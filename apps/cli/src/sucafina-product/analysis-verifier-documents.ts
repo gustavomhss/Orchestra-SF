@@ -22,7 +22,7 @@ export function createSfDocumentExtractionVerifier(dependencies: SfAnalysisDepen
       const read = async (currentCall: TrustedDomainContext) => {
         const current = await dependencies.cases.read({ caseRef: encodeCaseRef(request.caseRef) }, currentCall)
         if (current.status !== "ok" || current.value.case.version !== request.caseRef.version) return undefined
-        const schema = await dependencies.documentHost.resolveFieldSchema(value.targetFieldSchema.id, currentCall)
+        const schema = await dependencies.documentHost.resolveFieldSchema(value.targetFieldSchema.id, currentCall, value.authorizedFileRef)
         if (schema.status !== "ok" || digestSfValue(schema.value) !== digestSfValue(value.targetFieldSchema)) return undefined
         const document = await dependencies.documentHost.documents.read(value.authorizedFileRef, currentCall)
         if (document.status !== "ok" || document.value.revision !== value.documentRevision || !value.limits.formats.includes(document.value.mediaType) ||

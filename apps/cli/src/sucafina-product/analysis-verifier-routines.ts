@@ -29,7 +29,7 @@ export function createSfMeetingVerifier(dependencies: SfAnalysisDependencies & {
       const read = async (currentCall: TrustedDomainContext) => {
         const current = await dependencies.cases.read({ caseRef: encodeCaseRef(request.caseRef) }, currentCall)
         if (current.status !== "ok" || current.value.case.version !== request.caseRef.version) return undefined
-        const cases = await Promise.all(value.decisionRefs.map((ref) => dependencies.cases.read({ caseRef: encodeCaseRef(ref) }, currentCall))
+        const cases = await Promise.all(value.decisionRefs.map((ref) => dependencies.cases.read({ caseRef: encodeCaseRef(ref) }, currentCall)))
         if (cases.some((item, index) => item.status !== "ok" || item.value.case.version !== value.decisionRefs[index]?.version)) return undefined
         const review = await dependencies.reviews.read(value.preservedReviewRef.id, currentCall)
         if (review.status !== "ok" || review.value.version !== value.preservedReviewRef.version || value.authorizedSections.some((id) => !review.value.sections.some((section) => section.id === id))) return undefined
@@ -118,3 +118,4 @@ export function createSfExecutiveReviewVerifier(dependencies: SfAnalysisDependen
     },
   }
 }
+

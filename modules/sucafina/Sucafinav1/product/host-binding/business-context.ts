@@ -11,6 +11,30 @@ import type { SfDomainValidation } from "../contracts/runtime.ts"
 import type { ScannerBinarySpec } from "@orchestra/atlas-boundary/native-memory"
 import type { DecisionCase } from "../contracts/decisions.ts"
 
+/** Bound repeated source reauthorization without caching an authorization across reads. */
+function evidenceWithinBudget(refs: readonly BusinessEvidenceRef[]) {
+  const limit = 512
+  const cost = (ref: BusinessEvidenceRef, ancestors: ReadonlySet<string>): number => {
+    if (ancestors.size >= 16 || ancestors.has(ref.refDigest)) return limit + 1
+    const children = ref.kind === "case-event" ? ref.target.evidenceRefs : ref.kind === "calculation" ? ref.target.sourceRefs : []
+    // Case readers authorize twice, then this host verifies ancestry once more.
+    const multiplier = ref.kind === "case-event" ? 3 : 1
+    let total = 1
+    const next = new Set([...ancestors, ref.refDigest])
+    for (const child of children) {
+      total += multiplier * cost(child, next)
+      if (total > limit) return limit + 1
+    }
+    return total
+  }
+  let total = 0
+  for (const ref of refs) {
+    total += cost(ref, new Set())
+    if (total > limit) return false
+  }
+  return true
+}
+
 /** All source readers and memory operations are host-bound; references are selectors, not authority. */
 function assembleSfBusinessContext(host: {
   revalidate: (call: TrustedDomainContext) => Promise<boolean>
@@ -21,7 +45,7 @@ function assembleSfBusinessContext(host: {
 }): { service: BusinessContextService; resolveAncestry: (ref: BusinessEvidenceRef, call: TrustedDomainContext, ancestors: ReadonlySet<string>) => Promise<BusinessEvidenceResolution> } {
   async function resolveAncestry(ref: BusinessEvidenceRef, call: TrustedDomainContext, ancestors: ReadonlySet<string>): Promise<BusinessEvidenceResolution> {
     const unavailable = (): BusinessEvidenceResolution => ({ state: "unavailable", ref, accessRevision: call.binding.accessRevision, checkedAt: new Date().toISOString() })
-    if (ancestors.has(ref.refDigest) || ancestors.size >= 16) return unavailable()
+    if (ancestors.has(ref.refDigest) || ancestors.size >= 16 || !evidenceWithinBudget([ref])) return unavailable()
     if (!(await host.revalidate(call))) return unavailable()
     if (ref.schema !== "sf-evidence-v1" || ref.installationId !== call.binding.installationId || ref.projectId !== call.binding.projectId) return { ...unavailable(), state: "invalid" }
     try {
@@ -57,7 +81,8 @@ function assembleSfBusinessContext(host: {
   const resolve = (ref: BusinessEvidenceRef, call: TrustedDomainContext) => resolveAncestry(ref, call, new Set())
   const service: BusinessContextService = {
     resolve,
-    context: async (request, call) => Promise.all(request.refs.map((ref) => resolve(ref, call))),
+    context: async (request, call) => evidenceWithinBudget(request.refs) ? Promise.all(request.refs.map((ref) => resolve(ref, call))) :
+      request.refs.map((ref) => ({ state: "unavailable", ref, accessRevision: call.binding.accessRevision, checkedAt: new Date().toISOString() })),
     async recall(request, call) {
       if (!(await host.revalidate(call))) throw new Error("SF_MEMORY_AUTHORITY_UNAVAILABLE")
       const records = await host.recall(request, call)
@@ -65,6 +90,7 @@ function assembleSfBusinessContext(host: {
         const caseRef = record.envelope.caseRef
         if (!caseRef || !request.caseRefs.some((ref) => ref.id === caseRef.id && ref.incarnation === caseRef.incarnation)) return false
         const refs = [...record.envelope.evidenceRefs, ...record.envelope.dependencies]
+        if (!evidenceWithinBudget(refs)) return false
         try {
           const maps = sfEvidenceSourceMaps(refs)
           if (digestSfValue(maps.sourceVersions) !== digestSfValue(record.envelope.sourceVersions) || digestSfValue(maps.sourceIncarnations) !== digestSfValue(record.envelope.sourceIncarnations)) return false
@@ -156,7 +182,7 @@ export function createSfAtlasBusiness(input: {
   procurementResolve: Parameters<typeof createSfProcurementSourceAccess>[0]["resolve"]
   documentRead: Parameters<typeof createSfDocumentSourceAccess>[0]["read"]
   planner?: { sources: PlannerSourceHost; port: PlannerPort }
-  caseForEvidence: (digest: string, call: TrustedDomainContext) => Promise<{ id: string; incarnation: string } | undefined>
+  caseForEvidence: (digest: string, call: TrustedDomainContext) => Promise<readonly { id: string; incarnation: string }[] | { id: string; incarnation: string } | undefined>
   selections: Pick<Parameters<typeof createSfEvidenceCapabilities>[0], "contextSelections" | "recallSelections" | "featuresForCase" | "runtimeVersions">
   scanner?: { spec: ScannerBinarySpec; version: string }
   now: () => string
@@ -183,8 +209,11 @@ export function createSfAtlasBusiness(input: {
     return { state: "fresh", ref, currentRef: again.value.evidence, authorizedProjection: projected.value.baseline, accessRevision: call.binding.accessRevision, checkedAt: input.now() }
   }
   const readOriginal = async (digest: string, call: TrustedDomainContext) => {
-    const caseRef = await input.caseForEvidence(digest, call)
-    return caseRef ? memory.readOriginal(caseRef, digest, call) : undefined
+    const selected = await input.caseForEvidence(digest, call)
+    const refs = !selected ? [] : Array.isArray(selected) ? selected : [selected]
+    const found = await Promise.all(refs.map((ref) => memory.readOriginal(ref, digest, call)))
+    const originals = found.filter((ref): ref is BusinessEvidenceRef => !!ref)
+    return originals.length && originals.every((ref) => digestSfValue(ref) === digestSfValue(originals[0])) && await input.host.revalidate(call) ? originals[0] : undefined
   }
   const dashboardRecordProof = async (original: BusinessEvidenceRef, current: BusinessEvidenceRef, call: TrustedDomainContext) => {
     if (original.kind !== "record" || original.target.surface !== "dashboard" || original.target.recordType === "dashboard-page" || digestSfValue(original) !== digestSfValue(current)) return false

@@ -3601,5 +3601,161 @@
       "owner": "WP10",
       "publishedBy": "WP12"
     }
-  ]
+  ],
+  "wp10Deltas": {
+    "parent": "d02c64430d459d183eeb9e467e1c35d9a6b958f8",
+    "status": "CANDIDATE_AWAITING_HOSTED_CI_AND_INDEPENDENT_REVIEWS",
+    "ownFiles": [
+      {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "blobSha": "ffc6b9ef1eeac5925dc49f51c7d3393b12839adf"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/business-services.ts",
+        "blobSha": "8876947e1ba6c6f9bb770433a5382ff49b9db26f"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/analysis-services.ts",
+        "blobSha": "d510fdb54e91e49a215e6f030f1382b5905f4bfb"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/analysis-verifier-routines.ts",
+        "blobSha": "9970b8d661ca374770f7403e3be74a267908dc15"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/analysis-verifier-procurement.ts",
+        "blobSha": "8843617fcab07d6da320cc5935aee563e740e4dd"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/analysis-verifier-documents.ts",
+        "blobSha": "25444fd946757cd747a3bbcdebab163892be0fc0"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/input-producer-extraction.ts",
+        "blobSha": "a2121f3063010b731d9bd6f50ab8cd05fa475597"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/input-producer-contract.ts",
+        "blobSha": "2df4656bc5aa750182827fa62c37ae01e88711ff"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/dashboard-services.ts",
+        "blobSha": "0891d178833165fff098e3c05f3a64c5f5b35043"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/workspace-services.ts",
+        "blobSha": "3eac6bdde960b020e536f56615dcf2bf20cc55c2"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/source-inventory.ts",
+        "blobSha": "eac8e0b28e591b7cc50ef5cb7fb1ebe768526509"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+        "blobSha": "ec265772aa3100f6f69648cbd444fcdfde01b754"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/procurement-projections.ts",
+        "blobSha": "3e8830c3dddc8b9609f583f877b2fe7458eccd28"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+        "blobSha": "b56cb0d8379bca9e6eb9e596c276cb159ab7a524"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/bi-http.ts",
+        "blobSha": "ffc5e0d3cfc259d0b1feaa0e1b44c37b73caab52"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+        "blobSha": "ac905cec7c0d65c9f2b96a0d4ec97bd87866ef6f"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+        "blobSha": "7c58755689a46f8bcdec7639f0c055d7b604546d"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+        "blobSha": "ab1111745c340d35d4edbf8cafb9b6486cf3dd7c"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+        "blobSha": "9e9bac976b503409de65868a366f352ca1e65071"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+        "blobSha": "b5502470d44360f6f80b31b932867d27cca63531"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/atlas-recovery.test.ts",
+        "blobSha": "a7395e072db32bec6aa72d1e2dba9a9400c9c6c9"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/business-context.test.ts",
+        "blobSha": "6d961b84ffbc105b0797524f1a899d831a13195f"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/analysis-services.test.ts",
+        "blobSha": "0c2977bfb9f24cedfde498b50a8fa6df0c9f0304"
+      }
+    ],
+    "publishedSupport": [
+      {
+        "path": "apps/cli/src/sucafina-product/dashboard-http.ts",
+        "blobSha": "c6c24f4a66315c75dd8b0903ddd70c89b9b9e19c",
+        "sourceCommit": "c59a01042298be0f5a5aaa33d47afc04ab3ab534",
+        "owner": "WP10",
+        "publishedBy": "WP02"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/dashboard-decisions.ts",
+        "blobSha": "2b8aef91bb7f88db3ee467b32f76d4d3911e73c1",
+        "sourceCommit": "c59a01042298be0f5a5aaa33d47afc04ab3ab534",
+        "owner": "WP10",
+        "publishedBy": "WP02"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/analysis-verifier-procurement.ts",
+        "blobSha": "8843617fcab07d6da320cc5935aee563e740e4dd",
+        "sourceCommit": "dae18b4f43f0daecf46264e876810025684a919d",
+        "publishedBy": "WP04",
+        "owner": "WP10"
+      }
+    ],
+    "sources": [
+      {
+        "owner": "WP02",
+        "pin": "c59a01042298be0f5a5aaa33d47afc04ab3ab534",
+        "paths": [
+          "apps/cli/src/sucafina-product/business-services.ts",
+          "apps/cli/src/sucafina-product/dashboard-services.ts",
+          "modules/sucafina/Sucafinav1/product/integration/source-inventory.ts",
+          "modules/sucafina/Sucafinav1/product/integration/source-projections.ts"
+        ],
+        "mode": "reviewed WP10-owned composition; seed C08 protection preserved"
+      },
+      {
+        "owner": "WP04",
+        "pin": "dae18b4f43f0daecf46264e876810025684a919d",
+        "paths": [
+          "modules/sucafina/Sucafinav1/product/integration/procurement-projections.ts",
+          "modules/sucafina/Sucafinav1/runtime/contract.ts"
+        ],
+        "mode": "reviewed WP10-owned source projection and CAS feedback"
+      },
+      {
+        "owner": "WP05",
+        "pin": "8f8a1a72dec4065c4cfb798d6d48ca13ca6d5760",
+        "paths": [
+          "modules/sucafina/Sucafinav1/product/integration/bi-http.ts"
+        ],
+        "mode": "one dispatch for authorized projection and presentation"
+      },
+      {
+        "owner": "WP12",
+        "pin": "574841e2409a9523000c4c1976c81804c9a86fde",
+        "mode": "WP10-owned CLI producer pairs, corrected schema documentRef and syntax; producer implementations remain published inputs"
+      }
+    ]
+  }
 }

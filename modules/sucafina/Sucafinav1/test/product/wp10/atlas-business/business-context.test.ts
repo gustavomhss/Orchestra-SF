@@ -4,6 +4,29 @@ import { digestSfEvidenceRef, sfEvidenceSourceMaps } from "../../../../product/c
 import type { BusinessEvidenceRef, BusinessEvidenceResolution } from "../../../../product/contracts/business-context.ts"
 import { createSfBusinessContext } from "../../../../product/host-binding/business-context.ts"
 
+test("over-budget evidence ancestry is refused before source IO", async () => {
+  const authority = createSfUiAuthority({ authorize: async () => ({ installationId: "i", projectId: "p", principalRef: "actor", policyVersion: "v1", accessRevision: "a1" }), commandIdentity: async () => "command", createId: () => "request", now: () => 0 })
+  const admitted = await authority.admit(new Request("http://localhost"), "sf_evidence_get", "a".repeat(64))
+  if (admitted.status !== "ok") throw new Error("UI admission failed")
+  let sourceReads = 0
+  const context = createSfBusinessContext({
+    revalidate: (call) => call.kind === "ui" ? authority.revalidate(call) : Promise.resolve(false),
+    resolveSource: async (ref) => { sourceReads++; return { state: "fresh", ref, accessRevision: "a1", checkedAt: "2026-01-01" } },
+    proveContinuity: async () => false, recall: async () => [],
+    emitFromLedger: async () => ({ status: "unavailable", sourceEventId: "event", scanner: { name: "", version: "", status: "unavailable" } }),
+  })
+  let refs: BusinessEvidenceRef[] = []
+  for (let index = 0; index < 7; index++) {
+    const value: Extract<BusinessEvidenceRef, { kind: "case-event" }> = { schema: "sf-evidence-v1", kind: "case-event", refId: `event-${index}`, installationId: "i", projectId: "p", refDigest: "", evidenceLevel: "decision",
+      target: { caseId: "case", caseIncarnation: "inc", caseVersion: 1, eventId: `event-${index}`, outputDigest: "d", evidenceRefs: refs } }
+    refs = [{ ...value, refDigest: digestSfEvidenceRef(value) }]
+  }
+  expect((await context.resolve(refs[0]!, admitted.value)).state).toBe("unavailable")
+  expect((await context.context({ refs }, admitted.value)).every((result) => result.state === "unavailable")).toBe(true)
+  expect(sourceReads).toBe(0)
+  authority.finish(admitted.value)
+})
+
 test("shared event dependencies resolve independently in sibling branches", async () => {
   const authority = createSfUiAuthority({ authorize: async () => ({ installationId: "i", projectId: "p", principalRef: "actor", policyVersion: "v1", accessRevision: "a1" }), commandIdentity: async () => "command", createId: () => "request", now: () => 0 })
   const admitted = await authority.admit(new Request("http://localhost"), "sf_evidence_get", "a".repeat(64))

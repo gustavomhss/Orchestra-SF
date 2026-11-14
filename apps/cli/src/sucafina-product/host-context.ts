@@ -36,6 +36,8 @@ import { verifyPlannerImportTarget } from "../../../../modules/sucafina/Sucafina
 import { isSfPeriod } from "../../../../modules/sucafina/Sucafinav1/product/contracts/validation.ts"
 import { createSfImportHttp } from "../../../../modules/sucafina/Sucafinav1/product/interface/import-http.ts"
 import { createSfBusinessServices } from "./business-services.ts"
+import { createSfDashboardHttp } from "./dashboard-http.ts"
+import { createSfWorkspaceServices } from "./workspace-services.ts"
 import { createSfProductContribution, createSfProductDispatch } from "./contribution.ts"
 import { createSfTokenGate } from "./token-gate.ts"
 import { createSfNativeHostContribution } from "./native-host.ts"
@@ -49,15 +51,12 @@ import { decodeSfContributionEnvelope, decodeSfOperationInput, decodeSfOperation
 import { captureAlternativeProvenance } from "../../../../modules/sucafina/Sucafinav1/product/decisions/alternative-provenance.ts"
 import type { AlternativeCapabilityProvenance } from "../../../../modules/sucafina/Sucafinav1/product/decisions/alternative-provenance.ts"
 import type { SfSkillInputMap } from "../../../../modules/sucafina/Sucafinav1/product/contracts/skill-inputs.ts"
-import { createSfScenarioComparisonInput } from "./analysis-inputs.ts"
+import { createSfAnalysisServices, sfAnalysisDocumentLimits } from "./analysis-services.ts"
+import type { SfAnalysisPair, SfAnalysisPreparation } from "./analysis-services.ts"
 import { createSfAnalysisAuthorReader } from "./analysis-author.ts"
-import { createSfDecisionCritiqueVerifier } from "./analysis-verifier-review.ts"
-import { createSfIntentVerifier } from "./analysis-verifier-intent.ts"
-import { createSfSourcingVerifier } from "./analysis-verifier-procurement.ts"
-import { createSfScenarioVerifier } from "./analysis-verifier-scenarios.ts"
 import { createSfForecastVerifier, withoutObservationTimes } from "./analysis-verifier.ts"
 import type { BusinessPorts, PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
-import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
+import type { TrustedDomainContext, TrustedUiContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import type { SfNativeRunRecord } from "../../../../modules/sucafina/Sucafinav1/product/contracts/state.ts"
 import { encodeCaseRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
 import type { SfNativeHostApi, SfLoadedSkillObservation } from "./native-host.ts"
@@ -79,6 +78,8 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
   const alternativeCaptures = new Map<string, Map<string, AlternativeCapabilityProvenance>>()
   const observed = new Map<string, { value: SfLoadedSkillObservation; digest: string }>()
   const proposalCoverageWrites = new WeakSet<object>()
+  const dashboardHostWrites = new WeakSet<object>()
+  const procurementEvidenceWrites = new WeakSet<object>()
   const signalRegistryWrites = new WeakSet<object>()
   const caseSelectionWrites = new WeakSet<object>()
   const threadHistoryWrites = new WeakSet<object>()
@@ -87,7 +88,7 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
     parent.manifestDigest === value.manifestDigest && digestSfValue(parent.profile) === digestSfValue(value.profile) &&
     value.skills.every((skill) => parent.skills.some((allowed) => digestSfValue(allowed) === digestSfValue(skill))) &&
     value.operationIds.every((operation) => parent.operationIds.includes(operation)))
-  const authority = createSfProductAuthority({ ...input, identity, proposalCoverageWrites, signalRegistryWrites, caseSelectionWrites, threadHistoryWrites, policyVersion: "sf-product-v1", grants: input.grants ?? [], createId: randomUUID, now: Date.now,
+  const authority = createSfProductAuthority({ ...input, identity, proposalCoverageWrites, dashboardHostWrites, procurementEvidenceWrites, signalRegistryWrites, caseSelectionWrites, threadHistoryWrites, policyVersion: "sf-product-v1", grants: input.grants ?? [], createId: randomUUID, now: Date.now,
     commandIdentity: async (request, operation, digest) => {
       if (request.method === "GET" || request.method === "HEAD") return randomUUID()
       const key = request.headers.get("Idempotency-Key")
@@ -157,8 +158,27 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
   const roster = createSfRosterSources({ host: authority.host, scopedSources: input.persistence, plannerSources: createSfPlannerSourceHost({ host: authority.host, scopedSources: input.persistence, coverageFor: async () => ({ status: "unavailable", reason: "roster-coverage-unavailable" }) }) })
   const imports = createSfImportServices({ runtime: input, authority, roster })
   const documents = createSfDocumentServices({ runtime: input, authority })
-  const business = createSfBusinessServices({ authority, persistence: input.persistence, proposalCoverageWrites, documentRead: documents?.documents.reader,
+  const business = createSfBusinessServices({ authority, persistence: input.persistence, proposalCoverageWrites, dashboardHostWrites, documentRead: documents?.documents.reader,
     extraDescriptors: [...imports?.descriptors ?? [], ...documents?.descriptors ?? []] })
+  const readAuthorAnalysis = createSfAnalysisAuthorReader({ authority, context: business.context, resolveCase: business.resolveCase })
+  const readContribution: NonNullable<Parameters<typeof createSfWorkspaceServices>[0]["readContribution"]> = async (incoming, call) => {
+    const wanted = structuredClone(incoming)
+    const request = authority.host.requestFor(call)
+    if (!request || call.kind !== "ui" || !await authority.host.revalidate(call)) return { status: "denied", reason: "contribution-authority-unavailable" }
+    const found = await authority.state.read(request, "contributions", (stored, actor) => actor.principalRef === call.binding.principalRef &&
+      actor.accessRevision === call.binding.accessRevision && actor.policyVersion === call.binding.policyVersion ? stored.contributions[wanted.outputRef] : undefined)
+    if (found.status !== "ok") return { status: "unavailable", reason: "contribution-unavailable" }
+    const decoded = decodeSfContributionEnvelope(found.value)
+    if (!decoded.ok || decoded.value.id !== wanted.outputRef || digestSfValue(decoded.value.caseRef) !== digestSfValue(wanted.caseRef)) return { status: "unavailable", reason: "contribution-unavailable" }
+    const result = await business.withCase(call, wanted.caseRef, {}, () => readAuthorAnalysis(decoded.value.runProvenance.runId, decoded.value.outputDigest, call))
+    if (result.status !== "ok") return result
+    return result.value.output.id === wanted.outputRef && digestSfValue(result.value.output) === digestSfValue(decoded.value) &&
+      digestSfValue(result.value.run.caseRef) === digestSfValue(wanted.caseRef) && await authority.host.revalidate(call)
+      ? result : { status: "unavailable", reason: "contribution-changed" }
+  }
+  const workspace = createSfWorkspaceServices({ authority, business, persistence: input.persistence, origin: input.origin, mount: input.mount, caseSelectionWrites, threadHistoryWrites, readContribution })
+  business.descriptors.push(...workspace.descriptors)
+  const dashboardHttp = createSfDashboardHttp({ origin: input.origin, mount: input.mount, runtime: () => identity() ? { authority, dashboard: business.dashboardServices, decisions: business.dashboardDecisions } : undefined })
   const documentHttp = createSfDocumentHttp({ origin: input.origin, mount: input.mount, runtime: () => identity() && documents ? { ui: authority.ui, human: authority.human, ...documents } : undefined })
   const importHttp = createSfImportHttp({ origin: input.origin, mount: input.mount, runtime: () => identity() && imports ? { ui: authority.ui, human: authority.human, service: imports } : undefined })
   const monthly = createPlannerMonthlyHost({ host: authority.host, humanAuthorize: (context, action, value) => authority.human.authorize(context, action, value) })
@@ -177,43 +197,48 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
       return !!target && target.surface === "planner" && verifyPlannerImportTarget(snapshot, { surface: "planner", selectionRef: sfPlannerSourceSelector(target.id, target.incarnation, target.version), incarnation: target.incarnation, version: target.version, options: { newVersion: false, removeMissing: false, preview: {} } }, actor, call)
     },
   }) : undefined
-  const readAuthorAnalysis = createSfAnalysisAuthorReader({ authority, context: business.context, resolveCase: business.resolveCase })
-  const verifiers = [createSfDecisionCritiqueVerifier({ ...analysisDependencies, readAuthorAnalysis }), createSfIntentVerifier({ ...analysisDependencies, replayIntent: business.cases.prepareIntentForCase }), importForecast ? importForecast(async () => false).verifier : createSfForecastVerifier(analysisDependencies), createSfSourcingVerifier({ ...analysisDependencies, sourcingEvidence: business.sourcingEvidence }), createSfScenarioVerifier({ ...analysisDependencies,
-    scenarioRef: async (caseRef, alternative, call) => {
-      const result = await business.scenarioLookup({ caseRef, alternativeId: alternative.id, alternativeVersion: alternative.version }, call)
-      return result.status === "ok" ? { status: "ok", value: result.value.resultRef } : result
-    } })]
-  const analysisInputs: NonNullable<SfHostServices["analysisInputs"]> = { prepare: async (call, incoming) => {
+  const forecast: SfAnalysisPair = {
+    producer: { skillIds: ["sf-explicar-forecast"], prepare: async (raw, request, call) => {
+      if (call.kind !== "ui") return { status: "denied", reason: "fresh-human-authority-required" }
+      const captured = structuredClone({ request, selection: raw })
+      if (!await authority.human.authorize(call, "analysis.prepare", captured)) return { status: "denied", reason: "analysis-input-authority-unavailable" }
+      const selection = object(captured.selection)
+      if (digestSfValue(selection.caseRef) !== digestSfValue(request.caseRef)) return { status: "needs-input", reason: "forecast-selection-invalid" }
+      if (selection.importRequest !== undefined) {
+        if (!importForecast) return { status: "unavailable", reason: "import-forecast-unavailable" }
+        const preview = decodeSfOperationInput("sf_import_preview", selection.importRequest)
+        if (Object.keys(selection).some((key) => !["caseRef", "previewRef", "importRequest", "period", "currency"].includes(key)) || typeof selection.previewRef !== "string" || !selection.previewRef.trim() || !preview.ok || !isSfPeriod(selection.period) || typeof selection.currency !== "string") return { status: "needs-input", reason: "import-forecast-selection-invalid" }
+        const wanted = { caseRef: request.caseRef, previewRef: selection.previewRef, importRequest: preview.value, period: selection.period, currency: selection.currency }
+        if (digestSfValue(wanted) !== digestSfValue(selection)) return { status: "needs-input", reason: "import-forecast-selection-invalid" }
+        const producer = importForecast(async (current, operation, digest) => current.kind === "ui" && operation === "analysis.prepare" && digest === digestSfValue(wanted) && await authority.human.authorize(current, "analysis.prepare", captured))
+        return producer.prepare(call, wanted)
+      }
+      if (Object.keys(selection).some((key) => !["caseRef", "baseRef", "candidateRef", "period", "currency"].includes(key))) return { status: "needs-input", reason: "forecast-selection-invalid" }
+      const decoded = decodeSfOperationInput("sf_forecast_compare", { baseRef: selection.baseRef, candidateRef: selection.candidateRef, period: selection.period, currency: selection.currency })
+      if (!decoded.ok) return { status: "needs-input", reason: "forecast-selection-invalid" }
+      const result = await business.planner.compareForecast(decoded.value, call)
+      if (result.status !== "ok") return result
+      return { status: "ok", value: { forecastComparison: result.value, selectedPeriod: decoded.value.period, currency: decoded.value.currency, sourceRefs: result.value.sourceRefs, registeredReasons: [] } }
+    } },
+    verifier: importForecast ? importForecast(async () => false).verifier : createSfForecastVerifier(analysisDependencies),
+  }
+  const preparedAnalyses = createSfAnalysisServices({
+    dependencies: analysisDependencies, selected,
+    authorizeSelection: (call, captured) => authority.human.authorize(call, "analysis.prepare", captured),
+    bindings: {
+      forecast,
+      scenarios: { scenarioLookup: business.scenarioLookup },
+      sourcing: { sourcingEvidence: business.sourcingEvidence },
+      collaboration: { collaboration: workspace.collaboration },
+      reviews: { reviews: workspace.reviews.reviews, meeting: { artifacts: workspace.reviews.artifacts, results: business.results } },
+      ...(documents ? { documents: { documentHost: documents.documents.evidenceHost, documentLimits: sfAnalysisDocumentLimits, dashboardRecord: business.dashboardRecords } } : {}),
+    },
+  })
+  const verifiers = preparedAnalyses.verifiers
+  const analysisInputs = { prepare: async (call: TrustedUiContext, incoming: SfAnalysisPreparation): Promise<PortResult<unknown>> => {
     const captured = structuredClone(incoming)
     if (!await authority.human.authorize(call, "analysis.prepare", captured)) return { status: "denied", reason: "analysis-input-authority-unavailable" }
-    const profile = selected.find((item) => item.profile.id === captured.request.profileId && item.profile.version === captured.request.profileVersion && item.manifestDigest === captured.request.manifestDigest)
-    const skill = profile?.skills.find((item) => item.id === captured.request.skillId && item.version === captured.request.skillVersion)
-    if (!profile || !skill) return { status: "unavailable", reason: "analysis-input-producer-unavailable" }
-    const selection = object(captured.selection)
-    if (skill.id === "sf-explicar-forecast" && skill.inputSchemaRef === "ForecastExplainInput" && importForecast) {
-      const preview = decodeSfOperationInput("sf_import_preview", selection.importRequest)
-      if (Object.keys(selection).some((key) => !["caseRef", "previewRef", "importRequest", "period", "currency"].includes(key)) || digestSfValue(selection.caseRef) !== digestSfValue(captured.request.caseRef) || typeof selection.previewRef !== "string" || !selection.previewRef.trim() || !preview.ok || !isSfPeriod(selection.period) || typeof selection.currency !== "string") return { status: "needs-input", reason: "import-forecast-selection-invalid" }
-      const wanted = { caseRef: captured.request.caseRef, previewRef: selection.previewRef, importRequest: preview.value, period: selection.period, currency: selection.currency }
-      if (digestSfValue(wanted) !== digestSfValue(captured.selection)) return { status: "needs-input", reason: "import-forecast-selection-invalid" }
-      const producer = importForecast(async (context, operation, digest) => context.kind === "ui" && operation === "analysis.prepare" && digest === digestSfValue(wanted) && await authority.human.authorize(context, "analysis.prepare", captured))
-      return business.withCase(call, wanted.caseRef, {}, () => producer.prepare(call, wanted))
-    }
-    if (skill.id !== "sf-comparar-cenarios" || skill.inputSchemaRef !== "ScenarioComparisonInput") return { status: "unavailable", reason: "analysis-input-producer-unavailable" }
-    const refs = Array.isArray(selection.alternatives) ? selection.alternatives.map(object) : []
-    const reference = object(selection.caseRef)
-    if (Object.keys(selection).some((key) => key !== "caseRef" && key !== "alternatives") || digestSfValue(reference) !== digestSfValue(captured.request.caseRef) || refs.length !== 2 ||
-      refs.some((ref) => Object.keys(ref).some((key) => key !== "id" && key !== "version") || typeof ref.id !== "string" || !ref.id.trim() || typeof ref.version !== "number" || !Number.isSafeInteger(ref.version)))
-      return { status: "needs-input", reason: "scenario-selection-invalid" }
-    const wanted = { caseRef: captured.request.caseRef, alternatives: [{ id: String(refs[0]!.id), version: Number(refs[0]!.version) }, { id: String(refs[1]!.id), version: Number(refs[1]!.version) }] as const }
-    if (digestSfValue(wanted) !== digestSfValue(captured.selection)) return { status: "needs-input", reason: "scenario-selection-invalid" }
-    const producer = createSfScenarioComparisonInput({ cases: business.cases, scenarioLookup: business.scenarioLookup, planner: business.planner, context: business.context,
-      revalidate: authority.host.revalidate, authorizeSelection: (context) => authority.human.authorize(context, "analysis.prepare", captured) })
-    return business.withCase(call, captured.request.caseRef, {}, async () => {
-      const result = await producer.prepare(call, wanted)
-      if (result.status !== "ok") return result
-      const decoded = decodeSfSkillInput("ScenarioComparisonInput", result.value)
-      return decoded.ok && await authority.human.authorize(call, "analysis.prepare", captured) ? { status: "ok", value: decoded.value } : { status: "unavailable", reason: "analysis-input-unavailable" }
-    })
+    return business.withCase(call, captured.request.caseRef, {}, () => preparedAnalyses.prepare(call, captured))
   } }
   const analyses: NonNullable<SfHostServices["analyses"]> = {
     start: async (context, incoming) => {
@@ -611,7 +636,7 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
           return { models: yield* catalog.model.available(), servers: yield* mcp.config() }
         }).pipe(Effect.provide(locations.get(identity.location)))).catch(() => undefined)
         if (!data || state.identity !== identity) throw new Error("SF_CATALOG_UNAVAILABLE")
-        // Public metadata only; credentials, provider headers and endpoint configuration remain opaque.
+        // Retain only a digest of private configuration; never persist or expose the configuration itself.
         const digest = digestSfValue({ models: data.models.map((model) => ({ providerID: model.providerID, id: model.id,
           api: { id: model.api.id, type: model.api.type }, variants: model.variants.map((variant) => variant.id).toSorted(), limit: model.limit }))
           .toSorted((left, right) => `${left.providerID}:${left.id}`.localeCompare(`${right.providerID}:${right.id}`)),
@@ -648,7 +673,7 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
       }, { signal: request.signal })
       return allowed && await authority.host.revalidate(call)
     } })
-  const services: SfHostServices = { ...authority, ...{ procurementSelections: business.procurementSelections, forecastInputs: business.forecastInputs, analysisInputs, analyses, plannerMonthly, personalViews, documents: documents?.documents, productHttp: async (request, surface) => await documentHttp(request, surface) ?? await importHttp(request, surface) }, selected, dispatch: createSfProductDispatch({ descriptors, authority: authority.authority }), models: async () => state.models ? state.models() : [], sessions: {
+  const services: SfHostServices = { ...authority, ...{ procurementSelections: business.procurementSelections, forecastInputs: business.forecastInputs, analysisInputs, analyses, plannerMonthly, personalViews, documents: documents?.documents, work: workspace.collaboration.work, productHttp: async (request, surface) => await workspace.http(request, surface) ?? await dashboardHttp(request, surface) ?? await documentHttp(request, surface) ?? await importHttp(request, surface) }, selected, dispatch: createSfProductDispatch({ descriptors, authority: authority.authority }), models: async () => state.models ? state.models() : [], sessions: {
     prepare: async (request) => {
       if (!state.api || !identity()) return { status: "unavailable", reason: "native-host-unavailable" }
       if (requests.has(request.runId)) return { status: "conflict", reason: "native-run-already-admitted" }

@@ -33,16 +33,31 @@ export function createSfAtlasMemory(input: {
       const request = input.host.requestFor(call)
       if (ref.kind !== "case-event" || ref.installationId !== call.binding.installationId || ref.projectId !== call.binding.projectId || !request || request.signal.aborted || !await input.host.revalidate(call)) return unavailable("authority-unavailable")
       try { sfEvidenceSourceMaps([ref]) } catch { return unavailable("invalid-evidence") }
+      const access = await input.state.read(request, "cases", (state, actor) => {
+        const value = state.cases[ref.target.caseId]
+        return value && value.incarnation === ref.target.caseIncarnation && value.participants.includes(actor.principalRef) &&
+          actor.principalRef === call.binding.principalRef && actor.accessRevision === call.binding.accessRevision && actor.policyVersion === call.binding.policyVersion &&
+          (call.kind !== "native" || call.binding.caseId === value.id && call.binding.caseIncarnation === value.incarnation && call.binding.caseVersion === value.version) ? value : undefined
+      }).catch(() => undefined)
+      if (!access || access.status !== "ok" || !access.value) return unavailable("authority-unavailable")
+      const permitted = input.authorizeCase ? await input.authorizeCase(access.value, call) :
+        (await input.cases.read({ caseRef: encodeCaseRef({ id: ref.target.caseId, incarnation: ref.target.caseIncarnation }) }, call)).status === "ok"
+      if (!permitted || !await input.host.revalidate(call)) return unavailable("authority-unavailable")
       const key = JSON.stringify([ref.target.caseId, ref.target.caseIncarnation, ref.target.eventId])
       const captured = await input.state.read(request, "atlas", (state) => ({ versions: state.versions, item: state.outbox[key] })).catch(() => undefined)
+      const confirmed = await input.state.read(request, "cases", (state) => state.cases[ref.target.caseId]).catch(() => undefined)
+      if (!confirmed || confirmed.status !== "ok" || !confirmed.value || digestSfValue(confirmed.value) !== digestSfValue(access.value) ||
+        (input.authorizeCase && !await input.authorizeCase(confirmed.value, call)) || !await input.host.revalidate(call)) return unavailable("authority-unavailable")
       if (!captured || captured.status !== "ok" || !captured.value.item) return unavailable("outbox-unavailable")
       if (digestSfValue(captured.value.item.eventRef) !== digestSfValue(ref)) return { ...unavailable("idempotency-content-changed"), status: "conflict" }
       // A durable receipt is a recovery result, not a second append. Reauthorize it without rerunning the scanner.
       if (captured.value.item.state === "settled") {
         const replay = await input.state.read(request, "outbox", (state, actor) => {
           const value = state.cases[ref.target.caseId]
-          const event = value?.ledger.find((item) => item.id === ref.target.eventId)
+          const events = value?.ledger.filter((item) => item.id === ref.target.eventId)
+          const event = events?.length === 1 ? events[0] : undefined
           return value && value.incarnation === ref.target.caseIncarnation && value.participants.includes(actor.principalRef) &&
+            (call.kind !== "native" || call.binding.caseId === value.id && call.binding.caseIncarnation === value.incarnation && call.binding.caseVersion === value.version) &&
             actor.principalRef === call.binding.principalRef && actor.accessRevision === call.binding.accessRevision && actor.policyVersion === call.binding.policyVersion &&
             event && event.caseRef.id === ref.target.caseId && event.caseRef.incarnation === ref.target.caseIncarnation && event.caseRef.version === ref.target.caseVersion &&
             event.outputDigest === ref.target.outputDigest && digestSfValue(event.evidenceRefs) === digestSfValue(ref.target.evidenceRefs)
@@ -53,7 +68,8 @@ export function createSfAtlasMemory(input: {
           (await input.cases.read({ caseRef: encodeCaseRef({ id: ref.target.caseId, incarnation: ref.target.caseIncarnation }) }, call)).status === "ok"
         if (!authorized || !await input.host.revalidate(call)) return unavailable("case-unavailable")
         const current = await input.state.read(request, "cases", (state) => ({ value: state.cases[ref.target.caseId], item: state.outbox[key] })).catch(() => undefined)
-        if (!current || current.status !== "ok" || digestSfValue(current.value) !== digestSfValue(replay.value) || !await input.host.revalidate(call)) return unavailable("case-unavailable")
+        if (!current || current.status !== "ok" || digestSfValue(current.value) !== digestSfValue(replay.value) ||
+          (input.authorizeCase && !await input.authorizeCase(current.value.value!, call)) || !await input.host.revalidate(call)) return unavailable("case-unavailable")
         return captured.value.item.receipt.status === "committed" ? { ...captured.value.item.receipt, status: "already-committed" } : captured.value.item.receipt
       }
       const found = await input.cases.read({ caseRef: encodeCaseRef({ id: ref.target.caseId, incarnation: ref.target.caseIncarnation }) }, call)
@@ -187,9 +203,23 @@ export function createSfAtlasMemory(input: {
     async readOriginal(caseRef: { id: string; incarnation: string }, digest: string, call: TrustedDomainContext): Promise<BusinessEvidenceRef | undefined> {
       const request = input.host.requestFor(call)
       if (!request || !/^[a-f0-9]{64}$/.test(digest) || !await input.host.revalidate(call)) return undefined
-      const current = await input.cases.read({ caseRef: encodeCaseRef(caseRef) }, call)
-      if (current.status !== "ok") return undefined
-      const owner = deriveSfMemoryOwner(current.value.context, current.value.case)
+      // A continuity proof must not recursively resolve the same sources through cases.read.
+      const readCase = async () => {
+        const found = await input.state.read(request, "cases", (state, actor) => {
+          const value = state.cases[caseRef.id]
+          return value && value.incarnation === caseRef.incarnation && value.participants.includes(actor.principalRef) &&
+            actor.principalRef === call.binding.principalRef && actor.accessRevision === call.binding.accessRevision && actor.policyVersion === call.binding.policyVersion &&
+            (call.kind !== "native" || call.binding.caseId === value.id && call.binding.caseIncarnation === value.incarnation && call.binding.caseVersion === value.version) ? value : undefined
+        }).catch(() => undefined)
+        if (!found || found.status !== "ok" || !found.value) return undefined
+        const allowed = input.authorizeCase ? await input.authorizeCase(found.value, call) :
+          (await input.cases.read({ caseRef: encodeCaseRef(caseRef) }, call)).status === "ok"
+        return allowed && await input.host.revalidate(call) ? found.value : undefined
+      }
+      const current = await readCase()
+      if (!current) return undefined
+      const context: AuthorizedCaseProjection["context"] = call.kind === "ui" ? { ...call.binding, kind: "ui" } : { ...call.binding, kind: "native" }
+      const owner = deriveSfMemoryOwner(context, current)
       if (!owner) return undefined
       const result = await input.state.read(request, "atlas", (state) => {
         const partition = state.atlas[owner] as AtlasPartition | undefined
@@ -208,8 +238,8 @@ export function createSfAtlasMemory(input: {
         return linked ? capture.ref : undefined
       }).catch(() => undefined)
       if (!result || result.status !== "ok" || !await input.host.revalidate(call)) return undefined
-      const again = await input.cases.read({ caseRef: encodeCaseRef(caseRef) }, call)
-      if (again.status !== "ok" || again.value.case.incarnation !== caseRef.incarnation || !await input.host.revalidate(call)) return undefined
+      const again = await readCase()
+      if (!again || digestSfValue(again) !== digestSfValue(current) || !await input.host.revalidate(call)) return undefined
       return result.value
     },
   }

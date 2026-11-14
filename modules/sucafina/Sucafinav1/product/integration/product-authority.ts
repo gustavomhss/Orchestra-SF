@@ -19,6 +19,24 @@ import type { SfHumanAction } from "./human-authority.ts"
 
 export type SfProductGrant = Readonly<{ principalRef: string; namespaces: readonly SfStateNamespace[]; operations: readonly string[]; humanActions?: readonly SfHumanAction[] }>
 
+const collaborationReads: Record<string, { operation: string; namespaces: readonly SfStateNamespace[] }> = {
+  "collaboration.question.output": { operation: "sf_question_prepare", namespaces: ["cases", "contributions"] },
+  "collaboration.thread.read": { operation: "sf_answer_read", namespaces: ["threads"] },
+  "collaboration.thread.history": { operation: "sf_answer_read", namespaces: ["threads"] },
+  "collaboration.relation.read": { operation: "sf_relation_read", namespaces: ["relations"] },
+  "collaboration.confirmation.prepare": { operation: "sf_work_list", namespaces: ["confirmations"] },
+  "collaboration.confirmation.project": { operation: "sf_work_list", namespaces: ["confirmations"] },
+  "collaboration.answer.prepare": { operation: "sf_answer_read", namespaces: ["threads", "confirmations"] },
+  "collaboration.answer.read": { operation: "sf_answer_read", namespaces: ["threads"] },
+  "collaboration.selection.list": { operation: "sf_work_list", namespaces: ["cases", "preferences"] },
+  "collaboration.selection.version": { operation: "sf_work_list", namespaces: ["preferences"] },
+  "collaboration.cycle.read": { operation: "sf_work_list", namespaces: ["cases", "threads", "relations", "confirmations"] },
+  "collaboration.work.list": { operation: "sf_work_list", namespaces: ["threads", "relations", "confirmations"] },
+  "collaboration.work.destination": { operation: "sf_work_list", namespaces: ["threads", "relations", "confirmations"] },
+  "collaboration.recipients": { operation: "sf_question_prepare", namespaces: ["threads"] },
+  "collaboration.storage.version": { operation: "sf_work_list", namespaces: ["threads", "relations", "confirmations"] },
+}
+
 /** Compose authority over the installation's own store and authenticator; no serialized identity becomes authority. */
 export function createSfProductAuthority(input: {
   identity: SfHostRuntime["identity"]
@@ -41,6 +59,8 @@ export function createSfProductAuthority(input: {
   signalRegistryWrites?: WeakSet<object>
   caseSelectionWrites?: WeakSet<object>
   threadHistoryWrites?: WeakSet<object>
+  dashboardHostWrites?: WeakSet<object>
+  procurementEvidenceWrites?: WeakSet<object>
   authorizeDocument: (request: Request, snapshot: Snapshot, assetId: string, principal: string, authority: SfStateAuthority) => Promise<{ incarnation: string } | undefined>
 }) {
   const grants = structuredClone(input.grants)
@@ -100,13 +120,13 @@ export function createSfProductAuthority(input: {
     return input.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: await principal(request, snapshot) }), { signal: request.signal })
   }
   const state = createSfProductState({
-    persistence: input.persistence, createId: input.createId, nativeEvidenceWrites, proposalCoverageWrites: input.proposalCoverageWrites, signalRegistryWrites: input.signalRegistryWrites, caseSelectionWrites: input.caseSelectionWrites, threadHistoryWrites: input.threadHistoryWrites,
+    persistence: input.persistence, createId: input.createId, nativeEvidenceWrites, proposalCoverageWrites: input.proposalCoverageWrites, signalRegistryWrites: input.signalRegistryWrites, caseSelectionWrites: input.caseSelectionWrites, threadHistoryWrites: input.threadHistoryWrites, dashboardHostWrites: input.dashboardHostWrites, procurementEvidenceWrites: input.procurementEvidenceWrites,
     authorize: async (request, snapshot, namespace, mode) => {
       const actor = await principal(request, snapshot)
       if (!actor || !actor.grant.namespaces.includes(namespace) || (mode === "write" && !actor.canWrite)) return undefined
       return { principalRef: actor.principalRef, policyVersion: actor.policyVersion, accessRevision: actor.accessRevision }
     },
-    resolveTarget: async (request, snapshot, namespace, targetRef) => {
+    resolveTarget: async (request, snapshot, namespace, targetRef, command) => {
       const actor = await principal(request, snapshot)
       if (!actor || !actor.grant.namespaces.includes(namespace)) return undefined
       if (actor.canWrite && creationNamespaces.includes(namespace) && targetRef === creationTarget.ref) return { incarnation: creationTarget.incarnation }
@@ -118,15 +138,43 @@ export function createSfProductAuthority(input: {
       const entry = Object.hasOwn(cases, id) ? object(cases[id]) : undefined
       if (entry && entry.id === id && typeof entry.incarnation === "string" && (!parsed || parsed.incarnation === entry.incarnation) &&
         Array.isArray(entry.participants) && entry.participants.includes(actor.principalRef)) return { incarnation: entry.incarnation }
+      if (namespace === "receipts" && actor.canWrite && command.domainSurface === "dashboard") {
+        const preferences = object(state.preferences)
+        const targets = Object.values(cases).flatMap((value) => {
+          const decision = object(value)
+          if (typeof decision.id !== "string" || typeof decision.incarnation !== "string" || typeof decision.version !== "number" || !Array.isArray(decision.participants) || !decision.participants.includes(actor.principalRef) || !Array.isArray(decision.choices) || !Array.isArray(decision.preparedChanges)) return []
+          const changes: readonly unknown[] = decision.preparedChanges
+          const choices: readonly unknown[] = decision.choices
+          const decisionVersion = decision.version
+          return changes.flatMap((value) => {
+            const change = object(value), target = object(change.target)
+            if (typeof change.id !== "string" || target.surface !== "dashboard" || target.id !== targetRef || typeof target.incarnation !== "string" || target.incarnation !== command.targetIncarnation || command.idempotencyKey !== `prepared:${change.idempotencyKey}`) return []
+            const binding = object(preferences[`sf:dashboard-host:prepared:${change.id}`])
+            const caseRef = object(binding.caseRef)
+            const boundChoices = choices.map(object).filter((choice) => choice.id === change.choiceId)
+            if (binding.schema !== "sf-dashboard-prepared-binding-v1" || binding.changeId !== change.id || binding.choiceId !== change.choiceId || caseRef.id !== decision.id || caseRef.incarnation !== decision.incarnation || typeof caseRef.version !== "number" || caseRef.version > decisionVersion || (change.state === "planned" && !change.receipt && caseRef.version !== decisionVersion) || binding.principalRef !== actor.principalRef || binding.accessRevision !== actor.accessRevision || binding.policyVersion !== actor.policyVersion || boundChoices.length !== 1 || binding.choiceDigest !== digestSfValue(boundChoices[0]) || digestSfValue(binding.command) !== digestSfValue(change.operation)) return []
+            const material = Object.fromEntries(Object.entries(binding).filter(([key]) => key !== "recordDigest"))
+            if (binding.recordDigest !== digestSfValue(material)) return []
+            return [{ incarnation: target.incarnation }]
+          })
+        })
+        if (targets.length === 1) return targets[0]
+      }
       if (namespace === "documents") return input.authorizeDocument(request, snapshot, targetRef, actor.principalRef, { principalRef: actor.principalRef, accessRevision: actor.accessRevision, policyVersion: actor.policyVersion })
       return undefined
     },
   })
   const ui = createSfUiAuthority({
-    privateCommands: sfHumanActions.map((action) => `sf-human:${action}`),
+    privateCommands: [...sfHumanActions.map((action) => `sf-human:${action}`), ...Object.keys(collaborationReads).map((action) => `sf-read:${action}`)],
     createId: input.createId, now: input.now, commandIdentity: input.commandIdentity,
     authorize: async (request, operation) => {
       const actor = await resolve(request).catch(() => undefined)
+      if (operation.startsWith("sf-read:")) {
+        const read = collaborationReads[operation.slice("sf-read:".length)]
+        if (!actor || !read || !actor.grant.operations.includes(read.operation) || read.namespaces.some((namespace) => !actor.grant.namespaces.includes(namespace))) return undefined
+        return { installationId: actor.identity.installationId, projectId: actor.identity.projectId,
+          principalRef: actor.principalRef, policyVersion: actor.policyVersion, accessRevision: actor.accessRevision }
+      }
       if (!actor || !(operation.startsWith("sf-human:")
         ? (actor.canWrite || operation === "sf-human:views.read" || operation === "sf-human:analysis.read" || operation === "sf-human:decisions.portfolio.read") && actor.grant.humanActions?.some((action) => operation === `sf-human:${action}`)
         : actor.grant.operations.includes(operation))) return undefined
@@ -189,5 +237,12 @@ export function createSfProductAuthority(input: {
   const host: DomainPortHost = { persistence: input.persistence, authenticate: input.authenticate, environment: input.environment,
     requestFor: authority.requestFor, revalidate: authority.revalidateDomainContext }
   const human = createSfHumanAuthority({ origin: input.origin, ui })
-  return { state, ui, human, native, authority, host, creationTarget, nativeEvidenceWrites, authorizeNative, authorizeInterrupt }
+  const humanActions = async (request: Request): Promise<readonly SfHumanAction[]> => {
+    const actor = await resolve(request).catch(() => undefined)
+    if (!actor?.canWrite) return []
+    const current = await resolve(request).catch(() => undefined)
+    if (!current?.canWrite || current.principalRef !== actor.principalRef || current.accessRevision !== actor.accessRevision || request.signal.aborted) return []
+    return [...actor.grant.humanActions ?? []]
+  }
+  return { state, ui, human, humanActions, native, authority, host, creationTarget, nativeEvidenceWrites, authorizeNative, authorizeInterrupt }
 }

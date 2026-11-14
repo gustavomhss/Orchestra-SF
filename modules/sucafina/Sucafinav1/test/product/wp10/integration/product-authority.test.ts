@@ -12,6 +12,7 @@ import { createSfProductAuthority } from "../../../../product/integration/produc
 import type { SfProductGrant } from "../../../../product/integration/product-authority.ts"
 import type { ResidentProfile, SkillLoadReceipt } from "../../../../product/contracts/resident-ai.ts"
 import { selection } from "../resident-runtime/fixture.ts"
+import { digestSfValue } from "../../../../product/contracts/canonical.ts"
 
 async function fixture(grants: readonly SfProductGrant[], work: (input: { product: ReturnType<typeof createSfProductAuthority>; request: Request; location: Location.Ref; persistence: LocalStore; actor: { write: boolean; active: boolean }; changes: { role: string; mutateAuth: boolean; mutateInspect: boolean; session?: SessionSchema.Info } }) => Promise<void>, options: { rejectNested?: boolean } = {}) {
   const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-product-authority-"))
@@ -106,6 +107,30 @@ test("dashboard roles alone do not grant C08 or a business operation", async () 
   })
 })
 
+test("collaboration read leases require the exact operation and all namespaces without granting writes", async () => {
+  await fixture([{ principalRef: "person", namespaces: ["threads", "relations", "confirmations"], operations: ["sf_work_list"] }], async ({ product, request, actor, changes }) => {
+    actor.write = false
+    const operation = "sf-read:collaboration.work.list"
+    const payload = { period: { start: "2026-01-01", end: "2026-12-31" } }
+    const admitted = await product.ui.admit(request, operation, digestSfValue(payload))
+    expect(admitted.status).toBe("ok")
+    if (admitted.status !== "ok") throw new Error("Explicit collaboration read grant was not admitted")
+    expect(await product.ui.validate(admitted.value, operation, digestSfValue(payload))).toBe(true)
+    expect(await product.human.authorize(admitted.value, "collaboration.thread.reply", payload)).toBe(false)
+    expect((await product.ui.admit(request, "sf-read:collaboration.unlisted", digestSfValue(payload))).status).toBe("denied")
+    expect((await product.ui.admit(request, "sf-read:collaboration.question.output", digestSfValue(payload))).status).toBe("denied")
+    const write = await product.state.transaction(request, { namespace: "threads", expectedStorageVersion: 0, targetRef: product.creationTarget.ref,
+      targetIncarnation: product.creationTarget.incarnation, idempotencyKey: "read-cannot-write", commandDigest: digestSfValue(payload) }, async () => ({ commit: true, value: true }))
+    expect(write.status).toBe("denied")
+    changes.role = "contributor"
+    expect(await product.ui.revalidate(admitted.value)).toBe(false)
+    product.ui.finish(admitted.value)
+  })
+  await fixture([{ principalRef: "person", namespaces: ["threads", "relations"], operations: ["sf_work_list"] }], async ({ product, request }) => {
+    expect((await product.ui.admit(request, "sf-read:collaboration.work.list", digestSfValue({}))).status).toBe("denied")
+  })
+})
+
 test("private grants narrow namespaces and operations; role changes revoke existing UI authority", async () => {
   await fixture([{ principalRef: "person", namespaces: ["cases", "preferences"], operations: ["sf_context_get"] }], async ({ product, request, changes }) => {
     const context = await product.ui.admit(request, "sf_context_get", "a".repeat(64))
@@ -147,7 +172,7 @@ test("native binding cannot be invented without a current stored run", async () 
 })
 
 test("a real C08 run and case still cannot bind a missing native Session", async () => {
-  await fixture([{ principalRef: "person", namespaces: ["cases", "contributions"], operations: ["sf_forecast_compare"] }], async ({ product, request, changes, actor }) => {
+  await fixture([{ principalRef: "person", namespaces: ["cases", "contributions"], operations: ["sf_forecast_compare"] }], async ({ product, request, changes, actor, location }) => {
     const caseRef = { id: "case", incarnation: "inc", version: 1 }
     const created = await product.state.transaction(request, { namespace: "cases", expectedStorageVersion: 0, targetRef: product.creationTarget.ref,
       targetIncarnation: product.creationTarget.incarnation, idempotencyKey: "seed-case", commandDigest: "e".repeat(64) }, async (state) => {
@@ -249,3 +274,4 @@ test("identity mutation during authentication is denied", async () => {
     expect((await product.ui.admit(request, "sf_context_get", "a".repeat(64))).status).toBe("denied")
   })
 })
+

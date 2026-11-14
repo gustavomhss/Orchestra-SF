@@ -48,11 +48,14 @@ async function compose(dependencies: SfAnalysisDependencies & { documentHost: Do
   const matches = current.value.evidenceRefs.filter((ref): ref is Extract<BusinessEvidenceRef, { kind: "record" }> => ref.refId === human.contractRefId && ref.kind === "record" && ref.target.surface === "procurement")
   const contractRef = matches.length === 1 ? matches[0] : undefined
   if (!costCoverage || !contractRef) return undefined
-  const schema = await dependencies.documentHost.resolveFieldSchema(human.fieldSchemaRef, call)
-  if (schema.status !== "ok" || schema.value.id !== human.fieldSchemaRef) return undefined
-  const stored = await Promise.all(human.documentIds.map((id) => readDocumentEvidence(id, call, { state: dependencies.documentHost.state, documents: dependencies.documentHost.documents, requestFor: dependencies.documentHost.host.requestFor, revalidate: dependencies.documentHost.host.revalidate })))
-  if (stored.some((item) => item.status !== "ok" || item.value.schemaRef !== schema.value.id || item.value.schemaVersion !== schema.value.version || item.value.evidence.id !== item.value.snapshot.evidence?.id)) return undefined
-  const documentEvidence = stored.flatMap((item) => item.status === "ok" ? [item.value.evidence] : [])
+  const stored = await Promise.all(human.documentIds.map(async (id) => {
+    const item = await readDocumentEvidence(id, call, { state: dependencies.documentHost.state, documents: dependencies.documentHost.documents, requestFor: dependencies.documentHost.host.requestFor, revalidate: dependencies.documentHost.host.revalidate })
+    if (item.status !== "ok" || item.value.evidence.id !== item.value.snapshot.evidence?.id) return undefined
+    const schema = await dependencies.documentHost.resolveFieldSchema(human.fieldSchemaRef, call, item.value.snapshot.documentRef)
+    return schema.status === "ok" && schema.value.id === human.fieldSchemaRef && item.value.schemaRef === schema.value.id && item.value.schemaVersion === schema.value.version ? item.value.evidence : undefined
+  }))
+  if (stored.some((item) => !item)) return undefined
+  const documentEvidence = stored.flatMap((item) => item ? [item] : [])
   const contract = await dependencies.procurement.readContract({ contractRef: contractRef.refId, fields: contractRef.target.fields }, call)
   if (contract.status !== "ok" || !contract.value.values.some((item) => item.sourceRefs.some((ref) => same(ref, contractRef)))) return undefined
   const refs = [contractRef, ...documentEvidence.map((item) => item.ref)]
@@ -77,3 +80,4 @@ export function createSfContractInputProducer(dependencies: SfAnalysisDependenci
     },
   }
 }
+

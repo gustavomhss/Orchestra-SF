@@ -26,7 +26,7 @@ async function compose(dependencies: SfAnalysisDependencies & { documentHost: Do
   if (!same(human.limits, dependencies.documentLimits)) return undefined
   const current = await dependencies.cases.read({ caseRef: encodeCaseRef(request.caseRef) }, call)
   if (current.status !== "ok" || current.value.case.id !== request.caseRef.id || current.value.case.incarnation !== request.caseRef.incarnation || current.value.case.version !== request.caseRef.version) return undefined
-  const schema = await dependencies.documentHost.resolveFieldSchema(human.fieldSchemaRef, call)
+  const schema = await dependencies.documentHost.resolveFieldSchema(human.fieldSchemaRef, call, human.authorizedFileRef)
   if (schema.status !== "ok" || schema.value.id !== human.fieldSchemaRef) return undefined
   const document = await dependencies.documentHost.documents.read(human.authorizedFileRef, call)
   if (document.status !== "ok" || !dependencies.documentLimits.formats.includes(document.value.mediaType) || document.value.bytes.length === 0 || document.value.bytes.length > dependencies.documentLimits.maxBytes || new Bun.CryptoHasher("sha256").update(document.value.bytes).digest("hex") !== document.value.blobDigest.value) return undefined
