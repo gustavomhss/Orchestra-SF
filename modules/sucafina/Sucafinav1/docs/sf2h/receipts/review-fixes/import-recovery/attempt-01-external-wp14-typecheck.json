@@ -1,0 +1,54 @@
+{
+  "schema": "sf2h-external-patch-proposal-v1",
+  "mission": "import-recovery",
+  "actor": "S2-C",
+  "attempt": 1,
+  "status": "PROPOSED_NOT_APPLIED",
+  "scope": "Dependência externa do gate bun typecheck de modules/sucafina; não altera a prova funcional OPS-REV-04/E-OPS-02.",
+  "owner": "WP14 / consumidor de createSfBusinessServices; integração por S0",
+  "target": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+    "observed_commit": "20915a35aa8364a39d1a6014c494f9ab4c1339e8",
+    "base": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+    "preimage_blob_sha": "fbe627ffde443ff7e2d3b1204bbcf67523404f41",
+    "preimage_unchanged_from_base": true
+  },
+  "diagnosis": {
+    "code": "TS2741",
+    "location": "167:41",
+    "missing_property": "procurementEvidenceWrites",
+    "required_type": "WeakSet<object>",
+    "declaration": {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "blob": "9aee116a091c684ba467f81316d2fb915b3f8758",
+      "commit": "20915a35aa8364a39d1a6014c494f9ab4c1339e8"
+    },
+    "static_observation": "A chamada preexistente não fornece o parâmetro obrigatório. O diff completo base→W não altera este teste nem a assinatura.",
+    "prior_independent_runs": [
+      {
+        "run": 43626182880,
+        "job": 132542383185,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43626182880/job/132542383185"
+      },
+      {
+        "run": 43625644846,
+        "job": 132540722576,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43625644846/job/132540722576"
+      }
+    ],
+    "own_check": "Será executado no commit que arquiva este recibo. O resultado próprio ainda não existe no momento desta proposta."
+  },
+  "change": "Fornecer um WeakSet<object> vazio e isolado ao serviço na composição do teste existente.",
+  "semantics": "O cenário WP14 usa documentos/casos/outbox/Atlas; não exercita captura de evidência Procurement. O set isolado satisfaz o contrato obrigatório sem compartilhar uma capability de escrita com a autoridade nem conceder namespace/ação adicional. A correção não relaxa a assinatura e não altera a composição de produto.",
+  "patch_format": "unified diff",
+  "patch": "diff --git a/modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts b/modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts\n--- a/modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts\n+++ b/modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts\n@@ -164,7 +164,7 @@\n     documents = createSfDocumentServices({ runtime: app.runtime, authority })\n     if (!documents) throw new Error(\"Actual document services unavailable\")\n     const service = documents\n-    business = createSfBusinessServices({ authority, persistence: app.store, proposalCoverageWrites: new WeakSet(), documentRead: service.documents.reader })\n+    business = createSfBusinessServices({ authority, persistence: app.store, proposalCoverageWrites: new WeakSet(), procurementEvidenceWrites: new WeakSet<object>(), documentRead: service.documents.reader })\n     const product = business\n     const host = authority.host\n     let selectedCase: { id: string; incarnation: string } | undefined\n",
+  "validation": {
+    "source_review": "Chamada, assinatura e consumidores reais lidos no mesmo W. Proposta revisada estaticamente pelo agente ci_protocol sem autoria de código desta missão.",
+    "applied": false,
+    "product_tests_run_for_patch": false,
+    "typecheck_run_for_patch": false,
+    "required_after_owner_applies": "Conferir preimage antes de aplicar; preservar mudanças posteriores. Executar bun typecheck no package relevante e seleção afetada pelo owner conforme CI.md. Não reivindicar PASS desta proposta com o run funcional da missão."
+  },
+  "authorization": "O arquivo alvo está fora dos write_paths da missão. Somente este recibo/patch externo é entregue; o arquivo WP14 e dependências CLI permanecem byte-idênticos."
+}
