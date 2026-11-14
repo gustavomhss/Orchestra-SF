@@ -17,7 +17,7 @@ test("WP00 proves real browser zoom independently of Sucafina bootstrap", async 
   const before = Omni.snapshot()
   try {
     await Effect.runPromise(Effect.scoped(Effect.gen(function* () {
-      const { browser, page, worker } = yield* scopedWp00Browser(directory)
+      const { browser, page, worker, extensionObservation } = yield* scopedWp00Browser(directory)
       yield* Effect.promise(async () => {
         await page.setViewportSize({ width: 1440, height: 900 })
         expect((await page.goto(baseURL))?.status()).toBe(200)
@@ -39,7 +39,7 @@ test("WP00 proves real browser zoom independently of Sucafina bootstrap", async 
           schema: "wp00-browser-zoom-observation-v1", executedSnapshotCommit: process.env.GITHUB_SHA,
           operatingSystem: `${process.platform} ${release()}`, browserVersion: browser.version(),
           scope: "Browser instrumentation against the existing production server; not Sucafina authentication, business flow or GNATIVE proof",
-          viewport: { width: 1440, height: 900 }, normal, enlarged, restored,
+          viewport: { width: 1440, height: 900 }, normal, enlarged, restored, extensionObservation,
           processObservation: { spawns: after.spawns - before.spawns, delegations: after.delegations - before.delegations },
         }, null, 2), contentType: "application/json" })
       })

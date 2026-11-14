@@ -7,6 +7,11 @@ import path from "node:path"
 import { fileURLToPath } from "node:url"
 
 declare const chrome: {
+  runtime: {
+    id: string
+    getManifest(): { name: string; version: string; background?: { service_worker?: string }; permissions?: string[] }
+  }
+  permissions: { contains(permissions: { permissions: string[] }): Promise<boolean> }
   tabs: {
     query(query: { active?: boolean; currentWindow?: boolean }): Promise<{ id?: number; url?: string }[]>
     setZoomSettings(id: number, settings: { mode: "automatic"; scope: "per-origin" }): Promise<void>
@@ -48,12 +53,26 @@ export function scopedWp00Browser(directory: string) {
     const context = browser.contexts()[0]
     if (!context) throw new Error("The isolated Chromium profile did not expose a browser context")
     context.setDefaultTimeout(30000)
-    const worker = context.serviceWorkers().find((value) => value.url().startsWith("chrome-extension://"))
+    // Chromium can expose component-extension workers too. Only our manifest's worker is eligible.
+    const isZoomWorker = (value: Worker) => value.url().startsWith("chrome-extension://")
+      && new URL(value.url()).pathname === "/worker.js"
+    const worker = context.serviceWorkers().find(isZoomWorker)
       ?? (yield* Effect.promise(() => context.waitForEvent("serviceworker", {
-        predicate: (value) => value.url().startsWith("chrome-extension://"), timeout: 30000,
-      }).catch(() => { throw new Error("Zoom extension did not start in bundled Chromium: " + status.diagnostic) })))
+        predicate: isZoomWorker, timeout: 30000,
+      }).catch(() => { throw new Error("Zoom extension did not start in bundled Chromium; workers="
+        + JSON.stringify(context.serviceWorkers().map((value) => value.url())) + "; " + status.diagnostic) })))
+    const extensionObservation = yield* Effect.promise(() => worker.evaluate(async () => ({
+      id: chrome.runtime.id, manifest: chrome.runtime.getManifest(),
+      tabsPermission: await chrome.permissions.contains({ permissions: ["tabs"] }),
+      workerUrl: location.href,
+    })))
+    expect(extensionObservation.manifest.name).toBe("WP00 isolated browser zoom evidence")
+    expect(extensionObservation.manifest.version).toBe("1.0.0")
+    expect(extensionObservation.manifest.background?.service_worker).toBe("worker.js")
+    expect(new URL(extensionObservation.workerUrl).hostname).toBe(extensionObservation.id)
+    expect(extensionObservation.tabsPermission, JSON.stringify(extensionObservation)).toBe(true)
     const page = yield* Effect.promise(() => context.newPage())
-    return { browser, context, page, worker }
+    return { browser, context, page, worker, extensionObservation }
   })
 }
 
@@ -67,7 +86,9 @@ export async function setBrowserZoom(page: Page, worker: Worker, percent: 100 | 
     const matching = tabs.filter((entry) => entry.url === input.url)
     const id = matching.length === 1 ? matching[0]?.id : undefined
     if (id === undefined)
-      throw new Error("Expected one isolated zoom tab for " + input.url + "; observed " + JSON.stringify(tabs))
+      throw new Error("Expected one isolated zoom tab for " + input.url + "; observed " + JSON.stringify({
+        workerUrl: location.href, extensionId: chrome.runtime.id, manifest: chrome.runtime.getManifest(), tabs,
+      }))
     await chrome.tabs.setZoomSettings(id, { mode: "automatic", scope: "per-origin" })
     await chrome.tabs.setZoom(id, input.percent / 100)
     return chrome.tabs.getZoom(id)
