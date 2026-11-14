@@ -20,6 +20,9 @@ import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { setTimeout } from "node:timers/promises"
 if (process.versions.bun || process.release.name !== "node") throw new Error("The browser driver requires Node")
+// Keep Playwright's launch/PID/Chromium stderr in the bounded failure report.
+// A phase name alone cannot diagnose a browser that never reaches ready.
+process.env.DEBUG = "pw:browser"
 console.log(JSON.stringify({ event: "phase", phase: "node-import" }))
 const { chromium } = await import(process.argv[1])
 console.log(JSON.stringify({ event: "phase", phase: "node-imported" }))
