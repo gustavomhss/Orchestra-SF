@@ -1,0 +1,13 @@
+{
+  "package": "sucafina",
+  "directory": "modules/sucafina",
+  "runner": "bun",
+  "args": [
+    "./Sucafinav1/test/product/wp10/memory-integrity/revocation-tail.test.ts",
+    "--timeout",
+    "120000"
+  ],
+  "env": {
+    "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+  }
+}

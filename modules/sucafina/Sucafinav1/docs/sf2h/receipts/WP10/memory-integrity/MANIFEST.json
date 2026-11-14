@@ -1,0 +1,412 @@
+{
+  "mission": "memory-integrity-preflight",
+  "number": 13,
+  "actor": "S0-B Memory continuation",
+  "campaign": "sf2h-integral-20261112",
+  "branch": "astra-wp10",
+  "pr": 29,
+  "initialHead": "54317229d7f8fcb7e92921c2f4a8dc6f9310270b",
+  "candidate": "f29f9f7acdc860590581d76e1d276139da7af1e3",
+  "candidateTree": "6f69fc8bfcfcd8ae313ef1a556a35d11ad09e556",
+  "implementationCommit": "ab511e9ab2dcb0f64b34bea944533cdbf7ed98e7",
+  "consumer": "S0 integration/reviewers/final candidate later",
+  "authority": {
+    "basis": "User mission 13 after explicit terminal handoff reconciliation; expected-head fast-forward writes only",
+    "terminalHandoffBlob": "ff67547a8b4bce811e3b34bbfc75aab530c150fc",
+    "terminalRun": 43630987389,
+    "missionBlob": "c8085b604257684572c7c8f405388b2082819c51",
+    "commonBlob": "e54d84e3cdfa0046225518e253baf9dcf377fa7c",
+    "packBlob": "7597a7e508228ac2878a9061887ac77fc70ad009",
+    "AGENTSBlob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+    "sessionLabel": "Locally assigned label only: memory-integrity-20261114",
+    "leaseEpochSource": "Mission JSON metadata; no native lease activation claimed",
+    "source_mission": {
+      "lease_epoch": 1,
+      "state": "PREPARED_NOT_STARTED",
+      "session_id": null,
+      "model_effective": "NOT_VERIFIED"
+    }
+  },
+  "fixture": {
+    "synthetic": [
+      "Case/choice/scenario/lifecycle and ledger seed metadata",
+      "PR-1 fixture values and deliberate edits",
+      "Principal alice, installation/project IDs, local authentication/grant provider; no Entra integration",
+      "Native run/model/output/skill-receipt fixture metadata only; no native execution"
+    ],
+    "real": [
+      "Source issuance and source lifecycle",
+      "Procurement resolve and C12 prepareDomainCommands",
+      "C08 protected transaction with SQLite openLocalStore",
+      "BusinessContextService and actual source/continuity router",
+      "Product authority admission and revalidation using declared fixture principal provider",
+      "Canonical Atlas append/fold/readOriginalCapture/full recall",
+      "Pinned Gitleaks scanner through Omni",
+      "Stale wrapper, run store and metadata-only preserve"
+    ],
+    "caseRef": {
+      "id": "integrity-case",
+      "incarnation": "integrity-case-incarnation",
+      "version": 1
+    },
+    "at": "2026-11-14T00:00:00Z",
+    "profile": {
+      "id": "sf_maestro",
+      "version": "NOT_OBSERVED separately in logs; selected from real resident bundle"
+    },
+    "skill": {
+      "id": "sf-consultar-memoria-decisoria",
+      "input": "DecisionRecallInput",
+      "version": "NOT_OBSERVED separately in logs; selected from real resident bundle"
+    },
+    "policyVersion": "policy",
+    "accessRevision": "Current real authority binding; value asserted, not separately logged",
+    "faultHooks": "Forward installed readers/revalidation unchanged, then mutate observed state or revoke fixture authority; no permissive reader substitute.",
+    "fallback": "Second ledger event is a declared synthetic seed; enqueue/outbox/emit/scanner/Atlas envelopes and capture reads are real. The second case/event version is2; baseline fixture case version is1."
+  },
+  "runtimeVersions": {
+    "atlas": {
+      "package": "@orchestra/atlas-boundary",
+      "version": "0.0.0",
+      "packageBlob": "6a5e7bddf5b9ea31dd0fb795f38be4fc98a231b7",
+      "engine": {
+        "status": "NOT_OBSERVED",
+        "reason": "Engine source is unchanged and invoked through real Atlas boundary; standalone engine version not emitted."
+      },
+      "boundaryVersion": "0.0.0",
+      "schemaVersion": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba"
+    },
+    "contracts": {
+      "freezeRevision": 10,
+      "freezeBlob": "b20cf5cecf22885dd8858f3659056a50ab88f485",
+      "canonicalSha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba"
+    },
+    "scanner": {
+      "version": "8.30.1",
+      "archiveSha256": "551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb",
+      "controlSha256": "9e8852b78eca61424a7572ec28a01d6005470c0e0c0f361865b86444c1a3e403",
+      "canary": "real scanner against synthetic control",
+      "clean": "real emit admitted by scanner; canonical append asserted"
+    },
+    "modelEffective": null,
+    "nativeSessionId": null,
+    "skillLoadReceipt": null,
+    "nativeReason": "No native Session/model admission or execution in this focused fixture. Runtime uses real bundle metadata only; no AM/native acceptance claimed.",
+    "mcpTools": {
+      "status": "N/A",
+      "reason": "Focused preflight fixture does not execute native model MCP tools. Remote orchestration is GitHub MCP, not runtime proof."
+    }
+  },
+  "preservedPending": [
+    "Complete original historical regression: MI07 FAIL225000; corruption assertion and final three revocations not reached in that run",
+    "C17 R1-W23-C17-BETWEEN-OBSERVATIONS",
+    "X29 performance",
+    "UI/session12",
+    "ACK/session10",
+    "exports/session11",
+    "13 external WP04/WP06/WP08/WP09 typecheck errors; exact baseline comparison in CHECK34 and final check receipt",
+    "Native/AM/GNATIVE and restart-to-UI proofs",
+    "Three independent campaign FINAL reviews",
+    "All other original terminal handoff limitations"
+  ],
+  "constraints": {
+    "remote": "GitHub MCP",
+    "tests": "Actions only",
+    "localTests": false,
+    "fullSuite": false,
+    "epic": false,
+    "engineChanges": false,
+    "workflowChanges": false,
+    "supervisorRestart": false,
+    "goalRestart": false,
+    "newProductBranch": false,
+    "newPR": false,
+    "merge": false
+  },
+  "checks": {
+    "focused": {
+      "status": "PASS",
+      "scope": "Targeted conclusions supported by head-qualified reuse and affected recheck, not a single whole-suite execution",
+      "source": {
+        "attempt": "MI05",
+        "W": "5d42e44fb623db78a3a6ef025d2317a3fb653432",
+        "run": 43636096246,
+        "status": "FAIL",
+        "pass": 12,
+        "fail": 1
+      },
+      "affected": {
+        "attempt": "MI06",
+        "W": "ab511e9ab2dcb0f64b34bea944533cdbf7ed98e7",
+        "run": 43637049651,
+        "status": "PASS",
+        "pass": 1,
+        "fail": 0
+      },
+      "reuse": "EVIDENCE-REUSE.json",
+      "notClaimed": "13 original focused cases executed together on W36"
+    },
+    "historical": {
+      "status": "FAIL",
+      "W": "ab511e9ab2dcb0f64b34bea944533cdbf7ed98e7",
+      "run": 43637227753,
+      "tail": "NOT_REACHED",
+      "limitation": "Historical scenario exhausted225000 before the changed stale path; no repeat or X29 work in this mission."
+    },
+    "hosted": {
+      "status": "FAIL",
+      "W": "f29f9f7acdc860590581d76e1d276139da7af1e3",
+      "S": "42bb400783f50b06c5925a1411c94a33734bc95c",
+      "run": 43638533816,
+      "meaning": "Global FAIL only13 external TS errors, identical to CHECK30/CHECK34; CLI/WP10/Atlas/guards PASS on W36. Historical MI07 remains FAIL.",
+      "artifact": {
+        "id": 14131287684,
+        "sha256": "sha256:4ede1b651434996a232f3e402c825027f3669b3d8286aae1c0726218c5c5d058",
+        "size": 4364
+      },
+      "baselineDiagnosticsIdentical": true
+    },
+    "delivery": "NOT_RUN",
+    "tail": {
+      "status": "PASS",
+      "W": "f29f9f7acdc860590581d76e1d276139da7af1e3",
+      "S": "088c84fe639638b3623f2278a91b08e24e614964",
+      "run": 43638160793,
+      "counts": {
+        "pass": 3,
+        "fail": 0,
+        "expects": 51
+      },
+      "measured_duration_seconds": 95.22
+    }
+  },
+  "runtime": [
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-stale-commit.ts",
+      "blob": "8e1b7eaab139c3303462bdb5af9b4c679e61b276",
+      "sha256": "3d1b2e6ed237e1321fe6052277f94e6edc83a66b0b03a1e977b9757641bf8ca0"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "blob": "6e0aba2f7aa058cef1b35ecd0c963312e98ef993",
+      "sha256": "d6df55fbe2ebf1868c3279eb2196108228a1dcd695f8af36fe65429419c7ec65"
+    }
+  ],
+  "entity_id": "WP10.S0-B.MemoryA27",
+  "logical_owner": "S0-B Memory mission 13",
+  "fixture_id": "wp10/memory-integrity/withMemoryIntegrityFixture",
+  "entrypoint_or_action": [
+    "createSfStaleAnalysisAccess.preflight",
+    "createSfStaleAnalysisAccess transactional run-store preserveStale",
+    "readSfMemoryCaptureIntegrity at real createSfAtlasBusiness composition"
+  ],
+  "consumer_entrypoint": "apps/cli/src/sucafina-product/analysis-stale-commit.ts",
+  "producer_refs": {
+    "paths": [
+      "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+      "modules/sucafina/Sucafinav1/product/procurement"
+    ],
+    "exactRuntimeReferenceDigests": "NOT_OBSERVED as separate receipt values; derived and asserted inside the real fixture",
+    "source": "Procurement PR-1",
+    "case": {
+      "id": "integrity-case",
+      "incarnation": "integrity-case-incarnation",
+      "version": 1
+    }
+  },
+  "source_paths": [
+    "apps/cli/src/sucafina-product/analysis-stale-commit.ts",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/memory-integrity/attempt-01/PREPARATION.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/memory-integrity/attempt-01/RESULT.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/memory-integrity/attempt-02/IMPLEMENTATION.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/memory-integrity/attempt-02/RESULT.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/memory-integrity/attempt-03/PREPARATION.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/memory-integrity/attempt-04/RESULT.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/memory-integrity/attempt-05/IMPLEMENTATION.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/memory-integrity/attempt-05/RESULT.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/memory-integrity/attempt-06/PREPARATION.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/memory-integrity/attempt-07/RESULT.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/memory-integrity/attempt-08/PREPARATION.json",
+    "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/authority.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/fallback.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/fixture.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/identity.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/preflight.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/revocation-tail.test.ts"
+  ],
+  "runtime_build_sha": "f29f9f7acdc860590581d76e1d276139da7af1e3",
+  "bundle_digest": {
+    "status": "NOT_OBSERVED",
+    "reason": "Bundle is built from real resident.json and used in fixture; digest not separately emitted in hosted logs. Do not invent it."
+  },
+  "access_revision": {
+    "status": "NOT_OBSERVED",
+    "reason": "Bound by real fixture authority and asserted against current resolutions; no standalone value emitted."
+  },
+  "case_identity": {
+    "id": "integrity-case",
+    "incarnation": "integrity-case-incarnation",
+    "version": 1
+  },
+  "contract_versions": {
+    "freezeRevision": 10,
+    "freezeBlob": "b20cf5cecf22885dd8858f3659056a50ab88f485",
+    "canonicalSha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba"
+  },
+  "reviewer": [
+    {
+      "reviewer": "memory_boundary_review",
+      "scope": "Static runtime boundary and write-scope",
+      "verified_at": "2026-11-14",
+      "qualification": "Design participant; not independent campaign FINAL"
+    },
+    {
+      "reviewer": "memory_focused_tests",
+      "scope": "Real fixture/fault calibration and W34-to-W35 evidence reuse",
+      "verified_at": "2026-11-14",
+      "qualification": "Test collaborator; not independent campaign FINAL"
+    },
+    {
+      "reviewer": "memory_ci_protocol",
+      "scope": "CI protocol, pack obligations and baseline diagnostic comparison",
+      "verified_at": "2026-11-14",
+      "qualification": "Protocol review; not independent campaign FINAL"
+    }
+  ],
+  "candidate_sha": "f29f9f7acdc860590581d76e1d276139da7af1e3",
+  "product_candidate_sha": "f29f9f7acdc860590581d76e1d276139da7af1e3",
+  "ci_identity_mapping": {
+    "W": "product_candidate_sha (runtime candidate)",
+    "S": "ci_snapshot_sha (W plus only the exact request envelope)",
+    "requestSha256": "ci_request_hash (UTF-8 exact request file)"
+  },
+  "actor_or_role": {
+    "role": "S0-B Memory mission 13",
+    "runtimePrincipal": "alice",
+    "runtimePrincipalKind": "declared synthetic fixture actor"
+  },
+  "execution_actor": {
+    "implementation": "root session with static collaborating agents",
+    "tests": "GitHub Actions test-ci hosted runner; strict Omni",
+    "nativeSession": "N/A: no native model Session executed"
+  },
+  "writer_lease": {
+    "sourceMissionCommit": "3e3c329e9f4ab94d70c02d2cf69b030a9726769a",
+    "sourceLeaseEpoch": 1,
+    "grant": "User mission 13, narrow JSON write_paths, after explicit terminal HANDOFF/head verification",
+    "mechanismObserved": "Expected-head fast-forward GitHub MCP updates only",
+    "nativeLeaseAcquisition": "NOT_OBSERVED; source lease_epoch is metadata, not a claim of runtime lease acquisition or renewal",
+    "initialHead": "54317229d7f8fcb7e92921c2f4a8dc6f9310270b",
+    "terminalHandoffPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-continuation-c09/HANDOFF.md",
+    "formal_runtime_epoch": "NOT_OBSERVED"
+  },
+  "contract_version": 10,
+  "business_schema_version": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+  "public_bcs_contract": {
+    "blob": "102c849084980ae52223809d33bdeea36a58536b",
+    "changed": false
+  },
+  "atlas_engine_baseline": {
+    "commit": "54317229d7f8fcb7e92921c2f4a8dc6f9310270b",
+    "changed": false,
+    "standaloneVersion": "NOT_OBSERVED"
+  },
+  "atlas_boundary_version": "0.0.0",
+  "scanner_binary_version": "Gitleaks 8.30.1",
+  "case_id": "integrity-case",
+  "case_version": 1,
+  "case_incarnation": "integrity-case-incarnation",
+  "profile_id": {
+    "value": "sf_maestro",
+    "role": "Structural metadata selected from real bundle; no native execution"
+  },
+  "profile_version": {
+    "status": "NOT_OBSERVED",
+    "reason": "Used from bundle in fixture, not separately emitted"
+  },
+  "skill_ids": {
+    "values": [
+      "sf-consultar-memoria-decisoria"
+    ],
+    "role": "Structural fixture metadata; no native SkillLoadReceipt"
+  },
+  "skill_versions": {
+    "status": "NOT_OBSERVED",
+    "reason": "Used from bundle in fixture, not separately emitted"
+  },
+  "skill_digests": {
+    "status": "NOT_OBSERVED",
+    "reason": "Used by bundle initialization, not separately emitted"
+  },
+  "mcp_server_generation": {
+    "status": "N/A",
+    "reason": "No native runtime MCP server used by this focused fixture"
+  },
+  "mcp_operation": {
+    "status": "N/A",
+    "reason": "Direct domain ports, not native MCP operation execution"
+  },
+  "domain_port": [
+    "BCS context",
+    "Atlas readOriginalCapture/recall",
+    "case read",
+    "StaleAnalysisAccess preflight/preserve"
+  ],
+  "domain_call_id": {
+    "status": "NOT_OBSERVED",
+    "reason": "Real TrustedDomainContext passed and revalidated; no standalone call ID emitted in hosted log"
+  },
+  "envelope_policy_version": {
+    "ciProtocolRef": "a3d29d011ba3607a57914701300f09117a3e2de9",
+    "testWorkflowBlob": "9f078f4e37b758691bcd073e5590f05d5444392a",
+    "testValidatorBlob": "5007e48270b80c83eb719d35cec9e6343206a195",
+    "checkWorkflowBlob": "56ccb98dd74d3acbfdb43645bd9d54c9bf18816d",
+    "workflowChanged": false
+  },
+  "execution_instance": {
+    "id": "memory-integrity-20261114",
+    "kind": "locally assigned mission label, not a native Session ID",
+    "scope": "Descriptive orchestration label for mission13; no native Session/admission proof"
+  },
+  "status": "BLOCKED",
+  "scope": "MemoryA27 integrity fix and focused proof; complete historical regression remains unqualified",
+  "expected": "Corrupt captures denied with intact/historical/stale positives and required revocation paths preserved; unchanged historical regression rechecked within original budgets.",
+  "observed": "MI05 12 PASS observations reattached, MI06 affected source-await PASS; MI08 three revocation entrypoints PASS with real positives. MI07 complete historical FAIL225000 before changed stale path and original tail; overall historical qualification remains BLOCKED.",
+  "delivery": {
+    "status": "NOT_RUN",
+    "scope": "Future evidence-only guard for commit containing this receipt",
+    "resultLocation": "PR29 mission13 terminal section after guard; no self-referential commit or predicted result"
+  },
+  "runtimeEquivalentToImplementation": true,
+  "criterion_id": "MemoryA27.targeted-integrity",
+  "evidence_uri": "RUN-INDEX.json",
+  "expected_selection": "Per-attempt exact request JSON, selected files and test-name filters recorded in RUN-INDEX.json",
+  "selected_files": [
+    "memory-integrity/preflight.test.ts",
+    "memory-integrity/identity.test.ts",
+    "memory-integrity/authority.test.ts",
+    "memory-integrity/fallback.test.ts",
+    "memory-integrity/revocation-tail.test.ts",
+    "analysis-composition/historical-memory.test.ts"
+  ],
+  "measured_duration_seconds": "Per-run numeric measurements in RUN-INDEX.json; no aggregate native execution or human effort estimate",
+  "defect_correction": {
+    "status": "PASS",
+    "scope": "Covered MemoryA27 corrupt capture preflight and focused authority paths; not complete historical acceptance"
+  },
+  "verified_at": "2026-11-14T20:41:24Z",
+  "observed_limits": [
+    "Complete original historical regression: MI07 FAIL225000; corruption assertion and final three revocations not reached in that run",
+    "C17 R1-W23-C17-BETWEEN-OBSERVATIONS",
+    "X29 performance",
+    "UI/session12",
+    "ACK/session10",
+    "exports/session11",
+    "13 external WP04/WP06/WP08/WP09 typecheck errors; exact baseline comparison in CHECK34 and final check receipt",
+    "Native/AM/GNATIVE and restart-to-UI proofs",
+    "Three independent campaign FINAL reviews",
+    "All other original terminal handoff limitations"
+  ]
+}

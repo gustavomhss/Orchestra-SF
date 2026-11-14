@@ -1,0 +1,52 @@
+{
+  "mission": "MemoryA27 integrity preflight",
+  "attempt": "MI06",
+  "status": "PASS",
+  "productW": "ab511e9ab2dcb0f64b34bea944533cdbf7ed98e7",
+  "productTree": "0c7b73bd55ca21498477e9b32a763a87dff2bf50",
+  "snapshotS": "5860244f722a2c8e5c47c6a24dfb0f44768f5478",
+  "snapshotTree": "03dc6af04898f8e90559075b1c57cdd85bba63db",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/wp10/memory-integrity/authority.test.ts",
+      "-t",
+      "in-place source change",
+      "--timeout",
+      "120000"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+    }
+  },
+  "requestSha256": "b753a2c99edf373a1d754e7db32c2f9a6dd5a5021544beecf7a785bd7788eb54",
+  "requestBlob": "8d30e700292a6d9b20138383a16bcc9ffdcc5cd6",
+  "run": 43637049651,
+  "job": 132576026162,
+  "cleanupJob": 132576501547,
+  "cleanup": "SUCCESS",
+  "artifacts": [],
+  "pass": 1,
+  "fail": 0,
+  "filtered": 4,
+  "expects": 5,
+  "tests": 1,
+  "files": 1,
+  "elapsedSeconds": 10.72,
+  "testDurationMs": 10001.09,
+  "omni": {
+    "status": "PASS",
+    "spawns": 2,
+    "delegated": 0,
+    "nonce": "f790c1797445044aecc6b3ba14b9a601"
+  },
+  "test": "Memory integrity rejects an in-place source change after the real Atlas capture reader awaited",
+  "assertions": "Real source modified in outer C08 after real capture read; preflight denied, fault reached; unchanged assertion and injection.",
+  "log": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/memory-integrity/attempt-06/job.txt",
+    "bytes": 71953,
+    "sha256": "ba847e14facbf701cbc150c3827bd3a4d43f1c1692966b5228439755e588c203"
+  }
+}
