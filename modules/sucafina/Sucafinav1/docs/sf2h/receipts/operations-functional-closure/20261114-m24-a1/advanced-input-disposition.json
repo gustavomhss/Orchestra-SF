@@ -1,0 +1,355 @@
+{
+  "schema": "sf2-operations24-advanced-input-disposition-v1",
+  "mission": 24,
+  "observed_at": "2026-11-14T20:57:44Z",
+  "repository": "gustavomhss/Orchestra-SF",
+  "role": "Read-only reconciliation support; root owns mission24 writes and CI.",
+  "reference_scope": {
+    "original_test_work_tree": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+    "published_product_candidate": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+    "candidate_name": "C2",
+    "candidate_tree": "f13eadcdf86861982ded1d05ef02e3bdd94adb2f",
+    "observed_documentary_checkpoint": "c7c2ffdc113764f7bcf67c07ef2e86b49004bbb1",
+    "checkpoint_tree": "e5f118de83554121a43f05599a098401900c50de",
+    "candidate_state": "FROZEN_IDENTITY_UNQUALIFIED",
+    "source_green_transferred": false
+  },
+  "chain": [
+    {
+      "commit": "0d5d2e56448bf22ed3fbbf44d8d0e1a52cc3d4b7",
+      "parent": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+      "tree": "5911cd631db7d2251bbc0bb45d62b4616996c31c",
+      "subject": "docs(sf2): acknowledge mission23 closed-output integration lease"
+    },
+    {
+      "commit": "d81dc320a82044009dd4c39f2e5d062ad46719a9",
+      "parent": "0d5d2e56448bf22ed3fbbf44d8d0e1a52cc3d4b7",
+      "tree": "72d2a3c443233017dec3820d1a6987c4934e39f6",
+      "subject": "fix(sucafina): integrate closed C12 recovery and Finance18 outputs"
+    },
+    {
+      "commit": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "parent": "d81dc320a82044009dd4c39f2e5d062ad46719a9",
+      "tree": "f13eadcdf86861982ded1d05ef02e3bdd94adb2f",
+      "subject": "fix(sucafina): integrate closed Memory integrity output"
+    },
+    {
+      "commit": "c7c2ffdc113764f7bcf67c07ef2e86b49004bbb1",
+      "parent": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "tree": "e5f118de83554121a43f05599a098401900c50de",
+      "subject": "docs(sucafina): record C2 and Memory intake acknowledgements",
+      "record_only": true
+    }
+  ],
+  "operations_disposition": {
+    "source_pr": 23,
+    "source_commit": "39b50786b8d341d13f98ca2c5ada035a4bd7a46a",
+    "mission24_consumer_ack": "NOT_OBSERVED_AT_PINNED_CHECKPOINT",
+    "ack_coverage": [
+      "consumer-acks-01: C12/session19 and Finance18",
+      "consumer-acks-02: Memory13"
+    ],
+    "pending_record": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/pending-owners-01.json",
+    "pending_id": "E2E-OPERATIONS",
+    "pending_state": "NO_NEW_OUTPUT24",
+    "pending_next": "Publish complete real-host shared assembly patches and five nominal functional outcomes; collection-only remains insufficient.",
+    "pr65_snapshot": {
+      "head": "c7c2ffdc113764f7bcf67c07ef2e86b49004bbb1",
+      "updated_at": "2026-11-14T20:56:25Z",
+      "comments": 0,
+      "review_comments": 0,
+      "description": "Still predecessor mission14 narrative; does not contain a mission24 consumer ACK."
+    },
+    "consequence": "Current stack still contains original five Operations cases and old helpers. Shared host/selection/config patches were not admitted by these advances."
+  },
+  "unchanged_tree_proof": [
+    {
+      "path": "packages",
+      "blob": "d8eb8ee43941790bdc6f78cd0826655aa0bbcc25",
+      "at": [
+        "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+        "0ce090d7d1d4399d77b435debd59eb7cc903c202"
+      ],
+      "meaning": "All app-shell Operations sources and shared host/config/selection identical."
+    },
+    {
+      "path": ".github",
+      "blob": "4151c456a60fbdbc53533870900b405da512c020",
+      "at": [
+        "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+        "0ce090d7d1d4399d77b435debd59eb7cc903c202"
+      ],
+      "meaning": "No workflow or scanner provisioning change."
+    },
+    {
+      "path": "script",
+      "blob": "fb8fe22ca6fb4ed8417761e13afff556aa75927d",
+      "at": [
+        "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+        "0ce090d7d1d4399d77b435debd59eb7cc903c202"
+      ],
+      "meaning": "CI request dispatcher/validator unchanged."
+    }
+  ],
+  "unchanged_operations_inputs": [
+    {
+      "path": "packages/app-shell/e2e/playwright.production.config.ts",
+      "blob": "ae56b7fc9da248ee8e34d73d0eb13c8fe8e0c088",
+      "mode": "100644"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/documents.ts",
+      "blob": "21e00319151989a4c2337fe20d9c7de1d8374fa9",
+      "mode": "100644"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/imports.ts",
+      "blob": "20a9978c41697ac135a91d5229abc295d6c71375",
+      "mode": "100644"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/procurement-comparison.ts",
+      "blob": "6ddccf1af1119c4eec6b45c568caf3f45d8c62bc",
+      "mode": "100644"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/procurement-refusal.ts",
+      "blob": "079af7db0ade65464aa31e564d82209527f75b5f",
+      "mode": "100644"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/procurement-snapshot.ts",
+      "blob": "7af501a9567f1311983e80265ebb9c1d47cf3989",
+      "mode": "100644"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/procurement.ts",
+      "blob": "c750821955cb56e7e6549c808d3c8e1cf5ee6e2a",
+      "mode": "100644"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/runtime.ts",
+      "blob": "08296858b237881f29432c1cb982c91a4284c51a",
+      "mode": "100644"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/selection.check.ts",
+      "blob": "691ddedf779cb18d115dfd816732fe93ccea3ed9",
+      "mode": "100644"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations.spec.ts",
+      "blob": "bab6a804e5f082cc60eb6f27209070b552981035",
+      "mode": "100644"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp04/host.ts",
+      "blob": "3dd5760da92346e267a3cc767c69c4d8bb51b31c",
+      "mode": "100644"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp04/selection.ts",
+      "blob": "7224825eb470a2f172e7dc32172f83a6b05a5787",
+      "mode": "100644"
+    }
+  ],
+  "unchanged_relevant_product_inputs": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+      "blob": "81b7cd4ef5a73670642df42a2f891b9d95420dac"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-scanner.ts",
+      "blob": "f4fc6bc7c653213c61b8d05ecfad6bfd765df261"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/assets.ts",
+      "blob": "11f6dd1e28bcebdcdbc40a68a31cc033e0f4e377"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/dashboard-import.ts",
+      "blob": "b12751ba48918108c8b3923e5b098b35215a91d4"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+      "blob": "20a3ec5a30ac0fce6b35f05750d1b3dced11c45b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/installation.ts",
+      "blob": "66fcbe749ffd7e9d0c19b29c27b5b212139a29f7"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "blob": "2fd55c7304add0829d7434917c80664fe86356b9"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "blob": "90c3e981d8418c562342660bd3d56d03f9995383"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "blob": "b753e3ffbfcdc06de373388845c686afac26dec8"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/prepared.ts",
+      "blob": "e613a1bf32fe1ee75574139cf699c34843cf25d1"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/imports/staged-files.ts",
+      "blob": "0d42f5242acd3d1c93bc110422285b96975b8ea0"
+    }
+  ],
+  "changed_product_inputs": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+      "source_pr": 60,
+      "source_commit": "c8a03c4f689025ca70a1c815fd292af22b6261cd",
+      "source_blob": "2776a112cd24c1cb3bd4fe2791f7b232fb68286d",
+      "preimage": "f8404c18abc040c49cf111eb4561ce4c2873a4c6",
+      "postimage": "6ad51e47b22eca073a0a81731575c463d98673e4",
+      "method": "FOUR_PUBLISHED_HUNKS_ON_FINANCE_EXECUTOR",
+      "postimage_readback": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+      "source_pr": 60,
+      "source_commit": "c8a03c4f689025ca70a1c815fd292af22b6261cd",
+      "source_blob": "14e41977752f48fc0f204dc5e5893521a5bd1d30",
+      "preimage": "23d9291b3dcedda36edc4aa4f38856024e3c58f4",
+      "postimage": "14e41977752f48fc0f204dc5e5893521a5bd1d30",
+      "method": "EXACT_SOURCE_AFTER_PREIMAGE_MATCH",
+      "postimage_readback": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/decision-http.ts",
+      "source_pr": 60,
+      "source_commit": "c8a03c4f689025ca70a1c815fd292af22b6261cd",
+      "source_blob": "fa83ce380647f02d8942f01ffbc1981cf1b2494d",
+      "preimage": "e169d335f091c446bb380ee73f450083f917946f",
+      "postimage": "fa83ce380647f02d8942f01ffbc1981cf1b2494d",
+      "method": "EXACT_SOURCE_AFTER_PREIMAGE_MATCH",
+      "postimage_readback": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+      "source_pr": 60,
+      "source_commit": "c8a03c4f689025ca70a1c815fd292af22b6261cd",
+      "source_blob": "a182c632c1714e3c48e6be07142adc7ed87d8f13",
+      "preimage": "2e6c081ad2a5282654707f7fc7278183e7dfb20d",
+      "postimage": "a182c632c1714e3c48e6be07142adc7ed87d8f13",
+      "method": "EXACT_SOURCE_AFTER_PREIMAGE_MATCH",
+      "postimage_readback": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "source_pr": 42,
+      "source_commit": "d8d586e19c824f75a88494a9c3677faac617e81d",
+      "source_blob": "23a90b2e44e8bf7f50ff41f6f1622f77a5c9dd85",
+      "preimage": "33a99c9fc0d1c22b9dee21ee37274988c72736ba",
+      "postimage": "23a90b2e44e8bf7f50ff41f6f1622f77a5c9dd85",
+      "method": "EXACT_SOURCE_AFTER_PREIMAGE_MATCH",
+      "postimage_readback": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+      "source_pr": 42,
+      "source_commit": "d8d586e19c824f75a88494a9c3677faac617e81d",
+      "source_blob": "29ef0758be90aa2851a2631de8ed3aff5e0cc332",
+      "preimage": "d2ae9e7b53fe3a86b356f8453814b2b7d7b2615e",
+      "postimage": "29ef0758be90aa2851a2631de8ed3aff5e0cc332",
+      "method": "EXACT_SOURCE_AFTER_PREIMAGE_MATCH",
+      "postimage_readback": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-stale-commit.ts",
+      "source_pr": 29,
+      "source_commit": "539a3c7f95174190f783debc74e3694d84ca8653",
+      "source_blob": "8e1b7eaab139c3303462bdb5af9b4c679e61b276",
+      "preimage": "9f574a7573538c2a46796dfd650fadbac052dc80",
+      "postimage": "8e1b7eaab139c3303462bdb5af9b4c679e61b276",
+      "method": "EXACT_SOURCE_AFTER_PREIMAGE_MATCH",
+      "postimage_readback": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "source_pr": 29,
+      "source_commit": "539a3c7f95174190f783debc74e3694d84ca8653",
+      "source_blob": "6e0aba2f7aa058cef1b35ecd0c963312e98ef993",
+      "preimage": "5cca27ce239c92a8e3c9f9f92f816f5224562904",
+      "postimage": "6e0aba2f7aa058cef1b35ecd0c963312e98ef993",
+      "method": "EXACT_SOURCE_AFTER_PREIMAGE_MATCH",
+      "postimage_readback": true
+    }
+  ],
+  "integration_records": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/authority-ack.json",
+      "blob": "c43ab41e25f112f1788fc13d6b6923696f007087"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/increment-01.json",
+      "blob": "ab183d90ae95c243f52c39a915b5c403b617e460"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/assembly-01.json",
+      "blob": "dfbbc986ec49f19b1a203b5b051980a9b3ed34c6"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/consumer-acks-01.json",
+      "blob": "9ac979bb649717d7ef9b75c9b89ee87d9bda004f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/verification-01.json",
+      "blob": "061a2fd5b932e2b2205a5db0391a025aa35695cb"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/pending-owners-01.json",
+      "blob": "e4538142db05ea06934d2ffa76888bfadeb94fec"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/increment-02.json",
+      "blob": "3d81ab63b65954ff2a427f86b411208149588c60"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/memory-terminal-authority.json",
+      "blob": "6483e6284be8b01babd0acf33036f86ce27c3b55"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/candidate-C2.json",
+      "blob": "b4f7d19b2a85eafeb534b283102976ab4d48482e"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/consumer-acks-02.json",
+      "blob": "d6843806d1b6c063985928926e607d72f5613a2a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/verification-02.json",
+      "blob": "ddbc6aba4429eb845052b19adc3a3d9e28c9bdaa"
+    }
+  ],
+  "retained_limits": [
+    "C12 recovery implementation is now consumed from c8a03c4; the earlier d8ab snapshot contained the old source. Its four apply.ts hunks retain Finance executor, fresh reconciliation and normal Apply CAS.",
+    "C12/Finance legacy test-oracle compatibility, first-save/lost-register findings and FIN-IND-005 remain open.",
+    "Memory intake changes business-context and analysis-stale-commit only; full historical MI07, C17/X29 and runtime qualification remain open.",
+    "Real local-scanner and assets producers are unchanged. No new approved ClamD endpoint or provisioning was introduced by this advance.",
+    "The nominal run result on d8ab must retain its original W/S identity; this reconciliation neither reruns nor transfers its result to C2.",
+    "candidate-C2 explicitly announces subsequent Decisions20 admission may create C3. Recheck shared target preimages immediately before session23 applies any proposal; this receipt is bounded to the checkpoint above."
+  ],
+  "parent_reported_nominal_evidence": {
+    "run_id": 43639526175,
+    "work_tree": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+    "snapshot": "a54db382b9425e68f0c1dee1754aae80e2665726",
+    "result": "5 real bodies attempted, 5 failed in readManifest before UI",
+    "verification_scope": "Reported by root; this subagent did not poll run/jobs/logs."
+  },
+  "methodology": {
+    "remote": "GitHub MCP GET only",
+    "inputs": "Commit ancestry, complete file lists, untruncated module tree, identical ancestor tree hashes, pinned integration records and PR65 snapshot.",
+    "module_tree_truncated": false,
+    "local_tests": "NOT_RUN",
+    "ci_dispatch": "NONE",
+    "remote_mutations": "NONE",
+    "external_messages": "NONE",
+    "local_artifact": "Scratch receipt only; root may publish within its authorized receipt prefix."
+  }
+}

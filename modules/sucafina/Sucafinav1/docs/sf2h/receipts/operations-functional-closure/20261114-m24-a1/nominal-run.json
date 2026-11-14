@@ -230,8 +230,11 @@
     "runtime_report_preserved": true
   },
   "omni_positive_control": {
-    "status": "MISSING",
-    "note": "Workflow issued one nonce; job log contains no nonce-bound positive control verdict. No pass or not-applicable is inferred."
+    "status": "NOT_APPLICABLE",
+    "reason": "Canonical script/test-ci.ts report() requires a nonce-bound verdict only when runner === bun and the package preloads test-omni-control.ts. This request uses Playwright; no Bun control verdict is required or inferred.",
+    "source_path": "script/test-ci.ts",
+    "source_blob": "6f67619958ce0567ea93dd66c53ae3aca242cb95",
+    "observed": "One workflow nonce, no positive-control verdict line; no Omni execution proof claimed."
   },
   "dedup": {
     "recent_runs_total": 954,

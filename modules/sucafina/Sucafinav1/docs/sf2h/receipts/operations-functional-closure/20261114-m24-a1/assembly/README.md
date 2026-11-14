@@ -1,42 +1,42 @@
-# Operations assembly proposal for session23
+# Operations24 — patch completo de montagem para sessão23
 
-State: READY_PATCH_PENDING_SESSION23_ASSEMBLY_AND_ACTIONS_QUALIFICATION. This shared patch has not been applied. The nominal run is recorded separately and failed before the host mount.
+Estado: **READY_PATCH_PENDING_SESSION23_ASSEMBLY_AND_QUALIFICATION**. Este diretório contém uma proposta inerte. Só a sessão23 aplica os três arquivos compartilhados.
 
-## Exact inputs and consumer
+## Inputs e ordem de aplicação
 
-Product composition: `b62c32940d06c15c04f52b88209d5b4930cf1a3e`.
-Observed stack: `d8ab1d3321a76870ed3092ba043fe1b5781a2c23`.
-Terminal Operations source: `39b50786b8d341d13f98ca2c5ada035a4bd7a46a`.
-Only session23 applies shared host/selection changes. Verify all preimages against the head that session23 accepts. Do not overwrite a later writer.
+A composição usada no run nominal é `d8ab1d3321a76870ed3092ba043fe1b5781a2c23`, produto C `b62c32940d06c15c04f52b88209d5b4930cf1a3e`. O avanço observado até C2/checkpoint `c7c2ffdc113764f7bcf67c07ef2e86b49004bbb1` está registrado em [advanced-input-disposition.json](../advanced-input-disposition.json). Ele não alterou o host, selector, config ou helpers de Operations.
 
-## Payload
+1. Consuma os cinco arquivos próprios listados em [manifest.json](manifest.json), pelos blobs exatos do handoff terminal; o teste de montagem corrige o setup de upload após o commit [0042a959](https://github.com/gustavomhss/Orchestra-SF/commit/0042a95967ad651fe65ac0da216db6af86ed804c). Não importe a árvore antiga inteira de astra-wp04.
+2. Confira os preimages completos. Se o head aceito avançou, reconcilie semanticamente; não sobrescreva outro writer.
+3. Aplique [shared.patch](shared.patch): host compartilhado, reconhecimento do pré-requisito de host e abrangência do projeto E2E. Os postimages completos estão em `postimages/`; os originais, em `preimages/`. As extensões `.txt` mantêm as cópias documentais fora do grafo TypeScript.
+4. Qualifique o grafo pelo script existente `bun run typecheck:e2e`, em `packages/app-shell`, somente em Actions.
+5. Execute [regression-request.json](regression-request.json) e a [requisição nominal](../nominal-request.json) na composição resultante, pelo dispatcher existente e com deduplicação. A primeira inclui os cinco testes de montagem e os dois testes do selector real. Esses sete testes não substituem as cinco jornadas de UI.
 
-1. `operations-support/installation.ts` is new source for the mission24 writer's allowed directory. It assembles actual production factories over the host's one SQLite/source store and real local-operator authentication.
-2. `tests/mount-boundary.test.ts` is a new allowed regression test file. It contains five real assembly checks: unauthenticated denial/no effects; actual Planner/import/document workbench routes; viewer mutation denial; unissued source selector and revoked-session denial; scanner-absent upload refusal with exact source state preserved. These checks are not five browser journey passes.
-3. `preimages/` and `postimages/` contain complete shared `wp04/host.ts` and `wp04/selection.ts`. Original blobs are verified in `manifest.json`.
-4. `shared-only.patch` applies the two shared seams after exact helper/test source intake. `assembly.patch` additionally includes the two new files and should be used only if those new paths are absent.
-5. `direct-bindings.json` identifies the actual source factories and HTTP adapters. `input-subtrees.json` adds 723 exact composed path/blob entries across the explicitly declared complete subtrees, with 541 matching published owner provenance records. Neither artifact claims an exhaustive transitive dependency closure; workspace, npm and native/scanner boundaries stay explicit.
-6. The helper feature-detects the source39 document service disposer while remaining compatible with composed d8ab, whose factory has no disposer. Fixture teardown attempts all registered cleanup operations even if one fails. This repair is statically reviewed and untested.
+## Montagem real
 
-## Resulting assembly
+O limite de anexos de 16 MiB é configurado pelo comando real Settings/save com sua versão corrente; isso permite alcançar o scanner, sem alterar os cálculos financeiros.
 
-The existing host's listener, private temporary directory, SQLite, source lifecycle, local-operator enrollment, synthetic business records, and teardown remain the host lifecycle. It delegates application assembly to the allowed helper. Procurement and C02 use the existing business-services composition. Planner uses PlannerModule. Import and document workbenches are the production HTTP adapters and their real rendered HTML.
+O host conserva seu listener, diretório privado, SQLite, fonte/autorização por registro, autenticação do operador, fixture comercial e teardown. Delega a montagem ao helper próprio `operations-support/installation.ts`, que usa os factories de produção:
 
-The private asset adapter is exactly the same persistence object as the application and services. Document target authorization uses createSfDocumentTargetAuthority. It rechecks actual scoped source identities, current roles, access revision, policy, asset ownership and source incarnation. There is no allow-all target callback.
+- Procurement e C02 pelo business-services atual; Planner pelo `PlannerModule`.
+- Importação pelo `createSfImportServices` e `createSfImportHttp`.
+- Documentos pelo `createSfDocumentServices` e `createSfDocumentHttp`.
+- Assets sobre a mesma persistência autoritativa; fonte documental por `createSfDocumentTargetAuthority`.
+- Idempotência derivada do `Idempotency-Key`, grants mínimos de documentos/receipts, operações necessárias e ações humanas somente para writers.
+- Read-only sem grants de mutação humana; autenticação revogada volta a ser recusada.
 
-Product grants are confined to documents/receipts state, the five needed read/prepare operations (including sf_evidence_get for document-open), and four explicit writer human actions. Read-only accounts have no human actions. Native session/skill/provider entrypoints stay unavailable; they are not simulated.
+Nenhum renderer, parser, handler de negócio, veredicto de scanner ou resposta de sucesso é reimplementado. O descarte respeita os dois contratos publicados do factory documental e sempre descarta business-services; a fixture libera todos os recursos mesmo diante de falha.
 
-POST identity uses the production Idempotency-Key rule. Browser mutations still occur once and existing UI assertions remain unchanged. The proposed selector activates the same host for the exact nominal operations.spec.ts filename while retaining wp04/procurement.spec.ts. It does not widen the selected tests or change the production config.
+## Scanner real: dependência externa ainda pendente
 
-## Real scanner dependency remains explicit
+A montagem chama `scanLocalFile` de produção. Usa apenas um serviço ClamD já aprovado em `127.0.0.1`, com a porta recebida do ambiente do host em `SF_OPERATIONS_CLAMD_PORT`. Não instala nem inicia serviços. Ausência do endpoint causa recusa explícita.
 
-The helper invokes production scanLocalFile, using only a host-owned already approved ClamD service at 127.0.0.1 and the `SF_OPERATIONS_CLAMD_PORT` value. It installs/starts no scanner. Missing endpoint passes null to the production scanner and upload/import admission fails closed. No callback manufactures acceptance. The Actions availability and request allowlist for this environment input are not established here. Session23 must reconcile an approved existing service through the existing CI interface before claiming positive upload/import execution.
+O workflow atual não provisiona esse serviço e a allowlist de `.ci-run.json` não aceita essa variável. Não há endpoint hospedado aprovado demonstrado. A sessão23 precisa resolver essa capacidade com o owner do ambiente antes de qualificar upload/import positivos; não deve inserir veredictos sintéticos nem copiar o servidor falso de testes de protocolo.
 
-The scanner-absent regression intentionally proves refusal and unchanged state; it is not positive scanner, parser or nominal document acceptance evidence.
+## Provas e limites
 
-## Required qualification after intake
+O run nominal publicado em [nominal-run.json](../nominal-run.json) executou os cinco corpos, que falharam em `readManifest`, antes do login ou de qualquer ação comercial. Não valida este postimage.
 
-Run the exact nominal CI-UI-OPERATIONS five-case spec through the current dispatcher, once per changed candidate with deduplication. Run only the new mount-boundary.test.ts regression file for assembly behavior, through Actions. Include the helper/test graph in a package bun typecheck gate; the predecessor's excluded E2E graph remains an explicit gate gap until handled by its owner.
+O check [43640212098](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43640212098) passou em `0042a959`: geração canônica, `bun typecheck` de `modules/sucafina` e guards contra origin/dev. O teste de montagem importa o helper, trazendo esse grafo ao typecheck. O grafo inteiro da UI de Operations permanece pendente do patch de tsconfig e da execução de `typecheck:e2e`.
 
-No positive result is recorded in this proposal. C06 material confirmation, native/AM parity, human timing, PDF/DOCX/OCR, and wider campaign criteria remain outside this payload.
-
+O arquivo de regressão de seleção permanece NOT_RUN até o aceite do selector compartilhado. As regressões HTTP/SQLite são auxiliares. C06 material, native/AM, human timing e outros formatos documentais continuam sem aceite.

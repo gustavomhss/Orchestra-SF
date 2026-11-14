@@ -79,9 +79,13 @@ const records = await store.transaction("procurement", async (snapshot) => {
   if (!reset.ok) throw new Error("Baseline Procurement settings could not be initialized")
   const holders = ProcurementModule.domain.execute(snapshot, actor, {
     page: "Settings", action: "save", version: snapshot.versions.settings!.version,
-    values: { levels: initialProcurementSettings().levels.map((level) => ({ ...level, holderId: actor.id })) },
+    values: {
+      levels: initialProcurementSettings().levels.map((level) => ({ ...level, holderId: actor.id })),
+      // The real private upload path requires a configured limit in bytes before scanning.
+      uploadCap: 16 * 1024 * 1024,
+    },
   }, context)
-  if (!holders.ok) throw new Error("Synthetic approval holder could not be configured")
+  if (!holders.ok) throw new Error("Synthetic approval holder and attachment limit could not be configured")
   const execute = (command: Command) => {
     const result = ProcurementModule.domain.execute(snapshot, actor, command, context)
     if (!result.ok) throw new Error(`Fixture command ${command.page}/${command.action} was refused (${result.status})`)

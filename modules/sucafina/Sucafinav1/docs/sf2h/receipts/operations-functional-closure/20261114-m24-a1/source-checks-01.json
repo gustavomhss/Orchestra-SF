@@ -1,0 +1,84 @@
+{
+  "schema": "operations-source-checks-v1",
+  "W": "0042a95967ad651fe65ac0da216db6af86ed804c",
+  "tree": "ad87005bbc3b02d18652ebb07d87fac904cfcfbf",
+  "workflow": {
+    "path": ".github/workflows/astra-wp04-check.yml",
+    "blob": "dab8d29f69d78ba304325333e03fb8d729fe026e",
+    "branch": "astra-check-wp04",
+    "previous_head": "70255998e3310652c4b7fce33f498e592be0bda9",
+    "expected_head_CAS": true
+  },
+  "run_id": 43640212098,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43640212098",
+  "job_id": 132585909805,
+  "conclusion": "success",
+  "commands": [
+    {
+      "directory": "modules/sucafina/Sucafinav1",
+      "commands": [
+        "bun product/contracts/generate-output-schemas.ts",
+        "bun product/contracts/generate-output-schemas.ts --check",
+        "git diff --exit-code -- product/contracts/output-schemas.ts"
+      ],
+      "result": "PASS"
+    },
+    {
+      "directory": "modules/sucafina",
+      "command": "bun typecheck",
+      "result": "PASS"
+    },
+    {
+      "directory": ".",
+      "command": "bun run check:guards --base origin/dev",
+      "base_sha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+      "result": "PASS_WITH_EXISTING_WARNINGS",
+      "rules": 78,
+      "changed_paths": 687,
+      "gate_findings": 0,
+      "warnings": 11,
+      "errors": 0
+    }
+  ],
+  "warnings": [
+    "WARN apps/cli/package.json:37 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+    "WARN modules/atlas/boundary/package.json:66 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+    "WARN modules/atlas/boundary/package.json:67 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+    "WARN modules/atlas/boundary/package.json:68 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+    "WARN modules/sucafina/package.json:17 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+    "WARN modules/sucafina/package.json:18 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+    "WARN modules/sucafina/package.json:19 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+    "WARN modules/sucafina/package.json:20 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+    "WARN modules/sucafina/package.json:21 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+    "WARN modules/sucafina/package.json:22 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+    "WARN modules/sucafina/Sucafinav1/product/decisions/analysis-acceptance.ts:46 [ts-double-cast] Double cast through unknown bypasses the type checker. Fix the type, or narrow the value with a guard."
+  ],
+  "artifacts": [
+    {
+      "id": 14132055714,
+      "name": "astra-wp04-checks",
+      "size_in_bytes": 15010,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14132055714",
+      "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14132055714/zip",
+      "expired": false,
+      "created_at": "2026-11-14T20:59:09Z",
+      "expires_at": "2027-02-12T20:57:31Z",
+      "updated_at": "2026-11-14T20:59:09Z",
+      "digest": "sha256:c0af0b0dba0d5f521bafa9bb7ad0ced21fa32917a40d42d86697ec0998bd3012",
+      "workflow_run": {
+        "id": 43640212098,
+        "repository_id": 1455724710,
+        "head_repository_id": 1455724710,
+        "head_branch": "astra-check-wp04",
+        "head_sha": "0042a95967ad651fe65ac0da216db6af86ed804c"
+      }
+    }
+  ],
+  "artifact_sha256_verified": "c0af0b0dba0d5f521bafa9bb7ad0ced21fa32917a40d42d86697ec0998bd3012",
+  "coverage": "Module tsconfig includes test/**/*.ts. New mount-boundary regression imports the actual own installation helper, so that graph participates in this package check.",
+  "limits": [
+    "W is own astra-wp04 source lineage, not the d8ab/C2 composed runtime.",
+    "The complete operations.spec/UI helper graph remains outside the existing app/e2e tsconfigs; an exact shared tsconfig patch is delivered.",
+    "Later receipt-only commits do not requalify the entire delivered head; exact checked W remains recorded."
+  ]
+}
