@@ -127,7 +127,7 @@ export function createSfPurchasePreparationVerifier(dependencies: SfAnalysisDepe
         const current = await read(currentCall)
         if (!current) return { status: "unavailable", reason: "analysis-output-unverified" }
         const dossier = output.payload
-        const pending = value.choice.costCoverage.entries.filter((entry): entry is Extract<CostCoverageEntry, { status: "pending" }> => entry.status === "pending")
+        const pending = [...value.choice.costCoverage.entries].filter((entry): entry is Extract<CostCoverageEntry, { status: "pending" }> => entry.status === "pending")
         const missing = value.choice.costCoverage.derivedMissingCategoryIds
         if (dossier.requestRef !== value.request.requestRef || dossier.requestVersion !== value.request.version || dossier.domainApplied !== false || digestSfValue(dossier.alternatives) !== digestSfValue([value.choice.alternativeId]) ||
           digestSfValue(dossier.gaps) !== digestSfValue(value.choice.costCoverage.issues) || pending.some((entry) => !dossier.conditions.some((condition) => condition.category === entry.categoryId && condition.reason === entry.reason)) || missing.some((category) => !dossier.conditions.some((condition) => condition.category === category)) ||
