@@ -1,0 +1,122 @@
+{
+  "schema": "sf-wp07-hosted-test-receipt-v1",
+  "repository": "gustavomhss/Orchestra-SF",
+  "historical_attempt": 13,
+  "observation_id": "13-initial-late",
+  "is_final_candidate": false,
+  "product_sha": "dcde725380e76ff3180b1415e3c0838b9ca7df34",
+  "product_tree": "c9c97786a5fa8692d861d87663f66e7803440514",
+  "ci_snapshot_sha": "66071da10fce65e51cf47b218d019386aef29485",
+  "ci_snapshot_tree": "e2a128a8c33b6b407bd43ecfc0d874ff392bbb1d",
+  "run_id": "43537466887",
+  "job_id": "132269833269",
+  "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43537466887",
+  "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43537466887/job/132269833269",
+  "overall_status": "PASS",
+  "process_exit_code": 0,
+  "counts": {
+    "passed": 2,
+    "failed": 0,
+    "tests": 2,
+    "files": 2,
+    "assertions": null
+  },
+  "log": {
+    "source": "wp07-context/test-13-initial.log",
+    "sha256": "31221c6f79ae524831dc39cf61cb87eec047c6f82a46778d2a6708d1a4be97ae",
+    "lines": 1032,
+    "bytes": 97559,
+    "characters": 97557
+  },
+  "omni_control": {
+    "status": "NOT_APPLICABLE_VALIDATED",
+    "nonce": "14a4986a5c35f7035cf270962403fab9",
+    "canonical_validation": {
+      "attempt": "13-initial",
+      "valid": true,
+      "verdict": "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+      "nonce": "14a4986a5c35f7035cf270962403fab9"
+    },
+    "scope": "Focused run made no omni spawn/delegation; not native execution evidence."
+  },
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/wp07/browser-ui.test.ts",
+      "Sucafinav1/test/product/wp07/browser-contribution.test.ts"
+    ],
+    "env": {}
+  },
+  "request_sha256": "fc6ee7ee2cb0888378ff6e88b7c46700856792c3fdc6e41a3064fdd5a3eebe3f",
+  "request_blob_sha": "7ffcbc5eb8bad0d48ae8c56a08b056e17597ebcf",
+  "snapshot_proof": {
+    "attempt": 13,
+    "product_sha": "dcde725380e76ff3180b1415e3c0838b9ca7df34",
+    "snapshot_sha": "66071da10fce65e51cf47b218d019386aef29485",
+    "snapshot_tree": "e2a128a8c33b6b407bd43ecfc0d874ff392bbb1d",
+    "compare_url": "https://github.com/gustavomhss/Orchestra-SF/compare/dcde725380e76ff3180b1415e3c0838b9ca7df34...66071da10fce65e51cf47b218d019386aef29485",
+    "commits": 1,
+    "only_changed_paths": [
+      {
+        "path": ".ci-run.json",
+        "blob_sha": "7ffcbc5eb8bad0d48ae8c56a08b056e17597ebcf",
+        "status": "added"
+      }
+    ],
+    "product_test_config_fixture_blobs_identical": true
+  },
+  "canonical_omni_validation": {
+    "attempt": "13-initial",
+    "valid": true,
+    "verdict": "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+    "nonce": "14a4986a5c35f7035cf270962403fab9"
+  },
+  "identity_scope": "Original push run became visible after the empty metadata retry. The same exact browser fixture/tree and request as the designated final browser run were exercised. Additional observed evidence only; do not add these two results to final_tests again.",
+  "native_receipts": [],
+  "proof_policy": "Named annual functional and contribution-view assertions passed in their declared controlled test host. This neither qualifies native execution nor supplies broader historical authorization or a general performance benchmark.",
+  "tests": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/browser-ui.test.ts",
+      "name": "Chromium preserves the annual agenda, recovers a lost response and removes revoked content",
+      "status": "PASS",
+      "log_line": 961,
+      "duration_ms": 37919.12
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/browser-contribution.test.ts",
+      "name": "Chromium reauthorizes contribution navigation and discards revoked or superseded results",
+      "status": "PASS",
+      "log_line": 995,
+      "duration_ms": 3523.92
+    }
+  ],
+  "scope_period": {
+    "start": "2027-01-01",
+    "end": "2027-12-31"
+  },
+  "observed_concurrency": {
+    "status": "OVERLAP_OBSERVED",
+    "requirement_maximum_in_flight": 1,
+    "runs": [
+      {
+        "run": 43537439411,
+        "created_at": "2026-11-14T00:56:24Z",
+        "updated_at": "2026-11-14T00:58:57Z"
+      },
+      {
+        "run": 43537466887,
+        "created_at": "2026-11-14T00:56:40Z",
+        "updated_at": "2026-11-14T00:59:06Z"
+      }
+    ],
+    "reason": "An initially absent push run appeared after an unchanged-tree metadata retry. At the retry, repeated GitHub Actions branch/all-run queries returned no run. Later observation showed both completed and overlapping. This does not satisfy the strict one-in-flight requirement; no claim of perfect adherence is made.",
+    "unit14_started_after_both_completed": true,
+    "no_more_retries_while_pending": true
+  },
+  "test_scopes": {
+    "Chromium preserves the annual agenda, recovers a lost response and removes revoked content": "Full 2027 Planner/SQLite/HTTP/browser journey with unchanged 5s interactions and controlled evidence/history/navigation adapters.",
+    "Chromium reauthorizes contribution navigation and discards revoked or superseded results": "Actual browser/view over complete explicit fixture-not-native-evidence HTTP envelopes. Missing provenance denial, rendering, retry and navigation reauthorization; not production C11 output/native execution."
+  }
+}

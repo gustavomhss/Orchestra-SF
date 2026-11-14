@@ -1,0 +1,117 @@
+{
+  "schema": "sf-wp07-hosted-test-receipt-v1",
+  "repository": "gustavomhss/Orchestra-SF",
+  "historical_attempt": 12,
+  "is_final_candidate": false,
+  "product_sha": "dd30b8238143306958ef070cfb9a670544a2ac89",
+  "product_tree": "ac91bf3e7433e8b70b2f1b00244007484d10f273",
+  "ci_snapshot_sha": "1fcc5a04be1f26edaeeea0d2a5efc20501cc1d05",
+  "ci_snapshot_tree": "47e8dd798c93d3d459300604d1e227e562dc3cf7",
+  "run_id": "43536210514",
+  "job_id": "132265720831",
+  "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43536210514",
+  "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43536210514/job/132265720831",
+  "overall_status": "FAIL",
+  "process_exit_code": 1,
+  "counts": {
+    "passed": 1,
+    "failed": 1,
+    "tests": 2,
+    "files": 2,
+    "assertions": null
+  },
+  "log": {
+    "source": "wp07-context/test-12.log",
+    "sha256": "02b3b3cc80ab9c2db4e19136b0620015f95ac0b827d58d55b8986c3b6259dcbf",
+    "lines": 979,
+    "bytes": 83936,
+    "characters": 83934
+  },
+  "omni_control": {
+    "status": "NOT_APPLICABLE_VALIDATED",
+    "nonce": "d814e27b056d27adfd9bec05bfa832c6",
+    "canonical_validation": {
+      "attempt": 12,
+      "valid": true,
+      "verdict": "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+      "nonce": "d814e27b056d27adfd9bec05bfa832c6"
+    },
+    "scope": "Focused run made no omni spawn/delegation; not native execution evidence."
+  },
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/wp07/browser-ui.test.ts",
+      "Sucafinav1/test/product/wp07/browser-contribution.test.ts"
+    ],
+    "env": {}
+  },
+  "request_sha256": "fc6ee7ee2cb0888378ff6e88b7c46700856792c3fdc6e41a3064fdd5a3eebe3f",
+  "request_blob_sha": "7ffcbc5eb8bad0d48ae8c56a08b056e17597ebcf",
+  "snapshot_proof": {
+    "attempt": 12,
+    "product_sha": "dd30b8238143306958ef070cfb9a670544a2ac89",
+    "snapshot_sha": "1fcc5a04be1f26edaeeea0d2a5efc20501cc1d05",
+    "snapshot_tree": "47e8dd798c93d3d459300604d1e227e562dc3cf7",
+    "compare_url": "https://github.com/gustavomhss/Orchestra-SF/compare/dd30b8238143306958ef070cfb9a670544a2ac89...1fcc5a04be1f26edaeeea0d2a5efc20501cc1d05",
+    "commits": 1,
+    "only_changed_paths": [
+      {
+        "path": ".ci-run.json",
+        "blob_sha": "7ffcbc5eb8bad0d48ae8c56a08b056e17597ebcf",
+        "status": "added"
+      }
+    ],
+    "product_test_config_fixture_blobs_identical": true
+  },
+  "canonical_omni_validation": {
+    "attempt": 12,
+    "valid": true,
+    "verdict": "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+    "nonce": "d814e27b056d27adfd9bec05bfa832c6"
+  },
+  "identity_scope": "W/S/tree and request are bound to GitHub MCP snapshot proof. Request content was independently read by immutable snapshot SHA, with both SHA-256 and Git blob SHA checked. S also appears in the retained hosted log.",
+  "native_receipts": [],
+  "proof_policy": "Historical candidate only. This does not qualify a later product or change the 86 current acceptance statuses. Complete contribution envelopes are display fixtures, not SessionV2 execution or observed native receipts.",
+  "tests": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/browser-ui.test.ts",
+      "name": "Chromium preserves the annual agenda, recovers a lost response and removes revoked content",
+      "status": "FAIL",
+      "log_line": 914,
+      "duration_ms": 11970.66
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/browser-contribution.test.ts",
+      "name": "Chromium reauthorizes contribution navigation and discards revoked or superseded results",
+      "status": "PASS",
+      "log_line": 951,
+      "duration_ms": 3549.49
+    }
+  ],
+  "annual_browser_performance_status": "BLOCKED_EXTERNAL",
+  "annual_failure": "Second annual preserve measured 5172 ms and exceeded the unchanged 5000 ms action deadline. Inclusive timings overlap and must not be added as independent cost components.",
+  "annual_measurements": {
+    "operation": "review-preserve",
+    "milliseconds": 5172,
+    "inclusiveDurations": true,
+    "log_line": 867,
+    "currentSnapshots": {
+      "calls": 162,
+      "milliseconds": 2711
+    },
+    "state.transaction": {
+      "calls": 2,
+      "milliseconds": 969
+    },
+    "host.revalidate": {
+      "calls": 70,
+      "milliseconds": 3922
+    }
+  },
+  "test_scopes": {
+    "Chromium reauthorizes contribution navigation and discards revoked or superseded results": "Actual Chromium/browser/view with complete shared-schema envelope labelled fixture-not-native-evidence. Missing provenance denial, provenance/source rendering, retry recovery and navigation reauthorization passed. The HTTP display fixture is not production C11 reading or native execution."
+  }
+}

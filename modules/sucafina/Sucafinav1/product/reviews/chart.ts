@@ -1,3 +1,4 @@
+import { isReviewSensitivityBound } from "./sensitivity.ts"
 import { deflateSync } from "node:zlib"
 import { digestSfValue } from "../contracts/canonical.ts"
 import { isSfPeriod } from "../contracts/validation.ts"
@@ -48,11 +49,14 @@ export function renderReviewChart(projection: DomainProjection, chart: ReviewCha
       pixel(x, y + 1, color)
     }
   }
-  const x = (date: number) => Math.round(first === last ? width / 2 : 30 + (date - first) / (last - first) * (width - 60))
-  const y = (value: number) => Math.round(span === 0 ? height / 2 : 20 + (maximum - value) / span * (height - 40))
+  const x = (date: number) => Math.round(first === last ? width / 2 : 65 + (date - first) / (last - first) * (width - 90))
+  const y = (value: number) => Math.round(span === 0 ? height / 2 : 25 + (maximum - value) / span * (height - 65))
   const axis = [80, 80, 80]
-  line(30, y(0), width - 30, y(0), axis)
-  line(30, 20, 30, height - 20, axis)
+  line(65, y(0), width - 25, y(0), axis)
+  line(65, 25, 65, height - 40, axis)
+  ;[minimum, maximum, 0].filter((value, index, values) => values.indexOf(value) === index).forEach((value) => rasterLabel(pixels, width, height, axisNumber(value), 2, y(value) - 3))
+  rasterLabel(pixels, width, height, new Date(first).toISOString().slice(0, 10), 65, height - 18)
+  if (last !== first) rasterLabel(pixels, width, height, new Date(last).toISOString().slice(0, 10), width - 85, height - 18)
   const colors = [[0, 103, 69], [0, 91, 173], [172, 77, 0], [117, 49, 150]]
   chart.series.forEach((series: Series, index: number) => {
     const sorted = [...series.values].sort((left, right) => left.period.start.localeCompare(right.period.start))
@@ -98,7 +102,7 @@ export function renderReviewBars(projection: DomainProjection, chart: ReviewChar
   const colors = [[0, 103, 69], [0, 91, 173], [172, 77, 0], [117, 49, 150]]
   return groups.flatMap((group, groupIndex) => {
     const scale = scales[groupIndex]!
-    const position = (value: number) => Math.round(scale.span === 0 ? width / 2 : 30 + (value - scale.minimum) / scale.span * (width - 60))
+    const position = (value: number) => Math.round(scale.span === 0 ? width / 2 : 65 + (value - scale.minimum) / scale.span * (width - 90))
     return Array.from({ length: Math.ceil(group.length / 8) }, (_, page) => {
       const pixels = new Uint8Array(width * height * 3).fill(255)
       const put = (x: number, y: number, color: readonly number[]) => {
@@ -110,7 +114,11 @@ export function renderReviewBars(projection: DomainProjection, chart: ReviewChar
       }
       const zero = position(0)
       for (let y = 0; y < height - 40; y++) put(zero, y + 20, [80, 80, 80])
+      rasterLabel(pixels, width, height, axisNumber(scale.minimum), 65, height - 16)
+      rasterLabel(pixels, width, height, axisNumber(scale.maximum), width - 80, height - 16)
+      if (scale.minimum < 0 && scale.maximum > 0) rasterLabel(pixels, width, height, "0", zero, height - 16)
       group.slice(page * 8, (page + 1) * 8).forEach((entry, row) => {
+        rasterLabel(pixels, width, height, String(row + 1), 12, 31 + row * 25)
         if (typeof entry.value.value !== "number") return
         const end = position(entry.value.value)
         const start = Math.min(zero, end)
@@ -144,7 +152,10 @@ export function renderReviewTimeline(projection: DomainProjection, chart: Review
       pixels[offset + 2] = color[2]!
     }
     for (let x = 30; x < width - 30; x++) put(x, 20, [80, 80, 80])
+    rasterLabel(pixels, width, height, projection.context.period.start, 30, 4)
+    rasterLabel(pixels, width, height, projection.context.period.end, width - 90, 4)
     items.slice(page * 8, (page + 1) * 8).forEach((item: Item, row: number) => {
+      rasterLabel(pixels, width, height, String(row + 1), 8, 33 + row * 25)
       if (item.date === null || item.date < projection.context.period.start || item.date > projection.context.period.end) return
       const date = Date.parse(`${item.date}T00:00:00Z`)
       const x = Math.round(start === end ? width / 2 : 30 + (date - start) / (end - start) * (width - 60))
@@ -170,7 +181,7 @@ export function renderReviewWaterfall(projection: DomainProjection, chart: Revie
   if (!Number.isFinite(span)) return
   const width = 600
   const height = 260
-  const position = (value: number) => Math.round(span === 0 ? width / 2 : 30 + (value - minimum) / span * (width - 60))
+  const position = (value: number) => Math.round(span === 0 ? width / 2 : 65 + (value - minimum) / span * (width - 90))
   return Array.from({ length: Math.ceil(segments.length / 8) }, (_, page) => {
     const pixels = new Uint8Array(width * height * 3).fill(255)
     const put = (x: number, y: number, color: readonly number[]) => {
@@ -181,7 +192,10 @@ export function renderReviewWaterfall(projection: DomainProjection, chart: Revie
       pixels[offset + 2] = color[2]!
     }
     for (let y = 20; y < height - 20; y++) put(position(0), y, [80, 80, 80])
+    rasterLabel(pixels, width, height, axisNumber(minimum), 65, height - 13)
+    rasterLabel(pixels, width, height, axisNumber(maximum), width - 80, height - 13)
     segments.slice(page * 8, (page + 1) * 8).forEach((segment, row) => {
+      rasterLabel(pixels, width, height, String(row + 1), 12, 31 + row * 25)
       if (segment.start === null || segment.end === null) return
       const start = position(segment.start)
       const end = position(segment.end)
@@ -193,8 +207,8 @@ export function renderReviewWaterfall(projection: DomainProjection, chart: Revie
 }
 
 /** BI11 is a scatter of producer-evaluated points; it never interpolates a threshold. */
-export function renderReviewSensitivity(chart: ReviewChart | undefined): Uint8Array | undefined {
-  if (!chart || chart.status !== "ok" || chart.viewId !== "BI11" || !chart.sensitivity || typeof chart.sensitivity.parameterUnit !== "string" || !chart.sensitivity.parameterUnit.trim() || typeof chart.sensitivity.resultUnit !== "string" || !chart.sensitivity.resultUnit.trim() || !decodeSfOperationOutput("sf_sensitivity_evaluate", chart.sensitivity.result).ok) return
+export function renderReviewSensitivity(projection: DomainProjection, chart: ReviewChart | undefined): Uint8Array | undefined {
+  if (!isReviewSensitivityBound(projection, chart) || !chart || chart.status !== "ok" || chart.viewId !== "BI11" || !chart.sensitivity || typeof chart.sensitivity.parameterUnit !== "string" || !chart.sensitivity.parameterUnit.trim() || typeof chart.sensitivity.resultUnit !== "string" || !chart.sensitivity.resultUnit.trim() || !decodeSfOperationOutput("sf_sensitivity_evaluate", chart.sensitivity.result).ok) return
   const points = chart.sensitivity.result.evaluated.filter((point) => Number.isFinite(point.parameterValue) && point.value !== null && Number.isFinite(point.value))
   if (!points.length) return
   const minX = points.reduce((value, point) => Math.min(value, point.parameterValue), Infinity)
@@ -212,14 +226,53 @@ export function renderReviewSensitivity(chart: ReviewChart | undefined): Uint8Ar
     pixels[offset + 1] = color[1]!
     pixels[offset + 2] = color[2]!
   }
-  for (let x = 30; x < width - 30; x++) put(x, height - 20, [80, 80, 80])
-  for (let y = 20; y < height - 20; y++) put(30, y, [80, 80, 80])
+  for (let x = 65; x < width - 25; x++) put(x, height - 40, [80, 80, 80])
+  for (let y = 25; y < height - 40; y++) put(65, y, [80, 80, 80])
+  rasterLabel(pixels, width, height, axisNumber(minX), 65, height - 18)
+  rasterLabel(pixels, width, height, axisNumber(maxX), width - 80, height - 18)
+  rasterLabel(pixels, width, height, axisNumber(minY), 2, height - 43)
+  rasterLabel(pixels, width, height, axisNumber(maxY), 2, 22)
   points.forEach((point) => {
-    const x = Math.round(30 + (maxX === minX ? 0.5 : (point.parameterValue - minX) / (maxX - minX)) * (width - 60))
-    const y = Math.round(20 + (maxY === minY ? 0.5 : (maxY - point.value!) / (maxY - minY)) * (height - 40))
+    const x = Math.round(65 + (maxX === minX ? 0.5 : (point.parameterValue - minX) / (maxX - minX)) * (width - 90))
+    const y = Math.round(25 + (maxY === minY ? 0.5 : (maxY - point.value!) / (maxY - minY)) * (height - 65))
     for (let dx = -3; dx <= 3; dx++) for (let dy = -3; dy <= 3; dy++) if (dx * dx + dy * dy <= 9) put(x + dx, y + dy, [0, 91, 173])
   })
   return encodePng(pixels, width, height)
+}
+
+function axisNumber(value: number) {
+  return Math.abs(value) >= 1e7 || (value !== 0 && Math.abs(value) < 0.001) ? value.toExponential(1) : String(Number(value.toPrecision(5)))
+}
+
+/** Numeric axis labels are embedded in the immutable raster, independent of Office font substitution. */
+function rasterLabel(pixels: Uint8Array, width: number, height: number, text: string, x: number, y: number) {
+  const glyphs: Record<string, string[]> = {
+    "0": ["01110", "10001", "10011", "10101", "11001", "10001", "01110"],
+    "1": ["00100", "01100", "00100", "00100", "00100", "00100", "01110"],
+    "2": ["01110", "10001", "00001", "00010", "00100", "01000", "11111"],
+    "3": ["11110", "00001", "00001", "01110", "00001", "00001", "11110"],
+    "4": ["00010", "00110", "01010", "10010", "11111", "00010", "00010"],
+    "5": ["11111", "10000", "10000", "11110", "00001", "00001", "11110"],
+    "6": ["01110", "10000", "10000", "11110", "10001", "10001", "01110"],
+    "7": ["11111", "00001", "00010", "00100", "01000", "01000", "01000"],
+    "8": ["01110", "10001", "10001", "01110", "10001", "10001", "01110"],
+    "9": ["01110", "10001", "10001", "01111", "00001", "00001", "01110"],
+    "-": ["00000", "00000", "00000", "11111", "00000", "00000", "00000"],
+    "+": ["00000", "00100", "00100", "11111", "00100", "00100", "00000"],
+    ".": ["00000", "00000", "00000", "00000", "00000", "00110", "00110"],
+    "e": ["00000", "00000", "01110", "10001", "11111", "10000", "01111"],
+  }
+  ;[...text].forEach((character, index) => {
+    glyphs[character]?.forEach((row, dy) => [...row].forEach((bit, dx) => {
+      const px = Math.round(x + index * 6 + dx)
+      const py = Math.round(y + dy)
+      if (bit !== "1" || px < 0 || py < 0 || px >= width || py >= height) return
+      const offset = (py * width + px) * 3
+      pixels[offset] = 70
+      pixels[offset + 1] = 70
+      pixels[offset + 2] = 70
+    }))
+  })
 }
 
 function encodePng(pixels: Uint8Array, width: number, height: number) {
