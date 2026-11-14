@@ -33,9 +33,9 @@
         "bytes": 34388
       },
       "postimage": {
-        "gitBlob": "ff83d341a0b0effc066616f17c7d92a3419bef99",
-        "sha256": "0df31e68bc08b583edcbafcae0d2f99f1fcb4c340f36c690dfd818476b0a2af4",
-        "bytes": 43854
+        "gitBlob": "a7d5b4c8346c8f092b4497e7ae8c44aa5f8b53c9",
+        "sha256": "5b5cababd46f64fc8b7187df3a24da7cab832276f843a2f4b314e0a7b27dd4ef",
+        "bytes": 43863
       }
     },
     {
@@ -52,9 +52,9 @@
         "bytes": 11421
       },
       "postimage": {
-        "gitBlob": "e52b6baaf0b30edb7a289e070287c9027eb364cf",
-        "sha256": "688318f86382a12446b7803d07ff435cee26405feb6ddd246c46b5ed4abf746d",
-        "bytes": 14155
+        "gitBlob": "65c5fd04f6af34a241e6cc0bd40cd968cdc6e353",
+        "sha256": "87915c7647c66d457be91176bbc8a2d566ce7e1bb1afe1f643e8033c1e6ce1ce",
+        "bytes": 14203
       }
     }
   ],
@@ -66,9 +66,9 @@
   },
   "patch": {
     "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/atlas-process-restart/0001-restore-atlas-process-proof.patch",
-    "gitBlob": "4f328019012fa23a07df0b17152f792861ff7c77",
-    "sha256": "d41bc56a3fe281d9cdd859493de4a9ddc2b155ea54c02c0157650e75c2b5a749",
-    "bytes": 28999
+    "gitBlob": "0145865bd2aedad8588f4b83e7193c9f2b537e5f",
+    "sha256": "88b469dfcde4b68fadcf09012cf9ecc186a41fd1e5385b2dca87a03b21327cfb",
+    "bytes": 29056
   },
   "dependencyClosure": {
     "rule": "Exact composedInput tree, overlay only the two listed test/helper postimages. Every other runtime, engine, host, fixture, config and dependency blob remains that input tree. No composed runtime is authored or copied into the PR38 product tree.",
@@ -82,7 +82,7 @@
     }
   },
   "ci": {
-    "state": "NOT_RUN_AT_PUBLICATION",
+    "state": "CORRECTED_AFTER_ATTEMPT_1_PENDING_HOSTED_REVALIDATION",
     "selection": [
       "Sucafinav1/test/product/wp14/source-access-atlas.test.ts"
     ],

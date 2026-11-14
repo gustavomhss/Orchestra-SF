@@ -132,11 +132,11 @@ try {
   assert.deepEqual(authorized.matches[0]?.evidenceRefs, record.envelope.evidenceRefs)
   assert.deepEqual(record.envelope.caseRef, caseRef)
   assert.equal(record.envelope.scannerReceipt.digest, record.recordDigest)
-  const source = record.envelope.dependencies.find((ref) => ref.kind === "record" && ref.target.surface === "dashboard")
-  assert.ok(source, "The persisted record must retain its original source dependency")
-  const originalCapture = await atlas.readOriginalCapture(caseRef, source.refDigest, authorizedCall)
+  const capturedSource = record.envelope.dependencies.find((ref) => ref.kind === "record" && ref.target.surface === "dashboard")
+  assert.ok(capturedSource, "The persisted record must retain its original source dependency")
+  const originalCapture = await atlas.readOriginalCapture(caseRef, capturedSource.refDigest, authorizedCall)
   assert.ok(originalCapture, "The canonical protected reader must validate the persisted capture")
-  assert.deepEqual(originalCapture.ref, source)
+  assert.deepEqual(originalCapture.ref, capturedSource)
   const persisted = { eventId: record.envelope.eventId, recordDigest: record.recordDigest, envelope: record.envelope,
     originalCapture, captureDigest: digestSfValue(originalCapture) }
   trace("canonical-record-and-capture:verified")
@@ -145,14 +145,14 @@ try {
   const outsider = await recall(request, call())
   trace("outsider-recall:done", outsider.status)
   assert.deepEqual(outsider, { status: "unavailable" }, "Outsider must receive no matches or derived metadata")
-  assert.equal(await atlas.readOriginalCapture(caseRef, source.refDigest, call()), undefined)
+  assert.equal(await atlas.readOriginalCapture(caseRef, capturedSource.refDigest, call()), undefined)
   session.id = "bob"
   session.evidence = false
   trace("revoked-recall:start")
   const revoked = await recall(request, call())
   trace("revoked-recall:done", revoked.status)
   assert.deepEqual(revoked, { status: "unavailable" }, "Revoked evidence must suppress the entire consumer result")
-  const deniedSource = await resolveEvidence(source, call())
+  const deniedSource = await resolveEvidence(capturedSource, call())
   assert.equal(deniedSource.state, "unavailable")
   assert.equal(deniedSource.authorizedProjection, undefined)
   assert.equal(deniedSource.currentRef, undefined)

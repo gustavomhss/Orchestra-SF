@@ -172,7 +172,7 @@ test("protected Atlas original binds cross-principal continuity after store reop
     if (recall.status !== "ok") throw new Error("Actual Atlas recall unavailable after child exit")
     expect(recall.records).toHaveLength(1)
     expect(recall.records[0]?.recordDigest).toBe(committed.recordDigest)
-    expect(recall.records[0]?.envelope).toEqual(envelope)
+    expect<unknown>(recall.records[0]?.envelope).toEqual(envelope)
     const caseRecall = createSfCaseRecall({ host: reopened.host, cases: reopened.cases, memory: reopened.atlas, selectCandidates: async () => [{ id: "case", incarnation: "case-inc" }], featuresForCase: async (value, call) => deriveAuthorizedRecallFeatures(value, call), runtimeVersions: { boundaryVersion: "1", schemaVersion: "1", manifestVersion: "1", skillVersion: "1" }, proveContinuity: reopened.proveContinuity, rank: rankSfAtlasRecall })
     const recallRequest = { caseRef: { id: "case", incarnation: "case-inc", version: 1 }, limit: 10, scope: { query: "renewal", recallScope: { cases: [{ id: "case", incarnation: "case-inc", version: 1 }], period, includeHistorical: false } } }
     const caseMatches = await caseRecall(recallRequest, binding("bob"))
