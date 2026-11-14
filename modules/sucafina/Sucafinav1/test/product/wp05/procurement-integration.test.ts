@@ -111,6 +111,8 @@ test("real procurement registry and port supply scoped BI stock and deny revoked
     const browser = await localBrowser()
     try {
       const page = await browser.browser.newPage()
+      page.setDefaultTimeout(10000)
+      page.setDefaultNavigationTimeout(10000)
       await page.goto("about:blank")
       await page.evaluate(async (input) => {
         const module = await import(input.url)

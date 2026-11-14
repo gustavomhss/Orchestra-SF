@@ -39,6 +39,8 @@ test("BI consumes the persisted Planner sensitivity and rejects a changed criter
     const browser = await localBrowser()
     try {
       const page = await browser.browser.newPage()
+      page.setDefaultTimeout(10000)
+      page.setDefaultNavigationTimeout(10000)
       await page.goto("about:blank")
       await page.evaluate(async (input) => {
         const module = await import(input.url)
@@ -84,6 +86,8 @@ test("persisted zero and unknown training keep every component and sensitivity p
         expect(result.value.decision.scenario).toEqual(fixture.selectedResult)
         expect(result.value.decision.sensitivity).toEqual(fixture.saved.sensitivity)
         const page = await browser.browser.newPage()
+        page.setDefaultTimeout(10000)
+        page.setDefaultNavigationTimeout(10000)
         try {
           await page.goto("about:blank")
           await page.evaluate(async (input) => {

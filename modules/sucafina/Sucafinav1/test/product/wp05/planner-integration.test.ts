@@ -245,6 +245,8 @@ async function inspectBiProjection(
   const fixture = await localBrowser()
   try {
     const page = await fixture.browser.newPage()
+    page.setDefaultTimeout(10000)
+    page.setDefaultNavigationTimeout(10000)
     await page.goto("about:blank")
     await page.evaluate(async (input) => {
       const module = await import(input.url)
