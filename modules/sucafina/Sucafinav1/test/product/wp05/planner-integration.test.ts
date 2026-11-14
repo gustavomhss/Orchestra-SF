@@ -243,18 +243,44 @@ async function inspectBiProjection(
   if (!built.success || !built.outputs[0]) throw new Error("analytics browser bundle failed")
   const url = `data:text/javascript;base64,${Buffer.from(await built.outputs[0].text()).toString("base64")}`
   const fixture = await localBrowser()
+  const deadline = {
+    milliseconds: 60000,
+    phase: "open-page" as "open-page" | "render" | "inspect",
+    timer: undefined as ReturnType<typeof setTimeout> | undefined,
+    error: undefined as Error | undefined,
+  }
+  const requireActive = () => {
+    if (deadline.error) throw deadline.error
+  }
   try {
-    const page = await fixture.browser.newPage()
-    page.setDefaultTimeout(10000)
-    page.setDefaultNavigationTimeout(10000)
-    await page.goto("about:blank")
-    await page.evaluate(async (input) => {
-      const module = await import(input.url)
-      document.body.append(module.renderBiView(input.request, input.value.projection, (selection: unknown) => { document.body.dataset.selection = JSON.stringify(selection) }, input.value.presentation))
-    }, { url, request, value })
-    await inspect(page)
+    const expired = new Promise<never>((_, reject) => {
+      deadline.timer = setTimeout(() => {
+        deadline.error = new Error(`WP05 browser ${request.viewId} exceeded ${deadline.milliseconds}ms during ${deadline.phase}`)
+        reject(deadline.error)
+      }, deadline.milliseconds)
+    })
+    const body = async () => {
+      const page = await fixture.browser.newPage()
+      requireActive()
+      page.setDefaultTimeout(10000)
+      page.setDefaultNavigationTimeout(10000)
+      await page.goto("about:blank")
+      requireActive()
+      deadline.phase = "render"
+      await page.evaluate(async (input) => {
+        const module = await import(input.url)
+        document.body.append(module.renderBiView(input.request, input.value.projection, (selection: unknown) => { document.body.dataset.selection = JSON.stringify(selection) }, input.value.presentation))
+      }, { url, request, value })
+      requireActive()
+      deadline.phase = "inspect"
+      await inspect(page)
+    }
+    // Promise.race installs rejection handlers on both promises. A late browser
+    // rejection remains handled after the deadline wins; closing the fixture
+    // below terminates the browser operations instead of starting a retry.
+    await Promise.race([body(), expired])
   } finally {
+    if (deadline.timer) clearTimeout(deadline.timer)
     await fixture.dispose()
   }
 }
-
