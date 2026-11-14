@@ -1,0 +1,95 @@
+{
+  "schema": "sf2h-evidence-census-v1",
+  "mission": "coverage-reconciliation",
+  "attempt": "20261114T191555Z",
+  "repository": "gustavomhss/Orchestra-SF",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "campaign_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+  "mission_commit": "c708ec0609dbfc95b259707d8c38481617f74f11",
+  "parent_sha": "c21a990c57b714cd60bb7f915beb6be51acbafdb",
+  "allowed_write_prefixes": [
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/coverage-reconciliation/",
+    "script/sf2h/coverage-reconciliation/"
+  ],
+  "counts": {
+    "work_packages": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610
+  },
+  "campaign_criteria": 50,
+  "canonical_id_note": "The50 campaign criteria include39 CAMP.* IDs and11 sf2h-integral-20261112.* IDs. They are preserved, never renamed.",
+  "counts_by_wp": {
+    "CAMP": 50,
+    "WP00": 85,
+    "WP01": 75,
+    "WP02": 78,
+    "WP03": 112,
+    "WP04": 111,
+    "WP05": 108,
+    "WP06": 140,
+    "WP07": 86,
+    "WP08": 132,
+    "WP09": 112,
+    "WP10": 171,
+    "WP11": 83,
+    "WP12": 108,
+    "WP13": 68,
+    "WP14": 91
+  },
+  "assessment_counts_not_progress": {
+    "implemented": {
+      "UNKNOWN": 750,
+      "PARTIAL": 833,
+      "YES": 23,
+      "NO": 4
+    },
+    "integrated": {
+      "UNKNOWN": 1154,
+      "PARTIAL": 445,
+      "YES": 6,
+      "NO": 5
+    },
+    "proven": {
+      "UNKNOWN": 1050,
+      "PARTIAL": 549,
+      "YES": 6,
+      "NO": 5
+    },
+    "accepted": {
+      "NOT_ACCEPTED": 1610
+    }
+  },
+  "current_accepted_candidate_C": null,
+  "state_definitions": {
+    "YES": "The entire literal criterion at the stated limited scope is established by cited evidence; not task/global acceptance.",
+    "PARTIAL": "A named part is supported; one or more clauses/consumers/proofs remain open. No numeric fraction is assigned.",
+    "NO": "A cited observed counterexample contradicts this axis at the specified pin. Not a statement about every tree.",
+    "UNKNOWN": "Insufficient current observation; does not mean unimplemented or zero progress.",
+    "NOT_ACCEPTED": "No final same-C acceptance is established; implementation and scoped proof are separate."
+  },
+  "no_product_execution": true,
+  "no_plan_or_checkpoint_edits": true,
+  "read_only_remote_transport": "GitHub MCP",
+  "acceptance_rule": "All final requirements and three independent reviews belong to one C; D archives admitted evidence without claiming CI ran on D.",
+  "limits": [
+    "Inspection is selective and published proof is scope-bound; all missing conclusions remain explicit UNKNOWN.",
+    "Final reviewer heads advanced; their late semantic changes are not included except the separately inspected PR29 receipt update.",
+    "Do not use the inherited intel-resume diff as a product merge.",
+    "Effort is a conditional low-confidence engineering band; not a measured completion date."
+  ],
+  "entrypoints": [
+    "HANDOFF.md",
+    "remaining-work.json",
+    "criteria/",
+    "tasks.json",
+    "contracts.json",
+    "sources.json",
+    "runs.json",
+    "heads.json",
+    "anomalies.json",
+    "output-consumption.json",
+    "reading-receipt.json",
+    "verification.json"
+  ]
+}

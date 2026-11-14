@@ -1,0 +1,981 @@
+{
+  "schema": "sf2h-anomalies-v1",
+  "meaning": "Only exact observed unconsumed blobs, overlaps, failed assertions and explicit unknown consumption. A proposed patch is not an applied delivery.",
+  "anomalies": [
+    {
+      "audit_partition": "root",
+      "id": "X29-THRESHOLD",
+      "classification": "FAILED_INTEGRATED_PROOF",
+      "owner": "WP10.T01 / WP13.T03",
+      "task_ids": [
+        "WP10.T01",
+        "WP13.T03"
+      ],
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/integration/planner-sources.ts",
+        "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp10/portfolio-composition/portfolio-exact-threshold.test.ts"
+      ],
+      "sources": [
+        "ROOT-29-c09-runs_X29-dispatch.json"
+      ],
+      "run_id": 43628663680,
+      "W": "813806af6c2ce74b2a087139c544e90dd1adcbe4",
+      "S": "d356d543298835b09b0452777fbd76cdaea77c85",
+      "observation": "Run agora completed/failure: fixture.complete8721ms; host.evaluate-and-store276519ms, aborto cooperativo ao total285245ms. Leitura/retry/revogação não alcançados. A redução de4→2 transações não demonstra fechamento da jornada.",
+      "next_action": "Instrumentar/fixar a causa dominante no caminho real após preservar os gates fonte/autoridade já verdes; não aumentar orçamento ou somar tempos inclusivos."
+    },
+    {
+      "audit_partition": "root",
+      "id": "MEMORY-INTEGRITY",
+      "classification": "FAILED_SAFETY_INVARIANT",
+      "owner": "WP10/S0-B missão memory-integrity-preflight PR29",
+      "task_ids": [
+        "WP10.T07",
+        "WP10.T01"
+      ],
+      "paths": [
+        "apps/cli/src/sucafina-product/analysis-stale-commit.ts",
+        "apps/cli/src/sucafina-product/host-context.ts",
+        "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts"
+      ],
+      "sources": [
+        "ROOT-55-HANDOFF.md",
+        "ROOT-29-c09-reconciliation.json"
+      ],
+      "observation": "No estado A27, Atlas recusa projeção persistida corrompida mas staleAccess.preflight retorna ok. O timeout antigo deixou de ser a causa desse teste. Negativos finais de revogação não foram alcançados.",
+      "next_action": "Validar identidade/headers/projeção/digest no reader instalado; preservar histórico autorizado e metadata-only stale.preserve; consumir entrega da missão atual."
+    },
+    {
+      "audit_partition": "root",
+      "id": "MULTIHEAD-CONSUMPTION",
+      "classification": "OVERLAPPING_ORIGINS",
+      "owner": "S0 / WP10",
+      "task_ids": [
+        "WP10.T01"
+      ],
+      "paths": [
+        "apps/cli/src/sucafina-product/business-services.ts",
+        "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+        "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts"
+      ],
+      "sources": [
+        "ROOT-44-R04-critical-overlaps.json",
+        "ROOT-29-c09-diagnostics_wp10-pr59-financial-gate-reachability.md"
+      ],
+      "observation": "PR42 ainda tem FIN001–003; PR29 já contém verifyScenarioOperations, factory state/authorizeCase/authorizeEvidence e prefixo portfolio. Wrapper C11 e callback workSignals também já existem em29. Reaplicar remédio de árvore antiga pode regredir o produtor novo.",
+      "next_action": "Escolher por blob/preimage e consumidor; não substituir arquivos integrais nem tratar status de PR42 como status de29."
+    },
+    {
+      "audit_partition": "root",
+      "id": "INHERITED-PR-DIFF",
+      "classification": "INHERITED_BRANCH_DIFF",
+      "owner": "S0 evidential intake",
+      "task_ids": [
+        "WP10.T01",
+        "WP10.T05"
+      ],
+      "paths": [
+        "intel-resume...sf2-control"
+      ],
+      "sources": [],
+      "observation": "intel-resume já contém commits de produto. Compare inicial control...intel diverge ahead60/behind21 e retorna300files (cap da API); o total real não foi inferido. Esta missão adiciona somente seus namespaces e preserva os ancestrais.",
+      "next_action": "Revisar o delta do novo commit e admitir apenas seus blobs evidenciais; nunca mergear a branch inteira em produto."
+    },
+    {
+      "audit_partition": "root",
+      "id": "NO-ACCEPTED-C",
+      "classification": "ACCEPTANCE_ABSENT",
+      "owner": "S0 / revisores independentes",
+      "task_ids": [
+        "WP10.T03",
+        "WP10.T04",
+        "WP10.T05"
+      ],
+      "paths": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/"
+      ],
+      "sources": [
+        "ROOT-44-HANDOFF-S0.md",
+        "ROOT-44-R06-owner-findings.json"
+      ],
+      "observation": "Não foi encontrado C aceito/GLOBAL_RELEASE nos heads e recibos consultados; evidências multi-head não são candidato final.",
+      "next_action": "Estabilizar C, executar gates pela autoridade competente e obter3pareceres no mesmoC; depoisD arquiva sem reatribuir execução."
+    },
+    {
+      "audit_partition": "ops",
+      "id": "OPS-REV-01",
+      "title": "Sourcing money fix consumed; export consumers still disagree",
+      "scope": "WP04.T03",
+      "classification": "FIX_CONSUMED_WITH_FAILED_CONSUMER",
+      "owner": "WP04/S2-A; astra-operations; runtime download owner; WP10 intake",
+      "criteria_ids": [
+        "WP04.T03.CHK.03",
+        "WP04.T03.DOD.02",
+        "WP04.T03.SUC.02"
+      ],
+      "related_criteria_ids": [
+        "WP04.INV.02",
+        "WP04.CMP.02",
+        "WP04.T03.CMP.01",
+        "WP04.T04.QLT.02"
+      ],
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/procurement/monetary.ts",
+        "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "modules/sucafina/Sucafinav1/runtime/downloads.ts"
+      ],
+      "proofs": [
+        {
+          "source_id": "OPS-S-859beefcd8df",
+          "pr": 57,
+          "published_head": "2a185e05967f611d63796684379761ded991092b",
+          "W": "a3b7fb9b45d7852a3000e01098336a1aca9526c3",
+          "S": "fb440a03e4d712e0d6f40f021997b31a80943a3d",
+          "run_id": 43626658534,
+          "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43626658534",
+          "claim": "Isolated monetary fix, including real domain progression, frozen sourcing and future PO.",
+          "aggregate_conclusion": "success",
+          "case_observation_basis": "Pinned published receipt; Actions aggregate metadata independently read, no new test execution."
+        },
+        {
+          "source_id": "OPS-S-d85ce1ba94ae",
+          "pr": 34,
+          "published_head": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+          "W": "fd363ca6f66dea56422c235f835103467c7ee8ba",
+          "S": "80e78d97f15b468b8393c6a1676472f1979d2d33",
+          "run_id": 43628901747,
+          "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43628901747",
+          "claim": "10 scoped passes and 2 export failures; monetary and WP14 fixture consumed, runtime/downloads still defective.",
+          "aggregate_conclusion": "failure",
+          "case_observation_basis": "Pinned published receipt; Actions aggregate metadata independently read, no new test execution."
+        }
+      ],
+      "next_action": "Apply the owner-reviewed runtime/downloads hunk d47538f593c2b563e34c75434044def6e070de58 after checking the current preimage; preserve frozen sourcing and label the future PO separately; retain a case per actual PO line.",
+      "consumer_state": "monetary.ts c9a224b12c13b7cec506be90527300caa7e984fd consumed in PR34; downloads fa365f9d350be341348ab69d789e40779c8b9756 still produces the two failures.",
+      "limits": [
+        "No all-green result: run43628901747 is failure.",
+        "Current PO total expected200/currentFX2 is rendered108/submittedFX1.08; line totals40/60 observed100/100.",
+        "Scope is published deterministic fixtures, not commercial or human acceptance."
+      ]
+    },
+    {
+      "audit_partition": "ops",
+      "id": "OPS-REV-02",
+      "title": "PR intent can be acknowledged without applying the requested PR fields",
+      "scope": "WP04.T02",
+      "classification": "FIX_PUBLISHED_NOT_CONSUMED",
+      "owner": "WP04/S2-A; procurement-apply; astra-operations/WP10 intake",
+      "criteria_ids": [
+        "WP04.QLT.10",
+        "WP04.T02.SUC.02"
+      ],
+      "related_criteria_ids": [
+        "WP04.DOD.02"
+      ],
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/procurement/prepared.ts",
+        "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+        "modules/sucafina/Sucafinav1/product/procurement/prepared-review.ts"
+      ],
+      "proofs": [
+        {
+          "source_id": "OPS-S-3f4243a3e27d",
+          "pr": 60,
+          "published_head": "8e23e592602fb9f2fae9ce8f824322a073073e23",
+          "W": "897484c9a472bd43d17cabe56552f2f8fa890185",
+          "S": "9c45f18de1f9bd3d5647e37ef35cb3d5e2855277",
+          "run_id": 43626285237,
+          "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43626285237",
+          "claim": "Ten scoped Apply/preparation cases; ignored PR intent/no-op is refused, real allowed PR effect and replay remain.",
+          "aggregate_conclusion": "success",
+          "case_observation_basis": "Pinned published receipt; Actions aggregate metadata independently read, no new test execution."
+        }
+      ],
+      "next_action": "Consume the three PR60 product files as one reviewed delta; reject noneditable stage/no-op at preparation and verify requested PR fields after the domain command before producing a success receipt.",
+      "consumer_state": "All three PR60 fix blobs differ from PR34; the old body still verifies unrelated fields/history but not that PR intent became the persisted state.",
+      "limits": [
+        "Run success belongs to PR60 W897484c9 and S9c45f18d, not current PR34 or a common C.",
+        "Static check on the fix snapshot has a retained external WP14 fixture failure; do not transfer that old fixture failure to PR34 after its later update."
+      ]
+    },
+    {
+      "audit_partition": "ops",
+      "id": "OPS-REV-03",
+      "title": "Document search limits count records before authorized distinct sources",
+      "scope": "WP06.T05",
+      "classification": "FIX_PUBLISHED_NOT_CONSUMED",
+      "owner": "WP06/S2-C; operations-fixes; astra-operations/WP10 intake",
+      "criteria_ids": [
+        "WP06.T05.CMP.19",
+        "WP06.T05.QLT.18"
+      ],
+      "related_criteria_ids": [],
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/documents/capabilities.ts"
+      ],
+      "proofs": [
+        {
+          "source_id": "OPS-S-93de10a5788d",
+          "pr": 52,
+          "published_head": "d48065d391e1557d43b63525bdc7f55b168d5206",
+          "W": "c9b14ba6848d87a756c4144a542f5cee571dac37",
+          "S": "56b5b3dcd409aa65ced84244999a01f9042570a0",
+          "run_id": 43626678715,
+          "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43626678715",
+          "claim": "Search counts authorized distinct document identities, protects metadata witness, revalidates at egress.",
+          "aggregate_conclusion": "success",
+          "case_observation_basis": "Pinned published receipt; Actions aggregate metadata independently read, no new test execution."
+        }
+      ],
+      "next_action": "Intake PR52 capabilities.ts after preimage review; authorize source identity before counting, deduplicate document identity rather than fields, preserve authorized101st metadata witness and revalidate all egress sources.",
+      "consumer_state": "PR34 blob6b655187d4444cff5b8966e868ba163191adfc42 still calls records.slice(0,100) before source authorization/dedup; PR52 blob2753c07ee03472d35d3b93789e3cb9ba309f6a41 is absent.",
+      "limits": [
+        "Scoped cardinality fixture uses synthetic byte policy; HTTP/current withdrawal are real-service cases.",
+        "No whole PDF/DOCX/text/native/MCP acceptance inherited from this fix."
+      ]
+    },
+    {
+      "audit_partition": "ops",
+      "id": "OPS-REV-04",
+      "title": "Import admission must recover owned bytes after uncertain catalog outcome",
+      "scope": "WP06.T03",
+      "classification": "FIX_PUBLISHED_NOT_CONSUMED",
+      "owner": "WP06/S2-C; import-recovery; astra-operations/WP10 intake",
+      "criteria_ids": [
+        "WP06.QLT.03"
+      ],
+      "related_criteria_ids": [],
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/imports/staged-files.ts"
+      ],
+      "proofs": [
+        {
+          "source_id": "OPS-S-94e7c21f9e16",
+          "pr": 58,
+          "published_head": "e1dc51a6df8cd40a125d960dce6fa5e5d8b33c5e",
+          "W": "20915a35aa8364a39d1a6014c494f9ab4c1339e8",
+          "S": "a0e8b4d9c9ed338d3a3e1e850ae258bf098678c3",
+          "run_id": 43626093062,
+          "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43626093062",
+          "claim": "Fourteen scoped admission/Apply cases on W1; admission proof and bytes retained atomically.",
+          "aggregate_conclusion": "success",
+          "case_observation_basis": "Pinned published receipt; Actions aggregate metadata independently read, no new test execution."
+        },
+        {
+          "source_id": "OPS-S-519f356b1111",
+          "pr": 58,
+          "published_head": "e1dc51a6df8cd40a125d960dce6fa5e5d8b33c5e",
+          "W": "95b3c9a33ba1bf66b9edf2bdd35736e6228eb979",
+          "S": "0a3857a4f3c9f3824c09b6aa76d155d6295e9ed9",
+          "run_id": 43627493939,
+          "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43627493939",
+          "claim": "Four Apply cases on W2, actual runtime reconstruction and exact receipt recovery; ten W1 admission cases not rerun at W2.",
+          "aggregate_conclusion": "success",
+          "case_observation_basis": "Pinned published receipt; Actions aggregate metadata independently read, no new test execution."
+        }
+      ],
+      "next_action": "Intake PR58 admission proof+bytes transaction; keep original expiry and full identity digest, preserve uncertain/legacy orphan bytes, then recover only an authorized proof-bound exact intention.",
+      "consumer_state": "PR34 staged-files.ts b24558f415f48921b43255169ec0cc82d7037ddb lacks the PR58 private admission proof0d42f5242acd3d1c93bc110422285b96975b8ea0.",
+      "limits": [
+        "Legacy orphan with no proof is preserved/refused, not silently adopted or deleted.",
+        "Apply restart proof does not prove every format/native/browser journey."
+      ]
+    },
+    {
+      "audit_partition": "ops",
+      "id": "D-OPS-01",
+      "title": "Repeated document form submission creates a new schema and conflicts with existing candidate",
+      "scope": "WP06.T05",
+      "classification": "FIX_PUBLISHED_NOT_CONSUMED",
+      "owner": "WP06/S2-C; operations-fixes; WP10 intake",
+      "criteria_ids": [
+        "WP06.SUC.10",
+        "WP06.QLT.10",
+        "WP06.DOD.04",
+        "WP06.CMP.04",
+        "WP06.T05.DOD.01"
+      ],
+      "related_criteria_ids": [],
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/documents/schemas.ts",
+        "modules/sucafina/Sucafinav1/product/documents/workbench.ts",
+        "apps/cli/src/sucafina-product/document-services.ts"
+      ],
+      "proofs": [
+        {
+          "source_id": "OPS-S-f2778ff1ed75",
+          "pr": 52,
+          "published_head": "d48065d391e1557d43b63525bdc7f55b168d5206",
+          "W": "ee2e14ac940ba62177052f44c0f0e781132e7564",
+          "S": "96da0ee1011e4a47086830c0a4bde00b878f54e5",
+          "run_id": 43625203326,
+          "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43625203326",
+          "claim": "Eight scoped real service/SQLite/Chromium schema-extract replay cases, including postcommit503 and already confirmed candidate.",
+          "aggregate_conclusion": "success",
+          "case_observation_basis": "Pinned published receipt; Actions aggregate metadata independently read, no new test execution."
+        }
+      ],
+      "next_action": "Consume PR52 schemas/workbench as a pair, reuse a current authorized equivalent schema while preserving candidates, retain exact same-page extraction keys and verify changed-schema/source/ACL refusal.",
+      "consumer_state": "PR34 schemas50e20b20/workbenchd9769a4f retain per-operation schema identity and fresh extraction UUIDs. PR52 schemasfbe4b704/workbench3d21a461 are not consumed.",
+      "limits": [
+        "Recovery intent is same-page memory only; page reload recovery is not established.",
+        "A parser or lower API test with constant schema did not exercise the failing two-submit consumer."
+      ]
+    },
+    {
+      "audit_partition": "ops",
+      "id": "UI-C12-RELOAD-INTAKE",
+      "title": "Dashboard reload recovery published on ui-recovery, absent from interface-resume",
+      "scope": "WP01.T03",
+      "classification": "FIX_PUBLISHED_NOT_CONSUMED",
+      "owner": "WP01/S1-A; ui-recovery; WP02 consumer; WP10 intake",
+      "criteria_ids": [
+        "WP01.T03.DOD.01",
+        "WP01.T03.CMP.01",
+        "WP02.T02.DOD.01",
+        "WP02.T04.QLT.01"
+      ],
+      "related_criteria_ids": [],
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts"
+      ],
+      "proofs": [
+        {
+          "source_id": "OPS-S-d861191cce97",
+          "pr": 43,
+          "published_head": "2ee71fc90055814912654ae198f7a1dcf9583943",
+          "W": "ad94fd2d78be47cecfb91f801ce7764127667b60",
+          "S": "519571ec1c90454b8a1eacf94f156dcc9c296f9f",
+          "run_id": 43616465145,
+          "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43616465145",
+          "claim": "31pass/1fail on eight files; row scopes support shell/ACK components, C12 lost reply/reload fails.",
+          "aggregate_conclusion": "failure",
+          "case_observation_basis": "Pinned published receipt; Actions aggregate metadata independently read, no new test execution."
+        },
+        {
+          "source_id": "OPS-S-a3217c2cbe96",
+          "pr": 46,
+          "published_head": "db1dd1709483478ca2c8db2f0a479b72aea59821",
+          "W": "db56ec7fe2d1bf78dd2b26f13d708a79f9b23c71",
+          "S": "1ae238b3119d0759902e100ac2a779001564489a",
+          "run_id": 43620348596,
+          "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43620348596",
+          "claim": "Scoped recovery cases and preserved failed/positive observations from this exact W/S; the first run is not all-green.",
+          "aggregate_conclusion": "failure",
+          "case_observation_basis": "Pinned published receipt; Actions aggregate metadata independently read, no new test execution."
+        },
+        {
+          "source_id": "OPS-S-a3217c2cbe96",
+          "pr": 46,
+          "published_head": "db1dd1709483478ca2c8db2f0a479b72aea59821",
+          "W": "c38a9eb54297baf20df47d296c8d25471ab341b9",
+          "S": "a5a2396c106a7762084ade10740bd7033c238960",
+          "run_id": 43620823146,
+          "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43620823146",
+          "claim": "Scoped recovery cases and preserved failed/positive observations from this exact W/S; the first run is not all-green.",
+          "aggregate_conclusion": "success",
+          "case_observation_basis": "Pinned published receipt; Actions aggregate metadata independently read, no new test execution."
+        }
+      ],
+      "next_action": "Review and intake PR46 dashboard-workbench blob06a4f77b after reconciling the PR43 ACK changes; preserve exact body/key/reviewDigest, authorize at the host and keep ambiguous/incomplete ACK pending.",
+      "consumer_state": "PR43 dashboard-workbench c92748938661f561a7f99d16049c35d0b4ce345c still requires one bounded-discovery match to restore; PR46 permits exact authorized replay when omitted, with ambiguity/denial protections.",
+      "limits": [
+        "PR46 run43620348596 aggregate failure includes scoped passes; run43620823146 success supports its new cases only.",
+        "First-save lookup and shared Apply receipt lookup remain external dependencies, not solved by retaining a pending marker."
+      ]
+    },
+    {
+      "audit_partition": "ops",
+      "id": "UI-FIRST-SAVE-LOOKUP",
+      "title": "First-save lost ACK plus reload has no authorized outcome lookup",
+      "scope": "WP02.T02",
+      "classification": "UNDELIVERED_PRODUCER_SEAM_WITH_SAFE_PENDING_UI",
+      "owner": "WP10/compose source authority; WP02/S1-B and WP01/S1-A consumer",
+      "criteria_ids": [
+        "WP01.T03.DOD.01",
+        "WP02.T02.DOD.01",
+        "WP02.T04.DOD.01",
+        "WP02.T04.SUC.01"
+      ],
+      "related_criteria_ids": [],
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts",
+        "modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts"
+      ],
+      "proofs": [],
+      "next_action": "Publish the authorized original-intent-to-draftRef outcome lookup, then wire the pending marker to it; preserve private values out of history and do not infer identity from title, order or target.",
+      "consumer_state": "PR46 intentionally blocks a new save after reload rather than guessing the committed draft; no success-recovery endpoint is supplied in the inspected slice.",
+      "limits": [
+        "Absence is scoped to the pinned inspected producer/consumer records, not a claim about uninspected future heads."
+      ]
+    },
+    {
+      "audit_partition": "ops",
+      "id": "UI-SOURCE-HANDOFFS",
+      "title": "Physical create identity, draft replay ordering and readable-draft continuity remain proposals",
+      "scope": "WP02.T04",
+      "classification": "UNCONSUMED_OUTPUT_AND_SHARED_PATH_OVERLAP",
+      "owner": "ui-source/WP02; WP10/source-lifecycle and hot-topic host; WP01 consumer",
+      "criteria_ids": [
+        "WP02.T04.DOD.01",
+        "WP02.T04.SUC.01",
+        "WP02.T04.CHK.01",
+        "WP02.T04.CMP.01"
+      ],
+      "related_criteria_ids": [],
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/dashboard/hot-topics.ts",
+        "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+        "modules/sucafina/Sucafinav1/product/integration/hot-topic-host.ts",
+        "modules/sucafina/Sucafinav1/product/dashboard/sources.ts",
+        "modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts"
+      ],
+      "proofs": [],
+      "next_action": "Resolve three NOT_APPLIED PR48 proposals with the owner: atomic create reservation/finalization, previous exact receipt before newer case-version rejection, and current read/physical-continuity admission for an unsaved draft. Intake only after source preimage and semantic review.",
+      "consumer_state": "PR48 delivered hot-topics051be54a is absent from PR43 hot-topics9b959a09; proposed atomic hot-topicscfc9d98 variant depends on lifecycle/host and is not the delivered blob.",
+      "limits": [
+        "The proposal syntax/apply checks are not runtime proof.",
+        "PR48 run43620533033 and run43620871410 remain aggregate failures; foreign static diagnoses were not made into native or common-C acceptance."
+      ]
+    },
+    {
+      "audit_partition": "ops",
+      "id": "UI-C05-REVIEW-MOUNT",
+      "title": "WholeReview/history consumer proof depends on external mount and producer",
+      "scope": "WP02.T03",
+      "classification": "EXTERNAL_PROOF_NOT_TRANSFERABLE_TO_FIXED_BASE",
+      "owner": "WP10/compose; WP07 review producer; WP01/WP02 consumer",
+      "criteria_ids": [
+        "WP01.T02.DOD.01",
+        "WP02.T03.DOD.01",
+        "WP02.T03.SUC.01"
+      ],
+      "related_criteria_ids": [],
+      "paths": [
+        "apps/cli/src/sucafina-product/host-context.ts",
+        "modules/sucafina/Sucafinav1/product/reviews/thread-context.ts",
+        "modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts"
+      ],
+      "proofs": [],
+      "next_action": "Compose historical review reader with evidence:context only after BusinessContext exists; intake the published thread-context producer; preserve original1300 snapshot after source2400 and distinguish explicit new2400 review with current ACL.",
+      "consumer_state": "PR45 own base and external proof input differ in host sources; equal test blobs do not transfer the successful external snapshot assertions to the base.",
+      "limits": [
+        "Own run43621128874:6pass; external run43621543227:4pass2fail2errors from missing thread-context.",
+        "Current common compose outcome is outside this subaudit and must use root/collaboration evidence."
+      ]
+    },
+    {
+      "audit_partition": "ops",
+      "id": "UI-WORK-ACK-CONSUMPTION",
+      "title": "Work and selection uncertain outcomes need actual producer ACK correlation",
+      "scope": "WP01.T03",
+      "classification": "CONSUMER_SLICE_PUBLISHED_WITH_EXTERNAL_PRODUCER_DEPENDENCY",
+      "owner": "ui-work/WP01; Collaboration/WP05; WP10 compose",
+      "criteria_ids": [
+        "WP01.T03.DOD.01",
+        "WP01.T03.INV.01",
+        "WP01.T03.CMP.01"
+      ],
+      "related_criteria_ids": [],
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/ui/case-work-selection.ts",
+        "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts",
+        "modules/sucafina/Sucafinav1/product/collaboration/recipient-actions.ts",
+        "modules/sucafina/Sucafinav1/product/collaboration/case-selection.ts"
+      ],
+      "proofs": [],
+      "next_action": "Reconcile PR47 consumer ACK guards with current Collaboration receipts and conflict-to409 producer intake; compare exact producer bodies and W/S before qualifying reply loss/reload and first-cycle reuse.",
+      "consumer_state": "PR47 readback at the recorded Collaboration input does not contain durable exact outcome receipts in recipient-actions/case-selection. Later Collaboration fixes must be assessed by its owner audit rather than extrapolated here.",
+      "limits": [
+        "The ui-work matrix is a scoped overlay, not new proof of all WP01 criteria.",
+        "No claim that the newest outside-scope Collaboration head still lacks a fix."
+      ]
+    },
+    {
+      "audit_partition": "finance",
+      "id": "FIN-AN01",
+      "type": "OVERLAPPING_IMPLEMENTATIONS_UNCONSUMED_FIX",
+      "task_ids": [
+        "WP11.T01",
+        "WP13.T01"
+      ],
+      "finding_ids": [
+        "FIN-IND-001",
+        "FIN-IND-002",
+        "FIN-IND-003"
+      ],
+      "source_refs": [
+        "FIN-SRC-031",
+        "FIN-SRC-029",
+        "FIN-SRC-067",
+        "FIN-SRC-030",
+        "FIN-SRC-004"
+      ],
+      "description": "Finance42 retains an old caller/provider combination while root verified compatible or fixed code in PR29. Reconcile paired signatures and authority prefixes, not independent snippets. Do not overwrite cross-tree facts with one global issue state.",
+      "next_action_id": "FIN-A01"
+    },
+    {
+      "audit_partition": "finance",
+      "id": "FIN-AN02",
+      "type": "UNAPPLIED_PROPOSAL",
+      "task_ids": [
+        "WP13.T03",
+        "WP11.T02"
+      ],
+      "source_refs": [
+        "FIN-SRC-021",
+        "FIN-SRC-035"
+      ],
+      "description": "PR56 coverage issue proposal is still unapplied at Finance42: current blob equals stated preimage 9f7e12113b38e73befb64f99a94fb8ca28d05eee. No measured improvement or correctness conclusion from patch text alone.",
+      "next_action_id": "FIN-A05"
+    },
+    {
+      "audit_partition": "finance",
+      "id": "FIN-AN03",
+      "type": "UNCONSUMED_OUTPUT",
+      "task_ids": [
+        "WP03.T01",
+        "WP05.T05"
+      ],
+      "source_refs": [
+        "FIN-SRC-043",
+        "FIN-SRC-045",
+        "FIN-SRC-004"
+      ],
+      "description": "BI09/BI10 Planner producer and projectedScenario adapter exist. Published PR32 reconciliation says binding absent; those composed CLI files are absent entirely at Finance42. Exact paths queried 404 and directory listing confirmed. Current product consumer path is unknown/incomplete, not nonexistent producer.",
+      "next_action_id": "FIN-A03"
+    },
+    {
+      "audit_partition": "finance",
+      "id": "FIN-AN04",
+      "type": "UNCONSUMED_INTERFACE_FIX",
+      "task_ids": [
+        "WP05.T04"
+      ],
+      "source_refs": [
+        "FIN-SRC-065",
+        "FIN-SRC-066",
+        "FIN-SRC-049",
+        "FIN-SRC-004"
+      ],
+      "description": "Finance42 scope filters milestones without valid dates and port skips non-string dates, although BI08 renderer can preserve undated rows. Owner Interface pin31 already supplies newer scope/port blobs in reconciliation; producer fix remains unconsumed in Finance42.",
+      "next_action_id": "FIN-A03"
+    },
+    {
+      "audit_partition": "finance",
+      "id": "FIN-AN05",
+      "type": "UNCONSUMED_OUTPUTS",
+      "task_ids": [
+        "WP13.T01",
+        "WP13.T04",
+        "WP11.T04"
+      ],
+      "source_refs": [
+        "FIN-SRC-058",
+        "FIN-SRC-061",
+        "FIN-SRC-057",
+        "FIN-SRC-004"
+      ],
+      "description": "Published consumer deltas identify campaign and historical readers not wired and optional reconciliation not supplied in owner composition at its pin. Current Finance product returns portfolio-reconciliation-producer-unavailable without input.reconciliation. A directory or export alone is not consumption. Root must resolve later owner states before opening duplicate work.",
+      "next_action_id": "FIN-A04"
+    },
+    {
+      "audit_partition": "finance",
+      "id": "FIN-AN06",
+      "type": "SOURCE_CONSUMER_TRANSACTION_MISMATCH",
+      "task_ids": [
+        "WP11.T01",
+        "WP13.T03",
+        "WP13.T04",
+        "WP05.T05"
+      ],
+      "source_refs": [
+        "FIN-SRC-004"
+      ],
+      "description": "Historical DELTA01 traces nested transactionAll from readSourceFences inside a readonly root, poisoning the lease. Source chain belongs to pinned PR32 and must be compared with root current PR29. It is not proof of current installed execution.",
+      "next_action_id": "FIN-A09"
+    },
+    {
+      "audit_partition": "finance",
+      "id": "FIN-AN07",
+      "type": "STALE_NARRATIVE_VS_PUBLISHED_RUN",
+      "task_ids": [
+        "WP11.T02",
+        "WP13.T03"
+      ],
+      "source_refs": [
+        "FIN-RUN-43630462257",
+        "FIN-RUN-43630618176"
+      ],
+      "description": "Frozen PR42 body says S5/check running, but queried GitHub runs are terminal: S5 success and package check failure. Run outcomes override stale narrative for their exact pins; neither is a progress percentage.",
+      "next_action_id": "FIN-A05"
+    },
+    {
+      "audit_partition": "collab",
+      "id": "ACK-PRODUCER-UNCONSUMED",
+      "type": "unconsumed_output",
+      "owners": [
+        "WP08",
+        "WP10",
+        "WP01"
+      ],
+      "tasks": [
+        "WP08.T02",
+        "WP08.T06",
+        "WP10.T06",
+        "WP01.T04"
+      ],
+      "sources": [
+        "ack-validation",
+        "recipient-actions",
+        "collab-authority",
+        "host44-recipient",
+        "host29-recipient",
+        "ui47-work"
+      ],
+      "finding": "PR54 proposal was applied by PR41; exact recipient mutationReceipt producer exists and scoped cases pass. PR44 recipient-actions blob4c93bd36 and PR29 blob45f31b1f differ from producer22c6309. PR47 UI neither checks mutationReceipt nor persists pending intent across reload; it refuses recipient reply success unconditionally.",
+      "next_action": "Intake exact owner delta and implement/review receipt consumer with stable retry intent. Do not reopen producer work as Boolean-only."
+    },
+    {
+      "audit_partition": "collab",
+      "id": "REUSE-PROPOSAL-SUPERSEDED",
+      "type": "overlapping_change",
+      "owners": [
+        "WP08",
+        "WP10",
+        "WP01"
+      ],
+      "tasks": [
+        "WP08.T06",
+        "WP10.T06",
+        "WP01.T04"
+      ],
+      "sources": [
+        "pr-61",
+        "answer-reuse",
+        "host44-reuse",
+        "host29-reuse"
+      ],
+      "finding": "PR61 NOT_APPLIED optimization is an alternative to owner PR41 W6 closure, not a cumulative patch. Composed answer-reuse134ce5cd differs from current012175e4. Original UI case exceeded5s; attachment404 occurred at an unmounted fixture route and does not prove product denial or attachment success.",
+      "next_action": "Select current owner closure, retire superseded proposal reference, qualify current recipientAuthority and original deadline in actual consumer."
+    },
+    {
+      "audit_partition": "collab",
+      "id": "G03-FUNCTIONAL-VS-RUN",
+      "type": "evidence_boundary",
+      "owners": [
+        "WP08",
+        "WP01",
+        "WP10"
+      ],
+      "tasks": [
+        "WP08.T01",
+        "WP07.T02"
+      ],
+      "sources": [
+        "pr-53",
+        "run-43625362178",
+        "code-collaboration-case-selection.ts"
+      ],
+      "finding": "G03 functional expected409 selection-not-committed is published; run conclusion is failure due typecheck. Current PR41 uses cd9a678 case-selection. Functional success cannot be promoted into whole-run or common-C PASS.",
+      "next_action": "Retain exact functional receipt and resolve composition/static gate separately."
+    },
+    {
+      "audit_partition": "collab",
+      "id": "WORK-SIGNALS-STALE-FINDING",
+      "type": "superseded_finding",
+      "owners": [
+        "WP10",
+        "WP08",
+        "WP14"
+      ],
+      "tasks": [
+        "WP08.T04",
+        "WP14.T04",
+        "WP10.T06"
+      ],
+      "sources": [
+        "host29-business",
+        "host44-business",
+        "wp14-criteria"
+      ],
+      "finding": "Published WP14 consumer finding that createCollaborationHost lacks workSignals is historical. PR29 business-services385dd199 mounts workSignals via current bridge; PR44 b3595989 does not. recipientAuthority absent from both inspected callers.",
+      "next_action": "Preserve/consume existing PR29 binding; qualify actual work projection and authority instead of creating a duplicate callback."
+    },
+    {
+      "audit_partition": "collab",
+      "id": "WP12-ONE-BLOB-OVERLAP",
+      "type": "overlapping_change",
+      "owners": [
+        "WP12",
+        "WP10"
+      ],
+      "tasks": [
+        "WP12.T02",
+        "WP12.T04"
+      ],
+      "sources": [
+        "intel-w7",
+        "code-ai-analysis-port.ts",
+        "code-ai-contribution-reader.ts"
+      ],
+      "finding": "PR39 and PR36 share32 of33 AI source blobs. analysis-port.ts differs:47e25de4 (PR39) versus f1127503 (PR36). PR36 W7 explicitly adds cancellation/ready-reader pinning while retaining W6 behavior; newest PR39 also evolves that file.",
+      "next_action": "Reconcile the exact semantic delta in analysis-port only; preserve common32 blobs and do not replace a whole directory or infer its tests carry forward."
+    },
+    {
+      "audit_partition": "collab",
+      "id": "WP14-EIGHT-BLOB-OVERLAP",
+      "type": "overlapping_change",
+      "owners": [
+        "WP14",
+        "WP10"
+      ],
+      "tasks": [
+        "WP14.T01",
+        "WP14.T02",
+        "WP14.T03",
+        "WP14.T04"
+      ],
+      "sources": [
+        "intel-w7",
+        "wp14-criteria",
+        "pr-36",
+        "pr-38"
+      ],
+      "finding": "PR38 and PR36 memory directories share9 of17 source blobs.8 differing paths: invalidation,materiality,outcome-selection,outcome,recall,signal-list,signal-registry,signal-work. Later independent changes must be reconciled, not overlaid wholesale.",
+      "next_action": "Create path-by-path intake decisions with pre/post blobs and preserve both dependency/security deltas."
+    },
+    {
+      "audit_partition": "collab",
+      "id": "WP14-PURE-LAYER-IO",
+      "type": "ownership_mismatch",
+      "owners": [
+        "WP14",
+        "WP10"
+      ],
+      "tasks": [
+        "WP14.T04",
+        "WP10.T01"
+      ],
+      "sources": [
+        "code-decision-memory-signal-registry.ts",
+        "wp14-criteria"
+      ],
+      "finding": "createSfSignalRegistry reads/transacts preferences under product/decision-memory; published owner findings also identify outcome-selection. This violates canonical pure-layer invariants. Proposed host relocation remains NOT_APPLIED.",
+      "next_action": "Transfer concrete C08 IO to WP10 authorized host, retain pure WP14 transformations, then qualify existing callers."
+    },
+    {
+      "audit_partition": "collab",
+      "id": "WP14-NONEMPTY-OUTCOME-UNWITNESSED",
+      "type": "unconsumed_output_unverified",
+      "owners": [
+        "WP14",
+        "WP07",
+        "WP10"
+      ],
+      "tasks": [
+        "WP14.T03",
+        "WP07.T03"
+      ],
+      "sources": [
+        "wp14-criteria",
+        "code-decision-memory-outcome.ts",
+        "review-compare"
+      ],
+      "finding": "Actual memory/outcome/review source wiring is published; no inspected receipt demonstrates a nonempty observed outcome persisted and reopened in a real saved review with revocation. This is unknown consumption, not absence of code.",
+      "next_action": "Attach a nonempty actual observed/baseline/review/after-reload receipt with source access and incompatible/missing variants."
+    },
+    {
+      "audit_partition": "collab",
+      "id": "WP12-HUMAN-NOT-NATIVE",
+      "type": "orphan_native_output_witness",
+      "owners": [
+        "WP12",
+        "WP10"
+      ],
+      "tasks": [
+        "WP12.T01",
+        "WP12.T02",
+        "WP12.T03"
+      ],
+      "sources": [
+        "wp12-consumers",
+        "wp12-evidence",
+        "wp12-run23",
+        "pr-39",
+        "run-43619631569"
+      ],
+      "finding": "W28 human Forecast/KPI, BI public-selection and Question Work flows pass. Six catalogue observations are empty; zero native inference, typed native outputs or native consumers.18 sources/loading receipts and human fixtures cannot substitute for18 AM01 output+consumer witnesses.",
+      "next_action": "Resolve authorized native binding and connect the existing typed outputs to actual consumers; preserve green human-route receipts separately."
+    },
+    {
+      "audit_partition": "collab",
+      "id": "C07-NATIVE-RESULT-NOT-PROVEN",
+      "type": "unconsumed_output_unverified",
+      "owners": [
+        "WP09",
+        "WP10",
+        "WP12"
+      ],
+      "tasks": [
+        "WP09.T01",
+        "WP09.T07",
+        "WP09.T06",
+        "WP12.T04"
+      ],
+      "sources": [
+        "routine-factory",
+        "routine-lifecycle",
+        "host29-routines",
+        "host44-routines",
+        "wp09-criteria"
+      ],
+      "finding": "Factory/adapters and current host callsites exist, but a real published/admitted Relay/skill/output/consumer chain is not established by inspected receipts. Historical Schedule test substituted the native provider.",
+      "next_action": "Qualify existing optional native binding and actual C07 current-principal/admission/result route; no new platform."
+    }
+  ],
+  "new_owner_delegations": [
+    {
+      "source_id": "MISSION-forecast-cancel-visibility",
+      "id": "forecast-cancel-visibility",
+      "number": 12,
+      "branch": "ui-review",
+      "pr": 45,
+      "actor_pack": "S1-A",
+      "expected_head": "32bae2bcc8008b2e81948e434dc1e3326dc4f947",
+      "write_paths": [
+        "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+        "modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts",
+        "modules/sucafina/Sucafinav1/test/product/forecast-cancel-visibility/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/forecast-cancel-visibility/"
+      ],
+      "input": {
+        "wp10": "54317229d7f8fcb7e92921c2f4a8dc6f9310270b",
+        "handoff": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-continuation-c09/HANDOFF.md",
+        "U30": {
+          "run": 43629303473,
+          "job": 132552127580,
+          "result": "3pass/1fail; ready output rendered but cancel.isVisible true"
+        }
+      },
+      "task": "Resolver WP10-U30-CANCEL-VISIBILITY com causa demonstrada e mudança mínima. Capturar atributo hidden, estado de run, computedStyle/display e prontidão no instante relevante. button,.button display:inline-flex no shell é hipótese, não causa já executada; não remover assertion, usar estilo na fixture ou aumentar deadline. Se confirmado, corrigir CSS/controller real de forma consistente e preservando botões ativos. Provar cancel oculto antes da execução e após ready/failure/cancel/revogação, visível somente em estados ativos; retry-status segue estado correto. Percorrer click positivo e Enter negativo409, payload prepare completo, ordem start/read/output, keys, moedaEUR preservada, reabilitação dos controles e ausência de pageErrors, além das assertionsU30 anteriormente NOT_REACHED. Verificar efeito de hidden em outro controle legítimo se alteração global; sem redesign. Usar renderer/controller/shell reais; fronteiraHTTPfixture declarada não prova modelo/Finance/native.",
+      "limits": "Comparar fonte atual da branch com WP10/WP12 e portar só delta necessário, preservando review-context e mudanças próprias. Não substituir arquivo inteiro cegamente. Não tocar work-collaboration.ts da sessão10, runtime/downloads.ts da11, hosts, APIs, sharedfixtures, configs ou specs E2E das sessões7–9. Criar cópia própria das provas/fixtures reutilizadas se necessário. Somente CI cirúrgico no fechamento, sem locais/epic/fullsuite.",
+      "common_ref": "c708ec0609dbfc95b259707d8c38481617f74f11:modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-wave/COMMON.md",
+      "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "campaign": "sf2h-integral-20261112",
+      "T0": "2026-11-13T04:01:10Z",
+      "state": "PREPARED_NOT_STARTED",
+      "lease_epoch": 1,
+      "session_id": null,
+      "model_effective": "NOT_VERIFIED",
+      "consumer": "S0 integration/reviewers/final candidate later",
+      "rules": "Leia AGENTS/COMMON/seu pack completo. Somente GitHubMCP remoto,CAS,nãoforce/gh/remoteGit/login/merge/deploy/restart/engines. Testes sóActions cirúrgicos com W/S/requests/seleção/config/dedupe/Omni e checks reais, nunca local/epic/fullsuite. Preservar handoff/headtrabalhoalheio; nãocontarproposta comoimplementação ou fixturecomonativo. Entregar mesmaPR e recibosappendonly, prossiga decisõesrotineiras autonomamente."
+    },
+    {
+      "source_id": "MISSION-memory-integrity-preflight",
+      "id": "memory-integrity-preflight",
+      "number": 13,
+      "branch": "astra-wp10",
+      "pr": 29,
+      "actor_pack": "S0-B",
+      "expected_head": "54317229d7f8fcb7e92921c2f4a8dc6f9310270b",
+      "write_paths": [
+        "apps/cli/src/sucafina-product/analysis-stale-commit.ts",
+        "apps/cli/src/sucafina-product/host-context.ts",
+        "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/memory-integrity/"
+      ],
+      "input": {
+        "wp10": "54317229d7f8fcb7e92921c2f4a8dc6f9310270b",
+        "handoff": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-continuation-c09/HANDOFF.md",
+        "failure": {
+          "run": 43624030665,
+          "file": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+          "line": 580,
+          "observed": "Atlas recall rejects corrupted persisted projection, then staleAccess.preflight returns ok instead of denied"
+        },
+        "diagnostic": "diagnose-memory@0d7fb6f12ed053340391ff6e4f95b6f3c1276ea8"
+      },
+      "task": "Corrigir o defeito concreto de integridade MemoryA27, sem refazer diagnóstico de timeout nem iniciar melhoriaX29. A corrupção modifica a projeção persistida de atlas.originals[original.refDigest] sem recalcular digest; recall real retornaunavailable, mas o stale preflight aceita. Investigar reader de captura/continuidade realmente instalado e autoridade que o wrapper valida; conferir invariantes do registro/headers/projeção/digest e fonte original. Rejeitar a captura corrompida na fronteira real, mantendo positivos autorizados de alteração material/sourcehistorical e metadata-only stale.preserve. Não trocar todos retornos por denied ou tratar fingerprintantigo como grant. Provar captura íntegra, corrupção semdigestnovo, owner/fonte/substituição/incarnação, alteração duranteawait, revogação apósúltimaleitura, Requestretido e replay. Alcançar os três negativos de revogação nãoexecutados emA27. Não mascarar a falha com reset/regravação da captura. Testecomponente novo deve atravessar Atlas/C08/SQLite/BCS e wrapperreais, não callback permissivo. Depois de causa e delta, recheckselecionadohistoricalMemory original com assertions/budgets240000/225000preservados se necessário; nenhuma repetiçãoA27inalterada. SeguirprovasC09jáaprovadas preservadas e noCIduplicado.",
+      "limits": "Continuação após handoffterminal, mesmaPR29, sem reiniciarGoal/supervisor; conferir head e revogação/autoridade antes deassumir. host-context.ts somente wiring da validaçãoMemory; business-context.ts somente integridade do reader necessário ao preflight. Sem edição dos produtores Finance ativos, source-lifecycle/planner-sources otimizaçãoX, forecastshell/controller sessão12, UI ACK10, exports11, workflows/specsE2E/nativeharness das9. FindingsC17entreobservações e ACKporTexto são distintos: não encerrá-los por este teste. Nenhuma edição de engines, regrasGuard ou assertions estrangeiras.",
+      "common_ref": "c708ec0609dbfc95b259707d8c38481617f74f11:modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-wave/COMMON.md",
+      "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "campaign": "sf2h-integral-20261112",
+      "T0": "2026-11-13T04:01:10Z",
+      "state": "PREPARED_NOT_STARTED",
+      "lease_epoch": 1,
+      "session_id": null,
+      "model_effective": "NOT_VERIFIED",
+      "consumer": "S0 integration/reviewers/final candidate later",
+      "rules": "Leia AGENTS/COMMON/seu pack completo. Somente GitHubMCP remoto,CAS,nãoforce/gh/remoteGit/login/merge/deploy/restart/engines. Testes sóActions cirúrgicos com W/S/requests/seleção/config/dedupe/Omni e checks reais, nunca local/epic/fullsuite. Preservar handoff/headtrabalhoalheio; nãocontarproposta comoimplementação ou fixturecomonativo. Entregar mesmaPR e recibosappendonly, prossiga decisõesrotineiras autonomamente."
+    },
+    {
+      "source_id": "MISSION-procurement-exports",
+      "id": "procurement-exports",
+      "branch": "sourcing-money",
+      "pr": 57,
+      "actor_pack": "S2-A",
+      "expected_head": "2a185e05967f611d63796684379761ded991092b",
+      "paths": [
+        "modules/sucafina/Sucafinav1/runtime/downloads.ts",
+        "modules/sucafina/Sucafinav1/test/product/procurement-exports/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-exports/"
+      ],
+      "inputs": {
+        "operations": "astra-operations@15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+        "source_handoff": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-consumers/attempt-01/HANDOFF.md",
+        "patch": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-consumers/attempt-01/downloads-owner.patch",
+        "patch_blob": "d47538f593c2b563e34c75434044def6e070de58",
+        "downloads_preimage": "fa365f9d350be341348ab69d789e40779c8b9756",
+        "existing_helper": "sourcing-money includes exact stage-aware monetary producer; do not redesign"
+      },
+      "task": "Aplicar/reconciliar correção dos consumidores EXPORT-01/EXPORT-02 no runtime/downloads.ts. PO futura é sua própria estimativa:200USD/FX2/current/estimate, aprovaçãoPOindisponível; não empresta sourcing108USD/FX1.08/submitted/pending. Linhas40+60 devem mostrar40e60, não100e100; total100 permanece. Usar wrapper purchaseOrderMoney respeitando etapa de leitura, sem persistir outrostatus ou modificar produtor/fórmula. Preservar PO efetivamente submetida/congelada apósFX3, cancelamento, moeda base alterada, FX ausente, qty/unitPrice/amount e ausência versus zero. Exercitar downloads reais CSV eHTML, conteúdo/unidades/proveniência e igualdade do registro antes/depois; não apenas registroemmemória. Reusar as duas regressões publicadas em namespace próprio com dependências explicitadas. Não modificar testes/source alheios.",
+      "intake": "Não integrar PR34/snapshot completo. A branch já tem o helper correto; não reimplementar. Reusar seletivamente testes/fixtures via cópias próprias se necessário, preservando os originais e limites. Runtime Procurement, UI, sharedfixtures, config e engines são readonly.",
+      "acceptance": "PR57 atualizada com código aplicado, ambas regressões resolvidas em CI cirúrgico, POsubmitted/cancelled regression e checks próprios; evidência anterior58+5 preservada sem repetir semimpacto.",
+      "state": "PREPARED_NOT_STARTED",
+      "lease_epoch": 1,
+      "session_id": null,
+      "model_effective": "NOT_VERIFIED",
+      "campaign": "sf2h-integral-20261112",
+      "T0": "2026-11-13T04:01:10Z",
+      "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "common_ref": "c708ec0609dbfc95b259707d8c38481617f74f11:modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-wave/COMMON.md",
+      "rules": "Leia AGENTS/COMMON/seu actorpack completo; mesma branch/PR, novo contexto manual. Handoff terminal e head/authority antes de escrever. GitHub MCP only, CAS, sem merge/force/gh/remote git/deploy/engines/restart. Nenhum teste de produto local; somente CI cirúrgico canônico ao fechar, com dedupe W/seleção/config/fixtures; não rodar epic/fullsuite. Nenhuma inferência ou propostanãoaplicada conta como implementação. Ownpaths somente, sourceproducer intakereadonly. Checkpoint/handoff antes de encerramento."
+    },
+    {
+      "source_id": "MISSION-ui-recipient-ack",
+      "id": "ui-recipient-ack",
+      "branch": "ui-work",
+      "pr": 47,
+      "actor_pack": "S1-A",
+      "expected_head": "79ebf5555eddaa4b5b8b57cbe1df7c5ad22b1244",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts",
+        "modules/sucafina/Sucafinav1/test/product/ui-ack-completion/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/ui-ack-completion/"
+      ],
+      "inputs": {
+        "producer": "collab-resume@62e5629dbf31be2bb662dda152c96021f22b0ca5",
+        "producer_original_validation": "run43628901092:20pass/0fail",
+        "latest_producer_validation": "run43630483191:success, read actual selection/logs before claiming coverage",
+        "contract": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP08/recipient-receipt-20261114/CONTRACT.md",
+        "old_consumer_handoff": "work-ack@92243fc68ff81df7fc563ec081ac9db686a24dfa",
+        "retained_ui": "ui-work@79ebf5555eddaa4b5b8b57cbe1df7c5ad22b1244"
+      },
+      "task": "Implementar consumo UI de mutationReceipt realmente publicado, com ACK da mutação exata. Preservar principal/key/thread/intentDigest/commandDigest e mensagem id/incarnation/version; sent.current e texto/posição/count não são ACK. Recuperar/reconciliar tentativa pendente após reload sob autorização fresca, mantendo payload/key/version originais e sem autosend. Provar perda pós-commit→retry/reload, mensagens iguais, replay após resolução sem reabrir, payload/versão divergentes, Boolean legado/recibo inválido, versão de mensagem alterada e revogação/troca de principal/encarnação. Preservar caminho ordinary thread aprovado. Persistência de intenção deve respeitar escopo/auth e purge; não colocar conteúdo protegido em URL/logs/histórico ou renderizar rascunho antes de reautorizar. Escolher mecanismo existente apropriado, sem nova infraestrutura. C03 ACK não é confirmaçãoC06/aprovação. Não duplicar G03 ou reuso/attachment; estes têm suas próprias provas. Novos fixtures somente próprios com implementação/SQLite/HTTP reais; não fabricar receipt para positivo.",
+      "intake": "Pode materializar verbatim closure mínima publicada do produtor para prova composta própria, com manifest de path/blob/dependência e sem modificar/reimplementar produtor. Se um adapter HTTP precisar repassar a propriedade que já existe, propor patch com preimage ao owner ativo em vez de editar host/route estrangeiro. Não aplicar snapshots completos nem alterar source branches.",
+      "acceptance": "PR47 com UI implementada e prova cirúrgica real; relação exata de produtor consumido, W/S/seleção/run/jobs, consumer acknowledgement e limites. Sem falso green de guard/fixture/native.",
+      "state": "PREPARED_NOT_STARTED",
+      "lease_epoch": 1,
+      "session_id": null,
+      "model_effective": "NOT_VERIFIED",
+      "campaign": "sf2h-integral-20261112",
+      "T0": "2026-11-13T04:01:10Z",
+      "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "common_ref": "c708ec0609dbfc95b259707d8c38481617f74f11:modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-wave/COMMON.md",
+      "rules": "Leia AGENTS/COMMON/seu actorpack completo; mesma branch/PR, novo contexto manual. Handoff terminal e head/authority antes de escrever. GitHub MCP only, CAS, sem merge/force/gh/remote git/deploy/engines/restart. Nenhum teste de produto local; somente CI cirúrgico canônico ao fechar, com dedupe W/seleção/config/fixtures; não rodar epic/fullsuite. Nenhuma inferência ou propostanãoaplicada conta como implementação. Ownpaths somente, sourceproducer intakereadonly. Checkpoint/handoff antes de encerramento."
+    }
+  ]
+}
