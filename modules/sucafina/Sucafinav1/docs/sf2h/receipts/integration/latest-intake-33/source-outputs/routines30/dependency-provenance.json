@@ -1,0 +1,356 @@
+{
+  "schema": "sf-routine-native-dependency-provenance-v1",
+  "mission": 30,
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "astra-wp09",
+  "pr": 30,
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "source_sha": "1998acb0dcb59e68d41ee924eca4737bccbd5148",
+  "composition_target_sha": "9cc27888581a13b55992cdb5dfbd27e43479ac29",
+  "consumer": "session23",
+  "evidence_kind": "static exact-source API and manifest inspection through GitHub MCP; no runtime or AM06 claim",
+  "native_apis": [
+    {
+      "path": "packages/core/src/host.ts",
+      "source_blob": "a0fc5bc9a36e50315b0ddddf4de3566555711250",
+      "bundle_blob": "a0fc5bc9a36e50315b0ddddf4de3566555711250",
+      "identical_between_pins": true,
+      "consumed_api": [
+        "Host.Contribution.replacements",
+        "Host.Contribution.locationNodes",
+        "Host.merge"
+      ]
+    },
+    {
+      "path": "packages/core/src/effect/layer-node.ts",
+      "source_blob": "4d1491948140e05894193050f07b664163a69912",
+      "bundle_blob": "4d1491948140e05894193050f07b664163a69912",
+      "identical_between_pins": true,
+      "consumed_api": [
+        "Node.implementation",
+        "Node.dependencies",
+        "Node.tag",
+        "ordered replacement by service name"
+      ]
+    },
+    {
+      "path": "packages/core/src/tool/task-governance.ts",
+      "source_blob": "12173c0769e62212a4a01003a0a253e7d1d1ba38",
+      "bundle_blob": "12173c0769e62212a4a01003a0a253e7d1d1ba38",
+      "identical_between_pins": true,
+      "consumed_api": [
+        "TaskGovernance.Interface.admit",
+        "TaskGovernance.Interface.beforeTurn",
+        "TaskGovernance.Interface.settle"
+      ]
+    },
+    {
+      "path": "packages/core/src/tool/task.ts",
+      "source_blob": "0e82455ca428e5b498551496bc65bdc0f6551df3",
+      "bundle_blob": "0e82455ca428e5b498551496bc65bdc0f6551df3",
+      "identical_between_pins": true,
+      "consumed_api": [
+        "TaskTool.node",
+        "TaskTool.name",
+        "native recorded-call requireParent",
+        "canonical Task child and prompt identity"
+      ]
+    },
+    {
+      "path": "packages/core/src/tool/registry.ts",
+      "source_blob": "27c06bb2060a792ca1a2237673f2627b8d04f3fc",
+      "bundle_blob": "27c06bb2060a792ca1a2237673f2627b8d04f3fc",
+      "identical_between_pins": true,
+      "consumed_api": [
+        "currentRegistrationIdentity",
+        "materialize",
+        "Materialization.registrationIdentity",
+        "Materialization.settle"
+      ]
+    },
+    {
+      "path": "packages/core/src/tool-safety.ts",
+      "source_blob": "effd9af70e95a38de93c9e472bd03728666c4da8",
+      "bundle_blob": "effd9af70e95a38de93c9e472bd03728666c4da8",
+      "identical_between_pins": true,
+      "consumed_api": [
+        "ToolSafety.Interface.before",
+        "ToolSafety.Interface.run",
+        "ToolSafety.Interface.acquire",
+        "ToolSafety.Interface.session"
+      ]
+    },
+    {
+      "path": "packages/core/src/relay.ts",
+      "source_blob": "25fb509203f933a2e8b0f311c3fc8f9476d53e16",
+      "bundle_blob": "25fb509203f933a2e8b0f311c3fc8f9476d53e16",
+      "identical_between_pins": true,
+      "consumed_api": [
+        "Relay.Service",
+        "Relay.node",
+        "Relay.Interface.create",
+        "Relay.Interface.rebind",
+        "Relay.Interface.transition"
+      ]
+    },
+    {
+      "path": "packages/core/src/relay-workflow-transition.ts",
+      "source_blob": "a200d327a4e1f9f7c3b0e7c986f6a848608f6d6b",
+      "bundle_blob": "a200d327a4e1f9f7c3b0e7c986f6a848608f6d6b",
+      "identical_between_pins": true,
+      "consumed_api": [
+        "Input.revalidate under native run lock",
+        "checkpoint identity/replay/reconciliation"
+      ]
+    },
+    {
+      "path": "packages/core/src/location-services.ts",
+      "source_blob": "b6eaefbc8dd8df2be112371c69b7791f462cf82e",
+      "bundle_blob": "b6eaefbc8dd8df2be112371c69b7791f462cf82e",
+      "identical_between_pins": true,
+      "consumed_api": [
+        "buildLocationServiceMap",
+        "native registry replacements",
+        "Location-scoped contribution dependencies"
+      ]
+    },
+    {
+      "path": "modules/maestro/coordination/src/v2/governance.ts",
+      "source_blob": "78841580d6b70d124cdce19b41f9eeea05c4ef8e",
+      "bundle_blob": "78841580d6b70d124cdce19b41f9eeea05c4ef8e",
+      "identical_between_pins": true,
+      "consumed_api": [
+        "MaestroGovernanceV2.make",
+        "MaestroGovernanceV2.node",
+        "native workflow admission and current review/approval checks"
+      ]
+    },
+    {
+      "path": "modules/maestro/coordination/src/v2/governance/write-roots.ts",
+      "source_blob": "964f22804a2b06b9a14a5f95b2b428e1af77d586",
+      "bundle_blob": "964f22804a2b06b9a14a5f95b2b428e1af77d586",
+      "identical_between_pins": true,
+      "consumed_api": [
+        "WriteRootsV2.safetyNode",
+        "original Arsenal layer preservation",
+        "write-root enforcement and acquisition"
+      ]
+    },
+    {
+      "path": "modules/maestro/coordination/src/v2/governance/records.ts",
+      "source_blob": "800ba56aeb7865b2b2fd8b9adc9539523b408e5a",
+      "bundle_blob": "800ba56aeb7865b2b2fd8b9adc9539523b408e5a",
+      "identical_between_pins": true,
+      "consumed_api": [
+        "GovernanceRecordsV2.readWorkflowRevision",
+        "closed v3 schema, native ID/hash/aggregate validation"
+      ]
+    },
+    {
+      "path": "modules/maestro/coordination/src/v2/workflow/records.ts",
+      "source_blob": "ec921d50bb9b4aabc7be2b047805a8f00770c379",
+      "bundle_blob": "ec921d50bb9b4aabc7be2b047805a8f00770c379",
+      "identical_between_pins": true,
+      "consumed_api": [
+        "WorkflowRecordsV2.read",
+        "canonical execution Session-to-plan binding"
+      ]
+    }
+  ],
+  "workspace": {
+    "package_manager": "bun@1.3.14",
+    "catalog": {
+      "effect": "4.0.0-beta.83",
+      "drizzle-orm": "1.0.0-rc.2"
+    },
+    "evidence": [
+      {
+        "path": "package.json",
+        "source_commit": "1998acb0dcb59e68d41ee924eca4737bccbd5148",
+        "source_blob": "3bac883dfbc44466be9afb54a1e175a9643ecdab",
+        "bundle_commit": "9cc27888581a13b55992cdb5dfbd27e43479ac29",
+        "bundle_blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+        "inspected_range": "complete file"
+      },
+      {
+        "path": "apps/cli/package.json",
+        "source_commit": "1998acb0dcb59e68d41ee924eca4737bccbd5148",
+        "source_blob": "b1385b685c2af5ae8f88d5962be87d3363f5085c",
+        "bundle_commit": "9cc27888581a13b55992cdb5dfbd27e43479ac29",
+        "bundle_blob": "b1385b685c2af5ae8f88d5962be87d3363f5085c",
+        "inspected_range": "complete file"
+      },
+      {
+        "path": "modules/relay/package.json",
+        "source_commit": "1998acb0dcb59e68d41ee924eca4737bccbd5148",
+        "source_blob": "c7145670d8f79d2db91eb8545af5361bc04549f1",
+        "bundle_commit": "9cc27888581a13b55992cdb5dfbd27e43479ac29",
+        "bundle_blob": "c7145670d8f79d2db91eb8545af5361bc04549f1",
+        "inspected_range": "complete file"
+      },
+      {
+        "path": "packages/schema/package.json",
+        "source_commit": "1998acb0dcb59e68d41ee924eca4737bccbd5148",
+        "source_blob": "adc53ecfa8f4ac83fee37854db2dc0ec2bb9136a",
+        "bundle_commit": "9cc27888581a13b55992cdb5dfbd27e43479ac29",
+        "bundle_blob": "adc53ecfa8f4ac83fee37854db2dc0ec2bb9136a",
+        "inspected_range": "complete file"
+      },
+      {
+        "path": "bun.lock",
+        "source_commit": "1998acb0dcb59e68d41ee924eca4737bccbd5148",
+        "source_blob": "20b7898cf6eb5ff864e99f9b244f29c985b62f4c",
+        "bundle_commit": "9cc27888581a13b55992cdb5dfbd27e43479ac29",
+        "bundle_blob": "e3f0c6443c12dd16cb66030f75e2f71f16508098",
+        "inspected_range": "lines 1-100; complete-file blob supplied by GitHub"
+      },
+      {
+        "path": "bunfig.toml",
+        "source_commit": "1998acb0dcb59e68d41ee924eca4737bccbd5148",
+        "source_blob": "c506ff57c4bf3fa3a6bd3501b8ce2fc29122accb",
+        "bundle_commit": "9cc27888581a13b55992cdb5dfbd27e43479ac29",
+        "bundle_blob": "c506ff57c4bf3fa3a6bd3501b8ce2fc29122accb",
+        "inspected_range": "complete file"
+      }
+    ],
+    "existing_workspaces": [
+      "packages/*",
+      "apps/cli",
+      "modules/relay",
+      "modules/maestro/coordination",
+      "modules/maestro/arsenal",
+      "modules/sucafina"
+    ],
+    "existing_cli_direct_dependencies": [
+      "@orchestra/core",
+      "@orchestra/llm",
+      "@orchestra/maestro",
+      "effect",
+      "drizzle-orm"
+    ],
+    "existing_bundle_root_dependencies": {
+      "@orchestra/relay": "workspace:*",
+      "@orchestra/schema": "workspace:*"
+    },
+    "source_difference": "At source 1998ac, root package.json and its bun.lock root workspace entry do not list @orchestra/relay or @orchestra/schema directly. Both workspace packages and their exact export maps already exist at the same blobs. At the required composition target 9cc, root manifest and lock already list both directly.",
+    "package_exports_confirmed": {
+      "@orchestra/relay": [
+        "./arm/load",
+        "./arm/state",
+        "./audit",
+        "./authoring/graph",
+        "./authoring/store"
+      ],
+      "@orchestra/schema": [
+        "./maestro-event",
+        "./relay-arm",
+        "./session-message",
+        "./session-event",
+        "./project-id"
+      ]
+    },
+    "existing_cli_import_precedent": [
+      {
+        "path": "apps/cli/src/sucafina-product/routine-services.ts",
+        "imports": [
+          "@orchestra/schema/relay-arm"
+        ]
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/routine-publication.ts",
+        "imports": [
+          "@orchestra/relay/authoring/graph"
+        ]
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/routine-installed-publication.ts",
+        "imports": [
+          "@orchestra/relay/authoring/graph",
+          "@orchestra/relay/authoring/store",
+          "@orchestra/schema/project-id"
+        ]
+      }
+    ],
+    "decision": "No package or lock mutation is made. The exact 9cc composition target already supplies its root workspace dependencies and must preserve them. The source-head hosted typecheck exposed that relay/schema aliases are not resolvable from CLI at source 1998ac; owned adapter support therefore uses explicit relative paths to the same existing workspace source modules instead of adding shared dependencies.",
+    "package_patch_required_for_target": false,
+    "source_runtime_resolution": "W1 hosted run 43643108377/job 132594812686 failed, including unresolved owned aliases. W2 1fe2e77f8cb70ff9f8fd0195efcc4792ebf6cadd corrected owned imports to existing workspace sources and the native Layer tuple overload. The exact W3 7676fd9173015e2c7d7c91745cc486f50018fc85 check run 43644025753/job 132597678493 observed zero owned diagnostics and 78 external diagnostics; the package typecheck remains FAIL. No package/lock changes, local installs or local typecheck were used.",
+    "source_compatibility_correction": {
+      "trigger": {
+        "run_id": 43643108377,
+        "job_id": 132594812686,
+        "result": "FAIL",
+        "governance_errors": [
+          "TS2307: @orchestra/relay/arm/state is not resolvable from CLI at the source pin",
+          "TS2769: the single-layer Layer.provide overload does not accept LayerNode's erased Layer.Any"
+        ]
+      },
+      "governance_import": "../../../../modules/relay/src/arm/state.ts",
+      "layer_adaptation": "Layer.provide([Relay.node.implementation!]) uses the supported tuple overload and preserves the exact original native layer without any cast or a new service graph.",
+      "verification": {
+        "W": "7676fd9173015e2c7d7c91745cc486f50018fc85",
+        "S": "f8c20a57dae345d45ada1a42ef38233d24668c13",
+        "run": 43644025753,
+        "job": 132597678493,
+        "own_diagnostics": 0,
+        "external_diagnostics": 78,
+        "package_typecheck": "failure",
+        "guards": "success",
+        "scope": "modules/sucafina bun typecheck reaches owned CLI adapter imports through the named tests; no separate CLI or shared-host postimage typecheck was run"
+      }
+    },
+    "changed_package_files": []
+  },
+  "assembly_dependencies": {
+    "source_files": [
+      "apps/cli/src/sucafina-product/routine-services.ts",
+      "apps/cli/src/sucafina-product/routine-native-adapter.ts",
+      "apps/cli/src/sucafina-product/routine-native-input.ts",
+      "apps/cli/src/sucafina-product/routine-native-records.ts",
+      "apps/cli/src/sucafina-product/routine-native-dispatch.ts",
+      "apps/cli/src/sucafina-product/routine-native-governance.ts",
+      "apps/cli/src/sucafina-product/routine-native-runtime.ts"
+    ],
+    "shared_patch": "assembly/host-context.patch",
+    "exact_target_manifest": "assembly/manifest.json",
+    "initialization_order": [
+      "Existing Maestro governance and WriteRoots/Arsenal composition",
+      "SF contribution wrapping original TaskGovernance, ToolSafety and Relay implementations",
+      "SF Location capture dependent on actual TaskTool registration and decorated service instances",
+      "onReady inserts only descriptors backed by the installed owner capability and publication resources",
+      "product Location tools.register observes those descriptors through explicit node dependency"
+    ],
+    "existing_singletons": [
+      "SessionExecution.Service",
+      "LocationServiceMap.Service"
+    ],
+    "authority_state": "Ephemeral Request-bound leases only; native PlanRevision, Task, WorkflowBound, arm, checkpoint and result records remain canonical.",
+    "required_private_resource": "Authenticated owner-to-Maestro binding with stable real Request, current authority Session and an already recorded exact native Task invocation",
+    "private_resource_observed": "Absent in current host/UI; adapter installation alone does not supply this resource or prove AM06.",
+    "still_unavailable": [
+      "Native watch admission (sf_watch_prepare)",
+      "Any missing publication/knowledge resource",
+      "AM06 until real installed owner capability/provider/acceptance evidence exists"
+    ]
+  },
+  "transaction_scope": {
+    "session_prompt_source": {
+      "path": "packages/core/src/session.ts",
+      "bundle_blob": "00b276d8f2c9e634ae55a37e800fae388eb595e6"
+    },
+    "prompt_guard": "Native promptHooks executes before events.transact for SessionInput.admit; async current/readPlan callbacks are not placed inside the SQL transaction.",
+    "prompt_hook_limit": "Session hook invocation is conditional on native hooks.json presence, so it is supplemental; Task beforeTurn, ToolSafety run and Relay transition are independent guards.",
+    "relay_guard": "Native transition revalidate is called inside the filesystem run lock, not inside an EventV2 SQL transaction.",
+    "event_publish": "Do not place async lease.current/readPlan callbacks that call Effect.runPromise inside EventV2.transact."
+  },
+  "write_scope": {
+    "direct_shared_or_engine_writes": false,
+    "remote_writes_by_this_subagent": false,
+    "owned_subagent_writes": [
+      "apps/cli/src/sucafina-product/routine-native-governance.ts",
+      "apps/cli/src/sucafina-product/routine-native-runtime.ts",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-admission/dependency-provenance.json"
+    ],
+    "private_research_only": "pack-map/ materializes immutable source and readouts in scratch; it is not part of the repository patch.",
+    "prohibited_actions_performed": []
+  }
+}

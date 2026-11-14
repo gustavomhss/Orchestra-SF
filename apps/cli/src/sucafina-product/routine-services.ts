@@ -1,6 +1,6 @@
 import { Effect } from "effect"
 import { RelayWorkflowBinding } from "@orchestra/core/relay-workflow-binding"
-import type { RelayArm } from "@orchestra/schema/relay-arm"
+import type { RelayArm } from "../../../../packages/schema/src/relay-arm.ts"
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { RoutineResult, SourceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
 import type { BusinessPorts, PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
@@ -57,6 +57,8 @@ export type SfRoutineServicesInput = {
   resolveInputs: (references: readonly string[], context: TrustedDomainContext) => Promise<PortResult<readonly SourceRef[]>>
   revalidateSources: (sources: readonly SourceRef[], context: TrustedDomainContext) => Promise<boolean>
   prepareWatch?: RoutineHost["prepareWatch"]
+  /** A Schedule function that only returns unavailable is not an installed watch admission binding. */
+  watchAvailable?: () => boolean
   requiredAuthority?: RoutineHost["requiredAuthority"]
 }
 
@@ -266,8 +268,15 @@ export function createSfRoutineServices(input: SfRoutineServicesInput) {
       revalidate: async (call, runs) => await authorized(call) && (await Promise.all(runs.map((run) => input.revalidateSources(run.sourceRefs, call)))).every(Boolean),
     } })
   }
+  const descriptors = createRoutineCapabilities({ ...capabilities, routines })
   return {
-    routines, descriptors: createRoutineCapabilities({ ...capabilities, routines }), resultAccess, expectedInputDigest, readExecution,
+    routines,
+    /** Read at native tool registration, after the existing Location services have actually been acquired. */
+    get descriptors() {
+      if (!input.native?.() || !input.publication?.()) return []
+      return descriptors.filter((descriptor) => descriptor.id !== "sf_watch_prepare" || !!input.prepareWatch && input.watchAvailable?.() === true)
+    },
+    resultAccess, expectedInputDigest, readExecution,
     readArtifact: async (resultRef: string, context: TrustedDomainContext): Promise<PortResult<RoutineArtifact>> => {
       const artifact = await readArtifact(resultRef, context)
       if (artifact.status !== "ok") return artifact
@@ -296,3 +305,4 @@ export function routineSourceDigest(sources: readonly SourceRef[]) {
 }
 function unavailable(reason: string) { return { status: "unavailable" as const, reason } }
 function denied() { return { status: "denied" as const, reason: "routine-authority-unavailable" } }
+

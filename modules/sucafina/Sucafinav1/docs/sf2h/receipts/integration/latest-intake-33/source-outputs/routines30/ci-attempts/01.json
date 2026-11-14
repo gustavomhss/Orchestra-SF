@@ -1,0 +1,64 @@
+{
+  "W": "f3b97d4ff68d69fccbdf286dd66767c1d5fceae5",
+  "Wtree": "2d8a06fd6e2f1b89b84910a072b13adc599bbf12",
+  "test": {
+    "S": "400365533b0bdfbf7f3c757caf74925bf3ffdf9d",
+    "tree": "023cc9ca02065dfcaf92a43eddae7017ff7b06bc",
+    "run": 43643105285,
+    "branch": "ci-run-linux-astra-wp09-f3b97d4f-697dca0d-1",
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "Sucafinav1/test/product/routine-native-admission/adapter-boundaries.test.ts",
+        "Sucafinav1/test/product/routine-native-admission/admission-records.test.ts",
+        "Sucafinav1/test/product/routine-native-admission/governance-lease.test.ts",
+        "Sucafinav1/test/product/routine-native-admission/plan-records.test.ts",
+        "Sucafinav1/test/product/routine-native-admission/positive-admission.test.ts",
+        "Sucafinav1/test/product/routine-native-admission/retained-input.test.ts"
+      ],
+      "env": {}
+    },
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43643105285",
+    "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43643105285/job/132594802593",
+    "request_sha256": "697dca0d8254d24736654f2bc024b7f0201acf511e7a83f30969cbe4a759b650"
+  },
+  "check": {
+    "S": "b269dad9006f24ee6697d77eb6bdfcb59ca35e02",
+    "tree": "3fbc5040b8a267c101b956b978eed52fadd445ae",
+    "run": 43643108377,
+    "request": {
+      "productSha": "f3b97d4ff68d69fccbdf286dd66767c1d5fceae5",
+      "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+    },
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43643108377",
+    "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43643108377/job/132594812686"
+  },
+  "testJob": 132594802593,
+  "checkJob": 132594812686,
+  "testResult": {
+    "pass": 2,
+    "fail": 6,
+    "errors": 5,
+    "expect": 20,
+    "tests": 8,
+    "files": 6,
+    "duration_ms": 926,
+    "omniNonce": "597eac1ba2e7553c64acc313eb564fd4",
+    "omniVerdict": "not applicable (focused: no declaring test ran)",
+    "conclusion": "failure"
+  },
+  "checkResult": {
+    "typecheck": "failure",
+    "diagnostics": 143,
+    "ownDiagnostics": 65,
+    "externalDiagnostics": 78,
+    "guards": "success",
+    "rules": 78,
+    "changedPaths": 680,
+    "gate": 0,
+    "warnings": 13,
+    "errors": 0
+  }
+}

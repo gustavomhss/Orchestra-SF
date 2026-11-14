@@ -1,0 +1,196 @@
+{
+  "schema": "sf-routine-native-candidate-v1",
+  "mission": 30,
+  "branch": "astra-wp09",
+  "pr": 30,
+  "lease": "routine-native-browser30",
+  "source_parent": "1998acb0dcb59e68d41ee924eca4737bccbd5148",
+  "source_tree": "d55821143e3f522c3a3ea7ad6c076bd8cfac6bfb",
+  "mission_commit": "5b00bd553781f437586177247b8a726aafd8ee59",
+  "planning": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "composed_input": "9cc27888581a13b55992cdb5dfbd27e43479ac29",
+  "native_harness": "8a776484bb17ac0c83ae2eb56ddcfb2fad73aa35",
+  "files_excluding_this_manifest": [
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-adapter.ts",
+      "bytes": 29066,
+      "git_blob": "aa0b9758acee9338f8422002d718f05c71f00a09",
+      "sha256": "2b847a1f3969ee870ae49790f5ce7ad15df5f2524423b5a96d725cb2e4e9c8b6"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-dispatch.ts",
+      "bytes": 12229,
+      "git_blob": "40fbb2c2abdc26463ee20b34d1e2081287c2ea63",
+      "sha256": "166d15578beca43de868af4bd78c752acd821cca7a99e2492732b78c92b83673"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-governance.ts",
+      "bytes": 14259,
+      "git_blob": "59c76df420f9532fbe4d278a9c1dccf86e33cbe0",
+      "sha256": "731416684d0056b0530e759a1c11d1f6b42dfd84e6c3dc2ee65a4a1707d1e5f4"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-input.ts",
+      "bytes": 4631,
+      "git_blob": "f0a3a1f9b743161a98b5545fce1ca71c8d9c0abe",
+      "sha256": "d90866bef08d30bac3312724e583a2c7534b0ef991d8362b0a004f3c44242a92"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-records.ts",
+      "bytes": 26950,
+      "git_blob": "d918fa52cdf301ed90ed243329caa799dcfc8ebd",
+      "sha256": "f9333b0fee6d2c73b6d6056fe5f9351186cf7d67167086bcb0f25f17dfb360de"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-runtime.ts",
+      "bytes": 10580,
+      "git_blob": "377ceb99d45b6142c8e9f077f69f23673f470f92",
+      "sha256": "19b65e0e786bec23d99ed7bb86034aff31bfff31b33c19fb7f30c3a2b9ed5607"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-services.ts",
+      "bytes": 22976,
+      "git_blob": "4b455444cdeb560e85f6a17e6192c0420287d48a",
+      "sha256": "ae09e051924b204f80de30e50964cd22410f8c7d45432ae3aeb00501d101ebb4"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-admission/README.md",
+      "bytes": 8306,
+      "git_blob": "c2b8c1c64c2e9fd4695bfc0d88f558c6527db636",
+      "sha256": "39eb424cfc646da97183076bac895ecb0cf91f60e2b375ab1eb297287554a0cb"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-admission/assembly/README.md",
+      "bytes": 3953,
+      "git_blob": "8155807cba03b38c52b4688382d31ef4de345184",
+      "sha256": "ed37ffe976ff9ba29cd4a4e973e8fb8d30558b49afcf65fba49a2b37964a68a4"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-admission/assembly/host-context.patch",
+      "bytes": 6378,
+      "git_blob": "01de7c21025a2c9f0363503aa02b928835508c5a",
+      "sha256": "d83a3fb763a18ecabb0d5d0570fcf06e1c15ff3a9116c2862cbf6820b00aeb08"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-admission/assembly/host-context.postimage.txt",
+      "bytes": 76410,
+      "git_blob": "2bf1e6e66c13dd099029ec16b1f1ddf1f698dae6",
+      "sha256": "6063552373c63e9a7bd71c3b43ee31f8782aafe294eea1ae194dae8d6a5f72a0"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-admission/assembly/host-context.preimage.txt",
+      "bytes": 74216,
+      "git_blob": "bdf6d4e2014cc9b2a492b6ae304948c249221e39",
+      "sha256": "42839b627194c59febff34052b813a6e4725414dcf84c8308397539b734b3893"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-admission/assembly/manifest.json",
+      "bytes": 1351,
+      "git_blob": "e332f286505676b6925d9e8f101be35aacb7b965",
+      "sha256": "49b1cf9746d9ae91e6883cd5c2c4e0aec6f913d1f210b2bb05d4f275ea2b2e9e"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-admission/ci-attempts/01.json",
+      "bytes": 2345,
+      "git_blob": "f0f2198d1b033eb77327f04981c297be847a8e15",
+      "sha256": "dabc21edbc7863423d0ccd1f726198dc95ca9ad6d57d74c1ebb952dbad384297"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-admission/ci-attempts/02.json",
+      "bytes": 3552,
+      "git_blob": "f4d766af57e741e82d52e73468cd31ae3f61b987",
+      "sha256": "ed53165ce9cf4dd022b95ff00f330e6d882cfe444255b928d6f1c14e594b9346"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-admission/ci-attempts/03.json",
+      "bytes": 5879,
+      "git_blob": "61c323cb4383c7ba9521de0a2122d8815c1b4165",
+      "sha256": "a20a6ec9a89d8a579e4a2895fd7d618969c0c58c1b353a3625c65970a7a037d2"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-admission/criteria-evidence.json",
+      "bytes": 11697,
+      "git_blob": "70af0a99d54e0fbfacc1fbcf73c8cd02eb4d2e2e",
+      "sha256": "ec06c881a1dac5309ccd752bdba6729b6fac3d42d819bb1759115763644fe871"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-admission/dependency-provenance.json",
+      "bytes": 15481,
+      "git_blob": "b20792ef481afd60dbf69de538725b9006697afd",
+      "sha256": "4f010046377a65263bc6d00c5f4b43caa81796575cb5ca5b8a57e9982ea2d6a7"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-admission/implementation.md",
+      "bytes": 10079,
+      "git_blob": "88ef633fd78df9eee0495061ff5494853aaa22bf",
+      "sha256": "26ab40387bf3628a762f5a94d07ab92ca90f89281f16e43d9cc539664cca8a10"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-admission/terminal.json",
+      "bytes": 9564,
+      "git_blob": "8ebdfa310bae3ca05d7ef43d31a6360d474f4f48",
+      "sha256": "3c0cc67dcc21bf71c5b1af0ba48035bed88b707e560ae58abab0e34ac5a36dd4"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/routine-native-admission/adapter-boundaries.test.ts",
+      "bytes": 16212,
+      "git_blob": "b3a178758751b5a12d0d16f33d2a68872014edea",
+      "sha256": "62160bbe96ff65a14b9c66d8e20e4d9d812a4c35407358034825fa48f005d9a9"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/routine-native-admission/admission-records.test.ts",
+      "bytes": 8287,
+      "git_blob": "d43abff57e9adca7483b3ed3fb01f9fdbfe83a84",
+      "sha256": "3d38866d5fd80bcfcf5fe73a6208dd5eb79262a84bb55797cfdf3f91d9b67995"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/routine-native-admission/fixture.ts",
+      "bytes": 4669,
+      "git_blob": "eab3ded0a4964793d7786a50e02d0b9f97962bf3",
+      "sha256": "28dc7cc60fcf78304dc4eb44d6117cc1b7e839a609365c584f206a14f1e89701"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/routine-native-admission/governance-lease.test.ts",
+      "bytes": 8195,
+      "git_blob": "b56593997f2c04ad793e9756e10703e4dab97e60",
+      "sha256": "125c70c5df81faff027e248aaf16c4b03ed580c10b0dbb62a5429d4f0e2098b1"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/routine-native-admission/plan-records.test.ts",
+      "bytes": 4797,
+      "git_blob": "057eb8692913abb8780403d71b7b671ef8cab788",
+      "sha256": "78d8fb29fdc2fc93f567f55c48dc1e83d33afce4c6c7c46b7aa20fc6e3b8feb0"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/routine-native-admission/positive-admission.test.ts",
+      "bytes": 14599,
+      "git_blob": "635fcee58fdf25453ed976f730649e0f922e484a",
+      "sha256": "c0092e6039782fa21687a62889ddace171dc3c214d4ae5efbad6654e6193941f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/routine-native-admission/retained-input.test.ts",
+      "bytes": 4814,
+      "git_blob": "b209ed94c4b6802fdc37321ce82a61ea8e7fb9e2",
+      "sha256": "355d361ca9108530bd806605e304f0621517bfc26545c664b08ea6ee793dc8c3"
+    }
+  ],
+  "ci_request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/routine-native-admission/adapter-boundaries.test.ts",
+      "Sucafinav1/test/product/routine-native-admission/admission-records.test.ts",
+      "Sucafinav1/test/product/routine-native-admission/governance-lease.test.ts",
+      "Sucafinav1/test/product/routine-native-admission/plan-records.test.ts",
+      "Sucafinav1/test/product/routine-native-admission/positive-admission.test.ts",
+      "Sucafinav1/test/product/routine-native-admission/retained-input.test.ts"
+    ],
+    "env": {}
+  },
+  "ci_request_sha256": "697dca0d8254d24736654f2bc024b7f0201acf511e7a83f30969cbe4a759b650",
+  "tests_local": "NOT_RUN_BY_INSTRUCTION",
+  "native_acceptance": "AM06_NOT_RUN",
+  "shared_host": "PATCH_ONLY_NOT_APPLIED",
+  "consumer": "session23"
+}
