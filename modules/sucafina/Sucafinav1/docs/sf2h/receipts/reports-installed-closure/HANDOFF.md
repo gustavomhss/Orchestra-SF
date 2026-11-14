@@ -84,6 +84,14 @@ Os artefatos dos checks contêm geração sintética de DOCX/PPTX, com IDs, tama
 
 O perfil instalado disponível admite uma pessoa. Nova admissão cria outra sessão do mesmo operador e é adequada ao cenário de revogação de sessão; não prova um segundo destinatário. O shared adapter exige provider real de destinatário distinto e acesso real dessa pessoa à mesma C05 e às fontes; cadastro no diretório ou autorização do caller não satisfazem isso. Não foram fabricadas identidades ou permissões.
 
+## Liberação de implementação para consumo e defasagem do censo
+
+O pacote está **liberado para consumo pela sessão23 como implementação e assembly**, conforme [CONSUMER-RELEASE.json](CONSUMER-RELEASE.json). Essa disposição explícita não aprova a jornada nem exige um PASS nominal anterior à montagem de que os próprios testes dependem. A sessão23 deve publicar novo candidato, ACK e mapa de blobs; C4 permanece imutável.
+
+A integradora publicou seu encerramento de recorte em `3c0b7df201559223ddf1631c182a409af700ff38`. Seu censo de `21:16:09 UTC` ainda observava W2 sem os novos recibos; nossa primeira entrega documental foi comitada às `21:17:28 UTC`. O head documental posterior altera somente recibos de intake. O produto C4 continua `253baad3f2ff4af5beac695feae4c2f6372dc2e7`, tree `c3648fca57012f6e6934e207e02c88c75cc6eb3a`; `402a0914…` é seu checkpoint de identidade. [SESSION23-RECONCILIATION.json](SESSION23-RECONCILIATION.json) registra as identidades e a defasagem. Nenhum consumo de Reports25 ou novo candidato C5 foi observado.
+
+Na retomada da sessão23, a fonte a reconciliar é a sequência própria publicada nesta PR e o pacote completo atual, não apenas o W2 sem handoff que consta naquele censo. A próxima ação é assembly limitado aos deltas entregues, seguido da execução nominal pelo dispatcher WP07 autorizado.
+
 ## Próximo passo exato
 
 [ACK-REQUEST.json](ACK-REQUEST.json) solicita à sessão23 consumo dos deltas próprios e dos três pacotes, com publicação do **W/tree/blobs reais e ACK de assembly**. A sessão23 não recebe autorização de dispatcher/CI por este recibo.
