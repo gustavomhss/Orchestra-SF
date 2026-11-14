@@ -1,4 +1,6 @@
 import { AsyncLocalStorage } from "node:async_hooks"
+import type { Snapshot } from "../../../../runtime/contract.ts"
+import type { BlobTransaction } from "../../../../runtime/assets.ts"
 import type { createThreadActorsFixture } from "../../ui-split/ui-work/actors-fixture.ts"
 
 type Metric = { calls: number; inclusiveMs: number; maxMs: number }
@@ -55,7 +57,7 @@ export function instrumentWorkReuse(app: Awaited<ReturnType<typeof createThreadA
   // state.transaction work callback is replaced (authority uses its identity).
   const transaction = app.store.transaction
   app.store.transaction = (surface, work, options) => measure("sqlite.transaction:" + surface,
-    () => transaction(surface, (snapshot, blobs) => measure("sqlite.callback:" + surface, () => work(snapshot, blobs)), options))
+    () => transaction(surface, (snapshot: Snapshot, blobs: BlobTransaction) => measure("sqlite.callback:" + surface, () => work(snapshot, blobs)), options))
   const all = app.store.transactionAll
   if (all) app.store.transactionAll = (work, options) => measure("sqlite.transactionAll",
     () => all((snapshots) => measure("sqlite.callbackAll", () => work(snapshots)), options))

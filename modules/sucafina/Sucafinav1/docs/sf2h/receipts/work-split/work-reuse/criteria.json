@@ -1,0 +1,42 @@
+{
+  "schema": "sf2h.work-reuse.criteria-overlay.v1",
+  "plan": {
+    "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "campaign_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba"
+  },
+  "inherited_universe": "../../ui-split/ui-work/criterion-universe.json",
+  "inherited_universe_blob": "7088bc9f900401c6ce2037d5d7fe2ab2cf0e6f66",
+  "counts": {
+    "WP01": 75,
+    "WP02": 78
+  },
+  "full_plan_preserved": true,
+  "affected": [
+    "WP01.T03.DOD.01",
+    "WP01.T03.INV.01",
+    "WP01.T03.CMP.01",
+    "WP01.T03.SUC.01",
+    "WP01.T05.INV.01",
+    "WP01.T05.CMP.01",
+    "WP01.T05.CHK.02"
+  ],
+  "contracts": {
+    "C03": "Exact intention/body/key, durable atomic replay receipt and retry reauthorization remain required; no attachment replay PASS.",
+    "C06": "Current access, exact message/baseline, material scope/dependencies, physical incarnation and source/storage-version distinction remain required."
+  },
+  "campaign": [
+    "CAMP.INV.04",
+    "CAMP.INV.20",
+    "CAMP.QLT.05",
+    "CAMP.QLT.06"
+  ],
+  "observations": {
+    "diagnostic": "R01 measured repeated authenticated reads and observed the attachment request after the5000ms waiter failed; no criterion-wide PASS.",
+    "published_producer": "Reattach W6 seven scoped passes and W7 five corrected/split scoped passes under their actual W/S SHAs. W7 has no product delta and is not a latency fix.",
+    "already_approved_ui": "Reattach R02 direct reply/retry/reload, distinct-recipient uncertainty/retry and selected-case recovery. Not re-executed.",
+    "attachment": "NOT_RUN_IN_REAL_COMPOSITION; current composition needs real distinct-recipient authority wiring and proof.",
+    "latency": "FAIL5000ms observed; p95 and200ms perceptible-feedback quality targets are not qualified by this single trace."
+  },
+  "excluded_from_requalification": "Other WP01/WP02 criteria, all remaining campaign requirements and installed/native/global acceptance retain their historical evidence/status. This overlay does not reset or reduce them.",
+  "global_release": false
+}
