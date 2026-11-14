@@ -38,8 +38,13 @@ test("real JSON import preserves the private C08 choice and cannot revive a dele
       environment: async () => ({ at, id: () => project.id, directory: [{ id: principal, name: "Host authenticated Finance" }] }),
     }
     const records = createDashboardRecordEvidenceHost({ host, scopedSources: persistence, issueRecord: createDashboardRecordSourceIssuer({ host, scopedSources: persistence }) })
-    const app = createApplication("/sucafina", { persistence, authenticate: host.authenticate, environment: host.environment,
+    const handle = createApplication("/sucafina", { persistence, authenticate: host.authenticate, environment: host.environment,
       domains: { dashboard: [{ domain, pages, render }], planner: [], procurement: [] }, maxJsonBytes: 2_000_000 })
+    const app = async (incoming: Request): Promise<Response> => {
+      const response = await handle(incoming)
+      if (!response) throw new Error(`Dashboard route unavailable: ${incoming.method} ${new URL(incoming.url).pathname}`)
+      return response
+    }
     const state = createSfProductState({ persistence, createId: randomUUID,
       authorize: async (incoming) => incoming === fixture.request && await host.revalidate(fixture.context)
         ? { principalRef: principal, policyVersion: "policy", accessRevision: "access" } : undefined,
