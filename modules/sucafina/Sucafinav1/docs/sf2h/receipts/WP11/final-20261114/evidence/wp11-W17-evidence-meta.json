@@ -1,0 +1,173 @@
+{
+  "source": {
+    "productSha": "26bb96b22fbfe610eef1714036dbaa068ec7c371",
+    "productTree": "68e75187628ae046a9249238bb14226ebf0ec625",
+    "guardBase": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+    "mergeBase": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+    "seed": "ff99e4b4de56bbf6e7ef36daf5d3eb749779017a"
+  },
+  "run": {
+    "id": 43597203668,
+    "status": "completed",
+    "conclusion": "failure",
+    "created_at": "2026-11-14T12:55:53Z",
+    "updated_at": "2026-11-14T12:57:19Z",
+    "head_sha": "26bb96b22fbfe610eef1714036dbaa068ec7c371",
+    "html_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43597203668",
+    "run_attempt": 1,
+    "head_commit": {
+      "id": "26bb96b22fbfe610eef1714036dbaa068ec7c371",
+      "tree_id": "68e75187628ae046a9249238bb14226ebf0ec625",
+      "message": "fix(sucafina): fence complete case reads and avoid redundant fixture judgments",
+      "timestamp": "2026-11-14T12:55:49Z",
+      "author": {
+        "name": "gustavomhss",
+        "email": "gmhelmold@gmail.com"
+      },
+      "committer": {
+        "name": "gustavomhss",
+        "email": "gmhelmold@gmail.com"
+      }
+    }
+  },
+  "jobs": [
+    {
+      "id": 132454145495,
+      "name": "wp11-checks",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_id": 43597203668,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Checkout exact product commit",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Record product and guard base",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Typecheck Sucafina package",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 5
+        },
+        {
+          "name": "Guardrails against origin/dev",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Upload exact check evidence",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7
+        },
+        {
+          "name": "Post Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13
+        },
+        {
+          "name": "Post Checkout exact product commit",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15
+        }
+      ]
+    }
+  ],
+  "checks": {
+    "runId": 43597203668,
+    "jobId": 132454145495,
+    "artifactId": 14115226118,
+    "status": "completed",
+    "conclusion": "failure",
+    "typecheck": {
+      "conclusion": "failure",
+      "ownDiagnostics": 0,
+      "foreignDiagnostics": 130,
+      "removedSinceW16": [],
+      "addedSinceW16": [],
+      "sameLogBytesAsW16": true
+    },
+    "guards": {
+      "rules": 78,
+      "changedPaths": 845,
+      "gates": 0,
+      "warnings": 12,
+      "errors": 0,
+      "conclusion": "success"
+    },
+    "artifact": {
+      "id": 14115226118,
+      "name": "astra-wp11-checks-26bb96b22fbfe610eef1714036dbaa068ec7c371-1",
+      "zipSha256": "2ee96687eed475ed165c712c30044e53532dd333127eb4497475bd6503e0930e",
+      "remoteDigestMatched": true,
+      "sourceMatched": true,
+      "files": {
+        "guards.log": {
+          "sha256": "93cc4ed4371d846b541b7e56bc9fc42e49d7ae78e5713fa3c56ae10915a909af",
+          "bytes": 4861
+        },
+        "source.json": {
+          "sha256": "76db9ba3e80669634eaf9f29f4fe6ea39f47f1ac33e24f082f69c04e79e2cdc7",
+          "bytes": 296
+        },
+        "typecheck.log": {
+          "sha256": "6be625fa5ba28cef35348d3f1412d88577b3c8391b9f0ca93acef4807566e0d7",
+          "bytes": 63595
+        }
+      }
+    }
+  },
+  "claimBoundary": [
+    "The package-wide typecheck remains failed with130 foreign diagnostics; zero own diagnostics does not make the global gate green.",
+    "Typecheck log bytes are identical to W16 and prior W7 diagnostics.",
+    "This check includes the reviewed complete case read fence, two reader race regressions and H7 choice-value fixture composition. It does not execute those tests or qualify their runtime success.",
+    "Only remote logs/artifact metadata inspected; no local product tests/typecheck/build/guards/install."
+  ],
+  "files": {
+    "wp11-W17-check.log": {
+      "sha256": "052ac1d0b88add09f53103c3e2b46591a179dd53dd49e6a9d685a089c0736928",
+      "bytes": 128411
+    },
+    "wp11-W17-checks.zip": {
+      "sha256": "2ee96687eed475ed165c712c30044e53532dd333127eb4497475bd6503e0930e",
+      "bytes": 7831
+    },
+    "wp11-W17-remote-final.json": {
+      "sha256": "7e49bf08f9631b72899bbf0dd58466c6a15a30518da45a9bc0f6142b93c7d5c5",
+      "bytes": 3610
+    },
+    "wp11-W17-typecheck-diagnostics.json": {
+      "sha256": "5508ff39dbbd2a2e686f57dd4973c6e43ece2878b433b1eb0affbe032cb2c6da",
+      "bytes": 45062
+    }
+  }
+}

@@ -1,0 +1,131 @@
+{
+  "productSha": "efa0e57e54862f99a07b2837af5e729adb881415",
+  "productTree": "17734fc094bdf53f769ce494bf82a24ea0bc9a7d",
+  "snapshotSha": "bd0837b1fbd179cf044691981ba57e39c30f031c",
+  "snapshotTree": "8bd117c396d10c0ad45c3130353e2e4c2c776f66",
+  "snapshotParent": "efa0e57e54862f99a07b2837af5e729adb881415",
+  "snapshotChangedPaths": [
+    ".ci-run.json"
+  ],
+  "requestBlob": "996ba3f9a5afd3cb9b38e621b34d6a8ee932d8a1",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts",
+      "Sucafinav1/test/product/wp11/analysis-acceptance.test.ts",
+      "Sucafinav1/test/product/wp11/analysis-promotion.test.ts",
+      "Sucafinav1/test/product/wp11/calculation-persistence.test.ts",
+      "Sucafinav1/test/product/wp11/case-authority-concurrency.test.ts",
+      "Sucafinav1/test/product/wp11/case-management.test.ts",
+      "Sucafinav1/test/product/wp11/case-operation-access.test.ts",
+      "Sucafinav1/test/product/wp11/case-port.test.ts",
+      "Sucafinav1/test/product/wp11/choice-persistence.test.ts",
+      "Sucafinav1/test/product/wp11/composite-coverage.test.ts",
+      "Sucafinav1/test/product/wp11/coverage-access.test.ts",
+      "Sucafinav1/test/product/wp11/coverage-classification.test.ts",
+      "Sucafinav1/test/product/wp11/coverage-seal.test.ts",
+      "Sucafinav1/test/product/wp11/criterion-rules.test.ts",
+      "Sucafinav1/test/product/wp11/cross-domain-execution.test.ts",
+      "Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+      "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+      "Sucafinav1/test/product/wp11/http.test.ts",
+      "Sucafinav1/test/product/wp11/planner-apply.test.ts",
+      "Sucafinav1/test/product/wp11/portfolio-history-version.test.ts",
+      "Sucafinav1/test/product/wp11/prepared-apply.test.ts",
+      "Sucafinav1/test/product/wp11/proposal-coverage.test.ts",
+      "Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+      "Sucafinav1/test/product/wp11/result-store.test.ts",
+      "Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+      "Sucafinav1/test/product/wp03/composed-threshold.test.ts",
+      "Sucafinav1/test/product/wp03/scenario-costs.test.ts",
+      "Sucafinav1/test/product/wp03/source-scenario.test.ts",
+      "Sucafinav1/test/product/wp05/engine-coverage.test.ts",
+      "Sucafinav1/test/product/wp05/choice-history-bi.test.ts",
+      "Sucafinav1/test/product/wp05/capacity-numeric.test.ts",
+      "--timeout",
+      "180000"
+    ],
+    "env": {}
+  },
+  "checks": {
+    "runId": 43580724726,
+    "jobId": 132404695143,
+    "status": "completed",
+    "conclusion": "failure",
+    "artifactId": 14107768955,
+    "typecheck": {
+      "conclusion": "failure",
+      "ownDiagnostics": 2,
+      "foreignDiagnostics": 130
+    },
+    "guards": {
+      "conclusion": "success",
+      "rules": 78,
+      "changedPaths": 684,
+      "warnings": 12,
+      "gates": 0,
+      "errors": 0
+    }
+  },
+  "tests": {
+    "runId": 43580722320,
+    "jobId": 132404687494,
+    "status": "completed",
+    "conclusion": "cancelled",
+    "cleanupJobId": 132415345164,
+    "cleanupConclusion": "success",
+    "updatedAt": "2026-11-14T10:14:00Z",
+    "observedTestCounts": {
+      "pass": 48,
+      "fail": 4
+    },
+    "ownObservedTestCounts": {
+      "pass": 30,
+      "fail": 4,
+      "skip": 0,
+      "todo": 0
+    },
+    "observedFileHeaders": 24,
+    "requestedFiles": 31,
+    "completedBunSummary": false,
+    "omniPositiveControl": {
+      "nonces": [
+        "543bbc4c5a15bd4c5be7144ebfd49b41"
+      ],
+      "observedVerdicts": [],
+      "matchingVerdicts": [],
+      "validPassingVerdict": false,
+      "boundary": "Metadata inspection of hosted logs; not a local product execution or independent run."
+    },
+    "requestedButNotObserved": [
+      "Sucafinav1/test/product/wp11/case-authority-concurrency.test.ts",
+      "Sucafinav1/test/product/wp11/case-operation-access.test.ts",
+      "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+      "Sucafinav1/test/product/wp11/result-store.test.ts",
+      "Sucafinav1/test/product/wp05/engine-coverage.test.ts",
+      "Sucafinav1/test/product/wp05/choice-history-bi.test.ts",
+      "Sucafinav1/test/product/wp05/capacity-numeric.test.ts"
+    ],
+    "lastObservedFile": "Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+    "lastReportedTest": {
+      "file": "Sucafinav1/test/product/wp11/criterion-rules.test.ts",
+      "status": "fail",
+      "name": "explicit criterion rule is versioned, authorized and evaluated using the domain metric",
+      "line": 934,
+      "timestamp": "2026-11-14T10:13:00.2004246Z",
+      "durationMs": 8.2
+    },
+    "logSha256": "9187121e712bf0dfddfc714cdbc9911d7ee2f442d6334eb4b87503bd80cee063",
+    "artifacts": [],
+    "cancellation": {
+      "message": "The operation was canceled.",
+      "at": "2026-11-14T10:13:53.4673524Z",
+      "workflowTimeoutMinutes": 45,
+      "interpretation": "The observed cancellation matches the configured 45-minute job limit; no separate OOM or peak-memory measurement is emitted."
+    },
+    "maxMemoryObserved": null,
+    "claimBoundary": "Cancelled run: partial observed passes do not make this a PASS. Seven files had no header, and current-choice-lifecycle began without any reported test outcome. Omni verdict is missing."
+  }
+}

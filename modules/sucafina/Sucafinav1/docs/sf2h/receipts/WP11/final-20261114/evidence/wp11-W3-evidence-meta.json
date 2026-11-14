@@ -1,0 +1,60 @@
+{
+  "source": {
+    "productSha": "768a189c92bae0353e546c29a71fda95fac1c4bf",
+    "productTree": "28396b1bf895985c39a0a2ddbf8e983fe726f49a",
+    "guardBase": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+    "mergeBase": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+    "seed": "ff99e4b4de56bbf6e7ef36daf5d3eb749779017a"
+  },
+  "checks": {
+    "runId": 43581691678,
+    "jobId": 132407587040,
+    "artifactId": 14107994487,
+    "status": "completed",
+    "conclusion": "failure",
+    "typecheck": {
+      "conclusion": "failure",
+      "ownDiagnostics": 0,
+      "foreignDiagnostics": 130,
+      "newForeignSignaturesComparedWithW2": 0
+    },
+    "guards": {
+      "conclusion": "success",
+      "rules": 78,
+      "changedPaths": 692,
+      "warnings": 12,
+      "gates": 0,
+      "errors": 0
+    },
+    "artifact": {
+      "id": 14107994487,
+      "name": "astra-wp11-checks-768a189c92bae0353e546c29a71fda95fac1c4bf-1",
+      "zipSha256": "4385596f4dee039fbc9d242c931c497535b3c19f400e190f5a70bb0cc7ec6bcb",
+      "remoteDigestMatched": true,
+      "sourceMatched": true,
+      "files": {
+        "guards.log": {
+          "sha256": "3d230ac5ca8db9673596806aa9a953b56d5f39a52e4ea92ec0a0af2b995f97fb",
+          "bytes": 4861
+        },
+        "source.json": {
+          "sha256": "f865719f6afbf19ebc308b1c494c380c35a22ba42ba96bf4ae0f354e7ff59b8a",
+          "bytes": 296
+        },
+        "typecheck.log": {
+          "sha256": "06fe757dbd875415df12710859fd832fa7b902275d61a9754b2b4604c00da437",
+          "bytes": 63669
+        }
+      },
+      "typecheckDiagnosticCounts": {
+        "total": 130,
+        "own": 0,
+        "foreign": 130
+      },
+      "guardSummary": [
+        "guards: 78 rules, 692 changed paths, 0 gate and 12 warn findings, 0 errors."
+      ]
+    }
+  },
+  "claimBoundary": "No product test run is claimed for W3 here. Full package typecheck failed; zero WP11 diagnostics does not make it a green typecheck."
+}

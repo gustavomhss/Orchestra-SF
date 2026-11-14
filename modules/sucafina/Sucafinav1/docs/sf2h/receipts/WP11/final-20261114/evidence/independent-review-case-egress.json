@@ -1,0 +1,54 @@
+{
+  "schema": "wp11-independent-static-review-v1",
+  "reviewer": "producer_seams",
+  "status": "NO_STATIC_BLOCKER_FOUND_HOSTED_NEGATIVES_PENDING",
+  "proposal": {
+    "path": "ci-analysis/case-egress-proposal/manifest.json",
+    "sha256": "bf51d1b0440ad4c08e1a5c0970ea000f23b7ef50bafb3c02f952fd5a9d554028"
+  },
+  "baseProductSha": "26bb96b22fbfe610eef1714036dbaa068ec7c371",
+  "reviewedFiles": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "candidatePath": "/workspace/scratch/c3f9350f32d4/ci-analysis/case-egress-proposal/candidate/modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "baseBlob": "e646386af209978f2a931a10a070061ba0c97cbe",
+      "candidateBlob": "206271d33bcfb7786ee80ef0dfad50eb80e4fee2",
+      "sha256": "82f7865ae309d1fa3ef5d9138f373029d7b3d4a40db203f6a2cae48523282450",
+      "bytes": 17600,
+      "owner": "WP11"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+      "candidatePath": "/workspace/scratch/c3f9350f32d4/ci-analysis/case-egress-proposal/candidate/modules/sucafina/Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+      "baseBlob": null,
+      "candidateBlob": "0d344369ce375c0cb35633c7eac2f6b8dd11b153",
+      "sha256": "5cab79a445db29e70f9358aab5429ae407ab50d5db9898051093ced7600519b5",
+      "bytes": 9944,
+      "owner": "WP11"
+    }
+  ],
+  "readSymbol": {
+    "sourceSha": "26bb96b22fbfe610eef1714036dbaa068ec7c371",
+    "sourceBlob": "e646386af209978f2a931a10a070061ba0c97cbe",
+    "candidateBlob": "206271d33bcfb7786ee80ef0dfad50eb80e4fee2",
+    "byteIdentical": true,
+    "sha256": "1715c615c2c112d7ed28715016ee673b55c355ec1475409613a6325598c78e2c",
+    "bytes": 4156
+  },
+  "findings": [
+    "Draft still performs one initial read, one creation transaction and one final read. It now captures the durable saved case digest, completes ACL/evidence/host callbacks, then reobserves authorized C08 and compares the whole saved/current case before disclosure.",
+    "The state transaction command, target, idempotency key, command digest and receipt shortcut are unchanged. With an unchanged case, exact creation replay returns the original result; with a later legitimate case mutation it now refuses stale/denied rather than disclosing changed or revoked content. Existing case-port replay tests remain required in the hosted selection.",
+    "PrepareIntentForCase moves its outer host callback before the existing second port.read. Both complete projection digests and parsed-intent digest must still match, and final criteria are taken from the final projection. No external callback follows this read.",
+    "The changed source cannot alter read(): the independently sliced4156-byte segment is exactly identical to W17, including its closure boundary. Import/reference/shared-helper changes are absent in the diff.",
+    "Draft hook3 is the final host call after actual creation; prepare hook5 is the final host call inside second read after the outer callback moves to position3. The extra same-version hook3 variant verifies equality across the two reads rather than only within the final read.",
+    "All seven scenarios commit a real C08 transaction under live UI authority. The outer assertion verifies committed=true and exact stored mutation/storageVersion2, so swallowed callback exceptions cannot make the attack pass.",
+    "The provider resolveTarget sees the actual original target incarnation during the CAS; replacement occurs only in staged C08 and final observation refuses it. Source, case and storage revisions are not collapsed into a fake version counter.",
+    "The generic state-read wrapper is contextually typed; savedCase is narrowed after status/value guards; const variant branches, optional race evidence and expected response shapes introduce no detected typing incompatibility."
+  ],
+  "boundary": [
+    "These are UI-fixture C08 egress proofs. prepareIntentForCase is an explicit-case helper under a consumed UI lease; no installed native session or native human action is claimed.",
+    "The empty real-created case has no alternatives, money, ChoiceRecord, prepared command or domain effect; no financial coverage/canonical producer behavior is inferred.",
+    "H7 read qualification remains on its original W17 SHA/run. New draft/intent negatives have not been executed and require the authorized hosted selection.",
+    "Only read/diff/hash analysis performed; no repository edits, local product execution, typecheck, build, install or remote mutation."
+  ]
+}

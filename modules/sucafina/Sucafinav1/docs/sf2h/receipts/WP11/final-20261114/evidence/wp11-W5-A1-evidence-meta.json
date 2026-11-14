@@ -1,0 +1,74 @@
+{
+  "productSha": "be50d42d6a2c030d57d17038dec267ebd33ea78c",
+  "productTree": "39c335642dd594713694adf92436396d9217793f",
+  "snapshotSha": "d21a4dac299d57d2571adc11e4b368a44bb27b60",
+  "snapshotTree": "8b627d790cca61bb295e7e3801b360963e73169d",
+  "branch": "ci-run-linux-astra-wp11-be50d42-aa2e6300-a1",
+  "requestSha256": "aa2e63002f88ad7b80bd68132d77d7c036ee9fd055312fe38cf9d8faf476454d",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/wp11/application-indeterminate.test.ts",
+      "Sucafinav1/test/product/wp11/assumption-divergence.test.ts",
+      "Sucafinav1/test/product/wp11/case-authority-concurrency.test.ts",
+      "Sucafinav1/test/product/wp11/case-operation-access.test.ts",
+      "Sucafinav1/test/product/wp11/case-port.test.ts",
+      "Sucafinav1/test/product/wp11/case-management.test.ts",
+      "Sucafinav1/test/product/wp11/criterion-rules.test.ts",
+      "Sucafinav1/test/product/wp11/cross-domain-execution.test.ts",
+      "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+      "Sucafinav1/test/product/wp11/prepared-rejection.test.ts",
+      "Sucafinav1/test/product/wp11/http.test.ts",
+      "Sucafinav1/test/product/wp11/result-store.test.ts",
+      "--timeout",
+      "180000"
+    ],
+    "env": {}
+  },
+  "verifiedChangedPaths": [
+    ".ci-run.json"
+  ],
+  "requestBlob": "a19660a50b0a1dbb25ba9a81739151384cdb979e",
+  "runIds": [
+    43584601515
+  ],
+  "tests": {
+    "runId": 43584601515,
+    "jobId": 132416299515,
+    "cleanupJobId": 132416683947,
+    "status": "completed",
+    "conclusion": "failure",
+    "summary": {
+      "pass": 23,
+      "fail": 1,
+      "tests": 24,
+      "files": 12,
+      "durationSeconds": 2.28
+    },
+    "ownObservedCounts": {
+      "pass": 23,
+      "fail": 1,
+      "skip": 0,
+      "todo": 0
+    },
+    "omniPositiveControl": {
+      "nonces": [
+        "56bdb5e1632c48b3ee68f8d0aa99277f"
+      ],
+      "observedVerdicts": [
+        "omni positive control [56bdb5e1632c48b3ee68f8d0aa99277f]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+      ],
+      "matchingVerdicts": [
+        "omni positive control [56bdb5e1632c48b3ee68f8d0aa99277f]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+      ],
+      "validPassingVerdict": true,
+      "boundary": "Metadata inspection of hosted logs; not a local product execution or independent run."
+    },
+    "requestedButNotObserved": [],
+    "logSha256": "70a01ae9643b0a094a298c1a3bddbefeac890fc85165e6fc33f3a2f68850e217",
+    "artifacts": [],
+    "claimBoundary": "All12requestedfiles observed,23pass1fail. This run is a failure, not a green selection. No omni spawn occurred."
+  }
+}

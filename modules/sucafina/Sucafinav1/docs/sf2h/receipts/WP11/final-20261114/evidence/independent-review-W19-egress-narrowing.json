@@ -1,0 +1,23 @@
+{
+  "schema": "wp11-static-fixture-narrowing-review-v1",
+  "reviewer": "ci_reconciliation",
+  "status": "NO_STATIC_BLOCKER_HOSTED_CHECK_AND_E2_PENDING",
+  "baseProductSha": "1c262ba4548c53ae014a2fd21d1e6dc085cb6f13",
+  "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+  "baseBlob": "0d344369ce375c0cb35633c7eac2f6b8dd11b153",
+  "candidateBlob": "40f814167314c329b30d15db3dadbeaad4cfcb55",
+  "candidateSha256": "e06e00d84fbd8c18f08ce251a2e3bbdedc6bfb8098e4c916af5835cddd828811",
+  "soleDelta": "if (!race.before || !race.beforeDigest) throw new Error(\"Committed race evidence unavailable\")",
+  "reason": "W18 hosted TS2769 observed optional string passed to Bun matcher toBe at prior line116. Runtime E1 passed all7cases, but the optional evidence lacked an explicit type guard.",
+  "findings": [
+    "Explicit throw narrows both optional evidence properties before their matchers and digest assertions; no cast, non-null assertion or removed assertion.",
+    "The guard occurs after committed=true, outside the callback and catch paths; an absent captured mutation cannot make a negative pass.",
+    "Removing the sole new guard line reproduces the complete W18 test byte-for-byte. Product code and all other test paths are unchanged by this fix."
+  ],
+  "requiredHostedValidation": [
+    "Scoped package typecheck must remove the1own diagnostic while retaining honest foreign blockers.",
+    "Rerun this one explicit file/7cases on published W19; the other14E1passes retain W18 SHA."
+  ],
+  "localProductExecution": false,
+  "repoEditsByReviewer": false
+}

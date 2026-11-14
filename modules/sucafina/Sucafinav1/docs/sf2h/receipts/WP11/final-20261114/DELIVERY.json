@@ -1,0 +1,1247 @@
+{
+  "schema": "wp11-final-evidence-delivery-v1",
+  "productCandidate": {
+    "sha": "a3b57d475e7b564fa7b05932d3a81c5836e3e3c1",
+    "tree": "47e634b81b9a64fef462cb670373aa832b88b76b"
+  },
+  "seedSha": "ff99e4b4de56bbf6e7ef36daf5d3eb749779017a",
+  "planSha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "campaignSha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+  "delivery": {
+    "branch": "astra-wp11",
+    "target": "sf2-stack",
+    "pullRequest": "https://github.com/gustavomhss/Orchestra-SF/pull/40",
+    "status": "DRAFT/BLOCKED",
+    "changeKind": "EVIDENCE_ONLY_ADDITIONS",
+    "allowedPrefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/",
+    "existingCandidatePathsModified": 0,
+    "productRuntimeTestsAndConfigurationPreserved": true,
+    "finalCommitSha": "Recorded by the containing commit and the pull request; omitted here to avoid a circular identity.",
+    "finalAutomaticCheck": "The automatic check on the containing evidence commit is reported in the pull request; it does not alter the frozen execution index for product candidate W19."
+  },
+  "criterionDisposition": {
+    "total": 83,
+    "VERIFIED_SCOPED": 32,
+    "PARTIAL": 23,
+    "BLOCKED": 26,
+    "NOT_ESTABLISHED": 2
+  },
+  "candidateQualification": {
+    "observations": 197,
+    "assertionGroups": 122,
+    "uniqueTestNames": 100,
+    "testRoots": 44,
+    "directCandidateExecution": 7,
+    "identicalRootGraphReuse": 39,
+    "verifiedScopedSymbolsAndFocusedRegression": 54,
+    "originalExecutionShasPreserved": true,
+    "notClaimed": [
+      "100 tests freshly executed on W19",
+      "all 83 criteria accepted",
+      "native installation verified",
+      "human confirmation substituted",
+      "global typecheck success"
+    ]
+  },
+  "executionIndex": {
+    "terminalRecords": 43,
+    "productTestAttempts": 24,
+    "scopedChecks": 19,
+    "path": "CI-INDEX.json"
+  },
+  "candidateCheck": {
+    "runId": 43599586885,
+    "conclusion": "failure",
+    "ownDiagnostics": 0,
+    "foreignDiagnostics": 130,
+    "guards": {
+      "rules": 78,
+      "paths": 864,
+      "warnings": 12,
+      "gates": 0,
+      "errors": 0
+    }
+  },
+  "publicationScope": {
+    "dependencyCopies": 134,
+    "reviewedDeliverables": 5,
+    "filesListedExcludingThisManifest": 146,
+    "bytesListed": 9252522,
+    "selfHashPolicy": "This manifest does not list itself. The exact staged tree and published commit identify it.",
+    "assertions": [
+      "All additions remain inside the WP11 receipt namespace.",
+      "No local product tests, typecheck, builds, installs, or epic suite were run.",
+      "No merge into dev or deployment was performed."
+    ]
+  },
+  "files": [
+    {
+      "path": "CI-INDEX.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/CI-INDEX.json",
+      "mode": "100644",
+      "bytes": 372849,
+      "sha256": "53d61986061203b1c69530f0b1e6dc708a748e0b95f804434b1b4452f33742fc",
+      "blobSha": "805e541e11084dfc2e3e372a0a61768641269f58"
+    },
+    {
+      "path": "CRITERIA.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/CRITERIA.json",
+      "mode": "100644",
+      "bytes": 705503,
+      "sha256": "65b31fe4c64ab223c6e5fa89b3c7b4bc8d35bc6d3fbc6f45dda7e3b65b925eed",
+      "blobSha": "c71031ea23e27b8c48b170a0a785afbc8cf07c9d"
+    },
+    {
+      "path": "CRITERIA.md",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/CRITERIA.md",
+      "mode": "100644",
+      "bytes": 40142,
+      "sha256": "b257c98c94397c8624d70ea7790cbed1aa808e73020fa3968533210eef4122de",
+      "blobSha": "dbad1f8bc09bb9a47abd0292237f2f3137583f22"
+    },
+    {
+      "path": "DEPENDENCIES.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/DEPENDENCIES.json",
+      "mode": "100644",
+      "bytes": 37919,
+      "sha256": "4953e55f18f507ca20c0a721179c5ed8b67f38a81c04f1488092ceb5e749803e",
+      "blobSha": "a459ee40c6fea98e8c2dac82b8a80d404b3faa61"
+    },
+    {
+      "path": "EXECUTION.md",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/EXECUTION.md",
+      "mode": "100644",
+      "bytes": 17375,
+      "sha256": "831733924ed86b843a741958df6eac9a2c97a1d3803331f4ae97103ca05de243",
+      "blobSha": "4c8c4da50159de5c529030aa0e48b0415bc61a0f"
+    },
+    {
+      "path": "INTEGRATION.md",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/INTEGRATION.md",
+      "mode": "100644",
+      "bytes": 10143,
+      "sha256": "93f30ff34d32b570fba0d0417664eca4b705d017b1a59cd147407ede8bdf5902",
+      "blobSha": "3a7856aabd701b720f2b28611c54d6b879a82b14"
+    },
+    {
+      "path": "artifact-download-verification.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/artifact-download-verification.json",
+      "mode": "100644",
+      "bytes": 17832,
+      "sha256": "186067b4e80dbbade170be04faa9f09d90dee15d0568c8c8278458bab8e3d14a",
+      "blobSha": "371471e51b36de50da2254f1ea743e8d28e3de37"
+    },
+    {
+      "path": "candidate-audit.manifest.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/candidate-audit.manifest.json",
+      "mode": "100644",
+      "bytes": 394099,
+      "sha256": "a627990da2b745339c4d88678dbd7aa44321bd927e92de10f4c2f03790d5a8df",
+      "blobSha": "a36f9b50315fb9b5514a60c621a6ccc66c31e4fc"
+    },
+    {
+      "path": "candidate-audit.raw.json.gz",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/candidate-audit.raw.json.gz",
+      "mode": "100644",
+      "bytes": 793600,
+      "sha256": "0bd8b7a0cce8dc6690aebee36319a6e37f69a0bb8d8669a7564069cbd5629969",
+      "blobSha": "1390b82d2c2b5406037e328ec6a5932c55ca92f5"
+    },
+    {
+      "path": "evidence/W17-B1B-criterion-evidence.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/W17-B1B-criterion-evidence.json",
+      "mode": "100644",
+      "bytes": 10734,
+      "sha256": "f14bed9df1be24345427f68b5c4437c53f57521b8182636da3bd7f02432d000e",
+      "blobSha": "ca839d3e924e2cfc8147908bd8e6bbbc3bcdfeb7"
+    },
+    {
+      "path": "evidence/W17-H7-criterion-evidence.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/W17-H7-criterion-evidence.json",
+      "mode": "100644",
+      "bytes": 81298,
+      "sha256": "2d0ecd09e1b1799f024074eda93d9b33941c74843c6c63174451adcf4ec45b7e",
+      "blobSha": "430ae77a56f17da24f971cb0ad0200e1b9039cd3"
+    },
+    {
+      "path": "evidence/W18-E1-criterion-evidence.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/W18-E1-criterion-evidence.json",
+      "mode": "100644",
+      "bytes": 39698,
+      "sha256": "5a696aafb213178ff7b7ae64aa926db2f0aab8b566f4f32d459b5e10d441a365",
+      "blobSha": "ca52d32e0bd8112032451f1db1422e49074b0ff9"
+    },
+    {
+      "path": "evidence/W19-E2-criterion-evidence.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/W19-E2-criterion-evidence.json",
+      "mode": "100644",
+      "bytes": 18335,
+      "sha256": "7b5240b2b1a08b93b39aa6bb0283d8ad68b31e604de5cfae7efe0f19b469daa1",
+      "blobSha": "5d279bdc7c16f622fbe16f1e548dbbdda5ee6560"
+    },
+    {
+      "path": "evidence/WP11.pack.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/WP11.pack.json",
+      "mode": "100644",
+      "bytes": 417689,
+      "sha256": "30fbcaa826eddf3141913a81aee1f99f7938ec4f0c5d6bee3d31342e4b24ae6e",
+      "blobSha": "e8e0da6d618bbfdf05053a401ccfd6e74bdcdc99"
+    },
+    {
+      "path": "evidence/case-read-W16-symbol-impact.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/case-read-W16-symbol-impact.json",
+      "mode": "100644",
+      "bytes": 178939,
+      "sha256": "eb9ab7cf9fbcf9a621d40f40ffc9e30799a8c6f8a1804feed436117d585a9e82",
+      "blobSha": "1d32b3077dac63f9ebfd128943c1811a78c4c922"
+    },
+    {
+      "path": "evidence/criteria-83.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/criteria-83.json",
+      "mode": "100644",
+      "bytes": 71450,
+      "sha256": "d70964455a209cd9a536444a1a5d49715c53f937694ae17f142bf0b11e3841db",
+      "blobSha": "bba2e38cddf9ae9b06905eaf96aff1521b650b47"
+    },
+    {
+      "path": "evidence/guard-warnings-W9-catalog.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/guard-warnings-W9-catalog.json",
+      "mode": "100644",
+      "bytes": 79892,
+      "sha256": "67aa7c3a948f16e3fe4e8ffd4b990478cd7dfe023033ab2e52c7a253427c21f3",
+      "blobSha": "cf7e4bbd950f06bec7b09a27280dc974665f05ed"
+    },
+    {
+      "path": "evidence/independent-map-W12-review-producer-seams.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/independent-map-W12-review-producer-seams.json",
+      "mode": "100644",
+      "bytes": 18782,
+      "sha256": "192cdb02e9a532d323b1525f90afc0f5d84e9c9b3c1bb865aff9840c4bee1146",
+      "blobSha": "6913daa4567b96046d5b384614135e74824dfa85"
+    },
+    {
+      "path": "evidence/independent-review-B1A-five-criteria.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/independent-review-B1A-five-criteria.json",
+      "mode": "100644",
+      "bytes": 2538,
+      "sha256": "498aba0883b38f920630e5b018615669101ec26a345a7728ce85083865561e73",
+      "blobSha": "414102dd8dd4d327bd06427582ea56c4d16ab8bc"
+    },
+    {
+      "path": "evidence/independent-review-B1B-criterion-evidence.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/independent-review-B1B-criterion-evidence.json",
+      "mode": "100644",
+      "bytes": 2501,
+      "sha256": "facf9519508e114a008fda67cc58888d679f77aef3ac338e7c74ae2280d92bb0",
+      "blobSha": "0a7162cdadf032939c747ba9e3c6a50c8d1150dd"
+    },
+    {
+      "path": "evidence/independent-review-E1-E2-criterion-evidence.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/independent-review-E1-E2-criterion-evidence.json",
+      "mode": "100644",
+      "bytes": 3107,
+      "sha256": "dbaa3eb6fa9a714909d61cc73f879c497ba3549d61aacdeb914e582069f9adbd",
+      "blobSha": "d3de0d42ba2faa3ad5850d16f9a84c96989878f4"
+    },
+    {
+      "path": "evidence/independent-review-H7-criterion-evidence.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/independent-review-H7-criterion-evidence.json",
+      "mode": "100644",
+      "bytes": 3345,
+      "sha256": "48826fc3934c6926142777b3cc3c180e23e1c1d1eeb975a6fe8f4c11e4ce0e4a",
+      "blobSha": "82072f65635f8e7456484f34aca5ab3f000dced2"
+    },
+    {
+      "path": "evidence/independent-review-R2Q-criterion.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/independent-review-R2Q-criterion.json",
+      "mode": "100644",
+      "bytes": 3007,
+      "sha256": "1da4419fe82cab55152ce1621991061f573760d2570aa60b347414428ed17cc5",
+      "blobSha": "71a2e710b320f00ab4051142fba3a40f24179e2b"
+    },
+    {
+      "path": "evidence/independent-review-W19-egress-narrowing.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/independent-review-W19-egress-narrowing.json",
+      "mode": "100644",
+      "bytes": 1593,
+      "sha256": "9153508539e44625156393a859656055ef2d310c9c9f5acdb7c089d95559eecd",
+      "blobSha": "bfdae5e70d10843ee27ea929b5266bd74c2f24dc"
+    },
+    {
+      "path": "evidence/independent-review-case-egress.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/independent-review-case-egress.json",
+      "mode": "100644",
+      "bytes": 4560,
+      "sha256": "94e22ae0aa3e45848b1b4f66c572202edd268e156277ff0c32c4eea60b35898e",
+      "blobSha": "424731ed8a8cf953234e244ea09f68dac52671cb"
+    },
+    {
+      "path": "evidence/independent-review-case-read-fence.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/independent-review-case-read-fence.json",
+      "mode": "100644",
+      "bytes": 3853,
+      "sha256": "b75dc304b7a4506eb34bde8fbcd415b078b12904ae2da21d7abd542a679bac0b",
+      "blobSha": "0ed3d67ff2354d0b354c0b909a4887746b32370f"
+    },
+    {
+      "path": "evidence/independent-review-criterion-rule-revision.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/independent-review-criterion-rule-revision.json",
+      "mode": "100644",
+      "bytes": 2755,
+      "sha256": "b2cee03d7901d2f7e826b983ac42a230d3b9d696e221939d69fa7dd3c9f8c65a",
+      "blobSha": "a79bfa5a38d60d6b22ae17eb548212d6966af276"
+    },
+    {
+      "path": "evidence/independent-review-final-W19-audit-r6.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/independent-review-final-W19-audit-r6.json",
+      "mode": "100644",
+      "bytes": 5419,
+      "sha256": "a44b00e35631cacfe40f064e620e4a1e121ed58aaf90015c7836f936dc1a50eb",
+      "blobSha": "67084e410decc0404aacb7d488123ca6285227dc"
+    },
+    {
+      "path": "evidence/independent-review-final-W19-audit.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/independent-review-final-W19-audit.json",
+      "mode": "100644",
+      "bytes": 4551,
+      "sha256": "ed317e0c71c968c9f51d66494d04bd991be922cd12c79f01355d510e48d6c5c8",
+      "blobSha": "a948913b3c5e0cead3c059363ad910f25879fa8f"
+    },
+    {
+      "path": "evidence/independent-review-final-criteria-W19.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/independent-review-final-criteria-W19.json",
+      "mode": "100644",
+      "bytes": 5166,
+      "sha256": "039cd2f8aff146a1fafa78d2b318b536a8585a57b9bedb874015b6bbd4fac0cd",
+      "blobSha": "ed7fdbb0c419f4ef3821476aa60b6a60c61e7772"
+    },
+    {
+      "path": "evidence/independent-review-inspectability-W19.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/independent-review-inspectability-W19.json",
+      "mode": "100644",
+      "bytes": 1898,
+      "sha256": "dc27ca39661d6ad6882b3ea50e1ff782b9dab0836e0295164b9eb1dc3ac8c5fc",
+      "blobSha": "d420dac3371bd11742a6298a87e95da7e2c79e37"
+    },
+    {
+      "path": "evidence/independent-review-literal-quality-W19.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/independent-review-literal-quality-W19.json",
+      "mode": "100644",
+      "bytes": 4731,
+      "sha256": "79857193895938427120ad3547b369ae779d51e640eea04d77ec8275365bcc02",
+      "blobSha": "71a8bec0e305c339728db4b904290feda07d84cc"
+    },
+    {
+      "path": "evidence/independent-review-literal-scoped-W17.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/independent-review-literal-scoped-W17.json",
+      "mode": "100644",
+      "bytes": 3164,
+      "sha256": "eb063f398c702f2e9cf9fbaca5fde040b2ab0a85178a9569c7bd99bf31b07f0b",
+      "blobSha": "b552293e6e6a4f70e3832b7b9ce2eb3997a7d404"
+    },
+    {
+      "path": "evidence/integration-intake.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/integration-intake.json",
+      "mode": "100644",
+      "bytes": 78662,
+      "sha256": "07727885ba769558a3dafb65a1adae21400ca7653cfd206532b316771d860e82",
+      "blobSha": "d51df24c74351b044b19a9feb7e699e3be89ee82"
+    },
+    {
+      "path": "evidence/owner-integration-delta-r6.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/owner-integration-delta-r6.json",
+      "mode": "100644",
+      "bytes": 131978,
+      "sha256": "d682ee923480e8a57785397be5d5f86c9811d35c551f54bb556cb20d6745b64b",
+      "blobSha": "5a67e67784429acdd1c6a1f2ee1c9676b7e0f256"
+    },
+    {
+      "path": "evidence/wp11-W1-check.log",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W1-check.log",
+      "mode": "100644",
+      "bytes": 140872,
+      "sha256": "3f98109a7a52f1603c2892e51e3915efc4ad48235108eacc3cbd893eb44cb79c",
+      "blobSha": "f6a14959c913a931d4a31e98c867a086a5da20d4"
+    },
+    {
+      "path": "evidence/wp11-W1-typecheck-diagnostics.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W1-typecheck-diagnostics.json",
+      "mode": "100644",
+      "bytes": 45397,
+      "sha256": "7de2efca2b00a717cfc5e75f961ca69cd761c72dda4f7b7f4e56d677a6913fb5",
+      "blobSha": "d196bf978f913598179cf64617f43f2620e7898a"
+    },
+    {
+      "path": "evidence/wp11-W10-H4-evidence-meta.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W10-H4-evidence-meta.json",
+      "mode": "100644",
+      "bytes": 34199,
+      "sha256": "a74f67edff2404d426380542b429082e76f4021edd554b3bb977ed8c66604203",
+      "blobSha": "7f12492a181bd8cc5cbebe92141401a42c44cdcc"
+    },
+    {
+      "path": "evidence/wp11-W10-H4-tests-observed.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W10-H4-tests-observed.json",
+      "mode": "100644",
+      "bytes": 27507,
+      "sha256": "d9fe869f3feb322da8ddc8d2c6e97a5d9a4dc9e236ef56b657e325b1a9e1ea4f",
+      "blobSha": "5c04135e1a8f7fad9776dd12d10197845abd073f"
+    },
+    {
+      "path": "evidence/wp11-W10-H4-tests.log",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W10-H4-tests.log",
+      "mode": "100644",
+      "bytes": 81931,
+      "sha256": "8bc116b8ab4a2c93fd4da675c8ae55a56b669d3bc298fbf545feb8080b52cb97",
+      "blobSha": "cc4e6710df760dc63db603ffd412e11679efc8ec"
+    },
+    {
+      "path": "evidence/wp11-W10-checks.log",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W10-checks.log",
+      "mode": "100644",
+      "bytes": 128429,
+      "sha256": "9c7c0adbbbace98991b66925f72055dcf07e077f8565f79df957d439e5b1fbdb",
+      "blobSha": "7549108277c63b78c9d6af29f40f6fc16f91b257"
+    },
+    {
+      "path": "evidence/wp11-W10-evidence-meta.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W10-evidence-meta.json",
+      "mode": "100644",
+      "bytes": 1863,
+      "sha256": "cef9ccb534f39bb2a3df629de2a0e624c3e0bc8fe6d9665d6fd96b7ee7b444b7",
+      "blobSha": "6aaa07a4a76102edf3e2335a6da1bd94f97263d0"
+    },
+    {
+      "path": "evidence/wp11-W11-AR3-attempt1-evidence-meta.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W11-AR3-attempt1-evidence-meta.json",
+      "mode": "100644",
+      "bytes": 8140,
+      "sha256": "c5920529f0fc087bf656bd2232023e70b423210626eca204cbd04b788436e618",
+      "blobSha": "dacaa1c00940065db935c65840dea70adae8eec6"
+    },
+    {
+      "path": "evidence/wp11-W11-AR3-attempt1-tests-observed.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W11-AR3-attempt1-tests-observed.json",
+      "mode": "100644",
+      "bytes": 2445,
+      "sha256": "0c0b1e00428faacf16ed7388f5e579c189d4c5a8813d252a78a3ace3bc556e53",
+      "blobSha": "bf2e90cce4ae5d82434220c9ae531cbc4b745f82"
+    },
+    {
+      "path": "evidence/wp11-W11-AR3-attempt1-tests.log",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W11-AR3-attempt1-tests.log",
+      "mode": "100644",
+      "bytes": 29756,
+      "sha256": "ece9cc410b0d0d2696dfb00dd8fb832c9da4da25269d923164ef72f09e632889",
+      "blobSha": "efa7d58294744fab0e4076dc22d42f3aaaf6f8a6"
+    },
+    {
+      "path": "evidence/wp11-W11-AR3-attempt2-evidence-meta.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W11-AR3-attempt2-evidence-meta.json",
+      "mode": "100644",
+      "bytes": 10514,
+      "sha256": "9b825f04bf999d017ef7cdb3c3384e94e98e06287e4e75d73cc470145f3f7d78",
+      "blobSha": "30dd20feb9db2decce11a6a5a57ef4fddc4557ea"
+    },
+    {
+      "path": "evidence/wp11-W11-AR3-attempt2-tests-observed.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W11-AR3-attempt2-tests-observed.json",
+      "mode": "100644",
+      "bytes": 5827,
+      "sha256": "413cc27f16c2f46aaab0068ace5cc658551694dc4fae53d42dc5081cf641f082",
+      "blobSha": "cc48a2d918adf61e4dfffee7da9add23c90f6018"
+    },
+    {
+      "path": "evidence/wp11-W11-AR3-attempt2-tests.log",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W11-AR3-attempt2-tests.log",
+      "mode": "100644",
+      "bytes": 69185,
+      "sha256": "48f352f66bfb8a4fe38ca7162cb7b61d1418af24f5898c57c16713465bac2d02",
+      "blobSha": "a98b30c30a8fe5888a20ce1cabbdc1cb67ba3fe3"
+    },
+    {
+      "path": "evidence/wp11-W11-F1-evidence-meta.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W11-F1-evidence-meta.json",
+      "mode": "100644",
+      "bytes": 32199,
+      "sha256": "86718fd814c379fb9942f813eff12a21c6957739e3538f7fa852cd87c99a1056",
+      "blobSha": "37daaf50c5177d51de32262d5dce8627dfb89999"
+    },
+    {
+      "path": "evidence/wp11-W11-F1-tests-observed.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W11-F1-tests-observed.json",
+      "mode": "100644",
+      "bytes": 44018,
+      "sha256": "6cd85f79d55677b0064c6648426070a9ec268c1ee57b710b3a6980092ee1b90a",
+      "blobSha": "e24a6d8005190296d11be036c25239159c61b8f9"
+    },
+    {
+      "path": "evidence/wp11-W11-F1-tests.log",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W11-F1-tests.log",
+      "mode": "100644",
+      "bytes": 108002,
+      "sha256": "08bbe9f1c121910a8fb42af0f29f681bdd0a169d8bb36bcb5336309c8ceb3613",
+      "blobSha": "4baca3d1e0cec1ad411a9913a157c3149edef8f4"
+    },
+    {
+      "path": "evidence/wp11-W11-check.log",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W11-check.log",
+      "mode": "100644",
+      "bytes": 128637,
+      "sha256": "767628a2cab3684abace61bfd1f1dabe70e578022dd1b54119e14c1dcb39ced7",
+      "blobSha": "349290d8e150433622612a666fa1d4bd8bc491f5"
+    },
+    {
+      "path": "evidence/wp11-W11-evidence-meta.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W11-evidence-meta.json",
+      "mode": "100644",
+      "bytes": 1865,
+      "sha256": "d32728014365c9467302243cd7dc56edceda580ec798ec95992e2d5871b84f92",
+      "blobSha": "48c18509b7837b5ca14a37575f2c091cce633761"
+    },
+    {
+      "path": "evidence/wp11-W12-F2-evidence-meta.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W12-F2-evidence-meta.json",
+      "mode": "100644",
+      "bytes": 11412,
+      "sha256": "7861c1bb028dec79f5a050900c5c10eb15084a1fddcd783ba99f7c71a5d26b3c",
+      "blobSha": "ba5d2e549c5b52982d6842d0a6410e312f0b1787"
+    },
+    {
+      "path": "evidence/wp11-W12-F2-tests-observed.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W12-F2-tests-observed.json",
+      "mode": "100644",
+      "bytes": 9034,
+      "sha256": "bd5f1f64b0f145d99b8dd871a3f6fd225c6a36e8ee567c1e7eb67268658cd726",
+      "blobSha": "9b32ba6a2b566c737513f06ce428b59c4afb132c"
+    },
+    {
+      "path": "evidence/wp11-W12-F2-tests.log",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W12-F2-tests.log",
+      "mode": "100644",
+      "bytes": 71171,
+      "sha256": "b0a7a16457c5d2652485f4a0829411f07be3123d0a7c6be237d3a880568da93d",
+      "blobSha": "d25f1f1d47b90caa6be920fa634fe53572ee6c73"
+    },
+    {
+      "path": "evidence/wp11-W12-H5-evidence-meta.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W12-H5-evidence-meta.json",
+      "mode": "100644",
+      "bytes": 31617,
+      "sha256": "f0d8e2258bf43013c421000ddb12564be5f3380d158d78624e9f3c6e82f0ba92",
+      "blobSha": "0b07f77657fb8d7370b0750b2f1cb6a31e32c931"
+    },
+    {
+      "path": "evidence/wp11-W12-H5-tests-observed.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W12-H5-tests-observed.json",
+      "mode": "100644",
+      "bytes": 25497,
+      "sha256": "995ee6c29d74352def910cf2a2fe42216f5274d7d153f8d893129797c9d52b61",
+      "blobSha": "3143d12728698cc815d432cc373b9d9d88d5a358"
+    },
+    {
+      "path": "evidence/wp11-W12-H5-tests.log",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W12-H5-tests.log",
+      "mode": "100644",
+      "bytes": 81876,
+      "sha256": "9c5693b75cfaae74f93e8d1a61dcec483614c346820ee69215a5f46989e0b79f",
+      "blobSha": "7a1fba055c7966c0cac2f2bc1052082640ec97a2"
+    },
+    {
+      "path": "evidence/wp11-W12-check.log",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W12-check.log",
+      "mode": "100644",
+      "bytes": 126585,
+      "sha256": "6a916e2d265e7612dcc06a5c22e923d0d16256a5292e3027ad56b68c62bce7eb",
+      "blobSha": "89cd53ccc8d2d320eaea785ad7c06eaf2c6f27a2"
+    },
+    {
+      "path": "evidence/wp11-W12-evidence-meta.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W12-evidence-meta.json",
+      "mode": "100644",
+      "bytes": 1865,
+      "sha256": "538171d7e18115c90dd46a4b1424f4e13f33d99f798e8dd9b220e15a9cb04c83",
+      "blobSha": "0c94b8506748e6a523fe78b0717684e9bb2a72d9"
+    },
+    {
+      "path": "evidence/wp11-W13-C2-evidence-meta.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W13-C2-evidence-meta.json",
+      "mode": "100644",
+      "bytes": 11433,
+      "sha256": "e2286f278e6dedf2ce510cc2355bbd45d9b21e5572612ba9cda265293db25e7d",
+      "blobSha": "3fdec57f75344dc1e9dbe8612a097c40418f9101"
+    },
+    {
+      "path": "evidence/wp11-W13-C2-tests-observed.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W13-C2-tests-observed.json",
+      "mode": "100644",
+      "bytes": 5986,
+      "sha256": "840abade1abfc837368b5fc7319bd588d0f1d5a1ab8b96367479e87086d7149a",
+      "blobSha": "110dbf9dedb54551d69066714bbb25fe82691641"
+    },
+    {
+      "path": "evidence/wp11-W13-C2-tests.log",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W13-C2-tests.log",
+      "mode": "100644",
+      "bytes": 69211,
+      "sha256": "7a5f3319c7df181f5a71381ce0996d0ca50a8aa58de53e8b675e3c539aaad936",
+      "blobSha": "2ee1acff2229e0a395ecbb3452d7b3021ba4e19a"
+    },
+    {
+      "path": "evidence/wp11-W13-F3-evidence-meta.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W13-F3-evidence-meta.json",
+      "mode": "100644",
+      "bytes": 9788,
+      "sha256": "4b72c21f86747607be4ad0404d36c59dc0a943f2cd014deaea7a6da139630bd4",
+      "blobSha": "e80705036ca46d7c96863a9350a25799fa9475e3"
+    },
+    {
+      "path": "evidence/wp11-W13-F3-tests-observed.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W13-F3-tests-observed.json",
+      "mode": "100644",
+      "bytes": 5844,
+      "sha256": "1ff0d358461c49d91a108a155412b741bfd621b0dd3c270ba0fb859ffdaba24e",
+      "blobSha": "1ac03e16bd19ba109300885ceaf44793f21e8400"
+    },
+    {
+      "path": "evidence/wp11-W13-F3-tests.log",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W13-F3-tests.log",
+      "mode": "100644",
+      "bytes": 70738,
+      "sha256": "b135db3ac46b7031b977b539fbac3fc17f6c3d66563203ccd3ca9f2bdde5ffb3",
+      "blobSha": "eb451828086d3c042225b06819971b9a0694f196"
+    },
+    {
+      "path": "evidence/wp11-W13-check.log",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W13-check.log",
+      "mode": "100644",
+      "bytes": 127219,
+      "sha256": "fa1226375ac6fb9765829bdb3edb346313208a72780b69bc15129906c22ddfe8",
+      "blobSha": "6c1153be682df51917df6d03270564c1b40c70ce"
+    },
+    {
+      "path": "evidence/wp11-W13-evidence-meta.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W13-evidence-meta.json",
+      "mode": "100644",
+      "bytes": 1865,
+      "sha256": "0a0143dbbafd4fdaa4c14a179cf8f3dfe3d240277ebd2e758a0ad7c4672c24a1",
+      "blobSha": "16765cb0a2fcecfc62fcd8a4a57f69fb7831c4d6"
+    },
+    {
+      "path": "evidence/wp11-W14-B1A-evidence-meta.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W14-B1A-evidence-meta.json",
+      "mode": "100644",
+      "bytes": 16765,
+      "sha256": "c42ddfdf68bf2c9da6538716650d506ec2b23a3d6439baf0d521d928f13890ca",
+      "blobSha": "e2222c056f1ab5126d997109fae41f69c7a501cb"
+    },
+    {
+      "path": "evidence/wp11-W14-B1A-tests-observed.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W14-B1A-tests-observed.json",
+      "mode": "100644",
+      "bytes": 10681,
+      "sha256": "a1638cfbb8832400065399de2bd2d1a24c16476b368613ec11fa577ffa14ec2e",
+      "blobSha": "bc2245b2ac84c25fa96dd51e64fb94e62900d3c8"
+    },
+    {
+      "path": "evidence/wp11-W14-B1A-tests.log",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W14-B1A-tests.log",
+      "mode": "100644",
+      "bytes": 70880,
+      "sha256": "ac177bc7c1a4a693f0f1e75bfac4ac35dd1093ccb98feda7673a02084346c9c8",
+      "blobSha": "3f0727c41709c7c27f84c5cf88d55942dc3a3f66"
+    },
+    {
+      "path": "evidence/wp11-W14-R1-evidence-meta.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W14-R1-evidence-meta.json",
+      "mode": "100644",
+      "bytes": 15414,
+      "sha256": "5559263326a396c497066adebcb8c699182e7f928f56fe5fa832b354a2be013a",
+      "blobSha": "ec95dee137161460e999ea59a07bd9e02c1d0028"
+    },
+    {
+      "path": "evidence/wp11-W14-R1-tests-observed.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W14-R1-tests-observed.json",
+      "mode": "100644",
+      "bytes": 10304,
+      "sha256": "ed7f0f1bd9614714f19f0c87786be5f07ed23cf1bc36cd2967ae4191fce434c6",
+      "blobSha": "b9e7f1bcdfb5a9d60d2125c053131583d201d829"
+    },
+    {
+      "path": "evidence/wp11-W14-R1-tests.log",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W14-R1-tests.log",
+      "mode": "100644",
+      "bytes": 70224,
+      "sha256": "d1f07f1a6cc6034f36314d5950f05732821190a89497bef50e512676927d5930",
+      "blobSha": "a9c7dc78fb455f67a79755e7d56419a9ec15157a"
+    },
+    {
+      "path": "evidence/wp11-W14-checks.log",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W14-checks.log",
+      "mode": "100644",
+      "bytes": 126742,
+      "sha256": "0a37ad1de9f6859badca384014b2526030a085bb2d37444a0e40bb1ca9e2f108",
+      "blobSha": "95b0fdb41c59de78d64516776a311ccb30505bf6"
+    },
+    {
+      "path": "evidence/wp11-W14-evidence-meta.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W14-evidence-meta.json",
+      "mode": "100644",
+      "bytes": 4873,
+      "sha256": "39bf7cb318a5dc58c08681d0c87af8302473983507b5092a6a094d00472d9d16",
+      "blobSha": "b87ff52e54ff325bd1012e229231c5d15630b2c9"
+    },
+    {
+      "path": "evidence/wp11-W15-H6-evidence-meta.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W15-H6-evidence-meta.json",
+      "mode": "100644",
+      "bytes": 37468,
+      "sha256": "eb5cb0d5631a9aa71ba4a8cb70eaea76f2d2df10f45c8dc5d45bc932db58856c",
+      "blobSha": "6dc49f8ff1a7b58fa965e603dcd4b0ba127765ec"
+    },
+    {
+      "path": "evidence/wp11-W15-H6-tests-observed.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W15-H6-tests-observed.json",
+      "mode": "100644",
+      "bytes": 30133,
+      "sha256": "2cac41fb79ebf1d265cf1f4b4491edea2df5744ff21d97541914c73822f449a5",
+      "blobSha": "31faf2ff266e01c736263b6f2c2f4eef6dd46a48"
+    },
+    {
+      "path": "evidence/wp11-W15-H6-tests.log",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W15-H6-tests.log",
+      "mode": "100644",
+      "bytes": 83450,
+      "sha256": "b6dd674c6be5dfeb5022b3a8731f954610ed25ba53246f9bee2a2f3960dc250c",
+      "blobSha": "32891d5d7e1b6190d0e78d7e5e8345c7dd13ee25"
+    },
+    {
+      "path": "evidence/wp11-W15-check.log",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W15-check.log",
+      "mode": "100644",
+      "bytes": 127047,
+      "sha256": "3d7328bd9146cb13966372397134d2379d70da0b076cc8ace16753bf904e230d",
+      "blobSha": "b8053be5b8efc3b17a17813bb8e9285fe95f9884"
+    },
+    {
+      "path": "evidence/wp11-W15-evidence-meta.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W15-evidence-meta.json",
+      "mode": "100644",
+      "bytes": 4968,
+      "sha256": "237a239fc5a8f7e7c76644d941db86efdd3e0c9aa9a79d583eaf099178834226",
+      "blobSha": "e244d9fb39e3afea50e5ed058f2eb7e13a468ca2"
+    },
+    {
+      "path": "evidence/wp11-W16-R2Q-evidence-meta.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W16-R2Q-evidence-meta.json",
+      "mode": "100644",
+      "bytes": 13101,
+      "sha256": "bbf38418723d82e160743d53a41631942f190849bdb778c71963c109f09445f6",
+      "blobSha": "d7ca9cbbceb37a8872500c450f91d245e1552c25"
+    },
+    {
+      "path": "evidence/wp11-W16-R2Q-tests-observed.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W16-R2Q-tests-observed.json",
+      "mode": "100644",
+      "bytes": 7758,
+      "sha256": "e1bca438ec3b85cdb68c459776fafc0648407b0ac1971ec0809716626691a27c",
+      "blobSha": "398783c2abbdd9873c5b49b112f1b4dca5d23531"
+    },
+    {
+      "path": "evidence/wp11-W16-R2Q-tests.log",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W16-R2Q-tests.log",
+      "mode": "100644",
+      "bytes": 69934,
+      "sha256": "c3b1cd6c2f4c774726e9dca81e762c4673adac819167e10af3e79f187f8ef9ef",
+      "blobSha": "28e2456d1cd0135a19875b9a607e701353c20715"
+    },
+    {
+      "path": "evidence/wp11-W16-check.log",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W16-check.log",
+      "mode": "100644",
+      "bytes": 128496,
+      "sha256": "b6702ebe88d782b1de7b7851e881d5fec85898d5ce7983080fc221103db7f9ed",
+      "blobSha": "8067ed198ab56ba7b53c89802744e87f1f38577d"
+    },
+    {
+      "path": "evidence/wp11-W16-evidence-meta.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W16-evidence-meta.json",
+      "mode": "100644",
+      "bytes": 4988,
+      "sha256": "c249054a1dc8f8c815993614c53aa218d3cd252139496f5600d0673c0108666f",
+      "blobSha": "e57d5f6d7af96d727c68d8112f830a08ef797dbe"
+    },
+    {
+      "path": "evidence/wp11-W17-B1B-evidence-meta.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W17-B1B-evidence-meta.json",
+      "mode": "100644",
+      "bytes": 40836,
+      "sha256": "a5d2f18fa1560e754b29312cfc3320a39a33a12d177d3359fe1a7c8f593f932e",
+      "blobSha": "0ffeb2bfecabbc44586e572d22b820bfd3b57556"
+    },
+    {
+      "path": "evidence/wp11-W17-B1B-tests-observed.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W17-B1B-tests-observed.json",
+      "mode": "100644",
+      "bytes": 32215,
+      "sha256": "84efa068a62a68062cdaf70d69245590d8b002c29c39984e358560acd9b78478",
+      "blobSha": "8fa7834d8b91b87e3058ab0d8087447c89e9147b"
+    },
+    {
+      "path": "evidence/wp11-W17-B1B-tests.log",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W17-B1B-tests.log",
+      "mode": "100644",
+      "bytes": 90121,
+      "sha256": "d3321461f2d3ecf53359f059c18f7834be6c46eb3962534195bd65c803458909",
+      "blobSha": "71762d2d43f0a7f8f935b1c8f5f6dd155c1c4fcc"
+    },
+    {
+      "path": "evidence/wp11-W17-H7-evidence-meta.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W17-H7-evidence-meta.json",
+      "mode": "100644",
+      "bytes": 55306,
+      "sha256": "a8625ff548f119584733347ad62e625256678f1371d7667acc94def1a2a69af4",
+      "blobSha": "6a48ea286eec56b07bba58adaacb757b1c653fd7"
+    },
+    {
+      "path": "evidence/wp11-W17-H7-tests-observed.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W17-H7-tests-observed.json",
+      "mode": "100644",
+      "bytes": 46581,
+      "sha256": "bd69728912f2e9ac1099034f3f928772659d0901e4b9f8406310846e0c956ad2",
+      "blobSha": "7cde6714f377d8b0217298d4bc406f1731142d00"
+    },
+    {
+      "path": "evidence/wp11-W17-H7-tests.log",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W17-H7-tests.log",
+      "mode": "100644",
+      "bytes": 88942,
+      "sha256": "554c2ef91ced6f2c23beb3fb88119e9c610a7624822049b04ac2f8f8e9d8de87",
+      "blobSha": "cfa626e295e144486671f5c8325f6fb86ebbc7a3"
+    },
+    {
+      "path": "evidence/wp11-W17-check.log",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W17-check.log",
+      "mode": "100644",
+      "bytes": 128411,
+      "sha256": "052ac1d0b88add09f53103c3e2b46591a179dd53dd49e6a9d685a089c0736928",
+      "blobSha": "b606d4079e8039677e9205539eec759570a21e19"
+    },
+    {
+      "path": "evidence/wp11-W17-evidence-meta.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W17-evidence-meta.json",
+      "mode": "100644",
+      "bytes": 5343,
+      "sha256": "79e965cc3bb0cfe359b2f50c4934f26444a374716a625bb61485ce3dc1e26a91",
+      "blobSha": "9e24ab2bb38cdea3523a1acb5efaada624997127"
+    },
+    {
+      "path": "evidence/wp11-W18-E1-evidence-meta.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W18-E1-evidence-meta.json",
+      "mode": "100644",
+      "bytes": 22514,
+      "sha256": "a5cba70b007e77e1d62c642e663701df4e42fb98fa93df97e2d08e6fa3f707b5",
+      "blobSha": "d26a75d0edc4952dfd5ff4457b0ad8a05f13e3e2"
+    },
+    {
+      "path": "evidence/wp11-W18-E1-tests-observed.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W18-E1-tests-observed.json",
+      "mode": "100644",
+      "bytes": 14624,
+      "sha256": "d3fc545adcaae9a31ff4d070243ef58f0f616f594bbd5e0a81f68e00113d1bf7",
+      "blobSha": "52face86de35b5983b1a5e4f360f0946fda063e0"
+    },
+    {
+      "path": "evidence/wp11-W18-E1-tests.log",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W18-E1-tests.log",
+      "mode": "100644",
+      "bytes": 71837,
+      "sha256": "7c347eaf58a9370f2b0e8d96d31ce98a57f7733b3e229ef47d3d14952fe259de",
+      "blobSha": "e2ff1aaf5ecd455a404a8a64e574e637eab1b1b2"
+    },
+    {
+      "path": "evidence/wp11-W18-check.log",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W18-check.log",
+      "mode": "100644",
+      "bytes": 128837,
+      "sha256": "41e13e868b65789aae8a51e2fd5b5c7d55908095ef4f0a9a626a0e4b87067fea",
+      "blobSha": "20c43e16024db6184beee32e080b94d13c4fd5bc"
+    },
+    {
+      "path": "evidence/wp11-W18-evidence-meta.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W18-evidence-meta.json",
+      "mode": "100644",
+      "bytes": 5244,
+      "sha256": "5389ea0fc984a859e63c637f4260183547f517fc7c2e45eb6515bade121b7885",
+      "blobSha": "82935a461aade4584a263905fc400d6eafcd0772"
+    },
+    {
+      "path": "evidence/wp11-W19-E2-evidence-meta.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W19-E2-evidence-meta.json",
+      "mode": "100644",
+      "bytes": 13042,
+      "sha256": "521ca06685a992cf1bcf60fa4f67081f0bd0990d004d9515156ba3f6c17b5877",
+      "blobSha": "3bc3818117db852963d0ed3a2496fe12369546eb"
+    },
+    {
+      "path": "evidence/wp11-W19-E2-tests-observed.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W19-E2-tests-observed.json",
+      "mode": "100644",
+      "bytes": 6447,
+      "sha256": "a09d6522ee235c9054b0c2d0f84a9329ea7d226cededf21a6a19a915dcce4fd0",
+      "blobSha": "15fa3758988a4c42d6ff5d06004becfeb27cecdd"
+    },
+    {
+      "path": "evidence/wp11-W19-E2-tests.log",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W19-E2-tests.log",
+      "mode": "100644",
+      "bytes": 70915,
+      "sha256": "4a2be6e02241e7d0bda07a7e32712ac56f906ef1ef70131d0710c565034ccf14",
+      "blobSha": "9809291ae7391e374642279792aa62031f50eb45"
+    },
+    {
+      "path": "evidence/wp11-W19-check.log",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W19-check.log",
+      "mode": "100644",
+      "bytes": 128627,
+      "sha256": "d9218a631b5fe94695e6a24499b16ab575e3e8ad380639659cb4348e6df9d9ee",
+      "blobSha": "348ad243e3123d2e1ede576a1943237a8d987027"
+    },
+    {
+      "path": "evidence/wp11-W19-evidence-meta.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W19-evidence-meta.json",
+      "mode": "100644",
+      "bytes": 5226,
+      "sha256": "73f7da7a8f24dfd91833bedcf86c0f7cb15a80dee9849bc3548a60650eb2be01",
+      "blobSha": "57ffd67fa0fe8f18f9a50d765c3dc6b4e0ac3c89"
+    },
+    {
+      "path": "evidence/wp11-W19-typecheck-diagnostics.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W19-typecheck-diagnostics.json",
+      "mode": "100644",
+      "bytes": 45062,
+      "sha256": "5508ff39dbbd2a2e686f57dd4973c6e43ece2878b433b1eb0affbe032cb2c6da",
+      "blobSha": "ddaf28080db600740af8d1c245b7c91b32f0dc3b"
+    },
+    {
+      "path": "evidence/wp11-W2-check.log",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W2-check.log",
+      "mode": "100644",
+      "bytes": 127073,
+      "sha256": "9d84e94ccdd05a8831c06f78f4540868cea98cc7597c14ea0a8d2d9653284c3c",
+      "blobSha": "2bbcd440d8274a8f64eb6632dba1fda195c81008"
+    },
+    {
+      "path": "evidence/wp11-W2-evidence-meta.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W2-evidence-meta.json",
+      "mode": "100644",
+      "bytes": 5424,
+      "sha256": "c67de18d5ba0c876c584dcf0f81070a292129833233e87b79820aad186f6818a",
+      "blobSha": "40a0a3be36719ee0a381f97ccd69b7a30d180310"
+    },
+    {
+      "path": "evidence/wp11-W2-tests-observed.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W2-tests-observed.json",
+      "mode": "100644",
+      "bytes": 46473,
+      "sha256": "db36a899b6444fd71df408217dec0f428cf4fe6621842b43dba993df292efd8b",
+      "blobSha": "98a2a6adeae05b0329449112c1eb849af645d193"
+    },
+    {
+      "path": "evidence/wp11-W2-tests.log",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W2-tests.log",
+      "mode": "100644",
+      "bytes": 81212,
+      "sha256": "9187121e712bf0dfddfc714cdbc9911d7ee2f442d6334eb4b87503bd80cee063",
+      "blobSha": "4892451e1e1ec4849f395e5dc1d9da4163edfa99"
+    },
+    {
+      "path": "evidence/wp11-W3-check.log",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W3-check.log",
+      "mode": "100644",
+      "bytes": 127977,
+      "sha256": "183130bfb8052a773325555694bdca7ac414391819cbc426627e4a2a559e8a07",
+      "blobSha": "9756d9fa0bbc854e9b6b4789fdb329c32b1d96f7"
+    },
+    {
+      "path": "evidence/wp11-W3-evidence-meta.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W3-evidence-meta.json",
+      "mode": "100644",
+      "bytes": 1934,
+      "sha256": "4e88e397e57f7f6a13e5c0977c97540750e052d64961c1316a6601b4f7b47912",
+      "blobSha": "6bc59ccc45735af2a5b37e1de360b18eff53386d"
+    },
+    {
+      "path": "evidence/wp11-W4-check.log",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W4-check.log",
+      "mode": "100644",
+      "bytes": 129072,
+      "sha256": "ecc44741ae2c22768d8b07dd7e826f348d610fd6ed89cd08d6b17a45efd52fcc",
+      "blobSha": "540416eb9b5fb712b365c19138e0a8056a4e9e99"
+    },
+    {
+      "path": "evidence/wp11-W4-evidence-meta.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W4-evidence-meta.json",
+      "mode": "100644",
+      "bytes": 5407,
+      "sha256": "be3bd010f67797f521b3397ad301cd6c07feb0a4e48eb70c067c6188f486df9f",
+      "blobSha": "f06c284488fc8023e9aa5b5d88b5c84c16490fc4"
+    },
+    {
+      "path": "evidence/wp11-W5-A1-evidence-meta.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W5-A1-evidence-meta.json",
+      "mode": "100644",
+      "bytes": 2874,
+      "sha256": "a3eb53c91a3531cb86db62c0a4e87b7cb2d59fc46192821b767046e2d66055fe",
+      "blobSha": "2ebe1bf8d34bbbc10097bea8426f1394a8cd8b68"
+    },
+    {
+      "path": "evidence/wp11-W5-A1-tests-observed.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W5-A1-tests-observed.json",
+      "mode": "100644",
+      "bytes": 23118,
+      "sha256": "e977e5c04df7e95050c55794d9ca62eb3160360adc8e439eb89f1f865f8b653a",
+      "blobSha": "993aae62320bcd92dea011339850986dae4957dd"
+    },
+    {
+      "path": "evidence/wp11-W5-A1-tests.log",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W5-A1-tests.log",
+      "mode": "100644",
+      "bytes": 75486,
+      "sha256": "70a01ae9643b0a094a298c1a3bddbefeac890fc85165e6fc33f3a2f68850e217",
+      "blobSha": "14a36b807c91b50bd2e079f66c3ff7340b8d8ca2"
+    },
+    {
+      "path": "evidence/wp11-W5-check.log",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W5-check.log",
+      "mode": "100644",
+      "bytes": 127784,
+      "sha256": "df6e03407eac2bc4cbfcb85642120f2b4ffa955a6a75131740696e1120f6f34b",
+      "blobSha": "208f3d8f017d064dfe8e8b7b0f8f900e2f69bf58"
+    },
+    {
+      "path": "evidence/wp11-W5-evidence-meta.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W5-evidence-meta.json",
+      "mode": "100644",
+      "bytes": 1684,
+      "sha256": "b4b46d6e72ea507826572a93b0b9df253bb34b7ddcc1ecfe73da702a84c19eb7",
+      "blobSha": "b821297e0cd46edf82c405ba751b9be7d288eab9"
+    },
+    {
+      "path": "evidence/wp11-W6-AR1-evidence-meta.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W6-AR1-evidence-meta.json",
+      "mode": "100644",
+      "bytes": 37412,
+      "sha256": "b083bc34cfa946b0f2689b7801b57b9e68b41712686a2721758f60f3ca2d00b4",
+      "blobSha": "ba05e0bbf39556fa3fbbf2d3819ac618d89697c0"
+    },
+    {
+      "path": "evidence/wp11-W6-AR1-tests-observed.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W6-AR1-tests-observed.json",
+      "mode": "100644",
+      "bytes": 38638,
+      "sha256": "e48cf93f63697f65116fdedc3e257e0df8e4181a89b113c90b8351c2afa88c6d",
+      "blobSha": "ac435dd330724bb6cb1d93dd8790de716b5a0216"
+    },
+    {
+      "path": "evidence/wp11-W6-AR1-tests.log",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W6-AR1-tests.log",
+      "mode": "100644",
+      "bytes": 81848,
+      "sha256": "fa60d15e07db1909d099724a4b3e8eaec02b1721aac971d8ed9836037d8bfa58",
+      "blobSha": "d1315e9d0dc5b8df2965f507805031856b8e5bbb"
+    },
+    {
+      "path": "evidence/wp11-W6-C1-evidence-meta.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W6-C1-evidence-meta.json",
+      "mode": "100644",
+      "bytes": 17919,
+      "sha256": "22add740a7aded65b8ce725f8490f6b8835230a651bfa54f85bef2d234aea2e3",
+      "blobSha": "c563e0c033ca10afaf68b887bbeb80f5c3994784"
+    },
+    {
+      "path": "evidence/wp11-W6-C1-tests-observed.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W6-C1-tests-observed.json",
+      "mode": "100644",
+      "bytes": 41244,
+      "sha256": "aba8f03f5ecc36422ee83373a1a279927b998eb3c7b44d8a34de51db8c717bac",
+      "blobSha": "1d181af9c704f26c0251fcd25962e43ca8574cd5"
+    },
+    {
+      "path": "evidence/wp11-W6-C1-tests.log",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W6-C1-tests.log",
+      "mode": "100644",
+      "bytes": 106380,
+      "sha256": "ccdbd0f1c6aea224473a23067ff7339d9836cf9b89b268a14fb9f091ce74b1eb",
+      "blobSha": "f639957af2a66636216a0dba7c2de6a4c4cb974d"
+    },
+    {
+      "path": "evidence/wp11-W6-H1-evidence-meta.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W6-H1-evidence-meta.json",
+      "mode": "100644",
+      "bytes": 19046,
+      "sha256": "9db76856ae22c7d3b883065d8c1f60e21fab6edadadce42bea0bf863313518e8",
+      "blobSha": "080d92e3ff6507a4abe9f40e6c5d71f98adf0f51"
+    },
+    {
+      "path": "evidence/wp11-W6-H1-tests-observed.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W6-H1-tests-observed.json",
+      "mode": "100644",
+      "bytes": 14602,
+      "sha256": "eb5e70c77772de9a99c35cc3af8548937933315128345efd89fc473f0f900f3d",
+      "blobSha": "9ae005d8cbfe032e43aeb7ba9c50cfbd9cbb45ce"
+    },
+    {
+      "path": "evidence/wp11-W6-H1-tests.log",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W6-H1-tests.log",
+      "mode": "100644",
+      "bytes": 74805,
+      "sha256": "1ba407e9d72bbd660c767f0ac47dbcaf45e3310f0de72282baa4b4650b8f1563",
+      "blobSha": "28d6408a14525f562bc89b238b689728a4349497"
+    },
+    {
+      "path": "evidence/wp11-W6-check.log",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W6-check.log",
+      "mode": "100644",
+      "bytes": 127618,
+      "sha256": "b750cd7c34bd8da4db6aa59f4f045766b93fc5d1f888b9bc70fc5f44fb89b29e",
+      "blobSha": "b8bedacad3df5d2e4e38c7377e88cf0fee310331"
+    },
+    {
+      "path": "evidence/wp11-W6-evidence-meta.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W6-evidence-meta.json",
+      "mode": "100644",
+      "bytes": 2404,
+      "sha256": "f662a28f53c96c056d23e538d4a75c483da83f351dd358f98d7dee566b580805",
+      "blobSha": "0a34731e9a998ea52a5401c87896adda6b614978"
+    },
+    {
+      "path": "evidence/wp11-W7-check.log",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W7-check.log",
+      "mode": "100644",
+      "bytes": 127495,
+      "sha256": "7e95d04c95e733732a008c9621f1a9aaa5322974e323dc0146594b2681b295b5",
+      "blobSha": "8b9ac1b4835aa54022b154168ea787aa19036196"
+    },
+    {
+      "path": "evidence/wp11-W7-evidence-meta.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W7-evidence-meta.json",
+      "mode": "100644",
+      "bytes": 1747,
+      "sha256": "0d9bc560e879ec9c3866f31a7e2fb80496d23e2afa62db90391ea1a1f8aa1a72",
+      "blobSha": "fa25c3083fe81ba0db770591ed74ae81c716c858"
+    },
+    {
+      "path": "evidence/wp11-W8-H2-evidence-meta.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W8-H2-evidence-meta.json",
+      "mode": "100644",
+      "bytes": 36432,
+      "sha256": "a7d17893a2cd5e43e5be95dd7ff1cafb0d6ecff32e9a2e75080502a9f785a198",
+      "blobSha": "bbf22510da5c1295514aa464e63f7734492ac0c2"
+    },
+    {
+      "path": "evidence/wp11-W8-H2-tests-observed.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W8-H2-tests-observed.json",
+      "mode": "100644",
+      "bytes": 19551,
+      "sha256": "63e3c80f8ff47452cb9b2fa5f6a905acd4fe5e0c4bf009352a196fcf9790f55e",
+      "blobSha": "e0d16f40582bed8f0377caf431ad17ed68ec5b19"
+    },
+    {
+      "path": "evidence/wp11-W8-H2-tests.log",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W8-H2-tests.log",
+      "mode": "100644",
+      "bytes": 78568,
+      "sha256": "21aedbfddc86dc4aff9b08b8831d1bd4250d31a33ce76000b59ccd8580379fa4",
+      "blobSha": "a6d90af022f061edadac4ad90f58caadae3612a0"
+    },
+    {
+      "path": "evidence/wp11-W8-check.log",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W8-check.log",
+      "mode": "100644",
+      "bytes": 126684,
+      "sha256": "a02708afa55dd03129b373b32fe9c513dc89b8d96c45d625dfe6e6beb5025a45",
+      "blobSha": "bfc3dc13efa2d81836ae5e20ca54ac831a3b3749"
+    },
+    {
+      "path": "evidence/wp11-W8-evidence-meta.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W8-evidence-meta.json",
+      "mode": "100644",
+      "bytes": 1747,
+      "sha256": "31de51ed21bbb77af89cdd22fe6b1095d487387dad2c822b3d7e28477a3248d2",
+      "blobSha": "4c2df4a35656722ba77cc66f3ac5a38c9c20a5d9"
+    },
+    {
+      "path": "evidence/wp11-W9-AR2-evidence-meta.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W9-AR2-evidence-meta.json",
+      "mode": "100644",
+      "bytes": 30110,
+      "sha256": "f140785d0a1a819e161fcfcbbbcf8067724526f92ff0be88c8af5d008be9a8dd",
+      "blobSha": "a519f13b35352dc50593833f0b5a74471081a74e"
+    },
+    {
+      "path": "evidence/wp11-W9-AR2-tests-observed.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W9-AR2-tests-observed.json",
+      "mode": "100644",
+      "bytes": 25779,
+      "sha256": "40ae96bdd121d2eeb6d437688e5930fe37aadb6303c7ef1fc9a8982d21bce270",
+      "blobSha": "86afdc3297c4317a53d0bc18363c285caad667ca"
+    },
+    {
+      "path": "evidence/wp11-W9-AR2-tests.log",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W9-AR2-tests.log",
+      "mode": "100644",
+      "bytes": 80471,
+      "sha256": "ee6d7a7f2218411cf12fbf852c056f09913e1a906a7dc1b4d633dd37f3fa34e9",
+      "blobSha": "6c3972474a050c5d7195c5450fb6ecb32e623231"
+    },
+    {
+      "path": "evidence/wp11-W9-H3-evidence-meta.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W9-H3-evidence-meta.json",
+      "mode": "100644",
+      "bytes": 43598,
+      "sha256": "6656034e00f04b458d826734e81a37dd97ff31b3950e6c3abb03292e84663c4e",
+      "blobSha": "510e84b5b6d5d16cd9cef0b7aa707cbf127367c7"
+    },
+    {
+      "path": "evidence/wp11-W9-H3-tests-observed.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W9-H3-tests-observed.json",
+      "mode": "100644",
+      "bytes": 25386,
+      "sha256": "91fee4e07e244a6616726536e9e491d76a9adadfafd6474d27b3aa3ab5b94bfc",
+      "blobSha": "040a017b618f2abf12a0d44f7eb788f323666b7d"
+    },
+    {
+      "path": "evidence/wp11-W9-H3-tests.log",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W9-H3-tests.log",
+      "mode": "100644",
+      "bytes": 244395,
+      "sha256": "5e9bb05a190c2d0f77a6b9dfe59b5d1c9cd428b455657b203f76d140221b4682",
+      "blobSha": "7e6f57f7212c09e05d35ec6857c3fc32dfb5c97e"
+    },
+    {
+      "path": "evidence/wp11-W9-check.log",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W9-check.log",
+      "mode": "100644",
+      "bytes": 126584,
+      "sha256": "59d01a490b89e9019eef98e920847f3a65052d7665523a7ef38bbaa2d7b03aa8",
+      "blobSha": "1cb8bed2849df15da786a9a1f4d9e375c1f6ced0"
+    },
+    {
+      "path": "evidence/wp11-W9-evidence-meta.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W9-evidence-meta.json",
+      "mode": "100644",
+      "bytes": 1747,
+      "sha256": "f6355b0e41fbd72cd1bdeb8fd3161d8f07665edd70bc749158477e8d956be2fd",
+      "blobSha": "c6303294ca778c9b09b1f9de4fbdb38334104253"
+    },
+    {
+      "path": "metadata-validation.json",
+      "repositoryPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/metadata-validation.json",
+      "mode": "100644",
+      "bytes": 404,
+      "sha256": "945931869f818d5b798b4c72d173470ad9c945b85e2a20ce243ea56574839422",
+      "blobSha": "6e029e9f44d5c6fdfb9e458aaf84241c55cccbd4"
+    }
+  ]
+}
