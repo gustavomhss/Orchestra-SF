@@ -1,0 +1,35 @@
+{
+  "owner": "session23",
+  "state": "NOT_APPLIED_SHARED_PATCH",
+  "base_commit": "9cc27888581a13b55992cdb5dfbd27e43479ac29",
+  "patch_sha256": "2bb840628ed3bc13bdb5a29c24b829689df8864ddeadaefb0900d10eeb14114b",
+  "dependencies": [
+    "coverage-read.patch with postimage 8ba78e4a49d289f1f0f50c2737989ff2ad1c26d6",
+    "apps/cli/src/sucafina-product/decision-coverage-read.ts blob cfbff030208adb764f392f637ff7b903c0c64199",
+    "Existing canonical collaboration.captureWorkSource → createProcurementCollectionMemberIssuer → individual source producer; canonical Procurement.read and source fences"
+  ],
+  "shape": "selected.procurementEvidence?: { sources: readonly { source: RecordEvidence; projection: DomainProjection; label: string }[] }",
+  "behavior": "Read all authorized request collection members, including drafts, under a real same-Request sf_work_list admission; capture each through the existing durable individual producer; read each canonical DomainProjection twice; release the temporary collection and child admission; revalidate parent authority, exact case and source fences before egress. Every source hash, incarnation, version, period, complete ref and projection reference must agree; the returned projection is the unmodified canonical reread. No new route, grant, MCP operation, financial formula, case mutation or Apply.",
+  "failure_behavior": "Omit optional procurementEvidence when unavailable; Planner/case read remains independently authorized. Consumer must display unavailable, not invent a source.",
+  "budget": "Maximum 100 source records, matching current controls enumeration ceiling; no test timeout or retry increases.",
+  "validation": {
+    "status": "NOT_RUN",
+    "mode": "Static source review only; owner must compose the patch and run existing surgical Actions E2E. No local tests or runtime."
+  },
+  "temporal_projection_decision": "ageDays comes from the canonical producer observation time. Do not compare entire projections across instants, remove ageDays, rewrite a projection, or filter request states. Compare full source, context, source version and engineVersion under source fences, then return the actual whole second projection. Current preparation independently restricts mutable request stages.",
+  "patch": "procurement-read.patch",
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/decision-controls.ts",
+      "preimage_blob": "8ba78e4a49d289f1f0f50c2737989ff2ad1c26d6",
+      "postimage_blob": "986450eb9b3a2bf9feb73f8071d8f05e38f1e515",
+      "preimage": "preimages/apps/cli/src/sucafina-product/decision-controls.ts.txt",
+      "preimage_bytes": 36288,
+      "preimage_sha256": "bbdecb2e816828572a0d2cec9e46821b8a4627bd7ef279e228ae5189a48acb43",
+      "postimage": "postimages/apps/cli/src/sucafina-product/decision-controls.ts.txt",
+      "postimage_bytes": 44487,
+      "postimage_sha256": "9a22538f67008b11b55165dfeaf8154c18404b224c9f1ff17daa9b98bbdc62ec"
+    }
+  ],
+  "artifact_note": "Images use .ts.txt so uninstalled owner proposals are not included as executable TypeScript. Strip only the final .txt when applying to the declared target path."
+}

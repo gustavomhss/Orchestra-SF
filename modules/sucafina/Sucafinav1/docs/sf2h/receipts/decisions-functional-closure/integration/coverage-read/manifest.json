@@ -1,0 +1,29 @@
+{
+  "owner": "session23",
+  "state": "NOT_APPLIED_SHARED_PATCH",
+  "base_commit": "9cc27888581a13b55992cdb5dfbd27e43479ac29",
+  "patch_sha256": "50a0a926c46ec1283d1aa02193334fd01b7dd01114c8d498b13595364142214c",
+  "dependencies": [
+    "apps/cli/src/sucafina-product/decision-coverage-read.ts blob cfbff030208adb764f392f637ff7b903c0c64199"
+  ],
+  "behavior": "Expose the already registered canonical coverage through the current authenticated read, preserving pending and absent states; no write, grant, endpoint or financial formula is added.",
+  "validation": {
+    "status": "NOT_RUN",
+    "mode": "Static review only; owner composition and surgical Actions required."
+  },
+  "patch": "coverage-read.patch",
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/decision-controls.ts",
+      "preimage_blob": "77563520dbfa9cab5876c0312eba294cb579e11d",
+      "postimage_blob": "8ba78e4a49d289f1f0f50c2737989ff2ad1c26d6",
+      "preimage": "preimages/apps/cli/src/sucafina-product/decision-controls.ts.txt",
+      "preimage_bytes": 36121,
+      "preimage_sha256": "e6f8ec6945304bcbd559c8deb73f4daf8be3b91d759c4b4c7fed01ed763cc0b5",
+      "postimage": "postimages/apps/cli/src/sucafina-product/decision-controls.ts.txt",
+      "postimage_bytes": 36288,
+      "postimage_sha256": "bbdecb2e816828572a0d2cec9e46821b8a4627bd7ef279e228ae5189a48acb43"
+    }
+  ],
+  "artifact_note": "Images use .ts.txt so uninstalled owner proposals are not included as executable TypeScript. Strip only the final .txt when applying to the declared target path."
+}

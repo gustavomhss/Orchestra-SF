@@ -1,0 +1,85 @@
+{
+  "schema": "sf2-focused-actions-v1",
+  "source_commit": "f7ef0a807f94040975dae9620f95e3db310ff06a",
+  "source_tree": "d17db55c192b11713054fc68f00a1b1f300cf90d",
+  "W": "21b4b6dd7779468062c6a169e7c7b14d8612717b",
+  "W_tree": "efc3c3699060786f96554bc3c7b5c1c65219e7a5",
+  "S": "5e4765300eab9f50416468d50b2543027a7e8d11",
+  "S_tree": "be0f23bf4251ed8d3dceb955a21bfdfb6213e851",
+  "closure_base": "9cc27888581a13b55992cdb5dfbd27e43479ac29",
+  "overlay": "Only the seven owned UI/adapter/test paths recorded below; all other runtime/config/fixture blobs inherited from published C3. No shared patch installed; this is a scoped proof composition, not a published global candidate.",
+  "product_files": [
+    {
+      "path": "apps/cli/src/sucafina-product/decision-coverage-read.ts",
+      "blob": "cfbff030208adb764f392f637ff7b903c0c64199"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/decision-choice.ts",
+      "blob": "cf61bf000836c0a7cd257366a30708f9e1000d9e"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/decision-edit.ts",
+      "blob": "df27364a8eef3f7b9b54a18ab6ec3dd23cf13d1a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/decisions-functional-closure/choice-forms.test.ts",
+      "blob": "76110418a19b55c8c96e5aefbd153c14cf9a3495"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/decisions-functional-closure/choice-intention.test.ts",
+      "blob": "2ac5b2e8824cea076e1e57b4b9a6dc174da6807a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/decisions-functional-closure/coverage-read.test.ts",
+      "blob": "f714f9ce95309f06874dd081c36a45ef1526a6cd"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/decisions-functional-closure/procurement-evidence.test.ts",
+      "blob": "be44db9a618b9c055dd33aa67fcfaa184dc73d59"
+    }
+  ],
+  "envelope_only": ".ci-run.json",
+  "request": {
+    "package": "sucafina",
+    "packageSelector": "@orchestra/sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/decisions-initial-alternatives/forms.test.ts",
+      "Sucafinav1/test/product/decisions-initial-alternatives/intention.test.ts",
+      "Sucafinav1/test/product/decisions-functional-closure/choice-forms.test.ts",
+      "Sucafinav1/test/product/decisions-functional-closure/choice-intention.test.ts",
+      "Sucafinav1/test/product/decisions-functional-closure/coverage-read.test.ts",
+      "Sucafinav1/test/product/decisions-functional-closure/procurement-evidence.test.ts"
+    ],
+    "env": {}
+  },
+  "run": {
+    "id": 43642837425,
+    "job": 132593972801,
+    "attempt": 1,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43642837425",
+    "conclusion": "success"
+  },
+  "result": {
+    "pass": 35,
+    "fail": 0,
+    "expect_calls": 192,
+    "files": 6,
+    "duration_ms": 259
+  },
+  "previous_mission20_tests_included": 11,
+  "new_tests": 24,
+  "omni_positive_control": {
+    "verdict": "not applicable",
+    "nonce_bound": true,
+    "reason": "focused: no declaring test ran; no omni spawn or delegation"
+  },
+  "artifacts": {
+    "count": 0,
+    "expected": "Bun lane does not upload a Playwright artifact; exact job evidence retained separately."
+  },
+  "acceptance": "COMPONENT_CONTRACTS_ONLY_NOT_E2E",
+  "later_material_change": "Edit Procurement source read changed from temporary BI06 to owner-provided durable individual projection. Revalidation of affected Edit tests is required; this pass is not attributed to the later Edit blob.",
+  "evidence": "evidence/unit-Wc1-tests.json"
+}

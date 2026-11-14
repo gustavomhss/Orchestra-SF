@@ -1,0 +1,130 @@
+{
+  "schema": "sf2-mission31-journey-v1",
+  "source_head": "386d1f9f52ba720e994f9d8feedfca8aa9c9e270",
+  "acceptance": "NOT_GRANTED",
+  "stages": [
+    {
+      "id": "human-case",
+      "required_stage": "Human creation/edit/reopen",
+      "implementation": "Preserved original tests; no direct POST or database seed",
+      "execution": "BLOCKED_BOOTSTRAP",
+      "criteria": [
+        "WP11.T01.DOD.01",
+        "WP11.T01.CHK.01"
+      ],
+      "acceptance": "NOT_GRANTED"
+    },
+    {
+      "id": "evidence",
+      "required_stage": "Authorized Planner and durable Procurement evidence",
+      "implementation": "Planner path preserved; Edit consumes canonical individual read; owner seam patch required",
+      "execution": "BLOCKED_BOOTSTRAP",
+      "criteria": [
+        "WP11.INV.10",
+        "WP11.T01.INV.01"
+      ],
+      "acceptance": "NOT_GRANTED"
+    },
+    {
+      "id": "two-alternatives",
+      "required_stage": "Two valid alternatives and C10 coverage",
+      "implementation": "Existing Mission20 UI preserved; canonical read-only coverage adapter delivered",
+      "execution": "BLOCKED_BOOTSTRAP",
+      "criteria": [
+        "WP11.DOD.20",
+        "WP11.T02.DOD.01"
+      ],
+      "acceptance": "NOT_GRANTED"
+    },
+    {
+      "id": "comparison-rule",
+      "required_stage": "Explicit comparison and numeric rule",
+      "implementation": "Human UI delivered; shared rule patch pending",
+      "execution": "BLOCKED_BOOTSTRAP",
+      "criteria": [
+        "WP11.T02.SUC.01"
+      ],
+      "acceptance": "NOT_GRANTED"
+    },
+    {
+      "id": "choice",
+      "required_stage": "Persisted human choice and reopen",
+      "implementation": "Exact uncertain-intention retention and explicit retry; immutable snapshot assertions",
+      "execution": "BLOCKED_BOOTSTRAP",
+      "criteria": [
+        "WP11.T03.CHK.01",
+        "WP11.T03.CHK.02"
+      ],
+      "acceptance": "NOT_GRANTED"
+    },
+    {
+      "id": "history",
+      "required_stage": "Read old choice after source change",
+      "implementation": "Source2400→3600 assertion; second new choice and canonical training oracle remain absent",
+      "execution": "BLOCKED_BOOTSTRAP",
+      "criteria": [
+        "WP11.T03.CHK.01",
+        "WP11.T03.CHK.20"
+      ],
+      "acceptance": "NOT_GRANTED"
+    },
+    {
+      "id": "proposal-preview",
+      "required_stage": "Real proposal and preview from frozen operation",
+      "implementation": "Prepare UI consumes existing operation only; typed Procurement producer absent",
+      "execution": "NOT_REACHED_OWNER_PRODUCER_REQUIRED",
+      "criteria": [
+        "WP11.T03.DOD.01",
+        "WP11.T03.QLT.01"
+      ],
+      "acceptance": "NOT_GRANTED"
+    },
+    {
+      "id": "approval",
+      "required_stage": "Explicit financial approval of proposed amount",
+      "implementation": "Mandatory real Approve gate; current save/approval contract incompatible",
+      "execution": "NOT_REACHED_OWNER_CONTRACT_REQUIRED",
+      "criteria": [
+        "WP11.INV.01",
+        "WP11.T03.INV.01"
+      ],
+      "acceptance": "NOT_GRANTED"
+    },
+    {
+      "id": "apply-recovery",
+      "required_stage": "Apply, lost response, concurrent edit, fresh admission and unique receipt",
+      "implementation": "Published C12 consumer wired; no second Apply implementation",
+      "execution": "NOT_RUN",
+      "criteria": [
+        "WP11.T04.CHK.02",
+        "WP11.T04.DOD.02",
+        "WP11.T04.SUC.01"
+      ],
+      "acceptance": "NOT_GRANTED"
+    },
+    {
+      "id": "authorization-negatives",
+      "required_stage": "Wrong actor/incarnation/revoked access",
+      "implementation": "Not implemented as browser scenarios in the five-test selection",
+      "execution": "NOT_RUN",
+      "criteria": [
+        "WP11.T04.CHK.03",
+        "WP11.T04.CMP.18"
+      ],
+      "acceptance": "NOT_GRANTED"
+    },
+    {
+      "id": "native",
+      "required_stage": "Native provider, critique, process restart and cross-surface parity",
+      "implementation": "No actual native resource available in this session",
+      "execution": "NOT_RUN",
+      "criteria": [
+        "WP11.DOD.10",
+        "WP11.T01.CHK.18",
+        "WP11.T03.CHK.18",
+        "WP11.T04.CHK.18"
+      ],
+      "acceptance": "NOT_GRANTED"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+--- a/apps/cli/src/sucafina-product/decision-controls.ts
++++ b/apps/cli/src/sucafina-product/decision-controls.ts
+@@ -10,10 +10,12 @@
+ import type { PlannerSensitivityUnits } from "../../../../modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts"
+ import { documentHtml, esc, pageMain } from "../../../../modules/sucafina/Sucafinav1/src/screen-shell.ts"
+ import type { SfDecisionHttpRuntime } from "./decision-domain-http.ts"
++import { readSfDecisionCoverage } from "./decision-coverage-read.ts"
++import type { SfDecisionCoverageRead } from "./decision-coverage-read.ts"
+ 
+ type CaseRef = { id: string; incarnation: string; version: number }
+ type RecordEvidence = Extract<BusinessEvidenceRef, { kind: "record" }>
+-type Forecast = { source: RecordEvidence; projection: DomainProjection; expectedVersion?: number; classification?: CoverageClassification }
++type Forecast = { source: RecordEvidence; projection: DomainProjection; expectedVersion?: number; classification?: CoverageClassification; coverage?: SfDecisionCoverageRead["coverage"] }
+ type Scenario = { ref: string; title: string; alternativeId: string; parameters: readonly { ref: string; label: string }[] }
+ type Evidence = { evidence: RecordEvidence; source: SourceRef; fields: readonly string[]; label: string }
+ type ControlsBody = { cases: readonly { ref: string; title: string; version: number }[]; actions: readonly string[]; accessRevision: string; selected?: {
+@@ -130,11 +132,11 @@
+   const read = () => runtime.authority.state.read(request, "preferences", (state, actor) => sameActor(actor, call) ? { absent: !Object.hasOwn(state.preferences, key) } : undefined)
+   const presence = await read()
+   if (presence.status !== "ok" || !presence.value) return { status: "unavailable", reason: "decision-controls-classification-unavailable" }
+-  const classification = presence.value.absent ? undefined : await runtime.domain.baselineCoverage.readClassification(source.refId, call)
++  const registered = presence.value.absent ? undefined : await readSfDecisionCoverage({ host: runtime.authority.host, baseline: runtime.domain.baselineCoverage }, { caseRef, source }, call)
+   const again = await read()
+   if (again.status !== "ok" || !same(again.value, presence.value) || !await runtime.authority.host.revalidate(call)) return { status: "stale", reason: "decision-controls-classification-changed" }
+   return { status: "ok", value: { source, projection: result.value.baseline,
+-    ...(presence.value.absent ? { expectedVersion: 0 } : classification?.status === "ok" ? { expectedVersion: classification.value.version, classification: classification.value } : {}) } }
++    ...(presence.value.absent ? { expectedVersion: 0 } : registered?.status === "ok" ? registered.value : {}) } }
+ }
+ 
+ export function sfDecisionControlsHtml(value: Controls, surface: "dashboard" | "planner" | "procurement") {

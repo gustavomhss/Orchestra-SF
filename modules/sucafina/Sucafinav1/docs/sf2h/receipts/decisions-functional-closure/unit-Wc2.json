@@ -1,0 +1,120 @@
+{
+  "schema": "sf2-focused-actions-v1",
+  "source_commit": "386d1f9f52ba720e994f9d8feedfca8aa9c9e270",
+  "source_tree": "3fc1bd258bb05ffd7ec6e05618961633fff253ce",
+  "W": "46e6ef14ebccd4c9ba5850b8c5d73ddd3e9609ad",
+  "W_tree": "54abd2ea5ab6c15454032f4a0183ea6cef641ea7",
+  "S": "36faa62ddb086142a7c0599ac096519ef25d2888",
+  "S_tree": "4c49b5ec46523f09e4a14160d90201b9751490e6",
+  "closure_base": "9cc27888581a13b55992cdb5dfbd27e43479ac29",
+  "overlay": "Only the sixteen owned files below; all other code/configuration/fixtures inherited exactly from published C3. No owner patch applied.",
+  "product_files": [
+    {
+      "path": "apps/cli/src/sucafina-product/decision-coverage-read.ts",
+      "blob": "cfbff030208adb764f392f637ff7b903c0c64199"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/decision-choice.ts",
+      "blob": "cf61bf000836c0a7cd257366a30708f9e1000d9e"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/decision-edit.ts",
+      "blob": "1c4bd231075bf149a31924cf651063bf1c3ef6d3"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/decisions-functional-closure/choice-forms.test.ts",
+      "blob": "76110418a19b55c8c96e5aefbd153c14cf9a3495"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/decisions-functional-closure/choice-intention.test.ts",
+      "blob": "2ac5b2e8824cea076e1e57b4b9a6dc174da6807a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/decisions-functional-closure/coverage-read.test.ts",
+      "blob": "f714f9ce95309f06874dd081c36a45ef1526a6cd"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/decisions-functional-closure/procurement-evidence.test.ts",
+      "blob": "040cee1856a4187b978552e4bf8f97110a6e3c9a"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/apply-recovery.ts",
+      "blob": "cb70480c28e9382629d289c1c954e88379e173d3"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/choice-history.ts",
+      "blob": "c469187a2e04d49d157cf9d3830145ca845f4064"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/closure-response.ts",
+      "blob": "fa509e9d7a7da9d0024c9487975f7b26b3b29146"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/comparison-rule.ts",
+      "blob": "9e02b30fee0e1f37afeac28b0296bdfbbbab70aa"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/initial-alternatives.ts",
+      "blob": "979bfeeb460e85fe1911affe0ac9ad4d21a27e3a"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/planner-sources.ts",
+      "blob": "c27eb39b9ef0d36a48d329e5767ba5cb3a4aa0ad"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/procurement-closure.ts",
+      "blob": "5784a995ba25d042101fe2eed63ce96957b711b1"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/procurement-source.ts",
+      "blob": "7a7553b89af8f90592603f7d454ba164cbb81afd"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+      "blob": "952ce06a276bca7723e11e8ea9067637e6bbf8e4"
+    }
+  ],
+  "envelope_only": ".ci-run.json",
+  "request": {
+    "package": "sucafina",
+    "packageSelector": "@orchestra/sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/decisions-initial-alternatives/forms.test.ts",
+      "Sucafinav1/test/product/decisions-initial-alternatives/intention.test.ts",
+      "Sucafinav1/test/product/decisions-functional-closure/procurement-evidence.test.ts"
+    ],
+    "env": {}
+  },
+  "run": {
+    "id": 43643273465,
+    "job": 132595302669,
+    "cleanup_job": 132595771075,
+    "attempt": 1,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43643273465",
+    "status": "completed",
+    "conclusion": "success"
+  },
+  "result": {
+    "pass": 15,
+    "fail": 0,
+    "expect_calls": 68,
+    "files": 3,
+    "duration_ms": 173
+  },
+  "previous_mission20_tests_included": 11,
+  "changed_component_tests": 4,
+  "omni_positive_control": {
+    "verdict": "not applicable",
+    "nonce": "16425d6c48245bd07d8c5f9fdb62f582",
+    "reason": "focused: no declaring test ran; no omni spawn or delegation"
+  },
+  "artifacts": {
+    "count": 0,
+    "expected": "Bun lane does not upload Playwright artifacts; exact job evidence retained separately."
+  },
+  "acceptance": "COMPONENT_CONTRACTS_ONLY_NOT_E2E",
+  "dedup": "Run after material Edit/Procurement evidence change. Choice and coverage tests with unchanged source/test closure were not repeated. Do not sum 35+15 as distinct tests.",
+  "evidence": "evidence/unit-Wc2-tests.json"
+}
