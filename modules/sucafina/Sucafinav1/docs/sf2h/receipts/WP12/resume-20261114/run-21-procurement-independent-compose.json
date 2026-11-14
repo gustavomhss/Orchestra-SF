@@ -1,0 +1,245 @@
+{
+  "schema": "sf-wp12-independent-terminal-review-v1",
+  "reviewer": "compose_typecheck",
+  "status": "PASS_BOUNDED_RECEIPT_REVIEW",
+  "scope": "Independent review of run-21-procurement against the one previously captured hosted log, saved MCP metadata and exact source bytes. This approves the accuracy and stated limits of the receipt, not the failing product run or native mission acceptance.",
+  "reviewedReceipt": {
+    "path": "repo/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/run-21-procurement.json",
+    "gitBlob": "f04ace251e94b623169df4460971ec3f7fabc168",
+    "sha256": "320e4548834dd569fdf05bb42bacdfc1d9683c2659d3cd5da7800db06a84c849",
+    "bytes": 22620
+  },
+  "product": {
+    "sha": "2ef423f09e0297fd9edb3c3e3f703d00410033bd",
+    "tree": "f859e3b62b1de24234025002459045ae6d3df328"
+  },
+  "snapshot": {
+    "sha": "c3358c7a4e7ae7adeeda4c9fd5b28830648bfcd2",
+    "tree": "e56b89ceae4080757f9827d993c0e7bc0f7e3132",
+    "directParent": "2ef423f09e0297fd9edb3c3e3f703d00410033bd",
+    "onlyEnvelopePath": ".ci-run.json",
+    "branch": "ci-run-linux-astra-wp12-2ef423f0-8e6c7287-1",
+    "deltaPaths": [
+      ".ci-run.json"
+    ]
+  },
+  "runId": 43612149925,
+  "testJobId": 132499298207,
+  "cleanupJobId": 132509068409,
+  "checks": [
+    {
+      "id": "identity",
+      "result": "PASS",
+      "detail": "Saved MCP run/jobs/commit/product objects agree with the receipt. Snapshot has exactly one parent, W24; only .ci-run.json differs. Test job failed; cleanup succeeded; artifact count is zero. Request body, Git blob and SHA256 match the exact source payload."
+    },
+    {
+      "id": "source-integrity",
+      "result": "PASS",
+      "detail": "All nine saved source payloads (request plus eight source files) recompute to their full Git blob and SHA256 pins; copied source files match their payload bytes. Named and supporting receipt pins equal source-pins.json. No product source was imported."
+    },
+    {
+      "id": "literal-log",
+      "result": "PASS",
+      "detail": "Recomputed log bytes/hash/1029 lines; independently parsed all 70 markers across 14 prefixes and compared every value/line/timestamp with markers.json. Every marker githubSha equals the CI snapshot. All three named result rows, durations, both timeout rows, summary and error row match literally. Eight choice phase pairs and both post-failure probes agree field by field."
+    },
+    {
+      "id": "documents-consumers",
+      "result": "PASS_SCOPED_UI",
+      "detail": "The executed no-model branch persisted a real HTTP parser candidate, reopened it, confirmed that exact candidate through document-confirm, and previewed a scenario using only the confirmed reference and the producer-returned destination. The source asserts unchanged value/unit/file/revision/range, a changed canonical confirmation ref digest, exact evidence in the preview request and result, total null/pending inventory coverage, unchanged case/domain digests, and confirmed evidence persistence after the third host open. Log lines 849/883/906 and terminal PASS support this route.",
+      "sourceBlob": "40ea061443542c42a4b27a6f9f602a97d05442b9",
+      "sourceSections": [
+        "127-143",
+        "145-245",
+        "248-278"
+      ],
+      "logLines": [
+        849,
+        874,
+        883,
+        906,
+        907
+      ]
+    },
+    {
+      "id": "native-limit",
+      "result": "PASS_NO_ACCEPTANCE_PROMOTION",
+      "detail": "Five catalog observations are empty, with available/supported/published/intersection all []. Extraction input was prepared but the native mission was unavailable. Contract input was unavailable and evidence-review had no persisted case claim selector. No native output, Session execution or native consumer was observed. Omni focused-control PASS with 149 spawns/0 delegated is not a native mission witness.",
+      "logLines": [
+        833,
+        843,
+        844,
+        845,
+        847,
+        871,
+        874,
+        903,
+        929,
+        981,
+        1000
+      ]
+    },
+    {
+      "id": "purchase-prerequisites",
+      "result": "PASS_SCOPED_PREREQUISITES",
+      "detail": "Both prepare-case calls returned after all actual alternative/C10 assertions and a same-value explicit Planner parameter. Source asserts training omitted/derived pending separately from complete coverage, numerical source/result digests, and exactly one hypothetical selected component. Both decision-sensitivity-units and decision-criteria returned successfully; no assertion after choose returned was reached.",
+      "helperBlob": "78331ae620b34f0fa1c5923a8b769415c5bdaaff",
+      "helperSourceSections": [
+        "184-232"
+      ],
+      "driverBlob": "2a3a788a56da8d53392f564e95dad168df670c84",
+      "logLines": [
+        931,
+        932,
+        938,
+        941,
+        983,
+        984,
+        990,
+        993
+      ]
+    },
+    {
+      "id": "purchase-failure-causality",
+      "result": "PASS_LIMITED_CAUSALITY",
+      "detail": "Both failed choose calls began after a new public selection returned, then reported decision-authority-changed at 300063/300137 ms since that return. Subsequent companion-business probes without renewal report procurement-context-unavailable. These facts do not identify the first internal refusal, prove which lease expired, or prove a committed ChoiceRecord. Receipt correctly retains timeout failures and an unhandled error between tests; neither PurchasePreparationInput nor a choice/contribution reopen consumer was reached.",
+      "logLines": [
+        943,
+        944,
+        945,
+        946,
+        947,
+        949,
+        958,
+        995,
+        996,
+        997,
+        998,
+        999
+      ]
+    }
+  ],
+  "summaryObserved": {
+    "pass": 1,
+    "fail": 2,
+    "errors": 1,
+    "filteredOut": 0,
+    "assertions": 239,
+    "files": 2,
+    "tests": 3,
+    "durationSeconds": 1993.76,
+    "logLines": [
+      1002,
+      1003,
+      1004,
+      1005,
+      1006
+    ],
+    "aggregateAccepted": false
+  },
+  "sourcePins": [
+    {
+      "path": ".ci-run.json",
+      "sourceCommit": "c3358c7a4e7ae7adeeda4c9fd5b28830648bfcd2",
+      "blob": "de64053f9e86d3d0aebd8d67bd454986e758540b",
+      "sha256": "8e6c7287a8afaf957807bf840c6380e92182a37d3f3a94b68c9911c36e9c9372",
+      "bytes": 663,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c3358c7a4e7ae7adeeda4c9fd5b28830648bfcd2/.ci-run.json"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts",
+      "sourceCommit": "c3358c7a4e7ae7adeeda4c9fd5b28830648bfcd2",
+      "blob": "40ea061443542c42a4b27a6f9f602a97d05442b9",
+      "sha256": "6c52720f88a5e77f0db8232c3f8510a44b943d0466febf2b514d88fdbf10df65",
+      "bytes": 33956,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c3358c7a4e7ae7adeeda4c9fd5b28830648bfcd2/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-purchase.test.ts",
+      "sourceCommit": "c3358c7a4e7ae7adeeda4c9fd5b28830648bfcd2",
+      "blob": "2a3a788a56da8d53392f564e95dad168df670c84",
+      "sha256": "cd6e1478c7724a32036e8ed20a2aee834870ae5f35ac33995827990d970a96ed",
+      "bytes": 16762,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c3358c7a4e7ae7adeeda4c9fd5b28830648bfcd2/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-purchase.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-choice-preparation.ts",
+      "sourceCommit": "c3358c7a4e7ae7adeeda4c9fd5b28830648bfcd2",
+      "blob": "ce7e079d3abcc8af0fc881483addfa2ca337ae9c",
+      "sha256": "9b60a4ecde5f616d187a323447b81ba3bbc6c982b5e62351965f7ef5935609de",
+      "bytes": 6289,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c3358c7a4e7ae7adeeda4c9fd5b28830648bfcd2/modules/sucafina/Sucafinav1/test/product/wp12/native-choice-preparation.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-procurement-preparation.ts",
+      "sourceCommit": "c3358c7a4e7ae7adeeda4c9fd5b28830648bfcd2",
+      "blob": "78331ae620b34f0fa1c5923a8b769415c5bdaaff",
+      "sha256": "979e285e285699f9ea5e3b0f61acaad280bbfbc7670726bd5445b873a3e2a196",
+      "bytes": 20548,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c3358c7a4e7ae7adeeda4c9fd5b28830648bfcd2/modules/sucafina/Sucafinav1/test/product/wp12/native-procurement-preparation.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-mission-harness.ts",
+      "sourceCommit": "c3358c7a4e7ae7adeeda4c9fd5b28830648bfcd2",
+      "blob": "49300a78a44ac0739791d10a11c386b317f4b51a",
+      "sha256": "050238396e5f12c067de3ab488f1dc207350cb636fc68d71fc72ef2d8a1b59bc",
+      "bytes": 20042,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c3358c7a4e7ae7adeeda4c9fd5b28830648bfcd2/modules/sucafina/Sucafinav1/test/product/wp12/native-mission-harness.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-document-preparation.ts",
+      "sourceCommit": "c3358c7a4e7ae7adeeda4c9fd5b28830648bfcd2",
+      "blob": "37a997aa782d1cb695238a5fbe6aeaddfcceb00d",
+      "sha256": "bb86514c2a85a351d29120246d17b8ed5fc6e09ec1f786d7ffe7773e2a89be66",
+      "bytes": 4654,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c3358c7a4e7ae7adeeda4c9fd5b28830648bfcd2/modules/sucafina/Sucafinav1/test/product/wp12/native-document-preparation.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+      "sourceCommit": "c3358c7a4e7ae7adeeda4c9fd5b28830648bfcd2",
+      "blob": "09097eaba2e0eae71d33d88077a2f86e83e1dde9",
+      "sha256": "0cca19827cfe6793207441d493561d76830d6903383701b9d84230380561a701",
+      "bytes": 11922,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c3358c7a4e7ae7adeeda4c9fd5b28830648bfcd2/modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "sourceCommit": "c3358c7a4e7ae7adeeda4c9fd5b28830648bfcd2",
+      "blob": "97cde4dce2858f47b57b446c9c20bad77d367591",
+      "sha256": "217ce1f268ae119bd38292f9b6697c6f6c1bfb08e31be3e25a434c5cf91d6b48",
+      "bytes": 62972,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c3358c7a4e7ae7adeeda4c9fd5b28830648bfcd2/apps/cli/src/sucafina-product/business-services.ts"
+    }
+  ],
+  "log": {
+    "path": "evidence/resume-21-procurement.log",
+    "bytes": 102302,
+    "sha256": "3ebfd4f7284d7a8e290042aa4da08cd0b63ebdb207293e5886a20d5cda1e4a2e",
+    "lines": 1029,
+    "source": "Single decoded job log already downloaded by root via GitHub MCP; reused locally without another log download."
+  },
+  "capsuleHashes": {
+    "manifest.json": "840bd4ec0e82a06eeaada1363b000c9c31e58baaec8739572f37311dc9f86837",
+    "metadata.json": "fd230ea9a3147744b7dbe8e91c418a7584a7fb6cf606b6e40c0a7610fd285225",
+    "product-commit.json": "901bfab3a9f513cb0d64f43c6ce02ab80f3b7598d3ddcd3a009ed8ca17f3899c",
+    "source-pins.json": "3d6484f1edba1c7646ae6af90c1a80b705d0ec6df9805d148f0b0ba48a1775e0",
+    "source-bytes.json": "d53cd31343f2b80e71c289ff432997360e551f32e719592b1673434caa28ef35",
+    "extra-source-bytes.json": "217d400726f75b2f24a3adcff55ec1c8d98975acaf0c729ad160016a8f62c093",
+    "markers.json": "ecdd13993e1ae4bf8f72a085cbd89d43229296d406262c2f4ba748e8aafcc33a"
+  },
+  "qualifications": [
+    "Documents originalContributionsUnchanged is a logged flag with an empty native witness collection in this run. It does not demonstrate preservation or rereading of a native contribution; the receipt explicitly denies native output consumers.",
+    "The evidence-review marker reason describes the no-claim boundary. The source assertion checks the raw producer result needs-input/invalid-analysis-input; the marker is not a separately returned backend reason.",
+    "Use in-process durationMs/selectionAgeSinceReturnMs telemetry as reported. Buffered console timestamps are not substituted for phase start times or treated as a precise internal-gate clock.",
+    "Declared test deadlines are not an upper bound on actual elapsed time: both Purchase results exceeded 360000 ms, and the aggregate elapsed time was 1993.76 s.",
+    "No new native/18-skill/full-WP12 acceptance is inferred. No contract surface/schema fix, uploaded-file/scanner qualification, case claim creation, domain apply, or Purchase success is established by this receipt."
+  ],
+  "findings": [],
+  "localProductTests": false,
+  "localTypecheck": false,
+  "productModulesImported": false,
+  "sourceEdited": false,
+  "authorsEdited": false,
+  "remoteCalls": false,
+  "logDownloadedAgain": false,
+  "ciDispatched": false
+}

@@ -1,0 +1,67 @@
+{
+  "schema": "sf-wp12-document-publication-v1",
+  "increment": "D28",
+  "baseCommit": "449072d08500c744ac17d7ac73d46d2f620a56b2",
+  "baseTree": "9f71d1096af10fd95af523fd563880a1de7f5563",
+  "productUnchanged": true,
+  "productionChanges": 0,
+  "testChanges": 0,
+  "foreignSourceChanges": 0,
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/run-21-procurement.json",
+      "bytes": 22620,
+      "sha256": "320e4548834dd569fdf05bb42bacdfc1d9683c2659d3cd5da7800db06a84c849",
+      "blob": "f04ace251e94b623169df4460971ec3f7fabc168",
+      "kind": "own-document"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/run-21-procurement-independent-compose.json",
+      "bytes": 12808,
+      "sha256": "b08c627e66a9e90fd51eb09117a036064c79f513fd309ab6237e668534e341b8",
+      "blob": "214df0f516669267c37638d96c9db387eba8b5da",
+      "kind": "own-document"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/run-21-procurement-author-freeze.json",
+      "bytes": 591,
+      "sha256": "840bd4ec0e82a06eeaada1363b000c9c31e58baaec8739572f37311dc9f86837",
+      "blob": "69d098bb913239bc05f141ebcb77a24304d180b4",
+      "kind": "own-document"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/run-21-review-work-dispatch.json",
+      "bytes": 3780,
+      "sha256": "7646ccb332edb1aeda12d67f097675e581ded9151ff2d9e8beccba6325dcf461",
+      "blob": "1d8ade93a5b83e3182bf4b5cda70f316de1b2bc8",
+      "kind": "own-document"
+    }
+  ],
+  "terminal": {
+    "run": 43612149925,
+    "result": "failure",
+    "pass": 1,
+    "fail": 2,
+    "errors": 1,
+    "assertions": 239,
+    "seconds": 1993.76,
+    "documents": "PASS_SCOPED_UI_AND_HUMAN_CONSUMERS",
+    "purchase": "FAIL_TIMEOUT_AT_CHOICE",
+    "nativeInference": 0,
+    "independentReceiptReview": "PASS_BOUNDED_RECEIPT_REVIEW"
+  },
+  "activeProductRun": 43615955284,
+  "rawLogAndSourceCapsulesBundled": false,
+  "reproduction": "Terminal receipt contains immutable GitHub source/request URLs, complete parsed-marker index, exact decoded log hash/line references and terminal metadata. Independent review preserves raw-log/source capsule hashes; capsules are scratch metadata, not claimed repository files.",
+  "product": {
+    "sha": "6880666b15dc18bf400c908a8457580526b70f4d",
+    "tree": "258bc03adf6343a10847f80060b6983cfc65ad43",
+    "checkRun": 43614850352,
+    "checkResult": "PASS",
+    "docsOnlyRequiresNoNewProductOrCheckRun": true
+  },
+  "noRuntimeResultTransferred": true,
+  "localProductTests": false,
+  "localTypecheck": false,
+  "fullWp12": false
+}
