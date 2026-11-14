@@ -239,13 +239,28 @@ test("first agenda uses three real domains, preserves edits through drift and re
     await f.reopen()
     const reloaded = await responseValue<PreservedReview>(await f.request("review-read", undefined, { reviewRef: saved.id }))
     expect(reloaded).toEqual(saved)
-    await view.getByRole("button", { name: "Open meeting", exact: true }).click()
+    const readMeeting = async (step: string, action: () => Promise<unknown>) => {
+      const diagnosticsBeforeRead = f.preserveDiagnostics.length
+      const pendingRead = page.waitForResponse((response) => {
+        const url = new URL(response.url())
+        return response.request().method() === "GET" && url.searchParams.get("sf") === "review-read" && url.searchParams.get("reviewRef") === saved.id
+      })
+      await action()
+      const response = await pendingRead
+      const result = await response.json() as PortResult<PreservedReview>
+      if (response.status() !== 200 || result.status !== "ok") console.error("First agenda meeting read", JSON.stringify({ step,
+        http: response.status(), status: result.status, reason: "reason" in result ? result.reason : undefined,
+        gates: f.preserveDiagnostics.slice(diagnosticsBeforeRead), pageErrors: failures }))
+      expect({ http: response.status(), result }).toMatchObject({ http: 200, result: { status: "ok" } })
+      expect(available(result)).toEqual(saved)
+    }
+    await readMeeting("open", () => view.getByRole("button", { name: "Open meeting", exact: true }).click())
     const meeting = page.locator('section[aria-label="Preserved review meeting"]')
     await playwright.expect(meeting.getByRole("heading", { name: "Hot Topics", exact: true })).toBeVisible()
-    await page.reload({ waitUntil: "domcontentloaded" })
+    await readMeeting("reload", () => page.reload({ waitUntil: "domcontentloaded" }))
     await playwright.expect(meeting.getByRole("heading", { name: "Hot Topics", exact: true })).toBeVisible()
     for (let index = 0; index < 3; index++) {
-      await meeting.getByRole("button", { name: "Next topic", exact: true }).click()
+      await readMeeting(`topic-${index + 1}`, () => meeting.getByRole("button", { name: "Next topic", exact: true }).click())
       await playwright.expect(meeting.getByRole("heading", { name: ordered[index + 1]!, exact: true })).toBeVisible()
     }
     await playwright.expect(meeting.getByRole("heading", { name: "Forecast · Agenda candidate · candidate", exact: true })).toBeVisible()
