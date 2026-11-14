@@ -41,7 +41,7 @@ export function createPlannerExactThreshold(input: { units: ReturnType<typeof cr
     const probe = async (key: bigint) => {
       const amount = fromOrdered(key)
       if (!Number.isFinite(amount) || plannerMonthlyAmount(amount) !== amount || usdAmount(amount, "USD", 1).usd !== amount || outlookMonth(0, 0, null, amount, 0) !== amount) return undefined
-      const result = await evaluate(amount)
+      const result = structuredClone(await evaluate(amount))
       if (result.status !== "ok" || result.value.metric.engineVersion !== issued.value.units.engineVersion || result.value.metric.unit !== "USD" || result.value.metric.value === null || !Number.isFinite(result.value.metric.value) || !exactComponents(result.value.sample, bounds.parameterRef, amount) || digestSfValue(result.value.sample.components.map((component) => component.id)) !== digestSfValue(left.sample.components.map((component) => component.id)) || plannerComponentDigest(result.value.sample.components.filter((component) => component.id !== bounds.parameterRef)) !== plannerComponentDigest(left.sample.components.filter((component) => component.id !== bounds.parameterRef))) return undefined
       refs.push(...result.value.metric.evidenceRefs)
       return satisfies(result.value.metric.value)

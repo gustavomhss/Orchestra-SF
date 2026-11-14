@@ -13,6 +13,7 @@ test("shared categories and supported N/A consume one real Planner contribution 
   try {
     const coverage = await renewalCoverage(fixture, "bundled")
     expect(coverage.assessment.coverageState).toBe("complete")
+    if (coverage.assessment.coverageState !== "complete") throw new Error("Expected the complete producer-supported coverage fixture")
     expect(coverage.assessment.issues).toEqual([])
     expect(coverage.assessment.derivedMissingCategoryIds).toEqual([])
     expect(fixture.selectedResult.knownSubtotal).toBe(210000)
@@ -30,7 +31,7 @@ test("shared categories and supported N/A consume one real Planner contribution 
     const decision = { ...fixture.decision, alternatives: fixture.decision.alternatives.map((item) => item.id === "selected" ? { ...item, result: storedResult } : item) }
     const input = { decision, selection, scenario: fixture.scenario, storedResult, rule: rule.value, structural: structural.value, assessment: coverage.assessment, basis: fixture.basis, classification: coverage.classification, evidence: coverage.evidence, context: fixture.context }
     const certificate = createCoverageIntervalCertificate(input)
-    expect(certificate?.bounds).toEqual(fixture.sensitivityRequest.parameterBounds && { parameterRef: "implementation:11", minimum: 10000, maximum: 70000 })
+    expect(certificate?.bounds).toEqual({ parameterRef: "implementation:11", minimum: 10000, maximum: 70000 })
     expect(certificate?.structuralDigest).toBe(digestSfValue(structural.value))
     expect(createCoverageIntervalCertificate({ ...input, evidence: coverage.evidence.map((item) => item.ref.refId === coverage.statement.refId ? { ...item, state: "revoked" as const } : item) })).toBeUndefined()
     expect(createCoverageIntervalCertificate({ ...input, classification: { ...coverage.classification, notApplicableEntries: [] } })).toBeUndefined()
