@@ -54,7 +54,7 @@ export function createScenarioRequestStore(input: {
       const finalRecord = await input.state.read(source, "preferences", (state, authority) => sameAuthority(authority, context) ? state.preferences[key(resultRef)] : undefined)
       if (finalRecord.status !== "ok" || digestSfValue(finalRecord.value) !== digestSfValue(record)) return { status: "stale", reason: "scenario-request-changed" }
       const final = await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? { decision: state.cases[result.value.caseRef.id], result: state.decisionResults?.[resultRef], record: state.preferences[key(resultRef)] } : undefined)
-      if (final.status !== "ok" || !final.value || source.signal.aborted) return { status: "stale", reason: "scenario-request-changed" }
+      if (final.status !== "ok" || !final.value || source.signal.aborted || input.host.requestFor(context) !== source) return { status: "stale", reason: "scenario-request-changed" }
       if (!final.value.decision || digestSfValue(final.value.decision) !== digestSfValue(decision)) return { status: "stale", reason: "scenario-request-case-changed" }
       if (digestSfValue(final.value.record) !== digestSfValue(record) || digestSfValue(final.value.result) !== digestSfValue(resultAgain.value)) return { status: "stale", reason: "scenario-request-changed" }
       return { status: "ok", value: structuredClone(record) }

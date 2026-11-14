@@ -1,0 +1,89 @@
+{
+  "schema": "sf-wp13-campaign-request-delta-v1",
+  "base_commit": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+  "base_tree": "e7e471f64dfd7a34c9d4143968d76b711b0a2966",
+  "source_commit": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/campaign.ts",
+      "operation": "modify",
+      "base_blob": "d5fe38ec0a02ce23dedd756869a8f10c15e3db4d",
+      "new_blob": "475e7532bbef2ede5fc91d1c7092e4b000e1fbde",
+      "sha256": "18f8c4769d8df05921bda4c29ef72828ed9fb4148009219aaac5c5011d4e8f26",
+      "bytes": 35021,
+      "content_path": "/workspace/scratch/3b9737c0177a/work-wp13/campaign-overlay/modules/sucafina/Sucafinav1/product/portfolio/campaign.ts",
+      "existing_expect_lines_unchanged": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/campaign-request.test.ts",
+      "operation": "add",
+      "base_blob": null,
+      "new_blob": "a284bb02a1b8d4ef734ebcaeab64f07d718a04b8",
+      "sha256": "ca9dabde0feb386b490e3ed9b875f3c23986cbc7bf4f4e424c6e266de92d8968",
+      "bytes": 14535,
+      "content_path": "/workspace/scratch/3b9737c0177a/work-wp13/campaign-overlay/modules/sucafina/Sucafinav1/test/product/wp13/campaign-request.test.ts",
+      "existing_expect_lines_unchanged": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/campaign.test.ts",
+      "operation": "modify",
+      "base_blob": "e83d632e6cd26ad360a9ea7ff72ba04a31c97eb4",
+      "new_blob": "4c304ac6e0357ec9d2731955c9acfae6580a6bbc",
+      "sha256": "f837a8cb56dbfffd3e75afc74edb3bf164093b502e0da960ef88c635add7404a",
+      "bytes": 23978,
+      "content_path": "/workspace/scratch/3b9737c0177a/work-wp13/campaign-overlay/modules/sucafina/Sucafinav1/test/product/wp13/campaign.test.ts",
+      "existing_expect_lines_unchanged": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+      "operation": "modify",
+      "base_blob": "4195ec55c7d9cdfe5e308d192414562bb998d7c0",
+      "new_blob": "192653d276d45efc073df2aea5f8c2170564bd7c",
+      "sha256": "8b9dbf330e8937dd3259d4d610d6124efd0e0057229c9eef50026b6d416e6658",
+      "bytes": 17856,
+      "content_path": "/workspace/scratch/3b9737c0177a/work-wp13/campaign-overlay/modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+      "existing_expect_lines_unchanged": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-read-scope.test.ts",
+      "operation": "modify",
+      "base_blob": "56d4f7342696245fae89fd00d15a037dd9cb33a4",
+      "new_blob": "a25539d00f8a43f2e7e3be02a16c29ba1c0272f2",
+      "sha256": "4d52329bb58a8c6715d5a4941a57b172f3df4fbb2ef4480cf8d9d18eb6f4c2ec",
+      "bytes": 10725,
+      "content_path": "/workspace/scratch/3b9737c0177a/work-wp13/campaign-overlay/modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-read-scope.test.ts",
+      "existing_expect_lines_unchanged": true
+    }
+  ],
+  "change": [
+    "Retain initially admitted Request synchronously after the last awaited callback in campaign read/readOriginal/readHistorical/list/listHistorical. Preserve all prior callbacks and numerical behavior.",
+    "Real UI lease finished/replacement counterexamples after the same final callback observed in a successful read. No aborted signal, no data mutation, no payload; renewed lease recovers positive. Real C08 and case port, conditional fixture candidate; not numerical/C17/installed campaign proof.",
+    "Existing campaign fixture retains one Request. All existing assertions remain byte-identical.",
+    "Sensitivity integration describes service reconstruction over the same live LocalStore; no SQLite/process restart claim. Existing assertions and timeouts unchanged.",
+    "Also retain Request before returning needs-input for an absent campaign after final C08 read authorization. Two real lease tests keep absence explicit and reject a finished/replaced lease. All twelve new cases preserve positive recovery."
+  ],
+  "hosted_selection_recommended": [
+    "Sucafinav1/test/product/wp13/campaign-request.test.ts"
+  ],
+  "already_affected_selection_descriptions": [
+    "Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+    "Sucafinav1/test/product/wp13/sensitivity-read-scope.test.ts"
+  ],
+  "not_closed": [
+    "Complete multi-source atomicity and interpretation of COMMON INV.11/C08 snapshot composition.",
+    "WP10 Finance provider does not implement the PR37 campaign private writer grant/sourceFence/checkNamespaces delta; no foreign code adopted.",
+    "No current hosted result until root publishes and Actions finishes."
+  ],
+  "local_product_execution": false,
+  "product_assertions_removed": 0,
+  "ownership": "Only product/portfolio, test/product/wp13; remote publication is root only.",
+  "review": {
+    "reviewer": "/root/wp11",
+    "mode": "static-only",
+    "initial_findings": [
+      "Use callback-mutable holder for TypeScript flow narrowing.",
+      "Retain Request for the absent campaign needs-input branch."
+    ],
+    "disposition": "BOTH_ADDRESSED; final follow-up requested"
+  }
+}

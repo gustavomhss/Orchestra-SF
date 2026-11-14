@@ -279,7 +279,7 @@ async function canonicalHandoff(failBeforeCommit: boolean) {
       if (attempts.status !== "ok") throw new Error(`Durable application reservation: ${JSON.stringify(attempts)}`)
       expect(attempts.value).toHaveLength(1)
       expect(attempts.value[0]?.value).toMatchObject({ schema: "sf-decision-application-attempt-v1", state: "receipt-required", changeId: secondChange.id, choiceId: choice.id, reviewBinding: receiptReviewBinding(secondChange, reviews.get(secondChange.id)!), principalRef: "principal" })
-      const unresolved = { status: "unavailable", reason: "application-indeterminate-reconciliation-required" }
+      const unresolved = { status: "unavailable" as const, reason: "application-indeterminate-reconciliation-required" }
       expect(await execution(secondRequest, binding)).toEqual(unresolved)
       // A reconstructed executor sees the same durable reservation; the missing
       // authoritative receipt never turns into an in-memory retry allowance.

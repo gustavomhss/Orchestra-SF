@@ -111,7 +111,7 @@ test("a failed sensitivity scope cannot retain its old grant or publish a callba
 /** Financial observations, samples and sensitivity C08 are produced by the real
  * Planner and persisted through the real store. The binding envelope below is
  * private verifier input derived from that result and the real rule issuer;
- * full binding publication and all four cold replays remain in the integration
+ * full binding publication and service reconstruction replays remain in the integration
  * suite, avoiding seven unrelated verifier replays in each scope counterexample. */
 async function scopeProof(label: string) {
   const fixture = await createPortfolioCoverageFixture("omitted")

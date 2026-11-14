@@ -78,7 +78,7 @@ export function createSfDecisionResultStore(input: {
     if (final.status !== "ok") return { status: "unavailable", reason: "result-unavailable" }
     const observed = structuredClone(final.value)
     if (historicalRequest && (!observed?.stored || !historicalCalculationMatches(observed.current, observed.stored, historicalRequest, context) || digestSfValue(observed.current) !== digestSfValue(latest.current))) return { status: "denied", reason: "historical-calculation-changed" }
-    if (!observed || !allowedCase(observed.current, value.stored.caseRef, context, historical) || digestSfValue(observed.current) !== digestSfValue(latest.current) || !observed.stored || digestSfValue(observed.stored) !== digestSfValue(latest.stored) || source.signal.aborted) return { status: "denied", reason: "result-access-unavailable" }
+    if (!observed || !allowedCase(observed.current, value.stored.caseRef, context, historical) || digestSfValue(observed.current) !== digestSfValue(latest.current) || !observed.stored || digestSfValue(observed.stored) !== digestSfValue(latest.stored) || source.signal.aborted || input.host.requestFor(context) !== source) return { status: "denied", reason: "result-access-unavailable" }
     return { status: "ok", value: structuredClone(observed.stored) }
   }
   const read = (request: { resultRef: string; kind: keyof ResultMap }, context: TrustedDomainContext) => readResult(request, context, false)

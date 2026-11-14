@@ -68,7 +68,7 @@ export function createDecisionMutations(input: MutationHost) {
       if (context.kind !== "ui" || !source || !identity || !await input.host.revalidate(context)) return { status: "denied", reason: "portfolio-replay-access-unavailable" }
       const read = () => input.state.read(source, "cases", (state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision ? { current: state.cases[request.caseRef.id], prior: state.transactions[JSON.stringify([authority.principalRef, "cases", request.caseRef.id, `${identity}:${request.operation}`])], results: state.decisionResults } : undefined)
       const loaded = await read()
-      if (loaded.status !== "ok" || !loaded.value?.current || loaded.value.current.incarnation !== request.caseRef.incarnation || !loaded.value.current.participants.includes(context.binding.principalRef) || !await input.authorizeCase(loaded.value.current, context)) return { status: "denied", reason: "portfolio-replay-access-unavailable" }
+      if (loaded.status !== "ok" || !loaded.value?.current || loaded.value.current.incarnation !== request.caseRef.incarnation || !loaded.value.current.participants.includes(context.binding.principalRef) || !await input.authorizeCase(loaded.value.current, context) || source.signal.aborted || input.host.requestFor(context) !== source) return { status: "denied", reason: "portfolio-replay-access-unavailable" }
       if (!loaded.value.prior) return { status: "ok", value: { state: "not-found" } }
       const prior = loaded.value.prior
       const saved = prior.value

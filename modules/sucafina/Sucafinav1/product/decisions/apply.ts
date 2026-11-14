@@ -44,7 +44,7 @@ export function createPreparedExecution(input: {
       // This is a consistency fence for a receipt already authorized by its
       // canonical reader, never a substitute for that reader's authority.
       const retained = await input.state.read(source, "cases", (state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision && !!state.cases[expectedCase.id] && digestSfValue(state.cases[expectedCase.id]) === digestSfValue(expectedCase) && receiptSnapshotMatches(state, change, receipt, reviewDigest, context.binding.principalRef)).catch(() => undefined)
-      return !source.signal.aborted && retained?.status === "ok" && retained.value
+      return input.host.requestFor(context) === source && !source.signal.aborted && retained?.status === "ok" && retained.value
     }
     if (lookup.value.state === "found") {
       const bound = await input.state.read(source, "receipts", (state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision ? state.transactions[receiptProofTransactionKey(authority.principalRef, change.target.id, change.idempotencyKey)] : undefined).catch(() => undefined)

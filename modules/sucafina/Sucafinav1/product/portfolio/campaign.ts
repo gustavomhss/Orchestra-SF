@@ -110,7 +110,7 @@ export function createPortfolioCampaign(input: {
     const proof = await prove(stored.value, context)
     if (proof.status !== "ok") return proof
     const again = await input.state.read(source, "preferences", (state, authority) => sameAuthority(authority, context) ? state.preferences[historyKey(request.commandDigest)] : undefined)
-    if (again.status !== "ok" || digestSfValue(again.value) !== digestSfValue(stored.value) || (await owner(request.ownerCase, context)).status !== "ok" || !await input.host.revalidate(context)) return { status: "stale", reason: "campaign-source-changed" }
+    if (again.status !== "ok" || digestSfValue(again.value) !== digestSfValue(stored.value) || (await owner(request.ownerCase, context)).status !== "ok" || !await input.host.revalidate(context) || source.signal.aborted || input.host.requestFor(context) !== source) return { status: "stale", reason: "campaign-source-changed" }
     return { status: "ok", value: structuredClone(stored.value) }
   }
   const read = async (ownerCase: CaseRef, context: TrustedDomainContext): Promise<PortResult<PortfolioCampaign>> => {
@@ -119,12 +119,13 @@ export function createPortfolioCampaign(input: {
     if (!source || decision.status !== "ok") return decision.status === "ok" ? { status: "denied", reason: "campaign-access-unavailable" } : decision
     const stored = await input.state.read(source, "preferences", (state, authority) => sameAuthority(authority, context) ? state.preferences[campaignKey(ownerCase)] : undefined)
     if (stored.status !== "ok") return { status: "unavailable", reason: "campaign-unavailable" }
+    if (source.signal.aborted || input.host.requestFor(context) !== source) return { status: "stale", reason: "campaign-source-changed" }
     if (stored.value === undefined) return { status: "needs-input", reason: "campaign-not-created" }
     if (!isCampaign(stored.value) || stored.value.campaignDigest !== campaignDigest(stored.value) || digestSfValue(stored.value.ownerCase) !== digestSfValue(ownerCase)) return { status: "unavailable", reason: "campaign-invalid" }
     const proof = await prove(stored.value, context)
     if (proof.status !== "ok") return proof
     const again = await input.state.read(source, "preferences", (state, authority) => sameAuthority(authority, context) ? state.preferences[campaignKey(ownerCase)] : undefined)
-    if (again.status !== "ok" || digestSfValue(again.value) !== digestSfValue(stored.value) || (await owner(ownerCase, context)).status !== "ok" || !await input.host.revalidate(context)) return { status: "stale", reason: "campaign-source-changed" }
+    if (again.status !== "ok" || digestSfValue(again.value) !== digestSfValue(stored.value) || (await owner(ownerCase, context)).status !== "ok" || !await input.host.revalidate(context) || source.signal.aborted || input.host.requestFor(context) !== source) return { status: "stale", reason: "campaign-source-changed" }
     return { status: "ok", value: structuredClone(stored.value) }
   }
   const readHistorical = async (request: { ownerCase: CaseRef; commandDigest: string }, context: TrustedDomainContext): Promise<PortResult<{ state: "historical"; campaign: PortfolioCampaign }>> => {
@@ -163,7 +164,7 @@ export function createPortfolioCampaign(input: {
     }
     if (!await inspect()) return { status: "unavailable", reason: "campaign-history-sources-unavailable" }
     const again = await load()
-    if (again.status !== "ok" || digestSfValue(again.value) !== digestSfValue(campaign) || (await owner(request.ownerCase, context)).status !== "ok" || !await inspect()) return { status: "stale", reason: "campaign-history-changed" }
+    if (again.status !== "ok" || digestSfValue(again.value) !== digestSfValue(campaign) || (await owner(request.ownerCase, context)).status !== "ok" || !await inspect() || source.signal.aborted || input.host.requestFor(context) !== source) return { status: "stale", reason: "campaign-history-changed" }
     return { status: "ok", value: { state: "historical", campaign: structuredClone(campaign) } }
   }
   const list = async (ownerCase: CaseRef, context: TrustedDomainContext): Promise<PortResult<readonly { campaignRef: string; version: number; createdAt: string; commandDigest: string }[]>> => {
@@ -179,7 +180,7 @@ export function createPortfolioCampaign(input: {
     const checked = await Promise.all(entries.map((entry) => readOriginal({ ownerCase, commandDigest: entry.commandDigest }, context)))
     if (checked.some((item) => item.status !== "ok")) return { status: "stale", reason: "campaign-list-changed" }
     const final = await load()
-    if (final.status !== "ok" || digestSfValue(final.value) !== digestSfValue(first.value) || !await input.host.revalidate(context)) return { status: "stale", reason: "campaign-list-changed" }
+    if (final.status !== "ok" || digestSfValue(final.value) !== digestSfValue(first.value) || !await input.host.revalidate(context) || source.signal.aborted || input.host.requestFor(context) !== source) return { status: "stale", reason: "campaign-list-changed" }
     return { status: "ok", value: entries.map(({ campaignRef, version, createdAt, commandDigest }) => ({ campaignRef, version, createdAt, commandDigest })) }
   }
   const listHistorical = async (ownerCase: CaseRef, context: TrustedDomainContext): Promise<PortResult<readonly { state: "historical"; campaign: PortfolioCampaign }[]>> => {
@@ -192,7 +193,7 @@ export function createPortfolioCampaign(input: {
     if (entries.length !== first.value.length) return { status: "unavailable", reason: "campaign-history-unavailable" }
     const checked = await Promise.all(entries.map((entry) => readHistorical({ ownerCase, commandDigest: entry.commandDigest }, context)))
     const again = await load()
-    if (again.status !== "ok" || digestSfValue(again.value) !== digestSfValue(first.value) || (await owner(ownerCase, context)).status !== "ok" || !await input.host.revalidate(context)) return { status: "stale", reason: "campaign-history-changed" }
+    if (again.status !== "ok" || digestSfValue(again.value) !== digestSfValue(first.value) || (await owner(ownerCase, context)).status !== "ok" || !await input.host.revalidate(context) || source.signal.aborted || input.host.requestFor(context) !== source) return { status: "stale", reason: "campaign-history-changed" }
     return { status: "ok", value: checked.flatMap((item) => item.status === "ok" ? [item.value] : []) }
   }
   const save = async (incoming: PortfolioCampaignEdit, context: TrustedDomainContext): Promise<PortResult<PortfolioCampaign>> => {

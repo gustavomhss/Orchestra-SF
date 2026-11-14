@@ -70,7 +70,12 @@ test("persisted comparison results are scoped to current case, principal, and so
   const db = await openLocalStore(directory)
   const access = { revoked: false }
   const ui = (principalRef: string): TrustedUiContext => ({ kind: "ui", binding: { installationId: "install", projectId: "project", principalRef, requestId: "request", policyVersion: "policy-1", accessRevision: "access-1", expiresAt: "2100-01-01T00:00:00Z" }, lease: {} }) as unknown as TrustedUiContext
-  const host = { requestFor: (context: TrustedDomainContext) => new Request("https://example.test/", { headers: { "x-principal": context.binding.principalRef } }), revalidate: async (_context: TrustedDomainContext) => !access.revoked }
+  const retainedRequests = new WeakMap<TrustedDomainContext, Request>()
+  const host = { requestFor: (context: TrustedDomainContext) => {
+    let request = retainedRequests.get(context)
+    if (!request) { request = new Request("https://example.test/", { headers: { "x-principal": context.binding.principalRef } }); retainedRequests.set(context, request) }
+    return request
+  }, revalidate: async (_context: TrustedDomainContext) => !access.revoked }
   const state = createSfProductState({ persistence: db, createId: () => "state-inc", resolveTarget: async (_request, _snapshot, _namespace, targetRef) => ({ incarnation: targetRef === "case" ? "case-inc" : targetRef }), authorize: async (request) => {
     const principalRef = request.headers.get("x-principal")
     return principalRef === "owner" ? { principalRef, policyVersion: "policy-1", accessRevision: "access-1" } : undefined

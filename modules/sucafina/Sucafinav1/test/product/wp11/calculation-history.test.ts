@@ -37,7 +37,7 @@ test("an accepted C17 reference reopens through the explicit ledger lane after t
     const scenario: ScenarioRequest = { baseRef: sourceRef.refId, operations: [{ kind: "replace", targetRef: "line:11", amount: 42, currency: "USD", period: { start: "2027-11-01", end: "2027-11-30" } }], assumptions: [] }
     const originalCaseRef = { id: "calculation-case", incarnation: "calculation-inc", version: 1 }
     const decision: DecisionCase = { ...originalCaseRef, state: "investigating", objective: "Inspect an actual Planner calculation", horizon: plannerPeriod, currency: "USD", criteria: [], participants: [context.binding.principalRef], sourceRefs: [sourceRef], alternatives: [], costCoverageBases: [], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
-    const hooks: { beforeSources?: () => Promise<void>; observeSources?: () => Promise<void>; observeRequestSources?: () => Promise<void> } = {}
+    const hooks: { beforeSources?: () => Promise<void>; observeSources?: () => Promise<void>; observeRequestSources?: () => Promise<void>; afterNamespaceAuthorization?: (namespace: string, mode: "read" | "write") => Promise<void> } = {}
     const compose = (persistence: Persistence) => {
       const writes = new WeakSet<object>()
       const state = createSfProductState({ persistence, proposalCoverageWrites: writes, createId: () => "history-state", resolveTarget: async (_request, snapshot, _namespace, targetRef) => {
@@ -47,7 +47,11 @@ test("an accepted C17 reference reopens through the explicit ledger lane after t
           if (selected && typeof selected === "object" && "incarnation" in selected && typeof selected.incarnation === "string") return { incarnation: selected.incarnation }
         }
         return targetRef === originalCaseRef.id ? { incarnation: originalCaseRef.incarnation } : undefined
-      }, authorize: async (request) => request === http && await fixture.host.revalidate(context) ? context.binding : undefined })
+      }, authorize: async (request, _snapshot, namespace, mode) => {
+        const authority = request === http && await fixture.host.revalidate(context) ? context.binding : undefined
+        if (authority) await hooks.afterNamespaceAuthorization?.(namespace, mode)
+        return authority
+      } })
       const authorizeCase = async (value: DecisionCase, trusted: TrustedDomainContext) => value.participants.includes(trusted.binding.principalRef) && await fixture.host.revalidate(trusted)
       const verifySource = async (ref: BusinessEvidenceRef, trusted: TrustedDomainContext) => {
         if (ref.kind !== "record" || ref.installationId !== trusted.binding.installationId || ref.projectId !== trusted.binding.projectId) return false
@@ -188,6 +192,55 @@ test("an accepted C17 reference reopens through the explicit ledger lane after t
       await changeCase((value) => ({ ...value, version: value.version + 1, ledger: acceptedCase.ledger }))
       const requestRestoredSelection = await second.selectionFor(calculation.value)
       expect(await second.requests.readHistorical(requestRestoredSelection, context)).toMatchObject({ status: "ok", value: { caseRef: originalCaseRef, request: scenario, requestDigest: digestSfValue(scenario), resultDigest: stored.value.resultDigest } })
+      // Use the actually produced Planner result and accepted C17 ledger reference.
+      // The race happens after the final C08 authorizer has resolved its unchanged
+      // principal/grants, with no data mutation or aborted transport signal.
+      const caseBeforeLeaseRace = await second.readCase()
+      for (const route of ["result", "request"] as const) for (const end of ["finished", "replacement"] as const) {
+        const expiredContext = context
+        const expiredRequest = http
+        const replacement: { context?: typeof context } = {}
+        let sourceChecks = 0
+        let namespaceChecks = 0
+        let armed = false
+        let applied = false
+        const armAfterSourceReplay = async () => { if (++sourceChecks === 2) armed = true }
+        if (route === "result") hooks.observeSources = armAfterSourceReplay
+        else hooks.observeRequestSources = armAfterSourceReplay
+        hooks.afterNamespaceAuthorization = async (namespace, mode) => {
+          if (!armed || namespace !== "cases" || mode !== "read") return
+          if (++namespaceChecks !== 2) return
+          fixture.ui.finish(expiredContext)
+          if (end === "replacement") replacement.context = await fixture.admit("sf-human:planner.read", {}, "finance", true)
+          applied = true
+        }
+        try {
+          const denied = route === "result" ? await second.results.readHistoricalCalculation(requestRestoredSelection, expiredContext) : await second.requests.readHistorical(requestRestoredSelection, expiredContext)
+          expect({ sourceChecks, namespaceChecks, applied }).toEqual({ sourceChecks: 2, namespaceChecks: 2, applied: true })
+          expect(denied).toEqual(route === "result" ? { status: "denied", reason: "result-access-unavailable" } : { status: "stale", reason: "scenario-request-changed" })
+          expect(denied).not.toHaveProperty("value")
+          expect(expiredRequest.signal.aborted).toBe(false)
+          expect(fixture.host.requestFor(expiredContext)).toBeUndefined()
+          expect(await fixture.host.revalidate(expiredContext)).toBe(false)
+          if (replacement.context) {
+            expect(replacement.context.binding.principalRef).toBe(expiredContext.binding.principalRef)
+            expect(fixture.host.requestFor(replacement.context)).not.toBe(expiredRequest)
+            expect(await fixture.host.revalidate(replacement.context)).toBe(true)
+          }
+        } finally {
+          hooks.observeSources = undefined
+          hooks.observeRequestSources = undefined
+          hooks.afterNamespaceAuthorization = undefined
+          context = replacement.context ?? await fixture.admit("sf-human:planner.read", {}, "finance", true)
+          const renewedRequest = fixture.host.requestFor(context)
+          if (!renewedRequest) throw new Error("Renewed C17 reader unavailable")
+          http = renewedRequest
+        }
+        expect(await second.readCase()).toEqual(caseBeforeLeaseRace)
+        expect(await second.results.readHistoricalCalculation(requestRestoredSelection, context)).toEqual(stored)
+        expect(await second.requests.readHistorical(requestRestoredSelection, context)).toMatchObject({ status: "ok", value: { caseRef: originalCaseRef, request: scenario, requestDigest: digestSfValue(scenario), resultDigest: stored.value.resultDigest } })
+      }
+      expect(await second.historicalProducer(requestRestoredSelection).issue(stored.value.resultRef, context)).toEqual(calculation)
       hooks.beforeSources = () => changeCase((value) => ({ ...value, version: value.version + 1, ledger: [] }))
       expect(await second.results.readHistoricalCalculation(requestRestoredSelection, context)).toEqual({ status: "denied", reason: "historical-calculation-changed" })
       expect((await second.results.readHistoricalCalculation(await second.selectionFor(calculation.value), context)).status).toBe("denied")

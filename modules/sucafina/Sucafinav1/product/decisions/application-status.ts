@@ -61,7 +61,7 @@ export function createPreparedApplicationStatus(input: {
       const last = await read()
       if (last.status !== "ok" || !last.value) return { status: last.status === "denied" ? "denied" : "unavailable", reason: "application-status-unavailable" }
       if (last.storageVersion !== first.storageVersion || digestSfValue(last.value) !== digestSfValue(first.value)) return { status: "stale", reason: "case-changed" }
-      if (source.signal.aborted) return { status: "denied", reason: "invalid-authority" }
+      if (source.signal.aborted || input.host.requestFor(context) !== source) return { status: "denied", reason: "invalid-authority" }
       return { status: "ok", value: { ...request, recordedState: change.state, status } }
     } catch {
       return { status: "unavailable", reason: "application-status-unavailable" }

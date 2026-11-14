@@ -1,0 +1,33 @@
+{
+  "schema": "sf-wp13-own-typecheck-delta-v1",
+  "base_commit": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+  "base_tree": "e7e471f64dfd7a34c9d4143968d76b711b0a2966",
+  "check_run": 43616584050,
+  "check_job": 132512854445,
+  "changes": [
+    "Retain literal unavailable status in G-RETRY expected outcome for typed toEqual; no assertion change.",
+    "HTTP reconciliation unused results fixture advertises the actual readHistoricalCalculation method added by consumed WP11; method still fails if called."
+  ],
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-domain-integration.test.ts",
+      "operation": "modify",
+      "base_blob": "1438625ca251804cb89c3be4a2f680a9d20eee4c",
+      "new_blob": "e3a0395a9ad33d6fb0ed161f69a246fa14664bd2",
+      "sha256": "8ed4d3ab856ad3ea18499f50b65f73e524c49c81304353a36727f9af622d3283",
+      "bytes": 50342,
+      "content_path": "/workspace/scratch/3b9737c0177a/work-wp13/typefix-overlay/modules/sucafina/Sucafinav1/test/product/wp13/handoff-domain-integration.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/reconciliation.test.ts",
+      "operation": "modify",
+      "base_blob": "5c53193ea3f2ac32bf2b5fd4a508215682c4b11c",
+      "new_blob": "d92851b34785490feccbfa17099281e7bf9989a3",
+      "sha256": "5e0e254b924cf6171cab2498fab0dade077f8dfcece9b6b70dc54d8bf7df7d01",
+      "bytes": 34195,
+      "content_path": "/workspace/scratch/3b9737c0177a/work-wp13/typefix-overlay/modules/sucafina/Sucafinav1/test/product/wp13/reconciliation.test.ts"
+    }
+  ],
+  "local_product_execution": false,
+  "hosted_recheck": "PENDING_ROOT"
+}

@@ -60,9 +60,10 @@ async function harness(options: { fenceRace?: boolean; omitWriteAuthority?: bool
   const proposals = new Map([["output-1", "ab".repeat(32)]])
   const fences = (snapshots: Record<"dashboard" | "planner" | "procurement", Snapshot>) => ({ dashboard: sfRunSourceFence(snapshots.dashboard), planner: sfRunSourceFence(snapshots.planner), procurement: sfRunSourceFence(snapshots.procurement) })
   let operation = "campaign-operation-1"
+  const admittedRequest = new Request("https://example.test/campaign")
   const campaign = createPortfolioCampaign({
     state,
-    host: { requestFor: () => new Request("https://example.test/campaign"), revalidate: async () => access.allowed },
+    host: { requestFor: () => admittedRequest, revalidate: async () => access.allowed },
     cases: { read: async (request) => { const parsed = /case:([^:]+):([^:]+)/.exec(request.caseRef); const item = parsed ? cases.get(decodeURIComponent(parsed[1]!)) : undefined; const found = item && item.id !== "owner" ? candidate(item, item.id) : undefined; return access.authorizeCase && item && item.incarnation === decodeURIComponent(parsed![2]!) ? { status: "ok", value: { context: { installationId: "install", projectId: "project", principalRef: "principal", policyVersion: "policy", accessRevision: "access", kind: "ui" }, case: { ...item, alternatives: item.alternatives.length ? item.alternatives : found && found.result ? [{ id: item.id, version: 1, title: item.id, scenario: found.scenario, result: found.result }] : [], preparedChanges: [], receipts: [] }, events: [], evidenceRefs: [], checkedAt: "2026-11-13T00:00:00Z" } } : { status: "denied", reason: "case-access-unavailable" } } },
     resolveCandidate: async (ref) => { const found = [left, right].map((item) => candidate(item, item.id)).find((value) => value.ref === ref); return found && cases.get(found.caseRef.split(":")[1] ? decodeURIComponent(found.caseRef.split(":")[1]!) : "")?.version === 1 ? { status: "ok", value: found } : { status: "stale", reason: "case-changed" } },
     validateCandidate: async () => access.supported ? { status: "ok", value: true } : { status: "needs-input", reason: "unsupported-candidate-effect" },

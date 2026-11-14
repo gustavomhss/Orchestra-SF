@@ -23,14 +23,16 @@ test("Hot Topic drafts verify the Dashboard snapshot, persist once without domai
   const period = { start: "2027-01-01", end: "2027-12-31" }
   const request = new Request("https://example.test/hot-topic")
   const identity = { installationId: "install", projectId: "project", principalRef: "leader", policyVersion: "policy", accessRevision: "access" }
-  const ui = createSfUiAuthority({ authorize: async (source) => source === request ? identity : undefined, commandIdentity: async () => "hot-topic-ui", createId: () => "hot-topic-ui", now: () => Date.parse(at) })
+  const clock = { now: Date.parse(at) }
+  const ui = createSfUiAuthority({ authorize: async (source) => source === request ? identity : undefined, commandIdentity: async () => "hot-topic-ui", createId: () => "hot-topic-ui", now: () => clock.now })
   const caseRef = { id: "hot-topic-case", incarnation: "hot-topic-case-inc", version: 1 }
   const admission = await ui.admit(request, "sf_case_read", digestSfValue({ caseRef: "fixture" }))
   if (admission.status !== "ok" || !await ui.validate(admission.value, "sf_case_read", digestSfValue({ caseRef: "fixture" }))) throw new Error("Fixture UI admission unavailable")
-  const context = admission.value
+  let context = admission.value
   const host = { requestFor: (call: TrustedDomainContext) => call.kind === "ui" ? ui.requestFor(call) : undefined, revalidate: (call: TrustedDomainContext) => call.kind === "ui" ? ui.revalidate(call) : Promise.resolve(false) }
   const writes = new WeakSet<object>()
   const control = { human: false, race: false, operation: "draft-once", checks: 0, ids: 0 }
+  const leaseRace: { afterAuthorization?: (namespace: string, mode: "read" | "write") => Promise<void>; afterDraftAuthorization?: () => Promise<void> } = {}
   const original = { id: "topic", action: "Review transition", owner: "leader", due: "2027-11-01", priority: "normal", notes: "Original Dashboard source" }
   const current = (snapshot: Snapshot) => {
     const topics = snapshot.data.hotTopics
@@ -41,7 +43,11 @@ test("Hot Topic drafts verify the Dashboard snapshot, persist once without domai
     // This deliberately different row makes selecting Planner fail the source verifier.
     await store.transaction("planner", async (snapshot) => { snapshot.data.hotTopics = [{ ...original, notes: "Unrelated Planner content" }]; return { commit: true, value: true } })
     const persisted = createSfProductState({ persistence: store, proposalCoverageWrites: writes,
-      authorize: async (source) => source === request && await host.revalidate(context) ? identity : undefined,
+      authorize: async (source, _snapshot, namespace, mode) => {
+        const authority = source === request && await host.revalidate(context) ? identity : undefined
+        if (authority) await leaseRace.afterAuthorization?.(namespace, mode)
+        return authority
+      },
       resolveTarget: async () => ({ incarnation: caseRef.incarnation }), createId: () => "hot-topic-state-inc" })
     const state: SfProductStatePort = { ...persisted, transaction: async (source, command, work) => {
       if (control.race && command.idempotencyKey.startsWith("hot-topic-draft:")) {
@@ -59,7 +65,7 @@ test("Hot Topic drafts verify the Dashboard snapshot, persist once without domai
     const input: HotTopicDraftRequest = { caseRef, target, targetEvidence, fields: { action: "Prepare revised transition", owner: "leader", due: "2027-11-30", priority: "high", notes: "Prepared, not applied" }, sourceRefs: [targetEvidence], expectedVersion: 0 }
     const drafts = createHotTopicDraftStore({ state, host, proposalCoverageWrites: writes,
       authorizeCase: async (value, call) => value.participants.includes(call.binding.principalRef) && await host.revalidate(call),
-      authorizeDraft: async () => control.human,
+      authorizeDraft: async () => { const allowed = control.human; await leaseRace.afterDraftAuthorization?.(); return allowed },
       verifySources: async (draft, call) => digestSfValue(draft.targetEvidence) === digestSfValue(targetEvidence) && await host.revalidate(call) && await store.transaction("dashboard", async (snapshot) => ({ commit: false, value: current(snapshot) })),
       verifySnapshot: (snapshot) => { control.checks++; return !!store.currentSnapshots?.() && current(snapshot) },
       operationIdentity: () => control.operation, createId: () => `hot-topic-${++control.ids}`, now: () => at,
@@ -82,6 +88,45 @@ test("Hot Topic drafts verify the Dashboard snapshot, persist once without domai
     expect(Object.keys(before.value).filter((key) => key.startsWith("sf:proposal-coverage:hot-topic:"))).toHaveLength(2)
     expect(await store.transaction("dashboard", async (snapshot) => ({ commit: false, value: current(snapshot) }))).toBe(true)
     expect(await store.transaction("planner", async (snapshot) => ({ commit: false, value: digestSfValue(snapshot) }))).toBe(plannerBefore)
+    // Read/list each reach their final C08 post-callback authorization with the
+    // same case, draft and grants. Finishing or expiring only the UI lease must
+    // suppress that egress, without deleting the successfully persisted draft.
+    for (const route of ["read", "list", "retry"] as const) for (const end of ["finished", "expired"] as const) {
+      const exercise = () => route === "read" ? drafts.readCurrent({ caseRef, draftRef: saved.value.draftRef }, context) : route === "list" ? drafts.list({ caseRef }, context) : drafts.register(input, context)
+      expect((await exercise()).status).toBe("ok")
+      const previous = context
+      let namespaceChecks = 0
+      let applied = false
+      const finalAuthorization = route === "read" ? 6 : route === "list" ? 12 : 2
+      const endAfterAuthorization = async () => {
+        if (++namespaceChecks !== finalAuthorization) return
+        if (end === "finished") ui.finish(previous)
+        else clock.now += 300_001
+        applied = true
+      }
+      if (route === "retry") leaseRace.afterDraftAuthorization = endAfterAuthorization
+      else leaseRace.afterAuthorization = async (namespace, mode) => { if (namespace === "preferences" && mode === "read") await endAfterAuthorization() }
+      try {
+        const denied = await exercise()
+        expect({ namespaceChecks, applied }).toEqual({ namespaceChecks: finalAuthorization, applied: true })
+        expect(denied).toEqual(route === "retry" ? { status: "unavailable", reason: "hot-topic-draft-unavailable" } : { status: "stale", reason: "hot-topic-draft-changed" })
+        expect(denied).not.toHaveProperty("value")
+        expect(request.signal.aborted).toBe(false)
+        expect(ui.requestFor(previous)).toBeUndefined()
+        expect(await ui.revalidate(previous)).toBe(false)
+      } finally {
+        leaseRace.afterAuthorization = undefined
+        leaseRace.afterDraftAuthorization = undefined
+        const renewed = await ui.admit(request, "sf_case_read", digestSfValue({ caseRef: "fixture" }))
+        if (renewed.status !== "ok" || !await ui.validate(renewed.value, "sf_case_read", digestSfValue({ caseRef: "fixture" }))) throw new Error("Renewed draft reader unavailable")
+        context = renewed.value
+      }
+      expect(await drafts.readCurrent({ caseRef, draftRef: saved.value.draftRef }, context)).toEqual(restored)
+      expect(await drafts.list({ caseRef }, context)).toEqual({ status: "ok", value: [{ draftRef: saved.value.draftRef, label: input.fields.action, version: saved.value.version, target }] })
+      expect(await state.read(request, "preferences", (value) => value.preferences)).toEqual(before)
+      expect(await store.transaction("planner", async (snapshot) => ({ commit: false, value: digestSfValue(snapshot) }))).toBe(plannerBefore)
+      expect(control.checks).toBe(1)
+    }
     control.operation = "draft-race"
     control.race = true
     const rejected = await drafts.register({ ...input, fields: { ...input.fields, notes: "Must not persist" } }, context)

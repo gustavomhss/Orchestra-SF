@@ -13,7 +13,7 @@ import type { BusinessEvidenceRef } from "../../../product/contracts/business-co
 import type { CommandReceipt, PreparedCommand, SourceRef } from "../../../product/contracts/context.ts"
 import type { ChoiceRecord, DecisionCase, PreparedChange, ScenarioResult } from "../../../product/contracts/decisions.ts"
 import type { PreparedApplyPort } from "../../../product/contracts/ports.ts"
-import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
+import type { TrustedDomainContext, TrustedUiContext } from "../../../product/contracts/sf-execution.ts"
 import { createPreparedExecution } from "../../../product/decisions/apply.ts"
 import { createPreparedApplicationStatus } from "../../../product/decisions/application-status.ts"
 import { createDecisionHttp } from "../../../product/decisions/http.ts"
@@ -36,6 +36,7 @@ const caseId = "indeterminate-case"
 const incarnation = "indeterminate-case-incarnation"
 const actor: Actor = { id: "alice", roles: ["finance"], canWrite: true, assigned: [], domains: [] }
 const operation: PreparedApplyRequest = { caseRef: { id: caseId, incarnation, version: 1 }, changeId: "planner-change", choiceId: "choice" }
+type SessionControls = { confirmed: boolean; hold: boolean; loseResponse: boolean; dispatches: number; reviews: number; confirmations: number; revoked: boolean; reviewDigest: string; receipt?: CommandReceipt; afterNamespaceAuthorization?: (request: Request, namespace: string, mode: "read" | "write") => Promise<void> }
 
 // Real SQLite, UI leases, Planner preparation/review/mutation and atomic receipts.
 // Choice/confirmation are fixture boundaries; deleting/restoring the exact committed
@@ -46,7 +47,7 @@ test("a dispatched change without its authoritative receipt stays indeterminate 
   const driver = { value: await openLocalStore(directory), open: true }
   const entered = latch()
   const release = latch()
-  const controls = { confirmed: false, hold: true, loseResponse: true, dispatches: 0, reviews: 0, confirmations: 0, revoked: false, reviewDigest: "", receipt: undefined as CommandReceipt | undefined }
+  const controls: SessionControls = { confirmed: false, hold: true, loseResponse: true, dispatches: 0, reviews: 0, confirmations: 0, revoked: false, reviewDigest: "" }
   try {
     const session = await createSession(driver.value, controls, entered, release)
     await session.persistence.initializeSources("dashboard")
@@ -162,6 +163,51 @@ test("a dispatched change without its authoritative receipt stays indeterminate 
     expect(await reconciledHttp!.json()).toEqual({ status: "ok", value: { ...reconciledRequest, recordedState: "applied", status: "reconciled" } })
     expect({ dispatches: controls.dispatches, reviews: controls.reviews, confirmations: controls.confirmations }).toEqual(counters)
 
+    // The canonical Planner receipt above was actually committed and reconciled.
+    // End the independent UI lease after C08's final namespace authorization has
+    // already succeeded. A valid replacement admission cannot revive the old one.
+    const observeDurable = () => restarted.state.read(restarted.request("alice"), "cases", (state) => state)
+    const durableBeforeLeaseRace = await observeDurable()
+    for (const route of ["receipt", "status"] as const) for (const end of ["finished", "replacement"] as const) {
+      const binding = await restarted.admit("alice", `lease-egress-${route}-${end}`)
+      const source = restarted.host.requestFor(binding)
+      if (!source) throw new Error("Retained application request unavailable")
+      const replacement: { context?: TrustedUiContext } = {}
+      let namespaceChecks = 0
+      let applied = false
+      const finalAuthorization = route === "receipt" ? 4 : 6
+      controls.afterNamespaceAuthorization = async (incoming, namespace, mode) => {
+        if (incoming !== source || namespace !== "cases" || mode !== "read") return
+        if (++namespaceChecks !== finalAuthorization) return
+        restarted.finish(binding)
+        if (end === "replacement") replacement.context = await restarted.admit("alice", `lease-egress-${route}-${end}`)
+        applied = true
+      }
+      try {
+        const denied = route === "receipt" ? await restarted.executeBound(operation, binding) : await restarted.applicationStatus(reconciledRequest, binding)
+        expect({ namespaceChecks, applied }).toEqual({ namespaceChecks: finalAuthorization, applied: true })
+        expect(denied).toEqual(route === "receipt" ? { status: "unavailable", reason: "receipt-authority-changed" } : { status: "denied", reason: "invalid-authority" })
+        expect(denied).not.toHaveProperty("value")
+        expect(source.signal.aborted).toBe(false)
+        expect(restarted.host.requestFor(binding)).toBeUndefined()
+        expect(await restarted.host.revalidate(binding)).toBe(false)
+        if (replacement.context) {
+          expect(replacement.context.binding.principalRef).toBe(binding.binding.principalRef)
+          expect(restarted.host.requestFor(replacement.context)).not.toBe(source)
+          expect(await restarted.host.revalidate(replacement.context)).toBe(true)
+        }
+      } finally {
+        controls.afterNamespaceAuthorization = undefined
+        restarted.finish(binding)
+        if (replacement.context) restarted.finish(replacement.context)
+      }
+      expect(await observeDurable()).toEqual(durableBeforeLeaseRace)
+      expect(await restarted.official()).toEqual(official)
+      expect(await restarted.execute("alice", `valid-after-${route}-${end}`)).toEqual({ status: "ok", value: receipt })
+      expect(await restarted.readStatus("alice", reconciledRequest)).toEqual({ status: "ok", value: { ...reconciledRequest, recordedState: "applied", status: "reconciled" } })
+      expect({ dispatches: controls.dispatches, reviews: controls.reviews, confirmations: controls.confirmations }).toEqual(counters)
+    }
+
     // Reobserve after the final asynchronous ACL callback, not only before it.
     let authorizations = 0
     const raced = createPreparedApplicationStatus({ state: restarted.state, host: restarted.host, receipts: restarted.receipts, authorizeCase: async (value, context) => {
@@ -189,7 +235,7 @@ function latch() {
   return { promise, resolve: () => value.resolve?.() }
 }
 
-async function createSession(store: Awaited<ReturnType<typeof openLocalStore>>, controls: { confirmed: boolean; hold: boolean; loseResponse: boolean; dispatches: number; reviews: number; confirmations: number; revoked: boolean; reviewDigest: string; receipt?: CommandReceipt }, entered: ReturnType<typeof latch>, release: ReturnType<typeof latch>) {
+async function createSession(store: Awaited<ReturnType<typeof openLocalStore>>, controls: SessionControls, entered: ReturnType<typeof latch>, release: ReturnType<typeof latch>) {
   const persistence = createSfSourcePersistence({ persistence: store, createId: randomUUID, enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(() => at) })
   const environment = { at, id: randomUUID, directory: [] }
   const request = (principal: string, identity = "fixture") => new Request("https://example.test/", { headers: { authorization: principal, "x-command-id": identity } })
@@ -211,7 +257,11 @@ async function createSession(store: Awaited<ReturnType<typeof openLocalStore>>, 
   const host = { persistence, authenticate, environment: async () => environment, requestFor: (binding: TrustedDomainContext) => binding.kind === "ui" ? ui.requestFor(binding) : undefined, revalidate: (binding: TrustedDomainContext) => binding.kind === "ui" ? ui.revalidate(binding) : Promise.resolve(false) }
   const planner = createPlannerProduct({ host, scopedSources: persistence, coverageFor: async () => ({ status: "unavailable", reason: "unused" }) })
   const review = createPlannerPreparedReview({ host, issueSource: planner.issueSource })
-  const state = createSfProductState({ persistence, createId: randomUUID, authorize, resolveTarget: async (_incoming, snapshot, namespace, targetRef) => {
+  const state = createSfProductState({ persistence, createId: randomUUID, authorize: async (incoming, _snapshot, namespace, mode) => {
+    const authority = await authorize(incoming)
+    if (authority) await controls.afterNamespaceAuthorization?.(incoming, namespace, mode)
+    return authority
+  }, resolveTarget: async (_incoming, snapshot, namespace, targetRef) => {
     if (namespace === "cases" && targetRef === caseId) return { incarnation }
     if (namespace !== "receipts") return undefined
     const current = object(object(object(snapshot.data.__sfProductV1).cases)[caseId])
@@ -258,7 +308,7 @@ async function createSession(store: Awaited<ReturnType<typeof openLocalStore>>, 
   const empty = {} as unknown as Parameters<typeof createDecisionHttp>[0]
   const statusHttp = createDecisionHttp({ ...empty, origin: "https://example.test", mount: "/decisions", human, applicationStatus,
     withCase: async (_binding, _caseRef, options, action) => { expect(options.allowHistoricalRetry).toBe(false); return action() } })
-  return { persistence, planner, environment, request, state, review, admit, readCase, host, receipts, applicationStatus, finish: ui.finish,
+  return { persistence, planner, environment, request, state, review, admit, readCase, host, receipts, applicationStatus, finish: ui.finish, executeBound: execute,
     readStatus: async (principal: string, incoming: PreparedApplyRequest = operation) => {
       const binding = await admit(principal, "read-application-status")
       try { return await applicationStatus(incoming, binding) } finally { ui.finish(binding) }

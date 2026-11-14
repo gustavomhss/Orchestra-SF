@@ -14,7 +14,7 @@ import { persistedServices } from "./sensitivity-read-scope-fixture.ts"
 import { createRenewalChoiceHistory } from "../wp11/renewal-choice-fixture.ts"
 
 for (const training of ["omitted", "bundled", "confirmed"] as const) {
-  test(`WP13 persists and cold-reloads ${training} training with its real ${training === "confirmed" ? 15000 : 55000} sensitivity bound`, async () => {
+  test(`WP13 persists ${training} training and recreates services with its real ${training === "confirmed" ? 15000 : 55000} sensitivity bound`, async () => {
     const fixture = await createPortfolioCoverageFixture(training)
     try {
       const request = endpointRequest(fixture.sensitivityRequest)
@@ -56,6 +56,7 @@ for (const training of ["omitted", "bundled", "confirmed"] as const) {
         if (training === "omitted") expect(sample.value.result.costCoverage.derivedMissingCategoryIds).toContain("training")
       }
       const reloaded = await persistedServices(fixture, training)
+      // The LocalStore stays open. This recreates service/verifier state, without claiming SQLite or process restart.
       // This must be the first operation on the recreated service: no producer or verifier prewarms its proof maps.
       const replay = await reloaded.persistent.read(saved.value.sensitivityResultRef, fixture.context)
       if (replay.status !== "ok") throw new Error(`Fresh service replay unavailable: ${JSON.stringify(replay)}`)

@@ -53,7 +53,7 @@ export function createHotTopicDraftStore(input: {
         const draft = state.preferences[historyKey(request.draftRef)]
         return { current: state.cases[request.caseRef.id], draft, active: isDraft(draft) ? state.preferences[activeKey(draft.id)] : undefined }
       })
-      if (final.status !== "ok" || !final.value || !allowed(final.value.current, request.caseRef, context) || digestSfValue(final.value.current) !== digestSfValue(again.value) || !isDraft(final.value.draft) || digestSfValue(final.value.draft) !== digestSfValue(draft) || !isDraft(final.value.active) || digestSfValue(final.value.active) !== digestSfValue(found.value.active) || source.signal.aborted) return { status: "stale", reason: "hot-topic-draft-changed" }
+      if (final.status !== "ok" || !final.value || !allowed(final.value.current, request.caseRef, context) || digestSfValue(final.value.current) !== digestSfValue(again.value) || !isDraft(final.value.draft) || digestSfValue(final.value.draft) !== digestSfValue(draft) || !isDraft(final.value.active) || digestSfValue(final.value.active) !== digestSfValue(found.value.active) || source.signal.aborted || input.host.requestFor(context) !== source) return { status: "stale", reason: "hot-topic-draft-changed" }
       return { status: "ok", value: structuredClone(final.value.draft) }
     } catch { return { status: "unavailable", reason: "hot-topic-draft-unavailable" } }
   }
@@ -73,7 +73,7 @@ export function createHotTopicDraftStore(input: {
       const draftsAgain = await readDrafts()
       if (again.status !== "ok" || digestSfValue(again.value) !== digestSfValue(current.value) || !allowed(again.value, request.caseRef, context) || !await input.authorizeCase(again.value!, context) || draftsAgain.status !== "ok" || digestSfValue(draftsAgain.value) !== digestSfValue(drafts.value) || source.signal.aborted || !await input.host.revalidate(context)) return { status: "stale", reason: "hot-topic-draft-changed" }
       const final = await input.state.read(source, "preferences", (state, authority) => sameAuthority(authority, context) ? { current: state.cases[request.caseRef.id], drafts: selectedDrafts(state) } : undefined)
-      if (final.status !== "ok" || !final.value || !allowed(final.value.current, request.caseRef, context) || digestSfValue(final.value.current) !== digestSfValue(again.value) || digestSfValue(final.value.drafts) !== digestSfValue(draftsAgain.value) || source.signal.aborted) return { status: "stale", reason: "hot-topic-draft-changed" }
+      if (final.status !== "ok" || !final.value || !allowed(final.value.current, request.caseRef, context) || digestSfValue(final.value.current) !== digestSfValue(again.value) || digestSfValue(final.value.drafts) !== digestSfValue(draftsAgain.value) || source.signal.aborted || input.host.requestFor(context) !== source) return { status: "stale", reason: "hot-topic-draft-changed" }
       return { status: "ok", value: checked.flatMap((item) => item.status === "ok" ? [{ draftRef: item.value.draftRef, label: item.value.fields.action, version: item.value.version, target: item.value.target }] : []) }
     } catch { return { status: "unavailable", reason: "hot-topic-draft-unavailable" } }
   }
@@ -95,7 +95,7 @@ export function createHotTopicDraftStore(input: {
         const saved = preferences.value.prior.value
         if (!saved || typeof saved !== "object" || !("draftRef" in saved) || typeof saved.draftRef !== "string") return { status: "unavailable", reason: "hot-topic-draft-unavailable" }
         const checked = await readCurrent({ caseRef: request.caseRef, draftRef: saved.draftRef }, context)
-        if (checked.status !== "ok" || !await input.authorizeDraft(request, context)) return { status: "unavailable", reason: "hot-topic-draft-unavailable" }
+        if (checked.status !== "ok" || !await input.authorizeDraft(request, context) || source.signal.aborted || input.host.requestFor(context) !== source) return { status: "unavailable", reason: "hot-topic-draft-unavailable" }
         return { status: "ok", value: { draftRef: checked.value.draftRef, version: checked.value.version } }
       }
       const previous = preferences.value.previous
@@ -121,7 +121,7 @@ export function createHotTopicDraftStore(input: {
       const saved = await input.state.transaction(source, { namespace: "preferences", domainSurface: "dashboard", expectedStorageVersion: preferences.storageVersion, additionalNamespaces: [{ namespace: "cases", expectedStorageVersion: current.storageVersion }], targetRef: request.caseRef.id, targetIncarnation: request.caseRef.incarnation, idempotencyKey: `hot-topic-draft:${operation}`, commandDigest: digestSfValue(request) }, work).finally(() => input.proposalCoverageWrites.delete(work))
       if (saved.status !== "ok" || !saved.value) return { status: saved.status === "conflict" || saved.status === "preview" ? "conflict" : "unavailable", reason: "hot-topic-draft-unavailable" }
       const checked = await readCurrent({ caseRef: request.caseRef, draftRef: saved.value.draftRef }, context)
-      if (checked.status !== "ok" || !await input.authorizeDraft(request, context)) return { status: "unavailable", reason: "hot-topic-draft-unavailable" }
+      if (checked.status !== "ok" || !await input.authorizeDraft(request, context) || source.signal.aborted || input.host.requestFor(context) !== source) return { status: "unavailable", reason: "hot-topic-draft-unavailable" }
       return { status: "ok", value: saved.value }
     } catch { return { status: "unavailable", reason: "hot-topic-draft-unavailable" } }
   }

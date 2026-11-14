@@ -353,7 +353,7 @@ function httpProduct(input: Parameters<typeof createPortfolioReconciliation>[0])
         cases: { draft: unused, prepareIntent: unused, read: input.cases.read },
         evidence: { resolve: unused, context: input.evidence.context, recall: unused, emitFromLedger: unused },
         planner: { planner: { compareForecast: unused, simulateScenario: unused, compareScenarios: unused, evaluateSensitivity: unused }, sources: { resolveForecastSource: unused, resolveForecastCoverage: unused }, scenarios: { resolve: unused } },
-        results: { write: unused, read: unused, readForCalculation: unused, readHistoricalScenario: unused, readByRequest: unused },
+        results: { write: unused, read: unused, readForCalculation: unused, readHistoricalScenario: unused, readHistoricalCalculation: unused, readByRequest: unused },
         rules: { register: unused, resolve: unused, evaluate: unused },
         selection: { register: unused, read: unused, inspect: unused },
         portfolioBindings: { proofs: unused, bind: unused, read: unused, list: unused, readHistoricalBinding: unused },
