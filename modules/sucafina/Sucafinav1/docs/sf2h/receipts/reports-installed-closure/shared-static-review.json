@@ -1,0 +1,132 @@
+{
+  "schema": "reports-installed-shared-static-review-v1",
+  "reviewer": "ci_and_criteria",
+  "reviewMode": "STATIC_ONLY",
+  "sourcePreimagesVerifiedAt": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+  "patchSHA256": "d401f15b192d6a51f5e9e91fd50840a350f4c6715b2d3854f9448e88efa9d308",
+  "patchApplied": false,
+  "testsExecuted": false,
+  "typecheckExecuted": false,
+  "conclusion": "No further concrete defect identified in the inspected lease/identity-pinning delta; this is not runtime approval or a complete authority proof.",
+  "reviewedPostimages": [
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "postimageSHA256": "7a0a9adfccb1ecc2caef577e6d7e4cbeb084c71dd633520691cc459dc93c9bb9",
+      "postimageGitBlobSHA1": "ce3a281bf07819f90af7fad10f98861980f3273b",
+      "matchesFrozenManifest": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-business-services.ts",
+      "postimageSHA256": "698e289b2cfc3996bc91069561d40b89294e3004bbd682e07a14ec3026f948ac",
+      "postimageGitBlobSHA1": "4cadc40037fefb895a7c77d53125922fa747b479",
+      "matchesFrozenManifest": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-http.ts",
+      "postimageSHA256": "1dfba65871e6a70917969dfd472e428b2bba5eed842fa32456fd3e04710bcccb",
+      "postimageGitBlobSHA1": "1d5605a4d447bd9eef590c09c5b9a41ca026c2d7",
+      "matchesFrozenManifest": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-browser.ts",
+      "postimageSHA256": "4c28afeb113132ce7836f2d247d175418c9c5ef3be25323cb55e4161efb7d3f2",
+      "postimageGitBlobSHA1": "83ecd80669c759dc65cc621543af2b5ebd9f9ac0",
+      "matchesFrozenManifest": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-source-links.ts",
+      "postimageSHA256": "64162802035919aa6b74306166a3854cb3c6d6df05524e9bbd3228254a26e83e",
+      "postimageGitBlobSHA1": "f655f9d0728d8c92efe9b78efa1f379c5be67efd",
+      "matchesFrozenManifest": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/review-history.ts",
+      "postimageSHA256": "2c4a38106be2410e4f6629209fb997af6eb2a0cbadfe1a5bb0fbd66da173a706",
+      "postimageGitBlobSHA1": "965ad8445deb9b97d1f1c76f18d4036bc2006975",
+      "matchesFrozenManifest": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/review-collaboration-binding.ts",
+      "postimageSHA256": "3e6b275ab3323e2d059df7268de829f9541f9c2d145d4c83d2341ba5c88df2ef",
+      "postimageGitBlobSHA1": "0da7d51672dc2519019f7880806d61c529456aa9",
+      "matchesFrozenManifest": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/review-collaboration.ts",
+      "postimageSHA256": "ee376ff5d4c4ca7f4fe378f3c5fd68f1799847e68c56b2b09d32d112991f30f1",
+      "postimageGitBlobSHA1": "0912fc1f33fb1b4fe81d92eeb509c7806ab1a380",
+      "matchesFrozenManifest": true
+    }
+  ],
+  "checks": [
+    {
+      "scope": "review-collaboration-binding.ts",
+      "finding": "One-time binding forwards to real current providers, preserves original evidence before bind, rejects replaced callback identities after awaited calls, and disposes without positive fallback."
+    },
+    {
+      "scope": "review-collaboration.ts",
+      "finding": "Current C05 read and host revalidation precede access leases; immutable review digest and real C08 receipt are matched to source snapshots. Local scope accepts plain Dashboard record reviews only. Same producer captures host, Review application, thread-context owner and reader."
+    },
+    {
+      "scope": "review-collaboration.ts final delta",
+      "finding": "Lease current predicate pins persistence owner, authority state owner+reader, requestFor, authenticate, reviews.read, revalidate and currentSnapshots, together with exact Request object, abort signal and trusted binding digest. Awaited boundaries recheck identities. Commit checks inspect held protected snapshots without invoking replacement authority providers."
+    },
+    {
+      "scope": "review-collaboration.ts recipient fence",
+      "finding": "Self recipient remains conditional on the actual caller source lease. A distinct recipient requires a real supplied provider with authorize and synchronous checkAtCommit, pinned before and after commit check; directory membership provides no authority."
+    },
+    {
+      "scope": "review-history.ts",
+      "finding": "Original preserved review/evidence remains immutable. Current reference comes from real Dashboard source issuance for current physical incarnation/version/fields/period and is resolved through original current authority before rechecking C08 closure. No synthetic version rewrite establishes authority."
+    }
+  ],
+  "requiredRuntimeFollowup": [
+    "Session23 integrates exact own source and shared postimages, preserving current composition, and ACKs actual W/tree/blobs.",
+    "Authorized WP07 dispatcher executes the four nominal Reports E2Es via existing request-only S and records actual per-case outcomes.",
+    "Relevant hosted typechecks must include the new source graph; static inspection does not prove TypeScript or installed browser execution."
+  ],
+  "remainingBlocks": [
+    {
+      "id": "distinct-legitimate-recipient",
+      "status": "BLOCKED",
+      "reason": "Existing local operator identity alone cannot prove a second legitimate recipient; no identity or grant expansion was introduced."
+    },
+    {
+      "id": "nonplain-c05-source-lease",
+      "status": "BLOCKED_FOR_NONPLAIN_C05",
+      "reason": "Captured comments, external outcomes, decisions, sensitivity, calculations/documents and non-Dashboard source reviews need their actual protected producer lease."
+    }
+  ],
+  "authorityChange": "No grant expansion, positive authorization fixture, Memory edit or Decisions writer edit was part of this proposal or child review.",
+  "followup_deltas": [
+    {
+      "kind": "STATIC_ONLY_FOLLOWUP_DELTA",
+      "priorReceiptSHA256": "26d9b11c8ec3bbed9bb2519c3b2c7b0ca7892e90619a89ad49909db94a36fe3c",
+      "priorPatchSHA256": "d401f15b192d6a51f5e9e91fd50840a350f4c6715b2d3854f9448e88efa9d308",
+      "currentPatchSHA256": "42cce7c5b42604636c77584e6e86f5594a2a1fa1b6d265f9fc16c7a028f78f47",
+      "changedPostimages": [
+        {
+          "path": "apps/cli/src/sucafina-product/extended-http.ts",
+          "priorSHA256": "1dfba65871e6a70917969dfd472e428b2bba5eed842fa32456fd3e04710bcccb",
+          "currentSHA256": "4f126782c18018ec6f17da90c19a19c237731064d3ee23fbfe4769e793224dcc",
+          "currentGitBlobSHA1": "d8e0d149e37c640db8957f3e917f867088923d93"
+        }
+      ],
+      "unchangedPostimages": [
+        "apps/cli/src/sucafina-product/business-services.ts",
+        "apps/cli/src/sucafina-product/extended-business-services.ts",
+        "apps/cli/src/sucafina-product/extended-browser.ts",
+        "apps/cli/src/sucafina-product/extended-source-links.ts",
+        "apps/cli/src/sucafina-product/review-history.ts",
+        "apps/cli/src/sucafina-product/review-collaboration-binding.ts",
+        "apps/cli/src/sucafina-product/review-collaboration.ts"
+      ],
+      "finding": "The existing Reports entry now assigns each authorized discovered topic its own stable agenda id report:<page> before sfDashboardReviewAgendaItem. Discovery previously reused dashboard for each topic. Non-Reports entry preserves its original id. Selected pages are still deduplicated before discovery and each topic must pass its actual producer; period/source/basis and final host revalidation remain unchanged.",
+      "scope": "Only agenda section identity is changed; no synthetic content, fabricated source reference, replacement service, new grant or recipient authority is introduced.",
+      "titleBoundary": "Canonical agenda titles still come from the actual selection producer (Budget/Projects/Hot Topics). The new id does not justify substituting discovery or All Projects labels into assertions.",
+      "runtimeConclusion": "NOT_RUN; inert proposal requires session23 integration and real nominal execution. No new product test, typecheck or server was executed by this helper."
+    }
+  ],
+  "effectivePatchSHA256": "42cce7c5b42604636c77584e6e86f5594a2a1fa1b6d265f9fc16c7a028f78f47",
+  "reviewSequence": "Original identity-pinning review plus the sole subsequent section-ID delta recorded in followup_deltas; no runtime approval."
+}

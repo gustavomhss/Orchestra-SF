@@ -1,0 +1,162 @@
+{
+  "schema": "reports-installed-closure-composition-audit-v1",
+  "status": "SHARED_ASSEMBLY_NOT_CONSUMED",
+  "observed": {
+    "sha": "0d5bd54a109774d4e3296e00c276be341fe39b00",
+    "tree": "c056602b26eb044fe5e2e18a5a05bd2bd2d5a83a",
+    "sharedDirectory": [
+      {
+        "path": "apps/cli/src/sucafina-product/business-services.ts",
+        "sha": "385dd1998ec3fb73b32f77ab3dec9c93beb440d1"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/extended-browser.ts",
+        "sha": "9ddc9d3e95585cda5efe877ce2303ade497a0b98"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/extended-business-services.ts",
+        "sha": "a57e9d39f81e8a064f903765e70533bdffea4ba2"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/extended-http.ts",
+        "sha": "63bbe96595c04a484cdc16e01f95c42233b4025c"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/extended-source-links.ts",
+        "sha": "147b3a687aa8786a7429ba8e7452db40290081d5"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/review-history.ts",
+        "sha": "0c9a68225d114ba77617af4a0e3acc2607ea0e5a"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/review-services.ts",
+        "sha": "c07d55c714b4c85ee41abb4d287ce5861500086d"
+      }
+    ],
+    "meeting": "65bdb3e8ebe6f8432a6fc61a166ef5b74a81d4e6",
+    "browser": "ad9c66337205d05764e187f8acadc2dff4cf151b",
+    "e2eConfig": "8364221434311400cae3007ea74cc67ddcfde765",
+    "acks": [
+      {
+        "blob": "9ac979bb649717d7ef9b75c9b89ee87d9bda004f",
+        "acks": [
+          {
+            "lane": "C12/session19",
+            "source_commit": "c8a03c4f689025ca70a1c815fd292af22b6261cd",
+            "integrated_commit": "d81dc320a82044009dd4c39f2e5d062ad46719a9",
+            "status": "ACK_CONSUMED_SELECTIVELY_IMPLEMENTATION_ONLY"
+          },
+          {
+            "lane": "Finance18",
+            "source_commit": "d8d586e19c824f75a88494a9c3677faac617e81d",
+            "integrated_commit": "d81dc320a82044009dd4c39f2e5d062ad46719a9",
+            "status": "ACK_CONSUMED_SELECTIVELY_IMPLEMENTATION_ONLY"
+          }
+        ]
+      },
+      {
+        "blob": "d6843806d1b6c063985928926e607d72f5613a2a",
+        "increment": 2,
+        "acks": [
+          {
+            "lane": "Memory13",
+            "source_commit": "539a3c7f95174190f783debc74e3694d84ca8653",
+            "integrated_commit": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+            "status": "ACK_CONSUMED_SELECTIVELY_IMPLEMENTATION_ONLY"
+          }
+        ]
+      },
+      {
+        "blob": "c76f85b917bd50cf5d167f9efa8b2a0f6c58c4ff",
+        "increment": 3,
+        "acks": [
+          {
+            "lane": "Decisions20",
+            "source_commit": "556079fe2fb97c824504ec60a47798c6e0553539",
+            "integrated_commit": "9cc27888581a13b55992cdb5dfbd27e43479ac29",
+            "status": "ACK_IMPLEMENTATION_AND_REQUIRED_HTTP_ASSEMBLY_CONSUMED"
+          }
+        ]
+      }
+    ]
+  },
+  "checked_at": "2026-11-14T21:12:31.430Z",
+  "facts": {
+    "agenda": "Actual Review agenda already present",
+    "application": "Actual ReviewApplication already present",
+    "collaboration": "Actual Collaboration producers already present",
+    "remainingWiring": [
+      "Legacy Reports form still routes to legacy current-data export until the proposed host route is consumed.",
+      "Collaboration host has no bound C05 context/source callbacks until proposed one-time binding is consumed.",
+      "New Review discussion view needs actual host/browser mounting.",
+      "App E2E graph needs the separate config include patch."
+    ],
+    "noReports25ACKInReadIntake": true,
+    "newHelpersAbsent": [
+      "apps/cli/src/sucafina-product/review-collaboration-binding.ts",
+      "apps/cli/src/sucafina-product/review-collaboration.ts"
+    ]
+  },
+  "preimagePolicy": "Exact hashes match published bundle preimages. Session23 must compare again against its actual head; no stale full-file overwrite is authorized.",
+  "nominalCompositionW": null,
+  "nominalCompositionTree": null,
+  "consumerACK": null,
+  "sourceCheckTransfer": false,
+  "ownedSourceReadAtComposition": {
+    "composition": "0d5bd54a109774d4e3296e00c276be341fe39b00",
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/browser.ts",
+        "sha": "ad9c66337205d05764e187f8acadc2dff4cf151b",
+        "present": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/meeting.ts",
+        "sha": "65bdb3e8ebe6f8432a6fc61a166ef5b74a81d4e6",
+        "present": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/collaboration-client.ts",
+        "sha": null,
+        "present": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/collaboration-view.ts",
+        "sha": null,
+        "present": false
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/reports.spec.ts",
+        "sha": "0d6c965e2afb83b2fe703c080f1f96547b2a582f",
+        "present": true
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/reports-support/review-flow.ts",
+        "sha": "82e4723fc40359e4da16a64973db8d9c516d3ebd",
+        "present": true
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/reports-support/confirmation.ts",
+        "sha": "dbdd5c6cf117bd793101dfa6164b026dd10ec9bd",
+        "present": true
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/reports-support/human-answer-flow.ts",
+        "sha": "70a721dc5c20182f67ba3cd52a153190f62875e9",
+        "present": true
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/reports-support/revocation.ts",
+        "sha": "e05b2e2a8e1b09114c4d1691d946a0cd59ad87f6",
+        "present": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp07/browser-build.test.ts",
+        "sha": "f2274e98de44db74d99dff5f4993720325f02170",
+        "present": true
+      }
+    ]
+  },
+  "ownedCompatibility": "Five E2E preimages match W1 predecessor exactly; two new client/view files absent. browser.ts/meeting.ts have current concurrent Review changes and require the supplied two-hunk patch. browser-build.test.ts baseline preserved before W2 entries."
+}

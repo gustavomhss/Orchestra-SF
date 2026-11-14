@@ -1,0 +1,1753 @@
+{
+  "schema": "reports-installed-external-typecheck-diagnostics-v1",
+  "W": "bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45",
+  "runId": 43640600856,
+  "jobId": 132587110097,
+  "sourceLogSHA256": "a92713a510d1114f83d00232d5f7d77b65809f9c975b6ba7f7e97c9671418e38",
+  "diagnostics": [
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "line": 85,
+      "column": 30,
+      "code": "TS7006",
+      "message": "Parameter 'snapshot' implicitly has an 'any' type.",
+      "continuation": [],
+      "logLine": 522,
+      "ownership": "outside-mission25",
+      "normalized": "apps/cli/src/sucafina-product/business-services.ts(85,30): error TS7006: Parameter 'snapshot' implicitly has an 'any' type."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "line": 85,
+      "column": 40,
+      "code": "TS7006",
+      "message": "Parameter 'evidence' implicitly has an 'any' type.",
+      "continuation": [],
+      "logLine": 523,
+      "ownership": "outside-mission25",
+      "normalized": "apps/cli/src/sucafina-product/business-services.ts(85,40): error TS7006: Parameter 'evidence' implicitly has an 'any' type."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "line": 188,
+      "column": 20,
+      "code": "TS2322",
+      "message": "Type '(ref: string, call: TrustedDomainContext) => Promise<{ status: \"ok\"; value: { evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; ... 6 more ...; projectionDigest: string; }; }; context: ProductContext; }; } | { ...; } | { ...; }>' is not assignable to type '{ issue: (kind: \"procurement-request\" | \"procurement-supplier\", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }'.",
+      "continuation": [],
+      "logLine": 524,
+      "ownership": "outside-mission25",
+      "normalized": "apps/cli/src/sucafina-product/business-services.ts(188,20): error TS2322: Type '(ref: string, call: TrustedDomainContext) => Promise<{ status: \"ok\"; value: { evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; ... 6 more ...; projectionDigest: string; }; }; context: ProductContext; }; } | { ...; } | { ...; }>' is not assignable to type '{ issue: (kind: \"procurement-request\" | \"procurement-supplier\", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }'."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "line": 158,
+      "column": 128,
+      "code": "TS2345",
+      "message": "Argument of type '{ cases: { draft: (request: CaseDraftRequest, binding: TrustedDomainContext) => Promise<PortResult<DecisionCase>>; prepareIntent: (request: CaseDraftRequest, binding: TrustedDomainContext) => Promise<...>; read: (request: CaseReadRequest, binding: TrustedDomainContext) => Promise<...>; prepareIntentForCase: (request...' is not assignable to parameter of type 'SfAnalysisDependencies & { replayIntent: (request: CaseDraftRequest, ref: { id: string; incarnation: string; version: number; }, context: TrustedDomainContext) => Promise<...>; imports: Pick<...>; selectedPreviewRef: (caseRef: { ...; }, call: TrustedDomainContext) => Promise<...>; }'.",
+      "continuation": [
+        "  Type '{ cases: { draft: (request: CaseDraftRequest, binding: TrustedDomainContext) => Promise<PortResult<DecisionCase>>; prepareIntent: (request: CaseDraftRequest, binding: TrustedDomainContext) => Promise<...>; read: (request: CaseReadRequest, binding: TrustedDomainContext) => Promise<...>; prepareIntentForCase: (request...' is missing the following properties from type '{ replayIntent: (request: CaseDraftRequest, ref: { id: string; incarnation: string; version: number; }, context: TrustedDomainContext) => Promise<...>; imports: Pick<...>; selectedPreviewRef: (caseRef: { ...; }, call: TrustedDomainContext) => Promise<...>; }': imports, selectedPreviewRef"
+      ],
+      "logLine": 525,
+      "ownership": "outside-mission25",
+      "normalized": "apps/cli/src/sucafina-product/host-context.ts(158,128): error TS2345: Argument of type '{ cases: { draft: (request: CaseDraftRequest, binding: TrustedDomainContext) => Promise<PortResult<DecisionCase>>; prepareIntent: (request: CaseDraftRequest, binding: TrustedDomainContext) => Promise<...>; read: (request: CaseReadRequest, binding: TrustedDomainContext) => Promise<...>; prepareIntentForCase: (request...' is not assignable to parameter of type 'SfAnalysisDependencies & { replayIntent: (request: CaseDraftRequest, ref: { id: string; incarnation: string; version: number; }, context: TrustedDomainContext) => Promise<...>; imports: Pick<...>; selectedPreviewRef: (caseRef: { ...; }, call: TrustedDomainContext) => Promise<...>; }'.\n  Type '{ cases: { draft: (request: CaseDraftRequest, binding: TrustedDomainContext) => Promise<PortResult<DecisionCase>>; prepareIntent: (request: CaseDraftRequest, binding: TrustedDomainContext) => Promise<...>; read: (request: CaseReadRequest, binding: TrustedDomainContext) => Promise<...>; prepareIntentForCase: (request...' is missing the following properties from type '{ replayIntent: (request: CaseDraftRequest, ref: { id: string; incarnation: string; version: number; }, context: TrustedDomainContext) => Promise<...>; imports: Pick<...>; selectedPreviewRef: (caseRef: { ...; }, call: TrustedDomainContext) => Promise<...>; }': imports, selectedPreviewRef"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "line": 185,
+      "column": 136,
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<string | undefined>' is not assignable to type 'PortResult<{ runRef: string; }>'.",
+      "continuation": [
+        "  Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: string | undefined; }' is not assignable to type 'PortResult<{ runRef: string; }>'.",
+        "    Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: string | undefined; }' is not assignable to type '{ status: \"ok\"; value: { runRef: string; }; }'.",
+        "      Types of property 'status' are incompatible.",
+        "        Type '\"ok\" | \"preview\"' is not assignable to type '\"ok\"'.",
+        "          Type '\"preview\"' is not assignable to type '\"ok\"'."
+      ],
+      "logLine": 527,
+      "ownership": "outside-mission25",
+      "normalized": "apps/cli/src/sucafina-product/host-context.ts(185,136): error TS2322: Type 'SfStateResult<string | undefined>' is not assignable to type 'PortResult<{ runRef: string; }>'.\n  Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: string | undefined; }' is not assignable to type 'PortResult<{ runRef: string; }>'.\n    Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: string | undefined; }' is not assignable to type '{ status: \"ok\"; value: { runRef: string; }; }'.\n      Types of property 'status' are incompatible.\n        Type '\"ok\" | \"preview\"' is not assignable to type '\"ok\"'.\n          Type '\"preview\"' is not assignable to type '\"ok\"'."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "line": 217,
+      "column": 138,
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; intentDigest?: string | undefined; skillInputDigest: string; principalRef: string; accessRevision: string; ... 9 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined>' is not assignable to type 'PortResult<{ runRef: string; }> | undefined'.",
+      "continuation": [
+        "  Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; ... 13 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined; }' is not assignable to type 'PortResult<{ runRef: string; }> | undefined'.",
+        "    Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; ... 13 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined; }' is not assignable to type '{ status: \"ok\"; value: { runRef: string; }; }'.",
+        "      Types of property 'status' are incompatible.",
+        "        Type '\"ok\" | \"preview\"' is not assignable to type '\"ok\"'.",
+        "          Type '\"preview\"' is not assignable to type '\"ok\"'."
+      ],
+      "logLine": 533,
+      "ownership": "outside-mission25",
+      "normalized": "apps/cli/src/sucafina-product/host-context.ts(217,138): error TS2322: Type 'SfStateResult<({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; intentDigest?: string | undefined; skillInputDigest: string; principalRef: string; accessRevision: string; ... 9 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined>' is not assignable to type 'PortResult<{ runRef: string; }> | undefined'.\n  Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; ... 13 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined; }' is not assignable to type 'PortResult<{ runRef: string; }> | undefined'.\n    Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; ... 13 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined; }' is not assignable to type '{ status: \"ok\"; value: { runRef: string; }; }'.\n      Types of property 'status' are incompatible.\n        Type '\"ok\" | \"preview\"' is not assignable to type '\"ok\"'.\n          Type '\"preview\"' is not assignable to type '\"ok\"'."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "line": 273,
+      "column": 138,
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; intentDigest?: string | undefined; skillInputDigest: string; principalRef: string; accessRevision: string; ... 9 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined>' is not assignable to type 'PortResult<SfNativeRunRecord>'.",
+      "continuation": [
+        "  Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; ... 13 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined; }' is not assignable to type 'PortResult<SfNativeRunRecord>'.",
+        "    Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; ... 13 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined; }' is not assignable to type '{ status: \"ok\"; value: SfNativeRunRecord; }'.",
+        "      Types of property 'status' are incompatible.",
+        "        Type '\"ok\" | \"preview\"' is not assignable to type '\"ok\"'.",
+        "          Type '\"preview\"' is not assignable to type '\"ok\"'."
+      ],
+      "logLine": 539,
+      "ownership": "outside-mission25",
+      "normalized": "apps/cli/src/sucafina-product/host-context.ts(273,138): error TS2322: Type 'SfStateResult<({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; intentDigest?: string | undefined; skillInputDigest: string; principalRef: string; accessRevision: string; ... 9 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined>' is not assignable to type 'PortResult<SfNativeRunRecord>'.\n  Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; ... 13 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined; }' is not assignable to type 'PortResult<SfNativeRunRecord>'.\n    Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; ... 13 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined; }' is not assignable to type '{ status: \"ok\"; value: SfNativeRunRecord; }'.\n      Types of property 'status' are incompatible.\n        Type '\"ok\" | \"preview\"' is not assignable to type '\"ok\"'.\n          Type '\"preview\"' is not assignable to type '\"ok\"'."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "line": 396,
+      "column": 5,
+      "code": "TS2322",
+      "message": "Type '(context: TrustedUiContext, caseRef: { id: string; incarnation: string; version: number; }) => Promise<{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { ...; }[]; } | { ...; } | { ...; }>' is not assignable to type '(context: TrustedUiContext, caseRef: { id: string; incarnation: string; version: number; }) => Promise<PortResult<readonly { runRef: string; state: \"cancelled\" | \"failed\" | \"needs-input\" | ... 6 more ... | \"unavailable\"; version: number; outputRef?: string | undefined; }[]>>'.",
+      "continuation": [
+        "  Type 'Promise<{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { runRef: string; state: \"cancelled\" | \"failed\" | \"needs-input\" | \"preparing\" | ... 5 more ... | \"unavailable\"; version: number; outputRef?: string | undefined; }[]; } | { ...; } | { ...; }>' is not assignable to type 'Promise<PortResult<readonly { runRef: string; state: \"cancelled\" | \"failed\" | \"needs-input\" | \"preparing\" | \"queued\" | \"ready\" | \"running\" | \"stale\" | \"unavailable\"; version: number; outputRef?: string | undefined; }[]>>'.",
+        "    Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { runRef: string; state: \"cancelled\" | \"failed\" | \"needs-input\" | \"preparing\" | ... 5 more ... | \"unavailable\"; version: number; outputRef?: string | undefined; }[]; } | { ...; } | { ...; }' is not assignable to type 'PortResult<readonly { runRef: string; state: \"cancelled\" | \"failed\" | \"needs-input\" | \"preparing\" | \"queued\" | \"ready\" | \"running\" | \"stale\" | \"unavailable\"; version: number; outputRef?: string | undefined; }[]>'.",
+        "      Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { runRef: string; state: \"cancelled\" | \"failed\" | \"needs-input\" | \"preparing\" | ... 5 more ... | \"unavailable\"; version: number; outputRef?: string | undefined; }[]; }' is not assignable to type 'PortResult<readonly { runRef: string; state: \"cancelled\" | \"failed\" | \"needs-input\" | \"preparing\" | \"queued\" | \"ready\" | \"running\" | \"stale\" | \"unavailable\"; version: number; outputRef?: string | undefined; }[]>'.",
+        "        Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { runRef: string; state: \"cancelled\" | \"failed\" | \"needs-input\" | \"preparing\" | ... 5 more ... | \"unavailable\"; version: number; outputRef?: string | undefined; }[]; }' is not assignable to type '{ status: \"ok\"; value: readonly { runRef: string; state: \"cancelled\" | \"failed\" | \"needs-input\" | \"preparing\" | \"queued\" | \"ready\" | \"running\" | \"stale\" | \"unavailable\"; version: number; outputRef?: string | undefined; }[]; }'.",
+        "          Types of property 'status' are incompatible.",
+        "            Type '\"ok\" | \"preview\"' is not assignable to type '\"ok\"'.",
+        "              Type '\"preview\"' is not assignable to type '\"ok\"'."
+      ],
+      "logLine": 545,
+      "ownership": "outside-mission25",
+      "normalized": "apps/cli/src/sucafina-product/host-context.ts(396,5): error TS2322: Type '(context: TrustedUiContext, caseRef: { id: string; incarnation: string; version: number; }) => Promise<{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { ...; }[]; } | { ...; } | { ...; }>' is not assignable to type '(context: TrustedUiContext, caseRef: { id: string; incarnation: string; version: number; }) => Promise<PortResult<readonly { runRef: string; state: \"cancelled\" | \"failed\" | \"needs-input\" | ... 6 more ... | \"unavailable\"; version: number; outputRef?: string | undefined; }[]>>'.\n  Type 'Promise<{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { runRef: string; state: \"cancelled\" | \"failed\" | \"needs-input\" | \"preparing\" | ... 5 more ... | \"unavailable\"; version: number; outputRef?: string | undefined; }[]; } | { ...; } | { ...; }>' is not assignable to type 'Promise<PortResult<readonly { runRef: string; state: \"cancelled\" | \"failed\" | \"needs-input\" | \"preparing\" | \"queued\" | \"ready\" | \"running\" | \"stale\" | \"unavailable\"; version: number; outputRef?: string | undefined; }[]>>'.\n    Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { runRef: string; state: \"cancelled\" | \"failed\" | \"needs-input\" | \"preparing\" | ... 5 more ... | \"unavailable\"; version: number; outputRef?: string | undefined; }[]; } | { ...; } | { ...; }' is not assignable to type 'PortResult<readonly { runRef: string; state: \"cancelled\" | \"failed\" | \"needs-input\" | \"preparing\" | \"queued\" | \"ready\" | \"running\" | \"stale\" | \"unavailable\"; version: number; outputRef?: string | undefined; }[]>'.\n      Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { runRef: string; state: \"cancelled\" | \"failed\" | \"needs-input\" | \"preparing\" | ... 5 more ... | \"unavailable\"; version: number; outputRef?: string | undefined; }[]; }' is not assignable to type 'PortResult<readonly { runRef: string; state: \"cancelled\" | \"failed\" | \"needs-input\" | \"preparing\" | \"queued\" | \"ready\" | \"running\" | \"stale\" | \"unavailable\"; version: number; outputRef?: string | undefined; }[]>'.\n        Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { runRef: string; state: \"cancelled\" | \"failed\" | \"needs-input\" | \"preparing\" | ... 5 more ... | \"unavailable\"; version: number; outputRef?: string | undefined; }[]; }' is not assignable to type '{ status: \"ok\"; value: readonly { runRef: string; state: \"cancelled\" | \"failed\" | \"needs-input\" | \"preparing\" | \"queued\" | \"ready\" | \"running\" | \"stale\" | \"unavailable\"; version: number; outputRef?: string | undefined; }[]; }'.\n          Types of property 'status' are incompatible.\n            Type '\"ok\" | \"preview\"' is not assignable to type '\"ok\"'.\n              Type '\"preview\"' is not assignable to type '\"ok\"'."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "line": 412,
+      "column": 5,
+      "code": "TS2322",
+      "message": "Type '(context: TrustedUiContext, runRef: string) => Promise<{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ ...; } & { ...; }) | ({ ...; } & { ...; }) | undefined; } | { ...; } | { ...; }>' is not assignable to type '(context: TrustedUiContext, runRef: string) => Promise<PortResult<SfNativeRunRecord>>'.",
+      "continuation": [
+        "  Type 'Promise<{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; ... 13 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined; } | { ...;...' is not assignable to type 'Promise<PortResult<SfNativeRunRecord>>'.",
+        "    Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; ... 13 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined; } | { ...; } | { ....' is not assignable to type 'PortResult<SfNativeRunRecord>'.",
+        "      Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; ... 13 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined; }' is not assignable to type 'PortResult<SfNativeRunRecord>'.",
+        "        Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; ... 13 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined; }' is not assignable to type '{ status: \"ok\"; value: SfNativeRunRecord; }'.",
+        "          Types of property 'status' are incompatible.",
+        "            Type '\"ok\" | \"preview\"' is not assignable to type '\"ok\"'.",
+        "              Type '\"preview\"' is not assignable to type '\"ok\"'."
+      ],
+      "logLine": 553,
+      "ownership": "outside-mission25",
+      "normalized": "apps/cli/src/sucafina-product/host-context.ts(412,5): error TS2322: Type '(context: TrustedUiContext, runRef: string) => Promise<{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ ...; } & { ...; }) | ({ ...; } & { ...; }) | undefined; } | { ...; } | { ...; }>' is not assignable to type '(context: TrustedUiContext, runRef: string) => Promise<PortResult<SfNativeRunRecord>>'.\n  Type 'Promise<{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; ... 13 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined; } | { ...;...' is not assignable to type 'Promise<PortResult<SfNativeRunRecord>>'.\n    Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; ... 13 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined; } | { ...; } | { ....' is not assignable to type 'PortResult<SfNativeRunRecord>'.\n      Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; ... 13 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined; }' is not assignable to type 'PortResult<SfNativeRunRecord>'.\n        Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; ... 13 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined; }' is not assignable to type '{ status: \"ok\"; value: SfNativeRunRecord; }'.\n          Types of property 'status' are incompatible.\n            Type '\"ok\" | \"preview\"' is not assignable to type '\"ok\"'.\n              Type '\"preview\"' is not assignable to type '\"ok\"'."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "line": 551,
+      "column": 5,
+      "code": "TS2322",
+      "message": "Type '(context: TrustedUiContext) => string | undefined' is not assignable to type '(context: TrustedDomainContext) => string | undefined'.",
+      "continuation": [
+        "  Types of parameters 'context' and 'context' are incompatible.",
+        "    Type 'TrustedDomainContext' is not assignable to type 'TrustedUiContext'.",
+        "      Type 'TrustedCallContext' is not assignable to type 'TrustedUiContext'.",
+        "        Types of property 'kind' are incompatible.",
+        "          Type '\"native\"' is not assignable to type '\"ui\"'."
+      ],
+      "logLine": 561,
+      "ownership": "outside-mission25",
+      "normalized": "apps/cli/src/sucafina-product/host-context.ts(551,5): error TS2322: Type '(context: TrustedUiContext) => string | undefined' is not assignable to type '(context: TrustedDomainContext) => string | undefined'.\n  Types of parameters 'context' and 'context' are incompatible.\n    Type 'TrustedDomainContext' is not assignable to type 'TrustedUiContext'.\n      Type 'TrustedCallContext' is not assignable to type 'TrustedUiContext'.\n        Types of property 'kind' are incompatible.\n          Type '\"native\"' is not assignable to type '\"ui\"'."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/import-services.ts",
+      "line": 85,
+      "column": 101,
+      "code": "TS2304",
+      "message": "Cannot find name 'Period'.",
+      "continuation": [],
+      "logLine": 567,
+      "ownership": "outside-mission25",
+      "normalized": "apps/cli/src/sucafina-product/import-services.ts(85,101): error TS2304: Cannot find name 'Period'."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/import-services.ts",
+      "line": 115,
+      "column": 21,
+      "code": "TS2304",
+      "message": "Cannot find name 'isSfPeriod'.",
+      "continuation": [],
+      "logLine": 568,
+      "ownership": "outside-mission25",
+      "normalized": "apps/cli/src/sucafina-product/import-services.ts(115,21): error TS2304: Cannot find name 'isSfPeriod'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/confirmation.ts",
+      "line": 79,
+      "column": 34,
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<(ConfirmationRecord & ConfirmationBaseline) | null>' is not assignable to type 'PortResult<ConfirmationRecord>'.",
+      "continuation": [
+        "  Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: (ConfirmationRecord & ConfirmationBaseline) | null; }' is not assignable to type 'PortResult<ConfirmationRecord>'.",
+        "    Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: (ConfirmationRecord & ConfirmationBaseline) | null; }' is not assignable to type '{ status: \"ok\"; value: ConfirmationRecord; }'.",
+        "      Types of property 'status' are incompatible.",
+        "        Type '\"ok\" | \"preview\"' is not assignable to type '\"ok\"'.",
+        "          Type '\"preview\"' is not assignable to type '\"ok\"'."
+      ],
+      "logLine": 569,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/collaboration/confirmation.ts(79,34): error TS2322: Type 'SfStateResult<(ConfirmationRecord & ConfirmationBaseline) | null>' is not assignable to type 'PortResult<ConfirmationRecord>'.\n  Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: (ConfirmationRecord & ConfirmationBaseline) | null; }' is not assignable to type 'PortResult<ConfirmationRecord>'.\n    Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: (ConfirmationRecord & ConfirmationBaseline) | null; }' is not assignable to type '{ status: \"ok\"; value: ConfirmationRecord; }'.\n      Types of property 'status' are incompatible.\n        Type '\"ok\" | \"preview\"' is not assignable to type '\"ok\"'.\n          Type '\"preview\"' is not assignable to type '\"ok\"'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/confirmation.ts",
+      "line": 91,
+      "column": 34,
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<ConfirmationRecord | undefined>' is not assignable to type 'PortResult<ConfirmationValidityProjection>'.",
+      "continuation": [
+        "  Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ConfirmationRecord | undefined; }' is not assignable to type 'PortResult<ConfirmationValidityProjection>'.",
+        "    Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ConfirmationRecord | undefined; }' is not assignable to type '{ status: \"ok\"; value: ConfirmationValidityProjection; }'.",
+        "      Types of property 'status' are incompatible.",
+        "        Type '\"ok\" | \"preview\"' is not assignable to type '\"ok\"'.",
+        "          Type '\"preview\"' is not assignable to type '\"ok\"'."
+      ],
+      "logLine": 575,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/collaboration/confirmation.ts(91,34): error TS2322: Type 'SfStateResult<ConfirmationRecord | undefined>' is not assignable to type 'PortResult<ConfirmationValidityProjection>'.\n  Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ConfirmationRecord | undefined; }' is not assignable to type 'PortResult<ConfirmationValidityProjection>'.\n    Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ConfirmationRecord | undefined; }' is not assignable to type '{ status: \"ok\"; value: ConfirmationValidityProjection; }'.\n      Types of property 'status' are incompatible.\n        Type '\"ok\" | \"preview\"' is not assignable to type '\"ok\"'.\n          Type '\"preview\"' is not assignable to type '\"ok\"'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/hot-topic-host.ts",
+      "line": 16,
+      "column": 9,
+      "code": "TS2322",
+      "message": "Type '<T>(context: TrustedDomainContext, sourceRefs: readonly BusinessEvidenceRef[], work: (snapshot: Snapshot, actor: Actor, environment: Environment, correlations: Record<...>) => { ...; }) => Promise<...>' is not assignable to type '<T>(binding: TrustedDomainContext, sourceRefs: readonly BusinessEvidenceRef[], work: (snapshot: Snapshot, actor: Actor, environment: Environment, correlations: Record<...>) => { ...; }) => Promise<...>'.",
+      "continuation": [
+        "  Type 'Promise<{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: PortResult<T>; } | { status: \"ok\"; value: T; } | { status: \"conflict\" | ... 5 more ... | \"unavailable\"; reason: string; }>' is not assignable to type 'Promise<PortResult<T>>'.",
+        "    Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: PortResult<T>; } | { status: \"ok\"; value: T; } | { status: \"conflict\" | ... 6 more ... | \"unavailable\"; reason: string; }' is not assignable to type 'PortResult<T>'.",
+        "      Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: PortResult<T>; }' is not assignable to type 'PortResult<T>'.",
+        "        Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: PortResult<T>; }' is not assignable to type '{ status: \"ok\"; value: T; }'.",
+        "          Types of property 'status' are incompatible.",
+        "            Type '\"ok\" | \"preview\"' is not assignable to type '\"ok\"'.",
+        "              Type '\"preview\"' is not assignable to type '\"ok\"'."
+      ],
+      "logLine": 581,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/collaboration/hot-topic-host.ts(16,9): error TS2322: Type '<T>(context: TrustedDomainContext, sourceRefs: readonly BusinessEvidenceRef[], work: (snapshot: Snapshot, actor: Actor, environment: Environment, correlations: Record<...>) => { ...; }) => Promise<...>' is not assignable to type '<T>(binding: TrustedDomainContext, sourceRefs: readonly BusinessEvidenceRef[], work: (snapshot: Snapshot, actor: Actor, environment: Environment, correlations: Record<...>) => { ...; }) => Promise<...>'.\n  Type 'Promise<{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: PortResult<T>; } | { status: \"ok\"; value: T; } | { status: \"conflict\" | ... 5 more ... | \"unavailable\"; reason: string; }>' is not assignable to type 'Promise<PortResult<T>>'.\n    Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: PortResult<T>; } | { status: \"ok\"; value: T; } | { status: \"conflict\" | ... 6 more ... | \"unavailable\"; reason: string; }' is not assignable to type 'PortResult<T>'.\n      Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: PortResult<T>; }' is not assignable to type 'PortResult<T>'.\n        Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: PortResult<T>; }' is not assignable to type '{ status: \"ok\"; value: T; }'.\n          Types of property 'status' are incompatible.\n            Type '\"ok\" | \"preview\"' is not assignable to type '\"ok\"'.\n              Type '\"preview\"' is not assignable to type '\"ok\"'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/recipient-actions.ts",
+      "line": 50,
+      "column": 32,
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<boolean>' is not assignable to type 'PortResult<RecipientThread>'.",
+      "continuation": [
+        "  Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: boolean; }' is not assignable to type 'PortResult<RecipientThread>'.",
+        "    Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: boolean; }' is not assignable to type '{ status: \"ok\"; value: RecipientThread; }'.",
+        "      Types of property 'status' are incompatible.",
+        "        Type '\"ok\" | \"preview\"' is not assignable to type '\"ok\"'.",
+        "          Type '\"preview\"' is not assignable to type '\"ok\"'."
+      ],
+      "logLine": 589,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/collaboration/recipient-actions.ts(50,32): error TS2322: Type 'SfStateResult<boolean>' is not assignable to type 'PortResult<RecipientThread>'.\n  Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: boolean; }' is not assignable to type 'PortResult<RecipientThread>'.\n    Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: boolean; }' is not assignable to type '{ status: \"ok\"; value: RecipientThread; }'.\n      Types of property 'status' are incompatible.\n        Type '\"ok\" | \"preview\"' is not assignable to type '\"ok\"'.\n          Type '\"preview\"' is not assignable to type '\"ok\"'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/relations.ts",
+      "line": 70,
+      "column": 66,
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<{ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | null>' is not assignable to type 'PortResult<{ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }>'.",
+      "continuation": [
+        "  Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | null; }' is not assignable to type 'PortResult<{ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }>'.",
+        "    Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | null; }' is not assignable to type '{ status: \"ok\"; value: { id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }; }'.",
+        "      Types of property 'status' are incompatible.",
+        "        Type '\"ok\" | \"preview\"' is not assignable to type '\"ok\"'.",
+        "          Type '\"preview\"' is not assignable to type '\"ok\"'."
+      ],
+      "logLine": 595,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/collaboration/relations.ts(70,66): error TS2322: Type 'SfStateResult<{ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | null>' is not assignable to type 'PortResult<{ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }>'.\n  Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | null; }' is not assignable to type 'PortResult<{ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }>'.\n    Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | null; }' is not assignable to type '{ status: \"ok\"; value: { id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }; }'.\n      Types of property 'status' are incompatible.\n        Type '\"ok\" | \"preview\"' is not assignable to type '\"ok\"'.\n          Type '\"preview\"' is not assignable to type '\"ok\"'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/relations.ts",
+      "line": 116,
+      "column": 35,
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<{ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | null>' is not assignable to type 'PortResult<{ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }>'.",
+      "continuation": [
+        "  Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | null; }' is not assignable to type 'PortResult<{ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }>'.",
+        "    Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | null; }' is not assignable to type '{ status: \"ok\"; value: { id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }; }'.",
+        "      Types of property 'status' are incompatible.",
+        "        Type '\"ok\" | \"preview\"' is not assignable to type '\"ok\"'.",
+        "          Type '\"preview\"' is not assignable to type '\"ok\"'."
+      ],
+      "logLine": 601,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/collaboration/relations.ts(116,35): error TS2322: Type 'SfStateResult<{ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | null>' is not assignable to type 'PortResult<{ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }>'.\n  Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | null; }' is not assignable to type 'PortResult<{ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }>'.\n    Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | null; }' is not assignable to type '{ status: \"ok\"; value: { id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }; }'.\n      Types of property 'status' are incompatible.\n        Type '\"ok\" | \"preview\"' is not assignable to type '\"ok\"'.\n          Type '\"preview\"' is not assignable to type '\"ok\"'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/relations.ts",
+      "line": 127,
+      "column": 35,
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<({ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | undefined)[] | undefined>' is not assignable to type 'PortResult<{ relations: readonly { id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }[]; }>'.",
+      "continuation": [
+        "  Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | undefined)[] | undefined; }' is not assignable to type 'PortResult<{ relations: readonly { id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }[]; }>'.",
+        "    Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | undefined)[] | undefined; }' is not assignable to type '{ status: \"ok\"; value: { relations: readonly { id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }[]; }; }'.",
+        "      Types of property 'status' are incompatible.",
+        "        Type '\"ok\" | \"preview\"' is not assignable to type '\"ok\"'.",
+        "          Type '\"preview\"' is not assignable to type '\"ok\"'."
+      ],
+      "logLine": 607,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/collaboration/relations.ts(127,35): error TS2322: Type 'SfStateResult<({ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | undefined)[] | undefined>' is not assignable to type 'PortResult<{ relations: readonly { id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }[]; }>'.\n  Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | undefined)[] | undefined; }' is not assignable to type 'PortResult<{ relations: readonly { id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }[]; }>'.\n    Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | undefined)[] | undefined; }' is not assignable to type '{ status: \"ok\"; value: { relations: readonly { id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }[]; }; }'.\n      Types of property 'status' are incompatible.\n        Type '\"ok\" | \"preview\"' is not assignable to type '\"ok\"'.\n          Type '\"preview\"' is not assignable to type '\"ok\"'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/threads.ts",
+      "line": 57,
+      "column": 34,
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<CollaborationThread | null>' is not assignable to type 'PortResult<CollaborationThread>'.",
+      "continuation": [
+        "  Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: CollaborationThread | null; }' is not assignable to type 'PortResult<CollaborationThread>'.",
+        "    Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: CollaborationThread | null; }' is not assignable to type '{ status: \"ok\"; value: CollaborationThread; }'.",
+        "      Types of property 'status' are incompatible.",
+        "        Type '\"ok\" | \"preview\"' is not assignable to type '\"ok\"'.",
+        "          Type '\"preview\"' is not assignable to type '\"ok\"'."
+      ],
+      "logLine": 613,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/collaboration/threads.ts(57,34): error TS2322: Type 'SfStateResult<CollaborationThread | null>' is not assignable to type 'PortResult<CollaborationThread>'.\n  Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: CollaborationThread | null; }' is not assignable to type 'PortResult<CollaborationThread>'.\n    Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: CollaborationThread | null; }' is not assignable to type '{ status: \"ok\"; value: CollaborationThread; }'.\n      Types of property 'status' are incompatible.\n        Type '\"ok\" | \"preview\"' is not assignable to type '\"ok\"'.\n          Type '\"preview\"' is not assignable to type '\"ok\"'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/threads.ts",
+      "line": 68,
+      "column": 33,
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<unknown>' is not assignable to type 'PortResult<CollaborationThread>'.",
+      "continuation": [
+        "  Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: unknown; }' is not assignable to type 'PortResult<CollaborationThread>'.",
+        "    Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: unknown; }' is not assignable to type '{ status: \"ok\"; value: CollaborationThread; }'.",
+        "      Types of property 'status' are incompatible.",
+        "        Type '\"ok\" | \"preview\"' is not assignable to type '\"ok\"'.",
+        "          Type '\"preview\"' is not assignable to type '\"ok\"'."
+      ],
+      "logLine": 619,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/collaboration/threads.ts(68,33): error TS2322: Type 'SfStateResult<unknown>' is not assignable to type 'PortResult<CollaborationThread>'.\n  Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: unknown; }' is not assignable to type 'PortResult<CollaborationThread>'.\n    Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: unknown; }' is not assignable to type '{ status: \"ok\"; value: CollaborationThread; }'.\n      Types of property 'status' are incompatible.\n        Type '\"ok\" | \"preview\"' is not assignable to type '\"ok\"'.\n          Type '\"preview\"' is not assignable to type '\"ok\"'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/threads.ts",
+      "line": 86,
+      "column": 31,
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<unknown>' is not assignable to type 'PortResult<CollaborationThread>'.",
+      "continuation": [
+        "  Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: unknown; }' is not assignable to type 'PortResult<CollaborationThread>'.",
+        "    Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: unknown; }' is not assignable to type '{ status: \"ok\"; value: CollaborationThread; }'.",
+        "      Types of property 'status' are incompatible.",
+        "        Type '\"ok\" | \"preview\"' is not assignable to type '\"ok\"'.",
+        "          Type '\"preview\"' is not assignable to type '\"ok\"'."
+      ],
+      "logLine": 625,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/collaboration/threads.ts(86,31): error TS2322: Type 'SfStateResult<unknown>' is not assignable to type 'PortResult<CollaborationThread>'.\n  Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: unknown; }' is not assignable to type 'PortResult<CollaborationThread>'.\n    Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: unknown; }' is not assignable to type '{ status: \"ok\"; value: CollaborationThread; }'.\n      Types of property 'status' are incompatible.\n        Type '\"ok\" | \"preview\"' is not assignable to type '\"ok\"'.\n          Type '\"preview\"' is not assignable to type '\"ok\"'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/threads.ts",
+      "line": 101,
+      "column": 32,
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<CollaborationThread | null>' is not assignable to type 'PortResult<CollaborationThread>'.",
+      "continuation": [
+        "  Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: CollaborationThread | null; }' is not assignable to type 'PortResult<CollaborationThread>'.",
+        "    Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: CollaborationThread | null; }' is not assignable to type '{ status: \"ok\"; value: CollaborationThread; }'.",
+        "      Types of property 'status' are incompatible.",
+        "        Type '\"ok\" | \"preview\"' is not assignable to type '\"ok\"'.",
+        "          Type '\"preview\"' is not assignable to type '\"ok\"'."
+      ],
+      "logLine": 631,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/collaboration/threads.ts(101,32): error TS2322: Type 'SfStateResult<CollaborationThread | null>' is not assignable to type 'PortResult<CollaborationThread>'.\n  Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: CollaborationThread | null; }' is not assignable to type 'PortResult<CollaborationThread>'.\n    Type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: CollaborationThread | null; }' is not assignable to type '{ status: \"ok\"; value: CollaborationThread; }'.\n      Types of property 'status' are incompatible.\n        Type '\"ok\" | \"preview\"' is not assignable to type '\"ok\"'.\n          Type '\"preview\"' is not assignable to type '\"ok\"'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+      "line": 14,
+      "column": 45,
+      "code": "TS2307",
+      "message": "Cannot find module '../routines/factory.ts' or its corresponding type declarations.",
+      "continuation": [],
+      "logLine": 637,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/contracts/host-context.ts(14,45): error TS2307: Cannot find module '../routines/factory.ts' or its corresponding type declarations."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+      "line": 66,
+      "column": 474,
+      "code": "TS7006",
+      "message": "Parameter 'field' implicitly has an 'any' type.",
+      "continuation": [],
+      "logLine": 638,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts(66,474): error TS7006: Parameter 'field' implicitly has an 'any' type."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+      "line": 104,
+      "column": 41,
+      "code": "TS2345",
+      "message": "Argument of type '(snapshots: Record<Surface, Snapshot>) => Promise<{ commit: false; value: { state: \"replaced\" | \"unavailable\"; index: number; fingerprints: string[]; physicalIncarnations?: undefined; }; } | { ...; }>' is not assignable to parameter of type '(snapshots: Record<Surface, Snapshot>) => Promise<{ commit: boolean; value: { state: \"replaced\" | \"unavailable\"; index: number; fingerprints: string[]; physicalIncarnations?: undefined; }; }>'.",
+      "continuation": [
+        "  Type 'Promise<{ commit: false; value: { state: \"replaced\" | \"unavailable\"; index: number; fingerprints: string[]; physicalIncarnations?: undefined; }; } | { commit: false; value: { state: \"same\"; index: number; fingerprints: string[]; physicalIncarnations: string[]; }; }>' is not assignable to type 'Promise<{ commit: boolean; value: { state: \"replaced\" | \"unavailable\"; index: number; fingerprints: string[]; physicalIncarnations?: undefined; }; }>'.",
+        "    Type '{ commit: false; value: { state: \"replaced\" | \"unavailable\"; index: number; fingerprints: string[]; physicalIncarnations?: undefined; }; } | { commit: false; value: { state: \"same\"; index: number; fingerprints: string[]; physicalIncarnations: string[]; }; }' is not assignable to type '{ commit: boolean; value: { state: \"replaced\" | \"unavailable\"; index: number; fingerprints: string[]; physicalIncarnations?: undefined; }; }'.",
+        "      Type '{ commit: false; value: { state: \"same\"; index: number; fingerprints: string[]; physicalIncarnations: string[]; }; }' is not assignable to type '{ commit: boolean; value: { state: \"replaced\" | \"unavailable\"; index: number; fingerprints: string[]; physicalIncarnations?: undefined; }; }'.",
+        "        The types of 'value.state' are incompatible between these types.",
+        "          Type '\"same\"' is not assignable to type '\"replaced\" | \"unavailable\"'."
+      ],
+      "logLine": 639,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts(104,41): error TS2345: Argument of type '(snapshots: Record<Surface, Snapshot>) => Promise<{ commit: false; value: { state: \"replaced\" | \"unavailable\"; index: number; fingerprints: string[]; physicalIncarnations?: undefined; }; } | { ...; }>' is not assignable to parameter of type '(snapshots: Record<Surface, Snapshot>) => Promise<{ commit: boolean; value: { state: \"replaced\" | \"unavailable\"; index: number; fingerprints: string[]; physicalIncarnations?: undefined; }; }>'.\n  Type 'Promise<{ commit: false; value: { state: \"replaced\" | \"unavailable\"; index: number; fingerprints: string[]; physicalIncarnations?: undefined; }; } | { commit: false; value: { state: \"same\"; index: number; fingerprints: string[]; physicalIncarnations: string[]; }; }>' is not assignable to type 'Promise<{ commit: boolean; value: { state: \"replaced\" | \"unavailable\"; index: number; fingerprints: string[]; physicalIncarnations?: undefined; }; }>'.\n    Type '{ commit: false; value: { state: \"replaced\" | \"unavailable\"; index: number; fingerprints: string[]; physicalIncarnations?: undefined; }; } | { commit: false; value: { state: \"same\"; index: number; fingerprints: string[]; physicalIncarnations: string[]; }; }' is not assignable to type '{ commit: boolean; value: { state: \"replaced\" | \"unavailable\"; index: number; fingerprints: string[]; physicalIncarnations?: undefined; }; }'.\n      Type '{ commit: false; value: { state: \"same\"; index: number; fingerprints: string[]; physicalIncarnations: string[]; }; }' is not assignable to type '{ commit: boolean; value: { state: \"replaced\" | \"unavailable\"; index: number; fingerprints: string[]; physicalIncarnations?: undefined; }; }'.\n        The types of 'value.state' are incompatible between these types.\n          Type '\"same\"' is not assignable to type '\"replaced\" | \"unavailable\"'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+      "line": 118,
+      "column": 16,
+      "code": "TS2339",
+      "message": "Property 'state' does not exist on type '{}'.",
+      "continuation": [],
+      "logLine": 645,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts(118,16): error TS2339: Property 'state' does not exist on type '{}'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+      "line": 118,
+      "column": 52,
+      "code": "TS2339",
+      "message": "Property 'index' does not exist on type '{}'.",
+      "continuation": [],
+      "logLine": 646,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts(118,52): error TS2339: Property 'index' does not exist on type '{}'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+      "line": 119,
+      "column": 16,
+      "code": "TS2339",
+      "message": "Property 'state' does not exist on type '{}'.",
+      "continuation": [],
+      "logLine": 647,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts(119,16): error TS2339: Property 'state' does not exist on type '{}'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+      "line": 120,
+      "column": 77,
+      "code": "TS2339",
+      "message": "Property 'fingerprints' does not exist on type '{}'.",
+      "continuation": [],
+      "logLine": 648,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts(120,77): error TS2339: Property 'fingerprints' does not exist on type '{}'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+      "line": 121,
+      "column": 163,
+      "code": "TS2339",
+      "message": "Property 'fingerprints' does not exist on type '{}'.",
+      "continuation": [],
+      "logLine": 649,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts(121,163): error TS2339: Property 'fingerprints' does not exist on type '{}'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+      "line": 123,
+      "column": 61,
+      "code": "TS2339",
+      "message": "Property 'fingerprints' does not exist on type '{}'.",
+      "continuation": [],
+      "logLine": 650,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts(123,61): error TS2339: Property 'fingerprints' does not exist on type '{}'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+      "line": 128,
+      "column": 126,
+      "code": "TS2339",
+      "message": "Property 'physicalIncarnations' does not exist on type '{}'.",
+      "continuation": [],
+      "logLine": 651,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts(128,126): error TS2339: Property 'physicalIncarnations' does not exist on type '{}'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts",
+      "line": 216,
+      "column": 35,
+      "code": "TS2349",
+      "message": "This expression is not callable.",
+      "continuation": [
+        "  Type '{ issue: (kind: \"procurement-request\" | \"procurement-supplier\", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }' has no call signatures."
+      ],
+      "logLine": 652,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts(216,35): error TS2349: This expression is not callable.\n  Type '{ issue: (kind: \"procurement-request\" | \"procurement-supplier\", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }' has no call signatures."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts",
+      "line": 222,
+      "column": 33,
+      "code": "TS2349",
+      "message": "This expression is not callable.",
+      "continuation": [
+        "  Type '{ issue: (kind: \"procurement-request\" | \"procurement-supplier\", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }' has no call signatures."
+      ],
+      "logLine": 654,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts(222,33): error TS2349: This expression is not callable.\n  Type '{ issue: (kind: \"procurement-request\" | \"procurement-supplier\", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }' has no call signatures."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "line": 46,
+      "column": 5,
+      "code": "TS2322",
+      "message": "Type '(incoming: { caseRef: { id: string; incarnation: string; version: number; }; changeId: string; choiceId: string; }, context: TrustedDomainContext) => Promise<{ reason?: undefined; status: \"ok\"; value: {}; } | { ...; }>' is not assignable to type '(request: { caseRef: { id: string; incarnation: string; version: number; }; changeId: string; choiceId: string; }, binding: TrustedDomainContext) => Promise<PortResult<CommandReceipt>>'.",
+      "continuation": [
+        "  Type 'Promise<{ reason?: undefined; status: \"ok\"; value: {}; } | { value?: undefined; status: {}; reason: string; }>' is not assignable to type 'Promise<PortResult<CommandReceipt>>'.",
+        "    Type '{ reason?: undefined; status: \"ok\"; value: {}; } | { value?: undefined; status: {}; reason: string; }' is not assignable to type 'PortResult<CommandReceipt>'.",
+        "      Type '{ reason?: undefined; status: \"ok\"; value: {}; }' is not assignable to type 'PortResult<CommandReceipt>'.",
+        "        Type '{ reason?: undefined; status: \"ok\"; value: {}; }' is not assignable to type '{ status: \"ok\"; value: CommandReceipt; }'.",
+        "          Types of property 'value' are incompatible.",
+        "            Type '{}' is missing the following properties from type 'CommandReceipt': id, idempotencyKey, commandDigest, targetIncarnation, and 5 more."
+      ],
+      "logLine": 656,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts(46,5): error TS2322: Type '(incoming: { caseRef: { id: string; incarnation: string; version: number; }; changeId: string; choiceId: string; }, context: TrustedDomainContext) => Promise<{ reason?: undefined; status: \"ok\"; value: {}; } | { ...; }>' is not assignable to type '(request: { caseRef: { id: string; incarnation: string; version: number; }; changeId: string; choiceId: string; }, binding: TrustedDomainContext) => Promise<PortResult<CommandReceipt>>'.\n  Type 'Promise<{ reason?: undefined; status: \"ok\"; value: {}; } | { value?: undefined; status: {}; reason: string; }>' is not assignable to type 'Promise<PortResult<CommandReceipt>>'.\n    Type '{ reason?: undefined; status: \"ok\"; value: {}; } | { value?: undefined; status: {}; reason: string; }' is not assignable to type 'PortResult<CommandReceipt>'.\n      Type '{ reason?: undefined; status: \"ok\"; value: {}; }' is not assignable to type 'PortResult<CommandReceipt>'.\n        Type '{ reason?: undefined; status: \"ok\"; value: {}; }' is not assignable to type '{ status: \"ok\"; value: CommandReceipt; }'.\n          Types of property 'value' are incompatible.\n            Type '{}' is missing the following properties from type 'CommandReceipt': id, idempotencyKey, commandDigest, targetIncarnation, and 5 more."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "line": 71,
+      "column": 446,
+      "code": "TS2345",
+      "message": "Argument of type '(state: SfProductState, authority: SfStateAuthority, snapshot: Snapshot) => Promise<{ commit: false; value: null; } | { commit: false; value: { ...; }; } | { ...; } | { ...; } | { ...; }>' is not assignable to parameter of type '(state: SfProductState, authority: SfStateAuthority, snapshot: Snapshot) => Promise<{ commit: boolean; value: { failure: \"unavailable\"; existing?: undefined; } | null; }>'.",
+      "continuation": [
+        "  Type 'Promise<{ commit: false; value: null; } | { commit: false; value: { failure: \"unavailable\"; existing?: undefined; }; } | { commit: false; value: { existing: CommandReceipt; failure?: undefined; }; } | { ...; } | { ...; }>' is not assignable to type 'Promise<{ commit: boolean; value: { failure: \"unavailable\"; existing?: undefined; } | null; }>'.",
+        "    Type '{ commit: false; value: null; } | { commit: false; value: { failure: \"unavailable\"; existing?: undefined; }; } | { commit: false; value: { existing: CommandReceipt; failure?: undefined; }; } | { ...; } | { ...; }' is not assignable to type '{ commit: boolean; value: { failure: \"unavailable\"; existing?: undefined; } | null; }'.",
+        "      Type '{ commit: false; value: { existing: CommandReceipt; failure?: undefined; }; }' is not assignable to type '{ commit: boolean; value: { failure: \"unavailable\"; existing?: undefined; } | null; }'.",
+        "        The types of 'value.failure' are incompatible between these types.",
+        "          Type 'undefined' is not assignable to type '\"unavailable\"'."
+      ],
+      "logLine": 663,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts(71,446): error TS2345: Argument of type '(state: SfProductState, authority: SfStateAuthority, snapshot: Snapshot) => Promise<{ commit: false; value: null; } | { commit: false; value: { ...; }; } | { ...; } | { ...; } | { ...; }>' is not assignable to parameter of type '(state: SfProductState, authority: SfStateAuthority, snapshot: Snapshot) => Promise<{ commit: boolean; value: { failure: \"unavailable\"; existing?: undefined; } | null; }>'.\n  Type 'Promise<{ commit: false; value: null; } | { commit: false; value: { failure: \"unavailable\"; existing?: undefined; }; } | { commit: false; value: { existing: CommandReceipt; failure?: undefined; }; } | { ...; } | { ...; }>' is not assignable to type 'Promise<{ commit: boolean; value: { failure: \"unavailable\"; existing?: undefined; } | null; }>'.\n    Type '{ commit: false; value: null; } | { commit: false; value: { failure: \"unavailable\"; existing?: undefined; }; } | { commit: false; value: { existing: CommandReceipt; failure?: undefined; }; } | { ...; } | { ...; }' is not assignable to type '{ commit: boolean; value: { failure: \"unavailable\"; existing?: undefined; } | null; }'.\n      Type '{ commit: false; value: { existing: CommandReceipt; failure?: undefined; }; }' is not assignable to type '{ commit: boolean; value: { failure: \"unavailable\"; existing?: undefined; } | null; }'.\n        The types of 'value.failure' are incompatible between these types.\n          Type 'undefined' is not assignable to type '\"unavailable\"'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "line": 95,
+      "column": 75,
+      "code": "TS2638",
+      "message": "Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.",
+      "continuation": [],
+      "logLine": 669,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts(95,75): error TS2638: Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "line": 97,
+      "column": 185,
+      "code": "TS2740",
+      "message": "Type '{}' is missing the following properties from type 'CommandReceipt': id, idempotencyKey, commandDigest, targetIncarnation, and 5 more.",
+      "continuation": [],
+      "logLine": 670,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts(97,185): error TS2740: Type '{}' is missing the following properties from type 'CommandReceipt': id, idempotencyKey, commandDigest, targetIncarnation, and 5 more."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "line": 100,
+      "column": 74,
+      "code": "TS2638",
+      "message": "Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.",
+      "continuation": [],
+      "logLine": 671,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts(100,74): error TS2638: Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "line": 101,
+      "column": 81,
+      "code": "TS2638",
+      "message": "Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.",
+      "continuation": [],
+      "logLine": 672,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts(101,81): error TS2638: Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "line": 101,
+      "column": 112,
+      "code": "TS2638",
+      "message": "Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.",
+      "continuation": [],
+      "logLine": 673,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts(101,112): error TS2638: Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "line": 102,
+      "column": 183,
+      "code": "TS2740",
+      "message": "Type '{}' is missing the following properties from type 'CommandReceipt': id, idempotencyKey, commandDigest, targetIncarnation, and 5 more.",
+      "continuation": [],
+      "logLine": 674,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts(102,183): error TS2740: Type '{}' is missing the following properties from type 'CommandReceipt': id, idempotencyKey, commandDigest, targetIncarnation, and 5 more."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/proposals.ts",
+      "line": 92,
+      "column": 26,
+      "code": "TS2367",
+      "message": "This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "continuation": [],
+      "logLine": 675,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/decisions/proposals.ts(92,26): error TS2367: This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/documents/capabilities.ts",
+      "line": 71,
+      "column": 172,
+      "code": "TS2339",
+      "message": "Property 'reason' does not exist on type 'SfStateResult<SfDocumentAssetCatalogEntry | undefined>'.",
+      "continuation": [
+        "  Property 'reason' does not exist on type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: SfDocumentAssetCatalogEntry | undefined; }'."
+      ],
+      "logLine": 676,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/documents/capabilities.ts(71,172): error TS2339: Property 'reason' does not exist on type 'SfStateResult<SfDocumentAssetCatalogEntry | undefined>'.\n  Property 'reason' does not exist on type '{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: SfDocumentAssetCatalogEntry | undefined; }'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "line": 170,
+      "column": 71,
+      "code": "TS2353",
+      "message": "Object literal may only specify known properties, and 'state' does not exist in type '{ host: DomainPortHost; cases: DecisionCasePort; }'.",
+      "continuation": [],
+      "logLine": 678,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts(170,71): error TS2353: Object literal may only specify known properties, and 'state' does not exist in type '{ host: DomainPortHost; cases: DecisionCasePort; }'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "line": 170,
+      "column": 153,
+      "code": "TS7006",
+      "message": "Parameter 'refs' implicitly has an 'any' type.",
+      "continuation": [],
+      "logLine": 679,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts(170,153): error TS7006: Parameter 'refs' implicitly has an 'any' type."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "line": 170,
+      "column": 159,
+      "code": "TS7006",
+      "message": "Parameter 'call' implicitly has an 'any' type.",
+      "continuation": [],
+      "logLine": 680,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts(170,159): error TS7006: Parameter 'call' implicitly has an 'any' type."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "line": 212,
+      "column": 5,
+      "code": "TS2322",
+      "message": "Type '(request: { caseRefs: readonly { id: string; incarnation: string; }[]; query: string; }, call: TrustedDomainContext) => Promise<{ envelope: BusinessMemoryEnvelope; entry: MemoryEntry; resolutions: BusinessEvidenceResolution[]; case: AuthorizedCaseProjection; recordDigest: string; }[]>' is not assignable to type '(request: { caseRefs: readonly { id: string; incarnation: string; }[]; query: string; }, trustedCall: TrustedDomainContext) => Promise<readonly { envelope: BusinessMemoryEnvelope; entry: { ...; } | { ...; }; }[]>'.",
+      "continuation": [
+        "  Type 'Promise<{ envelope: BusinessMemoryEnvelope; entry: MemoryEntry; resolutions: BusinessEvidenceResolution[]; case: AuthorizedCaseProjection; recordDigest: string; }[]>' is not assignable to type 'Promise<readonly { envelope: BusinessMemoryEnvelope; entry: { taskId: string; attempted: readonly string[]; failedWith: readonly string[]; stoppedAt: string; lesson: string; ref: string; } | { rule: string; scope: string; frecency: number; grounding?: string | undefined; }; }[]>'.",
+        "    Type '{ envelope: BusinessMemoryEnvelope; entry: MemoryEntry; resolutions: BusinessEvidenceResolution[]; case: AuthorizedCaseProjection; recordDigest: string; }[]' is not assignable to type 'readonly { envelope: BusinessMemoryEnvelope; entry: { taskId: string; attempted: readonly string[]; failedWith: readonly string[]; stoppedAt: string; lesson: string; ref: string; } | { rule: string; scope: string; frecency: number; grounding?: string | undefined; }; }[]'.",
+        "      Type '{ envelope: BusinessMemoryEnvelope; entry: MemoryEntry; resolutions: BusinessEvidenceResolution[]; case: AuthorizedCaseProjection; recordDigest: string; }' is not assignable to type '{ envelope: BusinessMemoryEnvelope; entry: { taskId: string; attempted: readonly string[]; failedWith: readonly string[]; stoppedAt: string; lesson: string; ref: string; } | { rule: string; scope: string; frecency: number; grounding?: string | undefined; }; }'.",
+        "        Types of property 'entry' are incompatible.",
+        "          Type 'MemoryEntry' is not assignable to type '{ taskId: string; attempted: readonly string[]; failedWith: readonly string[]; stoppedAt: string; lesson: string; ref: string; } | { rule: string; scope: string; frecency: number; grounding?: string | undefined; }'.",
+        "            Type 'LogbookEntry' is not assignable to type '{ taskId: string; attempted: readonly string[]; failedWith: readonly string[]; stoppedAt: string; lesson: string; ref: string; } | { rule: string; scope: string; frecency: number; grounding?: string | undefined; }'."
+      ],
+      "logLine": 681,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts(212,5): error TS2322: Type '(request: { caseRefs: readonly { id: string; incarnation: string; }[]; query: string; }, call: TrustedDomainContext) => Promise<{ envelope: BusinessMemoryEnvelope; entry: MemoryEntry; resolutions: BusinessEvidenceResolution[]; case: AuthorizedCaseProjection; recordDigest: string; }[]>' is not assignable to type '(request: { caseRefs: readonly { id: string; incarnation: string; }[]; query: string; }, trustedCall: TrustedDomainContext) => Promise<readonly { envelope: BusinessMemoryEnvelope; entry: { ...; } | { ...; }; }[]>'.\n  Type 'Promise<{ envelope: BusinessMemoryEnvelope; entry: MemoryEntry; resolutions: BusinessEvidenceResolution[]; case: AuthorizedCaseProjection; recordDigest: string; }[]>' is not assignable to type 'Promise<readonly { envelope: BusinessMemoryEnvelope; entry: { taskId: string; attempted: readonly string[]; failedWith: readonly string[]; stoppedAt: string; lesson: string; ref: string; } | { rule: string; scope: string; frecency: number; grounding?: string | undefined; }; }[]>'.\n    Type '{ envelope: BusinessMemoryEnvelope; entry: MemoryEntry; resolutions: BusinessEvidenceResolution[]; case: AuthorizedCaseProjection; recordDigest: string; }[]' is not assignable to type 'readonly { envelope: BusinessMemoryEnvelope; entry: { taskId: string; attempted: readonly string[]; failedWith: readonly string[]; stoppedAt: string; lesson: string; ref: string; } | { rule: string; scope: string; frecency: number; grounding?: string | undefined; }; }[]'.\n      Type '{ envelope: BusinessMemoryEnvelope; entry: MemoryEntry; resolutions: BusinessEvidenceResolution[]; case: AuthorizedCaseProjection; recordDigest: string; }' is not assignable to type '{ envelope: BusinessMemoryEnvelope; entry: { taskId: string; attempted: readonly string[]; failedWith: readonly string[]; stoppedAt: string; lesson: string; ref: string; } | { rule: string; scope: string; frecency: number; grounding?: string | undefined; }; }'.\n        Types of property 'entry' are incompatible.\n          Type 'MemoryEntry' is not assignable to type '{ taskId: string; attempted: readonly string[]; failedWith: readonly string[]; stoppedAt: string; lesson: string; ref: string; } | { rule: string; scope: string; frecency: number; grounding?: string | undefined; }'.\n            Type 'LogbookEntry' is not assignable to type '{ taskId: string; attempted: readonly string[]; failedWith: readonly string[]; stoppedAt: string; lesson: string; ref: string; } | { rule: string; scope: string; frecency: number; grounding?: string | undefined; }'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+      "line": 38,
+      "column": 75,
+      "code": "TS2345",
+      "message": "Argument of type '(snapshot: Snapshot) => Promise<{ commit: false; value: undefined; } | { commit: false; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { ...; }; impactDigest?: undefined; }; } | { ...; }>' is not assignable to parameter of type '(snapshot: Snapshot) => Promise<{ commit: boolean; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { baseDigest?: undefined; ... 7 more ...; reason: string; }; impactDigest?: undefined; } | undefined; }>'.",
+      "continuation": [
+        "  Type 'Promise<{ commit: false; value: undefined; } | { commit: false; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { baseDigest?: undefined; ... 7 more ...; reason: string; }; impactDigest?: undefined; }; } | { ...; }>' is not assignable to type 'Promise<{ commit: boolean; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { baseDigest?: undefined; commandDigest?: undefined; ... 6 more ...; reason: string; }; impactDigest?: undefined; } | undefined; }>'.",
+        "    Type '{ commit: false; value: undefined; } | { commit: false; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { baseDigest?: undefined; ... 7 more ...; reason: string; }; impactDigest?: undefined; }; } | { ...; }' is not assignable to type '{ commit: boolean; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { baseDigest?: undefined; commandDigest?: undefined; ... 6 more ...; reason: string; }; impactDigest?: undefined; } | undefined; }'.",
+        "      Type '{ commit: false; value: { format: \"backup\" | DashboardImportFormat; result: { reason?: undefined; status: \"preview\"; baseDigest: string; before: Record<string, unknown>; ... 8 more ...; requiresHumanConfirmation: true; } | { ...; }; impactDigest: string; before: any; after: any; }; }' is not assignable to type '{ commit: boolean; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { baseDigest?: undefined; commandDigest?: undefined; ... 6 more ...; reason: string; }; impactDigest?: undefined; } | undefined; }'.",
+        "        The types of 'value.result' are incompatible between these types.",
+        "          Type '{ reason?: undefined; status: \"preview\"; baseDigest: string; before: Record<string, unknown>; after: Record<string, unknown>; changedFields: string[]; changes: DashboardPreviewChange[]; ... 5 more ...; requiresHumanConfirmation: true; } | { ...; }' is not assignable to type '{ baseDigest?: undefined; commandDigest?: undefined; before?: undefined; after?: undefined; changes?: undefined; warnings?: undefined; summary?: undefined; status: \"conflict\" | \"denied\" | \"invalid\"; reason: string; }'.",
+        "            Type '{ reason?: undefined; status: \"preview\"; baseDigest: string; before: Record<string, unknown>; after: Record<string, unknown>; changedFields: string[]; changes: DashboardPreviewChange[]; ... 5 more ...; requiresHumanConfirmation: true; }' is not assignable to type '{ baseDigest?: undefined; commandDigest?: undefined; before?: undefined; after?: undefined; changes?: undefined; warnings?: undefined; summary?: undefined; status: \"conflict\" | \"denied\" | \"invalid\"; reason: string; }'.",
+        "              Types of property 'baseDigest' are incompatible.",
+        "                Type 'string' is not assignable to type 'undefined'."
+      ],
+      "logLine": 688,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts(38,75): error TS2345: Argument of type '(snapshot: Snapshot) => Promise<{ commit: false; value: undefined; } | { commit: false; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { ...; }; impactDigest?: undefined; }; } | { ...; }>' is not assignable to parameter of type '(snapshot: Snapshot) => Promise<{ commit: boolean; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { baseDigest?: undefined; ... 7 more ...; reason: string; }; impactDigest?: undefined; } | undefined; }>'.\n  Type 'Promise<{ commit: false; value: undefined; } | { commit: false; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { baseDigest?: undefined; ... 7 more ...; reason: string; }; impactDigest?: undefined; }; } | { ...; }>' is not assignable to type 'Promise<{ commit: boolean; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { baseDigest?: undefined; commandDigest?: undefined; ... 6 more ...; reason: string; }; impactDigest?: undefined; } | undefined; }>'.\n    Type '{ commit: false; value: undefined; } | { commit: false; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { baseDigest?: undefined; ... 7 more ...; reason: string; }; impactDigest?: undefined; }; } | { ...; }' is not assignable to type '{ commit: boolean; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { baseDigest?: undefined; commandDigest?: undefined; ... 6 more ...; reason: string; }; impactDigest?: undefined; } | undefined; }'.\n      Type '{ commit: false; value: { format: \"backup\" | DashboardImportFormat; result: { reason?: undefined; status: \"preview\"; baseDigest: string; before: Record<string, unknown>; ... 8 more ...; requiresHumanConfirmation: true; } | { ...; }; impactDigest: string; before: any; after: any; }; }' is not assignable to type '{ commit: boolean; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { baseDigest?: undefined; commandDigest?: undefined; ... 6 more ...; reason: string; }; impactDigest?: undefined; } | undefined; }'.\n        The types of 'value.result' are incompatible between these types.\n          Type '{ reason?: undefined; status: \"preview\"; baseDigest: string; before: Record<string, unknown>; after: Record<string, unknown>; changedFields: string[]; changes: DashboardPreviewChange[]; ... 5 more ...; requiresHumanConfirmation: true; } | { ...; }' is not assignable to type '{ baseDigest?: undefined; commandDigest?: undefined; before?: undefined; after?: undefined; changes?: undefined; warnings?: undefined; summary?: undefined; status: \"conflict\" | \"denied\" | \"invalid\"; reason: string; }'.\n            Type '{ reason?: undefined; status: \"preview\"; baseDigest: string; before: Record<string, unknown>; after: Record<string, unknown>; changedFields: string[]; changes: DashboardPreviewChange[]; ... 5 more ...; requiresHumanConfirmation: true; }' is not assignable to type '{ baseDigest?: undefined; commandDigest?: undefined; before?: undefined; after?: undefined; changes?: undefined; warnings?: undefined; summary?: undefined; status: \"conflict\" | \"denied\" | \"invalid\"; reason: string; }'.\n              Types of property 'baseDigest' are incompatible.\n                Type 'string' is not assignable to type 'undefined'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+      "line": 60,
+      "column": 17,
+      "code": "TS2339",
+      "message": "Property 'result' does not exist on type '{}'.",
+      "continuation": [],
+      "logLine": 697,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts(60,17): error TS2339: Property 'result' does not exist on type '{}'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+      "line": 60,
+      "column": 71,
+      "code": "TS2339",
+      "message": "Property 'result' does not exist on type '{}'.",
+      "continuation": [],
+      "logLine": 698,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts(60,71): error TS2339: Property 'result' does not exist on type '{}'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+      "line": 60,
+      "column": 119,
+      "code": "TS2339",
+      "message": "Property 'result' does not exist on type '{}'.",
+      "continuation": [],
+      "logLine": 699,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts(60,119): error TS2339: Property 'result' does not exist on type '{}'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+      "line": 62,
+      "column": 29,
+      "code": "TS2638",
+      "message": "Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.",
+      "continuation": [],
+      "logLine": 700,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts(62,29): error TS2638: Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+      "line": 74,
+      "column": 251,
+      "code": "TS2339",
+      "message": "Property 'result' does not exist on type 'Record<\"impactDigest\", unknown> & Record<\"before\", unknown> & Record<\"after\", unknown>'.",
+      "continuation": [],
+      "logLine": 701,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts(74,251): error TS2339: Property 'result' does not exist on type 'Record<\"impactDigest\", unknown> & Record<\"before\", unknown> & Record<\"after\", unknown>'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+      "line": 74,
+      "column": 306,
+      "code": "TS2339",
+      "message": "Property 'result' does not exist on type 'Record<\"impactDigest\", unknown> & Record<\"before\", unknown> & Record<\"after\", unknown>'.",
+      "continuation": [],
+      "logLine": 702,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts(74,306): error TS2339: Property 'result' does not exist on type 'Record<\"impactDigest\", unknown> & Record<\"before\", unknown> & Record<\"after\", unknown>'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+      "line": 74,
+      "column": 353,
+      "code": "TS2339",
+      "message": "Property 'result' does not exist on type 'Record<\"impactDigest\", unknown> & Record<\"before\", unknown> & Record<\"after\", unknown>'.",
+      "continuation": [],
+      "logLine": 703,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts(74,353): error TS2339: Property 'result' does not exist on type 'Record<\"impactDigest\", unknown> & Record<\"before\", unknown> & Record<\"after\", unknown>'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+      "line": 74,
+      "column": 457,
+      "code": "TS2339",
+      "message": "Property 'result' does not exist on type 'Record<\"impactDigest\", unknown> & Record<\"before\", unknown> & Record<\"after\", unknown>'.",
+      "continuation": [],
+      "logLine": 704,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts(74,457): error TS2339: Property 'result' does not exist on type 'Record<\"impactDigest\", unknown> & Record<\"before\", unknown> & Record<\"after\", unknown>'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+      "line": 75,
+      "column": 297,
+      "code": "TS2322",
+      "message": "Type 'unknown' is not assignable to type 'Record<string, unknown>'.",
+      "continuation": [],
+      "logLine": 705,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts(75,297): error TS2322: Type 'unknown' is not assignable to type 'Record<string, unknown>'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+      "line": 75,
+      "column": 445,
+      "code": "TS2322",
+      "message": "Type 'unknown' is not assignable to type 'Record<string, unknown>'.",
+      "continuation": [],
+      "logLine": 706,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts(75,445): error TS2322: Type 'unknown' is not assignable to type 'Record<string, unknown>'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+      "line": 75,
+      "column": 469,
+      "code": "TS2322",
+      "message": "Type 'unknown' is not assignable to type 'Record<string, unknown>'.",
+      "continuation": [],
+      "logLine": 707,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts(75,469): error TS2322: Type 'unknown' is not assignable to type 'Record<string, unknown>'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+      "line": 75,
+      "column": 545,
+      "code": "TS2339",
+      "message": "Property 'format' does not exist on type 'Record<\"impactDigest\", unknown> & Record<\"before\", unknown> & Record<\"after\", unknown>'.",
+      "continuation": [],
+      "logLine": 708,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts(75,545): error TS2339: Property 'format' does not exist on type 'Record<\"impactDigest\", unknown> & Record<\"before\", unknown> & Record<\"after\", unknown>'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+      "line": 75,
+      "column": 573,
+      "code": "TS2339",
+      "message": "Property 'result' does not exist on type 'Record<\"impactDigest\", unknown> & Record<\"before\", unknown> & Record<\"after\", unknown>'.",
+      "continuation": [],
+      "logLine": 709,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts(75,573): error TS2339: Property 'result' does not exist on type 'Record<\"impactDigest\", unknown> & Record<\"before\", unknown> & Record<\"after\", unknown>'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+      "line": 75,
+      "column": 592,
+      "code": "TS2322",
+      "message": "Type '{}' is not assignable to type 'string'.",
+      "continuation": [],
+      "logLine": 710,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts(75,592): error TS2322: Type '{}' is not assignable to type 'string'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+      "line": 75,
+      "column": 674,
+      "code": "TS2339",
+      "message": "Property 'result' does not exist on type 'Record<\"impactDigest\", unknown> & Record<\"before\", unknown> & Record<\"after\", unknown>'.",
+      "continuation": [],
+      "logLine": 711,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts(75,674): error TS2339: Property 'result' does not exist on type 'Record<\"impactDigest\", unknown> & Record<\"before\", unknown> & Record<\"after\", unknown>'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+      "line": 75,
+      "column": 848,
+      "code": "TS2339",
+      "message": "Property 'result' does not exist on type 'Record<\"impactDigest\", unknown> & Record<\"before\", unknown> & Record<\"after\", unknown>'.",
+      "continuation": [],
+      "logLine": 712,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts(75,848): error TS2339: Property 'result' does not exist on type 'Record<\"impactDigest\", unknown> & Record<\"before\", unknown> & Record<\"after\", unknown>'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+      "line": 30,
+      "column": 114,
+      "code": "TS2339",
+      "message": "Property 'runRef' does not exist on type 'ContributionEnvelope'.",
+      "continuation": [
+        "  Property 'runRef' does not exist on type 'ContributionBase & { kind: \"AnalysisPlan\"; state: \"ready\"; payload: AnalysisPlan; }'."
+      ],
+      "logLine": 713,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts(30,114): error TS2339: Property 'runRef' does not exist on type 'ContributionEnvelope'.\n  Property 'runRef' does not exist on type 'ContributionBase & { kind: \"AnalysisPlan\"; state: \"ready\"; payload: AnalysisPlan; }'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+      "line": 30,
+      "column": 171,
+      "code": "TS2339",
+      "message": "Property 'version' does not exist on type 'ContributionEnvelope'.",
+      "continuation": [
+        "  Property 'version' does not exist on type 'ContributionBase & { kind: \"AnalysisPlan\"; state: \"ready\"; payload: AnalysisPlan; }'."
+      ],
+      "logLine": 715,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts(30,171): error TS2339: Property 'version' does not exist on type 'ContributionEnvelope'.\n  Property 'version' does not exist on type 'ContributionBase & { kind: \"AnalysisPlan\"; state: \"ready\"; payload: AnalysisPlan; }'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+      "line": 30,
+      "column": 197,
+      "code": "TS2339",
+      "message": "Property 'outputRef' does not exist on type 'ContributionEnvelope'.",
+      "continuation": [
+        "  Property 'outputRef' does not exist on type 'ContributionBase & { kind: \"AnalysisPlan\"; state: \"ready\"; payload: AnalysisPlan; }'."
+      ],
+      "logLine": 717,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts(30,197): error TS2339: Property 'outputRef' does not exist on type 'ContributionEnvelope'.\n  Property 'outputRef' does not exist on type 'ContributionBase & { kind: \"AnalysisPlan\"; state: \"ready\"; payload: AnalysisPlan; }'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+      "line": 30,
+      "column": 235,
+      "code": "TS2339",
+      "message": "Property 'outputRef' does not exist on type 'ContributionEnvelope'.",
+      "continuation": [
+        "  Property 'outputRef' does not exist on type 'ContributionBase & { kind: \"AnalysisPlan\"; state: \"ready\"; payload: AnalysisPlan; }'."
+      ],
+      "logLine": 719,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts(30,235): error TS2339: Property 'outputRef' does not exist on type 'ContributionEnvelope'.\n  Property 'outputRef' does not exist on type 'ContributionBase & { kind: \"AnalysisPlan\"; state: \"ready\"; payload: AnalysisPlan; }'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+      "line": 148,
+      "column": 82,
+      "code": "TS7006",
+      "message": "Parameter 'run' implicitly has an 'any' type.",
+      "continuation": [],
+      "logLine": 721,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/interface/http.ts(148,82): error TS7006: Parameter 'run' implicitly has an 'any' type."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+      "line": 148,
+      "column": 87,
+      "code": "TS7006",
+      "message": "Parameter 'index' implicitly has an 'any' type.",
+      "continuation": [],
+      "logLine": 722,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/interface/http.ts(148,87): error TS7006: Parameter 'index' implicitly has an 'any' type."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/import-http.ts",
+      "line": 54,
+      "column": 249,
+      "code": "TS2345",
+      "message": "Argument of type '{ surface: string; selectionRef: string; options: { newVersion: boolean; removeMissing: boolean; preview: { sheet?: string | undefined; replace?: boolean | undefined; headerRow?: number | undefined; }; }; }' is not assignable to parameter of type '{ surface: \"dashboard\" | \"planner\"; selectionRef: string; options: { newVersion: boolean; removeMissing: boolean; preview: { sheet?: string | undefined; replace?: boolean | undefined; headerRow?: number | undefined; }; }; }'.",
+      "continuation": [
+        "  Types of property 'surface' are incompatible.",
+        "    Type 'string' is not assignable to type '\"dashboard\" | \"planner\"'."
+      ],
+      "logLine": 723,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/interface/import-http.ts(54,249): error TS2345: Argument of type '{ surface: string; selectionRef: string; options: { newVersion: boolean; removeMissing: boolean; preview: { sheet?: string | undefined; replace?: boolean | undefined; headerRow?: number | undefined; }; }; }' is not assignable to parameter of type '{ surface: \"dashboard\" | \"planner\"; selectionRef: string; options: { newVersion: boolean; removeMissing: boolean; preview: { sheet?: string | undefined; replace?: boolean | undefined; headerRow?: number | undefined; }; }; }'.\n  Types of property 'surface' are incompatible.\n    Type 'string' is not assignable to type '\"dashboard\" | \"planner\"'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/headcount.ts",
+      "line": 27,
+      "column": 73,
+      "code": "TS2339",
+      "message": "Property 'domain' does not exist on type '{ state: HeadcountState; }'.",
+      "continuation": [],
+      "logLine": 726,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/planner/headcount.ts(27,73): error TS2339: Property 'domain' does not exist on type '{ state: HeadcountState; }'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/headcount.ts",
+      "line": 39,
+      "column": 66,
+      "code": "TS2339",
+      "message": "Property 'domain' does not exist on type '{ state: HeadcountState; }'.",
+      "continuation": [],
+      "logLine": 727,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/planner/headcount.ts(39,66): error TS2339: Property 'domain' does not exist on type '{ state: HeadcountState; }'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/monthly-host.ts",
+      "line": 58,
+      "column": 598,
+      "code": "TS7006",
+      "message": "Parameter 'cell' implicitly has an 'any' type.",
+      "continuation": [],
+      "logLine": 728,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/planner/monthly-host.ts(58,598): error TS7006: Parameter 'cell' implicitly has an 'any' type."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/persistence.ts",
+      "line": 33,
+      "column": 19,
+      "code": "TS2367",
+      "message": "This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "continuation": [],
+      "logLine": 729,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/planner/persistence.ts(33,19): error TS2367: This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/persistence.ts",
+      "line": 38,
+      "column": 22,
+      "code": "TS2367",
+      "message": "This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "continuation": [],
+      "logLine": 730,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/planner/persistence.ts(38,22): error TS2367: This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/prepared.ts",
+      "line": 54,
+      "column": 5,
+      "code": "TS2322",
+      "message": "Type '(snapshot: Snapshot, actor: Actor, environment: Environment) => { commit: false; value: { status: string; reason: string; }; } | { commit: true; value: { reason?: undefined; status: string; }; }' is not assignable to type '(snapshot: Snapshot, actor: Actor, environment: Environment) => { commit: boolean; value: JsonValue; }'.",
+      "continuation": [
+        "  Type '{ commit: false; value: { status: string; reason: string; }; } | { commit: true; value: { reason?: undefined; status: string; }; }' is not assignable to type '{ commit: boolean; value: JsonValue; }'.",
+        "    Type '{ commit: true; value: { reason?: undefined; status: string; }; }' is not assignable to type '{ commit: boolean; value: JsonValue; }'.",
+        "      Types of property 'value' are incompatible.",
+        "        Type '{ reason?: undefined; status: string; }' is not assignable to type 'JsonValue'.",
+        "          Type '{ reason?: undefined; status: string; }' is not assignable to type '{ readonly [key: string]: JsonValue; }'.",
+        "            Property 'reason' is incompatible with index signature.",
+        "              Type 'undefined' is not assignable to type 'JsonValue'."
+      ],
+      "logLine": 731,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/planner/prepared.ts(54,5): error TS2322: Type '(snapshot: Snapshot, actor: Actor, environment: Environment) => { commit: false; value: { status: string; reason: string; }; } | { commit: true; value: { reason?: undefined; status: string; }; }' is not assignable to type '(snapshot: Snapshot, actor: Actor, environment: Environment) => { commit: boolean; value: JsonValue; }'.\n  Type '{ commit: false; value: { status: string; reason: string; }; } | { commit: true; value: { reason?: undefined; status: string; }; }' is not assignable to type '{ commit: boolean; value: JsonValue; }'.\n    Type '{ commit: true; value: { reason?: undefined; status: string; }; }' is not assignable to type '{ commit: boolean; value: JsonValue; }'.\n      Types of property 'value' are incompatible.\n        Type '{ reason?: undefined; status: string; }' is not assignable to type 'JsonValue'.\n          Type '{ reason?: undefined; status: string; }' is not assignable to type '{ readonly [key: string]: JsonValue; }'.\n            Property 'reason' is incompatible with index signature.\n              Type 'undefined' is not assignable to type 'JsonValue'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+      "line": 40,
+      "column": 18,
+      "code": "TS2367",
+      "message": "This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "continuation": [],
+      "logLine": 739,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts(40,18): error TS2367: This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/catalog.ts",
+      "line": 13,
+      "column": 20,
+      "code": "TS2367",
+      "message": "This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "continuation": [],
+      "logLine": 740,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/portfolio/catalog.ts(13,20): error TS2367: This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/handoff.ts",
+      "line": 41,
+      "column": 18,
+      "code": "TS2367",
+      "message": "This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "continuation": [],
+      "logLine": 741,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/portfolio/handoff.ts(41,18): error TS2367: This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/handoff.ts",
+      "line": 78,
+      "column": 18,
+      "code": "TS2367",
+      "message": "This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "continuation": [],
+      "logLine": 742,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/portfolio/handoff.ts(78,18): error TS2367: This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+      "line": 80,
+      "column": 106,
+      "code": "TS2339",
+      "message": "Property 'costCoverage' does not exist on type 'PortfolioResult | SensitivityResult | ScenarioComparison | ScenarioResult'.",
+      "continuation": [
+        "  Property 'costCoverage' does not exist on type 'PortfolioResult'."
+      ],
+      "logLine": 743,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts(80,106): error TS2339: Property 'costCoverage' does not exist on type 'PortfolioResult | SensitivityResult | ScenarioComparison | ScenarioResult'.\n  Property 'costCoverage' does not exist on type 'PortfolioResult'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+      "line": 80,
+      "column": 171,
+      "code": "TS2339",
+      "message": "Property 'costCoverage' does not exist on type 'PortfolioResult | SensitivityResult | ScenarioComparison | ScenarioResult'.",
+      "continuation": [
+        "  Property 'costCoverage' does not exist on type 'PortfolioResult'."
+      ],
+      "logLine": 745,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts(80,171): error TS2339: Property 'costCoverage' does not exist on type 'PortfolioResult | SensitivityResult | ScenarioComparison | ScenarioResult'.\n  Property 'costCoverage' does not exist on type 'PortfolioResult'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+      "line": 36,
+      "column": 20,
+      "code": "TS2367",
+      "message": "This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "continuation": [],
+      "logLine": 747,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/portfolio/port.ts(36,20): error TS2367: This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-store.ts",
+      "line": 25,
+      "column": 19,
+      "code": "TS2367",
+      "message": "This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "continuation": [],
+      "logLine": 748,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-store.ts(25,19): error TS2367: This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+      "line": 119,
+      "column": 106,
+      "code": "TS2339",
+      "message": "Property 'costCoverage' does not exist on type 'PortfolioResult | SensitivityResult | ScenarioComparison | ScenarioResult'.",
+      "continuation": [
+        "  Property 'costCoverage' does not exist on type 'PortfolioResult'."
+      ],
+      "logLine": 749,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts(119,106): error TS2339: Property 'costCoverage' does not exist on type 'PortfolioResult | SensitivityResult | ScenarioComparison | ScenarioResult'.\n  Property 'costCoverage' does not exist on type 'PortfolioResult'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+      "line": 119,
+      "column": 171,
+      "code": "TS2339",
+      "message": "Property 'costCoverage' does not exist on type 'PortfolioResult | SensitivityResult | ScenarioComparison | ScenarioResult'.",
+      "continuation": [
+        "  Property 'costCoverage' does not exist on type 'PortfolioResult'."
+      ],
+      "logLine": 751,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts(119,171): error TS2339: Property 'costCoverage' does not exist on type 'PortfolioResult | SensitivityResult | ScenarioComparison | ScenarioResult'.\n  Property 'costCoverage' does not exist on type 'PortfolioResult'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/prepared.ts",
+      "line": 69,
+      "column": 5,
+      "code": "TS2322",
+      "message": "Type '(snapshot: Snapshot, actor: Actor, environment: Environment) => { commit: false; value: { status: string; reason: string; }; } | { commit: true; value: { reason?: undefined; status: string; }; }' is not assignable to type '(snapshot: Snapshot, actor: Actor, environment: Environment) => { commit: boolean; value: JsonValue; }'.",
+      "continuation": [
+        "  Type '{ commit: false; value: { status: string; reason: string; }; } | { commit: true; value: { reason?: undefined; status: string; }; }' is not assignable to type '{ commit: boolean; value: JsonValue; }'.",
+        "    Type '{ commit: true; value: { reason?: undefined; status: string; }; }' is not assignable to type '{ commit: boolean; value: JsonValue; }'.",
+        "      Types of property 'value' are incompatible.",
+        "        Type '{ reason?: undefined; status: string; }' is not assignable to type 'JsonValue'.",
+        "          Type '{ reason?: undefined; status: string; }' is not assignable to type '{ readonly [key: string]: JsonValue; }'.",
+        "            Property 'reason' is incompatible with index signature.",
+        "              Type 'undefined' is not assignable to type 'JsonValue'."
+      ],
+      "logLine": 753,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/product/procurement/prepared.ts(69,5): error TS2322: Type '(snapshot: Snapshot, actor: Actor, environment: Environment) => { commit: false; value: { status: string; reason: string; }; } | { commit: true; value: { reason?: undefined; status: string; }; }' is not assignable to type '(snapshot: Snapshot, actor: Actor, environment: Environment) => { commit: boolean; value: JsonValue; }'.\n  Type '{ commit: false; value: { status: string; reason: string; }; } | { commit: true; value: { reason?: undefined; status: string; }; }' is not assignable to type '{ commit: boolean; value: JsonValue; }'.\n    Type '{ commit: true; value: { reason?: undefined; status: string; }; }' is not assignable to type '{ commit: boolean; value: JsonValue; }'.\n      Types of property 'value' are incompatible.\n        Type '{ reason?: undefined; status: string; }' is not assignable to type 'JsonValue'.\n          Type '{ reason?: undefined; status: string; }' is not assignable to type '{ readonly [key: string]: JsonValue; }'.\n            Property 'reason' is incompatible with index signature.\n              Type 'undefined' is not assignable to type 'JsonValue'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/personal-views.test.ts",
+      "line": 35,
+      "column": 137,
+      "code": "TS2322",
+      "message": "Type '(context: TrustedUiContext) => string | undefined' is not assignable to type '(context: TrustedDomainContext) => string | undefined'.",
+      "continuation": [
+        "  Types of parameters 'context' and 'context' are incompatible.",
+        "    Type 'TrustedDomainContext' is not assignable to type 'TrustedUiContext'.",
+        "      Type 'TrustedCallContext' is not assignable to type 'TrustedUiContext'.",
+        "        Types of property 'kind' are incompatible.",
+        "          Type '\"native\"' is not assignable to type '\"ui\"'."
+      ],
+      "logLine": 761,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/test/product/wp01/personal-views.test.ts(35,137): error TS2322: Type '(context: TrustedUiContext) => string | undefined' is not assignable to type '(context: TrustedDomainContext) => string | undefined'.\n  Types of parameters 'context' and 'context' are incompatible.\n    Type 'TrustedDomainContext' is not assignable to type 'TrustedUiContext'.\n      Type 'TrustedCallContext' is not assignable to type 'TrustedUiContext'.\n        Types of property 'kind' are incompatible.\n          Type '\"native\"' is not assignable to type '\"ui\"'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+      "line": 6,
+      "column": 38,
+      "code": "TS2307",
+      "message": "Cannot find module '@orchestra/server/routes' or its corresponding type declarations.",
+      "continuation": [],
+      "logLine": 767,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts(6,38): error TS2307: Cannot find module '@orchestra/server/routes' or its corresponding type declarations."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/parity-matrix.test.ts",
+      "line": 106,
+      "column": 68,
+      "code": "TS2339",
+      "message": "Property 'recordId' does not exist on type '{ surface: Surface; recordType: string; recordId: string; incarnation: string; version: number; fields: readonly string[]; period?: Period | undefined; projectionDigest: string; } | ... 5 more ... | { ...; }'.",
+      "continuation": [
+        "  Property 'recordId' does not exist on type '{ documentId: string; incarnation: string; revision: number; blobDigest: Digest; segment: { start: number; end: number; unit: \"utf16\"; textDigest: Digest; }; ragSourceId?: string | undefined; ragRevisionId?: string | undefined; ragSourceHash?: { ...; } | undefined; fieldCandidateId?: string | undefined; confirmation...'."
+      ],
+      "logLine": 768,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/test/product/wp03/parity-matrix.test.ts(106,68): error TS2339: Property 'recordId' does not exist on type '{ surface: Surface; recordType: string; recordId: string; incarnation: string; version: number; fields: readonly string[]; period?: Period | undefined; projectionDigest: string; } | ... 5 more ... | { ...; }'.\n  Property 'recordId' does not exist on type '{ documentId: string; incarnation: string; revision: number; blobDigest: Digest; segment: { start: number; end: number; unit: \"utf16\"; textDigest: Digest; }; ragSourceId?: string | undefined; ragRevisionId?: string | undefined; ragSourceHash?: { ...; } | undefined; fieldCandidateId?: string | undefined; confirmation...'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/prepared-production.test.ts",
+      "line": 208,
+      "column": 41,
+      "code": "TS2554",
+      "message": "Expected 0 arguments, but got 1.",
+      "continuation": [],
+      "logLine": 770,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/test/product/wp04/prepared-production.test.ts(208,41): error TS2554: Expected 0 arguments, but got 1."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/prepared-production.test.ts",
+      "line": 220,
+      "column": 107,
+      "code": "TS2554",
+      "message": "Expected 0 arguments, but got 1.",
+      "continuation": [],
+      "logLine": 771,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/test/product/wp04/prepared-production.test.ts(220,107): error TS2554: Expected 0 arguments, but got 1."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts",
+      "line": 25,
+      "column": 40,
+      "code": "TS2307",
+      "message": "Cannot find module '../../../../product/routines/dossier.ts' or its corresponding type declarations.",
+      "continuation": [],
+      "logLine": 772,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts(25,40): error TS2307: Cannot find module '../../../../product/routines/dossier.ts' or its corresponding type declarations."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts",
+      "line": 101,
+      "column": 227,
+      "code": "TS7006",
+      "message": "Parameter '_' implicitly has an 'any' type.",
+      "continuation": [],
+      "logLine": 773,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts(101,227): error TS7006: Parameter '_' implicitly has an 'any' type."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts",
+      "line": 101,
+      "column": 230,
+      "code": "TS7006",
+      "message": "Parameter 'call' implicitly has an 'any' type.",
+      "continuation": [],
+      "logLine": 774,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts(101,230): error TS7006: Parameter 'call' implicitly has an 'any' type."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts",
+      "line": 114,
+      "column": 229,
+      "code": "TS7006",
+      "message": "Parameter '_' implicitly has an 'any' type.",
+      "continuation": [],
+      "logLine": 775,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts(114,229): error TS7006: Parameter '_' implicitly has an 'any' type."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts",
+      "line": 114,
+      "column": 232,
+      "code": "TS7006",
+      "message": "Parameter 'call' implicitly has an 'any' type.",
+      "continuation": [],
+      "logLine": 776,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts(114,232): error TS7006: Parameter 'call' implicitly has an 'any' type."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts",
+      "line": 253,
+      "column": 225,
+      "code": "TS7006",
+      "message": "Parameter '_' implicitly has an 'any' type.",
+      "continuation": [],
+      "logLine": 777,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts(253,225): error TS7006: Parameter '_' implicitly has an 'any' type."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts",
+      "line": 253,
+      "column": 228,
+      "code": "TS7006",
+      "message": "Parameter 'call' implicitly has an 'any' type.",
+      "continuation": [],
+      "logLine": 778,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts(253,228): error TS7006: Parameter 'call' implicitly has an 'any' type."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts",
+      "line": 263,
+      "column": 227,
+      "code": "TS7006",
+      "message": "Parameter '_' implicitly has an 'any' type.",
+      "continuation": [],
+      "logLine": 779,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts(263,227): error TS7006: Parameter '_' implicitly has an 'any' type."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts",
+      "line": 263,
+      "column": 230,
+      "code": "TS7006",
+      "message": "Parameter 'call' implicitly has an 'any' type.",
+      "continuation": [],
+      "logLine": 780,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts(263,230): error TS7006: Parameter 'call' implicitly has an 'any' type."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/end-to-end.test.ts",
+      "line": 56,
+      "column": 72,
+      "code": "TS2345",
+      "message": "Argument of type '(snapshot: Snapshot) => Promise<{ commit: false; value: { value?: undefined; status: \"unavailable\"; reason: string; }; } | { commit: false; value: { reason?: undefined; status: \"ok\"; value: { versionId: string; evidence: EvidenceIdentity & { ...; }; }; }; }>' is not assignable to parameter of type '(snapshot: Snapshot, blobs: BlobTransaction) => Promise<{ commit: boolean; value: { value?: undefined; status: \"unavailable\"; reason: string; }; }>'.",
+      "continuation": [
+        "  Type 'Promise<{ commit: false; value: { value?: undefined; status: \"unavailable\"; reason: string; }; } | { commit: false; value: { reason?: undefined; status: \"ok\"; value: { versionId: string; evidence: EvidenceIdentity & { ...; }; }; }; }>' is not assignable to type 'Promise<{ commit: boolean; value: { value?: undefined; status: \"unavailable\"; reason: string; }; }>'.",
+        "    Type '{ commit: false; value: { value?: undefined; status: \"unavailable\"; reason: string; }; } | { commit: false; value: { reason?: undefined; status: \"ok\"; value: { versionId: string; evidence: EvidenceIdentity & { ...; }; }; }; }' is not assignable to type '{ commit: boolean; value: { value?: undefined; status: \"unavailable\"; reason: string; }; }'.",
+        "      Type '{ commit: false; value: { reason?: undefined; status: \"ok\"; value: { versionId: string; evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; recordType: string; ... 5 more ...; projectionDigest: string; }; }; }; }; }' is not assignable to type '{ commit: boolean; value: { value?: undefined; status: \"unavailable\"; reason: string; }; }'.",
+        "        The types of 'value.value' are incompatible between these types.",
+        "          Type '{ versionId: string; evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; recordType: string; recordId: string; incarnation: string; version: number; fields: readonly string[]; period?: Period | undefined; projectionDigest: string; }; }; }' is not assignable to type 'undefined'."
+      ],
+      "logLine": 781,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/test/product/wp06/imports/end-to-end.test.ts(56,72): error TS2345: Argument of type '(snapshot: Snapshot) => Promise<{ commit: false; value: { value?: undefined; status: \"unavailable\"; reason: string; }; } | { commit: false; value: { reason?: undefined; status: \"ok\"; value: { versionId: string; evidence: EvidenceIdentity & { ...; }; }; }; }>' is not assignable to parameter of type '(snapshot: Snapshot, blobs: BlobTransaction) => Promise<{ commit: boolean; value: { value?: undefined; status: \"unavailable\"; reason: string; }; }>'.\n  Type 'Promise<{ commit: false; value: { value?: undefined; status: \"unavailable\"; reason: string; }; } | { commit: false; value: { reason?: undefined; status: \"ok\"; value: { versionId: string; evidence: EvidenceIdentity & { ...; }; }; }; }>' is not assignable to type 'Promise<{ commit: boolean; value: { value?: undefined; status: \"unavailable\"; reason: string; }; }>'.\n    Type '{ commit: false; value: { value?: undefined; status: \"unavailable\"; reason: string; }; } | { commit: false; value: { reason?: undefined; status: \"ok\"; value: { versionId: string; evidence: EvidenceIdentity & { ...; }; }; }; }' is not assignable to type '{ commit: boolean; value: { value?: undefined; status: \"unavailable\"; reason: string; }; }'.\n      Type '{ commit: false; value: { reason?: undefined; status: \"ok\"; value: { versionId: string; evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; recordType: string; ... 5 more ...; projectionDigest: string; }; }; }; }; }' is not assignable to type '{ commit: boolean; value: { value?: undefined; status: \"unavailable\"; reason: string; }; }'.\n        The types of 'value.value' are incompatible between these types.\n          Type '{ versionId: string; evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; recordType: string; recordId: string; incarnation: string; version: number; fields: readonly string[]; period?: Period | undefined; projectionDigest: string; }; }; }' is not assignable to type 'undefined'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/end-to-end.test.ts",
+      "line": 65,
+      "column": 590,
+      "code": "TS2322",
+      "message": "Type '() => Promise<unknown>' is not assignable to type '(target: ImportTarget, context: TrustedDomainContext) => Promise<PortResult<{ versionId: string; evidence: EvidenceIdentity & { kind: \"record\"; target: { ...; }; }; }>>'.",
+      "continuation": [
+        "  Type 'Promise<unknown>' is not assignable to type 'Promise<PortResult<{ versionId: string; evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; recordType: string; recordId: string; incarnation: string; version: number; fields: readonly string[]; period?: Period | undefined; projectionDigest: string; }; }; }>>'.",
+        "    Type 'unknown' is not assignable to type 'PortResult<{ versionId: string; evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; recordType: string; recordId: string; incarnation: string; version: number; fields: readonly string[]; period?: Period | undefined; projectionDigest: string; }; }; }>'."
+      ],
+      "logLine": 787,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/test/product/wp06/imports/end-to-end.test.ts(65,590): error TS2322: Type '() => Promise<unknown>' is not assignable to type '(target: ImportTarget, context: TrustedDomainContext) => Promise<PortResult<{ versionId: string; evidence: EvidenceIdentity & { kind: \"record\"; target: { ...; }; }; }>>'.\n  Type 'Promise<unknown>' is not assignable to type 'Promise<PortResult<{ versionId: string; evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; recordType: string; recordId: string; incarnation: string; version: number; fields: readonly string[]; period?: Period | undefined; projectionDigest: string; }; }; }>>'.\n    Type 'unknown' is not assignable to type 'PortResult<{ versionId: string; evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; recordType: string; recordId: string; incarnation: string; version: number; fields: readonly string[]; period?: Period | undefined; projectionDigest: string; }; }; }>'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/sqlite-planner.test.ts",
+      "line": 41,
+      "column": 76,
+      "code": "TS2322",
+      "message": "Type 'Promise<{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; } | { commit: boolean; value: { reason?: undefined; status: \"applied\" | \"unchanged\"; changedFields: number; warnings: string[]; }; }>' is not assignable to type 'Promise<{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; }>'.",
+      "continuation": [
+        "  Type '{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; } | { commit: boolean; value: { reason?: undefined; status: \"applied\" | \"unchanged\"; changedFields: number; warnings: string[]; }; }' is not assignable to type '{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; }'.",
+        "    Type '{ commit: boolean; value: { reason?: undefined; status: \"applied\" | \"unchanged\"; changedFields: number; warnings: string[]; }; }' is not assignable to type '{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; }'.",
+        "      The types of 'value.changedFields' are incompatible between these types.",
+        "        Type 'number' is not assignable to type 'undefined'."
+      ],
+      "logLine": 790,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/test/product/wp06/imports/sqlite-planner.test.ts(41,76): error TS2322: Type 'Promise<{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; } | { commit: boolean; value: { reason?: undefined; status: \"applied\" | \"unchanged\"; changedFields: number; warnings: string[]; }; }>' is not assignable to type 'Promise<{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; }>'.\n  Type '{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; } | { commit: boolean; value: { reason?: undefined; status: \"applied\" | \"unchanged\"; changedFields: number; warnings: string[]; }; }' is not assignable to type '{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; }'.\n    Type '{ commit: boolean; value: { reason?: undefined; status: \"applied\" | \"unchanged\"; changedFields: number; warnings: string[]; }; }' is not assignable to type '{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; }'.\n      The types of 'value.changedFields' are incompatible between these types.\n        Type 'number' is not assignable to type 'undefined'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/sqlite-planner.test.ts",
+      "line": 42,
+      "column": 12,
+      "code": "TS18046",
+      "message": "'applied' is of type 'unknown'.",
+      "continuation": [],
+      "logLine": 795,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/test/product/wp06/imports/sqlite-planner.test.ts(42,12): error TS18046: 'applied' is of type 'unknown'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/sqlite-planner.test.ts",
+      "line": 46,
+      "column": 74,
+      "code": "TS2322",
+      "message": "Type 'Promise<{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; } | { commit: boolean; value: { reason?: undefined; status: \"applied\" | \"unchanged\"; changedFields: number; warnings: string[]; }; }>' is not assignable to type 'Promise<{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; }>'.",
+      "continuation": [
+        "  Type '{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; } | { commit: boolean; value: { reason?: undefined; status: \"applied\" | \"unchanged\"; changedFields: number; warnings: string[]; }; }' is not assignable to type '{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; }'.",
+        "    Type '{ commit: boolean; value: { reason?: undefined; status: \"applied\" | \"unchanged\"; changedFields: number; warnings: string[]; }; }' is not assignable to type '{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; }'.",
+        "      The types of 'value.changedFields' are incompatible between these types.",
+        "        Type 'number' is not assignable to type 'undefined'."
+      ],
+      "logLine": 796,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/test/product/wp06/imports/sqlite-planner.test.ts(46,74): error TS2322: Type 'Promise<{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; } | { commit: boolean; value: { reason?: undefined; status: \"applied\" | \"unchanged\"; changedFields: number; warnings: string[]; }; }>' is not assignable to type 'Promise<{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; }>'.\n  Type '{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; } | { commit: boolean; value: { reason?: undefined; status: \"applied\" | \"unchanged\"; changedFields: number; warnings: string[]; }; }' is not assignable to type '{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; }'.\n    Type '{ commit: boolean; value: { reason?: undefined; status: \"applied\" | \"unchanged\"; changedFields: number; warnings: string[]; }; }' is not assignable to type '{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; }'.\n      The types of 'value.changedFields' are incompatible between these types.\n        Type 'number' is not assignable to type 'undefined'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/sqlite-planner.test.ts",
+      "line": 47,
+      "column": 12,
+      "code": "TS18046",
+      "message": "'stale' is of type 'unknown'.",
+      "continuation": [],
+      "logLine": 801,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/test/product/wp06/imports/sqlite-planner.test.ts(47,12): error TS18046: 'stale' is of type 'unknown'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/confirmation-integration.test.ts",
+      "line": 63,
+      "column": 289,
+      "code": "TS2739",
+      "message": "Type '{ state: \"available\"; sourceVersion: number; incarnation: string; physicalIncarnation: string; scopeFingerprint: string; sourceFingerprint: string; dependencyFingerprint: string; }' is missing the following properties from type '{ state: \"available\"; sourceVersion: number; incarnation: string; physicalIncarnation: string; scopeFingerprint: string; sourceFingerprint: string; dependencyFingerprint: string; evidence: EvidenceIdentity & { ...; }; projection: DomainProjection; }': evidence, projection",
+      "continuation": [],
+      "logLine": 802,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/test/product/wp08/confirmation-integration.test.ts(63,289): error TS2739: Type '{ state: \"available\"; sourceVersion: number; incarnation: string; physicalIncarnation: string; scopeFingerprint: string; sourceFingerprint: string; dependencyFingerprint: string; }' is missing the following properties from type '{ state: \"available\"; sourceVersion: number; incarnation: string; physicalIncarnation: string; scopeFingerprint: string; sourceFingerprint: string; dependencyFingerprint: string; evidence: EvidenceIdentity & { ...; }; projection: DomainProjection; }': evidence, projection"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts",
+      "line": 13,
+      "column": 112,
+      "code": "TS7006",
+      "message": "Parameter 'snapshot' implicitly has an 'any' type.",
+      "continuation": [],
+      "logLine": 803,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts(13,112): error TS7006: Parameter 'snapshot' implicitly has an 'any' type."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts",
+      "line": 13,
+      "column": 122,
+      "code": "TS7006",
+      "message": "Parameter 'blobs' implicitly has an 'any' type.",
+      "continuation": [],
+      "logLine": 804,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts(13,122): error TS7006: Parameter 'blobs' implicitly has an 'any' type."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts",
+      "line": 31,
+      "column": 58,
+      "code": "TS7006",
+      "message": "Parameter 'snapshot' implicitly has an 'any' type.",
+      "continuation": [],
+      "logLine": 805,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts(31,58): error TS7006: Parameter 'snapshot' implicitly has an 'any' type."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts",
+      "line": 31,
+      "column": 68,
+      "code": "TS7006",
+      "message": "Parameter 'blobs' implicitly has an 'any' type.",
+      "continuation": [],
+      "logLine": 806,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts(31,68): error TS7006: Parameter 'blobs' implicitly has an 'any' type."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts",
+      "line": 40,
+      "column": 63,
+      "code": "TS7006",
+      "message": "Parameter 'snapshot' implicitly has an 'any' type.",
+      "continuation": [],
+      "logLine": 807,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts(40,63): error TS7006: Parameter 'snapshot' implicitly has an 'any' type."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts",
+      "line": 40,
+      "column": 73,
+      "code": "TS7006",
+      "message": "Parameter 'blobs' implicitly has an 'any' type.",
+      "continuation": [],
+      "logLine": 808,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts(40,73): error TS7006: Parameter 'blobs' implicitly has an 'any' type."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts",
+      "line": 51,
+      "column": 49,
+      "code": "TS7006",
+      "message": "Parameter '_snapshot' implicitly has an 'any' type.",
+      "continuation": [],
+      "logLine": 809,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts(51,49): error TS7006: Parameter '_snapshot' implicitly has an 'any' type."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts",
+      "line": 51,
+      "column": 60,
+      "code": "TS7006",
+      "message": "Parameter 'blobs' implicitly has an 'any' type.",
+      "continuation": [],
+      "logLine": 810,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts(51,60): error TS7006: Parameter 'blobs' implicitly has an 'any' type."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts",
+      "line": 68,
+      "column": 69,
+      "code": "TS7006",
+      "message": "Parameter '_snapshot' implicitly has an 'any' type.",
+      "continuation": [],
+      "logLine": 811,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts(68,69): error TS7006: Parameter '_snapshot' implicitly has an 'any' type."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts",
+      "line": 68,
+      "column": 80,
+      "code": "TS7006",
+      "message": "Parameter 'blobs' implicitly has an 'any' type.",
+      "continuation": [],
+      "logLine": 812,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts(68,80): error TS7006: Parameter 'blobs' implicitly has an 'any' type."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+      "line": 24,
+      "column": 47,
+      "code": "TS7006",
+      "message": "Parameter 'snapshot' implicitly has an 'any' type.",
+      "continuation": [],
+      "logLine": 813,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts(24,47): error TS7006: Parameter 'snapshot' implicitly has an 'any' type."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+      "line": 24,
+      "column": 57,
+      "code": "TS7006",
+      "message": "Parameter 'blobs' implicitly has an 'any' type.",
+      "continuation": [],
+      "logLine": 814,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts(24,57): error TS7006: Parameter 'blobs' implicitly has an 'any' type."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts",
+      "line": 73,
+      "column": 60,
+      "code": "TS2345",
+      "message": "Argument of type 'TrustedDomainContext' is not assignable to parameter of type 'TrustedUiContext'.",
+      "continuation": [
+        "  Type 'TrustedCallContext' is not assignable to type 'TrustedUiContext'.",
+        "    Types of property 'kind' are incompatible.",
+        "      Type '\"native\"' is not assignable to type '\"ui\"'."
+      ],
+      "logLine": 815,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts(73,60): error TS2345: Argument of type 'TrustedDomainContext' is not assignable to parameter of type 'TrustedUiContext'.\n  Type 'TrustedCallContext' is not assignable to type 'TrustedUiContext'.\n    Types of property 'kind' are incompatible.\n      Type '\"native\"' is not assignable to type '\"ui\"'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/coverage-access.test.ts",
+      "line": 39,
+      "column": 127,
+      "code": "TS2322",
+      "message": "Type '{ surface: string; type: string; id: string; incarnation: string; version: number; fields: string[]; period: { start: string; end: string; }; observedAt: string; }' is not assignable to type 'SourceRef'.",
+      "continuation": [
+        "  Types of property 'surface' are incompatible.",
+        "    Type 'string' is not assignable to type 'Surface'."
+      ],
+      "logLine": 819,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/test/product/wp11/coverage-access.test.ts(39,127): error TS2322: Type '{ surface: string; type: string; id: string; incarnation: string; version: number; fields: string[]; period: { start: string; end: string; }; observedAt: string; }' is not assignable to type 'SourceRef'.\n  Types of property 'surface' are incompatible.\n    Type 'string' is not assignable to type 'Surface'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/coverage-access.test.ts",
+      "line": 48,
+      "column": 127,
+      "code": "TS2322",
+      "message": "Type '{ surface: string; type: string; id: string; incarnation: string; version: number; fields: string[]; period: { start: string; end: string; }; observedAt: string; }' is not assignable to type 'SourceRef'.",
+      "continuation": [
+        "  Types of property 'surface' are incompatible.",
+        "    Type 'string' is not assignable to type 'Surface'."
+      ],
+      "logLine": 822,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/test/product/wp11/coverage-access.test.ts(48,127): error TS2322: Type '{ surface: string; type: string; id: string; incarnation: string; version: number; fields: string[]; period: { start: string; end: string; }; observedAt: string; }' is not assignable to type 'SourceRef'.\n  Types of property 'surface' are incompatible.\n    Type 'string' is not assignable to type 'Surface'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/coverage-access.test.ts",
+      "line": 77,
+      "column": 63,
+      "code": "TS2322",
+      "message": "Type '{ baselineResultRef: string; alternativeResultRef: string; costCoverageRefs: string[]; criterionResults: never[]; unresolvedConditions: string[]; comparisonStatus: string; knownDifference: number; completeDifference: null; }' is not assignable to type 'PortfolioResult | SensitivityResult | ScenarioComparison | ScenarioResult'.",
+      "continuation": [
+        "  Type '{ baselineResultRef: string; alternativeResultRef: string; costCoverageRefs: string[]; criterionResults: never[]; unresolvedConditions: string[]; comparisonStatus: string; knownDifference: number; completeDifference: null; }' is not assignable to type 'PortfolioResult | SensitivityResult | (ComparisonBase & { comparisonStatus: \"conditioned\" | \"incompatible\" | \"unavailable\"; knownDifference: number | null; completeDifference: null; }) | (ScenarioBase & { ...; }) | (ScenarioBase & { ...; })'.",
+        "    Type '{ baselineResultRef: string; alternativeResultRef: string; costCoverageRefs: string[]; criterionResults: never[]; unresolvedConditions: string[]; comparisonStatus: string; knownDifference: number; completeDifference: null; }' is not assignable to type 'ComparisonBase & { comparisonStatus: \"conditioned\" | \"incompatible\" | \"unavailable\"; knownDifference: number | null; completeDifference: null; }'.",
+        "      Type '{ baselineResultRef: string; alternativeResultRef: string; costCoverageRefs: string[]; criterionResults: never[]; unresolvedConditions: string[]; comparisonStatus: string; knownDifference: number; completeDifference: null; }' is not assignable to type '{ comparisonStatus: \"conditioned\" | \"incompatible\" | \"unavailable\"; knownDifference: number | null; completeDifference: null; }'.",
+        "        Types of property 'comparisonStatus' are incompatible.",
+        "          Type 'string' is not assignable to type '\"conditioned\" | \"incompatible\" | \"unavailable\"'."
+      ],
+      "logLine": 825,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/test/product/wp11/coverage-access.test.ts(77,63): error TS2322: Type '{ baselineResultRef: string; alternativeResultRef: string; costCoverageRefs: string[]; criterionResults: never[]; unresolvedConditions: string[]; comparisonStatus: string; knownDifference: number; completeDifference: null; }' is not assignable to type 'PortfolioResult | SensitivityResult | ScenarioComparison | ScenarioResult'.\n  Type '{ baselineResultRef: string; alternativeResultRef: string; costCoverageRefs: string[]; criterionResults: never[]; unresolvedConditions: string[]; comparisonStatus: string; knownDifference: number; completeDifference: null; }' is not assignable to type 'PortfolioResult | SensitivityResult | (ComparisonBase & { comparisonStatus: \"conditioned\" | \"incompatible\" | \"unavailable\"; knownDifference: number | null; completeDifference: null; }) | (ScenarioBase & { ...; }) | (ScenarioBase & { ...; })'.\n    Type '{ baselineResultRef: string; alternativeResultRef: string; costCoverageRefs: string[]; criterionResults: never[]; unresolvedConditions: string[]; comparisonStatus: string; knownDifference: number; completeDifference: null; }' is not assignable to type 'ComparisonBase & { comparisonStatus: \"conditioned\" | \"incompatible\" | \"unavailable\"; knownDifference: number | null; completeDifference: null; }'.\n      Type '{ baselineResultRef: string; alternativeResultRef: string; costCoverageRefs: string[]; criterionResults: never[]; unresolvedConditions: string[]; comparisonStatus: string; knownDifference: number; completeDifference: null; }' is not assignable to type '{ comparisonStatus: \"conditioned\" | \"incompatible\" | \"unavailable\"; knownDifference: number | null; completeDifference: null; }'.\n        Types of property 'comparisonStatus' are incompatible.\n          Type 'string' is not assignable to type '\"conditioned\" | \"incompatible\" | \"unavailable\"'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/author-reader.test.ts",
+      "line": 32,
+      "column": 26,
+      "code": "TS2352",
+      "message": "Conversion of type '{ id: string; incarnation: string; version: number; participants: string[]; }' to type 'DecisionCase' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.",
+      "continuation": [
+        "  Type '{ id: string; incarnation: string; version: number; participants: string[]; }' is missing the following properties from type 'DecisionCase': state, objective, horizon, currency, and 10 more."
+      ],
+      "logLine": 831,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/test/product/wp12/author-reader.test.ts(32,26): error TS2352: Conversion of type '{ id: string; incarnation: string; version: number; participants: string[]; }' to type 'DecisionCase' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\n  Type '{ id: string; incarnation: string; version: number; participants: string[]; }' is missing the following properties from type 'DecisionCase': state, objective, horizon, currency, and 10 more."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+      "line": 218,
+      "column": 211,
+      "code": "TS2722",
+      "message": "Cannot invoke an object which is possibly 'undefined'.",
+      "continuation": [],
+      "logLine": 833,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts(218,211): error TS2722: Cannot invoke an object which is possibly 'undefined'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+      "line": 230,
+      "column": 25,
+      "code": "TS2722",
+      "message": "Cannot invoke an object which is possibly 'undefined'.",
+      "continuation": [],
+      "logLine": 834,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts(230,25): error TS2722: Cannot invoke an object which is possibly 'undefined'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+      "line": 230,
+      "column": 25,
+      "code": "TS18048",
+      "message": "'store.transactionAll' is possibly 'undefined'.",
+      "continuation": [],
+      "logLine": 835,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts(230,25): error TS18048: 'store.transactionAll' is possibly 'undefined'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts",
+      "line": 10,
+      "column": 43,
+      "code": "TS2305",
+      "message": "Module '\"../../../product/procurement/sources.ts\"' has no exported member 'procurementSourceSelector'.",
+      "continuation": [],
+      "logLine": 836,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts(10,43): error TS2305: Module '\"../../../product/procurement/sources.ts\"' has no exported member 'procurementSourceSelector'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts",
+      "line": 11,
+      "column": 33,
+      "code": "TS2724",
+      "message": "'\"../../../product/procurement/port.ts\"' has no exported member named 'isCurrentProcurementSource'. Did you mean 'projectProcurementSource'?",
+      "continuation": [],
+      "logLine": 837,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts(11,33): error TS2724: '\"../../../product/procurement/port.ts\"' has no exported member named 'isCurrentProcurementSource'. Did you mean 'projectProcurementSource'?"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts",
+      "line": 31,
+      "column": 54,
+      "code": "TS2741",
+      "message": "Property 'scopedSources' is missing in type '{ host: DomainPortHost; contextFor: () => Promise<{ status: \"ok\"; value: { installationId: string; projectId: string; principalRef: string; accessRevision: string; policyVersion: string; ... 4 more ...; capabilities: never[]; }; }>; }' but required in type '{ host: DomainPortHost; scopedSources: SfScopedSourcePort; contextFor: (binding: TrustedDomainContext) => Promise<PortResult<ProductContext>>; }'.",
+      "continuation": [],
+      "logLine": 838,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts(31,54): error TS2741: Property 'scopedSources' is missing in type '{ host: DomainPortHost; contextFor: () => Promise<{ status: \"ok\"; value: { installationId: string; projectId: string; principalRef: string; accessRevision: string; policyVersion: string; ... 4 more ...; capabilities: never[]; }; }>; }' but required in type '{ host: DomainPortHost; scopedSources: SfScopedSourcePort; contextFor: (binding: TrustedDomainContext) => Promise<PortResult<ProductContext>>; }'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts",
+      "line": 32,
+      "column": 51,
+      "code": "TS2322",
+      "message": "Type '{ issue: (kind: \"procurement-request\" | \"procurement-supplier\", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }' is not assignable to type '(reference: string, binding: TrustedDomainContext) => Promise<PortResult<{ evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; ... 6 more ...; projectionDigest: string; }; }; context: ProductContext; }>>'.",
+      "continuation": [
+        "  Type '{ issue: (kind: \"procurement-request\" | \"procurement-supplier\", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }' provides no match for the signature '(reference: string, binding: TrustedDomainContext): Promise<PortResult<{ evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; ... 6 more ...; projectionDigest: string; }; }; context: ProductContext; }>>'."
+      ],
+      "logLine": 839,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts(32,51): error TS2322: Type '{ issue: (kind: \"procurement-request\" | \"procurement-supplier\", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }' is not assignable to type '(reference: string, binding: TrustedDomainContext) => Promise<PortResult<{ evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; ... 6 more ...; projectionDigest: string; }; }; context: ProductContext; }>>'.\n  Type '{ issue: (kind: \"procurement-request\" | \"procurement-supplier\", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }' provides no match for the signature '(reference: string, binding: TrustedDomainContext): Promise<PortResult<{ evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; ... 6 more ...; projectionDigest: string; }; }; context: ProductContext; }>>'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts",
+      "line": 32,
+      "column": 83,
+      "code": "TS2322",
+      "message": "Type '{ issue: (kind: \"procurement-request\" | \"procurement-supplier\", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }' is not assignable to type '(reference: string, binding: TrustedDomainContext) => Promise<PortResult<{ evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; ... 6 more ...; projectionDigest: string; }; }; context: ProductContext; }>>'.",
+      "continuation": [
+        "  Type '{ issue: (kind: \"procurement-request\" | \"procurement-supplier\", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }' provides no match for the signature '(reference: string, binding: TrustedDomainContext): Promise<PortResult<{ evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; ... 6 more ...; projectionDigest: string; }; }; context: ProductContext; }>>'."
+      ],
+      "logLine": 841,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts(32,83): error TS2322: Type '{ issue: (kind: \"procurement-request\" | \"procurement-supplier\", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }' is not assignable to type '(reference: string, binding: TrustedDomainContext) => Promise<PortResult<{ evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; ... 6 more ...; projectionDigest: string; }; }; context: ProductContext; }>>'.\n  Type '{ issue: (kind: \"procurement-request\" | \"procurement-supplier\", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }' provides no match for the signature '(reference: string, binding: TrustedDomainContext): Promise<PortResult<{ evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; ... 6 more ...; projectionDigest: string; }; }; context: ProductContext; }>>'."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts",
+      "line": 33,
+      "column": 25,
+      "code": "TS2349",
+      "message": "This expression is not callable.",
+      "continuation": [
+        "  Type '{ issue: (kind: \"procurement-request\" | \"procurement-supplier\", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }' has no call signatures."
+      ],
+      "logLine": 843,
+      "ownership": "outside-mission25",
+      "normalized": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts(33,25): error TS2349: This expression is not callable.\n  Type '{ issue: (kind: \"procurement-request\" | \"procurement-supplier\", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }' has no call signatures."
+    }
+  ]
+}

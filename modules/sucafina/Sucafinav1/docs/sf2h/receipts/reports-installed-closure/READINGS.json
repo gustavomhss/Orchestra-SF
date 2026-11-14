@@ -1,0 +1,249 @@
+{
+  "schema": "orchestra-sf.mission25.readings.v1",
+  "reader": "reports_e2e helper",
+  "scope": "Applicable E2E instructions, full pinned mission and actor pack, mandatory appendices and Playwright guides.",
+  "remote_transport": "GitHub MCP only",
+  "completion": "Full canonical texts and all six guides were read before E2E implementation. Truncated outputs were reread in smaller complete segments; metadata alone was not treated as a complete read.",
+  "canonical_sources": [
+    {
+      "repository": "gustavomhss/Orchestra-SF",
+      "path": "AGENTS.md",
+      "commit": "dbc5e803050052909316562ad4c1dc579f5f453a",
+      "blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbc5e803050052909316562ad4c1dc579f5f453a/AGENTS.md",
+      "read": "COMPLETE",
+      "purpose": "Applicable root instructions",
+      "unchanged_blob_verified_at": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "verification_url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/AGENTS.md"
+    },
+    {
+      "repository": "gustavomhss/Orchestra-SF",
+      "path": "packages/app-shell/AGENTS.md",
+      "commit": "dbc5e803050052909316562ad4c1dc579f5f453a",
+      "blob": "a9ed3dc797d2756089a032e75bc0ab77256b3a03",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbc5e803050052909316562ad4c1dc579f5f453a/packages/app-shell/AGENTS.md",
+      "read": "COMPLETE",
+      "purpose": "Applicable package instructions",
+      "unchanged_blob_verified_at": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "verification_url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/packages/app-shell/AGENTS.md"
+    },
+    {
+      "repository": "gustavomhss/Orchestra-SF",
+      "path": "packages/app-shell/e2e/AGENTS.md",
+      "commit": "dbc5e803050052909316562ad4c1dc579f5f453a",
+      "blob": "2e24eecc8ccea104922263bf6c7ccc8e93da24ec",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbc5e803050052909316562ad4c1dc579f5f453a/packages/app-shell/e2e/AGENTS.md",
+      "read": "COMPLETE",
+      "purpose": "Applicable E2E instructions and mandatory Playwright readings",
+      "unchanged_blob_verified_at": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+      "verification_url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/packages/app-shell/e2e/AGENTS.md"
+    },
+    {
+      "repository": "gustavomhss/Orchestra-SF",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/START.md",
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "522782bb7e113124a937d7ef17313032be9d6850",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/START.md",
+      "read": "COMPLETE",
+      "purpose": "Pinned plan entry"
+    },
+    {
+      "repository": "gustavomhss/Orchestra-SF",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/WORKFLOW.md",
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "043205bee6031b4517a98591b3588fca0ab12925",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/WORKFLOW.md",
+      "read": "COMPLETE",
+      "purpose": "Pinned workflow"
+    },
+    {
+      "repository": "gustavomhss/Orchestra-SF",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/COMMON.md",
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "d61f32af03fe10747a50274233f953af044decf6",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/COMMON.md",
+      "read": "COMPLETE",
+      "purpose": "Execution requirements"
+    },
+    {
+      "repository": "gustavomhss/Orchestra-SF",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S3-A.json",
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "bb0e591a199e1d0b30285bef88da5e96e2b33bc6",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S3-A.json",
+      "read": "COMPLETE",
+      "purpose": "Complete actor pack: all fields, contracts, WP07 criteria, numeric oracles and resident obligations"
+    },
+    {
+      "repository": "gustavomhss/Orchestra-SF",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/product-acceptance.md",
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "ded082688fce327def0b48968fa3b89a5831029c",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/product-acceptance.md",
+      "read": "COMPLETE",
+      "purpose": "Mandatory product acceptance appendix"
+    },
+    {
+      "repository": "gustavomhss/Orchestra-SF",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/resident-runtime.md",
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "033737b1051b23443e633df7874c550629bf55a1",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/resident-runtime.md",
+      "read": "COMPLETE",
+      "purpose": "Mandatory resident runtime appendix"
+    },
+    {
+      "repository": "gustavomhss/Orchestra-SF",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/closure-wave/COMMON.json",
+      "commit": "233e9acb7c048dda3d8174d87b76f1e8441f4917",
+      "blob": "6dddb69b7f044e0467cfa4ab8dff60f560ca50b1",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/233e9acb7c048dda3d8174d87b76f1e8441f4917/modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/closure-wave/COMMON.json",
+      "read": "COMPLETE",
+      "purpose": "Mission wave instructions"
+    },
+    {
+      "repository": "gustavomhss/Orchestra-SF",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/closure-wave/reports-installed-closure.json",
+      "commit": "233e9acb7c048dda3d8174d87b76f1e8441f4917",
+      "blob": "d906d207c4a29ed6aa8ac5f8818303ded2c0e0a0",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/233e9acb7c048dda3d8174d87b76f1e8441f4917/modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/closure-wave/reports-installed-closure.json",
+      "read": "COMPLETE",
+      "purpose": "Mission25 authorized scope and proof obligations"
+    },
+    {
+      "repository": "gustavomhss/Orchestra-SF",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/final-e2e/reports/attempt-01/HANDOFF.md",
+      "commit": "dbc5e803050052909316562ad4c1dc579f5f453a",
+      "blob": "7beaa8fe085052257c28e121e3ee567350259c28",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbc5e803050052909316562ad4c1dc579f5f453a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/final-e2e/reports/attempt-01/HANDOFF.md",
+      "read": "COMPLETE",
+      "purpose": "Terminal predecessor; preserve its commits, evidence identities and unexecuted status"
+    },
+    {
+      "repository": "gustavomhss/Orchestra-SF",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/CI.md",
+      "commit": "c708ec0609dbfc95b259707d8c38481617f74f11",
+      "blob": "c34ab425e0f3b7dc0899a05826829f38b5af84bb",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c708ec0609dbfc95b259707d8c38481617f74f11/modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/CI.md",
+      "read": "COMPLETE",
+      "purpose": "Existing scoped Actions interface, snapshot W/S, dedup and final S0 boundary"
+    }
+  ],
+  "canonical_campaign_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+  "playwright": {
+    "purpose": "Required before review or edit by packages/app-shell/e2e/AGENTS.md.",
+    "guide_sources": [
+      {
+        "repository": "microsoft/playwright",
+        "path": "docs/src/best-practices-js.md",
+        "requested_ref": "main",
+        "blob": "02e1e4db6baea68e725040646396e09a29584420",
+        "source_url": "https://github.com/microsoft/playwright/blob/main/docs/src/best-practices-js.md",
+        "guide_url": "https://playwright.dev/docs/best-practices",
+        "read": "COMPLETE"
+      },
+      {
+        "repository": "microsoft/playwright",
+        "path": "docs/src/actionability.md",
+        "requested_ref": "main",
+        "blob": "848df596771406a7c4d7b2e6120f95b01330a756",
+        "source_url": "https://github.com/microsoft/playwright/blob/main/docs/src/actionability.md",
+        "guide_url": "https://playwright.dev/docs/actionability",
+        "read": "COMPLETE"
+      },
+      {
+        "repository": "microsoft/playwright",
+        "path": "docs/src/test-assertions-js.md",
+        "requested_ref": "main",
+        "blob": "97eb22aa6c5839c4f83be974fef260221d6494e2",
+        "source_url": "https://github.com/microsoft/playwright/blob/main/docs/src/test-assertions-js.md",
+        "guide_url": "https://playwright.dev/docs/test-assertions",
+        "read": "COMPLETE"
+      },
+      {
+        "repository": "microsoft/playwright",
+        "path": "docs/src/locators.md",
+        "requested_ref": "main",
+        "blob": "a4307c3b47fc1cf6c048e5f94c98b5dcbb6bcb9a",
+        "source_url": "https://github.com/microsoft/playwright/blob/main/docs/src/locators.md",
+        "guide_url": "https://playwright.dev/docs/locators",
+        "read": "COMPLETE"
+      },
+      {
+        "repository": "microsoft/playwright",
+        "path": "docs/src/network.md",
+        "requested_ref": "main",
+        "blob": "fb24a1855d418e4c9291d8e2656dcc51c3dbf2e4",
+        "source_url": "https://github.com/microsoft/playwright/blob/main/docs/src/network.md",
+        "guide_url": "https://playwright.dev/docs/network",
+        "read": "COMPLETE"
+      },
+      {
+        "repository": "microsoft/playwright",
+        "path": "docs/src/browser-contexts.md",
+        "requested_ref": "main",
+        "blob": "d34759c18549026d7cba3558ce8357d6e441c4c7",
+        "source_url": "https://github.com/microsoft/playwright/blob/main/docs/src/browser-contexts.md",
+        "guide_url": "https://playwright.dev/docs/browser-contexts",
+        "read": "COMPLETE"
+      }
+    ],
+    "documentation_pin": "The requested branch was main; each returned Git blob above identifies the exact document content read.",
+    "application": [
+      "Semantic role/label locators and scoped strictness.",
+      "Web-first assertions on concrete user-visible completion state.",
+      "Register network/download waits before the corresponding UI action.",
+      "Isolated browser contexts for revoked credential and fresh admission checks.",
+      "No sleeps, mutation retries, skips, positive route mocks or timeout inflation."
+    ],
+    "third_party_full_text_in_receipt": false
+  },
+  "producer_title_audit": {
+    "read_scope": "Targeted producer/adapter/selection source analysis; not execution.",
+    "sources": [
+      {
+        "repository": "gustavomhss/Orchestra-SF",
+        "path": "apps/cli/src/sucafina-product/dashboard-services.ts",
+        "commit": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+        "blob": "9084d0d376a5135aa5804b002d8068ac09f89f83",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/apps/cli/src/sucafina-product/dashboard-services.ts",
+        "finding": "discover creates UI-only title=request.page and id=dashboard; Portfolio Dashboard maps to topic projects."
+      },
+      {
+        "repository": "gustavomhss/Orchestra-SF",
+        "path": "modules/sucafina/Sucafinav1/product/reviews/selection.ts",
+        "commit": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+        "blob": "3de1bf6369b1ca68e09dbae5ab6ffecaa87b85dc",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0ce090d7d1d4399d77b435debd59eb7cc903c202/modules/sucafina/Sucafinav1/product/reviews/selection.ts",
+        "finding": "dashboardTopics assigns canonical Budget/Projects/Hot Topics titles and validates nonempty unique agenda IDs."
+      }
+    ],
+    "result": "Existing E2E title assertions are correct. Shared patch postimage now assigns distinct stable report:<page> IDs and preserves all canonical topic/source/period semantics. This is inert assembly work, not an executed journey."
+  },
+  "privacy_implementation_read": {
+    "reader": "ci_and_criteria helper",
+    "remote_transport": "GitHub MCP",
+    "repository": "microsoft/playwright",
+    "ref": "v1.59.1",
+    "sources": [
+      {
+        "path": "packages/playwright/src/common/fixtures.ts",
+        "blob": "30b144e6634650ba51d6880b1ce864f978f5e43a",
+        "url": "https://github.com/microsoft/playwright/blob/v1.59.1/packages/playwright/src/common/fixtures.ts"
+      },
+      {
+        "path": "packages/playwright/src/common/poolBuilder.ts",
+        "blob": "f975efe92f80d4d4beaf36dbbaeede992e1cfc87",
+        "url": "https://github.com/microsoft/playwright/blob/v1.59.1/packages/playwright/src/common/poolBuilder.ts"
+      }
+    ],
+    "finding": "Suite test.use overrides config/CLI recording options. The effective dependency version 1.59.1 is established by the repository bun.lock, not the differing module package.json pin.",
+    "execution_claim": false
+  },
+  "evidence_limits": "Reading and static source review are not runtime evidence. The four nominal Reports E2Es remain NOT_RUN; this file assigns no S, run, job, PASS or native/visual proof.",
+  "root_read_confirmation": {
+    "reader": "/root",
+    "status": "COMPLETE",
+    "scope": "Both pinned mission JSONs, root/app/e2e AGENTS, full S3-A pack and mandatory appendices, predecessor terminal handoff, six required Playwright guides and current CI protocol. Initially truncated parts were reread. Delegated read details retained."
+  }
+}

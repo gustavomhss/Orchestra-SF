@@ -1,0 +1,215 @@
+{
+  "schema": "reports-installed-closure-shared-patch-v1",
+  "status": "INERT_PROPOSAL_NOT_APPLIED_NOT_TESTED",
+  "consumer": "session23",
+  "source_branch": "astra-wp07",
+  "source_pr": 27,
+  "reports_input_sha": "dbc5e803050052909316562ad4c1dc579f5f453a",
+  "reports_source_commit": "567727670b4039c316a12718c84b43b57f4fa19d",
+  "new_helper_files_verified_absent_at": [
+    "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+    "0d5bd54a109774d4e3296e00c276be341fe39b00"
+  ],
+  "composition_baseline": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+  "preimages_verified_at": [
+    "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+    "0d5bd54a109774d4e3296e00c276be341fe39b00"
+  ],
+  "additional_preimage_verification": {
+    "commit": "0d5bd54a109774d4e3296e00c276be341fe39b00",
+    "tree": "c056602b26eb044fe5e2e18a5a05bd2bd2d5a83a",
+    "source": "Root reported direct GitHub MCP verification: all six modified preimages identical, both helper paths absent, review-services blob unchanged."
+  },
+  "mutation_boundary": "Only receipt artifacts may be published by Mission25. Session23 owns actual apps/cli source integration.",
+  "patch": "patches/mission25-reports-shared.patch",
+  "patch_sha256": "42cce7c5b42604636c77584e6e86f5594a2a1fa1b6d265f9fc16c7a028f78f47",
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "operation": "modify",
+      "preimage_git_blob_sha1": "385dd1998ec3fb73b32f77ab3dec9c93beb440d1",
+      "preimage_sha256": "82d182ce0ae3cff5f7346d4b7f61519440316c37a74751687277744d8d673ef2",
+      "postimage_git_blob_sha1": "ce3a281bf07819f90af7fad10f98861980f3273b",
+      "postimage_sha256": "7a0a9adfccb1ecc2caef577e6d7e4cbeb084c71dd633520691cc459dc93c9bb9",
+      "preimage": "preimages/apps/cli/src/sucafina-product/business-services.ts.txt",
+      "postimage": "postimages/apps/cli/src/sucafina-product/business-services.ts.txt"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-business-services.ts",
+      "operation": "modify",
+      "preimage_git_blob_sha1": "a57e9d39f81e8a064f903765e70533bdffea4ba2",
+      "preimage_sha256": "69762e50794e88f70407095367f1c63cab1e6638896f9ec10e866740605a9d9d",
+      "postimage_git_blob_sha1": "4cadc40037fefb895a7c77d53125922fa747b479",
+      "postimage_sha256": "698e289b2cfc3996bc91069561d40b89294e3004bbd682e07a14ec3026f948ac",
+      "preimage": "preimages/apps/cli/src/sucafina-product/extended-business-services.ts.txt",
+      "postimage": "postimages/apps/cli/src/sucafina-product/extended-business-services.ts.txt"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-http.ts",
+      "operation": "modify",
+      "preimage_git_blob_sha1": "63bbe96595c04a484cdc16e01f95c42233b4025c",
+      "preimage_sha256": "cc07d2745bdd82009574691d105b8cb490e74ef5da56e49eeeff7f8c55a7f929",
+      "postimage_git_blob_sha1": "d8e0d149e37c640db8957f3e917f867088923d93",
+      "postimage_sha256": "4f126782c18018ec6f17da90c19a19c237731064d3ee23fbfe4769e793224dcc",
+      "preimage": "preimages/apps/cli/src/sucafina-product/extended-http.ts.txt",
+      "postimage": "postimages/apps/cli/src/sucafina-product/extended-http.ts.txt"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-browser.ts",
+      "operation": "modify",
+      "preimage_git_blob_sha1": "9ddc9d3e95585cda5efe877ce2303ade497a0b98",
+      "preimage_sha256": "325fd76f6005645ea07517ae78ace1ea0422014322dc9745d2169d51034bf01e",
+      "postimage_git_blob_sha1": "83ecd80669c759dc65cc621543af2b5ebd9f9ac0",
+      "postimage_sha256": "4c28afeb113132ce7836f2d247d175418c9c5ef3be25323cb55e4161efb7d3f2",
+      "preimage": "preimages/apps/cli/src/sucafina-product/extended-browser.ts.txt",
+      "postimage": "postimages/apps/cli/src/sucafina-product/extended-browser.ts.txt"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-source-links.ts",
+      "operation": "modify",
+      "preimage_git_blob_sha1": "147b3a687aa8786a7429ba8e7452db40290081d5",
+      "preimage_sha256": "f1bdc31ba1bb8ae968cd9c48a3869ab2d0c231ce22a297d72800a1cbba367ce5",
+      "postimage_git_blob_sha1": "f655f9d0728d8c92efe9b78efa1f379c5be67efd",
+      "postimage_sha256": "64162802035919aa6b74306166a3854cb3c6d6df05524e9bbd3228254a26e83e",
+      "preimage": "preimages/apps/cli/src/sucafina-product/extended-source-links.ts.txt",
+      "postimage": "postimages/apps/cli/src/sucafina-product/extended-source-links.ts.txt"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/review-history.ts",
+      "operation": "modify",
+      "preimage_git_blob_sha1": "0c9a68225d114ba77617af4a0e3acc2607ea0e5a",
+      "preimage_sha256": "2d3fc4f4ca0297eeec13b1376c19911f706734780cfee80e1b3a9453097f3064",
+      "postimage_git_blob_sha1": "965ad8445deb9b97d1f1c76f18d4036bc2006975",
+      "postimage_sha256": "2c4a38106be2410e4f6629209fb997af6eb2a0cbadfe1a5bb0fbd66da173a706",
+      "preimage": "preimages/apps/cli/src/sucafina-product/review-history.ts.txt",
+      "postimage": "postimages/apps/cli/src/sucafina-product/review-history.ts.txt"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/review-collaboration-binding.ts",
+      "operation": "add",
+      "preimage_git_blob_sha1": null,
+      "preimage_sha256": null,
+      "postimage_git_blob_sha1": "0da7d51672dc2519019f7880806d61c529456aa9",
+      "postimage_sha256": "3e6b275ab3323e2d059df7268de829f9541f9c2d145d4c83d2341ba5c88df2ef",
+      "preimage": null,
+      "postimage": "postimages/apps/cli/src/sucafina-product/review-collaboration-binding.ts.txt"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/review-collaboration.ts",
+      "operation": "add",
+      "preimage_git_blob_sha1": null,
+      "preimage_sha256": null,
+      "postimage_git_blob_sha1": "0912fc1f33fb1b4fe81d92eeb509c7806ab1a380",
+      "postimage_sha256": "ee376ff5d4c4ca7f4fe378f3c5fd68f1799847e68c56b2b09d32d112991f30f1",
+      "preimage": null,
+      "postimage": "postimages/apps/cli/src/sucafina-product/review-collaboration.ts.txt"
+    }
+  ],
+  "requires": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/collaboration-view.ts",
+      "producer": "same PR27 Mission25 source commit",
+      "contract": "createReviewCollaborationView({review:PreservedReview,principalRef:string})->{element,dispose,refresh}",
+      "producer_commit": "bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45",
+      "producer_ancestry": [
+        "567727670b4039c316a12718c84b43b57f4fa19d",
+        "bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/meeting.ts",
+      "producer": "same PR27 Mission25 source commit",
+      "contract": "Root supplies minimal aria-label amendment against current composition; do not replace current meeting implementation with old branch file.",
+      "producer_commit": "bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45",
+      "producer_ancestry": [
+        "567727670b4039c316a12718c84b43b57f4fa19d",
+        "bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45"
+      ]
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/review-services.ts",
+      "git_blob_sha1": "c07d55c714b4c85ee41abb4d287ce5861500086d",
+      "contract": "Existing real ReviewApplication, protected read and historical evidence; unchanged dependency."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/review-answer-source.ts",
+      "git_blob_sha1": "fc1bebfdd8b1dd4b0536b7076f4305dfa91483d0"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/thread-context.ts",
+      "git_blob_sha1": "20d98a976372338a22c947ee6bfcb9641c0429c5",
+      "contract": "createReviewThreadContext.read/authorize + immutable C05 pin"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/host.ts",
+      "git_blob_sha1": "1678fc9d46c36a7da962aeca3b782b395e129c51",
+      "contract": "Existing authorizeReviewThreadContext/reviewAnswerSource/reviewRecipientAuthority callbacks and HTTP producers."
+    }
+  ],
+  "required_unresolved_dependencies": [
+    {
+      "id": "distinct-legitimate-recipient",
+      "status": "BLOCKED",
+      "reason": "Installed local-operator authenticates exactly one principal; directory/enroll do not establish a second legitimate person. No identity or grant change is proposed.",
+      "consumer_interface": "createSfExtendedBusinessServices.reviewRecipientAuthority must receive a real current caller+recipient+immutable-pin+all-source-fields/periods ACL provider with synchronous checkAtCommit. Directory lookup is insufficient.",
+      "identity_sources": [
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/operator-identity.ts",
+          "git_blob_sha1": "4845de24285df2459991da7d9895aad95eb93b19"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+          "git_blob_sha1": "26a330c62a0e5e9f3e2ea79be0b6854e7dca7363"
+        }
+      ]
+    },
+    {
+      "id": "nonplain-c05-source-lease",
+      "status": "BLOCKED_FOR_NONPLAIN_C05",
+      "reason": "Local lease supports only Dashboard record reviews whose authority is contained in protected domain snapshots. Captured comments, external outcomes, decisions, sensitivity, calculations/documents and non-Dashboard sources fail closed until their real producer supplies a protected current authority lease."
+    },
+    {
+      "id": "real-composition-w-and-actions",
+      "status": "NOT_RUN",
+      "reason": "Session23 consumes source and these shared patches and publishes only actual candidate W/tree/blobs with exact ACK; session23 has no dispatcher/CI authority. After ACK the already authorized WP07 dispatcher creates request-only S and runs four nominal reports.spec.ts E2Es. No local test, positive fixture, collection-only proof or native/visual claim."
+    }
+  ],
+  "static_corrections": [
+    {
+      "id": "reports-multitopic-distinct-section-ids",
+      "status": "IMPLEMENTED_NOT_RUN",
+      "finding": "dashboardServices.discover returns local section id dashboard for every page; aggregating multiple pages unchanged creates duplicate IDs rejected by createReviewAgendaSelection.",
+      "change": "Only existing Generate Report entry uses stable report:<page> agenda IDs. Unique normalized pages were already validated. Source selectors, topics, periods, recordRefs, order and canonical titles remain producer-owned; review-update preserves captured section.id.",
+      "supersedes_patch_sha256": "d401f15b192d6a51f5e9e91fd50840a350f4c6715b2d3854f9448e88efa9d308"
+    }
+  ],
+  "invariants": [
+    "No Memory or Decisions writer edits",
+    "No authorization/grant broadening",
+    "No source capture mutation",
+    "No current legacy report presented as preserved review",
+    "No new service/listener/surface",
+    "No local tests"
+  ],
+  "requested_title": "Legacy form title/format retained as bootstrap metadata; C05 report input has no title field. No claim title is applied to DOCX/PPTX bytes.",
+  "verification": {
+    "remote_reads": "GitHub MCP only",
+    "local_work": "File construction, hash reconciliation and textual diff inspection only",
+    "product_tests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "visual_render": "NOT_RUN",
+    "native_execution": "NOT_RUN"
+  },
+  "reports_latest_source_commit": "bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45",
+  "reports_source_commits": [
+    {
+      "label": "W1",
+      "commit": "567727670b4039c316a12718c84b43b57f4fa19d"
+    },
+    {
+      "label": "W2",
+      "commit": "bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45"
+    }
+  ],
+  "receipt_images": "All preimage/postimage paths are inert .txt files, byte-identical to the source images; files[].path and unified patch paths remain real product paths."
+}

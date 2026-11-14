@@ -1,0 +1,22 @@
+diff --git a/modules/sucafina/Sucafinav1/product/reviews/meeting.ts b/modules/sucafina/Sucafinav1/product/reviews/meeting.ts
+index 65bdb3e8ebe6f8432a6fc61a166ef5b74a81d4e6..4b148e2bfea0e356641c18f0821e503b18e33590 100644
+--- a/modules/sucafina/Sucafinav1/product/reviews/meeting.ts
++++ b/modules/sucafina/Sucafinav1/product/reviews/meeting.ts
+@@ -42,6 +42,7 @@
+   openReviewSection?: (reviewRef: string, sectionId: string) => void | Promise<void>
+ }) {
+   const root = document.createElement("section")
++  root.setAttribute("aria-label", "Preserved review meeting")
+   const status = document.createElement("p")
+   status.setAttribute("role", "status")
+   const content = document.createElement("div")
+diff --git a/modules/sucafina/Sucafinav1/product/reviews/browser.ts b/modules/sucafina/Sucafinav1/product/reviews/browser.ts
+index ad9c66337205d05764e187f8acadc2dff4cf151b..ea194a5c8cf0624c278c8dc2bf81c0dac6222887 100644
+--- a/modules/sucafina/Sucafinav1/product/reviews/browser.ts
++++ b/modules/sucafina/Sucafinav1/product/reviews/browser.ts
+@@ -1,3 +1,5 @@
++export { createReviewCollaborationView } from "./collaboration-view.ts"
++
+ import type { ReviewActionClosure, ReviewActionHandoff } from "./closure-action.ts"
+ import type { HotTopic } from "../dashboard/hot-topics.ts"
+ import type { PreservedReview } from "../contracts/context.ts"

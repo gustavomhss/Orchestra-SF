@@ -1,0 +1,11 @@
+--- a/packages/app-shell/e2e/tsconfig.json
++++ b/packages/app-shell/e2e/tsconfig.json
+@@ -30,6 +30,8 @@
+     "../../core/src/flag/flag.ts",
+     "../playwright.config.ts",
+     "./playwright.production.config.ts",
++    "./sucafina/reports.spec.ts",
++    "./sucafina/reports-support/**/*.ts",
+     "./orchestra/**/*.ts",
+     "./orchestra-screenshots/**/*.ts",
+     "./orchestra/theme-first-paint.fixture.tsx",

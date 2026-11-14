@@ -1,0 +1,85 @@
+{
+  "schema": "orchestra-sf.reports-installed-closure.shared-config-patch.v1",
+  "mission": 25,
+  "lease_epoch": "reports-browser25",
+  "recipient": "session23",
+  "author": "S3-A / read-only CI helper",
+  "status": "INERT_COMPLETE_PATCH_NOT_APPLIED",
+  "baseline": {
+    "branch": "sf2-stack",
+    "commit": "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+    "path": "packages/app-shell/e2e/tsconfig.json",
+    "blob": "8364221434311400cae3007ea74cc67ddcfde765",
+    "sha256": "26b37a283557b1c24a70533f54c067abb6d4c74191151e4c203d3b5458b437a7",
+    "also_same_at": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23"
+  },
+  "postimage": {
+    "blob": "141da754e380d7410da97f9ca44505880cca55c9",
+    "sha256": "d1e94a1533a152e61753bea090c6e28214ef41da77f2ae837f194175ec065418"
+  },
+  "patch": {
+    "path": "reports-e2e-graph.patch",
+    "sha256": "9d8e1bb084485cc951d449d8dac161fbfc3700b7ca9d48f9611d506bf09ab6bb"
+  },
+  "scope": "Adds precisely ./sucafina/reports.spec.ts and ./sucafina/reports-support/**/*.ts to existing e2e include. Does not broaden grants, change compiler options, modify another writer's files or create a dispatcher. Full exact pre/post files accompany patch.",
+  "why_complete": "Explicit support glob includes production-state.ts, which is a runtime setup entry referenced by string and would not be guaranteed transitively included just by adding the spec. Existing ten support modules and any owned successors are covered. Other Sucafina writer E2Es remain untouched.",
+  "dependencies": [
+    {
+      "path": "packages/app-shell/package.json",
+      "blob": "32567c3e0d67a3cceacab355bb34e291cd419c26",
+      "reason": "Existing typecheck:e2e script is tsgo -p e2e/tsconfig.json; normal typecheck is separate tsgo -b."
+    },
+    {
+      "path": "packages/app-shell/tsconfig.json",
+      "blob": "8604188dee0f1ce9978cae39366d1850f5e97e7f",
+      "reason": "Parent compiler options preserved."
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports.spec.ts",
+      "required": "Accept exact final Mission25 owned source commit, including privacy override.",
+      "required_commit": "bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/",
+      "required": "Accept exact final Mission25 owned support files.",
+      "required_commit": "bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45"
+    }
+  ],
+  "apply_rule": "Session23 must verify current full preimage hash. If changed, rebase these two additions onto the current config with fresh pre/postimages; do not overwrite another producer's additions. Read the complete inert pre/postimages from images.preimage and images.postimage; their .txt suffix is receipt packaging only.",
+  "verification": {
+    "local_tests": "NOT_RUN; prohibited",
+    "static": "Full pre/post JSON source prepared; exact hashes computed as artifact serialization, not a compiler/test run.",
+    "required_hosted_command": {
+      "directory": "packages/app-shell",
+      "command": "bun run typecheck:e2e"
+    },
+    "hosted_route": "Use an already authorized existing scoped check route. Own astra-wp07-check does not run app E2E typecheck. This config inclusion is not evidence the command passed; no new dispatcher is proposed.",
+    "residual": "No compiler invocation occurred. Any existing or newly exposed compiler diagnostics, including inherited cross-directory graph settings, must be reported/resolved under the appropriate owner; no flags suppressed."
+  },
+  "consumer_ack_required": {
+    "accepted_composition_W": null,
+    "accepted_config_blob": null,
+    "accepted_owned_source_W": null,
+    "hosted_run": null,
+    "job": null,
+    "typecheck_result": "NOT_RUN"
+  },
+  "request_to_23": "Apply complete config patch with the owned final Reports source commit and shared Reports host/router patches; return accepted W/tree, exact config blob and dependency dispositions. Parent retains nominal Actions dispatch through existing test-ci.",
+  "images": {
+    "preimage": "preimages/packages/app-shell/e2e/tsconfig.json.txt",
+    "postimage": "postimages/packages/app-shell/e2e/tsconfig.json.txt",
+    "format": "Inert .txt files, byte-identical to original configuration images; baseline.path and patch paths remain the actual shared configuration path."
+  },
+  "owned_source_commits": [
+    {
+      "label": "W1",
+      "commit": "567727670b4039c316a12718c84b43b57f4fa19d"
+    },
+    {
+      "label": "W2",
+      "commit": "bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45"
+    }
+  ],
+  "owned_source_head": "bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45",
+  "shared_assembly_manifest": "../shared/manifest.json"
+}
