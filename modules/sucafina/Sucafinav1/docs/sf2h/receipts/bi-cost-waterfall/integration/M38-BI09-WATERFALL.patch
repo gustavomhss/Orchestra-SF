@@ -1126,7 +1126,7 @@ index 0000000000000000000000000000000000000000..b04f95fe9159af96308115598effda64
 +}, 120_000)
 diff --git a/modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/waterfall-contract.test.ts b/modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/waterfall-contract.test.ts
 new file mode 100644
-index 0000000000000000000000000000000000000000..33e2bc8fac3c8396355f38656096b4f81e22e469
+index 0000000000000000000000000000000000000000..63ed564458b4d05ff8c193d19614cadc77fe6ca3
 --- /dev/null
 +++ b/modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/waterfall-contract.test.ts
 @@ -0,0 +1,186 @@
@@ -1290,7 +1290,7 @@ index 0000000000000000000000000000000000000000..33e2bc8fac3c8396355f38656096b4f8
 +  ["currency", { currency: "EUR" }, "incompatible-unit-or-currency"],
 +  ["unit", { unit: "fte" }, "incompatible-unit-or-currency"],
 +  ["horizon", { period: { start: "2027-01-01", end: "2027-06-30" } }, "incompatible-period"],
-+] satisfies [string, Partial<ProjectionValue>, string][]) test(`waterfall withholds incompatible ${label} without converting the supplied values`, () => {
++] as const satisfies readonly (readonly [string, Partial<ProjectionValue>, string])[]) test(`waterfall withholds incompatible ${label} without converting the supplied values`, () => {
 +  const { projection, plan } = fixture()
 +  const changed = changeValue(projection, "first-contribution", change)
 +  const original = structuredClone(changed)

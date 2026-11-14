@@ -158,7 +158,7 @@ for (const [label, change, reason] of [
   ["currency", { currency: "EUR" }, "incompatible-unit-or-currency"],
   ["unit", { unit: "fte" }, "incompatible-unit-or-currency"],
   ["horizon", { period: { start: "2027-01-01", end: "2027-06-30" } }, "incompatible-period"],
-] satisfies [string, Partial<ProjectionValue>, string][]) test(`waterfall withholds incompatible ${label} without converting the supplied values`, () => {
+] as const satisfies readonly (readonly [string, Partial<ProjectionValue>, string])[]) test(`waterfall withholds incompatible ${label} without converting the supplied values`, () => {
   const { projection, plan } = fixture()
   const changed = changeValue(projection, "first-contribution", change)
   const original = structuredClone(changed)
