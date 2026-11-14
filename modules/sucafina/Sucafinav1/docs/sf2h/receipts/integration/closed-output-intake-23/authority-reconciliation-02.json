@@ -1,0 +1,52 @@
+{
+  "schema": "sf2-later-authority-reconciliation-v1",
+  "mission": 23,
+  "branch": "sf2-stack",
+  "pr": 65,
+  "writer": "S0-C current root session only",
+  "lease_epoch": "S0-C-e6-browser23",
+  "previous_control": "6da04cd66eb268362ee58509271fef773ac2a62e",
+  "current_control": "ade0332cb8d972eb102de0a9cc98b607d9981343",
+  "files_read_completely": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/validation-wave/decisions-functional-closure.json",
+      "blob": "21c6de6a35655b222d78852eea73fc74d320da5e",
+      "status": "added"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/validation-wave/routine-native-admission.json",
+      "blob": "5b68a470e3afaff985b949c89273e9f42e85d3c9",
+      "status": "added"
+    }
+  ],
+  "change_scope": "Two additive missions30 and31; no changes to COMMON, fixed planning, T0 or integration authority.",
+  "missions": [
+    {
+      "number": 30,
+      "id": "routine-native-admission",
+      "state": "PREPARED_NOT_STARTED",
+      "branch": "astra-wp09",
+      "pr": 30,
+      "expected_head": "1998acb0dcb59e68d41ee924eca4737bccbd5148",
+      "consumer": 23,
+      "scope": "Private native routine adapter/source plus own tests/receipts; shared host-context assembly proposed inert with complete preimages/postimages. No engine edits, second ledger or fabricated admission.",
+      "current_gap": "Actual routine native port unavailable; AM02 sixRoutines routes and AM06 remain blocked pending real adapter/resources/proof."
+    },
+    {
+      "number": 31,
+      "id": "decisions-functional-closure",
+      "state": "PREPARED_NOT_STARTED",
+      "branch": "astra-wp11",
+      "pr": 40,
+      "expected_head": "556079fe2fb97c824504ec60a47798c6e0553539",
+      "consumer": 23,
+      "scope": "Explicit continuation20 using already composed C3 UI/mount; nominal human journey and private coverage read support; C12Apply/Finance/Memory/shared host excluded.",
+      "current_gap": "Nominal positive Decisions journey, historical coverage and current consumer validation remain open."
+    }
+  ],
+  "operative_rule": "Session23 sole sf2-stack writer; S0 final dispatcher/acceptance. No supervisor/dispatcher/native Goal or source/control writer created. Future material outputs get new candidates. Prepared reviews ofC2 require explicit later-candidate rechecks.",
+  "prior_record": "authority-reconciliation-01.json",
+  "tests": "NOT_RUN",
+  "ci": "NOT_RUN",
+  "global_release": false
+}
