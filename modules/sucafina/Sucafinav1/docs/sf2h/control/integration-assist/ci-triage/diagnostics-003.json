@@ -1,0 +1,4309 @@
+{
+  "schema": "sf2h.ci-triage.diagnostics.v1",
+  "normalization": "Exact path+TS code+message after normalizing runner workspace prefix; source locations and W/S retained per occurrence. Buckets group owner/API intake, not proof of a common runtime root cause.",
+  "observations": 353,
+  "uniqueDiagnostics": 114,
+  "runs": {
+    "43630618176": {
+      "W": "7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1",
+      "treeW": "2da074668b164b1aa5e051f8a70366969425906f",
+      "S": "7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1",
+      "treeS": "2da074668b164b1aa5e051f8a70366969425906f",
+      "requestPath": null,
+      "requestBlob": null,
+      "request": null,
+      "snapshotDelta": "Direct exact-product checkout; S=W, no synthetic test request.",
+      "job": 132556167840,
+      "count": 115
+    },
+    "43630776800": {
+      "W": "62e5629dbf31be2bb662dda152c96021f22b0ca5",
+      "treeW": "6a52cb85d78260d5420acac3a4db35ce23873e83",
+      "S": "62e5629dbf31be2bb662dda152c96021f22b0ca5",
+      "treeS": "6a52cb85d78260d5420acac3a4db35ce23873e83",
+      "requestPath": null,
+      "requestBlob": null,
+      "request": null,
+      "snapshotDelta": "Direct exact-product checkout; S=W, no synthetic test request.",
+      "job": 132556649787,
+      "count": 69
+    },
+    "43629131094": {
+      "W": "d4fb072fa9bd32ebfef2b9cbc9b27b998d34f4e7",
+      "treeW": "8f2cd84288df2a9d70402219df871765fe1890ca",
+      "S": "00d1ba5220121c8490ae28ed0fc839c56b0b7192",
+      "treeS": "74baf3094086b85bd5c003ff4a2dfa9cb9119f57",
+      "requestPath": ".astra-wp10-check.json",
+      "requestBlob": "44644019c1aa76864506d1d59d99ae61500a5774",
+      "request": {
+        "productSha": "d4fb072fa9bd32ebfef2b9cbc9b27b998d34f4e7",
+        "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+      },
+      "snapshotDelta": {
+        "files": [
+          {
+            "path": ".astra-wp10-check.json",
+            "status": "added"
+          }
+        ],
+        "aheadBy": 37,
+        "treeOnlyRequest": true
+      },
+      "job": 132551590764,
+      "count": 13
+    },
+    "43632801654": {
+      "W": "7c9bbd966483b94d21a4c30961a8174be7ed6804",
+      "treeW": "6c55ee7399780575a61af242e79676a472d038af",
+      "S": "5ef3284a31973be8e3c14c8db23887574754a657",
+      "treeS": "00a2da15699e759733003ef9c788da43acf41c6e",
+      "requestPath": ".ci-run.json",
+      "requestBlob": "9054309f4fff75b66ae2cb6923476c8025faeb9d",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+          "./Sucafinav1/test/product/ui-ack-completion/ordinary-thread.test.ts",
+          "./Sucafinav1/test/product/ui-ack-completion/recipient-recovery.test.ts",
+          "./Sucafinav1/test/product/ui-ack-completion/recipient-refusal.test.ts",
+          "./Sucafinav1/test/product/ui-ack-completion/source-replacement.test.ts",
+          "./Sucafinav1/test/product/ui-split/ui-work/static-gates.test.ts",
+          "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "snapshotDelta": {
+        "files": [
+          {
+            "path": ".ci-run.json",
+            "status": "added"
+          }
+        ],
+        "aheadBy": 1,
+        "treeOnlyRequest": true
+      },
+      "job": 132562905431,
+      "count": 9
+    },
+    "43633483813": {
+      "W": "359ab99db8aaec23e885b492876bc0a3df3d0a33",
+      "treeW": "9793849ac18d0c664fabfec49e7e3b3a9ffd0605",
+      "S": "d482772e85f117e95f70dbaabed7b0518e9f5b1e",
+      "treeS": "eeda391d690537249607f294afaf32b1f0556b2c",
+      "requestPath": ".ci-run.json",
+      "requestBlob": "750d98d5cd8d19a96977687651dcfd792cff226f",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+          "./Sucafinav1/test/product/ui-ack-completion/recipient-recovery.test.ts",
+          "./Sucafinav1/test/product/ui-ack-completion/recipient-refusal.test.ts",
+          "./Sucafinav1/test/product/ui-ack-completion/source-replacement.test.ts",
+          "./Sucafinav1/test/product/ui-split/ui-work/static-gates.test.ts",
+          "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "snapshotDelta": {
+        "files": [
+          {
+            "path": ".ci-run.json",
+            "status": "added"
+          }
+        ],
+        "aheadBy": 1,
+        "treeOnlyRequest": true
+      },
+      "job": 132565093216,
+      "count": 9
+    },
+    "43632616824": {
+      "W": "e1fe9561f199dc594a5fd559d06d450253e571bc",
+      "treeW": "5cb441e60a88dce057534548796dc6e7b1e40f74",
+      "S": "cd4e8f8c63db9b66d4ab6742f3893c1dd3e8dd27",
+      "treeS": "aec6724439edf39398620902d3fd7650ffc42445",
+      "requestPath": ".astra-operations-check.json",
+      "requestBlob": "437b06e8462bd713723dd36f8a96a4d8033d3e10",
+      "request": {
+        "productSha": "e1fe9561f199dc594a5fd559d06d450253e571bc",
+        "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+      },
+      "snapshotDelta": {
+        "files": [
+          {
+            "path": ".astra-operations-check.json",
+            "status": "added"
+          }
+        ],
+        "aheadBy": 1,
+        "treeOnlyRequest": true
+      },
+      "job": 132562347834,
+      "count": 1
+    },
+    "43634168745": {
+      "W": "d8524169e0de188312f6c2d3b6877562c47e664d",
+      "treeW": "3ee21c140ca1647ed36989bd2203c1134eec08d6",
+      "S": "a53551af20e1476173cbeed8b54ae8f61c9872fe",
+      "treeS": "ea77baf645e92d06e4cded0123de5337506cd311",
+      "requestPath": ".ci-run.json",
+      "requestBlob": "b34019836dc507e957dc4d62b282ec391437fe8a",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+          "./Sucafinav1/test/product/ui-ack-completion/recipient-recovery.test.ts",
+          "./Sucafinav1/test/product/ui-ack-completion/source-replacement.test.ts",
+          "./Sucafinav1/test/product/ui-split/ui-work/static-gates.test.ts",
+          "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "snapshotDelta": {
+        "files": [
+          {
+            "path": ".ci-run.json",
+            "status": "added"
+          }
+        ],
+        "aheadBy": 1,
+        "treeOnlyRequest": true
+      },
+      "job": 132567207864,
+      "count": 9
+    },
+    "43635795619": {
+      "W": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+      "treeW": "a736cd370da6081c6010ffb26d66130fea94736f",
+      "S": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+      "treeS": "a736cd370da6081c6010ffb26d66130fea94736f",
+      "requestPath": null,
+      "requestBlob": null,
+      "request": null,
+      "snapshotDelta": "Direct exact-product checkout; S=W, no synthetic test request; log records both productSha and productTree.",
+      "job": 132572187686,
+      "count": 115
+    },
+    "43635682967": {
+      "W": "5d42e44fb623db78a3a6ef025d2317a3fb653432",
+      "treeW": "cb51ae6f05946b76623283f70e78abbd2ed0aef0",
+      "S": "f9e314f1b4c31962306626cc5c3363913f17e296",
+      "treeS": "43e6665e4d1d0f5de07dd774065766f176cab9c3",
+      "requestPath": ".astra-wp10-check.json",
+      "requestBlob": "cdccfd26c0473204ac25f9ff74927bcf91c799a1",
+      "request": {
+        "productSha": "5d42e44fb623db78a3a6ef025d2317a3fb653432",
+        "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+      },
+      "snapshotDelta": {
+        "files": [
+          {
+            "path": ".astra-wp10-check.json",
+            "status": "added"
+          }
+        ],
+        "aheadBy": 39,
+        "treeOnlyRequest": true
+      },
+      "job": 132571841882,
+      "count": 13
+    }
+  },
+  "diagnostics": [
+    {
+      "normalizedSignature": "apps/cli/src/sucafina-product/business-services.ts|TS7006|Parameter 'snapshot' implicitly has an 'any' type.",
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "code": "TS7006",
+      "message": "Parameter 'snapshot' implicitly has an 'any' type.",
+      "bucket": "UNRESOLVED_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 85,
+          "sourceColumn": 30,
+          "logLine": 557
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 85,
+          "sourceColumn": 30,
+          "logLine": 559
+        }
+      ],
+      "id": "TC-0001"
+    },
+    {
+      "normalizedSignature": "apps/cli/src/sucafina-product/business-services.ts|TS7006|Parameter 'evidence' implicitly has an 'any' type.",
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "code": "TS7006",
+      "message": "Parameter 'evidence' implicitly has an 'any' type.",
+      "bucket": "UNRESOLVED_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 85,
+          "sourceColumn": 40,
+          "logLine": 558
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 85,
+          "sourceColumn": 40,
+          "logLine": 560
+        }
+      ],
+      "id": "TC-0002"
+    },
+    {
+      "normalizedSignature": "apps/cli/src/sucafina-product/business-services.ts|TS2741|Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: Readonly<{ ref: `sf-workspace:${string}`; incarnation: string; }>; operationIdentity: (call: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, call: TrustedDomainContext) => Promise<...>; evidence: BusinessContextServi...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "code": "TS2741",
+      "message": "Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: Readonly<{ ref: `sf-workspace:${string}`; incarnation: string; }>; operationIdentity: (call: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, call: TrustedDomainContext) => Promise<...>; evidence: BusinessContextServi...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "bucket": "SCENARIO_VERIFIER_CALLER",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 102,
+          "sourceColumn": 40,
+          "logLine": 559
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 102,
+          "sourceColumn": 40,
+          "logLine": 561
+        }
+      ],
+      "id": "TC-0003"
+    },
+    {
+      "normalizedSignature": "apps/cli/src/sucafina-product/business-services.ts|TS2322|Type '(ref: string, call: TrustedDomainContext) => Promise<{ status: \"ok\"; value: { evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; ... 6 more ...; projectionDigest: string; }; }; context: ProductContext; }; } | { ...; } | { ...; }>' is not assignable to type '{ issue: (kind: \"procurement-request\" | \"procurement-supplier\", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }'.",
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "code": "TS2322",
+      "message": "Type '(ref: string, call: TrustedDomainContext) => Promise<{ status: \"ok\"; value: { evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; ... 6 more ...; projectionDigest: string; }; }; context: ProductContext; }; } | { ...; } | { ...; }>' is not assignable to type '{ issue: (kind: \"procurement-request\" | \"procurement-supplier\", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }'.",
+      "bucket": "PROCUREMENT_SOURCE_PORT",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 188,
+          "sourceColumn": 20,
+          "logLine": 560
+        },
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 192,
+          "sourceColumn": 20,
+          "logLine": 494
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 188,
+          "sourceColumn": 20,
+          "logLine": 562
+        }
+      ],
+      "id": "TC-0004"
+    },
+    {
+      "normalizedSignature": "apps/cli/src/sucafina-product/host-context.ts|TS2345|Argument of type '{ cases: { draft: (request: CaseDraftRequest, binding: TrustedDomainContext) => Promise<PortResult<DecisionCase>>; prepareIntent: (request: CaseDraftRequest, binding: TrustedDomainContext) => Promise<...>; read: (request: CaseReadRequest, binding: TrustedDomainContext) => Promise<...>; prepareIntentForCase: (request...' is not assignable to parameter of type 'SfAnalysisDependencies & { replayIntent: (request: CaseDraftRequest, ref: { id: string; incarnation: string; version: number; }, context: TrustedDomainContext) => Promise<...>; imports: Pick<...>; selectedPreviewRef: (caseRef: { ...; }, call: TrustedDomainContext) => Promise<...>; }'.",
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "code": "TS2345",
+      "message": "Argument of type '{ cases: { draft: (request: CaseDraftRequest, binding: TrustedDomainContext) => Promise<PortResult<DecisionCase>>; prepareIntent: (request: CaseDraftRequest, binding: TrustedDomainContext) => Promise<...>; read: (request: CaseReadRequest, binding: TrustedDomainContext) => Promise<...>; prepareIntentForCase: (request...' is not assignable to parameter of type 'SfAnalysisDependencies & { replayIntent: (request: CaseDraftRequest, ref: { id: string; incarnation: string; version: number; }, context: TrustedDomainContext) => Promise<...>; imports: Pick<...>; selectedPreviewRef: (caseRef: { ...; }, call: TrustedDomainContext) => Promise<...>; }'.",
+      "bucket": "UNRESOLVED_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 158,
+          "sourceColumn": 128,
+          "logLine": 561
+        },
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 158,
+          "sourceColumn": 128,
+          "logLine": 495
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 158,
+          "sourceColumn": 128,
+          "logLine": 563
+        }
+      ],
+      "id": "TC-0005"
+    },
+    {
+      "normalizedSignature": "apps/cli/src/sucafina-product/host-context.ts|TS2322|Type 'SfStateResult<string | undefined>' is not assignable to type 'PortResult<{ runRef: string; }>'.",
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<string | undefined>' is not assignable to type 'PortResult<{ runRef: string; }>'.",
+      "bucket": "NATIVE_RUN_RESULT_ADAPTER",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 185,
+          "sourceColumn": 136,
+          "logLine": 563
+        },
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 185,
+          "sourceColumn": 136,
+          "logLine": 497
+        },
+        {
+          "run": 43632801654,
+          "job": 132562905431,
+          "sourceLine": 193,
+          "sourceColumn": 136,
+          "logLine": 948
+        },
+        {
+          "run": 43633483813,
+          "job": 132565093216,
+          "sourceLine": 193,
+          "sourceColumn": 136,
+          "logLine": 975
+        },
+        {
+          "run": 43634168745,
+          "job": 132567207864,
+          "sourceLine": 193,
+          "sourceColumn": 136,
+          "logLine": 922
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 185,
+          "sourceColumn": 136,
+          "logLine": 565
+        }
+      ],
+      "id": "TC-0006"
+    },
+    {
+      "normalizedSignature": "apps/cli/src/sucafina-product/host-context.ts|TS2322|Type 'SfStateResult<({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; intentDigest?: string | undefined; skillInputDigest: string; principalRef: string; accessRevision: string; ... 9 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined>' is not assignable to type 'PortResult<{ runRef: string; }> | undefined'.",
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; intentDigest?: string | undefined; skillInputDigest: string; principalRef: string; accessRevision: string; ... 9 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined>' is not assignable to type 'PortResult<{ runRef: string; }> | undefined'.",
+      "bucket": "NATIVE_RUN_RESULT_ADAPTER",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 217,
+          "sourceColumn": 138,
+          "logLine": 569
+        },
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 217,
+          "sourceColumn": 138,
+          "logLine": 503
+        },
+        {
+          "run": 43632801654,
+          "job": 132562905431,
+          "sourceLine": 225,
+          "sourceColumn": 138,
+          "logLine": 954
+        },
+        {
+          "run": 43633483813,
+          "job": 132565093216,
+          "sourceLine": 225,
+          "sourceColumn": 138,
+          "logLine": 981
+        },
+        {
+          "run": 43634168745,
+          "job": 132567207864,
+          "sourceLine": 225,
+          "sourceColumn": 138,
+          "logLine": 928
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 217,
+          "sourceColumn": 138,
+          "logLine": 571
+        }
+      ],
+      "id": "TC-0007"
+    },
+    {
+      "normalizedSignature": "apps/cli/src/sucafina-product/host-context.ts|TS2322|Type 'SfStateResult<({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; intentDigest?: string | undefined; skillInputDigest: string; principalRef: string; accessRevision: string; ... 9 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined>' is not assignable to type 'PortResult<SfNativeRunRecord>'.",
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; intentDigest?: string | undefined; skillInputDigest: string; principalRef: string; accessRevision: string; ... 9 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined>' is not assignable to type 'PortResult<SfNativeRunRecord>'.",
+      "bucket": "NATIVE_RUN_RESULT_ADAPTER",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 273,
+          "sourceColumn": 138,
+          "logLine": 575
+        },
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 273,
+          "sourceColumn": 138,
+          "logLine": 509
+        },
+        {
+          "run": 43632801654,
+          "job": 132562905431,
+          "sourceLine": 281,
+          "sourceColumn": 138,
+          "logLine": 960
+        },
+        {
+          "run": 43633483813,
+          "job": 132565093216,
+          "sourceLine": 281,
+          "sourceColumn": 138,
+          "logLine": 987
+        },
+        {
+          "run": 43634168745,
+          "job": 132567207864,
+          "sourceLine": 281,
+          "sourceColumn": 138,
+          "logLine": 934
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 273,
+          "sourceColumn": 138,
+          "logLine": 577
+        }
+      ],
+      "id": "TC-0008"
+    },
+    {
+      "normalizedSignature": "apps/cli/src/sucafina-product/host-context.ts|TS2322|Type '(context: TrustedUiContext, caseRef: { id: string; incarnation: string; version: number; }) => Promise<{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { ...; }[]; } | { ...; } | { ...; }>' is not assignable to type '(context: TrustedUiContext, caseRef: { id: string; incarnation: string; version: number; }) => Promise<PortResult<readonly { runRef: string; state: \"cancelled\" | \"failed\" | \"needs-input\" | ... 6 more ... | \"unavailable\"; version: number; outputRef?: string | undefined; }[]>>'.",
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "code": "TS2322",
+      "message": "Type '(context: TrustedUiContext, caseRef: { id: string; incarnation: string; version: number; }) => Promise<{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { ...; }[]; } | { ...; } | { ...; }>' is not assignable to type '(context: TrustedUiContext, caseRef: { id: string; incarnation: string; version: number; }) => Promise<PortResult<readonly { runRef: string; state: \"cancelled\" | \"failed\" | \"needs-input\" | ... 6 more ... | \"unavailable\"; version: number; outputRef?: string | undefined; }[]>>'.",
+      "bucket": "NATIVE_RUN_RESULT_ADAPTER",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 396,
+          "sourceColumn": 5,
+          "logLine": 581
+        },
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 396,
+          "sourceColumn": 5,
+          "logLine": 515
+        },
+        {
+          "run": 43632801654,
+          "job": 132562905431,
+          "sourceLine": 404,
+          "sourceColumn": 5,
+          "logLine": 966
+        },
+        {
+          "run": 43633483813,
+          "job": 132565093216,
+          "sourceLine": 404,
+          "sourceColumn": 5,
+          "logLine": 993
+        },
+        {
+          "run": 43634168745,
+          "job": 132567207864,
+          "sourceLine": 404,
+          "sourceColumn": 5,
+          "logLine": 940
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 396,
+          "sourceColumn": 5,
+          "logLine": 583
+        }
+      ],
+      "id": "TC-0009"
+    },
+    {
+      "normalizedSignature": "apps/cli/src/sucafina-product/host-context.ts|TS2322|Type '(context: TrustedUiContext, runRef: string) => Promise<{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ ...; } & { ...; }) | ({ ...; } & { ...; }) | undefined; } | { ...; } | { ...; }>' is not assignable to type '(context: TrustedUiContext, runRef: string) => Promise<PortResult<SfNativeRunRecord>>'.",
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "code": "TS2322",
+      "message": "Type '(context: TrustedUiContext, runRef: string) => Promise<{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ ...; } & { ...; }) | ({ ...; } & { ...; }) | undefined; } | { ...; } | { ...; }>' is not assignable to type '(context: TrustedUiContext, runRef: string) => Promise<PortResult<SfNativeRunRecord>>'.",
+      "bucket": "NATIVE_RUN_RESULT_ADAPTER",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 412,
+          "sourceColumn": 5,
+          "logLine": 589
+        },
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 412,
+          "sourceColumn": 5,
+          "logLine": 523
+        },
+        {
+          "run": 43632801654,
+          "job": 132562905431,
+          "sourceLine": 420,
+          "sourceColumn": 5,
+          "logLine": 974
+        },
+        {
+          "run": 43633483813,
+          "job": 132565093216,
+          "sourceLine": 420,
+          "sourceColumn": 5,
+          "logLine": 1001
+        },
+        {
+          "run": 43634168745,
+          "job": 132567207864,
+          "sourceLine": 420,
+          "sourceColumn": 5,
+          "logLine": 948
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 412,
+          "sourceColumn": 5,
+          "logLine": 591
+        }
+      ],
+      "id": "TC-0010"
+    },
+    {
+      "normalizedSignature": "apps/cli/src/sucafina-product/host-context.ts|TS2322|Type '(context: TrustedUiContext) => string | undefined' is not assignable to type '(context: TrustedDomainContext) => string | undefined'.",
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "code": "TS2322",
+      "message": "Type '(context: TrustedUiContext) => string | undefined' is not assignable to type '(context: TrustedDomainContext) => string | undefined'.",
+      "bucket": "NATIVE_RUN_RESULT_ADAPTER",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 551,
+          "sourceColumn": 5,
+          "logLine": 597
+        },
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 551,
+          "sourceColumn": 5,
+          "logLine": 531
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 551,
+          "sourceColumn": 5,
+          "logLine": 599
+        }
+      ],
+      "id": "TC-0011"
+    },
+    {
+      "normalizedSignature": "apps/cli/src/sucafina-product/import-services.ts|TS2304|Cannot find name 'Period'.",
+      "path": "apps/cli/src/sucafina-product/import-services.ts",
+      "code": "TS2304",
+      "message": "Cannot find name 'Period'.",
+      "bucket": "MISSING_TYPE_OR_MODULE",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 85,
+          "sourceColumn": 101,
+          "logLine": 603
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 85,
+          "sourceColumn": 101,
+          "logLine": 605
+        }
+      ],
+      "id": "TC-0012"
+    },
+    {
+      "normalizedSignature": "apps/cli/src/sucafina-product/import-services.ts|TS2304|Cannot find name 'isSfPeriod'.",
+      "path": "apps/cli/src/sucafina-product/import-services.ts",
+      "code": "TS2304",
+      "message": "Cannot find name 'isSfPeriod'.",
+      "bucket": "MISSING_TYPE_OR_MODULE",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 115,
+          "sourceColumn": 21,
+          "logLine": 604
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 115,
+          "sourceColumn": 21,
+          "logLine": 606
+        }
+      ],
+      "id": "TC-0013"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/product/collaboration/confirmation.ts|TS2322|Type 'SfStateResult<(ConfirmationRecord & ConfirmationBaseline) | null>' is not assignable to type 'PortResult<ConfirmationRecord>'.",
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/confirmation.ts",
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<(ConfirmationRecord & ConfirmationBaseline) | null>' is not assignable to type 'PortResult<ConfirmationRecord>'.",
+      "bucket": "COLLAB_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 79,
+          "sourceColumn": 34,
+          "logLine": 605
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 79,
+          "sourceColumn": 34,
+          "logLine": 607
+        }
+      ],
+      "id": "TC-0014"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/product/collaboration/confirmation.ts|TS2322|Type 'SfStateResult<ConfirmationRecord | undefined>' is not assignable to type 'PortResult<ConfirmationValidityProjection>'.",
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/confirmation.ts",
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<ConfirmationRecord | undefined>' is not assignable to type 'PortResult<ConfirmationValidityProjection>'.",
+      "bucket": "COLLAB_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 91,
+          "sourceColumn": 34,
+          "logLine": 611
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 91,
+          "sourceColumn": 34,
+          "logLine": 613
+        }
+      ],
+      "id": "TC-0015"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/product/collaboration/hot-topic-host.ts|TS2322|Type '<T>(context: TrustedDomainContext, sourceRefs: readonly BusinessEvidenceRef[], work: (snapshot: Snapshot, actor: Actor, environment: Environment, correlations: Record<...>) => { ...; }) => Promise<...>' is not assignable to type '<T>(binding: TrustedDomainContext, sourceRefs: readonly BusinessEvidenceRef[], work: (snapshot: Snapshot, actor: Actor, environment: Environment, correlations: Record<...>) => { ...; }) => Promise<...>'.",
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/hot-topic-host.ts",
+      "code": "TS2322",
+      "message": "Type '<T>(context: TrustedDomainContext, sourceRefs: readonly BusinessEvidenceRef[], work: (snapshot: Snapshot, actor: Actor, environment: Environment, correlations: Record<...>) => { ...; }) => Promise<...>' is not assignable to type '<T>(binding: TrustedDomainContext, sourceRefs: readonly BusinessEvidenceRef[], work: (snapshot: Snapshot, actor: Actor, environment: Environment, correlations: Record<...>) => { ...; }) => Promise<...>'.",
+      "bucket": "COLLAB_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 16,
+          "sourceColumn": 9,
+          "logLine": 617
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 16,
+          "sourceColumn": 9,
+          "logLine": 619
+        }
+      ],
+      "id": "TC-0016"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/product/collaboration/recipient-actions.ts|TS2322|Type 'SfStateResult<boolean>' is not assignable to type 'PortResult<RecipientThread>'.",
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/recipient-actions.ts",
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<boolean>' is not assignable to type 'PortResult<RecipientThread>'.",
+      "bucket": "COLLAB_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 50,
+          "sourceColumn": 32,
+          "logLine": 625
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 50,
+          "sourceColumn": 32,
+          "logLine": 627
+        }
+      ],
+      "id": "TC-0017"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/product/collaboration/relations.ts|TS2322|Type 'SfStateResult<{ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | null>' is not assignable to type 'PortResult<{ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }>'.",
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/relations.ts",
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<{ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | null>' is not assignable to type 'PortResult<{ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }>'.",
+      "bucket": "COLLAB_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 70,
+          "sourceColumn": 66,
+          "logLine": 631
+        },
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 116,
+          "sourceColumn": 35,
+          "logLine": 637
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 70,
+          "sourceColumn": 66,
+          "logLine": 633
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 116,
+          "sourceColumn": 35,
+          "logLine": 639
+        }
+      ],
+      "id": "TC-0018"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/product/collaboration/relations.ts|TS2322|Type 'SfStateResult<({ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | undefined)[] | undefined>' is not assignable to type 'PortResult<{ relations: readonly { id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }[]; }>'.",
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/relations.ts",
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<({ id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; } | undefined)[] | undefined>' is not assignable to type 'PortResult<{ relations: readonly { id: string; fromRef: string; toRef: string; kind: string; confirmedBy: string; confirmedAt: string; evidenceRefs: readonly BusinessEvidenceRef[]; }[]; }>'.",
+      "bucket": "COLLAB_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 127,
+          "sourceColumn": 35,
+          "logLine": 643
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 127,
+          "sourceColumn": 35,
+          "logLine": 645
+        }
+      ],
+      "id": "TC-0019"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/product/collaboration/threads.ts|TS2322|Type 'SfStateResult<CollaborationThread | null>' is not assignable to type 'PortResult<CollaborationThread>'.",
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/threads.ts",
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<CollaborationThread | null>' is not assignable to type 'PortResult<CollaborationThread>'.",
+      "bucket": "COLLAB_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 57,
+          "sourceColumn": 34,
+          "logLine": 649
+        },
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 101,
+          "sourceColumn": 32,
+          "logLine": 667
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 57,
+          "sourceColumn": 34,
+          "logLine": 651
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 101,
+          "sourceColumn": 32,
+          "logLine": 669
+        }
+      ],
+      "id": "TC-0020"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/product/collaboration/threads.ts|TS2322|Type 'SfStateResult<unknown>' is not assignable to type 'PortResult<CollaborationThread>'.",
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/threads.ts",
+      "code": "TS2322",
+      "message": "Type 'SfStateResult<unknown>' is not assignable to type 'PortResult<CollaborationThread>'.",
+      "bucket": "COLLAB_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 68,
+          "sourceColumn": 33,
+          "logLine": 655
+        },
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 86,
+          "sourceColumn": 31,
+          "logLine": 661
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 68,
+          "sourceColumn": 33,
+          "logLine": 657
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 86,
+          "sourceColumn": 31,
+          "logLine": 663
+        }
+      ],
+      "id": "TC-0021"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/product/contracts/host-context.ts|TS2307|Cannot find module '../routines/factory.ts' or its corresponding type declarations.",
+      "path": "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+      "code": "TS2307",
+      "message": "Cannot find module '../routines/factory.ts' or its corresponding type declarations.",
+      "bucket": "MISSING_TYPE_OR_MODULE",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 14,
+          "sourceColumn": 45,
+          "logLine": 673
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 14,
+          "sourceColumn": 45,
+          "logLine": 675
+        }
+      ],
+      "id": "TC-0022"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts|TS7006|Parameter 'field' implicitly has an 'any' type.",
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+      "code": "TS7006",
+      "message": "Parameter 'field' implicitly has an 'any' type.",
+      "bucket": "COLLAB_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 66,
+          "sourceColumn": 474,
+          "logLine": 674
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 66,
+          "sourceColumn": 474,
+          "logLine": 676
+        }
+      ],
+      "id": "TC-0023"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts|TS2345|Argument of type '(snapshots: Record<Surface, Snapshot>) => Promise<{ commit: false; value: { state: \"replaced\" | \"unavailable\"; index: number; fingerprints: string[]; physicalIncarnations?: undefined; }; } | { ...; }>' is not assignable to parameter of type '(snapshots: Record<Surface, Snapshot>) => Promise<{ commit: boolean; value: { state: \"replaced\" | \"unavailable\"; index: number; fingerprints: string[]; physicalIncarnations?: undefined; }; }>'.",
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+      "code": "TS2345",
+      "message": "Argument of type '(snapshots: Record<Surface, Snapshot>) => Promise<{ commit: false; value: { state: \"replaced\" | \"unavailable\"; index: number; fingerprints: string[]; physicalIncarnations?: undefined; }; } | { ...; }>' is not assignable to parameter of type '(snapshots: Record<Surface, Snapshot>) => Promise<{ commit: boolean; value: { state: \"replaced\" | \"unavailable\"; index: number; fingerprints: string[]; physicalIncarnations?: undefined; }; }>'.",
+      "bucket": "COLLAB_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 104,
+          "sourceColumn": 41,
+          "logLine": 675
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 104,
+          "sourceColumn": 41,
+          "logLine": 677
+        }
+      ],
+      "id": "TC-0024"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts|TS2339|Property 'state' does not exist on type '{}'.",
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+      "code": "TS2339",
+      "message": "Property 'state' does not exist on type '{}'.",
+      "bucket": "COLLAB_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 118,
+          "sourceColumn": 16,
+          "logLine": 681
+        },
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 119,
+          "sourceColumn": 16,
+          "logLine": 683
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 118,
+          "sourceColumn": 16,
+          "logLine": 683
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 119,
+          "sourceColumn": 16,
+          "logLine": 685
+        }
+      ],
+      "id": "TC-0025"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts|TS2339|Property 'index' does not exist on type '{}'.",
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+      "code": "TS2339",
+      "message": "Property 'index' does not exist on type '{}'.",
+      "bucket": "COLLAB_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 118,
+          "sourceColumn": 52,
+          "logLine": 682
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 118,
+          "sourceColumn": 52,
+          "logLine": 684
+        }
+      ],
+      "id": "TC-0026"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts|TS2339|Property 'fingerprints' does not exist on type '{}'.",
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+      "code": "TS2339",
+      "message": "Property 'fingerprints' does not exist on type '{}'.",
+      "bucket": "COLLAB_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 120,
+          "sourceColumn": 77,
+          "logLine": 684
+        },
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 121,
+          "sourceColumn": 163,
+          "logLine": 685
+        },
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 123,
+          "sourceColumn": 61,
+          "logLine": 686
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 120,
+          "sourceColumn": 77,
+          "logLine": 686
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 121,
+          "sourceColumn": 163,
+          "logLine": 687
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 123,
+          "sourceColumn": 61,
+          "logLine": 688
+        }
+      ],
+      "id": "TC-0027"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts|TS2339|Property 'physicalIncarnations' does not exist on type '{}'.",
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+      "code": "TS2339",
+      "message": "Property 'physicalIncarnations' does not exist on type '{}'.",
+      "bucket": "COLLAB_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 128,
+          "sourceColumn": 126,
+          "logLine": 687
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 128,
+          "sourceColumn": 126,
+          "logLine": 689
+        }
+      ],
+      "id": "TC-0028"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts|TS2349|This expression is not callable.",
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts",
+      "code": "TS2349",
+      "message": "This expression is not callable.",
+      "bucket": "PROCUREMENT_SOURCE_PORT",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 216,
+          "sourceColumn": 35,
+          "logLine": 688
+        },
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 222,
+          "sourceColumn": 33,
+          "logLine": 690
+        },
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 216,
+          "sourceColumn": 35,
+          "logLine": 537
+        },
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 222,
+          "sourceColumn": 33,
+          "logLine": 539
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 216,
+          "sourceColumn": 35,
+          "logLine": 690
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 222,
+          "sourceColumn": 33,
+          "logLine": 692
+        }
+      ],
+      "id": "TC-0029"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/product/documents/capabilities.ts|TS2339|Property 'reason' does not exist on type 'SfStateResult<SfDocumentAssetCatalogEntry | undefined>'.",
+      "path": "modules/sucafina/Sucafinav1/product/documents/capabilities.ts",
+      "code": "TS2339",
+      "message": "Property 'reason' does not exist on type 'SfStateResult<SfDocumentAssetCatalogEntry | undefined>'.",
+      "bucket": "OPERATIONS_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 71,
+          "sourceColumn": 172,
+          "logLine": 692
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 71,
+          "sourceColumn": 172,
+          "logLine": 694
+        }
+      ],
+      "id": "TC-0030"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts|TS2353|Object literal may only specify known properties, and 'state' does not exist in type '{ host: DomainPortHost; cases: DecisionCasePort; }'.",
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "code": "TS2353",
+      "message": "Object literal may only specify known properties, and 'state' does not exist in type '{ host: DomainPortHost; cases: DecisionCasePort; }'.",
+      "bucket": "C09_READER_ADAPTER",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 170,
+          "sourceColumn": 71,
+          "logLine": 694
+        },
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 170,
+          "sourceColumn": 71,
+          "logLine": 563
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 170,
+          "sourceColumn": 71,
+          "logLine": 696
+        }
+      ],
+      "id": "TC-0031"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts|TS7006|Parameter 'refs' implicitly has an 'any' type.",
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "code": "TS7006",
+      "message": "Parameter 'refs' implicitly has an 'any' type.",
+      "bucket": "C09_READER_ADAPTER",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 170,
+          "sourceColumn": 153,
+          "logLine": 695
+        },
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 170,
+          "sourceColumn": 153,
+          "logLine": 564
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 170,
+          "sourceColumn": 153,
+          "logLine": 697
+        }
+      ],
+      "id": "TC-0032"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts|TS7006|Parameter 'call' implicitly has an 'any' type.",
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "code": "TS7006",
+      "message": "Parameter 'call' implicitly has an 'any' type.",
+      "bucket": "C09_READER_ADAPTER",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 170,
+          "sourceColumn": 159,
+          "logLine": 696
+        },
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 170,
+          "sourceColumn": 159,
+          "logLine": 565
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 170,
+          "sourceColumn": 159,
+          "logLine": 698
+        }
+      ],
+      "id": "TC-0033"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts|TS2322|Type '(request: { caseRefs: readonly { id: string; incarnation: string; }[]; query: string; }, call: TrustedDomainContext) => Promise<{ envelope: BusinessMemoryEnvelope; entry: MemoryEntry; resolutions: BusinessEvidenceResolution[]; case: AuthorizedCaseProjection; recordDigest: string; }[]>' is not assignable to type '(request: { caseRefs: readonly { id: string; incarnation: string; }[]; query: string; }, trustedCall: TrustedDomainContext) => Promise<readonly { envelope: BusinessMemoryEnvelope; entry: { ...; } | { ...; }; }[]>'.",
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "code": "TS2322",
+      "message": "Type '(request: { caseRefs: readonly { id: string; incarnation: string; }[]; query: string; }, call: TrustedDomainContext) => Promise<{ envelope: BusinessMemoryEnvelope; entry: MemoryEntry; resolutions: BusinessEvidenceResolution[]; case: AuthorizedCaseProjection; recordDigest: string; }[]>' is not assignable to type '(request: { caseRefs: readonly { id: string; incarnation: string; }[]; query: string; }, trustedCall: TrustedDomainContext) => Promise<readonly { envelope: BusinessMemoryEnvelope; entry: { ...; } | { ...; }; }[]>'.",
+      "bucket": "UNRESOLVED_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 212,
+          "sourceColumn": 5,
+          "logLine": 697
+        },
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 212,
+          "sourceColumn": 5,
+          "logLine": 566
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 212,
+          "sourceColumn": 5,
+          "logLine": 699
+        }
+      ],
+      "id": "TC-0034"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts|TS2345|Argument of type 'SfStateNamespace' is not assignable to parameter of type '\"atlas\" | \"cases\" | \"confirmations\" | \"contributions\" | \"documents\" | \"outbox\" | \"preferences\" | \"receipts\" | \"relations\" | \"reviews\" | \"threads\"'.",
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "code": "TS2345",
+      "message": "Argument of type 'SfStateNamespace' is not assignable to parameter of type '\"atlas\" | \"cases\" | \"confirmations\" | \"contributions\" | \"documents\" | \"outbox\" | \"preferences\" | \"receipts\" | \"relations\" | \"reviews\" | \"threads\"'.",
+      "bucket": "UNRESOLVED_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 37,
+          "sourceColumn": 128,
+          "logLine": 704
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 37,
+          "sourceColumn": 128,
+          "logLine": 706
+        }
+      ],
+      "id": "TC-0035"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts|TS2741|Property '\"bi-artifacts\"' is missing in type '{ preferences: number; reviews: number; relations: number; threads: number; confirmations: number; cases: number; contributions: number; documents: number; receipts: number; atlas: number; outbox: number; }' but required in type 'Record<SfStateNamespace, number>'.",
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "code": "TS2741",
+      "message": "Property '\"bi-artifacts\"' is missing in type '{ preferences: number; reviews: number; relations: number; threads: number; confirmations: number; cases: number; contributions: number; documents: number; receipts: number; atlas: number; outbox: number; }' but required in type 'Record<SfStateNamespace, number>'.",
+      "bucket": "UNRESOLVED_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 113,
+          "sourceColumn": 43,
+          "logLine": 706
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 113,
+          "sourceColumn": 43,
+          "logLine": 708
+        }
+      ],
+      "id": "TC-0036"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts|TS2345|Argument of type '(snapshot: Snapshot) => Promise<{ commit: false; value: undefined; } | { commit: false; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { ...; }; impactDigest?: undefined; }; } | { ...; }>' is not assignable to parameter of type '(snapshot: Snapshot) => Promise<{ commit: boolean; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { warnings?: undefined; ... 7 more ...; commandDigest?: undefined; }; impactDigest?: undefined; } | undefined; }>'.",
+      "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+      "code": "TS2345",
+      "message": "Argument of type '(snapshot: Snapshot) => Promise<{ commit: false; value: undefined; } | { commit: false; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { ...; }; impactDigest?: undefined; }; } | { ...; }>' is not assignable to parameter of type '(snapshot: Snapshot) => Promise<{ commit: boolean; value: { before?: undefined; after?: undefined; format: \"backup\" | DashboardImportFormat; result: { warnings?: undefined; ... 7 more ...; commandDigest?: undefined; }; impactDigest?: undefined; } | undefined; }>'.",
+      "bucket": "OPERATIONS_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 38,
+          "sourceColumn": 75,
+          "logLine": 707
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 38,
+          "sourceColumn": 75,
+          "logLine": 709
+        }
+      ],
+      "id": "TC-0037"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts|TS2339|Property 'result' does not exist on type '{}'.",
+      "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+      "code": "TS2339",
+      "message": "Property 'result' does not exist on type '{}'.",
+      "bucket": "OPERATIONS_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 60,
+          "sourceColumn": 17,
+          "logLine": 716
+        },
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 60,
+          "sourceColumn": 71,
+          "logLine": 717
+        },
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 60,
+          "sourceColumn": 119,
+          "logLine": 718
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 60,
+          "sourceColumn": 17,
+          "logLine": 718
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 60,
+          "sourceColumn": 71,
+          "logLine": 719
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 60,
+          "sourceColumn": 119,
+          "logLine": 720
+        }
+      ],
+      "id": "TC-0038"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts|TS2638|Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.",
+      "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+      "code": "TS2638",
+      "message": "Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.",
+      "bucket": "OPERATIONS_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 62,
+          "sourceColumn": 29,
+          "logLine": 719
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 62,
+          "sourceColumn": 29,
+          "logLine": 721
+        }
+      ],
+      "id": "TC-0039"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts|TS2339|Property 'result' does not exist on type 'Record<\"impactDigest\", unknown> & Record<\"before\", unknown> & Record<\"after\", unknown>'.",
+      "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+      "code": "TS2339",
+      "message": "Property 'result' does not exist on type 'Record<\"impactDigest\", unknown> & Record<\"before\", unknown> & Record<\"after\", unknown>'.",
+      "bucket": "OPERATIONS_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 74,
+          "sourceColumn": 251,
+          "logLine": 720
+        },
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 74,
+          "sourceColumn": 306,
+          "logLine": 721
+        },
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 74,
+          "sourceColumn": 353,
+          "logLine": 722
+        },
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 74,
+          "sourceColumn": 457,
+          "logLine": 723
+        },
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 75,
+          "sourceColumn": 573,
+          "logLine": 728
+        },
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 75,
+          "sourceColumn": 674,
+          "logLine": 730
+        },
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 75,
+          "sourceColumn": 848,
+          "logLine": 731
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 74,
+          "sourceColumn": 251,
+          "logLine": 722
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 74,
+          "sourceColumn": 306,
+          "logLine": 723
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 74,
+          "sourceColumn": 353,
+          "logLine": 724
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 74,
+          "sourceColumn": 457,
+          "logLine": 725
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 75,
+          "sourceColumn": 573,
+          "logLine": 730
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 75,
+          "sourceColumn": 674,
+          "logLine": 732
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 75,
+          "sourceColumn": 848,
+          "logLine": 733
+        }
+      ],
+      "id": "TC-0040"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts|TS2322|Type 'unknown' is not assignable to type 'Record<string, unknown>'.",
+      "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+      "code": "TS2322",
+      "message": "Type 'unknown' is not assignable to type 'Record<string, unknown>'.",
+      "bucket": "OPERATIONS_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 75,
+          "sourceColumn": 297,
+          "logLine": 724
+        },
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 75,
+          "sourceColumn": 445,
+          "logLine": 725
+        },
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 75,
+          "sourceColumn": 469,
+          "logLine": 726
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 75,
+          "sourceColumn": 297,
+          "logLine": 726
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 75,
+          "sourceColumn": 445,
+          "logLine": 727
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 75,
+          "sourceColumn": 469,
+          "logLine": 728
+        }
+      ],
+      "id": "TC-0041"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts|TS2339|Property 'format' does not exist on type 'Record<\"impactDigest\", unknown> & Record<\"before\", unknown> & Record<\"after\", unknown>'.",
+      "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+      "code": "TS2339",
+      "message": "Property 'format' does not exist on type 'Record<\"impactDigest\", unknown> & Record<\"before\", unknown> & Record<\"after\", unknown>'.",
+      "bucket": "OPERATIONS_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 75,
+          "sourceColumn": 545,
+          "logLine": 727
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 75,
+          "sourceColumn": 545,
+          "logLine": 729
+        }
+      ],
+      "id": "TC-0042"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts|TS2322|Type '{}' is not assignable to type 'string'.",
+      "path": "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+      "code": "TS2322",
+      "message": "Type '{}' is not assignable to type 'string'.",
+      "bucket": "OPERATIONS_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 75,
+          "sourceColumn": 592,
+          "logLine": 729
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 75,
+          "sourceColumn": 592,
+          "logLine": 731
+        }
+      ],
+      "id": "TC-0043"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts|TS2339|Property 'runRef' does not exist on type 'ContributionEnvelope'.",
+      "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+      "code": "TS2339",
+      "message": "Property 'runRef' does not exist on type 'ContributionEnvelope'.",
+      "bucket": "UNRESOLVED_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 30,
+          "sourceColumn": 114,
+          "logLine": 732
+        },
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 30,
+          "sourceColumn": 114,
+          "logLine": 573
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 30,
+          "sourceColumn": 114,
+          "logLine": 734
+        }
+      ],
+      "id": "TC-0044"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts|TS2339|Property 'version' does not exist on type 'ContributionEnvelope'.",
+      "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+      "code": "TS2339",
+      "message": "Property 'version' does not exist on type 'ContributionEnvelope'.",
+      "bucket": "UNRESOLVED_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 30,
+          "sourceColumn": 171,
+          "logLine": 734
+        },
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 30,
+          "sourceColumn": 171,
+          "logLine": 575
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 30,
+          "sourceColumn": 171,
+          "logLine": 736
+        }
+      ],
+      "id": "TC-0045"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts|TS2339|Property 'outputRef' does not exist on type 'ContributionEnvelope'.",
+      "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+      "code": "TS2339",
+      "message": "Property 'outputRef' does not exist on type 'ContributionEnvelope'.",
+      "bucket": "UNRESOLVED_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 30,
+          "sourceColumn": 197,
+          "logLine": 736
+        },
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 30,
+          "sourceColumn": 235,
+          "logLine": 738
+        },
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 30,
+          "sourceColumn": 197,
+          "logLine": 577
+        },
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 30,
+          "sourceColumn": 235,
+          "logLine": 579
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 30,
+          "sourceColumn": 197,
+          "logLine": 738
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 30,
+          "sourceColumn": 235,
+          "logLine": 740
+        }
+      ],
+      "id": "TC-0046"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/product/interface/http.ts|TS7006|Parameter 'run' implicitly has an 'any' type.",
+      "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+      "code": "TS7006",
+      "message": "Parameter 'run' implicitly has an 'any' type.",
+      "bucket": "UNRESOLVED_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 148,
+          "sourceColumn": 82,
+          "logLine": 740
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 148,
+          "sourceColumn": 82,
+          "logLine": 742
+        }
+      ],
+      "id": "TC-0047"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/product/interface/http.ts|TS7006|Parameter 'index' implicitly has an 'any' type.",
+      "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+      "code": "TS7006",
+      "message": "Parameter 'index' implicitly has an 'any' type.",
+      "bucket": "UNRESOLVED_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 148,
+          "sourceColumn": 87,
+          "logLine": 741
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 148,
+          "sourceColumn": 87,
+          "logLine": 743
+        }
+      ],
+      "id": "TC-0048"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/product/interface/import-http.ts|TS2345|Argument of type '{ surface: string; selectionRef: string; options: { newVersion: boolean; removeMissing: boolean; preview: { sheet?: string | undefined; replace?: boolean | undefined; headerRow?: number | undefined; }; }; }' is not assignable to parameter of type '{ surface: \"dashboard\" | \"planner\"; selectionRef: string; options: { newVersion: boolean; removeMissing: boolean; preview: { sheet?: string | undefined; replace?: boolean | undefined; headerRow?: number | undefined; }; }; }'.",
+      "path": "modules/sucafina/Sucafinav1/product/interface/import-http.ts",
+      "code": "TS2345",
+      "message": "Argument of type '{ surface: string; selectionRef: string; options: { newVersion: boolean; removeMissing: boolean; preview: { sheet?: string | undefined; replace?: boolean | undefined; headerRow?: number | undefined; }; }; }' is not assignable to parameter of type '{ surface: \"dashboard\" | \"planner\"; selectionRef: string; options: { newVersion: boolean; removeMissing: boolean; preview: { sheet?: string | undefined; replace?: boolean | undefined; headerRow?: number | undefined; }; }; }'.",
+      "bucket": "OPERATIONS_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 54,
+          "sourceColumn": 249,
+          "logLine": 742
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 54,
+          "sourceColumn": 249,
+          "logLine": 744
+        }
+      ],
+      "id": "TC-0049"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/product/procurement/prepared.ts|TS2322|Type '(snapshot: Snapshot, actor: Actor, environment: Environment) => { commit: false; value: { status: string; reason: string; }; } | { commit: true; value: { reason?: undefined; status: string; }; }' is not assignable to type '(snapshot: Snapshot, actor: Actor, environment: Environment) => { commit: boolean; value: JsonValue; }'.",
+      "path": "modules/sucafina/Sucafinav1/product/procurement/prepared.ts",
+      "code": "TS2322",
+      "message": "Type '(snapshot: Snapshot, actor: Actor, environment: Environment) => { commit: false; value: { status: string; reason: string; }; } | { commit: true; value: { reason?: undefined; status: string; }; }' is not assignable to type '(snapshot: Snapshot, actor: Actor, environment: Environment) => { commit: boolean; value: JsonValue; }'.",
+      "bucket": "UNRESOLVED_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 69,
+          "sourceColumn": 5,
+          "logLine": 745
+        },
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 69,
+          "sourceColumn": 5,
+          "logLine": 594
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 69,
+          "sourceColumn": 5,
+          "logLine": 747
+        }
+      ],
+      "id": "TC-0050"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/product/ui/components.ts|TS2741|Property 'AlternativeDraft' is missing in type '{ IntentFrame: string; AnalysisPlan: string; DecisionBrief: string; QuestionProposal: string; FinancialAnalysis: string; ScenarioComparison: string; SensitivityResult: string; CommercialComparison: string; ... 15 more ...; MatchExplanation: string; }' but required in type 'Record<\"AlternativeDraft\" | \"AnalysisPlan\" | \"CaseRecall\" | \"ClaimIssue\" | \"CommercialComparison\" | \"CommercialGap\" | \"ContextualBIProposal\" | \"CritiqueReport\" | \"DecisionBrief\" | ... 16 more ... | \"UnresolvedCondition\", string>'.",
+      "path": "modules/sucafina/Sucafinav1/product/ui/components.ts",
+      "code": "TS2741",
+      "message": "Property 'AlternativeDraft' is missing in type '{ IntentFrame: string; AnalysisPlan: string; DecisionBrief: string; QuestionProposal: string; FinancialAnalysis: string; ScenarioComparison: string; SensitivityResult: string; CommercialComparison: string; ... 15 more ...; MatchExplanation: string; }' but required in type 'Record<\"AlternativeDraft\" | \"AnalysisPlan\" | \"CaseRecall\" | \"ClaimIssue\" | \"CommercialComparison\" | \"CommercialGap\" | \"ContextualBIProposal\" | \"CritiqueReport\" | \"DecisionBrief\" | ... 16 more ... | \"UnresolvedCondition\", string>'.",
+      "bucket": "UNRESOLVED_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 49,
+          "sourceColumn": 9,
+          "logLine": 753
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 49,
+          "sourceColumn": 9,
+          "logLine": 755
+        }
+      ],
+      "id": "TC-0051"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts|TS2366|Function lacks ending return statement and return type does not include 'undefined'.",
+      "path": "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts",
+      "code": "TS2366",
+      "message": "Function lacks ending return statement and return type does not include 'undefined'.",
+      "bucket": "UNRESOLVED_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 7,
+          "sourceColumn": 65,
+          "logLine": 754
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 7,
+          "sourceColumn": 65,
+          "logLine": 756
+        }
+      ],
+      "id": "TC-0052"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts|TS2741|Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: Readonly<{ ref: `sf-workspace:${string}`; incarnation: string; }>; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContex...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts",
+      "code": "TS2741",
+      "message": "Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: Readonly<{ ref: `sf-workspace:${string}`; incarnation: string; }>; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContex...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "bucket": "SCENARIO_VERIFIER_CALLER",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 36,
+          "sourceColumn": 40,
+          "logLine": 755
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 36,
+          "sourceColumn": 40,
+          "logLine": 757
+        }
+      ],
+      "id": "TC-0053"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/test/product/wp01/personal-views.test.ts|TS2322|Type '(context: TrustedUiContext) => string | undefined' is not assignable to type '(context: TrustedDomainContext) => string | undefined'.",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/personal-views.test.ts",
+      "code": "TS2322",
+      "message": "Type '(context: TrustedUiContext) => string | undefined' is not assignable to type '(context: TrustedDomainContext) => string | undefined'.",
+      "bucket": "UNRESOLVED_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 35,
+          "sourceColumn": 137,
+          "logLine": 756
+        },
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 35,
+          "sourceColumn": 137,
+          "logLine": 602
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 35,
+          "sourceColumn": 137,
+          "logLine": 758
+        }
+      ],
+      "id": "TC-0054"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts|TS2307|Cannot find module '@orchestra/server/routes' or its corresponding type declarations.",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+      "code": "TS2307",
+      "message": "Cannot find module '@orchestra/server/routes' or its corresponding type declarations.",
+      "bucket": "MISSING_TYPE_OR_MODULE",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 6,
+          "sourceColumn": 38,
+          "logLine": 762
+        },
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 6,
+          "sourceColumn": 38,
+          "logLine": 608
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 6,
+          "sourceColumn": 38,
+          "logLine": 764
+        }
+      ],
+      "id": "TC-0055"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/test/product/wp04/prepared-production.test.ts|TS2554|Expected 0 arguments, but got 1.",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/prepared-production.test.ts",
+      "code": "TS2554",
+      "message": "Expected 0 arguments, but got 1.",
+      "bucket": "UNRESOLVED_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 208,
+          "sourceColumn": 41,
+          "logLine": 763
+        },
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 220,
+          "sourceColumn": 107,
+          "logLine": 764
+        },
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 208,
+          "sourceColumn": 41,
+          "logLine": 611
+        },
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 220,
+          "sourceColumn": 107,
+          "logLine": 612
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 208,
+          "sourceColumn": 41,
+          "logLine": 765
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 220,
+          "sourceColumn": 107,
+          "logLine": 766
+        }
+      ],
+      "id": "TC-0056"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/test/product/wp04/prepared-production.test.ts|TS2741|Property 'reviewDigestFor' is missing in type '{ state: SfProductStatePort; host: { requestFor: (binding: TrustedDomainContext) => Request | undefined; revalidate: (binding: TrustedDomainContext) => Promise<...>; }; ... 10 more ...; now: () => string; }' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; ... 10 more ...; reviewDigestFor: ReviewDigestFor; }'.",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/prepared-production.test.ts",
+      "code": "TS2741",
+      "message": "Property 'reviewDigestFor' is missing in type '{ state: SfProductStatePort; host: { requestFor: (binding: TrustedDomainContext) => Request | undefined; revalidate: (binding: TrustedDomainContext) => Promise<...>; }; ... 10 more ...; now: () => string; }' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; ... 10 more ...; reviewDigestFor: ReviewDigestFor; }'.",
+      "bucket": "UNRESOLVED_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 274,
+          "sourceColumn": 39,
+          "logLine": 765
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 274,
+          "sourceColumn": 39,
+          "logLine": 767
+        }
+      ],
+      "id": "TC-0057"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts|TS2307|Cannot find module '../../../../product/routines/dossier.ts' or its corresponding type declarations.",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts",
+      "code": "TS2307",
+      "message": "Cannot find module '../../../../product/routines/dossier.ts' or its corresponding type declarations.",
+      "bucket": "MISSING_TYPE_OR_MODULE",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 25,
+          "sourceColumn": 40,
+          "logLine": 766
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 25,
+          "sourceColumn": 40,
+          "logLine": 768
+        }
+      ],
+      "id": "TC-0058"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts|TS7006|Parameter '_' implicitly has an 'any' type.",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts",
+      "code": "TS7006",
+      "message": "Parameter '_' implicitly has an 'any' type.",
+      "bucket": "OPERATIONS_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 101,
+          "sourceColumn": 227,
+          "logLine": 767
+        },
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 114,
+          "sourceColumn": 229,
+          "logLine": 769
+        },
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 253,
+          "sourceColumn": 225,
+          "logLine": 771
+        },
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 263,
+          "sourceColumn": 227,
+          "logLine": 773
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 101,
+          "sourceColumn": 227,
+          "logLine": 769
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 114,
+          "sourceColumn": 229,
+          "logLine": 771
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 253,
+          "sourceColumn": 225,
+          "logLine": 773
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 263,
+          "sourceColumn": 227,
+          "logLine": 775
+        }
+      ],
+      "id": "TC-0059"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts|TS7006|Parameter 'call' implicitly has an 'any' type.",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/runtime-e2e.test.ts",
+      "code": "TS7006",
+      "message": "Parameter 'call' implicitly has an 'any' type.",
+      "bucket": "OPERATIONS_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 101,
+          "sourceColumn": 230,
+          "logLine": 768
+        },
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 114,
+          "sourceColumn": 232,
+          "logLine": 770
+        },
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 253,
+          "sourceColumn": 228,
+          "logLine": 772
+        },
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 263,
+          "sourceColumn": 230,
+          "logLine": 774
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 101,
+          "sourceColumn": 230,
+          "logLine": 770
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 114,
+          "sourceColumn": 232,
+          "logLine": 772
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 253,
+          "sourceColumn": 228,
+          "logLine": 774
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 263,
+          "sourceColumn": 230,
+          "logLine": 776
+        }
+      ],
+      "id": "TC-0060"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/test/product/wp06/imports/end-to-end.test.ts|TS2345|Argument of type '(snapshot: Snapshot) => Promise<{ commit: false; value: { readonly value?: undefined; status: \"unavailable\"; reason: string; }; } | { commit: false; value: { reason?: undefined; status: \"ok\"; value: { ...; }; }; }>' is not assignable to parameter of type '(snapshot: Snapshot, blobs: BlobTransaction) => Promise<{ commit: boolean; value: { readonly value?: undefined; status: \"unavailable\"; reason: string; }; }>'.",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/end-to-end.test.ts",
+      "code": "TS2345",
+      "message": "Argument of type '(snapshot: Snapshot) => Promise<{ commit: false; value: { readonly value?: undefined; status: \"unavailable\"; reason: string; }; } | { commit: false; value: { reason?: undefined; status: \"ok\"; value: { ...; }; }; }>' is not assignable to parameter of type '(snapshot: Snapshot, blobs: BlobTransaction) => Promise<{ commit: boolean; value: { readonly value?: undefined; status: \"unavailable\"; reason: string; }; }>'.",
+      "bucket": "OPERATIONS_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 56,
+          "sourceColumn": 72,
+          "logLine": 775
+        }
+      ],
+      "id": "TC-0061"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/test/product/wp06/imports/end-to-end.test.ts|TS2322|Type '() => Promise<unknown>' is not assignable to type '(target: ImportTarget, context: TrustedDomainContext) => Promise<PortResult<{ versionId: string; evidence: EvidenceIdentity & { kind: \"record\"; target: { ...; }; }; }>>'.",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/end-to-end.test.ts",
+      "code": "TS2322",
+      "message": "Type '() => Promise<unknown>' is not assignable to type '(target: ImportTarget, context: TrustedDomainContext) => Promise<PortResult<{ versionId: string; evidence: EvidenceIdentity & { kind: \"record\"; target: { ...; }; }; }>>'.",
+      "bucket": "OPERATIONS_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 65,
+          "sourceColumn": 590,
+          "logLine": 781
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 65,
+          "sourceColumn": 590,
+          "logLine": 783
+        }
+      ],
+      "id": "TC-0062"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/test/product/wp06/imports/sqlite-planner.test.ts|TS2322|Type 'Promise<{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; } | { commit: boolean; value: { reason?: undefined; status: \"applied\" | \"unchanged\"; changedFields: number; warnings: string[]; }; }>' is not assignable to type 'Promise<{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; }>'.",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/sqlite-planner.test.ts",
+      "code": "TS2322",
+      "message": "Type 'Promise<{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; } | { commit: boolean; value: { reason?: undefined; status: \"applied\" | \"unchanged\"; changedFields: number; warnings: string[]; }; }>' is not assignable to type 'Promise<{ commit: boolean; value: { changedFields?: undefined; warnings?: undefined; status: string; reason: string; }; }>'.",
+      "bucket": "OPERATIONS_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 41,
+          "sourceColumn": 76,
+          "logLine": 784
+        },
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 46,
+          "sourceColumn": 74,
+          "logLine": 790
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 41,
+          "sourceColumn": 76,
+          "logLine": 786
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 46,
+          "sourceColumn": 74,
+          "logLine": 792
+        }
+      ],
+      "id": "TC-0063"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/test/product/wp06/imports/sqlite-planner.test.ts|TS18046|'applied' is of type 'unknown'.",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/sqlite-planner.test.ts",
+      "code": "TS18046",
+      "message": "'applied' is of type 'unknown'.",
+      "bucket": "OPERATIONS_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 42,
+          "sourceColumn": 12,
+          "logLine": 789
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 42,
+          "sourceColumn": 12,
+          "logLine": 791
+        }
+      ],
+      "id": "TC-0064"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/test/product/wp06/imports/sqlite-planner.test.ts|TS18046|'stale' is of type 'unknown'.",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/sqlite-planner.test.ts",
+      "code": "TS18046",
+      "message": "'stale' is of type 'unknown'.",
+      "bucket": "OPERATIONS_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 47,
+          "sourceColumn": 12,
+          "logLine": 795
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 47,
+          "sourceColumn": 12,
+          "logLine": 797
+        }
+      ],
+      "id": "TC-0065"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts|TS2769|No overload matches this call.",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+      "code": "TS2769",
+      "message": "No overload matches this call.",
+      "bucket": "REVIEW_HOST_FIXTURE",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 106,
+          "sourceColumn": 64,
+          "logLine": 796
+        },
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 113,
+          "sourceColumn": 122,
+          "logLine": 801
+        },
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 124,
+          "sourceColumn": 64,
+          "logLine": 806
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 106,
+          "sourceColumn": 64,
+          "logLine": 798
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 113,
+          "sourceColumn": 122,
+          "logLine": 803
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 124,
+          "sourceColumn": 64,
+          "logLine": 808
+        }
+      ],
+      "id": "TC-0066"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/test/product/wp08/confirmation-integration.test.ts|TS2739|Type '{ state: \"available\"; sourceVersion: number; incarnation: string; physicalIncarnation: string; scopeFingerprint: string; sourceFingerprint: string; dependencyFingerprint: string; }' is missing the following properties from type '{ state: \"available\"; sourceVersion: number; incarnation: string; physicalIncarnation: string; scopeFingerprint: string; sourceFingerprint: string; dependencyFingerprint: string; evidence: EvidenceIdentity & { ...; }; projection: DomainProjection; }': evidence, projection",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/confirmation-integration.test.ts",
+      "code": "TS2739",
+      "message": "Type '{ state: \"available\"; sourceVersion: number; incarnation: string; physicalIncarnation: string; scopeFingerprint: string; sourceFingerprint: string; dependencyFingerprint: string; }' is missing the following properties from type '{ state: \"available\"; sourceVersion: number; incarnation: string; physicalIncarnation: string; scopeFingerprint: string; sourceFingerprint: string; dependencyFingerprint: string; evidence: EvidenceIdentity & { ...; }; projection: DomainProjection; }': evidence, projection",
+      "bucket": "COLLAB_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 63,
+          "sourceColumn": 289,
+          "logLine": 811
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 63,
+          "sourceColumn": 289,
+          "logLine": 813
+        }
+      ],
+      "id": "TC-0067"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts|TS7006|Parameter 'snapshot' implicitly has an 'any' type.",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts",
+      "code": "TS7006",
+      "message": "Parameter 'snapshot' implicitly has an 'any' type.",
+      "bucket": "UNRESOLVED_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 13,
+          "sourceColumn": 112,
+          "logLine": 812
+        },
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 31,
+          "sourceColumn": 58,
+          "logLine": 814
+        },
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 40,
+          "sourceColumn": 63,
+          "logLine": 816
+        },
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 13,
+          "sourceColumn": 112,
+          "logLine": 613
+        },
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 31,
+          "sourceColumn": 58,
+          "logLine": 615
+        },
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 40,
+          "sourceColumn": 63,
+          "logLine": 617
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 13,
+          "sourceColumn": 112,
+          "logLine": 814
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 31,
+          "sourceColumn": 58,
+          "logLine": 816
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 40,
+          "sourceColumn": 63,
+          "logLine": 818
+        }
+      ],
+      "id": "TC-0068"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts|TS7006|Parameter 'blobs' implicitly has an 'any' type.",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts",
+      "code": "TS7006",
+      "message": "Parameter 'blobs' implicitly has an 'any' type.",
+      "bucket": "UNRESOLVED_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 13,
+          "sourceColumn": 122,
+          "logLine": 813
+        },
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 31,
+          "sourceColumn": 68,
+          "logLine": 815
+        },
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 40,
+          "sourceColumn": 73,
+          "logLine": 817
+        },
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 51,
+          "sourceColumn": 60,
+          "logLine": 819
+        },
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 68,
+          "sourceColumn": 80,
+          "logLine": 821
+        },
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 13,
+          "sourceColumn": 122,
+          "logLine": 614
+        },
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 31,
+          "sourceColumn": 68,
+          "logLine": 616
+        },
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 40,
+          "sourceColumn": 73,
+          "logLine": 618
+        },
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 51,
+          "sourceColumn": 60,
+          "logLine": 620
+        },
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 68,
+          "sourceColumn": 80,
+          "logLine": 622
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 13,
+          "sourceColumn": 122,
+          "logLine": 815
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 31,
+          "sourceColumn": 68,
+          "logLine": 817
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 40,
+          "sourceColumn": 73,
+          "logLine": 819
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 51,
+          "sourceColumn": 60,
+          "logLine": 821
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 68,
+          "sourceColumn": 80,
+          "logLine": 823
+        }
+      ],
+      "id": "TC-0069"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts|TS7006|Parameter '_snapshot' implicitly has an 'any' type.",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/blob-generations.test.ts",
+      "code": "TS7006",
+      "message": "Parameter '_snapshot' implicitly has an 'any' type.",
+      "bucket": "UNRESOLVED_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 51,
+          "sourceColumn": 49,
+          "logLine": 818
+        },
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 68,
+          "sourceColumn": 69,
+          "logLine": 820
+        },
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 51,
+          "sourceColumn": 49,
+          "logLine": 619
+        },
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 68,
+          "sourceColumn": 69,
+          "logLine": 621
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 51,
+          "sourceColumn": 49,
+          "logLine": 820
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 68,
+          "sourceColumn": 69,
+          "logLine": 822
+        }
+      ],
+      "id": "TC-0070"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts|TS7006|Parameter 'snapshot' implicitly has an 'any' type.",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+      "code": "TS7006",
+      "message": "Parameter 'snapshot' implicitly has an 'any' type.",
+      "bucket": "UNRESOLVED_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 24,
+          "sourceColumn": 47,
+          "logLine": 822
+        },
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 24,
+          "sourceColumn": 47,
+          "logLine": 623
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 24,
+          "sourceColumn": 47,
+          "logLine": 824
+        }
+      ],
+      "id": "TC-0071"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts|TS7006|Parameter 'blobs' implicitly has an 'any' type.",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+      "code": "TS7006",
+      "message": "Parameter 'blobs' implicitly has an 'any' type.",
+      "bucket": "UNRESOLVED_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 24,
+          "sourceColumn": 57,
+          "logLine": 823
+        },
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 24,
+          "sourceColumn": 57,
+          "logLine": 624
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 24,
+          "sourceColumn": 57,
+          "logLine": 825
+        }
+      ],
+      "id": "TC-0072"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/test/product/wp12/author-reader.test.ts|TS2352|Conversion of type '{ id: string; incarnation: string; version: number; participants: string[]; }' to type 'DecisionCase' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/author-reader.test.ts",
+      "code": "TS2352",
+      "message": "Conversion of type '{ id: string; incarnation: string; version: number; participants: string[]; }' to type 'DecisionCase' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.",
+      "bucket": "UNRESOLVED_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 32,
+          "sourceColumn": 26,
+          "logLine": 824
+        },
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 32,
+          "sourceColumn": 26,
+          "logLine": 641
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 32,
+          "sourceColumn": 26,
+          "logLine": 826
+        }
+      ],
+      "id": "TC-0073"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts|TS2741|Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: () => string; authorizeCase: (value: DecisionCase, call: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options?: RandomUUIDOptions | undefined) => `${stri...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+      "code": "TS2741",
+      "message": "Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: () => string; authorizeCase: (value: DecisionCase, call: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options?: RandomUUIDOptions | undefined) => `${stri...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "bucket": "SCENARIO_VERIFIER_CALLER",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 55,
+          "sourceColumn": 42,
+          "logLine": 826
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 55,
+          "sourceColumn": 42,
+          "logLine": 828
+        }
+      ],
+      "id": "TC-0074"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts|TS2305|Module '\"../../../product/procurement/sources.ts\"' has no exported member 'procurementSourceSelector'.",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts",
+      "code": "TS2305",
+      "message": "Module '\"../../../product/procurement/sources.ts\"' has no exported member 'procurementSourceSelector'.",
+      "bucket": "PROCUREMENT_SOURCE_PORT",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 10,
+          "sourceColumn": 43,
+          "logLine": 827
+        },
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 10,
+          "sourceColumn": 43,
+          "logLine": 646
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 10,
+          "sourceColumn": 43,
+          "logLine": 829
+        }
+      ],
+      "id": "TC-0075"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts|TS2724|'\"../../../product/procurement/port.ts\"' has no exported member named 'isCurrentProcurementSource'. Did you mean 'projectProcurementSource'?",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts",
+      "code": "TS2724",
+      "message": "'\"../../../product/procurement/port.ts\"' has no exported member named 'isCurrentProcurementSource'. Did you mean 'projectProcurementSource'?",
+      "bucket": "PROCUREMENT_SOURCE_PORT",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 11,
+          "sourceColumn": 33,
+          "logLine": 828
+        },
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 11,
+          "sourceColumn": 33,
+          "logLine": 647
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 11,
+          "sourceColumn": 33,
+          "logLine": 830
+        }
+      ],
+      "id": "TC-0076"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts|TS2741|Property 'scopedSources' is missing in type '{ host: DomainPortHost; contextFor: () => Promise<{ status: \"ok\"; value: { installationId: string; projectId: string; principalRef: string; accessRevision: string; policyVersion: string; ... 4 more ...; capabilities: never[]; }; }>; }' but required in type '{ host: DomainPortHost; scopedSources: SfScopedSourcePort; contextFor: (binding: TrustedDomainContext) => Promise<PortResult<ProductContext>>; }'.",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts",
+      "code": "TS2741",
+      "message": "Property 'scopedSources' is missing in type '{ host: DomainPortHost; contextFor: () => Promise<{ status: \"ok\"; value: { installationId: string; projectId: string; principalRef: string; accessRevision: string; policyVersion: string; ... 4 more ...; capabilities: never[]; }; }>; }' but required in type '{ host: DomainPortHost; scopedSources: SfScopedSourcePort; contextFor: (binding: TrustedDomainContext) => Promise<PortResult<ProductContext>>; }'.",
+      "bucket": "PROCUREMENT_SOURCE_PORT",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 31,
+          "sourceColumn": 54,
+          "logLine": 829
+        },
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 31,
+          "sourceColumn": 54,
+          "logLine": 648
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 31,
+          "sourceColumn": 54,
+          "logLine": 831
+        }
+      ],
+      "id": "TC-0077"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts|TS2322|Type '{ issue: (kind: \"procurement-request\" | \"procurement-supplier\", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }' is not assignable to type '(reference: string, binding: TrustedDomainContext) => Promise<PortResult<{ evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; ... 6 more ...; projectionDigest: string; }; }; context: ProductContext; }>>'.",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts",
+      "code": "TS2322",
+      "message": "Type '{ issue: (kind: \"procurement-request\" | \"procurement-supplier\", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }' is not assignable to type '(reference: string, binding: TrustedDomainContext) => Promise<PortResult<{ evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; ... 6 more ...; projectionDigest: string; }; }; context: ProductContext; }>>'.",
+      "bucket": "PROCUREMENT_SOURCE_PORT",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 32,
+          "sourceColumn": 51,
+          "logLine": 830
+        },
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 32,
+          "sourceColumn": 83,
+          "logLine": 832
+        },
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 32,
+          "sourceColumn": 51,
+          "logLine": 649
+        },
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 32,
+          "sourceColumn": 83,
+          "logLine": 651
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 32,
+          "sourceColumn": 51,
+          "logLine": 832
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 32,
+          "sourceColumn": 83,
+          "logLine": 834
+        }
+      ],
+      "id": "TC-0078"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts|TS2349|This expression is not callable.",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts",
+      "code": "TS2349",
+      "message": "This expression is not callable.",
+      "bucket": "PROCUREMENT_SOURCE_PORT",
+      "occurrences": [
+        {
+          "run": 43630618176,
+          "job": 132556167840,
+          "sourceLine": 33,
+          "sourceColumn": 25,
+          "logLine": 834
+        },
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 33,
+          "sourceColumn": 25,
+          "logLine": 653
+        },
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 33,
+          "sourceColumn": 25,
+          "logLine": 836
+        }
+      ],
+      "id": "TC-0079"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts|TS2322|Type '(incoming: { caseRef: { id: string; incarnation: string; version: number; }; changeId: string; choiceId: string; }, context: TrustedDomainContext) => Promise<{ reason?: undefined; status: \"ok\"; value: {}; } | { ...; }>' is not assignable to type '(request: { caseRef: { id: string; incarnation: string; version: number; }; changeId: string; choiceId: string; }, binding: TrustedDomainContext) => Promise<PortResult<CommandReceipt>>'.",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "code": "TS2322",
+      "message": "Type '(incoming: { caseRef: { id: string; incarnation: string; version: number; }; changeId: string; choiceId: string; }, context: TrustedDomainContext) => Promise<{ reason?: undefined; status: \"ok\"; value: {}; } | { ...; }>' is not assignable to type '(request: { caseRef: { id: string; incarnation: string; version: number; }; changeId: string; choiceId: string; }, binding: TrustedDomainContext) => Promise<PortResult<CommandReceipt>>'.",
+      "bucket": "FINANCE_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 46,
+          "sourceColumn": 5,
+          "logLine": 541
+        }
+      ],
+      "id": "TC-0080"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts|TS2345|Argument of type '(state: SfProductState, authority: SfStateAuthority, snapshot: Snapshot) => Promise<{ commit: false; value: null; } | { commit: false; value: { ...; }; } | { ...; } | { ...; } | { ...; }>' is not assignable to parameter of type '(state: SfProductState, authority: SfStateAuthority, snapshot: Snapshot) => Promise<{ commit: boolean; value: { failure: \"unavailable\"; existing?: undefined; } | null; }>'.",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "code": "TS2345",
+      "message": "Argument of type '(state: SfProductState, authority: SfStateAuthority, snapshot: Snapshot) => Promise<{ commit: false; value: null; } | { commit: false; value: { ...; }; } | { ...; } | { ...; } | { ...; }>' is not assignable to parameter of type '(state: SfProductState, authority: SfStateAuthority, snapshot: Snapshot) => Promise<{ commit: boolean; value: { failure: \"unavailable\"; existing?: undefined; } | null; }>'.",
+      "bucket": "FINANCE_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 71,
+          "sourceColumn": 446,
+          "logLine": 548
+        }
+      ],
+      "id": "TC-0081"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts|TS2638|Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "code": "TS2638",
+      "message": "Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.",
+      "bucket": "FINANCE_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 95,
+          "sourceColumn": 75,
+          "logLine": 554
+        },
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 100,
+          "sourceColumn": 74,
+          "logLine": 556
+        },
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 101,
+          "sourceColumn": 81,
+          "logLine": 557
+        },
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 101,
+          "sourceColumn": 112,
+          "logLine": 558
+        }
+      ],
+      "id": "TC-0082"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts|TS2740|Type '{}' is missing the following properties from type 'CommandReceipt': id, idempotencyKey, commandDigest, targetIncarnation, and 5 more.",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "code": "TS2740",
+      "message": "Type '{}' is missing the following properties from type 'CommandReceipt': id, idempotencyKey, commandDigest, targetIncarnation, and 5 more.",
+      "bucket": "FINANCE_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 97,
+          "sourceColumn": 185,
+          "logLine": 555
+        },
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 102,
+          "sourceColumn": 183,
+          "logLine": 559
+        }
+      ],
+      "id": "TC-0083"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/product/decisions/proposals.ts|TS2367|This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/proposals.ts",
+      "code": "TS2367",
+      "message": "This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "bucket": "FINANCE_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 92,
+          "sourceColumn": 26,
+          "logLine": 560
+        }
+      ],
+      "id": "TC-0084"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/product/documents/scenario-inputs.ts|TS2322|Type 'string | undefined' is not assignable to type 'string'.",
+      "path": "modules/sucafina/Sucafinav1/product/documents/scenario-inputs.ts",
+      "code": "TS2322",
+      "message": "Type 'string | undefined' is not assignable to type 'string'.",
+      "bucket": "OPERATIONS_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 112,
+          "sourceColumn": 119,
+          "logLine": 561
+        }
+      ],
+      "id": "TC-0085"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/product/portfolio/catalog.ts|TS2367|This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/catalog.ts",
+      "code": "TS2367",
+      "message": "This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "bucket": "FINANCE_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 13,
+          "sourceColumn": 20,
+          "logLine": 581
+        }
+      ],
+      "id": "TC-0086"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/product/portfolio/handoff.ts|TS2367|This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/handoff.ts",
+      "code": "TS2367",
+      "message": "This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "bucket": "FINANCE_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 41,
+          "sourceColumn": 18,
+          "logLine": 582
+        },
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 78,
+          "sourceColumn": 18,
+          "logLine": 583
+        }
+      ],
+      "id": "TC-0087"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts|TS2339|Property 'costCoverage' does not exist on type 'PortfolioResult | SensitivityResult | ScenarioComparison | ScenarioResult'.",
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+      "code": "TS2339",
+      "message": "Property 'costCoverage' does not exist on type 'PortfolioResult | SensitivityResult | ScenarioComparison | ScenarioResult'.",
+      "bucket": "FINANCE_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 80,
+          "sourceColumn": 106,
+          "logLine": 584
+        },
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 80,
+          "sourceColumn": 171,
+          "logLine": 586
+        }
+      ],
+      "id": "TC-0088"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/product/portfolio/port.ts|TS2367|This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+      "code": "TS2367",
+      "message": "This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "bucket": "FINANCE_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 36,
+          "sourceColumn": 20,
+          "logLine": 588
+        }
+      ],
+      "id": "TC-0089"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-store.ts|TS2367|This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-store.ts",
+      "code": "TS2367",
+      "message": "This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "bucket": "FINANCE_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 25,
+          "sourceColumn": 19,
+          "logLine": 589
+        }
+      ],
+      "id": "TC-0090"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts|TS2339|Property 'costCoverage' does not exist on type 'PortfolioResult | SensitivityResult | ScenarioComparison | ScenarioResult'.",
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+      "code": "TS2339",
+      "message": "Property 'costCoverage' does not exist on type 'PortfolioResult | SensitivityResult | ScenarioComparison | ScenarioResult'.",
+      "bucket": "FINANCE_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 119,
+          "sourceColumn": 106,
+          "logLine": 590
+        },
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 119,
+          "sourceColumn": 171,
+          "logLine": 592
+        }
+      ],
+      "id": "TC-0091"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/test/product/wp03/parity-matrix.test.ts|TS2339|Property 'recordId' does not exist on type '{ surface: Surface; recordType: string; recordId: string; incarnation: string; version: number; fields: readonly string[]; period?: Period | undefined; projectionDigest: string; } | ... 5 more ... | { ...; }'.",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/parity-matrix.test.ts",
+      "code": "TS2339",
+      "message": "Property 'recordId' does not exist on type '{ surface: Surface; recordType: string; recordId: string; incarnation: string; version: number; fields: readonly string[]; period?: Period | undefined; projectionDigest: string; } | ... 5 more ... | { ...; }'.",
+      "bucket": "UNRESOLVED_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 106,
+          "sourceColumn": 68,
+          "logLine": 609
+        }
+      ],
+      "id": "TC-0092"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts|TS2345|Argument of type 'TrustedDomainContext' is not assignable to parameter of type 'TrustedUiContext'.",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts",
+      "code": "TS2345",
+      "message": "Argument of type 'TrustedDomainContext' is not assignable to parameter of type 'TrustedUiContext'.",
+      "bucket": "FINANCE_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 73,
+          "sourceColumn": 60,
+          "logLine": 625
+        }
+      ],
+      "id": "TC-0093"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/test/product/wp11/coverage-access.test.ts|TS2322|Type '{ surface: string; type: string; id: string; incarnation: string; version: number; fields: string[]; period: { start: string; end: string; }; observedAt: string; }' is not assignable to type 'SourceRef'.",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/coverage-access.test.ts",
+      "code": "TS2322",
+      "message": "Type '{ surface: string; type: string; id: string; incarnation: string; version: number; fields: string[]; period: { start: string; end: string; }; observedAt: string; }' is not assignable to type 'SourceRef'.",
+      "bucket": "FINANCE_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 39,
+          "sourceColumn": 127,
+          "logLine": 629
+        },
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 48,
+          "sourceColumn": 127,
+          "logLine": 632
+        }
+      ],
+      "id": "TC-0094"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/test/product/wp11/coverage-access.test.ts|TS2322|Type '{ baselineResultRef: string; alternativeResultRef: string; costCoverageRefs: string[]; criterionResults: never[]; unresolvedConditions: string[]; comparisonStatus: string; knownDifference: number; completeDifference: null; }' is not assignable to type 'PortfolioResult | SensitivityResult | ScenarioComparison | ScenarioResult'.",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/coverage-access.test.ts",
+      "code": "TS2322",
+      "message": "Type '{ baselineResultRef: string; alternativeResultRef: string; costCoverageRefs: string[]; criterionResults: never[]; unresolvedConditions: string[]; comparisonStatus: string; knownDifference: number; completeDifference: null; }' is not assignable to type 'PortfolioResult | SensitivityResult | ScenarioComparison | ScenarioResult'.",
+      "bucket": "FINANCE_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 77,
+          "sourceColumn": 63,
+          "logLine": 635
+        }
+      ],
+      "id": "TC-0095"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts|TS2722|Cannot invoke an object which is possibly 'undefined'.",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+      "code": "TS2722",
+      "message": "Cannot invoke an object which is possibly 'undefined'.",
+      "bucket": "FINANCE_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 218,
+          "sourceColumn": 211,
+          "logLine": 643
+        },
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 230,
+          "sourceColumn": 25,
+          "logLine": 644
+        }
+      ],
+      "id": "TC-0096"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts|TS18048|'store.transactionAll' is possibly 'undefined'.",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+      "code": "TS18048",
+      "message": "'store.transactionAll' is possibly 'undefined'.",
+      "bucket": "FINANCE_CONTRACT_SKEW",
+      "occurrences": [
+        {
+          "run": 43630776800,
+          "job": 132556649787,
+          "sourceLine": 230,
+          "sourceColumn": 25,
+          "logLine": 645
+        }
+      ],
+      "id": "TC-0097"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/product/procurement/sourcing-analysis.ts|TS2305|Module '\"../ui/forecast-analysis.ts\"' has no exported member 'analysisHistory'.",
+      "path": "modules/sucafina/Sucafinav1/product/procurement/sourcing-analysis.ts",
+      "code": "TS2305",
+      "message": "Module '\"../ui/forecast-analysis.ts\"' has no exported member 'analysisHistory'.",
+      "bucket": "FORECAST_EXPORT",
+      "occurrences": [
+        {
+          "run": 43629131094,
+          "job": 132551590764,
+          "sourceLine": 4,
+          "sourceColumn": 10,
+          "logLine": 623
+        },
+        {
+          "run": 43635682967,
+          "job": 132571841882,
+          "sourceLine": 4,
+          "sourceColumn": 10,
+          "logLine": 625
+        }
+      ],
+      "id": "TC-0098"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts|TS2322|Type '(ref: string, binding: TrustedDomainContext) => Promise<PortResult<{ evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; ... 6 more ...; projectionDigest: string; }; }; context: ProductContext; }>>' is not assignable to type 'Pick<{ issue: (kind: \"procurement-request\" | \"procurement-supplier\", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }, \"resolve\">'.",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts",
+      "code": "TS2322",
+      "message": "Type '(ref: string, binding: TrustedDomainContext) => Promise<PortResult<{ evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; ... 6 more ...; projectionDigest: string; }; }; context: ProductContext; }>>' is not assignable to type 'Pick<{ issue: (kind: \"procurement-request\" | \"procurement-supplier\", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }, \"resolve\">'.",
+      "bucket": "PROCUREMENT_SOURCE_PORT",
+      "occurrences": [
+        {
+          "run": 43629131094,
+          "job": 132551590764,
+          "sourceLine": 388,
+          "sourceColumn": 65,
+          "logLine": 624
+        },
+        {
+          "run": 43635682967,
+          "job": 132571841882,
+          "sourceLine": 388,
+          "sourceColumn": 65,
+          "logLine": 626
+        }
+      ],
+      "id": "TC-0099"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts|TS2741|Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (call: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, call: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options?: Ran...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts",
+      "code": "TS2741",
+      "message": "Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (call: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, call: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options?: Ran...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "bucket": "SCENARIO_VERIFIER_CALLER",
+      "occurrences": [
+        {
+          "run": 43629131094,
+          "job": 132551590764,
+          "sourceLine": 394,
+          "sourceColumn": 40,
+          "logLine": 625
+        },
+        {
+          "run": 43635682967,
+          "job": 132571841882,
+          "sourceLine": 394,
+          "sourceColumn": 40,
+          "logLine": 627
+        }
+      ],
+      "id": "TC-0100"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/test/product/wp06/native/import-analysis.test.ts|TS2339|Property 'importPreview' does not exist on type '{ importPreview: { importPreviewRef: string; manifest: ImportManifest; detail: ImportDetail; }; } | { decisionRecall: SfMemoryPrompt; }'.",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/native/import-analysis.test.ts",
+      "code": "TS2339",
+      "message": "Property 'importPreview' does not exist on type '{ importPreview: { importPreviewRef: string; manifest: ImportManifest; detail: ImportDetail; }; } | { decisionRecall: SfMemoryPrompt; }'.",
+      "bucket": "IMPORT_ANALYSIS_UNION",
+      "occurrences": [
+        {
+          "run": 43629131094,
+          "job": 132551590764,
+          "sourceLine": 130,
+          "sourceColumn": 47,
+          "logLine": 626
+        },
+        {
+          "run": 43629131094,
+          "job": 132551590764,
+          "sourceLine": 166,
+          "sourceColumn": 47,
+          "logLine": 628
+        },
+        {
+          "run": 43629131094,
+          "job": 132551590764,
+          "sourceLine": 205,
+          "sourceColumn": 45,
+          "logLine": 630
+        },
+        {
+          "run": 43635682967,
+          "job": 132571841882,
+          "sourceLine": 130,
+          "sourceColumn": 47,
+          "logLine": 628
+        },
+        {
+          "run": 43635682967,
+          "job": 132571841882,
+          "sourceLine": 166,
+          "sourceColumn": 47,
+          "logLine": 630
+        },
+        {
+          "run": 43635682967,
+          "job": 132571841882,
+          "sourceLine": 205,
+          "sourceColumn": 45,
+          "logLine": 632
+        }
+      ],
+      "id": "TC-0101"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/test/product/wp06/native/import-analysis.test.ts|TS2554|Expected 1 arguments, but got 2.",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/native/import-analysis.test.ts",
+      "code": "TS2554",
+      "message": "Expected 1 arguments, but got 2.",
+      "bucket": "IMPORT_ANALYSIS_UNION",
+      "occurrences": [
+        {
+          "run": 43629131094,
+          "job": 132551590764,
+          "sourceLine": 324,
+          "sourceColumn": 37,
+          "logLine": 632
+        },
+        {
+          "run": 43635682967,
+          "job": 132571841882,
+          "sourceLine": 324,
+          "sourceColumn": 37,
+          "logLine": 634
+        }
+      ],
+      "id": "TC-0102"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/test/product/wp08/collaboration-journey.test.ts|TS2741|Property 'verifyScenarioOperations' is missing in type '{ host: DomainPortHost; state: SfProductStatePort; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/collaboration-journey.test.ts",
+      "code": "TS2741",
+      "message": "Property 'verifyScenarioOperations' is missing in type '{ host: DomainPortHost; state: SfProductStatePort; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "bucket": "SCENARIO_VERIFIER_CALLER",
+      "occurrences": [
+        {
+          "run": 43629131094,
+          "job": 132551590764,
+          "sourceLine": 79,
+          "sourceColumn": 42,
+          "logLine": 633
+        },
+        {
+          "run": 43635682967,
+          "job": 132571841882,
+          "sourceLine": 79,
+          "sourceColumn": 42,
+          "logLine": 635
+        }
+      ],
+      "id": "TC-0103"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/test/product/wp08/confirmation-work-integration.test.ts|TS2741|Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/confirmation-work-integration.test.ts",
+      "code": "TS2741",
+      "message": "Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "bucket": "SCENARIO_VERIFIER_CALLER",
+      "occurrences": [
+        {
+          "run": 43629131094,
+          "job": 132551590764,
+          "sourceLine": 83,
+          "sourceColumn": 42,
+          "logLine": 634
+        },
+        {
+          "run": 43635682967,
+          "job": 132571841882,
+          "sourceLine": 83,
+          "sourceColumn": 42,
+          "logLine": 636
+        }
+      ],
+      "id": "TC-0104"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/test/product/wp08/host-answer-reuse.test.ts|TS2741|Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/host-answer-reuse.test.ts",
+      "code": "TS2741",
+      "message": "Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "bucket": "SCENARIO_VERIFIER_CALLER",
+      "occurrences": [
+        {
+          "run": 43629131094,
+          "job": 132551590764,
+          "sourceLine": 79,
+          "sourceColumn": 42,
+          "logLine": 635
+        },
+        {
+          "run": 43635682967,
+          "job": 132571841882,
+          "sourceLine": 79,
+          "sourceColumn": 42,
+          "logLine": 637
+        }
+      ],
+      "id": "TC-0105"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/test/product/wp08/question-consumer.test.ts|TS2741|Property 'verifyScenarioOperations' is missing in type '{ host: DomainPortHost; state: SfProductStatePort; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/question-consumer.test.ts",
+      "code": "TS2741",
+      "message": "Property 'verifyScenarioOperations' is missing in type '{ host: DomainPortHost; state: SfProductStatePort; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "bucket": "SCENARIO_VERIFIER_CALLER",
+      "occurrences": [
+        {
+          "run": 43629131094,
+          "job": 132551590764,
+          "sourceLine": 44,
+          "sourceColumn": 42,
+          "logLine": 636
+        },
+        {
+          "run": 43635682967,
+          "job": 132571841882,
+          "sourceLine": 44,
+          "sourceColumn": 42,
+          "logLine": 638
+        }
+      ],
+      "id": "TC-0106"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/test/product/wp08/thread-actors-fixture.ts|TS2741|Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/thread-actors-fixture.ts",
+      "code": "TS2741",
+      "message": "Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "bucket": "SCENARIO_VERIFIER_CALLER",
+      "occurrences": [
+        {
+          "run": 43629131094,
+          "job": 132551590764,
+          "sourceLine": 126,
+          "sourceColumn": 40,
+          "logLine": 637
+        },
+        {
+          "run": 43635682967,
+          "job": 132571841882,
+          "sourceLine": 126,
+          "sourceColumn": 40,
+          "logLine": 639
+        }
+      ],
+      "id": "TC-0107"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/test/product/wp09/decision-answer-consumer.test.ts|TS2741|Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; evidence: BusinessContextService; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (binding: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, binding: TrustedDomainContext) => Promise<...>; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/decision-answer-consumer.test.ts",
+      "code": "TS2741",
+      "message": "Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; evidence: BusinessContextService; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (binding: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, binding: TrustedDomainContext) => Promise<...>; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "bucket": "SCENARIO_VERIFIER_CALLER",
+      "occurrences": [
+        {
+          "run": 43629131094,
+          "job": 132551590764,
+          "sourceLine": 76,
+          "sourceColumn": 42,
+          "logLine": 638
+        },
+        {
+          "run": 43635682967,
+          "job": 132571841882,
+          "sourceLine": 76,
+          "sourceColumn": 42,
+          "logLine": 640
+        }
+      ],
+      "id": "TC-0108"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts|TS2739|Type '{ state: SfProductStatePort; now: () => string; requestFor: () => Request; authorizeSections: () => Promise<boolean>; authorizeComments: () => Promise<boolean>; authorizeSensitivity: () => Promise<...>; revalidate: () => Promise<...>; revalidateEvidence: () => Promise<...>; select: () => Promise<...>; }' is missing the following properties from type 'ReviewHost': creationTarget, authorizeOutcomeComparison, authorizeOutcome, authorizeDecision",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+      "code": "TS2739",
+      "message": "Type '{ state: SfProductStatePort; now: () => string; requestFor: () => Request; authorizeSections: () => Promise<boolean>; authorizeComments: () => Promise<boolean>; authorizeSensitivity: () => Promise<...>; revalidate: () => Promise<...>; revalidateEvidence: () => Promise<...>; select: () => Promise<...>; }' is missing the following properties from type 'ReviewHost': creationTarget, authorizeOutcomeComparison, authorizeOutcome, authorizeDecision",
+      "bucket": "REVIEW_HOST_FIXTURE",
+      "occurrences": [
+        {
+          "run": 43632801654,
+          "job": 132562905431,
+          "sourceLine": 40,
+          "sourceColumn": 35,
+          "logLine": 982
+        },
+        {
+          "run": 43633483813,
+          "job": 132565093216,
+          "sourceLine": 40,
+          "sourceColumn": 35,
+          "logLine": 1009
+        },
+        {
+          "run": 43634168745,
+          "job": 132567207864,
+          "sourceLine": 40,
+          "sourceColumn": 35,
+          "logLine": 956
+        }
+      ],
+      "id": "TC-0109"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts|TS2739|Type '{ state: SfProductStatePort; now: () => string; requestFor: () => Request; authorizeSections: () => Promise<false>; authorizeComments: () => Promise<true>; authorizeSensitivity: () => Promise<...>; revalidate: () => Promise<...>; revalidateEvidence: () => Promise<...>; select: () => Promise<...>; }' is missing the following properties from type 'ReviewHost': creationTarget, authorizeOutcomeComparison, authorizeOutcome, authorizeDecision",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+      "code": "TS2739",
+      "message": "Type '{ state: SfProductStatePort; now: () => string; requestFor: () => Request; authorizeSections: () => Promise<false>; authorizeComments: () => Promise<true>; authorizeSensitivity: () => Promise<...>; revalidate: () => Promise<...>; revalidateEvidence: () => Promise<...>; select: () => Promise<...>; }' is missing the following properties from type 'ReviewHost': creationTarget, authorizeOutcomeComparison, authorizeOutcome, authorizeDecision",
+      "bucket": "REVIEW_HOST_FIXTURE",
+      "occurrences": [
+        {
+          "run": 43632801654,
+          "job": 132562905431,
+          "sourceLine": 45,
+          "sourceColumn": 41,
+          "logLine": 983
+        },
+        {
+          "run": 43633483813,
+          "job": 132565093216,
+          "sourceLine": 45,
+          "sourceColumn": 41,
+          "logLine": 1010
+        },
+        {
+          "run": 43634168745,
+          "job": 132567207864,
+          "sourceLine": 45,
+          "sourceColumn": 41,
+          "logLine": 957
+        }
+      ],
+      "id": "TC-0110"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts|TS2739|Type '{ state: SfProductStatePort; now: () => string; requestFor: () => Request; authorizeSections: () => Promise<true>; authorizeComments: () => Promise<true>; authorizeSensitivity: () => Promise<...>; revalidate: () => Promise<...>; revalidateEvidence: () => Promise<...>; select: () => Promise<...>; }' is missing the following properties from type 'ReviewHost': creationTarget, authorizeOutcomeComparison, authorizeOutcome, authorizeDecision",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+      "code": "TS2739",
+      "message": "Type '{ state: SfProductStatePort; now: () => string; requestFor: () => Request; authorizeSections: () => Promise<true>; authorizeComments: () => Promise<true>; authorizeSensitivity: () => Promise<...>; revalidate: () => Promise<...>; revalidateEvidence: () => Promise<...>; select: () => Promise<...>; }' is missing the following properties from type 'ReviewHost': creationTarget, authorizeOutcomeComparison, authorizeOutcome, authorizeDecision",
+      "bucket": "REVIEW_HOST_FIXTURE",
+      "occurrences": [
+        {
+          "run": 43632801654,
+          "job": 132562905431,
+          "sourceLine": 56,
+          "sourceColumn": 37,
+          "logLine": 984
+        },
+        {
+          "run": 43633483813,
+          "job": 132565093216,
+          "sourceLine": 56,
+          "sourceColumn": 37,
+          "logLine": 1011
+        },
+        {
+          "run": 43634168745,
+          "job": 132567207864,
+          "sourceLine": 56,
+          "sourceColumn": 37,
+          "logLine": 958
+        }
+      ],
+      "id": "TC-0111"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts|TS2739|Type '{ state: SfProductStatePort; now: () => string; requestFor: () => undefined; authorizeSections: () => Promise<false>; authorizeComments: () => Promise<true>; authorizeSensitivity: () => Promise<...>; revalidate: () => Promise<...>; revalidateEvidence: () => Promise<...>; select: () => Promise<...>; }' is missing the following properties from type 'ReviewHost': creationTarget, authorizeOutcomeComparison, authorizeOutcome, authorizeDecision",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+      "code": "TS2739",
+      "message": "Type '{ state: SfProductStatePort; now: () => string; requestFor: () => undefined; authorizeSections: () => Promise<false>; authorizeComments: () => Promise<true>; authorizeSensitivity: () => Promise<...>; revalidate: () => Promise<...>; revalidateEvidence: () => Promise<...>; select: () => Promise<...>; }' is missing the following properties from type 'ReviewHost': creationTarget, authorizeOutcomeComparison, authorizeOutcome, authorizeDecision",
+      "bucket": "REVIEW_HOST_FIXTURE",
+      "occurrences": [
+        {
+          "run": 43632801654,
+          "job": 132562905431,
+          "sourceLine": 221,
+          "sourceColumn": 36,
+          "logLine": 985
+        },
+        {
+          "run": 43633483813,
+          "job": 132565093216,
+          "sourceLine": 221,
+          "sourceColumn": 36,
+          "logLine": 1012
+        },
+        {
+          "run": 43634168745,
+          "job": 132567207864,
+          "sourceLine": 221,
+          "sourceColumn": 36,
+          "logLine": 959
+        }
+      ],
+      "id": "TC-0112"
+    },
+    {
+      "normalizedSignature": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts|TS2741|Property 'procurementEvidenceWrites' is missing in type '{ authority: { state: import(\"<repo>/modules/sucafina/Sucafinav1/product/contracts/state\").SfProductStatePort; ui: { admit(request: Request, operation: string, inputDigest: string): Promise<...>; ... 6 more ...; finish(context: import(\"<repo>/...' but required in type '{ authority: { state: import(\"<repo>/modules/sucafina/Sucafinav1/product/contracts/state\").SfProductStatePort; ui: { admit(request: Request, operation: string, inputDigest: string): Promise<...>; ... 6 more ...; finish(context: import(\"<repo>/...'.",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+      "code": "TS2741",
+      "message": "Property 'procurementEvidenceWrites' is missing in type '{ authority: { state: import(\"<repo>/modules/sucafina/Sucafinav1/product/contracts/state\").SfProductStatePort; ui: { admit(request: Request, operation: string, inputDigest: string): Promise<...>; ... 6 more ...; finish(context: import(\"<repo>/...' but required in type '{ authority: { state: import(\"<repo>/modules/sucafina/Sucafinav1/product/contracts/state\").SfProductStatePort; ui: { admit(request: Request, operation: string, inputDigest: string): Promise<...>; ... 6 more ...; finish(context: import(\"<repo>/...'.",
+      "bucket": "WP14_FIXED_GRANT",
+      "occurrences": [
+        {
+          "run": 43632616824,
+          "job": 132562347834,
+          "sourceLine": 167,
+          "sourceColumn": 41,
+          "logLine": 613
+        }
+      ],
+      "id": "TC-0113"
+    },
+    {
+      "id": "TC-0114",
+      "normalizedSignature": "modules/sucafina/Sucafinav1/test/product/wp06/imports/end-to-end.test.ts|TS2345|Argument of type '(snapshot: Snapshot) => Promise<{ commit: false; value: { value?: undefined; status: \"unavailable\"; reason: string; }; } | { commit: false; value: { reason?: undefined; status: \"ok\"; value: { versionId: string; evidence: EvidenceIdentity & { ...; }; }; }; }>' is not assignable to parameter of type '(snapshot: Snapshot, blobs: BlobTransaction) => Promise<{ commit: boolean; value: { value?: undefined; status: \"unavailable\"; reason: string; }; }>'.",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/end-to-end.test.ts",
+      "code": "TS2345",
+      "message": "Argument of type '(snapshot: Snapshot) => Promise<{ commit: false; value: { value?: undefined; status: \"unavailable\"; reason: string; }; } | { commit: false; value: { reason?: undefined; status: \"ok\"; value: { versionId: string; evidence: EvidenceIdentity & { ...; }; }; }; }>' is not assignable to parameter of type '(snapshot: Snapshot, blobs: BlobTransaction) => Promise<{ commit: boolean; value: { value?: undefined; status: \"unavailable\"; reason: string; }; }>'.",
+      "bucket": "OPERATIONS_CONTRACT_SKEW",
+      "relatedDiagnostic": "TC-0061",
+      "relation": "Same call/path/line56 TS2345; inferred union text changed (readonly/expanded success shape). Preserve exact messages; same owner intake group, no separate runtime defect.",
+      "occurrences": [
+        {
+          "run": 43635795619,
+          "job": 132572187686,
+          "sourceLine": 56,
+          "sourceColumn": 72,
+          "logLine": 777
+        }
+      ]
+    }
+  ],
+  "artifactFindings": {
+    "classification": "artifact",
+    "item": "TRIAGE-ART-001",
+    "run": 43630618176,
+    "job": 132556167840,
+    "provenance": {
+      "W": "7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1",
+      "treeW": "2da074668b164b1aa5e051f8a70366969425906f",
+      "S": "7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1",
+      "treeS": "2da074668b164b1aa5e051f8a70366969425906f",
+      "requestPath": null,
+      "requestBlob": null,
+      "request": null,
+      "snapshotDelta": "Direct exact-product checkout; S=W, no synthetic test request."
+    },
+    "findings": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W1-check.log",
+        "logLine": 845,
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W10-H4-tests.log",
+        "logLine": 846,
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W10-checks.log",
+        "logLine": 847,
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W11-AR3-attempt1-tests.log",
+        "logLine": 848,
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W11-AR3-attempt2-tests.log",
+        "logLine": 849,
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W11-F1-tests.log",
+        "logLine": 850,
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W11-check.log",
+        "logLine": 851,
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W12-F2-tests.log",
+        "logLine": 852,
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W12-H5-tests.log",
+        "logLine": 853,
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W12-check.log",
+        "logLine": 854,
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W13-C2-tests.log",
+        "logLine": 855,
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W13-F3-tests.log",
+        "logLine": 856,
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W13-check.log",
+        "logLine": 857,
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W14-B1A-tests.log",
+        "logLine": 858,
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W14-R1-tests.log",
+        "logLine": 859,
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W14-checks.log",
+        "logLine": 860,
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W15-H6-tests.log",
+        "logLine": 861,
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W15-check.log",
+        "logLine": 862,
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W16-R2Q-tests.log",
+        "logLine": 863,
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W16-check.log",
+        "logLine": 864,
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W17-B1B-tests.log",
+        "logLine": 865,
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W17-H7-tests.log",
+        "logLine": 866,
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W17-check.log",
+        "logLine": 867,
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W18-E1-tests.log",
+        "logLine": 868,
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W18-check.log",
+        "logLine": 869,
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W19-E2-tests.log",
+        "logLine": 870,
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W19-check.log",
+        "logLine": 871,
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W2-check.log",
+        "logLine": 872,
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W2-tests.log",
+        "logLine": 873,
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W3-check.log",
+        "logLine": 874,
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W4-check.log",
+        "logLine": 875,
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W5-A1-tests.log",
+        "logLine": 876,
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W5-check.log",
+        "logLine": 877,
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W6-AR1-tests.log",
+        "logLine": 878,
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W6-C1-tests.log",
+        "logLine": 879,
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W6-H1-tests.log",
+        "logLine": 880,
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W6-check.log",
+        "logLine": 881,
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W7-check.log",
+        "logLine": 882,
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W8-H2-tests.log",
+        "logLine": 883,
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W8-check.log",
+        "logLine": 884,
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W9-AR2-tests.log",
+        "logLine": 885,
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W9-H3-tests.log",
+        "logLine": 886,
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W9-check.log",
+        "logLine": 887,
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+      }
+    ],
+    "additionalOccurrence": {
+      "run": 43635795619,
+      "job": 132572187686,
+      "provenance": {
+        "W": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+        "treeW": "a736cd370da6081c6010ffb26d66130fea94736f",
+        "S": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+        "treeS": "a736cd370da6081c6010ffb26d66130fea94736f",
+        "requestPath": null,
+        "requestBlob": null,
+        "request": null,
+        "snapshotDelta": "Direct exact-product checkout; S=W, no synthetic test request; log records both productSha and productTree."
+      },
+      "findings": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W1-check.log",
+          "logLine": 847,
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W10-H4-tests.log",
+          "logLine": 848,
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W10-checks.log",
+          "logLine": 849,
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W11-AR3-attempt1-tests.log",
+          "logLine": 850,
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W11-AR3-attempt2-tests.log",
+          "logLine": 851,
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W11-F1-tests.log",
+          "logLine": 852,
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W11-check.log",
+          "logLine": 853,
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W12-F2-tests.log",
+          "logLine": 854,
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W12-H5-tests.log",
+          "logLine": 855,
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W12-check.log",
+          "logLine": 856,
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W13-C2-tests.log",
+          "logLine": 857,
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W13-F3-tests.log",
+          "logLine": 858,
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W13-check.log",
+          "logLine": 859,
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W14-B1A-tests.log",
+          "logLine": 860,
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W14-R1-tests.log",
+          "logLine": 861,
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W14-checks.log",
+          "logLine": 862,
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W15-H6-tests.log",
+          "logLine": 863,
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W15-check.log",
+          "logLine": 864,
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W16-R2Q-tests.log",
+          "logLine": 865,
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W16-check.log",
+          "logLine": 866,
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W17-B1B-tests.log",
+          "logLine": 867,
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W17-H7-tests.log",
+          "logLine": 868,
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W17-check.log",
+          "logLine": 869,
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W18-E1-tests.log",
+          "logLine": 870,
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W18-check.log",
+          "logLine": 871,
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W19-E2-tests.log",
+          "logLine": 872,
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W19-check.log",
+          "logLine": 873,
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W2-check.log",
+          "logLine": 874,
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W2-tests.log",
+          "logLine": 875,
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W3-check.log",
+          "logLine": 876,
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W4-check.log",
+          "logLine": 877,
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W5-A1-tests.log",
+          "logLine": 878,
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W5-check.log",
+          "logLine": 879,
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W6-AR1-tests.log",
+          "logLine": 880,
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W6-C1-tests.log",
+          "logLine": 881,
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W6-H1-tests.log",
+          "logLine": 882,
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W6-check.log",
+          "logLine": 883,
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W7-check.log",
+          "logLine": 884,
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W8-H2-tests.log",
+          "logLine": 885,
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W8-check.log",
+          "logLine": 886,
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W9-AR2-tests.log",
+          "logLine": 887,
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W9-H3-tests.log",
+          "logLine": 888,
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/evidence/wp11-W9-check.log",
+          "logLine": 889,
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files."
+        }
+      ]
+    }
+  }
+}
