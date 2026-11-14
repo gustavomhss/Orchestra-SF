@@ -158,10 +158,12 @@ test("CI-UI-DECISIONS — recover a lost creation response by reading the same c
       expect(typeof saved.outputRef).toBe("string")
       const reference = saved.outputRef as string
       caseIdentity(reference)
-      await expect(form.getByRole("status")).toHaveText("Could not confirm creation. Your entries are preserved; retry to check the same request.")
+      await expect(form.getByRole("status")).toHaveText("Creation is unconfirmed. Your entries are locked to the original request; retry the same request to reconcile it.")
       await expect(form.getByLabel("Decision objective", { exact: true })).toHaveValue(objective)
+      await expect(form.getByLabel("Decision objective", { exact: true })).toBeDisabled()
       await expect(form.getByLabel("Criteria, one per line", { exact: true })).toHaveValue(draft.criteria.join("\n"))
-      await expect(form.getByRole("button", { name: "Create decision", exact: true })).toBeEnabled()
+      await expect(form.getByLabel("Criteria, one per line", { exact: true })).toBeDisabled()
+      await expect(form.getByRole("button", { name: "Retry same creation", exact: true })).toBeEnabled()
       observations.push({ stage: "lost-response-draft-preserved", caseRef: reference, creationSubmits: requests.length })
       expect(requests).toHaveLength(1)
       // Leave the uncertain form and reconcile by authorized reads, not another mutation.
