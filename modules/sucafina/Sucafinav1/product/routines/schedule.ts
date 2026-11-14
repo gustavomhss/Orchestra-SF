@@ -44,95 +44,111 @@ export type ScheduleHost = {
 }
 
 /** Safe internal recurrence operations. This module never sends externally or approves a workflow. */
-export function createRoutineSchedule(host: ScheduleHost, schedules: SchedulePorts) {
+export function createRoutineSchedule(source: ScheduleHost, providers: SchedulePorts) {
   return {
     async create(incoming: Parameters<SchedulePorts["create"]>[0], context: TrustedDomainContext) {
-      const request = structuredClone(incoming)
-      if (context.kind !== "ui" || !await host.authorize(context, "schedules.create", structuredClone(request))) return { status: "denied", reason: "human-authorization-required" } as const
-      if (!await requireOwner(host, context) || !validTimezone(request.timezone) || !host.validateRecurrence(request.recurrence, request.timezone) || !await host.revalidate(context, [])) return { status: "denied", reason: "schedule-authority-unavailable" } as const
-      if (!host.occurrences) return { status: "unavailable", reason: "occurrence-owner-revalidation-unavailable" } as const
-      const qualified = await host.occurrences.qualify(structuredClone(request), context)
-      if (qualified.status !== "ok") return qualified
-      if (!samePrincipal(qualified.value, context) || qualified.value.recipeRef !== request.recipeRef || qualified.value.conditionRef !== request.conditionRef || !await host.revalidate(context, [])) return { status: "denied", reason: "schedule-authority-changed" } as const
-      if (!await host.authorize(context, "schedules.create", structuredClone(request))) return { status: "denied", reason: "human-authorization-required" } as const
-      const result = await schedules.create(structuredClone(request), context)
-      if (result.status !== "ok") return result
-      if (!await host.revalidate(context, [result.value.scheduleRef])) return { status: "denied", reason: "schedule-authority-changed" } as const
-      return result
+      return withPinnedScheduleProviders(source, providers, async (host, schedules) => {
+        const request = structuredClone(incoming)
+        if (context.kind !== "ui" || !await host.authorize(context, "schedules.create", structuredClone(request))) return { status: "denied", reason: "human-authorization-required" } as const
+        if (!await requireOwner(host, context) || !validTimezone(request.timezone) || !host.validateRecurrence(request.recurrence, request.timezone) || !await host.revalidate(context, [])) return { status: "denied", reason: "schedule-authority-unavailable" } as const
+        if (!host.occurrences) return { status: "unavailable", reason: "occurrence-owner-revalidation-unavailable" } as const
+        const qualified = await host.occurrences.qualify(structuredClone(request), context)
+        if (qualified.status !== "ok") return qualified
+        if (!samePrincipal(qualified.value, context) || qualified.value.recipeRef !== request.recipeRef || qualified.value.conditionRef !== request.conditionRef || !await host.revalidate(context, [])) return { status: "denied", reason: "schedule-authority-changed" } as const
+        if (!await host.authorize(context, "schedules.create", structuredClone(request))) return { status: "denied", reason: "human-authorization-required" } as const
+        const result = await schedules.create(structuredClone(request), context)
+        if (result.status !== "ok") return result
+        if (!await host.revalidate(context, [result.value.scheduleRef])) return { status: "denied", reason: "schedule-authority-changed" } as const
+        return result
+      })
     },
     async update(incoming: Parameters<SchedulePorts["update"]>[0], context: TrustedDomainContext) {
-      const request = structuredClone(incoming)
-      if (context.kind !== "ui" || !await host.authorize(context, "schedules.update", structuredClone(request))) return { status: "denied", reason: "human-authorization-required" } as const
-      if (!await requireOwner(host, context) || !await host.revalidate(context, [request.scheduleRef])) return { status: "denied", reason: "schedule-authority-unavailable" } as const
-      if (!host.occurrences) return { status: "unavailable", reason: "authorized-schedule-recipe-unavailable" } as const
-      if (!validTimezone(request.timezone) || !host.validateRecurrence(request.recurrence, request.timezone)) return { status: "needs-input", reason: "invalid-schedule-recurrence" } as const
-      const binding = await readBinding(host, request, context)
-      if (binding.status !== "ok") return binding
-      const qualified = await host.occurrences.qualify({ conditionRef: binding.value.conditionRef, recipeRef: binding.value.recipeRef, recurrence: request.recurrence, timezone: request.timezone }, context)
-      if (qualified.status !== "ok") return qualified
-      if (!samePrincipal(qualified.value, context) || qualified.value.recipeRef !== binding.value.recipeRef || qualified.value.conditionRef !== binding.value.conditionRef || !await host.revalidate(context, [request.scheduleRef])) return { status: "denied", reason: "schedule-authority-changed" } as const
-      if (!await host.authorize(context, "schedules.update", structuredClone(request))) return { status: "denied", reason: "human-authorization-required" } as const
-      const result = await schedules.update(structuredClone(request), context)
-      if (result.status !== "ok") return result
-      if (result.value.scheduleRef !== request.scheduleRef || !await host.revalidate(context, [request.scheduleRef])) return { status: "denied", reason: "schedule-authority-changed" } as const
-      return result
+      return withPinnedScheduleProviders(source, providers, async (host, schedules) => {
+        const request = structuredClone(incoming)
+        if (context.kind !== "ui" || !await host.authorize(context, "schedules.update", structuredClone(request))) return { status: "denied", reason: "human-authorization-required" } as const
+        if (!await requireOwner(host, context) || !await host.revalidate(context, [request.scheduleRef])) return { status: "denied", reason: "schedule-authority-unavailable" } as const
+        if (!host.occurrences) return { status: "unavailable", reason: "authorized-schedule-recipe-unavailable" } as const
+        if (!validTimezone(request.timezone) || !host.validateRecurrence(request.recurrence, request.timezone)) return { status: "needs-input", reason: "invalid-schedule-recurrence" } as const
+        const binding = await readBinding(host, request, context)
+        if (binding.status !== "ok") return binding
+        const qualified = await host.occurrences.qualify({ conditionRef: binding.value.conditionRef, recipeRef: binding.value.recipeRef, recurrence: request.recurrence, timezone: request.timezone }, context)
+        if (qualified.status !== "ok") return qualified
+        if (!samePrincipal(qualified.value, context) || qualified.value.recipeRef !== binding.value.recipeRef || qualified.value.conditionRef !== binding.value.conditionRef || !await host.revalidate(context, [request.scheduleRef])) return { status: "denied", reason: "schedule-authority-changed" } as const
+        if (!await host.authorize(context, "schedules.update", structuredClone(request))) return { status: "denied", reason: "human-authorization-required" } as const
+        const result = await schedules.update(structuredClone(request), context)
+        if (result.status !== "ok") return result
+        if (result.value.scheduleRef !== request.scheduleRef || !await host.revalidate(context, [request.scheduleRef])) return { status: "denied", reason: "schedule-authority-changed" } as const
+        return result
+      })
     },
     async pause(incoming: Parameters<SchedulePorts["pause"]>[0], context: TrustedDomainContext) {
-      const request = structuredClone(incoming)
-      if (context.kind !== "ui" || !await host.authorize(context, "schedules.pause", structuredClone(request))) return { status: "denied", reason: "human-authorization-required" } as const
-      if (!await requireOwner(host, context) || !await host.revalidate(context, [request.scheduleRef])) return { status: "denied", reason: "schedule-authority-unavailable" } as const
-      if (!await host.authorize(context, "schedules.pause", structuredClone(request))) return { status: "denied", reason: "human-authorization-required" } as const
-      const result = await schedules.pause(structuredClone(request), context)
-      if (result.status !== "ok") return result
-      if (result.value.scheduleRef !== request.scheduleRef || !await host.revalidate(context, [request.scheduleRef])) return { status: "denied", reason: "schedule-authority-changed" } as const
-      return result
+      return withPinnedScheduleProviders(source, providers, async (host, schedules) => {
+        const request = structuredClone(incoming)
+        if (context.kind !== "ui" || !await host.authorize(context, "schedules.pause", structuredClone(request))) return { status: "denied", reason: "human-authorization-required" } as const
+        if (!await requireOwner(host, context) || !await host.revalidate(context, [request.scheduleRef])) return { status: "denied", reason: "schedule-authority-unavailable" } as const
+        if (!await host.authorize(context, "schedules.pause", structuredClone(request))) return { status: "denied", reason: "human-authorization-required" } as const
+        const result = await schedules.pause(structuredClone(request), context)
+        if (result.status !== "ok") return result
+        if (result.value.scheduleRef !== request.scheduleRef || !await host.revalidate(context, [request.scheduleRef])) return { status: "denied", reason: "schedule-authority-changed" } as const
+        return result
+      })
     },
     async list(context: TrustedDomainContext) {
-      if (!await requireOwner(host, context) || !await host.revalidate(context, [])) return { status: "denied", reason: "schedule-authority-unavailable" } as const
-      const result = await schedules.list(context)
-      if (result.status !== "ok") return result
-      if (!await host.revalidate(context, result.value.map((item) => item.scheduleRef))) return { status: "denied", reason: "schedule-authority-changed" } as const
-      return result
+      return withPinnedScheduleProviders(source, providers, async (host, schedules) => {
+        if (!await requireOwner(host, context) || !await host.revalidate(context, [])) return { status: "denied", reason: "schedule-authority-unavailable" } as const
+        const result = await schedules.list(context)
+        if (result.status !== "ok") return result
+        if (!await host.revalidate(context, result.value.map((item) => item.scheduleRef))) return { status: "denied", reason: "schedule-authority-changed" } as const
+        return result
+      })
     },
     async resume(incoming: { scheduleRef: string; expectedVersion: number }, context: TrustedDomainContext) {
-      const request = structuredClone(incoming)
-      if (context.kind !== "ui" || !await host.authorize(context, "schedules.resume", structuredClone(request))) return { status: "denied", reason: "human-authorization-required" } as const
-      const binding = await readBinding(host, request, context)
-      if (binding.status !== "ok") return binding
-      if (!host.occurrences) return { status: "unavailable", reason: "durable-occurrence-port-unavailable" } as const
-      if (!await host.authorize(context, "schedules.resume", structuredClone(request))) return { status: "denied", reason: "human-authorization-required" } as const
-      const result = await host.occurrences.resume(structuredClone(request), context)
-      if (result.status !== "ok") return result
-      if (result.value.scheduleRef !== request.scheduleRef || !await host.revalidate(context, [request.scheduleRef])) return { status: "denied", reason: "schedule-authority-changed" } as const
-      return result
+      return withPinnedScheduleProviders(source, providers, async (host) => {
+        const request = structuredClone(incoming)
+        if (context.kind !== "ui" || !await host.authorize(context, "schedules.resume", structuredClone(request))) return { status: "denied", reason: "human-authorization-required" } as const
+        const binding = await readBinding(host, request, context)
+        if (binding.status !== "ok") return binding
+        if (!host.occurrences) return { status: "unavailable", reason: "durable-occurrence-port-unavailable" } as const
+        if (!await host.authorize(context, "schedules.resume", structuredClone(request))) return { status: "denied", reason: "human-authorization-required" } as const
+        const result = await host.occurrences.resume(structuredClone(request), context)
+        if (result.status !== "ok") return result
+        if (result.value.scheduleRef !== request.scheduleRef || !await host.revalidate(context, [request.scheduleRef])) return { status: "denied", reason: "schedule-authority-changed" } as const
+        return result
+      })
     },
     async runDue(scheduleRef: string, context: TrustedDomainContext) {
-      if (!await requireOwner(host, context) || !await host.revalidate(context, [scheduleRef])) return { status: "denied", reason: "schedule-authority-unavailable" } as const
-      if (!host.occurrences) return { status: "unavailable", reason: "durable-occurrence-port-unavailable" } as const
-      const found = await host.occurrences.read(scheduleRef, context)
-      if (found.status !== "ok") return found
-      const binding = structuredClone(found.value)
-      if (!samePrincipal(binding, context) || binding.scheduleRef !== scheduleRef) return { status: "denied", reason: "schedule-authority-unavailable" } as const
-      if (binding.state !== "active") return { status: "needs-input", reason: "schedule-not-active" } as const
-      if (!await host.revalidate(context, [scheduleRef])) return { status: "denied", reason: "schedule-authority-changed" } as const
-      return validateOccurrence(await host.occurrences.runDue(scheduleRef, context), scheduleRef, host, context)
+      return withPinnedScheduleProviders(source, providers, async (host) => {
+        if (!await requireOwner(host, context) || !await host.revalidate(context, [scheduleRef])) return { status: "denied", reason: "schedule-authority-unavailable" } as const
+        if (!host.occurrences) return { status: "unavailable", reason: "durable-occurrence-port-unavailable" } as const
+        const found = await host.occurrences.read(scheduleRef, context)
+        if (found.status !== "ok") return found
+        const binding = structuredClone(found.value)
+        if (!samePrincipal(binding, context) || binding.scheduleRef !== scheduleRef) return { status: "denied", reason: "schedule-authority-unavailable" } as const
+        if (binding.state !== "active") return { status: "needs-input", reason: "schedule-not-active" } as const
+        if (!await host.revalidate(context, [scheduleRef])) return { status: "denied", reason: "schedule-authority-changed" } as const
+        return validateOccurrence(await host.occurrences.runDue(scheduleRef, context), scheduleRef, host, context)
+      })
     },
     async runNow(incoming: { scheduleRef: string; expectedVersion: number; idempotencyKey: string }, context: TrustedDomainContext) {
-      const request = structuredClone(incoming)
-      if (context.kind !== "ui" || !await host.authorize(context, "schedules.run", structuredClone(request))) return { status: "denied", reason: "human-authorization-required" } as const
-      if (!request.idempotencyKey.trim()) return { status: "needs-input", reason: "idempotency-key-required" } as const
-      const binding = await readBinding(host, request, context)
-      if (binding.status !== "ok") return binding
-      if (!host.occurrences) return { status: "unavailable", reason: "durable-occurrence-port-unavailable" } as const
-      if (!await host.authorize(context, "schedules.run", structuredClone(request))) return { status: "denied", reason: "human-authorization-required" } as const
-      return validateOccurrence(await host.occurrences.runNow(structuredClone(request), context), request.scheduleRef, host, context)
+      return withPinnedScheduleProviders(source, providers, async (host) => {
+        const request = structuredClone(incoming)
+        if (context.kind !== "ui" || !await host.authorize(context, "schedules.run", structuredClone(request))) return { status: "denied", reason: "human-authorization-required" } as const
+        if (!request.idempotencyKey.trim()) return { status: "needs-input", reason: "idempotency-key-required" } as const
+        const binding = await readBinding(host, request, context)
+        if (binding.status !== "ok") return binding
+        if (!host.occurrences) return { status: "unavailable", reason: "durable-occurrence-port-unavailable" } as const
+        if (!await host.authorize(context, "schedules.run", structuredClone(request))) return { status: "denied", reason: "human-authorization-required" } as const
+        return validateOccurrence(await host.occurrences.runNow(structuredClone(request), context), request.scheduleRef, host, context)
+      })
     },
     async readRun(runRef: string, context: TrustedDomainContext) {
-      if (!await requireOwner(host, context) || !await host.revalidate(context, [runRef])) return { status: "denied", reason: "schedule-authority-unavailable" } as const
-      const result = await schedules.readRun(runRef, context)
-      if (result.status !== "ok") return result
-      if (result.value.runRef !== runRef || result.value.principalRef !== context.binding.principalRef || result.value.projectId !== context.binding.projectId || !await host.revalidate(context, [runRef])) return { status: "denied", reason: "schedule-authority-changed" } as const
-      return result
+      return withPinnedScheduleProviders(source, providers, async (host, schedules) => {
+        if (!await requireOwner(host, context) || !await host.revalidate(context, [runRef])) return { status: "denied", reason: "schedule-authority-unavailable" } as const
+        const result = await schedules.readRun(runRef, context)
+        if (result.status !== "ok") return result
+        if (result.value.runRef !== runRef || result.value.principalRef !== context.binding.principalRef || result.value.projectId !== context.binding.projectId || !await host.revalidate(context, [runRef])) return { status: "denied", reason: "schedule-authority-changed" } as const
+        return result
+      })
     },
   }
 }
@@ -191,4 +207,76 @@ function validTimezone(timezone: string) {
   }
 }
 
-
+/** A replacement C08 or occurrence provider must not borrow an in-flight authorization. */
+function withPinnedScheduleProviders<T>(source: ScheduleHost, providers: SchedulePorts, action: (host: ScheduleHost, schedules: SchedulePorts) => Promise<T>) {
+  const host = {
+    owner: source.owner,
+    revalidate: source.revalidate,
+    authorize: source.authorize,
+    validateRecurrence: source.validateRecurrence,
+    occurrences: source.occurrences,
+    resultAccess: source.resultAccess,
+  }
+  const schedules = {
+    create: providers.create,
+    update: providers.update,
+    pause: providers.pause,
+    list: providers.list,
+    readRun: providers.readRun,
+  }
+  const occurrences = host.occurrences && {
+    qualify: host.occurrences.qualify,
+    read: host.occurrences.read,
+    resume: host.occurrences.resume,
+    runDue: host.occurrences.runDue,
+    runNow: host.occurrences.runNow,
+  }
+  const readResult = host.resultAccess?.readResult
+  const changed = new Error("schedule-provider-changed")
+  const current = () => source.owner === host.owner && source.revalidate === host.revalidate && source.authorize === host.authorize &&
+    source.validateRecurrence === host.validateRecurrence && source.occurrences === host.occurrences && source.resultAccess === host.resultAccess &&
+    host.resultAccess?.readResult === readResult &&
+    (!occurrences || host.occurrences?.qualify === occurrences.qualify && host.occurrences.read === occurrences.read &&
+      host.occurrences.resume === occurrences.resume && host.occurrences.runDue === occurrences.runDue && host.occurrences.runNow === occurrences.runNow) &&
+    providers.create === schedules.create && providers.update === schedules.update && providers.pause === schedules.pause &&
+    providers.list === schedules.list && providers.readRun === schedules.readRun
+  const invoke = async <V>(call: () => Promise<V>) => {
+    if (!current()) throw changed
+    const value = await call()
+    if (!current()) throw changed
+    return value
+  }
+  const guardedHost: ScheduleHost = {
+    owner: (...args) => invoke(() => host.owner.apply(source, args)),
+    revalidate: (...args) => invoke(() => host.revalidate.apply(source, args)),
+    authorize: (...args) => invoke(() => host.authorize.apply(source, args)),
+    validateRecurrence: (...args) => {
+      if (!current()) throw changed
+      const valid = host.validateRecurrence.apply(source, args)
+      if (!current()) throw changed
+      return valid
+    },
+    ...(occurrences ? { occurrences: {
+      qualify: (...args: Parameters<RoutineOccurrencePort["qualify"]>) => invoke(() => occurrences.qualify.apply(host.occurrences, args)),
+      read: (...args: Parameters<RoutineOccurrencePort["read"]>) => invoke(() => occurrences.read.apply(host.occurrences, args)),
+      resume: (...args: Parameters<RoutineOccurrencePort["resume"]>) => invoke(() => occurrences.resume.apply(host.occurrences, args)),
+      runDue: (...args: Parameters<RoutineOccurrencePort["runDue"]>) => invoke(() => occurrences.runDue.apply(host.occurrences, args)),
+      runNow: (...args: Parameters<RoutineOccurrencePort["runNow"]>) => invoke(() => occurrences.runNow.apply(host.occurrences, args)),
+    } } : {}),
+    ...(readResult ? { resultAccess: { readResult: (...args: Parameters<RoutineResultAccess["readResult"]>) => invoke(() => readResult.apply(host.resultAccess, args)) } } : {}),
+  }
+  const guardedSchedules: SchedulePorts = {
+    create: (...args) => invoke(() => schedules.create.apply(providers, args)),
+    update: (...args) => invoke(() => schedules.update.apply(providers, args)),
+    pause: (...args) => invoke(() => schedules.pause.apply(providers, args)),
+    list: (...args) => invoke(() => schedules.list.apply(providers, args)),
+    readRun: (...args) => invoke(() => schedules.readRun.apply(providers, args)),
+  }
+  return action(guardedHost, guardedSchedules).then((result) => {
+    if (!current()) throw changed
+    return result
+  }).catch((error: unknown) => {
+    if (error === changed) return { status: "unavailable", reason: "schedule-provider-changed" } as const
+    throw error
+  })
+}

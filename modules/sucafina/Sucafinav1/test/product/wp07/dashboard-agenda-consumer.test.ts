@@ -66,7 +66,14 @@ test("review agenda consumes real Dashboard selectors with exact record identity
     expect(chosen.sections.every((section) => section.period.start === f.period.start && section.period.end === f.period.end && section.projection.context.sourceRefs.every((ref) => ref.period.start === f.period.start && ref.period.end === f.period.end))).toBe(true)
     const empty = available(await agenda.create([{ ...items[2]!, recordRefs: [] }], f.author))
     expect(empty.sections[0]).toMatchObject({ recordCount: 0, projection: { values: [], components: [], missing: [] } })
-    expectUnchangedDomainState(before, await f.snapshots())
+    const after = await f.snapshots()
+    // The real People reader appends a redacted member access audit. Selection
+    // may record that read, but cannot rewrite the audit or any business state.
+    expect(after.dashboard.audit.slice(0, before.dashboard.audit.length)).toEqual(before.dashboard.audit)
+    const reads = after.dashboard.audit.slice(before.dashboard.audit.length)
+    expect(reads.length).toBeGreaterThan(0)
+    for (const entry of reads) expect(entry).toEqual({ who: "person", at: "2026-11-13T00:00:00.000Z", record: "members:private-member", was: null, became: null })
+    expectUnchangedDomainState(before, { ...after, dashboard: { ...after.dashboard, audit: before.dashboard.audit } })
     const forbiddenSource = await issue({ page: "Talent Review", fields: ["members", "leaders"], period: f.period }, f.recipient)
     expect(forbiddenSource.status).not.toBe("ok")
     const forbiddenAgenda = await agenda.create([{ id: "talent", kind: "dashboard", topic: "talent-review", selectionRef: talent.selectionRef, period: f.period }], f.recipient)
@@ -78,3 +85,4 @@ test("review agenda consumes real Dashboard selectors with exact record identity
     expect(JSON.stringify(revoked)).not.toContain("Shared project")
   } finally { await f.dispose() }
 }, 120000)
+

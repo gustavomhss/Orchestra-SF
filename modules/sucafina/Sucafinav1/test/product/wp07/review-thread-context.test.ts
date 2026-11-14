@@ -45,8 +45,10 @@ test("a question on C05 keeps its original review and source basis through curre
     } })
     reviewContext = services.threadContext
     const stored = await f.state.read(f.request("person"), "reviews", () => null)
-    if (stored.status !== "ok") throw new Error("Review storage unavailable")
-    const review = available(await services.reviews.preserve({ id: "question-original-review", selectionRef: "original-project-selection", sectionRefs: ["project"], expectedStorageVersion: stored.storageVersion, idempotencyKey: "wp07-preserve-for-question", targetIncarnation: f.creationTarget.incarnation }, f.author))
+    expect(stored).toEqual({ status: "unavailable", reason: "product-state-uninitialized" })
+    // C08 initializes its protected state only on the first committed mutation.
+    // The source/history capture above does not fabricate a product-state write.
+    const review = available(await services.reviews.preserve({ id: "question-original-review", selectionRef: "original-project-selection", sectionRefs: ["project"], expectedStorageVersion: 0, idempotencyKey: "wp07-preserve-for-question", targetIncarnation: f.creationTarget.incarnation }, f.author))
     const originalDigest = digestSfValue(review)
     const basis: ThreadSourceContext = { sourceRef: source.refId, sourceIncarnation: source.target.incarnation, observedVersion: source.target.version, period: f.period, evidenceRefs: [source] }
     const pin = available(await services.threadContext.prepare({ reviewRef: review.id, sectionId: "project" }, basis, f.author))
@@ -187,3 +189,4 @@ test("a question on C05 keeps its original review and source basis through curre
     expect(JSON.stringify(await forbiddenResponse!.json())).not.toContain(review.id)
   } finally { await f.dispose() }
 }, 120000)
+
