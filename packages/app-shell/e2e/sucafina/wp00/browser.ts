@@ -8,7 +8,7 @@ import { fileURLToPath } from "node:url"
 
 declare const chrome: {
   tabs: {
-    query(query: { active: boolean; currentWindow: boolean }): Promise<{ id?: number; url?: string }[]>
+    query(query: { active?: boolean; currentWindow?: boolean }): Promise<{ id?: number; url?: string }[]>
     setZoomSettings(id: number, settings: { mode: "automatic"; scope: "per-origin" }): Promise<void>
     setZoom(id: number, factor: number): Promise<void>
     getZoom(id: number): Promise<number>
@@ -61,12 +61,16 @@ export function scopedWp00Browser(directory: string) {
 export async function setBrowserZoom(page: Page, worker: Worker, percent: 100 | 200) {
   await page.bringToFront()
   const factor = await worker.evaluate(async (input) => {
-    const tabs = await chrome.tabs.query({ active: true, currentWindow: true })
-    const tab = tabs.find((entry) => entry.url === input.url)
-    if (tab?.id === undefined) throw new Error("The active browser tab does not match the measured page")
-    await chrome.tabs.setZoomSettings(tab.id, { mode: "automatic", scope: "per-origin" })
-    await chrome.tabs.setZoom(tab.id, input.percent / 100)
-    return chrome.tabs.getZoom(tab.id)
+    // A headless service worker need not have a current/focused browser window.
+    // The private browser has no user tabs; identify exactly one real tab by the measured URL.
+    const tabs = await chrome.tabs.query({})
+    const matching = tabs.filter((entry) => entry.url === input.url)
+    const id = matching.length === 1 ? matching[0]?.id : undefined
+    if (id === undefined)
+      throw new Error("Expected one isolated zoom tab for " + input.url + "; observed " + JSON.stringify(tabs))
+    await chrome.tabs.setZoomSettings(id, { mode: "automatic", scope: "per-origin" })
+    await chrome.tabs.setZoom(id, input.percent / 100)
+    return chrome.tabs.getZoom(id)
   }, { url: page.url(), percent })
   expect(factor, "Chrome must report the requested browser zoom").toBe(percent / 100)
   const observed = await page.evaluate(() => ({
