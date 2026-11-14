@@ -66,20 +66,17 @@ export type ReportsCollaboration = ReturnType<typeof reportsCollaboration>
 /** C05 self-recipient scenario: proves the real human's own answer lifecycle.
  * A separate-person authority/lease proof is outside this scenario's claim.
  */
-export async function createReviewQuestion(api: ReportsCollaboration, input: {
+export async function expectCreatedReviewQuestion(api: ReportsCollaboration, input: {
   pin: ReviewPin
   basis: ReviewBasis
   principalRef: string
   question: string
-  key: string
-}) {
+}, value: unknown) {
   const pin = object(await api.ok("review-thread-context", {
     reviewRef: input.pin.reviewRef, sectionId: input.pin.sectionId, basis: input.basis,
   }))
   expect(pin).toEqual(input.pin)
-  const mutation = { expectedStorageVersion: await api.version(), idempotencyKey: input.key }
-  const draft = { kind: "clarification", ...input.basis, reviewContext: input.pin, recipientRef: input.principalRef, body: input.question }
-  const created = object(await api.ok("collaboration-thread-create", { draft, mutation }, input.key))
+  const created = object(value)
   const id = text(created.id)
   expect(created).toMatchObject({ id, kind: "clarification", state: "open", recipientRef: input.principalRef, ...input.basis })
   const messages = array(created.messages).map(message)
@@ -90,13 +87,11 @@ export async function createReviewQuestion(api: ReportsCollaboration, input: {
   return { id, messages, pin: input.pin, basis: input.basis }
 }
 
-export async function replyReviewQuestion(api: ReportsCollaboration, question: Awaited<ReturnType<typeof createReviewQuestion>>, input: {
+export async function expectRepliedReviewQuestion(api: ReportsCollaboration, question: Awaited<ReturnType<typeof expectCreatedReviewQuestion>>, input: {
   principalRef: string
   body: string
-  key: string
-}) {
-  const mutation = { expectedStorageVersion: await api.version(), idempotencyKey: input.key }
-  const replied = object(await api.ok("collaboration-thread-reply", { id: question.id, body: input.body, mutation }, input.key))
+}, value: unknown) {
+  const replied = object(value)
   expect(replied.id).toBe(question.id)
   // The C05 HTTP adapter selects threads.reply and returns its committed snapshot.
   // A RecipientThread.current projection is deliberately not accepted as that ACK.
@@ -118,10 +113,8 @@ export async function replyReviewQuestion(api: ReportsCollaboration, question: A
 /** Preparation is separate from confirmation so the caller can assert the
  * actual preserved UI/projection before submitting this exact observation.
  */
-export async function prepareReviewAnswer(api: ReportsCollaboration, question: { id: string; pin: ReviewPin; basis: ReviewBasis }, answer: ReviewMessage): Promise<ReviewAnswer> {
-  const prepared = object(await api.ok("collaboration-answer-prepare-message", {
-    questionId: question.id, messageId: answer.id, incarnation: answer.incarnation, version: answer.version,
-  }))
+export function expectPreparedReviewAnswer(question: { id: string; pin: ReviewPin; basis: ReviewBasis }, answer: ReviewMessage, value: unknown): ReviewAnswer {
+  const prepared = object(value)
   expect(prepared.answer).toBe(answer.body)
   expect(prepared.authorRef).toBe(answer.authorRef)
   expect(prepared.reviewContext).toEqual(question.pin)
@@ -156,17 +149,10 @@ export async function prepareReviewAnswer(api: ReportsCollaboration, question: {
   }
 }
 
-export async function confirmReviewAnswer(api: ReportsCollaboration, answer: ReviewAnswer, key: string) {
-  const mutation = {
-    expectedStorageVersion: await api.version(), idempotencyKey: key,
-    observationRef: answer.observationRef, observedSourceVersion: answer.observedSourceVersion,
-    expectedScopeFingerprint: answer.expectedScopeFingerprint,
-  }
-  const payload = { questionId: answer.questionId, answerRef: answer.answerRef, mutation }
-  const receipt = await api.ok("collaboration-answer-confirm", payload, key)
+export async function expectConfirmedReviewAnswer(api: ReportsCollaboration, answer: ReviewAnswer, receipt: unknown) {
   expect(receipt).toEqual({ answerRef: answer.answerRef, observedVersion: answer.observedSourceVersion })
   await expectReusedReviewAnswer(api, answer)
-  return { payload, receipt }
+  return { receipt }
 }
 
 /** Calling this after page/context reopen verifies reuse without a new write. */
@@ -181,11 +167,7 @@ export async function expectReusedReviewAnswer(api: ReportsCollaboration, answer
   return reused
 }
 
-export async function editReviewAnswer(api: ReportsCollaboration, answer: ReviewAnswer, input: { body: string; key: string }) {
-  const mutation = { expectedStorageVersion: await api.version(), idempotencyKey: input.key }
-  const edited = await api.ok("collaboration-thread-edit", {
-    id: answer.questionId, messageId: answer.message.id, expectedVersion: answer.message.version, body: input.body, mutation,
-  }, input.key)
+export async function expectEditedReviewAnswer(api: ReportsCollaboration, answer: ReviewAnswer, input: { body: string }, edited: unknown) {
   expect(edited).toEqual({ id: answer.questionId, messageId: answer.message.id, version: answer.message.version + 1 })
   const current = await api.thread(answer.questionId)
   const matches = array(current.messages).map(message).filter((entry) => entry.id === answer.message.id)

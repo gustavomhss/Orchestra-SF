@@ -1,8 +1,8 @@
 import { expect } from "@playwright/test"
 import { reportsTest } from "./reports-support/fixture.ts"
 import { changeForecast, expectCapturedBudget, exportReview, followBudgetSource, openAndReopenMeeting, prepareReview, preserveNewRevision, readSourceData } from "./reports-support/review-flow.ts"
-import { editReviewAnswer, expectReusedReviewAnswer } from "./reports-support/confirmation.ts"
-import { confirmHumanAnswer } from "./reports-support/human-answer-flow.ts"
+import { expectReusedReviewAnswer } from "./reports-support/confirmation.ts"
+import { confirmHumanAnswer, editHumanAnswer, expectConfirmedAnswerVisible, observed } from "./reports-support/human-answer-flow.ts"
 import { object, readReview, responseFor } from "./reports-support/model.ts"
 import { revokeReportsSession } from "./reports-support/revocation.ts"
 
@@ -11,6 +11,9 @@ import { revokeReportsSession } from "./reports-support/revocation.ts"
 // Missing producer composition fails the assertions; it is never skip/xfail or PASS.
 reportsTest.describe("CI-UI-REPORTS · real preserved dossier", () => {
   reportsTest.describe.configure({ retries: 0, timeout: 180_000 })
+  // Real operator credentials must never enter retained Playwright API/network traces.
+  // Explicit synthetic-content receipts and downloaded reports remain the evidence.
+  reportsTest.use({ trace: "off", video: "off", screenshot: "off" })
 
   reportsTest("RPT-01 preserves authorized sources, exports 25 real projects and reopens before following the current source", async ({ page, reports }, info) => {
     const { app, corpus } = reports
@@ -31,20 +34,27 @@ reportsTest.describe("CI-UI-REPORTS · real preserved dossier", () => {
     const { saved } = await prepareReview(page, app, corpus, info)
     await changeForecast(page, app, corpus)
     await openAndReopenMeeting(page, app, saved)
-    const { api, answer } = await reportsTest.step("Confirm the human HTTP action against the visible preserved projection", () => confirmHumanAnswer(page, app, saved, corpus, info))
+    const { api, answer } = await reportsTest.step("Confirm through the installed Review controls against the exact visible preserved projection", () => confirmHumanAnswer(page, app, saved, corpus, info))
+    const beforeReload = await api.version()
     const read = page.waitForResponse(responseFor(app.dashboardURL, "review-read", "GET"))
+    const answerRead = page.waitForResponse(responseFor(app.dashboardURL, "collaboration-answer-read", "POST"))
     await page.reload()
     const reopened = await read
     expect(reopened.status()).toBe(200)
     expect(object(await reopened.json()).value).toEqual(saved)
-    await expect(page.locator("section:has(> nav > button)").getByRole("heading", { level: 2 })).toHaveText("Projects")
-    await page.getByRole("button", { name: "Next topic", exact: true }).click()
+    const meeting = page.getByRole("region", { name: "Preserved review meeting", exact: true })
+    await expect(meeting.getByRole("heading", { level: 2 })).toHaveText("Projects")
+    await meeting.getByRole("button", { name: "Next topic", exact: true }).click()
     await expectCapturedBudget(page, corpus)
-    await reportsTest.step("Reuse after reopening without writing a new confirmation", () => expectReusedReviewAnswer(api, answer))
-    const edited = await reportsTest.step("Edit once; reject old selector/reuse and retain exact historical content", () => editReviewAnswer(api, answer, {
-      body: `Edited human answer: the current source is ${corpus.after}. REPORTS_HUMAN_EDITED`,
-      key: `reports-edit:${answer.message.id}`,
-    }))
+    await reportsTest.step("Reuse after reopening without writing a new confirmation", async () => {
+      const observedRead = await observed(await answerRead, "collaboration-answer-read")
+      expect(observedRead.payload).toEqual({ questionId: answer.questionId })
+      expect(observedRead.value).toEqual(await expectReusedReviewAnswer(api, answer))
+      expect(await api.version()).toBe(beforeReload)
+      await expectConfirmedAnswerVisible(page, answer)
+    })
+    const edited = await reportsTest.step("Edit once through Review; reject old selector/reuse and read the exact original through history", () => editHumanAnswer(page, app, api, answer,
+      `Edited human answer: the current source is ${corpus.after}. REPORTS_HUMAN_EDITED`))
     expect(edited.incarnation).toBe(answer.message.incarnation)
     expect(edited.version).toBe(answer.message.version + 1)
     expect(await readReview(page.request, app.dashboardURL, saved.id)).toEqual(saved)
