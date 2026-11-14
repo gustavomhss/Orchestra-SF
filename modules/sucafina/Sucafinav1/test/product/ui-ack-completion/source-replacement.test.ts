@@ -30,7 +30,7 @@ test("physical source replacement refuses the old recipient intent and reload ca
     expect((await deniedDocument.body()).byteLength).toBe(0)
     try { expect((await app.page.reload())?.status()).toBe(503) }
     catch (error) {
-      if (!(error instanceof Error) || !/^page\.reload: net::ERR_HTTP_RESPONSE_CODE_FAILURE(?:\s|$)/.test(error.message)) throw error
+      if (!(error instanceof Error) || !/^(?:page\.)?reload: net::ERR_HTTP_RESPONSE_CODE_FAILURE(?:\s|$)/.test(error.message)) throw error
     }
     expect(await app.page.getByLabel("Reply", { exact: true }).count()).toBe(0)
     expect(await app.page.getByText(body, { exact: true }).count()).toBe(0)

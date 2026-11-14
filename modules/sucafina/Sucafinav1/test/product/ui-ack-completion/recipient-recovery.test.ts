@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, expect, test } from "bun:test"
-import type { Browser } from "@playwright/test"
+import type { Browser, Frame } from "@playwright/test"
 import { closeWp01Browser, launchWp01Browser } from "../wp01/browser-fixture.ts"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import { createAckBrowserFixture } from "./browser-fixture.ts"
@@ -56,6 +56,9 @@ test("recipient ACK selects the committed identity among equal messages and exac
 test("pagehide removes protected pending content and persisted pageshow reauthorizes by GET without autosend", async () => {
   const app = await createAckBrowserFixture(browser)
   const release = Promise.withResolvers<void>()
+  let navigationCommits = 0
+  const countCommit = (frame: Frame) => { if (frame === app.page.mainFrame()) navigationCommits++ }
+  app.page.on("framenavigated", countCommit)
   try {
     const body = "Private pending contribution across page lifecycle."
     const lost = await loseCommittedReply(app, body), committed = await app.inspect()
@@ -67,6 +70,8 @@ test("pagehide removes protected pending content and persisted pageshow reauthor
     expect(await app.page.getByText(body, { exact: true }).count()).toBe(0)
     expect(await retainedPayloads(app.page, body)).toBe(1)
     expect(replyWrites(app)).toHaveLength(1)
+    // Ignore the initial authorized document; observe only pageshow's reload.
+    navigationCommits = 0
     const reading = Promise.withResolvers<void>()
     await app.page.route(app.origin + "/product", async (route) => {
       if (!route.request().isNavigationRequest()) return route.continue()
@@ -77,17 +82,21 @@ test("pagehide removes protected pending content and persisted pageshow reauthor
       await release.promise
       await route.fulfill({ response })
     })
-    const loaded = app.page.waitForEvent("load")
     // PageTransitionEvent controls the browser lifecycle only, without
     // synthesizing domain reads, authority or receipts.
     await app.page.evaluate(() => dispatchEvent(new PageTransitionEvent("pageshow", { persisted: true })))
     await reading.promise
-    expect(await app.page.locator("[data-case-thread]").isHidden()).toBe(true)
-    expect(await app.page.getByLabel("Reply", { exact: true }).count()).toBe(0)
-    expect(await app.page.getByText(body, { exact: true }).count()).toBe(0)
+    // The old document was already proved hidden and empty above. Locator
+    // queries during a pending navigation can wait for its new context, so
+    // observe the commit boundary while the real GET response is gated.
+    expect(navigationCommits).toBe(0)
+    expect(app.attempts.filter((attempt) => attempt.route === "collaboration-thread-read")).toHaveLength(reads)
     expect(replyWrites(app)).toHaveLength(1)
+    const navigated = app.page.waitForEvent("framenavigated", { predicate: (frame) => frame === app.page.mainFrame() })
     release.resolve()
-    await loaded
+    await navigated
+    await app.page.getByRole("button", { name: "Open conversation", exact: true }).waitFor()
+    expect(navigationCommits).toBe(1)
     await app.page.unroute(app.origin + "/product")
     expect(await app.page.getByLabel("Reply", { exact: true }).count()).toBe(0)
     expect(app.attempts.filter((attempt) => attempt.route === "collaboration-thread-read")).toHaveLength(reads)
@@ -107,7 +116,7 @@ test("pagehide removes protected pending content and persisted pageshow reauthor
     expect(app.errors).toEqual([])
     console.info("UI_ACK_PAGE_LIFECYCLE", JSON.stringify({ hiddenBeforeReload: true, freshGet: true,
       automaticWrites: 0, originalRecovered: true }))
-  } finally { release.resolve(); await app.close() }
+  } finally { release.resolve(); app.page.off("framenavigated", countCommit); await app.close() }
 }, 60_000)
 
 test("reload reauthorizes before showing pending content and replays a resolved thread without reopening or autosend", async () => {
