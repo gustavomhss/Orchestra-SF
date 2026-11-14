@@ -270,6 +270,28 @@ document.querySelectorAll('[data-dashboard-workbench]').forEach((root) => {
       await refreshedAfter(messages[attempt.mode]);
     }
   };
+  const confirmedMutation = (attempt, value) => {
+    const object = (item) => item !== null && typeof item === 'object' && !Array.isArray(item);
+    const text = (item) => typeof item === 'string' && item.trim().length > 0;
+    const strings = (items) => Array.isArray(items) && items.every(text);
+    const version = (item) => Number.isSafeInteger(item) && item >= 0;
+    if (!object(value)) return false;
+    const sent = JSON.parse(attempt.body);
+    if (attempt.mode === 'dashboard-capture') return Object.keys(value).join(',') === 'captureId' && typeof value.captureId === 'string' && /^dashboard-capture:[a-f0-9]{64}$/.test(value.captureId);
+    if (attempt.mode === 'dashboard-hot-topic-draft') return Object.keys(value).sort().join(',') === 'draftRef,version' && typeof value.draftRef === 'string' && /^hot-topic-draft:[a-f0-9]{64}$/.test(value.draftRef) && version(value.version) && value.version === sent.expectedVersion + 1;
+    if (attempt.mode === 'dashboard-hot-topic-prepare') return Object.keys(value).sort().join(',') === 'caseRef,changeId,choiceId' && object(value.caseRef) &&
+      value.caseRef.id === sent.caseRef.id && value.caseRef.incarnation === sent.caseRef.incarnation && version(value.caseRef.version) && value.caseRef.version === sent.caseRef.version + 1 &&
+      value.choiceId === sent.choiceId && typeof value.changeId === 'string' && /^dashboard-change:[a-f0-9]{64}$/.test(value.changeId);
+    if (attempt.mode === 'dashboard-review-preserve') return typeof value.id === 'string' && /^dashboard-review:[a-f0-9]{64}$/.test(value.id) && value.version === 1 && text(value.createdAt) && Number.isFinite(Date.parse(value.createdAt)) &&
+      Array.isArray(value.sourceRefs) && Array.isArray(value.comments) && Array.isArray(value.sections) && value.sections.length === sent.sectionRefs.length &&
+      value.sections.every((section, index) => object(section) && section.id === sent.sectionRefs[index] && text(section.title) && object(section.period) && object(section.content) && Array.isArray(section.sourceRefs) && version(section.count));
+    // The HTTP receipt has the domain command's identity, not the browser's request key.
+    // Validate its complete shape here; the admitted host remains the authority for that binding.
+    if (attempt.mode === 'dashboard-hot-topic-apply') return [value.id, value.idempotencyKey, value.targetIncarnation, value.principalRef, value.at].every(text) &&
+      typeof value.commandDigest === 'string' && /^[a-f0-9]{64}$/.test(value.commandDigest) && Number.isFinite(Date.parse(value.at)) && value.surface === 'dashboard' && version(value.version) && object(value.result) &&
+      (value.result.ok === true ? value.result.warnings === undefined || strings(value.result.warnings) : value.result.ok === false && [400, 403, 404, 409, 422, 503].includes(value.result.status) && (value.result.errors === undefined || strings(value.result.errors)));
+    return false;
+  };
   const retryMutation = async () => {
     const attempt = mutation;
     if (!attempt || revoked) return;
@@ -277,9 +299,7 @@ document.querySelectorAll('[data-dashboard-workbench]').forEach((root) => {
     try {
       const value = await request(attempt.mode, undefined, undefined, attempt);
       if (revoked || mutation !== attempt) return;
-      if (!value || typeof value !== 'object') throw new Error('Resultado não confirmado.');
-      if (attempt.mode === 'dashboard-hot-topic-draft' && (typeof value.draftRef !== 'string' || !value.draftRef || !Number.isSafeInteger(value.version) || value.version < 1)) throw new Error('Rascunho não confirmado.');
-      if (attempt.mode === 'dashboard-hot-topic-apply' && (typeof value.id !== 'string' || !value.id || value.surface !== 'dashboard' || !Number.isSafeInteger(value.version) || value.version < 0 || !value.result || typeof value.result.ok !== 'boolean')) throw new Error('Comprovante não confirmado.');
+      if (!confirmedMutation(attempt, value)) throw new Error('Resultado não confirmado.');
       mutation = undefined; delete guard.dataset.dirty; rememberApplication();
       await completeMutation(attempt, value);
     } catch (error) {

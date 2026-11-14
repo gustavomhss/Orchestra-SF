@@ -242,9 +242,12 @@ function attach() {
       const active = [...dialog.querySelectorAll("form[data-command]")].find((form) => outstandingCommand(form))
       if (active) { event.preventDefault(); commandBlocked(active); return }
       const dirty = dialog.querySelectorAll("form[data-dirty]")
-      if (!dirty.length) return
+      // Native Escape hides the dialog before its queued close event is delivered.
+      // Keep the opener's accessibility state in step with that permitted dismissal.
+      if (!dirty.length) { button.setAttribute("aria-expanded", "false"); return }
       if (!window.confirm("Discard unsaved changes?")) { event.preventDefault(); return }
       dirty.forEach((form) => { delete form.dataset.dirty; discardDashboardPreview(form) })
+      button.setAttribute("aria-expanded", "false")
       setTimeout(() => void refresh(true), 0)
     })
     dialog.addEventListener("keydown", (event) => {

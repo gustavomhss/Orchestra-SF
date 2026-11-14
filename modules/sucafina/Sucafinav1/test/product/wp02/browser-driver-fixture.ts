@@ -14,20 +14,26 @@ import { object } from "../../../runtime/contract.ts"
 const transport = "playwright-unix-pipe-node-websocket"
 const limits = { maxFrameBytes: 16 * 1024 * 1024, maxQueuedBytes: 32 * 1024 * 1024 }
 const nodeDriver = String.raw`
+import { readFileSync } from "node:fs"
 import { chmod, lstat, mkdtemp, readFile, rm } from "node:fs/promises"
 import { createServer } from "node:net"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { setTimeout } from "node:timers/promises"
 if (process.versions.bun || process.release.name !== "node") throw new Error("The browser driver requires Node")
-// Keep Playwright's launch/PID/Chromium stderr in the bounded failure report.
-// A phase name alone cannot diagnose a browser that never reaches ready.
+// launchServer 1.59.1 stores its browser launch logs without the DEBUG callback.
+// Keep DEBUG for any available diagnostics, and independently observe its public
+// protocol logger and the Node-owned children before the external deadline.
 process.env.DEBUG = "pw:browser"
 console.log(JSON.stringify({ event: "phase", phase: "node-import" }))
 const { chromium } = await import(process.argv[1])
 console.log(JSON.stringify({ event: "phase", phase: "node-imported" }))
 const version = JSON.parse(await readFile(new URL(process.argv[2]), "utf8")).version
 const limits = JSON.parse(process.argv[3])
+const startup = JSON.parse(process.argv[4])
+const launchCeilingMs = startup.consumer === "wp01-shared-pool" ? 30000 : 15000
+if (!Number.isSafeInteger(startup.deadlineEpochMs) || startup.ceilingMs !== launchCeilingMs || startup.deadlineEpochMs - Date.now() > launchCeilingMs)
+  throw new Error("Invalid Node browser startup deadline")
 const stopped = new Promise((resolve) => process.stdin.once("end", resolve))
 process.stdin.resume()
 const failed = Promise.withResolvers()
@@ -40,7 +46,52 @@ const stats = { framing: "json-nul", acceptedClients: 0, framesToBrowser: 0, fra
 const lifecycle = { bridgeClosed: false, listenerClosed: false, socketClosed: false, pipeEnded: false,
   webSocketOpened: false, webSocketClosed: false, webSocketCloseCode: 0, webSocketCloseWasClean: false,
   pendingFrameBytes: 0, queuedWriteBytes: 0, socketRemoved: false, directoryRemoved: false }
-let server, socket, websocket, bridge, failure
+let server, socket, websocket, bridge, failure, launchSampler
+const launchStarted = performance.now()
+const protocol = { sent: 0, received: 0, malformed: 0, lastSent: undefined, lastReceived: undefined, pending: new Map() }
+const launchLogger = {
+  isEnabled: (name) => name === "protocol",
+  log: (_name, _severity, message) => {
+    try {
+      const start = message.indexOf("{")
+      if (start < 0) throw new Error("Missing protocol object")
+      const value = JSON.parse(message.slice(start))
+      if (message.startsWith("SEND")) {
+        protocol.sent++; protocol.lastSent = typeof value.method === "string" ? value.method : undefined
+        if (Number.isSafeInteger(value.id) && typeof value.method === "string" && protocol.pending.size < 32) protocol.pending.set(value.id, value.method)
+      } else {
+        protocol.received++; protocol.lastReceived = typeof value.method === "string" ? value.method : protocol.pending.get(value.id)
+        protocol.pending.delete(value.id)
+      }
+    } catch { protocol.malformed++ }
+  },
+}
+const inspectLaunch = () => {
+  const activeResources = process.getActiveResourcesInfo()
+  const resources = Object.fromEntries([...new Set(activeResources)].map((name) => [name, activeResources.filter((value) => value === name).length]))
+  const children = []
+  if (process.platform === "linux") {
+    try {
+      const ids = readFileSync("/proc/" + process.pid + "/task/" + process.pid + "/children", "utf8").trim().split(/\s+/).filter(Boolean).slice(0, 8)
+      for (const id of ids) {
+        try {
+          const status = readFileSync("/proc/" + id + "/status", "utf8")
+          const parent = Number(/^PPid:\s+(\d+)/m.exec(status)?.[1])
+          if (parent !== process.pid) continue
+          children.push({ pid: Number(id), parent, name: readFileSync("/proc/" + id + "/comm", "utf8").trim(), state: /^State:\s+([^\n]+)/m.exec(status)?.[1], wait: readFileSync("/proc/" + id + "/wchan", "utf8").trim() })
+        } catch { children.push({ pid: Number(id), state: "exited-during-observation" }) }
+      }
+    } catch { children.push({ state: "process-observation-unavailable" }) }
+  }
+  // No protocol payload, command arguments, cookies or environment values leave
+  // the driver. These samples are diagnostic and never count as lifecycle proof.
+  console.log(JSON.stringify({ event: "launch-diagnostic", runtime: process.release.name, pid: process.pid,
+    elapsedMs: Math.round(performance.now() - launchStarted), resources, rss: process.memoryUsage().rss, children,
+    deadlineEpochMs: startup.deadlineEpochMs, launchCeilingMs, remainingStartupMs: Math.max(0, startup.deadlineEpochMs - Date.now()),
+    debugFileConfigured: typeof process.env.DEBUG_FILE === "string" && process.env.DEBUG_FILE.length > 0,
+    protocol: { sent: protocol.sent, received: protocol.received, malformed: protocol.malformed,
+      lastSent: protocol.lastSent, lastReceived: protocol.lastReceived, pending: [...protocol.pending.values()] } }))
+}
 const fail = (error) => {
   if (failure) return
   failure = error
@@ -150,8 +201,17 @@ async function forward(client) {
   lifecycle.bridgeClosed = client.destroyed && websocket.readyState === WebSocket.CLOSED
 }
 try {
-  console.log(JSON.stringify({ event: "phase", phase: "chromium-launch" }))
-  server = await chromium.launchServer({ host: "127.0.0.1", channel: "chrome", headless: true, args: ["--no-sandbox"], timeout: 15000 })
+  inspectLaunch()
+  launchSampler = setInterval(inspectLaunch, 1000)
+  launchSampler.unref()
+  // The caller's deadline includes Node imports and preparation. Never create a
+  // browser after it expired or start a fresh full timeout at this boundary.
+  const launchTimeoutMs = Math.min(launchCeilingMs, startup.deadlineEpochMs - Date.now())
+  if (launchTimeoutMs <= 0) throw new Error("Node browser startup deadline expired before launch")
+  console.log(JSON.stringify({ event: "phase", phase: "chromium-launch", timeoutMs: launchTimeoutMs, deadlineEpochMs: startup.deadlineEpochMs }))
+  server = await chromium.launchServer({ host: "127.0.0.1", channel: "chrome", headless: true, args: ["--no-sandbox"], timeout: launchTimeoutMs, logger: launchLogger })
+  clearInterval(launchSampler)
+  inspectLaunch()
   console.log(JSON.stringify({ event: "phase", phase: "chromium-launched" }))
   await new Promise((resolve, reject) => {
     listener.once("error", reject)
@@ -177,6 +237,7 @@ try {
   console.log(JSON.stringify({ event: "closed", browserExitCode: child.exitCode, browserSignal: child.signalCode,
     bridge: { ...stats, directoryMode, socketMode }, lifecycle }))
 } catch (error) {
+  clearInterval(launchSampler)
   fail(error)
   console.error("SF_WP02_BROWSER_BRIDGE_FAILURE", JSON.stringify({ bridge: stats, lifecycle }))
   await Promise.allSettled([
@@ -226,11 +287,18 @@ async function within<T>(work: Promise<T>, timeout: number, name: string) {
 
 /** Each caller declares expectSpawn in its own test and reports only after assertions and cleanup succeed.
  * A caller's shorter acquisition deadline cancels the owned process scope, not only its await. */
-export async function launchBrowserDriver(consumer: "host-contextual-controls" | "host-draft-conflict" | "host-write-authority" | "host-response-recovery" | "host-draft-recovery" | "host-access-recovery" | "host-egress-recovery" | "host-source-recovery" | "dashboard-monthly" | "personal-views" | "preview-in-flight" | "wp01-shared-pool", startup?: { signal: AbortSignal; timeoutMs: number }) {
+export async function launchBrowserDriver(consumer: "host-contextual-controls" | "host-draft-conflict" | "host-write-authority" | "host-response-recovery" | "host-draft-recovery" | "host-access-recovery" | "host-egress-recovery" | "host-source-recovery" | "dashboard-monthly" | "personal-views" | "preview-in-flight" | "wp01-shared-pool", startup?: { signal: AbortSignal; timeoutMs: number; deadlineEpochMs?: number }) {
   const launchTimeout = startup?.timeoutMs ?? 15000
-  if (!Number.isSafeInteger(launchTimeout) || launchTimeout < 1 || launchTimeout > 15000) throw new Error("Invalid browser driver startup deadline")
+  const launchCeilingMs = consumer === "wp01-shared-pool" ? 30000 : 15000
+  if (!Number.isSafeInteger(launchTimeout) || launchTimeout < 1 || launchTimeout > launchCeilingMs) throw new Error("Invalid browser driver startup deadline")
   const started = performance.now()
-  const remaining = () => Math.max(1, launchTimeout - Math.ceil(performance.now() - started))
+  const deadlineEpochMs = startup?.deadlineEpochMs ?? Date.now() + launchTimeout
+  if (!Number.isSafeInteger(deadlineEpochMs) || deadlineEpochMs - Date.now() > launchCeilingMs) throw new Error("Invalid absolute browser driver startup deadline")
+  const remaining = () => {
+    const value = Math.min(deadlineEpochMs - Date.now(), launchTimeout - Math.ceil(performance.now() - started))
+    if (value <= 0) throw new Error("Browser driver startup deadline expired")
+    return value
+  }
   let currentPhase = "playwright-import"
   const phase = (name: string, details: Record<string, string | number | boolean | undefined> = {}) => {
     currentPhase = name
@@ -239,13 +307,19 @@ export async function launchBrowserDriver(consumer: "host-contextual-controls" |
   const node = Bun.which("node")
   if (!node) throw new Error("Node is unavailable for the Playwright browser driver")
   phase("playwright-import")
-  const { chromium } = await within(import("@playwright/test"), remaining(), "Browser driver Playwright import")
+  const importTimeout = remaining()
+  const { chromium } = await within(import("@playwright/test"), importTimeout, "Browser driver Playwright import")
   phase("playwright-imported")
   if (startup?.signal.aborted) throw startup.signal.reason
   const ready = Promise.withResolvers<Ready>(), stop = Promise.withResolvers<void>()
+  // A deadline may expire before the ready race is installed. Observe this
+  // deferred rejection; its original promise and the owned scope retain errors.
+  void ready.promise.catch(() => {})
   const abort = new AbortController()
-  const observed: { pid?: number; ready?: Ready; closed?: ReturnType<typeof closedMessage>; proof?: object; stderr: string } = { stderr: "" }
+  const observed: { pid?: number; ready?: Ready; closed?: ReturnType<typeof closedMessage>; proof?: object; stderr: string; diagnostic?: ReturnType<typeof object>; browserPids: Set<number> } = { stderr: "", browserPids: new Set() }
+  let cancellationStarted: number | undefined
   const cancelStartup = () => {
+    cancellationStarted ??= performance.now()
     phase("startup-cancelled", { waitingAt: currentPhase, driverPid: observed.pid })
     stop.resolve()
     abort.abort(startup?.signal.reason ?? new Error("Browser driver startup cancelled"))
@@ -255,8 +329,24 @@ export async function launchBrowserDriver(consumer: "host-contextual-controls" |
     try {
       if (!line || line.length > 8192) throw new Error("Invalid browser driver message")
       const value = object(JSON.parse(line))
+      if (value.event === "launch-diagnostic") {
+        if (value.runtime !== "node" || value.pid !== observed.pid || !Array.isArray(value.children) || value.children.length > 8 || typeof value.elapsedMs !== "number") throw new Error("Invalid browser launch diagnostic")
+        for (const child of value.children) {
+          const entry = object(child)
+          if (entry.parent === observed.pid && typeof entry.pid === "number" && Number.isSafeInteger(entry.pid) && entry.pid > 0 && entry.pid !== observed.pid && entry.pid !== process.pid)
+            observed.browserPids.add(entry.pid)
+        }
+        observed.diagnostic = value
+        console.info("SF_BROWSER_DRIVER_LAUNCH_DIAGNOSTIC", JSON.stringify({ consumer, ...value }))
+        return
+      }
       if (value.event === "phase") {
         if (typeof value.phase !== "string" || !["node-import", "node-imported", "chromium-launch", "chromium-launched"].includes(value.phase)) throw new Error("Invalid browser driver phase")
+        if (value.phase === "chromium-launch") {
+          if (typeof value.timeoutMs !== "number" || !Number.isSafeInteger(value.timeoutMs) || value.timeoutMs < 1 || value.timeoutMs > launchCeilingMs || value.deadlineEpochMs !== deadlineEpochMs) throw new Error("Node browser launch did not use the caller deadline")
+          phase(value.phase, { driverPid: observed.pid, timeoutMs: value.timeoutMs, deadlineEpochMs })
+          return
+        }
         phase(value.phase, { driverPid: observed.pid })
         return
       }
@@ -279,8 +369,8 @@ export async function launchBrowserDriver(consumer: "host-contextual-controls" |
     phase("app-process-service")
     const process = yield* AppProcess.Service
     if (abort.signal.aborted) throw abort.signal.reason
-    phase("app-process-spawn")
-    const child = yield* process.spawn(ChildProcess.make(node, ["--input-type=module", "-e", nodeDriver, import.meta.resolve("@playwright/test"), import.meta.resolve("@playwright/test/package.json"), JSON.stringify(limits)], {
+    phase("app-process-spawn", { remainingMs: remaining(), deadlineEpochMs, launchCeilingMs })
+    const child = yield* process.spawn(ChildProcess.make(node, ["--input-type=module", "-e", nodeDriver, import.meta.resolve("@playwright/test"), import.meta.resolve("@playwright/test/package.json"), JSON.stringify(limits), JSON.stringify({ consumer, deadlineEpochMs, ceilingMs: launchCeilingMs })], {
       extendEnv: true, stdin: Stream.fromEffect(Effect.promise(() => stop.promise)).pipe(Stream.drain), stdout: "pipe", stderr: "pipe",
     }))
     observed.pid = Number(child.pid)
@@ -299,7 +389,7 @@ export async function launchBrowserDriver(consumer: "host-contextual-controls" |
   // A timeout at the caller must not hide a later owned-process failure.
   void finished.catch((error: unknown) => {
     console.error("SF_BROWSER_DRIVER_FAILURE", JSON.stringify({ consumer, phase: currentPhase, driverPid: observed.pid,
-      reason: error instanceof Error ? error.message : String(error), stderr: observed.stderr }))
+      reason: error instanceof Error ? error.message : String(error), stderr: observed.stderr, diagnostic: observed.diagnostic }))
     ready.reject(error)
   })
   const cleanup = async <T>(work: () => Promise<T>) => {
@@ -312,12 +402,55 @@ export async function launchBrowserDriver(consumer: "host-contextual-controls" |
       throw error
     }
   }
+  const observeCancelledStartup = async () => {
+    cancellationStarted ??= performance.now()
+    const deadline = cancellationStarted + 5000
+    // Scope ownership is never abandoned to meet a reporting deadline. If its
+    // finalizer overruns, report incomplete and do not perform late PID probes.
+    const scope = await Promise.allSettled([finished])
+    const failures: unknown[] = []
+    const pids = [...(observed.pid === undefined ? [] : [observed.pid]), ...observed.browserPids]
+    const states = new Map<number, "absent" | "present" | "unobserved" | "error">(pids.map((pid) => [pid, "unobserved"]))
+    if (observed.pid === undefined || !Number.isSafeInteger(observed.pid) || observed.pid <= 0 || observed.pid === process.pid)
+      failures.push(new Error("Startup cleanup has no valid observed Node PID"))
+    if (!observed.browserPids.size) failures.push(new Error("Startup cleanup has no parent-validated browser PID"))
+    let deadlineExceeded = performance.now() >= deadline
+    if (!deadlineExceeded) {
+      while (true) {
+        for (const pid of pids) {
+          if (performance.now() >= deadline) { deadlineExceeded = true; break }
+          if (pid === process.pid || !Number.isSafeInteger(pid) || pid <= 0) { states.set(pid, "error"); continue }
+          try { process.kill(pid, 0); states.set(pid, "present") }
+          catch (error) {
+            if (error instanceof Error && "code" in error && error.code === "ESRCH") states.set(pid, "absent")
+            else { states.set(pid, "error"); failures.push(error) }
+          }
+        }
+        if (deadlineExceeded || failures.length || [...states.values()].every((state) => state === "absent")) break
+        const remainingMs = deadline - performance.now()
+        if (remainingMs <= 0) { deadlineExceeded = true; break }
+        await new Promise<void>((resolve) => setTimeout(resolve, Math.min(50, remainingMs)))
+      }
+    }
+    deadlineExceeded ||= performance.now() >= deadline
+    if (deadlineExceeded) failures.push(new Error("Startup cleanup observation exceeded its shared 5000 ms window"))
+    if ([...states.values()].some((state) => state !== "absent")) failures.push(new Error("Startup cleanup did not observe every known PID absent"))
+    const scopeResult = scope[0]
+    console.info("SF_BROWSER_DRIVER_STARTUP_CANCEL_CLEANUP", JSON.stringify({ consumer, startupSucceeded: false, normalBridgeProof: false,
+      observationBudgetMs: 5000, elapsedMs: Math.round(performance.now() - cancellationStarted), deadlineExceeded,
+      scopeSettled: true, scopeOutcome: scopeResult?.status, scopeReason: scopeResult?.status === "rejected" ? scopeResult.reason instanceof Error ? scopeResult.reason.message : String(scopeResult.reason) : undefined,
+      driverPid: observed.pid, browserPids: [...observed.browserPids], pids: [...states].map(([pid, state]) => ({ pid, state })),
+      status: failures.length ? "incomplete" : "observed-absent", failures: failures.map((error) => error instanceof Error ? error.message : String(error)) }))
+    if (failures.length) throw new AggregateError(failures, "Browser driver startup cleanup observation is incomplete")
+  }
   try {
     if (startup?.signal.aborted) cancelStartup()
-    const metadata = await within(Promise.race([ready.promise, finished.then(() => { throw new Error("Browser driver exited before connection") })]), remaining(), "Browser driver launch")
+    const readyTimeout = remaining()
+    const metadata = await within(Promise.race([ready.promise, finished.then(() => { throw new Error("Browser driver exited before connection") })]), readyTimeout, "Browser driver launch")
     if (abort.signal.aborted) throw abort.signal.reason
     phase("pipe-verify", { driverPid: metadata.pid, browserPid: metadata.browserPid })
-    const [directory, socket] = await Promise.all([lstat(dirname(metadata.endpoint)), lstat(metadata.endpoint)])
+    const pipeTimeout = remaining()
+    const [directory, socket] = await within(Promise.all([lstat(dirname(metadata.endpoint)), lstat(metadata.endpoint)]), pipeTimeout, "Browser Unix-pipe verification")
     if (!directory.isDirectory() || !socket.isSocket() || (directory.mode & 0o777) !== metadata.directoryMode || (socket.mode & 0o777) !== metadata.socketMode) throw new Error("Browser Unix pipe permissions differ in the client")
     phase("browser-connect", { driverPid: metadata.pid, browserPid: metadata.browserPid })
     const browser = await chromium.connect(metadata.endpoint, { timeout: remaining() })
@@ -349,12 +482,13 @@ export async function launchBrowserDriver(consumer: "host-contextual-controls" |
     }
   } catch (error) {
     console.error("SF_BROWSER_DRIVER_STARTUP_FAILURE", JSON.stringify({ consumer, phase: currentPhase, driverPid: observed.pid,
-      elapsedMs: Math.round(performance.now() - started), reason: error instanceof Error ? error.message : String(error), stderr: observed.stderr }))
+      elapsedMs: Math.round(performance.now() - started), reason: error instanceof Error ? error.message : String(error), stderr: observed.stderr, diagnostic: observed.diagnostic }))
     // Failed startup owns no reusable browser. Cancel immediately and await its
     // AppProcess finalizer instead of waiting for a handshake that already expired.
+    cancellationStarted ??= performance.now()
     stop.resolve()
     abort.abort(error)
-    try { await cleanup(async () => { await Promise.allSettled([finished]) }) }
+    try { await observeCancelledStartup() }
     catch (closed) { throw new AggregateError([error, closed], "Browser driver startup and cleanup failed") }
     throw error
   } finally { startup?.signal.removeEventListener("abort", cancelStartup) }

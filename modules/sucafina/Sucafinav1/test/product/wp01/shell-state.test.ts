@@ -192,6 +192,7 @@ test.each([320, 768, 1440])("real shell detail supports keyboard, focus return a
     await page.keyboard.press("Enter")
     const dialog = page.locator("dialog").nth(1)
     await dialog.waitFor({ state: "visible" })
+    expect(await button.getAttribute("aria-expanded")).toBe("true")
     expect(await dialog.evaluate((element) => { const box = element.getBoundingClientRect(); return box.left >= 0 && box.right <= innerWidth })).toBe(true)
     await dialog.getByRole("button", { name: "Close editor" }).focus()
     await page.keyboard.press("Shift+Tab")
