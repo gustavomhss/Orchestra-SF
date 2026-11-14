@@ -131,6 +131,13 @@ async function renderObservation(observation: { label: "before" | "after"; proje
     expect(rows).toEqual(decision.scenario.components.map((component) => [component.id, component.amount === null || component.evidenceState === "absent" ? "Indisponível" : String(component.amount), component.currency, `${component.period.start} – ${component.period.end}`, component.evidenceState]))
     const timeline = page.locator('svg[aria-label="Períodos no horizonte selecionado; os detalhes estão na lista seguinte"] [role="button"]')
     expect(await timeline.count()).toBe(decision.scenario.components.filter((component) => component.sourceRefs.length).length)
+    // Every period, including the last rows, must expose real pointer geometry;
+    // stroke on a zero-height SVG group is not a usable interaction target.
+    const timelineTargets = await timeline.evaluateAll((marks) => marks.map((mark) => {
+      const bounds = mark.getBoundingClientRect()
+      return { width: bounds.width, height: bounds.height }
+    }))
+    expect(timelineTargets.every((bounds) => bounds.width > 0 && bounds.height > 0)).toBe(true)
     const text = await page.locator("body").innerText()
     expect(text).toContain(`Comparação de custos: alternativa ${decision.comparison.alternativeResultRef} menos referência ${decision.comparison.baselineResultRef}.`)
     expect(text).toContain("Diferença negativa indica custo conhecido menor da alternativa; positiva indica custo conhecido maior.")
@@ -176,6 +183,7 @@ async function renderObservation(observation: { label: "before" | "after"; proje
       await page.keyboard.press("Enter")
       expect(JSON.parse(await page.locator("body").getAttribute("data-source") ?? "null")).toEqual(component.sourceRefs[0])
       const trainingRow = table.getByRole("row").filter({ has: page.getByRole("cell", { name: "training:11", exact: true }) })
+      await page.evaluate(() => { delete document.body.dataset.source })
       await trainingRow.getByRole("button").first().click()
       expect(JSON.parse(await page.locator("body").getAttribute("data-source") ?? "null")).toEqual(component.sourceRefs[0])
     }
