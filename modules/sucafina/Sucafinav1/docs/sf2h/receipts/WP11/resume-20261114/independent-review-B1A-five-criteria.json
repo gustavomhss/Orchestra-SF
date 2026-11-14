@@ -1,0 +1,33 @@
+{
+  "schema": "wp11-independent-B1A-narrow-criteria-review-v1",
+  "reviewer": "ci_reconciliation",
+  "status": "FIVE_LITERAL_CONCLUSIONS_SUPPORTED_ON_ORIGINAL_RECORDED_SOURCES_ONLY",
+  "reviewedArtifact": {
+    "path": "/workspace/scratch/c3f9350f32d4/requirements/W14-B1A-criterion-evidence.json",
+    "sha256": "4ba0137c42c258d2db49bcaa3319c580d0315bf8cfae640f9ff07bf5da881f97"
+  },
+  "criteria": [
+    "WP11.T01.CHK.03",
+    "WP11.T01.INV.01",
+    "WP11.T01.CMP.01",
+    "WP11.T02.CHK.01",
+    "WP11.T02.CHK.02"
+  ],
+  "verification": [
+    "The5 passing test observations, names/durations, raw log hash and exact W14 test blobs match the hosted metadata and immutable Git source.",
+    "The proposed T02.CHK.01 numbers, complete coverage and shared component assertions are explicit in the real-source quotation test, including original210000/30000 and revised235000/5000.",
+    "T02.CHK.02 is supported by the explicit unique component checks and canonical duplicate include refusal with official snapshot digests unchanged.",
+    "T01.CHK.03 is exercised through real hostile JSON rejection, unchanged private C08/authority state, real delete/tombstone/restore and old-incarnation rejection after actual driver dispose/reopen.",
+    "T01.INV.01 and T01.CMP.01 combine those new import/source-identity facts with recorded F1 draft/access/concurrency/host-intent assertions; they are not inferred solely from choice-persistence."
+  ],
+  "retainedLimits": [
+    "Overall B1A remains5pass1fail. Failed current-choice lifecycle preparation/promotion/reopen is not granted a pass by these five conclusions.",
+    "Choice-persistence keeps its original writer open and uses a confirmation switch; it is a second-connection persistence proof, not complete shutdown or independent human/native admission.",
+    "The import test really disposes its SQLite driver but reuses its original UI context/principal. It does not prove a new login or collaborator reading the same financial choice.",
+    "Synthetic confirmed quote/source declarations satisfy the narrow stated financial fixture criterion; the quote command is not itself a human approval or an installed business execution.",
+    "The proposed artifact keeps finalCandidateAcceptance=false. Static graph reuse and S0 acceptance remain separate; no result is relabeled W15/W16.",
+    "Currency/horizon incompatibility does not replace the separate missing-FX source counterexample.",
+    "No local product test, typecheck or other product execution occurred."
+  ],
+  "findings": []
+}

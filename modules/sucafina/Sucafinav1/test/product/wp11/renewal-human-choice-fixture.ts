@@ -121,6 +121,9 @@ export function createRenewalHumanChoices(history: History) {
     const decision = await readCase(context)
     return decision ? rules.evaluate({ caseRef: { id: decision.id, incarnation: decision.incarnation, version: decision.version }, ...request }, context) : { status: "denied", reason: "human-choice-case-unavailable" }
   } } })
+  // Only the canonical monetary difference is consumed by resolveChoiceValues;
+  // recordChoice retains the separate withCriteria comparison and human grants.
+  const choiceValuesPlanner = createPlannerPort({ host, sources, scenarios, evidence })
   const unavailable = async () => ({ status: "unavailable" as const, reason: "outside-human-choice-test" })
   const mutations = createDecisionMutations({ state, host, planner: withCriteria, sources, authorizeCase,
     authorizeMutation: (operation, payload, context) => operation === "record-choice" ? human.authorize(context, humanAction, payload) : Promise.resolve(false),
@@ -132,7 +135,7 @@ export function createRenewalHumanChoices(history: History) {
     },
     resolveQuestion: unavailable, resolveAnswer: unavailable, confirmAnswer: async () => false, prepareDomainCommands: unavailable,
     resolveChoiceValues: async (_caseRef, request, context) => {
-      const compared = await withCriteria.compareScenarios(request, context)
+      const compared = await choiceValuesPlanner.compareScenarios({ ...request, criteria: [] }, context)
       return compared.status === "ok" ? { status: "ok", value: [{ criterionRef: "renewal-difference", value: compared.value.knownDifference, unit: "USD", currency: "USD", horizon: wp05Horizon }] } : compared
     },
     readScenarioResult: (resultRef, context) => results.readHistoricalScenario({ resultRef }, context), createId: () => `renewal-human-event-${++controls.event}`, now: () => at,

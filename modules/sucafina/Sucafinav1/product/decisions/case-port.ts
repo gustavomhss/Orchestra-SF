@@ -75,18 +75,25 @@ export function createDecisionCasePort(input: {
         if (read.status === "preview") return { status: "unavailable", reason: "unexpected-state-preview" }
         if (read.status !== "ok") return failure(read)
         const value = read.value
-        if (!value || value.incarnation !== ref.incarnation || (context.kind === "native" && context.binding.caseVersion !== value.version) || !value.participants.includes(context.binding.principalRef) || !await input.authorizeCase(value, context)) return { status: "denied", reason: "case-access-unavailable" }
+        if (!value || value.incarnation !== ref.incarnation || (context.kind === "native" && context.binding.caseVersion !== value.version) || !value.participants.includes(context.binding.principalRef)) return { status: "denied", reason: "case-access-unavailable" }
+        const caseDigest = digestSfValue(value)
+        if (!await input.authorizeCase(value, context)) return { status: "denied", reason: "case-access-unavailable" }
         const refs = evidenceReferences(value)
+        const refsDigest = digestSfValue(refs)
         if (!sourcesCovered(value, refs) || !await accessible(input.evidence, refs, context) || !await input.verifyScenarioOperations(value, context)) return { status: "unavailable", reason: "case-evidence-unavailable" }
+        if (!await input.authorizeCase(value, context) || !await accessible(input.evidence, refs, context) || !await input.verifyScenarioOperations(value, context) || !await input.host.revalidate(context)) return { status: "denied", reason: "case-access-unavailable" }
+        const checkedAt = input.now()
+        // All external checks may await while C08 changes. Keep the second
+        // observation after them and release only the same complete case.
         const again = await input.state.read(source, "cases", (state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision ? state.cases[ref.id] : undefined).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
         if (again.status === "preview") return { status: "unavailable", reason: "unexpected-state-preview" }
         if (again.status !== "ok") return failure(again)
-        if (!again.value || again.value.incarnation !== value.incarnation || again.value.version !== value.version) return { status: "stale", reason: "case-changed" }
-        if (!await input.authorizeCase(again.value, context) || !await accessible(input.evidence, refs, context) || !await input.verifyScenarioOperations(again.value, context) || !await input.host.revalidate(context)) return { status: "denied", reason: "case-access-unavailable" }
+        if (!again.value || digestSfValue(again.value) !== caseDigest || digestSfValue(value) !== caseDigest || digestSfValue(refs) !== refsDigest || source.signal.aborted) return { status: "stale", reason: "case-changed" }
+        const final = again.value
         const projection: AuthorizedCaseProjection = {
           context: { installationId: context.binding.installationId, projectId: context.binding.projectId, principalRef: context.binding.principalRef, policyVersion: context.binding.policyVersion, accessRevision: context.binding.accessRevision, ...(context.kind === "native" ? { kind: "native" as const, profileId: context.binding.profileId } : { kind: "ui" as const }) },
-          case: { ...value, preparedChanges: value.preparedChanges.map(changeView), receipts: value.receipts.map((receipt) => receiptView(receipt, value.preparedChanges)) },
-          events: value.ledger, evidenceRefs: refs, checkedAt: input.now(),
+          case: { ...final, preparedChanges: final.preparedChanges.map(changeView), receipts: final.receipts.map((receipt) => receiptView(receipt, final.preparedChanges)) },
+          events: final.ledger, evidenceRefs: refs, checkedAt,
         }
         return { status: "ok", value: projection }
       } catch {

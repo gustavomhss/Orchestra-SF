@@ -1,0 +1,48 @@
+{
+  "schema": "wp11-independent-static-review-v1",
+  "reviewer": "producer_seams",
+  "baseProductSha": "dc9d4327d07db58d026e7672cf619717394f5ffd",
+  "status": "NO_STATIC_BLOCKER_FOUND_HOSTED_TESTS_PENDING",
+  "reviewedFiles": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "baseBlob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+      "reviewedBlob": "e646386af209978f2a931a10a070061ba0c97cbe",
+      "sha256": "8a16ba240d930c60ec90a25f4189fe053f61df2e2021aada83fb3a1874b256ab",
+      "bytes": 17077
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-read-fence.test.ts",
+      "baseBlob": null,
+      "reviewedBlob": "67b8b179a3fba332933d8ad00820df82b7ab258e",
+      "sha256": "8b03c302aec54800e951e623c1e9b15bc31e3322ad75c964da910350b504d45a",
+      "bytes": 8384
+    }
+  ],
+  "productionFindings": [
+    "Initial whole-case digest is captured before the first asynchronous authorizeCase callback; evidence-reference digest is captured before source/operation callbacks.",
+    "The same two case ACL, evidence and scenario-operation verification passes remain. The second pass validates the observed initial case and is accepted only if the final complete C08 case equals that observation.",
+    "The former second cases read is moved after all external callbacks and checkedAt; no third cases read is added. The final read reauthorizes the namespace through the real state provider.",
+    "Final case, initial retained case and evidence refs are checked by full digest; source abort suppresses the projection. Returned case/events are built from final C08 data and no external product callback follows."
+  ],
+  "testFindings": [
+    "Both parameterized tests use real UI admission, state-provider and SQLite CAS; the domain case itself is an explicit empty fixture seed.",
+    "Race is armed only after a successful baseline. Port host check1 is admission and check2 is final revalidation; state-provider and fixture ACL/operations invoke ui.revalidate directly, so they do not accidentally fire the hook early.",
+    "Membership change increments business version; content-change variant preserves business version while changing objective. Both advance real C08 storage version and retain the same global UI authority.",
+    "Real CAS success is asserted outside the port catch. The test also checks stale status and absence of a value, unchanged fixture digest, still-live lease/request and exactly two cases reads for the port.",
+    "The pre-fix read observes its second C08 snapshot before final hostCheck2, so both tests would expose its stale successful projection; the full-digest variant additionally discriminates version-only fencing."
+  ],
+  "typeReview": [
+    "Contextually typed generic SfProductStatePort.read wrapper forwards the generic reader without casting.",
+    "Seeded state result is explicitly narrowed to ok before storageVersion is used; changed transaction returns a boolean consistently.",
+    "BusinessContextService unused functions return Promise<never>, assignable to each declared promise result; empty evidence legitimately avoids them.",
+    "No new contract, state schema, foreign producer, monetary value, confirmation shortcut or dispatch behavior is introduced."
+  ],
+  "limits": [
+    "Static read/diff/hash review only; no product execution, test, typecheck, build or install was run.",
+    "This patch addresses createDecisionCasePort.read. It does not establish a final-callback fence for draft or prepareIntentForCase, nor a global atomic observation of all foreign domains.",
+    "The empty case has no financial, human-choice, native-session, evidence-source or domain-effect proof. Existing source-specific runtime evidence retains its original SHAs/runs."
+  ],
+  "repositoryEditsByReviewer": false,
+  "remoteMutations": false
+}

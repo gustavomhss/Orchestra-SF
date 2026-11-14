@@ -108,10 +108,13 @@ export async function createRenewalChoiceHistory(options: { training: "omitted" 
     const issuer = createPlannerSensitivityUnits({ host: fixture.host, cases, scenarios, store: results, evidence, rules })
     metrics.read = createPlannerCriterionMetric({ host: fixture.host, rules, units: issuer, preview })
     const withCriteria = createPlannerPort({ host: fixture.host, sources, scenarios, evidence, criteria: { evaluate: async (request, context) => rules.evaluate({ caseRef: refFor(await readCase()), ...request }, context) } })
+    // Choice values retain only the fresh canonical monetary difference. The
+    // mutation's separate withCriteria comparison still evaluates the real rule.
+    const choiceValuesPlanner = createPlannerPort({ host: fixture.host, sources, scenarios, evidence })
     const exact = createPlannerExactThreshold({ units: issuer, preview })
     const mutation = createDecisionMutations({ state, host: fixture.host, planner: withCriteria, sources, authorizeCase, authorizeMutation: async () => true, verifyMutation: () => true, operationIdentity: () => current.identity, confirmChoice: async () => true, confirmAnswer: async () => false, resolveQuestion: async () => ({ status: "unavailable", reason: "not-requested" }), resolveAnswer: async () => ({ status: "unavailable", reason: "not-requested" }), prepareDomainCommands: async () => ({ status: "unavailable", reason: "separate-application-required" }),
       coverageEvidence: { entries: async (_scenario, assessment) => ({ status: "ok", value: assessment.entries }), resolve: (refs, context) => evidence.context({ refs }, context), supports, verifySnapshot: (snapshot, result, basis) => current.sourceFenceValid && snapshotMatches(snapshot, [...result.sourceRefs, ...basis.sourceRefs, ...result.costCoverage.evaluatedSourceRefs]) },
-      resolveChoiceValues: async (_caseRef, request, context) => { const compared = await withCriteria.compareScenarios(request, context); return compared.status === "ok" ? { status: "ok", value: [{ criterionRef: "renewal-difference", value: compared.value.knownDifference, unit: "USD", currency: "USD", horizon: wp05Horizon }] } : compared },
+      resolveChoiceValues: async (_caseRef, request, context) => { const compared = await choiceValuesPlanner.compareScenarios({ ...request, criteria: [] }, context); return compared.status === "ok" ? { status: "ok", value: [{ criterionRef: "renewal-difference", value: compared.value.knownDifference, unit: "USD", currency: "USD", horizon: wp05Horizon }] } : compared },
       readScenarioResult: (resultRef, context) => results.readHistoricalScenario({ resultRef }, context), createId: () => `wp11-history-${++current.next}`, now })
     const register = async (source: RecordEvidence, basis: CostCoverageBasis, entries: readonly CostCoverageEntry[]) => {
       const caseRef = refFor(await readCase())
