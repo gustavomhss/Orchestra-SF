@@ -4,6 +4,8 @@ import { join } from "node:path"
 import { expect, test } from "bun:test"
 import { createDecisionCasePort } from "../../../product/decisions/case-port.ts"
 import { createPreparedExecution } from "../../../product/decisions/apply.ts"
+import { createSfPreparedApply } from "../../../product/decisions/prepared-apply.ts"
+import { proposalReviewDigest } from "../../../product/decisions/receipt-review-binding.ts"
 import { createDecisionMutations } from "../../../product/decisions/mutations.ts"
 import { createSfProductState } from "../../../product/host-binding/state-provider.ts"
 import { digestSfEvidenceRef, digestSfValue } from "../../../product/contracts/canonical.ts"
@@ -11,7 +13,6 @@ import type { BusinessContextService, BusinessEvidenceRef } from "../../../produ
 import type { DecisionCase, ScenarioResult } from "../../../product/contracts/decisions.ts"
 import type { PreparedCommand } from "../../../product/contracts/context.ts"
 import type { PortfolioRequest, ScenarioOperation } from "../../../product/contracts/operations.ts"
-import type { PreparedApplyPort } from "../../../product/contracts/ports.ts"
 import type { TrustedUiContext } from "../../../product/contracts/sf-execution.ts"
 import { openLocalStore } from "../../../runtime/local-store.ts"
 import type { Command } from "../../../runtime/contract.ts"
@@ -49,7 +50,7 @@ test("portfolio handoff prepares two WP11 changes and resumes a partial applicat
     }
     const choice = { id: "choice-portfolio", scenario: { baseRef: "base", operations, assumptions: [] }, result: scenario, evidenceRefs: [], costCoverage: scenario.costCoverage } as unknown as DecisionCase["choices"][number]
     const decision: DecisionCase = { id: "case-a", incarnation: "case-inc-a", version: 4, state: "chosen", objective: "Change two domains", horizon, currency: "USD", criteria: [{ id: "cost", description: "cost", required: true }], participants: ["principal"], sourceRefs: [], alternatives: [], costCoverageBases: [], assumptions: [], questions: [], choices: [choice], preparedChanges: [], receipts: [], ledger: [] }
-    const state = createSfProductState({ persistence: store, createId: () => "product-state-inc", resolveTarget: async (_request, _snapshot, _namespace, targetRef) => ({ incarnation: targetRef === decision.id ? decision.incarnation : "target-inc" }), authorize: async () => ({ principalRef: "principal", policyVersion: "policy", accessRevision: "access" }) })
+    const state = createSfProductState({ persistence: store, createId: () => "product-state-inc", resolveTarget: async (_request, _snapshot, _namespace, targetRef) => targetRef === decision.id ? { incarnation: decision.incarnation } : targetRef === "forecast-a" ? { incarnation: "target-inc-0" } : targetRef === "contract-b" ? { incarnation: "target-inc-1" } : undefined, authorize: async () => ({ principalRef: "principal", policyVersion: "policy", accessRevision: "access" }) })
     await state.transaction(new Request("https://example.test"), { namespace: "cases", expectedStorageVersion: 0, idempotencyKey: "seed-case", commandDigest: "a".repeat(64), targetRef: decision.id, targetIncarnation: decision.incarnation }, async (productState) => { productState.cases[decision.id] = decision; return { commit: true, value: true } })
     const evidence: BusinessContextService = { context: async ({ refs }) => refs.map((ref) => ({ ref, state: "fresh", accessRevision: "access", checkedAt: "2027-01-01" })), resolve: async () => { throw new Error("unused") }, recall: async () => [], emitFromLedger: async () => { throw new Error("unused") } }
     const host = { requestFor: () => new Request("https://example.test"), revalidate: async () => true }
@@ -79,8 +80,11 @@ test("portfolio handoff prepares two WP11 changes and resumes a partial applicat
       revalidate: async () => true,
     }
     const portfolio = createPortfolioPort(portfolioHost)
-    const domain = { receipts: new Map<string, ReturnType<typeof receiptFor>>(), procurementFails: true, plannerCalls: 0 }
-    const domainState = new Map([["planner:forecast-a", { amount: 30, version: 4 }], ["procurement:contract-b", { amount: 50, version: 4 }]])
+    const domain = { procurementFails: true, plannerCalls: 0, receiptSequence: 0 }
+    for (const [index, surface] of (["planner", "procurement"] as const).entries()) {
+      await store.transaction(surface, async (snapshot) => { snapshot.data.wp13Amount = index === 0 ? 30 : 50; snapshot.versions.wp13Amount = { version: 4, by: "principal" }; return { commit: true, value: true } })
+    }
+    const amounts = () => Promise.all((["planner", "procurement"] as const).map((surface) => store.transaction(surface, async (snapshot) => ({ commit: false, value: snapshot.data.wp13Amount }))))
     const comparison = await portfolio.evaluate(portfolioRequest, binding)
     expect(comparison.status).toBe("ok")
     if (comparison.status !== "ok") return
@@ -92,32 +96,59 @@ test("portfolio handoff prepares two WP11 changes and resumes a partial applicat
     if (saved.status !== "ok" || !saved.value) return
     expect(saved.value.preparedChanges).toHaveLength(2)
     expect(saved.value.preparedChanges.map((item) => [item.target.surface, item.expectedVersion, item.state])).toEqual([["planner", 4, "planned"], ["procurement", 4, "planned"]])
-    expect([...domainState.values()].map((value) => value.amount)).toEqual([30, 50])
-    const apply: PreparedApplyPort = {
-      readReceipt: async ({ idempotencyKey }) => {
-        const receipt = domain.receipts.get(idempotencyKey)
-        return { status: "ok", value: receipt ? { state: "found", receipt } : { state: "not-found" } }
-      },
-      executePrepared: async (request) => {
-        const change = saved.value!.preparedChanges.find((item) => item.id === request.changeId)!
-        if (change.target.surface === "procurement" && domain.procurementFails) return { status: "unavailable", reason: "supplier-system-unavailable" }
-        const targetRef = `${change.target.surface}:${change.target.id}`
-        const target = domainState.get(targetRef)
-        if (!target || target.version !== change.expectedVersion) return { status: "conflict", reason: "domain-version-changed" }
-        if (change.target.surface === "planner") domain.plannerCalls++
-        domainState.set(targetRef, { amount: change.operation.command.values.amount as number, version: target.version + 1 })
-        const receipt = receiptFor(change)
-        domain.receipts.set(change.idempotencyKey, receipt)
-        return { status: "ok", value: receipt }
-      },
-    }
-    const execution = createPreparedExecution({ state, host, apply, authorizeCase: async () => true, authorizeApplication: async (request, change, trusted) => trusted.kind === "ui" && request.choiceId === choice.id && change.caseId === decision.id && ["planner:forecast-a", "procurement:contract-b"].includes(`${change.target.surface}:${change.target.id}`), confirmApplication: async () => true, operationIdentity: () => "apply-operation", classifyReceipt: async (receipt) => {
+    expect(await amounts()).toEqual([30, 50])
+    const reviews = new Map(saved.value.preparedChanges.map((change, index) => [change.id, proposalReviewDigest({ caseId: decision.id, caseIncarnation: decision.incarnation, changeCaseVersion: change.caseVersion, choiceDigest: digestSfValue(choice), change, fields: [{ field: "amount", before: index === 0 ? 30 : 50, after: change.operation.command.values.amount as number }], sourceRefDigest: domainCommands[index]!.targetEvidence.refDigest })]))
+    const reviewDigestFor: Parameters<typeof createSfPreparedApply>[0]["reviewDigestFor"] = (context, request, change) => context.kind === "ui" && request.caseRef.id === decision.id && request.caseRef.incarnation === decision.incarnation && request.choiceId === choice.id && change.caseId === decision.id ? reviews.get(change.id) : undefined
+    const apply = createSfPreparedApply({
+      state, host, authorizeCase: async () => true,
+      authorizeLookup: async (request) => ["forecast-a", "contract-b"].includes(request.targetRef),
+      authorizeReceipt: async (receipt, request) => receipt.targetIncarnation === request.targetIncarnation && receipt.commandDigest === request.commandDigest,
+      confirmHuman: async (request, change, context) => !!reviewDigestFor(context, request, change),
+      resolveActor: () => ({ id: "principal", roles: ["finance", "buyer"], canWrite: true }),
+      resolveMutation: (_snapshot, change) => change.target.surface === "procurement" && domain.procurementFails ? undefined : ({
+        surface: change.target.surface, targetIncarnation: change.target.incarnation, idempotencyKey: change.idempotencyKey, commandDigest: change.operation.commandDigest, expectedVersion: change.expectedVersion,
+        execute: (snapshot) => {
+          if (snapshot.versions.wp13Amount?.version !== change.expectedVersion) return { commit: false, value: { status: "conflict" } }
+          if (change.target.surface === "planner") domain.plannerCalls++
+          snapshot.data.wp13Amount = change.operation.command.values.amount
+          snapshot.versions.wp13Amount = { version: change.expectedVersion + 1, by: "principal" }
+          return { commit: true, value: { amount: change.operation.command.values.amount as number } }
+        },
+      }),
+      verifyGrant: (_snapshot, request, change, _actor, context) => !!reviewDigestFor(context, request, change),
+      receiptVersion: (snapshot) => snapshot.versions.wp13Amount?.version,
+      environment: () => ({ at: "2027-01-03T00:00:00Z", id: () => "unused", directory: [] }),
+      createId: () => `receipt-${++domain.receiptSequence}`, now: () => "2027-01-03T00:00:00Z", reviewDigestFor,
+    })
+    const execution = createPreparedExecution({ state, host, apply, reviewDigestFor, revalidateProducer: async (request, context) => {
+      const change = saved.value!.preparedChanges.find((item) => item.id === request.changeId)
+      const digest = change && reviewDigestFor(context, request, change)
+      if (!change || !digest) return { status: "unavailable", reason: "review-producer-unavailable" }
+      const version = await store.transaction(change.target.surface, async (snapshot) => ({ commit: false, value: snapshot.versions.wp13Amount?.version }))
+      return version === change.expectedVersion ? { status: "ok", value: { reviewDigest: digest } } : { status: "stale", reason: "review-source-changed" }
+    }, authorizeCase: async () => true, authorizeApplication: async (request, change, trusted) => trusted.kind === "ui" && request.choiceId === choice.id && change.caseId === decision.id && ["planner:forecast-a", "procurement:contract-b"].includes(`${change.target.surface}:${change.target.id}`), confirmApplication: async () => true, operationIdentity: () => "apply-operation", classifyReceipt: async (receipt) => {
       const evidenceBase = { schema: "sf-evidence-v1" as const, refId: `receipt-ref-${receipt.id}`, installationId: "install", projectId: "project", refDigest: "", evidenceLevel: "observed" as const, kind: "receipt" as const, target: { surface: receipt.surface, receiptId: receipt.id, idempotencyKey: receipt.idempotencyKey, targetIncarnation: receipt.targetIncarnation, commandDigest: receipt.commandDigest, version: receipt.version } }
       return { state: "applied", evidence: { ...evidenceBase, refDigest: digestSfEvidenceRef(evidenceBase) } }
     } })
     const firstChange = saved.value.preparedChanges[0]!
     const secondChange = saved.value.preparedChanges[1]!
-    expect((await execution({ caseRef: { id: decision.id, incarnation: decision.incarnation, version: saved.value.version }, changeId: firstChange.id, choiceId: choice.id }, binding)).status).toBe("ok")
+    const firstRequest = { caseRef: { id: decision.id, incarnation: decision.incarnation, version: saved.value.version }, changeId: firstChange.id, choiceId: choice.id }
+    // WP11 currently advances the cases namespace while committing a domain receipt.
+    // Preserve that observable pending reconciliation and prove recovery without a second mutation.
+    expect(await execution(firstRequest, binding)).toEqual({ status: "unavailable", reason: "case-reconciliation-pending" })
+    expect(await amounts()).toEqual([40, 50])
+    expect(domain.plannerCalls).toBe(1)
+    const committedReceipt = await state.read(new Request("https://example.test"), "receipts", (productState) => Object.values(productState.receipts))
+    expect(committedReceipt.status).toBe("ok")
+    if (committedReceipt.status !== "ok") return
+    expect(committedReceipt.value).toHaveLength(1)
+    expect(committedReceipt.value[0]?.result.ok).toBe(true)
+    const unreconciled = await cases.read({ caseRef: `case:${decision.id}:${decision.incarnation}` }, binding)
+    expect(unreconciled.status).toBe("ok")
+    if (unreconciled.status !== "ok") return
+    expect(unreconciled.value.case.receipts).toHaveLength(0)
+    expect(unreconciled.value.case.preparedChanges[0]?.state).toBe("planned")
+    expect((await execution(firstRequest, binding)).status).toBe("ok")
     const afterFirst = await cases.read({ caseRef: `case:${decision.id}:${decision.incarnation}` }, binding)
     expect(afterFirst.status).toBe("ok")
     if (afterFirst.status !== "ok") return
@@ -126,14 +157,16 @@ test("portfolio handoff prepares two WP11 changes and resumes a partial applicat
     expect(partial.status).toBe("ok")
     if (partial.status !== "ok") return
     expect(partial.value.case.state).toBe("partially-applied")
-    expect([...domainState.values()].map((value) => value.amount)).toEqual([40, 50])
+    expect(await amounts()).toEqual([40, 50])
     domain.procurementFails = false
     expect((await execution({ caseRef: { id: decision.id, incarnation: decision.incarnation, version: partial.value.case.version }, changeId: firstChange.id, choiceId: choice.id }, binding)).status).toBe("ok")
     const beforeResume = await cases.read({ caseRef: `case:${decision.id}:${decision.incarnation}` }, binding)
     if (beforeResume.status !== "ok") throw new Error("case unavailable after first retry")
-    expect((await execution({ caseRef: { id: decision.id, incarnation: decision.incarnation, version: beforeResume.value.case.version }, changeId: secondChange.id, choiceId: choice.id }, binding)).status).toBe("ok")
+    const secondRequest = { caseRef: { id: decision.id, incarnation: decision.incarnation, version: beforeResume.value.case.version }, changeId: secondChange.id, choiceId: choice.id }
+    expect(await execution(secondRequest, binding)).toEqual({ status: "unavailable", reason: "case-reconciliation-pending" })
+    expect((await execution(secondRequest, binding)).status).toBe("ok")
     expect(domain.plannerCalls).toBe(1)
-    expect([...domainState.values()].map((value) => value.amount)).toEqual([40, 60])
+    expect(await amounts()).toEqual([40, 60])
     const completed = await cases.read({ caseRef: `case:${decision.id}:${decision.incarnation}` }, binding)
     expect(completed.status).toBe("ok")
     if (completed.status === "ok") expect(completed.value.case.state).toBe("applied")
@@ -142,7 +175,3 @@ test("portfolio handoff prepares two WP11 changes and resumes a partial applicat
     await rm(directory, { recursive: true, force: true })
   }
 })
-
-function receiptFor(change: DecisionCase["preparedChanges"][number]) {
-  return { id: `receipt-${change.id}`, idempotencyKey: change.idempotencyKey, commandDigest: change.operation.commandDigest, targetIncarnation: change.target.incarnation, principalRef: "principal", surface: change.target.surface, version: 5, result: { ok: true }, at: "2027-01-03T00:00:00Z" } as const
-}

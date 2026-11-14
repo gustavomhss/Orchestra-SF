@@ -1,0 +1,14 @@
+--- a/modules/sucafina/Sucafinav1/product/decisions/apply.ts
++++ b/modules/sucafina/Sucafinav1/product/decisions/apply.ts
+@@ -76,7 +76,10 @@
+       if (!await input.authorizeCase(value, context).catch(() => false) || !await input.authorizeApplication(request, change, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "case-access-unavailable" }
+       return { status: "ok", value: observed.value }
+     }
+-    const saved = await input.state.transaction(source, { namespace: "cases", expectedStorageVersion: current.storageVersion, targetRef: value.id, targetIncarnation: value.incarnation, idempotencyKey: `${operation}:${change.id}:${observed.value.id}`, commandDigest: digestSfValue({ caseRef: request.caseRef, changeId: change.id, receipt: observed.value, state: result.state, evidence: result.evidence }) }, async (state, authority) => {
++    const reconciliation = await input.state.read(source, "cases", (state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision ? state.cases[request.caseRef.id] : undefined).catch(() => undefined)
++    if (!reconciliation || reconciliation.status !== "ok" || !reconciliation.value || digestSfValue(reconciliation.value) !== digestSfValue(value)) return { status: "unavailable", reason: "case-reconciliation-pending" }
++    if (!await input.authorizeCase(reconciliation.value, context).catch(() => false) || !await input.authorizeApplication(request, change, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "unavailable", reason: "receipt-authority-changed" }
++    const saved = await input.state.transaction(source, { namespace: "cases", expectedStorageVersion: reconciliation.storageVersion, targetRef: value.id, targetIncarnation: value.incarnation, idempotencyKey: `${operation}:${change.id}:${observed.value.id}`, commandDigest: digestSfValue({ caseRef: request.caseRef, changeId: change.id, receipt: observed.value, state: result.state, evidence: result.evidence }) }, async (state, authority) => {
+       const actual = state.cases[value.id]
+       if (!actual || actual.incarnation !== value.incarnation || actual.version !== value.version || authority.principalRef !== context.binding.principalRef || authority.policyVersion !== context.binding.policyVersion || authority.accessRevision !== context.binding.accessRevision) return { commit: false, value: false }
+       const changes = actual.preparedChanges.map((item) => item.id === change.id ? reconciled.change : item)

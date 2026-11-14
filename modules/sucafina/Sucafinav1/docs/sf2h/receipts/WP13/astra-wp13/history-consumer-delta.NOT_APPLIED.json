@@ -1,0 +1,44 @@
+{
+  "schema": "sf-cross-owner-delta-v1",
+  "id": "WP13-WP10-HISTORY-CANDIDATE-READER",
+  "status": "NOT_APPLIED",
+  "producer": "WP13",
+  "consumer_owner": "WP10",
+  "consumer_pin": "f075e9824b7d8aed50b7f42c597528ef198177db",
+  "consumer_path": "apps/cli/src/sucafina-product/review-portfolio-history.ts",
+  "consumer_blob": "4d11a5c8c81d99f117709fc65327373055ee2cc1",
+  "pin_observation": "MCP read confirmed by /root/wp13_findings; no remote operation or consumer-source mutation by this author.",
+  "problem": "WP11 legitimately replaces the current alternative v1 with v2. The historical portfolio and campaign need an authorized immutable v1 origin after it disappears from current alternatives.",
+  "producer_exports": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/proof.ts",
+      "symbol": "createPortfolioCandidateHistoryReader",
+      "factory_arguments": ["state", "cases", "results", "evidence", "host"],
+      "request": { "ref": "original portfolio-candidate selector", "candidateDigest": "digest obtained from the authenticated persisted binding or campaign" },
+      "response": ["candidate", "originalCaseRef", "currentCaseRef", "scenarioResultRef", "provenanceDigest"]
+    }
+  ],
+  "required_change": [
+    "Import createPortfolioCandidateHistoryReader from the new WP13 proof.ts module.",
+    "In createSfReviewPortfolioHistory, create the reader with state: authority.state, cases: business.cases, results: business.results, evidence: input.evidence and host.",
+    "Pass the reader as readHistoricalCandidate to createPortfolioHistoricalProvenance beside readHistoricalBinding/caseFor/cases/evidence/host.",
+    "When the host composes createPortfolioCampaign, inject the same reader as readHistoricalCandidate. No published campaign callsite was confirmed in the inspected host files; do not invent a source path or claim that consumer is already wired."
+  ],
+  "behavior": [
+    "Original current alternative continues through its existing exact id/version/content validation.",
+    "Only when the old version is absent, the reader can recover a matching immutable C08 case-transaction snapshot, or an exact ChoiceRecord with its choice-recorded ledger event.",
+    "The recovered candidate must match the anchored digest and a readable original C08 scenario with the same input/result digests and case ancestry.",
+    "Current case authorization and all request/result/coverage/source evidence are revalidated twice. Denied C08 or revoked evidence remains denied, including the ChoiceRecord fallback.",
+    "No snapshot or ledger write occurs, no historic value is recalculated from a current price, and no future case version or substituted incarnation is accepted."
+  ],
+  "remaining_limitation": "If no immutable case transaction contains the original candidate and no matching chosen snapshot/ledger exists, return unavailable. This can occur for legacy/seeded data or an unchosen promotion whose producer did not retain a complete case snapshot. WP11 must expose an authenticated historical request/result origin for such a producer; a bare candidate hash, latest alternative with the same id, or invented snapshot must not restore access.",
+  "required_checks": [
+    "GitHub Actions: test/product/wp13/history-provenance.test.ts (new tests use actual C08 state/result store and WP11 addAlternative/recordChoice).",
+    "GitHub Actions: test/product/wp13/campaign.test.ts for the consuming callback boundary.",
+    "Consumer host regression: published host reads a portfolio/campaign after an authorized v1-to-v2 revision; original request/result remains unchanged and current version is separately visible.",
+    "Negatives: inaccessible original C08, wrong original request digest, future ancestry, replaced incarnation, revoked source and old accessRevision.",
+    "Record the consumer head/tree and run ID/SHA; these checks are NOT_RUN in this delta."
+  ],
+  "local_product_tests_executed": false,
+  "independent_acceptance": false
+}

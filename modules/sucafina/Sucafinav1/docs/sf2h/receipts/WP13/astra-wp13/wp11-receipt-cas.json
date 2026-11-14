@@ -1,0 +1,53 @@
+{
+  "schema": "sf2h-owner-delta-v1",
+  "id": "WP13-WP11-RECEIPT-CASE-CAS",
+  "owner": "WP11",
+  "consumer": "WP13",
+  "status": "NOT_APPLIED",
+  "evidenceState": "source-confirmed; hosted consumer regression pending",
+  "sourcePins": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "commit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+      "blob": "90c3e981d8418c562342660bd3d56d03f9995383"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+      "commit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+      "blob": "fed7feb25d9af2fecebba8d2b1d2e2a6b1a3e0ac"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/receipt-review-binding.ts",
+      "commit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+      "blob": "6987eddae37ae2c90fe03b2d8e81ea28e8b5221f"
+    }
+  ],
+  "finding": {
+    "cause": "prepared-apply commits the domain receipt with additionalNamespaces: cases. The state provider increments every write namespace, although this callback only reads the case. createPreparedExecution then reconciles using the cases storageVersion captured before that commit.",
+    "effect": "The first domain application can commit its mutation and durable receipt, then return unavailable/case-reconciliation-pending. Exact retry reads the bound receipt and can reconcile without repeating the domain mutation when the case remains unchanged.",
+    "truthToPreserve": "A pending case reconciliation does not establish that the domain was not applied. Preserve the durable receipt and the observed domain-applied fact across a late failure. Never reset it to false or repeat the mutation solely because the outer result is unavailable."
+  },
+  "proposedDelta": {
+    "patch": "wp11-receipt-cas.NOT_APPLIED.patch.txt",
+    "target": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+    "behavior": "After observing the durable receipt and before reconciling, reread the case under current authority. Require its full digest to equal the original case observation, revalidate case/application authority, and use the fresh cases storageVersion. The transaction still checks the case version, incarnation, authority and current namespace CAS.",
+    "reason": "This preserves prepared-apply write authority, transaction scopeDigest and persisted receipt identities. It only refreshes the reconciliation CAS after the known domain transaction.",
+    "alternativeNotApplied": "Changing prepared-apply additionalNamespaces: cases to checkNamespaces: cases also prevents the version increment, but changes case authority from write to read and transaction scopeDigest. WP11 must assess grants and exact retry compatibility before choosing this alternative."
+  },
+  "consumerRegression": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-integration.test.ts",
+    "test": "portfolio handoff prepares two WP11 changes and resumes a partial application without repeating a receipt",
+    "implementation": "Uses createDecisionMutations, createSfPreparedApply, createPreparedExecution, receiptReviewBinding/proposalReviewDigest and real local-store persistence. The domain mutation callback is a controlled synthetic amount field in Planner and Procurement snapshots; this is not proof of canonical domain-engine execution or the UI/native human flow.",
+    "currentPinExpectation": "Assert first application returns case-reconciliation-pending while the durable receipt and Planner amount are already committed. Retry exactly, fail Procurement before mutation, and resume it; Planner mutation count must remain one.",
+    "afterOwnerDelta": "WP11 must publish its selected fix and update first-call assertions to success while retaining a separate forced late-reconciliation-failure test and exact receipt replay checks.",
+    "runStatus": "NOT_RUN_LOCALLY; await root surgical GitHub Actions run"
+  },
+  "requiredOwnerChecks": [
+    "Fresh first application returns a reconciled receipt without requiring an automatic retry solely for its own namespace increment.",
+    "A concurrent case content/version change after domain commit returns reconciliation pending and never overwrites the newer case.",
+    "Late authority revocation preserves durable truth, withholds unauthorized receipt disclosure, and does not repeat the domain mutation on a later authorized retry.",
+    "Exact replay validates the review digest, command digest, target incarnation, receipt identity and persisted proof; changed content or review cannot reuse the receipt.",
+    "Partial Planner/Procurement application resumes only the unapplied change and leaves previously applied domain data unchanged."
+  ],
+  "nextAction": "WP11 reviews and publishes the delta with its surgical hosted receipt/application tests. WP13 then consumes the published pin and reruns only the affected handoff consumer. S0 decides integration; no READY claim follows from this receipt."
+}

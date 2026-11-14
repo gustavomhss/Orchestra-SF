@@ -10,7 +10,7 @@ test("composition does not advertise disabled operations or fabricate a scenario
   const planner: PlannerPort = { compareForecast: unavailable, simulateScenario: unavailable, compareScenarios: unavailable, evaluateSensitivity: unavailable }
   const operations = [{ kind: "replace" as const, targetRef: "line:1", amount: 50 }]
   const scenario = { baseRef: "base", operations, assumptions: [] }
-  const cases = { read: async () => ({ status: "ok", value: { case: { version: 1, alternatives: [{ id: "alt", version: 1, scenario }] } } }) } as unknown as DecisionCasePort
+  const cases = { read: async () => ({ status: "ok", value: { case: { id: "a", incarnation: "i", version: 1, alternatives: [{ id: "alt", version: 1, scenario }] } } }) } as unknown as DecisionCasePort
   const contribution = createPortfolioContribution({ cases, enabledOperations: [], plannerHost: { planner, revalidate: async () => true, revalidateEvaluation: async () => true, scenarioRequest: async () => ({ status: "ok", value: scenario }), assess: unavailable }, createReceipt: async () => undefined, decisions: { prepareChanges: unavailable } })
   expect(contribution.capabilities).toEqual([])
   const context = {} as TrustedDomainContext

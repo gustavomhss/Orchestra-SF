@@ -1,5 +1,8 @@
 import { describe, expect, test } from "bun:test"
 import { createPortfolioPort } from "../../../product/portfolio/port.ts"
+import { assessCostCoverage } from "../../../product/decisions/cost-coverage.ts"
+import { RENEWAL_TRANSITION_CATEGORIES } from "../../../product/contracts/decisions.ts"
+import { digestSfEvidenceRef } from "../../../product/contracts/canonical.ts"
 import type { PortfolioHost } from "../../../product/portfolio/port.ts"
 import type { ScenarioResult } from "../../../product/contracts/decisions.ts"
 import type { PortfolioRequest } from "../../../product/contracts/operations.ts"
@@ -91,8 +94,18 @@ describe("portfolio composition", () => {
 
   test("preserves the domain's failed ceiling after coverage resolves", async () => {
     const input = host()
-    const complete: ScenarioResult = { ...scenario, comparisonStatus: "complete", knownSubtotal: 250000, total: 250000, costCoverage: { ...scenario.costCoverage, coverageState: "complete", entries: [], derivedMissingCategoryIds: [], issues: [] } }
-    input.evaluate = async () => ({ status: "ok", value: { scenario: complete, costCoverageRefs: ["coverage-v2"], constraints: [{ ref: "ceiling", state: "failed", reason: "250000 exceeds 240000" }] } })
+    const identity = { schema: "sf-evidence-v1", refId: "cost-quote", installationId: "install", projectId: "project", refDigest: "", evidenceLevel: "observed", kind: "record", target: { surface: "planner", recordType: "quote", recordId: "quote", incarnation: "inc", version: 2, fields: ["amount", "coverage"], period, projectionDigest: "a".repeat(64) } } as const
+    const evidence = { ...identity, refDigest: digestSfEvidenceRef(identity) }
+    const source = { surface: "planner", type: "quote", id: "quote", incarnation: "inc", version: 2, fields: ["amount", "coverage"], period, observedAt: "2026-11-14T00:00:00Z" } as const
+    const components = [{ id: "cost", amount: 250000, currency: "USD", period, sourceRefs: [source], evidenceState: "confirmed" as const }]
+    const basis = { id: "renewal", version: 1, decisionType: "renewal-transition-v1", categoryIds: RENEWAL_TRANSITION_CATEGORIES, additionalCategoryIds: [], sourceRefs: [evidence] }
+    const coverage = assessCostCoverage({ basis, alternativeId: "a", alternativeVersion: 2, currency: "USD", horizon: period, entries: RENEWAL_TRANSITION_CATEGORIES.map((categoryId, index) => index === 0 ? { status: "included" as const, categoryId, componentRefs: ["cost"], evidenceRefs: [evidence] } : { status: "not-applicable" as const, categoryId, justification: "Explicit quote scope", evidenceRefs: [evidence] }), components, evidence: [{ state: "fresh", ref: evidence, accessRevision: "access", checkedAt: "2026-11-14T00:00:00Z" }], supports: () => true })
+    expect(coverage.coverageState).toBe("complete")
+    const complete: ScenarioResult = { ...scenario, components, sourceRefs: [evidence], comparisonStatus: "complete", knownSubtotal: 250000, total: 250000, costCoverage: coverage }
+    const resolve = input.resolveCandidate
+    input.resolveCandidate = async (ref, context) => { const result = await resolve(ref, context); return result.status === "ok" ? { status: "ok", value: { ...result.value, result: complete } } : result }
+    const comparison = { baselineResultRef: "base", alternativeResultRef: "scenario-ref", costCoverageRefs: ["coverage-v2"], criterionResults: [{ criterionId: "ceiling", state: "failed", reason: "250000 exceeds 240000" }], unresolvedConditions: [], comparisonStatus: "complete", knownDifference: 10000, completeDifference: 10000 } as const
+    input.evaluate = async () => ({ status: "ok", value: { scenario: complete, costCoverageRefs: ["coverage-v2"], analysis: { scenarioResultRef: "scenario-ref", scenario: complete, comparisonRef: "comparison-ref", comparison }, constraints: [{ ref: "ceiling", state: "failed", reason: "250000 exceeds 240000" }] } })
     const result = await createPortfolioPort(input).evaluate({ ...request, candidateRefs: ["a"] }, context)
     expect(result.status).toBe("ok")
     if (result.status !== "ok") return
@@ -136,7 +149,7 @@ describe("portfolio composition", () => {
 
   test("retains validated canonical analysis and rejects a mismatched scenario reference", async () => {
     const input = host()
-    const comparison = { baselineResultRef: "base", alternativeResultRef: "scenario-ref", costCoverageRefs: ["coverage-a"], criterionResults: [], unresolvedConditions: ["training missing"], comparisonStatus: "conditioned", knownDifference: 30000, completeDifference: null } as const
+    const comparison = { baselineResultRef: "base", alternativeResultRef: "scenario-ref", costCoverageRefs: ["coverage-a"], criterionResults: [{ criterionId: "ceiling", state: "satisfied", reason: "subtotal" }], unresolvedConditions: ["training missing"], comparisonStatus: "conditioned", knownDifference: 30000, completeDifference: null } as const
     const analysis = { scenarioResultRef: "scenario-ref", scenario, comparisonRef: "comparison-ref", comparison }
     input.evaluate = async () => ({ status: "ok", value: { scenario, costCoverageRefs: ["coverage-a"], analysis, constraints: [{ ref: "ceiling", state: "satisfied", reason: "subtotal" }] } })
     const result = await createPortfolioPort(input).evaluate({ ...request, candidateRefs: ["a"] }, context)

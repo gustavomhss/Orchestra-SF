@@ -73,7 +73,9 @@ export async function reassessScenarioCoverage(input: {
     const refs = [...input.basis.sourceRefs, ...input.scenario.sourceRefs, ...input.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs)].filter((ref, index, all) => all.findIndex((other) => digestSfValue(other) === digestSfValue(ref)) === index)
     const evidence = await input.resolveEvidence(refs)
     if (evidence.length !== refs.length || refs.some((ref) => !evidence.some((item) => item.state === "fresh" && digestSfValue(item.ref) === digestSfValue(ref)))) return undefined
-    const assessment = assessCostCoverage({ basis: input.basis, alternativeId: input.scenario.costCoverage.alternativeId, alternativeVersion: input.scenario.costCoverage.alternativeVersion, currency: input.scenario.currency, horizon: input.scenario.horizon, entries: input.entries, components: input.scenario.components, evidence, supports: input.supports })
+    // A baseline's generated missing-category row is still an omitted input, not a newly supplied answer.
+    const entries = input.entries.filter((entry) => !(entry.status === "pending" && entry.reason === "missing-category" && input.baseline.derivedMissingCategoryIds.includes(entry.categoryId)))
+    const assessment = assessCostCoverage({ basis: input.basis, alternativeId: input.scenario.costCoverage.alternativeId, alternativeVersion: input.scenario.costCoverage.alternativeVersion, currency: input.scenario.currency, horizon: input.scenario.horizon, entries, components: input.scenario.components, evidence, supports: input.supports })
     const unresolvedConditions = input.scenario.unresolvedConditions.filter((condition) => condition !== "scenario-coverage-reassessment-required")
     if (input.scenario.comparisonStatus === "complete" && assessment.coverageState === "complete") return { ...input.scenario, unresolvedConditions, costCoverage: assessment }
     return { ...input.scenario, unresolvedConditions, comparisonStatus: input.scenario.comparisonStatus === "complete" ? "conditioned" : input.scenario.comparisonStatus, total: null, costCoverage: assessment }

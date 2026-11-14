@@ -46,7 +46,8 @@ const caseRef = { id: "case", incarnation: "case-incarnation", version: 1 }
 const initial = (): Snapshot => ({
   data: {
     roleMap: [{ surface: "planner", role: "finance", entra: "finance-group", version: 1, by: "admin" }],
-    versions: [{ id: "v0", year: 2027, closed: 9, lines: [{ id: "line", sec: "opex", el: "licenses", cur: "EUR", b: Array(12).fill(100000), a: Array(12).fill(null), f: [null, null, null, null, null, null, null, null, null, 100000, 112000, 100000] }], fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }],
+    // A registered currency with no rate remains missing FX while allowing canonical forecast edits.
+    versions: [{ id: "v0", year: 2027, closed: 9, lines: [{ id: "line", sec: "opex", el: "licenses", cur: "EUR", b: Array(12).fill(100000), a: Array(12).fill(null), f: [null, null, null, null, null, null, null, null, null, 100000, 112000, 100000] }], fx: [{ id: "EUR", cur: "EUR", rate: null }], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }],
   },
   versions: {}, sequences: {}, audit: [], notices: [],
 })
@@ -59,6 +60,8 @@ test("real Planner sensitivity keeps EUR input separate from USD output and leav
   const access = { allowed: true, historical: false }
   const store = await openLocalStore(directory)
   try {
+    const transactionAll = store.transactionAll
+    if (!transactionAll) throw new Error("sensitivity fixture requires atomic cross-surface reads")
     const seededPlanner = await store.transaction("planner", async (snapshot) => {
       snapshot.data = initial().data
       return { commit: true, value: true }
@@ -99,7 +102,7 @@ test("real Planner sensitivity keeps EUR input separate from USD output and leav
     expect(selectedPreview).toMatchObject({ status: "ok" })
     expect(baselinePreview.status).toBe("ok")
     if (selectedPreview.status !== "ok" || baselinePreview.status !== "ok") return
-    if (selectedPreview.value.comparisonStatus !== "conditioned" || baselinePreview.value.comparisonStatus !== "conditioned") throw new Error("expected conditioned Planner previews")
+    if (selectedPreview.value.comparisonStatus !== "conditioned" || baselinePreview.value.comparisonStatus !== "conditioned") throw new Error(`Expected conditioned Planner previews: ${JSON.stringify({ selectedPreview, baselinePreview })}`)
     const selectedResult: ScenarioResult = { ...selectedPreview.value, costCoverage: { ...selectedPreview.value.costCoverage, alternativeId: "selected", alternativeVersion: 1 } }
     const baselineResult: ScenarioResult = { ...baselinePreview.value, costCoverage: { ...baselinePreview.value.costCoverage, alternativeId: "baseline", alternativeVersion: 1 } }
     const decision = { ...caseRef, state: "comparing" as const, objective: "renewal", currency: "USD", horizon, criteria: [{ id: "renewal-difference", description: "Explicit criterion", required: true }], participants: ["finance"], sourceRefs: [evidence], alternatives: [{ id: "selected", version: 1, title: "Selected", scenario, result: selectedResult }, { id: "baseline", version: 1, title: "Baseline", scenario: baselineScenario, result: baselineResult }], costCoverageBases: [basis], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
@@ -220,7 +223,7 @@ test("real Planner sensitivity keeps EUR input separate from USD output and leav
     const beforeRead = ids.value
     expect((await product.http.readSensitivity(saved.value.sensitivityResultRef, caseRef, context)).status).toBe("ok")
     expect(ids.value).toBe(beforeRead)
-    const verifier = createPortfolioProofVerifier({ cases, planner: plannerWithCriteria, sources, evidence: evidenceService, results, revalidate: host.revalidate, readSourceFences: async () => access.allowed ? store.transactionAll(async (snapshots) => ({ commit: false, value: { dashboard: sfRunSourceFence(snapshots.dashboard), planner: sfRunSourceFence(snapshots.planner), procurement: sfRunSourceFence(snapshots.procurement) } })) : undefined, lockedSourceFences: () => { const snapshots = store.currentSnapshots?.(); return snapshots ? { dashboard: sfRunSourceFence(snapshots.dashboard), planner: sfRunSourceFence(snapshots.planner), procurement: sfRunSourceFence(snapshots.procurement) } : undefined }, caseFor: async () => ({ status: "ok", value: caseRef }), idempotencyKey: async (digest) => `verify-${digest}`, decisions: { prepareChanges: async () => ({ status: "unavailable", reason: "unused" }) }, createReceipt: async () => undefined, candidateCoverageRefFor: async (candidate) => { const ref = parseCaseRef(candidate.caseRef); return ref && candidate.result ? { status: "ok", value: decisionCoverageRef(ref, candidate.result.costCoverage.alternativeId, candidate.result.costCoverage.alternativeVersion) } : { status: "unavailable", reason: "candidate-unavailable" } }, revalidateAnalysis: analysis.revalidate, units: issuer, sensitivityPreview: (input, trusted) => comparePlannerPreview({ host, sources, scenarios, planner }, input, trusted) })
+    const verifier = createPortfolioProofVerifier({ cases, planner: plannerWithCriteria, sources, evidence: evidenceService, results, revalidate: host.revalidate, readSourceFences: async () => access.allowed ? transactionAll(async (snapshots) => ({ commit: false, value: { dashboard: sfRunSourceFence(snapshots.dashboard), planner: sfRunSourceFence(snapshots.planner), procurement: sfRunSourceFence(snapshots.procurement) } })) : undefined, lockedSourceFences: () => { const snapshots = store.currentSnapshots?.(); return snapshots ? { dashboard: sfRunSourceFence(snapshots.dashboard), planner: sfRunSourceFence(snapshots.planner), procurement: sfRunSourceFence(snapshots.procurement) } : undefined }, caseFor: async () => ({ status: "ok", value: caseRef }), idempotencyKey: async (digest) => `verify-${digest}`, decisions: { prepareChanges: async () => ({ status: "unavailable", reason: "unused" }) }, createReceipt: async () => undefined, candidateCoverageRefFor: async (candidate) => { const ref = parseCaseRef(candidate.caseRef); return ref && candidate.result ? { status: "ok", value: decisionCoverageRef(ref, candidate.result.costCoverage.alternativeId, candidate.result.costCoverage.alternativeVersion) } : { status: "unavailable", reason: "candidate-unavailable" } }, revalidateAnalysis: analysis.revalidate, units: issuer, sensitivityPreview: (input, trusted) => comparePlannerPreview({ host, sources, scenarios, planner }, input, trusted) })
     const portfolioProof = await portfolioBindings.read({ caseRef, resultRef: portfolioSaved.value.portfolioResultRef }, context)
     const portfolioRecord = await results.read({ kind: "portfolio", resultRef: portfolioSaved.value.portfolioResultRef }, context)
     const comparisonProof = await comparisonBindings.read({ caseRef, resultRef: compared.value.analysis.comparisonRef }, context)
@@ -232,7 +235,7 @@ test("real Planner sensitivity keeps EUR input separate from USD output and leav
     expect(await verifier.verifyPortfolio(portfolioProof.value, portfolioRecord.value, context)).toBe(true)
     expect(await verifier.verifyComparison(comparisonProof.value, comparisonRecord.value, context)).toBe(true)
     expect(await verifier.verifySensitivity(sensitivityProof.value, sensitivityRecord.value, context)).toBe(true)
-    const fence = await store.transactionAll(async (snapshots) => ({ commit: false, value: { current: verifier.verifySnapshot(snapshots.planner, portfolioProof.value, context), changed: verifier.verifySnapshot({ ...snapshots.planner, data: { ...snapshots.planner.data, changed: true } }, portfolioProof.value, context) } }))
+    const fence = await transactionAll(async (snapshots) => ({ commit: false, value: { current: verifier.verifySnapshot(snapshots.planner, portfolioProof.value, context), changed: verifier.verifySnapshot({ ...snapshots.planner, data: { ...snapshots.planner.data, changed: true } }, portfolioProof.value, context) } }))
     expect(fence).toEqual({ current: true, changed: false })
     expect(ids.value).toBe(beforeVerification)
     expect(await persistent.evaluateAndStore(sensitivityRequest, caseRef, context)).toEqual(saved)

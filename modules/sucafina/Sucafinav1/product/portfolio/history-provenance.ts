@@ -5,11 +5,13 @@ import type { SfStoredDecisionResult } from "../contracts/state.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import { parseCaseRef } from "../decisions/case-port.ts"
 import type { PortfolioBinding } from "../decisions/portfolio-bindings.ts"
+import type { createPortfolioCandidateHistoryReader } from "./proof.ts"
 
 export function createPortfolioHistoricalProvenance(input: {
   readHistoricalBinding: (request: { caseRef: { id: string; incarnation: string; version: number }; resultRef: string }, context: TrustedDomainContext) => Promise<PortResult<{ binding: PortfolioBinding; selection: unknown }>>
   caseFor: (context: TrustedDomainContext) => Promise<PortResult<{ id: string; incarnation: string; version: number }>>
   cases: DecisionCasePort
+  readHistoricalCandidate?: ReturnType<typeof createPortfolioCandidateHistoryReader>
   evidence: BusinessContextService
   host: Pick<DomainPortHost, "revalidate">
 }) {
@@ -40,6 +42,11 @@ export function createPortfolioHistoricalProvenance(input: {
         const result = await input.cases.read({ caseRef }, context).catch(() => undefined)
         if (!result || result.status !== "ok" || result.value.case.id !== parsed.id || result.value.case.incarnation !== parsed.incarnation || result.value.case.version < Number(match[2])) return undefined
         const alternatives = result.value.case.alternatives.filter((alternative) => alternative.id === alternativeId && alternative.version === Number(match[4]))
+        if (!alternatives.length && input.readHistoricalCandidate) {
+          const historical = structuredClone(await input.readHistoricalCandidate({ ref, candidateDigest: binding.proof.candidates[index]!.digest }, context).catch(() => undefined))
+          if (!historical || historical.status !== "ok" || historical.value.candidate.ref !== ref || historical.value.candidate.caseRef !== caseRef || digestSfValue(historical.value.candidate) !== binding.proof.candidates[index]!.digest || digestSfValue(historical.value.candidate.operations) !== digestSfValue(historical.value.candidate.scenario.operations) || historical.value.originalCaseRef.id !== parsed.id || historical.value.originalCaseRef.incarnation !== parsed.incarnation || historical.value.originalCaseRef.version !== Number(match[2]) || historical.value.currentCaseRef.id !== parsed.id || historical.value.currentCaseRef.incarnation !== parsed.incarnation || historical.value.currentCaseRef.version !== result.value.case.version || !historical.value.scenarioResultRef.trim() || !/^[a-f0-9]{64}$/.test(historical.value.provenanceDigest)) return undefined
+          return { ref, case: structuredClone(result.value.case), candidateDigest: digestSfValue(historical.value.candidate), historicalProof: { scenarioResultRef: historical.value.scenarioResultRef, provenanceDigest: historical.value.provenanceDigest } }
+        }
         if (alternatives.length !== 1) return undefined
         const alternative = alternatives[0]!
         const candidate = { ref, caseRef, operations: alternative.scenario.operations, scenario: alternative.scenario, result: alternative.result }
