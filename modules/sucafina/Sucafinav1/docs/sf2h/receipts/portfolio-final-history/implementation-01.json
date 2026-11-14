@@ -1,0 +1,73 @@
+{
+  "schema": "sf2h.portfolio-final-history.implementation.v1",
+  "mission": 50,
+  "stage": "P02_IMPLEMENTED_PENDING_HOSTED_PROOF",
+  "parent": "85191ca90750da1ff494bc2098bf87c6f4f3c297",
+  "source_branch": "astra-wp13",
+  "pr": 37,
+  "reviewed_proposal43": {
+    "pre": "e07714d6c390a655b6eac7f5c2d56193b7bbfc7b",
+    "post": "d99af3b43388b510e510908fff2371a34b57eee1",
+    "exact_minimal_transform": true,
+    "private_body_unchanged": true,
+    "authority_sites": 3,
+    "authority_invocations_per_valid_read": 4
+  },
+  "changes": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/proof.ts",
+      "pre": "e07714d6c390a655b6eac7f5c2d56193b7bbfc7b",
+      "post": "d99af3b43388b510e510908fff2371a34b57eee1",
+      "purpose": "Enclose admitted observations and final authority callback in canonical snapshot root."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts",
+      "pre": null,
+      "post": "095a0e5764e115fb874a5f5c0c16a9c73466c340",
+      "origin_commit": "31578c35c1e66371647f1e00ceefff1cdb85fed3",
+      "purpose": "Existing canonical helper absent from historical source; exact unchanged dependency intake under authorized path. Target KEEP_CURRENT."
+    }
+  ],
+  "boundary": {
+    "with_persistence": "Final nested CAS poisons admitted root; no stale ok may escape even if callback swallows write refusal.",
+    "without_persistence": "Existing independent-observation contract only; no atomic snapshot guarantee.",
+    "persistence_without_currentSnapshots": "Refused by existing helper; no permissive fallback."
+  },
+  "real_caller": {
+    "path": "apps/cli/src/sucafina-product/portfolio-reconciliation-services.ts",
+    "blob": "39dc82d505931daf927b35230341ac99fdc7e09d",
+    "authority_path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+    "authority_blob": "2c82d60d220d8d5365da8322bad648a64bbb62d2",
+    "shared_host_state_persistence": true
+  },
+  "regression43": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+    "blob": "8ae8e056f426e128ecec38a26d646896b7c28d81",
+    "unchanged": true,
+    "budget_ms": 120000
+  },
+  "semantic43": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts",
+    "blob": "47b5358c8dda3179045499388ce98871576a2aa9",
+    "unchanged": true,
+    "expect_lines": 72,
+    "budget_ms": 180000
+  },
+  "reading": {
+    "root": "Pinned mission50/43, handoff43/release/manifest/proposal/diagnosis, AGENTS, START/WORKFLOW/COMMON, core S4-C, code P02/P03 and actual helpers/callers.",
+    "pack_reviewer": "/root/pack_criteria confirmed complete S4-C(36 keys), full product-acceptance and resident-runtime appendices, complete criteria68 and mission50 before product edit.",
+    "code_reviewer": "/root/review_p02 independently read full proof/helper/LocalStore/caller and all ten released43 code/test/readme paths, input-closure/findings/CI-LEDGER.",
+    "ci_reviewer": "/root/ci_p03 read current authority47, C13 input, existing workflow/request/location and gates45 availability.",
+    "review_scope": "Static reviews; not campaign FINAL reviews."
+  },
+  "validation": {
+    "product_tests": "NOT_RUN",
+    "local_product_execution": false,
+    "typecheck": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "next": "Add exact historical-reader reopen regression; build manifest-only W with C13+release43 and run surgical Actions."
+  },
+  "target_ref_changed": false,
+  "foreign_source_refs_changed": false,
+  "GLOBAL_RELEASE": false
+}
