@@ -5,8 +5,10 @@ import { pathToFileURL } from "node:url"
 
 type ProducerModule = Pick<typeof import("../../../product/collaboration/recipient-actions.ts"), "createRecipientThreadActions">
 
-/** Compile the published UTF-8 blob without modifying its bytes or duplicating its algorithm.
- * Runtime imports stay external and resolve to the retained, manifest-checked real modules.
+/** Keep the published UTF-8 blob verbatim and relocate only its four runtime import
+ * specifiers in the compiler input. External imports retain their written specifier
+ * in Bun output, so that specifier must already name the canonical absolute module.
+ * Dependencies remain external singletons with their manifest-checked real modules.
  * This helper executes only inside the selected GitHub Actions tests.
  */
 export async function loadRecipientActions() {
@@ -26,7 +28,16 @@ export async function loadRecipientActions() {
     const observed = new Bun.CryptoHasher("sha1").update("blob " + dependency.byteLength + "\0").update(dependency).digest("hex")
     if (observed !== expected) throw new Error("Pinned recipient runtime dependency changed: " + specifier)
   }
-  const imports = new Set(Object.keys(dependencies))
+  const imports = new Map(Object.keys(dependencies).map((specifier) => [specifier, resolve(original, specifier)] as const))
+  const relocated = new Set<string>()
+  const contents = new TextDecoder().decode(bytes).replace(/^import (?!type\b)([^\r\n]+ from )"([^"\r\n]+)"$/gm, (_line, clause: string, specifier: string) => {
+    const canonical = imports.get(specifier)
+    if (!canonical || relocated.has(specifier)) throw new Error("Unmanifested or repeated recipient runtime import")
+    relocated.add(specifier)
+    return "import " + clause + JSON.stringify(canonical)
+  })
+  if (relocated.size !== imports.size) throw new Error("Recipient runtime import relocation incomplete")
+  const canonicalImports = new Set(imports.values())
   const directory = await mkdtemp(join(tmpdir(), "sf-ui-ack-producer-"))
   try {
     const built = await Bun.build({
@@ -34,11 +45,11 @@ export async function loadRecipientActions() {
       plugins: [{
         name: "published-recipient-imports",
         setup(build) {
-          build.onLoad({ filter: /recipient-actions\.ts\.fixture$/ }, async () => ({ contents: await Bun.file(source).text(), loader: "ts" }))
+          build.onLoad({ filter: /recipient-actions\.ts\.fixture$/ }, () => ({ contents, loader: "ts" }))
           build.onResolve({ filter: /.*/ }, (args) => {
             if (args.importer !== source) return
-            if (!imports.has(args.path)) throw new Error("Unmanifested recipient runtime dependency")
-            return { path: resolve(original, args.path), external: true }
+            if (!canonicalImports.has(args.path)) throw new Error("Unmanifested recipient runtime dependency")
+            return { path: args.path, external: true }
           })
         },
       }],
