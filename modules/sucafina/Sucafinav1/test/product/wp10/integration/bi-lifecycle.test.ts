@@ -5,6 +5,7 @@ import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { AbsolutePath } from "@orchestra/core/schema"
 import { Location } from "@orchestra/core/location"
+import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
 import { createModule } from "../../../../index.ts"
 import { openLocalStore } from "../../../../runtime/local-store.ts"
 import { createOperatorIdentity } from "../../../../runtime/operator-identity.ts"
@@ -85,8 +86,7 @@ async function prepareBiLifecycle(deadline: ReturnType<typeof compositionTestDea
   let stage = "imports"
   try {
     signal.throwIfAborted()
-    const { chromium } = await import("@playwright/test")
-    const { captureChromiumCleanup } = await import("../../wp07/chromium-cleanup.ts")
+    const { launchBrowserDriver } = await import("../../wp02/browser-driver-fixture.ts")
     signal.throwIfAborted()
     const temporary = await realpath(tmpdir())
     signal.throwIfAborted()
@@ -162,7 +162,17 @@ async function prepareBiLifecycle(deadline: ReturnType<typeof compositionTestDea
     route.handle = async (request) => {
       const url = new URL(request.url)
       const mode = url.pathname.endsWith("/auth/logout") ? "logout" : url.searchParams.get("sf") ?? "other"
-      const response = await identity.handle(request) ?? await app(request)
+      const started = performance.now()
+      const trace = (phase: "entered" | "produced" | "returned" | "failed", status?: number) => {
+        if (!["bi-options", "bi-data", "bi-source"].includes(mode)) return
+        // Route/timing only: no cookie, source selector, payload or credential.
+        console.info("SF_BI_HTTP_PHASE", JSON.stringify({ mode, method: request.method, viewId: url.searchParams.get("viewId"), phase, status,
+          elapsedMs: Math.round(performance.now() - started), aborted: request.signal.aborted }))
+      }
+      trace("entered")
+      let response: Response | undefined
+      try { response = await identity.handle(request) ?? await app(request); trace("produced", response?.status) }
+      catch (error) { trace("failed"); throw error }
       if (!response) return undefined
       observations.push({ mode, method: request.method, status: response.status })
       const gate = held.get(mode)
@@ -174,17 +184,18 @@ async function prepareBiLifecycle(deadline: ReturnType<typeof compositionTestDea
         try { await gate.release.promise }
         finally { pending.delete(gate); gate.finished.resolve() }
       }
+      trace("returned", response.status)
       return response
     }
     stage = "browser.asset"
     await assets.bi()
     signal.throwIfAborted()
     stage = "browser.acquire"
-    const owned = await acquire(async () => {
-      const browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"], timeout: 15_000 })
-      try { return { browser, close: await captureChromiumCleanup(browser) } }
-      catch (error) { await browser.close(); throw error }
-    }, (value) => value.close())
+    // Reuse the published driver without changing its 15s launch bound. Node
+    // owns Chromium's DevTools pipes; this fixture remains the authentic Bun
+    // HTTP/product host and the Playwright client. The existing contextual-
+    // controls consumer category is the driver's diagnostic label, not native proof.
+    const owned = await acquire(() => launchBrowserDriver("host-contextual-controls", { signal, timeoutMs: 15_000 }), (value) => value.close())
     const context = await owned.browser.newContext({ serviceWorkers: "block" })
     signal.throwIfAborted()
     const page = await context.newPage()
@@ -236,7 +247,7 @@ async function prepareBiLifecycle(deadline: ReturnType<typeof compositionTestDea
     if (!workspace) throw new Error("Real retained BI workspace unavailable")
     signal.throwIfAborted()
     const count = (mode: string) => observations.filter((entry) => entry.mode === mode).length
-    return { page, context, origin, mount, workspace, observations, failures, aborted, holdNext, count, dispose }
+    return { page, context, origin, mount, workspace, observations, failures, aborted, holdNext, count, dispose, reportBrowser: owned.report }
   } catch (error) {
     console.error("SF_BI_LIFECYCLE_SETUP", JSON.stringify({ stage, cancelled: signal.aborted, error: error instanceof Error ? error.message : String(error) }))
     await dispose()
@@ -253,9 +264,12 @@ async function closeBiLifecycle(deadline: ReturnType<typeof compositionTestDeadl
 }
 
 test("BI keeps the canonical shell, refreshes on manual focus and timer, and signs out once while discarding a held genuine success", async () => {
+  expectSpawn(import.meta.path)
+  let reportBrowser: (() => void) | undefined
   const deadline = compositionTestDeadline("bi-lifecycle-controls")
   try {
     const world = await deadline.phase("browser.setup", () => prepareBiLifecycle(deadline))
+    reportBrowser = world.reportBrowser
     const { page } = world
     const refresh = async (action: () => Promise<unknown>, shell: boolean) => {
       const before = world.count("bi-data"), beforeShell = world.count("bi")
@@ -295,13 +309,18 @@ test("BI keeps the canonical shell, refreshes on manual focus and timer, and sig
     expect(world.count("logout") - beforeLogout).toBe(1)
     expect(world.failures).toEqual([])
   } finally { await deadline.close() }
+  // The driver reports only after all assertions and mandatory cleanup succeed.
+  reportBrowser!()
 }, 120_000)
 
 test("the canonical shell still polls authority while BI awaits a held result and revocation prevents every late render", async () => {
+  expectSpawn(import.meta.path)
+  let reportBrowser: (() => void) | undefined
   const deadline = compositionTestDeadline("bi-lifecycle-authority")
   const failures: unknown[] = []
   try {
     const world = await deadline.phase("browser.setup", () => prepareBiLifecycle(deadline))
+    reportBrowser = world.reportBrowser
     const { page } = world
     // Observe an actual completed interval before using its next 30s window.
     // The initial document's timer origin is not inferred from clock.install.
@@ -359,12 +378,17 @@ test("the canonical shell still polls authority while BI awaits a held result an
     failures.push(error)
     console.error("SF_BI_LIFECYCLE_BODY_FAILURE", { fixture: "bi-lifecycle-authority", error })
   } finally { await closeBiLifecycle(deadline, failures) }
+  // The driver reports only after all assertions and mandatory cleanup succeed.
+  reportBrowser!()
 }, 120_000)
 
 test("clearing the BI selection while genuine authorized options are delayed prevents restoration of the previous selection", async () => {
+  expectSpawn(import.meta.path)
+  let reportBrowser: (() => void) | undefined
   const deadline = compositionTestDeadline("bi-lifecycle-selection")
   try {
     const world = await deadline.phase("browser.setup", () => prepareBiLifecycle(deadline))
+    reportBrowser = world.reportBrowser
     const { page } = world
     const options = world.holdNext("bi-options"), beforeData = world.count("bi-data")
     await page.getByRole("button", { name: "Refresh data", exact: true }).click()
@@ -383,13 +407,18 @@ test("clearing the BI selection while genuine authorized options are delayed pre
     expect(await world.workspace.evaluate((node) => node.isConnected)).toBe(true)
     expect(world.failures).toEqual([])
   } finally { await deadline.close() }
+  // The driver reports only after all assertions and mandatory cleanup succeed.
+  reportBrowser!()
 }, 120_000)
 
 test("BI returns from a real source with the same human filters, version pair, currency and mark focus after current reauthorization", async () => {
+  expectSpawn(import.meta.path)
+  let reportBrowser: (() => void) | undefined
   const deadline = compositionTestDeadline("bi-return-context")
   const failures: unknown[] = []
   try {
     const world = await deadline.phase("browser.setup", () => prepareBiLifecycle(deadline))
+    reportBrowser = world.reportBrowser
     const { page } = world
     // This case proves navigation and current reauthorization, not timer order.
     // Let document loading, animation frames and history restoration run normally.
@@ -439,7 +468,7 @@ test("BI returns from a real source with the same human filters, version pair, c
         const url = new URL(response.url())
         return url.pathname === `${world.mount}/dashboard` && url.searchParams.get("sf") === "bi-data" && url.searchParams.get("viewId") === "BI02" && url.searchParams.get("start") === "2026-01-01" && url.searchParams.get("end") === "2026-03-31" && url.searchParams.get("baseRef") === versions[0] && url.searchParams.get("candidateRef") === versions[1] && url.searchParams.get("currency") === "USD"
       }),
-      page.getByRole("button", { name: "Atualizar visualização", exact: true }).click(),
+      deadline.phase("comparison.click", () => page.getByRole("button", { name: "Atualizar visualização", exact: true }).click()),
     ]))
     expect(data.status()).toBe(200)
     await deadline.phase("comparison.dom", () => page.getByText("Dados atualizados.", { exact: true }).waitFor())
@@ -480,6 +509,8 @@ test("BI returns from a real source with the same human filters, version pair, c
     failures.push(error)
     console.error("SF_BI_LIFECYCLE_BODY_FAILURE", { fixture: "bi-return-context", error })
   } finally { await closeBiLifecycle(deadline, failures) }
+  // The driver reports only after all assertions and mandatory cleanup succeed.
+  reportBrowser!()
 }, 120_000)
 
 test("BI origin digests select only an explicit source of the real current Planner difference and never choose A or B implicitly", async () => {

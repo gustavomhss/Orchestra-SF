@@ -1,0 +1,60 @@
+{
+  "schema": "sf2-wp10-bi-node-driver-proposal-v1",
+  "status": "OWN_FIXTURE_PROPOSAL_PENDING_EXACT_ACTIONS",
+  "author": "/root",
+  "base": {
+    "head": "34e6dd4f3588a64a3963a854ee29729f82fdd594",
+    "tree": "a73e41901be0e861d9e4ffa96810d1c6dd653d66"
+  },
+  "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts",
+  "base_blob": "d4f3078394e65092f5da9261d5febfad61080f0a",
+  "proposed": {
+    "path": "incoming-cache/bi-w17/patch/modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts",
+    "bytes": 40255,
+    "blob": "a6e4dbe4bddc18866a8fe8082fa889540ac75972",
+    "sha256": "14185e2798b5c7e8384ddd260e8a74893e795584de7546f07980e572c702475e"
+  },
+  "diff": {
+    "path": "incoming-cache/bi-w17/bi-lifecycle.patch",
+    "bytes": 9080,
+    "blob": "02c6faba25a310abadde64ed1734f5686a0ab339",
+    "sha256": "0dcf1391e4e00a502cd782fe98ef24a560613bb552c1a1571346d43c6ffc90ff"
+  },
+  "reused_published_dependency": {
+    "path": "worktree/modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts",
+    "bytes": 23484,
+    "blob": "76188b9f567861b30dba3b22afce66d60a2424c8",
+    "sha256": "295c47a4376e7eb4295badd6960fbeca3fa6afdca20ea6b162285aadfdbe134a"
+  },
+  "dependency_modified": false,
+  "reason": "CI9 verified valid exact form/options but comparison response timed out, followed by live Playwright transport despite all close RPCs. Existing WP02 helper documents Bun1.3.14 recycled Chromium DevTools descriptors and provides Node ownership through the real AppProcess boundary. This proposal changes only the consumer fixture transport; cause is not asserted as proven until exact execution.",
+  "scope": [
+    "Four existing browser tests use the published driver category host-contextual-controls. This label describes the transport consumer and does not claim a WP02 or native journey.",
+    "Four actual expectSpawn declarations, one per browser test; no declarations added to nonbrowser fifth case.",
+    "Each successful case reports actual driver proof only after assertions and mandatory fixture close. Startup cancellation, finalization and test-body failures remain failures.",
+    "Passive handler entered/produced/returned/failed timing and click completion observations distinguish HTTP handling from transport, without exposing credential or source selector."
+  ],
+  "invariants": [
+    "All five original test names and120s budgets remain. Browser driver launch stays15s; page10s/navigation15s/cooperative105s unchanged.",
+    "All previous expect lines retained exactly; fifth nonbrowser test byte-identical.",
+    "No financial arithmetic, authorization, identity, routes, product implementation, foreign helper or cleanup modified.",
+    "Published driver requires zero remaining contexts, disconnect, normal Node/Chromium exit, clean WebSocket1000/EOF, drained frames, removed socket/directory and bounded bridge counts. Failure cannot report proof.",
+    "Historical WP07 cleanup failure remains open for its owner; a passing Node path would not prove the old failure path repaired."
+  ],
+  "source_result": {
+    "run": 43603388390,
+    "W": "34e6dd4f3588a64a3963a854ee29729f82fdd594",
+    "S": "068673ebc436f256cae085fd736797c443bb8f24",
+    "pass": 7,
+    "fail": 1,
+    "receipt": {
+      "path": "evidence/ci9-result-receipt.json",
+      "bytes": 6250,
+      "blob": "37d01e9a21e2da11afddb828ef47d5c7aa6c2924",
+      "sha256": "5c7ac43204e91a8e1754fe1a0444811aa40a18b7d6bf80ef2f02d6cb5096be07"
+    }
+  },
+  "forwarded_owner_comment": 6878612897,
+  "local_product_execution": false,
+  "global_release": false
+}
