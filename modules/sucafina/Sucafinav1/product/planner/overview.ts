@@ -3,6 +3,7 @@ import { esc } from "../../src/screen-shell.ts"
 import type { DomainProjection } from "../contracts/context.ts"
 import type { FinancialAnalysis } from "../contracts/ports.ts"
 import { plannerMonthlyPrefix } from "./bi.ts"
+import { plannerOverviewDrilldowns, renderPlannerOverviewDrilldowns } from "./overview-drilldown.ts"
 import { comparePlannerVersions } from "./version-comparison.ts"
 
 /** Aggregate only the monthly amounts already priced and authorized by the Planner port. */
@@ -27,6 +28,7 @@ export function plannerOverview(analysis: FinancialAnalysis, official?: DomainPr
   const officialBudget = official ? sum(selected(official, "budget")) : null
   const baselineOutlook = sum(selected(analysis.baseline, "outlook"))
   const candidateOutlook = sum(selected(analysis.candidate, "outlook"))
+  const metrics = { baselineOutlook, candidateOutlook, deltaToBase: delta(candidateOutlook, baselineOutlook), candidateBudget: budget, varianceToCandidateBudget: delta(candidateOutlook, budget), officialBudget, varianceToOfficialBudget: delta(candidateOutlook, officialBudget) }
   const prefix = plannerMonthlyPrefix(analysis.candidate.components)
   const baselinePrefix = plannerMonthlyPrefix(analysis.baseline.components)
   const monthly = selected(analysis.candidate, "outlook").map((outlook) => {
@@ -47,7 +49,8 @@ export function plannerOverview(analysis: FinancialAnalysis, official?: DomainPr
     baselineRefs: analysis.baseline.context.sourceRefs,
     candidateRefs: analysis.candidate.context.sourceRefs,
     officialRefs: official?.context.sourceRefs ?? [],
-    metrics: { baselineOutlook, candidateOutlook, deltaToBase: delta(candidateOutlook, baselineOutlook), candidateBudget: budget, varianceToCandidateBudget: delta(candidateOutlook, budget), officialBudget, varianceToOfficialBudget: delta(candidateOutlook, officialBudget) },
+    metrics,
+    drilldowns: plannerOverviewDrilldowns(analysis, official, metrics),
     monthly, components: differences.rows, assumptions,
     coverageState: analysis.comparison.comparisonStatus,
     gaps: analysis.gaps,
@@ -59,11 +62,5 @@ export function plannerOverview(analysis: FinancialAnalysis, official?: DomainPr
 export function renderPlannerOverview(model: Extract<ReturnType<typeof plannerOverview>, { status: "ok" }>["value"]) {
   const amount = (value: number | null) => value === null ? "Unavailable" : esc(String(value))
   const identity = (refs: DomainProjection["context"]["sourceRefs"]) => refs.map((ref) => `${ref.id} · revision ${ref.version}`).join(", ")
-  const metrics = [
-    ["Baseline outlook", model.metrics.baselineOutlook], ["Candidate outlook", model.metrics.candidateOutlook],
-    ["Change from baseline", model.metrics.deltaToBase], ["Candidate budget", model.metrics.candidateBudget],
-    ["Variance to candidate budget", model.metrics.varianceToCandidateBudget], ["Official budget", model.metrics.officialBudget],
-    ["Variance to official budget", model.metrics.varianceToOfficialBudget],
-  ] as const
-  return `<section data-planner-overview><h2>Version comparison</h2><p>Baseline: ${esc(identity(model.baselineRefs))}. Candidate: ${esc(identity(model.candidateRefs))}. Official: ${model.officialRefs.length ? esc(identity(model.officialRefs)) : "Unavailable"}.</p><p>${esc(model.context.period.start)} to ${esc(model.context.period.end)} · ${esc(model.context.currency)}</p><dl>${metrics.map(([label, value]) => `<dt>${esc(label)}</dt><dd>${amount(value)}</dd>`).join("")}</dl><p role="status">Cost comparison: ${esc(model.coverageState)}. ${model.gaps.map(esc).join("; ")}</p><p>${esc(model.capacityLabel)}</p><table><caption>Monthly comparison</caption><thead><tr><th scope="col">Month</th><th scope="col">Base budget</th><th scope="col">Candidate budget</th><th scope="col">Base actual</th><th scope="col">Candidate actual</th><th scope="col">Base outlook</th><th scope="col">Candidate outlook</th><th scope="col">Base planned FTE</th><th scope="col">Candidate planned FTE</th></tr></thead><tbody>${model.monthly.map((row) => `<tr><th scope="row">${esc(row.period.start.slice(0, 7))}</th>${[row.baselineBudget, row.budget, row.baselineActual, row.actual, row.baselineOutlook, row.outlook, row.baselineFte, row.fte].map((value) => `<td>${amount(value)}</td>`).join("")}</tr>`).join("")}</tbody></table><table><caption>Changes by record and month</caption><thead><tr><th scope="col">Component</th><th scope="col">State</th><th scope="col">Difference</th><th scope="col">Explanation</th></tr></thead><tbody>${model.components.map((row) => `<tr><th scope="row">${esc(row.id)}</th><td>${esc(row.state)}</td><td>${amount(row.difference)}</td><td>${esc(row.explanation)}</td></tr>`).join("")}</tbody></table>${model.assumptions.length ? `<h3>Changed inputs</h3><ul>${model.assumptions.map((entry) => `<li>${esc(entry.id)}: ${esc(String(entry.before ?? "Unavailable"))} → ${esc(String(entry.after ?? "Unavailable"))}. ${esc(entry.explanation)}</li>`).join("")}</ul>` : ""}</section>`
+  return `<section data-planner-overview><h2>Version comparison</h2><p>Baseline: ${esc(identity(model.baselineRefs))}. Candidate: ${esc(identity(model.candidateRefs))}. Official: ${model.officialRefs.length ? esc(identity(model.officialRefs)) : "Unavailable"}.</p><p>${esc(model.context.period.start)} to ${esc(model.context.period.end)} · ${esc(model.context.currency)}</p>${renderPlannerOverviewDrilldowns(model.drilldowns)}<p role="status">Cost comparison: ${esc(model.coverageState)}. ${model.gaps.map(esc).join("; ")}</p><p>${esc(model.capacityLabel)}</p><table><caption>Monthly comparison</caption><thead><tr><th scope="col">Month</th><th scope="col">Base budget</th><th scope="col">Candidate budget</th><th scope="col">Base actual</th><th scope="col">Candidate actual</th><th scope="col">Base outlook</th><th scope="col">Candidate outlook</th><th scope="col">Base planned FTE</th><th scope="col">Candidate planned FTE</th></tr></thead><tbody>${model.monthly.map((row) => `<tr><th scope="row">${esc(row.period.start.slice(0, 7))}</th>${[row.baselineBudget, row.budget, row.baselineActual, row.actual, row.baselineOutlook, row.outlook, row.baselineFte, row.fte].map((value) => `<td>${amount(value)}</td>`).join("")}</tr>`).join("")}</tbody></table><table><caption>Changes by record and month</caption><thead><tr><th scope="col">Component</th><th scope="col">State</th><th scope="col">Difference</th><th scope="col">Explanation</th></tr></thead><tbody>${model.components.map((row) => `<tr><th scope="row">${esc(row.id)}</th><td>${esc(row.state)}</td><td>${amount(row.difference)}</td><td>${esc(row.explanation)}</td></tr>`).join("")}</tbody></table>${model.assumptions.length ? `<h3>Changed inputs</h3><ul>${model.assumptions.map((entry) => `<li>${esc(entry.id)}: ${esc(String(entry.before ?? "Unavailable"))} → ${esc(String(entry.after ?? "Unavailable"))}. ${esc(entry.explanation)}</li>`).join("")}</ul>` : ""}</section>`
 }
