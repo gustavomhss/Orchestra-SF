@@ -1,0 +1,688 @@
+{
+  "schema": "sf2h.finance-journey.result.v1",
+  "recorded_at_utc": "2026-11-14 18:27:02 UTC",
+  "finding": {
+    "id": "FIN-IND-005",
+    "status": "OPEN",
+    "classification": "NEEDS_EVIDENCE",
+    "severity": "P1"
+  },
+  "delivery": {
+    "route": "CAUSAL_DIAGNOSIS_WITH_OWNER_PROPOSAL",
+    "status": "READY_FOR_OWNER_REVIEW",
+    "pr": 56,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/pull/56",
+    "head_branch": "finance-journey",
+    "base_branch": "finance-resume",
+    "merge": false,
+    "producer_patch": "NOT_APPLIED",
+    "proposal_qualification": "PROPOSED_NOT_RUN",
+    "note": "The delivery commit adds receipts only. Its final SHA/tree are recorded in the PR after commit creation; these results belong to W/S below."
+  },
+  "sources": {
+    "mission_commit": "30e2215749d5295f81fdeafccb9e69ba21d0cdb8",
+    "mission_blob": "cb294478092c641e0256b3742add2f2c393c08d6",
+    "common_blob": "77528795ad0ac28e077dd070898f758825db12ec",
+    "agents": {
+      "commit": "3ea9dc2efe0de8d283f9625774697e431f55a0d7",
+      "also_read_at_handoff_commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+      "same_blob_at_both_commits": true,
+      "path": "AGENTS.md",
+      "blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4"
+    },
+    "handoff_commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+    "ci_blob": "c34ab425e0f3b7dc0899a05826829f38b5af84bb",
+    "wp11_pack": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/WP11.pack.json",
+      "blob": "b593782368d19e557358d64dcecaefccd10ac991",
+      "read": "COMPLETE"
+    },
+    "normative_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "wp13": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP13.json",
+      "blob": "1c268bae1d894ee1a2a350bd1a2cc5da7a3433dd",
+      "read": "COMPLETE"
+    },
+    "execution_common_blob": "d61f32af03fe10747a50274233f953af044decf6",
+    "mandatory_appendices": {
+      "product_acceptance_blob": "ded082688fce327def0b48968fa3b89a5831029c",
+      "resident_runtime_blob": "033737b1051b23443e633df7874c550629bf55a1"
+    },
+    "criteria": [
+      "WP11.T02.CHK.21",
+      "WP11.T03.CHK.20",
+      "WP13.T02.CHK.20",
+      "WP13.T03.CHK.20",
+      "C10",
+      "CAMP.QLT.06",
+      "CAMP.CMP.04"
+    ],
+    "acceptance": "NONE_OF_THE_FULL_CRITERIA_CLOSED"
+  },
+  "git": {
+    "original_base": "3ea9dc2efe0de8d283f9625774697e431f55a0d7",
+    "original_base_tree": "2d1ecef2ebc5aeca3fd312397bdf709f53d42582",
+    "test_commit": "a7c886ececeb9ea63c58e85f5eed8884021af97d",
+    "W": "1248dc6c5aaa83cb16c92697947fa5fea9699625",
+    "W_tree": "17105591e5a92ff792b676c61497c0c75a48d954",
+    "S": "b8f023e61983dbe33dc11f9e5dfd2000034ef4c0",
+    "S_tree": "525224251530ac6dd1e5fd2a4ca1dbba296e713b",
+    "S_parent": "1248dc6c5aaa83cb16c92697947fa5fea9699625",
+    "W_to_S": {
+      "status": "VERIFIED",
+      "files": [
+        {
+          "path": ".ci-run.json",
+          "status": "added",
+          "blob": "d17151760cc63c5561fd96985aa82cadfac3802d"
+        }
+      ],
+      "all_other_blobs_identical": true,
+      "compare": "https://github.com/gustavomhss/Orchestra-SF/compare/1248dc6c5aaa83cb16c92697947fa5fea9699625...b8f023e61983dbe33dc11f9e5dfd2000034ef4c0"
+    },
+    "selected_test_blobs": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/finance-journey/journey-phase.test.ts",
+        "git_blob_sha": "5ca793fc4c7ae6d06f1af9cfb2f53faaa963c70b"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/finance-journey/observed-coverage.ts",
+        "git_blob_sha": "0b6bdc6285b9a57c38939f5dea469bfdc060eb2f"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/finance-journey/observed-ports.ts",
+        "git_blob_sha": "5e8740a9e3372e75624674617b63fadb5f81bfbc"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/finance-journey/phase-trace.ts",
+        "git_blob_sha": "7123f5147720f643ef909b0a2d1ad1943afd3df5"
+      }
+    ],
+    "unchanged_shared_blobs": {
+      "renewal_choice_fixture": "0dc89d86866620a8109051c68bc2d2b4d92c508f",
+      "original_coverage_integration_test": "192653d276d45efc073df2aea5f8c2170564bd7c",
+      "coverage_preview_producer": "9f7e12113b38e73befb64f99a94fb8ca28d05eee"
+    }
+  },
+  "selection": {
+    "request": {
+      "package": "sucafina",
+      "packageSelector": "packages/sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "Sucafinav1/test/product/review-fixes/finance-journey/journey-phase.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "env": {}
+    },
+    "request_sha256": "4c722d670ce548d65145fb096d2b37767c417301b9b483336ce2582628b2305e",
+    "request_blob": "d17151760cc63c5561fd96985aa82cadfac3802d",
+    "dispatch_receipt": "dispatch.json",
+    "timeouts_ms": {
+      "cli_default": 120000,
+      "individual_test": 300000,
+      "fixture_cooperative_guard": 180000
+    },
+    "changed_timeout": false,
+    "note": "dispatch.json supersedes the unexecuted CLI setting in selection.json. The actual request, individual test timeout and fixture guard match the original S11 budgets.",
+    "new_hosted_runs": 1,
+    "deduplication": "Checked existing requests/runs before dispatch; one in flight for this mission; no rerun.",
+    "excluded": [
+      "WP10 evaluate-and-store selection",
+      "Memory same-request-new-proof selection",
+      "epic",
+      "full suite",
+      "local product tests"
+    ]
+  },
+  "execution": {
+    "workflow": "test-ci",
+    "run_id": 43625830145,
+    "run_attempt": 1,
+    "run_number": 576,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43625830145",
+    "created_at": "2026-11-14T18:18:10Z",
+    "updated_at": "2026-11-14T18:23:06Z",
+    "head_sha": "b8f023e61983dbe33dc11f9e5dfd2000034ef4c0",
+    "head_branch": "ci-run-linux-finance-journey-1248dc6c-4c722d67-1",
+    "status": "completed",
+    "conclusion": "failure",
+    "jobs": [
+      {
+        "id": 132541295004,
+        "name": "test (ubuntu-24.04)",
+        "conclusion": "failure",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43625830145/job/132541295004"
+      },
+      {
+        "id": 132542718708,
+        "name": "cleanup",
+        "conclusion": "success",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43625830145/job/132542718708",
+        "snapshot_branch_deletion": "success"
+      }
+    ],
+    "test_result": {
+      "pass": 0,
+      "fail": 1,
+      "expect_calls": 18,
+      "tests": 1,
+      "files": 1,
+      "duration_seconds": 180.26
+    },
+    "error": "WP11_FIXTURE_DEADLINE_EXCEEDED:renewal-choice-history:prepare:transition-confirmed:complete:180000",
+    "artifacts": {
+      "count": 0,
+      "source": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43625830145/artifacts",
+      "note": "The selected Bun workflow uploaded no artifacts. Job-log excerpts are committed separately."
+    },
+    "omni": {
+      "status": "NOT_APPLICABLE",
+      "spawned": 0,
+      "delegated": 0,
+      "native_evidence": false
+    },
+    "gates": {
+      "product_selection": "FAILURE_WITH_DISCRIMINATING_PHASE_TRACE",
+      "typecheck": "NOT_RUN",
+      "repository_guards": "NOT_RUN",
+      "proposed_patch_execution": "NOT_RUN"
+    },
+    "gate_limit": "The environment contains MCP-materialized partial sources, not a full dependency-installed checkout. No local product check was executed; the authorized test-ci request executes only the selected test. Workflow edits are outside mission scope. Bun execution is not typecheck or repository guards."
+  },
+  "observations": {
+    "completed_assertion_checkpoints": [
+      {
+        "line": 915,
+        "timestamp": "2026-11-14T18:20:51.5764331Z",
+        "elapsedMs": 56326,
+        "event": "checkpoint",
+        "label": "omitted.assertions-complete",
+        "caseRef": {
+          "id": "case",
+          "incarnation": "case-incarnation",
+          "version": 3
+        },
+        "knownSubtotal": 210000,
+        "threshold": 55000.000000000015,
+        "comparisonStatus": "conditioned"
+      },
+      {
+        "line": 918,
+        "timestamp": "2026-11-14T18:21:02.4127811Z",
+        "elapsedMs": 67162,
+        "event": "checkpoint",
+        "label": "choice.persisted",
+        "caseRef": {
+          "id": "case",
+          "incarnation": "case-incarnation",
+          "version": 4
+        },
+        "choiceDigest": "077b2824dc68f8dbcb82604bb00bd0e402754c94715917dd56e45b1418b9929d"
+      },
+      {
+        "line": 923,
+        "timestamp": "2026-11-14T18:21:53.1140776Z",
+        "elapsedMs": 117862,
+        "event": "checkpoint",
+        "label": "confirmed.assertions-complete",
+        "caseRef": {
+          "id": "case",
+          "incarnation": "case-incarnation",
+          "version": 6
+        },
+        "total": 250000,
+        "advantage": -10000,
+        "choiceDigest": "077b2824dc68f8dbcb82604bb00bd0e402754c94715917dd56e45b1418b9929d"
+      }
+    ],
+    "additional_prefix_assertions": "Renewal-cost baseline240000; omitted training absent and pending with known210000; historical choice persisted with original alternative/basis versions; same case/incarnation; confirmed training40000; complete coverage; total250000; advantage-10000; current criterion failed.",
+    "baseline_scope": "The executed240000 assertion is baselineResult.knownSubtotal in the renewal-cost fixture; it is not an assertion on a revenue field.",
+    "original_choice_digest": "077b2824dc68f8dbcb82604bb00bd0e402754c94715917dd56e45b1418b9929d",
+    "digest_limit": "The confirmed checkpoint repeats the originally computed digest. The post-confirmation stored-history reread was not reached, so this marker does not prove historical preservation.",
+    "not_reached": [
+      "confirmed.threshold-assertions-complete",
+      "witness.15000.assertions-complete",
+      "witness.15001.assertions-complete",
+      "history.assertions-complete",
+      "choice.replay-assertions-complete",
+      "persistence.restart-and-revocation-assertions-complete"
+    ],
+    "confirmed_sample_writes": 0,
+    "confirmed_exact_threshold_calls": 0,
+    "metric_orientation": "advantageComparison is [selected,baseline] and equals -10000 after training. Witness preview uses cost difference and lte -20000: expected15000=>-20000/pass,15001=>-19999/fail. Those witnesses were not reached.",
+    "omitted_threshold_raw": 55000.000000000015,
+    "omitted_threshold_limit": "Observed exact binary floating-point certificate with the preserved toBeCloseTo(55000,8) assertion; result remains conditioned by missing training."
+  },
+  "causal_diagnosis": {
+    "original_run": {
+      "id": 43620619049,
+      "job_id": 132525249982,
+      "snapshot": "c7a0956f850525a03ccd28b26cb8d90808f4d83f",
+      "snapshot_tree": "413f807a60933f928e5526fb2dba768e41ba00d6",
+      "product_parent": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+      "pass": 0,
+      "fail": 1,
+      "expect_calls": 10,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43620619049",
+      "excerpt": "original-run-excerpt.txt"
+    },
+    "original_phase_refinement": "createRenewalChoiceHistory returned after omitted preparation at11386ms; chosen transition and training confirmation returned. Last recorded fixture checkpoint was transition-confirmed:complete115913ms. Original deadline arose later in the coverage authority isStillValid callback/issuer.revalidate. The immutable finding remains unchanged; its evidence gap is preserved and its constructor attribution is refined.",
+    "discriminant": "Locate confirmed evaluation among coverage validation, exact solver and result persistence without changing producers, original assertions or budgets.",
+    "measured_failure_boundary": "First confirmed coverage.qualify, at final current() authority reread after canonical preview replay. Nested units.resolve completed at179968ms; following authority.read-case hit fixture guard180003ms. This precedes any confirmed sample write or exactThreshold call.",
+    "completed_issue_ms": 32347,
+    "failed_first_qualify_ms": 17156,
+    "confirmed_evaluation_ms": 62141,
+    "original_eager_validity_callback_ms": 4438,
+    "outer_phases": [
+      {
+        "label": "fixture.create",
+        "event": "complete",
+        "elapsed_ms": 11346,
+        "inclusive_duration_ms": 11345
+      },
+      {
+        "label": "omitted.evaluate",
+        "event": "complete",
+        "elapsed_ms": 56325,
+        "inclusive_duration_ms": 44978,
+        "status": "ok"
+      },
+      {
+        "label": "choice.record",
+        "event": "complete",
+        "elapsed_ms": 67162,
+        "inclusive_duration_ms": 10836
+      },
+      {
+        "label": "training.confirm",
+        "event": "complete",
+        "elapsed_ms": 117862,
+        "inclusive_duration_ms": 50700
+      },
+      {
+        "label": "confirmed.coverage.issue",
+        "event": "complete",
+        "elapsed_ms": 159331,
+        "inclusive_duration_ms": 32347,
+        "status": "ok"
+      },
+      {
+        "label": "confirmed.coverage.qualify",
+        "event": "error",
+        "elapsed_ms": 180004,
+        "inclusive_duration_ms": 17156
+      },
+      {
+        "label": "confirmed.evaluate",
+        "event": "error",
+        "elapsed_ms": 180004,
+        "inclusive_duration_ms": 62141
+      }
+    ],
+    "observed_port_counts": {
+      "fixture.create": {
+        "calls": 1,
+        "completed": 1,
+        "failed": 0,
+        "inclusiveMs": 11345
+      },
+      "omitted.evaluate": {
+        "calls": 1,
+        "completed": 1,
+        "failed": 0,
+        "inclusiveMs": 44978
+      },
+      "omitted.units.resolve": {
+        "calls": 2,
+        "completed": 2,
+        "failed": 0,
+        "inclusiveMs": 2785
+      },
+      "omitted.units.revalidate": {
+        "calls": 4,
+        "completed": 4,
+        "failed": 0,
+        "inclusiveMs": 5811
+      },
+      "omitted.results.readHistoricalScenario": {
+        "calls": 4,
+        "completed": 4,
+        "failed": 0,
+        "inclusiveMs": 191
+      },
+      "omitted.preview": {
+        "calls": 26,
+        "completed": 26,
+        "failed": 0,
+        "inclusiveMs": 33044
+      },
+      "omitted.results.readByRequest": {
+        "calls": 2,
+        "completed": 2,
+        "failed": 0,
+        "inclusiveMs": 56
+      },
+      "omitted.results.write": {
+        "calls": 2,
+        "completed": 2,
+        "failed": 0,
+        "inclusiveMs": 292
+      },
+      "omitted.exact": {
+        "calls": 2,
+        "completed": 2,
+        "failed": 0,
+        "inclusiveMs": 26462
+      },
+      "omitted.units.issue": {
+        "calls": 4,
+        "completed": 4,
+        "failed": 0,
+        "inclusiveMs": 5013
+      },
+      "omitted.results.read": {
+        "calls": 2,
+        "completed": 2,
+        "failed": 0,
+        "inclusiveMs": 216
+      },
+      "choice.record": {
+        "calls": 1,
+        "completed": 1,
+        "failed": 0,
+        "inclusiveMs": 10836
+      },
+      "training.confirm": {
+        "calls": 1,
+        "completed": 1,
+        "failed": 0,
+        "inclusiveMs": 50700
+      },
+      "confirmed.evaluate": {
+        "calls": 1,
+        "completed": 0,
+        "failed": 1,
+        "inclusiveMs": 62141
+      },
+      "confirmed.units.resolve": {
+        "calls": 5,
+        "completed": 5,
+        "failed": 0,
+        "inclusiveMs": 22114
+      },
+      "confirmed.units.revalidate": {
+        "calls": 4,
+        "completed": 4,
+        "failed": 0,
+        "inclusiveMs": 17610
+      },
+      "confirmed.results.readHistoricalScenario": {
+        "calls": 2,
+        "completed": 2,
+        "failed": 0,
+        "inclusiveMs": 342
+      },
+      "confirmed.coverage.issue": {
+        "calls": 1,
+        "completed": 1,
+        "failed": 0,
+        "inclusiveMs": 32347
+      },
+      "confirmed.authority.resolve": {
+        "calls": 4,
+        "completed": 3,
+        "failed": 1,
+        "inclusiveMs": 18037
+      },
+      "confirmed.authority.read-case": {
+        "calls": 7,
+        "completed": 6,
+        "failed": 1,
+        "inclusiveMs": 246
+      },
+      "confirmed.authority.read-classifications": {
+        "calls": 6,
+        "completed": 6,
+        "failed": 0,
+        "inclusiveMs": 209
+      },
+      "confirmed.authority.evidence-context": {
+        "calls": 3,
+        "completed": 3,
+        "failed": 0,
+        "inclusiveMs": 76
+      },
+      "confirmed.authority.is-still-valid": {
+        "calls": 3,
+        "completed": 3,
+        "failed": 0,
+        "inclusiveMs": 13465
+      },
+      "confirmed.units.issue": {
+        "calls": 2,
+        "completed": 2,
+        "failed": 0,
+        "inclusiveMs": 7230
+      },
+      "confirmed.preview": {
+        "calls": 4,
+        "completed": 4,
+        "failed": 0,
+        "inclusiveMs": 14188
+      },
+      "confirmed.coverage.qualify": {
+        "calls": 1,
+        "completed": 0,
+        "failed": 1,
+        "inclusiveMs": 17156
+      }
+    },
+    "fixture_counter_delta_after_training": {
+      "c08.read.cases": {
+        "calls": 790,
+        "inclusiveMs": 29063
+      },
+      "host.revalidate": {
+        "calls": 6230,
+        "inclusiveMs": 837
+      },
+      "operation-source": {
+        "calls": 832,
+        "inclusiveMs": 1715
+      },
+      "operation-coverage": {
+        "calls": 104,
+        "inclusiveMs": 0
+      },
+      "c08.read.preferences": {
+        "calls": 90,
+        "inclusiveMs": 3243
+      },
+      "c08.transaction.preferences": {
+        "calls": 0,
+        "inclusiveMs": 0
+      },
+      "classified-source": {
+        "calls": 36,
+        "inclusiveMs": 724
+      },
+      "classified-coverage": {
+        "calls": 32,
+        "inclusiveMs": 6675
+      },
+      "c08.transaction.cases": {
+        "calls": 0,
+        "inclusiveMs": 0
+      },
+      "planner.verifySourceOnly": {
+        "calls": 364,
+        "inclusiveMs": 1357
+      },
+      "planner.verifyOperation": {
+        "calls": 0,
+        "inclusiveMs": 0
+      },
+      "planner.verifySourceProjection": {
+        "calls": 728,
+        "inclusiveMs": 497
+      },
+      "c08.read.outbox": {
+        "calls": 0,
+        "inclusiveMs": 0
+      }
+    },
+    "measured_mechanism": "Repeated authority resolve/isStillValid invokes complete sensitivity source resolution/revalidation and canonical proofs. 790 additional case reads,90 preferences reads,6230 host revalidations and32 classified coverage calls occur after confirmation, with no additional case/preferences transactions.",
+    "inferred_candidate": "Avoid one redundant eager full authority predicate on successful coverage issue, preserving final current() validation plus non-ok original-authority and mutable-digest guards. This is a bounded optimization hypothesis, not a demonstrated complete fix.",
+    "not_proven": [
+      "Arithmetic defect",
+      "exact solver slowdown in the confirmed phase",
+      "confirmed persistence/evaluate-store fault",
+      "SQLite lock/deadlock or precise CPU/copy attribution",
+      "sufficient speedup for full journey",
+      "native mounted host performance"
+    ],
+    "timing_rules": "Spans and fixture counters are inclusive and overlap. Do not add them as wall time. active IDs are simultaneously active spans, not strict parent pointers. Decorated counts omit internal closed-over calls while their time remains inside outer spans. Observer overhead is unmeasured."
+  },
+  "proposal": {
+    "metadata": "coverage-issue.NOT_APPLIED.json",
+    "patch": "coverage-issue.NOT_APPLIED.patch.txt",
+    "status": "NOT_APPLIED",
+    "owner": "WP13 / S4-C coverage producer; WP11 journey; finance-resume/S0 integration",
+    "preimage": {
+      "commit": "3ea9dc2efe0de8d283f9625774697e431f55a0d7",
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/coverage-preview.ts",
+      "git_blob_sha": "9f7e12113b38e73befb64f99a94fb8ca28d05eee"
+    },
+    "textual_applicability": "PASS_TEXTUAL_ONLY: git apply --check against the exact preimage; no source applied and no product executed.",
+    "static_review": "Separate read-only review found no new diff defect. It is not functional acceptance. Opaque original/new authority callback equivalence needs owner qualification.",
+    "performance": "NOT_MEASURED_ON_CANDIDATE",
+    "invalid_unavailable_fence": "Every non-ok prepare result validates original authority and digest before return; invalid authority is stale and cannot enter conditioned unavailable fallback.",
+    "owner_counterproofs": [
+      {
+        "id": "OWNER-01",
+        "case": "Valid complete same-case financial journey",
+        "expected": "250000/-10000; exact15000; witness15000 passes and15001 fails; history/replay/restart; original budgets; record actual call reduction and timing."
+      },
+      {
+        "id": "OWNER-02",
+        "case": "Invalid authority plus pre-proof or structural unavailable",
+        "expected": "Hard refusal (stale/denied), no conditioned fallback and no new sample writes."
+      },
+      {
+        "id": "OWNER-03",
+        "case": "Valid authority plus genuine incomplete coverage",
+        "expected": "Existing conditioned behavior remains; no false authority error."
+      },
+      {
+        "id": "OWNER-04",
+        "case": "Case/incarnation/source/classification/basis/criterion/access changes during proof",
+        "expected": "No complete interval or result escapes, including same scalar values with changed identity."
+      },
+      {
+        "id": "OWNER-05",
+        "case": "Mutable original authority object changes across await",
+        "expected": "Post-await digest rejects both non-ok fallback and successful interval release; a rejected provisional interval cannot be reused."
+      },
+      {
+        "id": "OWNER-06",
+        "case": "Revoked context, wrong scope, expired interval and token reuse",
+        "expected": "Existing scope/TTL/qualify/revalidate/verify rejection remains; do not claim a newly implemented post-await TTL fence."
+      }
+    ]
+  },
+  "late_diagnostic_intake": {
+    "supersedes": "The initial preflight observation that both diagnosis heads had no new published delta is historical. The following later publications were consumed before final delivery.",
+    "calculation": {
+      "pr": 59,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/59",
+      "head": "e80fdc933dfd25956a50c22dea76bf077e79815b",
+      "tree": "f1ef898362d27d16f53aebfc278eee6d6ff9d73d",
+      "target": "astra-wp10",
+      "status": "OPEN_NOT_APPLIED_NOT_RUN",
+      "run": 43623440133,
+      "job": 132533968037,
+      "snapshot": "329a3b4547ec77c6b516ac1f28c732f0fc076902",
+      "observed": "First binding precommit recertification fails after results.write(kind=sensitivity) returned ok in1367ms.",
+      "proposal": "Consolidate source preparation/observation from4to2 transaction envelopes while preserving2 independent observations,6direct authentications,4direct revalidations.",
+      "targets": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+          "preimage": "65867a3e6aa9b5b85266bb637fb22cf1c6c6d539"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/planner-sources.ts",
+          "preimage": "6230f22e7dd66fec1103f28cc9a7937b2dca1449"
+        }
+      ],
+      "relation": "This renewal fixture uses synthetic renewal source ports, not the integration resolver targeted by #59. The proposal cannot directly close this fixture's coverage qualification failure; it complements eventual mounted qualification."
+    },
+    "memory": {
+      "pr": 55,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/55",
+      "head": "0d7fb6f12ed053340391ff6e4f95b6f3c1276ea8",
+      "tree": "51c7f4cb50fda8d327d1b7c5a3da802489ff4b0f",
+      "target": "astra-wp10",
+      "status": "OPEN_NOT_APPLIED_NOT_RUN",
+      "run": 43624030665,
+      "job": 132535810515,
+      "snapshot": "e336f3e945fc22ae737af9b2425186c25b46a43d",
+      "observed": "59pass/1fail; no timeout. same-request-new-proof and stale.preserve complete; at182124.35ms staleAccess.preflight returns ok where denied was expected for corrupted capture. Final revoked-authority probes remain unreached.",
+      "proposal_target": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+      "preimage": "ee5c725ae78e0eba5c12600da80eb51b7173c2ed",
+      "relation": "Observer/counter proposal and distinct capture-integrity issue; no coverage producer or finance fixture edits."
+    },
+    "actions": "Read immutable delivery receipts/patches and existing later logs. No merge, source application, duplicate diagnostic selection, new dependency test or transferred acceptance."
+  },
+  "composition_observation": {
+    "branch": "compose-resume",
+    "commit": "ad7fcdef7739e1bc471e42fac082452799de751b",
+    "coverage_preview_path": "ABSENT_AT_OBSERVED_COMMIT",
+    "product_ts_blob": "8fc915379f153fdb437be09c2c84924d7d59b6ed",
+    "portfolio_services_blob": "83c525e733b2cb21637734e3b1e07950e72f4f97",
+    "finding": "Observed composition uses older product.ts and supplies neither resolveCoverageAuthority nor exactThreshold. The proposed finance producer patch cannot be applied there without owner dependency intake.",
+    "implication": "Real producer under fixture-specific synthetic authority composition is not native mounted-host evidence."
+  },
+  "limitations": [
+    "FIN-IND-005 remains OPEN; no successful full financial journey.",
+    "WP13.T02.CHK.20 also covers portfolio combination/eligible-complete and UI/BI/critique parity outside this selection.",
+    "C10/campaign criteria are broader than the reached assertions; no entire criterion, WP or campaign accepted.",
+    "Historical choice after confirmation,15000/15001 witnesses,authorized replay and actual restart remain NOT_REACHED.",
+    "Replay in the authored test is the same authorized mutation before restart. New session checks reads/revocation, not replay across restart.",
+    "The authored restart checks case/choice/current alternative, not a reloaded persisted sensitivity envelope from the separate WP10 mission.",
+    "Synthetic source grants,selection and authority composition are not native AI/profile/provider/MCP/Atlas evidence.",
+    "Only tests and new receipts added. No runtime/workflow/shared file changes,local product tests,full suite,epic,merge or force push.",
+    "One hosted diagnostic run only. No unchanged long rerun or timeout increase.",
+    "Typecheck and repository guards are NOT_RUN; candidate patch tests are NOT_RUN."
+  ],
+  "evidence_files": [
+    {
+      "name": "original-run-excerpt.txt",
+      "bytes": 8689,
+      "git_blob_sha": "182c32f879ab97ffdabb5ac44371602e69de703f",
+      "sha256": "d8246a0293ff6dc9fe6538ba4b82038a16258547416501f8cfeff9049ecd7208"
+    },
+    {
+      "name": "hosted-run-excerpt.txt",
+      "bytes": 41722,
+      "git_blob_sha": "a9c19e8c8cd14d4b53413caffa609f38faab0cc5",
+      "sha256": "4b9c27f9df6e465c48e66dcfce09ecc665c71b9d18a1b8e28476df9078afdf9a"
+    },
+    {
+      "name": "coverage-issue.NOT_APPLIED.patch.txt",
+      "bytes": 11746,
+      "git_blob_sha": "07cfd30ecfda15e32c36e13ed6b1c9d2218da9a6",
+      "sha256": "a7bad4e4c47c34c0f1f2d30b72f33a3639e5a2e21cf9aa87849f8eea79441d72"
+    },
+    {
+      "name": "coverage-issue.NOT_APPLIED.json",
+      "bytes": 5750,
+      "git_blob_sha": "b0b93127f56a50d3d786843bf2a6bfe7e5291670",
+      "sha256": "2eceb13523961580bbbbf5cc2536d071c6f5b2dfd13df4d9cedbb0f99b28098b"
+    }
+  ],
+  "next_action": "finance-resume/S0 consumes only this delta and the read-only dependency handoffs. WP13 verifies exact preimage and authority semantics before applying a chosen correction in its owned source. Run targeted authority counterproofs and the complete preserved financial selection on that changed W through CI.md, record W/S/jobs and checks. Do not repeat this unchanged long run."
+}
+

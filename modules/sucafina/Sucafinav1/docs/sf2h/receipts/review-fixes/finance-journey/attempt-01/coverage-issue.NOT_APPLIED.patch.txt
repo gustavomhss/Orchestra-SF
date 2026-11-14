@@ -1,0 +1,71 @@
+--- a/modules/sucafina/Sucafinav1/product/portfolio/coverage-preview.ts
++++ b/modules/sucafina/Sucafinav1/product/portfolio/coverage-preview.ts
+@@ -108,31 +108,42 @@
+     if (resolved.status !== "ok") return resolved
+     const authority = detach(resolved.value)
+     const initialDigest = authorityDigest(authority)
+-    if (!await authority.isStillValid(context) || authorityDigest(resolved.value) !== initialDigest) return { status: "stale", reason: "coverage-authority-changed" }
+-    const selection = authority.selection
+-    const baseline = authority.decision.alternatives.filter((alternative) => alternative.id === selection.baselineAlternativeId)
+-    const classification = authority.baseline.classification
+-    if (selection.baselineRef !== baselineRef || selection.alternativeRef !== request.scenarioRef || selection.baselineAlternativeId === selection.alternativeId || selection.principalRef !== context.binding.principalRef || selection.accessRevision !== context.binding.accessRevision || selection.policyVersion !== context.binding.policyVersion || !authority.decision.participants.includes(context.binding.principalRef) || baseline.length !== 1 || digestSfValue(baseline[0]!.result) !== digestSfValue(authority.baseline.result) || classification.source.refId !== baseline[0]!.scenario.baseRef || authority.classification.source.refId !== authority.scenario.baseRef || !authority.decision.costCoverageBases.some((basis) => digestSfValue(basis) === digestSfValue(authority.basis))) return { status: "unavailable", reason: "coverage-selection-mismatch" }
+-    if (classification.schema !== "sf-coverage-classification-v1" || classification.classificationDigest !== classificationDigest(classification) || classification.caseRef.id !== authority.decision.id || classification.caseRef.incarnation !== authority.decision.incarnation || classification.caseRef.version > authority.decision.version || digestSfValue(classification.basis) !== digestSfValue(authority.basis)) return { status: "unavailable", reason: "baseline-classification-unavailable" }
+-    if (authority.rule.criterionId !== request.criterion.id || authority.rule.operator !== request.criterion.operator || authority.rule.value !== request.criterion.value || !Number.isFinite(request.criterion.value) || authority.storedResult.currency !== "USD" || authority.baseline.result.currency !== "USD" || digestSfValue(authority.baseline.result.horizon) !== digestSfValue(authority.storedResult.horizon)) return { status: "unavailable", reason: "coverage-rule-or-scope-mismatch" }
+-    if ([authority.storedResult, authority.baseline.result].some((result) => result.comparisonStatus === "unavailable" || result.comparisonStatus === "incompatible" || result.knownSubtotal === null || !Number.isFinite(result.knownSubtotal) || result.unresolvedConditions.some((condition) => !eligibleConditions.includes(condition)) || result.restrictions.some((restriction) => restriction !== "preview-not-applied"))) return { status: "unavailable", reason: "coverage-source-unresolved" }
+-    if (authority.evidence.some((item) => item.state !== "fresh" || item.accessRevision !== context.binding.accessRevision || !item.checkedAt.trim() || !Number.isFinite(Date.parse(item.checkedAt)))) return { status: "unavailable", reason: "coverage-evidence-unavailable" }
+-    const assessment = authority.storedResult.costCoverage
+-    const baselineAssessment = authority.baseline.result.costCoverage
+-    if (assessment.coverageState !== "complete" || baselineAssessment.coverageState !== "complete" || validateScenarioCoverage(authority.storedResult, authority.basis, assessment) || validateScenarioCoverage(authority.baseline.result, authority.basis, baselineAssessment) || assess(authority, authority.storedResult, authority.classification).coverageState !== "complete" || assess(authority, authority.baseline.result, classification).coverageState !== "complete") return { status: "unavailable", reason: "coverage-incomplete" }
+-    const structural = await prove(structuredClone(request), baselineRef, context)
+-    if (structural.status !== "ok") return structural
+-    if (plannerComponentDigest(authority.storedResult.components.filter((component) => component.id !== structural.value.parameterRef)) !== structural.value.fixedComponentsDigest || digestSfValue(authority.storedResult.components.map((component) => component.id)) !== digestSfValue(structural.value.componentIds)) return { status: "stale", reason: "coverage-stored-components-changed" }
+-    const certificate = certificateFor(authority, structural.value, context)
+-    if (!certificate) return { status: "unavailable", reason: "coverage-interval-unproven" }
+-    const refs = [...authority.evidence.map((item) => item.ref), ...structural.value.sourceRefs].filter((ref, index, all) => all.findIndex((other) => digestSfValue(other) === digestSfValue(ref)) === index)
+-    const body = { requestDigest: digestSfValue(request), baselineRef, certificate, structural: structural.value, assessment, baselineAssessment, evidenceRefs: refs }
+-    const interval: PortfolioCoverageInterval = structuredClone({ intervalRef: `portfolio-coverage-interval:${digestSfValue(body)}`, ...body })
+-    issued.set(interval.intervalRef, { request, interval, authorityDigest: initialDigest, contextDigest: scope(context), scenario: structuredClone(authority.scenario), expiresAt: Date.now() + 300_000 })
+-    prune()
+-    const checked = await current(interval.intervalRef, context)
+-    if (checked.status !== "ok") { issued.delete(interval.intervalRef); return checked }
+-    return { status: "ok", value: structuredClone(interval) }
++    if (authorityDigest(resolved.value) !== initialDigest) return { status: "stale", reason: "coverage-authority-changed" }
++    // Canonical proof reads validate their own authority; successful release still uses current().
++    // Non-ok outcomes must validate the original observation before allowing conditioned fallback.
++    const prepare = async (): Promise<PortResult<PortfolioCoverageInterval>> => {
++      const selection = authority.selection
++      const baseline = authority.decision.alternatives.filter((alternative) => alternative.id === selection.baselineAlternativeId)
++      const classification = authority.baseline.classification
++      if (selection.baselineRef !== baselineRef || selection.alternativeRef !== request.scenarioRef || selection.baselineAlternativeId === selection.alternativeId || selection.principalRef !== context.binding.principalRef || selection.accessRevision !== context.binding.accessRevision || selection.policyVersion !== context.binding.policyVersion || !authority.decision.participants.includes(context.binding.principalRef) || baseline.length !== 1 || digestSfValue(baseline[0]!.result) !== digestSfValue(authority.baseline.result) || classification.source.refId !== baseline[0]!.scenario.baseRef || authority.classification.source.refId !== authority.scenario.baseRef || !authority.decision.costCoverageBases.some((basis) => digestSfValue(basis) === digestSfValue(authority.basis))) return { status: "unavailable", reason: "coverage-selection-mismatch" }
++      if (classification.schema !== "sf-coverage-classification-v1" || classification.classificationDigest !== classificationDigest(classification) || classification.caseRef.id !== authority.decision.id || classification.caseRef.incarnation !== authority.decision.incarnation || classification.caseRef.version > authority.decision.version || digestSfValue(classification.basis) !== digestSfValue(authority.basis)) return { status: "unavailable", reason: "baseline-classification-unavailable" }
++      if (authority.rule.criterionId !== request.criterion.id || authority.rule.operator !== request.criterion.operator || authority.rule.value !== request.criterion.value || !Number.isFinite(request.criterion.value) || authority.storedResult.currency !== "USD" || authority.baseline.result.currency !== "USD" || digestSfValue(authority.baseline.result.horizon) !== digestSfValue(authority.storedResult.horizon)) return { status: "unavailable", reason: "coverage-rule-or-scope-mismatch" }
++      if ([authority.storedResult, authority.baseline.result].some((result) => result.comparisonStatus === "unavailable" || result.comparisonStatus === "incompatible" || result.knownSubtotal === null || !Number.isFinite(result.knownSubtotal) || result.unresolvedConditions.some((condition) => !eligibleConditions.includes(condition)) || result.restrictions.some((restriction) => restriction !== "preview-not-applied"))) return { status: "unavailable", reason: "coverage-source-unresolved" }
++      if (authority.evidence.some((item) => item.state !== "fresh" || item.accessRevision !== context.binding.accessRevision || !item.checkedAt.trim() || !Number.isFinite(Date.parse(item.checkedAt)))) return { status: "unavailable", reason: "coverage-evidence-unavailable" }
++      const assessment = authority.storedResult.costCoverage
++      const baselineAssessment = authority.baseline.result.costCoverage
++      if (assessment.coverageState !== "complete" || baselineAssessment.coverageState !== "complete" || validateScenarioCoverage(authority.storedResult, authority.basis, assessment) || validateScenarioCoverage(authority.baseline.result, authority.basis, baselineAssessment) || assess(authority, authority.storedResult, authority.classification).coverageState !== "complete" || assess(authority, authority.baseline.result, classification).coverageState !== "complete") return { status: "unavailable", reason: "coverage-incomplete" }
++      const structural = await prove(structuredClone(request), baselineRef, context)
++      if (structural.status !== "ok") return structural
++      if (plannerComponentDigest(authority.storedResult.components.filter((component) => component.id !== structural.value.parameterRef)) !== structural.value.fixedComponentsDigest || digestSfValue(authority.storedResult.components.map((component) => component.id)) !== digestSfValue(structural.value.componentIds)) return { status: "stale", reason: "coverage-stored-components-changed" }
++      const certificate = certificateFor(authority, structural.value, context)
++      if (!certificate) return { status: "unavailable", reason: "coverage-interval-unproven" }
++      const refs = [...authority.evidence.map((item) => item.ref), ...structural.value.sourceRefs].filter((ref, index, all) => all.findIndex((other) => digestSfValue(other) === digestSfValue(ref)) === index)
++      const body = { requestDigest: digestSfValue(request), baselineRef, certificate, structural: structural.value, assessment, baselineAssessment, evidenceRefs: refs }
++      const interval: PortfolioCoverageInterval = structuredClone({ intervalRef: `portfolio-coverage-interval:${digestSfValue(body)}`, ...body })
++      issued.set(interval.intervalRef, { request, interval, authorityDigest: initialDigest, contextDigest: scope(context), scenario: structuredClone(authority.scenario), expiresAt: Date.now() + 300_000 })
++      prune()
++      const checked = await current(interval.intervalRef, context)
++      if (checked.status !== "ok") { issued.delete(interval.intervalRef); return checked }
++      return { status: "ok", value: structuredClone(interval) }
++    }
++    const result = await prepare()
++    const valid = result.status === "ok" || await authority.isStillValid(context)
++    if (!valid || authorityDigest(resolved.value) !== initialDigest) {
++      if (result.status === "ok") issued.delete(result.value.intervalRef)
++      return { status: "stale", reason: "coverage-authority-changed" }
++    }
++    return result
+   }
+   const revalidate = async (intervalRef: string, context: TrustedDomainContext) => {
+     const saved = issued.get(intervalRef)
+
