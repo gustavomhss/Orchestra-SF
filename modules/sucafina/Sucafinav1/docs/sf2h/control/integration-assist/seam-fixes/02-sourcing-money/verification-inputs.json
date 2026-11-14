@@ -1,0 +1,187 @@
+{
+  "schema_version": 1,
+  "proposal": "SF2-SEAM-002",
+  "status": "PROPOSED/NOT_APPLIED; RECHECK_BLOCKED_ON_CANDIDATE_EXPORT_RECONCILIATION",
+  "checked_on": "f511f30b73289c2f21c843254569d31c02eb9608",
+  "source_commit": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+  "inputs": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-consumers/monetary-consumers.test.ts",
+      "sha": "f57ad2e8a745c56797bd7e1b7fe9c8fb0cda83bf",
+      "target_preimage": "ABSENT"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-consumers/fixture.ts",
+      "sha": "13dc9ab57a57fbd5e1c1477cf5fc6718cd5d2cad",
+      "target_preimage": "ABSENT"
+    }
+  ],
+  "not_product_tree_entries": true,
+  "test_direct_imports": [
+    "bun:test",
+    "runtime/procurement.ts: domain/render",
+    "runtime/contract.ts: object/rows/Snapshot",
+    "./fixture.ts: buyer/consumerFixture/environment/holder"
+  ],
+  "fixture_direct_imports": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+      "sha": "20a3ec5a30ac0fce6b35f05750d1b3dced11c45b",
+      "symbols": "domain, render; proposed postimage"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "sha": "9e9bac976b503409de65868a366f352ca1e65071",
+      "symbols": "object, rows, text, Actor"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/downloads.ts",
+      "sha": "3a18d541dd402fde0eb2be25de281b289189c537",
+      "symbols": "download; unresolved exports compatibility"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "sha": "b753e3ffbfcdc06de373388845c686afac26dec8",
+      "symbols": "openLocalStore"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/initial-settings.ts",
+      "sha": "7682bb517a77ef812dbd4626790f1453cc5c0100",
+      "symbols": "initialProcurementSettings"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "sha": "1769271386cdda1017c38023b0988ce2d64423d2",
+      "symbols": "digestSfValue"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/context.ts",
+      "sha": "ae2d6b73a24970ba23d21e17694b54fd32d1a700",
+      "symbols": "ConfirmationScope, type"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "sha": "88b6efb4840b8731f707862a8baf14683526c7a9",
+      "symbols": "DomainPortHost, type"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "sha": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95",
+      "symbols": "TrustedDomainContext, type"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+      "sha": "502fb1ab3a4116a62aeb504a4bb26040c66d81b2",
+      "symbols": "createSfUiAuthority"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "sha": "d43a630254142bc5e5fb3589d1120a328abf2d1c",
+      "symbols": "createSfSourcePersistence"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-inventory.ts",
+      "sha": "ddc5323d714c58de2d5b47eed2563176099f15b5",
+      "symbols": "enumerateSfSources"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/source-projection.ts",
+      "sha": "ab9814817d11c0b477636ee54d1b2763d365f405",
+      "symbols": "projectProcurementScope"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/sources.ts",
+      "sha": "615b908d59fb95cb16ce8359c83e0c7aaa8a7a5e",
+      "symbols": "createProcurementCollectionRegistry, createProcurementSourceResolver"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/port.ts",
+      "sha": "4f94c3355074db43dcc4acaab09e14be9150767c",
+      "symbols": "createProcurementPort"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/confirmation.ts",
+      "sha": "4fcda499e060bd77d595e4d567d7e9daed671fc4",
+      "symbols": "createProcurementConfirmationObserver"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/queue-view.ts",
+      "sha": "a03998f3b87df91c6c84b198f2b51aa9c391bcd2",
+      "symbols": "createProcurementQueueView"
+    }
+  ],
+  "fixture_external_imports": [
+    "node:fs/promises",
+    "node:os",
+    "node:path",
+    "node:crypto"
+  ],
+  "package_boundary": {
+    "tree": "ee2964cd6cc96ee2697e9d05835777870a843f65",
+    "pins": [
+      {
+        "path": "package.json",
+        "sha": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2"
+      },
+      {
+        "path": "bun.lock",
+        "sha": "e3f0c6443c12dd16cb66030f75e2f71f16508098"
+      },
+      {
+        "path": "bunfig.toml",
+        "sha": "c506ff57c4bf3fa3a6bd3501b8ce2fc29122accb"
+      },
+      {
+        "path": "modules/sucafina/package.json",
+        "sha": "10a8d5da1d074de28ab701ee388c4c2cd37e2917"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/package.json",
+        "sha": "18911fee9313f8fb57c1a972bc70eec2f7864c55"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/bun.lock",
+        "sha": "eb89ff3c4d61c41275dceddf11c5997f7993c2c8"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/tsconfig.json",
+        "sha": "51895f3c254e6020d116ca73d4a1c690f7562169"
+      }
+    ],
+    "notes": [
+      "Real LocalStore requires bun:sqlite and filesystem, not a renderer-only fixture.",
+      "downloads reaches reports and workbooks; preserve existing document/spreadsheet packages.",
+      "Types cross @orchestra/core/* and effect; no install or lock update performed."
+    ]
+  },
+  "blocker": {
+    "path": "modules/sucafina/Sucafinav1/runtime/downloads.ts",
+    "target_blob": "3a18d541dd402fde0eb2be25de281b289189c537",
+    "test_case": "a submitted PO freezes 200 USD through later FX, exports and cancellation",
+    "missing_columns": [
+      "PO base currency",
+      "PO FX rate",
+      "PO FX source",
+      "PO monetary state",
+      "PO submitted amount",
+      "PO submitted currency",
+      "PO submitted FX rate"
+    ],
+    "missing_html": "Monetary state paragraph including current base amount, applicable submitted FX and submitted approval, including cancelled state.",
+    "basis": "Direct static code/assertion comparison, not an executed failure.",
+    "owner": "session11 output reconciliation by session14",
+    "constraint": "Keep assertions and unconditional real download dependency; do not skip, weaken, make optional, or import an older downloads snapshot merely to pass."
+  },
+  "existing_exports_regressions": {
+    "path": "modules/sucafina/Sucafinav1/test/product/operations-consumers/export-owner-regression.test.ts",
+    "sha": "3170c80978ef8c87e0a254c8817ffe8514019d7c",
+    "owner": "session11",
+    "cases": [
+      "OPS-CONSUMER-EXPORT-01 future PO USD 200 separate from sourcing USD 108",
+      "OPS-CONSUMER-EXPORT-02 PO line values 40/60 with total 100"
+    ],
+    "copied_or_modified": false
+  },
+  "verification": "NOT_RUN",
+  "product_applied": false
+}
