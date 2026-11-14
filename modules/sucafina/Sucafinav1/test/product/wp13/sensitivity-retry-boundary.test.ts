@@ -1,0 +1,159 @@
+import { expect, test } from "bun:test"
+import { digestSfValue } from "../../../product/contracts/canonical.ts"
+import type { ScenarioResult } from "../../../product/contracts/decisions.ts"
+import type { SensitivityRequest } from "../../../product/contracts/operations.ts"
+import type { SensitivityResult } from "../../../product/contracts/outputs.ts"
+import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
+import type { StoredDecisionResult } from "../../../product/decisions/result-store.ts"
+import type { CriterionResultBinding } from "../../../product/decisions/criterion-rules.ts"
+import { createSfUiAuthority } from "../../../product/integration/ui-authority.ts"
+import type { PlannerSensitivityBinding } from "../../../product/portfolio/planner-sensitivity.ts"
+import { createPersistentSensitivityPort } from "../../../product/portfolio/sensitivity-store.ts"
+
+// Controlled port orchestration witnesses. Financial calculation/replay is proved
+// by coverage-sensitivity-integration; reaching a calculator here is a failure.
+// The mutable context below models this port boundary only. It is NOT a UI grant:
+// the real UI authority always receives its original frozen admitted context.
+async function fixture() {
+  const identity = { installationId: "i", projectId: "p", principalRef: "principal", policyVersion: "policy", accessRevision: "access" }
+  const ui = createSfUiAuthority({ authorize: async () => identity, commandIdentity: async () => "operation", createId: () => "request", now: () => Date.parse("2026-11-14T00:00:00Z") })
+  const http = new Request("https://example.test/retry")
+  const intent = { viewId: "view", selectionRef: "selection", period: { start: "2027-01-01", end: "2027-12-31" } }
+  const admitted = await ui.admit(http, "sf_bi_view", digestSfValue(intent))
+  if (admitted.status !== "ok" || !await ui.validate(admitted.value, "sf_bi_view", digestSfValue(intent))) throw new Error("Control UI admission unavailable")
+  const context = { ...admitted.value, binding: { ...admitted.value.binding } }
+  const modelBinding = context.binding
+  const modelBindingDigest = digestSfValue(modelBinding)
+  const currentAuthority = async (trusted: TrustedDomainContext) => trusted === context && trusted.kind === "ui" && trusted.binding === modelBinding && digestSfValue(trusted.binding) === modelBindingDigest && trusted.lease === admitted.value.lease && await ui.revalidate(admitted.value)
+  const caseRef = { id: "case", incarnation: "inc", version: 1 }
+  const request: SensitivityRequest = { scenarioRef: "source", parameterBounds: { parameterRef: "price", minimum: 0, maximum: 1, steps: 1 }, criterion: { id: "criterion", operator: "lte", value: 0 } }
+  const result: SensitivityResult = { scenarioRef: "source", parameterRef: "price", bounds: { minimum: 0, maximum: 1, steps: 1 }, evaluated: [{ parameterValue: 0, resultRef: "sample", value: null }], threshold: null, thresholdEvidence: { state: "unavailable", reason: "sample-value-unavailable" }, unit: "USD", parameterUnit: "USD", resultUnit: "USD", engineVersion: "planner-runtime-v1", costCoverageRefs: [], comparisonStatus: "conditioned", unresolvedConditions: [], evidenceRefs: [] }
+  const common = { schema: "sf-decision-result-v1" as const, caseRef, principalRef: "principal", accessRevision: "access", policyVersion: "policy", sourceRefs: [], createdAt: "2026-11-14T00:00:00Z" }
+  const stored: Extract<StoredDecisionResult, { kind: "sensitivity" }> = { ...common, kind: "sensitivity", resultRef: "sensitivity", result, resultDigest: digestSfValue(result), requestDigest: digestSfValue(request) }
+  const scenario: ScenarioResult = { id: "source", version: 1, components: [], currency: "USD", horizon: intent.period, sourceRefs: [], unresolvedConditions: [], restrictions: [], comparisonStatus: "conditioned", knownSubtotal: null, total: null, costCoverage: { basisId: "basis", basisVersion: 1, alternativeId: "selected", alternativeVersion: 1, currency: "USD", horizon: intent.period, coverageState: "pending", entries: [], evaluatedSourceRefs: [], issues: [], derivedMissingCategoryIds: [] } }
+  const proof: PlannerSensitivityBinding = { caseRef, scenario: { baseRef: "source", operations: [], assumptions: [] }, baselineRef: "baseline", scenarioCoverageRef: "selected-coverage", baselineCoverageRef: "baseline-coverage", criterionId: "criterion", metric: "alternative-minus-baseline-known-subtotal", parameterUnit: "USD", resultUnit: "USD", unit: "USD", unitMetadataRef: "units", unitMetadataVersion: 1, engineVersion: "planner-runtime-v1", evidenceRefs: [], sensitivityRequest: request, ruleRef: "rule", ruleVersion: 1, ruleDigest: "a".repeat(64), metadataDigest: "b".repeat(64) }
+  const binding: CriterionResultBinding = { schema: "sf-criterion-result-v1", caseRef, resultRef: stored.resultRef, resultDigest: stored.resultDigest, request, requestDigest: stored.requestDigest, criterionId: "criterion", ruleRef: "rule", ruleVersion: 1, principalRef: "principal", accessRevision: "access", policyVersion: "policy", createdAt: common.createdAt, bindingDigest: "controlled-port-binding" }
+  const calls = { lookup: 0, resolve: 0, read: 0, samples: 0, bound: 0, evaluate: 0, write: 0, bind: 0 }
+  const controls: { allowed: boolean; key: string; lookup?: () => void; sample?: () => void; beforeBound?: (count: number) => void; bound?: (context: TrustedDomainContext, count: number) => void } = { allowed: true, key: "operation" }
+  const unused = async (): Promise<never> => { throw new Error("Unexpected recovery capability") }
+  const input: Parameters<typeof createPersistentSensitivityPort>[0] = {
+    portfolio: { evaluate: unused, sensitivity: async () => { calls.evaluate++; throw new Error("A bound retry must not calculate again") } },
+    idempotencyKey: async () => controls.key,
+    resolveBinding: async (_request, trusted) => { calls.resolve++; return controls.allowed && await currentAuthority(trusted) ? { status: "ok", value: structuredClone(proof) } : { status: "denied", reason: "current-authority-denied" } },
+    bindings: { bind: async () => { calls.bind++; return unused() }, read: async (_request, trusted) => {
+      const call = ++calls.bound
+      controls.beforeBound?.(call)
+      if (!controls.allowed || !await currentAuthority(trusted)) return { status: "denied", reason: "current-bound-reader-denied" }
+      controls.bound?.(trusted, call)
+      return { status: "ok", value: structuredClone(binding) }
+    } },
+    results: {
+      write: async () => { calls.write++; return unused() }, readForCalculation: unused, readHistoricalCalculation: unused,
+      readByRequest: async () => { calls.lookup++; controls.lookup?.(); return { status: "ok", value: { state: "found", result: stored } } },
+      read: async ({ kind, resultRef }) => {
+        calls.read++
+        if (!controls.allowed) return { status: "denied", reason: "current-source-denied" }
+        if (kind === "sensitivity") return { status: "ok", value: structuredClone(stored) }
+        calls.samples++; controls.sample?.()
+        return { status: "ok", value: { ...common, kind: "scenario", resultRef, result: structuredClone(scenario), resultDigest: digestSfValue(scenario), requestDigest: digestSfValue(proof.scenario) } }
+      },
+      readHistoricalScenario: async ({ resultRef }) => ({ status: "ok", value: { ...common, kind: "scenario", resultRef, result: structuredClone(scenario), resultDigest: digestSfValue(scenario), requestDigest: digestSfValue(proof.scenario) } }),
+    },
+  }
+  return { request: structuredClone(request), caseRef: structuredClone(caseRef), context, stored, controls, calls, port: createPersistentSensitivityPort(input), close: () => ui.finish(admitted.value) }
+}
+
+test("a bound retry uses the admitted request snapshot and closes with a fresh bound reader", async () => {
+  const world = await fixture()
+  try {
+    world.controls.lookup = () => { world.request.parameterBounds.maximum = 99; world.caseRef.version = 99 }
+    const result = await world.port.evaluateAndStore(world.request, world.caseRef, world.context)
+    expect(result).toEqual({ status: "ok", value: { sensitivityResultRef: world.stored.resultRef, sensitivity: world.stored.result, caseRef: world.stored.caseRef } })
+    expect(world.calls).toMatchObject({ lookup: 1, resolve: 1, read: 3, samples: 1, bound: 1, evaluate: 0, write: 0, bind: 0 })
+  } finally { world.close() }
+})
+
+test("lookup key/content conflicts and source revocation cannot become a successful cached retry", async () => {
+  for (const failure of ["key", "request", "case", "result", "source"] as const) {
+    const world = await fixture()
+    let injected = false
+    try {
+      const corrupt = () => {
+        injected = true
+        if (failure === "key") world.controls.key = "substituted-operation"
+        if (failure === "request") world.stored.requestDigest = "c".repeat(64)
+        if (failure === "case") world.stored.caseRef.version++
+        if (failure === "result") world.stored.resultDigest = "d".repeat(64)
+        if (failure === "source") world.controls.allowed = false
+      }
+      if (failure === "source") world.controls.sample = corrupt
+      else world.controls.lookup = corrupt
+      expect((await world.port.evaluateAndStore(world.request, world.caseRef, world.context)).status).not.toBe("ok")
+      expect(injected).toBe(true)
+      expect(world.calls).toMatchObject({ evaluate: 0, write: 0, bind: 0 })
+      if (failure === "source") expect(world.calls.samples).toBe(1)
+    } finally { world.close() }
+  }
+})
+
+test("the final bound callback cannot change kind, binding or lease after successful validation", async () => {
+  const control = await fixture()
+  let finalCall = 0
+  try {
+    expect((await control.port.evaluateAndStore(control.request, control.caseRef, control.context)).status).toBe("ok")
+    finalCall = control.calls.bound
+    expect(finalCall).toBeGreaterThan(0)
+  } finally { control.close() }
+  for (const field of ["kind", "binding", "binding-reference", "lease"] as const) {
+    const world = await fixture()
+    let injected = false
+    try {
+      world.controls.bound = (trusted, call) => {
+        if (call !== finalCall) return
+        injected = true
+        if (field === "kind") Object.assign(trusted, { kind: "native" })
+        if (field === "binding") Object.assign(trusted, { binding: { ...trusted.binding, accessRevision: "changed-after-validation" } })
+        if (field === "binding-reference") Object.assign(trusted, { binding: { ...trusted.binding } })
+        if (field === "lease") Object.assign(trusted, { lease: {} })
+      }
+      const result = await world.port.evaluateAndStore(world.request, world.caseRef, world.context)
+      expect(injected).toBe(true)
+      expect(world.calls.bound).toBe(finalCall)
+      expect(result).toEqual({ status: "denied", reason: "sensitivity-authority-changed" })
+      expect(result).not.toHaveProperty("value")
+      expect(world.calls).toMatchObject({ evaluate: 0, write: 0, bind: 0 })
+    } finally { world.close() }
+  }
+})
+
+test("a bound retry reobserves the operation key after the final reader and a revoked UI admission before it validates", async () => {
+  const control = await fixture()
+  let finalCall = 0
+  try {
+    expect((await control.port.evaluateAndStore(control.request, control.caseRef, control.context)).status).toBe("ok")
+    finalCall = control.calls.bound
+    expect(finalCall).toBeGreaterThan(0)
+  } finally { control.close() }
+  for (const failure of ["final-key", "revoked-ui-admission"] as const) {
+    const world = await fixture()
+    let injected = false
+    try {
+      if (failure === "final-key") world.controls.bound = (_trusted, call) => {
+        if (call !== finalCall) return
+        injected = true
+        world.controls.key = "changed-after-final-bound-read"
+      }
+      else world.controls.beforeBound = (call) => {
+        if (call !== finalCall) return
+        injected = true
+        world.close()
+      }
+      const result = await world.port.evaluateAndStore(world.request, world.caseRef, world.context)
+      expect(injected).toBe(true)
+      expect(world.calls.bound).toBe(finalCall)
+      expect(result).toEqual({ status: "denied", reason: failure === "final-key" ? "operation-identity-changed" : "current-bound-reader-denied" })
+      expect(result).not.toHaveProperty("value")
+      expect(world.calls).toMatchObject({ evaluate: 0, write: 0, bind: 0 })
+    } finally { world.close() }
+  }
+})

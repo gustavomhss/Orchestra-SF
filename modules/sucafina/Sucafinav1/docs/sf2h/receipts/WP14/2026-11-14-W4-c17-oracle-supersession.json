@@ -1,0 +1,484 @@
+{
+  "schema": "sf2h.wp14.w4-c17-oracle-supersession.v1",
+  "created_at": "2026-11-14T11:40:51.931463+00:00",
+  "author": "/root/review_memory; test amendment explicitly authorized by /root after read-only semantic triage",
+  "status": "IMPLEMENTED_NOT_RUN",
+  "acceptance": "NOT_DECLARED",
+  "working_head": "c21a990c57b714cd60bb7f915beb6be51acbafdb",
+  "base_candidate": "c21a990c57b714cd60bb7f915beb6be51acbafdb",
+  "tested_commit_for_new_bytes": null,
+  "supersession": {
+    "mode": "Append-only override for one test file and two oracle interpretations; no frozen receipt or primary manifest rewritten.",
+    "primary_w4_manifest": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP14/2026-11-14-W4-reconciliation.json",
+      "git_blob": "9be6a78eb28859c98579e439bc6e631158c295a7",
+      "sha256": "f4782d6991ba89d9f80b0d2c1ec681cc48c5c92fb72f673a4c997324f22a3075",
+      "bytes": 17463
+    },
+    "file_entry_overridden": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+    "previous_file": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+      "git_blob": "929c98f8432104ebe14e1d9cfabcea99ba0dc3e1",
+      "sha256": "80362c71fee87db87bf4ff47f02b828ddc4a529459029db06829b15b529d9f04",
+      "bytes": 44302
+    },
+    "replacement_file": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+      "git_blob": "7f9b392ff55cf0193fbfa7542a0f4eaea4070746",
+      "sha256": "f892632e941d97ba5aa104570ae8cc7f1adc257f1361e4e66405b1347016a869",
+      "bytes": 51461
+    },
+    "previous_independent_review": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP14/2026-11-14-W4-independent-review.json",
+      "git_blob": "89f10b6a44f12a8e2e299fb2cffc20bd4f87646f",
+      "sha256": "bb34de36eb9505a50aac3c85d45a8c729e6dc1b8c6fdbfc3fd20624dbca30fda",
+      "bytes": 30627
+    },
+    "superseded_claims": [
+      "Documents test suffix unchanged and private undefined assertion preserved described the earlier frozen W4 file only.",
+      "OPEN_FOREIGN_HOST_FINDING for the private readOriginal return is reclassified as a test oracle mismatch after canonical/internal-contract review; it did not demonstrate public projection leakage.",
+      "The original expectation that settled recovery must be unavailable is replaced by prior-receipt recovery plus a distinct pending-event rejection counterproof."
+    ],
+    "external_finding_reference": "https://github.com/gustavomhss/Orchestra-SF/pull/32#issuecomment-6876102932",
+    "external_finding_communication": "This receipt records the corrected interpretation; it does not claim an external comment was edited or closed."
+  },
+  "canonical_sources": {
+    "campaign": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/campaign.json",
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "git_blob": "71b56906f8bb190c4d568f60c7511ce1ff63d5f3",
+      "sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+      "bytes": 1503706
+    },
+    "agents_atlas_mcp": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/AGENTS-ATLAS-MCP.md",
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "git_blob": "236aaddcc3fddc766190877e4550a1b8cee7d083",
+      "sha256": "83f08c430855307f8fe9307d947c028c31c6aaa6cf0867345088da1be8019f85",
+      "bytes": 10615,
+      "lines": [
+        69,
+        75
+      ],
+      "current_projection_rule_line": 73
+    },
+    "contracts": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/contracts.json",
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "git_blob": "6d038e3218fb74be19314ee61ea88cf963e41071",
+      "sha256": "e9ff1e927e5850da5af156419c6f9a1fcbdc4cec3287fe6a5a5f0b9534d10f44",
+      "bytes": 62685,
+      "c17_pointer": "/16",
+      "projection_rule": {
+        "pointer": "/16/content/8",
+        "text": "Antes de recall, BCS resolve casos e cada dependência no escopo atual; referência inacessível/revogada/substituída suprime o registro inteiro, inclusive resumo/título/contagens. Versão histórica só é servida como historical se a fonte histórica continua autorizada, com diferenças atuais explícitas. Busca não adivinha owner; args owner/kind/rawAtlasQuery são recusados."
+      },
+      "ledger_rule": {
+        "pointer": "/16/content/3",
+        "text": "Ledger C09 é oficial. Caso/resultado aceito gera sourceEventId e item pending de projeção. Atlas é derivado: scanner/commit falho mantém evento oficial e projeção pending/refused; recuperação não inventa memória pronta."
+      },
+      "protected_namespace": {
+        "pointer": "/16/content/10",
+        "text": "Persistência reside apenas no namespace protegido __sfProductV1.atlas de Snapshot dashboard existente. Todas as entradas passam por port WP10; namespace nunca vai a JSON business exports, logs/git, browser snapshots, prompts sem ACL ou mensagens de erro. Auditoria pública usa ids/digests/estado, não conteúdo sensível."
+      },
+      "same_key_recovery": {
+        "pointer": "/16/transaction_sequence/5",
+        "human_step": 6,
+        "text": "6 In the same snapshot persist event + BusinessMemoryEnvelope + sourceEventId->payloadDigest idempotency entry + outbox result. Same key/digest returns prior receipt; changed digest conflicts."
+      },
+      "new_append_failure": {
+        "pointer": "/16/transaction_sequence/6",
+        "human_step": 7,
+        "text": "7 callback returns commit:true only for admitted stable work; await durable transaction. Only then report committed. Commit/cancellation failure is unavailable and nothing new survives restart."
+      },
+      "current_read_gate": {
+        "pointer": "/16/transaction_sequence/7",
+        "human_step": 8,
+        "text": "8 Read/recall obtains a fresh snapshot, resolves current access/source tokens, builds authorized store before createMemoryRead, explicitly binds owner/kind and validates refs again before egress. No old request credential is revived."
+      }
+    },
+    "am05": {
+      "source": {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/campaign.json",
+        "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "git_blob": "71b56906f8bb190c4d568f60c7511ce1ff63d5f3",
+        "sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+        "bytes": 1503706
+      },
+      "pointer": "/execution_proofs/4",
+      "checks": [
+        "Resolver o import @orchestra/atlas-boundary/business-memory-ports e instrumentar createMemoryEmit, createMemoryRead e DurableMemory com o digest de engine/boundary. Ler apenas o ledger SF não passa.",
+        "Resolver BusinessEvidenceRef para documento/trecho/hash, registro/encarnação/versão e cálculo/recibo. Fonte ausente ou referência invalidada devem ser reconhecidas.",
+        "Exercer append, commit, read, reinício e nova leitura. A entrada autorizada e o contexto original devem persistir. Append ainda sem commit não aparece como sucesso.",
+        "Dois atores com o mesmo perfil, owner omitido ou forjado, sessão/caso incorretos e um canary privado não ampliam o acesso.",
+        "Revalidar e invalidar após revogação ou mudança de encarnação. O precedente recuperado explica pertinência e diferenças atuais.",
+        "Registrar binary path e versão do scanner real. Exercitar clean, secret-canary, timeout e ausência. Hit ou indisponibilidade não fazem append; indisponibilidade retorna scanner-unavailable. Não aceitar scanner simulado como prova real.",
+        "Falha de commit ou resposta perdida preserva consistência do log/ledger e retomada idempotente. A função síncrona append não significa que o commit assíncrono terminou.",
+        "Empacotamento: business-memory-ports tem factories reais e zero imports de spawning; scanner vem de native-memory já admitido. Verificar AST, a aresta external exata, quatro digests gerados, exports bound preservados e check:spawn-imports do candidato com guard/allowlist inalterados."
+      ],
+      "new_status": "NOT_RUN"
+    },
+    "am05_integrated": {
+      "source": {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/agents-atlas-mcp.json",
+        "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "git_blob": "d7ceaf88735b59886d5bbc9fbca7e4382de98a81",
+        "sha256": "578a51c06996c50df31e50d2e96f38d7cc936e0b59911affa6f3998456cdf91f",
+        "bytes": 179083
+      },
+      "pointer": "/integrated_proofs/4",
+      "relevant_positive": "Dois writes concorrentes/cap e retry após resposta perdida têm estado serializado sem duplicação; read após processo novo conserva evento.",
+      "relevant_negative": "Falha/cancelamento antes do commit deixa zero evento após restart; import mesma ID/nova encarnação invalida ref; revogação de um campo suprime registro inteiro."
+    }
+  },
+  "runtime_contracts_inspected_unchanged": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+      "git_blob": "91e8bc8f5d80f83b7756b4647c790cc5e5936d59",
+      "sha256": "62e0ab3ada8792c84b91c2e2b6ef9181fb9290292277485e7b18176090287a00",
+      "bytes": 34119
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "git_blob": "f6cfe69432142cdc4063494522627d6d3d50c5d8",
+      "sha256": "0dd478d718287fb68f3879574074abdc0d5e7c3381d47c23b6468292ffc4383d",
+      "bytes": 42415
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/capabilities.ts",
+      "git_blob": "eb14812f4e3e6545b9732a3930da6c2cececa81c",
+      "sha256": "530e5f1a44ee48e17c7aedf9a9ca1bce47b1b7ef80cb18547ca9d1e52dbd1e5f",
+      "bytes": 10922
+    }
+  ],
+  "production_pending_producer_unchanged": {
+    "path": "modules/sucafina/Sucafinav1/product/integration/ledger-outbox.ts",
+    "git_blob": "393aebdac3b6b5c80b41a1ca73227413563ad440",
+    "sha256": "125f1512889ab3403581536e46a0aa69f09f714258cab41e405a14813c407ac8",
+    "bytes": 2434
+  },
+  "continuity_and_document_source_unchanged": {
+    "path": "modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts",
+    "git_blob": "e4e648feecb4e12ace3da41e1b91c45b527c7247",
+    "sha256": "9efb6954aea16338a03ee5119561738814e184024583502b4bcb71b5070c69a2",
+    "bytes": 26975
+  },
+  "runtime_route_review": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+      "lines": [
+        32,
+        75,
+        101,
+        121,
+        123,
+        135,
+        187,
+        249,
+        251,
+        256
+      ],
+      "finding": "Private capture validates current case membership/binding/capture integrity; settled replay reauthorizes current case and durable receipt; new append requires current source; recall filters all dependencies before createMemoryRead."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "lines": [
+        52,
+        84,
+        109,
+        138,
+        283,
+        291,
+        349,
+        362
+      ],
+      "finding": "Public BCS resolution strips unavailable projection/currentRef; public BCS recall delegates the guarded memory reader and re-resolves evidence. Its emit wrapper does not independently resolve sources before settled recovery; the writer owns the distinction."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/capabilities.ts",
+      "lines": [
+        45,
+        51,
+        74,
+        99
+      ],
+      "finding": "Public sf_evidence_get and sf_decision_recall do not expose readOriginal. The ui helper only supplies an actual grant; direct callbacks are not proof that a C16 public handler was dispatched."
+    }
+  ],
+  "w3_failure_preserved": {
+    "run_id": 43586171924,
+    "job_id": 132421002717,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43586171924/job/132421002717",
+    "snapshot": "51bc38f99d82ccf14efef91fa721ff5c5cfd053b",
+    "verdict": "FAIL",
+    "pass": 53,
+    "fail": 2,
+    "tests": 55,
+    "files": 13,
+    "assertions": 681,
+    "duration_seconds": 63.2,
+    "omni": {
+      "verdict": "PASS",
+      "spawns": 5,
+      "delegated": 0
+    },
+    "log": {
+      "file": "/workspace/scratch/b7461e6926e7/w3-job-132421002717.log",
+      "sha256": "6ca3f0a6e0469e3ba3def5ec8422783cb650b7c003f798246c3cb8b5002f5050"
+    },
+    "original_failure_line": 451,
+    "frozen_w4_line_before_amendment": 459,
+    "result_not_rewritten": true,
+    "later_oracles_were_not_observed": [
+      "revoked recall",
+      "repeated settled emit",
+      "post-revocation durable equality"
+    ],
+    "other_w3_failure": "Authorized restart unavailable remains a prior observed failure. W4 stable-Request fixture fix still requires hosted validation."
+  },
+  "oracles": [
+    {
+      "id": "C17-PRIVATE-CAPTURE",
+      "old_expected": "readOriginal(caseRef, documentRef.refDigest, call) === undefined after blob replacement",
+      "w3_observed": "Private readOriginal returned the original document BusinessEvidenceRef; current BCS resolution already withheld currentRef and authorizedProjection.",
+      "revised_expected": "Private callback returns the exact immutable documentRef under current case authority. It grants no current source or recalled projection.",
+      "reason": "atlas-memory.ts251-256 identifies a private continuity callback; source-access.ts153-157 pairs that reference with an independent current source read. Canonical C17 governs public resolution/recall withdrawal, not deletion of protected historical metadata.",
+      "new_execution": "NOT_RUN",
+      "anchor": 475
+    },
+    {
+      "id": "C17-SETTLED-RECOVERY",
+      "old_expected": "Repeating the previously committed event through product.context.emitFromLedger after blob replacement returns unavailable with no eventId/recordDigest.",
+      "w3_observed": "NOT_REACHED; preceding private-capture assertion stopped the test.",
+      "revised_expected": "Same event key/digest returns exactly the old receipt with status already-committed. Atlas/outbox contents and versions remain equal to the prior durable snapshot.",
+      "reason": "C17 transaction_sequence[5] is human step 6 and explicitly returns the prior receipt for same key/digest. BCS130-138 delegates the writer after current call/scope/digest validation; Atlas101-121 reauthorizes settled recovery separately from new append.",
+      "new_execution": "NOT_RUN",
+      "anchor": 479
+    },
+    {
+      "id": "C17-CURRENT-RECALL",
+      "old_expected": "Revoked memory.recall is unavailable.",
+      "w3_observed": "NOT_REACHED after private-capture failure. Positive actual Atlas read and current document withdrawal were observed before it.",
+      "revised_expected": "Retain the memory.recall refusal and add public BusinessContextService.recall refusal after a successful BCS positive control. C08 proves the case has only the previous settled item before either refusal, so a newly pending outbox cannot explain the result.",
+      "reason": "C17 content[8], transaction_sequence[7], AGENTS-ATLAS-MCP.md73 and AM05 current-access requirements withdraw the entire projection.",
+      "new_execution": "NOT_RUN",
+      "anchor": 470
+    },
+    {
+      "id": "C17-NEW-APPEND",
+      "old_expected": "No separate new pending event was exercised after source loss.",
+      "w3_observed": "NOT_PRESENT",
+      "revised_expected": "After source loss and after recall refusal, authenticated C08 commits a distinct ledger event and production enqueueSfLedgerEvent pending item. Its BCS emit returns unavailable with sourceEventId equal to the new event and no eventId, recordDigest or committedRevision. Full Atlas, prior settled receipt, new pending item, case and cases/atlas/outbox versions remain identical to the pre-emission readback.",
+      "reason": "C17 canonical-ledger/outbox rule and new-append transaction sequence; retained source bytes are not current authority for a new projection. The negative uses the real writer and real C08 producer, with no mocked result or artificial settlement.",
+      "new_execution": "NOT_RUN",
+      "anchor": 530
+    }
+  ],
+  "line_anchors": {
+    "existing_real_ledger_premise": 385,
+    "bcs_positive": 449,
+    "blob_replacement": 454,
+    "document_withheld": 459,
+    "settled_only_before_recall": 464,
+    "memory_recall_refusal": 469,
+    "bcs_recall_refusal": 470,
+    "event_withheld": 471,
+    "private_capture_retained": 475,
+    "settled_recovery": 479,
+    "old_state_unchanged": 484,
+    "new_pending_premise": 488,
+    "pending_c08_transaction": 493,
+    "pending_committed_readback": 520,
+    "new_append_refusal": 530,
+    "failed_append_state_unchanged": 540
+  },
+  "fixture_boundary": {
+    "actual": [
+      "Local credentials and UI admission",
+      "C08 authenticated state read/transaction and grants",
+      "Real document discovery/extraction/human confirmation and blob mutation",
+      "Production enqueueSfLedgerEvent",
+      "Production BCS/Atlas writer/reader and existing named gitleaks scanner",
+      "Persisted Atlas/outbox readback"
+    ],
+    "explicit_premise": "Both accepted-analysis ledger events are test premises committed through real C08, not witnesses of model/analysis acceptance. The new event records loss of source validity and references the same original document; it supplies no fabricated calculation or domain result.",
+    "no_new_grants_or_mocked_results": true,
+    "asset_ingress_scan_substitution": "Existing WP06 fixture substitution retained; Atlas scanner remains real.",
+    "native_admission": "ABSENT_IN_THIS_DOCUMENT_FIXTURE; no C16 native or cross-case acceptance claimed.",
+    "public_scope_of_new_positive": "BusinessContextService.recall invoked under the real UI grant. This is not a new end-to-end C16 dispatcher proof."
+  },
+  "preservation": {
+    "first_test_and_imports_bytewise": {
+      "git_blob": "5e923c902722993521a8a58ce755986ae9483dc3",
+      "sha256": "deb94d9d0bd52f90065f5d28033c29a8521cfaf89095ce6a036221544ace3d3e",
+      "bytes": 23745,
+      "unchanged_bytes": 23745
+    },
+    "existing_documents_setup_through_positive_atlas_read_bytewise": {
+      "unchanged_prefix_bytes": 42556,
+      "git_blob": "71b61fca332e87635d400aceb718090ee7c34b2c",
+      "sha256": "70d13089d2fea6c8470faee85d7394a415bd498cbd35d2475e0700d63238a562",
+      "bytes": 42556
+    },
+    "other_w4_files_and_R1_to_R5_products_unchanged": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decision-memory/atlas-projection.ts",
+        "git_blob": "4ffa4bffc3e3fe3bfffd3a047f1e11c473697e36",
+        "sha256": "8dded53bbd11d87d53a2e080505da8bd0a468c08e24693dfbd72fd149748be45",
+        "bytes": 8580
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp14/atlas-projection.test.ts",
+        "git_blob": "c2efe0e5054b4a33a35daae1d5353ff730434577",
+        "sha256": "6688fd500edc16659b7ba91f92e91468c2b5365a6b92548a1cec698c88777c92",
+        "bytes": 18516
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp14/invalidation.test.ts",
+        "git_blob": "90e6dd5f1b87b03f6fe2440703443b64507ed375",
+        "sha256": "a50f9a1ab48cf6f7c6ec3dce96437fb517d8a8fe36bd2e7d94f15de8e82223da",
+        "bytes": 18685
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp14/outcome-signals.test.ts",
+        "git_blob": "1c33f4da2a87b25ae8b22cf181c755ee6fa60bc7",
+        "sha256": "750f2ae265738e534cf34f594cffd19e6181dcf18f202ccd1cc4fde586b25fa4",
+        "bytes": 19481
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp14/recall.test.ts",
+        "git_blob": "789bd248dff04f61119fd7bef5108754f14af423",
+        "sha256": "5d0afdb387d0ee5095b96edc5227c4ec6b3f614796f13506b6ff0f3c79ede1f8",
+        "bytes": 27289
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp14/domain-outcome.test.ts",
+        "git_blob": "3510dac982bc4e4dafe412b19f1e0866fc569698",
+        "sha256": "b8270aa1f819dff596241372b2ad7b3f7be82e034377637a4c1eac69570c759c",
+        "bytes": 21741
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp14/signal-registry.test.ts",
+        "git_blob": "8aa8e69757b14fb1ef7b4173b974c9a9204917c2",
+        "sha256": "a7d533c1810722198eb1990759816070ba685e8736dac27ebaccfe687d23d84a",
+        "bytes": 31594
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp14/atlas-restart-reader.ts",
+        "git_blob": "6194f415573636efd47751f977cd157c9396f17d",
+        "sha256": "509fc4423f0d74c130a5ead0c8744548f578109a6c50ac3095089f5e6dc801d4",
+        "bytes": 11421
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decision-memory/invalidation.ts",
+        "git_blob": "3bafcac1d0114eff9cd6869fd8040a9fe414ed7f",
+        "sha256": "b060837431cd1b156c2cdf2d8ed7558b87b8422521219cdafb9f1f6f05832535",
+        "bytes": 9016
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decision-memory/materiality.ts",
+        "git_blob": "1c586d321cf10bdaeccd95b4ac2a2100b439fe7f",
+        "sha256": "b1924141528e52b012b2886f1da77dbd55307216101c62dc8f33bf106e005f73",
+        "bytes": 14896
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decision-memory/outcome.ts",
+        "git_blob": "97d23e90f627472e525c50288fdf4163e3cc3c54",
+        "sha256": "df5e066b8e6f43d9c93a12e56037aecb7531936e63f1f786518fec6112e191b6",
+        "bytes": 7422
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decision-memory/outcome-selection.ts",
+        "git_blob": "790e7c98820df61306ad67bd5897b1301118d335",
+        "sha256": "90744777637dc32595b280e8c34e52f27a770c979f5f6e40d8442c256daf1a9c",
+        "bytes": 10547
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decision-memory/signal-list.ts",
+        "git_blob": "c4a1d8d1f4e540c41c3e7d09efb92bb003ab6d8b",
+        "sha256": "1c20921bef733f96f1dbf6c7df20869150e81b8f35c4dde36676224880df4f5b",
+        "bytes": 11275
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decision-memory/signal-registry.ts",
+        "git_blob": "b6edcf44f55923cbaa764ff9374ce127145b0f9e",
+        "sha256": "c2678a5235e6c550e12ecb4ac2a38f87af328d145b28c7483204d0e7b4e1340b",
+        "bytes": 23875
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decision-memory/signal-work.ts",
+        "git_blob": "3cc6b0ae5fd75ce84724eeafc053264fc9370740",
+        "sha256": "1e1ee1e10529b1d71bbebaf00af0abb7b44f6dea06a2915b46f36466e4702564",
+        "bytes": 16698
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decision-memory/recall.ts",
+        "git_blob": "2d8524b42448ea63a7dd9ab0e9337c90540dc383",
+        "sha256": "3c8fcffff8cc2d96e8e8fe509b4bc4dd0894a6805eaecde6427ed015cbaa343d",
+        "bytes": 13904
+      }
+    ],
+    "frozen_receipts_unchanged": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP14/2026-11-14-W3-reconciliation.json",
+        "git_blob": "87a7404baaa8738d703918f78c9901dad158473b",
+        "sha256": "b51b8f99969a26399126b313bdca4058efff0619425401d1f160cfb9ec5365cc",
+        "bytes": 75480
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP14/2026-11-14-W3-latest-independent-review.json",
+        "git_blob": "6b07c533d276914198f259d516d340e743d7f7e9",
+        "sha256": "5a193a632bfad66cafa15a0893cc83d410eb25ae81bf6e7f6e6535912fbe3d7f",
+        "bytes": 142815
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP14/2026-11-14-W3-latest-independent-review.md",
+        "git_blob": "f182b409c8f999a2d9fa682ad375f9d9e186068a",
+        "sha256": "7a1668725b36eea62a2f40e4f029aa52158b2b8e0e2abc4bdc525d0ebd949d55",
+        "bytes": 72705
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP14/2026-11-14-W4-reconciliation.json",
+        "git_blob": "9be6a78eb28859c98579e439bc6e631158c295a7",
+        "sha256": "f4782d6991ba89d9f80b0d2c1ec681cc48c5c92fb72f673a4c997324f22a3075",
+        "bytes": 17463
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP14/2026-11-14-W4-independent-review.json",
+        "git_blob": "89f10b6a44f12a8e2e299fb2cffc20bd4f87646f",
+        "sha256": "bb34de36eb9505a50aac3c85d45a8c729e6dc1b8c6fdbfc3fd20624dbca30fda",
+        "bytes": 30627
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP14/2026-11-14-W4-independent-review.md",
+        "git_blob": "53fea2218ca17ecd1f4793f56fde294670446607",
+        "sha256": "f8e18b519c60e5cc87694391dc543fa527b7de155dacbddb0a59c923bf2c7122",
+        "bytes": 11185
+      }
+    ],
+    "deadlines_ms": {
+      "parent_test": 180000,
+      "child_process": 120000,
+      "child_cooperative_cancel": 90000
+    },
+    "authority_scanner_and_outsider_restart_tests": "PRESERVED; first scenario prefix and other fixture file remain exact."
+  },
+  "verification": {
+    "local_product_tests": "NOT_RUN",
+    "local_typecheck": "NOT_RUN",
+    "local_build_or_guards": "NOT_RUN",
+    "hosted_new_bytes": "NOT_RUN",
+    "diff_check": {
+      "command": "git diff --check -- modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+      "exit_status": 0,
+      "scope": "Whitespace only; not product execution"
+    },
+    "root_patch_review": "Root reported no concrete finding in the amendment and requested final hashes; final publication/candidate gate remains root-owned."
+  },
+  "remaining_gates": [
+    "Hosted WP14 test run and typecheck for these exact amended bytes",
+    "Prior W3 restart failure must be checked with W4 Request identity fix",
+    "Full canonical AM05 and public host/scanner/packaging acceptance remain separate, not waived by this test amendment",
+    "Root review/publication of the final one-file override and this append-only receipt"
+  ]
+}

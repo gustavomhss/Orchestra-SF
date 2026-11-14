@@ -10,6 +10,7 @@ import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { SfProductStatePort } from "../contracts/state.ts"
 
 export type SfDocumentAssetCatalogEntry = { schema: "sf-asset-v1"; documentId: string; surface: "dashboard" | "procurement"; assetId: string; incarnation: string; revision: number; blobDigest: string }
+export type SfDocumentAssetSelection = { surface: "dashboard" | "procurement"; assetId: string; expected?: { incarnation: string; revision: number; request?: { recordId: string; incarnation: string; revision: number } } }
 
 export function createSfDocumentBytePort(input: { host: DomainPortHost; assets: AssetPersistence; services: AssetServices; state: SfProductStatePort; maxBytes: number }): SfDocumentReadPort {
   async function read(documentRef: string, context: TrustedDomainContext): ReturnType<SfDocumentReadPort["read"]> {
@@ -53,7 +54,7 @@ export function createSfDocumentBytePort(input: { host: DomainPortHost; assets: 
 }
 
 /** Registers an existing authorized asset. The catalog is metadata; it never grants source access. */
-export async function admitSfDocumentAsset(selection: { surface: "dashboard" | "procurement"; assetId: string }, context: TrustedDomainContext, input: { host: DomainPortHost; assets: AssetPersistence; services: AssetServices; state: SfProductStatePort; maxBytes: number; operationIdentity: (context: TrustedDomainContext) => string | undefined }): Promise<PortResult<SfDocumentAssetCatalogEntry>> {
+export async function admitSfDocumentAsset(selection: SfDocumentAssetSelection, context: TrustedDomainContext, input: { host: DomainPortHost; assets: AssetPersistence; services: AssetServices; state: SfProductStatePort; maxBytes: number; operationIdentity: (context: TrustedDomainContext) => string | undefined }): Promise<PortResult<SfDocumentAssetCatalogEntry>> {
   const request = input.host.requestFor(context)
   const operationId = input.operationIdentity(context)
   if (!request || !operationId || !selection.assetId || !Object.is(input.host.persistence, input.assets) || !Number.isSafeInteger(input.maxBytes) || input.maxBytes < 1 || !(await input.host.revalidate(context))) return { status: "denied", reason: "document-access-unavailable" }
@@ -69,6 +70,9 @@ export async function admitSfDocumentAsset(selection: { surface: "dashboard" | "
     if (!source || !asset || typeof asset.bytes !== "number" || asset.bytes < 1 || asset.bytes > input.maxBytes || (asset.type !== "text/plain" && asset.type !== "application/pdf" && asset.type !== "application/vnd.openxmlformats-officedocument.wordprocessingml.document")) return { commit: false, value: { status: "unavailable", reason: "document-unavailable" } }
     const link = assetLink(snapshot, actor, environment, input.services, selection.assetId)
     if (!link.ok || !("query" in link)) return { commit: false, value: { status: "denied", reason: "document-access-unavailable" } }
+    const expected = selection.expected
+    const requestSource = expected?.request ? sfSourceIdentity(snapshot, "procurement-request", expected.request.recordId) : undefined
+    if (expected && (source.incarnation !== expected.incarnation || source.version !== expected.revision || (expected.request && (selection.surface !== "procurement" || asset.record !== expected.request.recordId || (asset.kind !== "quote" && asset.kind !== "signed-po") || requestSource?.incarnation !== expected.request.incarnation || requestSource.version !== expected.request.revision)))) return { commit: false, value: { status: "stale", reason: "document-selection-changed" } }
     const response = await downloadAsset(snapshot, blobs, actor, environment, input.services, new URLSearchParams(link.query))
     if (!response.ok) return { commit: false, value: { status: "unavailable", reason: "document-unavailable" } }
     const bytes = new Uint8Array(await response.arrayBuffer())
@@ -81,6 +85,8 @@ export async function admitSfDocumentAsset(selection: { surface: "dashboard" | "
   const saved = await input.state.transaction(request, { namespace: "documents", expectedStorageVersion: prior.status === "ok" ? prior.storageVersion : 0, domainSurface: candidate.value.surface, idempotencyKey: operationId, commandDigest: digestSfValue({ action: "admit-document", entry: candidate.value }), targetRef: candidate.value.documentId, targetIncarnation: candidate.value.incarnation }, async (state, authority, snapshot) => {
     const source = sfSourceIdentity(snapshot, "document-asset", candidate.value.assetId)
     if (authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion || !source || source.incarnation !== candidate.value.incarnation || source.version !== candidate.value.revision) return { commit: false, value: null as SfDocumentAssetCatalogEntry | null }
+    const requestSource = selection.expected?.request ? sfSourceIdentity(snapshot, "procurement-request", selection.expected.request.recordId) : undefined
+    if (selection.expected?.request && (requestSource?.incarnation !== selection.expected.request.incarnation || requestSource.version !== selection.expected.request.revision)) return { commit: false, value: null as SfDocumentAssetCatalogEntry | null }
     // Nested reads use the same SQLite transaction and cannot acquire a separate write lock.
     const current = await input.assets.transaction(candidate.value.surface, async (locked, blobs) => {
       const principal = await input.host.authenticate(request, { surface: candidate.value.surface, roleMap: roleMap(locked, candidate.value.surface) })

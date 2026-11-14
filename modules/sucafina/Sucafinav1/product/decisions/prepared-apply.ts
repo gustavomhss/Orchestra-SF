@@ -5,6 +5,9 @@ import type { DomainPortHost, PortResult, PreparedApplyPort, PreparedDomainMutat
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { SfProductStatePort } from "../contracts/state.ts"
 import type { Actor, Environment, Snapshot } from "../../runtime/contract.ts"
+import { isReviewDigest, receiptProofKey, receiptProofTransactionKey, receiptReviewBinding, type ReviewDigestFor } from "./receipt-review-binding.ts"
+
+type PreparedOutcome = CommandReceipt | { existing: CommandReceipt } | { failure: "unavailable" | "conflict" } | null
 
 /** The callbacks resolve current host authority and domain data; none are supplied by a capability caller. */
 export function createSfPreparedApply(input: {
@@ -21,6 +24,7 @@ export function createSfPreparedApply(input: {
   environment: (context: TrustedDomainContext) => Environment
   createId: () => string
   now: () => string
+  reviewDigestFor: ReviewDigestFor
 }): PreparedApplyPort {
   const port: PreparedApplyPort = {
     readReceipt: async (incoming, context) => {
@@ -53,22 +57,34 @@ export function createSfPreparedApply(input: {
       const decision = current.value
       const change = decision?.preparedChanges.find((item) => item.id === request.changeId && item.choiceId === request.choiceId)
       if (!decision || decision.incarnation !== request.caseRef.incarnation || decision.version < request.caseRef.version || !decision.participants.includes(context.binding.principalRef) || !decision.choices.some((choice) => choice.id === request.choiceId) || !change || (decision.version !== request.caseRef.version && !change.receipt)) return { status: "stale", reason: "case-changed" }
-      if (!await input.authorizeCase(decision, context).catch(() => false) || !await input.confirmHuman(request, change, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "human-authority-required" }
-      if (change.receipt) {
-        const prior = await port.readReceipt({ surface: change.target.surface, targetRef: change.target.id, targetIncarnation: change.target.incarnation, idempotencyKey: change.idempotencyKey, commandDigest: change.operation.commandDigest }, context)
-        if (prior.status !== "ok") return prior
-        if (prior.value.state !== "found" || digestSfValue(prior.value.receipt) !== digestSfValue(change.receipt)) return { status: "unavailable", reason: "authoritative-receipt-unavailable" }
-        const again = await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? state.cases[request.caseRef.id] : undefined).catch(() => undefined)
-        const currentChange = again?.status === "ok" ? again.value?.preparedChanges.find((item) => item.id === change.id && item.choiceId === request.choiceId) : undefined
-        if (!again || again.status !== "ok" || !again.value || again.value.incarnation !== decision.incarnation || again.value.version !== decision.version || !again.value.participants.includes(context.binding.principalRef) || !currentChange || digestSfValue(currentChange) !== digestSfValue(change) || !await input.authorizeCase(again.value, context).catch(() => false) || !await input.confirmHuman(request, currentChange, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "receipt-authority-changed" }
-        return { status: "ok", value: prior.value.receipt }
+      if (!await input.authorizeCase(decision, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "human-authority-required" }
+      const reviewDigest = input.reviewDigestFor(context, request, change)
+      if (!isReviewDigest(reviewDigest)) return { status: "needs-input", reason: "review-proof-required" }
+      const binding = receiptReviewBinding(change, reviewDigest)
+      const recorded = await input.state.read(source, "receipts", (state, authority) => {
+        if (!sameAuthority(authority, context)) return undefined
+        const prior = state.transactions[receiptProofTransactionKey(authority.principalRef, change.target.id, change.idempotencyKey)]
+        const matching = Object.values(state.receipts).filter((item) => item.surface === change.target.surface && item.idempotencyKey === change.idempotencyKey && item.targetIncarnation === change.target.incarnation && item.principalRef === authority.principalRef)
+        return { prior, matching }
+      }).catch(() => undefined)
+      if (!recorded || recorded.status !== "ok" || !recorded.value || recorded.value.matching.length > 1) return { status: "unavailable", reason: "receipt-unavailable" }
+      const prior = recorded.value.prior
+      const stored = recorded.value.matching[0]
+      if (prior && prior.commandDigest !== binding) return { status: "conflict", reason: "idempotency-content-changed" }
+      if (prior && stored && digestSfValue(prior.value) === digestSfValue(stored)) {
+        if (change.receipt && digestSfValue(change.receipt) !== digestSfValue(stored)) return { status: "unavailable", reason: "receipt-identity-collision" }
+        if (!await input.authorizeReceipt(stored, { surface: change.target.surface, targetRef: change.target.id, targetIncarnation: change.target.incarnation, idempotencyKey: change.idempotencyKey, commandDigest: change.operation.commandDigest }, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "receipt-access-unavailable" }
+        return { status: "ok", value: structuredClone(stored) }
       }
+      if (prior || stored) return { status: "unavailable", reason: "review-proof-unbound" }
+      if (change.receipt) return { status: "unavailable", reason: "authoritative-receipt-unavailable" }
+      if (!await input.confirmHuman(request, change, context).catch(() => false)) return { status: "denied", reason: "human-authority-required" }
       if (change.state !== "planned") return { status: "conflict", reason: "change-not-applicable" }
       const receipts = await input.state.read(source, "receipts", (_state, authority) => sameAuthority(authority, context)).catch(() => undefined)
       if (!receipts || receipts.status !== "ok" || !receipts.value) return { status: "unavailable", reason: "receipt-unavailable" }
       const id = input.createId()
       if (!id.trim()) return { status: "unavailable", reason: "receipt-identity-unavailable" }
-      const applied = await input.state.transaction(source, { namespace: "receipts", domainSurface: change.target.surface, expectedStorageVersion: receipts.storageVersion, additionalNamespaces: [{ namespace: "cases", expectedStorageVersion: current.storageVersion }], targetRef: change.target.id, targetIncarnation: change.target.incarnation, idempotencyKey: `prepared:${change.idempotencyKey}`, commandDigest: change.operation.commandDigest }, async (state, authority, snapshot) => {
+      const applied = await input.state.transaction<PreparedOutcome>(source, { namespace: "receipts", domainSurface: change.target.surface, expectedStorageVersion: receipts.storageVersion, additionalNamespaces: [{ namespace: "cases", expectedStorageVersion: current.storageVersion }], targetRef: change.target.id, targetIncarnation: change.target.incarnation, idempotencyKey: receiptProofKey(change.idempotencyKey), commandDigest: binding }, async (state, authority, snapshot) => {
         const actual = state.cases[request.caseRef.id]
         const selected = actual?.preparedChanges.find((item) => item.id === request.changeId && item.choiceId === request.choiceId)
         if (!sameAuthority(authority, context) || !actual || actual.incarnation !== decision.incarnation || actual.version !== decision.version || !actual.participants.includes(context.binding.principalRef) || !actual.choices.some((choice) => choice.id === request.choiceId) || !selected || selected.state !== "planned" || digestSfValue(selected) !== digestSfValue(change)) return { commit: false, value: null }

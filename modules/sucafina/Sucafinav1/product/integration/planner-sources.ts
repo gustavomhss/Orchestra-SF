@@ -12,62 +12,71 @@ export function sfPlannerSourceSelector(id: string, incarnation: string, version
   return `planner-version:${encodeURIComponent(id)}:${encodeURIComponent(incarnation)}:${version}`
 }
 
+export type SfPlannerSourceProjector = <T>(reference: string, context: TrustedDomainContext,
+  project: (source: { versionId: string; evidence: Extract<BusinessEvidenceRef, { kind: "record" }>; projection: Record<string, unknown> }) => Promise<PortResult<T>>) => Promise<PortResult<T>>
+
 /** Same Request, role map, redaction and projector as the producer. Selectors never grant access. */
 export function createSfPlannerSourceHost(input: {
   host: DomainPortHost
   scopedSources: SfScopedSourcePort
   coverageFor: PlannerSourceHost["resolveForecastCoverage"]
-}): PlannerSourceHost {
+}): PlannerSourceHost & { projectForecastSource: SfPlannerSourceProjector } {
+  const projectForecastSource: SfPlannerSourceProjector = async (reference, context, project) => {
+    const parts = /^planner-version:([^:]+):([^:]+):([1-9]\d*)$/.exec(reference)
+    if (!parts) return { status: "needs-input", reason: "invalid-planner-source-selector" }
+    const decoded = [parts[1]!, parts[2]!].map((part) => {
+      const decoded = safeDecode(part)
+      return decoded && encodeURIComponent(decoded) === part ? decoded : undefined
+    })
+    if (!decoded[0] || !decoded[1] || !Number.isSafeInteger(Number(parts[3]))) return { status: "needs-input", reason: "invalid-planner-source-selector" }
+    const request = input.host.requestFor(context)
+    if (!request || !await input.host.revalidate(context)) return { status: "denied", reason: "source-authority-unavailable" }
+    const read = async () => {
+      const describe = () => input.host.persistence.transaction("planner", async (snapshot) => {
+        const principal = await input.host.authenticate(request, { surface: "planner", roleMap: roleMap(snapshot, "planner") })
+        if (!principal || principal.id !== context.binding.principalRef) return { commit: false, value: undefined }
+        const roles = principal.roles.filter((role) => role.surface === "planner").map((role) => role.role)
+        const actor: Actor = { id: principal.id, roles, canWrite: principal.canWrite && roles.some((role) => role !== "viewer") }
+        return { commit: false, value: sfPlannerProjectionSelector(snapshot, actor) }
+      }, { signal: request.signal })
+      const selector = await describe()
+      if (!selector) return undefined
+      const scope = { principalRef: context.binding.principalRef, accessRevision: context.binding.accessRevision,
+        policyVersion: context.binding.policyVersion, recordType: "planner-version", recordId: decoded[0]!, selector }
+      const current = await input.scopedSources.readScopedSource("planner", scope, async (snapshot) => {
+        if (request.signal.aborted) return false
+        const principal = await input.host.authenticate(request, { surface: "planner", roleMap: roleMap(snapshot, "planner") })
+        if (!principal || principal.id !== scope.principalRef) return false
+        const roles = principal.roles.filter((role) => role.surface === "planner").map((role) => role.role)
+        const actor: Actor = { id: principal.id, roles, canWrite: principal.canWrite && roles.some((role) => role !== "viewer") }
+        return digestSfValue(sfPlannerProjectionSelector(snapshot, actor)) === digestSfValue(selector)
+      })
+      if (!current || !await input.host.revalidate(context)) return undefined
+      return { projection: object(current.projection), identity: { incarnation: current.incarnation, version: current.version } }
+    }
+    const current = await read().catch(() => undefined)
+    if (!current) return { status: "denied", reason: "source-unavailable" }
+    if (current.identity.incarnation !== decoded[1] || current.identity.version !== Number(parts[3])) return { status: "stale", reason: "source-replaced-or-changed" }
+    const year = current.projection.year
+    if (typeof year !== "number" || !Number.isSafeInteger(year) || year < 2001 || year > 2099) return { status: "unavailable", reason: "invalid-source-period" }
+    const value: Extract<BusinessEvidenceRef, { kind: "record" }> = {
+      schema: "sf-evidence-v1", kind: "record", refId: reference, installationId: context.binding.installationId, projectId: context.binding.projectId,
+      refDigest: "", evidenceLevel: "observed", target: { surface: "planner", recordType: "planner-version", recordId: decoded[0],
+        incarnation: current.identity.incarnation, version: current.identity.version, fields: Object.keys(current.projection),
+        period: { start: `${year}-01-01`, end: `${year}-12-31` }, projectionDigest: digestSfValue({ versionId: decoded[0], projection: current.projection }) },
+    }
+    // The host projection runs between two complete source observations. Its
+    // payload is the same role/access-filtered projection already used to
+    // issue the evidence; it cannot authorize a later invocation.
+    const projected = await project({ versionId: decoded[0], evidence: { ...value, refDigest: digestSfEvidenceRef(value) }, projection: structuredClone(current.projection) })
+    const again = await read().catch(() => undefined)
+    if (!again || digestSfValue(again) !== digestSfValue(current) || !await input.host.revalidate(context)) return { status: "stale", reason: "source-or-authority-changed" }
+    return projected
+  }
   return {
     resolveForecastCoverage: input.coverageFor,
-    resolveForecastSource: async (reference, context): Promise<PortResult<{ versionId: string; evidence: Extract<BusinessEvidenceRef, { kind: "record" }> }>> => {
-      const parts = /^planner-version:([^:]+):([^:]+):([1-9]\d*)$/.exec(reference)
-      if (!parts) return { status: "needs-input", reason: "invalid-planner-source-selector" }
-      const decoded = [parts[1]!, parts[2]!].map((part) => {
-        const decoded = safeDecode(part)
-        return decoded && encodeURIComponent(decoded) === part ? decoded : undefined
-      })
-      if (!decoded[0] || !decoded[1] || !Number.isSafeInteger(Number(parts[3]))) return { status: "needs-input", reason: "invalid-planner-source-selector" }
-      const request = input.host.requestFor(context)
-      if (!request || !await input.host.revalidate(context)) return { status: "denied", reason: "source-authority-unavailable" }
-      const read = async () => {
-        const describe = () => input.host.persistence.transaction("planner", async (snapshot) => {
-          const principal = await input.host.authenticate(request, { surface: "planner", roleMap: roleMap(snapshot, "planner") })
-          if (!principal || principal.id !== context.binding.principalRef) return { commit: false, value: undefined }
-          const roles = principal.roles.filter((role) => role.surface === "planner").map((role) => role.role)
-          const actor: Actor = { id: principal.id, roles, canWrite: principal.canWrite && roles.some((role) => role !== "viewer") }
-          return { commit: false, value: sfPlannerProjectionSelector(snapshot, actor) }
-        }, { signal: request.signal })
-        const selector = await describe()
-        if (!selector) return undefined
-        const scope = { principalRef: context.binding.principalRef, accessRevision: context.binding.accessRevision,
-          policyVersion: context.binding.policyVersion, recordType: "planner-version", recordId: decoded[0]!, selector }
-        const current = await input.scopedSources.readScopedSource("planner", scope, async (snapshot) => {
-          if (request.signal.aborted) return false
-          const principal = await input.host.authenticate(request, { surface: "planner", roleMap: roleMap(snapshot, "planner") })
-          if (!principal || principal.id !== scope.principalRef) return false
-          const roles = principal.roles.filter((role) => role.surface === "planner").map((role) => role.role)
-          const actor: Actor = { id: principal.id, roles, canWrite: principal.canWrite && roles.some((role) => role !== "viewer") }
-          return digestSfValue(sfPlannerProjectionSelector(snapshot, actor)) === digestSfValue(selector)
-        })
-        if (!current || !await input.host.revalidate(context)) return undefined
-        return { projection: object(current.projection), identity: { incarnation: current.incarnation, version: current.version } }
-      }
-      const current = await read().catch(() => undefined)
-      if (!current) return { status: "denied", reason: "source-unavailable" }
-      if (current.identity.incarnation !== decoded[1] || current.identity.version !== Number(parts[3])) return { status: "stale", reason: "source-replaced-or-changed" }
-      const year = current.projection.year
-      if (typeof year !== "number" || !Number.isSafeInteger(year) || year < 2001 || year > 2099) return { status: "unavailable", reason: "invalid-source-period" }
-      const value: Extract<BusinessEvidenceRef, { kind: "record" }> = {
-        schema: "sf-evidence-v1", kind: "record", refId: reference, installationId: context.binding.installationId, projectId: context.binding.projectId,
-        refDigest: "", evidenceLevel: "observed", target: { surface: "planner", recordType: "planner-version", recordId: decoded[0],
-          incarnation: current.identity.incarnation, version: current.identity.version, fields: Object.keys(current.projection),
-          period: { start: `${year}-01-01`, end: `${year}-12-31` }, projectionDigest: digestSfValue({ versionId: decoded[0], projection: current.projection }) },
-      }
-      const again = await read().catch(() => undefined)
-      if (!again || digestSfValue(again) !== digestSfValue(current) || !await input.host.revalidate(context)) return { status: "stale", reason: "source-or-authority-changed" }
-      return { status: "ok", value: { versionId: decoded[0], evidence: { ...value, refDigest: digestSfEvidenceRef(value) } } }
-    },
+    resolveForecastSource: (reference, context) => projectForecastSource(reference, context, async ({ versionId, evidence }) => ({ status: "ok", value: { versionId, evidence } })),
+    projectForecastSource,
   }
 }
 

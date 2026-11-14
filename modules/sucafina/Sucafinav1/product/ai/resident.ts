@@ -5,6 +5,7 @@ import { ConfigMarkdown } from "@orchestra/core/config/markdown"
 import { SkillV2 } from "@orchestra/core/skill"
 import { Schema } from "effect"
 import type { ResidentProfile, SkillManifest } from "../contracts/resident-ai.ts"
+import type { SfSelectedRuntime } from "../contracts/runtime.ts"
 import normative from "../contracts/normative-contracts.json"
 import { sfContributionOutputSchemas, sfOperationOutputSchemas, sfSkillInputSchemas } from "../contracts/output-schemas.ts"
 import { sfOperationInputSchemas } from "../contracts/operations.ts"
@@ -72,8 +73,20 @@ export async function createResidentAiBundle(input: { root: string; manifestPath
     const file = await read(`skills/${skill.id}/SKILL.md`)
     const parsed = ConfigMarkdown.parse(new TextDecoder("utf-8", { fatal: true }).decode(file))
     if (hash(file) !== skill.sourceDigest || hash(parsed.content.trim()) !== skill.instructionsDigest || parsed.data.name !== skill.id || !parsed.content.trim()) throw new Error(`Skill digest mismatch: ${skill.id}`)
-    if (skill.allowedProfiles.some((id) => !profiles.some((profile) => profile.id === id && profile.allowedSkills.includes(skill.id) && skill.allowedOperations.every((operation) => profile.allowedOperations.includes(operation))))) throw new Error(`Skill grant mismatch: ${skill.id}`)
+    if (skill.allowedProfiles.some((id) => !profiles.some((profile) => profile.id === id && profile.allowedSkills.includes(skill.id) &&
+      skill.allowedOperations.every((operation) => profile.allowedOperations.includes(operation)) &&
+      skill.outputSchemaRefs.every((output) => profile.outputTypes.some((allowed) => allowed === output))))) throw new Error(`Skill grant mismatch: ${skill.id}`)
   }
   if (!probe && normative.resident.operation_call_routes.some((route) => !skills.some((skill) => skill.id === route.skill_id && skill.allowedProfiles.includes(route.profile_id as ResidentProfile["id"]) && skill.allowedOperations.includes(route.operation_id)))) throw new Error("Missing operation route")
-  return { profiles, skills, source: Schema.decodeUnknownSync(SkillV2.DirectorySource)({ type: "directory", path: path.join(root, "skills") }), manifestDigest: hash(bytes) }
+  const manifestDigest = hash(bytes)
+  // A profile is a permission ceiling. Registration grants only operations supported by
+  // a distributed skill and this bundle's declared packs; the probe grants just forecast.
+  const selected: SfSelectedRuntime[] = profiles.map((profile) => ({
+    profile,
+    manifestDigest,
+    skills: skills.filter((skill) => profile.allowedSkills.includes(skill.id) && skill.allowedProfiles.includes(profile.id)),
+    operationIds: profile.allowedOperations.filter((operation) => expectedPacks.some((pack) => pack.operations.some((item) => item.id === operation)) &&
+      skills.some((skill) => profile.allowedSkills.includes(skill.id) && skill.allowedProfiles.includes(profile.id) && skill.allowedOperations.includes(operation))),
+  }))
+  return { profiles, skills, selected, source: Schema.decodeUnknownSync(SkillV2.DirectorySource)({ type: "directory", path: path.join(root, "skills") }), manifestDigest }
 }

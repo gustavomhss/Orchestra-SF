@@ -1,0 +1,208 @@
+{
+  "schema": "astra-wp13-w7-source-reconciliation-v1",
+  "observedAt": "2026-11-14T13:10:55.524924+00:00",
+  "baseWorkCommit": "8bb72c8cdeda149b000d91403c368642c3b53dec",
+  "previousPublishedWp13": "W6",
+  "latestReconciledHead": "3def4e3a4038b0819284931be1b56704bb949208",
+  "upstreamDeltaFromW6Head": {
+    "baseHead": "0e73d1dfb179517a4e4341ad554966e6941b2a64",
+    "ownChangedPaths": [
+      "test/product/wp13/renewal-read-scope.test.ts"
+    ],
+    "disposition": "Only new owned test recovered exactly; no product snapshot overwrite."
+  },
+  "ownFiles": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-store.ts",
+      "gitBlob": "d2528cc98eabfea36025f25cdb0cb2bf9c54c42c",
+      "sha256": "01b61b76c8487adf357a9b8d811c796d1cbc83b6628f09417b6ad7b1cd88734a",
+      "bytes": 12250,
+      "baseBlob": "799d34dd2380674d1580143233cc5eb6915012a2",
+      "changedSinceBase": true,
+      "disposition": "OWN_CAUSAL_PRODUCT_CHANGE",
+      "detail": "Fresh request lookup precedes calculation. A found result returns only after current canonical bound read, source/sample rereads, proof identity and operation-key reobservation. A before-binding orphan retains original calculation and validated bind recovery."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/threshold-proof.ts",
+      "gitBlob": "89ba60857babe8a5c80f409de39b7e0598695b96",
+      "sha256": "425d2f5b15b82030a877a16bdab2e2407edf0f5dbe8bbc574494cf8ddd6cd815",
+      "bytes": 8268,
+      "baseBlob": "056a857364cf8a6c2a2bc97bf107276612edf55d",
+      "changedSinceBase": true,
+      "disposition": "OWN_CAUSAL_PRODUCT_CHANGE",
+      "detail": "Optional current structural proof binds fixed components, ordered component IDs, source/baseline/scenario/parameter metadata, units, engine, bounds and exact evidence set to both current adjacent previews."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+      "gitBlob": "b2ac17f210886353d3596fc6a891242c7ea40f0a",
+      "sha256": "7372cdf470657d9a851d3c9738b2092feda0a0ea791a715db276f694711a14d2",
+      "bytes": 20108,
+      "baseBlob": "199d8ae6bbda17925b2b2b0423137cbb17211dc8",
+      "changedSinceBase": true,
+      "disposition": "OWN_CAUSAL_PRODUCT_CHANGE",
+      "detail": "Current interval proof and adjacent IEEE recertification replace only repeated full threshold search. Fresh units, C08 sources/samples, C10 qualification, complete result digest and source/authority fences remain. Borrowed binding/stored digests and authority identity are pinned across final awaits."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+      "gitBlob": "1a0dc5a9bc71923aafd3ec5eaf476f7a3f780bdc",
+      "sha256": "d76f45b8e1195a4e79ce8c88dd0fc9ee01de070b808c709b69a3ae1f2e403d14",
+      "bytes": 25064,
+      "baseBlob": "5b4579143250700a313744cc2240741f1bc15237",
+      "changedSinceBase": true,
+      "disposition": "OWN_COUNTERPROOFS",
+      "detail": "Preserves all three training states and three real samples, complete/conditioned distinctions and 300000 ms budget. Adds real search/evaluation/preview/authority counters, first cold read, no repeated search or evaluation, final borrowed-input mutation checks using the actually admitted context, and revocation while physical fences remain equal."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/persistence-recovery.test.ts",
+      "gitBlob": "63f262129fb37adf74013f58ea5fc56bb4ecd79e",
+      "sha256": "f5c7d231cf86fbe33deaa9edb6bb12e17c2a8f865ecbdec16304897282892d81",
+      "bytes": 11478,
+      "baseBlob": "4efa414f8ecadde5799e7246337863b145373210",
+      "changedSinceBase": true,
+      "disposition": "OWN_COUNTERPROOFS",
+      "detail": "All four recovery cases retained. Actual sensitivity evaluator counts distinguish before-binding orphan repair from already-bound lost-reply retry; no budget change and no replacement of existing ref/allocation oracles."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/renewal-read-scope.test.ts",
+      "gitBlob": "bcd5ed7f2cc26b2d9e271dae421b4d86e2f05591",
+      "sha256": "f014f4a675faa9d172eb30f71cc46a8d1cbde4458ca802d60dfc19f5b68bb479",
+      "bytes": 3390,
+      "baseBlob": null,
+      "changedSinceBase": true,
+      "disposition": "RECOVERED_EXACT_BY_ROOT",
+      "detail": "Exact PR37 source 3def4e3a4038b0819284931be1b56704bb949208 blob bcd5ed7f2cc26b2d9e271dae421b4d86e2f05591. Adds snapshot invariance, canonical edit between invocations and UI revocation inside the scoped source callback; no replacement of existing proof.",
+      "sourceHead": "3def4e3a4038b0819284931be1b56704bb949208",
+      "sourceBlob": "bcd5ed7f2cc26b2d9e271dae421b4d86e2f05591"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-retry-boundary.test.ts",
+      "gitBlob": "674fae533af967f87e49a5a79d25ac1a6a925e3a",
+      "sha256": "389621a82c50f81b0e16c681aaef7d3c9aec091058da8068ba6c5ad9a1a5d88f",
+      "bytes": 12449,
+      "baseBlob": null,
+      "changedSinceBase": true,
+      "disposition": "NEW_CONTROLLED_BOUNDARY_COUNTERPROOFS",
+      "detail": "Controlled orchestration only, not a production host grant or financial proof. Actual UI authority receives its original admitted frozen context; the mutable boundary model has a positive calibrated control. Covers admitted request snapshot, key/content/source conflicts, final kind/binding/reference/lease/key mutations, real UI revocation before final validation, and zero effects."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/source-scenario-fixture.ts",
+      "gitBlob": "39a6164af40df18c4634196e31e84a8180c822a5",
+      "sha256": "073e52e3d32de47d588d46332e92f4685b52eea5ab543c4572ea6cc1dd5cdc41",
+      "bytes": 28220,
+      "baseBlob": "47622797c1f3df33bf68ddc0bed6616997205a58",
+      "changedSinceBase": true,
+      "disposition": "OWN_FIX_AUTHORED_BY_REVIEW_PORTFOLIO",
+      "detail": "Uses the baseline mutation emitted C08 receipt instead of writing a duplicate at the same final case revision. Selected publication at final revision retained; all policies, current authority, C10 producers and numeric oracles unchanged. Independently inspected by /root/wp13; no runtime claim."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/source-scenario.test.ts",
+      "gitBlob": "d5ad83048d49c79d7f83bd13b4f6c81e3d4ca31c",
+      "sha256": "d4d67b108df0f98e11f5a4fa6b520c285d6d630f5c1a9c472c5d7131a2bf782f",
+      "bytes": 27509,
+      "baseBlob": "90f32c029238dce63adee7e2866380312b234329",
+      "changedSinceBase": true,
+      "disposition": "OWN_FIX_AUTHORED_BY_REVIEW_PORTFOLIO",
+      "detail": "Binds baseline to the actual mutation receipt and asserts exactly one current matching C08 per baseline/selected request/result. Existing positive/negative CHK20 assertions and 180000 ms budget retained."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/threshold-recertification.test.ts",
+      "gitBlob": "42ddb74c93873d0dec1e9d255ba90a2ae71cab7d",
+      "sha256": "9cac87260bb159c4131e0357639d3294fe6c1a5dfd24a241e3aed24d2c63a15f",
+      "bytes": 4625,
+      "baseBlob": null,
+      "changedSinceBase": true,
+      "disposition": "NEW_PRODUCER_AND_STRUCTURAL_COUNTERPROOFS",
+      "detail": "Real current Planner interval, exact search, accepted/rejected previews and one-ULP/source-revocation checks. Negative structural-only correlation cases reuse captured numerical observations and do not claim current authorization. Separate new 60000 ms test, no existing budget raised."
+    }
+  ],
+  "foreignIntake": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/astra-intelligence-input-intake-w7.json",
+    "gitBlob": "6838e20d419fa538d49a6f189ab4951641c2be83",
+    "sha256": "bcd1203c47fdf43d5b94fa889b1dfc2bca919b543b26a793ed93f4339f6b895d",
+    "bytes": 3391,
+    "performedBy": "/root",
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+        "blob": "d5395570b44366fa81003d5f5aa68a3023c26fa5",
+        "sha256": "31559515ade97893610d6ccfef80bba7b4eb5c1cc096e6840013fb1309cdbc48",
+        "bytes": 25425,
+        "sourceCommit": "d7775d6f1eb17af1590ccfb98547259eb017cd1b",
+        "sourceOwner": "WP11",
+        "sourcePr": 40,
+        "previousBlob": "a7fbf1ab3e35810cc717980b89421f039eae41f1",
+        "action": "EXACT_PUBLISHED_OWNER_BLOB"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+        "blob": "2338917427497733e4bd88aec852985206cce066",
+        "sha256": "ddaa4cc2a68b466179408513c3f96614265251916e5a31f1638e1c6ebf828eca",
+        "bytes": 3665,
+        "sourceCommit": "96fc3162ae309f8b91b2c55524335026f8704714",
+        "sourceOwner": "WP11/Finance",
+        "sourcePr": 40,
+        "previousBlob": "f83ca8b14429905f84d42d27bb57e8b19d7aba42",
+        "action": "EXACT_PUBLISHED_OWNER_BLOB"
+      }
+    ],
+    "newOwnWitness": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/renewal-read-scope.test.ts",
+      "sourceCommit": "3def4e3a4038b0819284931be1b56704bb949208",
+      "sourcePr": 37,
+      "blob": "bcd5ed7f2cc26b2d9e271dae421b4d86e2f05591",
+      "sha256": "f014f4a675faa9d172eb30f71cc46a8d1cbde4458ca802d60dfc19f5b68bb479",
+      "action": "RECOVER_EXACT_OWN_WP13_TEST",
+      "tests": [
+        "No durable snapshot changes for real operation/source-only verification",
+        "Canonical source edit between calls refuses old evidence",
+        "Current UI lease revoked during awaited source callback is refused with observed callback hits"
+      ]
+    }
+  },
+  "measuredCauses": [
+    {
+      "increment": "W4",
+      "run": "43592160043",
+      "job": "132438990720",
+      "log": "docs/sf2h/receipts/WP13/astra-intelligence-ci/w4-coverage/job-132438990720.log",
+      "sha256": "7aa29f113c2ff7eff74cebb7688be68106c6e559ae3037451623db191c5f2fe7",
+      "omittedSeconds": {
+        "bootstrap": 57.56,
+        "evaluateAndStore": 429.28,
+        "samplesAndBinding": 152.78,
+        "coldRead": 141.68,
+        "directReplay": 70.32,
+        "idempotentRetry": 387.29
+      },
+      "outcome": "Cancelled at workflow 45 minute bound without test summary/Omni; no PASS."
+    },
+    {
+      "increment": "W6",
+      "run": "43596117858",
+      "job": "132450853486",
+      "passed": 16,
+      "failed": 1,
+      "assertions": 167,
+      "files": 4,
+      "elapsedSeconds": 380.23,
+      "failure": "source-scenario: unavailable/scenario-results-unavailable",
+      "fixReceipt": "source-scenario-c08-fix.json",
+      "limit": "Other passing tests do not grant W7 acceptance."
+    }
+  ],
+  "preserved": [
+    "All W3/W4/W6 durable history, restart, request/authority snapshot and source-revision-versus-command-CAS corrections.",
+    "Current source/ACL/case/rule/C10/C08 replay and final authority observations; no boolean or authorization memo.",
+    "All existing budgets and all existing training-state assertions; no splitting timed loops.",
+    "Financial calculations remain owned Planner producers; no callback totals or forged saved result.",
+    "All foreign files except exact intake done by root; all prior receipts, dirty/archived files preserved."
+  ],
+  "limits": [
+    "Threshold candidate is untrusted; current canonical interval + adjacent previews and full result equality must recertify it. Exact known subtotal stays conditioned when cost coverage is incomplete.",
+    "Physical source fences omit __sfProductV1 and are never used as aggregate authorization validity.",
+    "Current idempotency callback runs after the bound reader; it is an observation of operation identity, not a new synchronous host liveness API or a lock spanning unrelated external callbacks.",
+    "No local product/test/typecheck execution. No timing improvement or full WP13 acceptance claimed before hosted execution.",
+    "Source-scenario remains on its reviewed minimal C08 fix; upstream auxiliary projection optimization was not added to that helper without a measured need."
+  ],
+  "verification": "NOT_RUN_ON_W7"
+}

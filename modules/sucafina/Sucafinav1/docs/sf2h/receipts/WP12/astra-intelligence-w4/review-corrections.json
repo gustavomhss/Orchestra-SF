@@ -1,0 +1,191 @@
+{
+  "schema": "sf2h-wp12-w4-review-corrections-v1",
+  "status": "SOURCE_FROZEN_PENDING_INDEPENDENT_REVIEW_AND_HOSTED_CI",
+  "supersedes": [
+    "reconciliation.json: resulting code/test hashes only",
+    "test-selection.json: selected hashes and test declaration count only"
+  ],
+  "priorReconciliationSha256": "6fdeffe5d4d500f7397aa0c89f51b85ddb09a687b1257239c1f38cc1a66a58bf",
+  "canonicalCriteriaCount": 108,
+  "canonicalMapping": "../astra-intelligence-w3/canonical-evidence-map/receipt.json",
+  "originPolicy": "Upstream PR39 source origins, selective-reconciliation rationale, Finance archive and foreign dependency gates in reconciliation.json remain unchanged. This delta is authored inside WP12 to close concrete independent findings, with no foreign edits.",
+  "upstreamCommit": "cfbd2a04815e8e4db279f840e64fbf9cc90ee522",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/analysis-host.ts",
+      "gitBlob": "79bc5b933253daf8db73171d20e84f77436f5bbe",
+      "sha256": "655c545bc8bd5efe4e597c2f030835be0f0df06a14fb7a1776ad3647ead06769",
+      "bytes": 5212
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+      "gitBlob": "20e4b8f7631710855ba6a2331fb7886dd63cb671",
+      "sha256": "b9f2181800432106d8b9cb92b74adc633c17e713fdcd0605b57ad431f67dea07",
+      "bytes": 31448
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/contribution-builder.ts",
+      "gitBlob": "e4756f019be2696983734b8b3d43a471dc438195",
+      "sha256": "6a69ae6cef5f42b9feada16fff5743f9c3c99e2d37a8ae739fb6796d4a081221",
+      "bytes": 5823
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/contribution-reader.ts",
+      "gitBlob": "e7a20228f81e9e4af51cd29fda7fb4a76f3a7ef0",
+      "sha256": "1447aaac52a792231acd8bc70d2f7a665f7853a7370e26baa725d581abe808e5",
+      "bytes": 12015
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+      "gitBlob": "978e4d54d2d54d1308152b7a4e9625f5c54b36ae",
+      "sha256": "296e85bbeb97370706294baedfe0b04a826adc003a6058c110168d4810de31f2",
+      "bytes": 27602
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/analysis.test.ts",
+      "gitBlob": "9489e170c3c67b67cca93e6435ff403d7812ae29",
+      "sha256": "6a85a8df99a8e94eeb722cfae92d89193c3cd1d9aebb40fea40f4cc7d20fb517",
+      "bytes": 35419
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/contribution-builder.test.ts",
+      "gitBlob": "e43fa7c0da95ecdeda10386f2a5c2fabb7061c62",
+      "sha256": "5a29903bb1f89c7421427981b2add78a7d78b89abb0bfba7d3d5644df9629395",
+      "bytes": 6816
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/contribution-reader.test.ts",
+      "gitBlob": "5ec69851b6f94dd20804ba1e69ea4178edf97204",
+      "sha256": "0266753a5aab1509e09b10e13f78b4bbf5414c0e801921886ea74c4ad15d67bd",
+      "bytes": 12375
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/historical-reader.test.ts",
+      "gitBlob": "445e8f6add5c500a1aa8d8711e4ae7d3c4986c29",
+      "sha256": "2c012d7f850ef113c800b19d5ba5fe7ca6a89a2964573d0636e35a80a3ff5393",
+      "bytes": 7797
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-admission.test.ts",
+      "gitBlob": "7525801e2706e6e71e0a8e3dce53c35079992859",
+      "sha256": "e7040d11a6b7d667a9259d62623497f5f994afa97171abe8ea5a229a6c40248b",
+      "bytes": 6584
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/publication-lifecycle.test.ts",
+      "gitBlob": "72c97b793332ffb74eefa796c51cbdc81e0ee19b",
+      "sha256": "d97ce6d48964da2dcb8fdfb1233f03ce4393fc17a78abb6b6762bb00adb99ba3",
+      "bytes": 29416
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/resident-native.test.ts",
+      "gitBlob": "d6efa62544a8a5d6d3037f941951b6d415a38907",
+      "sha256": "d9f1e0347751cc9c7970f7f47babfb960dc5cfc607937611834684f46cbad37a",
+      "bytes": 7982
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/run-store.test.ts",
+      "gitBlob": "5620d5aac6bd469f726dfba18dabcbd889c36b35",
+      "sha256": "e067c4fe1283c55b37329c9d14cfd3f5d9e1469984337ac21b12ad06de755e37",
+      "bytes": 43417
+    }
+  ],
+  "findings": [
+    {
+      "id": "W4-CURRENT-READ-ALIAS",
+      "status": "RESOLVED_IMPLEMENTED_NOT_RUN",
+      "implementation": [
+        "contribution-reader.ts: output and run digests pinned before verifier callbacks; checks after each await, at final authority, and private egress clones.",
+        "analysis-port.ts/readSfAnalysisRun: pin lifecycle/run/output, check both revalidations, private callback and outer egress clones.",
+        "Current and historical reads pin selection, context kind/binding/lease identity and Request mapping across callbacks. Analysis progress pins input host/runRef and context binding/lease through both scope returns."
+      ],
+      "counterproofs": [
+        "real C08 current reader fences verifier aliases and returns private output and run copies",
+        "real C08 analysis progress fences host verification aliases and returns private ready content",
+        "historical contribution survives SQLite reopen and requires current access to case and sources"
+      ],
+      "scopeLimit": "Verifier output/run aliases are concrete product risks. Mutable authority fixtures are additional composition defenses; actual UI/native authorities freeze bindings/leases and recheck private registries. This is not a claim that real native authority was forged."
+    },
+    {
+      "id": "W4-STALE-CLOSED-STRICT-SCOPE",
+      "status": "RESOLVED_IMPLEMENTED_NOT_RUN",
+      "implementation": [
+        "Publisher captures an immutable metadata observation in the original authenticated strict scope before revalidation/write: original run digest and stable identity digest bind run/receipt/case/principal/policy/selection; original version/state and candidate output ref/digest bind allowed publication.",
+        "After an observed stale result and a failed strict preservation attempt, only runRef/reason/observation go through fresh lifecycle authority. No output payload or private capture crosses that boundary.",
+        "markStale accepts the exact original active run, or only its expected running v to ready v+1 publication with the same persisted output ref/digest. Ready without observation remains refused.",
+        "The same run and output bytes are revalidated inside C08 CAS; payload bytes and AlternativeDraft captures are not written by metadata fallback.",
+        "Source changes before write settle lifecycle with no output; postcommit changes retain only original bytes/outputRef. Current revocation and concurrent cancellation or output replacement prevent overwrite."
+      ],
+      "counterproofs": [
+        "a closed strict source scope settles a pre-write run through current lifecycle without content",
+        "a closed strict source scope marks the exact committed output stale through metadata only",
+        "revocation of current lifecycle authority prevents stale metadata writes after strict scope closes",
+        "lifecycle fallback cannot overwrite a concurrent cancellation at the C08 boundary",
+        "ready metadata fallback refuses injected run or output changes between its read and C08 commit",
+        "stale observation refuses a replacement publication before the lifecycle callback begins"
+      ],
+      "injectionScope": "C08 adversarial storage injections test the before-callback and before-commit windows; they do not introduce a domain permission to rewrite a ready output or cancel a ready run."
+    }
+  ],
+  "preserved": [
+    "All65 W3 test declarations remain, including original C08 alias, stale/cancel, AlternativeDraft and invalid-native-output counterproofs.",
+    "Four-process restart fixture/test remain byte-identical to W3.",
+    "Native18-load/five-profile test remains strict, now with18 negative loads.",
+    "Resident/native-probe manifests and all source skill/profile bytes remain untouched.",
+    "No local product/test/typecheck execution and no git mutation.",
+    "Finance stays archived under prepared/native-execution-finance.test.ts.txt, BLOCKED_HOST_COMPOSITION_NOT_RUN, no runnable test or skip."
+  ],
+  "execution": {
+    "status": "PENDING_HOSTED_EXECUTION",
+    "selectedFiles": 13,
+    "declaredTests": 82,
+    "expectSpawnDeclaringTests": 4,
+    "selection": "test-selection-review-fix.json",
+    "providerInferenceExecuted": false,
+    "inheritW3OrUpstreamPass": false
+  },
+  "unchangedW3Artifacts": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/run-restart.test.ts",
+      "gitBlob": "2bb82f2940853f0a07a5fe2ff9696fba488a1216",
+      "sha256": "90ce9d528672fdaae1fbe6a47c15a7fe4abd4430d4d52d6025d02bcca29bce60",
+      "bytes": 8351
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/restart-reader.ts",
+      "gitBlob": "430ca1ac52a85bdd56840175326e492d12c9cc31",
+      "sha256": "54bac943b27cfbec0a05809a8f34d765dcff3b2b6c6a122e4554024f35f1270a",
+      "bytes": 13756
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/continuation.test.ts",
+      "gitBlob": "4a4191b7b7b556d5e3c0fd6b66f96bb042f375df",
+      "sha256": "e4e6c37477ca534e1f022fad78532380c16f4940f2af317bf4b9f55a24e2dff9",
+      "bytes": 8007
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/resident-native-fixture.ts",
+      "gitBlob": "3b5b19e78a3dfe04c445e098841d488d36d5a51a",
+      "sha256": "ceabe739a68283e65900e2523e8dc30340a6f82a42efb2217726b6d5565c5c8c",
+      "bytes": 2905
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/resident-authority.test.ts",
+      "gitBlob": "a2da68aa5f5bf2122616b82b74a06aa4f54a3988",
+      "sha256": "23cf982e3d7d083ac811ed2e39dfc99e88cb13fb4eb716485396978e30f6c25e",
+      "bytes": 7186
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/manifests/resident.json",
+      "gitBlob": "453c6f3a5b48c081223909af8293f854ad31d7c8",
+      "sha256": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430",
+      "bytes": 106538
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/manifests/native-probe.json",
+      "gitBlob": "4e257c2bc83968759619a3698df0bee55b4c274b",
+      "sha256": "c21f7e493e5a48e5f21ceaf49834a384519ce5f9267bec5eb14b435b2449a106",
+      "bytes": 5456
+    }
+  ]
+}

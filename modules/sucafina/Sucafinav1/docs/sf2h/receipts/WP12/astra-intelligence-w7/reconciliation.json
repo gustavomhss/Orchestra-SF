@@ -1,0 +1,289 @@
+{
+  "schema": "sf2h-wp12-w7-reconciliation-v1",
+  "status": "SOURCE_FROZEN_PENDING_HOSTED_EXECUTION",
+  "createdAt": "2026-11-14T13:10:50.930913+00:00",
+  "author": "/root/review_intelligence",
+  "roleChange": "The former independent WP12 reviewer became author only for these root-authorized W7 deltas after completing the independent W6 hosted-proof receipt. Root independently reviewed the four frozen source/test blobs; this author does not self-approve the implementation.",
+  "rootAuthorization": "Only product/ai/analysis-port.ts, contribution-reader.ts and pertinent WP12 tests; no foreign host/app/domain intake, no local product/test/typecheck.",
+  "baseProduct": "8bb72c8cdeda149b000d91403c368642c3b53dec",
+  "upstreamPR": 39,
+  "upstreamSource": "0cf12be4ea37c497fb41349c8df8113e8c99b804",
+  "upstreamRefObserved": "origin/astra-wp12",
+  "activeFiles": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+      "before": {
+        "commit": "8bb72c8cdeda149b000d91403c368642c3b53dec",
+        "gitBlob": "3c78f724a50c37757570e80ba18af950a9469132",
+        "sha256": "5f0d55e23aa986d76fd437764bafceba0d448962d34b45486341d4c62d82d918",
+        "bytes": 32630
+      },
+      "after": {
+        "gitBlob": "f1127503cf3d25a44d76c766d6d52fcd3c41bd1d",
+        "sha256": "a6feadbff3f9e7c84120f603fa7498abcd983946fb5c96b9a0bc6d4bef454a94",
+        "bytes": 35027
+      },
+      "upstream": {
+        "commit": "0cf12be4ea37c497fb41349c8df8113e8c99b804",
+        "gitBlob": "38ce273d8a953868fa3c1ea577f0ef18a433243d",
+        "sha256": "d98da8227b889ceabc491ae2805eadf35d3640659fee00f47c370324589ca1e6",
+        "bytes": 33498
+      },
+      "decision": "Selectively integrate cancellation command/host/ticket pins and optional reviewTarget consistency assertion. Retain original observed run and private clone across later scopes, and check binding/lease identities. Extend ready-read pins through lifecycle/content callback return, including retained original aliases and the whole scoped result. Preserve W6 refusal reasons and all publication/stale/CAS behavior; do not replace the whole upstream file.",
+      "wholeFileImported": false,
+      "wholeUpstreamSnapshotImported": false,
+      "finalBlobEqualsUpstream": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/contribution-reader.ts",
+      "before": {
+        "commit": "8bb72c8cdeda149b000d91403c368642c3b53dec",
+        "gitBlob": "e7a20228f81e9e4af51cd29fda7fb4a76f3a7ef0",
+        "sha256": "1447aaac52a792231acd8bc70d2f7a665f7853a7370e26baa725d581abe808e5",
+        "bytes": 12015
+      },
+      "after": {
+        "gitBlob": "db9faeec0e1d35c0724a25a0d9cf53fee93961ee",
+        "sha256": "f0e7ccad88ad4d2ab0fd66f1d4963f090782d68abe24bb4720826f8b6c6cebca",
+        "bytes": 12059
+      },
+      "upstream": {
+        "commit": "0cf12be4ea37c497fb41349c8df8113e8c99b804",
+        "gitBlob": "db9faeec0e1d35c0724a25a0d9cf53fee93961ee",
+        "sha256": "f0e7ccad88ad4d2ab0fd66f1d4963f090782d68abe24bb4720826f8b6c6cebca",
+        "bytes": 12059
+      },
+      "decision": "Take exactly the two upstream identityMatches checks after current-case and contribution reads. Current/historical provenance, digest, reauthorization and detached return checks remain unchanged; this final file equals the exact upstream blob.",
+      "wholeFileImported": false,
+      "wholeUpstreamSnapshotImported": false,
+      "finalBlobEqualsUpstream": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/run-store.test.ts",
+      "before": {
+        "commit": "8bb72c8cdeda149b000d91403c368642c3b53dec",
+        "gitBlob": "5620d5aac6bd469f726dfba18dabcbd889c36b35",
+        "sha256": "e067c4fe1283c55b37329c9d14cfd3f5d9e1469984337ac21b12ad06de755e37",
+        "bytes": 43417
+      },
+      "after": {
+        "gitBlob": "d058f2fea94329fab357c386386a76f8435da879",
+        "sha256": "395d49b8290b494ecdb60d8ef5222df5ee991bca98409e2247cad1c070249083",
+        "bytes": 53248
+      },
+      "upstream": {
+        "commit": "0cf12be4ea37c497fb41349c8df8113e8c99b804",
+        "gitBlob": "282255c3f34ac9df7f14c913e5698d0d6146a71a",
+        "sha256": "831ea75381cdaaa79896d9e7850746890842f5e2eb2f4abc8f5901fd920f4b6c",
+        "bytes": 43194
+      },
+      "decision": "Preserve every W6 test and assertion. Add two actual C08/SQLite tests with eight cancellation phases and five progress-return phases, including positive controls. Add optional review-target consistency assertions to existing real cancellation tests. Native interruption is an observed unavailable boundary, not a simulated provider success.",
+      "wholeFileImported": false,
+      "wholeUpstreamSnapshotImported": false,
+      "finalBlobEqualsUpstream": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/historical-reader.test.ts",
+      "before": {
+        "commit": "8bb72c8cdeda149b000d91403c368642c3b53dec",
+        "gitBlob": "445e8f6add5c500a1aa8d8711e4ae7d3c4986c29",
+        "sha256": "2c012d7f850ef113c800b19d5ba5fe7ca6a89a2964573d0636e35a80a3ff5393",
+        "bytes": 7797
+      },
+      "after": {
+        "gitBlob": "27783a6de704414b263b056786eb25d84594ba75",
+        "sha256": "169c118d45d12c141186541bdbc52226bfddc16ceb6f08331038fce2a59302a7",
+        "bytes": 9067
+      },
+      "upstream": {
+        "commit": "0cf12be4ea37c497fb41349c8df8113e8c99b804",
+        "gitBlob": "6806a786ac9e41a6b87c539ab7e2eccc38871cb4",
+        "sha256": "cd1b230dd1395ee2aa0b431dc1b7ef17090bb487a6c4dbe58e80cb29f45a718a",
+        "bytes": 8578
+      },
+      "decision": "Preserve the full W6 reopen/ACL/provenance assertions. Add real state-read boundary probes for caller currentCase mutation; mutation after the cases read must stop before the contributions read, and mutation after contributions must stop before historical verification.",
+      "wholeFileImported": false,
+      "wholeUpstreamSnapshotImported": false,
+      "finalBlobEqualsUpstream": false
+    }
+  ],
+  "preservedFiles": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+      "gitBlob": "978e4d54d2d54d1308152b7a4e9625f5c54b36ae",
+      "sha256": "296e85bbeb97370706294baedfe0b04a826adc003a6058c110168d4810de31f2",
+      "bytes": 27602,
+      "unchangedFromW6": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/analysis-host.ts",
+      "gitBlob": "79bc5b933253daf8db73171d20e84f77436f5bbe",
+      "sha256": "655c545bc8bd5efe4e597c2f030835be0f0df06a14fb7a1776ad3647ead06769",
+      "bytes": 5212,
+      "unchangedFromW6": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/contribution-reader.test.ts",
+      "gitBlob": "5ec69851b6f94dd20804ba1e69ea4178edf97204",
+      "sha256": "0266753a5aab1509e09b10e13f78b4bbf5414c0e801921886ea74c4ad15d67bd",
+      "bytes": 12375,
+      "unchangedFromW6": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/resident-authority.test.ts",
+      "gitBlob": "a2da68aa5f5bf2122616b82b74a06aa4f54a3988",
+      "sha256": "23cf982e3d7d083ac811ed2e39dfc99e88cb13fb4eb716485396978e30f6c25e",
+      "bytes": 7186,
+      "unchangedFromW6": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/resident-native.test.ts",
+      "gitBlob": "d6efa62544a8a5d6d3037f941951b6d415a38907",
+      "sha256": "d9f1e0347751cc9c7970f7f47babfb960dc5cfc607937611834684f46cbad37a",
+      "bytes": 7982,
+      "unchangedFromW6": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/resident-native-fixture.ts",
+      "gitBlob": "3b5b19e78a3dfe04c445e098841d488d36d5a51a",
+      "sha256": "ceabe739a68283e65900e2523e8dc30340a6f82a42efb2217726b6d5565c5c8c",
+      "bytes": 2905,
+      "unchangedFromW6": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-admission.test.ts",
+      "gitBlob": "7525801e2706e6e71e0a8e3dce53c35079992859",
+      "sha256": "e7040d11a6b7d667a9259d62623497f5f994afa97171abe8ea5a229a6c40248b",
+      "bytes": 6584,
+      "unchangedFromW6": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/run-restart.test.ts",
+      "gitBlob": "2bb82f2940853f0a07a5fe2ff9696fba488a1216",
+      "sha256": "90ce9d528672fdaae1fbe6a47c15a7fe4abd4430d4d52d6025d02bcca29bce60",
+      "bytes": 8351,
+      "unchangedFromW6": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/restart-reader.ts",
+      "gitBlob": "430ca1ac52a85bdd56840175326e492d12c9cc31",
+      "sha256": "54bac943b27cfbec0a05809a8f34d765dcff3b2b6c6a122e4554024f35f1270a",
+      "bytes": 13756,
+      "unchangedFromW6": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/run-fixture.ts",
+      "gitBlob": "5d528e810ab79fb1e3beb571dcb216192d551e91",
+      "sha256": "e46bd4eb13bba2fafe489ae7d73a96749e1608c17f42dc70ab8c7f6ff6bd65a5",
+      "bytes": 3605,
+      "unchangedFromW6": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/continuation.ts",
+      "gitBlob": "940a98787420b7f88e625d7f7e9aeee39373f215",
+      "sha256": "db4ea2b4f05f2a32615a75d2f323a49e3e7984963072f31a0106c8ec693615b9",
+      "bytes": 9965,
+      "unchangedFromW6": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/contribution-builder.ts",
+      "gitBlob": "e0f70be52df22cac36dbaa88aa1ca7404f4abecc",
+      "sha256": "c0c8f5fee78ca93d98d4968e3507bee36ed62ba47756c4e86eab7e142b97b0f8",
+      "bytes": 5823,
+      "unchangedFromW6": true
+    }
+  ],
+  "protectedBehavior": {
+    "publicationFunctionByteIdenticalW6": true,
+    "publicationStaleReconciliation": "W4/W6 original stale observation, metadata-only lifecycle fallback, exact run/output CAS, concurrent cancellation and replacement protection are unchanged.",
+    "cancellation": "Current authority comes from durable run and fresh host scopes. Optional caller reviewTarget is only a consistency assertion. Durable cancellation precedes interruption and is not rolled back if a later caller alias changes or native interruption is unavailable.",
+    "reader": "Both current authority checks, repeated run read, original output/run provenance/digests, lifecycle/content binding and lease fences, and cloned egress remain. Original source aliases and scoped result are now checked after wrapper return.",
+    "historical": "Only early identity checks added between actual state reads. No metadata-only authority opens contribution content."
+  },
+  "counterproofs": {
+    "newDeclarations": [
+      "real C08 cancellation pins its command and observed run across authorization and interruption scopes",
+      "real C08 progress refuses retained run and output aliases changed after a scope returns"
+    ],
+    "cancellationPhases": [
+      "read-return",
+      "verify-return",
+      "authorization-return",
+      "cancel-entry",
+      "cancel-return",
+      "interrupt-entry",
+      "interrupt-return",
+      "unchanged"
+    ],
+    "progressPhases": [
+      "lifecycle-run",
+      "content-output",
+      "content-current-run",
+      "discarded-scope-result",
+      "unchanged"
+    ],
+    "historicalStateReadPhases": [
+      "cases",
+      "contributions"
+    ],
+    "realComponents": [
+      "createSfAnalysisHost",
+      "createSfRunStore",
+      "createSfProductState",
+      "openLocalStore",
+      "C08 transactions",
+      "SQLite persistence"
+    ],
+    "fixtureBoundary": "Host authority/collection/composition inputs are explicit injected component fixtures. No native model inference or true provider interruption is claimed. Each fault/control checks durable bytes and storageVersion; historical mutation after the cases read asserts zero subsequent contribution reads."
+  },
+  "independentReview": {
+    "reviewer": "/root",
+    "status": "ROOT_REPORTED_NO_STATIC_BLOCKER_FOR_FOUR_FROZEN_BLOBS",
+    "receipt": "Root will append a separate independent review; no acceptance or hosted PASS asserted by the author."
+  },
+  "canonical": {
+    "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "campaignSha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+    "workflowPath": "modules/sucafina/Sucafinav1/docs/sf2h-plan/WORKFLOW.md",
+    "workflowBlob": "043205bee6031b4517a98591b3588fca0ab12925",
+    "unchanged108CriteriaIndex": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/astra-intelligence-w6/criteria-108.json",
+      "sha256": "5f1d0ed47f6065cdcd31905efd741aeafd5f28faf5ba3abaa1d8eec95ce86f2d",
+      "bytes": 204442
+    },
+    "criteriaCount": 108,
+    "acceptance": "ALL_108_OPEN_NO_FULL_PASS_DECLARED"
+  },
+  "priorHostedProof": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/astra-intelligence-w6/hosted-proof-review.json",
+    "sha256": "f007247d1948b0e097dcf25fc254673c14c24dd8169a5e1e739f00da6e9d36e2",
+    "bytes": 83808
+  },
+  "priorHostedPassNotTransferred": true,
+  "upstreamNativeMissions": {
+    "status": "REFERENCE_ONLY_NOT_IMPORTED",
+    "source": "0cf12be4ea37c497fb41349c8df8113e8c99b804",
+    "reason": "New native mission source and foreign composition are outside this bounded W7 intake; no authenticated source closure/provider execution for them is established by this change. Previous prepared mission/pin receipts remain unchanged.",
+    "previousPreparedManifest": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/astra-intelligence-w6/prepared-missions.json",
+      "sha256": "3d77d46fa46be2c1966344570e2cd19b647222bccf1add7de0cd6fc43c28d795",
+      "bytes": 55367
+    },
+    "previousForeignPinInventory": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/astra-intelligence-w6/prepared-foreign-pins.json",
+      "sha256": "ec4417d8e8b3e7e85f53acd3198ed8a59dae950311a106f96cdac7ce4415f6ce",
+      "bytes": 294395
+    },
+    "newRunnableNativeTests": 0,
+    "newArchiveCopies": 0
+  },
+  "localValidation": {
+    "product": "NOT_RUN",
+    "tests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "diffCheck": "PASS_WHITESPACE_ONLY",
+    "method": "Static source comparison, immutable Git object reads, file hashes, literal test-name/declaration inventory and git diff --check. These are not runtime verification."
+  },
+  "supersession": "Only the four listed active files supersede W6 source/test bytes. Prior receipts and test oracles remain. W7 needs fresh hosted validation against its own immutable product/snapshot/request/log."
+}

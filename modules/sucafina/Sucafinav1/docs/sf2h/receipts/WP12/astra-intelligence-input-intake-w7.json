@@ -1,0 +1,70 @@
+{
+  "schema": "astra-intelligence-exact-owner-intake-v1",
+  "increment": "W7",
+  "observedAt": "2026-11-14T13:06:05.003Z",
+  "productParent": "8bb72c8cdeda149b000d91403c368642c3b53dec",
+  "policy": "Selective exact published owner blobs only; no owner runtime, branch snapshot, Azure or dev intake.",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "blob": "d5395570b44366fa81003d5f5aa68a3023c26fa5",
+      "sha256": "31559515ade97893610d6ccfef80bba7b4eb5c1cc096e6840013fb1309cdbc48",
+      "bytes": 25425,
+      "sourceCommit": "d7775d6f1eb17af1590ccfb98547259eb017cd1b",
+      "sourceOwner": "WP11",
+      "sourcePr": 40,
+      "previousBlob": "a7fbf1ab3e35810cc717980b89421f039eae41f1",
+      "action": "EXACT_PUBLISHED_OWNER_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+      "blob": "2338917427497733e4bd88aec852985206cce066",
+      "sha256": "ddaa4cc2a68b466179408513c3f96614265251916e5a31f1638e1c6ebf828eca",
+      "bytes": 3665,
+      "sourceCommit": "96fc3162ae309f8b91b2c55524335026f8704714",
+      "sourceOwner": "WP11/Finance",
+      "sourcePr": 40,
+      "previousBlob": "f83ca8b14429905f84d42d27bb57e8b19d7aba42",
+      "action": "EXACT_PUBLISHED_OWNER_BLOB"
+    }
+  ],
+  "ownCounterproof": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp13/renewal-read-scope.test.ts",
+    "sourceCommit": "3def4e3a4038b0819284931be1b56704bb949208",
+    "sourcePr": 37,
+    "blob": "bcd5ed7f2cc26b2d9e271dae421b4d86e2f05591",
+    "sha256": "f014f4a675faa9d172eb30f71cc46a8d1cbde4458ca802d60dfc19f5b68bb479",
+    "action": "RECOVER_EXACT_OWN_WP13_TEST",
+    "tests": [
+      "No durable snapshot changes for real operation/source-only verification",
+      "Canonical source edit between calls refuses old evidence",
+      "Current UI lease revoked during awaited source callback is refused with observed callback hits"
+    ]
+  },
+  "rationale": [
+    "Projection-only and operation-admission paths use canonical source projections; classified C10 remains on judgment and promotion.",
+    "One read-only Planner transaction per verifier invocation reduces transaction/SQL overhead without persisting projections or authorization across calls.",
+    "All nested producer calculations, current source reads and final host revalidation remain; every new test must run on this exact composition."
+  ],
+  "staticReview": {
+    "reviewers": [
+      "/root",
+      "/root/review_portfolio"
+    ],
+    "verdict": "NO_STATIC_BLOCKER_NOT_RUNTIME_PASS",
+    "notes": [
+      "The owner comment 'without decoding C08 again' overstates the optimization: LocalStore still serializes/clones nested snapshots. No zero-serialization or time-budget claim is made.",
+      "The owner's renewal-choice fixture has a separate baseline duplicate pattern; this intake does not alter it. The W6 source-scenario failure is repaired in the owned WP13 fixture with the emitted mutation receipt."
+    ]
+  },
+  "preserved": [
+    "Canonical financial producers and engine",
+    "C10 coverage qualification/revalidation",
+    "All existing timeout budgets",
+    "Existing stronger WP13 source-scenario and sensitivity fixtures",
+    "All unrelated foreign sources and dirty/archive files"
+  ],
+  "runtime": "NOT_RUN",
+  "typecheck": "NOT_RUN",
+  "fullAcceptance": "NOT_DECLARED"
+}

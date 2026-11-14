@@ -1,0 +1,40 @@
+{
+  "schema": "astra-intelligence-input-intake/v1",
+  "baseProductSha": "c21a990c57b714cd60bb7f915beb6be51acbafdb",
+  "observedAt": "2026-11-14T11:18:41.399Z",
+  "intake": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/fixture-trace.ts",
+      "blob": "23ed2604b5a8b11d392e57f0424d3d806aaf03a1",
+      "previousBlob": null,
+      "sha256": "3c679344d17a97136ac59f22284527d14ee2b9dde0004f63e548dd454a83f449",
+      "sourceCommit": "11261a57ebb5ad7281bb7bcdd9d3f2687c2c76de",
+      "owner": "WP11",
+      "method": "EXACT_PUBLISHED_OWNER_BLOB",
+      "purpose": "WP13 real source-history and reconciliation consumers: separate canonical operation admission from C10 classification while retaining actual Planner/source/ACL checks; cooperative original 180000ms fixture trace"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "blob": "b913d9c0ab46a3f624b6c0aee28f5adf6654940a",
+      "previousBlob": "52dc09126bc81da39aa4b5beb0a28d0218d7560d",
+      "sha256": "31756549e2bc37f2810c25ddc8c5a9c43e462513576a66330d21790433d8b2b4",
+      "sourceCommit": "11261a57ebb5ad7281bb7bcdd9d3f2687c2c76de",
+      "owner": "WP11",
+      "method": "EXACT_PUBLISHED_OWNER_BLOB",
+      "purpose": "WP13 real source-history and reconciliation consumers: separate canonical operation admission from C10 classification while retaining actual Planner/source/ACL checks; cooperative original 180000ms fixture trace"
+    }
+  ],
+  "notConsumed": [
+    "WP11 renewal-choice-history.test.ts (not imported by own selections)",
+    "Owner runtime/engines and unrelated foreign snapshot files"
+  ],
+  "validation": {
+    "sourceBlobAndSha256": "MATCH",
+    "execution": "NOT_RUN",
+    "budgetsIncreased": false
+  },
+  "limits": [
+    "Trace is cooperative and cannot interrupt a blocked await",
+    "This intake does not prove C10 acceptance or hosted performance"
+  ]
+}

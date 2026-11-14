@@ -1,0 +1,65 @@
+{
+  "schema": "sf2h-wp12-w5-fixture-type-narrowing-v1",
+  "status": "SOURCE_FROZEN_PENDING_HOSTED_TYPECHECK",
+  "date": "2026-11-14",
+  "owner": "astra-intelligence/WP12",
+  "base": {
+    "commit": "e5b3adf215939e9a5c16cbcaf3ad028475e0a693",
+    "path": "modules/sucafina/Sucafinav1/test/product/wp12/publication-lifecycle.test.ts",
+    "gitBlob": "72c97b793332ffb74eefa796c51cbdc81e0ee19b",
+    "sha256": "d97ce6d48964da2dcb8fdfb1233f03ce4393fc17a78abb6b6762bb00adb99ba3",
+    "bytes": 29416
+  },
+  "result": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp12/publication-lifecycle.test.ts",
+    "gitBlob": "ef4991ce05752f333e8b8df564e81c93176160bf",
+    "sha256": "542051fe78f3072889a58203806f8bf5846ec7cb6f9b6837cb8c72506b68b1d7",
+    "bytes": 29471
+  },
+  "diagnostic": {
+    "code": "TS2769",
+    "location": "test/product/wp12/publication-lifecycle.test.ts(205,52)",
+    "message": "Argument of type 'ContributionEnvelope | undefined' is not assignable to parameter of type 'ContributionEnvelope'. Type 'undefined' is not assignable to type 'ContributionEnvelope'.",
+    "source": "Exact hosted W4 typecheck excerpt provided by root in the task; no local typecheck execution."
+  },
+  "change": {
+    "before": "expect(persisted.contributions.output).toEqual(committed ? f.material.output : undefined)",
+    "after": [
+      "if (committed) expect(persisted.contributions.output).toEqual(f.material.output)",
+      "else expect(persisted.contributions.output).toBeUndefined()"
+    ],
+    "reason": "Bun expect.toEqual is typed from the indexed ContributionEnvelope value and cannot accept an expected ContributionEnvelope | undefined union. The explicit branches preserve the two runtime assertions: exact original output after a ready commit; no output before commit.",
+    "semanticChanges": false,
+    "castsAdded": false,
+    "assertionWeakened": false,
+    "testNamesChanged": false,
+    "productSourcesChanged": false
+  },
+  "baseEvidence": {
+    "status": "W4_HOSTED_PASS_REPORTED_BY_ROOT",
+    "testsPassed": 82,
+    "testsFailed": 0,
+    "assertions": 1004,
+    "testFiles": 13,
+    "elapsedSeconds": 13.29,
+    "typecheckTotalDiagnostics": 122,
+    "typecheckOwnDiagnostics": 1,
+    "typecheckForeignDiagnostics": 121,
+    "transferToW5": false
+  },
+  "preserved": [
+    "Lifecycle revocation must prevent metadata writes in both precommit and postcommit branches.",
+    "The test still checks unchanged lifecycle state/version, no stale commit callback, exact committed output or complete absence, and empty preferences.",
+    "Stale observation, alias counterproofs, CAS injections, native18-load selection and four-process restart sources remain frozen.",
+    "All W4 evidence and receipts remain untouched."
+  ],
+  "validation": {
+    "localProductExecution": false,
+    "localTests": false,
+    "localTypecheck": false,
+    "performed": "Read-only byte comparison confirmed exactly one assertion was replaced by its two explicit branches; source hashes recorded.",
+    "hostedExecution": "PENDING_ROOT_PUBLICATION_AND_CHECK"
+  },
+  "declaredTestsInChangedFile": 18,
+  "foreignFilesChanged": []
+}

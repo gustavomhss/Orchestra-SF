@@ -1,0 +1,239 @@
+{
+  "schema": "sf2h-wp12-w4-test-selection-v1",
+  "status": "PENDING_HOSTED_EXECUTION",
+  "localProductTestTypecheckExecution": false,
+  "selectedTestFiles": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/analysis.test.ts",
+      "gitBlob": "9489e170c3c67b67cca93e6435ff403d7812ae29",
+      "sha256": "6a85a8df99a8e94eeb722cfae92d89193c3cd1d9aebb40fea40f4cc7d20fb517",
+      "bytes": 35419,
+      "declaredTests": 16,
+      "testNames": [
+        "cancellation refuses a session different from the loaded skill receipt",
+        "cancellation persists before interrupting and permits a source-stale run under current authority",
+        "revocation after durable cancellation prevents interruption through an expired authority",
+        "a routine result cannot start another routine",
+        "tampered contribution digest is rejected before publication",
+        "a review cannot reuse the author's run or session",
+        "analysis rejects invalid skill input before host admission",
+        "revoked access after a native wait blocks collection and publication",
+        "analysis uses separate host authority scopes before and after the native wait",
+        "analysis rejects model-supplied identity before host admission",
+        "admitted runs persist non-executing native outcomes under fresh authority",
+        "revoked authority prevents settling an admitted run",
+        "real SQLite and C08 reject a changed Planner source and persist settlement after reopening",
+        "publication settles an exact output after a stale post-write check using fresh authority",
+        "terminal metadata uses current lifecycle authority after the execution source scope closes",
+        "lifecycle progress cannot use its current metadata authority to return a ready payload"
+      ],
+      "expectSpawnDeclarations": 0
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/author-reader.test.ts",
+      "gitBlob": "9b92175ccc462d20af3d6afec3c44b41f7aeb75e",
+      "sha256": "15c4060cbd923d28277a7ebe3263997c90f77624c3f6637f850dafac3b224f98",
+      "bytes": 7122,
+      "declaredTests": 1,
+      "testNames": [
+        "author reader rechecks the real stored run, receipt, case, and current authority"
+      ],
+      "expectSpawnDeclarations": 0
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/continuation.test.ts",
+      "gitBlob": "4a4191b7b7b556d5e3c0fd6b66f96bb042f375df",
+      "sha256": "e4e6c37477ca534e1f022fad78532380c16f4940f2af317bf4b9f55a24e2dff9",
+      "bytes": 8007,
+      "declaredTests": 6,
+      "testNames": [
+        "continuation admits a fresh run with exact human-response lineage and a new session/receipt",
+        "continuation refuses a response changed between initial resolution and pre-admission recheck",
+        "continuation refuses an admitted run whose returned receipt differs from its persisted receipt",
+        "continuation does not admit after current authority is revoked",
+        "continuation withholds the new run if authority is revoked after admission",
+        "continuation rejects stale prior versions and non-UI contexts before resolving a response"
+      ],
+      "expectSpawnDeclarations": 0
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/contribution-builder.test.ts",
+      "gitBlob": "e43fa7c0da95ecdeda10386f2a5c2fabb7061c62",
+      "sha256": "5a29903bb1f89c7421427981b2add78a7d78b89abb0bfba7d3d5644df9629395",
+      "bytes": 6816,
+      "declaredTests": 4,
+      "testNames": [
+        "host builds persisted provenance from the observed assistant model and skill receipt",
+        "review provenance is assigned by the host for an independent run",
+        "durable output must belong to the active skill and observed model",
+        "standalone reviewer conditions require the same independent host-owned target as a critique"
+      ],
+      "expectSpawnDeclarations": 0
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/contribution-reader.test.ts",
+      "gitBlob": "5ec69851b6f94dd20804ba1e69ea4178edf97204",
+      "sha256": "0266753a5aab1509e09b10e13f78b4bbf5414c0e801921886ea74c4ad15d67bd",
+      "bytes": 12375,
+      "declaredTests": 2,
+      "testNames": [
+        "consumer opens the stored result and refuses revoked or mismatched provenance",
+        "real C08 current reader fences verifier aliases and returns private output and run copies"
+      ],
+      "expectSpawnDeclarations": 0
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/historical-reader.test.ts",
+      "gitBlob": "445e8f6add5c500a1aa8d8711e4ae7d3c4986c29",
+      "sha256": "2c012d7f850ef113c800b19d5ba5fe7ca6a89a2964573d0636e35a80a3ff5393",
+      "bytes": 7797,
+      "declaredTests": 1,
+      "testNames": [
+        "historical contribution survives SQLite reopen and requires current access to case and sources"
+      ],
+      "expectSpawnDeclarations": 0
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-admission.test.ts",
+      "gitBlob": "7525801e2706e6e71e0a8e3dce53c35079992859",
+      "sha256": "e7040d11a6b7d667a9259d62623497f5f994afa97171abe8ea5a229a6c40248b",
+      "bytes": 6584,
+      "declaredTests": 1,
+      "testNames": [
+        "native probe observes actual Location model admission after a real Session skill load"
+      ],
+      "expectSpawnDeclarations": 1
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/publication-lifecycle.test.ts",
+      "gitBlob": "72c97b793332ffb74eefa796c51cbdc81e0ee19b",
+      "sha256": "d97ce6d48964da2dcb8fdfb1233f03ce4393fc17a78abb6b6762bb00adb99ba3",
+      "bytes": 29416,
+      "declaredTests": 18,
+      "testNames": [
+        "source changed strictly between publication authorization and write settles the original output as stale",
+        "source changed after the ready commit downgrades only the exact persisted output",
+        "a closed strict source scope settles a pre-write run through current lifecycle without content",
+        "a closed strict source scope marks the exact committed output stale through metadata only",
+        "revocation of current lifecycle authority prevents stale metadata writes after strict scope closes",
+        "lifecycle fallback cannot overwrite a concurrent cancellation at the C08 boundary",
+        "ready metadata fallback refuses injected run or output changes between its read and C08 commit",
+        "stale observation refuses a replacement publication before the lifecycle callback begins",
+        "stale reconciliation cannot overwrite a concurrent cancellation at the C08 commit boundary",
+        "ready reconciliation validates the original output bytes inside C08 and never overwrites a replacement",
+        "unpublished AlternativeDraft without private capture settles stale without persisting a payload or new grant",
+        "revocation or a denied historical-source validator prevents stale preservation",
+        "invalid model payload and ungranted kind finish failed through the real C08 host",
+        "publication validation failure settles failed under new authority, and simultaneous revocation prevents the write",
+        "invalid collected model output cannot settle through revoked authority",
+        "publication unavailable or needs-input settles through a fresh C08 authority, and revocation prevents it",
+        "a late unavailable or needs-input signal cannot overwrite a committed ready output",
+        "publication denied or conflict does not create a terminal lifecycle write"
+      ],
+      "expectSpawnDeclarations": 0
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/resident-authority.test.ts",
+      "gitBlob": "a2da68aa5f5bf2122616b82b74a06aa4f54a3988",
+      "sha256": "23cf982e3d7d083ac811ed2e39dfc99e88cb13fb4eb716485396978e30f6c25e",
+      "bytes": 7186,
+      "declaredTests": 2,
+      "testNames": [
+        "native loading keeps the reserved source and rejects changed bytes or grants without adding a message",
+        "closing the native registration scope revokes its capability before another skill load"
+      ],
+      "expectSpawnDeclarations": 1
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/resident-native.test.ts",
+      "gitBlob": "d6efa62544a8a5d6d3037f941951b6d415a38907",
+      "sha256": "d9f1e0347751cc9c7970f7f47babfb960dc5cfc607937611834684f46cbad37a",
+      "bytes": 7982,
+      "declaredTests": 2,
+      "testNames": [
+        "five profiles register and all eighteen distributed skills load into distinct native sessions",
+        "native probe registration grants only its one announced operation"
+      ],
+      "expectSpawnDeclarations": 1
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/resident.test.ts",
+      "gitBlob": "a5151b55edd232a5bb3426ff705f759e02e1326e",
+      "sha256": "89a3214c7f553d8d367eac8156e5e0af3bc166d10a2dca99852a2d8b9e826882",
+      "bytes": 5770,
+      "declaredTests": 6,
+      "testNames": [
+        "resident manifests load distributed sources and pin digests",
+        "a modified distributed skill cannot be admitted under an old digest",
+        "manifest cannot add a skill grant even with unchanged source bytes",
+        "a valid digest does not permit manifest or source paths outside the distributed root",
+        "duplicate, unknown and incomplete resident catalogs fail before registration",
+        "an unknown input schema is rejected"
+      ],
+      "expectSpawnDeclarations": 0
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/run-restart.test.ts",
+      "gitBlob": "2bb82f2940853f0a07a5fe2ff9696fba488a1216",
+      "sha256": "90ce9d528672fdaae1fbe6a47c15a7fe4abd4430d4d52d6025d02bcca29bce60",
+      "bytes": 8351,
+      "declaredTests": 1,
+      "testNames": [
+        "separate SQLite readers recover current and historical runs and enforce persisted source and case revocation"
+      ],
+      "expectSpawnDeclarations": 1
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/run-store.test.ts",
+      "gitBlob": "5620d5aac6bd469f726dfba18dabcbd889c36b35",
+      "sha256": "e067c4fe1283c55b37329c9d14cfd3f5d9e1469984337ac21b12ad06de755e37",
+      "bytes": 43417,
+      "declaredTests": 22,
+      "testNames": [
+        "run is durably prepared without a fabricated skill receipt and rejects a stale transition",
+        "an invalid native receipt cannot move a preparing run to queued",
+        "analysis host binds validation to the actual stored skill receipt",
+        "stale run is preserved when its case advances",
+        "commit validator cannot mutate the storage snapshot",
+        "new runs require a valid complete-intent digest",
+        "run admission rejects a contribution version changed during preflight",
+        "stale output is preserved with its original provenance and cannot be published as current",
+        "real C08 host cancels an independent review using its durable target even when its source becomes stale",
+        "read-only preflight cannot rewrite the admitted run",
+        "a commit verifier cannot replace an already validated contribution",
+        "C08 keeps its admitted record when the caller changes an alias during final write authorization",
+        "C08 keeps validated contribution bytes when the caller changes an alias during final write authorization",
+        "publication pins its validated output before awaiting mutation authority",
+        "read rejects a retained preflight reference changed during final authorization",
+        "durable cancellation wins a publication that is still validating its source",
+        "late publication failure cannot overwrite a ready result",
+        "lifecycle access survives source unavailability while current case membership and principal remain mandatory",
+        "terminal settlement persists without source preflight and still requires the host commit authority",
+        "a committed ready output can become stale only with its exact stored bytes",
+        "review cancellation validates its durable target before committing even without an attached native runtime",
+        "real C08 analysis progress fences host verification aliases and returns private ready content"
+      ],
+      "expectSpawnDeclarations": 0
+    }
+  ],
+  "declaredTests": 82,
+  "files": 13,
+  "expectedSpawnDeclaringTests": 4,
+  "providerInferenceExecuted": false,
+  "catalogObservationIsProviderProof": false,
+  "finance": {
+    "status": "BLOCKED_HOST_COMPOSITION_NOT_RUN",
+    "runnablePathAbsent": true,
+    "archive": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/astra-intelligence-w4/prepared/native-execution-finance.test.ts.txt",
+    "foreignDependencies": "foreign-dependency-frontier.json"
+  },
+  "requiredFutureEvidence": [
+    "Publish immutable W4 product and isolated hosted snapshot before any PASS claim.",
+    "Hosted focused test log and Omni evidence for all13 files.",
+    "Do not infer provider readiness from native admission catalog observation.",
+    "Independent review of selective reconciliation and preservation of W3 counterproofs."
+  ],
+  "budgetPolicy": "No existing test timeout was increased. Native admission retains upstream120000ms; Finance240000ms is archived and not selected.",
+  "supersedes": "test-selection.json",
+  "supersessionReason": "Independent W4 review: current-read aliases, final scope identity, and stale publication metadata fallback tied to the earlier observed run/output."
+}

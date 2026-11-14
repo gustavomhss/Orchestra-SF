@@ -1,0 +1,41 @@
+{
+  "schema": "astra-intelligence-w4-phase-trace-v1",
+  "observedAt": "2026-11-14T11:42:23.413Z",
+  "writer": "root",
+  "baseProductSha": "c21a990c57b714cd60bb7f915beb6be51acbafdb",
+  "trigger": {
+    "runId": 43586169806,
+    "jobId": 132420996139,
+    "status": "CANCELLED",
+    "testReportedMs": 2522305.42,
+    "declaredTimeoutMs": 300000,
+    "logSha256": "8d65be3dd3d3055e6bbe89a4df6d4d99a9538fdbd85418520b9748013952a05c"
+  },
+  "file": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+  "previousReviewedBlob": "ec70ced9b58b46255ea630d35f272e5b1fe82be1",
+  "finalBlob": "5b4579143250700a313744cc2240741f1bc15237",
+  "sha256": "b0ddf6ac0b6c0de6e3dd83b3a8f8ef138f9c3d460d505172c0d57ef73be62efa",
+  "addedLines": [
+    "    const started = Date.now()",
+    "    const phase = (name: string) => console.log(\"SF_WP13_SENSITIVITY_PHASE:\" + JSON.stringify({ training, phase: name, elapsedMs: Date.now() - started }))",
+    "    phase(\"fixture-begin\")",
+    "    phase(\"fixture-ready\")",
+    "      phase(\"evaluate-and-store-begin\")",
+    "      phase(\"evaluate-and-store-returned\")",
+    "      phase(\"samples-and-binding-read\")",
+    "      phase(\"cold-read-begin\")",
+    "      phase(\"cold-read-returned\")",
+    "      phase(\"replay-proof-ready\")",
+    "      phase(\"idempotent-evaluate-returned\")",
+    "      phase(\"revocation-refused\")",
+    "      phase(\"case-unchanged\")"
+  ],
+  "changes": "Diagnostic elapsed-time log at existing await boundaries only; no additional domain calls, no altered assertion, sample, training state or timeout",
+  "supersedesOnly": "This file hash in manifest.json/independent-review.json; all other reviewed bytes remain unchanged",
+  "execution": "NOT_RUN",
+  "phaseMeaning": "returned is not PASS; all subsequent original assertions remain mandatory",
+  "limits": [
+    "Date.now measures diagnostic elapsed time per training variant and does not create or reset a test budget",
+    "Log excludes business values, provider credentials and actor identifiers"
+  ]
+}

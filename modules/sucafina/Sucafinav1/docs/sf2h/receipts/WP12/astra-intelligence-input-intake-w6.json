@@ -1,0 +1,181 @@
+{
+  "schema": "astra-intelligence-pinned-input-intake-v6",
+  "createdAt": "2026-11-14T12:26:18.121413+00:00",
+  "productBase": "d697bcc1076a62375cbf0439376c9f0a4f81173f",
+  "sourceManifest": {
+    "commit": "4d3995a71b4ccafe2367679ab5024f8aa3013c50",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-wp13/consumed-inputs-v11.json",
+    "blob": "0c361d4bc5c907d355ec5ea18a6aca6b66e06ccc",
+    "sha256": "87314792ad63f2786714f0d3619cd5f0359ab504cce272f0ca6ed306b6a4d84e"
+  },
+  "reason": "Consume published finite per-call scenario batches and producer-only fixture bootstrap while preserving real C08/Planner/source verification. Separate batch counterproof is explicitly selected.",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "owner": "WP11",
+      "sourceCommit": "c41d7277be5941bafb105654360a32adea7f0347",
+      "blob": "a7fbf1ab3e35810cc717980b89421f039eae41f1",
+      "sha256": "36e11f7e1148d0b30fff90473f971a9183aef6b9ffeb5064f63a3034c96ee7e3",
+      "bytes": 25216,
+      "previousBlob": "b913d9c0ab46a3f624b6c0aee28f5adf6654940a",
+      "action": "CONSUMED_EXACT_PUBLISHED_BLOB",
+      "sourceOwnerPr": 40,
+      "discoveredInPr": 37
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-coverage-fixture.ts",
+      "owner": "WP11",
+      "sourceCommit": "c41d7277be5941bafb105654360a32adea7f0347",
+      "blob": "d1b8c7b91c071ee970ff217c3a2745d84b99486b",
+      "sha256": "f2149ed78166add2869fd2612d1936007c3a94862ebacdb277e0dba7c6f56ddf",
+      "bytes": 5144,
+      "previousBlob": "dd85ea61929f7a7180ed81b60ab4f866b6423f0c",
+      "action": "CONSUMED_EXACT_PUBLISHED_BLOB",
+      "sourceOwnerPr": 40,
+      "discoveredInPr": 37
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+      "owner": "WP11",
+      "sourceCommit": "c41d7277be5941bafb105654360a32adea7f0347",
+      "blob": "f83ca8b14429905f84d42d27bb57e8b19d7aba42",
+      "sha256": "cafe5d427ece4fef7dabd7c90869afe14e82be58501bd47cd261037a42075a7b",
+      "bytes": 2994,
+      "previousBlob": null,
+      "action": "CONSUMED_EXACT_PUBLISHED_BLOB",
+      "sourceOwnerPr": 40,
+      "discoveredInPr": 37
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-restart-reader.ts",
+      "owner": "WP11",
+      "sourceCommit": "c41d7277be5941bafb105654360a32adea7f0347",
+      "blob": "3086ebdaf8049ab38cc0855934389bdec3f251c8",
+      "sha256": "d84af8ce76b4392699a595c05d24984f2de3e8f8555bd1c9a9df959fa6ec7def",
+      "bytes": 9193,
+      "previousBlob": null,
+      "action": "CONSUMED_EXACT_PUBLISHED_BLOB",
+      "sourceOwnerPr": 40,
+      "discoveredInPr": 37
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-fixture.ts",
+      "owner": "WP11",
+      "sourceCommit": "c41d7277be5941bafb105654360a32adea7f0347",
+      "blob": "3c1caeff08728b3e0c2aed8ae916c0754ad6318d",
+      "sha256": "0485d078d1920a333287f4621882c8370cb6cc42b7901a49013c396120735321",
+      "bytes": 16513,
+      "previousBlob": null,
+      "action": "CONSUMED_EXACT_PUBLISHED_BLOB",
+      "sourceOwnerPr": 40,
+      "discoveredInPr": 37
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+      "owner": "Finance",
+      "sourceCommit": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+      "blob": "608b1a95b491740041f8689a41b4a064c7254b24",
+      "sha256": "afb559f4b2403025b977a33a5a118be567a5936de5ca46e3308687186b250ad8",
+      "bytes": 22570,
+      "previousBlob": "0ccf287ecd225ddcae99a1490f255b4c2b4358ed",
+      "action": "CONSUMED_EXACT_PUBLISHED_BLOB",
+      "sourceOwnerPr": 35,
+      "discoveredInPr": 37
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+      "owner": "WP03/Finance",
+      "sourceCommit": "61d92392e9bded167eb2794995a623b2719cc4ba",
+      "blob": "fca509789efd2bf1b7d9453d09a3a460ee778feb",
+      "sha256": "771b060898fce1b1d851461bee7df743014ab55f9c0994a0331f2664a1c8bfd1",
+      "bytes": 6407,
+      "previousBlob": "5433cb0518e770ff1a4dc1fa0fe14f8b89869c9b",
+      "action": "CONSUMED_EXACT_PUBLISHED_BLOB",
+      "sourceOwnerPr": 35,
+      "discoveredInPr": 37
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+      "owner": "WP03/Finance",
+      "sourceCommit": "61d92392e9bded167eb2794995a623b2719cc4ba",
+      "blob": "1782c2094239c3712d3a895a6a25f4160fb429c7",
+      "sha256": "0a7636cb5245b63494e2dc0d83adf909cd750ba71f4be46f62f03f797e71a965",
+      "bytes": 8591,
+      "previousBlob": "d3098aa94cdeee71193c94ae906f6fafd14bda9b",
+      "action": "CONSUMED_EXACT_PUBLISHED_BLOB",
+      "sourceOwnerPr": 35,
+      "discoveredInPr": 37
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+      "owner": "WP03/Finance",
+      "sourceCommit": "61d92392e9bded167eb2794995a623b2719cc4ba",
+      "blob": "1673c86995cf71b61e288d91492ae7b691934171",
+      "sha256": "d83e19bff860ad2a54fc3f41b3b5790d3d31cd3b2b55ea8785a61ea30aa8827b",
+      "bytes": 19887,
+      "previousBlob": "ed68563245e406aca2dc3ce335943647fd2cb002",
+      "action": "CONSUMED_EXACT_PUBLISHED_BLOB",
+      "sourceOwnerPr": 35,
+      "discoveredInPr": 37
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+      "owner": "WP11/Finance",
+      "sourceCommit": "61d92392e9bded167eb2794995a623b2719cc4ba",
+      "blob": "044de4c276dde8850abdacd9c2328c7f2836fdd0",
+      "sha256": "6a2576aa4495ec03a38c67f9c5453cd0a9cec3455f21306e435bc269cced8bce",
+      "bytes": 12865,
+      "previousBlob": null,
+      "action": "CONSUMED_EXACT_PUBLISHED_BLOB",
+      "sourceOwnerPr": 35,
+      "discoveredInPr": 37
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/scenario-batch-fixture.ts",
+      "owner": "WP11/Finance",
+      "sourceCommit": "6016a70d7ab0c3d50f1ec2827a534a80e48a5c56",
+      "blob": "0bd661681e2dd3c3daafdea82851af88c772f0cf",
+      "sha256": "cec7996db6f11c3fc45de8ab768288c548e6cb7184d85da70b05b1d020ea0ac4",
+      "bytes": 10879,
+      "previousBlob": null,
+      "action": "CONSUMED_EXACT_PUBLISHED_BLOB",
+      "sourceOwnerPr": 35,
+      "discoveredInPr": 37
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/planner-fixture.ts",
+      "owner": "WP03/Finance",
+      "sourceCommit": "61d92392e9bded167eb2794995a623b2719cc4ba",
+      "blob": "19cb4262ca02a680b06cdd4db54d5bb9d33a1219",
+      "sha256": "ce0483cee32f81c4616ae51369152618da94784ea195f5f8c6c3bcdabf038a5f",
+      "bytes": 6477,
+      "previousBlob": "19cb4262ca02a680b06cdd4db54d5bb9d33a1219",
+      "action": "PRESERVED_IDENTICAL",
+      "sourceOwnerPr": 35,
+      "discoveredInPr": 37
+    }
+  ],
+  "review": {
+    "author": "/root/wp13",
+    "independent": "/root/review_portfolio",
+    "status": "NO_STATIC_BLOCKING_API_OR_IMPORT_FINDING",
+    "record": "../WP13/astra-intelligence-w6/input-closure-review.json",
+    "tests": "NOT_RUN_ON_W6",
+    "typecheck": "NOT_RUN_ON_W6"
+  },
+  "excluded": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+      "sourceBlob": "cbce0fa5bc9cff4131ce540e98e05db70574015b",
+      "reason": "Owner producer gate, not imported by the selected WP13 or batch closure; existing tests preserved."
+    }
+  ],
+  "preservation": [
+    "Each prior blob archived before replacement",
+    "Only exact listed owner blobs consumed; no source authored outside WP12/13/14",
+    "No whole snapshot merge, Azure/dev or host/scanner public intake",
+    "Planner-fixture19cb4262 is already identical and was not rewritten",
+    "Eleven divergent existing dependencies preserved; no PASS or API compatibility inferred from hash inequality alone"
+  ],
+  "localProductExecution": "NOT_RUN"
+}

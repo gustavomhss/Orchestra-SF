@@ -1,0 +1,1042 @@
+{
+  "schema": "sf2h.wp14.w3-reconciliation.v1",
+  "writer": "Astra / WP14",
+  "base_candidate": "46c904ead4e9b363422f6739258e492913ae6e2e",
+  "canonical_plan": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "campaign_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+  "pr38": {
+    "requested_head": "7b20f81b5181d57109244236eb46ae049ca5ec8f",
+    "observed_head": "0f4f93ff6b6a4ce4936c2368f5aa2e91dd297470",
+    "observed_head_delta": "Six owner-findings documentation paths only; own product/test content remains requested pin.",
+    "own_paths_compared": 28,
+    "identical_paths": 9,
+    "changed_or_new_paths": 19,
+    "foreign_paths_consumed_by_wp14": 0,
+    "post_review_base": "0f4f93ff6b6a4ce4936c2368f5aa2e91dd297470",
+    "post_review_head": "45c4ed69325652d81b0f9954b6fe1debb4cf1301",
+    "post_review_own_paths_compared": 18
+  },
+  "operations": {
+    "head": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+    "test_blob": "fbe627ffde443ff7e2d3b1204bbcf67523404f41",
+    "patch_commit": "98dae53606d64994171bf42998fa4f9829dcd8d1",
+    "patch_blob": "2ab9a6b6f18709d5bad95f58247c70ba286a00aa",
+    "patch_proposed_whole_file_blob": "d7d2a69837560f42438d470b83724c1a61939a73",
+    "applied_as": "Only second Documents scenario, combined with W2/PR38 first scenario; same WeakSet passed to product authority/business factory. Whole-file replacement not used.",
+    "comment_urls": [
+      "https://github.com/gustavomhss/Orchestra-SF/pull/32#issuecomment-6874966024",
+      "https://github.com/gustavomhss/Orchestra-SF/pull/32#issuecomment-6875285729"
+    ]
+  },
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/atlas-projection.ts",
+      "w2_blob": "7c1b3dd08dc663e9dfa406b09dc2af5920281131",
+      "source_commit": "7b20f81b5181d57109244236eb46ae049ca5ec8f",
+      "source_blob": "7c1b3dd08dc663e9dfa406b09dc2af5920281131",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/7b20f81b5181d57109244236eb46ae049ca5ec8f/modules/sucafina/Sucafinav1/product/decision-memory/atlas-projection.ts",
+      "worktree_blob": "7c1b3dd08dc663e9dfa406b09dc2af5920281131",
+      "worktree_sha256": "d75df91777528df4f4cf2af8099bbea47ebdf614a20d73803de6e6eb06ed877d",
+      "changed_after_w2": false,
+      "decision": "retain-identical",
+      "rationale": "Identical valid W2 and PR38 content; preserved."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/case-features.ts",
+      "w2_blob": "ff95a311352c0c04b9ca42ab6523783284a8001e",
+      "source_commit": "7b20f81b5181d57109244236eb46ae049ca5ec8f",
+      "source_blob": "ff95a311352c0c04b9ca42ab6523783284a8001e",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/7b20f81b5181d57109244236eb46ae049ca5ec8f/modules/sucafina/Sucafinav1/product/decision-memory/case-features.ts",
+      "worktree_blob": "ff95a311352c0c04b9ca42ab6523783284a8001e",
+      "worktree_sha256": "58e8c6e365da4262720d1eb8e5d51e97f719ee87ebd56a6934ffdbd7a33f6852",
+      "changed_after_w2": false,
+      "decision": "retain-identical",
+      "rationale": "Identical valid W2 and PR38 content; preserved."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/case-recall.ts",
+      "w2_blob": "fdc378d5f251511f66bb256b78240f472f1d566c",
+      "source_commit": "7b20f81b5181d57109244236eb46ae049ca5ec8f",
+      "source_blob": "03e75875386483c7e37dce3f7bb21189f3066774",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/7b20f81b5181d57109244236eb46ae049ca5ec8f/modules/sucafina/Sucafinav1/product/decision-memory/case-recall.ts",
+      "worktree_blob": "03e75875386483c7e37dce3f7bb21189f3066774",
+      "worktree_sha256": "1adf7204fc8ff8fb1383418e311ca7a6271065f0301fde3cf7881d6e632d48c9",
+      "changed_after_w2": true,
+      "decision": "recover-exact-file",
+      "rationale": "Recovered scoped candidate feature/continuity callbacks, native narrowing and request/binding mutation guards; no native admission is claimed."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/domain-outcome.ts",
+      "w2_blob": "024733060d3a5eb0729a81ea81f2487b6420843f",
+      "source_commit": "45c4ed69325652d81b0f9954b6fe1debb4cf1301",
+      "source_blob": "aad2b8a655c3259a86e526efcf562602851df8bc",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/45c4ed69325652d81b0f9954b6fe1debb4cf1301/modules/sucafina/Sucafinav1/product/decision-memory/domain-outcome.ts",
+      "worktree_blob": "aad2b8a655c3259a86e526efcf562602851df8bc",
+      "worktree_sha256": "84c74cc88f568786bdf870f59f5d650bd8c81aba3a52994ec45ed274c23f94dc",
+      "changed_after_w2": true,
+      "decision": "recover-exact-owned-file",
+      "rationale": "Recover final authority/argument/selection/egress snapshot guards exactly; previous producer snapshots and observation clocks retained.",
+      "prior_checkpoints": [
+        {
+          "checkpoint": "W3-before-post-0f4",
+          "source_commit": "7b20f81b5181d57109244236eb46ae049ca5ec8f",
+          "source_blob": "293afaf57e4477e4a3a98ccf85c6f988109ffed0",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/7b20f81b5181d57109244236eb46ae049ca5ec8f/modules/sucafina/Sucafinav1/product/decision-memory/domain-outcome.ts",
+          "worktree_blob": "293afaf57e4477e4a3a98ccf85c6f988109ffed0",
+          "worktree_sha256": "0568db6660bf0602abebb46157229d9951d05650561879239dfa8e79d2332638",
+          "decision": "recover-exact-file",
+          "rationale": "Recovered immutable producer snapshots and monotonic valid observation clocks; existing real producer and authority remain."
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/invalidation.ts",
+      "w2_blob": "430cad970087abab2fcb05d299f5d358834c93e9",
+      "source_commit": "45c4ed69325652d81b0f9954b6fe1debb4cf1301",
+      "source_blob": "acca5b77dfef2cf4552ccf1caf27e19e74a98cf2",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/45c4ed69325652d81b0f9954b6fe1debb4cf1301/modules/sucafina/Sucafinav1/product/decision-memory/invalidation.ts",
+      "worktree_blob": "3bafcac1d0114eff9cd6869fd8040a9fe414ed7f",
+      "worktree_sha256": "b060837431cd1b156c2cdf2d8ed7558b87b8422521219cdafb9f1f6f05832535",
+      "changed_after_w2": true,
+      "decision": "retain-reviewed-deltas",
+      "rationale": "Retain reviewed R1/R2 complete material target/schema/evidence-level checks and same-projection scoped record reissue. Upstream refDigest-based source-content rule is less specific and is not substituted.",
+      "prior_checkpoints": [
+        {
+          "checkpoint": "W3-before-post-0f4",
+          "source_commit": "7b20f81b5181d57109244236eb46ae049ca5ec8f",
+          "source_blob": "298b9dfbb9b88605d5ede59967d894bc6f143725",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/7b20f81b5181d57109244236eb46ae049ca5ec8f/modules/sucafina/Sucafinav1/product/decision-memory/invalidation.ts",
+          "worktree_blob": "3bafcac1d0114eff9cd6869fd8040a9fe414ed7f",
+          "worktree_sha256": "b060837431cd1b156c2cdf2d8ed7558b87b8422521219cdafb9f1f6f05832535",
+          "decision": "reconcile-owned-deltas",
+          "rationale": "Recovered exact source subject/scope checks and immutable-source invalidation. Independent W3 review found historical N/N projection change could reuse cache. Root preserves the original source patch and adds source-digest invalidation plus a counterproof; execution pending W3 CI. W3 review follow-up: Preserves root WP14-W3-R1 record guard and adds full target/schema/evidence-level comparison for versioned document, receipt and case-event refs. Same-projection record reissue remains valid under reauthorization."
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/materiality.ts",
+      "w2_blob": "cd87d8a7af91ac66e8e6a8d2e9ae48ed1db5ec74",
+      "source_commit": "45c4ed69325652d81b0f9954b6fe1debb4cf1301",
+      "source_blob": "0299a2a5dadecbec526a5dcea127d8a010488824",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/45c4ed69325652d81b0f9954b6fe1debb4cf1301/modules/sucafina/Sucafinav1/product/decision-memory/materiality.ts",
+      "worktree_blob": "1c586d321cf10bdaeccd95b4ac2a2100b439fe7f",
+      "worktree_sha256": "b1924141528e52b012b2886f1da77dbd55307216101c62dc8f33bf106e005f73",
+      "changed_after_w2": true,
+      "decision": "reconcile-owned-deltas",
+      "rationale": "Merge local snapshot digest fences; preserve W2 coverage-set ordering, evidence copies lent to authorizers and final binding fence.",
+      "prior_checkpoints": [
+        {
+          "checkpoint": "W3-before-post-0f4",
+          "source_commit": "7b20f81b5181d57109244236eb46ae049ca5ec8f",
+          "source_blob": "e70f6c1f2e6ca50d46d4d13def1630cc59509d6c",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/7b20f81b5181d57109244236eb46ae049ca5ec8f/modules/sucafina/Sucafinav1/product/decision-memory/materiality.ts",
+          "worktree_blob": "4004a03da7990d4d53ca9bc17347d8dd132d723a",
+          "worktree_sha256": "720e60bd4055a6208d9783c9744f28b0e97d9ac1d485658766f8696c86721700",
+          "decision": "reconcile-owned-deltas",
+          "rationale": "Manually combined PR38 observation validity/monotonicity with W2 coverage set ordering, cloned evidence callbacks and final binding check after revalidation."
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/observation-time.ts",
+      "w2_blob": null,
+      "source_commit": "7b20f81b5181d57109244236eb46ae049ca5ec8f",
+      "source_blob": "0b567eb3c4b4363c41d50e1147f76b97ac051449",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/7b20f81b5181d57109244236eb46ae049ca5ec8f/modules/sucafina/Sucafinav1/product/decision-memory/observation-time.ts",
+      "worktree_blob": "0b567eb3c4b4363c41d50e1147f76b97ac051449",
+      "worktree_sha256": "8cbb0149e8e6afa02201646abd7161041fbe3408aadfec04ebc6ce4c84a7c0a4",
+      "changed_after_w2": true,
+      "decision": "recover-exact-file",
+      "rationale": "New PR38 date/clock validator consumed exactly."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/outcome-review.ts",
+      "w2_blob": "08dbdc8fe96069030afc1a2617260ca2eb7088b6",
+      "source_commit": "7b20f81b5181d57109244236eb46ae049ca5ec8f",
+      "source_blob": "08dbdc8fe96069030afc1a2617260ca2eb7088b6",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/7b20f81b5181d57109244236eb46ae049ca5ec8f/modules/sucafina/Sucafinav1/product/decision-memory/outcome-review.ts",
+      "worktree_blob": "08dbdc8fe96069030afc1a2617260ca2eb7088b6",
+      "worktree_sha256": "f7e28893cdcbbed41d5a4128d859db08c72f7b399b2949c1490a5d75ffaf66b2",
+      "changed_after_w2": false,
+      "decision": "retain-identical",
+      "rationale": "Identical valid W2 and PR38 content; preserved."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/outcome-selection.ts",
+      "w2_blob": "bc30d168f18a186a9cbdc149607fec9c30223247",
+      "source_commit": "45c4ed69325652d81b0f9954b6fe1debb4cf1301",
+      "source_blob": "03a3ddf8dacd2e7b050b20b73b14b2bd3e974f4c",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/45c4ed69325652d81b0f9954b6fe1debb4cf1301/modules/sucafina/Sucafinav1/product/decision-memory/outcome-selection.ts",
+      "worktree_blob": "790e7c98820df61306ad67bd5897b1301118d335",
+      "worktree_sha256": "90744777637dc32595b280e8c34e52f27a770c979f5f6e40d8442c256daf1a9c",
+      "changed_after_w2": true,
+      "decision": "reconcile-owned-deltas",
+      "rationale": "Recover selection/request/authority fences around async callbacks, independent stored snapshots and cloned durable/output values exactly. R5: Capture latest case digest synchronously immediately after the final real case read, then require that captured identity matches the initial case and that the returned object still matches it after final revalidate. Prevent B-to-A alias restoration from hiding a divergent choice.",
+      "prior_checkpoints": [
+        {
+          "checkpoint": "W3-before-post-0f4",
+          "source_commit": "7b20f81b5181d57109244236eb46ae049ca5ec8f",
+          "source_blob": "bc30d168f18a186a9cbdc149607fec9c30223247",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/7b20f81b5181d57109244236eb46ae049ca5ec8f/modules/sucafina/Sucafinav1/product/decision-memory/outcome-selection.ts",
+          "worktree_blob": "bc30d168f18a186a9cbdc149607fec9c30223247",
+          "worktree_sha256": "31bbd4885c2f5ae040df019024a6deb514e16903f652e624f6ebdf2ec92c79bf",
+          "decision": "retain-identical",
+          "rationale": "Identical valid W2 and PR38 content; preserved."
+        },
+        {
+          "checkpoint": "W3-post-45c4ed-before-latest-case-fence",
+          "worktree_blob": "03a3ddf8dacd2e7b050b20b73b14b2bd3e974f4c",
+          "worktree_sha256": "8261fcd6fd0e6ec6b15461ef5a8dd066d6cfc6efc16cf712dfe4af02f5e81337",
+          "decision": "recover-exact-owned-file",
+          "rationale": "Recover selection/request/authority fences around async callbacks, independent stored snapshots and cloned durable/output values exactly."
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/outcome.ts",
+      "w2_blob": "c84aac867aab332b9ac7e4e92d03bf3f7e7ad430",
+      "source_commit": "45c4ed69325652d81b0f9954b6fe1debb4cf1301",
+      "source_blob": "d1c524a976e07524d9b2b197635805dde9ae650c",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/45c4ed69325652d81b0f9954b6fe1debb4cf1301/modules/sucafina/Sucafinav1/product/decision-memory/outcome.ts",
+      "worktree_blob": "97d23e90f627472e525c50288fdf4163e3cc3c54",
+      "worktree_sha256": "df5e066b8e6f43d9c93a12e56037aecb7531936e63f1f786518fec6112e191b6",
+      "changed_after_w2": true,
+      "decision": "reconcile-owned-deltas",
+      "rationale": "Recover finite subtraction overflow refusal and snapshot digest fences; preserve W2 copied loader request/evidence, caller request identity and final binding check.",
+      "prior_checkpoints": [
+        {
+          "checkpoint": "W3-before-post-0f4",
+          "source_commit": "7b20f81b5181d57109244236eb46ae049ca5ec8f",
+          "source_blob": "50fa58dc2c2f9c5f759598eb028a01ce5092b41c",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/7b20f81b5181d57109244236eb46ae049ca5ec8f/modules/sucafina/Sucafinav1/product/decision-memory/outcome.ts",
+          "worktree_blob": "3f34a5867458a899a943cb50828c1c6403b09138",
+          "worktree_sha256": "36d74a58046c07859a612f79d705951447adeff64500f15ddbe7b43c740f519c",
+          "decision": "reconcile-owned-deltas",
+          "rationale": "Manually retained W2 cloned producer request/result/evidence and final authority check; added PR38 valid identity/time and foreign-evidence refusal."
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/planner-materiality.ts",
+      "w2_blob": "0c5f8ba9d7bb2c043ae5d62f044e9fcf8eb9ee7a",
+      "source_commit": "7b20f81b5181d57109244236eb46ae049ca5ec8f",
+      "source_blob": "0c5f8ba9d7bb2c043ae5d62f044e9fcf8eb9ee7a",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/7b20f81b5181d57109244236eb46ae049ca5ec8f/modules/sucafina/Sucafinav1/product/decision-memory/planner-materiality.ts",
+      "worktree_blob": "0c5f8ba9d7bb2c043ae5d62f044e9fcf8eb9ee7a",
+      "worktree_sha256": "ed6fb6e44e06cd40521467fe3fd5fbf0637a21cdda49b3e56b384d455a5a33e1",
+      "changed_after_w2": false,
+      "decision": "retain-identical",
+      "rationale": "Identical valid W2 and PR38 content; preserved."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/recall.ts",
+      "w2_blob": "6c4c972fb678ca31fc09606008feef5090602b1f",
+      "source_commit": "7b20f81b5181d57109244236eb46ae049ca5ec8f",
+      "source_blob": "57a9f7425de54eda1673a4f488d5567c66e94d5c",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/7b20f81b5181d57109244236eb46ae049ca5ec8f/modules/sucafina/Sucafinav1/product/decision-memory/recall.ts",
+      "worktree_blob": "2d8524b42448ea63a7dd9ab0e9337c90540dc383",
+      "worktree_sha256": "3c8fcffff8cc2d96e8e8fe509b4bc4dd0894a6805eaecde6427ed015cbaa343d",
+      "changed_after_w2": true,
+      "decision": "reconcile-owned-deltas",
+      "rationale": "Recovered reconstruction of task content from actual authorized ledger plus selection mutation guard. W3 review follow-up: Adds scopeDigest comparison after final revalidate, covering source maps, authority and runtime versions."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/signal-list.ts",
+      "w2_blob": "2d41f7fc3a718b625a49e2fe85e414cca1c473c8",
+      "source_commit": "45c4ed69325652d81b0f9954b6fe1debb4cf1301",
+      "source_blob": "905770233118a2b0707dfed37f9038f89fb884ac",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/45c4ed69325652d81b0f9954b6fe1debb4cf1301/modules/sucafina/Sucafinav1/product/decision-memory/signal-list.ts",
+      "worktree_blob": "c4a1d8d1f4e540c41c3e7d09efb92bb003ab6d8b",
+      "worktree_sha256": "1c20921bef733f96f1dbf6c7df20869150e81b8f35c4dde36676224880df4f5b",
+      "changed_after_w2": true,
+      "decision": "reconcile-owned-deltas",
+      "rationale": "Recover request/registry/materiality snapshots and async mutation guards. Preserve reviewed R3 final synchronous binding/abort fence including empty lists via unchanged().",
+      "prior_checkpoints": [
+        {
+          "checkpoint": "W3-before-post-0f4",
+          "source_commit": "7b20f81b5181d57109244236eb46ae049ca5ec8f",
+          "source_blob": "ecc16da2017e5850ce24f021d9264d8cdd30bcbc",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/7b20f81b5181d57109244236eb46ae049ca5ec8f/modules/sucafina/Sucafinav1/product/decision-memory/signal-list.ts",
+          "worktree_blob": "4bb3f24deba7f48ae9252063da2ccbf523d6431d",
+          "worktree_sha256": "d6a29dcf0fd521da1987053a2ba20921f8783411117a9b1ac9c44a51a1c67742",
+          "decision": "reconcile-owned-deltas",
+          "rationale": "Recovered monotonic observation egress check while retaining W2 signal fingerprint and typed callbacks. W3 review follow-up: Adds synchronous request-abort and binding-digest fence after every await, including empty signal lists."
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/signal-registry.ts",
+      "w2_blob": "83b77eab0314943f3a6e5dfc16b648f1a166db33",
+      "source_commit": "45c4ed69325652d81b0f9954b6fe1debb4cf1301",
+      "source_blob": "d329fc03041ae86d7d0e57a5d31e05e98be46fe5",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/45c4ed69325652d81b0f9954b6fe1debb4cf1301/modules/sucafina/Sucafinav1/product/decision-memory/signal-registry.ts",
+      "worktree_blob": "b6edcf44f55923cbaa764ff9374ce127145b0f9e",
+      "worktree_sha256": "c2678a5235e6c550e12ecb4ac2a38f87af328d145b28c7483204d0e7b4e1340b",
+      "changed_after_w2": true,
+      "decision": "reconcile-owned-deltas",
+      "rationale": "Recover register/revise/list/reconcile request/selection/state snapshots and post-await fences, stable choice digests and cloned persistence/output values exactly. R5: Capture latest case digest synchronously before final revalidate; validate both the captured case against the initial one and the returned alias against its captured identity afterward. Existing request/authority/record fences preserved.",
+      "prior_checkpoints": [
+        {
+          "checkpoint": "W3-before-post-0f4",
+          "source_commit": "7b20f81b5181d57109244236eb46ae049ca5ec8f",
+          "source_blob": "83b77eab0314943f3a6e5dfc16b648f1a166db33",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/7b20f81b5181d57109244236eb46ae049ca5ec8f/modules/sucafina/Sucafinav1/product/decision-memory/signal-registry.ts",
+          "worktree_blob": "83b77eab0314943f3a6e5dfc16b648f1a166db33",
+          "worktree_sha256": "e7268ad3ced942ae3ac6f2d3ccee5e4b49b00e355af7de4c0e64b0735b42f4f5",
+          "decision": "retain-identical",
+          "rationale": "Identical valid W2 and PR38 content; preserved."
+        },
+        {
+          "checkpoint": "W3-post-45c4ed-before-latest-case-fence",
+          "worktree_blob": "d329fc03041ae86d7d0e57a5d31e05e98be46fe5",
+          "worktree_sha256": "f9f8fb4e5926cc9e613fdb0f7f664446a6f7d50995db1578a8caaae160559dbb",
+          "decision": "recover-exact-owned-file",
+          "rationale": "Recover register/revise/list/reconcile request/selection/state snapshots and post-await fences, stable choice digests and cloned persistence/output values exactly."
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/signal-work.ts",
+      "w2_blob": "44d56975554badd68d9156622c9f94df8145bcdd",
+      "source_commit": "45c4ed69325652d81b0f9954b6fe1debb4cf1301",
+      "source_blob": "8e03cb17343b87304238a8f9f17b9e0e130b5149",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/45c4ed69325652d81b0f9954b6fe1debb4cf1301/modules/sucafina/Sucafinav1/product/decision-memory/signal-work.ts",
+      "worktree_blob": "3cc6b0ae5fd75ce84724eeafc053264fc9370740",
+      "worktree_sha256": "1e1ee1e10529b1d71bbebaf00af0abb7b44f6dea06a2915b46f36466e4702564",
+      "changed_after_w2": true,
+      "decision": "reconcile-owned-deltas",
+      "rationale": "Recover request-period/selection/registry/materiality/output snapshots and callback guards. Preserve reviewed R3 final synchronous empty-list fence and the reviewed WorkRef issuer including fail-closed exception handling.",
+      "prior_checkpoints": [
+        {
+          "checkpoint": "W3-before-post-0f4",
+          "source_commit": "7b20f81b5181d57109244236eb46ae049ca5ec8f",
+          "source_blob": "2349e47897d0a349c4877fefa04b394ced97af76",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/7b20f81b5181d57109244236eb46ae049ca5ec8f/modules/sucafina/Sucafinav1/product/decision-memory/signal-work.ts",
+          "worktree_blob": "eee1ea016e5843c08fd6911569c73d7855c33619",
+          "worktree_sha256": "99052526c5973bbada8843749138da57e90f907cced4e56bf7ffc35ff2fa0a9a",
+          "decision": "reconcile-owned-deltas",
+          "rationale": "Recovered monotonic observation egress check while retaining W2 signal fingerprint and typed callbacks. W3 review follow-up: Adds synchronous final request/binding fence; WorkRef issuer snapshots binding and record and fences both authorization awaits without changing HMAC format."
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/signals.ts",
+      "w2_blob": "bf432c915607ed99d050faae373c7fab3f741f88",
+      "source_commit": "7b20f81b5181d57109244236eb46ae049ca5ec8f",
+      "source_blob": "bf432c915607ed99d050faae373c7fab3f741f88",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/7b20f81b5181d57109244236eb46ae049ca5ec8f/modules/sucafina/Sucafinav1/product/decision-memory/signals.ts",
+      "worktree_blob": "bf432c915607ed99d050faae373c7fab3f741f88",
+      "worktree_sha256": "5873a4d766ffbca7b7adcd0ad3c33726c12185926067613242873c50854869f2",
+      "changed_after_w2": false,
+      "decision": "retain-identical",
+      "rationale": "Identical valid W2 and PR38 content; preserved."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts",
+      "w2_blob": "41741c5131ea66242c881126c22c6d03cfd9c3c3",
+      "source_commit": "45c4ed69325652d81b0f9954b6fe1debb4cf1301",
+      "source_blob": "e4e648feecb4e12ace3da41e1b91c45b527c7247",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/45c4ed69325652d81b0f9954b6fe1debb4cf1301/modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts",
+      "worktree_blob": "e4e648feecb4e12ace3da41e1b91c45b527c7247",
+      "worktree_sha256": "9efb6954aea16338a03ee5119561738814e184024583502b4bcb71b5070c69a2",
+      "changed_after_w2": true,
+      "decision": "recover-exact-owned-file",
+      "rationale": "Recover canonical Procurement resolver callback signature exactly. Verified actual Compose business-services passes callable resolver; all own object-form consumers migrated to the same actual callback without changing ACL or grants.",
+      "prior_checkpoints": [
+        {
+          "checkpoint": "W3-before-post-0f4",
+          "source_commit": "7b20f81b5181d57109244236eb46ae049ca5ec8f",
+          "source_blob": "8e8c0c470590127d028ae3fb1cd0677c5501886b",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/7b20f81b5181d57109244236eb46ae049ca5ec8f/modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts",
+          "worktree_blob": "8e8c0c470590127d028ae3fb1cd0677c5501886b",
+          "worktree_sha256": "72af2e3ad0b6a7f1bd866daeaa45121856371470f4bdd375b933e9c7441c0ee6",
+          "decision": "recover-exact-file",
+          "rationale": "Recovered optional host-only per-request recall case grant and mutation guards; W2 public Procurement object API retained."
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/atlas-projection.test.ts",
+      "w2_blob": "30ebaf3aac1940c2760b21761dcd72be52d050d9",
+      "source_commit": "7b20f81b5181d57109244236eb46ae049ca5ec8f",
+      "source_blob": "30ebaf3aac1940c2760b21761dcd72be52d050d9",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/7b20f81b5181d57109244236eb46ae049ca5ec8f/modules/sucafina/Sucafinav1/test/product/wp14/atlas-projection.test.ts",
+      "worktree_blob": "30ebaf3aac1940c2760b21761dcd72be52d050d9",
+      "worktree_sha256": "1d3774b57dc1aec7f6269318d1bf97da29901802f7f04d7ef45bd16deb46e1c2",
+      "changed_after_w2": false,
+      "decision": "retain-identical",
+      "rationale": "Identical valid W2 and PR38 content; preserved."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/atlas-restart-reader.ts",
+      "w2_blob": "60f768da8420782418b516b2f7e839845a101197",
+      "source_commit": "45c4ed69325652d81b0f9954b6fe1debb4cf1301",
+      "source_blob": "439ba78e8208133e498ebfb87b00e4eb882dd8fd",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/45c4ed69325652d81b0f9954b6fe1debb4cf1301/modules/sucafina/Sucafinav1/test/product/wp14/atlas-restart-reader.ts",
+      "worktree_blob": "f4fcfa9f961f5087eead1e4ce54296625c93172d",
+      "worktree_sha256": "940d24f7452e964b137911b2d708de8d238087c84aa6e286fa8fbb500aafd936",
+      "changed_after_w2": true,
+      "decision": "reconcile-owned-deltas",
+      "rationale": "Recover cooperative 90-second cancellation via real host request/revalidation fences and exact candidate case identity in child receipt. Preserve W3 detailed lifetime/read counters and parent 120-second process/180-second test bounds.",
+      "prior_checkpoints": [
+        {
+          "checkpoint": "W3-before-post-0f4",
+          "source_commit": "7b20f81b5181d57109244236eb46ae049ca5ec8f",
+          "source_blob": "c6cdf7d7b558649a45c1fd535f37526d3ff67de9",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/7b20f81b5181d57109244236eb46ae049ca5ec8f/modules/sucafina/Sucafinav1/test/product/wp14/atlas-restart-reader.ts",
+          "worktree_blob": "b0de86c28bf629fc045084a559099ef08cbd1b3a",
+          "worktree_sha256": "3db1126514387c7be3cfc0d131dab048d30eff5a79d37346b2a48d3d7e3bec44",
+          "decision": "reconcile-owned-deltas",
+          "rationale": "Recovered PR38 stage summaries; added live process/stage/elapsed counters and shared existing case ACL callback as used by real Atlas composition."
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/domain-outcome.test.ts",
+      "w2_blob": "3904520e863976a432c98b98de942c42ebf32e08",
+      "source_commit": "45c4ed69325652d81b0f9954b6fe1debb4cf1301",
+      "source_blob": "210bac0815396bb4769ec8f7a5d3e4b948fe13a6",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/45c4ed69325652d81b0f9954b6fe1debb4cf1301/modules/sucafina/Sucafinav1/test/product/wp14/domain-outcome.test.ts",
+      "worktree_blob": "6216953b705f3e329e746455019ff36d3d85e6b2",
+      "worktree_sha256": "5c8776975f650aa929b3b81733e0360be5178edc9880ae503eb8a111fb79719b",
+      "changed_after_w2": true,
+      "decision": "reconcile-owned-deltas",
+      "rationale": "Recover actual Planner/C08 selection and domain adapter mutation counterproofs. Existing initialization and W2/W3 producer alias/clock checks retained; resulting file equals current upstream own blob. R5 counterproof delegates two case reads to real C08/SQLite, removes the choice only from the detached second returned object B, and restores that same alias from independent A during delegated final revalidation #3. Asserts two reads/three checks/restoration, unavailable, durable choice intact and normal positive selection unchanged.",
+      "prior_checkpoints": [
+        {
+          "checkpoint": "W3-before-post-0f4",
+          "source_commit": "7b20f81b5181d57109244236eb46ae049ca5ec8f",
+          "source_blob": "9e7f97fec6b91023db8ac56c8d07dc67690e93f9",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/7b20f81b5181d57109244236eb46ae049ca5ec8f/modules/sucafina/Sucafinav1/test/product/wp14/domain-outcome.test.ts",
+          "worktree_blob": "9e7f97fec6b91023db8ac56c8d07dc67690e93f9",
+          "worktree_sha256": "4f02dce64fa10ce26772b070e86f7a60523aedd81e6cdd40b064509ce9dd2dcb",
+          "decision": "recover-exact-file",
+          "rationale": "Recovered complete surface initialization and mutable case alias negative; preserves real Planner observed producer."
+        },
+        {
+          "checkpoint": "W3-post-45c4ed-before-latest-case-fence",
+          "worktree_blob": "210bac0815396bb4769ec8f7a5d3e4b948fe13a6",
+          "worktree_sha256": "8b4613ed35330a51dc23d1e7e41a38c01e8d291035afbaab2416834ff7a47905",
+          "decision": "recover-exact-owned-file",
+          "rationale": "Recover actual Planner/C08 selection and domain adapter mutation counterproofs. Existing initialization and W2/W3 producer alias/clock checks retained; resulting file equals current upstream own blob."
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/invalidation.test.ts",
+      "w2_blob": null,
+      "source_commit": "45c4ed69325652d81b0f9954b6fe1debb4cf1301",
+      "source_blob": "295399eb9d4171b85788b7344de7cee1f4239f1b",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/45c4ed69325652d81b0f9954b6fe1debb4cf1301/modules/sucafina/Sucafinav1/test/product/wp14/invalidation.test.ts",
+      "worktree_blob": "978797fc015a548b32a8a4fd8730b664bba25e8d",
+      "worktree_sha256": "0b001e508065f92f7025d98f6ccadebc3d7ee77c71ef8d11c86f02d1cf077550",
+      "changed_after_w2": true,
+      "decision": "retain-reviewed-deltas",
+      "rationale": "Retain reviewed broader R1/R2 N/N record/document/receipt/event counterproofs and scoped reissue controls. Upstream duplicate cases assert source-content label; reviewed exact source-digest semantics retained.",
+      "prior_checkpoints": [
+        {
+          "checkpoint": "W3-before-post-0f4",
+          "source_commit": "7b20f81b5181d57109244236eb46ae049ca5ec8f",
+          "source_blob": "bf12f29a5a3f49d594e16dd1539e37c95720667a",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/7b20f81b5181d57109244236eb46ae049ca5ec8f/modules/sucafina/Sucafinav1/test/product/wp14/invalidation.test.ts",
+          "worktree_blob": "978797fc015a548b32a8a4fd8730b664bba25e8d",
+          "worktree_sha256": "0b001e508065f92f7025d98f6ccadebc3d7ee77c71ef8d11c86f02d1cf077550",
+          "decision": "reconcile-owned-deltas",
+          "rationale": "Recovered four policy tests for subject/scope, unchanged reissue and immutable identities; unit tests, not physical cache proof. Independent W3 review found historical N/N projection change could reuse cache. Root preserves the original source patch and adds source-digest invalidation plus a counterproof; execution pending W3 CI. W3 review follow-up: Preserves root record N/N counterproof and reissue controls; adds document byte/segment/confirmation/RAG N/N, event output/dependencies N/N and receipt evidence-level counterproofs."
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/materiality.test.ts",
+      "w2_blob": "aee559a4815e95c5a40ee2a0c867389630bba944",
+      "source_commit": "45c4ed69325652d81b0f9954b6fe1debb4cf1301",
+      "source_blob": "81a37a4c2945c2af64d0749be3b909a54ae97508",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/45c4ed69325652d81b0f9954b6fe1debb4cf1301/modules/sucafina/Sucafinav1/test/product/wp14/materiality.test.ts",
+      "worktree_blob": "832dec005b43eca42d6b4bde027aee77c5857d00",
+      "worktree_sha256": "db39fcac727fb0f7badd98b913bbee626d9738f2b45fdf36bd0809b725313cd2",
+      "changed_after_w2": true,
+      "decision": "reconcile-owned-deltas",
+      "rationale": "Reconcile final authority mutation counterproof with W2 evidence-copy isolation. Retained-copy mutation must leave returned source snapshot/material result unchanged; no claim of Atlas or financial producer execution from this policy fixture.",
+      "prior_checkpoints": [
+        {
+          "checkpoint": "W3-before-post-0f4",
+          "source_commit": "7b20f81b5181d57109244236eb46ae049ca5ec8f",
+          "source_blob": "7f242595cf534555cae7d51eb6afd5cca3ca2b74",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/7b20f81b5181d57109244236eb46ae049ca5ec8f/modules/sucafina/Sucafinav1/test/product/wp14/materiality.test.ts",
+          "worktree_blob": "9b44553ed987165477a935e50fcd4f46d74f7823",
+          "worktree_sha256": "7b1876eac932851a1b44e766f756ec0c85f1df0f0cf87510d03b66562afe33f1",
+          "decision": "reconcile-owned-deltas",
+          "rationale": "Combined PR38 clock/correlation assertions with all W2 coverage-order/dedupe assertions."
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/outcome-signals.test.ts",
+      "w2_blob": "533103800b6e5037644be6f12ee3a80357235e34",
+      "source_commit": "45c4ed69325652d81b0f9954b6fe1debb4cf1301",
+      "source_blob": "62f3667b3f1ac1b450490d7a076ad60244079f73",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/45c4ed69325652d81b0f9954b6fe1debb4cf1301/modules/sucafina/Sucafinav1/test/product/wp14/outcome-signals.test.ts",
+      "worktree_blob": "0e14479d1f0c9cddc52eeb7f55a77f97a54ddacd",
+      "worktree_sha256": "65c01f1d8b355c2c5fcd34838f49e6e77baa2392c76507677c0f978bcd45ad4f",
+      "changed_after_w2": true,
+      "decision": "reconcile-owned-deltas",
+      "rationale": "Recover upstream overflow counterproof exactly. Reconcile request/binding final-await tests with W2 evidence-copy isolation, checking unchanged sourceRefs/observation/delta; preserve all earlier W2/W3 tests.",
+      "prior_checkpoints": [
+        {
+          "checkpoint": "W3-before-post-0f4",
+          "source_commit": "7b20f81b5181d57109244236eb46ae049ca5ec8f",
+          "source_blob": "4b7f7693c93a504b158186c994fe5ac39c2d49f9",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/7b20f81b5181d57109244236eb46ae049ca5ec8f/modules/sucafina/Sucafinav1/test/product/wp14/outcome-signals.test.ts",
+          "worktree_blob": "e01b0d1e1e807070fdde7f497d6246e4211b03d1",
+          "worktree_sha256": "7f38857deed42cc4fe37d65d2af4ecd97d99c482869ca9ef83dd9dde8d7f72c3",
+          "decision": "reconcile-owned-deltas",
+          "rationale": "Combined PR38 invalid/rewound clock and foreign evidence negatives with all W2 alias, borrowed-evidence and final-binding assertions."
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/planner-materiality.test.ts",
+      "w2_blob": "7361b78c548f4e5fab2a2485b860846ee085cb5f",
+      "source_commit": "7b20f81b5181d57109244236eb46ae049ca5ec8f",
+      "source_blob": "7361b78c548f4e5fab2a2485b860846ee085cb5f",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/7b20f81b5181d57109244236eb46ae049ca5ec8f/modules/sucafina/Sucafinav1/test/product/wp14/planner-materiality.test.ts",
+      "worktree_blob": "7361b78c548f4e5fab2a2485b860846ee085cb5f",
+      "worktree_sha256": "c7b90c9c0ed29ba4c768bba56123647c7ae2869101df1345e0c73c4035f32c79",
+      "changed_after_w2": false,
+      "decision": "retain-identical",
+      "rationale": "Identical valid W2 and PR38 content; preserved."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/recall.test.ts",
+      "w2_blob": "42e2a8df724b4771b48f8ebc4509c678a1ce5e2a",
+      "source_commit": "45c4ed69325652d81b0f9954b6fe1debb4cf1301",
+      "source_blob": "7bb228a1f972b5829d3cec10bcde015959fdb359",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/45c4ed69325652d81b0f9954b6fe1debb4cf1301/modules/sucafina/Sucafinav1/test/product/wp14/recall.test.ts",
+      "worktree_blob": "57826906307ec60f9cbd1398596ea32104f66c2e",
+      "worktree_sha256": "12bce4a3943f608afb21378cf8ab53111430384679391da7f7ddbd8c3905112a",
+      "changed_after_w2": true,
+      "decision": "reconcile-owned-deltas",
+      "rationale": "Recover explicit unbranded native fixture shape typing; preserve reviewed R4 scope digest mutations for one and zero candidates and all earlier cases.",
+      "prior_checkpoints": [
+        {
+          "checkpoint": "W3-before-post-0f4",
+          "source_commit": "7b20f81b5181d57109244236eb46ae049ca5ec8f",
+          "source_blob": "529e670bfd7d9cca23c39d6d7be5fd2547f90e16",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/7b20f81b5181d57109244236eb46ae049ca5ec8f/modules/sucafina/Sucafinav1/test/product/wp14/recall.test.ts",
+          "worktree_blob": "5208f4926e57f5ce4e4f338942022c3cc4f1f67f",
+          "worktree_sha256": "66b104541c38745b4267bcf73f3a419fce959e2f29c59943855fc1c6aec8a692",
+          "decision": "reconcile-owned-deltas",
+          "rationale": "Recovered task semantic corruption/selection mutation negatives and scoped orchestration contract test; synthetic orchestration is explicitly not native integrated recall. W3 review follow-up: Adds isolated recall-policy counterproofs for scope mutation during final revalidation, with one candidate and no candidates and unchanged controls."
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/signal-registry.test.ts",
+      "w2_blob": "3e8d2e790d9b1224723b685f8962ceda534605b6",
+      "source_commit": "45c4ed69325652d81b0f9954b6fe1debb4cf1301",
+      "source_blob": "cef1f6bd6fcecbd569522c7e33d65d6767155182",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/45c4ed69325652d81b0f9954b6fe1debb4cf1301/modules/sucafina/Sucafinav1/test/product/wp14/signal-registry.test.ts",
+      "worktree_blob": "9b28a77e125e686dc3b390f3281e25e3e451a82f",
+      "worktree_sha256": "8463e1b8b166b1a55513ec9874b7555e8afff4480a3940a1a363845637196ea2",
+      "changed_after_w2": true,
+      "decision": "reconcile-owned-deltas",
+      "rationale": "Recover real C08/SQLite registry and consumer callback mutation counterproofs by changed spans only. Preserve reviewed one/empty list matrix, provider/principal/access/abort checks and WorkRef first/final-await tests. R5 counterproof delegates two case reads to real C08/SQLite, returns divergent B with choices removed, restores only that alias to independent A at delegated final revalidation #3, and asserts reached frontier, unavailable, durable choice intact and original positive registry record still returned.",
+      "prior_checkpoints": [
+        {
+          "checkpoint": "W3-before-post-0f4",
+          "source_commit": "7b20f81b5181d57109244236eb46ae049ca5ec8f",
+          "source_blob": "43c3955e02165ac77bf0af941f2b025cf19f8d4c",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/7b20f81b5181d57109244236eb46ae049ca5ec8f/modules/sucafina/Sucafinav1/test/product/wp14/signal-registry.test.ts",
+          "worktree_blob": "4eb816aefffc7daf4e076de1ad7ebe75d58d565c",
+          "worktree_sha256": "44e353cdf6b237da2c8a6d19ae17ed6cdd07ac77d3eee0b71b81750921046952",
+          "decision": "reconcile-owned-deltas",
+          "rationale": "Recovered rewind negatives on existing real registry/source consumers; advancing-clock and repeated-action checks retained. W3 review follow-up: Extends existing real SQLite/C08/source/case test with populated and empty list controls, final-await principal/access/provider/abort counterproofs and WorkRef first/final-await binding/record mutation counterproofs."
+        },
+        {
+          "checkpoint": "W3-post-45c4ed-before-latest-case-fence",
+          "worktree_blob": "6810a448e156a5b83696a4a4591a7f5f2ade45a8",
+          "worktree_sha256": "aafb0f24f9d05d2d032d945cf198168ee43a271a02e1d4b6c97b2e4228bcaeef",
+          "decision": "reconcile-owned-deltas",
+          "rationale": "Recover real C08/SQLite registry and consumer callback mutation counterproofs by changed spans only. Preserve reviewed one/empty list matrix, provider/principal/access/abort checks and WorkRef first/final-await tests."
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+      "w2_blob": "d31c8dc6867bcbb7f389bde79df644a5133de51a",
+      "source_commit": "45c4ed69325652d81b0f9954b6fe1debb4cf1301",
+      "source_blob": "4b0edefc2ed818c2c9cd17e035e6d0b84e110dcf",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/45c4ed69325652d81b0f9954b6fe1debb4cf1301/modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+      "worktree_blob": "d44e2088e04ba96fa5eb88256f0ffc0a4517b463",
+      "worktree_sha256": "8c06998cc9ce65d8ed57d0d995b026f4da326717b47c7c748388f1e57769ce42",
+      "changed_after_w2": true,
+      "decision": "reconcile-owned-deltas",
+      "rationale": "Recover explicit native fixture shape and exact fresh-process candidate identity assertion. Keep W3 full parent-reopen positive recall, all ancestry/replay/revocation assertions, live child tracing and entire Operations Documents scenario; migrate only its Procurement callback to actual producer function.",
+      "prior_checkpoints": [
+        {
+          "checkpoint": "W3-before-post-0f4",
+          "source_commit": "7b20f81b5181d57109244236eb46ae049ca5ec8f",
+          "source_blob": "ef32257986aae310044fa9ab1b26343496d0d3a1",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/7b20f81b5181d57109244236eb46ae049ca5ec8f/modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+          "worktree_blob": "56698cc6483583b9c8d19dd20ad05ce62700326e",
+          "worktree_sha256": "1005e0c0baa08ef689e029769bd15116e55c310f4d736c9379e19ff94035d51c",
+          "decision": "reconcile-owned-deltas",
+          "rationale": "Reconciled W2 nested ancestry/replay/process-restart, PR38 scoped callback negatives and OPS Documents-to-BCS-to-Atlas scenario; applied OPS shared WeakSet fix. Added shared existing case ACL callback and phase/PID/elapsed/process-exit trace without weakening assertions or 180s deadlines. The restored document scenario delegates the current public object resolver via {resolve: product.resolveProcurement}."
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts",
+      "w2_blob": "687007a3e8ed34373bbce1200570f79fa78731ec",
+      "source_commit": "45c4ed69325652d81b0f9954b6fe1debb4cf1301",
+      "source_blob": "8adc906eac19e275118d1e5b3d9f66ce09104aa8",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/45c4ed69325652d81b0f9954b6fe1debb4cf1301/modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts",
+      "worktree_blob": "ad6a5cea4e1eb5eb5e1b7faeea5ed2091f9f73f1",
+      "worktree_sha256": "2182a3850e94c85b017da1fdd229903ccc2a2d0106282dee05cfbd0fa96b3eeb",
+      "changed_after_w2": true,
+      "decision": "reconcile-owned-deltas",
+      "rationale": "Recover actual resolver.resolve callback API for positive read and existing revocation-between-resolves negative; retain canonical projector and reason diagnostics without foreign intake.",
+      "prior_checkpoints": [
+        {
+          "checkpoint": "W3-before-post-0f4",
+          "source_commit": "7b20f81b5181d57109244236eb46ae049ca5ec8f",
+          "source_blob": "18a144fae92af51a76ead136c1fab3398c295adc",
+          "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/7b20f81b5181d57109244236eb46ae049ca5ec8f/modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts",
+          "worktree_blob": "63f1de9a464e9c84a279e8f3402afcf5d0741a32",
+          "worktree_sha256": "fd62e0a0122e99b272d653a9f11ef99049fc99ed64de0fa31939e4f8e8b82dd0",
+          "decision": "reconcile-owned-deltas",
+          "rationale": "Combined current shared source projector and reason observability with W2 revocation-between-resolves proof. Producer field mismatch forwarded unchanged to root."
+        }
+      ]
+    }
+  ],
+  "external_intake_required": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/runtime-fixture.ts",
+      "source": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+      "blob": "5f45ba3357aa724af2746687761fc32fd4ca48ef",
+      "reason": "Actual local credentials/SQLite/UI/human authority and document runtime used by restored scenario; absent in W2.",
+      "root_intake": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/runtime-fixture.ts",
+        "sourceCommit": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+        "blob": "5f45ba3357aa724af2746687761fc32fd4ca48ef",
+        "previousBlob": null,
+        "sourcePr": 34,
+        "method": "exact-blob-consumption",
+        "purpose": "Restore real Documents \u2192 BusinessContext \u2192 Atlas proof using published host producer and its runtime imports"
+      },
+      "intake_status": "Consumed exact published bytes by root; hosted execution pending"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "reason": "Shared procurementEvidenceWrites identity must be passed to the actual state provider.",
+      "root_intake": {
+        "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+        "sourceCommit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+        "blob": "2c82d60d220d8d5365da8322bad648a64bbb62d2",
+        "previousBlob": "9a2da03da92ce07fc8506c72dc1f4139143a7615",
+        "sourcePr": 32,
+        "method": "exact-blob-consumption",
+        "purpose": "Restore real Documents \u2192 BusinessContext \u2192 Atlas proof using published host producer and its runtime imports"
+      },
+      "intake_status": "Consumed exact published bytes by root; hosted execution pending"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "reason": "Shared procurementEvidenceWrites and required verifyScenarioOperations producer; existing W2 caller lacks both.",
+      "root_intake": {
+        "path": "apps/cli/src/sucafina-product/business-services.ts",
+        "sourceCommit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+        "blob": "611831c32ddbf58296b33e1930806185564189b9",
+        "previousBlob": "54cb9612b58e6c3bd1e665d0a0093011ea1aa2d5",
+        "sourcePr": 32,
+        "method": "exact-blob-consumption",
+        "purpose": "Restore real Documents \u2192 BusinessContext \u2192 Atlas proof using published host producer and its runtime imports"
+      },
+      "intake_status": "Consumed exact published bytes by root; hosted execution pending"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/procurement-projections.ts",
+      "reason": "W2 resolver issuer includes approvalStage but projection fields omit it; exact selector digest check prevents issue. Consume compatible published producer without weakening guards.",
+      "root_intake": {
+        "path": "modules/sucafina/Sucafinav1/product/integration/procurement-projections.ts",
+        "sourceCommit": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+        "blob": "3e8830c3dddc8b9609f583f877b2fe7458eccd28",
+        "previousBlob": "08fdfb878f6f9282f70ec71b3e66122f1b95f6f5",
+        "sourcePr": 34,
+        "method": "exact-blob-consumption",
+        "purpose": "Use producer's canonical procurement field projection including approvalStage"
+      },
+      "intake_status": "Consumed exact published bytes by root; hosted execution pending"
+    }
+  ],
+  "host_dependencies": "Root owns exact intake closure and its provenance; no host/contract/runtime/financial producer was edited by WP14.",
+  "test_selection": {
+    "files": 13,
+    "added": "test/product/wp14/invalidation.test.ts",
+    "existing_source_access_atlas_tests": 2,
+    "helper": "test/product/wp14/atlas-restart-reader.ts",
+    "deadline_each_atlas_test_ms": 180000,
+    "child_timeout_ms": 120000,
+    "timeout_change": "No test deadline increased; child has bounded termination inside existing parent deadline.",
+    "child_cooperative_cancel_ms": 90000
+  },
+  "local_verification": {
+    "product_tests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "diff_check": "PASS",
+    "input_git_blob_checks": "PASS"
+  },
+  "w3_hosted_verification": "NOT_RUN",
+  "not_claimed": [
+    "Native cross-case reader/ACL admission from synthetic contract test",
+    "Documents scenario success before root consumes and hosted CI executes real closure",
+    "Physical cache/lease/index invalidation from unit planning tests",
+    "Atlas project-policy publication/restart",
+    "WP14 integrated acceptance"
+  ],
+  "external_intake_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/astra-intelligence-input-intake-w3.json",
+  "open_host_verification": [
+    {
+      "path": "product/host-binding/atlas-memory.ts",
+      "test": "confirmed C17 document is published and recalled by real Atlas, then withheld after blob revocation",
+      "finding": "Restored assertion requires readOriginal to withhold document reference after blob replacement. Current host readOriginal authorizes case/capture without directly resolving current document; potential failure retained for hosted proof, not bypassed.",
+      "status": "STATIC_RISK_NOT_EXECUTED"
+    }
+  ],
+  "independent_review_followup": {
+    "id": "WP14-W3-R1",
+    "reviewer": "review_memory",
+    "finding": "Historical currentRef with changed projectionDigest but identical source version/incarnation could return reuse",
+    "correction": "Invalidate source-digest while requiring current authorization; fresh inconsistent projection remains unavailable",
+    "status": "STATIC_REINSPECTION_PENDING",
+    "execution": "NOT_RUN"
+  },
+  "independent_review_additional_followups": {
+    "reviewer": "review_memory",
+    "status": "STATIC_REINSPECTION_PENDING",
+    "execution": "NOT_RUN",
+    "changes": [
+      {
+        "id": "WP14-W3-R1-versioned-targets",
+        "original_R1_preserved": true,
+        "correction": "Preserves root WP14-W3-R1 record guard and adds full target/schema/evidence-level comparison for versioned document, receipt and case-event refs. Same-projection record reissue remains valid under reauthorization.",
+        "counterproofs": "Documents and case events retain equal numeric version/incarnation maps while material content changes. Fresh inconsistent refs remain unavailable; historical changed material invalidates. Receipt evidence-level and unchanged reuse controls included."
+      },
+      {
+        "id": "WP14-W3-R2-signal-egress",
+        "correction": "Adds synchronous request-abort and binding-digest fence after every await, including empty signal lists. Adds synchronous final request/binding fence; WorkRef issuer snapshots binding and record and fences both authorization awaits without changing HMAC format.",
+        "counterproofs": "Both consumers, one signal and empty case: unchanged control plus principal/accessRevision/providerGeneration/abort during final await. Each authority check delegates to the existing SQLite host. WorkRef first and last authority await mutate binding or stored selection; reference withheld."
+      },
+      {
+        "id": "WP14-W3-R3-recall-egress",
+        "correction": "Adds scopeDigest comparison after final revalidate, covering source maps, authority and runtime versions.",
+        "counterproofs": "One/zero candidate isolated policy controls; final authority await mutates source versions, source incarnations, access revision, boundary/schema/manifest/skill versions. No integrated Atlas admission claim."
+      }
+    ],
+    "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP14/2026-11-14-W3-review-corrections.json"
+  },
+  "post_review_reconciliation": {
+    "base": "0f4f93ff6b6a4ce4936c2368f5aa2e91dd297470",
+    "head": "45c4ed69325652d81b0f9954b6fe1debb4cf1301",
+    "input_verification": "Exact old source plus GitHub compare patch; each result verified against published Git blob SHA before any product edit.",
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decision-memory/domain-outcome.ts",
+        "source_commit": "45c4ed69325652d81b0f9954b6fe1debb4cf1301",
+        "source_blob": "aad2b8a655c3259a86e526efcf562602851df8bc",
+        "source_sha256": "84c74cc88f568786bdf870f59f5d650bd8c81aba3a52994ec45ed274c23f94dc",
+        "reviewed_before_blob": "293afaf57e4477e4a3a98ccf85c6f988109ffed0",
+        "matches_reviewed": false,
+        "worktree_blob": "aad2b8a655c3259a86e526efcf562602851df8bc",
+        "worktree_sha256": "84c74cc88f568786bdf870f59f5d650bd8c81aba3a52994ec45ed274c23f94dc",
+        "disposition": "recover-exact-owned-file",
+        "decision": "Recover final authority/argument/selection/egress snapshot guards exactly; previous producer snapshots and observation clocks retained."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decision-memory/invalidation.ts",
+        "source_commit": "45c4ed69325652d81b0f9954b6fe1debb4cf1301",
+        "source_blob": "acca5b77dfef2cf4552ccf1caf27e19e74a98cf2",
+        "source_sha256": "fad69438aa6408ae9385979e98ebe6518c5e3db19f466e0184b734a4e3139ea2",
+        "reviewed_before_blob": "3bafcac1d0114eff9cd6869fd8040a9fe414ed7f",
+        "matches_reviewed": false,
+        "worktree_blob": "3bafcac1d0114eff9cd6869fd8040a9fe414ed7f",
+        "worktree_sha256": "b060837431cd1b156c2cdf2d8ed7558b87b8422521219cdafb9f1f6f05832535",
+        "disposition": "retain-reviewed-deltas",
+        "decision": "Retain reviewed R1/R2 complete material target/schema/evidence-level checks and same-projection scoped record reissue. Upstream refDigest-based source-content rule is less specific and is not substituted."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decision-memory/materiality.ts",
+        "source_commit": "45c4ed69325652d81b0f9954b6fe1debb4cf1301",
+        "source_blob": "0299a2a5dadecbec526a5dcea127d8a010488824",
+        "source_sha256": "a96c7f1d806d2f91819e4d7b3d7d0e616f5f0a879bfef8e54cdd2b67c468bb2f",
+        "reviewed_before_blob": "4004a03da7990d4d53ca9bc17347d8dd132d723a",
+        "matches_reviewed": false,
+        "worktree_blob": "1c586d321cf10bdaeccd95b4ac2a2100b439fe7f",
+        "worktree_sha256": "b1924141528e52b012b2886f1da77dbd55307216101c62dc8f33bf106e005f73",
+        "disposition": "reconcile-owned-deltas",
+        "decision": "Merge local snapshot digest fences; preserve W2 coverage-set ordering, evidence copies lent to authorizers and final binding fence."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decision-memory/outcome-selection.ts",
+        "source_commit": "45c4ed69325652d81b0f9954b6fe1debb4cf1301",
+        "source_blob": "03a3ddf8dacd2e7b050b20b73b14b2bd3e974f4c",
+        "source_sha256": "8261fcd6fd0e6ec6b15461ef5a8dd066d6cfc6efc16cf712dfe4af02f5e81337",
+        "reviewed_before_blob": "bc30d168f18a186a9cbdc149607fec9c30223247",
+        "matches_reviewed": false,
+        "worktree_blob": "790e7c98820df61306ad67bd5897b1301118d335",
+        "worktree_sha256": "90744777637dc32595b280e8c34e52f27a770c979f5f6e40d8442c256daf1a9c",
+        "disposition": "reconcile-owned-deltas",
+        "decision": "Recover selection/request/authority fences around async callbacks, independent stored snapshots and cloned durable/output values exactly. R5: Capture latest case digest synchronously immediately after the final real case read, then require that captured identity matches the initial case and that the returned object still matches it after final revalidate. Prevent B-to-A alias restoration from hiding a divergent choice."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decision-memory/outcome.ts",
+        "source_commit": "45c4ed69325652d81b0f9954b6fe1debb4cf1301",
+        "source_blob": "d1c524a976e07524d9b2b197635805dde9ae650c",
+        "source_sha256": "550d775954527b4a44959525922ce3339b8913e44642bb0ebe42061c2029a113",
+        "reviewed_before_blob": "3f34a5867458a899a943cb50828c1c6403b09138",
+        "matches_reviewed": false,
+        "worktree_blob": "97d23e90f627472e525c50288fdf4163e3cc3c54",
+        "worktree_sha256": "df5e066b8e6f43d9c93a12e56037aecb7531936e63f1f786518fec6112e191b6",
+        "disposition": "reconcile-owned-deltas",
+        "decision": "Recover finite subtraction overflow refusal and snapshot digest fences; preserve W2 copied loader request/evidence, caller request identity and final binding check."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decision-memory/signal-list.ts",
+        "source_commit": "45c4ed69325652d81b0f9954b6fe1debb4cf1301",
+        "source_blob": "905770233118a2b0707dfed37f9038f89fb884ac",
+        "source_sha256": "2f77264f0e55ec52379e244e47050d95149f9ff5b591893e484493b960ea6de5",
+        "reviewed_before_blob": "4bb3f24deba7f48ae9252063da2ccbf523d6431d",
+        "matches_reviewed": false,
+        "worktree_blob": "c4a1d8d1f4e540c41c3e7d09efb92bb003ab6d8b",
+        "worktree_sha256": "1c20921bef733f96f1dbf6c7df20869150e81b8f35c4dde36676224880df4f5b",
+        "disposition": "reconcile-owned-deltas",
+        "decision": "Recover request/registry/materiality snapshots and async mutation guards. Preserve reviewed R3 final synchronous binding/abort fence including empty lists via unchanged()."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decision-memory/signal-registry.ts",
+        "source_commit": "45c4ed69325652d81b0f9954b6fe1debb4cf1301",
+        "source_blob": "d329fc03041ae86d7d0e57a5d31e05e98be46fe5",
+        "source_sha256": "f9f8fb4e5926cc9e613fdb0f7f664446a6f7d50995db1578a8caaae160559dbb",
+        "reviewed_before_blob": "83b77eab0314943f3a6e5dfc16b648f1a166db33",
+        "matches_reviewed": false,
+        "worktree_blob": "b6edcf44f55923cbaa764ff9374ce127145b0f9e",
+        "worktree_sha256": "c2678a5235e6c550e12ecb4ac2a38f87af328d145b28c7483204d0e7b4e1340b",
+        "disposition": "reconcile-owned-deltas",
+        "decision": "Recover register/revise/list/reconcile request/selection/state snapshots and post-await fences, stable choice digests and cloned persistence/output values exactly. R5: Capture latest case digest synchronously before final revalidate; validate both the captured case against the initial one and the returned alias against its captured identity afterward. Existing request/authority/record fences preserved."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decision-memory/signal-work.ts",
+        "source_commit": "45c4ed69325652d81b0f9954b6fe1debb4cf1301",
+        "source_blob": "8e03cb17343b87304238a8f9f17b9e0e130b5149",
+        "source_sha256": "bf0894f974114eb9aa934e068929a03295e376d19d798c46032461f872d2ff03",
+        "reviewed_before_blob": "eee1ea016e5843c08fd6911569c73d7855c33619",
+        "matches_reviewed": false,
+        "worktree_blob": "3cc6b0ae5fd75ce84724eeafc053264fc9370740",
+        "worktree_sha256": "1e1ee1e10529b1d71bbebaf00af0abb7b44f6dea06a2915b46f36466e4702564",
+        "disposition": "reconcile-owned-deltas",
+        "decision": "Recover request-period/selection/registry/materiality/output snapshots and callback guards. Preserve reviewed R3 final synchronous empty-list fence and the reviewed WorkRef issuer including fail-closed exception handling."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts",
+        "source_commit": "45c4ed69325652d81b0f9954b6fe1debb4cf1301",
+        "source_blob": "e4e648feecb4e12ace3da41e1b91c45b527c7247",
+        "source_sha256": "9efb6954aea16338a03ee5119561738814e184024583502b4bcb71b5070c69a2",
+        "reviewed_before_blob": "8e8c0c470590127d028ae3fb1cd0677c5501886b",
+        "matches_reviewed": false,
+        "worktree_blob": "e4e648feecb4e12ace3da41e1b91c45b527c7247",
+        "worktree_sha256": "9efb6954aea16338a03ee5119561738814e184024583502b4bcb71b5070c69a2",
+        "disposition": "recover-exact-owned-file",
+        "decision": "Recover canonical Procurement resolver callback signature exactly. Verified actual Compose business-services passes callable resolver; all own object-form consumers migrated to the same actual callback without changing ACL or grants."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp14/atlas-restart-reader.ts",
+        "source_commit": "45c4ed69325652d81b0f9954b6fe1debb4cf1301",
+        "source_blob": "439ba78e8208133e498ebfb87b00e4eb882dd8fd",
+        "source_sha256": "ae173af790c4af13359812def4d8386867924249b5c89506ce8a8c885b42cdd5",
+        "reviewed_before_blob": "b0de86c28bf629fc045084a559099ef08cbd1b3a",
+        "matches_reviewed": false,
+        "worktree_blob": "f4fcfa9f961f5087eead1e4ce54296625c93172d",
+        "worktree_sha256": "940d24f7452e964b137911b2d708de8d238087c84aa6e286fa8fbb500aafd936",
+        "disposition": "reconcile-owned-deltas",
+        "decision": "Recover cooperative 90-second cancellation via real host request/revalidation fences and exact candidate case identity in child receipt. Preserve W3 detailed lifetime/read counters and parent 120-second process/180-second test bounds."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp14/domain-outcome.test.ts",
+        "source_commit": "45c4ed69325652d81b0f9954b6fe1debb4cf1301",
+        "source_blob": "210bac0815396bb4769ec8f7a5d3e4b948fe13a6",
+        "source_sha256": "8b4613ed35330a51dc23d1e7e41a38c01e8d291035afbaab2416834ff7a47905",
+        "reviewed_before_blob": "9e7f97fec6b91023db8ac56c8d07dc67690e93f9",
+        "matches_reviewed": false,
+        "worktree_blob": "6216953b705f3e329e746455019ff36d3d85e6b2",
+        "worktree_sha256": "5c8776975f650aa929b3b81733e0360be5178edc9880ae503eb8a111fb79719b",
+        "disposition": "reconcile-owned-deltas",
+        "decision": "Recover actual Planner/C08 selection and domain adapter mutation counterproofs. Existing initialization and W2/W3 producer alias/clock checks retained; resulting file equals current upstream own blob. R5 counterproof delegates two case reads to real C08/SQLite, removes the choice only from the detached second returned object B, and restores that same alias from independent A during delegated final revalidation #3. Asserts two reads/three checks/restoration, unavailable, durable choice intact and normal positive selection unchanged."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp14/invalidation.test.ts",
+        "source_commit": "45c4ed69325652d81b0f9954b6fe1debb4cf1301",
+        "source_blob": "295399eb9d4171b85788b7344de7cee1f4239f1b",
+        "source_sha256": "982a074ec9745859b865f49690689c91a64b230cb5b1014558364ed0f34439d7",
+        "reviewed_before_blob": "978797fc015a548b32a8a4fd8730b664bba25e8d",
+        "matches_reviewed": false,
+        "worktree_blob": "978797fc015a548b32a8a4fd8730b664bba25e8d",
+        "worktree_sha256": "0b001e508065f92f7025d98f6ccadebc3d7ee77c71ef8d11c86f02d1cf077550",
+        "disposition": "retain-reviewed-deltas",
+        "decision": "Retain reviewed broader R1/R2 N/N record/document/receipt/event counterproofs and scoped reissue controls. Upstream duplicate cases assert source-content label; reviewed exact source-digest semantics retained."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp14/materiality.test.ts",
+        "source_commit": "45c4ed69325652d81b0f9954b6fe1debb4cf1301",
+        "source_blob": "81a37a4c2945c2af64d0749be3b909a54ae97508",
+        "source_sha256": "f7bc7e7d6ba7866d92ad1c9ab2f83923fbc16e84b6e5cd791670a38dd43cf498",
+        "reviewed_before_blob": "9b44553ed987165477a935e50fcd4f46d74f7823",
+        "matches_reviewed": false,
+        "worktree_blob": "832dec005b43eca42d6b4bde027aee77c5857d00",
+        "worktree_sha256": "db39fcac727fb0f7badd98b913bbee626d9738f2b45fdf36bd0809b725313cd2",
+        "disposition": "reconcile-owned-deltas",
+        "decision": "Reconcile final authority mutation counterproof with W2 evidence-copy isolation. Retained-copy mutation must leave returned source snapshot/material result unchanged; no claim of Atlas or financial producer execution from this policy fixture."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp14/outcome-signals.test.ts",
+        "source_commit": "45c4ed69325652d81b0f9954b6fe1debb4cf1301",
+        "source_blob": "62f3667b3f1ac1b450490d7a076ad60244079f73",
+        "source_sha256": "bcdf8c64d4e147bdf508d3dc795e04b5dc73b5dc7d7b62270f7418490c93fc67",
+        "reviewed_before_blob": "e01b0d1e1e807070fdde7f497d6246e4211b03d1",
+        "matches_reviewed": false,
+        "worktree_blob": "0e14479d1f0c9cddc52eeb7f55a77f97a54ddacd",
+        "worktree_sha256": "65c01f1d8b355c2c5fcd34838f49e6e77baa2392c76507677c0f978bcd45ad4f",
+        "disposition": "reconcile-owned-deltas",
+        "decision": "Recover upstream overflow counterproof exactly. Reconcile request/binding final-await tests with W2 evidence-copy isolation, checking unchanged sourceRefs/observation/delta; preserve all earlier W2/W3 tests."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp14/recall.test.ts",
+        "source_commit": "45c4ed69325652d81b0f9954b6fe1debb4cf1301",
+        "source_blob": "7bb228a1f972b5829d3cec10bcde015959fdb359",
+        "source_sha256": "87475082bba9a6c6f135a9e81f4a59db13700b26da206c6a7f637962c117b631",
+        "reviewed_before_blob": "5208f4926e57f5ce4e4f338942022c3cc4f1f67f",
+        "matches_reviewed": false,
+        "worktree_blob": "57826906307ec60f9cbd1398596ea32104f66c2e",
+        "worktree_sha256": "12bce4a3943f608afb21378cf8ab53111430384679391da7f7ddbd8c3905112a",
+        "disposition": "reconcile-owned-deltas",
+        "decision": "Recover explicit unbranded native fixture shape typing; preserve reviewed R4 scope digest mutations for one and zero candidates and all earlier cases."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp14/signal-registry.test.ts",
+        "source_commit": "45c4ed69325652d81b0f9954b6fe1debb4cf1301",
+        "source_blob": "cef1f6bd6fcecbd569522c7e33d65d6767155182",
+        "source_sha256": "33b1ef388aa99237943e8113d5c00348d44a4e2820a614c1f12c1124aab248c7",
+        "reviewed_before_blob": "4eb816aefffc7daf4e076de1ad7ebe75d58d565c",
+        "matches_reviewed": false,
+        "worktree_blob": "9b28a77e125e686dc3b390f3281e25e3e451a82f",
+        "worktree_sha256": "8463e1b8b166b1a55513ec9874b7555e8afff4480a3940a1a363845637196ea2",
+        "disposition": "reconcile-owned-deltas",
+        "decision": "Recover real C08/SQLite registry and consumer callback mutation counterproofs by changed spans only. Preserve reviewed one/empty list matrix, provider/principal/access/abort checks and WorkRef first/final-await tests. R5 counterproof delegates two case reads to real C08/SQLite, returns divergent B with choices removed, restores only that alias to independent A at delegated final revalidation #3, and asserts reached frontier, unavailable, durable choice intact and original positive registry record still returned."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+        "source_commit": "45c4ed69325652d81b0f9954b6fe1debb4cf1301",
+        "source_blob": "4b0edefc2ed818c2c9cd17e035e6d0b84e110dcf",
+        "source_sha256": "0cf19a3f8375dfbfb9102d8669405d6129064ca8debefe3039de7a17178e2872",
+        "reviewed_before_blob": "56698cc6483583b9c8d19dd20ad05ce62700326e",
+        "matches_reviewed": false,
+        "worktree_blob": "d44e2088e04ba96fa5eb88256f0ffc0a4517b463",
+        "worktree_sha256": "8c06998cc9ce65d8ed57d0d995b026f4da326717b47c7c748388f1e57769ce42",
+        "disposition": "reconcile-owned-deltas",
+        "decision": "Recover explicit native fixture shape and exact fresh-process candidate identity assertion. Keep W3 full parent-reopen positive recall, all ancestry/replay/revocation assertions, live child tracing and entire Operations Documents scenario; migrate only its Procurement callback to actual producer function."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts",
+        "source_commit": "45c4ed69325652d81b0f9954b6fe1debb4cf1301",
+        "source_blob": "8adc906eac19e275118d1e5b3d9f66ce09104aa8",
+        "source_sha256": "f3d0788aa9d15db15b0a6bff8292563cd3e0c7678c1c88492be8506e6caae0c0",
+        "reviewed_before_blob": "63f1de9a464e9c84a279e8f3402afcf5d0741a32",
+        "matches_reviewed": false,
+        "worktree_blob": "ad6a5cea4e1eb5eb5e1b7faeea5ed2091f9f73f1",
+        "worktree_sha256": "2182a3850e94c85b017da1fdd229903ccc2a2d0106282dee05cfbd0fa96b3eeb",
+        "disposition": "reconcile-owned-deltas",
+        "decision": "Recover actual resolver.resolve callback API for positive read and existing revocation-between-resolves negative; retain canonical projector and reason diagnostics without foreign intake."
+      }
+    ],
+    "counts": {
+      "reconcile-owned-deltas": 14,
+      "recover-exact-owned-file": 2,
+      "retain-reviewed-deltas": 2
+    },
+    "prior_review_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP14/2026-11-14-W3-independent-review.json",
+    "prior_review_scope": "Original R1-R4 receipt preserved unchanged; changed paths require a new review. Invalidation product/test and recall product retain reviewed exact blobs.",
+    "review_status": "PENDING_AFTER_RECONCILIATION",
+    "hosted_execution": "NOT_RUN",
+    "product_local_execution": "NOT_RUN",
+    "typecheck_local": "NOT_RUN",
+    "foreign_sources_edited": 0,
+    "foreign_intake_requested": 0,
+    "operations_witness_static_check": "PASS: exact previous scenario except direct Procurement resolver callback; no other source/scanner/ACL/assertion changes",
+    "atlas_parent_positive_reopen": "PRESERVED; upstream deletion not applied",
+    "authorization_evidence_isolation": "Preserve W2 cloned references: isolated callback mutation leaves internal sources/output unchanged. Upstream unavailable expectations for aliases not shared here are reconciled explicitly, not used as integrated proof.",
+    "before_latest_case_fence_counts": {
+      "reconcile-owned-deltas": 11,
+      "recover-exact-owned-file": 5,
+      "retain-reviewed-deltas": 2
+    },
+    "latest_case_fence_review": {
+      "id": "WP14-W3-R5",
+      "reviewer": "review_memory",
+      "finding": "A final case read returns divergent B, but revalidation restores its mutable object to A before the only comparison; old code releases data despite observed choice divergence.",
+      "files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decision-memory/outcome-selection.ts",
+          "before": {
+            "git_blob": "03a3ddf8dacd2e7b050b20b73b14b2bd3e974f4c",
+            "sha256": "8261fcd6fd0e6ec6b15461ef5a8dd066d6cfc6efc16cf712dfe4af02f5e81337"
+          },
+          "after": {
+            "git_blob": "790e7c98820df61306ad67bd5897b1301118d335",
+            "sha256": "90744777637dc32595b280e8c34e52f27a770c979f5f6e40d8442c256daf1a9c"
+          },
+          "correction": "R5: Capture latest case digest synchronously immediately after the final real case read, then require that captured identity matches the initial case and that the returned object still matches it after final revalidate. Prevent B-to-A alias restoration from hiding a divergent choice."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decision-memory/signal-registry.ts",
+          "before": {
+            "git_blob": "d329fc03041ae86d7d0e57a5d31e05e98be46fe5",
+            "sha256": "f9f8fb4e5926cc9e613fdb0f7f664446a6f7d50995db1578a8caaae160559dbb"
+          },
+          "after": {
+            "git_blob": "b6edcf44f55923cbaa764ff9374ce127145b0f9e",
+            "sha256": "c2678a5235e6c550e12ecb4ac2a38f87af328d145b28c7483204d0e7b4e1340b"
+          },
+          "correction": "R5: Capture latest case digest synchronously before final revalidate; validate both the captured case against the initial one and the returned alias against its captured identity afterward. Existing request/authority/record fences preserved."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp14/domain-outcome.test.ts",
+          "before": {
+            "git_blob": "210bac0815396bb4769ec8f7a5d3e4b948fe13a6",
+            "sha256": "8b4613ed35330a51dc23d1e7e41a38c01e8d291035afbaab2416834ff7a47905"
+          },
+          "after": {
+            "git_blob": "6216953b705f3e329e746455019ff36d3d85e6b2",
+            "sha256": "5c8776975f650aa929b3b81733e0360be5178edc9880ae503eb8a111fb79719b"
+          },
+          "correction": "R5 counterproof delegates two case reads to real C08/SQLite, removes the choice only from the detached second returned object B, and restores that same alias from independent A during delegated final revalidation #3. Asserts two reads/three checks/restoration, unavailable, durable choice intact and normal positive selection unchanged."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp14/signal-registry.test.ts",
+          "before": {
+            "git_blob": "6810a448e156a5b83696a4a4591a7f5f2ade45a8",
+            "sha256": "aafb0f24f9d05d2d032d945cf198168ee43a271a02e1d4b6c97b2e4228bcaeef"
+          },
+          "after": {
+            "git_blob": "9b28a77e125e686dc3b390f3281e25e3e451a82f",
+            "sha256": "8463e1b8b166b1a55513ec9874b7555e8afff4480a3940a1a363845637196ea2"
+          },
+          "correction": "R5 counterproof delegates two case reads to real C08/SQLite, returns divergent B with choices removed, restores only that alias to independent A at delegated final revalidation #3, and asserts reached frontier, unavailable, durable choice intact and original positive registry record still returned."
+        }
+      ],
+      "status": "STATIC_REINSPECTION_PENDING",
+      "hosted_execution": "NOT_RUN",
+      "local_product_execution": "NOT_RUN",
+      "frozen_other_paths": true
+    }
+  }
+}

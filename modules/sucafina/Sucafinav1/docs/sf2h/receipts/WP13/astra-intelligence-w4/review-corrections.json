@@ -1,0 +1,87 @@
+{
+  "observedAt": "2026-11-14T11:08:26.075888+00:00",
+  "disposition": "P1/P2 were resolved at the first listed candidate stage; their ingress and final-await fences remain unchanged in the later R3 correction. R3 independent-clock correction reinspected statically on its listed final blobs. No runtime PASS.",
+  "priorManifest": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-intelligence-w4/manifest.json",
+    "gitBlob": "5430a8727a394be33a2e6ad051cc4cfb9ecc2133",
+    "sha256": "ed2c13a44e60d7ed0d3de0afc9ed6acec71cd2076594a546e507755bc1f9b07a"
+  },
+  "priorSourceReceipt": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-intelligence-w4/source-reconciliation.json",
+    "gitBlob": "15e7392bf37e73f6c724f3ec2cc8e6dfad5ff3ae",
+    "sha256": "4346d2797ff6bfa7b970c56da26f49505975cd25927e60bffbad9404b03c489b"
+  },
+  "paths": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/reconciliation.ts",
+      "beforeBlob": "214f0900792a7b491722ba4d576a7ab4915ad2cf",
+      "afterBlob": "f5d64eb84a45accb14afa7bc922d4fc04c4bac14",
+      "afterSha256": "8037ab70998dde898d0e5d67e021890f0b9c1be069af438553d96087df113c0b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/product.ts",
+      "beforeBlob": "1b9d09a8f1882cd940931c364185157df0695501",
+      "afterBlob": "d4c5d9c9aabcf70bb71739d3952776517dc55923",
+      "afterSha256": "b4d5f22cc08da980addedbe25c72428f112162993a977a0e5674892ea67dedd8"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/reconciliation.test.ts",
+      "beforeBlob": "b4e720037aec7c4c0119b4de900bcbd05957810b",
+      "afterBlob": "41155c4a35bb07d59337239548aad44301148bc4",
+      "afterSha256": "78b526c0d7aae302a5053554489cdb78eb7444e5d2376efc69ce5ef8eef2eaaf"
+    }
+  ],
+  "findings": [
+    {
+      "id": "W4-P1",
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/reconciliation.ts",
+      "problem": "Final awaited revalidate could validate admitted authority, mutate the borrowed kind/binding and return true; a projection was then returned without a synchronous ingress-authority fence.",
+      "change": "Capture digest of {kind,binding} before first await; compare after admission/closing awaits and synchronously after the final host revalidation. The actual context/lease is not cloned.",
+      "witness": "reconciliation refuses authority mutation after the final successful revalidation",
+      "counterexample": "Positive control measures final revalidation count. Fresh trials mutate principalRef, accessRevision or kind only at that call after validation; injected=true and equal final call count are required, with non-ok result and no value."
+    },
+    {
+      "id": "W4-P2",
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/product.ts",
+      "problem": "http.reconcile passed the borrowed original request to the core only after await authorized, permitting A to B selection replacement within the same authorized case.",
+      "change": "Capture request and authority digest synchronously at HTTP ingress. Authorize/invoke using the request snapshot, check ingress authority after authorization and after the core result.",
+      "witness": "HTTP reconciliation preserves the admitted selection when authorization mutates the caller request",
+      "counterexample": "Independent positive controls admit A and B. The first caseFor callback changes all three caller selection IDs from A to B; injection is required and the real HTTP entry must still return original A.",
+      "additionalWitness": "HTTP reconciliation fences authority from ingress before the core captures it",
+      "additionalCounterexample": "A positive accepts an already-current access-next revision; the negative injects that revision during first authorization and requires denial without projection."
+    }
+  ],
+  "scope": "Only these un-published W4 paths and W4 metadata changed. Original seven unit controls retained; unrelated HTTP factory ports throw on use in the controlled entry-boundary fixture. No financial or installed-host proof inferred.",
+  "staticReinspectionObservedAt": "2026-11-14T11:08:52.639036+00:00",
+  "subsequentCorrections": [
+    {
+      "id": "W4-R3",
+      "observedAt": "2026-11-14T11:20:33.937317+00:00",
+      "priority": "P1",
+      "problem": "Reconciliation equated independent source evidence revision and domain-command CAS, rejecting legitimate source 3/4 with CAS 0/1 and correlating components using the wrong clock.",
+      "change": "Validate both numbers independently as nonnegative safe integers. Match component source revision to change.target.version; retain expectedVersion unchanged for the domain command.",
+      "contractEvidence": [
+        "modules/sucafina/Sucafinav1/product/decisions/prepared-change.ts",
+        "modules/sucafina/Sucafinav1/product/planner/prepared.ts",
+        "modules/sucafina/Sucafinav1/product/procurement/prepared.ts"
+      ],
+      "paths": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/reconciliation.ts",
+          "beforeBlob": "f5d64eb84a45accb14afa7bc922d4fc04c4bac14",
+          "afterBlob": "aedc80310eee2752d067dd52afa6312a9558b87a",
+          "afterSha256": "cc40071c5f25343ee587ff6d86cec61ac2bdd6e364b3d488296303e22ebaee46"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp13/reconciliation.test.ts",
+          "beforeBlob": "41155c4a35bb07d59337239548aad44301148bc4",
+          "afterBlob": "7823451c6be37307317d3527b6a7367d64a5d58d",
+          "afterSha256": "9020a7bb8342f7fc37a5598efe227621b489312bb91e6061a9a08535872112a7"
+        }
+      ],
+      "witness": "reconciliation retains independent evidence and command revisions while binding effects and receipts",
+      "counterexamples": "Positive source 3/4, CAS 0/1, receipt 1/2 remains bound and stable through partial/completed observations. Source 0 matching CAS 0 does not bind original source 3. Negative, fractional or unsafe numbers in either clock are refused. All prior P1/P2 controls remain.",
+      "staticReview": "Reinspected by /root/review_portfolio on aedc80310eee2752d067dd52afa6312a9558b87a and 7823451c6be37307317d3527b6a7367d64a5d58d; resolved statically. NOT_RUN."
+    }
+  ]
+}

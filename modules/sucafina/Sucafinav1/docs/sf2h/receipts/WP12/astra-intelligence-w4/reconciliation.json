@@ -1,0 +1,513 @@
+{
+  "schema": "sf2h-wp12-selective-reconciliation-w4-v1",
+  "status": "SOURCE_FROZEN_PENDING_INDEPENDENT_REVIEW_AND_HOSTED_CI",
+  "date": "2026-11-14",
+  "ownership": {
+    "agent": "astra-intelligence/WP12",
+    "authoredPrefixes": [
+      "modules/sucafina/Sucafinav1/product/ai",
+      "modules/sucafina/Sucafinav1/test/product/wp12",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/astra-intelligence-w4"
+    ],
+    "foreignRepositoryFilesAuthored": [],
+    "wholeSnapshotMerged": false,
+    "foreignFilesExcludedFromUpstreamIntake": 265,
+    "azureOrDevImported": false
+  },
+  "canonical": {
+    "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "campaignSha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+    "fullCriteriaCount": 108,
+    "completeMapping": "../astra-intelligence-w3/canonical-evidence-map/receipt.json",
+    "w3ExecutionSupersession": "../astra-intelligence-w3/canonical-evidence-map/hosted-supersession.json",
+    "scopePolicy": "All108 canonical WP12 criteria remain in scope; this increment does not reduce them to actor slices or test counts."
+  },
+  "baseEvidence": {
+    "productCommit": "c21a990c57b714cd60bb7f915beb6be51acbafdb",
+    "tree": "3cdfa2b5a6d0ce2ea57aa37e5b95cb7037151fa5",
+    "wp12Snapshot": "80d2769ec9d965f7b9b1fafcc027f75085438f70",
+    "requestSha256": "47e6410cb1e5e3723daef1b2ac709012bbb8cd1053f740a496379f3765f00002",
+    "runId": 43586166717,
+    "jobId": 132420985955,
+    "testsPassed": 65,
+    "testsFailed": 0,
+    "assertions": 557,
+    "testFiles": 12,
+    "transferToW4": false
+  },
+  "reconciledHead": {
+    "pullRequest": 39,
+    "commit": "cfbd2a04815e8e4db279f840e64fbf9cc90ee522",
+    "previousHead": "5623a35fe42b4a2f0f309c2ae56e66677c6f4fc6",
+    "readMethod": "Pinned GitHub MCP files, verified Git blobs, textual comparison with both previous published head and W3 integration."
+  },
+  "readReceipts": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/astra-wp12-native-execution-preparation.json",
+      "commit": "cfbd2a04815e8e4db279f840e64fbf9cc90ee522",
+      "blob": "60df2612e53219721c7617c4f3f1503f7af07456",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/cfbd2a04815e8e4db279f840e64fbf9cc90ee522/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/astra-wp12-native-execution-preparation.json"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/terminal/proposal.json",
+      "commit": "cfbd2a04815e8e4db279f840e64fbf9cc90ee522",
+      "blob": "db8efc2f2568f42c5cdeafb0e3fe41f16a141829",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/cfbd2a04815e8e4db279f840e64fbf9cc90ee522/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/terminal/proposal.json"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/increment-01.json",
+      "commit": "cfbd2a04815e8e4db279f840e64fbf9cc90ee522",
+      "blob": "6ad96553f487740ea396babbf8be92987b94548b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/cfbd2a04815e8e4db279f840e64fbf9cc90ee522/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/increment-01.json"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/intake-02.json",
+      "commit": "cfbd2a04815e8e4db279f840e64fbf9cc90ee522",
+      "blob": "79f36347d7fb89814cab6f6bbb870e8d4af1e0dc",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/cfbd2a04815e8e4db279f840e64fbf9cc90ee522/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/intake-02.json"
+    }
+  ],
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/analysis-host.ts",
+      "disposition": "SELECTIVE_PATCH_APPLIED",
+      "materializedPath": "modules/sucafina/Sucafinav1/product/ai/analysis-host.ts",
+      "origin": {
+        "repository": "gustavomhss/Orchestra-SF",
+        "pullRequest": 39,
+        "commit": "cfbd2a04815e8e4db279f840e64fbf9cc90ee522",
+        "blob": "278277fc413caf72bea3f9a0b8310b6073f69e0d",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/cfbd2a04815e8e4db279f840e64fbf9cc90ee522/modules/sucafina/Sucafinav1/product/ai/analysis-host.ts"
+      },
+      "previousPublished": {
+        "commit": "5623a35fe42b4a2f0f309c2ae56e66677c6f4fc6",
+        "blob": "f97ff2c8ddf7ae856f3259020998867892e61306"
+      },
+      "integrationBase": {
+        "commit": "c21a990c57b714cd60bb7f915beb6be51acbafdb",
+        "blob": "337f6764a6e4fa84c09d4b53afd87c814a8d1fab"
+      },
+      "acceptedDelta": "Optional lifecycle authentication seam; fail/settle read lifecycle metadata. Strict withRunContext fallback remains.",
+      "preservedOrRejected": "No blanket replacement was needed; the accepted diff is compatible with all W3 original-byte and AlternativeDraft guards.",
+      "gitBlob": "278277fc413caf72bea3f9a0b8310b6073f69e0d",
+      "sha256": "83a08cefc513e0b2c92e310973224097ca96fcbfedf9cce085595ba93ec2a23a",
+      "bytes": 5186
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+      "disposition": "SELECTIVE_PATCH_APPLIED",
+      "materializedPath": "modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+      "origin": {
+        "repository": "gustavomhss/Orchestra-SF",
+        "pullRequest": 39,
+        "commit": "cfbd2a04815e8e4db279f840e64fbf9cc90ee522",
+        "blob": "b354f345784872e533afc689f26d743eab5fed0f",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/cfbd2a04815e8e4db279f840e64fbf9cc90ee522/modules/sucafina/Sucafinav1/product/ai/analysis-port.ts"
+      },
+      "previousPublished": {
+        "commit": "5623a35fe42b4a2f0f309c2ae56e66677c6f4fc6",
+        "blob": "5f0cb57b7b9263d68e743165828fd75bc9df076d"
+      },
+      "integrationBase": {
+        "commit": "c21a990c57b714cd60bb7f915beb6be51acbafdb",
+        "blob": "5526b59d0c7a06791968c9dbb4d94cd3145a5bf6"
+      },
+      "acceptedDelta": "Fresh lifecycle scopes only for terminal metadata; ready payload requires strict current run scope.",
+      "preservedOrRejected": "Preserved W3 durable-target cancellation, explicit read return type, original stale publication reconciliation, and failed-vs-denied settlement. Rejected caller-supplied reviewTarget regression.",
+      "gitBlob": "432bac47125b8f1c451653dcf57342763407aa7b",
+      "sha256": "b2352047a4e39a8758dad59d9512a5f6050aba77dc97612836e52ddff0b4c3c6",
+      "bytes": 27121
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/contribution-builder.ts",
+      "disposition": "SELECTIVE_PATCH_APPLIED",
+      "materializedPath": "modules/sucafina/Sucafinav1/product/ai/contribution-builder.ts",
+      "origin": {
+        "repository": "gustavomhss/Orchestra-SF",
+        "pullRequest": 39,
+        "commit": "cfbd2a04815e8e4db279f840e64fbf9cc90ee522",
+        "blob": "62fb6aaee60a1b750465c25b27822f6b8fca7dbf",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/cfbd2a04815e8e4db279f840e64fbf9cc90ee522/modules/sucafina/Sucafinav1/product/ai/contribution-builder.ts"
+      },
+      "previousPublished": {
+        "commit": "5623a35fe42b4a2f0f309c2ae56e66677c6f4fc6",
+        "blob": "19599d970f22eeab98fffd57d78629de914f8bf9"
+      },
+      "integrationBase": {
+        "commit": "c21a990c57b714cd60bb7f915beb6be51acbafdb",
+        "blob": "28a1af7a227af64f98d83cc32be5b997a898e4d6"
+      },
+      "acceptedDelta": "All reviewer-skill outputs require a nonempty independent author target, including UnresolvedCondition.",
+      "preservedOrRejected": "Preserved failed for invalid model payload/kind and denied for authority/context errors. Rejected upstream restoration of denied for invalid model output.",
+      "gitBlob": "e4756f019be2696983734b8b3d43a471dc438195",
+      "sha256": "6a69ae6cef5f42b9feada16fff5743f9c3c99e2d37a8ae739fb6796d4a081221",
+      "bytes": 5823
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/contribution-reader.ts",
+      "disposition": "SELECTIVE_PATCH_APPLIED",
+      "materializedPath": "modules/sucafina/Sucafinav1/product/ai/contribution-reader.ts",
+      "origin": {
+        "repository": "gustavomhss/Orchestra-SF",
+        "pullRequest": 39,
+        "commit": "cfbd2a04815e8e4db279f840e64fbf9cc90ee522",
+        "blob": "b9439405f2c75df475fc568884c6f2f81e4f13cb",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/cfbd2a04815e8e4db279f840e64fbf9cc90ee522/modules/sucafina/Sucafinav1/product/ai/contribution-reader.ts"
+      },
+      "previousPublished": {
+        "commit": "5623a35fe42b4a2f0f309c2ae56e66677c6f4fc6",
+        "blob": "e21faab024f4f908b3578f561c063f48c3c786c3"
+      },
+      "integrationBase": {
+        "commit": "c21a990c57b714cd60bb7f915beb6be51acbafdb",
+        "blob": "35a98360792cd8a7ebde6128dbe6ab59aa15b5bb"
+      },
+      "acceptedDelta": "Pin historical case/run/output digest before callbacks, reject retained-reference/cyclic mutation after each await, return a private output clone.",
+      "preservedOrRejected": "Preserved current source/case access and exact native case/incarnation/version binding; no permission widening.",
+      "gitBlob": "a03a038463e847940fa65b6d80ab7a1064492bc8",
+      "sha256": "6f84fc385d1bdcc934c924cae45288cadd12521b78f185592a83870d7a9a731b",
+      "bytes": 8615
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+      "disposition": "SELECTIVE_PATCH_APPLIED",
+      "materializedPath": "modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+      "origin": {
+        "repository": "gustavomhss/Orchestra-SF",
+        "pullRequest": 39,
+        "commit": "cfbd2a04815e8e4db279f840e64fbf9cc90ee522",
+        "blob": "0c2021133e2398ecf33fdcc5ddb567ab3ebbc64b",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/cfbd2a04815e8e4db279f840e64fbf9cc90ee522/modules/sucafina/Sucafinav1/product/ai/run-store.ts"
+      },
+      "previousPublished": {
+        "commit": "5623a35fe42b4a2f0f309c2ae56e66677c6f4fc6",
+        "blob": "3e0b32af1d5e4350d619a6db975551d6fde5c80a"
+      },
+      "integrationBase": {
+        "commit": "c21a990c57b714cd60bb7f915beb6be51acbafdb",
+        "blob": "460ea7d043351f1b401b005d0cc383ff2e876a86"
+      },
+      "acceptedDelta": "Bind state authority to request context, pin lifecycle record/case digests, clone lifecycle egress, settle failed/unavailable/needs-input through metadata path under mandatory commit authority.",
+      "preservedOrRejected": "Preserved W3 C08 staged private clones, command and record digests, exact ready-to-stale CAS, cancellation protection, AlternativeDraft lifecycle-only outcome, and no output grant bypass.",
+      "gitBlob": "0c2021133e2398ecf33fdcc5ddb567ab3ebbc64b",
+      "sha256": "ecca23f4efe3c9250168a6fe58ca66df25c656878d2c6c3ba9b589d6daf25b06",
+      "bytes": 23545
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/analysis.test.ts",
+      "disposition": "SELECTIVE_TESTS_APPENDED",
+      "materializedPath": "modules/sucafina/Sucafinav1/test/product/wp12/analysis.test.ts",
+      "origin": {
+        "repository": "gustavomhss/Orchestra-SF",
+        "pullRequest": 39,
+        "commit": "cfbd2a04815e8e4db279f840e64fbf9cc90ee522",
+        "blob": "964763dddf6a265b31de2696f1b5272fced2a9be",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/cfbd2a04815e8e4db279f840e64fbf9cc90ee522/modules/sucafina/Sucafinav1/test/product/wp12/analysis.test.ts"
+      },
+      "previousPublished": {
+        "commit": "5623a35fe42b4a2f0f309c2ae56e66677c6f4fc6",
+        "blob": "839354e9b0c51a7c919539dbf246edd723194a9c"
+      },
+      "integrationBase": {
+        "commit": "c21a990c57b714cd60bb7f915beb6be51acbafdb",
+        "blob": "a790afa68ce1e4257d2251495e8ab160cc76493a"
+      },
+      "acceptedDelta": "Three added counterproofs: fresh authority after post-write stale, terminal metadata after source scope closes, and metadata scope cannot read ready content.",
+      "preservedOrRejected": "Retained W3 durable readRun fixtures and all existing tests; new adapters are synthetic unit seams, not provider witnesses.",
+      "gitBlob": "9489e170c3c67b67cca93e6435ff403d7812ae29",
+      "sha256": "6a85a8df99a8e94eeb722cfae92d89193c3cd1d9aebb40fea40f4cc7d20fb517",
+      "bytes": 35419
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/contribution-builder.test.ts",
+      "disposition": "SELECTIVE_TESTS_APPENDED",
+      "materializedPath": "modules/sucafina/Sucafinav1/test/product/wp12/contribution-builder.test.ts",
+      "origin": {
+        "repository": "gustavomhss/Orchestra-SF",
+        "pullRequest": 39,
+        "commit": "cfbd2a04815e8e4db279f840e64fbf9cc90ee522",
+        "blob": "460a9bcfc6244647ab6623263d29f2954f6731ea",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/cfbd2a04815e8e4db279f840e64fbf9cc90ee522/modules/sucafina/Sucafinav1/test/product/wp12/contribution-builder.test.ts"
+      },
+      "previousPublished": {
+        "commit": "5623a35fe42b4a2f0f309c2ae56e66677c6f4fc6",
+        "blob": "0ff0519df135fb971dc49822e28849ea3d97aadb"
+      },
+      "integrationBase": {
+        "commit": "c21a990c57b714cd60bb7f915beb6be51acbafdb",
+        "blob": "786bbff6817c82f7c11e69a29c2633a1e839eb3f"
+      },
+      "acceptedDelta": "Typed reviewer fixture and standalone UnresolvedCondition target/independence counterproof.",
+      "preservedOrRejected": "Retained failed assertions for malformed native payload and ungranted output kind.",
+      "gitBlob": "e43fa7c0da95ecdeda10386f2a5c2fabb7061c62",
+      "sha256": "5a29903bb1f89c7421427981b2add78a7d78b89abb0bfba7d3d5644df9629395",
+      "bytes": 6816
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/historical-reader.test.ts",
+      "disposition": "SELECTIVE_TESTS_APPENDED",
+      "materializedPath": "modules/sucafina/Sucafinav1/test/product/wp12/historical-reader.test.ts",
+      "origin": {
+        "repository": "gustavomhss/Orchestra-SF",
+        "pullRequest": 39,
+        "commit": "cfbd2a04815e8e4db279f840e64fbf9cc90ee522",
+        "blob": "c07e0764c5b229eb01e7a1a065478fcc41bc74a1",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/cfbd2a04815e8e4db279f840e64fbf9cc90ee522/modules/sucafina/Sucafinav1/test/product/wp12/historical-reader.test.ts"
+      },
+      "previousPublished": {
+        "commit": "5623a35fe42b4a2f0f309c2ae56e66677c6f4fc6",
+        "blob": "8daf1d4de7432504250a4d44cddc2eaa3b661a59"
+      },
+      "integrationBase": {
+        "commit": "c21a990c57b714cd60bb7f915beb6be51acbafdb",
+        "blob": "33294499ff25edfc52015e30a375c4c5bb019918"
+      },
+      "acceptedDelta": "Real C08/SQLite callback mutation checks at both verifications and final egress, including cycles; persistent bytes remain unchanged.",
+      "preservedOrRejected": "Retained complete sfCaseFixture from W3 instead of transplanting an unrelated fixture replacement.",
+      "gitBlob": "246d2ac08e941566b55f856cea8517d1817ab97d",
+      "sha256": "6779a5fe30c59aa1552ec092be0368bd6aeead97ded14ea5a784f15cc764d870",
+      "bytes": 6794
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-admission.test.ts",
+      "disposition": "EXACT_NEW_TEST_RECOVERED",
+      "materializedPath": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-admission.test.ts",
+      "origin": {
+        "repository": "gustavomhss/Orchestra-SF",
+        "pullRequest": 39,
+        "commit": "cfbd2a04815e8e4db279f840e64fbf9cc90ee522",
+        "blob": "7525801e2706e6e71e0a8e3dce53c35079992859",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/cfbd2a04815e8e4db279f840e64fbf9cc90ee522/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-admission.test.ts"
+      },
+      "previousPublished": null,
+      "integrationBase": {
+        "commit": "c21a990c57b714cd60bb7f915beb6be51acbafdb",
+        "blob": null
+      },
+      "acceptedDelta": "Observe actual Catalog and SessionRunnerModel after actual skill registration/load in a real Location.",
+      "preservedOrRejected": "No model/provider/catalog/credentials fixture; no inference is run. Empty catalog is an explicit unavailable admission observation; a configured-candidate failure fails the test.",
+      "gitBlob": "7525801e2706e6e71e0a8e3dce53c35079992859",
+      "sha256": "e7040d11a6b7d667a9259d62623497f5f994afa97171abe8ea5a229a6c40248b",
+      "bytes": 6584
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-finance.test.ts",
+      "disposition": "BLOCKED_HOST_COMPOSITION_NOT_RUN",
+      "materializedPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/astra-intelligence-w4/prepared/native-execution-finance.test.ts.txt",
+      "origin": {
+        "repository": "gustavomhss/Orchestra-SF",
+        "pullRequest": 39,
+        "commit": "cfbd2a04815e8e4db279f840e64fbf9cc90ee522",
+        "blob": "dd60cd6f0ed63cdfd89cdfff0de001e35588473a",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/cfbd2a04815e8e4db279f840e64fbf9cc90ee522/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-finance.test.ts"
+      },
+      "previousPublished": null,
+      "integrationBase": {
+        "commit": "c21a990c57b714cd60bb7f915beb6be51acbafdb",
+        "blob": null
+      },
+      "acceptedDelta": "Exact prepared source archived as inert .ts.txt, not placed in runnable/typechecked test sources.",
+      "preservedOrRejected": "Full published host graph and interface APIs differ from this integration. Parent declined whole-host intake. No skip and no inherited CI/provider/consumer acceptance; see foreign-dependency-frontier.json.",
+      "gitBlob": "dd60cd6f0ed63cdfd89cdfff0de001e35588473a",
+      "sha256": "50c16b9e99478a69188779e6d54735bf50f80189ed28ee225fb58f4f6c7694fe",
+      "bytes": 17777
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/resident-authority.test.ts",
+      "disposition": "W3_RETAINED_UPSTREAM_DECLARATION_REJECTED",
+      "materializedPath": "modules/sucafina/Sucafinav1/test/product/wp12/resident-authority.test.ts",
+      "origin": {
+        "repository": "gustavomhss/Orchestra-SF",
+        "pullRequest": 39,
+        "commit": "cfbd2a04815e8e4db279f840e64fbf9cc90ee522",
+        "blob": "d36bdf71e668eefa8246b783d76752ff6df323b3",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/cfbd2a04815e8e4db279f840e64fbf9cc90ee522/modules/sucafina/Sucafinav1/test/product/wp12/resident-authority.test.ts"
+      },
+      "previousPublished": {
+        "commit": "5623a35fe42b4a2f0f309c2ae56e66677c6f4fc6",
+        "blob": "81840ce2745a2d970f8bacb4878a9b537a2f96b6"
+      },
+      "integrationBase": {
+        "commit": "c21a990c57b714cd60bb7f915beb6be51acbafdb",
+        "blob": "a2da68aa5f5bf2122616b82b74a06aa4f54a3988"
+      },
+      "acceptedDelta": "Both W3 tests retained byte-for-byte, including the existing real-repository expectSpawn declaration.",
+      "preservedOrRejected": "Upstream only adds expectSpawn to a temporary directory outside Git. packages/core/src/git.ts discover returns before AppProcess when .git is absent; this fixture replaces SkillDiscovery. No mandatory subprocess is established for that first test, so no artificial spawn/declaration was added.",
+      "gitBlob": "a2da68aa5f5bf2122616b82b74a06aa4f54a3988",
+      "sha256": "23cf982e3d7d083ac811ed2e39dfc99e88cb13fb4eb716485396978e30f6c25e",
+      "bytes": 7186
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/resident-native.test.ts",
+      "disposition": "SELECTIVE_TESTS_EXTENDED",
+      "materializedPath": "modules/sucafina/Sucafinav1/test/product/wp12/resident-native.test.ts",
+      "origin": {
+        "repository": "gustavomhss/Orchestra-SF",
+        "pullRequest": 39,
+        "commit": "cfbd2a04815e8e4db279f840e64fbf9cc90ee522",
+        "blob": "b95e8b8b5c281872b07164f7faa47f21f64de684",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/cfbd2a04815e8e4db279f840e64fbf9cc90ee522/modules/sucafina/Sucafinav1/test/product/wp12/resident-native.test.ts"
+      },
+      "previousPublished": {
+        "commit": "5623a35fe42b4a2f0f309c2ae56e66677c6f4fc6",
+        "blob": "dcca1255b1a05ed082a72367419d6469907bd4d2"
+      },
+      "integrationBase": {
+        "commit": "c21a990c57b714cd60bb7f915beb6be51acbafdb",
+        "blob": "c62d40665f8d3db156cf3702992f8643ef757292"
+      },
+      "acceptedDelta": "Retain all 18 real native loads and five actual profile grants; add one real rejected load per skill. All-profile recall uses invalid manifest as its relevant negative.",
+      "preservedOrRejected": "Retained W3 per-skill error diagnostics, actual SessionExecution fixture, source/instructions/load-message assertions, and expectSpawn. No provider execution claim.",
+      "gitBlob": "d6efa62544a8a5d6d3037f941951b6d415a38907",
+      "sha256": "d9f1e0347751cc9c7970f7f47babfb960dc5cfc607937611834684f46cbad37a",
+      "bytes": 7982
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/run-store.test.ts",
+      "disposition": "SELECTIVE_TESTS_APPENDED",
+      "materializedPath": "modules/sucafina/Sucafinav1/test/product/wp12/run-store.test.ts",
+      "origin": {
+        "repository": "gustavomhss/Orchestra-SF",
+        "pullRequest": 39,
+        "commit": "cfbd2a04815e8e4db279f840e64fbf9cc90ee522",
+        "blob": "55d1e6f122e37e7021ae0de13b5a65c427faa020",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/cfbd2a04815e8e4db279f840e64fbf9cc90ee522/modules/sucafina/Sucafinav1/test/product/wp12/run-store.test.ts"
+      },
+      "previousPublished": {
+        "commit": "5623a35fe42b4a2f0f309c2ae56e66677c6f4fc6",
+        "blob": "542403e347b2cf09282bfde4f3c9078ccccebeeb"
+      },
+      "integrationBase": {
+        "commit": "c21a990c57b714cd60bb7f915beb6be51acbafdb",
+        "blob": "75399d5f593bba467151e6debe34a7b17e6f13f3"
+      },
+      "acceptedDelta": "Added lifecycle/current principal-policy-access membership tests, source-unavailable terminal settlement with denied commit counterproof, exact ready-output stale retention, and durable cancellation with unattached interrupt.",
+      "preservedOrRejected": "Kept W3 final C08 alias tests, source-stale independent review cancellation and complete case fixtures. Adapted upstream cancellation test to durable target instead of introducing caller authority. Added current case version advance and principal/policy/access mismatches.",
+      "gitBlob": "d2c86a1c7a999690804eed560d49e8acdeaf72aa",
+      "sha256": "4774e36477f756c4d4ad6589e5de514fad05ee67e962f40d5d23245722954c1a",
+      "bytes": 37894
+    }
+  ],
+  "unchangedW3Guards": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/run-restart.test.ts",
+      "w3Blob": "2bb82f2940853f0a07a5fe2ff9696fba488a1216",
+      "gitBlob": "2bb82f2940853f0a07a5fe2ff9696fba488a1216",
+      "sha256": "90ce9d528672fdaae1fbe6a47c15a7fe4abd4430d4d52d6025d02bcca29bce60",
+      "bytes": 8351
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/restart-reader.ts",
+      "w3Blob": "430ca1ac52a85bdd56840175326e492d12c9cc31",
+      "gitBlob": "430ca1ac52a85bdd56840175326e492d12c9cc31",
+      "sha256": "54bac943b27cfbec0a05809a8f34d765dcff3b2b6c6a122e4554024f35f1270a",
+      "bytes": 13756
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/publication-lifecycle.test.ts",
+      "w3Blob": "e3e3dacbb3af4c62cc5c3f57582dfaac5581ae3c",
+      "gitBlob": "e3e3dacbb3af4c62cc5c3f57582dfaac5581ae3c",
+      "sha256": "9880318bd6b22b5ef745135915cb194603620f850928c4ce70632366f18110be",
+      "bytes": 20242
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/continuation.test.ts",
+      "w3Blob": "4a4191b7b7b556d5e3c0fd6b66f96bb042f375df",
+      "gitBlob": "4a4191b7b7b556d5e3c0fd6b66f96bb042f375df",
+      "sha256": "e4e6c37477ca534e1f022fad78532380c16f4940f2af317bf4b9f55a24e2dff9",
+      "bytes": 8007
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/resident-native-fixture.ts",
+      "w3Blob": "3b5b19e78a3dfe04c445e098841d488d36d5a51a",
+      "gitBlob": "3b5b19e78a3dfe04c445e098841d488d36d5a51a",
+      "sha256": "ceabe739a68283e65900e2523e8dc30340a6f82a42efb2217726b6d5565c5c8c",
+      "bytes": 2905
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/manifests/resident.json",
+      "w3Blob": "453c6f3a5b48c081223909af8293f854ad31d7c8",
+      "gitBlob": "453c6f3a5b48c081223909af8293f854ad31d7c8",
+      "sha256": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430",
+      "bytes": 106538
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/manifests/native-probe.json",
+      "w3Blob": "4e257c2bc83968759619a3698df0bee55b4c274b",
+      "gitBlob": "4e257c2bc83968759619a3698df0bee55b4c274b",
+      "sha256": "c21f7e493e5a48e5f21ceaf49834a384519ce5f9267bec5eb14b435b2449a106",
+      "bytes": 5456
+    }
+  ],
+  "lifecycleBoundary": {
+    "metadataOnly": [
+      "failed",
+      "unavailable",
+      "needs-input",
+      "stale",
+      "cancelled"
+    ],
+    "retainedRequirements": [
+      "Authenticated current principal, policy and access revision",
+      "Current case incarnation and participant membership; current version at least original",
+      "C08 contributions+case CAS, exact transition version",
+      "Mandatory revalidateForCommit under SQLite lock",
+      "No output payload/grant for metadata-only failure settlement",
+      "Strict withRunContext for source validation, collection, content reads and publication",
+      "No AlternativeDraft promotion without private capture"
+    ],
+    "hostWiring": {
+      "status": "EXTERNAL_OWNER_GATE_NOT_INSTALLED_BY_THIS_INCREMENT",
+      "owner": "WP10/astra-compose",
+      "inspectedCommit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "blob": "28046172e5a540c8418aff0b968b2e098888c432",
+      "finding": "This published host passes strict withRunContext and source fences for failed/unavailable/needs-input; the optional lifecycle scope is not supplied. Existing private AlternativeDraft capture/replay and stale/cancelled handlers are present.",
+      "ownerProposal": "https://github.com/gustavomhss/Orchestra-SF/blob/cfbd2a04815e8e4db279f840e64fbf9cc90ee522/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/terminal/proposal.json"
+    }
+  },
+  "proofLayers": {
+    "catalog": "New test observes installed Catalog/SessionRunnerModel; W4 execution pending.",
+    "load": "Existing W3 native18 loads/five grants preserved; new per-skill18 refusals await W4CI.",
+    "provider": "No new provider inference executed or simulated. Admission observation is not inference.",
+    "persisted": "W3 real SQLite four-child-process restart remains unchanged; its run/model/receipt records are explicitly synthetic. New terminal/historical guards await W4CI.",
+    "consumer": "Finance full-host persisted HTTP consumer proof is prepared but blocked by external composition and was not run. Existing canonical consumer mappings remain scoped as in W3.",
+    "continuation": "Fresh linked run and ancestry component counterproofs retained unchanged; no claim that public continuation or Relay/native execution adapter has been installed or executed."
+  },
+  "execution": {
+    "status": "PENDING_HOSTED_EXECUTION",
+    "testSelection": "test-selection.json",
+    "localExecution": false,
+    "nativeFinance": "BLOCKED_HOST_COMPOSITION_NOT_RUN",
+    "inheritUpstreamCi": false,
+    "inheritW3PassForChangedCode": false
+  },
+  "followupOwners": [
+    {
+      "owner": "WP10/astra-compose",
+      "action": "Consume optional lifecycle scope and terminal commit metadata policy through authenticated current-case authority; never reuse original source grant as current authority."
+    },
+    {
+      "owner": "WP10/astra-compose and producer owners",
+      "action": "Review exact native Finance host dependency frontier; resolve foreign APIs with pin provenance before making the archived test runnable."
+    },
+    {
+      "owner": "WP10/Relay",
+      "action": "Public fresh continuation/ancestry and installed Relay native adapter remain independently demonstrated gates."
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "test-selection.json",
+      "gitBlob": "297b96f0a3dcff33efc8765af506f977c7b87126",
+      "sha256": "40129a051e3405435215792ec58483fbb7b7151d8175d850f759d3e7d26682ee",
+      "bytes": 12481
+    },
+    {
+      "path": "foreign-dependency-frontier.json",
+      "gitBlob": "0ba53d29cb42b68a8bcfd9560a14843c4f6905bf",
+      "sha256": "07c4e339e863825451f1de0b983d12465e686e549d5f991dd1d913c398564b8c",
+      "bytes": 77710
+    }
+  ]
+}
