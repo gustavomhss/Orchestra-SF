@@ -10,6 +10,8 @@ import type { SfPortfolioPreparation } from "./portfolio-services.ts"
 import { createSfBiServices } from "./bi-services.ts"
 import { createSfBiArtifacts } from "./bi-artifacts.ts"
 import type { SfBiHumanChoiceReader } from "./bi-artifacts.ts"
+import { createSfReviewCollaboration } from "./review-collaboration.ts"
+import type { ReviewThreadRecipientAuthority } from "../../../../modules/sucafina/Sucafinav1/product/collaboration/recipient-authority.ts"
 import { createSfReviewServices } from "./review-services.ts"
 import type { SfReviewReaders } from "./review-services.ts"
 import { createSfExtendedAssets } from "./extended-assets.ts"
@@ -35,6 +37,7 @@ export function createSfExtendedBusinessServices(input: {
   origin: string
   preparation?: SfPortfolioPreparation
   reviewReaders?: SfReviewReaders
+  reviewRecipientAuthority?: ReviewThreadRecipientAuthority
   readHumanBiChoice?: SfBiHumanChoiceReader
   assets?: Pick<ReturnType<typeof createSfExtendedAssets>, "bi" | "reviews">
 }) {
@@ -49,6 +52,8 @@ export function createSfExtendedBusinessServices(input: {
     readHumanChoice: input.readHumanBiChoice ?? choices.readBi, readArtifact: biArtifacts.store.read, revalidate: input.authority.host.revalidate })
   const reviewServices = createSfReviewServices({ ...input, portfolio: portfolioServices, bi, readers: input.reviewReaders })
   const reviews = reviewServices.application
+  if (reviews && reviewServices.historical) input.business.bindReviewCollaboration(createSfReviewCollaboration({ authority: input.authority,
+    application: reviews, evidence: reviewServices.historical.evidence, recipientAuthority: input.reviewRecipientAuthority }))
   const ownAssets = input.assets ? undefined : createSfExtendedAssets()
   const assets = input.assets ?? ownAssets!
   const descriptors: readonly CapabilityDescriptor[] = [bi.descriptor, ...portfolioServices.descriptors, ...(reviews?.descriptors ?? [])]
@@ -61,7 +66,7 @@ export function createSfExtendedBusinessServices(input: {
       requiredAuthority: { read: ["cases:read"], draft: ["cases:write"], receipt: ["cases:read"], alternative: ["cases:read"], change: ["cases:read"] } })
       .filter((descriptor) => descriptor.id === "sf_change_prepare" || descriptor.id === "sf_alternative_draft"),
   ]
-  const http = createSfExtendedHttp({ ...input, bi, reviews, assets })
+  const http = createSfExtendedHttp({ ...input, bi, reviews, assets, reviewEvidence: reviewServices.historical?.evidence })
   const choiceHttp = createSfAnalysisChoiceHttp({ authority: input.authority, origin: input.origin, choices, artifacts: biArtifacts.store,
     alternatives: alternatives.choices, business: input.business })
   let disposed = false
@@ -86,7 +91,8 @@ export function createSfExtendedBusinessServices(input: {
       ...(reviews ? { reviews: reviews.reviews, artifacts: reviews.artifacts } : {}),
       ...(portfolioServices.proof ? { portfolioProof: portfolioServices.proof } : {}), ...(portfolioServices.units ? { units: portfolioServices.units } : {}),
     },
-    unavailable: [...portfolioServices.unavailable, ...bi.unavailable, ...reviewServices.unavailable, ...decisions.unavailable],
+    unavailable: [...portfolioServices.unavailable, ...bi.unavailable, ...reviewServices.unavailable, ...decisions.unavailable,
+      ...(!input.reviewRecipientAuthority ? ["review-distinct-recipient-authority-unavailable"] : [])],
     dispose: () => { disposed = true; portfolioServices.dispose(); ownAssets?.dispose() },
   }
 }

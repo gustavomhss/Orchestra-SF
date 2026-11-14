@@ -156,17 +156,48 @@ export async function changeForecast(page: Page, app: ReportsInstallation, corpu
     await source.goto(`${app.dashboardURL}?page=OPEX%20Detail&year=${corpus.year}`)
     const form = source.locator('form[data-command="save-entry"][data-record="reports-opex-01"]')
     await expect(form).toHaveCount(1)
+    const row = source.getByRole("row").filter({ has: form })
+    await expect(row).toHaveCount(1)
+    await row.getByRole("button", { name: "Edit", exact: true }).click()
+    const editor = source.getByRole("dialog", { name: "Edit record", exact: true })
+    await expect(editor).toBeVisible()
     await expect(form.getByLabel("Forecast", { exact: true })).toHaveValue("110")
     const version = Number(await form.getAttribute("data-version"))
     expect(Number.isSafeInteger(version) && version >= 1).toBe(true)
-    // This is one real source edit; the server checks the observed optimistic version.
-    const response = await source.request.post(app.dashboardURL, {
-      headers: { Origin: app.origin }, maxRedirects: 0,
-      data: { page: "OPEX Detail", action: "save-entry", id: "reports-opex-01", version,
-        values: { ownerId: "reports-opex", year: corpus.year, month: 1, budget: 100, actual: 100, forecast: 190 } },
+    await form.getByLabel("Forecast", { exact: true }).fill("190")
+    const previewed = source.waitForResponse((response) => response.url() === source.url() &&
+      response.request().method() === "POST" && object(response.request().postDataJSON()).action === "preview-change")
+    await form.getByRole("button", { name: "Save month", exact: true }).click()
+    const previewResponse = await previewed
+    expect(previewResponse.status()).toBe(200)
+    expect(object(previewResponse.request().postDataJSON())).toMatchObject({
+      page: "OPEX Detail", action: "preview-change", values: { command: {
+        page: "OPEX Detail", action: "save-entry", id: "reports-opex-01", version,
+        values: { ownerId: "reports-opex", month: 1, budget: 100, actual: 100, forecast: 190 },
+      } },
     })
-    expect(response.status()).toBe(200)
-    expect(object(await response.json()).ok).toBe(true)
+    const previewBody = object(await previewResponse.json())
+    expect(previewBody.ok).toBe(true)
+    const preview = object(previewBody.value)
+    expect(preview.status).toBe("preview")
+    const previewRef = text(preview.previewRef)
+    const confirmation = form.getByRole("region", { name: "Review changes", exact: true })
+    await expect(confirmation).toHaveAttribute("data-preview-ref", previewRef)
+    await expect(confirmation.getByRole("heading", { name: "Review changes before applying", exact: true })).toBeVisible()
+    await expect(confirmation.getByRole("listitem").filter({ hasText: /forecast: 110 → 190$/ })).toHaveCount(1)
+    const beforeApply = await readSourceData(source.request, app)
+    expect(beforeApply.opexEntries).toEqual(expect.arrayContaining([
+      expect.objectContaining({ id: "reports-opex-01", forecast: 110 }),
+    ]))
+    const applied = source.waitForResponse((response) => response.url() === source.url() &&
+      response.request().method() === "POST" && object(response.request().postDataJSON()).action === "apply-preview")
+    await confirmation.getByRole("button", { name: "Confirm and apply", exact: true }).click()
+    const applyResponse = await applied
+    expect(applyResponse.status()).toBe(200)
+    expect(object(applyResponse.request().postDataJSON())).toMatchObject({ page: "OPEX Detail", action: "apply-preview", values: { previewRef } })
+    expect(object(await applyResponse.json())).toMatchObject({ ok: true, value: { applied: true, previewRef } })
+    await expect(editor).not.toBeVisible()
+    await expect(form).toHaveAttribute("data-version", String(version + 1))
     await source.reload()
     await expect(form).toHaveAttribute("data-version", String(version + 1))
     await expect(form.getByLabel("Forecast", { exact: true })).toHaveValue("190")
@@ -216,7 +247,7 @@ export async function openAndReopenMeeting(page: Page, app: ReportsInstallation,
   const pending = page.waitForResponse(responseFor(app.dashboardURL, "review-read", "GET"))
   await page.getByRole("region", { name: "Prepare review", exact: true }).getByRole("button", { name: "Open meeting", exact: true }).click()
   expect(object(await (await pending).json()).value).toEqual(saved)
-  const meeting = page.locator("section:has(> nav > button)")
+  const meeting = page.getByRole("region", { name: "Preserved review meeting", exact: true })
   await expect(meeting).toHaveCount(1)
   await expect(meeting.getByRole("status")).toContainText(`Preserved review ${saved.id} v${saved.version}`)
   const url = page.url()
@@ -232,7 +263,7 @@ export async function openAndReopenMeeting(page: Page, app: ReportsInstallation,
 }
 
 export async function expectCapturedBudget(page: Page, corpus: ReportsCorpus, amount = corpus.before) {
-  const meeting = page.locator("section:has(> nav > button)")
+  const meeting = page.getByRole("region", { name: "Preserved review meeting", exact: true })
   await expect(meeting.getByRole("heading", { level: 2 })).toHaveText("Budget")
   await expect(meeting.getByRole("listitem").filter({ hasText: new RegExp(`^budgetMetrics\\.${corpus.year}\\.totalForecast:`) }))
     .toHaveText(new RegExp(`^budgetMetrics\\.${corpus.year}\\.totalForecast: ${amount} unspecified · ${corpus.annual.start} – ${corpus.annual.end} · sf-source:`))

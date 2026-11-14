@@ -1,0 +1,183 @@
+﻿2026-11-14T21:05:46.4491125Z Current runner version: '2.338.2'
+2026-11-14T21:05:46.4515711Z ##[group]Runner Image Provisioner
+2026-11-14T21:05:46.4516568Z Hosted Compute Agent
+2026-11-14T21:05:46.4517208Z Version: 20261103.629
+2026-11-14T21:05:46.4517857Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+2026-11-14T21:05:46.4518591Z Build Date: 2026-11-03T17:26:59Z
+2026-11-14T21:05:46.4519323Z Worker ID: {7e66b6c6-6f40-4748-b665-67df4413595e}
+2026-11-14T21:05:46.4520054Z Region: us-east-1
+2026-11-14T21:05:46.4520661Z Cloud: AWS
+2026-11-14T21:05:46.4521194Z ##[endgroup]
+2026-11-14T21:05:46.4522740Z ##[group]Operating System
+2026-11-14T21:05:46.4523385Z Ubuntu
+2026-11-14T21:05:46.4523889Z 24.04.5
+2026-11-14T21:05:46.4524413Z LTS
+2026-11-14T21:05:46.4524918Z ##[endgroup]
+2026-11-14T21:05:46.4525753Z ##[group]Runner Image
+2026-11-14T21:05:46.4526390Z Image: ubuntu-24.04
+2026-11-14T21:05:46.4526945Z Version: 20261111.127.1
+2026-11-14T21:05:46.4528357Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261111.127/images/ubuntu/Ubuntu2404-Readme.md
+2026-11-14T21:05:46.4530035Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261111.127
+2026-11-14T21:05:46.4531057Z ##[endgroup]
+2026-11-14T21:05:46.4532271Z ##[group]GITHUB_TOKEN Permissions
+2026-11-14T21:05:46.4534667Z Contents: read
+2026-11-14T21:05:46.4535529Z Metadata: read
+2026-11-14T21:05:46.4536125Z ##[endgroup]
+2026-11-14T21:05:46.4538364Z Secret source: Actions
+2026-11-14T21:05:46.4539325Z Cache mode: write
+2026-11-14T21:05:46.4540367Z Prepare workflow directory
+2026-11-14T21:05:46.4932589Z Prepare all required actions
+2026-11-14T21:05:46.4984373Z Getting action download info
+2026-11-14T21:05:46.6833527Z Download action repository 'actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+2026-11-14T21:05:48.6433909Z Download action repository 'actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+2026-11-14T21:05:48.7752557Z Download action repository 'actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1' (SHA:ece7cb06caefa5fff74198d8649806c4678c61a1)
+2026-11-14T21:05:48.8684755Z Download action repository 'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-11-14T21:05:49.1648730Z Complete job name: test (ubuntu-24.04)
+2026-11-14T21:05:49.2485882Z ##[group]Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+2026-11-14T21:05:49.2487335Z with:
+2026-11-14T21:05:49.2488067Z   repository: gustavomhss/Orchestra-SF
+2026-11-14T21:05:49.2494329Z   token: ***
+2026-11-14T21:05:49.2495068Z   ssh-strict: true
+2026-11-14T21:05:49.2496014Z   ssh-user: git
+2026-11-14T21:05:49.2496783Z   persist-credentials: true
+2026-11-14T21:05:49.2497576Z   clean: true
+2026-11-14T21:05:49.2498361Z   sparse-checkout-cone-mode: true
+2026-11-14T21:05:49.2499244Z   fetch-depth: 1
+2026-11-14T21:05:49.2499988Z   fetch-tags: false
+2026-11-14T21:05:49.2500861Z   show-progress: true
+2026-11-14T21:05:49.2501689Z   lfs: false
+2026-11-14T21:05:49.2502442Z   submodules: false
+2026-11-14T21:05:49.2503248Z   set-safe-directory: true
+2026-11-14T21:05:49.2504288Z ##[endgroup]
+2026-11-14T21:05:52.9530054Z Syncing repository: gustavomhss/Orchestra-SF
+2026-11-14T21:05:52.9531382Z ##[group]Getting Git version info
+2026-11-14T21:05:52.9531981Z Working directory is '/home/runner/work/Orchestra-SF/Orchestra-SF'
+2026-11-14T21:05:52.9532651Z [command]/usr/bin/git version
+2026-11-14T21:05:53.2376127Z git version 2.56.1
+2026-11-14T21:05:53.2390815Z ##[endgroup]
+2026-11-14T21:05:53.2401488Z Temporarily overriding HOME='/home/runner/work/_temp/5c31710c-03e8-485a-849c-fe1eedaedcda' before making global git config changes
+2026-11-14T21:05:53.2402435Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-14T21:05:53.2405916Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Orchestra-SF/Orchestra-SF
+2026-11-14T21:05:53.2747172Z Deleting the contents of '/home/runner/work/Orchestra-SF/Orchestra-SF'
+2026-11-14T21:05:53.2750318Z ##[group]Initializing the repository
+2026-11-14T21:05:53.2754528Z [command]/usr/bin/git init /home/runner/work/Orchestra-SF/Orchestra-SF
+2026-11-14T21:05:53.3280845Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-11-14T21:05:53.3281921Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-11-14T21:05:53.3282523Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-11-14T21:05:53.3283065Z hint: call:
+2026-11-14T21:05:53.3283901Z hint:
+2026-11-14T21:05:53.3284480Z hint: 	git config --global init.defaultBranch <name>
+2026-11-14T21:05:53.3285014Z hint:
+2026-11-14T21:05:53.3285490Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-11-14T21:05:53.3285973Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-11-14T21:05:53.3286360Z hint:
+2026-11-14T21:05:53.3286617Z hint: 	git branch -m <name>
+2026-11-14T21:05:53.3286965Z hint:
+2026-11-14T21:05:53.3287308Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-11-14T21:05:53.3289416Z Initialized empty Git repository in /home/runner/work/Orchestra-SF/Orchestra-SF/.git/
+2026-11-14T21:05:53.3296442Z [command]/usr/bin/git remote add origin https://github.com/gustavomhss/Orchestra-SF
+2026-11-14T21:05:53.3342523Z ##[endgroup]
+2026-11-14T21:05:53.3343135Z ##[group]Disabling automatic garbage collection
+2026-11-14T21:05:53.3346099Z [command]/usr/bin/git config --local gc.auto 0
+2026-11-14T21:05:53.3368247Z ##[endgroup]
+2026-11-14T21:05:53.3368905Z ##[group]Setting up auth
+2026-11-14T21:05:53.3373356Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-14T21:05:53.3403199Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-14T21:05:53.7496756Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-14T21:05:53.7508816Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-14T21:05:53.7659333Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-14T21:05:53.7683856Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-14T21:05:53.7831606Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-11-14T21:05:53.7856538Z ##[endgroup]
+2026-11-14T21:05:53.7856954Z ##[group]Fetching the repository
+2026-11-14T21:05:53.7868690Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +00fd9405f4637ddfd57b920ce62636a5cd740f00:refs/remotes/origin/ci-run-linux-astra-wp07-bc587ceb-a828e15b-1
+2026-11-14T21:05:56.6438025Z From https://github.com/gustavomhss/Orchestra-SF
+2026-11-14T21:05:56.6438697Z  * [new ref]         00fd9405f4637ddfd57b920ce62636a5cd740f00 -> origin/ci-run-linux-astra-wp07-bc587ceb-a828e15b-1
+2026-11-14T21:05:56.6442695Z ##[endgroup]
+2026-11-14T21:05:56.6443349Z ##[group]Determining the checkout info
+2026-11-14T21:05:56.6444180Z ##[endgroup]
+2026-11-14T21:05:56.6449234Z [command]/usr/bin/git sparse-checkout disable
+2026-11-14T21:05:56.6536291Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-11-14T21:05:56.6542667Z ##[group]Checking out the ref
+2026-11-14T21:05:56.6544860Z [command]/usr/bin/git checkout --progress --force -B ci-run-linux-astra-wp07-bc587ceb-a828e15b-1 refs/remotes/origin/ci-run-linux-astra-wp07-bc587ceb-a828e15b-1
+2026-11-14T21:05:57.4838617Z Switched to a new branch 'ci-run-linux-astra-wp07-bc587ceb-a828e15b-1'
+2026-11-14T21:05:57.4845785Z branch 'ci-run-linux-astra-wp07-bc587ceb-a828e15b-1' set up to track 'origin/ci-run-linux-astra-wp07-bc587ceb-a828e15b-1'.
+2026-11-14T21:05:57.4862257Z ##[endgroup]
+2026-11-14T21:05:57.4902874Z [command]/usr/bin/git log -1 --format=%H
+2026-11-14T21:05:57.4923065Z 00fd9405f4637ddfd57b920ce62636a5cd740f00
+2026-11-14T21:05:57.5146068Z ##[group]Run actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+2026-11-14T21:05:57.5146450Z with:
+2026-11-14T21:05:57.5146671Z   node-version: 24.15
+2026-11-14T21:05:57.5146910Z   always-auth: false
+2026-11-14T21:05:57.5147149Z   check-latest: false
+2026-11-14T21:05:57.5149143Z   token: ***
+2026-11-14T21:05:57.5149372Z ##[endgroup]
+2026-11-14T21:05:57.7585976Z Attempting to download 24.15...
+2026-11-14T21:05:57.8204023Z (node:2147) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-14T21:05:57.8205016Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-14T21:05:58.3446070Z Acquiring 24.15.0 - x64 from https://github.com/actions/node-versions/releases/download/24.15.0-24511264946/node-24.15.0-linux-x64.tar.gz
+2026-11-14T21:05:58.9010178Z Extracting ...
+2026-11-14T21:05:58.9115887Z [command]/usr/bin/tar xz --strip 1 --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/db9741ce-d756-49a8-a9a9-d7d5c665ce17 -f /home/runner/work/_temp/13851e0f-7813-423a-b285-775c9df5e2ea
+2026-11-14T21:05:59.9232650Z Adding to the cache ...
+2026-11-14T21:06:00.8223205Z ##[group]Environment details
+2026-11-14T21:06:01.4070223Z node: v24.15.0
+2026-11-14T21:06:01.4070599Z npm: 11.12.1
+2026-11-14T21:06:01.4070806Z yarn: 1.22.22
+2026-11-14T21:06:01.4071344Z ##[endgroup]
+2026-11-14T21:06:01.4199093Z ##[group]Run node --input-type=module <<'NODE'
+2026-11-14T21:06:01.4199550Z [36;1mnode --input-type=module <<'NODE'[0m
+2026-11-14T21:06:01.4200006Z [36;1mimport { appendFileSync, mkdirSync, readFileSync, realpathSync, statSync, writeFileSync } from 'node:fs'[0m
+2026-11-14T21:06:01.4200472Z [36;1mimport path from 'node:path'[0m
+2026-11-14T21:06:01.4200860Z [36;1mimport { omniControlScope, validateRequest } from './script/test-ci-request.ts'[0m
+2026-11-14T21:06:01.4201304Z [36;1mimport { locateTestPackage } from './script/test-ci-location.ts'[0m
+2026-11-14T21:06:01.4201773Z [36;1mconst request = validateRequest(JSON.parse(readFileSync('.ci-run.json', 'utf8')),[0m
+2026-11-14T21:06:01.4202231Z [36;1m  (file) => (statSync(file, { throwIfNoEntry: false })?.isFile() ?? false) &&[0m
+2026-11-14T21:06:01.4202672Z [36;1m    realpathSync(file).startsWith(realpathSync('.') + path.sep),[0m
+2026-11-14T21:06:01.4203033Z [36;1m  (selector) => locateTestPackage('.', selector))[0m
+2026-11-14T21:06:01.4203483Z [36;1mwriteFileSync('.ci-run.json', JSON.stringify(request))[0m
+2026-11-14T21:06:01.4203839Z [36;1mmkdirSync('test-ci-evidence', { recursive: true })[0m
+2026-11-14T21:06:01.4204226Z [36;1mwriteFileSync('test-ci-evidence/request.json', JSON.stringify({ request,[0m
+2026-11-14T21:06:01.4204691Z [36;1m  platform: process.platform, arch: process.arch, sha: process.env.GITHUB_SHA }))[0m
+2026-11-14T21:06:01.4205095Z [36;1mappendFileSync(process.env.GITHUB_OUTPUT,[0m
+2026-11-14T21:06:01.4205888Z [36;1m  `package=${request.package}\ndirectory=${request.directory}\nrunner=${request.runner}\nomni_control=${omniControlScope(request)}\n`)[0m
+2026-11-14T21:06:01.4206417Z [36;1mNODE[0m
+2026-11-14T21:06:01.7513992Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T21:06:01.7514393Z ##[endgroup]
+2026-11-14T21:06:01.8222447Z (node:2184) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///home/runner/work/Orchestra-SF/Orchestra-SF/packages/script/src/module-catalog.ts is not specified and it doesn't parse as CommonJS.
+2026-11-14T21:06:01.8244067Z Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+2026-11-14T21:06:01.8245012Z To eliminate this warning, add "type": "module" to /home/runner/work/Orchestra-SF/Orchestra-SF/packages/script/package.json.
+2026-11-14T21:06:01.8246265Z (Use `node --trace-warnings ...` to show where the warning was created)
+2026-11-14T21:06:01.8296315Z file:///home/runner/work/Orchestra-SF/Orchestra-SF/script/test-ci-package.ts:35
+2026-11-14T21:06:01.8296877Z   throw new Error(`TEST_PACKAGE_NOT_FOUND:${selector}`)
+2026-11-14T21:06:01.8297313Z         ^
+2026-11-14T21:06:01.8297423Z 
+2026-11-14T21:06:01.8297609Z Error: TEST_PACKAGE_NOT_FOUND:modules/sucafina
+2026-11-14T21:06:01.8298131Z     at resolveTestPackage (file:///home/runner/work/Orchestra-SF/Orchestra-SF/script/test-ci-package.ts:35:9)
+2026-11-14T21:06:01.8298774Z     at locateTestPackage (file:///home/runner/work/Orchestra-SF/Orchestra-SF/script/test-ci-location.ts:22:10)
+2026-11-14T21:06:01.8299356Z     at file:///home/runner/work/Orchestra-SF/Orchestra-SF/[eval1]:8:17
+2026-11-14T21:06:01.8299904Z     at validateRequest (file:///home/runner/work/Orchestra-SF/Orchestra-SF/script/test-ci-request.ts:84:36)
+2026-11-14T21:06:01.8300421Z     at file:///home/runner/work/Orchestra-SF/Orchestra-SF/[eval1]:5:17
+2026-11-14T21:06:01.8300908Z     at ModuleJob.run (node:internal/modules/esm/module_job:437:25)
+2026-11-14T21:06:01.8301388Z     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+2026-11-14T21:06:01.8301833Z     at async node:internal/modules/esm/loader:246:26
+2026-11-14T21:06:01.8302311Z     at async ModuleLoader.executeModuleJob (node:internal/modules/esm/loader:243:20)
+2026-11-14T21:06:01.8302815Z     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+2026-11-14T21:06:01.8303145Z 
+2026-11-14T21:06:01.8303254Z Node.js v24.15.0
+2026-11-14T21:06:01.8326311Z ##[error]Process completed with exit code 1.
+2026-11-14T21:06:01.8962579Z Post job cleanup.
+2026-11-14T21:06:01.9636575Z [command]/usr/bin/git version
+2026-11-14T21:06:01.9662468Z git version 2.56.1
+2026-11-14T21:06:01.9693707Z Temporarily overriding HOME='/home/runner/work/_temp/0f03b89d-2de3-43ef-ae21-9204496dae01' before making global git config changes
+2026-11-14T21:06:01.9694422Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-14T21:06:01.9698482Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Orchestra-SF/Orchestra-SF
+2026-11-14T21:06:01.9730075Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-14T21:06:01.9754074Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-14T21:06:01.9928403Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-14T21:06:01.9949079Z http.https://github.com/.extraheader
+2026-11-14T21:06:01.9973964Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-14T21:06:01.9997115Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-14T21:06:02.0177934Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-14T21:06:02.0201545Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-14T21:06:02.0475825Z Cleaning up orphan processes
+2026-11-14T21:06:02.0742524Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5, actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

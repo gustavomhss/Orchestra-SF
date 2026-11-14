@@ -1,18 +1,25 @@
-import type { BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
+import type { BusinessContextService, BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import { isSfPeriod } from "../../../../modules/sucafina/Sucafinav1/product/contracts/validation.ts"
 import type { createSfBusinessServices } from "./business-services.ts"
 
 /** Links are derived from producer-authorized evidence, never an incoming URL. */
-export async function sfExtendedSourceLinks(input: { business: ReturnType<typeof createSfBusinessServices>; reference: BusinessEvidenceRef; call: TrustedDomainContext; url: URL }) {
+export async function sfExtendedSourceLinks(input: { business: ReturnType<typeof createSfBusinessServices>; reference: BusinessEvidenceRef; call: TrustedDomainContext; url: URL; reviewEvidence?: Pick<BusinessContextService, "resolve"> }) {
   const refs: BusinessEvidenceRef[] = input.reference.kind === "calculation" ? [...input.reference.target.sourceRefs] : [input.reference]
   const links: { label: string; url: string }[] = []
   for (const reference of refs) {
     if (reference.kind !== "record") continue
-    const current = await input.business.context.resolve(reference, input.call)
-    if (current.state !== "fresh" || digestSfValue(current.ref) !== digestSfValue(reference)) continue
-    const target = reference.target
+    const current = await (input.reviewEvidence ?? input.business.context).resolve(reference, input.call)
+    if (digestSfValue(current.ref) !== digestSfValue(reference) || current.accessRevision !== input.call.binding.accessRevision) continue
+    const selected = current.state === "fresh" ? reference : input.reviewEvidence && current.state === "historical" &&
+      current.authorizedProjection && current.differences && current.currentRef?.kind === "record" ? current.currentRef : undefined
+    if (!selected || selected.target.surface !== reference.target.surface || selected.target.recordType !== reference.target.recordType ||
+      selected.target.recordId !== reference.target.recordId || selected.target.incarnation !== reference.target.incarnation ||
+      digestSfValue(selected.target.fields) !== digestSfValue(reference.target.fields) || digestSfValue(selected.target.period) !== digestSfValue(reference.target.period)) continue
+    const live = await input.business.context.resolve(selected, input.call)
+    if (live.state !== "fresh" || live.accessRevision !== input.call.binding.accessRevision || digestSfValue(live.ref) !== digestSfValue(selected)) continue
+    const target = selected.target
     const url = new URL(input.url)
     url.pathname = url.pathname.replace(/\/dashboard\/?$/, `/${target.surface}`); url.search = ""; url.hash = ""
     if (target.surface === "planner") { url.searchParams.set("page", "Overview"); url.searchParams.set("version", target.recordId) }

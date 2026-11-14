@@ -1,0 +1,143 @@
+{
+  "schema": "reports-installed-closure-product-v1",
+  "mission": 25,
+  "actor": "S3-A",
+  "lease_epoch": "reports-browser25",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "astra-wp07",
+  "PR": 27,
+  "status": "OWNED_SOURCE_COMMITTED_SHARED_ASSEMBLY_PROPOSED_NOMINAL_NOT_RUN",
+  "observedHeadPreserved": "dbc5e803050052909316562ad4c1dc579f5f453a",
+  "sourceCommits": [
+    {
+      "label": "W1",
+      "sha": "567727670b4039c316a12718c84b43b57f4fa19d",
+      "tree": "3a3cdd0ca5ae13eeb58f94810a540f8da3b23934",
+      "parent": "dbc5e803050052909316562ad4c1dc579f5f453a",
+      "purpose": "Real Review discussion/answer controls; human UI E2E actions; privacy override; accessible meeting region."
+    },
+    {
+      "label": "W2",
+      "sha": "bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45",
+      "tree": "fb3b512c69f249960bd768aef723425d5e2d6740",
+      "parent": "567727670b4039c316a12718c84b43b57f4fa19d",
+      "purpose": "Public browser export reaches client/view in actual module typecheck; existing browser build test includes both new modules."
+    }
+  ],
+  "latestSourceW": "bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/collaboration-client.ts",
+      "change": "new",
+      "commitLabel": "W1",
+      "commit": "567727670b4039c316a12718c84b43b57f4fa19d",
+      "gitBlobSHA1": "8c5b413e25ed7c8100cf516f8538da1a22602df2",
+      "sha256": "80ec50086761047a4404864582f7afe3ffced4ab53abf9b25d80f1aeed7940f4",
+      "bytes": 6702,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45/modules/sucafina/Sucafinav1/product/reviews/collaboration-client.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/collaboration-view.ts",
+      "change": "new",
+      "commitLabel": "W1",
+      "commit": "567727670b4039c316a12718c84b43b57f4fa19d",
+      "gitBlobSHA1": "4b45a5fe673c5653f0979ba1b1044da4907383e1",
+      "sha256": "c489abf1f77efd84c451dcf996cc217c19751993ef634d0e88357c2a094274f2",
+      "bytes": 15986,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45/modules/sucafina/Sucafinav1/product/reviews/collaboration-view.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/meeting.ts",
+      "change": "modified",
+      "commitLabel": "W1",
+      "commit": "567727670b4039c316a12718c84b43b57f4fa19d",
+      "gitBlobSHA1": "4939f825fcacc4cdfb7995389909b362404b400f",
+      "sha256": "ac44a52226ac8b4d58c7a31e102d8604542950d209302fdf89ef873d272b9265",
+      "bytes": 21739,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45/modules/sucafina/Sucafinav1/product/reviews/meeting.ts"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports.spec.ts",
+      "change": "modified",
+      "commitLabel": "W1",
+      "commit": "567727670b4039c316a12718c84b43b57f4fa19d",
+      "gitBlobSHA1": "afc8b97cdc7425fedf1368275a1436f0227f89e8",
+      "sha256": "2ee691a0450172e23e567a1a82052bc2244b993b114d26f3dcb42606bfd753db",
+      "bytes": 6904,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45/packages/app-shell/e2e/sucafina/reports.spec.ts"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/review-flow.ts",
+      "change": "modified",
+      "commitLabel": "W1",
+      "commit": "567727670b4039c316a12718c84b43b57f4fa19d",
+      "gitBlobSHA1": "98abf576128aa1c9ea7ae0c99230cc1dd16d4a0d",
+      "sha256": "6e5e6db1546098d3291b336a1cc9d7107dbcdc640569b0b43c1c66f03a4b738b",
+      "bytes": 21296,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/confirmation.ts",
+      "change": "modified",
+      "commitLabel": "W1",
+      "commit": "567727670b4039c316a12718c84b43b57f4fa19d",
+      "gitBlobSHA1": "9580eaf32f59508ad50d02339b4e8cf396ff405e",
+      "sha256": "8a06064f5a3a027e55b97c869befabec3317f5a5eb0973566394f40ac2f3416d",
+      "bytes": 11165,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45/packages/app-shell/e2e/sucafina/reports-support/confirmation.ts"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/human-answer-flow.ts",
+      "change": "modified",
+      "commitLabel": "W1",
+      "commit": "567727670b4039c316a12718c84b43b57f4fa19d",
+      "gitBlobSHA1": "02b0f6f6957bdc537c75c527aea1fc6cb95ff7a4",
+      "sha256": "618a61fe41f014f5a5b8a0b64db268235bf7326539389416a0ce7b73db4af4fd",
+      "bytes": 12043,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45/packages/app-shell/e2e/sucafina/reports-support/human-answer-flow.ts"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/revocation.ts",
+      "change": "modified",
+      "commitLabel": "W1",
+      "commit": "567727670b4039c316a12718c84b43b57f4fa19d",
+      "gitBlobSHA1": "21d21cac3b28211e3360ccbc8a3a4abe58653232",
+      "sha256": "9ff913f66c39963de81d764e11a0344355a2585760e2ff1bd180a0ae199ed67e",
+      "bytes": 7102,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45/packages/app-shell/e2e/sucafina/reports-support/revocation.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/browser.ts",
+      "change": "modified",
+      "commitLabel": "W2",
+      "commit": "bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45",
+      "gitBlobSHA1": "73f38f0040f053ff24ca17ca9bc53dde84bf0082",
+      "sha256": "bfbcd3168d755c6ae3e94e0ff9acb04b81171f1fe830b872ca0d59ccb8aafbf9",
+      "bytes": 11308,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45/modules/sucafina/Sucafinav1/product/reviews/browser.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/browser-build.test.ts",
+      "change": "modified",
+      "commitLabel": "W2",
+      "commit": "bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45",
+      "gitBlobSHA1": "5d75db3b4f22259b239a69c0e37e90f4ce1a851d",
+      "sha256": "70e90c441f2e166efe181dbc2179bffc94abc71d67da068a48dad12000e0b25e",
+      "bytes": 1042,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45/modules/sucafina/Sucafinav1/test/product/wp07/browser-build.test.ts"
+    }
+  ],
+  "sharedSourceMutation": false,
+  "sharedProposals": [
+    "shared/manifest.json",
+    "shared-typecheck/MANIFEST.json",
+    "owned-assembly/MANIFEST.json"
+  ],
+  "behavior": {
+    "discussion": "Uses same-origin authenticated existing Collaboration HTTP producers. No fake Request/principal/positive fixture callbacks. Prepared answers display exact captured pin/projection before explicit confirmation.",
+    "history": "Immutable review capture and durable thread/message incarnation/version selectors; historical read after edits; no implicit reprepare/reconfirm.",
+    "revocation": "View disposal aborts in-flight requests and removes private DOM; shared host proposal clears entire review UI on actual denial/login redirect.",
+    "authority": "Backend current authorization remains authoritative; caller principal only controls edit affordance. No grants widened."
+  },
+  "verification": "See RUNS.json; source checks are not installed E2E acceptance. No local product tests/build/server/typecheck/browser were run."
+}

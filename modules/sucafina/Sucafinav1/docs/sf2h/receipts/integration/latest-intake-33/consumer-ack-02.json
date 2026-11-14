@@ -1,0 +1,99 @@
+{
+  "schema": "sf2-consumer-ack-v1",
+  "mission": 33,
+  "source": "Reports25",
+  "source_commit": "2b418a754e90d9f52f69e570e6c8e36adda3f4a8",
+  "product_commit": "bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45",
+  "candidate": "C6",
+  "parent_commit": "f4a01b27f54bf7873ac4694823c7854c4c122569",
+  "status": "CONSUMED_IMPLEMENTATION_ONLY_PENDING_EXACT_CANDIDATE_READBACK",
+  "material_paths": 19,
+  "original_receipts": 54,
+  "complete_coherent_unit": true,
+  "source_head_reconciliation": "H2→H3 is five documentary changes only; explicit implementation release retained",
+  "manifest": "increment-02.json",
+  "exact_identity_receipt": "candidate-C6.json",
+  "held_dependencies": [
+    {
+      "id": "distinct-legitimate-recipient",
+      "status": "BLOCKED",
+      "reason": "Installed local-operator authenticates exactly one principal; directory/enroll do not establish a second legitimate person. No identity or grant change is proposed.",
+      "consumer_interface": "createSfExtendedBusinessServices.reviewRecipientAuthority must receive a real current caller+recipient+immutable-pin+all-source-fields/periods ACL provider with synchronous checkAtCommit. Directory lookup is insufficient.",
+      "identity_sources": [
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/operator-identity.ts",
+          "git_blob_sha1": "4845de24285df2459991da7d9895aad95eb93b19"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+          "git_blob_sha1": "26a330c62a0e5e9f3e2ea79be0b6854e7dca7363"
+        }
+      ],
+      "owner": "Reports25 / S3-A + actual identity/recipient-authority owner"
+    },
+    {
+      "id": "nonplain-c05-source-lease",
+      "status": "BLOCKED_FOR_NONPLAIN_C05",
+      "reason": "Local lease supports only Dashboard record reviews whose authority is contained in protected domain snapshots. Captured comments, external outcomes, decisions, sensitivity, calculations/documents and non-Dashboard sources fail closed until their real producer supplies a protected current authority lease.",
+      "owner": "Reports25 / S3-A + source domain producer authority owners"
+    },
+    {
+      "id": "real-composition-w-and-actions",
+      "status": "NOT_RUN",
+      "reason": "Session23 consumes source and these shared patches and publishes only actual candidate W/tree/blobs with exact ACK; session23 has no dispatcher/CI authority. After ACK the already authorized WP07 dispatcher creates request-only S and runs four nominal reports.spec.ts E2Es. No local test, positive fixture, collection-only proof or native/visual claim.",
+      "owner": "S0 acceptance + existing authorized WP07 dispatcher; no dispatch in mission33"
+    },
+    {
+      "id": "reports-e2e-typecheck",
+      "owner": "S0 / authorized hosted scoped dispatcher",
+      "status": "NOT_RUN",
+      "reason": "Only graph inclusion is consumed; astra-wp07 source check does not execute app typecheck:e2e, and mission33 prohibits checks."
+    },
+    {
+      "id": "canonical-reports-evidence",
+      "owner": "Reports25 / S3-A + S0",
+      "status": "NOT_RUN",
+      "reason": "All 86 canonical criteria remain unapproved by runtime. Selective Talent, external leases, visual rendering, native/UI/MCP parity, distinct recipient and human timings remain open."
+    }
+  ],
+  "findings": [
+    {
+      "id": "REPORTS25-DRAFT-LOSS-ON-ACTION-ERROR",
+      "owner": "Reports25 / S3-A / PR27",
+      "status": "OPEN_STATIC_FINDING",
+      "criterion": "CAMP.QLT.03",
+      "path": "modules/sucafina/Sucafinav1/product/reviews/collaboration-view.ts",
+      "sourceBlob": "4b45a5fe673c5653f0979ba1b1044da4907383e1",
+      "locations": {
+        "runCatch": [
+          177,
+          185
+        ],
+        "replyDraft": [
+          101,
+          109
+        ],
+        "editDraft": [
+          84,
+          93
+        ]
+      },
+      "finding": "The generic action-error catch clears messages and discards thread/prepared state. Reply and edit textareas are descendants of messages, so a failed reply/edit mutation (including network error or a stale CAS) removes the user's unsent draft.",
+      "evidenceKind": "STATIC_CONTROL_FLOW_REVIEW",
+      "runtimeReproduction": "NOT_RUN",
+      "nextAction": "Reports25 owner should preserve reply/edit draft values on recoverable mutation failure and display actionable conflict/error feedback. Revocation must still clear private content. Supply a bounded delta against the actual integrated candidate and source receipt.",
+      "integrationDisposition": "Implementation release can be assembled; this is an unresolved criterion/UX obligation, not runtime acceptance."
+    }
+  ],
+  "source_status": {
+    "typecheck": "FAIL: inherited 137 external diagnostics, remains FAIL",
+    "sourceBundle": "4 PASS / 0 FAIL / 20 assertions in source-only run 43641126816; not transferred",
+    "nominalReports": "4 cases NOT_RUN; no composed run",
+    "canonicalCriteria": "86 criteria not runtime-approved"
+  },
+  "tests": "NOT_RUN",
+  "ci": "NOT_RUN",
+  "AM": "NOT_RUN",
+  "functional_acceptance": false,
+  "source_PASS_transferred": false
+}

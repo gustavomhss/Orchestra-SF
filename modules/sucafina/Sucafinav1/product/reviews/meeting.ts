@@ -42,6 +42,7 @@ export function createMeetingViewFromReads(input: {
   openReviewSection?: (reviewRef: string, sectionId: string) => void | Promise<void>
 }) {
   const root = document.createElement("section")
+  root.setAttribute("aria-label", "Preserved review meeting")
   const status = document.createElement("p")
   status.setAttribute("role", "status")
   const content = document.createElement("div")

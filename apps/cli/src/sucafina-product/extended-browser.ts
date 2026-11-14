@@ -1,4 +1,5 @@
 import { createReviewPreparationBrowser } from "../../../../modules/sucafina/Sucafinav1/product/reviews/browser.ts"
+import { createReviewCollaborationView } from "../../../../modules/sucafina/Sucafinav1/product/reviews/collaboration-view.ts"
 import { createMeetingViewFromReads } from "../../../../modules/sucafina/Sucafinav1/product/reviews/meeting.ts"
 import type { ReviewComparisonRead } from "../../../../modules/sucafina/Sucafinav1/product/reviews/comparison-port.ts"
 import type { ReviewCurrentThread } from "../../../../modules/sucafina/Sucafinav1/product/reviews/current-thread.ts"
@@ -13,8 +14,16 @@ const root = document.querySelector<HTMLElement>("[data-sf-review-workspace]")
 const bootstrap = document.querySelector<HTMLScriptElement>("script[data-sf-review-bootstrap]")
 const reviewUrl = (reviewRef: string, sectionId?: string) => {
   const url = new URL(location.href)
-  url.searchParams.set("sf", "review"); url.searchParams.set("reviewRef", reviewRef)
-  url.searchParams.delete("previousReviewRef"); url.searchParams.delete("sectionId")
+  const context = url.searchParams.get("reviewRef") === reviewRef ? new URLSearchParams(url.search) : undefined
+  const thread = context?.get("reviewThread")
+  url.search = new URLSearchParams({ sf: "review", reviewRef }).toString()
+  if (thread) {
+    url.searchParams.set("reviewThread", thread)
+    for (const key of ["reviewMessage", "reviewIncarnation", "reviewVersion"]) {
+      const selected = context?.get(key)
+      if (selected) url.searchParams.set(key, selected)
+    }
+  }
   if (sectionId) url.searchParams.set("sectionId", sectionId)
   return url
 }
@@ -23,6 +32,7 @@ if (root && bootstrap) {
   bootstrap.remove()
   let closed = false, generation = 0
   let dispose = () => {}
+  let refreshCollaboration = () => {}
   const pending = new Set<AbortController>()
   let probing = false
   const clearPrivate = () => {
@@ -33,13 +43,19 @@ if (root && bootstrap) {
     const message = document.createElement("p"); message.setAttribute("role", "status"); message.textContent = "O acesso mudou. Reabra uma revisão autorizada."
     root.replaceChildren(message)
   }
+  const accessDenied = (response: Response) => {
+    if (response.status === 401 || response.status === 403) return true
+    if (!response.redirected) return false
+    const destination = new URL(response.url, location.href)
+    return destination.origin === location.origin && /\/auth\/login\/?$/.test(destination.pathname)
+  }
   const privateRead = async (url: URL) => {
     if (closed) return undefined
     const turn = generation, controller = new AbortController(); pending.add(controller)
     const timer = setTimeout(() => controller.abort(), 30_000)
     try {
       const response = await fetch(url, { credentials: "same-origin", cache: "no-store", signal: controller.signal })
-      if (response.status === 401 || response.status === 403) { clearPrivate(); return undefined }
+      if (accessDenied(response)) { clearPrivate(); return undefined }
       const body = await response.json().catch(() => undefined)
       return !closed && turn === generation && !controller.signal.aborted ? { response, body } : undefined
     } catch { return undefined } finally { clearTimeout(timer); pending.delete(controller) }
@@ -51,12 +67,12 @@ if (root && bootstrap) {
     const timer = setTimeout(() => controller.abort(), 30_000)
     try {
       const response = await fetch(location.href, { credentials: "same-origin", cache: "no-store", signal: controller.signal })
-      if (response.status === 401 || response.status === 403) clearPrivate()
+      if (accessDenied(response)) clearPrivate()
       await response.body?.cancel()
     } catch { /* A network failure does not authorize a new render or erase preserved history. */ }
     finally { clearTimeout(timer); pending.delete(controller); probing = false }
   }
-  window.addEventListener("focus", () => { void probe() })
+  window.addEventListener("focus", () => { void probe().then(() => { if (!closed) refreshCollaboration() }) })
   // The shell has just reopened this exact review/preparation under current
   // authority. Keep the mounted reader and human choices; updates remain an
   // explicit successor operation, not a replacement of preserved history.
@@ -68,7 +84,8 @@ if (root && bootstrap) {
   window.addEventListener("pagehide", clearPrivate, { once: true })
   window.addEventListener("pageshow", (event) => { if (event.persisted) location.reload() })
   if (value && typeof value === "object" && typeof value.reviewRef === "string") {
-    const status = document.createElement("p"), sources = document.createElement("nav")
+    const status = document.createElement("p"), sources = document.createElement("nav"), collaboration = document.createElement("section")
+    let conversation: ReturnType<typeof createReviewCollaborationView> | undefined
     status.setAttribute("role", "status"); sources.setAttribute("aria-label", "Origens autorizadas da revisão")
     let sourceGeneration = 0
     const openSource = async (reference: BusinessEvidenceRef) => {
@@ -96,6 +113,11 @@ if (root && bootstrap) {
         const found = await privateRead(url), body = found?.body
         if (!found?.response.ok || body?.status !== "ok" || body.value?.id !== reference || !Array.isArray(body.value?.sections) || !Array.isArray(body.value?.comments))
           return { status: closed ? "denied" : "unavailable", reason: "review-unavailable" }
+        if (!conversation && typeof value.principalRef === "string" && value.principalRef.trim()) {
+          conversation = createReviewCollaborationView({ review: body.value, principalRef: value.principalRef })
+          collaboration.replaceChildren(conversation.element)
+          refreshCollaboration = () => { if (!closed) void conversation?.refresh() }
+        }
         return { status: "ok", value: body.value }
       },
       readComparison: async (reference): Promise<PortResult<ReviewComparisonRead>> => {
@@ -122,6 +144,7 @@ if (root && bootstrap) {
         return { status: "ok", value: thread as ReviewCurrentThread }
       },
       checkUpdate: async (reference) => {
+        refreshCollaboration()
         const url = new URL(location.href); url.search = new URLSearchParams({ sf: "review-update", reviewRef: reference }).toString()
         const found = await privateRead(url)
         if (closed) return { status: "denied", reason: "review-access-changed" }
@@ -136,15 +159,15 @@ if (root && bootstrap) {
       },
       requestUpdate: (reference) => {
         if (closed) return
-        const url = new URL(location.href); url.searchParams.delete("reviewRef"); url.searchParams.delete("sectionId"); url.searchParams.set("previousReviewRef", reference)
+        const url = new URL(location.href); url.search = new URLSearchParams({ sf: "review", previousReviewRef: reference }).toString()
         location.assign(url)
       },
       openSource, openReviewSection: (reference, sectionId) => { if (!closed) location.assign(reviewUrl(reference, sectionId)) },
     })
     const selected = value.selectedSection as PreservedReview["sections"][number] | undefined
     const selectedView = selected ? selectedSection(selected, openSource) : undefined
-    root.replaceChildren(...(selectedView ? [selectedView] : []), view.element, status, sources)
-    dispose = view.dispose
+    root.replaceChildren(...(selectedView ? [selectedView] : []), view.element, collaboration, status, sources)
+    dispose = () => { refreshCollaboration = () => {}; conversation?.dispose(); collaboration.replaceChildren(); view.dispose() }
   } else if (value && typeof value === "object" && Array.isArray(value.items)) {
     const update = value as Partial<SfReviewUpdate> & { items: ReviewAgendaItem[] }
     const client = createReviewPreparationBrowser()

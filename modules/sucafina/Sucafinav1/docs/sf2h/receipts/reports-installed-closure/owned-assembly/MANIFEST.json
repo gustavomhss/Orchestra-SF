@@ -1,0 +1,61 @@
+{
+  "schema": "reports-owned-composition-compatibility-v1",
+  "status": "INERT_PROPOSAL_NOT_APPLIED",
+  "sourceBranch": "astra-wp07",
+  "PR": 27,
+  "sourceCommits": [
+    "567727670b4039c316a12718c84b43b57f4fa19d",
+    "bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45"
+  ],
+  "observedComposition": "0d5bd54a109774d4e3296e00c276be341fe39b00",
+  "compositionPreimagesReadFrom": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+  "intent": "Only add meeting accessible name and public collaboration-view export on current composition; retain all concurrent Review/C06 changes. Do not replace current files with older astra-wp07 full postimages.",
+  "applyRule": "Session23 verifies exact current preimage Git blob/SHA256 before applying. If drifted, transplant these two hunks onto actual current files and publish resulting W/tree/blobs/ACK. Do not overwrite another writer changes.",
+  "dependencies": [
+    "Source W1 creates collaboration-client.ts and collaboration-view.ts.",
+    "Shared assembly is a separate inert bundle; neither this patch nor prior own source commits constitutes session23 consumer ACK."
+  ],
+  "patch": {
+    "path": "patches/reports-current-composition-owned.patch",
+    "bytes": 1345,
+    "sha256": "f0cdd891ad1e1756265da7939c5fe846b1798a5afbbb8dc57e7eb7c3bf9f80a0"
+  },
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/meeting.ts",
+      "preimages": {
+        "path": "preimages/modules/sucafina/Sucafinav1/product/reviews/meeting.ts.txt",
+        "bytes": 24928,
+        "sha256": "7185b03adec8bd48dcad7c1dad63ad90a0c8c667183c519f708b05622ab39527",
+        "gitBlobSHA1": "65bdb3e8ebe6f8432a6fc61a166ef5b74a81d4e6"
+      },
+      "postimages": {
+        "path": "postimages/modules/sucafina/Sucafinav1/product/reviews/meeting.ts.txt",
+        "bytes": 24990,
+        "sha256": "66fbce4667cb0e4d6ec3d5f500860cbd6d906b6be31e0c25b4a794c41e4503e0",
+        "gitBlobSHA1": "4b148e2bfea0e356641c18f0821e503b18e33590"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/browser.ts",
+      "preimages": {
+        "path": "preimages/modules/sucafina/Sucafinav1/product/reviews/browser.ts.txt",
+        "bytes": 13905,
+        "sha256": "f65d0b323a2f63a95c6b4b56f6b20529396f82ebeb01d113df1326928e431279",
+        "gitBlobSHA1": "ad9c66337205d05764e187f8acadc2dff4cf151b"
+      },
+      "postimages": {
+        "path": "postimages/modules/sucafina/Sucafinav1/product/reviews/browser.ts.txt",
+        "bytes": 13978,
+        "sha256": "1151dcc44346e9f3c9948b8730bc0ba026ea8a3c6f3e0c6e36428c6ae5f6c1d3",
+        "gitBlobSHA1": "ea194a5c8cf0624c278c8dc2bf81c0dac6222887"
+      }
+    }
+  ],
+  "tests": "No local tests/build/typecheck executed; this is byte-level packaging and static diff only.",
+  "preimagesVerifiedAt": [
+    "0ce090d7d1d4399d77b435debd59eb7cc903c202",
+    "0d5bd54a109774d4e3296e00c276be341fe39b00"
+  ],
+  "observedCompositionTree": "c056602b26eb044fe5e2e18a5a05bd2bd2d5a83a"
+}

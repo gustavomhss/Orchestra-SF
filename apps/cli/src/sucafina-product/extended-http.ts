@@ -16,6 +16,7 @@ import { readSfDecisionBiSelection, sfPlannerBiSelection } from "./bi-selections
 import { createSfExtendedReviewCycle, sfDashboardReviewAgendaItem } from "./extended-review-cycle.ts"
 import { sfExtendedSourceLinks } from "./extended-source-links.ts"
 import { sameBiProjection } from "../../../../modules/sucafina/Sucafinav1/product/analytics/projection.ts"
+import type { BusinessContextService } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
 import type { DomainProjection } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
 import { createSfBiDecisionNavigation, sfBiDecisionNavigation } from "./extended-bi-navigation.ts"
 
@@ -25,6 +26,7 @@ export function createSfExtendedHttp(input: {
   bi: ReturnType<typeof createSfBiServices>
   reviews: ReturnType<typeof createSfReviewServices>["application"]
   persistence: SfScopedSourcePort
+  reviewEvidence?: Pick<BusinessContextService, "resolve">
   origin: string
   assets: Pick<ReturnType<typeof createSfExtendedAssets>, "bi" | "reviews">
 }) {
@@ -36,19 +38,33 @@ export function createSfExtendedHttp(input: {
   const handle = async (request: Request, surface: string): Promise<Response | undefined> => {
     const reviewed = await input.reviews?.http(request, surface)
     if (reviewed) return reviewed
-    const url = new URL(request.url), mode = url.searchParams.get("sf")
+    const url = new URL(request.url)
+    const reportsEntry = !url.searchParams.has("sf") && url.searchParams.get("page") === "Generate Report" && url.searchParams.has("download")
+    const mode = reportsEntry ? "review" : url.searchParams.get("sf")
     if (!["bi", "bi-data", "bi-source", "bi-decision", "bi-options", "review", "review-update", "review-source"].includes(mode ?? "")) return undefined
     const json = (value: unknown, status = 200) => new Response(request.method === "HEAD" ? null : JSON.stringify(value), { status,
       headers: { "Content-Type": "application/json", "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } })
     if (surface !== "dashboard" || url.origin !== input.origin || request.signal.aborted) return json({ status: "denied", reason: "surface-unavailable" }, 403)
     if (request.method !== "GET" && request.method !== "HEAD") return json({ status: "denied", reason: "read-method-required" }, 405)
-    const allowed = mode === "review" ? ["sf", "page", "reviewRef", "previousReviewRef", "sectionId", "start", "end"] : mode === "review-update" ? ["sf", "reviewRef"] : mode === "review-source" ? ["sf", "reviewRef", "referenceId"] : mode === "bi-decision" ? ["sf", "selectionRef", "viewId", "start", "end", "snapshot", "target"] : mode === "bi-source" ? ["sf", "selectionRef", "viewId", "start", "end", "valueId", "referenceDigest"] : mode === "bi-options" ? ["sf", "page", "viewId", "start", "end"] : ["sf", "page", "viewId", "selectionRef", "start", "end", "baseRef", "candidateRef", "currency"]
-    if ([...url.searchParams.keys()].some((key) => !allowed.includes(key) || url.searchParams.getAll(key).length !== 1)) return json({ status: "needs-input", reason: "invalid-query" }, 400)
-    const period = { start: url.searchParams.get("start") ?? `${new Date().getUTCFullYear()}-01-01`, end: url.searchParams.get("end") ?? `${new Date().getUTCFullYear()}-12-31` }
+    const allowed = reportsEntry ? ["page", "download", "year", "title", "topic"] : mode === "review" ? ["sf", "page", "reviewRef", "previousReviewRef", "sectionId", "reviewThread", "reviewMessage", "reviewIncarnation", "reviewVersion", "start", "end"] : mode === "review-update" ? ["sf", "reviewRef"] : mode === "review-source" ? ["sf", "reviewRef", "referenceId"] : mode === "bi-decision" ? ["sf", "selectionRef", "viewId", "start", "end", "snapshot", "target"] : mode === "bi-source" ? ["sf", "selectionRef", "viewId", "start", "end", "valueId", "referenceDigest"] : mode === "bi-options" ? ["sf", "page", "viewId", "start", "end"] : ["sf", "page", "viewId", "selectionRef", "start", "end", "baseRef", "candidateRef", "currency"]
+    if ([...url.searchParams.keys()].some((key) => !allowed.includes(key) || !(reportsEntry && key === "topic") && url.searchParams.getAll(key).length !== 1)) return json({ status: "needs-input", reason: "invalid-query" }, 400)
+    const reportTopics = reportsEntry ? url.searchParams.getAll("topic") : undefined
+    const reportYear = reportsEntry ? url.searchParams.get("year") : undefined
+    if (reportsEntry && (!["docx", "pptx"].includes(url.searchParams.get("download") ?? "") || !reportYear || !/^202[4-7]$/.test(reportYear) ||
+      !reportTopics?.length || reportTopics.length > 40 || new Set(reportTopics).size !== reportTopics.length || reportTopics.some((topic) => !topic.trim() || topic.length > 120) ||
+      (url.searchParams.get("title")?.length ?? 0) > 200)) return json({ status: "needs-input", reason: "invalid-report-selection" }, 400)
+    if (url.searchParams.has("reviewThread") && (!url.searchParams.get("reviewRef") || !url.searchParams.get("reviewThread")?.trim() || url.searchParams.get("reviewThread")!.length > 2048))
+      return json({ status: "needs-input", reason: "invalid-review-thread" }, 400)
+    const messageKeys = ["reviewMessage", "reviewIncarnation", "reviewVersion"]
+    if (messageKeys.some((key) => url.searchParams.has(key)) && (!url.searchParams.get("reviewThread") ||
+      messageKeys.some((key) => !url.searchParams.get(key)?.trim() || url.searchParams.get(key)!.length > 2048) ||
+      !/^[1-9]\d*$/.test(url.searchParams.get("reviewVersion")!) || !Number.isSafeInteger(Number(url.searchParams.get("reviewVersion")))))
+      return json({ status: "needs-input", reason: "invalid-review-message" }, 400)
+    const period = { start: reportYear ? `${reportYear}-01-01` : url.searchParams.get("start") ?? `${new Date().getUTCFullYear()}-01-01`, end: reportYear ? `${reportYear}-12-31` : url.searchParams.get("end") ?? `${new Date().getUTCFullYear()}-12-31` }
     if (!isSfPeriod(period)) return json({ status: "needs-input", reason: "invalid-period" }, 400)
     const viewId = url.searchParams.get("viewId") ?? "BI01"
     const bootstrap = { mode, page: url.searchParams.get("page"), period, viewId, selectionRef: url.searchParams.get("selectionRef"), reviewRef: url.searchParams.get("reviewRef"), baseRef: url.searchParams.get("baseRef"), candidateRef: url.searchParams.get("candidateRef"), currency: url.searchParams.get("currency"), previousReviewRef: url.searchParams.get("previousReviewRef"), sectionId: url.searchParams.get("sectionId"), referenceId: url.searchParams.get("referenceId"), valueId: url.searchParams.get("valueId"), referenceDigest: url.searchParams.get("referenceDigest") }
-    const digest = digestSfValue(mode === "bi-decision" ? { ...bootstrap, snapshot: url.searchParams.get("snapshot"), target: url.searchParams.get("target") } : bootstrap)
+    const digest = digestSfValue(reportsEntry ? { ...bootstrap, reportTopics, reportYear, requestedTitle: url.searchParams.get("title"), requestedFormat: url.searchParams.get("download") } : mode === "bi-decision" ? { ...bootstrap, snapshot: url.searchParams.get("snapshot"), target: url.searchParams.get("target") } : bootstrap)
     const action = mode?.startsWith("review") ? "sf_review_prepare" : "sf_dashboard_read"
     const admitted = await authority.ui.admit(request, action, digest)
     if (admitted.status !== "ok") return json(admitted, 403)
@@ -75,7 +91,7 @@ export function createSfExtendedHttp(input: {
           sources = reviewCycle.evidence(previous.value, referenceId)
         }
         if (!sources.length || sources.some((source) => digestSfValue(source) !== digestSfValue(sources[0]))) return json({ status: "denied", reason: "source-outside-preserved-review" }, 403)
-        const links = await sfExtendedSourceLinks({ business, reference: sources[0]!, call, url })
+        const links = await sfExtendedSourceLinks({ business, reference: sources[0]!, call, url, reviewEvidence: input.reviewEvidence })
         // The canonical readers may materialize source scopes. Finish that work
         // before C08; the final grouped reads require the same complete proof.
         await input.reviews.readScope?.prepare(preserved.map((entry) => entry.reference), call)
@@ -197,10 +213,20 @@ export function createSfExtendedHttp(input: {
             return undefined
           }
         } else {
-          const current = await business.dashboardServices.discover({ page: url.searchParams.get("page") ?? "Budget Overview", period }, call)
-          if (current.status !== "ok") return json(current, current.status === "denied" ? 403 : 409)
-          if (!current.value.agenda) return json({ status: "unavailable", reason: "review-source-selection-unavailable" }, 409)
-          data = { items: [sfDashboardReviewAgendaItem(current.value.agenda.section)] }
+          // The existing Generate Report form chooses the actual ordered agenda.
+          // Each topic is reopened by its production producer; none is dropped.
+          const pages = reportTopics?.map((topic) => topic === "Executive Summary" ? "Executive Dashboard" : topic) ?? [url.searchParams.get("page") ?? "Budget Overview"]
+          if (new Set(pages).size !== pages.length) return json({ status: "needs-input", reason: "duplicate-report-topic" }, 400)
+          const items: ReturnType<typeof sfDashboardReviewAgendaItem>[] = []
+          for (const page of pages) {
+            const current = await business.dashboardServices.discover({ page, period }, call)
+            if (current.status !== "ok") return json(current, current.status === "denied" ? 403 : 409)
+            if (!current.value.agenda) return json({ status: "unavailable", reason: "review-source-selection-unavailable" }, 409)
+            // Discovery uses one local "dashboard" ID; a report needs one stable ID per chosen topic.
+            items.push(sfDashboardReviewAgendaItem({ ...current.value.agenda.section,
+              id: reportsEntry ? `report:${page}` : current.value.agenda.section.id }))
+          }
+          data = { items, ...(reportsEntry ? { requestedTitle: url.searchParams.get("title"), requestedFormat: url.searchParams.get("download") } : {}) }
         }
       }
       const script = await (mode === "review" ? input.assets.reviews() : input.assets.bi()).catch(() => undefined)
@@ -216,7 +242,7 @@ export function createSfExtendedHttp(input: {
       // The published shell still owns navigation, notifications and sign-out.
       const content = mode === "review" ? '<section data-sf-review-workspace data-sf-retain-view><p role="status">Loading review…</p></section>' : '<section data-sf-bi data-sf-retain-view><p role="status">Loading analyses…</p></section>'
       const inline = script.replace(/<\/script/gi, "<\\/script")
-      const bootstrapHtml = data === undefined ? "" : `<script type="application/json" data-sf-review-bootstrap>${JSON.stringify(data).replace(/</g, "\\u003c")}</script>`
+      const bootstrapHtml = data === undefined ? "" : `<script type="application/json" data-sf-review-bootstrap>${JSON.stringify(mode === "review" ? { ...(data as object), principalRef: call.binding.principalRef } : data).replace(/</g, "\\u003c")}</script>`
       const title = mode === "review" ? "Review and reports" : "Business intelligence"
       const accessRevision = call.binding.accessRevision
       const shell = documentHtml(title, "dashboard", `<a href="${url.pathname}">Dashboard</a>`, pageMain({ drawn: true, key: title, index: 0 }, content), "", "", accessRevision)

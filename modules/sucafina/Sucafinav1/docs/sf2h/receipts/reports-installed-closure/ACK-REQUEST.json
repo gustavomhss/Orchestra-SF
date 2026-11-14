@@ -1,0 +1,117 @@
+{
+  "schema": "reports-installed-closure-consumer-request-v1",
+  "mission": 25,
+  "from": "S3-A / astra-wp07 / PR27",
+  "to": "session23 / S0-C",
+  "status": "AWAITING_CONSUMER_ASSEMBLY_ACK",
+  "sourceCommits": [
+    "567727670b4039c316a12718c84b43b57f4fa19d",
+    "bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45"
+  ],
+  "sourceHead": "bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45",
+  "sourceTree": "fb3b512c69f249960bd768aef723425d5e2d6740",
+  "producerFiles": "PRODUCT.json",
+  "observedComposition": "3c0b7df201559223ddf1631c182a409af700ff38",
+  "observedCompositionTree": "b92f6f83e83e2b7ed5ad5ff74d89fb8c015de196",
+  "bundles": [
+    {
+      "manifest": "shared/manifest.json",
+      "patch": "shared/patches/mission25-reports-shared.patch",
+      "sha256": "42cce7c5b42604636c77584e6e86f5594a2a1fa1b6d265f9fc16c7a028f78f47",
+      "scope": "Six shared host files modified plus two new helpers, complete exact pre/postimages."
+    },
+    {
+      "manifest": "shared-typecheck/MANIFEST.json",
+      "patch": "shared-typecheck/reports-e2e-graph.patch",
+      "sha256": "9d8e1bb084485cc951d449d8dac161fbfc3700b7ca9d48f9611d506bf09ab6bb",
+      "scope": "Only Reports spec/support inclusion in existing E2E tsconfig."
+    },
+    {
+      "manifest": "owned-assembly/MANIFEST.json",
+      "patch": "owned-assembly/patches/reports-current-composition-owned.patch",
+      "sha256": "f0cdd891ad1e1756265da7939c5fe846b1798a5afbbb8dc57e7eb7c3bf9f80a0",
+      "scope": "Two small owned hunks on current composed browser.ts/meeting.ts; preserve concurrent C06 implementation."
+    }
+  ],
+  "instructions": [
+    "Re-read actual composition and verify each preimage hash; consume only scoped producer deltas, preserving all previous and concurrent commits.",
+    "Use the two owned compatibility hunks instead of overwriting current meeting.ts/browser.ts with old-branch full files.",
+    "Keep actual source/authentication/CAS/idempotency producers and private artifact boundaries; do not add positive fixtures or grants.",
+    "Publish actual composed W/tree, applied blob map, exact source commits, dependency dispositions and consumer ACK.",
+    "Session23 does not dispatch CI. After ACK the already authorized WP07 dispatcher re-verifies actual source/config/fixtures, deduplicates and creates request-only S on accepted W through existing test-ci."
+  ],
+  "requiredUnresolvedDependencies": [
+    {
+      "id": "distinct-legitimate-recipient",
+      "status": "BLOCKED",
+      "reason": "Installed local-operator authenticates exactly one principal; directory/enroll do not establish a second legitimate person. No identity or grant change is proposed.",
+      "consumer_interface": "createSfExtendedBusinessServices.reviewRecipientAuthority must receive a real current caller+recipient+immutable-pin+all-source-fields/periods ACL provider with synchronous checkAtCommit. Directory lookup is insufficient.",
+      "identity_sources": [
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/operator-identity.ts",
+          "git_blob_sha1": "4845de24285df2459991da7d9895aad95eb93b19"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+          "git_blob_sha1": "26a330c62a0e5e9f3e2ea79be0b6854e7dca7363"
+        }
+      ]
+    },
+    {
+      "id": "nonplain-c05-source-lease",
+      "status": "BLOCKED_FOR_NONPLAIN_C05",
+      "reason": "Local lease supports only Dashboard record reviews whose authority is contained in protected domain snapshots. Captured comments, external outcomes, decisions, sensitivity, calculations/documents and non-Dashboard sources fail closed until their real producer supplies a protected current authority lease."
+    },
+    {
+      "id": "real-composition-w-and-actions",
+      "status": "NOT_RUN",
+      "reason": "Session23 consumes source and these shared patches and publishes only actual candidate W/tree/blobs with exact ACK; session23 has no dispatcher/CI authority. After ACK the already authorized WP07 dispatcher creates request-only S and runs four nominal reports.spec.ts E2Es. No local test, positive fixture, collection-only proof or native/visual claim."
+    }
+  ],
+  "additionalEvidenceGaps": [
+    "Different-recipient authority and ability to reopen the same C05 under actual recipient/source ACLs remain unproved; fresh enrollment is same operator.",
+    "Selective Talent revocation, captured comments/external sources leases, UI/native/MCP parity, visual rendering and human timing remain separate canonical requirements.",
+    "App E2E typecheck must use an already authorized hosted scoped route; source astra-wp07-check does not run it."
+  ],
+  "nominalRequest": {
+    "path": "ci-request.json",
+    "bytes": 274,
+    "sha256": "01608e6052545eb2729fb5cca8e3d1c2ca72302b5ee9cb4181330c7041c97766",
+    "gitBlobSHA1": "d5e2641c9d230e697c6d11d5a51be3c3eca5344b",
+    "request": {
+      "package": "app",
+      "packageSelector": "packages/app",
+      "directory": "packages/app-shell",
+      "runner": "playwright",
+      "args": [
+        "e2e/sucafina/reports.spec.ts"
+      ],
+      "env": {
+        "ORCHESTRA_CHANNEL": "prod"
+      },
+      "config": "e2e/playwright.production.config.ts"
+    },
+    "canonicalCompactSHA256": "37251a43f26b5cd4b6a513334f38c537a80b7a613ac8da8fa9aa819ca3cbc22f",
+    "status": "PREPARED_NOT_DISPATCHED",
+    "reason": "Requires actual session23 composition W/tree/blobs and source/config verification; no S or run exists for the nominal four."
+  },
+  "expectedACK": {
+    "acceptedCompositionW": null,
+    "acceptedCompositionTree": null,
+    "acceptedSourceCommits": [],
+    "appliedBlobs": [],
+    "dependencyDispositions": [],
+    "consumerACK": null
+  },
+  "CIForSession23Authorized": false,
+  "previousObservedComposition": "0d5bd54a109774d4e3296e00c276be341fe39b00",
+  "latestReadback": "COMPOSITION-C4.json",
+  "initialReceiptCommit": "df204294fe0778db95c70a66ef4715487badeb00",
+  "consumerRelease": "CONSUMER-RELEASE.json",
+  "latestConsumerReconciliation": "SESSION23-RECONCILIATION.json",
+  "observedProductCheckpoint": "402a091485e11d60dff433049c7dedd7fcead687",
+  "productCandidateC4": {
+    "W": "253baad3f2ff4af5beac695feae4c2f6372dc2e7",
+    "tree": "c3648fca57012f6e6934e207e02c88c75cc6eb3a"
+  }
+}

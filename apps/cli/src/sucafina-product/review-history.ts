@@ -6,6 +6,8 @@ import type { createSfProductAuthority } from "../../../../modules/sucafina/Suca
 import type { SfScopedSourcePort } from "../../../../modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts"
 import { roleMap } from "../../../../modules/sucafina/Sucafinav1/runtime/admin.ts"
 import { object } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
+import { createDashboardSourceHost, createDashboardRecordEvidenceHost, dashboardSourceSelector } from "../../../../modules/sucafina/Sucafinav1/product/dashboard/sources.ts"
+import { createDashboardRecordSourceIssuer } from "../../../../modules/sucafina/Sucafinav1/product/integration/dashboard-sources.ts"
 import { createSfReviewCalculationHistory } from "./review-calculation-history.ts"
 
 /** Read-only history is anchored in immutable review bodies and their atomic C08 receipts. */
@@ -18,6 +20,9 @@ export function createSfReviewHistory(input: {
   const { authority } = input
   const host = authority.host
   const calculation = createSfReviewCalculationHistory(input)
+  const dashboard = createDashboardSourceHost({ host, scopedSources: input.persistence })
+  const dashboardRecords = createDashboardRecordEvidenceHost({ host, scopedSources: input.persistence,
+    issueRecord: createDashboardRecordSourceIssuer({ host, scopedSources: input.persistence }) })
   const scoped = async (ref: SourceRef, call: TrustedDomainContext) => {
     const request = host.requestFor(call)
     if (!request || !await host.revalidate(call)) return undefined
@@ -111,7 +116,28 @@ export function createSfReviewHistory(input: {
     if (!again?.some((review) => same(review, record.review))) return current
     const checked = await readClosure()
     if (!checked || !same(sources, checked) || ref.kind === "calculation" && await calculation(ref, call) !== calculationProof || !await host.revalidate(call)) return current
-    const resolution: BusinessEvidenceResolution = { state: "historical", ref: structuredClone(ref), authorizedProjection: structuredClone(record.projection),
+    // C05/C06 continuity consumes a real current reference from its producer.
+    // Never update the captured reference's version/digest by construction.
+    const currentRecord = async () => {
+      if (ref.kind !== "record" || ref.target.surface !== "dashboard") return undefined
+      const source = record.review.sourceRefs.find((entry) => matchesRecord(entry, ref))
+      const live = source ? await scoped(source, call) : undefined
+      if (!live) return undefined
+      const selector = dashboardSourceSelector(live.incarnation, live.version)
+      const result = ref.target.recordType === "dashboard-page"
+        ? await dashboard.resolveDashboardSource(selector, call).then((value) => value.status === "ok" ? value.value.evidence : undefined)
+        : await dashboardRecords.resolve(selector, call).then((value) => value.status === "ok" ? value.value : undefined)
+      if (!result || result.target.surface !== ref.target.surface || result.target.recordType !== ref.target.recordType ||
+        result.target.recordId !== ref.target.recordId || result.target.incarnation !== ref.target.incarnation ||
+        result.target.version < ref.target.version || !same(result.target.fields, ref.target.fields) || !same(result.target.period, ref.target.period)) return undefined
+      const authorized = await input.evidence.resolve(result, call)
+      return authorized.state === "fresh" && authorized.accessRevision === call.binding.accessRevision && same(authorized.ref, result) ? result : undefined
+    }
+    const currentRef = await currentRecord()
+    const finalSources = await readClosure(), finalCaptures = await captures(call)
+    if (ref.kind === "record" && ref.target.surface === "dashboard" && !currentRef || !finalSources || !same(checked, finalSources) ||
+      !finalCaptures?.some((review) => same(review, record.review)) || !await host.revalidate(call)) return current
+    const resolution: BusinessEvidenceResolution = { state: "historical", ref: structuredClone(ref), ...(currentRef ? { currentRef } : {}), authorizedProjection: structuredClone(record.projection),
       accessRevision: call.binding.accessRevision, checkedAt: new Date().toISOString(),
       differences: sources.flatMap((value) => value && "source" in value && value.source && value.ref.kind === "record"
         ? [{ field: `${value.ref.refId}.version`, before: value.ref.target.version, after: value.source.version }] : []) }

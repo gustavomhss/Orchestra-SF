@@ -1,0 +1,364 @@
+{
+  "schema": "orchestra-sf.reports-installed-closure.receipt-v1",
+  "mission": 25,
+  "actor": "S3-A",
+  "writerLease": "reports-browser25",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "astra-wp07",
+  "PR": 27,
+  "status": "OWNED_IMPLEMENTATION_COMMITTED_SHARED_ASSEMBLY_AWAITING_SESSION23_NOMINAL_NOT_RUN",
+  "sourceHead": "bc587cebc9f2e46e48a3e828b83fe15cfaf2fc45",
+  "sourceTree": "fb3b512c69f249960bd768aef723425d5e2d6740",
+  "receiptCommitRule": "Receipt-only commits follow source W2. The initial packet and C4 reconciliation remain preserved; this follow-up records session23 terminal census timing and explicitly releases the complete implementation for bounded assembly. No receipt tree is an executed product candidate.",
+  "receiptRoot": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-installed-closure",
+  "primaryDocuments": [
+    "HANDOFF.md",
+    "PRODUCT.json",
+    "RUNS.json",
+    "CRITERIA.json",
+    "COMPOSITION.json",
+    "ACK-REQUEST.json",
+    "READINGS.json",
+    "e2e-implementation.json",
+    "shared-static-review.json",
+    "COMPOSITION-C4.json",
+    "CONSUMER-RELEASE.json",
+    "SESSION23-RECONCILIATION.json"
+  ],
+  "currentSharedPatchSHA256": "42cce7c5b42604636c77584e6e86f5594a2a1fa1b6d265f9fc16c7a028f78f47",
+  "artifactPolicy": "Only source proposals, complete inert source images, checks/build logs, hashes and status receipts. No live credentials, private installations, downloaded user reports or Playwright recordings.",
+  "canonicalCriteria": {
+    "count": 86,
+    "runtimeStatus": "NOT_RUN",
+    "approved": 0
+  },
+  "localVerification": "Byte hashing, JSON serialization and file/link integrity only; no local product tests, build, typecheck, server or browser.",
+  "filesExcludingThisManifest": 53,
+  "totalBytesExcludingThisManifest": 1758824,
+  "files": [
+    {
+      "path": "ACK-REQUEST.json",
+      "bytes": 6233,
+      "sha256": "8fbfb868e6bdfa1316f5f8a1321c7db4ca56ac1381335e24929132d33ec32331",
+      "gitBlobSHA1": "b38d74e0459e3fdda086d5f8abd125a0fb53b1fb"
+    },
+    {
+      "path": "checks/EVIDENCE-INDEX.json",
+      "bytes": 1600,
+      "sha256": "fb8f1719c3318af0474ddc7c74025d29f4cde080b55878a4b8c0e8d0b7328906",
+      "gitBlobSHA1": "1e4e25285564e634074702b81e6c9b062d1b91bb"
+    },
+    {
+      "path": "checks/external-diagnostics.json",
+      "bytes": 171402,
+      "sha256": "9f7b9bbf292c78d7ce1489898fc504b9cc001d2e4afac87946dbbc2712d0b042",
+      "gitBlobSHA1": "726c2a64be0d79306b0ecb993657d23d6531b286"
+    },
+    {
+      "path": "checks/external-diagnostics.txt",
+      "bytes": 69755,
+      "sha256": "9d3b2386ade78a32e57868dfd7702bcd831641d8cc44c97d15dd7bae2daff499",
+      "gitBlobSHA1": "f971db7f29d1d1fcbe85befd1d2e0dc590c03db4"
+    },
+    {
+      "path": "checks/logs/job-132268446934.txt",
+      "bytes": 125755,
+      "sha256": "8c44f72c9b840ea88d4f687490da087e8c7e21ec4bee83d277ba4fb1afb119be",
+      "gitBlobSHA1": "9edf2fd4373a40714b95805295b03444eae6ca31"
+    },
+    {
+      "path": "checks/logs/job-132585681543.txt",
+      "bytes": 133702,
+      "sha256": "dcc710a3700e7079ab197ab3d2efc0051498acc1bba1141b334c7e0e9845e8cd",
+      "gitBlobSHA1": "73c2b5d5cb72b6162917717b51839b96c3099ce6"
+    },
+    {
+      "path": "checks/logs/job-132587110097.txt",
+      "bytes": 133733,
+      "sha256": "a92713a510d1114f83d00232d5f7d77b65809f9c975b6ba7f7e97c9671418e38",
+      "gitBlobSHA1": "48739dca45c3cabd0964f763973b252740c62e71"
+    },
+    {
+      "path": "checks/logs/job-132588210719.txt",
+      "bytes": 16195,
+      "sha256": "56edcd5896d75f877a4172ad35c4274000db6e85eae9f4ed27ac21d6c2998774",
+      "gitBlobSHA1": "f29b57b76bfe9d3a536375928b0b7481fb9537b6"
+    },
+    {
+      "path": "checks/logs/job-132588718977.txt",
+      "bytes": 69189,
+      "sha256": "16fa60a6a4355e5dd0ecebcbcb9e76c9f25c0a8eeb8c5ee700d0b64d8712df51",
+      "gitBlobSHA1": "67060c371423a607391b47a99eb3632f6824be09"
+    },
+    {
+      "path": "checks/typecheck-comparison.json",
+      "bytes": 7168,
+      "sha256": "ddb304ce1752321556752e531fc361fc57389db1bc1fccaa9f8a2464f99a4bce",
+      "gitBlobSHA1": "7e18353b613808d3ef025bc51021fb1a3920298f"
+    },
+    {
+      "path": "checks/w2-external-diagnostics.json",
+      "bytes": 171402,
+      "sha256": "06a2758b892488b812a6a14cae4bc198bb518474df46a9caa0efbae193131d8c",
+      "gitBlobSHA1": "3c182498de2882a5a4b01acfa6fef37cedc34a75"
+    },
+    {
+      "path": "checks/w2-sourcegraph.json",
+      "bytes": 4423,
+      "sha256": "fbbd69c6c6b903cd0585ec170aef20c79c9b772f4eb645b8ea29985a977e935b",
+      "gitBlobSHA1": "5049c11097c070b1995e408a2aeb79f60eba96da"
+    },
+    {
+      "path": "checks/w2-typecheck-comparison.json",
+      "bytes": 12540,
+      "sha256": "28a24028533092aad0adf4553b200c38f8c361f5aebe2f0484379f2e45a73726",
+      "gitBlobSHA1": "5be1af59beebaa0a3f361aa78a52c2fad1abf375"
+    },
+    {
+      "path": "ci-request.json",
+      "bytes": 274,
+      "sha256": "01608e6052545eb2729fb5cca8e3d1c2ca72302b5ee9cb4181330c7041c97766",
+      "gitBlobSHA1": "d5e2641c9d230e697c6d11d5a51be3c3eca5344b"
+    },
+    {
+      "path": "COMPOSITION-C4.json",
+      "bytes": 3484,
+      "sha256": "1270136e1b072e15c867fb6aaffb12b9c5f47d86068accad6185b7b48359f8f9",
+      "gitBlobSHA1": "685702804effa1beae234dbf8450d22098b09b74"
+    },
+    {
+      "path": "COMPOSITION.json",
+      "bytes": 6241,
+      "sha256": "c70aab12b2b174bb8e047c0fca074adc0da2c0807314cde3581a021da6702af0",
+      "gitBlobSHA1": "39639dee1fce0eb63222a268dba466e2c4700668"
+    },
+    {
+      "path": "CONSUMER-RELEASE.json",
+      "bytes": 2914,
+      "sha256": "760ba17f1f9132ab4a3234e1089b62531d61e4e9a5e66fdd89d0eaad740f0483",
+      "gitBlobSHA1": "956ab44f80d52f8a7c2aa22711e8db316770ed3b"
+    },
+    {
+      "path": "CRITERIA.json",
+      "bytes": 269040,
+      "sha256": "010d8ea3f012df4c3c04097bd33309edc01536f930879619987a41ff4e847080",
+      "gitBlobSHA1": "885a57a4e8924ef39f8c11c13f0ae8ed7e515884"
+    },
+    {
+      "path": "e2e-implementation.json",
+      "bytes": 14259,
+      "sha256": "e35d15e55df839c58427b259998d5d71ab6988cc00312b695dc0eb1dd0e18e06",
+      "gitBlobSHA1": "086947265dad586b21cb8cde1c3cecd5cb873814"
+    },
+    {
+      "path": "HANDOFF.md",
+      "bytes": 15117,
+      "sha256": "1d0235d3037acb48bf50be1a4284452960d894c39eb61156312db12689d52fdd",
+      "gitBlobSHA1": "332028625a14f46e7febea188d341d9c9cb1f9f5"
+    },
+    {
+      "path": "owned-assembly/MANIFEST.json",
+      "bytes": 2960,
+      "sha256": "9a7c42bab18e56dd4a9a84e72b208089d4419d436b1bdfa6ceccd8338ea9beee",
+      "gitBlobSHA1": "b164fab3732cb35048b6f6cbd1e94ce7aec193b3"
+    },
+    {
+      "path": "owned-assembly/patches/reports-current-composition-owned.patch",
+      "bytes": 1345,
+      "sha256": "f0cdd891ad1e1756265da7939c5fe846b1798a5afbbb8dc57e7eb7c3bf9f80a0",
+      "gitBlobSHA1": "a2fff160ae2a9bdb16f30fb12e5a7d4e6e39936b"
+    },
+    {
+      "path": "owned-assembly/postimages/modules/sucafina/Sucafinav1/product/reviews/browser.ts.txt",
+      "bytes": 13978,
+      "sha256": "1151dcc44346e9f3c9948b8730bc0ba026ea8a3c6f3e0c6e36428c6ae5f6c1d3",
+      "gitBlobSHA1": "ea194a5c8cf0624c278c8dc2bf81c0dac6222887"
+    },
+    {
+      "path": "owned-assembly/postimages/modules/sucafina/Sucafinav1/product/reviews/meeting.ts.txt",
+      "bytes": 24990,
+      "sha256": "66fbce4667cb0e4d6ec3d5f500860cbd6d906b6be31e0c25b4a794c41e4503e0",
+      "gitBlobSHA1": "4b148e2bfea0e356641c18f0821e503b18e33590"
+    },
+    {
+      "path": "owned-assembly/preimages/modules/sucafina/Sucafinav1/product/reviews/browser.ts.txt",
+      "bytes": 13905,
+      "sha256": "f65d0b323a2f63a95c6b4b56f6b20529396f82ebeb01d113df1326928e431279",
+      "gitBlobSHA1": "ad9c66337205d05764e187f8acadc2dff4cf151b"
+    },
+    {
+      "path": "owned-assembly/preimages/modules/sucafina/Sucafinav1/product/reviews/meeting.ts.txt",
+      "bytes": 24928,
+      "sha256": "7185b03adec8bd48dcad7c1dad63ad90a0c8c667183c519f708b05622ab39527",
+      "gitBlobSHA1": "65bdb3e8ebe6f8432a6fc61a166ef5b74a81d4e6"
+    },
+    {
+      "path": "PRODUCT.json",
+      "bytes": 7613,
+      "sha256": "b682a92e00aa70fdd1afe1c6f4ee60a5ac903a32f1099c655ec7e88026c9af10",
+      "gitBlobSHA1": "03a9cc880aa0a60b6f0883b56a778ed65f6028f4"
+    },
+    {
+      "path": "READINGS.json",
+      "bytes": 14016,
+      "sha256": "e1b3b09bd0ad8eec55376ff8ed2da4b2d4210736f18cced0cde49bbf6fd45cb7",
+      "gitBlobSHA1": "08fc11ca0b6509d1dabcf547013e0cbf7ef9b01b"
+    },
+    {
+      "path": "RUNS.json",
+      "bytes": 14789,
+      "sha256": "09a458d27a762ffb7056e860d045d79896ccfb7acce8fc4ba4a7030fcb61ef57",
+      "gitBlobSHA1": "618c73e7c827f4edf8f84f89bbd258317343a95d"
+    },
+    {
+      "path": "SESSION23-RECONCILIATION.json",
+      "bytes": 8264,
+      "sha256": "d8e823a01ef00410d51ee93944f9f005b42c66504174b127e2c5bf38fd52f082",
+      "gitBlobSHA1": "51c64ec7efdfc639ffffd76cdea961ca484c262d"
+    },
+    {
+      "path": "shared/manifest.json",
+      "bytes": 11644,
+      "sha256": "e73f739e56537f11525c80c5a9add93472285f3e7895cdf62c4625ba6c27159d",
+      "gitBlobSHA1": "231eaf33ccb651cb9ebe2b7298bc4faef50c0772"
+    },
+    {
+      "path": "shared/patches/mission25-reports-shared.patch",
+      "bytes": 56407,
+      "sha256": "42cce7c5b42604636c77584e6e86f5594a2a1fa1b6d265f9fc16c7a028f78f47",
+      "gitBlobSHA1": "347b33b4e77a785aa83170f0b073273be87da840"
+    },
+    {
+      "path": "shared/postimages/apps/cli/src/sucafina-product/business-services.ts.txt",
+      "bytes": 70107,
+      "sha256": "7a0a9adfccb1ecc2caef577e6d7e4cbeb084c71dd633520691cc459dc93c9bb9",
+      "gitBlobSHA1": "ce3a281bf07819f90af7fad10f98861980f3273b"
+    },
+    {
+      "path": "shared/postimages/apps/cli/src/sucafina-product/extended-browser.ts.txt",
+      "bytes": 17497,
+      "sha256": "4c28afeb113132ce7836f2d247d175418c9c5ef3be25323cb55e4161efb7d3f2",
+      "gitBlobSHA1": "83ecd80669c759dc65cc621543af2b5ebd9f9ac0"
+    },
+    {
+      "path": "shared/postimages/apps/cli/src/sucafina-product/extended-business-services.ts.txt",
+      "bytes": 10427,
+      "sha256": "698e289b2cfc3996bc91069561d40b89294e3004bbd682e07a14ec3026f948ac",
+      "gitBlobSHA1": "4cadc40037fefb895a7c77d53125922fa747b479"
+    },
+    {
+      "path": "shared/postimages/apps/cli/src/sucafina-product/extended-http.ts.txt",
+      "bytes": 23678,
+      "sha256": "4f126782c18018ec6f17da90c19a19c237731064d3ee23fbfe4769e793224dcc",
+      "gitBlobSHA1": "d8e0d149e37c640db8957f3e917f867088923d93"
+    },
+    {
+      "path": "shared/postimages/apps/cli/src/sucafina-product/extended-source-links.ts.txt",
+      "bytes": 5068,
+      "sha256": "64162802035919aa6b74306166a3854cb3c6d6df05524e9bbd3228254a26e83e",
+      "gitBlobSHA1": "f655f9d0728d8c92efe9b78efa1f379c5be67efd"
+    },
+    {
+      "path": "shared/postimages/apps/cli/src/sucafina-product/review-collaboration-binding.ts.txt",
+      "bytes": 5762,
+      "sha256": "3e6b275ab3323e2d059df7268de829f9541f9c2d145d4c83d2341ba5c88df2ef",
+      "gitBlobSHA1": "0da7d51672dc2519019f7880806d61c529456aa9"
+    },
+    {
+      "path": "shared/postimages/apps/cli/src/sucafina-product/review-collaboration.ts.txt",
+      "bytes": 12914,
+      "sha256": "ee376ff5d4c4ca7f4fe378f3c5fd68f1799847e68c56b2b09d32d112991f30f1",
+      "gitBlobSHA1": "0912fc1f33fb1b4fe81d92eeb509c7806ab1a380"
+    },
+    {
+      "path": "shared/postimages/apps/cli/src/sucafina-product/review-history.ts.txt",
+      "bytes": 14533,
+      "sha256": "2c4a38106be2410e4f6629209fb997af6eb2a0cbadfe1a5bb0fbd66da173a706",
+      "gitBlobSHA1": "965ad8445deb9b97d1f1c76f18d4036bc2006975"
+    },
+    {
+      "path": "shared/preimages/apps/cli/src/sucafina-product/business-services.ts.txt",
+      "bytes": 69619,
+      "sha256": "82d182ce0ae3cff5f7346d4b7f61519440316c37a74751687277744d8d673ef2",
+      "gitBlobSHA1": "385dd1998ec3fb73b32f77ab3dec9c93beb440d1"
+    },
+    {
+      "path": "shared/preimages/apps/cli/src/sucafina-product/extended-browser.ts.txt",
+      "bytes": 16076,
+      "sha256": "325fd76f6005645ea07517ae78ace1ea0422014322dc9745d2169d51034bf01e",
+      "gitBlobSHA1": "9ddc9d3e95585cda5efe877ce2303ade497a0b98"
+    },
+    {
+      "path": "shared/preimages/apps/cli/src/sucafina-product/extended-business-services.ts.txt",
+      "bytes": 9732,
+      "sha256": "69762e50794e88f70407095367f1c63cab1e6638896f9ec10e866740605a9d9d",
+      "gitBlobSHA1": "a57e9d39f81e8a064f903765e70533bdffea4ba2"
+    },
+    {
+      "path": "shared/preimages/apps/cli/src/sucafina-product/extended-http.ts.txt",
+      "bytes": 20472,
+      "sha256": "cc07d2745bdd82009574691d105b8cb490e74ef5da56e49eeeff7f8c55a7f929",
+      "gitBlobSHA1": "63bbe96595c04a484cdc16e01f95c42233b4025c"
+    },
+    {
+      "path": "shared/preimages/apps/cli/src/sucafina-product/extended-source-links.ts.txt",
+      "bytes": 3994,
+      "sha256": "f1bdc31ba1bb8ae968cd9c48a3869ab2d0c231ce22a297d72800a1cbba367ce5",
+      "gitBlobSHA1": "147b3a687aa8786a7429ba8e7452db40290081d5"
+    },
+    {
+      "path": "shared/preimages/apps/cli/src/sucafina-product/review-history.ts.txt",
+      "bytes": 12004,
+      "sha256": "2d3fc4f4ca0297eeec13b1376c19911f706734780cfee80e1b3a9453097f3064",
+      "gitBlobSHA1": "0c9a68225d114ba77617af4a0e3acc2607ea0e5a"
+    },
+    {
+      "path": "shared/README.md",
+      "bytes": 12656,
+      "sha256": "d6400b4739e4a7ffc5e71e85eab1b55657106b33b8ec342751b6e5175afcd4d1",
+      "gitBlobSHA1": "246cbc11589e9f8a8de819724bd92a0b0a9a96d5"
+    },
+    {
+      "path": "shared/STAGED-FILES.json",
+      "bytes": 6876,
+      "sha256": "c5ecc549fe0571f178f5f2c8aa1d0ffc63a10457b75a6625a98f7b29852942de",
+      "gitBlobSHA1": "866479959ce6593593f3575f41e9e73d1090b612"
+    },
+    {
+      "path": "shared-static-review.json",
+      "bytes": 8310,
+      "sha256": "445a66c665705ccacaa42fe27133c946bb6ebc1028e5b64e3897c51257227a89",
+      "gitBlobSHA1": "839cd3c16be02977159fd063b5d3d328608622ac"
+    },
+    {
+      "path": "shared-typecheck/MANIFEST.json",
+      "bytes": 4632,
+      "sha256": "72fdcd74f745792a77595c46c7e3b8e4fae813d21f8d8dff474bbb2563ef031b",
+      "gitBlobSHA1": "fd32d36d88f47e520d8de96c39c454036c261f4c"
+    },
+    {
+      "path": "shared-typecheck/postimages/packages/app-shell/e2e/tsconfig.json.txt",
+      "bytes": 2434,
+      "sha256": "d1e94a1533a152e61753bea090c6e28214ef41da77f2ae837f194175ec065418",
+      "gitBlobSHA1": "141da754e380d7410da97f9ca44505880cca55c9"
+    },
+    {
+      "path": "shared-typecheck/preimages/packages/app-shell/e2e/tsconfig.json.txt",
+      "bytes": 2358,
+      "sha256": "26b37a283557b1c24a70533f54c067abb6d4c74191151e4c203d3b5458b437a7",
+      "gitBlobSHA1": "8364221434311400cae3007ea74cc67ddcfde765"
+    },
+    {
+      "path": "shared-typecheck/reports-e2e-graph.patch",
+      "bytes": 410,
+      "sha256": "9d8e1bb084485cc951d449d8dac161fbfc3700b7ca9d48f9611d506bf09ab6bb",
+      "gitBlobSHA1": "85cc913ac7ac47fce62b5e188bf7df41f8bbe553"
+    }
+  ],
+  "previousReceiptCommit": "97e59869017a1103ab1476ada30ef0768a259bb5",
+  "latestCompositionRead": "3c0b7df201559223ddf1631c182a409af700ff38",
+  "receiptHistory": [
+    "df204294fe0778db95c70a66ef4715487badeb00",
+    "97e59869017a1103ab1476ada30ef0768a259bb5"
+  ]
+}

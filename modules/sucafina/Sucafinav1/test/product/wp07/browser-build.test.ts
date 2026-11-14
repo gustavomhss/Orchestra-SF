@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test"
 import { fileURLToPath } from "node:url"
 
-test.each(["browser", "workspace"])("review %s entry bundles without server runtime dependencies", async (entry) => {
+test.each(["browser", "workspace", "collaboration-client", "collaboration-view"])("review %s entry bundles without server runtime dependencies", async (entry) => {
   const built = await Bun.build({
     entrypoints: [fileURLToPath(new URL(`../../../product/reviews/${entry}.ts`, import.meta.url))],
     target: "browser",
