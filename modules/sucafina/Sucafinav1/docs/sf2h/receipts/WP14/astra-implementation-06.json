@@ -1,0 +1,87 @@
+{
+  "schema": "sf2h-wp14-implementation-v1",
+  "owner": "WP14",
+  "parent": "1240efef88be380c82b29ec422a13c54b42c7b62",
+  "previousProduct": "1240efef88be380c82b29ec422a13c54b42c7b62",
+  "status": "IMPLEMENTED_PENDING_CHECKS",
+  "reason": "Bun's typed matcher overload rejected a string|undefined expected owner. Widen only the two expect generic parameters; no runtime expression or assertion is changed.",
+  "typeOnlyProof": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp14/atlas-projection.test.ts",
+    "sourceSha256": "6688fd500edc16659b7ba91f92e91468c2b5365a6b92548a1cec698c88777c92",
+    "blob": "c2efe0e5054b4a33a35daae1d5353ff730434577",
+    "beforeSha256": "0054bf0f19065e2f06ae961980b775d51a6d37ec1039b9d0d8099ca1adb8e332",
+    "javascriptIdentical": true,
+    "javascriptSha256": "93befb2f040984bcf6ad193369da88646e1294dcf386e7cf7a2d9de21151f122",
+    "javascriptBytes": 27110,
+    "transform": "node:module.stripTypeScriptTypes, mode=transform, source text only; no product evaluated"
+  },
+  "productTests": "Not repeated: W5 test JavaScript is byte-identical after TypeScript erasure and all runtime/product/config/fixture blobs are unchanged. W5 remains the executed test identity.",
+  "previousVerification": {
+    "W": "1240efef88be380c82b29ec422a13c54b42c7b62",
+    "tree": "1ebec1428d581c36c706ddbca97ea2b84d9daa0c",
+    "S": "7376413d8d6b07dd9e86f3f1fc8e1e1a495fe6f1",
+    "snapshotTree": "d10d96ebbf40e43523ffcfb45a027f58f979befe",
+    "testRunId": 43584174407,
+    "testJobId": 132415011849,
+    "conclusion": "success",
+    "tests": {
+      "files": 6,
+      "total": 39,
+      "pass": 39,
+      "fail": 0,
+      "expectCalls": 556,
+      "durationSeconds": 75.47
+    },
+    "omni": {
+      "verdict": "pass",
+      "nonce": "9e17f5aea604f4749dddda65fe88795b",
+      "declaredTests": 2,
+      "spawns": 5,
+      "delegated": 0
+    },
+    "atlasRestartReceipt": {
+      "kind": "sqlite-atlas-process-restart",
+      "nativeSessionWitness": false,
+      "scanner": {
+        "name": "gitleaks",
+        "version": "gitleaks version 8.30.1",
+        "sha256": "88f91962aa2f93ac6ab281d553b9e125f5197bbbce38f9f2437f7299c32e5509"
+      },
+      "committed": {
+        "status": "committed",
+        "eventId": "3373db39d643a7146deb7318c041027e2ab9f5208ed79add825c056ea9cd763e",
+        "recordDigest": "723a8cfd4f715f5e6aa3ae63106effb7d394ec4ae5da4c5753cb490b0b476112"
+      },
+      "replayed": {
+        "status": "already-committed",
+        "eventId": "3373db39d643a7146deb7318c041027e2ab9f5208ed79add825c056ea9cd763e",
+        "recordDigest": "723a8cfd4f715f5e6aa3ae63106effb7d394ec4ae5da4c5753cb490b0b476112"
+      },
+      "parentPid": 4045,
+      "childPid": 4095,
+      "authorized": "ok",
+      "matches": 1,
+      "outsider": "unavailable",
+      "revoked": "unavailable"
+    },
+    "check": {
+      "runId": 43584178239,
+      "jobId": 132415023095,
+      "conclusion": "failure",
+      "diagnostics": 141,
+      "wp14Diagnostics": 2,
+      "pathsAndLines": [
+        "test/product/wp14/atlas-projection.test.ts:135",
+        "test/product/wp14/atlas-projection.test.ts:194"
+      ],
+      "guards": {
+        "rules": 78,
+        "changedPaths": 608,
+        "gates": 0,
+        "warnings": 11,
+        "errors": 0
+      }
+    }
+  },
+  "limits": "No native SessionV2/MCP/global acceptance is inferred from the successful actual SQLite/Atlas restart test."
+}
