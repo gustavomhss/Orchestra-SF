@@ -7,6 +7,12 @@ export type SfSourceScope = NonNullable<NonNullable<Snapshot["sfSources"]>["scop
 export type SfScopedSourcePort = {
   resolveScopedSource: (surface: Surface, incarnation: string, authorize: (snapshot: Snapshot, scope: SfSourceScope) => Promise<boolean>) => Promise<{ scope: SfSourceScope; projection: unknown; incarnation: string; version: number; inputDigest: string } | undefined>
   readScopedSource: (surface: Surface, scope: SfSourceScope, authorize: (snapshot: Snapshot) => Promise<boolean>) => Promise<{ projection: unknown; incarnation: string; version: number; inputDigest: string } | undefined>
+  /** Prepare and observe one source in the same surface transaction; every call prepares afresh. */
+  readScopedSourcePrepared?: (
+    surface: Surface,
+    prepare: (snapshot: Snapshot) => Promise<{ scope: SfSourceScope; authorize: (snapshot: Snapshot) => Promise<boolean> } | undefined>,
+    options?: TransactionOptions,
+  ) => Promise<{ projection: unknown; incarnation: string; version: number; inputDigest: string } | undefined>
   checkScopedSource?: (surface: Surface, scope: SfSourceScope, authorize: (snapshot: Snapshot) => Promise<boolean>, expected: { incarnation: string; version: number; inputDigest: string }) => Promise<boolean>
 }
 
@@ -32,6 +38,21 @@ export function createSfSourcePersistence(input: {
     if (projection === undefined || !source || !await authorize(snapshot)) return undefined
     if (digestSfValue(snapshot) !== before) throw new Error("SF_SOURCE_SCOPE_CALLBACK_MUTATION")
     return { scope, projection, source, inputDigest: digestSfValue(projection) }
+  }
+  const readScopedSnapshot = async (surface: Surface, snapshot: Snapshot, requested: SfSourceScope, authorize: (snapshot: Snapshot) => Promise<boolean>) => {
+    const observed = await observe(surface, snapshot, requested, authorize)
+    if (!observed) return { commit: false, value: undefined }
+    const { scope, projection, source, inputDigest } = observed
+    const key = digestSfValue(scope)
+    const prior = snapshot.sfSources!.scopes?.[key]
+    const entry = {
+      scope, sourceIncarnation: source.incarnation, incarnation: prior?.sourceIncarnation === source.incarnation ? prior.incarnation : createScopedIncarnation(snapshot, input.createId), alive: true, inputDigest,
+      version: !prior || prior.sourceIncarnation !== source.incarnation ? 1 : prior.version + Number(!prior.alive || prior.inputDigest !== inputDigest),
+    }
+    snapshot.sfSources!.scopes ??= {}
+    snapshot.sfSources!.scopes[key] = entry
+    requireSourceIdentities(snapshot)
+    return { commit: digestSfValue(prior) !== digestSfValue(entry), value: { projection: structuredClone(projection), incarnation: entry.incarnation, version: entry.version, inputDigest } }
   }
   const guard = (surface: Surface, snapshot: Snapshot) => {
     const before = digestSfValue(snapshot.sfSources)
@@ -67,21 +88,16 @@ export function createSfSourcePersistence(input: {
       const value = await persistence.readScopedSource(surface, scope, (snapshot) => authorize(snapshot, structuredClone(scope)))
       return value?.incarnation === incarnation ? { ...value, scope } : undefined
     },
-    readScopedSource: (surface, requested, authorize) => input.persistence.transaction(surface, async (snapshot) => {
-      const observed = await observe(surface, snapshot, requested, authorize)
-      if (!observed) return { commit: false, value: undefined }
-      const { scope, projection, source, inputDigest } = observed
-      const key = digestSfValue(scope)
-      const prior = snapshot.sfSources!.scopes?.[key]
-      const entry = {
-        scope, sourceIncarnation: source.incarnation, incarnation: prior?.sourceIncarnation === source.incarnation ? prior.incarnation : createScopedIncarnation(snapshot, input.createId), alive: true, inputDigest,
-        version: !prior || prior.sourceIncarnation !== source.incarnation ? 1 : prior.version + Number(!prior.alive || prior.inputDigest !== inputDigest),
-      }
-      snapshot.sfSources!.scopes ??= {}
-      snapshot.sfSources!.scopes[key] = entry
+    readScopedSource: (surface, requested, authorize) => input.persistence.transaction(surface, (snapshot) =>
+      readScopedSnapshot(surface, snapshot, requested, authorize)),
+    readScopedSourcePrepared: (surface, prepare, options) => input.persistence.transaction(surface, async (snapshot) => {
       requireSourceIdentities(snapshot)
-      return { commit: digestSfValue(prior) !== digestSfValue(entry), value: { projection: structuredClone(projection), incarnation: entry.incarnation, version: entry.version, inputDigest } }
-    }),
+      // Preparation receives an isolated view. Its callback cannot alter the held
+      // source snapshot before observe establishes its existing mutation guard.
+      const prepared = await prepare(structuredClone(snapshot))
+      if (!prepared) return { commit: false, value: undefined }
+      return readScopedSnapshot(surface, snapshot, prepared.scope, prepared.authorize)
+    }, options),
     ...(input.persistence.currentSnapshots ? { checkScopedSource: async (surface: Surface, scope: SfSourceScope, authorize: (snapshot: Snapshot) => Promise<boolean>, expected: { incarnation: string; version: number; inputDigest: string }) => {
       const check = async (snapshot: Snapshot) => {
         const observed = await observe(surface, snapshot, scope, authorize)

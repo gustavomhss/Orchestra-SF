@@ -1,0 +1,157 @@
+{
+  "schema": "wp10-continuation-reconciliation-v1",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "astra-wp10",
+  "pr": 29,
+  "observedProduct": {
+    "W": "ab8fb4f29d078d179742a77679ef85e5c549b114",
+    "tree": "6b889a436fafe019580801edba3015d90fa75dfd",
+    "parent": "a1434e7ea7340aa1d1c8ce6bb48958b724218170"
+  },
+  "contextReplacement": {
+    "authorization": "User explicitly requested continuation in a new session, preserving this branch and PR. No second product branch or PR.",
+    "liveWriter": "No proven active competing writer observed. Git silence and terminal CI do not establish prior-session termination. Publish with expected_sha compare-and-swap and stop to reconcile any mismatch.",
+    "remoteChannel": "GitHub MCP only"
+  },
+  "immutableInputs": {
+    "reviewFixes": "30e2215749d5295f81fdeafccb9e69ba21d0cdb8",
+    "pack": "a3d29d011ba3607a57914701300f09117a3e2de9",
+    "plan": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "campaignSha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+    "criteria": 171,
+    "tasks": 7,
+    "obligations": 80,
+    "read": "Full WP10.pack.json reconciled by root plus three delegated read-only reviews; all applicable AGENTS and current workflow/validators read."
+  },
+  "reviews": {
+    "finance": {
+      "pr": 50,
+      "sha": "7155f90a6492597a3dd79cfcfda9330fef8be2a2",
+      "candidate": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c"
+    },
+    "contracts": {
+      "pr": 51,
+      "sha": "fa520193f5df9d6585d5f4c40d071215efb42923"
+    }
+  },
+  "deltas": [
+    {
+      "id": "FIN-IND-001",
+      "origin": "87f7317d5f983adb255a5707b65d6f07bfa5a0d4",
+      "currentBlob": "385dd1998ec3fb73b32f77ab3dec9c93beb440d1",
+      "action": "preserve supplied verifyScenarioOperations; no reimplementation",
+      "evidence": "A27 analysis-services cases passed with actual authority/readers and explicit fixture analysis producer/verifier; new real canonical C09 case read supplies a current composition recheck. Full real Planner forecast preparation is not established by those analysis-service fixtures."
+    },
+    {
+      "id": "FIN-IND-002",
+      "reviewedProducerBlob": "3cff741ce7dd96b7fdec8ac803e3b27c6170a463",
+      "reviewedContract": "{host,cases}",
+      "currentProducerBlob": "41741c5131ea66242c881126c22c6d03cfd9c3c3",
+      "currentContract": "{host,state,authorizeCase,authorizeEvidence}",
+      "callerBlob": "5cca27ce239c92a8e3c9f9f92f816f5224562904",
+      "compositionOrigin": "d02c64430d459d183eeb9e467e1c35d9a6b958f8",
+      "originProducerCommit": "02ac8172c17ad57e830bfb23d3ff1d1b1191852b",
+      "validationComposition": "f075e9824b7d8aed50b7f42c597528ef198177db",
+      "currentProducerInput": "46c904ead4e9b363422f6739258e492913ae6e2e",
+      "action": "do not add obsolete cases property; prove installed production reader/router/C17 without a permissive reader",
+      "functionalStatus": "NOT_RUN at preparation",
+      "test": "test/product/wp10/atlas-business/case-event-continuity.test.ts"
+    },
+    {
+      "id": "FIN-IND-003",
+      "origin": "d41ea01b8d9aa068301c1643c1ec3dc088900533",
+      "currentProviderBlob": "2fd55c7304add0829d7434917c80664fe86356b9",
+      "existingTestBlob": "533faeeb846987f99c67cbc69e86eb80f67054fc",
+      "earlierRun": 43544861337,
+      "earlierJob": 132293688965,
+      "earlierW": "eee00ac3ef2b68c987970535ba5bba5e4c6ad01b",
+      "earlierS": "d6dd636ec1ff6c6162eab8bd67f9398f847cc0d5",
+      "action": "preserve prefix and rerun existing five-case authority-composition file after provider migration/selection-guard changes",
+      "limitation": "Negative private-campaign grant refusal does not establish full successful campaign/reopen journey."
+    },
+    {
+      "id": "CR-C11-001",
+      "origin": "c3b02c7693c1ff3b702596c7c8458f913972a404",
+      "blob": "9f574a7573538c2a46796dfd650fadbac052dc80",
+      "run": 43604032487,
+      "job": 132474686748,
+      "W": "532da498e08fa36fadbd3c01e3e7da00d869dd47",
+      "S": "43e3f3cc819a0e154dbe927662a0b473ffa6a401",
+      "proof": "Four analysis-lifecycle-context cases passed. Wrapper, fixture, test, analysis-run-context, run-store and state-provider blobs match current W27 exactly.",
+      "action": "no code change and no redundant rerun; whole historical run remains failure (188 pass / 11 fail)."
+    },
+    {
+      "id": "FIN-IND-004",
+      "owner": "astra-wp12",
+      "ownerSha": "ba27411a7cda9301aa162680a94153a5e643be4d",
+      "currentAndOwnerBlob": "973a2f09b394426364c514b923ecdc8e10ffb184",
+      "compositionOrigin": "d02c64430d459d183eeb9e467e1c35d9a6b958f8",
+      "composedInput": "516f1d15f76e5e340609bd4a4b905e3a5f877cab",
+      "action": "preserve byte-identical UI; add own consumer DOM proof with existing WP01 browser lifecycle",
+      "scope": "Real renderer, script, browser and resident catalog; case/HTTP are declared UI fixtures. No native/financial/AM05 acceptance."
+    }
+  ],
+  "diagnoses": {
+    "memory": {
+      "pr": 55,
+      "head": "0d7fb6f12ed053340391ff6e4f95b6f3c1276ea8",
+      "status": "read before work; proposal not applied; no duplicate A27",
+      "newObservation": "A27 reaches same-request-new-proof and positive stale.preserve, then stale consumer accepts corrupted record at historical-memory.test.ts:580:103 although Atlas rejects the original corruption. Assertion failure, not timeout. Final revocation probes not reached."
+    },
+    "calculation": {
+      "pr": 59,
+      "head": "e80fdc933dfd25956a50c22dea76bf077e79815b",
+      "tree": "f1ef898362d27d16f53aebfc278eee6d6ff9d73d",
+      "preimages": {
+        "product/integration/source-lifecycle.ts": "65867a3e6aa9b5b85266bb637fb22cf1c6c6d539",
+        "product/integration/planner-sources.ts": "6230f22e7dd66fec1103f28cc9a7937b2dca1449"
+      },
+      "action": "Owner intake of exact two-source patch; own structural test adapted only for relative fixture import and execution-neutral comment.",
+      "discriminant": "Four to two source transaction envelopes per resolver invocation while preserving two fresh observations, six direct authentications, four external revalidations, ABA/source identity, revocation and request abort.",
+      "status": "Candidate staged; tests NOT_RUN at preparation",
+      "xRepeatCondition": "Structural gate plus three full source-fence files must pass before one new unchanged-budget X. No performance acceptance from static diff/counts alone."
+    }
+  },
+  "runs": {
+    "CHECK27": {
+      "id": 43623374771,
+      "status": "failure",
+      "ownDiagnostics": 0,
+      "foreignDiagnostics": 13
+    },
+    "X27": {
+      "id": 43623440133,
+      "status": "failure",
+      "pass": 0,
+      "fail": 1,
+      "expects": 3,
+      "tests": 1,
+      "files": 1,
+      "seconds": 285.57,
+      "cleanup": 132535684366
+    },
+    "A27": {
+      "id": 43624030665,
+      "status": "failure",
+      "pass": 59,
+      "fail": 1,
+      "expects": 1447,
+      "tests": 60,
+      "files": 8,
+      "seconds": 297.68,
+      "cleanup": 132537774635
+    },
+    "R27": {
+      "id": 43624794783,
+      "status": "failure",
+      "pass": 34,
+      "fail": 13,
+      "expects": 839,
+      "tests": 47,
+      "files": 10,
+      "seconds": 1052.08,
+      "cleanup": 132543694722
+    }
+  },
+  "inherited": "All existing receipts, current candidate data and foreign pins preserved. No FINAL reviews, FINAL W/D, merge, deploy or GLOBAL_RELEASE is asserted."
+}

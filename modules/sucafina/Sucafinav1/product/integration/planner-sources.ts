@@ -1,6 +1,6 @@
 import { roleMap } from "../../runtime/admin.ts"
 import { object } from "../../runtime/contract.ts"
-import type { Actor } from "../../runtime/contract.ts"
+import type { Actor, Snapshot } from "../../runtime/contract.ts"
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
 import type { DomainPortHost, PlannerSourceHost, PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
@@ -45,25 +45,42 @@ export function createSfPlannerSourceHost(input: {
       const request = input.host.requestFor(context)
       if (!request || !await input.host.revalidate(context)) return { status: "denied", reason: "source-authority-unavailable" }
       const read = async () => {
-        const describe = () => input.host.persistence.transaction("planner", async (snapshot) => {
+        const describe = async (snapshot: Snapshot) => {
           const principal = await input.host.authenticate(request, { surface: "planner", roleMap: roleMap(snapshot, "planner") })
-          if (!principal || principal.id !== context.binding.principalRef) return { commit: false, value: undefined }
+          if (!principal || principal.id !== context.binding.principalRef) return undefined
           const roles = principal.roles.filter((role) => role.surface === "planner").map((role) => role.role)
           const actor: Actor = { id: principal.id, roles, canWrite: principal.canWrite && roles.some((role) => role !== "viewer") }
-          return { commit: false, value: sfPlannerProjectionSelector(snapshot, actor) }
-        }, { signal: request.signal })
-        const selector = await describe()
-        if (!selector) return undefined
-        const scope = { principalRef: context.binding.principalRef, accessRevision: context.binding.accessRevision,
-          policyVersion: context.binding.policyVersion, recordType: "planner-version", recordId: decoded[0]!, selector }
-        const current = await input.scopedSources.readScopedSource("planner", scope, async (snapshot) => {
-          if (request.signal.aborted) return false
-          const principal = await input.host.authenticate(request, { surface: "planner", roleMap: roleMap(snapshot, "planner") })
-          if (!principal || principal.id !== scope.principalRef) return false
-          const roles = principal.roles.filter((role) => role.surface === "planner").map((role) => role.role)
-          const actor: Actor = { id: principal.id, roles, canWrite: principal.canWrite && roles.some((role) => role !== "viewer") }
-          return digestSfValue(sfPlannerProjectionSelector(snapshot, actor)) === digestSfValue(selector)
-        })
+          return sfPlannerProjectionSelector(snapshot, actor)
+        }
+        const prepare = (selector: ReturnType<typeof sfPlannerProjectionSelector>) => {
+          const scope = { principalRef: context.binding.principalRef, accessRevision: context.binding.accessRevision,
+            policyVersion: context.binding.policyVersion, recordType: "planner-version", recordId: decoded[0]!, selector }
+          return {
+            scope,
+            authorize: async (snapshot: Snapshot) => {
+              if (request.signal.aborted) return false
+              const principal = await input.host.authenticate(request, { surface: "planner", roleMap: roleMap(snapshot, "planner") })
+              if (!principal || principal.id !== scope.principalRef) return false
+              const roles = principal.roles.filter((role) => role.surface === "planner").map((role) => role.role)
+              const actor: Actor = { id: principal.id, roles, canWrite: principal.canWrite && roles.some((role) => role !== "viewer") }
+              return digestSfValue(sfPlannerProjectionSelector(snapshot, actor)) === digestSfValue(selector)
+            },
+          }
+        }
+        const legacy = async () => {
+          const selector = await input.host.persistence.transaction("planner", async (snapshot) => ({
+            commit: false, value: await describe(snapshot),
+          }), { signal: request.signal })
+          if (!selector) return undefined
+          const prepared = prepare(selector)
+          return input.scopedSources.readScopedSource("planner", prepared.scope, prepared.authorize)
+        }
+        const current = input.scopedSources.readScopedSourcePrepared
+          ? await input.scopedSources.readScopedSourcePrepared("planner", async (snapshot) => {
+            const selector = await describe(snapshot)
+            return selector ? prepare(selector) : undefined
+          }, { signal: request.signal })
+          : await legacy()
         if (!current || !await input.host.revalidate(context)) return undefined
         return { projection: object(current.projection), identity: { incarnation: current.incarnation, version: current.version } }
       }

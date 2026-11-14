@@ -1,0 +1,405 @@
+{
+  "schema": "wp10-existing-run-terminal-observation-v1",
+  "observation": "Follow-up to observation.json; supersedes only its IN_PROGRESS R27 status, preserving all prior observations.",
+  "product": {
+    "W": "ab8fb4f29d078d179742a77679ef85e5c549b114",
+    "tree": "6b889a436fafe019580801edba3015d90fa75dfd"
+  },
+  "snapshot": {
+    "S": "7ddf90ea85adbfc15c9ce2e6f4acc54a5f74e906",
+    "tree": "40b62994a45278fe00b3680006bf475e746ad879",
+    "requestBlob": "54b907f85068641160e57aa24a01ef2af94d1bdf",
+    "requestSha256": "588e0a75e6f22023a1100a1d0383b940494f1c8a1099454651d419ea7bf62690",
+    "compare": "Only added .ci-run.json; independently confirmed through GitHub MCP compare."
+  },
+  "run": {
+    "id": 43624794783,
+    "head_branch": "ci-run-linux-astra-wp10-ab8fb4f2-588e0a75-01",
+    "head_sha": "7ddf90ea85adbfc15c9ce2e6f4acc54a5f74e906",
+    "status": "completed",
+    "conclusion": "failure",
+    "created_at": "2026-11-14T18:07:12Z",
+    "updated_at": "2026-11-14T18:26:24Z",
+    "run_attempt": 1,
+    "html_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43624794783"
+  },
+  "jobs": [
+    {
+      "id": 132538121932,
+      "name": "test (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_id": 43624794783,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Assert Linux ARM64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 3
+        },
+        {
+          "name": "Assert macOS arm64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 4
+        },
+        {
+          "name": "Setup request validator Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Read request",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Fetch source history for Script fixtures",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "ripgrep",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Setup Playwright Node",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Install Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Linux sandbox dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12
+        },
+        {
+          "name": "Setup Python",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13
+        },
+        {
+          "name": "Install Python test dependencies",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 14
+        },
+        {
+          "name": "Configure git identity",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15
+        },
+        {
+          "name": "Export requested environment",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "omni binaries",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17
+        },
+        {
+          "name": "Rust toolchain (rust-toolchain.toml)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 18
+        },
+        {
+          "name": "Omni control nonce",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19
+        },
+        {
+          "name": "Run tests",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 20
+        },
+        {
+          "name": "Upload Lean dashboard previews (extension)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 21
+        },
+        {
+          "name": "Upload Playwright evidence",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 22
+        },
+        {
+          "name": "Post Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 42
+        },
+        {
+          "name": "Post Setup request validator Node",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 43
+        },
+        {
+          "name": "Post Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 44
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 45
+        }
+      ]
+    },
+    {
+      "id": 132543694722,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 43624794783,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Delete the snapshot branch",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        }
+      ]
+    }
+  ],
+  "artifacts": [],
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "--timeout",
+      "120000",
+      "Sucafinav1/test/product/wp10/integration/bi-call-scope.test.ts",
+      "Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "Sucafinav1/test/product/wp10/integration/bi-case-access.test.ts",
+      "Sucafinav1/test/product/wp10/integration/bi-fallback-lifecycle.test.ts",
+      "Sucafinav1/test/product/wp10/integration/dashboard-review-history.test.ts",
+      "Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts",
+      "Sucafinav1/test/product/wp10/integration/bi-advantage-selection.test.ts",
+      "Sucafinav1/test/product/wp10/integration/bi-decision-navigation.test.ts",
+      "Sucafinav1/test/product/wp05/stored-bi-fences.test.ts",
+      "Sucafinav1/test/product/wp05/projection.test.ts"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+    }
+  },
+  "result": {
+    "pass": 34,
+    "fail": 13,
+    "expects": 839,
+    "tests": 47,
+    "files": 10,
+    "bunSeconds": 1052.08,
+    "omni": {
+      "nonce": "4862935063f5a7866db39971d606df01",
+      "status": "not applicable",
+      "spawns": 0,
+      "delegated": 0
+    }
+  },
+  "failures": [
+    {
+      "logLine": 943,
+      "observation": "2026-11-14T18:08:53.9386472Z (fail) BI proof starts only after real UI consumption, clones within one invocation and cannot cross a new call or UTC day [10505.45ms]",
+      "stack": [
+        "2026-11-14T18:08:53.9385282Z       at prepare (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-call-scope.test.ts:114:45)"
+      ]
+    },
+    {
+      "logLine": 1051,
+      "observation": "2026-11-14T18:09:04.2553369Z (fail) BI exported source and Review cannot borrow a completed proof from an overlapping presentation dispatch [10316.72ms]",
+      "stack": [
+        "2026-11-14T18:09:04.2552388Z       at prepare (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-call-scope.test.ts:114:45)"
+      ]
+    },
+    {
+      "logLine": 1159,
+      "observation": "2026-11-14T18:09:14.6690242Z (fail) BI proof rejects current case revocation, unversioned C08 result corruption and changed input without repeating a producer [10414.10ms]",
+      "stack": [
+        "2026-11-14T18:09:14.6688802Z       at prepare (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-call-scope.test.ts:114:45)"
+      ]
+    },
+    {
+      "logLine": 1267,
+      "observation": "2026-11-14T18:09:25.0306840Z (fail) BI proof fences all three actual domain snapshots even when the C08 revision and Planner reference stay unchanged [10359.58ms]",
+      "stack": [
+        "2026-11-14T18:09:25.0306003Z       at prepare (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-call-scope.test.ts:114:45)"
+      ]
+    },
+    {
+      "logLine": 1375,
+      "observation": "2026-11-14T18:09:35.2360834Z (fail) BI egress returns denied after actor revocation, Request abort or lease removal at its final asynchronous boundaries [10207.34ms]",
+      "stack": [
+        "2026-11-14T18:09:35.2359959Z       at prepare (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-call-scope.test.ts:114:45)"
+      ]
+    },
+    {
+      "logLine": 1483,
+      "observation": "2026-11-14T18:09:45.4117272Z (fail) BI source HTTP reopens its real case after destination resolution and returns no links after participation is revoked [10174.75ms]",
+      "stack": [
+        "2026-11-14T18:09:45.4116201Z       at prepare (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-call-scope.test.ts:114:45)"
+      ]
+    },
+    {
+      "logLine": 1507,
+      "observation": "2026-11-14T18:10:03.7171475Z (fail) BI keeps the canonical shell, refreshes on manual focus and timer, and signs out once while discarding a held genuine success [18303.81ms]",
+      "stack": [
+        "2026-11-14T18:10:03.7164950Z error: expect(received).toBe(expected)",
+        "2026-11-14T18:10:03.7165324Z Expected: 200",
+        "2026-11-14T18:10:03.7165575Z Received: 403",
+        "2026-11-14T18:10:03.7166718Z       at prepareBiLifecycle (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts:213:36)",
+        "2026-11-14T18:10:03.7169616Z       at async <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts:246:34)"
+      ]
+    },
+    {
+      "logLine": 1529,
+      "observation": "2026-11-14T18:10:04.2334962Z (fail) the canonical shell still polls authority while BI awaits a held result and revocation prevents every late render [516.24ms]",
+      "stack": [
+        "2026-11-14T18:10:04.2328889Z error: expect(received).toBe(expected)",
+        "2026-11-14T18:10:04.2329236Z Expected: 200",
+        "2026-11-14T18:10:04.2329485Z Received: 403",
+        "2026-11-14T18:10:04.2330400Z       at prepareBiLifecycle (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts:213:36)",
+        "2026-11-14T18:10:04.2333541Z       at async <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts:291:34)"
+      ]
+    },
+    {
+      "logLine": 1551,
+      "observation": "2026-11-14T18:10:04.7293787Z (fail) clearing the BI selection while genuine authorized options are delayed prevents restoration of the previous selection [496.10ms]",
+      "stack": [
+        "2026-11-14T18:10:04.7289540Z error: expect(received).toBe(expected)",
+        "2026-11-14T18:10:04.7289772Z Expected: 200",
+        "2026-11-14T18:10:04.7290201Z Received: 403",
+        "2026-11-14T18:10:04.7290775Z       at prepareBiLifecycle (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts:213:36)",
+        "2026-11-14T18:10:04.7292572Z       at async <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts:329:34)"
+      ]
+    },
+    {
+      "logLine": 1573,
+      "observation": "2026-11-14T18:10:05.2103693Z (fail) BI returns from a real source with the same human filters, version pair, currency and mark focus after current reauthorization [480.61ms]",
+      "stack": [
+        "2026-11-14T18:10:05.2096977Z error: expect(received).toBe(expected)",
+        "2026-11-14T18:10:05.2097644Z Expected: 200",
+        "2026-11-14T18:10:05.2097902Z Received: 403",
+        "2026-11-14T18:10:05.2098897Z       at prepareBiLifecycle (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts:213:36)",
+        "2026-11-14T18:10:05.2102191Z       at async <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts:353:34)"
+      ]
+    },
+    {
+      "logLine": 1608,
+      "observation": "2026-11-14T18:10:15.4211914Z (fail) BI refuses lease loss after its first and last real authorization awaits and a changed final Request [4570.05ms]",
+      "stack": [
+        "2026-11-14T18:10:15.4209438Z error: expect(received).toBeGreaterThan(expected)",
+        "2026-11-14T18:10:15.4209890Z Expected: > 1",
+        "2026-11-14T18:10:15.4210097Z Received: 0",
+        "2026-11-14T18:10:15.4210960Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-advantage-selection.test.ts:112:34)"
+      ]
+    },
+    {
+      "logLine": 1724,
+      "observation": "2026-11-14T18:10:27.4359943Z (fail) BI clears a real persisted case after participant revocation with the session valid and discards a delayed authorized source [10161.79ms]",
+      "stack": [
+        "2026-11-14T18:10:27.4358566Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-case-access.test.ts:115:47)"
+      ]
+    },
+    {
+      "logLine": 2062,
+      "observation": "2026-11-14T18:21:01.4425404Z (fail) Review browser clears selected content after case revocation while the session remains authenticated [100255.21ms]",
+      "stack": [
+        "2026-11-14T18:21:01.4423173Z error: WP10_REVIEW_BROWSER_TRANSPORT_DEADLINE"
+      ]
+    }
+  ],
+  "grouping": [
+    {
+      "file": "bi-call-scope.test.ts",
+      "count": 6,
+      "location": "114:45",
+      "observation": "prepare.toEqual: ordered Planner evidence differs (bi-v0/bi-v1 refId/incarnation/refDigest). The bodies asserting each later authority/lifecycle condition were not reached."
+    },
+    {
+      "file": "bi-lifecycle.test.ts",
+      "count": 4,
+      "location": "213:36",
+      "observation": "browser.choices expected 200, received 403; intended later browser lifecycle probes were not reached."
+    },
+    {
+      "file": "bi-advantage-selection.test.ts",
+      "count": 1,
+      "location": "112:34",
+      "observation": "Expected authorization count >1, received0."
+    },
+    {
+      "file": "bi-case-access.test.ts",
+      "count": 1,
+      "location": "115:47",
+      "observation": "toEqual assertion; preserve complete diff from log rather than inferring participant-revocation behavior."
+    },
+    {
+      "file": "review-portfolio-http.test.ts",
+      "count": 1,
+      "location": "review-access-browser-fixture.ts:29:45",
+      "observation": "Review browser case revocation setup failed at focus.authorized-refresh with WP10_REVIEW_BROWSER_TRANSPORT_DEADLINE, test100255.21ms. HTTP handler returned200 after13650/13675ms, exceeding existing10000ms transport bound; intended participant revocation probe was not reached."
+    }
+  ],
+  "next": "No WP10 test-ci from this observed run remains in flight; root should perform final dedup/current-run check before a new surgical dispatch.",
+  "liveWriterLimit": "Terminal CI does not establish whether the prior author session is active or terminated. No stronger live-session evidence was found."
+}
