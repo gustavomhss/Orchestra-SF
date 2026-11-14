@@ -1,14 +1,14 @@
-# Missão32 — handoff terminal para a sessão23
+# Missão32 — handoff para a sessão23: composição C9 qualificada
 
 ## Resultado e limite de fechamento
 
 **A compatibilidade C12 foi implementada e comprovada na closure da composição real fixada nesta missão.** A reprodução distinguiu a reconciliação fresca legítima de um defeito material: o executor podia vincular o recibo do efeito150 a uma choice concorrente alterada para900. O delta agora recusa essa alteração, fecha a janela entre admissão e captura do executor e recusa identidades duplicadas, preservando o efeito e o recibo originais.
 
-A prova funcional combina **23 cenários distintos aprovados: 15 C12, 7 OPS-REV-02 e 1 WP04**. São 22 passes individuais no W2 e o caso restante aprovado isoladamente no W3. O run de W2 continua **failure**; não existe nem se alega um run único verde com 23 testes.
+A prova atual da composição C9 tem **22/22 cenários aprovados em um run: 15 C12 e 7 OPS-REV-02, com 570 assertions**. O caso WP04 de alias é reutilizado separadamente por identidade da sua closure direta. Os resultados anteriores W0–W3 permanecem preservados; o run de W2 continua failure. Não se alega um run único verde de23 testes.
 
-**CLI typecheck PASS e guards PASS. Sucafina typecheck FAIL exclusivamente pelo TS2741 herdado do caller WP14**, fora da autoridade C12. O workflow de checks da origem permanece **failure**. O caller já está corrigido no bundle fixado, mas isso não representa um typecheck executado nesse bundle.
+**Checks anteriores: CLI typecheck PASS e guards PASS; Sucafina typecheck FAIL pelo TS2741 herdado do caller WP14**, fora da autoridade C12. Após o ajuste autorizado da fixture, os checks da nova origem serão executados pelo mesmo workflow; este registro não antecipa seu resultado. O caller já está corrigido no bundle fixado, sem inferir um typecheck executado nesse bundle.
 
-Estado terminal: implementação/testes e patches entregues na mesma **PR60 / procurement-apply**, prontos para consumo pela sessão23. A integração em `sf2-stack` e a qualificação do SHA efetivamente integrado pertencem à sessão23; o aceite final permanece com o coordenador S0. **Nenhum aceite global é concedido.**
+Entrega funcional: implementação/testes e patches entregues na mesma **PR60 / procurement-apply**, prontos para consumo pela sessão23. A integração em `sf2-stack` e a qualificação do SHA efetivamente integrado pertencem à sessão23; o aceite final permanece com o coordenador S0. **Nenhum aceite global é concedido.**
 
 ## Autoridade, predecessores e preservação
 
@@ -22,21 +22,30 @@ Estado terminal: implementação/testes e patches entregues na mesma **PR60 / pr
 
 A base da PR continua `astra-operations`. Todos os avanços da origem usaram GitHub MCP com expected-head CAS e `force:false`. Nenhum arquivo anterior foi removido. Os recibos OPS-REV-02 e C12 da missão19 foram conservados, inclusive seus FAILs e limites.
 
-## Closure composta
+## Closure composta C9
 
-A composição inicialmente observada era `253baad3f2ff4af5beac695feae4c2f6372dc2e7`. A reconciliação inicial fixou seu filho documental publicado `402a091485e11d60dff433049c7dedd7fcead687`, tree `006339cc3a61de9bf99d2ba17069181bd5d8a02e`.
+A composição inicialmente observada era `253baad3f2ff4af5beac695feae4c2f6372dc2e7`. A reconciliação inicial fixou seu filho documental publicado `402a091485e11d60dff433049c7dedd7fcead687`. A conferência final encontrou uma publicação material C9, **`2c44f5d63b6f1a09bd81610be6fe3a1087f6daa0`**, root tree `2dba7fd244afcd39b837b1e61406de1e43450bb5`, doze commits após a base inicial. Essa base foi fixada para uma única requalificação delimitada, sem mover `sf2-stack` ou acompanhar indefinidamente seus próximos heads.
 
-O candidato final é **W3 `796f7d75310eba98a847a5ad9a5d4a5cec7e3de7`**, tree `62e159dbeab941069f702bfb7718ec5faa7e8dce`. Seus subtrees são:
+O candidato atual é **W4 `ba731ff646d8ed7a1c7fb15bf82f4e8c5a2ef81a`**, tree `c46c6dbb4d0e1bdc84da7ab21812f16e4bcc9b04`, filho direto da publicação C9. O snapshot S4 é `114b1c3ff83a038b515f4afcf5db0fc795d59b6d`, tree `3978a370af7a9da7ffee4db1eaf8ba137162df60`, acrescentando apenas `.ci-run.json`.
 
-| Subtree do W3 | SHA |
+| Subtree do W4 | SHA |
 | --- | --- |
-| product | `7fbf29cfcf13f0e88977bc3c1b04e6e053e7b53a` |
-| test | `ce7f2507957738c51134538f13911bad7995b67e` |
+| product | `9a1cc43bf51e6115d2edf2d7a87ca6e33567f9cb` |
+| test | `8a1a822601ef3d44b94df0a2d94c24af071eeff8` |
 | runtime | `46c24e8b1e54af03501b1b401a251285fa008d82` |
 
-[closure.json](closure.json) distingue explicitamente os trees da base dos trees do W3 e fixa os caminhos/blobs de produto, testes/helpers, CI, manifests e lockfile. O root tree identifica toda a closure rastreada; o delta em relação à base limita-se a dez caminhos autorizados.
+[closure.json](closure.json) fixa o tree completo, os onze deltas permitidos (dois de produto e nove de testes/helpers) e as dependências por SHA/path/blob. A [closure anterior](https://github.com/gustavomhss/Orchestra-SF/blob/8b7497a271c5afbd8604927f75b2a86a4f960bae/modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-composed-compatibility/closure.json) e o primeiro handoff terminal permanecem no commit8b7497a, com seus W/S e resultados intactos.
 
-A origem final de código/testes é `6f61cc332b4ebfa4a45313cd69da9dd99d4ab4fe`. O executor da origem, blob `605ad1fbd9167b8234aa614a01638724e87f36f5`, continua distinto do executor composto, blob `65d2a0518427b1454aa665ef744bce7564ed8049`. Não se substituiu o executor Finance por uma fixture ou pelo arquivo antigo da origem. Reservas `application-attempt`, clones, releituras autoritativas, reconciliação fresca e retenção final foram preservados.
+| Dependência publicada preservada | Blob na base C9 e em W4 |
+| --- | --- |
+| `product/decisions/case-port.ts` | `2bbcf63bb0fa56dd3a93190f7711f99aef2efb74` |
+| `product/host-binding/state-provider.ts` | `71ce2ba1b04d3c7f63f7c444ca23dd084a8e2b0c` |
+| `apps/cli/src/sucafina-product/business-services.ts` | `ce3a281bf07819f90af7fad10f98861980f3273b` |
+| `apps/cli/src/sucafina-product/host-context.ts` | `2bf1e6e66c13dd099029ec16b1f1ddf1f698dae6` |
+
+Os dois primeiros paths são relativos a `modules/sucafina/Sucafinav1/`. A origem final de código/testes é `a20f8701f8e8d8a5e75a1dc66e47de1ef8a2dfe1`. Seu executor, blob `605ad1fbd9167b8234aa614a01638724e87f36f5`, continua distinto do executor composto, blob `65d2a0518427b1454aa665ef744bce7564ed8049`. Reservas application-attempt, clones, releituras autoritativas, reconciliação fresca e retenção final do Finance integrado são preservadas. Copiar o executor antigo da origem não constitui consumo válido.
+
+A fixture C12 agora encaminha o callback original para C08 quando o hook final não está armado, preservando a identidade do seletor da publicação C9. Quando o hook está armado, conserva o wrapper e seu ponto real de revogação antes da autorização final. Isso não altera dados, resultado ou assertion e não concede aceite de desempenho C08. Não há aceite de Routines inferido dessa seleção.
 
 ## Correção efetiva
 
@@ -55,10 +64,10 @@ Não houve edição em Finance producer/result-store, state-provider, case-port,
 
 | Cenário | Resultado executado |
 | --- | --- |
-| Edição alheia após commit | Apply200, retry200 e recover200; efeito único, recibo único, case3→5, choice/objetivo preservados, zero mutações no replay. Recibo `a280993e-9a21-417a-bdca-bebf4a4ecc55`. |
-| Resposta perdida com recibo ainda não vinculado | Resposta interna real503 descartada no transporte; retry normal409; após reabrir serviços/C08/SQLite e criar browser context novo com storages vazios, recovery200→200 com recibo `a814f8ff-1af0-4840-995a-f02eb0315b3d`. Um efeito150, versão de domínio1/Alice/um Saved; case3→4→5. |
-| Resposta200 já reconciliada perdida | Recuperação200 do mesmo recibo `40788edb-10f0-4d7f-a361-ed107ef7aa98`, sem nova mutação/efeito. |
-| Segunda edição depois da captura fresca | Primeiro recovery503 `case-reconciliation-pending`; edição preservada; próxima recuperação200, mesmo recibo `b6f3c7fe-7872-4167-b3ce-d42285aa7a28`, sem duplicação. |
+| Edição alheia após commit | Apply200, retry200 e recover200; efeito único, recibo único, case3→5, choice/objetivo preservados, zero mutações no replay. Recibo `73e6cfc9-ef08-4e35-980a-73cbad3caf74`. |
+| Resposta perdida com recibo ainda não vinculado | Resposta interna real503 descartada no transporte; retry normal409; após reabrir serviços/C08/SQLite e criar browser context novo com storages vazios, recovery200→200 com recibo `f1289bf2-4d96-48a3-b14d-b35349275898`. Um efeito150, versão de domínio1/Alice/um Saved; case3→4→5. |
+| Resposta200 já reconciliada perdida | Recuperação200 do mesmo recibo `f75b5328-d5bd-4d1d-b510-17c2123c9632`, sem nova mutação/efeito. |
+| Segunda edição depois da captura fresca | Primeiro recovery503 `case-reconciliation-pending`; edição preservada; próxima recuperação200, mesmo recibo `c86094d8-3f32-49ed-9427-4b6b4b639b92`, sem duplicação. |
 | Choice150→900 depois do efeito | Apply409 `prepared-choice-changed`; um efeito/recibo150, zero vínculo novo; case3→4 e edição material preservados. Recuperação posterior409 por incompatibilidade da intenção. |
 | Alteração entre admissão e captura | Recovery403 `case-access-unavailable`, sem ID divulgado; nova admissão409 `application-intent-mismatch`; único efeito/recibo e edição preservados. |
 | Choice ou PreparedChange com ID duplicado antes da admissão | Dois casos409 `prepared-case-changed`; original mantido primeiro, duplicata divergente preservada, snapshot durável idêntico depois da recusa, zero redispatch/vínculos novos. |
@@ -67,9 +76,9 @@ Não houve edição em Finance producer/result-store, state-provider, case-port,
 | Principal, payload, digest, case, choice/change, alvo, chave ou encarnação divergentes | Recusas conforme fronteira, sem divulgação/alteração durável. Restaurar os bytes originais permite recuperar o recibo original. |
 | Revogação na retenção final | Original recover chamado uma vez, retorno interno exato `unavailable/receipt-authority-changed`; HTTP403 exato `denied/case-selection-authority-changed`. Sem ID/alteração durável; reautorização permite200; recriação física recebe403; zero efeitos duplicados. |
 | Execução parcial | Procurement recupera seu recibo; recuperação estrangeira409; Planner continua planned, sem recibo/efeito/aprovação fabricados. |
-| Regressões preservadas | Sete OPS-REV-02 e o teste WP04 de retenção dos inputs preparados passaram sobre o produto corrigido. |
+| Regressões preservadas | Sete OPS-REV-02 passaram novamente em W4. O caso WP04 de inputs preparados é evidência separada de W2, com closure direta inalterada. |
 
-Os IDs acima são recibos sintéticos realmente emitidos pelo harness. Os marcadores estruturados e as assertions estão preservados em [validation-02/result.json](validation-02/result.json) e [validation-03/result.json](validation-03/result.json), com links aos logs Actions.
+Os IDs acima são recibos sintéticos realmente emitidos pelo harness em W4. Os marcadores e resultados estão em [validation-04/result.json](validation-04/result.json). Os recibos validation-02 e validation-03 preservam separadamente os IDs e conclusões da qualificação anterior.
 
 ## Cada oráculo alterado
 
@@ -90,15 +99,16 @@ Nenhum oráculo foi convertido simplesmente de409 para200. Não houve remoção 
 | Candidato inicial | `05b9486f7c96f3aa793f030d5157c17b7b340ac1` | `7660065a030c5e0e128c1d5947ce6c41d798d583` | [43642889681](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43642889681) / `132594136855` | FAIL: 8 pass/6 fail/6 erros, 122 assertions; helper sem fechamento. |
 | Produto corrigido W2 | `9cf37f42eefb080940c7c71e4c2b1c5539459295` | `26cb97baa6ff8be3a4f020cad9ccfccbb1a6d860` | [43643559235](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43643559235) / `132596171206` | FAIL agregado: 22 pass/1 fail, 567 assertions, 23 testes/10 arquivos, 319,41s. |
 | Oráculo final W3 | `796f7d75310eba98a847a5ad9a5d4a5cec7e3de7` | `0a316164ce059b113e966810dc0c09cf47e0f76b` | [43644467464](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43644467464) / `132599028141` | PASS: 1 pass/0 fail/4 filtrados, 28 assertions, 26,71s. |
-| Checks da origem | `067b5cd37c09b2066dbd1a847942f8cac2ff8c40` | `e94f8ba7a91a1f384f96cd5f02b5e25d0caec428` | [43644816495](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43644816495) / `132600114060` | FAIL agregado apenas pelo TS2741 herdado; CLI e guards PASS. |
+| Composição publicada C9, W4 | `ba731ff646d8ed7a1c7fb15bf82f4e8c5a2ef81a` | `114b1c3ff83a038b515f4afcf5db0fc795d59b6d` | [43646007759](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43646007759) / `132603819490` | PASS: 22/22, 570 assertions, nove arquivos, 402,01s. |
+| Checks anteriores da origem | `067b5cd37c09b2066dbd1a847942f8cac2ff8c40` | `e94f8ba7a91a1f384f96cd5f02b5e25d0caec428` | [43644816495](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43644816495) / `132600114060` | FAIL agregado apenas pelo TS2741 herdado; CLI e guards PASS. |
 
 Cada S de teste é filho direto do W e acrescenta apenas `.ci-run.json`. O S de checks acrescenta somente `.astra-operations-check.json`. Não houve testes locais, servidores locais, epic/full suite, rerun inalterado ou dispatcher novo.
 
-A reprodução permanece vermelha. O erro sintático inicial e o mismatch de egress foram registrados, diagnosticados e corrigidos antes de suas repetições. W2→W3 altera apenas o corpo do teste que falhou e seu diagnóstico. Produto, fixtures, imports e os demais 22 corpos permanecem idênticos; o filtro exato reexecutou somente o caso afetado. Os oito passes de W1 não são necessários para a prova final.
+A reprodução permanece vermelha. O erro sintático inicial e o mismatch de egress foram registrados, diagnosticados e corrigidos antes de suas repetições. W2→W3 altera apenas o corpo do teste que falhou e seu diagnóstico. Produto, fixtures, imports e os demais 22 corpos permanecem idênticos; o filtro exato reexecutou somente o caso afetado. Os oito passes de W1 não são necessários para a prova final. A publicação material C9 e o encaminhamento do seletor pela fixture motivaram W4; os22 cenários afetados foram reexecutados uma vez. O alias WP04 não foi repetido porque sua closure direta permaneceu idêntica.
 
-Omni em W2: **pass**, nonce `cfd0dacd26fb9d185882853d79a0cdc1`, dois spawns e zero delegated. Nas seleções sem browser, os controles foram **not applicable**, sem alegar prova Omni. Os runs Bun produziram zero artefatos; os logs permanecem hospedados e os fatos estruturados estão commitados.
+Omni em W4: **pass**, nonce `2518f58e18caab01f544b1da18395a25`, dois spawns e zero delegated. O PASS histórico de W2 e seu nonce permanecem no respectivo recibo. Nas seleções sem browser, os controles foram **not applicable**, sem alegar prova Omni. Os runs Bun produziram zero artefatos; os logs permanecem hospedados e os fatos estruturados estão commitados.
 
-## Typecheck e guards
+## Typecheck e guards anteriores; atualização pendente
 
 [checks-01/result.json](checks-01/result.json) registra o resultado completo. W da origem: `067b5cd37c09b2066dbd1a847942f8cac2ff8c40`, tree `bd1e44cbd05e3f55b716a77a8c5ab7d91a85c15c`. O check executou `bun typecheck` em modules/sucafina e apps/cli, e `bun run check:guards --base origin/dev`.
 
@@ -117,12 +127,12 @@ Typecheck/guards não foram executados no W composto: o workflow Operations corr
 | Entrega | Identidade |
 | --- | --- |
 | [bundle-product.patch](patches/bundle-product.patch) | SHA256 `7b28a6edce5627d7eb14b5865e414805e0cc96a5fc45b764c67165568af77bb8`; dois caminhos de produto. |
-| [bundle-tests.patch](patches/bundle-tests.patch) | SHA256 `38947723e50391ca8748d376ae827f482b9d4a49a3fb74393437cf597f55ab80`; oito caminhos próprios de testes/helpers. |
-| [manifest.json](patches/manifest.json) | Base402a091, target796f7d7, todos os preimages/postimages e integridade de10/10 hunks. |
+| [bundle-tests.patch](patches/bundle-tests.patch) | SHA256 `32c2af29218e696992d42a67884d4b8d7ac64f68a2868872fe26642644c816ca`; nove caminhos próprios de testes/helpers. |
+| [manifest.json](patches/manifest.json) | Base2c44f5d, targetba731ff, todos os preimages/postimages e integridade estática dos11/11 paths. |
 | [INTEGRATION.md](INTEGRATION.md) | Procedimento de consumo e fronteiras entre origem, bundle e candidato integrado. |
 
 A sessão23 deve reconciliar o head atual, conferir os preimages e consumir os deltas completos sobre o executor Finance retido, preservando seus demais avanços. Copiar `apply.ts` inteiro da origem perderia diferenças de composição. Se seu tree divergir, requalificar o delta e atribuir a evidência ao SHA efetivamente executado.
 
-Este commit terminal só acrescenta HANDOFF/checks e esclarece duas referências documentais: origem intermediária histórica e subtrees da base versus W3. Não altera produto, testes ou CI, e não recebe execução nova por inferência.
+A publicação documental de C9 registra o resultado real do W4, atualiza os patches consumíveis e conserva o primeiro fechamento no commit8b7497a. O check da origem após a mudança da fixture será registrado separadamente; nenhuma evidência da origem é transferida ao bundle.
 
-Permanecem fora deste fechamento: aceite global IOPS02/first-save/lost-register, AM04 integral, toda a navegação Workbench, execução IA/nativa e C/D/GLOBAL_RELEASE. A prova UI usa shell GET mínimo com renderer/script e POSTs reais; a reabertura reconstrói serviços/C08/SQLite no mesmo processo Bun. Não houve restart do Orchestra, merge/deploy/Azure/credenciais/mudanças de engines, mensagem a terceiros ou novo controlador. Todos os runs desta missão terminaram.
+Permanecem fora deste fechamento: aceite global IOPS02/first-save/lost-register, AM04 integral, toda a navegação Workbench, execução IA/nativa e C/D/GLOBAL_RELEASE. A prova UI usa shell GET mínimo com renderer/script e POSTs reais; a reabertura reconstrói serviços/C08/SQLite no mesmo processo Bun. Não houve restart do Orchestra, merge/deploy/Azure/credenciais/mudanças de engines, mensagem a terceiros ou novo controlador. Todos os runs funcionais desta missão terminaram; o novo check da origem ainda será registrado antes do fechamento terminal.

@@ -122,3 +122,14 @@ W0 é uma reprodução vermelha de três casos, não prova completa da recupera�
 O Apply da origem intermediária histórica `363640a1844c09050a3bee76b4f01396f010314f` e o Apply do bundle têm blobs distintos porque a composição retém o executor Finance integrado. Um resultado da origem não demonstra a reconciliação fresca do bundle. O handoff deve preservar essa distinção, os resultados anteriores, os patches completos e os W/S efetivamente executados.
 
 Esta missão não concede aceite global AM04, prova nativa integral, aceite de outra sessão, merge ou deploy. Os IDs sintéticos do harness identificam os principais de teste e não são apresentados como contas empresariais reais. O objetivo desta nota é tornar revisável por que cada expectativa mudou e quais contraprovas continuam impedindo sucesso indevido.
+
+
+## Harness da composição C9: identidade do callback, sem novo oráculo
+
+A publicação material `sf2-stack@2c44f5d63b6f1a09bd81610be6fe3a1087f6daa0` acrescenta um seletor C08 reconhecido pela identidade do callback de leitura. A fixture C12 anterior envolvia todas as leituras, mesmo sem hook armado; isso forçava o fallback opaco do provider real. O delta autorizado em `test/product/c12-receipt-recovery/fixture.ts` passa `request`, `namespace` e o callback original diretamente para `readState` quando `beforeRetentionReadReturn` está ausente. O wrapper é conservado enquanto o probe explícito de revogação está armado.
+
+Preimage: `cfab781aee9064d94c98ab784d1bafdfd985ae92`. Postimage: `33650407123163ea881eca9d4940fde364b27c54`, tanto na origem `a20f8701f8e8d8a5e75a1dc66e47de1ef8a2dfe1` quanto no candidato composto W4 `ba731ff646d8ed7a1c7fb15bf82f4e8c5a2ef81a`.
+
+Não muda resultado esperado, assertion, dado, consumidor ou autorização. O callback continua executado uma vez; o hook é consumido antes de sua ação síncrona, depois da observação real e antes da autorização final de C08. As leituras sem hook preservam o seletor publicado. Enquanto o hook está armado, o probe continua usando o caminho opaco canônico; seu resultado não concede aceite de desempenho ao seletor C9.
+
+A repetição cirúrgica de 22 cenários C12/OPS em `validation-04` decorre da mudança material da closure e desse encaminhamento. O caso WP04 de inputs preparados conserva sua closure direta e reutiliza a evidência anterior. Nenhum teste de Routines ou aceite geral de C08 é inferido.

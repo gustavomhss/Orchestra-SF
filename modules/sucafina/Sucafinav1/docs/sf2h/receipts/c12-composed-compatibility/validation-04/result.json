@@ -1,0 +1,373 @@
+{
+  "schema": "sf-c12-composed-validation-v1",
+  "mission": 32,
+  "label": "validation-04",
+  "bundleBase": "2c44f5d63b6f1a09bd81610be6fe3a1087f6daa0",
+  "W": "ba731ff646d8ed7a1c7fb15bf82f4e8c5a2ef81a",
+  "W_tree": "c46c6dbb4d0e1bdc84da7ab21812f16e4bcc9b04",
+  "S": "114b1c3ff83a038b515f4afcf5db0fc795d59b6d",
+  "S_tree": "3978a370af7a9da7ffee4db1eaf8ba137162df60",
+  "request": {
+    "package": "sucafina",
+    "packageSelector": "packages/sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/c12-receipt-recovery/normal-retry.test.ts",
+      "./Sucafinav1/test/product/c12-receipt-recovery/recovery-http.test.ts",
+      "./Sucafinav1/test/product/c12-receipt-recovery/recovery-ui.test.ts",
+      "./Sucafinav1/test/product/c12-composed-compatibility/material-race.test.ts",
+      "./Sucafinav1/test/product/c12-composed-compatibility/admission-race.test.ts",
+      "./Sucafinav1/test/product/c12-composed-compatibility/fresh-reconciliation.test.ts",
+      "./Sucafinav1/test/product/c12-composed-compatibility/duplicate-choice.test.ts",
+      "./Sucafinav1/test/product/review-fixes/procurement-apply/real-apply.test.ts",
+      "./Sucafinav1/test/product/review-fixes/procurement-apply/refusals.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "run": 43646007759,
+  "job": 132603819490,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43646007759",
+  "attempt": 1,
+  "conclusion": "success",
+  "summary": {
+    "pass": 22,
+    "fail": 0,
+    "expectCalls": 570,
+    "tests": 22,
+    "files": 9,
+    "seconds": 402.01
+  },
+  "passedTests": [
+    {
+      "test": "C12 normal Apply rejects the historical case version after an interrupted domain response",
+      "milliseconds": 15160.59
+    },
+    {
+      "test": "C12 receipt recovery refuses a second case edit during reconciliation and preserves both commits",
+      "milliseconds": 19478.96
+    },
+    {
+      "test": "C12 recovery with no original receipt is read-only even after a valid review",
+      "milliseconds": 14213.08
+    },
+    {
+      "test": "C12 a committed intent without its domain receipt cannot authorize redispatch",
+      "milliseconds": 13799.73
+    },
+    {
+      "test": "C12 recovery rejects altered digest payload principal case and target identity while preserving the real receipt",
+      "milliseconds": 45650.3
+    },
+    {
+      "test": "C12 recovery rechecks revocation after its receipt read and rejects a replaced physical target",
+      "milliseconds": 32597.63
+    },
+    {
+      "test": "C12 Procurement recovery preserves partial execution and cannot dispatch another domain",
+      "milliseconds": 27767.22
+    },
+    {
+      "test": "C12 UI recovers the original receipt after lost response concurrent edit reload and a new SQLite composition",
+      "milliseconds": 45737.04
+    },
+    {
+      "test": "C12 UI recovers a successful committed Apply whose 200 response was lost",
+      "milliseconds": 24141.35
+    },
+    {
+      "test": "C12 composed reconciliation refuses a material choice replacement after the domain committed",
+      "milliseconds": 14661.02
+    },
+    {
+      "test": "C12 recovery refuses a material choice edit after canonical admission but before executor capture",
+      "milliseconds": 21493.1
+    },
+    {
+      "test": "C12 composed Apply reconciles an unrelated case edit with one original effect and receipt",
+      "milliseconds": 21825.9
+    },
+    {
+      "test": "C12 composed first dispatch requires human review and the current case version",
+      "milliseconds": 10033.25
+    },
+    {
+      "test": "C12 recovery refuses a duplicate choice identity before admission without linking or redispatching",
+      "milliseconds": 16339.52
+    },
+    {
+      "test": "C12 recovery refuses a duplicate prepared-change identity before admission without linking or redispatching",
+      "milliseconds": 15625.7
+    },
+    {
+      "test": "OPS-REV-02 real HTTP draft reviews and applies exactly 100 to 150 once",
+      "milliseconds": 18800.43
+    },
+    {
+      "test": "OPS-REV-02 real HTTP pr_rejected reviews and applies exactly 100 to 150 once",
+      "milliseconds": 18645.05
+    },
+    {
+      "test": "OPS-REV-02 real Apply refuses a changed source and preserves its newer CAS",
+      "milliseconds": 13541.47
+    },
+    {
+      "test": "OPS-REV-02 canonical po_draft refuses ignored PR preparation, review and HTTP Apply",
+      "milliseconds": 2960.61
+    },
+    {
+      "test": "OPS-REV-02 an equal amount is explicitly non-applicable without Saved, CAS or applied receipt",
+      "milliseconds": 2876.33
+    },
+    {
+      "test": "OPS-REV-02 review rejects an amount preview that differs from the prepared intent",
+      "milliseconds": 5572.36
+    },
+    {
+      "test": "OPS-REV-02 a mixed intent keeps equal fields and applies the exact changed field",
+      "milliseconds": 364.56
+    }
+  ],
+  "observedEvents": [
+    {
+      "marker": "SF_C12_RECOVERY_CONCURRENT_EDIT",
+      "data": {
+        "refusedStatus": 503,
+        "recoveredStatus": 200,
+        "editsPreserved": true,
+        "originalReceipt": "c86094d8-3f32-49ed-9427-4b6b4b639b92",
+        "duplicateEffects": 0
+      }
+    },
+    {
+      "marker": "SF_C12_MISSING_RECEIPT",
+      "data": {
+        "missingRecovery": "unavailable",
+        "durableMutations": 0,
+        "normalApplyAfterwards": 200
+      }
+    },
+    {
+      "marker": "SF_C12_INTENT_WITHOUT_RECEIPT",
+      "data": {
+        "realIntentCommits": 1,
+        "receiptCount": 0,
+        "recovery": 503,
+        "ordinaryRetry": 503,
+        "domainEffects": 0
+      }
+    },
+    {
+      "marker": "SF_C12_RECOVERY_IDENTITY",
+      "data": {
+        "wrongDigest": 409,
+        "otherPrincipal": 403,
+        "alteredPreparedInputs": [
+          "command payload",
+          "command digest",
+          "target",
+          "incarnation",
+          "intention key"
+        ],
+        "restoredOriginal": 200,
+        "receiptId": "36c46caf-457e-4f42-81ad-991afd59cb04"
+      }
+    },
+    {
+      "marker": "SF_C12_REVOKED_OR_REPLACED",
+      "data": {
+        "revocationAfterReceiptRead": true,
+        "revokedStatus": 403,
+        "lastStateReadRevocation": 403,
+        "retentionResult": {
+          "status": "unavailable",
+          "reason": "receipt-authority-changed"
+        },
+        "egressReason": "case-selection-authority-changed",
+        "finalReadInterleavings": 1,
+        "reauthorizedStatus": 200,
+        "replacementStatus": 403,
+        "duplicateEffects": 0
+      }
+    },
+    {
+      "marker": "SF_C12_PARTIAL_DOMAIN",
+      "data": {
+        "otherDomain": "planner",
+        "otherDomainState": "planned",
+        "foreignRecovery": 409,
+        "originalRecovery": 200,
+        "originalReceipt": "2c1b5a5e-4eab-4cc9-a123-8ac62ed30405",
+        "otherDomainReceiptFabricated": false
+      }
+    },
+    {
+      "marker": "SF_C12_RECOVERY_POSITIVE",
+      "data": {
+        "receiptId": "f1289bf2-4d96-48a3-b14d-b35349275898",
+        "firstInternalStatus": 503,
+        "lostResponse": true,
+        "retryStatus": 409,
+        "recoveryStatus": 200,
+        "repeatedStatus": 200,
+        "sameReceipt": true,
+        "financialEffects": 1,
+        "originalCaseVersion": 3,
+        "concurrentCaseVersion": 4,
+        "reconciledCaseVersion": 5,
+        "newBrowserContext": true,
+        "emptyBrowserStorage": true,
+        "newAdmission": true,
+        "servicesReconstructed": true,
+        "sqliteReopened": true,
+        "processRestarted": false
+      }
+    },
+    {
+      "marker": "SF_C12_COMMITTED_200_LOSS",
+      "data": {
+        "internalStatus": 200,
+        "lostResponse": true,
+        "recoveryStatus": 200,
+        "receiptId": "f75b5328-d5bd-4d1d-b510-17c2123c9632",
+        "financialEffects": 1
+      }
+    },
+    {
+      "marker": "SF_C12_MATERIAL_INTERLEAVING_OBSERVED",
+      "data": {
+        "status": 409,
+        "result": {
+          "status": "stale",
+          "reason": "prepared-choice-changed"
+        },
+        "effects": 1,
+        "authoritativeReceipts": 1,
+        "linkedReceipts": 0,
+        "initialCaseVersion": 3,
+        "observedCaseVersion": 4,
+        "materialChoicePreserved": true
+      }
+    },
+    {
+      "marker": "SF_C12_ADMISSION_INTERLEAVING_OBSERVED",
+      "data": {
+        "status": 403,
+        "result": {
+          "status": "denied",
+          "reason": "case-access-unavailable"
+        },
+        "receiptReads": 1,
+        "interleavings": 1,
+        "effects": 1,
+        "receipts": 1,
+        "beforeCaseVersion": 4,
+        "afterCaseVersion": 5,
+        "choicePreserved": true
+      }
+    },
+    {
+      "marker": "SF_C12_FRESH_RECONCILIATION",
+      "data": {
+        "firstStatus": 200,
+        "retryStatus": 200,
+        "recoveryStatus": 200,
+        "originalCaseVersion": 3,
+        "reconciledCaseVersion": 5,
+        "receiptId": "73e6cfc9-ef08-4e35-980a-73cbad3caf74",
+        "domainVersion": 1,
+        "effectCount": 1,
+        "choicePreserved": true,
+        "concurrentEditPreserved": true,
+        "replayDurableMutations": 0
+      }
+    },
+    {
+      "marker": "SF_C12_FIRST_DISPATCH_FENCES",
+      "data": {
+        "unreviewedStatus": 403,
+        "staleApplyStatus": 409,
+        "missingRecoveryStatus": 503,
+        "effects": 0,
+        "receipts": 0,
+        "caseVersion": 4,
+        "concurrentEditPreserved": true
+      }
+    },
+    {
+      "marker": "SF_C12_DUPLICATE_IDENTITY_OBSERVED",
+      "data": {
+        "kind": "choice",
+        "status": 409,
+        "result": {
+          "status": "stale",
+          "reason": "prepared-case-changed"
+        },
+        "effects": 1,
+        "receipts": 1,
+        "linkedReceipts": 0,
+        "initialCaseVersion": 5,
+        "observedCaseVersion": 5,
+        "choiceCount": 2,
+        "preparedChangeCount": 1
+      }
+    },
+    {
+      "marker": "SF_C12_DUPLICATE_IDENTITY_OBSERVED",
+      "data": {
+        "kind": "prepared-change",
+        "status": 409,
+        "result": {
+          "status": "stale",
+          "reason": "prepared-case-changed"
+        },
+        "effects": 1,
+        "receipts": 1,
+        "linkedReceipts": 0,
+        "initialCaseVersion": 5,
+        "observedCaseVersion": 5,
+        "choiceCount": 1,
+        "preparedChangeCount": 2
+      }
+    }
+  ],
+  "artifacts": [],
+  "basis": {
+    "materialBaseAdvance": "402a091485e11d60dff433049c7dedd7fcead687 -> 2c44f5d63b6f1a09bd81610be6fe3a1087f6daa0",
+    "selectedC12": 15,
+    "selectedOPS_REV_02": 7,
+    "productPostimagesUnchangedFromW3": true,
+    "ownFixtureChanged": true,
+    "fixturePostimage": "33650407123163ea881eca9d4940fde364b27c54",
+    "selectorIdentityPreservedWhenHookAbsent": true,
+    "retentionProbeUsesCanonicalFallbackWhenArmed": true,
+    "sourceRuntimeProofTransferred": false
+  },
+  "reuse": {
+    "WP04PreparedAlias": {
+      "run": 43643559235,
+      "test": "the prepared command retains its reviewed inputs when caller-owned outputs are mutated",
+      "testBlob": "df59fbe6a75525e57a7013a09a1a56712214868e",
+      "directClosureUnchanged": true,
+      "selectedInW4": false
+    },
+    "oneGreenRunOf23Claimed": false
+  },
+  "limits": {
+    "C08PerformanceAcceptance": false,
+    "RoutinesAcceptance": false,
+    "sourceTypecheckProofTransferred": false,
+    "integrationBySession23Pending": true,
+    "globalAcceptance": false
+  },
+  "globalAcceptance": false,
+  "omni": {
+    "nonce": "2518f58e18caab01f544b1da18395a25",
+    "verdict": "pass",
+    "declaringTests": 2,
+    "spawns": 2,
+    "delegated": 0
+  }
+}

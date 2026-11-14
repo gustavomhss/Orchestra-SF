@@ -10,56 +10,50 @@
     "branch": "procurement-apply",
     "pr": 60,
     "observedHead": "c8a03c4f689025ca70a1c815fd292af22b6261cd",
-    "implementationHead": "6f61cc332b4ebfa4a45313cd69da9dd99d4ab4fe",
-    "implementationTree": "224b644f72a9f7ec2a3202feb76931403ff34a84",
+    "implementationHead": "a20f8701f8e8d8a5e75a1dc66e47de1ef8a2dfe1",
+    "implementationTree": "b0b38c1d96bd8a64afc972c0ff3632d6bab7edaf",
     "applyPreimage": "2776a112cd24c1cb3bd4fe2791f7b232fb68286d",
     "applyPostimage": "605ad1fbd9167b8234aa614a01638724e87f36f5",
     "runtimeClaim": "No source runtime PASS transferred to the composition; fresh-reconciliation.test.ts explicitly requires the composed executor."
   },
   "composition": {
     "initiallyObserved": "253baad3f2ff4af5beac695feae4c2f6372dc2e7",
-    "fixedBase": "402a091485e11d60dff433049c7dedd7fcead687",
-    "baseTree": "006339cc3a61de9bf99d2ba17069181bd5d8a02e",
-    "observedReconciliation": "402a091 is a direct documentary child of 253baad3; retain the published Finance executor and all runtime dependencies.",
-    "productTree": "7fbf29cfcf13f0e88977bc3c1b04e6e053e7b53a",
-    "testTree": "ce7f2507957738c51134538f13911bad7995b67e",
+    "fixedBase": "2c44f5d63b6f1a09bd81610be6fe3a1087f6daa0",
+    "baseTree": "2dba7fd244afcd39b837b1e61406de1e43450bb5",
+    "observedReconciliation": "A final bounded read found material C9 publication 2c44f5d (12 commits after 402a091). Requalify C12/OPS once against this pinned published closure; retain all C08/case-port/host changes. No moving-head acceptance is implied.",
+    "productTree": "9a1cc43bf51e6115d2edf2d7a87ca6e33567f9cb",
+    "testTree": "8a1a822601ef3d44b94df0a2d94c24af071eeff8",
     "runtimeTree": "46c24e8b1e54af03501b1b401a251285fa008d82",
-    "W": "796f7d75310eba98a847a5ad9a5d4a5cec7e3de7",
-    "tree": "62e159dbeab941069f702bfb7718ec5faa7e8dce",
-    "S": "0a316164ce059b113e966810dc0c09cf47e0f76b",
-    "snapshotTree": "c88f2b073c21fb10bbb5d1b6e2f806237f7447b3",
+    "W": "ba731ff646d8ed7a1c7fb15bf82f4e8c5a2ef81a",
+    "tree": "c46c6dbb4d0e1bdc84da7ab21812f16e4bcc9b04",
+    "S": "114b1c3ff83a038b515f4afcf5db0fc795d59b6d",
+    "snapshotTree": "3978a370af7a9da7ffee4db1eaf8ba137162df60",
     "derivation": [
       {
-        "W": "7fd76f647a57e9b9bc1415a4d516791e13b719b4",
-        "tree": "cc0f152ea021431b5f27562a01f5311876d31ec6",
-        "parent": "402a091485e11d60dff433049c7dedd7fcead687",
-        "purpose": "real executor untouched; add material-race discriminator"
-      },
-      {
-        "W": "05b9486f7c96f3aa793f030d5157c17b7b340ac1",
-        "tree": "a904a47aa25c0094b2e8fba035e2064f13fc2ebf",
-        "parent": "7fd76f647a57e9b9bc1415a4d516791e13b719b4",
-        "purpose": "two product fences and scoped C12 test changes; contains helper syntax error"
-      },
-      {
-        "W": "9cf37f42eefb080940c7c71e4c2b1c5539459295",
-        "tree": "28877563a208d3db3e0f96c761ce357fcc2703b0",
-        "parent": "05b9486f7c96f3aa793f030d5157c17b7b340ac1",
-        "purpose": "correct helper and refuse duplicate choice/change IDs; add two negative cases"
-      },
-      {
-        "W": "796f7d75310eba98a847a5ad9a5d4a5cec7e3de7",
-        "tree": "62e159dbeab941069f702bfb7718ec5faa7e8dce",
-        "parent": "9cf37f42eefb080940c7c71e4c2b1c5539459295",
-        "purpose": "Only the failed revocation test changes: observe real internal result and require exact composed egress refusal; all product blobs unchanged."
+        "W": "ba731ff646d8ed7a1c7fb15bf82f4e8c5a2ef81a",
+        "tree": "c46c6dbb4d0e1bdc84da7ab21812f16e4bcc9b04",
+        "parent": "2c44f5d63b6f1a09bd81610be6fe3a1087f6daa0",
+        "purpose": "Same two C12 product deltas on the real published C9 base, eight existing mission32 test deltas, plus own fixture preserving selector callback identity unless the explicit retention fault is armed."
       }
     ],
-    "completeTrackedClosure": "The root Git tree of W fixes every tracked dependency. Relative to fixedBase the only runtime/test differences are the ten exact paths below; no old source executor, Finance producer, C08/state-provider/case-port, shared host, engine or dependency manifest is substituted.",
+    "completeTrackedClosure": "The root Git tree of W fixes every tracked dependency. Relative to fixedBase the only runtime/test differences are the eleven exact paths below; no Finance producer, state-provider, case-port, shared host, engine or dependency manifest is changed.",
     "integrationOwner": "session23",
     "sf2StackMoved": false,
-    "baseProductTree": "cd538127fa359cac8bfd3523bc6c5938084aa76c",
-    "baseTestTree": "bf50d3ce834ab7e832c9931690bf1c0ad36c8aed",
-    "baseRuntimeTree": "46c24e8b1e54af03501b1b401a251285fa008d82"
+    "baseProductTree": "816e37f689245c436645864db79576de36d9e3c4",
+    "baseTestTree": "846d059fe3877271abe345b4b4e36bfedc16a9b9",
+    "baseRuntimeTree": "46c24e8b1e54af03501b1b401a251285fa008d82",
+    "priorQualification": {
+      "sourceCommit": "8b7497a271c5afbd8604927f75b2a86a4f960bae",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-composed-compatibility/closure.json",
+      "base": "402a091485e11d60dff433049c7dedd7fcead687",
+      "W": "796f7d75310eba98a847a5ad9a5d4a5cec7e3de7",
+      "tree": "62e159dbeab941069f702bfb7718ec5faa7e8dce",
+      "validationReceipts": [
+        "validation-02/result.json",
+        "validation-03/result.json"
+      ],
+      "preserved": true
+    }
   },
   "changedPaths": [
     {
@@ -105,6 +99,12 @@
       "status": "modified"
     },
     {
+      "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/fixture.ts",
+      "preimage": "cfab781aee9064d94c98ab784d1bafdfd985ae92",
+      "postimage": "33650407123163ea881eca9d4940fde364b27c54",
+      "status": "modified"
+    },
+    {
       "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/normal-retry.test.ts",
       "preimage": "f1b39878522b5c154b6e250bb2fd1c93e2428025",
       "postimage": "4528a2c390110b3bf010cc77884e204139b50c09",
@@ -141,7 +141,7 @@
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
-      "blob": "d43849ba101000eb9eb2a6ddc9a04830b004ccc6",
+      "blob": "2bbcf63bb0fa56dd3a93190f7711f99aef2efb74",
       "mode": "100644"
     },
     {
@@ -201,7 +201,7 @@
     },
     {
       "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
-      "blob": "2fd55c7304add0829d7434917c80664fe86356b9",
+      "blob": "71ce2ba1b04d3c7f63f7c444ca23dd084a8e2b0c",
       "mode": "100644"
     },
     {
@@ -246,12 +246,12 @@
     },
     {
       "path": "apps/cli/src/sucafina-product/business-services.ts",
-      "blob": "385dd1998ec3fb73b32f77ab3dec9c93beb440d1",
+      "blob": "ce3a281bf07819f90af7fad10f98861980f3273b",
       "mode": "100644"
     },
     {
       "path": "apps/cli/src/sucafina-product/host-context.ts",
-      "blob": "bdf6d4e2014cc9b2a492b6ae304948c249221e39",
+      "blob": "2bf1e6e66c13dd099029ec16b1f1ddf1f698dae6",
       "mode": "100644"
     },
     {
@@ -426,5 +426,62 @@
     "patchBlob": "2ab9a6b6f18709d5bad95f58247c70ba286a00aa",
     "reapplyToBundle": false
   },
-  "globalAcceptance": false
+  "globalAcceptance": false,
+  "materialBaseAdvance": {
+    "from": "402a091485e11d60dff433049c7dedd7fcead687",
+    "to": "2c44f5d63b6f1a09bd81610be6fe3a1087f6daa0",
+    "commits": 12,
+    "changedFiles": 268,
+    "compareTruncated": null,
+    "changedCriticalDependencies": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+        "preimage": "d43849ba101000eb9eb2a6ddc9a04830b004ccc6",
+        "postimage": "2bbcf63bb0fa56dd3a93190f7711f99aef2efb74"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+        "preimage": "2fd55c7304add0829d7434917c80664fe86356b9",
+        "postimage": "71ce2ba1b04d3c7f63f7c444ca23dd084a8e2b0c"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/business-services.ts",
+        "preimage": "385dd1998ec3fb73b32f77ab3dec9c93beb440d1",
+        "postimage": "ce3a281bf07819f90af7fad10f98861980f3273b"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "preimage": "bdf6d4e2014cc9b2a492b6ae304948c249221e39",
+        "postimage": "2bf1e6e66c13dd099029ec16b1f1ddf1f698dae6"
+      }
+    ],
+    "review": "Static owner-boundary review found no C12 contractual oracle change required. Runtime compatibility was qualified by validation-04 on W4 (22 passes, 0 failures), not transferred from the previous base."
+  },
+  "harness": {
+    "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/fixture.ts",
+    "preimage": "cfab781aee9064d94c98ab784d1bafdfd985ae92",
+    "postimage": "33650407123163ea881eca9d4940fde364b27c54",
+    "change": "Pass through the exact state.read callback when beforeRetentionReadReturn is not armed. Preserve the original wrapper only for the explicit final-retention revocation probe.",
+    "oracleChanged": false,
+    "providerModified": false,
+    "performanceAcceptance": false
+  },
+  "reusedWP04Evidence": {
+    "run": 43643559235,
+    "testPath": "modules/sucafina/Sucafinav1/test/product/wp04/finance-prepared-alias.test.ts",
+    "blob": "df59fbe6a75525e57a7013a09a1a56712214868e",
+    "reason": "The alias test and its direct prepared-command dependency closure are unchanged by the C9 publication and by W4; no C08 selector or Routines claim derives from this test.",
+    "selectedAgain": false
+  },
+  "qualification": {
+    "run": 43646007759,
+    "job": 132603819490,
+    "conclusion": "success",
+    "passed": 22,
+    "failed": 0,
+    "assertions": 570,
+    "selectedC12": 15,
+    "selectedOPS": 7,
+    "globalAcceptance": false
+  }
 }

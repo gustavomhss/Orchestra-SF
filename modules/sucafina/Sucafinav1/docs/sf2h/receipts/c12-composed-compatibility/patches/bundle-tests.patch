@@ -426,6 +426,49 @@ index 80e4b8f5eba72f95ba94f906c982e4d4ad902907..fc9b0e4d52fca55921aa619687f41b89
  }
  
 +
+diff --git a/modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/fixture.ts b/modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/fixture.ts
+index cfab781aee9064d94c98ab784d1bafdfd985ae92..33650407123163ea881eca9d4940fde364b27c54 100644
+--- a/modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/fixture.ts
++++ b/modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/fixture.ts
+@@ -134,17 +134,22 @@ export async function createC12Fixture(scenario: string, origin: string, retaine
+     authorizePreparedTarget: (value, snapshot, targetRef, current) => mounted.business?.procurementDecisions.authorizeReceiptTarget(value, snapshot, targetRef, current) ?? Promise.resolve(undefined),
+   })
+   const readState = authority.state.read
+-  authority.state.read = (request, namespace, read) => readState(request, namespace, async (state, current) => {
+-    const result = await read(state, current)
+-    // The executor's final retention read has a boolean result and sees the
+-    // actual linked receipt. Revoke before C08 performs its final reauthorization.
+-    if (namespace === "cases" && result === true && Object.values(state.cases).some((item) => item.receipts.length && item.preparedChanges.some((change) => change.receipt))) {
+-      const work = scheduling.beforeRetentionReadReturn
+-      scheduling.beforeRetentionReadReturn = undefined
+-      if (work) { receiptReads.finalReadInterleavings++; work() }
+-    }
+-    return result
+-  })
++  authority.state.read = (request, namespace, read) => {
++    // Keep the published provider's selector identity when no retention fault
++    // is scheduled. Only the explicit revocation probe needs this callback hook.
++    if (!scheduling.beforeRetentionReadReturn) return readState(request, namespace, read)
++    return readState(request, namespace, async (state, current) => {
++      const result = await read(state, current)
++      // The executor's final retention read has a boolean result and sees the
++      // actual linked receipt. Revoke before C08 performs its final reauthorization.
++      if (namespace === "cases" && result === true && Object.values(state.cases).some((item) => item.receipts.length && item.preparedChanges.some((change) => change.receipt))) {
++        const work = scheduling.beforeRetentionReadReturn
++        scheduling.beforeRetentionReadReturn = undefined
++        if (work) { receiptReads.finalReadInterleavings++; work() }
++      }
++      return result
++    })
++  }
+   const services = createSfBusinessServices({ authority, persistence, proposalCoverageWrites, procurementEvidenceWrites })
+   const business = services
+   mounted.business = business
+@@ -263,3 +268,4 @@ export function changedReviewDigest(digest: string) {
+ }
+ 
+ 
++
 diff --git a/modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/normal-retry.test.ts b/modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/normal-retry.test.ts
 index f1b39878522b5c154b6e250bb2fd1c93e2428025..4528a2c390110b3bf010cc77884e204139b50c09 100644
 --- a/modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/normal-retry.test.ts
