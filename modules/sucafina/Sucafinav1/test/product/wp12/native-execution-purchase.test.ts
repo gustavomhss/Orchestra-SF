@@ -5,6 +5,7 @@ import { decodeSfSkillInput } from "../../../product/contracts/schema-admission.
 import { readCaseAnalysisProjection } from "../../../product/interface/case-analysis-input.ts"
 import { object } from "../../../runtime/contract.ts"
 import { chooseWp12Alternative } from "./native-choice-preparation.ts"
+import type { Wp12ChoiceAction } from "./native-choice-preparation.ts"
 import { executeWp12NativeMission, observeWp12UnavailableMission, readWp12NativeMissionAfterReload, withWp12NativeMissionHost } from "./native-mission-harness.ts"
 import type { Wp12NativeMissionContext } from "./native-mission-harness.ts"
 import { initializeWp12ProcurementSources, prepareWp12ProcurementCase, selectWp12ProcurementPeriod, WP12_PROCUREMENT_REQUEST_ID } from "./native-procurement-preparation.ts"
@@ -16,12 +17,12 @@ for (const variant of ["pending", "complete"] as const) test(`native purchase ob
     humanActions: [...WP12_SCENARIO_HUMAN_ACTIONS, "decisions.portfolio.read", "decisions.criteria", "decisions.choose"],
     initialize: initializeWp12ProcurementSources }, async ({ open }) => {
     const completed = await open("initial", async (context) => {
+      const preparationStartedAt = Date.now()
+      console.log("SF_WP12_PURCHASE_PHASE:" + JSON.stringify({ variant, phase: "prepare-case", state: "begin", githubSha: process.env.GITHUB_SHA ?? null }))
       const prepared = await prepareWp12ProcurementCase(context, { selected: variant })
-      const chosen = await chooseWp12Alternative(context, { caseRef: prepared.caseRef,
-        baselineResultRef: prepared.baseline.resultRef, alternativeResultRef: prepared.candidate.resultRef,
-        alternativeId: prepared.candidate.alternative.id, alternativeVersion: prepared.candidate.alternative.version,
-        parameterRef: prepared.parameterRef, criterionId: prepared.criterionId, threshold: 20_000,
-        reason: "Explicit human choice for an isolated purchase preparation; unresolved coverage remains part of its basis." })
+      console.log("SF_WP12_PURCHASE_PHASE:" + JSON.stringify({ variant, phase: "prepare-case", state: "complete",
+        durationMs: Date.now() - preparationStartedAt, githubSha: process.env.GITHUB_SHA ?? null }))
+      const chosen = await choosePurchaseAlternative(context, prepared, variant)
       expect(chosen.choice.comparisonStatus).toBe("conditioned")
       expect(chosen.choice.result.total).toBeNull()
       expect(chosen.choice.result.knownSubtotal).toBe(variant === "pending" ? 210_000 : 250_000)
@@ -133,6 +134,64 @@ for (const variant of ["pending", "complete"] as const) test(`native purchase ob
     })
   })
 }, 360_000)
+
+/** Each human action obtains its own current public selection. This does not
+ * extend the host lease, retry a refused action or renew while an action runs. */
+async function choosePurchaseAlternative(context: Wp12NativeMissionContext,
+  prepared: Awaited<ReturnType<typeof prepareWp12ProcurementCase>>, variant: "pending" | "complete") {
+  const startedAt = Date.now()
+  let phase: Wp12ChoiceAction | "before-choice" = "before-choice"
+  let phaseStartedAt = startedAt
+  let selectionStartedAt: number | undefined
+  let selectionReturnedAt: number | undefined
+  const trace = (state: string, details: Record<string, unknown> = {}) => {
+    const now = Date.now()
+    console.log("SF_WP12_PURCHASE_CHOICE_PHASE:" + JSON.stringify({ githubSha: process.env.GITHUB_SHA ?? null, variant,
+      phase, state, elapsedMs: now - startedAt, phaseElapsedMs: now - phaseStartedAt,
+      selectionAgeSinceCallStartMs: selectionStartedAt === undefined ? null : now - selectionStartedAt,
+      selectionAgeSinceReturnMs: selectionReturnedAt === undefined ? null : now - selectionReturnedAt,
+      ...details }))
+  }
+  const beforeAction = async (action: Wp12ChoiceAction) => {
+    if (selectionReturnedAt !== undefined) trace("complete")
+    phase = action
+    phaseStartedAt = Date.now()
+    selectionStartedAt = phaseStartedAt
+    selectionReturnedAt = undefined
+    trace("public-selection-begin")
+    await selectWp12ProcurementPeriod(context)
+    selectionReturnedAt = Date.now()
+    trace("begin")
+  }
+  try {
+    const chosen = await chooseWp12Alternative(context, { caseRef: prepared.caseRef,
+      baselineResultRef: prepared.baseline.resultRef, alternativeResultRef: prepared.candidate.resultRef,
+      alternativeId: prepared.candidate.alternative.id, alternativeVersion: prepared.candidate.alternative.version,
+      parameterRef: prepared.parameterRef, criterionId: prepared.criterionId, threshold: 20_000,
+      reason: "Explicit human choice for an isolated purchase preparation; unresolved coverage remains part of its basis." }, { beforeAction })
+    trace("complete")
+    return chosen
+  } catch (error) {
+    trace("failed", { originalError: error instanceof Error ? error.message : String(error) })
+    // Observe the existing selection without renewing it. These are actual
+    // companion-business readers, not the installed host's private period map.
+    const [requestProbe, contextProbe] = await Promise.allSettled([
+      context.ui("sf_request_read", { requestRef: prepared.requestEvidence.refId }, (call) =>
+        context.business.individual.resolve(prepared.requestEvidence.refId, call)),
+      context.ui("sf_context_get", { evidenceRefs: [prepared.requestEvidence] }, (call) =>
+        context.business.context.context({ refs: [prepared.requestEvidence] }, call)),
+    ])
+    trace("failure-source-probe", { scope: "real-companion-business-without-selection-renewal", selectionRenewed: false,
+      requestProbe: requestProbe.status === "fulfilled"
+        ? { status: requestProbe.value.status, reason: "reason" in requestProbe.value ? requestProbe.value.reason : null }
+        : { status: "threw", reason: String(requestProbe.reason) },
+      contextProbe: contextProbe.status === "fulfilled"
+        ? contextProbe.value.map((resolution) => ({ state: resolution.state, refId: resolution.ref.refId,
+          currentRefMatches: !!resolution.currentRef && digestSfValue(resolution.currentRef) === digestSfValue(prepared.requestEvidence) }))
+        : { status: "threw", reason: String(contextProbe.reason) } })
+    throw error
+  }
+}
 
 async function procurementDigest(context: Wp12NativeMissionContext) {
   return context.persistence.transaction("procurement", async (snapshot) => ({ commit: false, value: digestSfValue(snapshot.data.store) }))

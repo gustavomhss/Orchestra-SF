@@ -5,7 +5,7 @@ import { decodeSfOperationOutput, decodeSfSkillInput } from "../../../product/co
 import { encodeCaseRef } from "../../../product/decisions/case-port.ts"
 import { readCaseAnalysisProjection } from "../../../product/interface/case-analysis-input.ts"
 import { object } from "../../../runtime/contract.ts"
-import { executeWp12NativeMission, observeWp12UnavailableMission, readWp12NativeMissionAfterReload, withWp12NativeMissionHost } from "./native-mission-harness.ts"
+import { dispatchWp12Ui, executeWp12NativeMission, observeWp12UnavailableMission, readWp12NativeMissionAfterReload, withWp12NativeMissionHost } from "./native-mission-harness.ts"
 import type { Wp12CompletedNativeMission } from "./native-mission-harness.ts"
 import { initializeWp12ScenarioSources, prepareWp12ScenarioCase, WP12_SCENARIO_HUMAN_ACTIONS, WP12_SCENARIO_OPERATIONS, WP12_SCENARIO_PERIOD } from "./native-scenario-preparation.ts"
 
@@ -43,8 +43,7 @@ test("native Finance preserves pending versus covered scenario costs and a fresh
         expect(decoded.value.costCoverageBases).toEqual(decision.case.costCoverageBases)
         expect(decoded.value.alternatives.map((item) => item.result)).toEqual([decision.baseline.result, alternative.result])
         const comparisonRequest = { scenarioRefs: resultRefs, criteria: [] }
-        const compared = await context.ui("sf_scenario_compare", comparisonRequest,
-          (call) => context.services.dispatch("sf_scenario_compare", comparisonRequest, call))
+        const compared = await dispatchWp12Ui(context, "sf_scenario_compare", comparisonRequest)
         if (compared.status !== "ok") throw new Error(`The current deterministic scenario comparison was refused: ${compared.reason}`)
         const comparison = decodeSfOperationOutput("sf_scenario_compare", compared.result)
         if (!comparison.ok) throw new Error("The real scenario comparison failed its canonical output contract")

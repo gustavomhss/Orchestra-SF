@@ -5,6 +5,9 @@ import { readCaseAnalysisProjection } from "../../../product/interface/case-anal
 import { object } from "../../../runtime/contract.ts"
 import type { Wp12NativeMissionContext } from "./native-mission-harness.ts"
 
+type Wp12ChoicePost = "decision-sensitivity-units" | "decision-criteria" | "decision-choose"
+export type Wp12ChoiceAction = "read-current-case" | Wp12ChoicePost | "read-chosen-case"
+
 /** Human criteria use units issued from the actual persisted Planner results.
  * This helper never inserts a rule, metric or ChoiceRecord into C08 directly. */
 export async function chooseWp12Alternative(context: Wp12NativeMissionContext, input: {
@@ -17,14 +20,16 @@ export async function chooseWp12Alternative(context: Wp12NativeMissionContext, i
   criterionId: string
   threshold: number
   reason: string
-}) {
+}, options?: { beforeAction?: (action: Wp12ChoiceAction) => Promise<void> }) {
   const productHttp = context.services.productHttp
   if (!productHttp) throw new Error("Choice preparation requires the real product routes")
+  if (options?.beforeAction) await options.beforeAction("read-current-case")
   const current = await readCaseAnalysisProjection(context.request(), context.services, input.caseRef)
   if (current.status !== "ok") throw new Error(`Choice case read failed: ${current.reason}`)
   if (!current.value.case.criteria.some((criterion) => criterion.id === input.criterionId) || !Number.isFinite(input.threshold))
     throw new Error("The human criterion must belong to the current case")
-  const post = async (mode: string, payload: unknown) => {
+  const post = async (mode: Wp12ChoicePost, payload: unknown) => {
+    if (options?.beforeAction) await options.beforeAction(mode)
     const response = await productHttp(context.request(payload, `/sucafina/planner?sf=${mode}`), "planner")
     if (!response) throw new Error(`The real ${mode} route is missing`)
     const result = object(await response.json())
@@ -55,6 +60,7 @@ export async function chooseWp12Alternative(context: Wp12NativeMissionContext, i
   if (next.id !== input.caseRef.id || next.incarnation !== input.caseRef.incarnation || next.version !== input.caseRef.version + 1)
     throw new Error("The real choice did not advance the selected case exactly once")
   const caseRef = { ...input.caseRef, version: Number(next.version) }
+  if (options?.beforeAction) await options.beforeAction("read-chosen-case")
   const read = await readCaseAnalysisProjection(context.request(), context.services, caseRef)
   if (read.status !== "ok") throw new Error(`The real choice cannot be read: ${read.reason}`)
   const choices = read.value.case.choices.filter((choice) => choice.alternativeId === input.alternativeId &&

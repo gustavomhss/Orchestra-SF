@@ -1,0 +1,69 @@
+{
+  "schema": "sf-wp12-hosted-check-result-v1",
+  "phase": "resume-13",
+  "product": {
+    "sha": "e8ae326420eae2d51247fcab5730e82e5d3b8d39",
+    "tree": "4475ca36282141b4ec00212736fd9831cfc5f0e2"
+  },
+  "check": {
+    "snapshot": "804421e364d1392ead32c954f9d87adc38b9f027",
+    "tree": "d24914f6cf744136dddf26c8add62c313d968704",
+    "runId": 43601239454,
+    "jobId": 132466234270,
+    "conclusion": "success",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43601239454",
+    "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+    "typecheck": {
+      "command": "bun typecheck",
+      "cwd": "modules/sucafina",
+      "exitCode": 0,
+      "diagnostics": 0
+    },
+    "spawnImports": {
+      "conclusion": "success",
+      "checkedFiles": 4618,
+      "allowListedSites": 66
+    },
+    "guards": {
+      "conclusion": "success",
+      "rules": 78,
+      "changedPaths": 910,
+      "gate": 0,
+      "warn": 15,
+      "errors": 0
+    }
+  },
+  "log": {
+    "bytes": 65514,
+    "sha256": "88e0575a99934c970d9c3c940a260fc6fbef03fd14b8f7934c422e3564e9e4e7"
+  },
+  "artifact": {
+    "id": 14116930017,
+    "name": "astra-wp12-check-1",
+    "digest": "sha256:bc1fe965fe41396808f41745f24583a7e9b3d11a63774080b0bd75e0d98b5e29",
+    "bytes": 1421
+  },
+  "validatedOwnedDeltas": [
+    {
+      "path": "product/ai/analysis-port.ts",
+      "blob": "47e25de4ed1e743a2366c234a56baf2633c805bb"
+    },
+    {
+      "path": "test/product/wp12/run-store.test.ts",
+      "blob": "d12d8702f5914c94475b3ad1205718ecf1899fe9"
+    },
+    {
+      "path": "test/product/wp12/native-verifier-negatives.test.ts",
+      "blob": "7656809cc7e610d6427cb5df64355d29ecee30a6"
+    }
+  ],
+  "pendingProduct": {
+    "scope": "cancellation-verifier",
+    "requestSha256": "61988b5d8f0841c193c82abf8e8aee56fe7fd0616b668c1199f26e88434f9ba1",
+    "state": "PREPARED_NOT_DISPATCHED_AT_CUTOFF",
+    "reason": "One product flight at a time; ProcurementW16 still running."
+  },
+  "localProductTests": false,
+  "localTypecheck": false,
+  "fullWp12Acceptance": false
+}

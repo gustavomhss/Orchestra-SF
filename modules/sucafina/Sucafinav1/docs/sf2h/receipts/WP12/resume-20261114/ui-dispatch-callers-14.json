@@ -1,0 +1,59 @@
+{
+  "schema": "sf-wp12-ui-dispatch-caller-fix-v1",
+  "owner": "WP12",
+  "baseProduct": "e8ae326420eae2d51247fcab5730e82e5d3b8d39",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-question-preparation.ts",
+      "beforeBlob": "46d08068b355efb87605b07b954635faf2cb683e",
+      "blob": "c3c2efe6004c513370ab04077f7d2c79a704d9c6",
+      "sha256": "1ff25c69a32523eed1d1aadaf9f94d42c54ca416f345dfe309254b7d5d83aa04",
+      "bytes": 10795
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-collaboration-recall.test.ts",
+      "beforeBlob": "fa6316fd4e961df8ccfc961302e6d57c835542b0",
+      "blob": "12d52cdc872e64cf3265a3f5b09cbe0d5f07d57f",
+      "sha256": "b594964e7d9fdaa6398823251aee771dce228b06ab9601e71635584d292cb53b",
+      "bytes": 20117
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts",
+      "beforeBlob": "32c5da596893d0810879bd7912be9986a1127af3",
+      "blob": "8f330fa84bf8a6d09d66f7b9c5f83112a5c67c06",
+      "sha256": "aa89749cba692f244a357d60efebf831933ee0e85590605f7d0f85d1707d1580",
+      "bytes": 18456
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-reevaluation.test.ts",
+      "beforeBlob": "ee1da7e0c0912a63dcc881a6a57e10456620b9d8",
+      "blob": "dc3ac4d4b02e392170059911b7c8a5fba171c7b4",
+      "sha256": "35ef6568bdbe66e6fe03de86a08692bdb7af18f72164c078db1de7f08c70bb30",
+      "bytes": 13917
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-sourcing.test.ts",
+      "beforeBlob": "fd42dc367637ff8be90d04547ea4f73158747451",
+      "blob": "a38c64dfbf2d27143c756677e49171c4d0cadbfd",
+      "sha256": "64309a96c54c1a2f7892bbe287fda02f50c3898484d7e8fb8c5beaeef9bc9f0c",
+      "bytes": 17059
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-dependencies.test.ts",
+      "beforeBlob": "1d17e9e48d88abe1688d61f26f7df3dcfa1e1b84",
+      "blob": "4fe9d9c1caf31f918d3e791af587fdf0b0d2834f",
+      "sha256": "a61868af7744e329fc60842992a4df234b9b2903ecbdb3e6f23a81e1b5fb0d7a",
+      "bytes": 14665
+    }
+  ],
+  "cause": "context.ui pre-consumed a single-use UI admission which services.dispatch correctly tried to validate again.",
+  "changes": [
+    "Import the shared dispatchWp12Ui helper and replace exactly one double-validating UI call in each of six files.",
+    "Preserve operation and payload identity, every assertion, objective, grant, receipt check, consumer path and deadline."
+  ],
+  "dependency": "native-mission-harness.ts dispatchWp12Ui is prepared and reviewed separately by compose_typecheck",
+  "localProductTests": false,
+  "localTypecheck": false,
+  "hostedTests": "PENDING",
+  "independentReview": "PASS_STATIC"
+}

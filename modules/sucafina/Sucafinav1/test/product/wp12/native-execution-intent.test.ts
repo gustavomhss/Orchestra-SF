@@ -7,7 +7,7 @@ import { decodeSfOperationOutput, decodeSfSkillInput } from "../../../product/co
 import { encodeCaseRef } from "../../../product/decisions/case-port.ts"
 import { readCaseAnalysisProjection } from "../../../product/interface/case-analysis-input.ts"
 import { object } from "../../../runtime/contract.ts"
-import { executeWp12NativeMission, observeWp12UnavailableMission, readWp12NativeMissionAfterReload, withWp12NativeMissionHost } from "./native-mission-harness.ts"
+import { dispatchWp12Ui, executeWp12NativeMission, observeWp12UnavailableMission, readWp12NativeMissionAfterReload, withWp12NativeMissionHost } from "./native-mission-harness.ts"
 import type { Wp12CompletedNativeMission } from "./native-mission-harness.ts"
 import { assertWp12ChangedImportBaseRefused, assertWp12ImportCaseUnchanged, initializeWp12ImportPlanner, prepareWp12ImportCase, wp12InstalledImportAssets, WP12_IMPORT_PERIOD } from "./native-import-preparation.ts"
 
@@ -65,7 +65,7 @@ test("Maestro frames two real case selections and its native contribution reopen
         expect(decoded.value.context.sourceRefs).toHaveLength(2)
         expect(decoded.value.selectedSourceRefs).toEqual(decision.value.sourceRefs)
         const freshnessInput = { evidenceRefs: decision.value.sourceRefs }
-        const freshness = await context.ui("sf_freshness_check", freshnessInput, (call) => context.services.dispatch("sf_freshness_check", freshnessInput, call))
+        const freshness = await dispatchWp12Ui(context, "sf_freshness_check", freshnessInput)
         if (freshness.status !== "ok") throw new Error(`The real selected-source freshness check failed: ${freshness.reason}`)
         const resolved = decodeSfOperationOutput("sf_freshness_check", freshness.result)
         if (!resolved.ok) throw new Error("The real freshness capability returned an invalid resolution")
@@ -77,7 +77,7 @@ test("Maestro frames two real case selections and its native contribution reopen
         // evidence below must still come from the model's own bound tool calls.
         const question = { caseRef: encodeCaseRef(caseRef), question: { text: "Quais premissas de escopo e período precisam ser confirmadas antes de comparar estas fontes?" },
           sourceRefs: decision.value.sourceRefs }
-        const preview = await context.ui("sf_question_prepare", question, (call) => context.services.dispatch("sf_question_prepare", question, call))
+        const preview = await dispatchWp12Ui(context, "sf_question_prepare", question)
         if (preview.status !== "ok") throw new Error(`The real framing question preview failed: ${preview.reason}`)
         const proposal = decodeSfOperationOutput("sf_question_prepare", preview.result)
         if (!proposal.ok) throw new Error("The real question preparation returned an invalid proposal")
@@ -87,8 +87,7 @@ test("Maestro frames two real case selections and its native contribution reopen
         expect(proposal.value.evidenceRefs).toEqual(decision.value.sourceRefs)
         expect(proposal.value.recipientRef).toBeUndefined()
         const outsideQuestion = { ...question, sourceRefs: [material.refId === sources.first.refId ? sources.second : sources.first] }
-        const refusedQuestion = await context.ui("sf_question_prepare", outsideQuestion,
-          (call) => context.services.dispatch("sf_question_prepare", outsideQuestion, call))
+        const refusedQuestion = await dispatchWp12Ui(context, "sf_question_prepare", outsideQuestion)
         expect(refusedQuestion.status).toBe("denied")
         if (refusedQuestion.status === "ok") throw new Error("A framing question cited a source outside its current case")
         expect(refusedQuestion.reason).toBe("source-access-unavailable")

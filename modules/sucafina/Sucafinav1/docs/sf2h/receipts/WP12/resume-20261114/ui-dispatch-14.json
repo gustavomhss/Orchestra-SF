@@ -1,0 +1,131 @@
+{
+  "schema": "wp12-ui-dispatch-single-use-fix-v1",
+  "status": "FROZEN_REVIEWED",
+  "writer": "/root/compose_typecheck",
+  "baseProduct": "e8ae326420eae2d51247fcab5730e82e5d3b8d39",
+  "observedFailure": {
+    "product": "2ea0673cd17d97607ee020910bf66db4ee6c1bde",
+    "snapshot": "1878f1a513c99d95d4640faa042fa10ead947884",
+    "run": 43601851442,
+    "job": 132468089391,
+    "log": "evidence/resume-11-questions.log",
+    "logSHA256": "35c5491e1ca49267ee5d7fa70f3098ac01e2b532a748e63408125dd4985f7518",
+    "relevantFailures": [
+      {
+        "name": "Maestro frames two real case selections and its native contribution reopens with the selected evidence",
+        "reason": "authority-unavailable",
+        "logLine": 842
+      },
+      {
+        "name": "a focused human pending question is consumed once and its unconfirmed answer reopens through the canonical thread",
+        "reason": "denied at first UI question preparation",
+        "logLine": 923
+      }
+    ],
+    "otherFailure": "The relation endpoint source selection failure is owned separately by own_review_resume."
+  },
+  "diagnosis": {
+    "cause": "OWN_DRIVER_DOUBLE_CONSUMPTION_OF_UI_ADMISSION",
+    "mechanism": [
+      "context.ui admits and then calls ui.validate before invoking a direct business port callback.",
+      "services.dispatch is a shared UI/native dispatcher, and validateDomainContext calls ui.validate again for UI contexts.",
+      "UI authority marks the admission consumed on its first successful validate and refuses the second consumption. The dispatcher refusal is correct."
+    ],
+    "publishedSourcePins": [
+      {
+        "path": "apps/cli/src/sucafina-product/contribution.ts",
+        "commit": "2ea0673cd17d97607ee020910bf66db4ee6c1bde",
+        "blob": "8d44320acedc4afec9ffc100f5f6a171cdf26993",
+        "retrieval": "GitHub MCP github_fetch_file exact commit"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/capability-dispatch.ts",
+        "commit": "2ea0673cd17d97607ee020910bf66db4ee6c1bde",
+        "blob": "6ba1b02eee73d44133c78599284f9772b26007b1",
+        "retrieval": "GitHub MCP github_fetch_file exact commit"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+        "commit": "2ea0673cd17d97607ee020910bf66db4ee6c1bde",
+        "blob": "502fb1ab3a4116a62aeb504a4bb26040c66d81b2",
+        "retrieval": "GitHub MCP github_fetch_file exact commit"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-mission-harness.ts",
+        "commit": "2ea0673cd17d97607ee020910bf66db4ee6c1bde",
+        "blob": "9f61ae11b0f1b630427cda98ff44f229bd72d2b5",
+        "retrieval": "GitHub MCP github_fetch_file exact commit"
+      }
+    ]
+  },
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-mission-harness.ts",
+      "beforeBlob": "9f61ae11b0f1b630427cda98ff44f229bd72d2b5",
+      "afterBlob": "49300a78a44ac0739791d10a11c386b317f4b51a",
+      "bytes": 20042,
+      "sha256": "050238396e5f12c067de3ab488f1dc207350cb636fc68d71fc72ef2d8a1b59bc",
+      "priorExpectLinesUnchanged": 16,
+      "syntax": "PASS node --check, no import/execution"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-intent.test.ts",
+      "beforeBlob": "bcd35e803b8a00e6ddabef03c10885279e427870",
+      "afterBlob": "3d0fac5384b433dde3eab26b011679031218fc2f",
+      "bytes": 23692,
+      "sha256": "01be9041b41247ac1a3e5dbaaba70a49759391f4e91d755a00018307b43a1e6d",
+      "priorExpectLinesUnchanged": 64,
+      "syntax": "PASS node --check, no import/execution"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-question-consumer.test.ts",
+      "beforeBlob": "d0cdf8241b2db559493464f80efe7e893a9784e0",
+      "afterBlob": "1323c71bab9055e40a7f8d95b0cc94f097a1a1c9",
+      "bytes": 17177,
+      "sha256": "a1fa4893693567010c86cc3f38a29b18ee6a9d243e87e2c39ba3553d825fab83",
+      "priorExpectLinesUnchanged": 72,
+      "syntax": "PASS node --check, no import/execution"
+    }
+  ],
+  "changes": [
+    "Add exported dispatchWp12Ui(context, operation, payload) to the own harness. It obtains an actual UI admission from the actual Request and payload digest, delegates validation/consumption to services.dispatch, and always calls ui.finish in finally.",
+    "Migrate exactly three Intent UI calls: freshness, question preview, outside-case question refusal.",
+    "Migrate exactly two human question consumer UI calls: preparation and answer read after host reload."
+  ],
+  "preservation": {
+    "allHarnessBytesOutsideNewHelperIdentical": true,
+    "contextUiUnchanged": true,
+    "allPriorExpectLinesUnchanged": true,
+    "testNamesUnchanged": true,
+    "deadlinesUnchanged": true,
+    "nativeMissionBranchesUnchanged": true,
+    "requestedOperationScopesUnchanged": true,
+    "sourceFixturesAndGrantsUnchanged": true,
+    "uiReceiptAssertionsUnchanged": true,
+    "questionHttpConsumptionAndReloadUnchanged": true
+  },
+  "limits": [
+    "No product execution or typecheck performed locally.",
+    "The two formerly blocked flows and migrated callers require a hosted run; this static diagnosis is not a passing consumer result.",
+    "No admission, binding, receipt, model, data or permission is fabricated, and no foreign authority/dispatcher code is changed."
+  ],
+  "validation": {
+    "syntax": "3/3 PASS node --check",
+    "baseline": "All three before blobs equal independently retrieved published pins",
+    "localProductTests": false,
+    "localTypecheck": false,
+    "ciDispatched": false,
+    "foreignEdits": false,
+    "independentReview": {
+      "status": "PASS_STATIC",
+      "reviewer": "/root/own_review_resume",
+      "file": "independent-review-own.json",
+      "sha256": "1166f2f1495b5fdba998b896c9f67ae04c97ab90c61e7394bb0cdc4d88002617",
+      "blob": "5027371e70471506d80febfd9ecf5fadbd219730"
+    }
+  },
+  "artifacts": {
+    "diff": "increment.diff",
+    "sourcePins": "published-source-pins.json"
+  }
+}

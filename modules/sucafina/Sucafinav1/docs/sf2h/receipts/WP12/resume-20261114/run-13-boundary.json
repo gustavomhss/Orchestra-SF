@@ -1,0 +1,294 @@
+{
+  "schema": "sf-wp12-product-run-result-v1",
+  "phase": "resume-13-boundary",
+  "product": {
+    "sha": "e8ae326420eae2d51247fcab5730e82e5d3b8d39",
+    "tree": "4475ca36282141b4ec00212736fd9831cfc5f0e2"
+  },
+  "run": {
+    "id": 43601627208,
+    "jobId": 132467402304,
+    "conclusion": "success",
+    "snapshot": "d9333305d401a8feadf1b685ed6e39a8743c46b2",
+    "snapshotTree": "aaba49d5ba755ba906345bc088e767a647e2171d",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43601627208",
+    "branch": "ci-run-linux-astra-wp12-e8ae3264-61988b5d-1",
+    "cleanup": {
+      "jobId": 132467887851,
+      "conclusion": "success"
+    }
+  },
+  "request": {
+    "sha256": "61988b5d8f0841c193c82abf8e8aee56fe7fd0616b668c1199f26e88434f9ba1",
+    "blob": "36abe0c10518b10774993bdc740ee92f74ecd707",
+    "bytes": 1188,
+    "body": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "packageSelector": "packages/sucafina",
+      "runner": "bun",
+      "args": [
+        "./Sucafinav1/test/product/wp12/analysis.test.ts",
+        "./Sucafinav1/test/product/wp12/run-store.test.ts",
+        "./Sucafinav1/test/product/wp12/native-verifier-negatives.test.ts",
+        "--timeout",
+        "120000",
+        "-t",
+        "^(?:cancellation refuses a session different from the loaded skill receipt|cancellation persists before interrupting and permits a source-stale run under current authority|revocation after durable cancellation prevents interruption through an expired authority|real C08 host cancels an independent review using its durable target even when its source becomes stale|durable cancellation wins a publication that is still validating its source|review cancellation validates its durable target before committing even without an attached native runtime|real C08 cancellation pins its command and observed run across authorization and interruption scopes|real C08 progress refuses retained run and output aliases changed after a scope returns|real Forecast verifier refuses a false total, an out-of-schema operation and an invented source while preserving Planner and C08)$"
+      ],
+      "env": {}
+    }
+  },
+  "summary": {
+    "pass": 9,
+    "fail": 0,
+    "tests": 9,
+    "files": 3,
+    "assertions": 274,
+    "elapsedSeconds": 10.08,
+    "excludedByName": 38,
+    "completedBunSummary": true
+  },
+  "omni": {
+    "verdict": "PASS",
+    "scope": "focused: no declaring test ran",
+    "declaringTests": 0,
+    "spawns": 49,
+    "delegated": 0,
+    "nonce": "5ea573f406f198da39af219c43cbb586"
+  },
+  "tests": [
+    {
+      "status": "pass",
+      "name": "cancellation refuses a session different from the loaded skill receipt",
+      "elapsedMs": 9.78
+    },
+    {
+      "status": "pass",
+      "name": "cancellation persists before interrupting and permits a source-stale run under current authority",
+      "elapsedMs": 2.3
+    },
+    {
+      "status": "pass",
+      "name": "revocation after durable cancellation prevents interruption through an expired authority",
+      "elapsedMs": 0.78
+    },
+    {
+      "status": "pass",
+      "name": "real C08 host cancels an independent review using its durable target even when its source becomes stale",
+      "elapsedMs": 103.79
+    },
+    {
+      "status": "pass",
+      "name": "durable cancellation wins a publication that is still validating its source",
+      "elapsedMs": 36.86
+    },
+    {
+      "status": "pass",
+      "name": "review cancellation validates its durable target before committing even without an attached native runtime",
+      "elapsedMs": 31.42
+    },
+    {
+      "status": "pass",
+      "name": "real C08 cancellation pins its command and observed run across authorization and interruption scopes",
+      "elapsedMs": 209.03
+    },
+    {
+      "status": "pass",
+      "name": "real C08 progress refuses retained run and output aliases changed after a scope returns",
+      "elapsedMs": 154.75
+    },
+    {
+      "status": "pass",
+      "name": "real Forecast verifier refuses a false total, an out-of-schema operation and an invented source while preserving Planner and C08",
+      "elapsedMs": 8392.92
+    }
+  ],
+  "markers": [
+    {
+      "kind": "SF_WP12_NATIVE_MISSION_CATALOG",
+      "value": {
+        "label": "verifier-negatives",
+        "phase": "initial",
+        "scope": "host-installed-catalog",
+        "githubSha": "d9333305d401a8feadf1b685ed6e39a8743c46b2",
+        "state": "empty",
+        "available": [],
+        "supported": [],
+        "published": [],
+        "intersection": []
+      }
+    },
+    {
+      "kind": "SF_WP12_VERIFIER_NEGATIVE",
+      "value": {
+        "criterion": "WP12.T03.CHK.02",
+        "attack": "false-monthly-total",
+        "scope": "real-domain-verifier-with-adversarial-body",
+        "githubSha": "d9333305d401a8feadf1b685ed6e39a8743c46b2",
+        "authentication": "real-ui-authority-over-explicit-synthetic-principal",
+        "candidateProvenance": "none",
+        "caseRef": {
+          "id": "f0708f60-b4b4-44d8-a2eb-1ac617b80d4a",
+          "incarnation": "5ac6776f-278d-4e05-912a-906daae95126",
+          "version": 1
+        },
+        "inputDigest": "586a4cac36bede8dba51b09abbf92dfa0f79bbb355825f5c5e1ea9f1f2a2c2b0",
+        "candidateDigest": "7149e98fa98dd6688500d5a640b720e47b59008d1748d1fa6a7c17faab218d66",
+        "schemaAdmitted": true,
+        "semanticResult": {
+          "status": "unavailable",
+          "reason": "analysis-output-unverified"
+        },
+        "engineDigestBefore": "c8225767ffba34d0dc031f92101eceae4c28f3964674bda022c7727a9b39059a",
+        "engineDigestAfter": "c8225767ffba34d0dc031f92101eceae4c28f3964674bda022c7727a9b39059a",
+        "plannerStoreDigest": "f7fa34b903b9fa025f833c5182f4669fc5351bafe738002fd08732e1f05fa90e",
+        "caseUnchanged": true,
+        "c08Unchanged": true,
+        "envelopeAdmissionExecuted": false,
+        "malformedPublicationAttemptExecuted": false,
+        "inferenceExecuted": false,
+        "gnativeAccepted": false
+      }
+    },
+    {
+      "kind": "SF_WP12_VERIFIER_NEGATIVE",
+      "value": {
+        "criterion": "WP12.T03.CHK.02",
+        "attack": "operation-outside-schema",
+        "scope": "real-domain-verifier-with-adversarial-body",
+        "githubSha": "d9333305d401a8feadf1b685ed6e39a8743c46b2",
+        "authentication": "real-ui-authority-over-explicit-synthetic-principal",
+        "candidateProvenance": "none",
+        "caseRef": {
+          "id": "f0708f60-b4b4-44d8-a2eb-1ac617b80d4a",
+          "incarnation": "5ac6776f-278d-4e05-912a-906daae95126",
+          "version": 1
+        },
+        "inputDigest": "586a4cac36bede8dba51b09abbf92dfa0f79bbb355825f5c5e1ea9f1f2a2c2b0",
+        "candidateDigest": "819ffc020fa971c7a41f25104d2d060ccb4f8e89a5121d7f86cf5f4b51955943",
+        "schemaAdmitted": false,
+        "semanticResult": {
+          "status": "unavailable",
+          "reason": "analysis-output-unverified"
+        },
+        "engineDigestBefore": "c8225767ffba34d0dc031f92101eceae4c28f3964674bda022c7727a9b39059a",
+        "engineDigestAfter": "c8225767ffba34d0dc031f92101eceae4c28f3964674bda022c7727a9b39059a",
+        "plannerStoreDigest": "f7fa34b903b9fa025f833c5182f4669fc5351bafe738002fd08732e1f05fa90e",
+        "caseUnchanged": true,
+        "c08Unchanged": true,
+        "envelopeAdmissionExecuted": false,
+        "malformedPublicationAttemptExecuted": false,
+        "inferenceExecuted": false,
+        "gnativeAccepted": false
+      }
+    },
+    {
+      "kind": "SF_WP12_VERIFIER_NEGATIVE",
+      "value": {
+        "criterion": "WP12.T03.CHK.02",
+        "attack": "invented-source-reference",
+        "scope": "real-domain-verifier-with-adversarial-body",
+        "githubSha": "d9333305d401a8feadf1b685ed6e39a8743c46b2",
+        "authentication": "real-ui-authority-over-explicit-synthetic-principal",
+        "candidateProvenance": "none",
+        "caseRef": {
+          "id": "f0708f60-b4b4-44d8-a2eb-1ac617b80d4a",
+          "incarnation": "5ac6776f-278d-4e05-912a-906daae95126",
+          "version": 1
+        },
+        "inputDigest": "586a4cac36bede8dba51b09abbf92dfa0f79bbb355825f5c5e1ea9f1f2a2c2b0",
+        "candidateDigest": "82c6e3450e5f998439e5277bcdd57fb5aba124f36abc8bd5c94bdbb26bb9f975",
+        "schemaAdmitted": true,
+        "semanticResult": {
+          "status": "unavailable",
+          "reason": "analysis-output-unverified"
+        },
+        "engineDigestBefore": "c8225767ffba34d0dc031f92101eceae4c28f3964674bda022c7727a9b39059a",
+        "engineDigestAfter": "c8225767ffba34d0dc031f92101eceae4c28f3964674bda022c7727a9b39059a",
+        "plannerStoreDigest": "f7fa34b903b9fa025f833c5182f4669fc5351bafe738002fd08732e1f05fa90e",
+        "caseUnchanged": true,
+        "c08Unchanged": true,
+        "envelopeAdmissionExecuted": false,
+        "malformedPublicationAttemptExecuted": false,
+        "inferenceExecuted": false,
+        "gnativeAccepted": false
+      }
+    },
+    {
+      "kind": "SF_WP12_NATIVE_MISSION",
+      "value": {
+        "scope": "real-host-input-preparation-and-availability",
+        "status": "unavailable",
+        "reason": "installed-host-catalog-empty",
+        "catalogState": "empty",
+        "githubSha": "d9333305d401a8feadf1b685ed6e39a8743c46b2",
+        "profileId": "sf_finance",
+        "skillId": "sf-explicar-forecast",
+        "caseRef": {
+          "id": "f0708f60-b4b4-44d8-a2eb-1ac617b80d4a",
+          "incarnation": "5ac6776f-278d-4e05-912a-906daae95126",
+          "version": 1
+        },
+        "inputPrepared": true,
+        "inputDigest": "586a4cac36bede8dba51b09abbf92dfa0f79bbb355825f5c5e1ea9f1f2a2c2b0",
+        "inferenceExecuted": false,
+        "outputRef": null,
+        "consumerRef": null,
+        "gnativeAccepted": false
+      }
+    },
+    {
+      "kind": "SF_WP12_NATIVE_MISSION_CATALOG",
+      "value": {
+        "label": "verifier-negatives",
+        "phase": "reopened",
+        "scope": "host-installed-catalog",
+        "githubSha": "d9333305d401a8feadf1b685ed6e39a8743c46b2",
+        "state": "empty",
+        "available": [],
+        "supported": [],
+        "published": [],
+        "intersection": []
+      }
+    },
+    {
+      "kind": "SF_WP12_VERIFIER_NEGATIVE_REOPEN",
+      "value": {
+        "criterion": "WP12.T03.CHK.02",
+        "githubSha": "d9333305d401a8feadf1b685ed6e39a8743c46b2",
+        "caseRef": {
+          "id": "f0708f60-b4b4-44d8-a2eb-1ac617b80d4a",
+          "incarnation": "5ac6776f-278d-4e05-912a-906daae95126",
+          "version": 1
+        },
+        "plannerStoreDigest": "f7fa34b903b9fa025f833c5182f4669fc5351bafe738002fd08732e1f05fa90e",
+        "comparisonDigest": "c8225767ffba34d0dc031f92101eceae4c28f3964674bda022c7727a9b39059a",
+        "domainAndC08Preserved": true,
+        "nativePublicationObserved": false,
+        "malformedPublicationAttemptExecuted": false,
+        "remainingBoundary": "The installed host exposes no external candidate-publication port; these negatives observe schema/domain refusal, not an adversarial native completion reaching its private publisher.",
+        "gnativeAccepted": false
+      }
+    }
+  ],
+  "log": {
+    "bytes": 78785,
+    "sha256": "a786e440ea86a17b65740d9082e6638786bf854251e8d88b1a0c60cc58d5e669"
+  },
+  "artifacts": [],
+  "proof": {
+    "cancellation": "Eight actual test cases, including C08/SQLite with explicit fixture authority and unavailable native interrupt. Durable cancellation remains committed when later authority refuses.",
+    "forecast": "Three adversarial bodies reached the real Forecast verifier under UI authority, with actual Planner replay. False total and resealed invented ref were structurally valid then semantically refused; extra operation was schema-refused. The selected case/contributions/nativeRuns, Planner raw data and projections were preserved across reopening.",
+    "falseTotalSchemaAdmitted": true,
+    "extraOperationSchemaAdmitted": false,
+    "inventedRefSchemaAdmitted": true,
+    "malformedPublicationAttemptExecuted": false,
+    "inferenceExecuted": false,
+    "nativeOutputObserved": false,
+    "scopeOfC08Equality": "Only selected case and contributions/nativeRuns, not every namespace or global storageVersion."
+  },
+  "localProductTests": false,
+  "localTypecheck": false,
+  "fullWp12Acceptance": false
+}

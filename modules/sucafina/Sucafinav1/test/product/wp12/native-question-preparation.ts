@@ -8,6 +8,7 @@ import type { SfHumanAction } from "../../../product/integration/human-authority
 import { readCaseAnalysisProjection } from "../../../product/interface/case-analysis-input.ts"
 import { object } from "../../../runtime/contract.ts"
 import type { Wp12NativeMissionContext } from "./native-mission-harness.ts"
+import { dispatchWp12Ui } from "./native-mission-harness.ts"
 
 export const WP12_QUESTION_PERIOD = { start: "2027-01-01", end: "2027-12-31" }
 export const WP12_QUESTION_PENDING_REASON = "human-awaiting-training-confirmation"
@@ -58,7 +59,7 @@ export async function prepareWp12QuestionCase(context: Wp12NativeMissionContext,
   const support = await options.support?.(source)
   if (support?.questionRef) {
     const request = { questionRef: support.questionRef }
-    const answer = await context.ui("sf_answer_read", request, (call) => context.services.dispatch("sf_answer_read", request, call))
+    const answer = await dispatchWp12Ui(context, "sf_answer_read", request)
     if (answer.status !== "ok" || answer.receipt.kind !== "ui") throw new Error("The selected predecessor has no real readable answer")
     const decoded = decodeSfOperationOutput("sf_answer_read", answer.result)
     if (!decoded.ok) throw new Error("The predecessor answer did not satisfy its canonical schema")

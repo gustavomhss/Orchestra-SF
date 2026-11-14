@@ -8,7 +8,7 @@ import { isThread } from "../../../product/collaboration/threads.ts"
 import type { CollaborationThread } from "../../../product/collaboration/threads.ts"
 import { encodeCaseRef } from "../../../product/decisions/case-port.ts"
 import { object } from "../../../runtime/contract.ts"
-import { withWp12NativeMissionHost } from "./native-mission-harness.ts"
+import { dispatchWp12Ui, withWp12NativeMissionHost } from "./native-mission-harness.ts"
 import type { Wp12NativeMissionContext } from "./native-mission-harness.ts"
 import { initializeWp12QuestionSource, prepareWp12QuestionCase, wp12QuestionSourceDigest, WP12_QUESTION_HUMAN_ACTIONS, WP12_QUESTION_OPERATIONS, WP12_QUESTION_PERIOD, WP12_QUESTION_PENDING_REASON } from "./native-question-preparation.ts"
 
@@ -45,7 +45,7 @@ test("a focused human pending question is consumed once and its unconfirmed answ
       const question = { caseRef: encodeCaseRef(scenario.caseRef),
         question: { text: "Qual é o custo de treinamento desta alternativa? A resposta é necessária para completar a comparação do custo total." },
         sourceRefs: [source], recipientRef: context.principalRef }
-      const prepared = await context.ui("sf_question_prepare", question, (call) => context.services.dispatch("sf_question_prepare", question, call))
+      const prepared = await dispatchWp12Ui(context, "sf_question_prepare", question)
       expect(prepared.status).toBe("ok")
       if (prepared.status !== "ok" || prepared.receipt.kind !== "ui") throw new Error("Question consumption requires a real bound UI preparation")
       const output = decodeSfOperationOutput("sf_question_prepare", prepared.result)
@@ -138,7 +138,7 @@ test("a focused human pending question is consumed once and its unconfirmed answ
       expect(digestSfValue(retry.body.value)).toBe(digestSfValue(initial.thread))
       expect(await storageVersion(context, "threads")).toBe(before)
       const input = { questionRef: initial.thread.id }
-      const answer = await context.ui("sf_answer_read", input, (call) => context.services.dispatch("sf_answer_read", input, call))
+      const answer = await dispatchWp12Ui(context, "sf_answer_read", input)
       expect(answer.status).toBe("ok")
       if (answer.status !== "ok" || answer.receipt.kind !== "ui") throw new Error("The installed answer reader did not return a bound UI observation")
       const result = decodeSfOperationOutput("sf_answer_read", answer.result)

@@ -5,7 +5,7 @@ import { decodeSfOperationOutput, decodeSfSkillInput } from "../../../product/co
 import { readCaseAnalysisProjection } from "../../../product/interface/case-analysis-input.ts"
 import { object } from "../../../runtime/contract.ts"
 import { chooseWp12Alternative } from "./native-choice-preparation.ts"
-import { executeWp12NativeMission, observeWp12UnavailableMission, readWp12NativeMissionAfterReload, withWp12NativeMissionHost } from "./native-mission-harness.ts"
+import { dispatchWp12Ui, executeWp12NativeMission, observeWp12UnavailableMission, readWp12NativeMissionAfterReload, withWp12NativeMissionHost } from "./native-mission-harness.ts"
 import type { Wp12NativeMissionContext } from "./native-mission-harness.ts"
 import { initializeWp12PortfolioSources, prepareWp12PortfolioCase, prepareWp12PortfolioMission, wp12PortfolioMissionRequest,
   WP12_PORTFOLIO_HUMAN_ACTIONS, WP12_PORTFOLIO_OPERATIONS, WP12_PORTFOLIO_PERIOD } from "./native-portfolio-preparation.ts"
@@ -95,7 +95,7 @@ test("reevaluation reopens a real human choice and Planner condition without pro
       expect(unconfirmedDependency.body).toMatchObject({ status: "unavailable", reason: "analysis-source-unavailable" })
 
       const catalogRequest = { purpose: "Reevaluate a registered material condition without applying a decision" }
-      const catalog = await context.ui("sf_routine_catalog", catalogRequest, (call) => context.services.dispatch("sf_routine_catalog", catalogRequest, call))
+      const catalog = await dispatchWp12Ui(context, "sf_routine_catalog", catalogRequest)
       const decodedCatalog = catalog.status === "ok" ? decodeSfOperationOutput("sf_routine_catalog", catalog.result) : undefined
       if (catalog.status === "ok" && !decodedCatalog?.ok) throw new Error("The mounted routine catalog returned invalid output")
       if (catalog.status !== "ok") expect(catalog.status).toBe("unavailable")

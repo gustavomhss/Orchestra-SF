@@ -14,7 +14,7 @@ import { encodeCaseRef } from "../../../product/decisions/case-port.ts"
 import { readCaseAnalysisProjection } from "../../../product/interface/case-analysis-input.ts"
 import { object } from "../../../runtime/contract.ts"
 import { esc } from "../../../src/screen-shell.ts"
-import { executeWp12NativeMission, observeWp12UnavailableMission, readWp12NativeMissionAfterReload, withWp12NativeMissionHost } from "./native-mission-harness.ts"
+import { dispatchWp12Ui, executeWp12NativeMission, observeWp12UnavailableMission, readWp12NativeMissionAfterReload, withWp12NativeMissionHost } from "./native-mission-harness.ts"
 import type { Wp12CompletedNativeMission, Wp12NativeMissionContext } from "./native-mission-harness.ts"
 import { initializeWp12QuestionSource, prepareWp12QuestionCase, wp12QuestionSourceDigest, WP12_QUESTION_HUMAN_ACTIONS, WP12_QUESTION_OPERATIONS,
   WP12_QUESTION_PENDING_REASON, WP12_QUESTION_PERIOD } from "./native-question-preparation.ts"
@@ -42,7 +42,7 @@ test("QuestionPlanningInput carries real C06 support and its native proposal is 
       const relationRequest = { recordRefs: preparedCase.case.sourceRefs.filter((ref) => ref.kind === "record" &&
         ref.target.surface === "dashboard" && [projectId, capexId].includes(ref.target.recordId)).map((ref) => ref.refId) }
       expect(relationRequest.recordRefs).toHaveLength(2)
-      const relationRead = await context.ui("sf_relation_read", relationRequest, (call) => context.services.dispatch("sf_relation_read", relationRequest, call))
+      const relationRead = await dispatchWp12Ui(context, "sf_relation_read", relationRequest)
       if (relationRead.status !== "ok" || relationRead.receipt.kind !== "ui") throw new Error("The real relation was not readable before native preparation")
       const relationOutput = decodeSfOperationOutput("sf_relation_read", relationRead.result)
       if (!relationOutput.ok) throw new Error("The C06 relation output did not satisfy its schema")
@@ -65,8 +65,10 @@ test("QuestionPlanningInput carries real C06 support and its native proposal is 
       expect(decoded.value.authorizedDirectoryRefs).toEqual([context.principalRef])
 
       const unrelated = await context.ui("sf_context_get", { purpose: "question-unrelated-source" }, (call) => context.business.dashboardRecords.issue({
-        page: "Portfolio Dashboard", recordType: "projects", recordId: unrelatedProjectId, fields: ["name", "milestones"], period: WP12_QUESTION_PERIOD }, call))
+        page: "Portfolio Dashboard", recordType: "projects", recordId: unrelatedProjectId, fields: ["name", "milestones"], period: projectObservationPeriod(context) }, call))
       if (unrelated.status !== "ok") throw new Error("The real homonymous negative source was not issued")
+      expect(unrelated.value.target.recordId).toBe(unrelatedProjectId)
+      expect(unrelated.value.target.period).toEqual(projectObservationPeriod(context))
       const outsideCase = await prepareQuestionInput(context, { ...incoming, selection: { ...incoming.selection, relationRefIds: [unrelated.value.refId] } })
       expect(outsideCase.response.status).toBe(503)
       expect(outsideCase.body).toMatchObject({ status: "unavailable", reason: "analysis-input-producer-unavailable" })
@@ -227,12 +229,27 @@ async function prepareQuestionSupport(context: Wp12NativeMissionContext, source:
   const directory = await collaborationValue(context, "recipients", {})
   if (!Array.isArray(directory)) throw new Error("The real recipient directory returned no collection")
   expect(directory.filter((person) => object(person).id === context.principalRef)).toHaveLength(1)
+  const observationPeriod = projectObservationPeriod(context)
   const sources = await context.ui("sf_context_get", { purpose: "question-confirmed-support" }, async (call) => {
     const project = await context.business.dashboardRecords.issue({ page: "Portfolio Dashboard", recordType: "projects", recordId: projectId,
-      fields: ["name", "milestones"], period: WP12_QUESTION_PERIOD }, call)
+      fields: ["name", "milestones"], period: observationPeriod }, call)
+    if (project.status !== "ok") throw new Error(`The real relation project source was not issued: ${project.reason}`)
     const capex = await context.business.dashboardRecords.issue({ page: "CAPEX Projects", recordType: "capexProjects", recordId: capexId,
       fields: ["name"], period: WP12_QUESTION_PERIOD }, call)
-    if (project.status !== "ok" || capex.status !== "ok") throw new Error("The real relation endpoints were not issued")
+    if (capex.status !== "ok") throw new Error(`The real relation CAPEX source was not issued: ${capex.reason}`)
+    expect(project.value.target.surface).toBe("dashboard")
+    expect(project.value.target.recordType).toBe("projects")
+    expect(project.value.target.recordId).toBe(projectId)
+    expect(project.value.target.period).toEqual(observationPeriod)
+    expect(capex.value.target.surface).toBe("dashboard")
+    expect(capex.value.target.recordType).toBe("capexProjects")
+    expect(capex.value.target.recordId).toBe(capexId)
+    expect(capex.value.target.period).toEqual(WP12_QUESTION_PERIOD)
+    console.log("SF_WP12_NATIVE_QUESTION_RELATION_ENDPOINTS:" + JSON.stringify({ scope: "actual-current-project-and-selected-capex-year",
+      githubSha: process.env.GITHUB_SHA ?? null, observedAt: context.at, projectObservationPeriod: observationPeriod,
+      financialHorizon: WP12_QUESTION_PERIOD, endpoints: [project.value, capex.value].map((ref) => ({ sourceRef: ref.refId,
+        recordType: ref.target.recordType, recordId: ref.target.recordId, fields: ref.target.fields, period: ref.target.period })),
+      inferenceExecuted: false, gnativeAccepted: false }))
     return [project.value, capex.value] as const
   })
   const pair = { fromRef: sources[0].refId, toRef: sources[1].refId, kind: "pmo-capex", evidenceRefs: [...sources, source] }
@@ -254,6 +271,15 @@ async function prepareQuestionSupport(context: Wp12NativeMissionContext, source:
   expect(answer.answer).toBe(priorAnswer)
   expect(answer.state).toBe("unconfirmed")
   return { evidenceRefs: sources, questionRef: thread.id }
+}
+
+function projectObservationPeriod(context: Pick<Wp12NativeMissionContext, "at">) {
+  const observedAt = new Date(context.at)
+  if (!Number.isFinite(observedAt.getTime())) throw new Error("The host project observation time is invalid")
+  // Projects are current snapshots; the selected CAPEX record and Planner
+  // planning horizon retain their own financial year.
+  const year = observedAt.getUTCFullYear()
+  return { start: `${year}-01-01`, end: `${year}-12-31` }
 }
 
 function questionRequest(context: Wp12NativeMissionContext, caseRef: Preparation["request"]["caseRef"], objective: string) {
@@ -291,7 +317,7 @@ async function storageVersion(context: Wp12NativeMissionContext, namespace: "thr
 
 async function readAnswer(context: Wp12NativeMissionContext, questionRef: string) {
   const request = { questionRef }
-  const answer = await context.ui("sf_answer_read", request, (call) => context.services.dispatch("sf_answer_read", request, call))
+  const answer = await dispatchWp12Ui(context, "sf_answer_read", request)
   if (answer.status !== "ok" || answer.receipt.kind !== "ui") throw new Error("The actual question has no bound answer observation")
   const result = decodeSfOperationOutput("sf_answer_read", answer.result)
   if (!result.ok) throw new Error("The real answer reader returned an invalid schema")

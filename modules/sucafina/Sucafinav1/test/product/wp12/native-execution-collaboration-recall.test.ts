@@ -5,7 +5,7 @@ import { decodeSfOperationOutput, decodeSfSkillInput } from "../../../product/co
 import type { SfHostServices } from "../../../product/contracts/host-context.ts"
 import { encodeCaseRef } from "../../../product/decisions/case-port.ts"
 import { object } from "../../../runtime/contract.ts"
-import { executeWp12NativeMission, observeWp12UnavailableMission, readWp12NativeMissionAfterReload, withWp12NativeMissionHost } from "./native-mission-harness.ts"
+import { dispatchWp12Ui, executeWp12NativeMission, observeWp12UnavailableMission, readWp12NativeMissionAfterReload, withWp12NativeMissionHost } from "./native-mission-harness.ts"
 import type { Wp12NativeMissionContext } from "./native-mission-harness.ts"
 import { initializeWp12ScenarioSources, prepareWp12ScenarioCase, WP12_SCENARIO_HUMAN_ACTIONS, WP12_SCENARIO_OPERATIONS } from "./native-scenario-preparation.ts"
 
@@ -168,7 +168,7 @@ test("question input derives a real pending training condition and the human pre
       const question = { caseRef: encodeCaseRef(scenario.caseRef),
         question: { text: "Qual é o custo de treinamento desta alternativa? Esse valor é necessário para completar a comparação de custo total." },
         sourceRefs: [source.evidence] }
-      const proposal = await context.ui("sf_question_prepare", question, (call) => context.services.dispatch("sf_question_prepare", question, call))
+      const proposal = await dispatchWp12Ui(context, "sf_question_prepare", question)
       expect(proposal.status).toBe("ok")
       if (proposal.status !== "ok") throw new Error(`The real human question preparation failed: ${proposal.reason}`)
       const output = decodeSfOperationOutput("sf_question_prepare", proposal.result)

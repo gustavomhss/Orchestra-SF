@@ -1,0 +1,171 @@
+{
+  "schema": "wp12-contract-observation-period-fix-v1",
+  "status": "FROZEN_FOR_PARENT_PUBLICATION",
+  "author": "/root/own_review_resume",
+  "baseProduct": "7fe43d5b12f27f714a2c3208f49568c1013ba7fa",
+  "observedFailure": {
+    "product": "2ea0673cd17d97607ee020910bf66db4ee6c1bde",
+    "snapshot": "5fe687cdfae8f30e4a7121ac87d6e2a14982433a",
+    "runId": 43600564160,
+    "jobId": 132464186609,
+    "log": "evidence/resume-11-procurement.log",
+    "logSha256": "b62cbffc299996d1c6bd2b5f4f965bb8ddd3f7c69154933ef7e84a98b45bf7f7",
+    "tests": [
+      {
+        "name": "native Procurement reuses submitted FX and domain ranking without choosing the cheapest quote or changing sourcing",
+        "durationMs": 4247.93,
+        "logLines": [
+          855,
+          867
+        ]
+      },
+      {
+        "name": "native document extraction uses real private bytes and schema; contract review retains the actual issued source surface",
+        "durationMs": 3485.94,
+        "logLines": [
+          889,
+          901
+        ]
+      }
+    ],
+    "error": "Actual contract source issuance failed: source-unavailable",
+    "phase": "issueWp12Contract before source return; no native inference"
+  },
+  "cause": {
+    "classification": "OWN_FIXTURE_SELECTION_INCOMPATIBLE_WITH_REAL_CURRENT_RECORD_SCOPE",
+    "facts": [
+      "The harness captures the real current time with new Date().toISOString(); the failing run date is 2026-11-14.",
+      "issueWp12Contract selected the financial scenario period 2027-01-01 through 2027-12-31 as the observation period of a current Dashboard contract record.",
+      "projectDashboardScope refuses current collections, including contracts, when the observed day falls outside the selected period.",
+      "The record source projector calls that real scope with fields:[contracts]; readScopedSource cannot produce the requested source and the issuer yields source-unavailable.",
+      "The raw contract has the requested name/amount/currency/notice fields; DashboardPortfolio's published publicRecord includes them and preserves null notice.",
+      "The relevant Dashboard temporal gate is byte-identical in the current UI owner head. No foreign projector replacement is required."
+    ],
+    "attributionLimit": "The log records the failed public issuer; the pinned deterministic scope condition explains a sufficient rejection. The corrected issue/read path awaits hosted execution."
+  },
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-procurement-preparation.ts",
+      "beforeBlob": "a0146eb1e5e06eba5eca8007252206b2164e36fa",
+      "afterBlob": "f1433397246117886e109d32b171345ec1992066",
+      "sha256": "56cb1681ed5f52b4ed306231cb9650240218e89d73c1e4929a3f1ae26831eb43",
+      "bytes": 16037
+    }
+  ],
+  "change": "Only issueWp12Contract selects the UTC calendar year observed by the real host. It asserts the issued evidence and public projection periods and logs both observationPeriod and the separate financialHorizon.",
+  "preserved": [
+    "No host clock, authentication, grant, financial horizon, raw source, contract term or model configuration is changed.",
+    "Source surface stays Dashboard/contracts; the outside-field negative and missing-notice assertions remain.",
+    "Every existing assertion remains verbatim; all other helper functions are byte-identical.",
+    "Sourcing still selects both requests and three suppliers; its FX/ranking contrast remains unchanged.",
+    "Document preparation still selects the real complete coverage alternative; private bytes, schema, candidates, human confirmation and reload consumers remain unchanged."
+  ],
+  "callers": [
+    {
+      "path": "test/product/wp12/native-execution-sourcing.test.ts",
+      "route": "direct issueWp12Contract"
+    },
+    {
+      "path": "test/product/wp12/native-execution-documents-contract.test.ts",
+      "route": "prepareWp12ProcurementCase selected complete/includeContract true"
+    },
+    {
+      "path": "test/product/wp12/native-execution-purchase.test.ts",
+      "route": "includeContract omitted; this corrected helper function is not called"
+    }
+  ],
+  "compatibilityReviewed": [
+    "C09 case sources are the exact issued references; neither case access nor the contract input composer requires a current-record observation period to equal the future decision horizon.",
+    "The source resolver checks the issued selector period exactly against its projection. Both now receive the host-observed period.",
+    "The raw agreement can contain recorded future term dates while the record itself is observed now; no future observation is claimed."
+  ],
+  "remainingGates": [
+    "The separate installed ContractReviewInput producer still requires procurement surface whereas this real issuer supplies dashboard/contracts. This fix does not relabel the source or declare that input accepted.",
+    "The populated documentIds branch still has its separately recorded schema selector mismatch; this fix does not alter it.",
+    "Empty model catalog remains an explicit lack of inference. Hosted results are required before claiming the new issuer path or downstream consumer has passed.",
+    "No timeout attribution, deadline increase, authority cache or redundant-data deletion is made from these two fast failures."
+  ],
+  "sourcePins": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/scope.ts",
+      "tag": "current",
+      "commit": "2ea0673cd17d97607ee020910bf66db4ee6c1bde",
+      "blob": "f53d0509b6f727947ec9b00888bce9dae1420094"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+      "tag": "current",
+      "commit": "2ea0673cd17d97607ee020910bf66db4ee6c1bde",
+      "blob": "c28a167575bf2713590f97798e463ccb33dc50c8"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/dashboard-sources.ts",
+      "tag": "current",
+      "commit": "2ea0673cd17d97607ee020910bf66db4ee6c1bde",
+      "blob": "4ddee38662690ce5284cc46ef04d315cb3fb4f6c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/sources.ts",
+      "tag": "current",
+      "commit": "2ea0673cd17d97607ee020910bf66db4ee6c1bde",
+      "blob": "c32c973c0b4111e4ac7df0c5d934e094277823f6"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/contracts.ts",
+      "tag": "current",
+      "commit": "2ea0673cd17d97607ee020910bf66db4ee6c1bde",
+      "blob": "8bfd7345072e40512fd9e8805cdd93b22db25ccb"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/dashboard-portfolio.ts",
+      "tag": "current",
+      "commit": "2ea0673cd17d97607ee020910bf66db4ee6c1bde",
+      "blob": "f4ccf580aafef9789b9c9acba2f861f05d1c8b08"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/scope.ts",
+      "tag": "owner31",
+      "commit": "9d65ea8fcd8ce6ea1249dc669e0fcc248b540241",
+      "blob": "f53d0509b6f727947ec9b00888bce9dae1420094"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+      "tag": "owner31",
+      "commit": "9d65ea8fcd8ce6ea1249dc669e0fcc248b540241",
+      "blob": "ec265772aa3100f6f69648cbd444fcdfde01b754"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+      "tag": "owner34",
+      "commit": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+      "blob": "c28a167575bf2713590f97798e463ccb33dc50c8"
+    }
+  ],
+  "validation": {
+    "syntax": "PASS node --check; imports not executed",
+    "baseline": "Exact W16 helper blob verified by GitHub MCP",
+    "preservation": "PASS static before/after function boundary and all prior expect source lines",
+    "independentReview": {
+      "status": "PASS_STATIC",
+      "reviewer": "/root/compose_typecheck",
+      "path": "independent-review.json",
+      "sha256": "a847b27dcad8d1baa7b9d8b480a53a10b580b5548f3d95f451a9a7c0327fccef"
+    },
+    "localProductTests": false,
+    "localTypecheck": false,
+    "ciDispatched": false,
+    "foreignEdits": false
+  },
+  "acceptance": {
+    "GNATIVE": false,
+    "fullWP12": false,
+    "hostedPassForIncrement": false
+  },
+  "artifacts": {
+    "before": "native-procurement-preparation.before.ts",
+    "diff": "increment.diff",
+    "independentReview": "independent-review.json",
+    "independentSourcePins": "independent-source-pins.json",
+    "preservationCrosscheck": "preservation-crosscheck.json"
+  }
+}

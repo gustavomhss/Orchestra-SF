@@ -1,0 +1,37 @@
+{
+  "schema": "wp12-independent-purchase-renewal-review-v1",
+  "reviewer": "/root/own_review_resume",
+  "createdAt": "2026-11-14T13:58:07.944643+00:00",
+  "status": "PASS_STATIC",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-choice-preparation.ts",
+      "blob": "ce7e079d3abcc8af0fc881483addfa2ca337ae9c",
+      "sha256": "9b60a4ecde5f616d187a323447b81ba3bbc6c982b5e62351965f7ef5935609de",
+      "bytes": 6289
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-purchase.test.ts",
+      "blob": "4c303604768e8a2e750aee8ea8f35d7f17302742",
+      "sha256": "7e771637454be08e1392b39f2a0965391ae280f96230f8aacfcf220febc2f6cd",
+      "bytes": 16735
+    }
+  ],
+  "findings": [],
+  "review": [
+    "The optional typed beforeAction callback is awaited only when supplied. Existing default callers keep the same sequence and no extra await, operation, evidence or authority renewal.",
+    "The five hook sites precede the initial real case read, each of the three existing HTTP commands and the final real case read. Payloads, expected case version, criteria/result source refs, comparisons and choice assertions remain unchanged.",
+    "Only purchase supplies the hook. selectWp12ProcurementPeriod performs genuine public selection creation in both installed services and the separate companion business instance; it does not cache or extend an admission, retry a denied action, or renew during an action.",
+    "The public selection operation sf_work_list and the sf_request_read/sf_context_get diagnostic operations already exist in the purchase grant. No grant expansion or private period-map access is added.",
+    "The diagnostic direct readers correctly use the existing context.ui wrapper, because they consume the admission before invoking domain ports; these are not services.dispatch calls and do not incur the separately found duplicate-validation issue.",
+    "The failure probe uses two independent admissions, does not renew selection, records concrete statuses/reasons and rethrows the original error. It labels the observations companion-business and does not infer installed-host private lease state from them.",
+    "The known 300-second period registry supplies a source-consistent expiry hypothesis, but case-evidence-unavailable alone did not prove that cause. Instrumentation preserves this distinction; no repaired hosted result is claimed.",
+    "No existing deadline, real raw source, financial discriminator, derivedMissing assertion, request authority or model behavior changes."
+  ],
+  "limits": [
+    "Static source/diff review only; no product test, typecheck, CI or edits to the reviewed source files.",
+    "The pending derivedMissingCategoryIds failure is separate and remains strict.",
+    "Selection age is measured around the public call; it is not asserted to be an internal issuedAt/expiresAt value.",
+    "A new hosted run is required to observe whether a lease still expires within any individual expensive action."
+  ]
+}

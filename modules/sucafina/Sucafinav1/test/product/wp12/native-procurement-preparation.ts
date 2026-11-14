@@ -49,7 +49,13 @@ export async function selectWp12ProcurementPeriod(context: Wp12NativeMissionCont
 }
 
 export async function issueWp12Contract(context: Wp12NativeMissionContext) {
-  const selected = { id: WP12_CONTRACT_ID, fields: ["name", "amount", "currency", "notice"], period: WP12_SCENARIO_PERIOD }
+  const observedAt = new Date(context.at)
+  if (!Number.isFinite(observedAt.getTime())) throw new Error("The host contract observation time is invalid")
+  // Dashboard contracts are current record snapshots. Their observation period
+  // follows the actual host clock; the financial decision horizon stays in 2027.
+  const observedYear = observedAt.getUTCFullYear()
+  const observationPeriod = { start: `${observedYear}-01-01`, end: `${observedYear}-12-31` }
+  const selected = { id: WP12_CONTRACT_ID, fields: ["name", "amount", "currency", "notice"], period: observationPeriod }
   return context.ui("sf_contract_read", selected, async (call) => {
     const issued = await context.business.contracts.issueContract(selected, call)
     if (issued.status !== "ok") throw new Error(`Actual contract source issuance failed: ${issued.reason}`)
@@ -60,7 +66,14 @@ export async function issueWp12Contract(context: Wp12NativeMissionContext) {
     if (refs.length !== 1 || refs[0]?.kind !== "record" || refs[0].refId !== issued.value) throw new Error("The contract projection has no unique real source")
     expect(refs[0].target.surface).toBe("dashboard")
     expect(refs[0].target.recordType).toBe("contracts")
+    expect(refs[0].target.period).toEqual(observationPeriod)
+    expect(read.value.context.period).toEqual(observationPeriod)
     expect(read.value.missing).toContainEqual({ field: "notice", reason: "missing" })
+    console.log("SF_WP12_CONTRACT_SOURCE:" + JSON.stringify({ scope: "actual-current-dashboard-contract-snapshot",
+      githubSha: process.env.GITHUB_SHA ?? null, observedAt: context.at, observationPeriod, financialHorizon: WP12_SCENARIO_PERIOD,
+      sourceRef: refs[0].refId, sourceSurface: refs[0].target.surface, sourceType: refs[0].target.recordType,
+      sourceVersion: refs[0].target.version, projectionDigest: refs[0].target.projectionDigest,
+      missingFields: read.value.missing, inferenceExecuted: false, gnativeAccepted: false }))
     return { evidence: refs[0], projection: read.value }
   })
 }

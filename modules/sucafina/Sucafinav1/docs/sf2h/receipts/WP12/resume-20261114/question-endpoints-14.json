@@ -1,0 +1,91 @@
+{
+  "schema": "wp12-question-endpoint-selection-increment-v1",
+  "createdAt": "2026-11-14T13:59:55.752377+00:00",
+  "status": "FROZEN_FOR_PARENT_PUBLICATION",
+  "owner": "WP12",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-questions.test.ts",
+      "beforeBlob": "afb4f2bbb9669455e07fceb18cc7bd6a45b7457f",
+      "afterBlob": "50303355860a26718686f5daf7dddad8978434c3",
+      "sha256": "ead473b33a552a090e142d9eb4a2a06ce2b91955a98ee375b89dc15db9bd7786",
+      "bytes": 30092
+    }
+  ],
+  "failureEvidence": {
+    "runId": 43601851442,
+    "jobId": 132468089391,
+    "productSnapshot": "1878f1a513c99d95d4640faa042fa10ead947884",
+    "log": "evidence/resume-11-questions.log",
+    "logSha256": "35c5491e1ca49267ee5d7fa70f3098ac01e2b532a748e63408125dd4985f7518",
+    "test": "QuestionPlanningInput carries real C06 support and its native proposal is consumed once after reload when a model exists",
+    "durationMs": 1963.38,
+    "logLines": [
+      867,
+      884
+    ],
+    "error": "The real relation endpoints were not issued",
+    "phase": "prepareQuestionSupport after actual Planner source issue and before case promotion/native preparation",
+    "nativeInferenceObserved": false
+  },
+  "diagnosis": [
+    "The current Dashboard projects collection is admitted only if the host-observed day lies in the selected period. The W16 run observed2026-11-14 but the driver selected2027 for the current project snapshot; this is a sufficient deterministic source-unavailable cause.",
+    "Both name and milestones are allowed public project fields and are present in the real project projection. The authenticated admin actor has the Portfolio Dashboard page; neither fields nor visibility need widening.",
+    "The CAPEX record is explicitly year2027; its real source scope requires the2027 period. It must not be relabelled as the current observation year merely to match the project.",
+    "The C06 pmo-capex catalogue validates exact endpoint types, installation/project identity and ref hashes. Its current source authorizer resolves each real issued reference independently; it does not require their period to equal the decision horizon.",
+    "The driver also used context.ui around services.dispatch for relation_read and answer_read. That wrapper pre-consumes UI admission; the dispatcher validates it again and correctly denies a second consumption. Both calls now use the shared real single-use dispatch helper."
+  ],
+  "changes": [
+    "Projects and the homonymous outside-case negative use the UTC calendar year of context.at. CAPEX, Planner, decision horizon, thread/selection periods and all raw domain fields retain2027.",
+    "Separate issuer failures identify project versus CAPEX. Ten new assertions verify actual endpoint identities/surfaces/types/periods; all70 previous expect lines remain.",
+    "One marker reports public endpoint refs/fields/periods and separates current observation from financial horizon. It records no inference/GNATIVE acceptance.",
+    "Relation and answer operations use dispatchWp12Ui. Direct business source issuers continue to use context.ui; no private lease or serialized binding is created."
+  ],
+  "dependency": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-mission-harness.ts",
+    "blob": "49300a78a44ac0739791d10a11c386b317f4b51a",
+    "owner": "/root/compose_typecheck",
+    "export": "dispatchWp12Ui",
+    "manifest": "resume-input/own-missions/ui-dispatch-single-use/manifest.json",
+    "publication": "Must publish with this own helper increment or an identical published blob"
+  },
+  "preserved": [
+    "No changes to native-question-preparation.ts, contract helper f1433397, foreign sources, harness, grants, profile/skill manifest, model/provider configuration or deadlines.",
+    "Explicit human C10 pending condition remains distinct from derived-omission proof. Relation support, predecessor thread/reply, directory ID and empty condition evidenceRefs stay real and unchanged.",
+    "Outside-case, recipient-name and injected-condition negatives remain; real native calls/receipts, contribution consumer/idempotency/reopen and no-domain-mutation assertions remain.",
+    "No assertion is relaxed and no model response or public source reference is fabricated."
+  ],
+  "validation": {
+    "syntax": "PASS node --check; no imports executed",
+    "exactBaseline": "GitHub MCP verified afb4f2bbb9669455e07fceb18cc7bd6a45b7457f at failing snapshot",
+    "allPriorExpectLinesPreserved": 70,
+    "newExpectLines": 10,
+    "independentReview": {
+      "status": "PASS_STATIC",
+      "reviewer": "/root/compose_typecheck",
+      "path": "independent-review.json",
+      "sha256": "f29695f93cc33ce7ecbeab9806dca82f38a7aef0d71d192120d6a6be67d005d7"
+    },
+    "localProductTests": false,
+    "localTypecheck": false,
+    "ciDispatched": false,
+    "foreignEdits": false
+  },
+  "limits": [
+    "The original aggregated error did not report each endpoint status. Published code establishes the project period as a sufficient cause, not a runtime observation of corrected project or CAPEX success.",
+    "The corrected path needs hosted execution; no native mission, consumer or criterion is promoted from this source change alone.",
+    "The published Dashboard implementation currently accepts years2024–2027; this fix covers the observed2026 host date without changing that product range.",
+    "work-signals/C07 and unavailable actual model catalog remain explicit separate dependencies."
+  ],
+  "acceptance": {
+    "GNATIVE": false,
+    "hostedPassForIncrement": false,
+    "fullWP12": false
+  },
+  "artifacts": {
+    "before": "native-execution-questions.before.ts",
+    "diff": "increment.diff",
+    "sourcePins": "source-pins.json",
+    "independentReview": "independent-review.json"
+  }
+}

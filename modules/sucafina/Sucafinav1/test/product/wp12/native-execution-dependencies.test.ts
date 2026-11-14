@@ -7,7 +7,7 @@ import { createDashboardSourceIssuer } from "../../../product/integration/dashbo
 import { readCaseAnalysisProjection } from "../../../product/interface/case-analysis-input.ts"
 import { object } from "../../../runtime/contract.ts"
 import { chooseWp12Alternative } from "./native-choice-preparation.ts"
-import { executeWp12NativeMission, observeWp12UnavailableMission, readWp12NativeMissionAfterReload, withWp12NativeMissionHost } from "./native-mission-harness.ts"
+import { dispatchWp12Ui, executeWp12NativeMission, observeWp12UnavailableMission, readWp12NativeMissionAfterReload, withWp12NativeMissionHost } from "./native-mission-harness.ts"
 import type { Wp12NativeMissionContext } from "./native-mission-harness.ts"
 import { initializeWp12PortfolioSources, prepareWp12PortfolioCase, prepareWp12PortfolioMission, wp12PortfolioMissionRequest,
   WP12_PORTFOLIO_HUMAN_ACTIONS, WP12_PORTFOLIO_OPERATIONS, WP12_PORTFOLIO_PERIOD } from "./native-portfolio-preparation.ts"
@@ -142,7 +142,7 @@ test("dependency review uses a confirmed relation, actual choice and dated miles
       expect(prepared.response.status).toBe(200)
       expect(digestSfValue(prepared.body.value)).toBe(initial.inputDigest)
       const request = { recordRefs: initial.sourceRefs }
-      const relations = await context.ui("sf_relation_read", request, (call) => context.services.dispatch("sf_relation_read", request, call))
+      const relations = await dispatchWp12Ui(context, "sf_relation_read", request)
       if (relations.status !== "ok") throw new Error(`The confirmed relation cannot be reopened: ${relations.reason}`)
       const read = decodeSfOperationOutput("sf_relation_read", relations.result)
       if (!read.ok) throw new Error("The mounted relation reader returned invalid output")

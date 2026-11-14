@@ -3,7 +3,7 @@ import { expectSpawn } from "../../../../../../packages/core/test/fixture/omni-e
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import { decodeSfOperationOutput, decodeSfSkillInput } from "../../../product/contracts/schema-admission.ts"
 import { object } from "../../../runtime/contract.ts"
-import { executeWp12NativeMission, observeWp12UnavailableMission, readWp12NativeMissionAfterReload, withWp12NativeMissionHost } from "./native-mission-harness.ts"
+import { dispatchWp12Ui, executeWp12NativeMission, observeWp12UnavailableMission, readWp12NativeMissionAfterReload, withWp12NativeMissionHost } from "./native-mission-harness.ts"
 import type { Wp12CompletedNativeMission, Wp12NativeMissionContext } from "./native-mission-harness.ts"
 import { issueWp12Contract, WP12_CONTRACT_ID } from "./native-procurement-preparation.ts"
 
@@ -28,7 +28,7 @@ test("native Procurement reuses submitted FX and domain ranking without choosing
       // creates a supplier relationship or changes the submitted comparison.
       const contract = await issueWp12Contract(context)
       const evidenceInput = { evidenceRef: contract.evidence }
-      const resolved = await context.ui("sf_evidence_get", evidenceInput, (call) => context.services.dispatch("sf_evidence_get", evidenceInput, call))
+      const resolved = await dispatchWp12Ui(context, "sf_evidence_get", evidenceInput)
       if (resolved.status !== "ok") throw new Error(`The real selected contract evidence was refused: ${resolved.reason}`)
       const contractEvidence = decodeSfOperationOutput("sf_evidence_get", resolved.result)
       if (!contractEvidence.ok) throw new Error("The selected contract evidence failed the canonical output schema")

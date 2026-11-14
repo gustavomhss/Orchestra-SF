@@ -52,6 +52,18 @@ export type Wp12NativeMissionContext = {
   ui: <T>(operation: string, payload: unknown, work: (call: TrustedUiContext) => Promise<T>) => Promise<T>
 }
 
+/** The shared dispatcher validates and consumes UI admission itself. Direct
+ * business ports still use context.ui, which validates before their callback. */
+export async function dispatchWp12Ui(context: Wp12NativeMissionContext, operation: string, payload: unknown) {
+  const admitted = await context.services.ui.admit(context.request(), operation, digestSfValue(payload))
+  if (admitted.status !== "ok") throw new Error(`Native mission UI dispatch admission failed: ${admitted.reason}`)
+  try {
+    return await context.services.dispatch(operation, payload, admitted.value)
+  } finally {
+    context.services.ui.finish(admitted.value)
+  }
+}
+
 /** Only domain fixtures and the private Request authenticator are supplied by a
  * driver. Sessions, source issuance, catalog resolution, receipts, inference and
  * output persistence all come from the production host. No provider is installed. */

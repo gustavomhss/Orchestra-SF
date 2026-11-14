@@ -1,0 +1,71 @@
+{
+  "schema": "wp12-own-purchase-selection-renewal-v1",
+  "state": "FROZEN_REVIEWED_NOT_HOSTED",
+  "baseProduct": "e8ae326420eae2d51247fcab5730e82e5d3b8d39",
+  "observedFailedProduct": "2ea0673cd17d97607ee020910bf66db4ee6c1bde",
+  "observedRun": 43600564160,
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-choice-preparation.ts",
+      "blob": "ce7e079d3abcc8af0fc881483addfa2ca337ae9c",
+      "sha256": "9b60a4ecde5f616d187a323447b81ba3bbc6c982b5e62351965f7ef5935609de",
+      "bytes": 6289
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-purchase.test.ts",
+      "blob": "4c303604768e8a2e750aee8ea8f35d7f17302742",
+      "sha256": "7e771637454be08e1392b39f2a0965391ae280f96230f8aacfcf220febc2f6cd",
+      "bytes": 16735
+    }
+  ],
+  "baseline": [
+    {
+      "path": "repo/modules/sucafina/Sucafinav1/test/product/wp12/native-choice-preparation.ts",
+      "blob": "206212ffb8afd5ce1f0da70e1e4111b9482a3eb2",
+      "sha256": "b022cab648196c3e818b80573844960d254748b13d5de1fe87a6d7241b6a4766"
+    },
+    {
+      "path": "repo/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-purchase.test.ts",
+      "blob": "d66dafd96a04837f6b10d5e859271d153e1bd72d",
+      "sha256": "afcbf45563fced0034f48f4a2962c8f3082032e6ed3278afa37c4e384b61f62c"
+    }
+  ],
+  "reason": "Complete purchase consumed more than the public Procurement selection lifetime before units. Renew each distinct human action through actual public selection; do not renew inside a request or retry failure. Timing remains a strong inference, not exclusive cause proof.",
+  "changes": [
+    "Optional typed beforeAction called before initial case read, each of three HTTP human actions, and final case read. No new await/default behavior without callback.",
+    "Only purchase passes the callback; both real installed and companion-business registries are selected through their public APIs.",
+    "Phase/duration and selection call-start/return age are logged.",
+    "On error real request/context readers probe without renewal and original error is rethrown.",
+    "Preparation and choice costs now have separate phase observations."
+  ],
+  "preserved": [
+    "360000ms deadline",
+    "All financial values, null hypothetical total, category coverage, derived-training discriminator",
+    "Human choices, source selection, ranking, FX and input negative assertions",
+    "Other callers of choice helper use default behavior",
+    "No private map, TTL, clock or live policy change",
+    "No foreign source edit and no native receipt fabricated"
+  ],
+  "procurementHelperPreserved": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-procurement-preparation.ts",
+    "blob": "f1433397246117886e109d32b171345ec1992066"
+  },
+  "review": {
+    "path": "resume-input/criteria/purchase-selection-renewal/independent-review-own.json",
+    "sha256": "7f592dfff5d3601a9cccab1fc4d6c8da518b60a6dbec86f39bd5672b5da1fe7b",
+    "verdict": "PASS_STATIC"
+  },
+  "syntaxOnly": {
+    "tool": "node stripTypeScriptTypes text-only followed by node --check",
+    "files": 2,
+    "exitCode": 0,
+    "productCodeEvaluated": false
+  },
+  "runtimeVerification": {
+    "state": "NOT_RUN",
+    "localProductTests": false,
+    "localTypecheck": false,
+    "nextFlight": "Root to select only changed sourcing/documents-contract and complete purchase; pending C10 remains blocked awaiting exact owner correction."
+  },
+  "unappliedCostProposal": "Purchase currently initializes a third unselected forecast; reducing it is proposed only and requires separate coordination/review. No initializer data was changed."
+}

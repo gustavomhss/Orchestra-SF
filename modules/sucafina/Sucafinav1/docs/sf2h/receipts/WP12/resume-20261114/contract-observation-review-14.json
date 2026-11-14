@@ -1,0 +1,75 @@
+{
+  "schema": "wp12-independent-contract-observation-review-v1",
+  "reviewer": "/root/compose_typecheck",
+  "created_at": "2026-11-14T13:54:41.659374+00:00",
+  "status": "PASS_STATIC",
+  "file": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-procurement-preparation.ts",
+    "beforeBlob": "a0146eb1e5e06eba5eca8007252206b2164e36fa",
+    "afterBlob": "f1433397246117886e109d32b171345ec1992066",
+    "sha256": "56cb1681ed5f52b4ed306231cb9650240218e89d73c1e4929a3f1ae26831eb43",
+    "bytes": 16037
+  },
+  "findings": [],
+  "review": [
+    "The actual harness captures context.at with new Date().toISOString() and passes that same value to both source scope projection and host environment. The change selects a period; it neither alters nor forges that clock.",
+    "Published Dashboard scope f53d0509 rejects current contracts when the observed day is outside the selector period. The failed 2026 run used 2027. Published source projection c28a1675 routes contract records through this exact scope. Selecting the observed UTC calendar year removes that sufficient rejection for the current run date.",
+    "Published Procurement contract source 8bfd7345 accepts the four selected fields and delegates to real Dashboard issuance/read. Published publicRecord f4ccf580 retains currency and null notice. No private source reference or value is constructed.",
+    "New assertions bind both the returned record reference period and public projection context period to the selected observation period. Existing surface/type, unique reference and null notice assertions remain.",
+    "Both callers retain their real contract evidence; source outside-field refusal remains in sourcing. The future financial decision horizon, persisted raw sources, FX/ranking, case operations and document consumers are unchanged.",
+    "The return shape and imports do not change. The two added expect arguments are concrete Period-shaped objects compatible with the existing record/projection types; no concrete type or narrowing issue was found."
+  ],
+  "preservation": {
+    "beforeBlob": "a0146eb1e5e06eba5eca8007252206b2164e36fa",
+    "afterBlob": "f1433397246117886e109d32b171345ec1992066",
+    "afterSHA256": "56cb1681ed5f52b4ed306231cb9650240218e89d73c1e4929a3f1ae26831eb43",
+    "allBytesOutsideFunctionUnchanged": true,
+    "previousExpectLinesPreserved": 29,
+    "addedExpectLines": 2,
+    "failureLogSHA256": "b62cbffc299996d1c6bd2b5f4f965bb8ddd3f7c69154933ef7e84a98b45bf7f7"
+  },
+  "sourcePins": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/contracts.ts",
+      "commit": "2ea0673cd17d97607ee020910bf66db4ee6c1bde",
+      "blob": "8bfd7345072e40512fd9e8805cdd93b22db25ccb",
+      "retrieval": "GitHub MCP github_fetch_file exact commit"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/dashboard-portfolio.ts",
+      "commit": "2ea0673cd17d97607ee020910bf66db4ee6c1bde",
+      "blob": "f4ccf580aafef9789b9c9acba2f861f05d1c8b08",
+      "retrieval": "GitHub MCP github_fetch_file exact commit"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/scope.ts",
+      "commit": "2ea0673cd17d97607ee020910bf66db4ee6c1bde",
+      "blob": "f53d0509b6f727947ec9b00888bce9dae1420094",
+      "retrieval": "GitHub MCP github_fetch_file exact commit"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+      "commit": "2ea0673cd17d97607ee020910bf66db4ee6c1bde",
+      "blob": "c28a167575bf2713590f97798e463ccb33dc50c8",
+      "retrieval": "GitHub MCP github_fetch_file exact commit"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/sources.ts",
+      "commit": "2ea0673cd17d97607ee020910bf66db4ee6c1bde",
+      "blob": "c32c973c0b4111e4ac7df0c5d934e094277823f6",
+      "retrieval": "GitHub MCP github_fetch_file exact commit"
+    }
+  ],
+  "localSubsetHandling": {
+    "source": "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+    "localBlob": "4e0fd90ab35f9c03d79d4a1bb65b7bdc7385681c",
+    "publishedBlobReviewed": "c28a167575bf2713590f97798e463ccb33dc50c8",
+    "decision": "Local divergent bytes were excluded from authoritative source analysis; exact published source was independently retrieved via MCP. No source was overwritten."
+  },
+  "limits": [
+    "This closes the statically demonstrated observation-period mismatch; the corrected public issuer path has not yet passed hosted execution.",
+    "The pinned Dashboard implementation accepts observation years2024–2027. The reviewed current CI date is2026; no broader date support is claimed.",
+    "Existing ContractReviewInput surface/schema linkage findings and unavailable model catalog remain separate.",
+    "No product test, typecheck, CI dispatch, foreign source edit or remote mutation was performed."
+  ]
+}
