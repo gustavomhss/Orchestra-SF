@@ -36,6 +36,8 @@ export type SfRoutineNativeOwnerBinding = Readonly<{
 }>
 export type SfRoutineNativeOwnerPort = {
   resolve: (context: TrustedDomainContext, request: Request) => Promise<SfRoutineNativeOwnerBinding | undefined>
+  /** A concrete registry stays unavailable until it has a live, authenticated native owner. */
+  available?: () => boolean
 }
 
 export type SfRoutineNativeAdapterInput = Pick<SfRoutineServicesInput, "resolveCase" | "resolveInputs" | "revalidateSources"> & {
@@ -65,8 +67,9 @@ const hold = (status: Failure["status"], reason: string): never => { throw new H
 export function createSfRoutineNativeAdapter(input: SfRoutineNativeAdapterInput) {
   const available = () => {
     const resources = input.resources()
+    const owners = input.owners()
     return !!resources && resources.current() && input.governance.installed(resources.governance) &&
-      !!input.owners() && !!input.publication()
+      !!owners && owners.available?.() !== false && !!input.publication()
   }
   const acquire = async (context: TrustedDomainContext): Promise<Scope> => {
     const resources = input.resources(), owners = input.owners(), request = input.requestFor(context)
@@ -366,3 +369,4 @@ export function createSfRoutineNativeAdapter(input: SfRoutineNativeAdapterInput)
   }
   return { port, available, native: () => available() ? port : undefined }
 }
+

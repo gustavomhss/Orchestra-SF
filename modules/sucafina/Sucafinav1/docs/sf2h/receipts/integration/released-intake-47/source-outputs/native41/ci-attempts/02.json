@@ -1,0 +1,210 @@
+{
+  "schema": "sf-routine-native-owner-ci-attempt-v1",
+  "attempt": 2,
+  "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+  "W_tree": "294407df8b80276a9f80737fd12531635eccc078",
+  "source_delta": [
+    {
+      "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-owner-binding/ci-attempts/01.json",
+      "status": "added",
+      "additions": 165,
+      "deletions": 0,
+      "changes": 165,
+      "previous_filename": null
+    },
+    {
+      "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-owner-binding/input-provenance.json",
+      "status": "added",
+      "additions": 95,
+      "deletions": 0,
+      "changes": 95,
+      "previous_filename": null
+    },
+    {
+      "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-owner-binding/source-review.json",
+      "status": "added",
+      "additions": 140,
+      "deletions": 0,
+      "changes": 140,
+      "previous_filename": null
+    },
+    {
+      "filename": "modules/sucafina/Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+      "status": "modified",
+      "additions": 13,
+      "deletions": 20,
+      "changes": 33,
+      "previous_filename": null
+    },
+    {
+      "filename": "modules/sucafina/Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "status": "modified",
+      "additions": 2,
+      "deletions": 4,
+      "changes": 6,
+      "previous_filename": null
+    },
+    {
+      "filename": "modules/sucafina/Sucafinav1/test/product/routine-native-owner-binding/fixture.ts",
+      "status": "modified",
+      "additions": 7,
+      "deletions": 8,
+      "changes": 15,
+      "previous_filename": null
+    }
+  ],
+  "dedup": {
+    "branch": "ci-run-linux-astra-wp09-86e6a650-614f05c2-1",
+    "observedAt": "2026-11-14 22:49:41 UTC",
+    "runs": [],
+    "product": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+    "tree": "294407df8b80276a9f80737fd12531635eccc078",
+    "requestHash": "614f05c20db42b19e9749e6dac8f5327944b5160637384773f18279d158d5b9f",
+    "reuse": "Prior14 tests source and test files unchanged; rerun only unloaded new tests. Required package gate rechecked."
+  },
+  "interfaces": {
+    ".github/workflows/test-ci.yml": {
+      "blob": "9f078f4e37b758691bcd073e5590f05d5444392a",
+      "sha256": "10c4bb7b3b4fc6c9201736dfa1d4d211dccf0e75de74efa38ae5299473008d26"
+    },
+    ".github/workflows/astra-wp09-check.yml": {
+      "blob": "883e87de0196c580ac8160d74d8e5211a967e286",
+      "sha256": "fe1bebe8b39e57745396f91ea19acdd70cf2b06b49333fcae1349f89bc13d864"
+    },
+    "script/test-ci-request.ts": {
+      "blob": "5007e48270b80c83eb719d35cec9e6343206a195",
+      "sha256": "4097286f73438bf767cf47561fc03e29338eef8ffd48149b2dcba0b3323fa4cc"
+    }
+  },
+  "tests": {
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "./Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+        "./Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "env": {}
+    },
+    "request_sha256": "614f05c20db42b19e9749e6dac8f5327944b5160637384773f18279d158d5b9f",
+    "S": "f1ec557494f0c20159bbac937cc628071c08b074",
+    "S_tree": "4e8d30cc652413614a417dc3decc28efc5c3c5cd",
+    "first_parent": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+    "delta": [
+      {
+        "filename": ".ci-run.json",
+        "status": "added",
+        "additions": 1,
+        "deletions": 0,
+        "changes": 1,
+        "previous_filename": null
+      }
+    ],
+    "branch": "ci-run-linux-astra-wp09-86e6a650-614f05c2-1",
+    "run": 43650122594,
+    "job": 132616495906,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43650122594",
+    "conclusion": "success",
+    "pass": 87,
+    "fail": 0,
+    "errors": 0,
+    "expect_calls": 368,
+    "tests_reported": 87,
+    "files": 2,
+    "duration_ms": 10720,
+    "runtime": "bun 1.3.14 (0d9b296a), ubuntu-24.04",
+    "new_tests_executed": true,
+    "fixture_boundary": "Real native services and publication/record readers; explicitly synthetic Session/Task/governance records and injected authenticated Request/native frame. Nonexecuting Task fixture; no real native admission/model/reviewer/dispatch/Relay/Schedule.",
+    "omni_nonce": "304e14fdf3dd400e5930942ea9110a31",
+    "omni_verdict": "omni positive control [304e14fdf3dd400e5930942ea9110a31]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+    "omni_scope": "declared; no spawn proof",
+    "cleanup_job": 132616966753,
+    "cleanup_conclusion": "success",
+    "artifacts": []
+  },
+  "check": {
+    "request": {
+      "productSha": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+      "content": "{\"productSha\":\"86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df\",\"devSha\":\"a1d37698a7bb097c1578f827eba6a19b9917ef07\"}"
+    },
+    "S": "b333525a854cf64099ea8c6601d4da9bb52c8c1e",
+    "S_tree": "98f2f5654813ba5e7ceba38e1d60563678007984",
+    "first_parent": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+    "second_parent": "69ad7930e5ae676463f8bd25faeffbd2f2bc71f6",
+    "delta": [
+      {
+        "filename": ".astra-wp09-check.json",
+        "status": "added",
+        "additions": 1,
+        "deletions": 0,
+        "changes": 1,
+        "previous_filename": null
+      }
+    ],
+    "branch": "astra-check-wp09",
+    "run": 43650142544,
+    "job": 132616555993,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43650142544",
+    "conclusion": "failure",
+    "typecheck": {
+      "result": "FAIL",
+      "diagnostics": 78,
+      "owned": 0,
+      "external": 78,
+      "baseline_run": 43644025753,
+      "baseline_job": 132597678493,
+      "external_exact_equivalence": true,
+      "normalization": "Remove timestamp and GitHub ##[error] annotation only from each error TS header; compare ordered exact strings.",
+      "private_source_diagnostics": 0,
+      "prior_owned_diagnostics_resolved": 6
+    },
+    "guards": {
+      "result": "PASS",
+      "rules": 78,
+      "changed_paths": 703,
+      "gate": 0,
+      "warnings": 13,
+      "errors": 0
+    },
+    "artifacts": [
+      {
+        "id": 14135224329,
+        "name": "astra-wp09-check-1",
+        "size_in_bytes": 5527,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14135224329",
+        "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14135224329/zip",
+        "expired": false,
+        "created_at": "2026-11-14T22:51:29Z",
+        "expires_at": "2026-11-28T22:51:28Z",
+        "updated_at": "2026-11-14T22:51:29Z",
+        "digest": "sha256:0c27488e5836ed59f225128eca53b5dca7bd89b6e66626f20f86321b66f631e2",
+        "workflow_run": {
+          "id": 43650142544,
+          "repository_id": 1455724710,
+          "head_repository_id": 1455724710,
+          "head_branch": "astra-check-wp09",
+          "head_sha": "b333525a854cf64099ea8c6601d4da9bb52c8c1e"
+        }
+      }
+    ],
+    "artifact_zip_downloaded": false
+  },
+  "unchanged_witness": {
+    "W": "99d225ba024b4de910753d0fce34bf1b9a43281f",
+    "run": 43649747094,
+    "tests": 14,
+    "files": [
+      "routine-native-admission/adapter-boundaries.test.ts",
+      "routine-native-admission/governance-lease.test.ts"
+    ],
+    "basis": "W1→W2 modifies only the three new owner-binding test files and receipts; all five private source files and the two previous test files are identical.",
+    "same_head_101_test_suite_claim": false
+  },
+  "AM02": "NOT_PROVEN",
+  "AM06": "NOT_PROVEN",
+  "GLOBAL_RELEASE": false
+}

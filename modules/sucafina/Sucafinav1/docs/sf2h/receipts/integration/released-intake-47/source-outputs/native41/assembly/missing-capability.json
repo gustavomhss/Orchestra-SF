@@ -1,0 +1,109 @@
+{
+  "schema": "sf-routine-native-missing-capability-v1",
+  "mission": 41,
+  "status": "PRIVATE_REGISTRY_AND_HOOK_MOUNT_PREPARED; AUTHENTICATED_NATIVE_ADMISSION_NOT_INSTALLED",
+  "owner": "session42/S0 private host composition together with the authenticated native admission origin owner; session42 explicitly succeeds closed session33",
+  "owner_reconciliation": {
+    "original_requested_consumer": "session33/S0; terminal history preserved in manifest.json",
+    "authority_receipt_commit": "c5ab23fd7c9b231917bf70123958c9ff03e7d420",
+    "authority_receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/authority-ack.json",
+    "control_commit": "365c4b4f809eac232a46b38f7412bfea8ba55d30",
+    "integration_epoch": "S0-C-e8-browser42",
+    "routing_limit": "42 owns selective integration of explicitly released source41 output; semantic native admission changes remain with their authorized private origin owner. Integration authority does not create the missing capability or permit engine changes.",
+    "source41_authority": "Lease, private source scope and existing authorized surgical Actions flow unchanged; not transferred to integration42",
+    "integration42_validation": "Tests/typecheck/guards/CI/AM forbidden for this integrator; S0 retains final dispatcher and acceptance",
+    "consumption_ack": "NOT_OBSERVED",
+    "host_preimage_at_successor": "Unchanged from bf81f9776b6ba5fb6267828a9a029d7e8d6f5587; patch/preimage/postimage remain unchanged"
+  },
+  "scope": "No global inability inferred; the inspected host lacks this specific producer. Existing native hooks are present.",
+  "required_capability": {
+    "name": "Authenticated SF Request to native Maestro admission and recorded Task invocation/continuation",
+    "must_supply": [
+      "Exact authenticated Request object and a consumed/current TrustedDomainContext from the existing SF authority",
+      "Operation-specific SF authorization and current C07 admission, case, source revisions and publication; a generic UI read lease is insufficient",
+      "Trusted native origin that admitted the same principal/project/Location into the real Maestro Session; HTTP or model selectors are not authority",
+      "Already-persisted assistant message and Task tool call belonging to that Session",
+      "Live canonical invocation/registration/Permission context and explicit expiry/revocation lifecycle",
+      "Governed plan/publication/approval/arm/write-scope correspondence through existing Task records",
+      "An admitted continuation or ownership handoff that respects SessionRunCoordinator exclusivity",
+      "Readiness and descriptor installation before the appropriate native provider materialization"
+    ],
+    "must_not_supply": [
+      "HTTP sessionID as a grant",
+      "SF_ROUTINE_INPUT.owner as the sole owner assertion",
+      "Model text or provider/model name as native identity",
+      "Fabricated assistant tool message, parallel Task ledger or invented run IDs",
+      "A stale frame kept alive after hook completion",
+      "Broad native approval/tool grants added to resident SF profiles"
+    ]
+  },
+  "observed_boundaries": [
+    {
+      "path": "apps/cli/src/sucafina-product/installation.ts",
+      "commit": "bf81f9776b6ba5fb6267828a9a029d7e8d6f5587",
+      "blob": "30ffcb8353cdf478808fbb8d6bc67b48b10a6109",
+      "observation": "Trusted installation factory receives createSfHostRuntime; HTTP Request adapter has no Maestro admission context."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "commit": "bf81f9776b6ba5fb6267828a9a029d7e8d6f5587",
+      "blob": "2bf1e6e66c13dd099029ec16b1f1ddf1f698dae6",
+      "observation": "Existing default entrypoint passes no owner; mission41 patch instantiates registry and actual hook but cannot originate authenticated native admission."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/native-host.ts",
+      "commit": "0c395c462ce0fae67cb274c45ccb06884877d7cd",
+      "blob": "f43e9ae216a94f16daf985bac32f2c9e2627a2b7",
+      "observation": "SessionV2.create uses selected.profile.id and no parent Maestro. Request observation belongs to resident SF Session."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "commit": "0c395c462ce0fae67cb274c45ccb06884877d7cd",
+      "observation": "Authenticated grants/accessRevision bind SF principal and selected resident profile; admission verifies session.agent equals profile.id."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/execution-context.ts",
+      "commit": "0c395c462ce0fae67cb274c45ccb06884877d7cd",
+      "observation": "Request is returned only for consumed live leases of an existing SF binding; cannot infer another Maestro Session."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/contribution.ts",
+      "commit": "0c395c462ce0fae67cb274c45ccb06884877d7cd",
+      "blob": "8d44320acedc4afec9ffc100f5f6a171cdf26993",
+      "observation": "Tool.dynamic receives Tool.Context for sf_* bridge calls; it has no independent Maestro principal association."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-dispatch.ts",
+      "commit": "d9e1aca275bd04b2066ca84a605c7c315ea14c77",
+      "blob": "40fbb2c2abdc26463ee20b34d1e2081287c2ea63",
+      "observation": "Dispatcher takes existing coordinator exclusive ownership with wait:false; an active Task frame does not authorize a second execution."
+    }
+  ],
+  "private_patch": {
+    "target": "apps/cli/src/sucafina-product/host-context.ts",
+    "patch": "host-context.patch",
+    "preimage": "host-context.preimage.txt",
+    "postimage": "host-context.postimage.txt",
+    "installed_calls": [
+      "createSfHostRuntime -> createSfHostRuntimeWithRoutineNative -> createSfRoutineNativeOwnerRegistry",
+      "createSfRoutineNativeGovernance.ownerHook -> routineOwners.run through the private ToolSafety wrapper",
+      "createSfRoutineNativeAdapter.owners -> routineOwners.owners",
+      "host finalizer -> routineOwners.dispose before asynchronous shutdown"
+    ],
+    "deliberately_missing_call": "withRequest(context, request, effect) requires a trusted native admission origin with operation-specific C07, case/source/publication authorization; it grants nothing alone and has no invented HTTP caller.",
+    "public_contract_or_engine_change": false,
+    "dynamic_descriptor_registration": "NOT_IMPLEMENTED; current default has no live binding at onReady and installs zero routine descriptors",
+    "observer_does_not_grant_admission": "Registry does not call governance.bind. Original SF guard continues to require the stronger plan/case/sources/publication lease from adapter or authorized admission."
+  },
+  "proofs_required": [
+    "Positive hosted real-services binding and same-object identity, paired with forged actor/project/Location/session/message/call negatives",
+    "Current headers/policy/accessRevision/lease/providerGeneration and revoke/abort/finalizer/race rejection",
+    "Native human review/approval/arm/Task/Relay and factual terminal result under an actual admitted owner",
+    "Actual consumer after reload and full required AM02/AM06 witnesses",
+    "Schedule admission separately before sf_watch_prepare"
+  ],
+  "tests_in_this_assembly": "NOT_RUN",
+  "AM02": "NOT_PROVEN",
+  "AM06": "NOT_PROVEN",
+  "GLOBAL_RELEASE": false
+}

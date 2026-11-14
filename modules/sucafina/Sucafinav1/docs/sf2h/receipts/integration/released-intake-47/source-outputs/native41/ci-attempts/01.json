@@ -1,0 +1,165 @@
+{
+  "schema": "sf-routine-native-owner-ci-attempt-v1",
+  "attempt": 1,
+  "W": "99d225ba024b4de910753d0fce34bf1b9a43281f",
+  "W_tree": "2a1676a8788c58605657c9f99f2e6a82ee29e330",
+  "dedup": {
+    "branch": "ci-run-linux-astra-wp09-99d225ba-758b4660-1",
+    "observedAt": "2026-11-14 22:45:16 UTC",
+    "runs": [],
+    "requestHash": "758b4660a2b92dda33c750a8125b56385f2ea39e9caacab9d3eff6e4a672f38c",
+    "product": "99d225ba024b4de910753d0fce34bf1b9a43281f",
+    "tree": "2a1676a8788c58605657c9f99f2e6a82ee29e330"
+  },
+  "interfaces": {
+    ".github/workflows/test-ci.yml": {
+      "blob": "9f078f4e37b758691bcd073e5590f05d5444392a",
+      "sha256": "10c4bb7b3b4fc6c9201736dfa1d4d211dccf0e75de74efa38ae5299473008d26"
+    },
+    ".github/workflows/astra-wp09-check.yml": {
+      "blob": "883e87de0196c580ac8160d74d8e5211a967e286",
+      "sha256": "fe1bebe8b39e57745396f91ea19acdd70cf2b06b49333fcae1349f89bc13d864"
+    },
+    "script/test-ci-request.ts": {
+      "blob": "5007e48270b80c83eb719d35cec9e6343206a195",
+      "sha256": "4097286f73438bf767cf47561fc03e29338eef8ffd48149b2dcba0b3323fa4cc"
+    }
+  },
+  "tests": {
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "./Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+        "./Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+        "./Sucafinav1/test/product/routine-native-admission/adapter-boundaries.test.ts",
+        "./Sucafinav1/test/product/routine-native-admission/governance-lease.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "env": {}
+    },
+    "request_sha256": "758b4660a2b92dda33c750a8125b56385f2ea39e9caacab9d3eff6e4a672f38c",
+    "S": "3cd1633adb8d08abfc39d18deead854704a318ed",
+    "S_tree": "0fb2648f53a987f3b4aafeb40e5a05fe60e01b9c",
+    "first_parent": "99d225ba024b4de910753d0fce34bf1b9a43281f",
+    "delta": [
+      {
+        "filename": ".ci-run.json",
+        "status": "added",
+        "additions": 1,
+        "deletions": 0,
+        "changes": 1,
+        "previous_filename": null
+      }
+    ],
+    "branch": "ci-run-linux-astra-wp09-99d225ba-758b4660-1",
+    "run": 43649747094,
+    "job": 132615334257,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43649747094",
+    "conclusion": "failure",
+    "pass": 14,
+    "fail": 2,
+    "errors": 2,
+    "expect_calls": 97,
+    "tests_reported": 16,
+    "files": 4,
+    "duration_ms": 1355,
+    "runtime": "bun 1.3.14 (0d9b296a), ubuntu-24.04",
+    "new_tests_executed": false,
+    "failure": "Both new files failed loading because Sucafina does not declare drizzle-orm. Their test bodies did not execute. Direct import also occurs in the fixture.",
+    "previous_consumers": {
+      "adapter_boundaries": 6,
+      "governance_lease": 8,
+      "passed": 14
+    },
+    "omni_nonce": "9dd490ef7448cbbf32066bf34d8fe8cc",
+    "omni_verdict": "omni positive control [9dd490ef7448cbbf32066bf34d8fe8cc]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+    "omni_scope": "declared; no spawn proof",
+    "cleanup_job": 132615837170,
+    "cleanup_conclusion": "success",
+    "artifacts": []
+  },
+  "check": {
+    "request": {
+      "productSha": "99d225ba024b4de910753d0fce34bf1b9a43281f",
+      "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+      "content": "{\"productSha\":\"99d225ba024b4de910753d0fce34bf1b9a43281f\",\"devSha\":\"a1d37698a7bb097c1578f827eba6a19b9917ef07\"}"
+    },
+    "S": "69ad7930e5ae676463f8bd25faeffbd2f2bc71f6",
+    "S_tree": "05d472fd60867ea07c19e5e399cba34aff375d74",
+    "first_parent": "99d225ba024b4de910753d0fce34bf1b9a43281f",
+    "second_parent": "f8c20a57dae345d45ada1a42ef38233d24668c13",
+    "delta": [
+      {
+        "filename": ".astra-wp09-check.json",
+        "status": "added",
+        "additions": 1,
+        "deletions": 0,
+        "changes": 1,
+        "previous_filename": null
+      }
+    ],
+    "branch": "astra-check-wp09",
+    "run": 43649765609,
+    "job": 132615390010,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43649765609",
+    "conclusion": "failure",
+    "typecheck": {
+      "result": "FAIL",
+      "diagnostics": 84,
+      "owned": 6,
+      "external": 78,
+      "baseline_run": 43644025753,
+      "baseline_job": 132597678493,
+      "external_exact_equivalence": true,
+      "owned_diagnostics": [
+        "test/product/routine-native-owner-binding/binding.test.ts(3,20): error TS2307: Cannot find module 'drizzle-orm' or its corresponding type declarations.",
+        "test/product/routine-native-owner-binding/binding.test.ts(169,30): error TS2322: Type 'Effect<Registration, never, Scope>' is not assignable to type 'Effect<unknown, never, never>'.",
+        "test/product/routine-native-owner-binding/binding.test.ts(205,27): error TS2322: Type 'Effect<void, never, Scope>' is not assignable to type 'Effect<void, never, never>'.",
+        "test/product/routine-native-owner-binding/fences.test.ts(3,20): error TS2307: Cannot find module 'drizzle-orm' or its corresponding type declarations.",
+        "test/product/routine-native-owner-binding/fences.test.ts(102,27): error TS2322: Type 'Effect<void, never, Scope>' is not assignable to type 'Effect<void, never, never>'.",
+        "test/product/routine-native-owner-binding/fixture.ts(2,20): error TS2307: Cannot find module 'drizzle-orm' or its corresponding type declarations."
+      ],
+      "private_source_diagnostics": 0
+    },
+    "guards": {
+      "result": "PASS",
+      "rules": 78,
+      "changed_paths": 700,
+      "gate": 0,
+      "warnings": 13,
+      "errors": 0
+    },
+    "artifacts": [
+      {
+        "id": 14135009106,
+        "name": "astra-wp09-check-1",
+        "size_in_bytes": 5651,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14135009106",
+        "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14135009106/zip",
+        "expired": false,
+        "created_at": "2026-11-14T22:47:07Z",
+        "expires_at": "2026-11-28T22:47:06Z",
+        "updated_at": "2026-11-14T22:47:07Z",
+        "digest": "sha256:38c0bb8e4d1b3b572ec7dfce172309a88e4b44b24d022f285d38b8c79782905f",
+        "workflow_run": {
+          "id": 43649765609,
+          "repository_id": 1455724710,
+          "head_repository_id": 1455724710,
+          "head_branch": "astra-check-wp09",
+          "head_sha": "69ad7930e5ae676463f8bd25faeffbd2f2bc71f6"
+        }
+      }
+    ],
+    "artifact_zip_downloaded": false
+  },
+  "followup": {
+    "authorized_material_delta": "Fix only new test imports to use the existing Database SQL client and correctly discharge Scope required by scoped Agent transforms. No source/engine/API change, no dependency addition, no assertion or budget weakening.",
+    "next_selection": "Two new owner-binding test files; previous14 component witnesses retained at W1 with exact source/test identity and no same-head combined-suite claim."
+  },
+  "AM02": "NOT_PROVEN",
+  "AM06": "NOT_PROVEN",
+  "GLOBAL_RELEASE": false
+}

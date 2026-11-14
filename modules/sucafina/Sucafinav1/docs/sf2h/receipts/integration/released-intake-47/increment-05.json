@@ -1,0 +1,455 @@
+{
+  "schema": "sf2h.released-intake-47.increment.v1",
+  "mission": 47,
+  "epoch": "S0-C-e9-browser47",
+  "increment": 5,
+  "candidate_symbol": "C17",
+  "candidate_identity": "Containing commit/tree; resolved identity in following checkpoint/PR65.",
+  "expected_parent": "6cc6e94535e48d43f17794e6c6e4d171dfdab18c",
+  "prior_material": {
+    "symbol": "C16",
+    "sha": "6cc6e94535e48d43f17794e6c6e4d171dfdab18c",
+    "tree": "f1f6c4beae37491b97fd8fb06b9e09578e64d2ad",
+    "parent": "0fe4f1105e8e1e71ce07fa3fbf51bd9ff01a7364",
+    "increment": 4,
+    "sources": [
+      44
+    ]
+  },
+  "authority_ack": "657ddd81e8f8cc6709ea82e7a8acb40c04851d7b",
+  "input": {
+    "branch": "astra-wp09",
+    "pr": 30,
+    "release": "61af072c7385feba8c89ba6044ca09a90941213d",
+    "release_tree": "e69716a1bc4608ca8ae269e51415cd71e57d4144",
+    "product": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+    "product_tree": "294407df8b80276a9f80737fd12531635eccc078",
+    "lease": "routine-owner-browser41",
+    "authority": "EXPLICIT_BOUNDED_PARTIAL_RELEASE_ENDED_LEASE",
+    "evidence": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-owner-binding/HANDOFF.md",
+        "blob": "777eb719e9570b3dc695ad142f5647f4b10bf467"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-owner-binding/terminal.json",
+        "blob": "a506ee9b54eec94d44bb3f74bb3735581358c433"
+      }
+    ],
+    "stale_consumers": [
+      33,
+      42
+    ],
+    "current_consumer": 47
+  },
+  "decision": "ACCEPT_EIGHT_PRIVATE_COMPONENT_AND_TEST_PATHS_HOLD_REAL_NATIVE_ADMISSION",
+  "material_paths": [
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-owner.ts",
+      "mode": "100644",
+      "preimage": null,
+      "postimage": "a4dce61b612729bb317761bb0d63ff622f55a8cd",
+      "source_path": "apps/cli/src/sucafina-product/routine-native-owner.ts",
+      "source_commit": "61af072c7385feba8c89ba6044ca09a90941213d",
+      "sha256": "9a04db76741494bf6e710a50e17a1df05e27e8c3e4ed2db248c4aaa673477e1f",
+      "disposition": "CONSUME_EXACT_PRIVATE_COMPONENT_OR_TEST_SOURCE_WITHOUT_HOST_ACTIVATION"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-registry.ts",
+      "mode": "100644",
+      "preimage": null,
+      "postimage": "7b7f127610450ed531fbb11464a0308e860a9296",
+      "source_path": "apps/cli/src/sucafina-product/routine-native-registry.ts",
+      "source_commit": "61af072c7385feba8c89ba6044ca09a90941213d",
+      "sha256": "cecb3106c48a211a627f1f1b2a7d6e4d302c180a6685aedaec46b8846b7ff51c",
+      "disposition": "CONSUME_EXACT_PRIVATE_COMPONENT_OR_TEST_SOURCE_WITHOUT_HOST_ACTIVATION"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-adapter.ts",
+      "mode": "100644",
+      "preimage": "aa0b9758acee9338f8422002d718f05c71f00a09",
+      "postimage": "dfde682c3233b36b7c172459f4bc1788c8f7e4b3",
+      "source_path": "apps/cli/src/sucafina-product/routine-native-adapter.ts",
+      "source_commit": "61af072c7385feba8c89ba6044ca09a90941213d",
+      "sha256": "e130b2122c90fb8be0e21129e50f3749830a24bcf21b37f1de2da5d03998115f",
+      "disposition": "CONSUME_EXACT_PRIVATE_COMPONENT_OR_TEST_SOURCE_WITHOUT_HOST_ACTIVATION"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-runtime.ts",
+      "mode": "100644",
+      "preimage": "377ceb99d45b6142c8e9f077f69f23673f470f92",
+      "postimage": "5383051da7cda4523d81f34d93430871e564bb06",
+      "source_path": "apps/cli/src/sucafina-product/routine-native-runtime.ts",
+      "source_commit": "61af072c7385feba8c89ba6044ca09a90941213d",
+      "sha256": "1455a3cc71648018364cc0c9a429e7b98cd2eadd963ff0bf00ad88d5c43cb328",
+      "disposition": "CONSUME_EXACT_PRIVATE_COMPONENT_OR_TEST_SOURCE_WITHOUT_HOST_ACTIVATION"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-governance.ts",
+      "mode": "100644",
+      "preimage": "59c76df420f9532fbe4d278a9c1dccf86e33cbe0",
+      "postimage": "9934aca5899142f9715d82bf7d4a073e9912f7cc",
+      "source_path": "apps/cli/src/sucafina-product/routine-native-governance.ts",
+      "source_commit": "61af072c7385feba8c89ba6044ca09a90941213d",
+      "sha256": "7364dbbb543fa113d8d898d03cc0ace00cb1376830d1718527aa5e7eddfa5521",
+      "disposition": "CONSUME_EXACT_PRIVATE_COMPONENT_OR_TEST_SOURCE_WITHOUT_HOST_ACTIVATION"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/routine-native-owner-binding/fixture.ts",
+      "mode": "100644",
+      "preimage": null,
+      "postimage": "68c277780db8d4c7ddfa1e55820b80e31b0f8605",
+      "source_path": "modules/sucafina/Sucafinav1/test/product/routine-native-owner-binding/fixture.ts",
+      "source_commit": "61af072c7385feba8c89ba6044ca09a90941213d",
+      "sha256": "90c2a837bf15a93e7367b39330e44384aef4977b23a4de08c8493371ef59d14d",
+      "disposition": "CONSUME_EXACT_PRIVATE_COMPONENT_OR_TEST_SOURCE_WITHOUT_HOST_ACTIVATION"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+      "mode": "100644",
+      "preimage": null,
+      "postimage": "dfc38db2ef2552aa729bb73cbccdf1c991cfffbd",
+      "source_path": "modules/sucafina/Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+      "source_commit": "61af072c7385feba8c89ba6044ca09a90941213d",
+      "sha256": "4afecd7edc0d60487a982208d95b5c0b64aeec562ae8e1bfb25a2ecc304c4a6e",
+      "disposition": "CONSUME_EXACT_PRIVATE_COMPONENT_OR_TEST_SOURCE_WITHOUT_HOST_ACTIVATION"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "mode": "100644",
+      "preimage": null,
+      "postimage": "4abe43ac65b1006d154ee4b686a995c028079b18",
+      "source_path": "modules/sucafina/Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "source_commit": "61af072c7385feba8c89ba6044ca09a90941213d",
+      "sha256": "a8cb7369ee0084dd2032682bf65ae85e34c2a1ee7e4b4b56756b4af16c14dba0",
+      "disposition": "CONSUME_EXACT_PRIVATE_COMPONENT_OR_TEST_SOURCE_WITHOUT_HOST_ACTIVATION"
+    }
+  ],
+  "held_paths": [
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-owner-binding/assembly/host-context.postimage.txt",
+      "preimage": "2bf1e6e66c13dd099029ec16b1f1ddf1f698dae6",
+      "postimage": "ce3081f75ec97fd3daa7ef4073c51963bdff606f",
+      "patch_source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-owner-binding/assembly/host-context.patch",
+      "patch_blob": "a7b92ff4b0c4a35504d3f3a7872bdf4285ea6f1a",
+      "disposition": "ARCHIVE_INERT_DO_NOT_APPLY",
+      "reason": "No production caller owns authenticated SF Request plus legitimate native Maestro Task admission; readiness is absent and reentrant dispatch conflicts with coordinator exclusivity. Component intake need not mount unusable hook or replace current host signature. Exact mission47 permits useful private components separately; keeps installed admission/watch HOLD.",
+      "current_target": "0705fe61bb1d8daa7341d3c9b312780424ad3c7c",
+      "preimage_current_match": false,
+      "additional_reconciliation": "Procurement37 changed this host in C15. Even a later admission release must reconcile this current host, not copy the stale source41 postimage."
+    }
+  ],
+  "source_receipts": {
+    "source_commit": "61af072c7385feba8c89ba6044ca09a90941213d",
+    "source_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-owner-binding",
+    "source_tree": "268e8ab1ad5c5a6a82d67950ea58cc5cb9cfd4af",
+    "target_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/native41",
+    "count": 21,
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-owner-binding/HANDOFF.md",
+        "sha": "777eb719e9570b3dc695ad142f5647f4b10bf467",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-owner-binding/IMPLEMENTATION.md",
+        "sha": "6794379bff5ad544bf3c7408fb935a8f335013a1",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-owner-binding/README.md",
+        "sha": "5138932554bee324b13e413c4a29c6aadca3e09e",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-owner-binding/authority.json",
+        "sha": "895096ab2677814c1f790e4c44aa0ad3ae84cdf9",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-owner-binding/ci-evidence.json",
+        "sha": "f24f3168dce1bf40ebf19a9a03066d9e59eef1e2",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-owner-binding/criteria.json",
+        "sha": "8c051a759a2a8ec622276761de5473040f22b971",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-owner-binding/file-manifest.json",
+        "sha": "cd14a5c9f92665dd40864831936a3cc2f9c524fa",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-owner-binding/hosted-tests.json",
+        "sha": "971d29d649a19762d12f3e3a030ea24927ad5b08",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-owner-binding/input-provenance.json",
+        "sha": "84e2d0cce7a6fd0e0b5ec926d4d3a3845e1b2f3e",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-owner-binding/source-review.json",
+        "sha": "d5ec7e07affcc1f26dcd9805c474609d6d25f3c4",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-owner-binding/terminal.json",
+        "sha": "a506ee9b54eec94d44bb3f74bb3735581358c433",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-owner-binding/typecheck-comparison.json",
+        "sha": "f00672ec553394c2e17a70bde0acef4b48b20c82",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-owner-binding/assembly/README.md",
+        "sha": "67fc9a03e020a33d7693e53b79cb23be0dbad6d1",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-owner-binding/assembly/host-context.patch",
+        "sha": "a7b92ff4b0c4a35504d3f3a7872bdf4285ea6f1a",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-owner-binding/assembly/host-context.postimage.txt",
+        "sha": "ce3081f75ec97fd3daa7ef4073c51963bdff606f",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-owner-binding/assembly/host-context.preimage.txt",
+        "sha": "2bf1e6e66c13dd099029ec16b1f1ddf1f698dae6",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-owner-binding/assembly/manifest.json",
+        "sha": "a19167ad3204f5fe9b8992136b85ae2bb4b54465",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-owner-binding/assembly/missing-capability.json",
+        "sha": "173481b40206729055be2cc61468e9e4a4332b46",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-owner-binding/assembly/selective-intake.json",
+        "sha": "5f5b06d7715115577b3817f074f09cdfe410ff0d",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-owner-binding/ci-attempts/01.json",
+        "sha": "b8fc4b958b9644b0a1dfdfed3a8b0aa71dc53d4b",
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-owner-binding/ci-attempts/02.json",
+        "sha": "943b2dbf1b05902e5f8c01d362474cd7e1484828",
+        "mode": "100644"
+      }
+    ],
+    "original_bytes_preserved": true,
+    "assembly_patch_inert": true
+  },
+  "patch_integrity": {
+    "kind": "static_text_integrity_only",
+    "entries": [
+      {
+        "path": "apps/cli/src/sucafina-product/routine-native-owner.ts",
+        "preimage": null,
+        "postimage": "a4dce61b612729bb317761bb0d63ff622f55a8cd",
+        "hashes_verified": true,
+        "target_preimage_matches": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/routine-native-registry.ts",
+        "preimage": null,
+        "postimage": "7b7f127610450ed531fbb11464a0308e860a9296",
+        "hashes_verified": true,
+        "target_preimage_matches": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/routine-native-adapter.ts",
+        "preimage": "aa0b9758acee9338f8422002d718f05c71f00a09",
+        "postimage": "dfde682c3233b36b7c172459f4bc1788c8f7e4b3",
+        "hashes_verified": true,
+        "target_preimage_matches": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/routine-native-runtime.ts",
+        "preimage": "377ceb99d45b6142c8e9f077f69f23673f470f92",
+        "postimage": "5383051da7cda4523d81f34d93430871e564bb06",
+        "hashes_verified": true,
+        "target_preimage_matches": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/routine-native-governance.ts",
+        "preimage": "59c76df420f9532fbe4d278a9c1dccf86e33cbe0",
+        "postimage": "9934aca5899142f9715d82bf7d4a073e9912f7cc",
+        "hashes_verified": true,
+        "target_preimage_matches": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/routine-native-owner-binding/fixture.ts",
+        "preimage": null,
+        "postimage": "68c277780db8d4c7ddfa1e55820b80e31b0f8605",
+        "hashes_verified": true,
+        "target_preimage_matches": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+        "preimage": null,
+        "postimage": "dfc38db2ef2552aa729bb73cbccdf1c991cfffbd",
+        "hashes_verified": true,
+        "target_preimage_matches": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+        "preimage": null,
+        "postimage": "4abe43ac65b1006d154ee4b686a995c028079b18",
+        "hashes_verified": true,
+        "target_preimage_matches": true
+      }
+    ],
+    "host_patch_hunks": 5,
+    "host_patch_reconstruction_exact": true,
+    "host_patch_disposition": "HOLD_INERT_MISSING_AUTHENTICATED_ADMISSION_AND_READINESS",
+    "host_postimage": "ce3081f75ec97fd3daa7ef4073c51963bdff606f",
+    "product_execution": false
+  },
+  "behavior": [
+    "captureSfRoutineNativeOwner requires core-issued root Task frame, exact real Task registration, native maestro session/project/Location/message/input, canonical current plan/review/approval/presentation and read-only Permission evaluation.",
+    "Registry joins only actual Request/context to native witness; same frozen owner binding, before/after async fences, lease/resource/generation/header identities, monotonic expiry, abort/revoke/dispose/duplicate/replay protection.",
+    "Registry does not call governance.bind; existing stronger case/source/publication admission remains mandatory. One original settlement delegated, no reentrant adapter dispatch.",
+    "Optional ownerHook preserves old governance behavior when absent; runtime captures existing PermissionV2 service; adapter honors concrete owners.available()==false.",
+    "No Task, approval, Session, grant, ledger, fabricated frame or Request origin is created by component intake. Existing default host provides no nativeRoutineOwners, so native contributions remain unmounted and no new routine descriptor is activated.",
+    "Keep target result-access.ts 098a92920857926f117e266f5b63325f6ad112ca; do not copy source 2695f4d4564b071a92529e55910e7edd54599392. Keep current contracts and native dispatch/input/records/services."
+  ],
+  "proof_limits": {
+    "schema": "sf-routine-owner-ci-evidence-v1",
+    "mission": 41,
+    "final_product": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+    "final_tree": "294407df8b80276a9f80737fd12531635eccc078",
+    "attempts": [
+      "ci-attempts/01.json",
+      "ci-attempts/02.json"
+    ],
+    "actions_runs": [
+      43649747094,
+      43649765609,
+      43650122594,
+      43650142544
+    ],
+    "tests": {
+      "final_new_selection": "87 PASS, 0 FAIL at W2; 38 binding + 49 fences",
+      "retained_previous_selection": "14 PASS at W1; source and previous tests unchanged at W2",
+      "single_head_full_selection": false,
+      "fixture_details": "IMPLEMENTATION.md and each fixture header",
+      "hosted_case_inventory": "hosted-tests.json"
+    },
+    "typecheck": {
+      "status": "FAIL",
+      "final_diagnostics": 78,
+      "owned": 0,
+      "comparison": "typecheck-comparison.json",
+      "external_baseline_exact": true
+    },
+    "guards": {
+      "result": "PASS",
+      "rules": 78,
+      "changed_paths": 703,
+      "gate": 0,
+      "warnings": 13,
+      "errors": 0
+    },
+    "dedup": "No repeated W/tree/request/workflow/validator/runtime/fixture execution. W2 was a material test repair; test selection narrowed to the two previously unloadable files. The required existing package gate was repeated after changes.",
+    "envelopes": "Each S differs from its W by exactly one permitted CI envelope. S is not a product candidate.",
+    "artifacts": "Check artifact metadata and digests read for both attempts. ZIPs not downloaded. Bun test lane has no required separate artifact.",
+    "local_product_tests": "NOT_RUN",
+    "full_suite": "NOT_RUN",
+    "engine_changes": false,
+    "shared_postimage_validation": "NOT_RUN",
+    "native_admission_proof": "NOT_PROVEN",
+    "AM02": "NOT_PROVEN",
+    "AM06": "NOT_PROVEN",
+    "GLOBAL_RELEASE": false
+  },
+  "findings": [
+    {
+      "id": "M41-AUTHENTICATED-NATIVE-ADMISSION",
+      "status": "HOLD",
+      "owner": "S0 / actual authenticated native admission origin owner",
+      "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-owner-binding/assembly/missing-capability.json",
+      "source_blob": "173481b40206729055be2cc61468e9e4a4332b46",
+      "reason": "Native Task hook has canonical frame but no SF Request. Existing SF native-host uses resident sf_maestro/profile, not native maestro Session; no legitimate principal-to-Maestro association.",
+      "next_action": "Deliver trusted operation-specific C07/case/source/publication Request-to-native admission or coordinator-safe continuation; define readiness before provider materialization; release complete coherent integration patch. No HTTP/model session selector or retained input may substitute."
+    },
+    {
+      "id": "M41-WATCH-SCHEDULE",
+      "status": "HOLD",
+      "owner": "S0/native Schedule admission owner",
+      "reason": "sf_watch_prepare has no actual Schedule admission."
+    },
+    {
+      "id": "M41-NATIVE-ACCEPTANCE",
+      "status": "NOT_PROVEN",
+      "criteria": [
+        "AM02",
+        "AM06"
+      ],
+      "reason": "87 component source passes use real services with synthetic Request/core frame/history/Task/governance records and nonexecuting Task. No actual admitted native model/reviewer/Task/Relay/Schedule/consumer chain or composed proof."
+    }
+  ],
+  "verification": {
+    "preflight": {
+      "preimages": 8,
+      "archive": 21,
+      "host_kept": "0705fe61bb1d8daa7341d3c9b312780424ad3c7c",
+      "result_access_kept": "098a92920857926f117e266f5b63325f6ad112ca",
+      "exact": true
+    },
+    "previous_commit": {
+      "commit": "6cc6e94535e48d43f17794e6c6e4d171dfdab18c",
+      "files": 26,
+      "exact_paths_and_known_blobs": true,
+      "unexpected": [],
+      "missing": [],
+      "deletions": 0
+    },
+    "complete_content": "All8 source files and native dependencies reviewed; private module defaults preserve absent-owner behavior. Five shared patch hunks reconstructed but deliberately NOT_APPLIED."
+  },
+  "preserved": {
+    "host_context": "0705fe61bb1d8daa7341d3c9b312780424ad3c7c",
+    "result_access": "098a92920857926f117e266f5b63325f6ad112ca",
+    "native_input_records_dispatch_services": "KEEP_CURRENT",
+    "contracts": "KEEP_CURRENT; no engine/core/Task/Relay/Schedule mutation",
+    "real_admission": "HOLD",
+    "watch_schedule": "HOLD",
+    "synthetic_admission_created": false,
+    "AM02": "NOT_PROVEN",
+    "AM06": "NOT_PROVEN"
+  },
+  "consumer_ack": {
+    "id": "ACK47-05",
+    "source_release": "61af072c7385feba8c89ba6044ca09a90941213d",
+    "status": "PRIVATE_COMPONENTS_CONSUMED_IN_CONTAINING_C17_SHARED_HOST_HELD",
+    "original_source_receipts_unchanged": true,
+    "scope": "Five private modules plus3tests/fixture; archived offered host patch does not activate an admission path.",
+    "next_owner": "S0 and authentic native admission/continuation/readiness owner;45 checks actual private component candidate."
+  },
+  "checks": {
+    "tests": "NOT_RUN",
+    "typechecks": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "CI": "NOT_RUN",
+    "AM": "NOT_RUN",
+    "source_green_transferred": false
+  },
+  "final_acceptance": "S0",
+  "GLOBAL_RELEASE": false
+}

@@ -1,0 +1,141 @@
+{
+  "schema": "sf-routine-native-owner-assembly-v1",
+  "mission": 41,
+  "consumer": "session42/S0; explicit successor to closed session33",
+  "original_requested_consumer": "session33/S0",
+  "status": "COMPLETE_PATCH_NOT_APPLIED; NATIVE_ADMISSION_PRODUCER_HOLD",
+  "target_path": "apps/cli/src/sucafina-product/host-context.ts",
+  "target_ref": "sf2-stack",
+  "target_commit": "c5ab23fd7c9b231917bf70123958c9ff03e7d420",
+  "target_tree": "8da2223f2809a08b2c7169981c1d815ad0d7453a",
+  "authored_target_commit": "bf81f9776b6ba5fb6267828a9a029d7e8d6f5587",
+  "target_product_C11": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+  "target_content_also_at_C10": "0c395c462ce0fae67cb274c45ccb06884877d7cd",
+  "preimage": {
+    "file": "host-context.preimage.txt",
+    "git_blob": "2bf1e6e66c13dd099029ec16b1f1ddf1f698dae6",
+    "sha256": "6063552373c63e9a7bd71c3b43ee31f8782aafe294eea1ae194dae8d6a5f72a0",
+    "bytes": 76410
+  },
+  "postimage": {
+    "file": "host-context.postimage.txt",
+    "git_blob": "ce3081f75ec97fd3daa7ef4073c51963bdff606f",
+    "sha256": "2925802e11287634b8d6eb2709c2d32dd6a774fa6c0f5182035d2782cc5d7b18",
+    "bytes": 76912
+  },
+  "patch": {
+    "file": "host-context.patch",
+    "git_blob": "a7b92ff4b0c4a35504d3f3a7872bdf4285ea6f1a",
+    "sha256": "bff07027a3d0dca1d898e9830191a443544b375a2e026d0c513217fa2f0faca4",
+    "bytes": 8142,
+    "hunks": [
+      {
+        "old_start": 62,
+        "old_count": 11,
+        "new_start": 62,
+        "new_count": 11
+      },
+      {
+        "old_start": 97,
+        "old_count": 14,
+        "new_start": 97,
+        "new_count": 13
+      },
+      {
+        "old_start": 287,
+        "old_count": 30,
+        "new_start": 286,
+        "new_count": 37
+      },
+      {
+        "old_start": 809,
+        "old_count": 10,
+        "new_start": 815,
+        "new_count": 11
+      },
+      {
+        "old_start": 842,
+        "old_count": 12,
+        "new_start": 849,
+        "new_count": 12
+      }
+    ]
+  },
+  "preserved_predecessor_source": "d9e1aca275bd04b2066ca84a605c7c315ea14c77",
+  "planning": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "mission_input": "e4c1bb7c914a29cb3d4fcddc9e196823289ccc80",
+  "successor_reconciliation": {
+    "authority_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/authority-ack.json",
+    "authority_receipt_commit": "c5ab23fd7c9b231917bf70123958c9ff03e7d420",
+    "control_commit": "365c4b4f809eac232a46b38f7412bfea8ba55d30",
+    "rolling_common_blob": "ad53f26697738fc410648b198a79b6bfe6e7bac5",
+    "rolling_mission_blob": "1ac932bec6c885b1921257098907116cbbc0327b",
+    "read": "Complete authority-ack, pinned rolling-wave COMMON and rolling-product-integration",
+    "predecessor": {
+      "mission": 33,
+      "terminal_head": "bf81f9776b6ba5fb6267828a9a029d7e8d6f5587",
+      "handoff_blob": "68531a8e0b819699b29bbb83d4a2244218d3791f",
+      "authority_reconciliation_blob": "b441a69f5250462319545dea193fb18089d68520",
+      "lease_closed_explicitly": true
+    },
+    "successor": {
+      "mission": 42,
+      "lease_epoch": "S0-C-e8-browser42",
+      "scope": "Sole sf2-stack integration writer for explicitly released complete or bounded partial outputs",
+      "tests_typecheck_guards_CI_AM": "NOT_RUN_FORBIDDEN for integration42",
+      "final_dispatcher_and_acceptance": "S0"
+    },
+    "host_preimage": "Mission41 root fetched host-context at c5ab23f and compared it byte-for-byte with this preimage; unchanged from bf81f97. The sole successor commit delta is the authority receipt.",
+    "patch_preimage_postimage_changed": false,
+    "source41_lease_transferred_or_revoked": false,
+    "source41_actions_authority": "Unchanged; source41 remains limited to its own authorized surgical Actions interface, deduplication and scope. Integration42's test prohibition grants or removes no source41 authority.",
+    "consumer_ack_for_this_assembly": "NOT_OBSERVED; authority acknowledgement is not a consumption acknowledgement",
+    "candidate_rule": "Any material integration delta requires a new exact candidate; source W/S/runs and PASS do not transfer to that candidate."
+  },
+  "source_commit_binding": "The terminal mission41 handoff fixes W and the private module blob manifest; this assembly record makes no self-referential W claim.",
+  "requires_mission41_modules": [
+    "apps/cli/src/sucafina-product/routine-native-owner.ts",
+    "apps/cli/src/sucafina-product/routine-native-registry.ts",
+    "apps/cli/src/sucafina-product/routine-native-adapter.ts",
+    "apps/cli/src/sucafina-product/routine-native-governance.ts",
+    "apps/cli/src/sucafina-product/routine-native-runtime.ts"
+  ],
+  "private_api": {
+    "registry_factory": "createSfRoutineNativeOwnerRegistry({ resources, requestFor, authorize, generation })",
+    "owners": "resolve(context, request); available(): boolean",
+    "trusted_scope": "withRequest(context, request, effect), private only; no observed production caller",
+    "execution_hook": "run(invocation: ToolSafety.Invocation, effect), invoked by the installed private governance wrapper",
+    "lifecycle": "revoke / invalidateGeneration / dispose; host disposal precedes async shutdown",
+    "adapter": "Existing createSfRoutineNativeAdapter, no second adapter",
+    "entrypoint": "Existing createSfHostRuntime calls createSfHostRuntimeWithRoutineNative, which now instantiates the concrete registry without an external owner parameter",
+    "authority_boundary": "Observer never issues or replaces governance.bind; existing full-plan lease remains necessary. withRequest alone grants no C07 operation or native permission."
+  },
+  "installed_default_behavior": {
+    "registry_constructed": true,
+    "native_hook_contribution_mounted": true,
+    "trusted_admission_producer_installed": false,
+    "withRequest_exposed_on_public_host": false,
+    "new_http_binding_route": false,
+    "new_native_controller": false,
+    "routine_descriptors_at_startup": 0,
+    "watch_descriptor_available": false,
+    "future_dynamic_descriptor_registration": "NOT_IMPLEMENTED; producer/readiness/continuation must be supplied and qualified separately",
+    "claim_limit": "These describe the postimage design, not observed runtime execution or applied integration."
+  },
+  "deterministic_artifact_verification": {
+    "remote_preimage_git_blob_match": true,
+    "complete_diff_reconstructs_exact_postimage": true,
+    "hunk_count": 5,
+    "method": "Read fetched source bytes, exact string edits, unified diff generation, hunk reconstruction and cryptographic content hashing; no product code executed.",
+    "product_tests": "NOT_RUN",
+    "package_typecheck": "NOT_RUN",
+    "graph_construction": "NOT_RUN",
+    "shared_patch_applied": false
+  },
+  "missing_capability": "missing-capability.json",
+  "public_protocol_changed": false,
+  "engine_paths_changed": false,
+  "AM02": "NOT_PROVEN",
+  "AM06": "NOT_PROVEN",
+  "GLOBAL_RELEASE": false
+}
