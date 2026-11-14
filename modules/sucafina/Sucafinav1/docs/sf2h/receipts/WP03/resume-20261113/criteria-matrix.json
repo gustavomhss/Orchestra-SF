@@ -1,0 +1,2419 @@
+{
+  "schema": "sf2h.wp03.resume-criteria-matrix.v1",
+  "wp": "WP03",
+  "receipt_date_utc": "2026-11-13",
+  "criterion_count": 112,
+  "summary": {
+    "PRODUCER_VERIFIED": 79,
+    "PENDING_UI_PROOF": 16,
+    "BLOCKED_EXTERNAL": 9,
+    "NATIVE_UNPROVEN": 8
+  },
+  "integrated_acceptance": false,
+  "status_changes_from_history": [],
+  "historical_matrix": {
+    "commit": "f1eca7591b14e6cf8fda7cfb7b7a7a77959314be",
+    "blob_sha": "77e53ebe801b5871828262ca70409ebd2756964d",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/criteria-matrix.json",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f1eca7591b14e6cf8fda7cfb7b7a7a77959314be/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/criteria-matrix.json",
+    "scope": "Mapa completo de implementação, consumidores, provas W6, review_gates e dependências externas; preservado sem alteração."
+  },
+  "provenance": {
+    "handoff_commit": "4e4d873e7e93bba3dc82df45e243999e7c8e76b6",
+    "planning_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "baseline_commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+    "pack_sha256": "78c57fba9ce7eff53a1bcf1dca86520f8470f08fc74a3a0b3ffa504fffcccb32",
+    "product_sha": "5d811c04881b630608789d56349f8bed5908f509",
+    "snapshot_sha": "aff47b70bde99a09bef5a247553728b1662d7166",
+    "run_id": 43528213766,
+    "job_id": 132239111146,
+    "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43528213766/job/132239111146"
+  },
+  "proof_catalog": "./test-proof-catalog.json",
+  "status_definitions": {
+    "PRODUCER_VERIFIED": "Critério sustentado no escopo produtor por implementação revisada e testes nomeados observados. Não declara consumo externo, aceite integrado, navegador ou execução residente além do que a linha cita.",
+    "PARTIAL_PROOF": "Há execução discriminante de parte do critério; remaining_proof registra o ramo ou gate ainda não comprovado. Não é cobertura integral.",
+    "PENDING_UI_PROOF": "Modelo/host/renderizador possuem prova, mas a experiência exigida na interface montada não foi observada. A ausência de prova browser própria não é classificada automaticamente como bloqueio externo.",
+    "BLOCKED_EXTERNAL": "Há seam concreto sob outro owner: contrato/rota/retry/composição ou consumidor real. O delta/handoff é entregável produtor; aplicar e comprovar o consumidor continua pendente.",
+    "NATIVE_UNPROVEN": "Exige SessionV2.prompt, skill carregada, autoridade, handler, persistência/reload e consumidor reais. Provas SDK/dispatcher/registry ou admission sintética não fecham os oito critérios residentes."
+  },
+  "proof_scope_notes": [
+    "Cada proof_ref R20261113.BUN.* identifica uma observação nova no GREEN. As referências W6.BUN.* permanecem históricas e não são renomeadas nem transferidas para a execução nova.",
+    "Revalidação histórica significa correspondência exata de path e test_name entre os 142 registros W6 e os 142 resultados observados no GREEN; não substitui o mapa histórico de implementação, discriminação e dependências.",
+    "As 21 provas novas exercitam hosts/portas do produtor com armazenamento e autoridade reais das fixtures. Não comprovam UI montada, instalação CLI, SessionV2 residente, GNATIVE, Omni, AM02 ou consumo externo.",
+    "Cada associação nova a um critério é suplementar e limitada por proof_scope. Todos os estados e remaining_proof da matriz histórica são preservados; integrated_acceptance permanece false.",
+    "O RED aborta cada teste na primeira asserção falha; as asserções posteriores de apply, ausência de mutação e ausência de payload são comprovadas pelo GREEN integral."
+  ],
+  "reconciliation": {
+    "criterion_ids_match_pack": true,
+    "literal_criterion_text_preserved": true,
+    "remaining_proof_preserved": true,
+    "historical_proof_refs_preserved": true,
+    "historical_tests_revalidated": 142,
+    "new_tests_passed": 21,
+    "total_hosted_tests_passed": 163
+  },
+  "criteria": [
+    {
+      "id": "WP03.DOD.01",
+      "criterion": "As sete páginas possuem contribuição de produto completa ou porta de composição explícita, e a matriz de paridade local aponta cada fluxo original a comportamento e prova específicos.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.007",
+        "W6.BUN.063",
+        "W6.BUN.084",
+        "W6.BUN.135",
+        "W6.BUN.137",
+        "W6.BUN.101",
+        "W6.BUN.111",
+        "W6.BUN.067"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.007",
+        "R20261113.BUN.063",
+        "R20261113.BUN.084",
+        "R20261113.BUN.156",
+        "R20261113.BUN.158",
+        "R20261113.BUN.117",
+        "R20261113.BUN.127",
+        "R20261113.BUN.067"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.DOD.02",
+      "criterion": "Projeções e simulação financeira puras são publicadas conforme C02/C03/C04; WP05 e WP06 recebem exemplos válidos, negativos e de dados restritos, sem precisar copiar fórmulas.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.067",
+        "W6.BUN.121",
+        "W6.BUN.090",
+        "W6.BUN.118",
+        "W6.BUN.028"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.067",
+        "R20261113.BUN.137",
+        "R20261113.BUN.106",
+        "R20261113.BUN.134",
+        "R20261113.BUN.028"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.DOD.03",
+      "criterion": "O pacote de evidências locais e o roteiro de montagem real são entregues ao WP10; aceitação integrada só pode ser declarada após consumo nos entrypoints reais.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.138",
+        "W6.BUN.090",
+        "W6.BUN.081",
+        "W6.BUN.071"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.159",
+        "R20261113.BUN.106",
+        "R20261113.BUN.081",
+        "R20261113.BUN.071"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.DOD.10",
+      "criterion": "As entregas residentes atribuídas a WP03 têm produção, consumo e provas reais completos.",
+      "status": "NATIVE_UNPROVEN",
+      "remaining_proof": "Falta SessionV2.prompt/skill real carregada com concessão, handler de produção e leitura após reload. Nenhum teste listado fecha esta obrigação residente.",
+      "historical_proof_refs": [
+        "W6.BUN.127",
+        "W6.BUN.138",
+        "W6.BUN.139",
+        "W6.BUN.071",
+        "W6.BUN.110"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.143",
+        "R20261113.BUN.159",
+        "R20261113.BUN.160",
+        "R20261113.BUN.071",
+        "R20261113.BUN.126"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.INV.01",
+      "criterion": "Budget, spread, flags manuais, actual, forecast, outlook, HR, FX, classificação e versões preservam a semântica do baseline 9e4f3d35833f9b2cea6abdf58f42331f3973d9bf; defeitos comprovados exigem registro de discrepância, efeito e decisão explícita antes de mudar a regra.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.067",
+        "W6.BUN.010",
+        "W6.BUN.006",
+        "W6.BUN.014",
+        "W6.BUN.096",
+        "W6.BUN.046",
+        "W6.BUN.105"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.067",
+        "R20261113.BUN.010",
+        "R20261113.BUN.006",
+        "R20261113.BUN.014",
+        "R20261113.BUN.112",
+        "R20261113.BUN.046",
+        "R20261113.BUN.121"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.INV.02",
+      "criterion": "Papel, owner/domínio, lock, official e revisão esperada são respeitados em edição, composição, comparação e simulação; dados de remuneração não reaparecem em diferenças ou erros para usuários sem acesso.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.016",
+        "W6.BUN.012",
+        "W6.BUN.013",
+        "W6.BUN.011",
+        "W6.BUN.118",
+        "W6.BUN.020",
+        "W6.BUN.074",
+        "W6.BUN.102",
+        "W6.BUN.066",
+        "W6.BUN.075"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.016",
+        "R20261113.BUN.012",
+        "R20261113.BUN.013",
+        "R20261113.BUN.011",
+        "R20261113.BUN.134",
+        "R20261113.BUN.020",
+        "R20261113.BUN.074",
+        "R20261113.BUN.118",
+        "R20261113.BUN.066",
+        "R20261113.BUN.075"
+      ],
+      "new_regression_proof_refs": [
+        "R20261113.BUN.092",
+        "R20261113.BUN.093"
+      ]
+    },
+    {
+      "id": "WP03.INV.03",
+      "criterion": "Nenhuma hipótese altera a versão oficial por efeito colateral, nenhum pedido/contrato alimenta valores automaticamente e o adapter puro não grava estado nem executa I/O.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.120",
+        "W6.BUN.131",
+        "W6.BUN.133",
+        "W6.BUN.029",
+        "W6.BUN.111"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.136",
+        "R20261113.BUN.147",
+        "R20261113.BUN.149",
+        "R20261113.BUN.029",
+        "R20261113.BUN.127"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.INV.10",
+      "criterion": "WP03 conserva autoridade, dados oficiais e ownership; não assume identidade técnica ou novo acesso empresarial.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.008",
+        "W6.BUN.102",
+        "W6.BUN.066",
+        "W6.BUN.071",
+        "W6.BUN.105"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.008",
+        "R20261113.BUN.118",
+        "R20261113.BUN.066",
+        "R20261113.BUN.071",
+        "R20261113.BUN.121"
+      ],
+      "new_regression_proof_refs": [
+        "R20261113.BUN.098",
+        "R20261113.BUN.099"
+      ]
+    },
+    {
+      "id": "WP03.QLT.01",
+      "criterion": "Cada total abre componentes que reconciliam com o motor; origem, versão, período e moeda permanecem explícitos, e zero observado não é confundido com ausência tratada como zero pela regra legada.",
+      "status": "PENDING_UI_PROOF",
+      "remaining_proof": "Abrir cada total até seus componentes na interface montada requer prova de navegação/drilldown. O renderer e a porta isolados não provam essa jornada.",
+      "historical_proof_refs": [
+        "W6.BUN.067",
+        "W6.BUN.111",
+        "W6.BUN.112",
+        "W6.BUN.061",
+        "W6.BUN.085"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.067",
+        "R20261113.BUN.127",
+        "R20261113.BUN.128",
+        "R20261113.BUN.061",
+        "R20261113.BUN.085"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.QLT.02",
+      "criterion": "Edição e comparação usam uma única lógica financeira; novos componentes apresentam valores e operações do domínio, sem implementar fórmulas concorrentes na UI.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.067",
+        "W6.BUN.120",
+        "W6.BUN.089",
+        "W6.BUN.072",
+        "W6.BUN.111"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.067",
+        "R20261113.BUN.136",
+        "R20261113.BUN.089",
+        "R20261113.BUN.072",
+        "R20261113.BUN.127"
+      ],
+      "new_regression_proof_refs": [
+        "R20261113.BUN.155"
+      ]
+    },
+    {
+      "id": "WP03.QLT.03",
+      "criterion": "A pessoa distingue valor salvo, edição local, conflito, herança de budget e bloqueio pelo papel/estado, sem depender de códigos internos ou mensagens HTTP.",
+      "status": "PENDING_UI_PROOF",
+      "remaining_proof": "Falta a jornada de navegador comprovando esses estados e a recuperação do draft no cliente compartilhado.",
+      "historical_proof_refs": [
+        "W6.BUN.061",
+        "W6.BUN.065",
+        "W6.BUN.077",
+        "W6.BUN.062"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.061",
+        "R20261113.BUN.065",
+        "R20261113.BUN.077",
+        "R20261113.BUN.062"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.QLT.10",
+      "criterion": "Interfaces são concretas, versões/digests são verificáveis e falhas possuem causa e estado explícitos.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.066",
+        "W6.BUN.078",
+        "W6.BUN.079",
+        "W6.BUN.082",
+        "W6.BUN.083",
+        "W6.BUN.102"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.066",
+        "R20261113.BUN.078",
+        "R20261113.BUN.079",
+        "R20261113.BUN.082",
+        "R20261113.BUN.083",
+        "R20261113.BUN.118"
+      ],
+      "new_regression_proof_refs": [
+        "R20261113.BUN.092",
+        "R20261113.BUN.093",
+        "R20261113.BUN.097",
+        "R20261113.BUN.098",
+        "R20261113.BUN.099",
+        "R20261113.BUN.100",
+        "R20261113.BUN.101",
+        "R20261113.BUN.102",
+        "R20261113.BUN.103",
+        "R20261113.BUN.104",
+        "R20261113.BUN.105",
+        "R20261113.BUN.151",
+        "R20261113.BUN.152",
+        "R20261113.BUN.153",
+        "R20261113.BUN.154"
+      ]
+    },
+    {
+      "id": "WP03.CMP.01",
+      "criterion": "A cobertura inclui OPEX total/breakdown, CAPEX com classificação OPEX/CAPEX, sete medidas de comparação, spread/reset, monthly budget/actual/forecast e códigos CPX.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.006",
+        "W6.BUN.010",
+        "W6.BUN.072",
+        "W6.BUN.076",
+        "W6.BUN.022",
+        "W6.BUN.017",
+        "W6.BUN.031"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.006",
+        "R20261113.BUN.010",
+        "R20261113.BUN.072",
+        "R20261113.BUN.076",
+        "R20261113.BUN.022",
+        "R20261113.BUN.017",
+        "R20261113.BUN.031"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.CMP.02",
+      "criterion": "A cobertura inclui posições, rates, overrides, reajuste, roster, domínio manual, HR sintético/AF, FX, entidades/allocations, referências em uso e sigilo de remuneração.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.115",
+        "W6.BUN.136",
+        "W6.BUN.119",
+        "W6.BUN.118",
+        "W6.BUN.085",
+        "W6.BUN.095",
+        "W6.BUN.093",
+        "W6.BUN.018"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.131",
+        "R20261113.BUN.157",
+        "R20261113.BUN.135",
+        "R20261113.BUN.134",
+        "R20261113.BUN.085",
+        "R20261113.BUN.111",
+        "R20261113.BUN.109",
+        "R20261113.BUN.018"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.CMP.03",
+      "criterion": "A cobertura inclui criação/cópia/ano/lock/unlock/official/delete de versões, formas legadas de dados, Overview, composição e comparação detalhada A/B.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.101",
+        "W6.BUN.103",
+        "W6.BUN.104",
+        "W6.BUN.105",
+        "W6.BUN.046",
+        "W6.BUN.111",
+        "W6.BUN.112"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.117",
+        "R20261113.BUN.119",
+        "R20261113.BUN.120",
+        "R20261113.BUN.121",
+        "R20261113.BUN.046",
+        "R20261113.BUN.127",
+        "R20261113.BUN.128"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.CMP.10",
+      "criterion": "Todas as obrigações 5/18/8/C17 desta frente têm task, owner, paths, consumidor e negativos discriminantes.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.069",
+        "W6.BUN.106",
+        "W6.BUN.081",
+        "W6.BUN.082",
+        "W6.BUN.055",
+        "W6.BUN.071"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.069",
+        "R20261113.BUN.122",
+        "R20261113.BUN.081",
+        "R20261113.BUN.082",
+        "R20261113.BUN.055",
+        "R20261113.BUN.071"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.SUC.01",
+      "criterion": "No cenário sintético, budget 600000, actual fechado 400000 e previsão aberta 190000 produzem outlook 590000; substituir uma premissa de 72000 por 84000 ou 78000 produz 602000 ou 596000 sem alterar budget, actual ou oficial.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.111",
+        "W6.BUN.089",
+        "W6.BUN.131"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.127",
+        "R20261113.BUN.089",
+        "R20261113.BUN.147"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.SUC.02",
+      "criterion": "Um owner consegue salvar somente forecast autorizado; Finance mantém actual/forecast/fechamento em plano bloqueado; HR mantém premissas permitidas em plano editável; conflito preserva a entrada local.",
+      "status": "PENDING_UI_PROOF",
+      "remaining_proof": "O sucesso da pessoa na UI sob esses três papéis e a recuperação visual do conflito exigem navegador; o fixture localoperator é admin.",
+      "historical_proof_refs": [
+        "W6.BUN.016",
+        "W6.BUN.012",
+        "W6.BUN.135",
+        "W6.BUN.136",
+        "W6.BUN.077",
+        "W6.BUN.084"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.016",
+        "R20261113.BUN.012",
+        "R20261113.BUN.156",
+        "R20261113.BUN.157",
+        "R20261113.BUN.077",
+        "R20261113.BUN.084"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.SUC.03",
+      "criterion": "Os consumidores recebem projeção/simulação pelo contrato e conseguem reconciliar os resultados sem reproduzir regras financeiras.",
+      "status": "BLOCKED_EXTERNAL",
+      "remaining_proof": "WP05/WP06/WP10 ainda precisam demonstrar consumo de C02/C03/C04 em seus entrypoints reais, conforme fronteiras e handoffs nomeados.",
+      "historical_proof_refs": [
+        "W6.BUN.067",
+        "W6.BUN.089",
+        "W6.BUN.111",
+        "W6.BUN.112"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.067",
+        "R20261113.BUN.089",
+        "R20261113.BUN.127",
+        "R20261113.BUN.128"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.SUC.10",
+      "criterion": "O consumidor integrado utiliza a saída de produção sem substituto fictício e o revisor consegue reproduzir o resultado.",
+      "status": "NATIVE_UNPROVEN",
+      "remaining_proof": "Não há prova residente ponta a ponta com Session/skill/model reais e consumidor reaberto. A reprodução integrada permanece não comprovada.",
+      "historical_proof_refs": [
+        "W6.BUN.138",
+        "W6.BUN.139",
+        "W6.BUN.081",
+        "W6.BUN.071",
+        "W6.BUN.110"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.159",
+        "R20261113.BUN.160",
+        "R20261113.BUN.081",
+        "R20261113.BUN.071",
+        "R20261113.BUN.126"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T01.CHK.01",
+      "criterion": "Projetar e simular sobre snapshot congelado deixa snapshot, auditoria, sequências e versões originais idênticos; somente o resultado em memória contém o estado previsto.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.121",
+        "W6.BUN.120",
+        "W6.BUN.125",
+        "W6.BUN.124",
+        "W6.BUN.126"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.137",
+        "R20261113.BUN.136",
+        "R20261113.BUN.141",
+        "R20261113.BUN.140",
+        "R20261113.BUN.142"
+      ],
+      "new_regression_proof_refs": [
+        "R20261113.BUN.090",
+        "R20261113.BUN.091",
+        "R20261113.BUN.094",
+        "R20261113.BUN.095",
+        "R20261113.BUN.096",
+        "R20261113.BUN.155"
+      ]
+    },
+    {
+      "id": "WP03.T01.CHK.02",
+      "criterion": "Para o mesmo comando e contexto determinístico, simulação e execução isolada do domínio produzem os mesmos valores, flags, avisos e rejeições; nenhum componente de UI recalcula o resultado.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.067",
+        "W6.BUN.120",
+        "W6.BUN.089",
+        "W6.BUN.072",
+        "W6.BUN.070"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.067",
+        "R20261113.BUN.136",
+        "R20261113.BUN.089",
+        "R20261113.BUN.072",
+        "R20261113.BUN.070"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T01.CHK.03",
+      "criterion": "Versão legada em dicionário mantém IDs, valores e official por ano; uma leitura repetida não redistribui meses nem cria versão.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.046",
+        "W6.BUN.047",
+        "W6.BUN.050",
+        "W6.BUN.054",
+        "W6.BUN.049",
+        "W6.BUN.124"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.046",
+        "R20261113.BUN.047",
+        "R20261113.BUN.050",
+        "R20261113.BUN.054",
+        "R20261113.BUN.049",
+        "R20261113.BUN.140"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T01.CHK.04",
+      "criterion": "Usuário viewer/budget owner não recebe rates, overrides ou custos individuais em projeções, diffs ou payload de conflito; agregado permitido continua reconciliável.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.118",
+        "W6.BUN.085",
+        "W6.BUN.074",
+        "W6.BUN.020",
+        "W6.BUN.123",
+        "W6.BUN.075"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.134",
+        "R20261113.BUN.085",
+        "R20261113.BUN.074",
+        "R20261113.BUN.020",
+        "R20261113.BUN.139",
+        "R20261113.BUN.075"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T01.CHK.18",
+      "criterion": "Executar sf_forecast_compare, sf_scenario_simulate pela UI/native/MCP com base e autoridade iguais produz o mesmo handler, resultado e versão; chamada direta sem concessão ou após revogação é recusada pelo destino.",
+      "status": "NATIVE_UNPROVEN",
+      "remaining_proof": "SessionV2.prompt, skill carregada e admissão reais não foram executadas. Um SkillLoadReceipt sintético e receipt.kind native não fecham o critério residente.",
+      "historical_proof_refs": [
+        "W6.BUN.138",
+        "W6.BUN.110",
+        "W6.BUN.139",
+        "W6.BUN.128"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.159",
+        "R20261113.BUN.126",
+        "R20261113.BUN.160",
+        "R20261113.BUN.144"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T01.DOD.01",
+      "criterion": "As portas puras C02/C03/C04 do Planner estão exportadas e descritas com entradas, saídas, contexto e casos de rejeição.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.067",
+        "W6.BUN.121",
+        "W6.BUN.090",
+        "W6.BUN.040"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.067",
+        "R20261113.BUN.137",
+        "R20261113.BUN.106",
+        "R20261113.BUN.040"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T01.DOD.02",
+      "criterion": "Há prova local de paridade numérica, ausência de mutação e remoção de campos restritos, além do pacote de conformidade para WP10.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.067",
+        "W6.BUN.120",
+        "W6.BUN.125",
+        "W6.BUN.118",
+        "W6.BUN.123",
+        "W6.BUN.074"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.067",
+        "R20261113.BUN.136",
+        "R20261113.BUN.141",
+        "R20261113.BUN.134",
+        "R20261113.BUN.139",
+        "R20261113.BUN.074"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T01.DOD.18",
+      "criterion": "Descritores C16 de sf_forecast_compare, sf_scenario_simulate são implementados e consumidos por T06 com referências reais.",
+      "status": "NATIVE_UNPROVEN",
+      "remaining_proof": "Falta consumo residente T06 com referências reais de sessão/skill/handler e resultado durável para ambos os exports.",
+      "historical_proof_refs": [
+        "W6.BUN.127",
+        "W6.BUN.138",
+        "W6.BUN.128",
+        "W6.BUN.139",
+        "W6.BUN.110"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.143",
+        "R20261113.BUN.159",
+        "R20261113.BUN.144",
+        "R20261113.BUN.160",
+        "R20261113.BUN.126"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T01.INV.01",
+      "criterion": "Toda projeção e simulação reutiliza o cálculo e a autorização do domínio; não existe fórmula financeira paralela.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.067",
+        "W6.BUN.120",
+        "W6.BUN.125",
+        "W6.BUN.089",
+        "W6.BUN.070"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.067",
+        "R20261113.BUN.136",
+        "R20261113.BUN.141",
+        "R20261113.BUN.089",
+        "R20261113.BUN.070"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T01.INV.02",
+      "criterion": "Snapshot, relógio e gerador de IDs não são consultados por efeito global; dependências determinísticas seguem o contrato e a entrada original permanece intacta.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.120",
+        "W6.BUN.125",
+        "W6.BUN.124",
+        "W6.BUN.103"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.136",
+        "R20261113.BUN.141",
+        "R20261113.BUN.140",
+        "R20261113.BUN.119"
+      ],
+      "new_regression_proof_refs": [
+        "R20261113.BUN.090",
+        "R20261113.BUN.091",
+        "R20261113.BUN.094",
+        "R20261113.BUN.095",
+        "R20261113.BUN.096"
+      ]
+    },
+    {
+      "id": "WP03.T01.INV.03",
+      "criterion": "Ausência permanece identificável mesmo quando a conta legada contribui zero; não se transforma informação ausente em actual confirmado.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.067",
+        "W6.BUN.061",
+        "W6.BUN.116",
+        "W6.BUN.085",
+        "W6.BUN.112"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.067",
+        "R20261113.BUN.061",
+        "R20261113.BUN.132",
+        "R20261113.BUN.085",
+        "R20261113.BUN.128"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T01.INV.18",
+      "criterion": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.008",
+        "W6.BUN.016",
+        "W6.BUN.012",
+        "W6.BUN.066",
+        "W6.BUN.138",
+        "W6.BUN.071"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.008",
+        "R20261113.BUN.016",
+        "R20261113.BUN.012",
+        "R20261113.BUN.066",
+        "R20261113.BUN.159",
+        "R20261113.BUN.071"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T01.QLT.01",
+      "criterion": "Cada total publicado possui componentes suficientes para reconstruir sua soma, com versão, período, moeda e regra de origem.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.067",
+        "W6.BUN.111",
+        "W6.BUN.112",
+        "W6.BUN.085",
+        "W6.BUN.094"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.067",
+        "R20261113.BUN.127",
+        "R20261113.BUN.128",
+        "R20261113.BUN.085",
+        "R20261113.BUN.110"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T01.QLT.02",
+      "criterion": "Falhas e avisos identificam o registro/campo autorizado e distinguem validação, conflito e falta de permissão.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.077",
+        "W6.BUN.129",
+        "W6.BUN.084",
+        "W6.BUN.102",
+        "W6.BUN.066"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.077",
+        "R20261113.BUN.145",
+        "R20261113.BUN.084",
+        "R20261113.BUN.118",
+        "R20261113.BUN.066"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T01.QLT.18",
+      "criterion": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.138",
+        "W6.BUN.110",
+        "W6.BUN.127",
+        "W6.BUN.128",
+        "W6.BUN.066"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.159",
+        "R20261113.BUN.126",
+        "R20261113.BUN.143",
+        "R20261113.BUN.144",
+        "R20261113.BUN.066"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T01.CMP.01",
+      "criterion": "As projeções cobrem budget, actual, forecast, outlook, comparação, HR, FTE, FX, classificação e versões legadas.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.067",
+        "W6.BUN.089",
+        "W6.BUN.085",
+        "W6.BUN.114",
+        "W6.BUN.031",
+        "W6.BUN.124",
+        "W6.BUN.046"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.067",
+        "R20261113.BUN.089",
+        "R20261113.BUN.085",
+        "R20261113.BUN.130",
+        "R20261113.BUN.031",
+        "R20261113.BUN.140",
+        "R20261113.BUN.046"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T01.CMP.02",
+      "criterion": "O adapter cobre comandos existentes de edição e importação sem assumir que todo ator pode consultar os mesmos campos.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.120",
+        "W6.BUN.125",
+        "W6.BUN.026",
+        "W6.BUN.028",
+        "W6.BUN.037",
+        "W6.BUN.034",
+        "W6.BUN.027"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.136",
+        "R20261113.BUN.141",
+        "R20261113.BUN.026",
+        "R20261113.BUN.028",
+        "R20261113.BUN.037",
+        "R20261113.BUN.034",
+        "R20261113.BUN.027"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T01.CMP.18",
+      "criterion": "Cobrir todos os exports desta task (2), caso autorizado, direto proibido, stale e indisponível.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.138",
+        "W6.BUN.110",
+        "W6.BUN.128",
+        "W6.BUN.066",
+        "W6.BUN.083"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.159",
+        "R20261113.BUN.126",
+        "R20261113.BUN.144",
+        "R20261113.BUN.066",
+        "R20261113.BUN.083"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T01.SUC.01",
+      "criterion": "Um consumidor calcula zero fórmulas adicionais para exibir total, composição ou impacto de comando.",
+      "status": "BLOCKED_EXTERNAL",
+      "remaining_proof": "É necessário comprovar no consumidor WP05/WP06 real que nenhuma fórmula adicional foi introduzida para exibir as contribuições.",
+      "historical_proof_refs": [
+        "W6.BUN.067",
+        "W6.BUN.111",
+        "W6.BUN.112"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.067",
+        "R20261113.BUN.127",
+        "R20261113.BUN.128"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T01.SUC.02",
+      "criterion": "Um mesmo comando inválido é rejeitado pela simulação e pela execução isolada sem qualquer mudança no snapshot de origem.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.125",
+        "W6.BUN.070",
+        "W6.BUN.026",
+        "W6.BUN.040",
+        "W6.BUN.016"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.141",
+        "R20261113.BUN.070",
+        "R20261113.BUN.026",
+        "R20261113.BUN.040",
+        "R20261113.BUN.016"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T01.SUC.18",
+      "criterion": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+      "status": "NATIVE_UNPROVEN",
+      "remaining_proof": "A experiência do usuário com Session/skill/model reais e equivalência das três superfícies permanece sem prova integrada.",
+      "historical_proof_refs": [
+        "W6.BUN.138",
+        "W6.BUN.110",
+        "W6.BUN.139"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.159",
+        "R20261113.BUN.126",
+        "R20261113.BUN.160"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T02.CHK.01",
+      "criterion": "Em mês aberto com budget 100, forecast vazio resulta em 100 e forecast explícito 0 resulta em 0; em mês fechado, actual ausente preserva o resultado legado 0 e a indicação de ausência.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.061",
+        "W6.BUN.129",
+        "W6.BUN.010",
+        "W6.BUN.067"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.061",
+        "R20261113.BUN.145",
+        "R20261113.BUN.010",
+        "R20261113.BUN.067"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T02.CHK.02",
+      "criterion": "Com janeiro manual em 200 e annual alterado para 1520, os onze meses abertos recebem 120, janeiro permanece 200 e o total é 1520; reset libera flags e preserva o total com o arredondamento do baseline.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.072",
+        "W6.BUN.088",
+        "W6.BUN.064",
+        "W6.BUN.010"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.072",
+        "R20261113.BUN.088",
+        "R20261113.BUN.064",
+        "R20261113.BUN.010"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T02.CHK.03",
+      "criterion": "Duas edições em registros distintos são aceitas com suas revisões; duas edições concorrentes no mesmo registro produzem conflito na segunda, mantendo sua entrada local visível e sem sobrescrever a primeira.",
+      "status": "PENDING_UI_PROOF",
+      "remaining_proof": "Falta provar no navegador que a segunda entrada continua visível e pode ser retomada sem sobrescrever o valor atual.",
+      "historical_proof_refs": [
+        "W6.BUN.011",
+        "W6.BUN.077",
+        "W6.BUN.130",
+        "W6.BUN.065"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.011",
+        "R20261113.BUN.077",
+        "R20261113.BUN.146",
+        "R20261113.BUN.065"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T02.CHK.04",
+      "criterion": "Owner não altera budget/actual de linha alheia; Finance altera actual/forecast/closed permitido em versão bloqueada; linha sintética HR não admite budget manual.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.016",
+        "W6.BUN.012",
+        "W6.BUN.076",
+        "W6.BUN.021",
+        "W6.BUN.062",
+        "W6.BUN.034"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.016",
+        "R20261113.BUN.012",
+        "R20261113.BUN.076",
+        "R20261113.BUN.021",
+        "R20261113.BUN.062",
+        "R20261113.BUN.034"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T02.CHK.05",
+      "criterion": "CAPEX aceita linha classificada OPEX sem somá-la como capitalização; código CPX não se repete após cópia/exclusão e projeto referenciado não é excluído.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.031",
+        "W6.BUN.038",
+        "W6.BUN.017",
+        "W6.BUN.039",
+        "W6.BUN.091"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.031",
+        "R20261113.BUN.038",
+        "R20261113.BUN.017",
+        "R20261113.BUN.039",
+        "R20261113.BUN.107"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T02.DOD.01",
+      "criterion": "A grade e o detalhe contextual operam todos os fluxos OPEX/CAPEX inventariados com comandos C03 e estados locais explícitos.",
+      "status": "BLOCKED_EXTERNAL",
+      "remaining_proof": "O route/contrato compartilhado ainda precisa dos deltas WP00/WP01 para expor todos os tipos de operação e retry; as patches estão entregues, não aplicadas fora de ownership.",
+      "historical_proof_refs": [
+        "W6.BUN.063",
+        "W6.BUN.084",
+        "W6.BUN.072",
+        "W6.BUN.073",
+        "W6.BUN.076"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.063",
+        "R20261113.BUN.084",
+        "R20261113.BUN.072",
+        "R20261113.BUN.073",
+        "R20261113.BUN.076"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T02.DOD.02",
+      "criterion": "Casos de branco/zero/herança, spread, papel e conflito têm provas específicas e roteiro de montagem para WP10.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.061",
+        "W6.BUN.072",
+        "W6.BUN.016",
+        "W6.BUN.012",
+        "W6.BUN.077",
+        "W6.BUN.084"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.061",
+        "R20261113.BUN.072",
+        "R20261113.BUN.016",
+        "R20261113.BUN.012",
+        "R20261113.BUN.077",
+        "R20261113.BUN.084"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T02.INV.01",
+      "criterion": "Apresentar forecast herdado não preenche seu armazenamento; zero digitado continua override explícito.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.129",
+        "W6.BUN.061",
+        "W6.BUN.010",
+        "W6.BUN.084"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.145",
+        "R20261113.BUN.061",
+        "R20261113.BUN.010",
+        "R20261113.BUN.084"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T02.INV.02",
+      "criterion": "Spread, reset, flags e arredondamento seguem o domínio; nenhuma edição anual altera meses fora da operação escolhida sem tornar o efeito visível.",
+      "status": "BLOCKED_EXTERNAL",
+      "remaining_proof": "A rota/contrato WP00/WP01 precisa montar a prévia anual entregue. As patches estão propostas; o boot CLI externo bloqueia a prova de UI e nenhuma mudança fora de ownership foi aplicada.",
+      "historical_proof_refs": [
+        "W6.BUN.072",
+        "W6.BUN.064",
+        "W6.BUN.065",
+        "W6.BUN.010"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.072",
+        "R20261113.BUN.064",
+        "R20261113.BUN.065",
+        "R20261113.BUN.010"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T02.INV.03",
+      "criterion": "Lock, papel, owner/domínio e revisão esperada são rechecados pelo comando, independentemente da disponibilidade visual do controle.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.016",
+        "W6.BUN.012",
+        "W6.BUN.011",
+        "W6.BUN.084",
+        "W6.BUN.076"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.016",
+        "R20261113.BUN.012",
+        "R20261113.BUN.011",
+        "R20261113.BUN.084",
+        "R20261113.BUN.076"
+      ],
+      "new_regression_proof_refs": [
+        "R20261113.BUN.092",
+        "R20261113.BUN.093"
+      ]
+    },
+    {
+      "id": "WP03.T02.QLT.01",
+      "criterion": "A grade distingue salvo, pendente, conflito e não editável por texto e estado acessível, sem depender apenas de cor.",
+      "status": "PENDING_UI_PROOF",
+      "remaining_proof": "Provar acessibilidade e estados após ações no navegador; os testes de string não demonstram a experiência montada.",
+      "historical_proof_refs": [
+        "W6.BUN.061",
+        "W6.BUN.065",
+        "W6.BUN.062"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.061",
+        "R20261113.BUN.065",
+        "R20261113.BUN.062"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T02.QLT.02",
+      "criterion": "Navegação por teclado, identificação da linha e rótulo de versão/período permanecem utilizáveis ao percorrer os doze meses.",
+      "status": "PENDING_UI_PROOF",
+      "remaining_proof": "Não houve prova de navegação por teclado pela grade real. O critério não é fechado por markup apenas.",
+      "historical_proof_refs": [
+        "W6.BUN.063",
+        "W6.BUN.061",
+        "W6.BUN.007"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.063",
+        "R20261113.BUN.061",
+        "R20261113.BUN.007"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T02.CMP.01",
+      "criterion": "Estão cobertos os quatro modos de leitura, sete medidas de comparação, annual/mensal, spread/reset e actuals closed through.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.006",
+        "W6.BUN.072",
+        "W6.BUN.010",
+        "W6.BUN.076",
+        "W6.BUN.063"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.006",
+        "R20261113.BUN.072",
+        "R20261113.BUN.010",
+        "R20261113.BUN.076",
+        "R20261113.BUN.063"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T02.CMP.02",
+      "criterion": "Estão cobertos linhas, projetos, owners, entidades, allocations, moeda, classificação, total-only/breakdown, exclusões em uso e CPX.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.073",
+        "W6.BUN.024",
+        "W6.BUN.016",
+        "W6.BUN.093",
+        "W6.BUN.022",
+        "W6.BUN.017",
+        "W6.BUN.091",
+        "W6.BUN.092"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.073",
+        "R20261113.BUN.024",
+        "R20261113.BUN.016",
+        "R20261113.BUN.109",
+        "R20261113.BUN.022",
+        "R20261113.BUN.017",
+        "R20261113.BUN.107",
+        "R20261113.BUN.108"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T02.SUC.01",
+      "criterion": "O usuário altera uma previsão mensal e identifica seu efeito anual antes de confirmar, sem editar a versão errada.",
+      "status": "BLOCKED_EXTERNAL",
+      "remaining_proof": "A jornada real incluída no spec não chegou ao Planner: run 43520849840 falhou no boot externo do CLI. Patch WP10 entregue não aplicada; após desbloqueio ainda conferir o efeito anual e a versão na confirmação.",
+      "historical_proof_refs": [
+        "W6.BUN.084",
+        "W6.BUN.065",
+        "W6.BUN.072",
+        "W6.BUN.111"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.084",
+        "R20261113.BUN.065",
+        "R20261113.BUN.072",
+        "R20261113.BUN.127"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T02.SUC.02",
+      "criterion": "Uma recusa por conflito ou autoridade não perde a entrada local nem deixa o usuário acreditar que os valores foram salvos.",
+      "status": "PENDING_UI_PROOF",
+      "remaining_proof": "Falta provar no cliente a retenção após conflito/revogação e a mensagem visível; a recuperação compartilhada ainda possui delta WP01.",
+      "historical_proof_refs": [
+        "W6.BUN.077",
+        "W6.BUN.130",
+        "W6.BUN.084",
+        "W6.BUN.102"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.077",
+        "R20261113.BUN.146",
+        "R20261113.BUN.084",
+        "R20261113.BUN.118"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T02.SUC.03",
+      "criterion": "O operador altera um intervalo mensal real, identifica rejeições e reaplica somente células corrigidas sem redigitação nem perda de valores bloqueados.",
+      "status": "BLOCKED_EXTERNAL",
+      "remaining_proof": "Cliente compartilhado ainda impede o fluxo completo de reaplicar só células corrigidas sem refresh. wp01-monthly-retry.patch entrega a mudança concreta ao owner externo.",
+      "historical_proof_refs": [
+        "W6.BUN.129",
+        "W6.BUN.130",
+        "W6.BUN.077",
+        "W6.BUN.065"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.145",
+        "R20261113.BUN.146",
+        "R20261113.BUN.077",
+        "R20261113.BUN.065"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T03.CHK.01",
+      "criterion": "Posição incluída, FTE 1, rate anual USD 120000, início 7 e fim 12 gera budget HR 60000; reajuste de 10% a partir do mês 10 gera 63000 e mantém FTE dezembro 1.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.136",
+        "W6.BUN.114"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.157",
+        "R20261113.BUN.130"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T03.CHK.02",
+      "criterion": "Posição sem rate continua no FTE planejado, contribui custo zero pela regra atual e exibe No rate; excluir a posição do plano remove sua contribuição sem apagar seu cadastro.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.116",
+        "W6.BUN.117",
+        "W6.BUN.085"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.132",
+        "R20261113.BUN.133",
+        "R20261113.BUN.085"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T03.CHK.03",
+      "criterion": "Sincronização preserva domínio manual, marca ausência do roster e não admite pessoas futuras/terminadas conforme baseline; plano bloqueado não modifica posições.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.119",
+        "W6.BUN.019",
+        "W6.BUN.036",
+        "W6.BUN.041",
+        "W6.BUN.028"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.135",
+        "R20261113.BUN.019",
+        "R20261113.BUN.036",
+        "R20261113.BUN.041",
+        "R20261113.BUN.028"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T03.CHK.04",
+      "criterion": "Editar actual/forecast HR não altera seu budget derivado; tentativa de importar/editar budget sintético não é aceita como valor manual.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.021",
+        "W6.BUN.136",
+        "W6.BUN.119",
+        "W6.BUN.034",
+        "W6.BUN.076"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.021",
+        "R20261113.BUN.157",
+        "R20261113.BUN.135",
+        "R20261113.BUN.034",
+        "R20261113.BUN.076"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T03.CHK.05",
+      "criterion": "Owner/viewer vê agregados permitidos e nunca recebe annual cost individual, rate card privado, override ou reajuste em detalhe, comparação ou conflito.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.118",
+        "W6.BUN.085",
+        "W6.BUN.074",
+        "W6.BUN.020",
+        "W6.BUN.014",
+        "W6.BUN.075"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.134",
+        "R20261113.BUN.085",
+        "R20261113.BUN.074",
+        "R20261113.BUN.020",
+        "R20261113.BUN.014",
+        "R20261113.BUN.075"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T03.DOD.01",
+      "criterion": "Headcount, rates, reajuste e sincronização estão cobertos por contribuição de produto e comandos autorizados.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.135",
+        "W6.BUN.136",
+        "W6.BUN.119",
+        "W6.BUN.014",
+        "W6.BUN.099"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.156",
+        "R20261113.BUN.157",
+        "R20261113.BUN.135",
+        "R20261113.BUN.014",
+        "R20261113.BUN.115"
+      ],
+      "new_regression_proof_refs": [
+        "R20261113.BUN.094",
+        "R20261113.BUN.095",
+        "R20261113.BUN.096"
+      ]
+    },
+    {
+      "id": "WP03.T03.DOD.02",
+      "criterion": "C02 publica FTE/custo por mês e exceções com os mesmos resultados do domínio e provas por papel.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.085",
+        "W6.BUN.114",
+        "W6.BUN.116",
+        "W6.BUN.118",
+        "W6.BUN.075"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.085",
+        "R20261113.BUN.130",
+        "R20261113.BUN.132",
+        "R20261113.BUN.134",
+        "R20261113.BUN.075"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T03.INV.01",
+      "criterion": "Posições, rate, FTE, intervalo e reajuste alimentam HR sintético; não há budget HR manual paralelo.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.136",
+        "W6.BUN.114",
+        "W6.BUN.021",
+        "W6.BUN.034"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.157",
+        "R20261113.BUN.130",
+        "R20261113.BUN.021",
+        "R20261113.BUN.034"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T03.INV.02",
+      "criterion": "Actual/forecast HR permanecem independentes do cálculo de budget e não são substituídos por sincronização do roster.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.136",
+        "W6.BUN.119",
+        "W6.BUN.085",
+        "W6.BUN.021"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.157",
+        "R20261113.BUN.135",
+        "R20261113.BUN.085",
+        "R20261113.BUN.021"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T03.INV.03",
+      "criterion": "Campos salariais e Talent Review não são expandidos nem expostos a partir de agregado, diff, mensagem ou importação.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.074",
+        "W6.BUN.075",
+        "W6.BUN.086",
+        "W6.BUN.118",
+        "W6.BUN.020",
+        "W6.BUN.041",
+        "W6.BUN.034"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.074",
+        "R20261113.BUN.075",
+        "R20261113.BUN.086",
+        "R20261113.BUN.134",
+        "R20261113.BUN.020",
+        "R20261113.BUN.041",
+        "R20261113.BUN.034"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T03.QLT.01",
+      "criterion": "A interface identifica posição excluída, não presente no roster, nova contratação e sem rate sem fazer esses estados parecerem equivalentes.",
+      "status": "PENDING_UI_PROOF",
+      "remaining_proof": "Falta prova da apresentação desses quatro estados na interface montada e sob o papel HR.",
+      "historical_proof_refs": [
+        "W6.BUN.116",
+        "W6.BUN.117",
+        "W6.BUN.119",
+        "W6.BUN.114"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.132",
+        "R20261113.BUN.133",
+        "R20261113.BUN.135",
+        "R20261113.BUN.130"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T03.QLT.02",
+      "criterion": "Indicadores dizem FTE planejado e explicam o denominador; custo anual dividido por FTE dezembro não recebe rótulo de média anual sem essa definição.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.098",
+        "W6.BUN.114",
+        "W6.BUN.111"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.114",
+        "R20261113.BUN.130",
+        "R20261113.BUN.127"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T03.CMP.01",
+      "criterion": "Posições, rates automáticos/explícitos, overrides, reajuste, meses, inclusão, tipo, localização e domínio manual estão cobertos.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.115",
+        "W6.BUN.136",
+        "W6.BUN.114",
+        "W6.BUN.014",
+        "W6.BUN.119",
+        "W6.BUN.033"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.131",
+        "R20261113.BUN.157",
+        "R20261113.BUN.130",
+        "R20261113.BUN.014",
+        "R20261113.BUN.135",
+        "R20261113.BUN.033"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T03.CMP.02",
+      "criterion": "A sincronização, privacidade, bloqueio, HR por domínio e referências de rate em uso possuem casos de aceitação.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.119",
+        "W6.BUN.118",
+        "W6.BUN.085",
+        "W6.BUN.014",
+        "W6.BUN.028"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.135",
+        "R20261113.BUN.134",
+        "R20261113.BUN.085",
+        "R20261113.BUN.014",
+        "R20261113.BUN.028"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T03.SUC.01",
+      "criterion": "HR identifica quais posições explicam uma mudança mensal de custo sem editar linhas sintéticas de OPEX.",
+      "status": "PENDING_UI_PROOF",
+      "remaining_proof": "Falta a jornada HR que abre a mudança mensal e suas posições na tela; existência do read model não prova o drilldown.",
+      "historical_proof_refs": [
+        "W6.BUN.114",
+        "W6.BUN.136",
+        "W6.BUN.135",
+        "W6.BUN.021"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.130",
+        "R20261113.BUN.157",
+        "R20261113.BUN.156",
+        "R20261113.BUN.021"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T03.SUC.02",
+      "criterion": "André recebe a evolução planejada de FTE/custo dentro de seu acesso, e ausência de rate não parece economia confirmada.",
+      "status": "BLOCKED_EXTERNAL",
+      "remaining_proof": "O consumidor WP05 real de André precisa demonstrar a evolução e o estado desconhecido sem tratá-lo como economia. Não há prova dessa montagem.",
+      "historical_proof_refs": [
+        "W6.BUN.085",
+        "W6.BUN.116",
+        "W6.BUN.118"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.085",
+        "R20261113.BUN.132",
+        "R20261113.BUN.134"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T04.CHK.01",
+      "criterion": "Valor 100 em moeda com taxa USD 1.2 produz 120; taxa ausente mantém o resultado legado 0 e aviso de moeda sem taxa, sem informar perda/economia de 120 como fato.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.094",
+        "W6.BUN.087",
+        "W6.BUN.067",
+        "W6.BUN.107"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.110",
+        "R20261113.BUN.087",
+        "R20261113.BUN.067",
+        "R20261113.BUN.123"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T04.CHK.02",
+      "criterion": "USD não pode ser alterado/excluído, moeda em uso não é excluída e taxa válida com vírgula segue o mesmo parse e seis casas do baseline.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.095",
+        "W6.BUN.015",
+        "W6.BUN.032",
+        "W6.BUN.096"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.111",
+        "R20261113.BUN.015",
+        "R20261113.BUN.032",
+        "R20261113.BUN.112"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T04.CHK.03",
+      "criterion": "Nome equivalente normalizado é recusado como duplicata; entidade/allocation usada em outra versão ou HR AF não pode ser excluída.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.094",
+        "W6.BUN.018",
+        "W6.BUN.097"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.110",
+        "R20261113.BUN.018",
+        "R20261113.BUN.113"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T04.CHK.04",
+      "criterion": "Finance edita FX somente quando permitido pelo lock; administração de catálogos segue o papel original; tela e comando rejeitam a mesma mudança proibida.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.137",
+        "W6.BUN.098",
+        "W6.BUN.012",
+        "W6.BUN.094"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.158",
+        "R20261113.BUN.114",
+        "R20261113.BUN.012",
+        "R20261113.BUN.110"
+      ],
+      "new_regression_proof_refs": [
+        "R20261113.BUN.098",
+        "R20261113.BUN.099"
+      ]
+    },
+    {
+      "id": "WP03.T04.CHK.05",
+      "criterion": "Adicionar chaves comuns é idempotente e não altera distribuição de valores; By headcount continua referência, sem gerar pesos ou lançamentos.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.092",
+        "W6.BUN.137"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.108",
+        "R20261113.BUN.158"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T04.DOD.01",
+      "criterion": "FX e ambos os catálogos possuem os controles originais, contexto de escopo e prova de referência em uso.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.094",
+        "W6.BUN.095",
+        "W6.BUN.137",
+        "W6.BUN.098",
+        "W6.BUN.018"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.110",
+        "R20261113.BUN.111",
+        "R20261113.BUN.158",
+        "R20261113.BUN.114",
+        "R20261113.BUN.018"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T04.DOD.02",
+      "criterion": "A composição monetária e a ausência de taxa são publicadas para UI/BI/imports sem alterar a política cambial.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.094",
+        "W6.BUN.087",
+        "W6.BUN.067",
+        "W6.BUN.032"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.110",
+        "R20261113.BUN.087",
+        "R20261113.BUN.067",
+        "R20261113.BUN.032"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T04.INV.01",
+      "criterion": "FX pertence à versão e entidades/allocations mantêm o escopo compartilhado existente; troca de tela não muda essa autoridade.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.094",
+        "W6.BUN.137",
+        "W6.BUN.098"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.110",
+        "R20261113.BUN.158",
+        "R20261113.BUN.114"
+      ],
+      "new_regression_proof_refs": [
+        "R20261113.BUN.100",
+        "R20261113.BUN.101",
+        "R20261113.BUN.102",
+        "R20261113.BUN.103",
+        "R20261113.BUN.104",
+        "R20261113.BUN.105"
+      ]
+    },
+    {
+      "id": "WP03.T04.INV.02",
+      "criterion": "USD fixo, validação, precisão e resultado numérico de taxa ausente seguem o domínio, com a ausência explicitada.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.095",
+        "W6.BUN.015",
+        "W6.BUN.067",
+        "W6.BUN.096"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.111",
+        "R20261113.BUN.015",
+        "R20261113.BUN.067",
+        "R20261113.BUN.112"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T04.INV.03",
+      "criterion": "Chave de allocation é classificação; nenhum valor é rateado ou escrito em outro módulo por sua seleção.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.092",
+        "W6.BUN.073"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.108",
+        "R20261113.BUN.073"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T04.QLT.01",
+      "criterion": "Valor original, moeda, taxa aplicável e USD convertido podem ser inspecionados sem adivinhar a base.",
+      "status": "PENDING_UI_PROOF",
+      "remaining_proof": "Falta provar na tela a inspeção desses campos sem ambiguidade de base; o modelo isolado não demonstra navegação.",
+      "historical_proof_refs": [
+        "W6.BUN.094",
+        "W6.BUN.067"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.110",
+        "R20261113.BUN.067"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T04.QLT.02",
+      "criterion": "Referências são apresentadas por nome legível e exclusões recusadas explicam o uso encontrado sem revelar informação restrita.",
+      "status": "PENDING_UI_PROOF",
+      "remaining_proof": "A jornada browser de inspeção e recusa de exclusão não foi executada nesta seleção.",
+      "historical_proof_refs": [
+        "W6.BUN.023",
+        "W6.BUN.094",
+        "W6.BUN.018",
+        "W6.BUN.095"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.023",
+        "R20261113.BUN.110",
+        "R20261113.BUN.018",
+        "R20261113.BUN.111"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T04.CMP.01",
+      "criterion": "Criação, edição e exclusão de FX, entidades e allocations, chaves comuns e restrições de uso estão cobertas.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.093",
+        "W6.BUN.092",
+        "W6.BUN.097",
+        "W6.BUN.018",
+        "W6.BUN.095"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.109",
+        "R20261113.BUN.108",
+        "R20261113.BUN.113",
+        "R20261113.BUN.018",
+        "R20261113.BUN.111"
+      ],
+      "new_regression_proof_refs": [
+        "R20261113.BUN.100",
+        "R20261113.BUN.101",
+        "R20261113.BUN.102",
+        "R20261113.BUN.103",
+        "R20261113.BUN.104",
+        "R20261113.BUN.105"
+      ]
+    },
+    {
+      "id": "WP03.T04.CMP.02",
+      "criterion": "Casos de taxa ausente, código inválido, vírgula decimal, duplicidade normalizada e lock/papel têm resultados explícitos.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.094",
+        "W6.BUN.095",
+        "W6.BUN.015",
+        "W6.BUN.137",
+        "W6.BUN.098"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.110",
+        "R20261113.BUN.111",
+        "R20261113.BUN.015",
+        "R20261113.BUN.158",
+        "R20261113.BUN.114"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T04.SUC.01",
+      "criterion": "O usuário reconhece antes da gravação se altera uma premissa desta versão ou um cadastro compartilhado.",
+      "status": "PENDING_UI_PROOF",
+      "remaining_proof": "Falta prova na jornada browser de que o escopo permanece visível no preview e na confirmação.",
+      "historical_proof_refs": [
+        "W6.BUN.094",
+        "W6.BUN.098",
+        "W6.BUN.137"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.110",
+        "R20261113.BUN.114",
+        "R20261113.BUN.158"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T04.SUC.02",
+      "criterion": "Taxa ausente e allocation não calculada permanecem visíveis como tais em qualquer consumidor autorizado.",
+      "status": "BLOCKED_EXTERNAL",
+      "remaining_proof": "Cada consumidor autorizado WP05/WP06 deve comprovar que não oculta esses estados ou inventa pesos; não foi executada essa composição externa.",
+      "historical_proof_refs": [
+        "W6.BUN.094",
+        "W6.BUN.087",
+        "W6.BUN.067"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.110",
+        "R20261113.BUN.087",
+        "R20261113.BUN.067"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T05.CHK.01",
+      "criterion": "Base produz outlook 590000; cópia com o item 72000 substituído por 84000 produz 602000 e delta +12000; cópia com 78000 produz 596000 e delta +6000, mantendo budget 600000 e actual 400000.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.111",
+        "W6.BUN.089"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.127",
+        "R20261113.BUN.089"
+      ],
+      "new_regression_proof_refs": [
+        "R20261113.BUN.151",
+        "R20261113.BUN.155"
+      ]
+    },
+    {
+      "id": "WP03.T05.CHK.02",
+      "criterion": "No cenário de 596000, a UI mostra +6000 contra a base e -4000 contra budget, sem rotular os 4000 como economia contra a base.",
+      "status": "PENDING_UI_PROOF",
+      "remaining_proof": "A rota Overview A/B ainda não monta a contribuição nova; falta prova de UI dos dois valores simultâneos sem rotular −4000 como economia contra a base.",
+      "historical_proof_refs": [
+        "W6.BUN.111",
+        "W6.BUN.100"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.127",
+        "R20261113.BUN.116"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T05.CHK.03",
+      "criterion": "As contribuições das linhas somam o delta total; diferenças de FX/HR/meses permanecem explicadas por campos alterados, e registros sem identidade correspondente não são unidos por nome.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.111",
+        "W6.BUN.112",
+        "W6.BUN.113",
+        "W6.BUN.067"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.127",
+        "R20261113.BUN.128",
+        "R20261113.BUN.129",
+        "R20261113.BUN.067"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T05.CHK.04",
+      "criterion": "Copiar e explorar não modifica official; tornar official troca apenas o ponteiro daquele ano e bloqueia a escolhida; official não é excluída/desbloqueada pela ação proibida.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.101",
+        "W6.BUN.013",
+        "W6.BUN.111",
+        "W6.BUN.029"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.117",
+        "R20261113.BUN.013",
+        "R20261113.BUN.127",
+        "R20261113.BUN.029"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T05.CHK.05",
+      "criterion": "A matriz cobre sete páginas e operações originais; provas de montagem real são encaminhadas ao WP10, e gráficos/imports ainda não compostos não são declarados integrados.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.007",
+        "W6.BUN.063",
+        "W6.BUN.111",
+        "W6.BUN.101",
+        "W6.BUN.067"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.007",
+        "R20261113.BUN.063",
+        "R20261113.BUN.127",
+        "R20261113.BUN.117",
+        "R20261113.BUN.067"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T05.CHK.18",
+      "criterion": "Executar sf_scenario_compare pela UI/native/MCP com base e autoridade iguais produz o mesmo handler, resultado e versão; chamada direta sem concessão ou após revogação é recusada pelo destino.",
+      "status": "NATIVE_UNPROVEN",
+      "remaining_proof": "SessionV2.prompt, skill carregada e admissão reais não foram executadas. Um SkillLoadReceipt sintético e receipt.kind native não fecham o critério residente.",
+      "historical_proof_refs": [
+        "W6.BUN.138",
+        "W6.BUN.110",
+        "W6.BUN.139",
+        "W6.BUN.128"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.159",
+        "R20261113.BUN.126",
+        "R20261113.BUN.160",
+        "R20261113.BUN.144"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T05.DOD.01",
+      "criterion": "Overview, gestão completa de Versions e comparação A/B são entregues com composição explicável e estados de hipótese/oficial.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.111",
+        "W6.BUN.101",
+        "W6.BUN.104",
+        "W6.BUN.105",
+        "W6.BUN.112"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.127",
+        "R20261113.BUN.117",
+        "R20261113.BUN.120",
+        "R20261113.BUN.121",
+        "R20261113.BUN.128"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T05.DOD.02",
+      "criterion": "O handoff contém todas as portas de domínio, matriz de paridade e roteiro exato de consumo por WP05/WP06/WP10.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.111",
+        "W6.BUN.067",
+        "W6.BUN.090",
+        "W6.BUN.069",
+        "W6.BUN.081",
+        "W6.BUN.082",
+        "W6.BUN.055",
+        "W6.BUN.071"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.127",
+        "R20261113.BUN.067",
+        "R20261113.BUN.106",
+        "R20261113.BUN.069",
+        "R20261113.BUN.081",
+        "R20261113.BUN.082",
+        "R20261113.BUN.055",
+        "R20261113.BUN.071"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T05.DOD.18",
+      "criterion": "Descritores C16 de sf_scenario_compare são implementados e consumidos por T06 com referências reais.",
+      "status": "NATIVE_UNPROVEN",
+      "remaining_proof": "Não há consumo T06 com Session/SkillLoadReceipt reais, origem real e persistência/reabertura ponta a ponta.",
+      "historical_proof_refs": [
+        "W6.BUN.127",
+        "W6.BUN.128",
+        "W6.BUN.139",
+        "W6.BUN.110"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.143",
+        "R20261113.BUN.144",
+        "R20261113.BUN.160",
+        "R20261113.BUN.126"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T05.INV.01",
+      "criterion": "Explorar uma cópia não altera official, budget ou actual de outra versão; oficialização permanece ação explícita autorizada.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.111",
+        "W6.BUN.101",
+        "W6.BUN.029",
+        "W6.BUN.131"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.127",
+        "R20261113.BUN.117",
+        "R20261113.BUN.029",
+        "R20261113.BUN.147"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T05.INV.02",
+      "criterion": "Comparação preserva moeda/período/contexto e identidade dos registros; não mistura anos, hipóteses ou naturezas contábeis sem identificá-los.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.111",
+        "W6.BUN.112",
+        "W6.BUN.100",
+        "W6.BUN.067",
+        "W6.BUN.083"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.127",
+        "R20261113.BUN.128",
+        "R20261113.BUN.116",
+        "R20261113.BUN.067",
+        "R20261113.BUN.083"
+      ],
+      "new_regression_proof_refs": [
+        "R20261113.BUN.151",
+        "R20261113.BUN.153",
+        "R20261113.BUN.154"
+      ]
+    },
+    {
+      "id": "WP03.T05.INV.03",
+      "criterion": "Deltas são resultados do mesmo motor e respeitam redação salarial; não há integração automática de Procurement nem causalidade inferida.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.089",
+        "W6.BUN.067",
+        "W6.BUN.118",
+        "W6.BUN.111",
+        "W6.BUN.112"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.089",
+        "R20261113.BUN.067",
+        "R20261113.BUN.134",
+        "R20261113.BUN.127",
+        "R20261113.BUN.128"
+      ],
+      "new_regression_proof_refs": [
+        "R20261113.BUN.155"
+      ]
+    },
+    {
+      "id": "WP03.T05.INV.18",
+      "criterion": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.102",
+        "W6.BUN.066",
+        "W6.BUN.128",
+        "W6.BUN.081",
+        "W6.BUN.071"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.118",
+        "R20261113.BUN.066",
+        "R20261113.BUN.144",
+        "R20261113.BUN.081",
+        "R20261113.BUN.071"
+      ],
+      "new_regression_proof_refs": [
+        "R20261113.BUN.152"
+      ]
+    },
+    {
+      "id": "WP03.T05.QLT.01",
+      "criterion": "Os maiores impactos podem ser abertos até linha/mês e toda diferença agregada reconcilia com seus componentes.",
+      "status": "PENDING_UI_PROOF",
+      "remaining_proof": "A abertura interativa de total→linha→mês requer a rota Overview e prova de browser; presenter isolado não é drilldown montado.",
+      "historical_proof_refs": [
+        "W6.BUN.111",
+        "W6.BUN.112",
+        "W6.BUN.089"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.127",
+        "R20261113.BUN.128",
+        "R20261113.BUN.089"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T05.QLT.02",
+      "criterion": "Orçamento oficial, versão base, hipótese e outlook têm rótulos distintos; seleção e estado permanecem visíveis ao navegar.",
+      "status": "PENDING_UI_PROOF",
+      "remaining_proof": "A navegação preservando baseVersion ainda depende da allowlist/contexto do owner WP01. Provar os rótulos e a seleção no browser após montar.",
+      "historical_proof_refs": [
+        "W6.BUN.111",
+        "W6.BUN.100",
+        "W6.BUN.101"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.127",
+        "R20261113.BUN.116",
+        "R20261113.BUN.117"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T05.QLT.18",
+      "criterion": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.110",
+        "W6.BUN.127",
+        "W6.BUN.128",
+        "W6.BUN.078",
+        "W6.BUN.081",
+        "W6.BUN.083"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.126",
+        "R20261113.BUN.143",
+        "R20261113.BUN.144",
+        "R20261113.BUN.078",
+        "R20261113.BUN.081",
+        "R20261113.BUN.083"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T05.CMP.01",
+      "criterion": "Criar, copiar, editar nome/ano, bloquear, desbloquear, oficializar e excluir são preservados com todas as recusas pertinentes.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.101",
+        "W6.BUN.102",
+        "W6.BUN.103",
+        "W6.BUN.104",
+        "W6.BUN.105",
+        "W6.BUN.013",
+        "W6.BUN.051"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.117",
+        "R20261113.BUN.118",
+        "R20261113.BUN.119",
+        "R20261113.BUN.120",
+        "R20261113.BUN.121",
+        "R20261113.BUN.013",
+        "R20261113.BUN.051"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T05.CMP.02",
+      "criterion": "Overview mantém suas medidas e comparações originais e acrescenta detalhamento A/B; as sete páginas possuem cobertura e exports de composição.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.006",
+        "W6.BUN.007",
+        "W6.BUN.111",
+        "W6.BUN.112",
+        "W6.BUN.063"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.006",
+        "R20261113.BUN.007",
+        "R20261113.BUN.127",
+        "R20261113.BUN.128",
+        "R20261113.BUN.063"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T05.CMP.18",
+      "criterion": "Cobrir todos os exports desta task (1), caso autorizado, direto proibido, stale e indisponível.",
+      "status": "PRODUCER_VERIFIED",
+      "remaining_proof": "",
+      "historical_proof_refs": [
+        "W6.BUN.110",
+        "W6.BUN.128",
+        "W6.BUN.078",
+        "W6.BUN.079",
+        "W6.BUN.081",
+        "W6.BUN.082",
+        "W6.BUN.083"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.126",
+        "R20261113.BUN.144",
+        "R20261113.BUN.078",
+        "R20261113.BUN.079",
+        "R20261113.BUN.081",
+        "R20261113.BUN.082",
+        "R20261113.BUN.083"
+      ],
+      "new_regression_proof_refs": [
+        "R20261113.BUN.152",
+        "R20261113.BUN.153",
+        "R20261113.BUN.154"
+      ]
+    },
+    {
+      "id": "WP03.T05.SUC.01",
+      "criterion": "André identifica em uma comparação o único item que leva 590000 a 602000 e consegue inspecionar o mês sem perder a referência de versão.",
+      "status": "PENDING_UI_PROOF",
+      "remaining_proof": "Falta a jornada real de André abrindo o mês e conservando a versão selecionada na navegação.",
+      "historical_proof_refs": [
+        "W6.BUN.111",
+        "W6.BUN.112"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.127",
+        "R20261113.BUN.128"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T05.SUC.02",
+      "criterion": "WP10 consegue montar as contribuições reais sem alterar a lógica financeira nem copiar fórmulas para BI ou imports.",
+      "status": "BLOCKED_EXTERNAL",
+      "remaining_proof": "WP10/WP05/WP06 precisam demonstrar a montagem real e seu consumo em BI/imports. Nenhuma porta isolada substitui esse aceite externo.",
+      "historical_proof_refs": [
+        "W6.BUN.111",
+        "W6.BUN.067",
+        "W6.BUN.089",
+        "W6.BUN.026"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.127",
+        "R20261113.BUN.067",
+        "R20261113.BUN.089",
+        "R20261113.BUN.026"
+      ],
+      "new_regression_proof_refs": []
+    },
+    {
+      "id": "WP03.T05.SUC.18",
+      "criterion": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+      "status": "NATIVE_UNPROVEN",
+      "remaining_proof": "A equivalência percebida pelo usuário entre UI/native/MCP exige Session/skill reais e jornada integrada; permanece sem prova.",
+      "historical_proof_refs": [
+        "W6.BUN.127",
+        "W6.BUN.128",
+        "W6.BUN.139",
+        "W6.BUN.081",
+        "W6.BUN.110"
+      ],
+      "revalidated_proof_refs": [
+        "R20261113.BUN.143",
+        "R20261113.BUN.144",
+        "R20261113.BUN.160",
+        "R20261113.BUN.081",
+        "R20261113.BUN.126"
+      ],
+      "new_regression_proof_refs": []
+    }
+  ]
+}
+

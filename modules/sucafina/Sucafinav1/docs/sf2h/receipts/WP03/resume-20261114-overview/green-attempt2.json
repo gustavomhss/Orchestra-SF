@@ -1,0 +1,66 @@
+{
+  "schema": "wp03-overview-attempt-v1",
+  "kind": "failed-full-selection-timeout",
+  "product_sha": "d7be4567ea0eb47fe0022fcaf87ae497e33afcea",
+  "product_tree": "76bbcb8759bccb65067c8e72a0d8fb5ef32f4125",
+  "snapshot_sha": "40792323ea4921f2c34b87720f407878290396ef",
+  "snapshot_tree": "5514a81e585067bc2d3ba316e9502afcf9f7843c",
+  "branch": "ci-run-linux-astra-wp03-d7be4567-79addc39-1",
+  "request_sha256": "79addc3906450c91cad259c50397715bc68a7267b0cb86e1274f0070122ce69b",
+  "run_id": 43535785426,
+  "job_id": 132264320136,
+  "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43535785426",
+  "run_attempt": 1,
+  "conclusion": "failure",
+  "tests": {
+    "pass": 169,
+    "fail": 1,
+    "total": 170,
+    "files": 31,
+    "assertions": 2644,
+    "duration_seconds": 44.41
+  },
+  "observed_failure": {
+    "test": "real WP11 rules bind a comparison, survive reopen and refuse a second binding or a stale rule",
+    "path": "modules/sucafina/Sucafinav1/test/product/wp03/persistence-comparison.test.ts",
+    "blob": "c5c29d7ac94354318bdb32a3328ed6b93dc887e9",
+    "runner_reason": "this test timed out after 5000ms",
+    "observed_duration_ms": 5198.39,
+    "root_cause_proven": false
+  },
+  "earlier_observations": [
+    {
+      "run_id": 43528213766,
+      "conclusion_for_test": "pass",
+      "duration_ms": 4657.25
+    },
+    {
+      "run_id": 43535212218,
+      "conclusion_for_test": "pass",
+      "duration_ms": 4795.36
+    }
+  ],
+  "overview": {
+    "existing_regression_test": "pass",
+    "new_drilldown_tests": {
+      "pass": 7,
+      "fail": 0
+    }
+  },
+  "omni": {
+    "nonce": "979f3ccced08160434558b2e643d1688",
+    "verdict": "not applicable (focused: no declaring test ran)",
+    "spawn": false,
+    "delegated": false,
+    "native_proof": false
+  },
+  "followup": {
+    "run_id": 43536154582,
+    "snapshot_reused_without_change": true,
+    "request_reused_without_change": true,
+    "code_changed": false,
+    "tests_changed": false,
+    "timeout_changed": false,
+    "reason": "One exact repetition to determine whether the timeout reproduces on the same immutable product and selection; the failed attempt remains part of the evidence."
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "schema": "wp03-dependency-recheck-v1",
+  "scope": "Sucafina / WP03",
+  "observed_at_window_utc": [
+    "2026-11-14T00:19:00Z",
+    "2026-11-14T00:20:59Z"
+  ],
+  "integration_base": {
+    "branch": "sf2-stack",
+    "sha": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0"
+  },
+  "observations": [
+    {
+      "owner": "WP00",
+      "sha": "29f40e0f0fafa8d526df9b280151962187f1440d",
+      "path": "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+      "blob": "fa0d39f3dfc23bfce751d91b00ae6c8fc2a87686",
+      "observation": "Planner request is still monthly drafts only; plannerOverview and plannerVersions shared host capabilities are absent.",
+      "handoffs": [
+        "../wp00-monthly-contract.patch",
+        "../wp01-overview-versions-handoff.md"
+      ]
+    },
+    {
+      "owner": "WP01",
+      "sha": "0fa990d8c9ae44d06118493c75bf123cdccab2bd",
+      "path": "modules/sucafina/Sucafinav1/interface/planner-http.ts",
+      "blob": "2befb1d4c7964b30830311abe1c93c7c575b8f70",
+      "observation": "Route still rejects operation/entity via planner-operation-not-published; setting is absent in decoder. Monthly uncertainty/retry handling progressed, but revision rebase, partial save and reconfirmation required by the existing handoff remain unverified; Overview/Versions HTTP/UI consumer files are absent.",
+      "handoffs": [
+        "../wp01-monthly-route.patch",
+        "../wp01-monthly-retry.json",
+        "../wp01-monthly-retry.patch",
+        "../wp01-overview-versions-handoff.md"
+      ]
+    },
+    {
+      "owner": "WP10",
+      "sha": "d41ea01b8d9aa068301c1643c1ec3dc088900533",
+      "path": "apps/cli/src/sucafina-product/installation.ts",
+      "blob": "30ffcb8353cdf478808fbb8d6bc67b48b10a6109",
+      "observation": "Base and wildcard routes remain separately merged. The duplicate registration cause from the failed installed run is unchanged.",
+      "historical_run_id": 43520849840,
+      "historical_job_id": 132214420325,
+      "historical_failure": "Method 'ACL' already declared for route '/sucafina'",
+      "new_browser_run": false,
+      "handoffs": [
+        "../wp10-installation-router-handoff.md"
+      ]
+    },
+    {
+      "owners": [
+        "WP10",
+        "WP11",
+        "WP13",
+        "S0"
+      ],
+      "kind": "native-runtime",
+      "observation": "No callable real Orchestra SessionV2, SkillLoadReceipt, provider or grant API was exposed to this session; no native or resident proof is claimed.",
+      "handoffs": [
+        "../native-runtime-handoff.md",
+        "../wp13-comparison-persistence-handoff.md"
+      ]
+    }
+  ],
+  "scope_of_current_increment": "The own Overview total-to-record-to-month implementation gap was addressed despite the external installed-application blockers. External files were not modified.",
+  "limits": [
+    "These are source observations at the listed refs, not live production-health measurements.",
+    "Installed acceptance remains false.",
+    "Genesis and WP05 implementation are excluded."
+  ]
+}

@@ -17,9 +17,11 @@ export type PlannerScenarioInputs = {
   verifyAssumption: (assumption: ScenarioRequest["assumptions"][number], context: TrustedDomainContext) => Promise<PortResult<{ fingerprint: string }>>
 }
 
-export async function simulateScenario(input: { host: DomainPortHost; sources: PlannerSourceHost; evidence?: BusinessContextService; inputs?: PlannerScenarioInputs; compare: PlannerPort["compareForecast"]; project: (snapshot: Snapshot, actor: Actor, versionId: string) => Record<string, unknown> | undefined }, request: ScenarioRequest, binding: TrustedDomainContext): ReturnType<PlannerPort["simulateScenario"]> {
+export async function simulateScenario(input: { host: DomainPortHost; sources: PlannerSourceHost; evidence?: BusinessContextService; inputs?: PlannerScenarioInputs; compare: PlannerPort["compareForecast"]; project: (snapshot: Snapshot, actor: Actor, versionId: string) => Record<string, unknown> | undefined }, incoming: ScenarioRequest, binding: TrustedDomainContext): ReturnType<PlannerPort["simulateScenario"]> {
+  const parsed = decodeSfOperationInput("sf_scenario_simulate", incoming)
+  if (!parsed.ok) return { status: "needs-input", reason: "invalid-scenario-input" }
+  const request = parsed.value
   if (!(await input.host.revalidate(binding)) || !input.host.requestFor(binding)) return { status: "denied", reason: "invalid-binding" }
-  if (!decodeSfOperationInput("sf_scenario_simulate", request).ok) return { status: "needs-input", reason: "invalid-scenario-input" }
   if (request.assumptions.some((assumption) => assumption.state === "confirmed" && !assumption.evidenceRefs.length)) return { status: "needs-input", reason: "confirmed-assumption-needs-evidence" }
   if (request.assumptions.some((assumption) => assumption.state === "confirmed") && !input.inputs) return { status: "needs-input", reason: "assumption-confirmation-unavailable" }
   const confirmed = request.assumptions.filter((assumption) => assumption.state === "confirmed")
@@ -95,7 +97,8 @@ export async function simulateScenario(input: { host: DomainPortHost; sources: P
   const confirmationsAgain = await Promise.all(confirmed.map((assumption) => input.inputs!.verifyAssumption(assumption, binding)))
   if (confirmationsAgain.some((entry, index) => digestSfValue(entry) !== digestSfValue(confirmations[index]))) return { status: "stale", reason: "assumption-confirmation-changed" }
   const replacementEgress = await Promise.all(request.operations.map((operation) => operation.replacementRef && input.inputs ? input.inputs.resolveAmount(operation.replacementRef, binding) : undefined))
-  if (replacementEgress.some((entry, index) => digestSfValue(entry) !== digestSfValue(replacements[index]))) return { status: "stale", reason: "replacement-changed" }
+  const replacementDigest = (entry: (typeof replacements)[number]) => digestSfValue(entry?.status === "ok" ? { ...entry, value: { ...entry.value, source: { ...entry.value.source, observedAt: "" } } } : entry)
+  if (replacementEgress.some((entry, index) => replacementDigest(entry) !== replacementDigest(replacements[index]))) return { status: "stale", reason: "replacement-changed" }
   const egress = await checkEvidence()
   if (egress.length !== admission.length || egress.some((entry, index) => entry.state !== "fresh" || entry.ref.refDigest !== admission[index].ref.refDigest || entry.accessRevision !== admission[index].accessRevision) || !(await input.host.revalidate(binding))) return { status: "stale", reason: "scenario-evidence-changed" }
   const scenarioCoverage = { ...coverage.value.assessment, coverageState: coverage.value.assessment.coverageState === "unavailable" ? "unavailable" as const : "pending" as const, issues: [...coverage.value.assessment.issues, "scenario-coverage-reassessment-required"] }

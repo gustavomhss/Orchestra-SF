@@ -1,0 +1,142 @@
+{
+  "schema": "sf2h.wp03.baseline-review.v1",
+  "finding": "HR-AGGREGATE-PARITY",
+  "status": "CORRECTED_PRODUCT_PROJECTIONS_CI_REGRESSIONS_PASSED",
+  "source": {
+    "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+    "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+    "git_blob": "e836d3f83bd7707b27f5bd3052494c84d67a2442",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9e4f3d35833f9b2cea6abdf58f42331f3973d9bf/modules/sucafina/Sucafinav1/runtime/planner.ts",
+    "retrieval": "GitHub MCP fetch_file at fixed commit; functions privateAccess, redact, calculated and domain.view inspected."
+  },
+  "observed_baseline": {
+    "private_roles": [
+      "admin",
+      "hr",
+      "finance"
+    ],
+    "owner_viewer_path": "domain.view returns object(redact(data)); it does not remove HR synthetic lines or summary totals.",
+    "removed_recursively": [
+      "salary/cost/override keys",
+      "rates",
+      "rateId",
+      "inc",
+      "incMonth",
+      "rate outside FX",
+      "annual/months/total/budget/annualCost within positions"
+    ],
+    "preserved_aggregate_fields": [
+      "computed.hr by domain: b, annual, a, f, owner, entity, alloc",
+      "summary.hr",
+      "summary.lines including HR:<domain> synthetic lines",
+      "summary.budget",
+      "summary.actual",
+      "summary.outlook",
+      "summary.total",
+      "summary.fullYear",
+      "summary.hrTotal",
+      "summary.fte"
+    ]
+  },
+  "observed_seed_divergence": {
+    "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+    "function": "projectPlannerSource",
+    "behavior": "restrictedHr branch removes all HR lines and aggregate totals for owner/viewer; tests that only assert salary strings absent do not prove permitted aggregate parity.",
+    "status": "HISTORICAL_SEED_DEFECT_CORRECTED"
+  },
+  "criteria": [
+    "WP03.INV.01",
+    "WP03.INV.02",
+    "WP03.T01.CHK.04",
+    "WP03.T03.CHK.05",
+    "WP03.T03.DOD.02"
+  ],
+  "required_test": "Using the same snapshot, compare owner/viewer aggregate from domain.view with C02/headcount/monthly consumer projection; reconcile HR by domain and totals, assert absent private per-position/rate/override/increase fields, and preserve missing-input metadata.",
+  "tests_executed": true,
+  "decision_applied": "Restore the baseline-permitted HR domain aggregates in projectPlannerSource and projectHeadcount, preserve per-month missing-rate/missing-FX qualification, and exclude rates, increases and individual compensation from owner/viewer projections.",
+  "implementation": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "change": "Preserves HR synthetic lines and aggregate totals; internally qualifies each HR domain/month using current private inputs, then emits only public positions and qualified aggregates."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/headcount.ts",
+      "change": "Retains domain monthly budget/actual/forecast/outlook and planned FTE for owner/viewer while suppressing private rates/increases and per-position costs."
+    }
+  ],
+  "ci_evidence": {
+    "product_sha": "6f004731e7848bf540434a3ee050cd0f28f342cb",
+    "snapshot_sha": "9a62d6c0ed2638960319f8ff3d68eba58d2e92e5",
+    "run_id": 43523654974,
+    "job_id": 132223957537,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43523654974/job/132223957537",
+    "whole_run_conclusion": "success",
+    "whole_run_tests": {
+      "pass": 142,
+      "fail": 0,
+      "total": 142,
+      "files": 28,
+      "expects": 1521,
+      "duration": "42.26s"
+    },
+    "scope": "These five regression labels passed in the exact W6 selection, whose 142 tests all passed. This receipt does not qualify GNATIVE or a role-sensitive browser journey.",
+    "tests": [
+      {
+        "file": "modules/sucafina/Sucafinav1/test/planner-runtime.test.ts",
+        "label": "HR calculations and recursive privacy preserve domain aggregates",
+        "observed": "PASS",
+        "duration_ms": 3.34,
+        "observed_at": "2026-11-13T23:00:59.6861931Z"
+      },
+      {
+        "file": "modules/sucafina/Sucafinav1/test/product/wp03/monthly-operations.test.ts",
+        "label": "monthly viewer response retains permitted HR aggregates and excludes private rates, individual costs and migrated Talent fields",
+        "observed": "PASS",
+        "duration_ms": 9.7,
+        "observed_at": "2026-11-13T23:01:01.6450374Z"
+      },
+      {
+        "file": "modules/sucafina/Sucafinav1/test/product/wp03/monthly-operations.test.ts",
+        "label": "monthly budget owner response retains permitted HR aggregates and excludes private rates, individual costs and migrated Talent fields",
+        "observed": "PASS",
+        "duration_ms": 8.98,
+        "observed_at": "2026-11-13T23:01:01.6539997Z"
+      },
+      {
+        "file": "modules/sucafina/Sucafinav1/test/product/wp03/port-hr.test.ts",
+        "label": "C02 qualifies each HR domain and month while preserving authorized aggregates and independent actual/forecast",
+        "observed": "PASS",
+        "duration_ms": 111.5,
+        "observed_at": "2026-11-13T23:01:10.3713744Z"
+      },
+      {
+        "file": "modules/sucafina/Sucafinav1/test/product/wp03/headcount-projection.test.ts",
+        "label": "headcount projections retain permitted domain aggregates and remove private position costs for owner and viewer",
+        "observed": "PASS",
+        "duration_ms": 1.31,
+        "observed_at": "2026-11-13T23:01:41.2985914Z"
+      }
+    ],
+    "snapshot_isolation": {
+      "verified": true,
+      "base": "6f004731e7848bf540434a3ee050cd0f28f342cb",
+      "status": "ahead",
+      "aheadBy": 1,
+      "behindBy": 0,
+      "files": [
+        {
+          "path": ".ci-run.json",
+          "blob": "1506c1f200ca4ac73ecd50e57372feed1243acc1",
+          "status": "added"
+        }
+      ]
+    },
+    "evidence_kind": "Executed hosted Bun job log; this selection uploads no product-test artifact.",
+    "omni": {
+      "nonce": "b99d1fcdc98d2460c512464dcd6e0de3",
+      "verdict": "not applicable (focused: no declaring test ran)"
+    }
+  },
+  "tests_executed_locally": false,
+  "remaining_scope": "Mounted browser role matrix and resident SessionV2.prompt/SkillLoadReceipt proof remain separate acceptance work. The new local-operator E2E authenticates as admin, so it cannot close owner/viewer browser privacy criteria."
+}

@@ -1,0 +1,115 @@
+diff --git a/modules/sucafina/Sucafinav1/product/integration/human-authority.ts b/modules/sucafina/Sucafinav1/product/integration/human-authority.ts
+index ad72a4d73e2b31003deb028a6f761e164b7a860d..1272c1c9fed06b44c50c98bf94626abe83e5ad8b 100644
+--- a/modules/sucafina/Sucafinav1/product/integration/human-authority.ts
++++ b/modules/sucafina/Sucafinav1/product/integration/human-authority.ts
+@@ -6,7 +6,7 @@
+ export const sfHumanActions = ["collaboration.thread.create", "collaboration.thread.reply", "collaboration.thread.resolve",
+   "collaboration.relation.confirm", "collaboration.handoff.confirm", "collaboration.confirmation.confirm",
+   "views.read", "views.save", "views.remove", "decisions.coverage", "decisions.select-portfolio", "decisions.promote-portfolio", "decisions.prepare-portfolio",
+-  "decisions.portfolio.read", "decisions.portfolio.evaluate", "decisions.sensitivity.evaluate", "documents.schema", "planner.preview", "planner.apply", "documents.confirm", "analysis.start", "analysis.read", "analysis.cancel", "imports.admit", "imports.apply", "decisions.edit", "decisions.criteria", "decisions.accept-analysis", "decisions.promote-alternative",
++  "decisions.portfolio.read", "decisions.portfolio.evaluate", "decisions.sensitivity.evaluate", "documents.schema", "planner.read", "planner.preview", "planner.apply", "documents.confirm", "analysis.start", "analysis.read", "analysis.cancel", "imports.admit", "imports.apply", "decisions.edit", "decisions.criteria", "decisions.accept-analysis", "decisions.promote-alternative",
+   "decisions.choose", "decisions.prepare-changes", "decisions.apply", "reviews.preserve",
+   "routines.admit", "routines.run", "schedules.create", "schedules.update", "schedules.pause"] as const
+ export type SfHumanAction = typeof sfHumanActions[number]
+diff --git a/modules/sucafina/Sucafinav1/product/integration/product-authority.ts b/modules/sucafina/Sucafinav1/product/integration/product-authority.ts
+index 9a2da03da92ce07fc8506c72dc1f4139143a7615..e19e053b423565020e271ad768a0588350786fe6 100644
+--- a/modules/sucafina/Sucafinav1/product/integration/product-authority.ts
++++ b/modules/sucafina/Sucafinav1/product/integration/product-authority.ts
+@@ -125,7 +125,7 @@
+     authorize: async (request, operation) => {
+       const actor = await resolve(request).catch(() => undefined)
+       if (!actor || !(operation.startsWith("sf-human:")
+-        ? (actor.canWrite || operation === "sf-human:views.read" || operation === "sf-human:analysis.read" || operation === "sf-human:decisions.portfolio.read") && actor.grant.humanActions?.some((action) => operation === `sf-human:${action}`)
++        ? (actor.canWrite || operation === "sf-human:views.read" || operation === "sf-human:planner.read" || operation === "sf-human:analysis.read" || operation === "sf-human:decisions.portfolio.read") && actor.grant.humanActions?.some((action) => operation === `sf-human:${action}`)
+         : actor.grant.operations.includes(operation))) return undefined
+       return { installationId: actor.identity.installationId, projectId: actor.identity.projectId,
+         principalRef: actor.principalRef, policyVersion: actor.policyVersion, accessRevision: actor.accessRevision }
+diff --git a/apps/cli/src/sucafina-product/business-services.ts b/apps/cli/src/sucafina-product/business-services.ts
+index 54cb9612b58e6c3bd1e665d0a0093011ea1aa2d5..06b12941c202b8327e3febd5f7bd36b9e7db00b1 100644
+--- a/apps/cli/src/sucafina-product/business-services.ts
++++ b/apps/cli/src/sucafina-product/business-services.ts
+@@ -134,6 +134,7 @@
+         digestSfValue(item.ref) === digestSfValue(refs[index]) && digestSfValue(item.currentRef) === digestSfValue(item.ref)) && await host.revalidate(call)
+     } })
+   const product = createPlannerProduct({ host, scopedSources: input.persistence, evidence: context,
++    versionAuthorize: (call, action, payload) => input.authority.human.authorize(call, action, payload),
+     coverageFor: createPlannerCoverageRouter({ forecast: async () => ({ status: "unavailable", reason: "forecast-coverage-unavailable" }), decision: coverage }),
+     storedScenarios: { store: results, cases, coverageRefFor: (caseRef, alternative) => decisionCoverageRef(caseRef, alternative.id, alternative.version) } })
+   const planner = product.planner
+diff --git a/apps/cli/src/sucafina-product/host-context.ts b/apps/cli/src/sucafina-product/host-context.ts
+index 81f07b9d68a85811cef3aa4d3b4615475486f04f..4ed309a62f23523ddbb5cae11624dfd0b99447b7 100644
+--- a/apps/cli/src/sucafina-product/host-context.ts
++++ b/apps/cli/src/sucafina-product/host-context.ts
+@@ -1,7 +1,7 @@
+ import { randomUUID } from "node:crypto"
+ import { dashboardPages, plannerKeys, procurementKeys } from "../../../../modules/sucafina/Sucafinav1/src/nav.ts"
+ import { roleMap } from "../../../../modules/sucafina/Sucafinav1/runtime/admin.ts"
+-import { createSfPersonalViews } from "../../../../modules/sucafina/Sucafinav1/product/interface/personal-views.ts"
++import { createSfPersonalViews, sfViewSelectionKeys } from "../../../../modules/sucafina/Sucafinav1/product/interface/personal-views.ts"
+ import path from "node:path"
+ import { makeGlobalNode } from "@orchestra/core/effect/app-node"
+ import { ProjectV2 } from "@orchestra/core/project"
+@@ -36,6 +36,7 @@
+ import { createSfNativeHostContribution } from "./native-host.ts"
+ import { createSfNativeExecution } from "./native-execution.ts"
+ import type { SfStoppedRun } from "./native-execution.ts"
++import { plannerVersions } from "../../../../modules/sucafina/Sucafinav1/product/planner/versions.ts"
+ import { createPlannerMonthlyHost } from "../../../../modules/sucafina/Sucafinav1/product/planner/monthly-host.ts"
+ import { createSfRunStore, sfRunSourceFence } from "../../../../modules/sucafina/Sucafinav1/product/ai/run-store.ts"
+ import { createSfAnalysisHost } from "../../../../modules/sucafina/Sucafinav1/product/ai/analysis-host.ts"
+@@ -148,6 +149,18 @@
+   const monthly = createPlannerMonthlyHost({ host: authority.host, humanAuthorize: (context, action, value) => authority.human.authorize(context, action, value) })
+   const plannerMonthly: NonNullable<SfHostServices["plannerMonthly"]> = {
+     preview: (context, value) => monthly.preview(value, context), apply: (context, value) => monthly.apply(value, context),
++  }
++  const plannerOverview: NonNullable<SfHostServices["plannerOverview"]> = {
++    read: async (context, value) => await authority.human.authorize(context, "planner.read", value)
++      ? business.plannerProduct.overview(value, context)
++      : { status: "denied", reason: "overview-authority-unavailable" },
++  }
++  const plannerVersionsService: NonNullable<SfHostServices["plannerVersions"]> = {
++    read: async (context, value) => await authority.human.authorize(context, "planner.read", value)
++      ? business.plannerProduct.versions.read(value.selectedId, context)
++      : { status: "denied", reason: "versions-authority-unavailable" },
++    preview: (context, value) => business.plannerProduct.versions.preview(value, context),
++    apply: (context, value) => business.plannerProduct.versions.apply(value, context),
+   }
+   const descriptors = business.descriptors
+   const executions = new Map<string, ReturnType<typeof createSfNativeExecution>>()
+@@ -550,9 +563,14 @@
+   const personalViews = createSfPersonalViews({ host: authority.host, state: authority.state, creationTarget: authority.creationTarget,
+     operationIdentity: authority.ui.operationIdentity, humanAuthorize: (call, action, payload) => authority.human.authorize(call, action, payload),
+     authorizeView: async (view, call) => {
+-      if (Object.keys(view.filters?.selections ?? {}).some((key) => !["year", "own", "execYear", "opsYear", "secYear", "month", "executiveMonth", "operationsMonth", "securityMonth", "opsMonth"].includes(key))) return false
++      const plannerSelection = view.surface === "planner"
++      const keys = plannerSelection ? sfViewSelectionKeys("planner", view.page)
++        : ["year", "own", "execYear", "opsYear", "secYear", "month", "executiveMonth", "operationsMonth", "securityMonth", "opsMonth"]
++      if (Object.keys(view.filters?.selections ?? {}).some((key) => !keys.some((allowed) => allowed === key))) return false
+       const request = authority.host.requestFor(call)
+       if (!request || !await authority.host.revalidate(call)) return false
++      const environment = plannerSelection ? await authority.host.environment(request).catch(() => undefined) : undefined
++      if (plannerSelection && !environment) return false
+       const allowed = await input.persistence.transaction(view.surface, async (snapshot) => {
+         const principal = await authority.host.authenticate(request, { surface: view.surface, roleMap: roleMap(snapshot, view.surface) })
+         if (!principal || principal.id !== call.binding.principalRef || principal.id.startsWith("local:")) return { commit: false, value: false }
+@@ -563,11 +581,19 @@
+           domains: Array.isArray(access.domains) ? access.domains.filter((entry): entry is string => typeof entry === "string") : [] }
+         const summaries = Array.isArray(snapshot.data.summaries) ? snapshot.data.summaries.filter((entry): entry is string => typeof entry === "string") : []
+         const pages = view.surface === "dashboard" ? dashboardPages(actor, summaries) : view.surface === "planner" ? plannerKeys(actor) : procurementKeys(actor)
++        if (plannerSelection) {
++          const selected = [view.filters?.selections?.version, view.filters?.selections?.baseVersion].filter((id): id is string => typeof id === "string" && id.length > 0)
++          const versions = plannerVersions(snapshot, actor, environment!)?.versions ?? []
++          if (selected.some((id) => !versions.some((version) => version.id === id))) return { commit: false, value: false }
++          const selectedYears = selected.map((id) => Number(versions.find((version) => version.id === id)?.year))
++          const year = view.filters?.selections?.year
++          if (view.page === "Overview" && (new Set(selectedYears).size > 1 || year && selectedYears.some((value) => value !== Number(year)))) return { commit: false, value: false }
++        }
+         return { commit: false, value: pages.includes(view.page) }
+       }, { signal: request.signal })
+       return allowed && await authority.host.revalidate(call)
+     } })
+-  const services: SfHostServices = { ...authority, ...{ procurementSelections: business.procurementSelections, forecastInputs: business.forecastInputs, analyses, plannerMonthly, personalViews, documents: documents?.documents, productHttp: async (request, surface) => await documentHttp(request, surface) ?? await importHttp(request, surface) }, selected, dispatch: createSfProductDispatch({ descriptors, authority: authority.authority }), models: async () => state.models ? state.models() : [], sessions: {
++  const services: SfHostServices = { ...authority, ...{ procurementSelections: business.procurementSelections, forecastInputs: business.forecastInputs, analyses, plannerMonthly, plannerOverview, plannerVersions: plannerVersionsService, personalViews, documents: documents?.documents, productHttp: async (request, surface) => await documentHttp(request, surface) ?? await importHttp(request, surface) }, selected, dispatch: createSfProductDispatch({ descriptors, authority: authority.authority }), models: async () => state.models ? state.models() : [], sessions: {
+     prepare: async (request) => {
+       if (!state.api || !identity()) return { status: "unavailable", reason: "native-host-unavailable" }
+       if (requests.has(request.runId)) return { status: "conflict", reason: "native-run-already-admitted" }

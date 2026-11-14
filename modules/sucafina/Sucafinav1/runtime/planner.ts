@@ -3,6 +3,7 @@ import { changed, conflict, finite, object, rows, text } from "./contract.ts"
 import type { RenderContext } from "./ui.ts"
 import { fields, form, metric, metricGrid, table } from "./ui.ts"
 import { esc } from "../src/screen-shell.ts"
+import { renderMonthlyGrid } from "../product/planner/monthly-grid.ts"
 import { assignOwner, deleteRate, plannerField } from "../src/planner-role.ts"
 import {
   changeAnnual,
@@ -167,6 +168,7 @@ function flags(value: unknown): boolean[] {
 function privateAccess(actor: Actor) {
   return actor.roles.some((role) => ["admin", "hr", "finance"].includes(role))
 }
+const publicPositionFields = new Set(["id", "name", "title", "type", "location", "include", "fte", "start", "end", "domain", "left", "src", "hasRate", "state", "states", "revision"])
 // Redact recursively: migrated data can contain salary fields outside their original container.
 function redact(value: unknown, position = false, fx = false): unknown {
   if (Array.isArray(value)) return value.map((item) => redact(item, position, fx))
@@ -175,7 +177,8 @@ function redact(value: unknown, position = false, fx = false): unknown {
     Object.entries(object(value))
       .filter(
         ([key]) =>
-          !/(salary|cost|override)|^(rates|rateId|inc|incMonth)$/i.test(key) &&
+          (!position || publicPositionFields.has(key)) &&
+          !/(salary|cost|override|talent)|^(rates|rateId|inc|incMonth)$/i.test(key) &&
           (key !== "rate" || fx) &&
           !(position && /^(annual|months|total|budget|annualCost)$/i.test(key)),
       )
@@ -893,9 +896,23 @@ function renderPage(page: string, data: Record<string, unknown>, context: Render
     versions[0]
   const canWrite =
     context.actor.canWrite &&
-    context.actor.roles.some((role) => ["admin", "finance", "hr", "budget owner"].includes(role))
+    context.actor.roles.some((role) =>
+      (page === "Versions" || page === "Entities & allocations"
+        ? ["admin"]
+        : page === "FX rates" ? ["admin", "finance"] : ["admin", "finance", "hr", "budget owner"]).includes(role),
+    )
   const revision = (key: string) => context.versions[key]?.version ?? 0
   const versionField = version ? `<input type="hidden" name="versionId" value="${esc(version.id)}">` : ""
+  const allowedControl = (field: string, id?: string) => {
+    if (!version) return false
+    const line = id?.startsWith("HR:")
+      ? { ...object(version.hc.hrAF[id.slice(3)]), domain: id.slice(3), synthetic: true }
+      : version.lines.find((line) => line.id === id)
+    return plannerField(field, version, idOf(object(safe.officials)[String(version.year)]), context.actor, line ? {
+      ownerId: text(line.ownerId) || text(object(line.owner).id) || text(line.owner),
+      domain: text(line.domain), hr: line.synthetic === true,
+    } : undefined)
+  }
   const controls = (
     action: string,
     id: string,
@@ -904,6 +921,7 @@ function renderPage(page: string, data: Record<string, unknown>, context: Render
     label = "Save",
     key?: string,
     disabled = false,
+    permission?: string,
   ) =>
     form(
       page,
@@ -912,7 +930,16 @@ function renderPage(page: string, data: Record<string, unknown>, context: Render
       revision(key || `${version?.id}:${collection}:${id}`),
       versionField + `<input type="hidden" name="collection" value="${esc(collection)}">` + body,
       label,
-      !canWrite || disabled,
+      !canWrite || disabled || (
+        !["entities", "allocations"].includes(collection) && (
+          !allowedControl(permission ?? (
+            collection === "positions" || collection === "leaderDomains" ? "headcount"
+              : collection === "rates" ? "rate" : collection === "increase" ? "increase"
+                : collection === "fx" ? "fx" : action === "spread" || action === "reset" ? "budget"
+                  : action === "delete" || !id ? "structure" : "name"
+          ), id)
+        )
+      ),
     )
   const heading = `<h2>${esc(page)}</h2>`
   if (page === "Versions")
@@ -940,7 +967,7 @@ function renderPage(page: string, data: Record<string, unknown>, context: Render
                   value: item.year,
                   min: 2001,
                   max: 2099,
-                  readonly: item.locked,
+                  readonly: item.locked || idOf(object(safe.officials)[String(item.year)]) === item.id,
                 },
               ]),
               "Save",
@@ -977,6 +1004,7 @@ function renderPage(page: string, data: Record<string, unknown>, context: Render
   if (page === "Entities & allocations")
     return (
       heading +
+      "<p>Shared catalogs: changes apply across all plan versions. Allocations are named classifications; choosing one does not distribute costs.</p>" +
       ["entities", "allocations"]
         .map(
           (collection) =>
@@ -1041,8 +1069,10 @@ function renderPage(page: string, data: Record<string, unknown>, context: Render
         metric("HR Staff", money(summary.hrTotal)),
       ]) +
       monthlyChart(summary, version.closed) +
-      `<form method="get" class="filter-bar"><input type="hidden" name="page" value="Overview"><input type="hidden" name="version" value="${esc(version.id)}"><label>Compare budget <select name="filter"><option value="">All budgets</option>${versions
-        .filter((item) => item.id !== version.id)
+      `<p>Budget comparison uses FY ${version.year} in USD. These are budgets; outlook changes and variance to the official budget are separate measures.</p>` +
+      (safe.filter && !versions.some((item) => item.id === idOf(safe.filter) && item.year === version.year) ? '<p role="status">The comparison plan is unavailable or uses a different fiscal year.</p>' : "") +
+      `<form method="get" class="filter-bar"><input type="hidden" name="page" value="Overview"><input type="hidden" name="version" value="${esc(version.id)}"><label>Compare budget <select name="filter"><option value="">Budgets in this fiscal year</option>${versions
+        .filter((item) => item.id !== version.id && item.year === version.year)
         .map((item) => `<option value="${esc(item.id)}">${esc(item.name)}</option>`)
         .join("")}</select></label><button type="submit">Compare budgets</button></form>` +
       table(
@@ -1068,7 +1098,7 @@ function renderPage(page: string, data: Record<string, unknown>, context: Render
       table(
         ["Version", "Budget USD", "FTE December"],
         rows(safe.versions)
-          .filter((item) => !safe.filter || idOf(item.id) === version.id || idOf(item.id) === idOf(safe.filter))
+          .filter((item) => Number(item.year) === version.year && (!safe.filter || idOf(item.id) === version.id || idOf(item.id) === idOf(safe.filter)))
           .map((item) => [
             esc(text(item.name)),
             money(object(item.summary).total),
@@ -1080,6 +1110,7 @@ function renderPage(page: string, data: Record<string, unknown>, context: Render
     return (
       heading +
       selector +
+      `<p>Exchange rates for ${esc(version.name)} · FY ${version.year}. These rates belong to this version; entities and allocations are shared catalogs.</p>` +
       metric("USD", "1 (fixed)") +
       table(
         ["Code", "Rate", "Actions"],
@@ -1220,6 +1251,7 @@ function renderPage(page: string, data: Record<string, unknown>, context: Render
   return (
     heading +
     selector +
+    renderMonthlyGrid({ data: safe, versions: context.versions }, context.actor, sec === "opex" ? "OPEX" : "CAPEX", version.id, safe.mode === "budget" || safe.mode === "actual" ? safe.mode : "forecast") +
     (sec === "opex"
       ? `<details class="editor-panel"><summary>Cost element settings</summary><div class="compact-forms">` +
         OPEX_ELEMENTS.filter((el) => el !== "hr")
@@ -1243,7 +1275,7 @@ function renderPage(page: string, data: Record<string, unknown>, context: Render
                   },
                 ]),
               "Set breakdown",
-              !canWrite || version.locked,
+              !allowedControl("structure"),
             ),
           )
           .join("") +
@@ -1267,7 +1299,7 @@ function renderPage(page: string, data: Record<string, unknown>, context: Render
               },
             ]),
           "Save closed month",
-          !canWrite,
+          !allowedControl("closedThrough"),
         ).replace("<form ", '<form class="filter-bar" ')
       : `<form method="get"><input type="hidden" name="page" value="${esc(page)}"><input type="hidden" name="version" value="${esc(version.id)}"><label>Owner <select name="owner"><option value="">All</option>${rows(
           safe.directory,
@@ -1375,6 +1407,8 @@ function renderPage(page: string, data: Record<string, unknown>, context: Render
                 ),
                 "Save budget",
                 key,
+                false,
+                "budget",
               ),
           ...(["a", "f"] as const).map((field) =>
             controls(
@@ -1391,6 +1425,8 @@ function renderPage(page: string, data: Record<string, unknown>, context: Render
               ),
               "Save",
               key,
+              false,
+              field === "a" ? "actual" : "forecast",
             ),
           ),
           `<span${delta.over ? ' class="over"' : ""}>${esc(String(delta.shown))}</span>`,
@@ -1496,7 +1532,7 @@ function executeVersions(
   else if (command.action === "save") {
     if (values.year !== undefined) {
       const year = Number(values.year)
-      if (version.locked) return reject
+      if (version.locked || idOf(officials[String(version.year)]) === version.id) return reject
       if (!Number.isInteger(year) || year <= 2000 || year >= 2100) return invalid("Invalid fiscal year")
       version.year = year
     }
@@ -1642,10 +1678,11 @@ function renderHeadcount(
     mapping +
     metricGrid([
       metric("Positions in plan", String(version.hc.positions.filter((position) => position.include).length)),
-      metric("FTE December", String(finite(summary.fte))),
+      metric("Planned FTE December", String(finite(summary.fte))),
       metric("HR Staff budget USD", money(summary.hrTotal)),
-      metric("Average cost per FTE", money(finite(summary.fte) ? finite(summary.hrTotal) / finite(summary.fte) : 0)),
+      metric("Annual HR budget per planned December FTE", finite(summary.fte) ? money(finite(summary.hrTotal) / finite(summary.fte)) : "Unavailable — no planned December FTE"),
     ]) +
+    "<p>Planned FTE describes the plan, not actual availability. The cost ratio uses the annual HR budget divided by planned FTE in December.</p>" +
     (version.hc.exampleRates === true || version.hc.ratesAreExamples === true ? "<p>Example rates</p>" : "") +
     table(
       ["Domain", "Budget USD"],
@@ -1715,20 +1752,13 @@ function renderHeadcount(
           `${version.id}:increase`,
         )
       : "") +
-    table(
+    [...new Set(version.hc.positions.map((position) => text(position.domain)))].sort().map((domain) =>
+      `<h3>Positions · ${esc(domain || "Unassigned domain")}</h3>` + table(
       ["Position", "Domain", "Status", ...(salary ? ["FY cost USD", "Actions"] : [])],
-      version.hc.positions.map((position) => [
+      version.hc.positions.filter((position) => text(position.domain) === domain).map((position) => [
         esc(text(position.name)),
         esc(text(position.domain)),
-        position.include !== true
-          ? "Excluded"
-          : position.left
-            ? "Not in roster"
-            : position.hasRate === false
-              ? "No rate"
-              : position.src === "new"
-                ? "New hire"
-                : "In roster",
+        [position.include !== true ? "Excluded" : "In plan", position.left ? "Not in roster" : position.src === "new" ? "New hire" : "In roster", ...(position.hasRate === false ? ["No rate"] : [])].join(" · "),
         ...(salary
           ? [
               money(numericMonths(position.months).reduce((a, b) => a + b, 0)),
@@ -1800,7 +1830,7 @@ function renderHeadcount(
             ]
           : []),
       ]),
-    ) +
+    )).join("") +
     (salary
       ? `<h3>Add new hire</h3>` +
         controls(

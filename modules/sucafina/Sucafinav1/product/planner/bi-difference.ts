@@ -49,7 +49,7 @@ export function plannerDifferencePresentation(analysis: FinancialAnalysis, viewI
       { id: "version-contributions", label: "Contribuições por componente", unit: context.currency, role: "contribution", valueIds: contributionIds },
       { id: "version-candidate", label: "Total candidato", unit: context.currency, role: "result", valueIds: ["difference:candidate-total"] },
     ],
-    limitations: ["Componentes sem correspondência ou valor disponível permanecem ausentes; não se infere uma causa para a diferença.", "A reconciliação financeira não confirma cobertura completa dos custos."],
+    limitations: ["Inclusões e remoções permanecem identificadas pela identidade do registro; valores desconhecidos permanecem ausentes e não se infere uma causa para a diferença.", "A reconciliação financeira não confirma cobertura completa dos custos."],
     waterfall: { segments, finalValueId: "difference:candidate-total", reconciliation },
   }
   return { status: "ok", value: { projection, presentation } } as const

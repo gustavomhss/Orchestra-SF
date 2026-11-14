@@ -1,0 +1,51 @@
+{
+  "schema": "wp03-baseline-decisions-v1",
+  "baseline": {
+    "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+    "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+    "blob": "e836d3f83bd7707b27f5bd3052494c84d67a2442",
+    "review": "GitHub MCP read of the pinned file; no baseline product execution claimed"
+  },
+  "decisions": [
+    {
+      "id": "FX-SUBQUANTUM",
+      "status": "PRESERVE_PINNED_BEHAVIOR",
+      "discrepancy": "The manual FX command validates the raw positive value before rounding to six decimals, so 0.0000001 is stored as zero. Workbook FX validates the rounded value and rejects zero. Both branches exist in the pinned baseline.",
+      "effect": "Legacy conversion of a nonpositive rate yields numeric zero with an FX warning. The product composition exposes usd:null, legacyUsd:0 and missingRate:true, so the value is not presented as known zero cost.",
+      "decision": "Preserve both original admission/rounding branches and explicitly document their asymmetry. Do not silently introduce a new FX precision or validation policy in WP03.",
+      "implementationChange": "No financial or FX validation change.",
+      "proof": {
+        "file": "modules/sucafina/Sucafinav1/test/product/wp03/catalog-boundaries.test.ts",
+        "label": "subquantum FX preserves the pinned manual and workbook boundaries while marking the converted amount unavailable",
+        "status": "PASS_IN_HOSTED_SURGICAL_SELECTION",
+        "productSha": "6f004731e7848bf540434a3ee050cd0f28f342cb",
+        "snapshotSha": "9a62d6c0ed2638960319f8ff3d68eba58d2e92e5",
+        "testBlob": "775a383f6553e3b7b634bfb4137926e7a0ffb32e",
+        "runId": 43523654974,
+        "jobId": 132223957537,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43523654974",
+        "scope": "Current producer behavior. The pinned baseline source was reviewed, not executed locally."
+      }
+    },
+    {
+      "id": "OFFICIAL-YEAR-MIGRATED-LOCK",
+      "status": "FIX_AUTHORITY_INVARIANT",
+      "discrepancy": "The legacy save-year branch checks only version.locked. A migrated or restored snapshot whose officials pointer selects a version with locked:false can change its fiscal year through an admin command, leaving the annual official pointer inconsistent. The metadata host already marks changeYear:false for an official.",
+      "effect": "A submitted year change can move an official version out of the fiscal year that selects it. This affects version identity/authority, not any financial formula.",
+      "decision": "Reject a supplied year for the current official independently of its stored lock bit, and make the existing Year field readonly under the same official pointer. Keep ordinary draft year edits, renaming without a supplied year, copy, and all financial calculations unchanged.",
+      "implementationChange": "runtime/planner.ts executeVersions save-year guard and Versions Year readonly field.",
+      "proof": {
+        "file": "modules/sucafina/Sucafinav1/test/product/wp03/versions-host.test.ts",
+        "status": "PASS_IN_HOSTED_SURGICAL_SELECTION",
+        "label": "a legacy official without its lock flag rejects year changes in preview and apply while retaining rename and copy",
+        "productSha": "6f004731e7848bf540434a3ee050cd0f28f342cb",
+        "snapshotSha": "9a62d6c0ed2638960319f8ff3d68eba58d2e92e5",
+        "testBlob": "a4f0183be62e60cf478d3dc7868bb4d988e19695",
+        "runId": 43523654974,
+        "jobId": 132223957537,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43523654974",
+        "scope": "Current producer behavior. The pinned baseline source was reviewed, not executed locally."
+      }
+    }
+  ]
+}

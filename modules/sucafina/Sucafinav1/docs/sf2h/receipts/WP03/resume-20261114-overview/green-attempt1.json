@@ -1,0 +1,65 @@
+{
+  "schema": "wp03-overview-attempt-v1",
+  "kind": "failed-full-selection",
+  "product_sha": "57ce87d7032c948aa526b6eb92afb01d80ec2bc3",
+  "product_tree": "a222bc88ee4aa918a9c84abca89965550e23b7be",
+  "snapshot_sha": "9beb76e14284ddd7e540022ca259b6c25ca4c6b7",
+  "snapshot_tree": "8478cfd48cabbdf3ef60ddcbf373bb30c5c14bd7",
+  "branch": "ci-run-linux-astra-wp03-57ce87d7-79addc39-1",
+  "request_sha256": "79addc3906450c91cad259c50397715bc68a7267b0cb86e1274f0070122ce69b",
+  "run_id": 43535212218,
+  "job_id": 132262432260,
+  "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43535212218",
+  "run_attempt": 1,
+  "conclusion": "failure",
+  "started_at": "2026-11-14T00:35:31Z",
+  "completed_at": "2026-11-14T00:37:48Z",
+  "tests": {
+    "pass": 169,
+    "fail": 1,
+    "total": 170,
+    "files": 31,
+    "assertions": 2634,
+    "duration_seconds": 44.41
+  },
+  "observed_failure": {
+    "test": "Overview resolves baseline, candidate and official through the shared port and keeps their differences distinct",
+    "path": "modules/sucafina/Sucafinav1/test/product/wp03/overview.test.ts",
+    "cause": "renderContext passed an undefined source identity into esc, which requires a string. The old renderer interpolated first, so it did not throw for this case.",
+    "stack_location": "product/planner/overview-drilldown.ts:117",
+    "later_coverage_not_claimed": true
+  },
+  "new_drilldown_tests": {
+    "pass": 7,
+    "fail": 0
+  },
+  "omni": {
+    "nonce": "ee7c1a0bf04bf22e4adcde621b25e406",
+    "verdict": "not applicable (focused: no declaring test ran)",
+    "spawn": false,
+    "delegated": false,
+    "native_proof": false
+  },
+  "followup": "Correct missing source-metadata presentation explicitly, preserve tests, and rerun all 31 selected files on the new product commit. This attempt is retained and is never reported as GREEN.",
+  "checks": {
+    "run_id": 43535214641,
+    "job_id": 132262441043,
+    "conclusion": "failure",
+    "artifact_id": 14088709328,
+    "artifact_sha256": "37d3bf4030f4c6372a529aa8245f77974938485487379db55c9a34fa65313de8",
+    "diagnostics": 132,
+    "owned_diagnostics": 0,
+    "new_diagnostic_sites": [],
+    "guards": {
+      "rules": 78,
+      "changedPaths": 639,
+      "gateFindings": 0,
+      "warningFindings": 12,
+      "errors": 0,
+      "sameFindingsAsBaseline": true,
+      "newFindings": [],
+      "removedFindings": []
+    },
+    "typecheck_limit": "The package typecheck remains failure. Only two preexisting WP06 diagnostic blocks differ textually from the prior delivery; their source blob is unchanged."
+  }
+}
