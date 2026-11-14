@@ -134,8 +134,9 @@ test("real procurement registry and port supply scoped BI stock and deny revoked
         for (const value of entry.value.projection.values) {
           if (!value.drilldown) continue
           phase(`navigation:${entry.id}:${value.id}`)
-          const row = section.getByRole("row").filter({ has: page.getByRole("cell", { name: value.id, exact: true }) })
-          await row.getByRole("button", { name: "Abrir origem" }).click()
+          const origin = section.locator(`table button[data-bi-focus="${value.id}"]`)
+          expect(await origin.count()).toBe(1)
+          await origin.click()
           const selection = JSON.parse(await page.locator("body").getAttribute("data-selection") ?? "null")
           expect(selection.valueId).toBe(value.id)
           expect(selection.reference).toEqual(value.drilldown)

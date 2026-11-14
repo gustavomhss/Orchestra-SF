@@ -14,6 +14,7 @@ export async function inspectWp05Browser(label: string, inspect: (page: Page, ph
     if (deadline.error) throw deadline.error
     deadline.phase = name
   }
+  const outcome = { failed: false, error: undefined as unknown }
   try {
     const expired = new Promise<never>((_, reject) => {
       deadline.timer = setTimeout(() => {
@@ -32,8 +33,19 @@ export async function inspectWp05Browser(label: string, inspect: (page: Page, ph
     }
     // The race retains rejection handlers if closing the browser rejects a pending operation.
     await Promise.race([body(), expired])
+    console.info("WP05 browser assertions completed", { label, phase: deadline.phase })
+  } catch (error) {
+    outcome.failed = true
+    outcome.error = error
+    console.error("WP05 browser body failed", { label, phase: deadline.phase }, error)
   } finally {
     if (deadline.timer) clearTimeout(deadline.timer)
-    await fixture.dispose()
+    try {
+      await fixture.dispose()
+    } catch (cleanupError) {
+      if (outcome.failed) throw new AggregateError([outcome.error, cleanupError], `WP05 browser ${label} failed in its body and cleanup`)
+      throw cleanupError
+    }
   }
+  if (outcome.failed) throw outcome.error
 }
