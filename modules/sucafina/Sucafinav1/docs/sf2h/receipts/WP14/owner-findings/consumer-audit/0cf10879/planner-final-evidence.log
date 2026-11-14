@@ -1,0 +1,62 @@
+L1182 2026-11-14T09:26:42.1210718Z (pass) Planner calculation preserves UI and repeated BCS reads and rejects cycles, tampering and over-budget selectors [12000.01ms]
+L1213 2026-11-14T09:27:47.3936026Z (pass) Planner calculation survives SQLite and Atlas reopen with continuity, original and ancestor context [65272.49ms]
+L1214 2026-11-14T09:27:48.0219627Z SF_CALCULATION_PHASE {"fixture":"reopen-and-recall","phase":"initialized-real-store-producers-and-scanner","elapsedMs":628}
+L1215 2026-11-14T09:27:48.0220603Z SF_COMPOSITION_PHASE {"fixture":"planner-calculation.reopen-and-recall","phase":"calculation.produce","state":"started","elapsedMs":628}
+L1216 2026-11-14T09:27:50.4788734Z SF_COMPOSITION_PHASE {"fixture":"planner-calculation.reopen-and-recall","phase":"calculation.produce","state":"returned","phaseMs":2457,"elapsedMs":3085,"aborted":false}
+L1217 2026-11-14T09:27:50.4789361Z SF_CALCULATION_PHASE {"fixture":"reopen-and-recall","phase":"persisted-and-replayed-calculation","elapsedMs":3085}
+L1218 2026-11-14T09:27:50.5382333Z SF_CALCULATION_RESOLUTION {"fixture":"reopen-and-recall","generation":"initial","sequence":1,"state":"started"}
+L1219 2026-11-14T09:27:51.9413654Z SF_CALCULATION_RESOLUTION {"fixture":"reopen-and-recall","generation":"initial","sequence":1,"state":"returned","elapsedMs":1403,"completed":1,"entered":1}
+L1220 2026-11-14T09:27:52.0074589Z SF_CALCULATION_RESOLUTION {"fixture":"reopen-and-recall","generation":"initial","sequence":2,"state":"started"}
+L1221 2026-11-14T09:27:53.4411413Z SF_CALCULATION_RESOLUTION {"fixture":"reopen-and-recall","generation":"initial","sequence":2,"state":"returned","elapsedMs":1434,"completed":2,"entered":2}
+L1222 2026-11-14T09:27:53.4772237Z SF_CALCULATION_RESOLUTION {"fixture":"reopen-and-recall","generation":"initial","sequence":3,"state":"started"}
+L1223 2026-11-14T09:27:54.9516352Z SF_CALCULATION_RESOLUTION {"fixture":"reopen-and-recall","generation":"initial","sequence":3,"state":"returned","elapsedMs":1474,"completed":3,"entered":3}
+L1224 2026-11-14T09:27:55.3360879Z SF_CALCULATION_PHASE {"fixture":"reopen-and-recall","phase":"real-atlas-write-committed","elapsedMs":7942}
+L1225 2026-11-14T09:27:55.3442350Z SF_CALCULATION_PHASE {"fixture":"reopen-and-recall","phase":"reopened-sqlite-and-authority","elapsedMs":7950}
+L1226 2026-11-14T09:27:55.3635139Z SF_CALCULATION_PHASE {"fixture":"reopen-and-recall","phase":"starting-reopened-calculation-resolve-before-recall","elapsedMs":7970}
+L1227 2026-11-14T09:27:55.3700660Z SF_CALCULATION_RESOLUTION {"fixture":"reopen-and-recall","generation":"reopened","sequence":4,"state":"started"}
+L1228 2026-11-14T09:28:03.3196508Z SF_CALCULATION_RESOLUTION {"fixture":"reopen-and-recall","generation":"reopened","sequence":4,"state":"returned","elapsedMs":7949,"completed":4,"entered":4}
+L1229 2026-11-14T09:28:03.4824874Z SF_CALCULATION_PHASE {"fixture":"reopen-and-recall","phase":"finished-reopened-calculation-resolve-before-recall","elapsedMs":16088}
+L1230 2026-11-14T09:28:03.4825719Z SF_CALCULATION_PHASE {"fixture":"reopen-and-recall","phase":"starting-real-atlas-recall","elapsedMs":16088}
+L1231 2026-11-14T09:28:03.9821990Z SF_CALCULATION_RESOLUTION {"fixture":"reopen-and-recall","generation":"reopened","sequence":5,"state":"started"}
+L1232 2026-11-14T09:28:11.8534517Z SF_CALCULATION_RESOLUTION {"fixture":"reopen-and-recall","generation":"reopened","sequence":5,"state":"returned","elapsedMs":7871,"completed":5,"entered":5}
+L1233 2026-11-14T09:28:32.4641873Z SF_CALCULATION_PHASE {"fixture":"reopen-and-recall","phase":"real-atlas-recall-authorized","elapsedMs":45070}
+L1234 2026-11-14T09:28:32.5996748Z (pass) Planner calculation recalls the actual reopened Atlas record and does not append it twice [45206.01ms]
+L1256 2026-11-14T09:29:16.0844887Z (pass) Planner calculation rejects foreign case routing and all six corrupted durable Atlas capture fields [43484.84ms]
+L1280 2026-11-14T09:29:58.3856071Z (pass) Planner continuity fences membership changes during a real environment await and recovers after restoration [42301.10ms]
+L1281 2026-11-14T09:29:59.0374397Z SF_CALCULATION_PHASE {"fixture":"overlapping-revocation","phase":"initialized-real-store-producers-and-scanner","elapsedMs":651}
+L1282 2026-11-14T09:29:59.0375266Z SF_COMPOSITION_PHASE {"fixture":"planner-calculation.overlapping-revocation","phase":"calculation.produce","state":"started","elapsedMs":652}
+L1283 2026-11-14T09:30:01.6588757Z SF_COMPOSITION_PHASE {"fixture":"planner-calculation.overlapping-revocation","phase":"calculation.produce","state":"returned","phaseMs":2621,"elapsedMs":3273,"aborted":false}
+L1284 2026-11-14T09:30:01.6589866Z SF_CALCULATION_PHASE {"fixture":"overlapping-revocation","phase":"persisted-and-replayed-calculation","elapsedMs":3273}
+L1285 2026-11-14T09:30:01.7184233Z SF_CALCULATION_RESOLUTION {"fixture":"overlapping-revocation","generation":"initial","sequence":1,"state":"started"}
+L1286 2026-11-14T09:30:03.3134502Z SF_CALCULATION_RESOLUTION {"fixture":"overlapping-revocation","generation":"initial","sequence":1,"state":"returned","elapsedMs":1595,"completed":1,"entered":1}
+L1287 2026-11-14T09:30:03.3810733Z SF_CALCULATION_RESOLUTION {"fixture":"overlapping-revocation","generation":"initial","sequence":2,"state":"started"}
+L1288 2026-11-14T09:30:04.9359382Z SF_CALCULATION_RESOLUTION {"fixture":"overlapping-revocation","generation":"initial","sequence":2,"state":"returned","elapsedMs":1555,"completed":2,"entered":2}
+L1289 2026-11-14T09:30:04.9734106Z SF_CALCULATION_RESOLUTION {"fixture":"overlapping-revocation","generation":"initial","sequence":3,"state":"started"}
+L1290 2026-11-14T09:30:06.5927308Z SF_CALCULATION_RESOLUTION {"fixture":"overlapping-revocation","generation":"initial","sequence":3,"state":"returned","elapsedMs":1619,"completed":3,"entered":3}
+L1291 2026-11-14T09:30:06.9855138Z SF_CALCULATION_PHASE {"fixture":"overlapping-revocation","phase":"real-atlas-write-committed","elapsedMs":8599}
+L1292 2026-11-14T09:30:06.9911451Z SF_CALCULATION_PHASE {"fixture":"overlapping-revocation","phase":"reopened-sqlite-and-authority","elapsedMs":8605}
+L1293 2026-11-14T09:30:07.0112949Z SF_CALCULATION_PHASE {"fixture":"overlapping-revocation","phase":"starting-reopened-calculation-resolve-before-overlap","elapsedMs":8625}
+L1294 2026-11-14T09:30:07.0174700Z SF_CALCULATION_RESOLUTION {"fixture":"overlapping-revocation","generation":"reopened","sequence":4,"state":"started"}
+L1295 2026-11-14T09:30:15.0848548Z SF_CALCULATION_RESOLUTION {"fixture":"overlapping-revocation","generation":"reopened","sequence":4,"state":"returned","elapsedMs":8067,"completed":4,"entered":4}
+L1296 2026-11-14T09:30:15.2509526Z SF_CALCULATION_PHASE {"fixture":"overlapping-revocation","phase":"finished-reopened-calculation-resolve-before-overlap","elapsedMs":16865}
+L1297 2026-11-14T09:30:15.2510446Z SF_CALCULATION_PHASE {"fixture":"overlapping-revocation","phase":"starting-real-atlas-recall-before-overlap","elapsedMs":16865}
+L1298 2026-11-14T09:30:15.7632327Z SF_CALCULATION_RESOLUTION {"fixture":"overlapping-revocation","generation":"reopened","sequence":5,"state":"started"}
+L1299 2026-11-14T09:30:23.8300046Z SF_CALCULATION_RESOLUTION {"fixture":"overlapping-revocation","generation":"reopened","sequence":5,"state":"returned","elapsedMs":8067,"completed":5,"entered":5}
+L1300 2026-11-14T09:30:43.7916130Z SF_CALCULATION_PHASE {"fixture":"overlapping-revocation","phase":"reopened-positive-before-overlapping-revocation","elapsedMs":45406}
+L1301 2026-11-14T09:30:43.9301240Z (pass) Planner overlapping replays and Atlas recall disclose nothing after principal revocation [45544.43ms]
+L1318 2026-11-14T09:31:00.5172023Z (pass) Planner calculation becomes unavailable after its real persisted source changes [16587.11ms]
+L1336 2026-11-14T09:31:18.4301307Z (pass) Planner reopened recall rejects source drift after a completed calculation proof [17912.94ms]
+L1354 2026-11-14T09:31:37.0180252Z (pass) Planner reopened recall rejects membership drift after a completed calculation proof [18587.93ms]
+L1372 2026-11-14T09:31:55.9096208Z (pass) Planner reopened recall rejects capture drift after a completed calculation proof [18891.55ms]
+L1390 2026-11-14T09:32:14.3999853Z (pass) Planner reopened recall rejects coverage drift after a completed calculation proof [18490.34ms]
+L1408 2026-11-14T09:32:32.5224966Z (pass) Planner reopened recall rejects selector drift after a completed calculation proof [18122.50ms]
+L1426 2026-11-14T09:33:11.0473265Z (pass) Planner reopened recall rejects clock drift after a completed calculation proof [38524.82ms]
+L1444 2026-11-14T09:33:48.1307709Z (pass) Planner reopened recall rejects principal drift after a completed calculation proof [37083.46ms]
+L1462 2026-11-14T09:34:25.3642361Z (pass) Planner reopened recall rejects lease drift after a completed calculation proof [37233.41ms]
+L1481 2026-11-14T09:35:13.8955088Z (pass) Planner recall proof stays lexical while an independent same-call calculation resolves in parallel [48531.26ms]
+L2457 2026-11-14T10:01:47.3950782Z omni positive control [61ba1e84741e852d5655bf54b0582c01]: pass (declared: 22 test(s) in Sucafinav1/test/product/wp02/host-workbench.test.ts, Sucafinav1/test/product/wp02/workbench-recovery.test.ts, Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts); 38 omni spawn(s), 0 delegated.
+L2460 2026-11-14T10:01:47.3951964Z  198 pass
+L2461 2026-11-14T10:01:47.3952072Z  2 skip
+L2462 2026-11-14T10:01:47.3952173Z  12 fail
+L2463 2026-11-14T10:01:47.3952286Z  2163 expect() calls
+L2464 2026-11-14T10:01:47.3952438Z Ran 212 tests across 24 files. [2274.65s]

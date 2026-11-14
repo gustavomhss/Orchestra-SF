@@ -1,0 +1,175 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/wp14_requirements",
+  "mode": "independent_read_only_targeted_recheck",
+  "candidate_label": "W2 local frozen signals/outcomes per root; attach published commit only after matching these file blobs",
+  "prior_review": "reference/wp14-independent-review.json",
+  "product_tests_executed": false,
+  "scope": "Only the three concrete prior findings and regression source changes; no broadened native/Atlas approval. Atlas helper is still under separate correction.",
+  "findings": [
+    {
+      "id": "WP14-REVIEW-01",
+      "disposition": "STATIC_CORRECTED_CI_PENDING",
+      "evidence": [
+        {
+          "path": "product/decision-memory/materiality.ts",
+          "lines": "107-119",
+          "detail": "Captures value digest before authorizeEvidence; preserves first/second digest through final revalidate; synchronous binding and material fingerprint checks follow the last await."
+        },
+        {
+          "path": "product/decision-memory/outcome.ts",
+          "lines": "50-60",
+          "detail": "Captured evidence value digest, both loaded snapshots, original and cloned request, binding and monotonic cutoff are checked after final revalidate."
+        },
+        {
+          "path": "product/decision-memory/domain-outcome.ts",
+          "lines": "23-49",
+          "detail": "Captures request arguments/selection and terminal selected/projection/case tuple; final authority await precedes all identity/projection/cutoff/abort checks."
+        },
+        {
+          "path": "product/decision-memory/signal-list.ts",
+          "lines": "27-76",
+          "detail": "Clones case/projection/registry/materiality outputs; unchanged binding/request checks follow consumer callbacks and final revalidate; final synchronous check precedes return."
+        },
+        {
+          "path": "product/decision-memory/signal-work.ts",
+          "lines": "36-104,149-158",
+          "detail": "Cloned period/selection/records; binding/source/projection/output/egress digests checked after authorization/ref issuance/revalidate; work-ref issuer also checks binding/record after final await."
+        }
+      ],
+      "negative_test_sources": [
+        "materiality.test.ts:128-147",
+        "outcome-signals.test.ts:124-145",
+        "domain-outcome.test.ts:133-176",
+        "signal-registry.test.ts:160-209"
+      ],
+      "limits": "Static control-flow verification; test source inspected but no execution result. Not a blanket audit of host authority."
+    },
+    {
+      "id": "WP14-REVIEW-02",
+      "disposition": "STATIC_CORRECTED_CI_PENDING",
+      "evidence": [
+        {
+          "path": "product/decision-memory/invalidation.ts",
+          "lines": "58-72",
+          "detail": "Different historical ref digest with numeric source identity now adds source-content, preventing empty reasons/reuse for changed record/document/event bytes. Fresh changed material remains unavailable; authorized fresh reissue with unchanged record content retains scope/version/incarnation behavior."
+        }
+      ],
+      "negative_test_sources": [
+        "invalidation.test.ts:42-58",
+        "invalidation.test.ts:36-40",
+        "invalidation.test.ts:60-81"
+      ],
+      "limits": "Historical fixture Digest shapes were corrected and independently re-read; product and test source changes remain CI pending."
+    },
+    {
+      "id": "WP14-REVIEW-03",
+      "disposition": "STATIC_CORRECTED_CI_PENDING",
+      "evidence": [
+        {
+          "path": "product/decision-memory/outcome.ts",
+          "lines": "25-26",
+          "detail": "Finite operands are followed by Number.isFinite(observed - expected); nonrepresentable subtraction produces observation-out-of-range before comparable result construction."
+        }
+      ],
+      "negative_test_sources": [
+        "outcome-signals.test.ts:148-158"
+      ],
+      "limits": "Test covers both overflow signs plus finite near-boundary comparisons; source inspected only."
+    }
+  ],
+  "file_manifest": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/materiality.ts",
+      "blob": "0299a2a5dadecbec526a5dcea127d8a010488824",
+      "sha256": "a96c7f1d806d2f91819e4d7b3d7d0e616f5f0a879bfef8e54cdd2b67c468bb2f",
+      "bytes": 14286
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/observation-time.ts",
+      "blob": "0b567eb3c4b4363c41d50e1147f76b97ac051449",
+      "sha256": "8cbb0149e8e6afa02201646abd7161041fbe3408aadfec04ebc6ce4c84a7c0a4",
+      "bytes": 703
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/outcome.ts",
+      "blob": "d1c524a976e07524d9b2b197635805dde9ae650c",
+      "sha256": "550d775954527b4a44959525922ce3339b8913e44642bb0ebe42061c2029a113",
+      "bytes": 7408
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/domain-outcome.ts",
+      "blob": "aad2b8a655c3259a86e526efcf562602851df8bc",
+      "sha256": "84c74cc88f568786bdf870f59f5d650bd8c81aba3a52994ec45ed274c23f94dc",
+      "bytes": 7464
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/invalidation.ts",
+      "blob": "028c280bab64f2229aced50af88dcf95ad652d73",
+      "sha256": "494d465928955e773adfd1c74928034739a8803ba5f413db24c110f0731abb07",
+      "bytes": 8380
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/signal-list.ts",
+      "blob": "905770233118a2b0707dfed37f9038f89fb884ac",
+      "sha256": "2f77264f0e55ec52379e244e47050d95149f9ff5b591893e484493b960ea6de5",
+      "bytes": 11192
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/signal-work.ts",
+      "blob": "8e03cb17343b87304238a8f9f17b9e0e130b5149",
+      "sha256": "bf0894f974114eb9aa934e068929a03295e376d19d798c46032461f872d2ff03",
+      "bytes": 16546
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/materiality.test.ts",
+      "blob": "81a37a4c2945c2af64d0749be3b909a54ae97508",
+      "sha256": "f7bc7e7d6ba7866d92ad1c9ab2f83923fbc16e84b6e5cd791670a38dd43cf498",
+      "bytes": 16638
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/outcome-signals.test.ts",
+      "blob": "62f3667b3f1ac1b450490d7a076ad60244079f73",
+      "sha256": "bcdf8c64d4e147bdf508d3dc795e04b5dc73b5dc7d7b62270f7418490c93fc67",
+      "bytes": 15590
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/domain-outcome.test.ts",
+      "blob": "210bac0815396bb4769ec8f7a5d3e4b948fe13a6",
+      "sha256": "8b4613ed35330a51dc23d1e7e41a38c01e8d291035afbaab2416834ff7a47905",
+      "bytes": 19101
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/invalidation.test.ts",
+      "blob": "295399eb9d4171b85788b7344de7cee1f4239f1b",
+      "sha256": "982a074ec9745859b865f49690689c91a64b230cb5b1014558364ed0f34439d7",
+      "bytes": 9430,
+      "previous_review_blob": "295399eb9d4171b85788b7344de7cee1f4239f1b",
+      "previous_review_sha256": "982a074ec9745859b865f49690689c91a64b230cb5b1014558364ed0f34439d7"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/signal-registry.test.ts",
+      "blob": "cef1f6bd6fcecbd569522c7e33d65d6767155182",
+      "sha256": "33b1ef388aa99237943e8113d5c00348d44a4e2820a614c1f12c1124aab248c7",
+      "bytes": 23837
+    }
+  ],
+  "resolved_fixture_findings": [
+    {
+      "id": "WP14-REVIEW-W2-TEST-01",
+      "severity": "medium",
+      "status": "STATIC_CORRECTED_CI_PENDING",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/invalidation.test.ts",
+      "lines": "43-50",
+      "description": "The new document fixture uses string blobDigest and segment.textDigest while BusinessEvidenceRef requires Digest objects {algorithm:\"sha256\",value:string}. Its satisfies tuple should be rejected by typecheck.",
+      "contract_path": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+      "contract_lines": "5,17",
+      "required_action": "Use Digest objects for original document and both changed variants; preserve the same semantic content-change negative.",
+      "execution": "No CI or product test executed; source shape and exact file identity checked only.",
+      "resolution": "Re-read only lines43–51: original blobDigest/textDigest and both changed variants now use {algorithm:\"sha256\",value:string}, preserving the semantic content-change negative.",
+      "resolved_file_blob": "295399eb9d4171b85788b7344de7cee1f4239f1b",
+      "resolved_file_sha256": "982a074ec9745859b865f49690689c91a64b230cb5b1014558364ed0f34439d7"
+    }
+  ],
+  "remaining_findings": []
+}

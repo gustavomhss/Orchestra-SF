@@ -1,0 +1,1489 @@
+{
+  "schema_version": 1,
+  "run_id": 43580252381,
+  "job_id": 132403235716,
+  "records": [
+    {
+      "line": 817,
+      "source_file": "Sucafinav1/test/local-store.test.ts",
+      "status": "pass",
+      "name": "current snapshots are isolated copies in a live transaction and expire with its scope",
+      "duration_ms": 15.12
+    },
+    {
+      "line": 818,
+      "source_file": "Sucafinav1/test/local-store.test.ts",
+      "status": "pass",
+      "name": "current and nested snapshot copies preserve codec normalization and isolate staged mutations",
+      "duration_ms": 7.01
+    },
+    {
+      "line": 819,
+      "source_file": "Sucafinav1/test/local-store.test.ts",
+      "status": "pass",
+      "name": "current and nested snapshot copies retain codec rejection and snapshot validation",
+      "duration_ms": 9.21
+    },
+    {
+      "line": 820,
+      "source_file": "Sucafinav1/test/local-store.test.ts",
+      "status": "pass",
+      "name": "all-surface transaction exposes staged nested reads and rejects nested writes",
+      "duration_ms": 8.61
+    },
+    {
+      "line": 821,
+      "source_file": "Sucafinav1/test/local-store.test.ts",
+      "status": "pass",
+      "name": "real SQLite persists the entire snapshot, binary blobs and undefined across reopen",
+      "duration_ms": 9.17
+    },
+    {
+      "line": 822,
+      "source_file": "Sucafinav1/test/local-store.test.ts",
+      "status": "pass",
+      "name": "codec preserves sentinel-shaped objects, tagged-looking arrays and nested undefined",
+      "duration_ms": 6.7
+    },
+    {
+      "line": 823,
+      "source_file": "Sucafinav1/test/local-store.test.ts",
+      "status": "pass",
+      "name": "false rolls back state, versions, sequences, audit, notices and blob additions/removals",
+      "duration_ms": 8.14
+    },
+    {
+      "line": 824,
+      "source_file": "Sucafinav1/test/local-store.test.ts",
+      "status": "pass",
+      "name": "throw rolls back state, versions, sequences, audit, notices and blob additions/removals",
+      "duration_ms": 7.01
+    },
+    {
+      "line": 825,
+      "source_file": "Sucafinav1/test/local-store.test.ts",
+      "status": "pass",
+      "name": "abort rolls back state, versions, sequences, audit, notices and blob additions/removals",
+      "duration_ms": 6.95
+    },
+    {
+      "line": 826,
+      "source_file": "Sucafinav1/test/local-store.test.ts",
+      "status": "pass",
+      "name": "unsupported codec value NaN rejects without modifying persisted state",
+      "duration_ms": 4.9
+    },
+    {
+      "line": 827,
+      "source_file": "Sucafinav1/test/local-store.test.ts",
+      "status": "pass",
+      "name": "unsupported codec value Infinity rejects without modifying persisted state",
+      "duration_ms": 3.95
+    },
+    {
+      "line": 828,
+      "source_file": "Sucafinav1/test/local-store.test.ts",
+      "status": "pass",
+      "name": "unsupported codec value -Infinity rejects without modifying persisted state",
+      "duration_ms": 4.02
+    },
+    {
+      "line": 829,
+      "source_file": "Sucafinav1/test/local-store.test.ts",
+      "status": "pass",
+      "name": "unsupported codec value () => 1 rejects without modifying persisted state",
+      "duration_ms": 3.82
+    },
+    {
+      "line": 830,
+      "source_file": "Sucafinav1/test/local-store.test.ts",
+      "status": "pass",
+      "name": "unsupported codec value [object Object] rejects without modifying persisted state",
+      "duration_ms": 3.89
+    },
+    {
+      "line": 831,
+      "source_file": "Sucafinav1/test/local-store.test.ts",
+      "status": "pass",
+      "name": "cyclic state rejects atomically",
+      "duration_ms": 4.09
+    },
+    {
+      "line": 832,
+      "source_file": "Sucafinav1/test/local-store.test.ts",
+      "status": "pass",
+      "name": "independent instances serialize different-record writes without replay",
+      "duration_ms": 41.93
+    },
+    {
+      "line": 833,
+      "source_file": "Sucafinav1/test/local-store.test.ts",
+      "status": "pass",
+      "name": "independent instances serialize same-record CAS writes without replay",
+      "duration_ms": 37.31
+    },
+    {
+      "line": 834,
+      "source_file": "Sucafinav1/test/local-store.test.ts",
+      "status": "pass",
+      "name": "surface namespaces isolate identical blob keys and snapshots",
+      "duration_ms": 8.09
+    },
+    {
+      "line": 835,
+      "source_file": "Sucafinav1/test/local-store.test.ts",
+      "status": "pass",
+      "name": "pending lock cancellation never invokes work",
+      "duration_ms": 95.24
+    },
+    {
+      "line": 836,
+      "source_file": "Sucafinav1/test/local-store.test.ts",
+      "status": "pass",
+      "name": "pending lock timeout never invokes work",
+      "duration_ms": 86.27
+    },
+    {
+      "line": 837,
+      "source_file": "Sucafinav1/test/local-store.test.ts",
+      "status": "pass",
+      "name": "secrets get is read-only inside a business write; expiry, atomic take and removal persist",
+      "duration_ms": 18.37
+    },
+    {
+      "line": 838,
+      "source_file": "Sucafinav1/test/local-store.test.ts",
+      "status": "pass",
+      "name": "blob capabilities expire after callback and dispose drains work while prohibiting new operations",
+      "duration_ms": 7.28
+    },
+    {
+      "line": 839,
+      "source_file": "Sucafinav1/test/local-store.test.ts",
+      "status": "pass",
+      "name": "relative and memory paths are rejected before opening storage",
+      "duration_ms": 0.12
+    },
+    {
+      "line": 840,
+      "source_file": "Sucafinav1/test/local-store.test.ts",
+      "status": "pass",
+      "name": "an existing accessible directory is rejected without changing its permissions",
+      "duration_ms": 3.39
+    },
+    {
+      "line": 841,
+      "source_file": "Sucafinav1/test/local-store.test.ts",
+      "status": "pass",
+      "name": "a corrupt existing SQLite file rejects rather than returning an empty installation",
+      "duration_ms": 3.96
+    },
+    {
+      "line": 842,
+      "source_file": "Sucafinav1/test/local-store.test.ts",
+      "status": "pass",
+      "name": "corrupt stored snapshot payload rejects before callback instead of synthesizing empty state",
+      "duration_ms": 4.84
+    },
+    {
+      "line": 843,
+      "source_file": "Sucafinav1/test/local-store.test.ts",
+      "status": "pass",
+      "name": "already aborted transactions never invoke callback",
+      "duration_ms": 3.48
+    },
+    {
+      "line": 844,
+      "source_file": "Sucafinav1/test/local-store.test.ts",
+      "status": "pass",
+      "name": "rejects directory symlinks without creating storage through an alias",
+      "duration_ms": 0.69
+    },
+    {
+      "line": 845,
+      "source_file": "Sucafinav1/test/local-store.test.ts",
+      "status": "pass",
+      "name": "rejects ancestor symlinks without creating storage through an alias",
+      "duration_ms": 0.44
+    },
+    {
+      "line": 846,
+      "source_file": "Sucafinav1/test/local-store.test.ts",
+      "status": "pass",
+      "name": "rejects database symlinks without creating storage through an alias",
+      "duration_ms": 3.47
+    },
+    {
+      "line": 847,
+      "source_file": "Sucafinav1/test/local-store.test.ts",
+      "status": "pass",
+      "name": "creating nested private directories preserves existing parent permissions",
+      "duration_ms": 4.38
+    },
+    {
+      "line": 848,
+      "source_file": "Sucafinav1/test/local-store.test.ts",
+      "status": "skip",
+      "name": "rejects foreign UID directory (requires root fixture privileges)"
+    },
+    {
+      "line": 849,
+      "source_file": "Sucafinav1/test/local-store.test.ts",
+      "status": "skip",
+      "name": "rejects foreign UID database (requires root fixture privileges)"
+    },
+    {
+      "line": 850,
+      "source_file": "Sucafinav1/test/local-store.test.ts",
+      "status": "pass",
+      "name": "malformed but encodable snapshot rejects before commit and rolls back staged bytes",
+      "duration_ms": 4.53
+    },
+    {
+      "line": 851,
+      "source_file": "Sucafinav1/test/local-store.test.ts",
+      "status": "pass",
+      "name": "one SQLite store survives a mixed concurrent burst across surfaces, secrets and binary assets without lost or replayed writes",
+      "duration_ms": 145.28
+    },
+    {
+      "line": 852,
+      "source_file": "Sucafinav1/test/local-store.test.ts",
+      "status": "pass",
+      "name": "dispose drains already admitted mixed operations and cancelled work without admitting late writes",
+      "duration_ms": 5020.14
+    },
+    {
+      "line": 853,
+      "source_file": "Sucafinav1/test/local-store.test.ts",
+      "status": "pass",
+      "name": "same-instance abort before admission never invokes work or lets a later operation overtake its active predecessor",
+      "duration_ms": 117.88
+    },
+    {
+      "line": 854,
+      "source_file": "Sucafinav1/test/local-store.test.ts",
+      "status": "pass",
+      "name": "same-instance timeout before admission never invokes work or lets a later operation overtake its active predecessor",
+      "duration_ms": 116.51
+    },
+    {
+      "line": 857,
+      "source_file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "status": "pass",
+      "name": "producer sf_dashboard_read: modules/sucafina/Sucafinav1/product/dashboard/capabilities.ts#readDashboard is exported",
+      "duration_ms": 0.6
+    },
+    {
+      "line": 858,
+      "source_file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "status": "pass",
+      "name": "producer sf_kpi_explain: modules/sucafina/Sucafinav1/product/dashboard/capabilities.ts#explainKpi is exported",
+      "duration_ms": 0.13
+    },
+    {
+      "line": 859,
+      "source_file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "status": "pass",
+      "name": "producer sf_bi_view: modules/sucafina/Sucafinav1/product/analytics/capabilities.ts#readBiView is exported",
+      "duration_ms": 0.97
+    },
+    {
+      "line": 860,
+      "source_file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "status": "pass",
+      "name": "producer sf_source_get: modules/sucafina/Sucafinav1/product/host-binding/capabilities.ts#resolveSfSource is exported",
+      "duration_ms": 0.99
+    },
+    {
+      "line": 861,
+      "source_file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "status": "pass",
+      "name": "producer sf_forecast_compare: modules/sucafina/Sucafinav1/product/planner/capabilities.ts#compareForecast is exported",
+      "duration_ms": 0.21
+    },
+    {
+      "line": 862,
+      "source_file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "status": "pass",
+      "name": "producer sf_scenario_simulate: modules/sucafina/Sucafinav1/product/planner/capabilities.ts#simulateScenario is exported",
+      "duration_ms": 1.75
+    },
+    {
+      "line": 863,
+      "source_file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "status": "pass",
+      "name": "producer sf_scenario_compare: modules/sucafina/Sucafinav1/product/planner/capabilities.ts#compareScenarios is exported",
+      "duration_ms": 0.06
+    },
+    {
+      "line": 864,
+      "source_file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "status": "pass",
+      "name": "producer sf_sensitivity_evaluate: modules/sucafina/Sucafinav1/product/portfolio/capabilities.ts#evaluateSensitivity is exported",
+      "duration_ms": 0.06
+    },
+    {
+      "line": 865,
+      "source_file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "status": "pass",
+      "name": "producer sf_portfolio_evaluate: modules/sucafina/Sucafinav1/product/portfolio/capabilities.ts#evaluatePortfolio is exported",
+      "duration_ms": 0.62
+    },
+    {
+      "line": 866,
+      "source_file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "status": "pass",
+      "name": "producer sf_request_read: modules/sucafina/Sucafinav1/product/procurement/capabilities.ts#readRequest is exported",
+      "duration_ms": 0.05
+    },
+    {
+      "line": 867,
+      "source_file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "status": "pass",
+      "name": "producer sf_supplier_read: modules/sucafina/Sucafinav1/product/procurement/capabilities.ts#readSupplier is exported",
+      "duration_ms": 0.04
+    },
+    {
+      "line": 868,
+      "source_file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "status": "pass",
+      "name": "producer sf_contract_read: modules/sucafina/Sucafinav1/product/procurement/capabilities.ts#readContract is exported",
+      "duration_ms": 0.04
+    },
+    {
+      "line": 869,
+      "source_file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "status": "pass",
+      "name": "producer sf_sourcing_compare: modules/sucafina/Sucafinav1/product/procurement/capabilities.ts#compareSourcing is exported",
+      "duration_ms": 0.04
+    },
+    {
+      "line": 870,
+      "source_file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "status": "pass",
+      "name": "producer sf_case_read: modules/sucafina/Sucafinav1/product/decisions/capabilities.ts#readCase is exported",
+      "duration_ms": 0.05
+    },
+    {
+      "line": 871,
+      "source_file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "status": "pass",
+      "name": "producer sf_case_draft: modules/sucafina/Sucafinav1/product/decisions/capabilities.ts#draftCase is exported",
+      "duration_ms": 0.06
+    },
+    {
+      "line": 872,
+      "source_file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "status": "pass",
+      "name": "producer sf_alternative_draft: modules/sucafina/Sucafinav1/product/decisions/capabilities.ts#draftAlternative is exported",
+      "duration_ms": 0.8
+    },
+    {
+      "line": 873,
+      "source_file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "status": "pass",
+      "name": "producer sf_change_prepare: modules/sucafina/Sucafinav1/product/decisions/capabilities.ts#prepareChange is exported",
+      "duration_ms": 0.18
+    },
+    {
+      "line": 874,
+      "source_file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "status": "pass",
+      "name": "producer sf_receipt_get: modules/sucafina/Sucafinav1/product/decisions/capabilities.ts#readReceipt is exported",
+      "duration_ms": 9.1
+    },
+    {
+      "line": 875,
+      "source_file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "status": "pass",
+      "name": "producer sf_work_list: modules/sucafina/Sucafinav1/product/collaboration/capabilities.ts#listWork is exported",
+      "duration_ms": 0.13
+    },
+    {
+      "line": 876,
+      "source_file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "status": "pass",
+      "name": "producer sf_question_prepare: modules/sucafina/Sucafinav1/product/collaboration/capabilities.ts#prepareQuestion is exported",
+      "duration_ms": 0.07
+    },
+    {
+      "line": 877,
+      "source_file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "status": "pass",
+      "name": "producer sf_answer_read: modules/sucafina/Sucafinav1/product/collaboration/capabilities.ts#readAnswer is exported",
+      "duration_ms": 0.05
+    },
+    {
+      "line": 878,
+      "source_file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "status": "pass",
+      "name": "producer sf_relation_read: modules/sucafina/Sucafinav1/product/collaboration/capabilities.ts#readRelations is exported",
+      "duration_ms": 0.05
+    },
+    {
+      "line": 879,
+      "source_file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "status": "pass",
+      "name": "producer sf_handoff_prepare: modules/sucafina/Sucafinav1/product/collaboration/capabilities.ts#prepareHandoff is exported",
+      "duration_ms": 0.05
+    },
+    {
+      "line": 880,
+      "source_file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "status": "pass",
+      "name": "producer sf_document_extract: modules/sucafina/Sucafinav1/product/documents/capabilities.ts#extractDocumentEvidence is exported",
+      "duration_ms": 1.85
+    },
+    {
+      "line": 881,
+      "source_file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "status": "pass",
+      "name": "producer sf_import_preview: modules/sucafina/Sucafinav1/product/imports/capabilities.ts#previewImport is exported",
+      "duration_ms": 0.07
+    },
+    {
+      "line": 882,
+      "source_file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "status": "pass",
+      "name": "producer sf_review_prepare: modules/sucafina/Sucafinav1/product/reviews/capabilities.ts#prepareReview is exported",
+      "duration_ms": 0.07
+    },
+    {
+      "line": 883,
+      "source_file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "status": "pass",
+      "name": "producer sf_report_prepare: modules/sucafina/Sucafinav1/product/reviews/capabilities.ts#prepareReport is exported",
+      "duration_ms": 0.05
+    },
+    {
+      "line": 884,
+      "source_file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "status": "pass",
+      "name": "producer sf_artifact_get: modules/sucafina/Sucafinav1/product/reviews/capabilities.ts#readArtifact is exported",
+      "duration_ms": 0.04
+    },
+    {
+      "line": 885,
+      "source_file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "status": "pass",
+      "name": "producer sf_context_get: modules/sucafina/Sucafinav1/product/host-binding/capabilities.ts#readSfBusinessContext is exported",
+      "duration_ms": 0.07
+    },
+    {
+      "line": 886,
+      "source_file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "status": "pass",
+      "name": "producer sf_knowledge_search: modules/sucafina/Sucafinav1/product/documents/capabilities.ts#searchDocumentEvidence is exported",
+      "duration_ms": 0.06
+    },
+    {
+      "line": 887,
+      "source_file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "status": "pass",
+      "name": "producer sf_evidence_get: modules/sucafina/Sucafinav1/product/host-binding/capabilities.ts#resolveSfBusinessEvidence is exported",
+      "duration_ms": 0.06
+    },
+    {
+      "line": 888,
+      "source_file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "status": "pass",
+      "name": "producer sf_decision_recall: modules/sucafina/Sucafinav1/product/host-binding/capabilities.ts#recallSfDecisions is exported",
+      "duration_ms": 0.06
+    },
+    {
+      "line": 889,
+      "source_file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "status": "pass",
+      "name": "producer sf_freshness_check: modules/sucafina/Sucafinav1/product/host-binding/capabilities.ts#checkSfFreshness is exported",
+      "duration_ms": 0.06
+    },
+    {
+      "line": 890,
+      "source_file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "status": "pass",
+      "name": "producer sf_routine_catalog: modules/sucafina/Sucafinav1/product/routines/capabilities.ts#readRoutineCatalog is exported",
+      "duration_ms": 0.06
+    },
+    {
+      "line": 891,
+      "source_file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "status": "pass",
+      "name": "producer sf_routine_prepare: modules/sucafina/Sucafinav1/product/routines/capabilities.ts#prepareRoutine is exported",
+      "duration_ms": 0.06
+    },
+    {
+      "line": 892,
+      "source_file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "status": "pass",
+      "name": "producer sf_routine_run: modules/sucafina/Sucafinav1/product/routines/capabilities.ts#runAdmittedRoutine is exported",
+      "duration_ms": 0.04
+    },
+    {
+      "line": 893,
+      "source_file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "status": "pass",
+      "name": "producer sf_routine_status: modules/sucafina/Sucafinav1/product/routines/capabilities.ts#readRoutineStatus is exported",
+      "duration_ms": 0.04
+    },
+    {
+      "line": 894,
+      "source_file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "status": "pass",
+      "name": "producer sf_routine_result: modules/sucafina/Sucafinav1/product/routines/capabilities.ts#readRoutineResult is exported",
+      "duration_ms": 0.05
+    },
+    {
+      "line": 895,
+      "source_file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "status": "pass",
+      "name": "producer sf_watch_prepare: modules/sucafina/Sucafinav1/product/routines/capabilities.ts#prepareWatch is exported",
+      "duration_ms": 0.04
+    },
+    {
+      "line": 896,
+      "source_file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "status": "pass",
+      "name": "the distributed five-profile/eighteen-skill bundle consumes the frozen C15 contract",
+      "duration_ms": 8.18
+    },
+    {
+      "line": 897,
+      "source_file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "status": "pass",
+      "name": "the existing C08 provider creates all contracted namespace versions",
+      "duration_ms": 2.01
+    },
+    {
+      "line": 898,
+      "source_file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "status": "pass",
+      "name": "C08 adds the v1 fields on an authorized write and an exact retry does not migrate twice",
+      "duration_ms": 1.27
+    },
+    {
+      "line": 899,
+      "source_file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "status": "pass",
+      "name": "C08 checkNamespaces rejects a stale read dependency before invoking the write callback",
+      "duration_ms": 0.52
+    },
+    {
+      "line": 900,
+      "source_file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "status": "pass",
+      "name": "C08 checkNamespaces requires current read authority and does not increment the read version",
+      "duration_ms": 0.59
+    },
+    {
+      "line": 901,
+      "source_file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "status": "pass",
+      "name": "C08 refuses an unreadable check namespace before invoking any write callback",
+      "duration_ms": 0.36
+    },
+    {
+      "line": 902,
+      "source_file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "status": "pass",
+      "name": "C08 namespace fence refuses claimBindings outside preferences before a durable commit",
+      "duration_ms": 0.23
+    },
+    {
+      "line": 903,
+      "source_file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "status": "pass",
+      "name": "C08 namespace fence refuses commandProposals outside preferences before a durable commit",
+      "duration_ms": 0.17
+    },
+    {
+      "line": 904,
+      "source_file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "status": "pass",
+      "name": "C08 namespace fence refuses compositeScenarios outside preferences before a durable commit",
+      "duration_ms": 0.16
+    },
+    {
+      "line": 905,
+      "source_file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "status": "pass",
+      "name": "C08 namespace fence refuses decisionResults outside preferences before a durable commit",
+      "duration_ms": 0.15
+    },
+    {
+      "line": 906,
+      "source_file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "status": "pass",
+      "name": "C08 namespace fence refuses nativeRuns outside preferences before a durable commit",
+      "duration_ms": 0.12
+    },
+    {
+      "line": 907,
+      "source_file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "status": "pass",
+      "name": "C08 namespace fence refuses biArtifacts outside preferences before a durable commit",
+      "duration_ms": 0.12
+    },
+    {
+      "line": 908,
+      "source_file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "status": "pass",
+      "name": "C08 retains existing preference CAS and idempotency semantics",
+      "duration_ms": 0.48
+    },
+    {
+      "line": 924,
+      "source_file": "Sucafinav1/test/product/wp02/host-workbench.test.ts",
+      "status": "fail",
+      "name": "Dashboard contextual controls preserve a real agenda and record, then review and apply an existing C12 choice",
+      "duration_ms": 10376.43
+    },
+    {
+      "line": 993,
+      "source_file": "Sucafinav1/test/product/wp02/host-workbench.test.ts",
+      "status": "fail",
+      "name": "Dashboard draft conflict reloads the same draft identity and preserves local edits until the current base is confirmed",
+      "duration_ms": 16042.65
+    },
+    {
+      "line": 1025,
+      "source_file": "Sucafinav1/test/product/wp02/host-workbench.test.ts",
+      "status": "fail",
+      "name": "Dashboard discovery fences participant removal after options were assembled",
+      "duration_ms": 40.97
+    },
+    {
+      "line": 1026,
+      "source_file": "Sucafinav1/test/product/wp02/host-workbench.test.ts",
+      "status": "pass",
+      "name": "Dashboard discovery resolves real ticket months and Executive signal records",
+      "duration_ms": 421.45
+    },
+    {
+      "line": 1054,
+      "source_file": "Sucafinav1/test/product/wp02/host-workbench.test.ts",
+      "status": "fail",
+      "name": "Dashboard contextual draft retains edits when current write authority is withdrawn",
+      "duration_ms": 31027.03
+    },
+    {
+      "line": 1085,
+      "source_file": "Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+      "status": "fail",
+      "name": "Dashboard recovers a committed draft after response loss, restores only its authorized identity on reload, and fences revoked late discovery",
+      "duration_ms": 31041.63
+    },
+    {
+      "line": 1114,
+      "source_file": "Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+      "status": "fail",
+      "name": "Dashboard discards an uncertain private application review when fresh discovery no longer authorizes its case",
+      "duration_ms": 30993.88
+    },
+    {
+      "line": 1143,
+      "source_file": "Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+      "status": "fail",
+      "name": "Dashboard recovers the same C12 application receipt after a committed response is lost and the page reloads",
+      "duration_ms": 31132.47
+    },
+    {
+      "line": 1160,
+      "source_file": "Sucafinav1/test/product/wp01/shell-recovery.test.ts",
+      "status": "fail",
+      "name": "(unnamed)",
+      "duration_ms": 1.23
+    },
+    {
+      "line": 1182,
+      "source_file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "status": "pass",
+      "name": "Planner calculation preserves UI and repeated BCS reads and rejects cycles, tampering and over-budget selectors",
+      "duration_ms": 12000.01
+    },
+    {
+      "line": 1213,
+      "source_file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "status": "pass",
+      "name": "Planner calculation survives SQLite and Atlas reopen with continuity, original and ancestor context",
+      "duration_ms": 65272.49
+    },
+    {
+      "line": 1234,
+      "source_file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "status": "pass",
+      "name": "Planner calculation recalls the actual reopened Atlas record and does not append it twice",
+      "duration_ms": 45206.01
+    },
+    {
+      "line": 1256,
+      "source_file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "status": "pass",
+      "name": "Planner calculation rejects foreign case routing and all six corrupted durable Atlas capture fields",
+      "duration_ms": 43484.84
+    },
+    {
+      "line": 1280,
+      "source_file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "status": "pass",
+      "name": "Planner continuity fences membership changes during a real environment await and recovers after restoration",
+      "duration_ms": 42301.1
+    },
+    {
+      "line": 1301,
+      "source_file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "status": "pass",
+      "name": "Planner overlapping replays and Atlas recall disclose nothing after principal revocation",
+      "duration_ms": 45544.43
+    },
+    {
+      "line": 1318,
+      "source_file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "status": "pass",
+      "name": "Planner calculation becomes unavailable after its real persisted source changes",
+      "duration_ms": 16587.11
+    },
+    {
+      "line": 1336,
+      "source_file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "status": "pass",
+      "name": "Planner reopened recall rejects source drift after a completed calculation proof",
+      "duration_ms": 17912.94
+    },
+    {
+      "line": 1354,
+      "source_file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "status": "pass",
+      "name": "Planner reopened recall rejects membership drift after a completed calculation proof",
+      "duration_ms": 18587.93
+    },
+    {
+      "line": 1372,
+      "source_file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "status": "pass",
+      "name": "Planner reopened recall rejects capture drift after a completed calculation proof",
+      "duration_ms": 18891.55
+    },
+    {
+      "line": 1390,
+      "source_file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "status": "pass",
+      "name": "Planner reopened recall rejects coverage drift after a completed calculation proof",
+      "duration_ms": 18490.34
+    },
+    {
+      "line": 1408,
+      "source_file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "status": "pass",
+      "name": "Planner reopened recall rejects selector drift after a completed calculation proof",
+      "duration_ms": 18122.5
+    },
+    {
+      "line": 1426,
+      "source_file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "status": "pass",
+      "name": "Planner reopened recall rejects clock drift after a completed calculation proof",
+      "duration_ms": 38524.82
+    },
+    {
+      "line": 1444,
+      "source_file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "status": "pass",
+      "name": "Planner reopened recall rejects principal drift after a completed calculation proof",
+      "duration_ms": 37083.46
+    },
+    {
+      "line": 1462,
+      "source_file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "status": "pass",
+      "name": "Planner reopened recall rejects lease drift after a completed calculation proof",
+      "duration_ms": 37233.41
+    },
+    {
+      "line": 1481,
+      "source_file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "status": "pass",
+      "name": "Planner recall proof stays lexical while an independent same-call calculation resolves in parallel",
+      "duration_ms": 48531.26
+    },
+    {
+      "line": 1512,
+      "source_file": "Sucafinav1/test/product/wp10/integration/bi-call-scope.test.ts",
+      "status": "pass",
+      "name": "BI proof starts only after real UI consumption, clones within one invocation and cannot cross a new call or UTC day",
+      "duration_ms": 69810.38
+    },
+    {
+      "line": 1542,
+      "source_file": "Sucafinav1/test/product/wp10/integration/bi-call-scope.test.ts",
+      "status": "pass",
+      "name": "BI exported source and Review cannot borrow a completed proof from an overlapping presentation dispatch",
+      "duration_ms": 72914.24
+    },
+    {
+      "line": 1571,
+      "source_file": "Sucafinav1/test/product/wp10/integration/bi-call-scope.test.ts",
+      "status": "pass",
+      "name": "BI proof rejects current case revocation, unversioned C08 result corruption and changed input without repeating a producer",
+      "duration_ms": 62779.65
+    },
+    {
+      "line": 1602,
+      "source_file": "Sucafinav1/test/product/wp10/integration/bi-call-scope.test.ts",
+      "status": "pass",
+      "name": "BI proof fences all three actual domain snapshots even when the C08 revision and Planner reference stay unchanged",
+      "duration_ms": 67811.19
+    },
+    {
+      "line": 1633,
+      "source_file": "Sucafinav1/test/product/wp10/integration/bi-call-scope.test.ts",
+      "status": "pass",
+      "name": "BI egress returns denied after actor revocation, Request abort or lease removal at its final asynchronous boundaries",
+      "duration_ms": 65970.13
+    },
+    {
+      "line": 1636,
+      "source_file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "status": "pass",
+      "name": "stored Planner selectors use the exact domain projection without reopening coverage",
+      "duration_ms": 1178.92
+    },
+    {
+      "line": 1637,
+      "source_file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "status": "pass",
+      "name": "stored scenario rejects planner changes across the actual projection await",
+      "duration_ms": 163.59
+    },
+    {
+      "line": 1638,
+      "source_file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "status": "pass",
+      "name": "stored scenario rejects dashboard changes across the actual projection await",
+      "duration_ms": 159.91
+    },
+    {
+      "line": 1639,
+      "source_file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "status": "pass",
+      "name": "stored scenario rejects procurement changes across the actual projection await",
+      "duration_ms": 162.07
+    },
+    {
+      "line": 1640,
+      "source_file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "status": "pass",
+      "name": "stored scenario rejects principal changes across the actual projection await",
+      "duration_ms": 162.97
+    },
+    {
+      "line": 1641,
+      "source_file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "status": "pass",
+      "name": "stored scenario rejects case-input changes across the actual projection await",
+      "duration_ms": 152.45
+    },
+    {
+      "line": 1644,
+      "source_file": "Sucafinav1/test/product/wp10/integration/review-history-composition.test.ts",
+      "status": "pass",
+      "name": "C08 preserved domain values survive an ordinary edit, while revocation, replacement and receipt tampering deny history and downloads",
+      "duration_ms": 949.36
+    },
+    {
+      "line": 1647,
+      "source_file": "Sucafinav1/test/product/wp10/integration/native-evidence.test.ts",
+      "status": "pass",
+      "name": "native denial markers survive SQLite reopen and ordinary preference replacement cannot erase them",
+      "duration_ms": 19.97
+    },
+    {
+      "line": 1650,
+      "source_file": "Sucafinav1/test/product/wp10/integration/planner-evidence.test.ts",
+      "status": "pass",
+      "name": "coverage evidence projects exact whole months through Planner without recursively reading coverage",
+      "duration_ms": 39.97
+    },
+    {
+      "line": 1651,
+      "source_file": "Sucafinav1/test/product/wp10/integration/planner-evidence.test.ts",
+      "status": "pass",
+      "name": "composed BCS rejects a Planner source change during the authorized projection",
+      "duration_ms": 49.88
+    },
+    {
+      "line": 1652,
+      "source_file": "Sucafinav1/test/product/wp10/integration/planner-evidence.test.ts",
+      "status": "pass",
+      "name": "composed BCS rejects a Planner principal change during the authorized projection",
+      "duration_ms": 40.46
+    },
+    {
+      "line": 1655,
+      "source_file": "Sucafinav1/test/product/wp10/integration/personal-view-persistence.test.ts",
+      "status": "pass",
+      "name": "saved Planner and Procurement views survive a new store and authority, then reauthorize their actual destinations",
+      "duration_ms": 84.91
+    },
+    {
+      "line": 1658,
+      "source_file": "Sucafinav1/test/product/wp10/integration/alternative-call-scope.test.ts",
+      "status": "pass",
+      "name": "an invocation confines real proof reuse to its UTC day and rejects revocation during its final clock read",
+      "duration_ms": 157.24
+    },
+    {
+      "line": 1661,
+      "source_file": "Sucafinav1/test/product/wp10/integration/extended-ui-regressions.test.ts",
+      "status": "pass",
+      "name": "review and BI links retain the actual page's scoped year and selected month",
+      "duration_ms": 31.44
+    },
+    {
+      "line": 1662,
+      "source_file": "Sucafinav1/test/product/wp10/integration/extended-ui-regressions.test.ts",
+      "status": "pass",
+      "name": "a non-Budget review update preserves topic, period, notes and predecessor after explicit new record selection",
+      "duration_ms": 2023.28
+    },
+    {
+      "line": 1663,
+      "source_file": "Sucafinav1/test/product/wp10/integration/extended-ui-regressions.test.ts",
+      "status": "pass",
+      "name": "saved views accept only each page's real filter values and authorized record identities",
+      "duration_ms": 0.44
+    },
+    {
+      "line": 1664,
+      "source_file": "Sucafinav1/test/product/wp10/integration/extended-ui-regressions.test.ts",
+      "status": "pass",
+      "name": "saved-view authorization and BI choice reads stop after actual host revocation",
+      "duration_ms": 34.41
+    },
+    {
+      "line": 1723,
+      "source_file": "Sucafinav1/test/product/wp10/integration/bi-case-access.test.ts",
+      "status": "pass",
+      "name": "BI clears a real persisted case after participant revocation with the session valid and discards a delayed authorized source",
+      "duration_ms": 91428.97
+    },
+    {
+      "line": 1726,
+      "source_file": "Sucafinav1/test/product/wp10/integration/source-destinations.test.ts",
+      "status": "pass",
+      "name": "authorized monthly source links open the real page with the exact primary calendar period",
+      "duration_ms": 237.23
+    },
+    {
+      "line": 1727,
+      "source_file": "Sucafinav1/test/product/wp10/integration/source-destinations.test.ts",
+      "status": "pass",
+      "name": "monthly source issuance rejects partial spans and navigation refuses a fresh multi-month period",
+      "duration_ms": 69.29
+    },
+    {
+      "line": 1730,
+      "source_file": "Sucafinav1/test/product/wp10/integration/calculation-case-scope.test.ts",
+      "status": "pass",
+      "name": "concurrent calculation admissions retain one case scope across two real replays and release it after the last replay",
+      "duration_ms": 9478.51
+    },
+    {
+      "line": 1731,
+      "source_file": "Sucafinav1/test/product/wp10/integration/calculation-case-scope.test.ts",
+      "status": "pass",
+      "name": "a real calculation retains a withCase owner's selection after the outer action completes",
+      "duration_ms": 8171.08
+    },
+    {
+      "line": 1732,
+      "source_file": "Sucafinav1/test/product/wp10/integration/calculation-case-scope.test.ts",
+      "status": "pass",
+      "name": "calculation replay cannot borrow another selected case even when the same principal belongs to both",
+      "duration_ms": 8173.8
+    },
+    {
+      "line": 1733,
+      "source_file": "Sucafinav1/test/product/wp10/integration/calculation-case-scope.test.ts",
+      "status": "pass",
+      "name": "two real calculation replays refuse revoke during overlap and release every retention",
+      "duration_ms": 7934.04
+    },
+    {
+      "line": 1734,
+      "source_file": "Sucafinav1/test/product/wp10/integration/calculation-case-scope.test.ts",
+      "status": "pass",
+      "name": "two real calculation replays refuse abort during overlap and release every retention",
+      "duration_ms": 7894.16
+    },
+    {
+      "line": 1745,
+      "source_file": "Sucafinav1/test/product/wp10/integration/portfolio-metric.test.ts",
+      "status": "pass",
+      "name": "Portfolio metric keeps the public comparison's four real reads and reauthorizes each invocation",
+      "duration_ms": 10801.07
+    },
+    {
+      "line": 1752,
+      "source_file": "Sucafinav1/test/product/wp10/integration/portfolio-metric.test.ts",
+      "status": "pass",
+      "name": "Portfolio metric refuses source changing after the final real scenario resolution",
+      "duration_ms": 5921.12
+    },
+    {
+      "line": 1759,
+      "source_file": "Sucafinav1/test/product/wp10/integration/portfolio-metric.test.ts",
+      "status": "pass",
+      "name": "Portfolio metric refuses authority changing after the final real scenario resolution",
+      "duration_ms": 5718.03
+    },
+    {
+      "line": 1766,
+      "source_file": "Sucafinav1/test/product/wp10/integration/portfolio-metric.test.ts",
+      "status": "pass",
+      "name": "Portfolio metric refuses case-membership changing after the final real scenario resolution",
+      "duration_ms": 5888.5
+    },
+    {
+      "line": 1773,
+      "source_file": "Sucafinav1/test/product/wp10/integration/portfolio-metric.test.ts",
+      "status": "pass",
+      "name": "Portfolio metric refuses request changing after the final real scenario resolution",
+      "duration_ms": 6292.07
+    },
+    {
+      "line": 1800,
+      "source_file": "Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "status": "pass",
+      "name": "default Review HTTP retains the persisted Portfolio at N after the case reaches N+1",
+      "duration_ms": 20190.13
+    },
+    {
+      "line": 1839,
+      "source_file": "Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "status": "pass",
+      "name": "Review creates a real report and download and rejects both case and session revocation",
+      "duration_ms": 79194.19
+    },
+    {
+      "line": 1866,
+      "source_file": "Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "status": "pass",
+      "name": "Review compares an actually preserved historical Portfolio successor",
+      "duration_ms": 75583.71
+    },
+    {
+      "line": 1893,
+      "source_file": "Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "status": "pass",
+      "name": "Review HTTP fences case revocation after reading the real browser asset and recovers",
+      "duration_ms": 26908.3
+    },
+    {
+      "line": 1920,
+      "source_file": "Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "status": "pass",
+      "name": "Review HTTP fences session revocation after reading the real browser asset and recovers",
+      "duration_ms": 27507.96
+    },
+    {
+      "line": 1981,
+      "source_file": "Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "status": "pass",
+      "name": "Review browser clears selected content after case revocation while the session remains authenticated",
+      "duration_ms": 47919.01
+    },
+    {
+      "line": 2008,
+      "source_file": "Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "status": "pass",
+      "name": "Review historical HTTP rejects a replacement case incarnation and recovers the original",
+      "duration_ms": 13901.77
+    },
+    {
+      "line": 2035,
+      "source_file": "Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "status": "pass",
+      "name": "Review historical HTTP rejects an altered Portfolio binding and recovers the actual binding",
+      "duration_ms": 14537.2
+    },
+    {
+      "line": 2062,
+      "source_file": "Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "status": "pass",
+      "name": "Review historical HTTP rejects an altered stored Portfolio result and recovers the real result",
+      "duration_ms": 14272.01
+    },
+    {
+      "line": 2099,
+      "source_file": "Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "status": "pass",
+      "name": "Review rejects an altered body despite a legitimate successor and preserves history after a real source edit",
+      "duration_ms": 60748.43
+    },
+    {
+      "line": 2132,
+      "source_file": "Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "status": "pass",
+      "name": "Review historical capture needs its own intact receipt after a source edit despite a legitimate successor",
+      "duration_ms": 44825.46
+    },
+    {
+      "line": 2135,
+      "source_file": "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "status": "pass",
+      "name": "dashboard administrator is denied without product authority",
+      "duration_ms": 0.54
+    },
+    {
+      "line": 2136,
+      "source_file": "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "status": "pass",
+      "name": "exact retry recovers the result, digest reuse conflicts and principals remain isolated",
+      "duration_ms": 0.98
+    },
+    {
+      "line": 2137,
+      "source_file": "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "status": "pass",
+      "name": "concurrent different commands at the same version commit once",
+      "duration_ms": 0.39
+    },
+    {
+      "line": 2138,
+      "source_file": "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "status": "pass",
+      "name": "a retry after authority revocation never discloses the stored result",
+      "duration_ms": 0.3
+    },
+    {
+      "line": 2139,
+      "source_file": "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "status": "pass",
+      "name": "failure before commit rolls back all staged changes",
+      "duration_ms": 0.41
+    },
+    {
+      "line": 2140,
+      "source_file": "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "status": "pass",
+      "name": "read callback cannot mutate persisted state",
+      "duration_ms": 0.29
+    },
+    {
+      "line": 2141,
+      "source_file": "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "status": "pass",
+      "name": "thread messages are append-only outside the authorized history writer",
+      "duration_ms": 0.53
+    },
+    {
+      "line": 2142,
+      "source_file": "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "status": "pass",
+      "name": "revoked authority at egress prevents read disclosure and write commit",
+      "duration_ms": 0.51
+    },
+    {
+      "line": 2143,
+      "source_file": "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "status": "pass",
+      "name": "preview does not persist state or consume the command",
+      "duration_ms": 0.26
+    },
+    {
+      "line": 2144,
+      "source_file": "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "status": "pass",
+      "name": "writes in another namespace do not invalidate section CAS",
+      "duration_ms": 0.37
+    },
+    {
+      "line": 2145,
+      "source_file": "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "status": "pass",
+      "name": "legacy state adopts the BI namespace without resetting existing versions or granting cross-namespace writes",
+      "duration_ms": 0.69
+    },
+    {
+      "line": 2146,
+      "source_file": "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "status": "pass",
+      "name": "additive C08 migration preserves existing maps and commits only with a new authorized command",
+      "duration_ms": 0.99
+    },
+    {
+      "line": 2147,
+      "source_file": "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "status": "pass",
+      "name": "malformed additive maps cannot be normalized into an accepted state",
+      "duration_ms": 2.94
+    },
+    {
+      "line": 2148,
+      "source_file": "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "status": "pass",
+      "name": "replacing the actual target blocks replay of the old receipt",
+      "duration_ms": 0.41
+    },
+    {
+      "line": 2149,
+      "source_file": "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "status": "pass",
+      "name": "target replacement during work prevents commit and disclosure",
+      "duration_ms": 0.3
+    },
+    {
+      "line": 2150,
+      "source_file": "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "status": "pass",
+      "name": "a callback cannot mutate a different namespace, versions, or receipts",
+      "duration_ms": 1.32
+    },
+    {
+      "line": 2151,
+      "source_file": "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "status": "pass",
+      "name": "malformed command digest is rejected without work or persistence",
+      "duration_ms": 0.19
+    },
+    {
+      "line": 2152,
+      "source_file": "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "status": "pass",
+      "name": "admitted Atlas and outbox commit atomically with independent versions",
+      "duration_ms": 0.93
+    },
+    {
+      "line": 2153,
+      "source_file": "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "status": "pass",
+      "name": "stale secondary namespace blocks all work",
+      "duration_ms": 0.4
+    },
+    {
+      "line": 2154,
+      "source_file": "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "status": "pass",
+      "name": "read-only namespace guards enforce CAS without granting writes or advancing versions",
+      "duration_ms": 0.72
+    },
+    {
+      "line": 2155,
+      "source_file": "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "status": "pass",
+      "name": "revoked read authority for a guarded namespace prevents commit and retry disclosure",
+      "duration_ms": 0.22
+    },
+    {
+      "line": 2156,
+      "source_file": "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "status": "pass",
+      "name": "secondary authority revoked at egress rolls back both sections",
+      "duration_ms": 0.22
+    },
+    {
+      "line": 2157,
+      "source_file": "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "status": "pass",
+      "name": "retry with a changed admitted namespace scope conflicts without executing",
+      "duration_ms": 0.32
+    },
+    {
+      "line": 2158,
+      "source_file": "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "status": "pass",
+      "name": "runtime rejects internal and prototype-key namespaces before work",
+      "duration_ms": 0.22
+    },
+    {
+      "line": 2161,
+      "source_file": "Sucafinav1/test/product/wp10/atlas-business/business-context.test.ts",
+      "status": "pass",
+      "name": "over-budget evidence ancestry is refused before source IO",
+      "duration_ms": 2.76
+    },
+    {
+      "line": 2162,
+      "source_file": "Sucafinav1/test/product/wp10/atlas-business/business-context.test.ts",
+      "status": "pass",
+      "name": "shared event dependencies resolve independently in sibling branches",
+      "duration_ms": 0.63
+    },
+    {
+      "line": 2163,
+      "source_file": "Sucafinav1/test/product/wp10/atlas-business/business-context.test.ts",
+      "status": "pass",
+      "name": "duplicate evidence shares one pass without retaining authority for the next read",
+      "duration_ms": 0.65
+    },
+    {
+      "line": 2164,
+      "source_file": "Sucafinav1/test/product/wp10/atlas-business/business-context.test.ts",
+      "status": "pass",
+      "name": "aggregate evidence budget is checked before deduplication or source IO",
+      "duration_ms": 0.65
+    },
+    {
+      "line": 2165,
+      "source_file": "Sucafinav1/test/product/wp10/atlas-business/business-context.test.ts",
+      "status": "pass",
+      "name": "historical evidence keeps its original identity and requires authorized historical content",
+      "duration_ms": 0.72
+    },
+    {
+      "line": 2166,
+      "source_file": "Sucafinav1/test/product/wp10/atlas-business/business-context.test.ts",
+      "status": "pass",
+      "name": "recall rejects forged source versions after current authorization",
+      "duration_ms": 0.82
+    },
+    {
+      "line": 2169,
+      "source_file": "Sucafinav1/test/product/wp10/analysis-composition/decision-controls.test.ts",
+      "status": "pass",
+      "name": "decision controls use authorized cases and real absence, and revalidate every surface and read",
+      "duration_ms": 2014.66
+    },
+    {
+      "line": 2170,
+      "source_file": "Sucafinav1/test/product/wp10/analysis-composition/decision-controls.test.ts",
+      "status": "pass",
+      "name": "human coverage POSTs from all workbench surfaces share the real CAS and identical-retry receipt",
+      "duration_ms": 1151.84
+    },
+    {
+      "line": 2174,
+      "source_file": "Sucafinav1/test/product/wp10/analysis-composition/decision-controls.test.ts",
+      "status": "pass",
+      "name": "Chromium navigates the own decision controls, saves real classification and removes revoked content",
+      "duration_ms": 19785.59
+    },
+    {
+      "line": 2209,
+      "source_file": "Sucafinav1/test/product/wp10/analysis-composition/alternative-selection.test.ts",
+      "status": "fail",
+      "name": "canonical comparison drafts the exact human-selected second alternative and supports only the private replay context",
+      "duration_ms": 105012.28
+    },
+    {
+      "line": 2248,
+      "source_file": "Sucafinav1/test/product/wp10/analysis-composition/alternative-selection.test.ts",
+      "status": "fail",
+      "name": "comparison capture refuses missing or outside selections and a running draft cannot adopt a newer human selection",
+      "duration_ms": 105005.71
+    },
+    {
+      "line": 2277,
+      "source_file": "Sucafinav1/test/product/wp10/analysis-composition/alternative-selection.test.ts",
+      "status": "pass",
+      "name": "a missing admission snapshot stays missing and request/input digests cannot reuse a capture",
+      "duration_ms": 35787.46
+    },
+    {
+      "line": 2292,
+      "source_file": "Sucafinav1/test/product/wp10/analysis-composition/alternative-selection.test.ts",
+      "status": "pass",
+      "name": "canonical comparison reuse reopens Planner authority and remains bound to input, full C08 state, UTC day and one invocation",
+      "duration_ms": 63427.96
+    },
+    {
+      "line": 2313,
+      "source_file": "Sucafinav1/test/product/wp10/analysis-composition/alternative-selection.test.ts",
+      "status": "pass",
+      "name": "canonical comparison scopes reject overlap, input replacement and authority lost during their final clock read",
+      "duration_ms": 31755.23
+    },
+    {
+      "line": 2330,
+      "source_file": "Sucafinav1/test/product/wp10/analysis-composition/alternative-selection.test.ts",
+      "status": "pass",
+      "name": "stored scenario proofs remain private to one comparison and recheck C08 and current case membership",
+      "duration_ms": 15978.62
+    },
+    {
+      "line": 2361,
+      "source_file": "Sucafinav1/test/product/wp10/analysis-composition/alternative-selection.test.ts",
+      "status": "fail",
+      "name": "annual 2026 canonical comparison drafts the exact human-selected second alternative and supports only the private replay context",
+      "duration_ms": 105008.27
+    },
+    {
+      "line": 2398,
+      "source_file": "Sucafinav1/test/product/wp10/analysis-composition/alternative-selection.test.ts",
+      "status": "fail",
+      "name": "annual 2026 comparison capture refuses missing or outside selections and a running draft cannot adopt a newer human selection",
+      "duration_ms": 105005.59
+    },
+    {
+      "line": 2427,
+      "source_file": "Sucafinav1/test/product/wp10/analysis-composition/alternative-selection.test.ts",
+      "status": "pass",
+      "name": "annual 2026 a missing admission snapshot stays missing and request/input digests cannot reuse a capture",
+      "duration_ms": 64073.37
+    },
+    {
+      "line": 2430,
+      "source_file": "Sucafinav1/test/product/wp10/analysis-composition/selection-scope.test.ts",
+      "status": "pass",
+      "name": "exact human selections survive scope reconstruction and coexist without latest fallback",
+      "duration_ms": 235.75
+    },
+    {
+      "line": 2431,
+      "source_file": "Sucafinav1/test/product/wp10/analysis-composition/selection-scope.test.ts",
+      "status": "pass",
+      "name": "read admission and a changed human payload cannot create a selection",
+      "duration_ms": 19.11
+    },
+    {
+      "line": 2432,
+      "source_file": "Sucafinav1/test/product/wp10/analysis-composition/selection-scope.test.ts",
+      "status": "pass",
+      "name": "generic preferences writers cannot forge or replace a prepared selection",
+      "duration_ms": 62.16
+    },
+    {
+      "line": 2433,
+      "source_file": "Sucafinav1/test/product/wp10/analysis-composition/selection-scope.test.ts",
+      "status": "pass",
+      "name": "revocation while preparing prevents both the value and its durable selection",
+      "duration_ms": 29.89
+    },
+    {
+      "line": 2434,
+      "source_file": "Sucafinav1/test/product/wp10/analysis-composition/selection-scope.test.ts",
+      "status": "pass",
+      "name": "the stored selection expires and never crosses principals or case versions",
+      "duration_ms": 80.11
+    },
+    {
+      "line": 2435,
+      "source_file": "Sucafinav1/test/product/wp10/analysis-composition/selection-scope.test.ts",
+      "status": "pass",
+      "name": "verification rechecks authority after the reader awaits",
+      "duration_ms": 88.4
+    },
+    {
+      "line": 2436,
+      "source_file": "Sucafinav1/test/product/wp10/analysis-composition/selection-scope.test.ts",
+      "status": "pass",
+      "name": "fresh human preparation renews an expired generation with CAS and remains idempotent",
+      "duration_ms": 190.12
+    },
+    {
+      "line": 2437,
+      "source_file": "Sucafinav1/test/product/wp10/analysis-composition/selection-scope.test.ts",
+      "status": "pass",
+      "name": "a fresh human prepare renews an expired exact selection without reviving it on read",
+      "duration_ms": 180.93
+    },
+    {
+      "line": 2438,
+      "source_file": "Sucafinav1/test/product/wp10/analysis-composition/selection-scope.test.ts",
+      "status": "pass",
+      "name": "published Forecast form persists the exact canonical selection and denies changed or revoked intent",
+      "duration_ms": 204.72
+    }
+  ]
+}

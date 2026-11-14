@@ -1,0 +1,114 @@
+{
+  "schema": "sf2h-wp14-implementation-v1",
+  "owner": "WP14",
+  "parent": "45c4ed69325652d81b0f9954b6fe1debb4cf1301",
+  "previousProduct": "45c4ed69325652d81b0f9954b6fe1debb4cf1301",
+  "status": "IMPLEMENTED_PENDING_CI",
+  "reason": "Close executable criterion gaps found by the literal 91-criterion audit. Missing or malformed scope/review strings could throw from trim in the mapper; reject them explicitly while preserving valid mapping semantics.",
+  "changedProduct": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/atlas-projection.ts",
+      "bytes": 8580,
+      "blob": "4ffa4bffc3e3fe3bfffd3a047f1e11c473697e36",
+      "sha256": "8dded53bbd11d87d53a2e080505da8bd0a468c08e24693dfbd72fd149748be45"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/atlas-projection.test.ts",
+      "bytes": 18476,
+      "blob": "0cd241ca2410e581a3793dfb1fc52b07b2ad7b8c",
+      "sha256": "0054bf0f19065e2f06ae961980b775d51a6d37ec1039b9d0d8099ca1adb8e332"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/invalidation.test.ts",
+      "bytes": 14446,
+      "blob": "54438ff168810a69af2ef71ce2df149805ee78a8",
+      "sha256": "42ba92e8f142de630074a9f70b52b778f6e8396ccd56d90abd1cea95ddcd0025"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/outcome-signals.test.ts",
+      "bytes": 16842,
+      "blob": "2c84f9e2a0ae600ee7120c5c4bcbb7aaa255028b",
+      "sha256": "0cc2c86e3e17cfc55c8a72fa9bc42443c5ce72a6e7770612e329cf34ed813990"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/recall.test.ts",
+      "bytes": 24926,
+      "blob": "d870d96e0fc5440593d0fead7d9c9fd837cd506e",
+      "sha256": "9ec265bf2fb14a972d99265494fc545c39ab3fc2fc0955eb1f470dea5cc4ded4"
+    }
+  ],
+  "changes": [
+    {
+      "path": "product/decision-memory/atlas-projection.ts",
+      "change": "Guard context and required owner/scope/review strings before trim. Pure transformation, no I/O or authority expansion."
+    },
+    {
+      "path": "test/product/wp14/atlas-projection.test.ts",
+      "change": "Five additional cases exercise real closed Atlas validators, raw refs/extra keys, unsupported kinds, forged owner/PR fields, omitted metadata, coherent incarnation change, reviewed policy/profile namespaces and owner-not-ACL."
+    },
+    {
+      "path": "test/product/wp14/invalidation.test.ts",
+      "change": "Eleven scope dimensions and per-envelope source replacement/irrelevant dependency contraproofs; reauthorization stays required."
+    },
+    {
+      "path": "test/product/wp14/recall.test.ts",
+      "change": "Empty memory, deterministic mapped candidates, immutable inputs, ledger-only and forged Atlas trace refusal."
+    },
+    {
+      "path": "test/product/wp14/outcome-signals.test.ts",
+      "change": "Both delta directions and explicit zero preserve original choice, baseline/observation refs, period, cutoff and noncausal limitations."
+    }
+  ],
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/wp14/atlas-projection.test.ts",
+      "Sucafinav1/test/product/wp14/invalidation.test.ts",
+      "Sucafinav1/test/product/wp14/recall.test.ts",
+      "Sucafinav1/test/product/wp14/outcome-signals.test.ts",
+      "Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+      "Sucafinav1/test/product/wp10/atlas-business/atlas-recovery.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "requestHash": "85d617de1af4bf379ffb65c7f26808844292a9588edb4161b6c14482c45cf5f4",
+  "scope": "Four changed pure/adaptor test files plus the two real Atlas consumers source-access-atlas and WP10 atlas-recovery. Mapper runtime changed materially; persistence/restart is therefore reexecuted on W5. No full-package or epic run.",
+  "previousVerification": {
+    "W4": "45c4ed69325652d81b0f9954b6fe1debb4cf1301",
+    "tree": "181a08e1349bf1d550d14505ff7ad3e81ed4decd",
+    "test": {
+      "runId": 43582881542,
+      "jobId": 132411172526,
+      "status": "success",
+      "tests": 1,
+      "pass": 1,
+      "fail": 0,
+      "expectCalls": 5
+    },
+    "check": {
+      "runId": 43582884753,
+      "jobId": 132411182186,
+      "status": "failure",
+      "diagnostics": 139,
+      "wp14PathDiagnostics": 0,
+      "procurementCallerCoupling": "resolved; exactly one diagnostic removed from W3",
+      "guards": {
+        "rules": 78,
+        "changedPaths": 607,
+        "gates": 0,
+        "warnings": 11,
+        "errors": 0
+      }
+    }
+  },
+  "constraints": {
+    "localProductTests": false,
+    "foreignBranchEdits": false,
+    "globalNativeAcceptance": false,
+    "planChanged": false
+  }
+}

@@ -1,0 +1,747 @@
+{
+  "base": "f075e9824b7d8aed50b7f42c597528ef198177db",
+  "head": "0cf10879337bf1e4a4dfd0dbde0b9c259cb51d23",
+  "ahead_by": 2,
+  "behind_by": 0,
+  "status": "ahead",
+  "commits": [
+    {
+      "sha": "78f80881e94913b9b211bad7d17fbc95467ce0d7",
+      "tree": "ffae7f1279c8c7af7b98f19f3ebc04960db75cc7",
+      "parents": [
+        "f075e9824b7d8aed50b7f42c597528ef198177db"
+      ],
+      "message": "WP10 W14: close review fences and compose published calculation contracts\n\nRetain Review/BI lifecycle, revalidate protected source egress inside C08, fix owned type diagnostics, and compose exact published C17, dossier and Operations deltas. Preserve all 171 criteria, immutable receipts and foreign ownership exclusions. Hosted validation and independent W14 review required; no native/global acceptance claim."
+    },
+    {
+      "sha": "0cf10879337bf1e4a4dfd0dbde0b9c259cb51d23",
+      "tree": "78a1976c1c8831121fda75efad95ebaab6f2f425",
+      "parents": [
+        "78f80881e94913b9b211bad7d17fbc95467ce0d7"
+      ],
+      "message": "WP10 W15: repair reviewed authority and BI browser contraproofs\n\nSeparate the actual queued case writer statements and assert canonical shell plus the exact BI asset and retained root. Preserve all prior assertions and foreign pins. Record exact W14 diagnostics without claiming successor CI or native/global acceptance."
+    }
+  ],
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/alternative-call-scope.ts",
+      "blobSha": "5efb766f9a07ed7410074af18db0e5ff6f4d786c",
+      "status": "modified",
+      "additions": 5,
+      "deletions": 5,
+      "changes": 10
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "blobSha": "0d09eac4610a1f18c50f38094ada5a921e2ec237",
+      "status": "modified",
+      "additions": 18,
+      "deletions": 4,
+      "changes": 22
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/decision-alternative-services.ts",
+      "blobSha": "b8b11e15b28b10b793c75473466269848d6cbce3",
+      "status": "modified",
+      "additions": 3,
+      "deletions": 2,
+      "changes": 5
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/dossier-services.ts",
+      "blobSha": "0a89225f73bfe1c458ac5530918609a063ae385d",
+      "status": "modified",
+      "additions": 3,
+      "deletions": 3,
+      "changes": 6
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/dossier-workbench.ts",
+      "blobSha": "aca602b5d5ea02c6cea88897c4c2110c6c9afe39",
+      "status": "modified",
+      "additions": 17,
+      "deletions": 0,
+      "changes": 17
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-bi-browser.ts",
+      "blobSha": "01784671852a41fd87dddbfbd3aaaf988250b3ef",
+      "status": "modified",
+      "additions": 3,
+      "deletions": 0,
+      "changes": 3
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-browser.ts",
+      "blobSha": "500993261dbf096fc7a40b170aaeb773c4a4361e",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-http.ts",
+      "blobSha": "149a1a5f0e643d441e1828fd9ede79eb79fd49ac",
+      "status": "modified",
+      "additions": 25,
+      "deletions": 10,
+      "changes": 35
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+      "blobSha": "48a9cdd2d38fad855d8a338f8dc119c64f81057f",
+      "status": "modified",
+      "additions": 35,
+      "deletions": 15,
+      "changes": 50
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/baseline-capabilities.json",
+      "blobSha": "5d110579ac7b8b38307225a0ca6035ba88e9fdd7",
+      "status": "modified",
+      "additions": 35,
+      "deletions": 20,
+      "changes": 55
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/baseline-decisions.md",
+      "blobSha": "c8da79ce0ead3142d7a6fae9cc8760d60fc5a4b7",
+      "status": "added",
+      "additions": 33,
+      "deletions": 0,
+      "changes": 33
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/baseline-new-capabilities.json",
+      "blobSha": "ebba142430741f50f8431017d30c1a8f12458663",
+      "status": "added",
+      "additions": 700,
+      "deletions": 0,
+      "changes": 700
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/check-ownership.ts",
+      "blobSha": "058e69fc3abd8157ea4c42dfa27f75de96327104",
+      "status": "added",
+      "additions": 50,
+      "deletions": 0,
+      "changes": 50
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/ci-selection.json",
+      "blobSha": "08b1c255394e2514d1ca9fe1de8eb8375c35a4cc",
+      "status": "added",
+      "additions": 46,
+      "deletions": 0,
+      "changes": 46
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/consumer-deltas.md",
+      "blobSha": "311e3753123b1feed4e6cbe08594f40c835a23d9",
+      "status": "added",
+      "additions": 59,
+      "deletions": 0,
+      "changes": 59
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/consumer-deltas.patch",
+      "blobSha": "ccdf1fae37b5f30e5ae2a16aa1dfd71075d59bf5",
+      "status": "added",
+      "additions": 206,
+      "deletions": 0,
+      "changes": 206
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/contracts-v1.md",
+      "blobSha": "473532a1fe31fe07e36dc14b0e8f8771c947b03c",
+      "status": "modified",
+      "additions": 70,
+      "deletions": 2,
+      "changes": 72
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/criterion-map.json",
+      "blobSha": "82463f1e2496d44ba53843df533b12944605ca47",
+      "status": "added",
+      "additions": 5594,
+      "deletions": 0,
+      "changes": 5594
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/oracles/corpus-consumers.json",
+      "blobSha": "0f9be4f73a447ccd194e11fe4f86984225ebb183",
+      "status": "added",
+      "additions": 93,
+      "deletions": 0,
+      "changes": 93
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/oracles/journeys-j01-j08.json",
+      "blobSha": "996a1b42d3833d3b62ca9cee5ebb7955e339f1b9",
+      "status": "modified",
+      "additions": 139,
+      "deletions": 8,
+      "changes": 147
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/oracles/measurement-protocol.md",
+      "blobSha": "2bc6ea8103463da6611ab164af19cbabdcd92b10",
+      "status": "modified",
+      "additions": 96,
+      "deletions": 11,
+      "changes": 107
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/oracles/t01-t03-evidence.json",
+      "blobSha": "af423309734fa1de4106b9420eda9ad0fc11ea26",
+      "status": "added",
+      "additions": 405,
+      "deletions": 0,
+      "changes": 405
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/ownership-v1.json",
+      "blobSha": "cab4ab5ad52bf350c610a0bd88f97f71998413c5",
+      "status": "added",
+      "additions": 817,
+      "deletions": 0,
+      "changes": 817
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/state-consumer-matrix.json",
+      "blobSha": "db93d9dc03fab4d5e28aafe1ce4fd648f381033e",
+      "status": "added",
+      "additions": 5380,
+      "deletions": 0,
+      "changes": 5380
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/state-consumer-matrix.md",
+      "blobSha": "11a49e4c4212f35baa78e8b02ea7deb280b86dce",
+      "status": "added",
+      "additions": 156,
+      "deletions": 0,
+      "changes": 156
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/t02-criteria.json",
+      "blobSha": "e49fa449b798c07e2e854d2e583eeccc11c73c5d",
+      "status": "added",
+      "additions": 1197,
+      "deletions": 0,
+      "changes": 1197
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-recovery/preparation-W14/changes.md",
+      "blobSha": "34b62031512ee57216d77971ac8c67406ec4dfdb",
+      "status": "added",
+      "additions": 23,
+      "deletions": 0,
+      "changes": 23
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-recovery/preparation-W14/intake-pins.json",
+      "blobSha": "4265958cf077c324063b003df4afe2ca702edc1a",
+      "status": "added",
+      "additions": 3580,
+      "deletions": 0,
+      "changes": 3580
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-recovery/preparation-W15/changes.json",
+      "blobSha": "e86d10a7a902d4dfa989d29c66e8833303f51189",
+      "status": "added",
+      "additions": 41,
+      "deletions": 0,
+      "changes": 41
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/capabilities.ts",
+      "blobSha": "87e36883d92f6982cc8765337f8802ffacd6e52c",
+      "status": "modified",
+      "additions": 10,
+      "deletions": 3,
+      "changes": 13
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/consumer.ts",
+      "blobSha": "b90dcd9974085ee068f4d86715c4e5b874eb86c9",
+      "status": "modified",
+      "additions": 3,
+      "deletions": 2,
+      "changes": 5
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/alternative-replay.ts",
+      "blobSha": "df778b84a77aeed9ed60ca03e9071a1b92c37a35",
+      "status": "modified",
+      "additions": 4,
+      "deletions": 1,
+      "changes": 5
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/analysis-acceptance.ts",
+      "blobSha": "c2f91a8cdfc590dc10a1b3a2a9c56be8a424bd5a",
+      "status": "modified",
+      "additions": 5,
+      "deletions": 1,
+      "changes": 6
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/analysis-promotion.ts",
+      "blobSha": "43e1de8c347faea2953ff5baa2919b3b061fc4e4",
+      "status": "modified",
+      "additions": 2,
+      "deletions": 1,
+      "changes": 3
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+      "blobSha": "e0c190513d16938e14bd8626796ec952efcd5611",
+      "status": "modified",
+      "additions": 3,
+      "deletions": 1,
+      "changes": 4
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/coverage-interval.ts",
+      "blobSha": "351aa6cf8702c759da3c35cbf531f355d04ba742",
+      "status": "modified",
+      "additions": 12,
+      "deletions": 6,
+      "changes": 18
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+      "blobSha": "922358d17c470c16b43076510bdf04744e2306e4",
+      "status": "modified",
+      "additions": 3,
+      "deletions": 2,
+      "changes": 5
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "blobSha": "90c3e981d8418c562342660bd3d56d03f9995383",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 1,
+      "changes": 2
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/proposals.ts",
+      "blobSha": "b74c0d1699f64b5675517632f898ca318f8f67d8",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 1,
+      "changes": 2
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "blobSha": "338889513cfc681bdda91697a9d5bbc16bde8fd1",
+      "status": "modified",
+      "additions": 45,
+      "deletions": 10,
+      "changes": 55
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-request-store.ts",
+      "blobSha": "54c5155aa64b4528a75a601950b56bed8e021471",
+      "status": "modified",
+      "additions": 6,
+      "deletions": 2,
+      "changes": 8
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/imports/dashboard.ts",
+      "blobSha": "289d66175e64cdf4f13d5246d6647b8b74c9c4d4",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 1,
+      "changes": 2
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/bi-browser-lifecycle.ts",
+      "blobSha": "4c96869b91b1af55ebc0ad112ccd8a995a906317",
+      "status": "added",
+      "additions": 33,
+      "deletions": 0,
+      "changes": 33
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/bi-http.ts",
+      "blobSha": "e6487e027dd56ae682c572ac52778217f7ef1627",
+      "status": "modified",
+      "additions": 2,
+      "deletions": 1,
+      "changes": 3
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/calculation-evidence.ts",
+      "blobSha": "6d09c74ff03eef72aa564355fd7da52ae6fb503d",
+      "status": "modified",
+      "additions": 81,
+      "deletions": 14,
+      "changes": 95
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/criterion-metric.ts",
+      "blobSha": "2340a9566e1471f47d9c5c7f884bfc31be13cef3",
+      "status": "modified",
+      "additions": 14,
+      "deletions": 4,
+      "changes": 18
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/exact-threshold.ts",
+      "blobSha": "59fcb482078a1c33a8ab4c6e0d5e691228b6ae43",
+      "status": "modified",
+      "additions": 19,
+      "deletions": 7,
+      "changes": 26
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/interval-proof.ts",
+      "blobSha": "55a701b7be49fb3f550a0b52b580e6f7dc819b31",
+      "status": "modified",
+      "additions": 4,
+      "deletions": 4,
+      "changes": 8
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+      "blobSha": "40c4c72cf9b6863cf5eb791e78e4a87de751192d",
+      "status": "modified",
+      "additions": 17,
+      "deletions": 2,
+      "changes": 19
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+      "blobSha": "ed68563245e406aca2dc3ce335943647fd2cb002",
+      "status": "modified",
+      "additions": 21,
+      "deletions": 5,
+      "changes": 26
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+      "blobSha": "23d9291b3dcedda36edc4aa4f38856024e3c58f4",
+      "status": "modified",
+      "additions": 35,
+      "deletions": 13,
+      "changes": 48
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/decision-http.ts",
+      "blobSha": "e169d335f091c446bb380ee73f450083f917946f",
+      "status": "modified",
+      "additions": 7,
+      "deletions": 4,
+      "changes": 11
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts",
+      "blobSha": "fc4d57604c21ab5d007f747a908b17b67027ffd6",
+      "status": "modified",
+      "additions": 7,
+      "deletions": 3,
+      "changes": 10
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+      "blobSha": "2957b8329dc1478bd1e80b177b02786c9da85b83",
+      "status": "modified",
+      "additions": 92,
+      "deletions": 2,
+      "changes": 94
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/composed-threshold.test.ts",
+      "blobSha": "6d1c715d5f20c478e51370c39c4ef145b93930ae",
+      "status": "modified",
+      "additions": 5,
+      "deletions": 1,
+      "changes": 6
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/prepared-apply-integration.test.ts",
+      "blobSha": "5961c1eebeec21b75228bccb7caf1ca283fa6c9a",
+      "status": "modified",
+      "additions": 41,
+      "deletions": 15,
+      "changes": 56
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/source-scenario.test.ts",
+      "blobSha": "1e28aa16eb1d93ddff44dc8596b07c17abfa9775",
+      "status": "added",
+      "additions": 100,
+      "deletions": 0,
+      "changes": 100
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "blobSha": "3dbad125693da9898b1435eff2a1108476c09f40",
+      "status": "modified",
+      "additions": 112,
+      "deletions": 20,
+      "changes": 132
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/prepared-production.test.ts",
+      "blobSha": "eaa14e509dadbba9242dade7b70e5cf41cc8b51b",
+      "status": "modified",
+      "additions": 10,
+      "deletions": 1,
+      "changes": 11
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/browser.ts",
+      "blobSha": "4f5a9f1068ca99b2c81dfe428bce4e89ec954bae",
+      "status": "modified",
+      "additions": 12,
+      "deletions": 1,
+      "changes": 13
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/capacity-numeric.test.ts",
+      "blobSha": "fb064484e366b081f84591203704f9f0559c8cad",
+      "status": "added",
+      "additions": 94,
+      "deletions": 0,
+      "changes": 94
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/choice-history-bi.test.ts",
+      "blobSha": "071cf38fbd1928d561a3e8cc0101803db7dfa866",
+      "status": "added",
+      "additions": 144,
+      "deletions": 0,
+      "changes": 144
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/consumer.test.ts",
+      "blobSha": "540f8218c8923dc8e10c37dc991c3a4d33abff34",
+      "status": "modified",
+      "additions": 43,
+      "deletions": 3,
+      "changes": 46
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/engine-revision-fixture.ts",
+      "blobSha": "09d517d6139b55d0b43dce817464be1aef836903",
+      "status": "added",
+      "additions": 80,
+      "deletions": 0,
+      "changes": 80
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/planner-integration.test.ts",
+      "blobSha": "ca0ec0939cea86d2a657e24c1f61374e2d81fb02",
+      "status": "modified",
+      "additions": 5,
+      "deletions": 0,
+      "changes": 5
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/procurement-stages.test.ts",
+      "blobSha": "2eac642deb1e422017b28d41cc0eceba237568f4",
+      "status": "modified",
+      "additions": 5,
+      "deletions": 0,
+      "changes": 5
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/alternative-selection.test.ts",
+      "blobSha": "6a0ad3d64b08736529dea7d3787b9a089bdfdd8b",
+      "status": "modified",
+      "additions": 12,
+      "deletions": 4,
+      "changes": 16
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/analysis-variants.test.ts",
+      "blobSha": "871f557e1c8b4509c7bc2c997add40a4c22070b7",
+      "status": "modified",
+      "additions": 13,
+      "deletions": 12,
+      "changes": 25
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+      "blobSha": "c68933c6b311c3c812fc9fa7e42c76c6271bf670",
+      "status": "modified",
+      "additions": 6,
+      "deletions": 4,
+      "changes": 10
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/verifier-output-fixture.ts",
+      "blobSha": "0ecbf9f991567b464c987d836d910da42721ae8f",
+      "status": "added",
+      "additions": 25,
+      "deletions": 0,
+      "changes": 25
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/alternative-call-scope.test.ts",
+      "blobSha": "357266b9c8de41ba43051c03815863a2744e78e9",
+      "status": "modified",
+      "additions": 103,
+      "deletions": 0,
+      "changes": 103
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-access-browser-fixture.ts",
+      "blobSha": "82826d8e4e774529a3ebe0fee5a8922f9f349479",
+      "status": "modified",
+      "additions": 9,
+      "deletions": 4,
+      "changes": 13
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-call-scope.test.ts",
+      "blobSha": "08505e70b5994d2b6845dd69ac60cde79fed6035",
+      "status": "modified",
+      "additions": 82,
+      "deletions": 0,
+      "changes": 82
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-fallback-lifecycle.test.ts",
+      "blobSha": "a760e4083549e41a67b6a9ac3cea49e47d221963",
+      "status": "added",
+      "additions": 86,
+      "deletions": 0,
+      "changes": 86
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+      "blobSha": "0cd792293ecffe8fad0e1eff838de9ab332fdcfe",
+      "status": "added",
+      "additions": 174,
+      "deletions": 0,
+      "changes": 174
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/dossier-consumers.test.ts",
+      "blobSha": "6751276d8027aba58033562aced0a8abd054cd3d",
+      "status": "added",
+      "additions": 115,
+      "deletions": 0,
+      "changes": 115
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/financial-composition-fixture.ts",
+      "blobSha": "0d564fc27d853cb031b572c096955e9b0dd12363",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 1,
+      "changes": 2
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "blobSha": "3d9d93faefda4ff58c126738261ce7194ecb6f86",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 1,
+      "changes": 2
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+      "blobSha": "a059b3e711f2b627ead1bd7aa16738ff2d7ef97c",
+      "status": "modified",
+      "additions": 3,
+      "deletions": 2,
+      "changes": 5
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-access-browser-fixture.ts",
+      "blobSha": "2e2dd8398758cc91d9d42b7f3e0633172a8305f0",
+      "status": "modified",
+      "additions": 17,
+      "deletions": 1,
+      "changes": 18
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "blobSha": "6c54d0175fc1e6330666f6fd3bc7efaab9f69ca1",
+      "status": "modified",
+      "additions": 114,
+      "deletions": 3,
+      "changes": 117
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/resident-runtime/private-mcp.test.ts",
+      "blobSha": "5dc267e9ff70762bcd315352b81f6ce20fb7a494",
+      "status": "modified",
+      "additions": 3,
+      "deletions": 1,
+      "changes": 4
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts",
+      "blobSha": "aa7fa9b776e421f0141bdabc34353d2d53123233",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 1,
+      "changes": 2
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/calculation-persistence.test.ts",
+      "blobSha": "04185fa8e4e3c9c2c25d7bf4e898831f4f891ea7",
+      "status": "added",
+      "additions": 83,
+      "deletions": 0,
+      "changes": 83
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/choice-persistence.test.ts",
+      "blobSha": "abf5bb9f6fe4ecff2ab1e9a55d91c96c6118827b",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 1,
+      "changes": 2
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/composite-coverage.test.ts",
+      "blobSha": "b4da64e28c6a207311859595b0a36e07e0c5151b",
+      "status": "modified",
+      "additions": 2,
+      "deletions": 1,
+      "changes": 3
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/coverage-access.test.ts",
+      "blobSha": "7ae660b06be1c9c6c06a6a06486c5ad80bcfd9a7",
+      "status": "modified",
+      "additions": 4,
+      "deletions": 2,
+      "changes": 6
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "blobSha": "f65cd5b9b427a612f18acaaac4779f210b58bbb4",
+      "status": "added",
+      "additions": 200,
+      "deletions": 0,
+      "changes": 200
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+      "blobSha": "a9bd9674d033d5a990dda651e01371cc024d4a52",
+      "status": "added",
+      "additions": 69,
+      "deletions": 0,
+      "changes": 69
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/result-store.test.ts",
+      "blobSha": "d68a6d2ff044fe44590299e21c4b193910630f78",
+      "status": "modified",
+      "additions": 24,
+      "deletions": 1,
+      "changes": 25
+    }
+  ]
+}

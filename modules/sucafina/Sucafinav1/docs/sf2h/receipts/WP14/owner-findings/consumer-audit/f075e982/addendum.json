@@ -1,0 +1,174 @@
+{
+  "schema_version": 1,
+  "historical_audit_preserved": "../findings.json and ../README.md unchanged",
+  "mode": "read-only incremental source/CI audit",
+  "repository": "gustavomhss/Orchestra-SF",
+  "pr": 29,
+  "pin": "f075e9824b7d8aed50b7f42c597528ef198177db",
+  "tree": "2751625f28928baf371d39576fe46777aa81f74e",
+  "parent": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+  "changed_files": 134,
+  "source_snapshots": "source-manifest.json; seven files Git blob verified",
+  "key_blobs": {
+    "apps/cli/src/sucafina-product/business-services.ts": "14600913fcf85e6311d0d4ec3b90500231444372",
+    "apps/cli/src/sucafina-product/host-context.ts": "edf6b70a249f9a1bc85d46cd06e5a32a85c8e74b",
+    "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts": "60e23ea586cdfdb961cf084388b47f54ccef84b7",
+    "modules/sucafina/Sucafinav1/product/host-binding/atlas-recall-scope.ts": "30697fcbeee6b7011cc7786a0a3bc64bd0d3449e",
+    "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts": "2bc069d03fc39cede7635c94e0cf3f09f7f26882"
+  },
+  "findings": [
+    {
+      "id": "WP14-CONSUMER-01",
+      "new_pin_status": "PRODUCTION_WIRING_REMAINS_PRESENT",
+      "detail": "Memory/outcome/review host composition is preserved. host-context now is exactly the previously audited compose blob; no new nonempty outcome-in-review execution is demonstrated."
+    },
+    {
+      "id": "WP14-CONSUMER-02",
+      "new_pin_status": "BLOCKED_OWNER_UNCHANGED",
+      "detail": "business-services:170–179 still omits workSignals; no new CLI use of createSfWorkSignalList or createSfWorkRefIssuer in the complete commit delta. Collaboration helper changes do not compose the callback."
+    },
+    {
+      "id": "WP14-CONSUMER-03",
+      "new_pin_status": "BLOCKED_OWNER_UNCHANGED",
+      "detail": "business-services:359–372 still derives types from record/prepared-change and never calls deriveAuthorizedRecallFeatures. Atlas memory recall performance work does not repair the live ranked recall feature derivation."
+    },
+    {
+      "id": "WP14-CONSUMER-04",
+      "new_pin_status": "BLOCKED_OWNER_UNCHANGED",
+      "detail": "No candidateAccess is issued or passed in business-services:435–450. New atlas-recall-scope explicitly bypasses native calls and is not a native candidate authority producer."
+    },
+    {
+      "id": "WP14-CONSUMER-05",
+      "new_pin_status": "OPEN_REFINED_FOR_LEXICAL_PROOF",
+      "detail": "The new BCS wrapper reuses only completed canonical calculation results inside a lexical UI invocation, fences authority/state/sources/day, and clears proof in finally. Recognize this actual consumer mechanism; explicit decideSfRecallInvalidation consumption still absent. No stale-data leak claimed."
+    },
+    {
+      "id": "WP14-CONSUMER-06",
+      "new_pin_status": "BLOCKED_OWNER_UNCHANGED",
+      "detail": "memory-services and decision-materiality-services are unchanged by the exact parent delta. Original fresh/equal evidence requirements still make actual source replacement unavailable; no new host revision consumer appears."
+    },
+    {
+      "id": "WP14-CONSUMER-07",
+      "new_pin_status": "PRODUCTION_WIRING_REMAINS_PRESENT",
+      "detail": "Review/portfolio historical composition preserved; recovery test changes are not direct WP14 outcome/native-Atlas acceptance."
+    },
+    {
+      "id": "WP14-CONSUMER-08",
+      "new_pin_status": "PRODUCTION_WIRING_EXTENDED_EXECUTION_PENDING",
+      "detail": "Real Atlas adapter remains canonical; new lexical recall proof scope is production-wired through business-context. Exact hosted recovery run exists but was still in progress at observation. Native/global acceptance is explicitly not claimed in owner receipt."
+    },
+    {
+      "id": "WP14-CONSUMER-09",
+      "new_pin_status": "BLOCKED_OWNER_UNCHANGED",
+      "detail": "recovery-scope receipt explicitly preserves missing public C07/native executor/descriptors; memory-services prepareWatch unchanged."
+    }
+  ],
+  "planner_timeout_assessment": {
+    "status": "IMPLEMENTATION_CHANGE_PRESENT_NOT_YET_EXECUTION_PROVEN",
+    "mechanism": "Replay is supplied by the canonical Planner; a completed fresh record-only planner:scenario proof is reused only within one UI AsyncLocalStorage invocation, bracketed by real source/C08/request/binding/day/coverage checks and a final egress fence inside the private case retainer.",
+    "bounds": [
+      "UI only; native calls use original path",
+      "planner:scenario only; direct Planner record closure only",
+      "No assumptions or scenario operations for reuse eligibility",
+      "Mixed/recursive evidence and unsupported requests use canonical fallback",
+      "No in-flight Promise is cached; recursive/concurrent work uses original producer",
+      "Proof cleared and scope closed in finally"
+    ],
+    "test_scope": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+    "declared_tests": 16,
+    "new_negatives": [
+      "source",
+      "membership",
+      "capture",
+      "coverage",
+      "selector",
+      "clock",
+      "principal",
+      "lease",
+      "overlapping same-call lexical isolation"
+    ],
+    "deadlines": {
+      "internal_ms": 105000,
+      "bun_test_ms": 120000
+    },
+    "limitation": "Tests call reopened.atlas.memory.recall and assert records, not business.caseRecall/rank features. Even a pass does not close finding03 or native candidateAccess."
+  },
+  "intake": {
+    "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-recovery/preparation/intake-pins.json",
+    "effective_pin_entries": 202,
+    "admitted_outputs": 117,
+    "superseded_entries": 20,
+    "excluded_entries": 4,
+    "wp14_effective_changed_entries": 14,
+    "wp14_pin": "2fb7e9c792327725384d99d656cc44b232ddc485",
+    "wp14_pr": 36,
+    "latest_wp14_pr38_not_consumed": true,
+    "instruction": "Consume current published PR38 WP14 files with explicit pin; do not treat stale PR36 diagnostics as regressions in PR38."
+  },
+  "ci": {
+    "product": {
+      "run_id": 43580252381,
+      "job_id": 132403235716,
+      "snapshot": "dd648c423ab97fbe6e806b620057a328a5816b5f",
+      "snapshot_tree": "ac9a7f96aa0f8bd6b30200c5628c37058e8176b0",
+      "candidate_parent": "f075e9824b7d8aed50b7f42c597528ef198177db",
+      "delta": [
+        ".ci-run.json"
+      ],
+      "status_observed": "in_progress",
+      "conclusion": null,
+      "selected_files": 24,
+      "request": {
+        "blob": "c8f0966547ad81a8ef1715881adac731c7222a0c",
+        "verified": true,
+        "sha256": "bc01cc977b331e5538d4dad42e38048c943a2747fde600eb7cee580fd05c371b"
+      },
+      "raw_log": "not available as completed evidence; no test outcomes claimed"
+    },
+    "check": {
+      "run_id": 43580267717,
+      "job_id": 132403281550,
+      "snapshot": "5353af73e8bd1300efe631e2e9fbb30e0972de33",
+      "snapshot_tree": "4bbd1f55b7d6752719ee0fb3e9853102f00941f8",
+      "candidate_parent": "f075e9824b7d8aed50b7f42c597528ef198177db",
+      "delta": [
+        ".astra-wp10-check.json"
+      ],
+      "status": "completed",
+      "conclusion": "failure",
+      "request": {
+        "blob": "2b7e30684365526f74aff87c39d3a34a4f0ceff7",
+        "verified": true,
+        "sha256": "522155f17ce58d7f8edf483afa3bf4b37b7a6855941fae54e012e45f01ae2acd"
+      },
+      "diagnostics_per_step": {
+        "sucafina": 137,
+        "cli": 27,
+        "wp10_tests": 72
+      },
+      "unique_normalized_diagnostics": 139,
+      "wp14_unique_diagnostics": 11,
+      "planner_test_unique_diagnostics": 6,
+      "passed": [
+        "canonical Atlas generation",
+        "Atlas boundary typecheck",
+        "subprocess import guard",
+        "product guards"
+      ],
+      "guards": {
+        "rules": 78,
+        "changed_paths": 1197,
+        "gates": 0,
+        "warnings": 44,
+        "errors": 0
+      },
+      "artifact": {
+        "id": 14108415696,
+        "digest": "sha256:929c26b569a4d958beb1c96e5c68a1a93058c292ddbff248099f4d277f976932",
+        "bytes": 18891,
+        "inspection": "metadata only; archive bytes not verified"
+      }
+    },
+    "limits": "No run dispatched/repeated by this reviewer; check failures cannot establish product test outcome; no cross-identity reuse."
+  }
+}

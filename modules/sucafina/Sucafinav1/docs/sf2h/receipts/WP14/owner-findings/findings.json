@@ -1,0 +1,586 @@
+{
+  "schema_version": 1,
+  "scope": "Read-only source audit; no product test or remote mutation executed. Runtime status cannot be inferred from source availability.",
+  "pins": {
+    "wp10": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+    "compose": "5866bcb2ed610f80138aaabc261acac4acf709cd"
+  },
+  "root_candidate_at_assignment": "19ad7557",
+  "source_integrity": "659 source snapshots verified against pinned Git blob IDs; source-manifest.json publishes 153 sources supporting these findings and the complete 120-file WP10 CLI search scope.",
+  "coverage": {
+    "wp10_cli_files_fetched": 120,
+    "wp10_product_tree_complete": true,
+    "compose_product_tree_complete": true,
+    "native_acceptance": "NOT_CLAIMED"
+  },
+  "findings": [
+    {
+      "id": "WP14-CONSUMER-01",
+      "status": "PRODUCTION_WIRING_PRESENT_EXECUTION_NOT_CLAIMED",
+      "owners": [
+        "WP10",
+        "WP14",
+        "WP07"
+      ],
+      "summary": "Live host constructs durable signal registry, authorized signal list, outcome-selection registry/domain access and review adapter; private routes and review read/authorize closures consume them. A blanket consumer-absence finding is false.",
+      "evidence": [
+        {
+          "path": "apps/cli/src/sucafina-product/memory-services.ts",
+          "lines": "114-138",
+          "blob": "85c3021dec21ab942a8fab04524d48295fd918f7",
+          "pin": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+          "same_at_compose": "see pinned tree/list",
+          "detail": "Constructors and concrete callbacks"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "lines": "260-275,325-333,812",
+          "blob": "fe51225699ca128809af3c218e799db04f280cb8",
+          "pin": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+          "same_at_compose": "see pinned tree/list",
+          "detail": "Review binding, material selection, live HTTP pipeline"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/memory-http.ts",
+          "lines": "20-63",
+          "blob": "f727d5250024df7338491321c36e7055d7c18f74",
+          "pin": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+          "same_at_compose": "see pinned tree/list",
+          "detail": "Authenticated human selection/write and read/egress reauthorization"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/review-services.ts",
+          "lines": "75-89",
+          "blob": "e795aa2e8667a0da134a00ce6012fe1f7f1dc712",
+          "pin": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+          "same_at_compose": "see pinned tree/list",
+          "detail": "Outcome comparison access and authorization"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/reviews/outcome-access.ts",
+          "lines": "9-65",
+          "blob": "0d2e56a184b0a39a0a0b8dc2d5e54b7947fc4d1d",
+          "pin": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+          "same_at_compose": "see pinned tree/list",
+          "detail": "Exact cutoff/current authority/double read"
+        }
+      ],
+      "required_action": "Retain these consumers and validate nonempty actual observation reaches the saved review under current source authorization; existing source wiring alone is not run evidence.",
+      "tests": [
+        "modules/sucafina/Sucafinav1/test/product/wp10/integration/memory-services.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp07/outcome.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp07/composition.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-history-composition.test.ts"
+      ],
+      "criteria": [
+        "WP14.T03.DOD.01",
+        "WP14.SUC.10"
+      ]
+    },
+    {
+      "id": "WP14-CONSUMER-02",
+      "status": "BLOCKED_OWNER",
+      "severity": "high",
+      "owners": [
+        "WP10",
+        "WP08"
+      ],
+      "summary": "Production business-services does not provide workSignals to createCollaborationHost. Real case-work selections fail unavailable, so the C16 Meu Trabalho signal consumer is not composed.",
+      "evidence": [
+        {
+          "path": "apps/cli/src/sucafina-product/business-services.ts",
+          "lines": "170-179",
+          "blob": "34a491f859f7b57b0883a122f816803df43c74c8",
+          "pin": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+          "same_at_compose": "see pinned tree/list",
+          "detail": "createCollaborationHost lacks workSignals"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/host.ts",
+          "lines": "63,134",
+          "blob": "b55bf37a353acc771021b23b6906eb79ae4d43f1",
+          "pin": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+          "same_at_compose": "see pinned tree/list",
+          "detail": "Optional input forwarded to composition"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/work-port.ts",
+          "lines": "78-87,195-196",
+          "blob": "22a2a7fab04757667fcfed82147b7676d6928fee",
+          "pin": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+          "same_at_compose": "see pinned tree/list",
+          "detail": "Real case-work selection fails without signals; recipient/source checks and reread"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/case-selection.ts",
+          "lines": "76-83,150-153",
+          "blob": "ec80e2916c8a06cbb471cf02e30bb1cb5ebd9cc0",
+          "pin": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+          "same_at_compose": "see pinned tree/list",
+          "detail": "Protected resolveCase selection binds exact actor/access/policy/period/current case"
+        }
+      ],
+      "search_scope": "All 120 files in apps/cli/src/sucafina-product fetched at the WP10 pin: no createSfWorkSignalList, createSfWorkRefIssuer, workSignals references. Same business-services and relevant composition blobs at compose pin.",
+      "required_action": "WP10/WP08 compose createSfWorkSignalList using genuine protected caseSelection.resolveCase, current materiality/authorization, durable private opaque work-ref issuance and concrete authorized destination. Validate real case-work selection, repeat/reopen/revoke and no leaked titles/counts/destination.",
+      "tests": [
+        "modules/sucafina/Sucafinav1/test/product/wp08/case-selection.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp08/host-work.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp08/work-presentation.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp08/cycle-view.test.ts"
+      ],
+      "criteria": [
+        "WP14.T04.CHK.03",
+        "WP14.T04.CMP.01",
+        "WP14.T04.DOD.01",
+        "WP14.SUC.10"
+      ]
+    },
+    {
+      "id": "WP14-CONSUMER-03",
+      "status": "BLOCKED_OWNER",
+      "severity": "high",
+      "owners": [
+        "WP10",
+        "WP14"
+      ],
+      "summary": "Live Atlas recall derives types only from record/prepared-change references and can return undefined for valid Planner calculation evidence; consume canonical WP14 feature derivation.",
+      "evidence": [
+        {
+          "path": "apps/cli/src/sucafina-product/business-services.ts",
+          "lines": "352-365,428-443",
+          "blob": "34a491f859f7b57b0883a122f816803df43c74c8",
+          "pin": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+          "same_at_compose": "see pinned tree/list",
+          "detail": "Local feature derivation and live recall construction"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "lines": "325",
+          "blob": "fe51225699ca128809af3c218e799db04f280cb8",
+          "pin": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+          "same_at_compose": "see pinned tree/list",
+          "detail": "Live analysis receives business.caseRecall"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/analysis-memory-evidence.ts",
+          "lines": "55-73",
+          "blob": "8ef62f7ceb58b57647aab4761033452306f31f0d",
+          "pin": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+          "same_at_compose": "see pinned tree/list",
+          "detail": "Pinned memory selection, current case and BCS rereads"
+        }
+      ],
+      "required_action": "Apply reviewable WP14 consumer patch in owner branch, preserving current-authority/identity rereads and exact projection equality; use deriveAuthorizedRecallFeatures canonical source.",
+      "patch": "recall/0001-canonical-recall-features.patch",
+      "tests": [
+        "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts"
+      ],
+      "criteria": [
+        "WP14.T02.DOD.10",
+        "WP14.SUC.10"
+      ]
+    },
+    {
+      "id": "WP14-CONSUMER-04",
+      "status": "BLOCKED_OWNER",
+      "severity": "high",
+      "owners": [
+        "WP10",
+        "WP11"
+      ],
+      "summary": "A native cross-case precedent needs an owner-issued candidate reader plus memory/capture/continuity/feature bundle; current native context is scoped to the selected current case. Passing a case ID or broadening ranker authority cannot supply this.",
+      "evidence": [
+        {
+          "path": "apps/cli/src/sucafina-product/business-services.ts",
+          "lines": "344,390-443,543",
+          "blob": "34a491f859f7b57b0883a122f816803df43c74c8",
+          "pin": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+          "same_at_compose": "see pinned tree/list",
+          "detail": "Atlas state and recall constructor currently lack scoped candidateAccess"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/analysis-domain-bindings.ts",
+          "lines": "43,53",
+          "blob": "aeea82637256d07e234fc1587e39d864ef549346",
+          "pin": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+          "same_at_compose": "see pinned tree/list",
+          "detail": "Older helper uses atlasRecall spread; no importer in complete live CLI snapshot"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+          "lines": "144-206",
+          "blob": "d2860d3b241c90ecd5dc45bb4010de3c85449a27",
+          "pin": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+          "same_at_compose": true,
+          "detail": "Native exact-case admission and original capture authority"
+        }
+      ],
+      "required_action": "WP10/WP11 create and issue complete scope-bound candidateAccess under published C08/native authority and thread it through live business.caseRecall plus atlasRecall spread; prove separately authorized distinct precedent under revoke and restart.",
+      "patch": "recall/0002-scoped-recall-consumer-seam.patch",
+      "tests": [
+        "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/atlas-recovery.test.ts"
+      ],
+      "criteria": [
+        "WP14.T02.DOD.10",
+        "WP14.CMP.40"
+      ]
+    },
+    {
+      "id": "WP14-CONSUMER-05",
+      "status": "NOT_DEMONSTRATED_OWNER_ACTION_REQUIRED",
+      "severity": "medium",
+      "owners": [
+        "WP10",
+        "WP14"
+      ],
+      "summary": "Production Atlas rereads current source authorization and continuity, but no concrete consumer of decideSfRecallInvalidation was found in complete CLI or audited Atlas/BCS files. Retained projection/lease/index invalidation policy consumption remains unproven.",
+      "evidence": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+          "lines": "92",
+          "blob": "0ac4c11d4eddb6e4a67c2c41efe40a7ff34fa47e",
+          "pin": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+          "same_at_compose": true,
+          "detail": "No cross-call authorization cache; per-pass dedupe"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+          "lines": "144-205",
+          "blob": "d2860d3b241c90ecd5dc45bb4010de3c85449a27",
+          "pin": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+          "same_at_compose": true,
+          "detail": "Current BCS/continuity/store/outbox checks and actual createMemoryRead"
+        }
+      ],
+      "search_scope": "All 120 CLI files plus atlas-memory.ts, business-context.ts, atlas-store.ts, atlas-scanner.ts and atlas-capabilities.ts, source search only. This is not a claim of data leakage or an exhaustive unrelated-directory absence proof.",
+      "required_action": "WP10 wire pure invalidation decision into any retained BCS/Atlas projection/lease/index owner or document no retained cache and prove revocation in actual consumer. Preserve historical trace; invalidate current accessibility rather than fabricate/delete history.",
+      "tests": [
+        "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/business-context.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/atlas-recovery.test.ts"
+      ],
+      "criteria": [
+        "WP14.T04.DOD.01",
+        "WP14.T04.DOD.10",
+        "WP14.T04.CHK.03"
+      ]
+    },
+    {
+      "id": "WP14-CONSUMER-06",
+      "status": "BLOCKED_OWNER",
+      "severity": "high",
+      "owners": [
+        "WP10",
+        "WP11",
+        "WP14"
+      ],
+      "summary": "Materiality host requires original evidence to remain fresh and unchanged. An actual Planner edit makes the registered selection unavailable; no real host consumer was found that derives a new before/after condition revision while preserving original chosen result.",
+      "evidence": [
+        {
+          "path": "apps/cli/src/sucafina-product/memory-services.ts",
+          "lines": "43-50,76-93,114-128",
+          "blob": "85c3021dec21ab942a8fab04524d48295fd918f7",
+          "pin": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+          "same_at_compose": "see pinned tree/list",
+          "detail": "Exact fresh original evidence and selected stored result validation"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/decision-materiality-services.ts",
+          "lines": "81,106",
+          "blob": "2deb115ed924b39319eecada7701b8c63da79064",
+          "pin": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+          "same_at_compose": "see pinned tree/list",
+          "detail": "Second registry constructor shares protected namespace and exposes revise"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+          "lines": "138-143",
+          "blob": "8a97e942cc70a27e9faceb5ddb44998bb74dc235",
+          "pin": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+          "same_at_compose": "see pinned tree/list",
+          "detail": "Conditions producer"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/decision-domain-http.ts",
+          "lines": "49",
+          "blob": "5cb8e4e45c1e68af4c59ec096b499ed0907f6c66",
+          "pin": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+          "same_at_compose": "see pinned tree/list",
+          "detail": "Register route; no conditions.revise route found"
+        }
+      ],
+      "required_action": "Owner compose current authorized before/after evidence with preserved original decision, criterion/coverage meaning and genuine revision admission. Reconcile registry callback policy in the two compositions; do not substitute a newer decision or waive revocation.",
+      "tests": [
+        "modules/sucafina/Sucafinav1/test/product/wp10/integration/memory-services.test.ts"
+      ],
+      "criteria": [
+        "WP14.T01.DOD.01",
+        "WP14.DOD.02",
+        "WP14.DOD.20"
+      ]
+    },
+    {
+      "id": "WP14-CONSUMER-07",
+      "status": "PRODUCTION_WIRING_PRESENT_EXECUTION_NOT_CLAIMED",
+      "owners": [
+        "WP10",
+        "WP13",
+        "WP07"
+      ],
+      "summary": "Portfolio historical provenance and review history are genuinely composed through result-bound C08/BCS history with current authority; they do not directly call all WP14 outputs.",
+      "evidence": [
+        {
+          "path": "apps/cli/src/sucafina-product/review-portfolio-history.ts",
+          "lines": "58-96",
+          "blob": "4d11a5c8c81d99f117709fc65327373055ee2cc1",
+          "pin": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+          "same_at_compose": "see pinned tree/list",
+          "detail": "createPortfolioHistory + createPortfolioHistoricalProvenance with protected binding and current result-bound context"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/history-provenance.ts",
+          "lines": "9-82",
+          "blob": "4a3049d462c5fc24b81163c8468b8bd314d8aa61",
+          "pin": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+          "same_at_compose": "see pinned tree/list",
+          "detail": "Original binding/selection/incarnation and current access read twice"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/portfolio-services.ts",
+          "lines": "60-130",
+          "blob": "83c525e733b2cb21637734e3b1e07950e72f4f97",
+          "pin": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+          "same_at_compose": "see pinned tree/list",
+          "detail": "Concrete portfolio product/results/bindings/evidence"
+        }
+      ],
+      "required_action": "Preserve real historical integration and prove WP14-specific nonempty outcome/recall consumption where criterion requires it. Avoid declaring portfolio absent or treating generic history test as direct outcome/Atlas proof.",
+      "tests": [
+        "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/campaign.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-history-composition.test.ts"
+      ],
+      "criteria": [
+        "WP14.T03.DOD.01",
+        "WP14.SUC.10"
+      ]
+    },
+    {
+      "id": "WP14-CONSUMER-08",
+      "status": "PRODUCTION_WIRING_PRESENT_EXECUTION_NOT_CLAIMED",
+      "owners": [
+        "WP10",
+        "WP14"
+      ],
+      "summary": "Host initializes real Atlas scanner and boundary; memory adapter persists original capture/envelope/outbox in protected transactions and uses actual createMemoryEmit/createMemoryRead. Directory catalog is not the durable memory proof.",
+      "evidence": [
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "lines": "768-770",
+          "blob": "fe51225699ca128809af3c218e799db04f280cb8",
+          "pin": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+          "same_at_compose": "see pinned tree/list",
+          "detail": "probeSfAtlasScanner and initializeAtlas with pinned versions"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+          "lines": "1,84-135,144-205",
+          "blob": "d2860d3b241c90ecd5dc45bb4010de3c85449a27",
+          "pin": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+          "same_at_compose": true,
+          "detail": "Actual public boundary IO, durable capture/store/outbox and current authorization"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-store.ts",
+          "lines": "1-125",
+          "blob": "0d7a1fa1d0f138d99fd0dc358ab898ebf828dcbf",
+          "pin": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+          "same_at_compose": true,
+          "detail": "Canonical durable memory adapter"
+        }
+      ],
+      "required_action": "Run exact changed consumer scope via required CI; distinguish same-process dispose/reopen from fresh OS process/native Session/SkillLoad publication. Do not upgrade evidence beyond executed path.",
+      "tests": [
+        "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/atlas-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/atlas-store.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts"
+      ],
+      "criteria": [
+        "WP14.T05.CHK.06",
+        "WP14.CMP.40"
+      ]
+    },
+    {
+      "id": "WP14-CONSUMER-09",
+      "status": "BLOCKED_OWNER",
+      "severity": "medium",
+      "owners": [
+        "WP10",
+        "WP09"
+      ],
+      "summary": "Watch preparation validates genuine case/condition/materiality but explicitly returns native-watch-admission-port-unavailable. No native scheduler/publication proof is supplied by WP14.",
+      "evidence": [
+        {
+          "path": "apps/cli/src/sucafina-product/memory-services.ts",
+          "lines": "218-232",
+          "blob": "85c3021dec21ab942a8fab04524d48295fd918f7",
+          "pin": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+          "same_at_compose": "see pinned tree/list",
+          "detail": "Honest unsupported native watch admission"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "lines": "293-294",
+          "blob": "fe51225699ca128809af3c218e799db04f280cb8",
+          "pin": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+          "same_at_compose": "see pinned tree/list",
+          "detail": "PrepareWatch installed; missing public C07 admission documented"
+        }
+      ],
+      "required_action": "Owner supplies public native C07 admission before claiming watch integration; WP14 must not create scheduler or message delivery.",
+      "tests": [
+        "modules/sucafina/Sucafinav1/test/product/wp10/native-host/routine-services.test.ts"
+      ],
+      "criteria": [
+        "WP14.T04.INV.01"
+      ]
+    }
+  ],
+  "tests": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/memory-services.test.ts",
+      "blob": "5b8025565264a65d08dbbb93a0a2db211ff5a8b4",
+      "pin": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+      "observed_test_count": 6,
+      "status": "SOURCE_INSPECTED_NOT_EXECUTED",
+      "limits": "Real SQLite/C08/Planner producer paths plus explicit scenario/criterion fixtures. Actual source edit yields unavailable; no C16 or native Atlas; watch unavailable."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+      "blob": "cec2598f03e97a7b1efe9d478829955d17a731a3",
+      "pin": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+      "observed_test_count": 1,
+      "status": "SOURCE_INSPECTED_NOT_EXECUTED",
+      "limits": "Real business/Atlas boundary/scanner and SF archives. Explicit chosen-case upstream fixture. No model, Session, SkillLoadReceipt or native publication; current same-case UI recall, not native cross-case."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/atlas-recovery.test.ts",
+      "blob": "a7395e072db32bec6aa72d1e2dba9a9400c9c6c9",
+      "pin": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+      "observed_test_count": 1,
+      "status": "SOURCE_INSPECTED_NOT_EXECUTED",
+      "limits": "Real Atlas boundary and protected SQLite store, emit/replay/revocation. Dispose/reopen is inside same test process; does not prove fresh process/native publication."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/atlas-store.test.ts",
+      "blob": "e366d37c1f31217744e800263d9dcc514e2db755",
+      "pin": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+      "observed_test_count": 2,
+      "status": "SOURCE_INSPECTED_NOT_EXECUTED",
+      "limits": "Canonical record ordering/deduplication/tamper negative; adapter test only."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/business-context.test.ts",
+      "blob": "6de0459d3897490b89b85d7f375a4234f554025f",
+      "pin": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+      "observed_test_count": 6,
+      "status": "SOURCE_INSPECTED_NOT_EXECUTED",
+      "limits": "BCS ancestry IO budgets, original historical identity/current authority and per-pass dedupe, with source callbacks as explicit fixtures."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-history-composition.test.ts",
+      "blob": "1a68cba2878268f21a3f052bf802e965f55c2d91",
+      "pin": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+      "observed_test_count": 1,
+      "status": "SOURCE_INSPECTED_NOT_EXECUTED",
+      "limits": "Real business fixture/review history preserves original finance values and checks edit/revocation/replacement/tampering/download. Does not show nonempty WP14 outcomes."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/outcome.test.ts",
+      "blob": "8c0a3bb8d780289466501e3f2e675077aa4fd469",
+      "pin": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+      "observed_test_count": 4,
+      "status": "SOURCE_INSPECTED_NOT_EXECUTED",
+      "limits": "Outcome access/presentation contract negatives using synthetic contexts/read callbacks; not durable host/Atlas proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/composition.test.ts",
+      "blob": "d33bf05add10d9600867a0ff53fd0a20ae75e2a4",
+      "pin": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+      "observed_test_count": 1,
+      "status": "SOURCE_INSPECTED_NOT_EXECUTED",
+      "limits": "Planner/C08 wrappers with in-memory testPersistence; outcome arrays are empty. Recreating composition on same test store is not fresh-process restart."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/case-selection.test.ts",
+      "blob": "e636353f0a7467167e40b4208392b2bc750f2ba6",
+      "pin": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+      "observed_test_count": 5,
+      "status": "SOURCE_INSPECTED_NOT_EXECUTED",
+      "limits": "Protected selector logic with fixture storage/human/case/auth; period, forged/version/revoke/reread/commit negatives."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/host-work.test.ts",
+      "blob": "73e30001d18b68aa1eee3e052123ef4d81c5dc3f",
+      "pin": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+      "observed_test_count": 1,
+      "status": "SOURCE_INSPECTED_NOT_EXECUTED",
+      "limits": "Real product authority/shared dispatch and SQLite procurement work. No workSignals or case-work selection."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/work-presentation.test.ts",
+      "blob": "43103eea4e7a10e8da2f799a2495894627ce528a",
+      "pin": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+      "observed_test_count": 1,
+      "status": "SOURCE_INSPECTED_NOT_EXECUTED",
+      "limits": "Real SQLite procurement display/destination/revocation, directory ambiguity; not WP14 signal work."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/cycle-view.test.ts",
+      "blob": "ac4bdd28e88968dc44ef4aa90e1a878f3d7080f5",
+      "pin": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+      "observed_test_count": 3,
+      "status": "SOURCE_INSPECTED_NOT_EXECUTED",
+      "limits": "Fixture case/work list projection; empty is not completion, exact period, midread change."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/work.test.ts",
+      "blob": "2c126c4a5bad9bf08bae073dd3fe781dcf7ef23a",
+      "pin": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+      "observed_test_count": null,
+      "status": "SOURCE_INSPECTED_NOT_EXECUTED",
+      "limits": "Small pure work helper test."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+      "blob": "c9dc2eab887eb7624fabcb335b31972532f9b4b9",
+      "pin": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+      "observed_test_count": 6,
+      "status": "SOURCE_INSPECTED_NOT_EXECUTED",
+      "limits": "Historical-provenance helper with fixture callbacks; old binding/current auth/incarnation/revocation/tampering/between-pass mutation."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/campaign.test.ts",
+      "blob": "6b28c5032e7c211c84a1d33ac4faddf2a6e434ca",
+      "pin": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+      "observed_test_count": 4,
+      "status": "SOURCE_INSPECTED_NOT_EXECUTED",
+      "limits": "Real SQLite C08 with explicit case/candidate/contract/verification fixtures; proposal/order/retry/revoke/fence/history."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/native-host/routine-services.test.ts",
+      "blob": "01663714ae9b55d3f5fb1049d5fda09d57aa8a2c",
+      "pin": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+      "observed_test_count": 3,
+      "status": "SOURCE_INSPECTED_NOT_EXECUTED",
+      "limits": "UI/publication store; native C07 calls are explicitly fixtures, no GNATIVE acceptance."
+    }
+  ],
+  "required_new_evidence": [
+    "C16 actual protected case selection through production workSignals with durable opaque IDs, repeat/reopen/revocation and no metadata leaks",
+    "Actual Planner source revision produces before/after material signal preserving original choice/coverage/criteria",
+    "Selected nonempty observed outcome is saved/displayed in review/report with exact cutoff after reopen and source revoke",
+    "Real invalidation policy consumption in retained BCS/Atlas projection/lease/index",
+    "Native current case plus separately authorized distinct precedent via complete candidateAccess; fresh-process/Atlas/SkillLoad receipts for any claimed native proof"
+  ]
+}

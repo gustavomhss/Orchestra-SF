@@ -1,0 +1,231 @@
+{
+  "status": "PROPOSAL_ONLY_NOT_APPLIED_NOT_PRODUCTION_READY",
+  "finding": [
+    "WP14.INV.01",
+    "WP14.INV.40",
+    "WP14.T04.INV.01",
+    "WP14.T04.INV.10"
+  ],
+  "repository": "gustavomhss/Orchestra-SF",
+  "wp14_source": "Published W2 pin supplied by root; proposal reads the frozen per-path bytes recorded below",
+  "wp10_pin": "f075e9824b7d8aed50b7f42c597528ef198177db",
+  "wp10_tree": "2751625f28928baf371d39576fe46777aa81f74e",
+  "wp10_parent": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+  "wp10_caller_proof": "Both CLI files absent from complete 134-path f075e982 parent delta; parent snapshots verified against GitHub MCP blobs",
+  "patch": {
+    "file": "0003-host-memory-registry-ownership.patch",
+    "sha256": "6c74e06a014dbd71d5cd8330c69e6f4eb23c24c016caf61a4ab8f8dcd4fb57b7",
+    "git_blob": "c2715708643890cac920e6369834198b62d2d3bd",
+    "bytes": 81567,
+    "paths": 11
+  },
+  "paths": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/signal-registry.ts",
+      "change": "modified",
+      "source": "WP14 frozen W2",
+      "before": {
+        "sha256": "f9f8fb4e5926cc9e613fdb0f7f664446a6f7d50995db1578a8caaae160559dbb",
+        "git_blob": "d329fc03041ae86d7d0e57a5d31e05e98be46fe5",
+        "bytes": 23716
+      },
+      "proposed": {
+        "sha256": "450ea44ffd1e8f24e72d2c5df1ee7f406cad541277c7645190666a64560d941e",
+        "git_blob": "ba4d3183630cb8c7b875d4900a4a488035d96c0a",
+        "bytes": 1675
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/memory-signal-registry.ts",
+      "change": "added",
+      "source": "Relocation of WP14 frozen W2 implementation",
+      "before": null,
+      "proposed": {
+        "sha256": "0dc0a55e5a6b617f9c203182b153b11107ba1d5ba46991dfdd0d8bb23384812f",
+        "git_blob": "f7243aad595011e19d716dd0e974707575f76424",
+        "bytes": 23183
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/outcome-selection.ts",
+      "change": "modified",
+      "source": "WP14 frozen W2",
+      "before": {
+        "sha256": "8261fcd6fd0e6ec6b15461ef5a8dd066d6cfc6efc16cf712dfe4af02f5e81337",
+        "git_blob": "03a3ddf8dacd2e7b050b20b73b14b2bd3e974f4c",
+        "bytes": 10413
+      },
+      "proposed": {
+        "sha256": "2e4a7d07dee253198d7cff9ef1c3b262ecc4d0a467b7a345bf4b69d6e672f534",
+        "git_blob": "17dd54448297593947f17b205b7abf0372567920",
+        "bytes": 608
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/memory-outcome-selection.ts",
+      "change": "added",
+      "source": "Relocation of WP14 frozen W2 implementation",
+      "before": null,
+      "proposed": {
+        "sha256": "b4b9f9a5ff0867b1f8849437a00cc399079b54ca4e1cbf774e55230043f1a4f1",
+        "git_blob": "e8f34bf8093650848831c5c175433f689fb743bc",
+        "bytes": 10570
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/planner-materiality.ts",
+      "change": "modified",
+      "source": "WP14 frozen W2",
+      "before": {
+        "sha256": "ed6fb6e44e06cd40521467fe3fd5fbf0637a21cdda49b3e56b384d455a5a33e1",
+        "git_blob": "0c5f8ba9d7bb2c043ae5d62f044e9fcf8eb9ee7a",
+        "bytes": 4371
+      },
+      "proposed": {
+        "sha256": "da1717b6c7de97e40cfd3727015c29ef07e2560c2bea00ba36963248d7e6f7ac",
+        "git_blob": "aa5bbf0e4899b75dbab36aee1c2e9ca562324ead",
+        "bytes": 4340
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/signal-list.ts",
+      "change": "modified",
+      "source": "WP14 frozen W2",
+      "before": {
+        "sha256": "2f77264f0e55ec52379e244e47050d95149f9ff5b591893e484493b960ea6de5",
+        "git_blob": "905770233118a2b0707dfed37f9038f89fb884ac",
+        "bytes": 11192
+      },
+      "proposed": {
+        "sha256": "84b56269d1dce8012e8a60501b9e6efb1e1f788ee10dfc23d2fc92c10c65a03f",
+        "git_blob": "9d20bcbe59f6e56bc3ce759547686b9d186716ea",
+        "bytes": 11161
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/signal-work.ts",
+      "change": "modified",
+      "source": "WP14 frozen W2",
+      "before": {
+        "sha256": "bf0894f974114eb9aa934e068929a03295e376d19d798c46032461f872d2ff03",
+        "git_blob": "8e03cb17343b87304238a8f9f17b9e0e130b5149",
+        "bytes": 16546
+      },
+      "proposed": {
+        "sha256": "ff4ef5fc2d7b5c2a745c6da5b222849fd6ac4721aab6f186f28601f313b2248d",
+        "git_blob": "497d733c4a14742ffd8274c2925fee10706140b6",
+        "bytes": 16515
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/signal-registry.test.ts",
+      "change": "modified",
+      "source": "WP14 frozen W2",
+      "before": {
+        "sha256": "33b1ef388aa99237943e8113d5c00348d44a4e2820a614c1f12c1124aab248c7",
+        "git_blob": "cef1f6bd6fcecbd569522c7e33d65d6767155182",
+        "bytes": 23837
+      },
+      "proposed": {
+        "sha256": "24337d1796ed08dcbfaf1462246c925b79c70ebbf9c126ac67ec8c767dd68b32",
+        "git_blob": "4cf997be506cd178ebdc3a7f597fc6bac73db34c",
+        "bytes": 23910
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/domain-outcome.test.ts",
+      "change": "modified",
+      "source": "WP14 frozen W2",
+      "before": {
+        "sha256": "8b4613ed35330a51dc23d1e7e41a38c01e8d291035afbaab2416834ff7a47905",
+        "git_blob": "210bac0815396bb4769ec8f7a5d3e4b948fe13a6",
+        "bytes": 19101
+      },
+      "proposed": {
+        "sha256": "c24543711aa953ea5fafde3d5462372e0bb913a5c989db14b5c28af875a468ce",
+        "git_blob": "b40dfeb03d0c712833c116fa2e14c7c13f8931c5",
+        "bytes": 19176
+      }
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/memory-services.ts",
+      "change": "modified",
+      "source": "WP10 f075e982 inherits verified parent blob 417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+      "before": {
+        "sha256": "f08c39347bfb9998af6e6a1fea8acfe02e4ab02eed6d5b19d83b5c3057d0d171",
+        "git_blob": "85c3021dec21ab942a8fab04524d48295fd918f7",
+        "bytes": 21172
+      },
+      "proposed": {
+        "sha256": "aecb5563cc61984fdc769793dee3a819f19b9ad481807ba6df11ce254593b949",
+        "git_blob": "733ae708b52746fd607dfa252bd635beb0c40a55",
+        "bytes": 21180
+      }
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/decision-materiality-services.ts",
+      "change": "modified",
+      "source": "WP10 f075e982 inherits verified parent blob 417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+      "before": {
+        "sha256": "3e0d09b29919ea04ddac4f70224493ddebbf1d47f4d445b715794eeb959867da",
+        "git_blob": "2deb115ed924b39319eecada7701b8c63da79064",
+        "bytes": 11018
+      },
+      "proposed": {
+        "sha256": "264cb9bb82730b19b6166394e3736e645746b8ed136379cca21e72a0b6ca1ddd",
+        "git_blob": "4fadb15325921c39622966d77120f2dc9a118c07",
+        "bytes": 11022
+      }
+    }
+  ],
+  "applied": false,
+  "product_tests_executed": false,
+  "typecheck_executed": false,
+  "git_apply_check_executed": false,
+  "notes": [
+    "Factory names, arguments and return shapes preserved; runtime import paths move atomically with all known runtime callers.",
+    "Pure WP14 contracts retain schema prefixes and public selection/binding types; no runtime re-export back to host-binding.",
+    "No store migration, ACL, identity, source fence, idempotency policy, protected writer identity or scheduler change is proposed.",
+    "Owner must review current branch and rebase on an admitted W2 pin before applying; this artifact does not transfer ownership or approve native/Atlas acceptance."
+  ],
+  "textual_relocation_proof": [
+    {
+      "factory": "createSfSignalRegistry",
+      "normalization": "Only the explicit pure-port return annotation is removed for comparison; imports/types/constants live above the compared factory section",
+      "implementation_and_private_helpers_byte_equal": true,
+      "sha256": "bf65f12a9c6fe5315e7a0fe870decccc35335470f18cd2d86f84e9062c4fecd6"
+    },
+    {
+      "factory": "createSfOutcomeSelectionRegistry",
+      "normalization": "Only the explicit pure-port return annotation is removed for comparison; imports/types/constants live above the compared factory section",
+      "implementation_and_private_helpers_byte_equal": true,
+      "sha256": "1a0be12322c1b5b485c90c072cfd93e487f7993b405b1b458851f7fdce56fe23"
+    }
+  ],
+  "validation_limit": "Textual byte comparison and source hashing only; patch not applied and no product code executed.",
+  "wp14_pin": "075cbe04a954b08e946bed676c3901dae13a14cc",
+  "wp14_tree": "3f59fc019290d4f7a01a42de8a136c36840ff9ee",
+  "remaining_boundary": {
+    "global_purity_resolved": false,
+    "scope": "This patch relocates only the two durable registry writers",
+    "direct_read_io": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts",
+        "factories": [
+          "createSfDashboardSourceAccess",
+          "createSfDashboardContinuityProof"
+        ],
+        "mechanism": "host.persistence.transaction with commit:false, source/physical identity snapshots and concrete authentication"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts",
+        "factories": [
+          "createSfCaseEventSourceAccess"
+        ],
+        "mechanism": "SfProductStatePort.read of current cases and authority"
+      }
+    ],
+    "callback_io": "Source-access record/procurement/document resolvers and memory consumers invoke supplied readers, producers, registry operations and revalidation; port declarations do not make callback execution pure.",
+    "required_coordination": "S0/WP10 must review remaining adapter/orchestration paths and transfer ownership explicitly while preserving current authority, continuity, revocation and ancestry. No remaining path is relocated or granted access by this artifact."
+  }
+}

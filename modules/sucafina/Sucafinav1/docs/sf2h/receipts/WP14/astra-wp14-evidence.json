@@ -1,0 +1,627 @@
+{
+  "schema": "sf2h-wp14-ci-identities-v1",
+  "repository": "gustavomhss/Orchestra-SF",
+  "pr": 38,
+  "branch": "astra-wp14",
+  "source": {
+    "planPin": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "campaignSha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+    "tasks": 5,
+    "criteria": 91,
+    "handoffPin": "1480ed801d0961ba4448ef3cde0d2d75c9ef45a3",
+    "ciProtocolPin": "a3d29d011ba3607a57914701300f09117a3e2de9"
+  },
+  "base": {
+    "sha": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+    "tree": "acf3b722ad55c090bef8e9dc2b3fac2d9ad570af",
+    "stillObservedAtDelivery": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0"
+  },
+  "guardBase": {
+    "sha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+    "tree": "58a0c245e9c331aa93f5f2e6244c8bb8c05c975e"
+  },
+  "products": [
+    {
+      "label": "W1",
+      "sha": "7b20f81b5181d57109244236eb46ae049ca5ec8f",
+      "tree": "fd5a08bfbaaf255ba2fd43b67638cf5532cbc2a9"
+    },
+    {
+      "label": "W2",
+      "sha": "075cbe04a954b08e946bed676c3901dae13a14cc",
+      "tree": "3f59fc019290d4f7a01a42de8a136c36840ff9ee"
+    },
+    {
+      "label": "W3",
+      "sha": "c84ec9f4528d66bbaa3dd70689f6f9d568c463ca",
+      "tree": "cf7b3f8a74f101b3d580f6395808d0ddc6d75750"
+    },
+    {
+      "label": "W4",
+      "sha": "45c4ed69325652d81b0f9954b6fe1debb4cf1301",
+      "tree": "181a08e1349bf1d550d14505ff7ad3e81ed4decd"
+    },
+    {
+      "label": "W5",
+      "sha": "1240efef88be380c82b29ec422a13c54b42c7b62",
+      "tree": "1ebec1428d581c36c706ddbca97ea2b84d9daa0c"
+    },
+    {
+      "label": "W6",
+      "sha": "302332e2d30ecb3426265aac3adaa518b81a5ea3",
+      "tree": "f176fd9024d2dd93ad5a40f5e898c3760b7eb10e"
+    }
+  ],
+  "testRequests": [
+    {
+      "label": "W1",
+      "runId": 43580834753,
+      "jobId": 132405026618,
+      "W": "7b20f81b5181d57109244236eb46ae049ca5ec8f",
+      "S": "749bfcec1b1fa9910a1799d7bf887c24158bb17a",
+      "tree": "72069d40acb9091d254e146cc3243a86a808f5bc",
+      "branch": "ci-run-linux-astra-wp14-7b20f81-b2dd550d-1",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/wp14/atlas-projection.test.ts",
+          "Sucafinav1/test/product/wp14/domain-outcome.test.ts",
+          "Sucafinav1/test/product/wp14/invalidation.test.ts",
+          "Sucafinav1/test/product/wp14/materiality.test.ts",
+          "Sucafinav1/test/product/wp14/outcome-signals.test.ts",
+          "Sucafinav1/test/product/wp14/planner-materiality.test.ts",
+          "Sucafinav1/test/product/wp14/recall.test.ts",
+          "Sucafinav1/test/product/wp14/signal-registry.test.ts",
+          "Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+          "Sucafinav1/test/product/wp14/source-access-dashboard-record.test.ts",
+          "Sucafinav1/test/product/wp14/source-access-document.test.ts",
+          "Sucafinav1/test/product/wp14/source-access-procurement.test.ts",
+          "Sucafinav1/test/product/wp14/source-access.test.ts",
+          "Sucafinav1/test/product/wp10/atlas-business/atlas-store.test.ts",
+          "Sucafinav1/test/product/wp10/atlas-business/business-context.test.ts",
+          "Sucafinav1/test/product/wp10/atlas-business/scanner-probe.test.ts",
+          "Sucafinav1/test/product/wp10/atlas-business/atlas-recovery.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "requestSha256": "b2dd550d8128fd7da11d2ba35e9751e9666bd705411a03fecd60156bcc6f290e",
+      "envelopeOnly": ".ci-run.json"
+    },
+    {
+      "label": "W2",
+      "runId": 43581868850,
+      "jobId": 132408115499,
+      "W": "075cbe04a954b08e946bed676c3901dae13a14cc",
+      "S": "766b30eff18ae3d0bf5310a33eb7e1cd91fdaac0",
+      "tree": "7a17558d270af6f8bd9240a0a0e51bbb44baa434",
+      "branch": "ci-run-linux-astra-wp14-075cbe0-b2dd550d-1",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/wp14/atlas-projection.test.ts",
+          "Sucafinav1/test/product/wp14/domain-outcome.test.ts",
+          "Sucafinav1/test/product/wp14/invalidation.test.ts",
+          "Sucafinav1/test/product/wp14/materiality.test.ts",
+          "Sucafinav1/test/product/wp14/outcome-signals.test.ts",
+          "Sucafinav1/test/product/wp14/planner-materiality.test.ts",
+          "Sucafinav1/test/product/wp14/recall.test.ts",
+          "Sucafinav1/test/product/wp14/signal-registry.test.ts",
+          "Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+          "Sucafinav1/test/product/wp14/source-access-dashboard-record.test.ts",
+          "Sucafinav1/test/product/wp14/source-access-document.test.ts",
+          "Sucafinav1/test/product/wp14/source-access-procurement.test.ts",
+          "Sucafinav1/test/product/wp14/source-access.test.ts",
+          "Sucafinav1/test/product/wp10/atlas-business/atlas-store.test.ts",
+          "Sucafinav1/test/product/wp10/atlas-business/business-context.test.ts",
+          "Sucafinav1/test/product/wp10/atlas-business/scanner-probe.test.ts",
+          "Sucafinav1/test/product/wp10/atlas-business/atlas-recovery.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "requestSha256": "b2dd550d8128fd7da11d2ba35e9751e9666bd705411a03fecd60156bcc6f290e",
+      "envelopeOnly": ".ci-run.json"
+    },
+    {
+      "label": "W3",
+      "runId": 43582306795,
+      "jobId": 132409435524,
+      "W": "c84ec9f4528d66bbaa3dd70689f6f9d568c463ca",
+      "S": "11d95450508039b538e7dcc25754d9b1b3adf9ce",
+      "tree": "b1d0a675b735519fd1cc3fb5a6ff753740c23ead",
+      "branch": "ci-run-linux-astra-wp14-c84ec9f-339a2f8b-1",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/wp14/invalidation.test.ts",
+          "Sucafinav1/test/product/wp14/recall.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "requestSha256": "339a2f8bf194764c2946e65c24cb4f26ad8cf45f7b277aabddb6ae2fa0a407c6",
+      "envelopeOnly": ".ci-run.json"
+    },
+    {
+      "label": "W4",
+      "runId": 43582881542,
+      "jobId": 132411172526,
+      "W": "45c4ed69325652d81b0f9954b6fe1debb4cf1301",
+      "S": "cb128c652a567f24b52a00d156a4d24cd94c660d",
+      "tree": "5341838230f129fba005d69ca77e3340d582e651",
+      "branch": "ci-run-linux-astra-wp14-45c4ed6-6ff7a0f1-1",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/wp14/source-access-procurement.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "requestSha256": "6ff7a0f1ebc779d1e1c480da8928325d9311e4d874c5b6ab3d9ff65259cf5f89",
+      "envelopeOnly": ".ci-run.json"
+    },
+    {
+      "label": "W5",
+      "runId": 43584174407,
+      "jobId": 132415011849,
+      "W": "1240efef88be380c82b29ec422a13c54b42c7b62",
+      "S": "7376413d8d6b07dd9e86f3f1fc8e1e1a495fe6f1",
+      "tree": "d10d96ebbf40e43523ffcfb45a027f58f979befe",
+      "branch": "ci-run-linux-astra-wp14-1240efe-85d617de-1",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/wp14/atlas-projection.test.ts",
+          "Sucafinav1/test/product/wp14/invalidation.test.ts",
+          "Sucafinav1/test/product/wp14/recall.test.ts",
+          "Sucafinav1/test/product/wp14/outcome-signals.test.ts",
+          "Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+          "Sucafinav1/test/product/wp10/atlas-business/atlas-recovery.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "requestSha256": "85d617de1af4bf379ffb65c7f26808844292a9588edb4161b6c14482c45cf5f4",
+      "envelopeOnly": ".ci-run.json"
+    }
+  ],
+  "checks": [
+    {
+      "product": "W1",
+      "W": "7b20f81b5181d57109244236eb46ae049ca5ec8f",
+      "C": "2a7e56587f7b8083b0bd4473759ea4bc89fd03e0",
+      "tree": "6062bb3fa13f796aec102723992f6e1934448ccb",
+      "runId": 43580850502,
+      "jobId": 132405069162,
+      "branch": "astra-check-wp14",
+      "envelope": {
+        "productSha": "7b20f81b5181d57109244236eb46ae049ca5ec8f",
+        "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+      },
+      "envelopeOnly": ".astra-wp14-check.json",
+      "commands": [
+        "bun typecheck (cwd modules/sucafina)",
+        "bun run check:guards --base origin/dev (repository root)"
+      ]
+    },
+    {
+      "product": "W2",
+      "W": "075cbe04a954b08e946bed676c3901dae13a14cc",
+      "C": "d787ab14fc4d3183b805f5271f4a20776094d43f",
+      "tree": "bee82457ab93579f36e203ef3760adbd31d3e7df",
+      "runId": 43581908400,
+      "jobId": 132408235781,
+      "branch": "astra-check-wp14",
+      "envelope": {
+        "productSha": "075cbe04a954b08e946bed676c3901dae13a14cc",
+        "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+      },
+      "envelopeOnly": ".astra-wp14-check.json",
+      "commands": [
+        "bun typecheck (cwd modules/sucafina)",
+        "bun run check:guards --base origin/dev (repository root)"
+      ]
+    },
+    {
+      "product": "W3",
+      "W": "c84ec9f4528d66bbaa3dd70689f6f9d568c463ca",
+      "C": "08ee104fd6931f595cf1f00110b5ed1029a21d58",
+      "tree": "83a210a33a50988143312e134a8fbaf396e42549",
+      "runId": 43582318468,
+      "jobId": 132409471352,
+      "branch": "astra-check-wp14",
+      "envelope": {
+        "productSha": "c84ec9f4528d66bbaa3dd70689f6f9d568c463ca",
+        "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+      },
+      "envelopeOnly": ".astra-wp14-check.json",
+      "commands": [
+        "bun typecheck (cwd modules/sucafina)",
+        "bun run check:guards --base origin/dev (repository root)"
+      ]
+    },
+    {
+      "product": "W4",
+      "W": "45c4ed69325652d81b0f9954b6fe1debb4cf1301",
+      "C": "ef6bfe69ef8f4a3f2bb95739bffe9a302a4c195f",
+      "tree": "54bd56ed8b340dcb254c1e330efaca75d42b6159",
+      "runId": 43582884753,
+      "jobId": 132411182186,
+      "branch": "astra-check-wp14",
+      "envelope": {
+        "productSha": "45c4ed69325652d81b0f9954b6fe1debb4cf1301",
+        "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+      },
+      "envelopeOnly": ".astra-wp14-check.json",
+      "commands": [
+        "bun typecheck (cwd modules/sucafina)",
+        "bun run check:guards --base origin/dev (repository root)"
+      ]
+    },
+    {
+      "product": "W5",
+      "W": "1240efef88be380c82b29ec422a13c54b42c7b62",
+      "C": "121915c3661d94f133bea0cbe4a8ca3a4ebea56d",
+      "tree": "8a3314a82ff71b54ade5a7d6633a11ce3ddac3b5",
+      "runId": 43584178239,
+      "jobId": 132415023095,
+      "branch": "astra-check-wp14",
+      "envelope": {
+        "productSha": "1240efef88be380c82b29ec422a13c54b42c7b62",
+        "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+      },
+      "envelopeOnly": ".astra-wp14-check.json",
+      "commands": [
+        "bun typecheck (cwd modules/sucafina)",
+        "bun run check:guards --base origin/dev (repository root)"
+      ]
+    },
+    {
+      "product": "W6",
+      "W": "302332e2d30ecb3426265aac3adaa518b81a5ea3",
+      "C": "760cf0549a5432819f3a3d4a42f87fdbedfb1ece",
+      "tree": "655f1bf17cee00502572947c0bde8bd004d7a3d7",
+      "runId": 43584536897,
+      "jobId": 132416102283,
+      "branch": "astra-check-wp14",
+      "envelope": {
+        "productSha": "302332e2d30ecb3426265aac3adaa518b81a5ea3",
+        "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+      },
+      "envelopeOnly": ".astra-wp14-check.json",
+      "commands": [
+        "bun typecheck (cwd modules/sucafina)",
+        "bun run check:guards --base origin/dev (repository root)"
+      ]
+    }
+  ],
+  "typeOnlyTransition": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp14/atlas-projection.test.ts",
+    "sourceSha256": "6688fd500edc16659b7ba91f92e91468c2b5365a6b92548a1cec698c88777c92",
+    "blob": "c2efe0e5054b4a33a35daae1d5353ff730434577",
+    "beforeSha256": "0054bf0f19065e2f06ae961980b775d51a6d37ec1039b9d0d8099ca1adb8e332",
+    "javascriptIdentical": true,
+    "javascriptSha256": "93befb2f040984bcf6ad193369da88646e1294dcf386e7cf7a2d9de21151f122",
+    "javascriptBytes": 27110,
+    "transform": "node:module.stripTypeScriptTypes, mode=transform, source text only; no product evaluated"
+  },
+  "noProductRunW6": "Two erased generic type arguments only; emitted JavaScript byte-identical under recorded transform; no equivalent product run dispatched.",
+  "latestExecutedAtlasRestart": {
+    "product": "1240efef88be380c82b29ec422a13c54b42c7b62",
+    "runId": 43584174407,
+    "jobId": 132415011849,
+    "receipt": {
+      "kind": "sqlite-atlas-process-restart",
+      "nativeSessionWitness": false,
+      "scanner": {
+        "name": "gitleaks",
+        "version": "gitleaks version 8.30.1",
+        "sha256": "88f91962aa2f93ac6ab281d553b9e125f5197bbbce38f9f2437f7299c32e5509"
+      },
+      "committed": {
+        "status": "committed",
+        "eventId": "3373db39d643a7146deb7318c041027e2ab9f5208ed79add825c056ea9cd763e",
+        "recordDigest": "723a8cfd4f715f5e6aa3ae63106effb7d394ec4ae5da4c5753cb490b0b476112"
+      },
+      "replayed": {
+        "status": "already-committed",
+        "eventId": "3373db39d643a7146deb7318c041027e2ab9f5208ed79add825c056ea9cd763e",
+        "recordDigest": "723a8cfd4f715f5e6aa3ae63106effb7d394ec4ae5da4c5753cb490b0b476112"
+      },
+      "parentPid": 4045,
+      "childPid": 4095,
+      "authorized": "ok",
+      "matches": 1,
+      "outsider": "unavailable",
+      "revoked": "unavailable"
+    }
+  },
+  "previousExecutedAtlasRestart": {
+    "product": "075cbe04a954b08e946bed676c3901dae13a14cc",
+    "runId": 43581868850,
+    "jobId": 132408115499,
+    "receipt": {
+      "kind": "sqlite-atlas-process-restart",
+      "nativeSessionWitness": false,
+      "scanner": {
+        "name": "gitleaks",
+        "version": "gitleaks version 8.30.1",
+        "sha256": "88f91962aa2f93ac6ab281d553b9e125f5197bbbce38f9f2437f7299c32e5509"
+      },
+      "committed": {
+        "status": "committed",
+        "eventId": "9a732d9f8a684588324081b02e4841c524fbd12e9373de19290af1633d75f2ef",
+        "recordDigest": "43b967380fa071923e14572b80fcf46a979e4861398d23ea7ef0eb9a8368ebe7"
+      },
+      "replayed": {
+        "status": "already-committed",
+        "eventId": "9a732d9f8a684588324081b02e4841c524fbd12e9373de19290af1633d75f2ef",
+        "recordDigest": "43b967380fa071923e14572b80fcf46a979e4861398d23ea7ef0eb9a8368ebe7"
+      },
+      "parentPid": 4045,
+      "childPid": 4096,
+      "authorized": "ok",
+      "matches": 1,
+      "outsider": "unavailable",
+      "revoked": "unavailable"
+    }
+  },
+  "artifacts": {
+    "inspection": "GitHub metadata and decoded job logs; ZIP bytes not downloaded or verified. Artifact digests below are reported by GitHub, not locally recomputed.",
+    "checks": [
+      {
+        "product": "W1",
+        "runId": 43580850502,
+        "data": {
+          "artifacts": [
+            {
+              "id": 14108406367,
+              "name": "astra-wp14-check-1",
+              "size_in_bytes": 8111,
+              "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14108406367",
+              "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14108406367/zip",
+              "expired": false,
+              "created_at": "2026-11-14T09:31:36Z",
+              "expires_at": "2026-11-28T09:31:36Z",
+              "updated_at": "2026-11-14T09:31:36Z",
+              "digest": "sha256:4079cce5e8c104f7aa2e0df1fac8aede9335b4894d353d9db60ecca5b7e2c5fa",
+              "workflow_run": {
+                "id": 43580850502,
+                "repository_id": 1455724710,
+                "head_repository_id": 1455724710,
+                "head_branch": "astra-check-wp14",
+                "head_sha": "2a7e56587f7b8083b0bd4473759ea4bc89fd03e0"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "product": "W2",
+        "runId": 43581908400,
+        "data": {
+          "artifacts": [
+            {
+              "id": 14108603806,
+              "name": "astra-wp14-check-1",
+              "size_in_bytes": 7920,
+              "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14108603806",
+              "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14108603806/zip",
+              "expired": false,
+              "created_at": "2026-11-14T09:45:01Z",
+              "expires_at": "2026-11-28T09:45:01Z",
+              "updated_at": "2026-11-14T09:45:01Z",
+              "digest": "sha256:cf0445cae6e8cbad8ea993f71a66eee2e1246a3a15c0d78798dadaa450002dfc",
+              "workflow_run": {
+                "id": 43581908400,
+                "repository_id": 1455724710,
+                "head_repository_id": 1455724710,
+                "head_branch": "astra-check-wp14",
+                "head_sha": "d787ab14fc4d3183b805f5271f4a20776094d43f"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "product": "W3",
+        "runId": 43582318468,
+        "data": {
+          "artifacts": [
+            {
+              "id": 14108817544,
+              "name": "astra-wp14-check-1",
+              "size_in_bytes": 7919,
+              "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14108817544",
+              "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14108817544/zip",
+              "expired": false,
+              "created_at": "2026-11-14T09:50:29Z",
+              "expires_at": "2026-11-28T09:50:28Z",
+              "updated_at": "2026-11-14T09:50:29Z",
+              "digest": "sha256:16325e1e1cfb72a4db45ffd13741eafdfa0b493d266a3a09ea0f5fd11eee3d4d",
+              "workflow_run": {
+                "id": 43582318468,
+                "repository_id": 1455724710,
+                "head_repository_id": 1455724710,
+                "head_branch": "astra-check-wp14",
+                "head_sha": "08ee104fd6931f595cf1f00110b5ed1029a21d58"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "product": "W4",
+        "runId": 43582884753,
+        "data": {
+          "artifacts": [
+            {
+              "id": 14109122281,
+              "name": "astra-wp14-check-1",
+              "size_in_bytes": 7776,
+              "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14109122281",
+              "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14109122281/zip",
+              "expired": false,
+              "created_at": "2026-11-14T09:58:00Z",
+              "expires_at": "2026-11-28T09:57:58Z",
+              "updated_at": "2026-11-14T09:58:00Z",
+              "digest": "sha256:ba55319d9276e067c4be8880a1378ba6da003fd0be1a3524750e300bdb34b861",
+              "workflow_run": {
+                "id": 43582884753,
+                "repository_id": 1455724710,
+                "head_repository_id": 1455724710,
+                "head_branch": "astra-check-wp14",
+                "head_sha": "ef6bfe69ef8f4a3f2bb95739bffe9a302a4c195f"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "product": "W5",
+        "runId": 43584178239,
+        "data": {
+          "artifacts": [
+            {
+              "id": 14109925493,
+              "name": "astra-wp14-check-1",
+              "size_in_bytes": 7823,
+              "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14109925493",
+              "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14109925493/zip",
+              "expired": false,
+              "created_at": "2026-11-14T10:14:06Z",
+              "expires_at": "2026-11-28T10:14:05Z",
+              "updated_at": "2026-11-14T10:14:06Z",
+              "digest": "sha256:66e3717cf6a298a661ac7f2cdd03be03824e28badccc2b96ad097c14c3f523d4",
+              "workflow_run": {
+                "id": 43584178239,
+                "repository_id": 1455724710,
+                "head_repository_id": 1455724710,
+                "head_branch": "astra-check-wp14",
+                "head_sha": "121915c3661d94f133bea0cbe4a8ca3a4ebea56d"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "product": "W6",
+        "runId": 43584536897,
+        "data": {
+          "artifacts": [
+            {
+              "id": 14110035678,
+              "name": "astra-wp14-check-1",
+              "size_in_bytes": 7777,
+              "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14110035678",
+              "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14110035678/zip",
+              "expired": false,
+              "created_at": "2026-11-14T10:18:35Z",
+              "expires_at": "2026-11-28T10:18:35Z",
+              "updated_at": "2026-11-14T10:18:35Z",
+              "digest": "sha256:d07f060138fc5b169964f62a0087d27247389eacef334df3663ad22703a19c83",
+              "workflow_run": {
+                "id": 43584536897,
+                "repository_id": 1455724710,
+                "head_repository_id": 1455724710,
+                "head_branch": "astra-check-wp14",
+                "head_sha": "760cf0549a5432819f3a3d4a42f87fdbedfb1ece"
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "remotePolicy": {
+    "remoteOperations": "GitHub MCP only; hosted runner checkout/fetch belongs to canonical CI protocol",
+    "localProductTests": false,
+    "epic": false,
+    "merge": false,
+    "deploy": false,
+    "foreignAuthoredChanges": 0,
+    "planChanged": false,
+    "desktopOrServerRestart": false
+  },
+  "acceptance": {
+    "integral": "BLOCKED",
+    "nativeSession": false,
+    "AM05": false,
+    "globalBundle": false,
+    "reason": "Own implementation and scoped executable proofs delivered. Remaining host/native/composition and purity transfer obligations are listed individually in the 91-criterion matrix."
+  },
+  "ownerNotifications": {
+    "WP10Initial": "https://github.com/gustavomhss/Orchestra-SF/pull/29#issuecomment-6875345759",
+    "WP12Compatibility": "https://github.com/gustavomhss/Orchestra-SF/pull/39#issuecomment-6875602499",
+    "finalHandoff": "Final owner comment URLs and documentation-only commit identity are recorded in PR #38 after this receipt is published."
+  },
+  "latestProductResult": {
+    "run": 43584174407,
+    "job": 132415011849,
+    "conclusion": "success",
+    "pass": 39,
+    "fail": 0,
+    "files": 6,
+    "assertions": 556,
+    "elapsedSeconds": 75.47,
+    "product": "1240efef88be380c82b29ec422a13c54b42c7b62",
+    "snapshot": "7376413d8d6b07dd9e86f3f1fc8e1e1a495fe6f1",
+    "logSha256": "8ec3f4fc415ad12ecae9112faf4f0ff985831f4c0d9a05936589634036dea015"
+  },
+  "latestCheckResult": {
+    "run": 43584536897,
+    "job": 132416102283,
+    "conclusion": "failure",
+    "typecheckDiagnostics": 139,
+    "wp14PathDiagnostics": 0,
+    "guardConclusion": "pass",
+    "guardRules": 78,
+    "guardChangedPaths": 609,
+    "guardGates": 0,
+    "guardWarnings": 11,
+    "guardErrors": 0,
+    "product": "302332e2d30ecb3426265aac3adaa518b81a5ea3",
+    "snapshot": "760cf0549a5432819f3a3d4a42f87fdbedfb1ece",
+    "logSha256": "a260a8f82af8b2fc87690d11d0c241c4bc13b23df9a6426c67c0cab341563557"
+  },
+  "wp10PlannerLatencyReconciliation": {
+    "product": "f075e9824b7d8aed50b7f42c597528ef198177db",
+    "snapshot": "dd648c423ab97fbe6e806b620057a328a5816b5f",
+    "run": 43580252381,
+    "job": 132403235716,
+    "runConclusion": "failure",
+    "runPass": 198,
+    "runFail": 12,
+    "runSkip": 2,
+    "plannerPass": 16,
+    "reopenRecallMs": 45206.01,
+    "overlapRevocationMs": 45544.43,
+    "latencyFinding": "resolved at executed f075 product pin",
+    "latestSourceAudit": "0cf10879337bf1e4a4dfd0dbde0b9c259cb51d23",
+    "latestSourceHeadExecuted": false,
+    "details": "owner-findings/consumer-audit/0cf10879/product-final-summary.json",
+    "doesNotResolve": [
+      "WP14 ranking features",
+      "native candidateAccess producer",
+      "full host run",
+      "native session proof"
+    ]
+  }
+}
