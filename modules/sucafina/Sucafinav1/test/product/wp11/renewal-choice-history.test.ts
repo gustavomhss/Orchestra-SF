@@ -14,16 +14,20 @@ test("the same durable choice preserves omitted training while a confirmed sourc
     expect(before.selectedResult).toMatchObject({ knownSubtotal: 210000, total: null, comparisonStatus: "conditioned", costCoverage: { coverageState: "pending", derivedMissingCategoryIds: ["training"] } })
     expect(before.comparison).toMatchObject({ knownDifference: -30000, completeDifference: null, comparisonStatus: "conditioned" })
     expect(before.advantageComparison.knownDifference).toBe(30000)
+    await history.checkpoint("threshold-before:start")
     const thresholdBefore = await before.exact(before.sensitivityRequest, before.baselineRef, history.fixture.context)
+    await history.checkpoint("threshold-before:complete")
     expect(thresholdBefore.status).toBe("ok")
     if (thresholdBefore.status !== "ok") throw new Error(thresholdBefore.reason)
     expect(thresholdBefore.value.value).toBeCloseTo(55000, 8)
     const chosen = await history.choose()
+    await history.checkpoint("choice-recorded")
     const choiceDigest = digestSfValue(chosen.choice)
     expect(chosen.choice).toMatchObject({ result: { knownSubtotal: 210000, total: null }, costCoverage: { coverageState: "pending", derivedMissingCategoryIds: ["training"] } })
     expect((await history.readCase()).preparedChanges).toEqual([])
     expect((await history.readCase()).receipts).toEqual([])
     const after = await history.resolveTraining()
+    await history.checkpoint("training-revised")
     expect(after.caseRef.id).toBe(before.caseRef.id)
     expect(after.caseRef.incarnation).toBe(before.caseRef.incarnation)
     expect(after.caseRef.version).toBeGreaterThan(chosen.caseRef.version)
@@ -33,7 +37,9 @@ test("the same durable choice preserves omitted training while a confirmed sourc
     expect(after.selectedResult.components.every((component) => component.evidenceState === "confirmed")).toBe(true)
     expect(after.comparison).toMatchObject({ knownDifference: 10000, completeDifference: 10000, comparisonStatus: "complete", criterionResults: [{ criterionId: "renewal-difference", state: "failed" }] })
     expect(after.advantageComparison.completeDifference).toBe(-10000)
+    await history.checkpoint("threshold-after:start")
     const thresholdAfter = await after.exact(after.sensitivityRequest, after.baselineRef, history.fixture.context)
+    await history.checkpoint("threshold-after:complete")
     expect(thresholdAfter.status).toBe("ok")
     if (thresholdAfter.status !== "ok") throw new Error(thresholdAfter.reason)
     expect(thresholdAfter.value.value).toBeCloseTo(15000, 8)
@@ -49,6 +55,7 @@ test("the same durable choice preserves omitted training while a confirmed sourc
     expect((await history.readCase()).ledger.filter((event) => event.kind === "choice-recorded")).toHaveLength(1)
     // An interval certificate can use a source-only scenario only with the producer's current-value parameter proof.
     const structural = await createPlannerIntervalProof({ units: after.issuer, preview: after.preview })(after.sensitivityRequest, after.baselineRef, history.fixture.context)
+    await history.checkpoint("interval-proof:complete")
     if (structural.status !== "ok") throw new Error(structural.reason)
     const body = { schema: "sf-portfolio-selection-v1" as const, selectionRef: "history-selection", caseRef: after.caseRef, baselineAlternativeId: "baseline", alternativeId: "selected", baselineRef: after.baselineRef, alternativeRef: after.selectedRef, criteria: [after.rule.criterionId], comparisonDigest: digestSfValue(after.comparison), version: 1, principalRef: "finance", accessRevision: "access", policyVersion: "policy", createdAt: "2026-11-13T02:00:00Z" }
     const selection: PortfolioSelection = { ...body, selectionDigest: digestSfValue(body) }
@@ -65,5 +72,6 @@ test("the same durable choice preserves omitted training while a confirmed sourc
       expect(digestSfValue(persisted.value.decision?.choices[0])).toBe(choiceDigest)
       expect(persisted.value.result).toMatchObject({ caseRef: after.caseRef, kind: "scenario", result: { total: 250000, comparisonStatus: "complete" } })
     } finally { await reopened.dispose() }
+    await history.checkpoint("history-reopened:complete")
   } finally { await history.cleanup() }
 }, 180000)
