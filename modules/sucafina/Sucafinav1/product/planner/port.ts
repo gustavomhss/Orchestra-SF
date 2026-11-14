@@ -13,6 +13,7 @@ import { decodeSfOperationInput } from "../contracts/schema-admission.ts"
 import { projectPlanner } from "./adapter.ts"
 import { plannerMonthlyPrefix } from "./bi.ts"
 import { plannerHrMonthState } from "./headcount-months.ts"
+import { plannerActualMonth } from "./actual-presence.ts"
 import { plannerCoverageComplete } from "./coverage.ts"
 import { simulateScenario } from "./scenario-port.ts"
 import type { PlannerScenarioInputs } from "./scenario-port.ts"
@@ -199,15 +200,20 @@ export function buildPlannerFinancialProjection(input: { projection: Record<stri
     const hrBudget = hrKnown ? hr.reduce((sum, line) => sum + Number((line.budget as number[])[month - 1]), 0) : null
     values.push({ id: `${monthlyPrefix}:${month}:hr-budget`, value: hrBudget, currency: "USD", period, granularity: "month", sourceRefs: [input.ref], drilldown: input.ref, evidenceState: hrBudget === null ? "absent" : "confirmed" })
     for (const measure of ["budget", "actual", "outlook"] as const) {
+      if (measure === "actual") {
+        const actual = plannerActualMonth(summary, month, input.projection.restrictedHr === true)
+        values.push({ id: `${monthlyPrefix}:${month}:actual`, value: actual.value, currency: "USD", period, granularity: "month", sourceRefs: [input.ref], drilldown: input.ref, evidenceState: actual.evidenceState })
+        continue
+      }
       const totals = Array.isArray(summary[measure]) ? summary[measure] : []
       const unknown = !lines.length || lines.some((line) => {
         if (line.synthetic === true) {
           const hr = plannerHrMonthState(input.projection, line, month)
-          return (measure === "budget" ? hr.budgetUsd : measure === "actual" ? hr.actualUsd : hr.outlookUsd) === null
+          return (measure === "budget" ? hr.budgetUsd : hr.outlookUsd) === null
         }
         if (Array.isArray(summary.warnings) && summary.warnings.includes(String(line.cur ?? "USD").toUpperCase())) return true
         if (measure === "outlook") return false
-        const raw = measure === "budget" ? line.b : line.a
+        const raw = line.b
         return !Array.isArray(raw) || typeof raw[month - 1] !== "number" || !Number.isFinite(raw[month - 1])
       }) || measure === "outlook" && (matching.length !== lines.length || matching.some((component) => component.amount === null))
       const value = !unknown && typeof totals[month - 1] === "number" && Number.isFinite(totals[month - 1]) ? totals[month - 1] : null
