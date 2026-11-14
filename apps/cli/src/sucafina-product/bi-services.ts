@@ -185,8 +185,10 @@ export function createSfAuthorizedScenarioBiProjection(input: {
       selected.comparisonRef !== selection.comparisonRef || selected.sensitivityResultRef !== selection.sensitivityResultRef ||
       selected.advantageComparisonRef !== selection.advantageComparisonRef) return { status: "denied", reason: "bi-scenario-selection-mismatch" }
     const request = input.host.requestFor(call), binding = digestSfValue([call.kind, call.binding]), expected = digestSfValue(selection)
+    const transport = () => request && digestSfValue({ method: request.method, url: request.url, headers: [...request.headers.entries()] })
+    const expectedTransport = transport()
     const current = () => request !== undefined && input.host.requestFor(call) === request && !request.signal.aborted &&
-      binding === digestSfValue([call.kind, call.binding]) && expected === digestSfValue(incoming) && expected === digestSfValue(selection)
+      transport() === expectedTransport && binding === digestSfValue([call.kind, call.binding]) && expected === digestSfValue(incoming) && expected === digestSfValue(selection)
     const denied = (): PortResult<never> => ({ status: "denied", reason: "bi-scenario-authority-changed" })
     if (!current() || !await input.host.revalidate(call) || !current()) return denied()
     // C08 owns the exact direct/inverse pair, current case and source authority.

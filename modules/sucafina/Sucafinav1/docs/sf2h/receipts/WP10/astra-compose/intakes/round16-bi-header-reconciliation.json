@@ -1,0 +1,37 @@
+{
+  "schema": "sf2-own-wp10-reconciliation-v1",
+  "base": {
+    "head": "5cb947a4d6e11a37dbd702404c2d4f4d352a4b57",
+    "tree": "e39b8189cf70ecd3b00c02dcf59f9388d65b8b2d"
+  },
+  "source": {
+    "pr": 29,
+    "head": "c3b02c7693c1ff3b702596c7c8458f913972a404",
+    "tree": "f3719144bcaa6cfebcfdbd9cd1283edaae99ae3c"
+  },
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/bi-services.ts",
+      "method": "EXACT_PUBLISHED_OWNER_BLOB",
+      "staged": "incoming-cache/pr29-c3b-bi/source/apps/cli/src/sucafina-product/bi-services.ts",
+      "previous_blob": "f2f25da7875267f722d88cfa36820b5daa6c6c74",
+      "blob": "b6a84dd807207e9b6791dc10f1419ec756ea1167",
+      "sha256": "a0fce1e8e8f030874246616ad7777b2f4ac7fca4706d265502883fd099b03a95",
+      "bytes": 18183
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-advantage-selection.test.ts",
+      "method": "OWN_WP10_RECONCILIATION",
+      "staged": "incoming-cache/pr29-c3b-bi/reconciled/modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-advantage-selection.test.ts",
+      "previous_blob": "17415533dc254bb5181171a48a77fefe80792dcf",
+      "blob": "f391b6d8012cf39f0928f01d3d5ae9e6626549dd",
+      "sha256": "ac807434a5eeca7a2c998e04161ff583b89912f65235643cb879768fe2adda62",
+      "bytes": 11105
+    }
+  ],
+  "conflict": "Published source test reintroduced optional-call argument increment, so callback-free baseline does not count authorization awaits. Preserve Astra W13 unconditional increment after authentic awaited authorization; accept only additional first/last Request-header counterproof loop. Service full blob matches published source.",
+  "finding_comment": 6878456445,
+  "source_branch_modified": false,
+  "local_product_execution": false,
+  "acceptance": "STATIC_RECONCILIATION_PENDING_EXACT_ACTIONS"
+}

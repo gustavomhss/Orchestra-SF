@@ -135,5 +135,19 @@ test("BI refuses lease loss after its first and last real authorization awaits a
     expect(refused).toEqual({ status: "denied", reason: "bi-scenario-authority-changed" })
     expect(refused).not.toHaveProperty("value")
     fixture.fixture.ui.finish(call)
+    for (const boundary of [1, baseline.calls.count]) {
+      const changed = await fixture.admit()
+      const headers = observe((count, current) => {
+        if (count !== boundary) return
+        const request = fixture.fixture.host.requestFor(current)
+        if (!request) throw new Error("Authentic Request missing at the observed boundary")
+        request.headers.set("x-wp10-changed-during-bi-read", "changed")
+      })
+      const denied = await headers.read(fixture.selection, changed)
+      expect(headers.calls.count).toBe(boundary)
+      expect(denied).toEqual({ status: "denied", reason: "bi-scenario-authority-changed" })
+      expect(denied).not.toHaveProperty("value")
+      fixture.fixture.ui.finish(changed)
+    }
   } finally { await fixture.close() }
 }, 60000)

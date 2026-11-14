@@ -324,8 +324,14 @@ test("the canonical shell still polls authority while BI awaits a held result an
     // Revoke the real encrypted operator session from a separate HTTP caller
     // with the observed cookie. The browser keeps its old cookie, so the
     // server's durable revocation, not a fabricated client event, denies it.
-    const cookies = await world.context.cookies(world.origin)
-    const revoked = await fetch(new URL(`${world.mount}/auth/logout`, world.origin).href, { method: "POST", signal: deadline.signal,
+    const logout = new URL(`${world.mount}/auth/logout`, world.origin)
+    // cookies(origin) filters at "/" and omits the real mount-scoped session.
+    // Assert only its count/path/presence, never the credential value.
+    const cookies = (await world.context.cookies(logout.href)).filter((cookie) => cookie.name.startsWith("sucafina_operator_"))
+    expect(cookies.length).toBe(1)
+    expect(cookies[0]!.path).toBe(world.mount)
+    expect(cookies[0]!.value.length > 0).toBe(true)
+    const revoked = await fetch(logout.href, { method: "POST", signal: deadline.signal,
       headers: { origin: world.origin, cookie: cookies.map((cookie) => `${cookie.name}=${cookie.value}`).join("; ") }, redirect: "manual" })
     expect(revoked.status).toBe(204)
     expect(world.aborted).not.toContain("bi-data")
@@ -388,18 +394,51 @@ test("BI returns from a real source with the same human filters, version pair, c
     // This case proves navigation and current reauthorization, not timer order.
     // Let document loading, animation frames and history restoration run normally.
     await deadline.phase("navigation-clock.resume", () => page.clock.resume())
-    await deadline.phase("filters.view", () => page.getByLabel("Visualização", { exact: true }).selectOption("BI02"))
+    const [viewOptions] = await deadline.phase("filters.view", () => Promise.all([
+      page.waitForResponse((response) => {
+        const url = new URL(response.url())
+        return url.pathname === `${world.mount}/dashboard` && url.searchParams.get("sf") === "bi-options" && url.searchParams.get("viewId") === "BI02" && url.searchParams.get("start") === "2026-01-01" && url.searchParams.get("end") === "2026-12-31"
+      }),
+      page.getByLabel("Visualização", { exact: true }).selectOption("BI02"),
+    ]))
+    expect(viewOptions.status()).toBe(200)
     await page.waitForFunction(() => [...(document.querySelector('select[aria-label="Versão base"]') as HTMLSelectElement).options].filter((item) => item.value).length === 2)
-    await page.getByLabel("Fim", { exact: true }).fill("2026-03-31")
-    await deadline.phase("filters.period", () => page.getByLabel("Fim", { exact: true }).dispatchEvent("change"))
-    await page.waitForFunction(() => [...(document.querySelector('select[aria-label="Versão base"]') as HTMLSelectElement).options].filter((item) => item.value).length === 2)
+    const [periodOptions] = await deadline.phase("filters.period", () => Promise.all([
+      page.waitForResponse((response) => {
+        const url = new URL(response.url())
+        return url.pathname === `${world.mount}/dashboard` && url.searchParams.get("sf") === "bi-options" && url.searchParams.get("viewId") === "BI02" && url.searchParams.get("start") === "2026-01-01" && url.searchParams.get("end") === "2026-03-31"
+      }),
+      deadline.phase("filters.period.gesture", async () => {
+        // fill(date) already emits change. Commit focus before selecting versions;
+        // a synthetic second change starts another loadOptions and aborts the first.
+        await page.getByLabel("Fim", { exact: true }).fill("2026-03-31")
+        await page.getByLabel("Fim", { exact: true }).press("Tab")
+      }),
+    ]))
+    expect(periodOptions.status()).toBe(200)
+    await deadline.phase("filters.period.dom", () => page.waitForFunction(() => {
+      const root = document.querySelector("[data-sf-bi]")
+      const versions = root?.querySelector<HTMLSelectElement>('select[aria-label="Versão base"]')
+      return versions && [...versions.options].filter((item) => item.value).length === 2 && root?.querySelector('[role="status"]')?.textContent?.startsWith("Escolha os dados e atualize a visualização.")
+    }))
     await page.getByLabel("Dados para visualizar", { exact: true }).selectOption("planner")
     const versions = await page.getByLabel("Versão base", { exact: true }).locator("option").evaluateAll((options) => options.map((option) => (option as HTMLOptionElement).value).filter(Boolean))
     await page.getByLabel("Versão base", { exact: true }).selectOption(versions[0]!)
     await page.getByLabel("Versão candidata", { exact: true }).selectOption(versions[1]!)
     await page.getByLabel("Moeda da comparação", { exact: true }).fill("USD")
+    await page.getByLabel("Moeda da comparação", { exact: true }).press("Tab")
+    await deadline.phase("comparison.ready", () => page.waitForFunction(({ baseline, candidate }) => {
+      const form = document.querySelector<HTMLFormElement>("[data-sf-bi] > form")
+      const submit = form?.querySelector<HTMLButtonElement>('button[type="submit"]')
+      const value = (label: string) => form?.querySelector<HTMLInputElement | HTMLSelectElement>(`[aria-label="${label}"]`)?.value
+      return form?.matches(":valid") && submit?.disabled === false && value("Visualização") === "BI02" && value("Início") === "2026-01-01" && value("Fim") === "2026-03-31" && value("Dados para visualizar") === "planner" && value("Versão base") === baseline && value("Versão candidata") === candidate && value("Moeda da comparação") === "USD"
+    }, { baseline: versions[0]!, candidate: versions[1]! }))
+    expect(await page.getByRole("button", { name: "Atualizar visualização", exact: true }).isEnabled()).toBe(true)
     const [data] = await deadline.phase("comparison.http", () => Promise.all([
-      page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "bi-data"),
+      page.waitForResponse((response) => {
+        const url = new URL(response.url())
+        return url.pathname === `${world.mount}/dashboard` && url.searchParams.get("sf") === "bi-data" && url.searchParams.get("viewId") === "BI02" && url.searchParams.get("start") === "2026-01-01" && url.searchParams.get("end") === "2026-03-31" && url.searchParams.get("baseRef") === versions[0] && url.searchParams.get("candidateRef") === versions[1] && url.searchParams.get("currency") === "USD"
+      }),
       page.getByRole("button", { name: "Atualizar visualização", exact: true }).click(),
     ]))
     expect(data.status()).toBe(200)
