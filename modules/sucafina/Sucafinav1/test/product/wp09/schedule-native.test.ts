@@ -108,7 +108,7 @@ function lifecycleFixture() {
     readExecution: async () => ({ status: "ok", value: structuredClone(receipt) }),
     resultAccess,
   }
-  return { host, context, routine, receipt, state, resultAccess }
+  return { host, context, native, owner, routine, receipt, state, resultAccess }
 }
 
 test("admitted plus resultRef remains blocked without execution or authenticated output readers", async () => {
@@ -160,3 +160,25 @@ test("cancellation after the artifact read invalidates the earlier completion sn
   } }
   expect(await readNativeRoutineSchedule("schedule", context, host)).toEqual({ status: "stale", reason: "schedule-execution-changed" })
 })
+
+test("a changed schedule revision during result recovery cannot return its older occurrence", async () => {
+  const { host, context, native, resultAccess } = lifecycleFixture()
+  host.resultAccess = { readResult: async (runRef, binding) => {
+    const opened = await resultAccess.readResult(runRef, binding)
+    native.revision++
+    native.enabled = false
+    return opened
+  } }
+  expect(await readNativeRoutineSchedule("schedule", context, host)).toEqual({ status: "stale", reason: "schedule-changed" })
+})
+
+test("a substituted owner binding during result recovery cannot expose the former owner's result", async () => {
+  const { host, context, native, owner, resultAccess } = lifecycleFixture()
+  host.resultAccess = { readResult: async (runRef, binding) => {
+    const opened = await resultAccess.readResult(runRef, binding)
+    host.resolve = async () => ({ status: "ok", value: { nativeId: native.id, owner, principalRef: "replacement", projectId: "project" } })
+    return opened
+  } }
+  expect(await readNativeRoutineSchedule("schedule", context, host)).toEqual({ status: "stale", reason: "schedule-binding-changed" })
+})
+

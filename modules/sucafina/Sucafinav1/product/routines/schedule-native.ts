@@ -66,6 +66,12 @@ export async function readNativeRoutineSchedule(scheduleRef: string, context: Tr
     if (current.status !== "ok") return current
     if (digestSfValue(current.value) !== digestSfValue(routine)) return { status: "stale", reason: "schedule-routine-changed" }
   }
+  const currentBinding = await host.resolve(scheduleRef, context)
+  if (currentBinding.status !== "ok") return currentBinding
+  if (digestSfValue(currentBinding.value) !== digestSfValue(binding)) return { status: "stale", reason: "schedule-binding-changed" }
+  const current = await Effect.runPromise(Effect.result(host.schedules.get(structuredClone(binding.owner), binding.nativeId)))
+  if (current._tag === "Failure") return { status: "unavailable", reason: "schedule-unavailable" }
+  if (digestSfValue(current.success) !== digestSfValue(native)) return { status: "stale", reason: "schedule-changed" }
   if (!await host.revalidate(context, [scheduleRef, ...(routine?.runRef ? [routine.runRef] : []), ...(routine?.resultRef ? [routine.resultRef] : [])])) return { status: "denied", reason: "schedule-access-unavailable" }
   return {
     status: "ok",
@@ -111,3 +117,4 @@ async function readRoutinePresentation(routine: RoutineResult, context: TrustedD
     outputAuthorized: opened?.status === "ok",
   }) }
 }
+

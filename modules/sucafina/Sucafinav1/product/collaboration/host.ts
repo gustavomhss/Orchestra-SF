@@ -128,7 +128,7 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
       const record = result.value
       return { status: "ok" as const, value: { id: record.id, sourceRef: record.sourceRef, observedSourceVersion: record.observedSourceVersion, observedScopeFingerprint: record.observedScopeFingerprint, scope: record.scope, authorId: record.authorId, confirmedAt: record.confirmedAt, auditRef: record.auditRef } }
     }
-    return { prepare, confirm, project: port.project, find: port.find, inspect: port.inspect, work }
+    return { prepare, confirm, project: port.project, readScope: port.readScope, find: port.find, inspect: port.inspect, work }
   })()
   const answerWork = input.confirmationSource ? createAnswerWorkPort({ host: input.host, state: input.state, source: input.confirmationSource, authorizeSources: authority.sources }) : undefined
   const collaboration = createCollaborationComposition({ host: input.host, state: input.state, creationTarget: input.creationTarget, evidence: input.evidence, procurement: input.procurement, selections, signals: input.workSignals, recordEvidence, human: input.human, recipientAuthority: input.recipientAuthority, recipientThread, reissue, refreshWorkSource, captureWorkSource: input.captureWorkSource, confirmationWork: confirmation?.work, answerWork: answerWork?.project, createId: input.createId, now: input.now })
@@ -213,4 +213,5 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
   const cycle = createCollaborationCycleView({ cases: input.cases, work: collaboration.work, host: input.host, resolveCase: caseSelection?.resolveCase })
   return { ...collaboration, questions, cycle, caseSelection, confirmation, answerReuse, threadHistory, listRecipients, storageVersion, recipientThread, recipientActions, captureWorkSource, resolveWorkDestination, recordEvidence, selections, sourceFence: createCollaborationSourceFence({ host: input.host, scopedSources: input.scopedSources }), resolveQuestion: createQuestionSource(threadReads), answerEvidence, resolveAnswer: answerEvidence.resolve, projectAnswer: answerEvidence.project, capabilities: createCollaborationCapabilities(dispatch) }
 }
+
 
