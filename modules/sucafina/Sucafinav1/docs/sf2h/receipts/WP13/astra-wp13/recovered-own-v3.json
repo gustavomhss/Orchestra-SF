@@ -1,0 +1,38 @@
+{
+  "schema": "sf-wp13-own-delta-intake-v1",
+  "sourceRepository": "gustavomhss/Orchestra-SF",
+  "sourceCommit": "46c904ead4e9b363422f6739258e492913ae6e2e",
+  "sourceParent": "2fb7e9c792327725384d99d656cc44b232ddc485",
+  "exactFiles": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/threshold-proof.ts",
+      "sourceBlob": "056a857364cf8a6c2a2bc97bf107276612edf55d",
+      "localBlob": "056a857364cf8a6c2a2bc97bf107276612edf55d"
+    }
+  ],
+  "adaptedOwnFiles": [
+    "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+    "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+    "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp13/portfolio.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts"
+  ],
+  "adaptation": [
+    "Compose canonical adjacent IEEE witness validation with WP13 C10 interval qualification; keep source-only parameter validation, finite component guard, and omitted training exact bound conditioned.",
+    "A definitive failed domain constraint makes a portfolio combination ineligible while its financial comparison can remain conditioned.",
+    "Revalidation receives detached observations and cannot mutate them without failing the retained digest fence.",
+    "Do not consume old binding-recovery logic that retries denied or stale results; current WP13 keeps those failures explicit."
+  ],
+  "sourceCi": {
+    "runId": 43581167804,
+    "jobId": 132405995173,
+    "snapshot": "d2c29d6852b4066f3e78b2d24fa1facaf15d5fde",
+    "conclusion": "failure",
+    "pass": 74,
+    "fail": 6,
+    "error": 1,
+    "durationSeconds": 920.15,
+    "note": "Source run does not validate this adapted worktree. Four timeout failures, omitted-training restriction failure, and omni control failure; restart reader also returned stale."
+  },
+  "validation": "Static inspection and exact new-file blob hash only. No local product tests or remote mutations; await root surgical GitHub Actions."
+}

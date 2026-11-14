@@ -11,8 +11,10 @@ import type { PortfolioBinding } from "../decisions/portfolio-bindings.ts"
 import type { CriterionResultBinding } from "../decisions/criterion-rules.ts"
 import type { createPlannerSensitivityUnits } from "../planner/sensitivity-units.ts"
 import { plannerScenarioDigest } from "../planner/preview-comparison.ts"
-import { createSensitivityEvaluator } from "./sensitivity.ts"
+import { createSensitivityEvaluator, quantifiedSensitivityScenario } from "./sensitivity.ts"
 import { finalizePlannerSensitivity, plannerSensitivityScenario } from "./planner-sensitivity.ts"
+import { validatePlannerThreshold } from "./threshold-proof.ts"
+import type { KnownSubtotalThreshold } from "./threshold-proof.ts"
 import type { createPlannerSensitivity } from "./planner-sensitivity.ts"
 import type { CriterionComparisonBinding } from "../decisions/criterion-comparison.ts"
 import { createProductionPortfolio } from "./production.ts"
@@ -106,7 +108,8 @@ export function createPortfolioProofVerifier(input: {
     const interval = input.coveragePreview ? structuredClone(await input.coveragePreview.issue(structuredClone(binding.request), unitBinding.baselineRef, context)) : undefined
     if (interval && interval.status !== "ok" && interval.status !== "unavailable") return false
     const samples: { resultRef: string; coverageRefs: readonly string[]; conditions: readonly string[]; complete: boolean }[] = []
-    const exact: { value?: { value: number | null; evidenceRefs: readonly import("../contracts/business-context.ts").BusinessEvidenceRef[] } } = {}
+    const exact: { value?: KnownSubtotalThreshold } = {}
+    const certify = (certificate: Parameters<typeof validatePlannerThreshold>[0]["certificate"], trusted: TrustedDomainContext) => validatePlannerThreshold({ request: binding.request, binding: unitBinding, source: sourceScenario, baseline: baselineScenario, certificate, preview: input.sensitivityPreview, context: trusted })
     const evaluate = createSensitivityEvaluator({
       sample: async (_request, value, trusted) => {
         const point = expectedResult.evaluated[samples.length]
@@ -124,10 +127,12 @@ export function createPortfolioProofVerifier(input: {
         return { status: "ok", value: { resultRef: point.resultRef, scenario: saved.value.result, criterionValue: point.value, parameterUnit: unitBinding.parameterUnit, resultUnit: unitBinding.resultUnit, unitMetadataRef: unitBinding.unitMetadataRef, unitMetadataVersion: unitBinding.unitMetadataVersion, ...(qualification ? { coverageQualification: qualification } : {}) } }
       },
       exactThreshold: async (_request, trusted) => {
-        if (!input.exactThreshold || samples.some((sample) => !sample.complete) || (interval?.status !== "ok" && (baselineScenario.costCoverage.coverageState !== "complete" || sourceScenario.costCoverage.coverageState !== "complete"))) return { status: "unavailable", reason: "exact-threshold-not-proven" }
+        if (!input.exactThreshold || !quantifiedSensitivityScenario(sourceScenario) || !quantifiedSensitivityScenario(baselineScenario)) return { status: "unavailable", reason: "exact-threshold-not-proven" }
         const result = structuredClone(await input.exactThreshold(structuredClone(binding.request), structuredClone(unitBinding), trusted))
-        if (result.status === "ok") exact.value = result.value
-        return result
+        if (result.status !== "ok") return result
+        const certificate = await certify(result.value, trusted)
+        if (certificate.status === "ok") exact.value = certificate.value
+        return certificate
       },
       revalidate: async (_samples, _threshold, trusted) => {
         if (!await input.units.revalidate(unitBinding, trusted) || samples.length !== expectedResult.evaluated.length) return false
@@ -138,7 +143,9 @@ export function createPortfolioProofVerifier(input: {
         if (!exact.value) return true
         if (!input.exactThreshold) return false
         const current = structuredClone(await input.exactThreshold(structuredClone(binding.request), structuredClone(unitBinding), trusted))
-        return current.status === "ok" && digestSfValue(current.value) === digestSfValue(exact.value)
+        if (current.status !== "ok") return false
+        const certificate = await certify(current.value, trusted)
+        return certificate.status === "ok" && digestSfValue(certificate.value) === digestSfValue(exact.value)
       },
       verifyCoverageQualification: input.coveragePreview?.verify,
     })

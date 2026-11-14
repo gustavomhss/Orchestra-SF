@@ -195,6 +195,25 @@ test("campaign rejects a candidate in another currency or horizon before any wri
   }
 })
 
+test("a saved campaign remains authenticated historical data at the same owner case version", async () => {
+  const world = await harness()
+  try {
+    const saved = await world.campaign.save(world.edit(), binding)
+    if (saved.status !== "ok") throw new Error(`Campaign unavailable: ${JSON.stringify(saved)}`)
+    const request = { ownerCase: saved.value.ownerCase, commandDigest: saved.value.commandDigest }
+    expect(await world.campaign.readHistorical(request, binding)).toEqual({ status: "ok", value: { state: "historical", campaign: saved.value } })
+    expect(await world.campaign.listHistorical(saved.value.ownerCase, binding)).toEqual({ status: "ok", value: [{ state: "historical", campaign: saved.value }] })
+    world.sources.revoked = true
+    expect((await world.campaign.readHistorical(request, binding)).status).toBe("unavailable")
+    world.sources.revoked = false
+    world.access.authorizeCase = false
+    expect((await world.campaign.readHistorical(request, binding)).status).toBe("denied")
+  } finally {
+    await world.store.dispose()
+    await rm(world.directory, { recursive: true, force: true })
+  }
+})
+
 test("a prior campaign is separately marked historical after the owner case advances", async () => {
   const world = await harness()
   try {

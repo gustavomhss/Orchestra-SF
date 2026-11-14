@@ -1,0 +1,59 @@
+{
+  "schema": "sf-owner-delta-v1",
+  "status": "NOT_APPLIED",
+  "owner": "WP10",
+  "consumer": "WP13",
+  "target": {
+    "branch": "astra-wp10",
+    "head": "f075e9824b7d8aed50b7f42c597528ef198177db",
+    "path": "apps/cli/src/sucafina-product/portfolio-services.ts",
+    "blob": "83c525e733b2cb21637734e3b1e07950e72f4f97"
+  },
+  "producers": {
+    "finance": "ffe77b53f3c074f03fe6dc3ff7caa788778eca99",
+    "wp13": "W3 product commit recorded in delivery.json",
+    "wp11": "efa0e57e54862f99a07b2837af5e729adb881415"
+  },
+  "patch": "wp10-sensitivity.NOT_APPLIED.patch.txt",
+  "changes": [
+    "Add private createSfPortfolioSensitivityAuthority reader over current same-case WP11 selection, C08 scenario records, rule, selected and baseline classifications, fresh source evidence and source fences.",
+    "Inject canonical createPlannerExactThreshold and WP13 certified coverage preview into both createPortfolioProduct and createPortfolioProofVerifier.",
+    "Reconstruct and revalidate certificates on replay; do not publish the adapter Map intervalRef as a C08/C10 reference.",
+    "Keep original ScenarioResult and hypothetical preview disclosure unchanged."
+  ],
+  "blockedAdjacentSeams": [
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-coverage.ts",
+      "blob": "d8a668281ea9cac6a3a04c6bea19811ee8954808",
+      "finding": "Blanket rejection of not-applicable entries is still present at current host head.",
+      "delta": "wp10-supported-na.NOT_APPLIED.patch.txt",
+      "nextAction": "WP10 remove only blanket rejection; retain source classification/supports/freshness/snapshot authorization. Hosted promotion test must cover supported N/A, shared component and revoked N/A statement."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-coverage.ts",
+      "blob": "d8a668281ea9cac6a3a04c6bea19811ee8954808",
+      "finding": "Finance66bbe mutations now verifies source fences for a complete source-only scenario even when reassessed=false; current host creates its proof only in entries(), which is skipped when source assessment already matches baseline.",
+      "nextAction": "WP10 capture source-only proof before mutation admission (same classified current source, attributed result identity and snapshot fence), or WP11 publish a dedicated source-proof callback used before saveCase; never bypass verifySnapshot or manufacture a complete scenario."
+    }
+  ],
+  "durableIntervalAudit": {
+    "requiredForCurrentDelta": false,
+    "reason": "Sensitivity stores actual existing baseline/scenario C10 refs plus fresh evidence; the interval certificate is recomputed from current authentic producer inputs.",
+    "publishedProducer": "product/decisions/coverage-interval-store.ts",
+    "sourceCommit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+    "sourceBlob": "38fe7b91cfbad1d0f986c2252e68fed32446a2fd",
+    "nextActionIfPublicReferenceRequired": "Use createCoverageIntervalRegistry.register/read with proposalCoverageWrites and exact locked source/case/preferences fences. Advertise only its returned coverage-interval:<certificateDigest> after the read resolves; add host dispatch for that durable ref before adding it to consumer outputs."
+  },
+  "validation": {
+    "productTestsRun": false,
+    "typecheckRun": false,
+    "reason": "Ownership delta only. Root runs WP13 hosted CI; WP10 applies and runs surgical host default-factory integration.",
+    "requiredTests": [
+      "default host product.evaluateSensitivity yields exact certified 55000/55001, then real 40000 training quote yields15000/15001",
+      "C08 reload uses the same verifier and preserves raw hypothetical samples",
+      "N/A/shared classification preserved; omitted training exposes canonical known-components55000 as conditioned; null amount or missing FX exposes no exact threshold",
+      "source/selection/rule/ACL revocation rejects at ingress and egress",
+      "same-case human choice remains historical and no application receipt is produced"
+    ]
+  }
+}

@@ -1,0 +1,412 @@
+{
+  "schema": "wp13-independent-static-review-v1",
+  "reviewer": "/root/wp13_review_sensitivity",
+  "independent_of_product_authorship": true,
+  "status": "FINDINGS_OPEN_NOT_GLOBAL_ACCEPTANCE",
+  "candidate": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "pull_request": 37,
+    "head": "84fa950ed4925124ca7ee6c854d4ae534bcd6d1a",
+    "tree": "c619bb577c20133c41388eb6d2e538c9af8e453e",
+    "local_files_verified_against_W2_manifest": true,
+    "verification_method": "Read-only Git blob SHA-1 calculation for the seven changed portfolio files named below; every hash matches reference/wp13-W2-file-manifest.json."
+  },
+  "method": {
+    "applicable_instructions_read": [
+      "repo/AGENTS.md"
+    ],
+    "product_tests_executed": false,
+    "typecheck_executed": false,
+    "ci_dispatched": false,
+    "remote_operations": false,
+    "product_or_test_edits": false,
+    "only_written_artifact": "reference/wp13-independent-sensitivity.json",
+    "note": "Parent explicitly authorized this temporary report. Findings rely on source, contract and immutable-plan reading, not test success. Parent reports C2 guard pass and five fixture typecheck diagnostics, with S2 still running; this reviewer did not independently fetch or certify CI."
+  },
+  "primary_files": [
+    "modules/sucafina/Sucafinav1/product/portfolio/coverage-preview.ts",
+    "modules/sucafina/Sucafinav1/product/portfolio/sensitivity.ts",
+    "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+    "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+    "modules/sucafina/Sucafinav1/product/portfolio/product.ts",
+    "modules/sucafina/Sucafinav1/product/portfolio/result-store.ts",
+    "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-store.ts"
+  ],
+  "supporting_files_read": [
+    "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-v6.ts",
+    "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+    "modules/sucafina/Sucafinav1/product/portfolio/capabilities.ts",
+    "modules/sucafina/Sucafinav1/product/portfolio/README.md",
+    "modules/sucafina/Sucafinav1/product/planner/exact-threshold.ts",
+    "modules/sucafina/Sucafinav1/product/planner/interval-proof.ts",
+    "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+    "modules/sucafina/Sucafinav1/product/planner/preview-comparison.ts",
+    "modules/sucafina/Sucafinav1/product/planner/comparison.ts",
+    "modules/sucafina/Sucafinav1/product/decisions/coverage-interval.ts",
+    "modules/sucafina/Sucafinav1/product/decisions/coverage-classification.ts",
+    "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+    "modules/sucafina/Sucafinav1/product/decisions/portfolio-selection.ts",
+    "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+    "modules/sucafina/Sucafinav1/product/decisions/criterion-rules.ts",
+    "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+    "modules/sucafina/Sucafinav1/product/contracts/outputs.ts",
+    "modules/sucafina/Sucafinav1/product/contracts/output-schemas.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp13/coverage-preview.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+    "reference/host-delta/portfolio-services.before.ts",
+    "reference/host-delta/portfolio-sensitivity-authority.ts",
+    "reference/wp13-host-sensitivity.NOT_APPLIED.json",
+    "reference/campaign.json"
+  ],
+  "findings": [
+    {
+      "id": "WP13-SENS-REVIEW-01",
+      "severity": "P1",
+      "owner": "WP13",
+      "state": "OPEN_AT_W2",
+      "title": "Omitted training suppresses the required known-subtotal ceiling instead of publishing 55000 as conditioned",
+      "criterion": "WP13.T03.CHK.20",
+      "locations": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+          "lines": "91-95,141-144"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity.ts",
+          "lines": "49-56,66-67"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-v6.ts",
+          "lines": "18-23"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+          "lines": "126-130,145-148"
+        }
+      ],
+      "mechanism": "With a missing training category, coverage qualification correctly refuses an interval. Every real raw preview is conditioned and has pending coverage. planner-sensitivity's exactThreshold callback then returns unavailable before invoking the canonical solver because samples are not complete. Even if a mathematical value were obtained, sensitivity.ts forces threshold=null for incomplete coverage and finalizePlannerSensitivity retains a numeric value only when comparisonStatus is complete. W2 therefore exposes at most a sampled interval, never the explicit 55000 ceiling for the known components required by the immutable oracle.",
+      "evidence": [
+        "campaign.json WP13.T03.CHK.20 explicitly requires 55000 conditioned while training is omitted, then 15000 after a confirmed40000 training cost.",
+        "campaign.json AI-RENEWAL-OMITTED-CATEGORY expected.implementation_ceiling is {value:55000,status:conditioned}, with total:null and pending training.",
+        "coverage-sensitivity-integration.test.ts checks prior threshold=null for omitted training and has no assertion exposing the required known-subtotal ceiling. Passing that test would not satisfy CHK.20.",
+        "The canonical planner/exact-threshold.ts computes a monotone boundary over existing finite components; it does not require complete C10. An omitted category is not an existing null-valued component and need not become zero for the known-component proof."
+      ],
+      "next_action": "Keep complete decision coverage separate from mathematical precision. Obtain the known-subtotal bound through the published canonical exact-threshold callback; retain comparisonStatus=conditioned and all missing-category/hypothesis disclosures when C10 is incomplete. Reproduce the same semantics in the read-only verifier and persisted binding. Add a hosted real-engine assertion that omitted training publishes the known55000 bound with explicit known-component scope, while total staysnull, training staysmissing and no complete/apply claim appears; preserve15000/15001 after confirmation.",
+      "contract_analysis": "The current C07 SensitivityResult type and generated schema permit thresholdEvidence.state=exact with comparisonStatus=conditioned; there is no cross-field exact=>complete restriction in outputs.ts/output-schemas.ts. The extra restriction is in WP13 attachSensitivityV6. A new knownSubtotalLimit field is not currently legal because additionalProperties=false and would require a contract-owner delta. Before using the existing exact+conditioned representation, inspect consumers for an incorrect inference from precision to coverage or application."
+    },
+    {
+      "id": "WP13-SENS-REVIEW-02",
+      "severity": "P1",
+      "owner": "WP10",
+      "state": "OPEN_CONSUMER_DELTA_NOT_APPLIED",
+      "title": "Inspected default host does not wire canonical threshold or coverage authority into production and replay",
+      "locations": [
+        {
+          "path": "apps/cli/src/sucafina-product/portfolio-services.ts",
+          "reviewed_blob": "83c525e733b2cb21637734e3b1e07950e72f4f97",
+          "review_source": "reference/host-delta/portfolio-services.before.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/product.ts",
+          "lines": "40-46"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+          "lines": "38-41,106-107,126-130"
+        }
+      ],
+      "mechanism": "The host's createPortfolioProduct call supplies neither exactThreshold nor resolveCoverageAuthority, and its createPortfolioProofVerifier call supplies neither exactThreshold nor coveragePreview. WP13 consequently takes the unavailable proof path even for a complete classified case; unit/integration fixtures manually providing these callbacks do not establish delivery in the default product host.",
+      "pin": "astra-wp10@f075e9824b7d8aed50b7f42c597528ef198177db (local snapshot and delta provenance supplied by parent; no new remote verification by this reviewer)",
+      "next_action": "WP10 should consume the published WP13 increment and apply/review the NOT_APPLIED host delta. Wire equivalent canonical callbacks into producer and verifier, resolve the adjacent N/A and source-only mutation proof seams, and run a surgical default-host integration covering complete, conditioned-known55000, reload/replay and revocation. Record the consumer head/tree and run SHA before claiming consumer completion."
+    }
+  ],
+  "static_positive_observations": [
+    {
+      "area": "Absence versus zero",
+      "evidence": "assessCostCoverage distinguishes missing-category, null/nonfinite component and explicit zero; coverage-preview refuses incomplete C10. exactComponents also rejects null/nonfinite values. No source formula or replacement default to zero was found in the reviewed WP13 paths."
+    },
+    {
+      "area": "Shared and N/A coverage",
+      "evidence": "The coverage certificate requires the complete required inventory and authenticated persisted classification; shared entries are matched to one set of component identities. The monetary computation remains with canonical Planner components, not coverage rows. N/A support uses the classification's exact accepted entry plus current evidence."
+    },
+    {
+      "area": "Scope and authority",
+      "evidence": "Intervals bind current selection/case/rule/source/classification state, context installation/project/principal/policy/access, canonical structural proof and current evidence. Qualification verifies both fixed components and the real preview digest, then revalidates current authority. These guarantees rely on the documented authenticated resolveAuthority host contract; its installation remains an open consumer finding."
+    },
+    {
+      "area": "Hypothesis versus human application",
+      "evidence": "Qualification never mutates the raw producer result. C08 samples retain conditioned status, null total and preview-not-applied. The new complete-analysis path emits hypothesis disclosures and creates no choice, prepared mutation or execution receipt."
+    },
+    {
+      "area": "Persistence and replay",
+      "evidence": "Producer and verifier share plannerSensitivityScenario and finalizePlannerSensitivity, rebuild interval qualifications rather than trusting an expired private cache, and compare canonical C08/request/rule/result identities. Persistent stores repair a missing binding only after re-reading and revalidating the same C08 result; stale/denied bindings are not repaired as missing."
+    },
+    {
+      "area": "Canonical numeric boundary",
+      "evidence": "The invoked producer derives its bound through canonical Planner previews and adjacent representable witnesses; WP13 introduces no arithmetic formula. The 55000/55001 and15000/15001 numbers in fixtures match the declared baseline/minimum-benefit composition by static reasoning. Their runtime proof remains the pending hosted test's responsibility."
+    }
+  ],
+  "limitations": [
+    "This report is pinned to W2; later product or fixture fixes are not reviewed by implication.",
+    "No local product test, remote operation or independent CI result retrieval occurred.",
+    "No new incorrect complete/applied promotion, missing-to-zero conversion or formula divergence was identified in the reviewed W2 code under the documented trusted producer/authority contracts. This statement is a scoped static observation, not a proof of absence.",
+    "Human-native dispatch, UI/BI rendering and host default-factory adoption are not demonstrated by these local source reads.",
+    "The private interval cache expires after300000ms and holds32 intervals. Large concurrent analyses may fail closed from expiry or eviction; no runtime latency or load evidence was gathered, so this is an operational observation rather than a demonstrated defect."
+  ],
+  "followups": [
+    {
+      "id": "WP13-SENS-W3-FOLLOWUP-01",
+      "candidate": "W3 frozen local delta; unpublished at review",
+      "parent_candidate_head": "84fa950ed4925124ca7ee6c854d4ae534bcd6d1a",
+      "head": null,
+      "tree": null,
+      "status": "STATIC_CORRECTION_VERIFIED_PUBLICATION_AND_CI_PENDING",
+      "independent_of_authorship": true,
+      "product_tests_executed": false,
+      "typecheck_executed": false,
+      "remote_operations": false,
+      "product_or_test_edits": false,
+      "blob_manifest": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity.ts",
+          "blob": "5c6a1d892912a5967fe69e3e5b79c5672bdb4bad",
+          "sha256": "dd59bc69613da72c67bd274e40a497636a645f66415569e0e942489fe925ee6b",
+          "bytes": 12293
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+          "blob": "3ce5ad8a0373a13906a52692d183572d9cdd73d2",
+          "sha256": "e462d764365806ace56a6e1efe7804203ff3144f26f62796c17872cf778e8418",
+          "bytes": 19058
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+          "blob": "f179536c366349e6f971ecba41f8a4cb31c57442",
+          "sha256": "36f24223b669773e33d0951bc13c9f389c2e5408ac865d988257b11c607e4b2c",
+          "bytes": 16435
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-v6.ts",
+          "blob": "19b4cb50c7878bd1696551c03a5e2279bb95df36",
+          "sha256": "2dcba39e512ed688dfac31b41e784905aea3cf482d84da462299d59e6cdd43db",
+          "bytes": 3888
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/README.md",
+          "blob": "516338b8bfea1bb1411715f2f1d1c6b98a323444",
+          "sha256": "66312d8b2f98a3aa1e1cb06bbb18cff775cf6bca8edf3fd77d3bbc53df3596b7",
+          "bytes": 11183
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+          "blob": "4bddb2b59a1586885ef822fe7d0b15e0260a80ed",
+          "sha256": "b3738c722d07841772fdcb325a652557c5e2fb7b4a6211c0f3da7835979b5f65",
+          "bytes": 21631
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-v6.test.ts",
+          "blob": "71fe0413f45e540b0c3f42dc2b72c9e11596f8d0",
+          "sha256": "0eac0a44ed9ec33056f13f5156fecbd6de92c5e823f3563c19f312c5c5c71903",
+          "bytes": 4082
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity.test.ts",
+          "blob": "a77713b4a8dff26a7d105775633a9f15c1248f21",
+          "sha256": "de359452ef372a189c38e0a807757afb4fd3106e305daa002ae89e85743b9e37",
+          "bytes": 8056
+        }
+      ],
+      "finding_updates": [
+        {
+          "id": "WP13-SENS-REVIEW-01",
+          "state": "CORRECTED_IN_REVIEWED_LOCAL_W3_PENDING_HOSTED_EVIDENCE",
+          "assessment": "The producer now consults the published exact solver when samples, original source and baseline have finite sourced components, even when coverage is pending. The evaluator retains the proven numeric threshold while comparisonStatus stays conditioned and adds known-components-threshold plus existing missing-category/hypothesis conditions. finalizePlannerSensitivity preserves exact precision independently of its complete-C10 gate. The verifier repeats the same guard and shared finalization. This resolves the W2 code mechanism behind missing55000; hosted execution and publication are still required."
+        },
+        {
+          "id": "WP13-SENS-REVIEW-02",
+          "state": "OPEN_CONSUMER_DELTA_NOT_APPLIED",
+          "assessment": "The inspected host-consumer wiring remains outside this eight-file correction. No current remote host head or runtime adoption was inspected in this follow-up."
+        }
+      ],
+      "focused_checks": [
+        {
+          "area": "Known55000 with omitted training",
+          "locations": [
+            "product/portfolio/sensitivity.ts:42-49,50-69",
+            "product/portfolio/planner-sensitivity.ts:91-95,141-146"
+          ],
+          "result": "STATIC_MATCH",
+          "detail": "Precision can be exact for known components while C10 and comparison remain conditioned. Missing training is still reported, total remains the raw null, and no formula or invented training amount was added."
+        },
+        {
+          "area": "Null price, missing FX, absent evidence",
+          "locations": [
+            "product/portfolio/sensitivity.ts:73-76",
+            "product/portfolio/planner-sensitivity.ts:91-95",
+            "product/portfolio/verification.ts:126-130"
+          ],
+          "result": "STATIC_MATCH",
+          "detail": "quantifiedSensitivityScenario requires a comparable status, finite knownSubtotal, nonempty source/component sets, finite non-null component amounts, non-absent evidence and component sources. The evaluator checks every sample; producer and verifier additionally check original source and baseline. Null/FX fixtures therefore cannot consult the exact callback. Canonical Planner remains responsible for currency/unit/source semantics beyond this guard."
+        },
+        {
+          "area": "Unavailable/incompatible status",
+          "locations": [
+            "product/portfolio/sensitivity.ts:55-57,69",
+            "product/portfolio/planner-sensitivity.ts:142-146",
+            "product/portfolio/sensitivity-v6.ts:21"
+          ],
+          "result": "STATIC_MATCH",
+          "detail": "The finalizer no longer coerces these states to conditioned. Exact evidence is rejected for both states, and their samples do not pass quantification. Production preview checks also reject an unavailable or incompatible comparison before sample persistence."
+        },
+        {
+          "area": "Replay and binding",
+          "locations": [
+            "product/portfolio/verification.ts:92-148",
+            "product/portfolio/planner-sensitivity.ts:97-119"
+          ],
+          "result": "STATIC_MATCH",
+          "detail": "Both paths use the same quantified source/baseline guard and shared finalizer, retain exact evidence for repeated egress verification, and bind canonical persisted results. The local integration test now asserts omitted55000 C08 persistence, service recreation, read/replay, idempotent reuse and revocation."
+        },
+        {
+          "area": "Ordinary borrowed-object mutation",
+          "locations": [
+            "product/portfolio/planner-sensitivity.ts:48-58,73,85,98-113",
+            "product/portfolio/verification.ts:98-103,115-118,128,134-140",
+            "product/portfolio/sensitivity.ts:38,43,48-49"
+          ],
+          "result": "STATIC_MATCH_FOR_PRODUCTION_PLAIN_DATA",
+          "detail": "The default producer/replayer clone requests, bindings, raw previews, C08 records and exact results at async boundaries; evaluator passes cloned samples/evidence to validation. A provider reusing and changing an ordinary source record is compared with the detached initial snapshot."
+        },
+        {
+          "area": "Accessor/getter boundary",
+          "locations": [
+            "product/portfolio/sensitivity.ts:32-38",
+            "product/portfolio/sensitivity-v6.ts:33-41"
+          ],
+          "result": "INHERITED_HARDENING_LIMIT",
+          "detail": "The generic evaluator validates sample.value before structuredClone, so a side-effecting getter can return different values during validation and cloning. The legacy createSensitivityV6Evaluator also passes a borrowed result through describe/revalidate without detaching it. The canonical default producer/replayer supply detached plain objects; no regression or reachable default-host bypass was demonstrated. This follow-up does not certify arbitrary accessor-bearing providers. A future hardening change can detach/reject accessors before checks and pass detached copies to legacy callbacks."
+        }
+      ],
+      "hosted_evidence_requested": [
+        "coverage-sensitivity-integration.test.ts: omitted known55000 remains conditioned with missing training; complete cases retain55000/15000; real55000/55001 and15000/15001 witnesses.",
+        "The same integration persists and reproduces through C08/criterion bindings after recreating services, then refuses revoked sources or scope evidence.",
+        "Null-price and EUR-with-missing-FX cases retain null threshold and do not invoke the exact callback.",
+        "sensitivity-v6.test.ts: conditioned+exact accepted; unavailable/incompatible+exact and inconsistent evidence rejected."
+      ],
+      "new_blocking_findings_in_eight_file_delta": [],
+      "scope_limits": [
+        "No tests were run locally.",
+        "W3 has no published head/tree at this review; hashes identify the exact local text.",
+        "S2 belongs to W2 and cannot validate this delta.",
+        "The full host/UI/BI/native consumer path is not established by the local fixture or static review.",
+        "The consumed Finance/WP11 producer updates named by parent were not remotely reverified by this reviewer."
+      ],
+      "superseded_by": "WP13-SENS-W3-FOLLOWUP-02"
+    },
+    {
+      "id": "WP13-SENS-W3-FOLLOWUP-02",
+      "supersedes_local_snapshot": "WP13-SENS-W3-FOLLOWUP-01",
+      "candidate": "Final frozen local W3 sensitivity delta after root hardening; unpublished at review",
+      "head": null,
+      "tree": null,
+      "status": "NO_NEW_BLOCKING_STATIC_FINDINGS_PUBLICATION_AND_CI_PENDING",
+      "independent_of_authorship": true,
+      "product_tests_executed": false,
+      "typecheck_executed": false,
+      "remote_operations": false,
+      "product_or_test_edits": false,
+      "blob_manifest": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity.ts",
+          "blob": "527db7238ae9e7c5a5233e2fedfbb8431017e3d5",
+          "sha256": "1c6a655eedd44c6f09411e8e3a9b5f7cfaa82f6cedcaeb006dd00b293cf5e63c",
+          "bytes": 12310
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+          "blob": "3ce5ad8a0373a13906a52692d183572d9cdd73d2",
+          "sha256": "e462d764365806ace56a6e1efe7804203ff3144f26f62796c17872cf778e8418",
+          "bytes": 19058
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+          "blob": "f179536c366349e6f971ecba41f8a4cb31c57442",
+          "sha256": "36f24223b669773e33d0951bc13c9f389c2e5408ac865d988257b11c607e4b2c",
+          "bytes": 16435
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-v6.ts",
+          "blob": "ec0053c5fe571cf3867cdae09ae66c3b999b9a4d",
+          "sha256": "b2f2faddbfc14a0bb7c0d299a19e7f2d989260e0b3f09b2813efdbc8f59ff108",
+          "bytes": 4411
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/README.md",
+          "blob": "516338b8bfea1bb1411715f2f1d1c6b98a323444",
+          "sha256": "66312d8b2f98a3aa1e1cb06bbb18cff775cf6bca8edf3fd77d3bbc53df3596b7",
+          "bytes": 11183
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+          "blob": "4bddb2b59a1586885ef822fe7d0b15e0260a80ed",
+          "sha256": "b3738c722d07841772fdcb325a652557c5e2fb7b4a6211c0f3da7835979b5f65",
+          "bytes": 21631
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-v6.test.ts",
+          "blob": "26f2ad65abc551c33561420cf7e23b04522255f6",
+          "sha256": "9b2631c199a684a01aca48e074df3f04e631b3294837230ad05dfb23676eed99",
+          "bytes": 5026
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity.test.ts",
+          "blob": "a77713b4a8dff26a7d105775633a9f15c1248f21",
+          "sha256": "de359452ef372a189c38e0a807757afb4fd3106e305daa002ae89e85743b9e37",
+          "bytes": 8056
+        }
+      ],
+      "files_changed_since_prior_followup": [
+        "modules/sucafina/Sucafinav1/product/portfolio/sensitivity.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-v6.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-v6.test.ts"
+      ],
+      "hardening_review": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity.ts",
+          "lines": "31-38",
+          "assessment": "The sample envelope is now structured-cloned immediately on return from host.sample, before reading status or validating its fields. Getters are materialized into the detached envelope before checks; subsequent checks and persistence of that sample inspect the same values. Ordinary producer reuse/mutation remains isolated."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-v6.ts",
+          "lines": "34-47",
+          "assessment": "The evaluator receives a cloned request and its result is detached before any validation. describe receives a separate clone, checked by canonical digest after awaiting and cloning the returned description. revalidate receives another detached clone with before/after digest validation. The successful output is cloned. Mutating describe/revalidate callbacks fail stale and cannot change the producer-owned object or returned enriched data."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-v6.test.ts",
+          "lines": "44-58",
+          "assessment": "The new hosted regression exercises both callback mutation phases, expects stale, and checks that the original producer threshold stays55000. This reviewer read but did not execute it."
+        }
+      ],
+      "finding_updates": [
+        {
+          "id": "WP13-SENS-REVIEW-01",
+          "state": "CORRECTED_IN_FINAL_LOCAL_W3_PENDING_PUBLICATION_AND_HOSTED_EVIDENCE",
+          "assessment": "The previous follow-up financial analysis remains valid. All five other financial/replay/documentation/integration files match the prior reviewed hashes; only the three hardening files changed. Explicit known55000 is retained as conditioned without completing C10 or applying a choice, while canonical complete cases and null/FX guards remain separate."
+        },
+        {
+          "id": "WP13-SENS-REVIEW-02",
+          "state": "OPEN_CONSUMER_DELTA_NOT_APPLIED",
+          "assessment": "No consumer-head or host-default adoption proof was supplied to this read-only follow-up."
+        }
+      ],
+      "new_blocking_findings": [],
+      "remaining_required_evidence": [
+        "Published W3 head/tree with these blobs.",
+        "One surgical hosted run covering the changed producer, replay and null/FX/callback guards; S2-W2 is not evidence for W3.",
+        "Consumer owner adoption and hosted default-factory/UI/BI/native proofs remain separate requirements."
+      ],
+      "verdict_scope": "Independent static review of the exact local eight-file delta only; no READY, global acceptance or CI success is asserted."
+    }
+  ],
+  "latest_followup": "WP13-SENS-W3-FOLLOWUP-02"
+}

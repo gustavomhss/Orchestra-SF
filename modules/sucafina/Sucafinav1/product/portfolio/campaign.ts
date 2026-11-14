@@ -133,7 +133,7 @@ export function createPortfolioCampaign(input: {
     if (!source || decision.status !== "ok" || !/^[a-f0-9]{64}$/.test(request.commandDigest)) return { status: "denied", reason: "campaign-history-access-unavailable" }
     const load = () => input.state.read(source, "preferences", (state, authority) => sameAuthority(authority, context) ? state.preferences[historyKey(request.commandDigest)] : undefined)
     const stored = await load()
-    if (stored.status !== "ok" || !isCampaign(stored.value) || stored.value.commandDigest !== request.commandDigest || stored.value.campaignDigest !== campaignDigest(stored.value) || stored.value.ownerCase.id !== request.ownerCase.id || stored.value.ownerCase.incarnation !== request.ownerCase.incarnation || stored.value.ownerCase.version >= request.ownerCase.version) return { status: "unavailable", reason: "campaign-history-unavailable" }
+    if (stored.status !== "ok" || !isCampaign(stored.value) || stored.value.commandDigest !== request.commandDigest || stored.value.campaignDigest !== campaignDigest(stored.value) || stored.value.ownerCase.id !== request.ownerCase.id || stored.value.ownerCase.incarnation !== request.ownerCase.incarnation || stored.value.ownerCase.version > request.ownerCase.version) return { status: "unavailable", reason: "campaign-history-unavailable" }
     const campaign = stored.value
     const inspect = async () => {
       const candidates = await Promise.all(campaign.candidates.map(async (candidate) => {

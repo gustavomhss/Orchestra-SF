@@ -8,6 +8,7 @@ import type { SfStoredDecisionResult, SfProductStatePort } from "../contracts/st
 type CaseRef = { id: string; incarnation: string; version: number }
 type HistoricalPortfolio = { state: "historical"; resultRef: string; originalCaseRef: CaseRef; result: Extract<SfStoredDecisionResult, { kind: "portfolio" }> ["result"]; requestDigest: string; resultDigest: string; createdAt: string }
 
+/** A source can change while the case version stays the same; provenance, not version inequality, qualifies a saved result. */
 export function createPortfolioHistory(input: {
   state: SfProductStatePort
   host: Pick<DomainPortHost, "requestFor" | "revalidate">
@@ -18,7 +19,7 @@ export function createPortfolioHistory(input: {
   const list = async (request: { caseRef: CaseRef }, ctx: TrustedDomainContext): Promise<PortResult<HistoricalPortfolio[]>> => {
     const source = input.host.requestFor(ctx)
     if (!source || !await input.host.revalidate(ctx).catch(() => false)) return { status: "denied", reason: "invalid-authority" }
-    const load = () => input.state.read(source, "cases", (state, authority) => authority.principalRef === ctx.binding.principalRef && authority.policyVersion === ctx.binding.policyVersion && authority.accessRevision === ctx.binding.accessRevision ? { current: state.cases[request.caseRef.id], results: Object.values(state.decisionResults ?? {}).filter((stored) => stored.kind === "portfolio" && stored.caseRef.id === request.caseRef.id && stored.caseRef.incarnation === request.caseRef.incarnation && stored.caseRef.version < request.caseRef.version) } : undefined)
+    const load = () => input.state.read(source, "cases", (state, authority) => authority.principalRef === ctx.binding.principalRef && authority.policyVersion === ctx.binding.policyVersion && authority.accessRevision === ctx.binding.accessRevision ? { current: state.cases[request.caseRef.id], results: Object.values(state.decisionResults ?? {}).filter((stored) => stored.kind === "portfolio" && stored.caseRef.id === request.caseRef.id && stored.caseRef.incarnation === request.caseRef.incarnation && stored.caseRef.version <= request.caseRef.version) } : undefined)
     const first = await load().catch(() => undefined)
     if (!first || first.status !== "ok" || !first.value?.current) return { status: "unavailable", reason: "portfolio-history-unavailable" }
     if (!allowed(first.value.current, request.caseRef, ctx) || !await input.authorizeCase(first.value.current, ctx).catch(() => false)) return { status: "denied", reason: "portfolio-history-access-unavailable" }
@@ -37,7 +38,7 @@ export function createPortfolioHistory(input: {
     const first = await load().catch(() => undefined)
     if (!first || first.status !== "ok" || !first.value?.current || !first.value.stored) return { status: "unavailable", reason: "portfolio-history-unavailable" }
     const stored = first.value.stored
-    if (!allowed(first.value.current, request.caseRef, ctx) || stored.kind !== "portfolio" || stored.resultRef !== request.resultRef || stored.caseRef.id !== request.caseRef.id || stored.caseRef.incarnation !== request.caseRef.incarnation || stored.caseRef.version >= first.value.current.version || stored.resultDigest !== digestSfValue(stored.result) || !/^[a-f0-9]{64}$/.test(stored.requestDigest) || !decodeSfOperationOutput("sf_portfolio_evaluate", stored.result).ok) return { status: "denied", reason: "portfolio-history-access-unavailable" }
+    if (!allowed(first.value.current, request.caseRef, ctx) || stored.kind !== "portfolio" || stored.resultRef !== request.resultRef || stored.caseRef.id !== request.caseRef.id || stored.caseRef.incarnation !== request.caseRef.incarnation || stored.caseRef.version > first.value.current.version || stored.resultDigest !== digestSfValue(stored.result) || !/^[a-f0-9]{64}$/.test(stored.requestDigest) || !decodeSfOperationOutput("sf_portfolio_evaluate", stored.result).ok) return { status: "denied", reason: "portfolio-history-access-unavailable" }
     if (!await input.authorizeCase(first.value.current, ctx).catch(() => false) || !await input.verifyHistoricalProvenance(stored, ctx).catch(() => false) || !await input.host.revalidate(ctx).catch(() => false)) return { status: "denied", reason: "portfolio-history-access-unavailable" }
     const again = await load().catch(() => undefined)
     if (!again || again.status !== "ok" || !again.value?.current || !again.value.stored || digestSfValue(again.value.stored) !== digestSfValue(stored) || digestSfValue(again.value.current) !== digestSfValue(first.value.current) || source.signal.aborted || !allowed(again.value.current, request.caseRef, ctx) || !await input.authorizeCase(again.value.current, ctx).catch(() => false) || !await input.verifyHistoricalProvenance(again.value.stored, ctx).catch(() => false) || !await input.host.revalidate(ctx).catch(() => false)) return { status: "stale", reason: "portfolio-history-changed" }

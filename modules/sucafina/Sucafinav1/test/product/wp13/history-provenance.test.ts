@@ -53,6 +53,22 @@ describe("portfolio historical provenance", () => {
     expect(await createPortfolioHistoricalProvenance(harness())(stored, context)).toBe(true)
   })
 
+  test("accepts authenticated source history at the same case version and still rejects revocation", async () => {
+    const input = harness()
+    input.caseFor = async () => ({ status: "ok", value: originalCase })
+    input.cases.read = async () => ({ status: "ok", value: { case: { ...originalCase, alternatives: [alternative] } } } as never)
+    expect(await createPortfolioHistoricalProvenance(input)(stored, context)).toBe(true)
+    input.evidence.context = async ({ refs }) => refs.map((ref) => ({ ref, state: "revoked", accessRevision: "access-7", checkedAt: "now" }))
+    expect(await createPortfolioHistoricalProvenance(input)(stored, context)).toBe(false)
+    input.evidence.context = harness().evidence.context
+    let bindingReads = 0
+    const readBinding = input.readHistoricalBinding
+    input.readHistoricalBinding = async (request, trusted) => { bindingReads++; return readBinding(request, trusted) }
+    input.caseFor = async () => ({ status: "ok", value: { ...originalCase, version: originalCase.version - 1 } })
+    expect(await createPortfolioHistoricalProvenance(input)(stored, context)).toBe(false)
+    expect(bindingReads).toBe(0)
+  })
+
   test("rejects a candidate whose case incarnation was replaced", async () => {
     const input = harness()
     input.cases.read = async () => ({ status: "ok", value: { case: { id: "case-a", incarnation: "inc-replaced", version: 9 } } } as never)
@@ -100,6 +116,31 @@ describe("portfolio historical provenance", () => {
       return { status: "ok", value: shared } as never
     }
     expect(await createPortfolioHistoricalProvenance(input)(stored, context)).toBe(false)
+  })
+
+  test("rejects caller mutation during historical provenance verification", async () => {
+    const incoming = structuredClone(stored)
+    const input = harness()
+    input.caseFor = async () => {
+      incoming.resultDigest = "0".repeat(64)
+      return { status: "ok", value: currentCase }
+    }
+    expect(await createPortfolioHistoricalProvenance(input)(incoming, context)).toBe(false)
+    expect(incoming.resultDigest).toBe("0".repeat(64))
+  })
+
+  test("rejects an owner observation changed during the first binding read", async () => {
+    const input = harness()
+    const shared = { ...currentCase }
+    const read = input.readHistoricalBinding
+    let reads = 0
+    input.caseFor = async () => ({ status: "ok", value: shared })
+    input.readHistoricalBinding = async (request, trusted) => {
+      if (++reads === 1) shared.version += 1
+      return read(request, trusted)
+    }
+    expect(await createPortfolioHistoricalProvenance(input)(stored, context)).toBe(false)
+    expect(reads).toBe(2)
   })
 
   test("rejects a binding whose digest does not cover its contents", async () => {
@@ -227,7 +268,7 @@ test("historical candidate rejects changed C08 request ancestry and revoked evid
   }
 })
 
-test("historical chosen candidate requires the exact WP11 choice ledger and its original C08 scenario", async () => {
+test("historical chosen candidate selects its witnessed C08 among equivalent writes and requires the exact WP11 ledger", async () => {
   const world = await createWp13SensitivityFixture()
   try {
     const operation = { id: "history-original-choice" }
@@ -235,6 +276,13 @@ test("historical chosen candidate requires the exact WP11 choice ledger and its 
     const ref = portfolioCandidateRef({ caseRef: encodeCaseRef(world.caseRef), caseVersion: world.caseRef.version, alternativeId: "selected", alternativeVersion: 1 })
     const candidate = await createDecisionCandidateResolver(world.cases)(ref, world.context)
     if (candidate.status !== "ok") throw new Error("original candidate unavailable")
+    const original = await world.results.readHistoricalScenario({ resultRef: world.selectedRef }, world.context)
+    if (original.status !== "ok" || original.value.kind !== "scenario") throw new Error("original C08 unavailable")
+    const equivalent = await world.results.write({ kind: "scenario", caseRef: world.caseRef, result: original.value.result, requestDigest: original.value.requestDigest, sourceRefs: original.value.sourceRefs, idempotencyKey: "same-scenario-new-result-reference" }, world.context)
+    if (equivalent.status !== "ok") throw new Error(`equivalent C08 unavailable: ${equivalent.reason}`)
+    expect(equivalent.value.resultRef).not.toBe(world.selectedRef)
+    expect(equivalent.value.caseRef).toEqual(original.value.caseRef)
+    expect(equivalent.value.resultDigest).toBe(original.value.resultDigest)
     const chosen = await mutations.recordChoice({ caseRef: world.caseRef, alternativeId: "selected", alternativeVersion: 1, comparison: { scenarioRefs: [world.baselineRef, world.selectedRef], criteria: ["renewal-difference"] }, criteria: ["renewal-difference"], reason: "Preserve the original conditioned choice" }, world.context)
     expect(chosen.status).toBe("ok")
     if (chosen.status !== "ok") throw new Error(`choice unavailable: ${chosen.reason}`)
@@ -292,7 +340,7 @@ function historyMutations(world: Awaited<ReturnType<typeof createWp13Sensitivity
     host: world.host,
     planner: world.plannerWithCriteria,
     sources: world.sources,
-    coverageEvidence: { entries: async (_scenario, baseline) => ({ status: "ok", value: baseline.entries.filter((entry) => !baseline.derivedMissingCategoryIds.includes(entry.categoryId)) }), resolve: (refs) => world.evidenceService.context({ refs }, world.context), supports: () => false, verifySnapshot: () => world.access.allowed },
+    coverageEvidence: { entries: async (_scenario, baseline) => ({ status: "ok", value: baseline.entries.filter((entry) => !baseline.derivedMissingCategoryIds.some((categoryId) => categoryId === entry.categoryId)) }), resolve: (refs) => world.evidenceService.context({ refs }, world.context), supports: () => false, verifySnapshot: () => world.access.allowed },
     authorizeCase: async () => world.access.allowed,
     authorizeMutation: async (kind, _request, context) => world.access.allowed && context.kind === "ui" && (kind === "add-alternative" || kind === "record-choice"),
     verifyMutation: () => world.access.allowed,

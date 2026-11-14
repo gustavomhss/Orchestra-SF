@@ -1,0 +1,2825 @@
+{
+  "schema": "sf-wp13-independent-acceptance-v1",
+  "report_status": "NOT_ACCEPTED",
+  "acceptance": "NOT_READY",
+  "scope": "Independent read-only static acceptance review of W2; no authorship of product/tests; no product execution, CI dispatch or remote mutation by this reviewer.",
+  "reviewer": {
+    "agent": "/root/wp13_review_acceptance",
+    "authorship_exclusions": [
+      "All product implementation",
+      "All product tests",
+      "CI setup and publication"
+    ],
+    "report_only": true,
+    "global_three_reviews_satisfied": false
+  },
+  "provenance": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "branch": "astra-wp13",
+    "product_head": "84fa950ed4925124ca7ee6c854d4ae534bcd6d1a",
+    "product_tree": "c619bb577c20133c41388eb6d2e538c9af8e453e",
+    "published_identity_source": "Parent launch head/tree; all53 local changed blobs matched W2 before concurrent W3 edits. Frozen payload verified separately:33 owned content blobs and20 consumed pins match W2 manifest. No independent remote head lookup.",
+    "immutable_plan_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "campaign_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+    "source_inputs": [
+      "reference/campaign.json",
+      "reference/S4-C.json",
+      "reference/COMMON.md",
+      "reference/product-acceptance.md",
+      "reference/resident-runtime.md",
+      "reference/wp13-criteria-analysis.json"
+    ],
+    "prior_matrix_is_not_proof": true,
+    "prior_matrix_criterion_text_ids_verified_exact": true,
+    "actor_criterion_ids_verified": true,
+    "files_in_changed_manifest": 53,
+    "initial_workspace_verification": {
+      "observation": "Before concurrent W3 edits, all53 files in the W2 manifest matched their published git blob; verified by metadata-only read in this review.",
+      "files": 53,
+      "matched": 53
+    },
+    "frozen_w2_payload_verification": {
+      "path": "reference/wp13-W2-payload.json",
+      "sha256": "70cfdbbf3a214bcf5d53491f7ef5efbefe5c5098ae417d0468abbee7578a0412",
+      "owned_content_verified": 33,
+      "consumed_blob_pins_verified": 20,
+      "all_match_manifest": true,
+      "manifest_path": "reference/wp13-W2-file-manifest.json"
+    },
+    "workspace_changed_during_review": {
+      "expected": true,
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/proof.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/sensitivity.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/handoff-integration.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/portfolio.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/source-scenario.test.ts",
+        "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+        "modules/sucafina/Sucafinav1/product/planner/calculation-evidence.ts",
+        "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts"
+      ],
+      "reason": "Parent and original authors are implementing W3. This report remains solely about published W2. No conclusion about W3 is inferred."
+    }
+  },
+  "evidence_state": {
+    "local_product_tests": "NOT_RUN",
+    "product_ci": {
+      "status": "IN_PROGRESS_REPORTED_BY_PARENT",
+      "independently_reviewed_logs": false,
+      "run_id": 43580984368,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43580984368",
+      "snapshot_sha": "83d971e0da225d0095d5b3498bb2f7f5d473455f",
+      "snapshot_tree": "f9f3a9606af082b7c78893db3bd0b83d08270693",
+      "intended_parent": "84fa950ed4925124ca7ee6c854d4ae534bcd6d1a",
+      "selection": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/wp13/analysis-recovery.test.ts",
+          "Sucafinav1/test/product/wp13/campaign.test.ts",
+          "Sucafinav1/test/product/wp13/candidates-store.test.ts",
+          "Sucafinav1/test/product/wp13/candidates.test.ts",
+          "Sucafinav1/test/product/wp13/contribution.test.ts",
+          "Sucafinav1/test/product/wp13/coverage-preview.test.ts",
+          "Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+          "Sucafinav1/test/product/wp13/coverage.test.ts",
+          "Sucafinav1/test/product/wp13/handoff-integration.test.ts",
+          "Sucafinav1/test/product/wp13/handoff.test.ts",
+          "Sucafinav1/test/product/wp13/history-provenance.test.ts",
+          "Sucafinav1/test/product/wp13/persistence-recovery.test.ts",
+          "Sucafinav1/test/product/wp13/persistent-store.test.ts",
+          "Sucafinav1/test/product/wp13/planner-sensitivity-boundary.test.ts",
+          "Sucafinav1/test/product/wp13/portfolio.test.ts",
+          "Sucafinav1/test/product/wp13/production.test.ts",
+          "Sucafinav1/test/product/wp13/projection.test.ts",
+          "Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+          "Sucafinav1/test/product/wp13/sensitivity-v6.test.ts",
+          "Sucafinav1/test/product/wp13/sensitivity.test.ts",
+          "Sucafinav1/test/product/wp13/source-scenario.test.ts",
+          "Sucafinav1/test/product/wp13/stored-store.test.ts",
+          "Sucafinav1/test/product/wp13/stored.test.ts",
+          "Sucafinav1/test/product/wp03/source-scenario.test.ts",
+          "Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "interpretation": "A successful test assertion is evidence of its actual composed path only; test count is never a criterion pass. No global suite, native proof or consumer action in this selection."
+    },
+    "checks_ci": {
+      "status": "FAILED_REPORTED_BY_PARENT_NOT_LOG_REVIEWED",
+      "run_id": 43580992095,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43580992095",
+      "envelope_sha": "00cc83a3f649daef9f087af6f3379efe4863db3a",
+      "envelope_tree": "25c65eaf981f2836843b157a4be6eb4ec0519e31",
+      "observed_checkout_expected": "84fa950ed4925124ca7ee6c854d4ae534bcd6d1a",
+      "parent_report": "bun typecheck: five diagnostics in owned fixture tests; guards PASS.",
+      "implication": "W2 cannot be accepted as checked. Fix changes the candidate; W2 evidence identity must remain intact."
+    },
+    "native_GNATIVE_AM01_AM02": "NOT_RUN_IN_REVIEW_OR_S2",
+    "integrated_AM04": "NOT_RUN",
+    "actual_UI_BI_critique_consumption": "NOT_OBSERVED",
+    "WP14_memory_consumer": "NOT_OBSERVED"
+  },
+  "key_distinctions": [
+    "The criterion compares two monetary signs: Planner alternative-minus-baseline is +10000 at250000 versus240000, while advantage is -10000. This sign convention is not a discrepancy if labeled.",
+    "A 55000 solver result about known components with omitted training is not a complete threshold. W2 lacks a numeric conditioned-threshold exposure in the WP13 output; it preserves missing as unknown.",
+    "Certified sensitivity mathematically complete can retain hypothesis disclosures; its raw ScenarioResult remains conditioned/preview-not-applied. It does not confirm a forecast, a choice, savings or application.",
+    "The same-case human choice fixture records an actual WP11 choice and preserves it after training confirmation, but expects zero prepared changes and zero receipts.",
+    "The partial apply fixture uses WP11 durable receipt/apply logic but seeds the choice and controls the domain mutation. It proves a mechanism, not real financial domain application or a native user action.",
+    "Missing local/full consumer proof is not permission to edit WP10/WP11/WP12/WP14 sources or branches; deliver pinned deltas to owners."
+  ],
+  "findings": [
+    {
+      "id": "IA-W2-01",
+      "severity": "BLOCKER_ACCEPTANCE",
+      "title": "W2 typecheck gate failed",
+      "owner": "WP13",
+      "source": "Parent status update for C2",
+      "next_action": "Correct the five owned test diagnostics, publish a new immutable candidate and re-run only the necessary check gate; preserve W2 status."
+    },
+    {
+      "id": "IA-W2-02",
+      "severity": "BLOCKER_INTEGRATION",
+      "title": "Certified sensitivity not composed in current host",
+      "owner": "WP10",
+      "target": "apps/cli/src/sucafina-product/portfolio-services.ts",
+      "observed_pin": "f075e9824b7d8aed50b7f42c597528ef198177db",
+      "observed_blob": "83c525e733b2cb21637734e3b1e07950e72f4f97",
+      "source": "reference/wp13-host-sensitivity.NOT_APPLIED.json",
+      "next_action": "Consume the WP13 producer and inject authenticated coverage authority plus exact solver in product and verifier; hosted default-factory proof required."
+    },
+    {
+      "id": "IA-W2-03",
+      "severity": "BLOCKER_INTEGRATION",
+      "title": "Host N/A and source-only proof seams remain open",
+      "owner": "WP10/WP11",
+      "target": "apps/cli/src/sucafina-product/portfolio-coverage.ts",
+      "observed_pin": "f075e9824b7d8aed50b7f42c597528ef198177db",
+      "observed_blob": "d8a668281ea9cac6a3a04c6bea19811ee8954808",
+      "source": "reference/wp13-host-sensitivity.NOT_APPLIED.json",
+      "next_action": "Remove only blanket N/A refusal, preserve classification/source/snapshot checks, and capture valid complete source-only proof before mutation; do not disable verifySnapshot."
+    },
+    {
+      "id": "IA-W2-04",
+      "severity": "BLOCKER_PROOF",
+      "title": "Numeric corpus does not prove real ceiling and consumer parity together",
+      "owner": "WP13/WP10/WP05/WP12",
+      "criteria": [
+        "WP13.T02.CHK.20"
+      ],
+      "source": [
+        "modules/sucafina/Sucafinav1/test/product/wp13/source-scenario.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/portfolio.test.ts"
+      ],
+      "next_action": "Run both explicit ceiling240000 and minimum-advantage20000 through canonical criteria in the same case, then consume the same version in UI/BI/critique."
+    },
+    {
+      "id": "IA-W2-05",
+      "severity": "BLOCKER_BEHAVIOR_OR_PROOF",
+      "title": "Known-only55000 is not exposed as a conditioned WP13 threshold",
+      "owner": "WP13/WP03/WP00 if a contract change is required",
+      "criteria": [
+        "WP13.T03.CHK.20"
+      ],
+      "source": [
+        "modules/sucafina/Sucafinav1/product/portfolio/sensitivity.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-v6.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-history.test.ts"
+      ],
+      "next_action": "Reconcile required conditioned numeric limit with the published output contract. Preserve threshold complete=null while cost is missing; expose any known-only result with explicit conditions and proof, without inventing zero or relaxing C10."
+    },
+    {
+      "id": "IA-W2-06",
+      "severity": "BLOCKER_PROOF",
+      "title": "Application proof is controlled and separate from real same-case choice",
+      "owner": "WP11/WP10",
+      "criteria": [
+        "WP13.DOD.01",
+        "WP13.T04.DOD.01",
+        "WP13.T04.CHK.01",
+        "WP13.T04.CHK.02"
+      ],
+      "source": [
+        "modules/sucafina/Sucafinav1/test/product/wp13/handoff-integration.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/source-scenario.test.ts"
+      ],
+      "next_action": "Compose actual choice→prepared commands→domain execute→receipt→partial retry in the same reviewed campaign, with same case/incarnation/choice identity."
+    },
+    {
+      "id": "IA-W2-07",
+      "severity": "BLOCKER_INTEGRATION",
+      "title": "Receipt CAS reconciliation remains pending on first committed application",
+      "owner": "WP11/WP10",
+      "source": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-integration.test.ts",
+      "next_action": "Owner consume receipt/CAS delta and re-read/relock current case revision; preserve atomic receipt and retry without re-executing the domain effect."
+    },
+    {
+      "id": "IA-W2-08",
+      "severity": "BLOCKER_INTEGRATION",
+      "title": "Historical candidate reader not yet wired in host",
+      "owner": "WP10",
+      "target": "apps/cli/src/sucafina-product/review-portfolio-history.ts",
+      "observed_pin": "f075e9824b7d8aed50b7f42c597528ef198177db",
+      "observed_blob": "4d11a5c8c81d99f117709fc65327373055ee2cc1",
+      "source": "reference/wp13-history-consumer-delta.json",
+      "next_action": "Inject reader into historical portfolio and campaign composition. Legacy unchosen candidates without origin remain unavailable until WP11 publishes an authenticated origin port."
+    },
+    {
+      "id": "IA-W2-09",
+      "severity": "BLOCKER_PROOF",
+      "title": "Full native, HR and multicase authority proof absent",
+      "owner": "WP10/WP12/WP11",
+      "next_action": "Exercise real C16 binding/loaded skill and both operations on UI/native/MCP, include HR aggregates/exclusion canaries, and reconcile native case scope without widening grants from WP13."
+    },
+    {
+      "id": "IA-W2-10",
+      "severity": "BLOCKER_PROOF",
+      "title": "Contract/project/hiring, cancellation and material-condition consumer gaps",
+      "owner": "WP13 with domain and consumer owners",
+      "criteria": [
+        "WP13.CMP.01",
+        "WP13.T01.CHK.01",
+        "WP13.T02.CHK.02",
+        "WP13.T03.CHK.02",
+        "WP13.T04.CHK.03"
+      ],
+      "next_action": "Add/compose canonical corpus and consume conditions in WP14; no solver, fixture label or generic negative can stand for these distinct obligations."
+    }
+  ],
+  "consumer_edges": [
+    {
+      "producer": "WP00.T02",
+      "output": "C01–C17 e exemplos normativos",
+      "consumers": [
+        "WP01.T01",
+        "WP02.T01",
+        "WP03.T01",
+        "WP04.T01",
+        "WP05.T01",
+        "WP06.T01",
+        "WP07.T01",
+        "WP08.T01",
+        "WP09.T01",
+        "WP10.T01",
+        "WP11.T01",
+        "WP12.T01",
+        "WP13.T01",
+        "WP14.T01"
+      ],
+      "proof": "G0 confirma interfaces; alterações posteriores têm versão e análise de impacto."
+    },
+    {
+      "id": "AIEDGE06",
+      "contract": "C10",
+      "producer": "WP13",
+      "consumer": "WP01",
+      "acceptance_task": "WP13.T04",
+      "proof_package": "E11",
+      "proof": "Portfólio aparece no seletor/comparador real da mesa."
+    },
+    {
+      "id": "AIEDGE07",
+      "contract": "C10",
+      "producer": "WP13",
+      "consumer": "WP05",
+      "acceptance_task": "WP05.T05",
+      "proof_package": "E06",
+      "proof": "BI usa resultado de portfólio e sensibilidade do motor."
+    },
+    {
+      "id": "AIEDGE08",
+      "contract": "C12",
+      "producer": "WP13",
+      "consumer": "WP11",
+      "acceptance_task": "WP13.T04",
+      "proof_package": "E12",
+      "proof": "Escolha de portfólio prepara mudanças no mesmo mecanismo de recibos."
+    },
+    {
+      "id": "PRODEDGE04",
+      "contract": "C10",
+      "producer": "WP11",
+      "consumer": "WP13",
+      "acceptance_task": "WP13.T02",
+      "proof_package": "E11",
+      "proof": "Portfólio não classifica como elegível-completa uma combinação com categoria pertinente pendente."
+    }
+  ],
+  "operation_routes": [
+    {
+      "operation_id": "sf_sensitivity_evaluate",
+      "pack_id": "planning",
+      "profile_id": "sf_finance",
+      "skill_id": "sf-avaliar-sensibilidade",
+      "entry_mode": "interactive",
+      "input_schema": "SensitivityRequest",
+      "output_type": "SensitivityResult",
+      "producer_task": "WP13.T03",
+      "consumer_tasks": [
+        "WP05.T05",
+        "WP01.T05"
+      ],
+      "requires_loaded_skill_receipt": true,
+      "requires_current_c07_admission": false,
+      "proof_id": "AM02",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "negative": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos."
+    },
+    {
+      "operation_id": "sf_portfolio_evaluate",
+      "pack_id": "planning",
+      "profile_id": "sf_portfolio",
+      "skill_id": "sf-compor-portfolio",
+      "entry_mode": "interactive",
+      "input_schema": "PortfolioRequest",
+      "output_type": "PortfolioComparison",
+      "producer_task": "WP13.T02",
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP05.T05",
+        "WP13.T04"
+      ],
+      "requires_loaded_skill_receipt": true,
+      "requires_current_c07_admission": false,
+      "proof_id": "AM02",
+      "expected": "Wrapper nativo e bridge privada C16 usam perfil/skill carregados e principal autorizados; resultado/recibo coincide com a porta canônica e chega ao consumidor. A chamada direta do harness usa o mesmo contexto confiável, sem bypass de skill.",
+      "negative": "Remover o SkillLoadReceipt, revogar a concessão ou a permissão atual antes de callTool deve recusar sem efeito e sem dados restritos."
+    }
+  ],
+  "required_additional_consumers": [
+    {
+      "owner": "WP10",
+      "consumption": "Default product/proof/history composition and C16 native/MCP transport",
+      "status": "NOT_APPLIED_OR_UNPROVED",
+      "deltas": [
+        "reference/wp13-host-sensitivity.NOT_APPLIED.json",
+        "reference/wp13-history-consumer-delta.json",
+        "reference/wp10-supported-na.proposed.patch"
+      ]
+    },
+    {
+      "owner": "WP01",
+      "consumption": "Editable campaign, real selector/comparator, selection/choice and post-reload output",
+      "status": "NOT_OBSERVED"
+    },
+    {
+      "owner": "WP05",
+      "consumption": "Same stored portfolio/comparison/sensitivity result, table-equivalent curve, unit/precision/coverage, no zero bar for unknown",
+      "status": "NOT_OBSERVED"
+    },
+    {
+      "owner": "WP11",
+      "consumption": "Scenario/C10, registered selection, human choice and canonical PreparedChangeSet/receipts",
+      "status": "PRODUCER_FIXTURE_PATH_PENDING; INSTALLED_PATH_UNPROVED"
+    },
+    {
+      "owner": "WP12",
+      "consumption": "C11 actual output/skill provenance, independent critique of same C10 revision",
+      "status": "NOT_OBSERVED"
+    },
+    {
+      "owner": "WP14",
+      "consumption": "Material per-component condition and historical choice, current source resolution and Atlas memory",
+      "status": "NOT_OBSERVED"
+    }
+  ],
+  "proof_groups": [
+    {
+      "id": "G01",
+      "title": "Campanha, candidatos e restrições editáveis",
+      "owners": [
+        "WP13",
+        "WP11",
+        "WP01",
+        "WP05"
+      ],
+      "implementation": [
+        "modules/sucafina/Sucafinav1/product/portfolio/campaign.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/campaign-proposals.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/catalog.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/candidates.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/product.ts"
+      ],
+      "tests": [
+        "modules/sucafina/Sucafinav1/test/product/wp13/campaign.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/candidates.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/candidates-store.test.ts"
+      ],
+      "can_establish": [
+        "Persistência de metadados da campanha, seleção versionada, manutenção de origem e hipótese de proposta, recusa por moeda/período, retries e checks de fonte/lock nos ports compostos.",
+        "Leitura histórica da campanha via origem autenticada quando a callback é injetada."
+      ],
+      "cannot_establish": [
+        "Campanha contrato/projeto/contratação no consumidor instalado; fontes e comandos reais dos três domínios no mesmo corpus.",
+        "Campos editáveis e resultado compreensível na mesa WP01/BI WP05.",
+        "Execução real C11 de sf-compor-portfolio com SkillLoadReceipt e confirmação humana na instalação."
+      ],
+      "next_action": "Consumidores devem integrar o produtor pinado e registrar criação/edição/reload da campanha com os três domínios, identidade/escopo e outputRef reais.",
+      "observed_product_status": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "id": "G02",
+      "title": "Combinações finitas e reconciliação pelo domínio",
+      "owners": [
+        "WP13",
+        "WP03",
+        "WP11",
+        "WP10"
+      ],
+      "implementation": [
+        "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/planner-host.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/production.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/analysis.ts"
+      ],
+      "tests": [
+        "modules/sucafina/Sucafinav1/test/product/wp13/portfolio.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/production.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/source-scenario.test.ts"
+      ],
+      "can_establish": [
+        "Port recusa duplicidade de alvo/componente, preserva restrições e limite de exploração e não chama enumeração limitada de ótimo.",
+        "Um candidato source-only é consumido por ProductionPortfolio com Planner e comparação C08 reais."
+      ],
+      "cannot_establish": [
+        "Equivalência de uma combinação positiva de vários registros com execução isolada de todas as mesmas operações pelo adapter real.",
+        "Corpus multi-registro sem solução com compromissos reais preservados.",
+        "Teto240000 está explicitamente falhado em callback controlada; o teste source-scenario canônico aplica apenas o critério renewal-difference."
+      ],
+      "next_action": "Provar no host composto a combinação multi-registro, a reconciliação isolada e o corpus sem solução; manter ceiling e minimum-advantage como critérios distintos.",
+      "observed_product_status": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "id": "G03",
+      "title": "C10: omissão, zero, N/A e parcelas compartilhadas",
+      "owners": [
+        "WP13",
+        "WP11",
+        "WP03",
+        "WP10",
+        "WP01",
+        "WP05",
+        "WP12"
+      ],
+      "implementation": [
+        "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/production.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/coverage-preview.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/sensitivity.ts",
+        "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+        "modules/sucafina/Sucafinav1/product/decisions/coverage-interval.ts"
+      ],
+      "tests": [
+        "modules/sucafina/Sucafinav1/test/product/wp13/coverage-preview.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/source-scenario.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/coverage.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/portfolio.test.ts"
+      ],
+      "can_establish": [
+        "Omissão inteiramente ausente deriva training:missing-category sem linha de custo; subtotal210000/totalnull permanece condicionado.",
+        "Zero com fonte é diferente de null/omissão; confirmação40000 dá total250000 e diferença alternativa-menos-base10000, equivalente a vantagem-10000.",
+        "N/A sustentado e categorias compartilhando a mesma implementação não duplicam os componentes; certificação recusa fonte revogada.",
+        "Pending interaction é preservado pelo port sob avaliação controlada."
+      ],
+      "cannot_establish": [
+        "Default host não está comprovado: delta publicado relata recusa indiscriminada de N/A e ausência de proof source-only no caminho sem entries().",
+        "UI/BI/critique usando a mesma revisão e sem ranking/barra zero para categoria oculta.",
+        "Agregação de interação real entre vários candidatos, distinta de cenário único e callback controlada."
+      ],
+      "next_action": "WP10 integrar deltas N/A/source-proof e provar default factory com N/A suportado/revogado, shared, omitted/null/zero/40000; consumidores registrar mesmo resultRef/versão.",
+      "observed_product_status": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "id": "G04",
+      "title": "Sensibilidade e limites numéricos",
+      "owners": [
+        "WP13",
+        "WP03",
+        "WP11",
+        "WP10",
+        "WP01",
+        "WP05"
+      ],
+      "implementation": [
+        "modules/sucafina/Sucafinav1/product/portfolio/coverage-preview.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/sensitivity.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-v6.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+        "modules/sucafina/Sucafinav1/product/planner/exact-threshold.ts",
+        "modules/sucafina/Sucafinav1/product/planner/interval-proof.ts"
+      ],
+      "tests": [
+        "modules/sucafina/Sucafinav1/test/product/wp13/coverage-preview.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/planner-sensitivity-boundary.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-history.test.ts"
+      ],
+      "can_establish": [
+        "Planner exactThreshold + interval proof + C10 qualificação distinguem55000/55001 e15000/15001 sem fórmula financeira local.",
+        "C08 guarda amostras hipotéticas intactas; análise guarda refs de cobertura reais; certificate Map não vira ref C08/C10 pública.",
+        "Read/replay com factories recriadas mantém resultado e idempotência; fonte/regras/autoridade mutadas rejeitam.",
+        "EUR com FX ausente não é convertido em zero nem recebe limiar completo; amostra não linear controlada não inventa exato."
+      ],
+      "cannot_establish": [
+        "Exposição WP13 do teto conhecido55000 condicionado quando training está omitido: W2 retorna threshold:null; o solver WP11 tem teste55k separado.",
+        "Prazo/cancelamento sem regra executado pelo domínio (WP13.T03.CHK.02). O port atual aceita parâmetro replace/amount e rejeita outros.",
+        "UI/BI instalados com curva/tabela/unidades e mesmo caso/base; native/MCP.",
+        "Função não linear real do domínio: o teste de não linearidade usa callback value*value."
+      ],
+      "next_action": "Observar resultados S2 por assertion; não promover o limiar condicionado a completo. Resolver exposição do limite conhecido em contrato autorizado e consumir coverage authority no host.",
+      "observed_product_status": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "id": "G05",
+      "title": "Persistência, binding, ancestry e replay",
+      "owners": [
+        "WP13",
+        "WP11",
+        "WP10",
+        "WP03"
+      ],
+      "implementation": [
+        "modules/sucafina/Sucafinav1/product/portfolio/analysis.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/result-store.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-store.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/stored.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/proof.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/history-provenance.ts"
+      ],
+      "tests": [
+        "modules/sucafina/Sucafinav1/test/product/wp13/analysis-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/persistence-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/persistent-store.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/stored-store.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/stored.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/source-scenario.test.ts"
+      ],
+      "can_establish": [
+        "Retries após resultado C08 sem binding e após resposta de binding perdida reutilizam origem e não duplicam resultado/bind.",
+        "Comparação persistida referencia request/result e binding; read/replay revalida fontes, caso, incarnation, digests e autoridade.",
+        "Origem candidata v1 pode ser recuperada de transaction snapshot imutável ou ChoiceRecord+ledger exatos com C08 autorizado; naked digest, ancestry futura/alterada, ACL antiga e fonte revogada são recusados."
+      ],
+      "cannot_establish": [
+        "Host WP10 ainda precisa injetar createPortfolioCandidateHistoryReader; não há callsite de campanha confirmado no delta.",
+        "Origens antigas/unchosen sem snapshot completo nem escolha/ledger autenticados permanecem unavailable.",
+        "Leitura histórica/replay no consumidor instalado e análise/calculation ancestry através de todos os readers do host.",
+        "Recriar factories/reabrir local-store de fixture não prova restart do runtime instalado ou restauração de credenciais."
+      ],
+      "next_action": "WP10 integrar reader e callbacks de cálculo; WP11 publicar origem autenticada para casos legados quando necessário; registrar consumidor pós-reload e negatives com head/tree/run fixados.",
+      "observed_product_status": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "id": "G06",
+      "title": "Escolha, preparação e aplicação são etapas diferentes",
+      "owners": [
+        "WP13",
+        "WP11",
+        "WP10"
+      ],
+      "implementation": [
+        "modules/sucafina/Sucafinav1/product/portfolio/handoff.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/campaign-proposals.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/contribution.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/product.ts",
+        "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+        "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+        "modules/sucafina/Sucafinav1/product/decisions/apply.ts"
+      ],
+      "tests": [
+        "modules/sucafina/Sucafinav1/test/product/wp13/handoff.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/handoff-integration.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/source-scenario.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts"
+      ],
+      "can_establish": [
+        "preparePortfolioChoice exige UI, seleção/digest revisados e ChoiceRecord persistido compatível no caso/encarnação/versão antes de chamar prepareChanges WP11.",
+        "A fixture numérica registra escolha por mutation real, confirma training no mesmo caso, preserva choice digest e não cria preparedChanges/receipts.",
+        "Handoff de dois efeitos usa prepared apply/result receipt reais de WP11, com falha/retry parcial e uma mutação efetiva no callback do domínio.",
+        "O teste de aplicação expõe case-reconciliation-pending antes de retry; não demonstra correção do CAS."
+      ],
+      "cannot_establish": [
+        "Um único fluxo integrado que parte da escolha humana real da combinação multi-registro e aplica comandos canônicos dos dois domínios.",
+        "O teste de aplicação seeds ChoiceRecord via cast e altera snapshot.data.wp13Amount por callback; não é engine financeiro ou ação humana instalada.",
+        "AM04/native installed; aprovação empresarial real; transação global."
+      ],
+      "next_action": "WP11/WP10 resolver reconciliação receipt/CAS e provar aplicação/retry pelos handlers reais, usando a mesma escolha e correlação do conjunto e sem novo ledger.",
+      "observed_product_status": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "id": "G07",
+      "title": "Condição material, memória e escolha histórica",
+      "owners": [
+        "WP13",
+        "WP11",
+        "WP14",
+        "WP10"
+      ],
+      "implementation": [
+        "modules/sucafina/Sucafinav1/product/portfolio/proof.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/history-provenance.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/handoff.ts",
+        "modules/sucafina/Sucafinav1/product/decisions/portfolio-history.ts"
+      ],
+      "tests": [
+        "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/source-scenario.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-history.test.ts"
+      ],
+      "can_establish": [
+        "ChoiceRecord original permanece após a confirmação40000 no mesmo caso; a nova versão fica reconsidering e não escolhe/aplica automaticamente.",
+        "Histórico candidato conserva dados originais em vez de recalcular com preço atual quando origem e ACL são comprováveis."
+      ],
+      "cannot_establish": [
+        "Mudança de implantação45000→70000 com total235000/vantagem5000 e condição material específica em consumidor WP14.",
+        "DecisionMemoryPort/Atlas real, precedente após restart e consumidor que abre condição afetada; nenhum desses fluxos está em S2."
+      ],
+      "next_action": "WP14 consumir refs/condições originais e atuais e executar mudança material e irrelevante; WP10 integrar histórico sem reabrir acesso revogado.",
+      "observed_product_status": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "id": "G08",
+      "title": "Mesa, BI e crítica consumindo o mesmo resultado",
+      "owners": [
+        "WP01",
+        "WP05",
+        "WP10",
+        "WP12"
+      ],
+      "implementation": [
+        "modules/sucafina/Sucafinav1/product/portfolio/projection.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/product.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/contribution.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/stored.ts"
+      ],
+      "tests": [
+        "modules/sucafina/Sucafinav1/test/product/wp13/projection.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/stored-store.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/persistent-store.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/source-scenario.test.ts"
+      ],
+      "can_establish": [
+        "Readmodel/projection referencia o resultado persistido e recusa principal diferente ou revogação no egress.",
+        "As interfaces expõem campos e refs para consumidores sem renderizador WP13."
+      ],
+      "cannot_establish": [
+        "Abertura/edição/comparação/escolha/reload observados no entrypoint instalado.",
+        "UI, BI e crítica mostrando exatamente a mesma versão, status de cobertura, subtotal/total e categorias pendentes.",
+        "Aceite humano de usabilidade/compreensão dos compromissos e estados de cada mudança."
+      ],
+      "next_action": "Cada owner de consumidor publicar pin e ConsumptionReceipt/action real; WP10 consolidar cenário único de aceite.",
+      "observed_product_status": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "id": "G09",
+      "title": "C16, perfis/skills e paridade UI/native/MCP",
+      "owners": [
+        "WP13",
+        "WP10",
+        "WP12"
+      ],
+      "implementation": [
+        "modules/sucafina/Sucafinav1/product/portfolio/capabilities.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/persistent-capabilities.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/contribution.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/product.ts"
+      ],
+      "tests": [
+        "modules/sucafina/Sucafinav1/test/product/wp13/contribution.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/persistent-store.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/stored.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/stored-store.test.ts"
+      ],
+      "can_establish": [
+        "Dois descritores concretos, schemas comuns, handlerExport e admissão/egress receipt verificados; persistência ausente ou receipt divergente não produz sucesso.",
+        "Testes exercitam chamadas diretas com TrustedDomainContext/receipts de fixture."
+      ],
+      "cannot_establish": [
+        "GNATIVE, AM01 e AM02: SessionV2.skill real, bytes/digest/mensagem carregada, binding privado, transporte MCP e consumidor pós-reload.",
+        "Paridade dos dois handlers com o mesmo principal/caso/base entre UI/native/MCP.",
+        "Negative native sem SkillLoadReceipt, permissão revogada após discovery, homônimo, generation stale e lease forjada.",
+        "Campanha multicase nativa: o DecisionCasePort atual restringe read ao caso do binding; WP13 não pode ampliar a concessão."
+      ],
+      "next_action": "WP10/WP12 compor e provar as duas rotas canônicas: sf_portfolio/sf-compor-portfolio e sf_finance/sf-avaliar-sensibilidade, incluindo contraprovas.",
+      "observed_product_status": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "id": "G10",
+      "title": "Autoridade, fontes, ausência e moedas",
+      "owners": [
+        "WP13",
+        "WP10",
+        "WP11"
+      ],
+      "implementation": [
+        "modules/sucafina/Sucafinav1/product/portfolio/catalog.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/candidates.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/production.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/stored.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/history-provenance.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/projection.ts"
+      ],
+      "tests": [
+        "modules/sucafina/Sucafinav1/test/product/wp13/candidates.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/candidates-store.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/portfolio.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/projection.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/planner-sensitivity-boundary.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/coverage-preview.test.ts"
+      ],
+      "can_establish": [
+        "Recusa por case incarnation/versão/digest/autoridade, captura defensiva de objetos emprestados e revalidação ingress/egress.",
+        "Moeda do parâmetro e da saída conservadas; FX ausente não vira0; zero informado e omissão separados."
+      ],
+      "cannot_establish": [
+        "Canário HR nos agregados, delta, ranking, contagem e ausência de alternativa sob autenticação real.",
+        "Autorização final de todos os domínios e scopes multicase em UI/native/MCP instalado."
+      ],
+      "next_action": "Executar canários de permissão por campo/domínio no host de WP10 sem ampliar acesso para fazer o teste passar.",
+      "observed_product_status": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "id": "G11",
+      "title": "Proposta IA e contribuição confirmada",
+      "owners": [
+        "WP13",
+        "WP12",
+        "WP11",
+        "WP10"
+      ],
+      "implementation": [
+        "modules/sucafina/Sucafinav1/product/portfolio/campaign-proposals.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/campaign.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/stored.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/handoff.ts"
+      ],
+      "tests": [
+        "modules/sucafina/Sucafinav1/test/product/wp13/campaign.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/stored.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/stored-store.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/handoff.test.ts"
+      ],
+      "can_establish": [
+        "Reader exige AlternativeDraft ready, domainApplied:false, mesmo caso, perfil sf_portfolio/skill sf-compor-portfolio e output digest proveniente do reader C11.",
+        "Proposta continua hipótese até o fluxo de confirmação humana; não existe escolha automática neste reader."
+      ],
+      "cannot_establish": [
+        "Run/modelo/SkillLoadReceipt/output real persistido e ação humana integrada após reload.",
+        "Produção dos restantes outputs residentes/capacidades C17 e revisão IA independente."
+      ],
+      "next_action": "WP12 entregar output real pinado e WP11/WP10 confirmar/recarregar no mesmo caso com provenance e authority atuais.",
+      "observed_product_status": "PENDING_GHA_LOG_REVIEW"
+    }
+  ],
+  "criteria_count": 68,
+  "criteria_by_entity": {
+    "WP13": 17,
+    "WP13.T01": 8,
+    "WP13.T02": 20,
+    "WP13.T03": 15,
+    "WP13.T04": 8
+  },
+  "status_counts": {
+    "BLOCKED_REQUIRED_EVIDENCE": 40,
+    "PENDING_GHA": 9,
+    "PARTIAL_PENDING_GHA": 19
+  },
+  "criteria": [
+    {
+      "criterion_id": "WP13.DOD.01",
+      "entity_id": "WP13",
+      "family": "dod",
+      "text": "Campanha multi-registro pode ser comparada, escolhida e encaminhada aos domínios reais com a mesma semântica de casos individuais.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "BLOCKED_REQUIRED_EVIDENCE",
+      "observed": "Port produtor e C08 existem, porém campanha multi-registro escolhida e aplicada por domínios reais não foi demonstrada no módulo integrado.",
+      "proof_group_ids": [
+        "G01",
+        "G02",
+        "G05",
+        "G06",
+        "G08"
+      ],
+      "producer_tasks": [
+        "WP13.T01",
+        "WP13.T02",
+        "WP13.T03",
+        "WP13.T04"
+      ],
+      "required_consumer_tasks": [
+        "WP11.T01",
+        "WP01.T05",
+        "WP05.T05",
+        "WP11.T02",
+        "WP10.T01",
+        "WP11.T03",
+        "WP11.T04"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.DOD.20",
+      "entity_id": "WP13",
+      "family": "dod",
+      "text": "Portfólio integrado consome e conserva a cobertura dos candidatos/interações C10.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "BLOCKED_REQUIRED_EVIDENCE",
+      "observed": "Produtor C10 tem novos positivos N/A/shared/omitted/zero; host ainda possui deltas de cobertura não aplicados e consumidores não observados.",
+      "proof_group_ids": [
+        "G03",
+        "G08"
+      ],
+      "producer_tasks": [
+        "WP13.T02",
+        "WP13.T03",
+        "WP13.T01",
+        "WP13.T04"
+      ],
+      "required_consumer_tasks": [
+        "WP11.T02",
+        "WP01.T05",
+        "WP05.T05",
+        "WP12.T03"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.DOD.10",
+      "entity_id": "WP13",
+      "family": "dod",
+      "text": "As entregas residentes atribuídas a WP13 têm produção, consumo e provas reais completos.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "BLOCKED_REQUIRED_EVIDENCE",
+      "observed": "Descritores concretos não equivalem às entregas residentes executadas/consumidas; AM01/AM02 não estão em S2.",
+      "proof_group_ids": [
+        "G09",
+        "G11"
+      ],
+      "producer_tasks": [
+        "WP13.T02",
+        "WP13.T03",
+        "WP13.T01",
+        "WP13.T04"
+      ],
+      "required_consumer_tasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP01.T05",
+        "WP05.T05",
+        "WP11.T02"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.INV.01",
+      "entity_id": "WP13",
+      "family": "invariants",
+      "text": "Restrições não são relaxadas silenciosamente e compromisso não é duplicado.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "PENDING_GHA",
+      "observed": "Port recusa alvo/componente duplicado e assessment ausente e preserva failed; conferir assertions S2 sem extrapolar a reconciliação multirregistro real.",
+      "proof_group_ids": [
+        "G02"
+      ],
+      "producer_tasks": [
+        "WP13.T02"
+      ],
+      "required_consumer_tasks": [
+        "WP11.T02",
+        "WP01.T05",
+        "WP05.T05"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.INV.02",
+      "entity_id": "WP13",
+      "family": "invariants",
+      "text": "Amostra limitada não é ótimo comprovado; hipótese não vira economia confirmada.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "PARTIAL_PENDING_GHA",
+      "observed": "Limite de exploração e hipóteses são explícitos; certificado complete descreve análise matemática, enquanto amostras C08 continuam hypothetical/conditioned e zero recibos.",
+      "proof_group_ids": [
+        "G02",
+        "G03",
+        "G04",
+        "G06"
+      ],
+      "producer_tasks": [
+        "WP13.T02",
+        "WP13.T03",
+        "WP13.T04"
+      ],
+      "required_consumer_tasks": [
+        "WP11.T02",
+        "WP01.T05",
+        "WP05.T05",
+        "WP12.T03",
+        "WP11.T03",
+        "WP11.T04",
+        "WP10.T01"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.INV.20",
+      "entity_id": "WP13",
+      "family": "invariants",
+      "text": "Elegibilidade completa exige cobertura resolvida; falta de categoria não relaxa restrição nem cria economia.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "PENDING_GHA",
+      "observed": "Source-only omitido com subtotal210000 permanece conditioned; confirmação40000 não é elegível; coverage incompleta impede limiar completo.",
+      "proof_group_ids": [
+        "G03"
+      ],
+      "producer_tasks": [
+        "WP13.T02",
+        "WP13.T03"
+      ],
+      "required_consumer_tasks": [
+        "WP11.T02",
+        "WP01.T05",
+        "WP05.T05",
+        "WP12.T03"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.INV.10",
+      "entity_id": "WP13",
+      "family": "invariants",
+      "text": "WP13 conserva autoridade, dados oficiais e ownership; não assume identidade técnica ou novo acesso empresarial.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "PARTIAL_PENDING_GHA",
+      "observed": "W2 preserva fronteiras locais e não cria grants; permissões HR/native e pin de consumidor ainda exigem provas do host.",
+      "proof_group_ids": [
+        "G10"
+      ],
+      "producer_tasks": [
+        "WP13.T01",
+        "WP13.T02",
+        "WP13.T03",
+        "WP13.T04"
+      ],
+      "required_consumer_tasks": [
+        "WP10.T01",
+        "WP10.T06",
+        "WP11.T02",
+        "WP01.T05",
+        "WP05.T05"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.QLT.01",
+      "entity_id": "WP13",
+      "family": "quality_standards",
+      "text": "Composição, motivo de viabilidade e limites da exploração são explícitos.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "BLOCKED_REQUIRED_EVIDENCE",
+      "observed": "Campos de composição/motivos/limites estão no modelo; visibilidade real no consumidor não observada.",
+      "proof_group_ids": [
+        "G02",
+        "G08"
+      ],
+      "producer_tasks": [
+        "WP13.T02",
+        "WP13.T01",
+        "WP13.T03",
+        "WP13.T04"
+      ],
+      "required_consumer_tasks": [
+        "WP11.T02",
+        "WP01.T05",
+        "WP05.T05"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.QLT.02",
+      "entity_id": "WP13",
+      "family": "quality_standards",
+      "text": "Interação usa cálculo determinístico sem nova inferência por célula.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "PENDING_GHA",
+      "observed": "Evaluator chama domínio determinístico por ponto e exactThreshold canônico; não há inferência LLM por célula no trecho examinado.",
+      "proof_group_ids": [
+        "G02",
+        "G04"
+      ],
+      "producer_tasks": [
+        "WP13.T02",
+        "WP13.T03"
+      ],
+      "required_consumer_tasks": [
+        "WP11.T02",
+        "WP01.T05",
+        "WP05.T05"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.QLT.20",
+      "entity_id": "WP13",
+      "family": "quality_standards",
+      "text": "Motivo de incomplete referencia categoria/candidato e a condição que precisa ser resolvida.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "BLOCKED_REQUIRED_EVIDENCE",
+      "observed": "O produtor conserva categoria/reason/candidate; mesa/BI/crítica ainda precisam expor a condição correspondente da mesma revisão.",
+      "proof_group_ids": [
+        "G03",
+        "G08"
+      ],
+      "producer_tasks": [
+        "WP13.T02",
+        "WP13.T03",
+        "WP13.T01",
+        "WP13.T04"
+      ],
+      "required_consumer_tasks": [
+        "WP11.T02",
+        "WP01.T05",
+        "WP05.T05",
+        "WP12.T03"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.QLT.10",
+      "entity_id": "WP13",
+      "family": "quality_standards",
+      "text": "Interfaces são concretas, versões/digests são verificáveis e falhas possuem causa e estado explícitos.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "PARTIAL_PENDING_GHA",
+      "observed": "Digests, refs e falhas explícitas têm testes; typecheck C2 foi reportado failed e interfaces reais de host não foram comprovadas.",
+      "proof_group_ids": [
+        "G05",
+        "G09",
+        "G10"
+      ],
+      "producer_tasks": [
+        "WP13.T01",
+        "WP13.T02",
+        "WP13.T03",
+        "WP13.T04"
+      ],
+      "required_consumer_tasks": [
+        "WP10.T01",
+        "WP11.T02",
+        "WP01.T05",
+        "WP05.T05",
+        "WP10.T06",
+        "WP12.T02"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.CMP.01",
+      "entity_id": "WP13",
+      "family": "completeness_criteria",
+      "text": "Cobrir candidatos, combinações, restrições, sensibilidade e aplicação preparada em contrato/projeto/contratação, com casos sem solução e incompletos.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "BLOCKED_REQUIRED_EVIDENCE",
+      "observed": "Faltam corpus contrato/projeto/contratação, combinação real positiva/sem solução e aplicação integrada; não cobrir por contagem de testes.",
+      "proof_group_ids": [
+        "G01",
+        "G02",
+        "G03",
+        "G04",
+        "G06",
+        "G08"
+      ],
+      "producer_tasks": [
+        "WP13.T01",
+        "WP13.T02",
+        "WP13.T03",
+        "WP13.T04"
+      ],
+      "required_consumer_tasks": [
+        "WP11.T01",
+        "WP01.T05",
+        "WP05.T05",
+        "WP11.T02",
+        "WP12.T03",
+        "WP11.T03",
+        "WP11.T04",
+        "WP10.T01"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.CMP.20",
+      "entity_id": "WP13",
+      "family": "completeness_criteria",
+      "text": "Cobrir categoria omitida em um candidato, custo de interação pendente, zero, soma compartilhada e inversão após confirmação.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "PARTIAL_PENDING_GHA",
+      "observed": "Novos testes cobrem omissão/zero/shared/40000 com domínio; interação pendente permanece callback controlada e consumidor real é pendente.",
+      "proof_group_ids": [
+        "G03"
+      ],
+      "producer_tasks": [
+        "WP13.T02",
+        "WP13.T03"
+      ],
+      "required_consumer_tasks": [
+        "WP11.T02",
+        "WP01.T05",
+        "WP05.T05",
+        "WP12.T03"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.CMP.10",
+      "entity_id": "WP13",
+      "family": "completeness_criteria",
+      "text": "Todas as obrigações 5/18/8/C17 desta frente têm task, owner, paths, consumidor e negativos discriminantes.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "BLOCKED_REQUIRED_EVIDENCE",
+      "observed": "Mapa declara owners/consumers/rotas, mas 5/18/8/C17 requer witnesses integrados e negativos reais fora de S2.",
+      "proof_group_ids": [
+        "G09",
+        "G10",
+        "G11"
+      ],
+      "producer_tasks": [
+        "WP13.T02",
+        "WP13.T03",
+        "WP13.T01",
+        "WP13.T04"
+      ],
+      "required_consumer_tasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP01.T05",
+        "WP05.T05",
+        "WP10.T01",
+        "WP11.T02"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.SUC.01",
+      "entity_id": "WP13",
+      "family": "success_criteria",
+      "text": "André compara alternativas de portfólio e descobre quais compromissos e limites cada uma preserva.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "BLOCKED_REQUIRED_EVIDENCE",
+      "observed": "Não há ação observada de André/usuário comparando as opções no módulo instalado.",
+      "proof_group_ids": [
+        "G02",
+        "G04",
+        "G08"
+      ],
+      "producer_tasks": [
+        "WP13.T02",
+        "WP13.T03",
+        "WP13.T01",
+        "WP13.T04"
+      ],
+      "required_consumer_tasks": [
+        "WP11.T02",
+        "WP01.T05",
+        "WP05.T05"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.SUC.20",
+      "entity_id": "WP13",
+      "family": "success_criteria",
+      "text": "Usuário distingue combinação que atende comprovadamente de combinação ainda condicionada à informação faltante.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "BLOCKED_REQUIRED_EVIDENCE",
+      "observed": "Estados internos discriminam complete/conditioned; distinção percebida na UI/BI não está comprovada.",
+      "proof_group_ids": [
+        "G03",
+        "G08"
+      ],
+      "producer_tasks": [
+        "WP13.T02",
+        "WP13.T03",
+        "WP13.T01",
+        "WP13.T04"
+      ],
+      "required_consumer_tasks": [
+        "WP11.T02",
+        "WP01.T05",
+        "WP05.T05",
+        "WP12.T03"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.SUC.10",
+      "entity_id": "WP13",
+      "family": "success_criteria",
+      "text": "O consumidor integrado utiliza a saída de produção sem substituto fictício e o revisor consegue reproduzir o resultado.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "BLOCKED_REQUIRED_EVIDENCE",
+      "observed": "Replay de factory é candidato de prova; consumidor instalado e reprodução integrada não estão observados.",
+      "proof_group_ids": [
+        "G05",
+        "G08",
+        "G09"
+      ],
+      "producer_tasks": [
+        "WP13.T01",
+        "WP13.T02",
+        "WP13.T03",
+        "WP13.T04"
+      ],
+      "required_consumer_tasks": [
+        "WP10.T01",
+        "WP11.T02",
+        "WP01.T05",
+        "WP05.T05",
+        "WP10.T06",
+        "WP12.T02"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.T01.DOD.01",
+      "entity_id": "WP13.T01",
+      "family": "dod",
+      "text": "Campanha multi-registro e critérios são persistidos via caso WP11 e exibidos por consumidor real.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "BLOCKED_REQUIRED_EVIDENCE",
+      "observed": "Campaign testa metadados/caso/CAS, mas exibição real de campanha multi-registro está pendente.",
+      "proof_group_ids": [
+        "G01",
+        "G05",
+        "G08"
+      ],
+      "producer_tasks": [
+        "WP13.T01",
+        "WP13.T02",
+        "WP13.T03",
+        "WP13.T04"
+      ],
+      "required_consumer_tasks": [
+        "WP11.T01",
+        "WP01.T05",
+        "WP05.T05",
+        "WP10.T01",
+        "WP11.T02"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.T01.INV.01",
+      "entity_id": "WP13.T01",
+      "family": "invariants",
+      "text": "Portfólio não cria política de corte, pesos ocultos, capacidade presumida ou novos tipos de lançamento.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "PARTIAL_PENDING_GHA",
+      "observed": "Scope/priorities/constraints explícitos e catálogo finito não introduzem política; ausência de inferência FTE no corpus de três domínios não demonstrada.",
+      "proof_group_ids": [
+        "G01",
+        "G10"
+      ],
+      "producer_tasks": [
+        "WP13.T01",
+        "WP13.T02",
+        "WP13.T03",
+        "WP13.T04"
+      ],
+      "required_consumer_tasks": [
+        "WP11.T01",
+        "WP01.T05",
+        "WP05.T05",
+        "WP10.T01",
+        "WP10.T06",
+        "WP11.T02"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.T01.QLT.01",
+      "entity_id": "WP13.T01",
+      "family": "quality_standards",
+      "text": "Escopo, limites e compromissos aparecem como campos editáveis e não como instruções opacas no prompt.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "BLOCKED_REQUIRED_EVIDENCE",
+      "observed": "Modelo possui campos de edição; não houve operação no renderizador/mesa real.",
+      "proof_group_ids": [
+        "G01",
+        "G08"
+      ],
+      "producer_tasks": [
+        "WP13.T01",
+        "WP13.T02",
+        "WP13.T03",
+        "WP13.T04"
+      ],
+      "required_consumer_tasks": [
+        "WP11.T01",
+        "WP01.T05",
+        "WP05.T05"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.T01.CMP.01",
+      "entity_id": "WP13.T01",
+      "family": "completeness_criteria",
+      "text": "Cobrir candidatos válidos/inválidos, hipóteses, escopo vazio, período incompatível e componente restrito.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "PARTIAL_PENDING_GHA",
+      "observed": "Testes cobrem moeda/período, hipótese, versões e revogação; corpus domínio completo, vazio e HR precisa ser discriminado no host.",
+      "proof_group_ids": [
+        "G01",
+        "G10",
+        "G11"
+      ],
+      "producer_tasks": [
+        "WP13.T01",
+        "WP13.T02",
+        "WP13.T03",
+        "WP13.T04"
+      ],
+      "required_consumer_tasks": [
+        "WP11.T01",
+        "WP01.T05",
+        "WP05.T05",
+        "WP10.T01",
+        "WP10.T06",
+        "WP11.T02",
+        "WP12.T02"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.T01.SUC.01",
+      "entity_id": "WP13.T01",
+      "family": "success_criteria",
+      "text": "André expressa o que quer preservar e consegue conferir quais mudanças estão sendo consideradas.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "BLOCKED_REQUIRED_EVIDENCE",
+      "observed": "Confirmação de entendimento/edição do usuário exige consumidor observado.",
+      "proof_group_ids": [
+        "G01",
+        "G08"
+      ],
+      "producer_tasks": [
+        "WP13.T01",
+        "WP13.T02",
+        "WP13.T03",
+        "WP13.T04"
+      ],
+      "required_consumer_tasks": [
+        "WP11.T01",
+        "WP01.T05",
+        "WP05.T05"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.T01.CHK.01",
+      "entity_id": "WP13.T01",
+      "family": "check",
+      "text": "Criar campanha com contrato, projeto e contratação preserva IDs, períodos e compromissos selecionados sem inferir capacidade livre a partir de FTE.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "BLOCKED_REQUIRED_EVIDENCE",
+      "observed": "Multi-case sintético não é campanha contrato/projeto/contratação real com IDs, períodos e compromissos preservados.",
+      "proof_group_ids": [
+        "G01",
+        "G10"
+      ],
+      "producer_tasks": [
+        "WP13.T01",
+        "WP13.T02",
+        "WP13.T03",
+        "WP13.T04"
+      ],
+      "required_consumer_tasks": [
+        "WP11.T01",
+        "WP01.T05",
+        "WP05.T05",
+        "WP10.T01",
+        "WP10.T06",
+        "WP11.T02"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.T01.CHK.02",
+      "entity_id": "WP13.T01",
+      "family": "check",
+      "text": "Candidato sem efeito suportado no domínio é rejeitado; oportunidade de desconto permanece hipótese até confirmação.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "PARTIAL_PENDING_GHA",
+      "observed": "Recusas e origem de hipótese existem no produtor; efeito suportado e desconto até confirmação precisam atravessar comandos reais.",
+      "proof_group_ids": [
+        "G01",
+        "G11"
+      ],
+      "producer_tasks": [
+        "WP13.T01",
+        "WP13.T04"
+      ],
+      "required_consumer_tasks": [
+        "WP11.T01",
+        "WP01.T05",
+        "WP05.T05",
+        "WP12.T02",
+        "WP11.T02"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.T01.CHK.03",
+      "entity_id": "WP13.T01",
+      "family": "check",
+      "text": "Pessoa sem acesso ao componente de HR não o obtém por lista de candidatos, total, delta ou exclusão de alternativa.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "BLOCKED_REQUIRED_EVIDENCE",
+      "observed": "Denied no reader não comprova ausência de inferência por total/delta/ranking/exclusão em HR no host.",
+      "proof_group_ids": [
+        "G10"
+      ],
+      "producer_tasks": [
+        "WP13.T01",
+        "WP13.T02",
+        "WP13.T03",
+        "WP13.T04"
+      ],
+      "required_consumer_tasks": [
+        "WP10.T01",
+        "WP10.T06",
+        "WP11.T02",
+        "WP01.T05",
+        "WP05.T05"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.T02.DOD.01",
+      "entity_id": "WP13.T02",
+      "family": "dod",
+      "text": "Comparação multi-registro usa adapter real e entrega elegibilidade/limites ao caso integrado.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "BLOCKED_REQUIRED_EVIDENCE",
+      "observed": "Source-only test usa adapter real para candidato único; comparação multi-registro/limites no caso integrado permanece aberta.",
+      "proof_group_ids": [
+        "G02",
+        "G05",
+        "G08"
+      ],
+      "producer_tasks": [
+        "WP13.T02",
+        "WP13.T01",
+        "WP13.T03",
+        "WP13.T04"
+      ],
+      "required_consumer_tasks": [
+        "WP11.T02",
+        "WP01.T05",
+        "WP05.T05",
+        "WP10.T01"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.T02.DOD.20",
+      "entity_id": "WP13.T02",
+      "family": "dod",
+      "text": "Portfólio integrado consome e conserva a cobertura dos candidatos/interações C10.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "BLOCKED_REQUIRED_EVIDENCE",
+      "observed": "Mesmo bloqueio C10 do WP: produtor tem positivos novos, host N/A/source-only e consumidores pendentes.",
+      "proof_group_ids": [
+        "G03",
+        "G08"
+      ],
+      "producer_tasks": [
+        "WP13.T02",
+        "WP13.T03",
+        "WP13.T01",
+        "WP13.T04"
+      ],
+      "required_consumer_tasks": [
+        "WP11.T02",
+        "WP01.T05",
+        "WP05.T05",
+        "WP12.T03"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.T02.DOD.18",
+      "entity_id": "WP13.T02",
+      "family": "dod",
+      "text": "Descritores C16 de sf_portfolio_evaluate são implementados e consumidos por T06 com referências reais.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "BLOCKED_REQUIRED_EVIDENCE",
+      "observed": "evaluatePortfolio existe com schema/receipt; consumo T06 no host com referências reais ainda não observado.",
+      "proof_group_ids": [
+        "G09"
+      ],
+      "producer_tasks": [
+        "WP13.T02",
+        "WP13.T03"
+      ],
+      "required_consumer_tasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP01.T05",
+        "WP05.T05"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.T02.INV.01",
+      "entity_id": "WP13.T02",
+      "family": "invariants",
+      "text": "Não duplicar compromisso, relaxar restrição ou chamar amostra limitada de solução ótima comprovada.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "PENDING_GHA",
+      "observed": "Duplicidade e limite são discriminados em portfolio.test; nenhum rótulo de ótimo global na implementação examinada.",
+      "proof_group_ids": [
+        "G02"
+      ],
+      "producer_tasks": [
+        "WP13.T02"
+      ],
+      "required_consumer_tasks": [
+        "WP11.T02",
+        "WP01.T05",
+        "WP05.T05"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.T02.INV.20",
+      "entity_id": "WP13.T02",
+      "family": "invariants",
+      "text": "Elegibilidade completa exige cobertura resolvida; falta de categoria não relaxa restrição nem cria economia.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "PENDING_GHA",
+      "observed": "Port não transforma subtotal sob restrição em elegibilidade quando coverage/analysis está pendente.",
+      "proof_group_ids": [
+        "G03"
+      ],
+      "producer_tasks": [
+        "WP13.T02",
+        "WP13.T03"
+      ],
+      "required_consumer_tasks": [
+        "WP11.T02",
+        "WP01.T05",
+        "WP05.T05",
+        "WP12.T03"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.T02.INV.18",
+      "entity_id": "WP13.T02",
+      "family": "invariants",
+      "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "PARTIAL_PENDING_GHA",
+      "observed": "Port delega domínio e revalida; autoridade/CAS final via transportes reais não demonstrada.",
+      "proof_group_ids": [
+        "G09",
+        "G10"
+      ],
+      "producer_tasks": [
+        "WP13.T02",
+        "WP13.T03",
+        "WP13.T01",
+        "WP13.T04"
+      ],
+      "required_consumer_tasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP01.T05",
+        "WP05.T05",
+        "WP10.T01",
+        "WP11.T02"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.T02.QLT.01",
+      "entity_id": "WP13.T02",
+      "family": "quality_standards",
+      "text": "Resultado mantém composição, origem e motivo por critério; quantidade de combinações e limite ficam visíveis.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "BLOCKED_REQUIRED_EVIDENCE",
+      "observed": "Composição/analysis/ref/criterion/explored/limit estão no resultado; visibilidade do mesmo resultado persistido não observada.",
+      "proof_group_ids": [
+        "G02",
+        "G05",
+        "G08"
+      ],
+      "producer_tasks": [
+        "WP13.T02",
+        "WP13.T01",
+        "WP13.T03",
+        "WP13.T04"
+      ],
+      "required_consumer_tasks": [
+        "WP11.T02",
+        "WP01.T05",
+        "WP05.T05",
+        "WP10.T01"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.T02.QLT.20",
+      "entity_id": "WP13.T02",
+      "family": "quality_standards",
+      "text": "Motivo de incomplete referencia categoria/candidato e a condição que precisa ser resolvida.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "BLOCKED_REQUIRED_EVIDENCE",
+      "observed": "Reasons de categoria estão presentes; mesma versão em UI/BI/critique segue aberta.",
+      "proof_group_ids": [
+        "G03",
+        "G08"
+      ],
+      "producer_tasks": [
+        "WP13.T02",
+        "WP13.T03",
+        "WP13.T01",
+        "WP13.T04"
+      ],
+      "required_consumer_tasks": [
+        "WP11.T02",
+        "WP01.T05",
+        "WP05.T05",
+        "WP12.T03"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.T02.QLT.18",
+      "entity_id": "WP13.T02",
+      "family": "quality_standards",
+      "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "PARTIAL_PENDING_GHA",
+      "observed": "Schema/receipt e absence falham fechado; parity compara superfícies reais, não objetos TrustedContext de teste.",
+      "proof_group_ids": [
+        "G09",
+        "G10"
+      ],
+      "producer_tasks": [
+        "WP13.T02",
+        "WP13.T03",
+        "WP13.T01",
+        "WP13.T04"
+      ],
+      "required_consumer_tasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP01.T05",
+        "WP05.T05",
+        "WP10.T01",
+        "WP11.T02"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.T02.CMP.01",
+      "entity_id": "WP13.T02",
+      "family": "completeness_criteria",
+      "text": "Cobrir combinação válida, incompatível, incompleta, sem solução e limite de exploração atingido.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "PARTIAL_PENDING_GHA",
+      "observed": "Conflito/conditioned/limit testados com callbacks; combinação positiva e sem solução pelo adapter real permanecem sem prova completa.",
+      "proof_group_ids": [
+        "G02",
+        "G03"
+      ],
+      "producer_tasks": [
+        "WP13.T02",
+        "WP13.T03"
+      ],
+      "required_consumer_tasks": [
+        "WP11.T02",
+        "WP01.T05",
+        "WP05.T05",
+        "WP12.T03"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.T02.CMP.20",
+      "entity_id": "WP13.T02",
+      "family": "completeness_criteria",
+      "text": "Cobrir categoria omitida em um candidato, custo de interação pendente, zero, soma compartilhada e inversão após confirmação.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "PARTIAL_PENDING_GHA",
+      "observed": "Omissão/zero/shared/inversão têm novos oráculos de domínio; interação multi-candidato real permanece pendente.",
+      "proof_group_ids": [
+        "G03"
+      ],
+      "producer_tasks": [
+        "WP13.T02",
+        "WP13.T03"
+      ],
+      "required_consumer_tasks": [
+        "WP11.T02",
+        "WP01.T05",
+        "WP05.T05",
+        "WP12.T03"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.T02.CMP.18",
+      "entity_id": "WP13.T02",
+      "family": "completeness_criteria",
+      "text": "Cobrir todos os exports desta task (1), caso autorizado, direto proibido, stale e indisponível.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "BLOCKED_REQUIRED_EVIDENCE",
+      "observed": "Não há execução native/MCP com loaded skill, grant positivo e negativos direto/stale/unavailable da operação em S2.",
+      "proof_group_ids": [
+        "G09"
+      ],
+      "producer_tasks": [
+        "WP13.T02",
+        "WP13.T03"
+      ],
+      "required_consumer_tasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP01.T05",
+        "WP05.T05"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.T02.SUC.01",
+      "entity_id": "WP13.T02",
+      "family": "success_criteria",
+      "text": "O usuário identifica quais combinações atendem às restrições e qual compromisso muda entre elas.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "BLOCKED_REQUIRED_EVIDENCE",
+      "observed": "Resultado de port não prova usuário identificando combinações/compromissos no consumidor.",
+      "proof_group_ids": [
+        "G02",
+        "G08"
+      ],
+      "producer_tasks": [
+        "WP13.T02",
+        "WP13.T01",
+        "WP13.T03",
+        "WP13.T04"
+      ],
+      "required_consumer_tasks": [
+        "WP11.T02",
+        "WP01.T05",
+        "WP05.T05"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.T02.SUC.20",
+      "entity_id": "WP13.T02",
+      "family": "success_criteria",
+      "text": "Usuário distingue combinação que atende comprovadamente de combinação ainda condicionada à informação faltante.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "BLOCKED_REQUIRED_EVIDENCE",
+      "observed": "Distinção humana eligible-complete/conditioned ainda exige UI/BI real.",
+      "proof_group_ids": [
+        "G03",
+        "G08"
+      ],
+      "producer_tasks": [
+        "WP13.T02",
+        "WP13.T03",
+        "WP13.T01",
+        "WP13.T04"
+      ],
+      "required_consumer_tasks": [
+        "WP11.T02",
+        "WP01.T05",
+        "WP05.T05",
+        "WP12.T03"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.T02.SUC.18",
+      "entity_id": "WP13.T02",
+      "family": "success_criteria",
+      "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "BLOCKED_REQUIRED_EVIDENCE",
+      "observed": "Paridade de saída/versão/efeitos entre três superfícies não exercitada.",
+      "proof_group_ids": [
+        "G09"
+      ],
+      "producer_tasks": [
+        "WP13.T02",
+        "WP13.T03"
+      ],
+      "required_consumer_tasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP01.T05",
+        "WP05.T05"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.T02.CHK.01",
+      "entity_id": "WP13.T02",
+      "family": "check",
+      "text": "Combinação com duas alterações na mesma contribuição não soma ambas; conflitos são recusados ou explicitamente alternativos.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "PENDING_GHA",
+      "observed": "duplicate-target e duplicate-scenario-component são recusados; inspeção local mapeia testes concretos pendentes do resultado S2.",
+      "proof_group_ids": [
+        "G02"
+      ],
+      "producer_tasks": [
+        "WP13.T02"
+      ],
+      "required_consumer_tasks": [
+        "WP11.T02",
+        "WP01.T05",
+        "WP05.T05"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.T02.CHK.02",
+      "entity_id": "WP13.T02",
+      "family": "check",
+      "text": "Soma da combinação reconcilia com execução isolada das mesmas operações no adapter; não existe fórmula financeira local concorrente.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "BLOCKED_REQUIRED_EVIDENCE",
+      "observed": "Nenhum teste examinado reconcilia combinação positiva multi-registro com execuções isoladas equivalentes do adapter real.",
+      "proof_group_ids": [
+        "G02"
+      ],
+      "producer_tasks": [
+        "WP13.T02"
+      ],
+      "required_consumer_tasks": [
+        "WP11.T02",
+        "WP01.T05",
+        "WP05.T05"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.T02.CHK.03",
+      "entity_id": "WP13.T02",
+      "family": "check",
+      "text": "Corpus com nenhuma combinação que preserve compromissos retorna nenhuma solução elegível e os motivos, sem relaxar critério silenciosamente.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "PARTIAL_PENDING_GHA",
+      "observed": "Falhas de criteria e limites são preservados pelo port, mas falta corpus real sem combinação que preserve compromissos.",
+      "proof_group_ids": [
+        "G02",
+        "G08"
+      ],
+      "producer_tasks": [
+        "WP13.T02",
+        "WP13.T01",
+        "WP13.T03",
+        "WP13.T04"
+      ],
+      "required_consumer_tasks": [
+        "WP11.T02",
+        "WP01.T05",
+        "WP05.T05"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.T02.CHK.20",
+      "entity_id": "WP13.T02",
+      "family": "check",
+      "text": "Combinação contendo a alternativa training omitida tem subtotal 210000 e não passa como eligible-complete; após training = 40000, total 250000 rompe teto240000 e vantagem mínima 20000. UI/BI/critique usam a mesma versão, sem ranking com categoria oculta.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "BLOCKED_REQUIRED_EVIDENCE",
+      "observed": "210000→250000 e minimum-advantage vêm de Planner/C08 reais; ceiling240000 está numa callback controlada separada; UI/BI/critique mesma revisão não provados.",
+      "proof_group_ids": [
+        "G03",
+        "G08"
+      ],
+      "producer_tasks": [
+        "WP13.T02",
+        "WP13.T03",
+        "WP13.T01",
+        "WP13.T04"
+      ],
+      "required_consumer_tasks": [
+        "WP11.T02",
+        "WP01.T05",
+        "WP05.T05",
+        "WP12.T03"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.T02.CHK.18",
+      "entity_id": "WP13.T02",
+      "family": "check",
+      "text": "Executar sf_portfolio_evaluate pela UI/native/MCP com base e autoridade iguais produz o mesmo handler, resultado e versão; chamada direta sem concessão ou após revogação é recusada pelo destino.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "BLOCKED_REQUIRED_EVIDENCE",
+      "observed": "AM02/AM03 da operação continuam necessários com mesma base/authority, handler trace e revogação real.",
+      "proof_group_ids": [
+        "G09",
+        "G10"
+      ],
+      "producer_tasks": [
+        "WP13.T02",
+        "WP13.T03",
+        "WP13.T01",
+        "WP13.T04"
+      ],
+      "required_consumer_tasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP01.T05",
+        "WP05.T05",
+        "WP10.T01",
+        "WP11.T02"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.T03.DOD.01",
+      "entity_id": "WP13.T03",
+      "family": "dod",
+      "text": "Sensibilidade e limites são calculados e consumidos pela UI/BI reais com a mesma base da alternativa.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "BLOCKED_REQUIRED_EVIDENCE",
+      "observed": "Sensibilidade persistida/reproduzida existe em fixture; resolveCoverageAuthority/exactThreshold devem ser compostos no host e UI/BI consumir a mesma base.",
+      "proof_group_ids": [
+        "G04",
+        "G05",
+        "G08"
+      ],
+      "producer_tasks": [
+        "WP13.T03",
+        "WP13.T01",
+        "WP13.T02",
+        "WP13.T04"
+      ],
+      "required_consumer_tasks": [
+        "WP01.T05",
+        "WP05.T05",
+        "WP11.T02",
+        "WP10.T01"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.T03.DOD.18",
+      "entity_id": "WP13.T03",
+      "family": "dod",
+      "text": "Descritores C16 de sf_sensitivity_evaluate são implementados e consumidos por T06 com referências reais.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "BLOCKED_REQUIRED_EVIDENCE",
+      "observed": "evaluateSensitivity exportado não fecha consumo T06/AM02.",
+      "proof_group_ids": [
+        "G09"
+      ],
+      "producer_tasks": [
+        "WP13.T02",
+        "WP13.T03"
+      ],
+      "required_consumer_tasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP01.T05",
+        "WP05.T05"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.T03.INV.01",
+      "entity_id": "WP13.T03",
+      "family": "invariants",
+      "text": "Não inventar probabilidades, distribuições ou comportamento contratual a partir de um slider.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "PENDING_GHA",
+      "observed": "Ranges explícitos, parâmetro suportado e sampled fallback não inferem probabilidade/distribuição; prazo/cancelamento tem critério separado sem prova.",
+      "proof_group_ids": [
+        "G04"
+      ],
+      "producer_tasks": [
+        "WP13.T03"
+      ],
+      "required_consumer_tasks": [
+        "WP01.T05",
+        "WP05.T05",
+        "WP11.T02"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.T03.INV.18",
+      "entity_id": "WP13.T03",
+      "family": "invariants",
+      "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "PARTIAL_PENDING_GHA",
+      "observed": "Revalidação e cálculo canônico estão no produtor; scopes/locks do destino instalado permanecem não observados.",
+      "proof_group_ids": [
+        "G09",
+        "G10"
+      ],
+      "producer_tasks": [
+        "WP13.T02",
+        "WP13.T03",
+        "WP13.T01",
+        "WP13.T04"
+      ],
+      "required_consumer_tasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP01.T05",
+        "WP05.T05",
+        "WP10.T01",
+        "WP11.T02"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.T03.QLT.01",
+      "entity_id": "WP13.T03",
+      "family": "quality_standards",
+      "text": "Unidades, precisão, intervalo e fonte são explícitos; interação determinística não depende de latência de IA.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "BLOCKED_REQUIRED_EVIDENCE",
+      "observed": "Unidades/metadata/engine/bounds/ref e cálculo determinístico têm testes; apresentação de precisão/unidades no consumidor real pendente.",
+      "proof_group_ids": [
+        "G04",
+        "G08"
+      ],
+      "producer_tasks": [
+        "WP13.T03",
+        "WP13.T01",
+        "WP13.T02",
+        "WP13.T04"
+      ],
+      "required_consumer_tasks": [
+        "WP01.T05",
+        "WP05.T05",
+        "WP11.T02"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.T03.QLT.18",
+      "entity_id": "WP13.T03",
+      "family": "quality_standards",
+      "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "PARTIAL_PENDING_GHA",
+      "observed": "Schema e provenance existentes permitem comparação, mas nenhuma execução comparativa dos três transportes em S2.",
+      "proof_group_ids": [
+        "G09",
+        "G10"
+      ],
+      "producer_tasks": [
+        "WP13.T02",
+        "WP13.T03",
+        "WP13.T01",
+        "WP13.T04"
+      ],
+      "required_consumer_tasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP01.T05",
+        "WP05.T05",
+        "WP10.T01",
+        "WP11.T02"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.T03.CMP.01",
+      "entity_id": "WP13.T03",
+      "family": "completeness_criteria",
+      "text": "Cobrir limite atendido/exato/rompido, função não linear, dado ausente e parâmetro não suportado.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "PARTIAL_PENDING_GHA",
+      "observed": "Limiar exato atendido/rompido e ausência têm testes reais novos; função não linear é callback controlada e parâmetro de prazo não comprovado no domínio.",
+      "proof_group_ids": [
+        "G04"
+      ],
+      "producer_tasks": [
+        "WP13.T03"
+      ],
+      "required_consumer_tasks": [
+        "WP01.T05",
+        "WP05.T05",
+        "WP11.T02"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.T03.CMP.18",
+      "entity_id": "WP13.T03",
+      "family": "completeness_criteria",
+      "text": "Cobrir todos os exports desta task (1), caso autorizado, direto proibido, stale e indisponível.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "BLOCKED_REQUIRED_EVIDENCE",
+      "observed": "Positivo autorizado e negativos native/MCP com skill/lease atuais não são testes diretos do evaluator.",
+      "proof_group_ids": [
+        "G09"
+      ],
+      "producer_tasks": [
+        "WP13.T02",
+        "WP13.T03"
+      ],
+      "required_consumer_tasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP01.T05",
+        "WP05.T05"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.T03.SUC.01",
+      "entity_id": "WP13.T03",
+      "family": "success_criteria",
+      "text": "André identifica qual preço ou prazo precisa negociar e confere a condição que preserva sua escolha.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "BLOCKED_REQUIRED_EVIDENCE",
+      "observed": "Matemática por si só não demonstra usuário identificando condição de negociação na UI; prazo sem regra continua sem prova.",
+      "proof_group_ids": [
+        "G04",
+        "G08"
+      ],
+      "producer_tasks": [
+        "WP13.T03",
+        "WP13.T01",
+        "WP13.T02",
+        "WP13.T04"
+      ],
+      "required_consumer_tasks": [
+        "WP01.T05",
+        "WP05.T05",
+        "WP11.T02"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.T03.SUC.18",
+      "entity_id": "WP13.T03",
+      "family": "success_criteria",
+      "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "BLOCKED_REQUIRED_EVIDENCE",
+      "observed": "Mesma capacidade/resultado/versão UI/native/MCP exige consumer execution fora de S2.",
+      "proof_group_ids": [
+        "G09"
+      ],
+      "producer_tasks": [
+        "WP13.T02",
+        "WP13.T03"
+      ],
+      "required_consumer_tasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP01.T05",
+        "WP05.T05"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.T03.CHK.01",
+      "entity_id": "WP13.T03",
+      "family": "check",
+      "text": "Base240mil, outros componentes165mil e benefício mínimo20mil resulta em implantação máxima55mil;55mil atende e55mil+1 não atende.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "PENDING_GHA",
+      "observed": "coverage-preview exige exact55000 e witnesses55000/55001; integration exige resultado completo persistido/reproduzido via C08/criterion bindings. Aguardar log, não usar solver isolado como decisão humana.",
+      "proof_group_ids": [
+        "G04"
+      ],
+      "producer_tasks": [
+        "WP13.T03"
+      ],
+      "required_consumer_tasks": [
+        "WP01.T05",
+        "WP05.T05",
+        "WP11.T02"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.T03.CHK.02",
+      "entity_id": "WP13.T03",
+      "family": "check",
+      "text": "Alterar prazo em compromisso sem regra de cancelamento não cria economia artificial; regra existente determina o efeito.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "BLOCKED_REQUIRED_EVIDENCE",
+      "observed": "Não há teste discriminante de prazo/compromisso sem regra de cancelamento no domínio entre os arquivos selecionados.",
+      "proof_group_ids": [
+        "G04"
+      ],
+      "producer_tasks": [
+        "WP13.T03"
+      ],
+      "required_consumer_tasks": [
+        "WP01.T05",
+        "WP05.T05",
+        "WP11.T02"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.T03.CHK.03",
+      "entity_id": "WP13.T03",
+      "family": "check",
+      "text": "Amostragem de função não linear não apresenta ponto de corte exato inventado; parâmetros ausentes produzem desconhecido sem curva fictícia.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "PARTIAL_PENDING_GHA",
+      "observed": "Teste value*value com exact unavailable comprova fallback do evaluator se passar; FX ausente usa domínio real. Não demonstra função não linear financeira real.",
+      "proof_group_ids": [
+        "G04"
+      ],
+      "producer_tasks": [
+        "WP13.T03"
+      ],
+      "required_consumer_tasks": [
+        "WP01.T05",
+        "WP05.T05",
+        "WP11.T02"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.T03.CHK.20",
+      "entity_id": "WP13.T03",
+      "family": "check",
+      "text": "Com training omitido, teto 55000 vale apenas para componentes conhecidos e permanece condicionado. Após training = 40000 confirmado, outros custos205000 produzem teto 15000;15000 atende mínimo 20000 e15001 falha, com a mesma base confirmada.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "BLOCKED_REQUIRED_EVIDENCE",
+      "observed": "Solver WP11 fornece55k sobre conhecidos antes da resolução; WP13 W2 retorna threshold:null e sampled/indisponível. Depois40000, exact15k e witnesses15k/15k+1 no mesmo caso existem. Exposição de55k condicionado não demonstrada.",
+      "proof_group_ids": [
+        "G03",
+        "G04"
+      ],
+      "producer_tasks": [
+        "WP13.T02",
+        "WP13.T03"
+      ],
+      "required_consumer_tasks": [
+        "WP11.T02",
+        "WP01.T05",
+        "WP05.T05",
+        "WP12.T03"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.T03.CHK.18",
+      "entity_id": "WP13.T03",
+      "family": "check",
+      "text": "Executar sf_sensitivity_evaluate pela UI/native/MCP com base e autoridade iguais produz o mesmo handler, resultado e versão; chamada direta sem concessão ou após revogação é recusada pelo destino.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "BLOCKED_REQUIRED_EVIDENCE",
+      "observed": "Mesmo binding/skill/authority e handler entre UI/native/MCP, sem concessão e revogado, não exercitados em S2.",
+      "proof_group_ids": [
+        "G09",
+        "G10"
+      ],
+      "producer_tasks": [
+        "WP13.T02",
+        "WP13.T03",
+        "WP13.T01",
+        "WP13.T04"
+      ],
+      "required_consumer_tasks": [
+        "WP10.T06",
+        "WP12.T02",
+        "WP01.T05",
+        "WP05.T05",
+        "WP10.T01",
+        "WP11.T02"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.T04.DOD.01",
+      "entity_id": "WP13.T04",
+      "family": "dod",
+      "text": "Uma campanha de portfólio chega a propostas reais e recibos do mecanismo WP11 no módulo integrado.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "BLOCKED_REQUIRED_EVIDENCE",
+      "observed": "Aplicação controlada usa mecanismos WP11, mas não campanha real chegando a comandos canônicos e recibos no módulo integrado.",
+      "proof_group_ids": [
+        "G05",
+        "G06",
+        "G08"
+      ],
+      "producer_tasks": [
+        "WP13.T01",
+        "WP13.T02",
+        "WP13.T03",
+        "WP13.T04"
+      ],
+      "required_consumer_tasks": [
+        "WP10.T01",
+        "WP11.T02",
+        "WP01.T05",
+        "WP05.T05",
+        "WP11.T03",
+        "WP11.T04"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.T04.INV.01",
+      "entity_id": "WP13.T04",
+      "family": "invariants",
+      "text": "Nenhum caminho paralelo de aplicação, aprovação ou recibo; os mesmos efeitos mantêm a mesma correlação.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "PENDING_GHA",
+      "observed": "Handoff delega prepareChanges e teste usa mesmo prepared-apply/apply/receipts; nenhum ledger WP13 paralelo.",
+      "proof_group_ids": [
+        "G06"
+      ],
+      "producer_tasks": [
+        "WP13.T04"
+      ],
+      "required_consumer_tasks": [
+        "WP11.T02",
+        "WP11.T03",
+        "WP11.T04",
+        "WP01.T05",
+        "WP10.T01"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.T04.QLT.01",
+      "entity_id": "WP13.T04",
+      "family": "quality_standards",
+      "text": "A pessoa vê custos e compromissos do conjunto e o estado individual de cada mudança.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "BLOCKED_REQUIRED_EVIDENCE",
+      "observed": "Os estados individuais existem nos ports; pessoa vendo custos/compromissos e cada mudança não foi observada.",
+      "proof_group_ids": [
+        "G06",
+        "G08"
+      ],
+      "producer_tasks": [
+        "WP13.T04",
+        "WP13.T01",
+        "WP13.T02",
+        "WP13.T03"
+      ],
+      "required_consumer_tasks": [
+        "WP11.T02",
+        "WP11.T03",
+        "WP11.T04",
+        "WP01.T05",
+        "WP10.T01",
+        "WP05.T05"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.T04.CMP.01",
+      "entity_id": "WP13.T04",
+      "family": "completeness_criteria",
+      "text": "Cobrir preparar, escolher, conflito da base, aplicação parcial e condição posterior alterada.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "PARTIAL_PENDING_GHA",
+      "observed": "Escolha real same-case, preparação/parcial e história são testes separados; cadeia completa com conflito de base e condição posterior no consumidor continua pendente.",
+      "proof_group_ids": [
+        "G05",
+        "G06",
+        "G07"
+      ],
+      "producer_tasks": [
+        "WP13.T01",
+        "WP13.T02",
+        "WP13.T03",
+        "WP13.T04"
+      ],
+      "required_consumer_tasks": [
+        "WP10.T01",
+        "WP11.T02",
+        "WP01.T05",
+        "WP05.T05",
+        "WP11.T03",
+        "WP11.T04",
+        "WP14.T01",
+        "WP14.T02"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.T04.SUC.01",
+      "entity_id": "WP13.T04",
+      "family": "success_criteria",
+      "text": "Uma escolha sobre vários registros gera trabalho executável sem transportar manualmente cada mudança.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "BLOCKED_REQUIRED_EVIDENCE",
+      "observed": "Não foi demonstrado usuário escolher múltiplos registros e obter trabalho executável pelas interfaces instaladas.",
+      "proof_group_ids": [
+        "G06",
+        "G08"
+      ],
+      "producer_tasks": [
+        "WP13.T04",
+        "WP13.T01",
+        "WP13.T02",
+        "WP13.T03"
+      ],
+      "required_consumer_tasks": [
+        "WP11.T02",
+        "WP11.T03",
+        "WP11.T04",
+        "WP01.T05",
+        "WP10.T01",
+        "WP05.T05"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.T04.CHK.01",
+      "entity_id": "WP13.T04",
+      "family": "check",
+      "text": "Escolher combinação gera uma proposta por efeito de domínio com expected version; preparação não grava finanças.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "PARTIAL_PENDING_GHA",
+      "observed": "Teste prepara dois efeitos com expectedVersion4 e nenhum wp13Amount alterado; ChoiceRecord é seeded, prepareDomainCommands é controlado.",
+      "proof_group_ids": [
+        "G06"
+      ],
+      "producer_tasks": [
+        "WP13.T04"
+      ],
+      "required_consumer_tasks": [
+        "WP11.T02",
+        "WP11.T03",
+        "WP11.T04",
+        "WP01.T05",
+        "WP10.T01"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.T04.CHK.02",
+      "entity_id": "WP13.T04",
+      "family": "check",
+      "text": "Cenário com dois domínios e falha em um usa o estado parcial/retomada WP11 sem implementar outro ledger.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "PARTIAL_PENDING_GHA",
+      "observed": "Mecanismo WP11 parcial/retry reutiliza receipt se S2 passar; callbacks de mutação são controlados e a primeira chamada ainda retorna case-reconciliation-pending.",
+      "proof_group_ids": [
+        "G06"
+      ],
+      "producer_tasks": [
+        "WP13.T04"
+      ],
+      "required_consumer_tasks": [
+        "WP11.T02",
+        "WP11.T03",
+        "WP11.T04",
+        "WP01.T05",
+        "WP10.T01"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    },
+    {
+      "criterion_id": "WP13.T04.CHK.03",
+      "entity_id": "WP13.T04",
+      "family": "check",
+      "text": "Alterar preço de um componente vinculado afeta a condição correspondente da escolha e mantém a composição histórica.",
+      "canonical_status_unchanged": "NOT_RUN",
+      "acceptance_status": "BLOCKED_REQUIRED_EVIDENCE",
+      "observed": "Choice histórico preservado após training40000 tem prova candidata; preço45000→70000 e condição material específica em WP14/consumidor não estão demonstrados.",
+      "proof_group_ids": [
+        "G07"
+      ],
+      "producer_tasks": [
+        "WP13.T04"
+      ],
+      "required_consumer_tasks": [
+        "WP14.T01",
+        "WP14.T02",
+        "WP01.T05",
+        "WP11.T04"
+      ],
+      "evidence_packages": [
+        "E11"
+      ],
+      "hosted_observation": "PENDING_GHA_LOG_REVIEW"
+    }
+  ],
+  "closeout_rule": "No criterion is marked PASS in this static report. Hosted logs may establish bounded assertions for W2; they cannot close required consumer/native/global obligations. Any material correction produces a new candidate, and this report remains attached to W2. S0 owns final integration and global acceptance.",
+  "later_updates_excluded": {
+    "source": "Parent update during review",
+    "wp11": "efa0e57e54862f99a07b2837af5e729adb881415",
+    "finance": "ffe77b53f3c074f03fe6dc3ff7caa788778eca99",
+    "work_in_progress": [
+      "receipt CAS correction consumed by parent",
+      "actual recordChoice fixture replacement by original author",
+      "conditioned known-only threshold exposure by original author"
+    ],
+    "review_status": "Not reviewed or accepted here; W3 requires its own delta and CI identities."
+  },
+  "mapping_rule": "Each criterion preserves exact canonical ID/text. Implementation paths, named test files, what CI may establish, missing consumer proofs and next action are specified once in its proof_group_ids. Criterion-specific judgement stays in observed. No criterion has PASS.",
+  "followups": [
+    {
+      "id": "W3-SOURCE-SCENARIO-STATIC-01",
+      "scope": "Read-only review of the single authored W3 test delta; no W3 product acceptance and no product/test authorship by reviewer.",
+      "reviewer": "/root/wp13_review_acceptance",
+      "review_status": "NO_STATIC_BLOCKER_FOUND_IN_THIS_TEST_DELTA",
+      "product_evidence_status": "NOT_RUN_BY_REVIEWER; GITHUB_ACTIONS_REQUIRED",
+      "published_w3_head": null,
+      "review_target": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/source-scenario.test.ts",
+        "sha256": "0bf027a0aa33ce7af83965adcdcfdf1c4e9ff3e4980c38a66957d7c73af5f010",
+        "provenance": "Exact local bytes assigned by parent before W3 publication."
+      },
+      "criterion_ids": [
+        "WP13.T02.CHK.20"
+      ],
+      "immutable_w2_criteria_sha256": "bcf2e7ceea372862d4af9a7983edd804455e5cff90f6a03e61500aa91f8c8801",
+      "w2_criteria_unchanged": true,
+      "observations": [
+        {
+          "area": "Ceiling equivalence",
+          "finding": "The test pins the complete persisted USD240000 baseline by C08 ref, case/incarnation/version, original request/result digests, total, coverage, currency and fresh evidence. It registers the canonical Planner known-subtotal-difference metric with lte0, so the ceiling equivalence does not rely on a second financial formula."
+        },
+        {
+          "area": "Distinct advantage criterion",
+          "finding": "The existing renewal-difference rule is checked as lte-20000 against the same baseline. Both criterion IDs occur in selection, PortfolioRequest constraints, comparison requests and persisted comparison bindings."
+        },
+        {
+          "area": "Omission",
+          "finding": "Training is still absent as a component; subtotal210000/totalnull/derivedMissing training and conditioned eligibility persist. Both criteria must remain unknown, so the numerically favorable known difference is not eligibility-complete."
+        },
+        {
+          "area": "Human choice",
+          "finding": "before.choose uses createDecisionMutations.recordChoice, requests both criteria, compares through the newly composed canonical Planner, resolves choice values from that comparison, and reads the stored choice. Its comparison must equal the original persisted comparison."
+        },
+        {
+          "area": "Same-case confirmation",
+          "finding": "The real Planner training revision and WP11 alternative evolution remain in the same case/incarnation. The current source-only result must be250000, complete and ineligible; both criteria must befailed. Current result/comparison refs differ while original portfolio and ChoiceRecord digests remain unchanged."
+        },
+        {
+          "area": "Persistence and replay",
+          "finding": "The after comparison is independently replayed through Planner and matched to the C08 result. Both criterion IDs and scenarioRefs are checked on the new binding. Read and idempotent evaluate are required to reproduce the saved result."
+        },
+        {
+          "area": "Fences",
+          "finding": "Rule registration, selection and comparison binding use protected registries, storage CAS and planner source fence. Canonical metric validates baseline/rule/unit metadata identity and re-reads evidence. The negative with selectedRef substituted for baseline must be unknown; revoking actual baseline evidence must refuse rule/result reads."
+        },
+        {
+          "area": "Synthetic setup limitation",
+          "finding": "The extra case criterion is inserted directly as synthetic fixture setup before WP13 evaluation. It uses expectedStorageVersion and a full-case digest check, preserves prepared scenario/C08 versions and does not assert a production policy-edit workflow. Controlled host authority is explicitly stated."
+        }
+      ],
+      "impact_on_w2_findings": [
+        {
+          "finding": "IA-W2-04",
+          "scope": "Source-side explicit ceiling portion only",
+          "new_candidate_evidence": "The W3 test now exercises both declared criteria through real canonical metric and persistence, so it can supply missing source-side proof if the hosted assertions pass.",
+          "remaining": "UI/BI/critique same-version consumption remains unproved; the original W2 finding and all68 W2 statuses remain unchanged."
+        }
+      ],
+      "remaining_limits": [
+        "No PASS or execution success is inferred from this static review; typecheck and hosted test results are still required on the exact published W3 candidate/snapshot.",
+        "Synthetic case metadata setup and confirmation grants do not establish installed authorization, policy-edit versioning, SessionV2 skill receipt, native/MCP parity or HR isolation.",
+        "The test intentionally expects no preparedChanges or application receipts, so it does not prove an applied human choice.",
+        "A single source-only candidate does not close multi-register contract/project/hiring combination or canonical application obligations.",
+        "The exact W3 source delta reviewed does not establish the other W3 product changes or global acceptance."
+      ],
+      "next_action": "Publish the pinned W3 candidate, run the necessary surgical Actions selection, inspect this named test result and retain consumers/native requirements separately."
+    }
+  ]
+}

@@ -50,7 +50,7 @@ export function createPortfolioCandidateHistoryReader(input: {
         const matches = (candidate: PortfolioCandidate) => !!candidate.result && decodeSfOperationInput("sf_scenario_simulate", candidate.scenario).ok && decodeSfOperationOutput("sf_scenario_simulate", candidate.result).ok && candidate.result.costCoverage.alternativeId === selected.alternativeId && candidate.result.costCoverage.alternativeVersion === selected.alternativeVersion && digestSfValue(candidate) === request.candidateDigest
         if (loaded.value.transactions.some((entry) => entry.alternatives.length !== 1 || !matches(candidateFrom(entry.alternatives[0]!)))) return { status: "stale", reason: "portfolio-history-candidate-snapshot-changed" } as const
         const transaction = loaded.value.transactions[0]
-        const choices = transaction ? [] : decision.choices.filter((choice) => choice.alternativeId === selected.alternativeId && choice.alternativeVersion === selected.alternativeVersion)
+        const choices = decision.choices.filter((choice) => choice.alternativeId === selected.alternativeId && choice.alternativeVersion === selected.alternativeVersion)
         const witnessed = choices.flatMap((choice) => {
           const candidate = candidateFrom(choice)
           const events = decision.ledger.filter((event) => choiceEvent(event, choice, decision))
@@ -61,8 +61,12 @@ export function createPortfolioCandidateHistoryReader(input: {
         const requestDigest = digestSfValue(candidate.scenario)
         const resultDigest = digestSfValue(candidate.result)
         const records = loaded.value.results.filter((record) => record.requestDigest === requestDigest && record.resultDigest === resultDigest && digestSfValue(record.result) === resultDigest)
+        // A witnessed human choice names the original C08. Equivalent writes with a
+        // different idempotency key must not replace that authenticated ancestry.
+        const choiceRecords = records.filter((record) => witnessed.some(({ choice, event }) => choice.comparison.alternativeResultRef === record.resultRef && record.caseRef.version <= event.caseRef.version))
+        if (witnessed.length && !choiceRecords.length) return { status: "unavailable", reason: "portfolio-history-choice-scenario-unbound" } as const
         const newest = records.length ? Math.max(...records.map((record) => record.caseRef.version)) : -1
-        const latest = records.filter((record) => record.caseRef.version === newest)
+        const latest = witnessed.length ? choiceRecords : records.filter((record) => record.caseRef.version === newest)
         if (latest.length !== 1) return { status: latest.length > 1 ? "conflict" : "unavailable", reason: latest.length > 1 ? "portfolio-history-scenario-ambiguous" : "portfolio-history-scenario-unavailable" } as const
         const record = latest[0]!
         const verified = structuredClone(await input.results.readHistoricalScenario({ resultRef: record.resultRef }, context))

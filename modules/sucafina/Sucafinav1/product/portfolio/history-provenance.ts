@@ -15,12 +15,15 @@ export function createPortfolioHistoricalProvenance(input: {
   evidence: BusinessContextService
   host: Pick<DomainPortHost, "revalidate">
 }) {
-  return async (stored: SfStoredDecisionResult, context: TrustedDomainContext) => {
+  return async (incoming: SfStoredDecisionResult, context: TrustedDomainContext) => {
+    const stored = structuredClone(incoming)
+    const storedDigest = digestSfValue(stored)
     if (stored.kind !== "portfolio" || !stored.resultRef.trim() || !stored.requestDigest.trim() || !stored.resultDigest.trim() || !stored.sourceRefs.length) return false
     const inspect = async () => {
-      const current = await input.caseFor(context).catch(() => undefined)
-      if (!current || current.status !== "ok" || current.value.id !== stored.caseRef.id || current.value.incarnation !== stored.caseRef.incarnation || current.value.version <= stored.caseRef.version) return undefined
-      const bindingResult = await input.readHistoricalBinding({ caseRef: current.value, resultRef: stored.resultRef }, context).catch(() => undefined)
+      const current = structuredClone(await input.caseFor(context).catch(() => undefined))
+      // Source history can change without a DecisionCase revision; authenticated provenance decides access.
+      if (!current || current.status !== "ok" || current.value.id !== stored.caseRef.id || current.value.incarnation !== stored.caseRef.incarnation || current.value.version < stored.caseRef.version) return undefined
+      const bindingResult = structuredClone(await input.readHistoricalBinding({ caseRef: structuredClone(current.value), resultRef: stored.resultRef }, context).catch(() => undefined))
       if (!bindingResult || bindingResult.status !== "ok" || !bindingResult.value) return undefined
       const binding = structuredClone(bindingResult.value.binding)
       const bindingDigest = digestSfValue(Object.fromEntries(Object.entries(binding).filter(([name]) => name !== "bindingDigest")))
@@ -39,7 +42,7 @@ export function createPortfolioHistoricalProvenance(input: {
         if (!alternativeId || encodeURIComponent(caseRef) !== match[1] || encodeURIComponent(alternativeId) !== match[3] || !Number.isSafeInteger(Number(match[2])) || !Number.isSafeInteger(Number(match[4]))) return undefined
         const parsed = parseCaseRef(caseRef)
         if (!parsed) return undefined
-        const result = await input.cases.read({ caseRef }, context).catch(() => undefined)
+        const result = structuredClone(await input.cases.read({ caseRef }, context).catch(() => undefined))
         if (!result || result.status !== "ok" || result.value.case.id !== parsed.id || result.value.case.incarnation !== parsed.incarnation || result.value.case.version < Number(match[2])) return undefined
         const alternatives = result.value.case.alternatives.filter((alternative) => alternative.id === alternativeId && alternative.version === Number(match[4]))
         if (!alternatives.length && input.readHistoricalCandidate) {
@@ -54,7 +57,7 @@ export function createPortfolioHistoricalProvenance(input: {
         return { ref, case: structuredClone(result.value.case), candidateDigest: digestSfValue(candidate) }
       }))
       if (candidates.some((candidate) => !candidate)) return undefined
-      const resolutions = await input.evidence.context({ refs: stored.sourceRefs }, context).catch(() => undefined)
+      const resolutions = structuredClone(await input.evidence.context({ refs: structuredClone(stored.sourceRefs) }, context).catch(() => undefined))
       if (!resolutions || resolutions.length !== stored.sourceRefs.length || digestSfValue(resolutions.map((item) => digestSfValue(item.ref)).sort()) !== digestSfValue(stored.sourceRefs.map(digestSfValue).sort()) || resolutions.some((item) => item.accessRevision !== context.binding.accessRevision || (item.state !== "fresh" && item.state !== "historical"))) return undefined
       if (!await input.host.revalidate(context).catch(() => false)) return undefined
       return structuredClone({ binding, current: current.value, candidates, resolutions: resolutions.map((item) => ({ ref: item.ref, state: item.state, accessRevision: item.accessRevision })) })
@@ -62,6 +65,6 @@ export function createPortfolioHistoricalProvenance(input: {
     const first = await inspect()
     if (!first) return false
     const second = await inspect()
-    return !!second && digestSfValue(first) === digestSfValue(second) && await input.host.revalidate(context).catch(() => false)
+    return !!second && digestSfValue(first) === digestSfValue(second) && await input.host.revalidate(context).catch(() => false) && digestSfValue(incoming) === storedDigest
   }
 }
