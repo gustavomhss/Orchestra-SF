@@ -1,0 +1,48 @@
+{
+  "id": "WP11-CURRENT-CHOICE-COVERAGE-DIAGNOSTIC",
+  "status": "DIAGNOSTIC_ONLY_AUTHORED_NOT_RUN",
+  "file": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+    "baseHead": "92f6d97d2df5ebf53cd845f4cfe93355d10b0f6f",
+    "baseBlob": "5b754d16c5d61764bffc8268075fbd4551dd2072",
+    "gitBlob": "a8b72e8c30d6e365c77169e53d499dc163530318",
+    "sha256": "6aa68d8cbe504e9575e5016694a582f2de30b159dae79c0cefdb2384e8094905",
+    "bytes": 24721
+  },
+  "observedByRoot": {
+    "run": 43587138878,
+    "head": "92f6d97d2df5ebf53cd845f4cfe93355d10b0f6f",
+    "reason": "choice-preview-coverage-unavailable"
+  },
+  "staticNarrowing": [
+    "Error originates at current-choice-preview.ts73 before registry/persistence/commit. Either reassessScenarioCoverage returned undefined or validateScenarioCoverage returned a reason.",
+    "Baseline alternativeVersion1 versus preview alternativeVersion2 is not itself invalid: reassessment takes attributed scenario identity/version and validate compares the returned assessment.",
+    "W18 engine-fixture.ts0ccf287ecd225ddcae99a1490f255b4c2b4358ed has no coveragesMap/coverageFor cache. Bootstrap basis version stays1, but evaluatedSourceRefs uses the live sourceRefs array updated by splice.",
+    "The chosen scenario has3operations and no assumptions/replacements, so scenario-port129 returns currentSource alone in sourceRefs; this source does not demonstrate old coverage refs injected into result.sourceRefs.",
+    "No runtime root cause inferred from static inspection. Neither no-op promotion proof nor Hot Topic surface delta touches this stage."
+  ],
+  "diagnostic": {
+    "logTag": "WP11_CURRENT_CHOICE_COVERAGE",
+    "fields": [
+      "basisVersions",
+      "coverageError",
+      "coverageState",
+      "evidenceStates",
+      "gaps"
+    ],
+    "producerCalls": "reassessScenarioCoverage and validateScenarioCoverage reuse exactly the actual resolver resolutions already obtained by the fixture.",
+    "additionalSourceReads": 0,
+    "additionalPlannerReplays": 0,
+    "callerResolutionChanged": false,
+    "assertionsChanged": false,
+    "timeoutChanged": false,
+    "outputOnFailureOnly": true
+  },
+  "validation": {
+    "localProductExecutions": 0,
+    "remoteExecutionsByThisAgent": 0,
+    "typecheck": "ROOT_PENDING",
+    "independentReview": "ROOT_PENDING"
+  },
+  "next": "Actions on exact next head to disambiguate the canonical failure without relaxing assertions or stripping references."
+}

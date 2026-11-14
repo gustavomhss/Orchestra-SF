@@ -1,10 +1,10 @@
 import { expect, test } from "bun:test"
 import { digestSfEvidenceRef, digestSfValue } from "../../../product/contracts/canonical.ts"
 import type { BusinessEvidenceRef, BusinessEvidenceResolution } from "../../../product/contracts/business-context.ts"
-import type { ChoiceRecord, DecisionCase, ScenarioResult } from "../../../product/contracts/decisions.ts"
+import type { ChoiceRecord, CostCoverageAssessment, DecisionCase, ScenarioResult } from "../../../product/contracts/decisions.ts"
 import type { SfProductStatePort } from "../../../product/contracts/state.ts"
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
-import { reassessScenarioCoverage } from "../../../product/decisions/cost-coverage.ts"
+import { reassessScenarioCoverage, validateScenarioCoverage } from "../../../product/decisions/cost-coverage.ts"
 import { createCurrentChoicePreview } from "../../../product/decisions/current-choice-preview.ts"
 import { createCurrentChoicePromotion } from "../../../product/decisions/current-choice-promotion.ts"
 import { createDecisionMutations } from "../../../product/decisions/mutations.ts"
@@ -140,11 +140,39 @@ test("a current quote replays the same historical choice, requires a separate hu
         ? await sourceCurrent() ? { status: "ok" as const, value: { coverageRef: reference, basis, assessment: coverage.assessment } } : { status: "unavailable" as const, reason: "current-coverage-unavailable" }
         : registry.resolveForecastCoverage(reference, context),
     }
+    let observedCoverage: { scenario: ScenarioResult; baseline: CostCoverageAssessment } | undefined
+    let coverageDiagnostic: unknown
     const preview = createCurrentChoicePreview({
       state, host: fixture.host, sources, results, authorizeCase, resimulate, writes,
       authorizePreview: async () => human.preview,
       registerCoverage: registry.registerProposalCoverage,
-      coverageEvidence: { entries: async () => ({ status: "ok", value: coverage.entries }), resolve: resolveEvidence, supports: coverage.supports, verifySnapshot: (snapshot, _result, candidateBasis) => sourceFence(snapshot) && digestSfValue(candidateBasis) === digestSfValue(basis) },
+      coverageEvidence: {
+        entries: async (scenario, baseline) => {
+          observedCoverage = { scenario: structuredClone(scenario), baseline: structuredClone(baseline) }
+          coverageDiagnostic = { basisVersions: { selected: basis.version, baseline: baseline.basisVersion, scenario: scenario.costCoverage.basisVersion }, coverageError: "resolution-not-observed" }
+          return { status: "ok", value: coverage.entries }
+        },
+        resolve: async (refs, context) => {
+          const resolutions = await resolveEvidence(refs, context)
+          const observed = observedCoverage
+          if (observed) {
+            // Diagnostic only: reuse this exact resolver result, with no additional
+            // source reads or Planner replay and no change to the caller's output.
+            const assessed = await reassessScenarioCoverage({ scenario: observed.scenario, basis, baseline: observed.baseline, entries: coverage.entries,
+              resolveEvidence: async (wanted) => digestSfValue(wanted) === digestSfValue(refs) ? resolutions : [], supports: coverage.supports })
+            coverageDiagnostic = {
+              basisVersions: { selected: basis.version, baseline: observed.baseline.basisVersion, scenario: observed.scenario.costCoverage.basisVersion },
+              coverageError: assessed ? validateScenarioCoverage(assessed, basis, assessed.costCoverage) ?? null : "reassessment-undefined",
+              coverageState: assessed?.costCoverage.coverageState,
+              evidenceStates: resolutions.map((item) => ({ kind: item.ref.kind, refId: item.ref.refId, state: item.state, ...(item.ref.kind === "record" ? { version: item.ref.target.version } : {}) })),
+              gaps: { issues: assessed?.costCoverage.issues, missingCategories: assessed?.costCoverage.derivedMissingCategoryIds,
+                pending: assessed?.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [{ categoryId: entry.categoryId, reason: entry.reason }] : []), unresolvedConditions: assessed?.unresolvedConditions },
+            }
+          }
+          return resolutions
+        },
+        supports: coverage.supports, verifySnapshot: (snapshot, _result, candidateBasis) => sourceFence(snapshot) && digestSfValue(candidateBasis) === digestSfValue(basis),
+      },
       verifySnapshot: (snapshot, _request, binding) => sourceFence(snapshot) && digestSfValue(binding.originalSource) === digestSfValue(originalSource) && digestSfValue(binding.source) === digestSfValue(currentSource),
       verifySources: async (binding, context) => {
         const valid = digestSfValue(binding.originalSource) === digestSfValue(originalSource) && digestSfValue(binding.source) === digestSfValue(currentSource) && await fixture.host.revalidate(context) && await sourceCurrent()
@@ -179,7 +207,10 @@ test("a current quote replays the same historical choice, requires a separate hu
     human.preview = true
     expect((await preview.prepare({ ...previewRequest, alternativeRef: { id: "selected", version: 9 } }, fixture.context)).status).toBe("stale")
     const firstPrepared = await preview.prepare(previewRequest, fixture.context)
-    if (firstPrepared.status !== "ok") throw new Error(`Current choice preview: ${JSON.stringify(firstPrepared)}`)
+    if (firstPrepared.status !== "ok") {
+      console.debug("WP11_CURRENT_CHOICE_COVERAGE", JSON.stringify(coverageDiagnostic ?? { coverageError: "coverage-callback-not-reached" }))
+      throw new Error(`Current choice preview: ${JSON.stringify(firstPrepared)}`)
+    }
     const previewResult = await results.read({ kind: "scenario", resultRef: firstPrepared.value.promotion.resultRef }, fixture.context)
     if (previewResult.status !== "ok" || previewResult.value.kind !== "scenario") throw new Error("Current choice result unavailable")
     expect(previewResult.value.result).toMatchObject({ knownSubtotal: 250000, total: null, comparisonStatus: "conditioned", costCoverage: { coverageState: "complete", alternativeId: "selected", alternativeVersion: 2 } })
@@ -207,7 +238,10 @@ test("a current quote replays the same historical choice, requires a separate hu
     expect((await promotion(firstPrepared.value.promotion, fixture.context)).status).toBe("stale")
     human.round = 2
     const prepared = await preview.prepare({ ...previewRequest, caseRef: { ...recorded.value.caseRef, version: 3 } }, fixture.context)
-    if (prepared.status !== "ok") throw new Error(`Refreshed choice preview: ${JSON.stringify(prepared)}`)
+    if (prepared.status !== "ok") {
+      console.debug("WP11_CURRENT_CHOICE_COVERAGE", JSON.stringify(coverageDiagnostic ?? { coverageError: "coverage-callback-not-reached" }))
+      throw new Error(`Refreshed choice preview: ${JSON.stringify(prepared)}`)
+    }
     const promoted = await promotion(prepared.value.promotion, fixture.context)
     if (promoted.status !== "ok") throw new Error(`Current choice promotion: ${JSON.stringify(promoted)}`)
     expect(promoted.value.caseRef).toEqual({ ...recorded.value.caseRef, version: 4 })
