@@ -1,0 +1,201 @@
+{
+  "schema": "sf2-consumer-freshness-v1",
+  "validated_source_ref": "402a091485e11d60dff433049c7dedd7fcead687",
+  "later_observed_consumer_ref": "402a091485e11d60dff433049c7dedd7fcead687",
+  "relation": "ahead",
+  "commits": 3,
+  "changed_paths": 131,
+  "changed_in_inventoried_source_graph": [
+    {
+      "filename": "packages/app-shell/e2e/sucafina/operations-support/documents.ts",
+      "status": "modified",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "packages/app-shell/e2e/sucafina/operations-support/imports.ts",
+      "status": "modified",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "packages/app-shell/e2e/sucafina/wp04/host.ts",
+      "status": "modified",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "packages/app-shell/e2e/sucafina/wp04/selection.ts",
+      "status": "modified",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    }
+  ],
+  "recheck_required": "Scoped static inventory, canonical request admission and lexical source graph were regenerated on402. Actual composed-candidate compiler inventory and final gates remain NOT_RUN.",
+  "code_intake": "The six tooling/config target paths are unchanged by the complete comparison. Consume only their exact delta; preserve current product sources.",
+  "status": "SCOPED_STATIC_REFRESH_COMPLETED_COMPILER_NOT_RUN",
+  "prior_validated_source_ref": "9cc27888581a13b55992cdb5dfbd27e43479ac29",
+  "current_source_tree": "006339cc3a61de9bf99d2ba17069181bd5d8a02e",
+  "previous_receipt_hashes": {
+    "source-files.json": {
+      "bytes": 386758,
+      "sha256": "a48a7a0b0fd953e1a217bb10ef2617e466dff38d522d4ff8d6317441dfc3a251",
+      "git_blob_sha": "0d2676bfad037914702042ad9ef8d5dcccd1fcc7"
+    },
+    "static-graph.json": {
+      "bytes": 616797,
+      "sha256": "eab24e985b794ed5e6eef093bc7ab80eb330c286a33097fe7bcc0cb1e2c7553f",
+      "git_blob_sha": "d5ece470f37ab511f12639b293079ce38c5b47bd"
+    },
+    "declared-inputs.json": {
+      "bytes": 13970,
+      "sha256": "358c734f15cef4d82aa70fd570f96a9d70594e73a051802fb82edf73e433792d",
+      "git_blob_sha": "0838494a728c3f7f9e9b2ba0ebbef155ecb8eae5"
+    },
+    "request-preflight.json": {
+      "bytes": 3707,
+      "sha256": "237284f48be36f375c44b1fb1e99ab3d4a059765261ef40b2264bc8b1ed12f50",
+      "git_blob_sha": "9894f1663a42c5ae82704a307c1f83abd3565565"
+    }
+  },
+  "refresh": {
+    "source_ref": "402a091485e11d60dff433049c7dedd7fcead687",
+    "prior_source_ref": "9cc27888581a13b55992cdb5dfbd27e43479ac29",
+    "hydrated_files": 1412,
+    "byte_count": 11798401,
+    "verified_git_blobs": 1412,
+    "mismatches": [],
+    "roots": 47,
+    "visited_source_files": 1399,
+    "source_edges": 8707,
+    "missing_sources": 0,
+    "unresolved_repository_edges": 0,
+    "installed_dependency_paths": [
+      {
+        "source": "packages/app-shell/e2e/sucafina/operations-support/imports.ts",
+        "specifier": "../../../../../modules/sucafina/node_modules/exceljs",
+        "kind": "import-literal",
+        "status": "installed-dependency-path",
+        "targets": [],
+        "resolution_candidates": []
+      }
+    ],
+    "compiler_result": "NOT_RUN",
+    "syntax_method": "Lexical static import/export and literal import/require inventory; exact Git blob verified sources. Conditional workspace exports are a conservative union. This is not a compiler program or typecheck result.",
+    "manifest_sha256": "94e86557cc737ec1ca462c6132812a5057c4e9848d448cb7d0e6cefd8612208b",
+    "graph_sha256": "04d9a28402d31f4ea7008c79331089d1277ed0bbf68af22c42dc81bfd4d46d30",
+    "original_manifest_sha256": "6dbbe11942c5f1cd14bf389b8c4a59e81f7839d889f14c9c9f1d53362b39ca45",
+    "original_graph_sha256": "66ace9767946b2db29067b91d4ae31c844e3702eb76c694d9df6357457c51952",
+    "changed_preexisting_manifest_files": [
+      {
+        "path": "packages/app-shell/e2e/sucafina/operations-support/documents.ts",
+        "before": "21e00319151989a4c2337fe20d9c7de1d8374fa9",
+        "after": "7136131cdb713abecccde2c29e8b6c1204b60a6c"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/operations-support/imports.ts",
+        "before": "20a9978c41697ac135a91d5229abc295d6c71375",
+        "after": "c03cf0ec947f10548557643dd8a57a39e098fef0"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/wp04/host.ts",
+        "before": "3dd5760da92346e267a3cc767c69c4d8bb51b31c",
+        "after": "8ba8d97ec138265454507852a5ab50b600b96c60"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/wp04/selection.ts",
+        "before": "7224825eb470a2f172e7dc32172f83a6b05a5787",
+        "after": "1bfa058531fc84f012dcb8b601d471abd8fa0aad"
+      }
+    ],
+    "new_hydrated_paths": [
+      "apps/cli/src/sucafina-product/document-authority.ts",
+      "apps/cli/src/sucafina-product/document-services.ts",
+      "apps/cli/src/sucafina-product/import-services.ts",
+      "apps/cli/src/sucafina-product/roster-sources.ts",
+      "modules/sucafina/Sucafinav1/product/dashboard/imports.ts",
+      "modules/sucafina/Sucafinav1/product/documents/limits.ts",
+      "modules/sucafina/Sucafinav1/product/documents/schemas.ts",
+      "modules/sucafina/Sucafinav1/product/documents/selections.ts",
+      "modules/sucafina/Sucafinav1/product/host-binding/capability-dispatch.ts",
+      "modules/sucafina/Sucafinav1/product/imports/apply.ts",
+      "modules/sucafina/Sucafinav1/product/imports/capabilities.ts",
+      "modules/sucafina/Sucafinav1/product/imports/changes.ts",
+      "modules/sucafina/Sucafinav1/product/imports/dashboard-atomic.ts",
+      "modules/sucafina/Sucafinav1/product/imports/dashboard-command.ts",
+      "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+      "modules/sucafina/Sucafinav1/product/imports/dashboard-provenance.ts",
+      "modules/sucafina/Sucafinav1/product/imports/dashboard.ts",
+      "modules/sucafina/Sucafinav1/product/imports/detail.ts",
+      "modules/sucafina/Sucafinav1/product/imports/host.ts",
+      "modules/sucafina/Sucafinav1/product/imports/planner-atomic.ts",
+      "modules/sucafina/Sucafinav1/product/imports/planner-preview.ts",
+      "modules/sucafina/Sucafinav1/product/imports/planner-unchanged.ts",
+      "modules/sucafina/Sucafinav1/product/imports/planner.ts",
+      "modules/sucafina/Sucafinav1/product/imports/source-fences.ts",
+      "modules/sucafina/Sucafinav1/product/interface/document-http.ts",
+      "modules/sucafina/Sucafinav1/product/interface/import-http.ts",
+      "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+      "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+      "modules/sucafina/Sucafinav1/runtime/local-scanner.ts",
+      "packages/app-shell/e2e/sucafina/operations-support/installation.ts"
+    ],
+    "new_graph_nodes": [
+      "apps/cli/src/sucafina-product/document-authority.ts",
+      "apps/cli/src/sucafina-product/document-services.ts",
+      "apps/cli/src/sucafina-product/import-services.ts",
+      "apps/cli/src/sucafina-product/roster-sources.ts",
+      "modules/sucafina/Sucafinav1/product/dashboard/imports.ts",
+      "modules/sucafina/Sucafinav1/product/documents/limits.ts",
+      "modules/sucafina/Sucafinav1/product/documents/schemas.ts",
+      "modules/sucafina/Sucafinav1/product/documents/selections.ts",
+      "modules/sucafina/Sucafinav1/product/host-binding/capability-dispatch.ts",
+      "modules/sucafina/Sucafinav1/product/imports/apply.ts",
+      "modules/sucafina/Sucafinav1/product/imports/capabilities.ts",
+      "modules/sucafina/Sucafinav1/product/imports/changes.ts",
+      "modules/sucafina/Sucafinav1/product/imports/dashboard-atomic.ts",
+      "modules/sucafina/Sucafinav1/product/imports/dashboard-command.ts",
+      "modules/sucafina/Sucafinav1/product/imports/dashboard-preview.ts",
+      "modules/sucafina/Sucafinav1/product/imports/dashboard-provenance.ts",
+      "modules/sucafina/Sucafinav1/product/imports/dashboard.ts",
+      "modules/sucafina/Sucafinav1/product/imports/detail.ts",
+      "modules/sucafina/Sucafinav1/product/imports/host.ts",
+      "modules/sucafina/Sucafinav1/product/imports/planner-atomic.ts",
+      "modules/sucafina/Sucafinav1/product/imports/planner-preview.ts",
+      "modules/sucafina/Sucafinav1/product/imports/planner-unchanged.ts",
+      "modules/sucafina/Sucafinav1/product/imports/planner.ts",
+      "modules/sucafina/Sucafinav1/product/imports/source-fences.ts",
+      "modules/sucafina/Sucafinav1/product/interface/document-http.ts",
+      "modules/sucafina/Sucafinav1/product/interface/import-http.ts",
+      "modules/sucafina/Sucafinav1/runtime/local-scanner.ts",
+      "packages/app-shell/e2e/sucafina/operations-support/installation.ts"
+    ],
+    "removed_graph_nodes": [],
+    "compare_evidence": {
+      "path": "validation/latest-product-delta.json",
+      "base": "9cc27888581a13b55992cdb5dfbd27e43479ac29",
+      "head": "402a091485e11d60dff433049c7dedd7fcead687",
+      "commits": 3,
+      "changed_paths": 131,
+      "sha256": "b94678258c2b490ff858d30ffd520d963f8b1ca66cb85e000148afdea6151cc8"
+    },
+    "selector_omission": "SUPERSEDED_BY_CURRENT_SOURCE: wp04/selection.ts now explicitly accepts nominal operations.spec.ts as well as wp04/procurement.spec.ts; no execution claim."
+  },
+  "refreshed_artifacts": [
+    "declared-inputs.json",
+    "request-preflight.json",
+    "request-inputs.json",
+    "nominal-selection.json",
+    "source-files.json",
+    "static-graph.json"
+  ],
+  "proof_transfer": "No compiler or runtime verdict has been transferred. Sources not in the complete delta retain identical Git blobs; changed and newly reached source files were read and verified via GitHub MCP."
+}

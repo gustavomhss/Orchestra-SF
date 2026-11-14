@@ -1,0 +1,66 @@
+{
+  "schema": "sf2-mission26-intake-v1",
+  "branch": "astra-compose",
+  "pr": 32,
+  "parent": "5c41125e7ef17a6c7eff9c9fb2329fe8f85ce982",
+  "parent_tree": "49a2dbddfb6043b4131790bf11a33318864fae2f",
+  "consumer": "session23 / sf2-stack / PR65",
+  "consumer_source_snapshot": "402a091485e11d60dff433049c7dedd7fcead687",
+  "consumer_source_tree": "006339cc3a61de9bf99d2ba17069181bd5d8a02e",
+  "files": [
+    {
+      "path": ".github/workflows/sf2-epic.yml",
+      "mode": "100644",
+      "preimage_git_blob": "4e92e4960e2bc371aa712d95e08acd76a5cc1ff2",
+      "bytes": 54846,
+      "sha256": "5c87488dbb717ad4e5a410aa69cc0cb15264465512d8546838497c2ae58301b8",
+      "git_blob_sha": "b332d777e4465469e9e4869e29f4339a95853d21"
+    },
+    {
+      "path": "script/sf2h/final-bundle/build-artifact.py",
+      "mode": "100755",
+      "preimage_git_blob": "c78e91620042c18adc09ecf68050d55d95f4c78c",
+      "bytes": 16157,
+      "sha256": "f7b2e2cb65a09961bff0eda4b50b977b580baa5c29e2474c1d9979362b00c87d",
+      "git_blob_sha": "4f7d7a12a5eeba3bfb82f9ebe03f563bd1b441a2"
+    },
+    {
+      "path": "script/sf2h/final-bundle/README.md",
+      "mode": "100644",
+      "preimage_git_blob": "8080b880846de8b6ac881fee45804c62b4afa344",
+      "bytes": 15589,
+      "sha256": "ab26491381e4b4a202b186c8906bd202bb628c59de765776db00c29612c7fce2",
+      "git_blob_sha": "83da2c1840e57eda8901ce7cc3dfa225ab385446"
+    },
+    {
+      "path": "script/sf2h/final-bundle/verify-e2e-typecheck.mjs",
+      "mode": "100644",
+      "preimage_git_blob": null,
+      "bytes": 10147,
+      "sha256": "5a35232ad96f85ee5de164c3a1ed46a981897a6db959a429e05aba8db773f129",
+      "git_blob_sha": "9f8ce79ce8a8611451ad550f8807b4fa2a33ea30"
+    },
+    {
+      "path": "packages/app-shell/package.json",
+      "mode": "100644",
+      "preimage_git_blob": "32567c3e0d67a3cceacab355bb34e291cd419c26",
+      "bytes": 4281,
+      "sha256": "98130221e3c0d9fab48c134cfd347894a19fc4b5c075c92d7c080362904bd3f4",
+      "git_blob_sha": "fed0414375fe5ad9553d1b6562f54972f2ed89f7"
+    },
+    {
+      "path": "packages/app-shell/tsconfig.sf-e2e.json",
+      "mode": "100644",
+      "preimage_git_blob": null,
+      "bytes": 533,
+      "sha256": "6bd78feeb679a7d735aeee226860c656fb2b8c3f26fc7b6738d34c42c81a85c0",
+      "git_blob_sha": "93740e51cc01a84c2fd97771aa9ca5707e7e63a1"
+    }
+  ],
+  "rules": [
+    "Consume only these six tooling/config postimages plus this receipt namespace; never merge the old branch tree over the newer product.",
+    "Package JSON delta is a single new typecheck script; reconcile any later unrelated package change.",
+    "Rebuild with --check and rerun request/inventory preflight on the actual composed tree.",
+    "This is a new product input, not accepted C/G7, evidence-only D/G8 or a dispatcher lease."
+  ]
+}

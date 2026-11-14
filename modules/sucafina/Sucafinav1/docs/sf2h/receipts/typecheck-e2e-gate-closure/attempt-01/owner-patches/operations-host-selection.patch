@@ -1,0 +1,11 @@
+--- a/packages/app-shell/e2e/sucafina/wp04/selection.ts
++++ b/packages/app-shell/e2e/sucafina/wp04/selection.ts
+@@ -3,6 +3,7 @@
+   return args.some((argument) => {
+     // test-ci-request.ts passes anchored filename regexes with this separator class.
+     const path = argument.replaceAll("[\\\\/]", "/").replaceAll("\\.", ".").replaceAll("\\", "/").replace(/:\d+(?::\d+)?$/, "")
+-    return path.endsWith("e2e/sucafina/wp04/procurement.spec.ts") || path.endsWith("e2e/sucafina/wp04/procurement.spec.ts$")
++    return ["e2e/sucafina/wp04/procurement.spec.ts", "e2e/sucafina/operations.spec.ts"].some((spec) =>
++      path.endsWith(spec) || path.endsWith(`${spec}$`))
+   })
+ }
