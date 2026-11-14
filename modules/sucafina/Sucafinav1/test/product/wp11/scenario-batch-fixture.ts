@@ -92,19 +92,22 @@ export async function scenarioBatchFixture() {
       const observedCases: DecisionCasePort = { ...cases, read: async (input, trusted) => {
         counts.events.push("case")
         const result = await cases.read(input, trusted)
-        await hooks.afterCase?.(++counts.cases, result)
+        counts.cases++
+        await hooks.afterCase?.(counts.cases, result)
         return result
       } }
       const observedStore = { ...results, readHistoricalScenario: async (input: Parameters<typeof results.readHistoricalScenario>[0], trusted: TrustedDomainContext) => {
         counts.events.push(`store:${input.resultRef}`)
         const result = await results.readHistoricalScenario(input, trusted)
-        await hooks.afterStore?.(++counts.stores, result)
+        counts.stores++
+        await hooks.afterStore?.(counts.stores, result)
         return result
       } }
       const scenarios = createStoredPlannerScenarioHost({ store: observedStore, cases: observedCases, coverageRefFor: (_case, alternative) => `coverage:${alternative.id}`, planner: { compareForecast: async (input, trusted) => {
         counts.events.push(`forecast:${input.baseRef}`)
         const result = await planner.compareForecast(input, trusted)
-        await hooks.afterForecast?.(++counts.forecasts, result)
+        counts.forecasts++
+        await hooks.afterForecast?.(counts.forecasts, result)
         return result
       } } })
       return { scenarios, counts, hooks, cases: observedCases, store: observedStore }

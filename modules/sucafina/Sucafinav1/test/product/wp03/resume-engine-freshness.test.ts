@@ -66,6 +66,14 @@ function criterion(source: BusinessEvidenceRef): CriterionObservation {
   return { status: "ok", value: { criterionId: "delivery", state: "satisfied", reason: "Registered rule satisfied", ruleRef: "delivery-rule-v1", evidenceRefs: [source] } }
 }
 
+/** A no-op request observes a source; the preview tests must execute an explicit hypothetical operation. */
+function currentForecastPreview(request: ScenarioRequest, snapshot: ScenarioSnapshot): ScenarioRequest {
+  const values = snapshot.projection.values.filter((value) => value.id === "line:11:forecast")
+  const forecast = values[0]
+  if (values.length !== 1 || !forecast || typeof forecast.value !== "number" || !Number.isFinite(forecast.value) || forecast.evidenceState !== "confirmed" || !forecast.currency) throw new Error("Current Planner forecast unavailable for the preview fixture")
+  return { ...structuredClone(request), operations: [{ kind: "replace", targetRef: "line:11", amount: forecast.value, currency: forecast.currency, period: structuredClone(forecast.period) }] }
+}
+
 test("scenario comparison snapshots each cached resolver result before resolving the next reference", async () => {
   const fixture = await comparisonFixture()
   try {
@@ -150,7 +158,7 @@ test("preview comparison rejects a reused baseline cache changed after a real si
     const result = await comparePlannerPreview({ host: fixture.host, sources: fixture.sources, scenarios, planner: { simulateScenario: async (request, binding) => {
       calls.simulated++
       return fixture.planner.simulateScenario(request, binding)
-    } } }, { baselineRef: "base", scenario: fixture.requests[1]! }, fixture.context)
+    } } }, { baselineRef: "base", scenario: currentForecastPreview(fixture.requests[1]!, fixture.records.get("alternative")!) }, fixture.context)
     expect(result).toEqual({ status: "stale", reason: "scenario-or-authority-changed" })
     expect(calls).toEqual({ resolved: 2, simulated: 1 })
     expect("value" in result).toBe(false)
@@ -162,7 +170,7 @@ test("stable preview remains conditioned with the canonical cost difference and 
   const fixture = await comparisonFixture()
   try {
     const before = await fixture.readSnapshot()
-    const request = { baselineRef: "base", scenario: fixture.requests[1]! }
+    const request = { baselineRef: "base", scenario: currentForecastPreview(fixture.requests[1]!, fixture.records.get("alternative")!) }
     const original = structuredClone(request)
     const result = await comparePlannerPreview({ host: fixture.host, sources: fixture.sources, scenarios: fixture.scenarios, planner: fixture.planner }, request, fixture.context)
     expect(result).toMatchObject({ status: "ok", value: { sample: { knownSubtotal: 602000, total: null }, comparison: { knownDifference: 12000, completeDifference: null, comparisonStatus: "conditioned" }, metric: { value: 12000, state: "conditioned", unit: "USD" } } })
