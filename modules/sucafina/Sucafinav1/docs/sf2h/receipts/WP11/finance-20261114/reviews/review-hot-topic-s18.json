@@ -1,0 +1,117 @@
+{
+  "schema": "sf-finance-independent-review-v1",
+  "reviewer": "/root/hot_topic_s18_command_review",
+  "reviewedAt": "2026-11-14T12:17:12.131277+00:00",
+  "scope": "static-only Hot Topic fixture correction after S18",
+  "baseCommit": "29172d2e4db859eedac31e84778c447bb97f6c08",
+  "baseTree": "8d7a7657597d024c5a55a9f5a4fdccf604c40d25",
+  "baseCapture": "finance-W28-changes.json",
+  "candidate": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+    "before": {
+      "blob": "a45ca2e3e8efd8b39f53a94615cdad1064d8fe6b",
+      "sha256": "14de70f09d592ff4d4b33b09560e5170f0bd1baf3b1cc65283249fbcde4c5628",
+      "bytes": 20338
+    },
+    "after": {
+      "blob": "9a60848e9a050ffc6690cd484ce12b2d0cd2e9c8",
+      "sha256": "a4d6b16de09e9417ddba996dc1077c6daf831c2378710b80a85714b54328124e",
+      "bytes": 20365
+    }
+  },
+  "verdict": "NO_STATIC_BLOCKER",
+  "runtimeValidation": "PENDING_ACTIONS",
+  "findings": [],
+  "verification": {
+    "exactTwoLineReplacement": true,
+    "sourceProducerChanges": false,
+    "testDeclarations": 4,
+    "expandedTestCases": 6,
+    "literalExpectCallsBefore": 52,
+    "literalExpectCallsAfter": 52,
+    "allAssertionLinesUnchanged": true,
+    "hookTimingUnchanged": true,
+    "timeoutsUnchanged": true,
+    "initializationPreserved": true
+  },
+  "causalAnalysis": [
+    "The published fixture seeds the official Hot Topic with status Open and the concurrent canonical command supplies notes only.",
+    "DashboardPeople.saveRecord applies defaults, then the stored record, then command fields; the original Open survives into next.status.",
+    "The canonical Hot Topic enum accepts open, progress, blocked and done. Open yields status 422 before data, audit and versions are changed.",
+    "The fixture throws on !edited.ok inside verifySources. register catches the exception and returns unavailable before verifySnapshot; this explains the observed empty snapshots array.",
+    "The candidate seeds canonical open. It does not change the producer, source race timing, authorization, request, expected snapshot or C08 persistence assertions."
+  ],
+  "existingEvidence": {
+    "selection": 18,
+    "runId": 43593276333,
+    "jobId": 132442336638,
+    "head": "5178f3ff43a3387b3e25e4769a8b391a4ea9e423",
+    "productCommit": "29172d2e4db859eedac31e84778c447bb97f6c08",
+    "observedHotTopicCases": {
+      "pass": 5,
+      "fail": 1
+    },
+    "failure": "source race expected [dashboard], received []",
+    "direct422Log": false,
+    "causeQualification": "static inference from the exact exercised command path, not an observed 422 log"
+  },
+  "canonicalSources": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/dashboard-people.ts",
+      "blob": "de499e6d34af826add34bee4125bcfba4e57ddb8",
+      "sha256": "b883e0683a2f3e8146b3ae78af3e381005fc9cd4a3c66216b068f5041546b1bd",
+      "bytes": 27368,
+      "matchesPublishedManifest": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "blob": "b62fce6f0fb0845dbfd18cc94009c33f1586b9c5",
+      "sha256": "cb9ea7ac4610fc19cf6caa51a7339df9fd69ae181cdf638a8712779c846987c0",
+      "bytes": 4642,
+      "matchesPublishedManifest": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts",
+      "blob": "d8a151c558227b3bd2612dbb6caba993efa85783",
+      "sha256": "45eb7d1418a0f62ec8f361e9d78a3ed09a98e9d48318db0c2a7b986493fb84fa",
+      "bytes": 20044,
+      "matchesPublishedManifest": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "blob": "b7988a2963a2797a96ea19ab2b3a481564548213",
+      "sha256": "f988cc1c91c340628c80523d587bfeec27e92971d6ff467233f9bbb4fff0dfbe",
+      "bytes": 12807,
+      "matchesPublishedManifest": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "blob": "d0cab7f33b08806a6bb01a869fa789dc77e087ee",
+      "sha256": "4bf78ba13cc1533a93408b97125e66b21bbadf26b286176252ab9fd8930f0289",
+      "bytes": 14100,
+      "matchesPublishedManifest": true
+    }
+  ],
+  "preservedOracles": [
+    "source edit must pass the canonical Dashboard command and persist its notes/audit",
+    "the draft source race must reach exactly one Dashboard snapshot",
+    "private preferences, confirmations, receipts, decision results and matching transactions must remain unchanged",
+    "Planner must remain unchanged",
+    "case and authority races plus last-source and last-case callback replacement cases remain intact"
+  ],
+  "limitations": [
+    "The candidate was not executed; actual source invalidation and final rejection still require the same six cases in Actions.",
+    "The expanded error text is caught by register and does not itself make the canonical error visible in the public result.",
+    "No installed native proof, C/D review, integration qualification or READY/DONE claim."
+  ],
+  "executed": {
+    "productTests": false,
+    "productImports": false,
+    "bun": false,
+    "CI": false,
+    "native": false,
+    "remoteWrites": false,
+    "sourceWrites": false,
+    "metadataOnlyPython": true
+  }
+}

@@ -67,7 +67,7 @@ for (const race of ["source", "case", "authority"] as const) test(`hot-topic dra
       if (race === "source") {
         await fixture.persistence.transaction("dashboard", async (snapshot) => {
           const edited = DashboardPeople.domain.execute(snapshot, actor, { page: "Hot Topics & Actions", action: "save", id: "topic", version: 0, values: { notes: "Concurrent official source edit" } }, { at: plannerAt, id: randomUUID, directory: [] })
-          if (!edited.ok) throw new Error("Concurrent Dashboard edit unavailable")
+          if (!edited.ok) throw new Error(`Concurrent Dashboard edit unavailable: ${JSON.stringify(edited)}`)
           return { commit: true, value: edited }
         })
         return
@@ -171,7 +171,7 @@ async function hotTopicFixture() {
   await fixture.persistence.initializeSources("dashboard")
   await fixture.persistence.transaction("dashboard", async (snapshot) => {
     snapshot.data.roleMap = [{ surface: "dashboard", role: "admin", entra: "admin-group", version: 1, by: actor.id }]
-    snapshot.data.hotTopics = [{ id: "topic", action: "Review renewal", owner: actor.id, due: "2026-12-01", status: "Open", priority: "normal", notes: "Original official topic" }]
+    snapshot.data.hotTopics = [{ id: "topic", action: "Review renewal", owner: actor.id, due: "2026-12-01", status: "open", priority: "normal", notes: "Original official topic" }]
     return { commit: true, value: undefined }
   })
   const intents = new WeakMap<Request, { action: SfHumanAction; digest: string; operation: string }>()

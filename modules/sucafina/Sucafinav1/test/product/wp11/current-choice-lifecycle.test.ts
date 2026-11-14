@@ -74,7 +74,19 @@ test("a current quote replays the same historical choice, requires a separate hu
     const basis = { ...fixture.basis, version: 2, sourceRefs: structuredClone(fixture.sourceRefs) }
     const coverage = await renewalCoverage({ ...fixture, basis }, "confirmed")
     expect(coverage.assessment.coverageState).toBe("complete")
-    expect(coverage.assessment.entries.find((entry) => entry.categoryId === "training")).toMatchObject({ status: "included", componentRefs: expect.arrayContaining(["training:11"]) })
+    // Bun's asymmetric matcher must observe its own copy: the assessment and
+    // source entry list share objects; classification keeps its own cloned entries.
+    const trainingObservation = structuredClone(coverage.assessment.entries.find((entry) => entry.categoryId === "training"))
+    const coverageBeforeMatcher = digestSfValue(coverage.assessment)
+    const trainingBeforeMatcher = digestSfValue(trainingObservation)
+    expect(trainingObservation).toMatchObject({ status: "included", componentRefs: expect.arrayContaining(["training:11"]) })
+    const matcherObservation = (() => {
+      try { return { afterDigest: digestSfValue(trainingObservation) } }
+      catch (error) { return { afterError: error instanceof Error ? error.message : String(error) } }
+    })()
+    console.debug("WP11_CURRENT_CHOICE_MATCHER", JSON.stringify({ beforeDigest: trainingBeforeMatcher, ...matcherObservation,
+      componentRefsAreArray: trainingObservation?.status === "included" && Array.isArray(trainingObservation.componentRefs) }))
+    expect(digestSfValue(coverage.assessment)).toBe(coverageBeforeMatcher)
     const plannerAfterQuote = await fixture.store.transaction("planner", async (snapshot) => ({ commit: false, value: digestSfValue(snapshot) }))
     const writes = new WeakSet<object>()
     const makeState = (store: typeof fixture.store) => createSfProductState({
