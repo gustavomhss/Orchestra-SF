@@ -1,0 +1,2195 @@
+{
+  "schema": "wp08-exact-assertion-catalog.v1",
+  "binding": {
+    "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+    "product_tree": "548d9e07d5e2fe189adbaa11f931fbbbedf114d2",
+    "snapshot_sha": "b55254b4da225f3ad874b27885d4792c69f047ac",
+    "snapshot_tree": "32ed1ae4e1cf3eae03c2b0c6fe64740e7bbdbcf6",
+    "run_id": 43533574980,
+    "job_id": 132256977328,
+    "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43533574980",
+    "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43533574980/job/132256977328",
+    "test_results": "test-results.json",
+    "product_snapshot_equivalence": "https://github.com/gustavomhss/Orchestra-SF/compare/156f074d15c9787a9fc1b6430e632504ee3a69e6...b55254b4da225f3ad874b27885d4792c69f047ac",
+    "overall_test_conclusion": "FAILURE"
+  },
+  "evidence": {
+    "R.supplier": {
+      "kind": "HOSTED_ASSERTIONS",
+      "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+      "observed_result": "PASS",
+      "source_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/relations-sources.test.ts",
+          "product_blob": "2dc8ea038a43c0cf8a47ed4ea20f79766f28de3a"
+        }
+      ],
+      "exact_cases": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/relations-sources.test.ts",
+          "name": "canonical homonymous suppliers never link a textual vendor without the selected source ID",
+          "status": "PASS",
+          "product_blob": "2dc8ea038a43c0cf8a47ed4ea20f79766f28de3a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/relations-sources.test.ts",
+          "name": "canonical PMO and CAPEX records preserve identities, money and every domain snapshot through link and unlink",
+          "status": "PASS",
+          "product_blob": "2dc8ea038a43c0cf8a47ed4ea20f79766f28de3a"
+        }
+      ],
+      "reviewed_assertions": [
+        "Actual ProcurementModule creates supplier-A and supplier-B with the same legalName and distinct tax IDs; canonical duplicate-name warning is retained.",
+        "Actual DashboardPortfolio contract.vendor equals their name; product relation storage remains uninitialized until explicit mutation.",
+        "Canonical issued refs resolve to distinct supplier IDs; creating contract-supplier to B yields only B and reading A yields no edge.",
+        "Invalid relation kind does not initialize product relation state.",
+        "Revoked Procurement authentication hides the entire edge; removing the contract leaves no projection and does not recreate its row.",
+        "Creating/removing the relation preserves the complete Dashboard, Planner and Procurement snapshots except the owned product namespace."
+      ],
+      "limits": [],
+      "run_id": 43533574980,
+      "job_id": 132256977328
+    },
+    "R.pmo": {
+      "kind": "HOSTED_ASSERTIONS",
+      "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+      "observed_result": "PASS",
+      "source_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/relations-sources.test.ts",
+          "product_blob": "2dc8ea038a43c0cf8a47ed4ea20f79766f28de3a"
+        }
+      ],
+      "exact_cases": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/relations-sources.test.ts",
+          "name": "canonical homonymous suppliers never link a textual vendor without the selected source ID",
+          "status": "PASS",
+          "product_blob": "2dc8ea038a43c0cf8a47ed4ea20f79766f28de3a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/relations-sources.test.ts",
+          "name": "canonical PMO and CAPEX records preserve identities, money and every domain snapshot through link and unlink",
+          "status": "PASS",
+          "product_blob": "2dc8ea038a43c0cf8a47ed4ea20f79766f28de3a"
+        }
+      ],
+      "reviewed_assertions": [
+        "Actual DashboardPortfolio and DashboardBudget records with the same display name preserve distinct project/capex IDs and budgets 100/250, spent 20.",
+        "Canonical source refs create pmo-capex, reversed repeat returns the same relation and does not increment storage version.",
+        "Remove returns ok and both endpoint reads return an empty relation list.",
+        "Full three-surface business snapshots, including physical versions, source identities, notices, sequences and audit, remain equal."
+      ],
+      "limits": [],
+      "run_id": 43533574980,
+      "job_id": 132256977328
+    },
+    "R.lifecycle": {
+      "kind": "HOSTED_ASSERTIONS",
+      "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+      "observed_result": "PASS",
+      "source_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/threads-lifecycle.test.ts",
+          "product_blob": "62cb309bd8f192f8cedc6801869df1b0ad4ba458"
+        }
+      ],
+      "exact_cases": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/threads-lifecycle.test.ts",
+          "name": "canonical contextual conversations preserve all business snapshots and fail closed for changed, removed or restricted sources",
+          "status": "PASS",
+          "product_blob": "62cb309bd8f192f8cedc6801869df1b0ad4ba458"
+        }
+      ],
+      "reviewed_assertions": [
+        "Actual Dashboard record source and real UI human admission create comment, clarification and review.",
+        "Two distinct comment IDs on the same source retain January/February periods and distinct bodies.",
+        "Reply and resolve preserve original sourceRef/incarnation/version/period and explicit message authors.",
+        "Real Hot Topic remains open, actual Procurement request remains draft with amount 75, Planner FY2027 stays unlocked; complete three-surface snapshots remain equal after communication.",
+        "Editing notes outside the selected name/status fields advances physical version while thread read remains available with original observed context.",
+        "Revoking Dashboard source authentication returns exactly unavailable/thread-access-unavailable, no payload, for all conversations.",
+        "Changing selected status to On Hold makes every old thread unavailable; private stored thread context remains original and is not silently rebound.",
+        "Deleting the source denies reads, does not recreate it, and leaves Procurement and Planner unchanged."
+      ],
+      "limits": [
+        "Uses a current admin source actor and explicit self-assignment; does not demonstrate a real host cross-recipient lease.",
+        "Does not provide historical C05 projection after material changes: current producer deliberately fails closed.",
+        "Does not execute a browser navigation or native/MCP dispatch."
+      ],
+      "run_id": 43533574980,
+      "job_id": 132256977328
+    },
+    "R.integrity": {
+      "kind": "HOSTED_ASSERTIONS",
+      "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+      "observed_result": "PASS",
+      "source_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/relations-integrity.test.ts",
+          "product_blob": "88e44b5ddd362d3e8187f80eb4e2f0d5f7108fab"
+        }
+      ],
+      "exact_cases": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/relations-integrity.test.ts",
+          "name": "a symmetric relation has one identity and cannot silently change evidence or domain records",
+          "status": "PASS",
+          "product_blob": "88e44b5ddd362d3e8187f80eb4e2f0d5f7108fab"
+        }
+      ],
+      "reviewed_assertions": [
+        "Reversed symmetric duplicate returns the original relation and storage version remains 1.",
+        "Changed dependency evidence or recipient on a duplicate returns conflict.",
+        "Authority revocation hides relation; remove preserves domain record data."
+      ],
+      "limits": [
+        "Hand-built evidence, human authorization fixture and direct seed data; canonical producer assertions belong to the new supplier/pmo tests."
+      ],
+      "run_id": 43533574980,
+      "job_id": 132256977328
+    },
+    "R.catalogue": {
+      "kind": "HOSTED_ASSERTIONS",
+      "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+      "observed_result": "PASS",
+      "source_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/relation-catalog.test.ts",
+          "product_blob": "81a21b3f17c4a499dd0bc6a9b6fdd3c1bc0dac9f"
+        }
+      ],
+      "exact_cases": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/relation-catalog.test.ts",
+          "name": "C06 relation kinds require the allowed source types and never infer identity from names",
+          "status": "PASS",
+          "product_blob": "81a21b3f17c4a499dd0bc6a9b6fdd3c1bc0dac9f"
+        }
+      ],
+      "reviewed_assertions": [
+        "Permits PMO-CAPEX both directions, contract-supplier, contract-request and financial-line-request for dashboard opexEntries/capexEntries.",
+        "Rejects whole Planner version as a financial line, wrong endpoint types, self-pair, unknown kind and forged evidence digest.",
+        "Handoff direction is constrained."
+      ],
+      "limits": [
+        "Type catalogue contract test; not live canonical Procurement request consumer proof."
+      ],
+      "run_id": 43533574980,
+      "job_id": 132256977328
+    },
+    "R.persistence": {
+      "kind": "HOSTED_ASSERTIONS",
+      "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+      "observed_result": "PASS",
+      "source_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/persistence.test.ts",
+          "product_blob": "8638bfa936a0509f1e01490927780302e1a795e1"
+        }
+      ],
+      "exact_cases": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/persistence.test.ts",
+          "name": "relations and contextual threads persist, retry and hide after access revocation",
+          "status": "PASS",
+          "product_blob": "8638bfa936a0509f1e01490927780302e1a795e1"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/persistence.test.ts",
+          "name": "confirmation keeps the observed version while current scope and access are rechecked",
+          "status": "PASS",
+          "product_blob": "8638bfa936a0509f1e01490927780302e1a795e1"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/persistence.test.ts",
+          "name": "thread mutation requires the admitted payload again at commit",
+          "status": "PASS",
+          "product_blob": "8638bfa936a0509f1e01490927780302e1a795e1"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/persistence.test.ts",
+          "name": "versioned relations keep immutable identity and cannot reuse a retired id",
+          "status": "PASS",
+          "product_blob": "8638bfa936a0509f1e01490927780302e1a795e1"
+        }
+      ],
+      "reviewed_assertions": [
+        "SQLite reopen retains thread and retry returns the same reply/relation.",
+        "Access revocation hides thread/question and relation projections.",
+        "Versioned relations keep identity, repeated remove is idempotent and retired relation ID cannot be reused.",
+        "A second human-payload authorization failure at commit leaves no thread."
+      ],
+      "limits": [
+        "Source and human authorizers are test fixtures in these cases; native destination grant authority not demonstrated."
+      ],
+      "run_id": 43533574980,
+      "job_id": 132256977328
+    },
+    "R.periods": {
+      "kind": "HOSTED_ASSERTIONS",
+      "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+      "observed_result": "PASS",
+      "source_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/threads-context.test.ts",
+          "product_blob": "ea3759877a83e33fc53dcf2af272df02eccd1751"
+        }
+      ],
+      "exact_cases": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/threads-context.test.ts",
+          "name": "contextual questions retain separate periods, exact recipients, and communication after resolution",
+          "status": "PASS",
+          "product_blob": "ea3759877a83e33fc53dcf2af272df02eccd1751"
+        }
+      ],
+      "reviewed_assertions": [
+        "January and February clarification requests have distinct IDs, exact recipient-B and separate periods.",
+        "recipient-C has the same name but is refused; source-bound recipient-B selection is retained.",
+        "Revocation between prepare and commit refuses creation without consuming idempotency; restore allows same key.",
+        "Recipient revocation denies reply without changing storage; author may still read already authored communication.",
+        "Source fixture throws on attempted read inside mutation transaction.",
+        "Resolve January preserves its messages and leaves February open; author revocation returns exact denial."
+      ],
+      "limits": [
+        "Uses fabricated Planner reference and explicit recipient authority fixture, not installed external host lease.",
+        "Old domain noninterference assertion reads two undefined fields; use new lifecycle complete snapshots instead."
+      ],
+      "run_id": 43533574980,
+      "job_id": 132256977328
+    },
+    "R.thread-integrity": {
+      "kind": "HOSTED_ASSERTIONS",
+      "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+      "observed_result": "PASS",
+      "source_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/threads-integrity.test.ts",
+          "product_blob": "0d96c8b6d8b346fb820c917f179439c44c854803"
+        }
+      ],
+      "exact_cases": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/threads-integrity.test.ts",
+          "name": "a stored conversation cannot retarget its observed version, incarnation, or period",
+          "status": "PASS",
+          "product_blob": "0d96c8b6d8b346fb820c917f179439c44c854803"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/threads-integrity.test.ts",
+          "name": "stored communication has a real first message and an explicit recipient for questions",
+          "status": "PASS",
+          "product_blob": "0d96c8b6d8b346fb820c917f179439c44c854803"
+        }
+      ],
+      "reviewed_assertions": [
+        "Stored thread validator refuses mismatched source, incarnation, version, out-of-source period or duplicate source evidence.",
+        "Empty initial messages, missing question recipient, invalid recipient object, duplicate message identities fail.",
+        "Comment without recipient remains valid."
+      ],
+      "limits": [],
+      "run_id": 43533574980,
+      "job_id": 132256977328
+    },
+    "R.recipient": {
+      "kind": "HOSTED_ASSERTIONS",
+      "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+      "observed_result": "PASS",
+      "source_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/recipient-authority.test.ts",
+          "product_blob": "5e43d1314e2f2c0dd2e78169dd9b98079287fa8f"
+        }
+      ],
+      "exact_cases": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/recipient-authority.test.ts",
+          "name": "caller access permits self-assignment but cannot substitute for recipient source authority",
+          "status": "PASS",
+          "product_blob": "5e43d1314e2f2c0dd2e78169dd9b98079287fa8f"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/recipient-authority.test.ts",
+          "name": "recipient identity and every material dependency are checked without name inference",
+          "status": "PASS",
+          "product_blob": "5e43d1314e2f2c0dd2e78169dd9b98079287fa8f"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/recipient-authority.test.ts",
+          "name": "revocation during source inspection and proof failure refuse assignment",
+          "status": "PASS",
+          "product_blob": "5e43d1314e2f2c0dd2e78169dd9b98079287fa8f"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/recipient-authority.test.ts",
+          "name": "the proof gets detached exact refs and cannot rewrite the assignment or omit a dependency",
+          "status": "PASS",
+          "product_blob": "5e43d1314e2f2c0dd2e78169dd9b98079287fa8f"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/recipient-authority.test.ts",
+          "name": "commit checks require a current synchronous recipient lease without repeating source I/O",
+          "status": "PASS",
+          "product_blob": "5e43d1314e2f2c0dd2e78169dd9b98079287fa8f"
+        }
+      ],
+      "reviewed_assertions": [
+        "No external proof denies other recipients while current self-assignment is permitted.",
+        "Exact ID plus every dependency is required; a Same Name string is not identity.",
+        "Revocation between pre/post proof checks refuses assignment.",
+        "Provider receives detached exact refs and cannot rewrite original dependencies.",
+        "Commit check is synchronous, reuses current lease without I/O, denies absent, thrown or Promise-returning proof."
+      ],
+      "limits": [
+        "Tests injected authority semantics. Production WP10 must supply a genuine current principal/source-bound lease; no directory-derived grant was invented."
+      ],
+      "run_id": 43533574980,
+      "job_id": 132256977328
+    },
+    "R.human": {
+      "kind": "HOSTED_ASSERTIONS",
+      "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+      "observed_result": "PASS",
+      "source_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/human-authority.test.ts",
+          "product_blob": "c62a9eedf33ccba82c6c9e5b5bec014894d4afad"
+        }
+      ],
+      "exact_cases": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/human-authority.test.ts",
+          "name": "real UI admission binds thread creation to its human action and exact payload",
+          "status": "PASS",
+          "product_blob": "c62a9eedf33ccba82c6c9e5b5bec014894d4afad"
+        }
+      ],
+      "reviewed_assertions": [
+        "Real createSfUiAuthority rejects changed body, source incarnation/version mismatch and finished human lease.",
+        "The exact admitted command can create the thread."
+      ],
+      "limits": [],
+      "run_id": 43533574980,
+      "job_id": 132256977328
+    },
+    "R.human-extra": {
+      "kind": "HOSTED_ASSERTIONS",
+      "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+      "observed_result": "PASS",
+      "source_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/recipient-human-actions.test.ts",
+          "product_blob": "0af03b3ab1f5d1bde3a9efe21796ad02ca96905f"
+        }
+      ],
+      "exact_cases": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/recipient-human-actions.test.ts",
+          "name": "extended collaboration actions require explicitly registered commands and live human grants",
+          "status": "PASS",
+          "product_blob": "0af03b3ab1f5d1bde3a9efe21796ad02ca96905f"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/recipient-human-actions.test.ts",
+          "name": "thread edit admission is confined to POST, same origin and the retained current request",
+          "status": "PASS",
+          "product_blob": "0af03b3ab1f5d1bde3a9efe21796ad02ca96905f"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/recipient-human-actions.test.ts",
+          "name": "cancelled and expired selection admissions never regain authority",
+          "status": "PASS",
+          "product_blob": "0af03b3ab1f5d1bde3a9efe21796ad02ca96905f"
+        }
+      ],
+      "reviewed_assertions": [
+        "Unregistered command, absent grant, cloned lease, changed payload/action and revoked grant fail.",
+        "GET, other origin, cross-site requests, changed retained request, cancellation and expiration deny."
+      ],
+      "limits": [
+        "Own adapter and real shared UI admission exercised with fixture principals; does not register/grant installed WP10 commands."
+      ],
+      "run_id": 43533574980,
+      "job_id": 132256977328
+    },
+    "R.reissue": {
+      "kind": "HOSTED_ASSERTIONS",
+      "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+      "observed_result": "PASS",
+      "source_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/reissue.test.ts",
+          "product_blob": "9c8c16cef3a53fa4099f4e2b0408f9eaedac8f36"
+        }
+      ],
+      "exact_cases": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/reissue.test.ts",
+          "name": "reissue checks actor access and the live physical incarnation",
+          "status": "PASS",
+          "product_blob": "9c8c16cef3a53fa4099f4e2b0408f9eaedac8f36"
+        }
+      ],
+      "reviewed_assertions": [
+        "Recipient gets its own authorized source scope for the same record and original author-scoped selectors are not leaked.",
+        "Recipient reply and answer claim evidence work through reader/actions adapters and real human UI admission.",
+        "Current actor revocation denies; material source change and deleted/recreated physical source refuse reissue."
+      ],
+      "limits": [
+        "Scope projector and producer are test fixtures; not evidence of a preserved C05 historical producer."
+      ],
+      "run_id": 43533574980,
+      "job_id": 132256977328
+    },
+    "R.answer-history": {
+      "kind": "HOSTED_ASSERTIONS",
+      "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+      "observed_result": "PASS",
+      "source_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/answer-evidence.test.ts",
+          "product_blob": "12f5181b8e93673710b76a0f6ab6e681ef444c2f"
+        }
+      ],
+      "exact_cases": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/answer-evidence.test.ts",
+          "name": "human answer evidence is a stable claim and disappears when access is revoked",
+          "status": "PASS",
+          "product_blob": "12f5181b8e93673710b76a0f6ab6e681ef444c2f"
+        }
+      ],
+      "reviewed_assertions": [
+        "Answer evidence stays claim-level, targets exact message incarnation/version and preserves author/period.",
+        "Unrelated follow-up does not rewrite the original answer ref; wrong question/first question message are not accepted answers.",
+        "Owned history edit increments version and historical version 3 reads exact prior body/author.",
+        "Revocation denies history, resolve, belongs-to-question and answer projection."
+      ],
+      "limits": [
+        "Canonical shared state provider does not enforce C08 thread history writes against direct writers. This is behavior/history API proof only; not append-only enforcement."
+      ],
+      "run_id": 43533574980,
+      "job_id": 132256977328
+    },
+    "R.journey": {
+      "kind": "HOSTED_ASSERTIONS",
+      "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+      "observed_result": "PASS",
+      "source_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/collaboration-journey.test.ts",
+          "product_blob": "68dda95afd92154dc426ef40479648c21576de01"
+        }
+      ],
+      "exact_cases": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/collaboration-journey.test.ts",
+          "name": "contextual request → explicit confirmation → one canonical Hot Topic → completion in My Work",
+          "status": "PASS",
+          "product_blob": "68dda95afd92154dc426ef40479648c21576de01"
+        }
+      ],
+      "reviewed_assertions": [
+        "Resolved clarification leaves the independent open handoff item; canonical Hot Topic update alone completes the operational item.",
+        "One handoff destination persists with the same relation and repeat reads do not create duplicates."
+      ],
+      "limits": [
+        "Exact final W07/S06 journey assertions are bound here. No deployed/native UI mount is proven."
+      ],
+      "run_id": 43533574980,
+      "job_id": 132256977328
+    },
+    "R.answer-consumer": {
+      "kind": "HOSTED_ASSERTIONS",
+      "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+      "observed_result": "PASS",
+      "source_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/host-answer-reuse.test.ts",
+          "product_blob": "02e6ecaea3a6ce08e4f0831f882b98f190e4d44f"
+        }
+      ],
+      "exact_cases": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/host-answer-reuse.test.ts",
+          "name": "host-created capabilities consume a confirmed answer through shared dispatch and real Dashboard scope",
+          "status": "PASS",
+          "product_blob": "02e6ecaea3a6ce08e4f0831f882b98f190e4d44f"
+        }
+      ],
+      "reviewed_assertions": [
+        "Actual host factory capability sf_answer_read returns a confirmed answer through shared dispatcher for a real Dashboard source.",
+        "Unrelated source-field change retains confirmed read, revocation refuses."
+      ],
+      "limits": [
+        "UI context dispatch coverage only; native and MCP parity not exercised."
+      ],
+      "run_id": 43533574980,
+      "job_id": 132256977328
+    },
+    "R.http": {
+      "kind": "HOSTED_ASSERTIONS",
+      "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+      "observed_result": "PASS",
+      "source_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/collaboration-http.test.ts",
+          "product_blob": "6dec97c58bc556ed76761e8cd57cbb12085eabe3"
+        }
+      ],
+      "exact_cases": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/collaboration-http.test.ts",
+          "name": "private collaboration HTTP binds the whole human command and rejects other origins",
+          "status": "PASS",
+          "product_blob": "6dec97c58bc556ed76761e8cd57cbb12085eabe3"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/collaboration-http.test.ts",
+          "name": "private collaboration HTTP does not route prototype keys",
+          "status": "PASS",
+          "product_blob": "6dec97c58bc556ed76761e8cd57cbb12085eabe3"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/collaboration-http.test.ts",
+          "name": "private HTTP requires exact mount, one route key, bounded JSON and POST before admission",
+          "status": "PASS",
+          "product_blob": "6dec97c58bc556ed76761e8cd57cbb12085eabe3"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/collaboration-http.test.ts",
+          "name": "real private human grant binds the whole payload and is finished after a handler failure",
+          "status": "PASS",
+          "product_blob": "6dec97c58bc556ed76761e8cd57cbb12085eabe3"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/collaboration-http.test.ts",
+          "name": "answer observation HTTP returns the display projection while keeping provider-only data private",
+          "status": "PASS",
+          "product_blob": "6dec97c58bc556ed76761e8cd57cbb12085eabe3"
+        }
+      ],
+      "reviewed_assertions": [
+        "Typed same-origin POST route rejects invalid envelope before admission, emits no-store, delegates exact relation payload.",
+        "Real human lease is finished after handler failure and private errors are not exposed."
+      ],
+      "limits": [
+        "Own HTTP adapter test, not final installed UI mount or all-transport same-handler proof."
+      ],
+      "run_id": 43533574980,
+      "job_id": 132256977328
+    },
+    "C.C_UNIT": {
+      "kind": "HOSTED_ASSERTIONS",
+      "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+      "observed_result": "PASS",
+      "source_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/confirmation.test.ts",
+          "product_blob": "2fab4d3df79788cc0db859fe8a1f9f95cdeebf84"
+        }
+      ],
+      "exact_cases": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/confirmation.test.ts",
+          "name": "confirmation follows material scope and never treats access loss or replacement as valid",
+          "status": "PASS",
+          "product_blob": "2fab4d3df79788cc0db859fe8a1f9f95cdeebf84"
+        }
+      ],
+      "reviewed_assertions": [
+        "valid at evaluatedSourceVersion 8 while original record is unchanged",
+        "material-change and dependency-change become stale",
+        "physical replacement becomes source-replaced",
+        "revocation is unavailable without scopeFingerprint; legacy missing baseline unavailable"
+      ],
+      "limits": [],
+      "run_id": 43533574980,
+      "job_id": 132256977328
+    },
+    "C.C_REAL": {
+      "kind": "HOSTED_ASSERTIONS",
+      "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+      "observed_result": "PASS",
+      "source_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/confirmation-integration.test.ts",
+          "product_blob": "ea007ed617c8ee7ba8b52461f41814a9553dbbb3"
+        }
+      ],
+      "exact_cases": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/confirmation-integration.test.ts",
+          "name": "dashboard observation supports a human confirmation and another authorized reader",
+          "status": "PASS",
+          "product_blob": "ea007ed617c8ee7ba8b52461f41814a9553dbbb3"
+        }
+      ],
+      "reviewed_assertions": [
+        "a second authorized reader sees author, observed version, period and valid state",
+        "February edit before confirm is accepted; later February edit stays valid",
+        "January edit makes stale/material-change; re-confirming the displayed old scope conflicts and preserves the request draft",
+        "only original confirmation remains; domain ACL revocation makes inspect unavailable with no value",
+        "unregistered Planner observer returns dependency-unavailable"
+      ],
+      "limits": [],
+      "run_id": 43533574980,
+      "job_id": 132256977328
+    },
+    "C.C_RECEIPT": {
+      "kind": "HOSTED_ASSERTIONS",
+      "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+      "observed_result": "PASS",
+      "source_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/confirmation-observations.test.ts",
+          "product_blob": "7eb9cbf57f9e8f22f77b0fd4cf62f0a3c025e492"
+        }
+      ],
+      "exact_cases": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/confirmation-observations.test.ts",
+          "name": "observation receipts bind actor, scope, version and fingerprint and expire",
+          "status": "PASS",
+          "product_blob": "7eb9cbf57f9e8f22f77b0fd4cf62f0a3c025e492"
+        }
+      ],
+      "reviewed_assertions": [
+        "receipt requires same actor/version/fingerprint; field-order permutation is equivalent",
+        "NaN permanently invalidates the checked UI lease; fresh admission and displayed observation required",
+        "backward receipt clock and expiry refuse acceptance"
+      ],
+      "limits": [],
+      "run_id": 43533574980,
+      "job_id": 132256977328
+    },
+    "C.C_PERSIST": {
+      "kind": "HOSTED_ASSERTIONS",
+      "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+      "observed_result": "PASS",
+      "source_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/persistence.test.ts",
+          "product_blob": "8638bfa936a0509f1e01490927780302e1a795e1"
+        }
+      ],
+      "exact_cases": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/persistence.test.ts",
+          "name": "relations and contextual threads persist, retry and hide after access revocation",
+          "status": "PASS",
+          "product_blob": "8638bfa936a0509f1e01490927780302e1a795e1"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/persistence.test.ts",
+          "name": "confirmation keeps the observed version while current scope and access are rechecked",
+          "status": "PASS",
+          "product_blob": "8638bfa936a0509f1e01490927780302e1a795e1"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/persistence.test.ts",
+          "name": "thread mutation requires the admitted payload again at commit",
+          "status": "PASS",
+          "product_blob": "8638bfa936a0509f1e01490927780302e1a795e1"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/persistence.test.ts",
+          "name": "versioned relations keep immutable identity and cannot reuse a retired id",
+          "status": "PASS",
+          "product_blob": "8638bfa936a0509f1e01490927780302e1a795e1"
+        }
+      ],
+      "reviewed_assertions": [
+        "confirmation retry returns exactly original record",
+        "observed version 7 is distinct from evaluated version 8",
+        "scope race returns stale; changed material re-confirm conflicts",
+        "revoked projection is unavailable with no fingerprint"
+      ],
+      "limits": [],
+      "run_id": 43533574980,
+      "job_id": 132256977328
+    },
+    "C.W_GROUP": {
+      "kind": "HOSTED_ASSERTIONS",
+      "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+      "observed_result": "PASS",
+      "source_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/work-confirmations.test.ts",
+          "product_blob": "2a8ff768140ba309ff7d7d2a9c3b085d1c9d7a9f"
+        }
+      ],
+      "exact_cases": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/work-confirmations.test.ts",
+          "name": "reconfirmation with a new dependency manifest keeps one canonical obligation and original audit",
+          "status": "PASS",
+          "product_blob": "2a8ff768140ba309ff7d7d2a9c3b085d1c9d7a9f"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/work-confirmations.test.ts",
+          "name": "periods and replaced incarnations never inherit another scope's work identity",
+          "status": "PASS",
+          "product_blob": "2a8ff768140ba309ff7d7d2a9c3b085d1c9d7a9f"
+        }
+      ],
+      "reviewed_assertions": [
+        "new dependency manifest and field reordering retain one stable scope actionRef",
+        "latest record wins regardless input ordering; original record/audit unchanged",
+        "different period and replacement incarnation use distinct work identities"
+      ],
+      "limits": [],
+      "run_id": 43533574980,
+      "job_id": 132256977328
+    },
+    "C.W_PURE": {
+      "kind": "HOSTED_ASSERTIONS",
+      "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+      "observed_result": "PASS",
+      "source_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/work.test.ts",
+          "product_blob": "2c126c4a5bad9bf08bae073dd3fe781dcf7ef23a"
+        }
+      ],
+      "exact_cases": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/work.test.ts",
+          "name": "work is projected once per canonical action and does not infer ownership",
+          "status": "PASS",
+          "product_blob": "2c126c4a5bad9bf08bae073dd3fe781dcf7ef23a"
+        }
+      ],
+      "reviewed_assertions": [
+        "same canonical action deduplicates",
+        "another owner ID is excluded without name inference",
+        "conflicting operational states refuse with stale; empty principal is denied"
+      ],
+      "limits": [],
+      "run_id": 43533574980,
+      "job_id": 132256977328
+    },
+    "C.W_HOST": {
+      "kind": "HOSTED_ASSERTIONS",
+      "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+      "observed_result": "PASS",
+      "source_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/host-work.test.ts",
+          "product_blob": "73e30001d18b68aa1eee3e052123ef4d81c5dc3f"
+        }
+      ],
+      "exact_cases": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/host-work.test.ts",
+          "name": "product authority and shared dispatch read a current Procurement work item through SQLite",
+          "status": "PASS",
+          "product_blob": "73e30001d18b68aa1eee3e052123ef4d81c5dc3f"
+        }
+      ],
+      "reviewed_assertions": [
+        "sf_work_list returns the canonical pr_pending item for its holder ID",
+        "revocation blocks a new UI admission"
+      ],
+      "limits": [],
+      "run_id": 43533574980,
+      "job_id": 132256977328
+    },
+    "C.W_PRESENT": {
+      "kind": "HOSTED_ASSERTIONS",
+      "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+      "observed_result": "FAIL",
+      "source_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/work-presentation.test.ts",
+          "product_blob": "43103eea4e7a10e8da2f799a2495894627ce528a"
+        }
+      ],
+      "exact_cases": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/work-presentation.test.ts",
+          "name": "canonical My Work presentation resolves current Procurement title and destination through SQLite, then revocation removes it",
+          "status": "FAIL",
+          "product_blob": "43103eea4e7a10e8da2f799a2495894627ce528a"
+        }
+      ],
+      "reviewed_assertions": [
+        "intended assertions require title Approval, stage Manager, holder ID and individual destination",
+        "intended assertions suppress ambiguous owner label and refuse after revocation"
+      ],
+      "limits": [],
+      "run_id": 43533574980,
+      "job_id": 132256977328,
+      "assertions_after_failure_are_not_proven": true
+    },
+    "C.W_JOURNEY": {
+      "kind": "HOSTED_ASSERTIONS",
+      "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+      "observed_result": "PASS",
+      "source_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/collaboration-journey.test.ts",
+          "product_blob": "68dda95afd92154dc426ef40479648c21576de01"
+        }
+      ],
+      "exact_cases": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/collaboration-journey.test.ts",
+          "name": "contextual request → explicit confirmation → one canonical Hot Topic → completion in My Work",
+          "status": "PASS",
+          "product_blob": "68dda95afd92154dc426ef40479648c21576de01"
+        }
+      ],
+      "reviewed_assertions": [
+        "no Hot Topic exists before matching human handoff admission",
+        "retry returns same Hot Topic/relation; exactly one canonical row",
+        "work shows open contextual request and one open action with typed destinations",
+        "resolving the contextual review thread removes request work but action stays open",
+        "canonical handoff.update done produces one done work item; source row is done and original relation digest unchanged",
+        "repeat presentation identical; restored same-ID physical replacement unavailable without replacement label; revoked actor denied with no value"
+      ],
+      "limits": [
+        "The thread kind is review, using the same resolver as clarification.",
+        "No WP07 preserved review is created; no native/MCP admission or UI click is exercised."
+      ],
+      "run_id": 43533574980,
+      "job_id": 132256977328
+    },
+    "C.W_SELECTION": {
+      "kind": "HOSTED_ASSERTIONS",
+      "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+      "observed_result": "PASS",
+      "source_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/case-selection.test.ts",
+          "product_blob": "e636353f0a7467167e40b4208392b2bc750f2ba6"
+        }
+      ],
+      "exact_cases": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/case-selection.test.ts",
+          "name": "creates and resolves an explicit empty-source case selection",
+          "status": "PASS",
+          "product_blob": "e636353f0a7467167e40b4208392b2bc750f2ba6"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/case-selection.test.ts",
+          "name": "rejects forged selection refs and fails closed after revocation",
+          "status": "PASS",
+          "product_blob": "e636353f0a7467167e40b4208392b2bc750f2ba6"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/case-selection.test.ts",
+          "name": "listing fails closed when protected selection changes between reads",
+          "status": "PASS",
+          "product_blob": "e636353f0a7467167e40b4208392b2bc750f2ba6"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/case-selection.test.ts",
+          "name": "case changes invalidate the selected case version",
+          "status": "PASS",
+          "product_blob": "e636353f0a7467167e40b4208392b2bc750f2ba6"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/case-selection.test.ts",
+          "name": "case namespace change before commit refuses selection without persisting it",
+          "status": "PASS",
+          "product_blob": "e636353f0a7467167e40b4208392b2bc750f2ba6"
+        }
+      ],
+      "reviewed_assertions": [
+        "explicit persisted selection resolves; forged and revoked references are unavailable",
+        "changed preferences during read is stale",
+        "changed case version or namespace version at commit is rejected without saving"
+      ],
+      "limits": [],
+      "run_id": 43533574980,
+      "job_id": 132256977328
+    },
+    "C.W_CYCLE": {
+      "kind": "HOSTED_ASSERTIONS",
+      "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+      "observed_result": "PASS",
+      "source_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/cycle-view.test.ts",
+          "product_blob": "ac4bdd28e88968dc44ef4aa90e1a878f3d7080f5"
+        }
+      ],
+      "exact_cases": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/cycle-view.test.ts",
+          "name": "cycle view returns an explicitly empty cycle without implying completion",
+          "status": "PASS",
+          "product_blob": "ac4bdd28e88968dc44ef4aa90e1a878f3d7080f5"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/cycle-view.test.ts",
+          "name": "cycle view rejects periods outside the authorized case horizon before listing work",
+          "status": "PASS",
+          "product_blob": "ac4bdd28e88968dc44ef4aa90e1a878f3d7080f5"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/cycle-view.test.ts",
+          "name": "cycle view refuses case changes before egress",
+          "status": "PASS",
+          "product_blob": "ac4bdd28e88968dc44ef4aa90e1a878f3d7080f5"
+        }
+      ],
+      "reviewed_assertions": [
+        "empty cycle is explicit and never complete",
+        "out-of-horizon period rejects before work listing",
+        "case version change before egress is stale"
+      ],
+      "limits": [],
+      "run_id": 43533574980,
+      "job_id": 132256977328
+    },
+    "C.W_CONFIRM_REAL": {
+      "kind": "HOSTED_ASSERTIONS",
+      "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+      "observed_result": "PASS",
+      "source_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/confirmation-work-integration.test.ts",
+          "product_blob": "20ab2e370ae16086932f4f23a53e11f6e44b6881"
+        }
+      ],
+      "exact_cases": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/confirmation-work-integration.test.ts",
+          "name": "real confirmation and case selection keep v7 January valid after global v8 February, then show one material review",
+          "status": "PASS",
+          "product_blob": "20ab2e370ae16086932f4f23a53e11f6e44b6881"
+        }
+      ],
+      "reviewed_assertions": [
+        "real scoped January version 7 and global Dashboard page version 7 are established by source lifecycle",
+        "confirm v7; February makes global version 8, confirmation stays valid and work stays empty",
+        "January material change makes evaluated scoped version 8 stale and produces exactly one confirmation-stale item with observedVersion 7/current sourceVersion 8",
+        "old reference stays unavailable; every emitted reference is current and fresh; repeated presentation identical",
+        "same private authorizeCase closure is shared with canonical case producer; missing callback fails closed",
+        "case selection remains discoverable through list after material change",
+        "protected confirmation and case records retain their original digests",
+        "same-version raw case mutation cannot inherit selection; no payload is returned",
+        "domain ACL revocation retains UI grant but removes work value; cloned context without private lease is denied"
+      ],
+      "limits": [
+        "The scenario uses the identical canonical authorizeCase closure in both case and work consumers. Installed WP10 wiring of workCaseAuthority and the current issuer remains pending; this pass does not demonstrate that mount."
+      ],
+      "run_id": 43533574980,
+      "job_id": 132256977328
+    },
+    "C.W_REFRESH": {
+      "kind": "STATIC_IMPLEMENTATION_REVIEW",
+      "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+      "observed_result": "NOT_EXECUTED",
+      "source_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/work-source-refresh.ts",
+          "product_blob": "1a6076b3588296f3e19e85fe9504c832f8c0dc89"
+        }
+      ],
+      "exact_cases": [],
+      "reviewed_assertions": [
+        "work-only source refresh proves same physical C17 identity, exact fields/period, current scoped version/digest and current ACL; it never calls an old reference fresh",
+        "mixed selections preserve only individually authorized current refs and refresh stale record refs; the whole result is reauthorized",
+        "changed-case fallback needs exact protected snapshot digest, identity/version, principal/native binding, participants and the identical private authorizeCase callback",
+        "private callback receives cloned case metadata; no case body is returned",
+        "global thread/answer material reissuer is unchanged"
+      ],
+      "limits": [
+        "Static implementation review, not an executable test."
+      ]
+    },
+    "Q.H_LOSS": {
+      "kind": "HOSTED_ASSERTIONS",
+      "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+      "observed_result": "PASS",
+      "source_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/handoff-real-boundaries.test.ts",
+          "product_blob": "62822abe76d7049a335bdfd066507d69a9c23093"
+        }
+      ],
+      "exact_cases": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/handoff-real-boundaries.test.ts",
+          "name": "real SQLite handoff survives lost commit acknowledgement without copying private notes or changing source domains",
+          "status": "PASS",
+          "product_blob": "62822abe76d7049a335bdfd066507d69a9c23093"
+        }
+      ],
+      "reviewed_assertions": [
+        "Actual source producers, C08 state and SQLite commit the Hot Topic plus correlation; a wrapper loses the acknowledgement only after state.transaction returns ok.",
+        "Unknown outcome is exactly unavailable/action-outcome-unknown-retry-same-correlation; one canonical added Hot Topic and one durable correlation exist, with zero contextual handoff edges before recovery.",
+        "A newly composed consumer retries the same intent and gets the same committed topic ID; a second retry preserves the same relation ID, exactly one handoff edge and one assignment.",
+        "Changed action with same correlation conflicts without another action.",
+        "Private notes and a directory recipient without source authority are denied before domain writes; before/after complete three-surface snapshots are equal for those denials.",
+        "After allowed handoff, complete Planner and Procurement snapshots and every Dashboard source field/version outside Hot Topics remain equal; the private note is absent from Dashboard data."
+      ],
+      "limits": [
+        "Authentication is an explicit test fixture; final installed WP10 capability/recipient registration is not exercised.",
+        "This test creates a fresh consumer in one SQLite process; separate Hot Topic test reopens the database. It is not a UI journey or preserved-review producer."
+      ],
+      "run_id": 43533574980,
+      "job_id": 132256977328
+    },
+    "Q.H_BASIC": {
+      "kind": "HOSTED_ASSERTIONS",
+      "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+      "observed_result": "PASS",
+      "source_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/handoff.test.ts",
+          "product_blob": "5ee0bca30e4f12bb7d6ea48b4e680a5714e4a595"
+        }
+      ],
+      "exact_cases": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/handoff.test.ts",
+          "name": "handoff retries the canonical action and keeps the same contextual link",
+          "status": "PASS",
+          "product_blob": "5ee0bca30e4f12bb7d6ea48b4e680a5714e4a595"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/handoff.test.ts",
+          "name": "handoff and its relation require the exact real human admission",
+          "status": "PASS",
+          "product_blob": "5ee0bca30e4f12bb7d6ea48b4e680a5714e4a595"
+        }
+      ],
+      "reviewed_assertions": [
+        "Same correlation returns created then existing with topic-1/relation-1 and exactly one canonical row.",
+        "An unselected source is denied before domain creation.",
+        "Real human admission binds the entire handoff payload; altered relationKey is denied; exact payload reaches canonical creation."
+      ],
+      "limits": [
+        "Canonical producer executes with controlled host storage/source fixtures."
+      ],
+      "run_id": 43533574980,
+      "job_id": 132256977328
+    },
+    "Q.H_UPDATE": {
+      "kind": "HOSTED_ASSERTIONS",
+      "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+      "observed_result": "PASS",
+      "source_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/handoff.test.ts",
+          "product_blob": "5ee0bca30e4f12bb7d6ea48b4e680a5714e4a595"
+        }
+      ],
+      "exact_cases": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/handoff.test.ts",
+          "name": "handoff update authorizes and reads while the human action lease is active",
+          "status": "PASS",
+          "product_blob": "5ee0bca30e4f12bb7d6ea48b4e680a5714e4a595"
+        }
+      ],
+      "reviewed_assertions": [
+        "The human action lease is active during update authorization and canonical readback and is closed afterwards."
+      ],
+      "limits": [
+        "Port boundaries use focused provider fixtures."
+      ],
+      "run_id": 43533574980,
+      "job_id": 132256977328
+    },
+    "Q.H_LINK": {
+      "kind": "HOSTED_ASSERTIONS",
+      "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+      "observed_result": "PASS",
+      "source_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/handoff-boundaries.test.ts",
+          "product_blob": "42681aeff2f1b3ef2265fd4c33c73a49d1442099"
+        }
+      ],
+      "exact_cases": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/handoff-boundaries.test.ts",
+          "name": "explicit linking uses an existing canonical action without updating its domain record",
+          "status": "PASS",
+          "product_blob": "42681aeff2f1b3ef2265fd4c33c73a49d1442099"
+        }
+      ],
+      "reviewed_assertions": [
+        "Explicit link targets an existing canonical Hot Topic and returns linked; before/after domain snapshot is equal.",
+        "Scoped-source version differs from raw Hot Topic version without a false identity check.",
+        "Revocation denies retry, without domain edits or another contextual link."
+      ],
+      "limits": [
+        "Focused canonical producer in memory; not a mounted UI choice."
+      ],
+      "run_id": 43533574980,
+      "job_id": 132256977328
+    },
+    "Q.H_NEGATIVE": {
+      "kind": "HOSTED_ASSERTIONS",
+      "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+      "observed_result": "PASS",
+      "source_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/handoff-boundaries.test.ts",
+          "product_blob": "42681aeff2f1b3ef2265fd4c33c73a49d1442099"
+        }
+      ],
+      "exact_cases": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/handoff-boundaries.test.ts",
+          "name": "response loss after canonical commit recovers the same topic and no substitute action",
+          "status": "PASS",
+          "product_blob": "42681aeff2f1b3ef2265fd4c33c73a49d1442099"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/handoff-boundaries.test.ts",
+          "name": "revocation at entry to the handoff mutation scope denies before the action",
+          "status": "PASS",
+          "product_blob": "42681aeff2f1b3ef2265fd4c33c73a49d1442099"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/handoff-boundaries.test.ts",
+          "name": "a readback of another action never reports a confirmed handoff",
+          "status": "PASS",
+          "product_blob": "42681aeff2f1b3ef2265fd4c33c73a49d1442099"
+        }
+      ],
+      "reviewed_assertions": [
+        "Response loss is explicit; same correlation recovers same action, while changed intent conflicts without extra action/link.",
+        "Revocation at mutation-scope entry denies before action or link.",
+        "Readback returning another action yields unavailable/action-readback-unconfirmed, never confirmed success."
+      ],
+      "limits": [
+        "Controlled host/provider negatives complement the new real SQLite loss scenario."
+      ],
+      "run_id": 43533574980,
+      "job_id": 132256977328
+    },
+    "Q.H_DURABLE": {
+      "kind": "HOSTED_ASSERTIONS",
+      "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+      "observed_result": "PASS",
+      "source_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/hot-topic-host.test.ts",
+          "product_blob": "e335858ac5f616931b11453ea9104e7e6c88e783"
+        }
+      ],
+      "exact_cases": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/hot-topic-host.test.ts",
+          "name": "SQLite commits the Hot Topic and its correlation together and revalidates source access",
+          "status": "PASS",
+          "product_blob": "e335858ac5f616931b11453ea9104e7e6c88e783"
+        }
+      ],
+      "reviewed_assertions": [
+        "Canonical create persists in SQLite; close/reopen then same intent returns existing same ID and action count one.",
+        "Source revocation during creation denies without an extra row; revoked read is denied."
+      ],
+      "limits": [
+        "C08 is real; source and actor callbacks are controlled fixtures."
+      ],
+      "run_id": 43533574980,
+      "job_id": 132256977328
+    },
+    "Q.H_READONLY": {
+      "kind": "HOSTED_ASSERTIONS",
+      "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+      "observed_result": "PASS",
+      "source_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/hot-topic-host.test.ts",
+          "product_blob": "e335858ac5f616931b11453ea9104e7e6c88e783"
+        }
+      ],
+      "exact_cases": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/hot-topic-host.test.ts",
+          "name": "canonical Hot Topic read uses read grants without requesting state writes",
+          "status": "PASS",
+          "product_blob": "e335858ac5f616931b11453ea9104e7e6c88e783"
+        }
+      ],
+      "reviewed_assertions": [
+        "Canonical read succeeds with read grants, zero write attempts and no product-state initialization.",
+        "A create request on that read-only host is denied; revoked source read is denied."
+      ],
+      "limits": [
+        "Controlled source/actor callbacks; verifies the adapter contract."
+      ],
+      "run_id": 43533574980,
+      "job_id": 132256977328
+    },
+    "Q.JOURNEY": {
+      "kind": "HOSTED_ASSERTIONS",
+      "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+      "observed_result": "PASS",
+      "source_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/collaboration-journey.test.ts",
+          "product_blob": "68dda95afd92154dc426ef40479648c21576de01"
+        }
+      ],
+      "exact_cases": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/collaboration-journey.test.ts",
+          "name": "contextual request → explicit confirmation → one canonical Hot Topic → completion in My Work",
+          "status": "PASS",
+          "product_blob": "68dda95afd92154dc426ef40479648c21576de01"
+        }
+      ],
+      "reviewed_assertions": [
+        "no Hot Topic exists before matching human handoff admission",
+        "retry returns same Hot Topic/relation; exactly one canonical row",
+        "work shows open contextual request and one open action with typed destinations",
+        "resolving the contextual review thread removes request work but action stays open",
+        "canonical handoff.update done produces one done work item; source row is done and original relation digest unchanged",
+        "repeat presentation identical; restored same-ID physical replacement unavailable without replacement label; revoked actor denied with no value"
+      ],
+      "limits": [
+        "The thread kind is review, using the same resolver as clarification.",
+        "No WP07 preserved review is created; no native/MCP admission or UI click is exercised."
+      ],
+      "run_id": 43533574980,
+      "job_id": 132256977328
+    },
+    "Q.A_UNIT": {
+      "kind": "HOSTED_ASSERTIONS",
+      "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+      "observed_result": "PASS",
+      "source_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/answer-reuse.test.ts",
+          "product_blob": "d03e3444c85391f5b801396dfee4eca84ba6e686"
+        }
+      ],
+      "exact_cases": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/answer-reuse.test.ts",
+          "name": "answer reuse delegates cross-actor scope and authorization to producer",
+          "status": "PASS",
+          "product_blob": "d03e3444c85391f5b801396dfee4eca84ba6e686"
+        }
+      ],
+      "reviewed_assertions": [
+        "No protected baseline after successful authorization yields needs-input/answer-unconfirmed; revoked or mismatched actor yields unavailable without answer.",
+        "Forged receipt, question, answer, actor, observed version or fingerprint is refused; material change before commit conflicts and no baseline is saved.",
+        "Irrelevant global advancement permits confirm with original observedVersion 1; stable answer identity, author and version are preserved after resolution/non-answer thread changes.",
+        "Selected-answer change is unavailable; material scope change is stale; actor-scope reissue requires same producer-confirmed physical identity; revoked or egress-raced data is not reused.",
+        "NaN, backward and expired receipt clocks refuse confirmation."
+      ],
+      "limits": [
+        "Controlled producer observation/fence, not a physical domain dependency oracle."
+      ],
+      "run_id": 43533574980,
+      "job_id": 132256977328
+    },
+    "Q.A_HOST": {
+      "kind": "HOSTED_ASSERTIONS",
+      "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+      "observed_result": "PASS",
+      "source_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/host-answer-reuse.test.ts",
+          "product_blob": "02e6ecaea3a6ce08e4f0831f882b98f190e4d44f"
+        }
+      ],
+      "exact_cases": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/host-answer-reuse.test.ts",
+          "name": "host-created capabilities consume a confirmed answer through shared dispatch and real Dashboard scope",
+          "status": "PASS",
+          "product_blob": "02e6ecaea3a6ce08e4f0831f882b98f190e4d44f"
+        }
+      ],
+      "reviewed_assertions": [
+        "Real SQLite/UI/C08/Dashboard source, case, persisted selection and confirmation observer compose the owned host plus shared sf_answer_read dispatch.",
+        "Unconfirmed answer has one clarification row. Confirmed answer leaves the original thread open and produces zero pending work; all three source-domain data/version snapshots remain unchanged.",
+        "February change leaves the January answer confirmed through shared dispatch, preserves the original observedVersion and produces zero pending work.",
+        "Resolving the question preserves confirmed answer reuse. Later material January change makes the historical source unavailable and produces exactly one answer-stale row using the original thread ID and current fresh source refs.",
+        "Stale presentation has title null, original observedVersion, current sourceVersion, material-change reason and no historical answer body; repeat is identical.",
+        "Thread history and baselines remain byte-equivalent after projection, and all source domain data/version snapshots remain equal after the explicit material edit; revoked actor gets no value."
+      ],
+      "limits": [
+        "Full W07/S06 host-answer test now passes all new work assertions. W04 failed before them; historical W03/W04 must not be substituted for this proof.",
+        "The stale row is metadata, not proof that its thread destination can be opened or a new answer submitted. Strict historical read/reply remains unavailable after material change.",
+        "No WP09 routine or WP11 answer ingestion is executed."
+      ],
+      "run_id": 43533574980,
+      "job_id": 132256977328
+    },
+    "Q.CYCLE": {
+      "kind": "HOSTED_ASSERTIONS",
+      "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+      "observed_result": "PASS",
+      "source_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/cycle-view.test.ts",
+          "product_blob": "ac4bdd28e88968dc44ef4aa90e1a878f3d7080f5"
+        }
+      ],
+      "exact_cases": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/cycle-view.test.ts",
+          "name": "cycle view returns an explicitly empty cycle without implying completion",
+          "status": "PASS",
+          "product_blob": "ac4bdd28e88968dc44ef4aa90e1a878f3d7080f5"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/cycle-view.test.ts",
+          "name": "cycle view rejects periods outside the authorized case horizon before listing work",
+          "status": "PASS",
+          "product_blob": "ac4bdd28e88968dc44ef4aa90e1a878f3d7080f5"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/cycle-view.test.ts",
+          "name": "cycle view refuses case changes before egress",
+          "status": "PASS",
+          "product_blob": "ac4bdd28e88968dc44ef4aa90e1a878f3d7080f5"
+        }
+      ],
+      "reviewed_assertions": [
+        "Empty case/work projection returns explicit state empty and lacks a complete property.",
+        "Out-of-horizon period is rejected before listing work; case version changed before egress returns stale."
+      ],
+      "limits": [
+        "Case/work ports are focused fixtures; no initial-user screen or first-use navigation."
+      ],
+      "run_id": 43533574980,
+      "job_id": 132256977328
+    },
+    "Q.HTTP": {
+      "kind": "HOSTED_ASSERTIONS",
+      "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+      "observed_result": "PASS",
+      "source_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/collaboration-http.test.ts",
+          "product_blob": "6dec97c58bc556ed76761e8cd57cbb12085eabe3"
+        }
+      ],
+      "exact_cases": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/collaboration-http.test.ts",
+          "name": "private collaboration HTTP binds the whole human command and rejects other origins",
+          "status": "PASS",
+          "product_blob": "6dec97c58bc556ed76761e8cd57cbb12085eabe3"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/collaboration-http.test.ts",
+          "name": "private collaboration HTTP does not route prototype keys",
+          "status": "PASS",
+          "product_blob": "6dec97c58bc556ed76761e8cd57cbb12085eabe3"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/collaboration-http.test.ts",
+          "name": "private HTTP requires exact mount, one route key, bounded JSON and POST before admission",
+          "status": "PASS",
+          "product_blob": "6dec97c58bc556ed76761e8cd57cbb12085eabe3"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/collaboration-http.test.ts",
+          "name": "real private human grant binds the whole payload and is finished after a handler failure",
+          "status": "PASS",
+          "product_blob": "6dec97c58bc556ed76761e8cd57cbb12085eabe3"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/collaboration-http.test.ts",
+          "name": "answer observation HTTP returns the display projection while keeping provider-only data private",
+          "status": "PASS",
+          "product_blob": "6dec97c58bc556ed76761e8cd57cbb12085eabe3"
+        }
+      ],
+      "reviewed_assertions": [
+        "Owned private HTTP port requires same-origin exact mount POST, exactly one route parameter, bounded closed JSON envelope and registered action.",
+        "Human payload is bound exactly and finish executes after handler failure; prototype route keys do not dispatch.",
+        "Answer prepare preserves safe display evidence/projection while removing provider-only observation internals."
+      ],
+      "limits": [
+        "No production application mount/native session/MCP bridge is installed by this test."
+      ],
+      "run_id": 43533574980,
+      "job_id": 132256977328
+    },
+    "WP.RELATIONS_REAL": {
+      "kind": "HOSTED_ASSERTIONS",
+      "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+      "observed_result": "PASS",
+      "source_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/relations-sources.test.ts",
+          "product_blob": "2dc8ea038a43c0cf8a47ed4ea20f79766f28de3a"
+        }
+      ],
+      "exact_cases": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/relations-sources.test.ts",
+          "name": "canonical homonymous suppliers never link a textual vendor without the selected source ID",
+          "status": "PASS",
+          "product_blob": "2dc8ea038a43c0cf8a47ed4ea20f79766f28de3a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/relations-sources.test.ts",
+          "name": "canonical PMO and CAPEX records preserve identities, money and every domain snapshot through link and unlink",
+          "status": "PASS",
+          "product_blob": "2dc8ea038a43c0cf8a47ed4ea20f79766f28de3a"
+        }
+      ],
+      "reviewed_assertions": [
+        "Canonical Procurement supplier-A/supplier-B have the same legalName and distinct IDs; canonical Dashboard contract vendor is that name, but no relation exists until an exact selected-ID mutation.",
+        "Only supplier-B receives the explicit relation; invalid kind does not persist; destination ACL revocation hides the edge; deleted contract is never recreated.",
+        "Canonical PMO/CAPEX retain distinct IDs and budgets; reversed repeat returns the same relation; create/remove preserve complete Dashboard/Planner/Procurement snapshots except owned metadata."
+      ],
+      "limits": [
+        "Canonical Planner version and Procurement request exist for noninterference, but this is not a Planner source consumer or a canonical financial-line/request relationship proof.",
+        "No final UI picker or native/MCP dispatch; no C05 preserved review."
+      ],
+      "run_id": 43533574980,
+      "job_id": 132256977328
+    },
+    "WP.THREADS_REAL": {
+      "kind": "HOSTED_ASSERTIONS",
+      "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+      "observed_result": "PASS",
+      "source_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/threads-lifecycle.test.ts",
+          "product_blob": "62cb309bd8f192f8cedc6801869df1b0ad4ba458"
+        }
+      ],
+      "exact_cases": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/threads-lifecycle.test.ts",
+          "name": "canonical contextual conversations preserve all business snapshots and fail closed for changed, removed or restricted sources",
+          "status": "PASS",
+          "product_blob": "62cb309bd8f192f8cedc6801869df1b0ad4ba458"
+        }
+      ],
+      "reviewed_assertions": [
+        "Real Dashboard source and real UI admission create comment/clarification/review; distinct January/February comments keep exact context and bodies.",
+        "Reply/resolve preserve source identity, observed version, period and authors while real Hot Topic remains open, actual Procurement request remains draft and Planner FY2027 remains unchanged.",
+        "Every non-product part of all three snapshots remains equal after communication; outside-scope note edit preserves read, current source ACL denial emits no payload, material change/deletion denies old read without retargeting stored context."
+      ],
+      "limits": [
+        "Admin/self-assignment fixture; not comment-only domain permissions or installed cross-recipient lease.",
+        "Material source change deliberately makes thread unavailable; no historical C05 visibility or shared C08 direct-writer history enforcement."
+      ],
+      "run_id": 43533574980,
+      "job_id": 132256977328
+    },
+    "WP.SOURCE_AND_RECIPIENT_GATES": {
+      "kind": "HOSTED_ASSERTIONS",
+      "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+      "observed_result": "PASS",
+      "source_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/threads-context.test.ts",
+          "product_blob": "ea3759877a83e33fc53dcf2af272df02eccd1751"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/recipient-authority.test.ts",
+          "product_blob": "5e43d1314e2f2c0dd2e78169dd9b98079287fa8f"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/human-authority.test.ts",
+          "product_blob": "c62a9eedf33ccba82c6c9e5b5bec014894d4afad"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/recipient-human-actions.test.ts",
+          "product_blob": "0af03b3ab1f5d1bde3a9efe21796ad02ca96905f"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/relations-integrity.test.ts",
+          "product_blob": "88e44b5ddd362d3e8187f80eb4e2f0d5f7108fab"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/source-fence.test.ts",
+          "product_blob": "48d5fd64c863a764cb266260b87569078669457c"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/mutation-fence.test.ts",
+          "product_blob": "803ee63ffe92d210177af75a6e93642e58c749a0"
+        }
+      ],
+      "exact_cases": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/mutation-fence.test.ts",
+          "name": "collaboration fence detects a source change during and after authorization",
+          "status": "PASS",
+          "product_blob": "803ee63ffe92d210177af75a6e93642e58c749a0"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/relations-integrity.test.ts",
+          "name": "a symmetric relation has one identity and cannot silently change evidence or domain records",
+          "status": "PASS",
+          "product_blob": "88e44b5ddd362d3e8187f80eb4e2f0d5f7108fab"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/threads-context.test.ts",
+          "name": "contextual questions retain separate periods, exact recipients, and communication after resolution",
+          "status": "PASS",
+          "product_blob": "ea3759877a83e33fc53dcf2af272df02eccd1751"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/recipient-human-actions.test.ts",
+          "name": "extended collaboration actions require explicitly registered commands and live human grants",
+          "status": "PASS",
+          "product_blob": "0af03b3ab1f5d1bde3a9efe21796ad02ca96905f"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/recipient-human-actions.test.ts",
+          "name": "thread edit admission is confined to POST, same origin and the retained current request",
+          "status": "PASS",
+          "product_blob": "0af03b3ab1f5d1bde3a9efe21796ad02ca96905f"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/recipient-human-actions.test.ts",
+          "name": "cancelled and expired selection admissions never regain authority",
+          "status": "PASS",
+          "product_blob": "0af03b3ab1f5d1bde3a9efe21796ad02ca96905f"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/source-fence.test.ts",
+          "name": "C06 source fence is read-only inside SQLite C08 and detects material change and revocation",
+          "status": "PASS",
+          "product_blob": "48d5fd64c863a764cb266260b87569078669457c"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/recipient-authority.test.ts",
+          "name": "caller access permits self-assignment but cannot substitute for recipient source authority",
+          "status": "PASS",
+          "product_blob": "5e43d1314e2f2c0dd2e78169dd9b98079287fa8f"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/recipient-authority.test.ts",
+          "name": "recipient identity and every material dependency are checked without name inference",
+          "status": "PASS",
+          "product_blob": "5e43d1314e2f2c0dd2e78169dd9b98079287fa8f"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/recipient-authority.test.ts",
+          "name": "revocation during source inspection and proof failure refuse assignment",
+          "status": "PASS",
+          "product_blob": "5e43d1314e2f2c0dd2e78169dd9b98079287fa8f"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/recipient-authority.test.ts",
+          "name": "the proof gets detached exact refs and cannot rewrite the assignment or omit a dependency",
+          "status": "PASS",
+          "product_blob": "5e43d1314e2f2c0dd2e78169dd9b98079287fa8f"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/recipient-authority.test.ts",
+          "name": "commit checks require a current synchronous recipient lease without repeating source I/O",
+          "status": "PASS",
+          "product_blob": "5e43d1314e2f2c0dd2e78169dd9b98079287fa8f"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/human-authority.test.ts",
+          "name": "real UI admission binds thread creation to its human action and exact payload",
+          "status": "PASS",
+          "product_blob": "c62a9eedf33ccba82c6c9e5b5bec014894d4afad"
+        }
+      ],
+      "reviewed_assertions": [
+        "Both endpoints/all exact source refs are currently authorized; equal display names do not substitute for chosen recipient ID.",
+        "Absent external recipient proof refuses cross-assignment; synchronous current commit lease fails closed on absent/throwing/asynchronous proof and avoids source I/O in the transaction.",
+        "Current request, exact human command digest, origin/POST, retained private lease, command registration and current grant are rechecked.",
+        "Material/authority changes detected by source and mutation fences cannot commit under stale preparation."
+      ],
+      "limits": [
+        "Some authority/source inputs are explicit fixtures. They prove refusal boundaries and the seam contract, not a deployed real enterprise recipient lease."
+      ],
+      "run_id": 43533574980,
+      "job_id": 132256977328
+    },
+    "WP.CONFIRMATION_REAL": {
+      "kind": "HOSTED_ASSERTIONS",
+      "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+      "observed_result": "PASS",
+      "source_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/confirmation-integration.test.ts",
+          "product_blob": "ea007ed617c8ee7ba8b52461f41814a9553dbbb3"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/confirmation-work-integration.test.ts",
+          "product_blob": "20ab2e370ae16086932f4f23a53e11f6e44b6881"
+        }
+      ],
+      "exact_cases": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/confirmation-work-integration.test.ts",
+          "name": "real confirmation and case selection keep v7 January valid after global v8 February, then show one material review",
+          "status": "PASS",
+          "product_blob": "20ab2e370ae16086932f4f23a53e11f6e44b6881"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/confirmation-integration.test.ts",
+          "name": "dashboard observation supports a human confirmation and another authorized reader",
+          "status": "PASS",
+          "product_blob": "ea007ed617c8ee7ba8b52461f41814a9553dbbb3"
+        }
+      ],
+      "reviewed_assertions": [
+        "Actual Dashboard source-scoped and global version 7 are established; confirming January retains observedSourceVersion 7.",
+        "Changing only February advances global version to 8 while January stays valid and real host My Work has zero pending confirmation items.",
+        "Changing January makes the actual scope stale and returns exactly one confirmation-stale item with observedVersion 7/current sourceVersion 8; repeated presentation is identical.",
+        "The original confirmation and case digests remain unchanged; emitted current refs are fresh while old refs remain unavailable.",
+        "Missing private workCaseAuthority, same-version case-body tampering, revoked domain role and cloned UI context refuse access; restored identical protected case can be re-read."
+      ],
+      "limits": [
+        "Real producer is Dashboard; canonical Planner/Procurement confirmation manifests/absence/FX dependencies are not exercised.",
+        "The source records are seeded/changed through the canonical source persistence fixture, not every final domain command journey.",
+        "No WP09 scheduler/routine/rebilling invocation; no browser rendering."
+      ],
+      "run_id": 43533574980,
+      "job_id": 132256977328
+    },
+    "WP.CONFIRMATION_AND_ANSWER_UNITS": {
+      "kind": "HOSTED_ASSERTIONS",
+      "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+      "observed_result": "PASS",
+      "source_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/confirmation.test.ts",
+          "product_blob": "2fab4d3df79788cc0db859fe8a1f9f95cdeebf84"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/confirmation-observations.test.ts",
+          "product_blob": "7eb9cbf57f9e8f22f77b0fd4cf62f0a3c025e492"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/persistence.test.ts",
+          "product_blob": "8638bfa936a0509f1e01490927780302e1a795e1"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/work-confirmations.test.ts",
+          "product_blob": "2a8ff768140ba309ff7d7d2a9c3b085d1c9d7a9f"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/answer-reuse.test.ts",
+          "product_blob": "d03e3444c85391f5b801396dfee4eca84ba6e686"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/answer-evidence.test.ts",
+          "product_blob": "12f5181b8e93673710b76a0f6ab6e681ef444c2f"
+        }
+      ],
+      "exact_cases": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/answer-evidence.test.ts",
+          "name": "human answer evidence is a stable claim and disappears when access is revoked",
+          "status": "PASS",
+          "product_blob": "12f5181b8e93673710b76a0f6ab6e681ef444c2f"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/persistence.test.ts",
+          "name": "relations and contextual threads persist, retry and hide after access revocation",
+          "status": "PASS",
+          "product_blob": "8638bfa936a0509f1e01490927780302e1a795e1"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/persistence.test.ts",
+          "name": "confirmation keeps the observed version while current scope and access are rechecked",
+          "status": "PASS",
+          "product_blob": "8638bfa936a0509f1e01490927780302e1a795e1"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/persistence.test.ts",
+          "name": "thread mutation requires the admitted payload again at commit",
+          "status": "PASS",
+          "product_blob": "8638bfa936a0509f1e01490927780302e1a795e1"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/persistence.test.ts",
+          "name": "versioned relations keep immutable identity and cannot reuse a retired id",
+          "status": "PASS",
+          "product_blob": "8638bfa936a0509f1e01490927780302e1a795e1"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/work-confirmations.test.ts",
+          "name": "reconfirmation with a new dependency manifest keeps one canonical obligation and original audit",
+          "status": "PASS",
+          "product_blob": "2a8ff768140ba309ff7d7d2a9c3b085d1c9d7a9f"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/work-confirmations.test.ts",
+          "name": "periods and replaced incarnations never inherit another scope's work identity",
+          "status": "PASS",
+          "product_blob": "2a8ff768140ba309ff7d7d2a9c3b085d1c9d7a9f"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/confirmation.test.ts",
+          "name": "confirmation follows material scope and never treats access loss or replacement as valid",
+          "status": "PASS",
+          "product_blob": "2fab4d3df79788cc0db859fe8a1f9f95cdeebf84"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/answer-reuse.test.ts",
+          "name": "answer reuse delegates cross-actor scope and authorization to producer",
+          "status": "PASS",
+          "product_blob": "d03e3444c85391f5b801396dfee4eca84ba6e686"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/confirmation-observations.test.ts",
+          "name": "observation receipts bind actor, scope, version and fingerprint and expire",
+          "status": "PASS",
+          "product_blob": "7eb9cbf57f9e8f22f77b0fd4cf62f0a3c025e492"
+        }
+      ],
+      "reviewed_assertions": [
+        "Supplied scope/dependency fingerprints distinguish valid/stale/unavailable; receipt binds actor/scope/version and expires.",
+        "Observed version is immutable through irrelevant current revisions; stable work identity deduplicates changed dependency-manifest confirmation obligations.",
+        "Answer reuse requires explicit observed receipt and exact selected message; ordinary follow-up/resolution does not itself replace the answer, but changed answer body or current source scope refuses reuse.",
+        "Owned history API preserves previous message bodies/versions and redacts after revocation."
+      ],
+      "limits": [
+        "Dependency and replacement behavior here includes pure/synthetic observers; no real FX/rule or compensating-total source oracle.",
+        "Historical API behavior is not proof of C08 provider enforcement against direct writers."
+      ],
+      "run_id": 43533574980,
+      "job_id": 132256977328
+    },
+    "WP.HANDOFF_REAL": {
+      "kind": "HOSTED_ASSERTIONS",
+      "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+      "observed_result": "PASS",
+      "source_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/handoff-real-boundaries.test.ts",
+          "product_blob": "62822abe76d7049a335bdfd066507d69a9c23093"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/hot-topic-host.test.ts",
+          "product_blob": "e335858ac5f616931b11453ea9104e7e6c88e783"
+        }
+      ],
+      "exact_cases": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/hot-topic-host.test.ts",
+          "name": "SQLite commits the Hot Topic and its correlation together and revalidates source access",
+          "status": "PASS",
+          "product_blob": "e335858ac5f616931b11453ea9104e7e6c88e783"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/hot-topic-host.test.ts",
+          "name": "canonical Hot Topic read uses read grants without requesting state writes",
+          "status": "PASS",
+          "product_blob": "e335858ac5f616931b11453ea9104e7e6c88e783"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/handoff-real-boundaries.test.ts",
+          "name": "real SQLite handoff survives lost commit acknowledgement without copying private notes or changing source domains",
+          "status": "PASS",
+          "product_blob": "62822abe76d7049a335bdfd066507d69a9c23093"
+        }
+      ],
+      "reviewed_assertions": [
+        "Real SQLite commit creates one canonical Hot Topic with its durable correlation; acknowledgement loss occurs only after that commit.",
+        "A reconstructed composition retries the same correlation and recovers the same topic; one contextual relation and one assignment are retained; altered content with the same correlation conflicts.",
+        "Private notes and an unproved other recipient are rejected before mutation; denied requests preserve all snapshots.",
+        "Successful handoff leaves actual Planner/Procurement snapshots and non-Hot-Topic Dashboard data/versions unchanged; no private thread notes appear in business data.",
+        "Canonical Hot Topic read uses read grants without state-write grants."
+      ],
+      "limits": [
+        "Composition reconstruction uses the same live SQLite store; no process/SQLite reopen is claimed for the lost-ack trace.",
+        "No actual UI/native transport or three-product source handoff matrix."
+      ],
+      "run_id": 43533574980,
+      "job_id": 132256977328
+    },
+    "WP.JOURNEY_REAL": {
+      "kind": "HOSTED_ASSERTIONS",
+      "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+      "observed_result": "PASS",
+      "source_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/collaboration-journey.test.ts",
+          "product_blob": "68dda95afd92154dc426ef40479648c21576de01"
+        }
+      ],
+      "exact_cases": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/collaboration-journey.test.ts",
+          "name": "contextual request → explicit confirmation → one canonical Hot Topic → completion in My Work",
+          "status": "PASS",
+          "product_blob": "68dda95afd92154dc426ef40479648c21576de01"
+        }
+      ],
+      "reviewed_assertions": [
+        "Canonical Dashboard project/case/selection/question/handoff preparation and exact human confirmation produce one real Hot Topic and one canonical relation.",
+        "My Work presentation returns separate contextual review and operational handoff; resolving review removes only its pending item.",
+        "Canonical Hot Topic completion produces a single done work item with the same destination; relation digest remains unchanged and repeated presentation is identical.",
+        "Same-ID restored/replaced action is unavailable without leaking replacement label; revoked actor gets no value."
+      ],
+      "limits": [
+        "Server-side consumer/presentation, not rendered UI/navigation or native/MCP.",
+        "No Procurement approval/holder-transfer journey and no preserved C05 review."
+      ],
+      "run_id": 43533574980,
+      "job_id": 132256977328
+    },
+    "WP.PROCUREMENT_COLLECTION": {
+      "kind": "HOSTED_ASSERTIONS",
+      "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+      "observed_result": "PASS",
+      "source_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/host-work.test.ts",
+          "product_blob": "73e30001d18b68aa1eee3e052123ef4d81c5dc3f"
+        }
+      ],
+      "exact_cases": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/host-work.test.ts",
+          "name": "product authority and shared dispatch read a current Procurement work item through SQLite",
+          "status": "PASS",
+          "product_blob": "73e30001d18b68aa1eee3e052123ef4d81c5dc3f"
+        }
+      ],
+      "reviewed_assertions": [
+        "Real product authority/shared UI sf_work_list dispatch reads a current Procurement collection pending item for its holder ID.",
+        "Revoking current authority prevents a new UI admission."
+      ],
+      "limits": [
+        "Does not assert individual source title/destination/approval-stage consumer or legal holder-transfer/completion commands."
+      ],
+      "run_id": 43533574980,
+      "job_id": 132256977328
+    },
+    "WP.PROCUREMENT_INDIVIDUAL_FAILED": {
+      "kind": "HOSTED_ASSERTIONS",
+      "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+      "observed_result": "FAIL",
+      "source_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/selection.test.ts",
+          "product_blob": "03770d948e16708da1cdde11a694a6e325e89b59"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/work-presentation.test.ts",
+          "product_blob": "43103eea4e7a10e8da2f799a2495894627ce528a"
+        }
+      ],
+      "exact_cases": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/work-presentation.test.ts",
+          "name": "canonical My Work presentation resolves current Procurement title and destination through SQLite, then revocation removes it",
+          "status": "FAIL",
+          "product_blob": "43103eea4e7a10e8da2f799a2495894627ce528a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/selection.test.ts",
+          "name": "work membership uses the current authorized Procurement collection, not refId equality",
+          "status": "FAIL",
+          "product_blob": "03770d948e16708da1cdde11a694a6e325e89b59"
+        }
+      ],
+      "reviewed_assertions": [
+        "The selected hosted paths fail while capturing individually scoped Procurement request evidence.",
+        "Published request selector contains approvalStage while the exact canonical projector field list omits it; this B01 mismatch blocks the individual consumer."
+      ],
+      "limits": [
+        "Do not claim assertions following individual capture/presentation failure passed.",
+        "Needs admitted WP00/WP04/WP10 producer/schema alignment; no weakening of exact-field identity is authorized."
+      ],
+      "run_id": 43533574980,
+      "job_id": 132256977328,
+      "assertions_after_failure_are_not_proven": true
+    },
+    "WP.CYCLE_SELECTION_UNITS": {
+      "kind": "HOSTED_ASSERTIONS",
+      "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+      "observed_result": "PASS",
+      "source_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/case-selection.test.ts",
+          "product_blob": "e636353f0a7467167e40b4208392b2bc750f2ba6"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/cycle-view.test.ts",
+          "product_blob": "ac4bdd28e88968dc44ef4aa90e1a878f3d7080f5"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/work.test.ts",
+          "product_blob": "2c126c4a5bad9bf08bae073dd3fe781dcf7ef23a"
+        }
+      ],
+      "exact_cases": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/work.test.ts",
+          "name": "work is projected once per canonical action and does not infer ownership",
+          "status": "PASS",
+          "product_blob": "2c126c4a5bad9bf08bae073dd3fe781dcf7ef23a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/cycle-view.test.ts",
+          "name": "cycle view returns an explicitly empty cycle without implying completion",
+          "status": "PASS",
+          "product_blob": "ac4bdd28e88968dc44ef4aa90e1a878f3d7080f5"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/cycle-view.test.ts",
+          "name": "cycle view rejects periods outside the authorized case horizon before listing work",
+          "status": "PASS",
+          "product_blob": "ac4bdd28e88968dc44ef4aa90e1a878f3d7080f5"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/cycle-view.test.ts",
+          "name": "cycle view refuses case changes before egress",
+          "status": "PASS",
+          "product_blob": "ac4bdd28e88968dc44ef4aa90e1a878f3d7080f5"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/case-selection.test.ts",
+          "name": "creates and resolves an explicit empty-source case selection",
+          "status": "PASS",
+          "product_blob": "e636353f0a7467167e40b4208392b2bc750f2ba6"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/case-selection.test.ts",
+          "name": "rejects forged selection refs and fails closed after revocation",
+          "status": "PASS",
+          "product_blob": "e636353f0a7467167e40b4208392b2bc750f2ba6"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/case-selection.test.ts",
+          "name": "listing fails closed when protected selection changes between reads",
+          "status": "PASS",
+          "product_blob": "e636353f0a7467167e40b4208392b2bc750f2ba6"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/case-selection.test.ts",
+          "name": "case changes invalidate the selected case version",
+          "status": "PASS",
+          "product_blob": "e636353f0a7467167e40b4208392b2bc750f2ba6"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/case-selection.test.ts",
+          "name": "case namespace change before commit refuses selection without persisting it",
+          "status": "PASS",
+          "product_blob": "e636353f0a7467167e40b4208392b2bc750f2ba6"
+        }
+      ],
+      "reviewed_assertions": [
+        "Explicit empty cycle is not complete; out-of-horizon period and changing case reject; selection identity/version/current authority remain checked.",
+        "Work deduplicates canonical action identity and refuses conflicting states or ambiguous actor ownership."
+      ],
+      "limits": [
+        "These are injected case/work port cases, not actual first-use UI or complete decisive-question metadata/ranking and accepted decision consumer."
+      ],
+      "run_id": 43533574980,
+      "job_id": 132256977328
+    },
+    "WP.HTTP_AND_ADMISSION": {
+      "kind": "HOSTED_ASSERTIONS",
+      "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+      "observed_result": "PASS",
+      "source_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/collaboration-http.test.ts",
+          "product_blob": "6dec97c58bc556ed76761e8cd57cbb12085eabe3"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/recipient-human-actions.test.ts",
+          "product_blob": "0af03b3ab1f5d1bde3a9efe21796ad02ca96905f"
+        }
+      ],
+      "exact_cases": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/recipient-human-actions.test.ts",
+          "name": "extended collaboration actions require explicitly registered commands and live human grants",
+          "status": "PASS",
+          "product_blob": "0af03b3ab1f5d1bde3a9efe21796ad02ca96905f"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/recipient-human-actions.test.ts",
+          "name": "thread edit admission is confined to POST, same origin and the retained current request",
+          "status": "PASS",
+          "product_blob": "0af03b3ab1f5d1bde3a9efe21796ad02ca96905f"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/recipient-human-actions.test.ts",
+          "name": "cancelled and expired selection admissions never regain authority",
+          "status": "PASS",
+          "product_blob": "0af03b3ab1f5d1bde3a9efe21796ad02ca96905f"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/collaboration-http.test.ts",
+          "name": "private collaboration HTTP binds the whole human command and rejects other origins",
+          "status": "PASS",
+          "product_blob": "6dec97c58bc556ed76761e8cd57cbb12085eabe3"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/collaboration-http.test.ts",
+          "name": "private collaboration HTTP does not route prototype keys",
+          "status": "PASS",
+          "product_blob": "6dec97c58bc556ed76761e8cd57cbb12085eabe3"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/collaboration-http.test.ts",
+          "name": "private HTTP requires exact mount, one route key, bounded JSON and POST before admission",
+          "status": "PASS",
+          "product_blob": "6dec97c58bc556ed76761e8cd57cbb12085eabe3"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/collaboration-http.test.ts",
+          "name": "real private human grant binds the whole payload and is finished after a handler failure",
+          "status": "PASS",
+          "product_blob": "6dec97c58bc556ed76761e8cd57cbb12085eabe3"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/collaboration-http.test.ts",
+          "name": "answer observation HTTP returns the display projection while keeping provider-only data private",
+          "status": "PASS",
+          "product_blob": "6dec97c58bc556ed76761e8cd57cbb12085eabe3"
+        }
+      ],
+      "reviewed_assertions": [
+        "Private route requires exact mount/query, bounded JSON, POST and same origin; rejects prototype and altered payload routing before admission.",
+        "Real private human grant binds exact operation/payload and is finished after failure; response is no-store and excludes provider-only data."
+      ],
+      "limits": [
+        "Own HTTP adapter, not final application mounting or actual SessionV2/native/MCP same-handler exercise."
+      ],
+      "run_id": 43533574980,
+      "job_id": 132256977328
+    },
+    "WP.OWNERSHIP_AND_ARCHIVES": {
+      "kind": "REMOTE_COMPARISON_AND_ARCHIVE_MANIFEST",
+      "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+      "observed_result": "VERIFIED_STATIC",
+      "source_files": [],
+      "exact_cases": [],
+      "reviewed_assertions": [
+        "The exact seed-to-W07 remote comparison contains 56 changed paths: 29 collaboration product files, 26 WP08 test/helper files and the CI.md-authorized narrow workflow.",
+        "None of the 11 excluded historical dirty input paths is changed. Their archived SHA-256 hashes are retained as historical provenance, not canonical source hashes.",
+        "W07-to-S06 adds only .ci-run.json. Product, tests, config and fixtures are identical between the product and its hosted snapshot."
+      ],
+      "limits": [
+        "Static provenance and remote comparison do not demonstrate native/UI execution or complete domain integration."
+      ],
+      "sources": [
+        "change-manifest.json",
+        "input-preservation.json"
+      ]
+    },
+    "WP.NATIVE_MOUNT_WP09_ABSENT": {
+      "kind": "ABSENT_EXECUTION_EVIDENCE",
+      "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+      "observed_result": "NOT_EXECUTED",
+      "source_files": [],
+      "exact_cases": [],
+      "reviewed_assertions": [
+        "Five owned descriptors/exports and host/HTTP composition exist as source."
+      ],
+      "limits": [
+        "No installed native SessionV2/SkillLoadReceipt/MCP bridge equality campaign.",
+        "No mounted WP01 browser interaction, focus/navigation or rendered field/source-age semantics.",
+        "No real WP09.T02/T03 routine/rebilling invocation consuming C06 validity.",
+        "No complete real Planner+Procurement confirmation observer and preserved C05 review consumer."
+      ]
+    },
+    "WP.ANSWER_WORK_REAL": {
+      "kind": "HOSTED_ASSERTIONS",
+      "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+      "observed_result": "PASS",
+      "source_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/host-answer-reuse.test.ts",
+          "product_blob": "02e6ecaea3a6ce08e4f0831f882b98f190e4d44f"
+        }
+      ],
+      "exact_cases": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/host-answer-reuse.test.ts",
+          "name": "host-created capabilities consume a confirmed answer through shared dispatch and real Dashboard scope",
+          "status": "PASS",
+          "product_blob": "02e6ecaea3a6ce08e4f0831f882b98f190e4d44f"
+        }
+      ],
+      "reviewed_assertions": [
+        "Entire expanded host-answer-reuse case passes on W07 with real Dashboard source, case, source selection, observer and shared UI dispatch.",
+        "Before human confirmation, one clarification-open item exists; explicit answer confirmation removes pending work while thread remains open.",
+        "February-only source change retains confirmed answer/original observed version and zero pending January work.",
+        "Resolving the thread preserves answer confirmation; a later material January change reopens exactly one answer-stale item with original observed/current source versions, null title and material-change reason.",
+        "The stale pending item uses currently fresh source refs, does not expose the old answer body and repeats with the same identity/result.",
+        "Thread history digest and domain snapshots remain unchanged by work projection; access revocation emits no work value."
+      ],
+      "limits": [
+        "The source producer is Dashboard with a self-assigned authenticated test actor; no actual UI/native/MCP or WP09 routine consumer.",
+        "W04 failed before confirmation; only W07 supplies proof for the expanded post-confirmation assertions."
+      ],
+      "run_id": 43533574980,
+      "job_id": 132256977328
+    },
+    "Q.CONSUMER": {
+      "kind": "HOSTED_ASSERTIONS",
+      "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+      "observed_result": "PASS",
+      "source_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/question-consumer.test.ts",
+          "product_blob": "878e27f5abab286fd2c8e0720ba192b1b253af08"
+        }
+      ],
+      "exact_cases": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/question-consumer.test.ts",
+          "name": "real prepared QuestionProposal becomes one canonical thread with case provenance and survives host recomposition",
+          "status": "PASS",
+          "product_blob": "878e27f5abab286fd2c8e0720ba192b1b253af08"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/question-consumer.test.ts",
+          "name": "question consumer rejects altered human payload, forged preparation, cloned authority and missing C11 reader",
+          "status": "PASS",
+          "product_blob": "878e27f5abab286fd2c8e0720ba192b1b253af08"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/question-consumer.test.ts",
+          "name": "question consumption requires current source access and an explicit period inside the case horizon",
+          "status": "PASS",
+          "product_blob": "878e27f5abab286fd2c8e0720ba192b1b253af08"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/question-consumer.test.ts",
+          "name": "question commit refuses changed case version and same-version case-content races under real SQLite",
+          "status": "PASS",
+          "product_blob": "878e27f5abab286fd2c8e0720ba192b1b253af08"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/question-consumer.test.ts",
+          "name": "question commit fences source changes and HTTP consumes the exact shown preparation",
+          "status": "PASS",
+          "product_blob": "878e27f5abab286fd2c8e0720ba192b1b253af08"
+        }
+      ],
+      "reviewed_assertions": [
+        "The real projects issuer returns the annual selected period unchanged. Positive case and thread use that exact annual period; January is only the deliberately narrower case-horizon negative.",
+        "Real shared sf_question_prepare result/receipt is consumed into a canonical clarification thread; body, evidenceRefs, recipient, scope and case version/digest/provenance equal the producer output.",
+        "Actual case projections with changing checkedAt remain prepare-compatible; stable content still binds the protected case.",
+        "Retry and host recomposition return the same committed thread, even after the private preparation expires; all three business snapshots, case contents and native contribution stores remain unchanged by consumption.",
+        "Ordinary thread reads, replies and resolution omit questionOrigin; raw origin remains preserved for retry. Removing case participation while preserving source ACL allows ordinary thread content but never discloses private provenance or authorizes consumer retry.",
+        "Altered human payload, cloned authority, forged result/receipt/version, unregistered preparation after host reload, expiration and missing C11 reader all refuse without creating a thread.",
+        "Selected period must equal the prepared reference period and fit the case horizon; current source revocation refuses both creation and replay.",
+        "A changed prepared question cannot reuse the same idempotency key. Case version change before confirm and same-version raw-case mutation between prepare and SQLite commit refuse without a thread.",
+        "Canonical Dashboard material mutation immediately before the protected commit fails the domain snapshot fence; HTTP exact payload consumes successfully with no-store and malformed missing receipt returns explicit needs-input."
+      ],
+      "limits": [
+        "The explicit test authentication is UI; native registry authenticates no session. No SkillLoadReceipt, model execution, installed native/MCP parity, or positive C11 result.write/reader path is asserted.",
+        "No ContributionEnvelope is fabricated. The outputRef negative is an unavailable-reader boundary only.",
+        "QuestionProposal still lacks normative why/effect/decisive-priority fields. Case answer incorporation and WP09 recurring consumers remain unproved.",
+        "The own consumer preserves case association as protected thread metadata; it does not append to the foreign canonical case questions ledger or mutate official domain records.",
+        "Only exact named cases in final W07/S06 are execution evidence. No positive native/C11 installation or process restart proof is inferred."
+      ],
+      "run_id": 43533574980,
+      "job_id": 132256977328
+    }
+  }
+}

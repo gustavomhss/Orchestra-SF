@@ -1,0 +1,59 @@
+{
+  "schema": "wp08-input-preservation.v1",
+  "seed_sha": "7991850fc338edde3091131902273b63ffa7992a",
+  "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+  "proof_url": "https://github.com/gustavomhss/Orchestra-SF/compare/7991850fc338edde3091131902273b63ffa7992a...156f074d15c9787a9fc1b6430e632504ee3a69e6",
+  "preservation_claim": "No archived foreign input was written, restored, cleared, or admitted as canonical source. Candidate changes are limited to WP08 ownership and the CI.md workflow exception.",
+  "archived_foreign_inputs": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/state.ts",
+      "sha256": "1e05d63be02ff9e68a794fba11c5f4128625eff119a3c2323cc889e1ca2e631e"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "sha256": "c4983220de94b2c5827915c1ae5e64bd048b46f49db812b440e7200bc055983e"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "sha256": "4bf78ba13cc1533a93408b97125e66b21bbadf26b286176252ab9fd8930f0289"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/port.ts",
+      "sha256": "0e79d2e1ff308072100c60b2a32dd448948b069c39678b9879a7a60b04712940"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/sources.ts",
+      "sha256": "9866b20ba0de863d48d9febcfbc84c1174e714269391026d4ccd23c7d06af037"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "sha256": "cb9ea7ac4610fc19cf6caa51a7339df9fd69ae181cdf638a8712779c846987c0"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "sha256": "c8ce4f6d20eb89d2adebc6577692c310b65310be251784b109431bc18a7c26e5"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+      "sha256": "bee3428396d9da0e0e5c9e7f8bad5dd96d999cb2baf1a0a861a1260c68a43f78"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/human-authority.ts",
+      "sha256": "016ccdca0bc1d5174a89d417dca714635ba1bbe953eacafc3f08263ef99da70a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/confirmation.ts",
+      "sha256": "a42bcd8569082bcc4ce9221a1e58171a3d93faf45646abddbc437375094b6b91"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/confirmation.ts",
+      "sha256": "14aaa99f89764b3b8da8c717e720f828d14783fb8ccef113311a3898952adf27"
+    }
+  ],
+  "archive_hash_kind": "SHA-256 of excluded dirty historical input from WP08.seed.json; not claimed to equal the canonical current file.",
+  "excluded_paths_changed": [],
+  "candidate_foreign_paths_changed": [],
+  "workflow_exception": ".github/workflows/astra-wp08-check.yml",
+  "observed_changes": 56,
+  "validation_kind": "REMOTE_COMPARE_PLUS_MANIFEST_STATIC_CHECK_NOT_PRODUCT_TEST"
+}
