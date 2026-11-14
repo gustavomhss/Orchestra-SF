@@ -1,0 +1,117 @@
+{
+  "schema": "sf-wp07-hosted-test-receipt-v1",
+  "repository": "gustavomhss/Orchestra-SF",
+  "product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+  "ci_snapshot_sha": "9d4670fdf446d5e7acc01b95842209f68bd18e0b",
+  "run_id": "43530831862",
+  "job_id": "132247794669",
+  "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43530831862",
+  "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43530831862/job/132247794669",
+  "overall_status": "PASS",
+  "process_exit_code": 0,
+  "counts": {
+    "passed": 1,
+    "failed": 0,
+    "tests": 1,
+    "files": 1,
+    "assertions": null
+  },
+  "log": {
+    "source": "wp07-context/test-8.log",
+    "sha256": "f71b9dd9fea839667e00d1abb1cfe7d2e6b0661064057a2396057efb763d44b0",
+    "lines": 964
+  },
+  "omni_control": {
+    "status": "NOT_APPLICABLE_VALIDATED",
+    "nonce": "2a448a45a4da4aa06e3f38a68527d548",
+    "scope": "No declaring test, no omni spawn or delegation. This proves no omni/native execution."
+  },
+  "proof_policy": "Exact hosted assertions only, with producer/fixture boundaries explicit. W/S mapping is supplied by the root publisher; the log independently identifies S. No local product execution.",
+  "tests": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/browser-ui.test.ts",
+      "name": "Chromium preserves the chosen agenda, recovers a lost response and removes revoked content",
+      "status": "PASS",
+      "log_line": 929,
+      "duration_ms": 10993.36
+    }
+  ],
+  "product_tree": "889fe8f2c5dfc25ba9d8c25962e984454a12bd81",
+  "ci_snapshot_tree": "7d4b0605bd01131ec6925a3bed025e9316760d5f",
+  "proof_scope": "Monthly scope only: 2027-01-01 through 2027-01-31, using the period accepted by the real Planner without truncating its returned projection. Actual Chromium, Bun server, operator identity, UI/human authority, protected C08, real SQLite, real Planner, application HTTP, preparation and meeting consumers. The source/history catalog, C06 thread and host source/review-navigation adapters are explicitly controlled. Annual browser performance remains BLOCKED_EXTERNAL after two failed full-year runs. This is not native WP10 installation mounting, C17 physical deletion/replacement, persisted WP08 history or C16 native/MCP execution.",
+  "verified_behaviors": [
+    "All following browser behaviors are verified only for the January 2027 slice; no annual browser performance acceptance is inferred.",
+    "Authorized agenda order and removal, stale preview refusal and explicit refresh.",
+    "Lost response after real SQLite commit; explicit retry reuses Idempotency-Key and the original review.",
+    "A new review preserves 130 while the predecessor remains 120; later Planner value 140 does not silently replace meeting values.",
+    "Topic navigation, explicit update check and requestUpdate navigation without automatic new preservation.",
+    "Comparison 120 to 130 with delta 10, before/after review navigation and first-review state without fabricated changes.",
+    "Attributed preserved comments with author, time and v1 displayed separately from numeric differences.",
+    "Exact preserved source digest delegated through a revalidated host callback; rejected destination and revoked review clear headings/list items.",
+    "Revoked before-item navigation is refused without opening another review; no browser page errors."
+  ],
+  "scope_period": {
+    "start": "2027-01-01",
+    "end": "2027-01-31"
+  },
+  "annual_browser_performance_status": "BLOCKED_EXTERNAL",
+  "annual_failed_runs": [
+    {
+      "run_id": "43528912346",
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43528912346",
+      "product_sha": "fc59841cec4691a0520eabcf2c24c0bbf9c4ddc1",
+      "ci_snapshot_sha": "8a0de0f317661214418a94f1214561ca462b04ea",
+      "status": "FAIL",
+      "test_name": "Chromium preserves the chosen agenda, recovers a lost response and removes revoked content",
+      "scope_period": {
+        "start": "2027-01-01",
+        "end": "2027-12-31"
+      },
+      "observed_operation": "review-comparison",
+      "http_duration_ms": 5122,
+      "assertion_or_click_timeout_ms": 5000,
+      "late_http_status": 200,
+      "log": {
+        "source": "wp07-context/test-6.log",
+        "sha256": "1c3aeb28f64741ad8e6f2716c984691cdc12780bf1d52a31a22ea97b468ba709",
+        "relevant_lines": [
+          889,
+          897
+        ]
+      },
+      "omni_control": {
+        "status": "NOT_APPLICABLE_VALIDATED",
+        "nonce": "8697ec148e7209bf3a233ddc04d4bd9c"
+      }
+    },
+    {
+      "run_id": "43530154667",
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43530154667",
+      "product_sha": "7664de39a5675cff81ac963c0fa51eb77621e74a",
+      "ci_snapshot_sha": "b58997866f22359b412c5acc1df799f16548c4d2",
+      "status": "FAIL",
+      "test_name": "Chromium preserves the chosen agenda, recovers a lost response and removes revoked content",
+      "scope_period": {
+        "start": "2027-01-01",
+        "end": "2027-12-31"
+      },
+      "observed_operation": "second annual review-preserve",
+      "http_duration_ms": 6509,
+      "assertion_or_click_timeout_ms": 5000,
+      "late_http_status": 200,
+      "log": {
+        "source": "wp07-context/test-7.log",
+        "sha256": "87cc3538e224b3a105f3396071e6857f74cd7679a4174b1df905a18decf85434",
+        "relevant_lines": [
+          874,
+          876
+        ]
+      },
+      "omni_control": {
+        "status": "NOT_APPLICABLE_VALIDATED",
+        "nonce": "d882407ffa71474897af62f4ab396917"
+      }
+    }
+  ],
+  "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43530831862.json"
+}

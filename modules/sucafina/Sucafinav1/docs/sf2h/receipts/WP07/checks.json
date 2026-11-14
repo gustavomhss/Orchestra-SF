@@ -1,0 +1,1412 @@
+{
+  "schema": "sf2h.wp07.hosted-execution.v1",
+  "recorded_at": "2026-11-14T00:05:50.826107+00:00",
+  "status": "DRAFT/BLOCKED",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "astra-wp07",
+  "pr_url": "https://github.com/gustavomhss/Orchestra-SF/pull/27",
+  "pr_base": "sf2-stack",
+  "pr_base_sha": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+  "handoff_sha": "6074055e46116d770c6673449ec8c5da6dc74933",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "campaign_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+  "seed": {
+    "sha": "5be7b75f5540190deace73b620679db5a509bc4f",
+    "tree": "e43029aef3ce91896aeb6ffba3eb6e116dc97686"
+  },
+  "tested_product": {
+    "sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+    "tree": "889fe8f2c5dfc25ba9d8c25962e984454a12bd81"
+  },
+  "publication_policy": "The final publication adds only receipt/documentation files and a README clarification after W. The final commit/tree and GitHub compare are recorded in the PR. No runtime, test, fixture or workflow change is admitted by this receipt after W.",
+  "test_protocol": {
+    "remote": "GitHub MCP only",
+    "canonical_workflow": ".github/workflows/test-ci.yml",
+    "maximum_in_flight_test_runs": 1,
+    "local_product_tests": false,
+    "local_product_typecheck": false,
+    "epic_or_full_suite": false,
+    "merge": false,
+    "deploy": false,
+    "request_validation": [
+      {
+        "selection": "ui",
+        "request": {
+          "package": "sucafina",
+          "directory": "modules/sucafina",
+          "runner": "bun",
+          "args": [
+            "Sucafinav1/test/product/wp07/browser-ui.test.ts"
+          ],
+          "env": {}
+        },
+        "request_sha256": "5b75619067c78a908c0687e7871ca940cddff0dc40a76830bb996f54690f1eb3",
+        "omni_scope": "declared",
+        "exact_file_count": 1,
+        "existing_files_checked": true
+      },
+      {
+        "selection": "unit",
+        "request": {
+          "package": "sucafina",
+          "directory": "modules/sucafina",
+          "runner": "bun",
+          "args": [
+            "Sucafinav1/test/parity-reports.test.ts",
+            "Sucafinav1/test/product/wp07/application.test.ts",
+            "Sucafinav1/test/product/wp07/artifact-storage.test.ts",
+            "Sucafinav1/test/product/wp07/browser-build.test.ts",
+            "Sucafinav1/test/product/wp07/closure-action.test.ts",
+            "Sucafinav1/test/product/wp07/closure.test.ts",
+            "Sucafinav1/test/product/wp07/comparison.test.ts",
+            "Sucafinav1/test/product/wp07/composition.test.ts",
+            "Sucafinav1/test/product/wp07/contribution.test.ts",
+            "Sucafinav1/test/product/wp07/decision-access.test.ts",
+            "Sucafinav1/test/product/wp07/export-completeness.test.ts",
+            "Sucafinav1/test/product/wp07/human.test.ts",
+            "Sucafinav1/test/product/wp07/outcome.test.ts",
+            "Sucafinav1/test/product/wp07/report-layout.test.ts",
+            "Sucafinav1/test/product/wp07/review-port.test.ts",
+            "Sucafinav1/test/product/wp07/selection.test.ts",
+            "Sucafinav1/test/product/wp07/services.test.ts",
+            "Sucafinav1/test/product/wp07/thread-access.test.ts",
+            "Sucafinav1/test/reports-runtime.test.ts"
+          ],
+          "env": {}
+        },
+        "request_sha256": "d7ca0ce5903296fa4fac37a138e0ff29c81fa91f265e48842d97e1cd6500d09d",
+        "omni_scope": "declared",
+        "exact_file_count": 19,
+        "existing_files_checked": true
+      }
+    ]
+  },
+  "final_tests": {
+    "attempts": [
+      8,
+      9
+    ],
+    "product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+    "result": "PASS_SCOPED",
+    "pass": 68,
+    "fail": 0,
+    "files": 20,
+    "reported_bun_expect_calls": 826,
+    "assertion_count_limit": "826 is the non-browser Bun count; Playwright assertions are not added to that count.",
+    "browser_scope": "January2027 through actual Planner/UI/HTTP/SQLite with controlled evidence/thread/navigation producers. Annual UI remains failed.",
+    "omni": "valid not applicable; no omni or native-execution claim"
+  },
+  "tests_history": [
+    {
+      "attempt": 1,
+      "W": "c5db222c5a194b425e01b4414001ed254b7e7da1",
+      "S": "e994db724acf60ad05bf58f17a4e695d0bb7efa7",
+      "run": 43523764705,
+      "job": 132224320353,
+      "conclusion": "failure",
+      "reason": "parser errors and Bun crash; no valid omni verdict",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/wp07/application.test.ts",
+          "Sucafinav1/test/product/wp07/artifact-storage.test.ts",
+          "Sucafinav1/test/product/wp07/closure-action.test.ts",
+          "Sucafinav1/test/product/wp07/closure.test.ts",
+          "Sucafinav1/test/product/wp07/comparison.test.ts",
+          "Sucafinav1/test/product/wp07/composition.test.ts",
+          "Sucafinav1/test/product/wp07/contribution.test.ts",
+          "Sucafinav1/test/product/wp07/decision-access.test.ts",
+          "Sucafinav1/test/product/wp07/export-completeness.test.ts",
+          "Sucafinav1/test/product/wp07/human.test.ts",
+          "Sucafinav1/test/product/wp07/outcome.test.ts",
+          "Sucafinav1/test/product/wp07/report-layout.test.ts",
+          "Sucafinav1/test/product/wp07/review-port.test.ts",
+          "Sucafinav1/test/product/wp07/selection.test.ts",
+          "Sucafinav1/test/product/wp07/thread-access.test.ts",
+          "Sucafinav1/test/parity-reports.test.ts",
+          "Sucafinav1/test/reports-runtime.test.ts"
+        ],
+        "env": {}
+      },
+      "request_sha256": "bea118588d0b0dda96daf2fe50b7ddfa5942757db40c6be0b8813e63af65dca3",
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43523764705",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43523764705/job/132224320353",
+      "log_sha256": "a5151568deeeb990b89d916c9989f71edf81be73f67a682c67e863037acf7b17",
+      "snapshot_proof": {
+        "attempt": 1,
+        "product_sha": "c5db222c5a194b425e01b4414001ed254b7e7da1",
+        "snapshot_sha": "e994db724acf60ad05bf58f17a4e695d0bb7efa7",
+        "snapshot_tree": "642faa65fb6fece727d26b840424d2eb92e6b268",
+        "compare_url": "https://github.com/gustavomhss/Orchestra-SF/compare/c5db222c5a194b425e01b4414001ed254b7e7da1...e994db724acf60ad05bf58f17a4e695d0bb7efa7",
+        "commits": 1,
+        "only_changed_paths": [
+          {
+            "path": ".ci-run.json",
+            "blob_sha": "e074dd56fe3d25e9bab3346b8457f8bd9c14165d",
+            "status": "added"
+          }
+        ],
+        "product_test_config_fixture_blobs_identical": true
+      },
+      "canonical_omni_validation": {
+        "attempt": 1,
+        "valid": false,
+        "error": "Error: test1: expected one omni positive control verdict for this run's nonce, found 0"
+      }
+    },
+    {
+      "attempt": 2,
+      "W": "57ceb253dfe7edf0e0deb6ce462230f21888ba24",
+      "S": "64102b938f7a94be0085dcb4b267004c03d91380",
+      "run": 43524675966,
+      "job": 132227358864,
+      "conclusion": "failure",
+      "counts": {
+        "pass": 55,
+        "fail": 5,
+        "assertions": 723,
+        "tests": 60,
+        "files": 18
+      },
+      "omni": "not applicable",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/wp07/application.test.ts",
+          "Sucafinav1/test/product/wp07/artifact-storage.test.ts",
+          "Sucafinav1/test/product/wp07/browser-build.test.ts",
+          "Sucafinav1/test/product/wp07/closure-action.test.ts",
+          "Sucafinav1/test/product/wp07/closure.test.ts",
+          "Sucafinav1/test/product/wp07/comparison.test.ts",
+          "Sucafinav1/test/product/wp07/composition.test.ts",
+          "Sucafinav1/test/product/wp07/contribution.test.ts",
+          "Sucafinav1/test/product/wp07/decision-access.test.ts",
+          "Sucafinav1/test/product/wp07/export-completeness.test.ts",
+          "Sucafinav1/test/product/wp07/human.test.ts",
+          "Sucafinav1/test/product/wp07/outcome.test.ts",
+          "Sucafinav1/test/product/wp07/report-layout.test.ts",
+          "Sucafinav1/test/product/wp07/review-port.test.ts",
+          "Sucafinav1/test/product/wp07/selection.test.ts",
+          "Sucafinav1/test/product/wp07/thread-access.test.ts",
+          "Sucafinav1/test/parity-reports.test.ts",
+          "Sucafinav1/test/reports-runtime.test.ts"
+        ],
+        "env": {}
+      },
+      "request_sha256": "d6740710e08aca2c1a038061396891d72e574003f99b309fad1f3801c6376946",
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43524675966",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43524675966/job/132227358864",
+      "log_sha256": "b9aec204c44c41cffa0760e8ddf4cbcdee1ac49b7fae268904715d896aeb767e",
+      "snapshot_proof": {
+        "attempt": 2,
+        "product_sha": "57ceb253dfe7edf0e0deb6ce462230f21888ba24",
+        "snapshot_sha": "64102b938f7a94be0085dcb4b267004c03d91380",
+        "snapshot_tree": "4847fc5e9c5a630c06f41d6e51de1fb7eef94291",
+        "compare_url": "https://github.com/gustavomhss/Orchestra-SF/compare/57ceb253dfe7edf0e0deb6ce462230f21888ba24...64102b938f7a94be0085dcb4b267004c03d91380",
+        "commits": 1,
+        "only_changed_paths": [
+          {
+            "path": ".ci-run.json",
+            "blob_sha": "a62fa6c64c18f095d1d573214f2ee807dcb0ab19",
+            "status": "added"
+          }
+        ],
+        "product_test_config_fixture_blobs_identical": true
+      },
+      "canonical_omni_validation": {
+        "attempt": 2,
+        "valid": true,
+        "verdict": "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+      }
+    },
+    {
+      "attempt": 3,
+      "W": "798c096c105bc68870cec6c5a10269f1457e2f18",
+      "S": "7a1f2bf79198f395afc1784192cf4870122ff019",
+      "tree": "685e36eef50ab0803b6f42e100ff5c143816f1e0",
+      "branch": "ci-run-linux-astra-wp07-798c096c10-a5dab47373-3",
+      "requestSha256": "a5dab47373284778e0b016a1d4c7fb5a624b85b92a2d05aea52a49bf8ecdf922",
+      "run": 43526243469,
+      "job": 132232605437,
+      "conclusion": "failure",
+      "counts": {
+        "pass": 62,
+        "fail": 1,
+        "assertions": 794,
+        "tests": 63,
+        "files": 19
+      },
+      "reason": "Chromium UI test timed out at 120000ms; remaining 62 tests passed",
+      "omni": {
+        "verdict": "not applicable",
+        "nonce": "d72860c00254307a9420a55805a11b94",
+        "meaning": "No declaring test or omni spawn; does not prove omni"
+      },
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/wp07/application.test.ts",
+          "Sucafinav1/test/product/wp07/artifact-storage.test.ts",
+          "Sucafinav1/test/product/wp07/browser-build.test.ts",
+          "Sucafinav1/test/product/wp07/browser-ui.test.ts",
+          "Sucafinav1/test/product/wp07/closure-action.test.ts",
+          "Sucafinav1/test/product/wp07/closure.test.ts",
+          "Sucafinav1/test/product/wp07/comparison.test.ts",
+          "Sucafinav1/test/product/wp07/composition.test.ts",
+          "Sucafinav1/test/product/wp07/contribution.test.ts",
+          "Sucafinav1/test/product/wp07/decision-access.test.ts",
+          "Sucafinav1/test/product/wp07/export-completeness.test.ts",
+          "Sucafinav1/test/product/wp07/human.test.ts",
+          "Sucafinav1/test/product/wp07/outcome.test.ts",
+          "Sucafinav1/test/product/wp07/report-layout.test.ts",
+          "Sucafinav1/test/product/wp07/review-port.test.ts",
+          "Sucafinav1/test/product/wp07/selection.test.ts",
+          "Sucafinav1/test/product/wp07/thread-access.test.ts",
+          "Sucafinav1/test/parity-reports.test.ts",
+          "Sucafinav1/test/reports-runtime.test.ts"
+        ],
+        "env": {}
+      },
+      "request_sha256": "a5dab47373284778e0b016a1d4c7fb5a624b85b92a2d05aea52a49bf8ecdf922",
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43526243469",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43526243469/job/132232605437",
+      "log_sha256": "2627c1125b827c875641f7a799ee5e37b202eeb89ff075619aa512cc8a63e8e9",
+      "snapshot_proof": {
+        "attempt": 3,
+        "product_sha": "798c096c105bc68870cec6c5a10269f1457e2f18",
+        "snapshot_sha": "7a1f2bf79198f395afc1784192cf4870122ff019",
+        "snapshot_tree": "685e36eef50ab0803b6f42e100ff5c143816f1e0",
+        "compare_url": "https://github.com/gustavomhss/Orchestra-SF/compare/798c096c105bc68870cec6c5a10269f1457e2f18...7a1f2bf79198f395afc1784192cf4870122ff019",
+        "commits": 1,
+        "only_changed_paths": [
+          {
+            "path": ".ci-run.json",
+            "blob_sha": "1eba8eae93af7ba1d5dd6371449c9daba27c73fe",
+            "status": "added"
+          }
+        ],
+        "product_test_config_fixture_blobs_identical": true
+      },
+      "canonical_omni_validation": {
+        "attempt": 3,
+        "valid": true,
+        "verdict": "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+      }
+    },
+    {
+      "attempt": 4,
+      "W": "ee5a07da0a7d821c1b027d9e0a2c603d84709bb0",
+      "S": "a534817eabb36b9954f8c3c196fa0c98128f3e6b",
+      "tree": "ff56376d66d99debe46b312647af268cbf0786fe",
+      "run": 43527487980,
+      "job": 132236755946,
+      "requestSha256": "5b75619067c78a908c0687e7871ca940cddff0dc40a76830bb996f54690f1eb3",
+      "conclusion": "failure",
+      "counts": {
+        "pass": 0,
+        "fail": 1,
+        "tests": 1,
+        "files": 1
+      },
+      "reason": "UI preserve took 13.3s and hit 10s click timeout; cleanup proved Chrome shutdown",
+      "omni": {
+        "verdict": "not applicable",
+        "nonce": "0d9bcbc10e092f58b6ecc5cf26ad9dee"
+      },
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/wp07/browser-ui.test.ts"
+        ],
+        "env": {}
+      },
+      "request_sha256": "5b75619067c78a908c0687e7871ca940cddff0dc40a76830bb996f54690f1eb3",
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43527487980",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43527487980/job/132236755946",
+      "log_sha256": "132a9231f06101e680f3cde959de64f56b4eb3004202d1ef9a4739a4a423a6e8",
+      "snapshot_proof": {
+        "attempt": 4,
+        "product_sha": "ee5a07da0a7d821c1b027d9e0a2c603d84709bb0",
+        "snapshot_sha": "a534817eabb36b9954f8c3c196fa0c98128f3e6b",
+        "snapshot_tree": "ff56376d66d99debe46b312647af268cbf0786fe",
+        "compare_url": "https://github.com/gustavomhss/Orchestra-SF/compare/ee5a07da0a7d821c1b027d9e0a2c603d84709bb0...a534817eabb36b9954f8c3c196fa0c98128f3e6b",
+        "commits": 1,
+        "only_changed_paths": [
+          {
+            "path": ".ci-run.json",
+            "blob_sha": "93f0ebad7b4bf9ae5969b675d06baf6f8558c13c",
+            "status": "added"
+          }
+        ],
+        "product_test_config_fixture_blobs_identical": true
+      },
+      "canonical_omni_validation": {
+        "attempt": 4,
+        "valid": true,
+        "verdict": "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+      }
+    },
+    {
+      "attempt": 5,
+      "W": "d89084bb0f8e0f88ba09317e8b655178f575e5ad",
+      "S": "2cc9cd47f5a4f1cb59edaefe8b9553d800913879",
+      "tree": "4efb2581ceb13bd9a1f67cd8995f7a9e50caee5b",
+      "run": 43528384822,
+      "requestSha256": "f09ae3ea6abb5110a231c435572170b7ed981edc44f33e45c8bb6108ad2d4dcc",
+      "conclusion": "failure",
+      "job": 132239679786,
+      "counts": {
+        "pass": 66,
+        "fail": 1,
+        "assertions": 809,
+        "tests": 67,
+        "files": 20
+      },
+      "reason": "Chrome launch failed before UI interaction under 5s startup budget; all66nonbrowser tests passed",
+      "omni": {
+        "verdict": "not applicable",
+        "nonce": "40166e4fe3d1d4149ae91e0bcebf5f37"
+      },
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/parity-reports.test.ts",
+          "Sucafinav1/test/product/wp07/application.test.ts",
+          "Sucafinav1/test/product/wp07/artifact-storage.test.ts",
+          "Sucafinav1/test/product/wp07/browser-build.test.ts",
+          "Sucafinav1/test/product/wp07/browser-ui.test.ts",
+          "Sucafinav1/test/product/wp07/closure-action.test.ts",
+          "Sucafinav1/test/product/wp07/closure.test.ts",
+          "Sucafinav1/test/product/wp07/comparison.test.ts",
+          "Sucafinav1/test/product/wp07/composition.test.ts",
+          "Sucafinav1/test/product/wp07/contribution.test.ts",
+          "Sucafinav1/test/product/wp07/decision-access.test.ts",
+          "Sucafinav1/test/product/wp07/export-completeness.test.ts",
+          "Sucafinav1/test/product/wp07/human.test.ts",
+          "Sucafinav1/test/product/wp07/outcome.test.ts",
+          "Sucafinav1/test/product/wp07/report-layout.test.ts",
+          "Sucafinav1/test/product/wp07/review-port.test.ts",
+          "Sucafinav1/test/product/wp07/selection.test.ts",
+          "Sucafinav1/test/product/wp07/services.test.ts",
+          "Sucafinav1/test/product/wp07/thread-access.test.ts",
+          "Sucafinav1/test/reports-runtime.test.ts"
+        ],
+        "env": {}
+      },
+      "request_sha256": "f09ae3ea6abb5110a231c435572170b7ed981edc44f33e45c8bb6108ad2d4dcc",
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43528384822",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43528384822/job/132239679786",
+      "log_sha256": "39400ce33a7c72ba7f29b3df03c0155433c15f76dc36d0c8e00b309fdbc3e4c5",
+      "snapshot_proof": {
+        "attempt": 5,
+        "product_sha": "d89084bb0f8e0f88ba09317e8b655178f575e5ad",
+        "snapshot_sha": "2cc9cd47f5a4f1cb59edaefe8b9553d800913879",
+        "snapshot_tree": "4efb2581ceb13bd9a1f67cd8995f7a9e50caee5b",
+        "compare_url": "https://github.com/gustavomhss/Orchestra-SF/compare/d89084bb0f8e0f88ba09317e8b655178f575e5ad...2cc9cd47f5a4f1cb59edaefe8b9553d800913879",
+        "commits": 1,
+        "only_changed_paths": [
+          {
+            "path": ".ci-run.json",
+            "blob_sha": "5f14a5da14cd6ae569facc7a643dd184fe2ace1b",
+            "status": "added"
+          }
+        ],
+        "product_test_config_fixture_blobs_identical": true
+      },
+      "canonical_omni_validation": {
+        "attempt": 5,
+        "valid": true,
+        "verdict": "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+      }
+    },
+    {
+      "attempt": 6,
+      "W": "fc59841cec4691a0520eabcf2c24c0bbf9c4ddc1",
+      "S": "8a0de0f317661214418a94f1214561ca462b04ea",
+      "tree": "206bd318d87e9cec28e05993a6914c9fee1b9ca0",
+      "run": 43528912346,
+      "job": 132241445766,
+      "requestSha256": "5b75619067c78a908c0687e7871ca940cddff0dc40a76830bb996f54690f1eb3",
+      "conclusion": "failure",
+      "counts": {
+        "pass": 0,
+        "fail": 1,
+        "tests": 1,
+        "files": 1
+      },
+      "reason": "Comparison exceeded 5s status assertion; review-comparison HTTP returned 200 after5122ms; Chrome cleanup verified",
+      "omni": {
+        "verdict": "not applicable",
+        "nonce": "8697ec148e7209bf3a233ddc04d4bd9c"
+      },
+      "logSha256": "1c3aeb28f64741ad8e6f2716c984691cdc12780bf1d52a31a22ea97b468ba709",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/wp07/browser-ui.test.ts"
+        ],
+        "env": {}
+      },
+      "request_sha256": "5b75619067c78a908c0687e7871ca940cddff0dc40a76830bb996f54690f1eb3",
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43528912346",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43528912346/job/132241445766",
+      "log_sha256": "1c3aeb28f64741ad8e6f2716c984691cdc12780bf1d52a31a22ea97b468ba709",
+      "snapshot_proof": {
+        "attempt": 6,
+        "product_sha": "fc59841cec4691a0520eabcf2c24c0bbf9c4ddc1",
+        "snapshot_sha": "8a0de0f317661214418a94f1214561ca462b04ea",
+        "snapshot_tree": "206bd318d87e9cec28e05993a6914c9fee1b9ca0",
+        "compare_url": "https://github.com/gustavomhss/Orchestra-SF/compare/fc59841cec4691a0520eabcf2c24c0bbf9c4ddc1...8a0de0f317661214418a94f1214561ca462b04ea",
+        "commits": 1,
+        "only_changed_paths": [
+          {
+            "path": ".ci-run.json",
+            "blob_sha": "93f0ebad7b4bf9ae5969b675d06baf6f8558c13c",
+            "status": "added"
+          }
+        ],
+        "product_test_config_fixture_blobs_identical": true
+      },
+      "canonical_omni_validation": {
+        "attempt": 6,
+        "valid": true,
+        "verdict": "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+      }
+    },
+    {
+      "attempt": 7,
+      "W": "7664de39a5675cff81ac963c0fa51eb77621e74a",
+      "S": "b58997866f22359b412c5acc1df799f16548c4d2",
+      "tree": "38a35a1ca6c39977c9bfad177a2bb48f290977c6",
+      "run": 43530154667,
+      "requestSha256": "5b75619067c78a908c0687e7871ca940cddff0dc40a76830bb996f54690f1eb3",
+      "conclusion": "failure",
+      "snapshotOnlyRequest": true,
+      "job": 132245549968,
+      "counts": {
+        "pass": 0,
+        "fail": 1,
+        "tests": 1,
+        "files": 1
+      },
+      "reason": "Annual second preservation returned HTTP200 after6509ms; click5s timed out. No claim of annual browser PASS.",
+      "omni": {
+        "verdict": "not applicable",
+        "nonce": "d882407ffa71474897af62f4ab396917"
+      },
+      "logSha256": "87cc3538e224b3a105f3396071e6857f74cd7679a4174b1df905a18decf85434",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/wp07/browser-ui.test.ts"
+        ],
+        "env": {}
+      },
+      "request_sha256": "5b75619067c78a908c0687e7871ca940cddff0dc40a76830bb996f54690f1eb3",
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43530154667",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43530154667/job/132245549968",
+      "log_sha256": "87cc3538e224b3a105f3396071e6857f74cd7679a4174b1df905a18decf85434",
+      "snapshot_proof": {
+        "attempt": 7,
+        "product_sha": "7664de39a5675cff81ac963c0fa51eb77621e74a",
+        "snapshot_sha": "b58997866f22359b412c5acc1df799f16548c4d2",
+        "snapshot_tree": "38a35a1ca6c39977c9bfad177a2bb48f290977c6",
+        "compare_url": "https://github.com/gustavomhss/Orchestra-SF/compare/7664de39a5675cff81ac963c0fa51eb77621e74a...b58997866f22359b412c5acc1df799f16548c4d2",
+        "commits": 1,
+        "only_changed_paths": [
+          {
+            "path": ".ci-run.json",
+            "blob_sha": "93f0ebad7b4bf9ae5969b675d06baf6f8558c13c",
+            "status": "added"
+          }
+        ],
+        "product_test_config_fixture_blobs_identical": true
+      },
+      "canonical_omni_validation": {
+        "attempt": 7,
+        "valid": true,
+        "verdict": "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+      }
+    },
+    {
+      "attempt": 8,
+      "W": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+      "S": "9d4670fdf446d5e7acc01b95842209f68bd18e0b",
+      "tree": "7d4b0605bd01131ec6925a3bed025e9316760d5f",
+      "branch": "ci-run-linux-astra-wp07-c5143e6ad6-5b75619067-8",
+      "run": 43530831862,
+      "requestSha256": "5b75619067c78a908c0687e7871ca940cddff0dc40a76830bb996f54690f1eb3",
+      "conclusion": "success",
+      "scope": "monthly January2027 UI with real Planner selection and controlled historical source adapters",
+      "snapshotOnlyRequest": true,
+      "job": 132247794669,
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "tests": 1,
+        "files": 1
+      },
+      "omni": {
+        "verdict": "not applicable",
+        "nonce": "2a448a45a4da4aa06e3f38a68527d548"
+      },
+      "logSha256": "f71b9dd9fea839667e00d1abb1cfe7d2e6b0661064057a2396057efb763d44b0",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/wp07/browser-ui.test.ts"
+        ],
+        "env": {}
+      },
+      "request_sha256": "5b75619067c78a908c0687e7871ca940cddff0dc40a76830bb996f54690f1eb3",
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43530831862",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43530831862/job/132247794669",
+      "log_sha256": "f71b9dd9fea839667e00d1abb1cfe7d2e6b0661064057a2396057efb763d44b0",
+      "snapshot_proof": {
+        "attempt": 8,
+        "product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+        "snapshot_sha": "9d4670fdf446d5e7acc01b95842209f68bd18e0b",
+        "snapshot_tree": "7d4b0605bd01131ec6925a3bed025e9316760d5f",
+        "compare_url": "https://github.com/gustavomhss/Orchestra-SF/compare/c5143e6ad6d8dca61b09572c60f5a6ed64093f74...9d4670fdf446d5e7acc01b95842209f68bd18e0b",
+        "commits": 1,
+        "only_changed_paths": [
+          {
+            "path": ".ci-run.json",
+            "blob_sha": "93f0ebad7b4bf9ae5969b675d06baf6f8558c13c",
+            "status": "added"
+          }
+        ],
+        "product_test_config_fixture_blobs_identical": true
+      },
+      "canonical_omni_validation": {
+        "attempt": 8,
+        "valid": true,
+        "verdict": "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+      }
+    },
+    {
+      "attempt": 9,
+      "W": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+      "S": "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+      "tree": "d469c13334f526fbef13d0f41bccd2b5732b1b46",
+      "branch": "ci-run-linux-astra-wp07-c5143e6ad6-d7ca0ce590-9",
+      "run": 43531115429,
+      "requestSha256": "d7ca0ce5903296fa4fac37a138e0ff29c81fa91f265e48842d97e1cd6500d09d",
+      "conclusion": "success",
+      "scope": "19 exact consumer/export regression files; no browser file",
+      "snapshotOnlyRequest": true,
+      "job": 132248784028,
+      "counts": {
+        "pass": 67,
+        "fail": 0,
+        "assertions": 826,
+        "tests": 67,
+        "files": 19
+      },
+      "omni": {
+        "verdict": "not applicable",
+        "nonce": "3c2706e6abec6d74a8d64a0f8de93ea1"
+      },
+      "logSha256": "d9b2ecdc8b4e17e879810331b66a7756778922f3991eea193334b5c3a162385b",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/parity-reports.test.ts",
+          "Sucafinav1/test/product/wp07/application.test.ts",
+          "Sucafinav1/test/product/wp07/artifact-storage.test.ts",
+          "Sucafinav1/test/product/wp07/browser-build.test.ts",
+          "Sucafinav1/test/product/wp07/closure-action.test.ts",
+          "Sucafinav1/test/product/wp07/closure.test.ts",
+          "Sucafinav1/test/product/wp07/comparison.test.ts",
+          "Sucafinav1/test/product/wp07/composition.test.ts",
+          "Sucafinav1/test/product/wp07/contribution.test.ts",
+          "Sucafinav1/test/product/wp07/decision-access.test.ts",
+          "Sucafinav1/test/product/wp07/export-completeness.test.ts",
+          "Sucafinav1/test/product/wp07/human.test.ts",
+          "Sucafinav1/test/product/wp07/outcome.test.ts",
+          "Sucafinav1/test/product/wp07/report-layout.test.ts",
+          "Sucafinav1/test/product/wp07/review-port.test.ts",
+          "Sucafinav1/test/product/wp07/selection.test.ts",
+          "Sucafinav1/test/product/wp07/services.test.ts",
+          "Sucafinav1/test/product/wp07/thread-access.test.ts",
+          "Sucafinav1/test/reports-runtime.test.ts"
+        ],
+        "env": {}
+      },
+      "request_sha256": "d7ca0ce5903296fa4fac37a138e0ff29c81fa91f265e48842d97e1cd6500d09d",
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43531115429",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43531115429/job/132248784028",
+      "log_sha256": "d9b2ecdc8b4e17e879810331b66a7756778922f3991eea193334b5c3a162385b",
+      "snapshot_proof": {
+        "attempt": 9,
+        "product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+        "snapshot_sha": "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+        "snapshot_tree": "d469c13334f526fbef13d0f41bccd2b5732b1b46",
+        "compare_url": "https://github.com/gustavomhss/Orchestra-SF/compare/c5143e6ad6d8dca61b09572c60f5a6ed64093f74...c2d96395cb923a92c7a8f09c3190d5c42439e617",
+        "commits": 1,
+        "only_changed_paths": [
+          {
+            "path": ".ci-run.json",
+            "blob_sha": "c2859a3e5243be5a776c9da33c74c91b36b98581",
+            "status": "added"
+          }
+        ],
+        "product_test_config_fixture_blobs_identical": true
+      },
+      "canonical_omni_validation": {
+        "attempt": 9,
+        "valid": true,
+        "verdict": "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+      }
+    }
+  ],
+  "checks_history": [
+    {
+      "attempt": 1,
+      "W": "c5db222c5a194b425e01b4414001ed254b7e7da1",
+      "run": 43523767480,
+      "job": 132224330624,
+      "typecheck": "FAIL",
+      "guards": "PASS",
+      "exports": "FAIL",
+      "conclusion": "failure",
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43523767480",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43523767480/job/132224330624",
+      "local_log_copy": "not retained; inspect linked hosted job"
+    },
+    {
+      "attempt": 2,
+      "W": "57ceb253dfe7edf0e0deb6ce462230f21888ba24",
+      "run": 43524199358,
+      "job": 132225763692,
+      "typecheck": "FAIL",
+      "diagnostics": {
+        "own": 40,
+        "external": 137
+      },
+      "guards": "PASS",
+      "exports": "PASS",
+      "artifact": 14084018030,
+      "sha256": "a49ffa1210fc0ba12c96e9383266efa10799d8acec831f04578f3ff172bfc14f",
+      "visual": "85 images inspected",
+      "conclusion": "failure",
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43524199358",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43524199358/job/132225763692",
+      "local_log_copy": "not retained; inspect linked hosted job"
+    },
+    {
+      "attempt": 3,
+      "W": "495e690bdd5440734de81de6f6017f5a11ba6ebe",
+      "run": 43524911748,
+      "job": 132228144743,
+      "typecheck": "FAIL",
+      "diagnostics": {
+        "own": 2,
+        "external": 137
+      },
+      "guards": "PASS",
+      "exports": "PASS",
+      "conclusion": "failure",
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43524911748",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43524911748/job/132228144743",
+      "log_sha256": "34cf7b37404e7736054331625ee967cb0d92162ebd3f56e2e2aad19e217ea38b"
+    },
+    {
+      "attempt": 4,
+      "W": "798c096c105bc68870cec6c5a10269f1457e2f18",
+      "run": 43526207659,
+      "job": 132232484077,
+      "typecheck": "FAIL",
+      "diagnostics": {
+        "own": 0,
+        "external": 137
+      },
+      "guards": "PASS",
+      "guardCounts": {
+        "rules": 78,
+        "paths": 606,
+        "gates": 0,
+        "warnings": 11,
+        "errors": 0
+      },
+      "exports": "PASS",
+      "artifact": 14085750673,
+      "sha256": "80c5e01ef8c088bca2d04c4c44b259a646de907f0d1c56835748ec68405cfe62",
+      "visual": "85 renders pixel-identical to fully inspected check2",
+      "conclusion": "failure",
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43526207659",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43526207659/job/132232484077",
+      "log_sha256": "21feb7d11ab7fb74fc20656a2c2c978ad33f60f706853a658bc04bd8d3ea8882"
+    },
+    {
+      "attempt": 5,
+      "W": "ee5a07da0a7d821c1b027d9e0a2c603d84709bb0",
+      "run": 43527489487,
+      "job": 132236761287,
+      "typecheck": "FAIL",
+      "diagnostics": {
+        "own": 0,
+        "external": 137
+      },
+      "guards": "PASS",
+      "guardCounts": {
+        "rules": 78,
+        "paths": 607,
+        "gates": 0,
+        "warnings": 13,
+        "errors": 0
+      },
+      "exports": "PASS",
+      "artifact": 14084924851,
+      "sha256": "a54635eb61e8c422e71d34dc6ddb0a56d7f660b4187f0b4fa76bbc9368b6769d",
+      "conclusion": "failure",
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43527489487",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43527489487/job/132236761287",
+      "log_sha256": "0be2c32416e72732576719d0d759444b83eb10e661635669e737a9c754339b51"
+    },
+    {
+      "attempt": 6,
+      "W": "d89084bb0f8e0f88ba09317e8b655178f575e5ad",
+      "run": 43528388078,
+      "conclusion": "failure",
+      "job": 132239690416,
+      "typecheck": "FAIL",
+      "diagnostics": {
+        "own": 1,
+        "external": 137
+      },
+      "guards": "PASS",
+      "guardCounts": {
+        "rules": 78,
+        "paths": 608,
+        "gates": 0,
+        "warnings": 11,
+        "errors": 0
+      },
+      "exports": "PASS",
+      "sha256": "401598ca3aaf7330832d4732ec79c03446f723c56d8a196bbd496e0ea8ae4386",
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43528388078",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43528388078/job/132239690416",
+      "log_sha256": "e566265be19d72fc8e6829922a571903303a214fa89835c6c8e4157ce33e8906"
+    },
+    {
+      "attempt": 7,
+      "W": "fc59841cec4691a0520eabcf2c24c0bbf9c4ddc1",
+      "run": 43528915475,
+      "job": 132241456656,
+      "typecheck": "FAIL",
+      "diagnostics": {
+        "own": 0,
+        "external": 137
+      },
+      "guards": "PASS",
+      "guardCounts": {
+        "rules": 78,
+        "paths": 608,
+        "gates": 0,
+        "warnings": 11,
+        "errors": 0
+      },
+      "exports": "PASS",
+      "conclusion": "failure",
+      "artifact": 14086811317,
+      "sha256": "bf85483fcf4b1b87e4524369ac99b669b7277143aece6e29b57bf416bc24c66b",
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43528915475",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43528915475/job/132241456656",
+      "log_sha256": "2e58035041901ce73ea0ca8c672eebc7e37cda66994baff2c10f4b11421b94a6"
+    },
+    {
+      "attempt": 8,
+      "W": "7664de39a5675cff81ac963c0fa51eb77621e74a",
+      "run": 43530154275,
+      "conclusion": "failure",
+      "job": 132245548813,
+      "typecheck": "FAIL",
+      "diagnostics": {
+        "own": 0,
+        "external": 137
+      },
+      "guards": "PASS",
+      "guardSummary": {
+        "rules": 78,
+        "paths": 608,
+        "gate": 0,
+        "warnings": 11,
+        "errors": 0
+      },
+      "exports": "PASS",
+      "artifact": 14087181847,
+      "sha256": "09766f7379746923a18724859e297791e66150eefc578c2e3b3cfc903578fe7a",
+      "logSha256": "ba6cf572cdf7daa1b226821e60a1ab36cee51dbd4ef6383ad0d41391a35615a8",
+      "guardBase": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43530154275",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43530154275/job/132245548813",
+      "log_sha256": "ba6cf572cdf7daa1b226821e60a1ab36cee51dbd4ef6383ad0d41391a35615a8"
+    },
+    {
+      "attempt": 9,
+      "W": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+      "run": 43530862046,
+      "conclusion": "failure",
+      "job": 132247907151,
+      "typecheck": "FAIL",
+      "diagnostics": {
+        "own": 0,
+        "external": 137
+      },
+      "guards": "PASS",
+      "guardSummary": {
+        "rules": 78,
+        "paths": 608,
+        "gate": 0,
+        "warnings": 11,
+        "errors": 0
+      },
+      "exports": "PASS",
+      "artifact": 14086898379,
+      "sha256": "694d23b69f97ecab2537211281f52475be75db4ed1bdf0d1cce0807779a3286b",
+      "logSha256": "109de25d1ed5a755fe5606e833101f7aaec13a144a197eb630c2979e90da2bfa",
+      "guardBase": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+      "visual": "PASS:85/85 full RGBA identical to completely inspected baseline",
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43530862046",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43530862046/job/132247907151",
+      "log_sha256": "109de25d1ed5a755fe5606e833101f7aaec13a144a197eb630c2979e90da2bfa"
+    }
+  ],
+  "visual": {
+    "status": "PASS",
+    "run_id": 43530862046,
+    "artifact_id": 14086898379,
+    "zip_sha256": "694d23b69f97ecab2537211281f52475be75db4ed1bdf0d1cce0807779a3286b",
+    "receipt": "visual-check-43530862046.json",
+    "receipt_sha256": "fb6ad999eba43d8145e276eba5c5e629a9d735f1a53be1aa081e4669decd61ee",
+    "method": "85 baseline images inspected individually; all4 exact candidate exports rendered and all85 images compared in full RGBA/dimensions with the inspected baseline; zero differences.",
+    "counts": {
+      "preserved_pptx_slides": 39,
+      "legacy_pptx_slides": 26,
+      "preserved_docx_pages": 14,
+      "legacy_docx_pages": 6
+    },
+    "generated_manifest": {
+      "schema": "wp07-export-inspection-v1",
+      "fixture": "explicit synthetic data; 25 projects, long notes, monthly financial trajectory, empty section and preserved human comment",
+      "productSha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+      "runId": "43530862046",
+      "runAttempt": "1",
+      "contentExtraction": "passed",
+      "visualInspection": "pending; render and inspect these exact files",
+      "files": [
+        {
+          "name": "preserved-long.pptx",
+          "sha256": "267e0628d8e471fc917e34b42f7bfb524610d2df62f1d34231b97ee394721b7a",
+          "bytes": 1063233,
+          "format": "pptx",
+          "kind": "preserved",
+          "selectedRecords": 26,
+          "slides": 39,
+          "figures": 1,
+          "extractedTextSha256": "7de5d5ada23b1b52bc7868bd3e3e253da6c768f674b1827becdb91e132121d3a"
+        },
+        {
+          "name": "legacy-long.pptx",
+          "sha256": "b0ea733c3e581e0ba582ed961b96d66d3aeddd9c06d81b2535684c76b79b5313",
+          "bytes": 399219,
+          "format": "pptx",
+          "kind": "legacy",
+          "selectedRecords": 25,
+          "slides": 26,
+          "figures": 0,
+          "extractedTextSha256": "916d6aa734ed022187d7f7381fc0a9e4361d01ee1d8c718bab3209636676dbe6"
+        },
+        {
+          "name": "preserved-long.docx",
+          "sha256": "266ed8f274835879226e03e5f965bdd5e2c6598ddd43321aeb6b33746931555d",
+          "bytes": 15274,
+          "format": "docx",
+          "kind": "preserved",
+          "selectedRecords": 26,
+          "slides": null,
+          "figures": 1,
+          "extractedTextSha256": "aaf3cb909d7c67042ffde410e7217433812c737775d29e44e56f359569f47f3c"
+        },
+        {
+          "name": "legacy-long.docx",
+          "sha256": "ad62001429d86947b4a7a84dd2a55f1f3c6c514a6898e6f00285bed3dca0ce10",
+          "bytes": 9416,
+          "format": "docx",
+          "kind": "legacy",
+          "selectedRecords": 25,
+          "slides": null,
+          "figures": 0,
+          "extractedTextSha256": "e74e9e767adeefc4b232c8aae273b6dd79de420de3daa959f44f15b6d0e5dad5"
+        }
+      ]
+    },
+    "manifest_note": "The unchanged hosted manifest says visual inspection pending because it precedes the separate completed visual receipt."
+  },
+  "acceptance": {
+    "total": 86,
+    "global": 16,
+    "tasks": {
+      "WP07.T01": 13,
+      "WP07.T02": 22,
+      "WP07.T03": 14,
+      "WP07.T04": 21
+    },
+    "acceptance_status": {
+      "BLOCKED_EXTERNAL": 36,
+      "VERIFIED_SCOPED": 50
+    },
+    "proof_status": {
+      "HOSTED_PARTIAL": 36,
+      "HOSTED_VERIFIED_SCOPED": 50
+    },
+    "mapped_test_groups": 276,
+    "mapped_test_name_bindings": 472,
+    "hosted_unique_test_results": {
+      "PASS": 68,
+      "FAIL": 0,
+      "files_across_runs": 20,
+      "non_browser_assertions": 826,
+      "browser_assertions": null
+    }
+  },
+  "native_session_receipts": [],
+  "skill_load_receipts": [],
+  "consumption_receipts": [],
+  "global_campaign_acceptance": "NOT_CLAIMED",
+  "changed_paths_at_tested_product": {
+    "base": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+    "head": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+    "tree": "889fe8f2c5dfc25ba9d8c25962e984454a12bd81",
+    "compare_url": "https://github.com/gustavomhss/Orchestra-SF/compare/6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0...c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+    "files": [
+      {
+        "path": ".github/workflows/astra-wp07-check.yml",
+        "sha": "28c453f4b7735f944e1237715e399e955d86546c",
+        "status": "added",
+        "additions": 59,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/SELECTION-CONSUMERS-AUDIT.md",
+        "sha": "091a0c257d5c8f59b9962401b8878f284ed52cf9",
+        "status": "added",
+        "additions": 37,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reports/storage.ts",
+        "sha": "4e85f0e809455aefdeebb586fa7c268c09d49de3",
+        "status": "modified",
+        "additions": 54,
+        "deletions": 10
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/README.md",
+        "sha": "1cb5593aed22ab4767e761cb1536a92de852347e",
+        "status": "modified",
+        "additions": 14,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/application.ts",
+        "sha": "9a508eea9d01cdebc28ee2fed72a279782c0ba79",
+        "status": "added",
+        "additions": 57,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/browser.ts",
+        "sha": "e636f945d92aa14eb951d71d91754d49027ce8d4",
+        "status": "added",
+        "additions": 138,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/capabilities.ts",
+        "sha": "fd79690c368087f48276e0cb21198f91f59d5e63",
+        "status": "modified",
+        "additions": 10,
+        "deletions": 7
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/chart.ts",
+        "sha": "c5b7a979305e5894c9cc6dd00604c082ab6bed8b",
+        "status": "modified",
+        "additions": 65,
+        "deletions": 12
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/closure-action.ts",
+        "sha": "92e74e4f231e02a4d357232da08cb21e1bedc158",
+        "status": "added",
+        "additions": 129,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/closure.ts",
+        "sha": "7ce0afc5cf1c65bedafc8e5678c6e23052f52874",
+        "status": "added",
+        "additions": 52,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/compare.ts",
+        "sha": "3ef456060b03e6ad1f4460505e964990d71e8820",
+        "status": "modified",
+        "additions": 210,
+        "deletions": 36
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/comparison-port.ts",
+        "sha": "a3e206ea6ab413330328c3372f816182b564affa",
+        "status": "added",
+        "additions": 53,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/composition.ts",
+        "sha": "a0a35f08941e6fbbaa5890ae87ebd7bd547300c3",
+        "status": "added",
+        "additions": 39,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/contribution.ts",
+        "sha": "ca2bd345aa40618fd66c648e4199e2074d4aed39",
+        "status": "added",
+        "additions": 116,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/decision-access.ts",
+        "sha": "1b75f4b1786bb351c15821d76a31030fba677e7e",
+        "status": "added",
+        "additions": 61,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/decision.ts",
+        "sha": "54d3bf74bf136692e1aa20889b24b82d6f138695",
+        "status": "added",
+        "additions": 58,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/handoff-access.ts",
+        "sha": "d16dad918d45a0b1c80474ee8a7167cdae9b0b99",
+        "status": "added",
+        "additions": 35,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/http.ts",
+        "sha": "3411fe33f7e907cdb98c35841161342fda43a3c8",
+        "status": "added",
+        "additions": 162,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/human.ts",
+        "sha": "3877edbe3f3b1e4ae50f52a40ebcc9dab68d0b21",
+        "status": "added",
+        "additions": 42,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/inclusion.ts",
+        "sha": "7fa03e1967278a47c2e8bba9ee0fae7d4b512564",
+        "status": "added",
+        "additions": 46,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/meeting-chart.ts",
+        "sha": "38eafb83e02b75cb8e96c444760a76182517c65b",
+        "status": "added",
+        "additions": 29,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/meeting.ts",
+        "sha": "c2c8bf7ff6209daf43edc6a74faafc1da5604329",
+        "status": "modified",
+        "additions": 271,
+        "deletions": 31
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/outcome-access.ts",
+        "sha": "0d2e56a184b0a39a0a0b8dc2d5e54b7947fc4d1d",
+        "status": "added",
+        "additions": 26,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/outcome.ts",
+        "sha": "1a628eb2841f9241a3521acb7adb8afa7736585e",
+        "status": "added",
+        "additions": 53,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/port.ts",
+        "sha": "1fac49daf22f731a439102df25c0a9ea24e15f62",
+        "status": "modified",
+        "additions": 81,
+        "deletions": 23
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/render.ts",
+        "sha": "b86ae1f0c012922610a9567a3ef6a4af1fd5e050",
+        "status": "modified",
+        "additions": 100,
+        "deletions": 24
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/report-layout.ts",
+        "sha": "ed6d3f5342d06fac2782ae4ae63c1158e6b1c2fb",
+        "status": "added",
+        "additions": 194,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/selection.ts",
+        "sha": "90e42fbf42c07b11d7a1546a3e828d2de5e970fd",
+        "status": "added",
+        "additions": 287,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/sensitivity.ts",
+        "sha": "25a286482848f04f65285b31bb086c031d4b0f89",
+        "status": "added",
+        "additions": 11,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/services.ts",
+        "sha": "072d49caa29b32020def8b65c6fb46849e48e154",
+        "status": "added",
+        "additions": 47,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/thread-access.ts",
+        "sha": "a13b2ddcce4de5a7c415fa333055d7457df58b5c",
+        "status": "added",
+        "additions": 80,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/workspace.ts",
+        "sha": "27d4b4d5f06f35841707a9836c73a4a1b9360674",
+        "status": "added",
+        "additions": 242,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/reports.ts",
+        "sha": "80054e559574a9e13ce26cdfc7fbb3f778847b6f",
+        "status": "modified",
+        "additions": 50,
+        "deletions": 73
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/parity-reports.test.ts",
+        "sha": "d52082c8538917ae616d09102758bcce66bc5305",
+        "status": "modified",
+        "additions": 15,
+        "deletions": 8
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp07/application.test.ts",
+        "sha": "bd0f0f731ad8d13f2ca76c78c9c680f3209f7cfd",
+        "status": "added",
+        "additions": 216,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp07/artifact-storage.test.ts",
+        "sha": "416bcf1de69ab2650572f9b1a52284c554e325f5",
+        "status": "added",
+        "additions": 71,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp07/browser-build.test.ts",
+        "sha": "f2274e98de44db74d99dff5f4993720325f02170",
+        "status": "added",
+        "additions": 22,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp07/browser-ui-entry.ts",
+        "sha": "2daeb5cd3399d5df020a8b3a67519e58987f2d1d",
+        "status": "added",
+        "additions": 44,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp07/browser-ui.test.ts",
+        "sha": "f7906b2ddc9ee282df1f084a60569c02f0229baa",
+        "status": "added",
+        "additions": 425,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp07/chromium-cleanup.ts",
+        "sha": "26a07dfe8d5a5c1986535aea0c857bfd9faffda5",
+        "status": "added",
+        "additions": 96,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp07/closure-action.test.ts",
+        "sha": "2fb094eb04a42123b95407ca0682f9d5d3552592",
+        "status": "added",
+        "additions": 48,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp07/closure.test.ts",
+        "sha": "fdd9a9ecca974acdf70f14b4bfc69368d13a0aea",
+        "status": "added",
+        "additions": 29,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp07/comparison.test.ts",
+        "sha": "9046a22642cafa575dfe981e139abe10c7ae6da9",
+        "status": "added",
+        "additions": 112,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp07/composition.test.ts",
+        "sha": "d33bf05add10d9600867a0ff53fd0a20ae75e2a4",
+        "status": "added",
+        "additions": 81,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp07/contribution.test.ts",
+        "sha": "c7eddbecc1fd09c8040e03b5684767c91af82f8c",
+        "status": "added",
+        "additions": 38,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp07/decision-access.test.ts",
+        "sha": "f8fafc4ab361e562e4e3ee941095407afac9b2d5",
+        "status": "added",
+        "additions": 42,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp07/export-completeness.test.ts",
+        "sha": "d27fe67e7ec6ad37c6c5dec495f6049faaf12c61",
+        "status": "added",
+        "additions": 38,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp07/export-fixture.ts",
+        "sha": "110888ba7f19e4b45e24c25ad76eeb77089e1c50",
+        "status": "added",
+        "additions": 53,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp07/generate-export-fixtures.ts",
+        "sha": "a033c612863d033ce70497bac97e44d1fbb08e62",
+        "status": "added",
+        "additions": 34,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp07/human.test.ts",
+        "sha": "8ac8eed148d03031208fac7ab368ae5e0cb6b5ef",
+        "status": "added",
+        "additions": 61,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp07/outcome.test.ts",
+        "sha": "8c0a3bb8d780289466501e3f2e675077aa4fd469",
+        "status": "added",
+        "additions": 62,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp07/persistence.ts",
+        "sha": "d3966132ddc789fc6a00b58b13c2abcf3866a57a",
+        "status": "added",
+        "additions": 44,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp07/report-layout.test.ts",
+        "sha": "71c78cd46079b0dfd0c43a755de6f343accd956c",
+        "status": "added",
+        "additions": 35,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+        "sha": "2ab531e2571d3299d835ad06f28a3e0bf70ad8e1",
+        "status": "modified",
+        "additions": 104,
+        "deletions": 15
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp07/selection.test.ts",
+        "sha": "8e053c34d75e663ecff2b04ee1e650dae4c867b3",
+        "status": "added",
+        "additions": 311,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp07/services.test.ts",
+        "sha": "9c827b6da7b4c6f77ad15a07cc1c08ed004de81e",
+        "status": "added",
+        "additions": 94,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp07/thread-access.test.ts",
+        "sha": "32f474b4b1020382fb1cd2262e1d541e85bad2a0",
+        "status": "added",
+        "additions": 55,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/reports-runtime.test.ts",
+        "sha": "69b530d7396bc7b1b16b672093309c976de15d89",
+        "status": "modified",
+        "additions": 18,
+        "deletions": 0
+      }
+    ]
+  },
+  "external_delta": "INTEGRATION-DELTA.md",
+  "typecheck_external": "TYPECHECK-EXTERNAL.md"
+}

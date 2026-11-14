@@ -1,0 +1,2377 @@
+{
+  "schema": "sf-wp07-t03-source-review-v1",
+  "scope": [
+    "WP07.T03",
+    "WP07.CMP.03"
+  ],
+  "reviewed_at": "2026-11-13",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "astra-wp07",
+  "seed_commit": "5be7b75f5540190deace73b620679db5a509bc4f",
+  "seed_tree": "e43029aef3ce91896aeb6ffba3eb6e116dc97686",
+  "planning_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "campaign_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+  "tested_product_commit": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+  "hosted_test_runs": [
+    {
+      "product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+      "product_tree": "889fe8f2c5dfc25ba9d8c25962e984454a12bd81",
+      "ci_snapshot_sha": "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+      "ci_snapshot_tree": "d469c13334f526fbef13d0f41bccd2b5732b1b46",
+      "run_id": "43531115429",
+      "job_id": "132248784028",
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43531115429",
+      "overall_status": "PASS",
+      "counts": {
+        "passed": 67,
+        "failed": 0,
+        "tests": 67,
+        "files": 19,
+        "assertions": 826
+      },
+      "omni_control": {
+        "status": "NOT_APPLICABLE_VALIDATED",
+        "nonce": "3c2706e6abec6d74a8d64a0f8de93ea1",
+        "scope": "No declaring test, no omni spawn or delegation. This proves no omni/native execution."
+      },
+      "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43531115429.json"
+    },
+    {
+      "product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+      "product_tree": "889fe8f2c5dfc25ba9d8c25962e984454a12bd81",
+      "ci_snapshot_sha": "9d4670fdf446d5e7acc01b95842209f68bd18e0b",
+      "ci_snapshot_tree": "7d4b0605bd01131ec6925a3bed025e9316760d5f",
+      "run_id": "43530831862",
+      "job_id": "132247794669",
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43530831862",
+      "overall_status": "PASS",
+      "counts": {
+        "passed": 1,
+        "failed": 0,
+        "tests": 1,
+        "files": 1,
+        "assertions": null
+      },
+      "omni_control": {
+        "status": "NOT_APPLICABLE_VALIDATED",
+        "nonce": "2a448a45a4da4aa06e3f38a68527d548",
+        "scope": "No declaring test, no omni spawn or delegation. This proves no omni/native execution."
+      },
+      "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43530831862.json"
+    }
+  ],
+  "native_execution_receipts": [],
+  "evidence_status": "HOSTED_MONTHLY_BROWSER_AND_NONBROWSER_SCOPED_ANNUAL_PERFORMANCE_AND_NATIVE_BLOCKERS_REMAIN",
+  "evidence_policy": "Each test is reconciled with its own PASS on the exact product W and one of two independent CI snapshots S. Previous failed runs remain historical receipts; current scoped passes do not remove native/producer blockers or the failing full typecheck. Monthly scope only: 2027-01-01 through 2027-01-31, using the period accepted by the real Planner without truncating its returned projection. Actual Chromium, Bun server, operator identity, UI/human authority, protected C08, real SQLite, real Planner, application HTTP, preparation and meeting consumers. The source/history catalog, C06 thread and host source/review-navigation adapters are explicitly controlled. Annual browser performance remains BLOCKED_EXTERNAL after two failed full-year runs. This is not native WP10 installation mounting, C17 physical deletion/replacement, persisted WP08 history or C16 native/MCP execution.",
+  "browser_runtime_review": {
+    "status": "HOSTED_BROWSER_PASS_SCOPED",
+    "change": "When readComparison is provided, meeting.ts consumes the authorized server result directly; comparison-port still rereads both bases, compares full digests and revalidates host authority. The fallback without a comparison port uses pure canonicalSfValue for local payload consistency; it does not create authority. outcome.ts and sensitivity.ts also use the browser-safe canonical representation on their display paths.",
+    "transitive_audit": "decision/schema-admission/output-schemas/operations/validation, compare/outcome/references, and meeting-chart/analytics/view have no executed Bun digest call on the reviewed render path. analytics/view calls only pure hasBiDecision; it does not call sameBiProjection. contracts/canonical.ts was not modified.",
+    "navigation_contract": {
+      "openSource": "(reference: BusinessEvidenceRef) => void | Promise<void>",
+      "openReviewSection": "(reviewRef: string, sectionId: string) => void | Promise<void>"
+    },
+    "bundle_evidence": {
+      "run_id": "43531115429",
+      "test_results": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/browser-build.test.ts",
+          "name": "review browser entry bundles without server runtime dependencies",
+          "status": "PASS",
+          "log_line": 876,
+          "duration_ms": 6.58
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/browser-build.test.ts",
+          "name": "review workspace entry bundles without server runtime dependencies",
+          "status": "PASS",
+          "log_line": 877,
+          "duration_ms": 4.35
+        }
+      ]
+    },
+    "interaction_evidence": {
+      "status": "PASS",
+      "run_id": "43530831862",
+      "ci_snapshot_sha": "9d4670fdf446d5e7acc01b95842209f68bd18e0b",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43530831862.json",
+      "scope": "Monthly scope only: 2027-01-01 through 2027-01-31, using the period accepted by the real Planner without truncating its returned projection. Actual Chromium, Bun server, operator identity, UI/human authority, protected C08, real SQLite, real Planner, application HTTP, preparation and meeting consumers. The source/history catalog, C06 thread and host source/review-navigation adapters are explicitly controlled. Annual browser performance remains BLOCKED_EXTERNAL after two failed full-year runs. This is not native WP10 installation mounting, C17 physical deletion/replacement, persisted WP08 history or C16 native/MCP execution.",
+      "verified_behaviors": [
+        "All following browser behaviors are verified only for the January 2027 slice; no annual browser performance acceptance is inferred.",
+        "Authorized agenda order and removal, stale preview refusal and explicit refresh.",
+        "Lost response after real SQLite commit; explicit retry reuses Idempotency-Key and the original review.",
+        "A new review preserves 130 while the predecessor remains 120; later Planner value 140 does not silently replace meeting values.",
+        "Topic navigation, explicit update check and requestUpdate navigation without automatic new preservation.",
+        "Comparison 120 to 130 with delta 10, before/after review navigation and first-review state without fabricated changes.",
+        "Attributed preserved comments with author, time and v1 displayed separately from numeric differences.",
+        "Exact preserved source digest delegated through a revalidated host callback; rejected destination and revoked review clear headings/list items.",
+        "Revoked before-item navigation is refused without opening another review; no browser page errors."
+      ]
+    },
+    "navigation_wiring": "browser.ts forwards source/review callbacks; authorized callbacks were exercised in the isolated browser host. Native host and physical C17 resolution remain external."
+  },
+  "criteria": [
+    {
+      "criterion_id": "WP07.T03.CHK.01",
+      "criterion": "Comparar revisões sintéticas com forecast 1320→1400, um projeto removido e uma ação concluída: mostrar +80, remoção e estado da mesma ação, sem criar uma ação nova.",
+      "implementation_status": "IMPLEMENTED_LOCAL_CONSUMER",
+      "implementation_paths": [
+        "modules/sucafina/Sucafinav1/product/reviews/compare.ts",
+        "modules/sucafina/Sucafinav1/product/reviews/comparison-port.ts",
+        "modules/sucafina/Sucafinav1/product/reviews/closure-action.ts",
+        "modules/sucafina/Sucafinav1/product/reviews/handoff-access.ts",
+        "modules/sucafina/Sucafinav1/product/reviews/meeting.ts"
+      ],
+      "test_sources": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/comparison.test.ts",
+          "tests": [
+            "comparison follows unambiguous record identity across a row rename and retains removals, status and due changes",
+            "comparison reader exposes a canonical forwarding separately and removes all content on access revocation"
+          ],
+          "execution_status": "HOSTED_PASS_SCOPED",
+          "tested_product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+          "ci_snapshot_sha": "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+          "run_id": "43531115429",
+          "job_id": "132248784028",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43531115429.json",
+          "test_results": [
+            {
+              "name": "comparison follows unambiguous record identity across a row rename and retains removals, status and due changes",
+              "status": "PASS",
+              "run_id": "43531115429",
+              "log_line": 863,
+              "duration_ms": 0.5
+            },
+            {
+              "name": "comparison reader exposes a canonical forwarding separately and removes all content on access revocation",
+              "status": "PASS",
+              "run_id": "43531115429",
+              "log_line": 865,
+              "duration_ms": 0.88
+            }
+          ],
+          "proof_scope": "Pure comparison and authenticated port consumer with controlled review/action readers; not a WP02/WP08 native integration witness."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/closure-action.test.ts",
+          "tests": [
+            "closure binds an authorized handoff to the immutable review and rereads its action"
+          ],
+          "execution_status": "HOSTED_PASS_SCOPED",
+          "tested_product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+          "ci_snapshot_sha": "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+          "run_id": "43531115429",
+          "job_id": "132248784028",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43531115429.json",
+          "test_results": [
+            {
+              "name": "closure binds an authorized handoff to the immutable review and rereads its action",
+              "status": "PASS",
+              "run_id": "43531115429",
+              "log_line": 870,
+              "duration_ms": 8.66
+            }
+          ],
+          "proof_scope": "Real C08/UI/human components with controlled handoff/action ports; not a real action-source incarnation continuity witness."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/browser-ui.test.ts",
+          "tests": [
+            "Chromium preserves the chosen agenda, recovers a lost response and removes revoked content"
+          ],
+          "execution_status": "HOSTED_BROWSER_PASS_SCOPED",
+          "tested_product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+          "ci_snapshot_sha": "9d4670fdf446d5e7acc01b95842209f68bd18e0b",
+          "run_id": "43530831862",
+          "job_id": "132247794669",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43530831862.json",
+          "test_results": [
+            {
+              "name": "Chromium preserves the chosen agenda, recovers a lost response and removes revoked content",
+              "status": "PASS",
+              "run_id": "43530831862",
+              "log_line": 929,
+              "duration_ms": 10993.36
+            }
+          ],
+          "proof_scope": "Monthly scope only: 2027-01-01 through 2027-01-31, using the period accepted by the real Planner without truncating its returned projection. Actual Chromium, Bun server, operator identity, UI/human authority, protected C08, real SQLite, real Planner, application HTTP, preparation and meeting consumers. The source/history catalog, C06 thread and host source/review-navigation adapters are explicitly controlled. Annual browser performance remains BLOCKED_EXTERNAL after two failed full-year runs. This is not native WP10 installation mounting, C17 physical deletion/replacement, persisted WP08 history or C16 native/MCP execution."
+        }
+      ],
+      "negative_cases": [
+        "A changed action is read by the same canonical id; comparison performs no action mutation.",
+        "An exact closure retry after the current action advances returns the original closure without calling handoff.create again."
+      ],
+      "remaining_evidence_or_dependency": [
+        "Comparison unit test uses port fixtures; closure test uses real C08 storage but a handoff/action seam. A WP02 plus WP08 integrated witness remains required."
+      ],
+      "verdict": "VERIFIED_SCOPED",
+      "proof_status": "HOSTED_VERIFIED_SCOPED",
+      "acceptance_scope": "Verified for named hosted assertions and the actual isolated January 2027 browser interactions within explicit fixture/producer boundaries. Not full native installation acceptance; typecheck still fails externally.",
+      "blocked_by": [],
+      "evidence": {
+        "tested_product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+        "ci_snapshot_sha": "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+        "run_ids": [
+          "43531115429",
+          "43530831862"
+        ],
+        "native_receipts": [],
+        "visual_receipt": null,
+        "test_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43531115429.json",
+        "aggregate_test_run_status": "PASS_FOR_TWO_SEPARATE_SURGICAL_RUNS",
+        "typecheck_gate_status": "FAIL",
+        "ci_snapshot_shas": [
+          "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+          "9d4670fdf446d5e7acc01b95842209f68bd18e0b"
+        ]
+      },
+      "browser_evidence": {
+        "status": "HOSTED_BROWSER_PASS_SCOPED",
+        "run_id": "43530831862",
+        "ci_snapshot_sha": "9d4670fdf446d5e7acc01b95842209f68bd18e0b",
+        "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43530831862.json",
+        "test_name": "Chromium preserves the chosen agenda, recovers a lost response and removes revoked content",
+        "scope": "Monthly scope only: 2027-01-01 through 2027-01-31, using the period accepted by the real Planner without truncating its returned projection. Actual Chromium, Bun server, operator identity, UI/human authority, protected C08, real SQLite, real Planner, application HTTP, preparation and meeting consumers. The source/history catalog, C06 thread and host source/review-navigation adapters are explicitly controlled. Annual browser performance remains BLOCKED_EXTERNAL after two failed full-year runs. This is not native WP10 installation mounting, C17 physical deletion/replacement, persisted WP08 history or C16 native/MCP execution.",
+        "verified_behaviors": [
+          "All following browser behaviors are verified only for the January 2027 slice; no annual browser performance acceptance is inferred.",
+          "Authorized agenda order and removal, stale preview refusal and explicit refresh.",
+          "Lost response after real SQLite commit; explicit retry reuses Idempotency-Key and the original review.",
+          "A new review preserves 130 while the predecessor remains 120; later Planner value 140 does not silently replace meeting values.",
+          "Topic navigation, explicit update check and requestUpdate navigation without automatic new preservation.",
+          "Comparison 120 to 130 with delta 10, before/after review navigation and first-review state without fabricated changes.",
+          "Attributed preserved comments with author, time and v1 displayed separately from numeric differences.",
+          "Exact preserved source digest delegated through a revalidated host callback; rejected destination and revoked review clear headings/list items.",
+          "Revoked before-item navigation is refused without opening another review; no browser page errors."
+        ]
+      }
+    },
+    {
+      "criterion_id": "WP07.T03.CHK.02",
+      "criterion": "Comparar valores em competências ou moedas não equivalentes: não calcular um delta monetário como se fossem homogêneos; a incompatibilidade precisa estar explícita.",
+      "implementation_status": "IMPLEMENTED_LOCAL_CONSUMER",
+      "implementation_paths": [
+        "modules/sucafina/Sucafinav1/product/reviews/compare.ts",
+        "modules/sucafina/Sucafinav1/product/reviews/meeting.ts"
+      ],
+      "test_sources": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/comparison.test.ts",
+          "tests": [
+            "replacement, unit, currency, period and missing values never produce an invented monetary delta"
+          ],
+          "execution_status": "HOSTED_PASS_SCOPED",
+          "tested_product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+          "ci_snapshot_sha": "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+          "run_id": "43531115429",
+          "job_id": "132248784028",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43531115429.json",
+          "test_results": [
+            {
+              "name": "replacement, unit, currency, period and missing values never produce an invented monetary delta",
+              "status": "PASS",
+              "run_id": "43531115429",
+              "log_line": 864,
+              "duration_ms": 0.36
+            }
+          ],
+          "proof_scope": "Pure comparison and authenticated port consumer with controlled review/action readers; not a WP02/WP08 native integration witness."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+          "tests": [
+            "comparison requires identity and a compatible period before calculating a delta"
+          ],
+          "execution_status": "HOSTED_PASS_SCOPED",
+          "tested_product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+          "ci_snapshot_sha": "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+          "run_id": "43531115429",
+          "job_id": "132248784028",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43531115429.json",
+          "test_results": [
+            {
+              "name": "comparison requires identity and a compatible period before calculating a delta",
+              "status": "PASS",
+              "run_id": "43531115429",
+              "log_line": 831,
+              "duration_ms": 2.96
+            }
+          ],
+          "proof_scope": "Real review/storage/export paths with controlled source and access callbacks; source deletion in the fixture is not physical C17 tombstone proof. XML assertions are not visual inspection."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/browser-ui.test.ts",
+          "tests": [
+            "Chromium preserves the chosen agenda, recovers a lost response and removes revoked content"
+          ],
+          "execution_status": "HOSTED_BROWSER_PASS_SCOPED",
+          "tested_product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+          "ci_snapshot_sha": "9d4670fdf446d5e7acc01b95842209f68bd18e0b",
+          "run_id": "43530831862",
+          "job_id": "132247794669",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43530831862.json",
+          "test_results": [
+            {
+              "name": "Chromium preserves the chosen agenda, recovers a lost response and removes revoked content",
+              "status": "PASS",
+              "run_id": "43530831862",
+              "log_line": 929,
+              "duration_ms": 10993.36
+            }
+          ],
+          "proof_scope": "Monthly scope only: 2027-01-01 through 2027-01-31, using the period accepted by the real Planner without truncating its returned projection. Actual Chromium, Bun server, operator identity, UI/human authority, protected C08, real SQLite, real Planner, application HTTP, preparation and meeting consumers. The source/history catalog, C06 thread and host source/review-navigation adapters are explicitly controlled. Annual browser performance remains BLOCKED_EXTERNAL after two failed full-year runs. This is not native WP10 installation mounting, C17 physical deletion/replacement, persisted WP08 history or C16 native/MCP execution."
+        }
+      ],
+      "negative_cases": [
+        "Different currency, unit, period, incarnation, engine definition, missing identity, duplicate identity and overflowing difference cannot yield a monetary delta.",
+        "Null is not converted to zero."
+      ],
+      "remaining_evidence_or_dependency": [],
+      "verdict": "VERIFIED_SCOPED",
+      "proof_status": "HOSTED_VERIFIED_SCOPED",
+      "acceptance_scope": "Verified for named hosted assertions and the actual isolated January 2027 browser interactions within explicit fixture/producer boundaries. Not full native installation acceptance; typecheck still fails externally.",
+      "blocked_by": [],
+      "evidence": {
+        "tested_product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+        "ci_snapshot_sha": "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+        "run_ids": [
+          "43531115429",
+          "43530831862"
+        ],
+        "native_receipts": [],
+        "visual_receipt": null,
+        "test_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43531115429.json",
+        "aggregate_test_run_status": "PASS_FOR_TWO_SEPARATE_SURGICAL_RUNS",
+        "typecheck_gate_status": "FAIL",
+        "ci_snapshot_shas": [
+          "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+          "9d4670fdf446d5e7acc01b95842209f68bd18e0b"
+        ]
+      },
+      "browser_evidence": {
+        "status": "HOSTED_BROWSER_PASS_SCOPED",
+        "run_id": "43530831862",
+        "ci_snapshot_sha": "9d4670fdf446d5e7acc01b95842209f68bd18e0b",
+        "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43530831862.json",
+        "test_name": "Chromium preserves the chosen agenda, recovers a lost response and removes revoked content",
+        "scope": "Monthly scope only: 2027-01-01 through 2027-01-31, using the period accepted by the real Planner without truncating its returned projection. Actual Chromium, Bun server, operator identity, UI/human authority, protected C08, real SQLite, real Planner, application HTTP, preparation and meeting consumers. The source/history catalog, C06 thread and host source/review-navigation adapters are explicitly controlled. Annual browser performance remains BLOCKED_EXTERNAL after two failed full-year runs. This is not native WP10 installation mounting, C17 physical deletion/replacement, persisted WP08 history or C16 native/MCP execution.",
+        "verified_behaviors": [
+          "All following browser behaviors are verified only for the January 2027 slice; no annual browser performance acceptance is inferred.",
+          "Authorized agenda order and removal, stale preview refusal and explicit refresh.",
+          "Lost response after real SQLite commit; explicit retry reuses Idempotency-Key and the original review.",
+          "A new review preserves 130 while the predecessor remains 120; later Planner value 140 does not silently replace meeting values.",
+          "Topic navigation, explicit update check and requestUpdate navigation without automatic new preservation.",
+          "Comparison 120 to 130 with delta 10, before/after review navigation and first-review state without fabricated changes.",
+          "Attributed preserved comments with author, time and v1 displayed separately from numeric differences.",
+          "Exact preserved source digest delegated through a revalidated host callback; rejected destination and revoked review clear headings/list items.",
+          "Revoked before-item navigation is refused without opening another review; no browser page errors."
+        ]
+      }
+    },
+    {
+      "criterion_id": "WP07.T03.CHK.03",
+      "criterion": "Comparar como usuário que perdeu acesso a um tópico e abrir a primeira revisão sem antecessora: nenhum conteúdo revogado ou diferença histórica inventada aparece.",
+      "implementation_status": "IMPLEMENTED_FAIL_CLOSED",
+      "implementation_paths": [
+        "modules/sucafina/Sucafinav1/product/reviews/comparison-port.ts",
+        "modules/sucafina/Sucafinav1/product/reviews/compare.ts",
+        "modules/sucafina/Sucafinav1/product/reviews/meeting.ts"
+      ],
+      "test_sources": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/comparison.test.ts",
+          "tests": [
+            "comparison reader exposes a canonical forwarding separately and removes all content on access revocation",
+            "first review and an unavailable referenced predecessor have different states",
+            "comparison rechecks both immutable bases and final authority before returning any data"
+          ],
+          "execution_status": "HOSTED_PASS_SCOPED",
+          "tested_product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+          "ci_snapshot_sha": "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+          "run_id": "43531115429",
+          "job_id": "132248784028",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43531115429.json",
+          "test_results": [
+            {
+              "name": "comparison reader exposes a canonical forwarding separately and removes all content on access revocation",
+              "status": "PASS",
+              "run_id": "43531115429",
+              "log_line": 865,
+              "duration_ms": 0.88
+            },
+            {
+              "name": "first review and an unavailable referenced predecessor have different states",
+              "status": "PASS",
+              "run_id": "43531115429",
+              "log_line": 866,
+              "duration_ms": 0.28
+            },
+            {
+              "name": "comparison rechecks both immutable bases and final authority before returning any data",
+              "status": "PASS",
+              "run_id": "43531115429",
+              "log_line": 867,
+              "duration_ms": 0.43
+            }
+          ],
+          "proof_scope": "Pure comparison and authenticated port consumer with controlled review/action readers; not a WP02/WP08 native integration witness."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+          "tests": [
+            "preserved review survives changed projections and is denied after access revocation"
+          ],
+          "execution_status": "HOSTED_PASS_SCOPED",
+          "tested_product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+          "ci_snapshot_sha": "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+          "run_id": "43531115429",
+          "job_id": "132248784028",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43531115429.json",
+          "test_results": [
+            {
+              "name": "preserved review survives changed projections and is denied after access revocation",
+              "status": "PASS",
+              "run_id": "43531115429",
+              "log_line": 830,
+              "duration_ms": 66.15
+            }
+          ],
+          "proof_scope": "Real review/storage/export paths with controlled source and access callbacks; source deletion in the fixture is not physical C17 tombstone proof. XML assertions are not visual inspection."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/browser-ui.test.ts",
+          "tests": [
+            "Chromium preserves the chosen agenda, recovers a lost response and removes revoked content"
+          ],
+          "execution_status": "HOSTED_BROWSER_PASS_SCOPED",
+          "tested_product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+          "ci_snapshot_sha": "9d4670fdf446d5e7acc01b95842209f68bd18e0b",
+          "run_id": "43530831862",
+          "job_id": "132247794669",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43530831862.json",
+          "test_results": [
+            {
+              "name": "Chromium preserves the chosen agenda, recovers a lost response and removes revoked content",
+              "status": "PASS",
+              "run_id": "43530831862",
+              "log_line": 929,
+              "duration_ms": 10993.36
+            }
+          ],
+          "proof_scope": "Monthly scope only: 2027-01-01 through 2027-01-31, using the period accepted by the real Planner without truncating its returned projection. Actual Chromium, Bun server, operator identity, UI/human authority, protected C08, real SQLite, real Planner, application HTTP, preparation and meeting consumers. The source/history catalog, C06 thread and host source/review-navigation adapters are explicitly controlled. Annual browser performance remains BLOCKED_EXTERNAL after two failed full-year runs. This is not native WP10 installation mounting, C17 physical deletion/replacement, persisted WP08 history or C16 native/MCP execution."
+        }
+      ],
+      "negative_cases": [
+        "Revocation before final read returns no value or action text.",
+        "An absent predecessor differs from a first review; no invented historical change."
+      ],
+      "remaining_evidence_or_dependency": [],
+      "verdict": "VERIFIED_SCOPED",
+      "proof_status": "HOSTED_VERIFIED_SCOPED",
+      "acceptance_scope": "Verified for named hosted assertions and the actual isolated January 2027 browser interactions within explicit fixture/producer boundaries. Not full native installation acceptance; typecheck still fails externally.",
+      "blocked_by": [],
+      "evidence": {
+        "tested_product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+        "ci_snapshot_sha": "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+        "run_ids": [
+          "43531115429",
+          "43530831862"
+        ],
+        "native_receipts": [],
+        "visual_receipt": null,
+        "test_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43531115429.json",
+        "aggregate_test_run_status": "PASS_FOR_TWO_SEPARATE_SURGICAL_RUNS",
+        "typecheck_gate_status": "FAIL",
+        "ci_snapshot_shas": [
+          "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+          "9d4670fdf446d5e7acc01b95842209f68bd18e0b"
+        ]
+      },
+      "browser_evidence": {
+        "status": "HOSTED_BROWSER_PASS_SCOPED",
+        "run_id": "43530831862",
+        "ci_snapshot_sha": "9d4670fdf446d5e7acc01b95842209f68bd18e0b",
+        "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43530831862.json",
+        "test_name": "Chromium preserves the chosen agenda, recovers a lost response and removes revoked content",
+        "scope": "Monthly scope only: 2027-01-01 through 2027-01-31, using the period accepted by the real Planner without truncating its returned projection. Actual Chromium, Bun server, operator identity, UI/human authority, protected C08, real SQLite, real Planner, application HTTP, preparation and meeting consumers. The source/history catalog, C06 thread and host source/review-navigation adapters are explicitly controlled. Annual browser performance remains BLOCKED_EXTERNAL after two failed full-year runs. This is not native WP10 installation mounting, C17 physical deletion/replacement, persisted WP08 history or C16 native/MCP execution.",
+        "verified_behaviors": [
+          "All following browser behaviors are verified only for the January 2027 slice; no annual browser performance acceptance is inferred.",
+          "Authorized agenda order and removal, stale preview refusal and explicit refresh.",
+          "Lost response after real SQLite commit; explicit retry reuses Idempotency-Key and the original review.",
+          "A new review preserves 130 while the predecessor remains 120; later Planner value 140 does not silently replace meeting values.",
+          "Topic navigation, explicit update check and requestUpdate navigation without automatic new preservation.",
+          "Comparison 120 to 130 with delta 10, before/after review navigation and first-review state without fabricated changes.",
+          "Attributed preserved comments with author, time and v1 displayed separately from numeric differences.",
+          "Exact preserved source digest delegated through a revalidated host callback; rejected destination and revoked review clear headings/list items.",
+          "Revoked before-item navigation is refused without opening another review; no browser page errors."
+        ]
+      }
+    },
+    {
+      "criterion_id": "WP07.T03.DOD.01",
+      "criterion": "A comparação mostra alterações e mudanças de composição por referências estáveis das revisões.",
+      "implementation_status": "IMPLEMENTED_LOCAL_CONSUMER",
+      "implementation_paths": [
+        "modules/sucafina/Sucafinav1/product/reviews/compare.ts",
+        "modules/sucafina/Sucafinav1/product/reviews/comparison-port.ts",
+        "modules/sucafina/Sucafinav1/product/reviews/meeting.ts"
+      ],
+      "test_sources": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/comparison.test.ts",
+          "tests": [
+            "comparison follows unambiguous record identity across a row rename and retains removals, status and due changes",
+            "comparison reader exposes a canonical forwarding separately and removes all content on access revocation",
+            "comparison rechecks both immutable bases and final authority before returning any data"
+          ],
+          "execution_status": "HOSTED_PASS_SCOPED",
+          "tested_product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+          "ci_snapshot_sha": "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+          "run_id": "43531115429",
+          "job_id": "132248784028",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43531115429.json",
+          "test_results": [
+            {
+              "name": "comparison follows unambiguous record identity across a row rename and retains removals, status and due changes",
+              "status": "PASS",
+              "run_id": "43531115429",
+              "log_line": 863,
+              "duration_ms": 0.5
+            },
+            {
+              "name": "comparison reader exposes a canonical forwarding separately and removes all content on access revocation",
+              "status": "PASS",
+              "run_id": "43531115429",
+              "log_line": 865,
+              "duration_ms": 0.88
+            },
+            {
+              "name": "comparison rechecks both immutable bases and final authority before returning any data",
+              "status": "PASS",
+              "run_id": "43531115429",
+              "log_line": 867,
+              "duration_ms": 0.43
+            }
+          ],
+          "proof_scope": "Pure comparison and authenticated port consumer with controlled review/action readers; not a WP02/WP08 native integration witness."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/browser-ui.test.ts",
+          "tests": [
+            "Chromium preserves the chosen agenda, recovers a lost response and removes revoked content"
+          ],
+          "execution_status": "HOSTED_BROWSER_PASS_SCOPED",
+          "tested_product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+          "ci_snapshot_sha": "9d4670fdf446d5e7acc01b95842209f68bd18e0b",
+          "run_id": "43530831862",
+          "job_id": "132247794669",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43530831862.json",
+          "test_results": [
+            {
+              "name": "Chromium preserves the chosen agenda, recovers a lost response and removes revoked content",
+              "status": "PASS",
+              "run_id": "43530831862",
+              "log_line": 929,
+              "duration_ms": 10993.36
+            }
+          ],
+          "proof_scope": "Monthly scope only: 2027-01-01 through 2027-01-31, using the period accepted by the real Planner without truncating its returned projection. Actual Chromium, Bun server, operator identity, UI/human authority, protected C08, real SQLite, real Planner, application HTTP, preparation and meeting consumers. The source/history catalog, C06 thread and host source/review-navigation adapters are explicitly controlled. Annual browser performance remains BLOCKED_EXTERNAL after two failed full-year runs. This is not native WP10 installation mounting, C17 physical deletion/replacement, persisted WP08 history or C16 native/MCP execution."
+        }
+      ],
+      "negative_cases": [
+        "Display row rename pairs only through an unambiguous canonical record plus field basis.",
+        "Changed physical incarnation cannot be treated as the same record."
+      ],
+      "remaining_evidence_or_dependency": [],
+      "verdict": "VERIFIED_SCOPED",
+      "proof_status": "HOSTED_VERIFIED_SCOPED",
+      "acceptance_scope": "Verified for named hosted assertions and the actual isolated January 2027 browser interactions within explicit fixture/producer boundaries. Not full native installation acceptance; typecheck still fails externally.",
+      "blocked_by": [],
+      "evidence": {
+        "tested_product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+        "ci_snapshot_sha": "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+        "run_ids": [
+          "43531115429",
+          "43530831862"
+        ],
+        "native_receipts": [],
+        "visual_receipt": null,
+        "test_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43531115429.json",
+        "aggregate_test_run_status": "PASS_FOR_TWO_SEPARATE_SURGICAL_RUNS",
+        "typecheck_gate_status": "FAIL",
+        "ci_snapshot_shas": [
+          "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+          "9d4670fdf446d5e7acc01b95842209f68bd18e0b"
+        ]
+      },
+      "browser_evidence": {
+        "status": "HOSTED_BROWSER_PASS_SCOPED",
+        "run_id": "43530831862",
+        "ci_snapshot_sha": "9d4670fdf446d5e7acc01b95842209f68bd18e0b",
+        "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43530831862.json",
+        "test_name": "Chromium preserves the chosen agenda, recovers a lost response and removes revoked content",
+        "scope": "Monthly scope only: 2027-01-01 through 2027-01-31, using the period accepted by the real Planner without truncating its returned projection. Actual Chromium, Bun server, operator identity, UI/human authority, protected C08, real SQLite, real Planner, application HTTP, preparation and meeting consumers. The source/history catalog, C06 thread and host source/review-navigation adapters are explicitly controlled. Annual browser performance remains BLOCKED_EXTERNAL after two failed full-year runs. This is not native WP10 installation mounting, C17 physical deletion/replacement, persisted WP08 history or C16 native/MCP execution.",
+        "verified_behaviors": [
+          "All following browser behaviors are verified only for the January 2027 slice; no annual browser performance acceptance is inferred.",
+          "Authorized agenda order and removal, stale preview refusal and explicit refresh.",
+          "Lost response after real SQLite commit; explicit retry reuses Idempotency-Key and the original review.",
+          "A new review preserves 130 while the predecessor remains 120; later Planner value 140 does not silently replace meeting values.",
+          "Topic navigation, explicit update check and requestUpdate navigation without automatic new preservation.",
+          "Comparison 120 to 130 with delta 10, before/after review navigation and first-review state without fabricated changes.",
+          "Attributed preserved comments with author, time and v1 displayed separately from numeric differences.",
+          "Exact preserved source digest delegated through a revalidated host callback; rejected destination and revoked review clear headings/list items.",
+          "Revoked before-item navigation is refused without opening another review; no browser page errors."
+        ]
+      }
+    },
+    {
+      "criterion_id": "WP07.T03.DOD.02",
+      "criterion": "Primeira revisão e bases não comparáveis possuem resultado próprio em vez de deltas fabricados.",
+      "implementation_status": "IMPLEMENTED_LOCAL_CONSUMER",
+      "implementation_paths": [
+        "modules/sucafina/Sucafinav1/product/reviews/compare.ts",
+        "modules/sucafina/Sucafinav1/product/reviews/meeting.ts"
+      ],
+      "test_sources": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/comparison.test.ts",
+          "tests": [
+            "first review and an unavailable referenced predecessor have different states",
+            "replacement, unit, currency, period and missing values never produce an invented monetary delta"
+          ],
+          "execution_status": "HOSTED_PASS_SCOPED",
+          "tested_product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+          "ci_snapshot_sha": "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+          "run_id": "43531115429",
+          "job_id": "132248784028",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43531115429.json",
+          "test_results": [
+            {
+              "name": "first review and an unavailable referenced predecessor have different states",
+              "status": "PASS",
+              "run_id": "43531115429",
+              "log_line": 866,
+              "duration_ms": 0.28
+            },
+            {
+              "name": "replacement, unit, currency, period and missing values never produce an invented monetary delta",
+              "status": "PASS",
+              "run_id": "43531115429",
+              "log_line": 864,
+              "duration_ms": 0.36
+            }
+          ],
+          "proof_scope": "Pure comparison and authenticated port consumer with controlled review/action readers; not a WP02/WP08 native integration witness."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/browser-ui.test.ts",
+          "tests": [
+            "Chromium preserves the chosen agenda, recovers a lost response and removes revoked content"
+          ],
+          "execution_status": "HOSTED_BROWSER_PASS_SCOPED",
+          "tested_product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+          "ci_snapshot_sha": "9d4670fdf446d5e7acc01b95842209f68bd18e0b",
+          "run_id": "43530831862",
+          "job_id": "132247794669",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43530831862.json",
+          "test_results": [
+            {
+              "name": "Chromium preserves the chosen agenda, recovers a lost response and removes revoked content",
+              "status": "PASS",
+              "run_id": "43530831862",
+              "log_line": 929,
+              "duration_ms": 10993.36
+            }
+          ],
+          "proof_scope": "Monthly scope only: 2027-01-01 through 2027-01-31, using the period accepted by the real Planner without truncating its returned projection. Actual Chromium, Bun server, operator identity, UI/human authority, protected C08, real SQLite, real Planner, application HTTP, preparation and meeting consumers. The source/history catalog, C06 thread and host source/review-navigation adapters are explicitly controlled. Annual browser performance remains BLOCKED_EXTERNAL after two failed full-year runs. This is not native WP10 installation mounting, C17 physical deletion/replacement, persisted WP08 history or C16 native/MCP execution."
+        }
+      ],
+      "negative_cases": [
+        "First-review, unavailable predecessor and incompatible value have distinct states.",
+        "No previous financial amount is synthesized."
+      ],
+      "remaining_evidence_or_dependency": [],
+      "verdict": "VERIFIED_SCOPED",
+      "proof_status": "HOSTED_VERIFIED_SCOPED",
+      "acceptance_scope": "Verified for named hosted assertions and the actual isolated January 2027 browser interactions within explicit fixture/producer boundaries. Not full native installation acceptance; typecheck still fails externally.",
+      "blocked_by": [],
+      "evidence": {
+        "tested_product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+        "ci_snapshot_sha": "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+        "run_ids": [
+          "43531115429",
+          "43530831862"
+        ],
+        "native_receipts": [],
+        "visual_receipt": null,
+        "test_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43531115429.json",
+        "aggregate_test_run_status": "PASS_FOR_TWO_SEPARATE_SURGICAL_RUNS",
+        "typecheck_gate_status": "FAIL",
+        "ci_snapshot_shas": [
+          "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+          "9d4670fdf446d5e7acc01b95842209f68bd18e0b"
+        ]
+      },
+      "browser_evidence": {
+        "status": "HOSTED_BROWSER_PASS_SCOPED",
+        "run_id": "43530831862",
+        "ci_snapshot_sha": "9d4670fdf446d5e7acc01b95842209f68bd18e0b",
+        "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43530831862.json",
+        "test_name": "Chromium preserves the chosen agenda, recovers a lost response and removes revoked content",
+        "scope": "Monthly scope only: 2027-01-01 through 2027-01-31, using the period accepted by the real Planner without truncating its returned projection. Actual Chromium, Bun server, operator identity, UI/human authority, protected C08, real SQLite, real Planner, application HTTP, preparation and meeting consumers. The source/history catalog, C06 thread and host source/review-navigation adapters are explicitly controlled. Annual browser performance remains BLOCKED_EXTERNAL after two failed full-year runs. This is not native WP10 installation mounting, C17 physical deletion/replacement, persisted WP08 history or C16 native/MCP execution.",
+        "verified_behaviors": [
+          "All following browser behaviors are verified only for the January 2027 slice; no annual browser performance acceptance is inferred.",
+          "Authorized agenda order and removal, stale preview refusal and explicit refresh.",
+          "Lost response after real SQLite commit; explicit retry reuses Idempotency-Key and the original review.",
+          "A new review preserves 130 while the predecessor remains 120; later Planner value 140 does not silently replace meeting values.",
+          "Topic navigation, explicit update check and requestUpdate navigation without automatic new preservation.",
+          "Comparison 120 to 130 with delta 10, before/after review navigation and first-review state without fabricated changes.",
+          "Attributed preserved comments with author, time and v1 displayed separately from numeric differences.",
+          "Exact preserved source digest delegated through a revalidated host callback; rejected destination and revoked review clear headings/list items.",
+          "Revoked before-item navigation is refused without opening another review; no browser page errors."
+        ]
+      }
+    },
+    {
+      "criterion_id": "WP07.T03.INV.01",
+      "criterion": "Um delta não é calculado pela igualdade do nome do registro nem por soma de moedas ou competências incompatíveis.",
+      "implementation_status": "IMPLEMENTED_LOCAL_CONSUMER",
+      "implementation_paths": [
+        "modules/sucafina/Sucafinav1/product/reviews/compare.ts"
+      ],
+      "test_sources": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/comparison.test.ts",
+          "tests": [
+            "comparison follows unambiguous record identity across a row rename and retains removals, status and due changes",
+            "replacement, unit, currency, period and missing values never produce an invented monetary delta"
+          ],
+          "execution_status": "HOSTED_PASS_SCOPED",
+          "tested_product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+          "ci_snapshot_sha": "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+          "run_id": "43531115429",
+          "job_id": "132248784028",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43531115429.json",
+          "test_results": [
+            {
+              "name": "comparison follows unambiguous record identity across a row rename and retains removals, status and due changes",
+              "status": "PASS",
+              "run_id": "43531115429",
+              "log_line": 863,
+              "duration_ms": 0.5
+            },
+            {
+              "name": "replacement, unit, currency, period and missing values never produce an invented monetary delta",
+              "status": "PASS",
+              "run_id": "43531115429",
+              "log_line": 864,
+              "duration_ms": 0.36
+            }
+          ],
+          "proof_scope": "Pure comparison and authenticated port consumer with controlled review/action readers; not a WP02/WP08 native integration witness."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+          "tests": [
+            "comparison requires identity and a compatible period before calculating a delta"
+          ],
+          "execution_status": "HOSTED_PASS_SCOPED",
+          "tested_product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+          "ci_snapshot_sha": "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+          "run_id": "43531115429",
+          "job_id": "132248784028",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43531115429.json",
+          "test_results": [
+            {
+              "name": "comparison requires identity and a compatible period before calculating a delta",
+              "status": "PASS",
+              "run_id": "43531115429",
+              "log_line": 831,
+              "duration_ms": 2.96
+            }
+          ],
+          "proof_scope": "Real review/storage/export paths with controlled source and access callbacks; source deletion in the fixture is not physical C17 tombstone proof. XML assertions are not visual inspection."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/browser-ui.test.ts",
+          "tests": [
+            "Chromium preserves the chosen agenda, recovers a lost response and removes revoked content"
+          ],
+          "execution_status": "HOSTED_BROWSER_PASS_SCOPED",
+          "tested_product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+          "ci_snapshot_sha": "9d4670fdf446d5e7acc01b95842209f68bd18e0b",
+          "run_id": "43530831862",
+          "job_id": "132247794669",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43530831862.json",
+          "test_results": [
+            {
+              "name": "Chromium preserves the chosen agenda, recovers a lost response and removes revoked content",
+              "status": "PASS",
+              "run_id": "43530831862",
+              "log_line": 929,
+              "duration_ms": 10993.36
+            }
+          ],
+          "proof_scope": "Monthly scope only: 2027-01-01 through 2027-01-31, using the period accepted by the real Planner without truncating its returned projection. Actual Chromium, Bun server, operator identity, UI/human authority, protected C08, real SQLite, real Planner, application HTTP, preparation and meeting consumers. The source/history catalog, C06 thread and host source/review-navigation adapters are explicitly controlled. Annual browser performance remains BLOCKED_EXTERNAL after two failed full-year runs. This is not native WP10 installation mounting, C17 physical deletion/replacement, persisted WP08 history or C16 native/MCP execution."
+        }
+      ],
+      "negative_cases": [
+        "No pairing by record name.",
+        "Incompatible periods, currencies, units, definitions or physical identities suppress numeric delta."
+      ],
+      "remaining_evidence_or_dependency": [],
+      "verdict": "VERIFIED_SCOPED",
+      "proof_status": "HOSTED_VERIFIED_SCOPED",
+      "acceptance_scope": "Verified for named hosted assertions and the actual isolated January 2027 browser interactions within explicit fixture/producer boundaries. Not full native installation acceptance; typecheck still fails externally.",
+      "blocked_by": [],
+      "evidence": {
+        "tested_product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+        "ci_snapshot_sha": "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+        "run_ids": [
+          "43531115429",
+          "43530831862"
+        ],
+        "native_receipts": [],
+        "visual_receipt": null,
+        "test_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43531115429.json",
+        "aggregate_test_run_status": "PASS_FOR_TWO_SEPARATE_SURGICAL_RUNS",
+        "typecheck_gate_status": "FAIL",
+        "ci_snapshot_shas": [
+          "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+          "9d4670fdf446d5e7acc01b95842209f68bd18e0b"
+        ]
+      },
+      "browser_evidence": {
+        "status": "HOSTED_BROWSER_PASS_SCOPED",
+        "run_id": "43530831862",
+        "ci_snapshot_sha": "9d4670fdf446d5e7acc01b95842209f68bd18e0b",
+        "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43530831862.json",
+        "test_name": "Chromium preserves the chosen agenda, recovers a lost response and removes revoked content",
+        "scope": "Monthly scope only: 2027-01-01 through 2027-01-31, using the period accepted by the real Planner without truncating its returned projection. Actual Chromium, Bun server, operator identity, UI/human authority, protected C08, real SQLite, real Planner, application HTTP, preparation and meeting consumers. The source/history catalog, C06 thread and host source/review-navigation adapters are explicitly controlled. Annual browser performance remains BLOCKED_EXTERNAL after two failed full-year runs. This is not native WP10 installation mounting, C17 physical deletion/replacement, persisted WP08 history or C16 native/MCP execution.",
+        "verified_behaviors": [
+          "All following browser behaviors are verified only for the January 2027 slice; no annual browser performance acceptance is inferred.",
+          "Authorized agenda order and removal, stale preview refusal and explicit refresh.",
+          "Lost response after real SQLite commit; explicit retry reuses Idempotency-Key and the original review.",
+          "A new review preserves 130 while the predecessor remains 120; later Planner value 140 does not silently replace meeting values.",
+          "Topic navigation, explicit update check and requestUpdate navigation without automatic new preservation.",
+          "Comparison 120 to 130 with delta 10, before/after review navigation and first-review state without fabricated changes.",
+          "Attributed preserved comments with author, time and v1 displayed separately from numeric differences.",
+          "Exact preserved source digest delegated through a revalidated host callback; rejected destination and revoked review clear headings/list items.",
+          "Revoked before-item navigation is refused without opening another review; no browser page errors."
+        ]
+      }
+    },
+    {
+      "criterion_id": "WP07.T03.INV.02",
+      "criterion": "Explicações causais só são apresentadas quando registradas como comentário identificado, nunca inferidas do diff.",
+      "implementation_status": "IMPLEMENTED_LOCAL_CONSUMER",
+      "implementation_paths": [
+        "modules/sucafina/Sucafinav1/product/reviews/compare.ts",
+        "modules/sucafina/Sucafinav1/product/reviews/outcome.ts",
+        "modules/sucafina/Sucafinav1/product/reviews/meeting.ts"
+      ],
+      "test_sources": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/outcome.test.ts",
+          "tests": [
+            "meeting outcome lines show cutoff, coverage and sources without assigning a cause"
+          ],
+          "execution_status": "HOSTED_PASS_SCOPED",
+          "tested_product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+          "ci_snapshot_sha": "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+          "run_id": "43531115429",
+          "job_id": "132248784028",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43531115429.json",
+          "test_results": [
+            {
+              "name": "meeting outcome lines show cutoff, coverage and sources without assigning a cause",
+              "status": "PASS",
+              "run_id": "43531115429",
+              "log_line": 881,
+              "duration_ms": 0.12
+            }
+          ],
+          "proof_scope": "Validators, display lines and typed producer seams; not a real WP14 historical result or source-opening witness."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+          "tests": [
+            "preserved review survives changed projections and is denied after access revocation"
+          ],
+          "execution_status": "HOSTED_PASS_SCOPED",
+          "tested_product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+          "ci_snapshot_sha": "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+          "run_id": "43531115429",
+          "job_id": "132248784028",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43531115429.json",
+          "test_results": [
+            {
+              "name": "preserved review survives changed projections and is denied after access revocation",
+              "status": "PASS",
+              "run_id": "43531115429",
+              "log_line": 830,
+              "duration_ms": 66.15
+            }
+          ],
+          "proof_scope": "Real review/storage/export paths with controlled source and access callbacks; source deletion in the fixture is not physical C17 tombstone proof. XML assertions are not visual inspection."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/browser-ui.test.ts",
+          "tests": [
+            "Chromium preserves the chosen agenda, recovers a lost response and removes revoked content"
+          ],
+          "execution_status": "HOSTED_BROWSER_PASS_SCOPED",
+          "tested_product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+          "ci_snapshot_sha": "9d4670fdf446d5e7acc01b95842209f68bd18e0b",
+          "run_id": "43530831862",
+          "job_id": "132247794669",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43530831862.json",
+          "test_results": [
+            {
+              "name": "Chromium preserves the chosen agenda, recovers a lost response and removes revoked content",
+              "status": "PASS",
+              "run_id": "43530831862",
+              "log_line": 929,
+              "duration_ms": 10993.36
+            }
+          ],
+          "proof_scope": "Monthly scope only: 2027-01-01 through 2027-01-31, using the period accepted by the real Planner without truncating its returned projection. Actual Chromium, Bun server, operator identity, UI/human authority, protected C08, real SQLite, real Planner, application HTTP, preparation and meeting consumers. The source/history catalog, C06 thread and host source/review-navigation adapters are explicitly controlled. Annual browser performance remains BLOCKED_EXTERNAL after two failed full-year runs. This is not native WP10 installation mounting, C17 physical deletion/replacement, persisted WP08 history or C16 native/MCP execution."
+        }
+      ],
+      "negative_cases": [
+        "Diff only reports factual before/after; identified preserved comments retain author, timestamp and version.",
+        "Observed comparison explicitly states that observation does not establish causality."
+      ],
+      "remaining_evidence_or_dependency": [],
+      "verdict": "VERIFIED_SCOPED",
+      "proof_status": "HOSTED_VERIFIED_SCOPED",
+      "acceptance_scope": "Verified for named hosted assertions and the actual isolated January 2027 browser interactions within explicit fixture/producer boundaries. Not full native installation acceptance; typecheck still fails externally.",
+      "blocked_by": [],
+      "evidence": {
+        "tested_product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+        "ci_snapshot_sha": "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+        "run_ids": [
+          "43531115429",
+          "43530831862"
+        ],
+        "native_receipts": [],
+        "visual_receipt": null,
+        "test_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43531115429.json",
+        "aggregate_test_run_status": "PASS_FOR_TWO_SEPARATE_SURGICAL_RUNS",
+        "typecheck_gate_status": "FAIL",
+        "ci_snapshot_shas": [
+          "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+          "9d4670fdf446d5e7acc01b95842209f68bd18e0b"
+        ]
+      },
+      "browser_evidence": {
+        "status": "HOSTED_BROWSER_PASS_SCOPED",
+        "run_id": "43530831862",
+        "ci_snapshot_sha": "9d4670fdf446d5e7acc01b95842209f68bd18e0b",
+        "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43530831862.json",
+        "test_name": "Chromium preserves the chosen agenda, recovers a lost response and removes revoked content",
+        "scope": "Monthly scope only: 2027-01-01 through 2027-01-31, using the period accepted by the real Planner without truncating its returned projection. Actual Chromium, Bun server, operator identity, UI/human authority, protected C08, real SQLite, real Planner, application HTTP, preparation and meeting consumers. The source/history catalog, C06 thread and host source/review-navigation adapters are explicitly controlled. Annual browser performance remains BLOCKED_EXTERNAL after two failed full-year runs. This is not native WP10 installation mounting, C17 physical deletion/replacement, persisted WP08 history or C16 native/MCP execution.",
+        "verified_behaviors": [
+          "All following browser behaviors are verified only for the January 2027 slice; no annual browser performance acceptance is inferred.",
+          "Authorized agenda order and removal, stale preview refusal and explicit refresh.",
+          "Lost response after real SQLite commit; explicit retry reuses Idempotency-Key and the original review.",
+          "A new review preserves 130 while the predecessor remains 120; later Planner value 140 does not silently replace meeting values.",
+          "Topic navigation, explicit update check and requestUpdate navigation without automatic new preservation.",
+          "Comparison 120 to 130 with delta 10, before/after review navigation and first-review state without fabricated changes.",
+          "Attributed preserved comments with author, time and v1 displayed separately from numeric differences.",
+          "Exact preserved source digest delegated through a revalidated host callback; rejected destination and revoked review clear headings/list items.",
+          "Revoked before-item navigation is refused without opening another review; no browser page errors."
+        ]
+      }
+    },
+    {
+      "criterion_id": "WP07.T03.QLT.01",
+      "criterion": "Cada diferença mostra antes, depois e a base usada, com acesso ao item correspondente da revisão.",
+      "implementation_status": "IMPLEMENTED_WITH_HOST_NAVIGATION_CONTRACT",
+      "implementation_paths": [
+        "modules/sucafina/Sucafinav1/product/reviews/compare.ts",
+        "modules/sucafina/Sucafinav1/product/reviews/meeting.ts"
+      ],
+      "test_sources": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/comparison.test.ts",
+          "tests": [
+            "comparison follows unambiguous record identity across a row rename and retains removals, status and due changes",
+            "replacement, unit, currency, period and missing values never produce an invented monetary delta"
+          ],
+          "execution_status": "HOSTED_PASS_SCOPED",
+          "tested_product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+          "ci_snapshot_sha": "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+          "run_id": "43531115429",
+          "job_id": "132248784028",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43531115429.json",
+          "test_results": [
+            {
+              "name": "comparison follows unambiguous record identity across a row rename and retains removals, status and due changes",
+              "status": "PASS",
+              "run_id": "43531115429",
+              "log_line": 863,
+              "duration_ms": 0.5
+            },
+            {
+              "name": "replacement, unit, currency, period and missing values never produce an invented monetary delta",
+              "status": "PASS",
+              "run_id": "43531115429",
+              "log_line": 864,
+              "duration_ms": 0.36
+            }
+          ],
+          "proof_scope": "Pure comparison and authenticated port consumer with controlled review/action readers; not a WP02/WP08 native integration witness."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/browser-ui.test.ts",
+          "tests": [
+            "Chromium preserves the chosen agenda, recovers a lost response and removes revoked content"
+          ],
+          "execution_status": "HOSTED_BROWSER_PASS_SCOPED",
+          "tested_product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+          "ci_snapshot_sha": "9d4670fdf446d5e7acc01b95842209f68bd18e0b",
+          "run_id": "43530831862",
+          "job_id": "132247794669",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43530831862.json",
+          "test_results": [
+            {
+              "name": "Chromium preserves the chosen agenda, recovers a lost response and removes revoked content",
+              "status": "PASS",
+              "run_id": "43530831862",
+              "log_line": 929,
+              "duration_ms": 10993.36
+            }
+          ],
+          "proof_scope": "Monthly scope only: 2027-01-01 through 2027-01-31, using the period accepted by the real Planner without truncating its returned projection. Actual Chromium, Bun server, operator identity, UI/human authority, protected C08, real SQLite, real Planner, application HTTP, preparation and meeting consumers. The source/history catalog, C06 thread and host source/review-navigation adapters are explicitly controlled. Annual browser performance remains BLOCKED_EXTERNAL after two failed full-year runs. This is not native WP10 installation mounting, C17 physical deletion/replacement, persisted WP08 history or C16 native/MCP execution."
+        }
+      ],
+      "negative_cases": [
+        "Before and after items use immutable review/section references.",
+        "Navigation rereads the review; a missing or revoked section clears displayed content.",
+        "Without a host callback, previous-review navigation is explicitly unavailable."
+      ],
+      "remaining_evidence_or_dependency": [
+        "Annual browser runs 43528912346 and 43530154667 remain FAIL; the monthly fixture does not qualify annual performance. Owner authority/store optimization and an unchanged-timeout annual hosted witness are still required.",
+        "The isolated monthly browser witness does not close native WP10 mounting, actual owner historical readers or physical source continuity listed in blocked_by."
+      ],
+      "verdict": "BLOCKED_EXTERNAL",
+      "proof_status": "HOSTED_PARTIAL",
+      "acceptance_scope": "Mapped own assertions and available browser behavior passed within declared boundaries; full acceptance remains blocked by HOST_MOUNT, ANNUAL_BROWSER_PERFORMANCE.",
+      "blocked_by": [
+        "HOST_MOUNT",
+        "ANNUAL_BROWSER_PERFORMANCE"
+      ],
+      "evidence": {
+        "tested_product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+        "ci_snapshot_sha": "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+        "run_ids": [
+          "43531115429",
+          "43530831862"
+        ],
+        "native_receipts": [],
+        "visual_receipt": null,
+        "test_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43531115429.json",
+        "aggregate_test_run_status": "PASS_FOR_TWO_SEPARATE_SURGICAL_RUNS",
+        "typecheck_gate_status": "FAIL",
+        "ci_snapshot_shas": [
+          "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+          "9d4670fdf446d5e7acc01b95842209f68bd18e0b"
+        ]
+      },
+      "browser_evidence": {
+        "status": "HOSTED_BROWSER_PASS_SCOPED",
+        "run_id": "43530831862",
+        "ci_snapshot_sha": "9d4670fdf446d5e7acc01b95842209f68bd18e0b",
+        "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43530831862.json",
+        "test_name": "Chromium preserves the chosen agenda, recovers a lost response and removes revoked content",
+        "scope": "Monthly scope only: 2027-01-01 through 2027-01-31, using the period accepted by the real Planner without truncating its returned projection. Actual Chromium, Bun server, operator identity, UI/human authority, protected C08, real SQLite, real Planner, application HTTP, preparation and meeting consumers. The source/history catalog, C06 thread and host source/review-navigation adapters are explicitly controlled. Annual browser performance remains BLOCKED_EXTERNAL after two failed full-year runs. This is not native WP10 installation mounting, C17 physical deletion/replacement, persisted WP08 history or C16 native/MCP execution.",
+        "verified_behaviors": [
+          "All following browser behaviors are verified only for the January 2027 slice; no annual browser performance acceptance is inferred.",
+          "Authorized agenda order and removal, stale preview refusal and explicit refresh.",
+          "Lost response after real SQLite commit; explicit retry reuses Idempotency-Key and the original review.",
+          "A new review preserves 130 while the predecessor remains 120; later Planner value 140 does not silently replace meeting values.",
+          "Topic navigation, explicit update check and requestUpdate navigation without automatic new preservation.",
+          "Comparison 120 to 130 with delta 10, before/after review navigation and first-review state without fabricated changes.",
+          "Attributed preserved comments with author, time and v1 displayed separately from numeric differences.",
+          "Exact preserved source digest delegated through a revalidated host callback; rejected destination and revoked review clear headings/list items.",
+          "Revoked before-item navigation is refused without opening another review; no browser page errors."
+        ]
+      }
+    },
+    {
+      "criterion_id": "WP07.T03.QLT.02",
+      "criterion": "Comparações parciais deixam clara a cobertura autorizada sem revelar detalhes de tópicos restritos.",
+      "implementation_status": "IMPLEMENTED_FAIL_CLOSED",
+      "implementation_paths": [
+        "modules/sucafina/Sucafinav1/product/reviews/comparison-port.ts",
+        "modules/sucafina/Sucafinav1/product/reviews/closure-action.ts",
+        "modules/sucafina/Sucafinav1/product/reviews/meeting.ts"
+      ],
+      "test_sources": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/comparison.test.ts",
+          "tests": [
+            "comparison reader exposes a canonical forwarding separately and removes all content on access revocation",
+            "first review and an unavailable referenced predecessor have different states",
+            "comparison rechecks both immutable bases and final authority before returning any data"
+          ],
+          "execution_status": "HOSTED_PASS_SCOPED",
+          "tested_product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+          "ci_snapshot_sha": "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+          "run_id": "43531115429",
+          "job_id": "132248784028",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43531115429.json",
+          "test_results": [
+            {
+              "name": "comparison reader exposes a canonical forwarding separately and removes all content on access revocation",
+              "status": "PASS",
+              "run_id": "43531115429",
+              "log_line": 865,
+              "duration_ms": 0.88
+            },
+            {
+              "name": "first review and an unavailable referenced predecessor have different states",
+              "status": "PASS",
+              "run_id": "43531115429",
+              "log_line": 866,
+              "duration_ms": 0.28
+            },
+            {
+              "name": "comparison rechecks both immutable bases and final authority before returning any data",
+              "status": "PASS",
+              "run_id": "43531115429",
+              "log_line": 867,
+              "duration_ms": 0.43
+            }
+          ],
+          "proof_scope": "Pure comparison and authenticated port consumer with controlled review/action readers; not a WP02/WP08 native integration witness."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/closure-action.test.ts",
+          "tests": [
+            "closure binds an authorized handoff to the immutable review and rereads its action"
+          ],
+          "execution_status": "HOSTED_PASS_SCOPED",
+          "tested_product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+          "ci_snapshot_sha": "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+          "run_id": "43531115429",
+          "job_id": "132248784028",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43531115429.json",
+          "test_results": [
+            {
+              "name": "closure binds an authorized handoff to the immutable review and rereads its action",
+              "status": "PASS",
+              "run_id": "43531115429",
+              "log_line": 870,
+              "duration_ms": 8.66
+            }
+          ],
+          "proof_scope": "Real C08/UI/human components with controlled handoff/action ports; not a real action-source incarnation continuity witness."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/browser-ui.test.ts",
+          "tests": [
+            "Chromium preserves the chosen agenda, recovers a lost response and removes revoked content"
+          ],
+          "execution_status": "HOSTED_BROWSER_PASS_SCOPED",
+          "tested_product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+          "ci_snapshot_sha": "9d4670fdf446d5e7acc01b95842209f68bd18e0b",
+          "run_id": "43530831862",
+          "job_id": "132247794669",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43530831862.json",
+          "test_results": [
+            {
+              "name": "Chromium preserves the chosen agenda, recovers a lost response and removes revoked content",
+              "status": "PASS",
+              "run_id": "43530831862",
+              "log_line": 929,
+              "duration_ms": 10993.36
+            }
+          ],
+          "proof_scope": "Monthly scope only: 2027-01-01 through 2027-01-31, using the period accepted by the real Planner without truncating its returned projection. Actual Chromium, Bun server, operator identity, UI/human authority, protected C08, real SQLite, real Planner, application HTTP, preparation and meeting consumers. The source/history catalog, C06 thread and host source/review-navigation adapters are explicitly controlled. Annual browser performance remains BLOCKED_EXTERNAL after two failed full-year runs. This is not native WP10 installation mounting, C17 physical deletion/replacement, persisted WP08 history or C16 native/MCP execution."
+        }
+      ],
+      "negative_cases": [
+        "Inaccessible forwardings are omitted with generic partial coverage, without restricted details or counts.",
+        "Unavailable financial predecessor suppresses the comparison instead of displaying unauthorized sections."
+      ],
+      "remaining_evidence_or_dependency": [
+        "Current C05 access is whole-review fail closed; this receipt does not claim a partial financial projection for a review that fails authorization."
+      ],
+      "verdict": "VERIFIED_SCOPED",
+      "proof_status": "HOSTED_VERIFIED_SCOPED",
+      "acceptance_scope": "Verified for named hosted assertions and the actual isolated January 2027 browser interactions within explicit fixture/producer boundaries. Not full native installation acceptance; typecheck still fails externally.",
+      "blocked_by": [],
+      "evidence": {
+        "tested_product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+        "ci_snapshot_sha": "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+        "run_ids": [
+          "43531115429",
+          "43530831862"
+        ],
+        "native_receipts": [],
+        "visual_receipt": null,
+        "test_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43531115429.json",
+        "aggregate_test_run_status": "PASS_FOR_TWO_SEPARATE_SURGICAL_RUNS",
+        "typecheck_gate_status": "FAIL",
+        "ci_snapshot_shas": [
+          "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+          "9d4670fdf446d5e7acc01b95842209f68bd18e0b"
+        ]
+      },
+      "browser_evidence": {
+        "status": "HOSTED_BROWSER_PASS_SCOPED",
+        "run_id": "43530831862",
+        "ci_snapshot_sha": "9d4670fdf446d5e7acc01b95842209f68bd18e0b",
+        "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43530831862.json",
+        "test_name": "Chromium preserves the chosen agenda, recovers a lost response and removes revoked content",
+        "scope": "Monthly scope only: 2027-01-01 through 2027-01-31, using the period accepted by the real Planner without truncating its returned projection. Actual Chromium, Bun server, operator identity, UI/human authority, protected C08, real SQLite, real Planner, application HTTP, preparation and meeting consumers. The source/history catalog, C06 thread and host source/review-navigation adapters are explicitly controlled. Annual browser performance remains BLOCKED_EXTERNAL after two failed full-year runs. This is not native WP10 installation mounting, C17 physical deletion/replacement, persisted WP08 history or C16 native/MCP execution.",
+        "verified_behaviors": [
+          "All following browser behaviors are verified only for the January 2027 slice; no annual browser performance acceptance is inferred.",
+          "Authorized agenda order and removal, stale preview refusal and explicit refresh.",
+          "Lost response after real SQLite commit; explicit retry reuses Idempotency-Key and the original review.",
+          "A new review preserves 130 while the predecessor remains 120; later Planner value 140 does not silently replace meeting values.",
+          "Topic navigation, explicit update check and requestUpdate navigation without automatic new preservation.",
+          "Comparison 120 to 130 with delta 10, before/after review navigation and first-review state without fabricated changes.",
+          "Attributed preserved comments with author, time and v1 displayed separately from numeric differences.",
+          "Exact preserved source digest delegated through a revalidated host callback; rejected destination and revoked review clear headings/list items.",
+          "Revoked before-item navigation is refused without opening another review; no browser page errors."
+        ]
+      }
+    },
+    {
+      "criterion_id": "WP07.T03.CMP.01",
+      "criterion": "Valores, prazos, status, inclusões e remoções estão cobertos, incluindo registros de origem posteriormente apagados.",
+      "implementation_status": "IMPLEMENTED_CONSUMER_HISTORY_DEPENDS_ON_PRODUCER",
+      "implementation_paths": [
+        "modules/sucafina/Sucafinav1/product/reviews/compare.ts",
+        "modules/sucafina/Sucafinav1/product/reviews/comparison-port.ts",
+        "modules/sucafina/Sucafinav1/product/reviews/closure-action.ts",
+        "modules/sucafina/Sucafinav1/product/reviews/meeting.ts"
+      ],
+      "test_sources": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/comparison.test.ts",
+          "tests": [
+            "comparison follows unambiguous record identity across a row rename and retains removals, status and due changes",
+            "replacement, unit, currency, period and missing values never produce an invented monetary delta"
+          ],
+          "execution_status": "HOSTED_PASS_SCOPED",
+          "tested_product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+          "ci_snapshot_sha": "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+          "run_id": "43531115429",
+          "job_id": "132248784028",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43531115429.json",
+          "test_results": [
+            {
+              "name": "comparison follows unambiguous record identity across a row rename and retains removals, status and due changes",
+              "status": "PASS",
+              "run_id": "43531115429",
+              "log_line": 863,
+              "duration_ms": 0.5
+            },
+            {
+              "name": "replacement, unit, currency, period and missing values never produce an invented monetary delta",
+              "status": "PASS",
+              "run_id": "43531115429",
+              "log_line": 864,
+              "duration_ms": 0.36
+            }
+          ],
+          "proof_scope": "Pure comparison and authenticated port consumer with controlled review/action readers; not a WP02/WP08 native integration witness."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+          "tests": [
+            "preserved review survives changed projections and is denied after access revocation"
+          ],
+          "execution_status": "HOSTED_PASS_SCOPED",
+          "tested_product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+          "ci_snapshot_sha": "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+          "run_id": "43531115429",
+          "job_id": "132248784028",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43531115429.json",
+          "test_results": [
+            {
+              "name": "preserved review survives changed projections and is denied after access revocation",
+              "status": "PASS",
+              "run_id": "43531115429",
+              "log_line": 830,
+              "duration_ms": 66.15
+            }
+          ],
+          "proof_scope": "Real review/storage/export paths with controlled source and access callbacks; source deletion in the fixture is not physical C17 tombstone proof. XML assertions are not visual inspection."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/closure-action.test.ts",
+          "tests": [
+            "closure binds an authorized handoff to the immutable review and rereads its action"
+          ],
+          "execution_status": "HOSTED_PASS_SCOPED",
+          "tested_product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+          "ci_snapshot_sha": "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+          "run_id": "43531115429",
+          "job_id": "132248784028",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43531115429.json",
+          "test_results": [
+            {
+              "name": "closure binds an authorized handoff to the immutable review and rereads its action",
+              "status": "PASS",
+              "run_id": "43531115429",
+              "log_line": 870,
+              "duration_ms": 8.66
+            }
+          ],
+          "proof_scope": "Real C08/UI/human components with controlled handoff/action ports; not a real action-source incarnation continuity witness."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/browser-ui.test.ts",
+          "tests": [
+            "Chromium preserves the chosen agenda, recovers a lost response and removes revoked content"
+          ],
+          "execution_status": "HOSTED_BROWSER_PASS_SCOPED",
+          "tested_product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+          "ci_snapshot_sha": "9d4670fdf446d5e7acc01b95842209f68bd18e0b",
+          "run_id": "43530831862",
+          "job_id": "132247794669",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43530831862.json",
+          "test_results": [
+            {
+              "name": "Chromium preserves the chosen agenda, recovers a lost response and removes revoked content",
+              "status": "PASS",
+              "run_id": "43530831862",
+              "log_line": 929,
+              "duration_ms": 10993.36
+            }
+          ],
+          "proof_scope": "Monthly scope only: 2027-01-01 through 2027-01-31, using the period accepted by the real Planner without truncating its returned projection. Actual Chromium, Bun server, operator identity, UI/human authority, protected C08, real SQLite, real Planner, application HTTP, preparation and meeting consumers. The source/history catalog, C06 thread and host source/review-navigation adapters are explicitly controlled. Annual browser performance remains BLOCKED_EXTERNAL after two failed full-year runs. This is not native WP10 installation mounting, C17 physical deletion/replacement, persisted WP08 history or C16 native/MCP execution."
+        }
+      ],
+      "negative_cases": [
+        "Value, due date, status, removal and addition are represented by preserved values or canonical forwarding state.",
+        "A source being unavailable for new selection does not itself rewrite stored review bytes."
+      ],
+      "remaining_evidence_or_dependency": [
+        "Legacy snapshot test uses authorization seams; it does not prove a deleted physical source remains authorized through native C17 tombstone/history.",
+        "Historical decision/comparison/sensitivity and observed result consumers require the owner readers described in dependencies.",
+        "The isolated monthly browser witness does not close native WP10 mounting, actual owner historical readers or physical source continuity listed in blocked_by."
+      ],
+      "verdict": "BLOCKED_EXTERNAL",
+      "proof_status": "HOSTED_PARTIAL",
+      "acceptance_scope": "Mapped own assertions and available browser behavior passed within declared boundaries; full acceptance remains blocked by C17_REMOVED_SOURCE, C06_ACTION_CONTINUITY.",
+      "blocked_by": [
+        "C17_REMOVED_SOURCE",
+        "C06_ACTION_CONTINUITY"
+      ],
+      "evidence": {
+        "tested_product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+        "ci_snapshot_sha": "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+        "run_ids": [
+          "43531115429",
+          "43530831862"
+        ],
+        "native_receipts": [],
+        "visual_receipt": null,
+        "test_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43531115429.json",
+        "aggregate_test_run_status": "PASS_FOR_TWO_SEPARATE_SURGICAL_RUNS",
+        "typecheck_gate_status": "FAIL",
+        "ci_snapshot_shas": [
+          "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+          "9d4670fdf446d5e7acc01b95842209f68bd18e0b"
+        ]
+      },
+      "browser_evidence": {
+        "status": "HOSTED_BROWSER_PASS_SCOPED",
+        "run_id": "43530831862",
+        "ci_snapshot_sha": "9d4670fdf446d5e7acc01b95842209f68bd18e0b",
+        "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43530831862.json",
+        "test_name": "Chromium preserves the chosen agenda, recovers a lost response and removes revoked content",
+        "scope": "Monthly scope only: 2027-01-01 through 2027-01-31, using the period accepted by the real Planner without truncating its returned projection. Actual Chromium, Bun server, operator identity, UI/human authority, protected C08, real SQLite, real Planner, application HTTP, preparation and meeting consumers. The source/history catalog, C06 thread and host source/review-navigation adapters are explicitly controlled. Annual browser performance remains BLOCKED_EXTERNAL after two failed full-year runs. This is not native WP10 installation mounting, C17 physical deletion/replacement, persisted WP08 history or C16 native/MCP execution.",
+        "verified_behaviors": [
+          "All following browser behaviors are verified only for the January 2027 slice; no annual browser performance acceptance is inferred.",
+          "Authorized agenda order and removal, stale preview refusal and explicit refresh.",
+          "Lost response after real SQLite commit; explicit retry reuses Idempotency-Key and the original review.",
+          "A new review preserves 130 while the predecessor remains 120; later Planner value 140 does not silently replace meeting values.",
+          "Topic navigation, explicit update check and requestUpdate navigation without automatic new preservation.",
+          "Comparison 120 to 130 with delta 10, before/after review navigation and first-review state without fabricated changes.",
+          "Attributed preserved comments with author, time and v1 displayed separately from numeric differences.",
+          "Exact preserved source digest delegated through a revalidated host callback; rejected destination and revoked review clear headings/list items.",
+          "Revoked before-item navigation is refused without opening another review; no browser page errors."
+        ]
+      }
+    },
+    {
+      "criterion_id": "WP07.T03.CMP.02",
+      "criterion": "São tratados ausência de revisão anterior, mudança de definição e restrição de acesso após preservação.",
+      "implementation_status": "IMPLEMENTED_LOCAL_CONSUMER",
+      "implementation_paths": [
+        "modules/sucafina/Sucafinav1/product/reviews/compare.ts",
+        "modules/sucafina/Sucafinav1/product/reviews/comparison-port.ts",
+        "modules/sucafina/Sucafinav1/product/reviews/meeting.ts"
+      ],
+      "test_sources": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/comparison.test.ts",
+          "tests": [
+            "first review and an unavailable referenced predecessor have different states",
+            "comparison reader exposes a canonical forwarding separately and removes all content on access revocation",
+            "replacement, unit, currency, period and missing values never produce an invented monetary delta",
+            "comparison rechecks both immutable bases and final authority before returning any data"
+          ],
+          "execution_status": "HOSTED_PASS_SCOPED",
+          "tested_product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+          "ci_snapshot_sha": "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+          "run_id": "43531115429",
+          "job_id": "132248784028",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43531115429.json",
+          "test_results": [
+            {
+              "name": "first review and an unavailable referenced predecessor have different states",
+              "status": "PASS",
+              "run_id": "43531115429",
+              "log_line": 866,
+              "duration_ms": 0.28
+            },
+            {
+              "name": "comparison reader exposes a canonical forwarding separately and removes all content on access revocation",
+              "status": "PASS",
+              "run_id": "43531115429",
+              "log_line": 865,
+              "duration_ms": 0.88
+            },
+            {
+              "name": "replacement, unit, currency, period and missing values never produce an invented monetary delta",
+              "status": "PASS",
+              "run_id": "43531115429",
+              "log_line": 864,
+              "duration_ms": 0.36
+            },
+            {
+              "name": "comparison rechecks both immutable bases and final authority before returning any data",
+              "status": "PASS",
+              "run_id": "43531115429",
+              "log_line": 867,
+              "duration_ms": 0.43
+            }
+          ],
+          "proof_scope": "Pure comparison and authenticated port consumer with controlled review/action readers; not a WP02/WP08 native integration witness."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+          "tests": [
+            "comparison requires identity and a compatible period before calculating a delta"
+          ],
+          "execution_status": "HOSTED_PASS_SCOPED",
+          "tested_product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+          "ci_snapshot_sha": "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+          "run_id": "43531115429",
+          "job_id": "132248784028",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43531115429.json",
+          "test_results": [
+            {
+              "name": "comparison requires identity and a compatible period before calculating a delta",
+              "status": "PASS",
+              "run_id": "43531115429",
+              "log_line": 831,
+              "duration_ms": 2.96
+            }
+          ],
+          "proof_scope": "Real review/storage/export paths with controlled source and access callbacks; source deletion in the fixture is not physical C17 tombstone proof. XML assertions are not visual inspection."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/browser-ui.test.ts",
+          "tests": [
+            "Chromium preserves the chosen agenda, recovers a lost response and removes revoked content"
+          ],
+          "execution_status": "HOSTED_BROWSER_PASS_SCOPED",
+          "tested_product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+          "ci_snapshot_sha": "9d4670fdf446d5e7acc01b95842209f68bd18e0b",
+          "run_id": "43530831862",
+          "job_id": "132247794669",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43530831862.json",
+          "test_results": [
+            {
+              "name": "Chromium preserves the chosen agenda, recovers a lost response and removes revoked content",
+              "status": "PASS",
+              "run_id": "43530831862",
+              "log_line": 929,
+              "duration_ms": 10993.36
+            }
+          ],
+          "proof_scope": "Monthly scope only: 2027-01-01 through 2027-01-31, using the period accepted by the real Planner without truncating its returned projection. Actual Chromium, Bun server, operator identity, UI/human authority, protected C08, real SQLite, real Planner, application HTTP, preparation and meeting consumers. The source/history catalog, C06 thread and host source/review-navigation adapters are explicitly controlled. Annual browser performance remains BLOCKED_EXTERNAL after two failed full-year runs. This is not native WP10 installation mounting, C17 physical deletion/replacement, persisted WP08 history or C16 native/MCP execution."
+        }
+      ],
+      "negative_cases": [
+        "A referenced but unavailable predecessor is not a first review.",
+        "Changed engine/field definition or physical incarnation cannot produce a numeric improvement.",
+        "Access revocation clears the comparison."
+      ],
+      "remaining_evidence_or_dependency": [],
+      "verdict": "VERIFIED_SCOPED",
+      "proof_status": "HOSTED_VERIFIED_SCOPED",
+      "acceptance_scope": "Verified for named hosted assertions and the actual isolated January 2027 browser interactions within explicit fixture/producer boundaries. Not full native installation acceptance; typecheck still fails externally.",
+      "blocked_by": [],
+      "evidence": {
+        "tested_product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+        "ci_snapshot_sha": "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+        "run_ids": [
+          "43531115429",
+          "43530831862"
+        ],
+        "native_receipts": [],
+        "visual_receipt": null,
+        "test_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43531115429.json",
+        "aggregate_test_run_status": "PASS_FOR_TWO_SEPARATE_SURGICAL_RUNS",
+        "typecheck_gate_status": "FAIL",
+        "ci_snapshot_shas": [
+          "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+          "9d4670fdf446d5e7acc01b95842209f68bd18e0b"
+        ]
+      },
+      "browser_evidence": {
+        "status": "HOSTED_BROWSER_PASS_SCOPED",
+        "run_id": "43530831862",
+        "ci_snapshot_sha": "9d4670fdf446d5e7acc01b95842209f68bd18e0b",
+        "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43530831862.json",
+        "test_name": "Chromium preserves the chosen agenda, recovers a lost response and removes revoked content",
+        "scope": "Monthly scope only: 2027-01-01 through 2027-01-31, using the period accepted by the real Planner without truncating its returned projection. Actual Chromium, Bun server, operator identity, UI/human authority, protected C08, real SQLite, real Planner, application HTTP, preparation and meeting consumers. The source/history catalog, C06 thread and host source/review-navigation adapters are explicitly controlled. Annual browser performance remains BLOCKED_EXTERNAL after two failed full-year runs. This is not native WP10 installation mounting, C17 physical deletion/replacement, persisted WP08 history or C16 native/MCP execution.",
+        "verified_behaviors": [
+          "All following browser behaviors are verified only for the January 2027 slice; no annual browser performance acceptance is inferred.",
+          "Authorized agenda order and removal, stale preview refusal and explicit refresh.",
+          "Lost response after real SQLite commit; explicit retry reuses Idempotency-Key and the original review.",
+          "A new review preserves 130 while the predecessor remains 120; later Planner value 140 does not silently replace meeting values.",
+          "Topic navigation, explicit update check and requestUpdate navigation without automatic new preservation.",
+          "Comparison 120 to 130 with delta 10, before/after review navigation and first-review state without fabricated changes.",
+          "Attributed preserved comments with author, time and v1 displayed separately from numeric differences.",
+          "Exact preserved source digest delegated through a revalidated host callback; rejected destination and revoked review clear headings/list items.",
+          "Revoked before-item navigation is refused without opening another review; no browser page errors."
+        ]
+      }
+    },
+    {
+      "criterion_id": "WP07.T03.SUC.01",
+      "criterion": "O usuário identifica as mudanças da fixture sem reabrir cada cadastro ou redigitar seus valores.",
+      "implementation_status": "IMPLEMENTED_PENDING_INTERACTION_WITNESS",
+      "implementation_paths": [
+        "modules/sucafina/Sucafinav1/product/reviews/compare.ts",
+        "modules/sucafina/Sucafinav1/product/reviews/comparison-port.ts",
+        "modules/sucafina/Sucafinav1/product/reviews/meeting.ts"
+      ],
+      "test_sources": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/comparison.test.ts",
+          "tests": [
+            "comparison follows unambiguous record identity across a row rename and retains removals, status and due changes",
+            "comparison reader exposes a canonical forwarding separately and removes all content on access revocation"
+          ],
+          "execution_status": "HOSTED_PASS_SCOPED",
+          "tested_product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+          "ci_snapshot_sha": "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+          "run_id": "43531115429",
+          "job_id": "132248784028",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43531115429.json",
+          "test_results": [
+            {
+              "name": "comparison follows unambiguous record identity across a row rename and retains removals, status and due changes",
+              "status": "PASS",
+              "run_id": "43531115429",
+              "log_line": 863,
+              "duration_ms": 0.5
+            },
+            {
+              "name": "comparison reader exposes a canonical forwarding separately and removes all content on access revocation",
+              "status": "PASS",
+              "run_id": "43531115429",
+              "log_line": 865,
+              "duration_ms": 0.88
+            }
+          ],
+          "proof_scope": "Pure comparison and authenticated port consumer with controlled review/action readers; not a WP02/WP08 native integration witness."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/browser-ui.test.ts",
+          "tests": [
+            "Chromium preserves the chosen agenda, recovers a lost response and removes revoked content"
+          ],
+          "execution_status": "HOSTED_BROWSER_PASS_SCOPED",
+          "tested_product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+          "ci_snapshot_sha": "9d4670fdf446d5e7acc01b95842209f68bd18e0b",
+          "run_id": "43530831862",
+          "job_id": "132247794669",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43530831862.json",
+          "test_results": [
+            {
+              "name": "Chromium preserves the chosen agenda, recovers a lost response and removes revoked content",
+              "status": "PASS",
+              "run_id": "43530831862",
+              "log_line": 929,
+              "duration_ms": 10993.36
+            }
+          ],
+          "proof_scope": "Monthly scope only: 2027-01-01 through 2027-01-31, using the period accepted by the real Planner without truncating its returned projection. Actual Chromium, Bun server, operator identity, UI/human authority, protected C08, real SQLite, real Planner, application HTTP, preparation and meeting consumers. The source/history catalog, C06 thread and host source/review-navigation adapters are explicitly controlled. Annual browser performance remains BLOCKED_EXTERNAL after two failed full-year runs. This is not native WP10 installation mounting, C17 physical deletion/replacement, persisted WP08 history or C16 native/MCP execution."
+        }
+      ],
+      "negative_cases": [
+        "Before/after, delta, removal, dates and action status are read from captured/producer values; no manual value reentry is needed."
+      ],
+      "remaining_evidence_or_dependency": [
+        "Hosted browser witness for the full 1320 to 1400 fixture and canonical action required.",
+        "Annual browser runs 43528912346 and 43530154667 remain FAIL; the monthly fixture does not qualify annual performance. Owner authority/store optimization and an unchanged-timeout annual hosted witness are still required.",
+        "The isolated monthly browser witness does not close native WP10 mounting, actual owner historical readers or physical source continuity listed in blocked_by."
+      ],
+      "verdict": "BLOCKED_EXTERNAL",
+      "proof_status": "HOSTED_PARTIAL",
+      "acceptance_scope": "Mapped own assertions and available browser behavior passed within declared boundaries; full acceptance remains blocked by HOST_MOUNT, C06_ACTION_CONTINUITY, ANNUAL_BROWSER_PERFORMANCE.",
+      "blocked_by": [
+        "HOST_MOUNT",
+        "C06_ACTION_CONTINUITY",
+        "ANNUAL_BROWSER_PERFORMANCE"
+      ],
+      "evidence": {
+        "tested_product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+        "ci_snapshot_sha": "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+        "run_ids": [
+          "43531115429",
+          "43530831862"
+        ],
+        "native_receipts": [],
+        "visual_receipt": null,
+        "test_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43531115429.json",
+        "aggregate_test_run_status": "PASS_FOR_TWO_SEPARATE_SURGICAL_RUNS",
+        "typecheck_gate_status": "FAIL",
+        "ci_snapshot_shas": [
+          "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+          "9d4670fdf446d5e7acc01b95842209f68bd18e0b"
+        ]
+      },
+      "browser_evidence": {
+        "status": "HOSTED_BROWSER_PASS_SCOPED",
+        "run_id": "43530831862",
+        "ci_snapshot_sha": "9d4670fdf446d5e7acc01b95842209f68bd18e0b",
+        "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43530831862.json",
+        "test_name": "Chromium preserves the chosen agenda, recovers a lost response and removes revoked content",
+        "scope": "Monthly scope only: 2027-01-01 through 2027-01-31, using the period accepted by the real Planner without truncating its returned projection. Actual Chromium, Bun server, operator identity, UI/human authority, protected C08, real SQLite, real Planner, application HTTP, preparation and meeting consumers. The source/history catalog, C06 thread and host source/review-navigation adapters are explicitly controlled. Annual browser performance remains BLOCKED_EXTERNAL after two failed full-year runs. This is not native WP10 installation mounting, C17 physical deletion/replacement, persisted WP08 history or C16 native/MCP execution.",
+        "verified_behaviors": [
+          "All following browser behaviors are verified only for the January 2027 slice; no annual browser performance acceptance is inferred.",
+          "Authorized agenda order and removal, stale preview refusal and explicit refresh.",
+          "Lost response after real SQLite commit; explicit retry reuses Idempotency-Key and the original review.",
+          "A new review preserves 130 while the predecessor remains 120; later Planner value 140 does not silently replace meeting values.",
+          "Topic navigation, explicit update check and requestUpdate navigation without automatic new preservation.",
+          "Comparison 120 to 130 with delta 10, before/after review navigation and first-review state without fabricated changes.",
+          "Attributed preserved comments with author, time and v1 displayed separately from numeric differences.",
+          "Exact preserved source digest delegated through a revalidated host callback; rejected destination and revoked review clear headings/list items.",
+          "Revoked before-item navigation is refused without opening another review; no browser page errors."
+        ]
+      }
+    },
+    {
+      "criterion_id": "WP07.T03.SUC.02",
+      "criterion": "Um valor não comparável aparece como tal, e não como uma melhoria/piora numérica enganosa.",
+      "implementation_status": "IMPLEMENTED_LOCAL_CONSUMER",
+      "implementation_paths": [
+        "modules/sucafina/Sucafinav1/product/reviews/compare.ts",
+        "modules/sucafina/Sucafinav1/product/reviews/meeting.ts"
+      ],
+      "test_sources": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/comparison.test.ts",
+          "tests": [
+            "replacement, unit, currency, period and missing values never produce an invented monetary delta"
+          ],
+          "execution_status": "HOSTED_PASS_SCOPED",
+          "tested_product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+          "ci_snapshot_sha": "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+          "run_id": "43531115429",
+          "job_id": "132248784028",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43531115429.json",
+          "test_results": [
+            {
+              "name": "replacement, unit, currency, period and missing values never produce an invented monetary delta",
+              "status": "PASS",
+              "run_id": "43531115429",
+              "log_line": 864,
+              "duration_ms": 0.36
+            }
+          ],
+          "proof_scope": "Pure comparison and authenticated port consumer with controlled review/action readers; not a WP02/WP08 native integration witness."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+          "tests": [
+            "comparison requires identity and a compatible period before calculating a delta"
+          ],
+          "execution_status": "HOSTED_PASS_SCOPED",
+          "tested_product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+          "ci_snapshot_sha": "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+          "run_id": "43531115429",
+          "job_id": "132248784028",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43531115429.json",
+          "test_results": [
+            {
+              "name": "comparison requires identity and a compatible period before calculating a delta",
+              "status": "PASS",
+              "run_id": "43531115429",
+              "log_line": 831,
+              "duration_ms": 2.96
+            }
+          ],
+          "proof_scope": "Real review/storage/export paths with controlled source and access callbacks; source deletion in the fixture is not physical C17 tombstone proof. XML assertions are not visual inspection."
+        }
+      ],
+      "negative_cases": [
+        "Incompatible data renders its state and basis without a numeric delta."
+      ],
+      "remaining_evidence_or_dependency": [
+        "The passing monthly browser fixture has homogeneous USD values. It does not prove visible incompatible-currency presentation; those non-browser comparisons passed in run 43531115429."
+      ],
+      "verdict": "BLOCKED_EXTERNAL",
+      "proof_status": "HOSTED_PARTIAL",
+      "acceptance_scope": "Mapped own assertions and available browser behavior passed within declared boundaries; full acceptance remains blocked by HOST_MOUNT.",
+      "blocked_by": [
+        "HOST_MOUNT"
+      ],
+      "evidence": {
+        "tested_product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+        "ci_snapshot_sha": "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+        "run_ids": [
+          "43531115429"
+        ],
+        "native_receipts": [],
+        "visual_receipt": null,
+        "test_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43531115429.json",
+        "aggregate_test_run_status": "PASS_FOR_TWO_SEPARATE_SURGICAL_RUNS",
+        "typecheck_gate_status": "FAIL",
+        "ci_snapshot_shas": [
+          "c2d96395cb923a92c7a8f09c3190d5c42439e617"
+        ]
+      },
+      "browser_evidence": {
+        "status": "NOT_PROVED_FOR_THIS_BEHAVIOR",
+        "scope": "Passing meeting fixture has homogeneous USD values; it is not an incompatible-currency browser witness. Unit comparison checks passed; native mounting remains external."
+      }
+    },
+    {
+      "criterion_id": "WP07.T03.SUC.03",
+      "criterion": "Participante compara previsto e observado no mesmo escopo e abre a fonte; valores ausentes ou incompatíveis são visíveis, sem narrativa causal fabricada.",
+      "implementation_status": "PARTIAL_PRODUCER_HISTORY_UNAVAILABLE",
+      "implementation_paths": [
+        "modules/sucafina/Sucafinav1/product/reviews/outcome.ts",
+        "modules/sucafina/Sucafinav1/product/reviews/outcome-access.ts",
+        "modules/sucafina/Sucafinav1/product/reviews/compare.ts",
+        "modules/sucafina/Sucafinav1/product/reviews/meeting.ts"
+      ],
+      "test_sources": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/outcome.test.ts",
+          "tests": [
+            "meeting outcome lines show cutoff, coverage and sources without assigning a cause",
+            "missing actual remains unavailable and a zero actual remains an observed zero",
+            "outcome access requests the preserved cutoff and refuses a producer that returns a later current observation",
+            "outcome reader failure and mid-read source changes fail closed"
+          ],
+          "execution_status": "HOSTED_PASS_SCOPED",
+          "tested_product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+          "ci_snapshot_sha": "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+          "run_id": "43531115429",
+          "job_id": "132248784028",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43531115429.json",
+          "test_results": [
+            {
+              "name": "meeting outcome lines show cutoff, coverage and sources without assigning a cause",
+              "status": "PASS",
+              "run_id": "43531115429",
+              "log_line": 881,
+              "duration_ms": 0.12
+            },
+            {
+              "name": "missing actual remains unavailable and a zero actual remains an observed zero",
+              "status": "PASS",
+              "run_id": "43531115429",
+              "log_line": 880,
+              "duration_ms": 0.17
+            },
+            {
+              "name": "outcome access requests the preserved cutoff and refuses a producer that returns a later current observation",
+              "status": "PASS",
+              "run_id": "43531115429",
+              "log_line": 882,
+              "duration_ms": 0.9
+            },
+            {
+              "name": "outcome reader failure and mid-read source changes fail closed",
+              "status": "PASS",
+              "run_id": "43531115429",
+              "log_line": 883,
+              "duration_ms": 0.33
+            }
+          ],
+          "proof_scope": "Validators, display lines and typed producer seams; not a real WP14 historical result or source-opening witness."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/browser-ui.test.ts",
+          "tests": [
+            "Chromium preserves the chosen agenda, recovers a lost response and removes revoked content"
+          ],
+          "execution_status": "HOSTED_BROWSER_PASS_SCOPED",
+          "tested_product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+          "ci_snapshot_sha": "9d4670fdf446d5e7acc01b95842209f68bd18e0b",
+          "run_id": "43530831862",
+          "job_id": "132247794669",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43530831862.json",
+          "test_results": [
+            {
+              "name": "Chromium preserves the chosen agenda, recovers a lost response and removes revoked content",
+              "status": "PASS",
+              "run_id": "43530831862",
+              "log_line": 929,
+              "duration_ms": 10993.36
+            }
+          ],
+          "proof_scope": "Monthly scope only: 2027-01-01 through 2027-01-31, using the period accepted by the real Planner without truncating its returned projection. Actual Chromium, Bun server, operator identity, UI/human authority, protected C08, real SQLite, real Planner, application HTTP, preparation and meeting consumers. The source/history catalog, C06 thread and host source/review-navigation adapters are explicitly controlled. Annual browser performance remains BLOCKED_EXTERNAL after two failed full-year runs. This is not native WP10 installation mounting, C17 physical deletion/replacement, persisted WP08 history or C16 native/MCP execution."
+        }
+      ],
+      "negative_cases": [
+        "Null actual stays unavailable; real zero stays zero.",
+        "Partial compatibility, invalid period, wrong arithmetic, later cutoff and mid-read changes are rejected.",
+        "Source button rereads the review and compares the exact preserved evidence before delegating to the current authorized host resolver; absent callback is explicit unavailable."
+      ],
+      "remaining_evidence_or_dependency": [
+        "openSource is propagated by browser.ts to meeting.ts. Actual current C17 authorized source opening remains unproved.",
+        "WP14 current adapter supplies only comparable ready or bare unavailable; no immutable authenticated historical cutoff reader exists at the inspected SHA.",
+        "Tests exercise typed producer seams, not a native WP14 execution.",
+        "Open an owner-backed WP14 expected/observed section with actual source authorization in the browser. The passing monthly fixture contains Planner forecasts and controlled source-navigation adapters only.",
+        "The isolated monthly browser witness does not close native WP10 mounting, actual owner historical readers or physical source continuity listed in blocked_by."
+      ],
+      "verdict": "BLOCKED_EXTERNAL",
+      "proof_status": "HOSTED_PARTIAL",
+      "acceptance_scope": "Mapped own assertions and available browser behavior passed within declared boundaries; full acceptance remains blocked by HOST_MOUNT, WP14_OUTCOME_HISTORY.",
+      "blocked_by": [
+        "HOST_MOUNT",
+        "WP14_OUTCOME_HISTORY"
+      ],
+      "evidence": {
+        "tested_product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+        "ci_snapshot_sha": "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+        "run_ids": [
+          "43531115429",
+          "43530831862"
+        ],
+        "native_receipts": [],
+        "visual_receipt": null,
+        "test_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43531115429.json",
+        "aggregate_test_run_status": "PASS_FOR_TWO_SEPARATE_SURGICAL_RUNS",
+        "typecheck_gate_status": "FAIL",
+        "ci_snapshot_shas": [
+          "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+          "9d4670fdf446d5e7acc01b95842209f68bd18e0b"
+        ]
+      },
+      "browser_evidence": {
+        "status": "HOSTED_BROWSER_PASS_SCOPED",
+        "run_id": "43530831862",
+        "ci_snapshot_sha": "9d4670fdf446d5e7acc01b95842209f68bd18e0b",
+        "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43530831862.json",
+        "test_name": "Chromium preserves the chosen agenda, recovers a lost response and removes revoked content",
+        "scope": "Monthly scope only: 2027-01-01 through 2027-01-31, using the period accepted by the real Planner without truncating its returned projection. Actual Chromium, Bun server, operator identity, UI/human authority, protected C08, real SQLite, real Planner, application HTTP, preparation and meeting consumers. The source/history catalog, C06 thread and host source/review-navigation adapters are explicitly controlled. Annual browser performance remains BLOCKED_EXTERNAL after two failed full-year runs. This is not native WP10 installation mounting, C17 physical deletion/replacement, persisted WP08 history or C16 native/MCP execution.",
+        "verified_behaviors": [
+          "All following browser behaviors are verified only for the January 2027 slice; no annual browser performance acceptance is inferred.",
+          "Authorized agenda order and removal, stale preview refusal and explicit refresh.",
+          "Lost response after real SQLite commit; explicit retry reuses Idempotency-Key and the original review.",
+          "A new review preserves 130 while the predecessor remains 120; later Planner value 140 does not silently replace meeting values.",
+          "Topic navigation, explicit update check and requestUpdate navigation without automatic new preservation.",
+          "Comparison 120 to 130 with delta 10, before/after review navigation and first-review state without fabricated changes.",
+          "Attributed preserved comments with author, time and v1 displayed separately from numeric differences.",
+          "Exact preserved source digest delegated through a revalidated host callback; rejected destination and revoked review clear headings/list items.",
+          "Revoked before-item navigation is refused without opening another review; no browser page errors."
+        ]
+      }
+    },
+    {
+      "criterion_id": "WP07.CMP.03",
+      "criterion": "Reunião e exportação apresentam a decisão, suas condições e previsto versus observado com fontes/períodos; o fechamento mantém a base financeira debatida e incorpora as ações decididas.",
+      "implementation_status": "PARTIAL_LOCAL_CONSUMERS_IMPLEMENTED_DEPENDENCIES_OPEN",
+      "implementation_paths": [
+        "modules/sucafina/Sucafinav1/product/reviews/meeting.ts",
+        "modules/sucafina/Sucafinav1/product/reviews/decision.ts",
+        "modules/sucafina/Sucafinav1/product/reviews/decision-access.ts",
+        "modules/sucafina/Sucafinav1/product/reviews/sensitivity.ts",
+        "modules/sucafina/Sucafinav1/product/reviews/outcome.ts",
+        "modules/sucafina/Sucafinav1/product/reviews/outcome-access.ts",
+        "modules/sucafina/Sucafinav1/product/reviews/closure.ts",
+        "modules/sucafina/Sucafinav1/product/reviews/closure-action.ts",
+        "modules/sucafina/Sucafinav1/product/reviews/handoff-access.ts"
+      ],
+      "test_sources": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+          "tests": [
+            "sensitivity exports evaluated points and preserves a sampled threshold as an interval",
+            "decision exports retain conditioned coverage and reject an invented complete comparison"
+          ],
+          "execution_status": "HOSTED_PASS_SCOPED",
+          "tested_product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+          "ci_snapshot_sha": "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+          "run_id": "43531115429",
+          "job_id": "132248784028",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43531115429.json",
+          "test_results": [
+            {
+              "name": "sensitivity exports evaluated points and preserves a sampled threshold as an interval",
+              "status": "PASS",
+              "run_id": "43531115429",
+              "log_line": 840,
+              "duration_ms": 35.89
+            },
+            {
+              "name": "decision exports retain conditioned coverage and reject an invented complete comparison",
+              "status": "PASS",
+              "run_id": "43531115429",
+              "log_line": 841,
+              "duration_ms": 14.16
+            }
+          ],
+          "proof_scope": "Real review/storage/export paths with controlled source and access callbacks; source deletion in the fixture is not physical C17 tombstone proof. XML assertions are not visual inspection."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/decision-access.test.ts",
+          "tests": [
+            "decision access reopens actual results and denies changed evidence or mismatched bytes"
+          ],
+          "execution_status": "HOSTED_PASS_SCOPED",
+          "tested_product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+          "ci_snapshot_sha": "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+          "run_id": "43531115429",
+          "job_id": "132248784028",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43531115429.json",
+          "test_results": [
+            {
+              "name": "decision access reopens actual results and denies changed evidence or mismatched bytes",
+              "status": "PASS",
+              "run_id": "43531115429",
+              "log_line": 873,
+              "duration_ms": 7.22
+            }
+          ],
+          "proof_scope": "Real C08 and WP11 result store with synthetic stored results and controlled source authorization; no native model run or historical comparison/sensitivity producer."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/outcome.test.ts",
+          "tests": [
+            "missing actual remains unavailable and a zero actual remains an observed zero",
+            "meeting outcome lines show cutoff, coverage and sources without assigning a cause",
+            "outcome access requests the preserved cutoff and refuses a producer that returns a later current observation",
+            "outcome reader failure and mid-read source changes fail closed"
+          ],
+          "execution_status": "HOSTED_PASS_SCOPED",
+          "tested_product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+          "ci_snapshot_sha": "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+          "run_id": "43531115429",
+          "job_id": "132248784028",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43531115429.json",
+          "test_results": [
+            {
+              "name": "missing actual remains unavailable and a zero actual remains an observed zero",
+              "status": "PASS",
+              "run_id": "43531115429",
+              "log_line": 880,
+              "duration_ms": 0.17
+            },
+            {
+              "name": "meeting outcome lines show cutoff, coverage and sources without assigning a cause",
+              "status": "PASS",
+              "run_id": "43531115429",
+              "log_line": 881,
+              "duration_ms": 0.12
+            },
+            {
+              "name": "outcome access requests the preserved cutoff and refuses a producer that returns a later current observation",
+              "status": "PASS",
+              "run_id": "43531115429",
+              "log_line": 882,
+              "duration_ms": 0.9
+            },
+            {
+              "name": "outcome reader failure and mid-read source changes fail closed",
+              "status": "PASS",
+              "run_id": "43531115429",
+              "log_line": 883,
+              "duration_ms": 0.33
+            }
+          ],
+          "proof_scope": "Validators, display lines and typed producer seams; not a real WP14 historical result or source-opening witness."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/closure-action.test.ts",
+          "tests": [
+            "closure binds an authorized handoff to the immutable review and rereads its action"
+          ],
+          "execution_status": "HOSTED_PASS_SCOPED",
+          "tested_product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+          "ci_snapshot_sha": "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+          "run_id": "43531115429",
+          "job_id": "132248784028",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43531115429.json",
+          "test_results": [
+            {
+              "name": "closure binds an authorized handoff to the immutable review and rereads its action",
+              "status": "PASS",
+              "run_id": "43531115429",
+              "log_line": 870,
+              "duration_ms": 8.66
+            }
+          ],
+          "proof_scope": "Real C08/UI/human components with controlled handoff/action ports; not a real action-source incarnation continuity witness."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/browser-ui.test.ts",
+          "tests": [
+            "Chromium preserves the chosen agenda, recovers a lost response and removes revoked content"
+          ],
+          "execution_status": "HOSTED_BROWSER_PASS_SCOPED",
+          "tested_product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+          "ci_snapshot_sha": "9d4670fdf446d5e7acc01b95842209f68bd18e0b",
+          "run_id": "43530831862",
+          "job_id": "132247794669",
+          "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43530831862.json",
+          "test_results": [
+            {
+              "name": "Chromium preserves the chosen agenda, recovers a lost response and removes revoked content",
+              "status": "PASS",
+              "run_id": "43530831862",
+              "log_line": 929,
+              "duration_ms": 10993.36
+            }
+          ],
+          "proof_scope": "Monthly scope only: 2027-01-01 through 2027-01-31, using the period accepted by the real Planner without truncating its returned projection. Actual Chromium, Bun server, operator identity, UI/human authority, protected C08, real SQLite, real Planner, application HTTP, preparation and meeting consumers. The source/history catalog, C06 thread and host source/review-navigation adapters are explicitly controlled. Annual browser performance remains BLOCKED_EXTERNAL after two failed full-year runs. This is not native WP10 installation mounting, C17 physical deletion/replacement, persisted WP08 history or C16 native/MCP execution."
+        }
+      ],
+      "negative_cases": [
+        "Decision conditions and missing coverage remain explicit.",
+        "Invalid complete comparison and missing sensitivity result binding are rejected.",
+        "Closure preserves original review digest and original action snapshot while reading current action state separately.",
+        "The current WP14 output is never substituted for the preserved cutoff."
+      ],
+      "remaining_evidence_or_dependency": [
+        "Inspect decision/outcome figures and tables in actual files and execute current authorized source opening.",
+        "The isolated monthly browser witness does not close native WP10 mounting, actual owner historical readers or physical source continuity listed in blocked_by."
+      ],
+      "verdict": "BLOCKED_EXTERNAL",
+      "proof_status": "HOSTED_PARTIAL",
+      "acceptance_scope": "Mapped own assertions and available browser behavior passed within declared boundaries; full acceptance remains blocked by HOST_MOUNT, C09_HISTORICAL_RESULTS, WP14_OUTCOME_HISTORY, C06_ACTION_CONTINUITY.",
+      "blocked_by": [
+        "HOST_MOUNT",
+        "C09_HISTORICAL_RESULTS",
+        "WP14_OUTCOME_HISTORY",
+        "C06_ACTION_CONTINUITY"
+      ],
+      "evidence": {
+        "tested_product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+        "ci_snapshot_sha": "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+        "run_ids": [
+          "43531115429",
+          "43530831862"
+        ],
+        "native_receipts": [],
+        "visual_receipt": null,
+        "test_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43531115429.json",
+        "aggregate_test_run_status": "PASS_FOR_TWO_SEPARATE_SURGICAL_RUNS",
+        "typecheck_gate_status": "FAIL",
+        "ci_snapshot_shas": [
+          "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+          "9d4670fdf446d5e7acc01b95842209f68bd18e0b"
+        ]
+      },
+      "browser_evidence": {
+        "status": "HOSTED_BROWSER_PASS_SCOPED",
+        "run_id": "43530831862",
+        "ci_snapshot_sha": "9d4670fdf446d5e7acc01b95842209f68bd18e0b",
+        "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43530831862.json",
+        "test_name": "Chromium preserves the chosen agenda, recovers a lost response and removes revoked content",
+        "scope": "Monthly scope only: 2027-01-01 through 2027-01-31, using the period accepted by the real Planner without truncating its returned projection. Actual Chromium, Bun server, operator identity, UI/human authority, protected C08, real SQLite, real Planner, application HTTP, preparation and meeting consumers. The source/history catalog, C06 thread and host source/review-navigation adapters are explicitly controlled. Annual browser performance remains BLOCKED_EXTERNAL after two failed full-year runs. This is not native WP10 installation mounting, C17 physical deletion/replacement, persisted WP08 history or C16 native/MCP execution.",
+        "verified_behaviors": [
+          "All following browser behaviors are verified only for the January 2027 slice; no annual browser performance acceptance is inferred.",
+          "Authorized agenda order and removal, stale preview refusal and explicit refresh.",
+          "Lost response after real SQLite commit; explicit retry reuses Idempotency-Key and the original review.",
+          "A new review preserves 130 while the predecessor remains 120; later Planner value 140 does not silently replace meeting values.",
+          "Topic navigation, explicit update check and requestUpdate navigation without automatic new preservation.",
+          "Comparison 120 to 130 with delta 10, before/after review navigation and first-review state without fabricated changes.",
+          "Attributed preserved comments with author, time and v1 displayed separately from numeric differences.",
+          "Exact preserved source digest delegated through a revalidated host callback; rejected destination and revoked review clear headings/list items.",
+          "Revoked before-item navigation is refused without opening another review; no browser page errors."
+        ]
+      }
+    }
+  ],
+  "dependencies": [
+    {
+      "id": "C07_IMMUTABLE_FACTUAL_BODY",
+      "owners": [
+        "WP09",
+        "WP10",
+        "WP00"
+      ],
+      "branch": "sf2-relay-ready",
+      "inspected_commit": "b58601f92f3bc8742e5a7c72a34d5ddf1fd87fe8",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/routines/capabilities.ts",
+        "modules/sucafina/Sucafinav1/product/routines/factory.ts",
+        "modules/sucafina/Sucafinav1/product/routines/review.ts",
+        "modules/sucafina/Sucafinav1/product/routines/handoff.ts"
+      ],
+      "finding": "readRoutineResult returns authorized RoutineResult metadata, not an immutable persisted factual body. prepareFactualReview returns an in-memory draft/topics payload. No authenticated result-body reader was found.",
+      "required_delta": "Owner supplies an authenticated readResultBody keyed by admitted runRef/resultRef/expectedDigest with original persisted bytes, principal/project/case/admission/revision provenance, closed output schema, current C17 checks before and after, and denial for cross-run/user/ref/digest or revoked source. Shared contract changes belong to WP00.",
+      "status": "OWNER_IMPLEMENTATION_REQUIRED",
+      "proof_missing": [
+        "real run and nativeSessionId",
+        "actual skill load receipt",
+        "reopen persisted body after restart and source advance",
+        "interactive versus routine-result recursion negative"
+      ]
+    },
+    {
+      "id": "WP14_HISTORICAL_OUTCOME",
+      "owners": [
+        "WP14",
+        "WP10",
+        "WP00"
+      ],
+      "branch": "sf2-memory-ready",
+      "inspected_commit": "02ac8172c17ad57e830bfb23d3ff1d1b1191852b",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/decision-memory/outcome.ts",
+        "modules/sucafina/Sucafinav1/product/decision-memory/domain-outcome.ts",
+        "modules/sucafina/Sucafinav1/product/decision-memory/outcome-review.ts",
+        "modules/sucafina/Sucafinav1/product/decision-memory/outcome-selection.ts"
+      ],
+      "finding": "Review adapter returns ready only for comparable current observation; unavailable has no preserved contextual body. Domain outcome requires current case version and numeric confirmed actual. Selection key does not identify an immutable cutoff result. No authenticated historical result/cutoff reader exists in these inspected producers.",
+      "consumer_behavior": "outcome-access requests the preserved cutoff, requires exact original comparison and observation twice, and returns false if the producer returns a later/current result. Missing data remains unavailable.",
+      "required_delta": "Owner persists the original ExpectedObservedComparison and observation under a stable resultRef/cutoff, authorizes historical reads against current principal and same physical source/case identity, and exposes explicit contextual unavailable/partial outputs through an approved contract. Never recompute an old review from current values.",
+      "status": "OWNER_IMPLEMENTATION_REQUIRED"
+    },
+    {
+      "id": "WP11_WP13_HISTORICAL_RESULTS",
+      "owners": [
+        "WP11",
+        "WP13",
+        "WP10"
+      ],
+      "producers": [
+        {
+          "branch": "sf2-decisions-ready",
+          "inspected_commit": "ba2822bb06a8ad741ecbcf0d47654d1a86a3a95b",
+          "paths": [
+            "modules/sucafina/Sucafinav1/product/decisions/result-store.ts"
+          ]
+        },
+        {
+          "branch": "sf2-portfolio-ready",
+          "inspected_commit": "27375325788fa571d39137728ec7f0666e89f22c",
+          "paths": [
+            "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-store.ts"
+          ]
+        }
+      ],
+      "finding": "Real readHistoricalScenario exists, but current comparison and sensitivity readers still require the current case version. No historical comparison or historical sensitivity reader was found. Seed portfolio-history has a real historical portfolio reader with current provenance checks.",
+      "consumer_behavior": "decision-access consumes actual readHistoricalScenario, accepts a later current comparison referencing the original same-incarnation scenario, and optionally consumes actual portfolioHistory/currentCase. It preserves payload identity and denies unavailable old comparison/sensitivity.",
+      "required_delta": "Owner supplies authenticated immutable historical comparison/sensitivity reads with exact original result digest and current C17/case/source authorization. Root must compose actual history ports rather than an allow callback.",
+      "status": "PARTIAL_NATIVE_READERS_AVAILABLE"
+    },
+    {
+      "id": "C06_PHYSICAL_CONTINUITY",
+      "owners": [
+        "WP08",
+        "WP10"
+      ],
+      "inspected_commit": "5be7b75f5540190deace73b620679db5a509bc4f",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/collaboration/relations.ts",
+        "modules/sucafina/Sucafinav1/product/collaboration/reissue.ts",
+        "modules/sucafina/Sucafinav1/product/collaboration/authority.ts",
+        "modules/sucafina/Sucafinav1/product/collaboration/handoff.ts"
+      ],
+      "finding": "Real relation reissue can require prepareMaterialScope and producer-owned physical continuity; current HotTopic output exposes id/version but no physical incarnation. A scoped ref reissue cannot be assumed equivalent solely by display ID.",
+      "consumer_behavior": "handoff-access uses actual versioned relations and canonical action reads; exact source scope/field/period/incarnation and evidence integrity are required. Closure history is immutable and current action is separate.",
+      "required_delta": "Compose WP08 reissuer with the real material scope/continuity resolver and provide integrated advance/reissue/deletion/replacement/revocation witnesses. Do not loosen WP07 to accept matching names or plain action IDs as continuity proof.",
+      "status": "INTEGRATED_CONTINUITY_PROOF_REQUIRED"
+    },
+    {
+      "id": "C17_REMOVED_SOURCE_HISTORY",
+      "owners": [
+        "WP10",
+        "WP00"
+      ],
+      "inspected_commit": "5be7b75f5540190deace73b620679db5a509bc4f",
+      "finding": "C05 reads still depend on the real current evidence/continuity resolver. The existing review snapshot test makes current selection unavailable but uses controlled authorization callbacks; it does not prove an authorized physical tombstone or deleted-source history. The composition test uses a real Planner, C16 authority and C08 state, with fixture evidence resolution.",
+      "required_delta": "Supply current C17 authorization for immutable historical evidence using physical identity/tombstone continuity; demonstrate deletion, revoked fields and same-id replacement separately. Do not treat unavailable live projection or matching ID as an authorization decision.",
+      "status": "REAL_PRODUCER_COMPOSITION_AND_PROOF_REQUIRED"
+    }
+  ],
+  "verification_requests": [
+    "Resolve owner-side annual authority/store performance and pass the unchanged-timeout annual browser journey. Monthly UI success does not close the two annual failures.",
+    "Complete native installation mounting and actual current C17 source authorization, physical deletion/replacement and owner historical readers. The isolated browser proof is explicitly scoped.",
+    "Inspect actual owner-backed decision/outcome-specific rendered figures and tables. The visual corpus covers long exports and financial trajectory only.",
+    "Obtain actual native run/skill-load/downstream consumption receipts; no substitute native receipt is added here.",
+    "S0 must resolve the 137 external diagnostics and rerun the full official typecheck on the integrated product SHA."
+  ],
+  "related_review": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/SELECTION-CONSUMERS-AUDIT.md",
+  "ci_snapshot_sha": "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+  "gate_receipt": {
+    "product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+    "product_tree": "889fe8f2c5dfc25ba9d8c25962e984454a12bd81",
+    "run_id": "43530862046",
+    "job_id": "132247907151",
+    "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43530862046",
+    "artifact_id": "14086898379",
+    "typecheck": {
+      "status": "FAIL",
+      "exit_code": 2,
+      "diagnostics": 137,
+      "external_diagnostics": 137,
+      "own_diagnostics": 0,
+      "external_files": 46,
+      "report": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/TYPECHECK-EXTERNAL.md"
+    },
+    "guards": {
+      "rules": 78,
+      "changed_paths": 608,
+      "gate_findings": 0,
+      "warnings": 11,
+      "errors": 0,
+      "status": "PASS"
+    },
+    "export_generation": {
+      "status": "PASS",
+      "files": 4,
+      "scope": "Synthetic corpus only"
+    },
+    "log": {
+      "source": "wp07-context/check-9.log",
+      "sha256": "109de25d1ed5a755fe5606e833101f7aaec13a144a197eb630c2979e90da2bfa"
+    }
+  },
+  "visual_receipt": {
+    "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/visual-check-43530862046.json",
+    "status": "PASS_BY_COMPLETE_RENDERED_PIXEL_EQUIVALENCE",
+    "scope": "Long synthetic exports and financial trajectory/36 monthly values only; no ACL, native, physical source continuity, browser behavior or separate decision/outcome rendered pages."
+  },
+  "ci_snapshot_shas": [
+    "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+    "9d4670fdf446d5e7acc01b95842209f68bd18e0b"
+  ],
+  "prior_hosted_test_runs": [
+    {
+      "product_sha": "798c096c105bc68870cec6c5a10269f1457e2f18",
+      "ci_snapshot_sha": "7a1f2bf79198f395afc1784192cf4870122ff019",
+      "run_id": "43526243469",
+      "job_id": "132232605437",
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43526243469",
+      "overall_status": "FAIL",
+      "process_exit_code": 1,
+      "counts": {
+        "passed": 62,
+        "failed": 1,
+        "tests": 63,
+        "files": 19,
+        "assertions": 794
+      },
+      "omni_control": {
+        "status": "NOT_APPLICABLE_VALIDATED",
+        "nonce": "d72860c00254307a9420a55805a11b94",
+        "log_line": 936,
+        "scope": "Focused run with no declaring test, no omni spawn and no delegation. This is not proof of omni or native execution."
+      }
+    }
+  ],
+  "hosted_test_receipts": [
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43531115429.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43530831862.json"
+  ],
+  "annual_browser_performance": {
+    "owners": [
+      "WP10",
+      "WP00"
+    ],
+    "status": "BLOCKED_EXTERNAL",
+    "scope": "Annual Chromium preservation/comparison performance; distinct from monthly functional behavior and annual unit/export correctness.",
+    "reason": "Two full-year browser journeys failed at the unchanged 5000 ms assertion/click boundary. Late HTTP 200 responses are not passing browser evidence. The monthly fixture cannot qualify annual UI performance.",
+    "source_inspection": {
+      "paths": [
+        "modules/sucafina/Sucafinav1/runtime/local-store.ts#currentSnapshots",
+        "modules/sucafina/Sucafinav1/product/integration/product-authority.ts#resolve",
+        "modules/sucafina/Sucafinav1/product/integration/product-authority.ts#principal"
+      ],
+      "finding": "Static inspection found repeated encode/decode materialization of all three full snapshots during authority resolution. No production benchmark or CPU profile attributes every observed millisecond to one function.",
+      "related_review": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/INTEGRATION-DELTA.md"
+    },
+    "required_delta": "Owners must instrument materialization counts/bytes/time and provide a minimal current immutable authority projection bound to the real generation/transaction, preserving before/after revalidation, cancellation, revocation and isolation. Do not cache authorization across requests, expose private payloads or increase test timeouts to claim acceptance.",
+    "failed_runs": [
+      {
+        "run_id": "43528912346",
+        "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43528912346",
+        "product_sha": "fc59841cec4691a0520eabcf2c24c0bbf9c4ddc1",
+        "ci_snapshot_sha": "8a0de0f317661214418a94f1214561ca462b04ea",
+        "status": "FAIL",
+        "test_name": "Chromium preserves the chosen agenda, recovers a lost response and removes revoked content",
+        "scope_period": {
+          "start": "2027-01-01",
+          "end": "2027-12-31"
+        },
+        "observed_operation": "review-comparison",
+        "http_duration_ms": 5122,
+        "assertion_or_click_timeout_ms": 5000,
+        "late_http_status": 200,
+        "log": {
+          "source": "wp07-context/test-6.log",
+          "sha256": "1c3aeb28f64741ad8e6f2716c984691cdc12780bf1d52a31a22ea97b468ba709",
+          "relevant_lines": [
+            889,
+            897
+          ]
+        },
+        "omni_control": {
+          "status": "NOT_APPLICABLE_VALIDATED",
+          "nonce": "8697ec148e7209bf3a233ddc04d4bd9c"
+        },
+        "http_duration_measurement": "Approximate elapsed time from hosted log timestamps; late HTTP 200 is not accepted as browser success."
+      },
+      {
+        "run_id": "43530154667",
+        "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43530154667",
+        "product_sha": "7664de39a5675cff81ac963c0fa51eb77621e74a",
+        "ci_snapshot_sha": "b58997866f22359b412c5acc1df799f16548c4d2",
+        "status": "FAIL",
+        "test_name": "Chromium preserves the chosen agenda, recovers a lost response and removes revoked content",
+        "scope_period": {
+          "start": "2027-01-01",
+          "end": "2027-12-31"
+        },
+        "observed_operation": "second annual review-preserve",
+        "http_duration_ms": 6509,
+        "assertion_or_click_timeout_ms": 5000,
+        "late_http_status": 200,
+        "log": {
+          "source": "wp07-context/test-7.log",
+          "sha256": "87cc3538e224b3a105f3396071e6857f74cd7679a4174b1df905a18decf85434",
+          "relevant_lines": [
+            874,
+            876
+          ]
+        },
+        "omni_control": {
+          "status": "NOT_APPLICABLE_VALIDATED",
+          "nonce": "d882407ffa71474897af62f4ab396917"
+        },
+        "http_duration_measurement": "Approximate elapsed time from hosted log timestamps; late HTTP 200 is not accepted as browser success."
+      }
+    ],
+    "monthly_limit": "A passing January 2027 Planner cut proves only that exact functional slice, with no producer truncation, omitted step or raised timeout. Annual selections, non-browser assertions and long exports remain separate evidence."
+  },
+  "related_reviews": [
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/criteria.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/INTEGRATION-DELTA.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/EXECUTION.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/checks.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/SELECTION-CONSUMERS-AUDIT.md"
+  ]
+}

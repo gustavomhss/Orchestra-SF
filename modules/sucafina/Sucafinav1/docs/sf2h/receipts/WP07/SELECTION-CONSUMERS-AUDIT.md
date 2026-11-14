@@ -2,7 +2,7 @@
 
 ## Scope and proof boundary
 
-This audit uses `astra-wp07` seed `5be7b75f5540190deace73b620679db5a509bc4f` and the pinned WP07 pack. Changes are confined to the WP07 ownership. No local product test, remote publication, merge or deployment was performed by this worker. Hosted CI results must be attached by the publishing session; the tests below are authored coverage until their exact candidate has run.
+This audit uses `astra-wp07` seed `5be7b75f5540190deace73b620679db5a509bc4f` and the pinned WP07 pack. Changes are confined to the WP07 ownership. No local product test, merge or deployment was performed. The published candidate and hosted execution receipts are recorded in this directory. Authored coverage, hosted assertions, browser interaction and native integration are distinct evidence scopes; the criterion matrix and run ledgers identify the result of each check.
 
 ## Implemented corrections
 

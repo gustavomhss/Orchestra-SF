@@ -1,0 +1,504 @@
+{
+  "schema": "sf-wp07-hosted-test-receipt-v1",
+  "repository": "gustavomhss/Orchestra-SF",
+  "product_sha": "c5143e6ad6d8dca61b09572c60f5a6ed64093f74",
+  "ci_snapshot_sha": "c2d96395cb923a92c7a8f09c3190d5c42439e617",
+  "run_id": "43531115429",
+  "job_id": "132248784028",
+  "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43531115429",
+  "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43531115429/job/132248784028",
+  "overall_status": "PASS",
+  "process_exit_code": 0,
+  "counts": {
+    "passed": 67,
+    "failed": 0,
+    "tests": 67,
+    "files": 19,
+    "assertions": 826
+  },
+  "log": {
+    "source": "wp07-context/test-9.log",
+    "sha256": "d9b2ecdc8b4e17e879810331b66a7756778922f3991eea193334b5c3a162385b",
+    "lines": 949
+  },
+  "omni_control": {
+    "status": "NOT_APPLICABLE_VALIDATED",
+    "nonce": "3c2706e6abec6d74a8d64a0f8de93ea1",
+    "scope": "No declaring test, no omni spawn or delegation. This proves no omni/native execution."
+  },
+  "proof_policy": "Exact hosted assertions only, with producer/fixture boundaries explicit. W/S mapping is supplied by the root publisher; the log independently identifies S. No local product execution.",
+  "tests": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/reports-runtime.test.ts",
+      "name": "PowerPoint contains the server totals and every selected record across slides",
+      "status": "PASS",
+      "log_line": 811,
+      "duration_ms": 50.79
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/reports-runtime.test.ts",
+      "name": "Word is an actual DOCX presenter script with all bullets rather than slide limits",
+      "status": "PASS",
+      "log_line": 812,
+      "duration_ms": 76.19
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/reports-runtime.test.ts",
+      "name": "legacy report keeps all 25 projects and long notes once in both formats",
+      "status": "PASS",
+      "log_line": 813,
+      "duration_ms": 52.71
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/reports-runtime.test.ts",
+      "name": "report scopes never expose talent and unauthorized Executive Summary cannot bypass page visibility",
+      "status": "PASS",
+      "log_line": 814,
+      "duration_ms": 7.62
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/reports-runtime.test.ts",
+      "name": "PO HTML omits bank fields, escapes description, and the register respects requester scope",
+      "status": "PASS",
+      "log_line": 815,
+      "duration_ms": 2.83
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/reports-runtime.test.ts",
+      "name": "executive reports include budget figures only when the viewer can access Budget Overview",
+      "status": "PASS",
+      "log_line": 816,
+      "duration_ms": 38.51
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/parity-reports.test.ts",
+      "name": "IT Operations reports preserve authorized monthly measurements and never manufacture YTD totals",
+      "status": "PASS",
+      "log_line": 819,
+      "duration_ms": 11.13
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/parity-reports.test.ts",
+      "name": "IT Security report uses the latest month in the selected year and preserves source and derived KPI values",
+      "status": "PASS",
+      "log_line": 820,
+      "duration_ms": 12.69
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/parity-reports.test.ts",
+      "name": "report data distinguishes real zero metrics from absent year data",
+      "status": "PASS",
+      "log_line": 821,
+      "duration_ms": 22.19
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/services.test.ts",
+      "name": "many cells sharing identical evidence resolve once per authorization pass without caching another read",
+      "status": "PASS",
+      "log_line": 824,
+      "duration_ms": 7.35
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/services.test.ts",
+      "name": "different evidence bodies sharing a claimed digest are independently checked and refused",
+      "status": "PASS",
+      "log_line": 825,
+      "duration_ms": 0.37
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/services.test.ts",
+      "name": "evidence revoke during resolution cannot escape the authorization boundary",
+      "status": "PASS",
+      "log_line": 826,
+      "duration_ms": 0.32
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/services.test.ts",
+      "name": "evidence mutate during resolution cannot escape the authorization boundary",
+      "status": "PASS",
+      "log_line": 827,
+      "duration_ms": 0.15
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+      "name": "preserved review survives changed projections and is denied after access revocation",
+      "status": "PASS",
+      "log_line": 830,
+      "duration_ms": 66.15
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+      "name": "comparison requires identity and a compatible period before calculating a delta",
+      "status": "PASS",
+      "log_line": 831,
+      "duration_ms": 2.96
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+      "name": "preserved report exports every selected record from the captured projection",
+      "status": "PASS",
+      "log_line": 832,
+      "duration_ms": 24.25
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+      "name": "review capability denies a forged binding before selecting source data",
+      "status": "PASS",
+      "log_line": 833,
+      "duration_ms": 0.66
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+      "name": "financial trajectory exports a captured figure and the same data table in both formats",
+      "status": "PASS",
+      "log_line": 834,
+      "duration_ms": 19.24
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+      "name": "category charts paginate every captured value in both export formats",
+      "status": "PASS",
+      "log_line": 835,
+      "duration_ms": 55.79
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+      "name": "ticket flow chart keeps monthly entries as separate periods",
+      "status": "PASS",
+      "log_line": 836,
+      "duration_ms": 1.15
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+      "name": "timeline export paginates resolved milestones and refuses fabricated completion",
+      "status": "PASS",
+      "log_line": 837,
+      "duration_ms": 39.25
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+      "name": "waterfall export uses resolved endpoints and marks a mismatched snapshot unavailable",
+      "status": "PASS",
+      "log_line": 838,
+      "duration_ms": 49.09
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+      "name": "capacity and cost charts require alignment and keep separate units",
+      "status": "PASS",
+      "log_line": 839,
+      "duration_ms": 10.15
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+      "name": "sensitivity exports evaluated points and preserves a sampled threshold as an interval",
+      "status": "PASS",
+      "log_line": 840,
+      "duration_ms": 35.89
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+      "name": "decision exports retain conditioned coverage and reject an invented complete comparison",
+      "status": "PASS",
+      "log_line": 841,
+      "duration_ms": 14.16
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/report-layout.test.ts",
+      "name": "slide pagination preserves whole graphemes and all text",
+      "status": "PASS",
+      "log_line": 844,
+      "duration_ms": 0.28
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/report-layout.test.ts",
+      "name": "coverage names selected sections and omitted comments without changing counts",
+      "status": "PASS",
+      "log_line": 845,
+      "duration_ms": 0.11
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/report-layout.test.ts",
+      "name": "long notes share bounded pages and keep every fragment instead of one slide per visual line",
+      "status": "PASS",
+      "log_line": 846,
+      "duration_ms": 2.02
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/report-layout.test.ts",
+      "name": "a paragraph longer than one page continues without losing its final note",
+      "status": "PASS",
+      "log_line": 847,
+      "duration_ms": 0.59
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/closure.test.ts",
+      "name": "meeting closure accepts only an authorized, unchanged review and the matching handoff",
+      "status": "PASS",
+      "log_line": 850,
+      "duration_ms": 0.6
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/human.test.ts",
+      "name": "human preservation uses the authorized creation target and reconciles an exact retry",
+      "status": "PASS",
+      "log_line": 853,
+      "duration_ms": 11.97
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/artifact-storage.test.ts",
+      "name": "artifact retry preserves the first bytes across ZIP timestamps, conflicts on changed intent, and rechecks access",
+      "status": "PASS",
+      "log_line": 856,
+      "duration_ms": 2230.45
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/export-completeness.test.ts",
+      "name": "presentation keeps its title and review reference alongside the selected material",
+      "status": "PASS",
+      "log_line": 859,
+      "duration_ms": 3.66
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/export-completeness.test.ts",
+      "name": "25 long project notes, every monthly value, missing series and captured comments survive both formats",
+      "status": "PASS",
+      "log_line": 860,
+      "duration_ms": 94.73
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/comparison.test.ts",
+      "name": "comparison follows unambiguous record identity across a row rename and retains removals, status and due changes",
+      "status": "PASS",
+      "log_line": 863,
+      "duration_ms": 0.5
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/comparison.test.ts",
+      "name": "replacement, unit, currency, period and missing values never produce an invented monetary delta",
+      "status": "PASS",
+      "log_line": 864,
+      "duration_ms": 0.36
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/comparison.test.ts",
+      "name": "comparison reader exposes a canonical forwarding separately and removes all content on access revocation",
+      "status": "PASS",
+      "log_line": 865,
+      "duration_ms": 0.88
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/comparison.test.ts",
+      "name": "first review and an unavailable referenced predecessor have different states",
+      "status": "PASS",
+      "log_line": 866,
+      "duration_ms": 0.28
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/comparison.test.ts",
+      "name": "comparison rechecks both immutable bases and final authority before returning any data",
+      "status": "PASS",
+      "log_line": 867,
+      "duration_ms": 0.43
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/closure-action.test.ts",
+      "name": "closure binds an authorized handoff to the immutable review and rereads its action",
+      "status": "PASS",
+      "log_line": 870,
+      "duration_ms": 8.66
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/decision-access.test.ts",
+      "name": "decision access reopens actual results and denies changed evidence or mismatched bytes",
+      "status": "PASS",
+      "log_line": 873,
+      "duration_ms": 7.22
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/browser-build.test.ts",
+      "name": "review browser entry bundles without server runtime dependencies",
+      "status": "PASS",
+      "log_line": 876,
+      "duration_ms": 6.58
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/browser-build.test.ts",
+      "name": "review workspace entry bundles without server runtime dependencies",
+      "status": "PASS",
+      "log_line": 877,
+      "duration_ms": 4.35
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/outcome.test.ts",
+      "name": "missing actual remains unavailable and a zero actual remains an observed zero",
+      "status": "PASS",
+      "log_line": 880,
+      "duration_ms": 0.17
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/outcome.test.ts",
+      "name": "meeting outcome lines show cutoff, coverage and sources without assigning a cause",
+      "status": "PASS",
+      "log_line": 881,
+      "duration_ms": 0.12
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/outcome.test.ts",
+      "name": "outcome access requests the preserved cutoff and refuses a producer that returns a later current observation",
+      "status": "PASS",
+      "log_line": 882,
+      "duration_ms": 0.9
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/outcome.test.ts",
+      "name": "outcome reader failure and mid-read source changes fail closed",
+      "status": "PASS",
+      "log_line": 883,
+      "duration_ms": 0.33
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/contribution.test.ts",
+      "name": "review consumer uses the production C11 reader and never opens material for an absent native output",
+      "status": "PASS",
+      "log_line": 886,
+      "duration_ms": 1.31
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/selection.test.ts",
+      "name": "agenda keeps exact records, chosen order, periods and notes without mutating Dashboard",
+      "status": "PASS",
+      "log_line": 889,
+      "duration_ms": 2.56
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/selection.test.ts",
+      "name": "agenda preserves each competence, represents empty sections and handles removals",
+      "status": "PASS",
+      "log_line": 890,
+      "duration_ms": 0.54
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/selection.test.ts",
+      "name": "agenda handles all Dashboard topic IDs and fails closed for unsupported or private topics",
+      "status": "PASS",
+      "log_line": 891,
+      "duration_ms": 1.59
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/selection.test.ts",
+      "name": "agenda rejects invalid producer counts and preserves producer failure reasons",
+      "status": "PASS",
+      "log_line": 892,
+      "duration_ms": 0.31
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/selection.test.ts",
+      "name": "agenda retains C06 comments, WP05 chart capture and WP14 outcome snapshots only when requested",
+      "status": "PASS",
+      "log_line": 893,
+      "duration_ms": 0.94
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/selection.test.ts",
+      "name": "agenda selection is bounded, expires, revalidates authority and rejects hostile runtime inputs",
+      "status": "PASS",
+      "log_line": 894,
+      "duration_ms": 0.49
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/selection.test.ts",
+      "name": "agenda delegates singleton topic availability to the authenticated producer",
+      "status": "PASS",
+      "log_line": 895,
+      "duration_ms": 0.24
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/selection.test.ts",
+      "name": "agenda pins caller input before awaiting authority and does not adopt a mutated binding",
+      "status": "PASS",
+      "log_line": 896,
+      "duration_ms": 0.49
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/selection.test.ts",
+      "name": "released or expired selection is refused after an in-flight producer read",
+      "status": "PASS",
+      "log_line": 897,
+      "duration_ms": 0.74
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/selection.test.ts",
+      "name": "selection refuses changed preview content while retaining its original observation time",
+      "status": "PASS",
+      "log_line": 898,
+      "duration_ms": 0.68
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/application.test.ts",
+      "name": "application consumes agenda, shared review/report/artifact capabilities and a preserved byte download",
+      "status": "PASS",
+      "log_line": 901,
+      "duration_ms": 46.3
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/application.test.ts",
+      "name": "shared dispatcher refuses forged arguments, missing admission, reused leases, expiry and source loss",
+      "status": "PASS",
+      "log_line": 902,
+      "duration_ms": 4.66
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/application.test.ts",
+      "name": "HTTP rejects cross-site writes, unknown fields, oversized bodies and revoked sources during preparation",
+      "status": "PASS",
+      "log_line": 903,
+      "duration_ms": 4.95
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/application.test.ts",
+      "name": "explicit refresh creates a new review reference without replacing the previous 1320",
+      "status": "PASS",
+      "log_line": 904,
+      "duration_ms": 12.9
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/application.test.ts",
+      "name": "Talent allowed in the preview is denied before export without writing a private artifact",
+      "status": "PASS",
+      "log_line": 905,
+      "duration_ms": 9.34
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/thread-access.test.ts",
+      "name": "captured comment requires the exact thread message, source association and current authority",
+      "status": "PASS",
+      "log_line": 908,
+      "duration_ms": 1.23
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/thread-access.test.ts",
+      "name": "a later conversation exceeding the capture limit does not revoke preserved comments",
+      "status": "PASS",
+      "log_line": 909,
+      "duration_ms": 0.42
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/thread-access.test.ts",
+      "name": "a source mapping callback cannot rewrite the captured canonical message",
+      "status": "PASS",
+      "log_line": 910,
+      "duration_ms": 0.3
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/composition.test.ts",
+      "name": "composition consumes the real Planner projection and protected review storage under a UI lease",
+      "status": "PASS",
+      "log_line": 913,
+      "duration_ms": 28.1
+    }
+  ],
+  "product_tree": "889fe8f2c5dfc25ba9d8c25962e984454a12bd81",
+  "ci_snapshot_tree": "d469c13334f526fbef13d0f41bccd2b5732b1b46",
+  "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/hosted-test-43531115429.json"
+}
