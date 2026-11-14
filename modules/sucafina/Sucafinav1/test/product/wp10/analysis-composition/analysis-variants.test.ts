@@ -22,7 +22,7 @@ import { createSfSourceScopeProjector } from "../../../../product/integration/so
 import { createChoiceSnapshot } from "../../../../product/decisions/choice.ts"
 import { encodeCaseRef } from "../../../../product/decisions/case-port.ts"
 import { createReviewPort } from "../../../../product/reviews/port.ts"
-import { digestSfValue } from "../../../../product/contracts/canonical.ts"
+import { digestSfContribution, digestSfValue } from "../../../../product/contracts/canonical.ts"
 import { decodeSfContributionOutput } from "../../../../product/contracts/schema-admission.ts"
 import type { BusinessEvidenceRef } from "../../../../product/contracts/business-context.ts"
 import type { ConfirmationCommand, ConfirmationScope } from "../../../../product/contracts/context.ts"
@@ -35,6 +35,7 @@ import type { TrustedDomainContext, TrustedUiContext } from "../../../../product
 import { openLocalStore } from "../../../../runtime/local-store.ts"
 import { domain as portfolio } from "../../../../runtime/dashboard-portfolio.ts"
 import { compositionTestDeadline } from "../integration/composition-test-deadline.ts"
+import { contributionPayloadMetadata } from "./contribution-payload-fixture.ts"
 
 const period = { start: "2026-01-01", end: "2026-12-31" }
 const at = "2026-11-14T00:00:00Z"
@@ -248,9 +249,11 @@ async function fixture(withChoice = true, duplicateMilestone = false, withRelati
 function dependencySelection() { return { relationRefIds: [], commitmentIds: ["chosen"], milestoneIds: [milestoneId], declaredConstraints: [declaration] } }
 function delivery(caseRef: SfAnalysisRequest["caseRef"], refs: readonly BusinessEvidenceRef[]): ContributionEnvelope {
   // Only the output payload boundary is exercised here; this is not a native contribution receipt.
-  return { state: "ready", kind: "DeliveryAssessment", evidenceRefs: refs, payload: { caseRef: encodeCaseRef(caseRef), candidateRefs: ["candidate"], dependencies: [], capacityConstraints: [declaration],
+  const output: ContributionEnvelope = { ...contributionPayloadMetadata(caseRef), state: "ready", kind: "DeliveryAssessment", evidenceRefs: refs, payload: { caseRef: encodeCaseRef(caseRef), candidateRefs: ["candidate"], dependencies: [], capacityConstraints: [declaration],
     unresolvedConditions: [{ id: "coverage-service", category: "service", reason: "Cost coverage pending", evidenceRefs: [] },
-      { id: "human-declared-constraint:0", category: "human-declared-constraint", reason: `Unverified human declaration: ${declaration}`, evidenceRefs: [] }] } } as ContributionEnvelope
+      { id: "human-declared-constraint:0", category: "human-declared-constraint", reason: `Unverified human declaration: ${declaration}`, evidenceRefs: [] }] } }
+  output.outputDigest = digestSfContribution(output)
+  return output
 }
 
 test("dependency variants reopen exact C09 choice and Dashboard milestone and preserve human declarations", async () => {
@@ -320,9 +323,10 @@ for (const group of [
     try {
       const input = ok(await state.prepare(state.dependencies, human.incoming, human.call)) as DependencyReviewInput
       expect(input.relations).toMatchObject([{ id: relation.id, version: 1, state: "confirmed" }])
-      const output = { state: "ready", kind: "DependencyConflict", evidenceRefs: relation.evidenceRefs,
+      const output: ContributionEnvelope = { ...contributionPayloadMetadata(state.caseRef), state: "ready", kind: "DependencyConflict", evidenceRefs: relation.evidenceRefs,
         payload: { fromRef: relation.fromRef, toRef: relation.toRef, constraintRef: "human-declared-constraint:0",
-          reason: `Unverified human declaration: ${declaration}`, evidenceRefs: relation.evidenceRefs, state: "needs-input" } } as ContributionEnvelope
+          reason: `Unverified human declaration: ${declaration}`, evidenceRefs: relation.evidenceRefs, state: "needs-input" } }
+      output.outputDigest = digestSfContribution(output)
       if (output.state !== "ready" || output.kind !== "DependencyConflict") throw new Error("Fixture kind mismatch")
       expect(decodeSfContributionOutput("DependencyConflict", output.payload).ok).toBe(true)
       expect(await state.accept(state.dependencies, input, human.incoming, human.call, output)).toEqual({ status: "ok", value: true })
@@ -371,8 +375,9 @@ test("real Dashboard confirmations preserve stale and executive output cannot er
     const input = ok(await state.prepare(state.executives, human.incoming, human.call)) as ExecutiveReviewInput
     expect(input.confirmations).toMatchObject([{ confirmationId: record.id, state: "stale", reason: "material-change" }])
     expect(input.factualRoutineResults).toEqual([])
-    const output = { state: "ready", kind: "DecisionBrief", evidenceRefs: [state.source()], payload: { caseRef: encodeCaseRef(state.caseRef), caseVersion: 1, objective: human.incoming.request.objective,
-      orderedResultRefs: [], evidenceRefs: [state.source()], conditions: [{ id: `confirmation:${record.id}`, category: "confirmation", reason: "material-change", evidenceRefs: [] }] } } as ContributionEnvelope
+    const output: ContributionEnvelope = { ...contributionPayloadMetadata(state.caseRef), state: "ready", kind: "DecisionBrief", evidenceRefs: [state.source()], payload: { caseRef: encodeCaseRef(state.caseRef), caseVersion: 1, objective: human.incoming.request.objective,
+      orderedResultRefs: [], evidenceRefs: [state.source()], conditions: [{ id: `confirmation:${record.id}`, category: "confirmation", reason: "material-change", evidenceRefs: [] }] } }
+    output.outputDigest = digestSfContribution(output)
     expect(await state.accept(state.executives, input, human.incoming, human.call, output)).toEqual({ status: "ok", value: true })
     if (output.state !== "ready" || output.kind !== "DecisionBrief") throw new Error("Fixture kind mismatch")
     output.payload.conditions = []

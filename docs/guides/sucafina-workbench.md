@@ -29,6 +29,8 @@ Na seção **Saved views**, escolha a densidade confortável ou compacta. Para g
 
 Uma visualização só restaura filtros e períodos compatíveis com a página e com o acesso atual. Se a tela informar que o contexto não pode ser restaurado, revise o período e os filtros na página atual e salve uma nova visualização.
 
+Se um registro, plano ou filtro salvo deixar de estar disponível, a lista mostra **Unavailable saved view** ou **Unavailable starting page**, sem repetir os detalhes anteriores. A página inicial indisponível não abre automaticamente. Você pode usar **Remove unavailable view**, ou escolher período, versão e filtros válidos na página atual e selecionar **Replace with this page**. Essa substituição exige uma ação sua e altera apenas a visualização pessoal.
+
 Se a confirmação de salvar, remover ou definir a página inicial não chegar, mantenha a página aberta e use a opção de repetir a mesma solicitação. Nome, densidade e filtros ficam preservados enquanto o resultado é incerto. Abrir outra visualização com uma edição pendente exige confirmar o descarte.
 
 ## Registrar e comparar uma decisão

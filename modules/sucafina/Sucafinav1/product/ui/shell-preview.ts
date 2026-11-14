@@ -158,9 +158,11 @@ async function restoreDashboardPreviews() {
         continue
       }
       if (reply.response.ok && reply.result?.ok === true && reply.result.value?.status === "preview" && reply.result.value.previewRef === saved.ref) {
-        if ((form.dataset.previewRevision || "0") !== revision || form.dataset.dirty) { notice("A reviewed change is available from the previous visit. Your new entries are preserved; finish reviewing them before reloading the saved preview."); continue }
+        const editedWhileReading = (form.dataset.previewRevision || "0") !== revision || !!form.dataset.dirty
+        if (editedWhileReading && !saved.uncertain) { notice("A reviewed change is available from the previous visit. Your new entries are preserved; finish reviewing them before reloading the saved preview."); continue }
         mountDashboardPreview(form, { page: saved.page, action: saved.action, id: saved.record, values: {} }, revision, reply.result.value, saved.uncertain)
         if (!saved.uncertain) form.querySelector('[data-preview] [role="status"]').textContent = "A saved preview was recovered. Review its changes before applying; the current form values may differ."
+        else if (editedWhileReading) form.querySelector('[data-preview] [role="status"]').textContent = "The original reviewed change was recovered while you were editing. Retry only that original application; your newer entries remain pending and are not included."
         for (let parent = form.parentElement; parent; parent = parent.parentElement) if (parent.tagName === "DETAILS") parent.open = true
         const dialog = form.closest("dialog")
         if (dialog && !dialog.open) dialog.closest("td").querySelector("[data-open-editor]")?.click()

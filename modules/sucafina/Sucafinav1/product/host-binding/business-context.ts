@@ -12,6 +12,10 @@ import type { ScannerBinarySpec } from "@orchestra/atlas-boundary/native-memory"
 import type { DecisionCase } from "../contracts/decisions.ts"
 import type { DomainProjection } from "../contracts/context.ts"
 import { mapSfEvidenceInOrder } from "./evidence-order.ts"
+import { roleMap } from "../../runtime/admin.ts"
+import { object } from "../../runtime/contract.ts"
+import { sfPlannerProjectionSelector } from "../integration/source-projections.ts"
+import { sfPlannerSourceSelector } from "../integration/planner-sources.ts"
 
 /** Bound repeated source reauthorization without caching an authorization across reads. */
 function evidenceWithinBudget(refs: readonly BusinessEvidenceRef[]) {
@@ -143,7 +147,7 @@ export function createSfBusinessContext(host: Parameters<typeof assembleSfBusine
 
 /** Textual IDs cannot carry historical authorization across replacement incarnations. */
 function sameHistoricalSource(original: BusinessEvidenceRef, current: BusinessEvidenceRef): boolean {
-  if (original.kind === "record" && current.kind === "record") return original.target.surface === current.target.surface && original.target.recordType === current.target.recordType && original.target.recordId === current.target.recordId && (["dashboard", "procurement"].includes(original.target.surface) || original.target.incarnation === current.target.incarnation)
+  if (original.kind === "record" && current.kind === "record") return original.target.surface === current.target.surface && original.target.recordType === current.target.recordType && original.target.recordId === current.target.recordId && (["dashboard", "planner", "procurement"].includes(original.target.surface) || original.target.incarnation === current.target.incarnation)
   if (original.kind === "document" && current.kind === "document") return original.target.documentId === current.target.documentId && original.target.incarnation === current.target.incarnation
   if (original.kind === "receipt" && current.kind === "receipt") return original.target.surface === current.target.surface && original.target.receiptId === current.target.receiptId && original.target.targetIncarnation === current.target.targetIncarnation
   if (original.kind === "case-event" && current.kind === "case-event") return original.target.caseId === current.target.caseId && original.target.caseIncarnation === current.target.caseIncarnation && original.target.eventId === current.target.eventId
@@ -175,7 +179,7 @@ export function createSfEvidenceRouter(input: {
       if (ref.kind === "record" && ref.target.surface === "dashboard" && input.dashboardRecord) return input.dashboardRecord(ref, call)
       if (ref.kind === "case-event") return input.caseEvent(ref, call, ancestors)
       if (ref.kind === "record" && ref.target.surface === "procurement" && ["procurement-request", "procurement-supplier"].includes(ref.target.recordType)) return input.procurement(ref, call)
-      if (ref.kind === "receipt" && ref.target.surface === "procurement" && input.receipt) return input.receipt(ref, call)
+      if (ref.kind === "receipt" && ["dashboard", "procurement"].includes(ref.target.surface) && input.receipt) return input.receipt(ref, call)
       if (ref.kind === "document" && input.document) return input.document(ref, call)
       if (ref.kind === "record" && ref.target.surface === "planner" && ref.target.recordType === "planner-version" && input.planner) return input.planner(ref, call)
       if (ref.kind === "calculation" && input.calculation) return input.calculation(ref, call)
@@ -186,7 +190,7 @@ export function createSfEvidenceRouter(input: {
       if (original.kind === "record" && original.target.surface === "dashboard" && input.dashboardRecordProof) return input.dashboardRecordProof(original, current, call)
       if (original.kind === "case-event") return input.caseEventProof(original, current, call)
       if (original.kind === "record" && original.target.surface === "procurement" && ["procurement-request", "procurement-supplier"].includes(original.target.recordType)) return input.procurementProof(original, current, call)
-      if (original.kind === "receipt" && original.target.surface === "procurement" && input.receiptProof) return input.receiptProof(original, current, call)
+      if (original.kind === "receipt" && ["dashboard", "procurement"].includes(original.target.surface) && input.receiptProof) return input.receiptProof(original, current, call)
       if (original.kind === "document" && input.documentProof) return input.documentProof(original, current, call)
       if (original.kind === "record" && original.target.surface === "planner" && original.target.recordType === "planner-version" && input.plannerProof) return input.plannerProof(original, current, call)
       if (original.kind === "calculation" && input.calculationProof) return input.calculationProof(original, current, call)
@@ -204,7 +208,11 @@ export function createSfAtlasBusiness(input: {
   authorizeCase: (value: DecisionCase, call: TrustedDomainContext) => Promise<boolean>
   dashboard: DashboardPort
   dashboardIssue: Parameters<typeof createSfDashboardSourceAccess>[0]["issue"]
-  dashboardRecords: Parameters<typeof createSfDashboardRecordSourceAccess>[0]["records"]
+  dashboardRecords: Parameters<typeof createSfDashboardRecordSourceAccess>[0]["records"] & Partial<Pick<ReturnType<typeof import("../dashboard/sources.ts").createDashboardRecordEvidenceHost>, "issue">>
+  dashboardEvidence?: {
+    resolveEvidence: (ref: BusinessEvidenceRef, call: TrustedDomainContext) => Promise<BusinessEvidenceResolution | undefined>
+    proveContinuity: (original: BusinessEvidenceRef, current: BusinessEvidenceRef, call: TrustedDomainContext) => Promise<boolean>
+  }
   procurement: ProcurementPort
   procurementResolve: Parameters<typeof createSfProcurementSourceAccess>[0]["resolve"]
   procurementEvidence?: Pick<ReturnType<typeof import("../procurement/decision-host.ts").createProcurementDecisionHost>, "resolveEvidence" | "proveContinuity">
@@ -218,8 +226,27 @@ export function createSfAtlasBusiness(input: {
   scanner?: { spec: ScannerBinarySpec; version: string }
   now: () => string
 }) {
-  const dashboard = createSfDashboardSourceAccess({ host: input.host, issue: input.dashboardIssue, dashboard: input.dashboard })
-  const dashboardRecord = createSfDashboardRecordSourceAccess({ host: input.host, records: input.dashboardRecords })
+  const freshDashboard = createSfDashboardSourceAccess({ host: input.host, issue: input.dashboardIssue, dashboard: input.dashboard })
+  const freshDashboardRecord = createSfDashboardRecordSourceAccess({ host: input.host, records: input.dashboardRecords })
+  const withRecordHistory = (read: (ref: BusinessEvidenceRef, call: TrustedDomainContext) => Promise<BusinessEvidenceResolution>) => async (ref: BusinessEvidenceRef, call: TrustedDomainContext): Promise<BusinessEvidenceResolution> => {
+    const selected = structuredClone(ref)
+    const request = input.host.requestFor(call)
+    const binding = digestSfValue([call.kind, call.binding])
+    const found = await read(selected, call)
+    let result = found
+    if (found.state === "stale" || found.state === "unavailable") {
+      const historical = await recordHistory.resolve(selected, call)
+      result = historical.state === "fresh" || historical.state === "historical" ? historical :
+        selected.kind === "record" && selected.target.surface === "dashboard" ? await input.dashboardEvidence?.resolveEvidence(selected, call) ?? historical : historical
+    }
+    // C12 also owns originals captured atomically with prepared commands. Keep
+    // Atlas captures first so its stored projection bytes remain authoritative.
+    return request && !request.signal.aborted && await input.host.revalidate(call) && input.host.requestFor(call) === request &&
+      binding === digestSfValue([call.kind, call.binding]) && digestSfValue(ref) === digestSfValue(selected) ? result :
+        { state: "unavailable", ref: selected, accessRevision: call.binding.accessRevision, checkedAt: input.now() }
+  }
+  const dashboard = withRecordHistory(freshDashboard)
+  const dashboardRecord = withRecordHistory(freshDashboardRecord)
   let resolveAncestry: ReturnType<typeof assembleSfBusinessContext>["resolveAncestry"] | undefined
   const caseEvent = createSfCaseEventSourceAccess({ host: input.host, state: input.state, authorizeCase: input.authorizeCase, authorizeEvidence: async (refs, call, ancestors) => {
     if (!resolveAncestry) return false
@@ -230,9 +257,10 @@ export function createSfAtlasBusiness(input: {
   const procurement = async (ref: BusinessEvidenceRef, call: TrustedDomainContext): Promise<BusinessEvidenceResolution> =>
     await input.procurementEvidence?.resolveEvidence(ref, call) ?? currentProcurement(ref, call)
   const receipt = async (ref: BusinessEvidenceRef, call: TrustedDomainContext): Promise<BusinessEvidenceResolution> =>
-    await input.procurementEvidence?.resolveEvidence(ref, call) ?? { state: "unavailable", ref, accessRevision: call.binding.accessRevision, checkedAt: input.now() }
+    (ref.kind === "receipt" && ref.target.surface === "dashboard" ? await input.dashboardEvidence?.resolveEvidence(ref, call) : await input.procurementEvidence?.resolveEvidence(ref, call)) ??
+      { state: "unavailable", ref, accessRevision: call.binding.accessRevision, checkedAt: input.now() }
   const document = createSfDocumentSourceAccess({ host: input.host, read: input.documentRead })
-  const planner = async (ref: BusinessEvidenceRef, call: TrustedDomainContext): Promise<BusinessEvidenceResolution> => {
+  const freshPlanner = async (ref: BusinessEvidenceRef, call: TrustedDomainContext): Promise<BusinessEvidenceResolution> => {
     const unavailable = (): BusinessEvidenceResolution => ({ state: "unavailable", ref, accessRevision: call.binding.accessRevision, checkedAt: input.now() })
     if (!input.planner || ref.kind !== "record" || ref.target.surface !== "planner" || ref.target.recordType !== "planner-version" || !ref.target.period || !await input.host.revalidate(call)) return unavailable()
     if (input.planner.readEvidence) {
@@ -252,27 +280,57 @@ export function createSfAtlasBusiness(input: {
     if (again.status !== "ok" || digestSfValue(again.value.evidence) !== digestSfValue(ref) || !await input.host.revalidate(call)) return unavailable()
     return { state: "fresh", ref, currentRef: again.value.evidence, authorizedProjection: projection, accessRevision: call.binding.accessRevision, checkedAt: input.now() }
   }
-  const readOriginal = async (digest: string, call: TrustedDomainContext) => {
+  const readOriginalCapture = async (digest: string, call: TrustedDomainContext) => {
     const selected = await input.caseForEvidence(digest, call)
     const refs = !selected ? [] : Array.isArray(selected) ? selected : [selected]
-    const found = await Promise.all(refs.map((ref) => memory.readOriginal(ref, digest, call)))
-    const originals = found.filter((ref): ref is BusinessEvidenceRef => !!ref)
+    if (!refs.length || refs.length > 500) return undefined
+    const found = await mapSfEvidenceInOrder(refs, (ref) => memory.readOriginalCapture(ref, digest, call))
+    const originals = found.filter((capture): capture is NonNullable<typeof capture> => !!capture)
     return originals.length && originals.every((ref) => digestSfValue(ref) === digestSfValue(originals[0])) && await input.host.revalidate(call) ? originals[0] : undefined
   }
-  const dashboardRecordProof = async (original: BusinessEvidenceRef, current: BusinessEvidenceRef, call: TrustedDomainContext) => {
-    if (original.kind !== "record" || original.target.surface !== "dashboard" || original.target.recordType === "dashboard-page" || digestSfValue(original) !== digestSfValue(current)) return false
-    const check = async () => {
-      const saved = await readOriginal(original.refDigest, call)
-      if (!saved || digestSfValue(saved) !== digestSfValue(original) || !await input.host.revalidate(call)) return false
-      const resolution = await dashboardRecord(original, call)
-      return resolution.state === "fresh" && !!resolution.currentRef && !!resolution.authorizedProjection && digestSfValue(resolution.currentRef) === digestSfValue(current) && await input.host.revalidate(call)
-    }
-    return await check() && await check()
-  }
+  const readOriginal = async (digest: string, call: TrustedDomainContext) => (await readOriginalCapture(digest, call))?.ref
+  const recordHistory = createSfRecordHistory({ host: input.host, readOriginalCapture, now: input.now,
+    current: async (original, page, call) => {
+      const unavailable = (): BusinessEvidenceResolution => ({ state: "unavailable", ref: original, accessRevision: call.binding.accessRevision, checkedAt: input.now() })
+      const period = original.target.period
+      if (!period) return unavailable()
+      if (original.target.surface === "dashboard") {
+        if (original.target.recordType === "dashboard-page") {
+          const issued = await input.dashboardIssue({ page: original.target.recordId, fields: original.target.fields, period }, call)
+          return issued.status === "ok" ? freshDashboard(issued.value.evidence, call) : unavailable()
+        }
+        if (!page || !input.dashboardRecords.issue) return unavailable()
+        const issued = await input.dashboardRecords.issue({ page, recordType: original.target.recordType, recordId: original.target.recordId, fields: original.target.fields, period }, call)
+        return issued.status === "ok" ? freshDashboardRecord(issued.value, call) : unavailable()
+      }
+      if (!input.planner || original.target.surface !== "planner" || original.target.recordType !== "planner-version") return unavailable()
+      // The producer reopens or creates the current authorized scope even when the
+      // old selector returns stale. Only its freshly resolved reference is used.
+      await input.planner.sources.resolveForecastSource(original.refId, call)
+      const request = input.host.requestFor(call)
+      if (!request || request.signal.aborted || !await input.host.revalidate(call)) return unavailable()
+      const selected = await input.host.persistence.transaction<string | undefined>("planner", async (snapshot) => {
+        const principal = await input.host.authenticate(request, { surface: "planner", roleMap: roleMap(snapshot, "planner") })
+        if (!principal || principal.id !== call.binding.principalRef || principal.id.startsWith("local:")) return { commit: false, value: undefined }
+        const roles = principal.roles.filter((entry) => entry.surface === "planner").map((entry) => entry.role)
+        const selector = sfPlannerProjectionSelector(snapshot, { id: principal.id, roles, canWrite: principal.canWrite && roles.some((role) => role !== "viewer") })
+        const scopes = Object.values(snapshot.sfSources?.scopes ?? {}).filter((entry) => entry.alive && entry.scope.recordType === "planner-version" &&
+          entry.scope.recordId === original.target.recordId && entry.scope.principalRef === principal.id && entry.scope.accessRevision === call.binding.accessRevision &&
+          entry.scope.policyVersion === call.binding.policyVersion && digestSfValue(entry.scope.selector) === digestSfValue(selector))
+        const scope = scopes.length === 1 ? scopes[0] : undefined
+        return { commit: false, value: scope ? sfPlannerSourceSelector(original.target.recordId, scope.incarnation, scope.version) : undefined }
+      }, { signal: request.signal }).catch(() => undefined)
+      if (!selected || !await input.host.revalidate(call)) return unavailable()
+      const current = await input.planner.sources.resolveForecastSource(selected, call)
+      return current.status === "ok" ? freshPlanner(current.value.evidence, call) : unavailable()
+    },
+  })
+  const planner = withRecordHistory(freshPlanner)
   const router = createSfEvidenceRouter({
     dashboard, dashboardRecord, caseEvent, procurement, document, planner, calculation: input.calculation,
-    dashboardProof: createSfDashboardContinuityProof({ host: input.host, issue: input.dashboardIssue, dashboard: input.dashboard, readOriginal }),
-    dashboardRecordProof,
+    dashboardProof: recordHistory.proveContinuity,
+    dashboardRecordProof: async (original, current, call) => await recordHistory.proveContinuity(original, current, call) ||
+      await input.dashboardEvidence?.proveContinuity(original, current, call) === true,
     caseEventProof: createSfSourceContinuityProof({ host: input.host, readOriginal, readCurrent: caseEvent }),
     procurementProof: async (original, current, call) => {
       if (digestSfValue(original) !== digestSfValue(current) && input.procurementEvidence)
@@ -285,7 +343,7 @@ export function createSfAtlasBusiness(input: {
       return proof.state === "fresh" && !!proof.currentRef && !!proof.authorizedProjection && digestSfValue(proof.ref) === digestSfValue(original) && digestSfValue(proof.currentRef) === digestSfValue(current) && await input.host.revalidate(call)
     },
     documentProof: createSfSourceContinuityProof({ host: input.host, readOriginal, readCurrent: document }),
-    plannerProof: createSfSourceContinuityProof({ host: input.host, readOriginal, readCurrent: planner }),
+    plannerProof: recordHistory.proveContinuity,
     calculationProof: input.calculation ? createSfSourceContinuityProof({ host: input.host, readOriginal, readCurrent: input.calculation }) : undefined,
   })
   const assembled = assembleSfBusinessContext({
@@ -310,4 +368,128 @@ function plannerProjectionMatches(projection: DomainProjection, ref: Extract<Bus
     projection.context.policyVersion === call.binding.policyVersion && projection.context.surface === "planner" &&
     digestSfValue(projection.context.period) === digestSfValue(ref.target.period) && projection.values.every((value) =>
       value.sourceRefs.length === 1 && digestSfValue(value.sourceRefs[0]) === digestSfValue(ref))
+}
+
+type RecordRef = Extract<BusinessEvidenceRef, { kind: "record" }>
+type ProtectedEvidenceCapture = { ref: BusinessEvidenceRef; projection: NonNullable<BusinessEvidenceResolution["authorizedProjection"]> }
+
+/** A historical body is a protected producer capture. Its current read grant and physical
+ * source continuity are separate observations, never a relabelled original version. */
+export function createSfRecordHistory(input: {
+  host: DomainPortHost
+  readOriginalCapture: (digest: string, call: TrustedDomainContext) => Promise<ProtectedEvidenceCapture | undefined>
+  current: (original: RecordRef, page: string | undefined, call: TrustedDomainContext) => Promise<BusinessEvidenceResolution>
+  now: () => string
+}) {
+  const host = input.host
+  const same = (left: unknown, right: unknown) => digestSfValue(left) === digestSfValue(right)
+  const scopeIdentity = async (original: RecordRef, current: RecordRef | undefined, call: TrustedDomainContext) => {
+    const request = host.requestFor(call)
+    if (!request || request.signal.aborted || !await host.revalidate(call)) return undefined
+    return host.persistence.transaction<{ physical: string; page: string | undefined } | undefined>(original.target.surface, async (snapshot) => {
+      const principal = await host.authenticate(request, { surface: original.target.surface, roleMap: roleMap(snapshot, original.target.surface) })
+      if (!principal || principal.id !== call.binding.principalRef || principal.id.startsWith("local:") || request.signal.aborted) return { commit: false, value: undefined }
+      const scopes = Object.values(snapshot.sfSources?.scopes ?? {})
+      const oldMatches = scopes.filter((entry) => entry.incarnation === original.target.incarnation && entry.scope.recordType === original.target.recordType && entry.scope.recordId === original.target.recordId)
+      const old = oldMatches.length === 1 ? oldMatches[0] : undefined
+      const physical = snapshot.sfSources?.records[JSON.stringify([original.target.recordType, original.target.recordId])]
+      if (!old || !physical?.alive || old.sourceIncarnation !== physical.incarnation || old.version < original.target.version) return { commit: false, value: undefined }
+      const selector = object(old.scope.selector)
+      const page = typeof selector.page === "string" ? selector.page : undefined
+      if (original.target.surface === "dashboard" && (!page || !same(selector.fields, [...original.target.fields].sort()) || !same(selector.period, original.target.period))) return { commit: false, value: undefined }
+      // Scope versions advance on material edits. The original payload itself is
+      // authenticated by its protected producer, while this record proves physical lineage.
+      if (old.version === original.target.version && original.target.surface === "dashboard" && old.inputDigest !== original.target.projectionDigest) return { commit: false, value: undefined }
+      if (!current) return { commit: false, value: { physical: physical.incarnation, page } }
+      const activeMatches = scopes.filter((entry) => entry.alive && entry.incarnation === current.target.incarnation && entry.scope.recordType === current.target.recordType && entry.scope.recordId === current.target.recordId &&
+        entry.scope.principalRef === principal.id && entry.scope.accessRevision === call.binding.accessRevision && entry.scope.policyVersion === call.binding.policyVersion)
+      const active = activeMatches.length === 1 ? activeMatches[0] : undefined
+      if (!active || active.sourceIncarnation !== physical.incarnation || active.version !== current.target.version) return { commit: false, value: undefined }
+      const activeSelector = object(active.scope.selector)
+      if (current.target.surface === "dashboard" && (activeSelector.page !== page || !same(activeSelector.fields, [...current.target.fields].sort()) || !same(activeSelector.period, current.target.period) || active.inputDigest !== current.target.projectionDigest)) return { commit: false, value: undefined }
+      return { commit: false, value: { physical: physical.incarnation, page } }
+    }, { signal: request.signal }).catch(() => undefined)
+  }
+  const resolve = async (incoming: BusinessEvidenceRef, call: TrustedDomainContext): Promise<BusinessEvidenceResolution> => {
+    const original = structuredClone(incoming)
+    const unavailable = (): BusinessEvidenceResolution => ({ state: "unavailable", ref: original, accessRevision: call.binding.accessRevision, checkedAt: input.now() })
+    try {
+      if (original.kind !== "record" || !["dashboard", "planner"].includes(original.target.surface) || original.target.surface === "planner" && original.target.recordType !== "planner-version" || !original.target.period ||
+        original.installationId !== call.binding.installationId || original.projectId !== call.binding.projectId) return unavailable()
+      sfEvidenceSourceMaps([original])
+      const request = host.requestFor(call)
+      const binding = digestSfValue([call.kind, call.binding])
+      if (!request || request.signal.aborted || !await host.revalidate(call)) return unavailable()
+      const capture = await input.readOriginalCapture(original.refDigest, call)
+      if (!capture || !same(capture.ref, original) || !("values" in capture.projection) || capture.projection.context.installationId !== original.installationId || capture.projection.context.projectId !== original.projectId) return unavailable()
+      const captured = structuredClone(capture)
+      const lineage = await scopeIdentity(original, undefined, call)
+      if (!lineage) return unavailable()
+      const observe = async () => {
+        const current = structuredClone(await input.current(structuredClone(original), lineage.page, call))
+        const ref = current.currentRef
+        const projection = current.authorizedProjection
+        if (current.state !== "fresh" || !ref || ref.kind !== "record" || !same(current.ref, ref) || current.accessRevision !== call.binding.accessRevision ||
+          !projection || !("values" in projection) || ref.installationId !== original.installationId || ref.projectId !== original.projectId ||
+          ref.target.surface !== original.target.surface || ref.target.recordType !== original.target.recordType || ref.target.recordId !== original.target.recordId ||
+          !same([...ref.target.fields].sort(), [...original.target.fields].sort()) || !same(ref.target.period, original.target.period) ||
+          projection.context.installationId !== call.binding.installationId || projection.context.projectId !== call.binding.projectId || projection.context.principalRef !== call.binding.principalRef ||
+          projection.context.accessRevision !== call.binding.accessRevision || projection.context.policyVersion !== call.binding.policyVersion || projection.context.surface !== ref.target.surface ||
+          !same(projection.context.period, original.target.period)) return undefined
+        sfEvidenceSourceMaps([ref])
+        const physical = await scopeIdentity(original, ref, call)
+        return physical && same(physical, lineage) && await host.revalidate(call) ? { ref, projection, physical } : undefined
+      }
+      const first = await observe()
+      if (!first) return unavailable()
+      const recaptured = await input.readOriginalCapture(original.refDigest, call)
+      if (!recaptured || !same(recaptured, captured)) return unavailable()
+      const second = await observe()
+      if (!second) return unavailable()
+      const finalCapture = await input.readOriginalCapture(original.refDigest, call)
+      const finalLineage = await scopeIdentity(original, second.ref, call)
+      if (!finalCapture || !same(finalCapture, captured) || !same(first.ref, second.ref) || !same(currentProjectionIdentity(first.projection), currentProjectionIdentity(second.projection)) ||
+        !same(first.physical, second.physical) || !finalLineage || !same(finalLineage, second.physical) || !await host.revalidate(call) || host.requestFor(call) !== request || request.signal.aborted ||
+        binding !== digestSfValue([call.kind, call.binding]) || !same(incoming, original)) return unavailable()
+      if (same(original, second.ref)) return { state: "fresh", ref: original, currentRef: second.ref, authorizedProjection: second.projection, accessRevision: call.binding.accessRevision, checkedAt: input.now() }
+      // The original context/version remains untouched. Only the resolution's
+      // accessRevision and currentRef express today's independently proven grant.
+      return { state: "historical", ref: original, currentRef: second.ref, authorizedProjection: captured.projection,
+        differences: recordDifferences(original, second.ref, captured.projection as DomainProjection, second.projection), accessRevision: call.binding.accessRevision, checkedAt: input.now() }
+    } catch { return unavailable() }
+  }
+  const proveContinuity = async (original: BusinessEvidenceRef, current: BusinessEvidenceRef, call: TrustedDomainContext) => {
+    const selected = structuredClone(original)
+    const expected = structuredClone(current)
+    const first = await resolve(selected, call)
+    if ((first.state !== "fresh" && first.state !== "historical") || !first.currentRef || !same(first.currentRef, expected)) return false
+    const second = await resolve(selected, call)
+    return same(original, selected) && same(current, expected) && second.state === first.state && !!second.currentRef && same(second.currentRef, expected) &&
+      same(second.differences, first.differences) && !!second.authorizedProjection && !!first.authorizedProjection &&
+      same(first.state === "fresh" && "values" in first.authorizedProjection ? currentProjectionIdentity(first.authorizedProjection) : first.authorizedProjection,
+        second.state === "fresh" && "values" in second.authorizedProjection ? currentProjectionIdentity(second.authorizedProjection) : second.authorizedProjection)
+  }
+  return { resolve, proveContinuity }
+}
+
+function currentProjectionIdentity(projection: DomainProjection) {
+  const source = (ref: DomainProjection["context"]["sourceRefs"][number]) => ({ ...ref, observedAt: "" })
+  return { ...projection, context: { ...projection.context, sourceRefs: projection.context.sourceRefs.map(source) },
+    components: projection.components.map((component) => ({ ...component, sourceRefs: component.sourceRefs.map(source) })) }
+}
+
+function recordDifferences(original: RecordRef, current: RecordRef, before: DomainProjection, after: DomainProjection): NonNullable<BusinessEvidenceResolution["differences"]> {
+  const differences: { field: string; before: string | number | boolean | null; after: string | number | boolean | null }[] = []
+  for (const field of ["incarnation", "version", "projectionDigest"] as const) {
+    if (original.target[field] !== current.target[field]) differences.push({ field: `source.${field}`, before: original.target[field], after: current.target[field] })
+  }
+  const oldValues = new Map(before.values.map((value) => [value.id, value.value]))
+  const currentValues = new Map(after.values.map((value) => [value.id, value.value]))
+  const scalar = (value: unknown): value is string | number | boolean | null => value === null || typeof value === "string" || typeof value === "boolean" || typeof value === "number" && Number.isFinite(value)
+  for (const field of [...new Set([...oldValues.keys(), ...currentValues.keys()])].sort()) {
+    const old = oldValues.get(field) ?? null
+    const value = currentValues.get(field) ?? null
+    if (scalar(old) && scalar(value) && digestSfValue(old) !== digestSfValue(value)) differences.push({ field, before: old, after: value })
+  }
+  return differences
 }

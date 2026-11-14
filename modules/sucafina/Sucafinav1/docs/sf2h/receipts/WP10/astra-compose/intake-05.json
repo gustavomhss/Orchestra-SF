@@ -1,0 +1,603 @@
+{
+  "schema": "sf2-astra-compose-intake-v1",
+  "sequence": 5,
+  "repository": "gustavomhss/Orchestra-SF",
+  "base": {
+    "head": "4306b310e4d6dac77f9beab461adad4e8e924849",
+    "tree": "b786e0cee23f13c11542cea32db38ef532071576"
+  },
+  "scope": "WP00 contracts and WP10 composition; S0 owns sf2-stack integration",
+  "source_intakes": [
+    {
+      "pr": 31,
+      "head": "e5afff327dc64735bbd8a646124570a0c97a9c6b",
+      "tree": "7d4e618514d7b99cc30b142a89335868f1878db7",
+      "selected_paths": 10,
+      "superseded_by_next_pin": 3
+    },
+    {
+      "pr": 31,
+      "head": "86b2ba372d187d229820015d8311a0dd54a2c5d5",
+      "tree": "9f6ecfd420189dad05fc8a5557f2cf84192da5da",
+      "selected_paths": 7,
+      "held_paths": 2
+    },
+    {
+      "pr": 34,
+      "head": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+      "tree": "a3ebf675545fadcd3124b387b15f396550652df8",
+      "selected_paths": 4
+    }
+  ],
+  "conflicts_resolved": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts",
+      "earlier_source_head": "e5afff327dc64735bbd8a646124570a0c97a9c6b",
+      "earlier_blob": "bfb9859c3ec6c8e415ef86bac796689fa62de4fd",
+      "later_source_head": "86b2ba372d187d229820015d8311a0dd54a2c5d5",
+      "selected_blob": "bad4b08050949eb7cde69615b131649f1c0bcad7"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts",
+      "earlier_source_head": "e5afff327dc64735bbd8a646124570a0c97a9c6b",
+      "earlier_blob": "52dbc91951643be61d518ed2f9a80749790268f7",
+      "later_source_head": "86b2ba372d187d229820015d8311a0dd54a2c5d5",
+      "selected_blob": "e476274c6d997a3e305cdf7c139cc3e03430890e"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+      "earlier_source_head": "e5afff327dc64735bbd8a646124570a0c97a9c6b",
+      "earlier_blob": "c473886b3ee00e7b6463733718c3e9f9fda6a68c",
+      "later_source_head": "86b2ba372d187d229820015d8311a0dd54a2c5d5",
+      "selected_blob": "e6c22b6df3ec47ebc7dff5c745514da94d0d53a2"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "method": "OWN_HUNK_RECONCILIATION",
+      "detail": "Apply bounded OPS-HOST-01B dossier source verification over W4 nested C17 replay, then wire dashboardEvidence; preserve all previous C17 callbacks and private source admission."
+    }
+  ],
+  "checks": [
+    {
+      "run": 43580421464,
+      "product": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "snapshot": "cf7e321e01367e8dd28e72d02c2a07503e93ef3c",
+      "result": "IN_PROGRESS_AT_INTAKE",
+      "scope": "Prior product only; no result transfer."
+    },
+    {
+      "run": 43580430596,
+      "product": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "snapshot": "949a9da96213b130ae8d2fa3028c42f9c3f6960d",
+      "result": "FAILURE",
+      "scope": "Atlas generation/check/typecheck and guards passed. Sucafina100+CLI13 diagnostics; 47 WP10 test diagnostics addressed in this increment, foreign diagnostics forwarded; no post-change PASS claimed."
+    },
+    {
+      "run": 43581283802,
+      "product": "86b2ba372d187d229820015d8311a0dd54a2c5d5",
+      "snapshot": "1b122b629d4b407f783f329ecc5fbb9d14b320a4",
+      "result": "SUCCESS;6 pass,0 fail,3 files",
+      "scope": "Source PR31 startup/preview-browser/lifecycle only; does not validate recovery or this composition."
+    }
+  ],
+  "changed_paths": [
+    {
+      "path": "docs/guides/sucafina-workbench.md",
+      "owner": "WP01",
+      "source_pr": 31,
+      "source_head": "e5afff327dc64735bbd8a646124570a0c97a9c6b",
+      "source_tree": "7d4e618514d7b99cc30b142a89335868f1878db7",
+      "source_blob": "e112f63432fe922a59242fdf08d4c28367abccf1",
+      "previous_blob": "15456c27fc81f12ce96058e4ff3791f6a58be7e5",
+      "sha256": "8f86800ecdf6c29c6fcb1a5f11e7e880b59af6af3a97e1dbfbacfbae53189bd8",
+      "method": "EXACT_PUBLISHED_BLOB",
+      "target_acceptance": "NOT_REVALIDATED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/hot-topics.ts",
+      "owner": "WP02",
+      "source_pr": 31,
+      "source_head": "e5afff327dc64735bbd8a646124570a0c97a9c6b",
+      "source_tree": "7d4e618514d7b99cc30b142a89335868f1878db7",
+      "source_blob": "9b959a09360bec0854016d1dd53905dc585f1931",
+      "previous_blob": "3f1e411fee14260fc4c9eb5d6a26cd4fea100079",
+      "sha256": "54196f92af49f924dc2aff205f24db337b7c536ff339b0e10827591618c2f477",
+      "method": "EXACT_PUBLISHED_BLOB",
+      "target_acceptance": "NOT_REVALIDATED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts",
+      "owner": "WP02",
+      "source_pr": 31,
+      "source_head": "86b2ba372d187d229820015d8311a0dd54a2c5d5",
+      "source_tree": "9f6ecfd420189dad05fc8a5557f2cf84192da5da",
+      "source_blob": "bad4b08050949eb7cde69615b131649f1c0bcad7",
+      "previous_blob": "e45c51206b6011baf7f6fb952c4f6e916d0a98d9",
+      "sha256": "b32b5963660795b8f0f41e857b97fcd613d0e83f4e7e99a3f8a1d1c0ae74ea6c",
+      "method": "EXACT_PUBLISHED_BLOB",
+      "target_acceptance": "NOT_REVALIDATED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/personal-views.ts",
+      "owner": "WP01",
+      "source_pr": 31,
+      "source_head": "e5afff327dc64735bbd8a646124570a0c97a9c6b",
+      "source_tree": "7d4e618514d7b99cc30b142a89335868f1878db7",
+      "source_blob": "e424c7454a1aa4b7bd8290408001e65ae029d156",
+      "previous_blob": "34a1a5045e33a23edb5ca0f49dcced8532580c6f",
+      "sha256": "639041e356ba5be7c9752c3189a4411c9bd1d6e580d08cc146a5252ee13ad198",
+      "method": "EXACT_PUBLISHED_BLOB",
+      "target_acceptance": "NOT_REVALIDATED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/personal-views.ts",
+      "owner": "WP01",
+      "source_pr": 31,
+      "source_head": "e5afff327dc64735bbd8a646124570a0c97a9c6b",
+      "source_tree": "7d4e618514d7b99cc30b142a89335868f1878db7",
+      "source_blob": "4c20c81eeeb770b80eacc3c57589435bfdaba2ae",
+      "previous_blob": "ceb3915008e7bd82579ecc8e6df90367d7d29259",
+      "sha256": "50d99e3f52a232560d41eb5d1b967f66f0d1ccdec59e04d3cfcdc29db7617f45",
+      "method": "EXACT_PUBLISHED_BLOB",
+      "target_acceptance": "NOT_REVALIDATED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/shell-preview.ts",
+      "owner": "WP01",
+      "source_pr": 31,
+      "source_head": "e5afff327dc64735bbd8a646124570a0c97a9c6b",
+      "source_tree": "7d4e618514d7b99cc30b142a89335868f1878db7",
+      "source_blob": "73c2ce48454e4291fcc4d6c9e2b554317d820f2a",
+      "previous_blob": "f085a26efa754f8f583461d7bf1931251a63a0ef",
+      "sha256": "ef7eef781ef1ad89c5587acef8fb3e45eeedd40aac1818840cafd07b8fd961a2",
+      "method": "EXACT_PUBLISHED_BLOB",
+      "target_acceptance": "NOT_REVALIDATED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-recovery.test.ts",
+      "owner": "WP01",
+      "source_pr": 31,
+      "source_head": "e5afff327dc64735bbd8a646124570a0c97a9c6b",
+      "source_tree": "7d4e618514d7b99cc30b142a89335868f1878db7",
+      "source_blob": "e5c3e7f569b3009de9b4aaed27a3231ddd089736",
+      "previous_blob": "d4a0c111d326401e44327258ab9f9bd02ecbe60b",
+      "sha256": "da8f16e3b32009076949b81f68e408452f4f0377532946be0e423729a57aa4fe",
+      "method": "EXACT_PUBLISHED_BLOB",
+      "target_acceptance": "NOT_REVALIDATED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/two-actor-conflict.test.ts",
+      "owner": "WP01",
+      "source_pr": 31,
+      "source_head": "e5afff327dc64735bbd8a646124570a0c97a9c6b",
+      "source_tree": "7d4e618514d7b99cc30b142a89335868f1878db7",
+      "source_blob": "04132b4a9225057fcdb33868e5e3a22f24115363",
+      "previous_blob": null,
+      "sha256": "4c2b8f498be3d82036243d60da192a383f0e3269c33e0ffa24a51c7fec50ac51",
+      "method": "EXACT_PUBLISHED_BLOB",
+      "target_acceptance": "NOT_REVALIDATED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/unavailable-views.test.ts",
+      "owner": "WP01",
+      "source_pr": 31,
+      "source_head": "e5afff327dc64735bbd8a646124570a0c97a9c6b",
+      "source_tree": "7d4e618514d7b99cc30b142a89335868f1878db7",
+      "source_blob": "bf49284de952cbc4c3b4a136b3d572dfbc3aaf97",
+      "previous_blob": null,
+      "sha256": "b8a105470fc81568424b428602f7277d6b44906a7c794da3f697a5d39731ca4b",
+      "method": "EXACT_PUBLISHED_BLOB",
+      "target_acceptance": "NOT_REVALIDATED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts",
+      "owner": "WP02",
+      "source_pr": 31,
+      "source_head": "86b2ba372d187d229820015d8311a0dd54a2c5d5",
+      "source_tree": "9f6ecfd420189dad05fc8a5557f2cf84192da5da",
+      "source_blob": "e476274c6d997a3e305cdf7c139cc3e03430890e",
+      "previous_blob": "87fd7e777622555054ac807c9444796e4d309fa4",
+      "sha256": "bb3b376b79728bdad7ec0bb3520f717c82b5de275b5ba96c405937bdd1d98deb",
+      "method": "EXACT_PUBLISHED_BLOB",
+      "target_acceptance": "NOT_REVALIDATED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/collaboration-consumer.test.ts",
+      "owner": "WP02",
+      "source_pr": 31,
+      "source_head": "e5afff327dc64735bbd8a646124570a0c97a9c6b",
+      "source_tree": "7d4e618514d7b99cc30b142a89335868f1878db7",
+      "source_blob": "b429e974e4b104e5f576f144b157b642e88f127f",
+      "previous_blob": "9c703f6e49b1491f4f4b2a6c503eff16c49a4428",
+      "sha256": "fefb69540409eeb186d5723a775d770e866643c10d9d702d35eb9574f0e1367e",
+      "method": "EXACT_PUBLISHED_BLOB",
+      "target_acceptance": "NOT_REVALIDATED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/hot-topics.test.ts",
+      "owner": "WP02",
+      "source_pr": 31,
+      "source_head": "e5afff327dc64735bbd8a646124570a0c97a9c6b",
+      "source_tree": "7d4e618514d7b99cc30b142a89335868f1878db7",
+      "source_blob": "15d54cfea98fc362333dafb25ea28f4d5b13cff1",
+      "previous_blob": "ba4cf28643bafd3e4d3afb19a1dbac95579a69e4",
+      "sha256": "53c3f5541788d99ea2434712007f6c004518e84c34a26f9b425d30c7e2fda1a6",
+      "method": "EXACT_PUBLISHED_BLOB",
+      "target_acceptance": "NOT_REVALIDATED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+      "owner": "WP02",
+      "source_pr": 31,
+      "source_head": "86b2ba372d187d229820015d8311a0dd54a2c5d5",
+      "source_tree": "9f6ecfd420189dad05fc8a5557f2cf84192da5da",
+      "source_blob": "e6c22b6df3ec47ebc7dff5c745514da94d0d53a2",
+      "previous_blob": "8d6a9c0a38497ab6842060828ba6307471b647ae",
+      "sha256": "23d3b05c7bf5654f04242f4f6f23f62d95b51ae1cf0cfe342cdb62b4ae37cbbb",
+      "method": "EXACT_PUBLISHED_BLOB",
+      "target_acceptance": "NOT_REVALIDATED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts",
+      "owner": "WP01",
+      "source_pr": 31,
+      "source_head": "86b2ba372d187d229820015d8311a0dd54a2c5d5",
+      "source_tree": "9f6ecfd420189dad05fc8a5557f2cf84192da5da",
+      "source_blob": "67d9ca1c8b880d555f90a1aef227a78e5b9170e8",
+      "previous_blob": "3a747f523a1705fdf32146e95e5c1571fbb9a88b",
+      "sha256": "7a1e5bece6cea161d7b785a14a696d7145772b001b7cb4a7bcf96aa0734a0109",
+      "method": "EXACT_PUBLISHED_BLOB",
+      "target_acceptance": "NOT_REVALIDATED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "owner": "WP01",
+      "source_pr": 31,
+      "source_head": "86b2ba372d187d229820015d8311a0dd54a2c5d5",
+      "source_tree": "9f6ecfd420189dad05fc8a5557f2cf84192da5da",
+      "source_blob": "260151909d86dfc77f6dc3229b660e63e5745033",
+      "previous_blob": "ee88e46d2633ff3dcdd53470c9cbaed2aac4ddd3",
+      "sha256": "db0ea9a106a32299366670c41ce6275eb26fce705aa0f1f41449f42498d7356b",
+      "method": "EXACT_PUBLISHED_BLOB",
+      "target_acceptance": "NOT_REVALIDATED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "owner": "WP01",
+      "source_pr": 31,
+      "source_head": "86b2ba372d187d229820015d8311a0dd54a2c5d5",
+      "source_tree": "9f6ecfd420189dad05fc8a5557f2cf84192da5da",
+      "source_blob": "6952098674a027afafb11ff9cdf6d942580c4149",
+      "previous_blob": null,
+      "sha256": "aab192f98e0796f149a8a45b728ac533e23975b701cc4e7e2713a8fa208bb90e",
+      "method": "EXACT_PUBLISHED_BLOB",
+      "target_acceptance": "NOT_REVALIDATED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery-fixture.ts",
+      "owner": "WP02",
+      "source_pr": 31,
+      "source_head": "86b2ba372d187d229820015d8311a0dd54a2c5d5",
+      "source_tree": "9f6ecfd420189dad05fc8a5557f2cf84192da5da",
+      "source_blob": "593a46dad67e490dcfdd4fdc1878353088138dc7",
+      "previous_blob": "b82a5800470641ff1298475f0189882c38299b5e",
+      "sha256": "7f1d7b9c8f527f2298d6f0ce3fa76350bd400e2bb42cd0bb9578cbdafeecda28",
+      "method": "EXACT_PUBLISHED_BLOB",
+      "target_acceptance": "NOT_REVALIDATED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+      "owner": "WP04",
+      "source_pr": 34,
+      "source_head": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+      "source_tree": "a3ebf675545fadcd3124b387b15f396550652df8",
+      "source_blob": "23d9291b3dcedda36edc4aa4f38856024e3c58f4",
+      "previous_blob": "0c970d36c5af4f5a58dfca80e1c46cf12d478f5f",
+      "sha256": "dc8a1a16ea7b54b03ca6bafacf60cc27b61aff32626c2a8cf69affa5d3f1399f",
+      "method": "EXACT_PUBLISHED_BLOB",
+      "target_acceptance": "NOT_REVALIDATED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/decision-http.ts",
+      "owner": "WP04",
+      "source_pr": 34,
+      "source_head": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+      "source_tree": "a3ebf675545fadcd3124b387b15f396550652df8",
+      "source_blob": "e169d335f091c446bb380ee73f450083f917946f",
+      "previous_blob": "d6ce17ec9d81b5c1d2feb91b7ccaf640295f6e3b",
+      "sha256": "e853571c1530368e85136175d913c646c95bf5c850eefb583270f605ed6eddd1",
+      "method": "EXACT_PUBLISHED_BLOB",
+      "target_acceptance": "NOT_REVALIDATED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "owner": "WP04",
+      "source_pr": 34,
+      "source_head": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+      "source_tree": "a3ebf675545fadcd3124b387b15f396550652df8",
+      "source_blob": "3dbad125693da9898b1435eff2a1108476c09f40",
+      "previous_blob": "ae82f2d972c44256f2328dc3b733627c44bb3dd6",
+      "sha256": "1f0335d5d6df1a083e318fdd5a0e96bb5dbc4a4bc0142389639d26f2b73896f8",
+      "method": "EXACT_PUBLISHED_BLOB",
+      "target_acceptance": "NOT_REVALIDATED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/prepared-production.test.ts",
+      "owner": "WP04",
+      "source_pr": 34,
+      "source_head": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+      "source_tree": "a3ebf675545fadcd3124b387b15f396550652df8",
+      "source_blob": "eaa14e509dadbba9242dade7b70e5cf41cc8b51b",
+      "previous_blob": "929443b4e7a0c3dabc7db88534c17a7489f25c03",
+      "sha256": "d03fd49e40bbbdaba425923237153c306622856cacf93b84928cf16f27f6950c",
+      "method": "EXACT_PUBLISHED_BLOB",
+      "target_acceptance": "NOT_REVALIDATED"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/dashboard-decision-evidence.ts",
+      "owner": "WP10",
+      "source": "OWN_COMPOSITION",
+      "previous_blob": null,
+      "blob": "4c205439aed7779dff66079a1ebaad1927d75d77",
+      "sha256": "be562162364ac711caf82d530f50174adefc6a11673dfe8b0a95070b43d3835d",
+      "stage": "composition-history-patch",
+      "target_acceptance": "NOT_REVALIDATED"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/dashboard-decisions.ts",
+      "owner": "WP10",
+      "source": "OWN_COMPOSITION",
+      "previous_blob": "2b8aef91bb7f88db3ee467b32f76d4d3911e73c1",
+      "blob": "f8914c141ba5c72439f5fdba50e9153c4cd477d4",
+      "sha256": "066292b447d006f9f442e96ec95875a0c1cad6e43deedd3373e3bf829da7a574",
+      "stage": "composition-history-patch",
+      "target_acceptance": "NOT_REVALIDATED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/compose-history-c12.json",
+      "owner": "WP10",
+      "source": "OWN_COMPOSITION",
+      "previous_blob": null,
+      "blob": "7fbe454150c10b5243580db37c332964cba60016",
+      "sha256": "ead90f1dda8f9c7117bc724430c6c9c09f974ab405db35cf79ac4a70504cd5de",
+      "stage": "composition-history-patch",
+      "target_acceptance": "NOT_REVALIDATED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/patches/wp14-request-stability.patch",
+      "owner": "WP10",
+      "source": "OWN_COMPOSITION",
+      "previous_blob": null,
+      "blob": "d2fbd51a5a350f3503b794d5b0a7c80400671787",
+      "sha256": "91c876bfa1743cd71a95cf342a797fd087997b46acd640813e91876bdd1305cd",
+      "stage": "composition-history-patch",
+      "target_acceptance": "NOT_REVALIDATED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+      "owner": "WP10",
+      "source": "OWN_COMPOSITION",
+      "previous_blob": "d2860d3b241c90ecd5dc45bb4010de3c85449a27",
+      "blob": "91e8bc8f5d80f83b7756b4647c790cc5e5936d59",
+      "sha256": "62e0ab3ada8792c84b91c2e2b6ef9181fb9290292277485e7b18176090287a00",
+      "stage": "composition-history-patch",
+      "target_acceptance": "NOT_REVALIDATED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "owner": "WP10",
+      "source": "OWN_COMPOSITION",
+      "previous_blob": "0ac4c11d4eddb6e4a67c2c41efe40a7ff34fa47e",
+      "blob": "f6cfe69432142cdc4063494522627d6d3d50c5d8",
+      "sha256": "0dd478d718287fb68f3879574074abdc0d5e7c3381d47c23b6468292ffc4383d",
+      "stage": "composition-history-patch",
+      "target_acceptance": "NOT_REVALIDATED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/atlas-recovery.test.ts",
+      "owner": "WP10",
+      "source": "OWN_COMPOSITION",
+      "previous_blob": "a7395e072db32bec6aa72d1e2dba9a9400c9c6c9",
+      "blob": "b4af8ec1ca2b944f89bdfea23fd339c510154182",
+      "sha256": "d91cee6cff4852ad643cf343f493ddc37aac1152e6e91fd9ff19b0afab20c1f9",
+      "stage": "composition-history-patch",
+      "target_acceptance": "NOT_REVALIDATED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/record-history.test.ts",
+      "owner": "WP10",
+      "source": "OWN_COMPOSITION",
+      "previous_blob": null,
+      "blob": "e6d29ab48f12d260672ba4e1fde2d263b7e3fdc4",
+      "sha256": "1bdb7b1b0588e923886a5dbf3d7eddc77b452e6f848ebe1f6b080ee727a1d851",
+      "stage": "composition-history-patch",
+      "target_acceptance": "NOT_REVALIDATED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/dashboard-after-apply.test.ts",
+      "owner": "WP10",
+      "source": "OWN_COMPOSITION",
+      "previous_blob": null,
+      "blob": "3692120a4eca74ea5c5adf7610b170060b62b4a7",
+      "sha256": "2b8e45e85f8ce33356fbce13d6f570297b4655e773e6550b8115ac1292976275",
+      "stage": "composition-history-patch",
+      "target_acceptance": "NOT_REVALIDATED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/financial-composition-fixture.ts",
+      "owner": "WP10",
+      "source": "OWN_COMPOSITION",
+      "previous_blob": "737c19b03fa3d47fcdc7748e4d110b4af30fb7e7",
+      "blob": "1bf3ead4c6652e4aa31a28ea6850db3efd40c2f0",
+      "sha256": "b7c80445450960cdf9cf48d98865721f477d52fdb190604007bee374eef14928",
+      "stage": "composition-history-patch",
+      "target_acceptance": "NOT_REVALIDATED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/alternative-selection.test.ts",
+      "owner": "WP10",
+      "source": "OWN_COMPOSITION",
+      "previous_blob": "2ab277be76e42ce1eb69382282c26048a12c6d85",
+      "blob": "641d9ba4998b64db456502a7caf01a2e8909ca9c",
+      "sha256": "cf77e2081297546c26145c0413f594d1b8313ff86ee133474080bdf537919d89",
+      "stage": "composition-typecheck-patch",
+      "target_acceptance": "NOT_REVALIDATED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/analysis-variants.test.ts",
+      "owner": "WP10",
+      "source": "OWN_COMPOSITION",
+      "previous_blob": "3dedc8456cd0772ee58546396554173bd3c18939",
+      "blob": "e4da29605080af7f148f9db54ade40de17747931",
+      "sha256": "e77801815d904b587898701ab066d88a201fe4e165a95a0183f914beb92ddcf3",
+      "stage": "composition-typecheck-patch",
+      "target_acceptance": "NOT_REVALIDATED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/contribution-payload-fixture.ts",
+      "owner": "WP10",
+      "source": "OWN_COMPOSITION",
+      "previous_blob": null,
+      "blob": "a8a42d9fb82d1f8b97ed49cdeab589737c3b6329",
+      "sha256": "c58883a83ff21cf02a6477b805e9bc5fc48f01b8c46ba2624152edba346082e1",
+      "stage": "composition-typecheck-patch",
+      "target_acceptance": "NOT_REVALIDATED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+      "owner": "WP10",
+      "source": "OWN_COMPOSITION",
+      "previous_blob": "cec2598f03e97a7b1efe9d478829955d17a731a3",
+      "blob": "022c5166fb5343f50cae86e9deccc5e8dfb85959",
+      "sha256": "6d8a799cc1d597b6d9de085ded138b803965ae5094ca422dff1dff4a6d2e8e2b",
+      "stage": "composition-typecheck-patch",
+      "target_acceptance": "NOT_REVALIDATED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-access-browser-fixture.ts",
+      "owner": "WP10",
+      "source": "OWN_COMPOSITION",
+      "previous_blob": "11c50e913e583cd7a74b2de51f58e99f1be03ed0",
+      "blob": "72dce0adc358ba69f45216a104bdcb94a7b3da97",
+      "sha256": "d976fe9dc72b4bd651a6cfd215e549e593336796c5791de610bf73166305d033",
+      "stage": "composition-typecheck-patch",
+      "target_acceptance": "NOT_REVALIDATED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "owner": "WP10",
+      "source": "OWN_COMPOSITION",
+      "previous_blob": "2ee27da347c92b6eae5e97c156f89b6ca8f70e37",
+      "blob": "e4dcb97632b3b32131904296f02b4425a79367f4",
+      "sha256": "e12d0fbb65d2002403b3a3d997d1dc53bc38e62a68c0b7e1f1ff338dee5d47a4",
+      "stage": "composition-typecheck-patch",
+      "target_acceptance": "NOT_REVALIDATED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts",
+      "owner": "WP10",
+      "source": "OWN_COMPOSITION",
+      "previous_blob": "7056f63e9eab9ba1febfdca6d6354234314b08ee",
+      "blob": "a059b3e711f2b627ead1bd7aa16738ff2d7ef97c",
+      "sha256": "5e37191f01283e202f25dbd1b0bca279edaf5aff6f0b1fb77de30fc69b322032",
+      "stage": "composition-typecheck-patch",
+      "target_acceptance": "NOT_REVALIDATED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-access-browser-fixture.ts",
+      "owner": "WP10",
+      "source": "OWN_COMPOSITION",
+      "previous_blob": "2e78fa2dac99afdd7d5370cfdf4be01b03f29db7",
+      "blob": "c3d11836a54c04f6e86c60e9d8a19d403dcbf3ca",
+      "sha256": "5b2c0bc17d1bea67730b18868e25080ded21d888933f62e69eda99f2f9391251",
+      "stage": "composition-typecheck-patch",
+      "target_acceptance": "NOT_REVALIDATED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "owner": "WP10",
+      "source": "OWN_COMPOSITION",
+      "previous_blob": "61fdc24600b074a66fd4b2611a409e0fdf4b9dbd",
+      "blob": "671bb2b556f7713c80a54da742a3664025fd5ff9",
+      "sha256": "f99475d6e7850eb6ee6922f2e2da8a49eb2e43c30e0f4c72f41933046c4b4bfc",
+      "stage": "composition-typecheck-patch",
+      "target_acceptance": "NOT_REVALIDATED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/resident-runtime/private-mcp.test.ts",
+      "owner": "WP10",
+      "source": "OWN_COMPOSITION",
+      "previous_blob": "59f4918f97b4ef6957f15d4bf568e6d79a899ef5",
+      "blob": "886c56cf2638502d789e93e234b5282894ef4c27",
+      "sha256": "b244fc6c3e42995b80131d7cfedf3234264f757f8e14b64120c23c14521958ec",
+      "stage": "composition-typecheck-patch",
+      "target_acceptance": "NOT_REVALIDATED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/personal-view-persistence.test.ts",
+      "owner": "WP10",
+      "source": "OWN_COMPOSITION",
+      "previous_blob": "b5b8267bc1f377e870eeab84e16682fa4771d723",
+      "blob": "592c754d77d0d74ad8dffc1125dd036d2a53f59b",
+      "sha256": "05891e69351dc13f6c34ff656e012948234c0cc44c28ef8a70ae59d2c83d4c45",
+      "stage": "composition-view-repair-patch",
+      "target_acceptance": "NOT_REVALIDATED"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "owner": "WP10",
+      "source": "OWN_COMPOSITION",
+      "previous_blob": "611831c32ddbf58296b33e1930806185564189b9",
+      "blob": "0e5a508722c9e741a1737beb7d88ccb596a6f495",
+      "sha256": "cc565faa7028c9b7244aea936287a80f32e419dd92356b66fdb87c2b9b9bd98d",
+      "stage": "owned-patch-round5",
+      "target_acceptance": "NOT_REVALIDATED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/dossier-consumers.test.ts",
+      "owner": "WP10",
+      "source": "OWN_COMPOSITION",
+      "previous_blob": "6751276d8027aba58033562aced0a8abd054cd3d",
+      "blob": "25e0104ef14ff018f86599ba0cac1381ecd5828b",
+      "sha256": "848fd4d8321c2c8bb89b384e44944a44c33eb4c02ba91164c9a6aa8c3d0e6664",
+      "stage": "owned-patch-round5",
+      "target_acceptance": "NOT_REVALIDATED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/astra-compose-c07-recipient-findings.json",
+      "owner": "WP10",
+      "source": "OWN_COMPOSITION",
+      "previous_blob": null,
+      "blob": "ff8d65770fb6aed4bd70fa17be3669b43ee7bde4",
+      "sha256": "50adf17c03a1d23829f75d367e49bdf0283bc12b2eb2bd723f3ec3093466c497",
+      "stage": "composition-routine-audit",
+      "target_acceptance": "NOT_REVALIDATED"
+    }
+  ],
+  "freeze": {
+    "revision": 9,
+    "all38ArtifactHashesUnchanged": true
+  },
+  "status": "PUBLISHED_INCREMENT_NOT_REVALIDATED",
+  "localProductTests": false,
+  "sourceBranchesModified": false,
+  "deletions": 0,
+  "review": {
+    "static_peer_increment_review": "No blocking finding in four history/C12 sources; does not count as independent final review or runtime proof.",
+    "optional_hardening": "A second receipt/proof sample after recorded-operation source reads can make append-only assumption explicit; no legitimate mutable receipt writer identified."
+  },
+  "next_action": "Validate exact published product in Actions: history/C12, personal-view repair, dossier and touched type fixtures; run package bun typecheck and guards; consume subsequent owner fixes by exact blob.",
+  "pending": [
+    "Current CI3 result and same-tree proof of W5 changes",
+    "Planner historical operation verifier remains fresh-only; BCS record history alone is not complete C17",
+    "Native cross-case candidateAccess needs a protected precedent reader",
+    "WP14 Request-stability patch sent to PR36; not applied to foreign tests",
+    "Hot Topic cross-day historical source period and legacy bindings without capture remain unavailable",
+    "C07 immutable completed-history/provider, real recipientAuthority/checkAtCommit and governed native provider",
+    "WP01 BI refresh seam, AlternativeDraft controls, decision-apply reviewDigest and human-selection/retry seams",
+    "Foreign typecheck diagnostics and retained intelligence/test paths",
+    "AM01-AM06, eight final selections, three independent nonauthor reviews, C/G7 and D/G8 on final S0 bundle"
+  ],
+  "global_release": false,
+  "independent_review_claimed": false
+}

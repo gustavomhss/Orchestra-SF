@@ -28,6 +28,8 @@ import type { createDashboardRecordEvidenceHost } from "../../../../modules/suca
 import type { createSfProductAuthority } from "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
 import { projectSfSourceScope } from "../../../../modules/sucafina/Sucafinav1/product/integration/source-projections.ts"
 import { dashboardSourceCurrent } from "./dashboard-services.ts"
+import { createSfDashboardDecisionEvidence } from "./dashboard-decision-evidence.ts"
+import type { DashboardSourceCapture } from "./dashboard-decision-evidence.ts"
 
 type CaseRef = { id: string; incarnation: string; version: number }
 export type DashboardPrepareRequest = { caseRef: CaseRef; choiceId: string; draftRef: string }
@@ -46,6 +48,8 @@ export type DashboardPreparedBinding = {
   principalRef: string
   accessRevision: string
   policyVersion: string
+  /** Actual producer reads taken before prepare; legacy bindings have no archive. */
+  sourceCaptures?: readonly DashboardSourceCapture[]
   recordDigest: string
 }
 
@@ -59,6 +63,7 @@ export function createSfDashboardDecisions(input: {
   dashboardHostWrites: WeakSet<object>
 }) {
   const { state, host, human, ui } = input.authority
+  const evidence = createSfDashboardDecisionEvidence({ authority: input.authority, records: input.records, isBinding, bindingDigest })
   const environments = new WeakMap<TrustedDomainContext, Environment>()
   const preferenceReads = new WeakSet<TrustedDomainContext>()
   const admitted = new WeakMap<TrustedDomainContext, { request: AdmittedApply; actor: Actor; environment: Environment; roles: string; access: string }>()
@@ -180,6 +185,8 @@ export function createSfDashboardDecisions(input: {
       return { state: receipt.result.ok ? "applied" : receipt.result.status === 409 ? "conflict" : "failed", evidence: { ...initial, refDigest: digestSfEvidenceRef(initial) } }
     } })
   return {
+    resolveEvidence: evidence.resolveEvidence,
+    proveContinuity: evidence.proveContinuity,
     discover: async (context: TrustedDomainContext) => {
       const request = host.requestFor(context)
       if (!request || !await host.revalidate(context)) return { status: "denied" as const, reason: "decision-discovery-unavailable" }
@@ -253,6 +260,10 @@ export function createSfDashboardDecisions(input: {
       }, readCurrent: drafts.readCurrent, list: drafts.list,
     },
     resolveOperation: async (request: { caseRef: CaseRef; draftRef: string; operation: ScenarioOperation }, context: TrustedDomainContext) => {
+      // Reading an already applied choice uses its immutable C12 command/capture
+      // and real receipt. New preparation still requires the live draft below.
+      const recorded = await evidence.resolveRecordedOperation(request, context).catch(() => undefined)
+      if (recorded) return recorded
       const current = await load(request.caseRef, context)
       const source = host.requestFor(context)
       if (!current || !source) return { status: "denied" as const, reason: "hot-topic-case-unavailable" }
@@ -290,6 +301,8 @@ export function createSfDashboardDecisions(input: {
       if (operations.length !== 1) return { status: "conflict", reason: "hot-topic-choice-binding-mismatch" }
       const operation = operations[0]!
       const environment = await host.environment(source)
+      const sourceCaptures = await evidence.captureSources(draft.value.sourceRefs, context)
+      if (!sourceCaptures) return { status: "unavailable", reason: "hot-topic-original-capture-unavailable" }
       const captured = await host.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: { snapshot: structuredClone(snapshot), actor: await actorFor(snapshot, context) } }))
       if (!captured.actor) return { status: "denied", reason: "hot-topic-access-unavailable" }
       const prepared = await prepareHotTopicDraft({ snapshot: captured.snapshot, actor: captured.actor, environment, draft: draft.value, caseRef: request.caseRef, choice, operation, context,
@@ -304,6 +317,7 @@ export function createSfDashboardDecisions(input: {
       const caseRef = { ...request.caseRef, version: request.caseRef.version + 1 }
       const initial: DashboardPreparedBinding = { schema: "sf-dashboard-prepared-binding-v1", caseRef, choiceId: choice.id, choiceDigest: digestSfValue(choice), changeId,
         command: prepared.value.command, draft: draft.value, operation, mutationScope: prepared.value.mutationScope, baseDigest: prepared.value.baseDigest, previewDigest: prepared.value.previewDigest,
+        sourceCaptures,
         principalRef: context.binding.principalRef, accessRevision: context.binding.accessRevision, policyVersion: context.binding.policyVersion, recordDigest: "" }
       const binding = { ...initial, recordDigest: bindingDigest(initial) }
       const work = async (stored: SfProductState, authority: SfStateAuthority, snapshot: Snapshot) => {
@@ -311,6 +325,7 @@ export function createSfDashboardDecisions(input: {
         if (!sameAuthority(authority, context) || !actual || digestSfValue(actual) !== digestSfValue(current.case) || !verifyHotTopicDraftBinding(stored, request.caseRef, choice.id, operation, draft.value) ||
           stored.preferences[preparedKey(changeId)] !== undefined || actual.preparedChanges.some((item) => item.id === changeId || item.idempotencyKey === change.change.idempotencyKey) ||
           !dashboardSourceCurrent(snapshot, draft.value.target, context, environment.at) || (snapshot.versions[`hotTopics:${draft.value.target.id}`]?.version ?? 0) !== prepared.value.command.expectedVersion ||
+          !evidence.capturesCurrent(snapshot, sourceCaptures, context, environment.at) ||
           !await human.authorize(context, "decisions.prepare-changes", request)) return { commit: false, value: null }
         stored.cases[actual.id] = { ...actual, version: caseRef.version, preparedChanges: [...actual.preparedChanges, change.change] }
         stored.preferences[preparedKey(changeId)] = binding

@@ -1,0 +1,375 @@
+{
+  "schema": "sf2-astra-group34-next-intake-v1",
+  "repository": "gustavomhss/Orchestra-SF",
+  "observed_at_utc": "2026-11-14T09:35:06.339089+00:00",
+  "source": {
+    "pr": 34,
+    "head": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+    "tree": "a3ebf675545fadcd3124b387b15f396550652df8",
+    "sucafina_tree": "e5a728cba9891fda31f0904c3cd783f81c5657b6",
+    "tree_entries": 851,
+    "truncated": false,
+    "reconciled_requested_head": "5e0c79ee7013ea84329ff1fab8b32ab04ebdc2c3",
+    "requested_tree": "d780548f6058e08e555e0565f013b3b0054973da",
+    "intervening_docs_head": "5fd358fe91ff2153ba9e498eab0dd9ab8472d782",
+    "delta": "Requested5e has 4 own paths; subsequent5fd docs-only; d7 adds context.kind ui guard to same own decision-host plus foreign WP11 fixture, excluded."
+  },
+  "comparison": {
+    "pr": 32,
+    "head": "4306b310e4d6dac77f9beab461adad4e8e924849",
+    "tree": "b786e0cee23f13c11542cea32db38ef532071576",
+    "source_base": "1887d550f91c2b605f9b1a1d3dc1a06a5590e0a9",
+    "method": "Full direct source SF tree (851 entries), full three-commit compare, exact 4 own source files, and base file API hashes; all 4 target bases identical to source base."
+  },
+  "summary": {
+    "eligible_paths": 4,
+    "source_paths": 2,
+    "test_paths": 2,
+    "product_deletions_selected": 0,
+    "source_conflicts": 0,
+    "foreign_product_noops_preserved": 4,
+    "foreign_tests_preserved": 3,
+    "local_product_tests": false,
+    "remote_test_dispatch": false,
+    "owner_branch_mutations": false
+  },
+  "accepted": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+      "blob": "23d9291b3dcedda36edc4aa4f38856024e3c58f4",
+      "pin": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+      "head": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+      "tree": "a3ebf675545fadcd3124b387b15f396550652df8",
+      "pr": 34,
+      "owner": "WP04",
+      "base_head": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "base_tree": "b786e0cee23f13c11542cea32db38ef532071576",
+      "target_blob_at_wp10": "0c970d36c5af4f5a58dfca80e1c46cf12d478f5f",
+      "source_base_head": "1887d550f91c2b605f9b1a1d3dc1a06a5590e0a9",
+      "source_base_blob": "0c970d36c5af4f5a58dfca80e1c46cf12d478f5f",
+      "content_sha256": "dc8a1a16ea7b54b03ca6bafacf60cc27b61aff32626c2a8cf69affa5d3f1399f",
+      "content_blob_verified": true,
+      "staged_source": "incoming-cache/group34-next-src/modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+      "atomic_group": "procurement-c12-review-binding",
+      "operation": "copy_exact_blob_only",
+      "disposition": "ELIGIBLE_FOR_SCOPED_COMPOSITION",
+      "why": "Binds active human apply intent to canonical review digest; revalidates actual review producer, source/physical identity and durable retry proof. Includes explicit ui narrowing from d7 after 5e source check.",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/d7d343ecb2ef4b4ccff925f50a5a60324d22b371/modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+      "target_proof_status": "NOT_REVALIDATED",
+      "upstream_pass_transferred": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/decision-http.ts",
+      "blob": "e169d335f091c446bb380ee73f450083f917946f",
+      "pin": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+      "head": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+      "tree": "a3ebf675545fadcd3124b387b15f396550652df8",
+      "pr": 34,
+      "owner": "WP04",
+      "base_head": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "base_tree": "b786e0cee23f13c11542cea32db38ef532071576",
+      "target_blob_at_wp10": "d6ce17ec9d81b5c1d2feb91b7ccaf640295f6e3b",
+      "source_base_head": "1887d550f91c2b605f9b1a1d3dc1a06a5590e0a9",
+      "source_base_blob": "d6ce17ec9d81b5c1d2feb91b7ccaf640295f6e3b",
+      "content_sha256": "e853571c1530368e85136175d913c646c95bf5c850eefb583270f605ed6eddd1",
+      "content_blob_verified": true,
+      "staged_source": "incoming-cache/group34-next-src/modules/sucafina/Sucafinav1/product/procurement/decision-http.ts",
+      "atomic_group": "procurement-c12-review-binding",
+      "operation": "copy_exact_blob_only",
+      "disposition": "ELIGIBLE_FOR_SCOPED_COMPOSITION",
+      "why": "Separates Review and Apply request; apply strictly parses actual reviewDigest and binds complete intent through human admission and scoped case.",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/d7d343ecb2ef4b4ccff925f50a5a60324d22b371/modules/sucafina/Sucafinav1/product/procurement/decision-http.ts",
+      "target_proof_status": "NOT_REVALIDATED",
+      "upstream_pass_transferred": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "blob": "3dbad125693da9898b1435eff2a1108476c09f40",
+      "pin": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+      "head": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+      "tree": "a3ebf675545fadcd3124b387b15f396550652df8",
+      "pr": 34,
+      "owner": "WP04",
+      "base_head": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "base_tree": "b786e0cee23f13c11542cea32db38ef532071576",
+      "target_blob_at_wp10": "ae82f2d972c44256f2328dc3b733627c44bb3dd6",
+      "source_base_head": "1887d550f91c2b605f9b1a1d3dc1a06a5590e0a9",
+      "source_base_blob": "ae82f2d972c44256f2328dc3b733627c44bb3dd6",
+      "content_sha256": "1f0335d5d6df1a083e318fdd5a0e96bb5dbc4a4bc0142389639d26f2b73896f8",
+      "content_blob_verified": true,
+      "staged_source": "incoming-cache/group34-next-src/modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "atomic_group": "procurement-c12-review-binding",
+      "operation": "copy_exact_blob_only",
+      "disposition": "ELIGIBLE_FOR_SCOPED_COMPOSITION",
+      "why": "Uses actual producer reviewDigest for success/retry; rejects missing/invalid/changed proof, changed human intent, expired observed review, and changed source before first apply; keeps SQLite durable/reopen and current-ACL tests.",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/d7d343ecb2ef4b4ccff925f50a5a60324d22b371/modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "target_proof_status": "NOT_REVALIDATED",
+      "upstream_pass_transferred": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/prepared-production.test.ts",
+      "blob": "eaa14e509dadbba9242dade7b70e5cf41cc8b51b",
+      "pin": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+      "head": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+      "tree": "a3ebf675545fadcd3124b387b15f396550652df8",
+      "pr": 34,
+      "owner": "WP04",
+      "base_head": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "base_tree": "b786e0cee23f13c11542cea32db38ef532071576",
+      "target_blob_at_wp10": "929443b4e7a0c3dabc7db88534c17a7489f25c03",
+      "source_base_head": "1887d550f91c2b605f9b1a1d3dc1a06a5590e0a9",
+      "source_base_blob": "929443b4e7a0c3dabc7db88534c17a7489f25c03",
+      "content_sha256": "d03fd49e40bbbdaba425923237153c306622856cacf93b84928cf16f27f6950c",
+      "content_blob_verified": true,
+      "staged_source": "incoming-cache/group34-next-src/modules/sucafina/Sucafinav1/test/product/wp04/prepared-production.test.ts",
+      "atomic_group": "procurement-c12-review-binding",
+      "operation": "copy_exact_blob_only",
+      "disposition": "ELIGIBLE_FOR_SCOPED_COMPOSITION",
+      "why": "Component fixture derives digest using real domain review + canonical proposalReviewDigest and binds exact context/request/change; full human path remains host integration, not claimed by fixture.",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/d7d343ecb2ef4b4ccff925f50a5a60324d22b371/modules/sucafina/Sucafinav1/test/product/wp04/prepared-production.test.ts",
+      "target_proof_status": "NOT_REVALIDATED",
+      "upstream_pass_transferred": false
+    }
+  ],
+  "excluded": [
+    {
+      "path": ".github/workflows/astra-operations-check.yml",
+      "blob": "32d4b65247ee8574681b65bdd07d1dc38cb7a14d",
+      "kind": "workflow",
+      "target_blob": null,
+      "identical_in_target": false,
+      "reason": "Preserve target; outside 4-path own product/test intake. Receipt documents are evidence only; foreign source/test ownership is not transferred."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/OPS-HOST-01B.json",
+      "blob": "c84a478c3dcb6f32de8205727311e318d9552a43",
+      "kind": "owner_receipt",
+      "target_blob": null,
+      "identical_in_target": false,
+      "reason": "Preserve target; outside 4-path own product/test intake. Receipt documents are evidence only; foreign source/test ownership is not transferred."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/OPS-HOST-01B.md",
+      "blob": "d99548785aeec5ea203bfa8ade37a37f25629ce7",
+      "kind": "owner_receipt",
+      "target_blob": null,
+      "identical_in_target": false,
+      "reason": "Preserve target; outside 4-path own product/test intake. Receipt documents are evidence only; foreign source/test ownership is not transferred."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/OPS-HOST-01B.patch",
+      "blob": "9908c2113284d72bef56edf14bf17f76ffb822dd",
+      "kind": "owner_receipt",
+      "target_blob": null,
+      "identical_in_target": false,
+      "reason": "Preserve target; outside 4-path own product/test intake. Receipt documents are evidence only; foreign source/test ownership is not transferred."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/c12-consumer-changes.json",
+      "blob": "e2d0c563049e19af1db5c2ef188fdaafd94760a6",
+      "kind": "owner_receipt",
+      "target_blob": null,
+      "identical_in_target": false,
+      "reason": "Preserve target; outside 4-path own product/test intake. Receipt documents are evidence only; foreign source/test ownership is not transferred."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/c12-fixture-intake-followup.json",
+      "blob": "a56333f54466aeb157f5d817352e33711cd5da5b",
+      "kind": "owner_receipt",
+      "target_blob": null,
+      "identical_in_target": false,
+      "reason": "Preserve target; outside 4-path own product/test intake. Receipt documents are evidence only; foreign source/test ownership is not transferred."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/c12-fixture-intake.json",
+      "blob": "6cad177c6d3f1d51ef2111e6d01540fdb5294b72",
+      "kind": "owner_receipt",
+      "target_blob": null,
+      "identical_in_target": false,
+      "reason": "Preserve target; outside 4-path own product/test intake. Receipt documents are evidence only; foreign source/test ownership is not transferred."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/c12-independent-review.md",
+      "blob": "49bd7cfa88644acfcfdd8e8133d84d557a999591",
+      "kind": "owner_receipt",
+      "target_blob": null,
+      "identical_in_target": false,
+      "reason": "Preserve target; outside 4-path own product/test intake. Receipt documents are evidence only; foreign source/test ownership is not transferred."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/c12-producer-intake.json",
+      "blob": "36eb1b42716c3f8b83f04c620ba5fa507baa6687",
+      "kind": "owner_receipt",
+      "target_blob": null,
+      "identical_in_target": false,
+      "reason": "Preserve target; outside 4-path own product/test intake. Receipt documents are evidence only; foreign source/test ownership is not transferred."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/c12-review-binding.md",
+      "blob": "e49fea9b4851428d2f5b0bb69a0e68bd96317c41",
+      "kind": "owner_receipt",
+      "target_blob": null,
+      "identical_in_target": false,
+      "reason": "Preserve target; outside 4-path own product/test intake. Receipt documents are evidence only; foreign source/test ownership is not transferred."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/c12-review-binding.patch",
+      "blob": "3842744aeb56b0526888923921c81fc30652f97a",
+      "kind": "owner_receipt",
+      "target_blob": null,
+      "identical_in_target": false,
+      "reason": "Preserve target; outside 4-path own product/test intake. Receipt documents are evidence only; foreign source/test ownership is not transferred."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/c12-type-narrowing-followup.json",
+      "blob": "e34ae06dcc736ad09be31c95c17be3fef66bf9fc",
+      "kind": "owner_receipt",
+      "target_blob": null,
+      "identical_in_target": false,
+      "reason": "Preserve target; outside 4-path own product/test intake. Receipt documents are evidence only; foreign source/test ownership is not transferred."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+      "blob": "fed7feb25d9af2fecebba8d2b1d2e2a6b1a3e0ac",
+      "kind": "foreign_source",
+      "target_blob": "fed7feb25d9af2fecebba8d2b1d2e2a6b1a3e0ac",
+      "identical_in_target": true,
+      "reason": "Preserve target; outside 4-path own product/test intake. Receipt documents are evidence only; foreign source/test ownership is not transferred."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "blob": "90c3e981d8418c562342660bd3d56d03f9995383",
+      "kind": "foreign_source",
+      "target_blob": "90c3e981d8418c562342660bd3d56d03f9995383",
+      "identical_in_target": true,
+      "reason": "Preserve target; outside 4-path own product/test intake. Receipt documents are evidence only; foreign source/test ownership is not transferred."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-review.ts",
+      "blob": "ae7a4476d686638512f3fc8bcf342a746259cacc",
+      "kind": "foreign_source",
+      "target_blob": "ae7a4476d686638512f3fc8bcf342a746259cacc",
+      "identical_in_target": true,
+      "reason": "Preserve target; outside 4-path own product/test intake. Receipt documents are evidence only; foreign source/test ownership is not transferred."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/receipt-review-binding.ts",
+      "blob": "6987eddae37ae2c90fe03b2d8e81ea28e8b5221f",
+      "kind": "foreign_source",
+      "target_blob": "6987eddae37ae2c90fe03b2d8e81ea28e8b5221f",
+      "identical_in_target": true,
+      "reason": "Preserve target; outside 4-path own product/test intake. Receipt documents are evidence only; foreign source/test ownership is not transferred."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-port.test.ts",
+      "blob": "3cfdaf5adbb8abcfe7f90640a56db3f9d733ac56",
+      "kind": "foreign_test",
+      "target_blob": "4e01acf909609e40bf9fc5e64c633ea8189c6e8b",
+      "identical_in_target": false,
+      "reason": "Preserve target; outside 4-path own product/test intake. Receipt documents are evidence only; foreign source/test ownership is not transferred."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/planner-apply.test.ts",
+      "blob": "160df21d7dd44109c392cf213680629b6c26d450",
+      "kind": "foreign_test",
+      "target_blob": "bd5ca7d9c9451ef677ad8656d4504d5409eb67ce",
+      "identical_in_target": false,
+      "reason": "Preserve target; outside 4-path own product/test intake. Receipt documents are evidence only; foreign source/test ownership is not transferred."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/prepared-apply.test.ts",
+      "blob": "3d1380e7aaacd894d082fdeb06cfaaa51bf92dbb",
+      "kind": "foreign_test",
+      "target_blob": "3d1380e7aaacd894d082fdeb06cfaaa51bf92dbb",
+      "identical_in_target": true,
+      "reason": "Preserve target; outside 4-path own product/test intake. Receipt documents are evidence only; foreign source/test ownership is not transferred."
+    }
+  ],
+  "local_validation": {
+    "content_blobs_verified": 4,
+    "exact_tree_blobs_verified": 4,
+    "bases_identical": 4,
+    "relative_imports": 75,
+    "missing_relative_imports": [],
+    "remote_dependency_resolved": {
+      "path": "modules/atlas/boundary/package.json",
+      "head": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "blob": "6a5e7bddf5b9ea31dd0fb795f38be4fc98a231b7",
+      "reason": "Missing only in sparse materialized worktree; exact file exists by GitHub MCP."
+    },
+    "new_process_spawn_bypass": false,
+    "product_execution": false
+  },
+  "source_evidence": {
+    "run_id": 43580277793,
+    "job_id": 132403312862,
+    "product_head": "5e0c79ee7013ea84329ff1fab8b32ab04ebdc2c3",
+    "product_tree": "d780548f6058e08e555e0565f013b3b0054973da",
+    "snapshot": "ee2099e581eb4a6fc83283599763dd825c4a8ac4",
+    "conclusion": "failure",
+    "checks": {
+      "sucafina_typecheck": "failure",
+      "cli_typecheck": "failure",
+      "guards": "success"
+    },
+    "evidence_lines": [
+      "2026-11-14T09:23:16.0463560Z HEAD is now at 5e0c79ee70 fix(sucafina): bind procurement application to reviewed proof",
+      "2026-11-14T09:24:22.4717978Z ##[error]product/procurement/decision-host.ts(154,293): error TS2345: Argument of type 'TrustedDomainContext' is not assignable to parameter of type 'TrustedUiContext'.",
+      "2026-11-14T09:24:22.4728248Z ##[error]test/product/wp11/case-port.test.ts(225,45): error TS2739: Type '{ state: SfProductStatePort; host: { requestFor: () => Request; revalidate: () => Promise<true>; }; apply: PreparedApplyPort; authorizeCase: () => Promise<...>; authorizeApplication: () => Promise<...>; confirmApplication: () => Promise<...>; operationIdentity: () => string; classifyReceipt: () => Promise<...>; }' is missing the following properties from type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; apply: PreparedApplyPort; ... 6 more ...; revalidateProducer: (request: { ...; }, context: TrustedDomainContext) => Promise<...>; }': reviewDigestFor, revalidateProducer",
+      "2026-11-14T09:24:22.4734017Z ##[error]test/product/wp14/source-access-atlas.test.ts(167,41): error TS2741: Property 'procurementEvidenceWrites' is missing in type '{ authority: { state: import(\"/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/product/contracts/state\").SfProductStatePort; ui: { admit(request: Request, operation: string, inputDigest: string): Promise<...>; ... 6 more ...; finish(context: import(\"/home/runner/work/Orchestra-SF/Orchestra-SF/...' but required in type '{ authority: { state: import(\"/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/product/contracts/state\").SfProductStatePort; ui: { admit(request: Request, operation: string, inputDigest: string): Promise<...>; ... 6 more ...; finish(context: import(\"/home/runner/work/Orchestra-SF/Orchestra-SF/...'.",
+      "2026-11-14T09:24:48.5181337Z ##[error]../../modules/sucafina/Sucafinav1/product/procurement/decision-host.ts(154,293): error TS2345: Argument of type 'TrustedDomainContext' is not assignable to parameter of type 'TrustedUiContext'.",
+      "2026-11-14T09:24:50.2806372Z guards: 78 rules, 727 changed paths, 0 gate and 11 warn findings, 0 errors."
+    ],
+    "candidate_after_check": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+    "transferred_to_candidate": false,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43580277793"
+  },
+  "composed_check_baseline": {
+    "run_id": 43580430596,
+    "job_id": 132403783053,
+    "snapshot": "949a9da96213b130ae8d2fa3028c42f9c3f6960d",
+    "product_head": "4306b310e4d6dac77f9beab461adad4e8e924849",
+    "conclusion": "failure",
+    "own_prior_diagnostics_addressed_by_code": [
+      "product/procurement/decision-host.ts:168 TS2741 reviewDigestFor",
+      "product/procurement/decision-host.ts:187 TS2739 reviewDigestFor/revalidateProducer",
+      "test/product/wp04/prepared-production.test.ts:274 TS2741 reviewDigestFor"
+    ],
+    "note": "Code inspection only; candidate/composed recheck still required."
+  },
+  "open_findings": [
+    {
+      "owner": "WP04/WP01",
+      "id": "sourcing-analysis-history-export",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/34#issuecomment-6875262067",
+      "detail": "sourcing-analysis.ts imports absent analysisHistory. Own candidate does not touch this path; runtime/typecheck blocker remains for sourcing consumer."
+    },
+    {
+      "owner": "WP04",
+      "id": "finance-sourcing-fixture",
+      "detail": "2 diagnostics remain in finance-sourcing-integration fixture: complete producer object and verifyScenarioOperations."
+    },
+    {
+      "owner": "WP06",
+      "id": "import-analysis-fixture",
+      "detail": "4 diagnostics remain: promptContext union narrowing x3; contribution signature x1."
+    },
+    {
+      "owner": "WP01",
+      "id": "OPS-CONSUMER-03",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/31#issuecomment-6875179595",
+      "detail": "Shared decision-apply must submit the real reviewDigest and preserve immutable retries; patch proposed but foreign source not changed by this intake."
+    },
+    {
+      "owner": "WP11",
+      "id": "planner-apply-review-binding",
+      "detail": "Shared planner apply consumer and owner test fixes remain with WP11. Foreign WP11 test snapshots in Operations are not imported."
+    }
+  ],
+  "required_next_actions": [
+    "Consume four exact own blobs atomically in next compose; do not merge branch or import snapshots/deletions.",
+    "Use actual next product SHA for surgical host-integration/prepared-production proof and bun typecheck plus guards via CI.md; no prior green transfer.",
+    "Finish shared UI reviewDigest consumer and sourcing history export through their owners.",
+    "Preserve all final selections, AM01-AM06, independent reviews, C/G7 and D/G8; no GLOBAL_RELEASE or broad READY declaration."
+  ]
+}

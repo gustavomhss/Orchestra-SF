@@ -15,7 +15,7 @@ import type { PortResult } from "../../../product/contracts/ports.ts"
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
 import { createSfProductAuthority } from "../../../product/integration/product-authority.ts"
 import type { SfHumanAction } from "../../../product/integration/human-authority.ts"
-import { createSfSourcePersistence } from "../../../product/integration/source-lifecycle.ts"
+import { createSfSourcePersistence, sfSourceIdentity } from "../../../product/integration/source-lifecycle.ts"
 import { enumerateSfSources } from "../../../product/integration/source-inventory.ts"
 import { createSfSourceScopeProjector } from "../../../product/integration/source-projections.ts"
 import { createDashboardRecordSourceIssuer } from "../../../product/integration/dashboard-sources.ts"
@@ -276,6 +276,42 @@ test("WP08 rejects revoked source scopes and removed Hot Topic references withou
     const stored = await f.runtime.inspect()
     expect(stored.topics).toEqual([])
     expect(Object.keys(stored.relations).filter((key) => key.startsWith("sf:hot-topic:"))).toHaveLength(1)
+  } finally { await f.close() }
+}, 60000)
+
+test("C06 update replay refuses an action ID reused in a different incarnation after SQLite reopen", async () => {
+  const f = await fixture()
+  try {
+    const source = await projectSource(f), created = value(await f.runtime.handoff(intent(f, source, "identity-fence")))
+    const original = await f.runtime.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: sfSourceIdentity(snapshot, "hotTopics", created.topic.id) }))
+    if (!original) throw new Error("The real source producer did not issue an action identity")
+    const update: Update = { id: created.topic.id, version: created.topic.version, idempotencyKey: "complete-original-action", sourceRefs: [source], values: { status: "done" } }
+    const completed = value(await f.runtime.update(update))
+    expect(completed).toMatchObject({ id: created.topic.id, status: "done", version: created.topic.version + 1 })
+    expect(value(await f.runtime.update(update))).toEqual(completed)
+    const key = `sf:hot-topic:${digestSfValue({ correlationKey: update.idempotencyKey })}`
+    expect(object((await f.runtime.inspect()).relations[key])).toMatchObject({ id: created.topic.id, targetIncarnation: original.incarnation, result: completed })
+
+    const removed = await f.runtime.command({ page: "Hot Topics & Actions", action: "delete", id: created.topic.id, version: completed.version, values: {}, confirmed: true })
+    expect(removed?.status).toBe(200)
+    expect(await removed!.json()).toMatchObject({ ok: true })
+    // Replacement is fixture input to the real scoped persistence, not a fabricated source receipt.
+    // It deliberately reuses the public ID while the lifecycle allocates a new incarnation.
+    await f.runtime.persistence.transaction("dashboard", async (snapshot) => {
+      snapshot.data.hotTopics = [{ id: created.topic.id, action: "Replacement action", owner: "Authenticated operator", due: "2026-12-15", priority: "normal", status: "open", notes: "" }]
+      return { commit: true, value: undefined }
+    })
+    const replacement = await f.runtime.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: sfSourceIdentity(snapshot, "hotTopics", created.topic.id) }))
+    expect(replacement?.alive).toBe(true)
+    expect(replacement?.incarnation).not.toBe(original.incarnation)
+    expect((await f.runtime.read(source, (context) => f.runtime.evidence.resolve(source, context))).state).toBe("fresh")
+    await f.reopen()
+    const beforeRetry = await f.runtime.inspect()
+    expect(await f.runtime.update(update)).toMatchObject({ status: "unavailable", reason: "action-replaced" })
+    expect(await f.runtime.inspect()).toEqual(beforeRetry)
+    expect(beforeRetry.topics).toHaveLength(1)
+    expect(beforeRetry.topics[0]).toMatchObject({ id: created.topic.id, action: "Replacement action", status: "open" })
+    expect(object(beforeRetry.relations[key])).toMatchObject({ targetIncarnation: original.incarnation, result: completed })
   } finally { await f.close() }
 }, 60000)
 

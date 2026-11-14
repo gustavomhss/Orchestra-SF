@@ -17,13 +17,14 @@ import { createDecisionMutations } from "../decisions/mutations.ts"
 import { createDecisionPreparedReview } from "../decisions/prepared-review.ts"
 import { createSfPreparedApply } from "../decisions/prepared-apply.ts"
 import { createPreparedExecution } from "../decisions/apply.ts"
+import { isReviewDigest, type AdmittedApply, type ReviewDigestFor } from "../decisions/receipt-review-binding.ts"
 import { createProcurementC12Bridge } from "./c12.ts"
 import { projectProcurementSource } from "./port.ts"
 
 type ApplyRequest = Parameters<PreparedApplyPort["executePrepared"]>[0]
 type MutationHost = Parameters<typeof createDecisionMutations>[0]
 type BridgeInput = Parameters<typeof createProcurementC12Bridge>[0]
-type ActiveApply = { context: TrustedDomainContext; bindingDigest: string; request: ApplyRequest; decision: DecisionCase; change: PreparedChange; actor: Actor; roleMapDigest: string; physicalIncarnation: string; environment: Environment }
+type ActiveApply = { context: TrustedDomainContext; bindingDigest: string; request: ApplyRequest; admitted: AdmittedApply; decision: DecisionCase; change: PreparedChange; actor: Actor; roleMapDigest: string; physicalIncarnation: string; environment: Environment }
 type RecordEvidence = Extract<BusinessEvidenceRef, { kind: "record" }>
 type ArchivedSource = { schema: "sf-procurement-evidence-v1"; evidence: RecordEvidence; projection: DomainProjection; scope: SfSourceScope; physicalIncarnation: string; projectionDigest: string; proofDigest: string }
 
@@ -121,7 +122,7 @@ export function createProcurementDecisionHost(input: BridgeInput & {
     resolveChoiceValues: async () => ({ status: "unavailable", reason: "procurement-preparation-only" }),
   })
   const readReview = createDecisionPreparedReview({ state, host, cases: input.cases, reviewDomain: bridge.reviewDomain })
-  const reviews = new Map<string, { changeDigest: string; expiresAt: number }>()
+  const reviews = new Map<string, { changeDigest: string; reviewDigest: string; expiresAt: number }>()
   const reviewKey = (request: ApplyRequest, context: TrustedDomainContext) => digestSfValue({ request, installation: context.binding.installationId, project: context.binding.projectId, principal: context.binding.principalRef, access: context.binding.accessRevision, policy: context.binding.policyVersion })
   const reviewChange = async (incoming: ApplyRequest, context: TrustedDomainContext) => {
     const request = structuredClone(incoming)
@@ -134,7 +135,8 @@ export function createProcurementDecisionHost(input: BridgeInput & {
     if (after.status !== "ok" || digestSfValue(after.value) !== digestSfValue(before.value) || !await host.revalidate(context)) return { status: "stale", reason: "prepared-review-changed" } as const
     const expiresAt = Date.parse(input.now()) + 300_000
     if (!Number.isFinite(expiresAt)) return { status: "unavailable", reason: "prepared-review-clock-unavailable" } as const
-    reviews.set(reviewKey(request, context), { changeDigest: digestSfValue(before.value.change), expiresAt })
+    if (!isReviewDigest(review.value.reviewDigest)) return { status: "unavailable", reason: "prepared-review-proof-unavailable" } as const
+    reviews.set(reviewKey(request, context), { changeDigest: digestSfValue(before.value.change), reviewDigest: review.value.reviewDigest, expiresAt })
     if (reviews.size > 512) reviews.delete(reviews.keys().next().value!)
     return review
   }
@@ -143,6 +145,13 @@ export function createProcurementDecisionHost(input: BridgeInput & {
     const source = host.requestFor(context)
     const held = source ? active.get(source) : undefined
     return held?.context === context && held.bindingDigest === digestSfValue(context.binding) && source && !source.signal.aborted ? held : undefined
+  }
+  // Only the active human intent supplies the producer proof to WP11. Initial
+  // application also checks the observed review; receipt replay checks its durable binding.
+  // WP11 changes state/receipt during reconciliation; the reviewed proposal must stay identical.
+  const reviewDigestFor: ReviewDigestFor = (context, request, change) => {
+    const held = current(context)
+    return held && context.kind === "ui" && isReviewDigest(held.admitted.reviewDigest) && digestSfValue(request) === digestSfValue(held.request) && digestSfValue({ ...change, state: "planned", receipt: null }) === digestSfValue({ ...held.change, state: "planned", receipt: null }) && input.authority.ui.matchesIntent(context, "sf-human:decisions.apply", digestSfValue(held.admitted)) ? held.admitted.reviewDigest : undefined
   }
   const validTarget = (snapshot: Snapshot, held: ActiveApply) => {
     const target = held.change.target
@@ -163,14 +172,14 @@ export function createProcurementDecisionHost(input: BridgeInput & {
   const authorizeReceipt: Parameters<typeof createSfPreparedApply>[0]["authorizeReceipt"] = async (receipt, lookup, context) => receipt.principalRef === context.binding.principalRef && receipt.surface === lookup.surface && receipt.targetIncarnation === lookup.targetIncarnation && receipt.idempotencyKey === lookup.idempotencyKey && receipt.commandDigest === lookup.commandDigest && await authorizeLookup(lookup, context)
   const confirmHuman: Parameters<typeof createSfPreparedApply>[0]["confirmHuman"] = async (request, change, context) => {
     const held = current(context)
-    return !!held && digestSfValue(request) === digestSfValue(held.request) && digestSfValue(change.operation) === digestSfValue(held.change.operation) && await input.authority.human.authorize(context, "decisions.apply", request)
+    return !!held && reviewDigestFor(context, request, change) === held.admitted.reviewDigest && await input.authority.human.authorize(context, "decisions.apply", held.admitted)
   }
-  const prepared = createSfPreparedApply({ state, host, authorizeCase, authorizeLookup, authorizeReceipt, confirmHuman,
+  const prepared = createSfPreparedApply({ state, host, authorizeCase, authorizeLookup, authorizeReceipt, confirmHuman, reviewDigestFor,
     resolveActor: (snapshot, context) => { const held = current(context); return held && validTarget(snapshot, held) ? structuredClone(held.actor) : undefined },
     resolveMutation: bridge.resolveMutation,
     verifyGrant: (snapshot, request, change, actor, context) => {
       const held = current(context)
-      return !!held && context.kind === "ui" && digestSfValue(actor) === digestSfValue(held.actor) && digestSfValue(request) === digestSfValue(held.request) && digestSfValue(change.operation) === digestSfValue(held.change.operation) && validTarget(snapshot, held) && input.authority.ui.matchesIntent(context, "sf-human:decisions.apply", digestSfValue(request))
+      return !!held && context.kind === "ui" && digestSfValue(actor) === digestSfValue(held.actor) && reviewDigestFor(context, request, change) === held.admitted.reviewDigest && validTarget(snapshot, held)
     },
     receiptVersion: bridge.receiptVersion,
     environment: (context) => { const held = current(context); if (!held) throw new Error("Prepared execution unavailable"); return held.environment },
@@ -184,15 +193,27 @@ export function createProcurementDecisionHost(input: BridgeInput & {
     const evidence: Extract<BusinessEvidenceRef, { kind: "receipt" }> = { schema: "sf-evidence-v1", kind: "receipt", refId: `sf-procurement-receipt:${encodeURIComponent(receipt.id)}`, installationId: context.binding.installationId, projectId: context.binding.projectId, evidenceLevel: "observed", refDigest: "", target: { surface: "procurement", receiptId: receipt.id, targetIncarnation: receipt.targetIncarnation, idempotencyKey: receipt.idempotencyKey, commandDigest: receipt.commandDigest, version: receipt.version } }
     return { state: receipt.result.ok ? "applied" as const : receipt.result.status === 409 ? "conflict" as const : "failed" as const, evidence: { ...evidence, refDigest: digestSfEvidenceRef(evidence) } }
   }
-  const execute = createPreparedExecution({ state, host, apply: prepared, authorizeCase, operationIdentity: input.operationIdentity,
+  const execute = createPreparedExecution({ state, host, apply: prepared, authorizeCase, operationIdentity: input.operationIdentity, reviewDigestFor,
     authorizeApplication: (request, change, context) => confirmHuman(request, change, context),
-    confirmApplication: async (request, context) => !!current(context) && await input.authority.human.authorize(context, "decisions.apply", request),
+    confirmApplication: async (request, context) => { const held = current(context); return !!held && await confirmHuman(request, held.change, context) },
+    revalidateProducer: async (request, context) => {
+      const held = current(context)
+      if (!held || reviewDigestFor(context, request, held.change) !== held.admitted.reviewDigest) return { status: "denied", reason: "human-application-required" }
+      const review = await readReview(request, context)
+      if (review.status !== "ok") return review
+      const reviewed = reviews.get(reviewKey(request, context))
+      const checkedAt = Date.parse(input.now())
+      if (!reviewed || !Number.isFinite(checkedAt) || reviewed.expiresAt <= checkedAt || reviewed.changeDigest !== digestSfValue(held.change) || reviewed.reviewDigest !== held.admitted.reviewDigest) return { status: "denied", reason: "prepared-review-required" }
+      return review
+    },
     classifyReceipt,
   })
-  const apply = async (incoming: ApplyRequest, context: TrustedDomainContext): Promise<PortResult<CommandReceipt>> => {
-    const request = structuredClone(incoming)
+  const apply = async (incoming: AdmittedApply, context: TrustedDomainContext): Promise<PortResult<CommandReceipt>> => {
+    const admitted = structuredClone(incoming)
+    if (!isReviewDigest(admitted.reviewDigest)) return { status: "needs-input", reason: "review-proof-required" }
+    const request: ApplyRequest = { caseRef: admitted.caseRef, changeId: admitted.changeId, choiceId: admitted.choiceId }
     const source = host.requestFor(context)
-    if (!source || context.kind !== "ui" || active.has(source) || !await input.authority.human.authorize(context, "decisions.apply", request) || !await host.revalidate(context)) return { status: "denied", reason: "human-application-required" }
+    if (!source || context.kind !== "ui" || active.has(source) || !await input.authority.human.authorize(context, "decisions.apply", admitted) || !await host.revalidate(context)) return { status: "denied", reason: "human-application-required" }
     const loaded = await readChange(request, context)
     if (loaded.status !== "ok") return loaded
     const reviewed = reviews.get(reviewKey(request, context))
@@ -207,7 +228,7 @@ export function createProcurementDecisionHost(input: BridgeInput & {
       const actor: Actor = { id: principal.id, roles, canWrite: principal.canWrite && roles.some((role) => role !== "viewer"), assigned: [], domains: [] }
       const physical = snapshot.sfSources?.records[JSON.stringify([loaded.value.change.target.type, loaded.value.change.target.id])]
       if (!physical?.alive) return { commit: false, value: undefined }
-      const value: ActiveApply = { context, bindingDigest: digestSfValue(context.binding), request, ...loaded.value, actor, roleMapDigest: digestSfValue(roleMap(snapshot, "procurement")), physicalIncarnation: physical.incarnation, environment }
+      const value: ActiveApply = { context, bindingDigest: digestSfValue(context.binding), request, admitted, ...loaded.value, actor, roleMapDigest: digestSfValue(roleMap(snapshot, "procurement")), physicalIncarnation: physical.incarnation, environment }
       return { commit: false, value: validTarget(snapshot, value) ? value : undefined }
     }, { signal: source.signal })
     if (!held || !await host.revalidate(context)) return { status: "denied", reason: "application-source-authority-unavailable" }
@@ -217,6 +238,7 @@ export function createProcurementDecisionHost(input: BridgeInput & {
         const receipt = await prepared.readReceipt({ surface: held.change.target.surface, targetRef: held.change.target.id, targetIncarnation: held.change.target.incarnation, idempotencyKey: held.change.idempotencyKey, commandDigest: held.change.operation.commandDigest }, context)
         if (receipt.status !== "ok") return receipt
         if (receipt.value.state === "not-found" && (!reviewed || reviewed.expiresAt <= checkedAt || reviewed.changeDigest !== digestSfValue(loaded.value.change))) return { status: "denied", reason: "prepared-review-required" }
+        if (receipt.value.state === "not-found" && reviewed?.reviewDigest !== admitted.reviewDigest) return { status: "conflict", reason: "prepared-review-proof-mismatch" }
       }
       return await execute(request, context)
     } finally { active.delete(source) }
@@ -224,7 +246,7 @@ export function createProcurementDecisionHost(input: BridgeInput & {
   const authorizeReceiptTarget = async (request: Request, snapshot: Snapshot, targetRef: string, authority: SfStateAuthority) => {
     const held = active.get(request)
     const domain = host.persistence.currentSnapshots?.()?.procurement
-    if (!held || current(held.context) !== held || !domain || targetRef !== held.change.target.id || authority.principalRef !== held.context.binding.principalRef || authority.accessRevision !== held.context.binding.accessRevision || authority.policyVersion !== held.context.binding.policyVersion || !validTarget(domain, held) || !await input.authority.human.authorize(held.context, "decisions.apply", held.request)) return undefined
+    if (!held || current(held.context) !== held || !domain || targetRef !== held.change.target.id || authority.principalRef !== held.context.binding.principalRef || authority.accessRevision !== held.context.binding.accessRevision || authority.policyVersion !== held.context.binding.policyVersion || !validTarget(domain, held) || !await input.authority.human.authorize(held.context, "decisions.apply", held.admitted)) return undefined
     const decision = object(object(object(snapshot.data.__sfProductV1).cases)[held.decision.id])
     const change = rows(decision.preparedChanges).filter((value) => value.id === held.change.id && value.choiceId === held.change.choiceId)
     if (decision.id !== held.decision.id || decision.incarnation !== held.decision.incarnation || decision.version !== held.decision.version || !Array.isArray(decision.participants) || !decision.participants.includes(authority.principalRef) || change.length !== 1 || digestSfValue(change[0]) !== digestSfValue(held.change)) return undefined

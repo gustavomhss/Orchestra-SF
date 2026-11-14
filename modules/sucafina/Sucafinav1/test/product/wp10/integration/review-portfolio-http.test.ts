@@ -97,7 +97,7 @@ async function reviewPortfolioFixture(deadline: ReturnType<typeof compositionTes
     const candidateRef = portfolioCandidateRef({ caseRef: encodeCaseRef(caseRef), caseVersion: caseRef.version, alternativeId: "selected", alternativeVersion: 1 })
     const request = { scope: { horizon: period, currency: "USD" }, candidateRefs: [candidateRef], operations: [], constraints: [], priorities: [], explorationLimit: 1 }
     const producer = createProductionPortfolio({ cases: business.cases, planner: business.planner, sources: business.plannerSources, evidence: business.context,
-      revalidate: authority.host.revalidate, createReceipt: business.receipt, decisions: portfolio.mutations, enabledOperations: ["sf_portfolio_evaluate"],
+      revalidate: authority.host.revalidate, createReceipt: async (...args) => business.receipt(...args), decisions: portfolio.mutations, enabledOperations: ["sf_portfolio_evaluate"],
       persistence: { results: business.results, portfolioBindings: portfolio.portfolioBindings, caseFor: business.resolveCase, idempotencyKey: async (digest) => `history:${digest}` } })
     const evaluated = await deadline.phase("portfolio.evaluate", () => producer.port.evaluate(request, call))
     if (evaluated.status !== "ok") return evaluated
@@ -424,3 +424,4 @@ test("Review historical capture needs its own intact receipt after a source edit
     expect((await get("review-read"))?.status).toBe(200)
   })
 }, 120_000)
+

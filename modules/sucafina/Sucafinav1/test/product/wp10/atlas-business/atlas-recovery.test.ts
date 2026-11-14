@@ -59,7 +59,13 @@ test("WP10 Atlas fences writes and recovers a durable receipt after reopen witho
         for (const surface of ["dashboard", "planner", "procurement"] as const) await persistence.initializeSources(surface)
         await persistence.transaction("dashboard", async (snapshot) => { snapshot.data.roleMap = [{ surface: "dashboard", role: "admin", entra: "admins", version: 1, by: "admin" }]; snapshot.data.opexOwners = [{ id: "o", budget: 1200 }]; snapshot.data.opexEntries = []; return { commit: true, value: undefined } })
       }
-      const host: DomainPortHost = { persistence, authenticate: async (request, context) => { const id = request.headers.get("authorization"); return id ? resolve(id, [...context!.roleMap], (group) => session.active && group === "admins") : null }, environment: async () => ({ at: time, id: randomUUID, directory: [] }), requestFor: () => new Request("https://example.test", { headers: { authorization: session.id } }), revalidate: async (call) => session.active && session.id === call.binding.principalRef && await store.transaction("dashboard", async () => ({ commit: false, value: true })) }
+      const requests = new WeakMap<TrustedDomainContext, Request>()
+      const requestFor = (call: TrustedDomainContext) => {
+        let request = requests.get(call)
+        if (!request) { request = new Request("https://example.test", { headers: { authorization: session.id } }); requests.set(call, request) }
+        return request
+      }
+      const host: DomainPortHost = { persistence, authenticate: async (request, context) => { const id = request.headers.get("authorization"); return id ? resolve(id, [...context!.roleMap], (group) => session.active && group === "admins") : null }, environment: async () => ({ at: time, id: randomUUID, directory: [] }), requestFor, revalidate: async (call) => session.active && session.id === call.binding.principalRef && await store.transaction("dashboard", async () => ({ commit: false, value: true })) }
       const issue = createDashboardSourceIssuer({ host, scopedSources: persistence })
       const sources = createDashboardSourceHost({ host, scopedSources: persistence })
       const dashboard = createDashboardPort({ host, sources })
@@ -141,6 +147,14 @@ test("WP10 Atlas fences writes and recovers a durable receipt after reopen witho
       session.evidence = true
       const original = await reopened.atlas.readOriginal({ id: "case", incarnation: "case-inc" }, source.refDigest, binding("bob"))
       expect(original).toEqual(source)
+      const captured = await reopened.atlas.readOriginalCapture({ id: "case", incarnation: "case-inc" }, source.refDigest, binding("bob"))
+      expect(captured?.ref).toEqual(source)
+      expect(captured?.projection).toMatchObject({ context: { principalRef: "alice", accessRevision: "1", policyVersion: "1" } })
+      // A current reader cannot mutate the retained original through its return value.
+      if (!captured || !("values" in captured.projection)) throw new Error("Protected original projection unavailable")
+      const originalProjection = structuredClone(captured.projection)
+      captured.projection.context.principalRef = "bob"
+      expect((await reopened.atlas.readOriginalCapture({ id: "case", incarnation: "case-inc" }, source.refDigest, binding("bob")))?.projection).toEqual(originalProjection)
       if (!original) return
       const current = await reopened.source(original, binding("bob"))
       expect(current.state).toBe("fresh")
@@ -172,6 +186,7 @@ test("WP10 Atlas fences writes and recovers a durable receipt after reopen witho
       expect(await proof(original, current.currentRef, binding("bob"))).toBe(false)
       expect((await reopened.atlas.recall({ id: "case", incarnation: "case-inc" }, binding("bob"))).status).toBe("unavailable")
       expect(await reopened.atlas.readOriginal({ id: "case", incarnation: "case-inc" }, source.refDigest, binding("bob"))).toBeUndefined()
+      expect(await reopened.atlas.readOriginalCapture({ id: "case", incarnation: "case-inc" }, source.refDigest, binding("bob"))).toBeUndefined()
     } finally { await store.dispose() }
   } finally { await rm(directory, { recursive: true, force: true }) }
 }, 180_000)

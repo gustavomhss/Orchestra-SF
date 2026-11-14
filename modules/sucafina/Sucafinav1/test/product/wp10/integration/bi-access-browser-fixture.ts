@@ -81,8 +81,9 @@ export async function prepareSfBiAccessBrowser(input: { http: ReturnType<typeof 
       const at = performance.now()
       console.info("SF_BI_BROWSER_HTTP", JSON.stringify({ mode, state: "started" }))
       try {
+        const body = request.postDataBuffer()
         const response = await input.http(new Request(request.url(), { method: request.method(), headers: await request.allHeaders(), signal: input.signal,
-          ...(request.postDataBuffer() ? { body: request.postDataBuffer()! } : {}) }), "dashboard")
+          ...(body ? { body: new Uint8Array(body).buffer } : {}) }), "dashboard")
         if (!response) {
           if (watch) throw new Error(`Real handler did not handle browser request ${mode}`)
           await route.abort("blockedbyclient")
@@ -180,3 +181,4 @@ function observedEvent<T>() {
   void promise.catch(() => undefined)
   return { promise, resolve, reject }
 }
+

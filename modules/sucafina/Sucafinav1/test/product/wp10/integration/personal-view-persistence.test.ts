@@ -88,7 +88,9 @@ test("saved Planner and Procurement views survive a new store and authority, the
     const listed = await reopened.admitted("views.read", {}, (call) => reopened.views.list(call))
     expect(listed.status).toBe("ok")
     if (listed.status !== "ok") throw new Error(listed.reason)
-    expect(listed.value.map((entry) => entry.view.id).toSorted()).toEqual([planner.id, procurement.id].toSorted())
+    expect(listed.value).toHaveLength(2)
+    expect(listed.value.every((entry) => "view" in entry)).toBe(true)
+    expect(listed.value.map((entry) => "view" in entry ? entry.view.id : entry.id).toSorted()).toEqual([planner.id, procurement.id].toSorted())
 
     // A saved URL is not authority to reopen a removed destination.
     await reopened.persistence.transaction("planner", async (snapshot) => {
@@ -97,8 +99,13 @@ test("saved Planner and Procurement views survive a new store and authority, the
     })
     expect(await reopened.admitted("views.read", { id: planner.id }, (call) => reopened.views.open({ id: planner.id }, call)))
       .toEqual({ status: "unavailable", reason: "view-unavailable" })
+    // Only the private preference identity and version remain available for repair.
+    // Previous title, destination, filters and currency must not be disclosed.
     expect(await reopened.admitted("views.read", {}, (call) => reopened.views.list(call)))
-      .toEqual({ status: "ok", value: [{ view: procurement, version: 1 }] })
+      .toEqual({ status: "ok", value: [
+        { id: planner.id, version: 1, availability: "unavailable" },
+        { view: procurement, version: 1 },
+      ] })
 
     await reopened.admitted("views.read", { id: procurement.id }, async (call) => {
       active.value = false

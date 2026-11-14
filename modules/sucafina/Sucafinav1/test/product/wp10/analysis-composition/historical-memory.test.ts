@@ -29,11 +29,12 @@ import { enumerateSfSources } from "../../../../product/integration/source-inven
 import { createSfSourceScopeProjector } from "../../../../product/integration/source-projections.ts"
 import { createResidentAiBundle } from "../../../../product/ai/resident.ts"
 import { createChoiceSnapshot } from "../../../../product/decisions/choice.ts"
-import { digestSfEvidenceRef, digestSfValue } from "../../../../product/contracts/canonical.ts"
+import { digestSfContribution, digestSfEvidenceRef, digestSfValue } from "../../../../product/contracts/canonical.ts"
 import type { BusinessEvidenceRef } from "../../../../product/contracts/business-context.ts"
 import type { CostCoverageBasis, DecisionCase, ScenarioResult, CaseLedgerEvent } from "../../../../product/contracts/decisions.ts"
 import type { ScenarioOperation } from "../../../../product/contracts/operations.ts"
 import type { ContributionEnvelope } from "../../../../product/contracts/resident-ai.ts"
+import { contributionPayloadMetadata } from "./contribution-payload-fixture.ts"
 import type { DecisionRecallInput } from "../../../../product/contracts/skill-inputs.ts"
 import atlasPackage from "../../../../../../atlas/boundary/package.json" with { type: "json" }
 import contractFreeze from "../../../../product/contracts/freeze-v1.json" with { type: "json" }
@@ -206,8 +207,10 @@ test("historical decision recall binds original/current evidence and rejects cha
         const changed = proof.sources.map((item) => item === historical ? malformed : item)
         expect(sfAnalysisSourcesAuthorized({ ...proof, sources: changed, promptContext: { decisionRecall: { ...prompt, sources: changed.map(sfMemoryEvidence) } } }, analysis, call)).toBe(false)
       }
-      // This fragment tests only the payload verifier. It has no native envelope/provenance or publication authority.
-      const output = { kind: "CaseRecall", state: "ready", payload: prompt.result, evidenceRefs: proof.sources.map((item) => item.ref) } as ContributionEnvelope
+      // The complete declared fixture envelope tests only the payload verifier;
+      // its synthetic provenance carries no native or publication authority.
+      const output: ContributionEnvelope = { ...contributionPayloadMetadata(caseRef), kind: "CaseRecall", state: "ready", payload: prompt.result, evidenceRefs: proof.sources.map((item) => item.ref) }
+      output.outputDigest = digestSfContribution(output)
       expect(await proof.acceptsOutput(output, call)).toEqual({ status: "ok", value: true })
       const excluded = await activeBusiness.caseRecall({ caseRef, limit: 50, scope: { query: value.query, recallScope: { ...value.recallScope, includeHistorical: false } } }, call)
       expect(excluded).toMatchObject({ status: "ok", matches: [] })
