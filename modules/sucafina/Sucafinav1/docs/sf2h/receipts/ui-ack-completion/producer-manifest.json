@@ -1,0 +1,57 @@
+{
+  "producer": {
+    "commit": "62e5629dbf31be2bb662dda152c96021f22b0ca5",
+    "path": "modules/sucafina/Sucafinav1/product/collaboration/recipient-actions.ts",
+    "blob": "22c6309c61b27b89914086a7602bf3bea61a988b",
+    "intake": "Verbatim producer bytes; compile only in GitHub Actions. No source producer or host edits.",
+    "test_fixture": "modules/sucafina/Sucafinav1/test/product/ui-ack-completion/producer/recipient-actions.ts.fixture"
+  },
+  "runtime_dependencies": [
+    {
+      "specifier": "../../runtime/contract.ts",
+      "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "producer_blob": "b62fce6f0fb0845dbfd18cc94009c33f1586b9c5",
+      "ui_blob": "b62fce6f0fb0845dbfd18cc94009c33f1586b9c5",
+      "symbol": "object",
+      "comparison": "same blob"
+    },
+    {
+      "specifier": "../contracts/canonical.ts",
+      "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "producer_blob": "1769271386cdda1017c38023b0988ce2d64423d2",
+      "ui_blob": "1769271386cdda1017c38023b0988ce2d64423d2",
+      "symbol": "digestSfValue",
+      "comparison": "same blob"
+    },
+    {
+      "specifier": "./threads.ts",
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/threads.ts",
+      "producer_blob": "a41d19008e41c9ff3248a7f44aa54d18bc0b7c8f",
+      "ui_blob": "08a14bb4713b0ccd67d9310b94fe30218eb7349d",
+      "symbol": "isThread",
+      "comparison": "export function isThread source is identical after trimEnd; ordinary thread factory not replaced"
+    },
+    {
+      "specifier": "./thread-context.ts",
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/thread-context.ts",
+      "producer_blob": "930e7a5febbc981ba1881fc67e9ab065691e3eb8",
+      "ui_blob": "930e7a5febbc981ba1881fc67e9ab065691e3eb8",
+      "symbol": "validThreadSourceContext",
+      "comparison": "same blob"
+    }
+  ],
+  "http": {
+    "route_path": "modules/sucafina/Sucafinav1/product/collaboration/http-routes.ts",
+    "ui_blob": "8e43041300f452a83d6b8f1895e73188a81138a3",
+    "producer_blob": "a266e12bd80a2ff95922c2492225ced86eda3ac3",
+    "reason": "threadChange returns port.reply/resolve directly; unrelated diff need not intake",
+    "http_path": "modules/sucafina/Sucafinav1/product/collaboration/http.ts",
+    "blob": "91091bf444bc23221d1f427138ebb9e5ca4c51bb",
+    "result": "Response.json(result) preserves additive value.mutationReceipt"
+  },
+  "limitations": [
+    "No C05 review fixture established here. The ui-work old host does not provide new prepareReviewThreadFence or review recipient authority callbacks; producer fails closed when basis.reviewContext exists.",
+    "Type-only producer imports are erased by hosted bundling. No replacement of shared contracts is needed for runtime closure.",
+    "The complete production integration remains owned by Composition/Collaboration; test intake is not installation acceptance."
+  ]
+}

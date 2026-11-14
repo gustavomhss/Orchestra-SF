@@ -1,0 +1,138 @@
+{
+  "schema": "sf-ui-review-static-checks-v1",
+  "product": "4183ebdb53b17b8e4efe9c8835ff2b0012e98624",
+  "checks": [
+    {
+      "command": "bun typecheck",
+      "cwd": "modules/sucafina",
+      "status": "NOT_RUN",
+      "exit": 127,
+      "output": "/bin/bash: line 1: bun: command not found"
+    },
+    {
+      "command": "bun run check:guards --base origin/dev",
+      "cwd": ".",
+      "status": "NOT_RUN",
+      "exit": 127,
+      "output": "/bin/bash: line 1: bun: command not found"
+    },
+    {
+      "command": "node --check <each of the six owned .ts files>",
+      "status": "SYNTAX_ONLY_PASS",
+      "notPackageTypecheck": true
+    },
+    {
+      "command": "validateRequest + locateTestPackage from the published CI implementation",
+      "status": "PASS_REQUEST_ONLY",
+      "original": {
+        "request": {
+          "package": "sucafina",
+          "directory": "modules/sucafina",
+          "packageSelector": "packages/sucafina",
+          "runner": "bun",
+          "args": [
+            "./Sucafinav1/test/product/wp01/meeting-number.test.ts",
+            "--timeout",
+            "120000",
+            "-t",
+            "^C05 reopens the same preserved financial meeting after a canonical budget change with its original authorized content$"
+          ],
+          "env": {
+            "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+          }
+        },
+        "sha256": "f08a82192abdc2bd4b4502f1174948a64a80ebcab2a65d3e4235a9db1ec87ddf",
+        "exitCode": 0
+      },
+      "consumers": {
+        "request": {
+          "package": "sucafina",
+          "directory": "modules/sucafina",
+          "packageSelector": "packages/sucafina",
+          "runner": "bun",
+          "args": [
+            "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+            "./Sucafinav1/test/product/ui-split/ui-review/review-context.test.ts",
+            "./Sucafinav1/test/product/ui-split/ui-review/whole-review-browser.test.ts",
+            "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+            "--timeout",
+            "120000"
+          ],
+          "env": {
+            "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+          }
+        },
+        "sha256": "35f622ef2ca34dcbdb5645f168d75b9ed05dca98082f75c9ba693c37cee566ec",
+        "control": "declared"
+      },
+      "correction": {
+        "file": "/workspace/scratch/0ae0a7de7687/request-ui-review-correction.json",
+        "request": {
+          "package": "sucafina",
+          "directory": "modules/sucafina",
+          "packageSelector": "packages/sucafina",
+          "runner": "bun",
+          "args": [
+            "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+            "./Sucafinav1/test/product/ui-split/ui-review/review-context.test.ts",
+            "./Sucafinav1/test/product/ui-split/ui-review/whole-review-revocation.test.ts",
+            "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+            "--timeout",
+            "120000"
+          ],
+          "env": {
+            "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+          }
+        },
+        "sha256": "7d771c208ae5e3456c34cc1a39893c08aec8ef58305c88054f36b6637283e10d",
+        "control": "declared"
+      },
+      "publishedReaderConsumers": {
+        "file": "/workspace/scratch/0ae0a7de7687/request-wp10-consumers.json",
+        "request": {
+          "package": "sucafina",
+          "directory": "modules/sucafina",
+          "packageSelector": "packages/sucafina",
+          "runner": "bun",
+          "args": [
+            "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+            "./Sucafinav1/test/product/ui-split/ui-review/review-context.test.ts",
+            "./Sucafinav1/test/product/ui-split/ui-review/review-context-history.test.ts",
+            "./Sucafinav1/test/product/ui-split/ui-review/whole-review-browser.test.ts",
+            "./Sucafinav1/test/product/ui-split/ui-review/whole-review-revocation.test.ts",
+            "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+            "--timeout",
+            "120000"
+          ],
+          "env": {
+            "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+          }
+        },
+        "sha256": "26b2b154f1afc0d57c2b6101dd3a35267e2f67513132ffffbeb307c0535bc342",
+        "control": "declared"
+      }
+    }
+  ],
+  "blockingReason": "The runtime has no Bun. Published static-check workflows only trigger external fixed refs, outside this slice's write lease. No workflow or foreign branch was changed to evade that lease.",
+  "priorDiagnostics": "Prior foreign typecheck diagnostics are not credited as a current PASS; no global gate is claimed.",
+  "proposedContextAfterOwnerIntake": {
+    "status": "PROPOSED_NOT_DISPATCHED",
+    "sha256": "27983a9c061ad6f8539ff4678fe1573b4e41326e58a5834164da26d4eb668822",
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "packageSelector": "packages/sucafina",
+      "runner": "bun",
+      "args": [
+        "./Sucafinav1/test/product/ui-split/ui-review/review-context.test.ts",
+        "./Sucafinav1/test/product/ui-split/ui-review/review-context-history.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "env": {
+        "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+      }
+    },
+    "control": "declared"
+  }
+}

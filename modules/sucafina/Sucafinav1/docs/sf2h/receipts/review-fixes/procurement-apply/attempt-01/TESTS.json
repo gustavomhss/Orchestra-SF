@@ -1,0 +1,242 @@
+{
+  "schema": "procurement-apply/tests/v1",
+  "finding": "OPS-REV-02",
+  "scope": "Surgical correction evidence; not complete WP04, global campaign or release acceptance.",
+  "base": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+  "W": {
+    "sha": "897484c9a472bd43d17cabe56552f2f8fa890185",
+    "tree": "7ce04850ffe2dc283eae076a625bcdc5d70a4cf4"
+  },
+  "S": {
+    "sha": "9c45f18de1f9bd3d5647e37ef35cb3d5e2855277",
+    "tree": "a105a63918f72022c04cb0c948c0a79979d681ee",
+    "parent": "897484c9a472bd43d17cabe56552f2f8fa890185",
+    "branch": "ci-run-linux-procurement-apply-897484c9-6ba10792-01"
+  },
+  "envelope": {
+    "only_delta": {
+      "status": "added",
+      "path": ".ci-run.json",
+      "blob": "70d41b2f0afba1f9bb429d9f5c6ea75c773af828"
+    },
+    "request_sha256_including_final_newline": "6ba10792b276d370dea3e3ac1f88d33b5b5d8ea666917fa0d95c78ba9fe3ef96",
+    "W_S_product_tests_configuration_fixtures_identical": true,
+    "verification": "GitHub compare W...S reports one added request and no other delta; published candidate blobs independently matched local blobs."
+  },
+  "request": {
+    "package": "sucafina",
+    "packageSelector": "packages/sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/review-fixes/procurement-apply/refusals.test.ts",
+      "./Sucafinav1/test/product/review-fixes/procurement-apply/real-apply.test.ts",
+      "./Sucafinav1/test/product/wp04/prepared-production.test.ts",
+      "./Sucafinav1/test/product/wp04/finance-prepared-alias.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "configuration": {
+    "workflow": {
+      "path": ".github/workflows/test-ci.yml",
+      "blob": "9f078f4e37b758691bcd073e5590f05d5444392a"
+    },
+    "request_validator": {
+      "path": "script/test-ci-request.ts",
+      "blob": "5007e48270b80c83eb719d35cec9e6343206a195"
+    },
+    "package_locator": {
+      "path": "script/test-ci-location.ts",
+      "blob": "ee07aaf93c54fa935e6c4e9d845aa73af3b464ee"
+    },
+    "module_registry": {
+      "path": "script/module-registry.json",
+      "blob": "c0f283ebff3bd3d5c087c8c7d4e61c3e7b15e903"
+    },
+    "request_validated_by_hosted_step": "Read request: success",
+    "env": {},
+    "fixture_notes": "Real HTTP application, authority, business services, SQLite and domain with synthetic seeded case/choice; no live AI model execution."
+  },
+  "deduplication": {
+    "consulted": "Existing branches and latest 100 Actions runs before trigger, plus queued/in_progress runs.",
+    "window_utc": {
+      "oldest": "2026-11-14T14:15:26Z",
+      "newest": "2026-11-14T18:21:53Z"
+    },
+    "matching_existing_product_tree_selection_configuration_fixture_run": false,
+    "mission_runs_in_flight_before_trigger": 0,
+    "attempts_started": 1,
+    "reruns": 0,
+    "local_product_tests": false,
+    "epic_or_full_suite": false
+  },
+  "run": {
+    "id": 43626285237,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43626285237",
+    "workflow": "test-ci",
+    "event": "push",
+    "attempt": 1,
+    "status": "completed",
+    "conclusion": "success",
+    "created_at": "2026-11-14T18:22:56Z",
+    "updated_at": "2026-11-14T18:25:31Z",
+    "head_sha": "9c45f18de1f9bd3d5647e37ef35cb3d5e2855277",
+    "jobs": [
+      {
+        "id": 132542704491,
+        "name": "test (ubuntu-24.04)",
+        "conclusion": "success"
+      },
+      {
+        "id": 132543411849,
+        "name": "cleanup",
+        "conclusion": "success"
+      }
+    ],
+    "artifacts": [],
+    "artifact_expectation": "Bun selection: general Playwright evidence upload was skipped; zero artifacts observed. Hosted job log is the evidence source."
+  },
+  "result": {
+    "passed": 10,
+    "failed": 0,
+    "expect_calls": 141,
+    "files": 4,
+    "duration_seconds": 43.32,
+    "new_tests": 7,
+    "existing_regressions": 3,
+    "tests": [
+      {
+        "name": "OPS-REV-02 canonical po_draft refuses ignored PR preparation, review and HTTP Apply",
+        "result": "pass",
+        "duration_ms": 1808.22
+      },
+      {
+        "name": "OPS-REV-02 an equal amount is explicitly non-applicable without Saved, CAS or applied receipt",
+        "result": "pass",
+        "duration_ms": 1531.13
+      },
+      {
+        "name": "OPS-REV-02 review rejects an amount preview that differs from the prepared intent",
+        "result": "pass",
+        "duration_ms": 4040.43
+      },
+      {
+        "name": "OPS-REV-02 a mixed intent keeps equal fields and applies the exact changed field",
+        "result": "pass",
+        "duration_ms": 609.28
+      },
+      {
+        "name": "OPS-REV-02 real HTTP draft reviews and applies exactly 100 to 150 once",
+        "result": "pass",
+        "duration_ms": 13215.84
+      },
+      {
+        "name": "OPS-REV-02 real HTTP pr_rejected reviews and applies exactly 100 to 150 once",
+        "result": "pass",
+        "duration_ms": 13106.95
+      },
+      {
+        "name": "OPS-REV-02 real Apply refuses a changed source and preserves its newer CAS",
+        "result": "pass",
+        "duration_ms": 7968.34
+      },
+      {
+        "name": "prepared Procurement mutation uses current actor and SQLite revision, and retries by receipt",
+        "result": "pass",
+        "duration_ms": 162.47
+      },
+      {
+        "name": "prepared Procurement mutation records a stale source conflict without changing the domain",
+        "result": "pass",
+        "duration_ms": 135.94
+      },
+      {
+        "name": "the prepared command retains its reviewed inputs when caller-owned outputs are mutated",
+        "result": "pass",
+        "duration_ms": 58.58
+      }
+    ]
+  },
+  "omni": {
+    "control": "declared",
+    "nonce": "d8b6c10d15b6b0aa3c328526026e4d02",
+    "matching_verdicts": 1,
+    "verdict": "not applicable (focused: no declaring test ran)",
+    "spawned_or_delegated": false,
+    "qualification_claim": false
+  },
+  "blobs_at_W": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/prepared.ts",
+      "blob": "e613a1bf32fe1ee75574139cf699c34843cf25d1"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+      "blob": "bdea5d497b4e8fa7e540cfb44d427cd3696678db"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/prepared-review.ts",
+      "blob": "c8d476a1be6d2b839a087b2bc248293014599791"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/procurement-apply/choice.ts",
+      "blob": "a52426bdec23ed61fac29ba84e85e7b7d101a3f3"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/procurement-apply/fixture.ts",
+      "blob": "d66efca4ffc076b6c709cec2fcccf6b024b26fb1"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/procurement-apply/real-apply.test.ts",
+      "blob": "b4ce031c32276342f041c0ed14beee94e8fd1fee"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/procurement-apply/refusals.test.ts",
+      "blob": "86ff640201bc35674b8fc4bb6f96dc4b0896d395"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/review-fixes/procurement-apply/attempt-01/EXTERNAL.md",
+      "blob": "2d219efeb9afefd9337cbfb5de58fed8a3b46081"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/review-fixes/procurement-apply/attempt-01/IMPLEMENTATION.md",
+      "blob": "b83d0bad6a7c568aadc5ab5119e575ff1a3a0869"
+    }
+  ],
+  "existing_selected_test_blobs": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/prepared-production.test.ts",
+      "blob": "eaa14e509dadbba9242dade7b70e5cf41cc8b51b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-prepared-alias.test.ts",
+      "blob": "df59fbe6a75525e57a7013a09a1a56712214868e"
+    }
+  ],
+  "coverage": {
+    "real_persisted_HTTP": [
+      "draft: prepare/review/Apply 100 to 150 exactly; author, USD currency, source refs, digest and CAS",
+      "pr_rejected: same exact transition",
+      "po_draft: real preparation refused; review rejects a synthetic persisted legacy entry; Apply with an unissued digest is denied with prepared-review-required; Procurement material, Saved history, CAS and receipts remain unchanged.",
+      "exact no-op: needs-input/requisition-already-matches without a new effect or receipt",
+      "digest mismatch and denied/revoked actor rejected",
+      "same operation/key replay returns the same receipt with one effect",
+      "stale source after review rejected, preserving the newer CAS"
+    ],
+    "clone_only": [
+      "Canonical po_draft runtime counterexample: real domain save succeeds but ignores requested PR amount on a disposable clone",
+      "Mixed intent: one PR field changes exactly while equal fields stay equal"
+    ],
+    "negative_synthetic": [
+      "Legacy prepared entries and unissued digests are deliberate negative inputs. They do not establish prior command issuance, historical receipt existence or historical recovery."
+    ]
+  },
+  "limits": [
+    "The case/choice is persisted seeded fixture data with explicitly pending cost coverage; no AI execution, human timing or global analysis journey was proved.",
+    "Retry is within the same active composition. No reload/restart, lost-response recovery or UI H05/I-OPS-02 coverage is claimed.",
+    "No historical bad applied receipt is retroactively repaired.",
+    "Passing this test run is not a typecheck or guards result; those are recorded separately."
+  ]
+}

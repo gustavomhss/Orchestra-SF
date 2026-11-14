@@ -1,0 +1,111 @@
+{
+  "schema": "sf2h.procurement-exports.review.v1",
+  "productCandidateSha": "e1fe9561f199dc594a5fd559d06d450253e571bc",
+  "productTree": "5cb441e60a88dce057534548796dc6e7b1e40f74",
+  "initialHead": "2a185e05967f611d63796684379761ded991092b",
+  "productDiff": {
+    "path": "modules/sucafina/Sucafinav1/runtime/downloads.ts",
+    "additions": 8,
+    "deletions": 4,
+    "before": "fa365f9d350be341348ab69d789e40779c8b9756",
+    "after": "7fa9c254c7c08b894d8b4c3336653c32b6270126"
+  },
+  "boundaries": {
+    "verified": "Complete compare initialHead→W: one changed product file, four own test/helper additions, one own receipt. All other blobs remain inherited.",
+    "producerBlob": "c9a224b12c13b7cec506be90527300caa7e984fd",
+    "sharedHelperUnchanged": true,
+    "noFormulaAdded": true,
+    "noPersistentMutationInProduct": true
+  },
+  "reviewers": [
+    {
+      "id": "/root/exports_review",
+      "independent": true,
+      "productAuthorship": false,
+      "readOnly": true,
+      "scope": "Preimage, applied product diff and all four own test/helper files",
+      "verdict": "No static blockers. Real hosted test/typecheck outcomes are separate.",
+      "findings": [
+        "Projection only for sourcing/src_pending/src_rejected; actual PO stages and cancelled remain unchanged.",
+        "Per-line and total consumers now share purchaseOrderMoney; no parallel money formula.",
+        "Original record.value precondition was adapted to persisted sourcing facts; export oracles unchanged.",
+        "Snapshot equality is checked after each format; persisted record equality before/after the pair.",
+        "2 ordinary regressions plus 9 controls; no skipped, inverted or expected-failure test."
+      ]
+    },
+    {
+      "id": "/root/pack_review",
+      "independent": true,
+      "productAuthorship": false,
+      "readOnly": true,
+      "scope": "Complete S2-A, execution COMMON and mandatory appendices",
+      "verdict": "Scope and evidence plan conform to explicit mission; no formal WP04/global acceptance.",
+      "criterionCount": 111,
+      "criteriaSha256": "de5df06984f523dea5807ba687a86a81e395655d1fbfac33410106f99570118f",
+      "finalExecutionReview": {
+        "verdict": "EXPORT-01/02 proved at W;11/0/396;18 pairs with both equality checks true. Sucafina TS2741 remains; CLI and guards pass.",
+        "functionalRun": 43632315600,
+        "checksRun": 43632616824,
+        "criteriaCaveat": "T03.CHK.05 is not fully accepted: selected quote100 equals line sum100; redundant amount999/888 proves per-line calculation, not display of both bases and discrepancy.",
+        "fullCanonicalAcceptance": false,
+        "independent": true,
+        "productAuthorship": false,
+        "executedOrDispatchedTests": false
+      }
+    },
+    {
+      "id": "/root/ci_contract",
+      "independent": true,
+      "productAuthorship": false,
+      "readOnly": true,
+      "scope": "CI.md, current workflows/validators, static own-test review",
+      "verdict": "Canonical scoped snapshot and existing default check workflow valid; hosted results pending at static review.",
+      "finalExecutionReview": {
+        "verdict": "Functional PASS (11/0/396), CLI/guards success; package fails only inherited WP14 TS2741. No rerun justified.",
+        "functionalRun": 43632315600,
+        "checksRun": 43632616824,
+        "functionalLogSha256": "f40a980bcb7c2026a11bbe84a5e637880c5a83a78e89351675c8d065d5b81cac",
+        "checksLogSha256": "d5621b4c14a9be7563e22ca9554a961f2b882184806ebe61ac5f73e3fef510a0",
+        "primaryPayloads": "All four UTF-8 payloads independently rehashed and byte lengths confirmed.",
+        "positiveControl": "Unique matching nonce; not applicable, no Omni claim.",
+        "independent": true,
+        "productAuthorship": false,
+        "dispatchedRuns": false
+      }
+    }
+  ],
+  "fullCampaignReviewSubstitution": false,
+  "staticReviewLimit": "These focused reviews are not the three final campaign approvals of the integrated candidate C.",
+  "fileManifest": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/downloads.ts",
+      "blob": "7fa9c254c7c08b894d8b4c3336653c32b6270126",
+      "sha256": "3853ec7a8d99d8c0a3774c7e932a5efd3f53ff750e86dbd0a2f418599842cb04"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/procurement-exports/fixture.ts",
+      "blob": "a14accbfe4a089ccb37cb281663ada538a92bc57",
+      "sha256": "0503a6d8c1e74e72a110779d1d80877150d6c14fa12a195f45bbcc35cfe7e1c5"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/procurement-exports/artifacts.ts",
+      "blob": "4439d59c6114ce83caa3f5a880357da49712fd41",
+      "sha256": "f9a8c1735c92f0c1010b27a22fae05078520c83080009a8a75c99e66889bcb80"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/procurement-exports/export-regressions.test.ts",
+      "blob": "e97b8bd1984a5a87bfb2f2704ce004bcba5735b7",
+      "sha256": "1a4502bb77d5728aa7addffb6f1832004f627166ca0e4e07c2455200295e6f13"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/procurement-exports/export-controls.test.ts",
+      "blob": "30173580d07036ea97fef6d9caf0c7dac2e085f8",
+      "sha256": "e3c7f842bcf65776649a923e882a2873bffafea7aebaf63194e76ba56f5f1830"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-exports/attempt-01/INTAKE.json",
+      "blob": "9e3db2e14dbc88d49bac2586cb9d8a8afc88be17",
+      "sha256": "dce1bf771c3a900ef662d77bb10051d53b4aa60893bba7e5c23f39d2d7546009"
+    }
+  ]
+}

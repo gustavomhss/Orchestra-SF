@@ -1,0 +1,289 @@
+{
+  "schema": "sf2h-final-e2e-reports-inputs-v1",
+  "attempt": "attempt-01",
+  "mission": "e2e-reports",
+  "actor": "S3-A",
+  "recorded_at": "2026-11-14T19:41:52Z",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "astra-wp07",
+  "pull_request": 27,
+  "mission_commit": "c708ec0609dbfc95b259707d8c38481617f74f11",
+  "mission_blob": "1327d476e5010262ff5f0348a7ae328477670d3a",
+  "planning_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "campaign_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+  "wp_pack_commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+  "input_head": "9839a46aa8d4e379268b2a724050247e2a0d8aa1",
+  "input_tree": "4aaf22d1b5726623d8ac31893faab3c6825fbce2",
+  "expected_mission_head": "9839a46aa8d4e379268b2a724050247e2a0d8aa1",
+  "head_reconciled": true,
+  "previous_handoff": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/EXECUTION.md",
+    "status": "terminal delivery reconciled; preserved byte-for-byte",
+    "new_write_authority": "mission explicitly assigns a new disjoint E2E/receipt namespace",
+    "conflicting_writer": "none evidenced on these paths; silence was not used as replacement authority"
+  },
+  "mission_inputs_preserved": [
+    {
+      "pr": 61,
+      "branch": "work-reuse",
+      "sha": "854f3dd9a5257c83b703424a8fd73d831f705f46"
+    },
+    {
+      "pr": 60,
+      "branch": "procurement-apply",
+      "sha": "897484c9a472bd43d17cabe56552f2f8fa890185"
+    },
+    {
+      "pr": 59,
+      "branch": "diagnose-calculation",
+      "sha": "e80fdc933dfd25956a50c22dea76bf077e79815b"
+    },
+    {
+      "pr": 58,
+      "branch": "import-recovery",
+      "sha": "e1dc51a6df8cd40a125d960dce6fa5e5d8b33c5e"
+    },
+    {
+      "pr": 57,
+      "branch": "sourcing-money",
+      "sha": "2a185e05967f611d63796684379761ded991092b"
+    },
+    {
+      "pr": 56,
+      "branch": "finance-journey",
+      "sha": "0d2e59ffb14c31ebfb0b717d3d0078985ab2a3b7"
+    },
+    {
+      "pr": 55,
+      "branch": "diagnose-memory",
+      "sha": "0d7fb6f12ed053340391ff6e4f95b6f3c1276ea8"
+    },
+    {
+      "pr": 54,
+      "branch": "work-ack",
+      "sha": "92243fc68ff81df7fc563ec081ac9db686a24dfa"
+    },
+    {
+      "pr": 53,
+      "branch": "work-g03",
+      "sha": "031ec153bbd42119dcf8787d8ce358858680f28b"
+    },
+    {
+      "pr": 52,
+      "branch": "operations-fixes",
+      "sha": "d48065d391e1557d43b63525bdc7f55b168d5206"
+    },
+    {
+      "pr": 48,
+      "branch": "ui-source",
+      "sha": "1bf7bfff20c5f04dfc0b6faf9ab41024a2feb326"
+    },
+    {
+      "pr": 47,
+      "branch": "ui-work",
+      "sha": "79ebf5555eddaa4b5b8b57cbe1df7c5ad22b1244"
+    },
+    {
+      "pr": 46,
+      "branch": "ui-recovery",
+      "sha": "db1dd1709483478ca2c8db2f0a479b72aea59821"
+    },
+    {
+      "pr": 45,
+      "branch": "ui-review",
+      "sha": "32bae2bcc8008b2e81948e434dc1e3326dc4f947"
+    },
+    {
+      "pr": 42,
+      "branch": "finance-resume",
+      "sha": "ab38a14c09d2292553670033b8c1eaea1d26f31f"
+    },
+    {
+      "pr": 41,
+      "branch": "collab-resume",
+      "sha": "9ec98ac9cdc807d2b95040274f4312df768d932d"
+    },
+    {
+      "pr": 39,
+      "branch": "astra-wp12",
+      "sha": "ba27411a7cda9301aa162680a94153a5e643be4d"
+    },
+    {
+      "pr": 38,
+      "branch": "astra-wp14",
+      "sha": "f8031d7c54ec2fa06359156dc0b6462c3a248633"
+    },
+    {
+      "pr": 34,
+      "branch": "astra-operations",
+      "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4"
+    },
+    {
+      "pr": 32,
+      "branch": "astra-compose",
+      "sha": "9048e0e65351a5bd80768458a79fed94a4993db7"
+    },
+    {
+      "pr": 29,
+      "branch": "astra-wp10",
+      "sha": "90f2c4f81f74edc26a1783bfda7891638b429fa6"
+    },
+    {
+      "pr": 20,
+      "branch": "astra-wp00",
+      "sha": "0a5ce33012d008af1f56d11596a1f1f4eaba5b9d"
+    }
+  ],
+  "refreshed_dependencies": [
+    {
+      "pr": 41,
+      "branch": "collab-resume",
+      "sha": "62e5629dbf31be2bb662dda152c96021f22b0ca5",
+      "note": "Reply receipt correction published; do not repeat old missing-receipt finding. Production C05 UI/mount intake remains."
+    },
+    {
+      "pr": 32,
+      "branch": "astra-compose",
+      "sha": "5c41125e7ef17a6c7eff9c9fb2329fe8f85ce982",
+      "previous": "9048e0e65351a5bd80768458a79fed94a4993db7",
+      "note": "13 additions prepare final CI; no product mount change, no test/epic dispatch. This is not an accepted C."
+    }
+  ],
+  "reads": {
+    "complete_actor_pack": true,
+    "complete_wp_pack": true,
+    "method": "complete delegated normative read plus root contract/criteria/API reconciliation",
+    "mandatory_appendices": [
+      "specs/product-acceptance.md",
+      "specs/resident-runtime.md"
+    ],
+    "guides": [
+      "https://playwright.dev/docs/best-practices",
+      "https://playwright.dev/docs/actionability",
+      "https://playwright.dev/docs/test-assertions",
+      "https://playwright.dev/docs/locators",
+      "https://playwright.dev/docs/network",
+      "https://playwright.dev/docs/browser-contexts"
+    ],
+    "sources": [
+      {
+        "name": "agents",
+        "blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/astra-wp07/AGENTS.md"
+      },
+      {
+        "name": "app-agents",
+        "blob": "a9ed3dc797d2756089a032e75bc0ab77256b3a03",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9839a46aa8d4e379268b2a724050247e2a0d8aa1/packages/app-shell/AGENTS.md"
+      },
+      {
+        "name": "e2e-agents",
+        "blob": "2e24eecc8ccea104922263bf6c7ccc8e93da24ec",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9839a46aa8d4e379268b2a724050247e2a0d8aa1/packages/app-shell/e2e/AGENTS.md"
+      },
+      {
+        "name": "actor-pack",
+        "blob": "bb0e591a199e1d0b30285bef88da5e96e2b33bc6",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S3-A.json"
+      },
+      {
+        "name": "wp07-pack",
+        "blob": "af82097016c6b66ba74877615b81c265ab129f54",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a3d29d011ba3607a57914701300f09117a3e2de9/modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/WP07.pack.json"
+      },
+      {
+        "name": "execution-common",
+        "blob": "d61f32af03fe10747a50274233f953af044decf6",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/COMMON.md"
+      },
+      {
+        "name": "start",
+        "blob": "522782bb7e113124a937d7ef17313032be9d6850",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/START.md"
+      },
+      {
+        "name": "workflow",
+        "blob": "043205bee6031b4517a98591b3588fca0ab12925",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/WORKFLOW.md"
+      },
+      {
+        "name": "ci-doc",
+        "blob": "c34ab425e0f3b7dc0899a05826829f38b5af84bb",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c708ec0609dbfc95b259707d8c38481617f74f11/modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/CI.md"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "blob": "81f07b9d68a85811cef3aa4d3b4615475486f04f",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9839a46aa8d4e379268b2a724050247e2a0d8aa1/apps/cli/src/sucafina-product/host-context.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+        "blob": "5a144bc373395a1ad2ce9eb7de256bcd94d0ed18",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9839a46aa8d4e379268b2a724050247e2a0d8aa1/modules/sucafina/Sucafinav1/product/interface/http.ts"
+      },
+      {
+        "path": "packages/app-shell/e2e/playwright.production.config.ts",
+        "blob": "84dbab99cf1d6d28b2f1b3ba7e688809b0eb74d1",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9839a46aa8d4e379268b2a724050247e2a0d8aa1/packages/app-shell/e2e/playwright.production.config.ts"
+      },
+      {
+        "path": "packages/app-shell/tsconfig.json",
+        "blob": "8604188dee0f1ce9978cae39366d1850f5e97e7f",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9839a46aa8d4e379268b2a724050247e2a0d8aa1/packages/app-shell/tsconfig.json"
+      },
+      {
+        "path": "packages/app-shell/e2e/tsconfig.json",
+        "blob": "8364221434311400cae3007ea74cc67ddcfde765",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9839a46aa8d4e379268b2a724050247e2a0d8aa1/packages/app-shell/e2e/tsconfig.json"
+      },
+      {
+        "path": "script/test-ci-request.ts",
+        "blob": "5007e48270b80c83eb719d35cec9e6343206a195",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9839a46aa8d4e379268b2a724050247e2a0d8aa1/script/test-ci-request.ts"
+      },
+      {
+        "path": "script/test-ci-location.ts",
+        "blob": "ee07aaf93c54fa935e6c4e9d845aa73af3b464ee",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9839a46aa8d4e379268b2a724050247e2a0d8aa1/script/test-ci-location.ts"
+      },
+      {
+        "path": "script/test-ci.ts",
+        "blob": "6f67619958ce0567ea93dd66c53ae3aca242cb95",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9839a46aa8d4e379268b2a724050247e2a0d8aa1/script/test-ci.ts"
+      },
+      {
+        "path": ".github/workflows/test-ci.yml",
+        "blob": "9f078f4e37b758691bcd073e5590f05d5444392a",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9839a46aa8d4e379268b2a724050247e2a0d8aa1/.github/workflows/test-ci.yml"
+      },
+      {
+        "name": "dashboard-agenda-intake",
+        "blob": "32b95d4a270cb9b9c987c6cb3097dbd6de975895",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/5a0f1acf9fa2cdc0171cf3f5178b61ab3bcd8d49/modules/sucafina/Sucafinav1/product/dashboard/agenda.ts"
+      }
+    ],
+    "additional_module_agents": "No modules/AGENTS.md, modules/sucafina/AGENTS.md or nested Sucafinav1 AGENTS.md at input head (404/complete untruncated module tree)."
+  },
+  "authority": {
+    "write_paths": [
+      "packages/app-shell/e2e/sucafina/reports.spec.ts",
+      "packages/app-shell/e2e/sucafina/reports-support/",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/final-e2e/reports/"
+    ],
+    "remote_transport": "GitHub MCP only",
+    "new_product_branch": false,
+    "new_pr": false,
+    "merge": false,
+    "producer_or_shared_config_edits": false,
+    "external_comments_or_messages": false,
+    "collaboration_ownership": "remains with current Colaboração session"
+  },
+  "runtime_execution": {
+    "product_tests": "NOT_RUN",
+    "local_product_execution": false,
+    "browser_execution": false,
+    "actions_dispatch": false,
+    "reason": "BLOCKED_COMPOSITION; details in DEPENDENCIES.json"
+  }
+}
+

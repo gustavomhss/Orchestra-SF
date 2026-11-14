@@ -21,6 +21,7 @@ import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/c
 import type { SfNativeAdmission } from "../../../../modules/sucafina/Sucafinav1/product/contracts/runtime.ts"
 import type { TrustedExecutionBinding } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import { sameNativeProject } from "./native-host.ts"
+import { sfNativeLocationRef, sfNativeModelRef } from "./native-identity.ts"
 import { enforceSfResponseTokenBudget } from "./token-count.ts"
 import type { SfTokenCountReceipt } from "./token-count.ts"
 
@@ -73,7 +74,7 @@ export function createSfTokenGate(input: SfTokenGateStorage & { upstream: Node.L
   const tickets = new WeakMap<SfTokenGateTicket, RecordState>()
   const mount = { current: false }
   const locations = new Map<string, { models: Set<object>; hosts: Set<object> }>()
-  const keyOf = (location: Location.Ref) => digestSfValue(location)
+  const keyOf = (location: Location.Ref) => digestSfValue(sfNativeLocationRef(location))
   const attach = (location: Location.Ref, kind: "models" | "hosts") => {
     const key = keyOf(location)
     const item = locations.get(key) ?? { models: new Set<object>(), hosts: new Set<object>() }
@@ -92,8 +93,8 @@ export function createSfTokenGate(input: SfTokenGateStorage & { upstream: Node.L
   })
   const same = (session: SessionSchema.Info | undefined, record: RecordState) => !!session && session.id === record.admission.sessionID &&
     sameNativeProject(session, record.binding) &&
-    session.agent === record.admission.profile.id && !!session.model && digestSfValue(session.model) === digestSfValue(record.model) &&
-    digestSfValue(session.location) === digestSfValue(record.location)
+    session.agent === record.admission.profile.id && !!session.model && digestSfValue(sfNativeModelRef(session.model)) === digestSfValue(sfNativeModelRef(record.model)) &&
+    keyOf(session.location) === keyOf(record.location)
   const refusal = (reason: string) => new LLMError({ module: "SucafinaTokenGate", method: "admit", reason: new InvalidRequestReason({ message: reason }) })
   const unavailable = (session: SessionSchema.Info) => session.model ? new SessionRunnerModel.ModelUnavailableError({
     providerID: session.model.providerID, modelID: session.model.id, cause: "sf-token-gate-unavailable",

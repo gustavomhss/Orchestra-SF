@@ -1,0 +1,105 @@
+{
+  "mission": "forecast-cancel-visibility",
+  "finding": "WP10-U30-CANCEL-VISIBILITY",
+  "actor": "S1-A",
+  "session": "forecast-cancel-visibility-20261114",
+  "role": "sole product writer for current mission",
+  "branch": "ui-review",
+  "pr": 45,
+  "initial_head": "32bae2bcc8008b2e81948e434dc1e3326dc4f947",
+  "initial_tree": "de0b250f0d0a0b19cd9bfa579d44b11444d1d34a",
+  "authority": {
+    "basis": [
+      "Explicit current user assignment for session 12 and exact write paths",
+      "Published terminal Review delivery 32bae2bcc8008b2e81948e434dc1e3326dc4f947 and its README handoff",
+      "Current PR head equals the published terminal head; no subsequent commits or discussion claims"
+    ],
+    "prior_handoff": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/ui-split/ui-review/README.md",
+    "prior_status": "PARTIAL_OWNER_INTEGRATION_REQUIRED",
+    "silence_is_not_authority": true,
+    "previous_work": "All existing Review files, commits, proofs and findings preserved. Read-only assistants are not alternate writers."
+  },
+  "inputs": {
+    "planning": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "mission": "3e3c329e9f4ab94d70c02d2cf69b030a9726769a",
+    "common": "c708ec0609dbfc95b259707d8c38481617f74f11",
+    "wp10": "54317229d7f8fcb7e92921c2f4a8dc6f9310270b",
+    "wp12": "ba27411a7cda9301aa162680a94153a5e643be4d",
+    "original_U30": {
+      "run": 43629303473,
+      "job": 132552127580,
+      "W": "d4fb072fa9bd32ebfef2b9cbc9b27b998d34f4e7",
+      "S": "84432d8ab3a5f1619eb2e96652290434d2bb0a2e",
+      "result": "FAIL 3 pass / 1 fail / 35 expects"
+    }
+  },
+  "comparison": {
+    "controller": {
+      "current": "973a2f09b394426364c514b923ecdc8e10ffb184",
+      "wp10": "973a2f09b394426364c514b923ecdc8e10ffb184",
+      "wp12": "973a2f09b394426364c514b923ecdc8e10ffb184"
+    },
+    "shell": {
+      "current": "2aeacf2c05e86fef28947c5332284f3089e00049",
+      "wp10": "d69bb554ba35863b0bf248c6aa0382205614d12a",
+      "wp12": "d69bb554ba35863b0bf248c6aa0382205614d12a",
+      "preserve_delta": "Native Escape synchronizes aria-expanded=false on dialog opener in current ui-review"
+    }
+  },
+  "diagnostic": {
+    "status": "NOT_RUN",
+    "production_changes": [],
+    "original_assertion_statements_preserved": 17,
+    "original_test_blob": "b312f2dda7029b79c7420af91d52ca6fec1b098d",
+    "read_only_captures": [
+      "controller ready",
+      "last read runRef/state/version",
+      "hidden attribute/property",
+      "computed display/visibility",
+      "rectangles",
+      "matching display rules",
+      "retry/start controls",
+      "currency",
+      "rendered output count"
+    ]
+  },
+  "boundaries": {
+    "real": [
+      "forecastAnalysisForm",
+      "forecastAnalysisScript",
+      "documentHtml/pageMain shell",
+      "distributed resident catalog",
+      "Chromium and existing WP01/WP02 browser pool"
+    ],
+    "fixture": [
+      "case and evidence data",
+      "model catalog",
+      "HTTP prepare/start/read/output responses"
+    ],
+    "not_claimed": [
+      "financial producer",
+      "native model or Session",
+      "AM01-AM06",
+      "GLOBAL_RELEASE"
+    ]
+  },
+  "checks": {
+    "functional": "NOT_RUN",
+    "typecheck": "NOT_RUN: no hosted path inside mission write scope; existing workflows bind foreign refs",
+    "guards": "NOT_RUN: same restriction; no shared workflow/config changes or foreign ref updates"
+  },
+  "mandatory_reading": {
+    "root_AGENTS": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+    "nested_AGENTS": "No AGENTS under src/product/test/docs or module ancestors; E2E AGENTS read as required",
+    "actor_pack": "S1-A complete, including all references and both mandatory appendices, read across root and read-only assistants",
+    "playwright": [
+      "Best Practices",
+      "Auto-waiting",
+      "Assertions",
+      "Locators",
+      "Network",
+      "Isolation"
+    ]
+  },
+  "result": "Preparation and diagnostic instrumentation only. CSS cascade remains a static hypothesis until hosted evidence."
+}

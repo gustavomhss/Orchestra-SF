@@ -1,0 +1,1029 @@
+name: sf2-epic
+
+on:
+  push:
+    branches: [sf2-epic-c]
+
+concurrency:
+  # Non-epic label events skip every job; give them their own group so they cannot cancel an epic run.
+  group: sf2-epic-${{ github.sha }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  # The account runs at most 20 hosted jobs at once across all workflows and PRs, and GitHub
+  # cancels jobs it cannot place. The unit and e2e matrices are sized by `plan` from measured times
+  # (packages/script/src/test-plan.ts, packages/script/src/test-timings.json), about 5.5 minutes of test time per Linux job and
+  # 6.5 per Windows job (Windows times are scaled by a measured overhead factor), so their job count follows the suite.
+  # `max-parallel` on both matrices keeps at
+  # most 15 of them running at once; the rest queue instead of being cancelled. Add the 4 fixed jobs
+  # (atlas scope, atlas, the two Omni producers) and the plan job to count what one epic run asks for.
+  #
+  # Every test job has a 10-minute timeout, setup included: a hung Windows build once held a runner
+  # past 40 minutes, and the GitHub default is 6 hours. A job that grows past it needs more shards
+  # (refresh packages/script/src/test-timings.json), not a longer timeout. The two documented exceptions are
+  # the e2e lane (15 minutes job, 12 minutes step) and the Windows libs lane ("other packages"), which gets
+  # 15 minutes job / 12 minutes step because the lane finishes under time without asserts once granted budget.
+  # See .orchestra/skills/ci-lanes-maintenance.
+  plan:
+    if: github.repository == 'gustavomhss/Orchestra-SF' && github.repository_id == '1455724710' && github.ref == 'refs/heads/sf2-epic-c' && github.event_name == 'push'
+    name: plan
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      unit: ${{ steps.plan.outputs.unit }}
+      e2e: ${{ steps.plan.outputs.e2e }}
+      e2e_shards: ${{ steps.plan.outputs.e2e_shards }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+
+      # The planner is plain TypeScript run by Node's type stripping, so this job installs nothing else.
+      - name: Setup Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: "24"
+
+      - name: Record qualification scope
+        env:
+          TEST_INPUTS: ${{ toJSON(inputs) }}
+        run: |
+          jq -n --arg sha "$GITHUB_SHA" --argjson inputs "$TEST_INPUTS" \
+            '{sourceSha: $sha, packages: ($inputs.packages // "")}' > test-scope.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: test-scope
+          path: test-scope.json
+          if-no-files-found: error
+
+      - name: Plan the shards
+        id: plan
+        run: node packages/script/src/test-plan.ts plan
+
+  atlas-scope:
+    if: github.repository == 'gustavomhss/Orchestra-SF' && github.repository_id == '1455724710' && github.ref == 'refs/heads/sf2-epic-c' && github.event_name == 'push'
+    name: atlas scope
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      changed: ${{ steps.scope.outputs.changed }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          fetch-depth: 0
+
+      - name: Detect Atlas-relevant changes
+        id: scope
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PACKAGES: ${{ '' }}
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" != "pull_request" ]; then
+            # A lane dispatch runs Atlas only when its packages include Atlas.
+            if [ -n "$PACKAGES" ] && [[ ",$PACKAGES," != *",atlas,"* && ",$PACKAGES," != *",@orchestra/atlas-boundary,"* ]]; then
+              echo "changed=false" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          changed=$(git diff --name-only "$BASE_SHA" "$HEAD_SHA")
+          if printf '%s\n' "$changed" | grep -Eq '^(modules/atlas/|script/atlas-genesis/|\.github/workflows/test\.yml$)'; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  atlas:
+    name: atlas
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    needs: atlas-scope
+    # Atlas guards cover its vendor subtree; a failed scope detector fails this workflow rather than skipping it.
+    if: github.repository == 'gustavomhss/Orchestra-SF' && github.repository_id == '1455724710' && github.ref == 'refs/heads/sf2-epic-c' && github.event_name == 'push' && needs.atlas-scope.outputs.changed == 'true'
+    defaults:
+      run:
+        working-directory: modules/atlas
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: modules/atlas/package-lock.json
+
+      # modules/atlas/.github/workflows/ci.yml documents Atlas's standalone
+      # contract. This host-level job makes that contract reachable in this repo.
+      - name: Install Atlas dependencies
+        run: npm ci
+
+      - name: Typecheck Atlas
+        run: npm run typecheck
+
+      - name: Set Atlas EARS baseline
+        env:
+          BASE_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.sha }}
+        run: node ../../script/atlas-baseline.mjs "$BASE_SHA"
+
+      - name: Run Atlas guards
+        run: |
+          npm run godfile-guard
+          npm run layer-guard
+          npm run reference-model-guard
+          npm run spec-conformance-guard
+          npm run id-integrity
+          npm run command-doc-guard
+          npm run wiring-guard
+          npm run adr-citation-guard
+          npm run req-clause-guard
+          npm run ears-coamend-guard
+          npm run doc-transcript-guard
+          npm run service-gate-guard
+          npm run own-snapshot-guard
+
+      - name: Test Own snapshot materializer
+        run: node --test scripts/materialize-own-snapshot.test.mjs
+
+      - name: Test Atlas historical source roots
+        run: node --test scripts/git-source-root.test.mjs scripts/own-history.test.mjs
+
+      - name: Test Own snapshot gate
+        run: npm test -- harness/gates/own-snapshot-guard.test.mjs
+
+      # The atlas-genesis workflow's scripts (frontier gate, judge): plain node:test, no install.
+      - name: Test atlas-genesis scripts
+        working-directory: ${{ github.workspace }}
+        run: node --test script/atlas-genesis/*.test.mjs
+
+      - name: Detect Atlas product changes
+        id: atlas-diff
+        if: github.event_name == 'pull_request'
+        run: |
+          BASE="${{ github.event.pull_request.base.sha }}"
+          HEAD="${{ github.event.pull_request.head.sha }}"
+          CHANGED=$(git diff --name-only "$BASE" "$HEAD")
+          if echo "$CHANGED" | grep -qE '^(modules/atlas/(packages/|harness/|\.github/)|\.github/workflows/test\.yml)'; then
+            echo "touches_code=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "touches_code=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Test Atlas product suite
+        if: github.event_name != 'pull_request' || steps.atlas-diff.outputs.touches_code == 'true'
+        run: npm test
+
+  # Every package runs through Turbo in unit-rest, where unchanged packages replay from the Turbo cache.
+  omni:
+    if: github.repository == 'gustavomhss/Orchestra-SF' && github.repository_id == '1455724710' && github.ref == 'refs/heads/sf2-epic-c' && github.event_name == 'push'
+    name: omni test binaries (${{ matrix.host }})
+    strategy:
+      fail-fast: false
+      matrix:
+        host: [ubuntu-24.04, windows-latest]
+    runs-on: ${{ matrix.host }}
+    timeout-minutes: 30
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+      - name: Exact-source omni binaries
+        uses: ./.github/actions/omni-binaries
+      - name: Share binaries with consuming test jobs
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: omni-test-${{ runner.os }}-${{ runner.arch }}
+          path: |
+            ${{ env.HUGR_OMNI_ADDON }}
+            ${{ env.HUGR_OMNI_SUPERVISOR }}
+          if-no-files-found: error
+          retention-days: 7
+
+  unit-rest:
+    needs: [omni, plan]
+    if: github.repository == 'gustavomhss/Orchestra-SF' && github.repository_id == '1455724710' && github.ref == 'refs/heads/sf2-epic-c' && github.event_name == 'push'
+    name: unit (${{ matrix.name }} ${{ matrix.label }})
+    strategy:
+      fail-fast: false
+      max-parallel: 10
+      matrix:
+        # Planned by packages/script/src/test-plan.ts from packages/script/src/test-timings.json: core is sharded on both systems by measured
+        # time (longest file first), and the other packages keep fixed lanes. Each include entry carries the flags its
+        # steps read (turbo, electron, repo_gates, relay, httpapi, hosted, rollback).
+        # Linux is pinned: on 2026-10-26 ubuntu-latest moved to 26.04, where bubblewrap cannot apply seccomp in a nested
+        # user namespace (run 40263348230), so every LIVE sandbox test failed. Move once the sandbox supports it.
+        include: ${{ fromJSON(needs.plan.outputs.unit) }}
+    runs-on: ${{ matrix.host }}
+    # ten minutes inclusive of setup; the Windows libs lane ("other packages") carries a per-lane budget of 15.
+    timeout-minutes: ${{ matrix.budget || 10 }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          fetch-depth: ${{ matrix.shard && '1' || '0' }}
+
+      - name: Setup Bun
+        uses: ./.github/actions/setup-bun
+
+      # Tests find rg on PATH and must never download it (packages/core/src/ripgrep/binary.ts).
+      - name: ripgrep
+        uses: ./.github/actions/ripgrep
+
+      - name: Linux sandbox dependencies
+        if: runner.os == 'Linux'
+        run: |
+          # Hosted ubuntu-24.04 sometimes cannot resolve azure.archive.ubuntu.com. apt reads that
+          # name from apt-mirrors.txt. Fall back to archive.ubuntu.com only after the fetch fails.
+          install_sandbox() {
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq bubblewrap socat
+          }
+          if ! install_sandbox; then
+            for file in /etc/apt/apt-mirrors.txt /etc/apt/sources.list /etc/apt/sources.list.d/*.sources /etc/apt/sources.list.d/*.list; do
+              [ -f "$file" ] || continue
+              sudo sed -i 's|azure.archive.ubuntu.com|archive.ubuntu.com|g' "$file"
+            done
+            install_sandbox
+          fi
+          # Ubuntu 24.04 blocks unprivileged user namespaces through AppArmor; bubblewrap needs them.
+          sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+
+
+      - name: Linux Electron dependencies
+        if: matrix.electron
+        run: sudo apt-get install -y -qq xvfb xauth libgtk-3-0 libnss3 libasound2t64
+
+      - name: Native test binaries
+        uses: ./.github/actions/omni-binaries
+        with:
+          artifact: omni-test-${{ runner.os }}-${{ runner.arch }}
+
+      # The CLI's native Windows artifact controls compile with `rustup run 1.98.0` (packages/core/src/
+      # artifact-native-windows.ts). The same-run omni artifact above skips cargo, so nothing else installs the
+      # toolchain pinned by native/omni/rust-toolchain.toml on this lane.
+      - name: Rust toolchain (rust-toolchain.toml)
+        if: runner.os == 'Windows' && matrix.turbo && !matrix.shard
+        working-directory: native/omni
+        run: rustup show active-toolchain || rustup toolchain install
+
+      - name: Configure git identity
+        run: |
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+
+      # Turbo 2 keeps its local cache in .turbo/cache. A run restores its PR's newest entry, else the one cache-warm
+      # saved on dev. Turbo checks each entry against its own task hash, so the key only selects the newest blob.
+
+      - name: Check generated Atlas boundary
+        if: matrix.repo_gates
+        working-directory: modules/atlas/boundary
+        run: bun run check:generated
+
+      - name: Fetch target branch for godfile
+        if: matrix.repo_gates
+        run: git fetch origin +dev:refs/remotes/origin/dev
+
+      - name: Test godfile gate
+        if: matrix.repo_gates
+        run: bun --cwd packages/core test test/godfile.test.ts
+        env:
+          # Build-time scanner test starts no runtime child; ordinary suites below stay default-native.
+          ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: "0"
+
+      # Lives beside the engine, not in a package: it imports script/guards, which module boundaries forbid across a package root.
+      - name: Test guards
+        if: matrix.repo_gates
+        working-directory: script/guards
+        run: bun test ./guards.test.ts
+        env:
+          ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: "0"
+
+      - name: Run godfile gate
+        if: matrix.repo_gates
+        run: bun run check:godfile
+
+      - name: Run spawn-import gate
+        if: matrix.repo_gates
+        run: bun run check:spawn-imports
+
+      # The base comparison fails when the boundary ledger gains a key or a per-rule count over dev's; it needs the full
+      # history this job's packages lane checks out (fetch-depth 0), like the godfile gate.
+      - name: Run module-boundary gate
+        if: matrix.repo_gates
+        run: bun run check:boundaries --base origin/dev
+
+      # Every pinned ripgrep digest, not only the runners' platforms, against upstream's .sha256 files.
+      - name: Run ripgrep pin gate
+        if: matrix.repo_gates
+        run: bun run check:ripgrep-pins
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+      # The job limit is 10 minutes with setup; a failed step still reaches the Turbo cache save. The Windows libs lane
+      # ("other packages") carries its documented 12-minute step alongside its 15-minute job.
+      - name: Run unit tests
+        if: matrix.turbo
+        timeout-minutes: ${{ matrix.budget && 12 || 8 }}
+        run: |
+          read -ra filters <<< "$FILTERS"
+          # A shard that selects no test task must fail, not pass: a filter that stops matching would otherwise
+          # turn a lane green while running nothing.
+          if [ -z "$SHARD" ]; then
+            selected=$(bun turbo test --dry=json "${filters[@]}" | jq -r '[.tasks[]? | select(.task == "test" and ((.command // "") != "<NONEXISTENT>")) | .package] | sort | join(" ")')
+            echo "shard $PART selects: $selected"
+            [ -n "$selected" ] || { echo "::error::shard $PART selects no test task"; exit 1; }
+          fi
+          # A lane dispatch tests only its packages that this shard selects; a shard with none of them has nothing to run.
+          if [ -n "$PACKAGES" ]; then
+            shard=$(bun turbo test --dry=json "${filters[@]}" | jq -r '.tasks[]? | select(.task == "test" and ((.command // "") != "<NONEXISTENT>")) | .package' | sort -u)
+            wanted=$(tr ', ' '\n\n' <<< "$PACKAGES" | sed '/^$/d' | sort -u)
+            mapfile -t lane < <(comm -12 <(printf '%s\n' "$shard") <(printf '%s\n' "$wanted"))
+            [ -n "${lane[0]:-}" ] || { echo "shard $PART has no package of this lane"; exit 0; }
+            echo "shard $PART tests lane packages: ${lane[*]}"
+            filters=("${lane[@]/#/--filter=}")
+          fi
+          # Core is sharded on both systems: shard i/n takes the i-th bin of the time-balanced split (packages/script/src/test-plan.ts).
+          # The plan job and this step read the same inputs, so the n shards cover every test file once.
+          if [ -n "$SHARD" ]; then
+            if [ -n "$PACKAGES" ] && ! tr ', ' '\n\n' <<< "$PACKAGES" | grep -qx '@orchestra/core'; then echo "shard $PART has no package of this lane"; exit 0; fi
+            mapfile -t files < <(bun packages/script/src/test-plan.ts shard packages/core "$(tr '[:upper:]' '[:lower:]' <<< "$RUNNER_OS")" "${SHARD%/*}" "${SHARD#*/}")
+            [ -n "${files[0]:-}" ] || { echo "::error::shard $PART selects no test file"; exit 1; }
+            echo "shard $PART runs ${#files[@]} files"
+            # A cold run also writes a JUnit report; its per-file times refresh packages/script/src/test-timings.json.
+            report=()
+            if [ "$COLD" = "true" ]; then
+              mkdir -p "$RUNNER_TEMP/junit"
+              report=(--reporter=junit "--reporter-outfile=$RUNNER_TEMP/junit/$(tr '[:upper:]' '[:lower:]' <<< "$RUNNER_OS")-$PART.xml")
+            fi
+            # Through turbo, so each shard keeps its own cache entry: the file list is part of the task hash.
+            GITHUB_ACTIONS=false exec bun turbo test --force --filter=@orchestra/core -- "${files[@]}" "${report[@]}"
+          fi
+          # Cold embedded startup on Windows and contract generation on Linux exceeded unchanged deadlines
+          # when sharing the runner with another runtime suite. Keep every package and per-test budget.
+          concurrency=1
+          # Turbo stops scheduling at the first failed task by default, so one red package hid every package after it
+          # (run 38157434225: core failed and the CLI suite never started). Each package runs once its dependencies
+          # pass; any failure still fails the step.
+          GITHUB_ACTIONS=false bun turbo test --force --concurrency="$concurrency" --continue=dependencies-successful "${filters[@]}"
+        env:
+          FILTERS: ${{ matrix.filters }}
+          PART: ${{ matrix.part }}
+          SHARD: ${{ matrix.shard }}
+          COLD: ${{ true }}
+          PACKAGES: ${{ '' }}
+          ORCHESTRA_EXPERIMENTAL_DISABLE_FILEWATCHER: ${{ runner.os == 'Windows' && 'true' || 'false' }}
+
+      # Saved even when a package failed: Turbo records only passing tasks, so re-labeling the PR replays them
+      # (about 1 MB per entry).
+
+      - name: Upload JUnit timings
+        if: always() && true && matrix.shard
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: junit-${{ runner.os }}-${{ matrix.part }}
+          path: ${{ runner.temp }}/junit
+          if-no-files-found: ignore
+          retention-days: 14
+
+      - name: Check generated client
+        if: matrix.httpapi
+        working-directory: packages/client
+        run: bun run check:generated
+
+      - name: Run HttpApi exerciser gates
+        if: matrix.httpapi
+        # Effect mode runs every scenario against a fresh in-memory server; fail instead of holding the runner if one wedges.
+        timeout-minutes: 8
+        working-directory: packages/server
+        run: bun run test:httpapi
+
+      # Hosted proofs are excluded from Bun's suffix discovery and run by exact path, so they run here and nowhere else.
+      # Linux needs the AppArmor relaxation above for bubblewrap; the srt endpoint proof starts Cassandra, ScyllaDB and
+      # PostgreSQL in Docker, which the runner provides. `declared` asks the omni control to count only tests that declare
+      # a spawn (a hosted proof is not a suite). The endpoint proof goes first: it requires the srt runtime to be absent,
+      # and the other two install it.
+      - name: Run hosted sandbox proofs
+        if: matrix.hosted && runner.os == 'Linux'
+        timeout-minutes: 8
+        working-directory: packages/core
+        run: bun test --timeout 120000 ./test/tool-safety-srt-endpoint.hosted.ts ./test/tool-safety-srt-read-alias.hosted.ts ./test/tool-safety-sandbox-project-config.hosted.ts
+        env:
+          ORCHESTRA_OMNI_CONTROL: declared
+
+      # Linux observes procfs birth and Windows pins a .NET handle: the one proof runs on both.
+      - name: Run hosted process query proof
+        if: ${{ !cancelled() && matrix.hosted }}
+        timeout-minutes: 5
+        working-directory: packages/core
+        run: bun test --timeout 120000 ./test/windows-process-query.hosted.ts
+        env:
+          ORCHESTRA_OMNI_CONTROL: declared
+
+      # Relay's retained Python oracle runs even when an earlier step failed, so one failure does not
+      # hide the other. Benchmark runtime tests nest real pytest campaigns and stay manual:
+      # `python -m pytest tests/test_benchmark_runtime.py` from modules/relay.
+      - name: Setup Python for Relay
+        if: ${{ !cancelled() && matrix.relay }}
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: modules/relay/requirements-dev.txt
+
+      - name: Install Relay test dependencies
+        if: ${{ !cancelled() && matrix.relay }}
+        run: python -m pip install -r modules/relay/requirements-dev.txt
+
+      - name: Test Relay
+        if: ${{ !cancelled() && matrix.relay }}
+        timeout-minutes: 5
+        working-directory: modules/relay
+        # tests/test_docs.py already runs the doc structure guard on the real tree; only the index check is extra.
+        # Every test isolates itself in tmp_path, ephemeral ports and env-scoped directories, so xdist is safe;
+        # `--durations` shows which tests to watch. The two shell tests are scripts, not pytest files.
+        run: |
+          python -m pytest tests -q -p no:cacheprovider -n auto --durations=15 --ignore=tests/test_benchmark_runtime.py
+          bash tests/test_arm_hook.sh
+          bash tests/test_concurrent_gate.sh
+          python bin/gen-doc-index.py --check
+
+      # Legacy rollback: the same native binaries, with omni turned off for these two suites only. They run even when
+      # a package failed above, as they did in a job of their own.
+      - name: Real AppProcess default and legacy backend selection
+        if: ${{ !cancelled() && matrix.rollback && ('' == '' || contains(format(',{0},', ''), ',@orchestra/core,')) }}
+        working-directory: packages/core
+        run: bun test test/omni-default-mode.test.ts test/effect/cross-spawn-spawner.test.ts --timeout 30000
+        env:
+          ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER: "0"
+          ORCHESTRA_EXPERIMENTAL_DISABLE_FILEWATCHER: "true"
+
+  e2e:
+    # A lane dispatch runs e2e only when its packages include the app shell.
+    if: github.repository == 'gustavomhss/Orchestra-SF' && github.repository_id == '1455724710' && github.ref == 'refs/heads/sf2-epic-c' && github.event_name == 'push'
+    needs: plan
+    name: e2e (${{ matrix.settings.name }} ${{ matrix.shard }}/${{ needs.plan.outputs.e2e_shards }})
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        # Each shard boots its own app server, so shards share no state. The plan sizes the count from
+        # packages/app-shell/script/e2e-timings.json (about 4.5 minutes of specs per shard).
+        shard: ${{ fromJSON(needs.plan.outputs.e2e) }}
+        # e2e drives Chromium against a per-page mocked backend, so Windows repeats the Linux
+        # coverage; it runs only when dispatched with windows_e2e. Windows unit tests always run.
+        settings: ${{ fromJSON('[{"name":"linux","host":"ubuntu-24.04"}]') }}
+    runs-on: ${{ matrix.settings.host }}
+    # The e2e lane is the documented exception to the 10-minute per-job budget: each shard boots its own app
+    # server and Chromium, and under the account's max-parallel cap a whole shard needs ~8.5 minutes, so the
+    # lane gets 15 job minutes with a 12-minute step. The Windows libs lane is the other 15/12 exception; every other test job stays at 10.
+    timeout-minutes: 15
+    env:
+      PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/.playwright-browsers
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      # e2e drives the app shell package; its Turbo hash covers the shell plus every workspace dependency.
+
+      - name: Setup Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          # Playwright 1.59 hangs while extracting Chromium with Node 24.16.
+          node-version: "24.15"
+
+      - name: Setup Bun
+        uses: ./.github/actions/setup-bun
+
+      # Tests find rg on PATH and must never download it (packages/core/src/ripgrep/binary.ts).
+      - name: ripgrep
+        uses: ./.github/actions/ripgrep
+
+      - name: Linux sandbox dependencies
+        if: runner.os == 'Linux'
+        run: |
+          # Hosted ubuntu-24.04 sometimes cannot resolve azure.archive.ubuntu.com. apt reads that
+          # name from apt-mirrors.txt. Fall back to archive.ubuntu.com only after the fetch fails.
+          install_sandbox() {
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq bubblewrap socat
+          }
+          if ! install_sandbox; then
+            for file in /etc/apt/apt-mirrors.txt /etc/apt/sources.list /etc/apt/sources.list.d/*.sources /etc/apt/sources.list.d/*.list; do
+              [ -f "$file" ] || continue
+              sudo sed -i 's|azure.archive.ubuntu.com|archive.ubuntu.com|g' "$file"
+            done
+            install_sandbox
+          fi
+          # Ubuntu 24.04 blocks unprivileged user namespaces through AppArmor; bubblewrap needs them.
+          sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+
+
+      - name: Read Playwright version
+        id: playwright-version
+        run: |
+          version=$(node -e 'console.log(require("./package.json").workspaces.catalog["@playwright/test"])')
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      # cache-warm saves the browsers on dev; per-PR copies (about 540 MB each) only crowd the 10 GB quota.
+      - name: Restore Playwright browsers
+        id: playwright-cache
+        uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          path: ${{ github.workspace }}/.playwright-browsers
+          key: ${{ runner.os }}-${{ runner.arch }}-playwright-${{ steps.playwright-version.outputs.version }}-chromium
+
+      - name: Install Playwright system dependencies
+        if: runner.os == 'Linux'
+        working-directory: packages/app-shell
+        run: bunx playwright install-deps chromium
+
+      - name: Install Playwright browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        working-directory: packages/app-shell
+        run: bunx playwright install chromium
+
+      - name: Run app e2e tests
+        working-directory: packages/app-shell
+        # Specs are split by measured time (script/e2e-shard.ts), not file count; the assignment fails the step
+        # if the script fails instead of falling back to every spec.
+        run: |
+          files=$(bun script/e2e-shard.ts ${{ matrix.shard }} ${{ needs.plan.outputs.e2e_shards }})
+          [ -n "$files" ] || { echo "::error::e2e shard produced an empty file list"; exit 1; }
+          mapfile -t selected <<< "$files"
+          bun run test:e2e:local "${selected[@]}"
+        env:
+          CI: true
+        # The unsharded single-worker suite took 20-30 minutes; a shard is planned at about 4.5.
+        # The e2e job budget above documents the exception: under runner contention a shard needs ~8.5, so 12.
+        timeout-minutes: 12
+
+      - name: Upload Playwright artifacts
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: playwright-${{ matrix.settings.name }}-${{ matrix.shard }}-${{ github.run_attempt }}
+          if-no-files-found: ignore
+          retention-days: 7
+          path: |
+            packages/app-shell/e2e/test-results
+            packages/app-shell/e2e/playwright-report
+
+
+
+  recipe:
+    name: recipe (${{ matrix.id }})
+    if: github.repository == 'gustavomhss/Orchestra-SF' && github.repository_id == '1455724710' && github.ref == 'refs/heads/sf2-epic-c' && github.event_name == 'push'
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        include:
+          - id: CI-SF
+            host: ubuntu-24.04
+            request: "{\"package\":\"sucafina\",\"runner\":\"bun\",\"args\":[],\"directory\":\"modules/sucafina\",\"env\":{}}"
+          - id: CI-CLI
+            host: ubuntu-24.04
+            request: "{\"package\":\"cli\",\"runner\":\"bun\",\"args\":[],\"directory\":\"apps/cli\",\"env\":{}}"
+          - id: CI-APP-SRC
+            host: ubuntu-24.04
+            request: "{\"package\":\"app\",\"runner\":\"bun\",\"args\":[],\"directory\":\"packages/app-shell\",\"env\":{}}"
+          - id: CI-APP-BROWSER
+            host: ubuntu-24.04
+            request: "{\"package\":\"app\",\"runner\":\"bun\",\"args\":[\"test-browser\"],\"directory\":\"packages/app-shell\",\"env\":{}}"
+          - id: CI-ATLAS-BUSINESS
+            host: ubuntu-24.04
+            request: "{\"package\":\"atlas-boundary\",\"runner\":\"bun\",\"args\":[\"--timeout\",\"30000\"],\"directory\":\"modules/atlas/boundary\",\"env\":{}}"
+          - id: CI-UI-OPERATIONS
+            host: ubuntu-24.04
+            request: "{\"package\":\"app\",\"runner\":\"playwright\",\"config\":\"e2e/playwright.production.config.ts\",\"args\":[\"e2e/sucafina/operations.spec.ts\"],\"directory\":\"packages/app-shell\",\"env\":{}}"
+          - id: CI-UI-DECISIONS
+            host: ubuntu-24.04
+            request: "{\"package\":\"app\",\"runner\":\"playwright\",\"config\":\"e2e/playwright.production.config.ts\",\"args\":[\"e2e/sucafina/decisions.spec.ts\"],\"directory\":\"packages/app-shell\",\"env\":{}}"
+          - id: CI-UI-REPORTS
+            host: ubuntu-24.04
+            request: "{\"package\":\"app\",\"runner\":\"playwright\",\"config\":\"e2e/playwright.production.config.ts\",\"args\":[\"e2e/sucafina/reports.spec.ts\"],\"directory\":\"packages/app-shell\",\"env\":{}}"
+    runs-on: ${{ matrix.host }}
+    timeout-minutes: 45
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+
+      - name: Materialize validated recipe request
+        env:
+          REQUEST: ${{ matrix.request }}
+        run: |
+          test "$GITHUB_SHA" = "$(git rev-parse HEAD)"
+          echo "SF_PRODUCT_TREE=$(git rev-parse 'HEAD^{tree}')" >> "$GITHUB_ENV"
+          node -e 'const fs = require("node:fs"); const r = JSON.parse(process.env.REQUEST); fs.writeFileSync(".ci-run.json", JSON.stringify(r))'
+
+      # Extension: branch-scoped so a misrouted ARM64 request cannot skip its CPU assertion.
+      - name: Assert Linux ARM64
+        if: startsWith(github.ref_name, 'ci-run-linux-arm64-')
+        run: |
+          set -euo pipefail
+          if [ "$RUNNER_OS" != Linux ] || [ "$RUNNER_ARCH" != ARM64 ] || [ "$(uname -m)" != aarch64 ]; then
+            echo "::error::${{ matrix.host }} must provide native Linux ARM64 (RUNNER_ARCH=ARM64, uname -m=aarch64)"
+            exit 2
+          fi
+
+      - name: Assert macOS arm64
+        if: runner.os == 'macOS' && matrix.host != 'macos-15-intel'
+        run: |
+          if [ "$RUNNER_ARCH" != ARM64 ] || [ "$(uname -m)" != arm64 ]; then
+            echo "::error::${{ matrix.host }} must provide native arm64"
+            exit 2
+          fi
+
+      - name: Setup request validator Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: "24.15"
+
+      - name: Read request
+        id: request
+        env:
+          RECIPE_ID: ${{ matrix.id }}
+        run: |
+          node --input-type=module <<'NODE'
+          import { createHash } from 'node:crypto'
+          import { appendFileSync, mkdirSync, readFileSync, realpathSync, statSync, writeFileSync } from 'node:fs'
+          import path from 'node:path'
+          import { omniControlScope, validateRequest } from './script/test-ci-request.ts'
+          import { locateTestPackage } from './script/test-ci-location.ts'
+          const request = validateRequest(JSON.parse(readFileSync('.ci-run.json', 'utf8')),
+            (file) => (statSync(file, { throwIfNoEntry: false })?.isFile() ?? false) &&
+              realpathSync(file).startsWith(realpathSync('.') + path.sep),
+            (selector) => locateTestPackage('.', selector))
+          writeFileSync('.ci-run.json', JSON.stringify(request))
+          mkdirSync('test-ci-evidence', { recursive: true })
+          writeFileSync('test-ci-evidence/request.json', JSON.stringify({ request,
+            platform: process.platform, arch: process.arch, node: process.version,
+            recipe_id: process.env.RECIPE_ID, sha: process.env.GITHUB_SHA,
+            product_tree: process.env.SF_PRODUCT_TREE, ci_snapshot_sha: null,
+            mode: 'direct-c-with-worktree-request', run_id: process.env.GITHUB_RUN_ID,
+            attempt: process.env.GITHUB_RUN_ATTEMPT,
+            request_sha256: createHash('sha256').update(JSON.stringify(request)).digest('hex'),
+            sources: Object.fromEntries(['.github/workflows/sf2-epic.yml', 'script/test-ci-request.ts',
+              'script/test-ci-location.ts', 'script/test-ci-package.ts', 'script/module-registry.json',
+              'packages/script/src/module-catalog.ts', 'packages/script/src/module-resolver.ts',
+              'script/sf2h/final-bundle/requests.json', 'script/sf2h/final-bundle/verify-runtime.mjs',
+              'script/sf2h/final-bundle/verify-bun-report.py', 'bun.lock', 'package.json',
+              `${request.directory}/package.json`, `${request.directory}/bunfig.toml`,
+              ...(request.config ? [`${request.directory}/${request.config}`] : [])]
+              .filter((file) => statSync(file, { throwIfNoEntry: false })?.isFile())
+              .map((file) => [file, createHash('sha256').update(readFileSync(file)).digest('hex')])) }))
+          appendFileSync(process.env.GITHUB_OUTPUT,
+            `package=${request.package}\ndirectory=${request.directory}\nrunner=${request.runner}\nomni_control=${omniControlScope(request)}\n`)
+          NODE
+
+      - name: Fetch source history for Script fixtures
+        if: steps.request.outputs.package == 'script' && steps.request.outputs.runner == 'bun'
+        run: |
+          if [ "$(git rev-parse --is-shallow-repository)" = true ]; then
+            git fetch --unshallow --no-tags origin
+          fi
+
+      - name: Setup Bun
+        if: steps.request.outputs.runner != 'pytest'
+        uses: ./.github/actions/setup-bun
+
+      # Tests find rg on PATH and must never download it (packages/core/src/ripgrep/binary.ts).
+      - name: ripgrep
+        if: steps.request.outputs.runner != 'pytest'
+        uses: ./.github/actions/ripgrep
+
+      # setup-bun selects Node 24; match the existing e2e lane's extraction workaround afterwards.
+      - name: Setup Playwright Node
+        if: steps.request.outputs.runner == 'playwright'
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: "24.15"
+
+      - name: Install Chromium
+        if: steps.request.outputs.runner == 'playwright'
+        working-directory: ${{ steps.request.outputs.directory }}
+        run: bunx playwright install --with-deps chromium
+
+      - name: Linux sandbox dependencies
+        if: runner.os == 'Linux'
+        run: |
+          # Hosted ubuntu-24.04 sometimes cannot resolve azure.archive.ubuntu.com. apt reads that
+          # name from apt-mirrors.txt. Fall back to archive.ubuntu.com only after the fetch fails.
+          install_sandbox() {
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq bubblewrap socat
+          }
+          if ! install_sandbox; then
+            for file in /etc/apt/apt-mirrors.txt /etc/apt/sources.list /etc/apt/sources.list.d/*.sources /etc/apt/sources.list.d/*.list; do
+              [ -f "$file" ] || continue
+              sudo sed -i 's|azure.archive.ubuntu.com|archive.ubuntu.com|g' "$file"
+            done
+            install_sandbox
+          fi
+          # Ubuntu 24.04 blocks unprivileged user namespaces through AppArmor; bubblewrap needs them.
+          sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+
+      - name: Setup Python
+        if: steps.request.outputs.runner == 'pytest'
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: ${{ steps.request.outputs.directory }}/requirements-dev.txt
+
+      - name: Install Python test dependencies
+        if: steps.request.outputs.runner == 'pytest'
+        env:
+          DIRECTORY: ${{ steps.request.outputs.directory }}
+        run: python -m pip install -r "$DIRECTORY/requirements-dev.txt"
+
+      - name: Configure git identity
+        run: |
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+
+      # Only allow-listed keys with plain values reach the environment; test-ci.ts validates before upload too.
+      - name: Export requested environment
+        run: |
+          jq -r '(.env // {}) | to_entries[] | "\(.key)=\(.value)"' .ci-run.json | tr -d '\r' | while IFS= read -r line; do
+            key=${line%%=*}
+            value=${line#*=}
+            case "$key" in
+              ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER) pattern='^(1|strict)$' ;;
+              ORCHESTRA_CHANNEL) pattern='^prod$' ;;
+              *) echo "::error::.ci-run.json env key $key is not allow-listed"; exit 2 ;;
+            esac
+            # Omni permits only its two on states; channel checks permit only the production value.
+            if ! printf '%s' "$value" | grep -Eq "$pattern"; then
+              echo "::error::.ci-run.json env value for $key is not allowed"
+              exit 2
+            fi
+            echo "$key=$value" >> "$GITHUB_ENV"
+          done
+
+      - name: omni binaries
+        if: steps.request.outputs.runner != 'pytest'
+        uses: ./.github/actions/omni-binaries
+
+      # The CLI's native Windows artifact controls compile with `rustup run 1.98.0` (packages/core/src/
+      # artifact-native-windows.ts). The omni artifact above skips cargo, so nothing else installs the toolchain
+      # pinned by native/omni/rust-toolchain.toml.
+      - name: Rust toolchain (rust-toolchain.toml)
+        if: runner.os == 'Windows' && steps.request.outputs.directory == 'apps/cli'
+        working-directory: native/omni
+        run: rustup show active-toolchain || rustup toolchain install
+
+      # A per-run secret for the omni positive control's verdict line: script/test-omni-control.ts prints it in its one
+      # verdict line and removes it from the environment before any test loads; test-ci.ts accepts only that line.
+      - name: Omni control nonce
+        run: |
+          nonce=$(node -e "process.stdout.write(require('node:crypto').randomBytes(16).toString('hex'))")
+          echo "ORCHESTRA_OMNI_CONTROL_NONCE=$nonce" >> "$GITHUB_ENV"
+          echo "omni control nonce: $nonce"
+
+      # The control's scope comes from the request (script/test-ci-request.ts omniControlScope): a whole-package request
+      # is "suite" like every test.yml lane, a narrower one is "declared". Not an --env key; an empty value fails the run.
+      - name: Run tests
+        env:
+          ORCHESTRA_EXPERIMENTAL_DISABLE_FILEWATCHER: ${{ runner.os == 'Windows' && 'true' || 'false' }}
+          ORCHESTRA_OMNI_CONTROL: ${{ steps.request.outputs.omni_control }}
+          PACKAGE: ${{ steps.request.outputs.package }}
+          DIRECTORY: ${{ steps.request.outputs.directory }}
+          RUNNER: ${{ steps.request.outputs.runner }}
+        run: |
+          set -o pipefail
+          {
+          if [ "$RUNNER" = playwright ]; then
+            node --input-type=module <<'NODE'
+          import { readFileSync, realpathSync, statSync, writeFileSync } from 'node:fs'
+          import path from 'node:path'
+          import { spawnSync } from 'node:child_process'
+          import { validatePlaywrightRuntime } from './script/sf2h/final-bundle/verify-runtime.mjs'
+          import { benchmarkEnvironment, playwrightArgs, validateRequest, validateSelection } from './script/test-ci-request.ts'
+          import { locateTestPackage } from './script/test-ci-location.ts'
+          const request = validateRequest(JSON.parse(readFileSync('.ci-run.json', 'utf8')),
+            (file) => (statSync(file, { throwIfNoEntry: false })?.isFile() ?? false) &&
+              realpathSync(file).startsWith(realpathSync('.') + path.sep),
+            (selector) => locateTestPackage('.', selector))
+          const cwd = path.resolve(request.directory)
+          const benchmark = benchmarkEnvironment(request.benchmarkRenderer, process.env.GITHUB_SHA)
+          writeFileSync('test-ci-evidence/benchmark-runtime.json', JSON.stringify(benchmark))
+          const env = { ...process.env, ...benchmark }
+          const args = ['run', 'test:e2e:local', ...playwrightArgs(request), '--trace', 'retain-on-failure']
+          const listed = spawnSync('bun', [...args, '--list', '--reporter=json'], { cwd, env, encoding: 'utf8' })
+          if (listed.error || listed.status !== 0) throw new Error(`playwright selection failed: ${listed.error ?? listed.stderr}`)
+          writeFileSync('test-ci-evidence/playwright-selection.json', listed.stdout)
+          const report = JSON.parse(listed.stdout)
+          const hasTests = (suite) => suite.specs?.some((spec) => spec.tests?.length > 0) || (suite.suites ?? []).some(hasTests)
+          validateSelection(request.args.map((file) => path.resolve(cwd, file)),
+            report.suites.filter(hasTests).map((suite) => path.resolve(report.config.rootDir, suite.file)))
+          // The flaky reporter lists tests that passed only on a retry in the log and the job summary.
+          const flaky = path.resolve(cwd, 'e2e/utils/flaky-reporter.ts')
+          const reporters = statSync(flaky, { throwIfNoEntry: false }) ? `html,line,json,${flaky}` : 'html,line,json'
+          const run = spawnSync('bun', [...args, `--reporter=${reporters}`], { cwd, stdio: 'inherit',
+            env: { ...env, PLAYWRIGHT_HTML_OUTPUT_DIR: path.resolve(cwd, 'e2e/playwright-report'),
+              PLAYWRIGHT_JSON_OUTPUT_NAME: path.resolve('test-ci-evidence/playwright-runtime.json') } })
+          if (run.error || run.status === null) throw new Error(`playwright execution failed: ${run.error ?? run.signal}`)
+          if (run.status !== 0) process.exit(run.status)
+          const runtime = JSON.parse(readFileSync('test-ci-evidence/playwright-runtime.json', 'utf8'))
+          const observation = validatePlaywrightRuntime(request, runtime, report)
+          writeFileSync('test-ci-evidence/runtime-observation.json', JSON.stringify(observation, null, 2))
+          NODE
+            exit $?
+          fi
+          args=()
+          while IFS= read -r arg; do args+=("$arg"); done < <(jq -r '.args[]' .ci-run.json | tr -d '\r')
+          cd "$DIRECTORY"
+          case "$RUNNER" in
+            pytest) python -m pytest -p no:cacheprovider "${args[@]}" ;;
+            bun)
+              # solid-sonner's compiled dist/index.js imports `use` from solid-js/web, a
+              # browser-only export that fails under bun's default (`node`) conditions.
+              # The `solid` condition routes solid-sonner to its untranspiled dist/index.jsx
+              # source, which does not make that import. test-ci bypasses the package's own
+              # `test:unit` script (which already passes `--conditions=solid`), so reproduce it.
+              # test-browser/ files follow `test:browser` instead: solid-js has no `solid`
+              # export, so under `solid` it falls through to `node` and loads its server build,
+              # where memos never recompute and onMount never runs. They also preload happydom.
+              if [ "$DIRECTORY" = "packages/app-shell" ]; then
+                unit=()
+                browser=()
+                common=()
+                # Only generated --timeout, -t and --test-name-pattern consume the next
+                # entry, including an empty name pattern. Other dash-prefixed tokens are
+                # one common token each; this is not a Bun CLI parser.
+                for ((index=0; index<${#args[@]}; index=index+1)); do
+                  arg="${args[$index]}"
+                  case "$arg" in
+                    --timeout|-t|--test-name-pattern)
+                      index=$((index+1))
+                      if [ "$index" -ge "${#args[@]}" ]; then
+                        echo "::error::$arg needs a following value"
+                        exit 2
+                      fi
+                      common+=("$arg" "${args[$index]}")
+                      ;;
+                    -*)
+                      common+=("$arg")
+                      ;;
+                    test-browser|test-browser/*|./test-browser/*) browser+=("$arg") ;;
+                    *) unit+=("$arg") ;;
+                  esac
+                done
+                status=0
+                if [ ${#unit[@]} -gt 0 ] || [ ${#browser[@]} -eq 0 ]; then
+                  GITHUB_ACTIONS=false bun test --reporter=junit "--reporter-outfile=$GITHUB_WORKSPACE/test-ci-evidence/bun-runtime.xml" --conditions=solid --preload ../../script/test-omni-control.ts "${unit[@]}" "${common[@]}" || status=$?
+                fi
+                if [ ${#browser[@]} -gt 0 ]; then
+                  GITHUB_ACTIONS=false bun test --reporter=junit "--reporter-outfile=$GITHUB_WORKSPACE/test-ci-evidence/bun-runtime.xml" --conditions=browser --preload ../../script/test-omni-control.ts --preload ./happydom.ts "${browser[@]}" "${common[@]}" || status=$?
+                fi
+                exit $status
+              fi
+              if [ "$DIRECTORY" = "modules/atlas/boundary" ]; then
+              GITHUB_ACTIONS=false bun test --reporter=junit "--reporter-outfile=$GITHUB_WORKSPACE/test-ci-evidence/bun-runtime.xml" --preload ../../../script/test-omni-control.ts "${args[@]}"
+              exit $?
+            fi
+            GITHUB_ACTIONS=false bun test --reporter=junit "--reporter-outfile=$GITHUB_WORKSPACE/test-ci-evidence/bun-runtime.xml" "${args[@]}"
+              ;;
+            node)
+              for file in "${args[@]}"; do
+                case "$file" in
+                  *.node-smoke.mjs) ;;
+                  *) echo "::error::the node runner runs only *.node-smoke.mjs files, not $file"; exit 2 ;;
+                esac
+              done
+              node --experimental-strip-types --test "${args[@]}"
+              ;;
+          esac
+
+          } 2>&1 | tee "$GITHUB_WORKSPACE/test-ci-evidence/recipe-run.log"
+          if [ "$RUNNER" = bun ]; then
+            count=$(grep -Fc "omni positive control [$ORCHESTRA_OMNI_CONTROL_NONCE]:" "$GITHUB_WORKSPACE/test-ci-evidence/recipe-run.log" || true)
+            [ "$count" = 1 ] || { echo '::error::missing or repeated nonce-bound omni verdict'; exit 1; }
+            grep -F "omni positive control [$ORCHESTRA_OMNI_CONTROL_NONCE]:" "$GITHUB_WORKSPACE/test-ci-evidence/recipe-run.log" | grep -Eq ': (pass|not applicable) \(' || { echo '::error::omni verdict failed'; exit 1; }
+            python3 script/sf2h/final-bundle/verify-bun-report.py test-ci-evidence/bun-runtime.xml > test-ci-evidence/runtime-observation.json
+          fi
+
+      - name: Upload Lean dashboard previews (extension)
+        if: always() && hashFiles(format('{0}/e2e/test-results/lean-visual/*.png', steps.request.outputs.directory)) != ''
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: recipe-${{ matrix.id }}-lean-${{ runner.os }}
+          path: |
+            ${{ steps.request.outputs.directory }}/e2e/test-results/lean-visual/*.png
+            ${{ steps.request.outputs.directory }}/e2e/test-results/lean-visual/*.json
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Upload Playwright evidence
+        if: always() && steps.request.outputs.runner == 'playwright'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: recipe-${{ matrix.id }}-playwright-${{ github.run_attempt }}
+          if-no-files-found: error
+          retention-days: 7
+          path: |
+            test-ci-evidence
+            ${{ steps.request.outputs.directory }}/e2e/test-results
+            ${{ steps.request.outputs.directory }}/e2e/playwright-report
+
+      - name: Upload recipe request and log
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: recipe-${{ matrix.id }}-request-log-${{ github.run_attempt }}
+          path: test-ci-evidence
+          if-no-files-found: error
+          retention-days: 7
+
+  sf-static:
+    if: github.repository == 'gustavomhss/Orchestra-SF' && github.repository_id == '1455724710' && github.ref == 'refs/heads/sf2-epic-c' && github.event_name == 'push'
+    name: SF static and typechecks
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          fetch-depth: 0
+      - uses: ./.github/actions/setup-bun
+      - name: Verify generated Atlas before generation
+        working-directory: modules/atlas/boundary
+        run: bun run check:generated
+      - name: Generate Atlas and verify unchanged
+        working-directory: modules/atlas/boundary
+        run: |
+          bun run generate
+          git diff --exit-code -- .
+      - name: Typecheck Atlas
+        working-directory: modules/atlas/boundary
+        run: bun typecheck
+      - name: Typecheck Sucafina
+        working-directory: modules/sucafina
+        run: bun typecheck
+      - name: Typecheck Core
+        working-directory: packages/core
+        run: bun typecheck
+      - name: Typecheck CLI
+        working-directory: apps/cli
+        run: bun typecheck
+      - name: Typecheck app
+        working-directory: packages/app-shell
+        run: bun typecheck
+      - name: Fetch guard base
+        run: git fetch origin +dev:refs/remotes/origin/dev
+      - name: Guardrails at C
+        run: |
+          mkdir -p guard-evidence
+          set +e
+          bun run check:guards --base origin/dev > guard-evidence/stdout-stderr.log 2>&1
+          status=$?
+          set -e
+          cat guard-evidence/stdout-stderr.log
+          GUARD_STATUS="$status" node -e 'const fs=require("node:fs"),cp=require("node:child_process"); const actual=cp.execFileSync("git",["rev-parse","HEAD"],{encoding:"utf8"}).trim(); const base=cp.execFileSync("git",["rev-parse","origin/dev"],{encoding:"utf8"}).trim(); fs.writeFileSync("guard-evidence/receipt.json",JSON.stringify({candidate:process.env.GITHUB_SHA,checkout:actual,base,status:Number(process.env.GUARD_STATUS),command:"bun run check:guards --base origin/dev"},null,2)); if(actual!==process.env.GITHUB_SHA) process.exit(1)'
+          exit "$status"
+      - name: Spawn import gate
+        run: bun run check:spawn-imports
+      - name: Upload C guard evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: guard-c-${{ github.sha }}-${{ github.run_attempt }}
+          path: guard-evidence
+          if-no-files-found: error
+          retention-days: 14
+
+  bundle-result:
+    if: always() && github.repository == 'gustavomhss/Orchestra-SF' && github.repository_id == '1455724710' && github.ref == 'refs/heads/sf2-epic-c' && github.event_name == 'push'
+    needs: [plan, atlas-scope, atlas, omni, unit-rest, e2e, recipe, sf-static]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Require all gates on this run
+        env:
+          RESULTS: ${{ toJSON(needs) }}
+        run: |
+          node -e 'const n=JSON.parse(process.env.RESULTS); const bad=Object.entries(n).filter(([,v])=>v.result!=="success"); if(bad.length) { console.error(JSON.stringify(bad)); process.exit(1) }'

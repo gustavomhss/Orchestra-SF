@@ -1,0 +1,13 @@
+{
+  "package": "app",
+  "directory": "packages/app-shell",
+  "runner": "playwright",
+  "config": "e2e/playwright.production.config.ts",
+  "args": [
+    "e2e/sucafina/reports.spec.ts"
+  ],
+  "env": {
+    "ORCHESTRA_CHANNEL": "prod"
+  }
+}
+

@@ -1,0 +1,5045 @@
+{
+  "finding": "WP10-U30-CANCEL-VISIBILITY",
+  "phase": "FIXED_PRIMARY_SELECTION",
+  "status": "FAIL",
+  "W": "cecd1de92bf4cbed7d6735e74fd5ffd4944e7dde",
+  "W_tree": "2e92d47791b1c39a7c774acc84e41d55537c8d2d",
+  "S": "a03193f99c3e28c149e1d47c5913b3a673fecc27",
+  "S_tree": "2214579196870d4d85ce19744127d5839f5754d3",
+  "run": 43633001171,
+  "job": 132563524780,
+  "cleanup_job": 132564133024,
+  "conclusion": "failure",
+  "results": {
+    "pass": 14,
+    "fail": 1,
+    "expects": 280,
+    "tests": 15,
+    "files": 6,
+    "duration_seconds": 23.12
+  },
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "./Sucafinav1/test/product/forecast-cancel-visibility/forecast-submit.test.ts",
+      "./Sucafinav1/test/product/forecast-cancel-visibility/states.test.ts",
+      "./Sucafinav1/test/product/forecast-cancel-visibility/recovery.test.ts",
+      "./Sucafinav1/test/product/forecast-cancel-visibility/revocation.test.ts",
+      "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+    }
+  },
+  "request_sha256": "4490f8aae564082fd1d7432194b9eb6b9ce0f2bc22a29fff547efe853725e236",
+  "envelope": {
+    "repository_full_name": "gustavomhss/Orchestra-SF",
+    "base": "cecd1de92bf4cbed7d6735e74fd5ffd4944e7dde",
+    "head": "a03193f99c3e28c149e1d47c5913b3a673fecc27",
+    "status": "ahead",
+    "ahead_by": 1,
+    "behind_by": 0,
+    "total_commits": 1,
+    "too_large": null,
+    "base_commit": {
+      "sha": "cecd1de92bf4cbed7d6735e74fd5ffd4944e7dde",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/cecd1de92bf4cbed7d6735e74fd5ffd4944e7dde",
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/cecd1de92bf4cbed7d6735e74fd5ffd4944e7dde"
+    },
+    "merge_base_commit": {
+      "sha": "cecd1de92bf4cbed7d6735e74fd5ffd4944e7dde",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/cecd1de92bf4cbed7d6735e74fd5ffd4944e7dde",
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/cecd1de92bf4cbed7d6735e74fd5ffd4944e7dde"
+    },
+    "files": [
+      {
+        "filename": ".ci-run.json",
+        "status": "added",
+        "additions": 18,
+        "deletions": 0,
+        "changes": 18,
+        "previous_filename": null
+      }
+    ]
+  },
+  "omni": {
+    "nonce": "4c03a4fb559e938d7965511a191a3eb8",
+    "verdict": "pass",
+    "declared": 1,
+    "spawns": 1,
+    "delegated": 0
+  },
+  "artifacts": {
+    "artifacts": []
+  },
+  "raw_log_sha256": "19326ec345469ae88615aca8951e0887f8cd46b515b494d6eea06430edbed79f",
+  "observations": [
+    {
+      "outcome": "ready",
+      "phase": "idle",
+      "lastRead": null,
+      "controls": {
+        "ready": "true",
+        "status": "",
+        "cancel": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "none",
+          "visibility": "visible",
+          "rectangles": 0,
+          "disabled": false
+        },
+        "retry": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "none",
+          "visibility": "visible",
+          "rectangles": 0,
+          "disabled": false
+        },
+        "start": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "currency": "USD",
+        "resultBodies": 0,
+        "matchedDisplayRules": [
+          {
+            "selector": "button, .button",
+            "display": "inline-flex",
+            "priority": ""
+          },
+          {
+            "selector": "button[hidden], .button[hidden]",
+            "display": "none",
+            "priority": ""
+          }
+        ]
+      }
+    },
+    {
+      "outcome": "ready",
+      "phase": "ready",
+      "lastRead": {
+        "runRef": "ui-fixture-run",
+        "state": "ready",
+        "version": 1
+      },
+      "controls": {
+        "ready": "true",
+        "status": "Analysis: ready.",
+        "cancel": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "none",
+          "visibility": "visible",
+          "rectangles": 0,
+          "disabled": false
+        },
+        "retry": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "none",
+          "visibility": "visible",
+          "rectangles": 0,
+          "disabled": false
+        },
+        "start": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "currency": "EUR",
+        "resultBodies": 1,
+        "matchedDisplayRules": [
+          {
+            "selector": "button, .button",
+            "display": "inline-flex",
+            "priority": ""
+          },
+          {
+            "selector": "button[hidden], .button[hidden]",
+            "display": "none",
+            "priority": ""
+          }
+        ]
+      }
+    },
+    {
+      "outcome": "ready",
+      "phase": "final",
+      "lastRead": {
+        "runRef": "ui-fixture-run",
+        "state": "ready",
+        "version": 1
+      },
+      "controls": {
+        "ready": "true",
+        "status": "Analysis: ready.",
+        "cancel": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "none",
+          "visibility": "visible",
+          "rectangles": 0,
+          "disabled": false
+        },
+        "retry": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "none",
+          "visibility": "visible",
+          "rectangles": 0,
+          "disabled": false
+        },
+        "start": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "currency": "EUR",
+        "resultBodies": 1,
+        "matchedDisplayRules": [
+          {
+            "selector": "button, .button",
+            "display": "inline-flex",
+            "priority": ""
+          },
+          {
+            "selector": "button[hidden], .button[hidden]",
+            "display": "none",
+            "priority": ""
+          }
+        ]
+      }
+    },
+    {
+      "outcome": "rejected",
+      "phase": "idle",
+      "lastRead": null,
+      "controls": {
+        "ready": "true",
+        "status": "",
+        "cancel": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "none",
+          "visibility": "visible",
+          "rectangles": 0,
+          "disabled": false
+        },
+        "retry": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "none",
+          "visibility": "visible",
+          "rectangles": 0,
+          "disabled": false
+        },
+        "start": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "currency": "USD",
+        "resultBodies": 0,
+        "matchedDisplayRules": [
+          {
+            "selector": "button, .button",
+            "display": "inline-flex",
+            "priority": ""
+          },
+          {
+            "selector": "button[hidden], .button[hidden]",
+            "display": "none",
+            "priority": ""
+          }
+        ]
+      }
+    },
+    {
+      "outcome": "rejected",
+      "phase": "final",
+      "lastRead": null,
+      "controls": {
+        "ready": "true",
+        "status": "The analysis request was rejected. Review the sources and current decision before retrying.",
+        "cancel": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "none",
+          "visibility": "visible",
+          "rectangles": 0,
+          "disabled": false
+        },
+        "retry": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "none",
+          "visibility": "visible",
+          "rectangles": 0,
+          "disabled": false
+        },
+        "start": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "currency": "EUR",
+        "resultBodies": 0,
+        "matchedDisplayRules": [
+          {
+            "selector": "button, .button",
+            "display": "inline-flex",
+            "priority": ""
+          },
+          {
+            "selector": "button[hidden], .button[hidden]",
+            "display": "none",
+            "priority": ""
+          }
+        ]
+      }
+    },
+    {
+      "scenario": "terminal-ready",
+      "phase": "idle",
+      "lastRead": null,
+      "controls": {
+        "ready": "true",
+        "status": "",
+        "cancel": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "none",
+          "visibility": "visible",
+          "rectangles": 0,
+          "disabled": false
+        },
+        "retry": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "none",
+          "visibility": "visible",
+          "rectangles": 0,
+          "disabled": false
+        },
+        "start": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "currency": "USD",
+        "resultBodies": 0,
+        "matchedDisplayRules": [
+          {
+            "selector": "button, .button",
+            "display": "inline-flex",
+            "priority": ""
+          },
+          {
+            "selector": "button[hidden], .button[hidden]",
+            "display": "none",
+            "priority": ""
+          }
+        ]
+      }
+    },
+    {
+      "scenario": "terminal-ready",
+      "phase": "preparing",
+      "lastRead": {
+        "runRef": "ui-fixture-run",
+        "state": "preparing",
+        "version": 1
+      },
+      "controls": {
+        "ready": "true",
+        "status": "Analysis: preparing.",
+        "cancel": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "retry": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "start": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": true
+        },
+        "currency": "EUR",
+        "resultBodies": 0,
+        "matchedDisplayRules": [
+          {
+            "selector": "button, .button",
+            "display": "inline-flex",
+            "priority": ""
+          }
+        ]
+      }
+    },
+    {
+      "scenario": "terminal-ready",
+      "phase": "queued",
+      "lastRead": {
+        "runRef": "ui-fixture-run",
+        "state": "queued",
+        "version": 1
+      },
+      "controls": {
+        "ready": "true",
+        "status": "Analysis: queued.",
+        "cancel": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "retry": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "start": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": true
+        },
+        "currency": "EUR",
+        "resultBodies": 0,
+        "matchedDisplayRules": [
+          {
+            "selector": "button, .button",
+            "display": "inline-flex",
+            "priority": ""
+          }
+        ]
+      }
+    },
+    {
+      "scenario": "terminal-ready",
+      "phase": "running",
+      "lastRead": {
+        "runRef": "ui-fixture-run",
+        "state": "running",
+        "version": 1
+      },
+      "controls": {
+        "ready": "true",
+        "status": "Analysis: running.",
+        "cancel": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "retry": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "start": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": true
+        },
+        "currency": "EUR",
+        "resultBodies": 0,
+        "matchedDisplayRules": [
+          {
+            "selector": "button, .button",
+            "display": "inline-flex",
+            "priority": ""
+          }
+        ]
+      }
+    },
+    {
+      "scenario": "terminal-ready",
+      "phase": "ready",
+      "lastRead": {
+        "runRef": "ui-fixture-run",
+        "state": "ready",
+        "version": 1
+      },
+      "controls": {
+        "ready": "true",
+        "status": "Analysis: ready.",
+        "cancel": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "none",
+          "visibility": "visible",
+          "rectangles": 0,
+          "disabled": false
+        },
+        "retry": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "none",
+          "visibility": "visible",
+          "rectangles": 0,
+          "disabled": false
+        },
+        "start": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "currency": "EUR",
+        "resultBodies": 0,
+        "matchedDisplayRules": [
+          {
+            "selector": "button, .button",
+            "display": "inline-flex",
+            "priority": ""
+          },
+          {
+            "selector": "button[hidden], .button[hidden]",
+            "display": "none",
+            "priority": ""
+          }
+        ]
+      }
+    },
+    {
+      "scenario": "terminal-needs-input",
+      "phase": "idle",
+      "lastRead": null,
+      "controls": {
+        "ready": "true",
+        "status": "",
+        "cancel": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "none",
+          "visibility": "visible",
+          "rectangles": 0,
+          "disabled": false
+        },
+        "retry": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "none",
+          "visibility": "visible",
+          "rectangles": 0,
+          "disabled": false
+        },
+        "start": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "currency": "USD",
+        "resultBodies": 0,
+        "matchedDisplayRules": [
+          {
+            "selector": "button, .button",
+            "display": "inline-flex",
+            "priority": ""
+          },
+          {
+            "selector": "button[hidden], .button[hidden]",
+            "display": "none",
+            "priority": ""
+          }
+        ]
+      }
+    },
+    {
+      "scenario": "terminal-needs-input",
+      "phase": "running",
+      "lastRead": {
+        "runRef": "ui-fixture-run",
+        "state": "running",
+        "version": 1
+      },
+      "controls": {
+        "ready": "true",
+        "status": "Analysis: running.",
+        "cancel": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "retry": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "start": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": true
+        },
+        "currency": "EUR",
+        "resultBodies": 0,
+        "matchedDisplayRules": [
+          {
+            "selector": "button, .button",
+            "display": "inline-flex",
+            "priority": ""
+          }
+        ]
+      }
+    },
+    {
+      "scenario": "terminal-needs-input",
+      "phase": "needs-input",
+      "lastRead": {
+        "runRef": "ui-fixture-run",
+        "state": "needs-input",
+        "version": 1
+      },
+      "controls": {
+        "ready": "true",
+        "status": "Analysis: needs-input.",
+        "cancel": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "none",
+          "visibility": "visible",
+          "rectangles": 0,
+          "disabled": false
+        },
+        "retry": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "none",
+          "visibility": "visible",
+          "rectangles": 0,
+          "disabled": false
+        },
+        "start": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "currency": "EUR",
+        "resultBodies": 0,
+        "matchedDisplayRules": [
+          {
+            "selector": "button, .button",
+            "display": "inline-flex",
+            "priority": ""
+          },
+          {
+            "selector": "button[hidden], .button[hidden]",
+            "display": "none",
+            "priority": ""
+          }
+        ]
+      }
+    },
+    {
+      "scenario": "terminal-unavailable",
+      "phase": "idle",
+      "lastRead": null,
+      "controls": {
+        "ready": "true",
+        "status": "",
+        "cancel": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "none",
+          "visibility": "visible",
+          "rectangles": 0,
+          "disabled": false
+        },
+        "retry": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "none",
+          "visibility": "visible",
+          "rectangles": 0,
+          "disabled": false
+        },
+        "start": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "currency": "USD",
+        "resultBodies": 0,
+        "matchedDisplayRules": [
+          {
+            "selector": "button, .button",
+            "display": "inline-flex",
+            "priority": ""
+          },
+          {
+            "selector": "button[hidden], .button[hidden]",
+            "display": "none",
+            "priority": ""
+          }
+        ]
+      }
+    },
+    {
+      "scenario": "terminal-unavailable",
+      "phase": "running",
+      "lastRead": {
+        "runRef": "ui-fixture-run",
+        "state": "running",
+        "version": 1
+      },
+      "controls": {
+        "ready": "true",
+        "status": "Analysis: running.",
+        "cancel": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "retry": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "start": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": true
+        },
+        "currency": "EUR",
+        "resultBodies": 0,
+        "matchedDisplayRules": [
+          {
+            "selector": "button, .button",
+            "display": "inline-flex",
+            "priority": ""
+          }
+        ]
+      }
+    },
+    {
+      "scenario": "terminal-unavailable",
+      "phase": "unavailable",
+      "lastRead": {
+        "runRef": "ui-fixture-run",
+        "state": "unavailable",
+        "version": 1
+      },
+      "controls": {
+        "ready": "true",
+        "status": "Analysis: unavailable.",
+        "cancel": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "none",
+          "visibility": "visible",
+          "rectangles": 0,
+          "disabled": false
+        },
+        "retry": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "none",
+          "visibility": "visible",
+          "rectangles": 0,
+          "disabled": false
+        },
+        "start": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "currency": "EUR",
+        "resultBodies": 0,
+        "matchedDisplayRules": [
+          {
+            "selector": "button, .button",
+            "display": "inline-flex",
+            "priority": ""
+          },
+          {
+            "selector": "button[hidden], .button[hidden]",
+            "display": "none",
+            "priority": ""
+          }
+        ]
+      }
+    },
+    {
+      "scenario": "terminal-failed",
+      "phase": "idle",
+      "lastRead": null,
+      "controls": {
+        "ready": "true",
+        "status": "",
+        "cancel": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "none",
+          "visibility": "visible",
+          "rectangles": 0,
+          "disabled": false
+        },
+        "retry": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "none",
+          "visibility": "visible",
+          "rectangles": 0,
+          "disabled": false
+        },
+        "start": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "currency": "USD",
+        "resultBodies": 0,
+        "matchedDisplayRules": [
+          {
+            "selector": "button, .button",
+            "display": "inline-flex",
+            "priority": ""
+          },
+          {
+            "selector": "button[hidden], .button[hidden]",
+            "display": "none",
+            "priority": ""
+          }
+        ]
+      }
+    },
+    {
+      "scenario": "terminal-failed",
+      "phase": "running",
+      "lastRead": {
+        "runRef": "ui-fixture-run",
+        "state": "running",
+        "version": 1
+      },
+      "controls": {
+        "ready": "true",
+        "status": "Analysis: running.",
+        "cancel": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "retry": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "start": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": true
+        },
+        "currency": "EUR",
+        "resultBodies": 0,
+        "matchedDisplayRules": [
+          {
+            "selector": "button, .button",
+            "display": "inline-flex",
+            "priority": ""
+          }
+        ]
+      }
+    },
+    {
+      "scenario": "terminal-failed",
+      "phase": "failed",
+      "lastRead": {
+        "runRef": "ui-fixture-run",
+        "state": "failed",
+        "version": 1
+      },
+      "controls": {
+        "ready": "true",
+        "status": "Analysis: failed.",
+        "cancel": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "none",
+          "visibility": "visible",
+          "rectangles": 0,
+          "disabled": false
+        },
+        "retry": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "none",
+          "visibility": "visible",
+          "rectangles": 0,
+          "disabled": false
+        },
+        "start": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "currency": "EUR",
+        "resultBodies": 0,
+        "matchedDisplayRules": [
+          {
+            "selector": "button, .button",
+            "display": "inline-flex",
+            "priority": ""
+          },
+          {
+            "selector": "button[hidden], .button[hidden]",
+            "display": "none",
+            "priority": ""
+          }
+        ]
+      }
+    },
+    {
+      "scenario": "terminal-cancelled",
+      "phase": "idle",
+      "lastRead": null,
+      "controls": {
+        "ready": "true",
+        "status": "",
+        "cancel": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "none",
+          "visibility": "visible",
+          "rectangles": 0,
+          "disabled": false
+        },
+        "retry": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "none",
+          "visibility": "visible",
+          "rectangles": 0,
+          "disabled": false
+        },
+        "start": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "currency": "USD",
+        "resultBodies": 0,
+        "matchedDisplayRules": [
+          {
+            "selector": "button, .button",
+            "display": "inline-flex",
+            "priority": ""
+          },
+          {
+            "selector": "button[hidden], .button[hidden]",
+            "display": "none",
+            "priority": ""
+          }
+        ]
+      }
+    },
+    {
+      "scenario": "terminal-cancelled",
+      "phase": "running",
+      "lastRead": {
+        "runRef": "ui-fixture-run",
+        "state": "running",
+        "version": 1
+      },
+      "controls": {
+        "ready": "true",
+        "status": "Analysis: running.",
+        "cancel": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "retry": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "start": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": true
+        },
+        "currency": "EUR",
+        "resultBodies": 0,
+        "matchedDisplayRules": [
+          {
+            "selector": "button, .button",
+            "display": "inline-flex",
+            "priority": ""
+          }
+        ]
+      }
+    },
+    {
+      "scenario": "terminal-cancelled",
+      "phase": "cancelled",
+      "lastRead": {
+        "runRef": "ui-fixture-run",
+        "state": "cancelled",
+        "version": 1
+      },
+      "controls": {
+        "ready": "true",
+        "status": "Analysis: cancelled.",
+        "cancel": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "none",
+          "visibility": "visible",
+          "rectangles": 0,
+          "disabled": false
+        },
+        "retry": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "none",
+          "visibility": "visible",
+          "rectangles": 0,
+          "disabled": false
+        },
+        "start": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "currency": "EUR",
+        "resultBodies": 0,
+        "matchedDisplayRules": [
+          {
+            "selector": "button, .button",
+            "display": "inline-flex",
+            "priority": ""
+          },
+          {
+            "selector": "button[hidden], .button[hidden]",
+            "display": "none",
+            "priority": ""
+          }
+        ]
+      }
+    },
+    {
+      "scenario": "terminal-stale",
+      "phase": "idle",
+      "lastRead": null,
+      "controls": {
+        "ready": "true",
+        "status": "",
+        "cancel": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "none",
+          "visibility": "visible",
+          "rectangles": 0,
+          "disabled": false
+        },
+        "retry": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "none",
+          "visibility": "visible",
+          "rectangles": 0,
+          "disabled": false
+        },
+        "start": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "currency": "USD",
+        "resultBodies": 0,
+        "matchedDisplayRules": [
+          {
+            "selector": "button, .button",
+            "display": "inline-flex",
+            "priority": ""
+          },
+          {
+            "selector": "button[hidden], .button[hidden]",
+            "display": "none",
+            "priority": ""
+          }
+        ]
+      }
+    },
+    {
+      "scenario": "terminal-stale",
+      "phase": "running",
+      "lastRead": {
+        "runRef": "ui-fixture-run",
+        "state": "running",
+        "version": 1
+      },
+      "controls": {
+        "ready": "true",
+        "status": "Analysis: running.",
+        "cancel": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "retry": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "start": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": true
+        },
+        "currency": "EUR",
+        "resultBodies": 0,
+        "matchedDisplayRules": [
+          {
+            "selector": "button, .button",
+            "display": "inline-flex",
+            "priority": ""
+          }
+        ]
+      }
+    },
+    {
+      "scenario": "terminal-stale",
+      "phase": "stale",
+      "lastRead": {
+        "runRef": "ui-fixture-run",
+        "state": "stale",
+        "version": 1
+      },
+      "controls": {
+        "ready": "true",
+        "status": "Analysis: stale.",
+        "cancel": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "none",
+          "visibility": "visible",
+          "rectangles": 0,
+          "disabled": false
+        },
+        "retry": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "none",
+          "visibility": "visible",
+          "rectangles": 0,
+          "disabled": false
+        },
+        "start": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "currency": "EUR",
+        "resultBodies": 0,
+        "matchedDisplayRules": [
+          {
+            "selector": "button, .button",
+            "display": "inline-flex",
+            "priority": ""
+          },
+          {
+            "selector": "button[hidden], .button[hidden]",
+            "display": "none",
+            "priority": ""
+          }
+        ]
+      }
+    },
+    {
+      "scenario": "status-retry",
+      "phase": "idle",
+      "lastRead": null,
+      "controls": {
+        "ready": "true",
+        "status": "",
+        "cancel": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "none",
+          "visibility": "visible",
+          "rectangles": 0,
+          "disabled": false
+        },
+        "retry": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "none",
+          "visibility": "visible",
+          "rectangles": 0,
+          "disabled": false
+        },
+        "start": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "currency": "USD",
+        "resultBodies": 0,
+        "matchedDisplayRules": [
+          {
+            "selector": "button, .button",
+            "display": "inline-flex",
+            "priority": ""
+          },
+          {
+            "selector": "button[hidden], .button[hidden]",
+            "display": "none",
+            "priority": ""
+          }
+        ]
+      }
+    },
+    {
+      "scenario": "status-retry",
+      "phase": "first-read-failure",
+      "lastRead": null,
+      "controls": {
+        "ready": "true",
+        "status": "Analysis status unavailable. Refresh its status before starting another analysis.",
+        "cancel": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "none",
+          "visibility": "visible",
+          "rectangles": 0,
+          "disabled": false
+        },
+        "retry": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "start": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": true
+        },
+        "currency": "EUR",
+        "resultBodies": 0,
+        "matchedDisplayRules": [
+          {
+            "selector": "button, .button",
+            "display": "inline-flex",
+            "priority": ""
+          },
+          {
+            "selector": "button[hidden], .button[hidden]",
+            "display": "none",
+            "priority": ""
+          }
+        ]
+      }
+    },
+    {
+      "scenario": "status-retry",
+      "phase": "running",
+      "lastRead": {
+        "runRef": "ui-fixture-run",
+        "state": "running",
+        "version": 1
+      },
+      "controls": {
+        "ready": "true",
+        "status": "Analysis: running.",
+        "cancel": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "retry": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "start": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": true
+        },
+        "currency": "EUR",
+        "resultBodies": 0,
+        "matchedDisplayRules": [
+          {
+            "selector": "button, .button",
+            "display": "inline-flex",
+            "priority": ""
+          }
+        ]
+      }
+    },
+    {
+      "scenario": "status-retry",
+      "phase": "later-read-failure",
+      "lastRead": {
+        "runRef": "ui-fixture-run",
+        "state": "running",
+        "version": 1
+      },
+      "controls": {
+        "ready": "true",
+        "status": "Analysis status unavailable. Refresh its status before starting another analysis.",
+        "cancel": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "retry": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "start": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": true
+        },
+        "currency": "EUR",
+        "resultBodies": 0,
+        "matchedDisplayRules": [
+          {
+            "selector": "button, .button",
+            "display": "inline-flex",
+            "priority": ""
+          }
+        ]
+      }
+    },
+    {
+      "scenario": "status-retry",
+      "phase": "ready-after-retry",
+      "lastRead": {
+        "runRef": "ui-fixture-run",
+        "state": "ready",
+        "version": 1
+      },
+      "controls": {
+        "ready": "true",
+        "status": "Analysis: ready.",
+        "cancel": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "none",
+          "visibility": "visible",
+          "rectangles": 0,
+          "disabled": false
+        },
+        "retry": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "none",
+          "visibility": "visible",
+          "rectangles": 0,
+          "disabled": false
+        },
+        "start": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "currency": "EUR",
+        "resultBodies": 0,
+        "matchedDisplayRules": [
+          {
+            "selector": "button, .button",
+            "display": "inline-flex",
+            "priority": ""
+          },
+          {
+            "selector": "button[hidden], .button[hidden]",
+            "display": "none",
+            "priority": ""
+          }
+        ]
+      }
+    },
+    {
+      "scenario": "cancel-confirmed",
+      "phase": "idle",
+      "lastRead": null,
+      "controls": {
+        "ready": "true",
+        "status": "",
+        "cancel": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "none",
+          "visibility": "visible",
+          "rectangles": 0,
+          "disabled": false
+        },
+        "retry": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "none",
+          "visibility": "visible",
+          "rectangles": 0,
+          "disabled": false
+        },
+        "start": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "currency": "USD",
+        "resultBodies": 0,
+        "matchedDisplayRules": [
+          {
+            "selector": "button, .button",
+            "display": "inline-flex",
+            "priority": ""
+          },
+          {
+            "selector": "button[hidden], .button[hidden]",
+            "display": "none",
+            "priority": ""
+          }
+        ]
+      }
+    },
+    {
+      "scenario": "cancel-confirmed",
+      "phase": "before-cancel",
+      "lastRead": {
+        "runRef": "ui-fixture-run",
+        "state": "running",
+        "version": 1
+      },
+      "controls": {
+        "ready": "true",
+        "status": "Analysis: running.",
+        "cancel": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "retry": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "start": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": true
+        },
+        "currency": "EUR",
+        "resultBodies": 0,
+        "matchedDisplayRules": [
+          {
+            "selector": "button, .button",
+            "display": "inline-flex",
+            "priority": ""
+          }
+        ]
+      }
+    },
+    {
+      "scenario": "cancel-confirmed",
+      "phase": "cancelled",
+      "lastRead": {
+        "runRef": "ui-fixture-run",
+        "state": "cancelled",
+        "version": 1
+      },
+      "controls": {
+        "ready": "true",
+        "status": "Analysis: cancelled.",
+        "cancel": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "none",
+          "visibility": "visible",
+          "rectangles": 0,
+          "disabled": false
+        },
+        "retry": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "none",
+          "visibility": "visible",
+          "rectangles": 0,
+          "disabled": false
+        },
+        "start": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "currency": "EUR",
+        "resultBodies": 0,
+        "matchedDisplayRules": [
+          {
+            "selector": "button, .button",
+            "display": "inline-flex",
+            "priority": ""
+          },
+          {
+            "selector": "button[hidden], .button[hidden]",
+            "display": "none",
+            "priority": ""
+          }
+        ]
+      }
+    },
+    {
+      "scenario": "cancel-lost-response",
+      "phase": "idle",
+      "lastRead": null,
+      "controls": {
+        "ready": "true",
+        "status": "",
+        "cancel": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "none",
+          "visibility": "visible",
+          "rectangles": 0,
+          "disabled": false
+        },
+        "retry": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "none",
+          "visibility": "visible",
+          "rectangles": 0,
+          "disabled": false
+        },
+        "start": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "currency": "USD",
+        "resultBodies": 0,
+        "matchedDisplayRules": [
+          {
+            "selector": "button, .button",
+            "display": "inline-flex",
+            "priority": ""
+          },
+          {
+            "selector": "button[hidden], .button[hidden]",
+            "display": "none",
+            "priority": ""
+          }
+        ]
+      }
+    },
+    {
+      "scenario": "cancel-lost-response",
+      "phase": "before-cancel",
+      "lastRead": {
+        "runRef": "ui-fixture-run",
+        "state": "running",
+        "version": 1
+      },
+      "controls": {
+        "ready": "true",
+        "status": "Analysis: running.",
+        "cancel": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "retry": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "start": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": true
+        },
+        "currency": "EUR",
+        "resultBodies": 0,
+        "matchedDisplayRules": [
+          {
+            "selector": "button, .button",
+            "display": "inline-flex",
+            "priority": ""
+          }
+        ]
+      }
+    },
+    {
+      "scenario": "cancel-lost-response",
+      "phase": "cancellation-unconfirmed",
+      "lastRead": {
+        "runRef": "ui-fixture-run",
+        "state": "running",
+        "version": 1
+      },
+      "controls": {
+        "ready": "true",
+        "status": "Could not confirm cancellation. Refresh the analysis status.",
+        "cancel": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "retry": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "start": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": true
+        },
+        "currency": "EUR",
+        "resultBodies": 0,
+        "matchedDisplayRules": [
+          {
+            "selector": "button, .button",
+            "display": "inline-flex",
+            "priority": ""
+          }
+        ]
+      }
+    },
+    {
+      "scenario": "cancel-lost-response",
+      "phase": "cancelled",
+      "lastRead": {
+        "runRef": "ui-fixture-run",
+        "state": "cancelled",
+        "version": 1
+      },
+      "controls": {
+        "ready": "true",
+        "status": "Analysis: cancelled.",
+        "cancel": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "none",
+          "visibility": "visible",
+          "rectangles": 0,
+          "disabled": false
+        },
+        "retry": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "none",
+          "visibility": "visible",
+          "rectangles": 0,
+          "disabled": false
+        },
+        "start": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "currency": "EUR",
+        "resultBodies": 0,
+        "matchedDisplayRules": [
+          {
+            "selector": "button, .button",
+            "display": "inline-flex",
+            "priority": ""
+          },
+          {
+            "selector": "button[hidden], .button[hidden]",
+            "display": "none",
+            "priority": ""
+          }
+        ]
+      }
+    },
+    {
+      "scenario": "revocation-http-403",
+      "phase": "idle",
+      "lastRead": null,
+      "controls": {
+        "ready": "true",
+        "status": "",
+        "cancel": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "none",
+          "visibility": "visible",
+          "rectangles": 0,
+          "disabled": false
+        },
+        "retry": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "none",
+          "visibility": "visible",
+          "rectangles": 0,
+          "disabled": false
+        },
+        "start": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "currency": "USD",
+        "resultBodies": 0,
+        "matchedDisplayRules": [
+          {
+            "selector": "button, .button",
+            "display": "inline-flex",
+            "priority": ""
+          },
+          {
+            "selector": "button[hidden], .button[hidden]",
+            "display": "none",
+            "priority": ""
+          }
+        ]
+      }
+    },
+    {
+      "scenario": "revocation-http-403",
+      "phase": "active-before-revoke",
+      "lastRead": {
+        "runRef": "ui-fixture-run",
+        "state": "running",
+        "version": 1
+      },
+      "controls": {
+        "ready": "true",
+        "status": "Analysis: running.",
+        "cancel": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "retry": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "start": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": true
+        },
+        "currency": "EUR",
+        "resultBodies": 0,
+        "matchedDisplayRules": [
+          {
+            "selector": "button, .button",
+            "display": "inline-flex",
+            "priority": ""
+          }
+        ]
+      }
+    },
+    {
+      "scenario": "revocation-http-403",
+      "phase": "revoked",
+      "lastRead": {
+        "runRef": "ui-fixture-run",
+        "state": "running",
+        "version": 1
+      },
+      "controls": {
+        "ready": "true",
+        "status": "Analysis access changed. Reopen the decision with your current access.",
+        "cancel": null,
+        "retry": null,
+        "start": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": true
+        },
+        "currency": "",
+        "resultBodies": 0,
+        "matchedDisplayRules": []
+      }
+    },
+    {
+      "scenario": "revocation-shell-event",
+      "phase": "idle",
+      "lastRead": null,
+      "controls": {
+        "ready": "true",
+        "status": "",
+        "cancel": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "none",
+          "visibility": "visible",
+          "rectangles": 0,
+          "disabled": false
+        },
+        "retry": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "none",
+          "visibility": "visible",
+          "rectangles": 0,
+          "disabled": false
+        },
+        "start": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "currency": "USD",
+        "resultBodies": 0,
+        "matchedDisplayRules": [
+          {
+            "selector": "button, .button",
+            "display": "inline-flex",
+            "priority": ""
+          },
+          {
+            "selector": "button[hidden], .button[hidden]",
+            "display": "none",
+            "priority": ""
+          }
+        ]
+      }
+    }
+  ],
+  "matrix_proofs": [
+    {
+      "name": "terminal-ready",
+      "pageErrors": [],
+      "observations": [
+        {
+          "phase": "idle",
+          "controls": {
+            "ready": "true",
+            "status": "",
+            "cancel": {
+              "present": true,
+              "hiddenAttribute": "",
+              "hidden": true,
+              "display": "none",
+              "visibility": "visible",
+              "rectangles": 0,
+              "disabled": false
+            },
+            "retry": {
+              "present": true,
+              "hiddenAttribute": "",
+              "hidden": true,
+              "display": "none",
+              "visibility": "visible",
+              "rectangles": 0,
+              "disabled": false
+            },
+            "start": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": false
+            },
+            "currency": "USD",
+            "resultBodies": 0,
+            "matchedDisplayRules": [
+              {
+                "selector": "button, .button",
+                "display": "inline-flex",
+                "priority": ""
+              },
+              {
+                "selector": "button[hidden], .button[hidden]",
+                "display": "none",
+                "priority": ""
+              }
+            ]
+          }
+        },
+        {
+          "phase": "preparing",
+          "lastRead": {
+            "runRef": "ui-fixture-run",
+            "state": "preparing",
+            "version": 1
+          },
+          "controls": {
+            "ready": "true",
+            "status": "Analysis: preparing.",
+            "cancel": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": false
+            },
+            "retry": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": false
+            },
+            "start": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": true
+            },
+            "currency": "EUR",
+            "resultBodies": 0,
+            "matchedDisplayRules": [
+              {
+                "selector": "button, .button",
+                "display": "inline-flex",
+                "priority": ""
+              }
+            ]
+          }
+        },
+        {
+          "phase": "queued",
+          "lastRead": {
+            "runRef": "ui-fixture-run",
+            "state": "queued",
+            "version": 1
+          },
+          "controls": {
+            "ready": "true",
+            "status": "Analysis: queued.",
+            "cancel": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": false
+            },
+            "retry": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": false
+            },
+            "start": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": true
+            },
+            "currency": "EUR",
+            "resultBodies": 0,
+            "matchedDisplayRules": [
+              {
+                "selector": "button, .button",
+                "display": "inline-flex",
+                "priority": ""
+              }
+            ]
+          }
+        },
+        {
+          "phase": "running",
+          "lastRead": {
+            "runRef": "ui-fixture-run",
+            "state": "running",
+            "version": 1
+          },
+          "controls": {
+            "ready": "true",
+            "status": "Analysis: running.",
+            "cancel": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": false
+            },
+            "retry": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": false
+            },
+            "start": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": true
+            },
+            "currency": "EUR",
+            "resultBodies": 0,
+            "matchedDisplayRules": [
+              {
+                "selector": "button, .button",
+                "display": "inline-flex",
+                "priority": ""
+              }
+            ]
+          }
+        },
+        {
+          "phase": "ready",
+          "lastRead": {
+            "runRef": "ui-fixture-run",
+            "state": "ready",
+            "version": 1
+          },
+          "controls": {
+            "ready": "true",
+            "status": "Analysis: ready.",
+            "cancel": {
+              "present": true,
+              "hiddenAttribute": "",
+              "hidden": true,
+              "display": "none",
+              "visibility": "visible",
+              "rectangles": 0,
+              "disabled": false
+            },
+            "retry": {
+              "present": true,
+              "hiddenAttribute": "",
+              "hidden": true,
+              "display": "none",
+              "visibility": "visible",
+              "rectangles": 0,
+              "disabled": false
+            },
+            "start": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": false
+            },
+            "currency": "EUR",
+            "resultBodies": 0,
+            "matchedDisplayRules": [
+              {
+                "selector": "button, .button",
+                "display": "inline-flex",
+                "priority": ""
+              },
+              {
+                "selector": "button[hidden], .button[hidden]",
+                "display": "none",
+                "priority": ""
+              }
+            ]
+          }
+        }
+      ],
+      "requests": [
+        {
+          "mode": "workbench-analysis",
+          "action": "list",
+          "payload": {
+            "action": "list",
+            "caseRef": {
+              "id": "ui-fixture-case",
+              "incarnation": "ui-fixture-case-incarnation",
+              "version": 3
+            }
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-forecast",
+          "payload": {
+            "caseRef": {
+              "id": "ui-fixture-case",
+              "incarnation": "ui-fixture-case-incarnation",
+              "version": 3
+            },
+            "baseRef": "ui-fixture-baseline",
+            "candidateRef": "ui-fixture-candidate",
+            "period": {
+              "start": "2027-02-01",
+              "end": "2027-11-30"
+            },
+            "currency": "EUR"
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-analysis",
+          "action": "start",
+          "payload": {
+            "action": "start",
+            "input": {
+              "request": {
+                "caseRef": {
+                  "id": "ui-fixture-case",
+                  "incarnation": "ui-fixture-case-incarnation",
+                  "version": 3
+                },
+                "objective": "Explain the selected forecast change",
+                "profileId": "sf_finance",
+                "profileVersion": "1.0.0",
+                "skillId": "sf-explicar-forecast",
+                "skillVersion": "1.0.0",
+                "manifestDigest": "d00c7ce2e450fc15fda8d35ebf1c27eeff43833ad2bb35b5b8e4548a9054c31d",
+                "outputSchemaVersion": "sf-contribution-v1",
+                "requestedOperationScope": [
+                  "sf_context_get",
+                  "sf_forecast_compare",
+                  "sf_freshness_check",
+                  "sf_import_preview",
+                  "sf_kpi_explain",
+                  "sf_source_get"
+                ]
+              },
+              "skillInput": {
+                "uiFixtureBoundary": true,
+                "selectedForecast": "prepared-once"
+              },
+              "model": {
+                "id": "ui-fixture-model",
+                "providerID": "ui-fixture-catalog"
+              }
+            }
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-analysis",
+          "action": "read",
+          "payload": {
+            "action": "read",
+            "runRef": "ui-fixture-run"
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-analysis",
+          "action": "read",
+          "payload": {
+            "action": "read",
+            "runRef": "ui-fixture-run"
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-analysis",
+          "action": "read",
+          "payload": {
+            "action": "read",
+            "runRef": "ui-fixture-run"
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-analysis",
+          "action": "read",
+          "payload": {
+            "action": "read",
+            "runRef": "ui-fixture-run"
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-analysis",
+          "action": "list",
+          "payload": {
+            "action": "list",
+            "caseRef": {
+              "id": "ui-fixture-case",
+              "incarnation": "ui-fixture-case-incarnation",
+              "version": 3
+            }
+          },
+          "keyPresent": true
+        }
+      ]
+    },
+    {
+      "name": "terminal-needs-input",
+      "pageErrors": [],
+      "observations": [
+        {
+          "phase": "idle",
+          "controls": {
+            "ready": "true",
+            "status": "",
+            "cancel": {
+              "present": true,
+              "hiddenAttribute": "",
+              "hidden": true,
+              "display": "none",
+              "visibility": "visible",
+              "rectangles": 0,
+              "disabled": false
+            },
+            "retry": {
+              "present": true,
+              "hiddenAttribute": "",
+              "hidden": true,
+              "display": "none",
+              "visibility": "visible",
+              "rectangles": 0,
+              "disabled": false
+            },
+            "start": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": false
+            },
+            "currency": "USD",
+            "resultBodies": 0,
+            "matchedDisplayRules": [
+              {
+                "selector": "button, .button",
+                "display": "inline-flex",
+                "priority": ""
+              },
+              {
+                "selector": "button[hidden], .button[hidden]",
+                "display": "none",
+                "priority": ""
+              }
+            ]
+          }
+        },
+        {
+          "phase": "running",
+          "lastRead": {
+            "runRef": "ui-fixture-run",
+            "state": "running",
+            "version": 1
+          },
+          "controls": {
+            "ready": "true",
+            "status": "Analysis: running.",
+            "cancel": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": false
+            },
+            "retry": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": false
+            },
+            "start": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": true
+            },
+            "currency": "EUR",
+            "resultBodies": 0,
+            "matchedDisplayRules": [
+              {
+                "selector": "button, .button",
+                "display": "inline-flex",
+                "priority": ""
+              }
+            ]
+          }
+        },
+        {
+          "phase": "needs-input",
+          "lastRead": {
+            "runRef": "ui-fixture-run",
+            "state": "needs-input",
+            "version": 1
+          },
+          "controls": {
+            "ready": "true",
+            "status": "Analysis: needs-input.",
+            "cancel": {
+              "present": true,
+              "hiddenAttribute": "",
+              "hidden": true,
+              "display": "none",
+              "visibility": "visible",
+              "rectangles": 0,
+              "disabled": false
+            },
+            "retry": {
+              "present": true,
+              "hiddenAttribute": "",
+              "hidden": true,
+              "display": "none",
+              "visibility": "visible",
+              "rectangles": 0,
+              "disabled": false
+            },
+            "start": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": false
+            },
+            "currency": "EUR",
+            "resultBodies": 0,
+            "matchedDisplayRules": [
+              {
+                "selector": "button, .button",
+                "display": "inline-flex",
+                "priority": ""
+              },
+              {
+                "selector": "button[hidden], .button[hidden]",
+                "display": "none",
+                "priority": ""
+              }
+            ]
+          }
+        }
+      ],
+      "requests": [
+        {
+          "mode": "workbench-analysis",
+          "action": "list",
+          "payload": {
+            "action": "list",
+            "caseRef": {
+              "id": "ui-fixture-case",
+              "incarnation": "ui-fixture-case-incarnation",
+              "version": 3
+            }
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-forecast",
+          "payload": {
+            "caseRef": {
+              "id": "ui-fixture-case",
+              "incarnation": "ui-fixture-case-incarnation",
+              "version": 3
+            },
+            "baseRef": "ui-fixture-baseline",
+            "candidateRef": "ui-fixture-candidate",
+            "period": {
+              "start": "2027-02-01",
+              "end": "2027-11-30"
+            },
+            "currency": "EUR"
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-analysis",
+          "action": "start",
+          "payload": {
+            "action": "start",
+            "input": {
+              "request": {
+                "caseRef": {
+                  "id": "ui-fixture-case",
+                  "incarnation": "ui-fixture-case-incarnation",
+                  "version": 3
+                },
+                "objective": "Explain the selected forecast change",
+                "profileId": "sf_finance",
+                "profileVersion": "1.0.0",
+                "skillId": "sf-explicar-forecast",
+                "skillVersion": "1.0.0",
+                "manifestDigest": "d00c7ce2e450fc15fda8d35ebf1c27eeff43833ad2bb35b5b8e4548a9054c31d",
+                "outputSchemaVersion": "sf-contribution-v1",
+                "requestedOperationScope": [
+                  "sf_context_get",
+                  "sf_forecast_compare",
+                  "sf_freshness_check",
+                  "sf_import_preview",
+                  "sf_kpi_explain",
+                  "sf_source_get"
+                ]
+              },
+              "skillInput": {
+                "uiFixtureBoundary": true,
+                "selectedForecast": "prepared-once"
+              },
+              "model": {
+                "id": "ui-fixture-model",
+                "providerID": "ui-fixture-catalog"
+              }
+            }
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-analysis",
+          "action": "read",
+          "payload": {
+            "action": "read",
+            "runRef": "ui-fixture-run"
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-analysis",
+          "action": "read",
+          "payload": {
+            "action": "read",
+            "runRef": "ui-fixture-run"
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-analysis",
+          "action": "list",
+          "payload": {
+            "action": "list",
+            "caseRef": {
+              "id": "ui-fixture-case",
+              "incarnation": "ui-fixture-case-incarnation",
+              "version": 3
+            }
+          },
+          "keyPresent": true
+        }
+      ]
+    },
+    {
+      "name": "terminal-unavailable",
+      "pageErrors": [],
+      "observations": [
+        {
+          "phase": "idle",
+          "controls": {
+            "ready": "true",
+            "status": "",
+            "cancel": {
+              "present": true,
+              "hiddenAttribute": "",
+              "hidden": true,
+              "display": "none",
+              "visibility": "visible",
+              "rectangles": 0,
+              "disabled": false
+            },
+            "retry": {
+              "present": true,
+              "hiddenAttribute": "",
+              "hidden": true,
+              "display": "none",
+              "visibility": "visible",
+              "rectangles": 0,
+              "disabled": false
+            },
+            "start": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": false
+            },
+            "currency": "USD",
+            "resultBodies": 0,
+            "matchedDisplayRules": [
+              {
+                "selector": "button, .button",
+                "display": "inline-flex",
+                "priority": ""
+              },
+              {
+                "selector": "button[hidden], .button[hidden]",
+                "display": "none",
+                "priority": ""
+              }
+            ]
+          }
+        },
+        {
+          "phase": "running",
+          "lastRead": {
+            "runRef": "ui-fixture-run",
+            "state": "running",
+            "version": 1
+          },
+          "controls": {
+            "ready": "true",
+            "status": "Analysis: running.",
+            "cancel": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": false
+            },
+            "retry": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": false
+            },
+            "start": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": true
+            },
+            "currency": "EUR",
+            "resultBodies": 0,
+            "matchedDisplayRules": [
+              {
+                "selector": "button, .button",
+                "display": "inline-flex",
+                "priority": ""
+              }
+            ]
+          }
+        },
+        {
+          "phase": "unavailable",
+          "lastRead": {
+            "runRef": "ui-fixture-run",
+            "state": "unavailable",
+            "version": 1
+          },
+          "controls": {
+            "ready": "true",
+            "status": "Analysis: unavailable.",
+            "cancel": {
+              "present": true,
+              "hiddenAttribute": "",
+              "hidden": true,
+              "display": "none",
+              "visibility": "visible",
+              "rectangles": 0,
+              "disabled": false
+            },
+            "retry": {
+              "present": true,
+              "hiddenAttribute": "",
+              "hidden": true,
+              "display": "none",
+              "visibility": "visible",
+              "rectangles": 0,
+              "disabled": false
+            },
+            "start": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": false
+            },
+            "currency": "EUR",
+            "resultBodies": 0,
+            "matchedDisplayRules": [
+              {
+                "selector": "button, .button",
+                "display": "inline-flex",
+                "priority": ""
+              },
+              {
+                "selector": "button[hidden], .button[hidden]",
+                "display": "none",
+                "priority": ""
+              }
+            ]
+          }
+        }
+      ],
+      "requests": [
+        {
+          "mode": "workbench-analysis",
+          "action": "list",
+          "payload": {
+            "action": "list",
+            "caseRef": {
+              "id": "ui-fixture-case",
+              "incarnation": "ui-fixture-case-incarnation",
+              "version": 3
+            }
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-forecast",
+          "payload": {
+            "caseRef": {
+              "id": "ui-fixture-case",
+              "incarnation": "ui-fixture-case-incarnation",
+              "version": 3
+            },
+            "baseRef": "ui-fixture-baseline",
+            "candidateRef": "ui-fixture-candidate",
+            "period": {
+              "start": "2027-02-01",
+              "end": "2027-11-30"
+            },
+            "currency": "EUR"
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-analysis",
+          "action": "start",
+          "payload": {
+            "action": "start",
+            "input": {
+              "request": {
+                "caseRef": {
+                  "id": "ui-fixture-case",
+                  "incarnation": "ui-fixture-case-incarnation",
+                  "version": 3
+                },
+                "objective": "Explain the selected forecast change",
+                "profileId": "sf_finance",
+                "profileVersion": "1.0.0",
+                "skillId": "sf-explicar-forecast",
+                "skillVersion": "1.0.0",
+                "manifestDigest": "d00c7ce2e450fc15fda8d35ebf1c27eeff43833ad2bb35b5b8e4548a9054c31d",
+                "outputSchemaVersion": "sf-contribution-v1",
+                "requestedOperationScope": [
+                  "sf_context_get",
+                  "sf_forecast_compare",
+                  "sf_freshness_check",
+                  "sf_import_preview",
+                  "sf_kpi_explain",
+                  "sf_source_get"
+                ]
+              },
+              "skillInput": {
+                "uiFixtureBoundary": true,
+                "selectedForecast": "prepared-once"
+              },
+              "model": {
+                "id": "ui-fixture-model",
+                "providerID": "ui-fixture-catalog"
+              }
+            }
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-analysis",
+          "action": "read",
+          "payload": {
+            "action": "read",
+            "runRef": "ui-fixture-run"
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-analysis",
+          "action": "read",
+          "payload": {
+            "action": "read",
+            "runRef": "ui-fixture-run"
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-analysis",
+          "action": "list",
+          "payload": {
+            "action": "list",
+            "caseRef": {
+              "id": "ui-fixture-case",
+              "incarnation": "ui-fixture-case-incarnation",
+              "version": 3
+            }
+          },
+          "keyPresent": true
+        }
+      ]
+    },
+    {
+      "name": "terminal-failed",
+      "pageErrors": [],
+      "observations": [
+        {
+          "phase": "idle",
+          "controls": {
+            "ready": "true",
+            "status": "",
+            "cancel": {
+              "present": true,
+              "hiddenAttribute": "",
+              "hidden": true,
+              "display": "none",
+              "visibility": "visible",
+              "rectangles": 0,
+              "disabled": false
+            },
+            "retry": {
+              "present": true,
+              "hiddenAttribute": "",
+              "hidden": true,
+              "display": "none",
+              "visibility": "visible",
+              "rectangles": 0,
+              "disabled": false
+            },
+            "start": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": false
+            },
+            "currency": "USD",
+            "resultBodies": 0,
+            "matchedDisplayRules": [
+              {
+                "selector": "button, .button",
+                "display": "inline-flex",
+                "priority": ""
+              },
+              {
+                "selector": "button[hidden], .button[hidden]",
+                "display": "none",
+                "priority": ""
+              }
+            ]
+          }
+        },
+        {
+          "phase": "running",
+          "lastRead": {
+            "runRef": "ui-fixture-run",
+            "state": "running",
+            "version": 1
+          },
+          "controls": {
+            "ready": "true",
+            "status": "Analysis: running.",
+            "cancel": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": false
+            },
+            "retry": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": false
+            },
+            "start": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": true
+            },
+            "currency": "EUR",
+            "resultBodies": 0,
+            "matchedDisplayRules": [
+              {
+                "selector": "button, .button",
+                "display": "inline-flex",
+                "priority": ""
+              }
+            ]
+          }
+        },
+        {
+          "phase": "failed",
+          "lastRead": {
+            "runRef": "ui-fixture-run",
+            "state": "failed",
+            "version": 1
+          },
+          "controls": {
+            "ready": "true",
+            "status": "Analysis: failed.",
+            "cancel": {
+              "present": true,
+              "hiddenAttribute": "",
+              "hidden": true,
+              "display": "none",
+              "visibility": "visible",
+              "rectangles": 0,
+              "disabled": false
+            },
+            "retry": {
+              "present": true,
+              "hiddenAttribute": "",
+              "hidden": true,
+              "display": "none",
+              "visibility": "visible",
+              "rectangles": 0,
+              "disabled": false
+            },
+            "start": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": false
+            },
+            "currency": "EUR",
+            "resultBodies": 0,
+            "matchedDisplayRules": [
+              {
+                "selector": "button, .button",
+                "display": "inline-flex",
+                "priority": ""
+              },
+              {
+                "selector": "button[hidden], .button[hidden]",
+                "display": "none",
+                "priority": ""
+              }
+            ]
+          }
+        }
+      ],
+      "requests": [
+        {
+          "mode": "workbench-analysis",
+          "action": "list",
+          "payload": {
+            "action": "list",
+            "caseRef": {
+              "id": "ui-fixture-case",
+              "incarnation": "ui-fixture-case-incarnation",
+              "version": 3
+            }
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-forecast",
+          "payload": {
+            "caseRef": {
+              "id": "ui-fixture-case",
+              "incarnation": "ui-fixture-case-incarnation",
+              "version": 3
+            },
+            "baseRef": "ui-fixture-baseline",
+            "candidateRef": "ui-fixture-candidate",
+            "period": {
+              "start": "2027-02-01",
+              "end": "2027-11-30"
+            },
+            "currency": "EUR"
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-analysis",
+          "action": "start",
+          "payload": {
+            "action": "start",
+            "input": {
+              "request": {
+                "caseRef": {
+                  "id": "ui-fixture-case",
+                  "incarnation": "ui-fixture-case-incarnation",
+                  "version": 3
+                },
+                "objective": "Explain the selected forecast change",
+                "profileId": "sf_finance",
+                "profileVersion": "1.0.0",
+                "skillId": "sf-explicar-forecast",
+                "skillVersion": "1.0.0",
+                "manifestDigest": "d00c7ce2e450fc15fda8d35ebf1c27eeff43833ad2bb35b5b8e4548a9054c31d",
+                "outputSchemaVersion": "sf-contribution-v1",
+                "requestedOperationScope": [
+                  "sf_context_get",
+                  "sf_forecast_compare",
+                  "sf_freshness_check",
+                  "sf_import_preview",
+                  "sf_kpi_explain",
+                  "sf_source_get"
+                ]
+              },
+              "skillInput": {
+                "uiFixtureBoundary": true,
+                "selectedForecast": "prepared-once"
+              },
+              "model": {
+                "id": "ui-fixture-model",
+                "providerID": "ui-fixture-catalog"
+              }
+            }
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-analysis",
+          "action": "read",
+          "payload": {
+            "action": "read",
+            "runRef": "ui-fixture-run"
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-analysis",
+          "action": "read",
+          "payload": {
+            "action": "read",
+            "runRef": "ui-fixture-run"
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-analysis",
+          "action": "list",
+          "payload": {
+            "action": "list",
+            "caseRef": {
+              "id": "ui-fixture-case",
+              "incarnation": "ui-fixture-case-incarnation",
+              "version": 3
+            }
+          },
+          "keyPresent": true
+        }
+      ]
+    },
+    {
+      "name": "terminal-cancelled",
+      "pageErrors": [],
+      "observations": [
+        {
+          "phase": "idle",
+          "controls": {
+            "ready": "true",
+            "status": "",
+            "cancel": {
+              "present": true,
+              "hiddenAttribute": "",
+              "hidden": true,
+              "display": "none",
+              "visibility": "visible",
+              "rectangles": 0,
+              "disabled": false
+            },
+            "retry": {
+              "present": true,
+              "hiddenAttribute": "",
+              "hidden": true,
+              "display": "none",
+              "visibility": "visible",
+              "rectangles": 0,
+              "disabled": false
+            },
+            "start": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": false
+            },
+            "currency": "USD",
+            "resultBodies": 0,
+            "matchedDisplayRules": [
+              {
+                "selector": "button, .button",
+                "display": "inline-flex",
+                "priority": ""
+              },
+              {
+                "selector": "button[hidden], .button[hidden]",
+                "display": "none",
+                "priority": ""
+              }
+            ]
+          }
+        },
+        {
+          "phase": "running",
+          "lastRead": {
+            "runRef": "ui-fixture-run",
+            "state": "running",
+            "version": 1
+          },
+          "controls": {
+            "ready": "true",
+            "status": "Analysis: running.",
+            "cancel": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": false
+            },
+            "retry": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": false
+            },
+            "start": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": true
+            },
+            "currency": "EUR",
+            "resultBodies": 0,
+            "matchedDisplayRules": [
+              {
+                "selector": "button, .button",
+                "display": "inline-flex",
+                "priority": ""
+              }
+            ]
+          }
+        },
+        {
+          "phase": "cancelled",
+          "lastRead": {
+            "runRef": "ui-fixture-run",
+            "state": "cancelled",
+            "version": 1
+          },
+          "controls": {
+            "ready": "true",
+            "status": "Analysis: cancelled.",
+            "cancel": {
+              "present": true,
+              "hiddenAttribute": "",
+              "hidden": true,
+              "display": "none",
+              "visibility": "visible",
+              "rectangles": 0,
+              "disabled": false
+            },
+            "retry": {
+              "present": true,
+              "hiddenAttribute": "",
+              "hidden": true,
+              "display": "none",
+              "visibility": "visible",
+              "rectangles": 0,
+              "disabled": false
+            },
+            "start": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": false
+            },
+            "currency": "EUR",
+            "resultBodies": 0,
+            "matchedDisplayRules": [
+              {
+                "selector": "button, .button",
+                "display": "inline-flex",
+                "priority": ""
+              },
+              {
+                "selector": "button[hidden], .button[hidden]",
+                "display": "none",
+                "priority": ""
+              }
+            ]
+          }
+        }
+      ],
+      "requests": [
+        {
+          "mode": "workbench-analysis",
+          "action": "list",
+          "payload": {
+            "action": "list",
+            "caseRef": {
+              "id": "ui-fixture-case",
+              "incarnation": "ui-fixture-case-incarnation",
+              "version": 3
+            }
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-forecast",
+          "payload": {
+            "caseRef": {
+              "id": "ui-fixture-case",
+              "incarnation": "ui-fixture-case-incarnation",
+              "version": 3
+            },
+            "baseRef": "ui-fixture-baseline",
+            "candidateRef": "ui-fixture-candidate",
+            "period": {
+              "start": "2027-02-01",
+              "end": "2027-11-30"
+            },
+            "currency": "EUR"
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-analysis",
+          "action": "start",
+          "payload": {
+            "action": "start",
+            "input": {
+              "request": {
+                "caseRef": {
+                  "id": "ui-fixture-case",
+                  "incarnation": "ui-fixture-case-incarnation",
+                  "version": 3
+                },
+                "objective": "Explain the selected forecast change",
+                "profileId": "sf_finance",
+                "profileVersion": "1.0.0",
+                "skillId": "sf-explicar-forecast",
+                "skillVersion": "1.0.0",
+                "manifestDigest": "d00c7ce2e450fc15fda8d35ebf1c27eeff43833ad2bb35b5b8e4548a9054c31d",
+                "outputSchemaVersion": "sf-contribution-v1",
+                "requestedOperationScope": [
+                  "sf_context_get",
+                  "sf_forecast_compare",
+                  "sf_freshness_check",
+                  "sf_import_preview",
+                  "sf_kpi_explain",
+                  "sf_source_get"
+                ]
+              },
+              "skillInput": {
+                "uiFixtureBoundary": true,
+                "selectedForecast": "prepared-once"
+              },
+              "model": {
+                "id": "ui-fixture-model",
+                "providerID": "ui-fixture-catalog"
+              }
+            }
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-analysis",
+          "action": "read",
+          "payload": {
+            "action": "read",
+            "runRef": "ui-fixture-run"
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-analysis",
+          "action": "read",
+          "payload": {
+            "action": "read",
+            "runRef": "ui-fixture-run"
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-analysis",
+          "action": "list",
+          "payload": {
+            "action": "list",
+            "caseRef": {
+              "id": "ui-fixture-case",
+              "incarnation": "ui-fixture-case-incarnation",
+              "version": 3
+            }
+          },
+          "keyPresent": true
+        }
+      ]
+    },
+    {
+      "name": "terminal-stale",
+      "pageErrors": [],
+      "observations": [
+        {
+          "phase": "idle",
+          "controls": {
+            "ready": "true",
+            "status": "",
+            "cancel": {
+              "present": true,
+              "hiddenAttribute": "",
+              "hidden": true,
+              "display": "none",
+              "visibility": "visible",
+              "rectangles": 0,
+              "disabled": false
+            },
+            "retry": {
+              "present": true,
+              "hiddenAttribute": "",
+              "hidden": true,
+              "display": "none",
+              "visibility": "visible",
+              "rectangles": 0,
+              "disabled": false
+            },
+            "start": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": false
+            },
+            "currency": "USD",
+            "resultBodies": 0,
+            "matchedDisplayRules": [
+              {
+                "selector": "button, .button",
+                "display": "inline-flex",
+                "priority": ""
+              },
+              {
+                "selector": "button[hidden], .button[hidden]",
+                "display": "none",
+                "priority": ""
+              }
+            ]
+          }
+        },
+        {
+          "phase": "running",
+          "lastRead": {
+            "runRef": "ui-fixture-run",
+            "state": "running",
+            "version": 1
+          },
+          "controls": {
+            "ready": "true",
+            "status": "Analysis: running.",
+            "cancel": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": false
+            },
+            "retry": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": false
+            },
+            "start": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": true
+            },
+            "currency": "EUR",
+            "resultBodies": 0,
+            "matchedDisplayRules": [
+              {
+                "selector": "button, .button",
+                "display": "inline-flex",
+                "priority": ""
+              }
+            ]
+          }
+        },
+        {
+          "phase": "stale",
+          "lastRead": {
+            "runRef": "ui-fixture-run",
+            "state": "stale",
+            "version": 1
+          },
+          "controls": {
+            "ready": "true",
+            "status": "Analysis: stale.",
+            "cancel": {
+              "present": true,
+              "hiddenAttribute": "",
+              "hidden": true,
+              "display": "none",
+              "visibility": "visible",
+              "rectangles": 0,
+              "disabled": false
+            },
+            "retry": {
+              "present": true,
+              "hiddenAttribute": "",
+              "hidden": true,
+              "display": "none",
+              "visibility": "visible",
+              "rectangles": 0,
+              "disabled": false
+            },
+            "start": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": false
+            },
+            "currency": "EUR",
+            "resultBodies": 0,
+            "matchedDisplayRules": [
+              {
+                "selector": "button, .button",
+                "display": "inline-flex",
+                "priority": ""
+              },
+              {
+                "selector": "button[hidden], .button[hidden]",
+                "display": "none",
+                "priority": ""
+              }
+            ]
+          }
+        }
+      ],
+      "requests": [
+        {
+          "mode": "workbench-analysis",
+          "action": "list",
+          "payload": {
+            "action": "list",
+            "caseRef": {
+              "id": "ui-fixture-case",
+              "incarnation": "ui-fixture-case-incarnation",
+              "version": 3
+            }
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-forecast",
+          "payload": {
+            "caseRef": {
+              "id": "ui-fixture-case",
+              "incarnation": "ui-fixture-case-incarnation",
+              "version": 3
+            },
+            "baseRef": "ui-fixture-baseline",
+            "candidateRef": "ui-fixture-candidate",
+            "period": {
+              "start": "2027-02-01",
+              "end": "2027-11-30"
+            },
+            "currency": "EUR"
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-analysis",
+          "action": "start",
+          "payload": {
+            "action": "start",
+            "input": {
+              "request": {
+                "caseRef": {
+                  "id": "ui-fixture-case",
+                  "incarnation": "ui-fixture-case-incarnation",
+                  "version": 3
+                },
+                "objective": "Explain the selected forecast change",
+                "profileId": "sf_finance",
+                "profileVersion": "1.0.0",
+                "skillId": "sf-explicar-forecast",
+                "skillVersion": "1.0.0",
+                "manifestDigest": "d00c7ce2e450fc15fda8d35ebf1c27eeff43833ad2bb35b5b8e4548a9054c31d",
+                "outputSchemaVersion": "sf-contribution-v1",
+                "requestedOperationScope": [
+                  "sf_context_get",
+                  "sf_forecast_compare",
+                  "sf_freshness_check",
+                  "sf_import_preview",
+                  "sf_kpi_explain",
+                  "sf_source_get"
+                ]
+              },
+              "skillInput": {
+                "uiFixtureBoundary": true,
+                "selectedForecast": "prepared-once"
+              },
+              "model": {
+                "id": "ui-fixture-model",
+                "providerID": "ui-fixture-catalog"
+              }
+            }
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-analysis",
+          "action": "read",
+          "payload": {
+            "action": "read",
+            "runRef": "ui-fixture-run"
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-analysis",
+          "action": "read",
+          "payload": {
+            "action": "read",
+            "runRef": "ui-fixture-run"
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-analysis",
+          "action": "list",
+          "payload": {
+            "action": "list",
+            "caseRef": {
+              "id": "ui-fixture-case",
+              "incarnation": "ui-fixture-case-incarnation",
+              "version": 3
+            }
+          },
+          "keyPresent": true
+        }
+      ]
+    },
+    {
+      "name": "status-retry",
+      "pageErrors": [],
+      "observations": [
+        {
+          "phase": "idle",
+          "controls": {
+            "ready": "true",
+            "status": "",
+            "cancel": {
+              "present": true,
+              "hiddenAttribute": "",
+              "hidden": true,
+              "display": "none",
+              "visibility": "visible",
+              "rectangles": 0,
+              "disabled": false
+            },
+            "retry": {
+              "present": true,
+              "hiddenAttribute": "",
+              "hidden": true,
+              "display": "none",
+              "visibility": "visible",
+              "rectangles": 0,
+              "disabled": false
+            },
+            "start": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": false
+            },
+            "currency": "USD",
+            "resultBodies": 0,
+            "matchedDisplayRules": [
+              {
+                "selector": "button, .button",
+                "display": "inline-flex",
+                "priority": ""
+              },
+              {
+                "selector": "button[hidden], .button[hidden]",
+                "display": "none",
+                "priority": ""
+              }
+            ]
+          }
+        },
+        {
+          "phase": "first-read-failure",
+          "controls": {
+            "ready": "true",
+            "status": "Analysis status unavailable. Refresh its status before starting another analysis.",
+            "cancel": {
+              "present": true,
+              "hiddenAttribute": "",
+              "hidden": true,
+              "display": "none",
+              "visibility": "visible",
+              "rectangles": 0,
+              "disabled": false
+            },
+            "retry": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": false
+            },
+            "start": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": true
+            },
+            "currency": "EUR",
+            "resultBodies": 0,
+            "matchedDisplayRules": [
+              {
+                "selector": "button, .button",
+                "display": "inline-flex",
+                "priority": ""
+              },
+              {
+                "selector": "button[hidden], .button[hidden]",
+                "display": "none",
+                "priority": ""
+              }
+            ]
+          }
+        },
+        {
+          "phase": "running",
+          "lastRead": {
+            "runRef": "ui-fixture-run",
+            "state": "running",
+            "version": 1
+          },
+          "controls": {
+            "ready": "true",
+            "status": "Analysis: running.",
+            "cancel": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": false
+            },
+            "retry": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": false
+            },
+            "start": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": true
+            },
+            "currency": "EUR",
+            "resultBodies": 0,
+            "matchedDisplayRules": [
+              {
+                "selector": "button, .button",
+                "display": "inline-flex",
+                "priority": ""
+              }
+            ]
+          }
+        },
+        {
+          "phase": "later-read-failure",
+          "lastRead": {
+            "runRef": "ui-fixture-run",
+            "state": "running",
+            "version": 1
+          },
+          "controls": {
+            "ready": "true",
+            "status": "Analysis status unavailable. Refresh its status before starting another analysis.",
+            "cancel": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": false
+            },
+            "retry": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": false
+            },
+            "start": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": true
+            },
+            "currency": "EUR",
+            "resultBodies": 0,
+            "matchedDisplayRules": [
+              {
+                "selector": "button, .button",
+                "display": "inline-flex",
+                "priority": ""
+              }
+            ]
+          }
+        },
+        {
+          "phase": "ready-after-retry",
+          "lastRead": {
+            "runRef": "ui-fixture-run",
+            "state": "ready",
+            "version": 1
+          },
+          "controls": {
+            "ready": "true",
+            "status": "Analysis: ready.",
+            "cancel": {
+              "present": true,
+              "hiddenAttribute": "",
+              "hidden": true,
+              "display": "none",
+              "visibility": "visible",
+              "rectangles": 0,
+              "disabled": false
+            },
+            "retry": {
+              "present": true,
+              "hiddenAttribute": "",
+              "hidden": true,
+              "display": "none",
+              "visibility": "visible",
+              "rectangles": 0,
+              "disabled": false
+            },
+            "start": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": false
+            },
+            "currency": "EUR",
+            "resultBodies": 0,
+            "matchedDisplayRules": [
+              {
+                "selector": "button, .button",
+                "display": "inline-flex",
+                "priority": ""
+              },
+              {
+                "selector": "button[hidden], .button[hidden]",
+                "display": "none",
+                "priority": ""
+              }
+            ]
+          }
+        }
+      ],
+      "requests": [
+        {
+          "mode": "workbench-analysis",
+          "action": "list",
+          "payload": {
+            "action": "list",
+            "caseRef": {
+              "id": "ui-fixture-case",
+              "incarnation": "ui-fixture-case-incarnation",
+              "version": 3
+            }
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-forecast",
+          "payload": {
+            "caseRef": {
+              "id": "ui-fixture-case",
+              "incarnation": "ui-fixture-case-incarnation",
+              "version": 3
+            },
+            "baseRef": "ui-fixture-baseline",
+            "candidateRef": "ui-fixture-candidate",
+            "period": {
+              "start": "2027-02-01",
+              "end": "2027-11-30"
+            },
+            "currency": "EUR"
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-analysis",
+          "action": "start",
+          "payload": {
+            "action": "start",
+            "input": {
+              "request": {
+                "caseRef": {
+                  "id": "ui-fixture-case",
+                  "incarnation": "ui-fixture-case-incarnation",
+                  "version": 3
+                },
+                "objective": "Explain the selected forecast change",
+                "profileId": "sf_finance",
+                "profileVersion": "1.0.0",
+                "skillId": "sf-explicar-forecast",
+                "skillVersion": "1.0.0",
+                "manifestDigest": "d00c7ce2e450fc15fda8d35ebf1c27eeff43833ad2bb35b5b8e4548a9054c31d",
+                "outputSchemaVersion": "sf-contribution-v1",
+                "requestedOperationScope": [
+                  "sf_context_get",
+                  "sf_forecast_compare",
+                  "sf_freshness_check",
+                  "sf_import_preview",
+                  "sf_kpi_explain",
+                  "sf_source_get"
+                ]
+              },
+              "skillInput": {
+                "uiFixtureBoundary": true,
+                "selectedForecast": "prepared-once"
+              },
+              "model": {
+                "id": "ui-fixture-model",
+                "providerID": "ui-fixture-catalog"
+              }
+            }
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-analysis",
+          "action": "read",
+          "payload": {
+            "action": "read",
+            "runRef": "ui-fixture-run"
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-analysis",
+          "action": "read",
+          "payload": {
+            "action": "read",
+            "runRef": "ui-fixture-run"
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-analysis",
+          "action": "read",
+          "payload": {
+            "action": "read",
+            "runRef": "ui-fixture-run"
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-analysis",
+          "action": "read",
+          "payload": {
+            "action": "read",
+            "runRef": "ui-fixture-run"
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-analysis",
+          "action": "list",
+          "payload": {
+            "action": "list",
+            "caseRef": {
+              "id": "ui-fixture-case",
+              "incarnation": "ui-fixture-case-incarnation",
+              "version": 3
+            }
+          },
+          "keyPresent": true
+        }
+      ]
+    },
+    {
+      "name": "cancel-confirmed",
+      "pageErrors": [],
+      "observations": [
+        {
+          "phase": "idle",
+          "controls": {
+            "ready": "true",
+            "status": "",
+            "cancel": {
+              "present": true,
+              "hiddenAttribute": "",
+              "hidden": true,
+              "display": "none",
+              "visibility": "visible",
+              "rectangles": 0,
+              "disabled": false
+            },
+            "retry": {
+              "present": true,
+              "hiddenAttribute": "",
+              "hidden": true,
+              "display": "none",
+              "visibility": "visible",
+              "rectangles": 0,
+              "disabled": false
+            },
+            "start": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": false
+            },
+            "currency": "USD",
+            "resultBodies": 0,
+            "matchedDisplayRules": [
+              {
+                "selector": "button, .button",
+                "display": "inline-flex",
+                "priority": ""
+              },
+              {
+                "selector": "button[hidden], .button[hidden]",
+                "display": "none",
+                "priority": ""
+              }
+            ]
+          }
+        },
+        {
+          "phase": "before-cancel",
+          "lastRead": {
+            "runRef": "ui-fixture-run",
+            "state": "running",
+            "version": 1
+          },
+          "controls": {
+            "ready": "true",
+            "status": "Analysis: running.",
+            "cancel": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": false
+            },
+            "retry": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": false
+            },
+            "start": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": true
+            },
+            "currency": "EUR",
+            "resultBodies": 0,
+            "matchedDisplayRules": [
+              {
+                "selector": "button, .button",
+                "display": "inline-flex",
+                "priority": ""
+              }
+            ]
+          }
+        },
+        {
+          "phase": "cancelled",
+          "lastRead": {
+            "runRef": "ui-fixture-run",
+            "state": "cancelled",
+            "version": 1
+          },
+          "controls": {
+            "ready": "true",
+            "status": "Analysis: cancelled.",
+            "cancel": {
+              "present": true,
+              "hiddenAttribute": "",
+              "hidden": true,
+              "display": "none",
+              "visibility": "visible",
+              "rectangles": 0,
+              "disabled": false
+            },
+            "retry": {
+              "present": true,
+              "hiddenAttribute": "",
+              "hidden": true,
+              "display": "none",
+              "visibility": "visible",
+              "rectangles": 0,
+              "disabled": false
+            },
+            "start": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": false
+            },
+            "currency": "EUR",
+            "resultBodies": 0,
+            "matchedDisplayRules": [
+              {
+                "selector": "button, .button",
+                "display": "inline-flex",
+                "priority": ""
+              },
+              {
+                "selector": "button[hidden], .button[hidden]",
+                "display": "none",
+                "priority": ""
+              }
+            ]
+          }
+        }
+      ],
+      "requests": [
+        {
+          "mode": "workbench-analysis",
+          "action": "list",
+          "payload": {
+            "action": "list",
+            "caseRef": {
+              "id": "ui-fixture-case",
+              "incarnation": "ui-fixture-case-incarnation",
+              "version": 3
+            }
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-forecast",
+          "payload": {
+            "caseRef": {
+              "id": "ui-fixture-case",
+              "incarnation": "ui-fixture-case-incarnation",
+              "version": 3
+            },
+            "baseRef": "ui-fixture-baseline",
+            "candidateRef": "ui-fixture-candidate",
+            "period": {
+              "start": "2027-02-01",
+              "end": "2027-11-30"
+            },
+            "currency": "EUR"
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-analysis",
+          "action": "start",
+          "payload": {
+            "action": "start",
+            "input": {
+              "request": {
+                "caseRef": {
+                  "id": "ui-fixture-case",
+                  "incarnation": "ui-fixture-case-incarnation",
+                  "version": 3
+                },
+                "objective": "Explain the selected forecast change",
+                "profileId": "sf_finance",
+                "profileVersion": "1.0.0",
+                "skillId": "sf-explicar-forecast",
+                "skillVersion": "1.0.0",
+                "manifestDigest": "d00c7ce2e450fc15fda8d35ebf1c27eeff43833ad2bb35b5b8e4548a9054c31d",
+                "outputSchemaVersion": "sf-contribution-v1",
+                "requestedOperationScope": [
+                  "sf_context_get",
+                  "sf_forecast_compare",
+                  "sf_freshness_check",
+                  "sf_import_preview",
+                  "sf_kpi_explain",
+                  "sf_source_get"
+                ]
+              },
+              "skillInput": {
+                "uiFixtureBoundary": true,
+                "selectedForecast": "prepared-once"
+              },
+              "model": {
+                "id": "ui-fixture-model",
+                "providerID": "ui-fixture-catalog"
+              }
+            }
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-analysis",
+          "action": "read",
+          "payload": {
+            "action": "read",
+            "runRef": "ui-fixture-run"
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-analysis",
+          "action": "cancel",
+          "payload": {
+            "action": "cancel",
+            "runRef": "ui-fixture-run"
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-analysis",
+          "action": "read",
+          "payload": {
+            "action": "read",
+            "runRef": "ui-fixture-run"
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-analysis",
+          "action": "list",
+          "payload": {
+            "action": "list",
+            "caseRef": {
+              "id": "ui-fixture-case",
+              "incarnation": "ui-fixture-case-incarnation",
+              "version": 3
+            }
+          },
+          "keyPresent": true
+        }
+      ]
+    },
+    {
+      "name": "cancel-lost-response",
+      "pageErrors": [],
+      "observations": [
+        {
+          "phase": "idle",
+          "controls": {
+            "ready": "true",
+            "status": "",
+            "cancel": {
+              "present": true,
+              "hiddenAttribute": "",
+              "hidden": true,
+              "display": "none",
+              "visibility": "visible",
+              "rectangles": 0,
+              "disabled": false
+            },
+            "retry": {
+              "present": true,
+              "hiddenAttribute": "",
+              "hidden": true,
+              "display": "none",
+              "visibility": "visible",
+              "rectangles": 0,
+              "disabled": false
+            },
+            "start": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": false
+            },
+            "currency": "USD",
+            "resultBodies": 0,
+            "matchedDisplayRules": [
+              {
+                "selector": "button, .button",
+                "display": "inline-flex",
+                "priority": ""
+              },
+              {
+                "selector": "button[hidden], .button[hidden]",
+                "display": "none",
+                "priority": ""
+              }
+            ]
+          }
+        },
+        {
+          "phase": "before-cancel",
+          "lastRead": {
+            "runRef": "ui-fixture-run",
+            "state": "running",
+            "version": 1
+          },
+          "controls": {
+            "ready": "true",
+            "status": "Analysis: running.",
+            "cancel": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": false
+            },
+            "retry": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": false
+            },
+            "start": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": true
+            },
+            "currency": "EUR",
+            "resultBodies": 0,
+            "matchedDisplayRules": [
+              {
+                "selector": "button, .button",
+                "display": "inline-flex",
+                "priority": ""
+              }
+            ]
+          }
+        },
+        {
+          "phase": "cancellation-unconfirmed",
+          "lastRead": {
+            "runRef": "ui-fixture-run",
+            "state": "running",
+            "version": 1
+          },
+          "controls": {
+            "ready": "true",
+            "status": "Could not confirm cancellation. Refresh the analysis status.",
+            "cancel": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": false
+            },
+            "retry": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": false
+            },
+            "start": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": true
+            },
+            "currency": "EUR",
+            "resultBodies": 0,
+            "matchedDisplayRules": [
+              {
+                "selector": "button, .button",
+                "display": "inline-flex",
+                "priority": ""
+              }
+            ]
+          }
+        },
+        {
+          "phase": "cancelled",
+          "lastRead": {
+            "runRef": "ui-fixture-run",
+            "state": "cancelled",
+            "version": 1
+          },
+          "controls": {
+            "ready": "true",
+            "status": "Analysis: cancelled.",
+            "cancel": {
+              "present": true,
+              "hiddenAttribute": "",
+              "hidden": true,
+              "display": "none",
+              "visibility": "visible",
+              "rectangles": 0,
+              "disabled": false
+            },
+            "retry": {
+              "present": true,
+              "hiddenAttribute": "",
+              "hidden": true,
+              "display": "none",
+              "visibility": "visible",
+              "rectangles": 0,
+              "disabled": false
+            },
+            "start": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": false
+            },
+            "currency": "EUR",
+            "resultBodies": 0,
+            "matchedDisplayRules": [
+              {
+                "selector": "button, .button",
+                "display": "inline-flex",
+                "priority": ""
+              },
+              {
+                "selector": "button[hidden], .button[hidden]",
+                "display": "none",
+                "priority": ""
+              }
+            ]
+          }
+        }
+      ],
+      "requests": [
+        {
+          "mode": "workbench-analysis",
+          "action": "list",
+          "payload": {
+            "action": "list",
+            "caseRef": {
+              "id": "ui-fixture-case",
+              "incarnation": "ui-fixture-case-incarnation",
+              "version": 3
+            }
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-forecast",
+          "payload": {
+            "caseRef": {
+              "id": "ui-fixture-case",
+              "incarnation": "ui-fixture-case-incarnation",
+              "version": 3
+            },
+            "baseRef": "ui-fixture-baseline",
+            "candidateRef": "ui-fixture-candidate",
+            "period": {
+              "start": "2027-02-01",
+              "end": "2027-11-30"
+            },
+            "currency": "EUR"
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-analysis",
+          "action": "start",
+          "payload": {
+            "action": "start",
+            "input": {
+              "request": {
+                "caseRef": {
+                  "id": "ui-fixture-case",
+                  "incarnation": "ui-fixture-case-incarnation",
+                  "version": 3
+                },
+                "objective": "Explain the selected forecast change",
+                "profileId": "sf_finance",
+                "profileVersion": "1.0.0",
+                "skillId": "sf-explicar-forecast",
+                "skillVersion": "1.0.0",
+                "manifestDigest": "d00c7ce2e450fc15fda8d35ebf1c27eeff43833ad2bb35b5b8e4548a9054c31d",
+                "outputSchemaVersion": "sf-contribution-v1",
+                "requestedOperationScope": [
+                  "sf_context_get",
+                  "sf_forecast_compare",
+                  "sf_freshness_check",
+                  "sf_import_preview",
+                  "sf_kpi_explain",
+                  "sf_source_get"
+                ]
+              },
+              "skillInput": {
+                "uiFixtureBoundary": true,
+                "selectedForecast": "prepared-once"
+              },
+              "model": {
+                "id": "ui-fixture-model",
+                "providerID": "ui-fixture-catalog"
+              }
+            }
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-analysis",
+          "action": "read",
+          "payload": {
+            "action": "read",
+            "runRef": "ui-fixture-run"
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-analysis",
+          "action": "cancel",
+          "payload": {
+            "action": "cancel",
+            "runRef": "ui-fixture-run"
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-analysis",
+          "action": "read",
+          "payload": {
+            "action": "read",
+            "runRef": "ui-fixture-run"
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-analysis",
+          "action": "list",
+          "payload": {
+            "action": "list",
+            "caseRef": {
+              "id": "ui-fixture-case",
+              "incarnation": "ui-fixture-case-incarnation",
+              "version": 3
+            }
+          },
+          "keyPresent": true
+        }
+      ]
+    },
+    {
+      "name": "revocation-http-403",
+      "pageErrors": [],
+      "observations": [
+        {
+          "phase": "idle",
+          "controls": {
+            "ready": "true",
+            "status": "",
+            "cancel": {
+              "present": true,
+              "hiddenAttribute": "",
+              "hidden": true,
+              "display": "none",
+              "visibility": "visible",
+              "rectangles": 0,
+              "disabled": false
+            },
+            "retry": {
+              "present": true,
+              "hiddenAttribute": "",
+              "hidden": true,
+              "display": "none",
+              "visibility": "visible",
+              "rectangles": 0,
+              "disabled": false
+            },
+            "start": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": false
+            },
+            "currency": "USD",
+            "resultBodies": 0,
+            "matchedDisplayRules": [
+              {
+                "selector": "button, .button",
+                "display": "inline-flex",
+                "priority": ""
+              },
+              {
+                "selector": "button[hidden], .button[hidden]",
+                "display": "none",
+                "priority": ""
+              }
+            ]
+          }
+        },
+        {
+          "phase": "active-before-revoke",
+          "lastRead": {
+            "runRef": "ui-fixture-run",
+            "state": "running",
+            "version": 1
+          },
+          "controls": {
+            "ready": "true",
+            "status": "Analysis: running.",
+            "cancel": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": false
+            },
+            "retry": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": false
+            },
+            "start": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": true
+            },
+            "currency": "EUR",
+            "resultBodies": 0,
+            "matchedDisplayRules": [
+              {
+                "selector": "button, .button",
+                "display": "inline-flex",
+                "priority": ""
+              }
+            ]
+          }
+        },
+        {
+          "phase": "revoked",
+          "lastRead": {
+            "runRef": "ui-fixture-run",
+            "state": "running",
+            "version": 1
+          },
+          "controls": {
+            "ready": "true",
+            "status": "Analysis access changed. Reopen the decision with your current access.",
+            "cancel": null,
+            "retry": null,
+            "start": {
+              "present": true,
+              "hiddenAttribute": null,
+              "hidden": false,
+              "display": "flex",
+              "visibility": "visible",
+              "rectangles": 1,
+              "disabled": true
+            },
+            "currency": "",
+            "resultBodies": 0,
+            "matchedDisplayRules": []
+          }
+        }
+      ],
+      "requests": [
+        {
+          "mode": "workbench-analysis",
+          "action": "list",
+          "payload": {
+            "action": "list",
+            "caseRef": {
+              "id": "ui-fixture-case",
+              "incarnation": "ui-fixture-case-incarnation",
+              "version": 3
+            }
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-forecast",
+          "payload": {
+            "caseRef": {
+              "id": "ui-fixture-case",
+              "incarnation": "ui-fixture-case-incarnation",
+              "version": 3
+            },
+            "baseRef": "ui-fixture-baseline",
+            "candidateRef": "ui-fixture-candidate",
+            "period": {
+              "start": "2027-02-01",
+              "end": "2027-11-30"
+            },
+            "currency": "EUR"
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-analysis",
+          "action": "start",
+          "payload": {
+            "action": "start",
+            "input": {
+              "request": {
+                "caseRef": {
+                  "id": "ui-fixture-case",
+                  "incarnation": "ui-fixture-case-incarnation",
+                  "version": 3
+                },
+                "objective": "Explain the selected forecast change",
+                "profileId": "sf_finance",
+                "profileVersion": "1.0.0",
+                "skillId": "sf-explicar-forecast",
+                "skillVersion": "1.0.0",
+                "manifestDigest": "d00c7ce2e450fc15fda8d35ebf1c27eeff43833ad2bb35b5b8e4548a9054c31d",
+                "outputSchemaVersion": "sf-contribution-v1",
+                "requestedOperationScope": [
+                  "sf_context_get",
+                  "sf_forecast_compare",
+                  "sf_freshness_check",
+                  "sf_import_preview",
+                  "sf_kpi_explain",
+                  "sf_source_get"
+                ]
+              },
+              "skillInput": {
+                "uiFixtureBoundary": true,
+                "selectedForecast": "prepared-once"
+              },
+              "model": {
+                "id": "ui-fixture-model",
+                "providerID": "ui-fixture-catalog"
+              }
+            }
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-analysis",
+          "action": "read",
+          "payload": {
+            "action": "read",
+            "runRef": "ui-fixture-run"
+          },
+          "keyPresent": true
+        },
+        {
+          "mode": "workbench-analysis",
+          "action": "read",
+          "payload": {
+            "action": "read",
+            "runRef": "ui-fixture-run"
+          },
+          "keyPresent": true
+        }
+      ]
+    }
+  ],
+  "passed": [
+    "complete original U30 positive including formerly NOT_REACHED assertions",
+    "Enter HTTP409",
+    "idle",
+    "preparing/queued/running",
+    "all six terminal states",
+    "status retry before and after running",
+    "confirmed cancel",
+    "503 after applied fixture cancellation then status reconciliation",
+    "HTTP403 revocation",
+    "browser lifecycle"
+  ],
+  "failure": {
+    "name": "Forecast removes cancellation controls after revocation through shell-event",
+    "location": "revocation.test.ts:26",
+    "message": "Wait for access-changed status in connected forecast form exceeded unchanged 5000ms native action timeout",
+    "source_observation": {
+      "path": "modules/sucafina/Sucafinav1/product/ui/shell-state.ts",
+      "blob": "74ccb3c50dcadd85878987870f0e388926898d53",
+      "behavior": "revokeAccess queues replacement of document.body with main[data-access-unavailable]; connected form locator is no longer the intended observer"
+    },
+    "disposition": "Own test expectation correction proposed. Preserve aggregate FAIL; next proof retains old-view handles and checks both scrubbing and new access-unavailable UI."
+  },
+  "u30_equivalence": {
+    "source_commit": "54317229d7f8fcb7e92921c2f4a8dc6f9310270b",
+    "source_path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/forecast-submit.test.ts",
+    "source_blob": "b312f2dda7029b79c7420af91d52ca6fec1b098d",
+    "copied_path": "modules/sucafina/Sucafinav1/test/product/forecast-cancel-visibility/forecast-submit.test.ts",
+    "copied_blob": "aa2ddcd4f4fb405739f90ebf48a1d17fe15d6ab1",
+    "normalization": [
+      "Remove three read-only SF_FORECAST_CONTROL_STATE console lines",
+      "Restore observational lastRead assignment to original response object",
+      "Ignore import relocation and exact forecastPage extraction"
+    ],
+    "body_exactly_equal_after_normalization": true,
+    "original_body_sha256": "f23bf546bc4e2d58876bbce147255fc8aa888c6caad73587bd2cd6a8023a7f7f",
+    "normalized_copy_body_sha256": "f23bf546bc4e2d58876bbce147255fc8aa888c6caad73587bd2cd6a8023a7f7f",
+    "assertion_statements": 17
+  },
+  "limits": {
+    "real": [
+      "forecastAnalysisForm",
+      "forecastAnalysisScript",
+      "documentHtml/pageMain shell",
+      "distributed resident catalog",
+      "Chromium and existing WP01/WP02 browser pool"
+    ],
+    "fixture": [
+      "case and evidence data",
+      "model catalog",
+      "HTTP prepare/start/read/output responses"
+    ],
+    "not_claimed": [
+      "financial producer",
+      "native model or Session",
+      "AM01-AM06",
+      "GLOBAL_RELEASE"
+    ]
+  }
+}

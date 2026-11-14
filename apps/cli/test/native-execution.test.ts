@@ -21,6 +21,7 @@ import { createSfRunStore } from "../../../modules/sucafina/Sucafinav1/product/a
 import { createSfExecutionBindingRegistry } from "../../../modules/sucafina/Sucafinav1/product/host-binding/execution-context.ts"
 import { createSfProductState } from "../../../modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts"
 import { openLocalStore } from "../../../modules/sucafina/Sucafinav1/runtime/local-store.ts"
+import { analysisLifecycleFixture } from "../../../modules/sucafina/Sucafinav1/test/product/wp10/integration/analysis-lifecycle-fixture.ts"
 
 test("native execution denies forged tickets and rejected preflight without creating a durable run", async () => {
   const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-native-execution-"))
@@ -86,3 +87,43 @@ test("native execution denies forged tickets and rejected preflight without crea
     await rm(directory, { recursive: true, force: true })
   }
 })
+
+test("real rejected native admission settles its preparing record through lifecycle after the source changes", async () => {
+  const f = await analysisLifecycleFixture({ seedRun: false })
+  try {
+    // The genuine native host refuses admission. No Session, loaded receipt,
+    // native execution or publication is manufactured by this counterproof.
+    const registry = createSfExecutionBindingRegistry({ authenticateAndResolve: async () => undefined, revalidateAdmission: async () => false })
+    const contribution = createSfNativeHostContribution({ registry, admit: () => Effect.succeed(false), authorize: () => Effect.succeed(false) })
+    const layer = AppNodeBuilder.build(LayerNode.group([contribution.node]), [[SessionExecution.node, SessionExecutionLocal.node]])
+    const scopes = { fresh: 0, lifecycle: 0 }
+    await Effect.gen(function* () {
+      const host = yield* SfNativeHost
+      const model = ModelV2.Ref.make({ providerID: ProviderV2.ID.make(f.preparing.model.providerID), id: ModelV2.ID.make(f.preparing.model.id) })
+      const execution = createSfNativeExecution({ host, store: f.store, intentDigest: f.preparing.intentDigest,
+        withRunContext: async (id, action) => {
+          scopes.fresh++
+          const result = await f.withRunContext(id, action)
+          if (scopes.fresh === 1 && result.status === "ok") await f.changeSource()
+          return result
+        },
+        withLifecycleContext: (id, action) => { scopes.lifecycle++; return f.lifecycle.withContext(id, action) },
+        preflight: async () => ({ status: "ok", value: { record: f.preparing, native: { request: f.request, selected: f.preparing.selection,
+          location: f.location, model, skillId: f.preparing.skillId, prompt: "Rejected admission fixture", runId: f.preparing.runRef,
+          caseRef: f.preparing.caseRef, entryMode: "interactive", toolCallBudget: 1, skillLoadBudget: 0 } } }),
+        verifyOutput: async () => ({ status: "denied", reason: "fixture-output-unavailable" }),
+      })
+      expect(yield* Effect.promise(() => execution.admit(f.analysisRequest, {})))
+        .toEqual({ status: "denied", reason: "native-admission-denied" })
+      expect(scopes).toEqual({ fresh: 1, lifecycle: 1 })
+      const saved = yield* Effect.promise(() => f.read())
+      expect(saved).toMatchObject({ status: "ok", value: { run: { state: "unavailable", version: 2, reason: "native-admission-denied" }, output: undefined } })
+      if (saved.status !== "ok" || !saved.value.run) throw new Error("Preparing lifecycle settlement unavailable")
+      expect(saved.value.run.native).toBeUndefined()
+      expect(saved.value.run.outputRef).toBeUndefined()
+      expect(yield* Effect.promise(() => f.withRunContext(f.run.runRef, (call) => f.store.read(f.run.runRef, call))))
+        .toEqual({ status: "stale", reason: "fixture-source-changed" })
+      yield* Effect.promise(() => execution.shutdown())
+    }).pipe(Effect.scoped, Effect.provide(layer), Effect.runPromise)
+  } finally { await f.dispose() }
+}, 120_000)

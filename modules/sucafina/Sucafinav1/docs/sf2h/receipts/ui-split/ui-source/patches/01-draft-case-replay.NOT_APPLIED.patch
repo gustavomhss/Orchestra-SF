@@ -1,0 +1,32 @@
+# NOT_APPLIED — compose-resume / decisions draft producer
+# Proposal only; no runtime or typecheck acceptance is claimed.
+diff --git a/modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts b/modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts
+index d8a151c558227b3bd2612dbb6caba993efa85783..7312549ff10ca33ef7406fc81e952a114235919e 100644
+--- a/modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts
++++ b/modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts
+@@ -89,15 +89,20 @@
+         const previous = request.draftRef ? state.preferences[historyKey(request.draftRef)] : undefined
+         return { previous, active: isDraft(previous) ? state.preferences[activeKey(previous.id)] : undefined, prior: state.transactions[JSON.stringify([authority.principalRef, "preferences", request.caseRef.id, `hot-topic-draft:${operation}`])] }
+       })
+-      if (current.status !== "ok" || !allowed(current.value, request.caseRef, context) || !await input.authorizeCase(current.value!, context) || preferences.status !== "ok" || !preferences.value) return { status: "denied", reason: "hot-topic-draft-access-unavailable" }
++      const currentRef = current.status === "ok" && current.value ? { ...request.caseRef, version: current.value.version } : undefined
++      if (current.status !== "ok" || !currentRef || currentRef.version < request.caseRef.version || !allowed(current.value, currentRef, context) || !await input.authorizeCase(current.value!, context) || preferences.status !== "ok" || !preferences.value) return { status: "denied", reason: "hot-topic-draft-access-unavailable" }
+       if (preferences.value.prior) {
+         if (preferences.value.prior.commandDigest !== digestSfValue(request) || preferences.value.prior.targetIncarnation !== request.caseRef.incarnation) return { status: "conflict", reason: "idempotency-content-changed" }
+         const saved = preferences.value.prior.value
+-        if (!saved || typeof saved !== "object" || !("draftRef" in saved) || typeof saved.draftRef !== "string") return { status: "unavailable", reason: "hot-topic-draft-unavailable" }
+-        const checked = await readCurrent({ caseRef: request.caseRef, draftRef: saved.draftRef }, context)
+-        if (checked.status !== "ok" || !await input.authorizeDraft(request, context)) return { status: "unavailable", reason: "hot-topic-draft-unavailable" }
+-        return { status: "ok", value: { draftRef: checked.value.draftRef, version: checked.value.version } }
++        if (!saved || typeof saved !== "object" || !("draftRef" in saved) || typeof saved.draftRef !== "string" || !("version" in saved) || typeof saved.version !== "number" || !Number.isSafeInteger(saved.version)) return { status: "unavailable", reason: "hot-topic-draft-unavailable" }
++        // The original command digest stays exact. Current authority, case scope,
++        // active draft and source fences are checked against the observed current case.
++        const checked = await readCurrent({ caseRef: currentRef, draftRef: saved.draftRef }, context)
++        if (checked.status !== "ok" || checked.value.draftRef !== saved.draftRef || checked.value.version !== saved.version || !await input.authorizeDraft(request, context)) return { status: "unavailable", reason: "hot-topic-draft-unavailable" }
++        return { status: "ok", value: { draftRef: saved.draftRef, version: saved.version } }
+       }
++      // A new write still requires the originally requested case version exactly.
++      if (!allowed(current.value, request.caseRef, context)) return { status: "denied", reason: "hot-topic-draft-access-unavailable" }
+       const previous = preferences.value.previous
+       if (request.draftRef && (!isDraft(previous) || !isDraft(preferences.value.active) || digestSfValue(previous) !== digestSfValue(preferences.value.active) || previous.draftRef !== request.draftRef || previous.caseRef.id !== request.caseRef.id || previous.caseRef.incarnation !== request.caseRef.incarnation || previous.caseScopeDigest !== caseScopeDigest(current.value!) || previous.version !== request.expectedVersion)) return { status: "stale", reason: "hot-topic-draft-changed" }
+       if (!request.draftRef && request.expectedVersion !== 0) return { status: "stale", reason: "hot-topic-draft-changed" }

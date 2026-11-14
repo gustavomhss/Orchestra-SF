@@ -6,7 +6,9 @@ import { decodeSfOperationInput, decodeSfOperationOutput } from "../../../produc
 import { dispatchSfCapability } from "../../../product/host-binding/capability-dispatch.ts"
 import { createPersistentPortfolioCapabilities } from "../../../product/portfolio/persistent-capabilities.ts"
 import { createPersistentPortfolioPort } from "../../../product/portfolio/result-store.ts"
+import { createPersistentSensitivityPort } from "../../../product/portfolio/sensitivity-store.ts"
 import { createSfDecisionResultStore } from "../../../product/decisions/result-store.ts"
+import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import { createSfProductState } from "../../../product/host-binding/state-provider.ts"
 import { openLocalStore } from "../../../runtime/local-store.ts"
 import type { PortfolioPort } from "../../../product/portfolio/port.ts"
@@ -77,4 +79,38 @@ test("refuses to persist analysis whose referenced scenario differs", async () =
   const result = await port.evaluateAndStore({ scope: { horizon, currency: "USD" }, candidateRefs: ["candidate"], operations: [], constraints: [], priorities: [], explorationLimit: 1 }, caseRef, {} as TrustedUiContext)
   expect(result).toEqual({ status: "stale", reason: "portfolio-analysis-changed" })
   expect(writes.count).toBe(0)
+})
+
+test("sensitivity closes sample rereads with the bound reader and denies authority revoked during those reads", async () => {
+  // This isolates the read ordering, not numerical calculation; renewal tests use the real C08 reader.
+  const caseRef = { id: "case", incarnation: "inc", version: 1 }
+  const context = {} as TrustedUiContext
+  const request = { scenarioRef: "source", parameterBounds: { parameterRef: "price", minimum: 0, maximum: 1, steps: 1 }, criterion: { id: "criterion", operator: "lte" as const, value: 0 } }
+  const sensitivity = { scenarioRef: "source", evaluated: [{ resultRef: "sample", parameterValue: 0, value: null }] }
+  const stored = { kind: "sensitivity", resultRef: "sensitivity", resultDigest: digestSfValue(sensitivity), requestDigest: digestSfValue(request), result: sensitivity, caseRef }
+  let revokeOnSample = false
+  let allowed = true
+  const reads: string[] = []
+  const results = {
+    read: async ({ kind, resultRef }: { kind: string; resultRef: string }) => {
+      reads.push(`${kind}:${resultRef}`)
+      if (kind === "sensitivity") return { status: "ok", value: structuredClone(stored) }
+      if (revokeOnSample) allowed = false
+      return { status: "ok", value: { kind: "scenario", resultRef, caseRef, sourceRefs: [] } }
+    },
+    readHistoricalScenario: async () => { reads.push("source"); return { status: "ok", value: { kind: "scenario", caseRef, sourceRefs: [] } } },
+  } as unknown as ReturnType<typeof createSfDecisionResultStore>
+  const bindings = {
+    read: async () => {
+      reads.push("binding-current-proof")
+      return allowed ? { status: "ok", value: { resultRef: stored.resultRef, resultDigest: stored.resultDigest, caseRef, request } } : { status: "denied", reason: "criterion-result-access-unavailable" }
+    },
+  } as unknown as Parameters<typeof createPersistentSensitivityPort>[0]["bindings"]
+  const port = createPersistentSensitivityPort({ results, bindings, portfolio: { evaluate: async () => ({ status: "unavailable", reason: "read-only" }), sensitivity: async () => ({ status: "unavailable", reason: "read-only" }) }, resolveBinding: async () => ({ status: "unavailable", reason: "read-only" }), idempotencyKey: async () => undefined })
+  expect((await port.read(stored.resultRef, context)).status).toBe("ok")
+  expect(reads).toEqual(["sensitivity:sensitivity", "source", "scenario:sample", "sensitivity:sensitivity", "binding-current-proof"])
+  reads.length = 0
+  revokeOnSample = true
+  expect(await port.read(stored.resultRef, context)).toEqual({ status: "denied", reason: "criterion-result-access-unavailable" })
+  expect(reads.at(-1)).toBe("binding-current-proof")
 })

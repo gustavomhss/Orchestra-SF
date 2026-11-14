@@ -1,0 +1,91 @@
+{
+  "status": "NOT_APPLIED",
+  "patches": [
+    {
+      "file": "01-draft-case-replay.NOT_APPLIED.patch",
+      "status": "NOT_APPLIED",
+      "owner": "compose-resume / decisions draft producer",
+      "verification": "PASS syntax parsing + git apply --check against exact pinned copies; typecheck/runtime NOT_RUN",
+      "sha256": "e9f65479b6cdde74b8c1700189b4ece50320e710f17a5fdf97132b9ddf03db0d",
+      "files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts",
+          "sourceRef": "e1a1888bd2117616d53c5af5f5014e81c4b4e530",
+          "sourceBlob": "d8a151c558227b3bd2612dbb6caba993efa85783",
+          "proposedBlob": "7312549ff10ca33ef7406fc81e952a114235919e"
+        }
+      ],
+      "limitations": [
+        "Preserves the newer compose readCurrent final locked fences. No shared allowed() relaxation.",
+        "Owner must run lost-register positive plus material case change, superseded draft, source ABA, cancellation and current authority revocation controls."
+      ],
+      "appliedToProduct": false
+    },
+    {
+      "file": "02-atomic-create-binding.NOT_APPLIED.patch",
+      "status": "NOT_APPLIED",
+      "owner": "WP10 lifecycle + collab-resume host + ui-source consumer",
+      "verification": "PASS syntax parsing + git apply --check against exact pinned copies; typecheck/runtime NOT_RUN",
+      "sha256": "39fc2cab3fd3aeae67188963243d55a3b69592fdae981b19b70ed47a75450c41",
+      "files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+          "sourceRef": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+          "sourceBlob": "65867a3e6aa9b5b85266bb637fb22cf1c6c6d539",
+          "proposedBlob": "9e9261743f8599051b0308c8416a62b72b58bf84"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/hot-topic-host.ts",
+          "sourceRef": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+          "sourceBlob": "aaae9db90459f8e6b34d9a1a2a1aedfda2a4affb",
+          "proposedBlob": "37c3164af1b17985213cd86e6c82f742ef5a24bd"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/dashboard/hot-topics.ts",
+          "sourceRef": "cfeda8edd29717f032f06b1ce66e63bd8a900c8e",
+          "sourceBlob": "051be54adbf197a0f4b290ab6bc6aaa9f0f563d5",
+          "proposedBlob": "cfc9d98c5c463041becbab11f1455c925a594451"
+        }
+      ],
+      "limitations": [
+        "Requires owner composition to inject sourceCreation: the same createSfSourcePersistence instance used by C08. Optional capability preserves refusal until wired.",
+        "Not yet integrated, typechecked or tested. Owner must cover commit rollback, lost ACK/reopen, source/authority revocation during mutation, legacy receipt and ABA; must prove one durable commit.",
+        "No UI-supplied identity, no second transaction, no generic mutation exemption: private reservations are guarded and closed in finally."
+      ],
+      "appliedToProduct": false
+    },
+    {
+      "file": "03-unsaved-source-continuity.NOT_APPLIED.patch",
+      "status": "NOT_APPLIED",
+      "owner": "compose-resume / WP10 admitted Dashboard source owner",
+      "verification": "PASS syntax parsing + git apply --check against exact pinned copies; typecheck/runtime NOT_RUN",
+      "sha256": "18355a198849cb5193081848c4230e650389b39ed59e7d1b44a40bb0dcd7fb06",
+      "files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/dashboard/sources.ts",
+          "sourceRef": "e1a1888bd2117616d53c5af5f5014e81c4b4e530",
+          "sourceBlob": "c32c973c0b4111e4ac7df0c5d934e094277823f6",
+          "proposedBlob": "bc8b73756c0f6d6f4b72ccd12e6115e7b583313e"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/dashboard-services.ts",
+          "sourceRef": "e1a1888bd2117616d53c5af5f5014e81c4b4e530",
+          "sourceBlob": "0891d178833165fff098e3c05f3a64c5f5b35043",
+          "proposedBlob": "37e1e65601bf5ebbdf89467c2d7aed61061115a4"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/dashboard-http.ts",
+          "sourceRef": "e1a1888bd2117616d53c5af5f5014e81c4b4e530",
+          "sourceBlob": "c6c24f4a66315c75dd8b0903ddd70c89b9b9e19c",
+          "proposedBlob": "642fda304f8d847b0e0046dfa99da90689e777e4"
+        }
+      ],
+      "limitations": [
+        "Requires owner review, typecheck and runtime proofs; this proposed API is absent in all executed tests.",
+        "Browser owner must consume the continuity receipt to preserve unsaved wording read-only, while current permissions keep register/prepare/apply disabled. No UI file is patched here.",
+        "Requires F04 positive plus read revocation, field/period shrink, source ABA, material edit and authority changes during observations; ID equality alone never certifies continuity."
+      ],
+      "appliedToProduct": false
+    }
+  ]
+}

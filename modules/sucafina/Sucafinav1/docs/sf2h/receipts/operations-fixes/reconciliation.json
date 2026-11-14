@@ -1,0 +1,155 @@
+{
+  "schema": "operations-fixes-reconciliation-v1",
+  "observedAt": "2026-11-14T18:15:27.212Z",
+  "repository": "gustavomhss/Orchestra-SF",
+  "pullRequest": {
+    "number": 52,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/pull/52",
+    "head": "operations-fixes",
+    "base": "astra-operations"
+  },
+  "initial": {
+    "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+    "tree": "eb427121bcfd8c2511aac31d908f3c0d52c1915e"
+  },
+  "sources": {
+    "review": {
+      "commit": "6830fa159d30b60d001f91a47326ae88c6255282",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reviews/operations/REVIEW.md",
+      "blob": "316622db495a2f51a1c051fab87e04539b8bbe4a"
+    },
+    "normative": {
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "directory": "modules/sucafina/Sucafinav1/docs/sf2h-plan",
+      "read": [
+        "COMMON",
+        "WP01 affected criteria",
+        "WP04 affected criteria",
+        "WP06 affected criteria",
+        "C03",
+        "C12",
+        "C14"
+      ]
+    },
+    "ci": {
+      "commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/CI.md",
+      "blob": "c34ab425e0f3b7dc0899a05826829f38b5af84bb"
+    },
+    "agents": {
+      "path": "AGENTS.md",
+      "blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+      "nestedAgentsFound": false
+    }
+  },
+  "heads": [
+    {
+      "branch": "astra-operations",
+      "head": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+      "tree": "eb427121bcfd8c2511aac31d908f3c0d52c1915e"
+    },
+    {
+      "branch": "operations-fixes",
+      "head": "eb3a97c0c2063fd28bbca74cdf50b3417c15ba25",
+      "tree": "4fef9228aa776288919c829f0888d020c1f739b8"
+    },
+    {
+      "branch": "dev",
+      "head": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+      "tree": "58a0c245e9c331aa93f5f2e6244c8bb8c05c975e"
+    },
+    {
+      "branch": "astra-wp11",
+      "head": "e8949be0e31952d5be4987c099003cd0b46e2add",
+      "tree": "694ab744ce9e1361ec65704c5854c0bd30bf833a"
+    },
+    {
+      "branch": "finance-resume",
+      "head": "3ea9dc2efe0de8d283f9625774697e431f55a0d7",
+      "tree": "2d1ecef2ebc5aeca3fd312397bdf709f53d42582"
+    },
+    {
+      "branch": "compose-resume",
+      "head": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "tree": "885ce466354d2b8dcf674472561c9c1fc3b632ff"
+    },
+    {
+      "branch": "interface-resume",
+      "head": "2ee71fc90055814912654ae198f7a1dcf9583943",
+      "tree": "cf3676a469a1f8bcab05e322ee7a4a1ada0704c5"
+    },
+    {
+      "branch": "ui-recovery",
+      "head": "db1dd1709483478ca2c8db2f0a479b72aea59821",
+      "tree": "14ed87eea33e428d1ffe57c3a2dd8e443452e912"
+    }
+  ],
+  "changes": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/documents/schemas.ts",
+      "preimage": "8ea0010cef6bb9a7d2dcb3ba805b197a373bba39",
+      "resultBlob": "fbe4b70444d4a7341a30372c754842a5aca3ce70",
+      "fixCommit": "86f9c993678668634ab409dc31b6b92865836180"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/documents/workbench.ts",
+      "preimage": "f6176e8900cf550e3a9d760c4d6a12c3f342ac07",
+      "resultBlob": "3d21a461c88da2372eae57d0e066ff59d9f21f55",
+      "fixCommit": "86f9c993678668634ab409dc31b6b92865836180"
+    }
+  ],
+  "reconciledOwnerDeltas": [
+    {
+      "branch": "finance-resume",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+      "blob": "f8404c18abc040c49cf111eb4561ce4c2873a4c6",
+      "decision": "Existing-receipt gate correction already present. Proposed mode guard is a minimal separate variant; no old executor copied into product."
+    },
+    {
+      "branch": "astra-wp11",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+      "blob": "229e64c2d8109b413a7667bbe1b208ffa3ab0a73",
+      "decision": "Existing-receipt gate correction already present; no duplicate applied."
+    },
+    {
+      "branch": "compose-resume",
+      "path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+      "blob": "23d9291b3dcedda36edc4aa4f38856024e3c58f4",
+      "decision": "Historical case gate still precedes lookup in the Procurement host. Proposed owner patch only."
+    },
+    {
+      "branch": "interface-resume",
+      "path": "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+      "blob": "2e6c081ad2a5282654707f7fc7278183e7dfb20d",
+      "decision": "Generic consumer unchanged at observed head. UI recovery proposal is atomic with owner endpoint and not applied."
+    },
+    {
+      "branch": "ui-recovery",
+      "head": "db1dd1709483478ca2c8db2f0a479b72aea59821",
+      "decision": "PR46 addresses a separate Dashboard consumer. Its paths and branch remain untouched."
+    }
+  ],
+  "ownership": {
+    "productTouched": [
+      "modules/sucafina/Sucafinav1/product/documents/schemas.ts",
+      "modules/sucafina/Sucafinav1/product/documents/workbench.ts"
+    ],
+    "newTestPrefix": "modules/sucafina/Sucafinav1/test/product/operations-fixes/",
+    "newReceiptPrefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-fixes/",
+    "sharedProductChangesApplied": false,
+    "fourUiSlicesTouched": false,
+    "previousBranchesChanged": false,
+    "merged": false
+  },
+  "validationPolicy": {
+    "productTests": "GitHub Actions only",
+    "remote": "GitHub MCP only",
+    "localProductTests": false,
+    "epic": false,
+    "equivalentReruns": false,
+    "assertionsRemoved": false,
+    "deadlinesIncreased": false,
+    "ciSnapshots": "one added envelope and parent == product",
+    "finalChecks": "Existing astra-operations-check workflow in full mode; terminal result is recorded in PR52 to avoid a self-referential receipt commit."
+  }
+}

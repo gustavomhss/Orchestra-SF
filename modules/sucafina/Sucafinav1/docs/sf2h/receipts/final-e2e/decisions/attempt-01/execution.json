@@ -1,0 +1,177 @@
+{
+  "schema": "sf2h-final-e2e-decisions-execution-v1",
+  "status": "PARTIAL_BLOCKED",
+  "selection": "CI-UI-DECISIONS",
+  "product": "3e1a8ec84ae334b7c7320c86d6b93bd5730ba469",
+  "snapshot": "7b3cc91ec088bdc527e1af1207ef8d66f5c45a2c",
+  "run_id": 43632217395,
+  "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43632217395",
+  "request_validation": "PASS",
+  "exact_spec_collection": "PASS",
+  "selected_files": [
+    "e2e/sucafina/decisions.spec.ts"
+  ],
+  "selected_tests": 3,
+  "workers": 1,
+  "retries": 0,
+  "repeat_each": 1,
+  "project": "chromium",
+  "configuration": "e2e/playwright.production.config.ts",
+  "configuration_metadata": {
+    "bundle": "production"
+  },
+  "environment": {
+    "ORCHESTRA_CHANNEL": "prod"
+  },
+  "runtime_stats": {
+    "startTime": "2026-11-14T19:29:56.463Z",
+    "duration": 262290.059,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 3,
+    "flaky": 0
+  },
+  "tests": [
+    {
+      "title": "CI-UI-DECISIONS — create, edit and reopen the same durable case through Workbench",
+      "file": "sucafina/decisions.spec.ts",
+      "line": 14,
+      "results": [
+        {
+          "project": "chromium",
+          "status": "failed",
+          "retry": 0,
+          "duration_ms": 74233,
+          "first_failure": "CLI exited: 1; Profile policy mismatch: sf_portfolio",
+          "failure_stage": "START_REAL_INSTALLATION",
+          "ui_actions_completed": 0
+        }
+      ]
+    },
+    {
+      "title": "CI-UI-DECISIONS — alternative discovery consumes a real Decisions catalog, not HTML 200",
+      "file": "sucafina/decisions.spec.ts",
+      "line": 66,
+      "results": [
+        {
+          "project": "chromium",
+          "status": "failed",
+          "retry": 0,
+          "duration_ms": 74267,
+          "first_failure": "CLI exited: 1; Profile policy mismatch: sf_portfolio",
+          "failure_stage": "START_REAL_INSTALLATION",
+          "ui_actions_completed": 0
+        }
+      ]
+    },
+    {
+      "title": "CI-UI-DECISIONS — recover a lost creation response by reading the same case without resubmitting",
+      "file": "sucafina/decisions.spec.ts",
+      "line": 114,
+      "results": [
+        {
+          "project": "chromium",
+          "status": "failed",
+          "retry": 0,
+          "duration_ms": 78226,
+          "first_failure": "CLI exited: 1; Profile policy mismatch: sf_portfolio",
+          "failure_stage": "START_REAL_INSTALLATION",
+          "ui_actions_completed": 0
+        }
+      ]
+    }
+  ],
+  "actual_first_failure": {
+    "id": "D-BOOT-PROFILE",
+    "stage": "START_REAL_INSTALLATION",
+    "process_exit": 1,
+    "reason": "Profile policy mismatch: sf_portfolio",
+    "throw_path": "modules/sucafina/Sucafinav1/product/ai/resident.ts",
+    "throw_line": 50,
+    "caller": "apps/cli/src/sucafina-product/host-context.ts:62",
+    "readiness_expected": "local-operator",
+    "readiness_received": "CLI exited: 1",
+    "readiness_budget_ms": 75000
+  },
+  "observed": [
+    "Canonical request validation",
+    "Exactly three tests collected from the required real spec",
+    "Production app-shell build/serve before test execution",
+    "Real isolated setup and CLI child process launch",
+    "Installed resident-bundle policy rejection before HTTP readiness"
+  ],
+  "journey": {
+    "dashboard": "NOT_REACHED",
+    "workbench": "NOT_REACHED",
+    "case_create_edit": "NOT_REACHED",
+    "catalog": "NOT_REACHED",
+    "alternatives": "NOT_REACHED_NOT_IMPLEMENTED_POSITIVE_FLOW",
+    "human_choice": "NOT_REACHED_NOT_IMPLEMENTED",
+    "proposal_preview_apply": "NOT_REACHED_NOT_IMPLEMENTED",
+    "financial_receipt_partial": "NOT_REACHED_NOT_IMPLEMENTED",
+    "creation_response_loss": "NOT_REACHED",
+    "financial_response_loss_retry": "NOT_REACHED_NOT_IMPLEMENTED",
+    "reload_and_current_state": "NOT_REACHED",
+    "persisted_choice_receipt_history_C17": "NOT_REACHED_NOT_IMPLEMENTED",
+    "ui_actions_completed": 0,
+    "mutations_submitted": 0
+  },
+  "provider": {
+    "availability": "NOT_OBSERVED",
+    "independent_critique": "NOT_RUN",
+    "fabricated_output": false
+  },
+  "screenshots": {
+    "status": "ARTIFACT_EXISTS_NOT_JOURNEY_PROOF",
+    "review": "One identical failure image inspected: blank page before UI. Do not count screenshot, video or HTTP200 as a passed journey."
+  },
+  "decisions_observations_attachment": "NOT_CREATED: installation failed before the action callback and observation attachment boundary.",
+  "contract_acceptance": {
+    "C09": "NOT_GRANTED",
+    "C10": "NOT_GRANTED",
+    "C12": "NOT_GRANTED",
+    "C17": "NOT_GRANTED",
+    "distinction": "Case creation or alternative choice is not financial approval. The written creation-response-loss case is not Apply/retry C12."
+  },
+  "criteria": {
+    "file": "criteria.json",
+    "canonical_rows": 83,
+    "static_fragments_implemented": 8,
+    "blocked_not_implemented": 46,
+    "outside_e2e_delta": 29,
+    "business_assertions_completed": 0,
+    "accepted_by_this_run": 0,
+    "policy": "criteria.json records pre-execution static coverage. This terminal execution overlays zero reached business assertions; it does not replace prior WP11 scoped evidence."
+  },
+  "static_dependencies_not_reproduced": [
+    "D-CASE-READ",
+    "D-HOST-HTTP",
+    "D-INITIAL-ALTERNATIVES",
+    "D-APPLY-DIGEST",
+    "D-HISTORY"
+  ],
+  "checks": {
+    "run_id": 43632969810,
+    "guards": "FAILURE",
+    "sucafina_typecheck": "FAILURE",
+    "app_typecheck": "NOT_RUN",
+    "e2e_typecheck": "NOT_RUN",
+    "decisions_typecheck": "NOT_RUN"
+  },
+  "omni_positive_control": {
+    "verdict": "not applicable",
+    "reason": "The existing test-ci workflow does not apply the Bun/omni positive-control verdict to the Playwright runner. No synthetic pass line emitted."
+  },
+  "cadence": {
+    "local_tests": 0,
+    "local_typecheck": 0,
+    "local_product_server": 0,
+    "product_runs": 1,
+    "scoped_check_runs": 1,
+    "overlap": false,
+    "epic": 0,
+    "full_suite": 0,
+    "reruns_after_same_failure": 0
+  },
+  "continuation": "S0/WP10 must reconcile published coherent profile/manifest and other runtime dependencies; then extend and validate the still unimplemented real UI journey through initial alternatives, human choice and explicit financial Apply. Do not bypass producer policies or shared fixture guards."
+}

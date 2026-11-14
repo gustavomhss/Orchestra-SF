@@ -1,0 +1,176 @@
+{
+  "schema": "sf2h.operations-auxiliary-selection.v1",
+  "attempt": "a1",
+  "status": "PASS_SCOPED",
+  "proof_kind": "AUXILIARY_LIST_AND_VALIDATE_SELECTION",
+  "W": "9b3edf3651f309ce9693d8593ac3c691e03ec1e4",
+  "W_tree": "316647481aef48776828438fa9451d82a645ad25",
+  "S": "cbf2556388896d39ecc1b90f485ddbc7ac87b443",
+  "S_tree": "3d386d9397974c910983ae1fc65424bcc9ff9d39",
+  "request": {
+    "package": "app",
+    "packageSelector": "packages/app",
+    "directory": "packages/app-shell",
+    "runner": "bun",
+    "args": [
+      "./e2e/sucafina/operations-support/selection.check.ts"
+    ],
+    "env": {
+      "ORCHESTRA_CHANNEL": "prod"
+    }
+  },
+  "request_blob": "dacbdccf11f3bc8708699b3c0dcc020a5fd20e8f",
+  "request_sha256": "4b27d7a63b090eac6057df8683869c6da138fcc93dea0b3a3e009a547d20c9b1",
+  "branch": "ci-run-linux-astra-wp04-9b3edf36-4b27d7a63b-a1",
+  "run": {
+    "id": 43633311440,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43633311440",
+    "head_sha": "cbf2556388896d39ecc1b90f485ddbc7ac87b443",
+    "event": "push",
+    "status": "completed",
+    "conclusion": "success"
+  },
+  "job": {
+    "id": 132564546915,
+    "name": "test (ubuntu-24.04)",
+    "conclusion": "success"
+  },
+  "scope_proof": {
+    "repository_full_name": "gustavomhss/Orchestra-SF",
+    "base": "9b3edf3651f309ce9693d8593ac3c691e03ec1e4",
+    "head": "cbf2556388896d39ecc1b90f485ddbc7ac87b443",
+    "status": "ahead",
+    "ahead_by": 1,
+    "behind_by": 0,
+    "total_commits": 1,
+    "too_large": null,
+    "base_commit": {
+      "sha": "9b3edf3651f309ce9693d8593ac3c691e03ec1e4",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/9b3edf3651f309ce9693d8593ac3c691e03ec1e4",
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/9b3edf3651f309ce9693d8593ac3c691e03ec1e4"
+    },
+    "merge_base_commit": {
+      "sha": "9b3edf3651f309ce9693d8593ac3c691e03ec1e4",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/9b3edf3651f309ce9693d8593ac3c691e03ec1e4",
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/9b3edf3651f309ce9693d8593ac3c691e03ec1e4"
+    },
+    "files": [
+      {
+        "filename": ".ci-run.json",
+        "status": "added",
+        "additions": 12,
+        "deletions": 0,
+        "changes": 12,
+        "previous_filename": null
+      }
+    ]
+  },
+  "validator_execution": {
+    "outer_request": "PASS",
+    "nominal_validateRequest": "PASS",
+    "real_Playwright_list": "PASS",
+    "nominal_validateSelection": "PASS"
+  },
+  "actual_selection": {
+    "kind": "AUXILIARY_LIST_AND_VALIDATE_SELECTION",
+    "selection": "CI-UI-OPERATIONS",
+    "snapshot": "cbf2556388896d39ecc1b90f485ddbc7ac87b443",
+    "normalizedRequest": {
+      "package": "app",
+      "directory": "packages/app-shell",
+      "packageSelector": "packages/app",
+      "runner": "playwright",
+      "args": [
+        "e2e/sucafina/operations.spec.ts"
+      ],
+      "env": {
+        "ORCHESTRA_CHANNEL": "prod"
+      },
+      "config": "e2e/playwright.production.config.ts"
+    },
+    "command": [
+      "bun",
+      "run",
+      "test:e2e:local",
+      "--config",
+      "e2e/playwright.production.config.ts",
+      "--workers",
+      "1",
+      "--retries",
+      "0",
+      "--repeat-each",
+      "1",
+      "(^|[\\\\/])e2e[\\\\/]sucafina[\\\\/]operations\\.spec\\.ts$",
+      "--trace",
+      "retain-on-failure",
+      "--list",
+      "--reporter=json"
+    ],
+    "configFile": "packages/app-shell/e2e/playwright.production.config.ts",
+    "bundle": "production",
+    "selected": [
+      "packages/app-shell/e2e/sucafina/operations.spec.ts"
+    ],
+    "cases": [
+      {
+        "id": "b944adae46abeb4efa4f-22afb77d3ca0df7121ad",
+        "title": "OP-PROC-01 real comparison preserves the J04 values and exact C02 drilldown",
+        "project": "chromium",
+        "executions": 0
+      },
+      {
+        "id": "b944adae46abeb4efa4f-05bfd53af44c9645acd5",
+        "title": "OP-PROC-02 pending sourcing keeps its submitted FX while the future PO changes",
+        "project": "chromium",
+        "executions": 0
+      },
+      {
+        "id": "b944adae46abeb4efa4f-014331764edf948dc865",
+        "title": "OP-PROC-03 missing FX stays unavailable and refuses submission without a new version",
+        "project": "chromium",
+        "executions": 0
+      },
+      {
+        "id": "b944adae46abeb4efa4f-e9566aebd8e9d1d91482",
+        "title": "OP-IMPORT-01 real preview and one Apply recover the same receipt without duplicate effects",
+        "project": "chromium",
+        "executions": 0
+      },
+      {
+        "id": "b944adae46abeb4efa4f-6f9d621cf244a785ed31",
+        "title": "OP-DOC-01 real schema and confirmation preserve exact evidence through source revocation",
+        "project": "chromium",
+        "executions": 0
+      }
+    ],
+    "journeyExecution": "NOT_RUN"
+  },
+  "results": {
+    "auxiliary_tests": 1,
+    "auxiliary_pass": 1,
+    "auxiliary_fail": 0,
+    "expect_calls": 46,
+    "playwright_cases_listed": 5,
+    "playwright_case_executions": 0,
+    "journeys": "NOT_RUN",
+    "omni_positive_control": "pass",
+    "omni_spawns": 1,
+    "delegated_spawns": 0
+  },
+  "raw_result_lines": [
+    "2026-11-14T19:41:24.8711963Z (pass) auxiliary: canonical Operations selection lists exactly five unexecuted production cases [1084.23ms]",
+    "2026-11-14T19:41:24.8712511Z  1 pass",
+    "2026-11-14T19:41:24.8712708Z  0 fail",
+    "2026-11-14T19:41:24.8712907Z  46 expect() calls",
+    "2026-11-14T19:41:24.8713183Z Ran 1 test across 1 file. [1478.00ms]",
+    "2026-11-14T19:41:24.8714077Z omni positive control [75571972d231ba3b90d6f844babe6777]: pass (declared: 1 test(s) in e2e/sucafina/operations-support/selection.check.ts); 1 omni spawn(s), 0 delegated."
+  ],
+  "artifacts": {
+    "count": 0,
+    "reason": "Outer runner is Bun; workflow Playwright artifact upload is skipped by its existing condition. This helper emits its complete compact selection evidence into the preserved job log; it does not promise a Playwright execution report."
+  },
+  "limit": "This is not CI-UI-OPERATIONS functional PASS, a typecheck, native proof, or accepted candidate C.",
+  "superseded_for_final_code": true,
+  "repeat_reason": null,
+  "cleanup": "Existing test-ci cleanup job deleted the temporary CI snapshot branch."
+}

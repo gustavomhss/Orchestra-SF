@@ -1,3 +1,6 @@
+import type { ReviewOutcomeComparison } from "../reviews/outcome.ts"
+import type { ObservedResultProjection } from "../contracts/decisions.ts"
+import { reviewDecisionEvidence } from "./decision.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
 import { sfOperationInputSchemas } from "../contracts/operations.ts"
 import { sfOperationOutputSchemas } from "../contracts/output-schemas.ts"
@@ -9,7 +12,7 @@ import type { PortResult } from "../contracts/ports.ts"
 import type { Artifact } from "../../runtime/artifact.ts"
 import { renderPreservedReview } from "./render.ts"
 import { renderReviewBars, renderReviewChart, renderReviewTimeline, renderReviewWaterfall, renderReviewSensitivity } from "./chart.ts"
-import { matchesSelectedSources } from "./references.ts"
+import { selectedReviewComments } from "./comment-selection.ts"
 import type { SfDomainValidation } from "../contracts/runtime.ts"
 import type { CapabilityDescriptor, CapabilityResult, TrustedDomainContext } from "../contracts/sf-execution.ts"
 import { reviewChartEvidence } from "./port.ts"
@@ -29,13 +32,13 @@ export async function prepareReview(value: unknown, context: TrustedDomainContex
   const parsed = decodeSfOperationInput("sf_review_prepare", value)
   if (!parsed.ok) return reject("sf_review_prepare", "invalid-input", "needs-input")
   const digest = digestSfValue(parsed.value)
-  if (!(await host.authority.validateDomainContext(context, "sf_review_prepare", digest))) return reject("sf_review_prepare", "invalid-binding", "denied")
+  if (!host.authority.receiptFor(context, "sf_review_prepare", digest) || !(await host.authority.revalidateDomainContext(context))) return reject("sf_review_prepare", "invalid-binding", "denied")
   const selected = await host.reviews.preview(parsed.value.selectionRef, parsed.value.sectionRefs, context, parsed.value.period)
   if (selected.status !== "ok") return reject("sf_review_prepare", selected.reason, selected.status === "conflict" ? "stale" : selected.status)
   const output = {
     selectionRef: parsed.value.selectionRef,
     sectionRefs: selected.value.map((section) => section.id),
-    sourceRefs: selected.value.flatMap((section) => [...section.projection.values.flatMap((entry) => entry.sourceRefs), ...reviewChartEvidence(section.chart)]),
+    sourceRefs: selected.value.flatMap((section) => [...section.projection.values.flatMap((entry) => entry.sourceRefs), ...reviewChartEvidence(section.chart), ...reviewDecisionEvidence(section.projection.decision), ...(section.outcome?.sourceRefs ?? []), ...(section.outcomeComparison?.baselineRefs ?? []), ...(section.outcomeComparison?.sourceRefs ?? [])]),
     gaps: selected.value.flatMap((section) => section.projection.missing.map((entry) => ({ id: `${section.id}:${entry.field}`, category: entry.field, reason: entry.reason, evidenceRefs: [] }))),
   }
   if (!decodeSfOperationOutput("sf_review_prepare", output).ok) return reject("sf_review_prepare", "invalid-output", "unavailable")
@@ -52,7 +55,7 @@ export async function prepareReport(value: unknown, context: TrustedDomainContex
   const parsed = decodeSfOperationInput("sf_report_prepare", value)
   if (!parsed.ok || (parsed.value.format !== "pptx" && parsed.value.format !== "docx")) return reject("sf_report_prepare", "invalid-input", "needs-input")
   const digest = digestSfValue(parsed.value)
-  if (!(await host.authority.validateDomainContext(context, "sf_report_prepare", digest))) return reject("sf_report_prepare", "invalid-binding", "denied")
+  if (!host.authority.receiptFor(context, "sf_report_prepare", digest) || !(await host.authority.revalidateDomainContext(context))) return reject("sf_report_prepare", "invalid-binding", "denied")
   const review = await host.reviews.read(parsed.value.reviewRef, context)
   if (review.status !== "ok") return reject("sf_report_prepare", review.reason, review.status === "conflict" ? "stale" : review.status)
   const artifact = await renderPreservedReview(review.value, { title: `Review ${review.value.id}`, format: parsed.value.format, sectionRefs: parsed.value.sectionRefs })
@@ -63,18 +66,19 @@ export async function prepareReport(value: unknown, context: TrustedDomainContex
   const selected = parsed.value.sectionRefs.map((id) => review.value.sections.find((section) => section.id === id)!)
   const evidenceRefs = selected.flatMap((section) => {
     const projection = section.content as DomainProjection & { reviewChart?: ReviewChart }
-    return [...projection.values.flatMap((entry) => entry.sourceRefs), ...reviewChartEvidence(projection.reviewChart)]
+    return [...projection.values.flatMap((entry) => entry.sourceRefs), ...reviewChartEvidence(projection.reviewChart), ...reviewDecisionEvidence(projection.decision), ...((projection as DomainProjection & { reviewOutcome?: ObservedResultProjection }).reviewOutcome?.sourceRefs ?? []), ...((projection as DomainProjection & { reviewOutcomeComparison?: ReviewOutcomeComparison }).reviewOutcomeComparison?.baselineRefs ?? []), ...((projection as DomainProjection & { reviewOutcomeComparison?: ReviewOutcomeComparison }).reviewOutcomeComparison?.sourceRefs ?? [])]
   })
   const stored = await host.artifacts.put({ reviewRef: parsed.value.reviewRef, sectionRefs: parsed.value.sectionRefs, artifact, format: parsed.value.format, evidenceRefs, recordCount: selected.reduce((total, section) => total + section.count, 0) }, context)
   if (stored.status !== "ok") return reject("sf_report_prepare", stored.reason, stored.status === "conflict" ? "stale" : stored.status)
-  const selectedRefs = selected.flatMap((section) => section.sourceRefs)
-  const omittedComments = review.value.comments.some((comment) => !matchesSelectedSources(comment.sourceRefs, selectedRefs))
+  const includedComments = selectedReviewComments(review.value, parsed.value.sectionRefs, digestSfValue)
+  if (!includedComments) return reject("sf_report_prepare", "comment-association-invalid", "unavailable")
+  const omittedComments = includedComments.length !== review.value.comments.length
   const output = {
     reviewSelectionRef: parsed.value.reviewRef, orderedResultRefs: [stored.value.artifactRef],
     coverage: selected.map((section) => ({ sectionRef: section.id, includedCount: section.count, totalCount: section.count })),
     gaps: [...selected.flatMap((section) => ((section.content as DomainProjection).missing ?? []).map((entry) => ({ id: `${section.id}:${entry.field}`, category: entry.field, reason: entry.reason, evidenceRefs: [] }))), ...(omittedComments ? [{ id: "comments-outside-selection", category: "comment", reason: "Comment sources do not match the selected sections.", evidenceRefs: [] }] : []), ...selected.flatMap((section) => {
       const chart = (section.content as DomainProjection & { reviewChart?: ReviewChart }).reviewChart
-      return chart && !renderReviewChart(section.content as DomainProjection, chart) && !renderReviewBars(section.content as DomainProjection, chart) && !renderReviewTimeline(section.content as DomainProjection, chart) && !renderReviewWaterfall(section.content as DomainProjection, chart) && !renderReviewSensitivity(chart) ? [{ id: `${section.id}:chart`, category: "chart", reason: chart.status === "ok" ? "Chart rendering unavailable; captured data remains in the report." : chart.reason, evidenceRefs: [] }] : []
+      return chart && !renderReviewChart(section.content as DomainProjection, chart) && !renderReviewBars(section.content as DomainProjection, chart) && !renderReviewTimeline(section.content as DomainProjection, chart) && !renderReviewWaterfall(section.content as DomainProjection, chart) && !renderReviewSensitivity(section.content as DomainProjection, chart) ? [{ id: `${section.id}:chart`, category: "chart", reason: chart.status === "ok" ? "Chart rendering unavailable; captured data remains in the report." : chart.reason, evidenceRefs: [] }] : []
     })],
   }
   if (!decodeSfOperationOutput("sf_report_prepare", output).ok) return reject("sf_report_prepare", "invalid-output", "unavailable")
@@ -88,7 +92,7 @@ export async function readArtifact(value: unknown, context: TrustedDomainContext
   const parsed = decodeSfOperationInput("sf_artifact_get", value)
   if (!parsed.ok) return reject("sf_artifact_get", "invalid-input", "needs-input")
   const digest = digestSfValue(parsed.value)
-  if (!(await host.authority.validateDomainContext(context, "sf_artifact_get", digest))) return reject("sf_artifact_get", "invalid-binding", "denied")
+  if (!host.authority.receiptFor(context, "sf_artifact_get", digest) || !(await host.authority.revalidateDomainContext(context))) return reject("sf_artifact_get", "invalid-binding", "denied")
   const stored = await host.artifacts.read(parsed.value.artifactRef, context)
   if (stored.status !== "ok") return reject("sf_artifact_get", stored.reason, stored.status === "conflict" ? "stale" : stored.status)
   if (stored.value.artifact.artifactRef !== parsed.value.artifactRef || stored.value.artifact.accessRevision !== context.binding.accessRevision) return reject("sf_artifact_get", "artifact-unavailable", "denied")
@@ -99,7 +103,7 @@ export async function readArtifact(value: unknown, context: TrustedDomainContext
   const evidence = selected.flatMap((section) => {
     if (!section) return []
     const projection = section.content as DomainProjection & { reviewChart?: ReviewChart }
-    return [...projection.values.flatMap((entry) => entry.sourceRefs), ...reviewChartEvidence(projection.reviewChart)]
+    return [...projection.values.flatMap((entry) => entry.sourceRefs), ...reviewChartEvidence(projection.reviewChart), ...reviewDecisionEvidence(projection.decision), ...((projection as DomainProjection & { reviewOutcome?: ObservedResultProjection }).reviewOutcome?.sourceRefs ?? []), ...((projection as DomainProjection & { reviewOutcomeComparison?: ReviewOutcomeComparison }).reviewOutcomeComparison?.baselineRefs ?? []), ...((projection as DomainProjection & { reviewOutcomeComparison?: ReviewOutcomeComparison }).reviewOutcomeComparison?.sourceRefs ?? [])]
   })
   const admitted = new Set(evidence.map((ref) => digestSfValue(ref)))
   if (stored.value.artifact.evidenceRefs.some((ref) => !admitted.has(digestSfValue(ref)))) return reject("sf_artifact_get", "artifact-evidence-mismatch", "denied")
@@ -120,3 +124,4 @@ export function createReviewCapabilities(host: ReviewCapabilityHost): readonly C
 function reject(operation: string, reason: string, status: "needs-input" | "stale" | "denied" | "unavailable" | "provider-conflict" | "failed"): CapabilityResult {
   return { status, reason, receipt: { kind: "unbound", operation, code: status === "needs-input" ? "invalid-input" : status === "denied" ? "invalid-binding" : "unavailable", at: new Date().toISOString() } }
 }
+

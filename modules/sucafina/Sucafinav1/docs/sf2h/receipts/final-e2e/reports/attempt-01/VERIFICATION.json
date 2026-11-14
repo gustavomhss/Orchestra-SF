@@ -1,0 +1,182 @@
+{
+  "schema": "sf2h-final-e2e-reports-verification-v1",
+  "recorded_at": "2026-11-14T19:47:39Z",
+  "attempt": "attempt-01",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "astra-wp07",
+  "pull_request": 27,
+  "input_head": "9839a46aa8d4e379268b2a724050247e2a0d8aa1",
+  "input_tree": "4aaf22d1b5726623d8ac31893faab3c6825fbce2",
+  "product_candidate_W": "5ccc977dabf1f5672610f8ddc8764ff8372bd35d",
+  "product_tree": "289e0c2eea3a218c37ada2b27159bc72ce277d97",
+  "publication": {
+    "method": "GitHub MCP create_tree/create_commit/update_ref",
+    "expected_sha": "9839a46aa8d4e379268b2a724050247e2a0d8aa1",
+    "force": false,
+    "parent_preserved": true,
+    "remote_blobs_matched": 16,
+    "delta": {
+      "added": 16,
+      "modified": 0,
+      "deleted": 0,
+      "renamed": 0,
+      "all_paths_allowed": true
+    }
+  },
+  "candidate_status": "IMPLEMENTED_BLOCKED_COMPOSITION_NOT_RUN",
+  "criterion_status": {
+    "total": 86,
+    "PASS": 0,
+    "FAIL": 0,
+    "BLOCKED": 0,
+    "NOT_RUN": 86,
+    "reason": "Criteria record runtime state; the composition dependency is separately BLOCKED."
+  },
+  "selection": {
+    "id": "CI-UI-REPORTS",
+    "request_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/final-e2e/reports/attempt-01/ci-request.json",
+    "request_bytes_sha256": "15ce9a5949eea1c2be62421e93ace7ef2908be9012edb683522858ea678ea0b6",
+    "request_blob": "42242450cdadbc738b4b647b2b7f9cae324d17c6",
+    "request": {
+      "package": "app",
+      "directory": "packages/app-shell",
+      "runner": "playwright",
+      "config": "e2e/playwright.production.config.ts",
+      "args": [
+        "e2e/sucafina/reports.spec.ts"
+      ],
+      "env": {
+        "ORCHESTRA_CHANNEL": "prod"
+      }
+    },
+    "shape_review": "READ_ONLY_REVIEW_AGAINST_CANONICAL_CODE; validateRequest/locateTestPackage not executed",
+    "configuration": {
+      "path": "packages/app-shell/e2e/playwright.production.config.ts",
+      "blob": "84dbab99cf1d6d28b2f1b3ba7e688809b0eb74d1",
+      "base_path": "packages/app-shell/playwright.config.ts",
+      "base_blob": "d935c68f5b996c0e53195ec832b969c217fcf858"
+    },
+    "canonical_sources": [
+      {
+        "path": "script/test-ci-request.ts",
+        "blob": "5007e48270b80c83eb719d35cec9e6343206a195"
+      },
+      {
+        "path": "script/test-ci-location.ts",
+        "blob": "ee07aaf93c54fa935e6c4e9d845aa73af3b464ee"
+      },
+      {
+        "path": "script/test-ci.ts",
+        "blob": "6f67619958ce0567ea93dd66c53ae3aca242cb95"
+      },
+      {
+        "path": ".github/workflows/test-ci.yml",
+        "blob": "9f078f4e37b758691bcd073e5590f05d5444392a"
+      }
+    ],
+    "nominal_controls": {
+      "workers": 1,
+      "retries": 0,
+      "repeat_each": 1,
+      "exact_file_list": true,
+      "production_channel": true
+    },
+    "declared_scenarios": [
+      "RPT-01 preserves authorized sources, exports 25 real projects and reopens before following the current source",
+      "RPT-02 confirms and reuses the exact human answer under C05, then rejects its edited version",
+      "RPT-03 removes one authorized record without editing its source and creates only an explicit new revision",
+      "RPT-04 revokes the real session and clears cached meeting data, export and answer access"
+    ],
+    "declared_count": 4,
+    "listing": "NOT_RUN",
+    "actual_selected_files": [],
+    "actual_executed_tests": null,
+    "ci_snapshot_S": null,
+    "ci_snapshot_tree": null,
+    "ci_ref": null,
+    "run_id": null,
+    "run_url": null,
+    "jobs": [],
+    "artifacts": [],
+    "omni_positive_control": "NOT_RUN"
+  },
+  "checks": [
+    {
+      "name": "Allowed paths, parent, no deletions, all16 remote blobs/lengths",
+      "status": "VERIFIED_METADATA",
+      "method": "GitHub commit/contents/compare plus local SHA1/SHA256 over bytes",
+      "product_execution": false
+    },
+    {
+      "name": "JSON receipts and86 canonical criterion IDs/texts",
+      "status": "VERIFIED_METADATA",
+      "method": "JSON parsing and direct canonical pack mapping; no product evaluator",
+      "product_execution": false
+    },
+    {
+      "name": "Static E2E review",
+      "status": "REVIEWED_WITHOUT_EXECUTION",
+      "scope": "Root plus delegated process, contract and criteria review. Fixed initial topic-order assumption, display label/money, revocation303, process deadlines, exact scope/timestamp, OOXML row/continuation/slide-order extraction.",
+      "formal_independent_C_approval": false
+    },
+    {
+      "name": "Forbidden synchronization/mocks/reproduction/raw-spawn/skips/first-last patterns",
+      "status": "NO_MATCH_IN_NEW_TS",
+      "method": "Text inspection only; not check:guards"
+    },
+    {
+      "name": "CI-UI-REPORTS",
+      "status": "NOT_RUN",
+      "reason": "RPT-D01 through RPT-D04 missing real composition; no known-failing run dispatched."
+    },
+    {
+      "name": "bun typecheck (packages/app-shell)",
+      "status": "NOT_RUN",
+      "reason": "Hosted gate not invoked; current project includes omit E2E. A green would not cover these files."
+    },
+    {
+      "name": "bun run typecheck:e2e",
+      "status": "NOT_RUN",
+      "reason": "Current shared include list omits e2e/sucafina/**; changes are outside this mission's authority."
+    },
+    {
+      "name": "bun run check:guards --base origin/dev",
+      "status": "NOT_RUN",
+      "reason": "No local execution; creating/updating hosted workflow lies outside allowed paths. No guard success is inferred from text inspection."
+    },
+    {
+      "name": "Rendered DOCX/PPTX / native / MCP parity / AM01-AM06 / final reviews",
+      "status": "NOT_RUN",
+      "reason": "No runtime artifacts or accepted candidate C; semantic XML assertions alone do not provide these proofs."
+    }
+  ],
+  "action_observation": {
+    "query": "GET /repos/gustavomhss/Orchestra-SF/actions/runs?branch=astra-wp07&per_page=30",
+    "runs_returned": 0,
+    "runs_for_W": [],
+    "test_dispatches_by_mission": 0
+  },
+  "no_execution_locally": {
+    "product": true,
+    "tests": true,
+    "typecheck": true,
+    "parser": true,
+    "allowed_operations": "source reads/edits, text inspection, JSON metadata parsing and file hashes only"
+  },
+  "authority_preserved": {
+    "new_product_branch": false,
+    "new_pr": false,
+    "merge": false,
+    "shared_host_or_config_changes": false,
+    "WP07_WP08_WP09_producer_changes": false,
+    "external_comments_or_messages": false,
+    "old_handoffs_untouched": true
+  },
+  "acceptance": {
+    "accepted_C": null,
+    "GLOBAL_RELEASE": false,
+    "previous_green_transferred": false,
+    "result": "Independent implementation delivered; integrated proof remains blocked."
+  }
+}
+

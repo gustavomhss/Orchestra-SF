@@ -1,0 +1,143 @@
+{
+  "schema": "s4-a-decisions-static-preflight-v1",
+  "observedAt": "2026-11-14T19:26:39Z",
+  "actor": "ci_contract internal static review",
+  "executed": {
+    "tests": false,
+    "typescript": false,
+    "lint": false,
+    "playwrightList": false,
+    "actionsDispatch": false,
+    "remoteWrites": false
+  },
+  "verdict": "NO_OWN_API_OR_SELECTION_BLOCKER_FOUND_BY_STATIC_INSPECTION",
+  "files": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+      "sha256": "40d771d2dc7bde7c081c97849fa3a22cad55cdfa297987ec498fc54002598291",
+      "tests": 3
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/journey.ts",
+      "sha256": "a934c3c67ddb17515d6b7e11d4103900ca279c7bcf9819c52cfe378c8e0c2977"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/lost-response.ts",
+      "sha256": "3a77abd7bb57416dc5857a48d92042f968cd8b39ad224abc133aca150123fa6f"
+    }
+  ],
+  "sourceRef": "e8949be0e31952d5be4987c099003cd0b46e2add",
+  "request": {
+    "package": "app",
+    "directory": "packages/app-shell",
+    "packageSelector": "packages/app",
+    "runner": "playwright",
+    "args": [
+      "e2e/sucafina/decisions.spec.ts"
+    ],
+    "env": {
+      "ORCHESTRA_CHANNEL": "prod"
+    },
+    "config": "e2e/playwright.production.config.ts"
+  },
+  "requestStatus": "Proposed exact nominal request. No committed .ci-run.json or W snapshot was available in this inspection; admission must occur after the spec is published in W and request-only S.",
+  "selection": {
+    "testDirectory": "packages/app-shell/e2e",
+    "expectedSpec": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+    "expectedProject": "chromium",
+    "expectedTests": 3,
+    "nominal": true,
+    "workers": 1,
+    "retries": 0,
+    "repeatEach": 1,
+    "deniedOptions": [
+      "-t",
+      "--test-name-pattern",
+      "--timeout",
+      "--benchmark-renderer"
+    ],
+    "contract": "test-ci-request playwrightArgs creates a path-exact regex; workflow --list validates that only requested spec files are selected. All three current tests match; helper filenames do not match Playwright test-file convention. Current titles have no production grepInvert exclusions."
+  },
+  "apiAndTypes": [
+    {
+      "subject": "Promise.withResolvers",
+      "finding": "Runtime-compatible with Node24.15 explicitly selected by test-ci workflow. Root uses Bun1.3.14; Playwright CLI runs via package script. No replacement is needed solely for runtime compatibility.",
+      "pins": {
+        "workflow": "9f078f4e37b758691bcd073e5590f05d5444392a",
+        "rootPackage": "3bac883dfbc44466be9afb54a1e175a9643ecdab"
+      }
+    },
+    {
+      "subject": "Type declarations",
+      "finding": "Root catalog pins @types/node24.12.2 and TypeScript5.8.2; app tsconfig targetESNext. Promise.withResolvers has no identified lib-level blocker. This is static reasoning; no typecheck ran.",
+      "pin": "8604188dee0f1ce9978cae39366d1850f5e97e7f"
+    },
+    {
+      "subject": "Playwright API",
+      "finding": "Pinned @playwright/test1.59.1; test.use/describe.configure, waitForRequest/Response, requestfailed predicate, toHaveURL predicate, getByRole, info.attach and BrowserContext.newCDPSession usages are consistent with the installed API. No suspect type cast suppressing an API call was found."
+    },
+    {
+      "subject": "CDP response interruption",
+      "finding": "Only Chromium project is selected, so CDP session is available. Fetch interception occurs at Response stage on the original command and uses getResponseBody then failRequest(ConnectionReset); it does not make a second network mutation or provide a fabricated response. Paused-response processing has rejection handling and finally cleanup."
+    },
+    {
+      "subject": "Asynchronous orchestration",
+      "finding": "Response/request observers are installed before click; lost-response observer Promise.all is created before mutation click. No sleeps, mutation retry loop, skip, expected failure, or direct API fixture command was introduced."
+    },
+    {
+      "subject": "Fixture concurrency",
+      "finding": "Existing real-host fixture fixed port4110 is compatible with request workers1 and default nonparallel file execution. Setup and teardown remain owned by existing shared fixture; no shared file changed."
+    }
+  ],
+  "remainingLimits": [
+    "Static review does not prove Playwright can collect, the server can start, or assertions succeed; only Actions can decide those.",
+    "Product blockers already recorded in dependencies.json remain expected blockers; this review does not reinterpret them as test defects or green coverage.",
+    "App/E2E typechecks remain NOT_RUN. Existing e2e tsconfig explicit includes omit sucafina/**/*.ts, and astra-wp11-check typechecks only modules/sucafina.",
+    "Independent critique and financial Apply/retry/history are not accepted by the current partial spec or this static review."
+  ],
+  "existingCheck": {
+    "ref": "refs/heads/astra-check-wp11",
+    "observedSha": "e8949be0e31952d5be4987c099003cd0b46e2add",
+    "astraWp11ObservedSha": "e8949be0e31952d5be4987c099003cd0b46e2add",
+    "workflow": ".github/workflows/astra-wp11-check.yml",
+    "workflowBlob": "3b361b6b22c7c5628d6b149321f73934ea5f9a84",
+    "seed": "ff99e4b4de56bbf6e7ef36daf5d3eb749779017a",
+    "seedComparison": {
+      "status": "ahead",
+      "aheadBy": 20,
+      "behindBy": 0,
+      "mergeBase": "ff99e4b4de56bbf6e7ef36daf5d3eb749779017a"
+    },
+    "fastForward": "W is not published yet. Updating this existing ref by CAS from e8949... is fast-forward if W is created as a child/descendant of e8949...; the remote ref must be reread immediately before mutation. No update performed.",
+    "scope": {
+      "moduleTypecheck": "modules/sucafina bun typecheck",
+      "guards": "bun run check:guards --base origin/dev",
+      "appTypecheck": "NOT_RUN",
+      "e2eTypecheck": "NOT_RUN"
+    },
+    "latestRun": {
+      "id": 43601719276,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43601719276",
+      "head": "e8949be0e31952d5be4987c099003cd0b46e2add",
+      "status": "completed",
+      "conclusion": "failure",
+      "steps": {
+        "checkout": "success",
+        "recordProductAndGuardBase": "success",
+        "setupBun": "success",
+        "typecheckSucafina": "failure",
+        "guardrails": "failure",
+        "uploadEvidence": "success"
+      }
+    },
+    "baseSemantics": "Checkout fetch-depth0 provides origin/dev. Workflow records exact live origin/dev plus merge-base and checks fixed seed ancestry; it does not require origin/dev to be an ancestor of W. Existing history gate passed for input head."
+  },
+  "dedupe": {
+    "queued": 0,
+    "inProgress": 0,
+    "latest100Inspected": true,
+    "equivalentNewDecisionsRun": false,
+    "reason": "Spec has not been published and W/S do not yet exist. No active run or recent exact Decisions branch observed. Previous wp11 check at old SHA is completed, so there is no in-flight check to reuse.",
+    "recheckBeforeDispatch": true
+  }
+}

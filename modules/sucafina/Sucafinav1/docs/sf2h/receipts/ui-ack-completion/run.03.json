@@ -1,0 +1,271 @@
+{
+  "mission": "ui-recipient-ack",
+  "attempt": 3,
+  "state": "COMPLETED_FAILURE_EXTERNAL_TYPECHECK",
+  "branch": "ui-work",
+  "pull_request": 47,
+  "W": {
+    "sha": "d8524169e0de188312f6c2d3b6877562c47e664d",
+    "tree": "3ee21c140ca1647ed36989bd2203c1134eec08d6",
+    "parent": "359ab99db8aaec23e885b492876bc0a3df3d0a33"
+  },
+  "S": {
+    "sha": "a53551af20e1476173cbeed8b54ae8f61c9872fe",
+    "tree": "ea77baf645e92d06e4cded0123de5337506cd311",
+    "parent": "d8524169e0de188312f6c2d3b6877562c47e664d",
+    "delta": [
+      ".ci-run.json"
+    ],
+    "product_test_config_fixture_blobs_identical_to_W": true
+  },
+  "request": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/ui-ack-completion/ci-request.03.json",
+    "blob": "b34019836dc507e957dc4d62b282ec391437fe8a",
+    "sha256": "bbccfe3535705f852de7b0c034e907db67850ad87daabc343e3d46222aaceb7a",
+    "validated_by": "existing workflow Read request step: success"
+  },
+  "run": {
+    "id": 43634168745,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43634168745",
+    "head_sha": "a53551af20e1476173cbeed8b54ae8f61c9872fe",
+    "branch": "ci-run-linux-ui-ack-d8524169-bbccfe35-03",
+    "status": "completed",
+    "conclusion": "failure",
+    "job_id": 132567207864,
+    "job_name": "test (ubuntu-24.04)",
+    "cleanup_job": 132568080817,
+    "cleanup": "success"
+  },
+  "selection": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "./Sucafinav1/test/product/ui-ack-completion/recipient-recovery.test.ts",
+      "./Sucafinav1/test/product/ui-ack-completion/source-replacement.test.ts",
+      "./Sucafinav1/test/product/ui-split/ui-work/static-gates.test.ts",
+      "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+    }
+  },
+  "result": {
+    "pass": 6,
+    "fail": 1,
+    "assertions": 113,
+    "files": 5,
+    "seconds": 92,
+    "recipient_cases": {
+      "pass": 4,
+      "fail": 0
+    },
+    "cases": [
+      {
+        "status": "pass",
+        "name": "WP01 starts one Node-owned Chromium through Omni before leasing it across files",
+        "milliseconds": 7840.75
+      },
+      {
+        "status": "pass",
+        "name": "recipient ACK selects the committed identity among equal messages and exact retry never appends twice",
+        "milliseconds": 9211.42
+      },
+      {
+        "status": "pass",
+        "name": "pagehide removes protected pending content and persisted pageshow reauthorizes by GET without autosend",
+        "milliseconds": 4103.09
+      },
+      {
+        "status": "pass",
+        "name": "reload reauthorizes before showing pending content and replays a resolved thread without reopening or autosend",
+        "milliseconds": 6722.84
+      },
+      {
+        "status": "pass",
+        "name": "physical source replacement refuses the old recipient intent and reload cannot render its protected text",
+        "milliseconds": 2445.76
+      },
+      {
+        "status": "fail",
+        "name": "ui-work package typecheck and repository guards use the canonical commands",
+        "milliseconds": 61108.25
+      },
+      {
+        "status": "pass",
+        "name": "WP01 shares one Chromium across files, releases every lease, and proves final process exit",
+        "milliseconds": 124.99
+      }
+    ],
+    "remaining_failure": "static-gates: package typecheck exit2 with exactly9 readonly foreign diagnostics;0 own-path diagnostics. No remaining selected functional failure.",
+    "guards": {
+      "command": "bun run check:guards --base origin/dev",
+      "exit_code": 0,
+      "rules": 78,
+      "changed_paths": 948,
+      "gate_findings": 0,
+      "warnings": 54,
+      "errors": 0
+    },
+    "typecheck": {
+      "command": "bun typecheck",
+      "cwd": "modules/sucafina",
+      "exit_code": 2,
+      "diagnostics": 9,
+      "own_path_diagnostics": 0,
+      "owner_receipt": "external-typecheck.01.json"
+    },
+    "omni": {
+      "positive_control": "pass",
+      "spawns": 4,
+      "delegated": 0
+    },
+    "browser": {
+      "startup": "PASS",
+      "lifecycle": "PASS",
+      "launches": 1,
+      "acquisitions": 2,
+      "releases": 2,
+      "remaining_contexts": 0,
+      "driver_exit": 0,
+      "driver_proof": {
+        "consumer": "wp01-shared-pool",
+        "clientRuntime": {
+          "name": "bun",
+          "version": "1.3.14",
+          "pid": 4345
+        },
+        "driverRuntime": {
+          "name": "node",
+          "version": "24.22.2",
+          "pid": 4365
+        },
+        "playwrightVersion": "1.59.1",
+        "browserVersion": "157.0.8103.50",
+        "browserPid": 4380,
+        "transport": "playwright-unix-pipe-node-websocket",
+        "spawnBoundary": "AppProcess",
+        "browserStdioCount": 5,
+        "browserUsesPipe": true,
+        "browserPipeOwner": "node",
+        "bridge": {
+          "framing": "json-nul",
+          "acceptedClients": 1,
+          "framesToBrowser": 135,
+          "framesFromBrowser": 369,
+          "peakQueuedBytes": 6993,
+          "peakBufferedBytes": 1335,
+          "maxFrameBytes": 16777216,
+          "maxQueuedBytes": 33554432,
+          "directoryMode": 448,
+          "socketMode": 384
+        },
+        "lifecycle": {
+          "remainingContexts": 0,
+          "connected": false,
+          "nodeExitCode": 0,
+          "browserExitCode": 0,
+          "browserSignal": null,
+          "bridgeClosed": true,
+          "listenerClosed": true,
+          "socketClosed": true,
+          "pipeEnded": true,
+          "webSocketOpened": true,
+          "webSocketClosed": true,
+          "webSocketCloseCode": 1000,
+          "webSocketCloseWasClean": true,
+          "pendingFrameBytes": 0,
+          "queuedWriteBytes": 0,
+          "socketRemoved": true,
+          "directoryRemoved": true
+        }
+      }
+    }
+  },
+  "observations": [
+    {
+      "event": "UI_ACK_EXACT_RETRY",
+      "threadId": "d4e5922b-4994-499a-80de-049b783c6918",
+      "reply": {
+        "id": "f8bd0914-2570-4425-8f01-6cb4bb11fb4c",
+        "incarnation": "e3cf9821-b15d-4aa7-9137-7479430d73a2",
+        "version": 1
+      },
+      "intentDigest": "ace7a501b0dce89f4a98c9d587eaf9e9d7e4f3303d66171c48de650469979e69",
+      "attempts": 2,
+      "equalTextReplies": 3,
+      "storageVersion": 4
+    },
+    {
+      "event": "UI_ACK_PAGE_LIFECYCLE",
+      "hiddenBeforeReload": true,
+      "freshGet": true,
+      "automaticWrites": 0,
+      "originalRecovered": true
+    },
+    {
+      "event": "UI_ACK_RELOAD_RESOLVED",
+      "threadId": "2d6719ab-611e-41b6-b41e-f54a01ae1616",
+      "reply": {
+        "id": "4033b7a7-bd8c-4cb8-aa42-241f263296f4",
+        "incarnation": "78990c31-9381-4a82-9f49-2252759e381b",
+        "version": 1
+      },
+      "intentDigest": "72eb5335c93db305efb71d923ba01d0a36eb18d24a2fd8f6ba0683e3d32431e2",
+      "attempts": 2,
+      "state": "resolved",
+      "storageVersion": 4,
+      "reloadReauthorized": true,
+      "sqliteReopened": true,
+      "automaticWrites": 0
+    },
+    {
+      "event": "UI_ACK_SOURCE_REPLACED",
+      "threadId": "35759d19-20cf-4e86-87a2-c3c39f5e902c",
+      "sourceReplaced": true,
+      "replayStatus": 503,
+      "automaticWrites": 0,
+      "protectedRendered": false
+    }
+  ],
+  "logs": {
+    "source": "GitHub MCP decoded job log",
+    "job_id": 132567207864,
+    "utf8_bytes": 118485,
+    "sha256": "27ab14b063b7190e3d3fe532b410c077b077ee23ede03d045c9bdc36dff13a4c",
+    "raw_log_committed": false
+  },
+  "artifacts": {
+    "returned": 0,
+    "required_by_this_bun_selection": 0,
+    "workflow_upload_steps": "skipped; selected Bun browser fixtures emit lifecycle and assertions to job log, not Playwright runner artifacts"
+  },
+  "dedupe": {
+    "method": "Actions global list plus exact branch lookup before creation",
+    "matching_prior_runs": 0,
+    "concurrent_mission_runs": 0
+  },
+  "reused": [
+    {
+      "file": "ordinary-thread.test.ts",
+      "run": 43632801654,
+      "cases": 1,
+      "status": "PASS_REUSED_UNCHANGED_BLOBS"
+    },
+    {
+      "file": "recipient-refusal.test.ts",
+      "run": 43633483813,
+      "cases": 7,
+      "status": "PASS_REUSED_UNCHANGED_BLOBS"
+    }
+  ],
+  "limits": [
+    "This run remains failure; functional PASS and guards PASS do not turn package typecheck green.",
+    "Lifecycle uses synthetic PageTransitionEvent with real document GET/commit; not native BFcache acceptance.",
+    "No installed host/native/C05/AM/global acceptance."
+  ],
+  "next": "Append final immutable evidence and run only the existing guards test on its delivery tree. Publish that tree, snapshot, run and result externally in PR47 without self-referencing or editing this receipt."
+}

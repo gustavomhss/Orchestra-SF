@@ -16,12 +16,14 @@ export function createThreadAnswerEvidence(threads: Pick<ReturnType<typeof creat
     const thread = first.value
     const message = thread.messages.find((item, index) => index > 0 && item.id === messageId && item.authorRef === thread.recipientRef)
     if (thread.kind === "comment" || !thread.recipientRef || !message || !thread.evidenceRefs.length) return { status: "unavailable", reason: "answer-unavailable" }
+    const basis = message.sourceContext ?? thread
     const refId = `sf-thread-answer:${encodeURIComponent(thread.id)}:${encodeURIComponent(message.id)}:${encodeURIComponent(message.incarnation)}:${message.version}`
-    const value: AnswerEvidence = { schema: "sf-evidence-v1", kind: "record", refId, installationId: context.binding.installationId, projectId: context.binding.projectId, refDigest: "", evidenceLevel: "claim", target: { surface: "dashboard", recordType: "sf-thread-answer", recordId: message.id, incarnation: message.incarnation, version: message.version, fields: ["body", "authorRef", "createdAt"], period: thread.period, projectionDigest: digestSfValue({ threadId: thread.id, message, period: thread.period, sourceRefs: thread.evidenceRefs }) } }
+    const value: AnswerEvidence = { schema: "sf-evidence-v1", kind: "record", refId, installationId: context.binding.installationId, projectId: context.binding.projectId, refDigest: "", evidenceLevel: "claim", target: { surface: "dashboard", recordType: "sf-thread-answer", recordId: message.id, incarnation: message.incarnation, version: message.version, fields: ["body", "authorRef", "createdAt"], period: basis.period, projectionDigest: digestSfValue({ threadId: thread.id, message, period: basis.period, sourceRefs: basis.evidenceRefs }) } }
     const again = await threads.read(threadId, context)
     if (again.status !== "ok") return again
     const current = again.value.messages.find((item) => item.id === message.id && item.incarnation === message.incarnation && item.version === message.version)
-    if (!current || again.value.recipientRef !== message.authorRef || digestSfValue({ threadId: again.value.id, message: current, period: again.value.period, sourceRefs: again.value.evidenceRefs }) !== value.target.projectionDigest) return { status: "stale", reason: "answer-changed" }
+    const currentBasis = current?.sourceContext ?? again.value
+    if (!current || again.value.recipientRef !== message.authorRef || digestSfValue({ threadId: again.value.id, message: current, period: currentBasis.period, sourceRefs: currentBasis.evidenceRefs }) !== value.target.projectionDigest) return { status: "stale", reason: "answer-changed" }
     return { status: "ok", value: { ...value, refDigest: digestSfEvidenceRef(value) } }
   }
   const resolve = async (refId: string, context: TrustedDomainContext): Promise<PortResult<AnswerEvidence>> => {
@@ -37,6 +39,14 @@ export function createThreadAnswerEvidence(threads: Pick<ReturnType<typeof creat
   return {
     issue,
     resolve,
+    belongsToQuestion: async (questionId: string, answerRef: string, context: TrustedDomainContext): Promise<boolean> => {
+      const parts = /^sf-thread-answer:([^:]+):([^:]+):([^:]+):([1-9]\d*)$/.exec(answerRef)
+      if (!parts) return false
+      const decoded = decode(parts.slice(1, 4))
+      if (!decoded || decoded[0] !== questionId) return false
+      const answer = await resolve(answerRef, context)
+      return answer.status === "ok"
+    },
     project: async (ref: AnswerEvidence, productContext: ProductContext, context: TrustedDomainContext): Promise<PortResult<DomainProjection>> => {
       const selected = structuredClone(productContext)
       if (selected.installationId !== context.binding.installationId || selected.projectId !== context.binding.projectId || selected.principalRef !== context.binding.principalRef || selected.accessRevision !== context.binding.accessRevision || selected.policyVersion !== context.binding.policyVersion) return { status: "denied", reason: "answer-context-unavailable" }
@@ -56,9 +66,9 @@ export function createThreadAnswerEvidence(threads: Pick<ReturnType<typeof creat
       if (current.status !== "ok") return current
       if (digestSfValue(current.value) !== digestSfValue(ref)) return { status: "stale", reason: "answer-changed" }
       return { status: "ok", value: { context: validated.value, version: message.version, engineVersion: "sf-thread-answer-v1", components: [], values: [
-        { id: "body", value: message.body, period: thread.value.period, granularity: "record", sourceRefs: [current.value], drilldown: current.value, evidenceState: "confirmed" },
-        { id: "authorRef", value: message.authorRef, period: thread.value.period, granularity: "record", sourceRefs: [current.value], drilldown: current.value, evidenceState: "confirmed" },
-        { id: "createdAt", value: message.createdAt, period: thread.value.period, granularity: "record", sourceRefs: [current.value], drilldown: current.value, evidenceState: "confirmed" },
+        { id: "body", value: message.body, period: current.value.target.period!, granularity: "record", sourceRefs: [current.value], drilldown: current.value, evidenceState: "confirmed" },
+        { id: "authorRef", value: message.authorRef, period: current.value.target.period!, granularity: "record", sourceRefs: [current.value], drilldown: current.value, evidenceState: "confirmed" },
+        { id: "createdAt", value: message.createdAt, period: current.value.target.period!, granularity: "record", sourceRefs: [current.value], drilldown: current.value, evidenceState: "confirmed" },
       ], missing: [] } }
     },
   }
@@ -72,3 +82,4 @@ function decode(parts: string[]) {
     return undefined
   }
 }
+

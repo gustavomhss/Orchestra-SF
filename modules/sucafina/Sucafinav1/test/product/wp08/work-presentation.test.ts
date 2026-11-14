@@ -30,7 +30,7 @@ test("canonical My Work presentation resolves current Procurement title and dest
     const persistence = createSfSourcePersistence({ persistence: store, createId: randomUUID, enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(() => at) })
     for (const surface of ["dashboard", "planner", "procurement"] as const) await persistence.initializeSources(surface)
     await persistence.transaction("procurement", async (snapshot) => {
-      snapshot.data.store = { requests: { "PR-1": { request: { number: "PR-1", createdBy: "person", status: "pr_pending", pr: { title: "Approval", estAmount: 100 }, prApproval: { steps: [{ status: "pending", holderId: "person" }] }, history: [{ action: "Requisition submitted for approval", at: "2026-01-01T00:00:00Z" }] }, version: 1, by: "person" } }, suppliers: [], settings: { currency: "USD" } }
+      snapshot.data.store = { requests: { "PR-1": { request: { number: "PR-1", createdBy: "person", status: "pr_pending", pr: { title: "Approval", estAmount: 100 }, prApproval: { steps: [{ status: "pending", holderId: "person", levelName: "Manager" }] }, history: [{ action: "Requisition submitted for approval", at: "2026-01-01T00:00:00Z" }] }, version: 1, by: "person" } }, suppliers: [], settings: { currency: "USD" } }
       return { commit: true, value: undefined }
     })
     const identity = { installationId: "installation", hostId: "host", projectId: "project", location: Location.Ref.make({ directory: AbsolutePath.make(directory) }) }
@@ -68,7 +68,7 @@ test("canonical My Work presentation resolves current Procurement title and dest
     const decoded = decodeSfOperationOutput("sf_work_list", result.result)
     if (!decoded.ok) throw new Error("work list invalid")
     const presented = await factory.work.listPresentation(payload, admitted.value)
-    expect(presented).toMatchObject({ status: "ok", value: { list: { items: [{ actionRef: decoded.value.items[0]?.actionRef, ownerRef: "person", state: "pr_pending" }] }, items: [{ kind: "procurement", actionRef: decoded.value.items[0]?.actionRef, title: "Approval", ownerRef: "person", ownerLabel: "Person", state: "pr_pending", destination: { kind: "procurement-request", recordId: "PR-1" } }] } })
+    expect(presented).toMatchObject({ status: "ok", value: { list: { items: [{ actionRef: decoded.value.items[0]?.actionRef, ownerRef: "person", state: "pr_pending" }] }, items: [{ kind: "procurement", actionRef: decoded.value.items[0]?.actionRef, title: "Approval", approvalStage: "Manager", ownerRef: "person", ownerLabel: "Person", state: "pr_pending", destination: { kind: "procurement-request", recordId: "PR-1" } }] } })
     if (presented.status !== "ok") throw new Error("presentation unavailable")
     expect(presented.value.items[0]?.actionRef).toBe(decoded.value.items[0]?.actionRef)
     expect(presented.value.items[0]?.sourceVersion).toBe(1)

@@ -1,0 +1,291 @@
+{
+  "schema": "operations-fixes-proof-v1",
+  "finding": "D-OPS-01",
+  "classification": "fixed-and-regression-proven",
+  "formalIndependentAcceptance": false,
+  "observedAt": "2026-11-14",
+  "repository": "gustavomhss/Orchestra-SF",
+  "product": {
+    "sha": "ee2e14ac940ba62177052f44c0f0e781132e7564",
+    "tree": "01a10e66482be74e95c099761e31eca2d9be4363",
+    "fixCommit": "86f9c993678668634ab409dc31b6b92865836180"
+  },
+  "snapshot": {
+    "sha": "96da0ee1011e4a47086830c0a4bde00b878f54e5",
+    "tree": "7f81d6b83868a60ca41fd0c9c6543959dba60bdd",
+    "parent": "ee2e14ac940ba62177052f44c0f0e781132e7564",
+    "delta": [
+      {
+        "path": ".ci-run.json",
+        "status": "added",
+        "blob": "d4b4a6b5796c6657c35ca09dc5392e34606b6b59"
+      }
+    ],
+    "compareVerified": true,
+    "branch": "ci-run-linux-operations-fixes-ee2e14ac-d4b4a6b5-1"
+  },
+  "request": {
+    "package": "sucafina",
+    "packageSelector": "packages/sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/operations-fixes/document-reextract.test.ts",
+      "./Sucafinav1/test/product/operations-fixes/document-workbench.test.ts",
+      "./Sucafinav1/test/product/wp06/documents/extraction-reuse.test.ts",
+      "./Sucafinav1/test/product/wp06/documents/schemas.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "run": {
+    "id": 43625203326,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43625203326",
+    "status": "completed",
+    "conclusion": "success",
+    "headSha": "96da0ee1011e4a47086830c0a4bde00b878f54e5",
+    "job": 132539378028
+  },
+  "result": {
+    "pass": 8,
+    "fail": 0,
+    "files": 4,
+    "assertions": 96,
+    "seconds": 20.93
+  },
+  "omni": {
+    "nonce": "fc7cd8762c5c4bb20a74a7d409bb934a",
+    "verdict": "pass",
+    "declaredTests": 1,
+    "spawns": 1,
+    "delegated": 0
+  },
+  "consumer": {
+    "traffic": [
+      {
+        "mode": "document-admit",
+        "key": "0dbfa345-0574-4fb5-a441-2833f786a508",
+        "body": "{\"selectionRef\":\"e7df371b-8c87-45f2-a8bc-44205513a118\"}",
+        "originalStatus": 200,
+        "deliveredStatus": 200
+      },
+      {
+        "mode": "document-schema",
+        "key": "1f37c396-6c83-4322-84c2-f416bf775139",
+        "body": "{\"documentRef\":\"operations-document\",\"fields\":[{\"id\":\"Price\",\"type\":\"number\",\"unit\":\"USD\"}]}",
+        "originalStatus": 200,
+        "deliveredStatus": 503,
+        "id": "schema_4e902050cc334f7df0b821fad526b3fe782f53bb",
+        "ref": "schema:schema_4e902050cc334f7df0b821fad526b3fe782f53bb:1"
+      },
+      {
+        "mode": "document-schema",
+        "key": "1f37c396-6c83-4322-84c2-f416bf775139",
+        "body": "{\"documentRef\":\"operations-document\",\"fields\":[{\"id\":\"Price\",\"type\":\"number\",\"unit\":\"USD\"}]}",
+        "originalStatus": 200,
+        "deliveredStatus": 200,
+        "id": "schema_4e902050cc334f7df0b821fad526b3fe782f53bb",
+        "ref": "schema:schema_4e902050cc334f7df0b821fad526b3fe782f53bb:1"
+      },
+      {
+        "mode": "document-extract",
+        "key": "85de00fe-4294-47dc-bc84-7f6ce8d832c7",
+        "body": "{\"documentRef\":\"operations-document\",\"fieldSchemaRef\":\"schema:schema_4e902050cc334f7df0b821fad526b3fe782f53bb:1\"}",
+        "originalStatus": 200,
+        "deliveredStatus": 200,
+        "id": "doc_3b1ccf19330cfed5b3076ffe5c324573a00aead0",
+        "state": "extracted"
+      },
+      {
+        "mode": "document-schema",
+        "key": "b12841f1-1329-4022-9e28-a697a469d55a",
+        "body": "{\"documentRef\":\"operations-document\",\"fields\":[{\"id\":\"Price\",\"type\":\"number\",\"unit\":\"USD\"}]}",
+        "originalStatus": 200,
+        "deliveredStatus": 200,
+        "id": "schema_4e902050cc334f7df0b821fad526b3fe782f53bb",
+        "ref": "schema:schema_4e902050cc334f7df0b821fad526b3fe782f53bb:1"
+      },
+      {
+        "mode": "document-extract",
+        "key": "4eb2871e-0a2d-41a3-aadc-936c9077001f",
+        "body": "{\"documentRef\":\"operations-document\",\"fieldSchemaRef\":\"schema:schema_4e902050cc334f7df0b821fad526b3fe782f53bb:1\"}",
+        "originalStatus": 200,
+        "deliveredStatus": 200,
+        "id": "doc_3b1ccf19330cfed5b3076ffe5c324573a00aead0",
+        "state": "extracted"
+      },
+      {
+        "mode": "document-confirm",
+        "key": "8502392f-4be2-4814-bfb8-07dad146fa4e",
+        "body": "{\"id\":\"doc_3b1ccf19330cfed5b3076ffe5c324573a00aead0\",\"fileRef\":\"operations-document\",\"version\":1,\"location\":\"text:7-9\",\"textRange\":{\"start\":7,\"end\":9,\"unit\":\"utf16\"},\"fieldCandidate\":\"Price\",\"value\":42,\"unit\":\"USD\",\"status\":\"extracted\",\"ref\":{\"schema\":\"sf-evidence-v1\",\"refId\":\"doc_3b1ccf19330cfed5b3076ffe5c324573a00aead0\",\"installationId\":\"a83669c2-1d14-4e75-913d-3eb2582c4060\",\"projectId\":\"project\",\"kind\":\"document\",\"evidenceLevel\":\"claim\",\"target\":{\"documentId\":\"operations-document\",\"incarnation\":\"16a1e102-a0e8-46ad-9cba-ac8d0a9738f1\",\"revision\":1,\"blobDigest\":{\"algorithm\":\"sha256\",\"value\":\"65a7e6145c96164cfbdb29601c833bc239ef5393589fe80aad15a8eb73788fd6\"},\"segment\":{\"start\":7,\"end\":9,\"unit\":\"utf16\",\"textDigest\":{\"algorithm\":\"sha256\",\"value\":\"73475cb40a568e8da8a045ced110137e159f890ac4da883b6b17dc651b3a8049\"}},\"ragSourceId\":\"src_5aabbd6e1750af6bab85b25a2c4167b1\",\"ragRevisionId\":\"rev_1\",\"ragSourceHash\":{\"algorithm\":\"blake3\",\"value\":\"48ae98da2fa62697a59baa70135da3b81bea74e33fd740a903448aacb63fb906\"},\"fieldCandidateId\":\"doc_3b1ccf19330cfed5b3076ffe5c324573a00aead0\"},\"refDigest\":\"e56f2aea509db0673b9ba99f7bd2af4c8553c2ba9ae021b638e38aa44d271bfb\"}}",
+        "originalStatus": 200,
+        "deliveredStatus": 200,
+        "id": "doc_3b1ccf19330cfed5b3076ffe5c324573a00aead0",
+        "state": "confirmed"
+      },
+      {
+        "mode": "document-schema",
+        "key": "91daa0f5-7e49-455d-b0b0-568c8bbebad4",
+        "body": "{\"documentRef\":\"operations-document\",\"fields\":[{\"id\":\"Price\",\"type\":\"number\",\"unit\":\"USD\"}]}",
+        "originalStatus": 200,
+        "deliveredStatus": 200,
+        "id": "schema_4e902050cc334f7df0b821fad526b3fe782f53bb",
+        "ref": "schema:schema_4e902050cc334f7df0b821fad526b3fe782f53bb:1"
+      },
+      {
+        "mode": "document-extract",
+        "key": "9a5192a0-2092-4219-b142-1bbf62aa9b98",
+        "body": "{\"documentRef\":\"operations-document\",\"fieldSchemaRef\":\"schema:schema_4e902050cc334f7df0b821fad526b3fe782f53bb:1\"}",
+        "originalStatus": 200,
+        "deliveredStatus": 200,
+        "id": "doc_3b1ccf19330cfed5b3076ffe5c324573a00aead0",
+        "state": "confirmed"
+      },
+      {
+        "mode": "document-schema",
+        "key": "97fb2169-2689-4fd6-aa2f-1140d35fc5dc",
+        "body": "{\"documentRef\":\"operations-document\",\"fields\":[{\"id\":\"Active\",\"type\":\"boolean\"}]}",
+        "originalStatus": 200,
+        "deliveredStatus": 200,
+        "id": "schema_64e9d11e5506482210ba7146420172ac12684f0b",
+        "ref": "schema:schema_64e9d11e5506482210ba7146420172ac12684f0b:1"
+      },
+      {
+        "mode": "document-extract",
+        "key": "bc71366e-bc30-49f8-b6e4-a965e64040aa",
+        "body": "{\"documentRef\":\"operations-document\",\"fieldSchemaRef\":\"schema:schema_64e9d11e5506482210ba7146420172ac12684f0b:1\"}",
+        "originalStatus": 200,
+        "deliveredStatus": 503,
+        "id": "doc_861343bb6979c04a2a25d5cb76a3af172aec8cea",
+        "state": "extracted"
+      },
+      {
+        "mode": "document-schema",
+        "key": "97fb2169-2689-4fd6-aa2f-1140d35fc5dc",
+        "body": "{\"documentRef\":\"operations-document\",\"fields\":[{\"id\":\"Active\",\"type\":\"boolean\"}]}",
+        "originalStatus": 200,
+        "deliveredStatus": 200,
+        "id": "schema_64e9d11e5506482210ba7146420172ac12684f0b",
+        "ref": "schema:schema_64e9d11e5506482210ba7146420172ac12684f0b:1"
+      },
+      {
+        "mode": "document-extract",
+        "key": "bc71366e-bc30-49f8-b6e4-a965e64040aa",
+        "body": "{\"documentRef\":\"operations-document\",\"fieldSchemaRef\":\"schema:schema_64e9d11e5506482210ba7146420172ac12684f0b:1\"}",
+        "originalStatus": 200,
+        "deliveredStatus": 200,
+        "id": "doc_861343bb6979c04a2a25d5cb76a3af172aec8cea",
+        "state": "extracted"
+      }
+    ],
+    "schemaCount": 2,
+    "candidateCount": 2,
+    "preservedConfirmation": true,
+    "transportLossAfterRealCommit": [
+      "document-schema",
+      "document-extract"
+    ]
+  },
+  "browserDriver": {
+    "consumer": "host-response-recovery",
+    "clientRuntime": {
+      "name": "bun",
+      "version": "1.3.14",
+      "pid": 4056
+    },
+    "driverRuntime": {
+      "name": "node",
+      "version": "24.22.2",
+      "pid": 4076
+    },
+    "playwrightVersion": "1.59.1",
+    "browserVersion": "157.0.8103.50",
+    "browserPid": 4091,
+    "transport": "playwright-unix-pipe-node-websocket",
+    "spawnBoundary": "AppProcess",
+    "browserStdioCount": 5,
+    "browserUsesPipe": true,
+    "browserPipeOwner": "node",
+    "bridge": {
+      "framing": "json-nul",
+      "acceptedClients": 1,
+      "framesToBrowser": 98,
+      "framesFromBrowser": 300,
+      "peakQueuedBytes": 3077,
+      "peakBufferedBytes": 67705,
+      "maxFrameBytes": 16777216,
+      "maxQueuedBytes": 33554432,
+      "directoryMode": 448,
+      "socketMode": 384
+    },
+    "lifecycle": {
+      "remainingContexts": 0,
+      "connected": false,
+      "nodeExitCode": 0,
+      "browserExitCode": 0,
+      "browserSignal": null,
+      "bridgeClosed": true,
+      "listenerClosed": true,
+      "socketClosed": true,
+      "pipeEnded": true,
+      "webSocketOpened": true,
+      "webSocketClosed": true,
+      "webSocketCloseCode": 1000,
+      "webSocketCloseWasClean": true,
+      "pendingFrameBytes": 0,
+      "queuedWriteBytes": 0,
+      "socketRemoved": true,
+      "directoryRemoved": true
+    }
+  },
+  "logs": {
+    "kind": "decoded-job-log",
+    "job": 132539378028,
+    "sha256": "a3dbc667218cc3fecd2cb2968e3394866b47f5bf348641672012375494496ccf",
+    "bytes": 79239,
+    "retainedInRepository": false
+  },
+  "changedProduct": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/documents/schemas.ts",
+      "gitBlob": "fbe4b70444d4a7341a30372c754842a5aca3ce70",
+      "preimage": "8ea0010cef6bb9a7d2dcb3ba805b197a373bba39"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/documents/workbench.ts",
+      "gitBlob": "3d21a461c88da2372eae57d0e066ff59d9f21f55",
+      "preimage": "f6176e8900cf550e3a9d760c4d6a12c3f342ac07"
+    }
+  ],
+  "newTests": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-fixes/document-fixture.ts",
+      "gitBlob": "65866a0a553bfa2b50a31883d9fd728478a6e38d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-fixes/document-reextract.test.ts",
+      "gitBlob": "ec5d8be54fee3c593e2446221b01c154fcb7fa79"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-fixes/document-workbench.test.ts",
+      "gitBlob": "3bfa3f6dc283257d10b537da4ae1e534bd96f4ff"
+    }
+  ],
+  "existingRegressionTests": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/extraction-reuse.test.ts",
+      "gitBlob": "effec27e24849d52ddff279395336d23aebd6cd8"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/schemas.test.ts",
+      "gitBlob": "8cc840fac6dc785de165307b84264e459663ed8c"
+    }
+  ],
+  "limits": [
+    "Real production services, authority, SQLite and Chromium UI are exercised; only delivery of two already-committed successful HTTP responses is changed to 503.",
+    "Strict semantic candidate-schema conflicts remain intact; the existing shared HTTP conflict mapping is unchanged.",
+    "This proof covers the selected regression and is not whole-WP acceptance.",
+    "The UI keeps the document submission intent in memory for the same page; browser-session recovery is not claimed."
+  ]
+}

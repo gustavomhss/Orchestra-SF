@@ -1,0 +1,22 @@
+diff --git a/modules/sucafina/Sucafinav1/product/decisions/apply.ts b/modules/sucafina/Sucafinav1/product/decisions/apply.ts
+index f8404c18abc040c49cf111eb4561ce4c2873a4c6..d31317d29c487cdadb325647e244f12e6d8bf886 100644
+--- a/modules/sucafina/Sucafinav1/product/decisions/apply.ts
++++ b/modules/sucafina/Sucafinav1/product/decisions/apply.ts
+@@ -22,7 +22,7 @@
+   reviewDigestFor: ReviewDigestFor
+   revalidateProducer: (request: { caseRef: { id: string; incarnation: string; version: number }; changeId: string; choiceId: string }, context: TrustedDomainContext) => Promise<PortResult<{ reviewDigest: string }>>
+ }) {
+-  return async (incoming: { caseRef: { id: string; incarnation: string; version: number }; changeId: string; choiceId: string }, context: TrustedDomainContext): Promise<PortResult<CommandReceipt>> => {
++  return async (incoming: { caseRef: { id: string; incarnation: string; version: number }; changeId: string; choiceId: string }, context: TrustedDomainContext, mode: "apply" | "recover" = "apply"): Promise<PortResult<CommandReceipt>> => {
+     const request = structuredClone(incoming)
+     const source = input.host.requestFor(context)
+     const operation = input.operationIdentity(context)
+@@ -38,6 +38,8 @@
+     if (!await input.authorizeApplication(request, change, context).catch(() => false)) return { status: "denied", reason: "application-authority-unavailable" }
+     const lookup = structuredClone(await callDomain(() => input.apply.readReceipt({ surface: change.target.surface, targetRef: change.target.id, targetIncarnation: change.target.incarnation, idempotencyKey: change.idempotencyKey, commandDigest: change.operation.commandDigest }, context)))
+     if (lookup.status !== "ok") return lookup
++    // Receipt recovery must never fall through to producer review or a domain dispatch.
++    if (mode === "recover" && lookup.value.state !== "found") return { status: "unavailable", reason: "original-receipt-unavailable" }
+     const reviewDigest = input.reviewDigestFor(context, request, change)
+     if (!isReviewDigest(reviewDigest)) return { status: "needs-input", reason: "review-proof-required" }
+     const retainReceipt = async (expectedCase: DecisionCase, receipt: CommandReceipt) => {

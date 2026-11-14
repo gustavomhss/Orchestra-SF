@@ -1,0 +1,220 @@
+{
+  "schemaVersion": 1,
+  "dependencyId": "D-BOOT-PROFILE",
+  "repository": "gustavomhss/Orchestra-SF",
+  "status": "BLOCKED_BEFORE_UI",
+  "severity": "Prevents real CLI installation bootstrap",
+  "workSha": "3e1a8ec84ae334b7c7320c86d6b93bd5730ba469",
+  "snapshotSha": "7b3cc91ec088bdc527e1af1207ef8d66f5c45a2c",
+  "sourceAudit": {
+    "kind": "Read-only static follow-up to root-supplied Actions terminal evidence",
+    "testsExecuted": false,
+    "ciDispatched": false,
+    "productRuntimeConfigFixtureChanges": false,
+    "remoteReadMethod": "GitHub MCP",
+    "actionArtifactsIndependentlyInspected": false
+  },
+  "runtimeEvidence": {
+    "source": "Root agent report from actual Actions result; artifact extraction/verification belongs to root",
+    "runId": 43632217395,
+    "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43632217395",
+    "collectedTests": 3,
+    "failedBeforeUi": 3,
+    "fixture": "packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+    "readinessBudgetSeconds": 75,
+    "observedProcessExit": 1,
+    "logAttachment": "wp03-real-cli.log",
+    "reportedError": "Profile policy mismatch: sf_portfolio",
+    "reportedThrowLocation": "modules/sucafina/Sucafinav1/product/ai/resident.ts:50:108",
+    "noOtherProductBlockersClaimedObserved": true
+  },
+  "exactCause": {
+    "profileId": "sf_portfolio",
+    "loader": "createResidentAiBundle",
+    "comparedManifestField": "profiles[id=sf_portfolio].outputTypes",
+    "normativeField": "resident.profiles[id=sf_portfolio].output_types",
+    "predicate": "!sameSet(profile.outputTypes, expected.output_types)",
+    "sameSetDefinition": "a.length === b.length && new Set(a).size === a.length && a.every(value => b.includes(value))",
+    "actualOutputTypes": [
+      "DeliveryAssessment",
+      "DependencyConflict",
+      "PortfolioComparison",
+      "ReconsiderationProposal",
+      "ContextualBIProposal",
+      "CaseRecall",
+      "MatchExplanation"
+    ],
+    "expectedOutputTypes": [
+      "DeliveryAssessment",
+      "DependencyConflict",
+      "PortfolioComparison",
+      "AlternativeDraft",
+      "ReconsiderationProposal",
+      "ContextualBIProposal",
+      "CaseRecall",
+      "MatchExplanation"
+    ],
+    "missingOutputTypes": [
+      "AlternativeDraft"
+    ],
+    "extraOutputTypes": [],
+    "differingPolicyFields": [
+      "outputTypes"
+    ],
+    "actualCount": 7,
+    "expectedCount": 8,
+    "distributedSourceAndManifestDefinitions": "Identical after removing sourceDigest from manifest profile",
+    "manifestDeclaredProfileSourceDigest": "216f5cd353d9e80856ea212862b22757a96a241032b18db31fb932e57ee24388",
+    "order": "Profile policy check runs before profile source bytes/digest verification, before native model/provider availability and before HTTP host readiness.",
+    "emittedError": "Profile policy mismatch: sf_portfolio"
+  },
+  "producerConsumerChain": [
+    {
+      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "symbol": "createLocalInstallation",
+      "action": "await context.createHostRuntime with sourceRoot path.resolve(import.meta.dir, '../product/ai') before returning installation handler"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "symbol": "createSfHostRuntime",
+      "action": "await createResidentAiBundle({root: input.sourceRoot, manifestPath: path.join(input.sourceRoot, 'manifests/resident.json')}) at line 62"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/manifests/resident.json",
+      "symbol": "distributed sf_portfolio profile",
+      "action": "Supplies seven outputTypes without AlternativeDraft"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/normative-contracts.json",
+      "symbol": "resident.profiles sf_portfolio",
+      "action": "Requires eight output_types including AlternativeDraft"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/resident.ts",
+      "symbol": "createResidentAiBundle profile loop",
+      "action": "sameSet returns false and throws; no resident bundle or accepted HTTP installation"
+    }
+  ],
+  "ownership": {
+    "profilePolicyOwnerTask": "WP12.T01",
+    "registrationOwnerTask": "WP10.T06",
+    "immediateIntegrationRoute": "WP10 / PR29 and S0, coordinating the WP12 resident-profile owner as required",
+    "notAssignedTo": "Finance or S4-A Decisions spec author",
+    "reason": "Normative ownership explicitly marks WP12.T01 for sf_portfolio and WP10.T06 for registration. Source correction already exists on published WP10 branch."
+  },
+  "installedPins": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/resident.ts",
+      "commit": "3e1a8ec84ae334b7c7320c86d6b93bd5730ba469",
+      "blob": "3e025a1395511af4f09de903b35d6b1cf20198ac",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/3e1a8ec84ae334b7c7320c86d6b93bd5730ba469/modules/sucafina/Sucafinav1/product/ai/resident.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/manifests/resident.json",
+      "commit": "3e1a8ec84ae334b7c7320c86d6b93bd5730ba469",
+      "blob": "6c2a9a7084379a91995842d9e8577f710f687465",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/3e1a8ec84ae334b7c7320c86d6b93bd5730ba469/modules/sucafina/Sucafinav1/product/ai/manifests/resident.json"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/profiles/sf_portfolio.json",
+      "commit": "3e1a8ec84ae334b7c7320c86d6b93bd5730ba469",
+      "blob": "1aabebe2ea6effa98dc1869ebcaf947092d7c4ba",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/3e1a8ec84ae334b7c7320c86d6b93bd5730ba469/modules/sucafina/Sucafinav1/product/ai/profiles/sf_portfolio.json"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/normative-contracts.json",
+      "commit": "3e1a8ec84ae334b7c7320c86d6b93bd5730ba469",
+      "blob": "a59ecb7ea7315504cb78ced5c6b6dd828e238730",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/3e1a8ec84ae334b7c7320c86d6b93bd5730ba469/modules/sucafina/Sucafinav1/product/contracts/normative-contracts.json"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "commit": "3e1a8ec84ae334b7c7320c86d6b93bd5730ba469",
+      "blob": "81f07b9d68a85811cef3aa4d3b4615475486f04f",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/3e1a8ec84ae334b7c7320c86d6b93bd5730ba469/apps/cli/src/sucafina-product/host-context.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "commit": "3e1a8ec84ae334b7c7320c86d6b93bd5730ba469",
+      "blob": "a7c5c08519906e640a3506f7685d18b949346cc8",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/3e1a8ec84ae334b7c7320c86d6b93bd5730ba469/modules/sucafina/Sucafinav1/local/entry.ts"
+    }
+  ],
+  "publishedComparison": {
+    "pr": 29,
+    "branch": "astra-wp10",
+    "observedHead": "6cf5d78ba412f97aa4dd8648bfec340a27060d3b",
+    "priorHeadAlsoInspected": "54317229d7f8fcb7e92921c2f4a8dc6f9310270b",
+    "prState": "open",
+    "draft": true,
+    "merged": false,
+    "sameRelevantBlobsAtBothHeads": true,
+    "outputTypes": [
+      "DeliveryAssessment",
+      "DependencyConflict",
+      "PortfolioComparison",
+      "AlternativeDraft",
+      "ReconsiderationProposal",
+      "ContextualBIProposal",
+      "CaseRecall",
+      "MatchExplanation"
+    ],
+    "manifestDeclaredProfileSourceDigest": "249ec91f7d1a76fef83c4408795b66953589d3b3f45e91c64ca691c60c8c2b83",
+    "normativePolicyUnchanged": true,
+    "strictOutputTypeEqualityPreserved": true,
+    "pins": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/ai/resident.ts",
+        "commit": "6cf5d78ba412f97aa4dd8648bfec340a27060d3b",
+        "blob": "7e3d3849272bb5755d793a9e2b00ad34c523c188",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/6cf5d78ba412f97aa4dd8648bfec340a27060d3b/modules/sucafina/Sucafinav1/product/ai/resident.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/ai/manifests/resident.json",
+        "commit": "6cf5d78ba412f97aa4dd8648bfec340a27060d3b",
+        "blob": "453c6f3a5b48c081223909af8293f854ad31d7c8",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/6cf5d78ba412f97aa4dd8648bfec340a27060d3b/modules/sucafina/Sucafinav1/product/ai/manifests/resident.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/ai/profiles/sf_portfolio.json",
+        "commit": "6cf5d78ba412f97aa4dd8648bfec340a27060d3b",
+        "blob": "744918076fa510339a3216487da8f59b06fe45e8",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/6cf5d78ba412f97aa4dd8648bfec340a27060d3b/modules/sucafina/Sucafinav1/product/ai/profiles/sf_portfolio.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/normative-contracts.json",
+        "commit": "6cf5d78ba412f97aa4dd8648bfec340a27060d3b",
+        "blob": "a59ecb7ea7315504cb78ced5c6b6dd828e238730",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/6cf5d78ba412f97aa4dd8648bfec340a27060d3b/modules/sucafina/Sucafinav1/product/contracts/normative-contracts.json"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "commit": "6cf5d78ba412f97aa4dd8648bfec340a27060d3b",
+        "blob": "bdf6d4e2014cc9b2a492b6ae304948c249221e39",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/6cf5d78ba412f97aa4dd8648bfec340a27060d3b/apps/cli/src/sucafina-product/host-context.ts"
+      }
+    ],
+    "conclusion": "Published profile and manifest already include AlternativeDraft; they are not installed in W. This comparison is not runtime success or acceptance."
+  },
+  "requestedResolution": {
+    "action": "Owner/S0 reconcile the already-published coherent resident profile+manifest into the authorized integration path, preserving normative policy and source digests; do not patch or bypass the loader in Decisions helpers.",
+    "exactAcceptanceCondition": "The real CLI must finish createResidentAiBundle with the full 5-profile/18-skill manifest and expose the existing authenticated installation readiness; then rerun only nominal CI-UI-DECISIONS on an exact owner-approved SHA through Actions.",
+    "noAutomaticDispatch": true,
+    "noNewBranchOrPr": true,
+    "noMergeByThisAudit": true,
+    "noProductWriteByThisAudit": true,
+    "prohibitedWorkaround": "No reduced native-probe manifest, omission of sf_portfolio, bypass of sameSet, fake readiness, provider stub, fixture mutation, or local execution."
+  },
+  "evidenceBoundary": {
+    "realDashboardAndWorkbench": "NOT_REACHED",
+    "createAndEditCase": "NOT_REACHED",
+    "alternativesAndChoice": "NOT_REACHED",
+    "proposalPreviewExplicitApply": "NOT_REACHED",
+    "lostResponseRetryReload": "NOT_REACHED",
+    "persistedHistory": "NOT_REACHED",
+    "providerAvailability": "NOT_OBSERVED",
+    "independentCritique": "NOT_RUN",
+    "earlierSourceFindings": "Static only; this run does not reproduce missing case verifier, decision HTTP composition, initial alternatives, Apply digest or portfolio controller collision.",
+    "missionAcceptance": false
+  }
+}

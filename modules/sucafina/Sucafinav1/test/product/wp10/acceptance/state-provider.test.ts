@@ -4,6 +4,7 @@ import type { SfStateAuthority, SfProductStatePort, SfProductState, SfAtlasOutbo
 import { digestSfEvidenceRef } from "../../../../product/contracts/canonical.ts"
 import { createSfProductState } from "../../../../product/host-binding/state-provider.ts"
 import { testPersistence } from "../../../fixture/persistence.ts"
+import { sfProductStateAdditiveFields } from "../../../../product/contracts/state-layout.ts"
 
 const authority: SfStateAuthority = { principalRef: "user-1", accessRevision: "access-1", policyVersion: "policy-1" }
 const request = () => new Request("https://example.test/product")
@@ -104,6 +105,23 @@ test("read callback cannot mutate persisted state", async () => {
   expect(f.storage.state.dashboard).toEqual(before)
 })
 
+test("thread messages are append-only outside the authorized history writer", async () => {
+  const f = fixture()
+  const input = { ...command, namespace: "threads" as const }
+  await f.port.transaction(request(), input, async (state) => {
+    state.threads.thread = { messages: [{ id: "m1", body: "original" }] }
+    return { commit: true, value: null }
+  })
+  expect(await f.port.transaction(request(), { ...input, expectedStorageVersion: 1, idempotencyKey: "rewrite" }, async (state) => {
+    state.threads.thread = { messages: [{ id: "m1", body: "forged" }] }
+    return { commit: true, value: null }
+  })).toMatchObject({ status: "denied", reason: "thread-history-write-outside-authority" })
+  expect(await f.port.transaction(request(), { ...input, expectedStorageVersion: 1, idempotencyKey: "reply" }, async (state) => {
+    state.threads.thread = { messages: [{ id: "m1", body: "original" }, { id: "m2", body: "reply" }] }
+    return { commit: true, value: null }
+  })).toMatchObject({ status: "ok", storageVersion: 2 })
+})
+
 test("revoked authority at egress prevents read disclosure and write commit", async () => {
   const f = fixture()
   await f.port.transaction(request(), command, async (state) => {
@@ -147,6 +165,93 @@ test("writes in another namespace do not invalidate section CAS", async () => {
   })).toMatchObject({ status: "ok", storageVersion: 1, aggregateRevision: 2 })
 })
 
+test("legacy state adopts the BI namespace without resetting existing versions or granting cross-namespace writes", async () => {
+  const f = fixture()
+  await f.port.transaction(request(), command, async (state) => { state.preferences.theme = "light"; return { commit: true, value: null } })
+  const stored = f.storage.state.dashboard.data.__sfProductV1 as SfProductState
+  delete stored.biArtifacts
+  Reflect.deleteProperty(stored.versions, "bi-artifacts")
+  expect(await f.port.read(request(), "preferences", (state) => state.versions)).toMatchObject({ status: "ok", value: { preferences: 1, "bi-artifacts": 0 } })
+  expect(await f.port.transaction(request(), { ...command, expectedStorageVersion: 1, idempotencyKey: "forged-bi" }, async (state) => {
+    state.biArtifacts = { forged: {} as NonNullable<SfProductState["biArtifacts"]>[string] }
+    return { commit: true, value: null }
+  })).toMatchObject({ status: "denied", reason: "namespace-write-outside-authority" })
+  expect(await f.port.transaction(request(), { ...command, namespace: "bi-artifacts", idempotencyKey: "bi-migration" }, async (state) => {
+    state.biArtifacts = {}
+    return { commit: true, value: null }
+  })).toMatchObject({ status: "ok", storageVersion: 1 })
+  expect(await f.port.read(request(), "preferences", (state) => state.versions)).toMatchObject({ status: "ok", value: { preferences: 1, "bi-artifacts": 1 } })
+})
+
+test("additive C08 migration preserves existing maps and commits only with a new authorized command", async () => {
+  const f = fixture()
+  const original = await f.port.transaction(request(), command, async (state) => {
+    state.preferences.theme = "light"
+    return { commit: true, value: "original" }
+  })
+  expect(original.status).toBe("ok")
+  const stored = f.storage.state.dashboard.data.__sfProductV1 as SfProductState
+  expect(Object.fromEntries(sfProductStateAdditiveFields.map((field) => [field, stored[field]])))
+    .toEqual(Object.fromEntries(sfProductStateAdditiveFields.map((field) => [field, {}])))
+  // Opaque legacy map contents exercise storage preservation; they are not admitted domain results.
+  Reflect.set(stored, "claimBindings", { preserved: { marker: "legacy-claim-map" } })
+  Reflect.set(stored, "nativeRuns", { preserved: { marker: "legacy-run-map" } })
+  for (const field of ["commandProposals", "compositeScenarios", "decisionResults", "biArtifacts"] as const) delete stored[field]
+  Reflect.deleteProperty(stored.versions, "bi-artifacts")
+  const legacy = structuredClone(f.storage.state.dashboard)
+  expect(await f.port.read(request(), "preferences", (state) => state.preferences.theme)).toMatchObject({ status: "ok", value: "light" })
+  expect(f.storage.state.dashboard).toEqual(legacy)
+  expect(await f.port.transaction(request(), command, async () => { throw new Error("old exact retry must not migrate") })).toEqual(original)
+  expect(f.storage.state.dashboard).toEqual(legacy)
+  const next = { ...command, expectedStorageVersion: 1, idempotencyKey: "migrate-additive", commandDigest: "b".repeat(64) }
+  const revoked = createSfProductState({ persistence: f.storage.persistence, resolveTarget, createId: () => "unused", authorize: async () => undefined })
+  expect(await revoked.transaction(request(), next, async () => { throw new Error("denied migration must not run") })).toMatchObject({ status: "denied" })
+  expect(f.storage.state.dashboard).toEqual(legacy)
+  expect(await f.port.transaction(request(), next, async (state) => {
+    expect(state.decisionResults).toEqual({})
+    state.preferences.theme = "preview"
+    return { commit: false, value: "preview" }
+  })).toMatchObject({ status: "preview", aggregateRevision: 1, storageVersion: 1 })
+  expect(f.storage.state.dashboard).toEqual(legacy)
+  let grants = 0
+  const lateRevoked = createSfProductState({ persistence: f.storage.persistence, resolveTarget, createId: () => "unused", authorize: async () => ++grants === 1 ? authority : undefined })
+  expect(await lateRevoked.transaction(request(), next, async (state) => {
+    state.preferences.theme = "revoked"
+    return { commit: true, value: "must not persist migration" }
+  })).toMatchObject({ status: "denied", reason: "product-authority-changed" })
+  expect(f.storage.state.dashboard).toEqual(legacy)
+  const result = await f.port.transaction(request(), next, async (state) => {
+    state.preferences.theme = "dark"
+    return { commit: true, value: "migrated" }
+  })
+  expect(result).toMatchObject({ status: "ok", aggregateRevision: 2, storageVersion: 2, incarnation: "incarnation-1", value: "migrated" })
+  const once = structuredClone(f.storage.state.dashboard)
+  const migrated = once.data.__sfProductV1 as SfProductState
+  expect(migrated.claimBindings).toEqual(stored.claimBindings)
+  expect(migrated.nativeRuns).toEqual(stored.nativeRuns)
+  expect(migrated.versions).toEqual({ ...stored.versions, preferences: 2, "bi-artifacts": 0 })
+  for (const field of ["commandProposals", "compositeScenarios", "decisionResults", "biArtifacts"] as const) expect(migrated[field]).toEqual({})
+  expect(await f.port.transaction(request(), next, async () => { throw new Error("retry must not migrate twice") })).toEqual(result)
+  expect(f.storage.state.dashboard).toEqual(once)
+})
+
+test("malformed additive maps cannot be normalized into an accepted state", async () => {
+  for (const field of sfProductStateAdditiveFields) {
+    for (const malformed of [null, [], 42]) {
+      const f = fixture()
+      expect((await f.port.transaction(request(), command, async () => ({ commit: true, value: "initialized" }))).status).toBe("ok")
+      Reflect.set(f.storage.state.dashboard.data.__sfProductV1 as SfProductState, field, malformed)
+      const before = structuredClone(f.storage.state.dashboard)
+      expect(await f.port.read(request(), "preferences", () => "must not disclose"))
+        .toEqual({ status: "unavailable", reason: "invalid-product-state" })
+      expect(await f.port.transaction(request(), { ...command, expectedStorageVersion: 1, idempotencyKey: "invalid-map" }, async () => {
+        throw new Error("invalid map must not invoke work")
+      })).toEqual({ status: "unavailable", reason: "invalid-product-state" })
+      expect(f.storage.state.dashboard).toEqual(before)
+    }
+  }
+})
+
 test("replacing the actual target blocks replay of the old receipt", async () => {
   const f = fixture()
   expect((await f.port.transaction(request(), command, async (state) => {
@@ -177,6 +282,7 @@ test("a callback cannot mutate a different namespace, versions, or receipts", as
   const before = structuredClone(f.storage.state.dashboard)
   const mutations = [
     (state: SfProductState) => { state.relations.link = "forged" },
+    ...sfProductStateAdditiveFields.map((field) => (state: SfProductState) => { Reflect.set(state, field, { forged: { marker: "unauthorized" } }) }),
     (state: SfProductState) => { state.versions.relations = 7 },
     (state: SfProductState) => { state.transactions.forged = { namespace: "preferences", scopeDigest: "forged", principalRef: "user-1", targetRef: "preference-1", targetIncarnation: "target-1", commandDigest: "a".repeat(64), storageVersion: 1, aggregateRevision: 1, incarnation: "incarnation-1", value: "forged" } },
   ]
@@ -233,6 +339,33 @@ test("stale secondary namespace blocks all work", async () => {
     throw new Error("stale secondary must not execute")
   })).toEqual({ status: "conflict", reason: "product-state-changed" })
   expect(f.storage.state.dashboard).toEqual(before)
+})
+
+test("read-only namespace guards enforce CAS without granting writes or advancing versions", async () => {
+  const f = fixture(async (_request, _snapshot, namespace, mode) => namespace === "relations" && mode === "write" ? undefined : authority)
+  const guarded = { ...command, checkNamespaces: [{ namespace: "relations" as const, expectedStorageVersion: 0 }] }
+  expect(await f.port.transaction(request(), guarded, async (state) => {
+    state.relations.forged = true
+    return { commit: true, value: null }
+  })).toMatchObject({ status: "denied", reason: "namespace-write-outside-authority" })
+  const saved = await f.port.transaction(request(), guarded, async (state) => {
+    state.preferences.value = "saved"
+    return { commit: true, value: "saved" }
+  })
+  expect(saved.status).toBe("ok")
+  expect(await f.port.read(request(), "relations", (state) => state.versions.relations)).toMatchObject({ status: "ok", value: 0 })
+  expect(await f.port.transaction(request(), { ...guarded, checkNamespaces: [] }, async () => { throw new Error("changed guard must not execute") })).toMatchObject({ status: "conflict", reason: "idempotency-content-changed" })
+  expect(await f.port.transaction(request(), { ...guarded, idempotencyKey: "stale", expectedStorageVersion: 1, checkNamespaces: [{ namespace: "relations", expectedStorageVersion: 1 }] }, async () => { throw new Error("stale guard must not execute") })).toMatchObject({ status: "conflict", reason: "product-state-changed" })
+  expect(await f.port.transaction(request(), { ...guarded, idempotencyKey: "overlap", checkNamespaces: [{ namespace: "preferences", expectedStorageVersion: 0 }] }, async () => { throw new Error("overlap must not execute") })).toMatchObject({ status: "conflict", reason: "invalid-expected-version" })
+})
+
+test("revoked read authority for a guarded namespace prevents commit and retry disclosure", async () => {
+  let checks = 0
+  const f = fixture(async (_request, _snapshot, namespace, mode) => namespace === "relations" && mode === "read" && ++checks > 1 ? undefined : authority)
+  expect(await f.port.transaction(request(), { ...command, checkNamespaces: [{ namespace: "relations", expectedStorageVersion: 0 }] }, async (state) => {
+    state.preferences.secret = "secret"
+    return { commit: true, value: "secret" }
+  })).toMatchObject({ status: "denied", reason: "product-authority-changed" })
 })
 
 test("secondary authority revoked at egress rolls back both sections", async () => {

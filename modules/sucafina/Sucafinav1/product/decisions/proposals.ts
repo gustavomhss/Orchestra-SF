@@ -1,5 +1,6 @@
 import { digestSfValue } from "../contracts/canonical.ts"
 import { reassessScenarioCoverage, validateScenarioCoverage } from "./cost-coverage.ts"
+import type { createChangeProposalStore } from "./change-proposal-store.ts"
 import { parseCaseRef } from "./case-port.ts"
 import { prepareDomainChange } from "./prepared-change.ts"
 import { decodeSfOperationInput } from "../contracts/schema-admission.ts"
@@ -72,6 +73,7 @@ export function createChangeProposalService(input: {
   cases: DecisionCasePort
   host: Pick<DomainPortHost, "revalidate">
   resolveChanges: (request: ChangePrepareRequest, context: TrustedDomainContext) => Promise<PortResult<{ changes: readonly { command: PreparedCommand; preview: ScenarioResult; targetEvidence: Extract<BusinessEvidenceRef, { kind: "record" }> }[]; conditions: readonly UnresolvedCondition[] }>>
+  store: ReturnType<typeof createChangeProposalStore>
   resolvePreview: (request: { caseRef: { id: string; incarnation: string; version: number }; choiceId: string; preview: ScenarioResult }, context: TrustedDomainContext) => Promise<PortResult<{ previewRef: string }>>
   authorizeProposal: (request: ChangePrepareRequest, output: SfOperationOutputMap["sf_change_prepare"], context: TrustedDomainContext) => Promise<boolean>
 }) {
@@ -81,15 +83,19 @@ export function createChangeProposalService(input: {
     const current = await callProposalPort(() => input.cases.read({ caseRef: parsed.value.caseRef }, context))
     if (current.status !== "ok") return current
     if (!current.value.case.choices.some((choice) => choice.id === parsed.value.choiceRef)) return { status: "unavailable", reason: "choice-unavailable" }
+    const caseRef = parseCaseRef(parsed.value.caseRef)
+    if (!caseRef) return { status: "needs-input", reason: "invalid-case-reference" }
+    const scopedCase = { ...caseRef, version: current.value.case.version }
+    const prior = await input.store.readByRequest({ caseRef: scopedCase, request: parsed.value }, context)
+    if (prior.status !== "ok") return prior
+    if (prior.value.state === "found") return await input.authorizeProposal(parsed.value, prior.value.output, context).catch(() => false) && await input.host.revalidate(context).catch(() => false) ? { status: "ok", value: prior.value.output } : { status: "denied", reason: "change-access-unavailable" }
     const resolved = await callProposalPort(() => input.resolveChanges(parsed.value, context))
     if (resolved.status !== "ok") return resolved
     if (!resolved.value.changes.length) return { status: "unavailable", reason: "domain-commands-unavailable" }
     if (new Set(resolved.value.changes.map((item) => item.command.idempotencyKey)).size !== resolved.value.changes.length) return { status: "conflict", reason: "change-identity-conflict" }
-    const caseRef = parseCaseRef(parsed.value.caseRef)
-    if (!caseRef) return { status: "needs-input", reason: "invalid-case-reference" }
-    const previews = await Promise.all(resolved.value.changes.map((item) => input.resolvePreview({ caseRef: { ...caseRef, version: current.value.case.version }, choiceId: parsed.value.choiceRef, preview: item.preview }, context)))
+    const previews = await Promise.all(resolved.value.changes.map((item) => input.resolvePreview({ caseRef: scopedCase, choiceId: parsed.value.choiceRef, preview: item.preview }, context)))
     const failedPreview = previews.find((item) => item.status !== "ok")
-    if (failedPreview && failedPreview.status !== "ok") return failedPreview
+    if (failedPreview) return failedPreview
     const changes = resolved.value.changes.map((item, index) => {
       const target = item.command.target
       const evidence = item.targetEvidence
@@ -98,14 +104,16 @@ export function createChangeProposalService(input: {
       if (prepared.status !== "ok") return undefined
       const preview = previews[index]
       if (!preview || preview.status !== "ok" || !preview.value.previewRef.trim()) return undefined
-      return { changeRef: prepared.change.id, targetRef: evidence, expectedVersion: prepared.change.expectedVersion, operationRef: item.command.id, previewRef: preview.value.previewRef, requiredAuthority: prepared.change.requiredAuthority }
+      return { command: item.command, preview: item.preview, previewRef: preview.value.previewRef, targetEvidence: evidence }
     })
     if (changes.some((change) => !change)) return { status: "conflict", reason: "invalid-domain-command" }
-    const output: SfOperationOutputMap["sf_change_prepare"] = { caseRef: parsed.value.caseRef, caseVersion: current.value.case.version, changes: changes.filter((change): change is NonNullable<typeof change> => change !== undefined), conditions: resolved.value.conditions }
+    const saved = await input.store.register({ caseRef: scopedCase, request: parsed.value, changes: changes.filter((change): change is NonNullable<typeof change> => change !== undefined), conditions: resolved.value.conditions }, context)
+    if (saved.status !== "ok") return saved
+    const output = saved.value
     if (!await input.authorizeProposal(parsed.value, output, context).catch(() => false)) return { status: "denied", reason: "change-access-unavailable" }
     const again = await callProposalPort(() => input.cases.read({ caseRef: parsed.value.caseRef }, context))
     if (again.status !== "ok") return again
-    const previewsAgain = await Promise.all(resolved.value.changes.map((item) => input.resolvePreview({ caseRef: { ...caseRef, version: current.value.case.version }, choiceId: parsed.value.choiceRef, preview: item.preview }, context)))
+    const previewsAgain = await Promise.all(resolved.value.changes.map((item) => input.resolvePreview({ caseRef: scopedCase, choiceId: parsed.value.choiceRef, preview: item.preview }, context)))
     if (again.value.case.version !== current.value.case.version || digestSfValue(previewsAgain) !== digestSfValue(previews) || !await input.authorizeProposal(parsed.value, output, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "stale", reason: "case-or-preview-changed" }
     return { status: "ok", value: output }
   }

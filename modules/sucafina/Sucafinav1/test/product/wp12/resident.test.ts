@@ -1,6 +1,7 @@
 import { expect, test } from "bun:test"
 import path from "node:path"
 import { createResidentAiBundle } from "../../../product/ai/resident.ts"
+import type { ResidentProfile, SkillManifest } from "../../../product/contracts/resident-ai.ts"
 
 const root = path.resolve(import.meta.dir, "../../../product/ai")
 
@@ -55,6 +56,51 @@ test("an unknown input schema is rejected", async () => {
     manifest.skills[0].inputSchemaRef = "UnknownSkillInput"
     await writeFile(file, JSON.stringify(manifest))
     await expect(createResidentAiBundle({ root: directory, manifestPath: file })).rejects.toThrow("Skill policy mismatch")
+  } finally {
+    await rm(directory, { recursive: true, force: true })
+  }
+})
+
+test("a valid digest does not permit manifest or source paths outside the distributed root", async () => {
+  const { mkdtemp, cp, rename, symlink, rm } = await import("node:fs/promises")
+  const { tmpdir } = await import("node:os")
+  const directory = await mkdtemp(path.join(tmpdir(), "sf-resident-boundary-"))
+  try {
+    const source = path.join(directory, "resident")
+    await cp(root, source, { recursive: true })
+    const manifest = path.join(source, "manifests/native-probe.json")
+    const externalManifest = path.join(directory, "native-probe.json")
+    await cp(manifest, externalManifest)
+    await expect(createResidentAiBundle({ root: source, manifestPath: externalManifest })).rejects.toThrow("Manifest outside resident root")
+
+    const file = path.join(source, "skills/sf-explicar-forecast/SKILL.md")
+    const externalSkill = path.join(directory, "SKILL.md")
+    await rename(file, externalSkill)
+    await symlink(externalSkill, file)
+    await expect(createResidentAiBundle({ root: source, manifestPath: manifest })).rejects.toThrow("Resident source outside root")
+  } finally {
+    await rm(directory, { recursive: true, force: true })
+  }
+})
+
+test("duplicate, unknown and incomplete resident catalogs fail before registration", async () => {
+  const { mkdtemp, cp, writeFile, rm } = await import("node:fs/promises")
+  const { tmpdir } = await import("node:os")
+  const directory = await mkdtemp(path.join(tmpdir(), "sf-resident-catalog-"))
+  try {
+    await cp(root, directory, { recursive: true })
+    const file = path.join(directory, "manifests/resident.json")
+    const manifest: { profiles: ResidentProfile[]; skills: SkillManifest[] } = await Bun.file(file).json()
+    const cases = [
+      { manifest: { ...manifest, profiles: [manifest.profiles[0], ...manifest.profiles.slice(0, -1)] }, reason: "Empty or duplicate resident entries" },
+      { manifest: { ...manifest, skills: [manifest.skills[0], ...manifest.skills.slice(0, -1)] }, reason: "Empty or duplicate resident entries" },
+      { manifest: { ...manifest, profiles: [...manifest.profiles.slice(0, -1), { ...manifest.profiles.at(-1), id: "sf_unknown" }] }, reason: "Invalid resident profile" },
+      { manifest: { ...manifest, skills: manifest.skills.slice(0, -1) }, reason: "Incomplete resident manifest" },
+    ]
+    for (const sample of cases) {
+      await writeFile(file, JSON.stringify(sample.manifest))
+      await expect(createResidentAiBundle({ root: directory, manifestPath: file })).rejects.toThrow(sample.reason)
+    }
   } finally {
     await rm(directory, { recursive: true, force: true })
   }

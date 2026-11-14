@@ -3,6 +3,7 @@ import type { DomainPortHost, PortResult, SfDocumentReadPort } from "../contract
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { SfProductState, SfProductStatePort } from "../contracts/state.ts"
 import { documentAsset, documentSourceCurrent } from "./source-fence.ts"
+import type { StoredDocumentEvidence } from "./store.ts"
 
 type Field = { id: string; type: "string" | "number" | "boolean" | "date"; unit?: string }
 type Schema = { schema: "sf-field-schema-v1"; id: string; version: number; documentRef: string; documentId: string; incarnation: string; revision: number; blobDigest: string; principalRef: string; accessRevision: string; policyVersion: string; installationId: string; projectId: string; fields: readonly Field[] }
@@ -54,22 +55,41 @@ export function createSfDocumentSchemas(input: { state: SfProductStatePort; docu
       if (document.status !== "ok") return document
       const identity = { incarnation: document.value.incarnation, revision: document.value.revision, blobDigest: document.value.blobDigest.value }
       const id = payload.id ?? `schema_${digestSfValue({ principal: context.binding.principalRef, operation }).slice(0, 40)}`
-      const loaded = await input.state.read(request, "documents", (state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? { previous: state.documents[`schema:${id}`], asset: documentAsset(state, payload.documentRef) } : undefined)
+      const loaded = await input.state.read(request, "documents", (state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? { previous: state.documents[`schema:${id}`], records: Object.values(state.documents), asset: documentAsset(state, payload.documentRef) } : undefined)
       if (loaded.status !== "ok" || !loaded.value?.asset) return { status: "unavailable", reason: "schema-unavailable" }
       const previous = loaded.value.previous
       const asset = loaded.value.asset
-      if (visible(previous, context) && previous.documentRef === payload.documentRef && previous.incarnation === identity.incarnation && previous.revision === identity.revision && previous.blobDigest === identity.blobDigest && previous.version === (payload.id ? Number(payload.expectedVersion) + 1 : 1) && digestSfValue(previous.fields) === digestSfValue(payload.fields) && await input.documents.revalidate(payload.documentRef, identity, context) && await input.confirm(payload, context) && await input.host.revalidate(context)) return { status: "ok", value: { id, version: previous.version, ref: `schema:${id}:${previous.version}`, fields: structuredClone(previous.fields) } }
-      if (payload.id ? !visible(previous, context) || previous.version !== payload.expectedVersion || previous.documentRef !== payload.documentRef || previous.incarnation !== identity.incarnation || previous.revision !== identity.revision || previous.blobDigest !== identity.blobDigest : previous !== undefined) return { status: "conflict", reason: "schema-changed" }
-      const row: Schema = { schema: "sf-field-schema-v1", id, version: payload.id ? Number(payload.expectedVersion) + 1 : 1, documentRef: payload.documentRef, documentId: document.value.documentId, ...identity, principalRef: context.binding.principalRef, accessRevision: context.binding.accessRevision, policyVersion: context.binding.policyVersion, installationId: context.binding.installationId, projectId: context.binding.projectId, fields: structuredClone(payload.fields) }
+      const equivalent = (value: unknown): value is Schema => visible(value, context) && value.documentRef === payload.documentRef && value.documentId === document.value.documentId && value.incarnation === identity.incarnation && value.revision === identity.revision && value.blobDigest === identity.blobDigest && digestSfValue(value.fields) === digestSfValue(payload.fields)
+      const exact = equivalent(previous) && previous.version === (payload.id ? Number(payload.expectedVersion) + 1 : 1)
+      // An operation that already created a schema may not change its meaning through a
+      // lookup for another equivalent row. Explicit updates retain their version CAS.
+      if (!exact && (payload.id ? !visible(previous, context) || previous.version !== payload.expectedVersion || previous.documentRef !== payload.documentRef || previous.documentId !== document.value.documentId || previous.incarnation !== identity.incarnation || previous.revision !== identity.revision || previous.blobDigest !== identity.blobDigest : previous !== undefined)) return { status: "conflict", reason: "schema-changed" }
+      const candidates = loaded.value.records.filter((value): value is StoredDocumentEvidence => !!value && typeof value === "object" && (value as StoredDocumentEvidence).schema === "sf-document-v1" && typeof (value as StoredDocumentEvidence).schemaRef === "string" && typeof (value as StoredDocumentEvidence).schemaVersion === "string" && !!(value as StoredDocumentEvidence).snapshot && typeof (value as StoredDocumentEvidence).snapshot === "object")
+      const equivalents = !payload.id && previous === undefined ? loaded.value.records.filter(equivalent) : []
+      // Older installations can contain unused duplicate definitions. Keep the schema
+      // that already owns this source's candidates, including confirmed candidates.
+      const referenced = equivalents.filter((schema) => candidates.some((candidate) => candidate.schemaRef === schema.id && candidate.schemaVersion === String(schema.version) && candidate.snapshot.documentRef === payload.documentRef && candidate.snapshot.incarnation === identity.incarnation && candidate.snapshot.revision === identity.revision && candidate.snapshot.blobDigest === identity.blobDigest))
+      if (referenced.length > 1) return { status: "conflict", reason: "schema-changed" }
+      const reused = exact ? previous : referenced[0] ?? equivalents.toSorted((left, right) => left.id < right.id ? -1 : left.id > right.id ? 1 : 0)[0]
+      const row: Schema = reused ?? { schema: "sf-field-schema-v1", id, version: payload.id ? Number(payload.expectedVersion) + 1 : 1, documentRef: payload.documentRef, documentId: document.value.documentId, ...identity, principalRef: context.binding.principalRef, accessRevision: context.binding.accessRevision, policyVersion: context.binding.policyVersion, installationId: context.binding.installationId, projectId: context.binding.projectId, fields: structuredClone(payload.fields) }
       if (!await input.documents.revalidate(payload.documentRef, identity, context) || !await input.confirm(payload, context)) return { status: "stale", reason: "schema-source-changed" }
-      const saved = await input.state.transaction(request, { namespace: "documents", domainSurface: asset.surface, expectedStorageVersion: loaded.storageVersion, targetRef: input.creationTarget.ref, targetIncarnation: input.creationTarget.incarnation, idempotencyKey: operation, commandDigest: digestSfValue(payload) }, async (state, authority, snapshot) => {
-        if (!documentSourceCurrent(state, snapshot, payload.documentRef, identity, asset.surface) || !await input.documents.revalidate(payload.documentRef, identity, context).catch(() => false) || authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion || digestSfValue(state.documents[`schema:${id}`]) !== digestSfValue(previous) || !await input.confirm(payload, context)) return { commit: false, value: false }
-        state.documents[`schema:${id}`] = row
-        return { commit: true, value: true }
+      // Even a definition reuse records the operation's digest and original schema
+      // identity in the existing transaction ledger; it creates no schema or candidate.
+      const saved = await input.state.transaction<true | { id: string; version: number } | null>(request, { namespace: "documents", domainSurface: asset.surface, expectedStorageVersion: loaded.storageVersion, targetRef: input.creationTarget.ref, targetIncarnation: input.creationTarget.incarnation, idempotencyKey: operation, commandDigest: digestSfValue(payload) }, async (state, authority, snapshot) => {
+        if (!documentSourceCurrent(state, snapshot, payload.documentRef, identity, asset.surface) || !await input.documents.revalidate(payload.documentRef, identity, context).catch(() => false) || authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion || digestSfValue(state.documents[`schema:${row.id}`]) !== digestSfValue(reused ?? previous) || !await input.confirm(payload, context)) return { commit: false, value: null }
+        if (!reused) state.documents[`schema:${row.id}`] = row
+        return { commit: true, value: { id: row.id, version: row.version } }
       })
       if (saved.status !== "ok" || !saved.value) return { status: "conflict", reason: "schema-changed" }
-      if (!await input.documents.revalidate(payload.documentRef, identity, context) || !await input.confirm(payload, context) || !await input.host.revalidate(context)) return { status: "stale", reason: "schema-source-changed" }
-      return { status: "ok", value: { id, version: row.version, ref: `schema:${id}:${row.version}`, fields: structuredClone(row.fields) } }
+      // Registrations predating schema reuse stored boolean true. Their operation-
+      // derived row was checked above; new receipts retain the exact id and version.
+      if (saved.value === true && !exact) return { status: "conflict", reason: "schema-changed" }
+      const registered = saved.value === true ? { id: row.id, version: row.version } : saved.value
+      if (registered.id !== row.id || registered.version !== row.version) return { status: "conflict", reason: "schema-changed" }
+      const current = await resolve(`schema:${registered.id}:${registered.version}`, context, payload.documentRef)
+      if (current.status !== "ok" || digestSfValue(current.value.fields) !== digestSfValue(payload.fields) || !await input.documents.revalidate(payload.documentRef, identity, context) || !await input.confirm(payload, context) || !await input.host.revalidate(context)) return { status: "stale", reason: "schema-source-changed" }
+      return { status: "ok", value: { id: registered.id, version: registered.version, ref: `schema:${registered.id}:${registered.version}`, fields: structuredClone(current.value.fields) } }
     },
   }
 }
+

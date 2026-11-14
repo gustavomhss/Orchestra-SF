@@ -32,7 +32,7 @@ function workbookOutcomeDetails(outcomes: readonly WorkbookOutcome[]) {
       before: { state: "undefined" as const },
       after: { state: "undefined" as const },
       source: { kind: "file" as const, ...source },
-      reason: outcome.reason === "domain-no-change" ? "The domain reported no change." : outcome.reason === "domain-retained-value" ? "The domain retained the existing value." : outcome.reason === "outside-selected-scope" ? "The field is outside the selected import scope." : outcome.reason === "protected-field" ? "The field is protected from import." : "The original importer does not consume this field.",
+      reason: outcome.reason === "domain-no-change" ? "The domain reported no change." : outcome.reason === "domain-retained-value" ? "The domain retained the existing value; this input will not be applied." : outcome.reason === "outside-selected-scope" ? "The field is outside the selected import scope." : outcome.reason === "protected-field" ? "The field is protected from import." : "The original importer does not consume this field.",
     }]
   })
 }

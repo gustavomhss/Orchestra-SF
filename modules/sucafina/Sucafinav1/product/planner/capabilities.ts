@@ -32,7 +32,7 @@ export async function simulateScenario(payload: unknown, context: TrustedDomainC
   if (!persist) return { status: "unavailable", reason: "result-persistence-unavailable", receipt: admission }
   const result = await port.simulateScenario(parsed.value, context)
   if (result.status !== "ok") return { status: result.status === "conflict" ? "failed" : result.status, reason: result.reason, receipt: admission }
-  const saved = await persist({ kind: "scenario", request: parsed.value, result: result.value }, admission.callId, context)
+  const saved = await persist({ kind: "scenario", request: parsed.value, result: result.value }, admission.callId, context, port)
   if (saved.status !== "ok") return { status: saved.status === "conflict" ? "failed" : saved.status, reason: saved.reason, receipt: admission }
   const receipt = await createReceipt(context, operation, inputDigest, digestSfValue(result.value))
   if (!receipt) return { status: "unavailable", reason: "receipt-unavailable", receipt: { kind: "unbound", operation, code: "unavailable", at: new Date().toISOString() } }
@@ -49,7 +49,7 @@ export async function compareScenarios(payload: unknown, context: TrustedDomainC
   if (!persist) return { status: "unavailable", reason: "result-persistence-unavailable", receipt: admission }
   const result = await port.compareScenarios(parsed.value, context)
   if (result.status !== "ok") return { status: result.status === "conflict" ? "failed" : result.status, reason: result.reason, receipt: admission }
-  const saved = await persist({ kind: "comparison", request: parsed.value, result: result.value }, admission.callId, context)
+  const saved = await persist({ kind: "comparison", request: parsed.value, result: result.value }, admission.callId, context, port)
   if (saved.status !== "ok") return { status: saved.status === "conflict" ? "failed" : saved.status, reason: saved.reason, receipt: admission }
   const receipt = await createReceipt(context, operation, inputDigest, digestSfValue(result.value))
   if (!receipt) return { status: "unavailable", reason: "receipt-unavailable", receipt: { kind: "unbound", operation, code: "unavailable", at: new Date().toISOString() } }

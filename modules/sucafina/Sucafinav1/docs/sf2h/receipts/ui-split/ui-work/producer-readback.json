@@ -1,0 +1,42 @@
+{
+  "schema": "sf2h.ui-work.producer-readback.v1",
+  "observedAt": "2026-11-14T17:55:12Z",
+  "purpose": "Read-only final reconciliation after collab-resume advanced; no product/test mutation or acceptance promotion.",
+  "priorInspectedSha": "0d9820924b33a8fc7b145f54a675aeef76c98489",
+  "publishedSha": "dc21cd389de67c2e7fac996b663d9c0aa7d8cae5",
+  "publishedTree": "0a5eea5d992e65153fae6999ce3e7e4d109f30b0",
+  "receiptPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP08/collab-resume-20261114/increment06.json",
+  "receiptBlob": "3dda95c5cce580c153910c21a5f1c30e38cda9b7",
+  "publishedStatus": "IMPLEMENTED_PENDING_HOSTED_VALIDATION",
+  "blobs": [
+    {
+      "path": "product/collaboration/answer-reuse.ts",
+      "blob": "012175e4acc2be40547089b43f248144beb6c712"
+    },
+    {
+      "path": "product/collaboration/answer-work.ts",
+      "blob": "f1e638546518f35aef1dcd053ae0f2a202cdadd3"
+    },
+    {
+      "path": "product/collaboration/answer-state-fence.ts",
+      "blob": "7b19cf14f220adb3a01530515ec5ad1657bc8f11"
+    },
+    {
+      "path": "product/collaboration/host.ts",
+      "blob": "1678fc9d46c36a7da962aeca3b782b395e129c51"
+    }
+  ],
+  "findings": [
+    "W6 changes answer scope/membership and protects egress and Work with thread/baseline snapshot equality before and after the producer fence.",
+    "Compared with the previously inspected 0d982092 commit, recipient-actions.ts, case-selection.ts and http-routes.ts did not change. The published G03 intake patch and missing recipient mutation receipt findings remain applicable.",
+    "The publisher retains its previous latency failure and labels W6 pending hosted validation. No W6 runtime or installed-host success is asserted here.",
+    "UI proofs remain pinned to the W/S pairs in validation.json. No published producer file was edited or copied over the fixed base by ui-work."
+  ],
+  "implications": {
+    "confirmationComposition": "Use the latest owner-published candidate with its owner proof, then run the unchanged UI confirmation/reuse acceptance and installed-host journey.",
+    "g03": "Integrate the already published case-selection producer through Collaboration/Composition, then repeat the original conflict/review proof.",
+    "recipientAck": "Exact mutation identity is still absent from the recipient action response; the consumer must retain its frozen uncertain attempt.",
+    "ownAcceptanceChanged": false,
+    "globalRelease": false
+  }
+}

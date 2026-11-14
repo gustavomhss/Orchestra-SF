@@ -1,0 +1,234 @@
+{
+  "schema": "sf2h.operations-hosted-checks.v1",
+  "status": "PASS_SCOPED",
+  "W": "70255998e3310652c4b7fce33f498e592be0bda9",
+  "W_tree": "642e3662e01526823fe29652d05cd2e6d5a1f7e0",
+  "run": {
+    "id": 43633785874,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43633785874",
+    "head_sha": "70255998e3310652c4b7fce33f498e592be0bda9",
+    "branch": "astra-check-wp04",
+    "event": "push",
+    "conclusion": "success"
+  },
+  "job": {
+    "id": 132566019029,
+    "name": "WP04 typecheck and guards",
+    "conclusion": "success"
+  },
+  "authority": "Existing hosted check path described in pinned CI.md; existing astra-check-wp04 ref fast-forwarded with expected_sha 91e1f60bc6f7e85517e2b4f963eec5ac7da13e62. No workflow/config changes or new check branch.",
+  "workflow": {
+    "path": ".github/workflows/astra-wp04-check.yml",
+    "blob": "dab8d29f69d78ba304325333e03fb8d729fe026e"
+  },
+  "recorded_revisions": {
+    "HEAD": "70255998e3310652c4b7fce33f498e592be0bda9",
+    "tree": "642e3662e01526823fe29652d05cd2e6d5a1f7e0",
+    "origin_dev": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+    "comparison_merge_base": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+    "merge_base_verification": "GitHub compare of recorded origin/dev tip against exact W; matches canonical guard merge-base selection."
+  },
+  "steps": [
+    {
+      "name": "Set up job",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 1
+    },
+    {
+      "name": "Checkout exact product commit",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 2
+    },
+    {
+      "name": "Record product and guard base",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 3
+    },
+    {
+      "name": "Setup Bun",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 4
+    },
+    {
+      "name": "Verify generated output contracts",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 5
+    },
+    {
+      "name": "Package typecheck",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 6
+    },
+    {
+      "name": "Repository guards against origin/dev",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 7
+    },
+    {
+      "name": "Preserve check evidence",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 8
+    },
+    {
+      "name": "Post Setup Bun",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 15
+    },
+    {
+      "name": "Post Checkout exact product commit",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 16
+    },
+    {
+      "name": "Complete job",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 17
+    }
+  ],
+  "checks": {
+    "output_contract_generation_and_check_and_diff": "PASS",
+    "sucafina_package_typecheck": "PASS",
+    "repository_guards": "PASS",
+    "operations_typescript_graph": "NOT_RUN"
+  },
+  "commands": [
+    {
+      "cwd": "modules/sucafina/Sucafinav1",
+      "command": "bun product/contracts/generate-output-schemas.ts; bun product/contracts/generate-output-schemas.ts --check; git diff --exit-code -- product/contracts/output-schemas.ts",
+      "result": "success; existing workflow execution only"
+    },
+    {
+      "cwd": "modules/sucafina",
+      "command": "bun typecheck",
+      "result": "success; does not include new E2E files"
+    },
+    {
+      "cwd": ".",
+      "command": "bun run check:guards --base origin/dev",
+      "result": "78 rules, 654 changed paths, 0 gate and 11 warn findings, 0 errors"
+    }
+  ],
+  "guard_summary": {
+    "rules": 78,
+    "changed_paths_against_dev": 654,
+    "gate": 0,
+    "warn": 11,
+    "errors": 0,
+    "warnings": [
+      {
+        "path": "apps/cli/package.json",
+        "line": 37,
+        "rule": "dep-new-added",
+        "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR."
+      },
+      {
+        "path": "modules/atlas/boundary/package.json",
+        "line": 66,
+        "rule": "dep-new-added",
+        "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR."
+      },
+      {
+        "path": "modules/atlas/boundary/package.json",
+        "line": 67,
+        "rule": "dep-new-added",
+        "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR."
+      },
+      {
+        "path": "modules/atlas/boundary/package.json",
+        "line": 68,
+        "rule": "dep-new-added",
+        "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR."
+      },
+      {
+        "path": "modules/sucafina/package.json",
+        "line": 17,
+        "rule": "dep-new-added",
+        "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR."
+      },
+      {
+        "path": "modules/sucafina/package.json",
+        "line": 18,
+        "rule": "dep-new-added",
+        "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR."
+      },
+      {
+        "path": "modules/sucafina/package.json",
+        "line": 19,
+        "rule": "dep-new-added",
+        "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR."
+      },
+      {
+        "path": "modules/sucafina/package.json",
+        "line": 20,
+        "rule": "dep-new-added",
+        "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR."
+      },
+      {
+        "path": "modules/sucafina/package.json",
+        "line": 21,
+        "rule": "dep-new-added",
+        "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR."
+      },
+      {
+        "path": "modules/sucafina/package.json",
+        "line": 22,
+        "rule": "dep-new-added",
+        "message": "New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/analysis-acceptance.ts",
+        "line": 46,
+        "rule": "ts-double-cast",
+        "message": "Double cast through unknown bypasses the type checker. Fix the type, or narrow the value with a guard."
+      }
+    ],
+    "new_mission_path_warnings": 0,
+    "interpretation": "All warning paths are outside the nine files added by this mission and unchanged from its initial parent. The 10 dependency warnings and 1 double-cast warning are retained inherited findings, not cleared or suppressed."
+  },
+  "guardrail_usage": {
+    "path": ".orchestra/skills/guardrail-usage/SKILL.md",
+    "commit": "70255998e3310652c4b7fce33f498e592be0bda9",
+    "blob": "c2333f8b46d780f6b52bba2ae9f6696e840d18a0",
+    "approval_or_ignore_added": false
+  },
+  "artifacts": [
+    {
+      "id": 14128498847,
+      "name": "astra-wp04-checks",
+      "size_in_bytes": 15011,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14128498847",
+      "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14128498847/zip",
+      "expired": false,
+      "created_at": "2026-11-14T19:46:47Z",
+      "expires_at": "2027-02-12T19:45:12Z",
+      "updated_at": "2026-11-14T19:46:47Z",
+      "digest": "sha256:2e2766d07b69acc7190e261792216e3de8d2e7aa750093aa4fef4fa4e4459a14",
+      "workflow_run": {
+        "id": 43633785874,
+        "repository_id": 1455724710,
+        "head_repository_id": 1455724710,
+        "head_branch": "astra-check-wp04",
+        "head_sha": "70255998e3310652c4b7fce33f498e592be0bda9"
+      },
+      "user_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43633785874/artifacts/14128498847",
+      "archive_downloaded": false
+    }
+  ],
+  "limits": [
+    "No functional Operations test executed.",
+    "Sucafina typecheck is not Operations E2E typecheck.",
+    "Guards examined W before the later receipt-only commit; no global D/G8 qualification claimed.",
+    "No acceptance C, native parity, human timing or full-suite approval."
+  ]
+}

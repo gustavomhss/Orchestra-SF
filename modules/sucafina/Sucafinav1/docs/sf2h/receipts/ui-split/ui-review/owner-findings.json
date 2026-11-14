@@ -1,0 +1,135 @@
+{
+  "schema": "sf-ui-review-owner-findings-v1",
+  "status": "OWNER_INTEGRATION_REQUIRED",
+  "globalRelease": false,
+  "findings": [
+    {
+      "id": "UI-REVIEW-C05-MOUNT",
+      "linkedFindings": [
+        "IR-EXT-C05-WHOLE-REVIEW",
+        "C05_PRESERVED_MEETING_HISTORY"
+      ],
+      "criterion_ids": [
+        "WP01.DOD.03",
+        "WP01.CMP.02",
+        "WP02.T03.CMP.01"
+      ],
+      "owner": "WP10 / compose-resume",
+      "status": "OPEN_ON_UI_REVIEW_BASE",
+      "symptom": "After the legitimate canonical budget change 1300→2400, section pin preparation returns denied and Dashboard discovery omits the previously preserved review.",
+      "reproduced": {
+        "product": "a08d2c6a4251c391036143fe06666a5b9f629a7b",
+        "snapshot": "22256892b1aeec870ec8badb9871e96117087fee",
+        "run": 43620401922,
+        "job": 132524594140,
+        "results": [
+          "C05 UI preserves the issued section context after a legitimate financial change and a fresh read admission: expected ok, received denied.",
+          "WholeReview UI reopens 1300 after reload and explicitly preserves a distinct 2400 observation: expected original review in discovery, received []."
+        ]
+      },
+      "producerPositive": {
+        "head": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+        "run": 43619653668,
+        "job": 132522203465,
+        "pass": 1,
+        "fail": 0,
+        "assertions": 38,
+        "scope": "Original unchanged WholeReview positive; external product, not the ui-review candidate."
+      },
+      "cause": "The ui-review base has a fresh-only Dashboard reader. compose-resume also mounts the old service without evidence: context. WP10 already publishes the historical reader and compatible mount.",
+      "proposals": [
+        "patches/c05-compose-mount.patch",
+        "patches/c05-compose-reader.patch"
+      ],
+      "proposalStatus": "NOT_APPLIED",
+      "nextAction": "Owner reconciles the pinned reader dependencies and moves the compatible mount below the actual BusinessContextService; then executes the original positive and the owned consumers on the final composed candidate.",
+      "browserPositive": {
+        "product": "ba85e0c6fd873026e1b7456214d125f340b170bf",
+        "snapshot": "7e902b570d1b422b469d5b64253c99c1de97d1b8",
+        "run": 43621543227,
+        "job": 132528119418,
+        "tests": [
+          "WholeReview UI reopens 1300 after reload and explicitly preserves a distinct 2400 observation: PASS.",
+          "WholeReview UI removes preserved material when the real history route revokes access: PASS."
+        ],
+        "aggregatedRun": "FAIL: 4 pass, 2 fail, 2 import errors; no overall PASS attributed."
+      }
+    },
+    {
+      "id": "UI-REVIEW-WORK-CONTEXT-EMISSION",
+      "linkedFindings": [
+        "IR-EXT-WORK-REVIEW-CONTEXT"
+      ],
+      "criterion_ids": [
+        "WP01.T04.INV.01",
+        "WP01.T04.SUC.01",
+        "WP02.T04.INV.02"
+      ],
+      "owner": "collab-resume / WP10 / compose-resume",
+      "status": "HOST_EMISSION_NOT_CLOSED",
+      "sourceEvidence": {
+        "collaborationHead": "0d9820924b33a8fc7b145f54a675aeef76c98489",
+        "hostBlob": "d80d441aa5775a3747303a60161e5a049f84ac16",
+        "compositionBlob": "7222e35f290d46f68d7ab2aefdfd1780774140ae",
+        "businessServicesBlob": "49f9e7824edb25443f48a2035ebfa698554de87e"
+      },
+      "boundary": "The production work renderer is already mounted in interface/http.ts and accepts producer-authorized metadata. The published Collaboration host exposes optional reviewContexts/authorizeReviewThreadContext inputs; the inspected business-services mounts do not supply those providers.",
+      "consumerProof": "The owned tests prepare section pins through createReviewThreadContext using the actual Dashboard reader and render those real pins. They do not substitute a host or prove the installed My work service emits metadata.",
+      "nextAction": "Collaboration/composition owner supplies the real closure and recipient-aware section context providers, then proves authorized My work emission and its current revocation. Do not infer a read grant from a pin or action assignment."
+    },
+    {
+      "id": "UI-REVIEW-CONTEXT-INPUT-GAP",
+      "linkedFindings": [
+        "IR-EXT-WORK-REVIEW-CONTEXT"
+      ],
+      "criterion_ids": [
+        "WP01.T04.INV.01",
+        "WP01.T04.SUC.01",
+        "WP02.T04.INV.02"
+      ],
+      "owner": "collab-resume / WP10 / compose-resume",
+      "status": "PUBLISHED_INPUT_NOT_COMPOSED",
+      "evidence": {
+        "run": 43621543227,
+        "job": 132528119418,
+        "error": "Cannot find module '../../../../product/reviews/thread-context.ts'",
+        "confirmedAbsentAt": [
+          "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+          "ad7fcdef7739e1bc471e42fac082452799de751b"
+        ],
+        "publishedSourceHead": "0d9820924b33a8fc7b145f54a675aeef76c98489",
+        "publishedSourceBlob": "20d98a976372338a22c947ee6bfcb9641c0429c5"
+      },
+      "proposal": "patches/c05-wp10-thread-context.patch",
+      "proposalMetadata": "patches/c05-context-intake.json",
+      "proposalStatus": "NOT_APPLIED",
+      "nextAction": "Owner reconciles the published Collaboration module and dependency closure with the WP10 reader. Run the two context test files on the actual composed candidate. Do not rerun already-green browser cases on an equivalent input."
+    }
+  ],
+  "ownHarnessCorrections": {
+    "initialRun": 43620401922,
+    "failures": [
+      "One test made many expensive real reads under one 60-second deadline and timed out.",
+      "The UI revocation handler aborts active requests; reading the denied Playwright Response body through CDP failed after that abort."
+    ],
+    "changes": "Split the same assertions into independent bounded cases. Preserve all 60-second test deadlines and the shared browser deadline. Inspect the revoked route body with a fresh real HTTP read under the same revoked cookie. Isolate file selections so known historical failures and the already-green reader revocation need not be rerun on an unchanged reader.",
+    "notOwnerDefects": true,
+    "correctedRun": {
+      "product": "4183ebdb53b17b8e4efe9c8835ff2b0012e98624",
+      "snapshot": "4324becfe50e203b255ab2aac3748191054c4ff5",
+      "run": 43621128874,
+      "job": 132526833852,
+      "pass": 6,
+      "fail": 0,
+      "assertions": 53,
+      "control": "PASS, 1 Omni spawn, 0 delegated; final process exit and zero remaining contexts."
+    }
+  },
+  "preservedOriginalTest": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp01/meeting-number.test.ts",
+    "blob": "53834c8c0802bf90a2336527460e2ecbf9aa8c97",
+    "modified": false
+  },
+  "fullPlanCriteriaUnchanged": 153,
+  "publicationReconciliation": "publication-reconciliation.json"
+}

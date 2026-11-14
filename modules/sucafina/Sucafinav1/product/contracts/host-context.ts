@@ -16,7 +16,7 @@ import type { createSfPersonalViews } from "../interface/personal-views.ts"
 import type { ContributionEnvelope } from "./resident-ai.ts"
 import type { SfNativeRunRecord } from "./state.ts"
 import type { TrustedUiContext } from "./sf-execution.ts"
-import type { ForecastExplainInput } from "./skill-inputs.ts"
+import type { ForecastExplainInput, SourcingComparisonInput } from "./skill-inputs.ts"
 import type { ForecastCompareRequest } from "./operations.ts"
 import type { MonthlyDraft } from "../planner/monthly-edit.ts"
 import type { View, Result } from "../../runtime/contract.ts"
@@ -24,6 +24,14 @@ import type { runSfAnalysis } from "../ai/analysis-port.ts"
 
 export type SfPlannerMonthlyInput = { page: "OPEX" | "CAPEX"; versionId: string; drafts: readonly MonthlyDraft[] }
 export type SfPlannerMonthlyResult = { view: View; rows: readonly { draft: MonthlyDraft; errors: readonly { cell?: MonthlyDraft["cells"][number]; reason: string }[]; result?: Result }[] }
+
+/** Human-authorized preparation shared by import, document and other analysis consumers. */
+export type SfAnalysisInputPort = {
+  prepare: (context: TrustedUiContext, input: {
+    request: Omit<Parameters<typeof runSfAnalysis>[0]["request"], "contextFingerprint">
+    selection: Record<string, unknown>
+  }) => Promise<PortResult<unknown>>
+}
 
 /** In-process host API. Neither this object nor its bindings are serialized into a model request. */
 export type SfHostSessionPort = {
@@ -39,6 +47,8 @@ export type SfHostServices = ReturnType<typeof createSfProductAuthority> & {
   dispatch: BusinessPorts["dispatch"]
   /** Private HTTP adapters mounted in the existing local application. */
   productHttp?: NonNullable<Application["product"]>
+  /** Private page projection prepared before the page lock and fenced inside it. */
+  productView?: NonNullable<Application["productView"]>
   /** Private UI discovery; absent until its real collection registry is mounted. */
   procurementSelections?: {
     create: (context: TrustedDomainContext, period: Period) => Promise<PortResult<{ selectionRef: string; label: string; period: Period }>>
@@ -50,6 +60,10 @@ export type SfHostServices = ReturnType<typeof createSfProductAuthority> & {
   forecastInputs?: {
     prepare: (context: TrustedUiContext, input: ForecastCompareRequest & { caseRef: { id: string; incarnation: string; version: number } }) => Promise<PortResult<ForecastExplainInput>>
   }
+  sourcingInputs?: {
+    prepare: (context: TrustedUiContext, input: { requestRef: string; caseRef: { id: string; incarnation: string; version: number } }) => Promise<PortResult<SourcingComparisonInput>>
+  }
+  analysisInputs?: SfAnalysisInputPort
   plannerMonthly?: {
     preview: (context: TrustedUiContext, input: SfPlannerMonthlyInput) => Promise<PortResult<SfPlannerMonthlyResult>>
     apply: (context: TrustedUiContext, input: SfPlannerMonthlyInput) => Promise<PortResult<SfPlannerMonthlyResult>>

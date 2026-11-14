@@ -6,7 +6,7 @@ import { randomUUID } from "node:crypto"
 import { openLocalStore } from "../../../runtime/local-store.ts"
 import { createSfSourcePersistence } from "../../../product/integration/source-lifecycle.ts"
 import { createSfBusinessContext } from "../../../product/host-binding/business-context.ts"
-import { createSfHumanAuthority } from "../../../product/integration/human-authority.ts"
+import { createCollaborationHumanAuthority } from "../../../product/collaboration/human.ts"
 import { createSfUiAuthority } from "../../../product/integration/ui-authority.ts"
 import { createSfProductState } from "../../../product/host-binding/state-provider.ts"
 import { createRecipientAwareThreadReads } from "../../../product/collaboration/thread-reads.ts"
@@ -78,11 +78,11 @@ test("reissue checks actor access and the live physical incarnation", async () =
       expect(repeated.value.current.sourceRef).toEqual(projected.value.current.sourceRef)
     }
     const ui = createSfUiAuthority({ authorize: async () => current.allowed ? { installationId: "install", projectId: "project", principalRef: "B", policyVersion: "policy", accessRevision: "access" } : undefined, commandIdentity: async () => "command", createId: randomUUID, now: () => Date.parse("2026-11-13T00:00:00Z"), privateCommands: ["sf-human:collaboration.thread.reply"] })
-    const human = createSfHumanAuthority({ origin: "https://example.test", ui })
+    const human = createCollaborationHumanAuthority({ origin: "https://example.test", ui })
     const mutation = { expectedStorageVersion: 1, idempotencyKey: "reply" }
     const admitted = await human.admit(new Request("https://example.test/action", { method: "POST", headers: { origin: "https://example.test" } }), "collaboration.thread.reply", { id: "thread", body: "Because", mutation })
     if (admitted.status !== "ok") throw new Error("recipient admission failed")
-    const actions = createRecipientThreadActions({ state, host: { requestFor: (binding) => binding.kind === "ui" ? ui.requestFor(binding) : undefined, revalidate: async (binding) => binding.kind === "ui" && await ui.revalidate(binding) }, human, mutationFence: createCollaborationMutationFence({ persistence: store }), read: reader, creationTarget: { ref: "workspace", incarnation: "workspace-inc" }, createId: randomUUID, now: () => "2026-11-13T00:00:00Z" })
+    const actions = createRecipientThreadActions({ state, host: { persistence: store, requestFor: (binding) => binding.kind === "ui" ? ui.requestFor(binding) : undefined, revalidate: async (binding) => binding.kind === "ui" && await ui.revalidate(binding) }, human, mutationFence: createCollaborationMutationFence({ persistence: store }), read: reader, creationTarget: { ref: "workspace", incarnation: "workspace-inc" }, createId: randomUUID, now: () => "2026-11-13T00:00:00Z" })
     const replied = await actions.reply("thread", "Because", mutation, admitted.value)
     expect(replied).toMatchObject({ status: "ok", value: { messages: [{ body: "Why?" }, { body: "Because", authorRef: "B" }] } })
     if (replied.status === "ok") {
@@ -110,3 +110,4 @@ test("reissue checks actor access and the live physical incarnation", async () =
     await rm(directory, { recursive: true, force: true })
   }
 })
+

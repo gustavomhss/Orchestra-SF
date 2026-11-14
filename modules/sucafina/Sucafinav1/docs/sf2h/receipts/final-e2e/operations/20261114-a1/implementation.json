@@ -1,0 +1,187 @@
+{
+  "schema": "sf2h.operations-implementation.v1",
+  "mission": "e2e-operations",
+  "actor": "S2-A",
+  "session_id": null,
+  "model_effective": "NOT_VERIFIED",
+  "status": "IMPLEMENTED_WITH_BLOCKED_DEPENDENCIES",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "astra-wp04",
+  "pr": 23,
+  "mission_commit": "c708ec0609dbfc95b259707d8c38481617f74f11",
+  "planning_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "campaign_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+  "initial_head": "91e1f60bc6f7e85517e2b4f963eec5ac7da13e62",
+  "initial_tree": "e7d11d7fff0f35d180083ba2497b5b750eeb206d",
+  "prior_terminal_handoff": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/resume-20261113/HANDOFF.md",
+  "reconciliation": "Existing terminal handoff read; branch and PR re-read before CAS; no later commit present. Prior tree retained as parent. No prior green reattributed.",
+  "W": "70255998e3310652c4b7fce33f498e592be0bda9",
+  "tree": "642e3662e01526823fe29652d05cd2e6d5a1f7e0",
+  "publication": "GitHub MCP blobs/tree/commit; update_ref expected_sha and force:false",
+  "files": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/documents.ts",
+      "bytes": 15187,
+      "sha256": "ffc1ed0d93642d9058b0646da7006e88aa13b8f07ae85e8cfc640f8b3f6cff4b",
+      "blob": "21e00319151989a4c2337fe20d9c7de1d8374fa9"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/imports.ts",
+      "bytes": 15964,
+      "sha256": "a7ef8f1af1419457f5c3db58b30108a21abd54cfaa424af82d832c126a4e9501",
+      "blob": "20a9978c41697ac135a91d5229abc295d6c71375"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/procurement-comparison.ts",
+      "bytes": 2996,
+      "sha256": "069d93515f36cc67e0ca0d8ac143ebebcae58fcf8bda6f336f958d995888a775",
+      "blob": "6ddccf1af1119c4eec6b45c568caf3f45d8c62bc"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/procurement-refusal.ts",
+      "bytes": 6129,
+      "sha256": "f975745557648cf3c051b78b86f86a9f6496aaa17ab31361a18953eaaac90469",
+      "blob": "079af7db0ade65464aa31e564d82209527f75b5f"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/procurement-snapshot.ts",
+      "bytes": 7105,
+      "sha256": "5ef4b128d8080ea69be22d315633af4686cd24896bc01f6192b9435aa39a9e6a",
+      "blob": "7af501a9567f1311983e80265ebb9c1d47cf3989"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/procurement.ts",
+      "bytes": 5507,
+      "sha256": "effbebf134bf256e13bababb2b82f5b73a103336433731b47e8832a1ed7fda03",
+      "blob": "c750821955cb56e7e6549c808d3c8e1cf5ee6e2a"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/runtime.ts",
+      "bytes": 4220,
+      "sha256": "b275ff36385f89e40448ce622dd1730fde411e122e8aa0effb12a6a31049f761",
+      "blob": "08296858b237881f29432c1cb982c91a4284c51a"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/selection.check.ts",
+      "bytes": 6182,
+      "sha256": "11668a9504715b8168aa3d0f5763713ebb2f171638c585ec0d7a886e096f6161",
+      "blob": "691ddedf779cb18d115dfd816732fe93ccea3ed9"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations.spec.ts",
+      "bytes": 2356,
+      "sha256": "29c9dcd28d0de5726770feac79be3f11652c349de2cbac09e8517307663f76fb",
+      "blob": "bab6a804e5f082cc60eb6f27209070b552981035"
+    }
+  ],
+  "scope_check": [
+    {
+      "filename": "packages/app-shell/e2e/sucafina/operations-support/documents.ts",
+      "status": "added",
+      "additions": 181,
+      "deletions": 0,
+      "changes": 181,
+      "previous_filename": null
+    },
+    {
+      "filename": "packages/app-shell/e2e/sucafina/operations-support/imports.ts",
+      "status": "added",
+      "additions": 202,
+      "deletions": 0,
+      "changes": 202,
+      "previous_filename": null
+    },
+    {
+      "filename": "packages/app-shell/e2e/sucafina/operations-support/procurement-comparison.ts",
+      "status": "added",
+      "additions": 40,
+      "deletions": 0,
+      "changes": 40,
+      "previous_filename": null
+    },
+    {
+      "filename": "packages/app-shell/e2e/sucafina/operations-support/procurement-refusal.ts",
+      "status": "added",
+      "additions": 75,
+      "deletions": 0,
+      "changes": 75,
+      "previous_filename": null
+    },
+    {
+      "filename": "packages/app-shell/e2e/sucafina/operations-support/procurement-snapshot.ts",
+      "status": "added",
+      "additions": 94,
+      "deletions": 0,
+      "changes": 94,
+      "previous_filename": null
+    },
+    {
+      "filename": "packages/app-shell/e2e/sucafina/operations-support/procurement.ts",
+      "status": "added",
+      "additions": 90,
+      "deletions": 0,
+      "changes": 90,
+      "previous_filename": null
+    },
+    {
+      "filename": "packages/app-shell/e2e/sucafina/operations-support/runtime.ts",
+      "status": "added",
+      "additions": 74,
+      "deletions": 0,
+      "changes": 74,
+      "previous_filename": null
+    },
+    {
+      "filename": "packages/app-shell/e2e/sucafina/operations-support/selection.check.ts",
+      "status": "added",
+      "additions": 116,
+      "deletions": 0,
+      "changes": 116,
+      "previous_filename": null
+    },
+    {
+      "filename": "packages/app-shell/e2e/sucafina/operations.spec.ts",
+      "status": "added",
+      "additions": 37,
+      "deletions": 0,
+      "changes": 37,
+      "previous_filename": null
+    }
+  ],
+  "local_work": "Source reads, edits and deterministic SHA256/Git blob calculations only; no local product tests/typecheck/Playwright/validator execution.",
+  "test_count": 5,
+  "auxiliary_tests": 1,
+  "native_proof": "NOT_RUN",
+  "human_30_second_proof": "NOT_RUN",
+  "C06_material_confirmation": "BLOCKED_DEPENDENCY",
+  "approval_of_integrated_C": false,
+  "final_acceptance": "NOT_RUN",
+  "review": {
+    "kind": "independent source-only review; no final C approval",
+    "reviewers": [
+      "/root/criteria_review",
+      "/root/ci_selection"
+    ],
+    "scope": [
+      "Pinned canonical criteria, Procurement contracts and monetary literals",
+      "PR34 import/document HTTP, UI, evidence references and persistence",
+      "Canonical request, production config, exact listing and Omni process integration"
+    ],
+    "corrections": [
+      "Exact CAS attribute checks replace summary-number prefix checks",
+      "Missing FX asserts unchanged history, selected quote/supplier and domain version",
+      "C02 collection UUIDs are distinguished from full-record and C06 selectors",
+      "Export tokens use Planner compare mode to avoid ambiguous save forms",
+      "Ephemeral selection tokens and signed download URLs are not treated as stable identities",
+      "Unsupported criterion IDs removed",
+      "Document revocation clears a still-open confirmed card; second page checks reload persistence",
+      "ExcelJS resolves through the existing owner package under isolated linking",
+      "Procurement requester/buyer and holder criteria removed; exact C02 drilldown/version criterion retained"
+    ],
+    "execution_claim": "No review is an executed journey result"
+  },
+  "implementation_commits": [
+    "9b3edf3651f309ce9693d8593ac3c691e03ec1e4",
+    "70255998e3310652c4b7fce33f498e592be0bda9"
+  ]
+}

@@ -15,6 +15,7 @@ import type { DashboardReadRequest, KpiExplainRequest } from "../contracts/opera
 import type { DashboardPort, DomainPortHost, PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import { projectDashboardScope } from "./scope.ts"
+import type { createDashboardRecordEvidenceHost } from "./sources.ts"
 
 const pageFields: Record<string, readonly string[]> = {
   "Executive Dashboard": ["executive", "executiveByYear", "executiveMonths", "opsDefaultMonth", "opexOwners", "opexEntries", "capexProjects", "capexEntries", "itUsersMonthly", "signals"],
@@ -57,7 +58,7 @@ export function projectDashboardSource(snapshot: Snapshot, actor: Actor, environ
       return milestones.map((milestone) => {
         const milestoneValid = typeof milestone.id === "string" && !!milestone.id && milestones.filter((entry) => entry.id === milestone.id).length === 1
         if (!projectValid || !milestoneValid) return { date: milestone.date, issue: "ambiguous-identity" }
-        return { projectId: project.id, id: milestone.id, name: typeof milestone.name === "string" ? milestone.name : "", date: milestone.date }
+        return { projectId: project.id, id: milestone.id, name: typeof milestone.name === "string" ? milestone.name : "", date: milestone.date, ...(typeof milestone.status === "string" ? { status: milestone.status } : {}) }
       })
     })
   }
@@ -102,13 +103,15 @@ export function projectDashboardSource(snapshot: Snapshot, actor: Actor, environ
   return projection
 }
 
-export function createDashboardPort(input: { host: DomainPortHost; sources: DashboardSourceHost }): DashboardPort & { explain: (request: KpiExplainRequest, binding: TrustedDomainContext) => Promise<PortResult<DomainProjection>> } {
+type DashboardPortInput = { host: DomainPortHost; sources: DashboardSourceHost; recordEvidence?: Pick<ReturnType<typeof createDashboardRecordEvidenceHost>, "issue" | "resolve"> }
+
+export function createDashboardPort(input: DashboardPortInput): DashboardPort & { explain: (request: KpiExplainRequest, binding: TrustedDomainContext) => Promise<PortResult<DomainProjection>> } {
   return {
     read: (request, binding) => read(input, structuredClone(request), binding),
     explain: async (incoming, binding) => {
       const request = structuredClone(incoming)
-      if (request.comparisonRef) return { status: "unavailable", reason: "dashboard-comparison-not-connected" }
       if (!(await input.host.revalidate(binding))) return { status: "denied", reason: "invalid-binding" }
+      if (request.comparisonRef !== undefined && (typeof request.comparisonRef !== "string" || !request.comparisonRef.trim())) return { status: "needs-input", reason: "comparison-reference-required" }
       const metric = await input.sources.resolveDashboardMetric(request.metricRef, binding)
       if (metric.status !== "ok") return metric
       const result = await read(input, { selectionRef: metric.value.selectionRef, period: request.period, fields: [metric.value.field] }, binding)
@@ -118,12 +121,27 @@ export function createDashboardPort(input: { host: DomainPortHost; sources: Dash
       const current = await input.sources.resolveDashboardMetric(request.metricRef, binding)
       if (!(await input.host.revalidate(binding)) || current.status !== "ok" || digestSfValue(current.value) !== digestSfValue(metric.value)) return { status: "stale", reason: "metric-or-authority-changed" }
       const components = metric.value.valuePrefix.endsWith(".totalBudget") || metric.value.valuePrefix.endsWith(".effectiveMonthlyBudget") ? result.value.components : []
-      return { status: "ok", value: { ...result.value, context: { ...result.value.context, capabilities: ["sf_kpi_explain"] }, components, values } }
+      const primary = { ...result.value, context: { ...result.value.context, capabilities: ["sf_kpi_explain"] }, components, values }
+      if (request.comparisonRef === undefined) return { status: "ok", value: primary }
+      const other = await input.sources.resolveDashboardMetric(request.comparisonRef, binding)
+      if (other.status !== "ok") return other
+      if (other.value.field !== metric.value.field || other.value.valuePrefix.replace(/\b\d{4}\b/g, "YEAR") !== metric.value.valuePrefix.replace(/\b\d{4}\b/g, "YEAR")) return { status: "unavailable", reason: "incompatible-comparison-metric" }
+      const selection = await input.sources.resolveDashboardSource(other.value.selectionRef, binding)
+      if (selection.status !== "ok") return selection
+      const period = selection.value.evidence.target.period
+      if (!period) return { status: "unavailable", reason: "comparison-period-unavailable" }
+      const compared = await read(input, { selectionRef: other.value.selectionRef, period, fields: [other.value.field] }, binding)
+      if (compared.status !== "ok") return compared
+      const comparisonValues = compared.value.values.filter((value) => value.id === other.value.valuePrefix || value.id.startsWith(`${other.value.valuePrefix}.`) || value.id.startsWith(`${other.value.valuePrefix}[`))
+      if (values.length !== 1 || comparisonValues.length !== 1 || values[0]!.unit !== comparisonValues[0]!.unit || values[0]!.currency !== comparisonValues[0]!.currency || values[0]!.granularity !== comparisonValues[0]!.granularity || values[0]!.currency === "unspecified") return { status: "unavailable", reason: "comparison-basis-unavailable" }
+      const [again, original] = await Promise.all([input.sources.resolveDashboardMetric(request.comparisonRef, binding), input.sources.resolveDashboardMetric(request.metricRef, binding)])
+      if (!await input.host.revalidate(binding) || again.status !== "ok" || original.status !== "ok" || digestSfValue(again.value) !== digestSfValue(other.value) || digestSfValue(original.value) !== digestSfValue(metric.value)) return { status: "stale", reason: "comparison-or-authority-changed" }
+      return { status: "ok", value: { ...primary, comparison: { metricRef: request.metricRef, comparisonRef: request.comparisonRef, context: { ...compared.value.context, capabilities: ["sf_kpi_explain"] }, version: compared.value.version, engineVersion: compared.value.engineVersion, values: comparisonValues } } }
     },
   }
 }
 
-async function read(input: { host: DomainPortHost; sources: DashboardSourceHost }, request: DashboardReadRequest, binding: TrustedDomainContext): Promise<PortResult<DomainProjection>> {
+async function read(input: DashboardPortInput, request: DashboardReadRequest, binding: TrustedDomainContext): Promise<PortResult<DomainProjection>> {
   if (!(await input.host.revalidate(binding))) return { status: "denied", reason: "invalid-binding" }
   const http = input.host.requestFor(binding)
   if (!http) return { status: "denied", reason: "missing-request" }
@@ -178,7 +196,7 @@ async function read(input: { host: DomainPortHost; sources: DashboardSourceHost 
       if (ytd && request.period.start.slice(5) !== "01-01") return
       const month = monthly ? Number(monthly[2]) + 1 : departures ? Number(departures[2]) + 1 : operationMonth ? Number(operationMonth[2]) : 0
       const year = monthly?.[1] ?? departures?.[1] ?? operationMonth?.[1]
-      const current = ["members", "leaders", "cio", "projects", "risks", "contracts", "stakeholders", "itperf", "signals", "hotTopics", "executive"].some((field) => id === field || id.startsWith(`${field}.`) || id.startsWith(`${field}[`)) || /^executiveByYear\.\d{4}\.active$/.test(id) || /^executiveMonths\.\d{4}:\d{1,2}\.openIncidents$/.test(id)
+      const current = ["members", "leaders", "cio", "projects", "risks", "contracts", "stakeholders", "itperf", "signals", "hotTopics", "executive", "secActions", "secIncidents", "secPhishing"].some((field) => id === field || id.startsWith(`${field}.`) || id.startsWith(`${field}[`)) || /^executiveByYear\.\d{4}\.active$/.test(id) || /^executiveMonths\.\d{4}:\d{1,2}\.openIncidents$/.test(id)
       const today = environment.at.slice(0, 10)
       if (current && (today < request.period.start || today > request.period.end)) return
       if (year && month && (month < Number(request.period.start.slice(5, 7)) || month > Number(request.period.end.slice(5, 7)))) return
@@ -235,8 +253,11 @@ async function read(input: { host: DomainPortHost; sources: DashboardSourceHost 
     Array.from({ length: 12 }, (_, index) => index + 1).filter((month) => month >= Number(request.period.start.slice(5, 7)) && month <= Number(request.period.end.slice(5, 7))).forEach((month) => {
       const period = { start: `${year}-${String(month).padStart(2, "0")}-01`, end: `${year}-${String(month).padStart(2, "0")}-${String(new Date(Date.UTC(year, month, 0)).getUTCDate()).padStart(2, "0")}` }
       const entry = (item: typeof records[number]) => item.entries.find((row) => row.year === year && row.month === month && (item.key === "ownerId" ? row.ownerId == item.row.id : (row.projId ?? row.projectId) == item.row.id))
+      const monthlyEntries = records.map((item) => item.entries.filter((row) => row.year === year && row.month === month && (item.key === "ownerId" ? row.ownerId == item.row.id : row.projId == item.row.id || row.projectId == item.row.id)))
       const measurements = (["actual", "forecast"] as const).map((measure) => {
-        const numbers = records.map((item) => entry(item)?.[measure])
+        // The domain sums every matching ledger line. A missing line or cell
+        // still makes the C02 measurement unknown; it is never a recorded zero.
+        const numbers = monthlyEntries.flatMap((entries) => entries.length ? entries.map((row) => row[measure]) : [undefined])
         const amount = numbers.length && numbers.every((value) => typeof value === "number" && Number.isFinite(value)) ? numbers.reduce<number>((sum, value) => sum + Number(value), 0) : null
         return { measure, amount }
       })
@@ -270,12 +291,15 @@ async function read(input: { host: DomainPortHost; sources: DashboardSourceHost 
     const milestones = rows(projection.milestoneDates)
     if (milestones.some((milestone) => milestone.issue === "ambiguous-identity")) missing.push({ field: "milestoneDates:identity", reason: "unavailable" })
     milestones.forEach((milestone) => {
-      if (typeof milestone.projectId !== "string" || typeof milestone.id !== "string" || typeof milestone.date !== "string") return
+      if (typeof milestone.projectId !== "string" || typeof milestone.id !== "string") return
       const prefix = `milestone:${encodeURIComponent(milestone.projectId)}:${encodeURIComponent(milestone.id)}`
-      const period = { start: milestone.date, end: milestone.date }
+      const date = typeof milestone.date === "string" ? milestone.date : null
+      const period = date ? { start: date, end: date } : request.period
       const name = typeof milestone.name === "string" ? milestone.name : ""
-      values.push({ id: `${prefix}:date`, value: milestone.date, unit: "date", period, granularity: "record", sourceRefs: [ref], drilldown: ref, evidenceState: "confirmed" })
+      values.push({ id: `${prefix}:date`, value: date, unit: "date", period, granularity: "record", sourceRefs: [ref], drilldown: ref, evidenceState: date ? "confirmed" : "absent" })
       values.push({ id: `${prefix}:name`, value: name, period, granularity: "record", sourceRefs: [ref], drilldown: ref, evidenceState: name ? "confirmed" : "absent" })
+      if (typeof milestone.status === "string") values.push({ id: `${prefix}:status`, value: milestone.status, period: { start: environment.at.slice(0, 10), end: environment.at.slice(0, 10) }, granularity: "record", sourceRefs: [ref], drilldown: ref, evidenceState: milestone.status ? "confirmed" : "absent" })
+      if (!date) missing.push({ field: `${prefix}:date`, reason: "missing" })
     })
   }
   if (request.fields.includes("projects")) {
@@ -293,10 +317,24 @@ async function read(input: { host: DomainPortHost; sources: DashboardSourceHost 
       })
     })
   }
+  const signalRefs = request.fields.includes("signals") ? await Promise.all(rows(projection.signals).map(async (signal) => {
+    if (!input.recordEvidence || typeof signal.id !== "string" || typeof signal.recordId !== "string") return undefined
+    const kind = signal.page === "Hot Topics & Actions" ? { type: "hotTopics", fields: ["due", "status"], period: { start: environment.at.slice(0, 10), end: environment.at.slice(0, 10) } } : signal.page === "IT Risks" ? { type: "risks", fields: ["impact", "probability", "status"], period: { start: `${request.period.start.slice(0, 4)}-01-01`, end: `${request.period.start.slice(0, 4)}-12-31` } } : signal.page === "Vendor Contracts" ? { type: "contracts", fields: ["renewal"], period: { start: `${request.period.start.slice(0, 4)}-01-01`, end: `${request.period.start.slice(0, 4)}-12-31` } } : undefined
+    if (!kind || typeof signal.page !== "string") return undefined
+    const evidence = await input.recordEvidence.issue({ page: signal.page, recordType: kind.type, recordId: signal.recordId, fields: kind.fields, period: kind.period }, binding).catch(() => undefined)
+    if (!evidence || evidence.status !== "ok" || evidence.value.refDigest !== digestSfEvidenceRef(evidence.value) || evidence.value.installationId !== binding.binding.installationId || evidence.value.projectId !== binding.binding.projectId || evidence.value.target.surface !== "dashboard" || evidence.value.target.recordType !== kind.type || evidence.value.target.recordId !== signal.recordId || digestSfValue(evidence.value.target.period) !== digestSfValue(kind.period) || digestSfValue([...evidence.value.target.fields].sort()) !== digestSfValue([...kind.fields].sort())) return undefined
+    return { id: signal.id, evidence: evidence.value }
+  })) : []
+  if (signalRefs.some((entry) => !entry)) return { status: "unavailable", reason: "signal-evidence-unavailable" }
+  signalRefs.forEach((entry) => {
+    const prefix = `signals[id:${encodeURIComponent(entry!.id)}].`
+    values.filter((value) => value.id.startsWith(prefix)).forEach((value) => { value.sourceRefs = [entry!.evidence]; value.drilldown = entry!.evidence })
+  })
   const latest = await get().catch(() => null)
   const refreshed = await input.sources.resolveDashboardSource(request.selectionRef, binding, { fields: request.fields, period: request.period }).catch(() => ({ status: "unavailable" as const, reason: "source-resolver-failed" }))
   if (!(await input.host.revalidate(binding)) || !latest || digestSfValue(latest.scoped) !== ref.target.projectionDigest || refreshed.status !== "ok" || refreshed.value.evidence.refDigest !== ref.refDigest)
     return { status: "stale", reason: "source-or-authority-changed" }
+  if (signalRefs.length && (!input.recordEvidence || (await Promise.all(signalRefs.map((entry) => input.recordEvidence!.resolve(entry!.evidence.refId, binding).catch(() => undefined)))).some((result, index) => !result || result.status !== "ok" || result.value.refDigest !== signalRefs[index]!.evidence.refDigest))) return { status: "stale", reason: "signal-evidence-changed" }
   const components: DomainProjection["components"][number][] = values.filter((value) => value.id.startsWith("budget:") && value.id.endsWith(":effective")).map((value) => ({ id: value.id, amount: typeof value.value === "number" ? value.value : null, currency: "unspecified", period: value.period, sourceRefs: [sourceRef], evidenceState: value.value === null ? "absent" : "estimated" }))
   return { status: "ok", value: { context: { installationId: binding.binding.installationId, projectId: binding.binding.projectId, principalRef: binding.binding.principalRef, accessRevision: binding.binding.accessRevision, policyVersion: binding.binding.policyVersion, surface: "dashboard", period: request.period, currency: "unspecified", sourceRefs: [sourceRef], capabilities: ["sf_dashboard_read"] }, version: ref.target.version, engineVersion: "dashboard-runtime-v1", components, values, missing } }
 }

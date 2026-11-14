@@ -1,0 +1,293 @@
+{
+  "finding": "WP10-U30-CANCEL-VISIBILITY",
+  "phase": "BEFORE_FIX",
+  "status": "FAIL",
+  "W": "f250a790f80710f939f02f1cc28ec6174887fc37",
+  "W_tree": "b148b198e3d99fef065fb8fb902f7a17c4270d64",
+  "S": "ed3dfa599723630aec7fe72d746ac7dd5fff15e9",
+  "S_tree": "2dac2c9c997f068bd9a98e1254028fccee2a9301",
+  "run": 43632553311,
+  "job": 132562154972,
+  "cleanup_job": 132562680320,
+  "conclusion": "failure",
+  "results": {
+    "pass": 3,
+    "fail": 1,
+    "expects": 35,
+    "tests": 4,
+    "files": 3,
+    "duration_seconds": 12.11
+  },
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "./Sucafinav1/test/product/forecast-cancel-visibility/forecast-submit.test.ts",
+      "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+    }
+  },
+  "request_sha256": "82326c9b49e6111d1e440aaad02209549c3a1e67c70fea8c431291285d54b64c",
+  "envelope": {
+    "parent_W": true,
+    "only_delta": ".ci-run.json",
+    "compare": {
+      "repository_full_name": "gustavomhss/Orchestra-SF",
+      "base": "f250a790f80710f939f02f1cc28ec6174887fc37",
+      "head": "ed3dfa599723630aec7fe72d746ac7dd5fff15e9",
+      "status": "ahead",
+      "ahead_by": 1,
+      "behind_by": 0,
+      "total_commits": 1,
+      "too_large": null,
+      "base_commit": {
+        "sha": "f250a790f80710f939f02f1cc28ec6174887fc37",
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/f250a790f80710f939f02f1cc28ec6174887fc37",
+        "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/f250a790f80710f939f02f1cc28ec6174887fc37"
+      },
+      "merge_base_commit": {
+        "sha": "f250a790f80710f939f02f1cc28ec6174887fc37",
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/f250a790f80710f939f02f1cc28ec6174887fc37",
+        "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/f250a790f80710f939f02f1cc28ec6174887fc37"
+      },
+      "files": [
+        {
+          "filename": ".ci-run.json",
+          "status": "added",
+          "additions": 15,
+          "deletions": 0,
+          "changes": 15,
+          "previous_filename": null
+        }
+      ]
+    }
+  },
+  "omni": {
+    "nonce": "910e292ca192cecfdeb58dbc3958bb52",
+    "verdict": "pass",
+    "declared": 1,
+    "spawns": 1,
+    "delegated": 0
+  },
+  "observations": [
+    {
+      "outcome": "ready",
+      "phase": "idle",
+      "lastRead": null,
+      "controls": {
+        "ready": "true",
+        "status": "",
+        "cancel": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "retry": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "start": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "currency": "USD",
+        "resultBodies": 0,
+        "matchedDisplayRules": [
+          {
+            "selector": "button, .button",
+            "display": "inline-flex",
+            "priority": ""
+          }
+        ]
+      }
+    },
+    {
+      "outcome": "ready",
+      "phase": "ready",
+      "lastRead": {
+        "runRef": "ui-fixture-run",
+        "state": "ready",
+        "version": 1
+      },
+      "controls": {
+        "ready": "true",
+        "status": "Analysis: ready.",
+        "cancel": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "retry": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "start": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "currency": "EUR",
+        "resultBodies": 1,
+        "matchedDisplayRules": [
+          {
+            "selector": "button, .button",
+            "display": "inline-flex",
+            "priority": ""
+          }
+        ]
+      }
+    },
+    {
+      "outcome": "rejected",
+      "phase": "idle",
+      "lastRead": null,
+      "controls": {
+        "ready": "true",
+        "status": "",
+        "cancel": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "retry": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "start": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "currency": "USD",
+        "resultBodies": 0,
+        "matchedDisplayRules": [
+          {
+            "selector": "button, .button",
+            "display": "inline-flex",
+            "priority": ""
+          }
+        ]
+      }
+    },
+    {
+      "outcome": "rejected",
+      "phase": "final",
+      "lastRead": null,
+      "controls": {
+        "ready": "true",
+        "status": "The analysis request was rejected. Review the sources and current decision before retrying.",
+        "cancel": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "retry": {
+          "present": true,
+          "hiddenAttribute": "",
+          "hidden": true,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "start": {
+          "present": true,
+          "hiddenAttribute": null,
+          "hidden": false,
+          "display": "flex",
+          "visibility": "visible",
+          "rectangles": 1,
+          "disabled": false
+        },
+        "currency": "EUR",
+        "resultBodies": 0,
+        "matchedDisplayRules": [
+          {
+            "selector": "button, .button",
+            "display": "inline-flex",
+            "priority": ""
+          }
+        ]
+      }
+    }
+  ],
+  "cause": {
+    "demonstrated": "The native hidden property/attribute is set correctly before execution and in ready, while the author button display declaration keeps the element rendered. Computed display is flex because the button is a flex item; the matching CSS rule declares inline-flex.",
+    "controller_ready": true,
+    "ready_result_bodies": 1,
+    "matching_author_rule": "button, .button",
+    "declared_display": "inline-flex",
+    "computed_display": "flex",
+    "hidden": true,
+    "rectangles": 1,
+    "affected_control_also_observed": "Refresh analysis status"
+  },
+  "not_reached_positive_U30": [
+    "prepare payload equality",
+    "every(key)",
+    "submit reenabled",
+    "currency reenabled",
+    "EUR preserved assertion",
+    "final pageErrors assertion"
+  ],
+  "proposed_delta_after_evidence": {
+    "shell": "button[hidden],.button[hidden]{display:none}",
+    "controller": "Remove Cancel analysis and Refresh analysis status nodes on permanent revocation; preserve hidden flags, access guard, refresh epoch, and other controls"
+  },
+  "limits": "UI/browser/real shell and controller; HTTP/case/model fixtures. No financial/native/integrated/global acceptance.",
+  "finding_disposition": "REPRODUCED_WITH_CAUSE",
+  "raw_log_sha256": "5c84ebfdfd97a5301ec930338c5b07b4f4206c231941b59d5649eb01a9a6a10b",
+  "artifacts": {
+    "artifacts": []
+  }
+}

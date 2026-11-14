@@ -187,6 +187,7 @@
         "DeliveryAssessment",
         "DependencyConflict",
         "PortfolioComparison",
+        "AlternativeDraft",
         "ReconsiderationProposal",
         "ContextualBIProposal",
         "CaseRecall",
@@ -198,7 +199,7 @@
       "modelClass": "reasoning",
       "resumePolicy": "Mudança material cria nova análise ligada à escolha preservada.",
       "sourcePath": "modules/sucafina/Sucafinav1/product/ai/profiles/sf_portfolio.json",
-      "sourceDigest": "216f5cd353d9e80856ea212862b22757a96a241032b18db31fb932e57ee24388"
+      "sourceDigest": "249ec91f7d1a76fef83c4408795b66953589d3b3f45e91c64ca691c60c8c2b83"
     },
     {
       "id": "sf_reviewer",
@@ -635,11 +636,12 @@
       "id": "sf-compor-portfolio",
       "version": "1.0.0",
       "sourcePath": "modules/sucafina/Sucafinav1/product/ai/skills/sf-compor-portfolio/SKILL.md",
-      "sourceDigest": "15b888271f235f009dd1af1db44db0bf6221ccfe4cb536c12e3b1f7bb62c4398",
-      "instructionsDigest": "90b111ea019b2dd6ad4aac6823b771f1f8d57f8986fa1efd5459b91df426c901",
+      "sourceDigest": "8910dd159591b5849f60a734ed27549e57ec3de6d05c125b004202c217166642",
+      "instructionsDigest": "0f6f8d575fd60b062fe2b700cde10fadd9e93bcb47409a0b8b362f028629cd07",
       "inputSchemaRef": "PortfolioCompositionInput",
       "outputSchemaRefs": [
-        "PortfolioComparison"
+        "PortfolioComparison",
+        "AlternativeDraft"
       ],
       "allowedProfiles": [
         "sf_portfolio"
