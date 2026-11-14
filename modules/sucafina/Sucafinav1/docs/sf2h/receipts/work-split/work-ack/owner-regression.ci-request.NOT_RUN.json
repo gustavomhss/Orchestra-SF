@@ -1,0 +1,14 @@
+{
+  "package": "sucafina",
+  "directory": "modules/sucafina",
+  "runner": "bun",
+  "args": [
+    "./Sucafinav1/test/product/wp08/recipient-human-actions.test.ts",
+    "./Sucafinav1/test/product/wp08/thread-actors.test.ts",
+    "./Sucafinav1/test/product/wp08/threads-lifecycle.test.ts",
+    "./Sucafinav1/test/product/wp08/thread-history-continuity.test.ts"
+  ],
+  "env": {
+    "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+  }
+}
