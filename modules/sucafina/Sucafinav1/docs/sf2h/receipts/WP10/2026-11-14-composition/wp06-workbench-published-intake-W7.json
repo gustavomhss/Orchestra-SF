@@ -1,0 +1,67 @@
+{
+  "schema": "sf2.wp10.published-intake-W7.v1",
+  "intakeMode": "exact published bytes only",
+  "sourceCommit": "e7fd8ff797441681f360e7775155a8cc2830280c",
+  "path": "modules/sucafina/Sucafinav1/product/imports/analysis-workbench.ts",
+  "before": {
+    "blobSha": "40d8d5b75f2d140c1ca6b9a538737df5d1fe2489",
+    "sha256": "e8934afa5f57b8ff1c881dcc5729f280262aa451a16709d58db1b86db33af7d1"
+  },
+  "after": {
+    "path": "modules/sucafina/Sucafinav1/product/imports/analysis-workbench.ts",
+    "blobSha": "0cbe971347f22d026310b67793aaba84aba8b03b",
+    "sha256": "6027b1b98e4c44b3a25396a99a8a42b613095d09e51bb823dfe671989ed813ff",
+    "bytes": 9764,
+    "owner": "WP06",
+    "sourceCommit": "e7fd8ff797441681f360e7775155a8cc2830280c",
+    "reason": "Exact published one-line fix: scoped hidden analysis forms remain hidden after source invalidation. Required imported UI consumer behavior; no owner source authoring."
+  },
+  "ownerHeads": [
+    {
+      "owner": "WP01",
+      "branch": "astra-wp01",
+      "sha": "6f4360bf0bdd444a19a7d4f97e18306ae7618b6f"
+    },
+    {
+      "owner": "WP04",
+      "branch": "astra-wp04",
+      "sha": "91e1f60bc6f7e85517e2b4f963eec5ac7da13e62"
+    },
+    {
+      "owner": "WP06",
+      "branch": "astra-wp06",
+      "sha": "e7fd8ff797441681f360e7775155a8cc2830280c"
+    },
+    {
+      "owner": "WP08",
+      "branch": "astra-wp08",
+      "sha": "08d808aa91696a30c6eb04293858fcae4fde4229"
+    },
+    {
+      "owner": "WP09",
+      "branch": "astra-wp09",
+      "sha": "1998acb0dcb59e68d41ee924eca4737bccbd5148"
+    },
+    {
+      "owner": "WP11",
+      "branch": "astra-wp11",
+      "sha": "ff99e4b4de56bbf6e7ef36daf5d3eb749779017a"
+    },
+    {
+      "owner": "WP12",
+      "branch": "sf2-ai-ready",
+      "sha": "574841e2409a9523000c4c1976c81804c9a86fde"
+    },
+    {
+      "owner": "WP13",
+      "branch": "sf2-portfolio-ready",
+      "sha": "27375325788fa571d39137728ec7f0666e89f22c"
+    },
+    {
+      "owner": "WP14",
+      "branch": "sf2-memory-ready",
+      "sha": "02ac8172c17ad57e830bfb23d3ff1d1b1191852b"
+    }
+  ],
+  "qualification": "All other observed owner heads unchanged from W6; published UI fix consumed without modifying foreign author source. Hosted browser/native consumer checks pending on successor. Archived128 inputs/131readonly records untouched."
+}

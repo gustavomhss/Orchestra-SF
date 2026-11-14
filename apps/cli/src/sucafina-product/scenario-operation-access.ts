@@ -2,16 +2,17 @@ import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/c
 import type { BusinessContextService, BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
 import type { SourceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
 import type { DecisionCase } from "../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts"
-import type { DomainPortHost, PlannerPort, PlannerSourceHost, PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
+import type { DomainPortHost, PlannerSourceHost, PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
 import type { ScenarioOperation } from "../../../../modules/sucafina/Sucafinav1/product/contracts/operations.ts"
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import type { PlannerScenarioInputs } from "../../../../modules/sucafina/Sucafinav1/product/planner/scenario-port.ts"
+import type { createSfPlannerEvidence } from "./planner-evidence.ts"
 
 /** Authorize selectors concealed inside a stored scenario without recursively reopening its case. */
 export function createSfScenarioOperationAccess(input: {
   host: DomainPortHost
   sources: PlannerSourceHost
-  planner: PlannerPort
+  projectPlanner: ReturnType<typeof createSfPlannerEvidence>
   scenarioInputs: PlannerScenarioInputs
   readSourceFences: (call: TrustedDomainContext) => Promise<unknown | undefined>
   resolveProcurementEvidence: BusinessContextService["resolve"]
@@ -55,10 +56,20 @@ export function createSfScenarioOperationAccess(input: {
       }
       const source = await input.sources.resolveForecastSource(item.scenario.baseRef, call)
       if (source.status !== "ok" || !refs.some((ref) => digestSfValue(ref) === digestSfValue(source.value.evidence))) return false
-      const current = await input.planner.compareForecast({ baseRef: item.scenario.baseRef, candidateRef: item.scenario.baseRef, period: item.result.horizon, currency: item.result.currency }, call)
-      if (current.status !== "ok" || current.value.analysisBasis !== "domain" || current.value.sourceRefs.some((ref) => !refs.some((allowed) => digestSfValue(ref) === digestSfValue(allowed)))) return false
+      if (item.result.currency !== "USD") return false
+      // This guard authorizes component selectors against the real domain
+      // projection. Comparing a forecast with itself also reopens its coverage,
+      // which can recursively revisit this same case during every case read.
+      const current = await input.projectPlanner(source.value.evidence, call, { period: item.result.horizon, currency: item.result.currency })
+      if (current.status !== "ok" || current.value.engineVersion !== "planner-runtime-v1" || current.value.version !== source.value.evidence.target.version ||
+        current.value.context.installationId !== call.binding.installationId || current.value.context.projectId !== call.binding.projectId ||
+        current.value.context.principalRef !== call.binding.principalRef || current.value.context.accessRevision !== call.binding.accessRevision ||
+        current.value.context.policyVersion !== call.binding.policyVersion || current.value.context.surface !== "planner" || current.value.context.currency !== item.result.currency ||
+        digestSfValue(current.value.context.period) !== digestSfValue(item.result.horizon) || !current.value.context.sourceRefs.length ||
+        current.value.context.sourceRefs.some((ref) => !covered(ref, [source.value.evidence])) ||
+        new Set(current.value.values.map((entry) => entry.id)).size !== current.value.values.length) return false
       for (const operation of domain) {
-        const targets = current.value.baseline.components.filter((component) => component.id === operation.targetRef)
+        const targets = current.value.components.filter((component) => component.id === operation.targetRef)
         if (targets.length !== 1 || !targets[0]!.sourceRefs.length || targets[0]!.sourceRefs.some((ref) => !covered(ref, refs))) return false
         if (operation.replacementRef) {
           const replacement = await input.scenarioInputs.resolveAmount(operation.replacementRef, call)

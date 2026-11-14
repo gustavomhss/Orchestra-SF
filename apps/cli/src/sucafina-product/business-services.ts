@@ -325,7 +325,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     authority: input.authority, procurementEvidenceWrites: input.procurementEvidenceWrites ?? new WeakSet<object>(), cases, planner, plannerSources,
     operationIdentity, readSourceFences, lockedSourceFences, createId: randomUUID, now: () => new Date().toISOString() })
   decisionEvidence.current = procurementDecisions
-  scenarioOperationAccess = createSfScenarioOperationAccess({ host, sources: plannerSources, planner, scenarioInputs: product.scenarioInputs,
+  scenarioOperationAccess = createSfScenarioOperationAccess({ host, sources: plannerSources, projectPlanner: projectPlannerEvidence, scenarioInputs: product.scenarioInputs,
     readSourceFences, resolveProcurementEvidence: context.resolve, externalOperation: dashboardDecisions.resolveOperation })
   const basePersist = createPlannerResultPersistence({ store: results, scenarios: product.scenarios, resolveCase })
   const calculations = createSfPlannerCalculationServices({ host, state: input.authority.state, results, authorizeCase, operationIdentity,
@@ -347,6 +347,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     atlasDescriptors.clear()
   }
   const initializeAtlas = (scanner: Awaited<ReturnType<typeof probeSfAtlasScanner>>, versions: { boundaryVersion: string; schemaVersion: string; manifestVersion: string; skillVersion: string }) => {
+    const originalMemory: { current?: ReturnType<typeof createSfAtlasBusiness>["memory"] } = {}
     const dashboardIssue = createDashboardSourceIssuer({ host, scopedSources: input.persistence })
     const featuresForCase = async (value: AuthorizedCaseProjection, call: TrustedDomainContext) => {
       if (!await host.revalidate(call)) return undefined
@@ -364,21 +365,27 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     }
     const caseForEvidence = async (digest: string, call: TrustedDomainContext) => {
       const request = host.requestFor(call)
-      if (!request || !await host.revalidate(call)) return undefined
+      const binding = digestSfValue([call.kind, call.binding])
+      if (!request || request.signal.aborted || !/^[a-f0-9]{64}$/.test(digest) || !await host.revalidate(call)) return undefined
       const source = await input.authority.state.read(request, call.kind === "native" ? "contributions" : "cases", (state, actor) => {
         if (actor.principalRef !== call.binding.principalRef || actor.accessRevision !== call.binding.accessRevision || actor.policyVersion !== call.binding.policyVersion) return []
         if (call.kind === "native") {
           const run = state.nativeRuns?.[call.binding.runId]
-          return run && run.caseRef.id === call.binding.caseId && run.caseRef.incarnation === call.binding.caseIncarnation ? [{ ref: run.caseRef,
-            outbox: Object.values(state.outbox).some((entry) => entry.eventRef.refDigest === digest && entry.eventRef.target.caseId === run.caseRef.id && entry.eventRef.target.caseIncarnation === run.caseRef.incarnation) }] : []
+          return run && run.caseRef.id === call.binding.caseId && run.caseRef.incarnation === call.binding.caseIncarnation ? [run.caseRef] : []
         }
-        return Object.values(state.cases).filter((value) => value.participants.includes(actor.principalRef)).map((value) => ({ ref: { id: value.id, incarnation: value.incarnation },
-          outbox: Object.values(state.outbox).some((entry) => entry.eventRef.refDigest === digest && entry.eventRef.target.caseId === value.id && entry.eventRef.target.caseIncarnation === value.incarnation) }))
+        return Object.values(state.cases).filter((value) => value.participants.includes(actor.principalRef)).map((value) => ({ id: value.id, incarnation: value.incarnation }))
       })
-      if (source.status !== "ok" || source.value.length > 500) return undefined
-      const checked = await mapSfEvidenceInOrder(source.value, async (entry) => ({ ...entry, result: await cases.read({ caseRef: encodeCaseRef(entry.ref) }, call) }))
-      const matches = checked.filter((entry) => entry.result.status === "ok" && (entry.outbox || entry.result.value.evidenceRefs.some((ref) => ref.refDigest === digest)))
-      return matches.length && await host.revalidate(call) ? matches.map((entry) => entry.ref) : undefined
+      const memory = originalMemory.current
+      if (source.status !== "ok" || source.value.length > 500 || !memory) return undefined
+      // This is a protected-capture lookup, not a full current case projection.
+      // readOriginal checks current C08 membership/identity and the canonical
+      // Atlas envelope/capture digest. Reopening cases.read here would resolve
+      // the same calculation whose continuity proof is asking for its capture.
+      const checked = await mapSfEvidenceInOrder(source.value, async (ref) => ({ ref, original: await memory.readOriginal(ref, digest, call) }))
+      const matches = checked.filter((entry) => entry.original?.refDigest === digest)
+      if (!matches.length || !await host.revalidate(call)) return undefined
+      return host.requestFor(call) === request && !request.signal.aborted && binding === digestSfValue([call.kind, call.binding])
+        ? matches.map((entry) => entry.ref) : undefined
     }
     const atlas = createSfAtlasBusiness({ host, authority: input.authority.authority, state: input.authority.state, cases, authorizeCase, dashboard, dashboardIssue, dashboardRecords,
       // WP14's published reader calls the resolver; WP04 also exposes named methods on it.
@@ -416,6 +423,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
           return { caseRefs: values.map((value) => ({ id: value.case.id, incarnation: value.case.incarnation })), features }
         },
       } })
+    originalMemory.current = atlas.memory
     evidence.current = atlas.context
     recall.current = createSfCaseRecall({ host, cases, memory: atlas.memory, featuresForCase, runtimeVersions: versions,
       proveContinuity: atlas.proveContinuity, rank: rankSfAtlasRecall,

@@ -9,7 +9,7 @@ import type { SfScopedSourcePort } from "../../../../modules/sucafina/Sucafinav1
 import type { createSfProductAuthority } from "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
 import type { createSfBusinessServices } from "./business-services.ts"
 import type { createSfBiServices } from "./bi-services.ts"
-import { readSfDecisionBiSelection, sfDecisionBiSelection } from "./bi-selections.ts"
+import { sfDecisionBiSelection } from "./bi-selections.ts"
 import { biViews } from "../../../../modules/sucafina/Sucafinav1/product/analytics/catalog.ts"
 
 export type SfBiChoice = { label: string; selectionRef: string; caseRef?: { id: string; incarnation: string; version: number } }
@@ -19,18 +19,6 @@ export type SfBiOptions = { choices: SfBiChoice[]; versions: { ref: string; labe
 export function createSfExtendedBiOptions(input: { authority: ReturnType<typeof createSfProductAuthority>; business: ReturnType<typeof createSfBusinessServices>; bi: ReturnType<typeof createSfBiServices>; persistence: SfScopedSourcePort }) {
   const { authority, business } = input
   const issueDashboard = createDashboardSourceIssuer({ host: authority.host, scopedSources: input.persistence })
-  const caseFor = async (selectionRef: string, call: TrustedDomainContext) => {
-    const parsed = readSfDecisionBiSelection(selectionRef), request = authority.host.requestFor(call)
-    if (!parsed || !request || !await authority.host.revalidate(call)) return undefined
-    const reference = "scenarioResultRef" in parsed ? parsed.scenarioResultRef : parsed.portfolioResultRef
-    const result = await authority.state.read(request, "cases", (state, actor) => {
-      if (actor.principalRef !== call.binding.principalRef || actor.accessRevision !== call.binding.accessRevision || actor.policyVersion !== call.binding.policyVersion) return undefined
-      const result = state.decisionResults?.[reference]
-      const current = result && state.cases[result.caseRef.id]
-      return current && current.incarnation === result.caseRef.incarnation && current.participants.includes(actor.principalRef) ? { id: current.id, incarnation: current.incarnation, version: current.version } : undefined
-    })
-    return result.status === "ok" && await authority.host.revalidate(call) ? result.value : undefined
-  }
   const read = async (viewId: string, period: Period, call: TrustedDomainContext): Promise<PortResult<SfBiOptions>> => {
     if (!biViews.some((view) => view.id === viewId)) return { status: "needs-input", reason: "unknown-bi-view" }
     const request = authority.host.requestFor(call)
@@ -55,9 +43,11 @@ export function createSfExtendedBiOptions(input: { authority: ReturnType<typeof 
     }
     if (viewId === "BI05" || viewId === "BI06") {
       value.links.push({ label: "Abrir pedidos e suas aprovações", surface: "procurement", page: "Requests" })
-      const admitted = await authority.ui.admit(request, "sf_work_list", digestSfValue({ purpose: "work-selection", period }))
+      const digest = digestSfValue({ purpose: "work-selection", period })
+      const admitted = await authority.ui.admit(request, "sf_work_list", digest)
       if (admitted.status !== "ok") return admitted
       try {
+        if (!await authority.ui.validate(admitted.value, "sf_work_list", digest)) return { status: "denied", reason: "bi-procurement-selection-authority-unavailable" }
         const selection = await business.procurementSelections.create(admitted.value, period)
         if (selection.status !== "ok") return selection
         const current = await business.procurement.list(selection.value.selectionRef, admitted.value)
@@ -103,10 +93,12 @@ export function createSfExtendedBiOptions(input: { authority: ReturnType<typeof 
       }
       for (const choice of choices.values()) {
         const selected = { viewId, selectionRef: choice.selectionRef, period }
-        const admitted = await authority.ui.admit(request, "sf_bi_view", digestSfValue(selected))
+        const digest = digestSfValue(selected)
+        const admitted = await authority.ui.admit(request, "sf_bi_view", digest)
         if (admitted.status !== "ok") return admitted
         try {
           // The producer fixes a call to one exact selection; each candidate gets its own authenticated read.
+          if (!await authority.ui.validate(admitted.value, "sf_bi_view", digest)) return { status: "denied", reason: "bi-choice-authority-unavailable" }
           const current = await business.withCase(admitted.value, choice.caseRef!, {}, () => input.bi.source.read(selected, admitted.value))
           if (current.status === "ok") value.choices.push(choice)
         } finally { authority.ui.finish(admitted.value) }
@@ -115,5 +107,5 @@ export function createSfExtendedBiOptions(input: { authority: ReturnType<typeof 
     }
     return await authority.host.revalidate(call) ? { status: "ok", value } : { status: "denied", reason: "bi-options-authority-changed" }
   }
-  return { read, caseFor }
+  return { read, caseFor: input.bi.caseFor }
 }

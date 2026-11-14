@@ -1,0 +1,72 @@
+{
+  "schema": "sf2.wp10.root-corrections-W7.v1",
+  "builder": "/root",
+  "builderStatus": "CLOSED",
+  "baseProductSha": "9c427835a029ac8594421436bffb4c5c23da059c",
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/bi-services.ts",
+      "bytes": 14904,
+      "sha256": "8aa177d26f98446fb9ab8dc4782cabb6013cd8a05f87153ff4fc7540d4d8d856",
+      "blobSha": "15c3b606619735693eeb64147b3980bd24b76ed3"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-bi-options.ts",
+      "bytes": 10085,
+      "sha256": "8ae36276dccf1c0b9080b32013cd06b76fc2c37fdb698584621da3b05caf5548",
+      "blobSha": "8b9d1de02f4187113ff09bc3f2ca7e953f420abb"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-http.ts",
+      "bytes": 15025,
+      "sha256": "fc2f7ecb16f7ab66f894cc1d2bc21a85b25513177da4eeb08a4e827814e618eb",
+      "blobSha": "a69d632fd44bf387c26391f3e6479ff1c1de0643"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/decision-controls.ts",
+      "bytes": 34984,
+      "sha256": "2d1e40d01f59a153b0d66342cc8a2809af747196fc044977aa7f262af3307e24",
+      "blobSha": "8fce87914c07d5b4257d17787464a3f1034261e4"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/financial-composition-fixture.ts",
+      "bytes": 5698,
+      "sha256": "bc8309217742936742c843d82d58d1b4fa456a9b81454e78a8b19779b94d1494",
+      "blobSha": "737c19b03fa3d47fcdc7748e4d110b4af30fb7e7"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/decision-controls.test.ts",
+      "bytes": 24506,
+      "sha256": "3b9256d7bb7fbaecdccf5dabcf900c2a008c53b47fee5a828389ef94f01d0993",
+      "blobSha": "4c3a1b6cabad738bc5fff7bbe5e522758d0907e6"
+    }
+  ],
+  "changes": [
+    {
+      "finding": "BI nested admissions consumed by actual owner",
+      "correction": "BI option enumeration consumes exact sf_work_list and sf_bi_view child admissions once before private readers; no authority registry relaxation."
+    },
+    {
+      "finding": "BI C16 decision case prebinding",
+      "correction": "The shared dispatcher remains the single admission consumer. Own presentation source callbacks bind the current authorized case after validation; HTTP no longer requests a private lease before consumption. Protected selector is shared with options/source routes and rechecks request, binding, abort and authority."
+    },
+    {
+      "finding": "Decision controls exact accessible selector",
+      "correction": "Select elements expose their intended visible title as aria-label. Hosted browser still must navigate the real link, require200/html and select the exact human label; no selector weakening or timeout increase."
+    },
+    {
+      "finding": "Fixture provenance and bounded cancellation",
+      "correction": "Real financial fixture can propagate caller AbortSignal and observe an environment boundary. It explicitly grants the BI/work-list operations now exercised. Domain data, receipts and authorization remain real."
+    },
+    {
+      "finding": "R3-CACHE-AUTH-02",
+      "correction": "Adopted the concurrent published W11 final-clock authority check and paused-clock revocation counterproof byte-for-byte. Duplicate unpublished root variant is preserved in analysis/pre-concurrent-W11 and is not additional accepted evidence."
+    }
+  ],
+  "validation": {
+    "localProductExecution": false,
+    "independentReview": false,
+    "runtimePass": false,
+    "pending": "Exact successor hosted CI and three independent nonauthor reviews after all builders close."
+  }
+}

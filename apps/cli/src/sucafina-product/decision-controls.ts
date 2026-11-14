@@ -139,7 +139,7 @@ async function readForecast(runtime: SfDecisionHttpRuntime, request: Request, ca
 
 export function sfDecisionControlsHtml(value: Controls, surface: "dashboard" | "planner" | "procurement") {
   const selected = value.selected
-  const select = (name: string, title: string, options: readonly { value: string; label: string }[], chosen = "") => `<label>${esc(title)}<select name="${esc(name)}" required><option value="">Selecione</option>${options.map((option) => `<option value="${esc(option.value)}"${option.value === chosen ? " selected" : ""}>${esc(option.label)}</option>`).join("")}</select></label>`
+  const select = (name: string, title: string, options: readonly { value: string; label: string }[], chosen = "") => `<label>${esc(title)}<select aria-label="${esc(title)}" name="${esc(name)}" required><option value="">Selecione</option>${options.map((option) => `<option value="${esc(option.value)}"${option.value === chosen ? " selected" : ""}>${esc(option.label)}</option>`).join("")}</select></label>`
   const hidden = (name: string, data: string) => `<input type="hidden" name="${esc(name)}" value="${esc(data)}">`
   const scope = `${hidden("sf", "decision-controls")}${selected ? hidden("case", selected.ref) : ""}`
   const picker = `<form method="get">${hidden("sf", "decision-controls")}${select("case", "Caso de decisão", value.cases.map((item) => ({ value: item.ref, label: `${item.title} · revisão ${item.version}` })), selected?.ref)}<button>Abrir caso</button></form>`

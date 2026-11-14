@@ -1,4 +1,5 @@
 export const importAnalysisMarkup = `<section data-import-analysis aria-labelledby="sf-import-analysis-title">
+  <style>[data-import-analysis] [hidden]{display:none!important}</style>
   <h2 id="sf-import-analysis-title">Análise opcional do arquivo</h2>
   <p>A análise usa a prévia revisada e as fontes atuais de uma decisão existente. A importação continua disponível sem análise.</p>
   <button type="button" data-analysis-open disabled>Analisar impacto do arquivo</button>

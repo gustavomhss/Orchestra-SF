@@ -5,6 +5,8 @@ import type { BiViewRequest } from "../../../../modules/sucafina/Sucafinav1/prod
 import type { PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import { createSfBiFactory } from "../../../../modules/sucafina/Sucafinav1/product/analytics/factory.ts"
+import { dispatchBiPresentation } from "../../../../modules/sucafina/Sucafinav1/product/analytics/consumer.ts"
+import type { BiPresentationPort } from "../../../../modules/sucafina/Sucafinav1/product/analytics/capabilities.ts"
 import { createStoredScenarioBiProjection } from "../../../../modules/sucafina/Sucafinav1/product/analytics/stored-scenario.ts"
 import { sameBiProjection } from "../../../../modules/sucafina/Sucafinav1/product/analytics/projection.ts"
 import { resolveBiPresentation } from "../../../../modules/sucafina/Sucafinav1/product/analytics/semantics.ts"
@@ -25,6 +27,21 @@ export function createSfBiServices(input: {
 }) {
   const { authority, business, portfolio } = input
   const host = authority.host
+  const caseFor = async (selectionRef: string, call: TrustedDomainContext) => {
+    const parsed = readSfDecisionBiSelection(selectionRef), request = host.requestFor(call)
+    const binding = digestSfValue([call.kind, call.binding])
+    if (!parsed || !request || request.signal.aborted || !await host.revalidate(call)) return undefined
+    const reference = "scenarioResultRef" in parsed ? parsed.scenarioResultRef : parsed.portfolioResultRef
+    const result = await authority.state.read(request, "cases", (state, actor) => {
+      if (actor.principalRef !== call.binding.principalRef || actor.accessRevision !== call.binding.accessRevision || actor.policyVersion !== call.binding.policyVersion) return undefined
+      const result = state.decisionResults?.[reference]
+      const current = result && state.cases[result.caseRef.id]
+      return current && current.incarnation === result.caseRef.incarnation && current.participants.includes(actor.principalRef)
+        ? { id: current.id, incarnation: current.incarnation, version: current.version } : undefined
+    })
+    return result.status === "ok" && await host.revalidate(call) && host.requestFor(call) === request && !request.signal.aborted &&
+      binding === digestSfValue([call.kind, call.binding]) ? result.value : undefined
+  }
   const revalidate = async (request: BiViewRequest, call: TrustedDomainContext, expected?: DomainProjection): Promise<boolean> => {
     if (!await host.revalidate(call)) return false
     const current = await factory.source.read(request, call)
@@ -117,6 +134,23 @@ export function createSfBiServices(input: {
       },
     } } } : {}),
   })
+  // C16 consumes the UI admission before any source callback. Bind the private
+  // case inside those callbacks, where requestFor can prove that consumption;
+  // prebinding an unconsumed context would deny every decision BI invocation.
+  const withinCase = async <Value>(request: BiViewRequest, call: TrustedDomainContext, read: () => Promise<PortResult<Value>>): Promise<PortResult<Value>> => {
+    if (call.kind !== "ui" || !readSfDecisionBiSelection(request.selectionRef)) return read()
+    const selected = await caseFor(request.selectionRef, call)
+    return selected ? business.withCase(call, selected, {}, read) : { status: "denied", reason: "bi-case-selection-unavailable" }
+  }
+  const presentationSource: BiPresentationPort = {
+    read: (request, call) => withinCase(request, call, () => factory.source.read(request, call)),
+    describe: (request, call, projection) => withinCase(request, call, () => factory.source.describe(request, call, projection)),
+    revalidate: async (request, call, projection) => {
+      const result = await withinCase(request, call, async () => ({ status: "ok", value: await factory.source.revalidate(request, call, projection) }))
+      return result.status === "ok" && result.value === true
+    },
+  }
+  const dispatchPresentation = (request: BiViewRequest, call: TrustedDomainContext) => dispatchBiPresentation(request, call, presentationSource, authority.authority)
   // Review is an authenticated consumer of domain producers, not a second C16 BI invocation.
   const readForReview = async (request: BiViewRequest, call: TrustedDomainContext): Promise<PortResult<{ projection: DomainProjection; presentation: BiPresentation }>> => {
     if (!decodeSfOperationInput("sf_bi_view", request).ok || !host.requestFor(call) || !await host.revalidate(call)) return { status: "denied", reason: "bi-review-authority-unavailable" }
@@ -133,5 +167,5 @@ export function createSfBiServices(input: {
       !await factory.source.revalidate(request, call, projectedCopy) || !await host.revalidate(call)) return { status: "stale", reason: "bi-review-source-changed" }
     return { status: "ok", value: { projection: projectedCopy, presentation: structuredClone(presentation.value) } }
   }
-  return { ...factory, readForReview, unavailable: ["decision-bi-waterfall-plan-unavailable", "decision-bi-timeline-plan-unavailable"] }
+  return { ...factory, dispatchPresentation, caseFor, readForReview, unavailable: ["decision-bi-waterfall-plan-unavailable", "decision-bi-timeline-plan-unavailable"] }
 }

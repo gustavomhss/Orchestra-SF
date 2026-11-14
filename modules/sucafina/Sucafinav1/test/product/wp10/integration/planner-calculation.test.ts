@@ -18,9 +18,11 @@ import { createSfSourcePersistence } from "../../../../product/integration/sourc
 import { enumerateSfSources } from "../../../../product/integration/source-inventory.ts"
 import { createSfSourceScopeProjector } from "../../../../product/integration/source-projections.ts"
 import { digestSfEvidenceRef, digestSfValue } from "../../../../product/contracts/canonical.ts"
-import type { BusinessEvidenceRef } from "../../../../product/contracts/business-context.ts"
+import type { BusinessEvidenceRef, BusinessMemoryEnvelope } from "../../../../product/contracts/business-context.ts"
 import type { CaseLedgerEvent } from "../../../../product/contracts/decisions.ts"
+import type { SfProductState } from "../../../../product/contracts/state.ts"
 import type { TrustedUiContext } from "../../../../product/contracts/sf-execution.ts"
+import { object } from "../../../../runtime/contract.ts"
 import { openLocalStore } from "../../../../runtime/local-store.ts"
 
 // Real SQLite, source issuer, Planner engine, request/result stores, UI capability,
@@ -212,8 +214,11 @@ test("Planner calculation replays through UI and BCS, survives Atlas reopen, and
       const payload = { evidenceRef: calculation }
       await reopened.ui("sf_evidence_get", payload, async (call) => {
         expect((await reopened.business.context.resolve(calculation, call)).state).toBe("fresh")
+        phase("reopened-calculation-resolved")
         expect(await reopened.atlas.proveContinuity(calculation, calculation, call)).toBe(true)
+        phase("reopened-continuity-authorized")
         expect(await reopened.atlas.memory.readOriginal(caseRef, calculation.refDigest, call)).toEqual(calculation)
+        phase("reopened-original-capture-read")
         // The event resolves this calculation as an ancestor. Direct and
         // repeated selectors must not overlap that same producer replay.
         const refs = [eventRef, calculation, calculation]
@@ -223,11 +228,55 @@ test("Planner calculation replays through UI and BCS, survives Atlas reopen, and
           expect(result).toMatchObject({ state: "fresh", ref: refs[index], currentRef: refs[index] })
           expect(result.authorizedProjection).toBeDefined()
         }
+        phase("reopened-ancestor-and-repeated-context-authorized")
         const recalled = await reopened.atlas.memory.recall(caseRef, call)
         expect(recalled.status).toBe("ok")
         if (recalled.status === "ok") expect(recalled.records).toHaveLength(1)
         phase("real-atlas-recall-authorized")
         expect((await reopened.business.context.emitFromLedger(eventRef, call)).status).toBe("already-committed")
+        const captured = await reopened.authority.state.read(reopened.request(), "atlas", (state) => ({ atlas: state.atlas, value: state.cases[caseRef.id] }))
+        if (captured.status !== "ok" || !captured.value.value) throw new Error("Protected capture fixture unavailable")
+        const owners = Object.entries(captured.value.atlas).filter(([, value]) => object(object(value).originals)[calculation.refDigest])
+        if (owners.length !== 1) throw new Error("Expected exactly one actual Atlas capture owner")
+        const owner = owners[0]![0]
+        type Partition = { originals: Record<string, { ref: BusinessEvidenceRef; projection: unknown }>; captureDigests: Record<string, Record<string, string>>; envelopes: Record<string, BusinessMemoryEnvelope> }
+        // Corrupt only the persisted test store. No alternate reader, permissive
+        // authority, fabricated capture or replacement continuity proof is used.
+        const change = async (work: (state: SfProductState) => void) => store.transaction("dashboard", async (snapshot) => {
+          const state = snapshot.data.__sfProductV1 as SfProductState
+          if (!state?.atlas || !state.cases) throw new Error("Actual C08 fixture store unavailable")
+          work(state)
+          return { commit: true, value: undefined }
+        })
+        const otherCase = { ...captured.value.value, id: "other-authorized-case", incarnation: "other-case-incarnation", ledger: [] }
+        await change((state) => { state.cases[otherCase.id] = otherCase })
+        expect(await reopened.atlas.memory.readOriginal(otherCase, calculation.refDigest, call)).toBeUndefined()
+        const mutations: readonly ((partition: Partition) => void)[] = [
+          (partition) => { delete partition.originals[calculation.refDigest] },
+          (partition) => { partition.originals[calculation.refDigest]!.ref = { ...calculation, refId: "tampered-original" } },
+          (partition) => { partition.originals[calculation.refDigest]!.projection = { tampered: true } },
+          (partition) => { Object.values(partition.captureDigests).forEach((entry) => { entry[calculation.refDigest] = "0".repeat(64) }) },
+          (partition) => { Object.values(partition.envelopes).forEach((entry) => { entry.caseRef = { id: otherCase.id, incarnation: otherCase.incarnation, version: otherCase.version } }) },
+          (partition) => { partition.envelopes = {} },
+        ]
+        for (const mutate of mutations) {
+          await change((state) => { state.atlas = structuredClone(captured.value.atlas); mutate(state.atlas[owner] as Partition) })
+          expect(await reopened.atlas.proveContinuity(calculation, calculation, call)).toBe(false)
+        }
+        await change((state) => { state.atlas = structuredClone(captured.value.atlas) })
+        expect(await reopened.atlas.proveContinuity(calculation, calculation, call)).toBe(true)
+        // Membership changes after the first protected lookup, while the real
+        // domain projection awaits its environment. Session authority stays live.
+        interleave.environment = async () => { await change((state) => { state.cases[caseRef.id]!.participants = [] }) }
+        expect(await reopened.atlas.proveContinuity(calculation, calculation, call)).toBe(false)
+        expect(interleave.environment).toBeUndefined()
+        expect(await reopened.authority.host.revalidate(call)).toBe(true)
+        await change((state) => {
+          state.cases[caseRef.id] = structuredClone(captured.value.value!)
+          delete state.cases[otherCase.id]
+        })
+        expect(await reopened.atlas.proveContinuity(calculation, calculation, call)).toBe(true)
+        phase("protected-capture-routing-and-current-membership-negative-proofs")
         // Pause at an actual host environment read, overlap another proof, then
         // revoke the principal before either can disclose its result.
         const entered = Promise.withResolvers<void>(), release = Promise.withResolvers<void>()

@@ -113,9 +113,9 @@ export function createSfExtendedHttp(input: {
         const next = await authority.ui.admit(request, "sf_bi_view", digestSfValue(payload))
         if (next.status !== "ok") return json(next, 403)
         try {
-          const selectedCase = readSfDecisionBiSelection(selectionRef) ? await options.caseFor(selectionRef, next.value) : undefined
-          if (readSfDecisionBiSelection(selectionRef) && !selectedCase) return json({ status: "denied", reason: "bi-case-selection-unavailable" }, 403)
-          const result = selectedCase ? await business.withCase(next.value, selectedCase, {}, () => input.bi.dispatchPresentation(payload, next.value)) : await input.bi.dispatchPresentation(payload, next.value)
+          // The shared C16 dispatcher consumes this new admission. Its source
+          // composition binds the selected case only after that validation.
+          const result = await input.bi.dispatchPresentation(payload, next.value)
           return result.status === "ok" ? json(result.value) : json(result, result.status === "denied" ? 403 : 409)
         } finally { authority.ui.finish(next.value) }
       }

@@ -5,7 +5,7 @@ import type { createSfExtendedHttp } from "../../../../../../../apps/cli/src/suc
 /** Real browser, producer and HTTP handler; route transport forwards exact handler bytes.
  * This seam does not qualify TCP hosting, installed identity, native AI or global E2E.
  */
-export async function prepareSfReviewAccessBrowser(input: { http: ReturnType<typeof createSfExtendedHttp>; url: string; privateText: string }) {
+export async function prepareSfReviewAccessBrowser(input: { http: ReturnType<typeof createSfExtendedHttp>; url: string; privateText: string; signal?: AbortSignal }) {
   const { chromium } = await import("@playwright/test")
   const { captureChromiumCleanup } = await import("../../wp07/chromium-cleanup.ts")
   const browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"], timeout: 15_000 })
@@ -38,7 +38,7 @@ export async function prepareSfReviewAccessBrowser(input: { http: ReturnType<typ
     context.setDefaultNavigationTimeout(15_000)
     await context.route("https://example.test/**", async (route) => {
       const request = route.request()
-      const response = await input.http(new Request(request.url(), { method: request.method(), headers: await request.allHeaders(),
+      const response = await input.http(new Request(request.url(), { method: request.method(), headers: await request.allHeaders(), signal: input.signal,
         ...(request.postDataBuffer() ? { body: request.postDataBuffer()! } : {}) }), "dashboard")
       if (!response) { await route.abort("blockedbyclient"); return }
       // Capture only actual host output. Status, headers and bytes are never

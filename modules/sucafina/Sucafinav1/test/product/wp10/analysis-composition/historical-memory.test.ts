@@ -96,15 +96,21 @@ test("historical decision recall binds original/current evidence and rejects cha
     const selected = await authority.ui.admit(request(), "sf_work_list", digestSfValue(selectionPayload))
     if (selected.status !== "ok") throw new Error("Human procurement period unavailable")
     try {
+      if (!await authority.ui.validate(selected.value, "sf_work_list", digestSfValue(selectionPayload))) throw new Error("Human procurement period admission was not consumed")
       const selectedPeriod = await activeBusiness.procurementSelections.create(selected.value, period)
       if (selectedPeriod.status !== "ok") throw new Error(selectedPeriod.reason)
     } finally { authority.ui.finish(selected.value) }
-    const issuedCall = await authority.ui.admit(request(), "sf_request_read", digestSfValue({ request: "PR-1" }))
+    const sourcePayload = { request: "PR-1" }
+    const issuedCall = await authority.ui.admit(request(), "sf_request_read", digestSfValue(sourcePayload))
     if (issuedCall.status !== "ok") throw new Error("Source issuance authority unavailable")
-    const issued = await activeBusiness.individual.issue("procurement-request", "PR-1", issuedCall.value)
-    if (issued.status !== "ok") throw new Error(issued.reason)
-    const resolved = await activeBusiness.individual.resolve(issued.value, issuedCall.value)
-    authority.ui.finish(issuedCall.value)
+    const resolved = await (async () => {
+      try {
+        if (!await authority.ui.validate(issuedCall.value, "sf_request_read", digestSfValue(sourcePayload))) throw new Error("Source issuance admission was not consumed")
+        const issued = await activeBusiness.individual.issue("procurement-request", "PR-1", issuedCall.value)
+        if (issued.status !== "ok") throw new Error(issued.reason)
+        return await activeBusiness.individual.resolve(issued.value, issuedCall.value)
+      } finally { authority.ui.finish(issuedCall.value) }
+    })()
     if (resolved.status !== "ok") throw new Error(resolved.reason)
     const original = resolved.value.evidence
     const operation: ScenarioOperation = { kind: "replace", targetRef: original.refId, amount: 150, currency: "USD", period }
