@@ -112,12 +112,22 @@ test("listener privacy blocks tracing before malformed callbacks; capture works 
   }
   expect(f.spans).toHaveLength(0)
   const visible: Tracer.NativeSpan[] = []
-  const tracer = Tracer.make({ span(options) { const span = new Tracer.NativeSpan(options); visible.push(span); return span } })
+  const ended = Promise.withResolvers<void>()
+  const tracer = Tracer.make({ span(options) {
+    const span = new Tracer.NativeSpan(options)
+    const finish = span.end.bind(span)
+    span.end = (at, exit) => { finish(at, exit); ended.resolve() }
+    visible.push(span)
+    return span
+  } })
   const control = HttpRouter.toWebHandler(Layer.merge(f.installation.layer, Layer.succeed(Tracer.Tracer)(tracer)).pipe(Layer.provide(HttpServer.layerServices)), { disableLogger: true })
+  const timeout = setTimeout(() => ended.reject(new Error("Synthetic HTTP trace control did not complete")), 5000)
   try {
     await control.handler(new Request(`${ingressOrigin}/sucafina/auth/callback?code=synthetic-control`, { headers: { host: new URL(ingressOrigin).host } }))
-    expect(visible.some((span) => span.attributes.has("url.query"))).toBe(true)
-  } finally { await control.dispose() }
+    // Effect schedules HTTP attributes and span.end after resolving the response promise.
+    await ended.promise
+    expect(visible.some((span) => span.attributes.get("url.query") === "code=synthetic-control")).toBe(true)
+  } finally { clearTimeout(timeout); await control.dispose() }
 })
 
 test("installed profile fails closed before private business state and never promotes the local operator to HTTPS", async () => {

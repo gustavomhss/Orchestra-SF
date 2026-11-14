@@ -1,7 +1,8 @@
 import { afterAll, beforeAll, expect, test } from "bun:test"
-import { NodeHttpServer } from "@effect/platform-node"
 import { createServer } from "node:http"
 import { writeFile } from "node:fs/promises"
+import { createRequire } from "node:module"
+import { pathToFileURL } from "node:url"
 import path from "node:path"
 import { Effect, Layer, Option, Tracer } from "effect"
 import { HttpRouter, HttpServer } from "effect/unstable/http"
@@ -16,10 +17,16 @@ type Entry = { createMicrosoftInstallation: (context: { origin: string }, file: 
 type Loader = { composeSfInstallation: (value: unknown, origin: string) => Promise<Installation & { layer: Layer.Layer<never, never, HttpRouter.HttpRouter>; privacy: Layer.Layer<never> }> }
 // This call must fail in preflight, before it can require the intentionally absent host services.
 type PreflightServe = { serveForever: (input: { hostname: string; port: Option.Option<number>; register: boolean; installation: Option.Option<string> }) => Effect.Effect<unknown, unknown> }
+type NodeServer = { layer: (evaluate: () => ReturnType<typeof createServer>, options: { host: string; port: number }) => Layer.Layer<HttpServer.HttpServer, unknown> }
 let entry: Entry
 let loader: Loader
 let serve: PreflightServe
+let NodeHttpServer: NodeServer
 beforeAll(async () => {
+  // This adapter is an existing CLI dependency; resolve it from that package without adding a Sucafina dependency.
+  const cli = createRequire(path.resolve(import.meta.dir, "../../../../apps/cli/package.json"))
+  const platform = await import(pathToFileURL(cli.resolve("@effect/platform-node")).href) as { NodeHttpServer: NodeServer }
+  NodeHttpServer = platform.NodeHttpServer
   entry = await integrationModule<Entry>("modules/sucafina/Sucafinav1/local/entry.ts")
   loader = await integrationModule<Loader>("apps/cli/src/sucafina-product/installation.ts")
   serve = await integrationModule<PreflightServe>("apps/cli/src/commands/handlers/serve.ts")
