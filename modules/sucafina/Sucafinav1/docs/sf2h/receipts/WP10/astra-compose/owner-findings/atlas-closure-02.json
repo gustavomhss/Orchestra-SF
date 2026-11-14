@@ -1,0 +1,39 @@
+{
+  "id": "ASTRA-WP14-ATLAS-CLOSURE-02",
+  "owner": "WP14 / PR36",
+  "integration_owner": "Astra WP10",
+  "observed_candidate": {
+    "head": "994b661e6b17a817c18dc89036b05d9b521f9be6",
+    "tree": "bacb81457fd546954f0fb7e70384fcb3c818d571"
+  },
+  "state": "BLOCKING_SOURCE_HOLD_AND_COMPOSITION_ROLLBACK",
+  "detected_by": [
+    "independent runtime-authority review",
+    "independent semantic-integrity review"
+  ],
+  "source": {
+    "head": "d697bcc1076a62375cbf0439376c9f0a4f81173f",
+    "tree": "464902873b604ceabe4518f34d16643c5dfb2a18",
+    "test_blob": "7f9b392ff55cf0193fbfa7542a0f4eaea4070746",
+    "reader_blob": "6194f415573636efd47751f977cd157c9396f17d",
+    "unconsumed_producer_blob": "e4e648feecb4e12ace3da41e1b91c45b527c7247"
+  },
+  "closure_failure": "The two exact Atlas tests accepted in intake11 are not a complete closure. source-access-atlas passes authorizeRecallCase (lines126/158) and expects a different native candidate case to resolve fresh, but the composed source-access producer has no callback and strictly binds native case id/incarnation/version. Exact blob identity alone was insufficient.",
+  "producer_hold": {
+    "status": "STATIC_FINDING_NOT_EXECUTED",
+    "sequence": [
+      "Native call remains valid for its current case, while a different historical candidate has a private recall grant.",
+      "The second read obtains candidate state and authorizeRecallCase returns true.",
+      "authorizeEvidence awaits domain work; the candidate/grant may change or revoke during that await.",
+      "Final host.revalidate checks the original native call/current case; old snapshots and ref/binding digests do not reobserve the candidate grant. Projection can therefore follow a stale grant."
+    ],
+    "required_remedy": "Owner must publish a bounded candidate/grant final-observation fence plus a negative test revoking or changing the candidate during the last authorizeEvidence await. Preserve current-case binding, exact candidate id/incarnation/version, Request identity, ACL, source lineage, lease and final snapshot checks. No new public contract or plan alteration authorized.",
+    "incidental_api": "The complete producer also changes procurement resolve from object to function. The existing WP10 adapter is callable and named; the owner procurement regression ad6a5cea4e1eb5eb5e1b7faeea5ed2091f9f73f1 is needed if this producer is later accepted."
+  },
+  "remedy_applied": "Restore only the two Atlas paths to their exact W10 blobs. Retain all seven Finance files, the own recall hook and historical W11 receipts. No owner branch/source hunk, deletion, source bypass, deadline increase or local product execution.",
+  "supersedes": [
+    "intake-11 Atlas accepted closure assertion",
+    "intakes/group36-d697bcc1076a-atlas.json ACCEPTED_FOR_COMPOSITION_PENDING_HOSTED_CI"
+  ],
+  "remaining": "W10 Atlas missing-verifier/Request-identity finding returns explicitly pending a compatible owner closure; no native Atlas or AM05 acceptance claimed."
+}
