@@ -1,0 +1,201 @@
+{
+  "schema": "sf2h.work-reuse.published-producer-intake.v1",
+  "status": "PROPOSED_NOT_APPLIED_NOT_COMPILED_NOT_RUN",
+  "base": {
+    "commit": "79ebf5555eddaa4b5b8b57cbe1df7c5ad22b1244",
+    "tree": "d0508747f0818b3467f44bac845ca6a878bdb7ea"
+  },
+  "published": {
+    "commit": "dc21cd389de67c2e7fac996b663d9c0aa7d8cae5",
+    "tree": "0a5eea5d992e65153fae6999ce3e7e4d109f30b0",
+    "increment": "W6"
+  },
+  "latest_readback": {
+    "commit": "9e1f44af7689946d27d37ed48b9f5e9849417121",
+    "increment": "W7",
+    "production_changes_from_w6": 0,
+    "changed_paths": [
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP08/collab-resume-20261114/increment07.json",
+      "modules/sucafina/Sucafinav1/test/product/wp08/answer-egress-version.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp08/review-answer-confirmation.test.ts"
+    ],
+    "run": {
+      "W": "9e1f44af7689946d27d37ed48b9f5e9849417121",
+      "S": "a4f8c7bd673de3e4092f20185f4c3ea2d10d0ec3",
+      "id": 43625515062,
+      "job": 132540336771,
+      "conclusion": "success",
+      "pass": 5,
+      "fail": 0,
+      "expect": 62,
+      "omni": "not applicable; no declaring test and no spawns",
+      "snapshot_diff": [
+        ".ci-run.json"
+      ],
+      "scope": "Three edited/reconfirmed C05 scenarios plus two R10 edit-race refusals. No UI timing or attachment qualification."
+    }
+  },
+  "recommendation": "Owner/S0 should consume the already published producer dependency closure and qualify the same UI after composition. Do not rebuild the W6 optimization or copy old complete snapshots.",
+  "scope": "Sixteen version-pinned producer/compatibility blobs for confirmation/reuse and preserved C05 semantics. This is not a repository merge, installed-host proof, or complete Collaboration release.",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/host.ts",
+      "preimage_blob": "0376f81eb7978807106d259d6f65a9b4e1ed3a2a",
+      "published_blob": "1678fc9d46c36a7da962aeca3b782b395e129c51",
+      "reason": "Published generic answer-reference dedup and current-scope derivation; composition of C05 source and recipient fences."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/answer-reuse.ts",
+      "preimage_blob": "134ce5cd8c4f0779380936de6a439c9ea124d932",
+      "published_blob": "012175e4acc2be40547089b43f248144beb6c712",
+      "reason": "C05 preserved scope support plus W6 exact thread/baseline fences for prepare, confirm and read."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/answer-work.ts",
+      "preimage_blob": "e3e5adc752b5e91e6a0645d0007b52d767a62994",
+      "published_blob": "f1e638546518f35aef1dcd053ae0f2a202cdadd3",
+      "reason": "C05 Work projection and exact state/source egress fences; published removal of duplicate review resolve."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/answer-state-fence.ts",
+      "preimage_blob": null,
+      "published_blob": "7b19cf14f220adb3a01530515ec5ad1657bc8f11",
+      "reason": "New protected before/after canonical thread and absent/exact baseline fence required by W6 answer consumers."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/authority.ts",
+      "preimage_blob": "0822834786a6a9e3fd09d89701aa61d624c72778",
+      "published_blob": "5c9850034bef92736b05a4fc0dddbaa1170c57b1",
+      "reason": "Review recipient grant and commit check methods consumed by the W6 host/composition/actions."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/composition.ts",
+      "preimage_blob": "6855bb9dadc5eaf892559f8af8e45c78fd69385e",
+      "published_blob": "7222e35f290d46f68d7ab2aefdfd1780774140ae",
+      "reason": "Passes new review recipient and prepared source-fence callbacks to thread producer and Work."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/recipient-authority.ts",
+      "preimage_blob": "bf1845e8673fd10425713085e20b04373885fabb",
+      "published_blob": "3b7080be16213512835902c37e58e1c88ca8405f",
+      "reason": "Adds ReviewThreadRecipientAuthority type required by host and authority."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/recipient-actions.ts",
+      "preimage_blob": "9054624ad9cc632f4ba945bdc75b1034a5da16a6",
+      "published_blob": "496df344b314df69e5e4d9896aa794ffc84f3cc1",
+      "reason": "C05 recipient reply/resolve use prepared source and recipient commit fences."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/thread-history.ts",
+      "preimage_blob": "4c55e8c7a25b52ae717769f44b130926477bb8e6",
+      "published_blob": "4bf7f79347f94255d3805fe6c1114893fedfbaa9",
+      "reason": "C05 edit and historical read integration with prepared review source and current recipient fences."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/threads.ts",
+      "preimage_blob": "08a14bb4713b0ccd67d9310b94fe30218eb7349d",
+      "published_blob": "a41d19008e41c9ff3248a7f44aa54d18bc0b7c8f",
+      "reason": "Accepts and enforces review-recipient and prepared review source fences passed by composition."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/review-source-fence.ts",
+      "preimage_blob": null,
+      "published_blob": "ec9fef31987a11a3f031a159b44463980a39cd8d",
+      "reason": "New adapter binds the current review-answer source and prepareThreadFence identity."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/dispatch.ts",
+      "preimage_blob": "4a1ebe9298dd62d2846a45f294aa1b6331343040",
+      "published_blob": "7d30096e973b003f222698bf2f605fc24031aba5",
+      "reason": "Retains C05 pin equality and fails closed for C16 AnswerProjection without review scope."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/work-port.ts",
+      "preimage_blob": "a01b11e23e650ffb218fd0a64640110fbc2f8710",
+      "published_blob": "0c49c363917ffaf9062366e54a7b7b970ae471cc",
+      "reason": "Preserves review pin and current recipient-source continuity while displaying stale answer work."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/http-routes.ts",
+      "preimage_blob": "8e43041300f452a83d6b8f1895e73188a81138a3",
+      "published_blob": "a266e12bd80a2ff95922c2492225ced86eda3ac3",
+      "reason": "Carries the exact reviewContext returned by prepareAnswer instead of dropping it."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/review-answer-source.ts",
+      "preimage_blob": null,
+      "published_blob": "fc1bebfdd8b1dd4b0536b7076f4305dfa91483d0",
+      "reason": "New producer of preserved C05 answer scope, observation lease and protected source fence."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/thread-context.ts",
+      "preimage_blob": "993d8fed23f398c4317dc6ed63bed05a5b79fd08",
+      "published_blob": "20d98a976372338a22c947ee6bfcb9641c0429c5",
+      "reason": "Adds private authenticated C05 snapshot read used by review-answer-source, with existing prepare facade preserved."
+    }
+  ],
+  "omitted": {
+    "collaboration/case-selection.ts": "G03 has its own owner/lane and independent intake; existing API remains used by this proposal.",
+    "collaboration/confirmation-source.ts": "New multi-domain composition helper is not imported by the selected closure and is not required by the retained generic Dashboard fixture.",
+    "other_reviews_files": "No wholesale reviews/UI/meeting intake; only review-answer-source and its thread-context dependency are named.",
+    "procurement_and_contract_deltas": "Existing imported symbols are reused. No unrelated producer/contract snapshot is adopted by association."
+  },
+  "compose_requirements": [
+    "Recheck the owner's current head and all listed preimages before writing. If advanced, reconcile; do not overwrite.",
+    "Use published blobs verbatim. If the owner selects full W6/W7 intake, do not also apply the generic backport patch.",
+    "The old UI fixture omits C05 source/grant wiring. Installed C05 qualification requires the real private reviewAnswerSource, prepareReviewThreadFence, reviewRecipientAuthority and authorizeReviewThreadContext wiring from their owners; no fixture grant may stand in for it.",
+    "Keep answer-read, 5000ms observation/10000ms UI deadlines, ACL revalidation, source/commit/egress fences, selected message identity, same idempotency key and real case.",
+    "Real decision-answer-question mount is already published at compose-resume ad7fcdef7739e1bc471e42fac082452799de751b. The missing prerequisite for distinct recipients is real private recipient-authority wiring, plus post-intake composition proof; see ../attachment-owner-request.md."
+  ],
+  "minimal_alternative": {
+    "patch": "generic-answer-dedup.NOT_APPLIED.patch",
+    "base_commit": "79ebf5555eddaa4b5b8b57cbe1df7c5ad22b1244",
+    "path": "modules/sucafina/Sucafinav1/product/collaboration/host.ts",
+    "preimage_blob": "0376f81eb7978807106d259d6f65a9b4e1ed3a2a",
+    "proposed_blob": "f4a5b59ecf36f66a89794b747529704958f8d758",
+    "published_source_blob": "1678fc9d46c36a7da962aeca3b782b395e129c51",
+    "patch_sha256": "ae866e0f75072cf52fa9e4cf923d18240d43b72b5f0b5c2c3f3452534c847921",
+    "additions": 13,
+    "deletions": 10,
+    "files": 1,
+    "status": "NOT_APPLIED_NOT_COMPILED_NOT_EXECUTED",
+    "static_applicability": "git apply --check passed against a scratch copy whose Git blob equals the exact preimage; no repository product or test was executed",
+    "construction": "The helper, complete answer callback and generic scope-selection prefix are verbatim published W6 text; the existing ThreadSourceContext type is imported. The legacy explicit C05 refusal and the outer membership check remain.",
+    "limits": [
+      "Alternative only when the owner needs to isolate the generic dedup on the retained base. Not cumulative with W6/W7 intake.",
+      "Does not import or claim the new W6 R10 final thread/baseline fence.",
+      "Does not implement C05, change a producer deadline or remove answer-read/source/commit/ACL checks.",
+      "Static applicability and source provenance do not establish performance, compilation, attachment or installed/native PASS."
+    ]
+  },
+  "static_call_counts": {
+    "meaning": "Successful generic callback path counts of threadReads.read derived from code, not durations or p95.",
+    "retained": {
+      "prepare_message": 17,
+      "confirm": 10,
+      "read": 15
+    },
+    "published_w6_and_minimal_alternative": {
+      "prepare_message": 9,
+      "confirm": 4,
+      "read": 7
+    }
+  },
+  "evidence_policy": "Reattach the existing W6/W7 producer runs as their exact scoped observations. A timing run on retained UI79eb measures that retained producer only; it cannot prove the post-intake W6 behavior or backport speedup.",
+  "delivery_head_readback": {
+    "head": "9ec98ac9cdc807d2b95040274f4312df768d932d",
+    "tree": "34c5197f92afe1a773a3c87e2f3397bf89f2abb2",
+    "readback_utc": "2026-11-14T18:32:48Z",
+    "since_W7": {
+      "files": 63,
+      "receipts_only": true,
+      "product_changes": 0,
+      "test_changes": 0
+    },
+    "product_W6": "dc21cd389de67c2e7fac996b663d9c0aa7d8cae5",
+    "test_W7": "9e1f44af7689946d27d37ed48b9f5e9849417121",
+    "W7_run": 43625515062,
+    "W7_conclusion": "success"
+  }
+}

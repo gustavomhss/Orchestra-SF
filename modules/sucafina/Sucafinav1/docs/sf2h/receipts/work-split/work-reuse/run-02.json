@@ -1,0 +1,87 @@
+{
+  "schema": "sf2h.work-reuse.run.v1",
+  "attempt": "R02",
+  "purpose": "Check type-only correction of two diagnostic TS7006 errors and guards on all staged evidence. No browser journey or product behavior test repeated.",
+  "W": "fc700e3127596171cd81eea1aa3cf630a19d9985",
+  "W_tree": "ba77e073f3aa7b136dd8c1b1ee64ef88bbc69d92",
+  "S": "aa207b331b6a64549ab41130ed879619ecc2593e",
+  "S_tree": "0c69c3993779b9441219a86128110bf7ecf0f4a9",
+  "request": "request-02.json",
+  "request_sha256": "87193c22efd9b026074525c8a5b021a9c24ebed0a2b0958f4801573a5333463f",
+  "snapshot_diff": [
+    ".ci-run.json"
+  ],
+  "run_id": 43626770240,
+  "job_id": 132544283579,
+  "cleanup_job_id": 132545113524,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43626770240/job/132544283579",
+  "conclusion": "failure",
+  "counts": {
+    "pass": 0,
+    "fail": 1,
+    "expect": 1,
+    "tests": 1
+  },
+  "named_test_duration_ms": 65266.96,
+  "selected": [
+    "./Sucafinav1/test/product/work-split/work-reuse/static-gates.test.ts"
+  ],
+  "typecheck": {
+    "command": "bun typecheck",
+    "cwd": "modules/sucafina",
+    "exit": 2,
+    "status": "FAIL",
+    "own_diagnostics": 0,
+    "foreign_diagnostics": 9,
+    "foreign_paths": {
+      "apps/cli/src/sucafina-product/host-context.ts": [
+        193,
+        225,
+        281,
+        404,
+        420
+      ],
+      "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts": [
+        40,
+        45,
+        56,
+        221
+      ]
+    },
+    "comparison": "Same nine retained foreign diagnostics recorded by original UI Work R03. No source owned by those writers changed.",
+    "correction": "Snapshot and BlobTransaction explicit callback types; both prior TS7006 diagnostics absent."
+  },
+  "guards": {
+    "command": "bun run check:guards --base origin/dev",
+    "base_fetch_exit": 0,
+    "exit": 0,
+    "status": "PASS",
+    "rules": 78,
+    "paths": 943,
+    "gate_findings": 0,
+    "warnings": 53,
+    "errors": 0
+  },
+  "omni": {
+    "verdict": "pass",
+    "nonce": "2f1167d34dbb0abfd76895c20bbc25d3",
+    "declaring_tests": 1,
+    "spawns": 3,
+    "delegated": 0
+  },
+  "artifacts": {
+    "uploaded": [],
+    "required_missing": false,
+    "basis": "Bun focused selection uses job logs; both upload extensions are skipped and no screenshot/native-host artifact is required by this selection."
+  },
+  "equivalence": {
+    "from_W": "c5a0ced6493410d321a61f8a2fbe4c3d7d9fd40b",
+    "changed_runtime_files": 0,
+    "type_only_path": "modules/sucafina/Sucafinav1/test/product/work-split/work-reuse/timing-fixture.ts",
+    "node_erasure": "stripTypeScriptTypes({ mode: transform }) outputs are byte-identical",
+    "erased_js_sha256": "dd707900bf9d3a895d6dbf9f25d5b06070fae4d7782d2d3d659156406b80e721",
+    "other_changes": "Receipts and proposed .patch text only.",
+    "reattached_runtime_proof": "R01 with its original FAIL and reached/not-reached assertions; not converted to PASS."
+  },
+  "result": "Own type errors resolved; package typecheck remains failed. Guards and Omni pass. No installed/native/global release claim."
+}
