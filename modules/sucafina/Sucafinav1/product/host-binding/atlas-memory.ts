@@ -179,8 +179,8 @@ export function createSfAtlasMemory(input: {
           const capture = partition.originals[ref.refDigest]
           if ((resolution.state !== "fresh" && resolution.state !== "historical") || !resolution.currentRef || !resolution.authorizedProjection || !capture || digestSfValue(capture.ref) !== digestSfValue(ref) || partition.captureDigests[id]?.[ref.refDigest] !== digestSfValue(capture) || (resolution.state === "historical" && (resolution.differences === undefined || digestSfValue(resolution.authorizedProjection) !== digestSfValue(capture.projection))) || !await input.proveContinuity(ref, resolution.currentRef, call)) return { status: "unavailable" as const }
         }
-        if (!("taskId" in record.entry)) return { status: "unavailable" as const }
-        approved.push({ id, event, envelope, resolutions, entry: record.entry })
+        if (!("taskId" in record.entry) || typeof record.entry.ref !== "string" || !record.entry.ref.trim()) return { status: "unavailable" as const }
+        approved.push({ id, event, envelope, resolutions, entry: { ...record.entry, ref: record.entry.ref } })
       }
       if (!await input.host.revalidate(call)) return { status: "unavailable" as const }
       const filtered = createSfAtlasDurableMemory({ events: approved.map((item) => [item.id, item.event]) })

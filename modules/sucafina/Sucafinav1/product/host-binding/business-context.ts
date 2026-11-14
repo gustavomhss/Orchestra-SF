@@ -124,7 +124,7 @@ export function createSfBusinessContext(host: Parameters<typeof assembleSfBusine
 
 /** Textual IDs cannot carry historical authorization across replacement incarnations. */
 function sameHistoricalSource(original: BusinessEvidenceRef, current: BusinessEvidenceRef): boolean {
-  if (original.kind === "record" && current.kind === "record") return original.target.surface === current.target.surface && original.target.recordType === current.target.recordType && original.target.recordId === current.target.recordId && (original.target.surface === "dashboard" || original.target.incarnation === current.target.incarnation)
+  if (original.kind === "record" && current.kind === "record") return original.target.surface === current.target.surface && original.target.recordType === current.target.recordType && original.target.recordId === current.target.recordId && (["dashboard", "procurement"].includes(original.target.surface) || original.target.incarnation === current.target.incarnation)
   if (original.kind === "document" && current.kind === "document") return original.target.documentId === current.target.documentId && original.target.incarnation === current.target.incarnation
   if (original.kind === "receipt" && current.kind === "receipt") return original.target.surface === current.target.surface && original.target.receiptId === current.target.receiptId && original.target.targetIncarnation === current.target.targetIncarnation
   if (original.kind === "case-event" && current.kind === "case-event") return original.target.caseId === current.target.caseId && original.target.caseIncarnation === current.target.caseIncarnation && original.target.eventId === current.target.eventId
@@ -145,6 +145,8 @@ export function createSfEvidenceRouter(input: {
   dashboardRecordProof?: ReturnType<typeof createSfSourceContinuityProof>
   documentProof?: ReturnType<typeof createSfSourceContinuityProof>
   plannerProof?: ReturnType<typeof createSfSourceContinuityProof>
+  receipt?: (ref: BusinessEvidenceRef, call: TrustedDomainContext) => Promise<BusinessEvidenceResolution>
+  receiptProof?: ReturnType<typeof createSfSourceContinuityProof>
 }) {
   return {
     resolveSource(ref: BusinessEvidenceRef, call: TrustedDomainContext, ancestors: ReadonlySet<string> = new Set()): Promise<BusinessEvidenceResolution> {
@@ -152,6 +154,7 @@ export function createSfEvidenceRouter(input: {
       if (ref.kind === "record" && ref.target.surface === "dashboard" && input.dashboardRecord) return input.dashboardRecord(ref, call)
       if (ref.kind === "case-event") return input.caseEvent(ref, call, ancestors)
       if (ref.kind === "record" && ref.target.surface === "procurement" && ["procurement-request", "procurement-supplier"].includes(ref.target.recordType)) return input.procurement(ref, call)
+      if (ref.kind === "receipt" && ref.target.surface === "procurement" && input.receipt) return input.receipt(ref, call)
       if (ref.kind === "document" && input.document) return input.document(ref, call)
       if (ref.kind === "record" && ref.target.surface === "planner" && ref.target.recordType === "planner-version" && input.planner) return input.planner(ref, call)
       return Promise.resolve({ state: "unavailable", ref, accessRevision: call.binding.accessRevision, checkedAt: new Date().toISOString() })
@@ -161,6 +164,7 @@ export function createSfEvidenceRouter(input: {
       if (original.kind === "record" && original.target.surface === "dashboard" && input.dashboardRecordProof) return input.dashboardRecordProof(original, current, call)
       if (original.kind === "case-event") return input.caseEventProof(original, current, call)
       if (original.kind === "record" && original.target.surface === "procurement" && ["procurement-request", "procurement-supplier"].includes(original.target.recordType)) return input.procurementProof(original, current, call)
+      if (original.kind === "receipt" && original.target.surface === "procurement" && input.receiptProof) return input.receiptProof(original, current, call)
       if (original.kind === "document" && input.documentProof) return input.documentProof(original, current, call)
       if (original.kind === "record" && original.target.surface === "planner" && original.target.recordType === "planner-version" && input.plannerProof) return input.plannerProof(original, current, call)
       return Promise.resolve(false)
@@ -180,6 +184,7 @@ export function createSfAtlasBusiness(input: {
   dashboardRecords: Parameters<typeof createSfDashboardRecordSourceAccess>[0]["records"]
   procurement: ProcurementPort
   procurementResolve: Parameters<typeof createSfProcurementSourceAccess>[0]["resolve"]
+  procurementEvidence?: Pick<ReturnType<typeof import("../procurement/decision-host.ts").createProcurementDecisionHost>, "resolveEvidence" | "proveContinuity">
   documentRead: Parameters<typeof createSfDocumentSourceAccess>[0]["read"]
   planner?: { sources: PlannerSourceHost; port: PlannerPort }
   caseForEvidence: (digest: string, call: TrustedDomainContext) => Promise<readonly { id: string; incarnation: string }[] | { id: string; incarnation: string } | undefined>
@@ -195,7 +200,11 @@ export function createSfAtlasBusiness(input: {
     const results = await Promise.all(refs.map((ref) => resolveAncestry!(ref, call, ancestors)))
     return results.length === refs.length && results.every((result, index) => (result.state === "fresh" || result.state === "historical") && digestSfValue(result.ref) === digestSfValue(refs[index])) && await input.host.revalidate(call)
   } })
-  const procurement = createSfProcurementSourceAccess({ host: input.host, resolve: input.procurementResolve, procurement: input.procurement })
+  const currentProcurement = createSfProcurementSourceAccess({ host: input.host, resolve: input.procurementResolve, procurement: input.procurement })
+  const procurement = async (ref: BusinessEvidenceRef, call: TrustedDomainContext): Promise<BusinessEvidenceResolution> =>
+    await input.procurementEvidence?.resolveEvidence(ref, call) ?? currentProcurement(ref, call)
+  const receipt = async (ref: BusinessEvidenceRef, call: TrustedDomainContext): Promise<BusinessEvidenceResolution> =>
+    await input.procurementEvidence?.resolveEvidence(ref, call) ?? { state: "unavailable", ref, accessRevision: call.binding.accessRevision, checkedAt: input.now() }
   const document = createSfDocumentSourceAccess({ host: input.host, read: input.documentRead })
   const planner = async (ref: BusinessEvidenceRef, call: TrustedDomainContext): Promise<BusinessEvidenceResolution> => {
     const unavailable = (): BusinessEvidenceResolution => ({ state: "unavailable", ref, accessRevision: call.binding.accessRevision, checkedAt: input.now() })
@@ -230,7 +239,16 @@ export function createSfAtlasBusiness(input: {
     dashboardProof: createSfDashboardContinuityProof({ host: input.host, issue: input.dashboardIssue, dashboard: input.dashboard, readOriginal }),
     dashboardRecordProof,
     caseEventProof: createSfSourceContinuityProof({ host: input.host, readOriginal, readCurrent: caseEvent }),
-    procurementProof: createSfSourceContinuityProof({ host: input.host, readOriginal, readCurrent: procurement }),
+    procurementProof: async (original, current, call) => {
+      if (digestSfValue(original) !== digestSfValue(current) && input.procurementEvidence)
+        return await input.procurementEvidence.proveContinuity(original, current, call) === true
+      return createSfSourceContinuityProof({ host: input.host, readOriginal, readCurrent: procurement })(original, current, call)
+    },
+    receipt, receiptProof: async (original, current, call) => {
+      if (digestSfValue(original) !== digestSfValue(current) || !await input.host.revalidate(call)) return false
+      const proof = await receipt(original, call)
+      return proof.state === "fresh" && !!proof.currentRef && !!proof.authorizedProjection && digestSfValue(proof.ref) === digestSfValue(original) && digestSfValue(proof.currentRef) === digestSfValue(current) && await input.host.revalidate(call)
+    },
     documentProof: createSfSourceContinuityProof({ host: input.host, readOriginal, readCurrent: document }),
     plannerProof: createSfSourceContinuityProof({ host: input.host, readOriginal, readCurrent: planner }),
   })
@@ -247,5 +265,5 @@ export function createSfAtlasBusiness(input: {
   resolveAncestry = assembled.resolveAncestry
   const memory = createSfAtlasMemory({ state: input.state, cases: input.cases, authorizeCase: input.authorizeCase, host: input.host, evidence: context, proveContinuity: router.proveContinuity, scanner: createSfAtlasScanner({ scanners: input.scanner ? [input.scanner.spec] : [] }), scannerVersion: input.scanner?.version ?? "", now: input.now })
   const capabilities = createSfEvidenceCapabilities({ ...input.selections, context, memory, proveContinuity: router.proveContinuity, revalidate: input.host.revalidate, createReceipt: input.authority.receiptFor })
-  return { context, memory, capabilities }
+  return { context, memory, capabilities, proveContinuity: router.proveContinuity }
 }

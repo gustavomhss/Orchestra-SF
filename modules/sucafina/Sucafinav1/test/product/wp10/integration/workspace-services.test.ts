@@ -59,7 +59,7 @@ async function fixture() {
     return { commit: true, value: true }
   })
   if (initialized.status !== "ok") throw new Error("Workspace fixture could not initialize real C08 storage")
-  const business = createSfBusinessServices({ authority, persistence, proposalCoverageWrites, dashboardHostWrites })
+  const business = createSfBusinessServices({ authority, persistence, proposalCoverageWrites, dashboardHostWrites, caseSelectionWrites, threadHistoryWrites })
   const workspace = createSfWorkspaceServices({ authority, business, persistence, origin, mount, caseSelectionWrites, threadHistoryWrites })
   business.descriptors.push(...workspace.descriptors)
   actor.write = false
@@ -71,12 +71,14 @@ async function fixture() {
 test("real workspace descriptors survive Atlas initialization and a second initialization does not duplicate operations", async () => {
   const state = await fixture()
   try {
-    const expected = ["sf_work_list", "sf_question_prepare", "sf_answer_read", "sf_relation_read", "sf_handoff_prepare",
-      "sf_review_prepare", "sf_report_prepare", "sf_artifact_get", "sf_bi_view"]
+    const expected = ["sf_review_prepare", "sf_report_prepare", "sf_artifact_get", "sf_bi_view"]
+    expect(state.workspace.collaboration).toBe(state.business.collaboration)
+    expect(state.business.collaboration.capabilities.map((descriptor) => descriptor.id).toSorted()).toEqual([
+      "sf_work_list", "sf_question_prepare", "sf_answer_read", "sf_relation_read", "sf_handoff_prepare"].toSorted())
     expect(state.workspace.descriptors.map((descriptor) => descriptor.id).toSorted()).toEqual(expected.toSorted())
     const mounted = [...state.business.descriptors]
     for (const descriptor of state.workspace.descriptors) expect(mounted.find((entry) => entry.id === descriptor.id)).toBe(descriptor)
-    const atlas = ["sf_context_get", "sf_knowledge_search", "sf_evidence_get", "sf_decision_recall", "sf_freshness_check"]
+    const atlas = ["sf_context_get", "sf_source_get", "sf_evidence_get", "sf_decision_recall", "sf_freshness_check"]
     const versions = { boundaryVersion: "workspace-test-v1", schemaVersion: "a".repeat(64), manifestVersion: "b".repeat(64), skillVersion: "c".repeat(64) }
     // An absent scanner still composes fail-closed descriptors; this asserts no scanner availability or native execution.
     state.business.initializeAtlas(undefined, versions)

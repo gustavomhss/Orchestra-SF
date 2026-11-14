@@ -3603,7 +3603,7 @@
     }
   ],
   "wp10Deltas": {
-    "parent": "43e01fce03a7bb2de3f42370e02ebc294eeda2fb",
+    "parent": "87f7317d5f983adb255a5707b65d6f07bfa5a0d4",
     "status": "CANDIDATE_AWAITING_HOSTED_CI_AND_INDEPENDENT_REVIEWS",
     "ownFiles": [
       {
@@ -3624,7 +3624,7 @@
       },
       {
         "path": "apps/cli/src/sucafina-product/business-services.ts",
-        "blobSha": "e8e9fb1a5eea0e5af05519ad92c220ba000d635d"
+        "blobSha": "8e741f7eb850921e67b223e0987234c017bcea83"
       },
       {
         "path": "apps/cli/src/sucafina-product/contribution.ts",
@@ -3636,7 +3636,7 @@
       },
       {
         "path": "apps/cli/src/sucafina-product/host-context.ts",
-        "blobSha": "c02776411a3eafe6070b088ed284575071be9e0c"
+        "blobSha": "1e7461bf59cc86dd75af01160738d4ac9b6ccef7"
       },
       {
         "path": "apps/cli/src/sucafina-product/input-producer-bi.ts",
@@ -3652,19 +3652,19 @@
       },
       {
         "path": "apps/cli/src/sucafina-product/scenario-operation-access.ts",
-        "blobSha": "d562279c102ae9ca5adf3b01b2814583823c13fa"
+        "blobSha": "35388df7fa1db13d0c1dc2ebd404fc442b7757bb"
       },
       {
         "path": "apps/cli/src/sucafina-product/workspace-services.ts",
-        "blobSha": "3eac6bdde960b020e536f56615dcf2bf20cc55c2"
+        "blobSha": "5e3dadd39c4f7b4bcc5d4fa9f91bec1e25c64351"
       },
       {
         "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
-        "blobSha": "8fee9609d7446202d7d2513303c107e605a2df6f"
+        "blobSha": "a29d4d90d7bff63a79319aba8c8588af7373e0bf"
       },
       {
         "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
-        "blobSha": "ab1111745c340d35d4edbf8cafb9b6486cf3dd7c"
+        "blobSha": "18eb9d1cfb4f98bbbcdf3e499368f1e6b2d0c8ed"
       },
       {
         "path": "modules/sucafina/Sucafinav1/product/host-binding/sf-mcp-bridge.ts",
@@ -3688,7 +3688,7 @@
       },
       {
         "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
-        "blobSha": "b56cb0d8379bca9e6eb9e596c276cb159ab7a524"
+        "blobSha": "f14af50dac3f4a8dda7e5428c3b2acab766d8b1a"
       },
       {
         "path": "modules/sucafina/Sucafinav1/product/integration/source-inventory.ts",
@@ -3724,7 +3724,7 @@
       },
       {
         "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/workspace-services.test.ts",
-        "blobSha": "4b590374d9d3a30abe7443b17da320c1f109e9c2"
+        "blobSha": "56c2353cc1f6851c3016327376040ff901b8e868"
       }
     ],
     "publishedSupport": [
@@ -3783,6 +3783,21 @@
         "owner": "WP12",
         "pin": "574841e2409a9523000c4c1976c81804c9a86fde",
         "mode": "WP10-owned CLI producer pairs, corrected schema documentRef and syntax; producer implementations remain published inputs"
+      },
+      {
+        "owner": "WP04",
+        "pin": "dae18b4f43f0daecf46264e876810025684a919d",
+        "paths": [
+          "apps/cli/src/sucafina-product/business-services.ts",
+          "apps/cli/src/sucafina-product/host-context.ts",
+          "modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
+        ],
+        "sourceBlobs": [
+          "3faa29c858ba97b2b98fc270256500132a1f29cc",
+          "e32bd0f414b254c77c8fe49a3ce40aadfc5f339c",
+          "807f346d6a4dce8313e09464223bd6636acb3bdc"
+        ],
+        "mode": "WP10-owned integration of published C06 observer, queue, dossier, C12 HTTP/receipt authority and historical evidence; single collaboration instance and existing WP10 fences retained"
       }
     ]
   },
@@ -3797,6 +3812,37 @@
       "run": 43538139091,
       "conclusion": "failure",
       "note": "Foreign WP13 syntax and CLI semantic diagnostics preserved; fixes in this candidate require fresh hosted evidence."
+    },
+    {
+      "product": "43e01fce03a7bb2de3f42370e02ebc294eeda2fb",
+      "run": 43538139091,
+      "conclusion": "failure"
+    },
+    {
+      "product": "87f7317d5f983adb255a5707b65d6f07bfa5a0d4",
+      "run": 43538974251,
+      "conclusion": "failure"
+    },
+    {
+      "product": "87f7317d5f983adb255a5707b65d6f07bfa5a0d4",
+      "run": 43538969495,
+      "conclusion": "failure",
+      "pass": 123,
+      "fail": 7
+    },
+    {
+      "product": "87f7317d5f983adb255a5707b65d6f07bfa5a0d4",
+      "run": 43539408225,
+      "conclusion": "success",
+      "pass": 3,
+      "fail": 0
+    },
+    {
+      "product": "87f7317d5f983adb255a5707b65d6f07bfa5a0d4",
+      "run": 43539741023,
+      "conclusion": "failure",
+      "pass": 8,
+      "fail": 1
     }
   ]
 }

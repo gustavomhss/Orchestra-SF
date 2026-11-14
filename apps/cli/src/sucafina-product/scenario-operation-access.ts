@@ -1,5 +1,5 @@
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
-import type { BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
+import type { BusinessContextService, BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
 import type { SourceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
 import type { DecisionCase } from "../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts"
 import type { DomainPortHost, PlannerPort, PlannerSourceHost, PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
@@ -14,6 +14,7 @@ export function createSfScenarioOperationAccess(input: {
   planner: PlannerPort
   scenarioInputs: PlannerScenarioInputs
   readSourceFences: (call: TrustedDomainContext) => Promise<unknown | undefined>
+  resolveProcurementEvidence: BusinessContextService["resolve"]
   externalOperation: (request: { caseRef: { id: string; incarnation: string; version: number }; draftRef: string; operation: ScenarioOperation }, call: TrustedDomainContext) => Promise<PortResult<{ operationDigest: string; sourceRefs: readonly BusinessEvidenceRef[] }>>
 }) {
   return async (value: DecisionCase, call: TrustedDomainContext): Promise<boolean> => {
@@ -35,6 +36,23 @@ export function createSfScenarioOperationAccess(input: {
           external.value.sourceRefs.some((ref) => !refs.some((allowed) => digestSfValue(allowed) === digestSfValue(ref)))) return false
       }
       if (!domain.length) continue
+      const procurementBase = refs.filter((ref) => ref.kind === "record" && ref.target.surface === "procurement" && ref.target.recordType === "procurement-request" && ref.refId === item.scenario.baseRef)
+      if (procurementBase.length) {
+        const selectedRefs = [procurementBase[0]!, ...domain.flatMap((operation) => refs.filter((ref) => ref.kind === "record" && ref.target.surface === "procurement" && ref.target.recordType === "procurement-request" && ref.refId === operation.targetRef))]
+        const unique = [...new Map(selectedRefs.map((ref) => [ref.refDigest, ref])).values()]
+        if (domain.some((operation) => operation.kind !== "replace" || operation.replacementRef !== undefined || typeof operation.amount !== "number" || !Number.isFinite(operation.amount) || operation.amount < 0 || operation.currency !== item.result.currency || digestSfValue(operation.period) !== digestSfValue(item.result.horizon) ||
+          !unique.some((ref) => ref.refId === operation.targetRef))) return false
+        const read = () => Promise.all(unique.map((ref) => input.resolveProcurementEvidence(ref, call)))
+        const first = await read()
+        if (first.some((result, index) => (result.state !== "fresh" && result.state !== "historical") || !result.authorizedProjection || !result.currentRef ||
+          digestSfValue(result.ref) !== digestSfValue(unique[index]) || result.accessRevision !== call.binding.accessRevision ||
+          !("context" in result.authorizedProjection) || result.authorizedProjection.context.currency !== item.result.currency ||
+          digestSfValue(result.authorizedProjection.context.period) !== digestSfValue(item.result.horizon))) return false
+        const second = await read()
+        const material = (results: typeof first) => results.map(({ checkedAt: _at, ...value }) => value)
+        if (digestSfValue(material(first)) !== digestSfValue(material(second)) || !await input.host.revalidate(call)) return false
+        continue
+      }
       const source = await input.sources.resolveForecastSource(item.scenario.baseRef, call)
       if (source.status !== "ok" || !refs.some((ref) => digestSfValue(ref) === digestSfValue(source.value.evidence))) return false
       const current = await input.planner.compareForecast({ baseRef: item.scenario.baseRef, candidateRef: item.scenario.baseRef, period: item.result.horizon, currency: item.result.currency }, call)

@@ -6,7 +6,6 @@ import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/c
 import { object } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
 import type { createSfProductAuthority } from "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
 import { projectSfSourceScope } from "../../../../modules/sucafina/Sucafinav1/product/integration/source-projections.ts"
-import { createCollaborationHost } from "../../../../modules/sucafina/Sucafinav1/product/collaboration/host.ts"
 import { createCollaborationHttp } from "../../../../modules/sucafina/Sucafinav1/product/collaboration/http.ts"
 import { createDashboardAgendaSelector } from "../../../../modules/sucafina/Sucafinav1/product/dashboard/agenda.ts"
 import { createReviewApplication } from "../../../../modules/sucafina/Sucafinav1/product/reviews/application.ts"
@@ -32,18 +31,7 @@ export function createSfWorkspaceServices(input: {
 }) {
   const { authority, business } = input
   const host = authority.host
-  const collaboration = createCollaborationHost({
-    host, state: authority.state, creationTarget: authority.creationTarget, scopedSources: input.persistence,
-    evidence: business.context, procurement: business.procurement, collections: business.registry, cases: business.cases,
-    authority: authority.authority, human: authority.human, caseSelectionWrites: input.caseSelectionWrites,
-    threadHistoryWrites: input.threadHistoryWrites, readQuestionContribution: input.readContribution, workCaseAuthority: business.authorizeCase,
-    requiredAuthority: {
-      sf_work_list: ["threads:read", "relations:read", "confirmations:read"],
-      sf_question_prepare: ["threads:read", "cases:read"],
-      sf_answer_read: ["threads:read"], sf_relation_read: ["relations:read"], sf_handoff_prepare: ["threads:read", "relations:read"],
-    },
-    createId: randomUUID, now: () => new Date().toISOString(),
-  })
+  const collaboration = business.collaboration
   const collaborationHttp = createCollaborationHttp({
     origin: input.origin, mount: `${input.mount}/dashboard`, host: collaboration, human: authority.human,
     admitRead: async (request, operation, payload) => {
@@ -145,6 +133,6 @@ export function createSfWorkspaceServices(input: {
     },
     ...(input.readContribution ? { contributions: { contributions: input.readContribution, results: business.results } } : {}),
   })
-  return { collaboration, reviews, bi, descriptors: [...collaboration.capabilities, ...reviews.descriptors, bi.descriptor],
+  return { collaboration, reviews, bi, descriptors: [...reviews.descriptors, bi.descriptor],
     http: async (request: Request, surface: string) => await collaborationHttp(request) ?? await reviews.http(request, surface) }
 }

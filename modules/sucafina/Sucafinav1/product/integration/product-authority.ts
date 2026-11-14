@@ -61,6 +61,7 @@ export function createSfProductAuthority(input: {
   threadHistoryWrites?: WeakSet<object>
   dashboardHostWrites?: WeakSet<object>
   procurementEvidenceWrites?: WeakSet<object>
+  authorizePreparedTarget?: (request: Request, snapshot: Snapshot, targetRef: string, authority: SfStateAuthority) => Promise<{ incarnation: string } | undefined>
   authorizeDocument: (request: Request, snapshot: Snapshot, assetId: string, principal: string, authority: SfStateAuthority) => Promise<{ incarnation: string } | undefined>
 }) {
   const grants = structuredClone(input.grants)
@@ -159,6 +160,10 @@ export function createSfProductAuthority(input: {
           })
         })
         if (targets.length === 1) return targets[0]
+      }
+      if (namespace === "receipts" && actor.canWrite && command.domainSurface === "procurement" && input.authorizePreparedTarget) {
+        const target = await input.authorizePreparedTarget(request, snapshot, targetRef, { principalRef: actor.principalRef, accessRevision: actor.accessRevision, policyVersion: actor.policyVersion })
+        return target?.incarnation === command.targetIncarnation ? target : undefined
       }
       if (namespace === "documents") return input.authorizeDocument(request, snapshot, targetRef, actor.principalRef, { principalRef: actor.principalRef, accessRevision: actor.accessRevision, policyVersion: actor.policyVersion })
       return undefined
