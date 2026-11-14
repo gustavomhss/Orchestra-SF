@@ -32,7 +32,7 @@ import { createResidentAiBundle } from "../../../../product/ai/resident.ts"
 import { createChoiceSnapshot } from "../../../../product/decisions/choice.ts"
 import { digestSfContribution, digestSfEvidenceRef, digestSfValue } from "../../../../product/contracts/canonical.ts"
 import type { ContributionEnvelope } from "../../../../product/contracts/resident-ai.ts"
-import type { SfNativeRunRecord } from "../../../../product/contracts/state.ts"
+import type { SfNativeRunRecord, SfProductState, SfStateAuthority, SfStateNamespace } from "../../../../product/contracts/state.ts"
 import type { TrustedDomainContext } from "../../../../product/contracts/sf-execution.ts"
 import { createSfRunStore } from "../../../../product/ai/run-store.ts"
 import { sfRunFixture } from "../../wp12/run-fixture.ts"
@@ -61,6 +61,27 @@ test("historical decision recall binds original/current evidence and rejects cha
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-historical-recall-"))
   await chmod(directory, 0o700)
   const driver = await openLocalStore(path.join(directory, "store"))
+  const transactionAll = driver.transactionAll
+  if (!transactionAll) throw new Error("Real cross-surface store unavailable")
+  const counters = { persistenceCalls: 0, c08Reads: 0, caseReads: 0, caseFences: 0, atlasCanonicalReads: 0, atlasCanonicalCompleted: 0 }
+  const measuredDriver: typeof driver = { ...driver,
+    transaction: (surface, work, options) => {
+      counters.persistenceCalls += 1
+      return driver.transaction(surface, work, options)
+    },
+    transactionAll: (work, options) => {
+      counters.persistenceCalls += 1
+      return transactionAll(work, options)
+    },
+  }
+  const measure = <Value>(label: string, work: () => Promise<Value>) => deadline.phase(label, async () => {
+    const before = { ...counters }
+    try { return await work() }
+    finally { console.info("SF_MEMORY_READ_COUNTS", JSON.stringify({ phase: label,
+      ...Object.fromEntries(Object.entries(counters).map(([key, value]) => [key, value - before[key as keyof typeof before]])) })) }
+  })
+  const interleave: { after?: { completed: number; remaining: number; work: () => Promise<void> }; observe?: { completed: number; fences: number } } = {}
+  const clock = { at }
   let business: ReturnType<typeof createSfBusinessServices> | undefined
   deadline.own(() => rm(directory, { recursive: true, force: true }))
   deadline.own(() => driver.dispose())
@@ -74,8 +95,8 @@ test("historical decision recall binds original/current evidence and rejects cha
       { extendEnv: true, stdin: "ignore" }))).pipe(Effect.provide(LayerNode.compile(AppProcess.node))), { signal: deadline.signal }))
     const version = scanVersion.stdout.toString("utf8").trim()
     if (scanVersion.exitCode !== 0 || !version) throw new Error("Atlas scanner version unavailable")
-    const persistence = { ...driver, ...createSfSourcePersistence({ persistence: driver, createId: randomUUID,
-      enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(() => at) }) }
+    const persistence = { ...measuredDriver, ...createSfSourcePersistence({ persistence: measuredDriver, createId: randomUUID,
+      enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(() => clock.at) }) }
     for (const surface of ["dashboard", "planner", "procurement"] as const) await persistence.initializeSources(surface)
     await persistence.transaction("procurement", async (snapshot) => {
       snapshot.data.store = { requests: { "PR-1": { request: { number: "PR-1", createdBy: "alice", status: "draft",
@@ -95,17 +116,42 @@ test("historical decision recall binds original/current evidence and rejects cha
         operations: ["sf_work_list", "sf_request_read", "sf_case_read"], humanActions: ["decisions.prepare-changes", "analysis.prepare", "analysis.start", "analysis.cancel", "analysis.read"] }],
       authenticate: async (value, selection) => access.allowed && value.headers.get("authorization") === "alice" && selection
         ? { id: "alice", canWrite: true, roles: [{ surface: selection.surface, role: selection.surface === "procurement" ? "requester" : "admin" }] } : null,
-      environment: async () => { deadline.check(); return { at, id: randomUUID, directory: [{ id: "alice", name: "Alice" }] } },
+      environment: async () => { deadline.check(); return { at: clock.at, id: randomUUID, directory: [{ id: "alice", name: "Alice" }] } },
       commandIdentity: async (value, operation, digest) => digestSfValue({ key: value.headers.get("idempotency-key"), operation, digest }),
       now: Date.now, createId: randomUUID, inspectSession: async () => undefined, verifySelection: async () => false,
       verifySkillReceipt: async () => false, providerGeneration: async () => undefined, authorizeDocument: async () => undefined,
       procurementEvidenceWrites, proposalCoverageWrites })
+    const readState = authority.state.read
+    authority.state.read = async <Value>(source: Request, namespace: SfStateNamespace,
+      read: (state: Readonly<SfProductState>, actor: SfStateAuthority) => Value | Promise<Value>) => {
+      counters.c08Reads += 1
+      const result = await readState(source, namespace, read)
+      if (result.status === "ok" && object(result.value).kind === "sf-memory-case-fence") {
+        counters.caseFences += 1
+        if (interleave.observe && counters.atlasCanonicalCompleted > interleave.observe.completed) interleave.observe.fences += 1
+        const action = interleave.after
+        if (action && counters.atlasCanonicalCompleted > action.completed && --action.remaining === 0) {
+          interleave.after = undefined
+          await action.work()
+        }
+      }
+      return result
+    }
     business = createSfBusinessServices({ authority, persistence, procurementEvidenceWrites, proposalCoverageWrites })
     const activeBusiness = business
     const aiRoot = path.resolve(import.meta.dir, "../../../../product/ai")
     const bundle = await createResidentAiBundle({ root: aiRoot, manifestPath: path.join(aiRoot, "manifests/resident.json") })
     const atlas = activeBusiness.initializeAtlas({ spec, version }, { boundaryVersion: atlasPackage.version, schemaVersion: contractFreeze.canonicalSha256,
       manifestVersion: bundle.manifestDigest, skillVersion: digestSfValue(bundle.skills.map((skill) => ({ id: skill.id, version: skill.version, sourceDigest: skill.sourceDigest }))) })
+    const readCase = activeBusiness.cases.read
+    activeBusiness.cases.read = async (value, call) => { counters.caseReads += 1; return readCase(value, call) }
+    const readMemory = atlas.memory.recall
+    atlas.memory.recall = async (value, call) => {
+      counters.atlasCanonicalReads += 1
+      const result = await readMemory(value, call)
+      if (result.status === "ok") counters.atlasCanonicalCompleted += 1
+      return result
+    }
     const selectionPayload = { purpose: "work-selection", period }
     const selected = await authority.ui.admit(request(), "sf_work_list", digestSfValue(selectionPayload))
     if (selected.status !== "ok") throw new Error("Human procurement period unavailable")
@@ -187,7 +233,7 @@ test("historical decision recall binds original/current evidence and rejects cha
     if (admitted.status !== "ok") throw new Error(admitted.reason)
     const call = admitted.value
     try {
-      const source = await deadline.phase("memory.resolve-original", () => activeBusiness.context.resolve(original, call))
+      const source = await measure("memory.resolve-original", () => activeBusiness.context.resolve(original, call))
       expect(source.state).toBe("historical")
       expect(source.ref).toEqual(original)
       expect(source.currentRef?.refDigest).not.toBe(original.refDigest)
@@ -195,10 +241,10 @@ test("historical decision recall binds original/current evidence and rejects cha
       const dependencies = { cases: activeBusiness.cases, planner: activeBusiness.planner, procurement: activeBusiness.procurement,
         context: activeBusiness.context, host: authority.host, caseRecall: activeBusiness.caseRecall }
       const producer = createSfMemoryInputProducer(dependencies)
-      expect(await deadline.phase("memory.prepare", () => producer.prepare(value, analysis, call))).toEqual({ status: "ok", value })
+      expect(await measure("memory.prepare", () => producer.prepare(value, analysis, call))).toEqual({ status: "ok", value })
       const readers = createSfAnalysisSelectionReaders({ authority, business: activeBusiness })
       const verifier = createSfDecisionMemoryVerifier({ ...dependencies, readRecallSelection: readers.recallSelection(value) })
-      const verified = await deadline.phase("memory.verify", () => verifier.verify(value, analysis, call))
+      const verified = await measure("memory.verify", () => verifier.verify(value, analysis, call))
       if (verified.status !== "ok") throw new Error(verified.reason)
       const proof = verified.value
       expect(sfAnalysisSourcesAuthorized(proof, analysis, call)).toBe(true)
@@ -223,9 +269,96 @@ test("historical decision recall binds original/current evidence and rejects cha
       // The canonical decoder checks this structural fixture; only the payload verifier runs.
       // Its explicitly unexecuted metadata confers no publication authority.
       const output = verifierOutputFixture(analysis, { kind: "CaseRecall", state: "ready", payload: prompt.result, evidenceRefs: proof.sources.map((item) => item.ref) })
-      expect(await deadline.phase("memory.accept-output", () => proof.acceptsOutput(output, call))).toEqual({ status: "ok", value: true })
-      const excluded = await activeBusiness.caseRecall({ caseRef, limit: 50, scope: { query: value.query, recallScope: { ...value.recallScope, includeHistorical: false } } }, call)
+      expect(await measure("memory.accept-output", () => proof.acceptsOutput(output, call))).toEqual({ status: "ok", value: true })
+      const recallInput = { caseRef, limit: 50, scope: { query: value.query, recallScope: { ...value.recallScope, includeHistorical: false } } }
+      let releaseDetached = () => {}
+      const detachedGate = new Promise<void>((resolve) => { releaseDetached = resolve })
+      let detachedRead: ReturnType<typeof activeBusiness.cases.read> | undefined
+      let overlapping = false
+      const beforeRecall = { ...counters }
+      const finalFence = { completed: counters.atlasCanonicalCompleted, fences: 0 }
+      interleave.observe = finalFence
+      interleave.after = { completed: counters.atlasCanonicalCompleted, remaining: 2, work: async () => {
+        // A second invocation with the exact same live call cannot borrow the
+        // first invocation's completed case or Atlas proof.
+        expect((await activeBusiness.caseRecall(recallInput, call)).status).toBe("unavailable")
+        overlapping = true
+        detachedRead = detachedGate.then(() => activeBusiness.cases.read({ caseRef: `case:${caseRef.id}:${caseRef.incarnation}` }, call))
+      } }
+      const excluded = await measure("memory.exclude-history-and-isolate", () => activeBusiness.caseRecall(recallInput, call))
       expect(excluded).toMatchObject({ status: "ok", matches: [] })
+      expect(overlapping).toBe(true)
+      expect(counters.atlasCanonicalReads - beforeRecall.atlasCanonicalReads).toBe(1)
+      expect(counters.caseReads - beforeRecall.caseReads).toBeGreaterThan(2)
+      expect(counters.caseFences - beforeRecall.caseFences).toBeGreaterThan(2)
+      interleave.observe = undefined
+      expect(finalFence.fences).toBeGreaterThan(2)
+      releaseDetached()
+      expect(await detachedRead).toEqual({ status: "unavailable", reason: "memory-case-proof-changed" })
+
+      // All races start after a complete canonical Atlas read has succeeded and
+      // the next protected read has started to reuse it. Source/capture writes
+      // use the real store; the caller's Request remains live throughout.
+      const sameRequest = authority.host.requestFor(call)!
+      const probe = async (name: string, mutate: (probeCall: TrustedDomainContext) => Promise<void>, remaining = 2) => {
+        const admitted = await authority.human.admit(sameRequest, "analysis.prepare", { request: analysis, selection: value })
+        if (admitted.status !== "ok") throw new Error(admitted.reason)
+        let changed = false
+        interleave.after = { completed: counters.atlasCanonicalCompleted, remaining, work: async () => {
+          expect(authority.host.requestFor(admitted.value)).toBe(sameRequest)
+          expect(sameRequest.signal.aborted).toBe(false)
+          await mutate(admitted.value)
+          changed = true
+        } }
+        try {
+          expect((await measure(`memory.fence-${name}`, () => activeBusiness.caseRecall(recallInput, admitted.value))).status).toBe("unavailable")
+          expect(changed).toBe(true)
+        } finally { interleave.after = undefined; authority.human.finish(admitted.value) }
+      }
+      await probe("source", async () => edit(151))
+      await edit(150)
+      let restoreCapture: (() => Promise<void>) | undefined
+      try {
+        await probe("capture", async () => {
+          const saved = await persistence.transaction("dashboard", async (snapshot) => {
+            const partitions = Object.values(object(object(snapshot.data.__sfProductV1).atlas))
+            const partition = partitions.find((item) => object(object(item).originals)[original.refDigest])
+            if (!partition) throw new Error("Canonical original capture missing")
+            const originals = object(object(partition).originals)
+            const preserved = structuredClone(originals[original.refDigest])
+            object(originals[original.refDigest]).projection = { damaged: true }
+            return { commit: true, value: preserved }
+          })
+          restoreCapture = async () => { await persistence.transaction("dashboard", async (snapshot) => {
+            const partitions = Object.values(object(object(snapshot.data.__sfProductV1).atlas))
+            const partition = partitions.find((item) => object(object(item).originals)[original.refDigest])
+            if (!partition) throw new Error("Fixture capture restoration unavailable")
+            object(object(partition).originals)[original.refDigest] = saved
+            return { commit: true, value: undefined }
+          }) }
+        })
+      } finally { await restoreCapture?.() }
+      try { await probe("principal", async () => { access.allowed = false }) }
+      finally { access.allowed = true }
+      try { await probe("clock", async () => { clock.at = "2026-11-15T00:00:00Z" }) }
+      finally { clock.at = at }
+      await probe("lease", async (probeCall) => { authority.human.finish(probeCall) })
+      const authorization = sameRequest.headers.get("authorization")!
+      try {
+        // Calibrate from the positive path, then replace credentials after its
+        // final protected read. Request identity and a still-live lease alone
+        // cannot detect this last-await change; the synchronous header pin does.
+        await probe("final-request-headers", async () => { sameRequest.headers.set("authorization", "replacement-principal") }, finalFence.fences)
+      } finally { sameRequest.headers.set("authorization", authorization) }
+      // Failed proofs are discarded. A new invocation on the same Request must
+      // complete its own canonical Atlas read and may succeed after recovery.
+      const retry = await authority.human.admit(sameRequest, "analysis.prepare", { request: analysis, selection: value })
+      if (retry.status !== "ok") throw new Error(retry.reason)
+      const beforeRetry = counters.atlasCanonicalReads
+      try { expect(await measure("memory.same-request-new-proof", () => activeBusiness.caseRecall(recallInput, retry.value)))
+        .toMatchObject({ status: "ok", matches: [] }) }
+      finally { authority.human.finish(retry.value) }
+      expect(counters.atlasCanonicalReads - beforeRetry).toBe(1)
 
       // Only durable lifecycle metadata is seeded. No native admission, Session,
       // provider execution or skill-load observation is fabricated by this proof.
@@ -270,7 +403,7 @@ test("historical decision recall binds original/current evidence and rejects cha
         expect((await staleAccess.commit(staleRecord, staleCall, detached, fixtureOutput)).status).toBe("unavailable")
         const runs = staleAccess.wrapStore(createSfRunStore({ state: authority.state, requestFor: authority.host.requestFor, revalidate: authority.host.revalidate,
           preflight: staleAccess.preflight, revalidateForCommit: staleAccess.commit, now: () => at }))
-        expect((await deadline.phase("stale.preserve", () => runs.preserveStale(fixtureRun.runRef, "source-changed", fixtureOutput, staleCall))).status).toBe("ok")
+        expect((await measure("stale.preserve", () => runs.preserveStale(fixtureRun.runRef, "source-changed", fixtureOutput, staleCall))).status).toBe("ok")
         const preserved = await authority.state.read(staleRequest, "contributions", (stored) => ({ run: stored.nativeRuns?.[fixtureRun.runRef], output: stored.contributions[fixtureOutput.id] }))
         if (preserved.status !== "ok") throw new Error("Preserved lifecycle fixture unavailable")
         expect(preserved.value.run).toMatchObject({ state: "stale", version: 4, outputRef: fixtureOutput.id })

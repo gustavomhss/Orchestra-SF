@@ -82,25 +82,31 @@ test("an invocation confines real proof reuse to its UTC day and rejects revocat
     } } }
     const guarded = createSfAlternativeCallScope<BusinessEvidenceRef>({ authority: authorityAtClock, selectedCase: business.resolveCase,
       lockedSourceFences: business.lockedSourceFences })
-    const revoked = await business.withCase(call, caseRef, {}, () => guarded.run(call, async () => {
-      expect((await guarded.read(call, produce)).status).toBe("ok")
-      const producedBefore = reads
-      armed = true
-      const pending = guarded.read(call, produce)
-      try {
-        await Promise.race([reached.promise, pending.then(() => { throw new Error("Proof reuse did not reach its final real environment read") })])
-        fixture.active.value = false
-        release.resolve()
-        expect(await pending).toEqual({ status: "stale", reason: "alternative-call-proof-changed" })
-        expect(reads).toBe(producedBefore)
-        expect(clockReads).toBe(4)
-        expect(await authority.host.revalidate(call)).toBe(false)
-        return { status: "ok", value: true }
-      } finally { release.resolve() }
-    }))
-    // Revocation tombstones the real UI admission; the invocation cannot
-    // return its earlier successful value after that authority is gone.
-    expect(revoked).toEqual({ status: "denied", reason: "alternative-call-authority-unavailable" })
+    const composedRevocation = await business.withCase(call, caseRef, {}, async () => {
+      const revoked = await guarded.run(call, async () => {
+        expect((await guarded.read(call, produce)).status).toBe("ok")
+        const producedBefore = reads
+        armed = true
+        const pending = guarded.read(call, produce)
+        try {
+          await Promise.race([reached.promise, pending.then(() => { throw new Error("Proof reuse did not reach its final real environment read") })])
+          fixture.active.value = false
+          release.resolve()
+          expect(await pending).toEqual({ status: "stale", reason: "alternative-call-proof-changed" })
+          expect(reads).toBe(producedBefore)
+          expect(clockReads).toBe(4)
+          expect(await authority.host.revalidate(call)).toBe(false)
+          return { status: "ok", value: true }
+        } finally { release.resolve() }
+      })
+      // Revocation tombstones the real UI admission; the invocation cannot
+      // return its earlier successful value after that authority is gone.
+      expect(revoked).toEqual({ status: "denied", reason: "alternative-call-authority-unavailable" })
+      return revoked
+    })
+    // The enclosing case scope independently revalidates that same lease at
+    // egress. Its denial must not hide a successful inner Alternative result.
+    expect(composedRevocation).toEqual({ status: "denied", reason: "case-selection-authority-changed" })
   } finally { authority.ui.finish(call); await fixture.dispose() }
 }, 120_000)
 

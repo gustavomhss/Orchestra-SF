@@ -49,6 +49,7 @@ import { createSfPlannerCalculationServices } from "./planner-calculation-servic
 import { createSfScenarioOperationAccess } from "./scenario-operation-access.ts"
 import { createSfRecordedPlannerOperationAccess } from "./recorded-planner-operation-access.ts"
 import { createSfPreparedApplicationEgress } from "./prepared-application-egress.ts"
+import { createSfMemoryCaseReadScope } from "./memory-case-read-scope.ts"
 import { createSfDecisionBaselineServices } from "./decision-baseline-services.ts"
 import { createCollaborationHost } from "../../../../modules/sucafina/Sucafinav1/product/collaboration/host.ts"
 import type { createSfContributionReader } from "../../../../modules/sucafina/Sucafinav1/product/ai/contribution-reader.ts"
@@ -129,7 +130,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   const evidence: { current?: BusinessContextService } = {}
   const recall: { current?: ReturnType<typeof createSfCaseRecall> } = {}
   const caseRecall: ReturnType<typeof createSfCaseRecall> = (request, call) => recall.current
-    ? recall.current(request, call) : Promise.resolve({ status: "unavailable" as const })
+    ? memoryCaseScope.recall(request, call, () => recall.current!(request, call)) : Promise.resolve({ status: "unavailable" as const })
   const decisionEvidence: { current?: ReturnType<typeof createProcurementDecisionHost> } = {}
   const procurementEvidence = {
     resolveEvidence: async (ref: BusinessEvidenceRef, call: TrustedDomainContext): Promise<BusinessEvidenceResolution | undefined> => {
@@ -156,11 +157,14 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   const operationIdentity = (call: TrustedDomainContext) => call.kind === "ui" ? input.authority.ui.operationIdentity(call) : input.authority.native.operationIdentity?.(call)
   const authorizeCase = async (value: DecisionCase, call: TrustedDomainContext) => value.participants.includes(call.binding.principalRef) && await host.revalidate(call)
   let scenarioOperationAccess: ReturnType<typeof createSfScenarioOperationAccess> | undefined
-  const cases = createDecisionCasePort({ state: input.authority.state, host, creationTarget: input.authority.creationTarget,
+  const canonicalCases = createDecisionCasePort({ state: input.authority.state, host, creationTarget: input.authority.creationTarget,
     operationIdentity,
     authorizeCase,
     verifyScenarioOperations: (value, call) => scenarioOperationAccess ? scenarioOperationAccess(value, call) : Promise.resolve(false),
     evidence: context, createId: randomUUID, now: () => new Date().toISOString() })
+  const memoryCaseScope = createSfMemoryCaseReadScope({ host, state: input.authority.state, read: canonicalCases.read,
+    selection: selectedPeriod, readerIdentity: () => evidence.current, lockedSourceFences })
+  const cases = { ...canonicalCases, read: memoryCaseScope.read }
   const plannerConfirmation: { current?: ReturnType<typeof createPlannerConfirmationObserver> } = {}
   const confirmationSourceFor = (scope: ConfirmationScope) => scope.sourceRef.surface === "dashboard" ? dashboardServices.observer
     : scope.sourceRef.surface === "planner" ? plannerConfirmation.current : scope.sourceRef.surface === "procurement" ? procurementConfirmation : undefined
@@ -499,7 +503,9 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
       } })
     originalMemory.current = atlas.memory
     evidence.current = atlas.context
-    recall.current = createSfCaseRecall({ host, cases, memory: atlas.memory, featuresForCase, runtimeVersions: versions,
+    recall.current = createSfCaseRecall({ host, cases,
+      memory: { ...atlas.memory, recall: (ref, call) => memoryCaseScope.memory(ref, call, () => atlas.memory.recall(ref, call)) },
+      featuresForCase, runtimeVersions: versions,
       proveContinuity: atlas.proveContinuity, rank: rankSfAtlasRecall,
       selectCandidates: async (_source, call, scope) => {
         const request = host.requestFor(call)

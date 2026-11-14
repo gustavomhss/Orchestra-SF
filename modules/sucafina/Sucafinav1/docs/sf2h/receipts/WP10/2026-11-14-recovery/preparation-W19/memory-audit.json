@@ -1,0 +1,273 @@
+{
+  "schema": "wp10.c17.w19-own-corrections.v1",
+  "role": "builder; not an independent reviewer",
+  "baseline": {
+    "productSha": "8b1cc71d8ab2484055a0d055c8487d4579476b9b",
+    "productTree": "6bace347fcd4deec2018185aff7ec152d79eaec5",
+    "parent": "2ec17b2c8204d5e953eec3186b7e236c0faaad47",
+    "branch": "astra-wp10",
+    "files": 47,
+    "localVerifiedFiles": 1142,
+    "treeBlobCount": 16120,
+    "effectivePins": 401,
+    "deletions": 0
+  },
+  "status": "frozen for W19 publication; hosted execution and independent review pending",
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "mode": "own-overlay",
+      "before": {
+        "bytes": 62972,
+        "blobSha": "97cde4dce2858f47b57b446c9c20bad77d367591",
+        "sha256": "217ce1f268ae119bd38292f9b6697c6f6c1bfb08e31be3e25a434c5cf91d6b48"
+      },
+      "bytes": 63494,
+      "blobSha": "e4080b5212f6320c4bbcbb707f67c1ebb37a9361",
+      "sha256": "413aeed33d704650580d2baf718c0f4f7587234c59c638324e3f13b4adbcaad3",
+      "diff": "agents/c17/W19-failures/diffs/business-services.ts.diff"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/memory-case-read-scope.ts",
+      "mode": "own-new",
+      "before": null,
+      "bytes": 16150,
+      "blobSha": "44c96c65ce974f1aee350516d2f342648322f9fa",
+      "sha256": "80c6676d93be7d9ddebde080a0c0f04b877eed230878f11543ad266f4549dd3f",
+      "diff": "agents/c17/W19-failures/diffs/memory-case-read-scope.ts.diff"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/analysis-run-context.test.ts",
+      "mode": "own-overlay",
+      "before": {
+        "bytes": 7743,
+        "blobSha": "ccc4405d5647eaca9b74da6579f2a040a1ac82e3",
+        "sha256": "fe3d3b0cfc706c6532923bac77e6db13ae915a02e77390704ae9ea7c951495a5"
+      },
+      "bytes": 8828,
+      "blobSha": "bcfd19a5b52f195d3dcf064e5df9131ef9990d6e",
+      "sha256": "d36712345f186d1c6c56644fb825cde82c4a96f6601ff0ddf91124c91109a665",
+      "diff": "agents/c17/W19-failures/diffs/analysis-run-context.test.ts.diff"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+      "mode": "own-overlay",
+      "before": {
+        "bytes": 34158,
+        "blobSha": "e652866feac07cad8957173792d136a631ecd036",
+        "sha256": "2e2c9b86ca41bc66e0c243a536b5888ccc16bcf8d017dfe8cb3c4a3532449a04"
+      },
+      "bytes": 42441,
+      "blobSha": "0e85858e26795c0dc48f58532bd47b4307f6f9f1",
+      "sha256": "ccd38405b99cdd9b4e8a7eb7785fe454d2287cf1cf66cff58815086a1c090c66",
+      "diff": "agents/c17/W19-failures/diffs/historical-memory.test.ts.diff"
+    }
+  ],
+  "referenceDependency": {
+    "path": "modules/sucafina/Sucafinav1/src/procurement-screen.ts",
+    "sourceCommit": "8b1cc71d8ab2484055a0d055c8487d4579476b9b",
+    "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/8b1cc71d8ab2484055a0d055c8487d4579476b9b/modules/sucafina/Sucafinav1/src/procurement-screen.ts",
+    "mode": "read-only-existing-base-dependency",
+    "fetchedVia": "GitHub MCP immutable blob URL",
+    "archive": "agents/c17/W19-failures/references/procurement-screen.W18.ts",
+    "bytes": 20940,
+    "blobSha": "510be5b2aeb82e740f342a5b649619116cb8ff1c",
+    "sha256": "6b05ad525a3f756ef6312656b2bd8d0f36746b7791480d5c52375c2c7a656908"
+  },
+  "staticChecks": {
+    "c12WithCaseEgressByteIdentical": true,
+    "calculationScopesAndCompositionByteIdentical": true,
+    "allListedProtectedFilesByteIdentical": true,
+    "historicalDeadline225000Unchanged": true,
+    "historicalBunLimit240000Unchanged": true,
+    "rankContinuityUnchanged": true,
+    "noLocalProductExecution": true
+  },
+  "protectedFileHashes": [
+    {
+      "path": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+      "byteIdenticalToW18": true,
+      "bytes": 18665,
+      "blobSha": "1c371738c80789cfc6d0d52d482c9c09a3757b0b",
+      "sha256": "712bff45bdf4263dc6ebca998dd5fee37f18c5e06f854b9aa97d700d9208e681"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/planner-calculation-history.ts",
+      "byteIdenticalToW18": true,
+      "bytes": 11862,
+      "blobSha": "9805676b50cb5d12f37a4a91350f01ba227a168f",
+      "sha256": "5b5822480441f8972ec4ced62d655c933504bcd200c7cb3882aa0170e8244694"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/recorded-planner-operation-access.ts",
+      "byteIdenticalToW18": true,
+      "bytes": 12291,
+      "blobSha": "38b832f73b0eaa615d5fdf2d7838b0e5635440fa",
+      "sha256": "9e23675cd288e9407f78787778abee30b3f01811823c0f714e99455f9899f8ea"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+      "byteIdenticalToW18": true,
+      "bytes": 10118,
+      "blobSha": "aa1be4cfb8f501b3fccddb269efce5567bcdd447",
+      "sha256": "9d59609b2a66ac9f0a6dab22e479398cffd6cf656687a1f215a949ec0d8f0290"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/prepared-application-egress.ts",
+      "byteIdenticalToW18": true,
+      "bytes": 1868,
+      "blobSha": "e4af87d2a1c5f9c72f86810db1cacc39fcb19faf",
+      "sha256": "8c2009995220001b82a423be035c651cb5bb62b5a7409d753107bddfa54f0e62"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/dashboard-decisions.ts",
+      "byteIdenticalToW18": true,
+      "bytes": 38305,
+      "blobSha": "3061f529e1417ba29f9976c3f132c1a08ead0742",
+      "sha256": "faa9602f7f7465e2748ac2fc0fe31a2ced07679a3522c4b4fea603e1dfff1726"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "byteIdenticalToW18": true,
+      "bytes": 46099,
+      "blobSha": "5cca27ce239c92a8e3c9f9f92f816f5224562904",
+      "sha256": "9791fd4c605693711a4508b3b496c0fb67a407c1009d734408659ed10664fefc"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/case-recall.ts",
+      "byteIdenticalToW18": true,
+      "bytes": 8123,
+      "blobSha": "fdc378d5f251511f66bb256b78240f472f1d566c",
+      "sha256": "c9004825a4da66cfe2af7b733478ccf6e9a303b5d765dae2427cec51b86ae9de"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+      "byteIdenticalToW18": true,
+      "bytes": 34119,
+      "blobSha": "91e8bc8f5d80f83b7756b4647c790cc5e5936d59",
+      "sha256": "62e0ab3ada8792c84b91c2e2b6ef9181fb9290292277485e7b18176090287a00"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-recall-scope.ts",
+      "byteIdenticalToW18": true,
+      "bytes": 13845,
+      "blobSha": "30697fcbeee6b7011cc7786a0a3bc64bd0d3449e",
+      "sha256": "ac95c12bb81b42f0186c1bafcd801b71e50aebe576791e844f4d7c849e25bb47"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "byteIdenticalToW18": true,
+      "bytes": 51133,
+      "blobSha": "8a1edca9f49c654ede0d2138df0ec8a724b2a228",
+      "sha256": "b8fb16aa4780e7b6338d6cff7d81c0c6d025c2b99663b57d616a7c58672a42d5"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-recorded-history.test.ts",
+      "byteIdenticalToW18": true,
+      "bytes": 16751,
+      "blobSha": "432ca1f9c72fbbb3d278a8cb687b9c65ddaadb0a",
+      "sha256": "c16da7312850a99961c982920d3c0527e281bea91e86fbd954d1838e581979ec"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/financial-composition-fixture.ts",
+      "byteIdenticalToW18": true,
+      "bytes": 5929,
+      "blobSha": "febb795303b8c4ada5fb6f39d6373667ee71dac1",
+      "sha256": "be6322af3235a0cfa4ab8c7c3f9d45f2e48d0146d560efca6ed6a5815418e15d"
+    }
+  ],
+  "observedW18": {
+    "runId": 43591262845,
+    "jobId": 132436280987,
+    "snapshotSha": "f84d2f41bb5755d350d524053c391fc8338e7bdd",
+    "conclusion": "failure",
+    "rawLogSha256": "68494c25cb7de5289f767b705f2435ad3f66efe06ecec2f8b9a5775ce7988765",
+    "details": "agents/c17/W19-failures/observed-W18.json"
+  },
+  "fixes": [
+    {
+      "id": "W19-C17-REENTRY-FIXTURE",
+      "cause": "The fixture removes current membership and then tries to restore it using the same case-target C08 authority. Current resolveTarget correctly denies the excluded actor.",
+      "change": "Keep legitimate case edits through C08; assert denied self-restoration and unchanged state; recover only this fixture through real raw persistence with explicit revision increments."
+    },
+    {
+      "id": "W19-C17-RECALL-MULTIPLICATION",
+      "cause": "Two full memory selections per prepare multiply CaseRecall current/candidate/features reads, two ranking passes and repeated Atlas reads. Each case projection resolves one Procurement record ten times across evidence and alternative/choice scenario checks. W18 memory.prepare reached 221553ms before the existing 225000ms cooperative deadline.",
+      "change": "A private ALS scope within one UI CaseRecall reuses only completed canonical case and Atlas proofs, bracketed and refreshed by real C08 full-state/source/actor/selection/environment/Request fences. All failures remain uncached; the canonical rank continuity callback is retained."
+    }
+  ],
+  "eligibility": {
+    "callKind": "ui only",
+    "sourceClosure": [
+      "sf-procurement individual procurement-request records",
+      "case-event evidence for the same case with eligible record closure"
+    ],
+    "fullAtlasClosureChecked": true,
+    "excluded": [
+      "native reuse",
+      "Planner or calculation closures",
+      "mixed domains",
+      "documents",
+      "receipt/prepared-change cases",
+      "case/scenario assumptions",
+      "questions",
+      "replacement selectors outside eligible record refs",
+      "approval stages with continuous ageDays"
+    ],
+    "canonicalFallbackForExcluded": true
+  },
+  "requestFence": [
+    "same Request object",
+    "synchronous method/URL/all headers digest",
+    "signal not aborted",
+    "same call/binding/selector digest",
+    "same private selection object and digest; real expiry",
+    "same active evidence reader object",
+    "current real human/domain lease"
+  ],
+  "stateFence": [
+    "whole SfProductState including Atlas originals/capture digests/outbox/preferences and cases",
+    "raw __sfProductV1 rechecked inside the held C08 transaction",
+    "all dashboard/planner/procurement source fences",
+    "real actor principal/accessRevision/policyVersion",
+    "real Procurement principal reauthenticated twice",
+    "current environment directory/bank-key identity and UTC day",
+    "continuous approval ages excluded from reuse"
+  ],
+  "counterproofsAdded": [
+    "actual excluded actor self-restoration is denied and writes nothing",
+    "one canonical Atlas read within a positive eligible recall",
+    "same-call overlapping recall cannot borrow a proof",
+    "detached descendant after scope closes cannot borrow a proof",
+    "actual source change after a completed canonical Atlas read",
+    "stored capture corruption after completed proof",
+    "real principal revocation with live Request",
+    "UTC-day change",
+    "real lease finish with live Request",
+    "authorization header replacement after calibrated final C08 read",
+    "fresh invocation on same Request recomputes canonical proof after failure recovery"
+  ],
+  "ciSelection": {
+    "changedTests": [
+      "Sucafinav1/test/product/wp10/integration/analysis-run-context.test.ts",
+      "Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts"
+    ],
+    "rootConfirmed": "A22 includes both changed files; B8 includes full C17 calculation/history/ancestry/persistence/case-scope/scenario-operation files; E CLI2 and hosted checks prepared by root.",
+    "metrics": "SF_MEMORY_READ_COUNTS reports persistence API invocations (including nested calls), C08 reads, case reads, real scoped fences, canonical Atlas calls and completed canonical Atlas calls per phase."
+  },
+  "pending": [
+    "Publish W19 product and record exact product/tree/snapshot SHA and run IDs.",
+    "Run the selected files and hosted checks; runtime behavior/performance and compile success are not established by this static package.",
+    "R1/R2/R3 independent review of the published SHA; builder audit is not acceptance.",
+    "Native execution/global epic remain unexecuted.",
+    "Whole-state equality is deliberately conservative: unrelated protected changes can make recall unavailable; unsupported closures keep canonical cost."
+  ],
+  "acceptance": {
+    "native": "unexecuted",
+    "global": "unexecuted",
+    "independentReview": false,
+    "localProductExecution": false,
+    "hostedW19Execution": "pending"
+  },
+  "frozen": true
+}

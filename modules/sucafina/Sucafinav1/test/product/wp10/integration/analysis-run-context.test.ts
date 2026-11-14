@@ -1,5 +1,6 @@
 import { expect, test } from "bun:test"
 import { digestSfValue } from "../../../../product/contracts/canonical.ts"
+import { object } from "../../../../runtime/contract.ts"
 import type { DecisionCase } from "../../../../product/contracts/decisions.ts"
 import type { TrustedDomainContext } from "../../../../product/contracts/sf-execution.ts"
 import { createSfAnalysisRunContext } from "../../../../../../../apps/cli/src/sucafina-product/analysis-run-context.ts"
@@ -60,10 +61,10 @@ test("Analysis reentry reaches current lifecycle metadata after case advancement
         state.cases[caseRef.id] = value
         return { commit: true, value: true }
       })
-      expect(saved.status).toBe("ok")
+      return saved
     }
     const advanced = { ...initial, version: 2, objective: "Legitimately edited case" }
-    await edit(advanced, "reentry-advance")
+    expect((await edit(advanced, "reentry-advance")).status).toBe("ok")
     expect(await deadline.phase("lifecycle.after-case-advance", () => withRunContext(runRef, async (call) => {
       // The reentry did not silently select version 2 for fresh domain operations.
       expect((await business.selectedCase(call)).status).toBe("unavailable")
@@ -90,9 +91,24 @@ test("Analysis reentry reaches current lifecycle metadata after case advancement
     expect(released).toEqual({ status: "denied", reason: "case-selection-authority-changed" })
 
     expect((await withRunContext("other-run", readLifecycle)).status).toBe("denied")
-    await edit({ ...advanced, version: 3, participants: [] }, "reentry-remove-member")
+    expect((await edit({ ...advanced, version: 3, participants: [] }, "reentry-remove-member")).status).toBe("ok")
     expect((await withRunContext(runRef, readLifecycle)).status).toBe("denied")
-    await edit({ ...advanced, version: 4 }, "reentry-restore-member")
+    const removed = await authority.state.read(request, "cases", (state) => digestSfValue(state))
+    expect(await edit({ ...advanced, version: 4 }, "reentry-self-restore-member"))
+      .toEqual({ status: "denied", reason: "target-access-unavailable" })
+    expect(await authority.state.read(request, "cases", (state) => digestSfValue(state))).toEqual(removed)
+    // The excluded actor cannot restore its own target authority. Reset only
+    // this fixture through the real source store, outside product admission.
+    await fixture.persistence.transaction("dashboard", async (snapshot) => {
+      const state = object(snapshot.data.__sfProductV1)
+      const cases = object(state.cases)
+      expect(cases[caseRef.id]).toEqual({ ...advanced, version: 3, participants: [] })
+      cases[caseRef.id] = { ...advanced, version: 4 }
+      state.revision = Number(state.revision) + 1
+      const versions = object(state.versions)
+      versions.cases = Number(versions.cases) + 1
+      return { commit: true, value: undefined }
+    })
     expect(await withRunContext(runRef, readLifecycle)).toEqual({ status: "ok", value: 4 })
     fixture.active.value = false
     expect((await withRunContext(runRef, readLifecycle)).status).toBe("denied")
@@ -109,7 +125,7 @@ test("Analysis reentry reaches current lifecycle metadata after case advancement
     entered = false
     expect((await abortContext(runRef, async () => { entered = true; return { status: "ok", value: true } })).status).toBe("denied")
     expect(entered).toBe(false)
-    await edit({ ...advanced, version: 5, incarnation: "replacement-incarnation" }, "reentry-replace")
+    expect((await edit({ ...advanced, version: 5, incarnation: "replacement-incarnation" }, "reentry-replace")).status).toBe("ok")
     expect((await withRunContext(runRef, readLifecycle)).status).toBe("denied")
     expect(replayContexts.has(last)).toBe(false)
     expect(authority.host.requestFor(last)).toBeUndefined()

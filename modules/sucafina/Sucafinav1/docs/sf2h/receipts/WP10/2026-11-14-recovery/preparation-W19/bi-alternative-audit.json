@@ -1,0 +1,74 @@
+{
+  "builder": "/root/ci_reconcile",
+  "baseProduct": "8b1cc71d8ab2484055a0d055c8487d4579476b9b",
+  "evidence": {
+    "runId": 43591262845,
+    "jobId": 132436280987,
+    "snapshotSha": "f84d2f41bb5755d350d524053c391fc8338e7bdd",
+    "conclusion": "failure",
+    "pass": 105,
+    "fail": 16,
+    "tests": 121,
+    "files": 22,
+    "seconds": 1052.03,
+    "logPath": "/workspace/scratch/301a7f2754f4/evidence/W18/test-A-job-132436280987.raw.txt",
+    "logSha256": "68494c25cb7de5289f767b705f2435ad3f66efe06ecec2f8b9a5775ce7988765"
+  },
+  "findings": [
+    {
+      "id": "W18-BI-SECOND-PROMOTION",
+      "observed": "All seven BI fixtures pass promotion.0, then promotion.1 at case version 2 returns HTTP503 and reason promotion-coverage-authority-unavailable before BI assertions.",
+      "failureCount": 7,
+      "causalClassification": "Static source mismatch, consistent with observed first-success/second-failure; the logged generic reason does not identify its internal branch.",
+      "cause": "Published baseline register collects refs starting with the selected source; the no-op Planner preserves that exact assessment. Published reassessment collects basis refs first. With fixture basis [v0,v1], baseline0 assessment order is [v0,v1] and baseline1 order is [v1,v0]. W18 own prepareNoop requires full equality with a reassessed proof using [v0,v1], so the second proof necessarily differs. Case version 2 is the sequence position, not a justification for relaxing CAS.",
+      "sourceLocations": [
+        "product/decisions/baseline-coverage.ts register refs and assessCostCoverage",
+        "product/planner/scenario-port.ts no-op assessment",
+        "product/decisions/cost-coverage.ts reassessScenarioCoverage refs and assessCostCoverage evaluatedSourceRefs",
+        "apps/cli/src/sucafina-product/portfolio-coverage.ts captureEntries/prepareNoop"
+      ],
+      "fix": "Only private no-op proof preparation supplies the real retained assessment ordering to the actual evidence readers. It first requires equal lengths, no duplicate exact refs and complete membership of every required ref. The reader authenticates all real references in that ordering. Full expected result equality, final verifySnapshot, identity, scope, classification and all domain/state fences remain strict. Public reassessed path remains canonical.",
+      "testStrengthening": "Both BI fixtures reopen and retain actual human baseline assessments, require their orders to differ, then require every promoted full costCoverage to equal the actual retained assessment with only the actual allocated alternative ID/version substituted. Existing HTTP200, empty operations/assumptions, annual inputs, conditioned totals and privacy assertions remain."
+    },
+    {
+      "id": "W18-ALTERNATIVE-OUTER-EGRESS",
+      "observed": "The final assertion expected denied/alternative-call-authority-unavailable but received denied/case-selection-authority-changed. Earlier clock-boundary assertions passed.",
+      "causalClassification": "Observed denial reason overridden by real enclosing case egress; no observed authority leak.",
+      "cause": "Root strengthened business.withCase final lease validation. It now independently denies after the Alternative scope has already denied, so the outer return cannot be used to assert the inner reason.",
+      "fix": "Keep the exact original Alternative denial assertion inside the real withCase callback, immediately after guarded.run. Return that result, then additionally require the enclosing withCase denial reason. No production scope or business code changed; neither guard can conceal a successful inner return."
+    }
+  ],
+  "preservation": {
+    "verifySnapshotByteExact": true,
+    "allExistingAssertionsAndTests": true,
+    "budgetsUnchanged": true,
+    "emptyOperationsAndAssumptionsUnchanged": true,
+    "annualInputsUnchanged": true,
+    "W19ReviewPathsByteExact": 3,
+    "noForeignEdits": true,
+    "noProductLocalExecution": true,
+    "noRemoteMutation": true
+  },
+  "hostedSelection": {
+    "A": [
+      "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-call-scope.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-case-access.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp10/integration/alternative-call-scope.test.ts"
+    ],
+    "D": [
+      "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-promotion.test.ts"
+    ],
+    "newFiles": 0,
+    "newTestCases": 0,
+    "wholeFilesOnly": true,
+    "reasonD": "Retain direct promotion/source/classification/authority commit counterproofs required by W18 adapter, now also affected by exact-order capture. No duplication beyond root existing A/D."
+  },
+  "pending": [
+    "Hosted typecheck and behavior on W19 exact product/snapshot",
+    "Both real BI promotions must complete and reach their consumers",
+    "Whole-file Alternative clock and final SQLite fence tests",
+    "Independent review of the successor; builder is not a reviewer"
+  ],
+  "productFrozen": true,
+  "timestampUtc": "2026-11-14T12:11:38.136494+00:00"
+}

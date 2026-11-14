@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test"
 import { digestSfValue } from "../../../../product/contracts/canonical.ts"
 import { RENEWAL_TRANSITION_CATEGORIES } from "../../../../product/contracts/decisions.ts"
-import type { DecisionCase } from "../../../../product/contracts/decisions.ts"
+import type { CostCoverageAssessment, DecisionCase } from "../../../../product/contracts/decisions.ts"
 import type { PortResult } from "../../../../product/contracts/ports.ts"
 import type { SfProductState } from "../../../../product/contracts/state.ts"
 import type { TrustedDomainContext } from "../../../../product/contracts/sf-execution.ts"
@@ -73,16 +73,23 @@ test("BI clears a real persisted case after participant revocation with the sess
       return { commit: true, value: true }
     })
     if (seeded.status !== "ok") throw new Error(`Empty BI case: ${JSON.stringify(seeded)}`)
-    const classifications: { coverageRef: string; version: number }[] = []
+    const classifications: { coverageRef: string; version: number; assessment: CostCoverageAssessment }[] = []
     for (const [index, source] of sources.entries()) {
       const coverage: BaselineCoverageRequest = { caseRef: initialRef, source, basis, expectedVersion: 0,
         entries: RENEWAL_TRANSITION_CATEGORIES.map((categoryId) => categoryId === "service"
           ? { categoryId, status: "included", componentRefs: componentIds[index]!, evidenceRefs: [source], scopeNote: "Human classifies license service; all other categories remain pending" }
           : { categoryId, status: "pending", reason: "Awaiting human evidence" }) }
       const human = ok(await authority.human.admit(fixture.request(`bi-coverage-${index}`), "decisions.coverage", coverage), "Admit human BI coverage")
-      try { classifications.push(ok(await deadline.phase(`coverage.${index}`, () => business.withCase(human, initialRef, {}, () => business.baselineCoverage.register(coverage, human))), "Register human BI coverage")) }
+      try {
+        const registered = ok(await deadline.phase(`coverage.${index}`, () => business.withCase(human, initialRef, {}, () => business.baselineCoverage.register(coverage, human))), "Register human BI coverage")
+        const preserved = ok(await deadline.phase(`coverage.read.${index}`, () => business.withCase(human, initialRef, {}, () =>
+          business.baselineCoverage.resolveForecastCoverage(registered.coverageRef, human))), "Reopen actual human BI assessment")
+        expect(preserved.coverageRef).toBe(registered.coverageRef)
+        classifications.push({ ...registered, assessment: preserved.assessment })
+      }
       finally { authority.human.finish(human) }
     }
+    expect(classifications[0]!.assessment.evaluatedSourceRefs).not.toEqual(classifications[1]!.assessment.evaluatedSourceRefs)
     const mutationHttp = portfolio.http({ origin: "https://example.test", mount: "/product" })
     const promote = async (index: number, caseRef: typeof initialRef) => {
       const payload = { caseRef, title: index ? "BI candidate" : "BI baseline", scenario: { baseRef: sources[index]!.refId, operations: [], assumptions: [] }, coverageRef: classifications[index]!.coverageRef }
@@ -101,10 +108,12 @@ test("BI clears a real persisted case after participant revocation with the sess
     if (snapshot.status !== "ok" || !snapshot.value) throw new Error("Promoted BI case unavailable")
     expect(snapshot.value.alternatives).toHaveLength(2)
     expect(snapshot.value.choices).toHaveLength(0)
-    for (const alternative of snapshot.value.alternatives) {
+    for (const [index, alternative] of snapshot.value.alternatives.entries()) {
       expect(alternative.scenario).toMatchObject({ operations: [], assumptions: [] })
       expect(alternative.result.costCoverage.alternativeId).toBe(alternative.id)
       expect(alternative.result.costCoverage.alternativeVersion).toBe(alternative.version)
+      expect(alternative.result.costCoverage).toEqual({ ...classifications[index]!.assessment,
+        alternativeId: alternative.id, alternativeVersion: alternative.version })
       expect(alternative.result).toMatchObject({ comparisonStatus: "conditioned", total: null, costCoverage: { coverageState: "pending" } })
       expect(alternative.result.horizon).toEqual(period)
       expect(alternative.result.costCoverage.entries.find((entry) => entry.categoryId === "service")?.status).toBe("included")

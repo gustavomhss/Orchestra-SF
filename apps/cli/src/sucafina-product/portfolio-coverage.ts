@@ -86,35 +86,43 @@ export function createSfPortfolioCoverage(input: {
     return values.length === refs.length && values.every((value, index) => value.state === "fresh" && !!value.currentRef && !!value.authorizedProjection &&
       value.accessRevision === call.binding.accessRevision && same(value.ref, refs[index]) && same(value.currentRef, value.ref)) && await host.revalidate(call) ? values : undefined
   }
+  const captureEntries = async (scenario: ScenarioResult, baseline: ScenarioResult["costCoverage"], call: TrustedDomainContext,
+    assessmentOrder?: readonly BusinessEvidenceRef[]): ReturnType<Evidence["entries"]> => {
+    const held = selections.get(call)
+    const run = execution.getStore()
+    if (!active || !held || held.source !== host.requestFor(call) || held.source.signal.aborted || held.binding !== binding(call) ||
+      run && (run.call !== call || !currentRun(run)) || !await host.revalidate(call)) return unavailable()
+    const before = await readState(held.value, call)
+    const sources = await business.readSourceFences(call)
+    const coverage = await business.plannerSources.resolveForecastCoverage(held.value.coverageRef, call)
+    const classification = await business.baselineCoverage.readClassification(held.value.scenario.baseRef, call)
+    if (!before || !sources || coverage.status !== "ok" || classification.status !== "ok" || !same(coverage.value.assessment, baseline) ||
+      !same(coverage.value.basis, classification.value.basis) || classification.value.source.refId !== held.value.scenario.baseRef ||
+      baseline.entries.some((entry) => entry.status === "not-applicable") || baseline.entries.some((entry) => entry.status === "included" &&
+        !classification.value.mappings.some((mapping) => same(mapping.entry, entry)))) return unavailable()
+    const entries: readonly CostCoverageEntry[] = structuredClone(baseline.entries)
+    for (const entry of entries) if (entry.status !== "pending") classifications.set(entry, classification.value)
+    const refs = refsFor(scenario, classification.value, entries)
+    // A no-op keeps the baseline producer's exact assessment bytes, including
+    // its source-first evidence order. Prove the complete one-to-one set
+    // before asking the actual readers for those same references in that order.
+    if (assessmentOrder && (assessmentOrder.length !== refs.length ||
+      assessmentOrder.some((ref, index) => assessmentOrder.findIndex((other) => same(other, ref)) !== index) ||
+      refs.some((ref) => !assessmentOrder.some((other) => same(other, ref))))) return unavailable()
+    const resolved = await fresh(assessmentOrder ?? refs, call)
+    if (!resolved) return unavailable()
+    const expected = await reassessScenarioCoverage({ scenario, basis: coverage.value.basis, baseline, entries,
+      resolveEvidence: async (wanted) => same(wanted, refs) ? resolved : [], supports: evidence.supports })
+    const after = await readState(held.value, call)
+    const latest = await business.readSourceFences(call)
+    if (!expected || before !== after || !same(sources, latest) || selections.get(call) !== held || held.binding !== binding(call) ||
+      held.source.signal.aborted || !await host.revalidate(call)) return unavailable()
+    proofs.set(call, { selection: held.value, source: held.source, binding: held.binding, state: before, sources, expected, basis: coverage.value.basis,
+      ...(run ? { run } : {}) })
+    return { status: "ok", value: entries }
+  }
   const evidence: Evidence = {
-    entries: async (scenario, baseline, call) => {
-      const held = selections.get(call)
-      const run = execution.getStore()
-      if (!active || !held || held.source !== host.requestFor(call) || held.source.signal.aborted || held.binding !== binding(call) ||
-        run && (run.call !== call || !currentRun(run)) || !await host.revalidate(call)) return unavailable()
-      const before = await readState(held.value, call)
-      const sources = await business.readSourceFences(call)
-      const coverage = await business.plannerSources.resolveForecastCoverage(held.value.coverageRef, call)
-      const classification = await business.baselineCoverage.readClassification(held.value.scenario.baseRef, call)
-      if (!before || !sources || coverage.status !== "ok" || classification.status !== "ok" || !same(coverage.value.assessment, baseline) ||
-        !same(coverage.value.basis, classification.value.basis) || classification.value.source.refId !== held.value.scenario.baseRef ||
-        baseline.entries.some((entry) => entry.status === "not-applicable") || baseline.entries.some((entry) => entry.status === "included" &&
-          !classification.value.mappings.some((mapping) => same(mapping.entry, entry)))) return unavailable()
-      const entries: readonly CostCoverageEntry[] = structuredClone(baseline.entries)
-      for (const entry of entries) if (entry.status !== "pending") classifications.set(entry, classification.value)
-      const refs = refsFor(scenario, classification.value, entries)
-      const resolved = await fresh(refs, call)
-      if (!resolved) return unavailable()
-      const expected = await reassessScenarioCoverage({ scenario, basis: coverage.value.basis, baseline, entries,
-        resolveEvidence: async (wanted) => same(wanted, refs) ? resolved : [], supports: evidence.supports })
-      const after = await readState(held.value, call)
-      const latest = await business.readSourceFences(call)
-      if (!expected || before !== after || !same(sources, latest) || selections.get(call) !== held || held.binding !== binding(call) ||
-        held.source.signal.aborted || !await host.revalidate(call)) return unavailable()
-      proofs.set(call, { selection: held.value, source: held.source, binding: held.binding, state: before, sources, expected, basis: coverage.value.basis,
-        ...(run ? { run } : {}) })
-      return { status: "ok", value: entries }
-    },
+    entries: (scenario, baseline, call) => captureEntries(scenario, baseline, call),
     resolve: async (refs, call) => {
       const proof = proofs.get(call)
       if (!active || !proof || proof.source !== host.requestFor(call) || proof.source.signal.aborted || proof.binding !== binding(call) ||
@@ -151,7 +159,7 @@ export function createSfPortfolioCoverage(input: {
     const attributed: ScenarioResult = result.value.comparisonStatus === "complete"
       ? { ...result.value, costCoverage: { ...result.value.costCoverage, alternativeId: identity.id, alternativeVersion: identity.version } }
       : { ...result.value, costCoverage: { ...result.value.costCoverage, alternativeId: identity.id, alternativeVersion: identity.version } }
-    const entries = await evidence.entries(attributed, coverage.value.assessment, call)
+    const entries = await captureEntries(attributed, coverage.value.assessment, call, coverage.value.assessment.evaluatedSourceRefs)
     if (entries.status !== "ok") return entries
     const proof = proofs.get(call)
     if (!currentRun(run) || !proof || !same(proof.expected, attributed) || !same(proof.basis, coverage.value.basis) ||

@@ -142,23 +142,37 @@ test("Chromium renders the real dossier commercial terms and next steps without 
     return await value.dossier.http(request, "procurement") ?? new Response("Not found", { status: 404 })
   } })
   const resources: { browser?: Browser; close?: () => Promise<void> } = {}
+  const started = performance.now()
+  let phase = "launch", closing = false
+  const browserEvents: { event: string; phase: string; closing: boolean; elapsedMs: number }[] = []
+  const observe = (event: string) => browserEvents.push({ event, phase, closing, elapsedMs: Math.round(performance.now() - started) })
+  const errors: string[] = []
   try {
     const before = await value.state.store.transaction("procurement", async (snapshot) => ({ commit: false, value: digestSfValue(snapshot.data.store) }))
     const browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"], timeout: 15_000 })
     resources.browser = browser
+    browser.on("disconnected", () => observe("browser-disconnected"))
+    phase = "capture-owner"
     resources.close = await captureChromiumCleanup(browser)
+    phase = "create-page"
     const context = await browser.newContext()
     const separator = value.state.cookie.indexOf("=")
     await context.addCookies([{ name: value.state.cookie.slice(0, separator), value: value.state.cookie.slice(separator + 1), url: server.url.origin }])
     const page = await context.newPage()
-    const errors: string[] = []
+    page.on("crash", () => observe("page-crash"))
+    page.on("close", () => observe("page-close"))
     page.on("pageerror", (error) => errors.push(error.message))
+    phase = "navigate"
     expect((await page.goto(`${server.url.origin}/sucafina/procurement?sf=sourcing-dossier`))?.status()).toBe(200)
+    phase = "select-period"
     await page.getByLabel("Start date", { exact: true }).fill("2026-01-01")
     await page.getByLabel("End date", { exact: true }).fill("2026-12-31")
+    phase = "load-requests"
     await page.getByRole("button", { name: "Load Requests", exact: true }).click()
     await page.getByRole("option", { name: "Request r1", exact: true }).waitFor({ state: "attached" })
+    phase = "show-dossier"
     await page.getByRole("button", { name: "Show dossier", exact: true }).click()
+    phase = "assert-dossier"
     await page.getByRole("heading", { name: "Request proposal terms", exact: true }).waitFor({ state: "visible" })
     expect(await page.getByRole("region", { name: "Dossier", exact: true }).textContent()).toContain('"amount": 42')
     expect(await page.getByRole("region", { name: "Dossier", exact: true }).textContent()).toContain('"amount": null')
@@ -169,7 +183,15 @@ test("Chromium renders the real dossier commercial terms and next steps without 
     expect(methods.length).toBeGreaterThan(2)
     expect(methods.every((method) => method === "GET")).toBe(true)
     expect(await value.state.store.transaction("procurement", async (snapshot) => ({ commit: false, value: digestSfValue(snapshot.data.store) }))).toBe(before)
+  } catch (error) {
+    // Record the original failure before cleanup. A later successful shutdown
+    // does not establish why a browser or page stopped during the real action.
+    console.error("SF_DOSSIER_BROWSER_FAILURE", JSON.stringify({ phase, elapsedMs: Math.round(performance.now() - started),
+      browserVersion: resources.browser?.version(), connected: resources.browser?.isConnected(), browserEvents, pageErrors: errors,
+      error: error instanceof Error ? error.message : String(error) }))
+    throw error
   } finally {
+    closing = true
     try { await resources.close?.() } finally { if (!resources.close) await resources.browser?.close(); server.stop(true); await value.close() }
   }
 }, 60_000)

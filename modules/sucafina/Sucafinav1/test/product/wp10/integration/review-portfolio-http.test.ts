@@ -12,6 +12,8 @@ import { createReviewServices } from "../../../../product/reviews/services.ts"
 import { createReviewHumanPort } from "../../../../product/reviews/human.ts"
 import { createSfBiServices } from "../../../../../../../apps/cli/src/sucafina-product/bi-services.ts"
 import { createSfReviewServices } from "../../../../../../../apps/cli/src/sucafina-product/review-services.ts"
+import { createSfResidentReviewReaders } from "../../../../../../../apps/cli/src/sucafina-product/review-resident-readers.ts"
+import { createSfMemoryServices } from "../../../../../../../apps/cli/src/sucafina-product/memory-services.ts"
 import { createSfReviewPortfolioHistory } from "../../../../../../../apps/cli/src/sucafina-product/review-portfolio-history.ts"
 import { createSfExtendedHttp } from "../../../../../../../apps/cli/src/sucafina-product/extended-http.ts"
 import { createSfExtendedAssets } from "../../../../../../../apps/cli/src/sucafina-product/extended-assets.ts"
@@ -25,7 +27,7 @@ import { compositionTestDeadline } from "./composition-test-deadline.ts"
 // Splitting independent counterproofs does not fix product latency or qualify
 // Portfolio selection/C12 Apply. Every group requires hosted execution at the
 // unchanged 105 s cooperative / 120 s outer budget.
-async function reviewPortfolioFixture(deadline: ReturnType<typeof compositionTestDeadline>) {
+async function reviewPortfolioFixture(deadline: ReturnType<typeof compositionTestDeadline>, readers: "resident" | "local" = "resident") {
   const fixture = await deadline.phase("fixture.initialize", async () => {
     const fixture = await financialCompositionFixture({ signal: deadline.signal, beforeEnvironment: async () => deadline.check() })
     deadline.own(() => fixture.dispose())
@@ -137,7 +139,14 @@ async function reviewPortfolioFixture(deadline: ReturnType<typeof compositionTes
     idempotencyKey: "history-binding", commandDigest: digestSfValue(binding) }, capture).finally(() => guards.proposalCoverageWrites.delete(capture))
   if (bound.status !== "ok") throw new Error("Historical binding fixture was not committed")
   const bi = createSfBiServices({ authority, business, portfolio })
-  const composed = createSfReviewServices({ authority, business, portfolio, bi, persistence, origin: "https://example.test" })
+  const resident = createSfResidentReviewReaders({ authority, business })
+  const composed = createSfReviewServices({ authority, business, portfolio, bi, persistence, origin: "https://example.test",
+    ...(readers === "resident" ? { readers: resident.readers } : {}) })
+  // Match the resident's deferred outcome wiring with the actual Memory
+  // provider. This read-only fixture does not authorize outcome selection writes.
+  const memory = createSfMemoryServices({ authority, business: { ...business, planner: portfolio.planner }, signalRegistryWrites: new WeakSet<object>() })
+  resident.bindOutcome(memory.reviewOutcome)
+  expect(composed.unavailable).toEqual(readers === "resident" ? [] : ["review-historical-outcome-reader-unavailable"])
   const application = composed.application
   if (!application) throw new Error("Default Review application unavailable")
   const historical = composed.historical!
@@ -153,7 +162,7 @@ async function reviewPortfolioFixture(deadline: ReturnType<typeof compositionTes
     await historical.currentSource(ref, context) || await historical.historicalSource(ref, context)))).every(Boolean) && await authority.host.revalidate(context)
   // The published agenda has no direct Portfolio item. Capture a selected
   // authorized section with the real preserve port; all subsequent reads use
-  // the unmodified default application and its authenticated HTTP consumer.
+  // the unmodified application, resident readers and authenticated HTTP consumer.
   const captureServices = createReviewServices({ state: authority.state, host: authority.host, authority: authority.authority, evidence: historical.evidence,
     creationTarget: authority.creationTarget, operationIdentity: business.operationIdentity, requiredAuthority: ["reviews:read"], maxBytes: 2 * 1024 * 1024, now: () => fixture.at,
     selection: { select: async () => ({ status: "ok", value: [{ id: "portfolio", title: "Selected Portfolio", period, recordCount: 1, projection: captureSelection.projection }] }),
@@ -202,14 +211,14 @@ async function reviewPortfolioFixture(deadline: ReturnType<typeof compositionTes
   const reviewPageUrl = `https://example.test/dashboard?${new URLSearchParams({ sf: "review", reviewRef: original.id, sectionId: "portfolio", start: period.start, end: period.end })}`
   return { deadline, fixture, authority, business, persistence, assets, period, caseRef, call, browserChecks, stored,
     binding, bindingKey, application, bi, human, original, receiptKey, receipt, http, invoke, get, getSource, post, mutate, reviewPageUrl,
-    captureSelection, sourceRef: source.value }
+    captureSelection, sourceRef: source.value, memory }
 }
 
 type ReviewPortfolioFixture = Awaited<ReturnType<typeof reviewPortfolioFixture>>
 
-async function withReviewPortfolio(name: string, work: (fixture: ReviewPortfolioFixture) => Promise<void>) {
+async function withReviewPortfolio(name: string, work: (fixture: ReviewPortfolioFixture) => Promise<void>, readers: "resident" | "local" = "resident") {
   const deadline = compositionTestDeadline(`review-portfolio-http.${name}`, 105_000)
-  try { await work(await reviewPortfolioFixture(deadline)) }
+  try { await work(await reviewPortfolioFixture(deadline, readers)) }
   finally { await deadline.close() }
 }
 
@@ -232,6 +241,8 @@ async function preserveSuccessor({ deadline, human, fixture, original }: ReviewP
 }
 
 test("Review grouped reads keep exact receipts and current authority without lending a proof to another invocation", async () => {
+  // This proof is intentionally limited to the default local readers. The
+  // resident composition below must keep calling its live Memory provider.
   await withReviewPortfolio("read-scope", async ({ application, authority, business, fixture, call, caseRef, original, mutate }) => {
     const scope = application.readScope
     const request = authority.host.requestFor(call)
@@ -275,6 +286,36 @@ test("Review grouped reads keep exact receipts and current authority without len
     const replacement = await scope.run(new Request(request), () => application.reviews.read(original.id, call))
     expect(replacement.status).toBe("denied")
     expect(replacement).not.toHaveProperty("value")
+  }, "local")
+}, 120_000)
+
+test("resident Review grouped reads reauthorize through the real Memory provider on every final read", async () => {
+  await withReviewPortfolio("resident-readers", async ({ application, authority, business, call, original, memory }) => {
+    const scope = application.readScope
+    const request = authority.host.requestFor(call)
+    if (!scope || !request) throw new Error("Resident Review read scope unavailable")
+    const authorize = memory.reviewOutcome.authorize
+    const calls: { context: TrustedDomainContext; locked: boolean }[] = []
+    memory.reviewOutcome.authorize = async (context, observations) => {
+      calls.push({ context, locked: !!business.lockedSourceFences() })
+      return authorize(context, observations)
+    }
+    try {
+      await scope.run(request, async () => {
+        const first = await application.reviews.read(original.id, call)
+        expect(first).toEqual({ status: "ok", value: original })
+        expect(calls.length).toBeGreaterThan(0)
+        await scope.prepare([original.id], call)
+        const prepared = calls.length
+        const final = await authority.state.read(request, "reviews", () => application.reviews.read(original.id, call))
+        expect(final.status).toBe("ok")
+        if (final.status !== "ok") throw new Error("Real resident C08 group unavailable")
+        expect(final.value).toEqual({ status: "ok", value: original })
+        const live = calls.slice(prepared)
+        expect(live.length).toBeGreaterThan(0)
+        expect(live.every((entry) => entry.context === call && entry.locked)).toBe(true)
+      })
+    } finally { memory.reviewOutcome.authorize = authorize }
   })
 }, 120_000)
 

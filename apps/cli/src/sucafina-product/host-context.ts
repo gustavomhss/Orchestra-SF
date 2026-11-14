@@ -46,8 +46,7 @@ import { createSfBaselineServices } from "./baseline-services.ts"
 import { createSfMemoryServices } from "./memory-services.ts"
 import { createSfMemoryHttp } from "./memory-http.ts"
 import { materialSelection } from "./memory-selection.ts"
-import type { SfReviewReaders } from "./review-services.ts"
-import { createSfAnalysisAuthorReader } from "./analysis-author.ts"
+import { createSfResidentReviewReaders } from "./review-resident-readers.ts"
 import type { createSfContributionReader } from "../../../../modules/sucafina/Sucafinav1/product/ai/contribution-reader.ts"
 import { createSfAnalysisHostServices } from "./analysis-host-services.ts"
 import { createSfAnalysisHttp } from "./analysis-http.ts"
@@ -234,36 +233,14 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
     captures: (runRef) => [...alternativeCaptures.get(runRef)?.values() ?? []], revalidateCapture })
   const dossier = documents ? createSfDossierServices({ runtime: input, authority, business, documents }) : undefined
   const documentScenarioHttp = createSfDocumentScenarioHttp({ origin: input.origin, mount: input.mount, authority, service: business.documentScenarios })
-  const readAuthorAnalysis = createSfAnalysisAuthorReader({ authority, context: business.context, resolveCase: business.resolveCase })
-  const readContribution: ReturnType<typeof createSfContributionReader> = async (incoming, call) => {
-    const wanted = structuredClone(incoming)
-    const request = authority.host.requestFor(call)
-    if (!request || call.kind !== "ui" || !await authority.host.revalidate(call)) return { status: "denied", reason: "contribution-authority-unavailable" }
-    const found = await authority.state.read(request, "contributions", (stored, actor) => actor.principalRef === call.binding.principalRef &&
-      actor.accessRevision === call.binding.accessRevision && actor.policyVersion === call.binding.policyVersion ? stored.contributions[wanted.outputRef] : undefined)
-    if (found.status !== "ok") return { status: "unavailable", reason: "contribution-unavailable" }
-    const decoded = decodeSfContributionEnvelope(found.value)
-    if (!decoded.ok || decoded.value.id !== wanted.outputRef || digestSfValue(decoded.value.caseRef) !== digestSfValue(wanted.caseRef)) return { status: "unavailable", reason: "contribution-unavailable" }
-    const bound = await business.resolveCase(call)
-    const read = () => readAuthorAnalysis(decoded.value.runProvenance.runId, decoded.value.outputDigest, call)
-    const result = bound.status === "ok" && digestSfValue(bound.value) === digestSfValue(wanted.caseRef) ? await read() :
-      await business.withCase(call, wanted.caseRef, {}, read)
-    if (result.status !== "ok") return result
-    return result.value.output.id === wanted.outputRef && digestSfValue(result.value.output) === digestSfValue(decoded.value) &&
-      digestSfValue(result.value.run.caseRef) === digestSfValue(wanted.caseRef) && await authority.host.revalidate(call)
-      ? result : { status: "unavailable", reason: "contribution-changed" }
-  }
-  questionContributions.read = readContribution
+  const residentReviewReaders = createSfResidentReviewReaders({ authority, business })
+  questionContributions.read = residentReviewReaders.readContribution
   const baselineServices = createSfBaselineServices({ authority, business, proposalCoverageWrites, origin: input.origin, mount: input.mount })
   business.bindForecastCoverage(baselineServices.baseline.resolveForecastCoverage)
   const captures = createSfAlternativeCaptures({ authority, captures: alternativeCaptures,
     active: (record) => !!identity() && captureCurrent(record) })
-  const outcomeReader: { current?: NonNullable<SfReviewReaders["outcome"]> } = {}
   const extended = createSfExtendedBusinessServices({ authority, business, persistence: input.persistence, proposalCoverageWrites, analysisSelectionWrites, procurementEvidenceWrites, origin: input.origin,
-    reviewReaders: { contributions: { contributions: readContribution, results: business.results }, outcome: {
-      read: (request, call) => outcomeReader.current?.read(request, call) ?? Promise.resolve({ status: "unavailable" }),
-      authorize: (call, observations) => outcomeReader.current?.authorize(call, observations) ?? Promise.resolve(false),
-    } } })
+    reviewReaders: residentReviewReaders.readers })
   const memory = createSfMemoryServices({ authority, business: { ...business, planner: extended.portfolioServices.planner }, signalRegistryWrites })
   const decisionDomain = createSfDecisionDomainServices({ authority, business, baseline: business.baselineCoverage, proposalCoverageWrites, signalRegistryWrites,
     sharedPortfolio: extended.portfolioServices, selectedCase: business.selectedCase, verifiedInputFor: nativeInputs.verifiedInputFor,
@@ -273,7 +250,7 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
   business.bindDecisionDomain(decisionDomain)
   const decisionDomainHttp = createSfDecisionDomainHttp({ origin: input.origin, mount: input.mount, runtime: () => identity() ? { authority, business, domain: decisionDomain } : undefined })
   const portfolioHttp = extended.portfolioServices.http({ origin: input.origin, mount: input.mount })
-  outcomeReader.current = memory.reviewOutcome
+  residentReviewReaders.bindOutcome(memory.reviewOutcome)
   const memoryHttp = createSfMemoryHttp({ origin: input.origin, mount: input.mount, authority, memory, withCase: business.withCase })
   for (const replacement of extended.replacements) {
     const index = business.descriptors.findIndex((descriptor) => descriptor.id === replacement.id)

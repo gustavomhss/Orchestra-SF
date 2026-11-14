@@ -1,0 +1,60 @@
+{
+  "builder": "/root/ci_reconcile",
+  "purpose": "Close the source-level resident Review mount proof gap for successor W19; no independent approval",
+  "baseProduct": "8b1cc71d8ab2484055a0d055c8487d4579476b9b",
+  "findings": [
+    {
+      "id": "R2-W18-REVIEW-HOST-OBS-01",
+      "reviewPath": "reviews/R2/review-W18.json"
+    },
+    {
+      "id": "R3-W18-REVIEW-MOUNT-01",
+      "reviewPath": "reviews/R3/review-W18.json"
+    }
+  ],
+  "provenObservation": "Resident host injects contributions/outcome, so localSnapshotReaders=false. W18 lexical test did not mount these readers. This alone does not prove an HTTP failure.",
+  "resolution": {
+    "sharedFactory": "apps/cli/src/sucafina-product/review-resident-readers.ts",
+    "residentHost": "host-context.ts calls shared factory, installs the actual contribution reader for questionContributions and Review, then binds actual Memory.reviewOutcome after Portfolio composition",
+    "fixture": "review-portfolio-http uses the same factory and actual Memory.reviewOutcome by default; exactly one pre-existing lexical test explicitly selects local readers",
+    "newCounterproof": "The actual Memory authorization callback must run again inside the final real C08 group after preflight in the same Request invocation. The observer delegates to the actual callback without changing its result. Generic external snapshot caching would skip this callback and fail the assertion."
+  },
+  "preserved": {
+    "liveExternalReaders": true,
+    "canonicalReaderAndFencesByteExact": true,
+    "receiptBodySourceRequestLeaseGuards": true,
+    "allPreviousTestsAndAssertions": true,
+    "budgets": {
+      "cooperativeMs": 105000,
+      "outerMs": 120000
+    },
+    "lateRevocations": "Existing current-case/previous-case/successor-body, page session/case lease, browser case and report download tests now default to the resident reader assembly. All assertions retained.",
+    "nativeContributionReaderBody": "Byte-identical extraction, validated against W18 baseline"
+  },
+  "limitations": [
+    "No product execution, local typecheck or parser was run.",
+    "No hosted W19 result exists in this builder receipt.",
+    "The fixture exercises the resident reader configuration through the real own composition over SQLite/C08; it does not start the resident native runtime or prove native contributions/outcomes end to end.",
+    "The fixture grants no outcome-selection writes; real Memory readers are installed, with a private unregistered write set. This is fail-closed and does not replace or widen authorization.",
+    "The existing lexical proof reuse remains restricted to the explicit local-reader test. No optimization efficacy is claimed for the resident host.",
+    "W18 A terminal, when available, remains evidence for W18 only."
+  ],
+  "foreignIntake": "None by this builder. Root-owned published planner-sources delta was not touched.",
+  "archiveIndex": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/stop-handoff.json",
+    "blobSha": "d1ac5e6da263fc2dd1766f13e4368b898bcceab5",
+    "sha256": "bc761d68afd64bcb7e49d2abbe98f849ee113b197b579b16f561b12622f65166",
+    "scope": "Original index is byte-identical; this builder did not re-fetch or readmit its historical foreign copies."
+  },
+  "hostedSelection": {
+    "file": "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+    "lane": "W19 A existing full-file selection",
+    "newFiles": 0,
+    "newTestCases": 1,
+    "filters": null,
+    "timeoutsChanged": false,
+    "required": "Typecheck/guards and this whole file on exact published W19 product plus CI snapshot; no W18 result transfer."
+  },
+  "productFrozen": true,
+  "timestampUtc": "2026-11-14T12:02:43.948755+00:00"
+}
