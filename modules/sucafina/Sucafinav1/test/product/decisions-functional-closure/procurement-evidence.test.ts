@@ -8,7 +8,7 @@ const period = { start: "2027-01-01", end: "2027-12-31" }
 const authority = { kind: "ui" as const, installationId: "installation", projectId: "project", principalRef: "reader", accessRevision: "access", policyVersion: "policy" }
 const scope: ReturnType<typeof decisionFormContext> = { scope: "scope", authority, caseRef: { id: "case", incarnation: "case-inc", version: 2 }, caseSelector: "case", horizon: period, currency: "USD", sourceRefs: [] }
 function fixture() {
-  const ref: Extract<BusinessEvidenceRef, { kind: "record" }> = { schema: "sf-evidence-v1", kind: "record", installationId: authority.installationId, projectId: authority.projectId, refId: "canonical-request", refDigest: "a".repeat(64), evidenceLevel: "observed", target: { surface: "procurement", recordType: "procurement-request", recordId: "PR-2027-1", incarnation: "pr-inc", version: 2, fields: ["status", "stageChangedAt"], period, projectionDigest: "b".repeat(64) } }
+  const ref: Extract<BusinessEvidenceRef, { kind: "record" }> = { schema: "sf-evidence-v1", kind: "record", installationId: authority.installationId, projectId: authority.projectId, refId: "sf-procurement:pr-inc:2", refDigest: "a".repeat(64), evidenceLevel: "observed", target: { surface: "procurement", recordType: "procurement-request", recordId: "PR-2027-1", incarnation: "pr-inc", version: 2, fields: ["status", "stageChangedAt"], period, projectionDigest: "b".repeat(64) } }
   const projection: DomainProjection = { context: { ...authority, surface: "procurement", period, currency: "USD", sourceRefs: [], capabilities: [] }, version: 2, engineVersion: "fixture-only", components: [], missing: [{ field: "ageDays", reason: "unavailable" }], values: [{ id: "PR-2027-1:pr-inc:ageDays", value: null, unit: "days", period, granularity: "record", sourceRefs: [ref], drilldown: ref, evidenceState: "absent" }] }
   return { ref, projection }
 }
@@ -33,8 +33,9 @@ test("Procurement evidence selector filters out foreign records and refuses ambi
   const foreign = { ...ref, projectId: "other-project" }
   const outside = { ...ref, target: { ...ref.target, period: { start: "2027-01-01", end: "2027-01-31" } } }
   const invalidVersion = { ...ref, target: { ...ref.target, version: 0 } }
+  const temporary = { ...ref, refId: "temporary-collection-member" }
   const row = projection.values[0]!
-  expect(decisionProcurementEvidence({ ...projection, values: [{ ...row, sourceRefs: [foreign, outside, invalidVersion], drilldown: null }] }, scope)).toEqual([])
+  expect(decisionProcurementEvidence({ ...projection, values: [{ ...row, sourceRefs: [foreign, outside, invalidVersion, temporary], drilldown: null }] }, scope)).toEqual([])
   const ambiguous = { ...ref, refDigest: "c".repeat(64) }
   expect(() => decisionProcurementEvidence({ ...projection, values: [{ ...row, sourceRefs: [ref, ambiguous] }] }, scope)).toThrow("ambiguous-procurement-source")
 })

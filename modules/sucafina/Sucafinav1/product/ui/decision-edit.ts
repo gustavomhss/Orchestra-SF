@@ -3,7 +3,7 @@ import type { DomainProjection } from "../contracts/context.ts"
 import { esc } from "../../src/screen-shell.ts"
 import { decisionFormContext, decisionScriptHelpers } from "./decision-alternatives.ts"
 
-/** Only the existing BI06 projection can supply selectable Procurement references. */
+/** Only an authorized individual projection can supply selectable Procurement references. */
 export function decisionProcurementEvidence(projection: DomainProjection, scope: ReturnType<typeof decisionFormContext>) {
   if (!projection?.context || !["installationId", "projectId", "principalRef", "accessRevision", "policyVersion"].every((key) =>
     projection.context[key as keyof typeof projection.context] === scope.authority[key as keyof typeof scope.authority]) ||
@@ -14,7 +14,7 @@ export function decisionProcurementEvidence(projection: DomainProjection, scope:
   const refs = supplied.filter((ref): ref is Extract<BusinessEvidenceRef, { kind: "record" }> =>
     ref?.kind === "record" && ref.target.surface === "procurement" && ref.target.recordType === "procurement-request" &&
     ref.installationId === scope.authority.installationId && ref.projectId === scope.authority.projectId &&
-    typeof ref.refId === "string" && !!ref.refId.trim() && typeof ref.refDigest === "string" && /^[a-f0-9]{64}$/.test(ref.refDigest) &&
+    ref.refId === "sf-procurement:" + encodeURIComponent(ref.target.incarnation) + ":" + ref.target.version && typeof ref.refDigest === "string" && /^[a-f0-9]{64}$/.test(ref.refDigest) &&
     Number.isSafeInteger(ref.target.version) && ref.target.version > 0 && !!ref.target.period &&
     ref.target.period.start <= scope.horizon.start && ref.target.period.end >= scope.horizon.end)
     .filter((ref, index, all) => all.findIndex((other) => other.refDigest === ref.refDigest) === index)
@@ -85,22 +85,24 @@ document.querySelectorAll('[data-decision-edit]').forEach((form) => {
     return { ref: matches[0], projection }
   }
   const readProcurement = async (scope) => {
-    const choices = await read('bi-options', { viewId: 'BI06', start: scope.horizon.start, end: scope.horizon.end })
-    // BI06 exposes one scoped collection, never a first/latest business record.
-    if (!Array.isArray(choices.choices) || choices.choices.length !== 1 || typeof choices.choices[0].selectionRef !== 'string') throw new Error('procurement-collection-unavailable')
-    const result = await read('bi-data', { viewId: 'BI06', selectionRef: choices.choices[0].selectionRef, start: scope.horizon.start, end: scope.horizon.end })
-    return { refs: procurementEvidence(result.projection, scope), projection: result.projection }
+    const current = await read('decision-controls', { case: scope.caseSelector, format: 'json' })
+    const selected = current.selected
+    if (current.accessRevision !== scope.authority.accessRevision || !selected || !same(selected.caseRef, scope.caseRef) ||
+      selected.decision.currency !== scope.currency || !same(selected.decision.horizon, scope.horizon) ||
+      !Array.isArray(selected.procurementEvidence?.sources)) throw new Error('procurement-collection-unavailable')
+    const entries = selected.procurementEvidence.sources
+    // Collection members expire. Only a full source in the owner's durable
+    // individual projection may be retained in the case.
+    if (entries.some((entry) => !entry.source || typeof entry.label !== 'string' ||
+      !procurementEvidence(entry.projection, scope).some((ref) => same(ref, entry.source))) ||
+      new Set(entries.map((entry) => entry.source.refId)).size !== entries.length) throw new Error('procurement-source-unavailable')
+    return { refs: entries.map((entry) => entry.source), entries }
   }
   const inspectProcurement = async (selected, scope) => {
     const current = await readProcurement(scope)
-    const matching = current.refs.filter((ref) => same(ref, selected))
+    const matching = current.entries.filter((entry) => same(entry.source, selected))
     if (matching.length !== 1) throw new Error('procurement-source-changed')
-    const ref = matching[0]
-    const values = current.projection.values.filter((value) => value.sourceRefs.some((source) => source.refDigest === ref.refDigest) || value.drilldown?.refDigest === ref.refDigest)
-    if (!values.length) throw new Error('procurement-source-unavailable')
-    return { ref, projection: { ...current.projection, values, components: current.projection.components.filter((component) =>
-      component.sourceRefs.some((source) => source.surface === 'procurement' && source.type === 'procurement-request' && source.id === ref.target.recordId && source.incarnation === ref.target.incarnation)),
-      missing: current.projection.missing.filter((entry) => entry.field.startsWith(ref.target.recordId + ':' + ref.target.incarnation + ':')) } }
+    return { ref: matching[0].source, projection: matching[0].projection }
   }
   const revalidateSources = async (selected, scope) => {
     for (const ref of selected) {

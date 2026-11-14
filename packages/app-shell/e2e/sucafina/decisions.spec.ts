@@ -2,16 +2,28 @@ import { expect, test } from "@playwright/test"
 import { asRecord, assertCase, caseIdentity, clickCommand, draft, enterWorkbench, fillDecision, isCommand, reopenCase, withInstallation } from "./decisions-support/journey"
 import { loseCreationResponse } from "./decisions-support/lost-response"
 import { initialAlternativesJourney } from "./decisions-support/initial-alternatives"
+import { choiceHistoryJourney } from "./decisions-support/choice-history"
+import { procurementClosureJourney } from "./decisions-support/procurement-closure"
 
 // Enrollment and the HttpOnly operator session are real. Do not retain auth in traces.
 test.use({ trace: "off" })
 test.describe.configure({ retries: 0 })
 
-test("CI-UI-DECISIONS — attach authorized evidence, create two alternatives and recover one uncertain result", async ({ page }, info) => {
+test("CI-UI-DECISIONS — attach evidence, compare two alternatives and preserve the human choice after a source change", async ({ page }, info) => {
   test.setTimeout(180_000)
-  info.annotations.push({ type: "proof-limit", description: "Initial alternatives with pending cost coverage; no complete financial comparison, financial approval, C12 Apply, native model or AM acceptance" })
+  info.annotations.push({ type: "proof-limit", description: "Human choice and historical C10 coverage with pending costs; this path has no executable Procurement operation and does not accept financial approval, C12 Apply, native model or AM proofs" })
   await withInstallation(page, info, async (installation, observations) => {
-    await initialAlternativesJourney(page, installation, observations)
+    const selection = await initialAlternativesJourney(page, installation, observations)
+    await choiceHistoryJourney(page, installation, selection, observations)
+  })
+})
+
+test("CI-UI-DECISIONS — require a real Procurement proposal and approval before Apply and recover its unique receipt", async ({ page }, info) => {
+  test.setTimeout(180_000)
+  info.annotations.push({ type: "dependency", description: "Public typed Procurement alternative authoring, authorized composite producer, numeric criterion rule and a domain financial approval compatible with the prepared change are mandatory. Missing controls fail; no fixture inserts them." })
+  info.annotations.push({ type: "proof-limit", description: "Consumes the published C12 Apply and recovery; selection and confirmation alone do not prove financial approval, native provider/critique or restart." })
+  await withInstallation(page, info, async (installation, observations) => {
+    await procurementClosureJourney(page, installation, observations)
   })
 })
 
@@ -114,8 +126,8 @@ test("CI-UI-DECISIONS — alternative discovery consumes a real Decisions catalo
       await expect(candidates.getByRole("checkbox")).toHaveCount(0)
       await expect(portfolio.locator(":scope > p[role=status]")).toHaveText("Choose alternatives and enter the portfolio scope.")
       await expect(portfolio.getByRole("button", { name: "Save this evaluation", exact: true })).toBeDisabled()
-      // A new case correctly has no alternatives. Positive C09/C10 comparison,
-      // choice and Apply remain blocked until their real UI producer is composed.
+      // A new case correctly has no alternatives. The positive journeys
+      // create their own alternatives through the composed human controls.
     })
   })
 })
