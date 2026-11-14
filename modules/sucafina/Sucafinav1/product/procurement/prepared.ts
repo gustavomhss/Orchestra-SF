@@ -37,6 +37,8 @@ export function prepareProcurementMutation(input: { snapshot: Snapshot; actor: A
   if (!valid(input.snapshot, prepared.actor)) return undefined
   const baseDigest = digestSfValue(projectProcurementScope("procurement", input.snapshot, prepared.scope))
   const run = (snapshot: Snapshot, actor: Actor, environment: Environment, at: string) => {
+    const issue = procurementPreparationIssue(snapshot, prepared.command)
+    if (issue) return { result: { ok: false as const, status: 422 as const, errors: [issue] } }
     const staged = structuredClone(snapshot)
     const result = domain.execute(staged, actor, prepared.command, { ...environment, at, id: () => "" })
     if (!result.ok) return { result }
@@ -44,6 +46,9 @@ export function prepareProcurementMutation(input: { snapshot: Snapshot; actor: A
     const afterStore = object(staged.data.store)
     const before = object(object(beforeStore.requests)[prepared.target.id]).request
     const after = object(object(afterStore.requests)[prepared.target.id]).request
+    // A successful save may ignore fields outside the current stage. Verify the
+    // physical PR intent before admitting either a preview or a committed result.
+    if (keys.some((key) => object(object(after).pr)[key] !== values[key])) return { result: { ok: false as const, status: 422 as const, errors: ["requisition-intent-not-applied"] } }
     const others = (value: unknown) => Object.fromEntries(Object.entries(object(value)).filter(([id]) => id !== prepared.target.id))
     if (digestSfValue(others(beforeStore.requests)) !== digestSfValue(others(afterStore.requests)) || digestSfValue(beforeStore.suppliers ?? []) !== digestSfValue(afterStore.suppliers ?? []) || digestSfValue(beforeStore.issued ?? { pr: [], po: [] }) !== digestSfValue(afterStore.issued) || ["settings", "form", "sup", "lastIssued", "actCalls"].some((key) => Object.hasOwn(beforeStore, key) && digestSfValue(beforeStore[key]) !== digestSfValue(afterStore[key]))) return { result }
     const untouched = (value: unknown) => Object.fromEntries(Object.entries(object(value)).filter(([key]) => key !== "pr" && key !== "history"))
@@ -80,6 +85,14 @@ export function prepareProcurementMutation(input: { snapshot: Snapshot; actor: A
   // The review payload is caller-owned; it must not alias the executable preparation.
   const command: PreparedCommand = structuredClone({ id: prepared.operationId, target: prepared.target, command: prepared.command, expectedVersion: prepared.command.version, idempotencyKey: prepared.idempotencyKey, commandDigest, requiredAuthority: ["procurement:write"], preview: preview.preview })
   return { mutation, command, target: structuredClone(prepared.target), targetEvidence: structuredClone(prepared.evidence), baseDigest, previewDigest, preview: structuredClone(preview.preview) }
+}
+
+/** Restricts prepared PR edits; the domain still decides actor and command authority. */
+export function procurementPreparationIssue(snapshot: Snapshot, command: Command) {
+  const request = object(object(object(object(snapshot.data.store).requests)[command.id ?? ""]).request)
+  if (!["draft", "pr_rejected"].includes(text(request.status))) return "requisition-stage-not-editable"
+  const values = Object.entries(object(command.values.pr))
+  if (values.length && values.every(([key, value]) => object(request.pr)[key] === value)) return "requisition-already-matches"
 }
 
 /** Read the command CAS revision, which is independent from scoped evidence versions. */

@@ -1,3 +1,4 @@
+import { object, text } from "../../runtime/contract.ts"
 import { digestSfEvidenceRef, digestSfValue } from "../contracts/canonical.ts"
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
 import type { PreparedCommand } from "../contracts/context.ts"
@@ -19,6 +20,16 @@ export function createProcurementPreparedReview(input: { port: ProcurementPort; 
     const current = await input.port.read({ requestRef: issued.value.refId }, binding)
     if (current.status !== "ok") return current
     if (current.value.version !== issued.value.target.version || current.value.values.some((value) => value.sourceRefs.length !== 1 || digestSfValue(value.sourceRefs[0]) !== digestSfValue(issued.value))) return { status: "stale", reason: "prepared-source-changed" }
+    if (!["draft", "pr_rejected"].includes(String(current.value.values.find((value) => value.id === "status")?.value))) return { status: "needs-input", reason: "requisition-stage-not-editable" }
+    const intent = object(command.command.values.pr)
+    const requested = Object.keys(intent)
+    if (Object.keys(command.command.values).length !== 1 || !requested.length || requested.some((key) => !["title", "justification", "estAmount"].includes(key) || (key === "estAmount" ? typeof intent[key] !== "number" || !Number.isFinite(intent[key]) || Number(intent[key]) < 0 : typeof intent[key] !== "string"))) return { status: "unavailable", reason: "prepared-intent-mismatch" }
+    if (requested.some((key) => {
+      const field = key === "title" ? "subject" : key === "justification" ? "reason" : "originalAmount"
+      const before = current.value.values.find((value) => value.id === field)
+      const after = command.preview.values.find((value) => value.id === field)
+      return !before || !after || after.value !== (key === "estAmount" ? intent[key] : text(intent[key]) || null) || before.currency !== after.currency
+    })) return { status: "unavailable", reason: "prepared-intent-mismatch" }
     const fields = ["subject", "reason", "originalAmount", "baseAmount"]
     const beforeIds = current.value.values.map((value) => value.id).sort()
     const afterIds = command.preview.values.map((value) => value.id).sort()
@@ -30,6 +41,7 @@ export function createProcurementPreparedReview(input: { port: ProcurementPort; 
       return [{ field, before: before.value, after: after.value, ...(before.currency ? { beforeCurrency: before.currency } : {}), ...(after.currency ? { afterCurrency: after.currency } : {}) }]
     })
     if (fields.some((field) => !current.value.values.some((value) => value.id === field) || !command.preview.values.some((value) => value.id === field))) return { status: "unavailable", reason: "prepared-fields-unavailable" }
+    if (!changes.length) return { status: "needs-input", reason: "requisition-already-matches" }
     const again = await input.individual.issueForActor(source.target, binding, { requireCurrent: true })
     if (again.status !== "ok" || digestSfValue(again.value) !== digestSfValue(issued.value)) return { status: "stale", reason: "prepared-source-changed" }
     const subject = current.value.values.find((value) => value.id === "subject")?.value
