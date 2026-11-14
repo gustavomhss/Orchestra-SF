@@ -1,6 +1,7 @@
 import type { BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+import { isSfPeriod } from "../../../../modules/sucafina/Sucafinav1/product/contracts/validation.ts"
 import type { createSfBusinessServices } from "./business-services.ts"
 
 /** Links are derived from producer-authorized evidence, never an incoming URL. */
@@ -28,9 +29,22 @@ export async function sfExtendedSourceLinks(input: { business: ReturnType<typeof
       }
       if (!page) continue
       url.searchParams.set("page", page)
+      const scoped = page === "IT Operations" ? ["opsYear", "operationsMonth"] :
+        page === "IT Security KPIs" ? ["secYear", "securityMonth"] : page === "Executive Dashboard" ? ["execYear", "executiveMonth"] : undefined
+      if (scoped) {
+        // These pages render one calendar month. A partial or multi-month
+        // source cannot be represented by silently choosing its first month.
+        const period = target.period
+        if (!isSfPeriod(period)) continue
+        const year = period.start.slice(0, 4), month = period.start.slice(5, 7)
+        if (!/^202[4-7]$/.test(year) || period.start !== `${year}-${month}-01` ||
+          period.end !== `${year}-${month}-${new Date(Date.UTC(Number(year), Number(month), 0)).getUTCDate()}`) continue
+        url.searchParams.set(scoped[0]!, year)
+        url.searchParams.set(scoped[1]!, String(Number(month)))
+      }
     }
     if (target.period) url.searchParams.set("year", target.period.start.slice(0, 4))
-    links.push({ label: `${target.surface} · ${target.recordId} · v${target.version}`, url: `${url.pathname}${url.search}` })
+    links.push({ label: `${target.surface} · ${target.recordId} · v${target.version}${target.period ? ` · ${target.period.start} a ${target.period.end}` : ""}`, url: `${url.pathname}${url.search}` })
   }
   return await input.business.host.revalidate(input.call) ? [...new Map(links.map((link) => [link.url, link])).values()] : []
 }

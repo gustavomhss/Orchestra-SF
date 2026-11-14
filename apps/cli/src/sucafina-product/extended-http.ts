@@ -71,7 +71,7 @@ export function createSfExtendedHttp(input: {
         }
         if (!sources.length || sources.some((source) => digestSfValue(source) !== digestSfValue(sources[0]))) return json({ status: "denied", reason: "source-outside-preserved-review" }, 403)
         const links = await sfExtendedSourceLinks({ business, reference: sources[0]!, call, url })
-        return links.length ? json({ links }) : json({ status: "unavailable", reason: "source-replaced-changed-or-revoked" }, 409)
+        return links.length ? json({ links }) : json({ status: "unavailable", reason: "source-or-destination-period-unavailable" }, 409)
       }
       if (mode === "bi-options") {
         const found = await options.read(viewId, period, call)
@@ -88,7 +88,7 @@ export function createSfExtendedHttp(input: {
           const value = current.value.values.find((entry) => entry.id === url.searchParams.get("valueId"))
           if (!value?.drilldown) return { status: "unavailable" as const, reason: "bi-value-source-unavailable" }
           const links = await sfExtendedSourceLinks({ business, reference: value.drilldown, call, url })
-          return links.length ? { status: "ok" as const, value: { links } } : { status: "unavailable" as const, reason: "source-replaced-changed-or-revoked" }
+          return links.length ? { status: "ok" as const, value: { links } } : { status: "unavailable" as const, reason: "source-or-destination-period-unavailable" }
         }
         const result = selectedCase ? await business.withCase(call, selectedCase, {}, read) : await read()
         return result.status === "ok" ? json(result.value) : json(result, 409)
