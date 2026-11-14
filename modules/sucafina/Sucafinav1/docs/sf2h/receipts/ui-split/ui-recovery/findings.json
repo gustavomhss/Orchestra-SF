@@ -1,0 +1,83 @@
+{
+  "schema": "sf-ui-recovery-findings-v1",
+  "source": "https://github.com/gustavomhss/Orchestra-SF/blob/2ee71fc90055814912654ae198f7a1dcf9583943/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/interface-resume/owner-findings.json",
+  "campaignStatusesChanged": false,
+  "globalRelease": false,
+  "criteriaRemoved": [],
+  "productHead": "c38a9eb54297baf20df47d296c8d25471ab341b9",
+  "findings": [
+    {
+      "id": "IR-EXT-C12-RELOAD",
+      "scopeStatus": "READY_FOR_INTEGRATION",
+      "ownerClosureClaimed": false,
+      "criterionIds": [
+        "WP01.DOD.03",
+        "WP01.CMP.02",
+        "WP01.T05.CHK.03",
+        "WP01.T05.DOD.01",
+        "WP01.T05.CMP.01",
+        "WP02.CMP.10"
+      ],
+      "obtained": "Exact apply body/key/reviewDigest survive reload even if bounded discovery omits the committed case. Explicit replay reauthorizes the real host, returns the authoritative receipt and does not change the committed case/domain. Invalid ACK and receipt collisions remain pending; real denial purges.",
+      "evidence": [
+        {
+          "runId": 43620348596,
+          "tests": [
+            "Dashboard recovers the same C12 application receipt after a committed response is lost and the page reloads",
+            "partial domain execution reconciles a durable receipt and never repeats it on retry",
+            "UI recovery rejects an incomplete apply ACK then recovers the exact authorized receipt after reload",
+            "UI recovery retains an ambiguous authoritative receipt outcome across repeated reloads without another apply"
+          ]
+        },
+        {
+          "runId": 43620823146,
+          "test": "UI recovery reauthorizes the restored attempt and purges it on real denial without another effect"
+        }
+      ],
+      "limits": "Real browser/identity/host/C08/C12/domain store; existing choice is fixture input. No new native decision or financial-policy proof. Published historical-evidence composition is read-only and not imported into this fixed-base slice. Full finding/global composition remains owner work."
+    },
+    {
+      "id": "IR-EXT-FIRST-SAVE-LOOKUP",
+      "scopeStatus": "BLOCKED",
+      "owner": "compose-resume / WP10",
+      "criterionIds": [
+        "WP02.QLT.02",
+        "WP02.T02.QLT.02",
+        "WP01.T03.DOD.01",
+        "WP01.T03.CMP.01",
+        "WP01.T03.SUC.01"
+      ],
+      "obtained": "First-save outcome is distinguished from apply. Only caseRef/key persist; after reload a pending state blocks another write and hides unusable retry. Two real drafts with identical text disprove title/target inference.",
+      "reproduction": "UI recovery distinguishes a lost first save without draftRef and never guesses its identity after reload",
+      "runId": 43620823146,
+      "missing": "Published authorized lookup from original save intent to its durable draftRef, without retaining private fields. The safeguard PASS is not successful outcome recovery.",
+      "proposal": {
+        "path": "patches/first-save-outcome.NOT_APPLIED.patch",
+        "status": "NOT_APPLIED",
+        "base": "e1a1888bd2117616d53c5af5f5014e81c4b4e530",
+        "integrationAndTestsPending": true
+      }
+    },
+    {
+      "id": "SHARED-APPLY-LOOKUP",
+      "scopeStatus": "BLOCKED",
+      "owner": "compose-resume / WP10 / C12 operations; UI consumes published API",
+      "criterionIds": [
+        "WP01.T03.DOD.01",
+        "WP01.T03.CMP.01",
+        "WP01.T03.SUC.01",
+        "WP01.T05.CMP.01"
+      ],
+      "obtained": "After full apply commit and lost reply, actual membership revocation yields host 403 and purge. C08 denies self-grant. Controlled administrative regrant followed by real HTTP discovery leaves no browser correlation and never replays automatically.",
+      "reproduction": "UI recovery reauthorizes the restored attempt and purges it on real denial without another effect",
+      "runId": 43620823146,
+      "originalPartialDomainAfterRevocationVariantExecuted": false,
+      "missing": "Server-side rediscovery/outcome lookup after correlation purge, including domain-committed/case-not-reconciled and cases outside first discovery page. The original partial-domain test is preserved and passed, but it does not prove that combined browser variant.",
+      "proposal": {
+        "path": "patches/README.md#shared-apply-lookup",
+        "status": "NOT_APPLIED_CONTRACT_REQUEST",
+        "implementationPending": true
+      }
+    }
+  ]
+}
