@@ -60,7 +60,7 @@ document.querySelectorAll('[data-procurement-alternatives]').forEach((form) => {
   }
   const revoke = () => {
     if (denied) return; denied = true; sources = []; proposal = undefined; pending = undefined
-    try { sessionStorage.removeItem(storageKey) } catch {}
+    try { sessionStorage.removeItem(storageKey) } catch { /* Revocation still removes the form; retained bytes cannot be resent under changed authority. */ }
     const message = document.createElement('p'); message.setAttribute('role', 'status'); message.textContent = 'Access changed. Reopen the decision with your current access.'
     form.replaceChildren(message)
   }

@@ -5,7 +5,7 @@ import { join } from "node:path"
 import { openLocalStore } from "../../../runtime/local-store.ts"
 import { domain } from "../../../runtime/procurement.ts"
 import { object } from "../../../runtime/contract.ts"
-import type { Actor, Command, Persistence } from "../../../runtime/contract.ts"
+import type { Actor, Command } from "../../../runtime/contract.ts"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import type { DomainPortHost } from "../../../product/contracts/ports.ts"
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
@@ -24,13 +24,25 @@ export async function createScenarioFixture(input: { amount?: number | null; dir
   const directory = input.directory ?? await mkdtemp(join(await realpath(tmpdir()), "sf-procurement-scenario-"))
   await chmod(directory, 0o700)
   const store = await openLocalStore(directory)
+  if (!store.transactionAll || !store.currentSnapshots) throw new Error("SQLite installation transaction capabilities unavailable")
+  const transactionAll = store.transactionAll
+  const currentSnapshots = store.currentSnapshots
   const writes: string[] = []
-  const tracked: Persistence = { transaction: (surface, work, options) => store.transaction(surface, async (snapshot) => {
-    const result = await work(snapshot)
-    if (result.commit) writes.push(surface)
-    return result
-  }, options) }
+  const tracked: Parameters<typeof createSfSourcePersistence>[0]["persistence"] = {
+    currentSnapshots: () => currentSnapshots(),
+    transaction: (surface, work, options) => store.transaction(surface, async (snapshot, blobs) => {
+      const result = await work(snapshot, blobs)
+      if (result.commit) writes.push(surface)
+      return result
+    }, options),
+    transactionAll: (work, options) => transactionAll(async (snapshots) => {
+      const result = await work(snapshots)
+      if (result.commit) writes.push("all")
+      return result
+    }, options),
+  }
   const persistence = createSfSourcePersistence({ persistence: tracked, createId: randomUUID, projectScope: projectProcurementScope, enumerate: enumerateSfSources })
+  for (const surface of ["dashboard", "planner", "procurement"] as const) await persistence.initializeSources(surface)
   const access = { allowed: true }
   const clock = { at: scenarioAt }
   const principal = (request: Request) => {
@@ -68,7 +80,6 @@ export async function createScenarioFixture(input: { amount?: number | null; dir
   })
   const requester: Actor = { id: "alice", roles: ["requester"], canWrite: true }
   const seed = async () => {
-    await persistence.initializeSources("procurement")
     const settings = await execute({ id: "admin", roles: ["admin"], canWrite: true }, { page: "Settings", action: "reset", version: 0, values: {} })
     if (!settings.ok) throw new Error("Synthetic Settings initialization failed")
     const created = await execute(requester, { page: "Requests", action: "create", version: 0, values: { pr: { title: "Synthetic purchase", type: "service", description: "Scenario producer fixture", estAmount: input.amount === undefined ? 100 : input.amount, recurring: false, expenseType: "OPEX", costCenter: "IT", needBy: "2026-12-01", justification: "Compare amount" } } })

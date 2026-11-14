@@ -29,7 +29,7 @@ test("a real hypothetical choice cannot prepare an unapproved financial effect o
     const selection = { operation: scenario.operations[0]!, choice: selected.choice, operationId: "unapproved-change", idempotencyKey: "same-human-choice" }
     const before = await fixture.snapshot()
     const writes = fixture.writes.length
-    const blocked = { status: "needs-input", reason: "financial-approval-command-unavailable" }
+    const blocked = { status: "needs-input", reason: "financial-approval-command-unavailable" } as const
     expect(await prepare(selection, fixture.context)).toEqual(blocked)
     expect(await prepare(selection, fixture.context)).toEqual(blocked)
     expect(await fixture.snapshot()).toEqual(before)
