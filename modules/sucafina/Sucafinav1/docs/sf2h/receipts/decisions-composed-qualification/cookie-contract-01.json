@@ -1,0 +1,136 @@
+{
+  "schema": "sf2-mission44-hosted-contract-v1",
+  "mission": 44,
+  "source": {
+    "sha": "ff0bd96d1303ef55204d498f286ba0da8543419d",
+    "tree": "d87e641ebd9cc8aded6c416c9fd5f9f30b4c9b1e"
+  },
+  "composed": {
+    "base": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+    "W": "953b7ba287d466488f661b6ed27e983668b13b42",
+    "tree": "f1de897f772474401cca38443808dd1c822f172a",
+    "owned_delta": [
+      {
+        "path": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+        "preimage": "952ce06a276bca7723e11e8ea9067637e6bbf8e4",
+        "postimage": "2d9c867af87fa0a26b182365b1780232b49bcaf9",
+        "source": "eadab8c975376b67ec01a8ce0342ae0b27e58b1f",
+        "purpose": "Align lost-creation assertions with the locked original-request contract already shipped in C11; add disabled field assertions."
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/decisions-support/operator-session-cookie.ts",
+        "preimage": null,
+        "postimage": "81a6863f68fc2b83c4b331c19920c59267b5d060",
+        "source": "ff0bd96d1303ef55204d498f286ba0da8543419d",
+        "purpose": "Validate exact session policy without relying on Set-Cookie attribute order."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/decisions-composed-qualification/operator-session-cookie.test.ts",
+        "preimage": null,
+        "postimage": "a8865d50f22248d172f106030516e67ec8ee833e",
+        "source": "ff0bd96d1303ef55204d498f286ba0da8543419d",
+        "purpose": "Real operator/SQLite/Effect transport contract with security negatives and revocation."
+      }
+    ]
+  },
+  "snapshot": {
+    "S": "343199d4c7dd533656731eecd7227b27c40df391",
+    "tree": "429e228a42a5d96f3591b741348b53c39938f40c",
+    "branch": "ci-run-linux-astra-wp11-953b7ba2-m44-cookie-01",
+    "only_difference": ".ci-run.json",
+    "compare": [
+      {
+        "filename": ".ci-run.json",
+        "status": "added",
+        "additions": 12,
+        "deletions": 0,
+        "changes": 12,
+        "previous_filename": null
+      }
+    ]
+  },
+  "request": {
+    "package": "sucafina",
+    "packageSelector": "packages/sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/decisions-composed-qualification/operator-session-cookie.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "run": {
+    "id": 43650131734,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43650131734",
+    "job_id": 132616525066,
+    "attempt": 1,
+    "status": "completed",
+    "conclusion": "success",
+    "started_at": "2026-11-14T22:49:59Z",
+    "completed_at": "2026-11-14T22:51:47Z",
+    "platform": "ubuntu-24.04",
+    "bun": "1.3.14"
+  },
+  "result": {
+    "files": 1,
+    "executed": 2,
+    "passed": 2,
+    "failed": 0,
+    "assertions": 29,
+    "total_ms": 152,
+    "tests": [
+      {
+        "title": "Effect transport preserves a real operator session accepted by the browser fixture",
+        "status": "PASS",
+        "duration_ms": 19
+      },
+      {
+        "title": "operator cookie admission rejects missing changed duplicated and extra attributes without logging values",
+        "status": "PASS",
+        "duration_ms": 0.38
+      }
+    ],
+    "omni": {
+      "nonce": "bb4a48a19988a55e1362b18e878ea02b",
+      "verdict": "not applicable (focused: no declaring test ran)",
+      "proof": "No omni spawn or delegation; no native proof."
+    }
+  },
+  "facts_proved": [
+    "Real operator enrollment with real private SQLite store produces the required redirect and session.",
+    "Old shared fixture regex accepts direct producer cookie but rejects the actual pinned Effect fromWeb/toWeb roundtrip.",
+    "New parser accepts both representations and preserves opaque name/value.",
+    "Transported session authenticates real identity; absent session does not.",
+    "Enrollment replay is forbidden; real logout revokes the session.",
+    "Missing/changed/duplicate/extra cookie attributes, wrong name/token and multiple cookies are rejected."
+  ],
+  "scope_limits": {
+    "shared_fixture_applied": false,
+    "actual_Node_listener_in_this_contract": false,
+    "real_CLI_listener_proof": "nominal-01.json",
+    "new_browser_nominal_pass": false,
+    "WP11_criteria_promoted": 0,
+    "native_provider": "NOT_RUN",
+    "native_critic": "NOT_RUN",
+    "restart": "NOT_RUN",
+    "Apply": "NOT_RUN"
+  },
+  "dedup": {
+    "eligible_prior_run": false,
+    "material_change": "Two new owned files implement and verify the distinct cookie transport contract.",
+    "one_test_run_at_a_time": true,
+    "baseline_nominal_run": "43649103661",
+    "no_nominal_rerun_without_fixture_change": true
+  },
+  "timeouts": {
+    "request_ms": 120000,
+    "source": "Existing test-ci uploader default, unchanged",
+    "test_body_timeout_overrides": 0
+  },
+  "artifacts": {
+    "required_by_bun_lane": false,
+    "authoritative_evidence": "Hosted job log; exact W/S, executed titles/counts/assertions and nonce verified."
+  }
+}

@@ -1,0 +1,103 @@
+diff --git a/packages/app-shell/e2e/sucafina/decisions-support/operator-session-cookie.ts b/packages/app-shell/e2e/sucafina/decisions-support/operator-session-cookie.ts
+new file mode 100644
+--- /dev/null
++++ b/packages/app-shell/e2e/sucafina/decisions-support/operator-session-cookie.ts
+@@ -0,0 +1,13 @@
++/** Accept transport attribute reordering without relaxing the operator session policy. */
++export function readOperatorSessionCookie(headers: Headers) {
++  const values = headers.getSetCookie()
++  if (values.length !== 1) throw new Error("Production enrollment did not issue its scoped HttpOnly session")
++  const parts = values[0]!.split(";").map((part) => part.trim())
++  const issued = /^(sucafina_operator_[a-f0-9]{24})=([a-f0-9]{64})$/.exec(parts[0]!)
++  const attributes = parts.slice(1)
++  const required = ["Path=/sucafina", "HttpOnly", "SameSite=Lax", "Max-Age=28800"]
++  if (!issued || attributes.length !== required.length || new Set(attributes).size !== required.length ||
++    !required.every((attribute) => attributes.includes(attribute)))
++    throw new Error("Production enrollment did not issue its scoped HttpOnly session")
++  return { name: issued[1]!, value: issued[2]!, domain: "localhost", path: "/sucafina", httpOnly: true, secure: false, sameSite: "Lax" as const }
++}
+diff --git a/modules/sucafina/Sucafinav1/test/product/decisions-composed-qualification/operator-session-cookie.test.ts b/modules/sucafina/Sucafinav1/test/product/decisions-composed-qualification/operator-session-cookie.test.ts
+new file mode 100644
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/decisions-composed-qualification/operator-session-cookie.test.ts
+@@ -0,0 +1,80 @@
++import { expect, test } from "bun:test"
++import { randomBytes } from "node:crypto"
++import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
++import { tmpdir } from "node:os"
++import { join } from "node:path"
++import { HttpServerResponse } from "effect/unstable/http"
++import { createOperatorIdentity } from "../../../runtime/operator-identity.ts"
++import { openLocalStore } from "../../../runtime/local-store.ts"
++import { readOperatorSessionCookie } from "../../../../../../packages/app-shell/e2e/sucafina/decisions-support/operator-session-cookie.ts"
++
++test("Effect transport preserves a real operator session accepted by the browser fixture", async () => {
++  const root = await mkdtemp(join(await realpath(tmpdir()), "sf-operator-cookie-"))
++  await chmod(root, 0o700)
++  const store = await openLocalStore(root)
++  const origin = "http://localhost:4110"
++  const operator = { installationId: "0fe3ac10-c944-4eb6-8812-c67f5202a32f", uid: 501, name: "Contract operator" }
++  try {
++    const identity = createOperatorIdentity({ origin, mount: "/sucafina", operator, secrets: store.secrets, key: randomBytes(32) })
++    const code = await identity.enroll()
++    const response = await identity.handle(new Request(origin + "/sucafina/auth/local?code=" + code))
++    if (!response) throw new Error("Real operator enrollment returned no response")
++    expect(response.status).toBe(303)
++    expect(response.headers.get("location")).toBe("/sucafina/dashboard")
++    const direct = readOperatorSessionCookie(response.headers)
++    const legacyCookie = /^(sucafina_operator_[a-f0-9]{24})=([a-f0-9]{64}); Path=\/sucafina; HttpOnly; SameSite=Lax; Max-Age=28800$/
++    expect(legacyCookie.test(response.headers.get("set-cookie") ?? "")).toBe(true)
++    // This is the production installation's real Web -> Effect boundary and
++    // Effect's real serializer; no replacement application or mocked transport.
++    const transported = HttpServerResponse.toWeb(HttpServerResponse.fromWeb(response))
++    expect(transported.status).toBe(303)
++    expect(transported.headers.get("location")).toBe("/sucafina/dashboard")
++    expect(transported.headers.get("cache-control")).toBe("no-store")
++    // This discriminator reproduces the old fixture failure with the pinned
++    // transport rather than constructing a second serialized response by hand.
++    expect(legacyCookie.test(transported.headers.get("set-cookie") ?? "")).toBe(false)
++    const cookie = readOperatorSessionCookie(transported.headers)
++    // Compare secrets as booleans so a failure cannot print credentials.
++    expect(cookie.name === direct.name && cookie.value === direct.value).toBe(true)
++    expect({ path: cookie.path, domain: cookie.domain, httpOnly: cookie.httpOnly, secure: cookie.secure, sameSite: cookie.sameSite })
++      .toEqual({ path: "/sucafina", domain: "localhost", httpOnly: true, secure: false, sameSite: "Lax" })
++    const authenticated = new Request(origin + "/sucafina/dashboard", { headers: { cookie: cookie.name + "=" + cookie.value } })
++    expect(await identity.person(authenticated)).toEqual({ id: "macos:" + operator.installationId + ":" + operator.uid, name: operator.name })
++    expect(await identity.person(new Request(origin + "/sucafina/dashboard"))).toBeNull()
++    expect((await identity.handle(new Request(origin + "/sucafina/auth/local?code=" + code)))?.status).toBe(403)
++    const logout = await identity.handle(new Request(origin + "/sucafina/auth/logout", {
++      method: "POST", headers: { origin, cookie: cookie.name + "=" + cookie.value },
++    }))
++    expect(logout?.status).toBe(204)
++    expect(await identity.person(authenticated)).toBeNull()
++  } finally {
++    await store.dispose()
++    await rm(root, { recursive: true, force: true })
++  }
++})
++
++test("operator cookie admission rejects missing changed duplicated and extra attributes without logging values", () => {
++  const session = "sucafina_operator_" + "a".repeat(24) + "=" + "b".repeat(64)
++  const attributes = ["Path=/sucafina", "HttpOnly", "SameSite=Lax", "Max-Age=28800"]
++  const invalid = [
++    ...attributes.map((_, index) => session + "; " + attributes.filter((_, position) => position !== index).join("; ")),
++    session + "; Path=/; HttpOnly; SameSite=Lax; Max-Age=28800",
++    session + "; Path=/sucafina; HttpOnly; SameSite=None; Max-Age=28800",
++    session + "; Path=/sucafina; HttpOnly; SameSite=Lax; Max-Age=0",
++    session + "; Path=/sucafina; HttpOnly; SameSite=Lax; Max-Age=28800x",
++    session + "; " + [...attributes, "HttpOnly"].join("; "),
++    session + "; " + [...attributes, "Domain=localhost"].join("; "),
++    session + "; " + [...attributes, "Secure"].join("; "),
++    session.replace("b".repeat(64), "invalid") + "; " + attributes.join("; "),
++    session.replace("sucafina_operator_", "other_") + "; " + attributes.join("; "),
++  ]
++  for (const value of invalid) {
++    const headers = new Headers({ "set-cookie": value })
++    expect(() => readOperatorSessionCookie(headers)).toThrow("Production enrollment did not issue its scoped HttpOnly session")
++  }
++  expect(() => readOperatorSessionCookie(new Headers())).toThrow("Production enrollment did not issue its scoped HttpOnly session")
++  const duplicate = new Headers()
++  duplicate.append("set-cookie", session + "; " + attributes.join("; "))
++  duplicate.append("set-cookie", session + "; " + attributes.join("; "))
++  expect(() => readOperatorSessionCookie(duplicate)).toThrow("Production enrollment did not issue its scoped HttpOnly session")
++})

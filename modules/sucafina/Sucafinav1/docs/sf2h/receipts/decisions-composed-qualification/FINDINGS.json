@@ -1,0 +1,146 @@
+{
+  "schema": "sf2-mission44-findings-v1",
+  "mission": 44,
+  "overall": "PARTIAL_RELEASE_BLOCKED_NOT_DONE",
+  "acceptance": "NOT_GRANTED",
+  "findings": [
+    {
+      "id": "M31-BOOTSTRAP-DUPLICATE-ACL",
+      "status": "C11_ADVANCE_OBSERVED",
+      "evidence": "nominal-01.json",
+      "detail": "The actual C11 CLI starts/listens and passes readiness/enrollment preconditions. Original duplicate ACL registration is no longer the observed failure. Dashboard/Workbench browser entry remains unproved."
+    },
+    {
+      "id": "M44-OPERATOR-COOKIE-TRANSPORT",
+      "status": "BLOCKS_ALL_FIVE_BROWSER_JOURNEYS",
+      "owner": 42,
+      "observed": "Shared fixture rejects normalized Set-Cookie before browser context injection.",
+      "cause": "Exact old attribute ordering is not preserved by the pinned Effect serialization; separate real contract reproduces and fixes semantic admission.",
+      "owned_fix": "Parser + real transport/security contract committed and PASS in run43650131734.",
+      "external_patch": "integration/operator-cookie/manifest.json",
+      "scope": "One shared fixture file. No production host/router, engine, operator identity or normative contract edits.",
+      "resolution_required": "Session42 integrates the complete fixture patch and owned dependency and records a new candidate. S0 or an expressly authorized qualification actor then runs the unchanged nominal spec through the existing dispatcher. Session42 does not dispatch tests under its observed authority."
+    },
+    {
+      "id": "M31-PRECHOICE_AND_FINANCIALAPPROVAL",
+      "status": "BLOCKED_NO_RELEASED_PRODUCER37_OBSERVED",
+      "owner": 37,
+      "evidence": "DEPENDENCIES.json",
+      "detail": "Financial test still requires a real pre-choice Procurement proposal and compatible human financial approval. Current scenario-preparation refuses with financial-approval-command-unavailable; saved draft/approved state is incompatible. No owner scope takeover.",
+      "proof_limit": "Secondary dependency established statically; runtime did not reach this step because cookie fixture failed first.",
+      "resume": "Consume reviewed release by37 through42; never equate choice with financial approval or synthesize proposal/approval."
+    },
+    {
+      "id": "M44-CREATION-UNCERTAINTY-CONTRACT",
+      "status": "OWNED_ASSERTIONS_FIXED_BROWSER_NOT_REACHED",
+      "path": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+      "preimage": "952ce06a276bca7723e11e8ea9067637e6bbf8e4",
+      "postimage": "2d9c867af87fa0a26b182365b1780232b49bcaf9",
+      "detail": "Matches C11 locked-request message/Retry same creation label and adds disabled assertions. Human lost-response/reopen actions and all five nominal test bodies remain."
+    },
+    {
+      "id": "M44-SURGICAL-FILTER",
+      "status": "EXACT_FILE_SUPPORTED_TITLE_SUBSET_UNSUPPORTED",
+      "detail": "Existing request validator allows explicit production .spec.ts files only; no title/line/grep/extra-env subset. Kept all five positive tests; no duplicate/synthetic spec or modified validator."
+    },
+    {
+      "id": "M44-C12-CONSUMPTION",
+      "status": "EXISTING_RECOVERY_CONSUMED_NO_NEW_APPLY",
+      "evidence": "DEPENDENCIES.json",
+      "detail": "Use composed C11 recovery blobs and source32 published closure as provenance only. Keep Finance-compatible composed apply; do not copy divergent whole source32 file or transfer its 22/22 proof to current browser candidate."
+    },
+    {
+      "id": "M44-NATIVE-AND-83",
+      "status": "NOT_RUN_NO_PROMOTION",
+      "detail": "83 literal WP11 criteria and bindings preserved; no native provider/reviewer/restart/UI-native-MCP/AM01–AM06 proof fabricated. Linux hosted contract is not native macOS proof."
+    }
+  ],
+  "journeys": [
+    {
+      "test_title": "CI-UI-DECISIONS — attach evidence, compare two alternatives and preserve the human choice after a source change",
+      "source_file": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+      "nominal": true,
+      "observed_execution": "FAIL_BEFORE_UI",
+      "result": "NOT_QUALIFIED",
+      "primary_blocker": "M44-OPERATOR-COOKIE-TRANSPORT",
+      "resume": [
+        "Open real Dashboard and Workbench via browser after one-use enrollment.",
+        "Create both Planner sources through the UI; preserve source identity/incarnation/version, USD and annual conversion.",
+        "Create case, attach authorized sources, persist two alternatives and comparison with nine pending categories.",
+        "Save numeric rule, human choice and historical basis; change a source and prove old choice unchanged."
+      ],
+      "additional_owner": "No producer37 dependency for this test"
+    },
+    {
+      "test_title": "CI-UI-DECISIONS — require a real Procurement proposal and approval before Apply and recover its unique receipt",
+      "source_file": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+      "nominal": true,
+      "observed_execution": "FAIL_BEFORE_UI",
+      "result": "NOT_QUALIFIED",
+      "primary_blocker": "M44-OPERATOR-COOKIE-TRANSPORT",
+      "resume": [
+        "After fixture integration, require released Procurement37 pre-choice producer and compatible human financial approval.",
+        "Create real Procurement request through UI; obtain selectable compatible proposal without replacing it by seed/POST.",
+        "Prepare and approve using authorized UI; consume existing C12 apply/recovery, preserve unique domain receipt.",
+        "Until producer release, retain this positive test and record actual blocked step; no skip/xfail/PASS."
+      ],
+      "additional_owner": "Procurement37; C12 recovery already published by32; integration42"
+    },
+    {
+      "test_title": "CI-UI-DECISIONS — create, edit and reopen the same durable case through Workbench",
+      "source_file": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+      "nominal": true,
+      "observed_execution": "FAIL_BEFORE_UI",
+      "result": "NOT_QUALIFIED",
+      "primary_blocker": "M44-OPERATOR-COOKIE-TRANSPORT",
+      "resume": [
+        "Create, edit objective/criteria, and reopen same durable case through Workbench; preserve versions/authorship."
+      ],
+      "additional_owner": "No producer37 dependency for this test"
+    },
+    {
+      "test_title": "CI-UI-DECISIONS — alternative discovery consumes a real Decisions catalog, not HTML 200",
+      "source_file": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+      "nominal": true,
+      "observed_execution": "FAIL_BEFORE_UI",
+      "result": "NOT_QUALIFIED",
+      "primary_blocker": "M44-OPERATOR-COOKIE-TRANSPORT",
+      "resume": [
+        "Use real Decisions catalog endpoint through the UI; assert non-HTML catalog and valid authorized initial alternatives."
+      ],
+      "additional_owner": "No producer37 dependency for this test"
+    },
+    {
+      "test_title": "CI-UI-DECISIONS — recover a lost creation response by reading the same case without resubmitting",
+      "source_file": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+      "nominal": true,
+      "observed_execution": "FAIL_BEFORE_UI",
+      "result": "NOT_QUALIFIED",
+      "primary_blocker": "M44-OPERATOR-COOKIE-TRANSPORT",
+      "resume": [
+        "Lose creation response after real create action; locked fields and preserved values remain visible.",
+        "Observe same original request; reopen existing case and reload without a second creation submission."
+      ],
+      "additional_owner": "No producer37 dependency for this test"
+    }
+  ],
+  "testing_limits": {
+    "local_product_tests": 0,
+    "local_servers": 0,
+    "epic_or_full_suite": 0,
+    "new_CI_controller": 0,
+    "budgets_raised": 0,
+    "assertions_weakened": 0,
+    "nominal_tests_removed": 0,
+    "remote_channel": "GitHub MCP; artifact hydration only through MCP-issued download URL",
+    "Procurement37_polling": "No repeated wait or polling for producer release"
+  },
+  "terminal_instruction": "Hand off useful partial owned files and complete external patch to42; do not wait for37.",
+  "authority42_reconciliation": {
+    "observed_head": "c5ab23fd7c9b231917bf70123958c9ff03e7d420",
+    "lease": "S0-C-e8-browser42",
+    "allowed": "Selective integration of explicitly released source outputs.",
+    "not_allowed": "No tests/typecheck/guards/CI/AM, workflow ref moves or source ref moves by42.",
+    "acceptance_owner": "S0"
+  }
+}
