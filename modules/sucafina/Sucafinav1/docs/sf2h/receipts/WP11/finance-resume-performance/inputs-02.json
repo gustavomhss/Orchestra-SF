@@ -1,0 +1,82 @@
+{
+  "schema": "finance-resume-performance-inputs-v1",
+  "initialHead": "3ea9dc2efe0de8d283f9625774697e431f55a0d7",
+  "productCommit": "95f474484fb49cedb563ed3d02a61e9638d6784d",
+  "productTree": "5173889bce7f5a6a6785e1adcdbc5b348483c190",
+  "preimages": {
+    "product/portfolio/planner-sensitivity.ts": "3dec070ca5f56f7bd03a09b4b19468c950d82214",
+    "product/portfolio/threshold-proof.ts": "056a857364cf8a6c2a2bc97bf107276612edf55d",
+    "product/portfolio/verification.ts": "912df8ecd8552b245e124b93c46644c92a32f3ac",
+    "product/planner/sensitivity-units.ts": "1673c86995cf71b61e288d91492ae7b691934171"
+  },
+  "intake": {
+    "W26": {
+      "commit": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+      "files": {
+        "product/portfolio/verification.ts": "b2ac17f210886353d3596fc6a891242c7ea40f0a",
+        "product/portfolio/threshold-proof.ts": "89ba60857babe8a5c80f409de39b7e0598695b96",
+        "product/planner/interval-proof.ts": "55a701b7be49fb3f550a0b52b580e6f7dc819b31",
+        "product/portfolio/planner-sensitivity.ts": "ee1a9586231ec9027bb323a817c4a469c4b207a6",
+        "product/portfolio/sensitivity.ts": "247a0cdc456f386475f53765e6da2e1db156eba8"
+      },
+      "disposition": "selective candidate/domain recertification only; original Finance finalizer retained, no whole-file import"
+    },
+    "PR59": {
+      "commit": "e80fdc933dfd25956a50c22dea76bf077e79815b",
+      "files": {
+        "README.md": "aa9d7d1142e8279eaee8a4eb0cbcb675ff6e9bd4",
+        "OWNER_HANDOFF.md": "6f7f5a7f9d12d09e8034eed94da6dcb86c08a95e",
+        "proposed/manifest.json": "15a2048d7ec943a9fdfdbff191aef1d95fc0fe3b"
+      },
+      "disposition": "WP10 envelope patch NOT applied"
+    },
+    "PR55": {
+      "commit": "0d7fb6f12ed053340391ff6e4f95b6f3c1276ea8",
+      "files": {
+        "README.md": "5b37f2716187dca34a6e438d524a24da720cd856",
+        "HANDOFF.md": "ee0da487d3956bc8467841fc70e5d4a37abf3102"
+      },
+      "disposition": "consumed; investigation not repeated; no patch applied"
+    }
+  },
+  "testInputs": [
+    {
+      "path": "test/product/wp13/coverage-preview-fixture.ts",
+      "commit": "3ea9dc2efe0de8d283f9625774697e431f55a0d7",
+      "blob": "6e56a64ee1b76422706d685e2f646a156a8ade39"
+    },
+    {
+      "path": "test/product/wp13/sensitivity-read-scope-fixture.ts",
+      "commit": "3ea9dc2efe0de8d283f9625774697e431f55a0d7",
+      "blob": "d337b1cd730c3ecd4efb40329551a27e8d932e08"
+    },
+    {
+      "path": "test/product/wp13/sensitivity-read-scope.test.ts",
+      "commit": "3ea9dc2efe0de8d283f9625774697e431f55a0d7",
+      "blob": "a25539d00f8a43f2e7e3be02a16c29ba1c0272f2"
+    },
+    {
+      "path": "test/product/wp13/sensitivity-fixture.ts",
+      "commit": "3ea9dc2efe0de8d283f9625774697e431f55a0d7",
+      "blob": "ecc4678cf757e68c5763f8bc99d5f3573df86bc5"
+    },
+    {
+      "path": "test/product/wp13/threshold-recertification.test.ts",
+      "commit": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+      "blob": "42ddb74c93873d0dec1e9d255ba90a2ae71cab7d"
+    }
+  ],
+  "coldReview": {
+    "reviewer": "criteria_test_intake",
+    "result": "no blocking source finding",
+    "localProductExecution": false,
+    "preserves": [
+      "fresh structural and accepted/adjacent-rejected witnesses",
+      "full Finance evidence/result digest",
+      "private first-observation reuse only within invocation",
+      "two independent source/case/evidence observations",
+      "current Request/lease and final root/staged publication fences"
+    ],
+    "limit": "source review only; S2 separately validates15tests, FIN-IND-005 still awaits S3"
+  }
+}
