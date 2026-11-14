@@ -1,0 +1,45 @@
+{
+  "number": 53,
+  "id": "procurement-approval-closure",
+  "state": "PREPARED_NOT_STARTED",
+  "session_id": null,
+  "model_effective": null,
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "actor": "S2-A Procurement/C12 compatibility continuation",
+  "actor_pack": "execution/actors/S2-A.json",
+  "branch": "astra-wp04",
+  "pr": 23,
+  "expected_head": "ab2a967125b3c767067797a27b919466020fbd82",
+  "lease_epoch": "procurement-approval-browser53",
+  "consumer": "47 sole stack integrator;52 Decisions and terminal51 Memory are affected consumers",
+  "authority": "37 terminal HANDOFF atab2a967125b3c767067797a27b919466020fbd82 explicitly ended source authority. Reconcile current source/target and newer authorizations before ACK; no silent takeover. This mission does not authorize financial policy, normative contracts, stages, roles or approval threshold changes.",
+  "mission": "Resolve all implementation/consumer compatibility work permitted by the EXISTING Procurement financial lifecycle, and determine the precise remaining M31 acceptance conflict. The existing commands allow draft edit -> submit_pr frozen value -> approve exact submitted snapshot -> sourcing. They do NOT support approval of an unpersisted amount followed by Requests/save after approval. No session can manufacture that missing authority. Do not repeat the prior inventory or run identical permanently refused flows.",
+  "S0_decision": "Use only existing canonical edit/submit/approve lifecycle for any code wiring developed here, with each real side effect explicit and correctly authorized. Do not reinterpret this lifecycle as proof of the distinct required post-approval replacement effect. If that exact predicate requires new proposal approval authority, keep it OPEN and deliver a concrete reviewable contract amendment proposal separately; never implement policy expansion or change pinned plan to pass. A genuinely already-supported explicitly typed post-approval effect may be used only if it matches original criteria exactly and producer proves it.",
+  "inputs": {
+    "terminal37": "ab2a967125b3c767067797a27b919466020fbd82",
+    "handoff": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-decision-producer/HANDOFF.md",
+    "known_rejection": "financial-approval-command-unavailable",
+    "MI07_consumer": "memory-history-closure finding from51; exact run failed before original capture",
+    "Decisions_consumer": "52 tests five original journeys; do not edit its files",
+    "current_stack": "Read current sf2-stack/PR65 and47 accepted manifests;C19 observed earlier, do not assume latest"
+  },
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+    "modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts",
+    "modules/sucafina/Sucafinav1/product/procurement/prepared.ts",
+    "modules/sucafina/Sucafinav1/product/procurement/prepared-review.ts",
+    "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-approval-closure/"
+  ],
+  "excluded": "Shared runtime/procurement.ts policy engine, src/identity.ts, financial commands/stages/thresholds, normative contracts, C12 decision-host/apply/http, registry/CLI/shared host, UI52, Memory51/40, CurrentChoice46, stack47, workflows45, Azure/Teams49/provisioner are readonly. Complete minimal compatibility patches for existing APIs to47/actual owner only; no new approval command or permission/grant.",
+  "execution": [
+    "Read actual canonical policy/commands, criteriaWP04/WP11/C12,37 full handoff/tests and52/51 exact calls before edits. Identify whether callers demand impossible ordering or supported existing effect. Produce concrete input/output/state/receipt contract to47/S0 and consumers; do not just rename reason codes.",
+    "Implement any genuinely missing supported preparation/lifecycle adapter in ownpaths with explicit before/after side effects and fresh grants/CAS. Never preapply covertly in preview, claim choice/checkbox equals approval, approve old100 fornew140, duplicate save after submit, bypass required stage, autoapprove or invoke private API.",
+    "Test actual existing domain/C08/SQLite and policy, exact amount/holder/version binding, changed amount after approval refusal, revoke/reject/resubmit and replay one effect. Test safe supported path plus unchanged forbidden path, preserving original positive requirements as OPEN if unsupported. No replaced positive assertion to make suite green.",
+    "If only policy expansion can satisfy remaining predicate, finish independent adapter/tests, deliver complete smallest proposed contract/implementation delta with risk, exact canonical requirement conflict and required owner decision. Do NOT apply newpolicy or say this mission unlocks global release. No unproductive unchangedCI loops.",
+    "Tests only surgical hosted GitHub Actions using existing authorized interface, dedup/reattach. No local product/heavy checks/full epic. Package bun typecheck and guards as required, coordinate45. Remote GitHub MCP/CAS, no gh/git push/force/dev merge/deploy/credentials/engine edits/restart/messages/newGoal/controller."
+  ],
+  "handoff": "SamePR23, actual allowed implementation, complete proposed shared patches/pre-post manifests, criteria/effect/state matrix, exact consumer corrections or unsatisfied contract, W/S/run/results and terminal authority.47 integrates selectively,52/MI07 retain original proof requirements. Preserve all15WPs74tasks1610criteria and pinned plan/T0."
+}
