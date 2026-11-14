@@ -1,0 +1,435 @@
+import { expect, test } from "bun:test"
+import { randomUUID } from "node:crypto"
+import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
+import { tmpdir } from "node:os"
+import { join } from "node:path"
+import { AbsolutePath } from "@orchestra/core/schema"
+import { Location } from "@orchestra/core/location"
+import { openLocalStore } from "../../../../runtime/local-store.ts"
+import { object } from "../../../../runtime/contract.ts"
+import { domain } from "../../../../runtime/procurement.ts"
+import { initialProcurementSettings } from "../../../../src/initial-settings.ts"
+import { digestSfValue } from "../../../../product/contracts/canonical.ts"
+import type { DecisionCase, ScenarioResult } from "../../../../product/contracts/decisions.ts"
+import type { TrustedDomainContext } from "../../../../product/contracts/sf-execution.ts"
+import type { SfProductState, SfStateAuthority, SfStateNamespace } from "../../../../product/contracts/state.ts"
+import { createSfProductAuthority } from "../../../../product/integration/product-authority.ts"
+import type { SfProductGrant } from "../../../../product/integration/product-authority.ts"
+import { createSfSourcePersistence } from "../../../../product/integration/source-lifecycle.ts"
+import { createSfSourceScopeProjector } from "../../../../product/integration/source-projections.ts"
+import { enumerateSfSources } from "../../../../product/integration/source-inventory.ts"
+import { createDecisionCasePort, encodeCaseRef } from "../../../../product/decisions/case-port.ts"
+import { createChoiceSnapshot } from "../../../../product/decisions/choice.ts"
+import { procurementRequestFields } from "../../../../product/procurement/source-projection.ts"
+import { createSfBusinessServices } from "../../../../../../../apps/cli/src/sucafina-product/business-services.ts"
+import { createSfScenarioOperationAccess } from "../../../../../../../apps/cli/src/sucafina-product/scenario-operation-access.ts"
+import { createSfScenarioProcurementProofScope } from "../../../../../../../apps/cli/src/sucafina-product/scenario-procurement-proof-scope.ts"
+import { createSfProcurementCaseReadScope } from "../../../../../../../apps/cli/src/sucafina-product/procurement-case-read-scope.ts"
+import { compositionTestDeadline } from "./composition-test-deadline.ts"
+
+const period = { start: "2026-01-01", end: "2026-12-31" }
+
+// Real SQLite, C08, admitted UI calls, source issuance, BCS and canonical case
+// projection. The explicit upstream choice has pending coverage; no Session,
+// model execution, accepted contribution or native receipt is manufactured.
+test("one current Procurement case read keeps both canonical passes and its prepared public view in one store scope", async () => {
+  const deadline = compositionTestDeadline("procurement-case-read")
+  try {
+    const f = await fixture(deadline)
+    const before = await f.snapshot()
+    f.reset()
+    const canonical = await deadline.phase("canonical.read", () => f.runtime.canonicalRead(f.input, f.call))
+    expect(canonical.status).toBe("ok")
+    const baseline = { ...f.metrics, ...f.runtime.counts }
+    expect(baseline).toMatchObject({ canonical: 1, inside: 0, contexts: 2, resolutions: 4 })
+    for (let invocation = 0; invocation < 2; invocation++) {
+      f.reset()
+      const read = await deadline.phase("scoped.read", () => f.runtime.read(f.input, f.call))
+      expect(read).toEqual(canonical)
+      expect(f.runtime.counts).toMatchObject({ canonical: 1, inside: 1, contexts: 2, resolutions: 4 })
+      expect(f.metrics.rootTransactions).toBe(1)
+      expect(f.metrics.rootTransactions).toBeLessThan(baseline.rootTransactions)
+      expect(f.metrics.commitRequests).toBe(0)
+      if (read.status !== "ok") throw new Error(read.reason)
+      expect(read.value.case.preparedChanges).toHaveLength(1)
+      expect(read.value.case.preparedChanges[0]).toHaveProperty("operationRef")
+      expect(read.value.case.preparedChanges[0]).not.toHaveProperty("operation")
+      console.info("SF_PROCUREMENT_CASE_READ_COUNTS", JSON.stringify({ invocation, baseline,
+        scoped: { ...f.metrics, ...f.runtime.counts }, unit: "Persistence API invocations; rootTransactions excludes an already-held snapshot, not physical commits" }))
+    }
+    expect(await f.snapshot()).toEqual(before)
+  } finally { await deadline.close() }
+}, 120_000)
+
+for (const mode of ["missing-case", "nonparticipant", "invalid-c08"] as const)
+test(`Procurement case preflight preserves the real ${mode} refusal outside its own store scope`, async () => {
+  const deadline = compositionTestDeadline(`procurement-case-contract-${mode}`)
+  try {
+    const f = await fixture(deadline)
+    expect((await f.runtime.read(f.input, f.call)).status).toBe("ok")
+    let input = f.input, call = f.call
+    if (mode === "missing-case") {
+      input = { caseRef: encodeCaseRef({ id: `absent-${randomUUID()}`, incarnation: randomUUID() }) }
+      call = await f.runtime.admitCase("alice", input)
+    }
+    if (mode === "nonparticipant") {
+      const decision = await f.stored()
+      expect(decision.participants).toContain("bob")
+      const before = await f.runtime.authority.state.read(f.request, "cases", () => null)
+      if (before.status !== "ok") throw new Error("Actual case namespace absent")
+      const next = { ...decision, version: decision.version + 1, participants: decision.participants.filter((actor) => actor !== "bob") }
+      const saved = await f.runtime.authority.state.transaction(f.request, { namespace: "cases", expectedStorageVersion: before.storageVersion,
+        targetRef: decision.id, targetIncarnation: decision.incarnation, idempotencyKey: randomUUID(), commandDigest: digestSfValue(next) },
+      async (state) => { state.cases[decision.id] = next; return { commit: true, value: true } })
+      if (saved.status !== "ok") throw new Error("Actual participant removal failed")
+      await f.runtime.select("bob", period)
+      call = await f.runtime.admitCase("bob", input)
+    }
+    if (mode === "invalid-c08") await f.persistence.transaction("dashboard", async (snapshot) => {
+      object(snapshot.data.__sfProductV1).schemaVersion = -1
+      return { commit: true, value: undefined }
+    })
+    // The UI admission is still valid; this is a case/C08 refusal, not lost
+    // Request authority. Obtain the expected outcome from the actual reader.
+    expect(await f.runtime.authority.host.revalidate(call)).toBe(true)
+    const canonical = await f.runtime.canonicalRead(input, call)
+    expect(canonical).toEqual(mode === "invalid-c08"
+      ? { status: "unavailable", reason: "invalid-product-state" }
+      : { status: "denied", reason: "case-access-unavailable" })
+    f.reset()
+    expect(await f.runtime.read(input, call)).toEqual(canonical)
+    expect(f.runtime.counts).toMatchObject({ canonical: 1, inside: 0, contexts: 0, resolutions: 0 })
+    if (mode === "missing-case") {
+      const request = f.runtime.authority.host.requestFor(call)
+      if (!request) throw new Error("Actual missing-case Request absent")
+      const readState = f.runtime.authority.state.read
+      let changed = false
+      f.runtime.authority.state.read = async <Value>(source: Request, namespace: SfStateNamespace,
+        read: (state: Readonly<SfProductState>, actor: SfStateAuthority) => Value | Promise<Value>) => {
+        const found = await readState(source, namespace, read)
+        if (!changed && source === request && namespace === "cases" && found.status === "ok" && found.value === undefined) {
+          changed = true
+          request.headers.set("x-before-eligibility", "changed-after-real-c08")
+        }
+        return found
+      }
+      try {
+        f.reset()
+        expect(await f.runtime.read(input, call)).toEqual({ status: "unavailable", reason: "procurement-case-read-changed" })
+        expect(changed).toBe(true)
+        expect(f.runtime.counts.canonical).toBe(0)
+        expect(await f.runtime.authority.host.revalidate(call)).toBe(true)
+      } finally { f.runtime.authority.state.read = readState }
+    }
+  } finally { await deadline.close() }
+}, 120_000)
+
+test("a chosen Procurement case without a prepared change keeps the canonical read boundaries", async () => {
+  const deadline = compositionTestDeadline("procurement-case-unprepared")
+  try {
+    const f = await fixture(deadline, false, false)
+    expect((await f.stored()).preparedChanges).toHaveLength(0)
+    f.reset()
+    const result = await f.runtime.read(f.input, f.call)
+    expect(result.status).toBe("ok")
+    expect(f.runtime.counts).toMatchObject({ canonical: 1, inside: 0, contexts: 2, resolutions: 4 })
+  } finally { await deadline.close() }
+}, 120_000)
+
+for (const mode of ["source", "actor", "policy", "legacy-fields"] as const)
+test(`Procurement case scope leaves ${mode} reauthorization/materialization on the canonical path outside its lock`, async () => {
+  const deadline = compositionTestDeadline(`procurement-case-fallback-${mode}`)
+  try {
+    const f = await fixture(deadline, mode === "legacy-fields")
+    expect((await f.stored()).preparedChanges).toHaveLength(1)
+    if (mode === "source") await f.edit(175)
+    const runtime = mode === "policy" ? f.open("policy-next") : f.runtime
+    const call = mode === "actor" || mode === "policy" ? await runtime.admitCase(mode === "actor" ? "bob" : "alice", f.input) : f.call
+    await runtime.select(mode === "actor" ? "bob" : "alice", period)
+    f.reset(); runtime.reset()
+    const result = await deadline.phase("fallback.read", () => runtime.read(f.input, call))
+    expect(runtime.counts.canonical).toBe(1)
+    expect(runtime.counts.inside).toBe(0)
+    // History/actor/policy positives must be produced by the real BCS. Legacy
+    // field reissuance may refuse material scope; compare its canonical result.
+    if (mode !== "legacy-fields") expect(result.status).toBe("ok")
+    const again = await runtime.canonicalRead(f.input, call)
+    expect(result.status).toBe(again.status)
+    if (result.status === "ok" && again.status === "ok") expect(result.value).toEqual(again.value)
+  } finally { await deadline.close() }
+}, 120_000)
+
+for (const changed of ["principal", "headers", "lease", "period", "clock"] as const)
+test(`Procurement case scope refuses ${changed} changes after the actual canonical reader without retrying`, async () => {
+  const deadline = compositionTestDeadline(`procurement-case-${changed}`)
+  try {
+    const f = await fixture(deadline)
+    expect((await f.runtime.read(f.input, f.call)).status).toBe("ok")
+    f.reset()
+    let mutated = false
+    f.runtime.during.after = async () => {
+      expect(f.persistence.currentSnapshots?.()).toBeDefined()
+      if (changed === "principal") f.allowed.delete("alice")
+      if (changed === "headers") f.request.headers.set("x-proof-boundary", "changed-after-canonical")
+      if (changed === "lease") f.runtime.authority.ui.finish(f.call)
+      if (changed === "period") await f.runtime.select("alice", { start: "2026-02-01", end: "2026-02-28" })
+      if (changed === "clock") f.clock.at = "2026-11-15T00:00:00Z"
+      mutated = true
+    }
+    expect((await f.runtime.read(f.input, f.call)).status).not.toBe("ok")
+    expect(mutated).toBe(true)
+    expect(f.runtime.counts.canonical).toBe(1)
+    expect(f.runtime.counts.inside).toBe(1)
+  } finally { await deadline.close() }
+}, 120_000)
+
+test("a real nested writer poisons the scoped read and is never retried outside the lock", async () => {
+  const deadline = compositionTestDeadline("procurement-case-writer")
+  try {
+    const f = await fixture(deadline)
+    expect((await f.runtime.read(f.input, f.call)).status).toBe("ok")
+    const before = await f.snapshot()
+    f.reset()
+    let attempted = false, rejected = false
+    f.runtime.during.after = async () => {
+      attempted = true
+      try { await f.persistence.transaction("dashboard", async (snapshot) => {
+        object(object(snapshot.data.__sfProductV1).preferences).forbiddenNestedWrite = { changed: true }
+        return { commit: true, value: undefined }
+      }) } catch { rejected = true }
+      // Even a producer that catches this error cannot clear the real driver's poison.
+    }
+    expect((await f.runtime.read(f.input, f.call)).status).not.toBe("ok")
+    expect({ attempted, rejected }).toEqual({ attempted: true, rejected: true })
+    expect(f.runtime.counts.canonical).toBe(1)
+    expect(await f.snapshot()).toEqual(before)
+    f.reset()
+    expect((await f.runtime.read(f.input, f.call)).status).toBe("ok")
+    expect(f.runtime.counts.canonical).toBe(1)
+  } finally { await deadline.close() }
+}, 120_000)
+
+test("the full C08 witness changes with protected bytes and a later read never reuses the prior projection", async () => {
+  const deadline = compositionTestDeadline("procurement-case-c08")
+  try {
+    const f = await fixture(deadline)
+    expect((await f.runtime.read(f.input, f.call)).status).toBe("ok")
+    const decision = await f.stored()
+    const proof = f.runtime.proofFor(decision, f.call)
+    if (!proof) throw new Error("Real current proof scope unavailable")
+    try {
+      const first = await proof.snapshot()
+      expect(first.kind).toBe("sf-scenario-procurement-fence")
+      await f.persistence.transaction("dashboard", async (snapshot) => {
+        const state = object(snapshot.data.__sfProductV1)
+        const versions = digestSfValue({ revision: state.revision, versions: state.versions })
+        object(state.preferences).readScopeCounterproof = { changed: true }
+        expect(digestSfValue({ revision: state.revision, versions: state.versions })).toBe(versions)
+        return { commit: true, value: undefined }
+      })
+      const second = await proof.snapshot()
+      expect(second.kind).toBe("sf-scenario-procurement-fence")
+      expect(second).not.toEqual(first)
+      f.reset()
+      expect((await f.runtime.read(f.input, f.call)).status).toBe("ok")
+      expect(f.runtime.counts).toMatchObject({ canonical: 1, inside: 1, contexts: 2, resolutions: 4 })
+      await f.persistence.transaction("dashboard", async (snapshot) => {
+        const capture = Object.values(object(object(snapshot.data.__sfProductV1).preferences))
+          .find((value) => object(value).schema === "sf-procurement-evidence-v1")
+        if (!capture) throw new Error("Actual protected original capture absent")
+        object(capture).projection = { damaged: true }
+        return { commit: true, value: undefined }
+      })
+      f.reset()
+      // A current source still has its independent fresh proof. A damaged
+      // historical archive must not be promoted into proof after source advance.
+      expect((await f.runtime.read(f.input, f.call)).status).toBe("ok")
+      expect(f.runtime.counts.canonical).toBe(1)
+      await f.edit(175)
+      f.reset()
+      expect((await f.runtime.read(f.input, f.call)).status).not.toBe("ok")
+      expect(f.runtime.counts.canonical).toBe(1)
+      expect(f.runtime.counts.inside).toBe(0)
+    } finally { proof.close() }
+  } finally { await deadline.close() }
+}, 120_000)
+
+async function fixture(deadline: ReturnType<typeof compositionTestDeadline>, legacy = false, prepareChange = true) {
+  const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-procurement-case-read-"))
+  await chmod(directory, 0o700)
+  deadline.own(() => rm(directory, { recursive: true, force: true }))
+  const store = await openLocalStore(join(directory, "store"))
+  deadline.own(() => store.dispose())
+  const metrics = { persistenceCalls: 0, rootTransactions: 0, commitRequests: 0 }
+  const measured: typeof store = { ...store,
+    transaction: (surface, work, options) => {
+      metrics.persistenceCalls++
+      if (!store.currentSnapshots?.()) metrics.rootTransactions++
+      return store.transaction(surface, async (...args) => { const result = await work(...args); if (result.commit) metrics.commitRequests++; return result }, options)
+    },
+    transactionAll: async (work, options) => {
+      metrics.persistenceCalls++
+      if (!store.currentSnapshots?.()) metrics.rootTransactions++
+      if (!store.transactionAll) throw new Error("Real all-surface transaction unavailable")
+      return store.transactionAll(async (snapshots) => { const result = await work(snapshots); if (result.commit) metrics.commitRequests++; return result }, options)
+    },
+  }
+  const clock = { at: "2026-11-14T00:00:00Z" }, allowed = new Set(["alice", "bob"])
+  const persistence = createSfSourcePersistence({ persistence: measured, enumerate: enumerateSfSources, createId: randomUUID,
+    projectScope: createSfSourceScopeProjector(() => clock.at) })
+  for (const surface of ["dashboard", "planner", "procurement"] as const) await persistence.initializeSources(surface)
+  await persistence.transaction("procurement", async (snapshot) => {
+    snapshot.data.store = { requests: { "PR-SCOPE": { request: { number: "PR-SCOPE", createdBy: "alice", status: "draft",
+      pr: { title: "Actual current Procurement", justification: "Explicit pending-choice fixture", estAmount: 100 }, history: [], attachments: [] }, version: 0, by: "alice" } },
+      suppliers: [], settings: initialProcurementSettings(), issued: { pr: ["PR-SCOPE"], po: [] } }
+    snapshot.versions["requests:PR-SCOPE"] = { version: 0, by: "alice" }
+    return { commit: true, value: undefined }
+  })
+  const origin = "https://example.test"
+  const open = (policyVersion = "policy") => {
+    const guards = { proposalCoverageWrites: new WeakSet<object>(), procurementEvidenceWrites: new WeakSet<object>() }
+    const authority = createSfProductAuthority({ installationId: "installation", origin, policyVersion, persistence, ...guards,
+      identity: () => ({ installationId: "installation", hostId: "host", projectId: "project", location: Location.Ref.make({ directory: AbsolutePath.make(directory) }) }),
+      grants: ["alice", "bob"].map((principalRef): SfProductGrant => ({ principalRef,
+        namespaces: ["cases", "preferences", "receipts", "outbox"], operations: ["sf_work_list", "sf_request_read", "sf_case_draft", "sf_case_read"],
+        humanActions: ["decisions.prepare-changes"] })),
+      authenticate: async (request, context) => {
+        const principal = request.headers.get("authorization")
+        return principal && allowed.has(principal) && context ? { id: principal, canWrite: true, roles: [{ surface: context.surface, role: "admin" }] } : null
+      },
+      environment: async () => { deadline.check(); return { at: clock.at, id: randomUUID, directory: [{ id: "alice", name: "Alice" }, { id: "bob", name: "Bob" }] } },
+      createId: randomUUID, now: Date.now, commandIdentity: async (request, operation, digest) => digestSfValue({ operation, digest, key: request.headers.get("idempotency-key") }),
+      inspectSession: async () => undefined, verifySelection: async () => false, verifySkillReceipt: async () => false,
+      providerGeneration: async () => undefined, authorizeDocument: async () => undefined })
+    const business = createSfBusinessServices({ authority, persistence, ...guards })
+    deadline.own(() => business.dispose())
+    business.initializeAtlas(undefined, { boundaryVersion: "unexecuted-fixture", schemaVersion: "unexecuted-fixture", manifestVersion: "unexecuted-fixture", skillVersion: "unexecuted-fixture" })
+    const request = (actor = "alice") => new Request(`${origin}/sf/procurement`, { method: "POST", signal: deadline.signal,
+      headers: { origin, authorization: actor, "idempotency-key": randomUUID() } })
+    const admit = async (operation: string, payload: unknown, actor = "alice", source = request(actor)) => {
+      const admitted = await authority.ui.admit(source, operation, digestSfValue(payload))
+      if (admitted.status !== "ok" || !await authority.ui.validate(admitted.value, operation, digestSfValue(payload))) throw new Error("Actual UI admission unavailable")
+      deadline.own(() => authority.ui.finish(admitted.value))
+      return admitted.value
+    }
+    // This test root retains a selected period only after the real producer has
+    // accepted its exact consumed intent. The application root uses its private map.
+    const selections = new Map<string, { period: typeof period; expiresAt: number }>()
+    const key = (call: TrustedDomainContext) => digestSfValue({ installationId: call.binding.installationId, projectId: call.binding.projectId,
+      principalRef: call.binding.principalRef, policyVersion: call.binding.policyVersion, accessRevision: call.binding.accessRevision })
+    const select = async (actor: string, selected: typeof period) => {
+      const payload = { purpose: "work-selection", period: selected }
+      const call = await admit("sf_work_list", payload, actor)
+      try {
+        const result = await business.procurementSelections.create(call, selected)
+        if (result.status !== "ok") throw new Error(result.reason)
+        selections.set(key(call), { period: structuredClone(selected), expiresAt: Date.now() + 300_000 })
+      } finally { authority.ui.finish(call) }
+    }
+    const dependencies = { host: authority.host, state: authority.state, selection: (call: TrustedDomainContext) => selections.get(key(call)),
+      readerIdentity: () => business.evidence.current, isCurrentRecord: business.individual.isCurrent, lockedSourceFences: business.lockedSourceFences }
+    const proofFor = createSfScenarioProcurementProofScope(dependencies)
+    const operations = createSfScenarioOperationAccess({ host: authority.host, sources: business.plannerSources, projectPlanner: business.projectPlannerEvidence,
+      scenarioInputs: business.plannerProduct.scenarioInputs, readSourceFences: business.readSourceFences, resolveProcurementEvidence: business.context.resolve,
+      externalOperation: business.dashboardDecisions.resolveOperation, procurementProof: proofFor })
+    const canonical = createDecisionCasePort({ state: authority.state, host: authority.host, creationTarget: authority.creationTarget,
+      operationIdentity: business.operationIdentity, authorizeCase: business.authorizeCase, verifyScenarioOperations: operations,
+      evidence: business.context, createId: randomUUID, now: () => clock.at })
+    const counts = { canonical: 0, inside: 0, contexts: 0, resolutions: 0 }
+    const during: { after?: () => Promise<void> } = {}
+    const canonicalRead: typeof canonical.read = async (input, call) => {
+      counts.canonical++; if (persistence.currentSnapshots?.()) counts.inside++
+      const result = await canonical.read(input, call)
+      const action = during.after; during.after = undefined
+      await action?.()
+      return result
+    }
+    const evidence = business.evidence.current
+    if (!evidence) throw new Error("Actual BCS absent")
+    const resolve = evidence.resolve, context = evidence.context
+    evidence.resolve = async (...args) => { counts.resolutions++; return resolve(...args) }
+    evidence.context = async (...args) => { counts.contexts++; return context(...args) }
+    return { authority, business, request, admit, select, proofFor, canonicalRead, counts, during,
+      read: createSfProcurementCaseReadScope({ ...dependencies, read: canonicalRead }),
+      admitCase: (actor: string, input: { caseRef: string }) => admit("sf_case_read", input, actor),
+      reset: () => { counts.canonical = 0; counts.inside = 0; counts.contexts = 0; counts.resolutions = 0 } }
+  }
+  const runtime = open()
+  await runtime.select("alice", period)
+  const issuer = await runtime.admit("sf_request_read", { request: "PR-SCOPE" })
+  const issued = await runtime.business.individual.issue("procurement-request", "PR-SCOPE", issuer)
+  if (issued.status !== "ok") throw new Error(issued.reason)
+  let source = await runtime.business.individual.resolve(issued.value, issuer)
+  if (source.status !== "ok") throw new Error(source.reason)
+  if (legacy) {
+    const selected = await runtime.business.individual.resolveForPreparation(source.value.evidence.refId, issuer)
+    if (selected.status !== "ok") throw new Error(selected.reason)
+    const scope = { ...selected.value.scope, selector: { ...object(selected.value.scope.selector), fields: procurementRequestFields.filter((field) => field !== "approvalStage") } }
+    const material = await persistence.readScopedSource("procurement", scope, async () => {
+      // Reopen the actual already-authorized full source; the legacy selector
+      // only removes one field accepted by the published projection contract.
+      const authorized = await runtime.business.individual.resolveForPreparation(issued.value, issuer)
+      return authorized.status === "ok" && digestSfValue(authorized.value) === digestSfValue(selected.value) &&
+        await runtime.authority.host.revalidate(issuer)
+    })
+    if (!material) throw new Error("Published legacy field scope unavailable")
+    source = await runtime.business.individual.resolve(`sf-procurement:${encodeURIComponent(material.incarnation)}:${material.version}`, issuer)
+    if (source.status !== "ok") throw new Error(source.reason)
+  }
+  const original = source.value.evidence
+  const draft = { objective: "Read the exact current Procurement case", horizon: period, currency: "USD", criteria: ["Cost impact"], sourceRefs: [original] }
+  const drafter = await runtime.admit("sf_case_draft", draft)
+  const created = await runtime.business.cases.draft(draft, drafter)
+  if (created.status !== "ok") throw new Error(created.reason)
+  const operation = { kind: "replace" as const, targetRef: original.refId, amount: 150, currency: "USD", period }
+  const result: ScenarioResult = { id: "upstream-result", version: 1, currency: "USD", horizon: period, components: [], sourceRefs: [original],
+    unresolvedConditions: ["Explicit upstream pending coverage"], restrictions: [], comparisonStatus: "conditioned", knownSubtotal: 150, total: null,
+    costCoverage: { basisId: "pending-basis", basisVersion: 1, alternativeId: "alternative", alternativeVersion: 1, currency: "USD", horizon: period,
+      issues: ["Coverage pending"], evaluatedSourceRefs: [original], coverageState: "pending", entries: [{ status: "pending", categoryId: "purchase", reason: "No complete cost assertion" }], derivedMissingCategoryIds: ["purchase"] } }
+  const initial: DecisionCase = { ...created.value, version: created.value.version + 1, state: "chosen", participants: ["alice", "bob"],
+    alternatives: [{ id: "alternative", version: 1, title: "Explicit amount replacement", scenario: { baseRef: original.refId, operations: [operation], assumptions: [] }, result }],
+    costCoverageBases: [{ id: "pending-basis", version: 1, decisionType: "requisition", categoryIds: ["purchase"], additionalCategoryIds: [], sourceRefs: [original] }] }
+  const choice = createChoiceSnapshot({ case: initial, alternativeId: "alternative", alternativeVersion: 1,
+    comparison: { baselineResultRef: "upstream-baseline", alternativeResultRef: result.id, costCoverageRefs: [], criterionResults: [], unresolvedConditions: result.unresolvedConditions,
+      comparisonStatus: "conditioned", knownDifference: 50, completeDifference: null }, criteria: initial.criteria.map((criterion) => criterion.id), values: [], evidenceRefs: [original],
+    id: "upstream-choice", principalRef: "alice", reason: "Explicit stored-choice fixture", at: clock.at })
+  if (choice.status !== "ok") throw new Error(choice.reason)
+  const version = await runtime.authority.state.read(runtime.request(), "cases", () => null)
+  if (version.status !== "ok") throw new Error("Actual case namespace absent")
+  const seeded = await runtime.authority.state.transaction(runtime.request(), { namespace: "cases", expectedStorageVersion: version.storageVersion,
+    targetRef: initial.id, targetIncarnation: initial.incarnation, idempotencyKey: randomUUID(), commandDigest: digestSfValue({ initial, choice }) }, async (state) => {
+    state.cases[initial.id] = { ...initial, choices: [choice.choice] }; return { commit: true, value: true }
+  })
+  if (seeded.status !== "ok") throw new Error("Actual chosen case fixture unavailable")
+  const caseRef = { id: initial.id, incarnation: initial.incarnation, version: initial.version }
+  const payload = { caseRef, choiceId: choice.choice.id, operations: [operation] }
+  const admission = await runtime.authority.human.admit(runtime.request(), "decisions.prepare-changes", payload)
+  if (admission.status !== "ok") throw new Error(admission.reason)
+  try {
+    // Both current and legacy fixtures execute the real case mutation. Only
+    // the explicit unprepared test stops after the authentic original capture.
+    const prepared = prepareChange
+      ? await runtime.business.withCase(admission.value, caseRef, {}, () => runtime.business.procurementDecisions.prepareChanges(payload, admission.value))
+      : await runtime.business.procurementDecisions.prepareDomainCommands(caseRef, choice.choice.id, [operation], admission.value)
+    if (prepared.status !== "ok") throw new Error(`Actual prepared change unavailable: ${prepared.reason}`)
+  } finally { runtime.authority.human.finish(admission.value) }
+  const input = { caseRef: encodeCaseRef(initial) }, request = runtime.request()
+  const call = await runtime.admit("sf_case_read", input, "alice", request)
+  const stored = async () => {
+    const found = await runtime.authority.state.read(runtime.request(), "cases", (state) => state.cases[initial.id])
+    if (found.status !== "ok" || !found.value) throw new Error("Actual prepared case missing")
+    return found.value
+  }
+  const edit = async (amount: number) => {
+    const result = await persistence.transaction("procurement", async (snapshot) => {
+      const result = domain.execute(snapshot, { id: "alice", roles: ["admin"], canWrite: true, assigned: [], domains: [] },
+        { page: "Requests", action: "save", id: "PR-SCOPE", version: snapshot.versions["requests:PR-SCOPE"]?.version ?? 0, values: { pr: { estAmount: amount } } },
+        await runtime.authority.host.environment(runtime.request()))
+      return { commit: result.ok, value: result }
+    })
+    if (!result.ok) throw new Error("Actual Procurement edit failed")
+  }
+  return { runtime, open, input, request, call, persistence, metrics, allowed, clock, stored, edit,
+    snapshot: () => persistence.transaction("dashboard", async () => ({ commit: false, value: persistence.currentSnapshots?.() })),
+    reset: () => { metrics.persistenceCalls = 0; metrics.rootTransactions = 0; metrics.commitRequests = 0; runtime.reset() } }
+}

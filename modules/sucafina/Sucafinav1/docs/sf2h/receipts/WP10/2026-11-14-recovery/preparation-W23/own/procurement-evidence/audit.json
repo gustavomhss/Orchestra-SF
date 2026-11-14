@@ -1,0 +1,36 @@
+{
+  "role": "builder optimization and auxiliary static audit; not independent review",
+  "status": "sealed-static-awaiting-root-integration-and-hosted-ci",
+  "baseProductSha": "4bc9c7220f04f113609393aaba38934a7e69878b",
+  "baseTreeSha": "082b73607bea09a0a6252e2298c5a581c10cb645",
+  "cause": "Repeated full canonical Procurement history resolution reopens many protected persistence/auth/source calls even though completed case/Atlas proofs are already limited per observation.",
+  "decision": "Group exactly one canonical decisionEvidence.resolveEvidence in a short actual LocalStore read scope when the current actor source entry is already fully materialized. Do not span the Memory observation or reuse outputs/authority.",
+  "currentScopeEligibility": [
+    "UI exact sf-procurement procurement-request reference only; original historical reference unchanged.",
+    "Same Request object and every header, call/binding, selected period object/bytes/expiry, and real producer function identity pinned.",
+    "Current contextFor supplies authenticated period/currency; current principal/roles/canWrite/roleMap reconstruct exact scope key.",
+    "Lookup current sfSources.scopes[digest(scope)], not archived original incarnation/version.",
+    "Public sfSourceIdentity/sfScopedSourceIdentity/projectProcurementScope must agree and the entire canonical existing entry must match; no extra/missing fields or pending normalization.",
+    "Approval-stage age readers are unsupported; UTC day/directory/bank pin is used only for the admitted closure.",
+    "Before/after private witnesses retain full C08 state and all three domain snapshots/source fences, current principal, environment and current context; actual C08 and host authorization still execute."
+  ],
+  "unsupportedSemantics": "Only pre-canonical unsupported may leave the root and invoke the ordinary canonical resolver once. Missing/denied/uninitialized C08 archive access remains compatible with canonical fresh fallthrough. Once canonical work begins, changed/unsupported/error/nested writer fails unavailable and is never retried. Canonical undefined is preserved after valid final witness.",
+  "guardPlacement": "The helper emits sf-procurement-evidence-fence during a short producer root. Memory emits sf-memory-case-fence before/after case/Atlas canonical work; the two tags cannot trigger one another. No Memory observation or Atlas callback is wrapped by the integration hunk.",
+  "preservedCanonicalWork": [
+    "Actual protected archive read and reread",
+    "Both issueForActor calls",
+    "Both physical-continuity checks and current Procurement projection",
+    "BCS current-source fallback and separate continuity checks",
+    "Both independent Atlas observations per prepare/verify/output acceptance",
+    "All historical source/capture/principal/clock/lease/header probes and full stale/cancel tail"
+  ],
+  "newCounterproofs": [
+    "cold C08 remains product-state-uninitialized and BCS returns real fresh evidence; canonical runs outside root and returns undefined",
+    "no preferences namespace grant remains denied at C08 while existing authorized fresh source fallback succeeds; no added grant",
+    "ready C08 invokes canonical inside real root and preserves its undefined fresh result",
+    "a real unexpected nested write is refused with one canonical execution and unchanged durable snapshot"
+  ],
+  "costLimits": "No measured successor savings are claimed. Root/nested persistence call diagnostics distinguish grouping on hosted execution; canonical producers and all auth still run. More CPU cloning/hashing may remain.",
+  "remainingAcceptance": "Run full historical-memory.test.ts and procurement-evidence-read-scope.test.ts on the published successor. C07/native/global acceptance and three independent reviews remain separate.",
+  "codeFrozen": true
+}

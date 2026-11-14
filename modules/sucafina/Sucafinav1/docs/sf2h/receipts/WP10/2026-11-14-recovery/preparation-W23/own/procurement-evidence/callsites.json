@@ -1,0 +1,68 @@
+[
+  {
+    "sourceCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+    "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+    "line": 77,
+    "reason": "Counters wrap all calls; phase stopwatch is separate."
+  },
+  {
+    "sourceCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+    "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+    "line": 138,
+    "reason": "The awaited callback runs after actual state.read has returned."
+  },
+  {
+    "sourceCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+    "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+    "line": 363,
+    "reason": "Source mutation occurs after a successful canonical Atlas read, not before the observation."
+  },
+  {
+    "sourceCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+    "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+    "line": 367,
+    "reason": "Capture mutation commits real dashboard state from that awaited callback."
+  },
+  {
+    "sourceCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+    "path": "apps/cli/src/sucafina-product/memory-case-read-scope.ts",
+    "line": 115,
+    "reason": "The first complete case producer is outside the Memory C08 witness."
+  },
+  {
+    "sourceCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+    "path": "apps/cli/src/sucafina-product/memory-case-read-scope.ts",
+    "line": 157,
+    "reason": "The first Atlas producer is outside the Memory C08 witness."
+  },
+  {
+    "sourceCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+    "path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+    "line": 284,
+    "reason": "Canonical historical producer remains unchanged."
+  },
+  {
+    "sourceCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+    "path": "modules/sucafina/Sucafinav1/product/procurement/sources.ts",
+    "line": 91,
+    "reason": "Two historical issueForActor calls each perform three resolveCurrent calls."
+  },
+  {
+    "sourceCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+    "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+    "line": 9,
+    "reason": "Exact existing-entry equality predicts no commit without creating a substitute proof."
+  },
+  {
+    "sourceCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+    "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+    "line": 264,
+    "reason": "undefined from the canonical archive producer preserves currentProcurement fallback."
+  },
+  {
+    "sourceCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+    "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+    "line": 188,
+    "reason": "Nested commit poisons the real read root; no retry is allowed."
+  }
+]

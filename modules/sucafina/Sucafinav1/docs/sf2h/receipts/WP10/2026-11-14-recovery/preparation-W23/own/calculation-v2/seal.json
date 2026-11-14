@@ -1,0 +1,88 @@
+{
+  "schema": "wp10-builder-seal-v1",
+  "status": "frozen-builder-candidate",
+  "revision": 2,
+  "parentPackage": {
+    "directory": "agents/c17/W23-calculation",
+    "auditSha256": "528d98bc16a986b68ec54356ee866d20135aa3ab7191cf0baed413e17290d126",
+    "sealSha256": "0c0cfd2d5b694a482a93021c07e30b6d1c3c67ba91d3c839c02546cd11fd9a0b",
+    "preservedByteExact": true
+  },
+  "baseCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+  "files": [
+    {
+      "path": "audit.json",
+      "bytes": 15196,
+      "sha256": "463173670fa1efab327a4fced3352f00afd48f9ad6de52732a3f78373198e547"
+    },
+    {
+      "path": "audit.md",
+      "bytes": 8961,
+      "sha256": "8118e960d6ff90b9bb8262979020c095499fa0accaf8c9d358ff0203624d1a7f"
+    },
+    {
+      "path": "baseline-evidence.json",
+      "bytes": 11242,
+      "sha256": "99d5d0f49159d7ac77a456b8d98561d853b7639249da6a77eec6370d07630f51"
+    },
+    {
+      "path": "changes.patch",
+      "bytes": 63616,
+      "sha256": "dbdaa5ddb4a464b2a26eb9daecf670cf8a9d12eacabcbacd703da70bf0a2f0c1"
+    },
+    {
+      "path": "package/apps/cli/src/sucafina-product/planner-calculation-history.ts",
+      "bytes": 13453,
+      "sha256": "5ab943a0a1d935a764a3061b4a138477e89057a6389608300cd01396b6626475"
+    },
+    {
+      "path": "package/apps/cli/src/sucafina-product/planner-calculation-read-scope.ts",
+      "bytes": 10079,
+      "sha256": "34100391d4ca6cee18c4a851e93e8a060a146acedcad567e15285646879c9912"
+    },
+    {
+      "path": "package/apps/cli/src/sucafina-product/planner-calculation-services.ts",
+      "bytes": 24989,
+      "sha256": "7bc72134c433aaeed609397c78d486c92e7fff500ca1b3935509a31abfc12f78"
+    },
+    {
+      "path": "package/modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+      "bytes": 15265,
+      "sha256": "3370333c7cf108d9624a2271231d71747847bcfee2af15ccae87b3c72ac14887"
+    },
+    {
+      "path": "package/modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-case-scope.test.ts",
+      "bytes": 17385,
+      "sha256": "db1543f9d92a763108b47db4f3ca47506bc1df3997ce596db95344bff06b7039"
+    },
+    {
+      "path": "package/modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "bytes": 56824,
+      "sha256": "901314f18cc9d8f5a54bbdef1222f9a72a0f556dd65a45b26811822799d3d2d5"
+    },
+    {
+      "path": "package/modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-recorded-history.test.ts",
+      "bytes": 17248,
+      "sha256": "f3bbda132da8aa8ab8d53ceca8ab819e0bc569c962b0ebc1396633ef40aef24c"
+    },
+    {
+      "path": "source-manifest.json",
+      "bytes": 5128,
+      "sha256": "a36b14cac3286d25949938c757d89fd5704bac59d841c1f506fdf968a9e9dc8d"
+    },
+    {
+      "path": "static-checks.json",
+      "bytes": 42597,
+      "sha256": "3f1f3597eb91063447cf99d5aa0ff01448b91fc510ae34bc19cd166ac9c29c4e"
+    },
+    {
+      "path": "v1-to-v2.patch",
+      "bytes": 8669,
+      "sha256": "4d155e3cfa492b6b1fd012f717aeb35d88a1d2c1d5da1ae158f446a9bded410d"
+    }
+  ],
+  "productFiles": 7,
+  "localProductExecution": false,
+  "hostedCandidateAcceptance": false,
+  "independentReview": false
+}

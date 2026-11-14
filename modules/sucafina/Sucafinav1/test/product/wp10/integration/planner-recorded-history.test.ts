@@ -68,10 +68,10 @@ test("stored Planner historical access rejects unrecorded input, missing capture
       await action?.()
     }))
     await f.setForecast(160)
-    expect(await f.access(f.decision, f.call)).toBe(true)
+    expect(await deadline.phase("positive-before-faults", () => f.access(f.decision, f.call))).toBe(true)
     const unrecorded = structuredClone(f.decision)
     unrecorded.alternatives[0]!.scenario.operations[0]!.amount = 1
-    expect(await f.access(unrecorded, f.call)).toBe(false)
+    expect(await deadline.phase("unrecorded-operation", () => f.access(unrecorded, f.call))).toBe(false)
     const saved = await f.store.transaction("dashboard", async (snapshot) => ({ commit: false, value: structuredClone(snapshot.data.__sfProductV1) as SfProductState }))
     const fault = (change: (state: SfProductState) => void) => f.store.transaction("dashboard", async (snapshot) => {
       snapshot.data.__sfProductV1 = structuredClone(saved)
@@ -80,21 +80,21 @@ test("stored Planner historical access rejects unrecorded input, missing capture
     })
     // Fault injection edits protected bytes only in the isolated test store.
     await fault((state) => { state.atlas = {} })
-    expect(await f.access(f.decision, f.call)).toBe(false)
+    expect(await deadline.phase("missing-protected-capture", () => f.access(f.decision, f.call))).toBe(false)
     await fault(() => {})
-    expect(await f.access(f.decision, f.call)).toBe(true)
+    expect(await deadline.phase("restored-capture", () => f.access(f.decision, f.call))).toBe(true)
     const nestedSelector = structuredClone(f.decision)
     const nestedOperation = nestedSelector.alternatives[1]!.scenario.operations[0]!
     nestedOperation.replacementRef = plannerValueRef(nestedOperation.replacementRef!, "line:2:forecast")
     await fault((state) => { state.cases[f.decision.id] = nestedSelector })
-    expect(await f.access(nestedSelector, f.call)).toBe(false)
+    expect(await deadline.phase("nested-selector", () => f.access(nestedSelector, f.call))).toBe(false)
     await fault(() => {})
     during.action = async () => { await f.setForecast(170) }
-    expect(await f.access(f.decision, f.call)).toBe(false)
+    expect(await deadline.phase("source-race", () => f.access(f.decision, f.call))).toBe(false)
     expect(during.action).toBeUndefined()
-    expect(await f.access(f.decision, f.call)).toBe(true)
+    expect(await deadline.phase("fresh-source-after-race", () => f.access(f.decision, f.call))).toBe(true)
     during.action = async () => { await fault((state) => { state.cases[f.decision.id]!.participants = [] }) }
-    expect(await f.access(f.decision, f.call)).toBe(false)
+    expect(await deadline.phase("membership-race", () => f.access(f.decision, f.call))).toBe(false)
     expect(during.action).toBeUndefined()
     await fault(() => {})
 
@@ -109,18 +109,18 @@ test("stored Planner historical access rejects unrecorded input, missing capture
     cyclic = f.createAccess(recorded)
     expect(await cyclic(f.decision, f.call)).toBe(false)
     expect(nested).toEqual([false])
-    expect(await f.access(f.decision, f.call)).toBe(true)
+    expect(await deadline.phase("after-cycle", () => f.access(f.decision, f.call))).toBe(true)
 
     const revoked = await f.read()
     try {
       f.active.value = false
       expect(await f.access(f.decision, revoked)).toBe(false)
     } finally { f.active.value = true; f.authority.ui.finish(revoked) }
-    expect(await f.access(f.decision, f.call)).toBe(true)
+    expect(await deadline.phase("after-principal-revocation", () => f.access(f.decision, f.call))).toBe(true)
 
     await f.persistence.transaction("planner", async (snapshot) => { snapshot.data.versions = []; return { commit: true, value: undefined } })
     await f.setForecast(170)
-    expect(await f.access(f.decision, f.call)).toBe(false)
+    expect(await deadline.phase("replaced-source-incarnation", () => f.access(f.decision, f.call))).toBe(false)
     expect((await f.business.cases.read({ caseRef: encodeCaseRef(f.decision) }, f.call)).status).not.toBe("ok")
   } finally { await deadline.close() }
 }, 180_000)

@@ -1,0 +1,81 @@
+{
+  "schema": "wp10-owner-contract-divergence-v1",
+  "id": "W23-OWNER-C12-H05-RECONCILIATION-01",
+  "status": "OPEN-OWNER-DECISION-REQUIRED",
+  "owners": [
+    "WP04",
+    "WP11",
+    "S0"
+  ],
+  "candidateInspected": "4bc9c7220f04f113609393aaba38934a7e69878b",
+  "hosted": {
+    "productSha": "532da498e08fa36fadbd3c01e3e7da00d869dd47",
+    "snapshotSha": "6cc1999f0614f6002f2d1bfc72be2edd82ae7594",
+    "runId": 43605495862,
+    "jobId": 132479126824,
+    "rawLogPath": "evidence/W21/B-job-132479126824.raw.txt",
+    "rawLogSha256": "37c9dad034c51ee8c0fc1ccf84639468f5d035df26f484c1272efecc7fdf14da",
+    "scenario": "H05",
+    "elapsedMs": 16942,
+    "declaredBudgetMs": 15000,
+    "httpObserved": {
+      "decision-review": 200,
+      "decision-apply": 200
+    },
+    "firstAssertionMismatch": {
+      "expectedHttp": 409,
+      "actualHttp": 200
+    },
+    "additionalErrorBelongsTo": "H05, not the following H06 test",
+    "laterStateAssertionsReached": false
+  },
+  "publishedForeignInputs": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+      "sourceCommit": "92f6d97d2df5ebf53cd845f4cfe93355d10b0f6f",
+      "blobSha": "964a53310c340f4496d7410d66f8b852270b75f1",
+      "localPath": "/workspace/scratch/301a7f2754f4/incoming/c12/apply-pr35.ts",
+      "bytes": 20833,
+      "sha256": "debb437646fff9e9143b713b42e445f34754fe33df379fdd5f62b35e4a26a6da",
+      "owner": "astra-finance/WP11",
+      "pr": 35,
+      "admission": "exact-published-C12-dependency",
+      "reason": "C12 reconciliation after the receipt advances the cases namespace, durable pre-dispatch reservation and exact receipt/case retention. Protected by WP10 human-lease egress wrappers; preserves producer tests verbatim."
+    },
+    {
+      "pr": 34,
+      "sourceCommit": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+      "path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+      "blobSha": "23d9291b3dcedda36edc4aa4f38856024e3c58f4",
+      "sha256": "dc8a1a16ea7b54b03ca6bafacf60cc27b61aff32626c2a8cf69affa5d3f1399f",
+      "owner": "astra-operations / WP04-WP06",
+      "reason": "Owner C12 producer/HTTP/test delta or exact dashboard adapter type repair; no protected application entrypoint changed.",
+      "bytes": 43049
+    },
+    {
+      "pr": 34,
+      "sourceCommit": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "blobSha": "3dbad125693da9898b1435eff2a1108476c09f40",
+      "sha256": "1f0335d5d6df1a083e318fdd5a0e96bb5dbc4a4bc0142389639d26f2b73896f8",
+      "owner": "astra-operations / WP04-WP06",
+      "reason": "Owner C12 producer/HTTP/test delta or exact dashboard adapter type repair; no protected application entrypoint changed.",
+      "bytes": 46778
+    }
+  ],
+  "staticCause": [
+    "The test commits a real authorized case edit after the durable domain receipt. It advances case.version and changes objective, then expects stale/case-changed-after-application and no reconciled case receipt.",
+    "The published apply producer explicitly reopens the case and rejects only a smaller fresh version. It preserves unrelated edits by spreading fresh, requires the selected prepared change to remain equal, rereads the authoritative receipt, and writes reconciliation with the actual latest storage version.",
+    "No case-changed-after-application outcome exists in the inspected producer. These published expectations disagree for the same interleave."
+  ],
+  "qualification": {
+    "httpMismatchObservedHosted": true,
+    "mechanismExplainedByStaticInspection": true,
+    "finalObjectiveOrReceiptsObservedByThisFailedTest": false,
+    "separateDeadlineFailureAlsoPresent": true,
+    "foreignFilesEdited": false,
+    "localProductExecution": false,
+    "nativeOrGlobalAcceptance": false
+  },
+  "nextAction": "WP04 and WP11 must choose the contract and publish a coherent producer/test pair. S0 resolves any policy disagreement. WP10 may compose exact published blobs and rerun the complete H file; it must not synthesize a 409 in its own wrapper or rewrite the foreign expectation."
+}

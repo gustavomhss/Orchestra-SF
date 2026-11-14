@@ -28,12 +28,27 @@ export function createSfPlannerCalculationHistory(input: {
   replayRecordOnly: PlannerPort["simulateScenario"]
   withCalculationCase: SfCalculationCaseScope
   lockedSourceFences: () => SourceFences | undefined
+  /** The host's current Planner record admission, not an assumed historical grant. */
+  verifyCurrentPlannerRecords?: (refs: readonly Extract<BusinessEvidenceRef, { kind: "record" }>[], call: TrustedDomainContext) => Promise<boolean>
 }) {
-  const active = new AsyncLocalStorage<{ call: TrustedDomainContext; request: Request; binding: string; runs: ReadonlySet<string>; open: boolean }>()
+  const active = new AsyncLocalStorage<{ call: TrustedDomainContext; request: Request; requestDigest: string; binding: string; runs: ReadonlySet<string>; open: boolean }>()
+  const currentSourceScope = (call: TrustedDomainContext) => {
+    const scope = active.getStore()
+    return !!scope?.open && scope.call === call && input.host.requestFor(call) === scope.request && !scope.request.signal.aborted &&
+      requestIdentity(scope.request) === scope.requestDigest && digestSfValue([call.kind, call.binding]) === scope.binding
+  }
   const readOnly = () => { throw new Error("historical-calculation-read-only") }
   const results = createSfDecisionResultStore({ host: input.host, state: input.state, authorizeCase: input.authorizeCase,
     verifySources: async (_value, refs, call) => {
       if (!refs.length || refs.some((ref) => ref.kind !== "record")) return false
+      // The same scoped source resolver used by current calculations compares
+      // every complete record ref with its live projection identity. The two
+      // actual financial replays below still reconstruct every numeric value.
+      if (call.kind === "ui" && input.verifyCurrentPlannerRecords && refs.every((ref): ref is Extract<BusinessEvidenceRef, { kind: "record" }> =>
+        ref.kind === "record" && ref.target.surface === "planner" && ref.target.recordType === "planner-version")) {
+        const scope = active.getStore()
+        return currentSourceScope(call) && await input.verifyCurrentPlannerRecords(refs, call) && active.getStore() === scope && currentSourceScope(call)
+      }
       const current = await input.evidence.context({ refs }, call)
       return current.length === refs.length && current.every((value, index) => value.state === "fresh" && !!value.authorizedProjection && !!value.currentRef &&
         value.accessRevision === call.binding.accessRevision && same(value.ref, refs[index]) && same(value.currentRef, refs[index])) && await input.host.revalidate(call)
@@ -51,7 +66,9 @@ export function createSfPlannerCalculationHistory(input: {
     const parent = active.getStore()
     const ancestors = parent?.open && parent.call === call && parent.request === request && parent.binding === binding ? parent.runs : new Set<string>()
     if (!request || request.signal.aborted || call.binding.principalRef.startsWith("local:") || ancestors.has(ref.target.runId) || ancestors.size >= 16) return unavailable()
-    const current = () => input.host.requestFor(call) === request && !request.signal.aborted && digestSfValue([call.kind, call.binding]) === binding && same(incoming, ref)
+    const requestDigest = requestIdentity(request)
+    const current = () => input.host.requestFor(call) === request && !request.signal.aborted && requestIdentity(request) === requestDigest &&
+      digestSfValue([call.kind, call.binding]) === binding && same(incoming, ref)
     const snapshot = async () => {
       if (!current() || !await input.host.revalidate(call) || !current()) return undefined
       const observe = async (state: Readonly<SfProductState>, actor: SfStateAuthority) => {
@@ -81,7 +98,7 @@ export function createSfPlannerCalculationHistory(input: {
     }
     try {
       sfEvidenceSourceMaps([ref])
-      const scope = { call, request, binding, runs: new Set([...ancestors, ref.target.runId]), open: true }
+      const scope = { call, request, requestDigest, binding, runs: new Set([...ancestors, ref.target.runId]), open: true }
       return await active.run(scope, async () => {
         try {
           const before = await snapshot()
@@ -121,6 +138,7 @@ export function createSfPlannerCalculationHistory(input: {
 }
 
 function same(left: unknown, right: unknown) { return digestSfValue(left) === digestSfValue(right) }
+function requestIdentity(request: Request) { return digestSfValue({ method: request.method, url: request.url, headers: [...request.headers.entries()] }) }
 
 function calculationProjection(projection: Capture["projection"], ref: Calculation, result: ScenarioResult): projection is DomainProjection {
   if (!("values" in projection) || !("components" in projection) || projection.context.installationId !== ref.installationId ||

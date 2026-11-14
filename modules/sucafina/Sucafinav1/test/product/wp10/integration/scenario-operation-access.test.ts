@@ -226,7 +226,7 @@ test(`fresh Procurement duplicate proof rejects ${changed} change after its cano
         return { commit: true, value: undefined }
       })
       if (changed === "principal") fixture.active.value = false
-      if (changed === "period") expect((await fixture.business.procurementSelections.create(fixture.call,
+      if (changed === "period") expect((await fixture.selectPeriod(
         { start: "2026-02-01", end: "2026-02-28" })).status).toBe("ok")
       if (changed === "clock") fixture.clock.at = "2026-11-15T00:00:00Z"
       if (changed === "headers") fixture.sourceRequest.headers.set("x-operation", "replaced-request-intent")
@@ -270,6 +270,18 @@ async function procurementScenarioFixture(deadline: ReturnType<typeof compositio
   const sourceRequest = fixture.authority.host.requestFor(call)
   if (!sourceRequest) throw new Error("Actual UI Request absent")
   const period = { start: "2026-01-01", end: "2026-12-31" }
+  // Each selected period has its own consumed intent; the proof keeps its
+  // original Request and lease throughout both setup and interleaved changes.
+  const selectPeriod = async (selected: typeof period) => {
+    const digest = digestSfValue({ purpose: "work-selection", period: selected })
+    const admitted = await fixture.authority.ui.admit(sourceRequest, "sf_work_list", digest)
+    if (admitted.status !== "ok") throw new Error(admitted.reason)
+    try {
+      if (!await fixture.authority.ui.validate(admitted.value, "sf_work_list", digest))
+        throw new Error("Actual work selection admission unavailable")
+      return await fixture.business.procurementSelections.create(admitted.value, selected)
+    } finally { fixture.authority.ui.finish(admitted.value) }
+  }
   await fixture.persistence.transaction("procurement", async (snapshot) => {
     snapshot.data.store = { requests: { "PR-PROOF": { request: { number: "PR-PROOF", createdBy: "person", status: "draft",
       pr: { title: "Stored Procurement proof", justification: "Explicit choice fixture", estAmount: 100 }, history: [], attachments: [] }, version: 0, by: "person" } },
@@ -277,7 +289,7 @@ async function procurementScenarioFixture(deadline: ReturnType<typeof compositio
     snapshot.versions["requests:PR-PROOF"] = { version: 0, by: "person" }
     return { commit: true, value: undefined }
   })
-  expect((await fixture.business.procurementSelections.create(call, period)).status).toBe("ok")
+  expect((await selectPeriod(period)).status).toBe("ok")
   const issued = await fixture.business.individual.issue("procurement-request", "PR-PROOF", call)
   if (issued.status !== "ok") throw new Error(issued.reason)
   const resolved = await fixture.business.individual.resolve(issued.value, call)
@@ -348,7 +360,7 @@ async function procurementScenarioFixture(deadline: ReturnType<typeof compositio
     })
     expect(changed.status).toBe("ok")
   }
-  return { ...fixture, call, sourceRequest, decision, original, counts, interleave, edit, save,
+  return { ...fixture, call, sourceRequest, decision, original, counts, interleave, edit, save, selectPeriod,
     reset: () => { counts.scenario = 0; counts.context = 0; counts.fences = 0 },
     read: () => fixture.business.cases.read({ caseRef: encodeCaseRef(caseRef) }, call) }
 }

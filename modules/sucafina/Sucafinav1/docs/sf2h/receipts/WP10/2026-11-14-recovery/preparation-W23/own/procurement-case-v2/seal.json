@@ -1,0 +1,67 @@
+{
+  "schema": "wp10.builder.package-seal.v2",
+  "status": "frozen-for-root-reconciliation-and-hosted-ci",
+  "parentSeal": {
+    "path": "agents/c17/W23-procurement-read-scope/seal.json",
+    "bytes": 2545,
+    "sha256": "db8116445050d94ecd8d4582aad6386624eed3b29c7492a9f70f8333a5fbeab3",
+    "blobSha": "921ecf359a1799b16059453950bfb85bfc4d9fd2"
+  },
+  "audit": {
+    "path": "agents/c17/W23-procurement-read-scope-v2/audit.json",
+    "bytes": 8743,
+    "sha256": "6355bbd9d796022292cbda5455f3fd1704040e9cd6d04cf70f085c51f5ca8b71",
+    "blobSha": "9361a80f4624e3a7bab7a00dfe2cc0d07d93cdf0"
+  },
+  "manifest": {
+    "path": "agents/c17/W23-procurement-read-scope-v2/source-manifest.json",
+    "bytes": 5854,
+    "sha256": "472155a5c30abbf2d8319a7264bded47bf8bfd38f1c3bb9fc9198fc24b2e0eb1",
+    "blobSha": "aa53dd3f1d67e3af1417af3c7d689d1fcf5fafef"
+  },
+  "notes": {
+    "path": "agents/c17/W23-procurement-read-scope-v2/audit.md",
+    "bytes": 4534,
+    "sha256": "064436967868d06fbe845323e02ad1e7ee1513e4cce1905a0b4805efba510229",
+    "blobSha": "1e51f1066a7b599f620696340d520bbd368e1e3b"
+  },
+  "staticChecks": {
+    "path": "agents/c17/W23-procurement-read-scope-v2/static-checks.json",
+    "bytes": 8152,
+    "sha256": "73584201690dac71c6ec56de0bde38c8f83c924919d68c3f28d3e580baf2d65d",
+    "blobSha": "3f6ebf4f5f2855e6cb80d9aba4c3336343a10cad"
+  },
+  "ciSelection": {
+    "path": "agents/c17/W23-procurement-read-scope-v2/ci-selection.json",
+    "bytes": 1534,
+    "sha256": "4a1380b82a751807ecc00d968c90881044557070f4cd08962f7db3de77345bd2",
+    "blobSha": "6789437aabf0441d8e9444acba4b9b200cb78cda"
+  },
+  "integrationPatch": {
+    "path": "agents/c17/W23-procurement-read-scope-v2/business-services.patch",
+    "bytes": 1716,
+    "sha256": "ca37f36eddefdaef794c670d6591a34712b3e31946b9c53b0740f4633820cf24",
+    "blobSha": "f75341e1b25437bd027c57db2bbd20562d26b61f"
+  },
+  "parentIntegrity": {
+    "path": "agents/c17/W23-procurement-read-scope-v2/parent-integrity.json",
+    "bytes": 4667,
+    "sha256": "3e9e1a59eba1047a948b3027901a03b5448a7da55f4d0c1c5ceeb154059196c4",
+    "blobSha": "df038399f3cc55f842a231ac4b62bbb484bd2c0f"
+  },
+  "productPaths": [
+    {
+      "path": "apps/cli/src/sucafina-product/procurement-case-read-scope.ts",
+      "bytes": 10647,
+      "sha256": "c2f8ed94d0dc3aef1ad95faf95255a8ab3cc2de433570c609e32d5e75b88ccf8",
+      "blobSha": "b5cebd6362b14b5b81fda7b80ff1e0f7bd85a3d6"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts",
+      "bytes": 30355,
+      "sha256": "06e53010610245e9413f470344f6133da72f899ed62a4ba7f8c042ae78a0937a",
+      "blobSha": "67274bd100bbab1ddf4ba02bac9a4b17bcb5472e"
+    }
+  ],
+  "localProductExecuted": false
+}

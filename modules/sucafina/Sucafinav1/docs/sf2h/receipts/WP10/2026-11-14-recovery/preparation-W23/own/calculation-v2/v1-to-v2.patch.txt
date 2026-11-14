@@ -1,0 +1,116 @@
+--- v1/apps/cli/src/sucafina-product/planner-calculation-read-scope.ts
++++ v2/apps/cli/src/sucafina-product/planner-calculation-read-scope.ts
+@@ -33,10 +33,22 @@
+       const decision = stored && state.cases[stored.caseRef.id]
+       if (!stored || stored.kind !== "scenario" || stored.resultRef !== runId || !decision || decision.id !== stored.caseRef.id ||
+         decision.incarnation !== stored.caseRef.incarnation || decision.version !== stored.caseRef.version || !decision.participants.includes(actor.principalRef)) return undefined
+-      return { stored: structuredClone(stored), request: structuredClone(state.preferences[requestKey(runId)]) }
++      return structuredClone(stored)
+     })
+     if (!current() || !await input.host.revalidate(call) || !current()) return { status: "denied", reason: "calculation-authority-unavailable" }
+-    return found.status === "ok" && found.value ? { status: "ok", value: found.value }
++    if (found.status !== "ok" || !found.value) return { status: "unavailable", reason: "scenario-request-unavailable" }
++    const selected = found.value
++    const preferences = await input.state.read(request, "preferences", (state, actor) => {
++      if (!sameAuthority(actor, call) || !current()) return undefined
++      const stored = state.decisionResults?.[runId], decision = state.cases[selected.caseRef.id]
++      const bound = state.preferences[requestKey(runId)]
++      if (!stored || digestSfValue(stored) !== digestSfValue(selected) || !bound || typeof bound !== "object" ||
++        !decision || decision.id !== selected.caseRef.id || decision.incarnation !== selected.caseRef.incarnation ||
++        decision.version !== selected.caseRef.version || !decision.participants.includes(actor.principalRef)) return undefined
++      return { stored: structuredClone(selected), request: structuredClone(bound) }
++    })
++    if (!current() || !await input.host.revalidate(call) || !current()) return { status: "denied", reason: "calculation-authority-unavailable" }
++    return preferences.status === "ok" && preferences.value ? { status: "ok", value: preferences.value }
+       : { status: "unavailable", reason: "scenario-request-unavailable" }
+   }
+   const open = async (selected: Selection, call: TrustedDomainContext, owns: () => boolean) => {
+--- v1/apps/cli/src/sucafina-product/planner-calculation-history.ts
++++ v2/apps/cli/src/sucafina-product/planner-calculation-history.ts
+@@ -31,7 +31,12 @@
+   /** The host's current Planner record admission, not an assumed historical grant. */
+   verifyCurrentPlannerRecords?: (refs: readonly Extract<BusinessEvidenceRef, { kind: "record" }>[], call: TrustedDomainContext) => Promise<boolean>
+ }) {
+-  const active = new AsyncLocalStorage<{ call: TrustedDomainContext; request: Request; binding: string; runs: ReadonlySet<string>; open: boolean }>()
++  const active = new AsyncLocalStorage<{ call: TrustedDomainContext; request: Request; requestDigest: string; binding: string; runs: ReadonlySet<string>; open: boolean }>()
++  const currentSourceScope = (call: TrustedDomainContext) => {
++    const scope = active.getStore()
++    return !!scope?.open && scope.call === call && input.host.requestFor(call) === scope.request && !scope.request.signal.aborted &&
++      requestIdentity(scope.request) === scope.requestDigest && digestSfValue([call.kind, call.binding]) === scope.binding
++  }
+   const readOnly = () => { throw new Error("historical-calculation-read-only") }
+   const results = createSfDecisionResultStore({ host: input.host, state: input.state, authorizeCase: input.authorizeCase,
+     verifySources: async (_value, refs, call) => {
+@@ -40,8 +45,10 @@
+       // every complete record ref with its live projection identity. The two
+       // actual financial replays below still reconstruct every numeric value.
+       if (call.kind === "ui" && input.verifyCurrentPlannerRecords && refs.every((ref): ref is Extract<BusinessEvidenceRef, { kind: "record" }> =>
+-        ref.kind === "record" && ref.target.surface === "planner" && ref.target.recordType === "planner-version"))
+-        return input.verifyCurrentPlannerRecords(refs, call)
++        ref.kind === "record" && ref.target.surface === "planner" && ref.target.recordType === "planner-version")) {
++        const scope = active.getStore()
++        return currentSourceScope(call) && await input.verifyCurrentPlannerRecords(refs, call) && active.getStore() === scope && currentSourceScope(call)
++      }
+       const current = await input.evidence.context({ refs }, call)
+       return current.length === refs.length && current.every((value, index) => value.state === "fresh" && !!value.authorizedProjection && !!value.currentRef &&
+         value.accessRevision === call.binding.accessRevision && same(value.ref, refs[index]) && same(value.currentRef, refs[index])) && await input.host.revalidate(call)
+@@ -59,7 +66,9 @@
+     const parent = active.getStore()
+     const ancestors = parent?.open && parent.call === call && parent.request === request && parent.binding === binding ? parent.runs : new Set<string>()
+     if (!request || request.signal.aborted || call.binding.principalRef.startsWith("local:") || ancestors.has(ref.target.runId) || ancestors.size >= 16) return unavailable()
+-    const current = () => input.host.requestFor(call) === request && !request.signal.aborted && digestSfValue([call.kind, call.binding]) === binding && same(incoming, ref)
++    const requestDigest = requestIdentity(request)
++    const current = () => input.host.requestFor(call) === request && !request.signal.aborted && requestIdentity(request) === requestDigest &&
++      digestSfValue([call.kind, call.binding]) === binding && same(incoming, ref)
+     const snapshot = async () => {
+       if (!current() || !await input.host.revalidate(call) || !current()) return undefined
+       const observe = async (state: Readonly<SfProductState>, actor: SfStateAuthority) => {
+@@ -89,7 +98,7 @@
+     }
+     try {
+       sfEvidenceSourceMaps([ref])
+-      const scope = { call, request, binding, runs: new Set([...ancestors, ref.target.runId]), open: true }
++      const scope = { call, request, requestDigest, binding, runs: new Set([...ancestors, ref.target.runId]), open: true }
+       return await active.run(scope, async () => {
+         try {
+           const before = await snapshot()
+@@ -129,6 +138,7 @@
+ }
+ 
+ function same(left: unknown, right: unknown) { return digestSfValue(left) === digestSfValue(right) }
++function requestIdentity(request: Request) { return digestSfValue({ method: request.method, url: request.url, headers: [...request.headers.entries()] }) }
+ 
+ function calculationProjection(projection: Capture["projection"], ref: Calculation, result: ScenarioResult): projection is DomainProjection {
+   if (!("values" in projection) || !("components" in projection) || projection.context.installationId !== ref.installationId ||
+--- v1/modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts
++++ v2/modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts
+@@ -339,7 +339,7 @@
+       } finally { control.active = true }
+       phase("historical-real-replay-revocation-closed")
+     })
+-    for (const mutation of ["abort", "finish"] as const) {
++    for (const mutation of ["abort", "finish", "headers"] as const) {
+       const controller = new AbortController(), base = reopened.request()
+       const request = new Request(base, { signal: AbortSignal.any([base.signal, controller.signal]) })
+       const payload = { evidenceRef: calculation }, digest = digestSfValue(payload)
+@@ -352,16 +352,18 @@
+           if (!original) throw new Error("Actual capture unavailable before Request revocation")
+           captured = true
+           if (mutation === "abort") controller.abort(new Error("Fixture abort after protected read"))
+-          else reopened.authority.ui.finish(admitted.value)
++          else if (mutation === "finish") reopened.authority.ui.finish(admitted.value)
++          else request.headers.set("x-wp10-historical-witness", "changed-after-protected-read")
+           return original
+         })
+         expect(captured).toBe(true)
+         expect(denied.state).toBe("unavailable")
+         expect(denied.authorizedProjection).toBeUndefined()
+         expect(denied.currentRef).toBeUndefined()
++        if (mutation === "headers") expect(await reopened.authority.host.revalidate(admitted.value)).toBe(true)
+       } finally { reopened.authority.ui.finish(admitted.value) }
+     }
+-    phase("historical-request-abort-and-lease-loss-closed")
++    phase("historical-request-abort-headers-and-lease-loss-closed")
+   })
+ }, 120_000)
+ 

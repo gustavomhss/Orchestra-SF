@@ -1,0 +1,234 @@
+{
+  "schema": "wp10.builder.source-manifest.v1",
+  "wave": "W23",
+  "status": "frozen-for-root-reconciliation-and-hosted-ci",
+  "builder": "/root/c17_composition/w22_observation_audit",
+  "createdAtUtc": "2026-11-14T15:49:41.290529+00:00",
+  "baseCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+  "baseTree": "082b73607bea09a0a6252e2298c5a581c10cb645",
+  "paths": [
+    {
+      "path": "apps/cli/src/sucafina-product/procurement-case-read-scope.ts",
+      "mode": "own-new",
+      "ownership": "WP10 own host composition / own integration test",
+      "baseCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+      "baseBlobSha": null,
+      "bytes": 10314,
+      "sha256": "0240032225df3d4db22aa541fc4394ab07fef2cb4358ccfe54f38dc69a1ac7b6",
+      "blobSha": "6d3211bfe7e33cd40364ec98240028a732212434",
+      "packagePath": "agents/c17/W23-procurement-read-scope/package/apps/cli/src/sucafina-product/procurement-case-read-scope.ts",
+      "patch": {
+        "path": "agents/c17/W23-procurement-read-scope/diffs/procurement-case-read-scope.patch",
+        "bytes": 10541,
+        "sha256": "3d6640162220a11140ec6119622bff4b1f826f3e5666eed5a11e348523bab99d",
+        "blobSha": "0a982f559c9cc5d23bf6ce9eb168877d9115be51"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts",
+      "mode": "own-new",
+      "ownership": "WP10 own host composition / own integration test",
+      "baseCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+      "baseBlobSha": null,
+      "bytes": 26507,
+      "sha256": "efe8864ea1c0699dd2115d394f51c77b1c77d4dc3647f5efe82916e8e9831cf8",
+      "blobSha": "f22f2d7542475b74013165b85ec9cdd4db77d7ee",
+      "packagePath": "agents/c17/W23-procurement-read-scope/package/modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts",
+      "patch": {
+        "path": "agents/c17/W23-procurement-read-scope/diffs/procurement-case-read-scope.test.patch",
+        "bytes": 27010,
+        "sha256": "8324bfe3a322265765bd6085edafeb0918ae98901fbc423fa2c27c18c583b91e",
+        "blobSha": "5d60eb69ab2e725e6a20eba0b0bbd9409ee1ff5a"
+      }
+    }
+  ],
+  "integration": {
+    "path": "apps/cli/src/sucafina-product/business-services.ts",
+    "mode": "patch-only-not-applied-by-builder",
+    "base": {
+      "path": "agents/c17/W23-procurement-read-scope/baseline/apps/cli/src/sucafina-product/business-services.ts",
+      "bytes": 68104,
+      "sha256": "52b0778b68b8c53218c6eea61a948e830fe745eed8c2b591c17b5ee3eba944da",
+      "blobSha": "da80511814c86214a963fc721fda4a3a891df147"
+    },
+    "baseMatchesFrozenW22": true,
+    "patch": {
+      "path": "agents/c17/W23-procurement-read-scope/business-services.patch",
+      "bytes": 1716,
+      "sha256": "ca37f36eddefdaef794c670d6591a34712b3e31946b9c53b0740f4633820cf24",
+      "blobSha": "f75341e1b25437bd027c57db2bbd20562d26b61f"
+    },
+    "proposedResult": {
+      "path": "agents/c17/W23-procurement-read-scope/package/apps/cli/src/sucafina-product/business-services.ts",
+      "bytes": 68448,
+      "sha256": "b1907ed5020f07aff5034784491f2ed5a697d9a81ae966651748de3911b11772",
+      "blobSha": "8370380dbe673c1e5ef0395ed95a4b1b0f00e8f5"
+    },
+    "hunks": "One import and one 3-line adapter insertion; Memory wrapper remains outermost. Root must reconcile concurrent own W23 work."
+  },
+  "readOnlyDependencies": [
+    {
+      "path": "apps/cli/src/sucafina-product/scenario-procurement-proof-scope.ts",
+      "mode": "read-only",
+      "matchesFrozenW22": true,
+      "sourceCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+      "bytes": 7873,
+      "sha256": "53f1fb931b261e567aa4e2695e69194544d708dca618f5e6497cfa2c8fcc18c5",
+      "blobSha": "2ebb518403bc463dddd645f77af12cb877bce3e1"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+      "mode": "read-only",
+      "matchesFrozenW22": true,
+      "sourceCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+      "bytes": 12272,
+      "sha256": "dfc532aa0594e44666b18fc0a35137820213205306ac9c96adaa0acc2e6c17e2",
+      "blobSha": "f83b79d838deb2fcdd09300903d2469b3de6d32e"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/source-fence-read.ts",
+      "mode": "read-only",
+      "matchesFrozenW22": true,
+      "sourceCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+      "bytes": 3948,
+      "sha256": "52fe5e9c88e7845842380d0f6a8fe64d9474d027e70c8580065edfdefdb12e55",
+      "blobSha": "5f1c4b43162aa2ba3eae9a7c57862cd41df0af18"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/memory-case-read-scope.ts",
+      "mode": "read-only",
+      "matchesFrozenW22": true,
+      "sourceCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+      "bytes": 18251,
+      "sha256": "9523b90ae8289efafad0e3309fcee7970d62665929d6f7ab9b23432b8d458aa1",
+      "blobSha": "907d1a0c48389af4b32cc958d53d2b1a7ae1fcc3"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/sources.ts",
+      "mode": "read-only",
+      "matchesFrozenW22": true,
+      "sourceCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+      "bytes": 32624,
+      "sha256": "690ad63560314587ecb355a7185650796c6c6ddd5e9da2015f34d1966893b311",
+      "blobSha": "615b908d59fb95cb16ce8359c83e0c7aaa8a7a5e"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/source-projection.ts",
+      "mode": "read-only",
+      "matchesFrozenW22": true,
+      "sourceCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+      "bytes": 4973,
+      "sha256": "c16c6d976d21f4a4f9b166315ad0e0c7fae138262f82aef8fda9df46ed73d4ac",
+      "blobSha": "ab9814817d11c0b477636ee54d1b2763d365f405"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+      "mode": "read-only",
+      "matchesFrozenW22": true,
+      "sourceCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+      "bytes": 43049,
+      "sha256": "dc8a1a16ea7b54b03ca6bafacf60cc27b61aff32626c2a8cf69affa5d3f1399f",
+      "blobSha": "23d9291b3dcedda36edc4aa4f38856024e3c58f4"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+      "mode": "read-only",
+      "matchesFrozenW22": true,
+      "sourceCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+      "bytes": 4753,
+      "sha256": "0a734ad4f69ffc257714f1d89202f980792af1d63105c130dfd3f63c6e880c70",
+      "blobSha": "8c83680aaffa06c7b265f17e612118b1e008615a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/prepared.ts",
+      "mode": "read-only",
+      "matchesFrozenW22": true,
+      "sourceCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+      "bytes": 15452,
+      "sha256": "7245fe76e46431dd50dbffff2162b5486c078b998c18a42fc46961c21a0e304b",
+      "blobSha": "9c1b657dc4d6d5ba139c4f9fe854c1c8960cc95b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "mode": "read-only",
+      "matchesFrozenW22": true,
+      "sourceCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+      "bytes": 14151,
+      "sha256": "81cbd49ac10274a29aefce19d23d4739f5d34e97696c16d789440fe2e845c44a",
+      "blobSha": "65867a3e6aa9b5b85266bb637fb22cf1c6c6d539"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "mode": "read-only",
+      "matchesFrozenW22": true,
+      "sourceCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+      "bytes": 22358,
+      "sha256": "c3d843a4bb26a0f74fce550aa1114ae490e0410e1bcc4016a33b62c72c49eb81",
+      "blobSha": "2c82d60d220d8d5365da8322bad648a64bbb62d2"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+      "mode": "read-only",
+      "matchesFrozenW22": true,
+      "sourceCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+      "bytes": 6876,
+      "sha256": "b6e875b8fc9ff731d225af16f84966bf78f6c1f65aefb852ef52a2983c6ec93e",
+      "blobSha": "502fb1ab3a4116a62aeb504a4bb26040c66d81b2"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "mode": "read-only",
+      "matchesFrozenW22": true,
+      "sourceCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+      "bytes": 16654,
+      "sha256": "a34b014aead5afe68cb6b45edf8a7981588b5b80fae99af9a0c082ce6986d47a",
+      "blobSha": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+      "mode": "read-only",
+      "matchesFrozenW22": true,
+      "sourceCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+      "bytes": 20833,
+      "sha256": "debb437646fff9e9143b713b42e445f34754fe33df379fdd5f62b35e4a26a6da",
+      "blobSha": "964a53310c340f4496d7410d66f8b852270b75f1"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "mode": "read-only",
+      "matchesFrozenW22": true,
+      "sourceCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+      "bytes": 25981,
+      "sha256": "e82f739cb1845c0c7fdd90d50a5de0a62d6c3f79d4c981289b63880e7a8e5460",
+      "blobSha": "b753e3ffbfcdc06de373388845c686afac26dec8"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "mode": "read-only",
+      "matchesFrozenW22": false,
+      "sourceCommit": null,
+      "bytes": 25445,
+      "sha256": "9d0675797aa2f575b7ba9b2193ce93db54db6f34faeee5cd8264abe8cc544191",
+      "blobSha": "2b198e3a3f51c6c4e1abbc3a9a8cf77a18a2183d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "mode": "read-only",
+      "matchesFrozenW22": true,
+      "sourceCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+      "bytes": 46778,
+      "sha256": "1f0335d5d6df1a083e318fdd5a0e96bb5dbc4a4bc0142389639d26f2b73896f8",
+      "blobSha": "3dbad125693da9898b1435eff2a1108476c09f40"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts",
+      "mode": "read-only",
+      "matchesFrozenW22": true,
+      "sourceCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+      "bytes": 2313,
+      "sha256": "d3db838157ddfd9143302f84b49b5790e0f949af1ed0e0ce08074b98b97c493c",
+      "blobSha": "3eb140557b597156baf52578d8981d332e52aef3"
+    }
+  ],
+  "foreignProductWrites": []
+}

@@ -1,0 +1,20 @@
+{
+  "schema": "wp10.builder.ci-selection.v1",
+  "execution": "not-dispatched-by-builder",
+  "wholeNewFile": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts",
+  "hostedRequestPath": "Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts",
+  "newTests": 13,
+  "existingFullFilesToRetain": [
+    "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp11/cross-domain-execution.test.ts"
+  ],
+  "scope": "Retain the parent complete existing affected selection, including whole foreign H02/H03/H05/H06 file and existing Memory/C17 callers. Do not run only the new positives.",
+  "newFileBudgets": {
+    "perTestMs": 120000,
+    "cooperativeMs": 105000
+  },
+  "existingBudgetsOrAssertionsChanged": false,
+  "metricUnit": "Persistence API invocations; rootTransactions counts invocations outside an already-held snapshot, not physical commits. Canonical context/resolve counters delegate the real BCS."
+}

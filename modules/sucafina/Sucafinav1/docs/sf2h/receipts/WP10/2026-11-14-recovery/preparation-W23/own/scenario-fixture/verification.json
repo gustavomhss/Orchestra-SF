@@ -1,0 +1,73 @@
+{
+  "kind": "static-text-and-hash-only",
+  "preparedAtUtc": "2026-11-14T15:24:02.409772+00:00",
+  "baseMatchesFrozenW22": true,
+  "exactFourHunkMutation": true,
+  "changedProductPaths": [
+    "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts"
+  ],
+  "existingExpectExpressionsBefore": 43,
+  "existingExpectExpressionsAfter": 43,
+  "assertionsRemoved": 0,
+  "assertionCallExpressionsChanged": [
+    {
+      "purpose": "initial exact period selection",
+      "expectation": "status ok preserved"
+    },
+    {
+      "purpose": "interleaved changed period selection",
+      "expectation": "status ok preserved"
+    }
+  ],
+  "testDefinitionsUnchanged": true,
+  "testMatricesUnchanged": true,
+  "expandedCasesFromHostedInventory": 19,
+  "hostedInventorySource": "evidence/W21/normalized/B-calculation/test-observations.json",
+  "testBudgetsLiteralBefore": [
+    "120_000",
+    "120_000",
+    "120_000",
+    "120_000",
+    "120_000",
+    "120_000"
+  ],
+  "testBudgetsLiteralAfter": [
+    "120_000",
+    "120_000",
+    "120_000",
+    "120_000",
+    "120_000",
+    "120_000"
+  ],
+  "cooperativeDeadlineCallsUnchanged": true,
+  "counterAssertionsByteIdentical": true,
+  "counterAssertions": [
+    "      ]) expect(await access({ ...replacement, alternatives: [{ ...replacement.alternatives[0]!, scenario: { ...scenario, operations: [changed] } }] }, call)).toBe(false)",
+    "      expect(fixture.counts).toMatchObject({ scenario: 4, context: 2, fences: 8 })",
+    "      expect(fixture.counts).toMatchObject({ scenario: 8, context: 2, fences: 0 })",
+    "    expect((await fixture.business.context.resolve(fixture.original, fixture.call)).state).toBe(\"historical\")",
+    "    expect(fixture.counts).toMatchObject({ scenario: 8, context: 2, fences: 0 })",
+    "      expect(fixture.counts.scenario).toBe(2)",
+    "    expect(fixture.counts).toMatchObject({ scenario: 8, context: 4, fences: 16 })",
+    "      expect(fixture.counts.scenario).toBe(2)"
+  ],
+  "originalProofCallDeclarationAndFinalizerByteIdentical": true,
+  "originalRequestRetained": true,
+  "finalCasesReadUsesOriginalCall": true,
+  "selectionCreateAwaitedBeforeFinish": true,
+  "admittedLeaseFinishedInFinally": true,
+  "originalCallNeverPassedToNewHelperFinish": true,
+  "grantsChanged": false,
+  "guardsChanged": false,
+  "financialFixtureChanged": false,
+  "businessServicesChangedByThisPackage": false,
+  "foreignPathsChanged": false,
+  "localProductExecution": false,
+  "localTests": false,
+  "localTypecheck": false,
+  "localProductImports": false,
+  "localBuild": false,
+  "remoteMutation": false,
+  "hostedCandidateExecution": false,
+  "claim": "Static correction of the common admission mismatch only; all downstream runtime assertions remain pending hosted execution."
+}

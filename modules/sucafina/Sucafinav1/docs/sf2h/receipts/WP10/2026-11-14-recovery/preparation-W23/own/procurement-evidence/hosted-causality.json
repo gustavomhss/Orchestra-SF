@@ -1,0 +1,280 @@
+{
+  "productSha": "4bc9c7220f04f113609393aaba38934a7e69878b",
+  "snapshotSha": "902bb817cde2c8ccb2aba5f6d6b8765d70bd6663",
+  "runId": 43609220130,
+  "jobId": 132490362081,
+  "jobConclusion": "failure",
+  "cleanupJobId": 132492560014,
+  "cleanupConclusion": "success",
+  "rawLogPath": "/workspace/scratch/301a7f2754f4/evidence/W22/A-job-132490362081.raw.txt",
+  "rawLogSha256": "020e0ed385b003b2bb73a080bdbefa99550c41e7fc03dcc8a8e43f69e04c02e0",
+  "failure": {
+    "status": "fail",
+    "name": "historical decision recall binds original/current evidence and rejects changed proof or authority",
+    "durationMs": 225020.02,
+    "file": "Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+    "rawLogLine": 999,
+    "kind": "named-test",
+    "context": [
+      "SF_MEMORY_READ_COUNTS {\"phase\":\"memory.prepare\",\"persistenceCalls\":17818,\"c08Reads\":598,\"caseReads\":24,\"caseFences\":40,\"evidenceContextReads\":6,\"atlasCanonicalReads\":2,\"atlasCanonicalCompleted\":2}",
+      "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"memory.prepare\",\"state\":\"returned\",\"phaseMs\":49666,\"elapsedMs\":53027,\"aborted\":false}",
+      "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"memory.verify\",\"state\":\"started\",\"elapsedMs\":53028}",
+      "SF_MEMORY_READ_COUNTS {\"phase\":\"memory.verify\",\"persistenceCalls\":17860,\"c08Reads\":610,\"caseReads\":36,\"caseFences\":52,\"evidenceContextReads\":6,\"atlasCanonicalReads\":2,\"atlasCanonicalCompleted\":2}",
+      "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"memory.verify\",\"state\":\"returned\",\"phaseMs\":49716,\"elapsedMs\":102744,\"aborted\":false}",
+      "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"memory.accept-output\",\"state\":\"started\",\"elapsedMs\":102762}",
+      "SF_MEMORY_READ_COUNTS {\"phase\":\"memory.accept-output\",\"persistenceCalls\":17860,\"c08Reads\":610,\"caseReads\":36,\"caseFences\":52,\"evidenceContextReads\":6,\"atlasCanonicalReads\":2,\"atlasCanonicalCompleted\":2}",
+      "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"memory.accept-output\",\"state\":\"returned\",\"phaseMs\":49338,\"elapsedMs\":152100,\"aborted\":false}",
+      "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"memory.exclude-history-and-isolate\",\"state\":\"started\",\"elapsedMs\":152100}",
+      "SF_MEMORY_READ_COUNTS {\"phase\":\"memory.exclude-history-and-isolate\",\"persistenceCalls\":8188,\"c08Reads\":282,\"caseReads\":10,\"caseFences\":17,\"evidenceContextReads\":2,\"atlasCanonicalReads\":1,\"atlasCanonicalCompleted\":1}",
+      "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"memory.exclude-history-and-isolate\",\"state\":\"returned\",\"phaseMs\":22726,\"elapsedMs\":174826,\"aborted\":false}",
+      "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"memory.fence-source\",\"state\":\"started\",\"elapsedMs\":174835}",
+      "SF_MEMORY_READ_COUNTS {\"phase\":\"memory.fence-source\",\"persistenceCalls\":5613,\"c08Reads\":172,\"caseReads\":6,\"caseFences\":9,\"evidenceContextReads\":2,\"atlasCanonicalReads\":1,\"atlasCanonicalCompleted\":1}",
+      "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"memory.fence-source\",\"state\":\"returned\",\"phaseMs\":15439,\"elapsedMs\":190274,\"aborted\":false}",
+      "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"memory.fence-capture\",\"state\":\"started\",\"elapsedMs\":190295}",
+      "SF_MEMORY_READ_COUNTS {\"phase\":\"memory.fence-capture\",\"persistenceCalls\":5667,\"c08Reads\":175,\"caseReads\":6,\"caseFences\":10,\"evidenceContextReads\":2,\"atlasCanonicalReads\":1,\"atlasCanonicalCompleted\":1}",
+      "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"memory.fence-capture\",\"state\":\"returned\",\"phaseMs\":15688,\"elapsedMs\":205983,\"aborted\":false}",
+      "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"memory.fence-principal\",\"state\":\"started\",\"elapsedMs\":205999}",
+      "SF_MEMORY_READ_COUNTS {\"phase\":\"memory.fence-principal\",\"persistenceCalls\":4830,\"c08Reads\":141,\"caseReads\":6,\"caseFences\":9,\"evidenceContextReads\":2,\"atlasCanonicalReads\":1,\"atlasCanonicalCompleted\":1}",
+      "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"memory.fence-principal\",\"state\":\"returned\",\"phaseMs\":13702,\"elapsedMs\":219701,\"aborted\":false}",
+      "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"memory.fence-clock\",\"state\":\"started\",\"elapsedMs\":219709}",
+      "SF_MEMORY_READ_COUNTS {\"phase\":\"memory.fence-clock\",\"persistenceCalls\":1841,\"c08Reads\":48,\"caseReads\":4,\"caseFences\":6,\"evidenceContextReads\":2,\"atlasCanonicalReads\":1,\"atlasCanonicalCompleted\":0}",
+      "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"memory.fence-clock\",\"state\":\"returned\",\"phaseMs\":5297,\"elapsedMs\":225006,\"aborted\":true}",
+      "1 | /** Cooperative host-boundary deadline; it does not replace Bun's outer test budget. */",
+      "2 | export function compositionTestDeadline(name: string, budgetMs = 105_000) {",
+      "3 |   const started = performance.now()",
+      "4 |   const cancellation = new AbortController()",
+      "5 |   const deadlineError = new Error(`${name} exceeded its ${budgetMs}ms cooperative deadline`)",
+      "                                ^",
+      "error: historical-memory exceeded its 225000ms cooperative deadline",
+      "      at compositionTestDeadline (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts:5:29)",
+      "      at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts:78:20",
+      "(fail) historical decision recall binds original/current evidence and rejects changed proof or authority [225020.02ms]",
+      "",
+      "Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts:",
+      "(pass) native input reader requires an exact consumed lease, stored run and admitted input, and observes revocation [103.68ms]",
+      "(pass) the joint alternative reader samples real C08 once for both projections and repeats authorization on every call [142.23ms]"
+    ]
+  },
+  "phaseCounts": {
+    "memory.resolve-original": {
+      "phase": "memory.resolve-original",
+      "persistenceCalls": 175,
+      "c08Reads": 3,
+      "caseReads": 0,
+      "caseFences": 0,
+      "evidenceContextReads": 0,
+      "atlasCanonicalReads": 0,
+      "atlasCanonicalCompleted": 0,
+      "rawLogLine": 964
+    },
+    "memory.prepare": {
+      "phase": "memory.prepare",
+      "persistenceCalls": 17818,
+      "c08Reads": 598,
+      "caseReads": 24,
+      "caseFences": 40,
+      "evidenceContextReads": 6,
+      "atlasCanonicalReads": 2,
+      "atlasCanonicalCompleted": 2,
+      "rawLogLine": 967
+    },
+    "memory.verify": {
+      "phase": "memory.verify",
+      "persistenceCalls": 17860,
+      "c08Reads": 610,
+      "caseReads": 36,
+      "caseFences": 52,
+      "evidenceContextReads": 6,
+      "atlasCanonicalReads": 2,
+      "atlasCanonicalCompleted": 2,
+      "rawLogLine": 970
+    },
+    "memory.accept-output": {
+      "phase": "memory.accept-output",
+      "persistenceCalls": 17860,
+      "c08Reads": 610,
+      "caseReads": 36,
+      "caseFences": 52,
+      "evidenceContextReads": 6,
+      "atlasCanonicalReads": 2,
+      "atlasCanonicalCompleted": 2,
+      "rawLogLine": 973
+    },
+    "memory.exclude-history-and-isolate": {
+      "phase": "memory.exclude-history-and-isolate",
+      "persistenceCalls": 8188,
+      "c08Reads": 282,
+      "caseReads": 10,
+      "caseFences": 17,
+      "evidenceContextReads": 2,
+      "atlasCanonicalReads": 1,
+      "atlasCanonicalCompleted": 1,
+      "rawLogLine": 976
+    },
+    "memory.fence-source": {
+      "phase": "memory.fence-source",
+      "persistenceCalls": 5613,
+      "c08Reads": 172,
+      "caseReads": 6,
+      "caseFences": 9,
+      "evidenceContextReads": 2,
+      "atlasCanonicalReads": 1,
+      "atlasCanonicalCompleted": 1,
+      "rawLogLine": 979
+    },
+    "memory.fence-capture": {
+      "phase": "memory.fence-capture",
+      "persistenceCalls": 5667,
+      "c08Reads": 175,
+      "caseReads": 6,
+      "caseFences": 10,
+      "evidenceContextReads": 2,
+      "atlasCanonicalReads": 1,
+      "atlasCanonicalCompleted": 1,
+      "rawLogLine": 982
+    },
+    "memory.fence-principal": {
+      "phase": "memory.fence-principal",
+      "persistenceCalls": 4830,
+      "c08Reads": 141,
+      "caseReads": 6,
+      "caseFences": 9,
+      "evidenceContextReads": 2,
+      "atlasCanonicalReads": 1,
+      "atlasCanonicalCompleted": 1,
+      "rawLogLine": 985
+    },
+    "memory.fence-clock": {
+      "phase": "memory.fence-clock",
+      "persistenceCalls": 1841,
+      "c08Reads": 48,
+      "caseReads": 4,
+      "caseFences": 6,
+      "evidenceContextReads": 2,
+      "atlasCanonicalReads": 1,
+      "atlasCanonicalCompleted": 0,
+      "rawLogLine": 988
+    }
+  },
+  "phaseDurations": {
+    "scanner.ensure": {
+      "fixture": "historical-memory",
+      "phase": "scanner.ensure",
+      "state": "returned",
+      "phaseMs": 254,
+      "elapsedMs": 261,
+      "aborted": false,
+      "rawLogLine": 956
+    },
+    "scanner.version": {
+      "fixture": "historical-memory",
+      "phase": "scanner.version",
+      "state": "returned",
+      "phaseMs": 266,
+      "elapsedMs": 527,
+      "aborted": false,
+      "rawLogLine": 958
+    },
+    "procurement.capture-original": {
+      "fixture": "historical-memory",
+      "phase": "procurement.capture-original",
+      "state": "returned",
+      "phaseMs": 106,
+      "elapsedMs": 973,
+      "aborted": false,
+      "rawLogLine": 960
+    },
+    "atlas.emit-ledger": {
+      "fixture": "historical-memory",
+      "phase": "atlas.emit-ledger",
+      "state": "returned",
+      "phaseMs": 1891,
+      "elapsedMs": 2864,
+      "aborted": false,
+      "rawLogLine": 962
+    },
+    "memory.resolve-original": {
+      "fixture": "historical-memory",
+      "phase": "memory.resolve-original",
+      "state": "returned",
+      "phaseMs": 481,
+      "elapsedMs": 3361,
+      "aborted": false,
+      "rawLogLine": 965
+    },
+    "memory.prepare": {
+      "fixture": "historical-memory",
+      "phase": "memory.prepare",
+      "state": "returned",
+      "phaseMs": 49666,
+      "elapsedMs": 53027,
+      "aborted": false,
+      "rawLogLine": 968
+    },
+    "memory.verify": {
+      "fixture": "historical-memory",
+      "phase": "memory.verify",
+      "state": "returned",
+      "phaseMs": 49716,
+      "elapsedMs": 102744,
+      "aborted": false,
+      "rawLogLine": 971
+    },
+    "memory.accept-output": {
+      "fixture": "historical-memory",
+      "phase": "memory.accept-output",
+      "state": "returned",
+      "phaseMs": 49338,
+      "elapsedMs": 152100,
+      "aborted": false,
+      "rawLogLine": 974
+    },
+    "memory.exclude-history-and-isolate": {
+      "fixture": "historical-memory",
+      "phase": "memory.exclude-history-and-isolate",
+      "state": "returned",
+      "phaseMs": 22726,
+      "elapsedMs": 174826,
+      "aborted": false,
+      "rawLogLine": 977
+    },
+    "memory.fence-source": {
+      "fixture": "historical-memory",
+      "phase": "memory.fence-source",
+      "state": "returned",
+      "phaseMs": 15439,
+      "elapsedMs": 190274,
+      "aborted": false,
+      "rawLogLine": 980
+    },
+    "memory.fence-capture": {
+      "fixture": "historical-memory",
+      "phase": "memory.fence-capture",
+      "state": "returned",
+      "phaseMs": 15688,
+      "elapsedMs": 205983,
+      "aborted": false,
+      "rawLogLine": 983
+    },
+    "memory.fence-principal": {
+      "fixture": "historical-memory",
+      "phase": "memory.fence-principal",
+      "state": "returned",
+      "phaseMs": 13702,
+      "elapsedMs": 219701,
+      "aborted": false,
+      "rawLogLine": 986
+    },
+    "memory.fence-clock": {
+      "fixture": "historical-memory",
+      "phase": "memory.fence-clock",
+      "state": "returned",
+      "phaseMs": 5297,
+      "elapsedMs": 225006,
+      "aborted": true,
+      "rawLogLine": 989
+    }
+  },
+  "counterSemantics": "persistenceCalls counts wrapper invocations, including nested calls; it is not a count of distinct SQLite connections or decodes. W23 adds root/nested counters.",
+  "status": "W22 authentic failure; no successor product execution or acceptance claimed."
+}

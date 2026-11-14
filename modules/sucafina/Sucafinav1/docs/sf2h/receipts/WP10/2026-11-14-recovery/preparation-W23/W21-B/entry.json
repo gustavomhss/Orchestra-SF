@@ -1,0 +1,78 @@
+{
+  "id": "W21-B-calculation",
+  "kind": "test",
+  "product_sha": "532da498e08fa36fadbd3c01e3e7da00d869dd47",
+  "product_tree": "5dcac0d207da530a4ff9b8f3ccd39e2e1cd2ef1f",
+  "snapshot_sha": "6cc1999f0614f6002f2d1bfc72be2edd82ae7594",
+  "snapshot_tree": "30cfb4ce128f7c8fd4f53220e66e801f1778ca1e",
+  "run_id": 43605495862,
+  "job_id": 132479126824,
+  "run_attempt": 1,
+  "status": "completed",
+  "conclusion": "failure",
+  "record_path": "evidence/W21/normalized/B-calculation/terminal.json",
+  "record_sha256": "4e7794ffb9283df4cf6dc158747ba61715ece07c75b96e0be9a996a1970fec1c",
+  "files": [
+    {
+      "path": "evidence/W21/terminal-B-run.json",
+      "bytes": 14322,
+      "sha256": "3b79a4e3a02be259703e3d28672b28890f9ac426c8c53e658ee618498c04dc3d",
+      "git_blob_sha1": "de89be3918104f56e15b436ea2a1a1cf923ac828",
+      "name": "source-records/run.json"
+    },
+    {
+      "path": "evidence/W21/terminal-B-jobs.json",
+      "bytes": 5429,
+      "sha256": "9fe0231f50d39cc5d66c11c7d5f60ee1741b503d0d920537d4c7562664e056ff",
+      "git_blob_sha1": "76d38211280ba2676eff83aecb53a5fa55351512",
+      "name": "source-records/jobs.json"
+    },
+    {
+      "path": "evidence/W21/terminal-B-artifacts.json",
+      "bytes": 161,
+      "sha256": "c3d575098a5138bf89dbf56b7529efa03609f2b319900cff0771df212f13b177",
+      "git_blob_sha1": "cea14c2cbf42c30d8ab46d525d2b27bd2b748212",
+      "name": "source-records/artifacts.json"
+    },
+    {
+      "path": "evidence/W21/B-compare.json",
+      "bytes": 15916,
+      "sha256": "73d52bfe81518b00a0aab2b5234d443ec1ccc7e2113bb9bceb7fa9b4b15d43c2",
+      "git_blob_sha1": "cad76eca5c885c1d039896da4defaf299cde181f",
+      "name": "source-records/compare.json"
+    },
+    {
+      "path": "evidence/W21/initial-B-commit.json",
+      "bytes": 1512,
+      "sha256": "652ea4922273091d81ea36e56a5b88fa3b4a654f788ade43a0e64a55752ebf74",
+      "git_blob_sha1": "6721ba10563cb2794d3fcc28cc9244b36f77b761",
+      "name": "source-records/commit.json"
+    },
+    {
+      "path": "evidence/W21/B-envelope.json",
+      "bytes": 921,
+      "sha256": "b38167789faa7116522ed30c105df6f6f7c1264df9044babb7e222fd34c79c30",
+      "git_blob_sha1": "e2ccaaea61747668e6565ca7a1692e620fa473ae",
+      "name": "source-records/envelope.json"
+    },
+    {
+      "path": "evidence/W21/normalized/B-calculation/test-observations.json",
+      "bytes": 146648,
+      "sha256": "0efcc6967df5cb1580ffe23f31512020ace43dd2f09d61ff615e43a52435afd7",
+      "git_blob_sha1": "524387173a8858cbcff73be0292e0d4b2e0aece1",
+      "name": "test-observations.json"
+    }
+  ],
+  "counts": {
+    "pass": 49,
+    "fail": 30,
+    "errors": 1,
+    "expects": 713,
+    "tests": 79,
+    "files": 10,
+    "durationSeconds": 2206.17,
+    "skip": 0,
+    "errorsAreAdditionalTestCases": false
+  },
+  "qualification": "Observed terminal of the exact selected product and snapshot. Individual scoped passes never change a failed run into success. No native/global, criterion or independent-review acceptance is inferred."
+}

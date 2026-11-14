@@ -1,0 +1,193 @@
+{
+  "schema": "wp10-own-composition-audit-v1",
+  "wave": "W23",
+  "status": "frozen-builder-candidate",
+  "builder": "/root/c17_composition",
+  "independentReview": false,
+  "base": {
+    "commit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+    "tree": "082b73607bea09a0a6252e2298c5a581c10cb645",
+    "source": "publication/frozen-W22/repo",
+    "treeIndex": "publication/verified-W22-tree.json"
+  },
+  "baselineEvidence": {
+    "product": "532da498e08fa36fadbd3c01e3e7da00d869dd47",
+    "snapshot": "6cc1999f0614f6002f2d1bfc72be2edd82ae7594",
+    "runId": 43605495862,
+    "jobId": 132479126824,
+    "rawPath": "evidence/W21/B-job-132479126824.raw.txt",
+    "rawSha256": "37c9dad034c51ee8c0fc1ccf84639468f5d035df26f484c1272efecc7fdf14da",
+    "terminal": "failure",
+    "suiteCounts": {
+      "pass": 49,
+      "fail": 30,
+      "additionalErrors": 1
+    },
+    "scopeTargetFailures": 11
+  },
+  "findings": [
+    {
+      "id": "W23-C17-CASE-SCOPE-01",
+      "classification": "own causal source and hosted assertion",
+      "observed": "calculation-case-scope expected denied/calculation-case-scope-mismatch, received unavailable/scenario-request-unavailable",
+      "cause": "issue performed requests.read before withCalculationCase; request-store collapsed a result/case refusal before the exact owner guard could return it.",
+      "change": "C08 reads the actual persisted scenario case and current membership first; withCalculationCase enters before any canonical request/result reader. The mismatch assertion is unchanged; new counter requires zero canonical result readers before that refusal.",
+      "executionStatus": "candidate unexecuted"
+    },
+    {
+      "id": "W23-C17-REDUNDANT-REPLAY-01",
+      "classification": "own static call graph plus hosted deadline",
+      "observed": "record calculation resolution after reopen took about 19 seconds in W21; reopen/context and Analysis lifecycle exceeded 105000ms, ancestry timed out during produce-outer",
+      "cause": "One request read only selected a case before canonical issuance; resolveEvidence repeated two requests and two direct result readers after the canonical producer already returned both independent observations. Each request reader contains two result readers. issue also selected the nested producer for purely record-only inputs.",
+      "change": "Capture cloned outputs from the actual producer loaders in the current lexical invocation, without replacing or skipping those loaders. UI Planner record/ledger closure builds its projection from these outputs under equal before/final C08 witnesses. Strict record-only inputs select the existing conservative producer. Native and mixed closures retain the full nested producer and extra post-issuance readers.",
+      "executionStatus": "candidate unexecuted; no measured W23 gain"
+    },
+    {
+      "id": "W23-C17-RECALL-HOOK-01",
+      "classification": "own fixture causal source and hosted assertion",
+      "observed": "Five recall-proof source/membership/capture/coverage/selector cases saw applied=0, expected1. No mutation phase logged.",
+      "cause": "The public atlas.context.resolve hook was armed before recall. The nested calculation invoked that resolver while calculationResolves exceeded calculationResolved; the first hook assertion threw before applied++, and producer failure handling returned unavailable.",
+      "change": "Arm the mutation hook after the first real outbox.read returns, after canonical cases.read completes. Preserve applied=1, one completed financial proof, no records on refusal, and all existing final-clock assertions. Save and rethrow hook failures outside recall.",
+      "executionStatus": "candidate unexecuted"
+    },
+    {
+      "id": "W23-C17-HISTORY-RECORD-01",
+      "classification": "own source admission equivalence; hosted timeout context",
+      "observed": "Historical Analysis lifecycle repeatedly entered a failing fresh reader then the historical canonical path before exceeding105000ms.",
+      "cause": "Historical result stores rebuilt BCS financial record projections merely to decide current source equality on each source check, in addition to two actual financial replays.",
+      "change": "An optional injected callback uses the exact existing freshRecordSources body only for UI and exclusively Planner-version record sources. It resolves the actual live source and compares the entire ref, fences every source surface before/after, retains Request/binding/revalidation checks. Canonical historical request/result stores, two financial replays, protected captures, ledger matches and both continuity observations are unchanged. Original BCS fallback remains for native/mixed/absent callback.",
+      "guardSha256": "9f00ce378c07fa0af2e15498aa020e70df53c8082172642bcf8f2b51f0fe72ab",
+      "guardByteEqualToFrozenW22": true,
+      "executionStatus": "candidate unexecuted"
+    },
+    {
+      "id": "W23-C17-RECORDED-HISTORY-PENDING-01",
+      "classification": "pending own performance closure",
+      "observed": "Both recorded-history tests exceeded165000ms. Positive stored-operation-access consumed46246ms; composed-case-read consumed92694ms before deadline.",
+      "cause": "Stored literal and reference alternatives reopen shared Planner originals in separate two-pass guards. Each historical BCS resolution itself retains a protected history resolution plus two continuity resolutions. cases.read repeats its source/operation checks independently.",
+      "change": "Only diagnostic phase labels were added to existing assertions. No historical reader cache or outer readonly scope was introduced.",
+      "executionStatus": "not corrected; hosted diagnostic rerun and safe source-materialization/readonly eligibility proof still needed"
+    },
+    {
+      "id": "W23-WP11-PERFORMANCE-CONTEXT-01",
+      "classification": "foreign evidence, no owner edit",
+      "observed": "WP11 nested C17 persistence ran227865.19ms against180000ms; sibling batch ran68882.38ms against60000ms.",
+      "change": "No foreign file changed. These results stay attached to the W21 product/snapshot and cannot become passes for W23.",
+      "executionStatus": "owner/S0 follow-up and exact-SHA hosted rerun pending"
+    }
+  ],
+  "staticCallCounts": {
+    "kind": "call graph estimates, not measured latency or physical commits",
+    "oneEligibleResolveBefore": {
+      "requestReaders": 5,
+      "directResultReaders": 4,
+      "resultReadersIncludingRequestInternals": 14,
+      "canonicalFinancialReplays": 2
+    },
+    "oneEligibleResolveAfter": {
+      "requestReaders": 2,
+      "directResultReaders": 2,
+      "resultReadersIncludingRequestInternals": 6,
+      "canonicalFinancialReplays": 2
+    },
+    "oneIssueBefore": {
+      "requestReaders": 3,
+      "resultReadersIncludingRequestInternals": 8,
+      "canonicalFinancialReplays": 2
+    },
+    "oneIssueAfter": {
+      "requestReaders": 2,
+      "resultReadersIncludingRequestInternals": 6,
+      "canonicalFinancialReplays": 2
+    },
+    "historicalUiRecordIssue": {
+      "canonicalRequests": 2,
+      "canonicalResultsIncludingRequestInternals": 6,
+      "sourceChecks": 12,
+      "financialReplays": 2,
+      "change": "12 full BCS record projection checks become12 actual scoped source admissions; every real canonical loader and financial replay stays."
+    },
+    "metricsAdded": "SF_CALCULATION_RESOLUTION.canonicalResultReads and SF_CALCULATION_ANCESTRY count actual canonical result-reader API invocations, not persistence transactions/physical commits. Completion includes settled failures; overlap logs aggregate calls in that fixture."
+  },
+  "security": {
+    "eligible": "UI only; the complete stored source closure must contain only Planner-version records, planner:scenario calculations and case-event ancestry, with shared graph validation and16-depth guard. Historical callback is narrower: current Planner-version records only.",
+    "notCached": [
+      "authorization",
+      "request or result reader calls",
+      "financial replays",
+      "Promises",
+      "failures",
+      "a previous invocation or overlapping caller"
+    ],
+    "witness": [
+      "same exact Request object",
+      "method, URL and every header pinned before first await",
+      "same immutable binding and selector",
+      "original withCalculationCase owner retained through final egress",
+      "real separate C08 cases and preferences grants",
+      "full SfProductState including __sfProductV1 originals/captures/receipts/ledger/preferences",
+      "all three source fences",
+      "real Planner principal/role-map authentication",
+      "semantic UTC day and directory",
+      "current lease and cancellation before/after awaits"
+    ],
+    "capture": "Exactly two completed canonical request callbacks and two direct result callbacks are observed; four result readers inside requests remain. Each recorded output is cloned, compared with the authenticated baseline and with its other observation. Final witness runs after selectedCase final await.",
+    "cleanup": "Invocation-local AsyncLocalStorage ownership; finally closes observation, clears arrays and closes ancestor frame. No shared pending Promise or cross-invocation Map.",
+    "nativeMixed": "Canonical full producer and legacy post-issuance result/request rereads remain; case owner is retained through projection completion. Historical native/mixed source admission uses original BCS fallback.",
+    "historical": "No historical projection is called fresh; original selector/version, captured financial projection, ledger binding and two continuity observations remain unchanged."
+  },
+  "tests": {
+    "wholeFiles": [
+      "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-case-scope.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-recorded-history.test.ts"
+    ],
+    "newCase": "Planner observed calculation outputs recheck protected state, headers and lease after the canonical store passes",
+    "counterproofs": [
+      "actual canonical positive with6 result readers",
+      "real persisted request digest corruption after6 completed readers",
+      "real persisted result digest corruption after6 completed readers",
+      "real protected Atlas capture removal after6 completed readers",
+      "Request header mutation while actor/lease remain valid",
+      "lease finish after6 completed readers",
+      "no projection/currentRef disclosure",
+      "scope release and a new canonical invocation succeeds",
+      "unchanged foreign-case mismatch reason pluszero readers",
+      "five recall mutations occur only after completed financial proof and count exactly1"
+    ],
+    "budgets": "Existing105000/165000 cooperative and120000/180000 Bun budgets unchanged. New case uses existing105000 fixture deadline and120000 outer budget.",
+    "hostedRun": "not dispatched by this builder; parent selects whole files and records actual W23 SHA/run IDs",
+    "localProductExecution": false
+  },
+  "ownership": {
+    "files": [
+      "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+      "apps/cli/src/sucafina-product/planner-calculation-read-scope.ts",
+      "apps/cli/src/sucafina-product/planner-calculation-history.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-case-scope.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-recorded-history.test.ts"
+    ],
+    "businessServicesChanged": false,
+    "foreignProductChanged": false,
+    "remoteMutation": false,
+    "priorReceiptsOrFrozenDirectoriesChanged": false,
+    "methodConsumersChecked": "sole current own history factory injection and new helper import;90 relative imports checked against full W22 tree or own package"
+  },
+  "acceptance": {
+    "typecheck": "unexecuted",
+    "hostedProductTests": "unexecuted for candidate",
+    "native": "unexecuted metadata only; no native acceptance",
+    "global": "unexecuted",
+    "threeIndependentReviewers": "required; builder/self/aide reviews do not substitute"
+  },
+  "files": {
+    "sourceManifest": "source-manifest.json",
+    "diff": "changes.patch",
+    "staticChecks": "static-checks.json",
+    "baselineEvidence": "baseline-evidence.json",
+    "readableAudit": "audit.md"
+  }
+}

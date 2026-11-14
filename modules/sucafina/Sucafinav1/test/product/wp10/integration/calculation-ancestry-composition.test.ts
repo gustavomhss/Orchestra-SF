@@ -31,7 +31,7 @@ test("C17 composition reopens a calculation with ledger ancestry and rejects a p
   const period = { start: "2027-01-01", end: "2027-12-31" }
   const caseRef = { id: "ancestry-case", incarnation: "ancestry-inc", version: 1 }
   const otherCaseRef = { id: "other-case", incarnation: "other-inc", version: 1 }
-  const control = { active: true }
+  const control = { active: true, canonicalResultReads: 0, canonicalResultReadsCompleted: 0 }
   const open = async (initialize: boolean) => {
     const store = await openLocalStore(storeDirectory)
     deadline.own(() => store.dispose())
@@ -59,6 +59,12 @@ test("C17 composition reopens a calculation with ledger ancestry and rejects a p
       verifySkillReceipt: async () => false, providerGeneration: async () => 1, authorizeDocument: async () => undefined })
     const business = createSfBusinessServices({ authority, persistence, proposalCoverageWrites: writes })
     deadline.own(() => business.dispose())
+    const readCalculation = business.results.readForCalculation
+    business.results.readForCalculation = async (request, call) => {
+      control.canonicalResultReads++
+      try { return await readCalculation(request, call) }
+      finally { control.canonicalResultReadsCompleted++ }
+    }
     business.bindForecastCoverage(async (reference, call) => {
       const source = await business.plannerSources.resolveForecastSource(reference, call)
       if (source.status !== "ok") return source
@@ -84,17 +90,22 @@ test("C17 composition reopens a calculation with ledger ancestry and rejects a p
       })
       if (seeded.status !== "ok") throw new Error("Case fixtures unavailable")
     }
-    const produce = (scenario: ScenarioRequest | undefined, idempotencyKey: string) => ui("sf_scenario_simulate", (call) => business.withCase(call, caseRef, {}, async () => {
-      const issued = await business.plannerProduct.issueSource("v0", call)
-      if (issued.status !== "ok") return issued
-      const input = scenario ?? { baseRef: issued.value.evidence.refId, operations: [], assumptions: [] }
-      const simulated = await business.planner.simulateScenario(input, call)
-      if (simulated.status !== "ok") return simulated
-      const saved = await business.calculations.persist({ kind: "scenario", request: input, result: simulated.value }, idempotencyKey, call)
-      if (saved.status !== "ok") return saved
-      const calculation = await business.calculations.issue(saved.value.resultRef, call)
-      return calculation.status === "ok" ? { status: "ok" as const, value: { input, result: simulated.value, calculation: calculation.value } } : calculation
-    }))
+    const produce = (scenario: ScenarioRequest | undefined, idempotencyKey: string) => {
+      const started = performance.now(), before = control.canonicalResultReads, completed = control.canonicalResultReadsCompleted
+      return ui("sf_scenario_simulate", (call) => business.withCase(call, caseRef, {}, async () => {
+        const issued = await business.plannerProduct.issueSource("v0", call)
+        if (issued.status !== "ok") return issued
+        const input = scenario ?? { baseRef: issued.value.evidence.refId, operations: [], assumptions: [] }
+        const simulated = await business.planner.simulateScenario(input, call)
+        if (simulated.status !== "ok") return simulated
+        const saved = await business.calculations.persist({ kind: "scenario", request: input, result: simulated.value }, idempotencyKey, call)
+        if (saved.status !== "ok") return saved
+        const calculation = await business.calculations.issue(saved.value.resultRef, call)
+        return calculation.status === "ok" ? { status: "ok" as const, value: { input, result: simulated.value, calculation: calculation.value } } : calculation
+      })).finally(() => console.info("SF_CALCULATION_ANCESTRY", JSON.stringify({ phase: `produce-${idempotencyKey}`,
+        elapsedMs: Math.round(performance.now() - started), canonicalResultReads: control.canonicalResultReads - before,
+        canonicalResultReadsCompleted: control.canonicalResultReadsCompleted - completed, aborted: deadline.signal.aborted })))
+    }
     return { store, authority, business, ui, produce, request }
   }
   try {

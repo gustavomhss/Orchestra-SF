@@ -1,0 +1,33 @@
+{
+  "schema": "wp10-ref-observation-v1",
+  "observedAtUtc": "2026-11-14 16:00:06 UTC",
+  "refs": [
+    {
+      "branch": "astra-wp10",
+      "sha": "4bc9c7220f04f113609393aaba38934a7e69878b",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/refs/heads/astra-wp10"
+    },
+    {
+      "branch": "astra-check-wp10",
+      "sha": "e8f68f3c1016f45a39b8111786ca8704e7f0e85f",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/refs/heads/astra-check-wp10"
+    },
+    {
+      "branch": "sf2-stack",
+      "sha": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/refs/heads/sf2-stack"
+    },
+    {
+      "branch": "dev",
+      "sha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/refs/heads/dev"
+    }
+  ],
+  "policy": {
+    "onlyOwnProductAndHelperRefsMayBeMutated": true,
+    "protectedRefsReadOnly": [
+      "sf2-stack",
+      "dev"
+    ]
+  }
+}

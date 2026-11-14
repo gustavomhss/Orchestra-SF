@@ -1,0 +1,78 @@
+{
+  "id": "W22-A-affected-consumers",
+  "kind": "test",
+  "product_sha": "4bc9c7220f04f113609393aaba38934a7e69878b",
+  "product_tree": "082b73607bea09a0a6252e2298c5a581c10cb645",
+  "snapshot_sha": "902bb817cde2c8ccb2aba5f6d6b8765d70bd6663",
+  "snapshot_tree": "58dc6640a42e0476b3182034045f240dbc1f97c5",
+  "run_id": 43609220130,
+  "job_id": 132490362081,
+  "run_attempt": 1,
+  "status": "completed",
+  "conclusion": "failure",
+  "record_path": "evidence/W22/normalized/A-affected-consumers/terminal.json",
+  "record_sha256": "81be17a32cc8ec57de29f1c1f0c4c21eca2e719b8b0d1237bc95be6dc645201f",
+  "files": [
+    {
+      "path": "evidence/W22/terminal-A-run.json",
+      "bytes": 14176,
+      "sha256": "3ee114d9f20765cf21ddb78b38cb5c9604d2f15404f5ce01f2fe451947a69736",
+      "git_blob_sha1": "e7b2b010a4306bad70db092f75753c89c36e61a8",
+      "name": "source-records/run.json"
+    },
+    {
+      "path": "evidence/W22/terminal-A-jobs.json",
+      "bytes": 5429,
+      "sha256": "9caaab9e382ba758d2994115899eef0c0e3fc0f49eb6ea57006cfff6a5774a96",
+      "git_blob_sha1": "aff0d5ce190fd5580090a09139463e8c33136d13",
+      "name": "source-records/jobs.json"
+    },
+    {
+      "path": "evidence/W22/terminal-A-artifacts.json",
+      "bytes": 161,
+      "sha256": "c3d575098a5138bf89dbf56b7529efa03609f2b319900cff0771df212f13b177",
+      "git_blob_sha1": "cea14c2cbf42c30d8ab46d525d2b27bd2b748212",
+      "name": "source-records/artifacts.json"
+    },
+    {
+      "path": "evidence/W22/A-compare.json",
+      "bytes": 15121,
+      "sha256": "39cbf1768350159d54c5882e0302eb62512970e4246e045d2537641bf7d8b54c",
+      "git_blob_sha1": "19dad806c938f2aea246b687a50a8c19c6f7c6a3",
+      "name": "source-records/compare.json"
+    },
+    {
+      "path": "evidence/W22/initial-A-commit.json",
+      "bytes": 1354,
+      "sha256": "929c27a2fb635a45a48cd4ea1dc41f4ad75a654bf570ffa1426e2c999cba78d1",
+      "git_blob_sha1": "36131b30010029605d6a5978f0b12d6330d3f095",
+      "name": "source-records/commit.json"
+    },
+    {
+      "path": "evidence/W22/A-envelope.json",
+      "bytes": 668,
+      "sha256": "f11b1dd4ef158e93fb915c3c09b4024e934ed4aa327346a19b21b3a537062962",
+      "git_blob_sha1": "f60e293b9ba3f0bf1c6d12df41d806572ee3c5b9",
+      "name": "source-records/envelope.json"
+    },
+    {
+      "path": "evidence/W22/normalized/A-affected-consumers/test-observations.json",
+      "bytes": 22440,
+      "sha256": "c13abe70c43852814f0fc58e319962113cf69b8d70171d672b57ade50b765ae9",
+      "git_blob_sha1": "085664ac65c9fa3643d7b93a89416eed6539e46b",
+      "name": "test-observations.json"
+    }
+  ],
+  "counts": {
+    "pass": 37,
+    "fail": 2,
+    "expects": 442,
+    "tests": 39,
+    "files": 6,
+    "durationSeconds": 366.2,
+    "skip": 0,
+    "errors": 0,
+    "errorsAreAdditionalTestCases": false
+  },
+  "qualification": "Observed terminal of the exact selected product and snapshot. Individual scoped passes never change a failed run into success. No native/global, criterion or independent-review acceptance is inferred."
+}

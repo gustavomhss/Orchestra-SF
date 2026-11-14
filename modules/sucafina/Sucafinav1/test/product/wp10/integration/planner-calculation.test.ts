@@ -48,7 +48,8 @@ async function calculationFixture(deadline: ReturnType<typeof compositionTestDea
   const clock = { at }
   const period = { start: "2027-01-01", end: "2027-12-31" }
   const caseRef = { id: "calculation-case", incarnation: "calculation-inc", version: 1 }
-  const control = { active: true, coverageReads: 0, calculationResolves: 0, calculationResolved: 0, coverageIssue: "fixture-training-unresolved" }
+  const control = { active: true, coverageReads: 0, calculationResolves: 0, calculationResolved: 0, calculationStoreReads: 0,
+    calculationStoreReadsCompleted: 0, coverageIssue: "fixture-training-unresolved" }
   const interleave: { environment?: () => Promise<void>; coverage?: () => Promise<void>; evidence?: () => Promise<void>; outbox?: () => Promise<void> } = {}
   let store = await openLocalStore(storeDirectory)
   deadline.own(() => store.dispose())
@@ -102,15 +103,22 @@ async function calculationFixture(deadline: ReturnType<typeof compositionTestDea
     }
     const business = createSfBusinessServices({ authority, persistence, proposalCoverageWrites })
     services.current = business
+    const readCalculation = business.results.readForCalculation
+    business.results.readForCalculation = async (input, call) => {
+      control.calculationStoreReads++
+      try { return await readCalculation(input, call) }
+      finally { control.calculationStoreReadsCompleted++ }
+    }
     const resolveCalculation = business.calculations.resolveEvidence
     business.calculations.resolveEvidence = async (ref, call) => {
-      const sequence = ++control.calculationResolves, began = performance.now()
+      const sequence = ++control.calculationResolves, began = performance.now(), storeReads = control.calculationStoreReads
       console.info("SF_CALCULATION_RESOLUTION", JSON.stringify({ fixture: name, generation: initialize ? "initial" : "reopened", sequence, state: "started" }))
       try { return await resolveCalculation(ref, call) }
       finally {
         control.calculationResolved++
         console.info("SF_CALCULATION_RESOLUTION", JSON.stringify({ fixture: name, generation: initialize ? "initial" : "reopened", sequence,
-          state: "returned", elapsedMs: Math.round(performance.now() - began), completed: control.calculationResolved, entered: control.calculationResolves }))
+          state: "returned", elapsedMs: Math.round(performance.now() - began), completed: control.calculationResolved, entered: control.calculationResolves,
+          canonicalResultReads: control.calculationStoreReads - storeReads }))
       }
     }
     business.bindForecastCoverage(async (reference, call) => {
@@ -331,7 +339,7 @@ test("Planner calculation history denies disclosure after principal, Request or 
       } finally { control.active = true }
       phase("historical-real-replay-revocation-closed")
     })
-    for (const mutation of ["abort", "finish"] as const) {
+    for (const mutation of ["abort", "finish", "headers"] as const) {
       const controller = new AbortController(), base = reopened.request()
       const request = new Request(base, { signal: AbortSignal.any([base.signal, controller.signal]) })
       const payload = { evidenceRef: calculation }, digest = digestSfValue(payload)
@@ -344,16 +352,18 @@ test("Planner calculation history denies disclosure after principal, Request or 
           if (!original) throw new Error("Actual capture unavailable before Request revocation")
           captured = true
           if (mutation === "abort") controller.abort(new Error("Fixture abort after protected read"))
-          else reopened.authority.ui.finish(admitted.value)
+          else if (mutation === "finish") reopened.authority.ui.finish(admitted.value)
+          else request.headers.set("x-wp10-historical-witness", "changed-after-protected-read")
           return original
         })
         expect(captured).toBe(true)
         expect(denied.state).toBe("unavailable")
         expect(denied.authorizedProjection).toBeUndefined()
         expect(denied.currentRef).toBeUndefined()
+        if (mutation === "headers") expect(await reopened.authority.host.revalidate(admitted.value)).toBe(true)
       } finally { reopened.authority.ui.finish(admitted.value) }
     }
-    phase("historical-request-abort-and-lease-loss-closed")
+    phase("historical-request-abort-headers-and-lease-loss-closed")
   })
 }, 120_000)
 
@@ -454,9 +464,13 @@ test("Planner calculation preserves UI and repeated BCS reads and rejects cycles
     await first.ui("sf_evidence_get", payload, async (call) => {
       // Repeated selectors in one authorization pass use the actual BCS.
       // Independent overlapping same-run replays remain prohibited by the producer.
+      const storeReads = control.calculationStoreReads
       const repeated = await first.business.context.context({ refs: [calculation, calculation] }, call)
       expect(repeated.map((item) => item.state)).toEqual(["fresh", "fresh"])
       expect(repeated.map((item) => item.currentRef)).toEqual([calculation, calculation])
+      // Two actual canonical request readers contain four result readers; the
+      // producer independently loads its result twice and replays twice.
+      expect(control.calculationStoreReads - storeReads).toBe(6)
       let reentered = false
       interleave.coverage = async () => {
         reentered = true
@@ -484,6 +498,77 @@ test("Planner calculation preserves UI and repeated BCS reads and rejects cycles
       expect(control.coverageReads).toBe(reads)
     })
     phase("ordered-read-and-real-cycle-negative-proofs")
+  })
+}, 120_000)
+
+test("Planner observed calculation outputs recheck protected state, headers and lease after the canonical store passes", async () => {
+  expectSpawn(import.meta.path)
+  await withCalculation("observed-store-egress", async ({ calculation, reopen, change, control, interleave, phase }) => {
+    const { reopened } = await reopen()
+    const payload = { evidenceRef: calculation }
+    const original = await reopened.authority.state.read(reopened.request(), "cases", (state) => structuredClone(state))
+    if (original.status !== "ok") throw new Error("Actual protected calculation fixture unavailable")
+    await reopened.ui("sf_evidence_get", payload, async (call) => {
+      const before = control.calculationStoreReads
+      const actual = await reopened.business.context.resolve(calculation, call)
+      expect(actual.state).toBe("fresh")
+      expect(actual.currentRef).toEqual(calculation)
+      expect(control.calculationStoreReads - before).toBe(6)
+    })
+    for (const mutation of ["request", "result", "capture", "headers", "lease"] as const) {
+      await reopened.ui("sf_evidence_get", payload, async (call) => {
+        const before = control.calculationStoreReadsCompleted
+        const request = reopened.authority.host.requestFor(call)
+        if (!request) throw new Error("Real UI Request unavailable")
+        let applied = 0, hookFailure: unknown
+        const afterCanonicalStores = async () => {
+          if (control.calculationStoreReadsCompleted - before < 6) { interleave.coverage = afterCanonicalStores; return }
+          try {
+            expect(control.calculationStoreReadsCompleted - before).toBe(6)
+            expect(control.calculationStoreReadsCompleted).toBe(control.calculationStoreReads)
+            applied++
+            if (mutation === "request") await change((state) => {
+              const key = `sf:proposal-coverage:scenario-request:${digestSfValue(calculation.target.runId)}`
+              state.preferences[key] = { ...object(state.preferences[key]), recordDigest: "0".repeat(64) }
+            })
+            if (mutation === "result") await change((state) => {
+              const stored = state.decisionResults?.[calculation.target.runId]
+              if (!stored) throw new Error("Actual persisted result unavailable")
+              stored.resultDigest = "0".repeat(64)
+            })
+            if (mutation === "capture") await change((state) => { state.atlas = {} })
+            if (mutation === "headers") request.headers.set("x-wp10-calculation-witness", "changed-after-store-passes")
+            if (mutation === "lease") reopened.authority.ui.finish(call)
+            phase(`observed-stores-mutation-${mutation}`)
+          } catch (error) { hookFailure = error; throw error }
+        }
+        interleave.coverage = afterCanonicalStores
+        try {
+          const denied = await reopened.business.context.resolve(calculation, call)
+          if (hookFailure) throw hookFailure
+          expect(applied).toBe(1)
+          expect(denied.state).toBe("unavailable")
+          expect(denied.authorizedProjection).toBeUndefined()
+          expect(denied.currentRef).toBeUndefined()
+          expect((await reopened.business.selectedCase(call)).status).toBe("unavailable")
+        } finally {
+          delete interleave.coverage
+          request.headers.delete("x-wp10-calculation-witness")
+          await change((state) => {
+            state.preferences = structuredClone(original.value.preferences)
+            state.decisionResults = structuredClone(original.value.decisionResults)
+            state.atlas = structuredClone(original.value.atlas)
+          })
+        }
+      })
+    }
+    // A new invocation still executes all real passes after each failed scope.
+    await reopened.ui("sf_evidence_get", payload, async (call) => {
+      const before = control.calculationStoreReads
+      expect((await reopened.business.context.resolve(calculation, call)).state).toBe("fresh")
+      expect(control.calculationStoreReads - before).toBe(6)
+    })
+    phase("observed-store-counterproofs-and-new-scope-recovery")
   })
 }, 120_000)
 
@@ -657,29 +742,39 @@ for (const mutation of ["source", "membership", "capture", "coverage", "selector
       await reopened.ui("sf_evidence_get", { evidenceRef: calculation }, async (call) => {
         const selected = { ...caseRef }, before = control.calculationResolves
         let applied = 0, outboxReads = 0, finalEnvironmentReads = 0
+        let hookFailure: unknown
         const mutate = async () => {
-          expect(control.calculationResolved).toBe(control.calculationResolves)
-          expect(control.calculationResolves - before).toBe(1)
-          applied++
-          if (mutation === "source") await reopened.persistence.transaction("planner", async (snapshot) => {
-            snapshot.data.entities = [{ id: "after-completed-proof", name: "Changed source" }]
-            return { commit: true, value: undefined }
-          })
-          if (mutation === "membership") await change((state) => { state.cases[caseRef.id]!.participants = [] })
-          if (mutation === "capture") await change((state) => {
-            const captures = Object.values(state.atlas).map((partition) => object(object(partition).originals)).filter((originals) => originals[calculation.refDigest])
-            expect(captures).toHaveLength(1)
-            delete captures[0]![calculation.refDigest]
-          })
-          if (mutation === "coverage") control.coverageIssue = "changed-after-completed-proof"
-          if (mutation === "selector") selected.incarnation = "different-case-incarnation"
-          if (mutation === "clock") clock.at = "2027-02-03T00:00:00Z"
-          if (mutation === "principal") control.active = false
-          if (mutation === "lease") reopened.authority.ui.finish(call)
-          phase(`mutated-${mutation}-after-completed-proof`)
+          try {
+            expect(control.calculationResolved).toBe(control.calculationResolves)
+            expect(control.calculationResolves - before).toBe(1)
+            applied++
+            if (mutation === "source") await reopened.persistence.transaction("planner", async (snapshot) => {
+              snapshot.data.entities = [{ id: "after-completed-proof", name: "Changed source" }]
+              return { commit: true, value: undefined }
+            })
+            if (mutation === "membership") await change((state) => { state.cases[caseRef.id]!.participants = [] })
+            if (mutation === "capture") await change((state) => {
+              const captures = Object.values(state.atlas).map((partition) => object(object(partition).originals)).filter((originals) => originals[calculation.refDigest])
+              expect(captures).toHaveLength(1)
+              delete captures[0]![calculation.refDigest]
+            })
+            if (mutation === "coverage") control.coverageIssue = "changed-after-completed-proof"
+            if (mutation === "selector") selected.incarnation = "different-case-incarnation"
+            if (mutation === "clock") clock.at = "2027-02-03T00:00:00Z"
+            if (mutation === "principal") control.active = false
+            if (mutation === "lease") reopened.authority.ui.finish(call)
+            phase(`mutated-${mutation}-after-completed-proof`)
+          } catch (error) { hookFailure = error; throw error }
         }
         const final = mutation === "clock" || mutation === "principal" || mutation === "lease"
-        if (!final) interleave.evidence = mutate
+        if (!final) interleave.outbox = async () => {
+          if (++outboxReads !== 1) return
+          delete interleave.outbox
+          // Atlas reads outbox only after its first actual cases.read completes.
+          // Arming earlier enters the producer's nested record resolver before
+          // its calculation proof is complete, where assertions are caught.
+          interleave.evidence = mutate
+        }
         if (final) interleave.outbox = async () => {
           if (++outboxReads !== 2) return
           delete interleave.outbox
@@ -697,6 +792,7 @@ for (const mutation of ["source", "membership", "capture", "coverage", "selector
         }
         phase(`starting-recall-proof-${mutation}`)
         const result = await reopened.atlas.memory.recall(selected, call)
+        if (hookFailure) throw hookFailure
         expect(applied).toBe(1)
         expect(result.status).toBe("unavailable")
         expect("records" in result).toBe(false)
@@ -704,7 +800,7 @@ for (const mutation of ["source", "membership", "capture", "coverage", "selector
         if (final) {
           expect(outboxReads).toBe(2)
           expect(finalEnvironmentReads).toBe(5)
-        }
+        } else expect(outboxReads).toBe(1)
         phase(`rejected-recall-proof-${mutation}`)
       })
     })

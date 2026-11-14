@@ -1,0 +1,17 @@
+--- a/apps/cli/src/sucafina-product/procurement-case-read-scope.ts
++++ b/apps/cli/src/sucafina-product/procurement-case-read-scope.ts
+@@ -42,7 +42,13 @@
+             actor.policyVersion === call.binding.policyVersion && value?.id === ref.id && value.incarnation === ref.incarnation &&
+             value.participants.includes(actor.principalRef) ? value : undefined
+         })
+-        if (selected.status !== "ok" || !selected.value || !current()) return { commit: false, value: changed() }
++        if (!current()) return { commit: false, value: changed() }
++        if (selected.status !== "ok" || !selected.value) {
++          // Eligibility has not been established. Preserve the real case
++          // reader's missing-case, participant and C08 refusal contracts.
++          if (!await input.host.revalidate(call) || !current()) return { commit: false, value: changed() }
++          return { commit: false, value: unsupported }
++        }
+         // C12 review/first-application reads only. An ordinary chosen case keeps
+         // its canonical boundaries, including concurrent source-write probes.
+         if (!selected.value.preparedChanges.length || selected.value.receipts.length || selected.value.preparedChanges.some((change) =>

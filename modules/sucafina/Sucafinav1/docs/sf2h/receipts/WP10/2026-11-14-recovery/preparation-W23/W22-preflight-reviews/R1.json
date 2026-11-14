@@ -1,0 +1,992 @@
+{
+  "schema": "wp10.independent-preflight.v2",
+  "review": "R1-W22-preflight",
+  "generatedAt": "2026-11-14T15:22:40.317382+00:00",
+  "evidenceCutoff": "2026-11-14T15:20:18Z",
+  "candidateSha": "4bc9c7220f04f113609393aaba38934a7e69878b",
+  "candidateTree": "082b73607bea09a0a6252e2298c5a581c10cb645",
+  "parentSha": "532da498e08fa36fadbd3c01e3e7da00d869dd47",
+  "pullRequest": 29,
+  "baseBranch": "sf2-stack",
+  "reviewer": {
+    "id": "R1",
+    "agent": "/root/independent_r1_w16",
+    "authoredProductChanges": false,
+    "declaration": "Não escrevi produto ou testes, não executei produto/typecheck/build/testes locais, não fiz mutação remota. Examinei o candidato congelado, comparei árvores e bytes e consultei GitHub MCP de modo somente leitura. Os audits dos builders não constituem este parecer."
+  },
+  "state": "PREFLIGHT_SOURCE_AND_CHECK_ONLY",
+  "verdict": "HOLD",
+  "finalForCandidate": false,
+  "isFinalReview": false,
+  "approval": false,
+  "functionalAcceptance": false,
+  "nativeAcceptance": false,
+  "globalAcceptance": false,
+  "localProductExecution": false,
+  "scope": {
+    "changedOwnPaths": 10,
+    "foreignDeltaPaths": 5,
+    "receiptDeltaPaths": 65,
+    "sourceReview": "Diff completo dos dez caminhos próprios e contexto crítico de Memory/Work/C07; leitura direcionada do produtor Planner/renovação estrangeiro. Não equivale a revisão semântica de todos os 16.381 blobs.",
+    "unchangedSources": "O inventário distingue contexto relido e raciocínio estático anterior em blobs inalterados; nenhuma aceitação CI foi herdada."
+  },
+  "sourceInventory": [
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-host-services.ts",
+      "bytes": 25418,
+      "gitBlobSha": "6b5f44ef8eb4d969cfc43fbbad4d0f2e923d5c1b",
+      "sha256": "f251b02093d54ac8d2d21806c9b2f663f9399f3dcb6f03fe9ae7765501992496",
+      "kind": "WP10-owned",
+      "priorBlob": "9b21d9f7d4b115bb690ab82256b2cef0590c6afe",
+      "reviewMode": "diff-and-relevant-context"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-memory-evidence.ts",
+      "bytes": 7477,
+      "gitBlobSha": "7f59bd020ee61d1a88e41b915943080db156bdaf",
+      "sha256": "f0de5857b4bd9122a00fc348e93a412e33546af7ad3c14b352103e666b88d05e",
+      "kind": "WP10-owned",
+      "priorBlob": "8ef62f7ceb58b57647aab4761033452306f31f0d",
+      "reviewMode": "diff-and-relevant-context"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-verifier-memory.ts",
+      "bytes": 4848,
+      "gitBlobSha": "31a3db47ff70eb22a33c5b411995e489211f863d",
+      "sha256": "9179bff3ea4e41e96874c6198e544fef03d31a04f99e4a729f04d0495155b4a9",
+      "kind": "WP10-owned",
+      "priorBlob": "19dec055c30691b8b7f4e8cc8ebf531a2608ba1a",
+      "reviewMode": "diff-and-relevant-context"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "bytes": 68104,
+      "gitBlobSha": "da80511814c86214a963fc721fda4a3a891df147",
+      "sha256": "52b0778b68b8c53218c6eea61a948e830fe745eed8c2b591c17b5ee3eba944da",
+      "kind": "WP10-owned",
+      "priorBlob": "520a71460ba69a9c8a07fd1b7db838ca13108c32",
+      "reviewMode": "diff-and-relevant-context"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/input-producer-memory.ts",
+      "bytes": 2320,
+      "gitBlobSha": "34c9d636ae3f1ea4ff35268cb777dd095c70f51f",
+      "sha256": "3d34381ddf51c3cd62e8f3cc902665cd1c221433a1d4161f6badb6e37c65c3ac",
+      "kind": "WP10-owned",
+      "priorBlob": "e7fbaa6f4480b2aff4625c7cd8b0f2da4b050f29",
+      "reviewMode": "diff-and-relevant-context"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/memory-case-read-scope.ts",
+      "bytes": 18251,
+      "gitBlobSha": "907d1a0c48389af4b32cc958d53d2b1a7ae1fcc3",
+      "sha256": "9523b90ae8289efafad0e3309fcee7970d62665929d6f7ab9b23432b8d458aa1",
+      "kind": "WP10-owned",
+      "priorBlob": "dc398afaa299cb01587794ab8cee0391c1be8eb2",
+      "reviewMode": "diff-and-relevant-context"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/work-destinations.ts",
+      "bytes": 18165,
+      "gitBlobSha": "506888f365643e0276d9098c6b924186212da5ee",
+      "sha256": "13be764232afc395e33a8c0d5e5405eb11e43e1e5b341bd1553d0e002aef9326",
+      "kind": "WP10-owned",
+      "priorBlob": "3ee3eea082dea99ab68f55013726967a34546ce8",
+      "reviewMode": "diff-and-relevant-context"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "bytes": 26150,
+      "gitBlobSha": "8389709232225424b5905638d0951d8cdbb71dd7",
+      "sha256": "8c51fdb91dc3c35bd6ff075488f3d393711b2d16e411085960fa3728c1fe5bd1",
+      "kind": "published-foreign-blob",
+      "priorBlob": "e365ac59376482dfcc6f81aed045b0153f911038",
+      "reviewMode": "published-pin-and-targeted-producer-review"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+      "bytes": 45865,
+      "gitBlobSha": "463483caed199961c7212daacc5822f0646c493e",
+      "sha256": "6eef4077dca1660ac58a04432f68a48dbcabeb199e3967a9d2ac65dbbb7c49ec",
+      "kind": "WP10-owned",
+      "priorBlob": "3caa43aae5fe77888b90483d13dc8f8735235b14",
+      "reviewMode": "diff-and-relevant-context"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts",
+      "bytes": 36271,
+      "gitBlobSha": "f643abc8cb78feabb82cde3eaea9bdae9e428ee9",
+      "sha256": "dc21862371a8a2e07045c48f4d5ff793e6f72e44d30d03f4f67884c673d988de",
+      "kind": "WP10-owned",
+      "priorBlob": "cd63b34552bc9d01712939407071e157c6e20abd",
+      "reviewMode": "diff-and-relevant-context"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts",
+      "bytes": 22783,
+      "gitBlobSha": "b501b12e29e911628d557bb6e6c65622760b4072",
+      "sha256": "a0468cb81fc1e5777c18a09b1927ba9dc8f9e45334b1670c94f98724335e4c69",
+      "kind": "WP10-owned",
+      "priorBlob": "848f81ae5e9315295f84ffc6a63d3b09ff7016fc",
+      "reviewMode": "diff-and-relevant-context"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-case-read-scope.test.ts",
+      "bytes": 6024,
+      "gitBlobSha": "75a2cbcd0c3907fc2d14f18f2b35f131331ecfb2",
+      "sha256": "fbccc98f43e078bcc735ac9f613507ab152f2fbbdd5fbce09e45b3a580a6929f",
+      "kind": "published-foreign-blob",
+      "priorBlob": null,
+      "reviewMode": "published-pin-and-targeted-producer-review"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "bytes": 25464,
+      "gitBlobSha": "2da82bf379910826f4558b5b330c97cdaf6806df",
+      "sha256": "e25c0f56ec3b9e8efe762e9bf372bb56b2a7d7d08b94cfaf66358033d8401a97",
+      "kind": "published-foreign-blob",
+      "priorBlob": "d5395570b44366fa81003d5f5aa68a3023c26fa5",
+      "reviewMode": "published-pin-and-targeted-producer-review"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+      "bytes": 8303,
+      "gitBlobSha": "df3c335c95bf9d8d06d00474ff0bc391dd852b4e",
+      "sha256": "9fb65068cc969ebb04f2e14f9082147d058287f09fa40702d56c4c4838a6d9a1",
+      "kind": "published-foreign-blob",
+      "priorBlob": "2338917427497733e4bd88aec852985206cce066",
+      "reviewMode": "published-pin-and-targeted-producer-review"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-admission.test.ts",
+      "bytes": 11611,
+      "gitBlobSha": "4a5780b82989b9e8c3437bb3758779d7cfb76733",
+      "sha256": "ed792565e2a75a2b29a65dc81eee892db5bcefd0744c55d110ee9af6401df737",
+      "kind": "published-foreign-blob",
+      "priorBlob": null,
+      "reviewMode": "published-pin-and-targeted-producer-review"
+    }
+  ],
+  "unchangedContextInventory": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "bytes": 25981,
+      "gitBlobSha": "b753e3ffbfcdc06de373388845c686afac26dec8",
+      "sha256": "e82f739cb1845c0c7fdd90d50a5de0a62d6c3f79d4c981289b63880e7a8e5460",
+      "unchangedFromW21": true,
+      "mode": "reread-relevant-transaction-and-authority-implementation"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "bytes": 19836,
+      "gitBlobSha": "2fd55c7304add0829d7434917c80664fe86356b9",
+      "sha256": "de25a3d2c5fc8725debb538ec0efb45b3a3c986ff478156cce734038f87d7268",
+      "unchangedFromW21": true,
+      "mode": "reread-relevant-transaction-and-authority-implementation"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+      "bytes": 34119,
+      "gitBlobSha": "91e8bc8f5d80f83b7756b4647c790cc5e5936d59",
+      "sha256": "62e0ab3ada8792c84b91c2e2b6ef9181fb9290292277485e7b18176090287a00",
+      "unchangedFromW21": true,
+      "mode": "prior-source-reasoning-plus-targeted-W22-context"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/source-fence-read.ts",
+      "bytes": 3948,
+      "gitBlobSha": "5f1c4b43162aa2ba3eae9a7c57862cd41df0af18",
+      "sha256": "52fe5e9c88e7845842380d0f6a8fe64d9474d027e70c8580065edfdefdb12e55",
+      "unchangedFromW21": true,
+      "mode": "prior-source-reasoning-plus-targeted-W22-context"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/scenario-procurement-proof-scope.ts",
+      "bytes": 7873,
+      "gitBlobSha": "2ebb518403bc463dddd645f77af12cb877bce3e1",
+      "sha256": "53f1fb931b261e567aa4e2695e69194544d708dca618f5e6497cfa2c8fcc18c5",
+      "unchangedFromW21": true,
+      "mode": "prior-source-reasoning-plus-targeted-W22-context"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-run-context.ts",
+      "bytes": 11367,
+      "gitBlobSha": "1d9a8a9589f3884a083ac09cbc951d4cce0bbdca",
+      "sha256": "75e66cf3f10edcee8ad78311db41267f499deadad425c679f7cf128e6e10b01d",
+      "unchangedFromW21": true,
+      "mode": "prior-source-reasoning-plus-targeted-W22-context"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-installed-publication.ts",
+      "bytes": 10689,
+      "gitBlobSha": "6405d4a2e4aa41a3bb8fb8da40641093d3eee7ff",
+      "sha256": "b63a0e28e855f9ec387d246a46e24e32e9b3e4734963829d3227b6f3e3dee49a",
+      "unchangedFromW21": true,
+      "mode": "prior-source-reasoning-plus-targeted-W22-context"
+    }
+  ],
+  "remoteBlobVerification": [
+    {
+      "path": "apps/cli/src/sucafina-product/memory-case-read-scope.ts",
+      "ref": "4bc9c7220f04f113609393aaba38934a7e69878b",
+      "remoteBlobSha": "907d1a0c48389af4b32cc958d53d2b1a7ae1fcc3",
+      "computedGitBlobSha": "907d1a0c48389af4b32cc958d53d2b1a7ae1fcc3",
+      "sha256": "9523b90ae8289efafad0e3309fcee7970d62665929d6f7ab9b23432b8d458aa1",
+      "bytes": 18251,
+      "byteEqualFrozen": true,
+      "shaEqual": true,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/4bc9c7220f04f113609393aaba38934a7e69878b/apps/cli/src/sucafina-product/memory-case-read-scope.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-memory-evidence.ts",
+      "ref": "4bc9c7220f04f113609393aaba38934a7e69878b",
+      "remoteBlobSha": "7f59bd020ee61d1a88e41b915943080db156bdaf",
+      "computedGitBlobSha": "7f59bd020ee61d1a88e41b915943080db156bdaf",
+      "sha256": "f0de5857b4bd9122a00fc348e93a412e33546af7ad3c14b352103e666b88d05e",
+      "bytes": 7477,
+      "byteEqualFrozen": true,
+      "shaEqual": true,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/4bc9c7220f04f113609393aaba38934a7e69878b/apps/cli/src/sucafina-product/analysis-memory-evidence.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-verifier-memory.ts",
+      "ref": "4bc9c7220f04f113609393aaba38934a7e69878b",
+      "remoteBlobSha": "31a3db47ff70eb22a33c5b411995e489211f863d",
+      "computedGitBlobSha": "31a3db47ff70eb22a33c5b411995e489211f863d",
+      "sha256": "9179bff3ea4e41e96874c6198e544fef03d31a04f99e4a729f04d0495155b4a9",
+      "bytes": 4848,
+      "byteEqualFrozen": true,
+      "shaEqual": true,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/4bc9c7220f04f113609393aaba38934a7e69878b/apps/cli/src/sucafina-product/analysis-verifier-memory.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/work-destinations.ts",
+      "ref": "4bc9c7220f04f113609393aaba38934a7e69878b",
+      "remoteBlobSha": "506888f365643e0276d9098c6b924186212da5ee",
+      "computedGitBlobSha": "506888f365643e0276d9098c6b924186212da5ee",
+      "sha256": "13be764232afc395e33a8c0d5e5405eb11e43e1e5b341bd1553d0e002aef9326",
+      "bytes": 18165,
+      "byteEqualFrozen": true,
+      "shaEqual": true,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/4bc9c7220f04f113609393aaba38934a7e69878b/apps/cli/src/sucafina-product/work-destinations.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts",
+      "ref": "4bc9c7220f04f113609393aaba38934a7e69878b",
+      "remoteBlobSha": "b501b12e29e911628d557bb6e6c65622760b4072",
+      "computedGitBlobSha": "b501b12e29e911628d557bb6e6c65622760b4072",
+      "sha256": "a0468cb81fc1e5777c18a09b1927ba9dc8f9e45334b1670c94f98724335e4c69",
+      "bytes": 22783,
+      "byteEqualFrozen": true,
+      "shaEqual": true,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/4bc9c7220f04f113609393aaba38934a7e69878b/modules/sucafina/Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "ref": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+      "remoteBlobSha": "8389709232225424b5905638d0951d8cdbb71dd7",
+      "computedGitBlobSha": "8389709232225424b5905638d0951d8cdbb71dd7",
+      "sha256": "8c51fdb91dc3c35bd6ff075488f3d393711b2d16e411085960fa3728c1fe5bd1",
+      "bytes": 26150,
+      "byteEqualFrozen": true,
+      "shaEqual": true,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ec052c2c3bef96f492512f3d5f663919580f25c8/modules/sucafina/Sucafinav1/product/planner/port.ts"
+    }
+  ],
+  "treeAndOwnership": {
+    "completeTreeBlobs": 16381,
+    "hydratedVerified": 1408,
+    "hydratedHashMismatches": [],
+    "deltaPaths": 80,
+    "manifestExact": true,
+    "deletions": [],
+    "ownSourceTestDeltas": 10,
+    "foreignSourceTestDeltas": 5,
+    "receiptDeltas": 65,
+    "effectiveForeignPins": 440,
+    "foreignPinMismatches": [],
+    "ownershipViolations": [],
+    "newForeignPins": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+        "blobSha": "8389709232225424b5905638d0951d8cdbb71dd7",
+        "sourceCommit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "sha256": "8c51fdb91dc3c35bd6ff075488f3d393711b2d16e411085960fa3728c1fe5bd1",
+        "localPath": "/workspace/scratch/301a7f2754f4/agents/c17/W22-owner-probe/archive/pr35/modules/sucafina/Sucafinav1/product/planner/port.ts",
+        "bytes": 26150,
+        "pr": 35,
+        "owner": "astra-finance / WP03-WP05-WP11",
+        "beforeBlobSha": "e365ac59376482dfcc6f81aed045b0153f911038",
+        "admission": "exact-published-renewal-closure",
+        "reason": "Canonical actor extraction plus the real source/case verifier and renewal fixture; whole source-admission and case-read-scope counterproofs qualify the published change in W22 D. Separate CurrentChoicePreview cohort is held; no prior hosted result is transferred.",
+        "candidateBlob": "8389709232225424b5905638d0951d8cdbb71dd7"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-case-read-scope.test.ts",
+        "blobSha": "75a2cbcd0c3907fc2d14f18f2b35f131331ecfb2",
+        "sourceCommit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "sha256": "fbccc98f43e078bcc735ac9f613507ab152f2fbbdd5fbce09e45b3a580a6929f",
+        "localPath": "/workspace/scratch/301a7f2754f4/agents/c17/W22-owner-probe/archive/pr35/modules/sucafina/Sucafinav1/test/product/wp11/renewal-case-read-scope.test.ts",
+        "bytes": 6024,
+        "pr": 35,
+        "owner": "astra-finance / WP03-WP05-WP11",
+        "beforeBlobSha": null,
+        "admission": "exact-published-renewal-closure",
+        "reason": "Canonical actor extraction plus the real source/case verifier and renewal fixture; whole source-admission and case-read-scope counterproofs qualify the published change in W22 D. Separate CurrentChoicePreview cohort is held; no prior hosted result is transferred.",
+        "candidateBlob": "75a2cbcd0c3907fc2d14f18f2b35f131331ecfb2"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+        "blobSha": "2da82bf379910826f4558b5b330c97cdaf6806df",
+        "sourceCommit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "sha256": "e25c0f56ec3b9e8efe762e9bf372bb56b2a7d7d08b94cfaf66358033d8401a97",
+        "localPath": "/workspace/scratch/301a7f2754f4/agents/c17/W22-owner-probe/archive/pr35/modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+        "bytes": 25464,
+        "pr": 35,
+        "owner": "astra-finance / WP03-WP05-WP11",
+        "beforeBlobSha": "d5395570b44366fa81003d5f5aa68a3023c26fa5",
+        "admission": "exact-published-renewal-closure",
+        "reason": "Canonical actor extraction plus the real source/case verifier and renewal fixture; whole source-admission and case-read-scope counterproofs qualify the published change in W22 D. Separate CurrentChoicePreview cohort is held; no prior hosted result is transferred.",
+        "candidateBlob": "2da82bf379910826f4558b5b330c97cdaf6806df"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+        "blobSha": "df3c335c95bf9d8d06d00474ff0bc391dd852b4e",
+        "sourceCommit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "sha256": "9fb65068cc969ebb04f2e14f9082147d058287f09fa40702d56c4c4838a6d9a1",
+        "localPath": "/workspace/scratch/301a7f2754f4/agents/c17/W22-owner-probe/archive/pr35/modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+        "bytes": 8303,
+        "pr": 35,
+        "owner": "astra-finance / WP03-WP05-WP11",
+        "beforeBlobSha": "2338917427497733e4bd88aec852985206cce066",
+        "admission": "exact-published-renewal-closure",
+        "reason": "Canonical actor extraction plus the real source/case verifier and renewal fixture; whole source-admission and case-read-scope counterproofs qualify the published change in W22 D. Separate CurrentChoicePreview cohort is held; no prior hosted result is transferred.",
+        "candidateBlob": "df3c335c95bf9d8d06d00474ff0bc391dd852b4e"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-admission.test.ts",
+        "blobSha": "4a5780b82989b9e8c3437bb3758779d7cfb76733",
+        "sourceCommit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "sha256": "ed792565e2a75a2b29a65dc81eee892db5bcefd0744c55d110ee9af6401df737",
+        "localPath": "/workspace/scratch/301a7f2754f4/agents/c17/W22-owner-probe/archive/pr35/modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-admission.test.ts",
+        "bytes": 11611,
+        "pr": 35,
+        "owner": "astra-finance / WP03-WP05-WP11",
+        "beforeBlobSha": null,
+        "admission": "exact-published-renewal-closure",
+        "reason": "Canonical actor extraction plus the real source/case verifier and renewal fixture; whole source-admission and case-read-scope counterproofs qualify the published change in W22 D. Separate CurrentChoicePreview cohort is held; no prior hosted result is transferred.",
+        "candidateBlob": "4a5780b82989b9e8c3437bb3758779d7cfb76733"
+      }
+    ]
+  },
+  "archivePreservation": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/stop-handoff.json",
+    "bytes": 85587,
+    "gitBlobSha": "d1ac5e6da263fc2dd1766f13e4368b898bcceab5",
+    "sha256": "bc761d68afd64bcb7e49d2abbe98f849ee113b197b579b16f561b12622f65166",
+    "foreignCopies": 128,
+    "readonlyInputs": 131,
+    "unchangedFromW21": true,
+    "priorReceiptBlobs": 268,
+    "changedOrDeletedPriorReceipts": []
+  },
+  "criteriaIntegrity": {
+    "mapPath": "agents/criteria/final-package/draft-W22-v3/package/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-recovery/review-W22-v3-draft/criteria-map.json",
+    "mapSha256": "05ae9fc806270720ee9f70ce83f815271f294b6c1027477ccc221916be41af88",
+    "candidateSha": null,
+    "candidateTree": null,
+    "state": "DRAFT_W22_UNPUBLISHED_NO_CURRENT_EXECUTION",
+    "ownCriteria": 171,
+    "tasks": 7,
+    "literalMismatches": [],
+    "familyCounts": {
+      "dod": 22,
+      "invariants": 24,
+      "quality_standards": 22,
+      "completeness_criteria": 24,
+      "success_criteria": 22,
+      "checks": 57
+    },
+    "scopeCounts": {
+      "WP10": 25,
+      "WP10.T01": 21,
+      "WP10.T02": 17,
+      "WP10.T03": 15,
+      "WP10.T04": 22,
+      "WP10.T05": 14,
+      "WP10.T06": 27,
+      "WP10.T07": 30
+    },
+    "acceptance": {
+      "criteria_accepted": 0,
+      "tasks_accepted": 0,
+      "native": false,
+      "global": false,
+      "builder_auto_acceptance": false
+    }
+  },
+  "freeze": {
+    "path": "modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json",
+    "revision": 10,
+    "total": 38,
+    "matches": 37,
+    "mismatches": [
+      {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "expectedSha256": "6a608e24847fe730b645d5f51f86e47d83e803875162820038e0c05d18f96772",
+        "actualSha256": "42839b627194c59febff34052b813a6e4725414dcf84c8308397539b734b3893",
+        "match": false
+      }
+    ]
+  },
+  "preservedTestBodies": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts",
+      "before": 10,
+      "after": 11,
+      "existingBodiesByteExact": true,
+      "existingBodies": [
+        {
+          "name": "Procurement destination resolves a new canonical collection in a rebuilt host and new UI with no ambient period",
+          "sha256": "e8e573bc7dc26c4eda006d43c873e08820657de7cc13eb3a2c4c750c53d90cd6"
+        },
+        {
+          "name": "Procurement destination refuses a different period, actor and actually changed source after its canonical positive",
+          "sha256": "a0776ba515e54d1404286aca6a1d359992148c0752a33afec46f421eed3bd02f"
+        },
+        {
+          "name": "Procurement period scope rejects overlap and header replacement and cleans up after throw or lease finish",
+          "sha256": "236da1662aaa88ab1488ce4c0cb978832b32d93e02f232a599c47517cc10a786"
+        },
+        {
+          "name": "Procurement secondary read cleans both scopes on exception and refuses real access revocation before display",
+          "sha256": "a202db5da3662fe544dc4c9dc316163690eaf1a826396f827377de28a75aed90"
+        },
+        {
+          "name": "actual C08 work composition opens a current thread and survives rebuilding the host with the same durable key",
+          "sha256": "1da53f5744f313916a0e859240d0c45f0dd71d7852bbd28ec4d1f5682a3ef94a"
+        },
+        {
+          "name": "an action ID, a different period or actor and missing exact content grant cannot bypass current work membership",
+          "sha256": "486e9f1c93a3a87c38a599d85045dae27da67f5fca5b845e8e4ed382cb30526b"
+        },
+        {
+          "name": "the current work reader refuses a real session revocation after the canonical thread read",
+          "sha256": "780a9431bf1d4047867b6895b7d2d38bb1bc6092861f213a7b600b4ead89dcee"
+        },
+        {
+          "name": "render egress rejects header replacement after the last real C08 work witness",
+          "sha256": "8c633505d86f6b9514af6de7b3646e68b758d059811f85149ae80b08dcc15f55"
+        },
+        {
+          "name": "a complete C08 witness detects preference or case mutation with the same live Request",
+          "sha256": "3243a90a8298f6a779017b1c44e7188756a2136a442d4a183010c58794fca1f1"
+        },
+        {
+          "name": "real registered C17 bindings have stable private work refs across key reload and isolated actor, case and key rotation",
+          "sha256": "b8f394d2113e7e0734a947c798e0f835c05c9ab2c7d09ecf6a7c76d7ca790809"
+        }
+      ],
+      "newNames": [
+        "Procurement work reads an uninitialized C08 without writing and invalidates its witness on the first real commit"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts",
+      "before": 5,
+      "after": 5,
+      "existingBodiesByteExact": true,
+      "existingBodies": [
+        {
+          "name": "installed routine publication reads the authenticated Relay store, real skill bytes and required controls",
+          "sha256": "bb7bbdc102111d1b0a960b6fb1b79233c9ffa0b2abb147cb0b3afaa8a2f6ebda"
+        },
+        {
+          "name": "installed publication refuses actual catalog drift and cannot fabricate a knowledge author from UI parameters",
+          "sha256": "a1b1c3d4d1916577eeef85fd1fbe1f7f6101f2eb41c062fa2c93666a6a44fed2"
+        },
+        {
+          "name": "publication egress rejects a revoked real UI lease and a replaced Location while store reads are suspended",
+          "sha256": "edc142308c884b2084549d90dbe0a650cbe54a7359c7f6fd1e24a33ea1df9ca7"
+        },
+        {
+          "name": "installed publication refuses another project before a store read and revokes retained providers on disposal",
+          "sha256": "2d55064c31db8b3c389f347efcf4eb3675246e03f52c12c8309aa55d011d9fcd"
+        },
+        {
+          "name": "publication author comes from the real registered Core session and refuses archive, removal and lease revocation",
+          "sha256": "c6a30c0cffb9169ce8103207d261a7f43370f0c13e0eeb74968bae7882418aa5"
+        }
+      ],
+      "newNames": []
+    }
+  ],
+  "priorReviewSeals": [
+    {
+      "path": "reviews/R1/preflight-W21.json",
+      "sha256": "ad43ae3c83c59f36dffd54bf66b1c01ef3ade6efed6057167c5d80b3201fc7f0"
+    },
+    {
+      "path": "reviews/R1/preflight-W21.md",
+      "sha256": "ce6d4a9d3b6bf9b06ac750699e06d6baaff051e418ad9ea606cf4d113c71b3f8"
+    },
+    {
+      "path": "reviews/R1/review-W20-source.json",
+      "sha256": "8af857c6acd85ede894452d46f534e9205034ca8a924f7bbba57a7f792ba036f"
+    },
+    {
+      "path": "reviews/R1/review-W20-source.md",
+      "sha256": "31f459eb34031ce6c76a19af914c4ddc28deae213c37f2b66081427e3319cc18"
+    }
+  ],
+  "newConfirmedOwnSourceBlockers": [],
+  "sourceReasoning": [
+    {
+      "id": "R1-W22-MEMORY-OBSERVATION",
+      "paths": [
+        "apps/cli/src/sucafina-product/memory-case-read-scope.ts",
+        "apps/cli/src/sucafina-product/analysis-memory-evidence.ts",
+        "apps/cli/src/sucafina-product/analysis-verifier-memory.ts",
+        "apps/cli/src/sucafina-product/input-producer-memory.ts",
+        "apps/cli/src/sucafina-product/business-services.ts",
+        "apps/cli/src/sucafina-product/analysis-host-services.ts"
+      ],
+      "status": "SOURCE_REVIEWED_FUNCTIONAL_PENDING",
+      "assessment": "A observação agora inclui os reads da seleção que cercam o recall. Cada passe prepare/verify cria um ALS/WeakMap novo; os dois passes canônicos nunca compartilham provas concluídas. O callback recebe um recall lexical com claimed antes do primeiro await, contexto por identidade, digest integral do ingresso e current antes/depois; público e nova observação no mesmo call são recusados mesmo antes do recall privado começar. finally fecha/limpa as provas. O host só instala withMemoryObservation quando caseRecall é exatamente business.caseRecall; binding substituído mantém o caminho canônico."
+    },
+    {
+      "id": "R1-W22-MEMORY-FENCES",
+      "paths": [
+        "apps/cli/src/sucafina-product/memory-case-read-scope.ts",
+        "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts"
+      ],
+      "status": "SOURCE_REVIEWED_FUNCTIONAL_PENDING",
+      "assessment": "Não observei ampliação para native, cálculo, cenários mistos ou leituras pendentes. O cache continua restrito a observações concluídas de Procurement record-only/case-event elegíveis, sem approvalStageEntry temporal, e fixa Request/headers/método/URL, binding, seleção/expiração, reader, C08 completo, fontes, principal/ACL e dia/diretório/bankKey. Atlas ainda produz a primeira prova original/capture/current-continuity. Fontes não suportadas mantêm o caminho canônico. A identidade id/incarnation de Atlas não altera o seletor versionado original da análise. Não deduzo daí que toda composição C17/histórica esteja funcionalmente aprovada."
+    },
+    {
+      "id": "R1-W22-MEMORY-COUNTERPROOFS",
+      "paths": [
+        "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts"
+      ],
+      "status": "SOURCE_PRESENT_NOT_EXECUTED_AT_CUTOFF",
+      "assessment": "Fixture usa SQLite/C08/Atlas reais, dois recalls canônicos completos por prepare e por verify, e seis contextos de evidência por passe duplo. Novas probes recusam tomada antecipada da capacidade pela chamada pública e observação concorrente. Permanecem source/capture/principal/clock/lease/headers finais, isolamento/detached read, recuperação e lifecycle stale/cancel. O orçamento continua 225.000ms. A conclusão dessas contraprovas depende do terminal atual; o output de modelo/native é uma fixture estrutural declarada, sem aceite nativo."
+    },
+    {
+      "id": "R1-W22-WORK-COLD-C08",
+      "paths": [
+        "apps/cli/src/sucafina-product/work-destinations.ts",
+        "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+        "modules/sucafina/Sucafinav1/runtime/local-store.ts"
+      ],
+      "status": "SOURCE_REVIEWED_FUNCTIONAL_PENDING",
+      "assessment": "O fallback entra somente após unavailable/product-state-uninitialized; exige ausência literal de __sfProductV1 no snapshot completo. Dentro de transaction dashboard read-only, o LocalStore retém as três superfícies e clones de leitura aninhada, recusando/poisoning qualquer escrita aninhada. Duas state.read threads executam autorizações reais; hashes completos, source fences, ambiente, Request e binding são rechecados; authorized final vincula a lease humana vigente. Estado corrupto/denied/outro unavailable não vira ausência aceita. Nenhum commit vazio é criado. Primeiro commit C08 altera a testemunha e deve invalidar verify."
+    },
+    {
+      "id": "R1-W22-WORK-FIXTURE",
+      "paths": [
+        "modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts"
+      ],
+      "status": "SOURCE_PRESENT_NOT_EXECUTED_AT_CUTOFF",
+      "assessment": "workFixture abre infraestrutura real sem fabricar thread para outro destinatário. Procurement é criado/submetido por domínio real e sua coleção atual vem de um host reconstruído. Os dez corpos W21 existentes são byte a byte iguais; acrescenta-se positivo sem C08, ausência ainda preservada depois de ler, primeiro commit real invalidando witness e corrupção negada. Rebuild de serviços na mesma persistência não prova reinício de processo ou expiração temporal de cinco minutos."
+    },
+    {
+      "id": "R1-W22-C07-FIXTURE",
+      "paths": [
+        "modules/sucafina/Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts"
+      ],
+      "status": "SOURCE_PRESENT_NOT_EXECUTED_AT_CUTOFF",
+      "assessment": "A única mudança funcional desta fixture acrescenta SessionExecution.node ao grupo raiz e conserva a substituição pública SessionExecutionLocal.node. Corrige a distinção entre dependência transitiva e serviço exportado da raiz observada no setup W21. Cinco corpos e budgets são byte a byte iguais. Publicação instalada/read do catálogo/Relay/skill não equivale a governar Task, obter admission nativa ou executar skill via MCP."
+    },
+    {
+      "id": "R1-W22-FINANCE-INTAKE",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/planner/port.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp11/renewal-case-read-scope.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-admission.test.ts"
+      ],
+      "status": "EXACT_PIN_CONSUMPTION_FUNCTIONAL_PENDING",
+      "assessment": "Os cinco blobs pertencem ao commit Finance ec052c2c3bef96f492512f3d5f663919580f25c8 e coincidem com os pins/tree. Confirmei remotamente o produtor Planner: plannerSourceActor extrai a mesma checagem de principal/roles/assigned/domains antes usada inline. O verifier de renovação sem operações observa projeções autenticadas e digests reais, retendo o verificador completo para operações/assumptions não vazias; a prova de cálculo financeiro não é substituída por esse booleano. Não compus nem aceitei o cohort CurrentChoicePreview mantido em espera."
+    }
+  ],
+  "priorFindingRechecks": [
+    {
+      "id": "R1-W20-WORK-DESTINATION-01",
+      "status": "SOURCE_FIXED_TYPES_RECHECKED_FUNCTIONAL_PENDING",
+      "note": "individual.resolve permanece correto e o check W22 não contém erro próprio. A contraprova real de destino ainda precisa do terminal W22."
+    },
+    {
+      "id": "R1-W20-WORK-PERIOD-02",
+      "status": "SOURCE_FIXED_TYPES_RECHECKED_FUNCTIONAL_PENDING",
+      "note": "Escopos outer/secondary de período e autorização permanecem; W22 remove o setup estranho e trata C08 ausente sem grant ambiente. Não há positivo funcional atual confirmado neste corte."
+    },
+    {
+      "id": "R1-W20-RECONCILIATION-TYPE-03",
+      "status": "SCOPED_TYPE_DIAGNOSTIC_ABSENT_IN_W22",
+      "note": "Ausência de diagnóstico próprio no check exato; não fecha reconciliação funcional."
+    },
+    {
+      "id": "R1-W20-TEST-TYPES-04",
+      "status": "SCOPED_TYPE_DIAGNOSTICS_ABSENT_IN_W22",
+      "note": "Os sete diagnósticos de testes W20 permanecem ausentes no check atual; runtime C07 ainda requer terminal."
+    },
+    {
+      "id": "W21-MEMORY-VERIFY-DEADLINE",
+      "status": "SOURCE_REVISED_CURRENT_HOSTED_RECHECK_PENDING",
+      "note": "Observação completa preserva provas independentes, mas W21 timeout e contraprovas não alcançadas não se convertem em PASS W22."
+    },
+    {
+      "id": "W21-WORK-PROCUREMENT-SETUP",
+      "status": "SOURCE_REVISED_CURRENT_HOSTED_RECHECK_PENDING",
+      "note": "Fixture deixou de preparar thread para outro recipient como precondição. Dez corpos anteriores preservados."
+    },
+    {
+      "id": "W21-C07-ROOT-EXPORT-SETUP",
+      "status": "SOURCE_REVISED_CURRENT_HOSTED_RECHECK_PENDING",
+      "note": "SessionExecution passou a integrar exports raiz; prova de publicação instalada e de runtime governado continua separada."
+    },
+    {
+      "id": "R1-W16-LIFECYCLE-CASE-01",
+      "status": "PRIOR_SOURCE_FIX_UNCHANGED_NO_NEW_FUNCTIONAL_ACCEPTANCE",
+      "note": "AllowHistoricalRetry/lifecycle metadata não redefine selectedCase/resolveCase fresh; sem transferência de CI anterior."
+    },
+    {
+      "id": "R1-W17-CALCULATION-HISTORY-01",
+      "status": "PRIOR_SOURCE_FIX_UNCHANGED_FULL_C17_PROOF_PENDING",
+      "note": "Histórico privado record-only não concede fresh upgrade ou aceitação de composição mista. Falhas/triagem históricas de B W21 permanecem abertas."
+    }
+  ],
+  "openMandatoryGates": [
+    {
+      "id": "R1-W22-CURRENT-FUNCTIONAL-PROOF",
+      "severity": "high",
+      "type": "evidence-gap",
+      "criteria": [
+        "WP10.T01.CHK.02",
+        "WP10.T01.CHK.12",
+        "WP10.T04.CHK.01",
+        "WP10.T04.CHK.41",
+        "WP10.T06.CHK.10",
+        "WP10.T07.CHK.09"
+      ],
+      "required": "Terminais completos do candidato atual para Memory/Work/C07 e demais seleções planejadas, incluindo contraprovas realmente alcançadas. Requalificar causas próprias C12/fixtures em investigação; zero transferência de W21."
+    },
+    {
+      "id": "R1-W22-CHECK-FOREIGN",
+      "severity": "high",
+      "type": "owner-integration-gate",
+      "criteria": [
+        "WP10.T04.CMP.10"
+      ],
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/procurement/sourcing-analysis.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp06/native/import-analysis.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp08/collaboration-journey.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp08/confirmation-work-integration.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp08/host-answer-reuse.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp08/question-consumer.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp08/thread-actors-fixture.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp09/decision-answer-consumer.test.ts"
+      ],
+      "required": "Resolver por outputs publicados dos donos os 13 diagnósticos estrangeiros ou registrar bloqueio exato; o run completo é FAILURE apesar de 0 próprios."
+    },
+    {
+      "id": "R1-W22-FREEZE10",
+      "severity": "high",
+      "type": "binding-gate",
+      "criteria": [
+        "WP10.T01.CMP.10",
+        "WP10.T04.CHK.01"
+      ],
+      "paths": [
+        "apps/cli/src/sucafina-product/host-context.ts",
+        "modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json"
+      ],
+      "required": "Binding WP00/reconciliação publicada exata para o host atual: freeze10 permanece 37/38. Não editar artefato estrangeiro apenas para produzir 38/38."
+    },
+    {
+      "id": "R1-W22-CRITERIA-BINDING",
+      "severity": "medium",
+      "type": "review-package-gate",
+      "criteria": [
+        "WP10.T05.DOD.01"
+      ],
+      "required": "Vincular os 171 literais/7 tasks ao candidato e aos resultados/reviews finais. O mapa draft-W22-v3 tem candidate_sha/tree null e zero aceites; preservação literal não é atendimento de critérios."
+    },
+    {
+      "id": "R1-W22-FINAL-INDEPENDENT-REVIEW",
+      "severity": "high",
+      "type": "review-gate",
+      "criteria": [
+        "WP10.T03.CMP.02",
+        "WP10.T03.CHK.03",
+        "WP10.DOD.01"
+      ],
+      "required": "Solicitar três pareceres independentes finais depois dos terminais relevantes. Este preflight não ocupa o lugar do parecer R1 final nem aceita o bundle global/nativo."
+    }
+  ],
+  "ci": {
+    "check": {
+      "snapshotSha": "e8f68f3c1016f45a39b8111786ca8704e7f0e85f",
+      "snapshotTree": "850e32b9b46f25c0178aff9571ef2baeb98fc515",
+      "runId": 43608694246,
+      "jobId": 132488747839,
+      "conclusion": "failure",
+      "counts": {
+        "diagnosticOccurrences": 13,
+        "uniqueDiagnostics": 13,
+        "ownUniqueDiagnostics": 0,
+        "foreignUniqueDiagnostics": 13
+      },
+      "zip": {
+        "path": "evidence/W22/check-artifact-14119118933.zip",
+        "sha256": "ef685cf268e3dbfeea07b81fb5436e3de7116680acdca62af6f474eea8cdea4d",
+        "bytes": 4226,
+        "artifactId": 14119118933
+      },
+      "members": [
+        {
+          "name": "atlas-generate.log",
+          "sha256": "0279c8a6959392e6cbdc8daf40011385f56fd4a7cbe09b5af76072e401a2b44f",
+          "bytes": 22,
+          "byteEqualExtracted": true
+        },
+        {
+          "name": "atlas-typecheck.log",
+          "sha256": "ae47736bb2a9401aa9743893f2f64b9a605e65a99d78cd991a8021e0f7722d87",
+          "bytes": 16,
+          "byteEqualExtracted": true
+        },
+        {
+          "name": "atlas-generated-check.log",
+          "sha256": "8040b8b602fe9bb0035e66ee567e05648e496a8edfd36495e4d79c65e84892fb",
+          "bytes": 30,
+          "byteEqualExtracted": true
+        },
+        {
+          "name": "atlas-generated-diff.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0,
+          "byteEqualExtracted": true
+        },
+        {
+          "name": "cli-typecheck.log",
+          "sha256": "ae47736bb2a9401aa9743893f2f64b9a605e65a99d78cd991a8021e0f7722d87",
+          "bytes": 16,
+          "byteEqualExtracted": true
+        },
+        {
+          "name": "guards.log",
+          "sha256": "0180c8dc014372a95facedce63d4ffc277d0a7371c853167cadbaf5af767b19b",
+          "bytes": 21184,
+          "byteEqualExtracted": true
+        },
+        {
+          "name": "merge-base.txt",
+          "sha256": "541c6844015c5a0839167f338dcca8932ce7eb70c1d79cdd891584a105bf9961",
+          "bytes": 41,
+          "byteEqualExtracted": true
+        },
+        {
+          "name": "revisions.txt",
+          "sha256": "05efa8e5701702add41725b728bd59391fb324b24b715bd28efa61d6c371a798",
+          "bytes": 123,
+          "byteEqualExtracted": true
+        },
+        {
+          "name": "spawn-imports.log",
+          "sha256": "2f1d6a92e1086522cf10d06d2975b89ad366e8da25ca26b0ba67e00c77a50ce9",
+          "bytes": 97,
+          "byteEqualExtracted": true
+        },
+        {
+          "name": "sucafina-typecheck.log",
+          "sha256": "e397e2582c940023a496512ddac9a3be0fe5a481d3f981c44b7a12a7e6c642f4",
+          "bytes": 6485,
+          "byteEqualExtracted": true
+        },
+        {
+          "name": "wp10-test-typecheck.log",
+          "sha256": "ad028ac630d212f71ae85efc93f29822c39adeb741bab228fff9298ab604f496",
+          "bytes": 60,
+          "byteEqualExtracted": true
+        }
+      ],
+      "diagnosticOwnershipVerified": true,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Checkout check envelope",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Validate exact product and envelope",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Checkout exact product",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Record product and guard base",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Typecheck Sucafina",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 7
+        },
+        {
+          "name": "Typecheck CLI consumers",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "Typecheck WP10 test consumers",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Verify canonical Atlas generation",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10
+        },
+        {
+          "name": "Typecheck Atlas boundary",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11
+        },
+        {
+          "name": "Guard subprocess imports",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12
+        },
+        {
+          "name": "Guard product against origin/dev",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13
+        },
+        {
+          "name": "Upload exact-check evidence",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14
+        },
+        {
+          "name": "Post Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 26
+        },
+        {
+          "name": "Post Checkout exact product",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 27
+        },
+        {
+          "name": "Post Checkout check envelope",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 28
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 29
+        }
+      ],
+      "remoteLog": {
+        "jobId": 132488747839,
+        "runId": 43608694246,
+        "bytes": 85837,
+        "sha256": "fb72d623ce90da7547ddd0fa11e16f6337e612981c52dbb0cfbefbf7f6f04180",
+        "byteEqualLocalRaw": true,
+        "source": "independent readonly GitHub MCP workflow job log"
+      },
+      "remoteCompare": "reviews/R1/remote-observations-W22-preflight.json",
+      "qualification": "Envelope W→S contém só .astra-wp10-check.json. Run FAILURE; CLI, WP10 consumers, Atlas generation/boundary e guards success. Não transformo passos scoped em check geral aprovado."
+    },
+    "functionalA": {
+      "productSha": "4bc9c7220f04f113609393aaba38934a7e69878b",
+      "snapshotSha": "902bb817cde2c8ccb2aba5f6d6b8765d70bd6663",
+      "runId": 43609220130,
+      "jobId": 132490362081,
+      "files": 6,
+      "status": "in_progress",
+      "conclusion": null,
+      "terminalObserved": false,
+      "observedAt": "2026-11-14 15:20:18 UTC",
+      "independentRemoteJobsAndEnvelope": "reviews/R1/remote-A-W22-preflight.json",
+      "envelopeOnlyDiff": [
+        ".ci-run.json"
+      ]
+    },
+    "otherSelectionsAtCutoff": "D18/R10/C29/E2 estavam preparados; não observei terminais atuais. Nenhuma quantidade de PASS/FAIL atribuída ao W22 funcional.",
+    "historicalOnly": {
+      "W21A": "188 pass, 11 fail, 199 tests, 29 files, conforme terminal anterior; não transferido.",
+      "W21B": "Parent informou terminal 49 pass, 30 fail e 1 additional error em 79 tests/10 files. Não reauditei o raw neste preflight; causas próprias ainda em investigação. Não transferido.",
+      "W21Check": "0 own/13 foreign histórico; check W22 observado separadamente."
+    }
+  },
+  "limits": [
+    "Escopo estático dirigido e verificação de bytes/identidade; não é atestado semântico de todos os arquivos ou de todos os critérios.",
+    "A suíte Memory usa output/native estruturais declarados; apenas C08/Atlas/scanner/fonte real na fixture podem sustentar suas observações específicas quando executadas.",
+    "C07 installed publication prepara aquisição; não prova Task/admission/artifact nativos, cinco perfis/18 skills/oito packs/39 operações nem toda rota MCP.",
+    "Não houve produto, teste, typecheck, build ou browser local. Somente parsing/diff/hashes de dados e consultas remotas somente leitura.",
+    "A snapshot hydration parcial não foi tratada como remoção. O inventário completo 16.381 blobs é a base de comparação.",
+    "Nenhum merge, deploy, publicação, edição de produto/foreign inputs ou mutação remota. S0 continua responsável pela integração.",
+    "Mudança posterior de produto invalida o uso deste preflight como revisão daquele novo SHA. Receber terminais exige adendo ou parecer final novo, sem alterar retroativamente este corte."
+  ],
+  "supportingArtifacts": [
+    {
+      "path": "reviews/R1/audit-W22-preflight.json",
+      "sha256": "8fe5345176698cb3f079981db1c312976a545cd319b6908108f88489804b0801"
+    },
+    {
+      "path": "reviews/R1/remote-blobs-W22-preflight.json",
+      "sha256": "00b691ce61f7c3bf7a9f5f4a7f5c9611c08f147530f66da294f29d3a0e43144d"
+    },
+    {
+      "path": "reviews/R1/remote-observations-W22-preflight.json",
+      "sha256": "53f46013ad0dbd96e15897b0805606fe7fa1a81bfcf5e6a93d238f401932803d"
+    },
+    {
+      "path": "reviews/R1/remote-log-W22-preflight.json",
+      "sha256": "723aec7f9d7a1315948f98c40bdfa4670b2b3b5ff74f842d977367d095617b64"
+    },
+    {
+      "path": "reviews/R1/remote-A-W22-preflight.json",
+      "sha256": "85e37b913d19686a308eb89325acf8184bc7025bc1176d6eb6b5103fb600080d"
+    }
+  ]
+}

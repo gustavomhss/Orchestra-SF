@@ -50,6 +50,8 @@ import { createSfScenarioOperationAccess } from "./scenario-operation-access.ts"
 import { createSfRecordedPlannerOperationAccess } from "./recorded-planner-operation-access.ts"
 import { createSfPreparedApplicationEgress } from "./prepared-application-egress.ts"
 import { createSfMemoryCaseReadScope } from "./memory-case-read-scope.ts"
+import { createSfProcurementCaseReadScope } from "./procurement-case-read-scope.ts"
+import { createSfProcurementEvidenceReadScope } from "./procurement-evidence-read-scope.ts"
 import type { SfMemoryObservation } from "./memory-case-read-scope.ts"
 import { createSfSourceFenceReader } from "./source-fence-read.ts"
 import { createSfScenarioProcurementProofScope } from "./scenario-procurement-proof-scope.ts"
@@ -131,10 +133,13 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   const caseRecall: ReturnType<typeof createSfCaseRecall> = (request, call) => recall.current
     ? memoryCaseScope.recall(request, call, () => recall.current!(request, call)) : Promise.resolve({ status: "unavailable" as const })
   const decisionEvidence: { current?: ReturnType<typeof createProcurementDecisionHost> } = {}
+  const readDecisionEvidence = createSfProcurementEvidenceReadScope({ host, state: input.authority.state, contextFor,
+    selection: selectedPeriod, readerIdentity: () => decisionEvidence.current?.resolveEvidence, lockedSourceFences,
+    resolve: (ref, call) => decisionEvidence.current?.resolveEvidence(ref, call) ?? Promise.resolve(undefined) })
   const procurementEvidence = {
     resolveEvidence: async (ref: BusinessEvidenceRef, call: TrustedDomainContext): Promise<BusinessEvidenceResolution | undefined> => {
       const unavailable = (): BusinessEvidenceResolution => ({ state: "unavailable", ref, accessRevision: call.binding.accessRevision, checkedAt: new Date().toISOString() })
-      if (ref.kind !== "record" || !ref.refId.startsWith("sf-procurement-c06:")) return decisionEvidence.current?.resolveEvidence(ref, call)
+      if (ref.kind !== "record" || !ref.refId.startsWith("sf-procurement-c06:")) return readDecisionEvidence(ref, call)
       if (ref.schema !== "sf-evidence-v1" || ref.target.surface !== "procurement" || ref.target.recordType !== "procurement-request" || !ref.target.period || ref.refDigest !== digestSfEvidenceRef(ref) || ref.installationId !== call.binding.installationId || ref.projectId !== call.binding.projectId) return unavailable()
       const first = await procurementConfirmation.resolve(ref.refId, call)
       if (first.status !== "ok" || digestSfValue(first.value.evidence) !== digestSfValue(ref)) return unavailable()
@@ -161,7 +166,9 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     authorizeCase,
     verifyScenarioOperations: (value, call) => scenarioOperationAccess ? scenarioOperationAccess(value, call) : Promise.resolve(false),
     evidence: context, createId: randomUUID, now: () => new Date().toISOString() })
-  const memoryCaseScope = createSfMemoryCaseReadScope({ host, state: input.authority.state, read: canonicalCases.read,
+  const procurementCaseRead = createSfProcurementCaseReadScope({ host, state: input.authority.state, read: canonicalCases.read,
+    selection: selectedPeriod, readerIdentity: () => evidence.current, isCurrentRecord: individual.isCurrent, lockedSourceFences })
+  const memoryCaseScope = createSfMemoryCaseReadScope({ host, state: input.authority.state, read: procurementCaseRead,
     selection: selectedPeriod, readerIdentity: () => evidence.current, lockedSourceFences })
   const cases = { ...canonicalCases, read: memoryCaseScope.read }
   const withMemoryObservation: SfMemoryObservation = (request, call, work) => {

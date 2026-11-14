@@ -1,0 +1,179 @@
+{
+  "schema": "wp10.builder.correction-audit.v2",
+  "wave": "W23",
+  "version": 2,
+  "status": "frozen-for-root-reconciliation-and-hosted-ci",
+  "builder": "/root/c17_composition/w22_observation_audit",
+  "baseCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+  "baseTree": "082b73607bea09a0a6252e2298c5a581c10cb645",
+  "parentAudit": {
+    "path": "agents/c17/W23-procurement-read-scope/audit.json",
+    "bytes": 8408,
+    "sha256": "426177db56be36bd11f54c5046a90494e3bd15ea477e1806b486be5323e34030",
+    "blobSha": "d64051661d1c52da43cd6908890ace7b0e502aaf"
+  },
+  "parentSeal": {
+    "path": "agents/c17/W23-procurement-read-scope/seal.json",
+    "bytes": 2545,
+    "sha256": "db8116445050d94ecd8d4582aad6386624eed3b29c7492a9f70f8333a5fbeab3",
+    "blobSha": "921ecf359a1799b16059453950bfb85bfc4d9fd2"
+  },
+  "parentIntegrity": {
+    "path": "agents/c17/W23-procurement-read-scope-v2/parent-integrity.json",
+    "bytes": 4667,
+    "sha256": "3e9e1a59eba1047a948b3027901a03b5448a7da55f4d0c1c5ceeb154059196c4",
+    "blobSha": "df038399f3cc55f842a231ac4b62bbb484bd2c0f"
+  },
+  "sourceManifest": {
+    "path": "agents/c17/W23-procurement-read-scope-v2/source-manifest.json",
+    "bytes": 5854,
+    "sha256": "472155a5c30abbf2d8319a7264bded47bf8bfd38f1c3bb9fc9198fc24b2e0eb1",
+    "blobSha": "aa53dd3f1d67e3af1417af3c7d689d1fcf5fafef"
+  },
+  "productPaths": [
+    {
+      "path": "apps/cli/src/sucafina-product/procurement-case-read-scope.ts",
+      "mode": "own-v2-over-v1",
+      "ownership": "WP10 own host composition / own integration test",
+      "baseCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+      "baseBlobSha": null,
+      "parentPackagePath": "agents/c17/W23-procurement-read-scope/package/apps/cli/src/sucafina-product/procurement-case-read-scope.ts",
+      "parentBlobSha": "6d3211bfe7e33cd40364ec98240028a732212434",
+      "parentSha256": "0240032225df3d4db22aa541fc4394ab07fef2cb4358ccfe54f38dc69a1ac7b6",
+      "bytes": 10647,
+      "sha256": "c2f8ed94d0dc3aef1ad95faf95255a8ab3cc2de433570c609e32d5e75b88ccf8",
+      "blobSha": "b5cebd6362b14b5b81fda7b80ff1e0f7bd85a3d6",
+      "packagePath": "agents/c17/W23-procurement-read-scope-v2/package/apps/cli/src/sucafina-product/procurement-case-read-scope.ts",
+      "patchFromV1": {
+        "path": "agents/c17/W23-procurement-read-scope-v2/diffs/procurement-case-read-scope.patch",
+        "bytes": 1247,
+        "sha256": "2b235a26df13cee904aad8a9e83d2a4afe22db4ffb4acccc8a222d8b252168a6",
+        "blobSha": "739c896532e9c11b5f8a6facb5b53e52c23e9d51"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts",
+      "mode": "own-v2-over-v1",
+      "ownership": "WP10 own host composition / own integration test",
+      "baseCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+      "baseBlobSha": null,
+      "parentPackagePath": "agents/c17/W23-procurement-read-scope/package/modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts",
+      "parentBlobSha": "f22f2d7542475b74013165b85ec9cdd4db77d7ee",
+      "parentSha256": "efe8864ea1c0699dd2115d394f51c77b1c77d4dc3647f5efe82916e8e9831cf8",
+      "bytes": 30355,
+      "sha256": "06e53010610245e9413f470344f6133da72f899ed62a4ba7f8c042ae78a0937a",
+      "blobSha": "67274bd100bbab1ddf4ba02bac9a4b17bcb5472e",
+      "packagePath": "agents/c17/W23-procurement-read-scope-v2/package/modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts",
+      "patchFromV1": {
+        "path": "agents/c17/W23-procurement-read-scope-v2/diffs/procurement-case-read-scope.test.patch",
+        "bytes": 4978,
+        "sha256": "78e63d77278247558e4fa51446c8fcd88b699eb329779bafc2ae6d6a8fd91886",
+        "blobSha": "1fc165f58e52b87f328ab18c36443592efb49c63"
+      }
+    }
+  ],
+  "integration": {
+    "path": "apps/cli/src/sucafina-product/business-services.ts",
+    "mode": "patch-only-not-applied-by-builder",
+    "base": {
+      "path": "agents/c17/W23-procurement-read-scope/baseline/apps/cli/src/sucafina-product/business-services.ts",
+      "bytes": 68104,
+      "sha256": "52b0778b68b8c53218c6eea61a948e830fe745eed8c2b591c17b5ee3eba944da",
+      "blobSha": "da80511814c86214a963fc721fda4a3a891df147"
+    },
+    "baseMatchesFrozenW22": true,
+    "patch": {
+      "path": "agents/c17/W23-procurement-read-scope-v2/business-services.patch",
+      "bytes": 1716,
+      "sha256": "ca37f36eddefdaef794c670d6591a34712b3e31946b9c53b0740f4633820cf24",
+      "blobSha": "f75341e1b25437bd027c57db2bbd20562d26b61f"
+    },
+    "proposedResult": {
+      "path": "agents/c17/W23-procurement-read-scope/package/apps/cli/src/sucafina-product/business-services.ts",
+      "bytes": 68448,
+      "sha256": "b1907ed5020f07aff5034784491f2ed5a697d9a81ae966651748de3911b11772",
+      "blobSha": "8370380dbe673c1e5ef0395ed95a4b1b0f00e8f5"
+    },
+    "unchangedFromV1": true,
+    "qualification": "Root reconciles this unchanged import/adapter patch with its other W23 work; central remains unedited by this builder."
+  },
+  "notes": {
+    "path": "agents/c17/W23-procurement-read-scope-v2/audit.md",
+    "bytes": 4534,
+    "sha256": "064436967868d06fbe845323e02ad1e7ee1513e4cce1905a0b4805efba510229",
+    "blobSha": "1e51f1066a7b599f620696340d520bbd368e1e3b"
+  },
+  "staticChecks": {
+    "path": "agents/c17/W23-procurement-read-scope-v2/static-checks.json",
+    "bytes": 8152,
+    "sha256": "73584201690dac71c6ec56de0bde38c8f83c924919d68c3f28d3e580baf2d65d",
+    "blobSha": "3f6ebf4f5f2855e6cb80d9aba4c3336343a10cad"
+  },
+  "ciSelection": {
+    "path": "agents/c17/W23-procurement-read-scope-v2/ci-selection.json",
+    "bytes": 1534,
+    "sha256": "4a1380b82a751807ecc00d968c90881044557070f4cd08962f7db3de77345bd2",
+    "blobSha": "6789437aabf0441d8e9444acba4b9b200cb78cda"
+  },
+  "rootFinding": "V1 returned procurement-case-read-changed before eligibility for valid-authority missing/nonparticipant cases and C08 refusals, changing canonical status/reason.",
+  "correction": "While full pin and real revalidation remain valid, pre-eligibility non-ok/undefined selection returns unsupported and invokes the actual canonical reader once after exiting the owned transaction. Changed/throw/writer/post-canonical paths never retry.",
+  "contractSources": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/state.ts",
+      "mode": "read-only",
+      "matchesFrozenW22": true,
+      "sourceCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+      "bytes": 9143,
+      "sha256": "ed588ca9aa44aac43882c31a0d7b75857adb5790790b3a0e44ddac75f3bc0af0",
+      "blobSha": "755639b2a16265fe164ba2e6343738c1362d168c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "mode": "read-only",
+      "matchesFrozenW22": true,
+      "sourceCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+      "bytes": 19836,
+      "sha256": "de25a3d2c5fc8725debb538ec0efb45b3a3c986ff478156cce734038f87d7268",
+      "blobSha": "2fd55c7304add0829d7434917c80664fe86356b9"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+      "mode": "read-only",
+      "matchesFrozenW22": true,
+      "sourceCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+      "bytes": 8975,
+      "sha256": "47597f1233478dacd6b4395a811105b44abf072d465341325d4d4834494083bf",
+      "blobSha": "cbce0fa5bc9cff4131ce540e98e05db70574015b"
+    }
+  ],
+  "tests": {
+    "wholeFile": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts",
+    "total": 16,
+    "originalV1TestsPreserved": 13,
+    "additionalV2Tests": 3,
+    "actualOutcomes": [
+      "denied/case-access-unavailable for missing case",
+      "denied/case-access-unavailable after actual participant removal",
+      "unavailable/invalid-product-state for actual invalid C08 schema"
+    ],
+    "headerMutationDuringPreflight": "actual state.read result unchanged; full Request header changed after its awaited result; no canonical invocation; actual UI authority still valid",
+    "execution": "not-executed-locally; awaiting hosted exact successor"
+  },
+  "validation": {
+    "localTests": "not-executed",
+    "localTypecheck": "not-executed",
+    "localBuild": "not-executed",
+    "localProductImport": "not-executed",
+    "localBrowser": "not-executed",
+    "hostedResult": "pending-parent-publication-and-CI",
+    "nativeAcceptance": "unexecuted",
+    "globalAcceptance": "unexecuted",
+    "independentAcceptance": "not-granted",
+    "performanceMeasuredW23": false
+  },
+  "parentPackageWrites": false,
+  "centralProductWrites": false,
+  "foreignProductWrites": [],
+  "publicationPerformed": false,
+  "ciDispatchPerformed": false
+}

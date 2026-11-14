@@ -1,0 +1,158 @@
+{
+  "schema": "wp10.builder.correction-audit.v1",
+  "wave": "W23",
+  "scope": "One current planned Procurement UI case read in one real LocalStore readonly scope",
+  "status": "frozen-for-root-reconciliation-and-hosted-ci",
+  "builder": "/root/c17_composition/w22_observation_audit",
+  "baseCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+  "baseTree": "082b73607bea09a0a6252e2298c5a581c10cb645",
+  "sourceManifest": {
+    "path": "agents/c17/W23-procurement-read-scope/source-manifest.json",
+    "bytes": 10348,
+    "sha256": "c333e0b336add47eb2f73adc242ab15f56851e62cae97718a2c0a9e950c57696",
+    "blobSha": "70c54b238de9c60a6b58a2eb0708cf8cdab8997b"
+  },
+  "productPaths": [
+    {
+      "path": "apps/cli/src/sucafina-product/procurement-case-read-scope.ts",
+      "mode": "own-new",
+      "ownership": "WP10 own host composition / own integration test",
+      "baseCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+      "baseBlobSha": null,
+      "bytes": 10314,
+      "sha256": "0240032225df3d4db22aa541fc4394ab07fef2cb4358ccfe54f38dc69a1ac7b6",
+      "blobSha": "6d3211bfe7e33cd40364ec98240028a732212434",
+      "packagePath": "agents/c17/W23-procurement-read-scope/package/apps/cli/src/sucafina-product/procurement-case-read-scope.ts",
+      "patch": {
+        "path": "agents/c17/W23-procurement-read-scope/diffs/procurement-case-read-scope.patch",
+        "bytes": 10541,
+        "sha256": "3d6640162220a11140ec6119622bff4b1f826f3e5666eed5a11e348523bab99d",
+        "blobSha": "0a982f559c9cc5d23bf6ce9eb168877d9115be51"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts",
+      "mode": "own-new",
+      "ownership": "WP10 own host composition / own integration test",
+      "baseCommit": "4bc9c7220f04f113609393aaba38934a7e69878b",
+      "baseBlobSha": null,
+      "bytes": 26507,
+      "sha256": "efe8864ea1c0699dd2115d394f51c77b1c77d4dc3647f5efe82916e8e9831cf8",
+      "blobSha": "f22f2d7542475b74013165b85ec9cdd4db77d7ee",
+      "packagePath": "agents/c17/W23-procurement-read-scope/package/modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts",
+      "patch": {
+        "path": "agents/c17/W23-procurement-read-scope/diffs/procurement-case-read-scope.test.patch",
+        "bytes": 27010,
+        "sha256": "8324bfe3a322265765bd6085edafeb0918ae98901fbc423fa2c27c18c583b91e",
+        "blobSha": "5d60eb69ab2e725e6a20eba0b0bbd9409ee1ff5a"
+      }
+    }
+  ],
+  "integration": {
+    "path": "apps/cli/src/sucafina-product/business-services.ts",
+    "mode": "patch-only-not-applied-by-builder",
+    "base": {
+      "path": "agents/c17/W23-procurement-read-scope/baseline/apps/cli/src/sucafina-product/business-services.ts",
+      "bytes": 68104,
+      "sha256": "52b0778b68b8c53218c6eea61a948e830fe745eed8c2b591c17b5ee3eba944da",
+      "blobSha": "da80511814c86214a963fc721fda4a3a891df147"
+    },
+    "baseMatchesFrozenW22": true,
+    "patch": {
+      "path": "agents/c17/W23-procurement-read-scope/business-services.patch",
+      "bytes": 1716,
+      "sha256": "ca37f36eddefdaef794c670d6591a34712b3e31946b9c53b0740f4633820cf24",
+      "blobSha": "f75341e1b25437bd027c57db2bbd20562d26b61f"
+    },
+    "proposedResult": {
+      "path": "agents/c17/W23-procurement-read-scope/package/apps/cli/src/sucafina-product/business-services.ts",
+      "bytes": 68448,
+      "sha256": "b1907ed5020f07aff5034784491f2ed5a697d9a81ae966651748de3911b11772",
+      "blobSha": "8370380dbe673c1e5ef0395ed95a4b1b0f00e8f5"
+    },
+    "hunks": "One import and one 3-line adapter insertion; Memory wrapper remains outermost. Root must reconcile concurrent own W23 work."
+  },
+  "priorHostedEvidence": {
+    "path": "agents/c17/W23-procurement-read-scope/prior-hosted-metrics.json",
+    "bytes": 5273,
+    "sha256": "f7afa3fece7ad621aa34692aa2484813b4312fbd783b420487acf96dd044a26f",
+    "blobSha": "d4b17190c3592d1df53c3e7115e024f97836d1e0"
+  },
+  "staticChecks": {
+    "path": "agents/c17/W23-procurement-read-scope/static-checks.json",
+    "bytes": 7810,
+    "sha256": "495b84d99cd5e223b4a480ad84406f1e81a70a71db76b822f2575801b2439de6",
+    "blobSha": "e29acaf9c33a244578840948966264ef67e21a63"
+  },
+  "ciSelection": {
+    "path": "agents/c17/W23-procurement-read-scope/ci-selection.json",
+    "bytes": 1219,
+    "sha256": "3ba6820bf309688b1e57ad5c15c958788c5a8623d1be3e739b87951a40197f71",
+    "blobSha": "54752452a7edd88d96162cfaa00ee91d57aedaad"
+  },
+  "notes": {
+    "path": "agents/c17/W23-procurement-read-scope/audit.md",
+    "bytes": 10658,
+    "sha256": "e87256d5c0393092926afab780cce8e66a6a6ceb4b11d8ce9b8ac6cfb02ef7e1",
+    "blobSha": "3048b44f175b576fea23e84f810d75050c393226"
+  },
+  "causes": [
+    "Canonical case.read repeatedly reopens root SQLite snapshots for real authority/C08/BCS observations. No proof pass is removable.",
+    "isCurrent does not guarantee issueForActor is readonly: actor/policy/legacy/metadata normalization can materialize scopes.",
+    "Wrapping unprepared chosen cases would swallow existing source/capture write interleavings and add fences before their probes; final eligibility excludes those cases."
+  ],
+  "changes": [
+    "New helper admits only planned Procurement prepared cases with no receipts and exact currently materialized source entries.",
+    "One canonical reader within one actual retained store snapshot; all canonical context, source, continuity, scenario and egress checks retained.",
+    "Real C08 and all-source witnesses before/after; complete Request headers/binding/lease/selection/reader pins retained.",
+    "Unsupported returns to canonical only before execution; changed/writer/canonical refusal never retry.",
+    "Separate root integration patch keeps the existing Memory wrapper outermost."
+  ],
+  "tests": {
+    "wholeFile": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-case-read-scope.test.ts",
+    "newTestCount": 13,
+    "fixtures": "Actual SQLite/C08/source producer/UI-human admission/BCS/case projection. Explicit upstream pending-cost choice; actual producer creates original capture and preparedChanges.",
+    "coverage": [
+      "unchanged canonical view and all passes on two invocations",
+      "unprepared canonical boundary",
+      "source,actor,policy,legacy fields fallback",
+      "principal,headers,lease,period,day change",
+      "real nested write poison with no retry",
+      "complete C08 bytes and invalid original after source advance"
+    ],
+    "execution": "not-executed-locally; exact published successor pending hosted check/tests",
+    "existingTestOrBudgetWrites": false
+  },
+  "performance": {
+    "measuredW23": false,
+    "staticEstimate": "One root transaction API invocation per admitted case.read, retaining 2 BCS context passes and 4 explicit scenario resolutions in the duplicate fixture. Not a whole-HTTP 2152-to-one claim.",
+    "metricsArePhysicalCommits": false,
+    "newTestsMeasureWhenHosted": true
+  },
+  "validation": {
+    "localTests": "not-executed",
+    "localTypecheck": "not-executed",
+    "localBuild": "not-executed",
+    "localProductImport": "not-executed",
+    "localBrowser": "not-executed",
+    "hostedSuccessor": "pending-parent-publication-and-CI",
+    "nativeAcceptance": "unexecuted",
+    "globalAcceptance": "unexecuted",
+    "independentReviewAcceptance": "not-granted",
+    "builderAuditOnly": true
+  },
+  "limits": [
+    "H05 expected409 versus actual200 remains a foreign producer/test semantic disagreement.",
+    "No history, mixed, native, Planner, timed approvals, applied/receipt cases or whole apply transaction optimization.",
+    "Existing scenario guard fixture remains unprepared, keeping all eight fences and actual write interleavings.",
+    "No reusable historical current-scope materialization API exported; parent evidence-reader work is separate.",
+    "Logical readonly operation uses the actual LocalStore serialized transaction and can extend its writer exclusion window.",
+    "Root must reconcile and hash the central integration alongside other W23 changes; patch-only preview is not the eventual published central blob.",
+    "Three independent reviewers must assess the published successor and actual hosted evidence."
+  ],
+  "foreignProductWrites": [],
+  "centralProductWritePerformed": false,
+  "publicationPerformed": false,
+  "ciDispatchPerformed": false,
+  "remoteMutationPerformed": false
+}

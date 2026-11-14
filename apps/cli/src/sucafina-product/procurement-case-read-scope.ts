@@ -1,0 +1,134 @@
+import { roleMap } from "../../../../modules/sucafina/Sucafinav1/runtime/admin.ts"
+import { object } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
+import type { Snapshot } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
+import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+import type { BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
+import type { DecisionCase } from "../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts"
+import type { DecisionCasePort } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
+import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
+import { parseCaseRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+import { sfScopedSourceIdentity, sfSourceIdentity } from "../../../../modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts"
+import { procurementRequestFields, projectProcurementScope } from "../../../../modules/sucafina/Sucafinav1/product/procurement/source-projection.ts"
+import { createSfScenarioProcurementProofScope } from "./scenario-procurement-proof-scope.ts"
+
+type Input = Parameters<typeof createSfScenarioProcurementProofScope>[0] & { read: DecisionCasePort["read"] }
+type RecordRef = Extract<BusinessEvidenceRef, { kind: "record" }>
+type ReadResult = Awaited<ReturnType<DecisionCasePort["read"]>>
+
+/** Keep one complete current, planned Procurement case read in one real SQLite scope.
+ * No result or authorization is cached; every canonical BCS pass still runs. */
+export function createSfProcurementCaseReadScope(input: Input): DecisionCasePort["read"] {
+  const proofFor = createSfScenarioProcurementProofScope(input)
+  const unsupported = Symbol("procurement-case-read-unsupported")
+  const changed = () => ({ status: "unavailable" as const, reason: "procurement-case-read-changed" })
+  return async (incoming, call) => {
+    if (call.kind !== "ui" || !input.host.persistence.currentSnapshots) return input.read(incoming, call)
+    const ref = parseCaseRef(incoming.caseRef)
+    if (!ref) return input.read(incoming, call)
+    const request = input.host.requestFor(call), selection = input.selection(call), reader = input.readerIdentity()
+    if (!request || request.signal.aborted) return changed()
+    if (!selection || !reader) return input.read(incoming, call)
+    const requestDigest = requestIdentity(request), binding = digestSfValue([call.kind, call.binding])
+    const incomingDigest = digestSfValue(incoming), selectionDigest = digestSfValue(selection)
+    const current = () => input.host.requestFor(call) === request && !request.signal.aborted && requestIdentity(request) === requestDigest &&
+      digestSfValue([call.kind, call.binding]) === binding && digestSfValue(incoming) === incomingDigest &&
+      input.selection(call) === selection && selection.expiresAt > Date.now() && digestSfValue(selection) === selectionDigest && input.readerIdentity() === reader
+    try {
+      const result = await input.host.persistence.transaction<ReadResult | typeof unsupported>("dashboard", async () => {
+        if (!current() || !await input.host.revalidate(call) || !current()) return { commit: false, value: changed() }
+        const selected = await input.state.read(request, "cases", (state, actor) => {
+          const value = state.cases[ref.id]
+          return actor.principalRef === call.binding.principalRef && actor.accessRevision === call.binding.accessRevision &&
+            actor.policyVersion === call.binding.policyVersion && value?.id === ref.id && value.incarnation === ref.incarnation &&
+            value.participants.includes(actor.principalRef) ? value : undefined
+        })
+        if (!current()) return { commit: false, value: changed() }
+        if (selected.status !== "ok" || !selected.value) {
+          // Eligibility has not been established. Preserve the real case
+          // reader's missing-case, participant and C08 refusal contracts.
+          if (!await input.host.revalidate(call) || !current()) return { commit: false, value: changed() }
+          return { commit: false, value: unsupported }
+        }
+        // C12 review/first-application reads only. An ordinary chosen case keeps
+        // its canonical boundaries, including concurrent source-write probes.
+        if (!selected.value.preparedChanges.length || selected.value.receipts.length || selected.value.preparedChanges.some((change) =>
+          change.state !== "planned" || change.target.surface !== "procurement" || change.receipt !== undefined))
+          return { commit: false, value: unsupported }
+        const scope = proofFor(selected.value, call)
+        if (!scope) return { commit: false, value: unsupported }
+        try {
+          const before = await scope.snapshot()
+          if (before.kind === "unsupported") return { commit: false, value: unsupported }
+          if (before.kind !== "sf-scenario-procurement-fence" || !current() || !scope.current()) return { commit: false, value: changed() }
+          const snapshots = input.host.persistence.currentSnapshots?.()
+          if (!snapshots) return { commit: false, value: changed() }
+          const snapshotDigest = digestSfValue(snapshots)
+          const principal = await input.host.authenticate(request, { surface: "procurement", roleMap: roleMap(snapshots.procurement, "procurement") })
+          if (!principal || principal.id !== call.binding.principalRef || principal.id.startsWith("local:") ||
+            !await input.host.revalidate(call) || !current() || !scope.current() ||
+            digestSfValue(input.host.persistence.currentSnapshots?.()) !== snapshotDigest) return { commit: false, value: changed() }
+          const roles = principal.roles.filter((role) => role.surface === "procurement").map((role) => role.role)
+          // isCurrent alone also accepts another actor's or a legacy field scope.
+          // A protected archive causes the producer to issueForActor even for a
+          // fresh reference. Admit only the exact scope it would reissue unchanged.
+          if (!materialized(selected.value, call, snapshots.procurement, selection.period, roles, principal.canWrite))
+            return { commit: false, value: unsupported }
+          const admitted = await scope.snapshot()
+          if (admitted.kind !== "sf-scenario-procurement-fence" || admitted.digest !== before.digest || !current() || !scope.current())
+            return { commit: false, value: changed() }
+          const value = await input.read(incoming, call)
+          // Never retry a canonical refusal or a nested writer outside this lock.
+          if (value.status !== "ok") return { commit: false, value }
+          const after = await scope.snapshot()
+          if (after.kind !== "sf-scenario-procurement-fence" || after.digest !== before.digest || !current() || !scope.current() ||
+            value.value.case.id !== ref.id || value.value.case.incarnation !== ref.incarnation || value.value.case.version !== selected.value.version)
+            return { commit: false, value: changed() }
+          // preparedChanges/receipts are canonical public views, not raw C08 bytes.
+          return { commit: false, value: structuredClone(value) }
+        } finally { scope.close() }
+      }, { signal: request.signal })
+      if (!current()) return changed()
+      return result === unsupported ? input.read(incoming, call) : result
+    } catch { return changed() }
+  }
+}
+
+function materialized(value: DecisionCase, call: TrustedDomainContext, snapshot: Snapshot,
+  period: NonNullable<ReturnType<Input["selection"]>>["period"], roles: string[], canWrite: boolean) {
+  const refs = new Map<string, RecordRef>(), seen = new Set<object>()
+  const visit = (item: unknown) => {
+    if (!item || typeof item !== "object" || seen.has(item)) return
+    seen.add(item)
+    if ("schema" in item && item.schema === "sf-evidence-v1") {
+      // The preceding published proof-scope predicate already refused all other kinds.
+      if ("kind" in item && item.kind === "record") refs.set(digestSfValue(item), item as RecordRef)
+    }
+    Object.values(item).forEach(visit)
+  }
+  visit(value)
+  if (!refs.size) return false
+  return [...refs.values()].every((ref) => {
+    if (ref.installationId !== call.binding.installationId || ref.projectId !== call.binding.projectId ||
+      digestSfValue(ref.target.fields) !== digestSfValue(procurementRequestFields) || digestSfValue(ref.target.period) !== digestSfValue(period)) return false
+    const entries = Object.values(snapshot.sfSources?.scopes ?? {}).filter((entry) => entry.alive && entry.incarnation === ref.target.incarnation &&
+      entry.version === ref.target.version && entry.scope.recordType === "procurement-request" && entry.scope.recordId === ref.target.recordId)
+    if (entries.length !== 1) return false
+    const entry = entries[0]!, currency = object(entry.scope.selector).currency
+    if (typeof currency !== "string" || !/^[A-Z]{3}$/.test(currency)) return false
+    const scope = { principalRef: call.binding.principalRef, accessRevision: call.binding.accessRevision, policyVersion: call.binding.policyVersion,
+      recordType: "procurement-request", recordId: ref.target.recordId, selector: { kind: "procurement-record-v1", roles,
+        canWrite: canWrite && roles.some((role) => role !== "viewer"), roleMapDigest: digestSfValue(roleMap(snapshot, "procurement")),
+        fields: [...procurementRequestFields], period, currency } }
+    if (digestSfValue(entry.scope) !== digestSfValue(scope)) return false
+    const source = sfSourceIdentity(snapshot, scope.recordType, scope.recordId), identity = sfScopedSourceIdentity(snapshot, scope)
+    const projection = projectProcurementScope("procurement", snapshot, scope)
+    if (!source || !identity || projection === undefined || identity.incarnation !== entry.incarnation || identity.version !== entry.version ||
+      identity.inputDigest !== digestSfValue(projection)) return false
+    // Reject pending normalization/extra fields as well as missing/new scopes.
+    // This is the producer's existing-entry shape, never a synthesized result.
+    return digestSfValue(entry) === digestSfValue({ scope, sourceIncarnation: source.incarnation, incarnation: entry.incarnation,
+      alive: true, inputDigest: identity.inputDigest, version: entry.version })
+  })
+}
+
+function requestIdentity(request: Request) { return digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] }) }

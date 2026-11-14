@@ -1,0 +1,769 @@
+--- a/apps/cli/src/sucafina-product/planner-calculation-services.ts
++++ b/apps/cli/src/sucafina-product/planner-calculation-services.ts
+@@ -1,8 +1,9 @@
+ import { AsyncLocalStorage } from "node:async_hooks"
+ import { digestSfValue, sfEvidenceSourceMaps } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
++import { decodeSfOperationInput } from "../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
+ import type { BusinessContextService, BusinessEvidenceRef, BusinessEvidenceResolution } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
+ import type { DomainProjection, ProjectionValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
+-import type { DomainPortHost, PlannerPort, PlannerSourceHost } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
++import type { DomainPortHost, PlannerPort, PlannerSourceHost, PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
+ import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
+ import { sfRunSourceFence } from "../../../../modules/sucafina/Sucafinav1/product/ai/run-store.ts"
+ import { createScenarioRequestStore } from "../../../../modules/sucafina/Sucafinav1/product/decisions/scenario-request-store.ts"
+@@ -11,7 +12,10 @@
+ import { plannerScenarioDigest } from "../../../../modules/sucafina/Sucafinav1/product/planner/preview-comparison.ts"
+ import type { createPlannerResultPersistence } from "../../../../modules/sucafina/Sucafinav1/product/planner/persistence.ts"
+ import { createSfPlannerCalculationHistory } from "./planner-calculation-history.ts"
++import { createSfPlannerCalculationReadScope } from "./planner-calculation-read-scope.ts"
++import type { SfCalculationObservedReads } from "./planner-calculation-read-scope.ts"
+ import type { SfCalculationCaseScope } from "../../../../modules/sucafina/Sucafinav1/product/host-binding/atlas-recall-scope.ts"
++import { object } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
+ 
+ type SourceFences = { dashboard: string; planner: string; procurement: string }
+ type ProducerInput = Parameters<typeof createScenarioRequestStore>[0]
+@@ -19,6 +23,8 @@
+ type CalculationVerifier = ReturnType<typeof createPlannerCalculationEvidence>
+ type StoredScenario = Parameters<CalculationVerifier["verifyCalculationSources"]>[0]
+ type PlannerRecord = Extract<BusinessEvidenceRef, { kind: "record" }>
++type Calculation = Extract<BusinessEvidenceRef, { kind: "calculation" }>
++type ReadObservation = NonNullable<Awaited<ReturnType<ReturnType<typeof createSfPlannerCalculationReadScope>["open"]>>>
+ 
+ /** Bind persisted Planner outputs and every ancestor to the installation's canonical replay. */
+ export function createSfPlannerCalculationServices(input: {
+@@ -41,7 +47,9 @@
+   const captures = new WeakMap<TrustedDomainContext, { requestDigest: string; resultDigest: string; resultRef?: string; sources: SourceFences }>()
+   // Track ancestors of one invocation; parallel readers of the same real run
+   // must not be mistaken for a persisted cycle or borrow each other's proof.
+-  const replaying = new AsyncLocalStorage<{ call: TrustedDomainContext; request: Request; binding: string; runs: ReadonlySet<string>; open: boolean }>()
++  type ReplayScope = { call: TrustedDomainContext; request: Request; requestDigest: string; binding: string; runs: ReadonlySet<string>; runId: string; open: boolean; observation?: ReadObservation }
++  const replaying = new AsyncLocalStorage<ReplayScope>()
++  const readScope = createSfPlannerCalculationReadScope({ host: input.host, state: input.state, lockedSourceFences: input.lockedSourceFences })
+   const requests = createScenarioRequestStore({ state: input.state, results: input.results, host: input.host,
+     authorizeCase: input.authorizeCase, operationIdentity: input.operationIdentity, writes: input.writes,
+     verifyRequestSources: async (request, stored, call): Promise<boolean> => {
+@@ -81,12 +89,25 @@
+   const recordOnly = recordOnlyFor(input.sources.resolveForecastCoverage)
+   const historicalRecordOnly = recordOnlyFor(input.resolveHistoricalForecastCoverage)
+   const historical = createSfPlannerCalculationHistory({ host: input.host, state: input.state, authorizeCase: input.authorizeCase, evidence: input.evidence,
+-    replayRecordOnly: historicalRecordOnly.simulateScenario, withCalculationCase: input.withHistoricalCalculationCase, lockedSourceFences: input.lockedSourceFences })
++    replayRecordOnly: historicalRecordOnly.simulateScenario, withCalculationCase: input.withHistoricalCalculationCase, lockedSourceFences: input.lockedSourceFences,
++    verifyCurrentPlannerRecords: (refs, call) => freshRecordSources(refs, call) })
++  const loadRequest: Parameters<typeof createPlannerCalculationEvidence>[0]["loadRecordOnlyRequest"] = async (runId, call) => {
++    const frame = replaying.getStore()
++    const found = await requests.read(runId, call)
++    if (found.status === "ok" && frame?.open && frame === replaying.getStore() && frame.call === call && frame.runId === runId)
++      frame.observation?.request(found.value)
++    return found
++  }
++  const loadResult: Parameters<typeof createPlannerCalculationEvidence>[0]["readForCalculation"] = async (request, call) => {
++    if (request.kind !== "scenario") return { status: "unavailable", reason: "calculation-result-kind-unsupported" }
++    const frame = replaying.getStore()
++    const found = await input.results.readForCalculation({ resultRef: request.resultRef }, call)
++    if (found.status === "ok" && found.value.kind === "scenario" && frame?.open && frame === replaying.getStore() &&
++      frame.call === call && frame.runId === request.resultRef) frame.observation?.result(found.value)
++    return found
++  }
+   const recordCalculation = createPlannerCalculationEvidence({ host: input.host,
+-    loadRecordOnlyRequest: requests.read,
+-    readForCalculation: (request, call) => request.kind === "scenario"
+-      ? input.results.readForCalculation({ resultRef: request.resultRef }, call)
+-      : Promise.resolve({ status: "unavailable", reason: "calculation-result-kind-unsupported" }),
++    loadRecordOnlyRequest: loadRequest, readForCalculation: loadResult,
+     replayRecordOnly: recordOnly.simulateScenario,
+   })
+   const freshRecordSources = async (refs: readonly PlannerRecord[], call: TrustedDomainContext): Promise<boolean> => {
+@@ -107,10 +128,7 @@
+       binding === digestSfValue([call.kind, call.binding]) && selected === digestSfValue(refs)
+   }
+   const calculation = createPlannerCalculationEvidence({ host: input.host,
+-    loadRecordOnlyRequest: requests.read,
+-    readForCalculation: (request, call) => request.kind === "scenario"
+-      ? input.results.readForCalculation({ resultRef: request.resultRef }, call)
+-      : Promise.resolve({ status: "unavailable", reason: "calculation-result-kind-unsupported" }),
++    loadRecordOnlyRequest: loadRequest, readForCalculation: loadResult,
+     replayRecordOnly: recordOnly.simulateScenario,
+     nested: { replayScenario: input.replayScenario, evidence: input.evidence },
+   })
+@@ -121,23 +139,51 @@
+       : await calculation.verifyCalculationSources(stored, refs, call) }))
+     return checked.status === "ok" && checked.value
+   }
+-  const issue: typeof calculation.issue = async (runId, call) => {
++  const issueObserved = async <Value>(runId: string, call: TrustedDomainContext,
++    finish: (reference: Calculation, observed: SfCalculationObservedReads | undefined) => Promise<PortResult<Value>>): Promise<PortResult<Value>> => {
+     if (typeof runId !== "string" || !runId.trim()) return { status: "denied", reason: "calculation-authority-unavailable" }
+-    // The first request read can itself resolve a persisted calculation ancestor,
+-    // before the producer's own replay guard has started. Bound that admission too.
++    // Bound the selector admission too: canonical readers may resolve ancestors
++    // before the producer's own replay guard starts.
+     const request = input.host.requestFor(call), binding = digestSfValue([call.kind, call.binding]), parent = replaying.getStore()
+     if (!request || request.signal.aborted) return { status: "denied", reason: "calculation-authority-unavailable" }
++    const requestDigest = requestIdentity(request)
+     const ancestors = parent?.open && parent.call === call && parent.request === request && parent.binding === binding ? parent.runs : new Set<string>()
+     if (ancestors.has(runId) || ancestors.size >= 16) return { status: "unavailable", reason: "calculation-replay-cycle" }
+-    const scope = { call, request, binding, runs: new Set([...ancestors, runId]), open: true }
+-    return replaying.run(scope, async (): ReturnType<typeof calculation.issue> => {
++    const scope: ReplayScope = { call, request, requestDigest, binding, runId, runs: new Set([...ancestors, runId]), open: true }
++    const current = () => scope.open && replaying.getStore() === scope && input.host.requestFor(call) === request && !request.signal.aborted &&
++      requestIdentity(request) === requestDigest && digestSfValue([call.kind, call.binding]) === binding
++    return replaying.run(scope, async (): Promise<PortResult<Value>> => {
+       try {
+-        const selected = await requests.read(runId, call)
+-        return selected.status === "ok" ? await input.withCalculationCase(call, selected.value.caseRef, () => calculation.issue(runId, call)) : selected
++        const selected = await readScope.select(runId, call)
++        if (selected.status !== "ok") return selected
++        if (!current()) return { status: "denied", reason: "calculation-authority-changed" }
++        // Enter the actual persisted case before request-store callbacks can
++        // turn a precise scope refusal into a generic unavailable request.
++        return await input.withCalculationCase<Value>(call, selected.value.stored.caseRef, async () => {
++          if (!current()) return { status: "denied", reason: "calculation-authority-changed" }
++          const eligible = call.kind === "ui" && plannerCalculationClosure(selected.value.stored)
++          if (eligible) {
++            scope.observation = await readScope.open(selected.value, call, current)
++            if (!scope.observation) return { status: "unavailable", reason: "calculation-observation-unavailable" }
++          }
++          const parsed = decodeSfOperationInput("sf_scenario_simulate", object(selected.value.request).request)
++          const recordOnly = call.kind === "ui" && parsed.ok && !parsed.value.assumptions.length &&
++            !parsed.value.operations.some((operation) => operation.replacementRef) && !!plannerRecordSources(selected.value.stored)
++          const issued = await (recordOnly ? recordCalculation : calculation).issue(runId, call)
++          if (issued.status !== "ok") return issued
++          const observed = scope.observation?.completed()
++          if (scope.observation && !observed) return { status: "unavailable", reason: "calculation-observation-incomplete" }
++          return finish(issued.value, observed)
++        }, async (result) => {
++          if (!current()) return { status: "denied", reason: "calculation-authority-changed" }
++          return result.status !== "ok" || !scope.observation ? result : await scope.observation.verify()
++            ? result : { status: "unavailable", reason: "calculation-observation-changed" }
++        })
+       } catch { return { status: "unavailable", reason: "calculation-replay-unavailable" } }
+-      finally { scope.open = false }
++      finally { scope.observation?.close(); scope.open = false }
+     })
+   }
++  const issue: typeof calculation.issue = (runId, call) => issueObserved(runId, call, async (value) => ({ status: "ok", value }))
+   const persist: Persist = async (incoming, callId, call, comparisonReplay) => {
+     if (incoming.kind !== "scenario") return input.persist(incoming, callId, call, comparisonReplay)
+     if (captures.has(call)) return { status: "unavailable", reason: "calculation-publication-already-active" }
+@@ -165,45 +211,57 @@
+     try {
+       if (ref.kind !== "calculation" || ref.target.calculationId !== "planner:scenario" || !await input.host.revalidate(call)) return unavailable()
+       sfEvidenceSourceMaps([ref])
+-      const issued = await issue(ref.target.runId, call)
+-      if (issued.status !== "ok" || digestSfValue(issued.value) !== digestSfValue(ref)) return unavailable()
+-      const stored = await input.results.readForCalculation({ resultRef: ref.target.runId }, call)
+-      const binding = await requests.read(ref.target.runId, call)
+-      if (stored.status !== "ok" || stored.value.kind !== "scenario" || binding.status !== "ok" ||
+-        stored.value.requestDigest !== ref.target.inputDigest || stored.value.resultDigest !== ref.target.resultDigest ||
+-        digestSfValue(stored.value.result) !== ref.target.resultDigest || binding.value.engineVersion !== ref.target.engineVersion ||
+-        digestSfValue(stored.value.sourceRefs) !== digestSfValue(ref.target.sourceRefs) || digestSfValue(stored.value.result.horizon) !== digestSfValue(ref.target.period) || stored.value.result.currency !== ref.target.currency)
+-        return unavailable()
+-      const sources = await input.evidence.context({ refs: ref.target.sourceRefs }, call)
+-      if (sources.length !== ref.target.sourceRefs.length || sources.some((source, index) => source.state !== "fresh" || !source.currentRef || !source.authorizedProjection ||
+-        source.accessRevision !== call.binding.accessRevision || digestSfValue(source.ref) !== digestSfValue(ref.target.sourceRefs[index]) || digestSfValue(source.currentRef) !== digestSfValue(source.ref))) return unavailable()
+-      const result = stored.value.result
+-      // Ledger/document/policy projections retain their typed evidence above. Only
+-      // domain projections contribute record metadata; no numeric value is inferred.
+-      const metadata = sources.flatMap((source) => source.authorizedProjection && "context" in source.authorizedProjection && "sourceRefs" in source.authorizedProjection.context ? source.authorizedProjection.context.sourceRefs : [])
+-      const sourceRefs = [...metadata, ...result.components.flatMap((component) => component.sourceRefs)]
+-        .filter((source, index, all) => all.findIndex((other) => digestSfValue(other) === digestSfValue(source)) === index)
+-      const value = (id: string, amount: ProjectionValue["value"], unit?: string): ProjectionValue => ({ id, value: amount, ...(unit ? { unit } : {}),
+-        period: result.horizon, granularity: "aggregate", sourceRefs: stored.value.sourceRefs, drilldown: null, evidenceState: amount === null ? "absent" : "hypothetical" })
+-      // The persisted JSON keeps coverage, restrictions and nulls losslessly. It is
+-      // a scenario projection, with no invented comparison or completeness claim.
+-      const projection: DomainProjection = {
+-        context: { installationId: call.binding.installationId, projectId: call.binding.projectId, principalRef: call.binding.principalRef,
+-          accessRevision: call.binding.accessRevision, policyVersion: call.binding.policyVersion, surface: "planner", period: result.horizon,
+-          currency: result.currency, sourceRefs, capabilities: [] },
+-        version: result.version, engineVersion: binding.value.engineVersion, components: structuredClone(result.components),
+-        values: [value("scenario:result-ref", stored.value.resultRef), value("scenario:request-digest", stored.value.requestDigest),
+-          value("scenario:result-digest", stored.value.resultDigest), value("scenario:result", JSON.stringify(result), "application/json"),
+-          value("scenario:known-subtotal", result.knownSubtotal, result.currency), value("scenario:total", result.total, result.currency)],
+-        missing: [...result.unresolvedConditions.map((field) => ({ field, reason: "unconfirmed" as const })),
+-          ...(result.total === null ? [{ field: "scenario:total", reason: "unavailable" as const }] : []),
+-          ...(result.costCoverage.coverageState !== "complete" ? [{ field: "scenario:cost-coverage", reason: "unconfirmed" as const }] : [])],
+-      }
+-      const latest = await input.results.readForCalculation({ resultRef: ref.target.runId }, call)
+-      const latestBinding = await requests.read(ref.target.runId, call)
+-      if (latest.status !== "ok" || digestSfValue(latest.value) !== digestSfValue(stored.value) || latestBinding.status !== "ok" ||
+-        digestSfValue(latestBinding.value) !== digestSfValue(binding.value) || input.host.requestFor(call)?.signal.aborted || !await input.host.revalidate(call)) return unavailable()
+-      return { state: "fresh", ref, currentRef: issued.value, authorizedProjection: projection, accessRevision: call.binding.accessRevision, checkedAt: new Date().toISOString() }
++      const captured = structuredClone(ref)
++      const resolved = await issueObserved<BusinessEvidenceResolution>(captured.target.runId, call, async (issued, observed) => {
++        const refused = (): PortResult<BusinessEvidenceResolution> => ({ status: "unavailable", reason: "calculation-evidence-unavailable" })
++        if (digestSfValue(issued) !== digestSfValue(captured) || digestSfValue(ref) !== digestSfValue(captured)) return refused()
++        // These are the actual outputs of the producer's two independent loaders,
++        // not a memoized read. Native and mixed closures retain their old readers.
++        const stored = observed ? { status: "ok" as const, value: observed.stored }
++          : await input.results.readForCalculation({ resultRef: captured.target.runId }, call)
++        const binding = observed ? { status: "ok" as const, value: observed.request } : await requests.read(captured.target.runId, call)
++        if (stored.status !== "ok" || stored.value.kind !== "scenario" || binding.status !== "ok" ||
++          stored.value.requestDigest !== ref.target.inputDigest || stored.value.resultDigest !== ref.target.resultDigest ||
++          digestSfValue(stored.value.result) !== ref.target.resultDigest || binding.value.engineVersion !== ref.target.engineVersion ||
++          digestSfValue(stored.value.sourceRefs) !== digestSfValue(ref.target.sourceRefs) || digestSfValue(stored.value.result.horizon) !== digestSfValue(ref.target.period) || stored.value.result.currency !== ref.target.currency)
++          return refused()
++        const sources = await input.evidence.context({ refs: ref.target.sourceRefs }, call)
++        if (sources.length !== ref.target.sourceRefs.length || sources.some((source, index) => source.state !== "fresh" || !source.currentRef || !source.authorizedProjection ||
++          source.accessRevision !== call.binding.accessRevision || digestSfValue(source.ref) !== digestSfValue(ref.target.sourceRefs[index]) || digestSfValue(source.currentRef) !== digestSfValue(source.ref))) return refused()
++        const result = stored.value.result
++        // Ledger/document/policy projections retain their typed evidence above. Only
++        // domain projections contribute record metadata; no numeric value is inferred.
++        const metadata = sources.flatMap((source) => source.authorizedProjection && "context" in source.authorizedProjection && "sourceRefs" in source.authorizedProjection.context ? source.authorizedProjection.context.sourceRefs : [])
++        const sourceRefs = [...metadata, ...result.components.flatMap((component) => component.sourceRefs)]
++          .filter((source, index, all) => all.findIndex((other) => digestSfValue(other) === digestSfValue(source)) === index)
++        const value = (id: string, amount: ProjectionValue["value"], unit?: string): ProjectionValue => ({ id, value: amount, ...(unit ? { unit } : {}),
++          period: result.horizon, granularity: "aggregate", sourceRefs: stored.value.sourceRefs, drilldown: null, evidenceState: amount === null ? "absent" : "hypothetical" })
++        // The persisted JSON keeps coverage, restrictions and nulls losslessly. It is
++        // a scenario projection, with no invented comparison or completeness claim.
++        const projection: DomainProjection = {
++          context: { installationId: call.binding.installationId, projectId: call.binding.projectId, principalRef: call.binding.principalRef,
++            accessRevision: call.binding.accessRevision, policyVersion: call.binding.policyVersion, surface: "planner", period: result.horizon,
++            currency: result.currency, sourceRefs, capabilities: [] },
++          version: result.version, engineVersion: binding.value.engineVersion, components: structuredClone(result.components),
++          values: [value("scenario:result-ref", stored.value.resultRef), value("scenario:request-digest", stored.value.requestDigest),
++            value("scenario:result-digest", stored.value.resultDigest), value("scenario:result", JSON.stringify(result), "application/json"),
++            value("scenario:known-subtotal", result.knownSubtotal, result.currency), value("scenario:total", result.total, result.currency)],
++          missing: [...result.unresolvedConditions.map((field) => ({ field, reason: "unconfirmed" as const })),
++            ...(result.total === null ? [{ field: "scenario:total", reason: "unavailable" as const }] : []),
++            ...(result.costCoverage.coverageState !== "complete" ? [{ field: "scenario:cost-coverage", reason: "unconfirmed" as const }] : [])],
++        }
++        if (!observed) {
++          const latest = await input.results.readForCalculation({ resultRef: captured.target.runId }, call)
++          const latestBinding = await requests.read(captured.target.runId, call)
++          if (latest.status !== "ok" || digestSfValue(latest.value) !== digestSfValue(stored.value) || latestBinding.status !== "ok" ||
++            digestSfValue(latestBinding.value) !== digestSfValue(binding.value) || input.host.requestFor(call)?.signal.aborted || !await input.host.revalidate(call)) return refused()
++        }
++        // The observed lane's final C08 witness runs after withCalculationCase's
++        // last selectedCase await, retaining its exact owner until egress.
++        return { status: "ok", value: { state: "fresh", ref: captured, currentRef: issued, authorizedProjection: projection,
++          accessRevision: call.binding.accessRevision, checkedAt: new Date().toISOString() } }
++      })
++      return resolved.status === "ok" && digestSfValue(ref) === digestSfValue(captured) ? resolved.value : unavailable()
+     } catch { return unavailable() }
+   }
+   return { persist, issue, resolveEvidence, resolveHistoricalEvidence: historical.resolve, verifyCalculationSources, requests: { read: requests.read } }
+@@ -215,3 +273,22 @@
+   if (!refs.length || !refs.every((ref): ref is PlannerRecord => ref.kind === "record" && ref.target.surface === "planner" && ref.target.recordType === "planner-version")) return undefined
+   return refs.filter((ref, index, all) => all.findIndex((other) => digestSfValue(other) === digestSfValue(ref)) === index)
+ }
++
++/** Only the Planner record/ledger graph is covered by this host witness. */
++function plannerCalculationClosure(stored: StoredScenario): boolean {
++  const refs = [...stored.sourceRefs, ...stored.result.sourceRefs, ...stored.result.costCoverage.evaluatedSourceRefs,
++    ...stored.result.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs)]
++  const visit = (ref: BusinessEvidenceRef, ancestors: ReadonlySet<string>): boolean => {
++    if (ancestors.size >= 16 || ancestors.has(ref.refDigest)) return false
++    if (ref.kind === "record") return ref.target.surface === "planner" && ref.target.recordType === "planner-version"
++    const next = new Set([...ancestors, ref.refDigest])
++    if (ref.kind === "case-event") return ref.target.evidenceRefs.length > 0 && ref.target.evidenceRefs.every((source) => visit(source, next))
++    if (ref.kind === "calculation") return ref.target.calculationId === "planner:scenario" && ref.target.engineVersion === "planner-runtime-v1" &&
++      ref.target.sourceRefs.length > 0 && ref.target.sourceRefs.every((source) => visit(source, next))
++    return false
++  }
++  try { sfEvidenceSourceMaps(refs); return refs.length > 0 && refs.every((ref) => visit(ref, new Set())) }
++  catch { return false }
++}
++
++function requestIdentity(request: Request) { return digestSfValue({ method: request.method, url: request.url, headers: [...request.headers.entries()] }) }
+--- /dev/null
++++ b/apps/cli/src/sucafina-product/planner-calculation-read-scope.ts
+@@ -0,0 +1,120 @@
++import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
++import type { DomainPortHost, PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
++import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
++import type { SfProductState, SfProductStatePort, SfStateAuthority } from "../../../../modules/sucafina/Sucafinav1/product/contracts/state.ts"
++import type { StoredDecisionResult } from "../../../../modules/sucafina/Sucafinav1/product/decisions/result-store.ts"
++import type { createScenarioRequestStore } from "../../../../modules/sucafina/Sucafinav1/product/decisions/scenario-request-store.ts"
++import { roleMap } from "../../../../modules/sucafina/Sucafinav1/runtime/admin.ts"
++
++type StoredScenario = Extract<StoredDecisionResult, { kind: "scenario" }>
++type StoredRequest = Extract<Awaited<ReturnType<ReturnType<typeof createScenarioRequestStore>["read"]>>, { status: "ok" }>["value"]
++type Selection = { stored: StoredScenario; request: unknown }
++export type SfCalculationObservedReads = { request: StoredRequest; stored: StoredScenario }
++type Sources = Record<"dashboard" | "planner" | "procurement", string>
++
++/** Observe actual canonical reader outputs; never replace a reader or share its Promise. */
++export function createSfPlannerCalculationReadScope(input: {
++  host: DomainPortHost
++  state: SfProductStatePort
++  lockedSourceFences: () => Sources | undefined
++}) {
++  const select = async (runId: string, call: TrustedDomainContext): Promise<PortResult<Selection>> => {
++    const request = input.host.requestFor(call), binding = digestSfValue([call.kind, call.binding])
++    const headers = request && requestIdentity(request)
++    const current = () => !!request && !request.signal.aborted && input.host.requestFor(call) === request &&
++      requestIdentity(request) === headers && digestSfValue([call.kind, call.binding]) === binding
++    if (!request || !current() || !await input.host.revalidate(call) || !current())
++      return { status: "denied", reason: "calculation-authority-unavailable" }
++    // This is only the authenticated store selector. The producer still reads
++    // and validates the canonical request and result twice before issuance.
++    const found = await input.state.read(request, "cases", (state, actor) => {
++      if (!sameAuthority(actor, call) || !current()) return undefined
++      const stored = state.decisionResults?.[runId]
++      const decision = stored && state.cases[stored.caseRef.id]
++      if (!stored || stored.kind !== "scenario" || stored.resultRef !== runId || !decision || decision.id !== stored.caseRef.id ||
++        decision.incarnation !== stored.caseRef.incarnation || decision.version !== stored.caseRef.version || !decision.participants.includes(actor.principalRef)) return undefined
++      return { stored: structuredClone(stored), request: structuredClone(state.preferences[requestKey(runId)]) }
++    })
++    if (!current() || !await input.host.revalidate(call) || !current()) return { status: "denied", reason: "calculation-authority-unavailable" }
++    return found.status === "ok" && found.value ? { status: "ok", value: found.value }
++      : { status: "unavailable", reason: "scenario-request-unavailable" }
++  }
++  const open = async (selected: Selection, call: TrustedDomainContext, owns: () => boolean) => {
++    const request = input.host.requestFor(call), binding = digestSfValue([call.kind, call.binding])
++    const headers = request && requestIdentity(request), selectedDigest = digestSfValue(selected)
++    const captured = structuredClone(selected), runId = captured.stored.resultRef
++    let closed = false, invalid = false
++    const requests: StoredRequest[] = [], results: StoredScenario[] = []
++    const current = () => !closed && !invalid && owns() && call.kind === "ui" && !!request && !request.signal.aborted &&
++      input.host.requestFor(call) === request && requestIdentity(request) === headers &&
++      digestSfValue([call.kind, call.binding]) === binding && digestSfValue(selected) === selectedDigest
++    const environment = async () => {
++      if (!request) return undefined
++      const value = await input.host.environment(request), at = Date.parse(value.at)
++      return Number.isFinite(at) ? { day: new Date(at).toISOString().slice(0, 10), directory: structuredClone(value.directory),
++        bankKey: value.bankKey ? Array.from(value.bankKey) : undefined } : undefined
++    }
++    const snapshot = async () => {
++      if (!request || !current() || !await input.host.revalidate(call) || !current()) return undefined
++      const observe = async (state: Readonly<SfProductState>, actor: SfStateAuthority) => {
++        if (!sameAuthority(actor, call) || !current()) return undefined
++        const stored = state.decisionResults?.[runId], bound = state.preferences[requestKey(runId)]
++        const decision = state.cases[captured.stored.caseRef.id]
++        if (!stored || digestSfValue(stored) !== digestSfValue(captured.stored) || digestSfValue(bound) !== digestSfValue(captured.request) ||
++          !decision || decision.id !== captured.stored.caseRef.id || decision.incarnation !== captured.stored.caseRef.incarnation ||
++          decision.version !== captured.stored.caseRef.version || !decision.participants.includes(actor.principalRef)) return undefined
++        const locked = input.host.persistence.currentSnapshots?.(), sources = input.lockedSourceFences()
++        if (!locked || !sources) return undefined
++        const product = digestSfValue(locked.dashboard.data.__sfProductV1)
++        const before = await environment()
++        const principal = structuredClone(await input.host.authenticate(request, { surface: "planner", roleMap: roleMap(locked.planner, "planner") }))
++        if (!before || !principal || principal.id !== actor.principalRef || principal.id.startsWith("local:") || !current()) return undefined
++        const after = await environment()
++        const again = await input.host.authenticate(request, { surface: "planner", roleMap: roleMap(locked.planner, "planner") })
++        if (!after || digestSfValue(after) !== digestSfValue(before) || digestSfValue(again) !== digestSfValue(principal) ||
++          !await input.host.revalidate(call) || !current() || product !== digestSfValue(input.host.persistence.currentSnapshots?.()?.dashboard.data.__sfProductV1) ||
++          digestSfValue(sources) !== digestSfValue(input.lockedSourceFences())) return undefined
++        // Full C08 includes originals, captures, receipts, ledger, preferences
++        // and grants; source fences alone intentionally exclude __sfProductV1.
++        return digestSfValue({ state, sources, principal, environment: after, request: headers, binding, selected: captured })
++      }
++      // A cases grant does not authorize preferences. Both are real C08 reads;
++      // its final reauthorization remains inside the held SQLite snapshot.
++      const preferences = await input.state.read(request, "preferences", observe)
++      const cases = await input.state.read(request, "cases", observe)
++      return current() && preferences.status === "ok" && cases.status === "ok" && preferences.value && preferences.value === cases.value
++        ? cases.value : undefined
++    }
++    const baseline = await snapshot()
++    if (!baseline) return undefined
++    return {
++      current,
++      request(value: StoredRequest) {
++        if (!current() || value.resultRef !== runId || digestSfValue(value) !== digestSfValue(captured.request) || requests.length >= 2) { invalid = true; return }
++        requests.push(structuredClone(value))
++      },
++      result(value: StoredScenario) {
++        if (!current() || value.resultRef !== runId || digestSfValue(value) !== digestSfValue(captured.stored) || results.length >= 2) { invalid = true; return }
++        results.push(structuredClone(value))
++      },
++      completed(): SfCalculationObservedReads | undefined {
++        if (!current() || requests.length !== 2 || results.length !== 2 || digestSfValue(requests[0]) !== digestSfValue(requests[1]) ||
++          digestSfValue(results[0]) !== digestSfValue(results[1])) return undefined
++        return { request: structuredClone(requests[1]!), stored: structuredClone(results[1]!) }
++      },
++      async verify() {
++        const latest = await snapshot()
++        if (!latest || latest !== baseline || !current()) { invalid = true; return false }
++        return true
++      },
++      close() { closed = true; requests.length = 0; results.length = 0 },
++    }
++  }
++  return { select, open }
++}
++
++function requestKey(runId: string) { return `sf:proposal-coverage:scenario-request:${digestSfValue(runId)}` }
++function requestIdentity(request: Request) { return digestSfValue({ method: request.method, url: request.url, headers: [...request.headers.entries()] }) }
++function sameAuthority(actor: SfStateAuthority, call: TrustedDomainContext) {
++  return actor.principalRef === call.binding.principalRef && actor.accessRevision === call.binding.accessRevision && actor.policyVersion === call.binding.policyVersion
++}
+--- a/apps/cli/src/sucafina-product/planner-calculation-history.ts
++++ b/apps/cli/src/sucafina-product/planner-calculation-history.ts
+@@ -28,12 +28,20 @@
+   replayRecordOnly: PlannerPort["simulateScenario"]
+   withCalculationCase: SfCalculationCaseScope
+   lockedSourceFences: () => SourceFences | undefined
++  /** The host's current Planner record admission, not an assumed historical grant. */
++  verifyCurrentPlannerRecords?: (refs: readonly Extract<BusinessEvidenceRef, { kind: "record" }>[], call: TrustedDomainContext) => Promise<boolean>
+ }) {
+   const active = new AsyncLocalStorage<{ call: TrustedDomainContext; request: Request; binding: string; runs: ReadonlySet<string>; open: boolean }>()
+   const readOnly = () => { throw new Error("historical-calculation-read-only") }
+   const results = createSfDecisionResultStore({ host: input.host, state: input.state, authorizeCase: input.authorizeCase,
+     verifySources: async (_value, refs, call) => {
+       if (!refs.length || refs.some((ref) => ref.kind !== "record")) return false
++      // The same scoped source resolver used by current calculations compares
++      // every complete record ref with its live projection identity. The two
++      // actual financial replays below still reconstruct every numeric value.
++      if (call.kind === "ui" && input.verifyCurrentPlannerRecords && refs.every((ref): ref is Extract<BusinessEvidenceRef, { kind: "record" }> =>
++        ref.kind === "record" && ref.target.surface === "planner" && ref.target.recordType === "planner-version"))
++        return input.verifyCurrentPlannerRecords(refs, call)
+       const current = await input.evidence.context({ refs }, call)
+       return current.length === refs.length && current.every((value, index) => value.state === "fresh" && !!value.authorizedProjection && !!value.currentRef &&
+         value.accessRevision === call.binding.accessRevision && same(value.ref, refs[index]) && same(value.currentRef, refs[index])) && await input.host.revalidate(call)
+--- a/modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts
+@@ -48,7 +48,8 @@
+   const clock = { at }
+   const period = { start: "2027-01-01", end: "2027-12-31" }
+   const caseRef = { id: "calculation-case", incarnation: "calculation-inc", version: 1 }
+-  const control = { active: true, coverageReads: 0, calculationResolves: 0, calculationResolved: 0, coverageIssue: "fixture-training-unresolved" }
++  const control = { active: true, coverageReads: 0, calculationResolves: 0, calculationResolved: 0, calculationStoreReads: 0,
++    calculationStoreReadsCompleted: 0, coverageIssue: "fixture-training-unresolved" }
+   const interleave: { environment?: () => Promise<void>; coverage?: () => Promise<void>; evidence?: () => Promise<void>; outbox?: () => Promise<void> } = {}
+   let store = await openLocalStore(storeDirectory)
+   deadline.own(() => store.dispose())
+@@ -102,15 +103,22 @@
+     }
+     const business = createSfBusinessServices({ authority, persistence, proposalCoverageWrites })
+     services.current = business
++    const readCalculation = business.results.readForCalculation
++    business.results.readForCalculation = async (input, call) => {
++      control.calculationStoreReads++
++      try { return await readCalculation(input, call) }
++      finally { control.calculationStoreReadsCompleted++ }
++    }
+     const resolveCalculation = business.calculations.resolveEvidence
+     business.calculations.resolveEvidence = async (ref, call) => {
+-      const sequence = ++control.calculationResolves, began = performance.now()
++      const sequence = ++control.calculationResolves, began = performance.now(), storeReads = control.calculationStoreReads
+       console.info("SF_CALCULATION_RESOLUTION", JSON.stringify({ fixture: name, generation: initialize ? "initial" : "reopened", sequence, state: "started" }))
+       try { return await resolveCalculation(ref, call) }
+       finally {
+         control.calculationResolved++
+         console.info("SF_CALCULATION_RESOLUTION", JSON.stringify({ fixture: name, generation: initialize ? "initial" : "reopened", sequence,
+-          state: "returned", elapsedMs: Math.round(performance.now() - began), completed: control.calculationResolved, entered: control.calculationResolves }))
++          state: "returned", elapsedMs: Math.round(performance.now() - began), completed: control.calculationResolved, entered: control.calculationResolves,
++          canonicalResultReads: control.calculationStoreReads - storeReads }))
+       }
+     }
+     business.bindForecastCoverage(async (reference, call) => {
+@@ -454,9 +462,13 @@
+     await first.ui("sf_evidence_get", payload, async (call) => {
+       // Repeated selectors in one authorization pass use the actual BCS.
+       // Independent overlapping same-run replays remain prohibited by the producer.
++      const storeReads = control.calculationStoreReads
+       const repeated = await first.business.context.context({ refs: [calculation, calculation] }, call)
+       expect(repeated.map((item) => item.state)).toEqual(["fresh", "fresh"])
+       expect(repeated.map((item) => item.currentRef)).toEqual([calculation, calculation])
++      // Two actual canonical request readers contain four result readers; the
++      // producer independently loads its result twice and replays twice.
++      expect(control.calculationStoreReads - storeReads).toBe(6)
+       let reentered = false
+       interleave.coverage = async () => {
+         reentered = true
+@@ -484,6 +496,77 @@
+       expect(control.coverageReads).toBe(reads)
+     })
+     phase("ordered-read-and-real-cycle-negative-proofs")
++  })
++}, 120_000)
++
++test("Planner observed calculation outputs recheck protected state, headers and lease after the canonical store passes", async () => {
++  expectSpawn(import.meta.path)
++  await withCalculation("observed-store-egress", async ({ calculation, reopen, change, control, interleave, phase }) => {
++    const { reopened } = await reopen()
++    const payload = { evidenceRef: calculation }
++    const original = await reopened.authority.state.read(reopened.request(), "cases", (state) => structuredClone(state))
++    if (original.status !== "ok") throw new Error("Actual protected calculation fixture unavailable")
++    await reopened.ui("sf_evidence_get", payload, async (call) => {
++      const before = control.calculationStoreReads
++      const actual = await reopened.business.context.resolve(calculation, call)
++      expect(actual.state).toBe("fresh")
++      expect(actual.currentRef).toEqual(calculation)
++      expect(control.calculationStoreReads - before).toBe(6)
++    })
++    for (const mutation of ["request", "result", "capture", "headers", "lease"] as const) {
++      await reopened.ui("sf_evidence_get", payload, async (call) => {
++        const before = control.calculationStoreReadsCompleted
++        const request = reopened.authority.host.requestFor(call)
++        if (!request) throw new Error("Real UI Request unavailable")
++        let applied = 0, hookFailure: unknown
++        const afterCanonicalStores = async () => {
++          if (control.calculationStoreReadsCompleted - before < 6) { interleave.coverage = afterCanonicalStores; return }
++          try {
++            expect(control.calculationStoreReadsCompleted - before).toBe(6)
++            expect(control.calculationStoreReadsCompleted).toBe(control.calculationStoreReads)
++            applied++
++            if (mutation === "request") await change((state) => {
++              const key = `sf:proposal-coverage:scenario-request:${digestSfValue(calculation.target.runId)}`
++              state.preferences[key] = { ...object(state.preferences[key]), recordDigest: "0".repeat(64) }
++            })
++            if (mutation === "result") await change((state) => {
++              const stored = state.decisionResults?.[calculation.target.runId]
++              if (!stored) throw new Error("Actual persisted result unavailable")
++              stored.resultDigest = "0".repeat(64)
++            })
++            if (mutation === "capture") await change((state) => { state.atlas = {} })
++            if (mutation === "headers") request.headers.set("x-wp10-calculation-witness", "changed-after-store-passes")
++            if (mutation === "lease") reopened.authority.ui.finish(call)
++            phase(`observed-stores-mutation-${mutation}`)
++          } catch (error) { hookFailure = error; throw error }
++        }
++        interleave.coverage = afterCanonicalStores
++        try {
++          const denied = await reopened.business.context.resolve(calculation, call)
++          if (hookFailure) throw hookFailure
++          expect(applied).toBe(1)
++          expect(denied.state).toBe("unavailable")
++          expect(denied.authorizedProjection).toBeUndefined()
++          expect(denied.currentRef).toBeUndefined()
++          expect((await reopened.business.selectedCase(call)).status).toBe("unavailable")
++        } finally {
++          delete interleave.coverage
++          request.headers.delete("x-wp10-calculation-witness")
++          await change((state) => {
++            state.preferences = structuredClone(original.value.preferences)
++            state.decisionResults = structuredClone(original.value.decisionResults)
++            state.atlas = structuredClone(original.value.atlas)
++          })
++        }
++      })
++    }
++    // A new invocation still executes all real passes after each failed scope.
++    await reopened.ui("sf_evidence_get", payload, async (call) => {
++      const before = control.calculationStoreReads
++      expect((await reopened.business.context.resolve(calculation, call)).state).toBe("fresh")
++      expect(control.calculationStoreReads - before).toBe(6)
++    })
++    phase("observed-store-counterproofs-and-new-scope-recovery")
+   })
+ }, 120_000)
+ 
+@@ -657,29 +740,39 @@
+       await reopened.ui("sf_evidence_get", { evidenceRef: calculation }, async (call) => {
+         const selected = { ...caseRef }, before = control.calculationResolves
+         let applied = 0, outboxReads = 0, finalEnvironmentReads = 0
++        let hookFailure: unknown
+         const mutate = async () => {
+-          expect(control.calculationResolved).toBe(control.calculationResolves)
+-          expect(control.calculationResolves - before).toBe(1)
+-          applied++
+-          if (mutation === "source") await reopened.persistence.transaction("planner", async (snapshot) => {
+-            snapshot.data.entities = [{ id: "after-completed-proof", name: "Changed source" }]
+-            return { commit: true, value: undefined }
+-          })
+-          if (mutation === "membership") await change((state) => { state.cases[caseRef.id]!.participants = [] })
+-          if (mutation === "capture") await change((state) => {
+-            const captures = Object.values(state.atlas).map((partition) => object(object(partition).originals)).filter((originals) => originals[calculation.refDigest])
+-            expect(captures).toHaveLength(1)
+-            delete captures[0]![calculation.refDigest]
+-          })
+-          if (mutation === "coverage") control.coverageIssue = "changed-after-completed-proof"
+-          if (mutation === "selector") selected.incarnation = "different-case-incarnation"
+-          if (mutation === "clock") clock.at = "2027-02-03T00:00:00Z"
+-          if (mutation === "principal") control.active = false
+-          if (mutation === "lease") reopened.authority.ui.finish(call)
+-          phase(`mutated-${mutation}-after-completed-proof`)
++          try {
++            expect(control.calculationResolved).toBe(control.calculationResolves)
++            expect(control.calculationResolves - before).toBe(1)
++            applied++
++            if (mutation === "source") await reopened.persistence.transaction("planner", async (snapshot) => {
++              snapshot.data.entities = [{ id: "after-completed-proof", name: "Changed source" }]
++              return { commit: true, value: undefined }
++            })
++            if (mutation === "membership") await change((state) => { state.cases[caseRef.id]!.participants = [] })
++            if (mutation === "capture") await change((state) => {
++              const captures = Object.values(state.atlas).map((partition) => object(object(partition).originals)).filter((originals) => originals[calculation.refDigest])
++              expect(captures).toHaveLength(1)
++              delete captures[0]![calculation.refDigest]
++            })
++            if (mutation === "coverage") control.coverageIssue = "changed-after-completed-proof"
++            if (mutation === "selector") selected.incarnation = "different-case-incarnation"
++            if (mutation === "clock") clock.at = "2027-02-03T00:00:00Z"
++            if (mutation === "principal") control.active = false
++            if (mutation === "lease") reopened.authority.ui.finish(call)
++            phase(`mutated-${mutation}-after-completed-proof`)
++          } catch (error) { hookFailure = error; throw error }
+         }
+         const final = mutation === "clock" || mutation === "principal" || mutation === "lease"
+-        if (!final) interleave.evidence = mutate
++        if (!final) interleave.outbox = async () => {
++          if (++outboxReads !== 1) return
++          delete interleave.outbox
++          // Atlas reads outbox only after its first actual cases.read completes.
++          // Arming earlier enters the producer's nested record resolver before
++          // its calculation proof is complete, where assertions are caught.
++          interleave.evidence = mutate
++        }
+         if (final) interleave.outbox = async () => {
+           if (++outboxReads !== 2) return
+           delete interleave.outbox
+@@ -697,6 +790,7 @@
+         }
+         phase(`starting-recall-proof-${mutation}`)
+         const result = await reopened.atlas.memory.recall(selected, call)
++        if (hookFailure) throw hookFailure
+         expect(applied).toBe(1)
+         expect(result.status).toBe("unavailable")
+         expect("records" in result).toBe(false)
+@@ -704,7 +798,7 @@
+         if (final) {
+           expect(outboxReads).toBe(2)
+           expect(finalEnvironmentReads).toBe(5)
+-        }
++        } else expect(outboxReads).toBe(1)
+         phase(`rejected-recall-proof-${mutation}`)
+       })
+     })
+--- a/modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-case-scope.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-case-scope.test.ts
+@@ -117,6 +117,9 @@
+   const fixture = await calculationFixture()
+   const { authority, business } = fixture
+   const lease = await fixture.admit()
++  let canonicalReads = 0
++  const read = business.results.readForCalculation
++  business.results.readForCalculation = async (request, call) => { canonicalReads++; return read(request, call) }
+   try {
+     const reads = fixture.control.coverageReads
+     const refused = await business.withCase(lease.call, fixture.otherCaseRef, {}, async () =>
+@@ -124,10 +127,12 @@
+     expect(refused).toEqual({ status: "denied", reason: "calculation-case-scope-mismatch" })
+     expect(Object.hasOwn(refused, "value")).toBe(false)
+     expect(fixture.control.coverageReads).toBe(reads)
++    expect(canonicalReads).toBe(0)
+     expect((await business.selectedCase(lease.call)).status).toBe("unavailable")
+     expect(await business.calculations.issue(fixture.calculation.target.runId, lease.call)).toEqual({ status: "ok", value: fixture.calculation })
+-    expect((await business.selectedCase(lease.call)).status).toBe("unavailable")
+-  } finally { authority.ui.finish(lease.call); await fixture.dispose() }
++    expect(canonicalReads).toBe(6)
++    expect((await business.selectedCase(lease.call)).status).toBe("unavailable")
++  } finally { business.results.readForCalculation = read; authority.ui.finish(lease.call); await fixture.dispose() }
+ }, 120_000)
+ 
+ for (const change of ["revoke", "abort"] as const) {
+--- a/modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts
+@@ -31,7 +31,7 @@
+   const period = { start: "2027-01-01", end: "2027-12-31" }
+   const caseRef = { id: "ancestry-case", incarnation: "ancestry-inc", version: 1 }
+   const otherCaseRef = { id: "other-case", incarnation: "other-inc", version: 1 }
+-  const control = { active: true }
++  const control = { active: true, canonicalResultReads: 0, canonicalResultReadsCompleted: 0 }
+   const open = async (initialize: boolean) => {
+     const store = await openLocalStore(storeDirectory)
+     deadline.own(() => store.dispose())
+@@ -59,6 +59,12 @@
+       verifySkillReceipt: async () => false, providerGeneration: async () => 1, authorizeDocument: async () => undefined })
+     const business = createSfBusinessServices({ authority, persistence, proposalCoverageWrites: writes })
+     deadline.own(() => business.dispose())
++    const readCalculation = business.results.readForCalculation
++    business.results.readForCalculation = async (request, call) => {
++      control.canonicalResultReads++
++      try { return await readCalculation(request, call) }
++      finally { control.canonicalResultReadsCompleted++ }
++    }
+     business.bindForecastCoverage(async (reference, call) => {
+       const source = await business.plannerSources.resolveForecastSource(reference, call)
+       if (source.status !== "ok") return source
+@@ -84,17 +90,22 @@
+       })
+       if (seeded.status !== "ok") throw new Error("Case fixtures unavailable")
+     }
+-    const produce = (scenario: ScenarioRequest | undefined, idempotencyKey: string) => ui("sf_scenario_simulate", (call) => business.withCase(call, caseRef, {}, async () => {
+-      const issued = await business.plannerProduct.issueSource("v0", call)
+-      if (issued.status !== "ok") return issued
+-      const input = scenario ?? { baseRef: issued.value.evidence.refId, operations: [], assumptions: [] }
+-      const simulated = await business.planner.simulateScenario(input, call)
+-      if (simulated.status !== "ok") return simulated
+-      const saved = await business.calculations.persist({ kind: "scenario", request: input, result: simulated.value }, idempotencyKey, call)
+-      if (saved.status !== "ok") return saved
+-      const calculation = await business.calculations.issue(saved.value.resultRef, call)
+-      return calculation.status === "ok" ? { status: "ok" as const, value: { input, result: simulated.value, calculation: calculation.value } } : calculation
+-    }))
++    const produce = (scenario: ScenarioRequest | undefined, idempotencyKey: string) => {
++      const started = performance.now(), before = control.canonicalResultReads, completed = control.canonicalResultReadsCompleted
++      return ui("sf_scenario_simulate", (call) => business.withCase(call, caseRef, {}, async () => {
++        const issued = await business.plannerProduct.issueSource("v0", call)
++        if (issued.status !== "ok") return issued
++        const input = scenario ?? { baseRef: issued.value.evidence.refId, operations: [], assumptions: [] }
++        const simulated = await business.planner.simulateScenario(input, call)
++        if (simulated.status !== "ok") return simulated
++        const saved = await business.calculations.persist({ kind: "scenario", request: input, result: simulated.value }, idempotencyKey, call)
++        if (saved.status !== "ok") return saved
++        const calculation = await business.calculations.issue(saved.value.resultRef, call)
++        return calculation.status === "ok" ? { status: "ok" as const, value: { input, result: simulated.value, calculation: calculation.value } } : calculation
++      })).finally(() => console.info("SF_CALCULATION_ANCESTRY", JSON.stringify({ phase: `produce-${idempotencyKey}`,
++        elapsedMs: Math.round(performance.now() - started), canonicalResultReads: control.canonicalResultReads - before,
++        canonicalResultReadsCompleted: control.canonicalResultReadsCompleted - completed, aborted: deadline.signal.aborted })))
++    }
+     return { store, authority, business, ui, produce, request }
+   }
+   try {
+--- a/modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-recorded-history.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-recorded-history.test.ts
+@@ -68,10 +68,10 @@
+       await action?.()
+     }))
+     await f.setForecast(160)
+-    expect(await f.access(f.decision, f.call)).toBe(true)
++    expect(await deadline.phase("positive-before-faults", () => f.access(f.decision, f.call))).toBe(true)
+     const unrecorded = structuredClone(f.decision)
+     unrecorded.alternatives[0]!.scenario.operations[0]!.amount = 1
+-    expect(await f.access(unrecorded, f.call)).toBe(false)
++    expect(await deadline.phase("unrecorded-operation", () => f.access(unrecorded, f.call))).toBe(false)
+     const saved = await f.store.transaction("dashboard", async (snapshot) => ({ commit: false, value: structuredClone(snapshot.data.__sfProductV1) as SfProductState }))
+     const fault = (change: (state: SfProductState) => void) => f.store.transaction("dashboard", async (snapshot) => {
+       snapshot.data.__sfProductV1 = structuredClone(saved)
+@@ -80,21 +80,21 @@
+     })
+     // Fault injection edits protected bytes only in the isolated test store.
+     await fault((state) => { state.atlas = {} })
+-    expect(await f.access(f.decision, f.call)).toBe(false)
++    expect(await deadline.phase("missing-protected-capture", () => f.access(f.decision, f.call))).toBe(false)
+     await fault(() => {})
+-    expect(await f.access(f.decision, f.call)).toBe(true)
++    expect(await deadline.phase("restored-capture", () => f.access(f.decision, f.call))).toBe(true)
+     const nestedSelector = structuredClone(f.decision)
+     const nestedOperation = nestedSelector.alternatives[1]!.scenario.operations[0]!
+     nestedOperation.replacementRef = plannerValueRef(nestedOperation.replacementRef!, "line:2:forecast")
+     await fault((state) => { state.cases[f.decision.id] = nestedSelector })
+-    expect(await f.access(nestedSelector, f.call)).toBe(false)
++    expect(await deadline.phase("nested-selector", () => f.access(nestedSelector, f.call))).toBe(false)
+     await fault(() => {})
+     during.action = async () => { await f.setForecast(170) }
+-    expect(await f.access(f.decision, f.call)).toBe(false)
++    expect(await deadline.phase("source-race", () => f.access(f.decision, f.call))).toBe(false)
+     expect(during.action).toBeUndefined()
+-    expect(await f.access(f.decision, f.call)).toBe(true)
++    expect(await deadline.phase("fresh-source-after-race", () => f.access(f.decision, f.call))).toBe(true)
+     during.action = async () => { await fault((state) => { state.cases[f.decision.id]!.participants = [] }) }
+-    expect(await f.access(f.decision, f.call)).toBe(false)
++    expect(await deadline.phase("membership-race", () => f.access(f.decision, f.call))).toBe(false)
+     expect(during.action).toBeUndefined()
+     await fault(() => {})
+ 
+@@ -109,18 +109,18 @@
+     cyclic = f.createAccess(recorded)
+     expect(await cyclic(f.decision, f.call)).toBe(false)
+     expect(nested).toEqual([false])
+-    expect(await f.access(f.decision, f.call)).toBe(true)
++    expect(await deadline.phase("after-cycle", () => f.access(f.decision, f.call))).toBe(true)
+ 
+     const revoked = await f.read()
+     try {
+       f.active.value = false
+       expect(await f.access(f.decision, revoked)).toBe(false)
+     } finally { f.active.value = true; f.authority.ui.finish(revoked) }
+-    expect(await f.access(f.decision, f.call)).toBe(true)
++    expect(await deadline.phase("after-principal-revocation", () => f.access(f.decision, f.call))).toBe(true)
+ 
+     await f.persistence.transaction("planner", async (snapshot) => { snapshot.data.versions = []; return { commit: true, value: undefined } })
+     await f.setForecast(170)
+-    expect(await f.access(f.decision, f.call)).toBe(false)
++    expect(await deadline.phase("replaced-source-incarnation", () => f.access(f.decision, f.call))).toBe(false)
+     expect((await f.business.cases.read({ caseRef: encodeCaseRef(f.decision) }, f.call)).status).not.toBe("ok")
+   } finally { await deadline.close() }
+ }, 180_000)

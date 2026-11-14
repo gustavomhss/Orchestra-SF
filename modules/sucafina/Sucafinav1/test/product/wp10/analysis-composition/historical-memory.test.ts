@@ -63,14 +63,17 @@ test("historical decision recall binds original/current evidence and rejects cha
   const driver = await openLocalStore(path.join(directory, "store"))
   const transactionAll = driver.transactionAll
   if (!transactionAll) throw new Error("Real cross-surface store unavailable")
-  const counters = { persistenceCalls: 0, c08Reads: 0, caseReads: 0, caseFences: 0, evidenceContextReads: 0, atlasCanonicalReads: 0, atlasCanonicalCompleted: 0 }
+  const counters = { persistenceCalls: 0, rootPersistenceCalls: 0, nestedPersistenceCalls: 0, groupedEvidenceFences: 0,
+    c08Reads: 0, caseReads: 0, caseFences: 0, evidenceContextReads: 0, atlasCanonicalReads: 0, atlasCanonicalCompleted: 0 }
   const measuredDriver: typeof driver = { ...driver,
     transaction: (surface, work, options) => {
       counters.persistenceCalls += 1
+      counters[driver.currentSnapshots?.() ? "nestedPersistenceCalls" : "rootPersistenceCalls"] += 1
       return driver.transaction(surface, work, options)
     },
     transactionAll: (work, options) => {
       counters.persistenceCalls += 1
+      counters[driver.currentSnapshots?.() ? "nestedPersistenceCalls" : "rootPersistenceCalls"] += 1
       return transactionAll(work, options)
     },
   }
@@ -127,7 +130,16 @@ test("historical decision recall binds original/current evidence and rejects cha
       read: (state: Readonly<SfProductState>, actor: SfStateAuthority) => Value | Promise<Value>) => {
       counters.c08Reads += 1
       const result = await readState(source, namespace, read)
+      if (result.status === "ok" && object(result.value).kind === "sf-procurement-evidence-fence") {
+        counters.groupedEvidenceFences += 1
+        // C08 has returned, but the one canonical evidence producer still owns
+        // its real LocalStore root; this is not a cached authorization/result.
+        expect(driver.currentSnapshots?.()).toBeDefined()
+      }
       if (result.status === "ok" && object(result.value).kind === "sf-memory-case-fence") {
+        // Memory's interleaved source/capture writers must run after every
+        // grouped evidence root has closed, including the final witnesses.
+        expect(driver.currentSnapshots?.()).toBeUndefined()
         counters.caseFences += 1
         const before = interleave.before
         if (before && counters.atlasCanonicalReads === before.started && --before.remaining === 0) {
@@ -283,6 +295,8 @@ test("historical decision recall binds original/current evidence and rejects cha
       // its two evidence contexts; the selection performs its own source read.
       // Repeated cases still reopen C08/authority without replaying that producer.
       expect(counters.evidenceContextReads - beforePrepare.evidenceContextReads).toBe(6)
+      expect(counters.groupedEvidenceFences - beforePrepare.groupedEvidenceFences).toBeGreaterThan(0)
+      expect(counters.nestedPersistenceCalls - beforePrepare.nestedPersistenceCalls).toBeGreaterThan(0)
       const readers = createSfAnalysisSelectionReaders({ authority, business: activeBusiness })
       const verifier = createSfDecisionMemoryVerifier({ ...dependencies, readRecallSelection: readers.recallSelection(value) })
       const beforeVerify = { ...counters }

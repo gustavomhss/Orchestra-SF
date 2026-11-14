@@ -117,6 +117,9 @@ test("calculation replay cannot borrow another selected case even when the same 
   const fixture = await calculationFixture()
   const { authority, business } = fixture
   const lease = await fixture.admit()
+  let canonicalReads = 0
+  const read = business.results.readForCalculation
+  business.results.readForCalculation = async (request, call) => { canonicalReads++; return read(request, call) }
   try {
     const reads = fixture.control.coverageReads
     const refused = await business.withCase(lease.call, fixture.otherCaseRef, {}, async () =>
@@ -124,10 +127,12 @@ test("calculation replay cannot borrow another selected case even when the same 
     expect(refused).toEqual({ status: "denied", reason: "calculation-case-scope-mismatch" })
     expect(Object.hasOwn(refused, "value")).toBe(false)
     expect(fixture.control.coverageReads).toBe(reads)
+    expect(canonicalReads).toBe(0)
     expect((await business.selectedCase(lease.call)).status).toBe("unavailable")
     expect(await business.calculations.issue(fixture.calculation.target.runId, lease.call)).toEqual({ status: "ok", value: fixture.calculation })
+    expect(canonicalReads).toBe(6)
     expect((await business.selectedCase(lease.call)).status).toBe("unavailable")
-  } finally { authority.ui.finish(lease.call); await fixture.dispose() }
+  } finally { business.results.readForCalculation = read; authority.ui.finish(lease.call); await fixture.dispose() }
 }, 120_000)
 
 for (const change of ["revoke", "abort"] as const) {
