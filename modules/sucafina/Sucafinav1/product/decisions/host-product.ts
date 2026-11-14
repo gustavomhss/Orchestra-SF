@@ -58,7 +58,7 @@ export function createDecisionHostProduct(input: Omit<Product, "management" | "b
       if (operation === "add-alternative" && derived.action === "decisions.promote-portfolio" || operation === "prepare-changes" && derived.action === "decisions.prepare-portfolio") return derived
       return undefined
     }
-    const action = operation === "add-alternative" ? "decisions.promote-alternative" : operation === "prepare-changes" ? "decisions.prepare-changes" : operation === "record-choice" ? "decisions.choose" : operation === "add-question" ? "decisions.add-question" : operation === "answer-question" ? "decisions.answer-question" : undefined
+    const action = operation === "add-alternative" ? "decisions.promote-alternative" : operation === "prepare-changes" || operation === "reject-change" ? "decisions.prepare-changes" : operation === "record-choice" ? "decisions.choose" : operation === "add-question" ? "decisions.add-question" : operation === "answer-question" ? "decisions.answer-question" : undefined
     return action ? { action, payload } : undefined
   }
   const matchesCaptured = (context: TrustedDomainContext, action: "decisions.edit" | "decisions.accept-analysis") => {

@@ -57,6 +57,70 @@ test("recursive read callbacks are bounded before a second stored read, and rele
   expect(await issuer.issue(f.record.resultRef, f.context)).toMatchObject({ status: "ok" })
 })
 
+for (const count of [2, 17]) test(`${count} independent C17 replays in one binding do not consume ancestral depth`, async () => {
+  const f = fixture()
+  const gate = Promise.withResolvers<void>()
+  const entered = Promise.withResolvers<void>()
+  const rejected = Promise.withResolvers<void>()
+  const progress = { entered: 0, released: false }
+  // Two calls deliberately share one run; seventeen calls are distinct depth-one leaves.
+  const records = Array.from({ length: count }, (_, index) => ({ ...f.record, resultRef: count === 2 ? f.record.resultRef : `decision-result:parallel-${index}` }))
+  const issuer = createPlannerCalculationEvidence({ ...f.input,
+    loadRecordOnlyRequest: async (runId) => {
+      if (!progress.released) {
+        progress.entered++
+        if (progress.entered === count) entered.resolve()
+        await gate.promise
+      }
+      return { status: "ok", value: { resultRef: runId, request: f.request, engineVersion: "planner-runtime-v1" } }
+    },
+    readForCalculation: async (request) => {
+      const record = records.find((entry) => entry.resultRef === request.resultRef)
+      return record ? { status: "ok", value: record } : { status: "unavailable", reason: "unknown-result" }
+    },
+  })
+  const jobs = records.map((record) => issuer.issue(record.resultRef, f.context).then((result) => {
+    if (result.status !== "ok") rejected.resolve()
+    return result
+  }))
+  try {
+    expect(await Promise.race([entered.promise.then(() => "all-entered"), rejected.promise.then(() => "false-cycle")])).toBe("all-entered")
+    expect(progress.entered).toBe(count)
+  } finally {
+    progress.released = true
+    gate.resolve()
+  }
+  const results = await Promise.all(jobs)
+  expect(results.map((result) => result.status)).toEqual(Array.from({ length: count }, () => "ok"))
+  expect(f.state.replayCalls).toBe(count * 2)
+  for (let index = 0; index < count; index++) {
+    const result = results[index]!
+    if (result.status !== "ok") throw new Error(result.reason)
+    expect(result.value.target.runId).toBe(records[index]!.resultRef)
+    expect(result.value.refDigest).toBe(digestSfEvidenceRef(result.value))
+  }
+})
+
+test("the C17 depth bound applies to a recursive path and is released after refusal", async () => {
+  const f = fixture()
+  const path = { recursive: true, reads: 0 }
+  const issuer = createPlannerCalculationEvidence({ ...f.input,
+    loadRecordOnlyRequest: async (runId) => ({ status: "ok", value: { resultRef: runId, request: f.request, engineVersion: "planner-runtime-v1" } }),
+    readForCalculation: async (request) => {
+      path.reads++
+      if (!path.recursive) return { status: "ok", value: { ...f.record, resultRef: request.resultRef } }
+      const nested = await issuer.issue(`decision-result:depth-${path.reads}`, f.context)
+      return nested.status === "ok" ? { status: "unavailable", reason: "unexpected-replay" } : nested
+    },
+  })
+  expect(await issuer.issue("decision-result:depth-0", f.context)).toEqual({ status: "unavailable", reason: "calculation-replay-cycle" })
+  expect(path.reads).toBe(16)
+  expect(f.state.replayCalls).toBe(0)
+  path.recursive = false
+  expect(await issuer.issue("decision-result:depth-0", f.context)).toMatchObject({ status: "ok" })
+  expect(f.state.replayCalls).toBe(2)
+})
+
 test("evidence outside the persisted closure and another project never reaches replay", async () => {
   const f = fixture()
   const extra = structuredClone(f.source)

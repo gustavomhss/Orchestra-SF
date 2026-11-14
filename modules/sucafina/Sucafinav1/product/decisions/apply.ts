@@ -7,6 +7,7 @@ import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { SfProductStatePort, SfStateResult } from "../contracts/state.ts"
 import { caseApplicationState, reconcileDomainReceipt } from "./receipts.ts"
 import { isReviewDigest, receiptProofTransactionKey, receiptReviewBinding, type ReviewDigestFor } from "./receipt-review-binding.ts"
+import { applicationAttempt, applicationAttemptKey, applicationAttempts } from "./application-attempt.ts"
 
 /** Explicit human application; each domain commits its own receipt before the case is reconciled. */
 export function createPreparedExecution(input: {
@@ -52,6 +53,9 @@ export function createPreparedExecution(input: {
     if (!await input.host.revalidate(context) || !await input.authorizeCase(value, context)) return { status: "denied", reason: "case-access-unavailable" }
     if (lookup.value.state === "not-found" && change.receipt) return { status: "unavailable", reason: "authoritative-receipt-unavailable" }
     if (lookup.value.state === "not-found") {
+      const attempted = await input.state.read(source, "cases", (state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision ? applicationAttempts(state, request).length > 0 : undefined).catch(() => undefined)
+      if (!attempted || attempted.status !== "ok" || attempted.value === undefined) return { status: "unavailable", reason: "application-attempt-unavailable" }
+      if (attempted.value) return { status: "unavailable", reason: "application-indeterminate-reconciliation-required" }
       if (value.version !== request.caseRef.version) return { status: "stale", reason: "case-changed" }
       const proof = await input.revalidateProducer(request, context).catch(() => undefined)
       if (!proof || proof.status !== "ok" || proof.value.reviewDigest !== reviewDigest) return proof && proof.status !== "ok" ? proof : { status: proof ? "stale" : "unavailable", reason: proof ? "review-proof-mismatch" : "review-producer-unavailable" }
@@ -62,6 +66,23 @@ export function createPreparedExecution(input: {
       const currentChange = fresh?.preparedChanges.find((item) => item.id === change.id && item.choiceId === request.choiceId)
       if (!fresh || fresh.incarnation !== value.incarnation || fresh.version !== value.version || !fresh.participants.includes(context.binding.principalRef) || !currentChange || currentChange.state !== "planned" || digestSfValue(currentChange) !== digestSfValue(change)) return { status: "stale", reason: "case-changed" }
       if (!await input.authorizeCase(fresh, context).catch(() => false) || !await input.authorizeApplication(request, currentChange, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "application-authority-unavailable" }
+      const attempt = applicationAttempt(request, currentChange, reviewDigest, context.binding.principalRef, operation)
+      // Persist before crossing the domain boundary. A crash before dispatch is
+      // conservatively unresolved; absence of a receipt never grants a new dispatch.
+      const reservation = { createdHere: false }
+      const reserved = await input.state.transaction<ReturnType<typeof applicationAttempt> | null>(source, { namespace: "cases", expectedStorageVersion: latest.storageVersion, targetRef: value.id, targetIncarnation: value.incarnation, idempotencyKey: applicationAttemptKey(request), commandDigest: digestSfValue(attempt) }, async (state, authority) => {
+        const actual = state.cases[value.id]
+        if (!actual || digestSfValue(actual) !== digestSfValue(fresh) || authority.principalRef !== context.binding.principalRef || authority.policyVersion !== context.binding.policyVersion || authority.accessRevision !== context.binding.accessRevision || applicationAttempts(state, request).length) return { commit: false, value: null }
+        // A provider may return a prior transaction without invoking this callback.
+        // Only this invocation's successful commit may perform the first dispatch.
+        reservation.createdHere = true
+        return { commit: true, value: attempt }
+      }).catch(() => undefined)
+      if (!reserved || reserved.status !== "ok" || !reserved.value || !reservation.createdHere) {
+        const recorded = await input.state.read(source, "cases", (state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision ? applicationAttempts(state, request).length > 0 : undefined).catch(() => undefined)
+        return { status: "unavailable", reason: recorded?.status === "ok" && recorded.value ? "application-indeterminate-reconciliation-required" : "application-attempt-unavailable" }
+      }
+      if (source.signal.aborted || !await input.host.revalidate(context).catch(() => false)) return { status: "unavailable", reason: "application-indeterminate-reconciliation-required" }
     }
     const observed = lookup.value.state === "found" ? { status: "ok" as const, value: lookup.value.receipt } : await callDomain(() => input.apply.executePrepared(request, context))
     if (observed.status !== "ok") return observed

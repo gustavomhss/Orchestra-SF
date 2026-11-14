@@ -14,6 +14,7 @@ import { renderDecisionView } from "./decision-view.ts"
 import { renderPortfolioView } from "./portfolio-view.ts"
 import { renderBiFilters } from "./filter-controls.ts"
 import type { BiFilterControls } from "./filter-controls.ts"
+import { appendBiSourceButtons, biSourceChoices, createBiSourceChooser } from "./source-navigation.ts"
 
 export type BiDecisionNavigation = {
   openSource?: (source: SourceRef) => void
@@ -182,6 +183,7 @@ export function renderBiView(request: BiViewRequest, projection: DomainProjectio
     status.textContent = ""
     chart.replaceChildren()
     body.replaceChildren()
+    const chooseSource = createBiSourceChooser(chart, openSelected)
     const undatedIds = new Set((request.viewId === "BI08" || request.viewId === "BI10") && semantic?.status === "ok" ? presentation?.timeline?.items.flatMap((item) => {
       const row = data.rows.find((value) => value.id === item.dateValueId)
       return row && (typeof row.value !== "string" || !isSfPeriod({ start: row.value, end: row.value })) ? [row.id] : []
@@ -330,13 +332,14 @@ export function renderBiView(request: BiViewRequest, projection: DomainProjectio
         const row = rows.find((item) => item.id === mark.id)
         const group = document.createElementNS(svg.namespaceURI, "g")
         const description = row ? `${seriesId} · ${mark.id}: ${mark.value} ${unit}; ${row.period.start} – ${row.period.end}` : `${mark.id}: ${mark.value} ${unit}`
-        if (row?.selection.reference) {
+        const origins = row ? biSourceChoices(row, row.selection) : []
+        if (row && origins.length) {
           group.setAttribute("tabindex", "0")
           group.setAttribute("data-bi-focus", row.id)
           group.setAttribute("data-bi-series", seriesId)
           group.setAttribute("role", "button")
-          group.setAttribute("aria-label", `${description}. Abrir origem`)
-          const select = () => openSelected(row.selection)
+          group.setAttribute("aria-label", `${description}. ${origins.length === 1 ? "Abrir origem" : "Escolher origem"}`)
+          const select = () => chooseSource(row.id, origins, group)
           group.addEventListener("click", select)
           group.addEventListener("keydown", (event) => {
             if (event instanceof KeyboardEvent && (event.key === "Enter" || event.key === " ")) {
@@ -390,15 +393,7 @@ export function renderBiView(request: BiViewRequest, projection: DomainProjectio
       line.insertCell().textContent = row.granularity
       line.insertCell().textContent = row.evidenceState
       const cell = line.insertCell()
-      if (row.selection.reference) {
-        const button = document.createElement("button")
-        button.type = "button"
-        button.setAttribute("data-bi-focus", row.id)
-        button.textContent = "Abrir origem"
-        button.addEventListener("click", () => openSelected(row.selection))
-        cell.append(button)
-      }
-      if (!row.selection.reference) cell.textContent = "Indisponível"
+      appendBiSourceButtons(cell, biSourceChoices(row, row.selection), openSelected)
     }
   }
   apply.addEventListener("click", draw)

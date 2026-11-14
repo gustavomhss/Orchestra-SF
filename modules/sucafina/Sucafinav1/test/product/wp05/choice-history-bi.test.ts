@@ -118,14 +118,20 @@ async function renderObservation(observation: { label: "before" | "after"; proje
     const timeline = page.locator('svg[aria-label="Períodos no horizonte selecionado; os detalhes estão na lista seguinte"] [role="button"]')
     expect(await timeline.count()).toBe(decision.scenario.components.filter((component) => component.sourceRefs.length).length)
     const text = await page.locator("body").innerText()
+    expect(text).toContain(`Comparação de custos: alternativa ${decision.comparison.alternativeResultRef} menos referência ${decision.comparison.baselineResultRef}.`)
+    expect(text).toContain("Diferença negativa indica custo conhecido menor da alternativa; positiva indica custo conhecido maior.")
     if (observation.label === "before") {
       expect(rows.some((row) => row[0]?.startsWith("training:"))).toBe(false)
       expect(text).toContain("total: indisponível")
       expect(text).toContain("training: pendente")
+      expect(decision.comparison.knownDifference).toBe(-30000)
+      expect(text).toContain("diferença conhecida (alternativa − referência): -30000")
     } else {
       expect(rows.find((row) => row[0] === "training:11")?.[1]).toBe("40000")
       expect(text).toContain("Completa · USD")
       expect(text).toContain("total: 250000")
+      expect(decision.comparison.knownDifference).toBe(10000)
+      expect(text).toContain("diferença conhecida (alternativa − referência): 10000")
       const componentIndex = decision.scenario.components.findIndex((component) => component.id === "training:11")
       const component = decision.scenario.components[componentIndex]!
       const mark = timeline.nth(componentIndex)

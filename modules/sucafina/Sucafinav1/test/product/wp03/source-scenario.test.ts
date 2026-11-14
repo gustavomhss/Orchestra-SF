@@ -5,7 +5,7 @@ import type { PlannerSourceHost } from "../../../product/contracts/ports.ts"
 import { createSfDecisionResultStore } from "../../../product/decisions/result-store.ts"
 import { createPlannerCalculationEvidence } from "../../../product/planner/calculation-evidence.ts"
 import { createPlannerResultPersistence } from "../../../product/planner/persistence.ts"
-import { createPlannerPort, projectPlannerSource } from "../../../product/planner/port.ts"
+import { buildPlannerFinancialProjection, createPlannerPort, projectPlannerSource } from "../../../product/planner/port.ts"
 import { simulateScenario } from "../../../product/planner/scenario-port.ts"
 import { createWp05SensitivityFixture } from "../wp05/engine-fixture.ts"
 import { renewalCoverage } from "../wp11/renewal-coverage-fixture.ts"
@@ -86,7 +86,7 @@ test("a source-only observation refuses a coverage change after the real compari
   const f = await fixture("confirmed")
   try {
     const reads = { comparisons: 0 }
-    const result = await simulateScenario({ host: f.host, sources: f.sourceHost, project: projectPlannerSource, compare: async (request, context) => {
+    const result = await simulateScenario({ host: f.host, sources: f.sourceHost, project: projectPlannerSource, qualify: buildPlannerFinancialProjection, compare: async (request, context) => {
       const compared = await f.sourcePlanner.compareForecast(request, context)
       reads.comparisons++
       if (reads.comparisons === 2) f.coverageState.assessment = f.inventory.assess(f.inventory.entries.filter((entry) => entry.categoryId !== "training"))

@@ -1,6 +1,8 @@
 import { createAnalysisAlternativePromotion } from "./analysis-promotion.ts"
 import { createAnalysisAcceptance } from "./analysis-acceptance.ts"
+import { createAssumptionDivergenceService } from "./assumption-divergence.ts"
 import { createPreparedExecution } from "./apply.ts"
+import { createPreparedApplicationStatus } from "./application-status.ts"
 import { createDecisionBaselineCoverage } from "./baseline-coverage.ts"
 import { createDecisionCaseManagement } from "./case-management.ts"
 import { createHotTopicDraftStore } from "./hot-topic-draft.ts"
@@ -37,6 +39,7 @@ export function createDecisionProduct(input: Common & Evidence & {
   results: ReturnType<typeof createSfDecisionResultStore>
   planner: PlannerPort
   sources: PlannerSourceHost
+  observeAssumption: Parameters<typeof createAssumptionDivergenceService>[0]["observe"]
   baseline: Omit<Parameters<typeof createDecisionBaselineCoverage>[0], Shared | keyof Evidence>
   management: Omit<Parameters<typeof createDecisionCaseManagement>[0], Shared>
   mutations: Omit<Parameters<typeof createDecisionMutations>[0], Shared | "planner" | "sources" | "resolveHotTopicDraft">
@@ -57,6 +60,7 @@ export function createDecisionProduct(input: Common & Evidence & {
   const evidence = { proposalCoverageWrites: input.proposalCoverageWrites, now: input.now }
   const baseline = createDecisionBaselineCoverage({ ...input.baseline, ...common, ...evidence })
   const management = createDecisionCaseManagement({ ...input.management, ...common })
+  const assumptionDivergence = createAssumptionDivergenceService({ cases: input.cases, host: input.host, observe: input.observeAssumption })
   const hotTopicDraft = createHotTopicDraftStore({ ...input.hotTopic, ...common, ...evidence, createId: input.mutations.createId })
   const mutations = createDecisionMutations({ ...input.mutations, ...common, planner: input.planner, sources: input.sources, resolveHotTopicDraft: hotTopicDraft.readCurrent })
   const promoteAnalysis = createAnalysisAlternativePromotion({ ...input.promotion, ...common, sources: input.sources, createId: input.mutations.createId, now: input.now })
@@ -64,6 +68,7 @@ export function createDecisionProduct(input: Common & Evidence & {
   const promoteCurrentChoice = createCurrentChoicePromotion({ ...input.currentChoice.promotion, ...common, sources: input.sources, now: input.now, verifyProvenance: async (request, choice, result, context) => (await currentChoicePreview.read(request, context)).status === "ok" && await input.currentChoice.promotion.verifyProvenance(request, choice, result, context) })
   const accept = createAnalysisAcceptance({ ...input.acceptance, ...common })
   const apply = createPreparedExecution({ ...input.application, ...common })
+  const applicationStatus = createPreparedApplicationStatus({ ...common, receipts: { readReceipt: input.application.apply.readReceipt } })
   const criteria = createCriterionRuleRegistry({ ...input.criteria, ...common, ...evidence })
   const sensitivityBindings = createCriterionResultBindings({ ...input.sensitivityBindings, ...common, ...evidence, rules: criteria, results: input.results })
   const comparisonBindings = createCriterionComparisonBindings({ ...input.comparisonBindings, ...common, ...evidence, rules: criteria, results: input.results })
@@ -77,5 +82,5 @@ export function createDecisionProduct(input: Common & Evidence & {
   const compare = createDecisionComparisonService({ cases: input.cases, state: input.state, host: input.host, results: input.results, planner: input.planner })
   const selection = createDecisionPortfolioSelection({ ...input.selection, ...common, ...evidence, compare })
   const portfolioBindings = createPortfolioResultBindings({ ...input.portfolioBindings, ...common, ...evidence, selection, results: input.results })
-  return { baseline, management, mutations, accept, promoteAnalysis, currentChoicePreview, promoteCurrentChoice, apply, criteria, sensitivityBindings, comparisonBindings, compare, selection, portfolioBindings, coverageCatalog, choiceCatalog, reviewChange, history, changeStore, changeProposal, hotTopicDraft }
+  return { baseline, management, assumptionDivergence, mutations, accept, promoteAnalysis, currentChoicePreview, promoteCurrentChoice, apply, applicationStatus, criteria, sensitivityBindings, comparisonBindings, compare, selection, portfolioBindings, coverageCatalog, choiceCatalog, reviewChange, history, changeStore, changeProposal, hotTopicDraft }
 }

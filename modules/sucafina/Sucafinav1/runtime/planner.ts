@@ -4,6 +4,7 @@ import type { RenderContext } from "./ui.ts"
 import { fields, form, metric, metricGrid, table } from "./ui.ts"
 import { esc } from "../src/screen-shell.ts"
 import { renderMonthlyGrid } from "../product/planner/monthly-grid.ts"
+import { plannerActualMonth } from "../product/planner/actual-presence.ts"
 import { assignOwner, deleteRate, plannerField } from "../src/planner-role.ts"
 import {
   changeAnnual,
@@ -1068,7 +1069,7 @@ function renderPage(page: string, data: Record<string, unknown>, context: Render
         metric("Full-year outlook", money(summary.fullYear)),
         metric("HR Staff", money(summary.hrTotal)),
       ]) +
-      monthlyChart(summary, version.closed) +
+      monthlyChart(summary) +
       `<p>Budget comparison uses FY ${version.year} in USD. These are budgets; outlook changes and variance to the official budget are separate measures.</p>` +
       (safe.filter && !versions.some((item) => item.id === idOf(safe.filter) && item.year === version.year) ? '<p role="status">The comparison plan is unavailable or uses a different fiscal year.</p>' : "") +
       `<form method="get" class="filter-bar"><input type="hidden" name="page" value="Overview"><input type="hidden" name="version" value="${esc(version.id)}"><label>Compare budget <select name="filter"><option value="">Budgets in this fiscal year</option>${versions
@@ -1080,7 +1081,7 @@ function renderPage(page: string, data: Record<string, unknown>, context: Render
         zeroMonths().map((_, i) => [
           String(i + 1),
           money(numericMonths(summary.budget)[i]),
-          i >= version.closed && numericMonths(summary.actual)[i] === 0 ? "–" : money(numericMonths(summary.actual)[i]),
+          overviewActualCell(summary, i + 1),
           money(numericMonths(summary.outlook)[i]),
         ]),
       ) +
@@ -1850,24 +1851,29 @@ function renderHeadcount(
   )
 }
 
-function monthlyChart(summary: Row, closed: number): string {
+function overviewActualCell(summary: Row, month: number): string {
+  const actual = plannerActualMonth(summary, month)
+  return `<span data-planner-actual-month="${month}" data-evidence-state="${actual.evidenceState}"${actual.domainValue === null ? "" : ` data-domain-value="${esc(String(actual.domainValue))}"`}>${actual.value === null ? "Unavailable" : money(actual.value)}<small>${actual.value === null ? "Actual data is missing or unpriced" : actual.value === 0 ? "Observed zero" : "Recorded actual"}</small></span>`
+}
+
+function monthlyChart(summary: Row): string {
   const series = [
     { key: "budget", name: "Budget", color: "#245ca6" },
     { key: "actual", name: "Actual", color: "#b54a22" },
     { key: "outlook", name: "Outlook", color: "#227b48" },
   ].map((line) => ({ ...line, values: Array.from({ length: 12 }, (_, index) => {
+    if (line.key === "actual") return plannerActualMonth(summary, index + 1).value
     const months = summary[line.key]
     const value: unknown = Array.isArray(months) ? months[index] : null
     if (typeof value !== "number" || !Number.isFinite(value)) return null
-    // Keep the original closed-month policy without turning absent months into zero.
-    return line.key === "actual" && index >= closed && value === 0 ? null : value
+    return value
   }) }))
   const values = series.flatMap((line) => line.values.filter((value) => value !== null))
   const low = Math.min(0, ...values)
   const high = Math.max(1, ...values)
   const y = (value: number) => 180 - ((value - low) / (high - low)) * 150
   const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-  return `<figure><figcaption>Monthly Budget, Actual, Outlook (USD)</figcaption><ul class="chart-legend">${series.map((line) => `<li><span aria-hidden="true" style="background:${line.color}"></span>${line.name}</li>`).join("")}</ul>${values.length ? `<svg viewBox="0 0 720 230" role="img" aria-label="Monthly Budget, Actual, Outlook in USD"><title>Monthly Budget, Actual, Outlook in USD</title><g class="chart-axis">${[...new Set([low, 0, high / 2, high])].map((value) => `<line x1="100" x2="705" y1="${y(value)}" y2="${y(value)}" stroke="#cbd5e1"/><text x="95" y="${y(value) + 4}" text-anchor="end" font-size="11">${esc(money(value))}</text>`).join("")}${months.map((month, index) => `<text x="${115 + index * 52}" y="202" text-anchor="middle" font-size="12">${month}</text>`).join("")}<text x="100" y="16" font-size="12">USD</text><text x="400" y="224" text-anchor="middle" font-size="12">Month</text></g>${series.map((line) => line.values.map((value, index) => value === null ? "" : `<circle cx="${115 + index * 52}" cy="${y(value)}" r="4" fill="${line.color}"><title>${line.name} ${index + 1}: ${esc(money(value))}</title></circle>`).join("")).join("")}</svg>` : '<p class="chart-empty">No data available for this chart.</p>'}</figure>`
+  return `<figure><figcaption>Monthly Budget, Actual, Outlook (USD)</figcaption><p>Missing or unpriced actual data is unavailable. Recorded zero remains visible in open and closed months.</p><ul class="chart-legend">${series.map((line) => `<li><span aria-hidden="true" style="background:${line.color}"></span>${line.name}</li>`).join("")}</ul>${values.length ? `<svg viewBox="0 0 720 230" role="img" aria-label="Monthly Budget, Actual, Outlook in USD"><title>Monthly Budget, Actual, Outlook in USD</title><g class="chart-axis">${[...new Set([low, 0, high / 2, high])].map((value) => `<line x1="100" x2="705" y1="${y(value)}" y2="${y(value)}" stroke="#cbd5e1"/><text x="95" y="${y(value) + 4}" text-anchor="end" font-size="11">${esc(money(value))}</text>`).join("")}${months.map((month, index) => `<text x="${115 + index * 52}" y="202" text-anchor="middle" font-size="12">${month}</text>`).join("")}<text x="100" y="16" font-size="12">USD</text><text x="400" y="224" text-anchor="middle" font-size="12">Month</text></g>${series.map((line) => line.values.map((value, index) => value === null ? "" : `<circle data-planner-series="${line.key}" data-month="${index + 1}" cx="${115 + index * 52}" cy="${y(value)}" r="4" fill="${line.color}"><title>${line.name} ${index + 1}: ${esc(money(value))}</title></circle>`).join("")).join("")}</svg>` : '<p class="chart-empty">No data available for this chart.</p>'}</figure>`
 }
 
 export function render(page: string, data: Record<string, unknown>, context: RenderContext): string | undefined {

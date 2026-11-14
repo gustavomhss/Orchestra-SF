@@ -12,8 +12,9 @@ import { createChoiceSnapshot } from "./choice.ts"
 import { verifyHotTopicDraftBinding } from "./hot-topic-draft.ts"
 import type { HotTopicDraft } from "./hot-topic-draft.ts"
 import { prepareDomainChange } from "./prepared-change.ts"
+import { applicationAttempts } from "./application-attempt.ts"
 
-export type DecisionMutationOperation = "add-alternative" | "prepare-changes" | "add-question" | "answer-question" | "record-choice"
+export type DecisionMutationOperation = "add-alternative" | "prepare-changes" | "reject-change" | "add-question" | "answer-question" | "record-choice"
 type CaseRef = { id: string; incarnation: string; version: number }
 type MutationReceipt = { caseRef: CaseRef; resultRef?: string }
 type MutationHost = {
@@ -41,6 +42,25 @@ type MutationHost = {
 
 export function createDecisionMutations(input: MutationHost) {
   return {
+    rejectChange: async (incoming: { purpose: "reject-change"; caseRef: CaseRef; choiceId: string; changeId: string; rationale: string }, context: TrustedDomainContext): Promise<PortResult<MutationReceipt>> => {
+      const request = structuredClone(incoming)
+      if (context.kind !== "ui" || !await input.authorizeMutation("reject-change", request, context).catch(() => false)) return { status: "denied", reason: "human-rejection-required" }
+      if (request.purpose !== "reject-change" || !request.choiceId.trim() || !request.changeId.trim() || !request.rationale.trim()) return { status: "needs-input", reason: "rejection-input-required" }
+      const replay = await replayMutation(input, request.caseRef, context, "reject-change", request)
+      if (replay) return replay
+      const loaded = await loadCase(input, request.caseRef, context)
+      if (loaded.status !== "ok") return loaded
+      const change = loaded.value.case.preparedChanges.find((item) => item.id === request.changeId && item.choiceId === request.choiceId)
+      if (!change || change.state !== "planned" || change.receipt || !loaded.value.case.choices.some((choice) => choice.id === request.choiceId)) return { status: "conflict", reason: "change-not-rejectable" }
+      const caseRef = { ...request.caseRef, version: request.caseRef.version + 1 }
+      const event = { id: input.createId(), caseRef, kind: "reconsideration-accepted" as const, principalRef: context.binding.principalRef, at: input.now(), consideredActions: [`reject-change:${change.id}`], factualGaps: [], lifecycleState: loaded.value.case.state, rationale: request.rationale, evidenceRefs: loaded.value.case.sourceRefs, outputDigest: digestSfValue({ change, disposition: "rejected" }) }
+      if (!event.id.trim() || !Number.isFinite(Date.parse(event.at)) || loaded.value.case.ledger.some((item) => item.id === event.id)) return { status: "unavailable", reason: "rejection-identity-unavailable" }
+      return saveCase(input, loaded.value, context, "reject-change", request, (value) => ({ ...value, preparedChanges: value.preparedChanges.map((item) => item.id === change.id ? { ...item, state: "cancelled" as const } : item), ledger: [...value.ledger, event] }), undefined, (state) => {
+        if (applicationAttempts(state, request).length) return false
+        const matches = (receipt: unknown) => !!receipt && typeof receipt === "object" && "surface" in receipt && receipt.surface === change.target.surface && "targetIncarnation" in receipt && receipt.targetIncarnation === change.target.incarnation && "idempotencyKey" in receipt && receipt.idempotencyKey === change.idempotencyKey
+        return !Object.values(state.receipts).some(matches) && !Object.values(state.transactions).some((transaction) => transaction.namespace === "receipts" && matches(transaction.value))
+      })
+    },
     replayPortfolio: async (incoming: { caseRef: CaseRef; operation: "add-alternative" | "prepare-changes"; payload: unknown }, context: TrustedDomainContext): Promise<PortResult<{ state: "found"; receipt: MutationReceipt } | { state: "not-found" }>> => {
       const request = structuredClone(incoming)
       const source = input.host.requestFor(context)
@@ -235,7 +255,7 @@ async function saveCase(input: MutationHost, loaded: LoadedCase, context: Truste
   const resultRef = scenario ? decisionScenarioResultRef(caseRef, digestSfValue(scenario.request)) : undefined
   const parent = operation === "add-alternative" || operation === "prepare-changes" ? input.portfolioParent?.(operation, request, context) : undefined
   if (!await input.authorizeCase(loaded.case, context) || !await input.authorizeCase(nextValue, context) || !await input.host.revalidate(context)) return { status: "denied", reason: "case-access-unavailable" }
-  const outbox = operation === "record-choice" ? await input.state.read(loaded.source, "outbox", (_state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" })) : undefined
+  const outbox = operation === "record-choice" || operation === "reject-change" ? await input.state.read(loaded.source, "outbox", (_state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" })) : undefined
   if (outbox && outbox.status !== "ok") return failure(outbox)
   if (outbox && !outbox.value) return { status: "denied", reason: "outbox-access-unavailable" }
   const saved = await input.state.transaction(loaded.source, { namespace: "cases", domainSurface: "planner", expectedStorageVersion: loaded.storageVersion, ...(outbox ? { additionalNamespaces: [{ namespace: "outbox" as const, expectedStorageVersion: outbox.storageVersion }] } : {}), targetRef: loaded.case.id, targetIncarnation: loaded.case.incarnation, idempotencyKey: `${loaded.identity}:${operation}`, commandDigest: digestSfValue(request) }, async (state, authority, snapshot) => {
@@ -252,7 +272,7 @@ async function saveCase(input: MutationHost, loaded: LoadedCase, context: Truste
     }
     if (outbox) {
       const event = nextValue.ledger.at(-1)
-      if (!event || event.kind !== "choice-recorded" || enqueueSfLedgerEvent(state, event, { installationId: context.binding.installationId, projectId: context.binding.projectId, authority }).status !== "ok") return { commit: false, value: null }
+      if (!event || event.kind !== (operation === "reject-change" ? "reconsideration-accepted" : "choice-recorded") || enqueueSfLedgerEvent(state, event, { installationId: context.binding.installationId, projectId: context.binding.projectId, authority }).status !== "ok") return { commit: false, value: null }
     }
     return { commit: true, value: parent === undefined ? nextValue : { ...nextValue, portfolioReplay: { parentDigest: digestSfValue(parent), child: structuredClone(request) } } }
   }).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
