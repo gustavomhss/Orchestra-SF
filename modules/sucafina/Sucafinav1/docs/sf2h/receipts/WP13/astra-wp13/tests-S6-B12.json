@@ -1,0 +1,390 @@
+{
+  "schema": "wp13-hosted-product-receipt-v1",
+  "label": "S6-B12",
+  "productSha": "ebc7000258b7fe10ad206bdb013415298a27b341",
+  "productTree": "b3c90e976e53c42ecb8828d60789a99abfb130f1",
+  "snapshotSha": "5bd20f3aa55f3e6e0b6140f81ec5d45629a57127",
+  "snapshotTree": "5ec2fbcc7dd3d10c60fe37ad843f4151e5f93d2d",
+  "branch": "ci-run-linux-astra-wp13-ebc70002-136a3ad4-1",
+  "snapshotOnlyAdded": {
+    "path": ".ci-run.json",
+    "sha": "118a9651e5f4979c3e3b9c6ff2f50897d8f840a9"
+  },
+  "runId": 43590329132,
+  "jobId": 132433501053,
+  "status": "completed",
+  "conclusion": "failure",
+  "jobs": [
+    {
+      "id": 132433501053,
+      "name": "test (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "failure",
+      "started_at": "2026-11-14T11:30:25Z",
+      "completed_at": "2026-11-14T11:37:41Z"
+    },
+    {
+      "id": 132435271141,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-11-14T11:37:43Z",
+      "completed_at": "2026-11-14T11:37:46Z"
+    }
+  ],
+  "artifacts": [],
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/wp13/coverage.test.ts",
+      "Sucafinav1/test/product/wp03/source-scenario.test.ts",
+      "Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+      "Sucafinav1/test/product/wp13/campaign.test.ts",
+      "Sucafinav1/test/product/wp13/candidates-store.test.ts",
+      "Sucafinav1/test/product/wp13/contribution.test.ts",
+      "Sucafinav1/test/product/wp13/analysis-recovery.test.ts",
+      "Sucafinav1/test/product/wp13/candidates.test.ts",
+      "Sucafinav1/test/product/wp13/persistent-store.test.ts",
+      "Sucafinav1/test/product/wp13/projection.test.ts",
+      "Sucafinav1/test/product/wp13/stored-store.test.ts",
+      "Sucafinav1/test/product/wp13/stored.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "requestSha256": "136a3ad492f761e4ae5591027e8c0741c57d27951be79cd57ddfed71d8d2755f",
+  "selectedPublishedFiles": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage.test.ts",
+      "sha": "64a05c6d18aa71a85cd8a5a23eb3706f672a8c81"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/source-scenario.test.ts",
+      "sha": "1e28aa16eb1d93ddff44dc8596b07c17abfa9775"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+      "sha": "a0a67918c69a636120daa66877669020803c108e"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/campaign.test.ts",
+      "sha": "e83d632e6cd26ad360a9ea7ff72ba04a31c97eb4"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/candidates-store.test.ts",
+      "sha": "fbecfabcd66aab023279d9b7ee3c14beccf1fcad"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/contribution.test.ts",
+      "sha": "4c4b89cc9777a21740eee43c4ce3295473d414c9"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/analysis-recovery.test.ts",
+      "sha": "6c92ae341623724fde5843292fdd81b3799eef93"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/candidates.test.ts",
+      "sha": "aa3e3ef05ec9034592eeccc9a900caa922571505"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/persistent-store.test.ts",
+      "sha": "ea54e03a06787a74c603c4e14a2c80d09a8c9700"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/projection.test.ts",
+      "sha": "191e49d579f79ce012b7455172e3f44da226f156"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/stored-store.test.ts",
+      "sha": "601af4ad1f504c9c7be47dce4e72d84587a38856"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/stored.test.ts",
+      "sha": "87fd1572c38eb436a65f4eaefb2c8f6ff4bb0ed9"
+    }
+  ],
+  "log": {
+    "sha256": "16697948b47c0defb294ebc42ee9781394a2f0a48a68bf7f91296c12c8de6999",
+    "bytes": 78055
+  },
+  "control": {
+    "accepted": true,
+    "verdict": "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+    "error": null,
+    "omniSpawnProven": false
+  },
+  "summary": {
+    "passed": 43,
+    "failed": 1,
+    "summary": "Ran 44 tests across 12 files. [346.93s]",
+    "expectCalls": 247
+  },
+  "fileResults": {
+    "Sucafinav1/test/product/wp03/calculation-evidence.test.ts": [
+      {
+        "status": "pass",
+        "name": "record-only replay binds C10 coverage, complete source closure and both fresh observations",
+        "milliseconds": 23.81
+      },
+      {
+        "status": "pass",
+        "name": "recursive read callbacks are bounded before a second stored read, and release their guard",
+        "milliseconds": 4.5
+      },
+      {
+        "status": "pass",
+        "name": "2 independent C17 replays in one binding do not consume ancestral depth",
+        "milliseconds": 7.54
+      },
+      {
+        "status": "pass",
+        "name": "17 independent C17 replays in one binding do not consume ancestral depth",
+        "milliseconds": 40.13
+      },
+      {
+        "status": "pass",
+        "name": "the C17 depth bound applies to a recursive path and is released after refusal",
+        "milliseconds": 4.47
+      },
+      {
+        "status": "pass",
+        "name": "evidence outside the persisted closure and another project never reaches replay",
+        "milliseconds": 2.47
+      },
+      {
+        "status": "pass",
+        "name": "cyclic calculation references and malformed request fields are unavailable without replay",
+        "milliseconds": 2.72
+      },
+      {
+        "status": "pass",
+        "name": "callback request mutation is detached and private failures never escape the resolver",
+        "milliseconds": 4.63
+      },
+      {
+        "status": "pass",
+        "name": "cancellation and revocation after replay never issue calculation evidence",
+        "milliseconds": 2.38
+      },
+      {
+        "status": "pass",
+        "name": "nested C17 requires replay for calculations and canonical authorization for ledger leaves",
+        "milliseconds": 30.19
+      },
+      {
+        "status": "pass",
+        "name": "nested C17 rejects a digest-valid calculation that cannot reproduce its stored result",
+        "milliseconds": 5.91
+      },
+      {
+        "status": "pass",
+        "name": "nested C17 rejects semantic ancestor cycles and releases traversal guards",
+        "milliseconds": 17.6
+      },
+      {
+        "status": "pass",
+        "name": "nested C17 refuses revoked lineage after replay while the caller remains authorized",
+        "milliseconds": 13.73
+      }
+    ],
+    "Sucafinav1/test/product/wp03/source-scenario.test.ts": [
+      {
+        "status": "pass",
+        "name": "source-only scenario publishes the covered confirmed total and replays through persistence and C17 without applying a choice",
+        "milliseconds": 88675.47
+      },
+      {
+        "status": "pass",
+        "name": "source-only zero stays confirmed while omitted coverage and null never become a complete total",
+        "milliseconds": 122370.81
+      },
+      {
+        "status": "pass",
+        "name": "a source-only observation refuses a coverage change after the real comparison recheck",
+        "milliseconds": 88008.38
+      }
+    ],
+    "Sucafinav1/test/product/wp13/stored-store.test.ts": [
+      {
+        "status": "pass",
+        "name": "stored contribution survives reopen and remains case-authorized",
+        "milliseconds": 13.42
+      }
+    ],
+    "Sucafinav1/test/product/wp13/analysis-recovery.test.ts": [
+      {
+        "status": "pass",
+        "name": "reconciles an unbound C08 comparison on retry without writing a second result",
+        "milliseconds": 47207.01
+      }
+    ],
+    "Sucafinav1/test/product/wp13/campaign.test.ts": [
+      {
+        "status": "pass",
+        "name": "multi-case campaign keeps owner separate, provisional AI, order and exact retry",
+        "milliseconds": 68.43
+      },
+      {
+        "status": "pass",
+        "name": "revoked and stale sources and a moved proposal do not replace the campaign",
+        "milliseconds": 23.59
+      },
+      {
+        "status": "pass",
+        "name": "a locked fence that differs from the pre-lock fingerprint does not commit",
+        "milliseconds": 10.32
+      },
+      {
+        "status": "pass",
+        "name": "campaign metadata needs the host's private writer grant",
+        "milliseconds": 10.16
+      },
+      {
+        "status": "pass",
+        "name": "campaign rejects a candidate in another currency or horizon before any write",
+        "milliseconds": 9.91
+      },
+      {
+        "status": "pass",
+        "name": "a saved campaign remains authenticated historical data at the same owner case version",
+        "milliseconds": 22.8
+      },
+      {
+        "status": "pass",
+        "name": "a prior campaign is separately marked historical after the owner case advances",
+        "milliseconds": 26
+      },
+      {
+        "status": "pass",
+        "name": "campaign history binds a replaced candidate to the trusted historical port and original digest",
+        "milliseconds": 24.93
+      }
+    ],
+    "Sucafinav1/test/product/wp13/stored.test.ts": [
+      {
+        "status": "pass",
+        "name": "reads an existing bound contribution and denies a revoked portfolio",
+        "milliseconds": 0.93
+      },
+      {
+        "status": "pass",
+        "name": "reports an unavailable store instead of exposing an error",
+        "milliseconds": 0.26
+      },
+      {
+        "status": "pass",
+        "name": "does not return persisted payload when source access changes during read",
+        "milliseconds": 0.46
+      }
+    ],
+    "Sucafinav1/test/product/wp13/candidates-store.test.ts": [
+      {
+        "status": "pass",
+        "name": "portfolio resolves a persisted decision alternative and respects revocation",
+        "milliseconds": 12.26
+      }
+    ],
+    "Sucafinav1/test/product/wp13/coverage.test.ts": [
+      {
+        "status": "fail",
+        "name": "portfolio distinguishes omitted training from sourced zero using WP11 coverage",
+        "milliseconds": 6.85
+      }
+    ],
+    "Sucafinav1/test/product/wp13/persistent-store.test.ts": [
+      {
+        "status": "pass",
+        "name": "portfolio uses the C08 decision store for durable refs and revalidates access",
+        "milliseconds": 33.25
+      },
+      {
+        "status": "pass",
+        "name": "refuses to persist analysis whose referenced scenario differs",
+        "milliseconds": 0.57
+      }
+    ],
+    "Sucafinav1/test/product/wp13/contribution.test.ts": [
+      {
+        "status": "pass",
+        "name": "composition does not advertise disabled operations or fabricate a scenario",
+        "milliseconds": 0.55
+      },
+      {
+        "status": "pass",
+        "name": "canonical portfolio handler is unavailable without persistence",
+        "milliseconds": 0.35
+      },
+      {
+        "status": "pass",
+        "name": "canonical handler rejects a mismatched receipt before persistence",
+        "milliseconds": 0.26
+      }
+    ],
+    "Sucafinav1/test/product/wp13/projection.test.ts": [
+      {
+        "status": "pass",
+        "name": "projection carries the stored reference and fails closed on egress revocation",
+        "milliseconds": 0.52
+      },
+      {
+        "status": "pass",
+        "name": "projection refuses a different authenticated principal",
+        "milliseconds": 0.29
+      },
+      {
+        "status": "pass",
+        "name": "projection lists a legacy combination without canonical analysis",
+        "milliseconds": 0.31
+      }
+    ],
+    "Sucafinav1/test/product/wp13/candidates.test.ts": [
+      {
+        "status": "pass",
+        "name": "resolves only the authorized case and versioned alternative",
+        "milliseconds": 0.26
+      },
+      {
+        "status": "pass",
+        "name": "rejects a case read that returns another incarnation",
+        "milliseconds": 0.15
+      },
+      {
+        "status": "pass",
+        "name": "propagates denial without revealing an alternative",
+        "milliseconds": 0.13
+      },
+      {
+        "status": "pass",
+        "name": "catalog detects a changed case when the provider reuses its original object",
+        "milliseconds": 0.81
+      },
+      {
+        "status": "pass",
+        "name": "catalog pins the admitted selection and protects it from source-validator mutation",
+        "milliseconds": 0.36
+      }
+    ]
+  },
+  "selectionMatches": true,
+  "acceptance": {
+    "aggregatePass": false,
+    "completedPassedFiles": [
+      "Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+      "Sucafinav1/test/product/wp03/source-scenario.test.ts",
+      "Sucafinav1/test/product/wp13/stored-store.test.ts",
+      "Sucafinav1/test/product/wp13/analysis-recovery.test.ts",
+      "Sucafinav1/test/product/wp13/campaign.test.ts",
+      "Sucafinav1/test/product/wp13/stored.test.ts",
+      "Sucafinav1/test/product/wp13/candidates-store.test.ts",
+      "Sucafinav1/test/product/wp13/persistent-store.test.ts",
+      "Sucafinav1/test/product/wp13/contribution.test.ts",
+      "Sucafinav1/test/product/wp13/projection.test.ts",
+      "Sucafinav1/test/product/wp13/candidates.test.ts"
+    ],
+    "nativeOrInstalledConsumerProof": false
+  },
+  "ready": false
+}

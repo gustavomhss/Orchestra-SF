@@ -1,0 +1,301 @@
+{
+  "schema": "wp13-hosted-product-receipt-v1",
+  "label": "S5-AcoreR1",
+  "productSha": "ebc7000258b7fe10ad206bdb013415298a27b341",
+  "productTree": "b3c90e976e53c42ecb8828d60789a99abfb130f1",
+  "snapshotSha": "330d6478b409201a3bda766be14be86c0f58322d",
+  "snapshotTree": "d54b80979828aab2a72a0a9ef3f5258d03ffb069",
+  "snapshotOnlyAdded": {
+    "path": ".ci-run.json",
+    "sha": "0b90512b6406559d23eb18efa6041cc318056893"
+  },
+  "branch": "ci-run-linux-astra-wp13-ebc70002-a3720679-1",
+  "runId": 43590116146,
+  "jobId": 132432862728,
+  "cleanupJobId": 132433320331,
+  "status": "completed",
+  "conclusion": "success",
+  "jobs": [
+    {
+      "id": 132432862728,
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-11-14T11:27:39Z",
+      "completed_at": "2026-11-14T11:29:38Z"
+    },
+    {
+      "id": 132433320331,
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-11-14T11:29:39Z",
+      "completed_at": "2026-11-14T11:29:46Z"
+    }
+  ],
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/wp13/sensitivity.test.ts",
+      "Sucafinav1/test/product/wp13/sensitivity-v6.test.ts",
+      "Sucafinav1/test/product/wp13/portfolio.test.ts",
+      "Sucafinav1/test/product/wp13/production.test.ts",
+      "Sucafinav1/test/product/wp13/reconciliation.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "requestSha256": "a3720679f5a2f6e953ec0f0a3d10659692fa2d1e21bd5d4eefd2da5210e3316a",
+  "selectedPublishedFiles": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity.test.ts",
+      "sha": "a77713b4a8dff26a7d105775633a9f15c1248f21"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-v6.test.ts",
+      "sha": "26f2ad65abc551c33561420cf7e23b04522255f6"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/portfolio.test.ts",
+      "sha": "57ec7d22fc2fa20506547ae5d4a3bca40a91db04"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/production.test.ts",
+      "sha": "af3d903b5cf476649d213a417ea673f8114071ee"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/reconciliation.test.ts",
+      "sha": "5e5461c2020288610b7ee8928747378d9977acd5"
+    }
+  ],
+  "log": {
+    "sha256": "1a211a423dff9b140929dd350264b5fdfebbc4eae831b1e1e235d06ee4b9b0dc",
+    "bytes": 73885
+  },
+  "control": {
+    "nonce": "d0b6559181cb04418562a7fcd681c0fa",
+    "accepted": true,
+    "verdict": "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+    "omniSpawnProven": false
+  },
+  "summary": {
+    "passed": 37,
+    "failed": 0,
+    "tests": 37,
+    "files": 5,
+    "expectCalls": 127,
+    "runtimeMilliseconds": 454
+  },
+  "fileResults": {
+    "Sucafinav1/test/product/wp13/reconciliation.test.ts": [
+      {
+        "status": "pass",
+        "name": "reconciliation preserves the chosen composition and WP11 partial/retry receipts without writing",
+        "milliseconds": 46.45
+      },
+      {
+        "status": "pass",
+        "name": "reconciliation sends a source-bound price observation to the WP14 classifier while retaining original null and currency",
+        "milliseconds": 10.29
+      },
+      {
+        "status": "pass",
+        "name": "a global criterion change cannot attribute a different component's price to an unchanged component",
+        "milliseconds": 7.67
+      },
+      {
+        "status": "pass",
+        "name": "reconciliation refuses a substituted historical selection even when its numbers match the choice",
+        "milliseconds": 1.61
+      },
+      {
+        "status": "pass",
+        "name": "reconciliation refuses receipt substitution, revoked sources and a different current principal",
+        "milliseconds": 3.11
+      },
+      {
+        "status": "pass",
+        "name": "reconciliation rejects a changed ledger, borrowed callback mutation and a changed read during egress",
+        "milliseconds": 14.19
+      },
+      {
+        "status": "pass",
+        "name": "reconciliation does not reinterpret another source or missing data as a material price signal",
+        "milliseconds": 13.97
+      }
+    ],
+    "Sucafinav1/test/product/wp13/sensitivity-v6.test.ts": [
+      {
+        "status": "pass",
+        "name": "v6 keeps exact evidence and legacy threshold consistent",
+        "milliseconds": 0.22
+      },
+      {
+        "status": "pass",
+        "name": "sampled interval cannot masquerade as an exact threshold",
+        "milliseconds": 0.08
+      },
+      {
+        "status": "pass",
+        "name": "v6 revalidates coverage before returning enriched output",
+        "milliseconds": 0.42
+      },
+      {
+        "status": "pass",
+        "name": "v6 rejects callbacks that mutate the validated result during enrichment or revalidation",
+        "milliseconds": 0.37
+      },
+      {
+        "status": "pass",
+        "name": "legacy sensitivity without both units is unavailable",
+        "milliseconds": 0.05
+      }
+    ],
+    "Sucafinav1/test/product/wp13/portfolio.test.ts": [
+      {
+        "status": "pass",
+        "name": "portfolio composition > keeps a missing cost category conditioned despite a satisfied known subtotal",
+        "milliseconds": 1.72
+      },
+      {
+        "status": "pass",
+        "name": "portfolio composition > rejects duplicate operations and declares an exploration limit",
+        "milliseconds": 0.75
+      },
+      {
+        "status": "pass",
+        "name": "portfolio composition > does not return results after candidate revocation",
+        "milliseconds": 0.6
+      },
+      {
+        "status": "pass",
+        "name": "portfolio composition > detects an in-place candidate mutation at egress",
+        "milliseconds": 0.48
+      },
+      {
+        "status": "pass",
+        "name": "portfolio composition > preserves scenario observations when the domain reuses a result object",
+        "milliseconds": 0.66
+      },
+      {
+        "status": "pass",
+        "name": "portfolio composition > does not expose a result when scenario coverage is revoked before egress",
+        "milliseconds": 0.49
+      },
+      {
+        "status": "pass",
+        "name": "portfolio composition > rejects an egress callback that rewrites its observed components or coverage references",
+        "milliseconds": 0.55
+      },
+      {
+        "status": "pass",
+        "name": "portfolio composition > does not claim eligibility if a required constraint was not assessed",
+        "milliseconds": 0.26
+      },
+      {
+        "status": "pass",
+        "name": "portfolio composition > a definitive failed deadline stays infeasible while financial coverage remains pending",
+        "milliseconds": 0.4
+      },
+      {
+        "status": "pass",
+        "name": "portfolio composition > a definitive failed deadline preserves unavailable financial evidence",
+        "milliseconds": 1.0
+      },
+      {
+        "status": "pass",
+        "name": "portfolio composition > preserves the domain's failed ceiling after coverage resolves",
+        "milliseconds": 2.13
+      },
+      {
+        "status": "pass",
+        "name": "portfolio composition > does not promote a restricted scenario to complete eligibility",
+        "milliseconds": 0.35
+      },
+      {
+        "status": "pass",
+        "name": "portfolio composition > reports an explicitly pending interaction cost",
+        "milliseconds": 0.36
+      },
+      {
+        "status": "pass",
+        "name": "portfolio composition > refuses a domain result that repeats a shared component",
+        "milliseconds": 0.25
+      },
+      {
+        "status": "pass",
+        "name": "portfolio composition > retains validated canonical analysis and rejects a mismatched scenario reference",
+        "milliseconds": 0.5
+      }
+    ],
+    "Sucafinav1/test/product/wp13/production.test.ts": [
+      {
+        "status": "pass",
+        "name": "production factory keeps an unbound Planner preview conditional",
+        "milliseconds": 185.48
+      }
+    ],
+    "Sucafinav1/test/product/wp13/sensitivity.test.ts": [
+      {
+        "status": "pass",
+        "name": "withholds a claimed domain threshold when no quantified source components support it",
+        "milliseconds": 1.21
+      },
+      {
+        "status": "pass",
+        "name": "does not infer an exact threshold from sampled points",
+        "milliseconds": 0.36
+      },
+      {
+        "status": "pass",
+        "name": "retains the domain values on either side of the exact boundary",
+        "milliseconds": 0.35
+      },
+      {
+        "status": "pass",
+        "name": "does not disclose sampled values after source revocation",
+        "milliseconds": 0.3
+      },
+      {
+        "status": "pass",
+        "name": "rejects conflicting versioned units across samples",
+        "milliseconds": 0.27
+      },
+      {
+        "status": "pass",
+        "name": "rejects missing unit metadata instead of inferring currency",
+        "milliseconds": 0.25
+      },
+      {
+        "status": "pass",
+        "name": "preserves each sampled coverage when the provider reuses a mutable scenario",
+        "milliseconds": 0.38
+      },
+      {
+        "status": "pass",
+        "name": "rejects one persisted sample reference reused for different parameter values",
+        "milliseconds": 0.26
+      },
+      {
+        "status": "pass",
+        "name": "refuses a range whose intermediate arithmetic overflows before consulting the domain",
+        "milliseconds": 0.14
+      }
+    ]
+  },
+  "artifacts": [],
+  "acceptance": {
+    "aggregatePass": true,
+    "completedPassedFiles": [
+      "Sucafinav1/test/product/wp13/reconciliation.test.ts",
+      "Sucafinav1/test/product/wp13/sensitivity-v6.test.ts",
+      "Sucafinav1/test/product/wp13/portfolio.test.ts",
+      "Sucafinav1/test/product/wp13/production.test.ts",
+      "Sucafinav1/test/product/wp13/sensitivity.test.ts"
+    ],
+    "nativeOrInstalledConsumerProof": false,
+    "nextAction": "No equivalent rerun for these unchanged inputs. Complete other disjoint selections and mandatory integrated acceptance."
+  },
+  "ready": false
+}
