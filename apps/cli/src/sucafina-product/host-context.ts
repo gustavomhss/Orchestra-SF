@@ -45,6 +45,9 @@ import { createSfAlternativeCaptures } from "./alternative-captures.ts"
 import { createSfBaselineServices } from "./baseline-services.ts"
 import { createSfMemoryServices } from "./memory-services.ts"
 import { createSfMemoryHttp } from "./memory-http.ts"
+import { createSfWorkSignals, deriveSfWorkRefKey } from "./work-signals.ts"
+import { createSfWorkDestinations } from "./work-destinations.ts"
+import { createSfWorkHttp } from "./work-http.ts"
 import { materialSelection } from "./memory-selection.ts"
 import { createSfResidentReviewReaders } from "./review-resident-readers.ts"
 import type { createSfContributionReader } from "../../../../modules/sucafina/Sucafinav1/product/ai/contribution-reader.ts"
@@ -53,10 +56,11 @@ import { createSfAnalysisHttp } from "./analysis-http.ts"
 import { createSfForecastInputAdapter } from "./forecast-input-adapter.ts"
 import { sfAnalysisSourceNamespaces } from "./analysis-namespaces.ts"
 import { createSfStaleAnalysisAccess } from "./analysis-stale-commit.ts"
-import { createSfAnalysisRunContext } from "./analysis-run-context.ts"
+import { createSfAnalysisLifecycleContext, createSfAnalysisRunContext } from "./analysis-run-context.ts"
 import type { SfAnalysisStartInput } from "./analysis-http.ts"
 import type { SfProductHtml } from "../../../../modules/sucafina/Sucafinav1/product/integration/host-presentation.ts"
 import { createSfRoutinePublicationContribution } from "./routine-publication.ts"
+import { createSfInstalledRoutinePublication } from "./routine-installed-publication.ts"
 import { createSfRoutineInputReaders } from "./routine-inputs.ts"
 import { createSfRoutineServices } from "./routine-services.ts"
 import { createSfDashboardHttp } from "./dashboard-http.ts"
@@ -242,6 +246,10 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
   const extended = createSfExtendedBusinessServices({ authority, business, persistence: input.persistence, proposalCoverageWrites, analysisSelectionWrites, procurementEvidenceWrites, origin: input.origin,
     reviewReaders: residentReviewReaders.readers })
   const memory = createSfMemoryServices({ authority, business: { ...business, planner: extended.portfolioServices.planner }, signalRegistryWrites })
+  const workDestinations = createSfWorkDestinations({ authority, business, origin: input.origin, mount: input.mount })
+  business.bindWorkBridge({ signals: createSfWorkSignals({ business, memory, origin: input.origin, mount: input.mount,
+    workRefKey: deriveSfWorkRefKey(input.installationId, input.assets?.services.signingKey) }), destination: workDestinations.resolve })
+  const workHttp = createSfWorkHttp({ authority, destinations: workDestinations, origin: input.origin, mount: input.mount })
   const decisionDomain = createSfDecisionDomainServices({ authority, business, baseline: business.baselineCoverage, proposalCoverageWrites, signalRegistryWrites,
     sharedPortfolio: extended.portfolioServices, selectedCase: business.selectedCase, verifiedInputFor: nativeInputs.verifiedInputFor,
     verifiedAlternativeSelectionFor: nativeInputs.verifiedAlternativeSelectionFor,
@@ -267,10 +275,12 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
     if (index < 0) business.descriptors.push(selected)
     else business.descriptors.splice(index, 1, selected)
   }
-  const routinePublication = createSfRoutinePublicationContribution({ identity, authorize: authority.authority.revalidateDomainContext })
+  const installedRoutinePublication = createSfInstalledRoutinePublication({ identity, host: authority.host })
+  const routinePublication = createSfRoutinePublicationContribution({ identity, authorize: authority.authority.revalidateDomainContext,
+    installed: installedRoutinePublication.publication })
   const routineInputs = createSfRoutineInputReaders({ cases: business.cases, context: business.context, resolveCase: business.resolveCase, revalidate: authority.host.revalidate })
   const routineServices = createSfRoutineServices({ authority: authority.authority, publication: routinePublication.publication, resolveCase: business.resolveCase, prepareWatch: memory.prepareWatch, ...routineInputs })
-  // No public C07 native/publication ports are installed; keep unavailable status readers without advertising callable routines.
+  // Publication is installed; governed native C07 admission remains unavailable, so no routine descriptors are advertised.
   const sourcingInputs = createSfSourcingInputs({ authority, business })
   const dashboardHttp = createSfDashboardHttp({ origin: input.origin, mount: input.mount, runtime: () => identity() ? { authority, dashboard: business.dashboardServices, decisions: business.dashboardDecisions } : undefined })
   const procurementDecisionHttp = createProcurementDecisionHttp({ origin: input.origin, mount: input.mount, runtime: () => identity() ? { human: authority.human, decisions: business.procurementDecisions, withCase: business.withCase } : undefined })
@@ -436,8 +446,10 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
       }
       const runState = createSfAlternativeRunState({ state: authority.state, proposalCoverageWrites, nativePublicationGuards, captureCurrent, runRef,
         captures: () => [...alternativeCaptures.get(runRef)?.values() ?? []] })
+      const lifecycle = createSfAnalysisLifecycleContext({ authority, persistence: input.persistence, request, start: captured,
+        proof: { runRef, caseRef: baseRequest.caseRef, contextFingerprint: fingerprint }, active: () => !!identity() })
       const staleAccess = createSfStaleAnalysisAccess({ authority, persistence: input.persistence, context: business.context, request, start: captured,
-        proof: { runRef, caseRef: baseRequest.caseRef, contextFingerprint: fingerprint, evidenceRefs: first.sources.map((source) => source.ref) } })
+        proof: { runRef, caseRef: baseRequest.caseRef, contextFingerprint: fingerprint, evidenceRefs: first.sources.map((source) => source.ref) }, lifecycle })
       const store = staleAccess.wrapStore(createSfRunStore({ state: runState, readCapturedAlternative: nativeInputs.readCapturedAlternative, requestFor: authority.host.requestFor, revalidate: authority.host.revalidate,
         requiredNamespaces: sfAnalysisSourceNamespaces(fullRequest.skillId),
         preflight: async (record, call, output) => {
@@ -465,6 +477,7 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
           return { status: "ok", value: { sourceFence: after.dashboard } }
         },
         revalidateForCommit: async (record, call, snapshot, output, alternative) => {
+          if (lifecycle.owns(call)) return lifecycle.commit(record, call, snapshot, output, alternative)
           if (record.state === "stale") return alternative ? { status: "denied", reason: "alternative-capture-unavailable" }
             : staleAccess.commit(record, call, snapshot, output)
           if (record.state === "cancelled") return staleAccess.commitCancellation(record, call, snapshot)
@@ -487,7 +500,7 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
       const announcement = Promise.withResolvers<PortResult<{ runRef: string }>>()
       const host = state.api
       if (!host || !identity()) return { status: "unavailable", reason: "analysis-host-unavailable" }
-      const execution = createSfNativeExecution({ host, store, withRunContext, intentDigest,
+      const execution = createSfNativeExecution({ host, store, withRunContext, withLifecycleContext: lifecycle.withContext, intentDigest,
         preflight: async (requested, decodedSkill) => {
           if (digestSfValue(requested) !== digestSfValue(fullRequest) || digestSfValue(decodedSkill) !== digestSfValue(verifiedInput)) return { status: "denied", reason: "analysis-input-changed" }
           const admission = await withRunContext(runRef, async (call) => {
@@ -535,7 +548,7 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
         const saved = await store.transition(id, current.value.version, "cancelled", "human-cancelled", call)
         return saved.status === "ok" ? { status: "ok", value: { cancelled: true } } : saved
       } }
-      const analysisHost = createSfAnalysisHost({ store, execution, analysis, routines: routineServices.routines, withRunContext,
+      const analysisHost = createSfAnalysisHost({ store, execution, analysis, routines: routineServices.routines, withRunContext, withLifecycleContext: lifecycle.withContext,
         alternativeForOutput: async (id, resultDigest, call) => {
           const found = await nativeInputs.readAlternativeCapture(id, resultDigest, call)
           return found.status === "ok" ? { status: "ok", value: found.value.record } : found
@@ -556,7 +569,7 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
         }
         else announcement.resolve({ status: "unavailable", reason: "analysis-admission-missing" })
       }).catch(async () => {
-        await withRunContext(runRef, (call) => analysisHost.settle(runRef, "unavailable", "analysis-outcome-unknown", call)).catch(() => undefined)
+        await lifecycle.withContext(runRef, (call) => analysisHost.settle(runRef, "unavailable", "analysis-outcome-unknown", call)).catch(() => undefined)
         announcement.resolve({ status: "unavailable", reason: "analysis-outcome-unknown" })
       }).finally(async () => {
         const marker = await execution.releaseRun(runRef).catch(() => undefined)
@@ -786,7 +799,7 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
   const services: SfHostServices & { productHtml: SfProductHtml } = { ...authority, productView: business.procurementQueueView, productHtml: extended.productHtml,
     procurementSelections: business.procurementSelections, forecastInputs: createSfForecastInputAdapter({ authority, business, selected, inputs: analysisInputs }), sourcingInputs, work: business.collaboration.work,
     analysisInputs, analyses, plannerMonthly, personalViews, documents: documents?.documents, routineRuns: routineServices.routineRuns,
-    productHttp: async (request, surface) => await analysisHttp(request, surface) ?? await decisionDomainHttp(request, surface) ?? await portfolioHttp(request, surface) ?? await baselineServices.productHttp(request, surface) ?? await memoryHttp(request, surface) ?? await extended.productHttp(request, surface) ?? await dashboardHttp(request, surface) ?? await procurementDecisionHttp(request, surface) ?? await collaborationHttp.get(surface)?.(request) ?? await documentHttp(request, surface) ?? await importHttp(request, surface) ?? await dossier?.http(request, surface) ?? await documentScenarioHttp(request, surface),
+    productHttp: async (request, surface) => await analysisHttp(request, surface) ?? await decisionDomainHttp(request, surface) ?? await portfolioHttp(request, surface) ?? await baselineServices.productHttp(request, surface) ?? await memoryHttp(request, surface) ?? await workHttp(request, surface) ?? await extended.productHttp(request, surface) ?? await dashboardHttp(request, surface) ?? await procurementDecisionHttp(request, surface) ?? await collaborationHttp.get(surface)?.(request) ?? await documentHttp(request, surface) ?? await importHttp(request, surface) ?? await dossier?.http(request, surface) ?? await documentScenarioHttp(request, surface),
     selected, dispatch: createSfProductDispatch({ descriptors, authority: authority.authority }), models: async () => state.models ? state.models() : [], sessions: {
     prepare: async (request) => {
       if (!state.api || !identity()) return { status: "unavailable", reason: "native-host-unavailable" }
@@ -800,7 +813,8 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
     interrupt: (binding) => state.api ? Effect.runPromise(state.api.interrupt(binding)) : Promise.resolve({ status: "unavailable", reason: "native-host-unavailable" }),
   } }
   return { identity, services: () => identity() ? services : undefined,
-    contributions: [{ id: "sucafina-host-context", nodes: [node] }, gate.contribution, native.contribution, routinePublication.contribution, product] }
+    contributions: [{ id: "sucafina-host-context", nodes: [node] }, gate.contribution, native.contribution,
+      installedRoutinePublication.contribution, routinePublication.contribution, product] }
 }
 
 function admissionDigest(admission: SfNativeAdmission) {

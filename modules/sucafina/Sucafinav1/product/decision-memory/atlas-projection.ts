@@ -9,20 +9,22 @@ export type SfAtlasSource =
   | { kind: "project"; projection: AuthorizedPolicyProjection }
 
 export function deriveSfMemoryOwner(context: Context, caseRef?: CaseRef) {
+  if (!context || typeof context !== "object") return undefined
   if (!caseRef && context.kind !== "native") return undefined
   const parts = caseRef
     ? [context.installationId, context.projectId, caseRef.id, caseRef.incarnation]
     : [context.installationId, context.projectId, context.kind === "native" ? context.profileId : "", context.policyVersion]
-  if (parts.some((part) => !part.trim())) return undefined
+  if (parts.some((part) => typeof part !== "string" || !part.trim())) return undefined
   return `${caseRef ? "sf-case-v1" : "sf-policy-v1"}:${new Bun.CryptoHasher("sha256").update(JSON.stringify(parts)).digest("hex")}`
 }
 
 export function mapSfAtlasEntry(source: SfAtlasSource): { status: "mapped"; projection: SfAtlasProjection } | { status: "refused"; reason: string } {
   if (source.kind !== "task" && source.kind !== "project") return { status: "refused", reason: "unsupported-memory-kind" }
   const context = source.projection.context
+  if (!context || typeof context !== "object") return { status: "refused", reason: "invalid-scope-or-reference" }
   const owner = deriveSfMemoryOwner(context, source.kind === "task" ? source.projection.case : undefined)
   const ref = source.kind === "task" ? source.bundleRef : source.projection.policyRef
-  if (!owner || !context.principalRef.trim() || !context.accessRevision.trim() || !context.policyVersion.trim() || ref.schema !== "sf-evidence-v1" || ref.installationId !== context.installationId || ref.projectId !== context.projectId || !ref.refId.trim() || !/^[a-f0-9]{64}$/i.test(ref.refDigest)) return { status: "refused", reason: "invalid-scope-or-reference" }
+  if (!owner || typeof context.principalRef !== "string" || !context.principalRef.trim() || typeof context.accessRevision !== "string" || !context.accessRevision.trim() || typeof context.policyVersion !== "string" || !context.policyVersion.trim() || ref.schema !== "sf-evidence-v1" || ref.installationId !== context.installationId || ref.projectId !== context.projectId || typeof ref.refId !== "string" || !ref.refId.trim() || !/^[a-f0-9]{64}$/i.test(ref.refDigest)) return { status: "refused", reason: "invalid-scope-or-reference" }
   if (source.kind === "task") {
     const projection = source.projection
     try { sfEvidenceSourceMaps([ref, ...projection.evidenceRefs]) } catch { return { status: "refused", reason: "invalid-evidence-digest" } }
@@ -45,7 +47,7 @@ export function mapSfAtlasEntry(source: SfAtlasSource): { status: "mapped"; proj
   const policy = source.projection
   try { sfEvidenceSourceMaps([ref, ...policy.dependencies]) } catch { return { status: "refused", reason: "invalid-evidence-digest" } }
   if (![ref, ...policy.dependencies].every((evidence) => evidenceScopeMatches(evidence, context))) return { status: "refused", reason: "invalid-evidence-scope" }
-  if (ref.kind !== "policy" || !ref.target.reviewRef.trim() || ref.target.version !== context.policyVersion || ref.target.scope !== policy.scope || ref.target.sourceDigest !== policy.sourceDigest || !/^[a-f0-9]{64}$/i.test(policy.sourceDigest) || policy.ruleDigest !== digestSfValue(policy.rule) || !policy.reviewedBy.trim() || !policy.reviewedAt.trim() || !Number.isFinite(Date.parse(policy.reviewedAt)) || !policy.rule.trim() || !policy.scope.trim() || !policy.sourceEventId.trim() || !Number.isSafeInteger(policy.validCitationCount) || policy.validCitationCount < 0) return { status: "refused", reason: "policy-not-reviewed" }
+  if (ref.kind !== "policy" || typeof ref.target.reviewRef !== "string" || !ref.target.reviewRef.trim() || ref.target.version !== context.policyVersion || ref.target.scope !== policy.scope || ref.target.sourceDigest !== policy.sourceDigest || !/^[a-f0-9]{64}$/i.test(policy.sourceDigest) || typeof policy.rule !== "string" || !policy.rule.trim() || policy.ruleDigest !== digestSfValue(policy.rule) || typeof policy.reviewedBy !== "string" || !policy.reviewedBy.trim() || typeof policy.reviewedAt !== "string" || !policy.reviewedAt.trim() || !Number.isFinite(Date.parse(policy.reviewedAt)) || typeof policy.scope !== "string" || !policy.scope.trim() || typeof policy.sourceEventId !== "string" || !policy.sourceEventId.trim() || !Number.isSafeInteger(policy.validCitationCount) || policy.validCitationCount < 0) return { status: "refused", reason: "policy-not-reviewed" }
   if (policy.dependencies.some((dependency) => dependency.schema !== "sf-evidence-v1" || dependency.installationId !== context.installationId || dependency.projectId !== context.projectId || !dependency.refId.trim() || !/^[a-f0-9]{64}$/i.test(dependency.refDigest))) return { status: "refused", reason: "invalid-policy-dependency" }
   const entry = { rule: policy.rule, scope: policy.scope, frecency: policy.validCitationCount, grounding: `sf-evidence:v1:${ref.refId}:${ref.refDigest}` }
   if (!validate("project", entry).valid || memoryKindOf(entry) !== "project") return { status: "refused", reason: "invalid-template" }

@@ -4,12 +4,13 @@ import type { Location } from "@orchestra/core/location"
 import { RelayWorkflowBinding } from "@orchestra/core/relay-workflow-binding"
 import { AuthoringGraph } from "@orchestra/relay/authoring/graph"
 import { Effect, Layer } from "effect"
+import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import type { RoutinePublicationHost } from "../../../../modules/sucafina/Sucafinav1/product/routines/publication.ts"
 
 type Placement = Readonly<{ projectId: string; location: Location.Ref }>
 
-/** The native owner supplies its public publication port. No private Maestro module is imported. */
+/** Keeps an installed public publication port inside the current product host lifetime. */
 export function createSfRoutinePublicationContribution(input: {
   identity: () => Placement | undefined
   authorize: (context: TrustedDomainContext) => Promise<boolean>
@@ -37,10 +38,12 @@ export function createSfRoutinePublicationContribution(input: {
     const epoch = state.epoch
     if (!placement || !provider || !epoch || provider.publication.projectID !== placement.projectId) return undefined
     if (state.cached?.placement === placement && state.cached.provider === provider) return state.cached.host
-    const current = () => state.epoch === epoch && input.identity() === placement && input.installed?.() === provider
+    const placementDigest = digestSfValue(placement), port = provider.publication
+    const current = () => state.epoch === epoch && input.identity() === placement && input.installed?.() === provider &&
+      provider.publication === port && port.projectID === placement.projectId && digestSfValue(placement) === placementDigest
     const within = <A, E>(read: (port: RelayWorkflowBinding.PublicationPort) => Effect.Effect<A, E>) => Effect.gen(function* () {
       if (!current()) return yield* new RelayWorkflowBinding.Held({ reason: "SF_ROUTINE_PUBLICATION_UNAVAILABLE" })
-      const value = yield* read(provider.publication)
+      const value = yield* read(port)
       if (!current()) return yield* new RelayWorkflowBinding.Held({ reason: "SF_ROUTINE_PUBLICATION_REPLACED" })
       return value
     })

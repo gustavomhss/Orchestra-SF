@@ -1,10 +1,13 @@
 import { decodeSfOperationInput } from "../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
+import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
 import { encodeCaseRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
 import type { createDecisionMutations } from "../../../../modules/sucafina/Sucafinav1/product/decisions/mutations.ts"
 import type { createPortfolioProduct } from "../../../../modules/sucafina/Sucafinav1/product/portfolio/product.ts"
 import type { createSfProductAuthority } from "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
 import type { createSfBusinessServices } from "./business-services.ts"
+import { createSfPortfolioReconciliationHttp, validSfPortfolioReconciliationRequest } from "./portfolio-reconciliation-http.ts"
+import type { createSfPortfolioReconciliationServices } from "./portfolio-reconciliation-services.ts"
 
 type CaseRef = { id: string; incarnation: string; version: number }
 type Mutations = ReturnType<typeof createDecisionMutations>
@@ -14,6 +17,7 @@ const actions = { "decision-choose": "decisions.choose", "decision-add-question"
   "decision-promote-portfolio": "decisions.promote-portfolio", "decision-prepare-portfolio": "decisions.prepare-portfolio",
   "decision-review": "decisions.portfolio.read", "decision-portfolio-results": "decisions.portfolio.read", "decision-portfolio-read": "decisions.portfolio.read",
   "decision-portfolio-preview": "decisions.portfolio.read", "decision-portfolio-evaluate": "decisions.portfolio.evaluate",
+  "decision-portfolio-reconcile": "decisions.portfolio.read",
   "decision-sensitivity-units": "decisions.portfolio.read", "decision-sensitivity-read": "decisions.portfolio.read", "decision-sensitivity-evaluate": "decisions.sensitivity.evaluate" } as const
 type Mode = keyof typeof actions
 
@@ -25,8 +29,12 @@ export function createSfPortfolioHttp(input: {
   business: ReturnType<typeof createSfBusinessServices>
   product?: Portfolio
   mutations: Mutations
+  reconciliation?: ReturnType<typeof createSfPortfolioReconciliationServices>
 }) {
+  const reconciliation = createSfPortfolioReconciliationHttp(input)
   return async (request: Request, surface: string): Promise<Response | undefined> => {
+    const page = await reconciliation(request, surface)
+    if (page) return page
     const url = new URL(request.url)
     const selected = url.searchParams.get("sf")
     if (!selected || !Object.hasOwn(actions, selected)) return undefined
@@ -41,6 +49,7 @@ export function createSfPortfolioHttp(input: {
     if (admitted.status !== "ok") return reply(admitted)
     try {
       const call = admitted.value
+      const binding = digestSfValue([call.kind, call.binding]), transport = digestSfValue({ method: request.method, url: request.url, headers: [...request.headers.entries()] })
       const allowHistoricalRetry = ["decision-promote", "decision-choose", "decision-add-question", "decision-answer-question", "decision-prepare-changes", "decision-promote-portfolio", "decision-prepare-portfolio"].includes(mode)
       const result = await input.business.withCase<unknown>(call, payload.caseRef, { allowHistoricalRetry }, async () => {
         if (mode === "decision-choose") return input.mutations.recordChoice(payload as Parameters<Mutations["recordChoice"]>[0], call)
@@ -51,6 +60,7 @@ export function createSfPortfolioHttp(input: {
         if (mode === "decision-review") return input.business.procurementDecisions.reviewChange(payload as Parameters<typeof input.business.procurementDecisions.reviewChange>[0], call)
         const product = input.product
         if (!product) return { status: "unavailable", reason: "portfolio-planner-stored-scenarios-unavailable" }
+        if (mode === "decision-portfolio-reconcile") return product.http.reconcile(payload as Parameters<Portfolio["http"]["reconcile"]>[0], call)
         if (mode === "decision-promote-portfolio") return product.http.promote(payload as Parameters<Portfolio["http"]["promote"]>[0], call)
         if (mode === "decision-prepare-portfolio") return product.http.prepare(payload as Parameters<Portfolio["http"]["prepare"]>[0], call)
         if (mode === "decision-portfolio-results") return product.http.list(payload.caseRef, call)
@@ -62,6 +72,9 @@ export function createSfPortfolioHttp(input: {
         return product.http.evaluate(payload.request as Parameters<Portfolio["http"]["evaluate"]>[0], payload.caseRef, call)
       })
       if (!await input.authority.host.revalidate(call)) return reply({ status: "denied", reason: "decision-authority-changed" })
+      if (mode === "decision-portfolio-reconcile" && (input.authority.host.requestFor(call) !== request || request.signal.aborted ||
+        binding !== digestSfValue([call.kind, call.binding]) || transport !== digestSfValue({ method: request.method, url: request.url, headers: [...request.headers.entries()] })))
+        return reply({ status: "denied", reason: "portfolio-reconciliation-authority-changed" })
       return reply(result)
     } catch { return reply({ status: "unavailable", reason: mode === "decision-review" ? "procurement-prepared-review-producer-unavailable" : "decision-request-unavailable" }) }
     finally { input.authority.human.finish(admitted.value) }
@@ -70,6 +83,7 @@ export function createSfPortfolioHttp(input: {
 
 function valid(mode: Mode, value: unknown): value is Record<string, unknown> & { caseRef: CaseRef } {
   if (!record(value) || !caseRef(value.caseRef)) return false
+  if (mode === "decision-portfolio-reconcile") return validSfPortfolioReconciliationRequest(value)
   if (mode === "decision-choose") return closed(value, ["caseRef", "alternativeId", "alternativeVersion", "comparison", "criteria", "reason"]) && text(value.alternativeId) && integer(value.alternativeVersion) && text(value.reason) && strings(value.criteria) && decodeSfOperationInput("sf_scenario_compare", value.comparison).ok
   if (mode === "decision-add-question") return closed(value, ["caseRef", "questionRef"]) && text(value.questionRef)
   if (mode === "decision-answer-question") return closed(value, ["caseRef", "questionId", "answerRef"]) && text(value.questionId) && text(value.answerRef)

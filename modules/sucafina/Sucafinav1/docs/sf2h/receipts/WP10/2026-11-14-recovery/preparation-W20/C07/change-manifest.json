@@ -1,0 +1,74 @@
+{
+  "baseCommit": "d357de0b1f58abc33e86e79ad3f93b8715ba0e83",
+  "baseTree": "20d4e76e42a8b74daced57d64ad285f5dfef17a2",
+  "status": "implemented; static-inspection-only; hosted-verification-pending",
+  "paths": [
+    {
+      "path": "apps/cli/src/sucafina-product/routine-installed-publication.ts",
+      "owner": "WP10",
+      "reason": "Install the read-only provider using authenticated public Location/Relay/SkillV2/SessionStore APIs",
+      "base": null,
+      "result": {
+        "blobSha": "6405d4a2e4aa41a3bb8fb8da40641093d3eee7ff",
+        "sha256": "b63a0e28e855f9ec387d246a46e24e32e9b3e4734963829d3227b6f3e3dee49a",
+        "bytes": 10689
+      },
+      "localPath": "/workspace/scratch/301a7f2754f4/repo/apps/cli/src/sucafina-product/routine-installed-publication.ts",
+      "frozenLocalPath": "/workspace/scratch/301a7f2754f4/agents/ci/C07-installed/package/apps/cli/src/sucafina-product/routine-installed-publication.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-publication.ts",
+      "owner": "WP10",
+      "reason": "Fence placement bytes and the installed publication-port identity",
+      "base": {
+        "blobSha": "3bc63f611beb36d535fd3ccedd9c5ae846ee4ca5",
+        "sha256": "9de5ec3d5f6bee3815c5347662f47985c94ed333db7a24160eb775d6dc760479",
+        "bytes": 4072
+      },
+      "result": {
+        "blobSha": "21e22bb8bb4813711e8b1f7851c0d10369200426",
+        "sha256": "d6a6036c0da025a22f5ccf84f0b55e6328cac8e15aa57750d79ea3de7a02ee1c",
+        "bytes": 4361
+      },
+      "localPath": "/workspace/scratch/301a7f2754f4/repo/apps/cli/src/sucafina-product/routine-publication.ts",
+      "frozenLocalPath": "/workspace/scratch/301a7f2754f4/agents/ci/C07-installed/package/apps/cli/src/sucafina-product/routine-publication.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "owner": "WP10",
+      "reason": "Install the publication contribution without native admission or routine descriptors",
+      "base": {
+        "blobSha": "7636572e7aec9035e8c4cd06e999d59bf6fe14ea",
+        "sha256": "7e21eff7395cf7f44dea8f05d855202884ae8be72d59019485f7ff57b9734a37",
+        "bytes": 72696
+      },
+      "result": {
+        "blobSha": "bf3f4b07606a86e9d182d7a7f907dbd1ce5fce9f",
+        "sha256": "e5ced56ebfd7719aceb50aeea0fa670894df20ce0839955f8f41ceb4a48d80ef",
+        "bytes": 72993
+      },
+      "localPath": "/workspace/scratch/301a7f2754f4/repo/apps/cli/src/sucafina-product/host-context.ts",
+      "frozenLocalPath": "/workspace/scratch/301a7f2754f4/agents/ci/C07-installed/package/apps/cli/src/sucafina-product/host-context.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts",
+      "owner": "WP10",
+      "reason": "Five real-store/Location/catalog/session counterproofs; no native C07 acceptance",
+      "base": null,
+      "result": {
+        "blobSha": "d858733f8212bb4ddb60e0dd93171bde0bded4b7",
+        "sha256": "2decbbc7ce1c447936fffa58327f82d1cfcf8aade8bda7871e11d63f1c2720ea",
+        "bytes": 22545
+      },
+      "localPath": "/workspace/scratch/301a7f2754f4/repo/modules/sucafina/Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts",
+      "frozenLocalPath": "/workspace/scratch/301a7f2754f4/agents/ci/C07-installed/package/modules/sucafina/Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts"
+    }
+  ],
+  "foreignPathsChanged": [],
+  "newNativePort": false,
+  "newRoutineDescriptors": false,
+  "productExecutedLocally": false,
+  "remoteMutations": false,
+  "existingTestsOrAssertionsRemoved": false,
+  "existingBudgetsIncreased": false
+}

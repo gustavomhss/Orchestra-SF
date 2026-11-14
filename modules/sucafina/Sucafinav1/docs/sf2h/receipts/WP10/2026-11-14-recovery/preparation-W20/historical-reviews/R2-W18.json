@@ -1,0 +1,325 @@
+{
+  "schema": "wp10-independent-review-v1",
+  "reviewer": "R2",
+  "agent": "/root/independent_r2_w16",
+  "candidateSha": "8b1cc71d8ab2484055a0d055c8487d4579476b9b",
+  "candidateTree": "6bace347fcd4deec2018185aff7ec152d79eaec5",
+  "parentSha": "2ec17b2c8204d5e953eec3186b7e236c0faaad47",
+  "pr": 29,
+  "base": "sf2-stack",
+  "verdict": "HOLD",
+  "finalForCandidate": true,
+  "observedAt": "2026-11-14 11:53:51 UTC",
+  "independence": {
+    "productAuthorship": false,
+    "productEdits": false,
+    "localProductExecution": false,
+    "remoteMutation": false,
+    "builderClaimsUsedAsAcceptance": false,
+    "independentRemoteReads": true,
+    "reviewArtifactsOnly": true,
+    "priorReviewsPreserved": true,
+    "scope": "Independent R2 delta review of W18 plus retained consumer/security boundaries. This is one independent review, not the three-review gate."
+  },
+  "summary": "W18 source fixes are materially consistent with the BI no-op, Review preflight and C12 composition goals, but hosted check fails with 14 foreign diagnostics. A is not terminal at this review. The new Review proof-reuse path is disabled by the actual resident host reader configuration, so its fixture proof cannot be credited to that configuration without additional hosted evidence. Native/global acceptance remains unexecuted.",
+  "closedFindings": [
+    {
+      "id": "R2-W16-BI-QUERY-01",
+      "status": "RESOLVED_IN_PUBLISHED_SOURCE",
+      "resolution": "The bi-source closed query allowlist and bootstrap intent both bind referenceDigest. Actual producer origins and final source/case authorization remain in the path.",
+      "retainedInCandidate": "8b1cc71d8ab2484055a0d055c8487d4579476b9b",
+      "blob": "176b75cb6f5079c202da2b1a989f46702d3413e5",
+      "functionalClosure": "Pending exact W18 A terminal; no older-run proof transferred."
+    }
+  ],
+  "findings": [
+    {
+      "id": "R2-W18-COMPOSITION-01",
+      "severity": "P1",
+      "mandatory": true,
+      "status": "OPEN",
+      "title": "Published Planner evidence consumer lacks its composed export dependency",
+      "origin": "Known root-reported blocker, independently corroborated by R2 source and hosted check.",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/planner/evidence-reader.ts",
+        "modules/sucafina/Sucafinav1/product/integration/planner-sources.ts"
+      ],
+      "evidence": "evidence-reader.ts imports sfPlannerEvidenceRef at line 8; the composed planner-sources.ts does not export it. Hosted check run 43591239877/job 132436212526 reports TS2305. This is a concrete missing composition dependency in W18, regardless of foreign ownership.",
+      "impact": "The W18 exact product does not pass the required Sucafina typecheck; the admitted consumer cannot be accepted as composed.",
+      "remediation": "Consume the required exact published producer dependency on the own candidate branch, record the pin and any dependent deltas, then rerun affected hosted checks on the successor candidate. Do not edit the foreign owner branch or weaken the consumer.",
+      "notRetestedInW18": true
+    }
+  ],
+  "observations": [
+    {
+      "id": "R2-W18-REVIEW-HOST-OBS-01",
+      "status": "EVIDENCE_GAP",
+      "mandatoryCodeDefect": false,
+      "title": "Review fixture and resident host select different proof paths",
+      "evidence": [
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "lines": "260-264",
+          "blob": "834b3c967d73411771e1f5aa82b683c6427e6769",
+          "fact": "The resident composition always supplies contributions and outcome readers."
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/review-services.ts",
+          "lines": "99-100",
+          "blob": "c07d55c714b4c85ee41abb4d287ce5861500086d",
+          "fact": "Any defined reader sets localSnapshotReaders=false."
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/review-read-integrity.ts",
+          "lines": "89-92",
+          "blob": "2a04d86546c1c5361ec523a5f7c7189b5a8d2d65",
+          "fact": "That setting selects legacyRead instead of the invocation-scoped snapshot proof."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+          "lines": "140,234-280",
+          "fact": "The new positive/negative proof-reuse fixture instantiates the service without readers."
+        }
+      ],
+      "conclusion": "The fixture does not establish the new reuse behavior in the resident host. The preflight still runs through legacyRead, and readScopedSource commits only on change, so static inspection does not prove an inevitable nested-write failure. Do not mislabel this as a demonstrated runtime defect.",
+      "requiredEvidence": "Hosted positive review-source plus revocation/changed-body/final-egress counterproofs with the effective host reader configuration. Preserve external reader authorization; do not indiscriminately enable snapshot reuse."
+    }
+  ],
+  "verifiedStatic": [
+    {
+      "area": "BI no-op promotion",
+      "facts": [
+        "Published mutations allocate the actual alternative identity before simulateScenario. Default own composition records that identity through createMutationId and runPromotion.",
+        "prepareNoop admits only the exact empty operations/assumptions scenario, actual incoming intent, call, Request and binding; it computes coverage evidence against the attributed actual identity before C08.",
+        "Existing reassessed path is preserved. VerifySnapshot retains actual C08 case/prefs, all-domain source fences, baseline, result and intent checks. Invocation cleanup removes proofs.",
+        "New assertions keep HTTP200, empty-scenario and actual alternative identity/version checks; they do not accept 409 as success."
+      ]
+    },
+    {
+      "area": "Review",
+      "facts": [
+        "Preflight is outside the final grouped C08 read; the final association requires every preserved/current/predecessor body digest to remain unchanged.",
+        "When eligible, proof reuse is confined to one open AsyncLocalStorage invocation, exact Request, trusted call/binding, and full all-domain snapshots plus actor/principals/day/body/receipt identity.",
+        "Results are cloned; changed membership or unversioned bytes invalidate the fence. New invocation/same Request and replacement Request negative cases are in source.",
+        "Comments, external/native outcomes, non-record evidence and sensitivity retain the full producer route. No global TTL cache was introduced."
+      ]
+    },
+    {
+      "area": "C12 exact producer and own egress",
+      "facts": [
+        "PR35 apply/application-attempt bytes match their published source. A durable attempt keyed to case incarnation/change precedes dispatch; a retry without authoritative receipt is indeterminate, not permission to redispatch.",
+        "The producer rereads canonical receipt and current case, preserves unrelated newer case edits, enforces exact selected change/receipt proof and receipt retention, and reconciles ordered case receipt state.",
+        "Own Dashboard and Procurement wrappers bind exact live Request, trusted binding and full human apply intent before/after producer execution, and reauthorize the lease at final egress.",
+        "The own Dashboard test ends only the real human lease at the final receipt-retention read, requires denied egress, then requires normal retry without repeated effect. The producer tests cover lost result/revocation/receipt removal/replacement/collision/restart; their hosted outcomes are not yet claimed."
+      ]
+    },
+    {
+      "area": "Dashboard draft",
+      "facts": [
+        "Snapshot validation now reads the actual Dashboard snapshot from the same C08 all-domain scope and requires complete callback bytes to match the allowed callback domain.",
+        "The test retains successful draft registration and checks Planner remains byte-identical."
+      ]
+    },
+    {
+      "area": "Consumers and boundaries",
+      "facts": [
+        "UI HTTP source selection still binds referenceDigest to actual producer origins and reopens authorization before link release.",
+        "The W18 delta does not replace native/MCP registries, resident host-context, driver-pool or cancellation implementation. Their previous static analysis remains historical; no new runtime/native proof follows from unchanged bytes.",
+        "C17 published history composition is present with exact pins; R1 owns focused re-review of the previous C17 finding. R2 does not close R1's finding by attribution."
+      ]
+    }
+  ],
+  "inventory": {
+    "hydratedFiles": 1142,
+    "matchedHydratedFiles": 1142,
+    "fullTreeBlobs": 16120,
+    "deltaPaths": 47,
+    "ownPaths": 41,
+    "publishedForeignDeltaPaths": 6,
+    "effectivePins": 401,
+    "remoteBlobReads": 18,
+    "remoteBlobMismatches": 0,
+    "ownershipViolations": 0,
+    "deletions": 0,
+    "priorWp10ReceiptsPreserved": 100,
+    "archivedR2W17ByteExact": true,
+    "criteria": 171,
+    "tasks": 7,
+    "literalCriteriaPreserved": true,
+    "criterionMapSha256": "95fc2fe3cdbebffa5aefe990991fb495c7d4f6c194395c27e01b7d8e2208a8e1",
+    "archiveIndexBaseline": "W17 independently compared original handoff previous index: 128 foreign copies and 131 recorded readonly inputs; W18 delta does not modify it. Individual historical blobs were not all re-fetched.",
+    "manifestInterpretation": "41 ownership paths include exact published WP10 composition inputs and own overlays. intake-pins intermediate business-services output is superseded explicitly by root-composition.json final blob 97cde4dce2858f47b57b446c9c20bad77d367591."
+  },
+  "foreignAdmission": {
+    "exactRemoteVerified": [
+      {
+        "pr": 32,
+        "commit": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+        "files": 6
+      },
+      {
+        "pr": 34,
+        "commit": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "files": 2
+      },
+      {
+        "pr": 35,
+        "commit": "92f6d97d2df5ebf53cd845f4cfe93355d10b0f6f",
+        "files": 4
+      }
+    ],
+    "excluded": "The latest PR35 mutations/scenario-port/scenario-comparison-port/stored-scenarios were preserved as inspected inputs and excluded from the BI409 composition. The retained foreign mutator's unchanged no-op branch is handled by own proof preparation; it was not spliced.",
+    "limits": "The six newly foreign-classified files and six exact PR32 composition inputs were remotely checked. The three own overlay upstream source blobs and all 401 historical pins were not re-fetched; candidate hashes/pin identities were checked against the complete tree."
+  },
+  "ci": {
+    "check": {
+      "runId": 43591239877,
+      "jobId": 132436212526,
+      "snapshotSha": "6d72852aa48f864338caa93204ae894ec1e978fe",
+      "conclusion": "failure",
+      "productEnvelopeDiff": [
+        {
+          "path": ".astra-wp10-check.json",
+          "status": "added",
+          "sha": "0e8e26faaccbee788afbefb2b9c000c24a054a20"
+        }
+      ],
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Checkout check envelope",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Validate exact product and envelope",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Checkout exact product",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Record product and guard base",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Setup Bun",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Typecheck Sucafina",
+          "status": "completed",
+          "conclusion": "failure"
+        },
+        {
+          "name": "Typecheck CLI consumers",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Typecheck WP10 test consumers",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify canonical Atlas generation",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Typecheck Atlas boundary",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Guard subprocess imports",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Guard product against origin/dev",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Upload exact-check evidence",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Setup Bun",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Checkout exact product",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Checkout check envelope",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ],
+      "artifactId": 14112034219,
+      "artifactSha256": "08329a4279831996b48cd01911e58a5caf164185103a2acf8268d33640ec063d",
+      "artifactFiles": 11,
+      "artifactAndExtractedFilesVerified": true,
+      "diagnostics": {
+        "total": 14,
+        "own": 0,
+        "foreign": 14
+      },
+      "artifactDetails": "intake-audit-W18.json"
+    },
+    "A": {
+      "runId": 43591262845,
+      "snapshotSha": "f84d2f41bb5755d350d524053c391fc8338e7bdd",
+      "lastIndependentlyObservedStatus": "in_progress",
+      "lastIndependentlyObservedConclusion": null,
+      "noPassClaimed": true
+    },
+    "otherLanes": {
+      "B": "not dispatched at parent status update",
+      "C": "not dispatched at parent status update",
+      "D": "not dispatched at parent status update"
+    }
+  },
+  "unresolvedGates": [
+    "Exact W18 check failure: 14 foreign diagnostics, including sfPlannerEvidenceRef and analysisHistory missing exports plus foreign fixture contract mismatches.",
+    "W18 A terminal and affected B/C/D evidence remain pending at this review; successor evidence must identify its own W/S/tree/run IDs.",
+    "Effective resident Review reader configuration requires hosted positive and counterproof coverage before this correction is credited to the resident host.",
+    "Strict Freeze9 remains 37/38: apps/cli/src/sucafina-product/host-context.ts expected SHA256 4c654665a12aa02a6d5a851cdbe662f6f0fabdacf21e4b600f598e499a3a1922, actual 6a608e24847fe730b645d5f51f86e47d83e803875162820038e0c05d18f96772; manifest/test were preserved.",
+    "C07 governed native execution and global epic remain NOT_RUN/BLOCKED; no fabricated native/global acceptance.",
+    "Three independent reviewer closure and S0 integration remain required; this report gives no merge/deploy approval."
+  ],
+  "artifacts": [
+    "review-W18.md",
+    "source-inventory-W18.json",
+    "intake-audit-W18.json",
+    "remote-observation-W18.json",
+    "observed-ci-W18.json"
+  ],
+  "limitations": [
+    "Static review of a partial hydrated snapshot matched to a complete published-tree inventory; absence from snapshot was never treated as deletion.",
+    "No local product/test/build/typecheck/browser execution.",
+    "No product code edits, commits, remote mutations or publication by R2.",
+    "No transfer of W16/W17 CI acceptance to W18; no self-review substituted for independent review.",
+    "This verdict applies only to W18, not any subsequently prepared W19."
+  ]
+}

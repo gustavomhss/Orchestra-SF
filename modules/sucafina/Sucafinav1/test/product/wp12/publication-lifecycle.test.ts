@@ -19,7 +19,7 @@ import { sfCaseFixture, sfRunFixture } from "./run-fixture.ts"
 
 // Real publisher, run store, C08 and SQLite. The injected authority and collection
 // boundary do not claim a native provider, capability call, or financial calculation.
-async function fixture(options?: { alternative?: boolean }) {
+async function fixture(options?: { alternative?: boolean; closeStrictOnStale?: boolean }) {
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-publication-lifecycle-"))
   const persistence = await openLocalStore(directory)
   const request = new Request("https://example.test/publication")
@@ -46,23 +46,26 @@ async function fixture(options?: { alternative?: boolean }) {
   const hooks: {
     beforeWrite?: () => Promise<void>
     beforeStateTransaction?: () => Promise<void>
+    beforeLifecycle?: () => Promise<void>
     afterReadyCommit?: () => Promise<void>
+    verify?: () => Promise<void>
     collect?: (context: TrustedDomainContext) => Promise<PortResult<ContributionEnvelope>>
     denyStaleCommit?: boolean
     publicationOutcome?: { status: "unavailable" | "needs-input" | "denied" | "conflict"; reason: string }
     outcomeAfterCommit?: boolean
   } = {}
-  const observations = { readyObservedBeforeChange: false, captureReads: 0 }
+  const observations = { readyObservedBeforeChange: false, captureReads: 0, lifecycleCalls: 0, strictRefusals: 0, staleCommitHadOutput: [] as boolean[] }
   const rawState = createSfProductState({ persistence, createId: () => "store", resolveTarget: async () => ({ incarnation: "inc" }), authorize: async () => access.allowed ? authority : undefined })
   const state: SfProductStatePort = { ...rawState, transaction: async (incoming, command, work) => {
     const before = hooks.beforeStateTransaction
     if (before) { delete hooks.beforeStateTransaction; await before() }
     return rawState.transaction(incoming, command, work)
   } }
+  let sourceCurrent = true
   const changeSource = () => persistence.transaction("dashboard", async (snapshot) => {
     snapshot.data.wp12SourceRevision = Number(snapshot.data.wp12SourceRevision ?? 0) + 1
     return { commit: true, value: true }
-  }).then(() => undefined)
+  }).then(() => { sourceCurrent = false })
   const stored = () => persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: structuredClone(snapshot.data.__sfProductV1) as SfProductState }))
   const store = createSfRunStore({ state, requestFor: () => request, revalidate: async () => access.allowed,
     preflight: async (record) => {
@@ -80,8 +83,9 @@ async function fixture(options?: { alternative?: boolean }) {
         ? { status: "ok" as const, value: { sourceFence: sfRunSourceFence(snapshot) } }
         : { status: "stale" as const, reason: "source-changed" } }))
     },
-    revalidateForCommit: async (record, _context, snapshot) => {
+    revalidateForCommit: async (record, _context, snapshot, output) => {
       if (!access.allowed) return { status: "denied", reason: "access-revoked" }
+      if (record.state === "stale") observations.staleCommitHadOutput.push(output !== undefined)
       if (record.state === "stale" && hooks.denyStaleCommit) return { status: "denied", reason: "historical-source-access-unavailable" }
       if (record.state === "stale" || record.state === "cancelled") return { status: "ok", value: true }
       return Number(snapshot.data.wp12SourceRevision ?? 0) === 0 ? { status: "ok", value: true } : { status: "stale", reason: "source-changed" }
@@ -94,14 +98,28 @@ async function fixture(options?: { alternative?: boolean }) {
   expect((await store.create({ ...base, state: "preparing", version: 1 }, context)).status).toBe("ok")
   expect((await store.attach("run", 1, "session", material.receipt, context)).status).toBe("ok")
   expect((await store.transition("run", 2, "running", undefined, context)).status).toBe("ok")
-  const hostBase = createSfAnalysisHost({ store,
-    withRunContext: async (runRef, action) => {
+  const withCurrentContext: SfAnalysisHost["withRunContext"] = async (runRef, action) => {
       if (!access.allowed || runRef !== "run") return { status: "denied", reason: "access-revoked" }
       const current = { kind: "ui", binding: { ...authority } } as unknown as TrustedDomainContext
       scopes.push(current)
       return action(current)
+  }
+  const withLifecycleContext: SfAnalysisHost["withRunContext"] = async (runRef, action) => {
+    observations.lifecycleCalls++
+    const before = hooks.beforeLifecycle
+    if (before) { delete hooks.beforeLifecycle; await before() }
+    return withCurrentContext(runRef, action)
+  }
+  const hostBase = createSfAnalysisHost({ store,
+    withRunContext: async (runRef, action) => {
+      if (options?.closeStrictOnStale && !sourceCurrent) { observations.strictRefusals++; return { status: "denied", reason: "old-source-context-unavailable" } }
+      return withCurrentContext(runRef, action)
     },
-    verify: async () => access.allowed ? { status: "ok", value: true } : { status: "denied", reason: "access-revoked" },
+    ...(options?.closeStrictOnStale ? { withLifecycleContext } : {}),
+    verify: async () => {
+      await hooks.verify?.()
+      return access.allowed ? { status: "ok", value: true } : { status: "denied", reason: "access-revoked" }
+    },
     alternativeForOutput: async () => { observations.captureReads++; return { status: "unavailable", reason: "alternative-capture-unavailable" } },
     analysis: { create: async () => ({ status: "unavailable", reason: "not-used" }), read: async () => ({ status: "unavailable", reason: "not-used" }), cancel: async () => ({ status: "unavailable", reason: "not-used" }) },
     routines: {} as SfAnalysisHost["routines"],
@@ -124,9 +142,78 @@ async function fixture(options?: { alternative?: boolean }) {
     skillId: material.receipt.skillId, skillVersion: material.receipt.skillVersion, manifestDigest: material.receipt.manifestDigest,
     outputSchemaVersion: "sf-contribution-v1", requestedOperationScope: [], objective: "Recall", contextFingerprint: "context" },
     skillInput: { currentCase: material.caseRef, recallScope: { cases: [], period: { start: "2027-01-01", end: "2027-12-31" }, includeHistorical: true }, query: "current case" } })
-  return { material, access, hooks, observations, scopes, state, rawState, store, context, request, changeSource, stored, publish, run,
+  return { material, access, hooks, observations, scopes, state, rawState, store, host, context, request, changeSource, stored, publish, run,
     [Symbol.asyncDispose]: async () => { await persistence.dispose(); await rm(directory, { recursive: true, force: true }) } }
 }
+
+test("publication refuses a resealed command changed by verification without altering real C08 state", async () => {
+  for (const mutation of ["envelope", "receipt", "cycle"] as const) {
+    await using f = await fixture()
+    const before = await f.stored()
+    let verifications = 0
+    f.hooks.verify = async () => {
+      verifications++
+      if (mutation === "cycle") Object.assign(f.material.output, { evidenceRefs: [f.material.output] })
+      else {
+        if (mutation === "envelope") f.material.output.createdAt = "2026-11-14T00:00:00Z"
+        else {
+          f.material.receipt.loadedMessageId = "unobserved-message"
+          f.material.output.runProvenance.loadedMessageId = "unobserved-message"
+        }
+        f.material.output.outputDigest = digestSfContribution(f.material.output)
+      }
+    }
+    expect(await f.publish()).toEqual({ status: "denied", reason: "contribution-input-changed-during-authorization" })
+    expect(verifications).toBe(1)
+    const after = await f.stored()
+    expect(digestSfValue(after)).toBe(digestSfValue(before))
+    expect(after.nativeRuns?.run?.state).toBe("running")
+    expect(after.contributions.output).toBeUndefined()
+    expect(f.observations.staleCommitHadOutput).toEqual([])
+  }
+})
+
+test("a command resealed after a stale authorization or write still settles only the original metadata through real C08", async () => {
+  for (const phase of ["authorization-return", "prewrite-return", "postcommit-return"] as const) {
+    const committed = phase === "postcommit-return"
+    await using f = await fixture({ closeStrictOnStale: true })
+    const original = structuredClone(f.material.output)
+    const before = await f.stored()
+    const originalNative = before.nativeRuns?.run?.native
+    if (!originalNative) throw new Error("Fixture did not persist its explicit native metadata")
+    if (committed) f.hooks.afterReadyCommit = f.changeSource
+    else if (phase === "prewrite-return") f.hooks.beforeWrite = f.changeSource
+    let mutations = 0
+    const host: SfAnalysisHost = { ...f.host, revalidate: async (context, request) => {
+      if (phase === "authorization-return") await f.changeSource()
+      return f.host.revalidate(context, request)
+    }, withRunContext: async (runRef, action) => {
+      const result = await f.host.withRunContext(runRef, action)
+      if (result.status === "stale" && mutations === 0) {
+        mutations++
+        f.material.output.createdAt = "2026-11-14T00:00:00Z"
+        f.material.output.outputDigest = digestSfContribution(f.material.output)
+      }
+      return result
+    } }
+    expect(await publishSfContribution({ host, output: f.material.output, skillReceipt: f.material.receipt, runRef: "run" }))
+      .toEqual({ status: "denied", reason: "contribution-input-changed-during-authorization" })
+    expect(mutations).toBe(1)
+    const persisted = await f.stored()
+    expect(persisted.nativeRuns?.run).toMatchObject({ state: "stale", version: committed ? 5 : 4 })
+    expect(persisted.nativeRuns?.run?.native).toEqual(originalNative)
+    if (committed) {
+      expect(persisted.nativeRuns?.run?.outputRef).toBe(original.id)
+      expect(persisted.contributions.output).toEqual(original)
+      expect(digestSfValue(persisted.contributions.output)).not.toBe(digestSfValue(f.material.output))
+    } else {
+      expect(persisted.nativeRuns?.run?.outputRef).toBeUndefined()
+      expect(persisted.contributions.output).toBeUndefined()
+    }
+    expect(f.observations.lifecycleCalls).toBe(1)
+    expect(f.observations.staleCommitHadOutput).toEqual([false])
+  }
+})
 
 test("source changed strictly between publication authorization and write settles the original output as stale", async () => {
   await using f = await fixture()
@@ -147,6 +234,145 @@ test("source changed after the ready commit downgrades only the exact persisted 
   expect(persisted.nativeRuns?.run).toMatchObject({ state: "stale", version: 5, outputRef: "output" })
   expect(digestSfValue(persisted.contributions.output)).toBe(digestSfValue(f.material.output))
   expect(new Set(f.scopes).size).toBe(3)
+})
+
+test("a closed strict source scope settles a pre-write run through current lifecycle without content", async () => {
+  for (const alternative of [false, true]) {
+    await using f = await fixture({ closeStrictOnStale: true, alternative })
+    f.hooks.beforeWrite = f.changeSource
+    expect(await f.publish()).toEqual({ status: "stale", reason: "source-changed" })
+    const persisted = await f.stored()
+    expect(persisted.nativeRuns?.run).toMatchObject({ state: "stale", version: 4 })
+    expect(persisted.nativeRuns?.run?.outputRef).toBeUndefined()
+    expect(Object.keys(persisted.contributions)).toEqual([])
+    expect(Object.keys(persisted.preferences)).toEqual([])
+    expect(persisted.cases.case?.alternatives).toEqual([])
+    expect(f.observations).toMatchObject({ captureReads: 0, lifecycleCalls: 1, strictRefusals: 1, staleCommitHadOutput: [false] })
+    expect(new Set(f.scopes).size).toBe(3)
+  }
+})
+
+test("a closed strict source scope marks the exact committed output stale through metadata only", async () => {
+  await using f = await fixture({ closeStrictOnStale: true })
+  f.hooks.afterReadyCommit = f.changeSource
+  const outputDigest = digestSfValue(f.material.output)
+  expect(await f.publish()).toEqual({ status: "stale", reason: "source-changed" })
+  const persisted = await f.stored()
+  expect(persisted.nativeRuns?.run).toMatchObject({ state: "stale", version: 5, outputRef: f.material.output.id })
+  expect(digestSfValue(persisted.contributions[f.material.output.id])).toBe(outputDigest)
+  expect(persisted.nativeRuns?.run?.selection).toEqual(f.material.run.selection)
+  expect(Object.keys(persisted.preferences)).toEqual([])
+  expect(f.observations).toMatchObject({ readyObservedBeforeChange: true, lifecycleCalls: 1, strictRefusals: 1, staleCommitHadOutput: [false] })
+})
+
+test("revocation of current lifecycle authority prevents stale metadata writes after strict scope closes", async () => {
+  for (const committed of [false, true]) {
+    await using f = await fixture({ closeStrictOnStale: true })
+    if (committed) f.hooks.afterReadyCommit = f.changeSource
+    else f.hooks.beforeWrite = f.changeSource
+    f.hooks.beforeLifecycle = async () => { f.access.allowed = false }
+    expect(await f.publish()).toEqual({ status: "denied", reason: "access-revoked" })
+    const persisted = await f.stored()
+    expect(persisted.nativeRuns?.run).toMatchObject({ state: committed ? "ready" : "running", version: committed ? 4 : 3 })
+    expect(f.observations.staleCommitHadOutput).toEqual([])
+    if (committed) expect(persisted.contributions.output).toEqual(f.material.output)
+    else expect(persisted.contributions.output).toBeUndefined()
+    expect(Object.keys(persisted.preferences)).toEqual([])
+  }
+})
+
+test("lifecycle fallback cannot overwrite a concurrent cancellation at the C08 boundary", async () => {
+  await using f = await fixture({ closeStrictOnStale: true })
+  f.hooks.beforeWrite = f.changeSource
+  f.hooks.beforeLifecycle = async () => {
+    f.hooks.beforeStateTransaction = async () => {
+      expect(await f.store.transition("run", 3, "cancelled", "human-cancelled", f.context)).toMatchObject({ status: "ok", value: { state: "cancelled", version: 4 } })
+    }
+  }
+  expect(await f.publish()).toMatchObject({ status: "conflict" })
+  const persisted = await f.stored()
+  expect(persisted.nativeRuns?.run).toMatchObject({ state: "cancelled", version: 4 })
+  expect(Object.keys(persisted.contributions)).toEqual([])
+  expect(Object.keys(persisted.preferences)).toEqual([])
+})
+
+test("ready metadata fallback refuses injected run or output changes between its read and C08 commit", async () => {
+  for (const injection of ["cancelled-run", "changed-output"] as const) {
+    await using f = await fixture({ closeStrictOnStale: true })
+    f.hooks.afterReadyCommit = f.changeSource
+    let injected: SfProductState | undefined
+    f.hooks.beforeLifecycle = async () => {
+      f.hooks.beforeStateTransaction = async () => {
+        const version = await f.rawState.read(f.request, "contributions", () => null)
+        if (version.status !== "ok") throw new Error("Ready state unavailable for race injection")
+        expect((await f.rawState.transaction(f.request, { namespace: "contributions", expectedStorageVersion: version.storageVersion,
+          idempotencyKey: `inject-${injection}`, commandDigest: digestSfValue(injection), targetRef: "case", targetIncarnation: "inc" }, async (state) => {
+          if (injection === "cancelled-run") {
+            // Storage-level adversarial injection, not a new domain permission to cancel a ready run.
+            const prior = state.nativeRuns!.run!
+            state.nativeRuns!.run = { ...prior, version: prior.version + 1, state: "cancelled", reason: "concurrent-terminal" }
+          } else {
+            const output = state.contributions.output!
+            output.createdAt = "2026-11-14T00:00:00Z"
+            output.outputDigest = digestSfContribution(output)
+          }
+          return { commit: true, value: true }
+        })).status).toBe("ok")
+        injected = await f.stored()
+      }
+    }
+    expect(await f.publish()).toMatchObject({ status: "conflict" })
+    if (!injected) throw new Error("C08 race injection did not execute")
+    const persisted = await f.stored()
+    expect(digestSfValue(persisted)).toBe(digestSfValue(injected))
+    expect(persisted.nativeRuns?.run).toMatchObject({ state: injection === "cancelled-run" ? "cancelled" : "ready" })
+    expect(f.observations.staleCommitHadOutput).toEqual([])
+  }
+})
+
+test("stale observation refuses a replacement publication before the lifecycle callback begins", async () => {
+  for (const injection of ["changed-output", "replacement-output-ref", "advanced-run-version", "changed-receipt"] as const) {
+    await using f = await fixture({ closeStrictOnStale: true })
+    f.hooks.afterReadyCommit = f.changeSource
+    let injected: SfProductState | undefined
+    f.hooks.beforeLifecycle = async () => {
+      const version = await f.rawState.read(f.request, "contributions", () => null)
+      if (version.status !== "ok") throw new Error("Ready state unavailable for pre-callback injection")
+      expect((await f.rawState.transaction(f.request, { namespace: "contributions", expectedStorageVersion: version.storageVersion,
+        idempotencyKey: `before-lifecycle-${injection}`, commandDigest: digestSfValue(injection), targetRef: "case", targetIncarnation: "inc" }, async (state) => {
+        const run = state.nativeRuns!.run!
+        const output = state.contributions.output!
+        if (injection === "changed-output") {
+          output.createdAt = "2026-11-14T00:00:00Z"
+          output.outputDigest = digestSfContribution(output)
+          // Also replace the retained caller candidate. The fallback must use
+          // the earlier observation, not discover this substituted output anew.
+          Object.assign(f.material.output, structuredClone(output))
+        } else if (injection === "replacement-output-ref") {
+          const replacement = { ...structuredClone(output), id: "replacement-output" }
+          replacement.outputDigest = digestSfContribution(replacement)
+          state.contributions[replacement.id] = replacement
+          run.outputRef = replacement.id
+        } else if (injection === "advanced-run-version") run.version++
+        else {
+          if (!run.native) throw new Error("Native receipt missing from ready fixture")
+          run.native.skillReceipt.loadedMessageId = "another-observed-load"
+          output.runProvenance.loadedMessageId = "another-observed-load"
+          output.outputDigest = digestSfContribution(output)
+        }
+        return { commit: true, value: true }
+      })).status).toBe("ok")
+      injected = await f.stored()
+    }
+    expect(await f.publish()).toEqual(injection === "changed-output"
+      ? { status: "denied", reason: "stale-output-access-unavailable" }
+      : { status: "conflict", reason: "stale-observation-changed" })
+    if (!injected) throw new Error("Pre-callback injection did not execute")
+    const persisted = await f.stored()
+    expect(digestSfValue(persisted)).toBe(digestSfValue(injected))
+    expect(persisted.nativeRuns?.run?.state).toBe("ready")
+    expect(f.observations.staleCommitHadOutput).toEqual([])
+  }
 })
 
 test("stale reconciliation cannot overwrite a concurrent cancellation at the C08 commit boundary", async () => {

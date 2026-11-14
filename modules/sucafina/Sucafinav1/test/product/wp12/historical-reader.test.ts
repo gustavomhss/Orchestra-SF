@@ -7,6 +7,7 @@ import { createSfProductState } from "../../../product/host-binding/state-provid
 import { openLocalStore } from "../../../runtime/local-store.ts"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
+import type { ContributionEnvelope } from "../../../product/contracts/resident-ai.ts"
 import { sfCaseFixture, sfRunFixture } from "./run-fixture.ts"
 
 test("historical contribution survives SQLite reopen and requires current access to case and sources", async () => {
@@ -14,15 +15,24 @@ test("historical contribution survives SQLite reopen and requires current access
   const request = new Request("https://example.test/history")
   const authority = { principalRef: "principal", policyVersion: "policy-current", accessRevision: "access-current" }
   const context = { kind: "ui", binding: authority } as unknown as TrustedDomainContext
-  const access = { case: true, source: true, revokeAtSecondVerification: false, verifications: 0 }
+  const access = { case: true, source: true, revokeAtSecondVerification: false, verifications: 0, mutateAtVerification: 0, mutateAtEgress: false, cyclicAtVerification: 0 }
+  const retained: { output?: ContributionEnvelope } = {}
+  let mutateIdentity: (() => void) | undefined
   const fixture = sfRunFixture()
   const open = async () => {
     const persistence = await openLocalStore(directory)
     const state = createSfProductState({ persistence, createId: () => "store", resolveTarget: async () => ({ incarnation: "inc" }),
       authorize: async () => access.case ? authority : undefined })
-    const read = createSfHistoricalContributionReader({ state, requestFor: () => request, revalidate: async () => access.case,
-      verifyHistorical: async () => {
+    const read = createSfHistoricalContributionReader({ state, requestFor: () => request, revalidate: async () => {
+      if (access.mutateAtEgress && access.verifications === 2 && retained.output) retained.output.createdAt = "2026-11-14T00:00:00Z"
+      if (access.verifications === 2) mutateIdentity?.()
+      return access.case
+    },
+      verifyHistorical: async (output) => {
         access.verifications++
+        retained.output = output
+        if (access.mutateAtVerification === access.verifications) output.createdAt = "2026-11-14T00:00:00Z"
+        if (access.cyclicAtVerification === access.verifications) Object.assign(output, { evidenceRefs: [output] })
         if (!access.source || (access.revokeAtSecondVerification && access.verifications % 2 === 0)) return { status: "denied", reason: "source-access-revoked" }
         return { status: "ok", value: true }
       } })
@@ -50,6 +60,13 @@ test("historical contribution survives SQLite reopen and requires current access
       expect(historical).toMatchObject({ status: "ok", value: { state: "historical", output: { accessRevision: "access", caseRef: fixture.caseRef } } })
       expect(access.verifications).toBe(2)
       expect(historical.status === "ok" && digestSfValue(historical.value.output)).toBe(digestSfValue(fixture.output))
+      const native = { kind: "native", binding: { ...authority, caseId: fixture.caseRef.id, caseIncarnation: fixture.caseRef.incarnation, caseVersion: fixture.caseRef.version } } as unknown as TrustedDomainContext
+      const beforeMismatches = access.verifications
+      for (const changed of [{ caseId: "another-case" }, { caseIncarnation: "replacement" }, { caseVersion: 2 }]) {
+        expect(await reopened.read(selection, { ...native, binding: { ...native.binding, ...changed } } as TrustedDomainContext)).toEqual({ status: "denied", reason: "historical-case-binding-mismatch" })
+      }
+      expect(access.verifications).toBe(beforeMismatches)
+      expect(await reopened.read(selection, native)).toMatchObject({ status: "ok", value: { state: "historical" } })
       access.source = false
       expect(await reopened.read(selection, context)).toEqual({ status: "denied", reason: "source-access-revoked" })
       access.source = true
@@ -57,6 +74,36 @@ test("historical contribution survives SQLite reopen and requires current access
       access.revokeAtSecondVerification = true
       expect(await reopened.read(selection, context)).toEqual({ status: "denied", reason: "source-access-revoked" })
       access.revokeAtSecondVerification = false
+      for (const phase of [1, 2]) {
+        access.verifications = 0
+        access.mutateAtVerification = phase
+        expect(await reopened.read(selection, context)).toEqual({ status: "denied", reason: "historical-verification-mutated-input" })
+      }
+      access.mutateAtVerification = 0
+      for (const phase of [1, 2]) {
+        access.verifications = 0
+        access.cyclicAtVerification = phase
+        expect(await reopened.read(selection, context)).toEqual({ status: "denied", reason: "historical-verification-mutated-input" })
+      }
+      access.cyclicAtVerification = 0
+      access.verifications = 0
+      access.mutateAtEgress = true
+      expect(await reopened.read(selection, context)).toEqual({ status: "denied", reason: "historical-verification-mutated-input" })
+      access.mutateAtEgress = false
+      // Synthetic mutable identities exercise a defensive fence; the actual UI/native
+      // authority factories freeze their binding/lease and recheck private registries.
+      for (const change of [
+        { name: "selection", mutate: () => { selection.outputRef = "another-output" }, restore: () => { selection.outputRef = fixture.output.id } },
+        { name: "binding", mutate: () => Object.assign(authority, { accessRevision: "changed-at-egress" }), restore: () => Object.assign(authority, { accessRevision: "access-current" }) },
+      ]) {
+        access.verifications = 0
+        mutateIdentity = change.mutate
+        expect({ change: change.name, result: await reopened.read(selection, context) }).toEqual({ change: change.name,
+          result: { status: "denied", reason: "contribution-read-identity-changed" } })
+        change.restore()
+      }
+      mutateIdentity = undefined
+      expect(await reopened.state.read(request, "contributions", (state) => digestSfValue(state.contributions[fixture.output.id]))).toMatchObject({ status: "ok", value: digestSfValue(fixture.output) })
       expect(await reopened.read({ ...selection, currentCase: { ...fixture.caseRef, incarnation: "replacement" } }, context)).toMatchObject({ status: "unavailable" })
       access.case = false
       expect(await reopened.read(selection, context)).toEqual({ status: "denied", reason: "contribution-access-unavailable" })

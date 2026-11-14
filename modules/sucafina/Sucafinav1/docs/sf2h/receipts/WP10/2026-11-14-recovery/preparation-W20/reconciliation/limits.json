@@ -1,0 +1,54 @@
+{
+  "schema": "sf-wp10-reconciliation-limits-v1",
+  "status": "SOURCE_READY_HOSTED_PENDING",
+  "candidateSha": null,
+  "currentHostedRun": null,
+  "independentReview": false,
+  "limits": [
+    {
+      "id": "PORTFOLIO-RECONCILIATION-HOSTED",
+      "owner": "WP10",
+      "state": "PENDING",
+      "detail": "The new real C08 integration source has not run. Its result, positive path, authority counterproofs and UI rendering remain unverified until hosted CI."
+    },
+    {
+      "id": "PORTFOLIO-MATERIALITY-MAPPING",
+      "owner": "WP10 + WP14 Planner materiality boundary",
+      "state": "UNKNOWN_EXPLICIT",
+      "detail": "No readMaterialChange callback is supplied. No exact registered condition/current before-and-after component proof is available in this composition. Canonical classification remains unknown; no amount or applicability is fabricated."
+    },
+    {
+      "id": "PORTFOLIO-SOURCE-NN",
+      "owner": "WP13 producer binding + WP10 composition",
+      "state": "FAIL_CLOSED",
+      "detail": "Original and current case revision equal: only canonical current portfolioBindings.read plus selection.read can authorize. Source change without case revision does not gain historical permission; failed proof is unavailable."
+    },
+    {
+      "id": "PORTFOLIO-HISTORY-CURRENT-ACL",
+      "owner": "WP10 + WP13",
+      "state": "SOURCE_COMPOSED",
+      "detail": "Older case revision uses canonical readHistoricalBinding and createPortfolioCandidateHistoryReader under current authority. Removed/replaced/revoked evidence remains refused; this does not grant general historical-source access."
+    },
+    {
+      "id": "PORTFOLIO-RECONCILIATION-READONLY",
+      "owner": "WP10 + WP11",
+      "state": "BOUNDED_SCOPE",
+      "detail": "The new consumer correlates real individual prepared changes and receipts; the hosted fixture intentionally has none and must show absence. Domain application, cross-case applications, native routines, global transactions, and browser visual acceptance are not claimed by this proof."
+    },
+    {
+      "id": "C07-NATIVE-GLOBAL",
+      "owner": "WP10/S0 + WP09/host boundary",
+      "state": "UNCHANGED_PENDING",
+      "detail": "No native adapter/Task receipt or global acceptance is supplied by this change."
+    }
+  ],
+  "bounds": {
+    "maximumCandidateRefs": 64,
+    "maximumExplorationLimit": 1024,
+    "reconstructionBound": "actual preserved result combination count <= original explorationLimit; every reconstructed id must match its preserved position and selected id must match exactly once",
+    "maximumCatalogPortfolios": 32,
+    "maximumCatalogChoices": 128,
+    "maximumCatalogCombinations": 256,
+    "maximumCatalogMatches": 64
+  }
+}

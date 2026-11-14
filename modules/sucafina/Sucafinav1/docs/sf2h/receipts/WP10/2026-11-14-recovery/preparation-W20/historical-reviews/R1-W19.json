@@ -1,0 +1,865 @@
+{
+  "schema": "wp10.independent-review.r1.v1",
+  "review": "W19",
+  "generatedAt": "2026-11-14T12:48:38.092731+00:00",
+  "candidateSha": "d357de0b1f58abc33e86e79ad3f93b8715ba0e83",
+  "candidateTree": "20d4e76e42a8b74daced57d64ad285f5dfef17a2",
+  "parentSha": "8b1cc71d8ab2484055a0d055c8487d4579476b9b",
+  "pullRequest": 29,
+  "baseBranch": "sf2-stack",
+  "reviewer": {
+    "id": "R1",
+    "agent": "/root/independent_r1_w16",
+    "authoredProductChanges": false,
+    "authoredProductTests": false,
+    "independenceDeclaration": "Independent static review of immutable published W19; no product/test edits, product execution, publication or remote mutation. Prior own reviews reused only where source bytes match. Builder audits and root self-review are not acceptance."
+  },
+  "state": "FINAL_SOURCE_AND_CHECK_REVIEW_FUNCTIONAL_PENDING",
+  "verdict": "HOLD",
+  "approval": false,
+  "functionalAcceptance": false,
+  "nativeAcceptance": false,
+  "globalAcceptance": false,
+  "localProductExecution": false,
+  "sourceInventory": [
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-run-context.ts",
+      "gitBlob": "5b0f9e394f433bc904724019678d08555078dc0b",
+      "sha256": "9d497b424797430aa713cae24a3bdd6a433ddbf678f4acc88da87d66230f6abf",
+      "reviewScope": "Same bytes as independent W18 inventory; no new runtime claim. Unchanged bytes reused from independent W17 source review. Full new production helper; original intent/case capture, historical lifecycle entry, final authority and cleanup.",
+      "reviewMode": "PRIOR_INDEPENDENT_SOURCE_REVIEW_BYTE_RECHECK",
+      "changedFromW18": false
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-stale-commit.ts",
+      "gitBlob": "f40a30aca8668f3ef7636ca8af4bf65d4e987217",
+      "sha256": "8c237876e2a2636ab0634cf9599bc136300253c621784fa4496d4636dc73e311",
+      "reviewScope": "Same bytes as independent W18 inventory; no new runtime claim. Unchanged bytes reused from independent W17 source review. Full unchanged source rechecked for helper integration and C17 source prerequisites.",
+      "reviewMode": "PRIOR_INDEPENDENT_SOURCE_REVIEW_BYTE_RECHECK",
+      "changedFromW18": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+      "gitBlob": "460ea7d043351f1b401b005d0cc383ff2e876a86",
+      "sha256": "90727faf94f3632d7ae7054d4f48cec148056068c50fea5e4be3be42f0d86221",
+      "reviewMode": "W19_SOURCE_REVIEW",
+      "reviewScope": "sfRunSourceFence implementation reread: includes all non-product data, versions, sequences, scoped sources and blob generations. Other source unchanged from prior independent review.",
+      "changedFromW18": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+      "gitBlob": "5526b59d0c7a06791968c9dbb4d94cd3145a5bf6",
+      "sha256": "0805ac5f3e5a36d8c288ef2ff625905b79aad0b980b62b5ac0317b81d9b391f4",
+      "reviewScope": "Same bytes as independent W18 inventory; no new runtime claim. Unchanged bytes reused from independent W17 source review. W17 terminal settlement delta plus run/collect/revalidate/markStale/preserve flow.",
+      "reviewMode": "PRIOR_INDEPENDENT_SOURCE_REVIEW_BYTE_RECHECK",
+      "changedFromW18": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/analysis-host.ts",
+      "gitBlob": "337f6764a6e4fa84c09d4b53afd87c814a8d1fab",
+      "sha256": "54e0f971b348eaf495fecb63bb3a84f3153d753b132c4e7e658b32cb64a5f693",
+      "reviewScope": "Same bytes as independent W18 inventory; no new runtime claim. Unchanged bytes reused from independent W17 source review. Revalidate, lifecycle readers and terminal/result composition.",
+      "reviewMode": "PRIOR_INDEPENDENT_SOURCE_REVIEW_BYTE_RECHECK",
+      "changedFromW18": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "gitBlob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+      "sha256": "a34b014aead5afe68cb6b45edf8a7981588b5b80fae99af9a0c082ce6986d47a",
+      "reviewScope": "Same bytes as independent W18 inventory; no new runtime claim. Unchanged bytes reused from independent W17 source review. Current case projection, evidenceReferences including ledger, accessible, exact case authority checks.",
+      "reviewMode": "PRIOR_INDEPENDENT_SOURCE_REVIEW_BYTE_RECHECK",
+      "changedFromW18": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "gitBlob": "d7d8eb3ca267551797b191ccfb1d037149757898",
+      "sha256": "2ddd4c7f64c24e781b5914cec322b0efa3ee0aa02c5f9b27cdd61271bb17fd5d",
+      "reviewScope": "Same bytes as independent W18 inventory; no new runtime claim. Unchanged bytes reused from independent W17 source review. Full source; ordinary vs historical readers and allowedCase version semantics.",
+      "reviewMode": "PRIOR_INDEPENDENT_SOURCE_REVIEW_BYTE_RECHECK",
+      "changedFromW18": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-request-store.ts",
+      "gitBlob": "0d677d2d0b3a9df7127f13b25fe3968757f0dceb",
+      "sha256": "8d2164156cb51c038c77bf08ddeda0f7298e429075f8213041c4c2cdc1f20b47",
+      "reviewScope": "Same bytes as independent W18 inventory; no new runtime claim. Unchanged bytes reused from independent W17 source review. Full source; readHistorical current case/event lane versus ordinary exact-case reader.",
+      "reviewMode": "PRIOR_INDEPENDENT_SOURCE_REVIEW_BYTE_RECHECK",
+      "changedFromW18": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/calculation-history.ts",
+      "gitBlob": "4e92219aae9046891f167502139412bf9c509529",
+      "sha256": "06d7d1acbf1857550bb65c5e9251984aa8ef712ced3add121e5fdbad9d103fe3",
+      "reviewScope": "Same bytes as independent W18 inventory; no new runtime claim. Unchanged bytes reused from independent W17 source review. Historical event/ref/source/run association from W16, byte identical in W17.",
+      "reviewMode": "PRIOR_INDEPENDENT_SOURCE_REVIEW_BYTE_RECHECK",
+      "changedFromW18": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-recall-scope.ts",
+      "gitBlob": "30697fcbeee6b7011cc7786a0a3bc64bd0d3449e",
+      "sha256": "ac95c12bb81b42f0186c1bafcd801b71e50aebe576791e844f4d7c849e25bb47",
+      "reviewScope": "Same bytes as independent W18 inventory; no new runtime claim. Unchanged bytes reused from independent W17 source review. Eligibility is exact current case; conservative fallback and private bounded proof reuse.",
+      "reviewMode": "PRIOR_INDEPENDENT_SOURCE_REVIEW_BYTE_RECHECK",
+      "changedFromW18": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/routines/confirmation.ts",
+      "gitBlob": "7c8fbe1fccd59de8371e53ad267f41d2b2a8cf70",
+      "sha256": "496e2067f1f99a6c6a41d59b3b769b1ce786c6e14367bc06f6efd717a144b12f",
+      "reviewScope": "Same bytes as independent W18 inventory; no new runtime claim. Unchanged bytes reused from independent W17 source review. Exact type-narrowing delta; no removed runtime validation.",
+      "reviewMode": "PRIOR_INDEPENDENT_SOURCE_REVIEW_BYTE_RECHECK",
+      "changedFromW18": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/routines/schedule-native.ts",
+      "gitBlob": "0711a5d689e303f7cbca97b46d10a10aab4c2b8e",
+      "sha256": "83b77115726c9b4367caa22e7c272f9fa136eb84eb4cad6868d71febc2aeca3c",
+      "reviewScope": "Same bytes as independent W18 inventory; no new runtime claim. Unchanged bytes reused from independent W17 source review. Exact provider identity pinning delta and final egress checks.",
+      "reviewMode": "PRIOR_INDEPENDENT_SOURCE_REVIEW_BYTE_RECHECK",
+      "changedFromW18": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/native-host/native-host-disposal.test.ts",
+      "gitBlob": "cf90ba55860b36ce085fa500c0c51f987ad06743",
+      "sha256": "b525c02969323232de5c216e6feb3a9076fe734dad3d5ca1570aaa215e3a0783",
+      "reviewScope": "Same bytes as independent W18 inventory; no new runtime claim. Unchanged bytes reused from independent W17 source review. Exact conservative readLifecycle fixture addition.",
+      "reviewMode": "PRIOR_INDEPENDENT_SOURCE_REVIEW_BYTE_RECHECK",
+      "changedFromW18": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/calculation-history.test.ts",
+      "gitBlob": "714f6a55cb3ed7f32a457259341ea68704bfad7e",
+      "sha256": "67e874a622090716bb15887081c33f624d5a93e62bfe3f92178c73da45ec1e0c",
+      "reviewScope": "Same bytes as independent W18 inventory; no new runtime claim. Unchanged bytes reused from independent W17 source review. Explicit producer historical lane, expected ordinary rejection after v1→v2, accepted ledger and restart assertions; fixture limits acknowledged.",
+      "reviewMode": "PRIOR_INDEPENDENT_SOURCE_REVIEW_BYTE_RECHECK",
+      "changedFromW18": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/business-services-fixture.ts",
+      "gitBlob": "7294b6c3240ae4b2858dd1603b12e49b0067041f",
+      "sha256": "b4fd1cfa2efbc9d304e5528e0b2648413c84e9deea58b368228e44f781b733e8",
+      "reviewScope": "Same bytes as independent W18 inventory; no new runtime claim. Unchanged bytes reused from independent W17 source review. Full published fixture: actual BusinessServices/Atlas initialization with scanner unavailable.",
+      "reviewMode": "PRIOR_INDEPENDENT_SOURCE_REVIEW_BYTE_RECHECK",
+      "changedFromW18": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts",
+      "gitBlob": "bbfad3882e0ab38ebab9b943eadad8b4c478ac07",
+      "sha256": "ddd6dc60524fbd19bf1d37262888aaea2ceb29d7fc8dcc83e8baf16f3c9abd8f",
+      "reviewScope": "Same bytes as independent W18 inventory; no new runtime claim. Unchanged bytes reused from independent W17 source review. Exact W16/W17 delta replaces incomplete fixture with actual BusinessServices; preserves assertions.",
+      "reviewMode": "PRIOR_INDEPENDENT_SOURCE_REVIEW_BYTE_RECHECK",
+      "changedFromW18": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json",
+      "gitBlob": "5cc315a2fb88118dbfa9ed5259e0fdf792dbf6b7",
+      "sha256": "d321f4d671d20e6852ba939dadf1753f72b2810d7b6ebac1b4e0156b496ad6bd",
+      "reviewScope": "Same bytes as independent W18 inventory; no new runtime claim. Unchanged bytes reused from independent W17 source review. All38 artifact hashes compared against W17.",
+      "reviewMode": "PRIOR_INDEPENDENT_SOURCE_REVIEW_BYTE_RECHECK",
+      "changedFromW18": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/stop-handoff.json",
+      "gitBlob": "d1ac5e6da263fc2dd1766f13e4368b898bcceab5",
+      "sha256": "bc761d68afd64bcb7e49d2abbe98f849ee113b197b579b16f561b12622f65166",
+      "reviewScope": "Same bytes as independent W18 inventory; no new runtime claim. Unchanged bytes reused from independent W17 source review. Archive blob identity checked against W16;128+131 inputs retained.",
+      "reviewMode": "PRIOR_INDEPENDENT_SOURCE_REVIEW_BYTE_RECHECK",
+      "changedFromW18": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/run-store.test.ts",
+      "gitBlob": "75399d5f593bba467151e6debe34a7b17e6f13f3",
+      "sha256": "dd2d50822e28f72ea5c42c092bcd7b884fb8110074f131dbe2b9bff2a60dad32",
+      "reviewScope": "Same bytes as independent W18 inventory; no new runtime claim. Unchanged bytes reused from independent W17 source review. Inspected new mutation/alias race counterproofs and conservative execution fixture addition; no execution claimed.",
+      "reviewMode": "PRIOR_INDEPENDENT_SOURCE_REVIEW_BYTE_RECHECK",
+      "changedFromW18": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-calculation-history.test.ts",
+      "gitBlob": "0aaef8f596b5be01cd386f0f2987dfca35517425",
+      "sha256": "fe2bbfe5dcc8af8f5dfbead05706fb22f3d33ff44f10a6fe1ce18181f0f0fc10",
+      "reviewScope": "Same bytes as independent W18 inventory; no new runtime claim. Unchanged bytes reused from independent W17 source review. Full source: protected historical review proof fixture, not a substitute for actual C17 calculation replay or ledger-bound BCS.",
+      "reviewMode": "PRIOR_INDEPENDENT_SOURCE_REVIEW_BYTE_RECHECK",
+      "changedFromW18": false
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/planner-calculation-history.ts",
+      "gitBlob": "9805676b50cb5d12f37a4a91350f01ba227a168f",
+      "sha256": "5b5822480441f8972ec4ced62d655c933504bcd200c7cb3882aa0170e8244694",
+      "reviewScope": "Same bytes as independent W18 inventory; no new runtime claim. Full new source: exact current ledger/result/request/capture, record-only replay, source/state/day fences, private case scope and bounded ancestry.",
+      "reviewMode": "PRIOR_INDEPENDENT_SOURCE_REVIEW_BYTE_RECHECK",
+      "changedFromW18": false
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+      "gitBlob": "1c371738c80789cfc6d0d52d482c9c09a3757b0b",
+      "sha256": "712bff45bdf4263dc6ebca998dd5fee37f18c5e06f854b9aa97d700d9208e681",
+      "reviewScope": "Same bytes as independent W18 inventory; no new runtime claim. Exact W17/W18 delta plus current request/result/fresh record replay and historical wiring; private ancestry isolates same-call parallel work.",
+      "reviewMode": "PRIOR_INDEPENDENT_SOURCE_REVIEW_BYTE_RECHECK",
+      "changedFromW18": false
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/recorded-planner-operation-access.ts",
+      "gitBlob": "38b832f73b0eaa615d5fdf2d7838b0e5635440fa",
+      "sha256": "9e23675cd288e9407f78787778abee30b3f01811823c0f714e99455f9899f8ea",
+      "reviewScope": "Same bytes as independent W18 inventory; no new runtime claim. Full new source: stored operation/result membership, current C08 authority, two real BCS resolutions and read-only cycle guard.",
+      "reviewMode": "PRIOR_INDEPENDENT_SOURCE_REVIEW_BYTE_RECHECK",
+      "changedFromW18": false
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+      "gitBlob": "aa1be4cfb8f501b3fccddb269efce5567bcdd447",
+      "sha256": "9d59609b2a66ac9f0a6dab22e479398cffd6cf656687a1f215a949ec0d8f0290",
+      "reviewScope": "Same bytes as independent W18 inventory; no new runtime claim. Exact delta plus stale-base/replacement routing and final request/binding/source fences; no mutation admission route.",
+      "reviewMode": "PRIOR_INDEPENDENT_SOURCE_REVIEW_BYTE_RECHECK",
+      "changedFromW18": false
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/decision-baseline-services.ts",
+      "gitBlob": "1c5cc2cc2f3c0f5aff1ce730972a2eda80292dab",
+      "sha256": "17fdc608af6af1bca5780637d37419d49301b9c4158e36f89d701accd1cadd1e",
+      "reviewScope": "Same bytes as independent W18 inventory; no new runtime claim. Full source: baseline factory/selected case injection, read projections and current domain actor snapshots.",
+      "reviewMode": "PRIOR_INDEPENDENT_SOURCE_REVIEW_BYTE_RECHECK",
+      "changedFromW18": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "gitBlob": "5cca27ce239c92a8e3c9f9f92f816f5224562904",
+      "sha256": "9791fd4c605693711a4508b3b496c0fb67a407c1009d734408659ed10664fefc",
+      "reviewScope": "Same bytes as independent W18 inventory; no new runtime claim. Exact W18 delta, fresh-first routing, exact historical calculation continuity and double historical proof; current recall uses fresh resolver.",
+      "reviewMode": "PRIOR_INDEPENDENT_SOURCE_REVIEW_BYTE_RECHECK",
+      "changedFromW18": false
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/prepared-application-egress.ts",
+      "gitBlob": "e4af87d2a1c5f9c72f86810db1cacc39fcb19faf",
+      "sha256": "8c2009995220001b82a423be035c651cb5bb62b5a7409d753107bddfa54f0e62",
+      "reviewScope": "Same bytes as independent W18 inventory; no new runtime claim. Full new helper: cloned intent, exact Request/binding, current human lease, final host authorization.",
+      "reviewMode": "PRIOR_INDEPENDENT_SOURCE_REVIEW_BYTE_RECHECK",
+      "changedFromW18": false
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/dashboard-decisions.ts",
+      "gitBlob": "3061f529e1417ba29f9976c3f132c1a08ead0742",
+      "sha256": "faa9602f7f7465e2748ac2fc0fe31a2ced07679a3522c4b4fea603e1dfff1726",
+      "reviewScope": "Same bytes as independent W18 inventory; no new runtime claim. Exact W18 delta: Dashboard snapshot from same all-surface C08 lock and prepared application egress wrapper.",
+      "reviewMode": "PRIOR_INDEPENDENT_SOURCE_REVIEW_BYTE_RECHECK",
+      "changedFromW18": false
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-preparation.ts",
+      "gitBlob": "d240bc25c412b4541e63507e6db057520714b96c",
+      "sha256": "17d543225112fe168c982d07bde12bc4f6b9afbf7d4586454e0c96a0f40e81ba",
+      "reviewScope": "Same bytes as independent W18 inventory; no new runtime claim. Exact delta: wrapper only around canonical Planner simulateScenario and prepared coverage helpers.",
+      "reviewMode": "PRIOR_INDEPENDENT_SOURCE_REVIEW_BYTE_RECHECK",
+      "changedFromW18": false
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-services.ts",
+      "gitBlob": "18caa4381d7d02f1193bdac4c2e9c2134c64daf1",
+      "sha256": "1bfdcc3ad250ae5f5d0ed69cab162c7516cea7d0bedb61a417304d6993ce0d1d",
+      "reviewScope": "Same bytes as independent W18 inventory; no new runtime claim. Exact delta: mutation ID allocation and runPromotion wiring; original producer mutator retains final snapshot verification.",
+      "reviewMode": "PRIOR_INDEPENDENT_SOURCE_REVIEW_BYTE_RECHECK",
+      "changedFromW18": false
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/review-read-integrity.ts",
+      "gitBlob": "2a04d86546c1c5361ec523a5f7c7189b5a8d2d65",
+      "sha256": "07095456b24817994fd1b6122efbecfa8c13afaef9e887f009971f7bc2fc47e0",
+      "reviewScope": "Same bytes as independent W18 inventory; no new runtime claim. Full current source: request-local proof scope, complete C08/domain snapshot fence, inherited conservative legacy reader and external/native exclusions.",
+      "reviewMode": "PRIOR_INDEPENDENT_SOURCE_REVIEW_BYTE_RECHECK",
+      "changedFromW18": false
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/review-services.ts",
+      "gitBlob": "c07d55c714b4c85ee41abb4d287ce5861500086d",
+      "sha256": "2f7b7a64fdc0d868966e103abbabbc677e86df77528dc268f11570c42427dc9e",
+      "reviewScope": "Same bytes as independent W18 inventory; no new runtime claim. Exact delta: local-snapshot eligibility and scoped HTTP wrapper.",
+      "reviewMode": "PRIOR_INDEPENDENT_SOURCE_REVIEW_BYTE_RECHECK",
+      "changedFromW18": false
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-http.ts",
+      "gitBlob": "176b75cb6f5079c202da2b1a989f46702d3413e5",
+      "sha256": "b6b0ee5281dd1c9d66f193be16bb30467960a273fa3bda421496ce87b3ed88a3",
+      "reviewScope": "Same bytes as independent W18 inventory; no new runtime claim. Exact delta: prepare source scopes before final C08 grouped read and request-scoped wrapper.",
+      "reviewMode": "PRIOR_INDEPENDENT_SOURCE_REVIEW_BYTE_RECHECK",
+      "changedFromW18": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/application-attempt.ts",
+      "gitBlob": "d7ef49df787cc4b058f0992b1fbbdc5c0cb6634e",
+      "sha256": "b952a9869602aee8c6696a769ee3d96278868dafc441bbdb4ff4b15c6b03762c",
+      "reviewScope": "Same bytes as independent W18 inventory; no new runtime claim. Full foreign source: durable global change reservation independent of actor-scoped receipt key.",
+      "reviewMode": "PRIOR_INDEPENDENT_SOURCE_REVIEW_BYTE_RECHECK",
+      "changedFromW18": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+      "gitBlob": "964a53310c340f4496d7410d66f8b852270b75f1",
+      "sha256": "debb437646fff9e9143b713b42e445f34754fe33df379fdd5f62b35e4a26a6da",
+      "reviewScope": "Same bytes as independent W18 inventory; no new runtime claim. W18 delta and pre-dispatch reservation/reconciliation sections; final exact receipt/case retention. Not a full independent runtime acceptance of producer.",
+      "reviewMode": "PRIOR_INDEPENDENT_SOURCE_REVIEW_BYTE_RECHECK",
+      "changedFromW18": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+      "gitBlob": "922358d17c470c16b43076510bdf04744e2306e4",
+      "sha256": "94f28f541f238aba4542f3b77259effcf4817ed22756a3a9895953605a4ec5d6",
+      "reviewScope": "Same bytes as independent W18 inventory; no new runtime claim. Relevant addAlternative allocation/simulation/attribution and saveCase verification sequence supporting own no-op composition.",
+      "reviewMode": "PRIOR_INDEPENDENT_SOURCE_REVIEW_BYTE_RECHECK",
+      "changedFromW18": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/evidence-reader.ts",
+      "gitBlob": "9c11e2ad6977573a14725a0b514528c09e34bcc4",
+      "sha256": "6e6d83f2f00e992b30e3b58dd458089702318ce9b2f254277f83992e41aebed8",
+      "reviewScope": "Same bytes as independent W18 inventory; no new runtime claim. Full added producer source; confirmed missing named import sfPlannerEvidenceRef.",
+      "reviewMode": "PRIOR_INDEPENDENT_SOURCE_REVIEW_BYTE_RECHECK",
+      "changedFromW18": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "gitBlob": "8a1edca9f49c654ede0d2138df0ec8a724b2a228",
+      "sha256": "b8fb16aa4780e7b6338d6cff7d81c0c6d025c2b99663b57d616a7c58672a42d5",
+      "reviewScope": "Same bytes as independent W18 inventory; no new runtime claim. Complete W18 historical delta and lifecycle reentry block; real SQLite/Atlas/C08 source proof, fresh negatives and explicit unexecuted native metadata.",
+      "reviewMode": "PRIOR_INDEPENDENT_SOURCE_REVIEW_BYTE_RECHECK",
+      "changedFromW18": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-recorded-history.test.ts",
+      "gitBlob": "432ca1f9c72fbbb3d278a8cb687b9c65ddaadb0a",
+      "sha256": "c16da7312850a99961c982920d3c0527e281bea91e86fbd954d1838e581979ec",
+      "reviewScope": "Same bytes as independent W18 inventory; no new runtime claim. Positive and negative test flow, real Planner/scanner/Atlas fixture; recorded stale access versus current execution denial.",
+      "reviewMode": "PRIOR_INDEPENDENT_SOURCE_REVIEW_BYTE_RECHECK",
+      "changedFromW18": false
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/memory-case-read-scope.ts",
+      "gitBlob": "44c96c65ce974f1aee350516d2f342648322f9fa",
+      "sha256": "80c6676d93be7d9ddebde080a0c0f04b877eed230878f11543ad266f4549dd3f",
+      "reviewMode": "W19_SOURCE_REVIEW",
+      "reviewScope": "Full new source: only completed UI proofs, narrow Procurement record/case-event eligibility, full protected-state and source fences, current Request/header/selection/reader/lease/environment checks, no pending promise sharing, finally cleanup and fallback.",
+      "changedFromW18": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "gitBlob": "e4080b5212f6320c4bbcbb707f67c1ebb37a9361",
+      "sha256": "413aeed33d704650580d2baf718c0f4f7587234c59c638324e3f13b4adbcaad3",
+      "reviewMode": "W19_SOURCE_REVIEW",
+      "reviewScope": "Exact W18/W19 delta and surrounding selectedPeriod/source-fence/features/caseRecall wiring; current case and Atlas wrappers are private to UI recall.",
+      "changedFromW18": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "gitBlob": "7636572e7aec9035e8c4cd06e999d59bf6fe14ea",
+      "sha256": "7e21eff7395cf7f44dea8f05d855202884ae8be72d59019485f7ff57b9734a37",
+      "reviewMode": "W19_SOURCE_REVIEW",
+      "reviewScope": "Exact W18/W19 delta: resident Review reader extraction and outcome provider binding; no C07 provider change.",
+      "changedFromW18": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/review-resident-readers.ts",
+      "gitBlob": "d5b1a0cb4e4f78caffe18d3d7c468c8d68ff200f",
+      "sha256": "4fc2bb09263dd3d59a6e201a0cf0e1a596ac03450fba2b7c834ef3c8b1966855",
+      "reviewMode": "W19_SOURCE_REVIEW",
+      "reviewScope": "Full extracted reader source compared with previous host implementation; live contribution and delayed outcome providers remain authoritative.",
+      "changedFromW18": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-coverage.ts",
+      "gitBlob": "d20eafe56f782c8d23917c53d60377fa09a386a6",
+      "sha256": "64627a56a2f4b6f15e8c5d790e4e1d945958e02b71e380d0b71355cc123cda92",
+      "reviewMode": "W19_SOURCE_REVIEW",
+      "reviewScope": "Exact delta: preserve baseline evidence order only after one-to-one exact-reference set proof; result and final snapshot equality remain strict.",
+      "changedFromW18": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/planner-sources.ts",
+      "gitBlob": "6230f22e7dd66fec1103f28cc9a7937b2dca1449",
+      "sha256": "ca17ee764ef826277213a34992557967d610079c75300f82fc7750bf08a6721b",
+      "reviewMode": "W19_SOURCE_REVIEW",
+      "reviewScope": "Full affected selector/read path and exact pure sfPlannerEvidenceRef extraction; canonical parsing and two current authorized source reads retained. Candidate and producer fetched by MCP.",
+      "changedFromW18": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/case-recall.ts",
+      "gitBlob": "fdc378d5f251511f66bb256b78240f472f1d566c",
+      "sha256": "c9004825a4da66cfe2af7b733478ccf6e9a303b5d765dae2427cec51b86ae9de",
+      "reviewMode": "W19_SOURCE_REVIEW",
+      "reviewScope": "Full unchanged reader: current source/candidate readers, two ranks, current feature reads, original selection and final authority checks.",
+      "changedFromW18": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+      "gitBlob": "91e8bc8f5d80f83b7756b4647c790cc5e5936d59",
+      "sha256": "62e0ab3ada8792c84b91c2e2b6ef9181fb9290292277485e7b18176090287a00",
+      "reviewMode": "W19_SOURCE_REVIEW",
+      "reviewScope": "Current recall/rank proof relationships, record fingerprints and before/egress continuity; no changes in W19.",
+      "changedFromW18": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/port.ts",
+      "gitBlob": "4f94c3355074db43dcc4acaab09e14be9150767c",
+      "sha256": "7b67e94e0ca50e553854b048a0372d34f41ca273d4cf46bd6bebb0727413b49f",
+      "reviewMode": "W19_SOURCE_REVIEW",
+      "reviewScope": "Projection portion for approvalStageEntry and continuously changing ageDays; this closure must fall back instead of caching.",
+      "changedFromW18": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+      "gitBlob": "0e85858e26795c0dc48f58532bd47b4307f6f9f1",
+      "sha256": "ccd38405b99cdd9b4e8a7eb7785fe454d2287cf1cf66cff58815086a1c090c66",
+      "reviewMode": "W19_SOURCE_REVIEW",
+      "reviewScope": "Complete W19 delta: measured real C08/Atlas reads and completed-proof interleaving; source/capture/principal/clock/lease/final-header races, concurrent/detached/new-call isolation. The UI type-narrowing defect remains at line345.",
+      "changedFromW18": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/analysis-run-context.test.ts",
+      "gitBlob": "bcfd19a5b52f195d3dcf064e5df9131ef9990d6e",
+      "sha256": "d36712345f186d1c6c56644fb825cde82c4a96f6601ff0ddf91124c91109a665",
+      "reviewMode": "W19_SOURCE_REVIEW",
+      "reviewScope": "Complete delta: excluded actor self-restoration must be denied without state change; fixture reset uses actual store outside product admission and bumps revision/cases version.",
+      "changedFromW18": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "gitBlob": "25731fd10d927caa3d3e29989fddcb24452a3542",
+      "sha256": "cf2625265c0aa5c6d4b6540072ea399582847663ecb7203e667155ab3dc7e5b0",
+      "reviewMode": "W19_SOURCE_REVIEW",
+      "reviewScope": "Complete delta: shared actual resident Review/Memory provider composition, separate local-only proof and explicit live provider call under final C08 read.",
+      "changedFromW18": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/alternative-call-scope.test.ts",
+      "gitBlob": "00a8eef27c49ae1530e8601de387ccce032771c8",
+      "sha256": "ea0d89fd65780fd8fac32044a2370e4f62cb811f9a5708671be7fb202f11687a",
+      "reviewMode": "W19_SOURCE_REVIEW",
+      "reviewScope": "Exact delta: separately assert inner Alternative denial and outer case-scope egress denial; prior proof-reuse assertions retained.",
+      "changedFromW18": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/dossier-consumers.test.ts",
+      "gitBlob": "37eb1c18612a426a8597021710dd7f08cee7a8eb",
+      "sha256": "395713c53d9c40c41a8ae0998c39fc3db77e5e58b59e539662fcdccbafb81297",
+      "reviewMode": "W19_SOURCE_REVIEW",
+      "reviewScope": "Exact delta: browser/crash/phase diagnostics only, original assertions and60000ms budget retained.",
+      "changedFromW18": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/procurement-screen.ts",
+      "gitBlob": "510be5b2aeb82e740f342a5b649619116cb8ff1c",
+      "sha256": "6b05ad525a3f756ef6312656b2bd8d0f36746b7791480d5c52375c2c7a656908",
+      "reviewMode": "W19_REMOTE_SOURCE_REVIEW",
+      "reviewScope": "Exact candidate remote source; approvalStageEntry implementation and dated approval behavior inspected. Not locally hydrated.",
+      "changedFromW18": false
+    }
+  ],
+  "remoteBlobVerification": {
+    "file": "reviews/R1/remote-blobs-W19.json",
+    "independentReads": 6,
+    "allRemoteContentHashesMatchCandidateTree": true,
+    "qualification": "Five candidate paths read by MCP, with planner-sources.ts also fetched from producer PR34. One dependency source was not hydrated locally; its remote bytes were verified against the complete candidate tree. All402 pins checked against that tree, not individually refetched."
+  },
+  "treeAndOwnership": {
+    "completeTreeBlobs": 16149,
+    "hydratedFiles": 1174,
+    "hydrationHashMismatches": 0,
+    "actualChangedBlobs": 40,
+    "manifestMatchesActualDelta": true,
+    "deletions": 0,
+    "changedCodeAndTestsInOwnPaths": 13,
+    "ownReceiptAdditions": 27,
+    "exactPublishedDependencyChanges": 1,
+    "publishedDependencyPaths": [
+      "modules/sucafina/Sucafinav1/product/integration/planner-sources.ts"
+    ],
+    "effectivePins": 402,
+    "uniqueEffectivePinPaths": 402,
+    "pinMismatches": [],
+    "ownershipViolations": [],
+    "changedPriorReceipts": [],
+    "partialHydrationIsNotDeletion": true
+  },
+  "archivePreservation": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/stop-handoff.json",
+    "gitBlob": "d1ac5e6da263fc2dd1766f13e4368b898bcceab5",
+    "sha256": "bc761d68afd64bcb7e49d2abbe98f849ee113b197b579b16f561b12622f65166",
+    "unchangedFromW18": true,
+    "foreignCopies": 128,
+    "recordedReadonlyInputs": 131,
+    "priorR1W18ReportsPublishedVerbatim": true
+  },
+  "criteriaIntegrity": {
+    "canonicalCount": 171,
+    "taskCount": 7,
+    "allLiteralTuplesPreserved": true,
+    "comparedFields": [
+      "id",
+      "text",
+      "family",
+      "task",
+      "task_title"
+    ],
+    "draftPath": "agents/criteria/final-package/draft-W19/package/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-recovery/review-W19-draft/criteria-map.json",
+    "draftSha256": "f6ab82eb25d813bb61bac4e7e73f0c0900a9d18e2f936ac88f74dc5989b15438",
+    "draftState": "DRAFT_W19_UNPUBLISHED_NO_CURRENT_EXECUTION",
+    "candidateBound": false,
+    "acceptedCriteria": 0,
+    "statusCounts": {
+      "NATIVE_OR_REAL_RUNTIME_PROOF_PENDING": 57,
+      "COMPOSITION_DRAFT_CURRENT_PROOF_UNBOUND": 48,
+      "BLOCKED_OWNER_DEPENDENCY": 13,
+      "GLOBAL_PROOF_DEFERRED_UNTIL_TOTAL_BUNDLE": 8,
+      "MANDATORY_OWN_REVIEW_FINDING_RECHECK_PENDING": 23,
+      "CURRENT_INDEPENDENT_REVIEW_AND_FINDING_RECHECK_PENDING": 14,
+      "ACCEPTED_C_AND_DELIVERY_ENVELOPE_PENDING": 8
+    },
+    "draftQualification": "Preserves all171 literal tuples but has no candidate SHA/tree, accepts0 criteria and is not current functional evidence.",
+    "classificationRequirement": "Register R1-W19-MEMORY-TEST-TYPE-01 as open; close only the Planner missing-export dependency with exact W19 evidence. C17 calculation/lifecycle proof belongs to B8, not A22. No source-presence, metadata-native or prior-run acceptance."
+  },
+  "freeze": {
+    "revision": 9,
+    "artifactBindings": 38,
+    "matchingBindings": 37,
+    "mismatches": [
+      {
+        "path": "../../../../../apps/cli/src/sucafina-product/host-context.ts",
+        "expectedSha256": "4c654665a12aa02a6d5a851cdbe662f6f0fabdacf21e4b600f598e499a3a1922",
+        "actualSha256": "7e21eff7395cf7f44dea8f05d855202884ae8be72d59019485f7ff57b9734a37"
+      }
+    ],
+    "owner": "WP00",
+    "status": "BLOCKED_PUBLISHED_OWNER_BINDING_REQUIRED"
+  },
+  "priorFindingRechecks": [
+    {
+      "id": "R1-W18-PLANNER-DEPENDENCY-01",
+      "status": "CLOSED_SCOPED_EXACT_W19_IMPORT_TYPECHECK",
+      "closed": true,
+      "path": "modules/sucafina/Sucafinav1/product/integration/planner-sources.ts",
+      "gitBlob": "6230f22e7dd66fec1103f28cc9a7937b2dca1449",
+      "sourceCommit": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+      "runId": 43595657356,
+      "jobId": 132449459684,
+      "analysis": "Exact published dependency confirmed from candidate and producer. sfPlannerEvidenceRef is a pure extraction; canonical selector decoding, scoped source identity and final revalidation remain. The W18 missing-export diagnostic is absent in W19. Other check failures remain."
+    },
+    {
+      "id": "R1-W17-CALCULATION-HISTORY-01",
+      "sourceStatus": "SOURCE_FIXED_SCOPED_RECORD_ONLY_FRESH_SOURCES",
+      "functionalStatus": "HOSTED_B8_RECHECK_PENDING",
+      "closed": false,
+      "analysis": "Current/historical/ancestry source files remain byte-identical to independently reviewed W18; new memory scope rejects calculation/mixed records and falls back to canonical path. No complete W19 B8 execution observed. Original-source drift/mixed/nested historical closure remains deliberately unavailable."
+    },
+    {
+      "id": "R1-W16-LIFECYCLE-CASE-01",
+      "sourceStatus": "SOURCE_FIXED_WITH_REAL_REENTRY_TESTS",
+      "functionalStatus": "A_REENTRY_AND_B8_C17_STALE_RECHECK_PENDING",
+      "closed": false,
+      "analysis": "Production helper unchanged. A contains standalone analysis-run-context plus Procurement historical-memory; B8 contains the exact real calculation-through-reentry preserveStale scenario. W19 fixture now explicitly proves excluded actor cannot restore its own C08 target before resetting the isolated test store."
+    },
+    {
+      "id": "R1-W16-TYPES-02",
+      "status": "CLOSED_PREVIOUS_LOCATIONS_UNCHANGED",
+      "closed": true,
+      "analysis": "The old dossier/native-host-disposal errors remain absent. W19 introduces a separate type error in historical-memory, recorded below; no overall zero-own or consumer-PASS claim."
+    }
+  ],
+  "findings": [
+    {
+      "id": "R1-W19-MEMORY-TEST-TYPE-01",
+      "severity": "high",
+      "category": "typecheck gate",
+      "mandatory": true,
+      "blocking": true,
+      "status": "OPEN",
+      "owner": "WP10",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+      "line": 345,
+      "column": 74,
+      "gitBlob": "0e85858e26795c0dc48f58532bd47b4307f6f9f1",
+      "impact": "Both Sucafina and WP10 test-consumer checks fail on the new lease counterproof. This is one unique own diagnostic repeated by two gates, not two independent defects.",
+      "cause": "probe exposes its callback parameter as TrustedDomainContext; authority.human.finish requires TrustedUiContext. Although actual admission is UI, the callback signature loses that discriminant.",
+      "evidence": {
+        "code": "TS2345",
+        "runId": 43595657356,
+        "jobId": 132449459684,
+        "artifactId": 14114970167,
+        "logs": [
+          "evidence/W19/check-artifact/sucafina-typecheck.log",
+          "evidence/W19/check-artifact/wp10-test-typecheck.log"
+        ],
+        "independentRemoteLogSha256": "f7ceb16b9bbcb97d123371fcf9270690b431c40b18e0fc9b9bed8fd9e6b75a12"
+      },
+      "requiredCorrection": "Preserve the actual UI type or explicitly narrow kind before finish; retain the real lease-revocation assertion without casts/suppressions/removed checks. Publish the successor and inspect its hosted typecheck and functional counterproof.",
+      "criteria": [
+        "WP10.T04.CMP.10",
+        "WP10.T04.CHK.01",
+        "WP10.T07.CMP.01"
+      ],
+      "parentNotification": "Communicated from independent MCP check/log observation; planned W20 narrowing is not used to close W19."
+    }
+  ],
+  "securityAndCompositionObservations": [
+    {
+      "topic": "Memory cache authority",
+      "result": "No concrete new privilege bypass found in inspected scope. A cache hit reopens actual C08, verifies current actor, full protected state and full source fences; sfRunSourceFence includes all non-product data plus versions/sequences/scoped identities/blob generations. Thus unversioned original/capture, ACL or source changes affect the proof."
+    },
+    {
+      "topic": "Request and lifetime",
+      "result": "Only UI recall creates a scope. Exact call, Request object, method/url/header digest, binding, incoming request, selection object/content/expiry and evidence-reader object must remain. Every final await is followed by current(scope); active same-call overlap is rejected and closed/detached scopes cannot lend proofs. Maps clear in finally."
+    },
+    {
+      "topic": "Canonical first proof",
+      "result": "Only completed producer results are cached; pending promises are never shared. First case projection and Atlas recall remain canonical. Mixed/native/calculation/other-domain closures, prepared changes, receipts, case/scenario assumptions/questions and unsupported operations fall back. The entire completed memory result is checked for eligibility, not only its current case."
+    },
+    {
+      "topic": "Time-dependent projections",
+      "result": "The real Procurement projection computes ageDays continuously when approvalStageEntry exists. Such records are excluded from cache. For eligible records the proof also compares current UTC day, directory and bank key, with repeated environment/principal checks. Native and calculation paths are not optimized."
+    },
+    {
+      "topic": "Ranking and preservation",
+      "result": "Rank continuity and before/egress proofs remain unchanged; cached Atlas bodies are defensive copies backed by a new protected-state/authority observation. Whole-state changes can conservatively make recall unavailable; no claim that every first materialization or multi-case recall succeeds without retry."
+    },
+    {
+      "topic": "Counterproofs",
+      "result": "New source tests start races after a complete canonical Atlas read, count actual reads/fences, and require denial for source/capture/principal/day/lease/last-await header changes. They exercise overlap, detached scope and new invocation on same Request. They remain unproven in current hosted execution and contain the open type defect."
+    },
+    {
+      "topic": "Analysis fixture reset",
+      "result": "The test first asserts denied self-restoration and identical C08 state, then performs an explicit isolated-store reset with revision/version increments. Production C08 authorization is unchanged; fixture reset is not granted business authority."
+    },
+    {
+      "topic": "Resident Review",
+      "result": "The shared helper extracts the previous actual host contribution/outcome composition. New tests use real resident Memory provider and separate the local-only cache proof. No native execution is established by that composition fixture."
+    },
+    {
+      "topic": "Alternative and C12",
+      "result": "No-op coverage now proves one-to-one exact ref set before preserving baseline evidence order; result and snapshot equality remain. Alternative counterproof asserts both inner and outer denial. C12 producers/egress, scanner and historical/fresh ancestry source files remain unchanged. Dossier delta is failure instrumentation only, not a latency fix."
+    }
+  ],
+  "ci": {
+    "check": {
+      "productSha": "d357de0b1f58abc33e86e79ad3f93b8715ba0e83",
+      "snapshotSha": "2905231af2c4522d400fd1d292721f9d8429501e",
+      "snapshotTree": "4535498da30922e65978580dd2a59de21e957712",
+      "runId": 43595657356,
+      "jobId": 132449459684,
+      "conclusion": "failure",
+      "independentlyQueriedByGithubMcp": true,
+      "independentRemoteLogVerified": true,
+      "observations": "reviews/R1/remote-observations-W19.json",
+      "artifactId": 14114970167,
+      "artifactZipSha256": "726844d6b2de45de4d1bbdbdcdfdfc668a90bf4e839bef60e17e1a93d257daee",
+      "artifactFilesVerified": 11,
+      "artifactCandidateRevisionsVerified": true,
+      "envelopeOnlyDiffIndependentlyVerified": [
+        ".astra-wp10-check.json"
+      ],
+      "gates": {
+        "sucafinaTypecheck": {
+          "status": "FAIL",
+          "diagnostics": 14,
+          "ownDiagnostics": 1,
+          "foreignPathDiagnostics": 13
+        },
+        "wp10TestConsumerTypecheck": {
+          "status": "FAIL",
+          "ownDiagnostics": 1,
+          "duplicateOfSucafinaOwnDiagnostic": true
+        },
+        "cliTypecheck": "PASS",
+        "atlasGenerationAndGeneratedDiff": "PASS",
+        "atlasTypecheck": "PASS",
+        "spawnImports": "PASS",
+        "guards": {
+          "status": "PASS",
+          "rules": 78,
+          "changedPaths": 1357,
+          "gateFindings": 0,
+          "warnings": 48,
+          "errors": 0
+        }
+      }
+    },
+    "functionalA": {
+      "snapshotSha": "12988ada266de298d0ec0ba9d8968845ae4c7782",
+      "snapshotTree": "3dda72fd38e3b226ce0572f31c524af704d2aeaa",
+      "runId": 43595658990,
+      "jobId": 132449464415,
+      "status": "in_progress",
+      "conclusion": null,
+      "independentlyQueriedByGithubMcp": true,
+      "envelopeOnlyDiffIndependentlyVerified": [
+        ".ci-run.json"
+      ],
+      "observedTerminalCounts": null
+    },
+    "selections": {
+      "A": {
+        "requestPath": "ci-validation/normalized-W19-A-security-history.json",
+        "requestSha256": "480ce73aaddd158651dcd06f07218975b71b1985ff122042c288dd1399744787",
+        "fileCount": 22,
+        "files": [
+          "Sucafinav1/test/product/wp00/contract-freeze.test.ts",
+          "Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts",
+          "Sucafinav1/test/product/wp10/integration/analysis-run-context.test.ts",
+          "Sucafinav1/test/product/wp10/native-host/native-host-disposal.test.ts",
+          "Sucafinav1/test/product/wp10/integration/bi-source-choice.test.ts",
+          "Sucafinav1/test/product/wp10/integration/dashboard-review-history.test.ts",
+          "Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+          "Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts",
+          "Sucafinav1/test/product/wp10/integration/alternative-call-scope.test.ts",
+          "Sucafinav1/test/product/wp10/integration/bi-call-scope.test.ts",
+          "Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+          "Sucafinav1/test/product/wp10/integration/bi-fallback-lifecycle.test.ts",
+          "Sucafinav1/test/product/wp10/integration/bi-case-access.test.ts",
+          "Sucafinav1/test/product/wp10/integration/dashboard-after-apply.test.ts",
+          "Sucafinav1/test/product/wp10/integration/dossier-consumers.test.ts",
+          "Sucafinav1/test/product/wp04/host-integration.test.ts",
+          "Sucafinav1/test/product/wp10/analysis-composition/analysis-variants.test.ts",
+          "Sucafinav1/test/product/wp10/resident-runtime/private-mcp.test.ts",
+          "Sucafinav1/test/product/wp10/integration/extended-ui-regressions.test.ts",
+          "Sucafinav1/test/product/wp10/analysis-composition/decision-controls.test.ts",
+          "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+          "Sucafinav1/test/product/wp11/cross-domain-execution.test.ts"
+        ],
+        "status": "IN_PROGRESS"
+      },
+      "B": {
+        "requestPath": "ci-validation/normalized-W19-B-calculation-history.json",
+        "requestSha256": "b5c49c341f6edb00d83b2563f0e6cf5b8dc05318aecd798c0639c5bf1fd27127",
+        "fileCount": 8,
+        "files": [
+          "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+          "Sucafinav1/test/product/wp10/integration/planner-recorded-history.test.ts",
+          "Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+          "Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+          "Sucafinav1/test/product/wp11/calculation-persistence.test.ts",
+          "Sucafinav1/test/product/wp11/calculation-history.test.ts",
+          "Sucafinav1/test/product/wp10/integration/calculation-case-scope.test.ts",
+          "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts"
+        ],
+        "status": "NOT_DISPATCHED_AS_LAST_REPORTED"
+      },
+      "C": {
+        "requestPath": "ci-validation/normalized-W19-C-browser-consumers.json",
+        "requestSha256": "452952f2b0f8ac269ce138599347ceb941300089f79ffe5b6190341ea96b2ed6",
+        "fileCount": 26,
+        "files": [
+          "Sucafinav1/test/product/wp01/browser-startup.test.ts",
+          "Sucafinav1/test/product/wp01/preview-browser.test.ts",
+          "Sucafinav1/test/product/wp01/bi-browser.test.ts",
+          "Sucafinav1/test/product/wp01/contextual-decision.test.ts",
+          "Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+          "Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+          "Sucafinav1/test/product/wp01/http.test.ts",
+          "Sucafinav1/test/product/wp01/import-receipt-browser.test.ts",
+          "Sucafinav1/test/product/wp01/meeting-number.test.ts",
+          "Sucafinav1/test/product/wp01/planner-monthly.test.ts",
+          "Sucafinav1/test/product/wp01/portfolio-recovery.test.ts",
+          "Sucafinav1/test/product/wp01/record-search.test.ts",
+          "Sucafinav1/test/product/wp01/shell-recovery.test.ts",
+          "Sucafinav1/test/product/wp01/shell-refresh.test.ts",
+          "Sucafinav1/test/product/wp01/shell-state.test.ts",
+          "Sucafinav1/test/product/wp01/two-actor-conflict.test.ts",
+          "Sucafinav1/test/product/wp01/unavailable-views.test.ts",
+          "Sucafinav1/test/product/wp01/view-recovery.test.ts",
+          "Sucafinav1/test/form-layout.test.ts",
+          "Sucafinav1/test/visual-layout.test.ts",
+          "Sucafinav1/test/product/wp02/host-integration.test.ts",
+          "Sucafinav1/test/product/wp02/host-workbench.test.ts",
+          "Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+          "Sucafinav1/test/product/wp04/ui-browser-selection.test.ts",
+          "Sucafinav1/test/product/wp06/imports/source-fences.test.ts",
+          "Sucafinav1/test/product/wp01/browser-lifecycle.test.ts"
+        ],
+        "status": "NOT_DISPATCHED_AS_LAST_REPORTED"
+      },
+      "D": {
+        "requestPath": "ci-validation/normalized-W19-D-alternative-lifecycle.json",
+        "requestSha256": "3a3a8c92ba3e3f0a9b2146e44fd0f01cf64b145af49d47277742c05d6019beae",
+        "fileCount": 10,
+        "files": [
+          "Sucafinav1/test/product/wp10/analysis-composition/alternative-selection.test.ts",
+          "Sucafinav1/test/product/wp03/exact-threshold-fallback.test.ts",
+          "Sucafinav1/test/product/wp03/runtime-overview-presence.test.ts",
+          "Sucafinav1/test/product/wp11/planner-apply.test.ts",
+          "Sucafinav1/test/product/wp13/planner-composition.test.ts",
+          "Sucafinav1/test/product/wp10/integration/portfolio-promotion.test.ts",
+          "Sucafinav1/test/product/wp12/run-store.test.ts",
+          "Sucafinav1/test/product/wp12/publication-lifecycle.test.ts",
+          "Sucafinav1/test/product/wp09/schedule-native.test.ts",
+          "Sucafinav1/test/product/wp13/renewal-sensitivity.test.ts"
+        ],
+        "status": "NOT_DISPATCHED_AS_LAST_REPORTED"
+      },
+      "E": {
+        "requestPath": "ci-validation/normalized-W19-E-cli-composition.json",
+        "requestSha256": "d261c586910ded667ac089ab698c032f1d8c694cc7ffaa7cf7abbed3e5ec96e8",
+        "fileCount": 2,
+        "files": [
+          "test/sucafina-host-context.test.ts",
+          "test/native-execution.test.ts"
+        ],
+        "status": "NOT_DISPATCHED_AS_LAST_REPORTED"
+      }
+    },
+    "olderRunsTransferredAsAcceptance": false,
+    "historicalW18A": {
+      "source": "evidence/W18/normalized/A/test-observations.json",
+      "counts": {
+        "pass": 105,
+        "fail": 16,
+        "errors": 1,
+        "expects": 3369,
+        "tests": 121,
+        "files": 22,
+        "durationSeconds": 1052.03,
+        "skip": 0,
+        "errorsAreAdditionalTestCases": false
+      },
+      "qualification": "Historical normalized record inspected for scope; not a W19 proof. No modification to archived W18 reports."
+    }
+  },
+  "correctionsToPriorReporting": [
+    {
+      "report": "reviews/R1/review-W18.md",
+      "issue": "Opening paragraph associated waiting for C17 calculation proof with batch A.",
+      "correction": "A22 contains historical-memory and analysis-run-context but not planner-calculation.test.ts or planner-recorded-history.test.ts. Those exact C17 calculation/lifecycle proofs belong to B8. W18 remained HOLD and accepted no functional criterion; preserve original report and carry this qualification in the final package."
+    }
+  ],
+  "remainingDependencies": [
+    "One own test type defect and13 foreign diagnostics keep exact W19 check failed.",
+    "A22 pending; B8 calculation/history/ancestry and other selected functional suites have no terminal proof observed by R1.",
+    "Freeze9 host binding still WP00-owned and mismatched37/38; current host SHA256 changed again due legitimate resident reader extraction.",
+    "C07 installed public provider is future work outside W19; no absent descriptors/39-operation matrix accepted.",
+    "Native/resident execution, providers/skills/scanner delivery and global epic remain separate evidence obligations after the total bundle.",
+    "Final171 map must bind the actual candidate/evidence and all independent reviewer findings; draft is unbound and accepts0."
+  ],
+  "requiredBeforeApproval": [
+    "Fix the unique own type diagnostic without weakening the lease negative and recheck exact published successor.",
+    "Complete the relevant hosted suites including B8; triage every own failure and keep foreign dependency failures explicit.",
+    "Bind current source/evidence/criteria and obtain three independent reviews of the final candidate, including future C07 and C12 changes.",
+    "Keep native/global acceptance false unless the actual independently observed required runtime/global evidence exists."
+  ],
+  "reportLimits": [
+    "W19 only; W20 planned changes are not reviewed or accepted.",
+    "No local product/build/test/typecheck/native/browser execution or remote mutation.",
+    "Static review cannot establish cache performance, functional preservation or all171 criteria.",
+    "Unchanged sources inherit previous independent static reasoning only after exact blob equality; no historical CI passes are promoted.",
+    "Partial hydration is not deletion; remote-only procurement-screen was verified against the complete tree.",
+    "Native metadata and real composed readers in fixtures do not demonstrate Task/Session/loaded-skill/model execution.",
+    "Whole-state cache fences intentionally refuse on relevant mutation; no broad caching or global historical closure is claimed."
+  ],
+  "newWorkNotPartOfCandidate": [
+    {
+      "label": "W20 own UI narrowing",
+      "qualification": "Reported by implementer, not published in W19; current finding stays open."
+    },
+    {
+      "label": "W20 C12 bounded dedupe and public installed C07 provider",
+      "qualification": "Separate implementation in progress; requires source and proof review on exact future SHA before delivery."
+    }
+  ]
+}

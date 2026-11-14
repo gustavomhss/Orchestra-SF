@@ -7,7 +7,7 @@ import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import { decodeSfOperationInput } from "../contracts/schema-admission.ts"
 import type { createSfDecisionResultStore } from "../decisions/result-store.ts"
 import { encodeCaseRef } from "../decisions/case-port.ts"
-import { projectionDigest } from "./scenario-comparison-port.ts"
+import { projectionDigest, resolvePlannerScenarioBatch } from "./scenario-comparison-port.ts"
 import { comparePlannerScenarios, plannerComponentDigest } from "./comparison.ts"
 import type { PlannerScenarioHost } from "./scenario-comparison-port.ts"
 
@@ -42,7 +42,7 @@ export function createPlannerSensitivityUnits(input: {
     const operations = scenario.operations.filter((operation) => operation.targetRef === request.parameterRef)
     const sourceOnly = scenario.operations.length === 0 && scenario.assumptions.length === 0
     if (!sourceOnly && (operations.length !== 1 || operations[0]!.kind !== "replace" || operations[0]!.replacementRef !== undefined || typeof operations[0]!.amount !== "number" || !Number.isFinite(operations[0]!.amount) || !operations[0]!.currency?.trim())) return { status: "needs-input", reason: "unsupported-sensitivity-parameter" } as const
-    const [selected, baseline] = await Promise.all([input.scenarios.resolve(request.scenarioRef, context), input.scenarios.resolve(request.baselineRef, context)])
+    const [selected, baseline] = await resolvePlannerScenarioBatch(input.scenarios, [request.scenarioRef, request.baselineRef], context)
     if (selected.status !== "ok") return selected
     if (baseline.status !== "ok") return baseline
     if (!selected.value.coverageRef.trim() || !baseline.value.coverageRef.trim() || digestSfValue(selected.value.result) !== stored.value.resultDigest || digestSfValue(baseline.value.result) !== baselineStored.value.resultDigest || selected.value.source.refId !== scenario.baseRef || selected.value.result.currency !== baseline.value.result.currency || selected.value.result.currency !== decision.currency || digestSfValue(selected.value.result.horizon) !== digestSfValue(baseline.value.result.horizon) || digestSfValue(selected.value.result.horizon) !== digestSfValue(decision.horizon)) return { status: "stale", reason: "sensitivity-scope-changed" } as const
@@ -57,7 +57,7 @@ export function createPlannerSensitivityUnits(input: {
     const resolutions = await Promise.all(sourceRefs.map((ref) => input.evidence.resolve(ref, context)))
     if (resolutions.some((resolution, index) => resolution.state !== "fresh" || resolution.ref.refDigest !== sourceRefs[index].refDigest || digestSfEvidenceRef(resolution.ref) !== resolution.ref.refDigest || resolution.accessRevision !== context.binding.accessRevision)) return { status: "stale", reason: "sensitivity-evidence-changed" } as const
     const again = await input.cases.read({ caseRef: encodeCaseRef(stored.value.caseRef) }, context)
-    const [selectedAgain, baselineAgain] = await Promise.all([input.scenarios.resolve(request.scenarioRef, context), input.scenarios.resolve(request.baselineRef, context)])
+    const [selectedAgain, baselineAgain] = await resolvePlannerScenarioBatch(input.scenarios, [request.scenarioRef, request.baselineRef], context)
     const evidenceAgain = await Promise.all(sourceRefs.map((ref) => input.evidence.resolve(ref, context)))
     const [storedAgain, baselineStoredAgain] = await Promise.all([readScenario(request.scenarioRef, context), readScenario(request.baselineRef, context)])
     if (storedAgain.status !== "ok" || baselineStoredAgain.status !== "ok" || digestSfValue(storedAgain.value) !== digestSfValue(stored.value) || digestSfValue(baselineStoredAgain.value) !== digestSfValue(baselineStored.value) || again.status !== "ok" || digestSfValue(again.value.case) !== digestSfValue(decision) || selectedAgain.status !== "ok" || digestSfValue(selectedAgain.value.result) !== digestSfValue(selected.value.result) || selectedAgain.value.source.refDigest !== selected.value.source.refDigest || selectedAgain.value.coverageRef !== selected.value.coverageRef || projectionDigest(selectedAgain.value.projection) !== projectionDigest(selected.value.projection) || baselineAgain.status !== "ok" || digestSfValue(baselineAgain.value.result) !== digestSfValue(baseline.value.result) || baselineAgain.value.source.refDigest !== baseline.value.source.refDigest || baselineAgain.value.coverageRef !== baseline.value.coverageRef || projectionDigest(baselineAgain.value.projection) !== projectionDigest(baseline.value.projection) || evidenceAgain.some((resolution, index) => resolution.state !== "fresh" || resolution.ref.refDigest !== sourceRefs[index].refDigest || digestSfEvidenceRef(resolution.ref) !== resolution.ref.refDigest || resolution.accessRevision !== context.binding.accessRevision) || !await input.host.revalidate(context)) return { status: "stale", reason: "sensitivity-source-changed" } as const

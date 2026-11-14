@@ -129,14 +129,20 @@ export function createSfMemoryCaseReadScope(input: {
     const scope = local.getStore()
     if (!scope || scope.call !== call) return work()
     if (!current(scope)) return { status: "unavailable" }
-    const ref = structuredClone(incoming), key = caseKey(ref), inputDigest = digestSfValue(incoming)
+    // Atlas recall's selector is exactly {id, incarnation}. Its canonical rank
+    // first supplies that selector and later supplies envelope.caseRef, whose
+    // extra version is historical metadata, not a different recall operation.
+    // Pin the complete argument separately so changes during either await still
+    // invalidate that invocation; the outer recall retains its versioned scope.
+    const ref = { id: incoming.id, incarnation: incoming.incarnation }, key = caseKey(ref)
+    const inputDigest = digestSfValue(ref), argumentDigest = digestSfValue(incoming)
     if (scope.memoryBusy.has(key)) return work()
     const before = await snapshot(scope, [ref])
     if (before?.kind === "unsupported" && !scope.memories.has(key)) return work()
     if (before?.kind !== "sf-memory-case-fence" || !current(scope)) { scope.invalid = true; return { status: "unavailable" } }
     const proof = scope.memories.get(key)
     if (proof) {
-      if (proof.fence !== before.digest || proof.inputDigest !== inputDigest || digestSfValue(incoming) !== inputDigest) {
+      if (proof.fence !== before.digest || proof.inputDigest !== inputDigest || digestSfValue(incoming) !== argumentDigest) {
         scope.invalid = true; return { status: "unavailable" }
       }
       return structuredClone(proof.value)
@@ -151,7 +157,7 @@ export function createSfMemoryCaseReadScope(input: {
       const after = await snapshot(scope, [ref], { ref, value: result })
       if (after?.kind === "unsupported") return result
       if (after?.kind !== "sf-memory-case-fence" || before.digest !== after.digest ||
-        !current(scope) || digestSfValue(incoming) !== inputDigest) { scope.invalid = true; return { status: "unavailable" } }
+        !current(scope) || digestSfValue(incoming) !== argumentDigest) { scope.invalid = true; return { status: "unavailable" } }
       scope.memories.set(key, { ref, inputDigest, fence: after.digest, value: structuredClone(result) })
       return structuredClone(result)
     } finally { scope.memoryBusy.delete(key) }

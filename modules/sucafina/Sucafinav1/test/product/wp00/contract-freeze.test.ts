@@ -10,7 +10,7 @@ import type { SfProductState } from "../../../product/contracts/state.ts"
 const root = path.resolve(import.meta.dir, "../../../../../..")
 
 test("the contract freeze binds current artifact bytes without hashing itself", async () => {
-  expect(freeze.revision).toBe(9)
+  expect(freeze.revision).toBe(10)
   expect(freeze.planningSha).toBe("dbf9547211d9b0fade619790de7c19c0869b7c7d")
   expect(freeze.canonicalSha256).toBe("703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba")
   expect(Object.hasOwn(freeze.artifacts, "freeze-v1.json")).toBe(false)

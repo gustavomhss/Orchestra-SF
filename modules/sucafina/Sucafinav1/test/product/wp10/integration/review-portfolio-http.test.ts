@@ -290,11 +290,18 @@ test("Review grouped reads keep exact receipts and current authority without len
 }, 120_000)
 
 test("resident Review grouped reads reauthorize through the real Memory provider on every final read", async () => {
-  await withReviewPortfolio("resident-readers", async ({ application, authority, business, call, original, memory }) => {
+  await withReviewPortfolio("resident-readers", async ({ application, authority, business, fixture, call, original, memory }) => {
     const scope = application.readScope
     const request = authority.host.requestFor(call)
     if (!scope || !request) throw new Error("Resident Review read scope unavailable")
     const authorize = memory.reviewOutcome.authorize
+    const transactionAll = fixture.persistence.transactionAll
+    if (!transactionAll) throw new Error("Real resident provider scope unavailable")
+    let nestedWriters = 0
+    fixture.persistence.transactionAll = (work, options) => {
+      if (fixture.persistence.currentSnapshots?.()) nestedWriters++
+      return transactionAll(work, options)
+    }
     const calls: { context: TrustedDomainContext; locked: boolean }[] = []
     memory.reviewOutcome.authorize = async (context, observations) => {
       calls.push({ context, locked: !!business.lockedSourceFences() })
@@ -314,8 +321,12 @@ test("resident Review grouped reads reauthorize through the real Memory provider
         const live = calls.slice(prepared)
         expect(live.length).toBeGreaterThan(0)
         expect(live.every((entry) => entry.context === call && entry.locked)).toBe(true)
+        expect(nestedWriters).toBe(0)
       })
-    } finally { memory.reviewOutcome.authorize = authorize }
+    } finally {
+      memory.reviewOutcome.authorize = authorize
+      fixture.persistence.transactionAll = transactionAll
+    }
   })
 }, 120_000)
 

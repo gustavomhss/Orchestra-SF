@@ -20,6 +20,9 @@ export function createSfNativeExecution(input: {
   host: SfNativeHostApi
   store: ReturnType<typeof createSfRunStore>
   withRunContext: WithContext
+  /** Current membership for non-executing admission failures only; never used by
+   * create, attach, execute, collect or a transition to running. */
+  withLifecycleContext?: WithContext
   preflight: (request: Parameters<BusinessPorts["analysis"]["create"]>[0], skillInput: unknown, target?: SfReviewTarget) => Promise<PortResult<Admission>>
   intentDigest?: string
   verifyOutput: (output: ContributionEnvelope, run: SfNativeRunRecord, context: TrustedDomainContext) => Promise<PortResult<true>>
@@ -30,6 +33,7 @@ export function createSfNativeExecution(input: {
   cancelAdmitted?: BusinessPorts["analysis"]["cancel"]
 }): NativeRunExecutionPort & { cancelRun: (runRef: string, context: TrustedDomainContext) => Promise<PortResult<{ cancelled: boolean }>>; releaseRun: (runRef: string) => Promise<SfStoppedRun | undefined>; shutdown: () => Promise<void> } {
   const admittedRuns = new Set<string>()
+  const withLifecycleContext = input.withLifecycleContext ?? input.withRunContext
   const tickets = new WeakMap<SfNativeExecutionTicket, { run: SfNativeRun; request: Request; record: SfNativeRunRecord; phase: "prepared" | "running" | "completed" | "failed"; output?: ContributionEnvelope; candidateDigest?: string }>()
   const active = new Map<string, { ticket: SfNativeExecutionTicket; run: SfNativeRun; record: SfNativeRunRecord; cancelling: boolean; cancelled: boolean; cancelDone?: Promise<void> }>()
   return {
@@ -60,13 +64,13 @@ export function createSfNativeExecution(input: {
       if (created.status !== "ok") return created
       const preparedRun = await Effect.runPromise(input.host.prepare(native), { signal: native.request.signal }).catch(() => undefined)
       if (!preparedRun) {
-        const settled = await input.withRunContext(record.runRef, (context) => input.store.transition(record.runRef, created.value.version,
+        const settled = await withLifecycleContext(record.runRef, (context) => input.store.transition(record.runRef, created.value.version,
           "unavailable", "native-preparation-outcome-unknown", context))
         if (settled.status !== "ok") return settled
         return { status: "unavailable", reason: "native-preparation-outcome-unknown" }
       }
       if (preparedRun.status !== "ok") {
-        const settled = await input.withRunContext(record.runRef, (context) => input.store.transition(record.runRef, created.value.version,
+        const settled = await withLifecycleContext(record.runRef, (context) => input.store.transition(record.runRef, created.value.version,
           preparedRun.status === "needs-input" ? "needs-input" : "unavailable", preparedRun.reason, context))
         if (settled.status !== "ok") return settled
         return preparedRun
@@ -86,7 +90,7 @@ export function createSfNativeExecution(input: {
         active.set(record.runRef, entry)
         const announced = await Promise.resolve().then(() => { input.onAdmitted?.(record.runRef); return true }).catch(() => false)
         if (!announced) {
-          await input.withRunContext(record.runRef, (context) => input.store.transition(record.runRef, attached.value.version, "unavailable", "native-admission-not-announced", context))
+          await withLifecycleContext(record.runRef, (context) => input.store.transition(record.runRef, attached.value.version, "unavailable", "native-admission-not-announced", context))
           return { status: "unavailable", reason: "native-admission-not-announced" }
         }
         if (native.request.signal.aborted || active.get(record.runRef) !== entry || !tickets.has(ticket)) return { status: "denied", reason: "native-admission-no-longer-active" }

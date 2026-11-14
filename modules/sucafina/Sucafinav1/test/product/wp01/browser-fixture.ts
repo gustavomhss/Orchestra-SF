@@ -32,6 +32,12 @@ const pool: {
   closing: false, starting: false, disconnected: false, driverClosed: false,
   processExited: false, verified: false, failed: false }
 
+// W15's outer 15s deadline cancelled the driver before its independently started
+// Chromium timeout. One 30s deadline now covers preparation, launch, connect and
+// PID acquisition; the Node process receives that same absolute deadline.
+// There is still one launch, with cancellation and observed physical teardown.
+const startupTimeoutMs = 30_000
+
 async function bounded<T>(operation: Promise<T>, stage: string, timeout = 10_000): Promise<T> {
   let timer: ReturnType<typeof setTimeout> | undefined
   try {
@@ -121,18 +127,23 @@ function shutdownBrowser(): Promise<void> {
 }
 
 async function startBrowser(): Promise<Browser> {
-  const deadline = performance.now() + 10_000
-  const remaining = () => Math.max(1, Math.ceil(deadline - performance.now()))
+  const deadline = performance.now() + startupTimeoutMs
+  const deadlineEpochMs = Date.now() + startupTimeoutMs
+  const remaining = () => {
+    const value = Math.ceil(deadline - performance.now())
+    if (value <= 0) throw new Error("WP01 browser acquisition deadline expired")
+    return value
+  }
   const startup = new AbortController()
-  const timer = setTimeout(() => startup.abort(new Error("WP01 browser timed out: single Node-owned Chromium launch and PID acquisition")), 10_000)
+  const timer = setTimeout(() => startup.abort(new Error("WP01 browser timed out: single Node-owned Chromium launch and PID acquisition")), startupTimeoutMs)
   try {
     await requireLifecycleSelection()
     if (startup.signal.aborted) throw startup.signal.reason
     if (pool.failed || pool.sealed) throw new Error("WP01 browser startup is no longer admitted")
-    console.info("WP01 browser launch phase", { phase: "published Node browser driver through AppProcess" })
+    console.info("WP01 browser launch phase", { phase: "published Node browser driver through AppProcess", startupTimeoutMs })
     // The deadline cancels and awaits the driver's owned AppProcess scope.
     // Racing this await alone would abandon an in-flight driver outside pool.
-    const driver = await launchBrowserDriver("wp01-shared-pool", { signal: startup.signal, timeoutMs: remaining() })
+    const driver = await launchBrowserDriver("wp01-shared-pool", { signal: startup.signal, timeoutMs: remaining(), deadlineEpochMs })
     const browser = driver.browser
     pool.driver = driver
     pool.browser = browser
@@ -150,10 +161,12 @@ async function startBrowser(): Promise<Browser> {
       throw new Error("WP01 browser launch completed after its acquisition deadline")
     }
     console.info("WP01 browser launch phase", { phase: "read actual browser PID through CDP" })
-    const session = await bounded(browser.newBrowserCDPSession(), "open browser CDP session", remaining())
+    const sessionTimeout = remaining()
+    const session = await bounded(browser.newBrowserCDPSession(), "open browser CDP session", sessionTimeout)
     const failures: unknown[] = []
     try {
-      const result = await bounded(session.send("SystemInfo.getProcessInfo"), "read browser process information", remaining())
+      const informationTimeout = remaining()
+      const result = await bounded(session.send("SystemInfo.getProcessInfo"), "read browser process information", informationTimeout)
       const processes = result.processInfo.filter((entry) => entry.type === "browser")
       const pid = processes[0]?.id
       if (processes.length !== 1 || typeof pid !== "number" || !Number.isSafeInteger(pid) || pid <= 0 || pid === process.pid)
@@ -161,7 +174,10 @@ async function startBrowser(): Promise<Browser> {
       pool.pid = pid
       if (!processExists(pid)) throw new Error("The CDP browser PID is absent before cleanup")
     } catch (error) { failures.push(error) }
-    try { await bounded(session.detach(), "detach browser PID session", remaining()) }
+    try {
+      const detachTimeout = remaining()
+      await bounded(session.detach(), "detach browser PID session", detachTimeout)
+    }
     catch (error) { failures.push(error) }
     if (failures.length === 1) throw failures[0]
     if (failures.length > 1) throw new AggregateError(failures, "WP01 browser PID acquisition and CDP cleanup failed")

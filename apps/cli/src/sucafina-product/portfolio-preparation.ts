@@ -21,7 +21,7 @@ export function createSfPortfolioPreparation(input: {
 }) {
   const { authority, business, registries } = input
   const handoff = createSfPortfolioHandoff(input)
-  const action = (operation: Parameters<Mutations["authorizeMutation"]>[0]) => operation === "add-alternative" ? "decisions.promote-alternative" : operation === "prepare-changes" ? "decisions.prepare-changes" : operation === "record-choice" ? "decisions.choose" : operation === "add-question" ? "decisions.add-question" : "decisions.answer-question"
+  const action = (operation: Parameters<Mutations["authorizeMutation"]>[0]) => operation === "add-alternative" ? "decisions.promote-alternative" : operation === "prepare-changes" ? "decisions.prepare-changes" : operation === "record-choice" ? "decisions.choose" : operation === "add-question" ? "decisions.add-question" : operation === "answer-question" ? "decisions.answer-question" : undefined
   const procurementHost: Parameters<typeof createProcurementDecisionHost>[0]["host"] = { ...authority.host, ...business.registry,
     resolveRequestSource: async (reference, call) => {
       const selected = await business.registry.resolveRequestSource(reference, call)
@@ -39,12 +39,17 @@ export function createSfPortfolioPreparation(input: {
     createId: randomUUID, now: () => new Date().toISOString(),
   }) : undefined
   const authorizeMutation: Mutations["authorizeMutation"] = async (operation, request, call) => {
+    const selected = action(operation)
+    if (!selected) return false
     const authorized = handoff.parent(operation, request, call) !== undefined
-      ? await handoff.authorize(operation, request, call) : await registries.intent.authorize(call, action(operation), request)
+      ? await handoff.authorize(operation, request, call) : await registries.intent.authorize(call, selected, request)
     return authorized && (operation !== "add-alternative" || coverage.remember(request, call))
   }
-  const verifyMutation: Mutations["verifyMutation"] = (_snapshot, operation, request, call) => handoff.parent(operation, request, call) !== undefined
-    ? handoff.verify(operation, request, call) : registries.intent.verify(call, action(operation), request)
+  const verifyMutation: Mutations["verifyMutation"] = (_snapshot, operation, request, call) => {
+    const selected = action(operation)
+    return selected !== undefined && (handoff.parent(operation, request, call) !== undefined
+      ? handoff.verify(operation, request, call) : registries.intent.verify(call, selected, request))
+  }
   const coverage = createSfPortfolioCoverage({ authority, business, verifyIntent: verifyMutation })
   const mutationPlanner: typeof registries.planner = { ...registries.planner,
     simulateScenario: async (request, call) => coverage.prepareNoop(request, await registries.planner.simulateScenario(request, call), call) }

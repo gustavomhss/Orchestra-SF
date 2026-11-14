@@ -241,7 +241,14 @@ test("historical decision recall binds original/current evidence and rejects cha
       const dependencies = { cases: activeBusiness.cases, planner: activeBusiness.planner, procurement: activeBusiness.procurement,
         context: activeBusiness.context, host: authority.host, caseRecall: activeBusiness.caseRecall }
       const producer = createSfMemoryInputProducer(dependencies)
+      const beforePrepare = { ...counters }
       expect(await measure("memory.prepare", () => producer.prepare(value, analysis, call))).toEqual({ status: "ok", value })
+      // The real rank starts with {id, incarnation} and reopens the same memory
+      // using its versioned envelope.caseRef at egress. Both remain one Atlas
+      // recall contract. Each of the producer's two independent observations
+      // must nevertheless complete its own canonical original/capture proof.
+      expect(counters.atlasCanonicalReads - beforePrepare.atlasCanonicalReads).toBe(2)
+      expect(counters.atlasCanonicalCompleted - beforePrepare.atlasCanonicalCompleted).toBe(2)
       const readers = createSfAnalysisSelectionReaders({ authority, business: activeBusiness })
       const verifier = createSfDecisionMemoryVerifier({ ...dependencies, readRecallSelection: readers.recallSelection(value) })
       const verified = await measure("memory.verify", () => verifier.verify(value, analysis, call))
@@ -342,7 +349,10 @@ test("historical decision recall binds original/current evidence and rejects cha
       finally { access.allowed = true }
       try { await probe("clock", async () => { clock.at = "2026-11-15T00:00:00Z" }) }
       finally { clock.at = at }
-      await probe("lease", async (probeCall) => { authority.human.finish(probeCall) })
+      await probe("lease", async (probeCall) => {
+        if (probeCall.kind !== "ui") throw new Error("Historical UI lease probe refuses native authority")
+        authority.human.finish(probeCall)
+      })
       const authorization = sameRequest.headers.get("authorization")!
       try {
         // Calibrate from the positive path, then replace credentials after its

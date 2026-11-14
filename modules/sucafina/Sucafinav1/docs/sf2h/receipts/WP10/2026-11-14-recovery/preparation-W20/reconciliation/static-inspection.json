@@ -1,0 +1,418 @@
+{
+  "schema": "sf-wp10-static-composition-inspection-v1",
+  "productExecution": false,
+  "typecheck": false,
+  "testExecution": false,
+  "independentReview": false,
+  "relativeImportsChecked": 77,
+  "imports": [
+    {
+      "from": "apps/cli/src/sucafina-product/portfolio-reconciliation-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/portfolio-reconciliation-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/portfolio-reconciliation-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/ports.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/portfolio-reconciliation-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/portfolio-reconciliation-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/state.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/state.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/portfolio-reconciliation-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/decisions.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/portfolio-reconciliation-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/decisions/portfolio-bindings.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/decisions/portfolio-bindings.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/portfolio-reconciliation-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/portfolio/candidates.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/portfolio/candidates.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/portfolio-reconciliation-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/portfolio/proof.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/portfolio/proof.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/portfolio-reconciliation-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/portfolio/history-provenance.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/portfolio/history-provenance.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/portfolio-reconciliation-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/portfolio/port.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/portfolio-reconciliation-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/portfolio/reconciliation.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/portfolio/reconciliation.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/portfolio-reconciliation-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/portfolio-reconciliation-services.ts",
+      "specifier": "./business-services.ts",
+      "resolved": "apps/cli/src/sucafina-product/business-services.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/portfolio-reconciliation-services.ts",
+      "specifier": "./portfolio-authority.ts",
+      "resolved": "apps/cli/src/sucafina-product/portfolio-authority.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/portfolio-reconciliation-http.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/portfolio-reconciliation-http.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/ports.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/portfolio-reconciliation-http.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/portfolio-reconciliation-http.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/portfolio/product.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/portfolio/product.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/portfolio-reconciliation-http.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/portfolio/reconciliation.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/portfolio/reconciliation.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/portfolio-reconciliation-http.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/portfolio-reconciliation-http.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/runtime/application.ts",
+      "resolved": "modules/sucafina/Sucafinav1/runtime/application.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/portfolio-reconciliation-http.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/src/screen-shell.ts",
+      "resolved": "modules/sucafina/Sucafinav1/src/screen-shell.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/portfolio-reconciliation-http.ts",
+      "specifier": "./business-services.ts",
+      "resolved": "apps/cli/src/sucafina-product/business-services.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/portfolio-reconciliation-http.ts",
+      "specifier": "./portfolio-reconciliation-services.ts",
+      "resolved": "apps/cli/src/sucafina-product/portfolio-reconciliation-services.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/portfolio-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/portfolio-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/portfolio/product.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/portfolio/product.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/portfolio-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/portfolio-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/portfolio-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/decisions/coverage-access.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/decisions/coverage-access.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/portfolio-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/portfolio-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/portfolio-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/planner/preview-comparison.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/planner/preview-comparison.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/portfolio-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/portfolio-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/portfolio-services.ts",
+      "specifier": "./business-services.ts",
+      "resolved": "apps/cli/src/sucafina-product/business-services.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/portfolio-services.ts",
+      "specifier": "./portfolio-authority.ts",
+      "resolved": "apps/cli/src/sucafina-product/portfolio-authority.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/portfolio-services.ts",
+      "specifier": "./portfolio-preparation.ts",
+      "resolved": "apps/cli/src/sucafina-product/portfolio-preparation.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/portfolio-services.ts",
+      "specifier": "./portfolio-http.ts",
+      "resolved": "apps/cli/src/sucafina-product/portfolio-http.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/portfolio-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/portfolio/coverage-preview.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/portfolio/coverage-preview.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/portfolio-services.ts",
+      "specifier": "./portfolio-coverage-authority.ts",
+      "resolved": "apps/cli/src/sucafina-product/portfolio-coverage-authority.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/portfolio-services.ts",
+      "specifier": "./portfolio-reconciliation-services.ts",
+      "resolved": "apps/cli/src/sucafina-product/portfolio-reconciliation-services.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/ports.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/portfolio/product.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/portfolio/product.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "specifier": "./business-services.ts",
+      "resolved": "apps/cli/src/sucafina-product/business-services.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "specifier": "./portfolio-reconciliation-http.ts",
+      "resolved": "apps/cli/src/sucafina-product/portfolio-reconciliation-http.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "specifier": "./portfolio-reconciliation-services.ts",
+      "resolved": "apps/cli/src/sucafina-product/portfolio-reconciliation-services.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-controls.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-controls.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-controls.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/context.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-controls.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/ports.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-controls.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-controls.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-controls.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-controls.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/decisions/coverage-classification.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/decisions/coverage-classification.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-controls.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/decisions/coverage-classification.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/decisions/coverage-classification.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-controls.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-controls.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/src/screen-shell.ts",
+      "resolved": "modules/sucafina/Sucafinav1/src/screen-shell.ts"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/decision-controls.ts",
+      "specifier": "./decision-domain-http.ts",
+      "resolved": "apps/cli/src/sucafina-product/decision-domain-http.ts"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-reconciliation.test.ts",
+      "specifier": "../../../../product/contracts/canonical.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-reconciliation.test.ts",
+      "specifier": "../../../../product/contracts/decisions.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/decisions.ts"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-reconciliation.test.ts",
+      "specifier": "../../../../product/contracts/decisions.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/decisions.ts"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-reconciliation.test.ts",
+      "specifier": "../../../../product/contracts/ports.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/ports.ts"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-reconciliation.test.ts",
+      "specifier": "../../../../product/contracts/state.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/state.ts"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-reconciliation.test.ts",
+      "specifier": "../../../../product/contracts/sf-execution.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-reconciliation.test.ts",
+      "specifier": "../../../../product/decisions/case-port.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-reconciliation.test.ts",
+      "specifier": "../../../../product/decisions/baseline-coverage.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/decisions/baseline-coverage.ts"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-reconciliation.test.ts",
+      "specifier": "../../../../product/decisions/criterion-rules.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/decisions/criterion-rules.ts"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-reconciliation.test.ts",
+      "specifier": "../../../../product/portfolio/candidates.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/portfolio/candidates.ts"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-reconciliation.test.ts",
+      "specifier": "../../../../product/portfolio/reconciliation.ts",
+      "resolved": "modules/sucafina/Sucafinav1/product/portfolio/reconciliation.ts"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-reconciliation.test.ts",
+      "specifier": "./financial-composition-fixture.ts",
+      "resolved": "modules/sucafina/Sucafinav1/test/product/wp10/integration/financial-composition-fixture.ts"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-reconciliation.test.ts",
+      "specifier": "./composition-test-deadline.ts",
+      "resolved": "modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts"
+    }
+  ],
+  "publishedDependencyBlobHashesMatch": true,
+  "portfolioServicesBaselineRestoredAfterRemovingOnlyDeclaredSeam": true,
+  "coverageAndDefaultDenyPreserved": true,
+  "preservedRootSourceSnapshots": [
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-coverage-authority.ts",
+      "bytes": 13340,
+      "gitBlob": "03a4a0d82676423c76b8055e2e7efeb9bfe9a973",
+      "sha256": "64985ca29e0477488d0afa6b9c1d4c51854ffdacef027d08c95e0cf6e354a5e1",
+      "localPath": "/workspace/scratch/301a7f2754f4/repo/apps/cli/src/sucafina-product/portfolio-coverage-authority.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-preparation.ts",
+      "bytes": 9317,
+      "gitBlob": "cd9b7e0ebd49db83ea8612d80fc636ed008b2c2c",
+      "sha256": "c1a6a6298de5715b62e19398cfca2c150e371e38ba6261b4de7093330928da51",
+      "localPath": "/workspace/scratch/301a7f2754f4/repo/apps/cli/src/sucafina-product/portfolio-preparation.ts"
+    }
+  ],
+  "testSourceCount": 1,
+  "testExpectCallCount": 45,
+  "testTimeoutMs": 360000,
+  "cooperativeDeadlineMs": 345000
+}

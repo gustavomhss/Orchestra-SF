@@ -8,6 +8,7 @@ import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafina
 import type { PlannerScenarioInputs } from "../../../../modules/sucafina/Sucafinav1/product/planner/scenario-port.ts"
 import type { createSfPlannerEvidence } from "./planner-evidence.ts"
 import type { createSfRecordedPlannerOperationAccess } from "./recorded-planner-operation-access.ts"
+import type { createSfScenarioProcurementProofScope } from "./scenario-procurement-proof-scope.ts"
 
 /** Authorize selectors concealed inside a stored scenario without recursively reopening its case. */
 export function createSfScenarioOperationAccess(input: {
@@ -18,6 +19,7 @@ export function createSfScenarioOperationAccess(input: {
   readSourceFences: (call: TrustedDomainContext) => Promise<unknown | undefined>
   resolveProcurementEvidence: BusinessContextService["resolve"]
   recordedPlanner?: ReturnType<typeof createSfRecordedPlannerOperationAccess>
+  procurementProof?: ReturnType<typeof createSfScenarioProcurementProofScope>
   externalOperation: (request: { caseRef: { id: string; incarnation: string; version: number }; draftRef: string; operation: ScenarioOperation }, call: TrustedDomainContext) => Promise<PortResult<{ operationDigest: string; sourceRefs: readonly BusinessEvidenceRef[] }>>
 }) {
   return async (value: DecisionCase, call: TrustedDomainContext): Promise<boolean> => {
@@ -32,6 +34,13 @@ export function createSfScenarioOperationAccess(input: {
     const fences = await input.readSourceFences(call)
     if (!fences) return false
     const caseRef = { id: captured.id, incarnation: captured.incarnation, version: captured.version }
+    const groupKey = (item: (typeof selected)[number]) => digestSfValue({ scenario: item.scenario, result: item.result })
+    const duplicates = new Set(selected.map(groupKey).filter((key, index, all) => all.indexOf(key) !== index))
+    const scope = duplicates.size ? input.procurementProof?.(value, call) : undefined
+    // Invocation-local completed proofs only. No pending Promise or authority
+    // is shared with the next guard pass, another request or overlapping work.
+    const proofs = new Map<string, string>()
+    try {
     for (const item of selected) {
       const refs = [...captured.sourceRefs, ...item.result.sourceRefs, ...item.result.costCoverage.evaluatedSourceRefs,
         ...item.result.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs)]
@@ -48,6 +57,14 @@ export function createSfScenarioOperationAccess(input: {
         const unique = [...new Map(selectedRefs.map((ref) => [ref.refDigest, ref])).values()]
         if (domain.some((operation) => operation.kind !== "replace" || operation.replacementRef !== undefined || typeof operation.amount !== "number" || !Number.isFinite(operation.amount) || operation.amount < 0 || operation.currency !== item.result.currency || digestSfValue(operation.period) !== digestSfValue(item.result.horizon) ||
           !unique.some((ref) => ref.refId === operation.targetRef))) return false
+        const key = digestSfValue({ group: groupKey(item), refs: unique })
+        const before = scope && duplicates.has(groupKey(item)) ? await scope.snapshot() : undefined
+        if (before?.kind === "changed") return false
+        const proof = proofs.get(key)
+        if (proof) {
+          if (before?.kind !== "sf-scenario-procurement-fence" || before.digest !== proof || !scope?.current()) return false
+          continue
+        }
         const read = () => Promise.all(unique.map((ref) => input.resolveProcurementEvidence(ref, call)))
         const first = await read()
         if (first.some((result, index) => (result.state !== "fresh" && result.state !== "historical") || !result.authorizedProjection || !result.currentRef ||
@@ -57,6 +74,15 @@ export function createSfScenarioOperationAccess(input: {
         const second = await read()
         const material = (results: typeof first) => results.map(({ checkedAt: _at, ...value }) => value)
         if (digestSfValue(material(first)) !== digestSfValue(material(second)) || !await input.host.revalidate(call)) return false
+        if (scope && before?.kind === "sf-scenario-procurement-fence" && [...first, ...second].every((result) =>
+          result.state === "fresh" && result.currentRef && digestSfValue(result.currentRef) === digestSfValue(result.ref))) {
+          const after = await scope.snapshot()
+          if (after.kind === "changed") return false
+          if (after.kind === "sf-scenario-procurement-fence" && after.digest === before.digest && scope.current()) proofs.set(key, after.digest)
+          else if (proofs.size) return false
+          // Source metadata may materialize during the first complete reader.
+          // In that case keep the canonical observation without storing a proof.
+        }
         continue
       }
       const source = await input.sources.resolveForecastSource(item.scenario.baseRef, call)
@@ -98,7 +124,11 @@ export function createSfScenarioOperationAccess(input: {
       const again = await input.sources.resolveForecastSource(item.scenario.baseRef, call)
       if (again.status !== "ok" || digestSfValue(again.value.evidence) !== digestSfValue(source.value.evidence)) return false
     }
-    return digestSfValue(value) === original && digestSfValue(await input.readSourceFences(call)) === digestSfValue(fences) && await input.host.revalidate(call) && currentAuthority()
+    if (digestSfValue(value) !== original || digestSfValue(await input.readSourceFences(call)) !== digestSfValue(fences) || !await input.host.revalidate(call) || !currentAuthority()) return false
+    if (!proofs.size) return true
+    const final = await scope!.snapshot()
+    return final.kind === "sf-scenario-procurement-fence" && [...proofs.values()].every((proof) => proof === final.digest) && scope!.current() && currentAuthority()
+    } finally { scope?.close(); proofs.clear() }
   }
 }
 

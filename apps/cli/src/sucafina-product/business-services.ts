@@ -7,7 +7,7 @@ import { object, rows, text } from "../../../../modules/sucafina/Sucafinav1/runt
 import type { Actor, Snapshot } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
 import type { CreateSfHostRuntime } from "../../../../modules/sucafina/Sucafinav1/product/contracts/host-context.ts"
 import type { ConfirmationScope, Period } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
-import type { ForecastCompareRequest } from "../../../../modules/sucafina/Sucafinav1/product/contracts/operations.ts"
+import type { ForecastCompareRequest, WorkListRequest } from "../../../../modules/sucafina/Sucafinav1/product/contracts/operations.ts"
 import type { CapabilityDescriptor } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import type { PlannerSourceHost, PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
@@ -50,8 +50,11 @@ import { createSfScenarioOperationAccess } from "./scenario-operation-access.ts"
 import { createSfRecordedPlannerOperationAccess } from "./recorded-planner-operation-access.ts"
 import { createSfPreparedApplicationEgress } from "./prepared-application-egress.ts"
 import { createSfMemoryCaseReadScope } from "./memory-case-read-scope.ts"
+import { createSfSourceFenceReader } from "./source-fence-read.ts"
+import { createSfScenarioProcurementProofScope } from "./scenario-procurement-proof-scope.ts"
 import { createSfDecisionBaselineServices } from "./decision-baseline-services.ts"
 import { createCollaborationHost } from "../../../../modules/sucafina/Sucafinav1/product/collaboration/host.ts"
+import type { WorkSignals } from "../../../../modules/sucafina/Sucafinav1/product/collaboration/work-port.ts"
 import type { createSfContributionReader } from "../../../../modules/sucafina/Sucafinav1/product/ai/contribution-reader.ts"
 import { createProcurementConfirmationObserver } from "../../../../modules/sucafina/Sucafinav1/product/procurement/confirmation.ts"
 import { createProcurementCollectionMemberIssuer } from "../../../../modules/sucafina/Sucafinav1/product/procurement/collection-member.ts"
@@ -69,12 +72,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   const fences = (snapshots: NonNullable<ReturnType<NonNullable<typeof input.persistence.currentSnapshots>>>) => ({
     dashboard: sfRunSourceFence(snapshots.dashboard), planner: sfRunSourceFence(snapshots.planner), procurement: sfRunSourceFence(snapshots.procurement),
   })
-  const readSourceFences = async (call: TrustedDomainContext) => {
-    const request = host.requestFor(call)
-    if (!request || !input.persistence.transactionAll || !await host.revalidate(call)) return undefined
-    const found = await input.persistence.transactionAll(async (snapshots) => ({ commit: false, value: fences(snapshots) }), { signal: request.signal })
-    return await host.revalidate(call) && !request.signal.aborted ? found : undefined
-  }
+  const readSourceFences = createSfSourceFenceReader({ host, persistence: input.persistence })
   const lockedSourceFences = () => {
     const snapshots = input.persistence.currentSnapshots?.()
     return snapshots ? fences(snapshots) : undefined
@@ -174,16 +172,32 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     observe: async (scope, call) => (await confirmationSourceFor(scope)?.observe(scope, call)) ?? { state: "dependency-unavailable", sourceVersion: 0 },
     fence: async (scope, observation, call) => (await confirmationSourceFor(scope)?.fence(scope, observation, call)) ?? false,
   }
-  const collaboration = createCollaborationHost({ host, state: input.authority.state, creationTarget: input.authority.creationTarget,
+  type WorkBridge = { signals: WorkSignals; destination: (selection: WorkListRequest, actionRef: string, call: TrustedDomainContext) => Promise<PortResult<{ href: string }>> }
+  const workBridge: { current?: WorkBridge } = {}
+  const collaborationProducer = createCollaborationHost({ host, state: input.authority.state, creationTarget: input.authority.creationTarget,
     scopedSources: input.persistence, evidence: context, procurement, collections: registry, cases,
     authority: input.authority.authority, human: input.authority.human, confirmationSource,
     captureWorkSource: createProcurementCollectionMemberIssuer({ collection: registry, individual, revalidate: host.revalidate }),
     issueForActor: individual.issueForActor, prepareReissueScope: individual.prepareReissueScope,
     caseSelectionWrites: input.caseSelectionWrites, threadHistoryWrites: input.threadHistoryWrites,
+    workSignals: async (selection, period, call) => {
+      const bound = workBridge.current
+      if (!bound) return { status: "unavailable" }
+      const result = await bound.signals(selection, period, call)
+      return workBridge.current === bound ? result : { status: "unavailable" }
+    },
     readQuestionContribution: input.readQuestionContribution, workCaseAuthority: authorizeCase,
     requiredAuthority: { sf_work_list: ["threads:read", "relations:read", "confirmations:read"], sf_question_prepare: ["threads:read", "cases:read"],
       sf_answer_read: ["threads:read"], sf_relation_read: ["relations:read"], sf_handoff_prepare: ["threads:read", "relations:read"] },
     createId: randomUUID, now: () => new Date().toISOString() })
+  const collaboration = { ...collaborationProducer,
+    resolveWorkDestination: async (selection: WorkListRequest, actionRef: string, call: TrustedDomainContext): Promise<PortResult<{ href: string }>> => {
+      const bound = workBridge.current
+      if (!bound) return { status: "unavailable", reason: "work-destination-unavailable" }
+      const result = await bound.destination(selection, actionRef, call)
+      return workBridge.current === bound ? result : { status: "unavailable", reason: "work-destination-unavailable" }
+    },
+  }
   const dashboardDecisions = createSfDashboardDecisions({ authority: input.authority, cases, records: dashboardRecords, issue: dashboardServices.issue,
     proposalCoverageWrites: input.proposalCoverageWrites, dashboardHostWrites })
   type CaseRef = { id: string; incarnation: string; version: number }
@@ -392,6 +406,8 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   decisionEvidence.current = procurementDecisions
   scenarioOperationAccess = createSfScenarioOperationAccess({ host, sources: plannerSources, projectPlanner: projectPlannerEvidence, scenarioInputs: product.scenarioInputs,
     readSourceFences, resolveProcurementEvidence: context.resolve, externalOperation: dashboardDecisions.resolveOperation,
+    procurementProof: createSfScenarioProcurementProofScope({ host, state: input.authority.state, selection: selectedPeriod,
+      readerIdentity: () => evidence.current, isCurrentRecord: individual.isCurrent, lockedSourceFences }),
     recordedPlanner: createSfRecordedPlannerOperationAccess({ host, state: input.authority.state, resolveEvidence: context.resolve }) })
   const basePersist = createPlannerResultPersistence({ store: results, scenarios: product.scenarios, replay: planner, resolveCase })
   const calculations = createSfPlannerCalculationServices({ host, state: input.authority.state, results, authorizeCase, operationIdentity,
@@ -627,11 +643,15 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   }) }
   return { host, authorizeCase, dashboardSources, dashboardRecords, dashboard, dashboardServices, dashboardDecisions, procurement, procurementDecisions, procurementConfirmation, procurementDossier, procurementQueueView, collaboration, planner, plannerProduct: product, plannerSources, registry, individual, contracts, cases, context, evidence, caseRecall, results, calculations, scenarioLookup, sourcingEvidence, operationIdentity, receipt, resolveCase, withCase, readSourceFences, lockedSourceFences, lockedDecisionStateDigest, descriptors, procurementSelections, forecastInputs, initializeAtlas,
     projectPlannerEvidence, documentScenarios, resolveProcurement, selectedCase, baselineCoverage, bindDecisionDomain,
+    bindWorkBridge: (bridge: WorkBridge) => {
+      if (workBridge.current) throw new Error("SF_WORK_BRIDGE_ALREADY_BOUND")
+      workBridge.current = Object.freeze({ ...bridge })
+    },
     bindForecastCoverage: (reader: PlannerSourceHost["resolveForecastCoverage"]) => {
       if (forecastCoverage.current && forecastCoverage.current !== reader) throw new Error("SF_FORECAST_COVERAGE_ALREADY_BOUND")
       forecastCoverage.current = reader
     },
     atlasRecall: () => atlasState.current,
     remainingOperations: () => freeze.operations.map((entry) => entry.operation).filter((operation) => !descriptors.some((descriptor) => descriptor.id === operation)),
-    dispose: () => { plannerConfirmation.current = undefined; dashboardServices.dispose(); procurementDecisions?.dispose(); periods.clear(); evidence.current = undefined; recall.current = undefined; decisionEvidence.current = undefined; atlasState.current = undefined; forecastCoverage.current = undefined; decisionDomain.current = undefined; plannerHolder.current = undefined; clearAtlasDescriptors() } }
+    dispose: () => { workBridge.current = undefined; plannerConfirmation.current = undefined; dashboardServices.dispose(); procurementDecisions?.dispose(); periods.clear(); evidence.current = undefined; recall.current = undefined; decisionEvidence.current = undefined; atlasState.current = undefined; forecastCoverage.current = undefined; decisionDomain.current = undefined; plannerHolder.current = undefined; clearAtlasDescriptors() } }
 }

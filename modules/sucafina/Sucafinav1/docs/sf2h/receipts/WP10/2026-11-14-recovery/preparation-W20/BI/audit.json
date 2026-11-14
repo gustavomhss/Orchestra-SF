@@ -1,0 +1,161 @@
+{
+  "schema": "wp10-w20-bi-intake-audit-v1",
+  "role": "BUILDER_NOT_INDEPENDENT_REVIEWER",
+  "candidateBase": {
+    "commit": "d357de0b1f58abc33e86e79ad3f93b8715ba0e83",
+    "tree": "20d4e76e42a8b74daced57d64ad285f5dfef17a2"
+  },
+  "sourcePins": {
+    "PR32": "f9990ecc7ade0d64122633d51258ddafe2c93802",
+    "PR36": "8bb72c8cdeda149b000d91403c368642c3b53dec"
+  },
+  "verdict": "RECOMMEND_SEVEN_EXACT_FOREIGN_AND_EIGHT_RECONCILED_OWN_PENDING_HOSTED",
+  "foreignManifest": "foreign-selection-7.json",
+  "ownManifest": "own-overlay-manifest.json",
+  "proofManifest": "proof-selection-5.json",
+  "sourceManifest": "source-manifest.json",
+  "foreignFiles": 7,
+  "ownAdapters": 8,
+  "ownExactPublished": 5,
+  "ownOverlays": 3,
+  "proofFiles": 5,
+  "staticRelativeImportEdges": 201,
+  "localProductExecution": false,
+  "repoEdited": false,
+  "remoteMutations": false,
+  "findings": [
+    {
+      "id": "BI-PUBLISHED-REVIEW-REGRESSION-01",
+      "path": "apps/cli/src/sucafina-product/extended-http.ts",
+      "finding": "Published whole-file copy removes final grouped current/predecessor Review reauthorization and readScope wrapper.",
+      "resolution": "Own overlay starts from W19 and preserves entire blocks byte-exact; adds only BI decision route/output and access revision shell metadata."
+    },
+    {
+      "id": "BI-PUBLISHED-THREAD-REGRESSION-02",
+      "path": "apps/cli/src/sucafina-product/extended-browser.ts",
+      "finding": "Published whole-file copy deletes current-thread reader and validation.",
+      "resolution": "Own overlay restores exact W19 reader/type while retaining bounded lifecycle updates."
+    },
+    {
+      "id": "BI-QUERY-COMPAT-03",
+      "path": "apps/cli/src/sucafina-product/extended-bi-browser.ts",
+      "finding": "Producer consumer uses refDigest while W19 protected route/counterproofs use referenceDigest.",
+      "resolution": "Keep referenceDigest. Adapt one browser parameter and published own lifecycle test parameter/reason constants; all five lifecycle cases and 72 assertions remain."
+    },
+    {
+      "id": "BI-PERSISTED-INVERSE-04",
+      "finding": "Advantage is bound to a separately persisted exact inverse comparison, same authorized case and direct pair; second producer observations protect all results.",
+      "resolution": "Admit foreign5 unchanged. Own selector enumerates every authorized inverse separately, preserves no-inverse option, rejects total planned cardinality >300. No inverse or monetary value generated in UI."
+    },
+    {
+      "id": "BI-CALL-SCOPE-05",
+      "finding": "Original completed-proof cache does not authenticate an additional inverse result.",
+      "resolution": "Published own services bypass original scope only when advantageComparisonRef is explicitly present; original-pair scope and readForReview preserved."
+    },
+    {
+      "id": "BI-DESTINATION-06",
+      "finding": "Navigation tokens prove membership in a projection, not permission.",
+      "resolution": "Fresh C16 dispatch, exact snapshot/token lookup, canonical source/result/coverage/question/case readers twice, final current projection/case/Request/authority checks. Missing/ambiguous origins fail closed."
+    },
+    {
+      "id": "PORTFOLIO-HISTORY-DEPENDENCY-07",
+      "finding": "W19 provenance cannot recover an alternative no longer in the current case.",
+      "resolution": "Admit exact optional candidate reader and provenance fallback; own supplied authenticated binding/selection and historical wiring still required."
+    }
+  ],
+  "proofLimits": [
+    "Two new WP10 selector/navigation files exercise actual domain/C08 adapters with synthetic source declarations/grants; navigation HTTP positive installed decision workflow remains separate.",
+    "Published lifecycle uses real operator cookie/revocation, SQLite/C08/C16, HTTP shell and compiled browser bundle with fixture seed; no installed OS/native inference/global claim.",
+    "No test was executed by this audit. Earlier failed W19 A run remains failed and is not repaired by source observation.",
+    "Foreign WP05 fences/projection and own lifecycle tests need hosted candidate-bound runs; inverse copies do not prove graph completeness for all views.",
+    "No PR32 Finance apply/mutations downgrade is included; selected PR35 latest remains authoritative."
+  ],
+  "criteriaSubset": [
+    {
+      "id": "WP10.CMP.01",
+      "text": "Todas as capacidades antigas e novas, três superfícies, quatro rotinas, oito gráficos e estados relevantes têm cobertura rastreável.",
+      "family": "completeness_criteria",
+      "task": "WP10",
+      "status": "SOURCE_COMPOSITION_PROPOSED_HOSTED_EVIDENCE_PENDING",
+      "acceptance_claimed": false,
+      "remaining_proof": "Run exact candidate hosted selectors and installed BI routes; preserve domain values, original-pair performance/fences, Review grouped reads, native/global boundaries. This source subset does not satisfy the whole literal criterion."
+    },
+    {
+      "id": "WP10.QLT.02",
+      "text": "A entrega usa linguagem de produto e inclui limites materiais e semântica dos números.",
+      "family": "quality_standards",
+      "task": "WP10",
+      "status": "SOURCE_COMPOSITION_PROPOSED_HOSTED_EVIDENCE_PENDING",
+      "acceptance_claimed": false,
+      "remaining_proof": "Run exact candidate hosted selectors and installed BI routes; preserve domain values, original-pair performance/fences, Review grouped reads, native/global boundaries. This source subset does not satisfy the whole literal criterion."
+    },
+    {
+      "id": "WP10.SUC.10",
+      "text": "O consumidor integrado utiliza a saída de produção sem substituto fictício e o revisor consegue reproduzir o resultado.",
+      "family": "success_criteria",
+      "task": "WP10",
+      "status": "SOURCE_COMPOSITION_PROPOSED_HOSTED_EVIDENCE_PENDING",
+      "acceptance_claimed": false,
+      "remaining_proof": "Run exact candidate hosted selectors and installed BI routes; preserve domain values, original-pair performance/fences, Review grouped reads, native/global boundaries. This source subset does not satisfy the whole literal criterion."
+    },
+    {
+      "id": "WP10.T01.CHK.02",
+      "text": "Abrir cada função nova através da navegação real e observar leitura/escrita no domínio correto.",
+      "family": "checks",
+      "task": "WP10.T01",
+      "status": "SOURCE_COMPOSITION_PROPOSED_HOSTED_EVIDENCE_PENDING",
+      "acceptance_claimed": false,
+      "remaining_proof": "Run exact candidate hosted selectors and installed BI routes; preserve domain values, original-pair performance/fences, Review grouped reads, native/global boundaries. This source subset does not satisfy the whole literal criterion."
+    },
+    {
+      "id": "WP10.T01.CHK.03",
+      "text": "Rotinas usam recibo de run real; gráficos, imports e relatórios usam os mesmos valores autorizados dos domínios.",
+      "family": "checks",
+      "task": "WP10.T01",
+      "status": "SOURCE_COMPOSITION_PROPOSED_HOSTED_EVIDENCE_PENDING",
+      "acceptance_claimed": false,
+      "remaining_proof": "Run exact candidate hosted selectors and installed BI routes; preserve domain values, original-pair performance/fences, Review grouped reads, native/global boundaries. This source subset does not satisfy the whole literal criterion."
+    },
+    {
+      "id": "WP10.T01.DOD.01",
+      "text": "As superfícies reais consomem todas as portas e funções da campanha, sem caminhos de produção vazios ou simulados. O README de uso, roteiro e changelog correspondente estão incluídos em C e disponíveis para T05.",
+      "family": "dod",
+      "task": "WP10.T01",
+      "status": "SOURCE_COMPOSITION_PROPOSED_HOSTED_EVIDENCE_PENDING",
+      "acceptance_claimed": false,
+      "remaining_proof": "Run exact candidate hosted selectors and installed BI routes; preserve domain values, original-pair performance/fences, Review grouped reads, native/global boundaries. This source subset does not satisfy the whole literal criterion."
+    },
+    {
+      "id": "WP10.T02.CMP.01",
+      "text": "Cobrir usuários, formatos, moedas, períodos, comparações, approvals, revisão, rotinas, busca, filtros e acessibilidade previstos.",
+      "family": "completeness_criteria",
+      "task": "WP10.T02",
+      "status": "SOURCE_COMPOSITION_PROPOSED_HOSTED_EVIDENCE_PENDING",
+      "acceptance_claimed": false,
+      "remaining_proof": "Run exact candidate hosted selectors and installed BI routes; preserve domain values, original-pair performance/fences, Review grouped reads, native/global boundaries. This source subset does not satisfy the whole literal criterion."
+    },
+    {
+      "id": "WP10.T05.CMP.01",
+      "text": "Incluir todas as personas, principais jornadas, gráficos/rotinas, import/export, estados de erro e semânticas alteradas. Conferir todos os paths/status/modos/blobs do diff C→D, índice de evidências, ancestralidade e guard próprio de D; diff truncado ou dependência desconhecida falha.",
+      "family": "completeness_criteria",
+      "task": "WP10.T05",
+      "status": "SOURCE_COMPOSITION_PROPOSED_HOSTED_EVIDENCE_PENDING",
+      "acceptance_claimed": false,
+      "remaining_proof": "Run exact candidate hosted selectors and installed BI routes; preserve domain values, original-pair performance/fences, Review grouped reads, native/global boundaries. This source subset does not satisfy the whole literal criterion."
+    },
+    {
+      "id": "WP10.T05.QLT.10",
+      "text": "Limitações e falhas são específicas e rastreáveis ao produtor.",
+      "family": "quality_standards",
+      "task": "WP10.T05",
+      "status": "SOURCE_COMPOSITION_PROPOSED_HOSTED_EVIDENCE_PENDING",
+      "acceptance_claimed": false,
+      "remaining_proof": "Run exact candidate hosted selectors and installed BI routes; preserve domain values, original-pair performance/fences, Review grouped reads, native/global boundaries. This source subset does not satisfy the whole literal criterion."
+    }
+  ],
+  "criterionInventoryPreservation": {
+    "total": 171,
+    "tasks": 7,
+    "modified": false
+  }
+}

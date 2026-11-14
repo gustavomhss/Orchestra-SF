@@ -1,0 +1,75 @@
+{
+  "schema": "wp10-prepublication-ref-observation-v1",
+  "candidate": "W20-unpublished",
+  "head": {
+    "ref": "refs/heads/astra-wp10",
+    "node_id": "REF_kwDOVsSYprVyZWZzL2hlYWRzL2FzdHJhLXdwMTA",
+    "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/refs/heads/astra-wp10",
+    "object": {
+      "sha": "d357de0b1f58abc33e86e79ad3f93b8715ba0e83",
+      "type": "commit",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/commits/d357de0b1f58abc33e86e79ad3f93b8715ba0e83"
+    }
+  },
+  "checkRef": {
+    "ref": "refs/heads/astra-check-wp10",
+    "node_id": "REF_kwDOVsSYprtyZWZzL2hlYWRzL2FzdHJhLWNoZWNrLXdwMTA",
+    "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/refs/heads/astra-check-wp10",
+    "object": {
+      "sha": "2905231af2c4522d400fd1d292721f9d8429501e",
+      "type": "commit",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/commits/2905231af2c4522d400fd1d292721f9d8429501e"
+    }
+  },
+  "base": {
+    "ref": "refs/heads/sf2-stack",
+    "node_id": "REF_kwDOVsSYprRyZWZzL2hlYWRzL3NmMi1zdGFjaw",
+    "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/refs/heads/sf2-stack",
+    "object": {
+      "sha": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+      "type": "commit",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/commits/6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0"
+    }
+  },
+  "dev": {
+    "ref": "refs/heads/dev",
+    "node_id": "REF_kwDOVsSYpq5yZWZzL2hlYWRzL2Rldg",
+    "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/refs/heads/dev",
+    "object": {
+      "sha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+      "type": "commit",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/commits/a1d37698a7bb097c1578f827eba6a19b9917ef07"
+    }
+  },
+  "wp10Runs": [
+    {
+      "id": 43595658990,
+      "branch": "ci-run-linux-astra-wp10-d357de0b-480ce73a-01",
+      "sha": "12988ada266de298d0ec0ba9d8968845ae4c7782",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43595657356,
+      "branch": "astra-check-wp10",
+      "sha": "2905231af2c4522d400fd1d292721f9d8429501e",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43591262845,
+      "branch": "ci-run-linux-astra-wp10-8b1cc71d-480ce73a-01",
+      "sha": "f84d2f41bb5755d350d524053c391fc8338e7bdd",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 43591239877,
+      "branch": "astra-check-wp10",
+      "sha": "6d72852aa48f864338caa93204ae894ec1e978fe",
+      "status": "completed",
+      "conclusion": "failure"
+    }
+  ],
+  "observedAt": "2026-11-14 13:41:50 UTC"
+}

@@ -72,7 +72,14 @@ export function createSfDecisionResultStore(input: {
     if (!latest || !allowedCase(latest.current, value.stored.caseRef, context, historical) || latest.current?.version !== value.current?.version || !latest.stored || digestSfValue(latest.stored) !== digestSfValue(value.stored) || !await authorizeCase(latest.current!, context).catch(() => false) || !await verifySources(latest.stored, calculation && latest.stored.kind === "scenario" ? calculationSources(latest.stored) : latest.stored.sourceRefs, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "result-access-unavailable" }
     if (calculation && latest.stored.kind === "scenario" && input.verifyCalculationSources && !await verifyCalculationSources(latest.stored, context).catch(() => false)) return { status: "unavailable", reason: "calculation-source-unproven" }
     if (source.signal.aborted || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "result-access-unavailable" }
-    return { status: "ok", value: structuredClone(latest.stored) }
+    // Source replay can await domain reads. Observe the same authorized case and result
+    // after that last callback, under C08's read fence, before releasing the value.
+    const final = await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? { current: state.cases[value.stored.caseRef.id], stored: (state as typeof state & { decisionResults?: Record<string, StoredDecisionResult> }).decisionResults?.[request.resultRef] } : undefined).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
+    if (final.status !== "ok") return { status: "unavailable", reason: "result-unavailable" }
+    const observed = structuredClone(final.value)
+    if (historicalRequest && (!observed?.stored || !historicalCalculationMatches(observed.current, observed.stored, historicalRequest, context) || digestSfValue(observed.current) !== digestSfValue(latest.current))) return { status: "denied", reason: "historical-calculation-changed" }
+    if (!observed || !allowedCase(observed.current, value.stored.caseRef, context, historical) || digestSfValue(observed.current) !== digestSfValue(latest.current) || !observed.stored || digestSfValue(observed.stored) !== digestSfValue(latest.stored) || source.signal.aborted) return { status: "denied", reason: "result-access-unavailable" }
+    return { status: "ok", value: structuredClone(observed.stored) }
   }
   const read = (request: { resultRef: string; kind: keyof ResultMap }, context: TrustedDomainContext) => readResult(request, context, false)
   const readForCalculation = (request: { resultRef: string }, context: TrustedDomainContext) => readResult({ resultRef: request.resultRef, kind: "scenario" }, context, false, true)

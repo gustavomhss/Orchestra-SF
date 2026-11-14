@@ -1,0 +1,271 @@
+{
+  "schema": "wp10.c17.w20-builder-corrections.v1",
+  "status": "frozen",
+  "role": "builder; not an independent reviewer",
+  "baseline": {
+    "productSha": "d357de0b1f58abc33e86e79ad3f93b8715ba0e83",
+    "treeSha": "20d4e76e42a8b74daced57d64ad285f5dfef17a2",
+    "frozenRoot": "publication/frozen-W19/repo"
+  },
+  "ownPaths": [
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "bytes": 63821,
+      "sha256": "ebd99ff75c9e17648266d770e2786dbc8f5fd19e442db5b6802e8da82af1ac99",
+      "blobSha": "102cec6fb93188aa177b4c2c572a58ccb79a6d87",
+      "mode": "own-patch",
+      "diff": "agents/c17/W20-corrections/diffs/apps__cli__src__sucafina-product__business-services.ts.diff",
+      "linesAdded": 3,
+      "linesRemoved": 0
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+      "bytes": 12272,
+      "sha256": "dfc532aa0594e44666b18fc0a35137820213205306ac9c96adaa0acc2e6c17e2",
+      "blobSha": "f83b79d838deb2fcdd09300903d2469b3de6d32e",
+      "mode": "own-patch",
+      "diff": "agents/c17/W20-corrections/diffs/apps__cli__src__sucafina-product__scenario-operation-access.ts.diff",
+      "linesAdded": 31,
+      "linesRemoved": 1
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+      "bytes": 42562,
+      "sha256": "0a35c50bd34eac1bd40fb3f46f6a690650ac89914dec180942163b0546ad667a",
+      "blobSha": "a4193ca736adce487b679cabe1f19ec1585b6ca1",
+      "mode": "own-patch",
+      "diff": "agents/c17/W20-corrections/diffs/modules__sucafina__Sucafinav1__test__product__wp10__analysis-composition__historical-memory.test.ts.diff",
+      "linesAdded": 4,
+      "linesRemoved": 1
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "bytes": 24726,
+      "sha256": "16ab73fd08584ac978ac9ac77fa11bcae9c391cf047b0b2bc084de8fb68308d2",
+      "blobSha": "9c478de4213624daca55908e23d853b1d1db9eb1",
+      "mode": "own-patch",
+      "diff": "agents/c17/W20-corrections/diffs/modules__sucafina__Sucafinav1__test__product__wp10__integration__scenario-operation-access.test.ts.diff",
+      "linesAdded": 204,
+      "linesRemoved": 1
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/scenario-procurement-proof-scope.ts",
+      "bytes": 7873,
+      "sha256": "53f1fb931b261e567aa4e2695e69194544d708dca618f5e6497cfa2c8fcc18c5",
+      "blobSha": "2ebb518403bc463dddd645f77af12cb877bce3e1",
+      "mode": "own-new",
+      "diff": "agents/c17/W20-corrections/diffs/apps__cli__src__sucafina-product__scenario-procurement-proof-scope.ts.diff",
+      "linesAdded": 103,
+      "linesRemoved": 0
+    }
+  ],
+  "sourceManifest": {
+    "path": "agents/c17/W20-corrections/source-manifest.json",
+    "bytes": 2533,
+    "sha256": "c93d0750a99c9d5b2e499f2401e52a3cf534c2b29d730009e0e31449e82dd09a",
+    "blobSha": "e8ab3e72c3e23595b16a39400ee57b6e7a2632dd"
+  },
+  "staticChecks": {
+    "path": "agents/c17/W20-corrections/static-checks.json",
+    "bytes": 5466,
+    "sha256": "b3231a3fa46ef748dd2d367bbd7b51baa0d641e35aeb86efe4b68cf98308f259",
+    "blobSha": "9098be1056b4349d843ef8d3fa02a19516835245"
+  },
+  "causes": [
+    {
+      "id": "W19-CHECK-OWN-TS2345",
+      "runId": 43595657356,
+      "jobId": 132449459684,
+      "status": "observed terminal failure",
+      "diagnostic": "historical-memory.test.ts(345,74) TrustedDomainContext cannot be passed to finish(TrustedUiContext)",
+      "fix": "Explicitly reject probeCall.kind !== ui before finish; no trusted-context cast, no grants or producer changes.",
+      "verification": "W20 hosted CHECK pending; static narrowing only."
+    },
+    {
+      "id": "C12-DUPLICATE-SCENARIO-RESULT",
+      "sourceAudit": "agents/ci/W19-c12-latency/audit.md",
+      "cause": "One case.read traverses accessible twice and the scenario guard twice; alternative and preserved choice contain the same whole scenario and result. Each entry previously performed two BCS root resolutions.",
+      "fix": "Invocation-local completed boolean proof, keyed by full scenario/result and unique record refs. Retain two real BCS observations for the first occurrence. Every reuse reopens authentic C08 and all source/current authority witnesses; close and clear at finally.",
+      "staticRootBcsCalls": {
+        "before": 10,
+        "candidateAfter": 6,
+        "reviewOrFirstApplyBefore": 30,
+        "reviewOrFirstApplyCandidateAfter": 18
+      },
+      "latencyMeasured": false,
+      "additionalWitnessCost": "Not measured; actual C08/environment/authentication/source work remains."
+    }
+  ],
+  "eligibility": {
+    "allowed": "UI, current individual sf-procurement procurement-request records only, duplicate exact scenario/result within one guard invocation. All case evidence and all scenario bases/targets must remain in that record closure.",
+    "canonicalFallback": [
+      "native",
+      "Planner",
+      "mixed evidence kinds or domains",
+      "historical records",
+      "collection/supplier/implicit replacement/external hot-topic selectors",
+      "scenario assumptions",
+      "approval records with continuous ageDays",
+      "missing selected period, reader or locked snapshots",
+      "unique scenario/result groups"
+    ],
+    "neverShared": [
+      "Promise",
+      "pending observations",
+      "ALS state",
+      "proof between case guard passes",
+      "proof between overlapping invocations",
+      "proof between Requests"
+    ],
+    "noFailureCache": true
+  },
+  "witness": {
+    "firstProof": "Two unchanged canonical BCS observations, comparing all material except checkedAt; fresh plus currentRef equals ref required to memoize.",
+    "eachReuse": "Real state.read(cases) under the existing C08 lock; no producer reader inside the lock.",
+    "protectedState": [
+      "complete structured C08 state",
+      "raw __sfProductV1 digest",
+      "case identity/version/content/participants",
+      "captures and archives",
+      "receipts",
+      "preferences",
+      "every protected namespace and transaction record"
+    ],
+    "sources": "All three actual locked sfRunSourceFence values plus the independent complete C08 state witness; sfRunSourceFence alone is not used as authorization.",
+    "authority": [
+      "real C08 actor principal/accessRevision/policyVersion",
+      "real current Procurement principal and roleMap, twice",
+      "host.revalidate inside C08 and C08 final reauthorization",
+      "same live Request object, method, URL, every header, abort status",
+      "immutable binding digest and current UI lease",
+      "same private period object/content/expiry",
+      "same BCS reader identity"
+    ],
+    "environment": [
+      "UTC day (continuous approval-age records excluded)",
+      "current directory, cloned",
+      "bank key bytes, privately digested only"
+    ],
+    "egress": "Final real C08 snapshot after original source/authority awaits; synchronous Request/binding/selection/lease checks afterward. No extra await claimed to make external state atomic.",
+    "onChange": "Reject any reuse/final egress whose full witness differs. If initial metadata materializes before a first proof can be stored, retain the complete canonical observation without memoizing."
+  },
+  "testChanges": {
+    "existingTestsUnchanged": 6,
+    "addedTests": 13,
+    "file": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+    "positive": "Real UI, C08, SQLite, source issuance, BCS, original archive, preserved choice; repeat case reads and require independent canonical observations each time.",
+    "counterproofs": [
+      "whole operation differs",
+      "whole result differs",
+      "coverage differs",
+      "refs differ",
+      "historical original after actual domain edit",
+      "current source edit after first double observation",
+      "actual original archive corrupted with C08 versions unchanged",
+      "protected receipt bytes changed with C08 versions unchanged",
+      "preferences changed with C08 versions unchanged",
+      "case content changed with C08 versions unchanged",
+      "principal revoked",
+      "private selected period replaced",
+      "UTC day advanced",
+      "Request headers replaced",
+      "actual UI lease finished",
+      "overlapping invocations on same Request",
+      "Request header replacement after final C08 read"
+    ],
+    "fixtureLimits": "Stored alternative/choice and pending coverage are explicit upstream fixtures. Public counters delegate to actual BCS/state readers; no fake successful domain/evidence authority. Fault-injected receipt is explicitly malformed, not a fabricated accepted receipt.",
+    "counters": "scenario counts public BCS.resolve root invocations; context counts root refs passed to BCS.context; fences counts successful real helper witnesses. These are not physical SQLite commits or measured savings.",
+    "budgets": "Existing 225000/240000 historical deadlines unchanged; original scenario deadlines unchanged; new tests use existing 105000 cooperative/120000 outer limits.",
+    "execution": "unexecuted locally; hosted W20 required"
+  },
+  "ciSelection": {
+    "required": [
+      "full CHECK including own consumer typecheck",
+      "A22 complete affected files, including historical-memory and foreign WP04 host-integration",
+      "B8 complete files including scenario-operation-access, recorded-history, calculation-ancestry and native scopes"
+    ],
+    "newTestFile": null,
+    "newProductFile": "apps/cli/src/sucafina-product/scenario-procurement-proof-scope.ts",
+    "W19A": {
+      "runId": 43595658990,
+      "stateAtAssignment": "in_progress",
+      "resultTransferred": false
+    },
+    "measure": [
+      "SF_SCENARIO_PROOF_COUNTS",
+      "existing H01-H08 HTTP durations and transaction API counters",
+      "unmodified H02/H03/H05/H06 budgets"
+    ]
+  },
+  "pending": [
+    {
+      "id": "H05-409-vs-200",
+      "owners": [
+        "WP04",
+        "WP11",
+        "S0"
+      ],
+      "testPin": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+      "producerPin": "92f6d97d2df5ebf53cd845f4cfe93355d10b0f6f",
+      "state": "Unchanged incompatibility: test requires409 after unrelated case edit; producer preserves edit and returns200. No own workaround/test change."
+    },
+    {
+      "id": "W20-HOSTED",
+      "state": "Await exact published SHA/run IDs and complete terminal results."
+    },
+    {
+      "id": "INDEPENDENT-REVIEW",
+      "state": "Three required independent reviews remain external to this builder audit."
+    }
+  ],
+  "boundaries": {
+    "localProductTests": false,
+    "localTypecheck": false,
+    "localBuildOrImportExecution": false,
+    "remoteMutation": false,
+    "foreignAuthorship": false,
+    "budgetsIncreased": false,
+    "frozenW19Changed": false,
+    "priorReceiptsChanged": false,
+    "nativeAcceptance": "unexecuted/not claimed",
+    "globalAcceptance": "unexecuted/not claimed"
+  },
+  "references": [
+    {
+      "path": "agents/ci/W19-c12-latency/audit.md",
+      "bytes": 16545,
+      "sha256": "948de74d0f1d2242385816eef4e0940bbe3e75e9c457ea43c18e14372e00b48a",
+      "blobSha": "1144aa94d4a794a530889deb3a7cdf8ade5b1834"
+    },
+    {
+      "path": "agents/ci/W19-c12-latency/metrics.json",
+      "bytes": 7408,
+      "sha256": "69855a21437be6326670123818c390c0b1ac67a4976337a8f4fabea37c48e37d",
+      "blobSha": "be3986dc9dd503712652c011134fdc2daa70c0a7"
+    },
+    {
+      "path": "agents/ci/W19-c12-latency/source-manifest.json",
+      "bytes": 7389,
+      "sha256": "150b04cc9acd46e53fb788665a0fef69ca835d6a8ba7c7decddc5ef7586b21cc",
+      "blobSha": "e8480c1b7caa8f5a94aa7b51b874859de57c79a1"
+    },
+    {
+      "path": "evidence/W19/check-artifact/wp10-test-typecheck.log",
+      "bytes": 424,
+      "sha256": "6eb86ffb0fb03eb70e227beb99a72f5074bf0627ca83140c8e20e1fca05ff484",
+      "blobSha": "28602efb54913aab2e354459ecb4f9fd2dc16b04"
+    },
+    {
+      "path": "evidence/W19/normalized/check/terminal.json",
+      "bytes": 5914,
+      "sha256": "8217f824b5dfee70a567f12eaaea97634c63074c9d0a578ea102f742e2f2be78",
+      "blobSha": "fcf4f2693d55fc435addf3826fa92b97792a4c9d"
+    },
+    {
+      "path": "agents/c17/W19-failures/references/procurement-screen.W18.ts",
+      "bytes": 20940,
+      "sha256": "6b05ad525a3f756ef6312656b2bd8d0f36746b7791480d5c52375c2c7a656908",
+      "blobSha": "510be5b2aeb82e740f342a5b649619116cb8ff1c"
+    }
+  ]
+}

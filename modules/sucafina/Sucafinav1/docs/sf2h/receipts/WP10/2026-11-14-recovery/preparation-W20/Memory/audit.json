@@ -1,0 +1,102 @@
+{
+  "schema": "wp10-w20-memory-selector-identity-v1",
+  "status": "frozen",
+  "role": "builder-not-independent-review",
+  "baseline": {
+    "productSha": "d357de0b1f58abc33e86e79ad3f93b8715ba0e83",
+    "tree": "20d4e76e42a8b74daced57d64ad285f5dfef17a2",
+    "runId": 43595658990,
+    "jobId": 132449464415,
+    "log": "evidence/W19/A-job-132449464415.raw.txt",
+    "logSha256": "37e8cd669418575398e22ca2d3bf17d8c2f82c4c36c62006f71045fdaa334c4f"
+  },
+  "observed": {
+    "phase": "memory.prepare",
+    "phaseMs": 24678,
+    "elapsedMs": 29475,
+    "aborted": false,
+    "persistenceApiCalls": 7437,
+    "c08Reads": 203,
+    "caseReads": 7,
+    "caseFences": 10,
+    "atlasCanonicalReads": 1,
+    "atlasCanonicalCompleted": 1,
+    "result": "unavailable/analysis-source-unavailable"
+  },
+  "cause": {
+    "confidence": "static causal proof; fixed execution pending",
+    "publicContract": "createSfAtlasMemory.recall({id,incarnation},call)",
+    "firstSelector": "business.selectCandidates returns objects with only id and incarnation; rankSfAtlasRecall passes these into memory.recall",
+    "egressSelector": "rankSfAtlasRecall.authorizeAtlas at egress passes candidate.envelope.caseRef, including its preserved version",
+    "ownFault": "memory-case-read-scope used a key containing only id/incarnation but stored inputDigest of every raw incoming field. At egress its same key therefore had a different digest and invalidated the whole scope.",
+    "relationToSourceFenceFix": "independent of source-fence-reader nested write fix; no business-services edit here"
+  },
+  "change": [
+    "Compute the reusable selector digest from exactly the two declared Atlas recall fields.",
+    "Retain a separate complete argument digest for each invocation and compare it after awaited work or before returning a reused result.",
+    "Outer recall selection, versioned scope, Request identity/method/URL/headers, binding, reader identity, lease, principal, source snapshots and full C08 state remain pinned.",
+    "First canonical read, original capture/current continuity, clone-per-return, unsupported-path refusal, native fallback and no shared pending Promise are unchanged.",
+    "Keep canonical rank.proveContinuity and every foreign producer byte intact.",
+    "After real producer.prepare positive control, assert both independent producer observations each completed one canonical Atlas proof (2 reads/2 completions); existing races and full assertions remain."
+  ],
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/memory-case-read-scope.ts",
+      "mode": "own-overlay",
+      "beforeSha256": "80c6676d93be7d9ddebde080a0c0f04b877eed230878f11543ad266f4549dd3f",
+      "sha256": "71077bc158ca654eebfde49d751b9b6929b1ec35d67541a18b6ba0a56e73ab77",
+      "blobSha": "dc398afaa299cb01587794ab8cee0391c1be8eb2",
+      "bytes": 16631,
+      "localPath": "agents/c17/W20-memory-identity/package/apps/cli/src/sucafina-product/memory-case-read-scope.ts",
+      "importsUnchanged": true,
+      "upstreamImportsOutsideSparseCheckout": [
+        {
+          "path": "modules/sucafina/Sucafinav1/src/procurement-screen.ts",
+          "sourceCommit": "d357de0b1f58abc33e86e79ad3f93b8715ba0e83",
+          "treeSha": "20d4e76e42a8b74daced57d64ad285f5dfef17a2",
+          "blobSha": "510be5b2aeb82e740f342a5b649619116cb8ff1c"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/src/procurement-screen.ts",
+          "sourceCommit": "d357de0b1f58abc33e86e79ad3f93b8715ba0e83",
+          "treeSha": "20d4e76e42a8b74daced57d64ad285f5dfef17a2",
+          "blobSha": "510be5b2aeb82e740f342a5b649619116cb8ff1c"
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+      "mode": "own-overlay",
+      "beforeSha256": "0a35c50bd34eac1bd40fb3f46f6a690650ac89914dec180942163b0546ad667a",
+      "sha256": "e2db992614477b88fef533ec2cc3b0c064d3f3ee98c16a664c606475674cfa47",
+      "blobSha": "3caa43aae5fe77888b90483d13dc8f8735235b14",
+      "bytes": 43104,
+      "localPath": "agents/c17/W20-memory-identity/package/modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+      "importsUnchanged": true,
+      "upstreamImportsOutsideSparseCheckout": [
+        {
+          "path": "packages/core/test/fixture/omni-expect.ts",
+          "sourceCommit": "d357de0b1f58abc33e86e79ad3f93b8715ba0e83",
+          "treeSha": "20d4e76e42a8b74daced57d64ad285f5dfef17a2",
+          "blobSha": "067fbf7a21e008caacfab46a2eaeb878ac7bcaac"
+        },
+        {
+          "path": "modules/atlas/boundary/package.json",
+          "sourceCommit": "d357de0b1f58abc33e86e79ad3f93b8715ba0e83",
+          "treeSha": "20d4e76e42a8b74daced57d64ad285f5dfef17a2",
+          "blobSha": "6a5e7bddf5b9ea31dd0fb795f38be4fc98a231b7"
+        }
+      ]
+    }
+  ],
+  "ciSelection": [
+    "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts"
+  ],
+  "limits": [
+    "No local product tests, typecheck, build, imports or browser executed.",
+    "W20 hosted result, absolute latency and remaining phases are unverified.",
+    "Existing 225000ms cooperative deadline and 240000ms Bun limit are unchanged; no assertion or counterproof removed.",
+    "The historical lifecycle fixture remains explicitly unexecuted native metadata; no native or global acceptance.",
+    "No changes to G03 frozen package, C12 frozen package, previous receipts/audits, foreign files or other branches."
+  ]
+}

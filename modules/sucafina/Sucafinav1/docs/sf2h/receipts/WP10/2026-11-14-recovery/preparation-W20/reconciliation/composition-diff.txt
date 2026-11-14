@@ -1,0 +1,658 @@
+--- /dev/null
++++ b/apps/cli/src/sucafina-product/portfolio-reconciliation-services.ts
+@@ -0,0 +1,173 @@
++import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
++import { decodeSfOperationOutput } from "../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
++import type { PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
++import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
++import type { SfStoredDecisionResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/state.ts"
++import type { ChoiceRecord } from "../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts"
++import type { PortfolioBinding } from "../../../../modules/sucafina/Sucafinav1/product/decisions/portfolio-bindings.ts"
++import { createDecisionCandidateResolver } from "../../../../modules/sucafina/Sucafinav1/product/portfolio/candidates.ts"
++import { createPortfolioCandidateHistoryReader } from "../../../../modules/sucafina/Sucafinav1/product/portfolio/proof.ts"
++import { createPortfolioHistoricalProvenance } from "../../../../modules/sucafina/Sucafinav1/product/portfolio/history-provenance.ts"
++import type { PortfolioCandidate } from "../../../../modules/sucafina/Sucafinav1/product/portfolio/port.ts"
++import type { PortfolioReconciliationHost, PortfolioReconciliationRequest } from "../../../../modules/sucafina/Sucafinav1/product/portfolio/reconciliation.ts"
++import type { createSfProductAuthority } from "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
++import type { createSfBusinessServices } from "./business-services.ts"
++import type { createSfPortfolioAuthority } from "./portfolio-authority.ts"
++
++type CaseRef = PortfolioReconciliationRequest["caseRef"]
++type StoredPortfolio = Extract<SfStoredDecisionResult, { kind: "portfolio" }>
++export type SfPortfolioReconciliationChoice = { request: PortfolioReconciliationRequest; label: string; originalCaseVersion: number }
++type Catalog = { choices: readonly SfPortfolioReconciliationChoice[]; unavailable: number }
++
++/** Private C08 readers supply provenance; browser identifiers never supply a binding or candidate proof. */
++export function createSfPortfolioReconciliationServices(input: {
++  authority: ReturnType<typeof createSfProductAuthority>
++  business: ReturnType<typeof createSfBusinessServices>
++  registries: Pick<ReturnType<typeof createSfPortfolioAuthority>, "portfolioBindings" | "selection">
++}) {
++  const { authority, business, registries } = input
++  const host = authority.host
++  const candidate = createDecisionCandidateResolver(business.cases)
++  const historicalCandidate = createPortfolioCandidateHistoryReader({ state: authority.state, cases: business.cases,
++    results: business.results, evidence: business.context, host })
++  const readPortfolio: PortfolioReconciliationHost["readPortfolio"] = async (incoming, call) => {
++    try {
++      const request = structuredClone(incoming), expected = digestSfValue(request)
++      const source = host.requestFor(call), binding = digestSfValue([call.kind, call.binding])
++      const transport = source && requestDigest(source)
++      const intact = () => !!source && host.requestFor(call) === source && !source.signal.aborted && requestDigest(source) === transport &&
++        binding === digestSfValue([call.kind, call.binding]) && expected === digestSfValue(incoming) && expected === digestSfValue(request)
++      const denied = (): PortResult<never> => ({ status: "denied", reason: "portfolio-reconciliation-authority-changed" })
++      if (!source || !intact() || !await host.revalidate(call) || !intact()) return denied()
++      const selected = await business.resolveCase(call)
++      if (selected.status !== "ok" || digestSfValue(selected.value) !== digestSfValue(request.caseRef)) return denied()
++      const load = () => authority.state.read(source, "cases", (state, actor) => {
++        const decision = state.cases[request.caseRef.id]
++        const stored = state.decisionResults?.[request.resultRef]
++        return intact() && actor.principalRef === call.binding.principalRef && actor.accessRevision === call.binding.accessRevision &&
++          actor.policyVersion === call.binding.policyVersion && decision && decision.incarnation === request.caseRef.incarnation &&
++          decision.version === request.caseRef.version && decision.participants.includes(actor.principalRef) && stored?.kind === "portfolio"
++          ? structuredClone({ decision, stored }) : undefined
++      })
++      const first = await load()
++      if (first.status !== "ok" || !first.value || !intact()) return denied()
++      const stored = first.value.stored
++      if (stored.schema !== "sf-decision-result-v1" || stored.resultRef !== request.resultRef || stored.caseRef.id !== request.caseRef.id ||
++        stored.caseRef.incarnation !== request.caseRef.incarnation || !Number.isSafeInteger(stored.caseRef.version) || stored.caseRef.version < 1 ||
++        stored.caseRef.version > request.caseRef.version || stored.resultDigest !== digestSfValue(stored.result) ||
++        !/^[a-f0-9]{64}$/.test(stored.requestDigest) || !stored.sourceRefs.length || !decodeSfOperationOutput("sf_portfolio_evaluate", stored.result).ok)
++        return { status: "unavailable", reason: "portfolio-reconciliation-origin-invalid" }
++      const fresh = stored.caseRef.version === request.caseRef.version
++      const readBinding = async (scope: { caseRef: CaseRef; resultRef: string }, context: TrustedDomainContext): Promise<PortResult<{ binding: PortfolioBinding; selection: unknown }>> => {
++        if (context !== call || !intact() || digestSfValue(scope.caseRef) !== digestSfValue(request.caseRef) || scope.resultRef !== request.resultRef) return denied()
++        // Source history at owner version N/N is deliberately not admitted by
++        // weakening a historical reader. The current producer must still agree.
++        if (!fresh) return registries.portfolioBindings.readHistoricalBinding(scope, call)
++        const found = await registries.portfolioBindings.read(scope, call)
++        if (found.status !== "ok") return found
++        const selection = await registries.selection.read({ caseRef: scope.caseRef }, call)
++        if (selection.status !== "ok") return selection
++        return intact() && selection.value.selectionDigest === found.value.proof.selectionDigest
++          ? { status: "ok", value: { binding: found.value, selection: selection.value } } : denied()
++      }
++      const bound = await readBinding(request, call)
++      if (bound.status !== "ok") return bound
++      const proof = createPortfolioHistoricalProvenance({ readHistoricalBinding: readBinding,
++        readHistoricalCandidate: historicalCandidate, cases: business.cases, evidence: business.context, host,
++        caseFor: async (context) => context === call && intact() ? business.resolveCase(context) : denied() })
++      if (!await proof(stored, call) || !intact()) return { status: "unavailable", reason: "portfolio-reconciliation-provenance-unavailable" }
++      const bindingValue = bound.value.binding
++      if (bindingValue.request.candidateRefs.length > 64 || bindingValue.proof.candidates.length !== bindingValue.request.candidateRefs.length ||
++        new Set(bindingValue.request.candidateRefs).size !== bindingValue.request.candidateRefs.length)
++        return { status: "unavailable", reason: "portfolio-reconciliation-candidates-invalid" }
++      const resolved = await Promise.all(bindingValue.request.candidateRefs.map(async (ref, index): Promise<PortResult<PortfolioCandidate>> => {
++        const proof = bindingValue.proof.candidates[index]
++        if (!proof || proof.ref !== ref || !/^[a-f0-9]{64}$/.test(proof.digest)) return { status: "unavailable", reason: "portfolio-reconciliation-candidate-unbound" }
++        const found = fresh ? await candidate(ref, call) : await historicalCandidate({ ref, candidateDigest: proof.digest }, call)
++        if (found.status !== "ok") return found
++        const value = "candidate" in found.value ? found.value.candidate : found.value
++        return value.ref === ref && digestSfValue(value) === proof.digest && digestSfValue(value.operations) === digestSfValue(value.scenario.operations)
++          ? { status: "ok", value: structuredClone(value) } : { status: "unavailable", reason: "portfolio-reconciliation-candidate-changed" }
++      }))
++      const failure = resolved.find((result) => result.status !== "ok")
++      if (failure && failure.status !== "ok") return failure
++      const all = resolved.flatMap((result) => result.status === "ok" ? [result.value] : [])
++      const candidates = selectedCandidates(bindingValue, stored, all, request.combinationId)
++      if (!candidates) return { status: "unavailable", reason: "portfolio-reconciliation-combination-unbound" }
++      const again = await readBinding(request, call)
++      const scope = await business.resolveCase(call)
++      if (again.status !== "ok" || digestSfValue(again.value) !== digestSfValue(bound.value) || scope.status !== "ok" ||
++        digestSfValue(scope.value) !== digestSfValue(request.caseRef) || !await host.revalidate(call) || !intact()) return denied()
++      const last = await load()
++      if (last.status !== "ok" || !last.value || digestSfValue(last.value) !== digestSfValue(first.value) || !intact())
++        return { status: "stale", reason: "portfolio-reconciliation-origin-changed" }
++      return { status: "ok", value: { stored: structuredClone(stored), binding: structuredClone(bindingValue), candidates } }
++    } catch { return { status: "unavailable", reason: "portfolio-reconciliation-origin-unavailable" } }
++  }
++  const list = async (caseRef: CaseRef, call: TrustedDomainContext): Promise<PortResult<Catalog>> => {
++    const source = host.requestFor(call), binding = digestSfValue([call.kind, call.binding]), expected = digestSfValue(caseRef)
++    const transport = source && requestDigest(source)
++    const intact = () => !!source && host.requestFor(call) === source && !source.signal.aborted && requestDigest(source) === transport &&
++      binding === digestSfValue([call.kind, call.binding]) && expected === digestSfValue(caseRef)
++    if (!source || !intact() || !await host.revalidate(call)) return { status: "denied", reason: "portfolio-reconciliation-authority-changed" }
++    const load = () => authority.state.read(source, "cases", (state, actor) => {
++      const decision = state.cases[caseRef.id]
++      return intact() && actor.principalRef === call.binding.principalRef && actor.accessRevision === call.binding.accessRevision &&
++        actor.policyVersion === call.binding.policyVersion && decision && decision.incarnation === caseRef.incarnation && decision.version === caseRef.version &&
++        decision.participants.includes(actor.principalRef) ? structuredClone({ decision, portfolios: Object.values(state.decisionResults ?? {})
++          .filter((record): record is StoredPortfolio => record.kind === "portfolio" && record.caseRef.id === caseRef.id && record.caseRef.incarnation === caseRef.incarnation && record.caseRef.version <= caseRef.version) }) : undefined
++    })
++    const first = await load()
++    if (first.status !== "ok" || !first.value || !intact()) return { status: "denied", reason: "portfolio-reconciliation-case-unavailable" }
++    if (first.value.portfolios.length > 32 || first.value.decision.choices.length > 128) return { status: "needs-input", reason: "portfolio-reconciliation-catalog-limit" }
++    if (first.value.portfolios.reduce((count, stored) => count + stored.result.combinations.length, 0) > 256)
++      return { status: "needs-input", reason: "portfolio-reconciliation-catalog-limit" }
++    const plans: { stored: StoredPortfolio; combination: StoredPortfolio["result"]["combinations"][number]; choice: ChoiceRecord }[] = []
++    for (const stored of first.value.portfolios) for (const combination of stored.result.combinations) for (const choice of first.value.decision.choices) {
++      if (!combination.analysis || choice.comparison.alternativeResultRef !== combination.analysis.scenarioResultRef ||
++        digestSfValue(choice.comparison) !== digestSfValue(combination.analysis.comparison) || digestSfValue(choice.result) !== digestSfValue(combination.analysis.scenario)) continue
++      if (plans.length >= 64) return { status: "needs-input", reason: "portfolio-reconciliation-catalog-limit" }
++      plans.push({ stored, combination, choice })
++    }
++    const choices: SfPortfolioReconciliationChoice[] = []
++    let unavailable = 0
++    for (const { stored, combination, choice } of plans) {
++      const found = await readPortfolio({ caseRef, resultRef: stored.resultRef, combinationId: combination.id }, call)
++      if (found.status === "denied") return found
++      if (found.status !== "ok") { unavailable++; continue }
++      choices.push({ request: { caseRef: structuredClone(caseRef), portfolioResultRef: stored.resultRef, combinationId: combination.id, choiceId: choice.id },
++        label: `Escolha de ${choice.at} · composição registrada em ${stored.createdAt}`, originalCaseVersion: stored.caseRef.version })
++    }
++    if (!await host.revalidate(call) || !intact()) return { status: "denied", reason: "portfolio-reconciliation-authority-changed" }
++    const last = await load()
++    if (last.status !== "ok" || !last.value || digestSfValue(last.value) !== digestSfValue(first.value) || !intact()) return { status: "stale", reason: "portfolio-reconciliation-catalog-changed" }
++    return { status: "ok", value: { choices, unavailable } }
++  }
++  // No materiality value is invented here. Until a registered condition can be
++  // mapped to real Planner before/after components, the producer returns unknown.
++  return { readPortfolio, list }
++}
++
++/** Reconstruct only the producer's bounded combination identities, never financial results. */
++function selectedCandidates(binding: PortfolioBinding, stored: StoredPortfolio, candidates: readonly PortfolioCandidate[], combinationId: string) {
++  const limit = binding.request.explorationLimit
++  if (!candidates.length || candidates.length > 64 || !Number.isSafeInteger(limit) || limit < 1 || limit > 1024 ||
++    stored.result.combinations.length > limit || stored.result.combinations.filter((item) => item.id === combinationId).length !== 1 ||
++    new Set(stored.result.combinations.map((item) => item.id)).size !== stored.result.combinations.length ||
++    candidates.some((candidate, index) => candidate.ref !== binding.request.candidateRefs[index])) return undefined
++  const queue: number[][] = candidates.map((_, index) => [index])
++  const matches: PortfolioCandidate[][] = []
++  for (let position = 0; position < stored.result.combinations.length; position++) {
++    const indexes = queue.shift()
++    if (!indexes) return undefined
++    const selected = indexes.map((index) => candidates[index]!)
++    const operations = [...binding.request.operations, ...selected.flatMap((candidate) => candidate.operations)]
++    const id = digestSfValue({ candidates: selected.map((candidate) => candidate.ref), operations })
++    if (stored.result.combinations[position]!.id !== id) return undefined
++    if (id === combinationId) matches.push(structuredClone(selected))
++    for (let index = indexes[indexes.length - 1]! + 1; index < candidates.length; index++) queue.push([...indexes, index])
++  }
++  return matches.length === 1 ? matches[0] : undefined
++}
++
++function requestDigest(request: Request) { return digestSfValue({ method: request.method, url: request.url, headers: [...request.headers.entries()] }) }
+--- /dev/null
++++ b/apps/cli/src/sucafina-product/portfolio-reconciliation-http.ts
+@@ -0,0 +1,122 @@
++import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
++import type { PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
++import { encodeCaseRef, parseCaseRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
++import type { createPortfolioProduct } from "../../../../modules/sucafina/Sucafinav1/product/portfolio/product.ts"
++import type { PortfolioReconciliationRequest } from "../../../../modules/sucafina/Sucafinav1/product/portfolio/reconciliation.ts"
++import type { createSfProductAuthority } from "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
++import { htmlPolicy } from "../../../../modules/sucafina/Sucafinav1/runtime/application.ts"
++import { documentHtml, esc, pageMain } from "../../../../modules/sucafina/Sucafinav1/src/screen-shell.ts"
++import type { createSfBusinessServices } from "./business-services.ts"
++import type { createSfPortfolioReconciliationServices, SfPortfolioReconciliationChoice } from "./portfolio-reconciliation-services.ts"
++
++type Product = ReturnType<typeof createPortfolioProduct>
++type Reconciled = Extract<Awaited<ReturnType<Product["http"]["reconcile"]>>, { status: "ok" }>["value"]
++type Page = { caseRef: PortfolioReconciliationRequest["caseRef"]; objective: string; choices: readonly SfPortfolioReconciliationChoice[];
++  unavailable: number; accessRevision: string; selected?: PortfolioReconciliationRequest; reconciliation?: Reconciled }
++
++/** An ordinary read-only page in the existing surface. Every reload reopens C08 and current authority. */
++export function createSfPortfolioReconciliationHttp(input: {
++  origin: string; mount: string
++  authority: ReturnType<typeof createSfProductAuthority>
++  business: ReturnType<typeof createSfBusinessServices>
++  product?: Product
++  reconciliation?: ReturnType<typeof createSfPortfolioReconciliationServices>
++}) {
++  return async (request: Request, surface: string): Promise<Response | undefined> => {
++    const url = new URL(request.url)
++    if (url.searchParams.get("sf") !== "decision-portfolio-reconciliation") return undefined
++    const reply = (value: unknown, status: number) => new Response(request.method === "HEAD" ? null : JSON.stringify(value), { status,
++      headers: { "Content-Type": "application/json", "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } })
++    if (surface !== "dashboard" && surface !== "planner" && surface !== "procurement" || url.origin !== input.origin ||
++      url.pathname !== `${input.mount}/${surface}` || request.signal.aborted || request.headers.get("sec-fetch-site") === "cross-site") return reply({ status: "denied", reason: "portfolio-reconciliation-origin-unavailable" }, 403)
++    if (request.method !== "GET" && request.method !== "HEAD") return reply({ status: "needs-input", reason: "method-not-allowed" }, 405)
++    if ([...url.searchParams.keys()].some((key) => !["sf", "case", "selection", "format"].includes(key) || url.searchParams.getAll(key).length !== 1) ||
++      url.searchParams.has("format") && url.searchParams.get("format") !== "json") return reply({ status: "needs-input", reason: "invalid-portfolio-reconciliation-query" }, 400)
++    const wanted = url.searchParams.get("case") ?? "", parsed = parseCaseRef(wanted)
++    if (wanted.length > 16_384 || !parsed) return reply({ status: "needs-input", reason: "portfolio-reconciliation-case-required" }, 400)
++    const selection = url.searchParams.get("selection"), selected = selection ? parseSelection(selection) : undefined
++    if (selection && (!selected || encodeCaseRef(selected.caseRef) !== wanted)) return reply({ status: "needs-input", reason: "invalid-portfolio-reconciliation-selection" }, 400)
++    if (!input.product || !input.reconciliation) return reply({ status: "unavailable", reason: "portfolio-reconciliation-producer-unavailable" }, 503)
++    const digest = digestSfValue({ caseRef: wanted, selection: selected ?? null })
++    const admitted = await input.authority.ui.admit(request, "sf_case_read", digest)
++    if (admitted.status !== "ok") return reply(admitted, 403)
++    const call = admitted.value, binding = digestSfValue([call.kind, call.binding]), transport = requestDigest(request)
++    const intact = () => input.authority.host.requestFor(call) === request && !request.signal.aborted && requestDigest(request) === transport && binding === digestSfValue([call.kind, call.binding])
++    try {
++      if (!await input.authority.ui.validate(call, "sf_case_read", digest) || !intact()) return reply({ status: "denied", reason: "portfolio-reconciliation-authority-changed" }, 403)
++      const first = await input.business.cases.read({ caseRef: wanted }, call)
++      if (first.status !== "ok") return reply(first, responseStatus(first))
++      const decision = first.value.case
++      const caseRef = { id: decision.id, incarnation: decision.incarnation, version: decision.version }
++      if (selected && digestSfValue(selected.caseRef) !== digestSfValue(caseRef)) return reply({ status: "stale", reason: "portfolio-reconciliation-case-changed" }, 409)
++      const result = await input.business.withCase<Page>(call, caseRef, {}, async () => {
++        if (selected) {
++          const reconciled = await input.product!.http.reconcile(selected, call)
++          if (reconciled.status !== "ok") return reconciled
++          return { status: "ok", value: { caseRef, objective: decision.objective, accessRevision: call.binding.accessRevision, selected,
++            choices: [{ request: selected, label: `Escolha de ${reconciled.value.originalChoice.at}`, originalCaseVersion: reconciled.value.originalCaseRef.version }],
++            unavailable: 0, reconciliation: reconciled.value } }
++        }
++        const catalog = await input.reconciliation!.list(caseRef, call)
++        if (catalog.status !== "ok") return catalog
++        return { status: "ok", value: { caseRef, objective: decision.objective, ...catalog.value, accessRevision: call.binding.accessRevision } }
++      })
++      if (result.status !== "ok") return reply(result, responseStatus(result))
++      if (!await input.authority.host.revalidate(call) || !intact()) return reply({ status: "denied", reason: "portfolio-reconciliation-authority-changed" }, 403)
++      const last = await input.business.cases.read({ caseRef: wanted }, call)
++      if (last.status !== "ok" || digestSfValue(last.value.case) !== digestSfValue(first.value.case) || !intact()) return reply({ status: "stale", reason: "portfolio-reconciliation-case-changed" }, 409)
++      if (url.searchParams.get("format") === "json") return reply(result, 200)
++      const html = reconciliationHtml(result.value, surface)
++      return new Response(request.method === "HEAD" ? null : html, { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store",
++        "Content-Security-Policy": htmlPolicy(html), "X-Content-Type-Options": "nosniff", "X-SF-Access-Revision": call.binding.accessRevision } })
++    } catch { return reply({ status: "unavailable", reason: "portfolio-reconciliation-unavailable" }, 503) }
++    finally { input.authority.ui.finish(call) }
++  }
++}
++
++export function validSfPortfolioReconciliationRequest(value: unknown): value is PortfolioReconciliationRequest {
++  if (!record(value) || !closed(value, ["caseRef", "portfolioResultRef", "combinationId", "choiceId"]) || !record(value.caseRef) ||
++    !closed(value.caseRef, ["id", "incarnation", "version"]) || !text(value.caseRef.id) || !text(value.caseRef.incarnation) ||
++    typeof value.caseRef.version !== "number" || !Number.isSafeInteger(value.caseRef.version) || value.caseRef.version < 1) return false
++  return text(value.portfolioResultRef) && text(value.choiceId) && typeof value.combinationId === "string" && /^[a-f0-9]{64}$/.test(value.combinationId)
++}
++
++function parseSelection(value: string) {
++  if (value.length > 16_384) return undefined
++  try { const selected: unknown = JSON.parse(value); return validSfPortfolioReconciliationRequest(selected) ? selected : undefined }
++  catch { return undefined }
++}
++
++function reconciliationHtml(page: Page, surface: "dashboard" | "planner" | "procurement") {
++  const original = page.reconciliation
++  const controls = `?${new URLSearchParams({ sf: "decision-controls", case: encodeCaseRef(page.caseRef) })}`
++  const catalog = `?${new URLSearchParams({ sf: "decision-portfolio-reconciliation", case: encodeCaseRef(page.caseRef) })}`
++  const options = page.choices.map((choice) => `<option value="${esc(JSON.stringify(choice.request))}"${page.selected && digestSfValue(page.selected) === digestSfValue(choice.request) ? " selected" : ""}>${esc(choice.label)} · revisão original ${choice.originalCaseVersion}</option>`).join("")
++  const form = `<form method="get"><input type="hidden" name="sf" value="decision-portfolio-reconciliation"><input type="hidden" name="case" value="${esc(encodeCaseRef(page.caseRef))}"><label>Composição e escolha preservadas<select name="selection" required><option value="">Selecione a escolha</option>${options}</select></label><button${page.choices.length ? "" : " disabled"}>Reconciliar leitura</button></form>${page.selected ? `<p><a href="${esc(catalog)}">Escolher outra composição preservada</a></p>` : ""}`
++  const result = original ? renderReconciliation(original) : `<p role="status">${page.choices.length ? "Escolha uma composição autorizada para conferir a escolha original e seus recibos." : "Nenhuma composição com escolha e origem verificáveis está disponível neste caso."}</p>`
++  const body = `<section class="sf-portfolio-reconciliation"><nav aria-label="Decisões"><a href="${esc(controls)}">Controles da decisão</a> · <a href="?sf=workbench">Workbench</a></nav><h1>Reconciliação do portfolio</h1><h2>${esc(page.objective)}</h2><p>Leitura do caso atual na revisão ${page.caseRef.version}. A composição e a escolha originais são preservadas; aplicar, aprovar ou tentar novamente exige a ação correspondente.</p>${form}${page.unavailable ? `<p role="status">${page.unavailable} composição(ões) preservada(s) não pôde(puderam) ser reautorizada(s). Uma fonte alterada sem nova revisão do caso continua bloqueada quando o vínculo atual não é válido.</p>` : ""}${result}</section>`
++  const html = documentHtml("Reconciliação do portfolio", surface, "", pageMain({ drawn: true, key: "Reconciliação do portfolio", index: 0 }, body), "", "", page.accessRevision)
++  return html.replace("</head>", `<style>.sf-portfolio-reconciliation{max-width:1120px;margin:auto;padding:16px;overflow-wrap:anywhere}.sf-portfolio-reconciliation form,.sf-portfolio-reconciliation label{display:grid;gap:12px}.sf-portfolio-reconciliation form{margin:24px 0}.sf-portfolio-reconciliation select{max-width:100%;min-height:44px}.sf-portfolio-reconciliation button{min-height:44px;width:fit-content}.sf-portfolio-reconciliation section{margin:24px 0}.sf-portfolio-reconciliation .table-region{overflow:auto;max-width:100%}.sf-portfolio-reconciliation table{border-collapse:collapse;width:100%}.sf-portfolio-reconciliation th,.sf-portfolio-reconciliation td{text-align:left;vertical-align:top;padding:8px;border:1px solid #ccc}.sf-portfolio-reconciliation dl{display:grid;grid-template-columns:minmax(120px,1fr) 2fr;gap:8px}.sf-portfolio-reconciliation dd{margin:0}</style></head>`)
++}
++
++function renderReconciliation(value: Reconciled) {
++  const choice = value.originalChoice, result = choice.result
++  const facts = [["Estado financeiro original", value.originalCombination.comparisonStatus], ["Elegibilidade original", value.originalCombination.eligibility],
++    ["Subtotal conhecido", amount(result.knownSubtotal)], ["Total completo", amount(result.total)], ["Moeda", result.currency],
++    ["Período", `${result.horizon.start} – ${result.horizon.end}`], ["Estado atual de aplicação do caso", value.applicationState],
++    ["Escolha humana", choice.id], ["Motivo preservado", choice.reason], ["Registro da escolha", value.choiceLedgerRef],
++    ["Resultado original", value.portfolioResultRef]]
++  const components = value.components.map((component) => `<section><h3>Componente ${esc(component.original.id)}</h3><p>${esc(amount(component.original.amount))} ${esc(component.original.currency)} · ${esc(component.original.period.start)} a ${esc(component.original.period.end)} · ${esc(component.original.evidenceState)}</p><p>Correspondência com mudanças: ${esc(component.correlation)}.</p>${table("Mudanças e recibos vinculados", ["Mudança", "Estado", "Operação", "Recibo", "Estado do recibo"], component.effects.map((effect) => [effect.change.id, effect.change.state, effect.change.operationRef, effect.receipt?.id ?? "Sem recibo", effect.receipt?.status ?? "Indisponível"]))}${table("Condições da escolha", ["Critério", "Fonte e versão", "Período", "Materialidade", "Limite da prova"], component.conditions.map((condition) => [condition.condition.criterionId, `${condition.condition.source.id} · v${condition.condition.source.version}`, `${condition.condition.period.start} – ${condition.condition.period.end}`, condition.impact.state, condition.impact.state === "unknown" ? "Desconhecida: falta prova do produtor para este componente." : condition.impact.reason]))}</section>`).join("")
++  return `<section aria-label="Reconciliação autorizada"><h2>Composição e escolha originais</h2><dl>${facts.map(([name, data]) => `<dt>${esc(name!)}</dt><dd>${esc(data!)}</dd>`).join("")}</dl><p>Valores ausentes permanecem indisponíveis. Recibos individuais não comprovam uma transação global.</p><p>Materialidade permanece desconhecida até existir uma condição registrada ligada aos cenários e componentes reais antes e depois da mudança.</p>${components}${table("Mudanças sem correspondência inequívoca", ["Mudança", "Estado", "Operação", "Recibo"], value.unmappedChanges.map((change) => [change.id, change.state, change.operationRef, change.receiptRef ?? "Sem recibo"]))}</section>`
++}
++
++function table(title: string, headers: readonly string[], rows: readonly (readonly string[])[]) {
++  if (!rows.length) return `<p>${esc(title)}: nenhum registro autorizado nesta composição.</p>`
++  return `<div class="table-region" role="region" aria-label="${esc(title)}" tabindex="0"><table><caption>${esc(title)}</caption><thead><tr>${headers.map((header) => `<th scope="col">${esc(header)}</th>`).join("")}</tr></thead><tbody>${rows.map((row) => `<tr>${row.map((value) => `<td>${esc(value)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`
++}
++function responseStatus(result: PortResult<unknown>) { return result.status === "ok" ? 200 : result.status === "denied" ? 403 : result.status === "needs-input" ? 400 : result.status === "stale" || result.status === "conflict" ? 409 : 503 }
++function requestDigest(request: Request) { return digestSfValue({ method: request.method, url: request.url, headers: [...request.headers.entries()] }) }
++function amount(value: number | null) { return value === null ? "Indisponível" : String(value) }
++function text(value: unknown): value is string { return typeof value === "string" && !!value.trim() && value.length <= 16_384 }
++function record(value: unknown): value is Record<string, unknown> { return !!value && typeof value === "object" && !Array.isArray(value) && Object.getPrototypeOf(value) === Object.prototype }
++function closed(value: Record<string, unknown>, fields: readonly string[]) { return fields.every((field) => Object.hasOwn(value, field)) && Object.keys(value).every((field) => fields.includes(field)) }
+--- a/apps/cli/src/sucafina-product/portfolio-services.ts
++++ b/apps/cli/src/sucafina-product/portfolio-services.ts
+@@ -15,6 +15,7 @@
+ import { createSfPortfolioHttp } from "./portfolio-http.ts"
+ import { createPortfolioCoveragePreview } from "../../../../modules/sucafina/Sucafinav1/product/portfolio/coverage-preview.ts"
+ import { createSfPortfolioCoverageAuthority } from "./portfolio-coverage-authority.ts"
++import { createSfPortfolioReconciliationServices } from "./portfolio-reconciliation-services.ts"
+ 
+ type Mutations = Parameters<typeof createDecisionMutations>[0]
+ type Product = ReturnType<typeof createPortfolioProduct>
+@@ -90,12 +91,13 @@
+     },
+     sensitivityPreview: (request, call) => comparePlannerPreview({ host: authority.host, sources: business.plannerSources, scenarios, planner: registries.planner }, request, call),
+   })
++  const reconciliation = createSfPortfolioReconciliationServices({ authority, business, registries })
+   const rawProduct = scenarios ? createPortfolioProduct({ host: authority.host, cases: business.cases, evidence: business.context,
+     planner: { planner: registries.planner, sources: business.plannerSources, scenarios }, results: business.results,
+     rules: registries.rules, selection: registries.selection, sensitivityBindings: registries.sensitivityBindings,
+     comparisonBindings: registries.comparisonBindings, portfolioBindings: registries.portfolioBindings,
+     decisions: mutations, createReceipt, caseFor: business.resolveCase,
+-    idempotencyKey, resolveCoverageAuthority,
++    idempotencyKey, resolveCoverageAuthority, reconciliation: { readPortfolio: reconciliation.readPortfolio },
+   }) : undefined
+   const product = rawProduct ? { ...rawProduct, http: { ...rawProduct.http,
+     prepare: (request: Parameters<Product["http"]["prepare"]>[0], call: Parameters<Product["http"]["prepare"]>[1]) =>
+@@ -108,8 +110,8 @@
+     promoteAlternative: (request: Parameters<Product["contribution"]["promoteAlternative"]>[0], call: Parameters<Product["contribution"]["promoteAlternative"]>[1]) =>
+       composed.handoff.run("decisions.promote-portfolio", request, call, () => rawProduct.contribution.promoteAlternative(request, call), mutations.replayPortfolio),
+   } } : undefined
+-  return { ...registries, mutations, product, units, proof: verification.proof, descriptors: product?.contribution.capabilities ?? [],
+-    http: (config: { origin: string; mount: string }) => createSfPortfolioHttp({ ...config, authority, business, product, mutations }),
++  return { ...registries, mutations, product, units, proof: verification.proof, reconciliation, descriptors: product?.contribution.capabilities ?? [],
++    http: (config: { origin: string; mount: string }) => createSfPortfolioHttp({ ...config, authority, business, product, mutations, reconciliation }),
+     dispose: composed.dispose,
+     unavailable: [...(scenarios ? [] : ["portfolio-planner-stored-scenarios-unavailable"]),
+       ...(input.preparation ? [] : composed.unavailable)],
+--- a/apps/cli/src/sucafina-product/portfolio-http.ts
++++ b/apps/cli/src/sucafina-product/portfolio-http.ts
+@@ -1,10 +1,13 @@
+ import { decodeSfOperationInput } from "../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
++import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+ import type { PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
+ import { encodeCaseRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+ import type { createDecisionMutations } from "../../../../modules/sucafina/Sucafinav1/product/decisions/mutations.ts"
+ import type { createPortfolioProduct } from "../../../../modules/sucafina/Sucafinav1/product/portfolio/product.ts"
+ import type { createSfProductAuthority } from "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
+ import type { createSfBusinessServices } from "./business-services.ts"
++import { createSfPortfolioReconciliationHttp, validSfPortfolioReconciliationRequest } from "./portfolio-reconciliation-http.ts"
++import type { createSfPortfolioReconciliationServices } from "./portfolio-reconciliation-services.ts"
+ 
+ type CaseRef = { id: string; incarnation: string; version: number }
+ type Mutations = ReturnType<typeof createDecisionMutations>
+@@ -14,6 +17,7 @@
+   "decision-promote-portfolio": "decisions.promote-portfolio", "decision-prepare-portfolio": "decisions.prepare-portfolio",
+   "decision-review": "decisions.portfolio.read", "decision-portfolio-results": "decisions.portfolio.read", "decision-portfolio-read": "decisions.portfolio.read",
+   "decision-portfolio-preview": "decisions.portfolio.read", "decision-portfolio-evaluate": "decisions.portfolio.evaluate",
++  "decision-portfolio-reconcile": "decisions.portfolio.read",
+   "decision-sensitivity-units": "decisions.portfolio.read", "decision-sensitivity-read": "decisions.portfolio.read", "decision-sensitivity-evaluate": "decisions.sensitivity.evaluate" } as const
+ type Mode = keyof typeof actions
+ 
+@@ -25,8 +29,12 @@
+   business: ReturnType<typeof createSfBusinessServices>
+   product?: Portfolio
+   mutations: Mutations
++  reconciliation?: ReturnType<typeof createSfPortfolioReconciliationServices>
+ }) {
++  const reconciliation = createSfPortfolioReconciliationHttp(input)
+   return async (request: Request, surface: string): Promise<Response | undefined> => {
++    const page = await reconciliation(request, surface)
++    if (page) return page
+     const url = new URL(request.url)
+     const selected = url.searchParams.get("sf")
+     if (!selected || !Object.hasOwn(actions, selected)) return undefined
+@@ -41,6 +49,7 @@
+     if (admitted.status !== "ok") return reply(admitted)
+     try {
+       const call = admitted.value
++      const binding = digestSfValue([call.kind, call.binding]), transport = digestSfValue({ method: request.method, url: request.url, headers: [...request.headers.entries()] })
+       const allowHistoricalRetry = ["decision-promote", "decision-choose", "decision-add-question", "decision-answer-question", "decision-prepare-changes", "decision-promote-portfolio", "decision-prepare-portfolio"].includes(mode)
+       const result = await input.business.withCase<unknown>(call, payload.caseRef, { allowHistoricalRetry }, async () => {
+         if (mode === "decision-choose") return input.mutations.recordChoice(payload as Parameters<Mutations["recordChoice"]>[0], call)
+@@ -51,6 +60,7 @@
+         if (mode === "decision-review") return input.business.procurementDecisions.reviewChange(payload as Parameters<typeof input.business.procurementDecisions.reviewChange>[0], call)
+         const product = input.product
+         if (!product) return { status: "unavailable", reason: "portfolio-planner-stored-scenarios-unavailable" }
++        if (mode === "decision-portfolio-reconcile") return product.http.reconcile(payload as Parameters<Portfolio["http"]["reconcile"]>[0], call)
+         if (mode === "decision-promote-portfolio") return product.http.promote(payload as Parameters<Portfolio["http"]["promote"]>[0], call)
+         if (mode === "decision-prepare-portfolio") return product.http.prepare(payload as Parameters<Portfolio["http"]["prepare"]>[0], call)
+         if (mode === "decision-portfolio-results") return product.http.list(payload.caseRef, call)
+@@ -62,6 +72,9 @@
+         return product.http.evaluate(payload.request as Parameters<Portfolio["http"]["evaluate"]>[0], payload.caseRef, call)
+       })
+       if (!await input.authority.host.revalidate(call)) return reply({ status: "denied", reason: "decision-authority-changed" })
++      if (mode === "decision-portfolio-reconcile" && (input.authority.host.requestFor(call) !== request || request.signal.aborted ||
++        binding !== digestSfValue([call.kind, call.binding]) || transport !== digestSfValue({ method: request.method, url: request.url, headers: [...request.headers.entries()] })))
++        return reply({ status: "denied", reason: "portfolio-reconciliation-authority-changed" })
+       return reply(result)
+     } catch { return reply({ status: "unavailable", reason: mode === "decision-review" ? "procurement-prepared-review-producer-unavailable" : "decision-request-unavailable" }) }
+     finally { input.authority.human.finish(admitted.value) }
+@@ -70,6 +83,7 @@
+ 
+ function valid(mode: Mode, value: unknown): value is Record<string, unknown> & { caseRef: CaseRef } {
+   if (!record(value) || !caseRef(value.caseRef)) return false
++  if (mode === "decision-portfolio-reconcile") return validSfPortfolioReconciliationRequest(value)
+   if (mode === "decision-choose") return closed(value, ["caseRef", "alternativeId", "alternativeVersion", "comparison", "criteria", "reason"]) && text(value.alternativeId) && integer(value.alternativeVersion) && text(value.reason) && strings(value.criteria) && decodeSfOperationInput("sf_scenario_compare", value.comparison).ok
+   if (mode === "decision-add-question") return closed(value, ["caseRef", "questionRef"]) && text(value.questionRef)
+   if (mode === "decision-answer-question") return closed(value, ["caseRef", "questionId", "answerRef"]) && text(value.questionId) && text(value.answerRef)
+--- a/apps/cli/src/sucafina-product/decision-controls.ts
++++ b/apps/cli/src/sucafina-product/decision-controls.ts
+@@ -154,7 +154,7 @@
+   }).join("") : "<p>Escolha dois cenários armazenados e um parâmetro para verificar moeda, período e unidades antes de informar o limite.</p>"
+   const choices = selected?.decision.choices.map((choice) => ({ value: choice.id, label: selected.decision.alternatives.find((alternative) => alternative.id === choice.alternativeId)?.title ?? `Escolha registrada em ${choice.at}` })) ?? []
+   const conditions = selected && choices.length && selected.scenarios.length >= 2 && selected.evidence.length ? `<form data-decision-action="decision-condition">${select("choice", "Escolha acompanhada", choices)}${select("criterion", "Critério da escolha", [])}${select("before", "Cenário anterior", selected.scenarios.map((item) => ({ value: item.ref, label: item.title })))}${select("after", "Cenário atual", selected.scenarios.map((item) => ({ value: item.ref, label: item.title })))}${select("evidence", "Fonte observada", selected.evidence.map((item, index) => ({ value: String(index), label: item.label })))}${select("recipient", "Responsável", selected.recipients.map((item) => ({ value: item.ref, label: item.label })))}<label>Descrição da condição<input name="label" required maxlength="300"></label><label><input type="checkbox" required>Confirmo o acompanhamento de todos os campos autorizados desta fonte no período do caso.</label><button${can("decisions.condition.record") ? "" : " disabled"}>Registrar acompanhamento</button></form>` : "<p>É necessário ter uma escolha registrada, dois cenários armazenados e uma fonte atual do Planner para registrar acompanhamento.</p>"
+-  const body = `<section class="sf-decision-controls"><nav aria-label="Decisões"><a href="?sf=workbench">Workbench</a> · <a href="?">Voltar à área</a></nav><h1>Controles da decisão</h1><p>Classifique custos, defina limites e registre condições com as fontes do caso.</p>${value.cases.length ? picker : "<p>Nenhum caso autorizado está disponível.</p>"}<div id="sf-decision-selected">${selected ? `<h2>${esc(selected.decision.objective)}</h2><p>${esc(selected.decision.currency)} · ${esc(selected.decision.horizon.start)} a ${esc(selected.decision.horizon.end)} · revisão ${selected.caseRef.version}</p><section><h2>Cobertura de custos</h2><p>Selecione explicitamente os componentes de cada categoria. A opção “não aplicável” depende de prova adicional e está indisponível.</p>${sourcePicker}${selected.forecast?.expectedVersion !== undefined ? `<p data-classification-version="${selected.forecast.expectedVersion}">${selected.forecast.expectedVersion === 0 ? "Nova classificação" : `Classificação registrada · revisão ${selected.forecast.expectedVersion}`}</p>` : ""}${selected.forecast?.classification ? `<ul>${selected.forecast.classification.mappings.map((mapping) => `<li>${esc(categoryLabel(mapping.entry.categoryId))}: ${mapping.components.length} parcela(s) incluída(s) — ${esc(mapping.entry.scopeNote)}</li>`).join("")}</ul>` : ""}${coverage}</section><section><h2>Critérios numéricos</h2>${unitPicker}${criteria}</section><section><h2>Condições da escolha</h2><p>O acompanhamento compara cenários existentes. Registrar uma condição não agenda uma rotina nem envia uma mensagem.</p>${conditions}${selected.conditions.length ? `<h3>Seus acompanhamentos</h3><ul>${selected.conditions.map((item) => `<li>${esc(item.label)} · revisão ${item.revision}</li>`).join("")}</ul>` : ""}</section>` : ""}</div><p id="sf-decision-status" role="status" aria-live="polite"></p></section>`
++  const body = `<section class="sf-decision-controls"><nav aria-label="Decisões"><a href="?sf=workbench">Workbench</a> · <a href="?">Voltar à área</a>${selected ? ` · <a href="?${esc(new URLSearchParams({ sf: "decision-portfolio-reconciliation", case: selected.ref }).toString())}">Reconciliação do portfolio</a>` : ""}</nav><h1>Controles da decisão</h1><p>Classifique custos, defina limites e registre condições com as fontes do caso.</p>${value.cases.length ? picker : "<p>Nenhum caso autorizado está disponível.</p>"}<div id="sf-decision-selected">${selected ? `<h2>${esc(selected.decision.objective)}</h2><p>${esc(selected.decision.currency)} · ${esc(selected.decision.horizon.start)} a ${esc(selected.decision.horizon.end)} · revisão ${selected.caseRef.version}</p><section><h2>Cobertura de custos</h2><p>Selecione explicitamente os componentes de cada categoria. A opção “não aplicável” depende de prova adicional e está indisponível.</p>${sourcePicker}${selected.forecast?.expectedVersion !== undefined ? `<p data-classification-version="${selected.forecast.expectedVersion}">${selected.forecast.expectedVersion === 0 ? "Nova classificação" : `Classificação registrada · revisão ${selected.forecast.expectedVersion}`}</p>` : ""}${selected.forecast?.classification ? `<ul>${selected.forecast.classification.mappings.map((mapping) => `<li>${esc(categoryLabel(mapping.entry.categoryId))}: ${mapping.components.length} parcela(s) incluída(s) — ${esc(mapping.entry.scopeNote)}</li>`).join("")}</ul>` : ""}${coverage}</section><section><h2>Critérios numéricos</h2>${unitPicker}${criteria}</section><section><h2>Condições da escolha</h2><p>O acompanhamento compara cenários existentes. Registrar uma condição não agenda uma rotina nem envia uma mensagem.</p>${conditions}${selected.conditions.length ? `<h3>Seus acompanhamentos</h3><ul>${selected.conditions.map((item) => `<li>${esc(item.label)} · revisão ${item.revision}</li>`).join("")}</ul>` : ""}</section>` : ""}</div><p id="sf-decision-status" role="status" aria-live="polite"></p></section>`
+   const data = JSON.stringify(value).replaceAll("<", "\\u003c").replaceAll("\u2028", "\\u2028").replaceAll("\u2029", "\\u2029")
+   const html = documentHtml("Controles da decisão", surface, "", pageMain({ drawn: true, key: "Controles da decisão", index: 0 }, body), "", "", value.accessRevision)
+   return html.replace("</head>", `<style>.sf-decision-controls{max-width:960px;margin:auto;padding:16px}.sf-decision-controls section{margin:24px 0;border-top:1px solid #ccc;padding-top:16px}.sf-decision-controls form{display:grid;gap:12px;margin:16px 0;max-width:100%}.sf-decision-controls label{display:grid;gap:6px}.sf-decision-controls fieldset{min-width:0}.sf-decision-controls input,.sf-decision-controls select,.sf-decision-controls textarea{box-sizing:border-box;max-width:100%;width:100%;min-height:40px}.sf-decision-controls textarea{min-height:72px}.sf-decision-controls input[type=checkbox]{width:auto;min-height:auto;justify-self:start}.sf-decision-controls button{width:fit-content;min-height:44px}.sf-decision-controls nav{overflow-wrap:anywhere}@media(min-width:768px){.sf-decision-controls fieldset{display:grid;grid-template-columns:1fr 2fr;gap:12px}.sf-decision-controls fieldset label:last-child{grid-column:1/-1}}</style></head>`).replace("</body>", `<script id="sf-decision-data" type="application/json">${data}</script><script>${decisionControlsScript}</script></body>`)
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-reconciliation.test.ts
+@@ -0,0 +1,214 @@
++import { expect, test } from "bun:test"
++import { digestSfValue } from "../../../../product/contracts/canonical.ts"
++import { RENEWAL_TRANSITION_CATEGORIES } from "../../../../product/contracts/decisions.ts"
++import type { DecisionCase } from "../../../../product/contracts/decisions.ts"
++import type { PortResult } from "../../../../product/contracts/ports.ts"
++import type { SfProductState, SfStateResult } from "../../../../product/contracts/state.ts"
++import type { TrustedDomainContext } from "../../../../product/contracts/sf-execution.ts"
++import { encodeCaseRef } from "../../../../product/decisions/case-port.ts"
++import type { BaselineCoverageRequest } from "../../../../product/decisions/baseline-coverage.ts"
++import type { CriterionRuleInput } from "../../../../product/decisions/criterion-rules.ts"
++import { portfolioCandidateRef } from "../../../../product/portfolio/candidates.ts"
++import type { PortfolioReconciliationRequest } from "../../../../product/portfolio/reconciliation.ts"
++import { financialCompositionFixture } from "./financial-composition-fixture.ts"
++import { compositionTestDeadline } from "./composition-test-deadline.ts"
++
++type Fixture = Awaited<ReturnType<typeof financialCompositionFixture>>
++type Product = NonNullable<Fixture["portfolio"]["product"]>
++type CaseRef = PortfolioReconciliationRequest["caseRef"]
++type MutationReceipt = { caseRef: CaseRef; resultRef?: string }
++type EvaluatedPortfolio = Extract<Awaited<ReturnType<Product["http"]["evaluate"]>>, { status: "ok" }>["value"]
++type Reconciled = Extract<Awaited<ReturnType<Product["http"]["reconcile"]>>, { status: "ok" }>["value"]
++const horizon = { start: "2026-01-01", end: "2026-12-31" }
++
++function ok<T>(result: PortResult<T> | SfStateResult<T>, phase: string): T {
++  if (result.status !== "ok") throw new Error(`${phase}: ${JSON.stringify(result)}`)
++  return result.value
++}
++
++test("real Portfolio HTTP reconciliation preserves the original C08 choice and refuses forged, revoked and replaced origins", async () => {
++  const deadline = compositionTestDeadline("portfolio-reconciliation-real-history", 345_000)
++  try {
++    const fixture = await deadline.phase("fixture.initialize", async () => {
++      const value = await financialCompositionFixture({ signal: deadline.signal, beforeEnvironment: async () => deadline.check(),
++        humanActions: ["decisions.portfolio.read", "decisions.portfolio.evaluate"] })
++      deadline.own(() => value.dispose())
++      return value
++    })
++    const { authority, business, portfolio, persistence } = fixture
++    business.initializeAtlas(undefined, { boundaryVersion: "fixture", schemaVersion: "a".repeat(64), manifestVersion: "b".repeat(64), skillVersion: "c".repeat(64) })
++    await persistence.transaction("planner", async (snapshot) => {
++      snapshot.data.versions = [100, 80].map((amount, index) => ({ id: `v${index}`, name: index ? "Candidate" : "Baseline", year: 2026, closed: 0,
++        lines: [{ id: "line", sec: "opex", el: "licenses", cur: "USD", b: Array(12).fill(amount), a: Array(12).fill(null), f: Array(12).fill(amount) }],
++        fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }))
++      return { commit: true, value: undefined }
++    })
++    await persistence.initializeSources("planner")
++    const sources = await deadline.phase("fixture.actual-source-components", async () => {
++      const call = await fixture.read()
++      try {
++        const entries = []
++        for (const id of ["v0", "v1"]) {
++          const issued = ok(await business.plannerProduct.issueSource(id, call), `Issue ${id}`)
++          const compared = ok(await business.planner.compareForecast({ baseRef: issued.evidence.refId, candidateRef: issued.evidence.refId, period: horizon, currency: "USD" }, call), `Project ${id}`)
++          const target = compared.baseline.components.find((component) => component.period.start === "2026-02-01" && component.period.end === "2026-02-28")
++          if (!target || target.amount === null || !target.sourceRefs.length) throw new Error("Real open-month component unavailable")
++          entries.push({ source: issued.evidence, components: compared.baseline.components, target })
++        }
++        return entries
++      } finally { authority.ui.finish(call) }
++    })
++    const initialRef: CaseRef = { id: "reconciliation-case", incarnation: "reconciliation-incarnation", version: 1 }
++    const basis: BaselineCoverageRequest["basis"] = { id: "renewal", version: 1, decisionType: "renewal-transition-v1",
++      categoryIds: [...RENEWAL_TRANSITION_CATEGORIES], additionalCategoryIds: [], sourceRefs: sources.map((entry) => entry.source) }
++    // Seed only domain inputs and an empty case. All alternatives, comparisons,
++    // selections, bindings, choices and their C08 receipts below are real writes.
++    const decision: DecisionCase = { ...initialRef, state: "draft", objective: "Preserve the human renewal choice", horizon, currency: "USD",
++      criteria: [{ id: "cost", description: "Known subtotal difference must not exceed zero", required: true }], participants: ["person"], sourceRefs: basis.sourceRefs,
++      alternatives: [], costCoverageBases: [basis], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
++    ok(await authority.state.transaction(fixture.request("empty-reconciliation-case"), { namespace: "cases", expectedStorageVersion: 0,
++      targetRef: authority.creationTarget.ref, targetIncarnation: authority.creationTarget.incarnation,
++      idempotencyKey: "empty-reconciliation-case", commandDigest: digestSfValue(decision) }, async (state) => {
++      state.cases[decision.id] = decision
++      return { commit: true, value: true }
++    }), "Seed empty case")
++    const scoped = async <T>(caseRef: CaseRef, work: (call: TrustedDomainContext) => Promise<PortResult<T>>) => {
++      const call = await fixture.read()
++      try { return await business.withCase(call, caseRef, {}, () => work(call)) }
++      finally { authority.ui.finish(call) }
++    }
++    const coverage = [] as { coverageRef: string; version: number }[]
++    for (const [index, entry] of sources.entries()) {
++      const request: BaselineCoverageRequest = { caseRef: initialRef, source: entry.source, basis, expectedVersion: 0,
++        entries: RENEWAL_TRANSITION_CATEGORIES.map((categoryId) => categoryId === "service"
++          ? { categoryId, status: "included", componentRefs: entry.components.map((component) => component.id), evidenceRefs: [entry.source], scopeNote: "Service classified by the human" }
++          : { categoryId, status: "pending", reason: "Awaiting human evidence" }) }
++      coverage.push(await deadline.phase(`coverage.${index}`, async () => {
++        const call = ok(await authority.human.admit(fixture.request(`coverage-${index}`), "decisions.coverage", request), "Admit coverage")
++        try { return ok(await business.withCase(call, initialRef, {}, () => business.baselineCoverage.register(request, call)), "Register coverage") }
++        finally { authority.human.finish(call) }
++      }))
++    }
++    const http = portfolio.http({ origin: "https://example.test", mount: "/product" })
++    const post = async <T>(mode: string, payload: unknown, operation: string) => deadline.phase(`http.${operation}`, async () => {
++      const response = await http(new Request(`https://example.test/product/planner?sf=${mode}`, { method: "POST", signal: deadline.signal,
++        headers: { origin: "https://example.test", "content-type": "application/json", "x-operation": operation }, body: JSON.stringify(payload) }), "planner")
++      if (!response) throw new Error("Portfolio action was not routed")
++      return { status: response.status, result: await response.json() as PortResult<T> }
++    })
++    const snapshot = async () => {
++      const found = ok(await authority.state.read(fixture.request(), "cases", (state) => ({ decision: state.cases[initialRef.id],
++        results: state.decisionResults ?? {}, transactions: state.transactions, outbox: state.outbox })), "Read C08")
++      if (!found.decision) throw new Error("Current case unavailable")
++      return { ...found, decision: found.decision }
++    }
++    const promote = async (index: number, caseRef: CaseRef) => {
++      const entry = sources[index]!, classification = coverage[index]!
++      const response = await post<MutationReceipt>("decision-promote", { caseRef, title: index ? "Candidate" : "Baseline", coverageRef: classification.coverageRef,
++        scenario: { baseRef: entry.source.refId, operations: index ? [{ kind: "exclude", targetRef: entry.target.id, currency: "USD", period: entry.target.period }] : [], assumptions: [] } }, `promote-${index}`)
++      expect(response.status).toBe(200)
++      return ok(response.result, "Promote actual scenario")
++    }
++    const baseline = await promote(0, initialRef)
++    const candidate = await promote(1, baseline.caseRef)
++    const alternatives = (await snapshot()).decision.alternatives
++    expect(alternatives).toHaveLength(2)
++    expect(alternatives[1]!.scenario.operations).toHaveLength(1)
++    await deadline.phase("criterion-and-selection", async () => {
++      const rule: CriterionRuleInput = { caseRef: candidate.caseRef, criterionId: "cost", metricRef: "planner:known-subtotal-difference", operator: "lte", value: 0,
++        unit: "USD", period: horizon, evidenceRefs: basis.sourceRefs, expectedRuleVersion: 0 }
++      const human = ok(await authority.human.admit(fixture.request("rule"), "decisions.criteria", rule), "Admit criterion")
++      try { ok(await business.withCase(human, candidate.caseRef, {}, () => portfolio.rules.register(rule, human)), "Register criterion") }
++      finally { authority.human.finish(human) }
++      const request = { caseRef: candidate.caseRef, baselineAlternativeId: alternatives[0]!.id, alternativeId: alternatives[1]!.id, criteria: ["cost"], expectedVersion: 0 }
++      const selected = ok(await authority.human.admit(fixture.request("selection"), "decisions.select-portfolio", request), "Admit selection")
++      try { return ok(await business.withCase(selected, candidate.caseRef, {}, () => portfolio.selection.register(request, selected)), "Register actual selection") }
++      finally { authority.human.finish(selected) }
++    })
++    const candidateRef = portfolioCandidateRef({ caseRef: encodeCaseRef(candidate.caseRef), caseVersion: candidate.caseRef.version,
++      alternativeId: alternatives[1]!.id, alternativeVersion: alternatives[1]!.version })
++    const request = { scope: { horizon, currency: "USD" }, candidateRefs: [candidateRef], operations: [], constraints: ["cost"], priorities: [], explorationLimit: 1 }
++    const evaluated = await post<EvaluatedPortfolio>("decision-portfolio-evaluate", { caseRef: candidate.caseRef, request }, "portfolio-evaluate")
++    expect(evaluated.status).toBe(200)
++    const output = ok(evaluated.result, "Persist Portfolio and real binding")
++    const stored = (await snapshot()).results[output.portfolioResultRef]
++    if (!stored || stored.kind !== "portfolio") throw new Error("Actual C08 Portfolio missing")
++    expect(output.portfolio).toEqual(stored.result)
++    expect(stored.result.combinations).toHaveLength(1)
++    const combination = stored.result.combinations[0]!
++    const analysis = combination.analysis
++    if (!analysis) throw new Error("Portfolio did not preserve its real comparison")
++    expect(combination).toMatchObject({ comparisonStatus: "conditioned", eligibility: "conditioned" })
++    expect(analysis.scenario.total).toBeNull()
++    // Exercise the fresh N/N reader before choice advances the case. This uses
++    // the canonical current binding and human selection, not the historical gate.
++    const fresh = await deadline.phase("origin.current", () => scoped(candidate.caseRef, (call) => portfolio.reconciliation.readPortfolio({ caseRef: candidate.caseRef,
++      resultRef: stored.resultRef, combinationId: combination.id }, call)))
++    expect(ok(fresh, "Current origin").stored).toEqual(stored)
++    const chosen = await post<MutationReceipt>("decision-choose", { caseRef: candidate.caseRef, alternativeId: alternatives[1]!.id,
++      alternativeVersion: alternatives[1]!.version, comparison: { scenarioRefs: [analysis.comparison.baselineResultRef, analysis.scenarioResultRef], criteria: ["cost"] },
++      criteria: ["cost"], reason: "Human accepts the known subtotal while remaining categories await evidence" }, "choose-real-portfolio")
++    expect(chosen.status).toBe(200)
++    const chosenRef = ok(chosen.result, "Record actual human choice").caseRef
++    expect(chosenRef.version).toBe(candidate.caseRef.version + 1)
++    const before = await snapshot(), choice = before.decision.choices[0]!
++    expect(before.decision.choices).toHaveLength(1)
++    expect(before.decision.ledger).toHaveLength(1)
++    expect(before.decision.preparedChanges).toHaveLength(0)
++    expect(before.decision.receipts).toHaveLength(0)
++    const selected: PortfolioReconciliationRequest = { caseRef: chosenRef, portfolioResultRef: stored.resultRef, combinationId: combination.id, choiceId: choice.id }
++    const reconciled = await post<Reconciled>("decision-portfolio-reconcile", selected, "reconcile-historical")
++    expect(reconciled.status).toBe(200)
++    const value = ok(reconciled.result, "Reconcile actual historical C08")
++    expect(value.originalCaseRef).toEqual(candidate.caseRef)
++    expect(value.caseRef).toEqual(chosenRef)
++    expect(value.originalChoice).toEqual(choice)
++    expect(value.originalCombination).toEqual(combination)
++    expect(value.originalChoice.result.total).toBeNull()
++    expect(value.components.length).toBeGreaterThan(0)
++    expect(value.components.every((component) => component.correlation === "not-prepared" && component.effects.length === 0)).toBe(true)
++    const conditions = value.components.flatMap((component) => component.conditions)
++    expect(conditions.length).toBeGreaterThan(0)
++    expect(conditions.every((condition) => condition.impact.state === "unknown" && condition.scopeReason === "materiality-producer-unavailable")).toBe(true)
++    expect(value.unmappedChanges).toHaveLength(0)
++    expect(value.restrictions).toContain("domain-receipts-do-not-prove-global-transaction")
++    expect(await snapshot()).toEqual(before)
++    const pageUrl = `https://example.test/product/planner?${new URLSearchParams({ sf: "decision-portfolio-reconciliation", case: encodeCaseRef(chosenRef), selection: JSON.stringify(selected) })}`
++    const page = await deadline.phase("http.readonly-page", () => http(new Request(pageUrl, { signal: deadline.signal }), "planner"))
++    expect(page?.status).toBe(200)
++    const html = await page!.text()
++    expect(html).toContain("Composição e escolha originais")
++    expect(html).toContain("Materialidade permanece desconhecida")
++    expect(html).toContain("Recibos individuais não comprovam uma transação global")
++    expect(html).toContain("nenhum registro autorizado nesta composição")
++    expect(html).not.toContain('method="post"')
++    expect(page!.headers.get("cache-control")).toBe("no-store")
++    expect(page!.headers.get("x-sf-access-revision")).toBeTruthy()
++    expect(await snapshot()).toEqual(before)
++    expect((await post("decision-portfolio-reconcile", { ...selected, binding: "transport-cannot-supply-proof" }, "forged-proof")).status).toBe(400)
++    expect((await post("decision-portfolio-reconcile", { ...selected, caseRef: { ...chosenRef, incarnation: "replacement" } }, "foreign-incarnation")).status).not.toBe(200)
++    fixture.active.value = false
++    expect((await http(new Request(pageUrl, { signal: deadline.signal }), "planner"))?.status).toBe(403)
++    fixture.active.value = true
++    expect(await snapshot()).toEqual(before)
++    // Deliberate fixture corruption is only a counterproof: no permissive
++    // reader, synthetic receipt or substituted producer is installed.
++    const corrupt = async (restore: boolean) => fixture.store.transaction("dashboard", async (snapshot) => {
++      const state = snapshot.data.__sfProductV1 as SfProductState
++      const original = before.results[stored.resultRef]
++      if (!original || !state.decisionResults) throw new Error("Original C08 result missing")
++      state.decisionResults[stored.resultRef] = restore ? structuredClone(original) : { ...structuredClone(original), resultDigest: "0".repeat(64) }
++      return { commit: true, value: undefined }
++    })
++    await corrupt(false)
++    expect((await post("decision-portfolio-reconcile", selected, "corrupt-origin")).status).not.toBe(200)
++    await corrupt(true)
++    expect(await snapshot()).toEqual(before)
++    // Removing the real source advances its lifecycle. The old immutable
++    // composition remains stored, but current authority cannot resolve it.
++    await persistence.transaction("planner", async (snapshot) => { snapshot.data.versions = []; return { commit: true, value: undefined } })
++    await persistence.initializeSources("planner")
++    expect((await post("decision-portfolio-reconcile", selected, "source-replaced")).status).not.toBe(200)
++    expect(await snapshot()).toEqual(before)
++  } finally { await deadline.close() }
++}, 360_000)
+--- /dev/null
++++ b/docs/guides/sucafina-portfolio-reconciliation.md
+@@ -0,0 +1,19 @@
++# Conferir uma composição de Portfolio após a escolha
++
++Abra **Controles da decisão** no caso e selecione **Reconciliação do portfolio**. A página usa o mesmo Dashboard, Planner ou Procurement em que você já está trabalhando. Selecione a composição e a escolha preservadas e clique em **Reconciliar leitura**.
++
++A leitura apresenta a composição original, a escolha humana e seu motivo, o subtotal conhecido, o total completo quando disponível, a moeda e o período. Ela também mostra o estado atual de aplicação do caso e a correspondência entre cada componente, suas mudanças preparadas e seus recibos individuais. Uma mudança sem correspondência inequívoca permanece identificada separadamente.
++
++Um total ausente continua **Indisponível**. Uma composição condicionada mantém esse estado. A falta de uma mudança preparada ou de um recibo não é convertida em aplicação concluída. Recibos individuais não comprovam uma transação global.
++
++## Entender a materialidade
++
++As condições da escolha aparecem por componente, fonte, período e critério. A materialidade permanece **Desconhecida** enquanto não houver uma condição registrada e uma prova do produtor que ligue aquele componente aos resultados reais antes e depois da mudança. A página não distribui automaticamente uma mudança global entre todos os componentes.
++
++## Quando a leitura está indisponível
++
++Cada abertura confere novamente seu acesso, o caso atual e a origem preservada. A composição só aparece quando a escolha, a avaliação salva e suas fontes podem ser relacionadas sem ambiguidade. Se o caso avançou de revisão, a leitura utiliza o histórico autorizado da mesma encarnação do caso. Uma fonte alterada sem avanço da revisão do caso pode deixar a composição indisponível enquanto o vínculo atual não puder ser confirmado.
++
++Se a seleção estiver desatualizada, volte a **Escolher outra composição preservada** e abra a seleção atual. Se o acesso ou uma fonte tiver sido removido, consulte o responsável antes de tentar novamente. O catálogo limita a quantidade de registros processados; se esse limite for atingido, a leitura é interrompida e informa o limite, sem omitir silenciosamente parte do histórico.
++
++Essa tela é somente de leitura. Para aprovar, aplicar ou repetir uma mudança, volte aos controles correspondentes e confira a revisão atual e o recibo devolvido por aquela ação. A leitura da reconciliação não altera a escolha nem registra uma nova aprovação.

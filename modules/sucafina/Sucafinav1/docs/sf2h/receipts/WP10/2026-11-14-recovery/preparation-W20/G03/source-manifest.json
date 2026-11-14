@@ -1,0 +1,167 @@
+{
+  "schema": "wp10-own-composition-snapshot-v1",
+  "wave": "W20",
+  "status": "frozen-builder-package",
+  "task": "G03 actual WorkSignals and current destination composition",
+  "builder": "/root/c17_composition",
+  "parentBaseline": {
+    "commit": "d357de0b1f58abc33e86e79ad3f93b8715ba0e83",
+    "tree": "20d4e76e42a8b74daced57d64ad285f5dfef17a2"
+  },
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "mode": "own-overlay",
+      "baselineSha256": "ebd99ff75c9e17648266d770e2786dbc8f5fd19e442db5b6802e8da82af1ac99",
+      "sha256": "e2fc2dcc27584e188811834d57ba73c01f321badc9bb9f64c08fef0d4e9306b4",
+      "blobSha": "c7c7e8f8e48ad5db5b65a857ddd20bc2c4ededae",
+      "bytes": 65236,
+      "localPath": "agents/c17/W20-work-bridge/package/apps/cli/src/sucafina-product/business-services.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/work-signals.ts",
+      "mode": "own-new",
+      "baselineSha256": null,
+      "sha256": "017c98ba03925925a27decc9ebdf70b88b77555ca1c7ebdbc7ba43fa39edc907",
+      "blobSha": "b80bddf1a0ea4343362f1c18f291de6aaa6e475d",
+      "bytes": 6481,
+      "localPath": "agents/c17/W20-work-bridge/package/apps/cli/src/sucafina-product/work-signals.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/work-destinations.ts",
+      "mode": "own-new",
+      "baselineSha256": null,
+      "sha256": "cbc527deeddca75e50919f3022b70bcbde8c7761ddf4dba1837730b9ef595aa0",
+      "blobSha": "d05c992da009c31cc9c2f9827ad9d58c3807db77",
+      "bytes": 15219,
+      "localPath": "agents/c17/W20-work-bridge/package/apps/cli/src/sucafina-product/work-destinations.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/work-http.ts",
+      "mode": "own-new",
+      "baselineSha256": null,
+      "sha256": "2ca1a73160f9130927b504c1e16f5f74baa76c73388dd36dd8bfb1ce19666933",
+      "blobSha": "b2dc424d96a67ddd581abbc460cfb938b35e0447",
+      "bytes": 5181,
+      "localPath": "agents/c17/W20-work-bridge/package/apps/cli/src/sucafina-product/work-http.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts",
+      "mode": "own-new",
+      "baselineSha256": null,
+      "sha256": "bd90a9cc13b1a124e162487ff0a2ab4fa7af24dac97570e064d37591b3330d9b",
+      "blobSha": "cb92eb45d239048f53de6b6149bab3d2759e8ef2",
+      "bytes": 19769,
+      "localPath": "agents/c17/W20-work-bridge/package/modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/memory-fixture.ts",
+      "mode": "own-overlay",
+      "baselineSha256": "bd571d19579b409e69b296c5540bd9785d0c34d21a78496ff6dd825c73615848",
+      "sha256": "507510a7d1dcf928981d6394fab17a706b5e4253a9664e04297eb887c3af172c",
+      "blobSha": "50c7c59d4f945554b74701210365feec6d28963f",
+      "bytes": 17374,
+      "localPath": "agents/c17/W20-work-bridge/package/modules/sucafina/Sucafinav1/test/product/wp10/integration/memory-fixture.ts"
+    }
+  ],
+  "readOnlyDependencies": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/signal-work.ts",
+      "mode": "read-only-dependency",
+      "sha256": "df08c3b4c2993e2fbd260579fb52771f3b69997faef61fc40bab613bf5a641e0",
+      "blobSha": "44d56975554badd68d9156622c9f94df8145bcdd",
+      "sourceCommit": "46c904ead4e9b363422f6739258e492913ae6e2e",
+      "provenance": "existing-admitted-exact-published-input"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/signal-registry.ts",
+      "mode": "read-only-dependency",
+      "sha256": "e7268ad3ced942ae3ac6f2d3ccee5e4b49b00e355af7de4c0e64b0735b42f4f5",
+      "blobSha": "83b77eab0314943f3a6e5dfc16b648f1a166db33",
+      "sourceCommit": "d357de0b1f58abc33e86e79ad3f93b8715ba0e83",
+      "provenance": "published-W19-identical-bytes"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/host.ts",
+      "mode": "read-only-dependency",
+      "sha256": "4afff123a457f0b077fb61d7038d0710b745825680115585ca0fdaa0f5da41b2",
+      "blobSha": "7d8396e2f6b07dbb41fd4a1694da6fab32bb25d0",
+      "sourceCommit": "5ec1630993e4fa66684539db11af939b44ec8ecd",
+      "provenance": "existing-admitted-exact-published-input"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/work-port.ts",
+      "mode": "read-only-dependency",
+      "sha256": "c212766b21b89ad0b5ad9c321bfd34e4b6a9352e08050760976dbb7b676a68bf",
+      "blobSha": "22a2a7fab04757667fcfed82147b7676d6928fee",
+      "sourceCommit": "d357de0b1f58abc33e86e79ad3f93b8715ba0e83",
+      "provenance": "published-W19-identical-bytes"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/destination.ts",
+      "mode": "read-only-dependency",
+      "sha256": "2a85cb32172aff24f97a978242e3e9296645fb71d79549f4aba36fb2cbf33345",
+      "blobSha": "7324f214be6b5ea2d30d4d0225cc12ae78592377",
+      "sourceCommit": "d357de0b1f58abc33e86e79ad3f93b8715ba0e83",
+      "provenance": "published-W19-identical-bytes"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/case-selection.ts",
+      "mode": "read-only-dependency",
+      "sha256": "f10165f3da65d1f6431567f84d1ef2737a9ec66fe6ad4e7c1a670c291381410b",
+      "blobSha": "ec80e2916c8a06cbb471cf02e30bb1cb5ebd9cc0",
+      "sourceCommit": "d357de0b1f58abc33e86e79ad3f93b8715ba0e83",
+      "provenance": "published-W19-identical-bytes"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/thread-reads.ts",
+      "mode": "read-only-dependency",
+      "sha256": "98689fe1f533c6419b702d1a37d498426c6a1ffe3dda5634a93160e632079eb2",
+      "blobSha": "5c8b811692c3e8aea1859b2f346096f0410e82f8",
+      "sourceCommit": "5ec1630993e4fa66684539db11af939b44ec8ecd",
+      "provenance": "existing-admitted-exact-published-input"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/confirmation.ts",
+      "mode": "read-only-dependency",
+      "sha256": "a37aec1d1d27afdf828d66eb2f1d4e23f98e79629e0ccbc3aeb6ab745bdc1231",
+      "blobSha": "9d38a30265e6efc2c9667371087a87bcce8e682f",
+      "sourceCommit": "e7e50c3572dfec8200517f8e9e8d2de23d41cfe7",
+      "provenance": "existing-admitted-exact-published-input"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "mode": "read-only-dependency",
+      "sha256": "c3d843a4bb26a0f74fce550aa1114ae490e0410e1bcc4016a33b62c72c49eb81",
+      "blobSha": "2c82d60d220d8d5365da8322bad648a64bbb62d2",
+      "sourceCommit": "d357de0b1f58abc33e86e79ad3f93b8715ba0e83",
+      "provenance": "published-W19-identical-bytes"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+      "mode": "read-only-dependency",
+      "sha256": "0476febc21bf87c35a734e4cae028bc4fee2f72ccfebfd30a0490ecf44fae055",
+      "blobSha": "920fda293db553096f4d8ab7004fcd9652a69291",
+      "sourceCommit": "5866bcb2ed610f80138aaabc261acac4acf709cd",
+      "provenance": "existing-admitted-exact-published-input"
+    }
+  ],
+  "hostPatch": {
+    "path": "apps/cli/src/sucafina-product/host-context.ts",
+    "baseSha256": "c4e2f2739eafc8328b72fe40a25f1555828b5f0d8751d4136b250156391880ac",
+    "patchedSha256": "42839b627194c59febff34052b813a6e4725414dcf84c8308397539b734b3893",
+    "applied": false,
+    "changes": "3 imports, private durable-key derivation plus bridge binding, existing productHttp chain"
+  },
+  "ciSelection": [
+    "modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp10/integration/memory-services.test.ts"
+  ],
+  "execution": {
+    "localProductTests": "unexecuted-by-instruction",
+    "localTypecheck": "unexecuted-by-instruction",
+    "hosted": "pending-publication-and-CI",
+    "native": "unexecuted",
+    "globalEpic": "unexecuted"
+  }
+}

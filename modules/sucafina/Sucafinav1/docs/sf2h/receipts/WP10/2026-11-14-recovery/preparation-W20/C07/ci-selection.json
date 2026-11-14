@@ -1,0 +1,23 @@
+{
+  "status": "proposal-for-root; not-dispatched",
+  "baseCommit": "d357de0b1f58abc33e86e79ad3f93b8715ba0e83",
+  "bindPublishedSuccessorBeforeDispatch": true,
+  "package": "sucafina",
+  "files": [
+    "Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts",
+    "Sucafinav1/test/product/wp10/native-host/routine-services.test.ts"
+  ],
+  "namePattern": null,
+  "timeoutMilliseconds": 120000,
+  "omniStrict": true,
+  "check": [
+    "cli-typecheck",
+    "wp10-test-typecheck"
+  ],
+  "reason": "Changed installed publication provider, canonical materialization and retained-provider/native-boundary regressions; no new producer unit-test wave",
+  "limitations": [
+    "Knowledge remains explicitly unavailable without public authenticated Archie anchor resolver",
+    "Native C07 Task/approval/ledger/admission not implemented or accepted",
+    "No local product execution; hosted result pending"
+  ]
+}

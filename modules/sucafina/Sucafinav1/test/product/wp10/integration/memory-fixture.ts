@@ -30,15 +30,17 @@ export const memoryCase = { id: "case", incarnation: "case-incarnation", version
 
 /** SQLite/C08, source lifecycle, Planner calculations and UI authority are real.
  * Scenario records and criterion rules are explicit upstream fixtures, never native/global evidence. */
-export async function memoryFixture() {
+export async function memoryFixture(options: { principalRef?: string; caseRef?: typeof memoryCase } = {}) {
+  const principalRef = options.principalRef ?? "person"
+  const selectedCase = options.caseRef ?? memoryCase
   const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-memory-composition-"))
   const store = await openLocalStore(directory)
   const at = "2027-02-02T00:00:00Z"
   const origin = "https://example.test"
   const access = { allowed: true }
-  const request = (intention = randomUUID()) => new Request(`${origin}/dashboard`, { method: "POST", headers: { origin, authorization: "person", intention } })
-  const identity = (request: Request) => access.allowed && request.headers.get("authorization") === "person"
-    ? { installationId: "installation", projectId: "project", principalRef: "person", accessRevision: "access", policyVersion: "policy" } : undefined
+  const request = (intention = randomUUID()) => new Request(`${origin}/dashboard`, { method: "POST", headers: { origin, authorization: principalRef, intention } })
+  const identity = (request: Request) => access.allowed && request.headers.get("authorization") === principalRef
+    ? { installationId: "installation", projectId: "project", principalRef: principalRef, accessRevision: "access", policyVersion: "policy" } : undefined
   const ui = createSfUiAuthority({ authorize: async (request) => identity(request), commandIdentity: async (request, operation, digest) => `${request.headers.get("intention")}:${operation}:${digest}`,
     createId: randomUUID, now: () => Date.parse(at), privateCommands: ["decisions.condition.record", "decisions.outcome.select", "analysis.prepare", "analysis.start", "analysis.read"].map((action) => `sf-human:${action}`) })
   const human = createSfHumanAuthority({ origin, ui })
@@ -46,20 +48,20 @@ export async function memoryFixture() {
     projectScope: createSfSourceScopeProjector(() => at) })
   for (const surface of ["dashboard", "planner", "procurement"] as const) await persistence.initializeSources(surface)
   await persistence.transaction("planner", async (snapshot) => {
-    snapshot.data = { roleMap: [{ surface: "planner", role: "finance", entra: "finance", version: 1, by: "person" }],
+    snapshot.data = { roleMap: [{ surface: "planner", role: "finance", entra: "finance", version: 1, by: principalRef }],
       versions: [{ id: "v0", name: "January actual", year: 2027, closed: 1, lines: [{ id: "line", name: "Service", ownerId: "owner", sec: "opex", el: "licenses", cur: "USD",
         b: Array(12).fill(120), a: [100, ...Array(11).fill(null)], f: [null, ...Array(11).fill(120)] }], fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }],
       officials: { "2027": "v0" }, entities: [], allocations: [], roster: [] }
     return { commit: true, value: undefined }
   })
   const host: DomainPortHost = { persistence, environment: async () => ({ at, id: randomUUID, directory: [] }),
-    authenticate: async (request, options) => identity(request) && options ? { id: "person", canWrite: true, roles: [{ surface: options.surface, role: "finance" }] } : null,
+    authenticate: async (request, options) => identity(request) && options ? { id: principalRef, canWrite: true, roles: [{ surface: options.surface, role: "finance" }] } : null,
     requestFor: (call) => call.kind === "ui" ? ui.requestFor(call) : undefined,
     revalidate: (call) => call.kind === "ui" ? ui.revalidate(call) : Promise.resolve(false) }
   const signalRegistryWrites = new WeakSet<object>()
   const state = createSfProductState({ persistence, signalRegistryWrites, createId: randomUUID,
     authorize: async (request) => { const actor = identity(request); return actor ? { principalRef: actor.principalRef, accessRevision: actor.accessRevision, policyVersion: actor.policyVersion } : undefined },
-    resolveTarget: async () => ({ incarnation: memoryCase.incarnation }) })
+    resolveTarget: async () => ({ incarnation: selectedCase.incarnation }) })
   const admit = async (action: SfHumanAction, payload: unknown) => {
     const admitted = await human.admit(request(), action, payload)
     if (admitted.status !== "ok") throw new Error(`Memory fixture admission failed: ${admitted.reason}`)
@@ -106,16 +108,16 @@ export async function memoryFixture() {
     criterionResults: ["cost", "quality"].map((criterionId) => ({ criterionId, state: "satisfied", reason: "Original preserved choice" })),
     unresolvedConditions: [], comparisonStatus: "complete", knownDifference: 0, completeDifference: 0 }
   const choice: ChoiceRecord = { id: "choice", alternativeId: "baseline", alternativeVersion: 1, basisVersion: 1, criteria: ["cost", "quality"],
-    values: [{ criterionRef: "cost", value: 120, unit: "USD", currency: "USD", horizon: memoryPeriod }], evidenceRefs: [source], principalRef: "person", reason: "Preserved decision",
+    values: [{ criterionRef: "cost", value: 120, unit: "USD", currency: "USD", horizon: memoryPeriod }], evidenceRefs: [source], principalRef: principalRef, reason: "Preserved decision",
     at, scenario: { baseRef: source.refId, operations: [], assumptions: [] }, result, comparison, comparisonStatus: "complete", costCoverage: coverage }
-  const decision: DecisionCase = { ...memoryCase, state: "chosen", objective: "Track this preserved commitment", horizon: memoryPeriod, currency: "USD",
-    participants: ["person"], criteria: ["cost", "quality"].map((id) => ({ id, description: id, required: true })), sourceRefs: [source], alternatives: [],
+  const decision: DecisionCase = { ...selectedCase, state: "chosen", objective: "Track this preserved commitment", horizon: memoryPeriod, currency: "USD",
+    participants: [principalRef], criteria: ["cost", "quality"].map((id) => ({ id, description: id, required: true })), sourceRefs: [source], alternatives: [],
     costCoverageBases: [basis], assumptions: [], questions: [], choices: [choice], preparedChanges: [], receipts: [], ledger: [] }
-  const saved = await state.transaction(request(), { namespace: "cases", expectedStorageVersion: 0, targetRef: memoryCase.id, targetIncarnation: memoryCase.incarnation,
+  const saved = await state.transaction(request(), { namespace: "cases", expectedStorageVersion: 0, targetRef: selectedCase.id, targetIncarnation: selectedCase.incarnation,
     idempotencyKey: "seed", commandDigest: digestSfValue(decision) }, async (value) => {
       value.cases[decision.id] = decision
       value.decisionResults = Object.fromEntries([...scenarioRecords].map(([ref, entry]) => [ref, { schema: "sf-decision-result-v1" as const, kind: "scenario" as const,
-        resultRef: ref, caseRef: memoryCase, principalRef: "person", accessRevision: "access", policyVersion: "policy", createdAt: at,
+        resultRef: ref, caseRef: selectedCase, principalRef: principalRef, accessRevision: "access", policyVersion: "policy", createdAt: at,
         requestDigest: digestSfValue(choice.scenario), resultDigest: digestSfValue(entry.result), sourceRefs: [source], result: entry.result }]))
       return { commit: true, value: true }
     })
@@ -130,7 +132,7 @@ export async function memoryFixture() {
   }
   const evidence: BusinessContextService = { resolve, context: (request, call) => Promise.all(request.refs.map((ref) => resolve(ref, call))),
     recall: async () => [], emitFromLedger: async () => ({ status: "unavailable", sourceEventId: "", scanner: { name: "", version: "", status: "unavailable" } }) }
-  const cases = createDecisionCasePort({ state, host, creationTarget: { ref: memoryCase.id, incarnation: memoryCase.incarnation }, operationIdentity: (call) => call.kind === "ui" ? ui.operationIdentity(call) : undefined,
+  const cases = createDecisionCasePort({ state, host, creationTarget: { ref: selectedCase.id, incarnation: selectedCase.incarnation }, operationIdentity: (call) => call.kind === "ui" ? ui.operationIdentity(call) : undefined,
     authorizeCase: async (value, call) => value.participants.includes(call.binding.principalRef) && await host.revalidate(call), evidence,
     verifyScenarioOperations: async (value) => value.choices.every((entry) => entry.scenario.operations.length === 0) && value.alternatives.every((entry) => entry.scenario.operations.length === 0),
     createId: randomUUID, now: () => at })
@@ -144,13 +146,13 @@ export async function memoryFixture() {
   } }
   const memory = createSfMemoryServices({ authority: { host, state: guardedState, human }, signalRegistryWrites,
     business: { cases, context: evidence, planner: product.planner, plannerSources: product.sources, plannerProduct: product,
-      resolveCase: async (call) => await host.revalidate(call) ? { status: "ok", value: memoryCase } : { status: "denied", reason: "fixture-case-unavailable" },
+      resolveCase: async (call) => await host.revalidate(call) ? { status: "ok", value: selectedCase } : { status: "denied", reason: "fixture-case-unavailable" },
       operationIdentity: (call) => call.kind === "ui" ? ui.operationIdentity(call) : undefined,
       readSourceFences: async (call) => await host.revalidate(call) ? persistence.transactionAll!(async (snapshots) => ({ commit: false, value: fence(snapshots) })) : undefined,
       lockedSourceFences: () => { const snapshots = persistence.currentSnapshots?.(); return snapshots ? fence(snapshots) : undefined },
     } })
-  const signal: SfSignalSelection = { caseRef: memoryCase, choiceId: choice.id, scenarioRefs: ["baseline", "candidate"], source: projection.context.sourceRefs[0]!, evidence: source,
-    fields: ["lines"], period: memoryPeriod, criterionId: "cost", recipientRef: "person", destination: "case", label: "Reconsider service commitment" }
+  const signal: SfSignalSelection = { caseRef: selectedCase, choiceId: choice.id, scenarioRefs: ["baseline", "candidate"], source: projection.context.sourceRefs[0]!, evidence: source,
+    fields: ["lines"], period: memoryPeriod, criterionId: "cost", recipientRef: principalRef, destination: "case", label: "Reconsider service commitment" }
   const register = async (selection = signal) => {
     const call = await admit("decisions.condition.record", selection)
     try { return await memory.registry.register(selection, call) } finally { human.finish(call) }
@@ -166,7 +168,7 @@ export async function memoryFixture() {
   })
   const http = createSfMemoryHttp({ origin, authority: { ui, human, host }, memory,
     // Explicit case-bound fixture only; the product host injects business.withCase.
-    withCase: async (call, selected, _options, work) => call.kind === "ui" && digestSfValue(selected) === digestSfValue(memoryCase) && await host.revalidate(call)
+    withCase: async (call, selected, _options, work) => call.kind === "ui" && digestSfValue(selected) === digestSfValue(selectedCase) && await host.revalidate(call)
       ? work() : { status: "denied", reason: "fixture-case-unavailable" },
   })
   return { memory, http, context, state, decision, choice, signal, source, projection, access, controls, admit, register, editSource, replaceActual, request, ui, human,

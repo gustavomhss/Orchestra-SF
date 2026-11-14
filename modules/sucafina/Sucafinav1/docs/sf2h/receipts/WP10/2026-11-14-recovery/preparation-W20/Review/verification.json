@@ -1,0 +1,522 @@
+{
+  "kind": "pure-text-hash-and-path-validation",
+  "productExecution": false,
+  "localTests": false,
+  "typecheck": false,
+  "hostedExecution": false,
+  "removedAssertions": [],
+  "removedTestDeclarations": [],
+  "reviewBudgetsUnchanged": true,
+  "canonicalReviewReadersUnchanged": [
+    {
+      "path": "apps/cli/src/sucafina-product/review-read-integrity.ts",
+      "unchanged": true,
+      "sha256": "07095456b24817994fd1b6122efbecfa8c13afaef9e887f009971f7bc2fc47e0",
+      "blobSha": "2a04d86546c1c5361ec523a5f7c7189b5a8d2d65",
+      "bytes": 10746
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/review-services.ts",
+      "unchanged": true,
+      "sha256": "2f7b7a64fdc0d868966e103abbabbc677e86df77528dc268f11570c42427dc9e",
+      "blobSha": "c07d55c714b4c85ee41abb4d287ce5861500086d",
+      "bytes": 8294
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/review-portfolio-history.ts",
+      "unchanged": true,
+      "sha256": "f7dfeb4ac76bcd016c183359169551ee6ede29fe295e6cf80c379c6b95566279",
+      "blobSha": "4d11a5c8c81d99f117709fc65327373055ee2cc1",
+      "bytes": 7222
+    }
+  ],
+  "imports": [
+    {
+      "file": "apps/cli/src/sucafina-product/source-fence-read.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/source-fence-read.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/source-fence-read.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/source-fence-read.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/source-fence-read.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/source-fence-read.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/src/identity.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/planner/confirmation.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/runtime/admin.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/runtime/procurement.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/contracts/operations.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/host-binding/evidence-order.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/contracts/validation.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/documents/evidence-resolver.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/documents/scenario-inputs.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/dashboard/port.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/dashboard/sources.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/integration/dashboard-sources.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/dashboard/capabilities.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/decisions/scenario-lookup.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/decisions/capabilities.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/procurement/sources.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/procurement/sourcing-evidence.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/procurement/port.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/procurement/capabilities.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/procurement/contracts.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/planner/product.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/planner/persistence.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/decisions/coverage-access.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/planner/capabilities.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/decision-memory/case-recall.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/host-binding/atlas-scanner.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "./dashboard-services.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "./dashboard-decisions.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "./planner-evidence.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "./planner-calculation-services.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "./scenario-operation-access.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "./recorded-planner-operation-access.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "./prepared-application-egress.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "./memory-case-read-scope.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "./source-fence-read.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "./scenario-procurement-proof-scope.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "./decision-baseline-services.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/collaboration/host.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/collaboration/work-port.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/ai/contribution-reader.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/procurement/confirmation.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/procurement/collection-member.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/procurement/queue-page.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/routines/dossier.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/documents/evidence-resolver.ts",
+      "present": true
+    },
+    {
+      "file": "apps/cli/src/sucafina-product/business-services.ts",
+      "import": "../../../../modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json",
+      "present": true
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp10/integration/source-fence-read.test.ts",
+      "import": "../../../../product/ai/run-store.ts",
+      "present": true
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp10/integration/source-fence-read.test.ts",
+      "import": "../../../../product/contracts/canonical.ts",
+      "present": true
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp10/integration/source-fence-read.test.ts",
+      "import": "../../../../product/contracts/decisions.ts",
+      "present": true
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp10/integration/source-fence-read.test.ts",
+      "import": "../../../../runtime/contract.ts",
+      "present": true
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp10/integration/source-fence-read.test.ts",
+      "import": "../../../../../../../apps/cli/src/sucafina-product/source-fence-read.ts",
+      "present": true
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp10/integration/source-fence-read.test.ts",
+      "import": "./financial-composition-fixture.ts",
+      "present": true
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "import": "../../../../product/contracts/canonical.ts",
+      "present": true
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "import": "../../../../product/contracts/context.ts",
+      "present": true
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "import": "../../../../product/contracts/decisions.ts",
+      "present": true
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "import": "../../../../product/contracts/operations.ts",
+      "present": true
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "import": "../../../../product/contracts/state.ts",
+      "present": true
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "import": "../../../../product/contracts/sf-execution.ts",
+      "present": true
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "import": "../../../../product/decisions/case-port.ts",
+      "present": true
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "import": "../../../../product/portfolio/candidates.ts",
+      "present": true
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "import": "../../../../product/portfolio/production.ts",
+      "present": true
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "import": "../../../../product/reviews/services.ts",
+      "present": true
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "import": "../../../../product/reviews/human.ts",
+      "present": true
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "import": "../../../../../../../apps/cli/src/sucafina-product/bi-services.ts",
+      "present": true
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "import": "../../../../../../../apps/cli/src/sucafina-product/review-services.ts",
+      "present": true
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "import": "../../../../../../../apps/cli/src/sucafina-product/review-resident-readers.ts",
+      "present": true
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "import": "../../../../../../../apps/cli/src/sucafina-product/memory-services.ts",
+      "present": true
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "import": "../../../../../../../apps/cli/src/sucafina-product/review-portfolio-history.ts",
+      "present": true
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "import": "../../../../../../../apps/cli/src/sucafina-product/extended-http.ts",
+      "present": true
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "import": "../../../../../../../apps/cli/src/sucafina-product/extended-assets.ts",
+      "present": true
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "import": "./financial-composition-fixture.ts",
+      "present": true
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "import": "./review-access-browser-fixture.ts",
+      "present": true
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "import": "./composition-test-deadline.ts",
+      "present": true
+    }
+  ],
+  "newFocusedTests": 3,
+  "newTestBudgetMs": 120000,
+  "ownDiff": {
+    "sha256": "a0421fdb81ad73ef494311a94118585d2e2676c88a6ed3f156576e3bbc835ef6",
+    "blobSha": "4321170860d5a730a845931877f105521b229982",
+    "bytes": 15585
+  }
+}

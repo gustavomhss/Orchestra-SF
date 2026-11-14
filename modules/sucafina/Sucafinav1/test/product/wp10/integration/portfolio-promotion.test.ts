@@ -9,6 +9,9 @@ import type { BaselineCoverageRequest } from "../../../../product/decisions/base
 import type { CriterionRuleInput } from "../../../../product/decisions/criterion-rules.ts"
 import { financialCompositionFixture } from "./financial-composition-fixture.ts"
 import { compositionTestDeadline } from "./composition-test-deadline.ts"
+import { createSfPortfolioCoverageAuthority } from "../../../../../../../apps/cli/src/sucafina-product/portfolio-coverage-authority.ts"
+import { createPortfolioCoveragePreview } from "../../../../product/portfolio/coverage-preview.ts"
+import { comparePlannerPreview } from "../../../../product/planner/preview-comparison.ts"
 
 type Fixture = Awaited<ReturnType<typeof financialCompositionFixture>>
 type CaseRef = { id: string; incarnation: string; version: number }
@@ -305,3 +308,85 @@ test("historical choice rejects removed membership, replaced incarnation, change
     expect(after.outbox).toEqual(before.outbox)
   } finally { state.fixture.active.value = true; await state.close() }
 }, 300_000)
+
+test("Portfolio coverage reopens real human selection and preserves incomplete costs across Request and source changes", async () => {
+  const state = await promotionFixture("portfolio-coverage-authority", 285_000)
+  try {
+    const pair = await promotedPair(state)
+    const { authority, business, portfolio } = state.fixture
+    const saved = await state.snapshot()
+    const alternative = saved.case.alternatives[1]!
+    const parameter = alternative.result.components[0]
+    if (!parameter) throw new Error("Actual Planner component unavailable")
+    const request = { scenarioRef: scenarioRef(pair.candidate), parameterBounds: { parameterRef: parameter.id, minimum: 0, maximum: 2000, steps: 2 },
+      criterion: { id: "cost", operator: "lte" as const, value: 0 } }
+    const baselineRef = scenarioRef(pair.baseline)
+    const resolve = createSfPortfolioCoverageAuthority({ authority, business, registries: portfolio })
+    const absent = await state.scoped(pair.candidate.caseRef, (call) => resolve(request, baselineRef, call), "coverage.no-human-selection")
+    expect(absent).toEqual({ status: "unavailable", reason: "portfolio-coverage-selection-unavailable" })
+    const selection = { caseRef: pair.candidate.caseRef, baselineAlternativeId: saved.case.alternatives[0]!.id,
+      alternativeId: alternative.id, criteria: ["cost"], expectedVersion: 0 }
+    const human = ok(await authority.human.admit(state.fixture.request("select-coverage-pair"), "decisions.select-portfolio", selection), "Admit portfolio selection")
+    try { ok(await business.withCase(human, selection.caseRef, {}, () => portfolio.selection.register(selection, human)), "Register actual selection") }
+    finally { authority.human.finish(human) }
+    const before = await state.snapshot()
+    const checked = await state.scoped(pair.candidate.caseRef, async (call) => {
+      const resolved = ok(await resolve(request, baselineRef, call), "Resolve authenticated coverage authority")
+      expect(resolved.decision).toEqual(before.case)
+      expect(resolved.storedResult).toEqual(alternative.result)
+      expect(resolved.storedResult.costCoverage.coverageState).toBe("pending")
+      expect(resolved.classification.notApplicableEntries ?? []).toHaveLength(0)
+      expect(resolved.baseline.classification.notApplicableEntries ?? []).toHaveLength(0)
+      expect(await resolved.isStillValid(call)).toBe(true)
+      const other = await state.fixture.read()
+      try { expect(await resolved.isStillValid(other)).toBe(false) }
+      finally { authority.ui.finish(other) }
+      expect((await resolve({ ...request, criterion: { ...request.criterion, value: 1 } }, baselineRef, call)).status).not.toBe("ok")
+      const scenarios = business.plannerProduct.scenarios
+      if (!scenarios || !portfolio.units) throw new Error("Actual Planner sensitivity ports unavailable")
+      const preview = createPortfolioCoveragePreview({ units: portfolio.units, resolveAuthority: resolve,
+        preview: (value, trusted) => comparePlannerPreview({ host: authority.host, sources: business.plannerSources, scenarios, planner: portfolio.planner }, value, trusted) })
+      // The original no-op results preserve explicit pending category reasons.
+      // The canonical issuer refuses those unresolved sources before issuing a certificate.
+      expect(resolved.storedResult.unresolvedConditions.some((condition) => condition.startsWith("coverage:"))).toBe(true)
+      const refused = await preview.issue(request, baselineRef, call)
+      expect(refused).toEqual({ status: "unavailable", reason: "coverage-source-unresolved" })
+      expect(refused).not.toHaveProperty("value")
+      expect(await state.snapshot()).toEqual(before)
+      const source = authority.host.requestFor(call)
+      if (!source) throw new Error("Authentic Request unavailable")
+      source.headers.set("x-coverage-replaced", "changed")
+      expect(await resolved.isStillValid(call)).toBe(false)
+      source.headers.delete("x-coverage-replaced")
+      expect(await resolved.isStillValid(call)).toBe(true)
+      await state.fixture.persistence.transaction("planner", async (snapshot) => {
+        const versions = snapshot.data.versions as { id: string; lines: { b: number[]; f: number[] }[] }[]
+        const line = versions.find((value) => value.id === "v1")!.lines[0]!
+        line.b[0] = 90
+        line.f[0] = 90
+        return { commit: true, value: undefined }
+      })
+      expect(await resolved.isStillValid(call)).toBe(false)
+      expect((await resolve(request, baselineRef, call)).status).not.toBe("ok")
+      return { status: "ok" as const, value: true }
+    }, "coverage.current-authority-and-counterproofs")
+    expect(checked).toEqual({ status: "ok", value: true })
+    expect((await state.snapshot()).case).toEqual(before.case)
+  } finally { state.fixture.active.value = true; await state.close() }
+}, 300_000)
+
+
+test("Portfolio coverage refuses a revoked authentic UI admission before exposing authority data", async () => {
+  const fixture = await financialCompositionFixture()
+  const call = await fixture.read()
+  try {
+    const resolve = createSfPortfolioCoverageAuthority({ authority: fixture.authority, business: fixture.business, registries: fixture.portfolio })
+    fixture.active.value = false
+    const result = await resolve({ scenarioRef: "untrusted-scenario", parameterBounds: { parameterRef: "untrusted-parameter", minimum: 0, maximum: 1, steps: 2 },
+      criterion: { id: "cost", operator: "lte", value: 0 } }, "untrusted-baseline", call)
+    expect(result).toEqual({ status: "denied", reason: "portfolio-coverage-authority-unavailable" })
+    fixture.active.value = true
+    // A revoked admission is not revived by a subsequently valid session.
+    expect(await fixture.authority.host.revalidate(call)).toBe(false)
+  } finally { fixture.authority.ui.finish(call); await fixture.dispose() }
+}, 120_000)

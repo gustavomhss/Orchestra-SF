@@ -49,6 +49,14 @@ export function createScenarioRequestStore(input: {
       if (again.status !== "ok" || digestSfValue(again.value) !== digestSfValue(record) || resultAgain.status !== "ok" || digestSfValue(resultAgain.value) !== digestSfValue(result.value) || source.signal.aborted || !await input.host.revalidate(context)) return { status: "stale", reason: "scenario-request-changed" }
       if (caseAgain.status !== "ok" || !caseAgain.value || digestSfValue(caseAgain.value) !== digestSfValue(decision) || !await authorizeCase(caseAgain.value, context)) return { status: "stale", reason: "scenario-request-case-changed" }
       if (input.verifyRequestSources && (resultAgain.value.kind !== "scenario" || !await verifyRequestSources(record.request, resultAgain.value, context) || source.signal.aborted || !await input.host.revalidate(context))) return { status: "unavailable", reason: "calculation-request-sources-unproven" }
+      // Request-source replay can await work after caseAgain. Reauthorize both
+      // namespaces, then fence the request, result and case in one final C08 read.
+      const finalRecord = await input.state.read(source, "preferences", (state, authority) => sameAuthority(authority, context) ? state.preferences[key(resultRef)] : undefined)
+      if (finalRecord.status !== "ok" || digestSfValue(finalRecord.value) !== digestSfValue(record)) return { status: "stale", reason: "scenario-request-changed" }
+      const final = await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? { decision: state.cases[result.value.caseRef.id], result: state.decisionResults?.[resultRef], record: state.preferences[key(resultRef)] } : undefined)
+      if (final.status !== "ok" || !final.value || source.signal.aborted) return { status: "stale", reason: "scenario-request-changed" }
+      if (!final.value.decision || digestSfValue(final.value.decision) !== digestSfValue(decision)) return { status: "stale", reason: "scenario-request-case-changed" }
+      if (digestSfValue(final.value.record) !== digestSfValue(record) || digestSfValue(final.value.result) !== digestSfValue(resultAgain.value)) return { status: "stale", reason: "scenario-request-changed" }
       return { status: "ok", value: structuredClone(record) }
     } catch { return { status: "unavailable", reason: "scenario-request-unavailable" } }
   }

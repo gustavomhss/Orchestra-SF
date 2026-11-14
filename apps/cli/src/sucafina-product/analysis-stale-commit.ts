@@ -9,6 +9,7 @@ import { sfRunSourceFence } from "../../../../modules/sucafina/Sucafinav1/produc
 import type { createSfRunStore } from "../../../../modules/sucafina/Sucafinav1/product/ai/run-store.ts"
 import { object } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
 import type { Persistence, Snapshot } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
+import type { createSfAnalysisLifecycleContext } from "./analysis-run-context.ts"
 
 /** Stale is a lifecycle settlement, never a fresh analysis or a new execution grant.
  * Current source access is re-opened under C08; original record/output CAS stays in the run store. */
@@ -19,6 +20,7 @@ export function createSfStaleAnalysisAccess(input: {
   request: Request
   start: unknown
   proof: { runRef: string; caseRef: SfNativeRunRecord["caseRef"]; contextFingerprint: string; evidenceRefs: readonly BusinessEvidenceRef[] }
+  lifecycle?: Pick<ReturnType<typeof createSfAnalysisLifecycleContext>, "owns">
 }) {
   const proof = structuredClone(input.proof)
   const start = structuredClone(input.start)
@@ -136,14 +138,22 @@ export function createSfStaleAnalysisAccess(input: {
       }
       return { ...store,
         preserveStale: (runRef, reason, output, call) => {
+          if (input.lifecycle?.owns(call)) return Promise.resolve({ status: "denied", reason: "analysis-lifecycle-content-unavailable" } as const)
           const captured = structuredClone(output)
           return prepare(runRef, call, captured, undefined, () => store.preserveStale(runRef, reason, captured, call))
         },
-        markStale: (runRef, reason, call) => prepare(runRef, call, undefined, undefined, () => store.markStale(runRef, reason, call)),
-        transition: (runRef, expectedVersion, state, reason, call) => state === "stale"
-          ? prepare(runRef, call, undefined, expectedVersion + 1, () => store.transition(runRef, expectedVersion, state, reason, call))
-          : state === "cancelled" ? cancel(runRef, expectedVersion, reason, call)
-          : store.transition(runRef, expectedVersion, state, reason, call),
+        markStale: (runRef, reason, call, observation) => {
+          const copy = observation && structuredClone(observation)
+          const captured = copy && Object.freeze({ ...copy, publication: Object.freeze({ ...copy.publication }) })
+          return input.lifecycle?.owns(call) ? store.markStale(runRef, reason, call, captured)
+            : prepare(runRef, call, undefined, undefined, () => store.markStale(runRef, reason, call, captured))
+        },
+        transition: (runRef, expectedVersion, state, reason, call) => {
+          if (state === "cancelled") return cancel(runRef, expectedVersion, reason, call)
+          if (state === "stale" && !input.lifecycle?.owns(call))
+            return prepare(runRef, call, undefined, expectedVersion + 1, () => store.transition(runRef, expectedVersion, state, reason, call))
+          return store.transition(runRef, expectedVersion, state, reason, call)
+        },
       }
     },
   }

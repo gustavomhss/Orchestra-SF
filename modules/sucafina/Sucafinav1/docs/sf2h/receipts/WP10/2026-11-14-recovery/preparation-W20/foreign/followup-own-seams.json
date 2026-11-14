@@ -1,0 +1,106 @@
+{
+  "schema": "wp10-w20-portfolio-own-seams-audit-v1",
+  "candidate": {
+    "commit": "d357de0b1f58abc33e86e79ad3f93b8715ba0e83",
+    "tree": "20d4e76e42a8b74daced57d64ad285f5dfef17a2"
+  },
+  "producers": {
+    "pr35": "c449efc092e507fca2b4f61d1e7ce057faf05c89",
+    "pr36": "8bb72c8cdeda149b000d91403c368642c3b53dec"
+  },
+  "mode": "READ_ONLY_SOURCE_AUDIT_NO_PRODUCT_EXECUTION",
+  "humanChoiceFixture": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts",
+    "gitBlob": "18d95b84d01b26048af9a442c44cb32e8f14e9f5",
+    "candidateBlob": null,
+    "disposition": "DELIBERATE_HOLD_NEW_NOT_IDENTICAL",
+    "reason": "No selected33 file imports it; belongs to unselected current-choice/choice-prepared/rejection proof closure. Its source remains in the probe archive."
+  },
+  "selected33Unchanged": true,
+  "coverage": {
+    "status": "OWN_WIRING_REQUIRED_EXISTING_PUBLIC_PORTS_SUFFICIENT_FOR_AUTHORIZED_INCLUDED_COVERAGE",
+    "root": "apps/cli/src/sucafina-product/portfolio-services.ts",
+    "missing": [
+      "createPortfolioProduct.resolveCoverageAuthority",
+      "equivalent createPortfolioCoveragePreview service passed as createPortfolioProofVerifier.coveragePreview"
+    ],
+    "realPorts": [
+      "business.resolveCase",
+      "business.cases.read",
+      "registries.selection.read",
+      "registries.rules.resolve",
+      "business.results.readHistoricalScenario",
+      "business.plannerProduct.scenarios.resolve",
+      "business.baselineCoverage.readClassification",
+      "business.baselineCoverage.resolveForecastCoverage",
+      "business.context.context",
+      "authority.host.requestFor/revalidate",
+      "business.readSourceFences"
+    ],
+    "collect": [
+      "Authenticate current case and exact selected baseline/alternative refs, criterion and human selection",
+      "Read stored scenario results and actual scenario request via Planner scenario host; compare to selected case alternatives and C08 digests",
+      "Read both classifications and the exact case-owned cost coverage basis; do not manufacture complete assessments or not-applicable entries",
+      "Resolve union of case/basis/classification/scenario/assessment/rule references with current authorization",
+      "Capture request identity, abort status, authority binding, case/selection/rule/classification/result/scenario digests and source fences",
+      "isStillValid rereads the same complete records and evidence under the same context and compares all material digests; no cross-call cache"
+    ],
+    "notApplicable": "Existing own decision-baseline-services explicitly refuses not-applicable without a producer; do not substitute fixture synthetic-scope statements or supports:true. Those cases remain conditioned/unavailable.",
+    "financialSemantics": "Coverage qualification can establish complete quantified sensitivity while scenario samples remain hypothetical, comparisonStatus conditioned, total null, preview not applied. Do not overwrite samples, persisted portfolio financialStatus or missing category disclosures.",
+    "evidenceRequired": [
+      "Hosted positive with real registered classifications and all categories accounted for",
+      "Hosted denial after ACL/classification/selection/rule/source/case/request mutation",
+      "Cold-read sensitivity proof reconstruction with equivalent coverage service",
+      "Conditioned/missing-category/null-total counterproof without an admissible qualification"
+    ]
+  },
+  "reconciliation": {
+    "status": "OWN_ADAPTER_AND_TRANSPORT_REQUIRED_NOT_ACTIVATED_BY_SELECTED6",
+    "requiredInput": "PortfolioReconciliationHost.readPortfolio({caseRef,resultRef,combinationId}, context) -> {stored,binding,candidates}",
+    "currentPorts": [
+      "authority.state.read with host Request and principal/access/policy binding",
+      "business.cases.read",
+      "registries.portfolioBindings.readHistoricalBinding",
+      "business.results.readHistoricalScenario",
+      "business.context.context"
+    ],
+    "guardedRead": "Read raw C08 portfolio only inside an authenticated state read, then validate schema/output/digests, exact current case and same incarnation; read authenticated historical binding+selection; expected candidate digests must originate there. Recheck all observations, authority and Request at egress.",
+    "ancestry": "Current W19 provenance only resolves alternatives still present in the current case. A replaced candidate needs the newly read published createPortfolioCandidateHistoryReader from portfolio/proof.ts and optional readHistoricalCandidate in the new history-provenance.ts. Both sources archived exact, not silently added to selected33.",
+    "newConditionalSources": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/proof.ts",
+        "gitBlob": "e07714d6c390a655b6eac7f5c2d56193b7bbfc7b",
+        "sourceCommit": "8bb72c8cdeda149b000d91403c368642c3b53dec"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/history-provenance.ts",
+        "gitBlob": "caa3b783b41f95287bba8a4bab3c652c8375c320",
+        "sourceCommit": "8bb72c8cdeda149b000d91403c368642c3b53dec"
+      }
+    ],
+    "readerInput": "createPortfolioCandidateHistoryReader({state:authority.state,cases:business.cases,results:business.results,evidence:business.context,host:authority.host}); call with binding.proof candidate ref+digest, never client-supplied digest.",
+    "historyLimit": "W19 decisions/portfolio-history.ts requires stored.caseRef.version < current.version. Do not blindly reuse it for source-only changes at owner version N/N. The new private readPortfolio adapter must explicitly authorize original C08/provenance for same-version source history, or retain unavailable; never change < to <= without proof.",
+    "materiality": "Optional readMaterialChange needs an authorized WP14 signal/condition selection and real Planner-produced before/after event. Existing decision-materiality-services exposes registry.list and produce plus conditions; it is not the required component callback by itself. Map exact condition/source/criterion/period and derive componentScope fingerprints from actual producer components. Missing provenance remains unknown.",
+    "ownTransport": "portfolio-http.ts has no decision-portfolio-reconcile route. Add only with explicit action, closed request schema, withCase, human admission and final authority/Request checks; UI must consume the result. No browser/native proof is supplied by source composition.",
+    "native": "createPortfolioProduct advertises only sf_portfolio_evaluate and sf_sensitivity_evaluate via existing persistent contribution. No native reconciliation operation is defined here. Preserve actual financialStatus, nulls, origin and receipt refs in consumers; new native capability needs governed contract/descriptor/dispatcher output and real receipts, not an invented flag.",
+    "evidenceRequired": [
+      "Hosted original portfolio -> human choice -> prepared changes/receipt reconciliation",
+      "Same source version vs changed source with owner case version N/N; replaced alternative via authenticated original snapshot",
+      "Revoked ancestry/ACL, forged candidate digest, changed receipt and ambiguous component scope refused",
+      "Actual installed UI/native consumer verification remains separate"
+    ]
+  },
+  "ownership": {
+    "wp10": "Private authority resolver, equivalent proof wiring, readPortfolio adapter, current Request/final fences, transport and consumer composition.",
+    "wp13": "Published coverage/reconciliation algorithms and historical candidate/provenance APIs; no source edits proposed.",
+    "wp11": "Case, classification, result/request, human selection, prepared change/receipt and historical bindings remain authoritative; latest Finance mutations/apply fences preserved.",
+    "wp14": "Material-condition selection and producer classification; no signal inferred from prose or receipts alone.",
+    "s0": "Integration and native/global acceptance after governed bundles and independent review."
+  },
+  "limits": [
+    "Static source/API analysis only. No local product tests, build or typecheck.",
+    "No criterion PASS or native/global acceptance inferred.",
+    "Original selected33, source archives and historical evidence left unchanged.",
+    "Parent's current default-deny changes in two own files not edited or replaced."
+  ]
+}

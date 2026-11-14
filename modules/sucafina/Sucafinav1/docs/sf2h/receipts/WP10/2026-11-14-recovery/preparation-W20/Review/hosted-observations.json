@@ -1,0 +1,5490 @@
+{
+  "productSha": "d357de0b1f58abc33e86e79ad3f93b8715ba0e83",
+  "snapshotSha": "12988ada266de298d0ec0ba9d8968845ae4c7782",
+  "counts": {
+    "pass": 105,
+    "fail": 17,
+    "errors": 1,
+    "expects": 3628,
+    "tests": 122,
+    "files": 22,
+    "durationSeconds": 2115.53,
+    "skip": 0,
+    "errorsAreAdditionalTestCases": false
+  },
+  "rawLog": "/workspace/scratch/301a7f2754f4/evidence/W19/A-job-132449464415.raw.txt",
+  "rawLogHashes": {
+    "sha256": "37e8cd669418575398e22ca2d3bf17d8c2f82c4c36c62006f71045fdaa334c4f",
+    "blobSha": "48a5b3ee2abd2eaa9f761767cddb094cc813393c",
+    "bytes": 403989
+  },
+  "tests": [
+    {
+      "status": "pass",
+      "name": "BI proof starts only after real UI consumption, clones within one invocation and cannot cross a new call or UTC day",
+      "durationMs": 88841.28,
+      "file": "Sucafinav1/test/product/wp10/integration/bi-call-scope.test.ts",
+      "rawLogLine": 1076,
+      "timeoutMs": null
+    },
+    {
+      "status": "pass",
+      "name": "BI exported source and Review cannot borrow a completed proof from an overlapping presentation dispatch",
+      "durationMs": 94316.33,
+      "file": "Sucafinav1/test/product/wp10/integration/bi-call-scope.test.ts",
+      "rawLogLine": 1110,
+      "timeoutMs": null
+    },
+    {
+      "status": "pass",
+      "name": "BI proof rejects current case revocation, unversioned C08 result corruption and changed input without repeating a producer",
+      "durationMs": 87891.43,
+      "file": "Sucafinav1/test/product/wp10/integration/bi-call-scope.test.ts",
+      "rawLogLine": 1143,
+      "timeoutMs": null
+    },
+    {
+      "status": "pass",
+      "name": "BI proof fences all three actual domain snapshots even when the C08 revision and Planner reference stay unchanged",
+      "durationMs": 91456.82,
+      "file": "Sucafinav1/test/product/wp10/integration/bi-call-scope.test.ts",
+      "rawLogLine": 1178,
+      "timeoutMs": null
+    },
+    {
+      "status": "pass",
+      "name": "BI egress returns denied after actor revocation, Request abort or lease removal at its final asynchronous boundaries",
+      "durationMs": 91897.45,
+      "file": "Sucafinav1/test/product/wp10/integration/bi-call-scope.test.ts",
+      "rawLogLine": 1213,
+      "timeoutMs": null
+    },
+    {
+      "status": "fail",
+      "name": "BI source HTTP reopens its real case after destination resolution and returns no links after participation is revoked",
+      "durationMs": 105047.79,
+      "file": "Sucafinav1/test/product/wp10/integration/bi-call-scope.test.ts",
+      "rawLogLine": 1251,
+      "timeoutMs": null
+    },
+    {
+      "status": "fail",
+      "name": "BI clears a real persisted case after participant revocation with the session valid and discards a delayed authorized source",
+      "durationMs": 105148.31,
+      "file": "Sucafinav1/test/product/wp10/integration/bi-case-access.test.ts",
+      "rawLogLine": 1353,
+      "timeoutMs": null
+    },
+    {
+      "status": "pass",
+      "name": "Review grouped reads keep exact receipts and current authority without lending a proof to another invocation",
+      "durationMs": 17576.53,
+      "file": "Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "rawLogLine": 1383,
+      "timeoutMs": null
+    },
+    {
+      "status": "fail",
+      "name": "resident Review grouped reads reauthorize through the real Memory provider on every final read",
+      "durationMs": 40675.43,
+      "file": "Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "rawLogLine": 1415,
+      "timeoutMs": null
+    },
+    {
+      "status": "fail",
+      "name": "Review source HTTP protects current-case after destination resolution without exposing labels or URLs",
+      "durationMs": 40561.6,
+      "file": "Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "rawLogLine": 1453,
+      "timeoutMs": null
+    },
+    {
+      "status": "fail",
+      "name": "Review source HTTP protects previous-case after destination resolution without exposing labels or URLs",
+      "durationMs": 58442.71,
+      "file": "Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "rawLogLine": 1491,
+      "timeoutMs": null
+    },
+    {
+      "status": "fail",
+      "name": "Review source HTTP protects successor-body after destination resolution without exposing labels or URLs",
+      "durationMs": 58344.37,
+      "file": "Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "rawLogLine": 1529,
+      "timeoutMs": null
+    },
+    {
+      "status": "pass",
+      "name": "default Review HTTP retains the persisted Portfolio at N after the case reaches N+1",
+      "durationMs": 31471.71,
+      "file": "Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "rawLogLine": 1554,
+      "timeoutMs": null
+    },
+    {
+      "status": "fail",
+      "name": "Review creates a real report and download and rejects both case and session revocation",
+      "durationMs": 105084.41,
+      "file": "Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "rawLogLine": 1599,
+      "timeoutMs": null
+    },
+    {
+      "status": "fail",
+      "name": "Review compares an actually preserved historical Portfolio successor",
+      "durationMs": 105018.79,
+      "file": "Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "rawLogLine": 1637,
+      "timeoutMs": null
+    },
+    {
+      "status": "pass",
+      "name": "Review HTTP fences case revocation after reading the real browser asset and recovers",
+      "durationMs": 40184.62,
+      "file": "Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "rawLogLine": 1663,
+      "timeoutMs": null
+    },
+    {
+      "status": "pass",
+      "name": "Review HTTP fences session revocation after reading the real browser asset and recovers",
+      "durationMs": 40101.68,
+      "file": "Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "rawLogLine": 1690,
+      "timeoutMs": null
+    },
+    {
+      "status": "fail",
+      "name": "Review browser clears selected content after case revocation while the session remains authenticated",
+      "durationMs": 32194.19,
+      "file": "Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "rawLogLine": 1740,
+      "timeoutMs": null
+    },
+    {
+      "status": "pass",
+      "name": "Review historical HTTP rejects a replacement case incarnation and recovers the original",
+      "durationMs": 22533.48,
+      "file": "Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "rawLogLine": 1767,
+      "timeoutMs": null
+    },
+    {
+      "status": "pass",
+      "name": "Review historical HTTP rejects an altered Portfolio binding and recovers the actual binding",
+      "durationMs": 22737.52,
+      "file": "Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "rawLogLine": 1794,
+      "timeoutMs": null
+    },
+    {
+      "status": "pass",
+      "name": "Review historical HTTP rejects an altered stored Portfolio result and recovers the real result",
+      "durationMs": 22648.13,
+      "file": "Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "rawLogLine": 1821,
+      "timeoutMs": null
+    },
+    {
+      "status": "fail",
+      "name": "Review rejects an altered body despite a legitimate successor and preserves history after a real source edit",
+      "durationMs": 105027.73,
+      "file": "Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "rawLogLine": 1869,
+      "timeoutMs": null
+    },
+    {
+      "status": "pass",
+      "name": "Review historical capture needs its own intact receipt after a source edit despite a legitimate successor",
+      "durationMs": 70500.7,
+      "file": "Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "rawLogLine": 1901,
+      "timeoutMs": null
+    }
+  ],
+  "phases": [
+    {
+      "rawLogLine": 1044,
+      "fixture": "bi-call-scope-identity",
+      "phase": "fixture.initialize",
+      "state": "started",
+      "elapsedMs": 1
+    },
+    {
+      "rawLogLine": 1045,
+      "fixture": "bi-call-scope-identity",
+      "phase": "fixture.initialize",
+      "state": "returned",
+      "phaseMs": 22,
+      "elapsedMs": 23,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1046,
+      "fixture": "bi-call-scope-identity",
+      "phase": "source.0",
+      "state": "started",
+      "elapsedMs": 34
+    },
+    {
+      "rawLogLine": 1047,
+      "fixture": "bi-call-scope-identity",
+      "phase": "source.0",
+      "state": "returned",
+      "phaseMs": 20,
+      "elapsedMs": 55,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1048,
+      "fixture": "bi-call-scope-identity",
+      "phase": "forecast.0",
+      "state": "started",
+      "elapsedMs": 55
+    },
+    {
+      "rawLogLine": 1049,
+      "fixture": "bi-call-scope-identity",
+      "phase": "forecast.0",
+      "state": "returned",
+      "phaseMs": 41,
+      "elapsedMs": 95,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1050,
+      "fixture": "bi-call-scope-identity",
+      "phase": "source.1",
+      "state": "started",
+      "elapsedMs": 95
+    },
+    {
+      "rawLogLine": 1051,
+      "fixture": "bi-call-scope-identity",
+      "phase": "source.1",
+      "state": "returned",
+      "phaseMs": 21,
+      "elapsedMs": 116,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1052,
+      "fixture": "bi-call-scope-identity",
+      "phase": "forecast.1",
+      "state": "started",
+      "elapsedMs": 116
+    },
+    {
+      "rawLogLine": 1053,
+      "fixture": "bi-call-scope-identity",
+      "phase": "forecast.1",
+      "state": "returned",
+      "phaseMs": 29,
+      "elapsedMs": 146,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1054,
+      "fixture": "bi-call-scope-identity",
+      "phase": "coverage.0",
+      "state": "started",
+      "elapsedMs": 156
+    },
+    {
+      "rawLogLine": 1055,
+      "fixture": "bi-call-scope-identity",
+      "phase": "coverage.0",
+      "state": "returned",
+      "phaseMs": 567,
+      "elapsedMs": 723,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1056,
+      "fixture": "bi-call-scope-identity",
+      "phase": "coverage.read.0",
+      "state": "started",
+      "elapsedMs": 723
+    },
+    {
+      "rawLogLine": 1057,
+      "fixture": "bi-call-scope-identity",
+      "phase": "coverage.read.0",
+      "state": "returned",
+      "phaseMs": 433,
+      "elapsedMs": 1156,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1058,
+      "fixture": "bi-call-scope-identity",
+      "phase": "coverage.1",
+      "state": "started",
+      "elapsedMs": 1162
+    },
+    {
+      "rawLogLine": 1059,
+      "fixture": "bi-call-scope-identity",
+      "phase": "coverage.1",
+      "state": "returned",
+      "phaseMs": 742,
+      "elapsedMs": 1903,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1060,
+      "fixture": "bi-call-scope-identity",
+      "phase": "coverage.read.1",
+      "state": "started",
+      "elapsedMs": 1903
+    },
+    {
+      "rawLogLine": 1061,
+      "fixture": "bi-call-scope-identity",
+      "phase": "coverage.read.1",
+      "state": "returned",
+      "phaseMs": 569,
+      "elapsedMs": 2472,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1062,
+      "fixture": "bi-call-scope-identity",
+      "phase": "promotion.0",
+      "state": "started",
+      "elapsedMs": 2473
+    },
+    {
+      "rawLogLine": 1063,
+      "fixture": "bi-call-scope-identity",
+      "phase": "promotion.0",
+      "state": "returned",
+      "phaseMs": 4107,
+      "elapsedMs": 6580,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1064,
+      "fixture": "bi-call-scope-identity",
+      "phase": "promotion.1",
+      "state": "started",
+      "elapsedMs": 6580
+    },
+    {
+      "rawLogLine": 1065,
+      "fixture": "bi-call-scope-identity",
+      "phase": "promotion.1",
+      "state": "returned",
+      "phaseMs": 5251,
+      "elapsedMs": 11831,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1066,
+      "fixture": "bi-call-scope-identity",
+      "phase": "comparison.produce",
+      "state": "started",
+      "elapsedMs": 12293
+    },
+    {
+      "rawLogLine": 1067,
+      "fixture": "bi-call-scope-identity",
+      "phase": "comparison.produce",
+      "state": "returned",
+      "phaseMs": 24311,
+      "elapsedMs": 36604,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1068,
+      "fixture": "bi-call-scope-identity",
+      "phase": "comparison.persist",
+      "state": "started",
+      "elapsedMs": 36604
+    },
+    {
+      "rawLogLine": 1069,
+      "fixture": "bi-call-scope-identity",
+      "phase": "comparison.persist",
+      "state": "returned",
+      "phaseMs": 40901,
+      "elapsedMs": 77505,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1070,
+      "fixture": "bi-call-scope-identity",
+      "phase": "same-day.1",
+      "state": "started",
+      "elapsedMs": 77535
+    },
+    {
+      "rawLogLine": 1071,
+      "fixture": "bi-call-scope-identity",
+      "phase": "same-day.1",
+      "state": "returned",
+      "phaseMs": 3838,
+      "elapsedMs": 81373,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1072,
+      "fixture": "bi-call-scope-identity",
+      "phase": "same-day.2",
+      "state": "started",
+      "elapsedMs": 81388
+    },
+    {
+      "rawLogLine": 1073,
+      "fixture": "bi-call-scope-identity",
+      "phase": "same-day.2",
+      "state": "returned",
+      "phaseMs": 3802,
+      "elapsedMs": 85190,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1074,
+      "fixture": "bi-call-scope-identity",
+      "phase": "midnight",
+      "state": "started",
+      "elapsedMs": 85198
+    },
+    {
+      "rawLogLine": 1075,
+      "fixture": "bi-call-scope-identity",
+      "phase": "midnight",
+      "state": "returned",
+      "phaseMs": 3636,
+      "elapsedMs": 88833,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1077,
+      "fixture": "bi-call-scope-lexical",
+      "phase": "fixture.initialize",
+      "state": "started",
+      "elapsedMs": 0
+    },
+    {
+      "rawLogLine": 1078,
+      "fixture": "bi-call-scope-lexical",
+      "phase": "fixture.initialize",
+      "state": "returned",
+      "phaseMs": 46,
+      "elapsedMs": 47,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1079,
+      "fixture": "bi-call-scope-lexical",
+      "phase": "source.0",
+      "state": "started",
+      "elapsedMs": 57
+    },
+    {
+      "rawLogLine": 1080,
+      "fixture": "bi-call-scope-lexical",
+      "phase": "source.0",
+      "state": "returned",
+      "phaseMs": 16,
+      "elapsedMs": 73,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1081,
+      "fixture": "bi-call-scope-lexical",
+      "phase": "forecast.0",
+      "state": "started",
+      "elapsedMs": 73
+    },
+    {
+      "rawLogLine": 1082,
+      "fixture": "bi-call-scope-lexical",
+      "phase": "forecast.0",
+      "state": "returned",
+      "phaseMs": 22,
+      "elapsedMs": 95,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1083,
+      "fixture": "bi-call-scope-lexical",
+      "phase": "source.1",
+      "state": "started",
+      "elapsedMs": 95
+    },
+    {
+      "rawLogLine": 1084,
+      "fixture": "bi-call-scope-lexical",
+      "phase": "source.1",
+      "state": "returned",
+      "phaseMs": 14,
+      "elapsedMs": 109,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1085,
+      "fixture": "bi-call-scope-lexical",
+      "phase": "forecast.1",
+      "state": "started",
+      "elapsedMs": 109
+    },
+    {
+      "rawLogLine": 1086,
+      "fixture": "bi-call-scope-lexical",
+      "phase": "forecast.1",
+      "state": "returned",
+      "phaseMs": 21,
+      "elapsedMs": 130,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1087,
+      "fixture": "bi-call-scope-lexical",
+      "phase": "coverage.0",
+      "state": "started",
+      "elapsedMs": 139
+    },
+    {
+      "rawLogLine": 1088,
+      "fixture": "bi-call-scope-lexical",
+      "phase": "coverage.0",
+      "state": "returned",
+      "phaseMs": 499,
+      "elapsedMs": 639,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1089,
+      "fixture": "bi-call-scope-lexical",
+      "phase": "coverage.read.0",
+      "state": "started",
+      "elapsedMs": 639
+    },
+    {
+      "rawLogLine": 1090,
+      "fixture": "bi-call-scope-lexical",
+      "phase": "coverage.read.0",
+      "state": "returned",
+      "phaseMs": 427,
+      "elapsedMs": 1066,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1091,
+      "fixture": "bi-call-scope-lexical",
+      "phase": "coverage.1",
+      "state": "started",
+      "elapsedMs": 1071
+    },
+    {
+      "rawLogLine": 1092,
+      "fixture": "bi-call-scope-lexical",
+      "phase": "coverage.1",
+      "state": "returned",
+      "phaseMs": 713,
+      "elapsedMs": 1784,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1093,
+      "fixture": "bi-call-scope-lexical",
+      "phase": "coverage.read.1",
+      "state": "started",
+      "elapsedMs": 1784
+    },
+    {
+      "rawLogLine": 1094,
+      "fixture": "bi-call-scope-lexical",
+      "phase": "coverage.read.1",
+      "state": "returned",
+      "phaseMs": 562,
+      "elapsedMs": 2346,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1095,
+      "fixture": "bi-call-scope-lexical",
+      "phase": "promotion.0",
+      "state": "started",
+      "elapsedMs": 2346
+    },
+    {
+      "rawLogLine": 1096,
+      "fixture": "bi-call-scope-lexical",
+      "phase": "promotion.0",
+      "state": "returned",
+      "phaseMs": 4076,
+      "elapsedMs": 6422,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1097,
+      "fixture": "bi-call-scope-lexical",
+      "phase": "promotion.1",
+      "state": "started",
+      "elapsedMs": 6422
+    },
+    {
+      "rawLogLine": 1098,
+      "fixture": "bi-call-scope-lexical",
+      "phase": "promotion.1",
+      "state": "returned",
+      "phaseMs": 5415,
+      "elapsedMs": 11837,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1099,
+      "fixture": "bi-call-scope-lexical",
+      "phase": "comparison.produce",
+      "state": "started",
+      "elapsedMs": 12317
+    },
+    {
+      "rawLogLine": 1100,
+      "fixture": "bi-call-scope-lexical",
+      "phase": "comparison.produce",
+      "state": "returned",
+      "phaseMs": 24013,
+      "elapsedMs": 36330,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1101,
+      "fixture": "bi-call-scope-lexical",
+      "phase": "comparison.persist",
+      "state": "started",
+      "elapsedMs": 36330
+    },
+    {
+      "rawLogLine": 1102,
+      "fixture": "bi-call-scope-lexical",
+      "phase": "comparison.persist",
+      "state": "returned",
+      "phaseMs": 40771,
+      "elapsedMs": 77102,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1103,
+      "fixture": "bi-call-scope-lexical",
+      "phase": "dispatch.presentation",
+      "state": "started",
+      "elapsedMs": 77115
+    },
+    {
+      "rawLogLine": 1104,
+      "fixture": "bi-call-scope-lexical",
+      "phase": "outside.source",
+      "state": "started",
+      "elapsedMs": 89327
+    },
+    {
+      "rawLogLine": 1105,
+      "fixture": "bi-call-scope-lexical",
+      "phase": "outside.source",
+      "state": "returned",
+      "phaseMs": 11,
+      "elapsedMs": 89338,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1106,
+      "fixture": "bi-call-scope-lexical",
+      "phase": "outside.review",
+      "state": "started",
+      "elapsedMs": 89338
+    },
+    {
+      "rawLogLine": 1107,
+      "fixture": "bi-call-scope-lexical",
+      "phase": "outside.review",
+      "state": "returned",
+      "phaseMs": 9,
+      "elapsedMs": 89347,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1108,
+      "fixture": "bi-call-scope-lexical",
+      "phase": "dispatch.presentation",
+      "state": "returned",
+      "phaseMs": 17198,
+      "elapsedMs": 94313,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1111,
+      "fixture": "bi-call-scope-state",
+      "phase": "fixture.initialize",
+      "state": "started",
+      "elapsedMs": 0
+    },
+    {
+      "rawLogLine": 1112,
+      "fixture": "bi-call-scope-state",
+      "phase": "fixture.initialize",
+      "state": "returned",
+      "phaseMs": 49,
+      "elapsedMs": 49,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1113,
+      "fixture": "bi-call-scope-state",
+      "phase": "source.0",
+      "state": "started",
+      "elapsedMs": 60
+    },
+    {
+      "rawLogLine": 1114,
+      "fixture": "bi-call-scope-state",
+      "phase": "source.0",
+      "state": "returned",
+      "phaseMs": 19,
+      "elapsedMs": 79,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1115,
+      "fixture": "bi-call-scope-state",
+      "phase": "forecast.0",
+      "state": "started",
+      "elapsedMs": 79
+    },
+    {
+      "rawLogLine": 1116,
+      "fixture": "bi-call-scope-state",
+      "phase": "forecast.0",
+      "state": "returned",
+      "phaseMs": 22,
+      "elapsedMs": 100,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1117,
+      "fixture": "bi-call-scope-state",
+      "phase": "source.1",
+      "state": "started",
+      "elapsedMs": 100
+    },
+    {
+      "rawLogLine": 1118,
+      "fixture": "bi-call-scope-state",
+      "phase": "source.1",
+      "state": "returned",
+      "phaseMs": 14,
+      "elapsedMs": 115,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1119,
+      "fixture": "bi-call-scope-state",
+      "phase": "forecast.1",
+      "state": "started",
+      "elapsedMs": 115
+    },
+    {
+      "rawLogLine": 1120,
+      "fixture": "bi-call-scope-state",
+      "phase": "forecast.1",
+      "state": "returned",
+      "phaseMs": 21,
+      "elapsedMs": 136,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1121,
+      "fixture": "bi-call-scope-state",
+      "phase": "coverage.0",
+      "state": "started",
+      "elapsedMs": 145
+    },
+    {
+      "rawLogLine": 1122,
+      "fixture": "bi-call-scope-state",
+      "phase": "coverage.0",
+      "state": "returned",
+      "phaseMs": 497,
+      "elapsedMs": 642,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1123,
+      "fixture": "bi-call-scope-state",
+      "phase": "coverage.read.0",
+      "state": "started",
+      "elapsedMs": 642
+    },
+    {
+      "rawLogLine": 1124,
+      "fixture": "bi-call-scope-state",
+      "phase": "coverage.read.0",
+      "state": "returned",
+      "phaseMs": 432,
+      "elapsedMs": 1074,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1125,
+      "fixture": "bi-call-scope-state",
+      "phase": "coverage.1",
+      "state": "started",
+      "elapsedMs": 1079
+    },
+    {
+      "rawLogLine": 1126,
+      "fixture": "bi-call-scope-state",
+      "phase": "coverage.1",
+      "state": "returned",
+      "phaseMs": 707,
+      "elapsedMs": 1787,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1127,
+      "fixture": "bi-call-scope-state",
+      "phase": "coverage.read.1",
+      "state": "started",
+      "elapsedMs": 1787
+    },
+    {
+      "rawLogLine": 1128,
+      "fixture": "bi-call-scope-state",
+      "phase": "coverage.read.1",
+      "state": "returned",
+      "phaseMs": 570,
+      "elapsedMs": 2357,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1129,
+      "fixture": "bi-call-scope-state",
+      "phase": "promotion.0",
+      "state": "started",
+      "elapsedMs": 2357
+    },
+    {
+      "rawLogLine": 1130,
+      "fixture": "bi-call-scope-state",
+      "phase": "promotion.0",
+      "state": "returned",
+      "phaseMs": 4105,
+      "elapsedMs": 6462,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1131,
+      "fixture": "bi-call-scope-state",
+      "phase": "promotion.1",
+      "state": "started",
+      "elapsedMs": 6462
+    },
+    {
+      "rawLogLine": 1132,
+      "fixture": "bi-call-scope-state",
+      "phase": "promotion.1",
+      "state": "returned",
+      "phaseMs": 5295,
+      "elapsedMs": 11757,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1133,
+      "fixture": "bi-call-scope-state",
+      "phase": "comparison.produce",
+      "state": "started",
+      "elapsedMs": 12226
+    },
+    {
+      "rawLogLine": 1134,
+      "fixture": "bi-call-scope-state",
+      "phase": "comparison.produce",
+      "state": "returned",
+      "phaseMs": 24135,
+      "elapsedMs": 36361,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1135,
+      "fixture": "bi-call-scope-state",
+      "phase": "comparison.persist",
+      "state": "started",
+      "elapsedMs": 36361
+    },
+    {
+      "rawLogLine": 1136,
+      "fixture": "bi-call-scope-state",
+      "phase": "comparison.persist",
+      "state": "returned",
+      "phaseMs": 40789,
+      "elapsedMs": 77150,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1137,
+      "fixture": "bi-call-scope-state",
+      "phase": "reject.case",
+      "state": "started",
+      "elapsedMs": 77170
+    },
+    {
+      "rawLogLine": 1138,
+      "fixture": "bi-call-scope-state",
+      "phase": "reject.case",
+      "state": "returned",
+      "phaseMs": 3525,
+      "elapsedMs": 80694,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1139,
+      "fixture": "bi-call-scope-state",
+      "phase": "reject.result",
+      "state": "started",
+      "elapsedMs": 80712
+    },
+    {
+      "rawLogLine": 1140,
+      "fixture": "bi-call-scope-state",
+      "phase": "reject.result",
+      "state": "returned",
+      "phaseMs": 3638,
+      "elapsedMs": 84350,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1141,
+      "fixture": "bi-call-scope-state",
+      "phase": "reject.input",
+      "state": "started",
+      "elapsedMs": 84367
+    },
+    {
+      "rawLogLine": 1142,
+      "fixture": "bi-call-scope-state",
+      "phase": "reject.input",
+      "state": "returned",
+      "phaseMs": 3511,
+      "elapsedMs": 87878,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1144,
+      "fixture": "bi-call-scope-sources",
+      "phase": "fixture.initialize",
+      "state": "started",
+      "elapsedMs": 0
+    },
+    {
+      "rawLogLine": 1145,
+      "fixture": "bi-call-scope-sources",
+      "phase": "fixture.initialize",
+      "state": "returned",
+      "phaseMs": 18,
+      "elapsedMs": 18,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1146,
+      "fixture": "bi-call-scope-sources",
+      "phase": "source.0",
+      "state": "started",
+      "elapsedMs": 27
+    },
+    {
+      "rawLogLine": 1147,
+      "fixture": "bi-call-scope-sources",
+      "phase": "source.0",
+      "state": "returned",
+      "phaseMs": 15,
+      "elapsedMs": 43,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1148,
+      "fixture": "bi-call-scope-sources",
+      "phase": "forecast.0",
+      "state": "started",
+      "elapsedMs": 43
+    },
+    {
+      "rawLogLine": 1149,
+      "fixture": "bi-call-scope-sources",
+      "phase": "forecast.0",
+      "state": "returned",
+      "phaseMs": 22,
+      "elapsedMs": 65,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1150,
+      "fixture": "bi-call-scope-sources",
+      "phase": "source.1",
+      "state": "started",
+      "elapsedMs": 65
+    },
+    {
+      "rawLogLine": 1151,
+      "fixture": "bi-call-scope-sources",
+      "phase": "source.1",
+      "state": "returned",
+      "phaseMs": 16,
+      "elapsedMs": 81,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1152,
+      "fixture": "bi-call-scope-sources",
+      "phase": "forecast.1",
+      "state": "started",
+      "elapsedMs": 81
+    },
+    {
+      "rawLogLine": 1153,
+      "fixture": "bi-call-scope-sources",
+      "phase": "forecast.1",
+      "state": "returned",
+      "phaseMs": 21,
+      "elapsedMs": 102,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1154,
+      "fixture": "bi-call-scope-sources",
+      "phase": "coverage.0",
+      "state": "started",
+      "elapsedMs": 111
+    },
+    {
+      "rawLogLine": 1155,
+      "fixture": "bi-call-scope-sources",
+      "phase": "coverage.0",
+      "state": "returned",
+      "phaseMs": 513,
+      "elapsedMs": 623,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1156,
+      "fixture": "bi-call-scope-sources",
+      "phase": "coverage.read.0",
+      "state": "started",
+      "elapsedMs": 623
+    },
+    {
+      "rawLogLine": 1157,
+      "fixture": "bi-call-scope-sources",
+      "phase": "coverage.read.0",
+      "state": "returned",
+      "phaseMs": 421,
+      "elapsedMs": 1044,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1158,
+      "fixture": "bi-call-scope-sources",
+      "phase": "coverage.1",
+      "state": "started",
+      "elapsedMs": 1049
+    },
+    {
+      "rawLogLine": 1159,
+      "fixture": "bi-call-scope-sources",
+      "phase": "coverage.1",
+      "state": "returned",
+      "phaseMs": 728,
+      "elapsedMs": 1777,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1160,
+      "fixture": "bi-call-scope-sources",
+      "phase": "coverage.read.1",
+      "state": "started",
+      "elapsedMs": 1778
+    },
+    {
+      "rawLogLine": 1161,
+      "fixture": "bi-call-scope-sources",
+      "phase": "coverage.read.1",
+      "state": "returned",
+      "phaseMs": 555,
+      "elapsedMs": 2332,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1162,
+      "fixture": "bi-call-scope-sources",
+      "phase": "promotion.0",
+      "state": "started",
+      "elapsedMs": 2333
+    },
+    {
+      "rawLogLine": 1163,
+      "fixture": "bi-call-scope-sources",
+      "phase": "promotion.0",
+      "state": "returned",
+      "phaseMs": 4106,
+      "elapsedMs": 6439,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1164,
+      "fixture": "bi-call-scope-sources",
+      "phase": "promotion.1",
+      "state": "started",
+      "elapsedMs": 6439
+    },
+    {
+      "rawLogLine": 1165,
+      "fixture": "bi-call-scope-sources",
+      "phase": "promotion.1",
+      "state": "returned",
+      "phaseMs": 5260,
+      "elapsedMs": 11699,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1166,
+      "fixture": "bi-call-scope-sources",
+      "phase": "comparison.produce",
+      "state": "started",
+      "elapsedMs": 12153
+    },
+    {
+      "rawLogLine": 1167,
+      "fixture": "bi-call-scope-sources",
+      "phase": "comparison.produce",
+      "state": "returned",
+      "phaseMs": 24002,
+      "elapsedMs": 36155,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1168,
+      "fixture": "bi-call-scope-sources",
+      "phase": "comparison.persist",
+      "state": "started",
+      "elapsedMs": 36155
+    },
+    {
+      "rawLogLine": 1169,
+      "fixture": "bi-call-scope-sources",
+      "phase": "comparison.persist",
+      "state": "returned",
+      "phaseMs": 40609,
+      "elapsedMs": 76764,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1170,
+      "fixture": "bi-call-scope-sources",
+      "phase": "fence.dashboard",
+      "state": "started",
+      "elapsedMs": 76776
+    },
+    {
+      "rawLogLine": 1171,
+      "fixture": "bi-call-scope-sources",
+      "phase": "fence.dashboard",
+      "state": "returned",
+      "phaseMs": 3695,
+      "elapsedMs": 80471,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1172,
+      "fixture": "bi-call-scope-sources",
+      "phase": "fence.planner",
+      "state": "started",
+      "elapsedMs": 80487
+    },
+    {
+      "rawLogLine": 1173,
+      "fixture": "bi-call-scope-sources",
+      "phase": "fence.planner",
+      "state": "returned",
+      "phaseMs": 3614,
+      "elapsedMs": 84101,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1174,
+      "fixture": "bi-call-scope-sources",
+      "phase": "fence.procurement",
+      "state": "started",
+      "elapsedMs": 84114
+    },
+    {
+      "rawLogLine": 1175,
+      "fixture": "bi-call-scope-sources",
+      "phase": "fence.procurement",
+      "state": "returned",
+      "phaseMs": 3675,
+      "elapsedMs": 87789,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1176,
+      "fixture": "bi-call-scope-sources",
+      "phase": "source-metadata-change",
+      "state": "started",
+      "elapsedMs": 87802
+    },
+    {
+      "rawLogLine": 1177,
+      "fixture": "bi-call-scope-sources",
+      "phase": "source-metadata-change",
+      "state": "returned",
+      "phaseMs": 3649,
+      "elapsedMs": 91451,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1179,
+      "fixture": "bi-call-scope-egress",
+      "phase": "fixture.initialize",
+      "state": "started",
+      "elapsedMs": 0
+    },
+    {
+      "rawLogLine": 1180,
+      "fixture": "bi-call-scope-egress",
+      "phase": "fixture.initialize",
+      "state": "returned",
+      "phaseMs": 19,
+      "elapsedMs": 19,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1181,
+      "fixture": "bi-call-scope-egress",
+      "phase": "source.0",
+      "state": "started",
+      "elapsedMs": 28
+    },
+    {
+      "rawLogLine": 1182,
+      "fixture": "bi-call-scope-egress",
+      "phase": "source.0",
+      "state": "returned",
+      "phaseMs": 16,
+      "elapsedMs": 45,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1183,
+      "fixture": "bi-call-scope-egress",
+      "phase": "forecast.0",
+      "state": "started",
+      "elapsedMs": 45
+    },
+    {
+      "rawLogLine": 1184,
+      "fixture": "bi-call-scope-egress",
+      "phase": "forecast.0",
+      "state": "returned",
+      "phaseMs": 22,
+      "elapsedMs": 67,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1185,
+      "fixture": "bi-call-scope-egress",
+      "phase": "source.1",
+      "state": "started",
+      "elapsedMs": 67
+    },
+    {
+      "rawLogLine": 1186,
+      "fixture": "bi-call-scope-egress",
+      "phase": "source.1",
+      "state": "returned",
+      "phaseMs": 16,
+      "elapsedMs": 83,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1187,
+      "fixture": "bi-call-scope-egress",
+      "phase": "forecast.1",
+      "state": "started",
+      "elapsedMs": 83
+    },
+    {
+      "rawLogLine": 1188,
+      "fixture": "bi-call-scope-egress",
+      "phase": "forecast.1",
+      "state": "returned",
+      "phaseMs": 21,
+      "elapsedMs": 104,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1189,
+      "fixture": "bi-call-scope-egress",
+      "phase": "coverage.0",
+      "state": "started",
+      "elapsedMs": 113
+    },
+    {
+      "rawLogLine": 1190,
+      "fixture": "bi-call-scope-egress",
+      "phase": "coverage.0",
+      "state": "returned",
+      "phaseMs": 505,
+      "elapsedMs": 618,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1191,
+      "fixture": "bi-call-scope-egress",
+      "phase": "coverage.read.0",
+      "state": "started",
+      "elapsedMs": 618
+    },
+    {
+      "rawLogLine": 1192,
+      "fixture": "bi-call-scope-egress",
+      "phase": "coverage.read.0",
+      "state": "returned",
+      "phaseMs": 437,
+      "elapsedMs": 1055,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1193,
+      "fixture": "bi-call-scope-egress",
+      "phase": "coverage.1",
+      "state": "started",
+      "elapsedMs": 1061
+    },
+    {
+      "rawLogLine": 1194,
+      "fixture": "bi-call-scope-egress",
+      "phase": "coverage.1",
+      "state": "returned",
+      "phaseMs": 720,
+      "elapsedMs": 1781,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1195,
+      "fixture": "bi-call-scope-egress",
+      "phase": "coverage.read.1",
+      "state": "started",
+      "elapsedMs": 1781
+    },
+    {
+      "rawLogLine": 1196,
+      "fixture": "bi-call-scope-egress",
+      "phase": "coverage.read.1",
+      "state": "returned",
+      "phaseMs": 560,
+      "elapsedMs": 2341,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1197,
+      "fixture": "bi-call-scope-egress",
+      "phase": "promotion.0",
+      "state": "started",
+      "elapsedMs": 2341
+    },
+    {
+      "rawLogLine": 1198,
+      "fixture": "bi-call-scope-egress",
+      "phase": "promotion.0",
+      "state": "returned",
+      "phaseMs": 4113,
+      "elapsedMs": 6454,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1199,
+      "fixture": "bi-call-scope-egress",
+      "phase": "promotion.1",
+      "state": "started",
+      "elapsedMs": 6454
+    },
+    {
+      "rawLogLine": 1200,
+      "fixture": "bi-call-scope-egress",
+      "phase": "promotion.1",
+      "state": "returned",
+      "phaseMs": 5337,
+      "elapsedMs": 11791,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1201,
+      "fixture": "bi-call-scope-egress",
+      "phase": "comparison.produce",
+      "state": "started",
+      "elapsedMs": 12253
+    },
+    {
+      "rawLogLine": 1202,
+      "fixture": "bi-call-scope-egress",
+      "phase": "comparison.produce",
+      "state": "returned",
+      "phaseMs": 24048,
+      "elapsedMs": 36301,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1203,
+      "fixture": "bi-call-scope-egress",
+      "phase": "comparison.persist",
+      "state": "started",
+      "elapsedMs": 36301
+    },
+    {
+      "rawLogLine": 1204,
+      "fixture": "bi-call-scope-egress",
+      "phase": "comparison.persist",
+      "state": "returned",
+      "phaseMs": 40973,
+      "elapsedMs": 77275,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1205,
+      "fixture": "bi-call-scope-egress",
+      "phase": "last-await.actor",
+      "state": "started",
+      "elapsedMs": 77288
+    },
+    {
+      "rawLogLine": 1206,
+      "fixture": "bi-call-scope-egress",
+      "phase": "last-await.actor",
+      "state": "returned",
+      "phaseMs": 3649,
+      "elapsedMs": 80937,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1207,
+      "fixture": "bi-call-scope-egress",
+      "phase": "last-await.lease",
+      "state": "started",
+      "elapsedMs": 80945
+    },
+    {
+      "rawLogLine": 1208,
+      "fixture": "bi-call-scope-egress",
+      "phase": "last-await.lease",
+      "state": "returned",
+      "phaseMs": 3658,
+      "elapsedMs": 84604,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1209,
+      "fixture": "bi-call-scope-egress",
+      "phase": "last-await.state",
+      "state": "started",
+      "elapsedMs": 84612
+    },
+    {
+      "rawLogLine": 1210,
+      "fixture": "bi-call-scope-egress",
+      "phase": "last-await.state",
+      "state": "returned",
+      "phaseMs": 3643,
+      "elapsedMs": 88255,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1211,
+      "fixture": "bi-call-scope-egress",
+      "phase": "last-await.abort",
+      "state": "started",
+      "elapsedMs": 88263
+    },
+    {
+      "rawLogLine": 1212,
+      "fixture": "bi-call-scope-egress",
+      "phase": "last-await.abort",
+      "state": "returned",
+      "phaseMs": 3628,
+      "elapsedMs": 91891,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1214,
+      "fixture": "bi-source-http-egress",
+      "phase": "fixture.initialize",
+      "state": "started",
+      "elapsedMs": 0
+    },
+    {
+      "rawLogLine": 1215,
+      "fixture": "bi-source-http-egress",
+      "phase": "fixture.initialize",
+      "state": "returned",
+      "phaseMs": 17,
+      "elapsedMs": 18,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1216,
+      "fixture": "bi-source-http-egress",
+      "phase": "source.0",
+      "state": "started",
+      "elapsedMs": 26
+    },
+    {
+      "rawLogLine": 1217,
+      "fixture": "bi-source-http-egress",
+      "phase": "source.0",
+      "state": "returned",
+      "phaseMs": 14,
+      "elapsedMs": 40,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1218,
+      "fixture": "bi-source-http-egress",
+      "phase": "forecast.0",
+      "state": "started",
+      "elapsedMs": 40
+    },
+    {
+      "rawLogLine": 1219,
+      "fixture": "bi-source-http-egress",
+      "phase": "forecast.0",
+      "state": "returned",
+      "phaseMs": 22,
+      "elapsedMs": 62,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1220,
+      "fixture": "bi-source-http-egress",
+      "phase": "source.1",
+      "state": "started",
+      "elapsedMs": 62
+    },
+    {
+      "rawLogLine": 1221,
+      "fixture": "bi-source-http-egress",
+      "phase": "source.1",
+      "state": "returned",
+      "phaseMs": 14,
+      "elapsedMs": 76,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1222,
+      "fixture": "bi-source-http-egress",
+      "phase": "forecast.1",
+      "state": "started",
+      "elapsedMs": 76
+    },
+    {
+      "rawLogLine": 1223,
+      "fixture": "bi-source-http-egress",
+      "phase": "forecast.1",
+      "state": "returned",
+      "phaseMs": 21,
+      "elapsedMs": 97,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1224,
+      "fixture": "bi-source-http-egress",
+      "phase": "coverage.0",
+      "state": "started",
+      "elapsedMs": 106
+    },
+    {
+      "rawLogLine": 1225,
+      "fixture": "bi-source-http-egress",
+      "phase": "coverage.0",
+      "state": "returned",
+      "phaseMs": 500,
+      "elapsedMs": 606,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1226,
+      "fixture": "bi-source-http-egress",
+      "phase": "coverage.read.0",
+      "state": "started",
+      "elapsedMs": 606
+    },
+    {
+      "rawLogLine": 1227,
+      "fixture": "bi-source-http-egress",
+      "phase": "coverage.read.0",
+      "state": "returned",
+      "phaseMs": 419,
+      "elapsedMs": 1025,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1228,
+      "fixture": "bi-source-http-egress",
+      "phase": "coverage.1",
+      "state": "started",
+      "elapsedMs": 1031
+    },
+    {
+      "rawLogLine": 1229,
+      "fixture": "bi-source-http-egress",
+      "phase": "coverage.1",
+      "state": "returned",
+      "phaseMs": 720,
+      "elapsedMs": 1751,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1230,
+      "fixture": "bi-source-http-egress",
+      "phase": "coverage.read.1",
+      "state": "started",
+      "elapsedMs": 1751
+    },
+    {
+      "rawLogLine": 1231,
+      "fixture": "bi-source-http-egress",
+      "phase": "coverage.read.1",
+      "state": "returned",
+      "phaseMs": 563,
+      "elapsedMs": 2314,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1232,
+      "fixture": "bi-source-http-egress",
+      "phase": "promotion.0",
+      "state": "started",
+      "elapsedMs": 2314
+    },
+    {
+      "rawLogLine": 1233,
+      "fixture": "bi-source-http-egress",
+      "phase": "promotion.0",
+      "state": "returned",
+      "phaseMs": 4052,
+      "elapsedMs": 6367,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1234,
+      "fixture": "bi-source-http-egress",
+      "phase": "promotion.1",
+      "state": "started",
+      "elapsedMs": 6367
+    },
+    {
+      "rawLogLine": 1235,
+      "fixture": "bi-source-http-egress",
+      "phase": "promotion.1",
+      "state": "returned",
+      "phaseMs": 5278,
+      "elapsedMs": 11645,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1236,
+      "fixture": "bi-source-http-egress",
+      "phase": "comparison.produce",
+      "state": "started",
+      "elapsedMs": 12088
+    },
+    {
+      "rawLogLine": 1237,
+      "fixture": "bi-source-http-egress",
+      "phase": "comparison.produce",
+      "state": "returned",
+      "phaseMs": 23932,
+      "elapsedMs": 36019,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1238,
+      "fixture": "bi-source-http-egress",
+      "phase": "comparison.persist",
+      "state": "started",
+      "elapsedMs": 36019
+    },
+    {
+      "rawLogLine": 1239,
+      "fixture": "bi-source-http-egress",
+      "phase": "comparison.persist",
+      "state": "returned",
+      "phaseMs": 40544,
+      "elapsedMs": 76563,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1240,
+      "fixture": "bi-source-http-egress",
+      "phase": "http.bi-source",
+      "state": "started",
+      "elapsedMs": 88432
+    },
+    {
+      "rawLogLine": 1241,
+      "fixture": "bi-source-http-egress",
+      "phase": "http.bi-source",
+      "state": "returned",
+      "phaseMs": 16609,
+      "elapsedMs": 105041,
+      "aborted": true
+    },
+    {
+      "rawLogLine": 1284,
+      "fixture": "bi-source-choice",
+      "phase": "real.planner-difference",
+      "state": "started",
+      "elapsedMs": 61
+    },
+    {
+      "rawLogLine": 1285,
+      "fixture": "bi-source-choice",
+      "phase": "real.planner-difference",
+      "state": "returned",
+      "phaseMs": 39,
+      "elapsedMs": 100,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1286,
+      "fixture": "bi-source-choice",
+      "phase": "http.source-choice",
+      "state": "started",
+      "elapsedMs": 101
+    },
+    {
+      "rawLogLine": 1287,
+      "fixture": "bi-source-choice",
+      "phase": "http.source-choice",
+      "state": "returned",
+      "phaseMs": 103,
+      "elapsedMs": 204,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1288,
+      "fixture": "bi-source-choice",
+      "phase": "http.source-choice",
+      "state": "started",
+      "elapsedMs": 204
+    },
+    {
+      "rawLogLine": 1289,
+      "fixture": "bi-source-choice",
+      "phase": "http.source-choice",
+      "state": "returned",
+      "phaseMs": 109,
+      "elapsedMs": 312,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1290,
+      "fixture": "bi-source-choice",
+      "phase": "http.source-choice",
+      "state": "started",
+      "elapsedMs": 313
+    },
+    {
+      "rawLogLine": 1291,
+      "fixture": "bi-source-choice",
+      "phase": "http.source-choice",
+      "state": "returned",
+      "phaseMs": 39,
+      "elapsedMs": 351,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1292,
+      "fixture": "bi-source-choice",
+      "phase": "http.source-choice",
+      "state": "started",
+      "elapsedMs": 375
+    },
+    {
+      "rawLogLine": 1293,
+      "fixture": "bi-source-choice",
+      "phase": "http.source-choice",
+      "state": "returned",
+      "phaseMs": 47,
+      "elapsedMs": 423,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1294,
+      "fixture": "bi-source-choice",
+      "phase": "http.source-choice",
+      "state": "started",
+      "elapsedMs": 423
+    },
+    {
+      "rawLogLine": 1295,
+      "fixture": "bi-source-choice",
+      "phase": "http.source-choice",
+      "state": "returned",
+      "phaseMs": 3,
+      "elapsedMs": 425,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1296,
+      "fixture": "bi-source-choice",
+      "phase": "http.source-choice",
+      "state": "started",
+      "elapsedMs": 430
+    },
+    {
+      "rawLogLine": 1297,
+      "fixture": "bi-source-choice",
+      "phase": "http.source-choice",
+      "state": "returned",
+      "phaseMs": 14,
+      "elapsedMs": 444,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1301,
+      "fixture": "bi-case-access",
+      "phase": "fixture.initialize",
+      "state": "started",
+      "elapsedMs": 0
+    },
+    {
+      "rawLogLine": 1302,
+      "fixture": "bi-case-access",
+      "phase": "fixture.initialize",
+      "state": "returned",
+      "phaseMs": 20,
+      "elapsedMs": 20,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1303,
+      "fixture": "bi-case-access",
+      "phase": "source.0",
+      "state": "started",
+      "elapsedMs": 28
+    },
+    {
+      "rawLogLine": 1304,
+      "fixture": "bi-case-access",
+      "phase": "source.0",
+      "state": "returned",
+      "phaseMs": 13,
+      "elapsedMs": 41,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1305,
+      "fixture": "bi-case-access",
+      "phase": "forecast.0",
+      "state": "started",
+      "elapsedMs": 41
+    },
+    {
+      "rawLogLine": 1306,
+      "fixture": "bi-case-access",
+      "phase": "forecast.0",
+      "state": "returned",
+      "phaseMs": 19,
+      "elapsedMs": 60,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1307,
+      "fixture": "bi-case-access",
+      "phase": "source.1",
+      "state": "started",
+      "elapsedMs": 60
+    },
+    {
+      "rawLogLine": 1308,
+      "fixture": "bi-case-access",
+      "phase": "source.1",
+      "state": "returned",
+      "phaseMs": 13,
+      "elapsedMs": 73,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1309,
+      "fixture": "bi-case-access",
+      "phase": "forecast.1",
+      "state": "started",
+      "elapsedMs": 73
+    },
+    {
+      "rawLogLine": 1310,
+      "fixture": "bi-case-access",
+      "phase": "forecast.1",
+      "state": "returned",
+      "phaseMs": 19,
+      "elapsedMs": 92,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1311,
+      "fixture": "bi-case-access",
+      "phase": "coverage.0",
+      "state": "started",
+      "elapsedMs": 100
+    },
+    {
+      "rawLogLine": 1312,
+      "fixture": "bi-case-access",
+      "phase": "coverage.0",
+      "state": "returned",
+      "phaseMs": 501,
+      "elapsedMs": 601,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1313,
+      "fixture": "bi-case-access",
+      "phase": "coverage.read.0",
+      "state": "started",
+      "elapsedMs": 601
+    },
+    {
+      "rawLogLine": 1314,
+      "fixture": "bi-case-access",
+      "phase": "coverage.read.0",
+      "state": "returned",
+      "phaseMs": 417,
+      "elapsedMs": 1019,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1315,
+      "fixture": "bi-case-access",
+      "phase": "coverage.1",
+      "state": "started",
+      "elapsedMs": 1024
+    },
+    {
+      "rawLogLine": 1316,
+      "fixture": "bi-case-access",
+      "phase": "coverage.1",
+      "state": "returned",
+      "phaseMs": 712,
+      "elapsedMs": 1736,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1317,
+      "fixture": "bi-case-access",
+      "phase": "coverage.read.1",
+      "state": "started",
+      "elapsedMs": 1736
+    },
+    {
+      "rawLogLine": 1318,
+      "fixture": "bi-case-access",
+      "phase": "coverage.read.1",
+      "state": "returned",
+      "phaseMs": 550,
+      "elapsedMs": 2286,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1319,
+      "fixture": "bi-case-access",
+      "phase": "promotion.0",
+      "state": "started",
+      "elapsedMs": 2286
+    },
+    {
+      "rawLogLine": 1320,
+      "fixture": "bi-case-access",
+      "phase": "promotion.0",
+      "state": "returned",
+      "phaseMs": 4041,
+      "elapsedMs": 6328,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1321,
+      "fixture": "bi-case-access",
+      "phase": "promotion.1",
+      "state": "started",
+      "elapsedMs": 6328
+    },
+    {
+      "rawLogLine": 1322,
+      "fixture": "bi-case-access",
+      "phase": "promotion.1",
+      "state": "returned",
+      "phaseMs": 5104,
+      "elapsedMs": 11432,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1323,
+      "fixture": "bi-case-access",
+      "phase": "comparison.produce",
+      "state": "started",
+      "elapsedMs": 11879
+    },
+    {
+      "rawLogLine": 1324,
+      "fixture": "bi-case-access",
+      "phase": "comparison.produce",
+      "state": "returned",
+      "phaseMs": 23678,
+      "elapsedMs": 35558,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1325,
+      "fixture": "bi-case-access",
+      "phase": "comparison.persist",
+      "state": "started",
+      "elapsedMs": 35558
+    },
+    {
+      "rawLogLine": 1326,
+      "fixture": "bi-case-access",
+      "phase": "comparison.persist",
+      "state": "returned",
+      "phaseMs": 40437,
+      "elapsedMs": 75994,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1327,
+      "fixture": "bi-case-access",
+      "phase": "bi05.options",
+      "state": "started",
+      "elapsedMs": 75999
+    },
+    {
+      "rawLogLine": 1328,
+      "fixture": "bi-case-access",
+      "phase": "bi05.options",
+      "state": "returned",
+      "phaseMs": 115,
+      "elapsedMs": 76115,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1329,
+      "fixture": "bi-case-access",
+      "phase": "browser.bundle",
+      "state": "started",
+      "elapsedMs": 76115
+    },
+    {
+      "rawLogLine": 1330,
+      "fixture": "bi-case-access",
+      "phase": "browser.bundle",
+      "state": "returned",
+      "phaseMs": 18,
+      "elapsedMs": 76132,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1331,
+      "fixture": "bi-case-access",
+      "phase": "browser.prepare",
+      "state": "started",
+      "elapsedMs": 76132
+    },
+    {
+      "rawLogLine": 1343,
+      "fixture": "bi-case-access",
+      "phase": "browser.prepare",
+      "state": "returned",
+      "phaseMs": 29007,
+      "elapsedMs": 105139,
+      "aborted": true
+    },
+    {
+      "rawLogLine": 1361,
+      "fixture": "review-portfolio-http.read-scope",
+      "phase": "fixture.initialize",
+      "state": "started",
+      "elapsedMs": 1
+    },
+    {
+      "rawLogLine": 1362,
+      "fixture": "review-portfolio-http.read-scope",
+      "phase": "fixture.initialize",
+      "state": "returned",
+      "phaseMs": 15,
+      "elapsedMs": 16,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1363,
+      "fixture": "review-portfolio-http.read-scope",
+      "phase": "fixture.authority",
+      "state": "started",
+      "elapsedMs": 16
+    },
+    {
+      "rawLogLine": 1364,
+      "fixture": "review-portfolio-http.read-scope",
+      "phase": "fixture.authority",
+      "state": "returned",
+      "phaseMs": 2,
+      "elapsedMs": 19,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1365,
+      "fixture": "review-portfolio-http.read-scope",
+      "phase": "portfolio.produce",
+      "state": "started",
+      "elapsedMs": 25
+    },
+    {
+      "rawLogLine": 1366,
+      "fixture": "review-portfolio-http.read-scope",
+      "phase": "planner.forecast",
+      "state": "started",
+      "elapsedMs": 50
+    },
+    {
+      "rawLogLine": 1367,
+      "fixture": "review-portfolio-http.read-scope",
+      "phase": "planner.forecast",
+      "state": "returned",
+      "phaseMs": 37,
+      "elapsedMs": 87,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1368,
+      "fixture": "review-portfolio-http.read-scope",
+      "phase": "planner.simulate",
+      "state": "started",
+      "elapsedMs": 87
+    },
+    {
+      "rawLogLine": 1369,
+      "fixture": "review-portfolio-http.read-scope",
+      "phase": "planner.simulate",
+      "state": "returned",
+      "phaseMs": 91,
+      "elapsedMs": 178,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1370,
+      "fixture": "review-portfolio-http.read-scope",
+      "phase": "planner.forecast-unchanged",
+      "state": "started",
+      "elapsedMs": 178
+    },
+    {
+      "rawLogLine": 1371,
+      "fixture": "review-portfolio-http.read-scope",
+      "phase": "planner.forecast-unchanged",
+      "state": "returned",
+      "phaseMs": 32,
+      "elapsedMs": 210,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1372,
+      "fixture": "review-portfolio-http.read-scope",
+      "phase": "portfolio.evaluate",
+      "state": "started",
+      "elapsedMs": 217
+    },
+    {
+      "rawLogLine": 1373,
+      "fixture": "review-portfolio-http.read-scope",
+      "phase": "portfolio.evaluate",
+      "state": "returned",
+      "phaseMs": 614,
+      "elapsedMs": 831,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1374,
+      "fixture": "review-portfolio-http.read-scope",
+      "phase": "portfolio.persist",
+      "state": "started",
+      "elapsedMs": 831
+    },
+    {
+      "rawLogLine": 1375,
+      "fixture": "review-portfolio-http.read-scope",
+      "phase": "portfolio.persist",
+      "state": "returned",
+      "phaseMs": 196,
+      "elapsedMs": 1027,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1376,
+      "fixture": "review-portfolio-http.read-scope",
+      "phase": "portfolio.produce",
+      "state": "returned",
+      "phaseMs": 1287,
+      "elapsedMs": 1313,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1377,
+      "fixture": "review-portfolio-http.read-scope",
+      "phase": "review.preserve",
+      "state": "started",
+      "elapsedMs": 1412
+    },
+    {
+      "rawLogLine": 1378,
+      "fixture": "review-portfolio-http.read-scope",
+      "phase": "review.preserve",
+      "state": "returned",
+      "phaseMs": 1894,
+      "elapsedMs": 3306,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1379,
+      "fixture": "review-portfolio-http.read-scope",
+      "phase": "http.review-read",
+      "state": "started",
+      "elapsedMs": 3311
+    },
+    {
+      "rawLogLine": 1380,
+      "fixture": "review-portfolio-http.read-scope",
+      "phase": "http.review-read",
+      "state": "returned",
+      "phaseMs": 730,
+      "elapsedMs": 4041,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1381,
+      "fixture": "review-portfolio-http.read-scope",
+      "phase": "http.review-read",
+      "state": "started",
+      "elapsedMs": 4067
+    },
+    {
+      "rawLogLine": 1382,
+      "fixture": "review-portfolio-http.read-scope",
+      "phase": "http.review-read",
+      "state": "returned",
+      "phaseMs": 4576,
+      "elapsedMs": 8643,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1384,
+      "fixture": "review-portfolio-http.resident-readers",
+      "phase": "fixture.initialize",
+      "state": "started",
+      "elapsedMs": 0
+    },
+    {
+      "rawLogLine": 1385,
+      "fixture": "review-portfolio-http.resident-readers",
+      "phase": "fixture.initialize",
+      "state": "returned",
+      "phaseMs": 17,
+      "elapsedMs": 17,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1386,
+      "fixture": "review-portfolio-http.resident-readers",
+      "phase": "fixture.authority",
+      "state": "started",
+      "elapsedMs": 18
+    },
+    {
+      "rawLogLine": 1387,
+      "fixture": "review-portfolio-http.resident-readers",
+      "phase": "fixture.authority",
+      "state": "returned",
+      "phaseMs": 3,
+      "elapsedMs": 21,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1388,
+      "fixture": "review-portfolio-http.resident-readers",
+      "phase": "portfolio.produce",
+      "state": "started",
+      "elapsedMs": 28
+    },
+    {
+      "rawLogLine": 1389,
+      "fixture": "review-portfolio-http.resident-readers",
+      "phase": "planner.forecast",
+      "state": "started",
+      "elapsedMs": 57
+    },
+    {
+      "rawLogLine": 1390,
+      "fixture": "review-portfolio-http.resident-readers",
+      "phase": "planner.forecast",
+      "state": "returned",
+      "phaseMs": 34,
+      "elapsedMs": 91,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1391,
+      "fixture": "review-portfolio-http.resident-readers",
+      "phase": "planner.simulate",
+      "state": "started",
+      "elapsedMs": 91
+    },
+    {
+      "rawLogLine": 1392,
+      "fixture": "review-portfolio-http.resident-readers",
+      "phase": "planner.simulate",
+      "state": "returned",
+      "phaseMs": 94,
+      "elapsedMs": 184,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1393,
+      "fixture": "review-portfolio-http.resident-readers",
+      "phase": "planner.forecast-unchanged",
+      "state": "started",
+      "elapsedMs": 184
+    },
+    {
+      "rawLogLine": 1394,
+      "fixture": "review-portfolio-http.resident-readers",
+      "phase": "planner.forecast-unchanged",
+      "state": "returned",
+      "phaseMs": 34,
+      "elapsedMs": 219,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1395,
+      "fixture": "review-portfolio-http.resident-readers",
+      "phase": "portfolio.evaluate",
+      "state": "started",
+      "elapsedMs": 226
+    },
+    {
+      "rawLogLine": 1396,
+      "fixture": "review-portfolio-http.resident-readers",
+      "phase": "portfolio.evaluate",
+      "state": "returned",
+      "phaseMs": 604,
+      "elapsedMs": 830,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1397,
+      "fixture": "review-portfolio-http.resident-readers",
+      "phase": "portfolio.persist",
+      "state": "started",
+      "elapsedMs": 830
+    },
+    {
+      "rawLogLine": 1398,
+      "fixture": "review-portfolio-http.resident-readers",
+      "phase": "portfolio.persist",
+      "state": "returned",
+      "phaseMs": 201,
+      "elapsedMs": 1031,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1399,
+      "fixture": "review-portfolio-http.resident-readers",
+      "phase": "portfolio.produce",
+      "state": "returned",
+      "phaseMs": 1276,
+      "elapsedMs": 1304,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1400,
+      "fixture": "review-portfolio-http.resident-readers",
+      "phase": "review.preserve",
+      "state": "started",
+      "elapsedMs": 1407
+    },
+    {
+      "rawLogLine": 1401,
+      "fixture": "review-portfolio-http.resident-readers",
+      "phase": "review.preserve",
+      "state": "returned",
+      "phaseMs": 1889,
+      "elapsedMs": 3297,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1402,
+      "fixture": "review-portfolio-http.resident-readers",
+      "phase": "http.review-read",
+      "state": "started",
+      "elapsedMs": 3301
+    },
+    {
+      "rawLogLine": 1403,
+      "fixture": "review-portfolio-http.resident-readers",
+      "phase": "http.review-read",
+      "state": "returned",
+      "phaseMs": 1370,
+      "elapsedMs": 4671,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1404,
+      "fixture": "review-portfolio-http.resident-readers",
+      "phase": "http.review-read",
+      "state": "started",
+      "elapsedMs": 4697
+    },
+    {
+      "rawLogLine": 1405,
+      "fixture": "review-portfolio-http.resident-readers",
+      "phase": "http.review-read",
+      "state": "returned",
+      "phaseMs": 9009,
+      "elapsedMs": 13706,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1416,
+      "fixture": "review-portfolio-http.source-egress-current-case",
+      "phase": "fixture.initialize",
+      "state": "started",
+      "elapsedMs": 0
+    },
+    {
+      "rawLogLine": 1417,
+      "fixture": "review-portfolio-http.source-egress-current-case",
+      "phase": "fixture.initialize",
+      "state": "returned",
+      "phaseMs": 19,
+      "elapsedMs": 19,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1418,
+      "fixture": "review-portfolio-http.source-egress-current-case",
+      "phase": "fixture.authority",
+      "state": "started",
+      "elapsedMs": 19
+    },
+    {
+      "rawLogLine": 1419,
+      "fixture": "review-portfolio-http.source-egress-current-case",
+      "phase": "fixture.authority",
+      "state": "returned",
+      "phaseMs": 3,
+      "elapsedMs": 22,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1420,
+      "fixture": "review-portfolio-http.source-egress-current-case",
+      "phase": "portfolio.produce",
+      "state": "started",
+      "elapsedMs": 29
+    },
+    {
+      "rawLogLine": 1421,
+      "fixture": "review-portfolio-http.source-egress-current-case",
+      "phase": "planner.forecast",
+      "state": "started",
+      "elapsedMs": 54
+    },
+    {
+      "rawLogLine": 1422,
+      "fixture": "review-portfolio-http.source-egress-current-case",
+      "phase": "planner.forecast",
+      "state": "returned",
+      "phaseMs": 36,
+      "elapsedMs": 90,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1423,
+      "fixture": "review-portfolio-http.source-egress-current-case",
+      "phase": "planner.simulate",
+      "state": "started",
+      "elapsedMs": 90
+    },
+    {
+      "rawLogLine": 1424,
+      "fixture": "review-portfolio-http.source-egress-current-case",
+      "phase": "planner.simulate",
+      "state": "returned",
+      "phaseMs": 95,
+      "elapsedMs": 185,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1425,
+      "fixture": "review-portfolio-http.source-egress-current-case",
+      "phase": "planner.forecast-unchanged",
+      "state": "started",
+      "elapsedMs": 185
+    },
+    {
+      "rawLogLine": 1426,
+      "fixture": "review-portfolio-http.source-egress-current-case",
+      "phase": "planner.forecast-unchanged",
+      "state": "returned",
+      "phaseMs": 33,
+      "elapsedMs": 218,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1427,
+      "fixture": "review-portfolio-http.source-egress-current-case",
+      "phase": "portfolio.evaluate",
+      "state": "started",
+      "elapsedMs": 225
+    },
+    {
+      "rawLogLine": 1428,
+      "fixture": "review-portfolio-http.source-egress-current-case",
+      "phase": "portfolio.evaluate",
+      "state": "returned",
+      "phaseMs": 604,
+      "elapsedMs": 829,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1429,
+      "fixture": "review-portfolio-http.source-egress-current-case",
+      "phase": "portfolio.persist",
+      "state": "started",
+      "elapsedMs": 829
+    },
+    {
+      "rawLogLine": 1430,
+      "fixture": "review-portfolio-http.source-egress-current-case",
+      "phase": "portfolio.persist",
+      "state": "returned",
+      "phaseMs": 184,
+      "elapsedMs": 1013,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1431,
+      "fixture": "review-portfolio-http.source-egress-current-case",
+      "phase": "portfolio.produce",
+      "state": "returned",
+      "phaseMs": 1264,
+      "elapsedMs": 1293,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1432,
+      "fixture": "review-portfolio-http.source-egress-current-case",
+      "phase": "review.preserve",
+      "state": "started",
+      "elapsedMs": 1389
+    },
+    {
+      "rawLogLine": 1433,
+      "fixture": "review-portfolio-http.source-egress-current-case",
+      "phase": "review.preserve",
+      "state": "returned",
+      "phaseMs": 1888,
+      "elapsedMs": 3277,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1434,
+      "fixture": "review-portfolio-http.source-egress-current-case",
+      "phase": "http.review-read",
+      "state": "started",
+      "elapsedMs": 3282
+    },
+    {
+      "rawLogLine": 1435,
+      "fixture": "review-portfolio-http.source-egress-current-case",
+      "phase": "http.review-read",
+      "state": "returned",
+      "phaseMs": 1387,
+      "elapsedMs": 4669,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1436,
+      "fixture": "review-portfolio-http.source-egress-current-case",
+      "phase": "http.review-read",
+      "state": "started",
+      "elapsedMs": 4695
+    },
+    {
+      "rawLogLine": 1437,
+      "fixture": "review-portfolio-http.source-egress-current-case",
+      "phase": "http.review-read",
+      "state": "returned",
+      "phaseMs": 9085,
+      "elapsedMs": 13781,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1438,
+      "fixture": "review-portfolio-http.source-egress-current-case",
+      "phase": "http.review-source",
+      "state": "started",
+      "elapsedMs": 13783
+    },
+    {
+      "rawLogLine": 1439,
+      "fixture": "review-portfolio-http.source-egress-current-case",
+      "phase": "http.review-source",
+      "state": "returned",
+      "phaseMs": 26771,
+      "elapsedMs": 40553,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1454,
+      "fixture": "review-portfolio-http.source-egress-previous-case",
+      "phase": "fixture.initialize",
+      "state": "started",
+      "elapsedMs": 0
+    },
+    {
+      "rawLogLine": 1455,
+      "fixture": "review-portfolio-http.source-egress-previous-case",
+      "phase": "fixture.initialize",
+      "state": "returned",
+      "phaseMs": 19,
+      "elapsedMs": 20,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1456,
+      "fixture": "review-portfolio-http.source-egress-previous-case",
+      "phase": "fixture.authority",
+      "state": "started",
+      "elapsedMs": 20
+    },
+    {
+      "rawLogLine": 1457,
+      "fixture": "review-portfolio-http.source-egress-previous-case",
+      "phase": "fixture.authority",
+      "state": "returned",
+      "phaseMs": 3,
+      "elapsedMs": 23,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1458,
+      "fixture": "review-portfolio-http.source-egress-previous-case",
+      "phase": "portfolio.produce",
+      "state": "started",
+      "elapsedMs": 30
+    },
+    {
+      "rawLogLine": 1459,
+      "fixture": "review-portfolio-http.source-egress-previous-case",
+      "phase": "planner.forecast",
+      "state": "started",
+      "elapsedMs": 56
+    },
+    {
+      "rawLogLine": 1460,
+      "fixture": "review-portfolio-http.source-egress-previous-case",
+      "phase": "planner.forecast",
+      "state": "returned",
+      "phaseMs": 35,
+      "elapsedMs": 91,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1461,
+      "fixture": "review-portfolio-http.source-egress-previous-case",
+      "phase": "planner.simulate",
+      "state": "started",
+      "elapsedMs": 91
+    },
+    {
+      "rawLogLine": 1462,
+      "fixture": "review-portfolio-http.source-egress-previous-case",
+      "phase": "planner.simulate",
+      "state": "returned",
+      "phaseMs": 93,
+      "elapsedMs": 184,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1463,
+      "fixture": "review-portfolio-http.source-egress-previous-case",
+      "phase": "planner.forecast-unchanged",
+      "state": "started",
+      "elapsedMs": 184
+    },
+    {
+      "rawLogLine": 1464,
+      "fixture": "review-portfolio-http.source-egress-previous-case",
+      "phase": "planner.forecast-unchanged",
+      "state": "returned",
+      "phaseMs": 34,
+      "elapsedMs": 217,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1465,
+      "fixture": "review-portfolio-http.source-egress-previous-case",
+      "phase": "portfolio.evaluate",
+      "state": "started",
+      "elapsedMs": 225
+    },
+    {
+      "rawLogLine": 1466,
+      "fixture": "review-portfolio-http.source-egress-previous-case",
+      "phase": "portfolio.evaluate",
+      "state": "returned",
+      "phaseMs": 605,
+      "elapsedMs": 829,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1467,
+      "fixture": "review-portfolio-http.source-egress-previous-case",
+      "phase": "portfolio.persist",
+      "state": "started",
+      "elapsedMs": 829
+    },
+    {
+      "rawLogLine": 1468,
+      "fixture": "review-portfolio-http.source-egress-previous-case",
+      "phase": "portfolio.persist",
+      "state": "returned",
+      "phaseMs": 184,
+      "elapsedMs": 1013,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1469,
+      "fixture": "review-portfolio-http.source-egress-previous-case",
+      "phase": "portfolio.produce",
+      "state": "returned",
+      "phaseMs": 1260,
+      "elapsedMs": 1291,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1470,
+      "fixture": "review-portfolio-http.source-egress-previous-case",
+      "phase": "review.preserve",
+      "state": "started",
+      "elapsedMs": 1393
+    },
+    {
+      "rawLogLine": 1471,
+      "fixture": "review-portfolio-http.source-egress-previous-case",
+      "phase": "review.preserve",
+      "state": "returned",
+      "phaseMs": 1855,
+      "elapsedMs": 3247,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1472,
+      "fixture": "review-portfolio-http.source-egress-previous-case",
+      "phase": "http.review-read",
+      "state": "started",
+      "elapsedMs": 3259
+    },
+    {
+      "rawLogLine": 1473,
+      "fixture": "review-portfolio-http.source-egress-previous-case",
+      "phase": "http.review-read",
+      "state": "returned",
+      "phaseMs": 1369,
+      "elapsedMs": 4628,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1474,
+      "fixture": "review-portfolio-http.source-egress-previous-case",
+      "phase": "http.review-read",
+      "state": "started",
+      "elapsedMs": 4666
+    },
+    {
+      "rawLogLine": 1475,
+      "fixture": "review-portfolio-http.source-egress-previous-case",
+      "phase": "http.review-read",
+      "state": "returned",
+      "phaseMs": 8971,
+      "elapsedMs": 13637,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1476,
+      "fixture": "review-portfolio-http.source-egress-previous-case",
+      "phase": "http.review-source",
+      "state": "started",
+      "elapsedMs": 28485
+    },
+    {
+      "rawLogLine": 1477,
+      "fixture": "review-portfolio-http.source-egress-previous-case",
+      "phase": "http.review-source",
+      "state": "returned",
+      "phaseMs": 29946,
+      "elapsedMs": 58432,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1492,
+      "fixture": "review-portfolio-http.source-egress-successor-body",
+      "phase": "fixture.initialize",
+      "state": "started",
+      "elapsedMs": 0
+    },
+    {
+      "rawLogLine": 1493,
+      "fixture": "review-portfolio-http.source-egress-successor-body",
+      "phase": "fixture.initialize",
+      "state": "returned",
+      "phaseMs": 20,
+      "elapsedMs": 21,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1494,
+      "fixture": "review-portfolio-http.source-egress-successor-body",
+      "phase": "fixture.authority",
+      "state": "started",
+      "elapsedMs": 21
+    },
+    {
+      "rawLogLine": 1495,
+      "fixture": "review-portfolio-http.source-egress-successor-body",
+      "phase": "fixture.authority",
+      "state": "returned",
+      "phaseMs": 3,
+      "elapsedMs": 24,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1496,
+      "fixture": "review-portfolio-http.source-egress-successor-body",
+      "phase": "portfolio.produce",
+      "state": "started",
+      "elapsedMs": 32
+    },
+    {
+      "rawLogLine": 1497,
+      "fixture": "review-portfolio-http.source-egress-successor-body",
+      "phase": "planner.forecast",
+      "state": "started",
+      "elapsedMs": 59
+    },
+    {
+      "rawLogLine": 1498,
+      "fixture": "review-portfolio-http.source-egress-successor-body",
+      "phase": "planner.forecast",
+      "state": "returned",
+      "phaseMs": 38,
+      "elapsedMs": 97,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1499,
+      "fixture": "review-portfolio-http.source-egress-successor-body",
+      "phase": "planner.simulate",
+      "state": "started",
+      "elapsedMs": 97
+    },
+    {
+      "rawLogLine": 1500,
+      "fixture": "review-portfolio-http.source-egress-successor-body",
+      "phase": "planner.simulate",
+      "state": "returned",
+      "phaseMs": 104,
+      "elapsedMs": 201,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1501,
+      "fixture": "review-portfolio-http.source-egress-successor-body",
+      "phase": "planner.forecast-unchanged",
+      "state": "started",
+      "elapsedMs": 201
+    },
+    {
+      "rawLogLine": 1502,
+      "fixture": "review-portfolio-http.source-egress-successor-body",
+      "phase": "planner.forecast-unchanged",
+      "state": "returned",
+      "phaseMs": 32,
+      "elapsedMs": 233,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1503,
+      "fixture": "review-portfolio-http.source-egress-successor-body",
+      "phase": "portfolio.evaluate",
+      "state": "started",
+      "elapsedMs": 240
+    },
+    {
+      "rawLogLine": 1504,
+      "fixture": "review-portfolio-http.source-egress-successor-body",
+      "phase": "portfolio.evaluate",
+      "state": "returned",
+      "phaseMs": 598,
+      "elapsedMs": 838,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1505,
+      "fixture": "review-portfolio-http.source-egress-successor-body",
+      "phase": "portfolio.persist",
+      "state": "started",
+      "elapsedMs": 838
+    },
+    {
+      "rawLogLine": 1506,
+      "fixture": "review-portfolio-http.source-egress-successor-body",
+      "phase": "portfolio.persist",
+      "state": "returned",
+      "phaseMs": 182,
+      "elapsedMs": 1021,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1507,
+      "fixture": "review-portfolio-http.source-egress-successor-body",
+      "phase": "portfolio.produce",
+      "state": "returned",
+      "phaseMs": 1277,
+      "elapsedMs": 1309,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1508,
+      "fixture": "review-portfolio-http.source-egress-successor-body",
+      "phase": "review.preserve",
+      "state": "started",
+      "elapsedMs": 1402
+    },
+    {
+      "rawLogLine": 1509,
+      "fixture": "review-portfolio-http.source-egress-successor-body",
+      "phase": "review.preserve",
+      "state": "returned",
+      "phaseMs": 1849,
+      "elapsedMs": 3251,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1510,
+      "fixture": "review-portfolio-http.source-egress-successor-body",
+      "phase": "http.review-read",
+      "state": "started",
+      "elapsedMs": 3255
+    },
+    {
+      "rawLogLine": 1511,
+      "fixture": "review-portfolio-http.source-egress-successor-body",
+      "phase": "http.review-read",
+      "state": "returned",
+      "phaseMs": 1365,
+      "elapsedMs": 4621,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1512,
+      "fixture": "review-portfolio-http.source-egress-successor-body",
+      "phase": "http.review-read",
+      "state": "started",
+      "elapsedMs": 4648
+    },
+    {
+      "rawLogLine": 1513,
+      "fixture": "review-portfolio-http.source-egress-successor-body",
+      "phase": "http.review-read",
+      "state": "returned",
+      "phaseMs": 8933,
+      "elapsedMs": 13581,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1514,
+      "fixture": "review-portfolio-http.source-egress-successor-body",
+      "phase": "http.review-source",
+      "state": "started",
+      "elapsedMs": 28372
+    },
+    {
+      "rawLogLine": 1515,
+      "fixture": "review-portfolio-http.source-egress-successor-body",
+      "phase": "http.review-source",
+      "state": "returned",
+      "phaseMs": 29964,
+      "elapsedMs": 58336,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1530,
+      "fixture": "review-portfolio-http.historical-page",
+      "phase": "fixture.initialize",
+      "state": "started",
+      "elapsedMs": 0
+    },
+    {
+      "rawLogLine": 1531,
+      "fixture": "review-portfolio-http.historical-page",
+      "phase": "fixture.initialize",
+      "state": "returned",
+      "phaseMs": 19,
+      "elapsedMs": 20,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1532,
+      "fixture": "review-portfolio-http.historical-page",
+      "phase": "fixture.authority",
+      "state": "started",
+      "elapsedMs": 20
+    },
+    {
+      "rawLogLine": 1533,
+      "fixture": "review-portfolio-http.historical-page",
+      "phase": "fixture.authority",
+      "state": "returned",
+      "phaseMs": 3,
+      "elapsedMs": 23,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1534,
+      "fixture": "review-portfolio-http.historical-page",
+      "phase": "portfolio.produce",
+      "state": "started",
+      "elapsedMs": 31
+    },
+    {
+      "rawLogLine": 1535,
+      "fixture": "review-portfolio-http.historical-page",
+      "phase": "planner.forecast",
+      "state": "started",
+      "elapsedMs": 58
+    },
+    {
+      "rawLogLine": 1536,
+      "fixture": "review-portfolio-http.historical-page",
+      "phase": "planner.forecast",
+      "state": "returned",
+      "phaseMs": 36,
+      "elapsedMs": 93,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1537,
+      "fixture": "review-portfolio-http.historical-page",
+      "phase": "planner.simulate",
+      "state": "started",
+      "elapsedMs": 94
+    },
+    {
+      "rawLogLine": 1538,
+      "fixture": "review-portfolio-http.historical-page",
+      "phase": "planner.simulate",
+      "state": "returned",
+      "phaseMs": 94,
+      "elapsedMs": 188,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1539,
+      "fixture": "review-portfolio-http.historical-page",
+      "phase": "planner.forecast-unchanged",
+      "state": "started",
+      "elapsedMs": 188
+    },
+    {
+      "rawLogLine": 1540,
+      "fixture": "review-portfolio-http.historical-page",
+      "phase": "planner.forecast-unchanged",
+      "state": "returned",
+      "phaseMs": 33,
+      "elapsedMs": 221,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1541,
+      "fixture": "review-portfolio-http.historical-page",
+      "phase": "portfolio.evaluate",
+      "state": "started",
+      "elapsedMs": 228
+    },
+    {
+      "rawLogLine": 1542,
+      "fixture": "review-portfolio-http.historical-page",
+      "phase": "portfolio.evaluate",
+      "state": "returned",
+      "phaseMs": 616,
+      "elapsedMs": 844,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1543,
+      "fixture": "review-portfolio-http.historical-page",
+      "phase": "portfolio.persist",
+      "state": "started",
+      "elapsedMs": 844
+    },
+    {
+      "rawLogLine": 1544,
+      "fixture": "review-portfolio-http.historical-page",
+      "phase": "portfolio.persist",
+      "state": "returned",
+      "phaseMs": 185,
+      "elapsedMs": 1029,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1545,
+      "fixture": "review-portfolio-http.historical-page",
+      "phase": "portfolio.produce",
+      "state": "returned",
+      "phaseMs": 1278,
+      "elapsedMs": 1310,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1546,
+      "fixture": "review-portfolio-http.historical-page",
+      "phase": "review.preserve",
+      "state": "started",
+      "elapsedMs": 1405
+    },
+    {
+      "rawLogLine": 1547,
+      "fixture": "review-portfolio-http.historical-page",
+      "phase": "review.preserve",
+      "state": "returned",
+      "phaseMs": 1886,
+      "elapsedMs": 3291,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1548,
+      "fixture": "review-portfolio-http.historical-page",
+      "phase": "http.review-read",
+      "state": "started",
+      "elapsedMs": 3296
+    },
+    {
+      "rawLogLine": 1549,
+      "fixture": "review-portfolio-http.historical-page",
+      "phase": "http.review-read",
+      "state": "returned",
+      "phaseMs": 1364,
+      "elapsedMs": 4660,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1550,
+      "fixture": "review-portfolio-http.historical-page",
+      "phase": "http.review-read",
+      "state": "started",
+      "elapsedMs": 4686
+    },
+    {
+      "rawLogLine": 1551,
+      "fixture": "review-portfolio-http.historical-page",
+      "phase": "http.review-read",
+      "state": "returned",
+      "phaseMs": 8946,
+      "elapsedMs": 13632,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1552,
+      "fixture": "review-portfolio-http.historical-page",
+      "phase": "http.review",
+      "state": "started",
+      "elapsedMs": 13632
+    },
+    {
+      "rawLogLine": 1553,
+      "fixture": "review-portfolio-http.historical-page",
+      "phase": "http.review",
+      "state": "returned",
+      "phaseMs": 17837,
+      "elapsedMs": 31469,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1555,
+      "fixture": "review-portfolio-http.report-download",
+      "phase": "fixture.initialize",
+      "state": "started",
+      "elapsedMs": 0
+    },
+    {
+      "rawLogLine": 1556,
+      "fixture": "review-portfolio-http.report-download",
+      "phase": "fixture.initialize",
+      "state": "returned",
+      "phaseMs": 23,
+      "elapsedMs": 23,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1557,
+      "fixture": "review-portfolio-http.report-download",
+      "phase": "fixture.authority",
+      "state": "started",
+      "elapsedMs": 23
+    },
+    {
+      "rawLogLine": 1558,
+      "fixture": "review-portfolio-http.report-download",
+      "phase": "fixture.authority",
+      "state": "returned",
+      "phaseMs": 4,
+      "elapsedMs": 27,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1559,
+      "fixture": "review-portfolio-http.report-download",
+      "phase": "portfolio.produce",
+      "state": "started",
+      "elapsedMs": 36
+    },
+    {
+      "rawLogLine": 1560,
+      "fixture": "review-portfolio-http.report-download",
+      "phase": "planner.forecast",
+      "state": "started",
+      "elapsedMs": 84
+    },
+    {
+      "rawLogLine": 1561,
+      "fixture": "review-portfolio-http.report-download",
+      "phase": "planner.forecast",
+      "state": "returned",
+      "phaseMs": 36,
+      "elapsedMs": 120,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1562,
+      "fixture": "review-portfolio-http.report-download",
+      "phase": "planner.simulate",
+      "state": "started",
+      "elapsedMs": 120
+    },
+    {
+      "rawLogLine": 1563,
+      "fixture": "review-portfolio-http.report-download",
+      "phase": "planner.simulate",
+      "state": "returned",
+      "phaseMs": 93,
+      "elapsedMs": 212,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1564,
+      "fixture": "review-portfolio-http.report-download",
+      "phase": "planner.forecast-unchanged",
+      "state": "started",
+      "elapsedMs": 212
+    },
+    {
+      "rawLogLine": 1565,
+      "fixture": "review-portfolio-http.report-download",
+      "phase": "planner.forecast-unchanged",
+      "state": "returned",
+      "phaseMs": 32,
+      "elapsedMs": 245,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1566,
+      "fixture": "review-portfolio-http.report-download",
+      "phase": "portfolio.evaluate",
+      "state": "started",
+      "elapsedMs": 252
+    },
+    {
+      "rawLogLine": 1567,
+      "fixture": "review-portfolio-http.report-download",
+      "phase": "portfolio.evaluate",
+      "state": "returned",
+      "phaseMs": 597,
+      "elapsedMs": 848,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1568,
+      "fixture": "review-portfolio-http.report-download",
+      "phase": "portfolio.persist",
+      "state": "started",
+      "elapsedMs": 849
+    },
+    {
+      "rawLogLine": 1569,
+      "fixture": "review-portfolio-http.report-download",
+      "phase": "portfolio.persist",
+      "state": "returned",
+      "phaseMs": 195,
+      "elapsedMs": 1043,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1570,
+      "fixture": "review-portfolio-http.report-download",
+      "phase": "portfolio.produce",
+      "state": "returned",
+      "phaseMs": 1286,
+      "elapsedMs": 1322,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1571,
+      "fixture": "review-portfolio-http.report-download",
+      "phase": "review.preserve",
+      "state": "started",
+      "elapsedMs": 1415
+    },
+    {
+      "rawLogLine": 1572,
+      "fixture": "review-portfolio-http.report-download",
+      "phase": "review.preserve",
+      "state": "returned",
+      "phaseMs": 1876,
+      "elapsedMs": 3291,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1573,
+      "fixture": "review-portfolio-http.report-download",
+      "phase": "http.review-read",
+      "state": "started",
+      "elapsedMs": 3296
+    },
+    {
+      "rawLogLine": 1574,
+      "fixture": "review-portfolio-http.report-download",
+      "phase": "http.review-read",
+      "state": "returned",
+      "phaseMs": 1376,
+      "elapsedMs": 4671,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1575,
+      "fixture": "review-portfolio-http.report-download",
+      "phase": "http.review-read",
+      "state": "started",
+      "elapsedMs": 4697
+    },
+    {
+      "rawLogLine": 1576,
+      "fixture": "review-portfolio-http.report-download",
+      "phase": "http.review-read",
+      "state": "returned",
+      "phaseMs": 8910,
+      "elapsedMs": 13606,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1577,
+      "fixture": "review-portfolio-http.report-download",
+      "phase": "http.review-report",
+      "state": "started",
+      "elapsedMs": 13607
+    },
+    {
+      "rawLogLine": 1578,
+      "fixture": "review-portfolio-http.report-download",
+      "phase": "http.review-report",
+      "state": "returned",
+      "phaseMs": 45531,
+      "elapsedMs": 59138,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1579,
+      "fixture": "review-portfolio-http.report-download",
+      "phase": "http.review-download",
+      "state": "started",
+      "elapsedMs": 59138
+    },
+    {
+      "rawLogLine": 1580,
+      "fixture": "review-portfolio-http.report-download",
+      "phase": "http.review-download",
+      "state": "returned",
+      "phaseMs": 27984,
+      "elapsedMs": 87122,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1581,
+      "fixture": "review-portfolio-http.report-download",
+      "phase": "http.review-read",
+      "state": "started",
+      "elapsedMs": 87129
+    },
+    {
+      "rawLogLine": 1582,
+      "fixture": "review-portfolio-http.report-download",
+      "phase": "http.review-read",
+      "state": "returned",
+      "phaseMs": 82,
+      "elapsedMs": 87211,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1583,
+      "fixture": "review-portfolio-http.report-download",
+      "phase": "http.review-download",
+      "state": "started",
+      "elapsedMs": 87211
+    },
+    {
+      "rawLogLine": 1584,
+      "fixture": "review-portfolio-http.report-download",
+      "phase": "http.review-download",
+      "state": "returned",
+      "phaseMs": 90,
+      "elapsedMs": 87302,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1585,
+      "fixture": "review-portfolio-http.report-download",
+      "phase": "http.review-read",
+      "state": "started",
+      "elapsedMs": 87309
+    },
+    {
+      "rawLogLine": 1586,
+      "fixture": "review-portfolio-http.report-download",
+      "phase": "http.review-read",
+      "state": "returned",
+      "phaseMs": 9378,
+      "elapsedMs": 96687,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1587,
+      "fixture": "review-portfolio-http.report-download",
+      "phase": "http.review-download",
+      "state": "started",
+      "elapsedMs": 96687
+    },
+    {
+      "rawLogLine": 1588,
+      "fixture": "review-portfolio-http.report-download",
+      "phase": "http.review-download",
+      "state": "returned",
+      "phaseMs": 8382,
+      "elapsedMs": 105069,
+      "aborted": true
+    },
+    {
+      "rawLogLine": 1600,
+      "fixture": "review-portfolio-http.successor-comparison",
+      "phase": "fixture.initialize",
+      "state": "started",
+      "elapsedMs": 0
+    },
+    {
+      "rawLogLine": 1601,
+      "fixture": "review-portfolio-http.successor-comparison",
+      "phase": "fixture.initialize",
+      "state": "returned",
+      "phaseMs": 19,
+      "elapsedMs": 19,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1602,
+      "fixture": "review-portfolio-http.successor-comparison",
+      "phase": "fixture.authority",
+      "state": "started",
+      "elapsedMs": 19
+    },
+    {
+      "rawLogLine": 1603,
+      "fixture": "review-portfolio-http.successor-comparison",
+      "phase": "fixture.authority",
+      "state": "returned",
+      "phaseMs": 3,
+      "elapsedMs": 22,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1604,
+      "fixture": "review-portfolio-http.successor-comparison",
+      "phase": "portfolio.produce",
+      "state": "started",
+      "elapsedMs": 30
+    },
+    {
+      "rawLogLine": 1605,
+      "fixture": "review-portfolio-http.successor-comparison",
+      "phase": "planner.forecast",
+      "state": "started",
+      "elapsedMs": 57
+    },
+    {
+      "rawLogLine": 1606,
+      "fixture": "review-portfolio-http.successor-comparison",
+      "phase": "planner.forecast",
+      "state": "returned",
+      "phaseMs": 37,
+      "elapsedMs": 94,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1607,
+      "fixture": "review-portfolio-http.successor-comparison",
+      "phase": "planner.simulate",
+      "state": "started",
+      "elapsedMs": 94
+    },
+    {
+      "rawLogLine": 1608,
+      "fixture": "review-portfolio-http.successor-comparison",
+      "phase": "planner.simulate",
+      "state": "returned",
+      "phaseMs": 94,
+      "elapsedMs": 188,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1609,
+      "fixture": "review-portfolio-http.successor-comparison",
+      "phase": "planner.forecast-unchanged",
+      "state": "started",
+      "elapsedMs": 188
+    },
+    {
+      "rawLogLine": 1610,
+      "fixture": "review-portfolio-http.successor-comparison",
+      "phase": "planner.forecast-unchanged",
+      "state": "returned",
+      "phaseMs": 32,
+      "elapsedMs": 220,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1611,
+      "fixture": "review-portfolio-http.successor-comparison",
+      "phase": "portfolio.evaluate",
+      "state": "started",
+      "elapsedMs": 228
+    },
+    {
+      "rawLogLine": 1612,
+      "fixture": "review-portfolio-http.successor-comparison",
+      "phase": "portfolio.evaluate",
+      "state": "returned",
+      "phaseMs": 600,
+      "elapsedMs": 827,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1613,
+      "fixture": "review-portfolio-http.successor-comparison",
+      "phase": "portfolio.persist",
+      "state": "started",
+      "elapsedMs": 827
+    },
+    {
+      "rawLogLine": 1614,
+      "fixture": "review-portfolio-http.successor-comparison",
+      "phase": "portfolio.persist",
+      "state": "returned",
+      "phaseMs": 190,
+      "elapsedMs": 1017,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1615,
+      "fixture": "review-portfolio-http.successor-comparison",
+      "phase": "portfolio.produce",
+      "state": "returned",
+      "phaseMs": 1270,
+      "elapsedMs": 1299,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1616,
+      "fixture": "review-portfolio-http.successor-comparison",
+      "phase": "review.preserve",
+      "state": "started",
+      "elapsedMs": 1396
+    },
+    {
+      "rawLogLine": 1617,
+      "fixture": "review-portfolio-http.successor-comparison",
+      "phase": "review.preserve",
+      "state": "returned",
+      "phaseMs": 1892,
+      "elapsedMs": 3287,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1618,
+      "fixture": "review-portfolio-http.successor-comparison",
+      "phase": "http.review-read",
+      "state": "started",
+      "elapsedMs": 3292
+    },
+    {
+      "rawLogLine": 1619,
+      "fixture": "review-portfolio-http.successor-comparison",
+      "phase": "http.review-read",
+      "state": "returned",
+      "phaseMs": 1390,
+      "elapsedMs": 4682,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1620,
+      "fixture": "review-portfolio-http.successor-comparison",
+      "phase": "http.review-read",
+      "state": "started",
+      "elapsedMs": 4709
+    },
+    {
+      "rawLogLine": 1621,
+      "fixture": "review-portfolio-http.successor-comparison",
+      "phase": "http.review-read",
+      "state": "returned",
+      "phaseMs": 9000,
+      "elapsedMs": 13710,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1622,
+      "fixture": "review-portfolio-http.successor-comparison",
+      "phase": "review.successor",
+      "state": "started",
+      "elapsedMs": 13710
+    },
+    {
+      "rawLogLine": 1623,
+      "fixture": "review-portfolio-http.successor-comparison",
+      "phase": "review.successor",
+      "state": "returned",
+      "phaseMs": 19008,
+      "elapsedMs": 32718,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1624,
+      "fixture": "review-portfolio-http.successor-comparison",
+      "phase": "http.review-comparison",
+      "state": "started",
+      "elapsedMs": 32719
+    },
+    {
+      "rawLogLine": 1625,
+      "fixture": "review-portfolio-http.successor-comparison",
+      "phase": "http.review-comparison",
+      "state": "returned",
+      "phaseMs": 72288,
+      "elapsedMs": 105007,
+      "aborted": true
+    },
+    {
+      "rawLogLine": 1627,
+      "fixture": "review-portfolio-http.egress-case",
+      "phase": "fixture.initialize",
+      "state": "started",
+      "elapsedMs": 0
+    },
+    {
+      "rawLogLine": 1638,
+      "fixture": "review-portfolio-http.egress-case",
+      "phase": "fixture.initialize",
+      "state": "returned",
+      "phaseMs": 30,
+      "elapsedMs": 30,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1639,
+      "fixture": "review-portfolio-http.egress-case",
+      "phase": "fixture.authority",
+      "state": "started",
+      "elapsedMs": 30
+    },
+    {
+      "rawLogLine": 1640,
+      "fixture": "review-portfolio-http.egress-case",
+      "phase": "fixture.authority",
+      "state": "returned",
+      "phaseMs": 4,
+      "elapsedMs": 34,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1641,
+      "fixture": "review-portfolio-http.egress-case",
+      "phase": "portfolio.produce",
+      "state": "started",
+      "elapsedMs": 68
+    },
+    {
+      "rawLogLine": 1642,
+      "fixture": "review-portfolio-http.egress-case",
+      "phase": "planner.forecast",
+      "state": "started",
+      "elapsedMs": 95
+    },
+    {
+      "rawLogLine": 1643,
+      "fixture": "review-portfolio-http.egress-case",
+      "phase": "planner.forecast",
+      "state": "returned",
+      "phaseMs": 35,
+      "elapsedMs": 130,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1644,
+      "fixture": "review-portfolio-http.egress-case",
+      "phase": "planner.simulate",
+      "state": "started",
+      "elapsedMs": 130
+    },
+    {
+      "rawLogLine": 1645,
+      "fixture": "review-portfolio-http.egress-case",
+      "phase": "planner.simulate",
+      "state": "returned",
+      "phaseMs": 95,
+      "elapsedMs": 225,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1646,
+      "fixture": "review-portfolio-http.egress-case",
+      "phase": "planner.forecast-unchanged",
+      "state": "started",
+      "elapsedMs": 225
+    },
+    {
+      "rawLogLine": 1647,
+      "fixture": "review-portfolio-http.egress-case",
+      "phase": "planner.forecast-unchanged",
+      "state": "returned",
+      "phaseMs": 34,
+      "elapsedMs": 259,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1648,
+      "fixture": "review-portfolio-http.egress-case",
+      "phase": "portfolio.evaluate",
+      "state": "started",
+      "elapsedMs": 266
+    },
+    {
+      "rawLogLine": 1649,
+      "fixture": "review-portfolio-http.egress-case",
+      "phase": "portfolio.evaluate",
+      "state": "returned",
+      "phaseMs": 595,
+      "elapsedMs": 862,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1650,
+      "fixture": "review-portfolio-http.egress-case",
+      "phase": "portfolio.persist",
+      "state": "started",
+      "elapsedMs": 862
+    },
+    {
+      "rawLogLine": 1651,
+      "fixture": "review-portfolio-http.egress-case",
+      "phase": "portfolio.persist",
+      "state": "returned",
+      "phaseMs": 192,
+      "elapsedMs": 1053,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1652,
+      "fixture": "review-portfolio-http.egress-case",
+      "phase": "portfolio.produce",
+      "state": "returned",
+      "phaseMs": 1262,
+      "elapsedMs": 1330,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1653,
+      "fixture": "review-portfolio-http.egress-case",
+      "phase": "review.preserve",
+      "state": "started",
+      "elapsedMs": 1425
+    },
+    {
+      "rawLogLine": 1654,
+      "fixture": "review-portfolio-http.egress-case",
+      "phase": "review.preserve",
+      "state": "returned",
+      "phaseMs": 1847,
+      "elapsedMs": 3272,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1655,
+      "fixture": "review-portfolio-http.egress-case",
+      "phase": "http.review-read",
+      "state": "started",
+      "elapsedMs": 3276
+    },
+    {
+      "rawLogLine": 1656,
+      "fixture": "review-portfolio-http.egress-case",
+      "phase": "http.review-read",
+      "state": "returned",
+      "phaseMs": 1353,
+      "elapsedMs": 4630,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1657,
+      "fixture": "review-portfolio-http.egress-case",
+      "phase": "http.review-read",
+      "state": "started",
+      "elapsedMs": 4655
+    },
+    {
+      "rawLogLine": 1658,
+      "fixture": "review-portfolio-http.egress-case",
+      "phase": "http.review-read",
+      "state": "returned",
+      "phaseMs": 8871,
+      "elapsedMs": 13526,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1659,
+      "fixture": "review-portfolio-http.egress-case",
+      "phase": "egress.case.page",
+      "state": "started",
+      "elapsedMs": 13528
+    },
+    {
+      "rawLogLine": 1660,
+      "fixture": "review-portfolio-http.egress-case",
+      "phase": "egress.case.page",
+      "state": "returned",
+      "phaseMs": 9078,
+      "elapsedMs": 22605,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1661,
+      "fixture": "review-portfolio-http.egress-case",
+      "phase": "http.review",
+      "state": "started",
+      "elapsedMs": 22612
+    },
+    {
+      "rawLogLine": 1662,
+      "fixture": "review-portfolio-http.egress-case",
+      "phase": "http.review",
+      "state": "returned",
+      "phaseMs": 17568,
+      "elapsedMs": 40180,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1664,
+      "fixture": "review-portfolio-http.egress-session",
+      "phase": "fixture.initialize",
+      "state": "started",
+      "elapsedMs": 0
+    },
+    {
+      "rawLogLine": 1665,
+      "fixture": "review-portfolio-http.egress-session",
+      "phase": "fixture.initialize",
+      "state": "returned",
+      "phaseMs": 26,
+      "elapsedMs": 26,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1666,
+      "fixture": "review-portfolio-http.egress-session",
+      "phase": "fixture.authority",
+      "state": "started",
+      "elapsedMs": 26
+    },
+    {
+      "rawLogLine": 1667,
+      "fixture": "review-portfolio-http.egress-session",
+      "phase": "fixture.authority",
+      "state": "returned",
+      "phaseMs": 4,
+      "elapsedMs": 31,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1668,
+      "fixture": "review-portfolio-http.egress-session",
+      "phase": "portfolio.produce",
+      "state": "started",
+      "elapsedMs": 60
+    },
+    {
+      "rawLogLine": 1669,
+      "fixture": "review-portfolio-http.egress-session",
+      "phase": "planner.forecast",
+      "state": "started",
+      "elapsedMs": 87
+    },
+    {
+      "rawLogLine": 1670,
+      "fixture": "review-portfolio-http.egress-session",
+      "phase": "planner.forecast",
+      "state": "returned",
+      "phaseMs": 35,
+      "elapsedMs": 121,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1671,
+      "fixture": "review-portfolio-http.egress-session",
+      "phase": "planner.simulate",
+      "state": "started",
+      "elapsedMs": 121
+    },
+    {
+      "rawLogLine": 1672,
+      "fixture": "review-portfolio-http.egress-session",
+      "phase": "planner.simulate",
+      "state": "returned",
+      "phaseMs": 91,
+      "elapsedMs": 213,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1673,
+      "fixture": "review-portfolio-http.egress-session",
+      "phase": "planner.forecast-unchanged",
+      "state": "started",
+      "elapsedMs": 213
+    },
+    {
+      "rawLogLine": 1674,
+      "fixture": "review-portfolio-http.egress-session",
+      "phase": "planner.forecast-unchanged",
+      "state": "returned",
+      "phaseMs": 32,
+      "elapsedMs": 244,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1675,
+      "fixture": "review-portfolio-http.egress-session",
+      "phase": "portfolio.evaluate",
+      "state": "started",
+      "elapsedMs": 251
+    },
+    {
+      "rawLogLine": 1676,
+      "fixture": "review-portfolio-http.egress-session",
+      "phase": "portfolio.evaluate",
+      "state": "returned",
+      "phaseMs": 590,
+      "elapsedMs": 841,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1677,
+      "fixture": "review-portfolio-http.egress-session",
+      "phase": "portfolio.persist",
+      "state": "started",
+      "elapsedMs": 842
+    },
+    {
+      "rawLogLine": 1678,
+      "fixture": "review-portfolio-http.egress-session",
+      "phase": "portfolio.persist",
+      "state": "returned",
+      "phaseMs": 195,
+      "elapsedMs": 1036,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1679,
+      "fixture": "review-portfolio-http.egress-session",
+      "phase": "portfolio.produce",
+      "state": "returned",
+      "phaseMs": 1252,
+      "elapsedMs": 1313,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1680,
+      "fixture": "review-portfolio-http.egress-session",
+      "phase": "review.preserve",
+      "state": "started",
+      "elapsedMs": 1408
+    },
+    {
+      "rawLogLine": 1681,
+      "fixture": "review-portfolio-http.egress-session",
+      "phase": "review.preserve",
+      "state": "returned",
+      "phaseMs": 1841,
+      "elapsedMs": 3249,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1682,
+      "fixture": "review-portfolio-http.egress-session",
+      "phase": "http.review-read",
+      "state": "started",
+      "elapsedMs": 3254
+    },
+    {
+      "rawLogLine": 1683,
+      "fixture": "review-portfolio-http.egress-session",
+      "phase": "http.review-read",
+      "state": "returned",
+      "phaseMs": 1350,
+      "elapsedMs": 4604,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1684,
+      "fixture": "review-portfolio-http.egress-session",
+      "phase": "http.review-read",
+      "state": "started",
+      "elapsedMs": 4630
+    },
+    {
+      "rawLogLine": 1685,
+      "fixture": "review-portfolio-http.egress-session",
+      "phase": "http.review-read",
+      "state": "returned",
+      "phaseMs": 8821,
+      "elapsedMs": 13451,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1686,
+      "fixture": "review-portfolio-http.egress-session",
+      "phase": "egress.session.page",
+      "state": "started",
+      "elapsedMs": 13452
+    },
+    {
+      "rawLogLine": 1687,
+      "fixture": "review-portfolio-http.egress-session",
+      "phase": "egress.session.page",
+      "state": "returned",
+      "phaseMs": 8983,
+      "elapsedMs": 22435,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1688,
+      "fixture": "review-portfolio-http.egress-session",
+      "phase": "http.review",
+      "state": "started",
+      "elapsedMs": 22439
+    },
+    {
+      "rawLogLine": 1689,
+      "fixture": "review-portfolio-http.egress-session",
+      "phase": "http.review",
+      "state": "returned",
+      "phaseMs": 17660,
+      "elapsedMs": 40099,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1691,
+      "fixture": "review-portfolio-http.browser-case-revocation",
+      "phase": "fixture.initialize",
+      "state": "started",
+      "elapsedMs": 0
+    },
+    {
+      "rawLogLine": 1692,
+      "fixture": "review-portfolio-http.browser-case-revocation",
+      "phase": "fixture.initialize",
+      "state": "returned",
+      "phaseMs": 28,
+      "elapsedMs": 28,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1693,
+      "fixture": "review-portfolio-http.browser-case-revocation",
+      "phase": "fixture.authority",
+      "state": "started",
+      "elapsedMs": 29
+    },
+    {
+      "rawLogLine": 1694,
+      "fixture": "review-portfolio-http.browser-case-revocation",
+      "phase": "fixture.authority",
+      "state": "returned",
+      "phaseMs": 4,
+      "elapsedMs": 33,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1695,
+      "fixture": "review-portfolio-http.browser-case-revocation",
+      "phase": "portfolio.produce",
+      "state": "started",
+      "elapsedMs": 61
+    },
+    {
+      "rawLogLine": 1696,
+      "fixture": "review-portfolio-http.browser-case-revocation",
+      "phase": "planner.forecast",
+      "state": "started",
+      "elapsedMs": 86
+    },
+    {
+      "rawLogLine": 1697,
+      "fixture": "review-portfolio-http.browser-case-revocation",
+      "phase": "planner.forecast",
+      "state": "returned",
+      "phaseMs": 35,
+      "elapsedMs": 121,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1698,
+      "fixture": "review-portfolio-http.browser-case-revocation",
+      "phase": "planner.simulate",
+      "state": "started",
+      "elapsedMs": 122
+    },
+    {
+      "rawLogLine": 1699,
+      "fixture": "review-portfolio-http.browser-case-revocation",
+      "phase": "planner.simulate",
+      "state": "returned",
+      "phaseMs": 94,
+      "elapsedMs": 215,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1700,
+      "fixture": "review-portfolio-http.browser-case-revocation",
+      "phase": "planner.forecast-unchanged",
+      "state": "started",
+      "elapsedMs": 215
+    },
+    {
+      "rawLogLine": 1701,
+      "fixture": "review-portfolio-http.browser-case-revocation",
+      "phase": "planner.forecast-unchanged",
+      "state": "returned",
+      "phaseMs": 34,
+      "elapsedMs": 249,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1702,
+      "fixture": "review-portfolio-http.browser-case-revocation",
+      "phase": "portfolio.evaluate",
+      "state": "started",
+      "elapsedMs": 258
+    },
+    {
+      "rawLogLine": 1703,
+      "fixture": "review-portfolio-http.browser-case-revocation",
+      "phase": "portfolio.evaluate",
+      "state": "returned",
+      "phaseMs": 601,
+      "elapsedMs": 860,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1704,
+      "fixture": "review-portfolio-http.browser-case-revocation",
+      "phase": "portfolio.persist",
+      "state": "started",
+      "elapsedMs": 860
+    },
+    {
+      "rawLogLine": 1705,
+      "fixture": "review-portfolio-http.browser-case-revocation",
+      "phase": "portfolio.persist",
+      "state": "returned",
+      "phaseMs": 180,
+      "elapsedMs": 1040,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1706,
+      "fixture": "review-portfolio-http.browser-case-revocation",
+      "phase": "portfolio.produce",
+      "state": "returned",
+      "phaseMs": 1251,
+      "elapsedMs": 1312,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1707,
+      "fixture": "review-portfolio-http.browser-case-revocation",
+      "phase": "review.preserve",
+      "state": "started",
+      "elapsedMs": 1414
+    },
+    {
+      "rawLogLine": 1708,
+      "fixture": "review-portfolio-http.browser-case-revocation",
+      "phase": "review.preserve",
+      "state": "returned",
+      "phaseMs": 1847,
+      "elapsedMs": 3261,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1709,
+      "fixture": "review-portfolio-http.browser-case-revocation",
+      "phase": "http.review-read",
+      "state": "started",
+      "elapsedMs": 3265
+    },
+    {
+      "rawLogLine": 1710,
+      "fixture": "review-portfolio-http.browser-case-revocation",
+      "phase": "http.review-read",
+      "state": "returned",
+      "phaseMs": 1345,
+      "elapsedMs": 4610,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1711,
+      "fixture": "review-portfolio-http.browser-case-revocation",
+      "phase": "http.review-read",
+      "state": "started",
+      "elapsedMs": 4636
+    },
+    {
+      "rawLogLine": 1712,
+      "fixture": "review-portfolio-http.browser-case-revocation",
+      "phase": "http.review-read",
+      "state": "returned",
+      "phaseMs": 8929,
+      "elapsedMs": 13565,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1713,
+      "fixture": "review-portfolio-http.browser-case-revocation",
+      "phase": "browser.prepare",
+      "state": "started",
+      "elapsedMs": 13566
+    },
+    {
+      "rawLogLine": 1722,
+      "fixture": "review-portfolio-http.browser-case-revocation",
+      "phase": "browser.prepare",
+      "state": "returned",
+      "phaseMs": 18626,
+      "elapsedMs": 32192,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1741,
+      "fixture": "review-portfolio-http.case-integrity",
+      "phase": "fixture.initialize",
+      "state": "started",
+      "elapsedMs": 0
+    },
+    {
+      "rawLogLine": 1742,
+      "fixture": "review-portfolio-http.case-integrity",
+      "phase": "fixture.initialize",
+      "state": "returned",
+      "phaseMs": 19,
+      "elapsedMs": 19,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1743,
+      "fixture": "review-portfolio-http.case-integrity",
+      "phase": "fixture.authority",
+      "state": "started",
+      "elapsedMs": 19
+    },
+    {
+      "rawLogLine": 1744,
+      "fixture": "review-portfolio-http.case-integrity",
+      "phase": "fixture.authority",
+      "state": "returned",
+      "phaseMs": 3,
+      "elapsedMs": 22,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1745,
+      "fixture": "review-portfolio-http.case-integrity",
+      "phase": "portfolio.produce",
+      "state": "started",
+      "elapsedMs": 30
+    },
+    {
+      "rawLogLine": 1746,
+      "fixture": "review-portfolio-http.case-integrity",
+      "phase": "planner.forecast",
+      "state": "started",
+      "elapsedMs": 56
+    },
+    {
+      "rawLogLine": 1747,
+      "fixture": "review-portfolio-http.case-integrity",
+      "phase": "planner.forecast",
+      "state": "returned",
+      "phaseMs": 36,
+      "elapsedMs": 92,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1748,
+      "fixture": "review-portfolio-http.case-integrity",
+      "phase": "planner.simulate",
+      "state": "started",
+      "elapsedMs": 92
+    },
+    {
+      "rawLogLine": 1749,
+      "fixture": "review-portfolio-http.case-integrity",
+      "phase": "planner.simulate",
+      "state": "returned",
+      "phaseMs": 93,
+      "elapsedMs": 185,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1750,
+      "fixture": "review-portfolio-http.case-integrity",
+      "phase": "planner.forecast-unchanged",
+      "state": "started",
+      "elapsedMs": 185
+    },
+    {
+      "rawLogLine": 1751,
+      "fixture": "review-portfolio-http.case-integrity",
+      "phase": "planner.forecast-unchanged",
+      "state": "returned",
+      "phaseMs": 32,
+      "elapsedMs": 217,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1752,
+      "fixture": "review-portfolio-http.case-integrity",
+      "phase": "portfolio.evaluate",
+      "state": "started",
+      "elapsedMs": 224
+    },
+    {
+      "rawLogLine": 1753,
+      "fixture": "review-portfolio-http.case-integrity",
+      "phase": "portfolio.evaluate",
+      "state": "returned",
+      "phaseMs": 600,
+      "elapsedMs": 824,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1754,
+      "fixture": "review-portfolio-http.case-integrity",
+      "phase": "portfolio.persist",
+      "state": "started",
+      "elapsedMs": 824
+    },
+    {
+      "rawLogLine": 1755,
+      "fixture": "review-portfolio-http.case-integrity",
+      "phase": "portfolio.persist",
+      "state": "returned",
+      "phaseMs": 184,
+      "elapsedMs": 1008,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1756,
+      "fixture": "review-portfolio-http.case-integrity",
+      "phase": "portfolio.produce",
+      "state": "returned",
+      "phaseMs": 1250,
+      "elapsedMs": 1280,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1757,
+      "fixture": "review-portfolio-http.case-integrity",
+      "phase": "review.preserve",
+      "state": "started",
+      "elapsedMs": 1374
+    },
+    {
+      "rawLogLine": 1758,
+      "fixture": "review-portfolio-http.case-integrity",
+      "phase": "review.preserve",
+      "state": "returned",
+      "phaseMs": 1848,
+      "elapsedMs": 3222,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1759,
+      "fixture": "review-portfolio-http.case-integrity",
+      "phase": "http.review-read",
+      "state": "started",
+      "elapsedMs": 3227
+    },
+    {
+      "rawLogLine": 1760,
+      "fixture": "review-portfolio-http.case-integrity",
+      "phase": "http.review-read",
+      "state": "returned",
+      "phaseMs": 1337,
+      "elapsedMs": 4564,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1761,
+      "fixture": "review-portfolio-http.case-integrity",
+      "phase": "http.review-read",
+      "state": "started",
+      "elapsedMs": 4589
+    },
+    {
+      "rawLogLine": 1762,
+      "fixture": "review-portfolio-http.case-integrity",
+      "phase": "http.review-read",
+      "state": "returned",
+      "phaseMs": 8857,
+      "elapsedMs": 13446,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1763,
+      "fixture": "review-portfolio-http.case-integrity",
+      "phase": "http.review-read",
+      "state": "started",
+      "elapsedMs": 13453
+    },
+    {
+      "rawLogLine": 1764,
+      "fixture": "review-portfolio-http.case-integrity",
+      "phase": "http.review-read",
+      "state": "returned",
+      "phaseMs": 63,
+      "elapsedMs": 13516,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1765,
+      "fixture": "review-portfolio-http.case-integrity",
+      "phase": "http.review-read",
+      "state": "started",
+      "elapsedMs": 13522
+    },
+    {
+      "rawLogLine": 1766,
+      "fixture": "review-portfolio-http.case-integrity",
+      "phase": "http.review-read",
+      "state": "returned",
+      "phaseMs": 9004,
+      "elapsedMs": 22527,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1768,
+      "fixture": "review-portfolio-http.binding-integrity",
+      "phase": "fixture.initialize",
+      "state": "started",
+      "elapsedMs": 0
+    },
+    {
+      "rawLogLine": 1769,
+      "fixture": "review-portfolio-http.binding-integrity",
+      "phase": "fixture.initialize",
+      "state": "returned",
+      "phaseMs": 19,
+      "elapsedMs": 19,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1770,
+      "fixture": "review-portfolio-http.binding-integrity",
+      "phase": "fixture.authority",
+      "state": "started",
+      "elapsedMs": 19
+    },
+    {
+      "rawLogLine": 1771,
+      "fixture": "review-portfolio-http.binding-integrity",
+      "phase": "fixture.authority",
+      "state": "returned",
+      "phaseMs": 3,
+      "elapsedMs": 22,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1772,
+      "fixture": "review-portfolio-http.binding-integrity",
+      "phase": "portfolio.produce",
+      "state": "started",
+      "elapsedMs": 30
+    },
+    {
+      "rawLogLine": 1773,
+      "fixture": "review-portfolio-http.binding-integrity",
+      "phase": "planner.forecast",
+      "state": "started",
+      "elapsedMs": 56
+    },
+    {
+      "rawLogLine": 1774,
+      "fixture": "review-portfolio-http.binding-integrity",
+      "phase": "planner.forecast",
+      "state": "returned",
+      "phaseMs": 36,
+      "elapsedMs": 92,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1775,
+      "fixture": "review-portfolio-http.binding-integrity",
+      "phase": "planner.simulate",
+      "state": "started",
+      "elapsedMs": 92
+    },
+    {
+      "rawLogLine": 1776,
+      "fixture": "review-portfolio-http.binding-integrity",
+      "phase": "planner.simulate",
+      "state": "returned",
+      "phaseMs": 94,
+      "elapsedMs": 186,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1777,
+      "fixture": "review-portfolio-http.binding-integrity",
+      "phase": "planner.forecast-unchanged",
+      "state": "started",
+      "elapsedMs": 186
+    },
+    {
+      "rawLogLine": 1778,
+      "fixture": "review-portfolio-http.binding-integrity",
+      "phase": "planner.forecast-unchanged",
+      "state": "returned",
+      "phaseMs": 34,
+      "elapsedMs": 220,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1779,
+      "fixture": "review-portfolio-http.binding-integrity",
+      "phase": "portfolio.evaluate",
+      "state": "started",
+      "elapsedMs": 227
+    },
+    {
+      "rawLogLine": 1780,
+      "fixture": "review-portfolio-http.binding-integrity",
+      "phase": "portfolio.evaluate",
+      "state": "returned",
+      "phaseMs": 608,
+      "elapsedMs": 835,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1781,
+      "fixture": "review-portfolio-http.binding-integrity",
+      "phase": "portfolio.persist",
+      "state": "started",
+      "elapsedMs": 835
+    },
+    {
+      "rawLogLine": 1782,
+      "fixture": "review-portfolio-http.binding-integrity",
+      "phase": "portfolio.persist",
+      "state": "returned",
+      "phaseMs": 185,
+      "elapsedMs": 1019,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1783,
+      "fixture": "review-portfolio-http.binding-integrity",
+      "phase": "portfolio.produce",
+      "state": "returned",
+      "phaseMs": 1266,
+      "elapsedMs": 1297,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1784,
+      "fixture": "review-portfolio-http.binding-integrity",
+      "phase": "review.preserve",
+      "state": "started",
+      "elapsedMs": 1391
+    },
+    {
+      "rawLogLine": 1785,
+      "fixture": "review-portfolio-http.binding-integrity",
+      "phase": "review.preserve",
+      "state": "returned",
+      "phaseMs": 1868,
+      "elapsedMs": 3258,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1786,
+      "fixture": "review-portfolio-http.binding-integrity",
+      "phase": "http.review-read",
+      "state": "started",
+      "elapsedMs": 3263
+    },
+    {
+      "rawLogLine": 1787,
+      "fixture": "review-portfolio-http.binding-integrity",
+      "phase": "http.review-read",
+      "state": "returned",
+      "phaseMs": 1387,
+      "elapsedMs": 4650,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1788,
+      "fixture": "review-portfolio-http.binding-integrity",
+      "phase": "http.review-read",
+      "state": "started",
+      "elapsedMs": 4675
+    },
+    {
+      "rawLogLine": 1789,
+      "fixture": "review-portfolio-http.binding-integrity",
+      "phase": "http.review-read",
+      "state": "returned",
+      "phaseMs": 8961,
+      "elapsedMs": 13636,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1790,
+      "fixture": "review-portfolio-http.binding-integrity",
+      "phase": "http.review-read",
+      "state": "started",
+      "elapsedMs": 13644
+    },
+    {
+      "rawLogLine": 1791,
+      "fixture": "review-portfolio-http.binding-integrity",
+      "phase": "http.review-read",
+      "state": "returned",
+      "phaseMs": 163,
+      "elapsedMs": 13807,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1792,
+      "fixture": "review-portfolio-http.binding-integrity",
+      "phase": "http.review-read",
+      "state": "started",
+      "elapsedMs": 13813
+    },
+    {
+      "rawLogLine": 1793,
+      "fixture": "review-portfolio-http.binding-integrity",
+      "phase": "http.review-read",
+      "state": "returned",
+      "phaseMs": 8918,
+      "elapsedMs": 22731,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1795,
+      "fixture": "review-portfolio-http.result-integrity",
+      "phase": "fixture.initialize",
+      "state": "started",
+      "elapsedMs": 0
+    },
+    {
+      "rawLogLine": 1796,
+      "fixture": "review-portfolio-http.result-integrity",
+      "phase": "fixture.initialize",
+      "state": "returned",
+      "phaseMs": 18,
+      "elapsedMs": 18,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1797,
+      "fixture": "review-portfolio-http.result-integrity",
+      "phase": "fixture.authority",
+      "state": "started",
+      "elapsedMs": 18
+    },
+    {
+      "rawLogLine": 1798,
+      "fixture": "review-portfolio-http.result-integrity",
+      "phase": "fixture.authority",
+      "state": "returned",
+      "phaseMs": 4,
+      "elapsedMs": 22,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1799,
+      "fixture": "review-portfolio-http.result-integrity",
+      "phase": "portfolio.produce",
+      "state": "started",
+      "elapsedMs": 35
+    },
+    {
+      "rawLogLine": 1800,
+      "fixture": "review-portfolio-http.result-integrity",
+      "phase": "planner.forecast",
+      "state": "started",
+      "elapsedMs": 63
+    },
+    {
+      "rawLogLine": 1801,
+      "fixture": "review-portfolio-http.result-integrity",
+      "phase": "planner.forecast",
+      "state": "returned",
+      "phaseMs": 37,
+      "elapsedMs": 100,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1802,
+      "fixture": "review-portfolio-http.result-integrity",
+      "phase": "planner.simulate",
+      "state": "started",
+      "elapsedMs": 101
+    },
+    {
+      "rawLogLine": 1803,
+      "fixture": "review-portfolio-http.result-integrity",
+      "phase": "planner.simulate",
+      "state": "returned",
+      "phaseMs": 96,
+      "elapsedMs": 197,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1804,
+      "fixture": "review-portfolio-http.result-integrity",
+      "phase": "planner.forecast-unchanged",
+      "state": "started",
+      "elapsedMs": 197
+    },
+    {
+      "rawLogLine": 1805,
+      "fixture": "review-portfolio-http.result-integrity",
+      "phase": "planner.forecast-unchanged",
+      "state": "returned",
+      "phaseMs": 34,
+      "elapsedMs": 230,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1806,
+      "fixture": "review-portfolio-http.result-integrity",
+      "phase": "portfolio.evaluate",
+      "state": "started",
+      "elapsedMs": 238
+    },
+    {
+      "rawLogLine": 1807,
+      "fixture": "review-portfolio-http.result-integrity",
+      "phase": "portfolio.evaluate",
+      "state": "returned",
+      "phaseMs": 590,
+      "elapsedMs": 828,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1808,
+      "fixture": "review-portfolio-http.result-integrity",
+      "phase": "portfolio.persist",
+      "state": "started",
+      "elapsedMs": 828
+    },
+    {
+      "rawLogLine": 1809,
+      "fixture": "review-portfolio-http.result-integrity",
+      "phase": "portfolio.persist",
+      "state": "returned",
+      "phaseMs": 182,
+      "elapsedMs": 1010,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1810,
+      "fixture": "review-portfolio-http.result-integrity",
+      "phase": "portfolio.produce",
+      "state": "returned",
+      "phaseMs": 1266,
+      "elapsedMs": 1301,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1811,
+      "fixture": "review-portfolio-http.result-integrity",
+      "phase": "review.preserve",
+      "state": "started",
+      "elapsedMs": 1403
+    },
+    {
+      "rawLogLine": 1812,
+      "fixture": "review-portfolio-http.result-integrity",
+      "phase": "review.preserve",
+      "state": "returned",
+      "phaseMs": 1878,
+      "elapsedMs": 3281,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1813,
+      "fixture": "review-portfolio-http.result-integrity",
+      "phase": "http.review-read",
+      "state": "started",
+      "elapsedMs": 3285
+    },
+    {
+      "rawLogLine": 1814,
+      "fixture": "review-portfolio-http.result-integrity",
+      "phase": "http.review-read",
+      "state": "returned",
+      "phaseMs": 1413,
+      "elapsedMs": 4698,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1815,
+      "fixture": "review-portfolio-http.result-integrity",
+      "phase": "http.review-read",
+      "state": "started",
+      "elapsedMs": 4726
+    },
+    {
+      "rawLogLine": 1816,
+      "fixture": "review-portfolio-http.result-integrity",
+      "phase": "http.review-read",
+      "state": "returned",
+      "phaseMs": 8972,
+      "elapsedMs": 13699,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1817,
+      "fixture": "review-portfolio-http.result-integrity",
+      "phase": "http.review-read",
+      "state": "started",
+      "elapsedMs": 13705
+    },
+    {
+      "rawLogLine": 1818,
+      "fixture": "review-portfolio-http.result-integrity",
+      "phase": "http.review-read",
+      "state": "returned",
+      "phaseMs": 64,
+      "elapsedMs": 13769,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1819,
+      "fixture": "review-portfolio-http.result-integrity",
+      "phase": "http.review-read",
+      "state": "started",
+      "elapsedMs": 13775
+    },
+    {
+      "rawLogLine": 1820,
+      "fixture": "review-portfolio-http.result-integrity",
+      "phase": "http.review-read",
+      "state": "returned",
+      "phaseMs": 8866,
+      "elapsedMs": 22641,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1822,
+      "fixture": "review-portfolio-http.body-source-and-backlink",
+      "phase": "fixture.initialize",
+      "state": "started",
+      "elapsedMs": 0
+    },
+    {
+      "rawLogLine": 1823,
+      "fixture": "review-portfolio-http.body-source-and-backlink",
+      "phase": "fixture.initialize",
+      "state": "returned",
+      "phaseMs": 23,
+      "elapsedMs": 23,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1824,
+      "fixture": "review-portfolio-http.body-source-and-backlink",
+      "phase": "fixture.authority",
+      "state": "started",
+      "elapsedMs": 23
+    },
+    {
+      "rawLogLine": 1825,
+      "fixture": "review-portfolio-http.body-source-and-backlink",
+      "phase": "fixture.authority",
+      "state": "returned",
+      "phaseMs": 3,
+      "elapsedMs": 26,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1826,
+      "fixture": "review-portfolio-http.body-source-and-backlink",
+      "phase": "portfolio.produce",
+      "state": "started",
+      "elapsedMs": 34
+    },
+    {
+      "rawLogLine": 1827,
+      "fixture": "review-portfolio-http.body-source-and-backlink",
+      "phase": "planner.forecast",
+      "state": "started",
+      "elapsedMs": 60
+    },
+    {
+      "rawLogLine": 1828,
+      "fixture": "review-portfolio-http.body-source-and-backlink",
+      "phase": "planner.forecast",
+      "state": "returned",
+      "phaseMs": 36,
+      "elapsedMs": 96,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1829,
+      "fixture": "review-portfolio-http.body-source-and-backlink",
+      "phase": "planner.simulate",
+      "state": "started",
+      "elapsedMs": 96
+    },
+    {
+      "rawLogLine": 1830,
+      "fixture": "review-portfolio-http.body-source-and-backlink",
+      "phase": "planner.simulate",
+      "state": "returned",
+      "phaseMs": 91,
+      "elapsedMs": 188,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1831,
+      "fixture": "review-portfolio-http.body-source-and-backlink",
+      "phase": "planner.forecast-unchanged",
+      "state": "started",
+      "elapsedMs": 188
+    },
+    {
+      "rawLogLine": 1832,
+      "fixture": "review-portfolio-http.body-source-and-backlink",
+      "phase": "planner.forecast-unchanged",
+      "state": "returned",
+      "phaseMs": 33,
+      "elapsedMs": 220,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1833,
+      "fixture": "review-portfolio-http.body-source-and-backlink",
+      "phase": "portfolio.evaluate",
+      "state": "started",
+      "elapsedMs": 228
+    },
+    {
+      "rawLogLine": 1834,
+      "fixture": "review-portfolio-http.body-source-and-backlink",
+      "phase": "portfolio.evaluate",
+      "state": "returned",
+      "phaseMs": 607,
+      "elapsedMs": 834,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1835,
+      "fixture": "review-portfolio-http.body-source-and-backlink",
+      "phase": "portfolio.persist",
+      "state": "started",
+      "elapsedMs": 834
+    },
+    {
+      "rawLogLine": 1836,
+      "fixture": "review-portfolio-http.body-source-and-backlink",
+      "phase": "portfolio.persist",
+      "state": "returned",
+      "phaseMs": 184,
+      "elapsedMs": 1019,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1837,
+      "fixture": "review-portfolio-http.body-source-and-backlink",
+      "phase": "portfolio.produce",
+      "state": "returned",
+      "phaseMs": 1263,
+      "elapsedMs": 1298,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1838,
+      "fixture": "review-portfolio-http.body-source-and-backlink",
+      "phase": "review.preserve",
+      "state": "started",
+      "elapsedMs": 1400
+    },
+    {
+      "rawLogLine": 1839,
+      "fixture": "review-portfolio-http.body-source-and-backlink",
+      "phase": "review.preserve",
+      "state": "returned",
+      "phaseMs": 1887,
+      "elapsedMs": 3287,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1840,
+      "fixture": "review-portfolio-http.body-source-and-backlink",
+      "phase": "http.review-read",
+      "state": "started",
+      "elapsedMs": 3291
+    },
+    {
+      "rawLogLine": 1841,
+      "fixture": "review-portfolio-http.body-source-and-backlink",
+      "phase": "http.review-read",
+      "state": "returned",
+      "phaseMs": 1371,
+      "elapsedMs": 4662,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1842,
+      "fixture": "review-portfolio-http.body-source-and-backlink",
+      "phase": "http.review-read",
+      "state": "started",
+      "elapsedMs": 4688
+    },
+    {
+      "rawLogLine": 1843,
+      "fixture": "review-portfolio-http.body-source-and-backlink",
+      "phase": "http.review-read",
+      "state": "returned",
+      "phaseMs": 8973,
+      "elapsedMs": 13661,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1844,
+      "fixture": "review-portfolio-http.body-source-and-backlink",
+      "phase": "review.successor",
+      "state": "started",
+      "elapsedMs": 13662
+    },
+    {
+      "rawLogLine": 1845,
+      "fixture": "review-portfolio-http.body-source-and-backlink",
+      "phase": "review.successor",
+      "state": "returned",
+      "phaseMs": 18643,
+      "elapsedMs": 32305,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1846,
+      "fixture": "review-portfolio-http.body-source-and-backlink",
+      "phase": "http.review-read",
+      "state": "started",
+      "elapsedMs": 32311
+    },
+    {
+      "rawLogLine": 1847,
+      "fixture": "review-portfolio-http.body-source-and-backlink",
+      "phase": "http.review-read",
+      "state": "returned",
+      "phaseMs": 10589,
+      "elapsedMs": 42901,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1848,
+      "fixture": "review-portfolio-http.body-source-and-backlink",
+      "phase": "http.review-read",
+      "state": "started",
+      "elapsedMs": 42901
+    },
+    {
+      "rawLogLine": 1849,
+      "fixture": "review-portfolio-http.body-source-and-backlink",
+      "phase": "http.review-read",
+      "state": "returned",
+      "phaseMs": 5359,
+      "elapsedMs": 48260,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1850,
+      "fixture": "review-portfolio-http.body-source-and-backlink",
+      "phase": "http.review-read",
+      "state": "started",
+      "elapsedMs": 48271
+    },
+    {
+      "rawLogLine": 1851,
+      "fixture": "review-portfolio-http.body-source-and-backlink",
+      "phase": "http.review-read",
+      "state": "returned",
+      "phaseMs": 5434,
+      "elapsedMs": 53705,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1852,
+      "fixture": "review-portfolio-http.body-source-and-backlink",
+      "phase": "http.review-read",
+      "state": "started",
+      "elapsedMs": 53712
+    },
+    {
+      "rawLogLine": 1853,
+      "fixture": "review-portfolio-http.body-source-and-backlink",
+      "phase": "http.review-read",
+      "state": "returned",
+      "phaseMs": 10905,
+      "elapsedMs": 64617,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1854,
+      "fixture": "review-portfolio-http.body-source-and-backlink",
+      "phase": "http.review",
+      "state": "started",
+      "elapsedMs": 64617
+    },
+    {
+      "rawLogLine": 1855,
+      "fixture": "review-portfolio-http.body-source-and-backlink",
+      "phase": "http.review",
+      "state": "returned",
+      "phaseMs": 21578,
+      "elapsedMs": 86195,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1856,
+      "fixture": "review-portfolio-http.body-source-and-backlink",
+      "phase": "http.review-source",
+      "state": "started",
+      "elapsedMs": 86195
+    },
+    {
+      "rawLogLine": 1857,
+      "fixture": "review-portfolio-http.body-source-and-backlink",
+      "phase": "http.review-source",
+      "state": "returned",
+      "phaseMs": 18829,
+      "elapsedMs": 105024,
+      "aborted": true
+    },
+    {
+      "rawLogLine": 1859,
+      "fixture": "review-portfolio-http.receipt-integrity",
+      "phase": "fixture.initialize",
+      "state": "started",
+      "elapsedMs": 0
+    },
+    {
+      "rawLogLine": 1870,
+      "fixture": "review-portfolio-http.receipt-integrity",
+      "phase": "fixture.initialize",
+      "state": "returned",
+      "phaseMs": 29,
+      "elapsedMs": 29,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1871,
+      "fixture": "review-portfolio-http.receipt-integrity",
+      "phase": "fixture.authority",
+      "state": "started",
+      "elapsedMs": 29
+    },
+    {
+      "rawLogLine": 1872,
+      "fixture": "review-portfolio-http.receipt-integrity",
+      "phase": "fixture.authority",
+      "state": "returned",
+      "phaseMs": 5,
+      "elapsedMs": 34,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1873,
+      "fixture": "review-portfolio-http.receipt-integrity",
+      "phase": "portfolio.produce",
+      "state": "started",
+      "elapsedMs": 43
+    },
+    {
+      "rawLogLine": 1874,
+      "fixture": "review-portfolio-http.receipt-integrity",
+      "phase": "planner.forecast",
+      "state": "started",
+      "elapsedMs": 90
+    },
+    {
+      "rawLogLine": 1875,
+      "fixture": "review-portfolio-http.receipt-integrity",
+      "phase": "planner.forecast",
+      "state": "returned",
+      "phaseMs": 35,
+      "elapsedMs": 126,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1876,
+      "fixture": "review-portfolio-http.receipt-integrity",
+      "phase": "planner.simulate",
+      "state": "started",
+      "elapsedMs": 126
+    },
+    {
+      "rawLogLine": 1877,
+      "fixture": "review-portfolio-http.receipt-integrity",
+      "phase": "planner.simulate",
+      "state": "returned",
+      "phaseMs": 101,
+      "elapsedMs": 227,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1878,
+      "fixture": "review-portfolio-http.receipt-integrity",
+      "phase": "planner.forecast-unchanged",
+      "state": "started",
+      "elapsedMs": 227
+    },
+    {
+      "rawLogLine": 1879,
+      "fixture": "review-portfolio-http.receipt-integrity",
+      "phase": "planner.forecast-unchanged",
+      "state": "returned",
+      "phaseMs": 33,
+      "elapsedMs": 260,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1880,
+      "fixture": "review-portfolio-http.receipt-integrity",
+      "phase": "portfolio.evaluate",
+      "state": "started",
+      "elapsedMs": 267
+    },
+    {
+      "rawLogLine": 1881,
+      "fixture": "review-portfolio-http.receipt-integrity",
+      "phase": "portfolio.evaluate",
+      "state": "returned",
+      "phaseMs": 583,
+      "elapsedMs": 850,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1882,
+      "fixture": "review-portfolio-http.receipt-integrity",
+      "phase": "portfolio.persist",
+      "state": "started",
+      "elapsedMs": 850
+    },
+    {
+      "rawLogLine": 1883,
+      "fixture": "review-portfolio-http.receipt-integrity",
+      "phase": "portfolio.persist",
+      "state": "returned",
+      "phaseMs": 191,
+      "elapsedMs": 1040,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1884,
+      "fixture": "review-portfolio-http.receipt-integrity",
+      "phase": "portfolio.produce",
+      "state": "returned",
+      "phaseMs": 1282,
+      "elapsedMs": 1325,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1885,
+      "fixture": "review-portfolio-http.receipt-integrity",
+      "phase": "review.preserve",
+      "state": "started",
+      "elapsedMs": 1417
+    },
+    {
+      "rawLogLine": 1886,
+      "fixture": "review-portfolio-http.receipt-integrity",
+      "phase": "review.preserve",
+      "state": "returned",
+      "phaseMs": 1866,
+      "elapsedMs": 3283,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1887,
+      "fixture": "review-portfolio-http.receipt-integrity",
+      "phase": "http.review-read",
+      "state": "started",
+      "elapsedMs": 3288
+    },
+    {
+      "rawLogLine": 1888,
+      "fixture": "review-portfolio-http.receipt-integrity",
+      "phase": "http.review-read",
+      "state": "returned",
+      "phaseMs": 1351,
+      "elapsedMs": 4639,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1889,
+      "fixture": "review-portfolio-http.receipt-integrity",
+      "phase": "http.review-read",
+      "state": "started",
+      "elapsedMs": 4665
+    },
+    {
+      "rawLogLine": 1890,
+      "fixture": "review-portfolio-http.receipt-integrity",
+      "phase": "http.review-read",
+      "state": "returned",
+      "phaseMs": 8889,
+      "elapsedMs": 13554,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1891,
+      "fixture": "review-portfolio-http.receipt-integrity",
+      "phase": "review.successor",
+      "state": "started",
+      "elapsedMs": 13554
+    },
+    {
+      "rawLogLine": 1892,
+      "fixture": "review-portfolio-http.receipt-integrity",
+      "phase": "review.successor",
+      "state": "returned",
+      "phaseMs": 18752,
+      "elapsedMs": 32306,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1893,
+      "fixture": "review-portfolio-http.receipt-integrity",
+      "phase": "http.review-read",
+      "state": "started",
+      "elapsedMs": 32322
+    },
+    {
+      "rawLogLine": 1894,
+      "fixture": "review-portfolio-http.receipt-integrity",
+      "phase": "http.review-read",
+      "state": "returned",
+      "phaseMs": 10934,
+      "elapsedMs": 43257,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1895,
+      "fixture": "review-portfolio-http.receipt-integrity",
+      "phase": "http.review-read",
+      "state": "started",
+      "elapsedMs": 43263
+    },
+    {
+      "rawLogLine": 1896,
+      "fixture": "review-portfolio-http.receipt-integrity",
+      "phase": "http.review-read",
+      "state": "returned",
+      "phaseMs": 5396,
+      "elapsedMs": 48660,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1897,
+      "fixture": "review-portfolio-http.receipt-integrity",
+      "phase": "http.review-read",
+      "state": "started",
+      "elapsedMs": 48660
+    },
+    {
+      "rawLogLine": 1898,
+      "fixture": "review-portfolio-http.receipt-integrity",
+      "phase": "http.review-read",
+      "state": "returned",
+      "phaseMs": 10935,
+      "elapsedMs": 59595,
+      "aborted": false
+    },
+    {
+      "rawLogLine": 1899,
+      "fixture": "review-portfolio-http.receipt-integrity",
+      "phase": "http.review-read",
+      "state": "started",
+      "elapsedMs": 59601
+    },
+    {
+      "rawLogLine": 1900,
+      "fixture": "review-portfolio-http.receipt-integrity",
+      "phase": "http.review-read",
+      "state": "returned",
+      "phaseMs": 10894,
+      "elapsedMs": 70495,
+      "aborted": false
+    }
+  ],
+  "candidateExecution": "not-run"
+}

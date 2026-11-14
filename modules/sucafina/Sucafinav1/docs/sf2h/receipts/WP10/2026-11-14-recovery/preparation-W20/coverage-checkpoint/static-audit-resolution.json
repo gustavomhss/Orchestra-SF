@@ -1,0 +1,33 @@
+{
+  "schema": "wp10-w20-builder-static-audit-resolution-v1",
+  "independentReview": false,
+  "localProductExecution": false,
+  "items": [
+    {
+      "finding": "Generic unavailable did not distinguish producer refusal from wiring error",
+      "resolution": "Canonical scenario-port no-op result includes coverage:<category>:<reason>; coverage-preview rejects these at coverage-source-unresolved before coverage-incomplete. Test now requires the original pending category reason, exact coverage-source-unresolved, and no value. No claim that coverage-incomplete branch was reached.",
+      "evidence": [
+        "modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+        "modules/sucafina/Sucafinav1/product/portfolio/coverage-preview.ts"
+      ]
+    },
+    {
+      "finding": "Repeated digest work was quadratic",
+      "resolution": "Invocation-local Set of full reference digests preserves first occurrence order, cardinality and exact bijection; no authorization or producer result cache introduced. Performance unmeasured."
+    }
+  ],
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-coverage-authority.ts",
+      "blobSha": "03a4a0d82676423c76b8055e2e7efeb9bfe9a973",
+      "sha256": "64985ca29e0477488d0afa6b9c1d4c51854ffdacef027d08c95e0cf6e354a5e1",
+      "bytes": 13340
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-promotion.test.ts",
+      "blobSha": "b9e8d3ff849327f31a6f6ccae78962376302deb5",
+      "sha256": "beb78a2c239b0dd3b27fe4f93ff960bceafcc32a8955c674d6c5a7a16ad14fde",
+      "bytes": 29792
+    }
+  ]
+}
