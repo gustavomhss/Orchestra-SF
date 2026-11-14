@@ -93,9 +93,13 @@ export async function createRenewalChoiceHistory(options: { training: "omitted" 
       resolveForecastSource: (reference, context) => trace.measure("operation-source", () => current.sources.resolveForecastSource(reference, context)),
       resolveForecastCoverage: (reference, context) => trace.measure("operation-coverage", () => current.sources.resolveForecastCoverage(reference, context)),
     }
+    // Stored scenarios retain their persisted C10 result and basis. This port
+    // supplies only the canonical source DomainProjection; judgment and preview
+    // keep the classified Planner and revalidate their complete C10 observations.
+    const sourcePlanner = createPlannerPort({ host: fixture.host, sources: operationSources })
     const verifyOperations = createRenewalOperationVerifier(fixture.host, operationSources, trace)
     const cases = createDecisionCasePort({ state, host: fixture.host, creationTarget: { ref: fixture.caseRef.id, incarnation: fixture.caseRef.incarnation }, operationIdentity: () => current.identity, authorizeCase, verifyScenarioOperations: async (decision, context) => (await Promise.all(decision.alternatives.map((alternative) => verifyOperations(alternative.scenario, context)))).every(Boolean), evidence, createId: () => `wp11-history-case-${++current.next}`, now })
-    const scenarios = createStoredPlannerScenarioHost({ store: results, cases, planner, coverageRefFor: (ref, alternative) => decisionCoverageRef(ref, alternative.id, alternative.version) })
+    const scenarios = createStoredPlannerScenarioHost({ store: results, cases, planner: sourcePlanner, coverageRefFor: (ref, alternative) => decisionCoverageRef(ref, alternative.id, alternative.version) })
     const preview: Parameters<typeof createPlannerExactThreshold>[0]["preview"] = (request, context) => comparePlannerPreview({ host: fixture.host, sources, scenarios, planner }, request, context)
     const metrics: { read?: ReturnType<typeof createPlannerCriterionMetric> } = {}
     const rules = createCriterionRuleRegistry({ state, host: fixture.host, authorizeCase, authorizeRule: async () => true, verifyEvidence: (rule) => verifyEvidence(rule.evidenceRefs), verifySnapshot: (snapshot, rule) => snapshotMatches(snapshot, rule.evidenceRefs), readMetric: (request, context) => { if (!metrics.read) throw new Error("Metric not composed"); return metrics.read(request, context) }, verifyMetric: (metric) => verifyEvidence(metric.evidenceRefs), operationIdentity: () => current.identity, proposalCoverageWrites: writes, now })

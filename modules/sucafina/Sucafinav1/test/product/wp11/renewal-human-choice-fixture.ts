@@ -102,9 +102,13 @@ export function createRenewalHumanChoices(history: History) {
   const results = createSfDecisionResultStore({ state, host, authorizeCase, verifySources: (_value, refs, context) => verifyEvidence(refs, context), createId: () => `unused-human-result-${++controls.event}`, now: () => at })
   // Admission needs current canonical targets; C10 stays on the judgment Planner.
   const operationSources: PlannerSourceHost = { resolveForecastSource: sources.resolveForecastSource, resolveForecastCoverage: async () => ({ status: "unavailable", reason: "coverage-not-needed-for-operation-admission" }) }
+  // Stored scenarios retain their persisted C10 result and basis. This port
+  // supplies only the canonical source DomainProjection; judgment and preview
+  // keep the classified Planner and revalidate their complete C10 observations.
+  const sourcePlanner = createPlannerPort({ host, sources: operationSources })
   const verifyOperations = createRenewalOperationVerifier(host, operationSources)
   const cases = createDecisionCasePort({ state, host, creationTarget: { ref: fixture.caseRef.id, incarnation: fixture.caseRef.incarnation }, operationIdentity: (context) => context.kind === "ui" ? ui.operationIdentity(context) : undefined, authorizeCase, verifyScenarioOperations: async (decision, context) => (await Promise.all(decision.alternatives.map((alternative) => verifyOperations(alternative.scenario, context)))).every(Boolean), evidence, createId: () => `unused-human-case-${++controls.event}`, now: () => at })
-  const scenarios = createStoredPlannerScenarioHost({ store: results, cases, planner, coverageRefFor: (ref, alternative) => decisionCoverageRef(ref, alternative.id, alternative.version) })
+  const scenarios = createStoredPlannerScenarioHost({ store: results, cases, planner: sourcePlanner, coverageRefFor: (ref, alternative) => decisionCoverageRef(ref, alternative.id, alternative.version) })
   const preview = (request: Parameters<typeof comparePlannerPreview>[1], context: TrustedDomainContext) => comparePlannerPreview({ host, sources, scenarios, planner }, request, context)
   const metrics: { read?: ReturnType<typeof createPlannerCriterionMetric> } = {}
   const rules = createCriterionRuleRegistry({ state, host, authorizeCase, authorizeRule: async () => false, verifyEvidence: (rule, context) => verifyEvidence(rule.evidenceRefs, context), verifySnapshot: () => false, readMetric: (request, context) => {
