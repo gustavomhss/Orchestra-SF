@@ -1,0 +1,82 @@
+{
+  "schema": "finance-journey-closure-ci-result-v1",
+  "selection": "S1",
+  "W": "9a2ab893be9f2af2078f67ca867c13892452752e",
+  "Wtree": "442369716e1a20587b3d0875698041b66186e3f2",
+  "S": "e47c611a7f03dfbb501487d09f1567c6802077fc",
+  "Stree": "17a21faadcd3d6a227c032a6bbf10e2ad9f6ef32",
+  "branch": "ci-run-linux-finance-closure-9a2ab893-fa0f1677-s1",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "packageSelector": "packages/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/finance-journey-closure/units-batch.test.ts",
+      "Sucafinav1/test/product/finance-journey-closure/original-authority.test.ts",
+      "--timeout",
+      "120000",
+      "-t",
+      "^(Finance units pairs keep every authority|coverage refuses its original predicate)"
+    ],
+    "env": {}
+  },
+  "requestSha256": "fa0f1677079dff8b9cae8b9c12a29b82e4ab344d122b89a9bd89b974eb373a08",
+  "requestOnlyChangedFiles": [
+    ".ci-run.json"
+  ],
+  "runId": 43634808031,
+  "jobId": 132569165100,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43634808031",
+  "conclusion": "failure",
+  "expectedRed": true,
+  "pass": 1,
+  "fail": 1,
+  "filtered": 3,
+  "assertions": 10,
+  "durationSeconds": 18.4,
+  "counterproof": {
+    "result": "ok",
+    "directResultEnvelopes": 12,
+    "expectedAfterFix": 6,
+    "authorizeCase": 8,
+    "verifySources": 8,
+    "explicitResultAuthority": 16,
+    "caseReads": 2,
+    "scenarioBatches": 2,
+    "rules": 0,
+    "evidence": 2,
+    "scalarHooks": 0,
+    "durationMs": 324.9795570000024
+  },
+  "originalPredicate": {
+    "result": "stale",
+    "reason": "coverage-authority-changed",
+    "resolutions": 1,
+    "originalChecks": 1,
+    "replacementChecks": 0,
+    "previews": 0
+  },
+  "omni": {
+    "nonce": "c9345923d1674bc5fe9e20907eefbba3",
+    "result": "not applicable"
+  },
+  "log": {
+    "bytes": 70386,
+    "sha256": "059a8e84d2a00b236d84726aca53ba5d9c3344b0e2c3c1f14fd51a9323b513fb"
+  },
+  "excerpts": [
+    "2026-11-14T19:58:24.7689234Z omni control nonce: c9345923d1674bc5fe9e20907eefbba3",
+    "2026-11-14T19:58:42.3310164Z {\"phase\":\"closure.original-predicate\",\"counts\":{\"resolutions\":1,\"originalChecks\":1,\"replacementChecks\":0,\"previews\":0},\"result\":{\"status\":\"stale\",\"reason\":\"coverage-authority-changed\"}}",
+    "2026-11-14T19:58:42.3349834Z (pass) coverage refuses its original predicate even when the next resolution has equal data [17481.56ms]",
+    "2026-11-14T19:58:43.0341199Z {\"phase\":\"finance-units-pairs.issue\",\"durationMs\":324.9795570000024,\"result\":\"ok\",\"counts\":{\"resultEnvelopes\":12,\"authorizeCase\":8,\"verifySources\":8,\"resultAuthority\":16,\"caseReads\":2,\"scenarioBatches\":2,\"rules\":0,\"evidence\":2,\"scalarHooks\":0}}",
+    "2026-11-14T19:58:43.0364197Z (fail) Finance units pairs keep every authority callback and use six fresh C08 envelopes [697.65ms]",
+    "2026-11-14T19:58:43.1848125Z omni positive control [c9345923d1674bc5fe9e20907eefbba3]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+    "2026-11-14T19:58:43.1849457Z  1 pass",
+    "2026-11-14T19:58:43.1869109Z  3 filtered out",
+    "2026-11-14T19:58:43.1869803Z  1 fail",
+    "2026-11-14T19:58:43.1870098Z  10 expect() calls",
+    "2026-11-14T19:58:43.1870490Z Ran 2 tests across 2 files. [18.40s]"
+  ],
+  "interpretation": "Expected failure only at direct C08 envelope count; previous numeric/case/unit/callback assertions passed. No product change yet. This is not a completed-journey timing."
+}
