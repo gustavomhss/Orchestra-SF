@@ -1,0 +1,98 @@
+{
+  "schema": "sf-routine-native-owner-authority-v1",
+  "mission": 41,
+  "status": "IN_PROGRESS",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "astra-wp09",
+  "pr": 30,
+  "lease_epoch": "routine-owner-browser41",
+  "consumer": "session33",
+  "observed_at": "2026-11-14T22:31:45Z",
+  "mission_sha": "e4c1bb7c914a29cb3d4fcddc9e196823289ccc80",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "predecessor_head": "d9e1aca275bd04b2066ca84a605c7c315ea14c77",
+  "predecessor_tree": "91dba0dfd731d8501abf0d3ef3f3265d751e107b",
+  "terminal30": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-admission/terminal.json",
+  "authority_basis": "Explicit bounded mission41 continuation after mission30 terminal; PR30 source head and current control rechecked. No inference of abandonment from silence.",
+  "integrator_observed": {
+    "branch": "sf2-stack",
+    "pr": 65,
+    "head": "bf81f9776b6ba5fb6267828a9a029d7e8d6f5587",
+    "product": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+    "host_blob": "2bf1e6e66c13dd099029ec16b1f1ddf1f698dae6",
+    "writer": "session33; source lane does not write shared host"
+  },
+  "capabilities": {
+    "remote": "GitHub MCP",
+    "writes": "CAS expected head, force false",
+    "backend_session_id": null,
+    "model_verified_by_backend": false,
+    "model_instruction": "GPT-6 Astra Pro",
+    "agents": "Three real collaboration helpers; actual tool identities recorded in this session, not campaign controllers",
+    "local": "Scratch source/artifact edits and deterministic content/hash inspection only; no product tests, typecheck, servers, provider or credential access"
+  },
+  "readings": {
+    "root_AGENTS": "complete; no additional applicable instructions in Sucafina or apps/cli",
+    "planning": "START, WORKFLOW, COMMON and complete S0-B pack read across non-overlapping assigned sections; truncations reread",
+    "appendices": [
+      "specs/product-acceptance.md",
+      "specs/resident-runtime.md"
+    ],
+    "dependency_contracts": "C01-C17 complete; mission30 terminal/README/provenance and native API dependencies inspected",
+    "pack_partition_owners": {
+      "root": [
+        "metadata",
+        "write_authority",
+        "allocation",
+        "work_packages",
+        "contracts",
+        "handoffs",
+        "dependencies",
+        "coverage",
+        "resident handoffs/gates",
+        "appendices"
+      ],
+      "native_api_audit": [
+        "resident policy/metadata",
+        "resident.skills (18)"
+      ],
+      "host_composition_audit": [
+        "resident_ui",
+        "resident.profiles",
+        "resident.mcp_packs",
+        "resident.operation_call_routes",
+        "resident.output_aliases"
+      ],
+      "ci_authority_audit": [
+        "proof_bindings",
+        "evidence",
+        "execution_proofs",
+        "numeric_oracles",
+        "code_sources",
+        "selection_pointers",
+        "criterion_ids",
+        "resident.integrated_proofs"
+      ]
+    }
+  },
+  "scope": "Only mission41 private modules, new tests and new receipts. Existing source evidence remains intact. Shared assembly supplied as exact preimage/postimage/patch.",
+  "observed_missing_capability": "Authenticated SF Request-to-native Maestro admission/continuation origin; native hooks exist but contain no SF Request, while resident SF admission does not own Maestro.",
+  "planned_independent_delivery": "Canonical native witness, Request registry with live scope and replay/revocation fences, real hook wiring, adapter/runtime support, surgical hosted tests, exact shared-host assembly and missing-capability handoff.",
+  "prohibited_actions": {
+    "engine_change": false,
+    "shared_host_direct_write": false,
+    "local_product_test": false,
+    "full_suite": false,
+    "merge": false,
+    "deploy": false,
+    "credentials": false,
+    "restart": false,
+    "external_message": false,
+    "new_controller": false
+  },
+  "acceptance": {
+    "AM02": "NOT_PROVEN",
+    "AM06": "NOT_PROVEN",
+    "GLOBAL_RELEASE": false
+  }
+}
