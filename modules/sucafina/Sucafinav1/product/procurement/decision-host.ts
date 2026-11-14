@@ -59,7 +59,7 @@ export function createProcurementDecisionHost(input: BridgeInput & {
     const held = source ? active.get(source) : undefined
     // Keep the canonical admission's choice bound across receipt lookup and the
     // executor's later capture, without opening a nested persistence read.
-    if (held && (current(context) !== held || value.id !== held.decision.id || value.incarnation !== held.decision.incarnation || digestSfValue(value.choices.filter((choice) => choice.id === held.request.choiceId)) !== held.choiceDigest)) return false
+    if (held && (current(context) !== held || value.id !== held.decision.id || value.incarnation !== held.decision.incarnation || value.preparedChanges.filter((change) => change.id === held.request.changeId).length !== 1 || digestSfValue(value.choices.filter((choice) => choice.id === held.request.choiceId)) !== held.choiceDigest)) return false
     return value.participants.includes(context.binding.principalRef) && await host.revalidate(context)
   }
   const intent = createDecisionIntentFences({ human: input.authority.human, ui: input.authority.ui, readSourceFences: input.readSourceFences, lockedSourceFences: input.lockedSourceFences })
@@ -106,8 +106,9 @@ export function createProcurementDecisionHost(input: BridgeInput & {
     const loaded = await state.read(source, "cases", (stored, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? stored.cases[request.caseRef.id] : undefined)
     if (loaded.status !== "ok" || !loaded.value || loaded.value.incarnation !== request.caseRef.incarnation || !await authorizeCase(loaded.value, context)) return { status: "unavailable", reason: "prepared-case-unavailable" }
     const decision = loaded.value
-    const change = decision.preparedChanges.find((value) => value.id === request.changeId && value.choiceId === request.choiceId)
-    if (!change || !decision.choices.some((value) => value.id === request.choiceId) || decision.version < request.caseRef.version || decision.version !== request.caseRef.version && !change.receipt && !receiptOnly || change.target.surface !== "procurement") return { status: "stale", reason: "prepared-case-changed" }
+    const changes = decision.preparedChanges.filter((value) => value.id === request.changeId)
+    const change = changes[0]
+    if (changes.length !== 1 || !change || change.choiceId !== request.choiceId || decision.choices.filter((value) => value.id === request.choiceId).length !== 1 || decision.version < request.caseRef.version || decision.version !== request.caseRef.version && !change.receipt && !receiptOnly || change.target.surface !== "procurement") return { status: "stale", reason: "prepared-case-changed" }
     return { status: "ok", value: { decision, change } }
   }
   const prepareDomainCommands: MutationHost["prepareDomainCommands"] = async (caseRef, choiceId, operations, context) => {

@@ -30,9 +30,11 @@ export function createPreparedExecution(input: {
     if (current.status !== "ok") return failure(current)
     const value = current.value
     if (!value || value.incarnation !== request.caseRef.incarnation || !value.participants.includes(context.binding.principalRef) || !await input.authorizeCase(value, context)) return { status: "denied", reason: "case-access-unavailable" }
-    const change = value.preparedChanges.find((item) => item.id === request.changeId && item.choiceId === request.choiceId)
-    const choiceDigest = digestSfValue(value.choices.filter((choice) => choice.id === request.choiceId))
-    if (!change || !value.choices.some((choice) => choice.id === request.choiceId)) return { status: "unavailable", reason: "prepared-change-unavailable" }
+    const selectedChanges = value.preparedChanges.filter((item) => item.id === request.changeId)
+    const change = selectedChanges[0]
+    const choices = value.choices.filter((choice) => choice.id === request.choiceId)
+    const choiceDigest = digestSfValue(choices)
+    if (selectedChanges.length !== 1 || !change || change.choiceId !== request.choiceId || choices.length !== 1) return { status: "unavailable", reason: "prepared-change-unavailable" }
     if (value.version < request.caseRef.version || mode === "apply" && value.version !== request.caseRef.version && !change.receipt) return { status: "stale", reason: "case-changed" }
     if (change.state !== "planned" && !change.receipt) return { status: "conflict", reason: "change-not-applicable" }
     if (!await input.authorizeApplication(request, change, context).catch(() => false)) return { status: "denied", reason: "application-authority-unavailable" }
@@ -92,6 +94,7 @@ export function createPreparedExecution(input: {
     // Fresh storage may preserve unrelated edits, but cannot bind the original
     // receipt to a materially replaced or duplicated historical choice.
     if (reconciliation?.status === "ok" && reconciliation.value && digestSfValue(reconciliation.value.choices.filter((choice) => choice.id === request.choiceId)) !== choiceDigest) return { status: "stale", reason: "prepared-choice-changed" }
+    if (reconciliation?.status === "ok" && reconciliation.value && reconciliation.value.preparedChanges.filter((item) => item.id === change.id).length !== 1) return { status: "stale", reason: "prepared-change-changed" }
     if (!reconciliation || reconciliation.status !== "ok") return { status: "unavailable", reason: "case-reconciliation-pending" }
     if (!reconciliation.value || digestSfValue(reconciliation.value) !== digestSfValue(value)) return { status: "stale", reason: "case-changed-after-application" }
     const authoritative = structuredClone(await callDomain(() => input.apply.readReceipt({ surface: change.target.surface, targetRef: change.target.id, targetIncarnation: change.target.incarnation, idempotencyKey: change.idempotencyKey, commandDigest: change.operation.commandDigest }, context)))
