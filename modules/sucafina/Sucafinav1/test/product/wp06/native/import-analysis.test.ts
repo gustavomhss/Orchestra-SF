@@ -55,7 +55,7 @@ test("recorded forecast and intent Sessions preserve selected C04 importPreviewR
     if (!uiDispatched.ok) throw new Error("UI C04 output schema invalid")
     expect(manifestSemantics(uiDispatched.value)).toEqual(manifestSemantics(ui))
     const previewRun = await fixture.bind("sf-explicar-forecast", {}, undefined, "recorded-explicit")
-    expect(previewRun.requestedModel.variant).toBe("recorded-explicit")
+    expect(previewRun.requestedModel.variant?.toString()).toBe("recorded-explicit")
     expect(previewRun.record.model.variant).toBe("recorded-explicit")
     const storedPreviewSession = await Effect.runPromise(fixture.sessionStore.get(previewRun.session.id))
     expect(digestSfValue(storedPreviewSession?.model)).toBe(digestSfValue(previewRun.record.model))
