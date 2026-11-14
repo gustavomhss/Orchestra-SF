@@ -168,3 +168,111 @@ test("pending references are deduplicated and detached from callback mutation", 
   expect(await api.runDue("schedule", context)).toMatchObject({ status: "ok", value: { pendingRefs: ["pending"] } })
   expect(checked).toEqual([["schedule", "pending"]])
 })
+
+
+
+test.each(["create", "runNow"] as const)("%s refuses a replacement authorizer before any native mutation", async (operation) => {
+  const { host, api, state } = fixture()
+  const replacement = { calls: 0 }
+  host.owner = async () => {
+    host.authorize = async () => { replacement.calls++; return true }
+    return { principalRef: "owner", projectId: "project" }
+  }
+  const input = { ...request, scheduleRef: "schedule", expectedVersion: 1, idempotencyKey: "manual-1" }
+  expect(await api[operation](input, context)).toEqual({ status: "unavailable", reason: "schedule-provider-changed" })
+  expect(state.calls).toEqual([])
+  expect(replacement.calls).toBe(0)
+})
+
+test("update refuses a replacement scheduler method before dispatch", async () => {
+  const { host, schedules, api, state } = fixture()
+  const original = schedules.update
+  host.owner = async () => {
+    schedules.update = async () => { state.calls.push("replacement-update"); return { status: "ok", value: { scheduleRef: "schedule", version: 2 } } }
+    return { principalRef: "owner", projectId: "project" }
+  }
+  expect(await api.update({ ...request, scheduleRef: "schedule", expectedVersion: 1 }, context)).toEqual({ status: "unavailable", reason: "schedule-provider-changed" })
+  expect(schedules.update).not.toBe(original)
+  expect(state.calls).toEqual([])
+})
+
+test("due dispatch refuses an occurrence provider replaced during the owner read", async () => {
+  const { host, api, state } = fixture()
+  const original = host.occurrences!
+  host.owner = async () => {
+    host.occurrences = { ...original }
+    return { principalRef: "owner", projectId: "project" }
+  }
+  expect(await api.runDue("schedule", context)).toEqual({ status: "unavailable", reason: "schedule-provider-changed" })
+  expect(state.calls).toEqual([])
+})
+
+test("occurrence methods cannot be replaced behind an unchanged provider object", async () => {
+  const { host, api, state, occurrence } = fixture()
+  const occurrences = host.occurrences!
+  const read = occurrences.read
+  occurrences.read = async (...args) => {
+    occurrences.runNow = async () => { state.calls.push("replacement-manual"); return { status: "ok", value: occurrence } }
+    return read(...args)
+  }
+  expect(await api.runNow({ scheduleRef: "schedule", expectedVersion: 1, idempotencyKey: "manual-1" }, context)).toEqual({ status: "unavailable", reason: "schedule-provider-changed" })
+  expect(state.calls).toEqual([])
+})
+
+test("replacement after native dispatch hides the output and preserves the submitted retry identity", async () => {
+  const { host, api, state, occurrence } = fixture()
+  host.occurrences!.runNow = async (input) => {
+    state.calls.push(input.idempotencyKey)
+    host.revalidate = async () => true
+    return { status: "ok", value: { ...occurrence, pendingRefs: ["private-pending-sentinel"] } }
+  }
+  const result = await api.runNow({ scheduleRef: "schedule", expectedVersion: 1, idempotencyKey: "exact-attempt-1" }, context)
+  expect(result).toEqual({ status: "unavailable", reason: "schedule-provider-changed" })
+  expect(JSON.stringify(result)).not.toContain("sentinel")
+  expect(state.calls).toEqual(["exact-attempt-1"])
+})
+
+test("native result reader replacement cannot release a ready occurrence", async () => {
+  const { host, api, occurrence } = fixture()
+  occurrence.state = "ready"
+  occurrence.routine = { admission: "admitted", admissionRef: "admission", admissionVersion: 1, documentId: "recipe", publishedVersion: "v1", principalRef: "owner", projectId: "project", correlationId: "correlation", sourceRefs: [], pending: [], runRef: "run", resultRef: "private-result-sentinel" }
+  const calls = { result: 0 }
+  host.resultAccess = { readResult: async () => { calls.result++; return { status: "unavailable", reason: "terminal-not-available" } } }
+  host.occurrences!.runDue = async () => {
+    host.resultAccess!.readResult = async () => { calls.result++; return { status: "unavailable", reason: "replacement" } }
+    return { status: "ok", value: occurrence }
+  }
+  const result = await api.runDue("schedule", context)
+  expect(result).toEqual({ status: "unavailable", reason: "schedule-provider-changed" })
+  expect(JSON.stringify(result)).not.toContain("sentinel")
+  expect(calls.result).toBe(0)
+})
+
+test("list does not release metadata through an authorizer replaced after its read", async () => {
+  const { host, schedules, api } = fixture()
+  schedules.list = async () => {
+    host.revalidate = async () => true
+    return { status: "ok", value: [{ scheduleRef: "private-schedule-sentinel", version: 1, state: "active", timezone: request.timezone, recurrence: request.recurrence }] }
+  }
+  const result = await api.list(context)
+  expect(result).toEqual({ status: "unavailable", reason: "schedule-provider-changed" })
+  expect(JSON.stringify(result)).not.toContain("sentinel")
+})
+
+
+test("native provider prototype methods retain their receiver and remain callable", async () => {
+  const { host, state } = fixture()
+  class NativeSchedules {
+    version = 4
+    async create() { state.calls.push("create"); return { status: "ok" as const, value: { scheduleRef: "schedule", version: this.version, state: "active" as const } } }
+    async update() { return { status: "ok" as const, value: { scheduleRef: "schedule", version: this.version } } }
+    async pause() { return { status: "ok" as const, value: { scheduleRef: "schedule", version: this.version, state: "paused" as const } } }
+    async list() { return { status: "ok" as const, value: [{ scheduleRef: "schedule", version: this.version, state: "active" }] } }
+    async readRun() { return { status: "unavailable" as const, reason: "not-selected" } }
+  }
+  const schedules = new NativeSchedules()
+  expect(Object.keys(schedules)).toEqual(["version"])
+  const api = createRoutineSchedule(host, schedules)
+  expect(await api.create(request, context)).toEqual({ status: "ok", value: { scheduleRef: "schedule", version: 4, state: "active" } })
+  expect(state.calls).toEqual(["create"])
+})

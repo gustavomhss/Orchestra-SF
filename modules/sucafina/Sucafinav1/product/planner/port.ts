@@ -1,5 +1,6 @@
 import { roleMap } from "../../runtime/admin.ts"
 import { object, rows } from "../../runtime/contract.ts"
+import { plannerHeadcountInputs } from "../../runtime/planner.ts"
 import type { Actor, Snapshot } from "../../runtime/contract.ts"
 import { plannerKeys } from "../../src/nav.ts"
 import { fteDecember, variance } from "../../src/planner-accounts.ts"
@@ -43,8 +44,7 @@ export function projectPlannerSource(snapshot: Snapshot, actor: Actor, versionId
   const summary = object(safe.summary)
   // The legacy policy permits domain aggregates to owners/viewers. Qualify those already
   // calculated amounts privately, retaining only aggregate state after rate redaction.
-  const rawHc = object(object(raw).hc)
-  const qualification = { ...version, restrictedHr: false, hrMonthStates: undefined, fteInputsKnown, hc: { ...rawHc, rates: rows(rawHc.rates).map((rate) => ({ ...rate, id: String(rate.id ?? "") })) } }
+  const qualification = { ...version, restrictedHr: false, hrMonthStates: undefined, fteInputsKnown, hc: plannerHeadcountInputs(object(raw)) }
   const hrMonthStates = Object.fromEntries(rows(summary.lines).filter((line) => line.synthetic === true).map((line) => [String(line.id), Array.from({ length: 12 }, (_, index) => plannerHrMonthState(qualification, line, index + 1))]))
   return { ...safe, restrictedHr: false, fteInputsKnown, hrMonthStates, sharedEntities: rows(view.data.entities), sharedAllocations: rows(view.data.allocations) }
 }
