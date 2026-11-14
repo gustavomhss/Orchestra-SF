@@ -1,0 +1,99 @@
+{
+  "schema": "sf-wp12-exact-hosted-check-result-v1",
+  "phase": "resume-19",
+  "product": {
+    "sha": "2ef423f09e0297fd9edb3c3e3f703d00410033bd",
+    "tree": "f859e3b62b1de24234025002459045ae6d3df328"
+  },
+  "check": {
+    "snapshot": "35e3fc2cf34132d34acb1db607ad24028f26ed35",
+    "tree": "b61ac6507dc5b2b36d8fe960fd7f9b8cd94d6986",
+    "directParent": "2ef423f09e0297fd9edb3c3e3f703d00410033bd",
+    "onlyEnvelopePath": ".astra-wp12-check.json",
+    "branch": "astra-check-wp12",
+    "runId": 43610836150,
+    "jobId": 132495306374,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43610836150",
+    "status": "completed",
+    "conclusion": "success",
+    "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+    "envelope": {
+      "sha256": "95557bb87e2ba315ece046164599b0f7cbc6bf3b151c4dc7274302ba9595e5d5",
+      "blob": "ac9e87d6e9a584c8c3ec6335f44127fae79fc047",
+      "candidateShaOmitted": true
+    },
+    "typecheck": {
+      "command": "bun typecheck",
+      "directory": "modules/sucafina",
+      "status": "success",
+      "diagnostics": 0
+    },
+    "spawnImports": {
+      "command": "bun run check:spawn-imports",
+      "status": "success",
+      "filesChecked": 4618,
+      "allowListedSites": 66
+    },
+    "guards": {
+      "command": "bun run check:guards --base origin/dev",
+      "status": "success",
+      "rules": 78,
+      "changedPaths": 1057,
+      "gate": 0,
+      "warn": 15,
+      "errors": 0
+    }
+  },
+  "log": {
+    "bytes": 65474,
+    "sha256": "90e0a5202e38c26a6ae8d9bbc1e9b2dd1accbebbd6a5c6bd51ab3b8fe468cdf3",
+    "source": "GitHub Actions job log132495306374",
+    "verifiedFrom": "evidence/resume-19-check.log"
+  },
+  "artifact": {
+    "id": 14119738753,
+    "name": "astra-wp12-check-1",
+    "bytes": 1424,
+    "digest": "sha256:6421238f9cba9e30e536ac4f22bfbb9d0e31e6beaffbf7a793ae0f067063e97a",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43610836150/artifacts/14119738753",
+    "qualification": "Digest and byte size agree between GitHub artifact metadata and the job upload log; no ZIP member inspection is asserted."
+  },
+  "validatedOwnSources": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-bi-kpi.test.ts",
+      "bytes": 29334,
+      "sha256": "a9f5e7fa7eb63c06e41f021cf66a000d66c02747f9f1f571c422372073a06136",
+      "blob": "7ddbda1cbc79857768ead729ed70dfe67dd5ae64",
+      "kind": "own-test",
+      "beforeBlob": "32c71d3c8c9645e6957eca6f3e4afa64727b71a5"
+    }
+  ],
+  "foreignSourceChanges": 0,
+  "sourceReceipt": "preparation-19.json",
+  "provenance": {
+    "runAndTreeMetadata": "GitHub MCP terminal run/jobs/artifacts; C directly parents the exact product and changes only the check envelope.",
+    "log": "Exact decoded job log, transported without newline change; checkout pins, commands and summaries checked."
+  },
+  "limits": [
+    "This full package check validates exact product types and guards, not runtime product or native inference.",
+    "The new combined Handoff/BI KPI scope and the failed Procurement scope require serial hosted product execution; individual Handoff/BI requests must not duplicate the combined run.",
+    "Scenarios preparation, Planner answer scope, Executive historical period and approved provider binding remain separate gates; no result is inferred for them."
+  ],
+  "localProductTests": false,
+  "localTypecheck": false,
+  "fullWp12": false,
+  "resolvedPreviousDiagnostics": [
+    {
+      "run": 43609369186,
+      "diagnostics": 3,
+      "correctionProduct": "c571d47bf356e26944d6980bad37a73992751a20",
+      "status": "ABSENT"
+    },
+    {
+      "run": 43609973039,
+      "diagnostics": 2,
+      "correctionProduct": "2ef423f09e0297fd9edb3c3e3f703d00410033bd",
+      "status": "ABSENT"
+    }
+  ]
+}

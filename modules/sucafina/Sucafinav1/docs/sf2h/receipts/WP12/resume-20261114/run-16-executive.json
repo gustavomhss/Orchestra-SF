@@ -1,0 +1,909 @@
+{
+  "schema": "sf-wp12-surgical-product-result-v1",
+  "phase": "resume-16",
+  "scope": "executive-meeting-retest",
+  "product": {
+    "sha": "efa940962023523848661d795856002d29510b19",
+    "tree": "f496ffa371c8b0ba2cce7191bb012e0af412c7d4"
+  },
+  "snapshot": {
+    "sha": "3bb3d0044578c0babbacb384798bcb1027a9c5dd",
+    "tree": "cc7a1c42508de548e5500b6838356b20bf3b9879",
+    "directParent": "efa940962023523848661d795856002d29510b19",
+    "onlyEnvelopePath": ".ci-run.json",
+    "branch": "ci-run-linux-astra-wp12-efa94096-7ece9aca-1",
+    "parentAndOnlyAddedEnvelopeVerifiedViaGitHubMcp": true
+  },
+  "request": {
+    "sha256": "7ece9aca1d4133c1128933ac4a5e348c627e4b30bb4e6c159e75a7c14a66393b",
+    "gitBlob": "a27702322f8cfd6e9dafe22fe28249fa69989dff",
+    "bytes": 357,
+    "validation": "PASS_METADATA_PUBLISHED_PINS",
+    "validationSource": "resume-input/w21-ci/executive.validation.json",
+    "sourcePins": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-executive.test.ts",
+        "blob": "fbac0c8e04cdab45ecf3be21810b48e57b102b83",
+        "sourceCommit": "efa940962023523848661d795856002d29510b19",
+        "sha256": "f131290842537426ad0ab24d9b13a80bf24c5224db57dbc38381fd238d04dce6",
+        "tests": [
+          {
+            "name": "real executive and meeting inputs use a preserved WP07 review and complete downloadable material, with native consumers when installed",
+            "timeoutMs": 420000
+          }
+        ]
+      }
+    ],
+    "selectedNames": [
+      {
+        "file": "native-execution-executive.test.ts",
+        "name": "real executive and meeting inputs use a preserved WP07 review and complete downloadable material, with native consumers when installed",
+        "timeoutMs": 420000
+      }
+    ],
+    "excludedNames": [],
+    "body": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "packageSelector": "packages/sucafina",
+      "runner": "bun",
+      "args": [
+        "./Sucafinav1/test/product/wp12/native-execution-executive.test.ts",
+        "--timeout",
+        "120000",
+        "-t",
+        "^real executive and meeting inputs use a preserved WP07 review and complete downloadable material, with native consumers when installed$"
+      ],
+      "env": {}
+    }
+  },
+  "run": {
+    "id": 43608377719,
+    "job": 132487813907,
+    "cleanupJob": 132488864706,
+    "status": "completed",
+    "conclusion": "failure",
+    "cleanup": "success",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43608377719",
+    "artifacts": [],
+    "jobsArtifactsAndHeadVerifiedViaGitHubMcp": true
+  },
+  "summary": {
+    "pass": 0,
+    "fail": 1,
+    "assertions": 2245,
+    "files": 1,
+    "tests": 1,
+    "durationSeconds": 116.24,
+    "testDurationMs": 114554.28,
+    "explicitDeadlineMs": 420000,
+    "phaseStarted": 21,
+    "phaseReturned": 20,
+    "phaseFailed": 1,
+    "markers": 47
+  },
+  "cases": [
+    {
+      "file": "native-execution-executive.test.ts",
+      "name": "real executive and meeting inputs use a preserved WP07 review and complete downloadable material, with native consumers when installed",
+      "status": "FAIL",
+      "durationMs": 114554.28,
+      "failure": {
+        "message": "Expected200, Received403 at getReview after actual source revision",
+        "sourceLine": 270,
+        "logLines": [
+          918,
+          919,
+          926,
+          928,
+          930,
+          931,
+          935
+        ],
+        "phase": 21,
+        "phaseName": "http:review-read",
+        "phaseDurationMs": 1730
+      },
+      "completedPhases": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "notReached": [
+        "successful historical review-read after source mutation",
+        "historical report downloads after mutation",
+        "fresh-analysis rejection of changed historical source",
+        "unauthenticated-download counterproof",
+        "SF_WP12_NATIVE_REVIEW_REOPEN terminal marker"
+      ]
+    }
+  ],
+  "omni": {
+    "status": "pass",
+    "kind": "focused-no-declaring-test-ran",
+    "nonce": "1ee0d9aec8c59f93d9859638f2687d86",
+    "spawns": 56,
+    "delegated": 0,
+    "line": 925,
+    "nativeAcceptance": false
+  },
+  "log": {
+    "bytes": 86805,
+    "sha256": "1499587973dda59191b330a71277c99a56e305dbfb62aec6e18426bfb87a5cdc",
+    "source": "GitHub Actions job log132487813907",
+    "verifiedFrom": "evidence/resume-16-executive.log"
+  },
+  "markers": [
+    {
+      "line": 854,
+      "timestamp": "2026-11-14T15:08:34.1028761Z",
+      "marker": "SF_WP12_NATIVE_MISSION_CATALOG",
+      "payload": {
+        "label": "executive-meeting",
+        "phase": "initial",
+        "scope": "host-installed-catalog",
+        "githubSha": "3bb3d0044578c0babbacb384798bcb1027a9c5dd",
+        "state": "empty",
+        "available": [],
+        "supported": [],
+        "published": [],
+        "intersection": []
+      }
+    },
+    {
+      "line": 855,
+      "timestamp": "2026-11-14T15:08:34.1057684Z",
+      "marker": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "payload": {
+        "githubSha": "3bb3d0044578c0babbacb384798bcb1027a9c5dd",
+        "phase": "source-selection",
+        "sequence": 1,
+        "state": "started",
+        "elapsedMs": 0
+      }
+    },
+    {
+      "line": 856,
+      "timestamp": "2026-11-14T15:08:34.1854595Z",
+      "marker": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "payload": {
+        "githubSha": "3bb3d0044578c0babbacb384798bcb1027a9c5dd",
+        "phase": "source-selection",
+        "sequence": 1,
+        "state": "returned",
+        "elapsedMs": 81
+      }
+    },
+    {
+      "line": 857,
+      "timestamp": "2026-11-14T15:08:34.1856961Z",
+      "marker": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "payload": {
+        "githubSha": "3bb3d0044578c0babbacb384798bcb1027a9c5dd",
+        "phase": "case-draft",
+        "sequence": 2,
+        "state": "started",
+        "elapsedMs": 0
+      }
+    },
+    {
+      "line": 858,
+      "timestamp": "2026-11-14T15:08:34.4343086Z",
+      "marker": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "payload": {
+        "githubSha": "3bb3d0044578c0babbacb384798bcb1027a9c5dd",
+        "phase": "case-draft",
+        "sequence": 2,
+        "state": "returned",
+        "elapsedMs": 249
+      }
+    },
+    {
+      "line": 859,
+      "timestamp": "2026-11-14T15:08:34.4353565Z",
+      "marker": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "payload": {
+        "githubSha": "3bb3d0044578c0babbacb384798bcb1027a9c5dd",
+        "phase": "http:review-agenda",
+        "sequence": 3,
+        "state": "started",
+        "elapsedMs": 0
+      }
+    },
+    {
+      "line": 860,
+      "timestamp": "2026-11-14T15:08:34.5208287Z",
+      "marker": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "payload": {
+        "githubSha": "3bb3d0044578c0babbacb384798bcb1027a9c5dd",
+        "phase": "http:review-agenda",
+        "sequence": 3,
+        "state": "returned",
+        "elapsedMs": 85
+      }
+    },
+    {
+      "line": 861,
+      "timestamp": "2026-11-14T15:08:34.5210569Z",
+      "marker": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "payload": {
+        "githubSha": "3bb3d0044578c0babbacb384798bcb1027a9c5dd",
+        "phase": "http:review-preview",
+        "sequence": 4,
+        "state": "started",
+        "elapsedMs": 0
+      }
+    },
+    {
+      "line": 862,
+      "timestamp": "2026-11-14T15:08:34.9720204Z",
+      "marker": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "payload": {
+        "githubSha": "3bb3d0044578c0babbacb384798bcb1027a9c5dd",
+        "phase": "http:review-preview",
+        "sequence": 4,
+        "state": "returned",
+        "elapsedMs": 451
+      }
+    },
+    {
+      "line": 863,
+      "timestamp": "2026-11-14T15:08:34.9730694Z",
+      "marker": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "payload": {
+        "githubSha": "3bb3d0044578c0babbacb384798bcb1027a9c5dd",
+        "phase": "analysis-prepare:sf-preparar-revisao-executiva",
+        "purpose": "initial",
+        "sequence": 5,
+        "state": "started",
+        "elapsedMs": 0
+      }
+    },
+    {
+      "line": 864,
+      "timestamp": "2026-11-14T15:08:38.8560557Z",
+      "marker": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "payload": {
+        "githubSha": "3bb3d0044578c0babbacb384798bcb1027a9c5dd",
+        "phase": "analysis-prepare:sf-preparar-revisao-executiva",
+        "purpose": "initial",
+        "sequence": 5,
+        "state": "returned",
+        "elapsedMs": 3883
+      }
+    },
+    {
+      "line": 865,
+      "timestamp": "2026-11-14T15:08:38.8562615Z",
+      "marker": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "payload": {
+        "githubSha": "3bb3d0044578c0babbacb384798bcb1027a9c5dd",
+        "phase": "analysis-prepare:sf-preparar-revisao-executiva",
+        "purpose": "reject-unavailable-routine-results",
+        "sequence": 6,
+        "state": "started",
+        "elapsedMs": 0
+      }
+    },
+    {
+      "line": 866,
+      "timestamp": "2026-11-14T15:08:39.3966284Z",
+      "marker": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "payload": {
+        "githubSha": "3bb3d0044578c0babbacb384798bcb1027a9c5dd",
+        "phase": "analysis-prepare:sf-preparar-revisao-executiva",
+        "purpose": "reject-unavailable-routine-results",
+        "sequence": 6,
+        "state": "returned",
+        "elapsedMs": 540
+      }
+    },
+    {
+      "line": 867,
+      "timestamp": "2026-11-14T15:08:39.3968879Z",
+      "marker": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "payload": {
+        "githubSha": "3bb3d0044578c0babbacb384798bcb1027a9c5dd",
+        "phase": "analysis-prepare:sf-preparar-revisao-executiva",
+        "purpose": "reject-unselected-section",
+        "sequence": 7,
+        "state": "started",
+        "elapsedMs": 0
+      }
+    },
+    {
+      "line": 868,
+      "timestamp": "2026-11-14T15:08:40.6734074Z",
+      "marker": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "payload": {
+        "githubSha": "3bb3d0044578c0babbacb384798bcb1027a9c5dd",
+        "phase": "analysis-prepare:sf-preparar-revisao-executiva",
+        "purpose": "reject-unselected-section",
+        "sequence": 7,
+        "state": "returned",
+        "elapsedMs": 1277
+      }
+    },
+    {
+      "line": 869,
+      "timestamp": "2026-11-14T15:08:40.6737060Z",
+      "marker": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "payload": {
+        "githubSha": "3bb3d0044578c0babbacb384798bcb1027a9c5dd",
+        "phase": "http:review-preserve",
+        "sequence": 8,
+        "state": "started",
+        "elapsedMs": 0
+      }
+    },
+    {
+      "line": 870,
+      "timestamp": "2026-11-14T15:08:41.8917125Z",
+      "marker": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "payload": {
+        "githubSha": "3bb3d0044578c0babbacb384798bcb1027a9c5dd",
+        "phase": "http:review-preserve",
+        "sequence": 8,
+        "state": "returned",
+        "elapsedMs": 1218
+      }
+    },
+    {
+      "line": 871,
+      "timestamp": "2026-11-14T15:08:41.8937371Z",
+      "marker": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "payload": {
+        "githubSha": "3bb3d0044578c0babbacb384798bcb1027a9c5dd",
+        "phase": "analysis-prepare:sf-produzir-material-reuniao",
+        "purpose": "initial",
+        "sequence": 9,
+        "state": "started",
+        "elapsedMs": 0
+      }
+    },
+    {
+      "line": 872,
+      "timestamp": "2026-11-14T15:08:53.0335429Z",
+      "marker": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "payload": {
+        "githubSha": "3bb3d0044578c0babbacb384798bcb1027a9c5dd",
+        "phase": "analysis-prepare:sf-produzir-material-reuniao",
+        "purpose": "initial",
+        "sequence": 9,
+        "state": "returned",
+        "elapsedMs": 11140
+      }
+    },
+    {
+      "line": 873,
+      "timestamp": "2026-11-14T15:08:53.0339029Z",
+      "marker": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "payload": {
+        "githubSha": "3bb3d0044578c0babbacb384798bcb1027a9c5dd",
+        "phase": "analysis-prepare:sf-produzir-material-reuniao",
+        "purpose": "reject-unavailable-routine-result",
+        "sequence": 10,
+        "state": "started",
+        "elapsedMs": 0
+      }
+    },
+    {
+      "line": 874,
+      "timestamp": "2026-11-14T15:08:54.8596231Z",
+      "marker": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "payload": {
+        "githubSha": "3bb3d0044578c0babbacb384798bcb1027a9c5dd",
+        "phase": "analysis-prepare:sf-produzir-material-reuniao",
+        "purpose": "reject-unavailable-routine-result",
+        "sequence": 10,
+        "state": "returned",
+        "elapsedMs": 1826
+      }
+    },
+    {
+      "line": 875,
+      "timestamp": "2026-11-14T15:08:54.8600816Z",
+      "marker": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "payload": {
+        "githubSha": "3bb3d0044578c0babbacb384798bcb1027a9c5dd",
+        "phase": "analysis-prepare:sf-produzir-material-reuniao",
+        "purpose": "reject-unlinked-case",
+        "sequence": 11,
+        "state": "started",
+        "elapsedMs": 0
+      }
+    },
+    {
+      "line": 876,
+      "timestamp": "2026-11-14T15:09:00.7948448Z",
+      "marker": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "payload": {
+        "githubSha": "3bb3d0044578c0babbacb384798bcb1027a9c5dd",
+        "phase": "analysis-prepare:sf-produzir-material-reuniao",
+        "purpose": "reject-unlinked-case",
+        "sequence": 11,
+        "state": "returned",
+        "elapsedMs": 5935
+      }
+    },
+    {
+      "line": 877,
+      "timestamp": "2026-11-14T15:09:00.7953379Z",
+      "marker": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "payload": {
+        "githubSha": "3bb3d0044578c0babbacb384798bcb1027a9c5dd",
+        "phase": "analysis-prepare:sf-produzir-material-reuniao",
+        "purpose": "reject-replaced-review-version",
+        "sequence": 12,
+        "state": "started",
+        "elapsedMs": 0
+      }
+    },
+    {
+      "line": 878,
+      "timestamp": "2026-11-14T15:09:05.6241220Z",
+      "marker": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "payload": {
+        "githubSha": "3bb3d0044578c0babbacb384798bcb1027a9c5dd",
+        "phase": "analysis-prepare:sf-produzir-material-reuniao",
+        "purpose": "reject-replaced-review-version",
+        "sequence": 12,
+        "state": "returned",
+        "elapsedMs": 4829
+      }
+    },
+    {
+      "line": 879,
+      "timestamp": "2026-11-14T15:09:05.6244083Z",
+      "marker": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "payload": {
+        "githubSha": "3bb3d0044578c0babbacb384798bcb1027a9c5dd",
+        "phase": "http:review-report",
+        "sequence": 13,
+        "state": "started",
+        "elapsedMs": 0
+      }
+    },
+    {
+      "line": 880,
+      "timestamp": "2026-11-14T15:09:11.6179649Z",
+      "marker": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "payload": {
+        "githubSha": "3bb3d0044578c0babbacb384798bcb1027a9c5dd",
+        "phase": "http:review-report",
+        "sequence": 13,
+        "state": "returned",
+        "elapsedMs": 5994
+      }
+    },
+    {
+      "line": 881,
+      "timestamp": "2026-11-14T15:09:11.6182443Z",
+      "marker": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "payload": {
+        "githubSha": "3bb3d0044578c0babbacb384798bcb1027a9c5dd",
+        "phase": "http:review-download",
+        "sequence": 14,
+        "state": "started",
+        "elapsedMs": 0
+      }
+    },
+    {
+      "line": 882,
+      "timestamp": "2026-11-14T15:09:15.7621308Z",
+      "marker": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "payload": {
+        "githubSha": "3bb3d0044578c0babbacb384798bcb1027a9c5dd",
+        "phase": "http:review-download",
+        "sequence": 14,
+        "state": "returned",
+        "elapsedMs": 4144
+      }
+    },
+    {
+      "line": 883,
+      "timestamp": "2026-11-14T15:09:15.7661953Z",
+      "marker": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "payload": {
+        "githubSha": "3bb3d0044578c0babbacb384798bcb1027a9c5dd",
+        "phase": "http:review-report",
+        "sequence": 15,
+        "state": "started",
+        "elapsedMs": 0
+      }
+    },
+    {
+      "line": 884,
+      "timestamp": "2026-11-14T15:09:24.6757165Z",
+      "marker": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "payload": {
+        "githubSha": "3bb3d0044578c0babbacb384798bcb1027a9c5dd",
+        "phase": "http:review-report",
+        "sequence": 15,
+        "state": "returned",
+        "elapsedMs": 8909
+      }
+    },
+    {
+      "line": 885,
+      "timestamp": "2026-11-14T15:09:24.6760973Z",
+      "marker": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "payload": {
+        "githubSha": "3bb3d0044578c0babbacb384798bcb1027a9c5dd",
+        "phase": "http:review-download",
+        "sequence": 16,
+        "state": "started",
+        "elapsedMs": 0
+      }
+    },
+    {
+      "line": 886,
+      "timestamp": "2026-11-14T15:09:31.6938373Z",
+      "marker": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "payload": {
+        "githubSha": "3bb3d0044578c0babbacb384798bcb1027a9c5dd",
+        "phase": "http:review-download",
+        "sequence": 16,
+        "state": "returned",
+        "elapsedMs": 7018
+      }
+    },
+    {
+      "line": 887,
+      "timestamp": "2026-11-14T15:09:34.6675743Z",
+      "marker": "SF_WP12_NATIVE_REVIEW_INPUTS",
+      "payload": {
+        "scope": "real-WP07-selection-preservation-export-and-host-inputs",
+        "githubSha": "3bb3d0044578c0babbacb384798bcb1027a9c5dd",
+        "caseRef": {
+          "id": "dd1cea98-2ba2-4100-bd89-c4408af023dd",
+          "incarnation": "5017e873-ecda-462f-854e-836960533a59",
+          "version": 1
+        },
+        "selectionRef": "review-agenda:837f1ac0-b506-4ebf-96e8-99965059e53f",
+        "reviewRef": "review:895b96fd1cca24517c3159ca27e3dee7819fd0575ca4a0e516797876c2edf302",
+        "reviewDigest": "91aa8a39d691c88034a3246e820eb1388bf3dcdd40fccb8d423b88a3947d19cc",
+        "sectionRefs": [
+          "wp12-review-forecast:baseline",
+          "wp12-review-forecast:candidate"
+        ],
+        "capturedValueCount": 44,
+        "caseHorizon": {
+          "start": "2027-01-01",
+          "end": "2027-12-31"
+        },
+        "reviewPeriod": {
+          "start": "2027-01-01",
+          "end": "2027-01-31"
+        },
+        "materialCompletenessScope": "all-values-of-explicit-January-selection",
+        "capturedValuesPerSection": [
+          22,
+          22
+        ],
+        "executiveInputDigest": "a624c6f35fa16c9b4cfd6750c3d32d48bcbbb706867b9e4b32d4ba900c203c0c",
+        "meetingInputDigest": "42e29e3d7edaafc3d8ed5d2bac3a0d3eba6bfddd980aaf9c5aa0093631259a28",
+        "reports": [
+          {
+            "artifactRef": "report:5698806e3246188545318acbf87a0e19bf198a1683676dbd9e3bb56606ab1f39",
+            "format": "docx",
+            "digest": "54c66b4cf290c6f6d2088587e5091acc270aa510036d241c3c71e402d23dd6ac",
+            "bytes": 10771
+          },
+          {
+            "artifactRef": "report:3d318b5c19a651ac70a6b0eb92a11d121e0015a24ffdee925ac0dadb0bd9ee49",
+            "format": "pptx",
+            "digest": "1c5639fc285d214905042b62f0663b3d7e76e38c94b4843779b0a12bf6e4de78",
+            "bytes": 535980
+          }
+        ],
+        "c07ResultsObserved": false,
+        "c07AdmissionObserved": false,
+        "executiveReportRoute": {
+          "publicReviewRef": "review:895b96fd1cca24517c3159ca27e3dee7819fd0575ca4a0e516797876c2edf302",
+          "inputCarriesPreservedReviewRef": false,
+          "bindingStatus": "preserved-review-not-selected-by-executive-input",
+          "nativeCallObserved": false
+        },
+        "c09DecisionResultsLinkedToMaterial": 0,
+        "inferenceExecuted": false,
+        "nativeContributionRef": null,
+        "gnativeAccepted": false
+      }
+    },
+    {
+      "line": 888,
+      "timestamp": "2026-11-14T15:09:34.6693866Z",
+      "marker": "SF_WP12_NATIVE_MISSION",
+      "payload": {
+        "scope": "real-host-input-preparation-and-availability",
+        "status": "unavailable",
+        "reason": "installed-host-catalog-empty",
+        "catalogState": "empty",
+        "githubSha": "3bb3d0044578c0babbacb384798bcb1027a9c5dd",
+        "profileId": "sf_maestro",
+        "skillId": "sf-preparar-revisao-executiva",
+        "caseRef": {
+          "id": "dd1cea98-2ba2-4100-bd89-c4408af023dd",
+          "incarnation": "5017e873-ecda-462f-854e-836960533a59",
+          "version": 1
+        },
+        "inputPrepared": true,
+        "inputDigest": "a624c6f35fa16c9b4cfd6750c3d32d48bcbbb706867b9e4b32d4ba900c203c0c",
+        "inferenceExecuted": false,
+        "outputRef": null,
+        "consumerRef": null,
+        "gnativeAccepted": false
+      }
+    },
+    {
+      "line": 889,
+      "timestamp": "2026-11-14T15:09:34.6702917Z",
+      "marker": "SF_WP12_NATIVE_MISSION",
+      "payload": {
+        "scope": "real-host-input-preparation-and-availability",
+        "status": "unavailable",
+        "reason": "installed-host-catalog-empty",
+        "catalogState": "empty",
+        "githubSha": "3bb3d0044578c0babbacb384798bcb1027a9c5dd",
+        "profileId": "sf_maestro",
+        "skillId": "sf-produzir-material-reuniao",
+        "caseRef": {
+          "id": "dd1cea98-2ba2-4100-bd89-c4408af023dd",
+          "incarnation": "5017e873-ecda-462f-854e-836960533a59",
+          "version": 1
+        },
+        "inputPrepared": true,
+        "inputDigest": "42e29e3d7edaafc3d8ed5d2bac3a0d3eba6bfddd980aaf9c5aa0093631259a28",
+        "inferenceExecuted": false,
+        "outputRef": null,
+        "consumerRef": null,
+        "gnativeAccepted": false
+      }
+    },
+    {
+      "line": 909,
+      "timestamp": "2026-11-14T15:09:37.3208562Z",
+      "marker": "SF_WP12_NATIVE_MISSION_CATALOG",
+      "payload": {
+        "label": "executive-meeting",
+        "phase": "reopened",
+        "scope": "host-installed-catalog",
+        "githubSha": "3bb3d0044578c0babbacb384798bcb1027a9c5dd",
+        "state": "empty",
+        "available": [],
+        "supported": [],
+        "published": [],
+        "intersection": []
+      }
+    },
+    {
+      "line": 910,
+      "timestamp": "2026-11-14T15:09:37.3219674Z",
+      "marker": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "payload": {
+        "githubSha": "3bb3d0044578c0babbacb384798bcb1027a9c5dd",
+        "phase": "http:review-read",
+        "sequence": 17,
+        "state": "started",
+        "elapsedMs": 0
+      }
+    },
+    {
+      "line": 911,
+      "timestamp": "2026-11-14T15:09:39.8781510Z",
+      "marker": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "payload": {
+        "githubSha": "3bb3d0044578c0babbacb384798bcb1027a9c5dd",
+        "phase": "http:review-read",
+        "sequence": 17,
+        "state": "returned",
+        "elapsedMs": 2556
+      }
+    },
+    {
+      "line": 912,
+      "timestamp": "2026-11-14T15:09:39.8783110Z",
+      "marker": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "payload": {
+        "githubSha": "3bb3d0044578c0babbacb384798bcb1027a9c5dd",
+        "phase": "http:review-download",
+        "sequence": 18,
+        "state": "started",
+        "elapsedMs": 0
+      }
+    },
+    {
+      "line": 913,
+      "timestamp": "2026-11-14T15:09:47.0374127Z",
+      "marker": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "payload": {
+        "githubSha": "3bb3d0044578c0babbacb384798bcb1027a9c5dd",
+        "phase": "http:review-download",
+        "sequence": 18,
+        "state": "returned",
+        "elapsedMs": 7159
+      }
+    },
+    {
+      "line": 914,
+      "timestamp": "2026-11-14T15:09:47.0404491Z",
+      "marker": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "payload": {
+        "githubSha": "3bb3d0044578c0babbacb384798bcb1027a9c5dd",
+        "phase": "http:review-download",
+        "sequence": 19,
+        "state": "started",
+        "elapsedMs": 0
+      }
+    },
+    {
+      "line": 915,
+      "timestamp": "2026-11-14T15:09:54.1297312Z",
+      "marker": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "payload": {
+        "githubSha": "3bb3d0044578c0babbacb384798bcb1027a9c5dd",
+        "phase": "http:review-download",
+        "sequence": 19,
+        "state": "returned",
+        "elapsedMs": 7089
+      }
+    },
+    {
+      "line": 916,
+      "timestamp": "2026-11-14T15:09:54.1339008Z",
+      "marker": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "payload": {
+        "githubSha": "3bb3d0044578c0babbacb384798bcb1027a9c5dd",
+        "phase": "analysis-prepare:sf-produzir-material-reuniao",
+        "purpose": "reopened-current-input",
+        "sequence": 20,
+        "state": "started",
+        "elapsedMs": 0
+      }
+    },
+    {
+      "line": 917,
+      "timestamp": "2026-11-14T15:10:22.8133866Z",
+      "marker": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "payload": {
+        "githubSha": "3bb3d0044578c0babbacb384798bcb1027a9c5dd",
+        "phase": "analysis-prepare:sf-produzir-material-reuniao",
+        "purpose": "reopened-current-input",
+        "sequence": 20,
+        "state": "returned",
+        "elapsedMs": 28679
+      }
+    },
+    {
+      "line": 918,
+      "timestamp": "2026-11-14T15:10:22.8224319Z",
+      "marker": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "payload": {
+        "githubSha": "3bb3d0044578c0babbacb384798bcb1027a9c5dd",
+        "phase": "http:review-read",
+        "sequence": 21,
+        "state": "started",
+        "elapsedMs": 0
+      }
+    },
+    {
+      "line": 919,
+      "timestamp": "2026-11-14T15:10:24.5521485Z",
+      "marker": "SF_WP12_NATIVE_REVIEW_PHASE",
+      "payload": {
+        "githubSha": "3bb3d0044578c0babbacb384798bcb1027a9c5dd",
+        "phase": "http:review-read",
+        "sequence": 21,
+        "state": "failed",
+        "elapsedMs": 1730
+      }
+    }
+  ],
+  "observations": {
+    "materialAndInputMarkerLine": 887,
+    "selectedMaterial": {
+      "caseHorizon": {
+        "start": "2027-01-01",
+        "end": "2027-12-31"
+      },
+      "reviewPeriod": {
+        "start": "2027-01-01",
+        "end": "2027-01-31"
+      },
+      "sectionRefs": [
+        "wp12-review-forecast:baseline",
+        "wp12-review-forecast:candidate"
+      ],
+      "capturedValueCount": 44,
+      "capturedValuesPerSection": [
+        22,
+        22
+      ],
+      "renderedValueIdOccurrencesPerFormat": 44,
+      "distinctRenderedValueIdsPerFormat": 38,
+      "formats": [
+        {
+          "artifactRef": "report:5698806e3246188545318acbf87a0e19bf198a1683676dbd9e3bb56606ab1f39",
+          "format": "docx",
+          "digest": "54c66b4cf290c6f6d2088587e5091acc270aa510036d241c3c71e402d23dd6ac",
+          "bytes": 10771
+        },
+        {
+          "artifactRef": "report:3d318b5c19a651ac70a6b0eb92a11d121e0015a24ffdee925ac0dadb0bd9ee49",
+          "format": "pptx",
+          "digest": "1c5639fc285d214905042b62f0663b3d7e76e38c94b4843779b0a12bf6e4de78",
+          "bytes": 535980
+        }
+      ],
+      "scope": "all captured value-ID occurrences of explicit January selection, with section/period and February\u2013December exclusion assertions; not annual completeness or a separate numeric-cell reconciliation"
+    },
+    "reopenedBeforeMutation": {
+      "reviewReadPhase": 17,
+      "downloads": [
+        18,
+        19
+      ],
+      "currentMeetingInputPhase": 20,
+      "currentMeetingInputDurationMs": 28679,
+      "inputDigestEqualityAsserted": true
+    },
+    "priorW16Timing": "The previous1200s-scale failure is not reused as a proof for this composition. This changed selected fixture reached its new failure in114.554s; global post-export performance and full mission acceptance are not established."
+  },
+  "findings": [
+    {
+      "id": "WP12-EXECUTIVE-HISTORICAL-PERIOD",
+      "path": "../owner-findings/executive-historical-period/finding.json",
+      "runtime": "403 after actual source revision; response body and first inner failure reason absent from log",
+      "static": "January captured SourceRef cannot satisfy review-history.matchesRecord requirement to cover the annual Planner BusinessEvidenceRef on the historical fallback",
+      "scope": "observed failure plus pinned source incompatibility; not a measured first-inner-gate attribution"
+    }
+  ],
+  "acceptance": {
+    "catalogObservations": 2,
+    "allObservedCatalogsEmpty": true,
+    "realPreparedInputs": [
+      "ExecutiveReviewInput",
+      "MeetingMaterialInput"
+    ],
+    "preparedInputEqualityAfterReload": [
+      "MeetingMaterialInput"
+    ],
+    "realNativeInferenceExecutions": 0,
+    "nativeOutputs": 0,
+    "nativeOutputConsumers": 0,
+    "c07AdmissionObserved": false,
+    "c07ResultsObserved": false,
+    "c09DecisionResultsLinkedToMaterial": 0,
+    "historicalConsumerAfterSourceChange": false,
+    "fullMission": false,
+    "fullWp12": false
+  },
+  "followup": {
+    "status": "HOLD_OWNER_HISTORICAL_SCOPE_FIX",
+    "ownDriverRetained": "fbac0c8e04cdab45ecf3be21810b48e57b102b83",
+    "noEquivalentRerunForReceiptOnly": true,
+    "sourceLatestInspected": "4bc9c7220f04f113609393aaba38934a7e69878b",
+    "latestOwnerRuntimeNotTested": true,
+    "requires": "reviewed published reconciliation preserving current authority, capture provenance, January scope and strict historical200 expectation"
+  },
+  "localProductTests": false,
+  "localTypecheck": false
+}

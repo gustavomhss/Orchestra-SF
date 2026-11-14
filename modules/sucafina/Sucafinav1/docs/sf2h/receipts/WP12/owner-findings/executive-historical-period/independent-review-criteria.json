@@ -1,0 +1,167 @@
+{
+  "schema": "wp12-independent-static-review-v1",
+  "reviewer": "criteria_resume",
+  "status": "PASS_STATIC_NO_COUNTER_FINDING",
+  "scope": "Executive historical-period finding and terminal evidence only; no product acceptance.",
+  "manifest": {
+    "path": "resume-input/own-missions/executive-historical-period/manifest.json",
+    "sha256": "5f847f02f7ffe3b7605524ab2b86654a24e44432240b827b4c9881220a060a10",
+    "blob": "1b7d1f8644ffa5aa43ca000aeea8d01a6c259a3a"
+  },
+  "filesVerified": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/run-16-executive.json",
+      "bytes": 28770,
+      "blob": "fd54d8894f51a645690b59104833eb2b00a90f8b",
+      "sha256": "c14b706d0847f5b9b50e258086b191be65cdf7fbd2754bdca005f8bfec8beb72"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/executive-historical-period/README.md",
+      "bytes": 2257,
+      "blob": "9488fc9751f7a437dc573e6372b6420540ab3b07",
+      "sha256": "17faf07f696907fb2f7ebe03e845c9566cababf004e4f47eb156e74e5d37535e"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/executive-historical-period/finding.json",
+      "bytes": 10278,
+      "blob": "56c07a0c5dc6d370d8be66ede472c2fad2ee219b",
+      "sha256": "4333bb1be5d6e9e9c921360d72838ca1da2d7dd14cac589ef8746a077e35f10f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/executive-historical-period/owner-delta.json",
+      "bytes": 2584,
+      "blob": "75a78f8929cbd7f523dc1d1713cde01d506bee36",
+      "sha256": "1c1f1b5c30b3aa58027405a6824db9459e5e26a9f6b6cfaca5bae08023c3c9eb"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/executive-historical-period/source-pins.json",
+      "bytes": 7665,
+      "blob": "91e16983cc2ae2f74253584b39fd4d996bc9ae1c",
+      "sha256": "8bb2a0bffff324adab4aa40054e658557d4701d7f0bfbf61fbc6c32710852df7"
+    }
+  ],
+  "sourceVerification": {
+    "capsule": "resume-input/own-missions/executive-historical-period/source-bytes.json",
+    "sourceCount": 23,
+    "allBytesBlobShaAndSizeMatch": true,
+    "additionalMcpSource": {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "ref": "efa940962023523848661d795856002d29510b19",
+      "blob": "97cde4dce2858f47b57b446c9c20bad77d367591",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/efa940962023523848661d795856002d29510b19/apps/cli/src/sucafina-product/business-services.ts",
+      "readVia": "GitHub MCP github_fetch_file",
+      "scope": "Supplemental review of the existing historical record-capture prerequisite; no intake.",
+      "bytes": 62972,
+      "sha256": "217ce1f268ae119bd38292f9b6697c6f6c1bfb08e31be3e25a434c5cf91d6b48",
+      "lines": [
+        439,
+        461
+      ]
+    }
+  },
+  "runtimeVerification": {
+    "runId": 43608377719,
+    "jobId": 132487813907,
+    "productSha": "efa940962023523848661d795856002d29510b19",
+    "snapshotSha": "3bb3d0044578c0babbacb384798bcb1027a9c5dd",
+    "log": "evidence/resume-16-executive.log",
+    "logSha256": "1499587973dda59191b330a71277c99a56e305dbfb62aec6e18426bfb87a5cdc",
+    "logBytes": 86805,
+    "pass": 0,
+    "fail": 1,
+    "assertions": 2245,
+    "bunDurationSeconds": 116.24,
+    "markersVerified": 47,
+    "phases": {
+      "started": 21,
+      "returned": 20,
+      "failed": 1
+    },
+    "observedFailure": {
+      "phase": 21,
+      "label": "http:review-read",
+      "expectedStatus": 200,
+      "actualStatus": 403,
+      "durationMs": 1730,
+      "logLines": [
+        918,
+        919,
+        926,
+        930,
+        931,
+        935,
+        937,
+        938,
+        939,
+        940
+      ]
+    }
+  },
+  "conclusions": [
+    {
+      "id": "annual-reference-monthly-capture",
+      "result": "CONFIRMED_STATIC",
+      "sources": [
+        "8a3201272fddf48b25d137886dcdd290e2d2db3e",
+        "3a9eaaa0f52c22f68f6e889af66b970fb51197b9",
+        "0c9a68225d114ba77617af4a0e3acc2607ea0e5a"
+      ],
+      "reason": "The real Planner issuer returns annual BusinessEvidenceRefs. The actual selected projection uses January SourceRefs while retaining annual cell evidence. matchesRecord requires the captured SourceRef to contain the evidence period, so January cannot satisfy that annual predicate."
+    },
+    {
+      "id": "authorized-route-not-private-reference",
+      "result": "CONFIRMED_STATIC",
+      "sources": [
+        "ba5023491e7aa7e2591e25e4f17f06f4292c77d4",
+        "90e42fbf42c07b11d7a1546a3e828d2de5e970fd"
+      ],
+      "reason": "The driver selected January through the public forecast-comparison agenda using real authenticated Planner evidence. The public source issuer has no monthly period parameter. Narrowing a reference body in the driver would fabricate the source identity."
+    },
+    {
+      "id": "first-runtime-subgate",
+      "result": "CORRECTLY_UNCLAIMED",
+      "sources": [
+        "3411fe33f7e907cdb98c35841161342fda43a3c8"
+      ],
+      "reason": "The route aggregates non-ok review reads as403. The log proves the public failure after source revision and not the first internal refusal. The short fresh GET does not establish a lease timeout."
+    },
+    {
+      "id": "bcs-historical-alternative",
+      "result": "NOT_AUTOMATICALLY_AVAILABLE",
+      "sources": [
+        "97cde4dce2858f47b57b446c9c20bad77d367591",
+        "5cca27ce239c92a8e3c9f9f92f816f5224562904",
+        "fbac0c8e04cdab45ecf3be21810b48e57b102b83"
+      ],
+      "reason": "caseForEvidence requires originalMemory.readOriginal; createSfRecordHistory then requires a protected matching capture. This driver creates a draft and does not seed/capture Atlas. A protected capture cannot be presumed to bypass the review-local period mismatch."
+    },
+    {
+      "id": "latest-owner-predicate",
+      "result": "CONFIRMED_IN_CAPSULE_ONLY",
+      "sources": [
+        "0c9a68225d114ba77617af4a0e3acc2607ea0e5a",
+        "6230f22e7dd66fec1103f28cc9a7937b2dca1449",
+        "ba5023491e7aa7e2591e25e4f17f06f4292c77d4"
+      ],
+      "reason": "The latest inspected PR29 pin4bc9c722 keeps the period predicate and annual public evidence. This review makes no claim about later owner heads."
+    },
+    {
+      "id": "bounded-completed-observations",
+      "result": "ACCURATELY_DELIMITED",
+      "reason": "Twenty phases completed before the overall failing test. Two current inputs, real human material generation,44 selected value-ID occurrences/38 unique identities and pre-mutation durable reopening do not accept the post-mutation consumer or either native mission. The receipt does not claim numeric-cell reconciliation beyond its assertions."
+    }
+  ],
+  "findings": [],
+  "limits": {
+    "nativeInferenceAccepted": false,
+    "nativeConsumerAccepted": false,
+    "c07Accepted": false,
+    "firstInternalRuntimeSubgateProven": false,
+    "publicationOfNewCrossrouteDriverCovered": false,
+    "localProductExecution": false,
+    "localTypecheck": false,
+    "foreignEdits": 0,
+    "reviewedFileEdits": 0
+  },
+  "disposition": "Forward owner finding without a naive period-widening patch. Keep the monthly historical200 assertion and source mutation intact; a changed owner implementation and hosted surgical run are needed for closure."
+}
