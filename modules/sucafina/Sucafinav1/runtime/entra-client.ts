@@ -1,15 +1,20 @@
 import { createLocalJWKSet, jwtVerify } from "jose"
+import { emptyMap } from "../src/identity.ts"
 import type { EntraClient, EntraOptions, EntraTokens } from "./local-contract.ts"
 
 const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 const graph = "https://graph.microsoft.com/v1.0"
-const scopes = "openid profile offline_access User.Read User.ReadBasic.All GroupMember.Read.All"
 const bodyLimit = 2 * 1024 * 1024
 const requestTimeout = 10000
 
 export function createEntraClient(options: EntraOptions): EntraClient {
   if (!uuid.test(options.tenantId) || !uuid.test(options.clientId)) throw new Error("Invalid Entra configuration")
   const tenant = options.tenantId.toLowerCase()
+  const clientId = options.clientId.toLowerCase()
+  const profile = options.profile === undefined ? "local-public" : options.profile
+  const clientSecret = options.clientSecret
+  if (!["local-public", "web-confidential"].includes(profile) || (profile === "web-confidential" ? typeof clientSecret !== "function" : clientSecret !== undefined)) throw new Error("Invalid Entra client profile")
+  const scopes = profile === "web-confidential" ? "openid profile offline_access User.Read" : "openid profile offline_access User.Read User.ReadBasic.All GroupMember.Read.All"
   const authority = `https://login.microsoftonline.com/${tenant}`
   const issuer = `${authority}/v2.0`
   const now = options.now ?? (() => new Date())
@@ -91,14 +96,18 @@ export function createEntraClient(options: EntraOptions): EntraClient {
   }
 
   async function redeem(url: string, fields: Record<string, string>) {
+    // Read only inside the server-side redemption boundary. Provider errors never escape.
+    const secret = clientSecret ? await Promise.resolve().then(clientSecret).catch(() => undefined) : undefined
+    if (profile === "web-confidential" && (typeof secret !== "string" || !secret.trim() || secret.length > 4096 || /[\x00-\x1f\x7f]/.test(secret))) throw new Error("Entra client credential unavailable")
     const data = await request(url, {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams({ client_id: options.clientId, scope: scopes, ...fields }),
+      body: new URLSearchParams({ client_id: clientId, scope: scopes, ...fields, ...(secret === undefined ? {} : { client_secret: secret }) }),
     })
     if (data.error !== undefined || typeof data.access_token !== "string" || !data.access_token.trim() || typeof data.expires_in !== "number" || !Number.isFinite(data.expires_in) || data.expires_in <= 0) throw new Error("Invalid Entra token response")
     if (data.refresh_token !== undefined && (typeof data.refresh_token !== "string" || !data.refresh_token.trim())) throw new Error("Invalid refresh token response")
     if (data.id_token !== undefined && (typeof data.id_token !== "string" || !data.id_token.trim())) throw new Error("Invalid identity token response")
+    if ((profile === "web-confidential" || data.token_type !== undefined) && data.token_type !== "Bearer") throw new Error("Invalid Entra token type")
     const tokens: EntraTokens = {
       accessToken: data.access_token,
       expiresAt: now().getTime() + data.expires_in * 1000,
@@ -109,11 +118,14 @@ export function createEntraClient(options: EntraOptions): EntraClient {
     return tokens
   }
 
-  return {
+  const client: EntraClient = {
+    tenantId: tenant,
+    clientId,
+    profile,
     async authorization(input) {
       const metadata = await discovery()
       const url = new URL(metadata.authorize)
-      url.search = new URLSearchParams({ client_id: options.clientId, response_type: "code", response_mode: "query", redirect_uri: input.redirectUri, scope: scopes, state: input.state, nonce: input.nonce, code_challenge: input.challenge, code_challenge_method: "S256" }).toString()
+      url.search = new URLSearchParams({ client_id: clientId, response_type: "code", response_mode: "query", redirect_uri: input.redirectUri, scope: scopes, state: input.state, nonce: input.nonce, code_challenge: input.challenge, code_challenge_method: "S256" }).toString()
       return url.href
     },
     async exchange(input) {
@@ -124,12 +136,13 @@ export function createEntraClient(options: EntraOptions): EntraClient {
       if (!Array.isArray(keyset.keys) || keyset.keys.length === 0 || keyset.keys.length > 100) throw new Error("Invalid Entra signing keys")
       const signingKeys = keyset.keys.map((key) => record(key))
       // Local JWKS resolution keeps all network I/O behind the bounded injected transport.
-      const verified = await Promise.resolve().then(() => jwtVerify(tokens.idToken!, createLocalJWKSet({ keys: signingKeys }), { algorithms: ["RS256"], issuer, audience: options.clientId, currentDate: now(), requiredClaims: ["exp", "iat", "tid", "oid", "nonce"] })).catch(() => {
+      const verified = await Promise.resolve().then(() => jwtVerify(tokens.idToken!, createLocalJWKSet({ keys: signingKeys }), { algorithms: ["RS256"], issuer, audience: clientId, currentDate: now(), requiredClaims: ["exp", "iat", "sub", "tid", "oid", "nonce"] })).catch(() => {
         throw new Error("Entra identity verification failed")
       })
-      if ((typeof verified.payload.tid !== "string" || verified.payload.tid.toLowerCase() !== tenant) || typeof verified.payload.oid !== "string" || !uuid.test(verified.payload.oid) || verified.payload.nonce !== input.nonce || typeof verified.payload.iat !== "number" || verified.payload.iat > Math.floor(now().getTime() / 1000)) throw new Error("Invalid Entra identity claims")
+      const claims = verified.payload
+      if (typeof claims.tid !== "string" || claims.tid.toLowerCase() !== tenant || typeof claims.oid !== "string" || !uuid.test(claims.oid) || claims.aud !== clientId || typeof claims.sub !== "string" || !claims.sub.trim() || claims.nonce !== input.nonce || typeof claims.iat !== "number" || !Number.isSafeInteger(claims.iat) || claims.iat <= 0 || claims.iat > Math.floor(now().getTime() / 1000) || typeof claims.exp !== "number" || !Number.isSafeInteger(claims.exp) || claims.exp <= claims.iat || (claims.ver !== undefined && claims.ver !== "2.0")) throw new Error("Invalid Entra identity claims")
       const identity = await person(tokens.accessToken)
-      if (identity.id !== verified.payload.oid.toLowerCase()) throw new Error("Entra identity mismatch")
+      if (identity.id !== claims.oid.toLowerCase()) throw new Error("Entra identity mismatch")
       return { tokens, person: identity }
     },
     async refresh(refreshToken) {
@@ -138,6 +151,8 @@ export function createEntraClient(options: EntraOptions): EntraClient {
     },
     person,
     async directory(accessToken) {
+      // B2B guests cannot enumerate /users. The web login requires only delegated User.Read.
+      if (profile === "web-confidential") return [await person(accessToken)]
       const people: { id: string; name: string }[] = []
       const visited = new Set<string>()
       const identities = new Set<string>()
@@ -171,10 +186,16 @@ export function createEntraClient(options: EntraOptions): EntraClient {
         page.url = data["@odata.nextLink"]
       }
     },
-    async resolve(accessToken, map) {
+    async resolve(accessToken, rows) {
+      const map = rows.map((row) => ({ ...row }))
+      if (profile === "web-confidential" && map.some((row) => !emptyMap().some((canonical) => canonical.surface === row.surface && canonical.role === row.role))) throw new Error("Invalid product role mapping")
       const identity = await person(accessToken)
       const names = [...new Set(map.flatMap((row) => row.entra?.trim() ? [row.entra] : []))]
       const groups = await Promise.all(names.map(async (name) => {
+        if (profile === "web-confidential") {
+          if (!name.startsWith("group:") || !uuid.test(name.slice(6))) throw new Error("Immutable Entra group ID required")
+          return { name, id: name.slice(6).toLowerCase() }
+        }
         const url = new URL(`${graph}/groups`)
         url.search = new URLSearchParams({ "$filter": `displayName eq '${name.replaceAll("'", "''")}'`, "$select": "id,displayName", "$top": "2" }).toString()
         const data = await graphRequest(accessToken, url.href)
@@ -196,6 +217,7 @@ export function createEntraClient(options: EntraOptions): EntraClient {
       return { id: identity.id, roles, canWrite: roles.some((role) => role.role !== "viewer") }
     },
   }
+  return Object.freeze(client)
 }
 
 function record(value: unknown): Record<string, unknown> {
@@ -215,3 +237,4 @@ function endpoint(value: unknown, paths: string[]) {
   if (url.origin !== "https://login.microsoftonline.com" || url.username || url.password || url.search || url.hash || !paths.includes(url.pathname)) throw new Error("Invalid Entra endpoint")
   return url.href
 }
+

@@ -1,0 +1,57 @@
+{
+  "schema": "sucafina.shared-integration-patch.v1",
+  "mission": 49,
+  "producer_branch": "microsoft-login",
+  "source_commit": "217b4295e2aeb00bc2f4accb9fb893451b9795e9",
+  "reconciled_target_commit": "ee1a3ea147ab7d7f4f6b231217e623456e294c84",
+  "reconciled_target_tree": "8563e04f8751ed786ccdbc086ed6566c410af3fe",
+  "target_branch": "sf2-stack",
+  "target_writer": "integration47",
+  "applied_to_shared_sources": false,
+  "combined_patch": "mission49-installation.patch",
+  "combined_patch_sha256": "28f586d4d53c28397a710ec55a92aa6a1210a3dcd551c1ef37128e3fcef5b378",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "source_blob": "26a330c62a0e5e9f3e2ea79be0b6854e7dca7363",
+      "reconciled_target_blob": "26a330c62a0e5e9f3e2ea79be0b6854e7dca7363",
+      "preimage": "local-entry.preimage.txt",
+      "preimage_sha256": "8803349c063a93cb03a805c9833ff612bec158e832f4ef05a1ef3cc5b7d7324b",
+      "postimage": "local-entry.postimage.txt",
+      "postimage_sha256": "5aabaa139ac45c9ef848ac89091a343c0df9eff447d1fe94a5bbf32f7399cfde",
+      "patch": "local-entry.patch",
+      "patch_sha256": "5eb55e3bf494beaf81a323e20cedb577226985380c520c9be6a941ac854d16b7",
+      "postimage_blob": "e1ddec48507fd1cf43e2233acd72061894362f06"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/installation.ts",
+      "source_blob": "e1392759f00d6d42477249823bbb6b3cec51601c",
+      "reconciled_target_blob": "e1392759f00d6d42477249823bbb6b3cec51601c",
+      "preimage": "cli-installation.preimage.txt",
+      "preimage_sha256": "26c989c2ab37d87363e77a06b96ed55eaccb97f9c4f586879bd4539de869f93d",
+      "postimage": "cli-installation.postimage.txt",
+      "postimage_sha256": "6e20349d72f7131a1b66507d81907df78d18e2e8eedcafd9b741bba77b67b294",
+      "patch": "cli-installation.patch",
+      "patch_sha256": "4474aa45b81485a2e5b9d7490cd1d71a7ecf47b9664149168f1a773c1c3ce09b",
+      "postimage_blob": "21236af83e4de879242fd298d9e15a9923f3bf41"
+    },
+    {
+      "path": "apps/cli/src/commands/handlers/serve.ts",
+      "source_blob": "6bfe580422d8b36f7b0ca68f42b3aa42c61d08c4",
+      "reconciled_target_blob": "6bfe580422d8b36f7b0ca68f42b3aa42c61d08c4",
+      "preimage": "cli-serve.preimage.txt",
+      "preimage_sha256": "eb8991f30d7d4003bedddd92c82af6a726c0508d7c4284cf51a02e726a2f4db8",
+      "postimage": "cli-serve.postimage.txt",
+      "postimage_sha256": "13c593602b7a5ae9465cadeb9da674657a900f9354b1061db0ef817d6db964f4",
+      "patch": "cli-serve.patch",
+      "patch_sha256": "355f8981dd4eacc868d9f90e645747bea9b122337759a933923abcdb490ee630",
+      "postimage_blob": "1356a4c3099d10c62e470142209ced0f8033a6e1"
+    }
+  ],
+  "verification": {
+    "canonical_preimages": "Git blob SHA-1 equals GitHub MCP source and reconciled target for all three files",
+    "local_tests": "not run; prohibited by task",
+    "github_actions": "parent mission49 reports actual hosted results separately",
+    "real_microsoft_b2b": "not executed; pending tenant validation"
+  }
+}

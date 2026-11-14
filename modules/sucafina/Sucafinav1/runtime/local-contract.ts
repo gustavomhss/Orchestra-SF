@@ -13,6 +13,10 @@ export type LocalStore = Persistence & AssetPersistence & { secrets: LocalSecret
 export type DirectoryPerson = { id: string; name: string }
 export type EntraTokens = { accessToken: string; refreshToken?: string; idToken?: string; expiresAt: number }
 export type EntraClient = {
+  /** Immutable issuer/application boundary; optional only for retained local test adapters. */
+  readonly tenantId?: string
+  readonly clientId?: string
+  readonly profile?: "local-public" | "web-confidential"
   authorization: (input: { state: string; nonce: string; challenge: string; redirectUri: string }) => Promise<string>
   exchange: (input: { code: string; verifier: string; redirectUri: string; nonce: string }) => Promise<{ tokens: EntraTokens; person: DirectoryPerson }>
   refresh: (refreshToken: string) => Promise<EntraTokens>
@@ -23,6 +27,9 @@ export type EntraClient = {
 export type EntraOptions = {
   tenantId: string
   clientId: string
+  profile?: "local-public" | "web-confidential"
+  /** Server-private provider. Never expose this credential through browser or tool configuration. */
+  clientSecret?: () => Promise<string>
   fetch?: (request: Request) => Promise<Response>
   now?: () => Date
   directoryLimit?: number
@@ -36,3 +43,4 @@ export type LocalIdentity = {
   directory: (request: Request) => Promise<DirectoryPerson[]>
   person: (request: Request) => Promise<DirectoryPerson | null>
 }
+

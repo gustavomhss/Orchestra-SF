@@ -26,7 +26,7 @@ const row = (entra: string | null, role = "viewer"): RoleRow => ({ surface: "das
 
 async function token(claims: Record<string, unknown> = {}, algorithm = "RS256") {
   const pair = algorithm === "RS256" ? await keys : await generateKeyPair(algorithm)
-  return new SignJWT({ tid: tenant, oid, nonce: input.nonce, iss: metadata.issuer, aud: clientId, iat: epoch, exp: epoch + 3600, ...claims })
+  return new SignJWT({ tid: tenant, oid, sub: "synthetic-subject", nonce: input.nonce, iss: metadata.issuer, aud: clientId, iat: epoch, exp: epoch + 3600, ...claims })
     .setProtectedHeader({ alg: algorithm, kid: "synthetic-key" })
     .sign(pair.privateKey)
 }
@@ -90,7 +90,7 @@ test("exchange posts code and verifier, verifies signed identity and returns rea
   expect(Object.fromEntries(new URLSearchParams(await request!.text()))).toMatchObject({ grant_type: "authorization_code", client_id: clientId, code: input.code, code_verifier: input.verifier, redirect_uri: redirectUri })
 })
 
-for (const claims of [{ nonce: "wrong" }, { iss: `${authority}/wrong` }, { aud: other }, { tid: other }, { oid: "not-a-uuid" }, { oid: null }, { exp: epoch - 300 }, { iat: epoch + 3600 }, { exp: undefined }, { iat: undefined }, { nonce: undefined }]) {
+for (const claims of [{ nonce: "wrong" }, { iss: `${authority}/wrong` }, { aud: other }, { aud: [clientId, other] }, { tid: other }, { tid: undefined }, { oid: "not-a-uuid" }, { oid: null }, { oid: undefined }, { sub: "" }, { sub: undefined }, { exp: epoch - 300 }, { exp: epoch + 0.5 }, { iat: epoch + 3600 }, { iat: epoch - 0.5 }, { iat: 0 }, { exp: undefined }, { iat: undefined }, { nonce: undefined }, { ver: "1.0" }]) {
   test(`exchange rejects invalid signed claims ${JSON.stringify(claims)}`, async () => {
     const f = await fixture({ claims })
     await failure(() => f.client.exchange(input))
@@ -380,3 +380,4 @@ test("directory rejects a terminal page that contradicts the declared total", as
   const f = await fixture({ route: (request) => request.url.startsWith(graph) ? Response.json({ value: [{ id: oid, displayName: "First" }], "@odata.count": 2 }) : undefined })
   await failure(() => f.client.directory("synthetic-access"))
 })
+
