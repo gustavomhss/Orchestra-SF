@@ -69,6 +69,11 @@ test("same-case BI preserves the human choice while the confirmed training revis
     expect(afterPhase.caseRef.id).toBe(history.before.caseRef.id)
     expect(afterPhase.caseRef.incarnation).toBe(history.before.caseRef.incarnation)
     expect(afterPhase.caseRef.version).toBeGreaterThan(chosen.caseRef.version)
+    // Completeness must already belong to the canonical source result. BI may
+    // not turn an estimated budget fallback into a confirmed monthly quote.
+    expect(afterPhase.scenario).toEqual({ baseRef: "transition-confirmed", operations: [], assumptions: [] })
+    expect(afterPhase.projection.components.filter((component) => component.id.startsWith("training:")).map((component) => ({ id: component.id, amount: component.amount, currency: component.currency, evidenceState: component.evidenceState }))).toEqual(Array.from({ length: 12 }, (_, month) => ({ id: `training:${month + 1}`, amount: month === 10 ? 40000 : 0, currency: "USD", evidenceState: "confirmed" })))
+    expect(afterPhase.selectedResult).toMatchObject({ knownSubtotal: 250000, total: 250000, comparisonStatus: "complete", costCoverage: { coverageState: "complete" } })
     const afterReader = consumer(afterPhase, history.fixture.host, await persistAdvantage(afterPhase, history.fixture.context))
     const after = await afterReader.read(afterReader.selection, history.fixture.context)
     expect(after.status).toBe("ok")

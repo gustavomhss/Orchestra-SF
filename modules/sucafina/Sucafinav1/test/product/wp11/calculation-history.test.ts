@@ -24,9 +24,10 @@ test("an accepted C17 reference reopens through the explicit ledger lane after t
   const fixture = await plannerFixture()
   try {
     for (const surface of ["dashboard", "procurement"] as const) await fixture.persistence.initializeSources(surface)
-    const context = await fixture.admit("sf-human:planner.read", {}, "finance", true)
-    const http = fixture.host.requestFor(context)
-    if (!http) throw new Error("Real UI authority unavailable")
+    let context = await fixture.admit("sf-human:planner.read", {}, "finance", true)
+    const initialHttp = fixture.host.requestFor(context)
+    if (!initialHttp) throw new Error("Real UI authority unavailable")
+    let http: Request = initialHttp
     const issuedSource = await fixture.issueSource("v0", context)
     if (issuedSource.status !== "ok") throw new Error(issuedSource.reason)
     const sourceRef = issuedSource.value.evidence
@@ -197,6 +198,17 @@ test("an accepted C17 reference reopens through the explicit ledger lane after t
       fixture.access.allowed = false
       expect((await second.results.readHistoricalCalculation(currentSelection, context)).status).toBe("denied")
       fixture.access.allowed = true
+      // Revocation permanently retires that admission; renewed access needs a new
+      // real UI admission before testing unrelated source and incarnation changes.
+      const revokedContext = context
+      expect(await fixture.host.revalidate(revokedContext)).toBe(false)
+      context = await fixture.admit("sf-human:planner.read", {}, "finance", true)
+      const renewedHttp = fixture.host.requestFor(context)
+      if (!renewedHttp) throw new Error("Renewed UI authority unavailable")
+      http = renewedHttp
+      expect(await fixture.host.revalidate(context)).toBe(true)
+      expect(await second.results.readHistoricalCalculation(currentSelection, context)).toEqual(stored)
+      expect((await second.results.readHistoricalCalculation(currentSelection, revokedContext)).status).toBe("denied")
       const changed = await fixture.persistence.transaction("planner", async (snapshot) => {
         const result = domain.execute(snapshot, { id: "finance", roles: ["finance"], canWrite: true, assigned: [], domains: [] }, { page: "OPEX", action: "save", id: "line", version: 0, values: { versionId: "v0", f10: 43 } }, { at: plannerAt, id: () => "source-change", directory: [] })
         return { commit: result.ok, value: result }

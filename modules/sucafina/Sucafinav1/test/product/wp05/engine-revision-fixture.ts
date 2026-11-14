@@ -38,7 +38,9 @@ async function createWp05QuoteRevision(fixture: Fixture, revision: { versionId: 
     const previousDigest = digestSfValue(previous)
     const copied = domain.execute(snapshot, author, { page: "Versions", action: "copy", id: fixture.scenario.baseRef, version: snapshot.versions[`versions:${fixture.scenario.baseRef}`]?.version ?? 0, values: { name: revision.name } }, environment)
     if (!copied.ok || copied.value !== versionId) throw new Error(`Planner copy rejected: ${JSON.stringify(copied)}`)
-    const added = domain.execute(snapshot, author, { page: "OPEX", action: "save", id: revision.lineId, version: snapshot.versions[`${versionId}:lines:${revision.lineId}`]?.version ?? 0, values: revision.lineId === "training" ? { versionId, el: "licenses", cur: "USD", annual: 0, f10: revision.amount } : { versionId, f10: revision.amount } }, environment)
+    // This synthetic quote confirms one November charge and zero charges in the
+    // other months. A null forecast would remain an estimated budget fallback.
+    const added = domain.execute(snapshot, author, { page: "OPEX", action: "save", id: revision.lineId, version: snapshot.versions[`${versionId}:lines:${revision.lineId}`]?.version ?? 0, values: revision.lineId === "training" ? { versionId, el: "licenses", cur: "USD", annual: 0, f: Array.from({ length: 12 }, (_, month) => month === 10 ? revision.amount : 0) } : { versionId, f10: revision.amount } }, environment)
     if (!added.ok) throw new Error(`Planner quote rejected: ${JSON.stringify(added)}`)
     if (digestSfValue(projectPlannerSource(snapshot, reader, fixture.scenario.baseRef)) !== previousDigest) throw new Error("Copy changed the original source")
     const projection = projectPlannerSource(snapshot, reader, versionId)

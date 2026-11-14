@@ -104,7 +104,9 @@ export async function createRenewalQuoteRevision(fixture: Awaited<ReturnType<typ
     const originalDigest = digestSfValue(previous)
     const copied = domain.execute(snapshot, author, { page: "Versions", action: "copy", id: fixture.scenario.baseRef, version: snapshot.versions[`versions:${fixture.scenario.baseRef}`]?.version ?? 0, values: { name: `Confirmed ${kind} quote` } }, environment)
     if (!copied.ok || copied.value !== versionId) throw new Error("Canonical source copy rejected")
-    const saved = domain.execute(snapshot, author, { page: "OPEX", action: "save", id: kind, version: snapshot.versions[`${versionId}:lines:${kind}`]?.version ?? 0, values: kind === "training" ? { versionId, el: "licenses", cur: "USD", annual: 0, f10: amount } : { versionId, f10: amount } }, environment)
+    // The supplied training quote confirms one November charge and explicitly
+    // no charges in the other months; omitted forecasts are not confirmed zeros.
+    const saved = domain.execute(snapshot, author, { page: "OPEX", action: "save", id: kind, version: snapshot.versions[`${versionId}:lines:${kind}`]?.version ?? 0, values: kind === "training" ? { versionId, el: "licenses", cur: "USD", annual: 0, f: Array.from({ length: 12 }, (_, month) => month === 10 ? amount : 0) } : { versionId, f10: amount } }, environment)
     if (!saved.ok || digestSfValue(projectPlannerSource(snapshot, reader, fixture.scenario.baseRef)) !== originalDigest) throw new Error("Canonical quote revision changed its original source")
     const projection = projectPlannerSource(snapshot, reader, versionId)
     if (!projection) throw new Error("Revised source unavailable")
