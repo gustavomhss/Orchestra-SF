@@ -1,0 +1,134 @@
+{
+  "mission": "forecast-cancel-visibility",
+  "status": "NOT_RUN",
+  "finding": "WP10-U30-CANCEL-VISIBILITY",
+  "diagnostic": {
+    "W": "f250a790f80710f939f02f1cc28ec6174887fc37",
+    "S": "ed3dfa599723630aec7fe72d746ac7dd5fff15e9",
+    "run": 43632553311,
+    "conclusion": "failure",
+    "cause": "hidden=true + computed display=flex; matched author button rule declares inline-flex; ready/output confirmed"
+  },
+  "source_preimages": {
+    "shell": "2aeacf2c05e86fef28947c5332284f3089e00049",
+    "controller": "973a2f09b394426364c514b923ecdc8e10ffb184"
+  },
+  "production_delta": [
+    "Add explicit hidden display rule only for styled buttons",
+    "Remove Cancel and status-refresh nodes in permanent forecast revoke handler"
+  ],
+  "preservation": {
+    "review_escape": true,
+    "original_U30_assertion_statements": 17,
+    "original_U30_deadlines": "18s cooperative work, 5s max native action within remaining budget, 30s Bun case; existing startup/lifecycle unchanged",
+    "fixtureStylesChanged": false
+  },
+  "selection": [
+    "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+    "./Sucafinav1/test/product/forecast-cancel-visibility/forecast-submit.test.ts",
+    "./Sucafinav1/test/product/forecast-cancel-visibility/states.test.ts",
+    "./Sucafinav1/test/product/forecast-cancel-visibility/recovery.test.ts",
+    "./Sucafinav1/test/product/forecast-cancel-visibility/revocation.test.ts",
+    "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts"
+  ],
+  "matrix": {
+    "idle": "Cancel and refresh hidden; Start enabled",
+    "active": [
+      "preparing",
+      "queued",
+      "running"
+    ],
+    "terminal": [
+      "ready",
+      "needs-input",
+      "unavailable",
+      "failed",
+      "cancelled",
+      "stale"
+    ],
+    "retry": [
+      "first read failure",
+      "read failure after running",
+      "same runRef; no repeat prepare/start"
+    ],
+    "cancel": [
+      "confirmed",
+      "accepted cancellation with 503 response then status reconciliation"
+    ],
+    "revoke": [
+      "read HTTP403",
+      "shell event after result rendered"
+    ],
+    "U30": [
+      "positive click",
+      "negative Enter409",
+      "complete prepare",
+      "start/read/output payloads/order",
+      "keys",
+      "EUR",
+      "enabled controls",
+      "pageErrors"
+    ]
+  },
+  "boundaries": {
+    "real": [
+      "forecastAnalysisForm",
+      "forecastAnalysisScript",
+      "documentHtml/pageMain shell",
+      "distributed resident catalog",
+      "Chromium and existing WP01/WP02 browser pool"
+    ],
+    "fixture": [
+      "case and evidence data",
+      "model catalog",
+      "HTTP prepare/start/read/output responses"
+    ],
+    "not_claimed": [
+      "financial producer",
+      "native model or Session",
+      "AM01-AM06",
+      "GLOBAL_RELEASE"
+    ]
+  },
+  "checks": {
+    "functional": "NOT_RUN",
+    "typecheck": "NOT_RUN: no hosted path inside mission write scope; existing workflows bind foreign refs",
+    "guards": "NOT_RUN: same restriction; no shared workflow/config changes or foreign ref updates"
+  },
+  "read_completeness": {
+    "S1A": "Entire JSON read across root and read-only pack reviewer; full COMMON and both mandatory appendices read; no other actor pack loaded",
+    "source_comparison": "ui-review/WP10/WP12 controller identical; shell Escape delta preserved",
+    "official_playwright": [
+      {
+        "repository": "microsoft/playwright",
+        "path": "docs/src/best-practices-js.md",
+        "blob": "02e1e4db6baea68e725040646396e09a29584420"
+      },
+      {
+        "repository": "microsoft/playwright",
+        "path": "docs/src/actionability.md",
+        "blob": "848df596771406a7c4d7b2e6120f95b01330a756"
+      },
+      {
+        "repository": "microsoft/playwright",
+        "path": "docs/src/test-assertions-js.md",
+        "blob": "97eb22aa6c5839c4f83be974fef260221d6494e2"
+      },
+      {
+        "repository": "microsoft/playwright",
+        "path": "docs/src/locators.md",
+        "blob": "a4307c3b47fc1cf6c048e5f94c98b5dcbb6bcb9a"
+      },
+      {
+        "repository": "microsoft/playwright",
+        "path": "docs/src/network.md",
+        "blob": "fb24a1855d418e4c9291d8e2656dcc51c3dbf2e4"
+      },
+      {
+        "repository": "microsoft/playwright",
+        "path": "docs/src/browser-contexts.md",
+        "blob": "d34759c18549026d7cba3558ce8357d6e441c4c7"
+      }
+    ]
+  }
+}
