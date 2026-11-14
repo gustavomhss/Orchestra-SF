@@ -1,0 +1,48 @@
+{
+  "schema": "sf2h-wp12-ci-observed-pinned-intake-v1",
+  "status": "source-verified-awaiting-hosted-validation",
+  "baseCommit": "c68f4522e910071c7cb236ed908a19994c71d97b",
+  "trigger": {
+    "runId": 43589648262,
+    "jobId": 132431454275,
+    "totalDiagnostics": 12,
+    "ownDiagnostics": 8,
+    "foreignDiagnostics": 4
+  },
+  "count": 3,
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/capabilities.ts",
+      "why": "Hosted W8 TS2339/TS2353 at collaboration/dispatch:24/80; producer exposes and records recordQuestionPreparation against the bound receipt.",
+      "sourceCommit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+      "sourceBlob": "c0bd1afe946a79a906c4f29c4afbd31a992daa68",
+      "baseBlob": "d85db7fbde8b56783c2a929b5c5812a9177aae0b",
+      "sha256": "464f647062b04c4bbe7a5ab79c370d1a91d6986e854e6d5abf69941359fafb3a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/cycle-view.ts",
+      "why": "Hosted W8 TS2353 at collaboration/host:226; cycle-view accepts resolveCase and fences case-work-selection identity.",
+      "sourceCommit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+      "sourceBlob": "6faf57943149d92ad1ce3335a78bc41784debc65",
+      "baseBlob": "2b700d01959334aee14b6715065bcf876a9b93dc",
+      "sha256": "231cd06fb5cde92ba6d165ec46fbc39b20cb3ac5f400dcbbc851bcb4b5563c74"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/capabilities.ts",
+      "why": "Hosted W8 TS2554 at reviews/capabilities:77; published caller supplies both projection and chart to renderReviewSensitivity.",
+      "sourceCommit": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "sourceBlob": "fd79690c368087f48276e0cb21198f91f59d5e63",
+      "baseBlob": "58f34b81a21a9c87d21c55fec4dc7f7dd318e2d3",
+      "sha256": "ab7c67a412e366bf7242d3ae55763fc2c1fb5e3c2a3fa244cc359077cd953f74"
+    }
+  ],
+  "unresolvedRelativeImports": [],
+  "ownPreservation": "No WP12-owned source or test is written.",
+  "materialization": {
+    "backupDirectory": "resume-input/compose/backup-before-w9-delta",
+    "ownPathsTouched": 0,
+    "verifiedGitBlobs": 3,
+    "backedUpExisting": 0,
+    "createdLocally": 3
+  }
+}

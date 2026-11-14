@@ -22,6 +22,7 @@ import { createSfBusinessServices } from "../../../../../../apps/cli/src/sucafin
 import atlasPackage from "../../../../../../modules/atlas/boundary/package.json" with { type: "json" }
 import contractFreeze from "../../../product/contracts/freeze-v1.json" with { type: "json" }
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
+import { decodeSfSkillInput } from "../../../product/contracts/schema-admission.ts"
 import type { SfHostServices } from "../../../product/contracts/host-context.ts"
 import type { TrustedUiContext } from "../../../product/contracts/sf-execution.ts"
 import type { SfHumanAction } from "../../../product/integration/human-authority.ts"
@@ -135,17 +136,6 @@ test("configured Finance executes through the real host and its persisted contri
   try {
     const first = await openLocalStore(path.join(directory, "business"))
     const completed = await host(first, true, async (services, session, models, persistence, catalogState) => {
-      if (models.length === 0) {
-        console.log("SF_WP12_NATIVE_FINANCE:" + JSON.stringify({ scope: "host-availability-only", status: "unavailable",
-          reason: catalogState === "empty" ? "installed-host-catalog-empty" : "installed-host-catalog-has-no-supported-model",
-          classification: "catalog-observation", catalogState,
-          githubSha: process.env.GITHUB_SHA ?? null, candidates: [],
-          inferenceExecuted: false, outputRef: null, consumerRef: null, gnativeAccepted: false }))
-        return undefined
-      }
-      // Only the admitted execution branch must load through the native runner.
-      // An empty catalog is an availability observation and starts no provider.
-      expectSpawn(import.meta.path)
       const selected = services.selected.find((entry) => entry.profile.id === "sf_finance")
       const skill = selected?.skills.find((entry) => entry.id === "sf-explicar-forecast")
       if (!selected || !skill || !services.analysisInputs || !services.analyses) throw new Error("Native Finance published analysis services are incomplete")
@@ -171,6 +161,28 @@ test("configured Finance executes through the real host and its persisted contri
         selection: { caseRef, baseRef: decision.value.sourceRefs[0]!.refId, candidateRef: decision.value.sourceRefs[1]!.refId, period, currency: "USD" } }
       const prepared = await human(services, "analysis.prepare", incoming, (call) => services.analysisInputs!.prepare(call, incoming))
       if (prepared.status !== "ok") throw new Error(`Native Finance producer failed: ${prepared.reason}`)
+      const decodedInput = decodeSfSkillInput("ForecastExplainInput", prepared.value)
+      if (!decodedInput.ok) throw new Error("Native Finance producer returned an invalid skill input")
+      expect(decodedInput.value.forecastComparison.knownDifference).toBe(-240)
+      expect(decodedInput.value.selectedPeriod).toEqual(period)
+      expect(decodedInput.value.currency).toBe("USD")
+      expect(decodedInput.value.sourceRefs.length).toBeGreaterThan(0)
+      const inputDigest = digestSfValue(prepared.value)
+      console.log("SF_WP12_NATIVE_FINANCE_INPUT:" + JSON.stringify({ scope: "real-host-input-producer",
+        githubSha: process.env.GITHUB_SHA ?? null, profileId: selected.profile.id, skillId: skill.id,
+        caseRef, inputDigest, sourceRefIds: decodedInput.value.sourceRefs.map((source) => source.refId),
+        knownDifference: decodedInput.value.forecastComparison.knownDifference, inferenceExecuted: false }))
+      if (models.length === 0) {
+        console.log("SF_WP12_NATIVE_FINANCE:" + JSON.stringify({ scope: "host-input-preparation-and-availability", status: "unavailable",
+          reason: catalogState === "empty" ? "installed-host-catalog-empty" : "installed-host-catalog-has-no-supported-model",
+          classification: "catalog-observation", catalogState, inputPrepared: true, inputDigest, caseRef,
+          githubSha: process.env.GITHUB_SHA ?? null, candidates: [],
+          inferenceExecuted: false, outputRef: null, consumerRef: null, gnativeAccepted: false }))
+        return undefined
+      }
+      // The native execution branch must spawn through the runner. Input
+      // preparation and empty-catalog observations start no provider turn.
+      expectSpawn(import.meta.path)
       const input = { request: incoming.request, skillInput: prepared.value, model: models[0]! }
       const started = await human(services, "analysis.start", input, (call) => services.analyses!.start(call, input))
       if (started.status !== "ok") throw new Error(`Native Finance admission failed: ${started.reason}`)
@@ -206,7 +218,7 @@ test("configured Finance executes through the real host and its persisted contri
           ? [{ toolCallId: part.id, handlerExport: receipt.handlerExport }] : []
       }))
       expect(calls.length).toBeGreaterThan(0)
-      return { runRef, caseRef, outputRef: output.value.id, outputDigest: output.value.outputDigest,
+      return { runRef, caseRef, inputDigest, outputRef: output.value.id, outputDigest: output.value.outputDigest,
         receipt: native.skillReceipt, actualModel: output.value.runProvenance.actualModel,
         contextFingerprint: output.value.runProvenance.contextFingerprint, accessRevision: output.value.accessRevision,
         toolCallIds: calls.map((call) => call.toolCallId) }

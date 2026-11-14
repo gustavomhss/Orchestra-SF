@@ -163,7 +163,7 @@ test("publication pins the independent review target until its write scope", asy
   const { digestSfContribution } = await import("../../../product/contracts/canonical.ts")
   const { sfRunFixture } = await import("./run-fixture.ts")
   const original = sfRunFixture()
-  const receipt = { ...original.receipt, profileId: "sf_reviewer", skillId: "sf-revisar-evidencias" }
+  const receipt = { ...original.receipt, profileId: "sf_reviewer", skillId: "sf-revisar-evidencias" } satisfies Parameters<typeof publishSfContribution>[0]["skillReceipt"]
   const reviewTarget = { targetRunId: "author-run", targetSessionId: "author-session", targetOutputDigest: "e".repeat(64), caseRef: original.caseRef }
   const output: Parameters<typeof digestSfContribution>[0] = {
     ...original.output, kind: "CritiqueReport", state: "ready",
@@ -432,7 +432,7 @@ test("ready read returns copies that retained host references cannot rewrite", a
   }
   const result = await readSfAnalysisRun({ host, runRef: readyRun.runRef } as unknown as Parameters<typeof readSfAnalysisRun>[0])
   expect(result.status).toBe("ok")
-  if (result.status !== "ok" || !result.value.output) return
+  if (result.status !== "ok" || !("output" in result.value) || !result.value.output) return
   const originalDate = result.value.output.createdAt
   original.output.createdAt = "2026-11-14T00:00:00Z"
   readyRun.caseRef.version = 9
@@ -472,7 +472,7 @@ test("ready read pins the scoped result and isolates the final returned copy", a
       continue
     }
     expect(result.status).toBe("ok")
-    if (result.status !== "ok" || !result.value.output || !observed.retained) throw new Error("Expected a verified ready result")
+    if (result.status !== "ok" || !("output" in result.value) || !result.value.output || !observed.retained) throw new Error("Expected a verified ready result")
     const date = result.value.output.createdAt
     observed.retained.value.output.createdAt = "2026-11-14T00:00:00Z"
     expect(result.value.output.createdAt).toBe(date)

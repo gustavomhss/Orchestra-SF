@@ -28,10 +28,11 @@ test("host builds persisted provenance from the observed assistant model and ski
   expect(result.value.runProvenance).toMatchObject({ ...receipt, actualModel: "provider/model", contextFingerprint: "context" })
   expect(result.value.outputDigest).toBe(digestSfContribution(result.value))
   expect(buildSfContribution({ ...input, actualModel: { providerID: "provider", id: "other" } })).toEqual({ status: "denied", reason: "invalid-native-output-context" })
-  expect(buildSfContribution({ ...input, candidate: { ...candidate, runProvenance: {} } })).toEqual({ status: "denied", reason: "invalid-native-output" })
-  expect(buildSfContribution({ ...input, candidate: { ...candidate, payload: {} } })).toEqual({ status: "denied", reason: "invalid-native-output" })
+  expect(buildSfContribution({ ...input, candidate: { ...candidate, runProvenance: {} } })).toEqual({ status: "failed", reason: "invalid-native-output" })
+  expect(buildSfContribution({ ...input, candidate: { ...candidate, payload: {} } })).toEqual({ status: "failed", reason: "invalid-native-output" })
   expect(buildSfContribution({ ...input, run: { ...run, native: { sessionID: "session", skillReceipt: { ...receipt, runId: "another-run" } } } })).toEqual({ status: "denied", reason: "invalid-native-output-context" })
   expect(buildSfContribution({ ...input, run: { ...run, native: { sessionID: "session", skillReceipt: { ...receipt, sourceDigest: "9".repeat(64) } } } })).toEqual({ status: "denied", reason: "invalid-native-output-context" })
+  expect(buildSfContribution({ ...input, run: { ...run, selection: { ...run.selection, skills: [] } } })).toEqual({ status: "denied", reason: "invalid-native-output-context" })
 })
 
 test("review provenance is assigned by the host for an independent run", () => {
@@ -64,13 +65,37 @@ test("standalone reviewer conditions require the same independent host-owned tar
   expect(matchesSfRunOutput(review, changedTarget)).toBe(false)
 })
 
+test("malformed review payloads fail while missing or reused review authority stays denied", () => {
+  const review = reviewRun()
+  const evidenceReview: SfNativeRunRecord = { ...review, skillId: "sf-revisar-evidencias",
+    native: { ...review.native!, skillReceipt: { ...review.native!.skillReceipt, skillId: "sf-revisar-evidencias" } },
+    selection: { ...review.selection,
+      profile: { ...review.selection.profile, allowedSkills: ["sf-revisar-evidencias"], outputTypes: ["ClaimIssue"] },
+      skills: [{ ...review.selection.skills[0]!, id: "sf-revisar-evidencias", outputSchemaRefs: ["ClaimIssue"] }],
+    },
+  }
+  for (const selected of [{ run: review, kind: "CritiqueReport" }, { run: evidenceReview, kind: "ClaimIssue" }]) {
+    for (const malformed of [null, { kind: "FinancialAnalysis", payload: {}, evidenceRefs: [] }]) {
+      expect(buildSfContribution({ ...input, run: selected.run, candidate: malformed })).toEqual({ status: "failed", reason: malformed === null ? "invalid-native-output" : "native-output-kind-not-granted" })
+      expect(buildSfContribution({ ...input, run: { ...selected.run, reviewTarget: undefined }, candidate: malformed })).toEqual({ status: "denied", reason: "invalid-review-output-context" })
+      expect(buildSfContribution({ ...input, run: { ...selected.run, reviewTarget: { ...selected.run.reviewTarget!, targetSessionId: selected.run.native!.sessionID } }, candidate: malformed })).toEqual({ status: "denied", reason: "invalid-review-output-context" })
+    }
+    for (const payload of [null, [], { targetRunId: "model-selected-author" }]) {
+      const malformed = { kind: selected.kind, payload, evidenceRefs: [] }
+      expect(buildSfContribution({ ...input, run: selected.run, candidate: malformed })).toEqual({ status: "failed", reason: "invalid-native-output" })
+      expect(buildSfContribution({ ...input, run: { ...selected.run, reviewTarget: undefined }, candidate: malformed })).toEqual({ status: "denied", reason: "invalid-review-output-context" })
+      expect(buildSfContribution({ ...input, run: { ...selected.run, reviewTarget: { ...selected.run.reviewTarget!, targetSessionId: selected.run.native!.sessionID } }, candidate: malformed })).toEqual({ status: "denied", reason: "invalid-review-output-context" })
+    }
+  }
+})
+
 test("durable output must belong to the active skill and observed model", () => {
   const fixture = sfRunFixture()
   expect(matchesSfRunOutput(fixture.run, fixture.output)).toBe(true)
   const anotherSkill = { ...fixture.skill, id: "different-skill", outputSchemaRefs: ["MatchExplanation"] }
   const wrongGrant = { ...fixture.run, selection: { ...fixture.run.selection, skills: [{ ...fixture.skill, outputSchemaRefs: ["FinancialAnalysis"] }, anotherSkill] } }
   expect(matchesSfRunOutput(wrongGrant, fixture.output)).toBe(false)
-  expect(buildSfContribution({ ...input, run: wrongGrant })).toEqual({ status: "denied", reason: "native-output-kind-not-granted" })
+  expect(buildSfContribution({ ...input, run: wrongGrant })).toEqual({ status: "failed", reason: "native-output-kind-not-granted" })
   const forgedModel = { ...fixture.output, runProvenance: { ...fixture.output.runProvenance, actualModel: "provider/unobserved" } }
   forgedModel.outputDigest = digestSfContribution(forgedModel)
   expect(matchesSfRunOutput(fixture.run, forgedModel)).toBe(false)
