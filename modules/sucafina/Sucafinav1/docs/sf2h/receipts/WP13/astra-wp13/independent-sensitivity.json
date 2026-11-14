@@ -406,7 +406,153 @@
         "Consumer owner adoption and hosted default-factory/UI/BI/native proofs remain separate requirements."
       ],
       "verdict_scope": "Independent static review of the exact local eight-file delta only; no READY, global acceptance or CI success is asserted."
+    },
+    {
+      "id": "WP13-SENS-W3-FOLLOWUP-03",
+      "candidate": "Final local W3 after consuming published PR36 threshold-proof and adapting producer/replay/eligibility; unpublished at review",
+      "head": null,
+      "tree": null,
+      "status": "NO_REMAINING_BLOCKING_STATIC_FINDINGS_IN_REQUESTED_DELTA_CI_PENDING",
+      "independent_of_authorship": true,
+      "product_tests_executed": false,
+      "typecheck_executed": false,
+      "remote_operations": false,
+      "product_or_test_edits": false,
+      "delta_blob_manifest": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/threshold-proof.ts",
+          "blob": "056a857364cf8a6c2a2bc97bf107276612edf55d",
+          "sha256": "96ed59925c95abe55fe15185f30f2026f0713f5f916238d4529c29d812aa86bf",
+          "bytes": 6719
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+          "blob": "3dec070ca5f56f7bd03a09b4b19468c950d82214",
+          "sha256": "ccfd69570f4cc7dbe180f4e60cbf9891522e3f10674a6c8d84c78b61af8b491d",
+          "bytes": 19201
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+          "blob": "dd571e43b841dc7cbc37296c4fa9ccd708215ef4",
+          "sha256": "fa2ec4afe016ef0820cce9d08601cd9772e099b1308790e23fd6f538af226320",
+          "bytes": 17055
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+          "blob": "84151d62b46e949c90a48a5965f5bdd244b0c5fb",
+          "sha256": "7aaeda6630e20eecf147d6a36ed9b52d87366b1712941302af047febad707e6a",
+          "bytes": 17416
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/README.md",
+          "blob": "516338b8bfea1bb1411715f2f1d1c6b98a323444",
+          "sha256": "66312d8b2f98a3aa1e1cb06bbb18cff775cf6bca8edf3fd77d3bbc53df3596b7",
+          "bytes": 11183
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp13/portfolio.test.ts",
+          "blob": "57ec7d22fc2fa20506547ae5d4a3bca40a91db04",
+          "sha256": "7ab02e6100cefe34da319dfc60e9e0c6250a831bb48337c4f892ad53d697564f",
+          "bytes": 17739
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+          "blob": "cda3793718823d031fe528ae39a282c4069ae49b",
+          "sha256": "543ee64aaeb2cd05506ff703e4d4936e67690b059362672b7d4413bacd796b17",
+          "bytes": 23637
+        }
+      ],
+      "prior_reviewed_files_reconfirmed": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity.ts",
+          "blob": "527db7238ae9e7c5a5233e2fedfbb8431017e3d5",
+          "unchanged_from_followup_02": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-v6.ts",
+          "blob": "ec0053c5fe571cf3867cdae09ae66c3b999b9a4d",
+          "unchanged_from_followup_02": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-v6.test.ts",
+          "blob": "26f2ad65abc551c33561420cf7e23b04522255f6",
+          "unchanged_from_followup_02": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity.test.ts",
+          "blob": "a77713b4a8dff26a7d105775633a9f15c1248f21",
+          "unchanged_from_followup_02": true
+        }
+      ],
+      "threshold_proof_provenance": {
+        "parent_supplied_commit_prefix": "46c904e",
+        "parent_supplied_pull_request": 36,
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/threshold-proof.ts",
+        "expected_blob": "056a857364cf8a6c2a2bc97bf107276612edf55d",
+        "local_blob_matches": true,
+        "remote_verification_by_this_reviewer": false
+      },
+      "checks": [
+        {
+          "area": "Threshold certificate",
+          "locations": [
+            "product/portfolio/threshold-proof.ts:25-44"
+          ],
+          "assessment": "Checks finite in-range scalar, supported monotone direct-USD operation, unit/engine/metric, original source/baseline scope, canonical source-reference digests and installation/project. Replays the claimed included boundary and the adjacent representable rejected value with canonical preview; checks coverage refs, comparison identities, metric/evidence closure, exact components, fixed components and distinct criterion outcomes. A false55001 with genuine source refs cannot pass the included witness in the renewal oracle. The domain remains responsible for monotonicity; this consumer does not derive a financial formula from a sampled curve."
+        },
+        {
+          "area": "Producer and replay parity",
+          "locations": [
+            "product/portfolio/planner-sensitivity.ts:73-74,96-102,117-122",
+            "product/portfolio/verification.ts:111-112,129-135,143-148"
+          ],
+          "assessment": "Both paths certify after the initial exact callback and again at egress, comparing the resulting typed known-subtotal certificate. The same reconstructed scenario function is imported/re-exported. Prior quantification guards, conditioned known55000 semantics and C10 complete qualification remain intact."
+        },
+        {
+          "area": "Definitive constraint failure",
+          "locations": [
+            "product/portfolio/port.ts:78-95"
+          ],
+          "assessment": "An authenticated failed constraint can make a combination ineligible without a complete financial comparison. Missing coverage is retained, and the code does not infer a failed criterion from a subtotal. The corrected financialStatus propagates incompatible and unavailable from scenario, selected candidates and persisted comparison before considering complete/conditioned."
+        },
+        {
+          "area": "Egress mutation",
+          "locations": [
+            "product/portfolio/port.ts:97-104"
+          ],
+          "assessment": "revalidateEvaluation receives a detached copy of scenario, refs, analysis and candidates. A callback rewriting components or coverage refs fails the canonical digest check, leaving original observations intact; candidate egress reread remains in place."
+        },
+        {
+          "area": "Targeted hosted regressions",
+          "locations": [
+            "test/product/wp13/coverage-sensitivity-integration.test.ts:113-129,197-200",
+            "test/product/wp13/portfolio.test.ts:88-99,107-135"
+          ],
+          "assessment": "Read assertions for a forged55001 scalar with real evidence, domain-backed endpoint grids, mutable egress callbacks, definitive deadline failure with pending coverage and candidate/analysis unavailable. The steps1 change reduces sample grid only; exact certification still uses canonical adjacent witnesses. None was executed by this reviewer."
+        }
+      ],
+      "finding_detected_and_corrected_during_review": {
+        "id": "WP13-SENS-REVIEW-03",
+        "severity": "P2",
+        "owner": "WP13",
+        "state": "CORRECTED_IN_FINAL_LOCAL_W3_PENDING_HOSTED_EVIDENCE",
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+        "mechanism_before_fix": "The new definitive-failed branch preceded unavailable handling, while financialStatus considered only scenario status. A conditioned scenario with an unavailable candidate or analysis and a failed delivery criterion returned ineligible+conditioned, masking unavailable financial evidence.",
+        "correction_reviewed": "financialStatus now first propagates incompatible/unavailable over all observed statuses. The failed criterion still determines ineligible, independently of that financial status. The new test covers both candidate and analysis unavailable.",
+        "author_of_fix": "Parent/root, not this reviewer"
+      },
+      "new_open_blocking_findings": [],
+      "prior_findings": {
+        "WP13-SENS-REVIEW-01": "CORRECTED_LOCAL_W3; publication and hosted evidence pending",
+        "WP13-SENS-REVIEW-02": "OPEN_CONSUMER_ADOPTION; not remotely reinspected"
+      },
+      "required_before_acceptance": [
+        "Publish head/tree containing reviewed blobs.",
+        "Run the authorized surgical W3 GitHub Actions checks; W2 runs cannot establish these changes.",
+        "Keep default host/UI/BI/native consumer adoption findings open until owner pins and real-path evidence are supplied."
+      ],
+      "verdict_scope": "No blocker found in the final requested local delta after the P2 correction. This is not global acceptance, READY, CI success, or remote consumer verification."
     }
   ],
-  "latest_followup": "WP13-SENS-W3-FOLLOWUP-02"
+  "latest_followup": "WP13-SENS-W3-FOLLOWUP-03"
 }

@@ -41,6 +41,17 @@ export async function createPortfolioCoverageFixture(training: "bundled" | "omit
     const selection: PortfolioSelection = { ...selectionBody, selectionDigest: digestSfValue(selectionBody) }
     const revoked = new Set<string>()
     const access = { allowed: true }
+    const scopeRefs = [selected.statement, statement].map((ref) => structuredClone(ref))
+    // C08 validates source identity/freshness here. Case, rule and interval checks remain in their canonical ports.
+    const coverageEvidence = async (refs: readonly BusinessEvidenceRef[], context: TrustedDomainContext): Promise<readonly BusinessEvidenceResolution[] | undefined> => {
+      if (!access.allowed || !await fixture.host.revalidate(context)) return undefined
+      if (refs.some((ref) => ![...fixture.sourceRefs, ...scopeRefs].some((known) => digestSfValue(known) === digestSfValue(ref)))) return undefined
+      const resolved = await Promise.all(refs.map(async (ref): Promise<BusinessEvidenceResolution> => {
+        if (scopeRefs.some((known) => digestSfValue(known) === digestSfValue(ref))) return { state: revoked.has(ref.refId) ? "revoked" : "fresh", ref: structuredClone(ref), accessRevision: context.binding.accessRevision, checkedAt: "2026-11-13T00:00:00Z" }
+        return fixture.evidence.resolve(ref, context)
+      }))
+      return access.allowed && await fixture.host.revalidate(context) ? resolved : undefined
+    }
     const resolveAuthority = async (request: SensitivityRequest, baselineRef: string, context: TrustedDomainContext): Promise<PortResult<PortfolioCoverageAuthority>> => {
       if (!access.allowed || request.scenarioRef !== fixture.selectedRef || baselineRef !== fixture.baselineRef || !await fixture.host.revalidate(context)) return { status: "denied", reason: "coverage-fixture-access-unavailable" }
       const rule = await fixture.rules.resolve({ caseRef: fixture.caseRef, criterionId: request.criterion.id }, context)
@@ -58,7 +69,7 @@ export async function createPortfolioCoverageFixture(training: "bundled" | "omit
     }
     const coverage = createPortfolioCoveragePreview({ units: fixture.issuer, preview: fixture.preview, resolveAuthority })
     const withAmount = (amount: number): ScenarioRequest => ({ ...fixture.scenario, operations: fixture.scenario.operations.map((operation) => operation.targetRef === fixture.sensitivityRequest.parameterBounds.parameterRef ? { ...operation, amount } : operation) })
-    return { ...fixture, selectedCoverage: selected, baselineCoverage: { assessment, classification, statement }, storedResult, coveredBaseline: baselineResult, selection, resolveAuthority, coverage, withAmount, revokeStatement: (ref = selected.statement.refId) => { revoked.add(ref) }, deny: () => { access.allowed = false } }
+    return { ...fixture, selectedCoverage: selected, baselineCoverage: { assessment, classification, statement }, storedResult, coveredBaseline: baselineResult, selection, resolveAuthority, coverageEvidence, coverage, withAmount, revokeStatement: (ref = selected.statement.refId) => { revoked.add(ref) }, deny: () => { access.allowed = false } }
   } catch (error) {
     await fixture.cleanup()
     throw error

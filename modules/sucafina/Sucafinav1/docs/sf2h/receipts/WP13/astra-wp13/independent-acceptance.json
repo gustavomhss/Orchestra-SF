@@ -2820,6 +2820,103 @@
         "The exact W3 source delta reviewed does not establish the other W3 product changes or global acceptance."
       ],
       "next_action": "Publish the pinned W3 candidate, run the necessary surgical Actions selection, inspect this named test result and retain consumers/native requirements separately."
+    },
+    {
+      "id": "W4-RECONCILIATION-STATIC-01",
+      "reviewer": "/root/wp13_review_acceptance",
+      "scope": "Read-only review of the proposed W4 reconciliation producer before publication. W2 matrix and W3 source-scenario follow-up remain unchanged.",
+      "priorReportSha256": "584e55f0a1ebea8c4a27de339ae2d1cfe558a30a7f66896bf9f46df845f9012d",
+      "files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/reconciliation.ts",
+          "gitBlob": "214f0900792a7b491722ba4d576a7ab4915ad2cf",
+          "sha256": "6402a3950ebf3e8e8ce2103b8947e1dab4dbd613f3a17f99e5ed6d8ef12d1b36"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/product.ts",
+          "gitBlob": "df0b1b8ff11debc47ed9ec62d637caca23bbd27e",
+          "sha256": "52640e9bf2e2d94f9b1a995472a267badbfe87e5e9f0c976d67f2dcb3fd321fd"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/README.md",
+          "gitBlob": "7b7779960f4ca5658bda5917f7033c51dad663f2",
+          "sha256": "82d4cfc2dae4fbabf2f33ebe5912b57ecbbb9d5dc4e427b06f318b1fd9e6ecc5"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp13/reconciliation.test.ts",
+          "gitBlob": "b4e720037aec7c4c0119b4de900bcbd05957810b",
+          "sha256": "8f1719fd300411412079d5c046df344f3f1064bc22caaea588ef440f60f1ee0d"
+        }
+      ],
+      "criteria": [
+        "WP13.T04.CHK.03",
+        "WP13.T04.CMP.01",
+        "WP13.T04.CHK.01",
+        "WP13.T04.CHK.02",
+        "WP13.T04.INV.01"
+      ],
+      "productStatus": "NOT_RUN",
+      "acceptanceStatus": "NOT_ESTABLISHED",
+      "ready": false,
+      "observedHostedEvidence": [],
+      "conclusion": "The missing owned producer now exists. It exposes an authorized read-only projection connecting the original portfolio/C08/binding/candidates, the same human choice and ledger, prepared changes/receipts and per-component material conditions. No additional blocking owned-code defect was found in the final listed blobs. This static conclusion is not criterion PASS or installed consumer proof.",
+      "reviewMethod": [
+        "Read source and canonical domain/WP11/WP14 contracts",
+        "Hash local bytes only",
+        "No product execution, typecheck, CI dispatch, repository edit or remote mutation"
+      ],
+      "observedImplementation": [
+        "caseFor, DecisionCasePort and trusted authority agree on current identity/incarnation/version and caller scope; original C08/binding/request, selected candidates, operations, assumptions, comparison/result and choice ledger are cross-bound.",
+        "Changes and receipts bind case/choice/expected version, target incarnation, idempotency and authenticated receipt evidence; duplicate change ids, idempotency keys and receipt references are refused.",
+        "Original historical evidence remains subject to current access; current material evidence must be fresh. Copied callback inputs, double inspection and final case/scope reread fence mutation and stale authority.",
+        "Stable component/source/criterion conditions preserve the original choice/composition, null/coverage/currency and canonical event. Financial results are not recalculated; classification uses the published WP14 classifier.",
+        "Verifiable componentScope binds before/after domain component fingerprints and the exact observed source/version. Missing scope or unchanged component with changed global comparison stays unknown while the canonical event remains intact.",
+        "product.ts exposes reconciliation and http.reconcile behind current-case authorization. Missing private host composition returns unavailable. No domain write, approval, receipt or memory ledger is created."
+      ],
+      "findingsResolved": [
+        {
+          "id": "WP13-RECON-MATERIAL-SCOPE-01",
+          "criterion": "WP13.T04.CHK.03",
+          "problem": "Global comparison changed by A could be classified as material for unchanged B.",
+          "resolution": "Component-scope proof plus unchanged-component guard retains the canonical event and uses unknown classification when local change is unproved; the controlled fixture covers B unchanged with A/global change.",
+          "status": "RESOLVED_IN_CODE_PENDING_HOSTED_PROOF"
+        },
+        {
+          "id": "WP13-RECON-RESUME-FIXTURE-01",
+          "criterion": "WP13.T04.CMP.01",
+          "problem": "Resume fixture passed a full DecisionCase as caseRef, which fails exact comparison to the id/incarnation/version triple.",
+          "resolution": "Fixture now passes the exact triple.",
+          "status": "RESOLVED_IN_CODE_PENDING_HOSTED_PROOF"
+        }
+      ],
+      "limitsAndNextActions": [
+        {
+          "owner": "WP10",
+          "action": "Compose authenticated historical readPortfolio (C08, binding, selection and candidates) and the canonical material producer with componentScope; neither is transport-provided proof.",
+          "status": "HOST_COMPOSITION_AND_PROOF_PENDING"
+        },
+        {
+          "owner": "WP13 / domain producer / GitHub Actions",
+          "action": "Observe hosted tests and a separate canonical price/materiality integration. This new unit fixture controls authority, C08 projections, ChoiceRecord/ledger, receipts and material observations; it does not prove installed financial commands, real recordChoice or native use.",
+          "status": "PRODUCT_AND_CANONICAL_PRICE_PROOF_PENDING"
+        },
+        {
+          "owner": "WP11",
+          "action": "Retain the same application, receipts and partial/retry mechanisms; the new projection reads them and does not establish their installed runtime execution.",
+          "status": "CONSUMER_RUNTIME_PROOF_PENDING"
+        },
+        {
+          "owner": "WP14 / WP01 / WP05 / WP10 native host",
+          "action": "Connect reconsideration delivery/memory and actual UI/BI/native consumption; do not infer adoption from this producer.",
+          "status": "CONSUMER_ADOPTION_AND_PROOF_PENDING"
+        },
+        {
+          "owner": "WP13 / host provenance",
+          "action": "Ambiguous/unmatched effects remain explicit and unmappedChanges is retained. Excluded components absent from the chosen result require additional origin evidence before claiming complete component correlation; this review does not approve universal reconciliation of every operation.",
+          "status": "EXPLICIT_LIMIT_REQUIRES_MATCHED_CORPUS"
+        }
+      ],
+      "w2Preservation": "All original top-level fields and all 68 criteria remain unchanged; only this followups entry is appended."
     }
   ]
 }

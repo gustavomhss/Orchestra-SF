@@ -50,8 +50,8 @@ test("WP13 composes real Planner and C10 interval proofs at 55000/55001 without 
   } finally { await fixture.cleanup() }
 }, 180000)
 
-test("WP13 distinguishes omitted/null training from explicit zero and moves the real boundary to 15000/15001 after the 40000 quote", async () => {
-  for (const training of ["omitted", "null", "zero", "confirmed"] as const) {
+for (const training of ["omitted", "null", "zero", "confirmed"] as const) {
+  test(`WP13 preserves ${training} training coverage and its canonical boundary without treating absence as zero`, async () => {
     const fixture = await createPortfolioCoverageFixture(training)
     try {
       const issued = await fixture.coverage.issue(fixture.sensitivityRequest, fixture.baselineRef, fixture.context)
@@ -62,7 +62,7 @@ test("WP13 distinguishes omitted/null training from explicit zero and moves the 
         const row = fixture.selectedCoverage.assessment.entries.find((entry) => entry.categoryId === "training")
         expect(row).toMatchObject({ status: "pending", reason: training === "omitted" ? "missing-category" : "component-unresolved" })
         if (training === "null") expect(fixture.selectedResult.components.find((component) => component.id === "training:11")?.amount).toBeNull()
-        continue
+        return
       }
       if (issued.status !== "ok") throw new Error(`Explicit training coverage unavailable: ${JSON.stringify(issued)}`)
       const exact = await fixture.exact(fixture.sensitivityRequest, fixture.baselineRef, fixture.context)
@@ -81,8 +81,8 @@ test("WP13 distinguishes omitted/null training from explicit zero and moves the 
         expect(preview.value.sample.total).toBeNull()
       }
     } finally { await fixture.cleanup() }
-  }
-}, 180000)
+  }, 180000)
+}
 
 test("WP13 rejects forged metrics, changed fixed components, unissued qualifications and revoked scope evidence", async () => {
   const fixture = await createPortfolioCoverageFixture()
@@ -109,8 +109,8 @@ test("WP13 rejects forged metrics, changed fixed components, unissued qualificat
   } finally { await fixture.cleanup() }
 }, 180000)
 
-test("WP13 fences source/rule/access changes and refuses an authority mutated during its validity callback", async () => {
-  for (const change of ["source", "rule", "access", "borrowed"] as const) {
+for (const change of ["source", "rule", "access", "borrowed"] as const) {
+  test(`WP13 fences ${change} authority changes in a real coverage certificate`, async () => {
     const fixture = await createPortfolioCoverageFixture()
     try {
       if (change === "borrowed") {
@@ -121,7 +121,7 @@ test("WP13 fences source/rule/access changes and refuses an authority mutated du
           return { status: "ok", value: { ...resolved.value, isStillValid: async (context) => { resolved.value.selection.version++; return check(context) } } }
         } })
         expect(await coverage.issue(fixture.sensitivityRequest, fixture.baselineRef, fixture.context)).toMatchObject({ status: "stale", reason: "coverage-authority-changed" })
-        continue
+        return
       }
       const issued = await fixture.coverage.issue(fixture.sensitivityRequest, fixture.baselineRef, fixture.context)
       if (issued.status !== "ok") throw new Error(`Coverage interval unavailable: ${JSON.stringify(issued)}`)
@@ -130,8 +130,8 @@ test("WP13 fences source/rule/access changes and refuses an authority mutated du
       if (change === "access") fixture.deny()
       expect(await fixture.coverage.revalidate(issued.value.intervalRef, fixture.context)).toBe(false)
     } finally { await fixture.cleanup() }
-  }
-}, 180000)
+  }, 180000)
+}
 
 test("WP13 does not qualify a real foreign currency preview with missing FX", async () => {
   const fixture = await createPortfolioCoverageFixture("bundled", "eur-missing-fx")

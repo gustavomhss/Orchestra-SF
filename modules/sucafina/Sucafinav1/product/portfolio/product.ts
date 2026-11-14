@@ -18,6 +18,8 @@ import { createProductionPortfolio } from "./production.ts"
 import { createPlannerSensitivity } from "./planner-sensitivity.ts"
 import { createPortfolioSelectionResolver } from "./selection.ts"
 import { createPortfolioCoveragePreview } from "./coverage-preview.ts"
+import { createPortfolioReconciliation } from "./reconciliation.ts"
+import type { PortfolioReconciliationHost, PortfolioReconciliationRequest } from "./reconciliation.ts"
 
 type CaseRef = { id: string; incarnation: string; version: number }
 
@@ -39,6 +41,7 @@ export function createPortfolioProduct(input: {
   idempotencyKey: (requestDigest: string, context: TrustedDomainContext) => Promise<string | undefined>
   exactThreshold?: Parameters<typeof createPlannerSensitivity>[0]["exactThreshold"]
   resolveCoverageAuthority?: Parameters<typeof createPortfolioCoveragePreview>[0]["resolveAuthority"]
+  reconciliation?: PortfolioReconciliationHost
 }) {
   const units = createPlannerSensitivityUnits({ host: input.host, cases: input.cases, scenarios: input.planner.scenarios, store: input.results, evidence: input.evidence, rules: input.rules })
   const preview = (request: Parameters<typeof comparePlannerPreview>[1], context: TrustedDomainContext) => comparePlannerPreview({ host: input.host, sources: input.planner.sources, scenarios: input.planner.scenarios, planner: input.planner.planner }, request, context)
@@ -54,6 +57,7 @@ export function createPortfolioProduct(input: {
     const current = await input.caseFor(context)
     return current.status === "ok" && digestSfValue(current.value) === digestSfValue(caseRef) && await input.host.revalidate(context)
   }
+  const reconcile = input.reconciliation ? createPortfolioReconciliation({ ...input.reconciliation, cases: input.cases, evidence: input.evidence, host: input.host, caseFor: input.caseFor }) : undefined
   const catalog = async (refs: readonly CaseRef[], context: TrustedDomainContext) => {
     if (!refs.length || new Set(refs.map((ref) => encodeCaseRef(ref))).size !== refs.length) return { status: "needs-input", reason: "invalid-portfolio-cases" } as const
     const checked = await Promise.all(refs.map((ref) => input.cases.read({ caseRef: encodeCaseRef(ref) }, context)))
@@ -71,6 +75,7 @@ export function createPortfolioProduct(input: {
     contribution,
     sensitivity: contribution.port.sensitivity,
     issueSensitivityUnits: units.issue,
+    reconciliation: reconcile,
     http: {
       list: async (caseRef: CaseRef, context: TrustedDomainContext) => await authorized(caseRef, context) ? input.portfolioBindings.list({ caseRef }, context) : { status: "denied" as const, reason: "portfolio-case-unavailable" },
       catalog,
@@ -94,6 +99,7 @@ export function createPortfolioProduct(input: {
       },
       promote: async (request: Parameters<typeof contribution.promoteAlternative>[0], context: TrustedDomainContext) => await authorized(request.caseRef, context) ? contribution.promoteAlternative(request, context) : { status: "denied" as const, reason: "portfolio-case-unavailable" },
       prepare: async (request: Parameters<typeof contribution.prepareChoice>[0], context: TrustedDomainContext) => await authorized(request.caseRef, context) ? contribution.prepareChoice(request, context) : { status: "denied" as const, reason: "portfolio-case-unavailable" },
+      reconcile: async (request: PortfolioReconciliationRequest, context: TrustedDomainContext) => !await authorized(request.caseRef, context) ? { status: "denied" as const, reason: "portfolio-case-unavailable" } : reconcile ? reconcile(request, context) : { status: "unavailable" as const, reason: "portfolio-reconciliation-producer-unavailable" },
     },
   }
 }

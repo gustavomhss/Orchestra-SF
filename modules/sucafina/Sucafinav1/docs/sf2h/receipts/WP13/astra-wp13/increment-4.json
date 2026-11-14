@@ -1,0 +1,43 @@
+{
+  "schema": "sf-wp13-increment-v1",
+  "label": "W4",
+  "parentProduct": "7c32479d70d047f96d71f6e3be6fe8eaca6adffd",
+  "status": "IMPLEMENTED_PENDING_HOSTED_PROOF",
+  "ready": false,
+  "ownProduct": [
+    "Read-only authenticated reconciliation of original portfolio/C08/binding/candidates to ChoiceRecord/ledger and current WP11 prepared changes/receipts",
+    "Per-component material condition references for WP14; canonical materiality event retained; missing attribution scope or unchanged component under global comparison change remains unknown",
+    "Optional private product.http.reconcile, unavailable when host composition is absent; no new public C16 or application/memory path"
+  ],
+  "ownTests": [
+    "Seven owned reconciliation test cases with origin, receipt, mutation, current access and component-scope negatives; exact count verified by hosted run",
+    "Split long coverage and EUR tests into independently reported cases",
+    "Remove duplicate manual verifier replay and repeat certified idempotence in confirmed mode",
+    "C08 fixture validates fresh exact evidence directly; current case/rule/C10 checks remain in canonical ports"
+  ],
+  "hostedEvidenceBeforeThisIncrement": {
+    "S2": {
+      "runId": 43580984368,
+      "product": "84fa950ed4925124ca7ee6c854d4ae534bcd6d1a",
+      "conclusion": "cancelled",
+      "omni": "missing verdict",
+      "acceptedProductPass": false
+    },
+    "C3": {
+      "runId": 43583222386,
+      "product": "7c32479d70d047f96d71f6e3be6fe8eaca6adffd",
+      "typecheck": "FAIL",
+      "ownedTypeErrors": 0,
+      "foreignTypeErrors": 130,
+      "guards": "PASS"
+    }
+  },
+  "next": [
+    "Hosted bun typecheck and guards against published W4",
+    "Disjoint explicit product selections against published inputs, one run in flight",
+    "Complete additional canonical same-source45000->70000 test and observe it in Actions",
+    "WP10/WP14 consume private reconciliation delta; consumers/global gates remain open"
+  ],
+  "ownerDelta": "reconciliation-consumer-delta.NOT_APPLIED.json",
+  "foreignInputs": "consumed-inputs-v4.json"
+}

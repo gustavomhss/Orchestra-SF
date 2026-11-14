@@ -1,0 +1,63 @@
+{
+  "schema": "sf-owner-delta-v1",
+  "status": "NOT_APPLIED",
+  "owners": [
+    "WP10",
+    "WP14"
+  ],
+  "producer": "WP13",
+  "target": {
+    "branch": "astra-wp10",
+    "head": "0cf10879337bf1e4a4dfd0dbde0b9c259cb51d23",
+    "path": "apps/cli/src/sucafina-product/portfolio-services.ts",
+    "blob": "83c525e733b2cb21637734e3b1e07950e72f4f97",
+    "verifiedUnchangedFrom": "f075e9824b7d8aed50b7f42c597528ef198177db"
+  },
+  "producerFiles": [
+    "product/portfolio/reconciliation.ts",
+    "product/portfolio/product.ts"
+  ],
+  "privateContract": {
+    "request": [
+      "caseRef current",
+      "portfolioResultRef",
+      "combinationId",
+      "choiceId"
+    ],
+    "readPortfolio": "Authenticate original C08 StoredPortfolio + PortfolioBinding + historical candidates, including current case/principal/ACL, authentic selection and digest equality. This is a private host seam, not transport data.",
+    "readMaterialChange": "Compose the domain producer (PlannerMateriality or the corresponding owner) and current evidence. A componentScope carries componentId and before/after digests computed by portfolioComponentConditionDigest from actual canonical result components. Scope is checked independently; missing scope or unchanged component with a changed global comparison remains unknown.",
+    "response": "Read-only original composition/choice/ledger, per-component prepared changes and receipts, material conditions/observations/impacts, explicit unmapped or ambiguous effects; no write/apply/memory command."
+  },
+  "patch": "reconciliation-factory.NOT_APPLIED.patch.txt",
+  "patchLimit": "The patch only adds private injection to the factory. WP10 must compose the authenticated reader/domain producer before enabling any route. It does not implement a public C16 operation or native/UI grant.",
+  "requiredOwnerWork": [
+    {
+      "owner": "WP10",
+      "action": "Compose the private historical portfolio/candidate reader using current WP11 provenance and current evidence checks; never pass a client-supplied stored object or widen native multicase scope."
+    },
+    {
+      "owner": "WP10/WP03/WP11",
+      "action": "Bind a materiality observation to the same source identity or an explicit published ancestry contract. A copied Planner version is not silently relabeled as the original source."
+    },
+    {
+      "owner": "WP10/WP01/WP05",
+      "action": "Expose authorized read-only reconciliation through installed UI/BI; preserve original values, per-change states and null/unknown disclosures."
+    },
+    {
+      "owner": "WP14",
+      "action": "Consume the returned condition references with originalChoice under current access. Persist memory/signals only through WP14's canonical flow; a reconciliation read is not a reconsideration command."
+    }
+  ],
+  "requiredProofs": [
+    "Real same-case choice; original implementation45000 -> current70000 on the same source; original C08/choice/composition preserved",
+    "Component A affected and unchanged B not incorrectly marked material by the global comparison",
+    "Partial WP11 application and retry retains one effect/receipt; no second ledger",
+    "Revoked case/source/receipt evidence and mutation during egress return denial/stale without restricted payload",
+    "Absent injection reports unavailable; no parallel application, financial calculation or memory writer"
+  ],
+  "validation": {
+    "testsRun": false,
+    "typecheckRun": false,
+    "note": "Owner delta only. Product checks are recorded separately against exact published WP13 SHAs."
+  }
+}

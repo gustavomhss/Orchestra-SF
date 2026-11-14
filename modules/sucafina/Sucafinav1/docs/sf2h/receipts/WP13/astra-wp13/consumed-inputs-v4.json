@@ -1,0 +1,25 @@
+{
+  "schema": "sf-wp13-exact-intake-v1",
+  "parentProduct": "7c32479d70d047f96d71f6e3be6fe8eaca6adffd",
+  "sourceCommit": "7a67364aeb5c478be54e533910c4b4c91bbd1ebe",
+  "authorship": "Exact published owner blobs; no source edits",
+  "reason": "Current owner fixture can open a bundled same-case human choice and preserves published revision helpers. Used by the WP13 same-case coverage tests and the additional reconciliation integration; a copied source is never treated as same-source materiality.",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/engine-revision-fixture.ts",
+      "blob": "93e9c37cfea05574c3c0b3ae080a03fdd5063056",
+      "sourceCommit": "7a67364aeb5c478be54e533910c4b4c91bbd1ebe"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "blob": "52dc09126bc81da39aa4b5beb0a28d0218d7560d",
+      "sourceCommit": "7a67364aeb5c478be54e533910c4b4c91bbd1ebe"
+    }
+  ],
+  "exclusions": [
+    "No runtime/planner engine changes",
+    "No owner branch modifications",
+    "No full Finance snapshot",
+    "No new numeric calculation in WP13"
+  ]
+}

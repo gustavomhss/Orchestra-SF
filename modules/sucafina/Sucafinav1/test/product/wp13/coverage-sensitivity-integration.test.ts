@@ -19,8 +19,8 @@ import { createPortfolioProofVerifier } from "../../../product/portfolio/verific
 import { createPortfolioCoverageFixture } from "./coverage-preview-fixture.ts"
 import { createRenewalChoiceHistory } from "../wp11/renewal-choice-fixture.ts"
 
-test("WP13 persists and reproduces real 55000/15000 sensitivity while omitted training keeps its exact known-components bound conditioned", async () => {
-  for (const training of ["omitted", "bundled", "confirmed"] as const) {
+for (const training of ["omitted", "bundled", "confirmed"] as const) {
+  test(`WP13 persists and cold-reloads ${training} training with its real ${training === "confirmed" ? 15000 : 55000} sensitivity bound`, async () => {
     const fixture = await createPortfolioCoverageFixture(training)
     try {
       const request = endpointRequest(fixture.sensitivityRequest)
@@ -61,30 +61,28 @@ test("WP13 persists and reproduces real 55000/15000 sensitivity while omitted tr
         expect(sample.value.caseRef).toEqual(fixture.caseRef)
         if (training === "omitted") expect(sample.value.result.costCoverage.derivedMissingCategoryIds).toContain("training")
       }
-      const stored = await services.results.read({ kind: "sensitivity", resultRef: saved.value.sensitivityResultRef }, fixture.context)
-      const binding = await services.bindings.read({ caseRef: fixture.caseRef, resultRef: saved.value.sensitivityResultRef }, fixture.context)
-      if (stored.status !== "ok" || binding.status !== "ok") throw new Error(`Certified stored result or binding unavailable: ${JSON.stringify({ stored, binding })}`)
-      const before = await services.state.read(fixture.request, "cases", (state) => Object.keys(state.decisionResults ?? {}))
       const reloaded = await persistedServices(fixture, training)
-      expect(await reloaded.verifier.verifySensitivity(binding.value, stored.value, fixture.context)).toBe(true)
+      // This must be the first operation on the recreated service: no producer or verifier prewarms its proof maps.
       const replay = await reloaded.persistent.read(saved.value.sensitivityResultRef, fixture.context)
       if (replay.status !== "ok") throw new Error(`Fresh service replay unavailable: ${JSON.stringify(replay)}`)
       expect(replay.value).toEqual(saved.value)
-      const again = await reloaded.persistent.evaluateAndStore(request, fixture.caseRef, fixture.context)
-      if (again.status !== "ok") throw new Error(`Idempotent certified sensitivity unavailable: ${JSON.stringify(again)}`)
-      expect(again.value.sensitivityResultRef).toBe(saved.value.sensitivityResultRef)
-      expect(await services.state.read(fixture.request, "cases", (state) => Object.keys(state.decisionResults ?? {}))).toEqual(before)
+      if (training === "confirmed") {
+        const before = await services.state.read(fixture.request, "cases", (state) => Object.keys(state.decisionResults ?? {}))
+        const again = await reloaded.persistent.evaluateAndStore(request, fixture.caseRef, fixture.context)
+        if (again.status !== "ok") throw new Error(`Idempotent certified sensitivity unavailable: ${JSON.stringify(again)}`)
+        expect(again.value.sensitivityResultRef).toBe(saved.value.sensitivityResultRef)
+        expect(await services.state.read(fixture.request, "cases", (state) => Object.keys(state.decisionResults ?? {}))).toEqual(before)
+      }
       if (training === "omitted") fixture.revokeSource(fixture.scenario.baseRef)
       if (training !== "omitted") fixture.revokeStatement()
-      expect(await reloaded.verifier.verifySensitivity(binding.value, stored.value, fixture.context)).toBe(false)
       expect((await reloaded.persistent.read(saved.value.sensitivityResultRef, fixture.context)).status).not.toBe("ok")
       const current = await fixture.state.read(fixture.request, "cases", (state) => state.cases[fixture.caseRef.id])
       if (current.status !== "ok" || !current.value) throw new Error("Case unavailable after analysis")
       expect(current.value.choices).toEqual([])
       expect(current.value.receipts).toEqual([])
     } finally { await fixture.cleanup() }
-  }
-}, 300000)
+  }, 300000)
+}
 
 test("WP13 withholds an exact bound for a real null price or missing FX before consulting an exact callback", async () => {
   for (const input of [{ training: "null", mode: "renewal-usd" }, { training: "bundled", mode: "eur-missing-fx" }] as const) {
@@ -205,8 +203,8 @@ async function persistedServices(fixture: Awaited<ReturnType<typeof createPortfo
   const state = createSfProductState({ persistence: fixture.store, proposalCoverageWrites: writes, createId: () => "wp13-coverage-state", resolveTarget: async () => ({ incarnation: fixture.caseRef.incarnation }), authorize: async (request) => request === fixture.request && await fixture.host.revalidate(fixture.context) ? identity : undefined })
   const sequence = { value: 0 }
   const results = createSfDecisionResultStore({ state, host: fixture.host, authorizeCase: async (decision, context) => decision.id === fixture.caseRef.id && decision.incarnation === fixture.caseRef.incarnation && decision.participants.includes(context.binding.principalRef) && await fixture.host.revalidate(context), verifySources: async (_value, refs, context) => {
-    const authority = await fixture.resolveAuthority(fixture.sensitivityRequest, fixture.baselineRef, context)
-    return authority.status === "ok" && await authority.value.isStillValid(context) && refs.every((ref) => authority.value.evidence.some((item) => item.state === "fresh" && item.accessRevision === context.binding.accessRevision && digestSfValue(item.ref) === digestSfValue(ref)))
+    const evidence = await fixture.coverageEvidence(refs, context)
+    return !!evidence && refs.every((ref) => evidence.some((item) => item.state === "fresh" && item.accessRevision === context.binding.accessRevision && digestSfValue(item.ref) === digestSfValue(ref)))
   }, createId: () => `wp13-certified-${training}-${++sequence.value}`, now: () => "2026-11-13T00:00:00Z" })
   const coveragePreview = createPortfolioCoveragePreview({ units: fixture.issuer, preview: fixture.preview, resolveAuthority: fixture.resolveAuthority })
   const exactThreshold: NonNullable<Parameters<typeof createPlannerSensitivity>[0]["exactThreshold"]> = (request, binding, context) => fixture.exact(request, binding.baselineRef, context)
