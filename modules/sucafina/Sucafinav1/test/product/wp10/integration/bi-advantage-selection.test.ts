@@ -113,7 +113,11 @@ test("BI refuses lease loss after its first and last real authorization awaits a
     fixture.fixture.ui.finish(baselineCall)
     for (const boundary of [1, baseline.calls.count]) {
       const call = await fixture.admit()
-      const observed = observe((count, current) => { if (count === boundary) fixture.fixture.ui.finish(current) })
+      const observed = observe((count, current) => {
+        if (count !== boundary) return
+        if (current.kind !== "ui") throw new Error("The real BI fixture must use a UI admission")
+        fixture.fixture.ui.finish(current)
+      })
       const refused = await observed.read(fixture.selection, call)
       expect(observed.calls.count).toBe(boundary)
       expect(refused).toEqual({ status: "denied", reason: "bi-scenario-authority-changed" })

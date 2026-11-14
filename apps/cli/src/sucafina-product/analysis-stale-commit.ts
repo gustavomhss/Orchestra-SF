@@ -1,5 +1,5 @@
 import { digestSfEvidenceRef, digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
-import type { BusinessContextService, BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
+import type { BusinessContextService, BusinessEvidenceRef, BusinessEvidenceResolution } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
 import type { PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
 import type { ContributionEnvelope } from "../../../../modules/sucafina/Sucafinav1/product/contracts/resident-ai.ts"
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
@@ -36,6 +36,7 @@ export function createSfStaleAnalysisAccess(input: {
     const denied = () => ({ status: "denied", reason: "analysis-stale-access-unavailable" } as const)
     try {
       const snapshots = input.persistence.currentSnapshots?.()
+      const snapshotIdentity = digestSfValue(snapshots)
       const identity = digestSfValue([record, output, call.kind, call.binding])
       if (!snapshots || record.state !== "stale" || record.runRef !== proof.runRef || record.contextFingerprint !== proof.contextFingerprint ||
         digestSfValue(record.caseRef) !== digestSfValue(proof.caseRef) || input.request.signal.aborted ||
@@ -46,13 +47,53 @@ export function createSfStaleAnalysisAccess(input: {
       if (!preparing && (!prior || prior.identity !== recordIdentity(record, call, output) || prior.fences !== fences(snapshots)))
         return { status: "stale", reason: "analysis-stale-source-changed" }
       const current = object(object(object(snapshots.dashboard.data.__sfProductV1).cases)[record.caseRef.id])
-      if (current.incarnation !== record.caseRef.incarnation || typeof current.version !== "number" || !Number.isSafeInteger(current.version) ||
+      if (current.id !== record.caseRef.id || current.incarnation !== record.caseRef.incarnation || typeof current.version !== "number" || !Number.isSafeInteger(current.version) ||
         current.version < record.caseRef.version || !Array.isArray(current.participants) || !current.participants.includes(call.binding.principalRef)) return denied()
       const refs = refsFor(output)
       const valid = (ref: BusinessEvidenceRef) => ref.installationId === call.binding.installationId && ref.projectId === call.binding.projectId && ref.refDigest === digestSfEvidenceRef(ref)
       if (refs.some((ref) => !valid(ref))) return denied()
-      const sources = await input.context.context({ refs: structuredClone(refs) }, call)
-      if (sources.length !== refs.length || sources.some((source, index) => digestSfValue(source.ref) !== digestSfValue(refs[index]) ||
+      const calculations = current.version > record.caseRef.version ? refs.filter((ref) => ref.kind === "calculation") : []
+      // The active run keeps its original selector. A late calculation can only
+      // reopen the same physical case's already-recorded result, never another
+      // case or a new result produced after the run's original case version.
+      const results = object(object(snapshots.dashboard.data.__sfProductV1).decisionResults)
+      if (calculations.some((ref) => {
+        const stored = object(results[ref.target.runId]), selected = object(stored.caseRef)
+        return stored.kind !== "scenario" || stored.resultRef !== ref.target.runId || selected.id !== record.caseRef.id ||
+          selected.incarnation !== record.caseRef.incarnation || typeof selected.version !== "number" || !Number.isSafeInteger(selected.version) ||
+          selected.version < 1 || selected.version > record.caseRef.version
+      })) return denied()
+      const readSources = async (): Promise<readonly BusinessEvidenceResolution[] | undefined> => {
+        if (!calculations.length) return input.context.context({ refs: structuredClone(refs) }, call)
+        const original = refs.filter((ref) => ref.kind !== "calculation")
+        const unchanged = await input.context.context({ refs: structuredClone(original) }, call)
+        if (unchanged.length !== original.length || input.authority.host.requestFor(call) !== input.request || input.request.signal.aborted ||
+          !await input.authority.human.authorize(call, "analysis.start", start)) return undefined
+        const admitted = await input.authority.human.admit(input.request, "analysis.start", start)
+        if (admitted.status !== "ok") return undefined
+        const readCall = admitted.value
+        const authority = (value: TrustedDomainContext) => digestSfValue([value.binding.installationId, value.binding.projectId,
+          value.binding.principalRef, value.binding.policyVersion, value.binding.accessRevision])
+        const binding = digestSfValue([readCall.kind, readCall.binding])
+        const currentRead = () => readCall !== call && input.authority.host.requestFor(readCall) === input.request &&
+          input.authority.host.requestFor(call) === input.request && !input.request.signal.aborted &&
+          authority(readCall) === authority(call) && binding === digestSfValue([readCall.kind, readCall.binding])
+        try {
+          if (!currentRead() || !await input.authority.human.authorize(readCall, "analysis.start", start) || !currentRead()) return undefined
+          // BCS owns the protected capture, ledger and canonical historical
+          // replay. Its temporary calculation selector belongs only to this
+          // private read lease; no active selector or publication is updated.
+          const historical = await input.context.context({ refs: structuredClone(calculations) }, readCall)
+          if (historical.length !== calculations.length || historical.some((source) => source.state !== "historical" ||
+            digestSfValue(source.currentRef) !== digestSfValue(source.ref)) || !currentRead() ||
+            !await input.authority.human.authorize(readCall, "analysis.start", start) || !currentRead() ||
+            !await input.authority.human.authorize(call, "analysis.start", start) || !currentRead()) return undefined
+          const observations = [...unchanged, ...historical]
+          return refs.map((ref) => observations.find((source) => digestSfValue(source.ref) === digestSfValue(ref))).filter((source): source is BusinessEvidenceResolution => source !== undefined)
+        } finally { if (readCall !== call) input.authority.human.finish(readCall) }
+      }
+      const sources = await readSources()
+      if (!sources || sources.length !== refs.length || sources.some((source, index) => digestSfValue(source.ref) !== digestSfValue(refs[index]) ||
         source.accessRevision !== call.binding.accessRevision || !source.currentRef || !valid(source.currentRef) || !source.authorizedProjection ||
         (source.state === "fresh" ? digestSfValue(source.currentRef) !== digestSfValue(source.ref)
           : source.state !== "historical" || !Array.isArray(source.differences)))) return denied()
@@ -61,7 +102,7 @@ export function createSfStaleAnalysisAccess(input: {
       if (!await input.authority.human.authorize(call, "analysis.start", start) || !await input.authority.host.revalidate(call) ||
         input.authority.host.requestFor(call) !== input.request || input.request.signal.aborted ||
         identity !== digestSfValue([record, output, call.kind, call.binding]) ||
-        digestSfValue(input.persistence.currentSnapshots?.()) !== digestSfValue(snapshots)) return denied()
+        digestSfValue(input.persistence.currentSnapshots?.()) !== snapshotIdentity) return denied()
       if (preparing) prepared.set(call, { identity: recordIdentity(record, call, output), fences: fences(snapshots) })
       return { status: "ok", value: { sourceFence: sfRunSourceFence(snapshots.dashboard) } }
     } catch {
