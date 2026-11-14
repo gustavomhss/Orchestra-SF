@@ -15,6 +15,7 @@ import { createDecisionEvidenceChecks } from "../../../../modules/sucafina/Sucaf
 import { verifyDecisionPlannerSources } from "../../../../modules/sucafina/Sucafinav1/product/decisions/baseline-fence.ts"
 import { decisionCoverageRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/coverage-access.ts"
 import { createPlannerSensitivityUnits } from "../../../../modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts"
+import { createPlannerExactThreshold } from "../../../../modules/sucafina/Sucafinav1/product/planner/exact-threshold.ts"
 import { createPlannerCriterionMetric } from "../../../../modules/sucafina/Sucafinav1/product/planner/criterion-metric.ts"
 import { comparePlannerPreview } from "../../../../modules/sucafina/Sucafinav1/product/planner/preview-comparison.ts"
 import { createPlannerResultPersistence } from "../../../../modules/sucafina/Sucafinav1/product/planner/persistence.ts"
@@ -89,6 +90,10 @@ export function createSfDecisionDomainServices(input: {
     },
     readMetric: (request, call) => metric(request, call), verifyMetric: checks.metric })
   const units = input.sharedPortfolio?.units ?? createPlannerSensitivityUnits({ host, cases: business.cases, scenarios, store: business.results, evidence: business.context, rules })
+  // The standalone domain composition must retain the host's exact-threshold capability.
+  const threshold = createPlannerExactThreshold({ units, preview })
+  const exactThreshold: NonNullable<Parameters<typeof createPortfolioProduct>[0]["exactThreshold"]> =
+    (request, binding, call) => threshold(request, binding.baselineRef, call)
   const metric = createPlannerCriterionMetric({ host, rules, units, preview })
   const plannerCriteria: PlannerCriteriaHost = { evaluate: async (request, call) => {
     const selected = await input.selectedCase(call)
@@ -128,14 +133,14 @@ export function createSfDecisionDomainServices(input: {
   const createReceipt: Parameters<typeof createPortfolioProduct>[0]["createReceipt"] = async (call, operation, digest, result) => business.receipt(call, operation, digest, result)
   const proof: ReturnType<typeof createPortfolioProofVerifier> = input.sharedPortfolio?.proof ?? createPortfolioProofVerifier({ cases: business.cases, planner: business.planner, sources: business.plannerSources,
     evidence: business.context, results: business.results, revalidate: host.revalidate, readSourceFences: business.readSourceFences, lockedSourceFences: business.lockedSourceFences,
-    caseFor: input.selectedCase, idempotencyKey, decisions, createReceipt, units, sensitivityPreview: preview, revalidateAnalysis: analysis.revalidate,
+    caseFor: input.selectedCase, idempotencyKey, decisions, createReceipt, units, sensitivityPreview: preview, exactThreshold, revalidateAnalysis: analysis.revalidate,
     candidateCoverageRefFor: async (candidate, call) => {
       const ref = parseCaseRef(candidate.caseRef)
       if (!ref || !candidate.result || !await host.revalidate(call)) return { status: "unavailable", reason: "candidate-coverage-unavailable" }
       return { status: "ok", value: decisionCoverageRef(ref, candidate.result.costCoverage.alternativeId, candidate.result.costCoverage.alternativeVersion) }
     } })
   const portfolio = input.sharedPortfolio?.product ?? createPortfolioProduct({ host, cases: business.cases, evidence: business.context, planner, results: business.results,
-    rules, selection: selectedPortfolio, portfolioBindings, comparisonBindings, sensitivityBindings, decisions, createReceipt, caseFor: input.selectedCase, idempotencyKey })
+    rules, selection: selectedPortfolio, portfolioBindings, comparisonBindings, sensitivityBindings, decisions, createReceipt, caseFor: input.selectedCase, idempotencyKey, exactThreshold })
   const proposals = createSfDecisionProposalServices({ ...input, selection: selectedPortfolio, checks })
   const materiality = createSfDecisionMaterialityServices({ authority: input.authority, business, selectedCase: input.selectedCase, signalRegistryWrites: input.signalRegistryWrites })
   return { ...proposals, descriptors: [...(input.sharedPortfolio?.product ? [] : portfolio.contribution.capabilities), ...proposals.descriptors], portfolio, portfolioProof: proof, units, sensitivityBindings, comparisonBindings, portfolioBindings,

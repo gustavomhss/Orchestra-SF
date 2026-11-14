@@ -1,0 +1,178 @@
+{
+  "schemaVersion": 1,
+  "id": "W26-INSTALLED-PUBLICATION-LIFECYCLE",
+  "status": "frozen-isolated-candidate-awaiting-hosted-check-and-CI",
+  "role": "own builder; not one of three independent reviewers",
+  "source": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "productCommit": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+    "productTree": "ee95a2e3d0f02efabe6a4442fcf59479265a9f61",
+    "frozenRoot": "publication/frozen-W25/repo",
+    "authoritativeTree": "publication/verified-W25-tree.json"
+  },
+  "scope": {
+    "changedPaths": [
+      "modules/sucafina/Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts"
+    ],
+    "centralRepoEdited": false,
+    "foreignSourceEdited": false,
+    "remoteMutations": false,
+    "dispatchedCI": false,
+    "candidateOnlyUnder": "agents/c17/W26-installed-publication-lifecycle"
+  },
+  "change": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts",
+    "baseCommit": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+    "base": {
+      "bytes": 23411,
+      "blobSha": "94cbf538fdb06949acf773941c437c8fd43a8a0e",
+      "sha256": "883ab148424655ad3f716fd283096e9e836119feacc8016d434ea43d5b288f4d"
+    },
+    "candidate": {
+      "bytes": 27069,
+      "blobSha": "9cb78aa7320e5e28fa43018cbd9ab94650523a5d",
+      "sha256": "cf88744e8bc83a53ead83b253e9d1a5775e48d0b6512dfac2645db5ca0264c7b"
+    },
+    "centralRepoEdited": false
+  },
+  "evidence": {
+    "runId": 43615096939,
+    "jobId": 132508295747,
+    "snapshotSha": "0b56a60ab2b66f123d2e9c375863cb48ff85788b",
+    "rawPath": "evidence/W25/A-job-132508295747.raw.txt",
+    "rawSha256": "c370e59135e63629adc585c6b021ef1e31aebccacd1ae948b9dbd7474866cad4",
+    "selectionCounts": {
+      "pass": 41,
+      "fail": 2,
+      "tests": 43,
+      "files": 7,
+      "durationSeconds": 371.09
+    },
+    "targetCounts": {
+      "pass": 4,
+      "fail": 1
+    },
+    "targetFailure": "publication author comes from the real registered Core session and refuses archive, removal and lease revocation",
+    "observedError": "RangeError: Cannot use a closed database",
+    "observedSource": "packages/core/src/database/sqlite.bun.ts:67 / :114",
+    "rawLines": [
+      918,
+      940
+    ],
+    "cleanupJobId": 132510432552,
+    "cleanupConclusion": "success"
+  },
+  "causalAssessment": {
+    "observed": "The fifth case reaches resident source registration and fails at real Core SQLite prepare; the first four cases pass.",
+    "staticFacts": [
+      "The W25 helper rebuilds the entire application root separately for each case and disposes it at the end of Effect.scoped.",
+      "The Core SQLite adapter closes its native connection in finalizers.",
+      "LocationServiceMap captures the completed application exports for lazy acquisitions and holds real locations in a scoped LayerMap.",
+      "The fifth case is the only body that creates, archives, restores and removes a real Core Session.",
+      "No exact retaining singleton or complete Session.create stack is identified in the hosted log."
+    ],
+    "inference": "Keeping the actual Core application root alive across all five cases eliminates the between-fixture release boundary for the Session/Store/Location instances used by these tests.",
+    "notProven": "This is a fixture lifetime correction candidate; the precise stale connection owner and hosted functional resolution remain unproven.",
+    "staticCounts": {
+      "fullRootAcquisitionsBefore": 5,
+      "fullRootAcquisitionsAfter": 1,
+      "measurement": "static source estimate for five successful acquisitions, not measured performance"
+    }
+  },
+  "design": {
+    "fileOwner": "One lazy ManagedRuntime owns the real AppNodeBuilder root: SessionV2, SessionStore, SessionExecutionLocal and LocationServiceMap.",
+    "fixtureOwner": "A fresh installed/publication contribution layer is acquired inside each real Effect.scoped fixture.",
+    "injectedDependencies": [
+      "Layer.succeed(SessionStore.Service, root.store)",
+      "Layer.succeed(LocationServiceMap.Service, root.locations)"
+    ],
+    "dependencyAuthenticity": "Both values come directly from the same live ManagedRuntime; no casts, fabricated services, fake database or mock session.",
+    "locationLifetime": "Locations remain owned by the real root LayerMap until suite disposal; provider, UI, authoring and resident registration scopes still close per fixture.",
+    "cleanupOrder": "Await each fixture scope; afterAll awaits ManagedRuntime.dispose before attempting removal of any owned temporary directory.",
+    "failedAcquisition": "Dispose a partially acquired runtime; propagate acquisition and cleanup errors; clear the opening reference by identity on either outcome.",
+    "overlap": "Reject a second active fixture before any asynchronous work. No parallel fixture shares active authority or provider state.",
+    "diagnostics": [
+      "SF_PUBLICATION_LIFECYCLE fixtureId/root-acquired/reusedRoot",
+      "SF_PUBLICATION_LIFECYCLE_FAILURE fixtureId/phase plus original thrown error"
+    ],
+    "errorHandling": "Original errors propagate. Added root or suite cleanup errors are aggregated, not converted to success."
+  },
+  "preserved": {
+    "fiveTestBodiesByteExact": true,
+    "bodySha256": "7f67baf5f9da8fd1be1a9b59a8e9ab08f7ed5dd8c5de472a17cc395f1a66720e",
+    "sourceExpectExpressions": 52,
+    "testBudgetsMs": [
+      120000,
+      120000,
+      120000,
+      120000,
+      120000
+    ],
+    "providerDisposalCounterproof": "The fourth case still asserts retained providers are unavailable after its fixture closes, while the Core root remains live.",
+    "identityCounterproofs": "Real Session creation, skill receipt, archive/unarchive, removal and SF lease revocation remain unchanged in the fifth body.",
+    "actualSources": [
+      "Core SessionV2",
+      "SessionStore",
+      "SessionExecutionLocal",
+      "LocationServiceMap",
+      "SkillV2",
+      "AuthoringStore",
+      "SF UI/native lease registries"
+    ]
+  },
+  "validation": {
+    "performed": [
+      "read exact published source and hosted raw logs",
+      "verify all archived source Git blob/SHA256 hashes against W25 full tree",
+      "text diff and exact body/assertion/budget preservation checks"
+    ],
+    "notPerformed": [
+      "local product execution",
+      "test execution",
+      "typecheck",
+      "build",
+      "executable product import",
+      "browser",
+      "remote mutation",
+      "CI dispatch"
+    ],
+    "candidateTests": "unexecuted",
+    "candidateTypecheck": "unexecuted",
+    "nativeAcceptance": false,
+    "globalEpicAcceptance": false,
+    "independentReview": false
+  },
+  "ci": {
+    "selection": "whole file required",
+    "files": [
+      "Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts"
+    ],
+    "testFilter": null,
+    "budgetsChanged": false,
+    "newProductTests": 0,
+    "expectedDiagnostics": [
+      "SF_PUBLICATION_LIFECYCLE with fixtureId and reusedRoot",
+      "SF_PUBLICATION_LIFECYCLE_FAILURE with precise phase and original error"
+    ],
+    "requirements": [
+      "all five existing cases complete, including real Session.create/skill/archive/unarchive/removal/lease revocation",
+      "retained-provider disposal assertions in fourth case remain effective while shared Core root stays alive",
+      "no closed SQLite handle or hidden teardown error"
+    ],
+    "nativeOrGlobalAcceptance": false,
+    "dispatched": false
+  },
+  "limitations": [
+    "Closed connection owner is not uniquely established by the raw stack; further hosted diagnostics may identify a separate Core lifetime issue.",
+    "No result from W25 or another SHA transfers to this candidate.",
+    "The suite root retains at most these five real Locations until afterAll; cross-file process lifetimes are not asserted.",
+    "The unchanged native-author fixture proves identity/lease behavior only; it does not start a governed Task or provide native C07 acceptance.",
+    "Bun/Effect type compatibility and cleanup behavior require the hosted CHECK and complete five-case CI file."
+  ],
+  "relatedBoundaryAudit": {
+    "path": "agents/c17/W25-native-boundary/audit.json",
+    "sha256": "dc56f01d6639df1d082b319bfed2078403cb3258f9336edf2b7a2630a31288fa",
+    "conclusion": "No complete legitimate SfRoutineNativePort composition from current public APIs and supplied trusted inputs; no descriptor enabled by this fixture change."
+  },
+  "nextAction": "Root may compose this exact own candidate, publish a new SHA, run hosted CHECK and the entire file, then hand the new SHA and evidence to independent reviewers."
+}

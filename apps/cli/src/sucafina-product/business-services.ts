@@ -51,7 +51,7 @@ import { createSfRecordedPlannerOperationAccess } from "./recorded-planner-opera
 import { createSfPreparedApplicationEgress } from "./prepared-application-egress.ts"
 import { createSfMemoryCaseReadScope } from "./memory-case-read-scope.ts"
 import { createSfProcurementCaseReadScope } from "./procurement-case-read-scope.ts"
-import { createSfProcurementEvidenceReadScope } from "./procurement-evidence-read-scope.ts"
+import { createSfProcurementEvidenceReadScope, createSfProcurementRecordReadScope } from "./procurement-evidence-read-scope.ts"
 import type { SfMemoryObservation } from "./memory-case-read-scope.ts"
 import { createSfSourceFenceReader } from "./source-fence-read.ts"
 import { createSfScenarioProcurementProofScope } from "./scenario-procurement-proof-scope.ts"
@@ -168,7 +168,15 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     evidence: context, createId: randomUUID, now: () => new Date().toISOString() })
   const procurementCaseRead = createSfProcurementCaseReadScope({ host, state: input.authority.state, read: canonicalCases.read,
     selection: selectedPeriod, readerIdentity: () => evidence.current, isCurrentRecord: individual.isCurrent, lockedSourceFences })
+  const memoryRecordRead = createSfProcurementRecordReadScope({ host, state: input.authority.state, contextFor,
+    selection: selectedPeriod, readerIdentity: () => evidence.current, lockedSourceFences })
   const memoryCaseScope = createSfMemoryCaseReadScope({ host, state: input.authority.state, read: procurementCaseRead,
+    readCanonical: async (request, call, records) => {
+      const selected = structuredClone(request)
+      const observed = await memoryRecordRead(records, call, () => canonicalCases.read(selected, call))
+      if (observed.kind === "unsupported") return procurementCaseRead(request, call)
+      return observed.kind === "observed" ? observed.value : { status: "unavailable", reason: "memory-case-read-changed" }
+    },
     selection: selectedPeriod, readerIdentity: () => evidence.current, lockedSourceFences })
   const cases = { ...canonicalCases, read: memoryCaseScope.read }
   const withMemoryObservation: SfMemoryObservation = (request, call, work) => {

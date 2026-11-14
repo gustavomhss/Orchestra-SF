@@ -1,0 +1,76 @@
+{
+  "schema": "wp10-own-test-delivery-v1",
+  "status": "SEALED_AUTHORING_NOT_HOSTED_ACCEPTANCE",
+  "owner": "WP10",
+  "finding": "R1-W26-HOST-EXACT-THRESHOLD-01",
+  "candidateProductSha": null,
+  "productPaths": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-exact-threshold.test.ts",
+      "localPath": "/workspace/scratch/301a7f2754f4/agents/criteria/W26-exact-threshold-host/package/modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-exact-threshold.test.ts",
+      "operation": "add",
+      "mode": "100644",
+      "owner": "WP10",
+      "bytes": 16088,
+      "sha256": "33faf5709c5465b99c6c18658eda6d80088af63dc6d3f596a08a8033caea0ee0",
+      "gitBlob": "e526fffa28318367b9180b419509949c93abb273"
+    }
+  ],
+  "testSelection": {
+    "wholeFiles": [
+      "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-exact-threshold.test.ts"
+    ],
+    "testDeclarations": 1,
+    "outerBudgetMs": 300000,
+    "cooperativeBudgetMs": 285000,
+    "existingBudgetsModified": 0,
+    "suggestedGroup": "W26-X",
+    "dispatched": false
+  },
+  "artifacts": [
+    {
+      "path": "README.md",
+      "localPath": "/workspace/scratch/301a7f2754f4/agents/criteria/W26-exact-threshold-host/README.md",
+      "bytes": 4666,
+      "sha256": "8c11c1c460c54e06d413802d1611ca7f308366b24d722bbca5a98259860435f3",
+      "gitBlob": "0e62380b3d48efeeba8744c2f8e4b39effb2e2f5"
+    },
+    {
+      "path": "audit.json",
+      "localPath": "/workspace/scratch/301a7f2754f4/agents/criteria/W26-exact-threshold-host/audit.json",
+      "bytes": 4474,
+      "sha256": "20289c002312a66098e672c511dcdf4d8e1a69989d3555d5fe0f7d357e81c03e",
+      "gitBlob": "80101160c71421b6f5dff4c7df106080f798cb69"
+    },
+    {
+      "path": "import-audit.json",
+      "localPath": "/workspace/scratch/301a7f2754f4/agents/criteria/W26-exact-threshold-host/import-audit.json",
+      "bytes": 4203,
+      "sha256": "d34f1568ccad7302777ff1666d4bb3dbbb8e6058fa173fef18b0b6000a33922e",
+      "gitBlob": "74377087c54b747c09c69a6fe9fd48e8b058f3a0"
+    },
+    {
+      "path": "package/modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-exact-threshold.test.ts",
+      "localPath": "/workspace/scratch/301a7f2754f4/agents/criteria/W26-exact-threshold-host/package/modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-exact-threshold.test.ts",
+      "bytes": 16088,
+      "sha256": "33faf5709c5465b99c6c18658eda6d80088af63dc6d3f596a08a8033caea0ee0",
+      "gitBlob": "e526fffa28318367b9180b419509949c93abb273"
+    },
+    {
+      "path": "source-manifest.json",
+      "localPath": "/workspace/scratch/301a7f2754f4/agents/criteria/W26-exact-threshold-host/source-manifest.json",
+      "bytes": 31715,
+      "sha256": "bf31d3b5f158f64d01bb968913fe13b8e089d01c3ef325e79c45ff55d98a82bd",
+      "gitBlob": "8df6297cd81fc5b620b3e912a99ce8908176cef7"
+    }
+  ],
+  "localProductExecution": false,
+  "nativeAcceptance": false,
+  "globalAcceptance": false,
+  "independentReview": false,
+  "requiredNext": [
+    "Root composes the exact test and separately prepared host wiring with the selected producer closure.",
+    "Bind to the real frozen candidate and run hosted check/test.",
+    "Independent reviewers assess actual candidate and observed output."
+  ]
+}

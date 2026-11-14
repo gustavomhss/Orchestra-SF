@@ -1,0 +1,76 @@
+{
+  "schema": "wp10-unobserved-own-cut-proposal-v1",
+  "dispatched": false,
+  "sourceBasisProductSha": "4bc9c7220f04f113609393aaba38934a7e69878b",
+  "execution": "sequential, at most one test-ci in flight; root alone binds/dispatches",
+  "preserves": "All18 statically declared own cases across the three full files, including three annual2026 alternative cases and the three-way promotion race matrix. No unknown D22 outcome is invented.",
+  "requests": [
+    {
+      "label": "D-own-promotion",
+      "requestPath": "agents/ci/W22-D-observation/cuts/request-D-own-promotion.json",
+      "files": [
+        "Sucafinav1/test/product/wp10/integration/portfolio-promotion.test.ts"
+      ],
+      "staticExpectedCases": 8,
+      "existingPerTestBudgetsMs": [
+        300000,
+        120000,
+        180000,
+        180000,
+        180000,
+        300000,
+        300000,
+        120000
+      ],
+      "nominalSumOfPerTestLimitsMinutes": 28.0,
+      "budgetQualification": "Static sum of current individual limits, not measured runtime or guaranteed wall-clock bound. Preserve all overrides and cooperative deadlines; the hosted job remains45minutes.",
+      "basisCandidateBlobSha": "b9e8d3ff849327f31a6f6ccae78962376302deb5",
+      "basisCandidateSha256": "beb78a2c239b0dd3b27fe4f93ff960bceafcc32a8955c674d6c5a7a16ad14fde",
+      "sourceBinding": "UNBOUND; root must bind reviewed/published successor before any dispatch",
+      "reason": "No named result or file header appeared for this own file in D22. Isolate full file to prevent foreign WP13 carryover from withholding its result; no name filter or budget/assertion change."
+    },
+    {
+      "label": "D-own-alternative-selection",
+      "requestPath": "agents/ci/W22-D-observation/cuts/request-D-own-alternative-selection.json",
+      "files": [
+        "Sucafinav1/test/product/wp10/analysis-composition/alternative-selection.test.ts"
+      ],
+      "staticExpectedCases": 9,
+      "existingPerTestBudgetsMs": [
+        120000,
+        120000,
+        120000,
+        120000,
+        120000,
+        120000,
+        120000,
+        120000,
+        120000
+      ],
+      "nominalSumOfPerTestLimitsMinutes": 18.0,
+      "budgetQualification": "Static sum of current individual limits, not measured runtime or guaranteed wall-clock bound. Preserve all overrides and cooperative deadlines; the hosted job remains45minutes.",
+      "basisCandidateBlobSha": "339a7ba1b57f31ca985b6b1015e0242ac60e2eb3",
+      "basisCandidateSha256": "14ea3b9394648d9d5d43ef8af09b7874ae50144d854f53a9cbc161a3b8cd98fa",
+      "sourceBinding": "UNBOUND; root must bind reviewed/published successor before any dispatch",
+      "reason": "No named result or file header appeared for this own file in D22. Isolate full file to prevent foreign WP13 carryover from withholding its result; no name filter or budget/assertion change."
+    },
+    {
+      "label": "D-own-reconciliation",
+      "requestPath": "agents/ci/W22-D-observation/cuts/request-D-own-reconciliation.json",
+      "files": [
+        "Sucafinav1/test/product/wp10/integration/portfolio-reconciliation.test.ts"
+      ],
+      "staticExpectedCases": 1,
+      "existingPerTestBudgetsMs": [
+        360000
+      ],
+      "nominalSumOfPerTestLimitsMinutes": 6.0,
+      "budgetQualification": "Static sum of current individual limits, not measured runtime or guaranteed wall-clock bound. Preserve all overrides and cooperative deadlines; the hosted job remains45minutes.",
+      "basisCandidateBlobSha": "2f8e2d6bebd81257437577d1cf50cf551374807c",
+      "basisCandidateSha256": "2381567d75eb108c30187e1c0d7df5acd5fe7a3f3f3f35b12530ade7e62c822e",
+      "sourceBinding": "UNBOUND; root must bind reviewed/published successor before any dispatch",
+      "reason": "No named result or file header appeared for this own file in D22. Isolate full file to prevent foreign WP13 carryover from withholding its result; no name filter or budget/assertion change."
+    }
+  ],
+  "foreignRepeat": "No foreign producer file in these own recovery cuts. If the seven-file PR36 intake is admitted, its changed real coverage integration plus new retry/recovery/recertification witnesses need a separate causal run; that is a new candidate validation, not recredit of D22."
+}

@@ -1,0 +1,222 @@
+{
+  "schema": "wp10-memory-auxiliary-builder-review-v1",
+  "id": "W26-MEMORY-AUXILIARY-REVIEW",
+  "status": "STATIC_BUILDER_READING_NO_NEW_CONCRETE_DEFECT_IDENTIFIED_IN_REVIEWED_MEMORY_SCOPE",
+  "reviewerRole": "c17 builder, auxiliary only",
+  "FINAL": false,
+  "independentReview": false,
+  "functionalPass": false,
+  "typecheckAccepted": false,
+  "hostedAcceptance": false,
+  "nativeAcceptance": false,
+  "globalEpicAcceptance": false,
+  "baseProduct": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+  "baseTree": "ee95a2e3d0f02efabe6a4442fcf59479265a9f61",
+  "stagingInventory": {
+    "path": "publication/W26-own-staging-v1.json",
+    "sha256": "600de984e921e51536219a119c4b14868038a2e3a0ba5f56046598b8327ad9e1",
+    "overlayCount": 4,
+    "ownFileCount": 9,
+    "newFileCount": 2
+  },
+  "overlayPins": [
+    {
+      "path": "agents/root/W26-memory-case-records",
+      "sealPath": "agents/root/W26-memory-case-records/seal.json",
+      "sealSha256": "5a7ff9bd1cea92f7639ab1c8ef0df6f4f4df58995b7d4c964cc945e41d590bd6",
+      "scopeOfThisRecord": "Memory composition: semantic auxiliary reading completed",
+      "packageBytesVerified": true,
+      "files": [
+        {
+          "path": "apps/cli/src/sucafina-product/business-services.ts",
+          "baseProduct": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+          "baseBlobSha": "c851f877970b18927bb2bcab96de5699fd8eaada",
+          "blobSha": "28d0eaf1013e6a7f53672a43d3d440bded1fd462",
+          "sha256": "cde7d5280d7fa9408cac1677faea09d0a4fc5c11fca7875ceebdf95d4928361e",
+          "bytes": 69530,
+          "sourceOverlay": "agents/root/W26-memory-case-records",
+          "sourceSealSha256": "5a7ff9bd1cea92f7639ab1c8ef0df6f4f4df58995b7d4c964cc945e41d590bd6"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/memory-case-read-scope.ts",
+          "baseProduct": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+          "baseBlobSha": "907d1a0c48389af4b32cc958d53d2b1a7ae1fcc3",
+          "blobSha": "bd4701de1dabd10be4b19253981d288108c2a3f7",
+          "sha256": "d8ffc62f8e9c2c9bb49dcbff0ef3324154f4369a8db2184838f11e6a8f16c4db",
+          "bytes": 19434,
+          "sourceOverlay": "agents/root/W26-memory-case-records",
+          "sourceSealSha256": "5a7ff9bd1cea92f7639ab1c8ef0df6f4f4df58995b7d4c964cc945e41d590bd6"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+          "baseProduct": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+          "baseBlobSha": "4b48dcd9cbd09c581060d6746232a7ccee5265a8",
+          "blobSha": "a56e9a13b84d67cf5367b3abd609989fb4e1e3b7",
+          "sha256": "e43d2c13137e1ccadc42ada89b0e9e2b8514fc8412704a14e5c7fc386d5ac3fd",
+          "bytes": 47804,
+          "sourceOverlay": "agents/root/W26-memory-case-records",
+          "sourceSealSha256": "5a7ff9bd1cea92f7639ab1c8ef0df6f4f4df58995b7d4c964cc945e41d590bd6"
+        }
+      ]
+    },
+    {
+      "path": "agents/ci/W26-memory-record-scope",
+      "sealPath": "agents/ci/W26-memory-record-scope/seal.json",
+      "sealSha256": "bd14446d34a97f3a1e8b93dd272a7943fe74f70efc1de6877d4f46cd3a17d594",
+      "scopeOfThisRecord": "Record helper/evidence wrapper and tests: semantic auxiliary reading completed",
+      "packageBytesVerified": true,
+      "files": [
+        {
+          "path": "apps/cli/src/sucafina-product/procurement-evidence-read-scope.ts",
+          "baseProduct": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+          "baseBlobSha": "bf571da17ad2cae7bd970697efdaaf541d00b1cc",
+          "blobSha": "68bae96124f2a0994be25b86765415b0d52452f4",
+          "sha256": "a6e3ec52b6b5e52e1362d27ab5da368cd0a02542b99c3965c9bba1361d269132",
+          "bytes": 1883,
+          "sourceOverlay": "agents/ci/W26-memory-record-scope",
+          "sourceSealSha256": "bd14446d34a97f3a1e8b93dd272a7943fe74f70efc1de6877d4f46cd3a17d594"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/procurement-record-read-scope.ts",
+          "baseProduct": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+          "baseBlobSha": null,
+          "blobSha": "7438cac1582ec97b4e55fcef0494554a21e9e7b4",
+          "sha256": "b315be0d6f0359c3cab96f4f810b05262d6e3606622d7f2bef945caf368c4edc",
+          "bytes": 11757,
+          "sourceOverlay": "agents/ci/W26-memory-record-scope",
+          "sourceSealSha256": "bd14446d34a97f3a1e8b93dd272a7943fe74f70efc1de6877d4f46cd3a17d594"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/procurement-record-read-scope.test.ts",
+          "baseProduct": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+          "baseBlobSha": null,
+          "blobSha": "77a0d6f197c215bb4e59794f65bf1e5673a4ee9f",
+          "sha256": "93a104e18dbfd598b738ff02d01a28bf5abf394b4938892fc9d7f49f02dd0bda",
+          "bytes": 13078,
+          "sourceOverlay": "agents/ci/W26-memory-record-scope",
+          "sourceSealSha256": "bd14446d34a97f3a1e8b93dd272a7943fe74f70efc1de6877d4f46cd3a17d594"
+        }
+      ]
+    },
+    {
+      "path": "agents/c17/W26-installed-publication-lifecycle",
+      "sealPath": "agents/c17/W26-installed-publication-lifecycle/seal.json",
+      "sealSha256": "464716ba0180b7391fa7b701621bec85291e60060e62ced764143a427f36112a",
+      "scopeOfThisRecord": "Own authored fixture candidate, separately audited; not independent review",
+      "packageBytesVerified": true,
+      "files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts",
+          "baseProduct": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+          "baseBlobSha": "94cbf538fdb06949acf773941c437c8fd43a8a0e",
+          "blobSha": "9cb78aa7320e5e28fa43018cbd9ab94650523a5d",
+          "sha256": "cf88744e8bc83a53ead83b253e9d1a5775e48d0b6512dfac2645db5ca0264c7b",
+          "bytes": 27069,
+          "sourceOverlay": "agents/c17/W26-installed-publication-lifecycle",
+          "sourceSealSha256": "464716ba0180b7391fa7b701621bec85291e60060e62ced764143a427f36112a"
+        }
+      ]
+    },
+    {
+      "path": "agents/root/W26-exact-threshold-composition",
+      "sealPath": "agents/root/W26-exact-threshold-composition/seal.json",
+      "sealSha256": "a89f977502a3fafb64beeedd46b566857ca6b9742e4bdcd939e35708efb73267",
+      "scopeOfThisRecord": "Inventory and hash pin only; outside this Memory semantic review",
+      "packageBytesVerified": true,
+      "files": [
+        {
+          "path": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+          "baseProduct": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+          "baseBlobSha": "6facc71b1351aea04ed3e7d51d1d0ed5d81c24d9",
+          "blobSha": "e8a931a3d0788d0c6899e9550fbe069a4a5dc7de",
+          "sha256": "2b782fb131707f8f3aceb3bec37c84f2ccff7a2d6970456e9812d8f471acf01a",
+          "bytes": 17822,
+          "sourceOverlay": "agents/root/W26-exact-threshold-composition",
+          "sourceSealSha256": "a89f977502a3fafb64beeedd46b566857ca6b9742e4bdcd939e35708efb73267"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/portfolio-services.ts",
+          "baseProduct": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+          "baseBlobSha": "463dafc3e1900099391cee63f83bc0f3148df03c",
+          "blobSha": "881ce4672d9d0e641d1cc849663c0980c118774d",
+          "sha256": "94427fe5eaae8f348e574bbade36fa34a386d5180c423139f4687078e0fa8342",
+          "bytes": 11364,
+          "sourceOverlay": "agents/root/W26-exact-threshold-composition",
+          "sourceSealSha256": "a89f977502a3fafb64beeedd46b566857ca6b9742e4bdcd939e35708efb73267"
+        }
+      ]
+    }
+  ],
+  "checks": [
+    {
+      "id": "W26-MEM-AUX-PREWORK",
+      "area": "pre-work unsupported",
+      "observation": "The generic returns unsupported only before invoking work(). After canonical execution, failed witnesses, changed inputs, thrown callbacks and nested writers yield changed with no returned value and no automatic retry.",
+      "paths": [
+        "apps/cli/src/sucafina-product/procurement-record-read-scope.ts",
+        "apps/cli/src/sucafina-product/business-services.ts"
+      ]
+    },
+    {
+      "id": "W26-MEM-AUX-CURRENT-ACTOR",
+      "area": "current actor and historical references",
+      "observation": "materialized() is byte-identical to the W25 helper. It reconstructs the current actor scope, roles, canWrite, role-map digest, fields, period and currency. Original historical incarnation/version remain on each ref and are still verified by the actual canonical readers; current materialization is only a no-write qualification.",
+      "paths": [
+        "apps/cli/src/sucafina-product/procurement-record-read-scope.ts"
+      ]
+    },
+    {
+      "id": "W26-MEM-AUX-ALL-REFS",
+      "area": "complete reference closure",
+      "observation": "Memory recursively collects complete record references keyed by digestSfValue(ref), preserving distinct versions and field selectors for a shared refId. The remaining refId map serves scenario membership. The generic pins the complete input array and qualifies every element; no authorization result or pending Promise is shared.",
+      "paths": [
+        "apps/cli/src/sucafina-product/memory-case-read-scope.ts",
+        "apps/cli/src/sucafina-product/procurement-record-read-scope.ts"
+      ]
+    },
+    {
+      "id": "W26-MEM-AUX-EVIDENCE-WRAPPER",
+      "area": "evidence wrapper compatibility",
+      "observation": "observed(undefined) remains the canonical fresh-source fallthrough. Changed/unavailable is not converted to unsupported. The one-ref wrapper falls back only after a pre-work unsupported result, outside the generic root.",
+      "paths": [
+        "apps/cli/src/sucafina-product/procurement-evidence-read-scope.ts"
+      ]
+    },
+    {
+      "id": "W26-MEM-AUX-OUTER-BOUNDARY",
+      "area": "Memory integration and canonical passes",
+      "observation": "The case request is cloned before generic preflight. The outer Memory witnesses and real mutation probes remain outside the grouped transaction. The actual case reader retains two BCS context passes and both verifyScenarioOperations calls. Each independent Atlas observation receives its own lexical Memory scope.",
+      "paths": [
+        "apps/cli/src/sucafina-product/business-services.ts",
+        "apps/cli/src/sucafina-product/memory-case-read-scope.ts",
+        "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+      ]
+    },
+    {
+      "id": "W26-MEM-AUX-WITNESSES",
+      "area": "authority and state witnesses",
+      "observation": "The generic retains real C08 reads, full state and all three snapshots/source fences, Request identity/method/URL/all headers, binding and lease identity, selection identity/expiry, reader identity, current principal/context, UTC day, directory and bank key. It clones the actual canonical output and performs no result cache.",
+      "paths": [
+        "apps/cli/src/sucafina-product/procurement-record-read-scope.ts"
+      ]
+    }
+  ],
+  "concreteNewDefectsFound": [],
+  "sourceReadValidation": {
+    "method": "text reading, diff and cryptographic hashes only",
+    "materializedFunctionByteExactToW25": true,
+    "allNineCandidatePinsMatchIsolatedPackages": true,
+    "allFourSealPinsMatch": true
+  },
+  "limits": [
+    "Auxiliary builder reading only: FINAL=false and independentReview=false. It does not replace any of the three independent reviewers.",
+    "No functional PASS, typecheck result, performance improvement, native acceptance or global epic acceptance is inferred from source reading.",
+    "No product, test, build, executable import, typecheck or browser was run locally; no CI or remote mutation was performed by this review.",
+    "The three new record-scope cases and complete historical Memory file still require hosted execution on the new published SHA; prior W25 evidence does not transfer.",
+    "The current root integration is qualified by its complete record-only closure. Native/mixed/unsupported paths remain canonical; nested writers fail closed rather than being retried.",
+    "The exact-threshold overlay is included solely to pin the four-overlay staging inventory. Its semantic correctness is outside this auxiliary Memory reading.",
+    "The C07 overlay is this builder own work and has its separate sealed audit; listing its pin does not provide an independent review.",
+    "Existing sealed packages, source files, staging and receipts were not edited while preparing this record."
+  ],
+  "nextAction": "Root may attach this auxiliary record to W26 preparation. Hosted CHECK and affected whole-file tests, followed by the independent reviews on the exact published SHA, remain required."
+}

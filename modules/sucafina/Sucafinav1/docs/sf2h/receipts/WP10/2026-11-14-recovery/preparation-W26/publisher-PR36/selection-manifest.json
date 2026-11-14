@@ -1,0 +1,304 @@
+{
+  "schema": "wp10-proposed-exact-intake-v1",
+  "status": "PROPOSED_NOT_APPLIED_NOT_ACCEPTED",
+  "producer": "PR36",
+  "sourceCommit": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+  "basisProductSha": "4bc9c7220f04f113609393aaba38934a7e69878b",
+  "selected": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-store.ts",
+      "sourceCommit": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+      "blobSha": "d2528cc98eabfea36025f25cdb0cb2bf9c54c42c",
+      "sha256": "01b61b76c8487adf357a9b8d811c796d1cbc83b6628f09417b6ad7b1cd88734a",
+      "bytes": 12250,
+      "owner": "astra-intelligence/WP13",
+      "pr": 36,
+      "reason": "Causal D22 persistence/retry multiplicity: performs one canonical binding read after source/sample/result rereads; found and already-bound requests use a fresh canonical read instead of recalculating. Preserves orphan recovery and pins operation identity, authority kind/binding/lease/content across awaits.",
+      "localPath": "/workspace/scratch/301a7f2754f4/agents/ci/W22-D-observation/publisher-audit/archive/pr36/modules/sucafina/Sucafinav1/product/portfolio/sensitivity-store.ts",
+      "diffPath": "/workspace/scratch/301a7f2754f4/agents/ci/W22-D-observation/publisher-audit/diffs-against-W22/modules/sucafina/Sucafinav1/product/portfolio/sensitivity-store.ts.diff",
+      "baseW22BlobSha": "4919ebc3367bb388974839382ff220a94667ad21",
+      "baseW22ProducerPin": {
+        "pr": 36,
+        "sourceCommit": "46c904ead4e9b363422f6739258e492913ae6e2e",
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-store.ts",
+        "blobSha": "4919ebc3367bb388974839382ff220a94667ad21",
+        "sha256": "84a24fc357cdaa061fa16a31ff352e9977ca5d9223d9508f067404d398df3d2c",
+        "owner": "WP13",
+        "reason": "Captures retained inputs/reads and repairs missing criterion binding on idempotent retry after durable samples/result; current producer binding and reread checks remain."
+      },
+      "currentStagingBlobSha": "4919ebc3367bb388974839382ff220a94667ad21",
+      "currentStagingMatchesW22": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/threshold-proof.ts",
+      "sourceCommit": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+      "blobSha": "89ba60857babe8a5c80f409de39b7e0598695b96",
+      "sha256": "425d2f5b15b82030a877a16bdab2e2407edf0f5dbe8bbc574494cf8ddd6cd815",
+      "bytes": 8268,
+      "owner": "astra-intelligence/WP13",
+      "pr": 36,
+      "reason": "Mandatory dependency of new verification: correlates optional current structural proof with scenario/baseline/metadata/parameter/bounds/period/unit/engine/evidence, fixed components and ordered component IDs of both current adjacent previews.",
+      "localPath": "/workspace/scratch/301a7f2754f4/agents/ci/W22-D-observation/publisher-audit/archive/pr36/modules/sucafina/Sucafinav1/product/portfolio/threshold-proof.ts",
+      "diffPath": "/workspace/scratch/301a7f2754f4/agents/ci/W22-D-observation/publisher-audit/diffs-against-W22/modules/sucafina/Sucafinav1/product/portfolio/threshold-proof.ts.diff",
+      "baseW22BlobSha": "056a857364cf8a6c2a2bc97bf107276612edf55d",
+      "baseW22ProducerPin": {
+        "pr": 36,
+        "sourceCommit": "46c904ead4e9b363422f6739258e492913ae6e2e",
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/threshold-proof.ts",
+        "blobSha": "056a857364cf8a6c2a2bc97bf107276612edf55d",
+        "sha256": "96ed59925c95abe55fe15185f30f2026f0713f5f916238d4529c29d812aa86bf",
+        "owner": "WP13",
+        "reason": "New validator checks canonical current evidence, USD rule/parameter, fixed components, included threshold and adjacent IEEE excluded point using actual preview."
+      },
+      "currentStagingBlobSha": "056a857364cf8a6c2a2bc97bf107276612edf55d",
+      "currentStagingMatchesW22": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+      "sourceCommit": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+      "blobSha": "b2ac17f210886353d3596fc6a891242c7ea40f0a",
+      "sha256": "7372cdf470657d9a851d3c9738b2092feda0a0ea791a715db276f694711a14d2",
+      "bytes": 20108,
+      "owner": "astra-intelligence/WP13",
+      "pr": 36,
+      "reason": "Causal D22 repeated exact-search cost: obtains a current canonical interval proof, validates both adjacent IEEE boundaries and full result equality instead of repeating the full search for an already exact candidate. Preserves C08 samples/source rereads, current units/C10 and final source/authority fences; freezes inputs and rejects replacement.",
+      "localPath": "/workspace/scratch/301a7f2754f4/agents/ci/W22-D-observation/publisher-audit/archive/pr36/modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+      "diffPath": "/workspace/scratch/301a7f2754f4/agents/ci/W22-D-observation/publisher-audit/diffs-against-W22/modules/sucafina/Sucafinav1/product/portfolio/verification.ts.diff",
+      "baseW22BlobSha": "199d8ae6bbda17925b2b2b0423137cbb17211dc8",
+      "baseW22ProducerPin": {
+        "pr": 36,
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+        "sourceCommit": "8bb72c8cdeda149b000d91403c368642c3b53dec",
+        "gitBlob": "199d8ae6bbda17925b2b2b0423137cbb17211dc8",
+        "localPath": "/workspace/scratch/301a7f2754f4/agents/criteria/W20-foreign-triage/archive/pr36/modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/8bb72c8cdeda149b000d91403c368642c3b53dec/modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+        "originalFinalLf": true,
+        "retrieval": "GitHub MCP fetch_file at exact pin",
+        "bytes": 17348,
+        "sha256": "dfe8a48b3b2def0a54f3cef38898c9bb9e9c52716b5f51f27f8e0a2795478f51",
+        "candidateBlob": "c2f37e94777d2bdd7d7e565b37f6b4140b3906d9",
+        "inSavedDelta": false,
+        "gitBlobVerified": true,
+        "blobSha": "199d8ae6bbda17925b2b2b0423137cbb17211dc8",
+        "group": "portfolio-complete-6",
+        "reason": "All six required together if current Portfolio product.ts is composed; optional host services remain unavailable until explicitly supplied.",
+        "admission": "exact-published-closure",
+        "hostedVerification": "NOT_RUN_BY_THIS_AUDIT"
+      },
+      "currentStagingBlobSha": "199d8ae6bbda17925b2b2b0423137cbb17211dc8",
+      "currentStagingMatchesW22": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+      "sourceCommit": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+      "blobSha": "1a0dc5a9bc71923aafd3ec5eaf476f7a3f780bdc",
+      "sha256": "d76f45b8e1195a4e79ce8c88dd0fc9ee01de070b808c709b69a3ae1f2e403d14",
+      "bytes": 25064,
+      "owner": "astra-intelligence/WP13",
+      "pr": 36,
+      "reason": "Preserves all three existing complete test bodies, all prior assertion lines, all training states/three samples and unchanged 300000/300000/120000 budgets; adds real current-authority/preview counters, cold/retry no-search observations, input-mutation and unchanged-physical-fence revocation counterproofs.",
+      "localPath": "/workspace/scratch/301a7f2754f4/agents/ci/W22-D-observation/publisher-audit/archive/pr36/modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+      "diffPath": "/workspace/scratch/301a7f2754f4/agents/ci/W22-D-observation/publisher-audit/diffs-against-W22/modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts.diff",
+      "baseW22BlobSha": "5b4579143250700a313744cc2240741f1bc15237",
+      "baseW22ProducerPin": {
+        "pr": 36,
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+        "sourceCommit": "8bb72c8cdeda149b000d91403c368642c3b53dec",
+        "gitBlob": "5b4579143250700a313744cc2240741f1bc15237",
+        "localPath": "/workspace/scratch/301a7f2754f4/agents/criteria/W20-foreign-triage/archive/pr36/modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/8bb72c8cdeda149b000d91403c368642c3b53dec/modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+        "originalFinalLf": true,
+        "retrieval": "GitHub MCP fetch_file at exact pin",
+        "bytes": 22116,
+        "sha256": "b0ddf6ac0b6c0de6e3dd83b3a8f8ef138f9c3d460d505172c0d57ef73be62efa",
+        "candidateBlob": null,
+        "inSavedDelta": true,
+        "gitBlobVerified": true,
+        "blobSha": "5b4579143250700a313744cc2240741f1bc15237",
+        "group": "published-regressions-10",
+        "reason": "Published focused counterproof/fixture/document companion; code presence is not an executed proof.",
+        "admission": "exact-published-closure",
+        "hostedVerification": "NOT_RUN_BY_THIS_AUDIT"
+      },
+      "currentStagingBlobSha": "5b4579143250700a313744cc2240741f1bc15237",
+      "currentStagingMatchesW22": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/persistence-recovery.test.ts",
+      "sourceCommit": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+      "blobSha": "63f262129fb37adf74013f58ea5fc56bb4ecd79e",
+      "sha256": "f5c7d231cf86fbe33deaa9edb6bb12e17c2a8f865ecbdec16304897282892d81",
+      "bytes": 11478,
+      "owner": "astra-intelligence/WP13",
+      "pr": 36,
+      "reason": "Published controlled recovery witness: four complete tests retain actual C08/ref/allocation oracles and distinguish before-binding orphan repair from already-bound lost-reply retries. Limited orchestration evidence; fixture verifyBinding callbacks are not production financial/source authority acceptance.",
+      "localPath": "/workspace/scratch/301a7f2754f4/agents/ci/W22-D-observation/publisher-audit/archive/pr36/modules/sucafina/Sucafinav1/test/product/wp13/persistence-recovery.test.ts",
+      "diffPath": "/workspace/scratch/301a7f2754f4/agents/ci/W22-D-observation/publisher-audit/diffs-against-W22/modules/sucafina/Sucafinav1/test/product/wp13/persistence-recovery.test.ts.diff",
+      "baseW22BlobSha": null,
+      "baseW22ProducerPin": null,
+      "currentStagingBlobSha": null,
+      "currentStagingMatchesW22": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-retry-boundary.test.ts",
+      "sourceCommit": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+      "blobSha": "674fae533af967f87e49a5a79d25ac1a6a925e3a",
+      "sha256": "389621a82c50f81b0e16c681aaef7d3c9aec091058da8068ba6c5ad9a1a5d88f",
+      "bytes": 12449,
+      "owner": "astra-intelligence/WP13",
+      "pr": 36,
+      "reason": "Published controlled port-boundary counterproofs: original actual UI admission retained for canonical lease checks, explicit mutable boundary model with positive control, request/key/result/source conflicts and final kind/binding/lease/key mutations, zero write/bind/calculation effects. Not a financial or native execution proof.",
+      "localPath": "/workspace/scratch/301a7f2754f4/agents/ci/W22-D-observation/publisher-audit/archive/pr36/modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-retry-boundary.test.ts",
+      "diffPath": "/workspace/scratch/301a7f2754f4/agents/ci/W22-D-observation/publisher-audit/diffs-against-W22/modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-retry-boundary.test.ts.diff",
+      "baseW22BlobSha": null,
+      "baseW22ProducerPin": null,
+      "currentStagingBlobSha": null,
+      "currentStagingMatchesW22": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/threshold-recertification.test.ts",
+      "sourceCommit": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+      "blobSha": "42ddb74c93873d0dec1e9d255ba90a2ae71cab7d",
+      "sha256": "9cac87260bb159c4131e0357639d3294fe6c1a5dfd24a241e3aed24d2c63a15f",
+      "bytes": 4625,
+      "owner": "astra-intelligence/WP13",
+      "pr": 36,
+      "reason": "Published real Planner interval/search/adjacent-preview positive and one-ULP/revocation negatives; captured negative-only structural probes are expressly limited to correlation. 60000 test budget unchanged in source.",
+      "localPath": "/workspace/scratch/301a7f2754f4/agents/ci/W22-D-observation/publisher-audit/archive/pr36/modules/sucafina/Sucafinav1/test/product/wp13/threshold-recertification.test.ts",
+      "diffPath": "/workspace/scratch/301a7f2754f4/agents/ci/W22-D-observation/publisher-audit/diffs-against-W22/modules/sucafina/Sucafinav1/test/product/wp13/threshold-recertification.test.ts.diff",
+      "baseW22BlobSha": null,
+      "baseW22ProducerPin": null,
+      "currentStagingBlobSha": null,
+      "currentStagingMatchesW22": true
+    }
+  ],
+  "preserve": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "sourceCommit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+      "blobSha": "2da82bf379910826f4558b5b330c97cdaf6806df",
+      "owner": "astra-finance/WP11",
+      "pr": 35,
+      "action": "PRESERVE_EXISTING_EXACT_PUBLISHED_BLOB",
+      "reason": "PR36 version is downrev relative to this integrated PR35 pin. No hunk synthesis or replacement permitted in this proposal."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+      "sourceCommit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+      "blobSha": "df3c335c95bf9d8d06d00474ff0bc391dd852b4e",
+      "owner": "astra-finance/WP11",
+      "pr": 35,
+      "action": "PRESERVE_EXISTING_EXACT_PUBLISHED_BLOB",
+      "reason": "PR36 version is downrev relative to this integrated PR35 pin. No hunk synthesis or replacement permitted in this proposal."
+    }
+  ],
+  "excluded": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/astra-intelligence-input-intake-w7.json",
+      "sourceCommit": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+      "blobSha": "6838e20d419fa538d49a6f189ab4951641c2be83",
+      "reason": "Published producer receipt only. Captured source-reconciliation receipt is provenance, not test acceptance or permission to downrev PR35; other metadata is preserved in the full compare.",
+      "archivedLocalPath": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/astra-intelligence-w7/reconciliation.json",
+      "sourceCommit": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+      "blobSha": "afcb0d7dd8b3e4e318972e68e9559d2992657653",
+      "reason": "Published producer receipt only. Captured source-reconciliation receipt is provenance, not test acceptance or permission to downrev PR35; other metadata is preserved in the full compare.",
+      "archivedLocalPath": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/astra-intelligence-w7/test-selection.json",
+      "sourceCommit": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+      "blobSha": "07f726ac8712503616152690b2379587b08ace15",
+      "reason": "Published producer receipt only. Captured source-reconciliation receipt is provenance, not test acceptance or permission to downrev PR35; other metadata is preserved in the full compare.",
+      "archivedLocalPath": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-intelligence-w7/manifest.json",
+      "sourceCommit": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+      "blobSha": "b87df7996364deca61031ec130def70f8f685172",
+      "reason": "Published producer receipt only. Captured source-reconciliation receipt is provenance, not test acceptance or permission to downrev PR35; other metadata is preserved in the full compare.",
+      "archivedLocalPath": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-intelligence-w7/source-reconciliation.json",
+      "sourceCommit": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+      "blobSha": "aa94b31ab6849484b0e9b207450c536ae118996e",
+      "reason": "Published producer receipt only. Captured source-reconciliation receipt is provenance, not test acceptance or permission to downrev PR35; other metadata is preserved in the full compare.",
+      "archivedLocalPath": "/workspace/scratch/301a7f2754f4/agents/ci/W22-D-observation/publisher-audit/archive/pr36/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-intelligence-w7/source-reconciliation.json"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/astra-intelligence-w7/source-scenario-c08-fix.json",
+      "sourceCommit": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+      "blobSha": "ba48bdb27bfcbe69c38243c0211b00b91cd89f8e",
+      "reason": "Published producer receipt only. Captured source-reconciliation receipt is provenance, not test acceptance or permission to downrev PR35; other metadata is preserved in the full compare.",
+      "archivedLocalPath": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+      "sourceCommit": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+      "blobSha": "f1127503cf3d25a44d76c766d6d52fcd3c41bd1d",
+      "reason": "AI lifecycle/history delta outside the observed D22 sensitivity/renewal cause and outside the selected import closure; metadata retained, no admission or compatibility claim.",
+      "archivedLocalPath": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/contribution-reader.ts",
+      "sourceCommit": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+      "blobSha": "db9faeec0e1d35c0724a25a0d9cf53fee93961ee",
+      "reason": "AI lifecycle/history delta outside the observed D22 sensitivity/renewal cause and outside the selected import closure; metadata retained, no admission or compatibility claim.",
+      "archivedLocalPath": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "sourceCommit": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+      "blobSha": "d5395570b44366fa81003d5f5aa68a3023c26fa5",
+      "reason": "DOWNREV: reverts case-wide verification to separate per-alternative scopes and restores classified Planner for a source-only projection. Preserve PR35 ec052 exact.",
+      "archivedLocalPath": "/workspace/scratch/301a7f2754f4/agents/ci/W22-D-observation/publisher-audit/archive/pr36/modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+      "sourceCommit": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+      "blobSha": "2338917427497733e4bd88aec852985206cce066",
+      "reason": "DOWNREV: removes createRenewalCaseOperationVerifier and explicit evidence identity/scope/period/projection/final-actor guards required by already-observed PR35 admission/case-scope tests. Preserve PR35 ec052 exact.",
+      "archivedLocalPath": "/workspace/scratch/301a7f2754f4/agents/ci/W22-D-observation/publisher-audit/archive/pr36/modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/historical-reader.test.ts",
+      "sourceCommit": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+      "blobSha": "27783a6de704414b263b056786eb25d84594ba75",
+      "reason": "AI lifecycle/history delta outside the observed D22 sensitivity/renewal cause and outside the selected import closure; metadata retained, no admission or compatibility claim.",
+      "archivedLocalPath": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/run-store.test.ts",
+      "sourceCommit": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+      "blobSha": "d058f2fea94329fab357c386386a76f8435da879",
+      "reason": "AI lifecycle/history delta outside the observed D22 sensitivity/renewal cause and outside the selected import closure; metadata retained, no admission or compatibility claim.",
+      "archivedLocalPath": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/renewal-read-scope.test.ts",
+      "sourceCommit": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+      "blobSha": "bcd5ed7f2cc26b2d9e271dae421b4d86e2f05591",
+      "reason": "Not required by selected producers; overlap with already-observed PR35 renewal-source-admission/case-read-scope witnesses. Keep archived; no producer edit selected to justify duplicate CI.",
+      "archivedLocalPath": "/workspace/scratch/301a7f2754f4/agents/ci/W22-D-observation/publisher-audit/archive/pr36/modules/sucafina/Sucafinav1/test/product/wp13/renewal-read-scope.test.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/source-scenario-fixture.ts",
+      "sourceCommit": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+      "blobSha": "39a6164af40df18c4634196e31e84a8180c822a5",
+      "reason": "Separate source-scenario C08 receipt repair; absent from W22 tree and not imported by the seven causal sensitivity files. No source-scenario failure was observed in D22. Deferred outside this narrow intake.",
+      "archivedLocalPath": "/workspace/scratch/301a7f2754f4/agents/ci/W22-D-observation/publisher-audit/archive/pr36/modules/sucafina/Sucafinav1/test/product/wp13/source-scenario-fixture.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/source-scenario.test.ts",
+      "sourceCommit": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+      "blobSha": "d5ad83048d49c79d7f83bd13b4f6c81e3d4ca31c",
+      "reason": "Separate source-scenario C08 receipt repair; absent from W22 tree and not imported by the seven causal sensitivity files. No source-scenario failure was observed in D22. Deferred outside this narrow intake.",
+      "archivedLocalPath": "/workspace/scratch/301a7f2754f4/agents/ci/W22-D-observation/publisher-audit/archive/pr36/modules/sucafina/Sucafinav1/test/product/wp13/source-scenario.test.ts"
+    }
+  ],
+  "importClosure": "agents/ci/W22-D-observation/publisher-audit/import-closure.json",
+  "audit": "agents/ci/W22-D-observation/publisher-audit/static-audit.json"
+}

@@ -26,13 +26,17 @@ type MemoryProof = { ref: CaseRef; inputDigest: string; fence: string; value: Me
 type Scope = { call: TrustedDomainContext; request: Request; requestDigest: string; binding: string; incoming: Parameters<Recall>[0]; inputDigest: string;
   selection: Selection; selectionDigest: string; reader: object; open: boolean; invalid: boolean; busy: Set<string>; proofs: Map<string, Proof>;
   memoryBusy: Set<string>; memories: Map<string, MemoryProof> }
-type Fence = { kind: "sf-memory-case-fence"; digest: string; cases: Record<string, string> } | { kind: "unsupported" }
+type RecordRef = Extract<BusinessEvidenceRef, { kind: "record" }>
+type Fence = { kind: "sf-memory-case-fence"; digest: string; cases: Record<string, string>; records: Record<string, readonly RecordRef[]> } | { kind: "unsupported" }
 
 /** Reuse completed case projections only inside one UI observation with unchanged, protected inputs. */
 export function createSfMemoryCaseReadScope(input: {
   host: DomainPortHost
   state: SfProductStatePort
   read: DecisionCasePort["read"]
+  /** One actual canonical read; invoked only inside an eligible observation, never for a reused proof. */
+  readCanonical?: (incoming: Parameters<DecisionCasePort["read"]>[0], call: TrustedDomainContext,
+    records: readonly BusinessEvidenceRef[]) => ReturnType<DecisionCasePort["read"]>
   selection: (call: TrustedDomainContext) => Selection | undefined
   readerIdentity: () => object | undefined
   lockedSourceFences: () => Record<"dashboard" | "planner" | "procurement", string> | undefined
@@ -61,11 +65,14 @@ export function createSfMemoryCaseReadScope(input: {
       if (!locked || !sources) return { kind: "unsupported" }
       const productDigest = digestSfValue(locked.dashboard.data.__sfProductV1)
       const cases: Record<string, string> = {}
+      const records: Record<string, readonly RecordRef[]> = {}
       for (const ref of refs) {
         const value = state.cases[ref.id]
         if (!value || value.id !== ref.id || value.incarnation !== ref.incarnation || !value.participants.includes(actor.principalRef)) return undefined
-        if (!procurementCase(value, locked.procurement)) return { kind: "unsupported" }
+        const captured = new Map<string, RecordRef>()
+        if (!procurementCase(value, locked.procurement, captured)) return { kind: "unsupported" }
         cases[caseKey(ref)] = digestSfValue(value)
+        records[caseKey(ref)] = structuredClone([...captured.values()])
       }
       // A current case containing only records does not imply its whole Atlas
       // history has that closure. Inspect the completed memory proof as well.
@@ -83,7 +90,7 @@ export function createSfMemoryCaseReadScope(input: {
       // C08 retains the actual SQLite read scope through all final awaits and
       // reauthorizes again on return. Full state includes originals, captures,
       // outbox, preferences and case bytes, not just their revision counters.
-      return { kind: "sf-memory-case-fence", cases,
+      return { kind: "sf-memory-case-fence", cases, records,
         digest: digestSfValue({ state, sources, principal, environment: after, selection: scope.selection,
           request: scope.requestDigest, binding: scope.binding, input: scope.inputDigest }) }
     })
@@ -110,9 +117,13 @@ export function createSfMemoryCaseReadScope(input: {
     }
     scope.busy.add(key)
     try {
-      // The first proof always comes from the complete producer outside C08.
-      // Source readers may materialize metadata and must never run under its lock.
-      const result = await input.read(incoming, call)
+      // The first proof always comes from the complete canonical producer. A
+      // composed read may group it only after proving every current actor/source
+      // scope is already materialized. This outer witness and its real mutation
+      // probes remain outside that root; unsupported sources keep the normal path.
+      const result = input.readCanonical
+        ? await input.readCanonical(incoming, call, structuredClone(before.records[key] ?? []))
+        : await input.read(incoming, call)
       if (result.status !== "ok") return result
       const after = await snapshot(scope, [ref])
       if (after?.kind !== "sf-memory-case-fence" || !current(scope) || digestSfValue(incoming) !== readDigest ||
@@ -222,15 +233,15 @@ function caseKey(ref: CaseRef) { return JSON.stringify([ref.id, ref.incarnation]
 function requestIdentity(request: Request) { return digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] }) }
 
 /** Other domains, native calls, timed approval ages and implicit selectors keep their canonical path. */
-function procurementCase(value: DecisionCase, snapshot: Snapshot) {
+function procurementCase(value: DecisionCase, snapshot: Snapshot, records?: Map<string, RecordRef>) {
   if (value.preparedChanges.length || value.receipts.length || value.assumptions.length || value.questions.length) return false
-  const refs = procurementReferences(value, value, snapshot)
+  const refs = procurementReferences(value, value, snapshot, records)
   return !!refs?.size && [...value.alternatives, ...value.choices].every((item) =>
     refs.has(item.scenario.baseRef) && !item.scenario.assumptions.length && item.scenario.operations.every((operation) =>
       operation.kind === "replace" && operation.replacementRef === undefined && refs.has(operation.targetRef)))
 }
 
-function procurementReferences(value: unknown, selected: CaseRef, snapshot: Snapshot) {
+function procurementReferences(value: unknown, selected: CaseRef, snapshot: Snapshot, records?: Map<string, RecordRef>) {
   const refs = new Map<string, Extract<BusinessEvidenceRef, { kind: "record" }>>()
   const seen = new Set<object>()
   const visit = (item: unknown): boolean => {
@@ -250,6 +261,9 @@ function procurementReferences(value: unknown, selected: CaseRef, snapshot: Snap
         // Such cases are never cached, even when the UTC day is unchanged.
         if (!request || approvalStageEntry(request as RequestView)) return false
         refs.set(ref.refId, ref)
+        // Different historical versions/field selectors of one record must all
+        // pass the zero-write qualification; refId alone cannot collapse them.
+        records?.set(digestSfValue(ref), ref)
       }
     }
     return Object.values(item).every(visit)

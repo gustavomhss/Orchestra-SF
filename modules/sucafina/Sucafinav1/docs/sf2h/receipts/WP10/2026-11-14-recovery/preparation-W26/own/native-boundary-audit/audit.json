@@ -1,0 +1,102 @@
+{
+  "schema": "wp10-native-boundary-audit-v1",
+  "status": "sealed_static_blocked_no_product_patch",
+  "role": "builder assistance; not an independent review",
+  "productCommit": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+  "productTree": "ee95a2e3d0f02efabe6a4442fcf59479265a9f61",
+  "prPins": {
+    "pr33": "2784daafbb0d3b58b6019822288a07fa38e5c5b0",
+    "pr36": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9"
+  },
+  "conclusion": "No legitimate own-only patch can complete SfRoutineNativePort and the five C07 callables with the public APIs and trusted inputs currently supplied in W25. Public read-only publication/skills are already composed; missing native admission/receipt/author seams must be resolved before adapter composition.",
+  "findings": [
+    {
+      "id": "W25-C07-HOST-UNCOMPOSED-01",
+      "classification": "implementation_absent",
+      "finding": "Own SfRoutineNativePort has no installed provider in W25 host; public publication/skills are composed. Five C07 callables remain unadvertised.",
+      "action": "WP10 composes own adapter only after owner public receipt/handoff seam exists; keep unavailable now."
+    },
+    {
+      "id": "W25-C07-TASK-CONTEXT-02",
+      "classification": "public_contract_and_trusted_input_missing",
+      "finding": "TrustedDomainContext has no callable Task Tool.Context. Native registry keeps actual assistant/tool identity privately as a one-use SF lease; operationIdentity is only a digest. A genuine sf_routine_run call is not the task call required by Task.requireParent.",
+      "exactInputs": [
+        "Tool.Context.sessionID",
+        "Tool.Context.agent",
+        "Tool.Context.assistantMessageID",
+        "Tool.Context.toolCallID",
+        "recorded part.name=task",
+        "recorded called input equality",
+        "same parent placement",
+        "governed approval or authorizationID",
+        "workflow planRevisionID/parameters/writePaths and arm receipt"
+      ],
+      "action": "S0 routes missing host handoff contract to Maestro/Core owner. No synthesized call, assistant event, Session.resume fallback or direct governance.admit bypass."
+    },
+    {
+      "id": "W25-C07-NATIVE-READERS-03",
+      "classification": "public_contract_missing",
+      "finding": "Public TaskGovernance hooks and RelayWorkflowSession.current are real but do not supply the complete nine-operation SF-native plan/admission/index/terminal/artifact mapping. Public Maestro governed-task/approval exports are pure verifiers. Relevant authoritative readers/admission implementations are internal and absent from package exports.",
+      "exactSymbols": [
+        "GovernanceRecordsV2.readWorkflowRevision/readAuthorization/readValidation/readContext",
+        "WorkflowAdmissionV2.before/admit",
+        "MaestroWorkflowHostV2.Interface.admit/current/settle",
+        "WorkflowRecordsV2.read",
+        "WorkflowSettlementV2"
+      ],
+      "action": "Owner exposes typed read/dispatch receipt boundary retaining canonical checks; WP09 defines C07 envelope mapping; WP10 adapts without copying engine logic or introducing a parallel native ledger."
+    },
+    {
+      "id": "W25-C07-KNOWLEDGE-04",
+      "classification": "public_contract_and_author_binding_missing",
+      "finding": "WorkflowKnowledgeV2.resolve and WorkflowRelayV2.publication are not public package exports. Resolver requires a real same-project Archie author Session and its unique completed non-provider-executed atlas_context anchor call, exact input/anchor/digests and current source reread. Installed SF authorSession returns its SF profile Session; none of the five ResidentProfile ids is archie; UI supplies no Session. An export alone does not supply canonical Archie authorship.",
+      "exactInputs": [
+        "WorkflowKnowledgeV2.Services.store/seats/atlas",
+        "projectID",
+        "authorSessionID from canonical upstream plan attribution",
+        "AtlasKnowledge.Reference",
+        "real completed atlas_context anchor in that author Session"
+      ],
+      "action": "Maestro/Atlas owner publishes authenticated resolver and plan-to-author binding; WP10 composes them under exact placement/Request/lease. Do not relabel an SF actor, scan any Archie session or use caller-provided author ids."
+    },
+    {
+      "id": "W25-C07-NATIVE-EXECUTION-05",
+      "classification": "execution_not_demonstrated_separate_from_implementation",
+      "finding": "Even an available model/runtime would not fill the missing host contracts. After contracts and adapter are implemented, a real installed native run with governed Task/arm/terminal output must be executed and evidenced separately.",
+      "action": "Do not call hosted adapter assertions native acceptance; no native/global acceptance in this package."
+    },
+    {
+      "id": "W25-C07-TASK-GUARD-PRECISION-06",
+      "classification": "historical_note_precision",
+      "finding": "The old W12 note says recorded running task call. W25 requireParent literally checks a recorded task part with non-pending decodable called input and equality; it is not a standalone status===running check. Canonical settlement and governance still require real invocation provenance. The old note is preserved unchanged.",
+      "action": "Use exact source wording in review and avoid asserting that completed retries are rejected by requireParent solely for their status."
+    }
+  ],
+  "operationMap": "operation-map.json",
+  "sources": "source-manifest.json",
+  "counterproofs": "counterproof-plan.json",
+  "routineReconcileCoverage": {
+    "literalSymbolFound": false,
+    "inspected": [
+      "W25 hydrated own host/analysis paths",
+      "full-tree enumerated W25 product/ai analysis-port.ts and analysis-host.ts",
+      "PR36 exact analysis-port.ts and analysis-host.ts"
+    ],
+    "semanticEquivalent": "readSfAnalysisRoutine -> readDecisionRoutine -> readDecisionRoutineOutput -> native binding/readAdmission/readRun/resultAccess",
+    "claimLimit": "No invented routineReconcile API and no assertion about uninspected arbitrary repository text."
+  },
+  "candidateChanges": [],
+  "repoWrites": [],
+  "foreignSourceWrites": [],
+  "remoteMutations": [],
+  "ciDispatched": false,
+  "nativeAcceptance": "not executed or accepted",
+  "globalAcceptance": "not executed or accepted",
+  "independentReviews": 0,
+  "limitations": [
+    "Source-level analysis only; no runtime/typecheck result inferred.",
+    "PR36 analysis-port has unrelated cancel/read deltas archived but not composed.",
+    "No new owner heads sought; observed PR metadata matched explicitly authorized pins.",
+    "Absence of native execution is separate from missing implementation and contracts."
+  ]
+}

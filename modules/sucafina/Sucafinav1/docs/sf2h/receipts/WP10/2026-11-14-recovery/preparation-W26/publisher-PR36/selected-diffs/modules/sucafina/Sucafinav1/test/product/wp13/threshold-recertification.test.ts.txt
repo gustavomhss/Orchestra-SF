@@ -1,0 +1,66 @@
+--- W22/modules/sucafina/Sucafinav1/test/product/wp13/threshold-recertification.test.ts
++++ 48486a2186c0cc07a3a5558e34e2aa94c89ad5e9/modules/sucafina/Sucafinav1/test/product/wp13/threshold-recertification.test.ts
+@@ -0,0 +1,63 @@
++import { expect, test } from "bun:test"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import { createPlannerIntervalProof } from "../../../product/planner/interval-proof.ts"
++import { validatePlannerThreshold } from "../../../product/portfolio/threshold-proof.ts"
++import { createWp13SensitivityRuntimeFixture } from "./sensitivity-fixture.ts"
++
++test("a persisted threshold candidate must match the current canonical interval and both adjacent component witnesses", async () => {
++  const world = await createWp13SensitivityRuntimeFixture({ renewal: {} })
++  try {
++    const request = world.sensitivityRequest
++    const binding = await world.issuer.resolve(request, world.context)
++    const structural = await createPlannerIntervalProof({ units: world.issuer, preview: world.preview })(request, world.baselineRef, world.context)
++    const certificate = await world.exact(request, world.baselineRef, world.context)
++    if (binding.status !== "ok" || structural.status !== "ok" || certificate.status !== "ok") throw new Error("Canonical interval and threshold producers unavailable")
++    expect(certificate.value.value).toBeCloseTo(55000, 8)
++    expect(certificate.value.evidenceRefs).toEqual(structural.value.sourceRefs)
++    const observations: { requestDigest: string; value: Awaited<ReturnType<typeof world.preview>> }[] = []
++    const base = { request, binding: binding.value, source: world.selectedResult, baseline: world.baselineResult, certificate: certificate.value, structural: structural.value, context: world.context }
++    const positive = await validatePlannerThreshold({ ...base, preview: async (input, context) => {
++      const value = await world.preview(input, context)
++      observations.push({ requestDigest: digestSfValue(input), value: structuredClone(value) })
++      return value
++    } })
++    expect(positive).toMatchObject({ status: "ok", value: { value: certificate.value.value, scope: "known-subtotal" } })
++    expect(observations).toHaveLength(2)
++    expect(observations.every((item) => item.value.status === "ok")).toBe(true)
++    expect(structural.value.componentIds.length).toBeGreaterThan(1)
++
++    // Negative-only component witnesses reuse the exact numerical observations
++    // above to isolate structural correlation, not to claim current authorization.
++    // Cold readers/current authority/replay are exercised by the integration tests.
++    for (const mismatch of ["fixed", "order", "baseline", "metadata", "scenario", "bounds", "unit", "engine", "refs"] as const) {
++      const changed = structuredClone(structural.value)
++      if (mismatch === "fixed") Object.assign(changed, { fixedComponentsDigest: "f".repeat(64) })
++      if (mismatch === "order") Object.assign(changed, { componentIds: [...changed.componentIds].reverse() })
++      if (mismatch === "baseline") Object.assign(changed, { baselineRef: "different-baseline" })
++      if (mismatch === "metadata") Object.assign(changed, { metadataDigest: "a".repeat(64) })
++      if (mismatch === "scenario") Object.assign(changed, { scenarioDigest: "b".repeat(64) })
++      if (mismatch === "bounds") Object.assign(changed, { maximum: changed.maximum + 1 })
++      if (mismatch === "unit") Object.assign(changed, { unit: "EUR" })
++      if (mismatch === "engine") Object.assign(changed, { engineVersion: "different-engine" })
++      if (mismatch === "refs") Object.assign(changed, { sourceRefs: changed.sourceRefs.slice(1) })
++      let replayed = 0
++      const result = await validatePlannerThreshold({ ...base, structural: changed, preview: async (input) => {
++        const observed = observations.find((item) => item.requestDigest === digestSfValue(input))
++        if (!observed) throw new Error("Unexpected structural validator probe")
++        replayed++
++        return structuredClone(observed.value)
++      } })
++      expect(result).toEqual({ status: "unavailable", reason: "exact-threshold-certificate-incompatible" })
++      expect(replayed).toBe(mismatch === "fixed" || mismatch === "order" ? 2 : 0)
++    }
++
++    // A one-ULP substitution is checked against NEW real Planner previews.
++    const bits = new DataView(new ArrayBuffer(8))
++    bits.setFloat64(0, certificate.value.value)
++    bits.setBigUint64(0, bits.getBigUint64(0) + 1n)
++    const substituted = await validatePlannerThreshold({ ...base, certificate: { ...certificate.value, value: bits.getFloat64(0) }, preview: world.preview })
++    expect(substituted.status).not.toBe("ok")
++    world.access.allowed = false
++    expect((await validatePlannerThreshold({ ...base, preview: world.preview })).status).not.toBe("ok")
++  } finally { await world.cleanup() }
++}, 60000)

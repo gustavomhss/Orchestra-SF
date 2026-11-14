@@ -1,0 +1,145 @@
+{
+  "productSha": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+  "snapshotSha": "0b56a60ab2b66f123d2e9c375863cb48ff85788b",
+  "runId": 43615096939,
+  "jobId": 132508295747,
+  "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43615096939",
+  "conclusion": "failure",
+  "fullSelectionCounts": {
+    "pass": 41,
+    "fail": 2,
+    "expects": 2009,
+    "tests": 43,
+    "files": 7,
+    "durationSeconds": 371.09,
+    "skip": 0,
+    "errors": 0,
+    "errorsAreAdditionalTestCases": false
+  },
+  "log": {
+    "path": "evidence/W25/A-job-132508295747.raw.txt",
+    "bytes": 96136,
+    "sha256": "c370e59135e63629adc585c6b021ef1e31aebccacd1ae948b9dbd7474866cad4",
+    "git_blob_sha1": "672f99e72949805fd633e5d13e00e97a5663e90a",
+    "characters": 96134,
+    "byteExactRawCapture": true,
+    "duplicatedInPackage": false
+  },
+  "testCases": [
+    {
+      "status": "pass",
+      "name": "installed routine publication reads the authenticated Relay store, real skill bytes and required controls",
+      "durationMs": 1430.51,
+      "file": "Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts",
+      "rawLogLine": 839,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "installed publication refuses actual catalog drift and cannot fabricate a knowledge author from UI parameters",
+      "durationMs": 516.56,
+      "file": "Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts",
+      "rawLogLine": 859,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "publication egress rejects a revoked real UI lease and a replaced Location while store reads are suspended",
+      "durationMs": 469.54,
+      "file": "Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts",
+      "rawLogLine": 879,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "installed publication refuses another project before a store read and revokes retained providers on disposal",
+      "durationMs": 401.66,
+      "file": "Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts",
+      "rawLogLine": 899,
+      "kind": "named-test"
+    },
+    {
+      "status": "fail",
+      "name": "publication author comes from the real registered Core session and refuses archive, removal and lease revocation",
+      "durationMs": 538.08,
+      "file": "Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts",
+      "rawLogLine": 940,
+      "kind": "named-test",
+      "context": [
+        "}",
+        "[16:22:20.780] INFO (#7716): project copy refresh done {",
+        "  projectID: \"global\",",
+        "  updated: [],",
+        "  removed: [],",
+        "}",
+        "[16:22:20.791] INFO (#7833): all LSPs are disabled",
+        "[16:22:20.803] INFO (#7567): booting location services {",
+        "  directory: \"/tmp/sf-installed-publication-uxSFtO\",",
+        "  workspaceID: undefined,",
+        "}",
+        "[16:22:20.819] WARN (#7472): Ignoring skill /tmp/sf-installed-publication-uxSFtO/.orchestra/skills/sf-explicar-forecast/SKILL.md: the name sf-explicar-forecast is reserved by a bundled skill",
+        "62 |     const statements = new Map<string, ReturnType<Database[\"prepare\"]>>()",
+        "63 |     const prepare = (query: string) => {",
+        "64 |       const cached = statements.get(query)",
+        "65 |       // Map order is recency order: a reused statement moves to the end, so the first entry is the one to evict.",
+        "66 |       statements.delete(query)",
+        "67 |       const statement = cached ?? native.prepare(query)",
+        "                                              ^",
+        "RangeError: Cannot use a closed database",
+        "      at prepare (bun:sqlite:345:37)",
+        "      at prepare (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/core/src/database/sqlite.bun.ts:67:42)",
+        "      at try (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/core/src/database/sqlite.bun.ts:114:31)",
+        "      at ~effect/Utils/internal (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/Utils.js:89:16)",
+        "      at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:682:20)",
+        "      at runLoop (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:444:98)",
+        "      at evaluate (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:412:23)",
+        "      at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:723:15)",
+        "      at loop (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:554:5)",
+        "      at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:550:9)",
+        "      at evaluate (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:425:23)",
+        "      at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:723:15)",
+        "(fail) publication author comes from the real registered Core session and refuses archive, removal and lease revocation [538.08ms]",
+        "",
+        "Sucafinav1/test/product/wp10/integration/procurement-evidence-read-scope.test.ts:",
+        "(pass) real fresh Procurement evidence retains canonical fallthrough with C08 cold [152.25ms]",
+        "(pass) real fresh Procurement evidence retains canonical fallthrough with C08 without-preferences [120.82ms]"
+      ]
+    }
+  ],
+  "cleanupJobs": [
+    {
+      "id": 132510432552,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 43615096939,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Delete the snapshot branch",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        }
+      ]
+    }
+  ],
+  "causalPrecision": {
+    "observed": "The fifth real Core Session case fails with RangeError Cannot use a closed database at SQLite prepare after resident source registration; four other cases pass.",
+    "static": "Each original fixture independently acquires/disposes the process-wide Core graph and retains Location/Session service objects; SQLite finalizers close native handles.",
+    "notProven": "The log lacks a complete call stack through Session.create and does not uniquely identify a singleton, cached reader or refcount path retaining the closed connection.",
+    "correction": "Make one actual Core application root own the file lifetime, with fixture-scoped publication/UI/authoring resources; do not claim confirmed runtime resolution before CI."
+  }
+}

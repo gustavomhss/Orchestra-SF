@@ -1,0 +1,19 @@
+{
+  "package": "sucafina",
+  "directory": "modules/sucafina",
+  "runner": "bun",
+  "args": [
+    "--timeout",
+    "120000",
+    "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+    "Sucafinav1/test/product/wp10/integration/planner-recorded-history.test.ts",
+    "Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+    "Sucafinav1/test/product/wp11/calculation-persistence.test.ts",
+    "Sucafinav1/test/product/wp11/calculation-history.test.ts",
+    "Sucafinav1/test/product/wp10/integration/calculation-case-scope.test.ts",
+    "Sucafinav1/test/product/wp11/scenario-batch.test.ts"
+  ],
+  "env": {
+    "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+  }
+}

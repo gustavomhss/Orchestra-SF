@@ -6,6 +6,7 @@ import type { DecisionMutationOperation } from "../../../../modules/sucafina/Suc
 import { decisionCoverageRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/coverage-access.ts"
 import { parseCaseRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
 import { createPlannerSensitivityUnits } from "../../../../modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts"
+import { createPlannerExactThreshold } from "../../../../modules/sucafina/Sucafinav1/product/planner/exact-threshold.ts"
 import { comparePlannerPreview } from "../../../../modules/sucafina/Sucafinav1/product/planner/preview-comparison.ts"
 import { createPortfolioProofVerifier } from "../../../../modules/sucafina/Sucafinav1/product/portfolio/verification.ts"
 import type { createSfProductAuthority } from "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
@@ -70,12 +71,16 @@ export function createSfPortfolioServices(input: {
   const resolveCoverageAuthority = createSfPortfolioCoverageAuthority({ authority, business, registries })
   const sensitivityPreview = scenarios ? (request: Parameters<typeof comparePlannerPreview>[1], call: Parameters<typeof comparePlannerPreview>[2]) =>
     comparePlannerPreview({ host: authority.host, sources: business.plannerSources, scenarios, planner: registries.planner }, request, call) : undefined
+  // Evaluation and durable recertification use the same current Planner proof.
+  const threshold = units && sensitivityPreview ? createPlannerExactThreshold({ units, preview: sensitivityPreview }) : undefined
+  const exactThreshold: Parameters<typeof createPortfolioProduct>[0]["exactThreshold"] = threshold
+    ? (request, binding, call) => threshold(request, binding.baselineRef, call) : undefined
   const coveragePreview = units && sensitivityPreview ? createPortfolioCoveragePreview({ units, preview: sensitivityPreview, resolveAuthority: resolveCoverageAuthority }) : undefined
   const createReceipt: Parameters<typeof createPortfolioProduct>[0]["createReceipt"] = async (call, operation, digest, result) => business.receipt(call, operation, digest, result)
   if (scenarios && units) verification.proof = createPortfolioProofVerifier({ cases: business.cases, planner: registries.planner,
     sources: business.plannerSources, evidence: business.context, results: business.results, revalidate: authority.host.revalidate,
     readSourceFences: business.readSourceFences, lockedSourceFences: business.lockedSourceFences, caseFor: business.resolveCase,
-    idempotencyKey, decisions: mutations, createReceipt, units, coveragePreview,
+    idempotencyKey, decisions: mutations, createReceipt, units, coveragePreview, exactThreshold,
     candidateCoverageRefFor: async (candidate) => {
       const ref = parseCaseRef(candidate.caseRef)
       return ref && candidate.result ? { status: "ok", value: decisionCoverageRef(ref, candidate.result.costCoverage.alternativeId, candidate.result.costCoverage.alternativeVersion) }
@@ -97,7 +102,7 @@ export function createSfPortfolioServices(input: {
     rules: registries.rules, selection: registries.selection, sensitivityBindings: registries.sensitivityBindings,
     comparisonBindings: registries.comparisonBindings, portfolioBindings: registries.portfolioBindings,
     decisions: mutations, createReceipt, caseFor: business.resolveCase,
-    idempotencyKey, resolveCoverageAuthority, reconciliation: { readPortfolio: reconciliation.readPortfolio },
+    idempotencyKey, exactThreshold, resolveCoverageAuthority, reconciliation: { readPortfolio: reconciliation.readPortfolio },
   }) : undefined
   const product = rawProduct ? { ...rawProduct, http: { ...rawProduct.http,
     prepare: (request: Parameters<Product["http"]["prepare"]>[0], call: Parameters<Product["http"]["prepare"]>[1]) =>

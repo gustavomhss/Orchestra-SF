@@ -1,0 +1,174 @@
+--- a/apps/cli/src/sucafina-product/business-services.ts
++++ b/apps/cli/src/sucafina-product/business-services.ts
+@@ -51,7 +51,7 @@
+ import { createSfPreparedApplicationEgress } from "./prepared-application-egress.ts"
+ import { createSfMemoryCaseReadScope } from "./memory-case-read-scope.ts"
+ import { createSfProcurementCaseReadScope } from "./procurement-case-read-scope.ts"
+-import { createSfProcurementEvidenceReadScope } from "./procurement-evidence-read-scope.ts"
++import { createSfProcurementEvidenceReadScope, createSfProcurementRecordReadScope } from "./procurement-evidence-read-scope.ts"
+ import type { SfMemoryObservation } from "./memory-case-read-scope.ts"
+ import { createSfSourceFenceReader } from "./source-fence-read.ts"
+ import { createSfScenarioProcurementProofScope } from "./scenario-procurement-proof-scope.ts"
+@@ -168,7 +168,15 @@
+     evidence: context, createId: randomUUID, now: () => new Date().toISOString() })
+   const procurementCaseRead = createSfProcurementCaseReadScope({ host, state: input.authority.state, read: canonicalCases.read,
+     selection: selectedPeriod, readerIdentity: () => evidence.current, isCurrentRecord: individual.isCurrent, lockedSourceFences })
++  const memoryRecordRead = createSfProcurementRecordReadScope({ host, state: input.authority.state, contextFor,
++    selection: selectedPeriod, readerIdentity: () => evidence.current, lockedSourceFences })
+   const memoryCaseScope = createSfMemoryCaseReadScope({ host, state: input.authority.state, read: procurementCaseRead,
++    readCanonical: async (request, call, records) => {
++      const selected = structuredClone(request)
++      const observed = await memoryRecordRead(records, call, () => canonicalCases.read(selected, call))
++      if (observed.kind === "unsupported") return procurementCaseRead(request, call)
++      return observed.kind === "observed" ? observed.value : { status: "unavailable", reason: "memory-case-read-changed" }
++    },
+     selection: selectedPeriod, readerIdentity: () => evidence.current, lockedSourceFences })
+   const cases = { ...canonicalCases, read: memoryCaseScope.read }
+   const withMemoryObservation: SfMemoryObservation = (request, call, work) => {
+--- a/apps/cli/src/sucafina-product/memory-case-read-scope.ts
++++ b/apps/cli/src/sucafina-product/memory-case-read-scope.ts
+@@ -26,13 +26,17 @@
+ type Scope = { call: TrustedDomainContext; request: Request; requestDigest: string; binding: string; incoming: Parameters<Recall>[0]; inputDigest: string;
+   selection: Selection; selectionDigest: string; reader: object; open: boolean; invalid: boolean; busy: Set<string>; proofs: Map<string, Proof>;
+   memoryBusy: Set<string>; memories: Map<string, MemoryProof> }
+-type Fence = { kind: "sf-memory-case-fence"; digest: string; cases: Record<string, string> } | { kind: "unsupported" }
++type RecordRef = Extract<BusinessEvidenceRef, { kind: "record" }>
++type Fence = { kind: "sf-memory-case-fence"; digest: string; cases: Record<string, string>; records: Record<string, readonly RecordRef[]> } | { kind: "unsupported" }
+ 
+ /** Reuse completed case projections only inside one UI observation with unchanged, protected inputs. */
+ export function createSfMemoryCaseReadScope(input: {
+   host: DomainPortHost
+   state: SfProductStatePort
+   read: DecisionCasePort["read"]
++  /** One actual canonical read; invoked only inside an eligible observation, never for a reused proof. */
++  readCanonical?: (incoming: Parameters<DecisionCasePort["read"]>[0], call: TrustedDomainContext,
++    records: readonly BusinessEvidenceRef[]) => ReturnType<DecisionCasePort["read"]>
+   selection: (call: TrustedDomainContext) => Selection | undefined
+   readerIdentity: () => object | undefined
+   lockedSourceFences: () => Record<"dashboard" | "planner" | "procurement", string> | undefined
+@@ -61,11 +65,14 @@
+       if (!locked || !sources) return { kind: "unsupported" }
+       const productDigest = digestSfValue(locked.dashboard.data.__sfProductV1)
+       const cases: Record<string, string> = {}
++      const records: Record<string, readonly RecordRef[]> = {}
+       for (const ref of refs) {
+         const value = state.cases[ref.id]
+         if (!value || value.id !== ref.id || value.incarnation !== ref.incarnation || !value.participants.includes(actor.principalRef)) return undefined
+-        if (!procurementCase(value, locked.procurement)) return { kind: "unsupported" }
++        const captured = new Map<string, RecordRef>()
++        if (!procurementCase(value, locked.procurement, captured)) return { kind: "unsupported" }
+         cases[caseKey(ref)] = digestSfValue(value)
++        records[caseKey(ref)] = structuredClone([...captured.values()])
+       }
+       // A current case containing only records does not imply its whole Atlas
+       // history has that closure. Inspect the completed memory proof as well.
+@@ -83,7 +90,7 @@
+       // C08 retains the actual SQLite read scope through all final awaits and
+       // reauthorizes again on return. Full state includes originals, captures,
+       // outbox, preferences and case bytes, not just their revision counters.
+-      return { kind: "sf-memory-case-fence", cases,
++      return { kind: "sf-memory-case-fence", cases, records,
+         digest: digestSfValue({ state, sources, principal, environment: after, selection: scope.selection,
+           request: scope.requestDigest, binding: scope.binding, input: scope.inputDigest }) }
+     })
+@@ -110,9 +117,13 @@
+     }
+     scope.busy.add(key)
+     try {
+-      // The first proof always comes from the complete producer outside C08.
+-      // Source readers may materialize metadata and must never run under its lock.
+-      const result = await input.read(incoming, call)
++      // The first proof always comes from the complete canonical producer. A
++      // composed read may group it only after proving every current actor/source
++      // scope is already materialized. This outer witness and its real mutation
++      // probes remain outside that root; unsupported sources keep the normal path.
++      const result = input.readCanonical
++        ? await input.readCanonical(incoming, call, structuredClone(before.records[key] ?? []))
++        : await input.read(incoming, call)
+       if (result.status !== "ok") return result
+       const after = await snapshot(scope, [ref])
+       if (after?.kind !== "sf-memory-case-fence" || !current(scope) || digestSfValue(incoming) !== readDigest ||
+@@ -222,15 +233,15 @@
+ function requestIdentity(request: Request) { return digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] }) }
+ 
+ /** Other domains, native calls, timed approval ages and implicit selectors keep their canonical path. */
+-function procurementCase(value: DecisionCase, snapshot: Snapshot) {
++function procurementCase(value: DecisionCase, snapshot: Snapshot, records?: Map<string, RecordRef>) {
+   if (value.preparedChanges.length || value.receipts.length || value.assumptions.length || value.questions.length) return false
+-  const refs = procurementReferences(value, value, snapshot)
++  const refs = procurementReferences(value, value, snapshot, records)
+   return !!refs?.size && [...value.alternatives, ...value.choices].every((item) =>
+     refs.has(item.scenario.baseRef) && !item.scenario.assumptions.length && item.scenario.operations.every((operation) =>
+       operation.kind === "replace" && operation.replacementRef === undefined && refs.has(operation.targetRef)))
+ }
+ 
+-function procurementReferences(value: unknown, selected: CaseRef, snapshot: Snapshot) {
++function procurementReferences(value: unknown, selected: CaseRef, snapshot: Snapshot, records?: Map<string, RecordRef>) {
+   const refs = new Map<string, Extract<BusinessEvidenceRef, { kind: "record" }>>()
+   const seen = new Set<object>()
+   const visit = (item: unknown): boolean => {
+@@ -250,6 +261,9 @@
+         // Such cases are never cached, even when the UTC day is unchanged.
+         if (!request || approvalStageEntry(request as RequestView)) return false
+         refs.set(ref.refId, ref)
++        // Different historical versions/field selectors of one record must all
++        // pass the zero-write qualification; refId alone cannot collapse them.
++        records?.set(digestSfValue(ref), ref)
+       }
+     }
+     return Object.values(item).every(visit)
+--- a/modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts
+@@ -64,7 +64,7 @@
+   const transactionAll = driver.transactionAll
+   if (!transactionAll) throw new Error("Real cross-surface store unavailable")
+   const counters = { persistenceCalls: 0, rootPersistenceCalls: 0, nestedPersistenceCalls: 0, groupedEvidenceFences: 0,
+-    c08Reads: 0, caseReads: 0, caseFences: 0, evidenceContextReads: 0, atlasCanonicalReads: 0, atlasCanonicalCompleted: 0 }
++    c08Reads: 0, caseReads: 0, caseFences: 0, evidenceContextReads: 0, groupedCaseContextReads: 0, atlasCanonicalReads: 0, atlasCanonicalCompleted: 0 }
+   const measuredDriver: typeof driver = { ...driver,
+     transaction: (surface, work, options) => {
+       counters.persistenceCalls += 1
+@@ -164,7 +164,11 @@
+     const readCase = activeBusiness.cases.read
+     activeBusiness.cases.read = async (value, call) => { counters.caseReads += 1; return readCase(value, call) }
+     const readEvidenceContext = activeBusiness.context.context
+-    activeBusiness.context.context = async (value, call) => { counters.evidenceContextReads += 1; return readEvidenceContext(value, call) }
++    activeBusiness.context.context = async (value, call) => {
++      counters.evidenceContextReads += 1
++      if (driver.currentSnapshots?.()) counters.groupedCaseContextReads += 1
++      return readEvidenceContext(value, call)
++    }
+     const readMemory = atlas.memory.recall
+     atlas.memory.recall = async (value, call) => {
+       counters.atlasCanonicalReads += 1
+@@ -295,6 +299,10 @@
+       // its two evidence contexts; the selection performs its own source read.
+       // Repeated cases still reopen C08/authority without replaying that producer.
+       expect(counters.evidenceContextReads - beforePrepare.evidenceContextReads).toBe(6)
++      // Both canonical BCS passes still execute in each independent observation.
++      // Only their actual case read is grouped; the selection's own two reads
++      // and every external mutation witness retain their separate boundaries.
++      expect(counters.groupedCaseContextReads - beforePrepare.groupedCaseContextReads).toBe(4)
+       expect(counters.groupedEvidenceFences - beforePrepare.groupedEvidenceFences).toBeGreaterThan(0)
+       expect(counters.nestedPersistenceCalls - beforePrepare.nestedPersistenceCalls).toBeGreaterThan(0)
+       const readers = createSfAnalysisSelectionReaders({ authority, business: activeBusiness })
+@@ -305,6 +313,7 @@
+       expect(counters.atlasCanonicalReads - beforeVerify.atlasCanonicalReads).toBe(2)
+       expect(counters.atlasCanonicalCompleted - beforeVerify.atlasCanonicalCompleted).toBe(2)
+       expect(counters.evidenceContextReads - beforeVerify.evidenceContextReads).toBe(6)
++      expect(counters.groupedCaseContextReads - beforeVerify.groupedCaseContextReads).toBe(4)
+       const proof = verified.value
+       expect(sfAnalysisSourcesAuthorized(proof, analysis, call)).toBe(true)
+       const prompt = proof.promptContext && "decisionRecall" in proof.promptContext ? proof.promptContext.decisionRecall : undefined
+@@ -328,7 +337,11 @@
+       // The canonical decoder checks this structural fixture; only the payload verifier runs.
+       // Its explicitly unexecuted metadata confers no publication authority.
+       const output = verifierOutputFixture(analysis, { kind: "CaseRecall", state: "ready", payload: prompt.result, evidenceRefs: proof.sources.map((item) => item.ref) })
++      const beforeAccept = { ...counters }
+       expect(await measure("memory.accept-output", () => proof.acceptsOutput(output, call))).toEqual({ status: "ok", value: true })
++      expect(counters.atlasCanonicalReads - beforeAccept.atlasCanonicalReads).toBe(2)
++      expect(counters.atlasCanonicalCompleted - beforeAccept.atlasCanonicalCompleted).toBe(2)
++      expect(counters.groupedCaseContextReads - beforeAccept.groupedCaseContextReads).toBe(4)
+       const recallInput = { caseRef, limit: 50, scope: { query: value.query, recallScope: { ...value.recallScope, includeHistorical: false } } }
+       let releaseDetached = () => {}
+       const detachedGate = new Promise<void>((resolve) => { releaseDetached = resolve })

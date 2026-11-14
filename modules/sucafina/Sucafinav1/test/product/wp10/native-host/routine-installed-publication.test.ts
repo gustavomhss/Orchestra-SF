@@ -1,4 +1,4 @@
-import { expect, test } from "bun:test"
+import { afterAll, expect, test } from "bun:test"
 import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import path from "node:path"
@@ -21,7 +21,7 @@ import { SkillV2 } from "@orchestra/core/skill"
 import { AuthoringGraph } from "@orchestra/relay/authoring/graph"
 import { AuthoringStore } from "@orchestra/relay/authoring/store"
 import type { RelayAuthoring } from "@orchestra/schema/relay-authoring"
-import { Effect } from "effect"
+import { Effect, Layer, ManagedRuntime } from "effect"
 import type { Scope } from "effect"
 import { createSfInstalledRoutinePublication } from "../../../../../../../apps/cli/src/sucafina-product/routine-installed-publication.ts"
 import { createSfRoutinePublicationContribution } from "../../../../../../../apps/cli/src/sucafina-product/routine-publication.ts"
@@ -252,29 +252,102 @@ type Fixture = {
   publish: (options: { skill?: boolean; knowledge?: boolean }) => Effect.Effect<RelayAuthoring.Document, AuthoringGraph.Refusal>
 }
 
-async function fixture<A>(work: (fixture: Fixture) => Effect.Effect<A, unknown, Scope.Scope>) {
-  const directory = await mkdtemp(path.join(tmpdir(), "sf-installed-publication-"))
-  const source = path.join(directory, ".orchestra", "skills")
-  const skillFile = "---\nname: sf-explicar-forecast\ndescription: Publication integration fixture\n---\n# Factual publication instructions\n"
-  await mkdir(path.join(source, "sf-explicar-forecast"), { recursive: true })
-  await mkdir(path.join(directory, "replacement"))
-  await writeFile(path.join(source, "sf-explicar-forecast", "SKILL.md"), skillFile)
-  const placement: Fixture["placement"] = {}, native: Fixture["native"] = {}
-  const access: { ui?: Fixture["ui"] } = {}
-  const authorized = (call: TrustedDomainContext) => call.kind === "ui" ? access.ui?.authority.revalidate(call) ?? Promise.resolve(false)
-    : native.registry?.revalidate(call) ?? Promise.resolve(false)
-  const installed = createSfInstalledRoutinePublication({ identity: () => placement.current,
-    host: { requestFor: (call) => call.kind === "ui" ? access.ui?.authority.requestFor(call) : native.registry?.requestFor(call), revalidate: authorized } })
-  const publication = createSfRoutinePublicationContribution({ identity: () => placement.current, authorize: authorized, installed: installed.publication })
-  expect(installed.publication()).toBeUndefined()
-  // Location's Task captures the completed root's process-global execution service;
-  // replacing a transitive dependency does not export it from the application graph.
-  const layer = AppNodeBuilder.build(LayerNode.group([installed.node, publication.node, SessionV2.node, SessionStore.node, SessionExecution.node, LocationServiceMap.node]),
+// One real process root owns Core Session/SQLite and all Location services until
+// the complete file ends. Publication providers retain their own fixture scopes.
+async function openPublicationRoot() {
+  const layer = AppNodeBuilder.build(LayerNode.group([SessionV2.node, SessionStore.node, SessionExecution.node, LocationServiceMap.node]),
     [[SessionExecution.node, SessionExecutionLocal.node]])
+  const runtime = ManagedRuntime.make(layer)
   try {
-    return await Effect.gen(function* () {
-      const sessions = yield* SessionV2.Service, store = yield* SessionStore.Service, locations = yield* LocationServiceMap.Service
+    const services = await runtime.runPromise(Effect.gen(function* () {
+      return { sessions: yield* SessionV2.Service, store: yield* SessionStore.Service, locations: yield* LocationServiceMap.Service }
+    }))
+    return { runtime, ...services }
+  } catch (error) {
+    try { await runtime.dispose() }
+    catch (cleanup) { throw new AggregateError([error, cleanup], "Publication root acquisition and disposal failed") }
+    throw error
+  }
+}
+
+type PublicationRoot = Awaited<ReturnType<typeof openPublicationRoot>>
+const publicationSuite: {
+  root?: PublicationRoot; opening?: Promise<PublicationRoot>; active: boolean; closed: boolean; sequence: number; directories: Set<string>
+} = { active: false, closed: false, sequence: 0, directories: new Set() }
+
+async function acquirePublicationRoot() {
+  if (publicationSuite.closed) throw new Error("Publication root already disposed")
+  if (publicationSuite.root) return publicationSuite.root
+  const opening = publicationSuite.opening ?? openPublicationRoot()
+  publicationSuite.opening = opening
+  try {
+    const root = await opening
+    publicationSuite.root = root
+    return root
+  } finally {
+    // A failed acquisition is disposed by openPublicationRoot and is never cached.
+    if (publicationSuite.opening === opening) publicationSuite.opening = undefined
+  }
+}
+
+afterAll(async () => {
+  publicationSuite.closed = true
+  const failures: unknown[] = []
+  if (publicationSuite.active) failures.push(new Error("Publication fixture still active during suite disposal"))
+  try {
+    const root = publicationSuite.root ?? (publicationSuite.opening ? await publicationSuite.opening : undefined)
+    // ManagedRuntime closes the actual Location graph and its scoped users before
+    // releasing their Core dependencies. No temporary directory is removed early.
+    await root?.runtime.dispose()
+  } catch (error) { failures.push(error) }
+  finally {
+    publicationSuite.root = undefined
+    publicationSuite.opening = undefined
+    for (const directory of publicationSuite.directories) {
+      try { await rm(directory, { recursive: true, force: true }) }
+      catch (error) { failures.push(error) }
+    }
+    publicationSuite.directories.clear()
+  }
+  if (failures.length) throw new AggregateError(failures, "Publication suite disposal failed")
+})
+
+async function fixture<A>(work: (fixture: Fixture) => Effect.Effect<A, unknown, Scope.Scope>) {
+  if (publicationSuite.closed || publicationSuite.active) throw new Error("Publication fixtures require one active scope")
+  publicationSuite.active = true
+  const fixtureId = ++publicationSuite.sequence
+  let phase = "directory.create"
+  try {
+    const directory = await mkdtemp(path.join(tmpdir(), "sf-installed-publication-"))
+    publicationSuite.directories.add(directory)
+    const source = path.join(directory, ".orchestra", "skills")
+    const skillFile = "---\nname: sf-explicar-forecast\ndescription: Publication integration fixture\n---\n# Factual publication instructions\n"
+    await mkdir(path.join(source, "sf-explicar-forecast"), { recursive: true })
+    await mkdir(path.join(directory, "replacement"))
+    await writeFile(path.join(source, "sf-explicar-forecast", "SKILL.md"), skillFile)
+    phase = "root.acquire"
+    const reusedRoot = publicationSuite.root !== undefined
+    const root = await acquirePublicationRoot()
+    console.info("SF_PUBLICATION_LIFECYCLE", JSON.stringify({ fixtureId, state: "root-acquired", reusedRoot }))
+    const { sessions, store, locations } = root
+    const placement: Fixture["placement"] = {}, native: Fixture["native"] = {}
+    const access: { ui?: Fixture["ui"] } = {}
+    const authorized = (call: TrustedDomainContext) => call.kind === "ui" ? access.ui?.authority.revalidate(call) ?? Promise.resolve(false)
+      : native.registry?.revalidate(call) ?? Promise.resolve(false)
+    const installed = createSfInstalledRoutinePublication({ identity: () => placement.current,
+      host: { requestFor: (call) => call.kind === "ui" ? access.ui?.authority.requestFor(call) : native.registry?.requestFor(call), revalidate: authorized } })
+    const publication = createSfRoutinePublicationContribution({ identity: () => placement.current, authorize: authorized, installed: installed.publication })
+    expect(installed.publication()).toBeUndefined()
+    // These two dependencies are the exact live services, not replacement readers.
+    // Only the publication contributions are acquired/disposed for this fixture.
+    const layer = LayerNode.compile(LayerNode.group([installed.node, publication.node]), [
+      [SessionStore.node, Layer.succeed(SessionStore.Service, store)],
+      [LocationServiceMap.node, Layer.succeed(LocationServiceMap.Service, locations)],
+    ])
+    phase = "providers.acquire"
+    return await root.runtime.runPromise(Effect.gen(function* () {
       const location = sfNativeLocationRef({ directory: AbsolutePath.make(directory) })
+      phase = "location.acquire"
       const placed = yield* Effect.gen(function* () {
         return { location: yield* Location.Service, relay: yield* Relay.Service, skills: yield* SkillV2.Service, agents: yield* AgentV2.Service }
       }).pipe(Effect.provide(locations.get(location)))
@@ -284,6 +357,7 @@ async function fixture<A>(work: (fixture: Fixture) => Effect.Effect<A, unknown, 
       access.ui = ui
       yield* Effect.addFinalizer(() => Effect.sync(() => ui.authority.finish(ui.context)))
       yield* placed.skills.transform((draft) => draft.source({ type: "directory", path: AbsolutePath.make(source) }))
+      phase = "authoring.open"
       const authoring = yield* AuthoringStore.open(placed.relay.paths.root, projectID)
       const owned: string[] = []
       yield* Effect.addFinalizer(() => Effect.forEach(owned, (id) => authoring.remove(id).pipe(Effect.catch(() => Effect.void)), { discard: true }))
@@ -299,8 +373,14 @@ async function fixture<A>(work: (fixture: Fixture) => Effect.Effect<A, unknown, 
       })
       const installedHost = installed.publication(), host = publication.publication()
       if (!installedHost || !host) throw new Error("Installed publication unavailable after graph acquisition")
+      phase = "test.body"
       return yield* work({ directory, source, skillFile, location, projectID, placement, native, ui, installed, publication,
-        installedHost, host, skills: placed.skills, agents: placed.agents, sessions, store, authoring, publish })
-    }).pipe(Effect.provide(layer), Effect.scoped, Effect.runPromise)
-  } finally { await rm(directory, { recursive: true, force: true }) }
+        installedHost, host, skills: placed.skills, agents: placed.agents, sessions, store, authoring, publish }).pipe(
+          Effect.onExit((exit) => Effect.sync(() => { if (exit._tag === "Success") phase = "fixture.dispose" })),
+        )
+    }).pipe(Effect.provide(layer), Effect.scoped))
+  } catch (error) {
+    console.error("SF_PUBLICATION_LIFECYCLE_FAILURE", JSON.stringify({ fixtureId, phase }), error)
+    throw error
+  } finally { publicationSuite.active = false }
 }

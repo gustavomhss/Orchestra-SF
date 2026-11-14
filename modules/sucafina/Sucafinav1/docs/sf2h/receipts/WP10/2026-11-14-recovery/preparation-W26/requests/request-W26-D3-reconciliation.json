@@ -1,0 +1,13 @@
+{
+  "package": "sucafina",
+  "directory": "modules/sucafina",
+  "runner": "bun",
+  "args": [
+    "--timeout",
+    "120000",
+    "Sucafinav1/test/product/wp10/integration/portfolio-reconciliation.test.ts"
+  ],
+  "env": {
+    "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+  }
+}

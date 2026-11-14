@@ -1,0 +1,36 @@
+{
+  "method": "text/JSON/hash only; no product/test/typecheck/import/build/browser execution",
+  "baseMatchesFullW25Tree": true,
+  "fiveTestBodiesByteExact": true,
+  "bodiesSha256": "7f67baf5f9da8fd1be1a9b59a8e9ab08f7ed5dd8c5de472a17cc395f1a66720e",
+  "expectExpressionsBefore": 52,
+  "expectExpressionsAfter": 52,
+  "budgets120000MsBefore": 5,
+  "budgets120000MsAfter": 5,
+  "changedPaths": [
+    "modules/sucafina/Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts"
+  ],
+  "centralRepoMatchesBase": true,
+  "newCasts": false,
+  "mockDatabase": false,
+  "mockSession": false,
+  "noopExecution": false,
+  "rootServices": [
+    "SessionV2.Service",
+    "SessionStore.Service",
+    "SessionExecutionLocal.node",
+    "LocationServiceMap.Service"
+  ],
+  "fixtureInjectedInstances": [
+    "exact root.store via Layer.succeed(SessionStore.Service, store)",
+    "exact root.locations via Layer.succeed(LocationServiceMap.Service, locations)"
+  ],
+  "individualFixtureDisposal": "real Effect.scoped publication contribution finalizers, AuthoringStore cleanup, UI finish and resident registration release",
+  "suiteDisposal": "await ManagedRuntime.dispose then remove all owned temp directories; errors propagate/aggregate",
+  "failedAcquisition": "disposed and opening reference cleared in finally; no rejected Promise cached",
+  "overlap": "explicit active guard prevents overlapping fixture scopes",
+  "tests": "unexecuted candidate",
+  "typecheck": "unexecuted candidate",
+  "nativeAcceptance": false,
+  "independentReview": false
+}

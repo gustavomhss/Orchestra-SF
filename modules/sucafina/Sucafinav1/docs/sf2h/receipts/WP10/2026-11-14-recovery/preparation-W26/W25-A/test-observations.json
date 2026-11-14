@@ -1,0 +1,499 @@
+{
+  "productSha": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+  "snapshotSha": "0b56a60ab2b66f123d2e9c375863cb48ff85788b",
+  "counts": {
+    "pass": 41,
+    "fail": 2,
+    "expects": 2009,
+    "tests": 43,
+    "files": 7,
+    "durationSeconds": 371.09,
+    "skip": 0,
+    "errors": 0,
+    "errorsAreAdditionalTestCases": false
+  },
+  "fileResults": {
+    "Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts": {
+      "pass": 4,
+      "fail": 1,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/integration/procurement-evidence-read-scope.test.ts": {
+      "pass": 4,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/integration/work-bridge.test.ts": {
+      "pass": 11,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/integration/memory-services.test.ts": {
+      "pass": 6,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/analysis-composition/analysis-services.test.ts": {
+      "pass": 5,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts": {
+      "pass": 0,
+      "fail": 1,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts": {
+      "pass": 11,
+      "fail": 0,
+      "skip": 0
+    }
+  },
+  "tests": [
+    {
+      "status": "pass",
+      "name": "installed routine publication reads the authenticated Relay store, real skill bytes and required controls",
+      "durationMs": 1430.51,
+      "file": "Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts",
+      "rawLogLine": 839,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "installed publication refuses actual catalog drift and cannot fabricate a knowledge author from UI parameters",
+      "durationMs": 516.56,
+      "file": "Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts",
+      "rawLogLine": 859,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "publication egress rejects a revoked real UI lease and a replaced Location while store reads are suspended",
+      "durationMs": 469.54,
+      "file": "Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts",
+      "rawLogLine": 879,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "installed publication refuses another project before a store read and revokes retained providers on disposal",
+      "durationMs": 401.66,
+      "file": "Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts",
+      "rawLogLine": 899,
+      "kind": "named-test"
+    },
+    {
+      "status": "fail",
+      "name": "publication author comes from the real registered Core session and refuses archive, removal and lease revocation",
+      "durationMs": 538.08,
+      "file": "Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts",
+      "rawLogLine": 940,
+      "kind": "named-test",
+      "context": [
+        "}",
+        "[16:22:20.780] INFO (#7716): project copy refresh done {",
+        "  projectID: \"global\",",
+        "  updated: [],",
+        "  removed: [],",
+        "}",
+        "[16:22:20.791] INFO (#7833): all LSPs are disabled",
+        "[16:22:20.803] INFO (#7567): booting location services {",
+        "  directory: \"/tmp/sf-installed-publication-uxSFtO\",",
+        "  workspaceID: undefined,",
+        "}",
+        "[16:22:20.819] WARN (#7472): Ignoring skill /tmp/sf-installed-publication-uxSFtO/.orchestra/skills/sf-explicar-forecast/SKILL.md: the name sf-explicar-forecast is reserved by a bundled skill",
+        "62 |     const statements = new Map<string, ReturnType<Database[\"prepare\"]>>()",
+        "63 |     const prepare = (query: string) => {",
+        "64 |       const cached = statements.get(query)",
+        "65 |       // Map order is recency order: a reused statement moves to the end, so the first entry is the one to evict.",
+        "66 |       statements.delete(query)",
+        "67 |       const statement = cached ?? native.prepare(query)",
+        "                                              ^",
+        "RangeError: Cannot use a closed database",
+        "      at prepare (bun:sqlite:345:37)",
+        "      at prepare (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/core/src/database/sqlite.bun.ts:67:42)",
+        "      at try (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/core/src/database/sqlite.bun.ts:114:31)",
+        "      at ~effect/Utils/internal (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/Utils.js:89:16)",
+        "      at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:682:20)",
+        "      at runLoop (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:444:98)",
+        "      at evaluate (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:412:23)",
+        "      at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:723:15)",
+        "      at loop (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:554:5)",
+        "      at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:550:9)",
+        "      at evaluate (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:425:23)",
+        "      at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/node_modules/.bun/effect@4.0.0-beta.83/node_modules/effect/dist/internal/effect.js:723:15)",
+        "(fail) publication author comes from the real registered Core session and refuses archive, removal and lease revocation [538.08ms]",
+        "",
+        "Sucafinav1/test/product/wp10/integration/procurement-evidence-read-scope.test.ts:",
+        "(pass) real fresh Procurement evidence retains canonical fallthrough with C08 cold [152.25ms]",
+        "(pass) real fresh Procurement evidence retains canonical fallthrough with C08 without-preferences [120.82ms]"
+      ]
+    },
+    {
+      "status": "pass",
+      "name": "real fresh Procurement evidence retains canonical fallthrough with C08 cold",
+      "durationMs": 152.25,
+      "file": "Sucafinav1/test/product/wp10/integration/procurement-evidence-read-scope.test.ts",
+      "rawLogLine": 943,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "real fresh Procurement evidence retains canonical fallthrough with C08 without-preferences",
+      "durationMs": 120.82,
+      "file": "Sucafinav1/test/product/wp10/integration/procurement-evidence-read-scope.test.ts",
+      "rawLogLine": 944,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "real fresh Procurement evidence retains canonical fallthrough with C08 ready",
+      "durationMs": 205.05,
+      "file": "Sucafinav1/test/product/wp10/integration/procurement-evidence-read-scope.test.ts",
+      "rawLogLine": 945,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "a canonical nested writer is refused once without retry or a durable side effect",
+      "durationMs": 68.09,
+      "file": "Sucafinav1/test/product/wp10/integration/procurement-evidence-read-scope.test.ts",
+      "rawLogLine": 946,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "Procurement work reads an uninitialized C08 without writing and invalidates its witness on the first real commit",
+      "durationMs": 2647.29,
+      "file": "Sucafinav1/test/product/wp10/integration/work-bridge.test.ts",
+      "rawLogLine": 949,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "Procurement destination resolves a new canonical collection in a rebuilt host and new UI with no ambient period",
+      "durationMs": 3761.39,
+      "file": "Sucafinav1/test/product/wp10/integration/work-bridge.test.ts",
+      "rawLogLine": 950,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "Procurement destination refuses a different period, actor and actually changed source after its canonical positive",
+      "durationMs": 1076.69,
+      "file": "Sucafinav1/test/product/wp10/integration/work-bridge.test.ts",
+      "rawLogLine": 951,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "Procurement period scope rejects overlap and header replacement and cleans up after throw or lease finish",
+      "durationMs": 131.29,
+      "file": "Sucafinav1/test/product/wp10/integration/work-bridge.test.ts",
+      "rawLogLine": 952,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "Procurement secondary read cleans both scopes on exception and refuses real access revocation before display",
+      "durationMs": 1829.97,
+      "file": "Sucafinav1/test/product/wp10/integration/work-bridge.test.ts",
+      "rawLogLine": 953,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "actual C08 work composition opens a current thread and survives rebuilding the host with the same durable key",
+      "durationMs": 42977.05,
+      "file": "Sucafinav1/test/product/wp10/integration/work-bridge.test.ts",
+      "rawLogLine": 954,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "an action ID, a different period or actor and missing exact content grant cannot bypass current work membership",
+      "durationMs": 6638.96,
+      "file": "Sucafinav1/test/product/wp10/integration/work-bridge.test.ts",
+      "rawLogLine": 955,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "the current work reader refuses a real session revocation after the canonical thread read",
+      "durationMs": 10362.35,
+      "file": "Sucafinav1/test/product/wp10/integration/work-bridge.test.ts",
+      "rawLogLine": 956,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "render egress rejects header replacement after the last real C08 work witness",
+      "durationMs": 13458.55,
+      "file": "Sucafinav1/test/product/wp10/integration/work-bridge.test.ts",
+      "rawLogLine": 957,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "a complete C08 witness detects preference or case mutation with the same live Request",
+      "durationMs": 13476.82,
+      "file": "Sucafinav1/test/product/wp10/integration/work-bridge.test.ts",
+      "rawLogLine": 958,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "real registered C17 bindings have stable private work refs across key reload and isolated actor, case and key rotation",
+      "durationMs": 811.76,
+      "file": "Sucafinav1/test/product/wp10/integration/work-bridge.test.ts",
+      "rawLogLine": 959,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "registered condition IDs select exact material changes and retain the full original criterion set",
+      "durationMs": 7735.3,
+      "file": "Sucafinav1/test/product/wp10/integration/memory-services.test.ts",
+      "rawLogLine": 962,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "material signals reconcile durably once and do not resolve without an actual resolution proof",
+      "durationMs": 25805.24,
+      "file": "Sucafinav1/test/product/wp10/integration/memory-services.test.ts",
+      "rawLogLine": 963,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "a real source write between selection and C08 commit prevents condition persistence",
+      "durationMs": 155.25,
+      "file": "Sucafinav1/test/product/wp10/integration/memory-services.test.ts",
+      "rawLogLine": 964,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "outcomes use an explicitly selected closed-month actual and never substitute the latest source",
+      "durationMs": 8923.46,
+      "file": "Sucafinav1/test/product/wp10/integration/memory-services.test.ts",
+      "rawLogLine": 965,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "private memory routes bind writes to the human intent and reread authority at egress",
+      "durationMs": 420.3,
+      "file": "Sucafinav1/test/product/wp10/integration/memory-services.test.ts",
+      "rawLogLine": 966,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "material selection parsing rejects invented scope and duplicated identities",
+      "durationMs": 0.47,
+      "file": "Sucafinav1/test/product/wp10/integration/memory-services.test.ts",
+      "rawLogLine": 967,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "analysis input rejects a read lease and a different human payload before producer access",
+      "durationMs": 30.1,
+      "file": "Sucafinav1/test/product/wp10/analysis-composition/analysis-services.test.ts",
+      "rawLogLine": 970,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "a missing factory is unavailable and a stale case does not reach the producer",
+      "durationMs": 30.83,
+      "file": "Sucafinav1/test/product/wp10/analysis-composition/analysis-services.test.ts",
+      "rawLogLine": 971,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "the current human choice is prepared but revocation during preparation prevents its return",
+      "durationMs": 65.79,
+      "file": "Sucafinav1/test/product/wp10/analysis-composition/analysis-services.test.ts",
+      "rawLogLine": 972,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "a producer cannot rewrite the human choice while obtaining a valid proof",
+      "durationMs": 47.9,
+      "file": "Sucafinav1/test/product/wp10/analysis-composition/analysis-services.test.ts",
+      "rawLogLine": 973,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "case reads reject an operation whose hidden target has no authorized source",
+      "durationMs": 27.66,
+      "file": "Sucafinav1/test/product/wp10/analysis-composition/analysis-services.test.ts",
+      "rawLogLine": 974,
+      "kind": "named-test"
+    },
+    {
+      "status": "fail",
+      "name": "historical decision recall binds original/current evidence and rejects changed proof or authority",
+      "durationMs": 225028.46,
+      "file": "Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+      "rawLogLine": 1033,
+      "kind": "named-test",
+      "context": [
+        "SF_MEMORY_READ_COUNTS {\"phase\":\"memory.fence-source\",\"persistenceCalls\":3515,\"rootPersistenceCalls\":1114,\"nestedPersistenceCalls\":2401,\"groupedEvidenceFences\":60,\"c08Reads\":233,\"caseReads\":6,\"caseFences\":9,\"evidenceContextReads\":2,\"atlasCanonicalReads\":1,\"atlasCanonicalCompleted\":1}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"memory.fence-source\",\"state\":\"returned\",\"phaseMs\":10172,\"elapsedMs\":130532,\"aborted\":false}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"memory.fence-capture\",\"state\":\"started\",\"elapsedMs\":130554}",
+        "SF_MEMORY_READ_COUNTS {\"phase\":\"memory.fence-capture\",\"persistenceCalls\":3569,\"rootPersistenceCalls\":1168,\"nestedPersistenceCalls\":2401,\"groupedEvidenceFences\":60,\"c08Reads\":236,\"caseReads\":6,\"caseFences\":10,\"evidenceContextReads\":2,\"atlasCanonicalReads\":1,\"atlasCanonicalCompleted\":1}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"memory.fence-capture\",\"state\":\"returned\",\"phaseMs\":10294,\"elapsedMs\":140847,\"aborted\":false}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"memory.fence-principal\",\"state\":\"started\",\"elapsedMs\":140930}",
+        "SF_MEMORY_READ_COUNTS {\"phase\":\"memory.fence-principal\",\"persistenceCalls\":3012,\"rootPersistenceCalls\":931,\"nestedPersistenceCalls\":2081,\"groupedEvidenceFences\":52,\"c08Reads\":194,\"caseReads\":6,\"caseFences\":9,\"evidenceContextReads\":2,\"atlasCanonicalReads\":1,\"atlasCanonicalCompleted\":1}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"memory.fence-principal\",\"state\":\"returned\",\"phaseMs\":9077,\"elapsedMs\":150007,\"aborted\":false}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"memory.fence-clock\",\"state\":\"started\",\"elapsedMs\":150016}",
+        "SF_MEMORY_READ_COUNTS {\"phase\":\"memory.fence-clock\",\"persistenceCalls\":3568,\"rootPersistenceCalls\":1167,\"nestedPersistenceCalls\":2401,\"groupedEvidenceFences\":60,\"c08Reads\":236,\"caseReads\":6,\"caseFences\":10,\"evidenceContextReads\":2,\"atlasCanonicalReads\":1,\"atlasCanonicalCompleted\":1}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"memory.fence-clock\",\"state\":\"returned\",\"phaseMs\":10650,\"elapsedMs\":160665,\"aborted\":false}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"memory.fence-lease\",\"state\":\"started\",\"elapsedMs\":160674}",
+        "SF_MEMORY_READ_COUNTS {\"phase\":\"memory.fence-lease\",\"persistenceCalls\":3011,\"rootPersistenceCalls\":930,\"nestedPersistenceCalls\":2081,\"groupedEvidenceFences\":52,\"c08Reads\":194,\"caseReads\":6,\"caseFences\":9,\"evidenceContextReads\":2,\"atlasCanonicalReads\":1,\"atlasCanonicalCompleted\":1}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"memory.fence-lease\",\"state\":\"returned\",\"phaseMs\":9043,\"elapsedMs\":169717,\"aborted\":false}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"memory.fence-final-request-headers\",\"state\":\"started\",\"elapsedMs\":169725}",
+        "SF_MEMORY_READ_COUNTS {\"phase\":\"memory.fence-final-request-headers\",\"persistenceCalls\":5250,\"rootPersistenceCalls\":1889,\"nestedPersistenceCalls\":3361,\"groupedEvidenceFences\":84,\"c08Reads\":367,\"caseReads\":10,\"caseFences\":17,\"evidenceContextReads\":2,\"atlasCanonicalReads\":1,\"atlasCanonicalCompleted\":1}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"memory.fence-final-request-headers\",\"state\":\"returned\",\"phaseMs\":15770,\"elapsedMs\":185495,\"aborted\":false}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"memory.same-request-new-proof\",\"state\":\"started\",\"elapsedMs\":185504}",
+        "SF_MEMORY_READ_COUNTS {\"phase\":\"memory.same-request-new-proof\",\"persistenceCalls\":5250,\"rootPersistenceCalls\":1889,\"nestedPersistenceCalls\":3361,\"groupedEvidenceFences\":84,\"c08Reads\":367,\"caseReads\":10,\"caseFences\":17,\"evidenceContextReads\":2,\"atlasCanonicalReads\":1,\"atlasCanonicalCompleted\":1}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"memory.same-request-new-proof\",\"state\":\"returned\",\"phaseMs\":15914,\"elapsedMs\":201419,\"aborted\":false}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"stale.preserve\",\"state\":\"started\",\"elapsedMs\":202063}",
+        "SF_MEMORY_READ_COUNTS {\"phase\":\"stale.preserve\",\"persistenceCalls\":304,\"rootPersistenceCalls\":44,\"nestedPersistenceCalls\":260,\"groupedEvidenceFences\":6,\"c08Reads\":23,\"caseReads\":0,\"caseFences\":0,\"evidenceContextReads\":3,\"atlasCanonicalReads\":0,\"atlasCanonicalCompleted\":0}",
+        "SF_COMPOSITION_PHASE {\"fixture\":\"historical-memory\",\"phase\":\"stale.preserve\",\"state\":\"returned\",\"phaseMs\":1004,\"elapsedMs\":203067,\"aborted\":false}",
+        "1 | /** Cooperative host-boundary deadline; it does not replace Bun's outer test budget. */",
+        "2 | export function compositionTestDeadline(name: string, budgetMs = 105_000) {",
+        "3 |   const started = performance.now()",
+        "4 |   const cancellation = new AbortController()",
+        "5 |   const deadlineError = new Error(`${name} exceeded its ${budgetMs}ms cooperative deadline`)",
+        "                                ^",
+        "error: historical-memory exceeded its 225000ms cooperative deadline",
+        "      at compositionTestDeadline (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts:5:29)",
+        "      at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts:68:9",
+        "(fail) historical decision recall binds original/current evidence and rejects changed proof or authority [225028.46ms]",
+        "",
+        "Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts:",
+        "(pass) native input reader requires an exact consumed lease, stored run and admitted input, and observes revocation [109.40ms]",
+        "(pass) the joint alternative reader samples real C08 once for both projections and repeats authorization on every call [123.93ms]"
+      ]
+    },
+    {
+      "status": "pass",
+      "name": "native input reader requires an exact consumed lease, stored run and admitted input, and observes revocation",
+      "durationMs": 109.4,
+      "file": "Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts",
+      "rawLogLine": 1036,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "the joint alternative reader samples real C08 once for both projections and repeats authorization on every call",
+      "durationMs": 123.93,
+      "file": "Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts",
+      "rawLogLine": 1037,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "a joint admission sample refuses a private input mutation between its real run reads",
+      "durationMs": 62.11,
+      "file": "Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts",
+      "rawLogLine": 1038,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "a joint admission sample refuses a committed C08 run change between its real run reads",
+      "durationMs": 48.12,
+      "file": "Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts",
+      "rawLogLine": 1039,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "a joint admission sample refuses revocation between passes and exposes no input",
+      "durationMs": 39.22,
+      "file": "Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts",
+      "rawLogLine": 1040,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "a joint admission sample observes a private holder mutation during its final authentication",
+      "durationMs": 61.83,
+      "file": "Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts",
+      "rawLogLine": 1041,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "alternative publication adapter cannot grant arbitrary preferences or provenance writes and clears both private guards",
+      "durationMs": 37.49,
+      "file": "Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts",
+      "rawLogLine": 1042,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "the C08 final publication guard rejects native revocation during authentication after the work callback",
+      "durationMs": 31.75,
+      "file": "Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts",
+      "rawLogLine": 1043,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "actual run-store publication exposes no ready preview after native capture veto=%s",
+      "durationMs": 53.19,
+      "file": "Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts",
+      "rawLogLine": 1044,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "actual run-store publication exposes no ready preview after native capture veto=%s",
+      "durationMs": 48.12,
+      "file": "Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts",
+      "rawLogLine": 1045,
+      "kind": "named-test"
+    },
+    {
+      "status": "pass",
+      "name": "decision registry HTTP routes reject malformed or foreign-origin inputs and never upgrade a read grant",
+      "durationMs": 41.83,
+      "file": "Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts",
+      "rawLogLine": 1046,
+      "kind": "named-test"
+    }
+  ],
+  "unhandledErrors": [],
+  "selectedFiles": [
+    "Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts",
+    "Sucafinav1/test/product/wp10/integration/work-bridge.test.ts",
+    "Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+    "Sucafinav1/test/product/wp10/analysis-composition/analysis-services.test.ts",
+    "Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts",
+    "Sucafinav1/test/product/wp10/integration/memory-services.test.ts",
+    "Sucafinav1/test/product/wp10/integration/procurement-evidence-read-scope.test.ts"
+  ],
+  "omniPositiveControl": {
+    "observedLines": [
+      "omni positive control [392ccf9bf42dddbbc990c196bca6cce9]: pass (declared: 1 test(s) in Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts); 2 omni spawn(s), 0 delegated."
+    ],
+    "nativeInferenceAcceptance": false,
+    "status": "success",
+    "spawns": 2,
+    "delegated": 0,
+    "declaredTests": 1,
+    "declaringFile": "Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts"
+  },
+  "summaryRawLogLine": 1048,
+  "summaryDuplicateFailuresExcluded": true
+}

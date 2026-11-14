@@ -9,7 +9,9 @@ import { sfRunSourceFence } from "../ai/run-store.ts"
 import type { StoredDecisionResult, createSfDecisionResultStore } from "../decisions/result-store.ts"
 import type { PortfolioBinding } from "../decisions/portfolio-bindings.ts"
 import type { CriterionResultBinding } from "../decisions/criterion-rules.ts"
+import type { PlannerDirectIntervalProof } from "../decisions/coverage-interval.ts"
 import type { createPlannerSensitivityUnits } from "../planner/sensitivity-units.ts"
+import { createPlannerIntervalProof } from "../planner/interval-proof.ts"
 import { plannerScenarioDigest } from "../planner/preview-comparison.ts"
 import { createSensitivityEvaluator } from "./sensitivity.ts"
 import { finalizePlannerSensitivity } from "./planner-sensitivity.ts"
@@ -41,6 +43,7 @@ export function createPortfolioProofVerifier(input: {
   exactThreshold?: Parameters<typeof createPlannerSensitivity>[0]["exactThreshold"]
   coveragePreview?: Parameters<typeof createPlannerSensitivity>[0]["coveragePreview"]
 }) {
+  const proveSensitivityInterval = createPlannerIntervalProof({ units: input.units, preview: (request, context) => input.sensitivityPreview(request, context) })
   const fences = new Map<string, { digest: string; planner: string; expires: number }>()
   const key = (binding: PortfolioBinding | CriterionComparisonBinding | CriterionResultBinding, context: TrustedDomainContext) => digestSfValue({ binding: binding.bindingDigest, installation: context.binding.installationId, project: context.binding.projectId, principal: context.binding.principalRef, revision: context.binding.accessRevision, policy: context.binding.policyVersion })
   const capture = async (binding: PortfolioBinding | CriterionComparisonBinding | CriterionResultBinding, context: TrustedDomainContext, expected: string) => {
@@ -90,8 +93,18 @@ export function createPortfolioProofVerifier(input: {
     const current = await input.planner.compareScenarios(binding.request, context)
     return current.status === "ok" && digestSfValue(current.value) === stored.resultDigest && await capture(binding, context, initialFence)
   }
-  const verifySensitivity = async (binding: CriterionResultBinding, stored: StoredDecisionResult, context: TrustedDomainContext) => {
+  const verifySensitivity = async (incomingBinding: CriterionResultBinding, incomingStored: StoredDecisionResult, context: TrustedDomainContext) => {
+    const binding = structuredClone(incomingBinding)
+    const stored = structuredClone(incomingStored)
+    const bindingInputDigest = digestSfValue(incomingBinding)
+    const storedInputDigest = digestSfValue(incomingStored)
+    const sameInputs = () => digestSfValue(incomingBinding) === bindingInputDigest && digestSfValue(incomingStored) === storedInputDigest
+    const authority = digestSfValue({ kind: context.kind, binding: context.binding })
+    const originalBinding = context.binding
+    const lease = context.lease
+    const sameAuthority = () => context.binding === originalBinding && context.lease === lease && digestSfValue({ kind: context.kind, binding: context.binding }) === authority
     if (stored.kind !== "sensitivity" || stored.resultRef !== binding.resultRef || stored.requestDigest !== digestSfValue(binding.request) || stored.resultDigest !== digestSfValue(stored.result) || digestSfValue(stored.caseRef) !== digestSfValue(binding.caseRef)) return false
+    if (!await input.revalidate(context) || !sameAuthority() || !sameInputs()) return false
     const expectedResult = stored.result
     const initial = await input.readSourceFences(context)
     if (!initial) return false
@@ -107,8 +120,8 @@ export function createPortfolioProofVerifier(input: {
     const interval = input.coveragePreview ? structuredClone(await input.coveragePreview.issue(structuredClone(binding.request), unitBinding.baselineRef, context)) : undefined
     if (interval && interval.status !== "ok" && interval.status !== "unavailable") return false
     const samples: { resultRef: string; coverageRefs: readonly string[]; conditions: readonly string[]; quantified: boolean }[] = []
-    const exact: { value?: KnownSubtotalThreshold } = {}
-    const certify = (certificate: { value: number | null; evidenceRefs: readonly import("../contracts/business-context.ts").BusinessEvidenceRef[] }, trusted: TrustedDomainContext) => validatePlannerThreshold({ request: binding.request, binding: unitBinding, source: sourceScenario, baseline: baselineScenario, certificate, preview: input.sensitivityPreview, context: trusted })
+    const exact: { value?: KnownSubtotalThreshold; structural?: PlannerDirectIntervalProof } = {}
+    const certify = (certificate: { value: number | null; evidenceRefs: readonly import("../contracts/business-context.ts").BusinessEvidenceRef[] }, trusted: TrustedDomainContext) => validatePlannerThreshold({ request: binding.request, binding: unitBinding, source: sourceScenario, baseline: baselineScenario, certificate, structural: exact.structural, preview: input.sensitivityPreview, context: trusted })
     const evaluate = createSensitivityEvaluator({
       sample: async (_request, value, trusted) => {
         const point = expectedResult.evaluated[samples.length]
@@ -127,6 +140,23 @@ export function createPortfolioProofVerifier(input: {
       },
       exactThreshold: async (_request, trusted) => {
         if (!input.exactThreshold || samples.some((sample) => !sample.quantified) || baselineScenario.knownSubtotal === null || sourceScenario.knownSubtotal === null) return { status: "unavailable", reason: "exact-threshold-not-proven" }
+        if (expectedResult.thresholdEvidence.state === "exact") {
+          // A stored number is only a candidate. Re-establish the producer's
+          // current monotone domain, then prove its accepted/rejected IEEE boundary.
+          // The proof is local to this invocation; no prior authorization is reused.
+          if (expectedResult.threshold !== expectedResult.thresholdEvidence.value) return { status: "unavailable", reason: "exact-threshold-certificate-incompatible" }
+          const structural = interval?.status === "ok"
+            ? { status: "ok" as const, value: structuredClone(interval.value.structural) }
+            : structuredClone(await proveSensitivityInterval(structuredClone(binding.request), unitBinding.baselineRef, trusted))
+          if (structural.status !== "ok") return structural
+          exact.structural = structural.value
+          // Reproduce the producer's evidence, including its deterministic order;
+          // a self-hashed extra, missing or substituted stored ref is not authority.
+          if (digestSfValue(expectedResult.thresholdEvidence.evidenceRefs) !== digestSfValue(structural.value.sourceRefs)) return { status: "unavailable", reason: "exact-threshold-evidence-changed" }
+          const certificate = await certify({ value: expectedResult.thresholdEvidence.value, evidenceRefs: structural.value.sourceRefs }, trusted)
+          if (certificate.status === "ok") exact.value = certificate.value
+          return certificate
+        }
         const result = structuredClone(await input.exactThreshold(structuredClone(binding.request), structuredClone(unitBinding), trusted))
         if (result.status !== "ok") return result
         const certificate = await certify(result.value, trusted)
@@ -140,8 +170,8 @@ export function createPortfolioProofVerifier(input: {
         if (currentSource.status !== "ok" || currentBaseline.status !== "ok" || digestSfValue(currentSource.value) !== digestSfValue(source.value) || digestSfValue(currentBaseline.value) !== digestSfValue(baseline.value)) return false
         if (interval?.status === "ok" && (!input.coveragePreview || !await input.coveragePreview.revalidate(interval.value.intervalRef, trusted))) return false
         if (!exact.value) return true
-        // The original search has already proved the direct parameter's domain. Reproduce
-        // its admitted boundary with current adjacent previews, then recheck authority/units.
+        // The fresh interval proof admits the direct parameter's domain. Reproduce
+        // its candidate boundary with current adjacent previews, then recheck authority/units.
         const certificate = await certify(structuredClone(exact.value), trusted)
         return certificate.status === "ok" && digestSfValue(certificate.value) === digestSfValue(exact.value) && await input.units.revalidate(structuredClone(unitBinding), trusted)
       },
@@ -150,7 +180,7 @@ export function createPortfolioProofVerifier(input: {
     const sampled = await evaluate(binding.request, context)
     if (sampled.status !== "ok") return false
     const result = finalizePlannerSensitivity({ request: binding.request, binding: unitBinding, result: sampled.value, samples, baselineRefs: baseline.value.sourceRefs, exact: exact.value, originalScenarios: sampled.value.comparisonStatus === "complete" ? [] : [{ resultRef: binding.request.scenarioRef, scenario: sourceScenario, coverageRef: unitBinding.scenarioCoverageRef }, { resultRef: unitBinding.baselineRef, scenario: baselineScenario, coverageRef: unitBinding.baselineCoverageRef }] })
-    return result.status === "ok" && digestSfValue(result.value) === stored.resultDigest && await capture(binding, context, initialFence)
+    return result.status === "ok" && digestSfValue(result.value) === stored.resultDigest && sameAuthority() && sameInputs() && await capture(binding, context, initialFence) && sameAuthority() && sameInputs()
   }
   const verifySnapshot = (snapshot: Snapshot, binding: PortfolioBinding | CriterionComparisonBinding | CriterionResultBinding, context: TrustedDomainContext) => {
     const saved = fences.get(key(binding, context))
