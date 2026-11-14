@@ -59,7 +59,8 @@ export async function withNativeWp06(work: (fixture: Awaited<ReturnType<typeof c
       return { profile, manifestDigest: bundle.manifestDigest, skills,
         operationIds: profile.allowedOperations.filter((operation) => skills.some((skill) => skill.allowedOperations.includes(operation))) }
     })
-    const layer = AppNodeBuilder.build(LayerNode.group([SessionV2.node, SessionStore.node, EventV2.node, LocationServiceMap.node, ProjectV2.node]),
+    // Location Task captures both Session services from the completed application's exports.
+    const layer = AppNodeBuilder.build(LayerNode.group([SessionV2.node, SessionExecution.node, SessionStore.node, EventV2.node, LocationServiceMap.node, ProjectV2.node]),
       [[SessionExecution.node, SessionExecutionLocal.node]])
     await Effect.gen(function* () {
       const session = yield* SessionV2.Service
