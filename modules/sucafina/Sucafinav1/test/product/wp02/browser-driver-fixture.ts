@@ -218,7 +218,7 @@ async function within<T>(work: Promise<T>, timeout: number, name: string) {
 }
 
 /** Each caller declares expectSpawn in its own test and reports only after assertions and cleanup succeed. */
-export async function launchBrowserDriver(consumer: "host-contextual-controls" | "host-draft-conflict" | "host-write-authority" | "host-response-recovery" | "host-draft-recovery" | "dashboard-monthly" | "personal-views" | "preview-in-flight") {
+export async function launchBrowserDriver(consumer: "host-contextual-controls" | "host-draft-conflict" | "host-write-authority" | "host-response-recovery" | "host-draft-recovery" | "host-access-recovery" | "dashboard-monthly" | "personal-views" | "preview-in-flight") {
   const node = Bun.which("node")
   if (!node) throw new Error("Node is unavailable for the Playwright browser driver")
   const { chromium } = await import("@playwright/test")

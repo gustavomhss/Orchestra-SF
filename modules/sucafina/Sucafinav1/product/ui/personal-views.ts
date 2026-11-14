@@ -19,6 +19,8 @@ document.querySelectorAll('[data-personal-views]').forEach((section) => {
   let closed = false
   let epoch = 0
   let readGeneration = 0
+  const entryId = (entry) => entry.availability === 'unavailable' ? entry.id : entry.view.id
+  const unavailableMessage = 'A saved reference is no longer available. Its previous details are hidden. Choose an available period, version and filters, then replace it with this page or remove it.'
   const active = () => !closed && section.isConnected
   const syncControls = () => {
     if (!active()) return
@@ -60,7 +62,7 @@ document.querySelectorAll('[data-personal-views]').forEach((section) => {
     const generation = ++readGeneration
     const result = await send('open', { id })
     if (!active() || pending || generation !== readGeneration || result.kind === 'ignored') return
-    if (result.kind !== 'ok' || !result.value?.view) { status.textContent = 'This view is unavailable or your access changed. Refresh saved views to choose another.'; return }
+    if (result.kind !== 'ok' || !result.value?.view) { status.textContent = unavailableMessage; await load(true); return }
     const view = result.value.view
     if (view.currency) { status.textContent = 'This view has a currency context that cannot be restored here. Save a new view to update it.'; return }
     if (!['dashboard', 'planner', 'procurement'].includes(view.surface) || typeof view.page !== 'string' || typeof view.id !== 'string') { status.textContent = 'This view has an invalid destination. Refresh saved views.'; return }
@@ -89,10 +91,26 @@ document.querySelectorAll('[data-personal-views]').forEach((section) => {
     const generation = ++readGeneration
     const result = await send('list', {})
     if (!active() || pending || generation !== readGeneration || result.kind === 'ignored') return
-    if (result.kind !== 'ok' || !Array.isArray(result.value) || result.value.some((entry) => !entry?.view || typeof entry.view.id !== 'string' || typeof entry.view.title !== 'string' || typeof entry.version !== 'number')) { list.replaceChildren(); status.textContent = 'Saved views are unavailable. Refresh saved views to try again.'; return }
-    entries = result.value; list.replaceChildren(); const visible = entries.filter((entry) => !entry.view.id.startsWith('preferred-'))
-    if (!preserveStatus) status.textContent = visible.length ? '' : 'No saved views yet.'
+    if (result.kind !== 'ok' || !Array.isArray(result.value) || result.value.some((entry) => !entry || !Number.isSafeInteger(entry.version) || entry.version < 1 || (entry.availability === 'unavailable' ? typeof entry.id !== 'string' || Object.keys(entry).some((key) => !['id', 'version', 'availability'].includes(key)) : !entry.view || typeof entry.view.id !== 'string' || typeof entry.view.title !== 'string'))) { list.replaceChildren(); status.textContent = 'Saved views are unavailable. Refresh saved views to try again.'; return }
+    entries = result.value; list.replaceChildren(); const visible = entries.filter((entry) => entry.availability === 'unavailable' || !entry.view.id.startsWith('preferred-'))
+    if (!preserveStatus) status.textContent = entries.some((entry) => entry.availability === 'unavailable') ? unavailableMessage : visible.length ? '' : 'No saved views yet.'
     visible.forEach((entry) => {
+      if (entry.availability === 'unavailable') {
+        const row = document.createElement('li'); row.dataset.viewUnavailable = 'true'
+        const label = document.createElement('span'); label.textContent = entry.id.startsWith('preferred-') ? 'Unavailable starting page' : 'Unavailable saved view'
+        const remove = document.createElement('button'); remove.type = 'button'; remove.textContent = 'Remove unavailable view'; remove.addEventListener('click', () => void write('remove', 'remove', { id: entry.id, expectedVersion: entry.version }))
+        row.append(label, ' ', remove)
+        if (context && (!entry.id.startsWith('preferred-') || entry.id === 'preferred-' + context.surface)) {
+          const replace = document.createElement('button'); replace.type = 'button'; replace.textContent = 'Replace with this page'
+          replace.addEventListener('click', async () => {
+            if (!active() || pending) return
+            let filters; try { filters = capture() } catch { status.textContent = 'This page contains a filter that cannot yet be saved. Choose an available page and filters before replacing the view.'; return }
+            await write('replace', 'save', { view: { id: entry.id, title: form?.querySelector('[name=title]').value.trim() || (entry.id.startsWith('preferred-') ? 'Starting page' : context.page), surface: context.surface, page: context.page, density: section.querySelector('[data-view-density]').value, ...(Object.keys(filters).length ? { filters } : {}) }, expectedVersion: entry.version })
+          })
+          row.append(' ', replace)
+        }
+        list.append(row); return
+      }
       const row = document.createElement('li'); const button = document.createElement('button'); button.type = 'button'; button.textContent = entry.view.title; button.addEventListener('click', () => void open(entry.view.id))
       const remove = document.createElement('button'); remove.type = 'button'; remove.textContent = 'Remove'; remove.setAttribute('aria-label', 'Remove ' + entry.view.title)
       remove.addEventListener('click', () => void write('remove', 'remove', { id: entry.view.id, expectedVersion: entry.version }))
@@ -102,11 +120,11 @@ document.querySelectorAll('[data-personal-views]').forEach((section) => {
     if (context && currentId && !preserveStatus && !form?.dataset.dirty) {
       const current = await send('open', { id: currentId })
       if (!active() || pending || generation !== readGeneration || current.kind === 'ignored' || form?.dataset.dirty) return
-      if (current.kind !== 'ok' || current.value?.view?.surface !== context.surface || current.value?.view?.page !== context.page) { delete document.documentElement.dataset.sfDensity; status.textContent = 'Saved view unavailable or access changed.'; return }
+      if (current.kind !== 'ok' || current.value?.view?.surface !== context.surface || current.value?.view?.page !== context.page) { delete document.documentElement.dataset.sfDensity; status.textContent = unavailableMessage; return }
       const density = current.value.view.density ?? 'comfortable'
       section.querySelector('[data-view-density]').value = density; document.documentElement.dataset.sfDensity = density
     }
-    if (context && !location.search && !location.hash) { const preferred = entries.find((entry) => entry.view.id === 'preferred-' + context.surface); if (preferred && (preferred.view.page !== context.page || preferred.view.filters || preferred.view.period || preferred.view.currency || preferred.view.density)) await open(preferred.view.id, true) }
+    if (context && !location.search && !location.hash) { const preferred = entries.find((entry) => entry.availability !== 'unavailable' && entry.view.id === 'preferred-' + context.surface); if (preferred && (preferred.view.page !== context.page || preferred.view.filters || preferred.view.period || preferred.view.currency || preferred.view.density)) await open(preferred.view.id, true) }
   }
   const perform = async () => {
     if (!active() || !pending || pending.running) return
@@ -116,8 +134,8 @@ document.querySelectorAll('[data-personal-views]').forEach((section) => {
     attempt.running = false
     if (result.kind === 'ok' && (attempt.action === 'remove' ? result.value?.removed === true : result.value?.view?.id === attempt.viewId && Number.isSafeInteger(result.value?.version) && result.value.version > 0)) {
       pending = undefined; epoch++; syncControls()
-      if (attempt.kind === 'save') { form.querySelector('[name=title]').value = ''; delete form.dataset.dirty }
-      status.textContent = attempt.kind === 'remove' ? 'Saved view removed.' : attempt.kind === 'preferred' ? 'Starting page saved.' : 'View saved.'
+      if (attempt.kind === 'save' || attempt.kind === 'replace') { form.querySelector('[name=title]').value = ''; delete form.dataset.dirty }
+      status.textContent = attempt.kind === 'remove' ? 'Saved view removed.' : attempt.kind === 'preferred' ? 'Starting page saved.' : attempt.kind === 'replace' ? 'Saved view replaced with the current page and filters.' : 'View saved.'
       await load(true)
       return
     }
@@ -150,7 +168,7 @@ document.querySelectorAll('[data-personal-views]').forEach((section) => {
     section.querySelector('[data-preferred]').addEventListener('click', async () => {
       if (!active() || pending) return
       let filters; try { filters = capture() } catch { status.textContent = 'This page contains a filter that cannot yet be saved.'; return }
-      const id = 'preferred-' + context.surface; const existing = entries.find((entry) => entry.view.id === id)
+      const id = 'preferred-' + context.surface; const existing = entries.find((entry) => entryId(entry) === id)
       await write('preferred', 'save', { view: { id, title: 'Starting page', surface: context.surface, page: context.page, density: density.value, ...(Object.keys(filters).length ? { filters } : {}) }, expectedVersion: existing?.version ?? null })
     })
   }

@@ -188,13 +188,16 @@ document.querySelectorAll('[data-dashboard-workbench]').forEach((root) => {
     const from = find('from').value, to = find('to').value;
     if ((from && !to) || (!from && to) || (from && to && from > to)) throw new Error('Informe o início e o fim do período em ordem cronológica.');
     const next = await request('dashboard-workbench', { page: root.dataset.page, ...(from && to ? { period: { start: from, end: to } } : {}) });
-    if (form.dataset.dirty && draftBinding && !next.decisions.cases.some((value) => value.caseRef.id === draftBinding.caseRef.id && value.caseRef.incarnation === draftBinding.caseRef.incarnation)) {
+    const caseAvailable = (ref) => next.decisions.cases.some((value) => value.caseRef.id === ref.id && value.caseRef.incarnation === ref.incarnation);
+    const mutationCase = mutation && ['dashboard-hot-topic-draft', 'dashboard-hot-topic-prepare', 'dashboard-hot-topic-apply'].includes(mutation.mode) ? JSON.parse(mutation.body).caseRef : undefined;
+    if (mutationCase && !caseAvailable(mutationCase) || form.dataset.dirty && draftBinding && !caseAvailable(draftBinding.caseRef)) {
       window.dispatchEvent(new Event('sf-access-revoked'));
       throw new Error('O caso não está disponível com seu acesso atual.');
     }
     data = next; agenda = undefined; if (!mutation) resetReview();
     find('from').value = next.period.start; find('to').value = next.period.end;
     find('agenda-view').replaceChildren();
+    find('history-view').replaceChildren();
     find('agenda-count').textContent = next.agenda ? next.agenda.recordCount + ' registro(s) na pauta de ' + root.dataset.page + '.' : 'Esta página não possui pauta disponível.';
     options('record', next.records, 'Selecione um registro'); options('history', next.history, 'Selecione um item do histórico');
     options('preparation', next.decisions.preparations, 'Selecione uma escolha');
@@ -207,7 +210,7 @@ document.querySelectorAll('[data-dashboard-workbench]').forEach((root) => {
       const caseIndex = selected ? caseCatalog.findIndex((value) => value.caseRef.id === selected.caseId && value.caseRef.incarnation === selected.caseIncarnation) : -1;
       if (caseIndex >= 0) find('case').value = String(caseIndex);
       selectCase();
-      const draftIndex = selected ? draftCatalog.findIndex((value) => value.id === selected.id && value.incarnation === selected.incarnation) : -1;
+      const draftIndex = selected ? draftCatalog.findIndex((value) => selected.id && selected.incarnation ? value.id === selected.id && value.incarnation === selected.incarnation : value.draftRef === selected.draftRef && value.version === selected.version) : -1;
       if (draftIndex >= 0) { find('draft-choice').value = String(draftIndex); selectDraft(); }
     }
     restoreApplication();
@@ -233,7 +236,10 @@ document.querySelectorAll('[data-dashboard-workbench]').forEach((root) => {
   };
   const completeMutation = async (attempt, value) => {
     if (attempt.mode === 'dashboard-hot-topic-draft') {
-      draftBinding = draftRequest(value); draftIdentity = { id: value.id, incarnation: value.incarnation }; rememberDraft();
+      const sent = JSON.parse(attempt.body);
+      // The save receipt contains a draftRef and version only. Full identity and fields
+      // come from the next authorized discovery, never from an invented receipt shape.
+      remember({ draft: { ...(draftIdentity || {}), draftRef: value.draftRef, version: value.version, caseId: sent.caseRef.id, caseIncarnation: sent.caseRef.incarnation } });
       delete form.dataset.dirty; clearDraftReview();
       await refreshedAfter('Rascunho salvo. Ele pode ser incluído em uma escolha do caso antes da preparação.');
     } else if (attempt.mode === 'dashboard-hot-topic-apply') {
@@ -252,12 +258,20 @@ document.querySelectorAll('[data-dashboard-workbench]').forEach((root) => {
       const value = await request(attempt.mode, undefined, undefined, attempt);
       if (revoked || mutation !== attempt) return;
       if (!value || typeof value !== 'object') throw new Error('Resultado não confirmado.');
-      if (attempt.mode === 'dashboard-hot-topic-draft' && (typeof value.id !== 'string' || typeof value.incarnation !== 'string' || typeof value.draftRef !== 'string' || !value.caseRef || !value.fields)) throw new Error('Rascunho não confirmado.');
+      if (attempt.mode === 'dashboard-hot-topic-draft' && (typeof value.draftRef !== 'string' || !value.draftRef || !Number.isSafeInteger(value.version) || value.version < 1)) throw new Error('Rascunho não confirmado.');
       if (attempt.mode === 'dashboard-hot-topic-apply' && (typeof value.id !== 'string' || !value.id || value.surface !== 'dashboard' || !Number.isSafeInteger(value.version) || value.version < 0 || !value.result || typeof value.result.ok !== 'boolean')) throw new Error('Comprovante não confirmado.');
       mutation = undefined; delete guard.dataset.dirty; rememberApplication();
       await completeMutation(attempt, value);
     } catch (error) {
       if (revoked || mutation !== attempt) return;
+      let readRechecked = false;
+      if (error.status === 'denied') {
+        // Write refusal alone does not revoke readable local work. Recheck the authorized
+        // case immediately; a missing case or denied read removes its private content.
+        try { await refresh(); readRechecked = true; }
+        catch { if (revoked || mutation !== attempt) return; }
+        if (revoked || mutation !== attempt) return;
+      }
       if (error.rejected && !reconciling) {
         mutation = undefined; delete guard.dataset.dirty; rememberApplication();
         if (attempt.mode === 'dashboard-hot-topic-draft' && (error.status === 'conflict' || error.status === 'stale')) {
@@ -267,7 +281,7 @@ document.querySelectorAll('[data-dashboard-workbench]').forEach((root) => {
         throw error;
       }
       attempt.uncertain = true; rememberApplication();
-      announce(error.rejected ? 'A repetição não foi autorizada ou seus dados mudaram. O resultado anterior continua pendente; carregue as opções com seu acesso atual e repita a mesma tentativa para recuperar o comprovante.' : 'O resultado não foi confirmado. Os valores enviados estão preservados. Use Repetir mesma tentativa para recuperar o resultado.');
+      announce(error.rejected ? readRechecked ? 'A repetição não foi autorizada, mas a leitura do caso continua disponível. O resultado anterior permanece pendente; repita a mesma tentativa quando sua permissão permitir.' : 'A repetição não foi autorizada ou seus dados mudaram. O resultado anterior continua pendente; carregue as opções com seu acesso atual e repita a mesma tentativa para recuperar o comprovante.' : 'O resultado não foi confirmado. Os valores enviados estão preservados. Use Repetir mesma tentativa para recuperar o resultado.');
     }
   };
   const mutate = async (mode, payload) => {

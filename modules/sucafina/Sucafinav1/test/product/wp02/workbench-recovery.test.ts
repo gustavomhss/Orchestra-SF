@@ -126,11 +126,95 @@ test("Dashboard recovers a committed draft after response loss, restores only it
     expect(await panel.getByLabel("Ação", { exact: true }).inputValue()).toBe("")
     expect(await panel.getByLabel(/^Caso/).textContent()).not.toContain("Review the action")
     expect(await panel.textContent()).not.toContain("Retained private draft")
+
+    await panel.getByLabel("Registro para preservar").selectOption({ label: "Original action" })
+    await panel.getByRole("button", { name: "Preservar retrato", exact: true }).click()
+    await panel.getByText("Retrato do registro preservado.", { exact: true }).waitFor()
+    await panel.getByLabel("Reunião ou retrato preservado").selectOption({ index: 1 })
+    await panel.getByRole("button", { name: "Abrir histórico", exact: true }).click()
+    await panel.getByText("Histórico aberto com seu acesso atual.", { exact: true }).waitFor()
+    expect(await panel.locator("[data-dashboard-history-view]").textContent()).toContain("Original action")
+    const version = await f.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: snapshot.versions["hotTopics:topic"]?.version ?? 0 }))
+    const deleted = await fetch(`${f.origin}/sucafina/dashboard`, { method: "POST", headers: f.request().headers,
+      body: JSON.stringify({ page: "Hot Topics & Actions", action: "delete", id: "topic", version, values: {}, confirmed: true }) })
+    expect(deleted.status).toBe(200)
+    expect(await deleted.json()).toMatchObject({ ok: true })
+    const discovery = page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "dashboard-workbench")
+    await panel.getByRole("button", { name: "Carregar opções", exact: true }).click()
+    const discovered = await discovery
+    expect(discovered.status()).toBe(200)
+    expect(object(object(await discovered.json()).value).history).toEqual([])
+    await panel.getByText("Opções carregadas.", { exact: false }).waitFor()
+    expect(await panel.locator("[data-dashboard-history-view]").textContent()).toBe("")
+    expect(await panel.getByLabel("Reunião ou retrato preservado").locator("option").count()).toBe(1)
     expect(errors).toEqual([])
   } finally {
     release.resolve()
     try { await driver.close() } finally { await f.close() }
   }
+  driver.report()
+}, 60000)
+
+test("Dashboard discards an uncertain private application review when fresh discovery no longer authorizes its case", async () => {
+  expectSpawn(import.meta.path)
+  const f = await createRecoveryFixture()
+  const driver = await launchBrowserDriver("host-access-recovery").catch(async (error) => { await f.close(); throw error })
+  try {
+    const page = await driver.browser.newPage(), errors: string[] = []
+    page.on("pageerror", (error) => errors.push(error.message))
+    const panel = await openWorkbench(page, f)
+    await editNewDraft(page, "Private application retained only with case access")
+    await panel.getByRole("button", { name: "Salvar rascunho", exact: true }).click()
+    await panel.getByText("Rascunho salvo.", { exact: false }).waitFor()
+    await storeExistingChoice(f, await currentDraft(f))
+    await panel.getByRole("button", { name: "Carregar opções", exact: true }).click()
+    await panel.getByText("Opções carregadas.", { exact: false }).waitFor()
+    await panel.getByLabel("Escolha existente para preparar").selectOption({ index: 1 })
+    await panel.getByRole("button", { name: "Preparar escolha", exact: true }).click()
+    await panel.getByText("Escolha preparada.", { exact: false }).waitFor()
+    await panel.getByLabel(/^Alteração preparada/).selectOption({ index: 1 })
+    await panel.getByRole("button", { name: "Revisar alterações", exact: true }).click()
+    await panel.getByText("Confira os valores atuais e propostos.", { exact: false }).waitFor()
+    await panel.getByLabel("Revisei os campos e confirmo estas alterações.").check()
+    const statuses: number[] = []
+    await page.route((url) => url.searchParams.get("sf") === "dashboard-hot-topic-apply", async (route) => {
+      const response = await route.fetch()
+      statuses.push(response.status())
+      if (statuses.length === 1) await route.abort("failed")
+      else await route.fulfill({ response })
+    })
+    await panel.getByRole("button", { name: "Aplicar alterações", exact: true }).click()
+    await panel.getByText("O resultado não foi confirmado.", { exact: false }).waitFor()
+    expect(statuses).toEqual([200])
+    expect(await panel.locator("[data-dashboard-draft]").getAttribute("data-dirty")).toBeNull()
+    expect(await panel.locator("[data-dashboard-review-view]").textContent()).toContain("Private application retained only with case access")
+    const before = await f.authority.state.read(f.request(), "cases", (state) => state.cases[initialCaseRef.id])
+    if (before.status !== "ok" || !before.value) throw new Error("Case unavailable before participation removal")
+    expect(before.value.receipts).toHaveLength(1)
+    const removed = await f.authority.state.transaction(f.request(), { namespace: "cases", expectedStorageVersion: before.storageVersion,
+      targetRef: initialCaseRef.id, targetIncarnation: initialCaseRef.incarnation, idempotencyKey: "withdraw-uncertain-application", commandDigest: digestSfValue({ withdraw: initialCaseRef }) }, async (state) => {
+        const decision = state.cases[initialCaseRef.id]!
+        state.cases[initialCaseRef.id] = { ...decision, version: decision.version + 1, participants: [] }
+        return { commit: true, value: true }
+      })
+    expect(removed.status).toBe("ok")
+    // The real host rejects the same replay; no synthetic browser revocation event is emitted here.
+    const discovery = page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "dashboard-workbench")
+    await panel.getByRole("button", { name: "Repetir mesma tentativa", exact: true }).click()
+    const response = await discovery
+    expect(statuses).toEqual([200, 403])
+    expect(response.status()).toBe(200)
+    expect(rows(object(object(object(await response.json()).value).decisions).cases)).toEqual([])
+    await panel.getByText("Seu acesso mudou. Reabra a página com o acesso atual.", { exact: true }).waitFor()
+    expect(await panel.textContent()).not.toContain("Private application retained only with case access")
+    expect(await panel.locator("input, textarea, select, button").count()).toBe(0)
+    const navigation = object(object(await page.evaluate(() => history.state)).sfDashboardWorkbench)
+    expect(navigation.application).toBeUndefined()
+    expect(navigation.draft).toBeUndefined()
+    const after = await f.authority.state.read(f.request(), "cases", (state) => state.cases[initialCaseRef.id])
+    expect(after.status === "ok" && after.value?.receipts).toEqual(before.value.receipts)
+    expect(errors).toEqual([])
+  } finally { try { await driver.close() } finally { await f.close() } }
   driver.report()
 }, 60000)
 

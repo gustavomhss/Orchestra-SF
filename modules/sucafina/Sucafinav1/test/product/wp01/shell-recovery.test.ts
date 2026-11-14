@@ -310,3 +310,33 @@ test("reload recovers a lost committed preview response from the receipt and nev
     await assertOneMonthlyEffect(fixture, auditLength)
   })
 }, 45_000)
+
+test("editing during a delayed real preview recovery keeps both the original reconciliation action and the newer draft", async () => {
+  await withWorkbench(async (fixture) => {
+    const initial = await prepareMonthly(fixture.page)
+    fixture.fault.action = "apply-preview"
+    fixture.fault.mode = "lose-before"
+    await initial.getByRole("button", { name: "Confirm and apply" }).click()
+    await initial.getByRole("button", { name: "Check saved outcome" }).waitFor()
+    fixture.fault.action = "read-preview"
+    fixture.fault.mode = "hold-after"
+    fixture.fault.used = false
+    const entered = new Promise<void>((resolve) => { fixture.fault.started = resolve })
+    await fixture.page.reload()
+    await entered
+    const form = await openMonthly(fixture.page)
+    await form.getByLabel("Budget", { exact: true }).fill("222")
+    fixture.fault.release?.()
+    await form.getByText("The original reviewed change was recovered while you were editing.", { exact: false }).waitFor()
+    expect(await form.getByLabel("Budget", { exact: true }).inputValue()).toBe("222")
+    await form.getByRole("button", { name: "Retry reviewed application", exact: true }).click()
+    await fixture.page.getByText("The reviewed changes were saved. New edits remain unsaved; review them before applying.", { exact: true }).waitFor()
+    expect(await form.getByLabel("Budget", { exact: true }).inputValue()).toBe("222")
+    expect(await form.getAttribute("data-dirty")).toBe("true")
+    expect(await form.getAttribute("data-result-uncertain")).toBeNull()
+    const applications = fixture.fault.posts.filter((entry) => entry.action === "apply-preview")
+    expect(applications).toHaveLength(2)
+    expect(applications[1]?.body).toBe(applications[0]?.body)
+    await assertOneMonthlyEffect(fixture)
+  })
+}, 45_000)

@@ -36,6 +36,10 @@ jobs:
       - name: Typecheck Sucafina package
         working-directory: modules/sucafina
         run: bun typecheck
+      - name: Typecheck consumed CLI authority
+        if: always() && steps.setup.outcome == 'success'
+        working-directory: apps/cli
+        run: bun typecheck
       - name: Check guards against origin/dev
         if: always() && steps.setup.outcome == 'success'
         run: bun run check:guards --base origin/dev
