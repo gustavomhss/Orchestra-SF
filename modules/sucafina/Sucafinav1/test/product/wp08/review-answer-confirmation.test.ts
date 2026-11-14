@@ -96,48 +96,92 @@ test("C05 answers confirm the displayed preserved review and reuse the same base
   } finally { await f.dispose(); mark("disposed") }
 }, 120000)
 
-test("C05 edited answers after SQLite reopen create one stale item and reconfirm the same original review", async () => {
-  const mark = checkpoints("edit-reconfirm")
+test("C05 edited answers after SQLite reopen create one stable stale item and reject the old confirmation", async () => {
+  const mark = checkpoints("edit-stale")
   const f = await createReviewAnswersFixture()
   mark("fixture-ready")
   try {
     let port = f.port
     if (!port.recipientActions || !port.answerReuse || !port.threadHistory) throw new Error("Review answer consumers unavailable")
-    const { thread, replied, body, answerRef } = await setupReviewAnswer(f, "review-edit", mark)
+    const { thread, replied, answerRef } = await setupReviewAnswer(f, "review-edit-stale", mark)
     const workSelection = await f.select("reader-b", f.recipient)
-    const confirmation = await confirmReviewAnswer(f, port, thread.id, answerRef, "review-edit-initial-confirm")
+    const confirmation = await confirmReviewAnswer(f, port, thread.id, answerRef, "review-edit-stale-initial-confirm")
     const version = available(await port.storageVersion("threads", f.recipient))
     const confirm = async () => port.answerReuse!.confirm(thread.id, answerRef, confirmation, await f.admit("reader-b", "collaboration.answer.confirm", { questionId: thread.id, answerRef, mutation: confirmation }))
-    // This journey retains the original causal link: editing uses a new
-    // consumer over the reopened real SQLite baseline, not a seeded record.
     port = (await f.reopenConsumers()).port
     if (!port.recipientActions || !port.answerReuse || !port.threadHistory) throw new Error("Reopened review consumers unavailable")
     mark("real-confirmation-and-sqlite-reopen")
-    // Changing the answer invalidates its confirmation, while its preserved
-    // source stays exact. My Work reopens one communication item with the C05 pin.
     const message = replied.messages[1]!
-    const edit = { id: thread.id, messageId: message.id, expectedVersion: message.version, body: "C05-ANSWER-EDITED: corrected explanation of that original review.", mutation: { expectedStorageVersion: version, idempotencyKey: "review-answer-edit" } }
+    const edit = { id: thread.id, messageId: message.id, expectedVersion: message.version, body: "C05-ANSWER-EDITED: corrected explanation of that original review.", mutation: { expectedStorageVersion: version, idempotencyKey: "review-answer-edit-stale" } }
     available(await port.threadHistory.edit(edit.id, edit.messageId, edit.expectedVersion, edit.body, edit.mutation, await f.admit("reader-b", "collaboration.thread.edit", edit)))
+    mark("real-answer-edit")
     const stale = available(await port.work.listPresentation(workSelection, f.recipient)).items.filter((item) => item.actionRef === thread.id)
     expect(stale).toHaveLength(1)
     expect(stale).toMatchObject([{ state: "answer-stale", reason: "answer-changed", reviewContext: f.basis.reviewContext }])
     expect(available(await port.work.listPresentation(workSelection, f.recipient)).items.filter((item) => item.actionRef === thread.id)).toEqual(stale)
-    mark("answer-edit-and-stale-work")
     expect((await confirm()).status).not.toBe("ok")
+    mark("stable-stale-work-and-old-confirmation-refusal")
+  } finally { await f.dispose(); mark("disposed") }
+}, 120000)
+
+test("C05 edited answers after SQLite reopen reconfirm the same response and retain its original historical version", async () => {
+  const mark = checkpoints("edit-reconfirm-history")
+  const f = await createReviewAnswersFixture()
+  mark("fixture-ready")
+  try {
+    let port = f.port
+    if (!port.recipientActions || !port.answerReuse || !port.threadHistory) throw new Error("Review answer consumers unavailable")
+    const { thread, replied, body, answerRef } = await setupReviewAnswer(f, "review-edit-history", mark)
+    const workSelection = await f.select("reader-b", f.recipient)
+    await confirmReviewAnswer(f, port, thread.id, answerRef, "review-edit-history-initial-confirm")
+    const version = available(await port.storageVersion("threads", f.recipient))
+    port = (await f.reopenConsumers()).port
+    if (!port.recipientActions || !port.answerReuse || !port.threadHistory) throw new Error("Reopened review consumers unavailable")
+    mark("real-confirmation-and-sqlite-reopen")
+    const message = replied.messages[1]!
+    const edit = { id: thread.id, messageId: message.id, expectedVersion: message.version, body: "C05-ANSWER-EDITED: corrected explanation of that original review.", mutation: { expectedStorageVersion: version, idempotencyKey: "review-answer-edit-history" } }
+    available(await port.threadHistory.edit(edit.id, edit.messageId, edit.expectedVersion, edit.body, edit.mutation, await f.admit("reader-b", "collaboration.thread.edit", edit)))
+    mark("real-answer-edit")
     const currentAnswerRef = available(await port.answerEvidence.issue(thread.id, message.id, f.recipient)).refId
     expect(currentAnswerRef).not.toBe(answerRef)
     const current = available(await port.answerReuse.prepare(thread.id, currentAnswerRef, f.recipient))
-    const next = { expectedStorageVersion: available(await port.storageVersion("threads", f.recipient)), idempotencyKey: "review-answer-reconfirm", observationRef: current.observationRef, observedSourceVersion: current.observedSourceVersion, expectedScopeFingerprint: current.expectedScopeFingerprint }
+    const next = { expectedStorageVersion: available(await port.storageVersion("threads", f.recipient)), idempotencyKey: "review-answer-reconfirm-history", observationRef: current.observationRef, observedSourceVersion: current.observedSourceVersion, expectedScopeFingerprint: current.expectedScopeFingerprint }
     available(await port.answerReuse.confirm(thread.id, currentAnswerRef, next, await f.admit("reader-b", "collaboration.answer.confirm", { questionId: thread.id, answerRef: currentAnswerRef, mutation: next })))
+    mark("real-reconfirmation")
     expect(available(await port.work.listPresentation(workSelection, f.recipient)).items.filter((item) => item.actionRef === thread.id)).toEqual([])
+    // Read the original message only AFTER the actual new confirmation, so a
+    // reconfirmation that rewrites history cannot pass this oracle.
     const historicalAnswer = available(await port.threadHistory.readVersion(thread.id, message.id, message.incarnation, message.version, f.recipient))
     expect(historicalAnswer.message.body).toBe(body)
     expect(historicalAnswer.reviewContext).toEqual(f.basis.reviewContext)
+    mark("work-suppressed-and-original-history-retained")
+  } finally { await f.dispose(); mark("disposed") }
+}, 120000)
+
+test("C05 edited answers after SQLite reopen resolve and reuse the newly confirmed response", async () => {
+  const mark = checkpoints("edit-reconfirm-resolve")
+  const f = await createReviewAnswersFixture()
+  mark("fixture-ready")
+  try {
+    let port = f.port
+    if (!port.recipientActions || !port.answerReuse || !port.threadHistory) throw new Error("Review answer consumers unavailable")
+    const { thread, replied, answerRef } = await setupReviewAnswer(f, "review-edit-resolve", mark)
+    await confirmReviewAnswer(f, port, thread.id, answerRef, "review-edit-resolve-initial-confirm")
+    const version = available(await port.storageVersion("threads", f.recipient))
+    port = (await f.reopenConsumers()).port
+    if (!port.recipientActions || !port.answerReuse || !port.threadHistory) throw new Error("Reopened review consumers unavailable")
+    mark("real-confirmation-and-sqlite-reopen")
+    const message = replied.messages[1]!
+    const edit = { id: thread.id, messageId: message.id, expectedVersion: message.version, body: "C05-ANSWER-EDITED: corrected explanation of that original review.", mutation: { expectedStorageVersion: version, idempotencyKey: "review-answer-edit-resolve" } }
+    available(await port.threadHistory.edit(edit.id, edit.messageId, edit.expectedVersion, edit.body, edit.mutation, await f.admit("reader-b", "collaboration.thread.edit", edit)))
+    mark("real-answer-edit")
+    const currentAnswerRef = available(await port.answerEvidence.issue(thread.id, message.id, f.recipient)).refId
+    await confirmReviewAnswer(f, port, thread.id, currentAnswerRef, "review-answer-reconfirm-resolve")
+    mark("real-reconfirmation")
     const resolution = { expectedStorageVersion: available(await port.storageVersion("threads", f.recipient)), idempotencyKey: "review-answer-resolve" }
     expect(available(await port.recipientActions.resolve(thread.id, resolution, await f.admit("reader-b", "collaboration.thread.resolve", { id: thread.id, mutation: resolution }))).state).toBe("resolved")
     expect(available(await port.answerReuse.read(thread.id, f.recipient))).toMatchObject({ answer: edit.body, reviewContext: f.basis.reviewContext })
-    mark("reconfirmation-history-and-resolution")
-
+    mark("same-thread-resolved-and-edited-answer-reused")
   } finally { await f.dispose(); mark("disposed") }
 }, 120000)
 
