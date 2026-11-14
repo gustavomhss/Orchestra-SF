@@ -14,18 +14,18 @@ export function buildSfContribution(input: {
   createdAt: string
 }): PortResult<ContributionEnvelope> {
   if (input.run.state !== "running" || !input.run.native || !hasSfRunSkillReceipt(input.run) || !input.outputId.trim() || !Number.isFinite(Date.parse(input.createdAt)) || digestSfValue(input.actualModel) !== digestSfValue(input.run.model)) return { status: "denied", reason: "invalid-native-output-context" }
-  const candidate = input.candidate
-  if (!candidate || typeof candidate !== "object" || Array.isArray(candidate) || ![Object.prototype, null].includes(Object.getPrototypeOf(candidate)) || Reflect.ownKeys(candidate).some((key) => typeof key !== "string" || !["kind", "payload", "evidenceRefs"].includes(key)) || !("kind" in candidate) || !("payload" in candidate) || !("evidenceRefs" in candidate) || typeof candidate.kind !== "string") return { status: "failed", reason: "invalid-native-output" }
-  const kind = candidate.kind
   const skill = input.run.selection.skills.find((item) => item.id === input.run.skillId)
   if (!skill) return { status: "denied", reason: "invalid-native-output-context" }
-  if (!skill.outputSchemaRefs.includes(kind) || !input.run.selection.profile.outputTypes.some((allowed) => allowed === kind)) return { status: "failed", reason: "native-output-kind-not-granted" }
   const target = input.run.reviewTarget
   const reviewSkill = input.run.skillId === "sf-contestar-decisao" || input.run.skillId === "sf-revisar-evidencias"
   // Independence applies to every output of a reviewer skill, including a standalone
   // UnresolvedCondition. The output kind must not make the author binding optional.
   if (reviewSkill && !target) return { status: "denied", reason: "invalid-review-output-context" }
   if (target && (input.run.selection.profile.id !== "sf_reviewer" || !target.targetRunId.trim() || !target.targetSessionId.trim() || !/^[a-f0-9]{64}$/.test(target.targetOutputDigest) || target.targetRunId === input.run.runRef || target.targetSessionId === input.run.native.sessionID || digestSfValue(target.caseRef) !== digestSfValue(input.run.caseRef))) return { status: "denied", reason: "invalid-review-output-context" }
+  const candidate = input.candidate
+  if (!candidate || typeof candidate !== "object" || Array.isArray(candidate) || ![Object.prototype, null].includes(Object.getPrototypeOf(candidate)) || Reflect.ownKeys(candidate).some((key) => typeof key !== "string" || !["kind", "payload", "evidenceRefs"].includes(key)) || !("kind" in candidate) || !("payload" in candidate) || !("evidenceRefs" in candidate) || typeof candidate.kind !== "string") return { status: "failed", reason: "invalid-native-output" }
+  const kind = candidate.kind
+  if (!skill.outputSchemaRefs.includes(kind) || !input.run.selection.profile.outputTypes.some((allowed) => allowed === kind)) return { status: "failed", reason: "native-output-kind-not-granted" }
   const receipt = input.run.native.skillReceipt
   if (target && (receipt.profileId !== "sf_reviewer" || receipt.profileId !== input.run.selection.profile.id || receipt.profileVersion !== input.run.selection.profile.version || receipt.profileDigest !== input.run.selection.profile.sourceDigest || receipt.runId !== input.run.runRef || receipt.nativeSessionId !== input.run.native.sessionID || receipt.skillId !== input.run.skillId || receipt.skillVersion !== skill.version || receipt.sourceDigest !== skill.sourceDigest || receipt.instructionsDigest !== skill.instructionsDigest || receipt.manifestDigest !== input.run.selection.manifestDigest || (!receipt.loadedMessageId || !Number.isFinite(Date.parse(receipt.loadedAt))) || (kind === "CritiqueReport" && receipt.skillId !== "sf-contestar-decisao") || (kind === "ClaimIssue" && receipt.skillId !== "sf-revisar-evidencias"))) return { status: "denied", reason: "invalid-review-output-context" }
   if ((kind === "CritiqueReport" || kind === "ClaimIssue") && !target) return { status: "denied", reason: "invalid-review-output-context" }

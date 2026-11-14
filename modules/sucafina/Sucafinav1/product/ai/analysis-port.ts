@@ -3,7 +3,7 @@ import type { BusinessPorts, PortResult } from "../contracts/ports.ts"
 import type { ContributionEnvelope, SkillLoadReceipt } from "../contracts/resident-ai.ts"
 import normative from "../contracts/normative-contracts.json"
 import { sfSkillInputSchemas } from "../contracts/output-schemas.ts"
-import { decodeSfSkillInput } from "../contracts/schema-admission.ts"
+import { decodeSfContributionOutput, decodeSfSkillInput } from "../contracts/schema-admission.ts"
 import type { SfSkillInputMap } from "../contracts/skill-inputs.ts"
 import { digestSfContribution, digestSfValue } from "../contracts/canonical.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
@@ -88,7 +88,6 @@ export async function publishSfContribution(input: {
   reviewTarget?: SfReviewTarget
 }) {
   const { host, runRef } = input
-  const { decodeSfContributionOutput } = await import("../contracts/schema-admission.ts")
   const receipt = input.skillReceipt
   const provenance = input.output.runProvenance
   if (provenance.runId !== runRef || !sameSfSkillLoadReceipt(receipt, provenance) || !provenance.actualModel || !provenance.contextFingerprint) {
@@ -112,18 +111,29 @@ export async function publishSfContribution(input: {
   if (input.output.state === "ready" && input.output.kind === "CritiqueReport" && (receipt.profileId !== "sf_reviewer" || !input.reviewTarget || input.output.payload.targetRunId !== input.reviewTarget.targetRunId ||
       input.output.payload.targetOutputDigest !== input.reviewTarget.targetOutputDigest || input.output.payload.reviewerRunId !== receipt.runId ||
       input.output.payload.reviewerSessionId !== receipt.nativeSessionId)) return { status: "failed", reason: "review-target-mismatch" } as const
+  // Pin the complete command before the first host callback. Re-sealing an
+  // altered envelope cannot replace the receipt or independent review target.
+  const command = () => ({ runRef: input.runRef, output: input.output, skillReceipt: input.skillReceipt, reviewTarget: input.reviewTarget })
+  const commandDigest = digestSfValue(command())
+  const unchanged = () => input.host === host && matchesDigest(command(), commandDigest)
+  const changed = { status: "denied", reason: "contribution-input-changed-during-authorization" } as const
   const publication = Object.freeze({ outputRef: input.output.id, outputDigest: digestSfValue(input.output) })
   let staleObservation: SfStaleRunObservation | undefined
   const retainStale = async (reason: string) => {
-    const preserved = await host.withRunContext(runRef, (context) => host.preserveStale(runRef, reason, input.output, context))
-    if (preserved.status === "ok" || !host.withLifecycleContext || !staleObservation) return preserved
+    const preserved = await host.withRunContext(runRef, (context) => unchanged()
+      ? host.preserveStale(runRef, reason, input.output, context) : Promise.resolve(changed))
+    if (preserved.status === "ok" || !host.withLifecycleContext || !staleObservation) return unchanged() ? preserved : changed
     // A stale source can close the old execution scope. Fresh lifecycle authority
-    // may settle metadata only; no output or capture crosses this boundary.
-    return host.withLifecycleContext(runRef, (context) => host.markStale(runRef, reason, context, staleObservation))
+    // may settle metadata only; no output or capture crosses this boundary. Its
+    // original observation remains pinned even if the caller's command changed.
+    const settled = await host.withLifecycleContext(runRef, (context) => host.markStale(runRef, reason, context, staleObservation))
+    return settled.status === "ok" && !unchanged() ? changed : settled
   }
   const authorized = await host.withRunContext(runRef, async (context) => {
+    if (!unchanged()) return changed
     if (host.withLifecycleContext) {
       const observed = await host.readRun(runRef, context)
+      if (!unchanged()) return changed
       if (observed.status !== "ok") return observed
       if (!matchesDigest(input.output, publication.outputDigest)) return { status: "failed", reason: "contribution-changed-during-authorization" } as const
       if (observed.value.runRef !== runRef || observed.value.principalRef !== context.binding.principalRef ||
@@ -131,27 +141,32 @@ export async function publishSfContribution(input: {
         !matchesSfRunOutput(observed.value, input.output)) return { status: "denied", reason: "stale-observation-unavailable" } as const
       staleObservation = observeSfStaleRun(observed.value, publication)
     }
-    return host.revalidate(context, {
+    const checked = await host.revalidate(context, {
       runRef,
       caseRef: input.output.caseRef,
-      contextFingerprint: provenance.contextFingerprint,
-      manifestDigest: receipt.manifestDigest,
+      contextFingerprint: input.output.runProvenance.contextFingerprint,
+      manifestDigest: input.skillReceipt.manifestDigest,
       accessRevision: input.output.accessRevision,
       outputKind: input.output.kind,
       evidenceRefs: input.output.evidenceRefs,
       output: input.output,
-      skillReceipts: [receipt],
+      skillReceipts: [input.skillReceipt],
       reviewTarget: input.reviewTarget,
     })
+    // A real stale observation still permits metadata-only settlement of the
+    // original run. A changed command can never enter content preservation.
+    return checked.status === "stale" || unchanged() ? checked : changed
   })
   if (authorized.status === "stale") {
     const stale = await retainStale(authorized.reason)
     if (stale.status !== "ok") return stale
     return authorized
   }
+  if (!unchanged()) return changed
   if (authorized.status !== "ok") return authorized
-  const written = await host.withRunContext(runRef, (context) => host.result.write({ runRef, caseRef: input.output.caseRef, output: input.output }, context))
-  if (written.status !== "stale") return written
+  const written = await host.withRunContext(runRef, (context) => unchanged()
+    ? host.result.write({ runRef, caseRef: input.output.caseRef, output: input.output }, context) : Promise.resolve(changed))
+  if (written.status !== "stale") return unchanged() ? written : changed
   // write can detect a changed source either before committing or at its final egress check.
   // Reopen authority and reconcile the durable state; the store fences any intervening change.
   const stale = await retainStale(written.reason)

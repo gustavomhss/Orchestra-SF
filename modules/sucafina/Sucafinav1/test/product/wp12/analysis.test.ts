@@ -411,3 +411,152 @@ test("lifecycle progress cannot use its current metadata authority to return a r
   expect(await readSfAnalysisRun(input)).toEqual({ status: "denied", reason: "old-case-selection-unavailable" })
   expect(observed).toEqual({ ready: true, strictCalls: 1, lifecycleCalls: 2 })
 })
+
+test("publication pins its envelope across authorization and later write or preservation scopes", async () => {
+  const { publishSfContribution } = await import("../../../product/ai/analysis-port.ts")
+  const { digestSfContribution } = await import("../../../product/contracts/canonical.ts")
+  const { sfRunFixture } = await import("./run-fixture.ts")
+  for (const phase of ["verifier", "after-verifier-scope", "write-scope", "preservation-scope", "post-write-preservation-scope"] as const) {
+    const original = sfRunFixture()
+    const observed = { scopes: 0, writes: 0, preservations: 0 }
+    const change = () => {
+      original.output.createdAt = "2026-11-14T00:00:00Z"
+      original.output.outputDigest = digestSfContribution(original.output)
+    }
+    const host = {
+      withRunContext: async (_runRef: string, action: (context: object) => Promise<unknown>) => {
+        observed.scopes++
+        if (observed.scopes === 2 && (phase === "write-scope" || phase === "preservation-scope")) change()
+        if (observed.scopes === 3 && phase === "post-write-preservation-scope") change()
+        const result = await action({ binding: { accessRevision: "access" } })
+        if (observed.scopes === 1 && phase === "after-verifier-scope") change()
+        return result
+      },
+      revalidate: async () => {
+        if (phase === "verifier") change()
+        return phase === "preservation-scope" ? { status: "stale", reason: "case-changed" } : { status: "ok", value: true }
+      },
+      result: { write: async () => {
+        observed.writes++
+        return phase === "post-write-preservation-scope" ? { status: "stale", reason: "source-changed-after-commit" }
+          : { status: "ok", value: { outputRef: original.output.id, caseVersion: 1 } }
+      } },
+      preserveStale: async () => { observed.preservations++; return { status: "ok", value: true } },
+    }
+    const input = { host, output: original.output, skillReceipt: original.receipt, runRef: original.run.runRef } as unknown as Parameters<typeof publishSfContribution>[0]
+    expect(await publishSfContribution(input)).toEqual({ status: "denied", reason: "contribution-input-changed-during-authorization" })
+    expect(observed.writes).toBe(phase === "post-write-preservation-scope" ? 1 : 0)
+    expect(observed.preservations).toBe(0)
+  }
+})
+
+test("publication refuses changed load provenance even when a verifier reseals the contribution", async () => {
+  const { publishSfContribution } = await import("../../../product/ai/analysis-port.ts")
+  const { digestSfContribution } = await import("../../../product/contracts/canonical.ts")
+  const { sfRunFixture } = await import("./run-fixture.ts")
+  const original = sfRunFixture()
+  const observed = { writes: 0 }
+  const host = {
+    withRunContext: async (_runRef: string, action: (context: object) => Promise<unknown>) => action({ binding: { accessRevision: "access" } }),
+    revalidate: async () => {
+      original.receipt.loadedMessageId = "unobserved-message"
+      original.output.runProvenance.loadedMessageId = "unobserved-message"
+      original.output.outputDigest = digestSfContribution(original.output)
+      return { status: "ok", value: true }
+    },
+    result: { write: async () => { observed.writes++; return { status: "ok", value: { outputRef: original.output.id, caseVersion: 1 } } } },
+  }
+  const input = { host, output: original.output, skillReceipt: original.receipt, runRef: original.run.runRef } as unknown as Parameters<typeof publishSfContribution>[0]
+  expect(await publishSfContribution(input)).toEqual({ status: "denied", reason: "contribution-input-changed-during-authorization" })
+  expect(observed.writes).toBe(0)
+})
+
+test("publication pins the independent review target until its write scope", async () => {
+  const { publishSfContribution } = await import("../../../product/ai/analysis-port.ts")
+  const { digestSfContribution } = await import("../../../product/contracts/canonical.ts")
+  const { sfRunFixture } = await import("./run-fixture.ts")
+  const original = sfRunFixture()
+  const receipt = { ...original.receipt, profileId: "sf_reviewer", skillId: "sf-contestar-decisao" } satisfies Parameters<typeof publishSfContribution>[0]["skillReceipt"]
+  const reviewTarget = { targetRunId: "author-run", targetSessionId: "author-session", targetOutputDigest: "e".repeat(64), caseRef: original.caseRef }
+  const output: Parameters<typeof digestSfContribution>[0] = {
+    ...original.output, kind: "CritiqueReport", state: "ready",
+    payload: { targetRunId: reviewTarget.targetRunId, targetOutputDigest: reviewTarget.targetOutputDigest, reviewerRunId: receipt.runId,
+      reviewerSessionId: receipt.nativeSessionId, claimIssues: [], unresolvedConditions: [], evidenceRefs: [] },
+    runProvenance: { ...receipt, actualModel: "provider/model", contextFingerprint: "context", targetRunId: reviewTarget.targetRunId,
+      targetOutputDigest: reviewTarget.targetOutputDigest, reviewerRunId: receipt.runId },
+  }
+  output.outputDigest = digestSfContribution(output)
+  const observed = { scopes: 0, writes: 0 }
+  const host = {
+    withRunContext: async (_runRef: string, action: (context: object) => Promise<unknown>) => {
+      if (++observed.scopes === 2) reviewTarget.targetSessionId = receipt.nativeSessionId
+      return action({ binding: { accessRevision: "access" } })
+    },
+    revalidate: async () => ({ status: "ok", value: true }),
+    result: { write: async () => { observed.writes++; return { status: "ok", value: { outputRef: output.id, caseVersion: 1 } } } },
+  }
+  const input = { host, output, skillReceipt: receipt, runRef: receipt.runId, reviewTarget } as unknown as Parameters<typeof publishSfContribution>[0]
+  expect(await publishSfContribution(input)).toEqual({ status: "denied", reason: "contribution-input-changed-during-authorization" })
+  expect(observed).toEqual({ scopes: 2, writes: 0 })
+})
+
+test("ready read returns copies that retained host references cannot rewrite", async () => {
+  const { readSfAnalysisRun } = await import("../../../product/ai/analysis-port.ts")
+  const { sfRunFixture } = await import("./run-fixture.ts")
+  const original = sfRunFixture()
+  const readyRun = { ...original.run, state: "ready", outputRef: original.output.id }
+  const host = {
+    withRunContext: async (_runRef: string, action: (context: object) => Promise<unknown>) => action({ binding: { accessRevision: "access" } }),
+    readRun: async () => ({ status: "ok", value: readyRun }),
+    analysis: { read: async () => ({ status: "ok", value: original.output }) },
+    revalidate: async () => ({ status: "ok", value: true }),
+  }
+  const result = await readSfAnalysisRun({ host, runRef: readyRun.runRef } as unknown as Parameters<typeof readSfAnalysisRun>[0])
+  expect(result.status).toBe("ok")
+  if (result.status !== "ok" || !("output" in result.value) || !result.value.output) throw new Error("Expected a verified ready output")
+  const originalDate = result.value.output.createdAt
+  original.output.createdAt = "2026-11-14T00:00:00Z"
+  readyRun.caseRef.version = 9
+  expect(result.value.output.createdAt).toBe(originalDate)
+  expect(result.value.output.caseRef.version).toBe(1)
+  expect(result.value.run.caseRef.version).toBe(1)
+})
+
+test("ready read pins the scoped result and isolates the final returned copy", async () => {
+  const { readSfAnalysisRun } = await import("../../../product/ai/analysis-port.ts")
+  const { digestSfContribution } = await import("../../../product/contracts/canonical.ts")
+  const { sfRunFixture } = await import("./run-fixture.ts")
+  for (const mutation of ["mutate-result", "replace-result", "retain-result"] as const) {
+    const original = sfRunFixture()
+    const readyRun = { ...original.run, state: "ready", outputRef: original.output.id }
+    const observed: { scopes: number; retained?: { value: { output: typeof original.output } } } = { scopes: 0 }
+    const host = {
+      withRunContext: async (_runRef: string, action: (context: object) => Promise<unknown>) => {
+        observed.scopes++
+        const result = await action({ binding: { accessRevision: "access" } })
+        if (observed.scopes !== 2) return result
+        const ready = (mutation === "replace-result" ? structuredClone(result) : result) as { value: { output: typeof original.output } }
+        observed.retained = ready
+        if (mutation !== "retain-result") {
+          ready.value.output.createdAt = "2026-11-14T00:00:00Z"
+          ready.value.output.outputDigest = digestSfContribution(ready.value.output)
+        }
+        return ready
+      },
+      readRun: async () => ({ status: "ok", value: readyRun }),
+      analysis: { read: async () => ({ status: "ok", value: original.output }) },
+      revalidate: async () => ({ status: "ok", value: true }),
+    }
+    const result = await readSfAnalysisRun({ host, runRef: readyRun.runRef } as unknown as Parameters<typeof readSfAnalysisRun>[0])
+    if (mutation !== "retain-result") {
+      expect(result).toEqual({ status: "denied", reason: "analysis-read-mutated-input" })
+      continue
+    }
+    expect(result.status).toBe("ok")
+    if (result.status !== "ok" || !("output" in result.value) || !result.value.output || !observed.retained) throw new Error("Expected a verified ready result")
+    const date = result.value.output.createdAt
+    observed.retained.value.output.createdAt = "2026-11-14T00:00:00Z"
+    expect(result.value.output.createdAt).toBe(date)
+    expect(result).not.toBe(observed.retained)
+  }
+})

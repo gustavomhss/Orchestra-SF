@@ -9,12 +9,13 @@ import { classifyCoverage, supportsCoverageClassification } from "../../../produ
 import type { PortfolioSelection } from "../../../product/decisions/portfolio-selection.ts"
 import { createPortfolioCoveragePreview } from "../../../product/portfolio/coverage-preview.ts"
 import type { PortfolioCoverageAuthority } from "../../../product/portfolio/coverage-preview.ts"
-import { createWp05SensitivityFixture, wp05Horizon } from "../wp05/engine-fixture.ts"
+import { createWp05ComparisonFixture, wp05Horizon } from "../wp05/engine-fixture.ts"
 import { renewalCoverage } from "../wp11/renewal-coverage-fixture.ts"
 
 /** Published Planner/C08/rule producers calculate every number. Scope declarations and admission are synthetic host fixtures. */
 export async function createPortfolioCoverageFixture(training: "bundled" | "omitted" | "confirmed" | "zero" | "null" = "bundled", mode: "renewal-usd" | "eur-missing-fx" = "renewal-usd") {
-  const fixture = await createWp05SensitivityFixture({ mode, training, composed: true })
+  // C08 scenarios, rule and comparison are required; each consumer runs its own sensitivity proof.
+  const fixture = await createWp05ComparisonFixture({ mode, training, composed: true })
   try {
     const selected = await renewalCoverage(fixture, training)
     const source = fixture.sourceRefs.find((ref) => ref.refId === fixture.baselineScenario.baseRef)

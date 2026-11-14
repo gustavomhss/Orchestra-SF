@@ -48,6 +48,7 @@ async function fixture(options?: { alternative?: boolean; closeStrictOnStale?: b
     beforeStateTransaction?: () => Promise<void>
     beforeLifecycle?: () => Promise<void>
     afterReadyCommit?: () => Promise<void>
+    verify?: () => Promise<void>
     collect?: (context: TrustedDomainContext) => Promise<PortResult<ContributionEnvelope>>
     denyStaleCommit?: boolean
     publicationOutcome?: { status: "unavailable" | "needs-input" | "denied" | "conflict"; reason: string }
@@ -115,7 +116,10 @@ async function fixture(options?: { alternative?: boolean; closeStrictOnStale?: b
       return withCurrentContext(runRef, action)
     },
     ...(options?.closeStrictOnStale ? { withLifecycleContext } : {}),
-    verify: async () => access.allowed ? { status: "ok", value: true } : { status: "denied", reason: "access-revoked" },
+    verify: async () => {
+      await hooks.verify?.()
+      return access.allowed ? { status: "ok", value: true } : { status: "denied", reason: "access-revoked" }
+    },
     alternativeForOutput: async () => { observations.captureReads++; return { status: "unavailable", reason: "alternative-capture-unavailable" } },
     analysis: { create: async () => ({ status: "unavailable", reason: "not-used" }), read: async () => ({ status: "unavailable", reason: "not-used" }), cancel: async () => ({ status: "unavailable", reason: "not-used" }) },
     routines: {} as SfAnalysisHost["routines"],
@@ -138,9 +142,78 @@ async function fixture(options?: { alternative?: boolean; closeStrictOnStale?: b
     skillId: material.receipt.skillId, skillVersion: material.receipt.skillVersion, manifestDigest: material.receipt.manifestDigest,
     outputSchemaVersion: "sf-contribution-v1", requestedOperationScope: [], objective: "Recall", contextFingerprint: "context" },
     skillInput: { currentCase: material.caseRef, recallScope: { cases: [], period: { start: "2027-01-01", end: "2027-12-31" }, includeHistorical: true }, query: "current case" } })
-  return { material, access, hooks, observations, scopes, state, rawState, store, context, request, changeSource, stored, publish, run,
+  return { material, access, hooks, observations, scopes, state, rawState, store, host, context, request, changeSource, stored, publish, run,
     [Symbol.asyncDispose]: async () => { await persistence.dispose(); await rm(directory, { recursive: true, force: true }) } }
 }
+
+test("publication refuses a resealed command changed by verification without altering real C08 state", async () => {
+  for (const mutation of ["envelope", "receipt", "cycle"] as const) {
+    await using f = await fixture()
+    const before = await f.stored()
+    let verifications = 0
+    f.hooks.verify = async () => {
+      verifications++
+      if (mutation === "cycle") Object.assign(f.material.output, { evidenceRefs: [f.material.output] })
+      else {
+        if (mutation === "envelope") f.material.output.createdAt = "2026-11-14T00:00:00Z"
+        else {
+          f.material.receipt.loadedMessageId = "unobserved-message"
+          f.material.output.runProvenance.loadedMessageId = "unobserved-message"
+        }
+        f.material.output.outputDigest = digestSfContribution(f.material.output)
+      }
+    }
+    expect(await f.publish()).toEqual({ status: "denied", reason: "contribution-input-changed-during-authorization" })
+    expect(verifications).toBe(1)
+    const after = await f.stored()
+    expect(digestSfValue(after)).toBe(digestSfValue(before))
+    expect(after.nativeRuns?.run?.state).toBe("running")
+    expect(after.contributions.output).toBeUndefined()
+    expect(f.observations.staleCommitHadOutput).toEqual([])
+  }
+})
+
+test("a command resealed after a stale authorization or write still settles only the original metadata through real C08", async () => {
+  for (const phase of ["authorization-return", "prewrite-return", "postcommit-return"] as const) {
+    const committed = phase === "postcommit-return"
+    await using f = await fixture({ closeStrictOnStale: true })
+    const original = structuredClone(f.material.output)
+    const before = await f.stored()
+    const originalNative = before.nativeRuns?.run?.native
+    if (!originalNative) throw new Error("Fixture did not persist its explicit native metadata")
+    if (committed) f.hooks.afterReadyCommit = f.changeSource
+    else if (phase === "prewrite-return") f.hooks.beforeWrite = f.changeSource
+    let mutations = 0
+    const host: SfAnalysisHost = { ...f.host, revalidate: async (context, request) => {
+      if (phase === "authorization-return") await f.changeSource()
+      return f.host.revalidate(context, request)
+    }, withRunContext: async (runRef, action) => {
+      const result = await f.host.withRunContext(runRef, action)
+      if (result.status === "stale" && mutations === 0) {
+        mutations++
+        f.material.output.createdAt = "2026-11-14T00:00:00Z"
+        f.material.output.outputDigest = digestSfContribution(f.material.output)
+      }
+      return result
+    } }
+    expect(await publishSfContribution({ host, output: f.material.output, skillReceipt: f.material.receipt, runRef: "run" }))
+      .toEqual({ status: "denied", reason: "contribution-input-changed-during-authorization" })
+    expect(mutations).toBe(1)
+    const persisted = await f.stored()
+    expect(persisted.nativeRuns?.run).toMatchObject({ state: "stale", version: committed ? 5 : 4 })
+    expect(persisted.nativeRuns?.run?.native).toEqual(originalNative)
+    if (committed) {
+      expect(persisted.nativeRuns?.run?.outputRef).toBe(original.id)
+      expect(persisted.contributions.output).toEqual(original)
+      expect(digestSfValue(persisted.contributions.output)).not.toBe(digestSfValue(f.material.output))
+    } else {
+      expect(persisted.nativeRuns?.run?.outputRef).toBeUndefined()
+      expect(persisted.contributions.output).toBeUndefined()
+    }
+    expect(f.observations.lifecycleCalls).toBe(1)
+    expect(f.observations.staleCommitHadOutput).toEqual([false])
+  }
+})
 
 test("source changed strictly between publication authorization and write settles the original output as stale", async () => {
   await using f = await fixture()

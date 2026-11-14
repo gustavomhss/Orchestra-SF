@@ -14,8 +14,16 @@ import { createProductionPortfolio } from "../../../product/portfolio/production
 import { createPersistentSensitivityPort } from "../../../product/portfolio/sensitivity-store.ts"
 import { createWp13AnalysisFixture, createWp13SensitivityFixture } from "./sensitivity-fixture.ts"
 
+test("portfolio retry binds the persisted orphan without allocating another C08 result", async () => {
+  await portfolioRecovery("before")
+})
+
 test("portfolio retry recovers a lost binding reply without allocating or binding twice", async () => {
   await portfolioRecovery("after")
+})
+
+test("sensitivity retry binds the persisted orphan without allocating another C08 result", async () => {
+  await sensitivityRecovery("before")
 })
 
 test("sensitivity retry recovers a lost binding reply without allocating or binding twice", async () => {

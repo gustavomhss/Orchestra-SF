@@ -117,9 +117,29 @@ test("portfolio replays the USD 240000 ceiling and USD 20000 advantage in the sa
 
     const substitutedBaseline = await after.rules.evaluate({ caseRef: phase.caseRef, criterionId: "renewal-ceiling-240000", scenarioRef: phase.selectedRef, baselineRef: phase.selectedRef }, history.fixture.context)
     expect(substitutedBaseline).toMatchObject({ status: "ok", value: { state: "unknown", reason: "criterion-metric-unavailable" } })
-    history.fixture.revokeSource(phase.baselineScenario.baseRef)
+    // Revoke only the original baseline at both synthetic source/evidence boundaries.
+    // The revised quote delegates old sources through these same live providers.
+    const resolveSource = history.fixture.sources.resolveForecastSource.bind(history.fixture.sources)
+    const resolveEvidence = history.fixture.evidence.resolve.bind(history.fixture.evidence)
+    let revokedBaselineReads = 0
+    history.fixture.sources.resolveForecastSource = async (reference, context) => {
+      if (reference === phase.baselineScenario.baseRef) {
+        revokedBaselineReads += 1
+        return { status: "unavailable", reason: "baseline-source-revoked" }
+      }
+      return resolveSource(reference, context)
+    }
+    history.fixture.evidence.resolve = async (ref, context) => {
+      const observed = await resolveEvidence(ref, context)
+      if (ref.refId !== phase.baselineScenario.baseRef) return observed
+      revokedBaselineReads += 1
+      return { state: "revoked", ref, accessRevision: context.binding.accessRevision, checkedAt: observed.checkedAt }
+    }
     expect((await after.rules.evaluate({ caseRef: phase.caseRef, criterionId: "renewal-ceiling-240000", scenarioRef: phase.selectedRef, baselineRef: phase.baselineRef }, history.fixture.context)).status).not.toBe("ok")
+    const readsAfterRule = revokedBaselineReads
+    expect(readsAfterRule).toBeGreaterThan(0)
     expect((await after.persistent.read(confirmed.value.portfolioResultRef, history.fixture.context)).status).not.toBe("ok")
+    expect(revokedBaselineReads).toBeGreaterThan(readsAfterRule)
   } finally { await history.cleanup() }
 }, 180000)
 

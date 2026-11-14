@@ -1,0 +1,117 @@
+{
+  "schema": "astra-wp13-w6-source-reconciliation-v1",
+  "observedAt": "2026-11-14T12:26:45.191354+00:00",
+  "sourceHeads": [
+    "4d3995a71b4ccafe2367679ab5024f8aa3013c50",
+    "0e73d1dfb179517a4e4341ad554966e6941b2a64"
+  ],
+  "sourceProductW12": "102f24f6f84e0cc66cb93124f65272777c094f9e",
+  "baseWorkCommit": "d697bcc1076a62375cbf0439376c9f0a4f81173f",
+  "ownFiles": [
+    {
+      "sourceHead": "4d3995a71b4ccafe2367679ab5024f8aa3013c50",
+      "sourceBlob": "6e56a64ee1b76422706d685e2f646a156a8ade39",
+      "disposition": "RECOVERED_EXACT",
+      "detail": "Uses the Finance ComparisonFixture. C08 scenarios, rule and comparison remain real; each consumer computes its own sensitivity. Existing coverageEvidence and all coverage tests remain intact.",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-preview-fixture.ts",
+      "beforeBlob": "a24a7ccf9b4771ed9e85b1f42cb8c4e4ddd46aca",
+      "afterBlob": "6e56a64ee1b76422706d685e2f646a156a8ade39",
+      "sha256": "c1bd849c0d0c716caf2ca55fb1b8cb0ef58af8297e3e1daa6a5b3f88951f0aec"
+    },
+    {
+      "sourceHead": "4d3995a71b4ccafe2367679ab5024f8aa3013c50",
+      "sourceBlob": "0a5f3d28435378bae4637d629ff991fb03993f27",
+      "disposition": "RECOVERED_SELECTIVELY",
+      "detail": "Adds the producer-failed criterion witness with ineligible eligibility, conditioned comparison, null total and retained failed criterion. Retains the existing unknown financial metric witness and independent deadline failures; no reason-text inference.",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage.test.ts",
+      "beforeBlob": "b6ff1dd3b2f2cad15556521a9406ba6985dcb753",
+      "afterBlob": "775a63f5cd25a68542508f6f8fa154fe7324a2bc",
+      "sha256": "0debd0ea4c286f116a791d5a952fcde89e6151058ce2e86c428fc4382333a730"
+    },
+    {
+      "sourceHead": "4d3995a71b4ccafe2367679ab5024f8aa3013c50",
+      "sourceBlob": "5e5461c2020288610b7ee8928747378d9977acd5",
+      "disposition": "RECOVERED_SELECTIVELY",
+      "detail": "An unchanged component cannot resolve an unknown choice criterion: retains component scope equality, unknown impact/signal and unchanged comparison. Preserves W4 final-authority, HTTP selection/authority snapshots, independent source/CAS clocks and readHistoricalCalculation capability.",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/reconciliation.test.ts",
+      "beforeBlob": "7823451c6be37307317d3527b6a7367d64a5d58d",
+      "afterBlob": "6b2a318f73aa8adb67840958add758f151f0bade",
+      "sha256": "a0088fb0607598b1f47210aedbc1bfea240babbf380a60243c3f389f7371ed4b"
+    },
+    {
+      "sourceHead": "c41d7277be5941bafb105654360a32adea7f0347",
+      "sourcePath": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "sourceBlob": "a7fbf1ab3e35810cc717980b89421f039eae41f1",
+      "disposition": "ADAPTED_OWN_CONSUMER_FROM_PINNED_OWNER",
+      "detail": "Uses published renewal source/quote revision and operation verifier helpers; no saved placeholder and no unrelated sensitivity bootstrap. Rule CAS starts at 0 because the new source fixture has no rule. Adds the published 180000 ms trace. Keeps the ceiling policy transaction before all C10 registrations. Raw sourcePlanner supplies DomainProjection for stored scenarios; C10 classifications, preview, rules, comparison, persistence and chosen-case history still use real producers. Evidence observations deduplicate only within one context call. No restart API or restart claim added.",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/source-scenario-fixture.ts",
+      "beforeBlob": "05bce70034ab4dcced503427b2a0a63913f50509",
+      "afterBlob": "47622797c1f3df33bf68ddc0bed6616997205a58",
+      "sha256": "e8e9a362be18bd304444a6c1fdf1c22d53b8b7d2d84b8a51d5f7aa3354c84604"
+    },
+    {
+      "sourceHead": "4d3995a71b4ccafe2367679ab5024f8aa3013c50",
+      "sourceBlob": "5f12e1d8a9c12d3947eda77ab93970771e3146e9",
+      "disposition": "RECOVERED_SELECTIVELY",
+      "detail": "Revokes original baseline through both live source/evidence providers, with an injected-read counter required separately for criterion evaluation and bound portfolio read. Retains all positive 210000/250000/240000/20000, same-case history, replay, digests, idempotency, selection and 180000 ms assertions; retains policy-before-C10 and hybrid Planner fixes.",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/source-scenario.test.ts",
+      "beforeBlob": "7b786158c1019b1e67d0e2f2593929ef3f4f5974",
+      "afterBlob": "90f32c029238dce63adee7e2866380312b234329",
+      "sha256": "073b30ce85b9ef63ef200019e2f75f1aaf2e607de72f2b49567eb274927d33d3"
+    },
+    {
+      "sourceHead": "0e73d1dfb179517a4e4341ad554966e6941b2a64",
+      "sourceBlob": "4efa414f8ecadde5799e7246337863b145373210",
+      "disposition": "RECOVERED_EXACT",
+      "detail": "The local portfolioRecovery already used AnalysisFixture without saved sensitivity. Adds the two missing before-binding test entry points, keeping all four before/after counterproofs and every assertion. sensitivityRecovery keeps the real positive saved sensitivity required by its sample-reference oracle. No budget override or split of an existing timed loop.",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/persistence-recovery.test.ts",
+      "beforeBlob": "969a5306055798e4efbd2a0d2f9d38b00bbb2e5e",
+      "afterBlob": "4efa414f8ecadde5799e7246337863b145373210",
+      "sha256": "6bc51ba2946cceef497d1d6535f5d6b12e575763c735694a7a2d6a6472aabb87"
+    }
+  ],
+  "latestHeadDispositions": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/product.ts",
+      "sourceBlob": "d4c5d9c9aabcf70bb71739d3952776517dc55923",
+      "localBlob": "d4c5d9c9aabcf70bb71739d3952776517dc55923",
+      "disposition": "ALREADY_EXACT_NO_EDIT"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/reconciliation.ts",
+      "sourceBlob": "aedc80310eee2752d067dd52afa6312a9558b87a",
+      "localBlob": "aedc80310eee2752d067dd52afa6312a9558b87a",
+      "disposition": "ALREADY_EXACT_NO_EDIT"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/reconciliation.test.ts",
+      "sourceBlob": "553e171d14ea8e7318ad245375cd6d2597b66d4a",
+      "localBlob": "6b2a318f73aa8adb67840958add758f151f0bade",
+      "disposition": "RETAIN_LOCAL_API_CLOSURE",
+      "detail": "Only remaining difference is local readHistoricalCalculation:unused required by the consumed C17 store port; all recovered W4 witnesses and unknown oracle retained."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-fixture.ts",
+      "sourceBlob": "ecc4678cf757e68c5763f8bc99d5f3573df86bc5",
+      "localBlob": "5b868fdcb3cc9371a6592b000f33ba0b357329c5",
+      "disposition": "RETAIN_STRONGER_LOCAL_EQUIVALENT",
+      "detail": "The local base/analysis/runtime/positive factories already avoid unrelated results for portfolio recovery. Whole upstream replacement would remove real renewal options, trace and exact-threshold producer and restore a literal 110000 callback. No source body imported."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/persistence-recovery.test.ts",
+      "sourceBlob": "4efa414f8ecadde5799e7246337863b145373210",
+      "localBlob": "4efa414f8ecadde5799e7246337863b145373210",
+      "disposition": "RECOVERED_EXACT",
+      "detail": "Four tests preserved; no new foreign input."
+    }
+  ],
+  "excludedApproaches": [
+    "No global numerical or authorization cache.",
+    "No whole snapshot merge.",
+    "No foreign edit.",
+    "No overwrite of W3/W4 certificate, replay, restart, alias or CAS corrections.",
+    "No replacement of the complete financial producer by a total callback.",
+    "No W3/W4 receipt mutation or PASS propagation."
+  ],
+  "verification": "STATIC_RECONCILIATION_ONLY_NOT_RUN"
+}
