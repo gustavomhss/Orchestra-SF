@@ -14,15 +14,21 @@ import { reassessScenarioCoverage, validateScenarioCoverage } from "./cost-cover
 
 type CaseRef = { id: string; incarnation: string; version: number }
 type RecordEvidence = Extract<BusinessEvidenceRef, { kind: "record" }>
-type Request = { caseRef: CaseRef; choiceId: string; alternativeRef: { id: string; version: number }; coverageRef: string }
+export type CurrentChoicePreviewRequest = { caseRef: CaseRef; choiceId: string; alternativeRef: { id: string; version: number }; coverageRef: string }
+type Request = CurrentChoicePreviewRequest
 export type CurrentChoiceBinding = { schema: "sf-current-choice-binding-v1"; promotion: CurrentChoicePromotion; originalSource: RecordEvidence; source: RecordEvidence; producerResultRef: string; producerResultDigest: string; recordDigest: string }
 const key = (resultRef: string) => `sf:proposal-coverage:current-choice:${digestSfValue(resultRef)}`
 const digest = (value: CurrentChoiceBinding) => digestSfValue(Object.fromEntries(Object.entries(value).filter(([name]) => name !== "recordDigest")))
 
 /** Checks the private preview binding inside a caller's case transaction. */
 export function verifyCurrentChoiceBinding(state: SfProductState, request: CurrentChoicePromotion, expectedDigest: string) {
+  const value = readCurrentChoiceBinding(state, request)
+  return !!value && digestSfValue(value) === expectedDigest
+}
+
+export function readCurrentChoiceBinding(state: Readonly<SfProductState>, request: CurrentChoicePromotion) {
   const value = state.preferences[key(request.resultRef)] as CurrentChoiceBinding | undefined
-  return !!value && value.schema === "sf-current-choice-binding-v1" && value.recordDigest === digest(value) && digestSfValue(value) === expectedDigest && digestSfValue(value.promotion) === digestSfValue(request)
+  return value && value.schema === "sf-current-choice-binding-v1" && value.recordDigest === digest(value) && digestSfValue(value.promotion) === digestSfValue(request) ? value : undefined
 }
 
 /** Prepare the exact C10 result for human review without modifying the original choice. */
@@ -37,6 +43,7 @@ export function createCurrentChoicePreview(input: {
   resimulate: (request: { caseRef: CaseRef; choice: ChoiceRecord }, context: TrustedDomainContext) => Promise<PortResult<{ resultRef: string; scenario: ScenarioRequest; result: ScenarioResult; choiceDigest: string; requestDigest: string; resultDigest: string; originalSource: RecordEvidence; source: RecordEvidence; fenceSnapshot: (snapshot: Snapshot) => boolean }>>
   registerCoverage: (request: { caseRef: string; expectedCaseVersion: number; basis: import("../contracts/decisions.ts").CostCoverageBasis; assessment: import("../contracts/decisions.ts").CostCoverageAssessment; result: ScenarioResult; scenario: ScenarioRequest }, context: TrustedDomainContext) => Promise<PortResult<{ coverageRef: string }>>
   verifySnapshot: (snapshot: Snapshot, request: Request, binding: CurrentChoiceBinding, context: TrustedDomainContext) => boolean
+  verifySources: (binding: CurrentChoiceBinding, context: TrustedDomainContext) => Promise<boolean>
   operationIdentity: (context: TrustedDomainContext) => string | undefined
   writes: WeakSet<object>
 }) {
@@ -54,11 +61,12 @@ export function createCurrentChoicePreview(input: {
       if (choices.length !== 1 || alternatives.length !== 1) return { status: "stale", reason: "choice-or-alternative-changed" }
       const preview = await input.resimulate({ caseRef: request.caseRef, choice: choices[0]! }, context)
       if (preview.status !== "ok") return preview
-      if (preview.value.choiceDigest !== digestSfValue(choices[0]) || preview.value.requestDigest !== digestSfValue(preview.value.scenario) || preview.value.resultDigest !== digestSfValue(preview.value.result) || !preview.value.result.sourceRefs.some((ref) => digestSfValue(ref) === digestSfValue(preview.value.source))) return { status: "conflict", reason: "choice-preview-mismatch" }
+      if (preview.value.choiceDigest !== digestSfValue(choices[0]) || preview.value.requestDigest !== digestSfValue(preview.value.scenario) || preview.value.resultDigest !== digestSfValue(preview.value.result) || digestSfValue(preview.value.scenario) !== digestSfValue({ ...choices[0]!.scenario, baseRef: preview.value.source.refId }) || preview.value.originalSource.refId !== choices[0]!.scenario.baseRef || !choices[0]!.result.sourceRefs.some((ref) => digestSfValue(ref) === digestSfValue(preview.value.originalSource)) || !preview.value.result.sourceRefs.some((ref) => digestSfValue(ref) === digestSfValue(preview.value.source))) return { status: "conflict", reason: "choice-preview-mismatch" }
       const baseline = await input.sources.resolveForecastCoverage(request.coverageRef, context)
       if (baseline.status !== "ok") return baseline
       if (baseline.value.coverageRef !== request.coverageRef || preview.value.result.currency !== decision.currency || digestSfValue(preview.value.result.horizon) !== digestSfValue(decision.horizon)) return { status: "conflict", reason: "choice-preview-basis-mismatch" }
-      const attributed = { ...preview.value.result, costCoverage: { ...preview.value.result.costCoverage, alternativeId: request.alternativeRef.id, alternativeVersion: request.alternativeRef.version + 1 } }
+      const computed = preview.value.result
+      const attributed: ScenarioResult = computed.comparisonStatus === "complete" ? { ...computed, costCoverage: { ...computed.costCoverage, alternativeId: request.alternativeRef.id, alternativeVersion: request.alternativeRef.version + 1 } } : { ...computed, costCoverage: { ...computed.costCoverage, alternativeId: request.alternativeRef.id, alternativeVersion: request.alternativeRef.version + 1 } }
       const entries = await input.coverageEvidence.entries(attributed, baseline.value.assessment, context)
       if (entries.status !== "ok") return entries
       const result = await reassessScenarioCoverage({ scenario: attributed, basis: baseline.value.basis, baseline: baseline.value.assessment, entries: entries.value, resolveEvidence: (refs) => input.coverageEvidence.resolve(refs, context), supports: input.coverageEvidence.supports })
@@ -89,16 +97,23 @@ export function createCurrentChoicePreview(input: {
       return { status: "ok", value: saved.value }
     } catch { return { status: "unavailable", reason: "choice-preview-unavailable" } }
   }
-  const read = async (request: CurrentChoicePromotion, context: TrustedDomainContext): Promise<PortResult<CurrentChoiceBinding>> => {
+  const read = async (incoming: CurrentChoicePromotion, context: TrustedDomainContext): Promise<PortResult<CurrentChoiceBinding>> => {
     try {
+      const request = structuredClone(incoming)
       const source = input.host.requestFor(context)
       if (!source || !await input.host.revalidate(context)) return { status: "denied", reason: "choice-preview-access-unavailable" }
       const stored = await input.state.read(source, "preferences", (state, authority) => sameAuthority(authority, context) ? state.preferences[key(request.resultRef)] : undefined)
       const current = await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? state.cases[request.caseRef.id] : undefined)
       const result = await input.results.read({ resultRef: request.resultRef, kind: "scenario" }, context)
       if (stored.status !== "ok" || !stored.value || typeof stored.value !== "object" || current.status !== "ok" || !current.value || current.value.incarnation !== request.caseRef.incarnation || current.value.version !== request.caseRef.version || !current.value.participants.includes(context.binding.principalRef) || !await input.authorizeCase(current.value, context) || result.status !== "ok") return { status: "unavailable", reason: "choice-preview-unavailable" }
-      const binding = stored.value as CurrentChoiceBinding
-      if (binding.schema !== "sf-current-choice-binding-v1" || binding.recordDigest !== digest(binding) || digestSfValue(binding.promotion) !== digestSfValue(request) || result.value.resultDigest !== request.resultDigest || result.value.requestDigest !== digestSfValue(request.scenario) || !await input.host.revalidate(context)) return { status: "unavailable", reason: "choice-preview-unavailable" }
+      const binding = structuredClone(stored.value) as CurrentChoiceBinding
+      const choice = current.value.choices.filter((item) => item.id === request.choiceId && item.alternativeId === request.alternativeRef.id && digestSfValue(item) === request.choiceDigest)
+      if (binding.schema !== "sf-current-choice-binding-v1" || binding.recordDigest !== digest(binding) || digestSfValue(binding.promotion) !== digestSfValue(request) || result.value.resultDigest !== request.resultDigest || result.value.requestDigest !== digestSfValue(request.scenario) || choice.length !== 1 || current.value.alternatives.filter((item) => item.id === request.alternativeRef.id && item.version === request.alternativeRef.version).length !== 1 || digestSfValue({ ...choice[0]!.scenario, baseRef: binding.source.refId }) !== digestSfValue(request.scenario) || !choice[0]!.result.sourceRefs.some((ref) => digestSfValue(ref) === digestSfValue(binding.originalSource))) return { status: "unavailable", reason: "choice-preview-unavailable" }
+      const producer = await input.results.read({ resultRef: binding.producerResultRef, kind: "scenario" }, context)
+      if (producer.status !== "ok" || producer.value.kind !== "scenario" || producer.value.resultDigest !== binding.producerResultDigest || producer.value.requestDigest !== digestSfValue(request.scenario) || digestSfValue(producer.value.caseRef) !== digestSfValue(request.caseRef) || !producer.value.result.sourceRefs.some((ref) => digestSfValue(ref) === digestSfValue(binding.source)) || !await input.verifySources(structuredClone(binding), context) || source.signal.aborted || !await input.host.revalidate(context)) return { status: "unavailable", reason: "choice-preview-unavailable" }
+      const casesAgain = await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? { decision: state.cases[request.caseRef.id], result: state.decisionResults?.[request.resultRef], producer: state.decisionResults?.[binding.producerResultRef] } : undefined)
+      const bindingAgain = await input.state.read(source, "preferences", (state, authority) => sameAuthority(authority, context) ? readCurrentChoiceBinding(state, request) : undefined)
+      if (casesAgain.status !== "ok" || !casesAgain.value?.decision || digestSfValue(casesAgain.value.decision) !== digestSfValue(current.value) || digestSfValue(casesAgain.value.result) !== digestSfValue(result.value) || digestSfValue(casesAgain.value.producer) !== digestSfValue(producer.value) || bindingAgain.status !== "ok" || !bindingAgain.value || digestSfValue(bindingAgain.value) !== digestSfValue(binding) || !await input.authorizeCase(casesAgain.value.decision, context) || source.signal.aborted || !await input.host.revalidate(context)) return { status: "stale", reason: "choice-preview-changed" }
       return { status: "ok", value: structuredClone(binding) }
     } catch { return { status: "unavailable", reason: "choice-preview-unavailable" } }
   }

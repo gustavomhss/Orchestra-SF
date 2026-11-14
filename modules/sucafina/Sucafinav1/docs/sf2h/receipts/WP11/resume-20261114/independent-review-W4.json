@@ -1,0 +1,93 @@
+{
+  "schema": "wp11-independent-review-v1",
+  "productParent": "768a189c92bae0353e546c29a71fda95fac1c4bf",
+  "status": "STATIC_REVIEW_NO_REMAINING_CONCRETE_BLOCKER_IN_REVIEWED_DELTA",
+  "reviewers": [
+    "ci_reconciliation",
+    "producer_seams",
+    "wp11_requirements"
+  ],
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/application-attempt.ts",
+      "blob": "d7ef49df787cc4b058f0992b1fbbdc5c0cb6634e",
+      "sha256": "b952a9869602aee8c6696a769ee3d96278868dafc441bbdb4ff4b15c6b03762c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/application-status.ts",
+      "blob": "29a01e27af230df149e8862beb370f466abf0808",
+      "sha256": "84260d8fbacd9a353eaa2b3a8fa3b022f2f190c34fadd558646a5f9e322b4b25"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+      "blob": "229e64c2d8109b413a7667bbe1b208ffa3ab0a73",
+      "sha256": "756906647ca921578b5c242af44c15a8e11c296aa693d8d659a86b4ee65bd3e2"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/assumption-divergence.ts",
+      "blob": "d70725ebd2ed99ffe9a617b21eac6fe17e089abd",
+      "sha256": "8f7c2dbf6bb8983da2dc4618d0a4f43cd2451df084d1b285d061b6363f142106"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "blob": "bc32bfb39e8b6012230ee0d136bed142340e5d89",
+      "sha256": "0bc0d34e79bac608968b088030d38ba3bf75ca6a49e388acef6b6b9e8b55705f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-request-store.ts",
+      "blob": "368a7f2e207c4f551ac3c6f77424797c97f794f3",
+      "sha256": "97cd2aa7cb2a70004c75b0f223889347553ff6ee33a5b12eee5220ce60882ceb"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/application-indeterminate.test.ts",
+      "blob": "d13ec6d28ff5eb89bb00e8db39ef9065aab394a2",
+      "sha256": "2aaa0568b95fbbe645496129a91d28fbd4f0e5d656c98ab8a933d148f0fdb1d7"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/assumption-divergence.test.ts",
+      "blob": "7427441bfb0fbc795f810265b302cd9563ea5bea",
+      "sha256": "f7632f31f710fd0791c568ba438165abd0661a59dfa6cca317037dd6abf56559"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/prepared-rejection.test.ts",
+      "blob": "1ec3fa08e6ef4bdb226a5c26838b01553606872e",
+      "sha256": "bbe9a7824adcf7ec586e8da83332fd64066fc9b62fe1f1daecb188ae981586f6"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-import-incarnation.test.ts",
+      "blob": "3d12e380e2e37be10a2fb518e2947cf2d253a922",
+      "sha256": "9ddacc18172c75478534dd34af1f4a108449f9702c84fbce62bd32c92fc07e10"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-revision.test.ts",
+      "blob": "c2901936d6730b56422b2c495069c0ed0a0705ce",
+      "sha256": "c2e64202f5d7b474b572bd7e6323e4ff2ade0892014b25e1aa6fc26a76471ce6"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-implementation-quote.test.ts",
+      "blob": "39c8b0e9138c36d5bd4a92726279633f69381cf6",
+      "sha256": "5e15c7381a9eae5cc3d0b7f90928c25a075658bc146c9a4859812e666a154906"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/calculation-history.test.ts",
+      "blob": "5c98fc71702c71ffb976735490fbaf1036a64e19",
+      "sha256": "5cd6fb60081450f7657dc8825ebe5f421aade88c282beed9b4db03c6749a3dde"
+    }
+  ],
+  "resolvedFindings": [
+    "Global durable application marker before domain dispatch; absence of receipt cannot authorize redispatch.",
+    "Terminal application-status requires exact currently authorized domain receipt; case participation alone is insufficient.",
+    "Final C08 observations after second source/request callback reject case/ledger drift without value.",
+    "Human grant mappings bind full rejection intent; outbox and event are atomic.",
+    "Import test composes actual importer, C08 and source incarnation lifecycle."
+  ],
+  "claimBoundary": [
+    "Review is static, not hosted test or native/browser proof.",
+    "Financial values are delegated to Planner producers.",
+    "Synthetic authorizations in some fixtures remain declared.",
+    "Native SessionV2/SkillLoadReceipt/consumption evidence is not produced by these fixtures."
+  ],
+  "localProductTestsRun": false,
+  "localProductTypecheckRun": false,
+  "hostedTests": "PENDING_FOR_CANDIDATE"
+}

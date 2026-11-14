@@ -8,11 +8,15 @@ import type { createDecisionCaseManagement } from "./case-management.ts"
 import type { createDecisionMutations } from "./mutations.ts"
 import type { AnalysisPromotionRequest, createAnalysisAlternativePromotion } from "./analysis-promotion.ts"
 import type { createAnalysisAcceptance } from "./analysis-acceptance.ts"
+import type { createAssumptionDivergenceService } from "./assumption-divergence.ts"
 import type { createPreparedExecution } from "./apply.ts"
+import type { createPreparedApplicationStatus } from "./application-status.ts"
 import type { HotTopicDraftRequest, createHotTopicDraftStore } from "./hot-topic-draft.ts"
 import type { createChangeProposalStore } from "./change-proposal-store.ts"
 import type { createPortfolioHistory } from "./portfolio-history.ts"
 import type { createDecisionChoiceCatalog } from "./choice-catalog.ts"
+import type { CurrentChoicePreviewRequest, createCurrentChoicePreview } from "./current-choice-preview.ts"
+import type { CurrentChoicePromotion, createCurrentChoicePromotion } from "./current-choice-promotion.ts"
 import type { createDecisionCoverageCatalog } from "./coverage-catalog.ts"
 import type { createDecisionComparisonService } from "./comparison.ts"
 import type { BaselineCoverageRequest, createDecisionBaselineCoverage } from "./baseline-coverage.ts"
@@ -26,6 +30,9 @@ type HumanAction = "decisions.edit" | "decisions.promote-alternative" | "decisio
 type Edit = Parameters<ReturnType<typeof createDecisionCaseManagement>["edit"]>[0]
 type Promote = Parameters<ReturnType<typeof createDecisionMutations>["addAlternative"]>[0]
 type Prepare = Parameters<ReturnType<typeof createDecisionMutations>["prepareChanges"]>[0]
+type RejectChange = Parameters<ReturnType<typeof createDecisionMutations>["rejectChange"]>[0]
+type AssumptionDivergence = Parameters<ReturnType<typeof createAssumptionDivergenceService>>[0]
+type ApplicationStatus = Parameters<ReturnType<typeof createPreparedApplicationStatus>>[0]
 type Choose = Parameters<ReturnType<typeof createDecisionMutations>["recordChoice"]>[0]
 type AddQuestion = Parameters<ReturnType<typeof createDecisionMutations>["addQuestion"]>[0]
 type AnswerQuestion = Parameters<ReturnType<typeof createDecisionMutations>["answerQuestion"]>[0]
@@ -63,8 +70,12 @@ export function createDecisionHttp(input: {
   baseline: ReturnType<typeof createDecisionBaselineCoverage>
   compare: ReturnType<typeof createDecisionComparisonService>
   management: ReturnType<typeof createDecisionCaseManagement>
+  assumptionDivergence: ReturnType<typeof createAssumptionDivergenceService>
+  applicationStatus: ReturnType<typeof createPreparedApplicationStatus>
   mutations: ReturnType<typeof createDecisionMutations>
   promoteAnalysis: ReturnType<typeof createAnalysisAlternativePromotion>
+  currentChoicePreview: ReturnType<typeof createCurrentChoicePreview>
+  promoteCurrentChoice: ReturnType<typeof createCurrentChoicePromotion>
   accept: ReturnType<typeof createAnalysisAcceptance>
   apply: ReturnType<typeof createPreparedExecution>
   bindAdmittedApply: (context: TrustedUiContext, request: AdmittedApply) => void
@@ -80,7 +91,7 @@ export function createDecisionHttp(input: {
       if (admitted.status !== "ok") return response(admitted)
       try { return response(await input.management.list(admitted.value)) } finally { input.human.finish(admitted.value) }
     }
-    const operations = { "decision-promote-analysis": "decisions.promote-analysis", "decision-hot-topic-draft": "decisions.draft-hot-topic", "decision-hot-topic-drafts": "decisions.portfolio.read", "decision-hot-topic-draft-read": "decisions.portfolio.read", "decision-add-question": "decisions.add-question", "decision-answer-question": "decisions.answer-question", "decision-edit": "decisions.edit", "decision-promote": "decisions.promote-alternative", "decision-prepare-changes": "decisions.prepare-changes", "decision-choose": "decisions.choose", "decision-accept-analysis": "decisions.accept-analysis", "decision-apply": "decisions.apply", "decision-criteria": "decisions.criteria", "decision-coverage": "decisions.coverage", "decision-select-portfolio": "decisions.select-portfolio", "decision-promote-portfolio": "decisions.promote-portfolio", "decision-prepare-portfolio": "decisions.prepare-portfolio", "decision-change-proposal-read": "decisions.portfolio.read", "decision-portfolio-history": "decisions.portfolio.read", "decision-portfolio-history-read": "decisions.portfolio.read", "decision-choice-catalog": "decisions.portfolio.read", "decision-coverage-catalog": "decisions.portfolio.read", "decision-review": "decisions.portfolio.read", "decision-sensitivity-units": "decisions.portfolio.read", "decision-portfolio-results": "decisions.portfolio.read", "decision-criterion-read": "decisions.portfolio.read", "decision-portfolio-catalog": "decisions.portfolio.read", "decision-portfolio-preview": "decisions.portfolio.read", "decision-portfolio-evaluate": "decisions.portfolio.evaluate", "decision-portfolio-read": "decisions.portfolio.read", "decision-sensitivity-evaluate": "decisions.sensitivity.evaluate", "decision-sensitivity-read": "decisions.portfolio.read" } as const
+    const operations = { "decision-application-status": "decisions.portfolio.read", "decision-assumption-divergence": "decisions.portfolio.read", "decision-reject-change": "decisions.prepare-changes", "decision-choice-preview": "decisions.promote-alternative", "decision-choice-promote": "decisions.promote-alternative", "decision-promote-analysis": "decisions.promote-analysis", "decision-hot-topic-draft": "decisions.draft-hot-topic", "decision-hot-topic-drafts": "decisions.portfolio.read", "decision-hot-topic-draft-read": "decisions.portfolio.read", "decision-add-question": "decisions.add-question", "decision-answer-question": "decisions.answer-question", "decision-edit": "decisions.edit", "decision-promote": "decisions.promote-alternative", "decision-prepare-changes": "decisions.prepare-changes", "decision-choose": "decisions.choose", "decision-accept-analysis": "decisions.accept-analysis", "decision-apply": "decisions.apply", "decision-criteria": "decisions.criteria", "decision-coverage": "decisions.coverage", "decision-select-portfolio": "decisions.select-portfolio", "decision-promote-portfolio": "decisions.promote-portfolio", "decision-prepare-portfolio": "decisions.prepare-portfolio", "decision-change-proposal-read": "decisions.portfolio.read", "decision-portfolio-history": "decisions.portfolio.read", "decision-portfolio-history-read": "decisions.portfolio.read", "decision-choice-catalog": "decisions.portfolio.read", "decision-coverage-catalog": "decisions.portfolio.read", "decision-review": "decisions.portfolio.read", "decision-sensitivity-units": "decisions.portfolio.read", "decision-portfolio-results": "decisions.portfolio.read", "decision-criterion-read": "decisions.portfolio.read", "decision-portfolio-catalog": "decisions.portfolio.read", "decision-portfolio-preview": "decisions.portfolio.read", "decision-portfolio-evaluate": "decisions.portfolio.evaluate", "decision-portfolio-read": "decisions.portfolio.read", "decision-sensitivity-evaluate": "decisions.sensitivity.evaluate", "decision-sensitivity-read": "decisions.portfolio.read" } as const
     if (!action || action !== "decision-compare" && action !== "decision-portfolio-selection" && !Object.hasOwn(operations, action)) return undefined
     if (request.method !== "POST") return response({ status: "needs-input", reason: "method-not-allowed" }, 405)
     if (!request.headers.get("content-type")?.toLowerCase().startsWith("application/json")) return response({ status: "needs-input", reason: "invalid-content-type" }, 415)
@@ -95,6 +106,10 @@ export function createDecisionHttp(input: {
       try {
         const context = admitted.value
         const dispatch = async (): Promise<Response> => {
+        if (action === "decision-application-status") return response(await input.applicationStatus(payload as ApplicationStatus, context))
+        if (action === "decision-assumption-divergence") return response(await input.assumptionDivergence(payload as AssumptionDivergence, context))
+        if (action === "decision-choice-preview") return response(await input.currentChoicePreview.prepare(payload as CurrentChoicePreviewRequest, context))
+        if (action === "decision-choice-promote") return response(await input.promoteCurrentChoice(payload as CurrentChoicePromotion, context))
         if (action === "decision-promote-analysis") return response(await input.promoteAnalysis(payload as AnalysisPromotionRequest, context))
         if (action === "decision-hot-topic-draft") return response(await input.hotTopicDraft.register(payload as HotTopicDraftRequest, context))
         if (action === "decision-hot-topic-drafts") return response(await input.hotTopicDraft.list(payload as { caseRef: CaseRef }, context))
@@ -131,6 +146,7 @@ export function createDecisionHttp(input: {
         if (action === "decision-answer-question") return response(await input.mutations.answerQuestion(payload as AnswerQuestion, context))
         if (action === "decision-edit") return response(await input.management.edit(payload as Edit, context))
         if (action === "decision-promote") return response(await input.mutations.addAlternative(payload as Promote, context))
+        if (action === "decision-reject-change") return response(await input.mutations.rejectChange(payload as RejectChange, context))
         if (action === "decision-prepare-changes") return response(await input.mutations.prepareChanges(payload as Prepare, context))
         if (action === "decision-choose") return response(await input.mutations.recordChoice(payload as Choose, context))
         if (action === "decision-accept-analysis") return response(await input.accept(payload as Accept, context))
@@ -143,7 +159,7 @@ export function createDecisionHttp(input: {
         return result.status === "ok" ? response({ status: "ok", value: { receiptId: result.value.id, surface: result.value.surface, version: result.value.version } }) : response(result)
         }
         if (!object(payload) || !caseRef(payload.caseRef)) return await dispatch()
-        const allowHistoricalRetry = ["decision-promote-analysis", "decision-add-question", "decision-answer-question", "decision-edit", "decision-promote", "decision-prepare-changes", "decision-choose", "decision-accept-analysis", "decision-apply"].includes(action)
+        const allowHistoricalRetry = ["decision-reject-change", "decision-choice-promote", "decision-promote-portfolio", "decision-prepare-portfolio", "decision-promote-analysis", "decision-add-question", "decision-answer-question", "decision-edit", "decision-promote", "decision-prepare-changes", "decision-choose", "decision-accept-analysis", "decision-apply"].includes(action)
         const scoped = await input.withCase(context, payload.caseRef, { allowHistoricalRetry }, async () => ({ status: "ok", value: await dispatch() }))
         return scoped.status === "ok" ? scoped.value : response(scoped)
       } finally { input.human.finish(admitted.value) }
@@ -166,6 +182,11 @@ function valid(action: string, value: unknown) {
   if (!object(value)) return false
   if (action === "decision-portfolio-catalog") return closed(value, ["purpose", "caseRefs"], ["purpose", "caseRefs"]) && value.purpose === "catalog" && Array.isArray(value.caseRefs) && value.caseRefs.length > 0 && value.caseRefs.length <= 64 && value.caseRefs.every(caseRef) && new Set(value.caseRefs.map((ref) => JSON.stringify([ref.id, ref.incarnation, ref.version]))).size === value.caseRefs.length
   if (!caseRef(value.caseRef)) return false
+  if (action === "decision-choice-preview" || action === "decision-choice-promote") {
+    const extra = action === "decision-choice-promote" ? ["choiceDigest", "resultRef", "resultDigest", "scenario"] : []
+    const fields = ["caseRef", "choiceId", "alternativeRef", "coverageRef", ...extra]
+    return closed(value, fields, fields) && text(value.choiceId) && text(value.coverageRef) && object(value.alternativeRef) && closed(value.alternativeRef, ["id", "version"], ["id", "version"]) && text(value.alternativeRef.id) && version(value.alternativeRef.version) && (action === "decision-choice-preview" || text(value.resultRef) && typeof value.choiceDigest === "string" && /^[a-f0-9]{64}$/.test(value.choiceDigest) && typeof value.resultDigest === "string" && /^[a-f0-9]{64}$/.test(value.resultDigest) && decodeSfOperationInput("sf_scenario_simulate", value.scenario).ok)
+  }
   if (action === "decision-promote-analysis") return closed(value, ["caseRef", "outputRef", "runRef", "outputDigest", "rationale"], ["caseRef", "outputRef", "runRef", "outputDigest", "rationale"]) && text(value.outputRef) && text(value.runRef) && typeof value.outputDigest === "string" && /^[a-f0-9]{64}$/.test(value.outputDigest) && text(value.rationale)
   if (action === "decision-hot-topic-drafts") return closed(value, ["purpose", "caseRef"], ["purpose", "caseRef"]) && value.purpose === "hot-topic-drafts"
   if (action === "decision-hot-topic-draft-read") return closed(value, ["purpose", "caseRef", "draftRef"], ["purpose", "caseRef", "draftRef"]) && value.purpose === "hot-topic-draft-read" && text(value.draftRef)
@@ -190,6 +211,9 @@ function valid(action: string, value: unknown) {
   if (action === "decision-answer-question") return closed(value, ["caseRef", "questionId", "answerRef"], ["caseRef", "questionId", "answerRef"]) && text(value.questionId) && text(value.answerRef)
   if (action === "decision-edit") return closed(value, ["caseRef", "objective", "criteria", "sourceRefs", "horizon", "currency", "assumptions"], ["caseRef", "objective", "criteria", "sourceRefs"]) && text(value.objective) && Array.isArray(value.criteria) && value.criteria.length > 0 && value.criteria.every((item) => object(item) && closed(item, ["id", "description", "required"], ["id", "description", "required"]) && text(item.id) && text(item.description) && typeof item.required === "boolean") && refs(value.sourceRefs) && (value.horizon === undefined || isSfPeriod(value.horizon)) && (value.currency === undefined || typeof value.currency === "string" && /^[A-Z]{3}$/.test(value.currency)) && (value.assumptions === undefined || Array.isArray(value.assumptions) && value.assumptions.every((item) => object(item) && closed(item, ["id", "text", "state", "evidenceRefs"], ["id", "text", "state", "evidenceRefs"]) && text(item.id) && text(item.text) && ["open", "confirmed", "rejected"].includes(String(item.state)) && refs(item.evidenceRefs)))
   if (action === "decision-promote") return closed(value, ["caseRef", "title", "scenario", "coverageRef", "alternativeRef"], ["caseRef", "title", "scenario", "coverageRef"]) && text(value.title) && text(value.coverageRef) && decodeSfOperationInput("sf_scenario_simulate", value.scenario).ok && (value.alternativeRef === undefined || object(value.alternativeRef) && closed(value.alternativeRef, ["id", "version"], ["id", "version"]) && text(value.alternativeRef.id) && version(value.alternativeRef.version))
+  if (action === "decision-assumption-divergence") return closed(value, ["purpose", "caseRef", "alternativeId", "alternativeVersion"], ["purpose", "caseRef", "alternativeId", "alternativeVersion"]) && value.purpose === "assumption-divergence" && text(value.alternativeId) && version(value.alternativeVersion)
+  if (action === "decision-application-status") return closed(value, ["caseRef", "choiceId", "changeId"], ["caseRef", "choiceId", "changeId"]) && text(value.choiceId) && text(value.changeId)
+  if (action === "decision-reject-change") return closed(value, ["purpose", "caseRef", "choiceId", "changeId", "rationale"], ["purpose", "caseRef", "choiceId", "changeId", "rationale"]) && value.purpose === "reject-change" && text(value.choiceId) && text(value.changeId) && text(value.rationale)
   if (action === "decision-prepare-changes") return closed(value, ["caseRef", "choiceId", "operations"], ["caseRef", "choiceId", "operations"]) && text(value.choiceId) && decodeSfOperationInput("sf_change_prepare", { caseRef: encodeCaseRef(value.caseRef), choiceRef: value.choiceId, operations: value.operations }).ok
   if (action === "decision-choose") return closed(value, ["caseRef", "alternativeId", "alternativeVersion", "comparison", "criteria", "reason"], ["caseRef", "alternativeId", "alternativeVersion", "comparison", "criteria", "reason"]) && text(value.alternativeId) && version(value.alternativeVersion) && text(value.reason) && Array.isArray(value.criteria) && value.criteria.every(text) && decodeSfOperationInput("sf_scenario_compare", value.comparison).ok
   if (action === "decision-accept-analysis") return closed(value, ["caseRef", "outputRef", "runRef", "rationale"], ["caseRef", "outputRef", "runRef", "rationale"]) && text(value.outputRef) && text(value.runRef) && text(value.rationale)

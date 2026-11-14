@@ -11,7 +11,7 @@ export function createDecisionHumanGrants(input: {
   authorizePortfolioMutation: (operation: DecisionMutationOperation, payload: unknown, context: TrustedDomainContext) => Promise<boolean>
   matchesPortfolioMutation: (operation: DecisionMutationOperation, payload: unknown, context: TrustedDomainContext) => boolean
 }) {
-  const actions: Partial<Record<DecisionMutationOperation, Action>> = { "add-alternative": "decisions.promote-alternative", "prepare-changes": "decisions.prepare-changes", "record-choice": "decisions.choose", "add-question": "decisions.add-question", "answer-question": "decisions.answer-question" }
+  const actions: Partial<Record<DecisionMutationOperation, Action>> = { "add-alternative": "decisions.promote-alternative", "prepare-changes": "decisions.prepare-changes", "reject-change": "decisions.prepare-changes", "record-choice": "decisions.choose", "add-question": "decisions.add-question", "answer-question": "decisions.answer-question" }
   const authorize = (action: Action, payload: unknown, context: TrustedDomainContext) => input.human.authorize(context, action, payload)
   const matches = (action: Action, payload: unknown, context: TrustedDomainContext) => context.kind === "ui" && input.ui.matchesIntent(context, `sf-human:${action}`, digestSfValue(payload))
   return {

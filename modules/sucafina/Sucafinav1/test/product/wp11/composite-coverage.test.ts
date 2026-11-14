@@ -17,6 +17,7 @@ test("shared categories and supported N/A consume one real Planner contribution 
     expect(coverage.assessment.issues).toEqual([])
     expect(coverage.assessment.derivedMissingCategoryIds).toEqual([])
     expect(fixture.selectedResult.knownSubtotal).toBe(210000)
+    if (fixture.selectedResult.comparisonStatus !== "conditioned") throw new Error("The simulated operations must retain their declared conditions")
     const storedResult = { ...fixture.selectedResult, costCoverage: coverage.assessment }
     expect(validateScenarioCoverage(storedResult, fixture.basis, coverage.assessment)).toBeUndefined()
     // Classification resolves cost scope; an unapplied scenario remains a hypothetical analysis.

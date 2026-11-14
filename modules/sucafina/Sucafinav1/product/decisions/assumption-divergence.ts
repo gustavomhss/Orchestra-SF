@@ -13,8 +13,9 @@ export function createAssumptionDivergenceService(input: {
   host: Pick<DomainPortHost, "revalidate">
   observe: (assumption: Assumption, context: TrustedDomainContext) => Promise<PortResult<Observation>>
 }) {
-  return async (request: { caseRef: { id: string; incarnation: string; version: number }; alternativeId: string; alternativeVersion: number }, context: TrustedDomainContext): Promise<PortResult<readonly { assumptionId: string; proposed: Assumption["value"]; observed: Observation["value"]; state: "matches" | "diverges" | "unavailable"; evidenceRefs: readonly BusinessEvidenceRef[] }[]>> => {
+  return async (incoming: { caseRef: { id: string; incarnation: string; version: number }; alternativeId: string; alternativeVersion: number }, context: TrustedDomainContext): Promise<PortResult<readonly { assumptionId: string; proposed: Assumption["value"]; observed: Observation["value"]; state: "matches" | "diverges" | "unavailable"; evidenceRefs: readonly BusinessEvidenceRef[] }[]>> => {
     try {
+      const request = structuredClone(incoming)
       const reference = encodeCaseRef(request.caseRef)
       const current = await input.cases.read({ caseRef: reference }, context)
       if (current.status !== "ok") return current
@@ -23,11 +24,13 @@ export function createAssumptionDivergenceService(input: {
       if (alternatives.length !== 1) return { status: "unavailable", reason: "alternative-unavailable" }
       const assumptions = alternatives[0]!.scenario.assumptions
       if (new Set(assumptions.map((item) => item.id)).size !== assumptions.length) return { status: "conflict", reason: "assumption-identity-conflict" }
-      const observed = await Promise.all(assumptions.map((item) => input.observe(item, context)))
+      const observed = structuredClone(await Promise.all(assumptions.map((item) => input.observe(structuredClone(item), context))))
       const again = await input.cases.read({ caseRef: reference }, context)
       if (again.status !== "ok" || again.value.case.version !== current.value.case.version || digestSfValue(again.value.case.alternatives) !== digestSfValue(current.value.case.alternatives) || !await input.host.revalidate(context)) return { status: "stale", reason: "case-changed" }
-      const checked = await Promise.all(assumptions.map((item) => input.observe(item, context)))
+      const checked = structuredClone(await Promise.all(assumptions.map((item) => input.observe(structuredClone(item), context))))
       if (checked.some((value, index) => digestSfValue(value) !== digestSfValue(observed[index])) || !await input.host.revalidate(context)) return { status: "stale", reason: "assumption-source-changed" }
+      const final = await input.cases.read({ caseRef: reference }, context)
+      if (final.status !== "ok" || final.value.case.version !== current.value.case.version || digestSfValue(final.value.case.alternatives) !== digestSfValue(current.value.case.alternatives) || !await input.host.revalidate(context)) return { status: "stale", reason: "case-changed" }
       return { status: "ok", value: assumptions.map((item, index) => {
         const value = observed[index]
         if (!value || value.status !== "ok" || !value.value.evidenceRefs.length) return { assumptionId: item.id, proposed: item.value, observed: null, state: "unavailable" as const, evidenceRefs: [] }
