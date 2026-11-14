@@ -1,0 +1,156 @@
+{
+  "schema": "sf2-authority-ack-v1",
+  "mission": 33,
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "canonical_scope_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+  "actor": "S0-C",
+  "lease_epoch": "S0-C-e7-browser33",
+  "execution_instance": "mission33-integration-20261114",
+  "local_task": "/root",
+  "external_session_id": null,
+  "observed_at": "2026-11-14 21:35:50 UTC",
+  "branch": "sf2-stack",
+  "pr": 65,
+  "expected_head": "3c0b7df201559223ddf1631c182a409af700ff38",
+  "received_tree": "b92f6f83e83e2b7ed5ad5ff74d89fb8c015de196",
+  "control_sha": "7150af3c3cea2a1dece40ffa3f13abe8fb10278d",
+  "predecessor": {
+    "mission": 23,
+    "status": "TERMINAL_BOUNDED_INTAKE_HANDOFF_TO_S0",
+    "handoff_blob": "6e02e994a80e34a5ca9ca52e21cc08eb3058fb1e",
+    "authority_reconciliation_blob": "30df2affce2f7eaa6b1b7d97ed62993792d37ee5",
+    "lease_closed_explicitly": true,
+    "head_matched": true,
+    "later_writer_observed": false
+  },
+  "authority": "User mission33 and pinned continuation COMMON grant this execution the sole sf2-stack integration writer. S0 retains final dispatcher and acceptance. No source-lane authorship is granted.",
+  "scope": {
+    "WPs": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610,
+    "resident_profiles": 5,
+    "skills": 18,
+    "packs": 8,
+    "operations": 39,
+    "AM": [
+      "AM01",
+      "AM02",
+      "AM03",
+      "AM04",
+      "AM05",
+      "AM06"
+    ]
+  },
+  "read_pins": [
+    {
+      "path": "AGENTS.md",
+      "commit": "3c0b7df201559223ddf1631c182a409af700ff38",
+      "blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4"
+    },
+    {
+      "path": "packages/app-shell/AGENTS.md",
+      "commit": "3c0b7df201559223ddf1631c182a409af700ff38",
+      "blob": "a9ed3dc797d2756089a032e75bc0ab77256b3a03"
+    },
+    {
+      "path": "packages/app-shell/e2e/AGENTS.md",
+      "commit": "3c0b7df201559223ddf1631c182a409af700ff38",
+      "blob": "2e24eecc8ccea104922263bf6c7ccc8e93da24ec"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/START.md",
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "522782bb7e113124a937d7ef17313032be9d6850",
+      "read": "complete; full JSON parsed and every distinct scalar read, preserving original pack and all criteria"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/WORKFLOW.md",
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "043205bee6031b4517a98591b3588fca0ab12925",
+      "read": "complete; full JSON parsed and every distinct scalar read, preserving original pack and all criteria"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/COMMON.md",
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "d61f32af03fe10747a50274233f953af044decf6",
+      "read": "complete; full JSON parsed and every distinct scalar read, preserving original pack and all criteria"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S0-C.json",
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "4eb6547c53ce65bc2170b9fdd6d8fd580e572e3b",
+      "read": "complete; full JSON parsed and every distinct scalar read, preserving original pack and all criteria"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/product-acceptance.md",
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "ded082688fce327def0b48968fa3b89a5831029c",
+      "read": "complete"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/resident-runtime.md",
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "033737b1051b23443e633df7874c550629bf55a1",
+      "read": "complete"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/atlas-packaging.md",
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "907750ae7c945e5f303480cc6e14f11bb1696eb9",
+      "read": "complete"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/continuation-wave/COMMON.json",
+      "commit": "7150af3c3cea2a1dece40ffa3f13abe8fb10278d",
+      "blob": "7839082081554eb288758460bdd8ce52529ba7da"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/continuation-wave/bundle-latest-intake.json",
+      "commit": "7150af3c3cea2a1dece40ffa3f13abe8fb10278d",
+      "blob": "4e8f0f5ac6239125e27acb570f652913c58383b9"
+    }
+  ],
+  "helpers": {
+    "capacity": "4 global slots including root",
+    "delegated": [
+      "finance22_intake",
+      "reports25_intake",
+      "source_census"
+    ],
+    "permissions": "Read remote GitHub MCP, prepare local intake proposals only. Root alone creates Git objects, commits and CAS ref updates."
+  },
+  "publication": {
+    "remote": "GitHub MCP only",
+    "branch": "sf2-stack",
+    "cas_expected_sha_required": true,
+    "force": false,
+    "whole_tree_merge": false
+  },
+  "constraints": {
+    "tests": "NOT_RUN; explicitly forbidden in mission33",
+    "ci_dispatch": false,
+    "epic": false,
+    "AM": false,
+    "typecheck": "NOT_RUN; remains S0 gate",
+    "guards": "NOT_RUN; remains S0 gate",
+    "source_lanes": "read only",
+    "control_branch": "read only",
+    "dev_merge": false,
+    "deploy": false,
+    "Azure": false,
+    "engine_changes": false,
+    "restart": false,
+    "third_party_messages": false
+  },
+  "candidate_policy": {
+    "prior": "C4@253baad3f2ff4af5beac695feae4c2f6372dc2e7",
+    "prior_tree": "c3648fca57012f6e6934e207e02c88c75cc6eb3a",
+    "immutable": true,
+    "each_material_delta_new_candidate": true,
+    "source_pass_transferred": false,
+    "GLOBAL_RELEASE": false
+  }
+}
