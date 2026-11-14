@@ -29,8 +29,8 @@ test("native document extraction uses real private bytes and schema; contract re
       const base = { caseRef: preparedCase.caseRef, profileId: selected.profile.id, profileVersion: selected.profile.version,
         manifestDigest: selected.manifestDigest, outputSchemaVersion: "sf-contribution-v1" }
       const extractRequest = { ...base, skillId: extraction.id, skillVersion: extraction.version,
-        objective: `Extraia a evidência definida pelo schema autorizado usando sf_document_extract. Releia a referência exata retornada pela extração com sf_evidence_get e pesquise o trecho com sf_knowledge_search. Use documentRef e fieldSchemaRef da seleção autorizada: ${document.documentRef}, ${document.schemaRef}. Preserve revisão, trecho e status de candidato sem confirmar ou aplicar.`,
-        requestedOperationScope: ["sf_document_extract", "sf_evidence_get", "sf_knowledge_search"] }
+        objective: `Extraia a evidência definida pelo schema autorizado usando sf_document_extract. Releia a referência exata retornada pela extração com sf_evidence_get. Use documentRef e fieldSchemaRef da seleção autorizada: ${document.documentRef}, ${document.schemaRef}. Preserve revisão, trecho e status de candidato sem confirmar ou aplicar.`,
+        requestedOperationScope: ["sf_document_extract", "sf_evidence_get"] }
       const extractIncoming = { request: extractRequest, selection: { caseRef: preparedCase.caseRef, documentRef: document.documentRef, fieldSchemaRef: document.schemaRef } }
       const extractResponse = await productHttp(context.request({ action: "prepare", input: extractIncoming }, "/sucafina/dashboard?sf=workbench-analysis"), "dashboard")
       if (!extractResponse) throw new Error("The actual extraction preparation route is missing")
@@ -82,7 +82,7 @@ test("native document extraction uses real private bytes and schema; contract re
         if (restored.status !== "ok") throw new Error("The real document selection changed before native execution")
         expectSpawn(import.meta.path)
         const extracted = await executeWp12NativeMission(context, { request: extractRequest, skillInput: restored.value, expectedKind: "DocumentEvidence",
-          requiredTools: [{ operation: "sf_document_extract", handlerExport: "extractDocumentEvidence" }, { operation: "sf_evidence_get" }, { operation: "sf_knowledge_search", handlerExport: "searchDocumentEvidence" }] })
+          requiredTools: [{ operation: "sf_document_extract", handlerExport: "extractDocumentEvidence" }, { operation: "sf_evidence_get" }] })
         if (extracted.output.kind !== "DocumentEvidence") throw new Error("The native extractor returned another kind")
         expect(extracted.output.payload.fieldCandidate).toBe("Price")
         expect(extracted.output.payload.value).toBe(42)

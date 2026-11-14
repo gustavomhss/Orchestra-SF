@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test"
 import { expectSpawn } from "../../../../../../packages/core/test/fixture/omni-expect.ts"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
-import { decodeSfSkillInput } from "../../../product/contracts/schema-admission.ts"
+import { decodeSfOperationOutput, decodeSfSkillInput } from "../../../product/contracts/schema-admission.ts"
 import { encodeCaseRef } from "../../../product/decisions/case-port.ts"
 import { readCaseAnalysisProjection } from "../../../product/interface/case-analysis-input.ts"
 import { object } from "../../../runtime/contract.ts"
@@ -42,9 +42,29 @@ test("native Finance preserves pending versus covered scenario costs and a fresh
         expect(decoded.value.horizon).toEqual(WP12_SCENARIO_PERIOD)
         expect(decoded.value.costCoverageBases).toEqual(decision.case.costCoverageBases)
         expect(decoded.value.alternatives.map((item) => item.result)).toEqual([decision.baseline.result, alternative.result])
-        prepared.push({ variant, incoming, input: decoded.value, resultRefs, alternativeRequest })
-        console.log("SF_WP12_NATIVE_SCENARIO_INPUT:" + JSON.stringify({ scope: "real-host-http-input-producer", githubSha: process.env.GITHUB_SHA ?? null,
-          caseRef: decision.caseRef, variant, inputDigest: digestSfValue(decoded.value), resultRefs, inferenceExecuted: false }))
+        const comparisonRequest = { scenarioRefs: resultRefs, criteria: [] }
+        const compared = await context.ui("sf_scenario_compare", comparisonRequest,
+          (call) => context.services.dispatch("sf_scenario_compare", comparisonRequest, call))
+        if (compared.status !== "ok") throw new Error(`The current deterministic scenario comparison was refused: ${compared.reason}`)
+        const comparison = decodeSfOperationOutput("sf_scenario_compare", compared.result)
+        if (!comparison.ok) throw new Error("The real scenario comparison failed its canonical output contract")
+        expect(compared.receipt.kind).toBe("ui")
+        expect(comparison.value.baselineResultRef).toBe(resultRefs[0])
+        expect(comparison.value.alternativeResultRef).toBe(resultRefs[1])
+        expect(comparison.value.costCoverageRefs).toHaveLength(2)
+        expect(new Set(comparison.value.costCoverageRefs).size).toBe(2)
+        expect(comparison.value.knownDifference).toBe(variant === "pending" ? -30_000 : 10_000)
+        expect(comparison.value.completeDifference).toBeNull()
+        expect(comparison.value.comparisonStatus).toBe("conditioned")
+        expect(comparison.value.unresolvedConditions).toContain("scenario-is-hypothetical")
+        expect(comparison.value.unresolvedConditions).toContain("comparison-requires-complete-current-coverage")
+        prepared.push({ variant, incoming, input: decoded.value, resultRefs, alternativeRequest, comparison: comparison.value })
+        console.log("SF_WP12_NATIVE_SCENARIO_INPUT:" + JSON.stringify({ scope: "real-host-input-and-deterministic-hypothetical-comparison", githubSha: process.env.GITHUB_SHA ?? null,
+          caseRef: decision.caseRef, variant, inputDigest: digestSfValue(decoded.value), resultRefs,
+          comparisonDigest: digestSfValue(comparison.value), comparisonStatus: comparison.value.comparisonStatus,
+          knownDifference: comparison.value.knownDifference, completeDifference: comparison.value.completeDifference,
+          coverageStates: decoded.value.alternatives.map((item) => item.result.costCoverage.coverageState),
+          receiptKind: compared.receipt.kind, inferenceExecuted: false, gnativeAccepted: false }))
       }
       expect(prepared).toHaveLength(2)
       expect(digestSfValue(prepared[0]!.input)).not.toBe(digestSfValue(prepared[1]!.input))
@@ -57,12 +77,13 @@ test("native Finance preserves pending versus covered scenario costs and a fresh
       const refusedAuthority = await context.human("analysis.prepare", first.incoming, (call) => context.services.analysisInputs!.prepare(call, changed))
       expect(refusedAuthority).toEqual({ status: "denied", reason: "analysis-input-authority-unavailable" })
       const caseDigest = digestSfValue(decision.case)
+      expect(await context.persistence.transaction("planner", async (snapshot) => ({ commit: false, value: digestSfValue(snapshot.data.versions) }))).toBe(decision.plannerSourceDigest)
       if (!context.models.length) {
         for (const item of prepared) observeWp12UnavailableMission(context, { request: item.incoming.request, skillInput: item.input })
         console.log("SF_WP12_NATIVE_MISSION:" + JSON.stringify({ scope: "reviewer-prerequisite-observation", status: "unavailable", githubSha: process.env.GITHUB_SHA ?? null,
           skillId: reviewSkill.id, profileId: reviewer.profile.id, caseRef: decision.caseRef, reason: "real-author-analysis-not-executed-without-installed-model",
           inputPrepared: false, inferenceExecuted: false, outputRef: null, consumerRef: null, gnativeAccepted: false }))
-        return [] satisfies Wp12CompletedNativeMission[]
+        return { witnesses: [] satisfies Wp12CompletedNativeMission[], case: decision.case, plannerSourceDigest: decision.plannerSourceDigest }
       }
       expectSpawn(import.meta.path)
       const witnesses: Wp12CompletedNativeMission[] = []
@@ -89,10 +110,10 @@ test("native Finance preserves pending versus covered scenario costs and a fresh
         expect(witness.output.payload.baselineResultRef).toBe(item.resultRefs[0])
         expect(witness.output.payload.alternativeResultRef).toBe(item.resultRefs[1])
         expect(witness.output.payload.knownDifference).toBe(item.variant === "pending" ? -30_000 : 10_000)
-        expect(witness.output.payload.completeDifference).toBe(item.variant === "pending" ? null : 10_000)
-        expect(witness.output.payload.comparisonStatus).toBe(item.variant === "pending" ? "conditioned" : "complete")
-        if (item.variant === "pending") expect(witness.output.payload.unresolvedConditions.length).toBeGreaterThan(0)
-        else expect(witness.output.payload.unresolvedConditions).toEqual([])
+        expect(witness.output.payload.completeDifference).toBeNull()
+        expect(witness.output.payload.comparisonStatus).toBe("conditioned")
+        expect(witness.output.payload.unresolvedConditions).toContain("scenario-is-hypothetical")
+        expect(witness.output.payload).toEqual(item.comparison)
         witnesses.push(witness)
       }
       const author = witnesses[0]!
@@ -127,15 +148,23 @@ test("native Finance preserves pending versus covered scenario costs and a fresh
       const after = await readCaseAnalysisProjection(context.request(), context.services, decision.caseRef)
       if (after.status !== "ok") throw new Error("The author case became unreadable after critique")
       expect(digestSfValue(after.value.case)).toBe(caseDigest)
+      expect(await context.persistence.transaction("planner", async (snapshot) => ({ commit: false, value: digestSfValue(snapshot.data.versions) }))).toBe(decision.plannerSourceDigest)
       const retainedAuthor = await context.human("analysis.read", { runRef: author.runRef }, (call) => context.services.analyses!.output(call, author.runRef))
       if (retainedAuthor.status !== "ok") throw new Error("Reviewer did not preserve the author contribution")
       expect(digestSfValue(retainedAuthor.value)).toBe(digestSfValue(author.output))
       witnesses.push(critique)
-      return witnesses
+      return { witnesses, case: decision.case, plannerSourceDigest: decision.plannerSourceDigest }
     })
-    if (!completed.length) return
     await open("reopened", async (context) => {
-      for (const witness of completed) {
+      const caseRef = { id: completed.case.id, incarnation: completed.case.incarnation, version: completed.case.version }
+      const current = await readCaseAnalysisProjection(context.request(), context.services, caseRef)
+      if (current.status !== "ok") throw new Error("The prepared scenario case cannot be reopened")
+      expect(digestSfValue(current.value.case)).toBe(digestSfValue(completed.case))
+      expect(await context.persistence.transaction("planner", async (snapshot) => ({ commit: false, value: digestSfValue(snapshot.data.versions) }))).toBe(completed.plannerSourceDigest)
+      console.log("SF_WP12_SCENARIO_CASE_REOPEN:" + JSON.stringify({ scope: "real-case-and-Planner-source-reopen",
+        githubSha: process.env.GITHUB_SHA ?? null, caseRef, caseDigest: digestSfValue(current.value.case),
+        outputRefs: completed.witnesses.map((witness) => witness.output.id), inferenceExecuted: completed.witnesses.length > 0, gnativeAccepted: false }))
+      for (const witness of completed.witnesses) {
         const consumed = await readWp12NativeMissionAfterReload(context, witness)
         if (consumed.output.kind === "ScenarioComparison") {
           expect(consumed.html).toContain(`Comparison: ${consumed.output.payload.comparisonStatus}`)

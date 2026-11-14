@@ -1,7 +1,10 @@
 import { expect, test } from "bun:test"
+import { SessionSchema } from "@orchestra/core/session/schema"
+import { Effect } from "effect"
 import { expectSpawn } from "../../../../../../packages/core/test/fixture/omni-expect.ts"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
-import { decodeSfSkillInput } from "../../../product/contracts/schema-admission.ts"
+import { decodeSfOperationOutput, decodeSfSkillInput } from "../../../product/contracts/schema-admission.ts"
+import { encodeCaseRef } from "../../../product/decisions/case-port.ts"
 import { readCaseAnalysisProjection } from "../../../product/interface/case-analysis-input.ts"
 import { object } from "../../../runtime/contract.ts"
 import { executeWp12NativeMission, observeWp12UnavailableMission, readWp12NativeMissionAfterReload, withWp12NativeMissionHost } from "./native-mission-harness.ts"
@@ -10,8 +13,8 @@ import { assertWp12ChangedImportBaseRefused, assertWp12ImportCaseUnchanged, init
 
 test("Maestro frames two real case selections and its native contribution reopens with the selected evidence", async () => {
   const period = { start: "2027-01-01", end: "2027-12-31" }
-  const objective = "Enquadre a decisão destas fontes autorizadas. Leia o contexto de suas referências no período selecionado com sf_context_get e use sf_case_read e sf_case_draft para produzir IntentFrame com objetivo, período, moeda, critérios e sourceRefs retornados pela porta. Preserve os limites e a base da análise, sem aplicar mudanças ao domínio."
-  await withWp12NativeMissionHost({ label: "intent", operations: ["sf_case_draft", "sf_case_read", "sf_context_get", "sf_freshness_check"],
+  const objective = "Enquadre a decisão destas fontes autorizadas. Leia o contexto de suas referências no período selecionado com sf_context_get e verifique a atualidade dessas fontes com sf_freshness_check. Use sf_case_read e prepare com sf_question_prepare uma pergunta pertinente sobre informações que precisam ser confirmadas para enquadrar a comparação, citando somente as fontes selecionadas e sem escolher destinatário ou enviar a pergunta. Use sf_case_draft para produzir IntentFrame com objetivo, período, moeda, critérios e sourceRefs retornados pela porta. Preserve os limites e a base da análise, sem aplicar mudanças ao domínio."
+  await withWp12NativeMissionHost({ label: "intent", operations: ["sf_case_draft", "sf_case_read", "sf_context_get", "sf_freshness_check", "sf_question_prepare"],
     initialize: async (persistence) => {
       await persistence.transaction("planner", async (snapshot) => {
         snapshot.data = { versions: [120, 100, 80].map((amount, index) => ({ id: `wp12-intent-forecast-${index}`, name: `Synthetic intent source ${index}`,
@@ -44,7 +47,7 @@ test("Maestro frames two real case selections and its native contribution reopen
         const caseRef = { id: decision.value.id, incarnation: decision.value.incarnation, version: decision.value.version }
         const incoming = { request: { caseRef, objective, profileId: selected.profile.id, profileVersion: selected.profile.version,
           skillId: skill.id, skillVersion: skill.version, manifestDigest: selected.manifestDigest, outputSchemaVersion: "sf-contribution-v1",
-          requestedOperationScope: ["sf_context_get", "sf_case_read", "sf_case_draft"] },
+          requestedOperationScope: ["sf_context_get", "sf_case_read", "sf_case_draft", "sf_freshness_check", "sf_question_prepare"] },
           selection: { evidenceRefIds: decision.value.sourceRefs.map((source) => source.refId) } }
         // This host route admits analysis.prepare and stores the selected input.
         // The older WP01 prepare route uses a different case projection adapter.
@@ -61,6 +64,38 @@ test("Maestro frames two real case selections and its native contribution reopen
         expect(decoded.value.context.currency).toBe("USD")
         expect(decoded.value.context.sourceRefs).toHaveLength(2)
         expect(decoded.value.selectedSourceRefs).toEqual(decision.value.sourceRefs)
+        const freshnessInput = { evidenceRefs: decision.value.sourceRefs }
+        const freshness = await context.ui("sf_freshness_check", freshnessInput, (call) => context.services.dispatch("sf_freshness_check", freshnessInput, call))
+        if (freshness.status !== "ok") throw new Error(`The real selected-source freshness check failed: ${freshness.reason}`)
+        const resolved = decodeSfOperationOutput("sf_freshness_check", freshness.result)
+        if (!resolved.ok) throw new Error("The real freshness capability returned an invalid resolution")
+        expect(freshness.receipt.kind).toBe("ui")
+        expect(resolved.value.resolutions.map((entry) => entry.ref)).toEqual(decision.value.sourceRefs)
+        expect(resolved.value.resolutions.every((entry) => entry.state === "fresh")).toBe(true)
+
+        // This human preview checks the actual selected sources. Native AM02
+        // evidence below must still come from the model's own bound tool calls.
+        const question = { caseRef: encodeCaseRef(caseRef), question: { text: "Quais premissas de escopo e período precisam ser confirmadas antes de comparar estas fontes?" },
+          sourceRefs: decision.value.sourceRefs }
+        const preview = await context.ui("sf_question_prepare", question, (call) => context.services.dispatch("sf_question_prepare", question, call))
+        if (preview.status !== "ok") throw new Error(`The real framing question preview failed: ${preview.reason}`)
+        const proposal = decodeSfOperationOutput("sf_question_prepare", preview.result)
+        if (!proposal.ok) throw new Error("The real question preparation returned an invalid proposal")
+        expect(preview.receipt.kind).toBe("ui")
+        expect(proposal.value.caseRef).toBe(encodeCaseRef(caseRef))
+        expect(proposal.value.expectedCaseVersion).toBe(caseRef.version)
+        expect(proposal.value.evidenceRefs).toEqual(decision.value.sourceRefs)
+        expect(proposal.value.recipientRef).toBeUndefined()
+        const outsideQuestion = { ...question, sourceRefs: [material.refId === sources.first.refId ? sources.second : sources.first] }
+        const refusedQuestion = await context.ui("sf_question_prepare", outsideQuestion,
+          (call) => context.services.dispatch("sf_question_prepare", outsideQuestion, call))
+        expect(refusedQuestion.status).toBe("denied")
+        if (refusedQuestion.status === "ok") throw new Error("A framing question cited a source outside its current case")
+        expect(refusedQuestion.reason).toBe("source-access-unavailable")
+        console.log("SF_WP12_INTENT_AM02_INPUT:" + JSON.stringify({ scope: "real-ui-source-freshness-and-question-preparation",
+          githubSha: process.env.GITHUB_SHA ?? null, caseRef, sourceRefIds: decision.value.sourceRefs.map((source) => source.refId),
+          freshnessDigest: digestSfValue(resolved.value), questionDigest: digestSfValue(proposal.value), receiptKind: "ui",
+          outsideCaseQuestion: refusedQuestion.status, questionSent: false, inferenceExecuted: false, gnativeAccepted: false }))
         prepared.push({ incoming, input: decoded.value, sourceRefs: decision.value.sourceRefs })
         console.log("SF_WP12_NATIVE_INTENT_INPUT:" + JSON.stringify({ scope: "real-host-http-input-producer", githubSha: process.env.GITHUB_SHA ?? null,
           route: "workbench-analysis:prepare", skillId: skill.id, profileId: selected.profile.id, caseRef,
@@ -94,7 +129,8 @@ test("Maestro frames two real case selections and its native contribution reopen
         expect(digestSfValue(restored.value)).toBe(digestSfValue(item.input))
         const witness = await executeWp12NativeMission(context, { request: item.incoming.request, skillInput: restored.value,
           expectedKind: "IntentFrame", requiredTools: [{ operation: "sf_context_get", handlerExport: "readSfBusinessContext" },
-            { operation: "sf_case_read" }, { operation: "sf_case_draft" }] })
+            { operation: "sf_case_read" }, { operation: "sf_case_draft" },
+            { operation: "sf_freshness_check", handlerExport: "checkSfFreshness" }, { operation: "sf_question_prepare", handlerExport: "prepareQuestion" }] })
         if (witness.output.kind !== "IntentFrame") throw new Error("Native Maestro returned a different output kind")
         expect(witness.output.payload.sourceRefs).toEqual(item.sourceRefs)
         expect(witness.output.evidenceRefs).toEqual(item.sourceRefs)
@@ -103,6 +139,31 @@ test("Maestro frames two real case selections and its native contribution reopen
         expect(witness.output.payload.domainApplied).toBe(false)
         expect(witness.output.payload.analysisBasis).toBe("domain")
         expect(witness.output.payload.criteria.length).toBeGreaterThan(0)
+        const messages = await Effect.runPromise(context.session.messages({ sessionID: SessionSchema.ID.make(witness.receipt.nativeSessionId) }))
+        const calls = messages.flatMap((message) => message.type !== "assistant" ? [] : message.content.flatMap((part) =>
+          part.type === "tool" && part.state.status === "completed" && witness.tools.some((tool) => tool.toolCallId === part.id)
+            ? [{ operation: part.name, result: part.state.structured.result, callId: part.id }] : []))
+        const currentSources = calls.flatMap((call) => {
+          if (call.operation !== "sf_freshness_check") return []
+          const decoded = decodeSfOperationOutput("sf_freshness_check", call.result)
+          return decoded.ok ? decoded.value.resolutions : []
+        })
+        for (const source of item.sourceRefs) expect(currentSources.some((entry) => entry.state === "fresh" && digestSfValue(entry.ref) === digestSfValue(source))).toBe(true)
+        const questions = calls.flatMap((call) => {
+          if (call.operation !== "sf_question_prepare") return []
+          const decoded = decodeSfOperationOutput("sf_question_prepare", call.result)
+          return decoded.ok ? [decoded.value] : []
+        })
+        expect(questions.some((question) => question.caseRef === encodeCaseRef(item.incoming.request.caseRef) &&
+          question.expectedCaseVersion === item.incoming.request.caseRef.version && question.question.trim().length > 0 &&
+          question.recipientRef === undefined && question.evidenceRefs.length > 0 &&
+          question.evidenceRefs.every((source) => item.sourceRefs.some((allowed) => digestSfValue(allowed) === digestSfValue(source))))).toBe(true)
+        console.log("SF_WP12_NATIVE_INTENT_AM02:" + JSON.stringify({ scope: "real-native-framing-operation-results",
+          githubSha: process.env.GITHUB_SHA ?? null, runRef: witness.runRef, nativeSessionId: witness.receipt.nativeSessionId,
+          profileId: witness.receipt.profileId, skillId: witness.receipt.skillId,
+          operations: witness.tools.filter((tool) => ["sf_freshness_check", "sf_question_prepare"].includes(tool.operation)),
+          sourceRefIds: item.sourceRefs.map((source) => source.refId), preparedQuestionDigests: questions.map((question) => digestSfValue(question)),
+          inferenceExecuted: true, questionSent: false, nativeQuestionContributionPersisted: false, allEighteenSkillsAccepted: false }))
         witnesses.push(witness)
       }
       expect(witnesses[0]!.receipt.nativeSessionId).not.toBe(witnesses[1]!.receipt.nativeSessionId)

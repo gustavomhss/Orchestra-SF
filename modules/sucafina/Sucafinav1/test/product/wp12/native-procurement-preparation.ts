@@ -75,9 +75,13 @@ export async function prepareWp12ProcurementCase(context: Wp12NativeMissionConte
   await selectWp12ProcurementPeriod(context)
   const requestEvidence = await context.ui("sf_request_read", { purpose: "native-purchase-source", id: WP12_PROCUREMENT_REQUEST_ID }, async (call) => {
     const issued = await context.business.individual.issue("procurement-request", WP12_PROCUREMENT_REQUEST_ID, call)
-    if (issued.status !== "ok") throw new Error(`Actual purchase request issuance failed: ${issued.reason}`)
+    if (issued.status !== "ok") throw new Error(`Actual purchase request issuance failed for ${WP12_PROCUREMENT_REQUEST_ID}: ${issued.reason}`)
     const source = await context.business.individual.resolve(issued.value, call)
     if (source.status !== "ok") throw new Error(`Actual purchase request source failed: ${source.reason}`)
+    expect(source.value.evidence.target.recordType).toBe("procurement-request")
+    expect(source.value.evidence.target.recordId).toBe(WP12_PROCUREMENT_REQUEST_ID)
+    expect(source.value.evidence.target.period).toEqual(WP12_SCENARIO_PERIOD)
+    expect(source.value.evidence.target.fields).toContain("approvalStage")
     return source.value.evidence
   })
   const contract = options.includeContract ? await issueWp12Contract(context) : undefined
@@ -137,8 +141,35 @@ export async function prepareWp12ProcurementCase(context: Wp12NativeMissionConte
     return { alternative, resultRef: stored.resultRef }
   }
   const baseline = get("baseline"), candidate = get("candidate")
-  expect(candidate.alternative.result.total).toBe(options.selected === "pending" ? null : 250_000)
+  // Observed category coverage does not turn a simulated choice into an applied
+  // result. Both alternatives retain the actual engine's hypothetical boundary.
+  for (const item of [baseline, candidate]) {
+    expect(item.alternative.result.total).toBeNull()
+    expect(item.alternative.result.comparisonStatus).toBe("conditioned")
+    expect(item.alternative.result.unresolvedConditions).toContain("scenario-is-hypothetical")
+    expect(item.alternative.result.restrictions).toContain("preview-not-applied")
+    expect(item.alternative.result.costCoverage.basisId).toBe(basis.id)
+    expect(item.alternative.result.costCoverage.basisVersion).toBe(basis.version)
+  }
+  expect(baseline.alternative.result.knownSubtotal).toBe(240_000)
+  expect(baseline.alternative.result.costCoverage.coverageState).toBe("complete")
+  expect(baseline.alternative.result.costCoverage.derivedMissingCategoryIds).toEqual([])
+  for (const item of options.selected === "pending" ? [baseline] : [baseline, candidate]) {
+    expect(item.alternative.result.costCoverage.entries.map((entry) => entry.categoryId).toSorted()).toEqual([...RENEWAL_TRANSITION_CATEGORIES].sort())
+    expect(item.alternative.result.costCoverage.entries.every((entry) => entry.status === "included")).toBe(true)
+    expect(item.alternative.result.components).toHaveLength(RENEWAL_TRANSITION_CATEGORIES.length * 12)
+    expect(item.alternative.result.components.every((component) => component.amount !== null && component.evidenceState === "confirmed")).toBe(true)
+  }
+  expect(candidate.alternative.result.knownSubtotal).toBe(options.selected === "pending" ? 210_000 : 250_000)
+  expect(candidate.alternative.result.costCoverage.coverageState).toBe(options.selected === "pending" ? "pending" : "complete")
   expect(candidate.alternative.result.costCoverage.derivedMissingCategoryIds).toEqual(options.selected === "pending" ? ["training"] : [])
+  const training = candidate.alternative.result.components.filter((component) => component.id.startsWith("wp12-cost-training:"))
+  expect(training).toHaveLength(options.selected === "pending" ? 0 : 12)
+  if (options.selected === "pending") {
+    expect(candidate.alternative.result.costCoverage.entries.some((entry) => entry.categoryId === "training" && entry.status === "pending" && entry.reason === "missing-category")).toBe(true)
+  }
+  expect(training.filter((component) => component.amount === 40_000)).toHaveLength(options.selected === "pending" ? 0 : 1)
+  expect(training.filter((component) => component.amount === 0)).toHaveLength(options.selected === "pending" ? 0 : 11)
   const parameter = candidate.alternative.result.components.find((component) => component.id.startsWith("wp12-cost-service:"))
   const criterion = read.value.case.criteria[0]
   if (!parameter || !criterion) throw new Error("The actual case has no selectable service component or criterion")

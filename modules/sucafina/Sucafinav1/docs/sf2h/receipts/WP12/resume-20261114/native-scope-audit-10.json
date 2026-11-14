@@ -1,0 +1,672 @@
+{
+  "schema": "sf-wp12-native-mission-scope-audit-v1",
+  "status": "STATIC_AUDIT_COMPLETE",
+  "sourceCommit": "0cf12be4ea37c497fb41349c8df8113e8c99b804",
+  "checks": [
+    {
+      "mission": "finance-domain",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-finance.test.ts",
+      "fileBlob": "15f64ede1ffcfae7a9ba35592b9a4dbaf3442097",
+      "skill": "sf-explicar-forecast",
+      "scopeOrigin": "explicit request",
+      "requestedOperationScope": [
+        "sf_forecast_compare",
+        "sf_source_get"
+      ],
+      "actualGrantOperations": [
+        "sf_case_draft",
+        "sf_case_read",
+        "sf_forecast_compare",
+        "sf_context_get",
+        "sf_source_get",
+        "sf_evidence_get",
+        "sf_freshness_check"
+      ],
+      "scopeOutsideGrant": [],
+      "scopeOutsideSkill": [],
+      "duplicateGrantOperations": [],
+      "duplicateScopeOperations": []
+    },
+    {
+      "mission": "finance-import",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-finance.test.ts",
+      "fileBlob": "15f64ede1ffcfae7a9ba35592b9a4dbaf3442097",
+      "skill": "sf-explicar-forecast",
+      "scopeOrigin": "explicit request",
+      "requestedOperationScope": [
+        "sf_import_preview",
+        "sf_source_get"
+      ],
+      "actualGrantOperations": [
+        "sf_case_draft",
+        "sf_case_read",
+        "sf_source_get",
+        "sf_import_preview"
+      ],
+      "scopeOutsideGrant": [],
+      "scopeOutsideSkill": [],
+      "duplicateGrantOperations": [],
+      "duplicateScopeOperations": []
+    },
+    {
+      "mission": "forecast-all-six-variants",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-forecast-variants.test.ts",
+      "fileBlob": "4424cea6540a61131741ea0a1cf7aaa5aa54e337",
+      "skill": "sf-explicar-forecast",
+      "scopeOrigin": "explicit request",
+      "requestedOperationScope": [
+        "sf_forecast_compare",
+        "sf_source_get"
+      ],
+      "actualGrantOperations": [
+        "sf_case_draft",
+        "sf_case_read",
+        "sf_forecast_compare",
+        "sf_context_get",
+        "sf_source_get",
+        "sf_evidence_get",
+        "sf_freshness_check"
+      ],
+      "scopeOutsideGrant": [],
+      "scopeOutsideSkill": [],
+      "duplicateGrantOperations": [],
+      "duplicateScopeOperations": []
+    },
+    {
+      "mission": "intent-two-selections",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-intent.test.ts",
+      "fileBlob": "ac815d5b6175a7147497fd548776a5f83be0e007",
+      "skill": "sf-enquadrar-decisao",
+      "scopeOrigin": "explicit request",
+      "requestedOperationScope": [
+        "sf_context_get",
+        "sf_case_read",
+        "sf_case_draft",
+        "sf_freshness_check",
+        "sf_question_prepare"
+      ],
+      "actualGrantOperations": [
+        "sf_case_draft",
+        "sf_case_read",
+        "sf_context_get",
+        "sf_freshness_check",
+        "sf_question_prepare"
+      ],
+      "scopeOutsideGrant": [],
+      "scopeOutsideSkill": [],
+      "duplicateGrantOperations": [],
+      "duplicateScopeOperations": []
+    },
+    {
+      "mission": "intent-import",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-intent.test.ts",
+      "fileBlob": "ac815d5b6175a7147497fd548776a5f83be0e007",
+      "skill": "sf-enquadrar-decisao",
+      "scopeOrigin": "explicit request",
+      "requestedOperationScope": [
+        "sf_context_get",
+        "sf_case_read",
+        "sf_case_draft",
+        "sf_import_preview"
+      ],
+      "actualGrantOperations": [
+        "sf_context_get",
+        "sf_case_draft",
+        "sf_case_read",
+        "sf_import_preview"
+      ],
+      "scopeOutsideGrant": [],
+      "scopeOutsideSkill": [],
+      "duplicateGrantOperations": [],
+      "duplicateScopeOperations": []
+    },
+    {
+      "mission": "recall-empty-scope",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-collaboration-recall.test.ts",
+      "fileBlob": "fa6316fd4e961df8ccfc961302e6d57c835542b0",
+      "skill": "sf-consultar-memoria-decisoria",
+      "scopeOrigin": "missionRequest copies allowedOperations",
+      "requestedOperationScope": [
+        "sf_context_get",
+        "sf_decision_recall",
+        "sf_evidence_get",
+        "sf_freshness_check",
+        "sf_knowledge_search"
+      ],
+      "actualGrantOperations": [
+        "sf_case_draft",
+        "sf_case_read",
+        "sf_context_get",
+        "sf_source_get",
+        "sf_evidence_get",
+        "sf_freshness_check",
+        "sf_decision_recall",
+        "sf_knowledge_search",
+        "sf_question_prepare",
+        "sf_answer_read",
+        "sf_relation_read",
+        "sf_work_list",
+        "sf_handoff_prepare"
+      ],
+      "scopeOutsideGrant": [],
+      "scopeOutsideSkill": [],
+      "duplicateGrantOperations": [],
+      "duplicateScopeOperations": []
+    },
+    {
+      "mission": "question-empty-input-only",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-collaboration-recall.test.ts",
+      "fileBlob": "fa6316fd4e961df8ccfc961302e6d57c835542b0",
+      "skill": "sf-coordenar-perguntas",
+      "scopeOrigin": "missionRequest copies allowedOperations; input-only case has no native branch",
+      "requestedOperationScope": [
+        "sf_answer_read",
+        "sf_case_read",
+        "sf_handoff_prepare",
+        "sf_question_prepare",
+        "sf_relation_read",
+        "sf_work_list"
+      ],
+      "actualGrantOperations": [
+        "sf_case_draft",
+        "sf_case_read",
+        "sf_context_get",
+        "sf_source_get",
+        "sf_evidence_get",
+        "sf_freshness_check",
+        "sf_decision_recall",
+        "sf_knowledge_search",
+        "sf_question_prepare",
+        "sf_answer_read",
+        "sf_relation_read",
+        "sf_work_list",
+        "sf_handoff_prepare"
+      ],
+      "scopeOutsideGrant": [],
+      "scopeOutsideSkill": [],
+      "duplicateGrantOperations": [],
+      "duplicateScopeOperations": []
+    },
+    {
+      "mission": "question-derived-training-input-only",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-collaboration-recall.test.ts",
+      "fileBlob": "fa6316fd4e961df8ccfc961302e6d57c835542b0",
+      "skill": "sf-coordenar-perguntas",
+      "scopeOrigin": "missionRequest copies allowedOperations; explicit Set dedupes combined grants; input-only case",
+      "requestedOperationScope": [
+        "sf_answer_read",
+        "sf_case_read",
+        "sf_handoff_prepare",
+        "sf_question_prepare",
+        "sf_relation_read",
+        "sf_work_list"
+      ],
+      "actualGrantOperations": [
+        "sf_case_draft",
+        "sf_case_read",
+        "sf_context_get",
+        "sf_source_get",
+        "sf_evidence_get",
+        "sf_freshness_check",
+        "sf_decision_recall",
+        "sf_knowledge_search",
+        "sf_question_prepare",
+        "sf_answer_read",
+        "sf_relation_read",
+        "sf_work_list",
+        "sf_handoff_prepare",
+        "sf_scenario_compare",
+        "sf_scenario_simulate"
+      ],
+      "scopeOutsideGrant": [],
+      "scopeOutsideSkill": [],
+      "duplicateGrantOperations": [],
+      "duplicateScopeOperations": []
+    },
+    {
+      "mission": "scenarios-author",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts",
+      "fileBlob": "32c5da596893d0810879bd7912be9986a1127af3",
+      "skill": "sf-comparar-cenarios",
+      "scopeOrigin": "explicit request",
+      "requestedOperationScope": [
+        "sf_case_read",
+        "sf_scenario_simulate",
+        "sf_scenario_compare",
+        "sf_alternative_draft"
+      ],
+      "actualGrantOperations": [
+        "sf_case_draft",
+        "sf_case_read",
+        "sf_context_get",
+        "sf_freshness_check",
+        "sf_scenario_compare",
+        "sf_scenario_simulate",
+        "sf_evidence_get",
+        "sf_alternative_draft"
+      ],
+      "scopeOutsideGrant": [],
+      "scopeOutsideSkill": [],
+      "duplicateGrantOperations": [],
+      "duplicateScopeOperations": []
+    },
+    {
+      "mission": "scenarios-independent-reviewer",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts",
+      "fileBlob": "32c5da596893d0810879bd7912be9986a1127af3",
+      "skill": "sf-contestar-decisao",
+      "scopeOrigin": "explicit request",
+      "requestedOperationScope": [
+        "sf_case_read",
+        "sf_evidence_get",
+        "sf_scenario_simulate",
+        "sf_scenario_compare"
+      ],
+      "actualGrantOperations": [
+        "sf_case_draft",
+        "sf_case_read",
+        "sf_context_get",
+        "sf_freshness_check",
+        "sf_scenario_compare",
+        "sf_scenario_simulate",
+        "sf_evidence_get",
+        "sf_alternative_draft"
+      ],
+      "scopeOutsideGrant": [],
+      "scopeOutsideSkill": [],
+      "duplicateGrantOperations": [],
+      "duplicateScopeOperations": []
+    },
+    {
+      "mission": "portfolio-composition-and-alternative",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-portfolio.test.ts",
+      "fileBlob": "fbfc8cc7948ddd607188bbea2bf40a0b98c51007",
+      "skill": "sf-compor-portfolio",
+      "scopeOrigin": "wp12PortfolioMissionRequest copies allowedOperations",
+      "requestedOperationScope": [
+        "sf_alternative_draft",
+        "sf_context_get",
+        "sf_portfolio_evaluate",
+        "sf_scenario_compare",
+        "sf_scenario_simulate"
+      ],
+      "actualGrantOperations": [
+        "sf_case_draft",
+        "sf_case_read",
+        "sf_context_get",
+        "sf_freshness_check",
+        "sf_source_get",
+        "sf_scenario_simulate",
+        "sf_scenario_compare",
+        "sf_portfolio_evaluate",
+        "sf_alternative_draft",
+        "sf_sensitivity_evaluate"
+      ],
+      "scopeOutsideGrant": [],
+      "scopeOutsideSkill": [],
+      "duplicateGrantOperations": [],
+      "duplicateScopeOperations": []
+    },
+    {
+      "mission": "portfolio-sensitivity",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-portfolio.test.ts",
+      "fileBlob": "fbfc8cc7948ddd607188bbea2bf40a0b98c51007",
+      "skill": "sf-avaliar-sensibilidade",
+      "scopeOrigin": "wp12PortfolioMissionRequest copies allowedOperations",
+      "requestedOperationScope": [
+        "sf_case_read",
+        "sf_scenario_simulate",
+        "sf_sensitivity_evaluate",
+        "sf_source_get"
+      ],
+      "actualGrantOperations": [
+        "sf_case_draft",
+        "sf_case_read",
+        "sf_context_get",
+        "sf_freshness_check",
+        "sf_source_get",
+        "sf_scenario_simulate",
+        "sf_scenario_compare",
+        "sf_portfolio_evaluate",
+        "sf_alternative_draft",
+        "sf_sensitivity_evaluate"
+      ],
+      "scopeOutsideGrant": [],
+      "scopeOutsideSkill": [],
+      "duplicateGrantOperations": [],
+      "duplicateScopeOperations": []
+    },
+    {
+      "mission": "dependencies-assessment-and-conflict",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-dependencies.test.ts",
+      "fileBlob": "1d17e9e48d88abe1688d61f26f7df3dcfa1e1b84",
+      "skill": "sf-revisar-dependencias",
+      "scopeOrigin": "wp12PortfolioMissionRequest copies allowedOperations",
+      "requestedOperationScope": [
+        "sf_case_read",
+        "sf_context_get",
+        "sf_freshness_check",
+        "sf_relation_read",
+        "sf_source_get"
+      ],
+      "actualGrantOperations": [
+        "sf_case_draft",
+        "sf_case_read",
+        "sf_context_get",
+        "sf_freshness_check",
+        "sf_source_get",
+        "sf_scenario_simulate",
+        "sf_scenario_compare",
+        "sf_portfolio_evaluate",
+        "sf_alternative_draft",
+        "sf_sensitivity_evaluate",
+        "sf_relation_read",
+        "sf_dashboard_read",
+        "sf_work_list"
+      ],
+      "scopeOutsideGrant": [],
+      "scopeOutsideSkill": [],
+      "duplicateGrantOperations": [],
+      "duplicateScopeOperations": []
+    },
+    {
+      "mission": "reevaluation-with-explicit-watch-gap",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-reevaluation.test.ts",
+      "fileBlob": "ee1da7e0c0912a63dcc881a6a57e10456620b9d8",
+      "skill": "sf-reavaliar-compromissos",
+      "scopeOrigin": "wp12PortfolioMissionRequest copies allowedOperations; watch admission remains separate/unavailable",
+      "requestedOperationScope": [
+        "sf_case_read",
+        "sf_context_get",
+        "sf_freshness_check",
+        "sf_relation_read",
+        "sf_scenario_compare",
+        "sf_scenario_simulate",
+        "sf_watch_prepare"
+      ],
+      "actualGrantOperations": [
+        "sf_case_draft",
+        "sf_case_read",
+        "sf_context_get",
+        "sf_freshness_check",
+        "sf_source_get",
+        "sf_scenario_simulate",
+        "sf_scenario_compare",
+        "sf_portfolio_evaluate",
+        "sf_alternative_draft",
+        "sf_sensitivity_evaluate",
+        "sf_relation_read",
+        "sf_watch_prepare",
+        "sf_routine_catalog"
+      ],
+      "scopeOutsideGrant": [],
+      "scopeOutsideSkill": [],
+      "duplicateGrantOperations": [],
+      "duplicateScopeOperations": []
+    },
+    {
+      "mission": "bi-finance-and-maestro",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-bi.test.ts",
+      "fileBlob": "7e29eba6598ce78fe1a8e7416220e229ea4b219c",
+      "skill": "sf-produzir-bi-contextual",
+      "scopeOrigin": "explicit request",
+      "requestedOperationScope": [
+        "sf_dashboard_read",
+        "sf_bi_view",
+        "sf_source_get"
+      ],
+      "actualGrantOperations": [
+        "sf_case_draft",
+        "sf_case_read",
+        "sf_dashboard_read",
+        "sf_bi_view",
+        "sf_context_get",
+        "sf_source_get",
+        "sf_kpi_explain"
+      ],
+      "scopeOutsideGrant": [],
+      "scopeOutsideSkill": [],
+      "duplicateGrantOperations": [],
+      "duplicateScopeOperations": []
+    },
+    {
+      "mission": "document-extraction-corrected",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts",
+      "fileBlob": "549225d0b82054ebacd0087b39bc6a8a46bc93db",
+      "skill": "sf-extrair-evidencias",
+      "scopeOrigin": "explicit request",
+      "requestedOperationScope": [
+        "sf_document_extract",
+        "sf_evidence_get"
+      ],
+      "actualGrantOperations": [
+        "sf_case_draft",
+        "sf_case_read",
+        "sf_context_get",
+        "sf_freshness_check",
+        "sf_scenario_compare",
+        "sf_scenario_simulate",
+        "sf_work_list",
+        "sf_request_read",
+        "sf_contract_read",
+        "sf_document_extract",
+        "sf_evidence_get",
+        "sf_knowledge_search",
+        "sf_source_get"
+      ],
+      "scopeOutsideGrant": [],
+      "scopeOutsideSkill": [],
+      "duplicateGrantOperations": [],
+      "duplicateScopeOperations": []
+    },
+    {
+      "mission": "contract-gap",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts",
+      "fileBlob": "549225d0b82054ebacd0087b39bc6a8a46bc93db",
+      "skill": "sf-revisar-condicoes-contratuais",
+      "scopeOrigin": "explicit request",
+      "requestedOperationScope": [
+        "sf_contract_read",
+        "sf_evidence_get",
+        "sf_source_get",
+        "sf_freshness_check"
+      ],
+      "actualGrantOperations": [
+        "sf_case_draft",
+        "sf_case_read",
+        "sf_context_get",
+        "sf_freshness_check",
+        "sf_scenario_compare",
+        "sf_scenario_simulate",
+        "sf_work_list",
+        "sf_request_read",
+        "sf_contract_read",
+        "sf_document_extract",
+        "sf_evidence_get",
+        "sf_knowledge_search",
+        "sf_source_get"
+      ],
+      "scopeOutsideGrant": [],
+      "scopeOutsideSkill": [],
+      "duplicateGrantOperations": [],
+      "duplicateScopeOperations": []
+    },
+    {
+      "mission": "independent-evidence-review",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts",
+      "fileBlob": "549225d0b82054ebacd0087b39bc6a8a46bc93db",
+      "skill": "sf-revisar-evidencias",
+      "scopeOrigin": "explicit request",
+      "requestedOperationScope": [
+        "sf_case_read",
+        "sf_evidence_get",
+        "sf_freshness_check",
+        "sf_knowledge_search",
+        "sf_source_get"
+      ],
+      "actualGrantOperations": [
+        "sf_case_draft",
+        "sf_case_read",
+        "sf_context_get",
+        "sf_freshness_check",
+        "sf_scenario_compare",
+        "sf_scenario_simulate",
+        "sf_work_list",
+        "sf_request_read",
+        "sf_contract_read",
+        "sf_document_extract",
+        "sf_evidence_get",
+        "sf_knowledge_search",
+        "sf_source_get"
+      ],
+      "scopeOutsideGrant": [],
+      "scopeOutsideSkill": [],
+      "duplicateGrantOperations": [],
+      "duplicateScopeOperations": []
+    },
+    {
+      "mission": "sourcing-two-requests",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-sourcing.test.ts",
+      "fileBlob": "9d07048be0b79123ffb590b0c5b1ff808f0df10d",
+      "skill": "sf-comparar-sourcing",
+      "scopeOrigin": "explicit request",
+      "requestedOperationScope": [
+        "sf_request_read",
+        "sf_supplier_read",
+        "sf_contract_read",
+        "sf_sourcing_compare",
+        "sf_source_get",
+        "sf_evidence_get"
+      ],
+      "actualGrantOperations": [
+        "sf_work_list",
+        "sf_case_draft",
+        "sf_case_read",
+        "sf_context_get",
+        "sf_freshness_check",
+        "sf_request_read",
+        "sf_supplier_read",
+        "sf_contract_read",
+        "sf_sourcing_compare",
+        "sf_source_get",
+        "sf_evidence_get"
+      ],
+      "scopeOutsideGrant": [],
+      "scopeOutsideSkill": [],
+      "duplicateGrantOperations": [],
+      "duplicateScopeOperations": []
+    },
+    {
+      "mission": "purchase-pending-and-complete",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-purchase.test.ts",
+      "fileBlob": "4c494e718a9a5097b48aeaed40c4c3f8223bd46c",
+      "skill": "sf-preparar-compra",
+      "scopeOrigin": "explicit request",
+      "requestedOperationScope": [
+        "sf_case_read",
+        "sf_request_read",
+        "sf_sourcing_compare"
+      ],
+      "actualGrantOperations": [
+        "sf_case_draft",
+        "sf_case_read",
+        "sf_context_get",
+        "sf_freshness_check",
+        "sf_scenario_compare",
+        "sf_scenario_simulate",
+        "sf_work_list",
+        "sf_request_read",
+        "sf_supplier_read",
+        "sf_sourcing_compare",
+        "sf_change_prepare",
+        "sf_receipt_get"
+      ],
+      "scopeOutsideGrant": [],
+      "scopeOutsideSkill": [],
+      "duplicateGrantOperations": [],
+      "duplicateScopeOperations": []
+    },
+    {
+      "mission": "question-native-focused",
+      "file": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-questions.test.ts",
+      "fileBlob": "afb4f2bbb9669455e07fceb18cc7bd6a45b7457f",
+      "skill": "sf-coordenar-perguntas",
+      "scopeOrigin": "explicit request",
+      "requestedOperationScope": [
+        "sf_answer_read",
+        "sf_case_read",
+        "sf_question_prepare",
+        "sf_relation_read",
+        "sf_work_list"
+      ],
+      "actualGrantOperations": [
+        "sf_case_draft",
+        "sf_case_read",
+        "sf_context_get",
+        "sf_freshness_check",
+        "sf_scenario_simulate",
+        "sf_answer_read",
+        "sf_question_prepare",
+        "sf_relation_read",
+        "sf_work_list"
+      ],
+      "scopeOutsideGrant": [],
+      "scopeOutsideSkill": [],
+      "duplicateGrantOperations": [],
+      "duplicateScopeOperations": []
+    }
+  ],
+  "remainingFailures": [],
+  "activeWriterExclusions": [
+    "native-execution-executive.test.ts: root is revising executive/meeting scopes; not part of this final finding conclusion."
+  ],
+  "sourcePins": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/manifests/resident.json",
+      "blob": "453c6f3a5b48c081223909af8293f854ad31d7c8",
+      "source": "GitHub MCP",
+      "localBlob": "453c6f3a5b48c081223909af8293f854ad31d7c8"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "blob": "2c82d60d220d8d5365da8322bad648a64bbb62d2",
+      "source": "GitHub MCP",
+      "rule": "selected.operationIds must all belong to current principal grant.operations; grant arrays reject duplicates."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-extrair-evidencias/SKILL.md",
+      "blob": "15b2ad72102d0da92a626315852c6dc1c4e556e6",
+      "source": "GitHub MCP",
+      "sourceDigest": "344827329b05b260be70c2dfbdbfcee22e329b090e38af82863bacfc2a610a1f",
+      "allowedOperations": [
+        "sf_document_extract",
+        "sf_evidence_get",
+        "sf_freshness_check"
+      ]
+    }
+  ],
+  "correctedFinding": {
+    "file": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts",
+    "publishedBeforeBlob": "9147d1550f34d066c55f1692dcceaf168cbe9ed6",
+    "problem": "Extraction scope/objective/requiredTools demanded sf_knowledge_search, which is outside the immutable canonical and published skill allowlist. Harness grant alone cannot authorize it.",
+    "fix": "Remove only knowledge_search from that extractor mission; keep document_extract/evidence_get. Preserve knowledge_search in the authorized independent evidence-review branch and existing contract scopes.",
+    "canonicalRequiredOperations": [
+      "sf_document_extract",
+      "sf_evidence_get"
+    ],
+    "catalogOrManifestChanged": false
+  },
+  "verification": {
+    "productTests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "ci": "NOT_RUN",
+    "syntax": "PASS node --check only",
+    "remoteWrites": "NONE"
+  },
+  "limits": [
+    "Static set compatibility is not native execution, current service availability, consumer acceptance or a GNATIVE proof.",
+    "Copied allowedOperations in Recall/Portfolio helpers are presently covered by their actual grants; no permission expansion or unnecessary source edit was introduced.",
+    "Canonical required operations and AM02 with unavailable inputs/ports remain separate from this admission audit.",
+    "Procurement/sourcing snapshots may receive concurrent owner fixes; their checked hashes identify this exact read-only scope audit."
+  ]
+}

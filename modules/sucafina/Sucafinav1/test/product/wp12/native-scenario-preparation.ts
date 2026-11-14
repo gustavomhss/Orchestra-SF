@@ -105,28 +105,50 @@ export async function prepareWp12ScenarioCase(context: Wp12NativeMissionContext,
     return matches[0]!
   }
   const baseline = get("baseline"), pending = get("pending"), complete = get("complete")
+  // Coverage describes the observed category inventory. A simulated result is
+  // still a hypothetical preview, even when every category has actual evidence.
+  for (const alternative of [baseline, pending, complete]) {
+    expect(alternative.result.total).toBeNull()
+    expect(alternative.result.comparisonStatus).toBe("conditioned")
+    expect(alternative.result.unresolvedConditions).toContain("scenario-is-hypothetical")
+    expect(alternative.result.restrictions).toContain("preview-not-applied")
+    expect(alternative.result.costCoverage.basisId).toBe(basis.id)
+    expect(alternative.result.costCoverage.basisVersion).toBe(basis.version)
+  }
+  for (const alternative of [baseline, complete]) {
+    expect(alternative.result.costCoverage.coverageState).toBe("complete")
+    expect(alternative.result.costCoverage.derivedMissingCategoryIds).toEqual([])
+    expect(alternative.result.costCoverage.entries.map((entry) => entry.categoryId).toSorted()).toEqual([...RENEWAL_TRANSITION_CATEGORIES].sort())
+    expect(alternative.result.costCoverage.entries.every((entry) => entry.status === "included")).toBe(true)
+    expect(alternative.result.components).toHaveLength(RENEWAL_TRANSITION_CATEGORIES.length * 12)
+    expect(alternative.result.components.every((component) => component.amount !== null && component.evidenceState === "confirmed")).toBe(true)
+  }
   expect(baseline.result.knownSubtotal).toBe(240_000)
-  expect(baseline.result.total).toBe(240_000)
-  expect(baseline.result.comparisonStatus).toBe("complete")
+  const zeroTraining = baseline.result.components.filter((component) => component.id.startsWith("wp12-cost-training:"))
+  expect(zeroTraining).toHaveLength(12)
+  expect(zeroTraining.every((component) => component.amount === 0)).toBe(true)
   expect(pending.result.knownSubtotal).toBe(210_000)
-  expect(pending.result.total).toBeNull()
-  expect(pending.result.comparisonStatus).toBe("conditioned")
+  expect(pending.result.costCoverage.coverageState).toBe("pending")
+  expect(pending.result.components.filter((component) => component.id.startsWith("wp12-cost-training:"))).toHaveLength(0)
   expect(pending.result.costCoverage.entries.some((entry) => entry.categoryId === "training" && entry.status === "pending" && entry.reason === "missing-category")).toBe(true)
   expect(pending.result.costCoverage.derivedMissingCategoryIds).toContain("training")
   expect(complete.result.knownSubtotal).toBe(250_000)
-  expect(complete.result.total).toBe(250_000)
-  expect(complete.result.comparisonStatus).toBe("complete")
+  const observedTraining = complete.result.components.filter((component) => component.id.startsWith("wp12-cost-training:"))
+  expect(observedTraining).toHaveLength(12)
+  expect(observedTraining.filter((component) => component.amount === 40_000)).toHaveLength(1)
+  expect(observedTraining.filter((component) => component.amount === 0)).toHaveLength(11)
   expect(await context.persistence.transaction("planner", async (snapshot) => ({ commit: false, value: digestSfValue(snapshot.data.versions) }))).toBe(before)
-  console.log("SF_WP12_NATIVE_SCENARIO_PREPARATION:" + JSON.stringify({ scope: "real-planner-coverage-and-c09-promotions", githubSha: process.env.GITHUB_SHA ?? null,
+  console.log("SF_WP12_NATIVE_SCENARIO_PREPARATION:" + JSON.stringify({ scope: "real-category-coverage-and-hypothetical-c09-promotions", githubSha: process.env.GITHUB_SHA ?? null,
     caseRef, basisId: basis.id, routes: ["baseline-coverage", "decision-promote"], results: promoted,
     alternatives: [baseline, pending, complete].map((item) => ({ id: item.id, version: item.version, knownSubtotal: item.result.knownSubtotal,
-      total: item.result.total, comparisonStatus: item.result.comparisonStatus, coverageState: item.result.costCoverage.coverageState })),
-    inferenceExecuted: false, plannerSourcesUnchanged: true }))
+      total: item.result.total, comparisonStatus: item.result.comparisonStatus, coverageState: item.result.costCoverage.coverageState,
+      derivedMissingCategoryIds: item.result.costCoverage.derivedMissingCategoryIds, restrictions: item.result.restrictions })),
+    inferenceExecuted: false, plannerSourcesUnchanged: true, hypotheticalResultsRemainConditional: true, gnativeAccepted: false }))
   const resultRef = (key: typeof alternatives[number]["key"]) => {
     const receipt = promoted.find((item) => item.key === key)
     if (!receipt) throw new Error(`The ${key} scenario has no promotion receipt`)
     return receipt.resultRef
   }
-  return { caseRef, case: read.value.case, sources, baseline, pending, complete,
+  return { caseRef, case: read.value.case, sources, baseline, pending, complete, plannerSourceDigest: before,
     resultRefs: { baseline: resultRef("baseline"), pending: resultRef("pending"), complete: resultRef("complete") } }
 }

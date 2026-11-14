@@ -151,9 +151,12 @@ async function selectPeriod(context: Wp12NativeMissionContext) {
 async function issueSource(context: Wp12NativeMissionContext, kind: "procurement-request" | "procurement-supplier", id: string) {
   return context.ui(kind === "procurement-request" ? "sf_request_read" : "sf_supplier_read", { purpose: "sourcing-source-selection", kind, id, period }, async (call) => {
     const issued = await context.business.individual.issue(kind, id, call)
-    if (issued.status !== "ok") throw new Error(`Real procurement source issuance failed: ${issued.reason}`)
+    if (issued.status !== "ok") throw new Error(`Real procurement source issuance failed for ${kind} ${id}: ${issued.reason}`)
     const resolved = await context.business.individual.resolve(issued.value, call)
     if (resolved.status !== "ok" || resolved.value.evidence.target.recordType !== kind) throw new Error("The issued procurement source could not be resolved")
+    expect(resolved.value.evidence.target.recordId).toBe(id)
+    expect(resolved.value.evidence.target.period).toEqual(period)
+    if (kind === "procurement-request") expect(resolved.value.evidence.target.fields).toContain("approvalStage")
     return resolved.value.evidence
   })
 }

@@ -136,20 +136,53 @@ export async function prepareWp12PortfolioCase(context: Wp12NativeMissionContext
     return { alternative: alternatives[0]!, resultRef: receipt.resultRef }
   }
   const baseline = get("baseline"), lowerCost = get("lowerCost"), trainingChange = get("trainingChange"), combined = get("combined")
-  expect(baseline.alternative.result.knownSubtotal).toBe(240_000)
-  expect(baseline.alternative.result.total).toBe(240_000)
-  expect(baseline.alternative.result.comparisonStatus).toBe("complete")
-  for (const [value, amount] of [[lowerCost, 200_000], [trainingChange, 280_000], [combined, 240_000]] as const) {
-    expect(value.alternative.result.knownSubtotal).toBe(amount)
-    expect(value.alternative.result.total).toBeNull()
-    expect(value.alternative.result.comparisonStatus).toBe("conditioned")
-    expect(value.alternative.result.restrictions).toContain("preview-not-applied")
+  // The real category inventory is complete for every selected operation. Its
+  // coverage does not turn a simulated result, including a no-op, into an
+  // applied or complete financial result.
+  for (const [value, amount, serviceAmount, trainingAmount, hypotheticalCount] of [
+    [baseline, 240_000, 240_000, 0, 0],
+    [lowerCost, 200_000, 200_000, 0, 1],
+    [trainingChange, 280_000, 240_000, 40_000, 1],
+    [combined, 240_000, 200_000, 40_000, 2],
+  ] as const) {
+    const result = value.alternative.result
+    expect(result.knownSubtotal).toBe(amount)
+    expect(result.total).toBeNull()
+    expect(result.comparisonStatus).toBe("conditioned")
+    expect(result.unresolvedConditions).toContain("scenario-is-hypothetical")
+    expect(result.restrictions).toContain("preview-not-applied")
+    expect(result.costCoverage.basisId).toBe(basis.id)
+    expect(result.costCoverage.basisVersion).toBe(basis.version)
+    expect(result.costCoverage.alternativeId).toBe(value.alternative.id)
+    expect(result.costCoverage.alternativeVersion).toBe(value.alternative.version)
+    expect(result.costCoverage.coverageState).toBe("complete")
+    expect(result.costCoverage.derivedMissingCategoryIds).toEqual([])
+    expect(result.costCoverage.issues).toEqual([])
+    expect(result.costCoverage.entries.map((entry) => entry.categoryId).toSorted()).toEqual([...RENEWAL_TRANSITION_CATEGORIES].sort())
+    expect(result.costCoverage.entries.every((entry) => entry.status === "included")).toBe(true)
+    expect(result.components).toHaveLength(RENEWAL_TRANSITION_CATEGORIES.length * 12)
+    expect(result.components.every((entry) => entry.amount !== null && Number.isFinite(entry.amount) && entry.currency === "USD")).toBe(true)
+    expect(result.components.filter((entry) => entry.evidenceState === "hypothetical")).toHaveLength(hypotheticalCount)
+    expect(result.components.filter((entry) => entry.evidenceState === "confirmed")).toHaveLength(RENEWAL_TRANSITION_CATEGORIES.length * 12 - hypotheticalCount)
+    const serviceComponent = result.components.find((entry) => entry.id === service.id)
+    const trainingComponent = result.components.find((entry) => entry.id === training.id)
+    if (!serviceComponent || !trainingComponent) throw new Error("The simulated result lost an explicitly selected source component")
+    expect(serviceComponent.amount).toBe(serviceAmount)
+    expect(trainingComponent.amount).toBe(trainingAmount)
+    expect(serviceComponent.evidenceState).toBe(serviceAmount === service.amount ? "confirmed" : "hypothetical")
+    expect(trainingComponent.evidenceState).toBe(trainingAmount === training.amount ? "confirmed" : "hypothetical")
+  }
+  for (const value of [lowerCost, trainingChange, combined]) {
     expect(value.alternative.result.components.some((entry) => entry.evidenceState === "hypothetical")).toBe(true)
   }
   expect(await context.persistence.transaction("planner", async (snapshot) => ({ commit: false, value: digestSfValue(snapshot.data.versions) }))).toBe(before)
   console.log("SF_WP12_NATIVE_PORTFOLIO_PREPARATION:" + JSON.stringify({ scope: "real-planner-operations-and-c09-promotions",
     githubSha: process.env.GITHUB_SHA ?? null, caseRef, sourceRef: source.refId, coverageRef, results: promoted,
-    operations: [reduction, additionalCost], inferenceExecuted: false, domainSourcesUnchanged: true }))
+    operations: [reduction, additionalCost],
+    alternatives: [baseline, lowerCost, trainingChange, combined].map(({ alternative }) => ({ id: alternative.id,
+      knownSubtotal: alternative.result.knownSubtotal, total: alternative.result.total, comparisonStatus: alternative.result.comparisonStatus,
+      coverageState: alternative.result.costCoverage.coverageState, hypotheticalComponents: alternative.result.components.filter((entry) => entry.evidenceState === "hypothetical").length })),
+    inferenceExecuted: false, domainSourcesUnchanged: true, hypotheticalResultsRemainConditional: true, gnativeAccepted: false }))
   return { caseRef, case: read.value.case, source, coverageRef, baseline, lowerCost, trainingChange, combined,
     parameterRef: service.id, operations: { reduction, additionalCost } }
 }

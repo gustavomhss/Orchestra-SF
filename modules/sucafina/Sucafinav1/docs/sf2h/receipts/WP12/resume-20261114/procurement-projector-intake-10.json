@@ -1,0 +1,41 @@
+{
+  "schema": "wp12-exact-foreign-closure-v1",
+  "status": "EXACT_PUBLISHED_BLOB_INTAKE_FOR_W15",
+  "baseCommit": "0cf12be4ea37c497fb41349c8df8113e8c99b804",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/procurement-projections.ts",
+      "owner": "WP00/integration; existing projector delegates to WP04 source authority",
+      "sourceCommit": "d357de0b1f58abc33e86e79ad3f93b8715ba0e83",
+      "sourceBlob": "3e8830c3dddc8b9609f583f877b2fe7458eccd28",
+      "baseBlob": "08fdfb878f6f9282f70ec71b3e66122f1b95f6f5",
+      "sha256": "4be293f1b2ab1ea2deefa7ebbef633cb71b9c9a6abe4a4d83a99929e5b6259cc",
+      "bytes": 233,
+      "why": "W14 issuer emits approvalStage in exact request fields; W14 legacy integration projector omits it and returns undefined before source issuance. Exact published delegation uses the already consumed owner projector.",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/d357de0b1f58abc33e86e79ad3f93b8715ba0e83/modules/sucafina/Sucafinav1/product/integration/procurement-projections.ts"
+    }
+  ],
+  "count": 1,
+  "existing_dependency": {
+    "path": "modules/sucafina/Sucafinav1/product/procurement/source-projection.ts",
+    "blob": "ab9814817d11c0b477636ee54d1b2763d365f405"
+  },
+  "observed_failure": {
+    "run": 43597537890,
+    "job": 132455165334,
+    "snapshot": "d0aacf2b07be783e57f66b2be5a0e1b8ef833eb9",
+    "log": "evidence/resume-09-inputs.log",
+    "log_sha256": "fbbc981aa52def2e0351072f374f51cfccbfca016dea241d69e1ab1edf56bca7",
+    "affected": "sourcing, documents-contract, purchase pending, purchase complete"
+  },
+  "cause": "Incomplete exact intake; fixture raw request wrappers, admin visibility and period selection match published adapters.",
+  "not_included": [
+    "source-inventory.ts",
+    "source-projections.ts",
+    "host, contracts, engines, financial policies"
+  ],
+  "validation": "GitHub MCP confirms exact blob on current PR29 source d357de0b and PR32 source39972fd; historical W7 source also matches. Static import closure only; no product or typecheck locally.",
+  "parentCommit": "caa2e9602d0369a1425429e2d910de62450cff8b",
+  "effectiveCountAfterIntake": 338,
+  "productValidation": "PENDING"
+}

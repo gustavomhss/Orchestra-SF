@@ -22,7 +22,12 @@ for (const variant of ["pending", "complete"] as const) test(`native purchase ob
         alternativeId: prepared.candidate.alternative.id, alternativeVersion: prepared.candidate.alternative.version,
         parameterRef: prepared.parameterRef, criterionId: prepared.criterionId, threshold: 20_000,
         reason: "Explicit human choice for an isolated purchase preparation; unresolved coverage remains part of its basis." })
-      expect(chosen.choice.comparisonStatus).toBe(variant === "pending" ? "conditioned" : "complete")
+      expect(chosen.choice.comparisonStatus).toBe("conditioned")
+      expect(chosen.choice.result.total).toBeNull()
+      expect(chosen.choice.result.knownSubtotal).toBe(variant === "pending" ? 210_000 : 250_000)
+      expect(chosen.choice.result.unresolvedConditions).toContain("scenario-is-hypothetical")
+      expect(chosen.choice.result.restrictions).toContain("preview-not-applied")
+      expect(chosen.choice.costCoverage.coverageState).toBe(variant === "pending" ? "pending" : "complete")
       expect(chosen.choice.costCoverage.derivedMissingCategoryIds).toEqual(variant === "pending" ? ["training"] : [])
       const retainedCase = digestSfValue(chosen.case), before = await procurementDigest(context)
       const selected = context.services.selected.find((entry) => entry.profile.id === "sf_procurement")

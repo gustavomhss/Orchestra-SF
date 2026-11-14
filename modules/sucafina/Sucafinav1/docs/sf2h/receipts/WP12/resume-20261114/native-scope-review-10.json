@@ -1,0 +1,34 @@
+{
+  "schema": "sf-wp12-increment-v1",
+  "status": "FROZEN_FOR_PARENT_PUBLICATION",
+  "owner": "WP12",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts",
+      "beforeBlob": "9147d1550f34d066c55f1692dcceaf168cbe9ed6",
+      "blob": "549225d0b82054ebacd0087b39bc6a8a46bc93db",
+      "sha256": "2230d3d90c1c50c2a84e57701836fb264b30826a4ce49f8ca55b4f46a07168ca",
+      "bytes": 31576,
+      "syntax": "PASS node --check only"
+    }
+  ],
+  "changes": [
+    "Remove only knowledge_search from that extractor mission; keep document_extract/evidence_get. Preserve knowledge_search in the authorized independent evidence-review branch and existing contract scopes."
+  ],
+  "audit": "resume-input/own-missions/w15-scope-audit/audit.json",
+  "verification": {
+    "productTests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "ci": "NOT_RUN",
+    "syntax": "PASS node --check only",
+    "remoteWrites": "NONE"
+  },
+  "independentReview": {
+    "agent": "/root/compose_typecheck",
+    "status": "STATIC_REVIEW_NO_REMAINING_CONCRETE_FINDING_IN_REVIEWED_SCOPE",
+    "reviewedBlob": "549225d0b82054ebacd0087b39bc6a8a46bc93db",
+    "scope": "Only objective/scope/requiredTools extractor delta. Existing HTTP/confirmation/scenario/reopen and independent evidence-review consumer untouched.",
+    "productTests": false,
+    "typecheck": false
+  }
+}

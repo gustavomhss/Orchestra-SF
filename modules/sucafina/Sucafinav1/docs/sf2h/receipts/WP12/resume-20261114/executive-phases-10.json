@@ -1,0 +1,82 @@
+{
+  "schema": "sf-wp12-increment-v1",
+  "owner": "WP12",
+  "baseProduct": "0cf12be4ea37c497fb41349c8df8113e8c99b804",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-executive.test.ts",
+      "blob": "1df012698094f318d5c745d73ffceaf56e0f9ee3",
+      "sha256": "e855029b8586842a7aa7ac182699c87795150475e3997d0651a1ac01572f6ade",
+      "bytes": 29354
+    }
+  ],
+  "status": "STATIC_REVIEW_COMPLETE_HOSTED_PENDING",
+  "changes": [
+    "Bound each of two actual Planner forecasts to two raw lines over twelve months; the published producer still yields at least 192 projection values per side, preserving the >12-row export regression discriminator.",
+    "Instrument real source selection, case drafting and HTTP prepare, post, read and download phases with elapsed time; return original results and rethrow original errors.",
+    "Keep the 420000ms deadline, every assertion, full DOCX/PPTX archive validation, all projection IDs/digests, reload, stale and unauthorized negatives.",
+    "Restrict requested operation scopes to the actual granted skill intersection."
+  ],
+  "priorFailure": {
+    "runId": 43597537890,
+    "jobId": 132455165334,
+    "observedElapsedMs": 482104.49,
+    "reportedTimeoutMs": 420000,
+    "lastMarker": "installed-model-catalog",
+    "blockedAwait": "NOT_IDENTIFIED_FROM_W14_LOG"
+  },
+  "independentReview": {
+    "schema": "sf-wp12-independent-review-v1",
+    "reviewer": "compose_typecheck",
+    "status": "NO_STATIC_BLOCKER_FOUND_HOSTED_EXECUTION_PENDING",
+    "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-executive.test.ts",
+    "blob": "1df012698094f318d5c745d73ffceaf56e0f9ee3",
+    "reviewedBase": "resume-input/executive-w15/before.ts",
+    "assertionLinesPreserved": true,
+    "completeArchiveFunctionUnchanged": true,
+    "testDeadlinePreserved": true,
+    "minimumValuesPerSideFromTwoRawLines": 192,
+    "calculation": "2 raw opex/licenses lines ×12 months ×8 projection value measures =192 per side, before FX/monthly aggregates. There are24 monthly components, not merely24 DomainProjection.values.",
+    "sourcePins": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+        "blob": "3a9eaaa0f52c22f68f6e889af66b970fb51197b9"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/adapter.ts",
+        "blob": "d6886477c1069a85221da673149ec8f67dd7666c"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+        "blob": "c487332777d4053be7a2b177ea598efb77ca0d66"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/reviews/selection.ts",
+        "blob": "90e42fbf42c07b11d7a1546a3e828d2de5e970fd"
+      }
+    ],
+    "sourceCommit": "0cf12be4ea37c497fb41349c8df8113e8c99b804",
+    "sourceVerification": "GitHub MCP fetch_file",
+    "findings": [],
+    "telemetry": "Generic wrapper awaits and returns the original work result, logs start/return/failure, rethrows the original error, and does not change the deadline.",
+    "limits": [
+      "Static producer trace only; not a measurement or proof that the timeout is fixed.",
+      "Full archive IDs and per-section >12 assertions still require hosted execution."
+    ],
+    "productTestsLocally": false,
+    "typecheckLocally": false,
+    "sourceEditedByReviewer": false,
+    "priorReviewedBlob": "154fde3dec5b2a7fee48c1a3821032acc44671f1",
+    "followup": "Only comment wording changed from Extra identical rows to Extra rows of the same shape. No logic, source count, assertions, telemetry or deadline changes."
+  },
+  "validation": {
+    "syntax": "PASS",
+    "productTestsLocal": false,
+    "typecheckLocal": false,
+    "hostedTests": "PENDING"
+  },
+  "limits": [
+    "Bounded data is an implementation change, not measured evidence that the timeout is fixed.",
+    "Catalog absence is not native inference; executive/meeting input binding gaps remain separate."
+  ]
+}

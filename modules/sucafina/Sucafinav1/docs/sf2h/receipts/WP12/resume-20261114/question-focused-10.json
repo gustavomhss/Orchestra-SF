@@ -1,0 +1,108 @@
+{
+  "schema": "sf-wp12-increment-v1",
+  "status": "FROZEN_FOR_PARENT_PUBLICATION",
+  "owner": "WP12",
+  "sourceCommit": "0cf12be4ea37c497fb41349c8df8113e8c99b804",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-question-preparation.ts",
+      "beforeBlob": null,
+      "blob": "46d08068b355efb87605b07b954635faf2cb683e",
+      "sha256": "a61610ed90f0f94a03b3b3717ebacaa2d1e18cf15f838f245416d9eeecce7988",
+      "bytes": 10791,
+      "syntax": "PASS node --check only"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-questions.test.ts",
+      "beforeBlob": null,
+      "blob": "afb4f2bbb9669455e07fceb18cc7bd6a45b7457f",
+      "sha256": "49bd9bb9bba0d88637d54e18fffef1c62f6ac09549474606efab3043ec2571b8",
+      "bytes": 28331,
+      "syntax": "PASS node --check only"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-question-consumer.test.ts",
+      "beforeBlob": "52aba99e4b5ae4d8c0e03b8e2cd85a4ab00910f2",
+      "blob": "d0cdf8241b2db559493464f80efe7e893a9784e0",
+      "sha256": "002a00136835f871e0ce17c60522ecb6cf2d0ecb290dd9ed192773a251869b6b",
+      "bytes": 17279,
+      "syntax": "PASS node --check only"
+    }
+  ],
+  "changes": [
+    "Add focused question preparation with one real Planner source, one baseline coverage registration and one real C09 promotion. Human explicitly classifies training pending; evidenceRefs are never added to its pending-entry schema.",
+    "Keep derivedMissingCategoryIds empty for this explicit human condition, all totals null/conditioned and all 96 observed components confirmed; preserve existing training-derived discriminators in separate files.",
+    "Add real pmo-capex C06 confirmation carrying the Planner ref as additional evidence, actual directory selection, a real answered predecessor thread, and read-back through sf_answer_read before embedding questionRef.",
+    "Require native Session/SkillLoadReceipt-backed question_prepare, answer_read and relation_read when a provider exists; verify actual structured tool results and preserve thread count before human confirmation.",
+    "After reload, use canonical question-output and human question-consume, exact replay, changed-command refusal, human reply and second reload with native origin preserved.",
+    "Adapt the human-only consumer to focused preparation and obtain origin from canonical question-consume retry; public thread-read is checked as its actual projection, not mislabelled as an origin-bearing stored row."
+  ],
+  "authority": {
+    "syntheticInputs": "Raw application rows and the same explicit synthetic principal accepted by the private harness. No foreign identity or session is adopted.",
+    "relation": "Catalog pmo-capex permits its two Dashboard endpoint records; the Planner source is an authorized additional evidenceRef, not a forged relation endpoint.",
+    "condition": "CostCoverageEntry pending has categoryId/reason/optional questionRef. QuestionPlanningInput preserves condition.evidenceRefs=[]; verifier independently allows output evidence from the actual confirmed relation.",
+    "answer": "Actual C06 review thread created/replied through authenticated HTTP. Its unconfirmed answer is not promoted to documentary evidence.",
+    "humanConsumer": "Only an explicit authenticated human question-consume writes a clarification thread."
+  },
+  "operations": {
+    "nativeRequiredWhenModelAvailable": [
+      "sf_question_prepare",
+      "sf_answer_read",
+      "sf_relation_read"
+    ],
+    "requiredNotAccepted": [
+      "sf_work_list"
+    ],
+    "am02NotAccepted": [
+      "sf_handoff_prepare"
+    ],
+    "workList": "Real UI case selection and actual work-list route; records work-signals-unavailable or validates real items. No unsupported selectionRef is injected into native typed input or prompt.",
+    "handoff": "No actual HotTopic action selection is available in this scenario; no forged actionRef supplied."
+  },
+  "verification": {
+    "syntax": "PASS",
+    "productTests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "ci": "NOT_RUN",
+    "remoteWrites": "NONE",
+    "independentReview": "STATIC_REVIEW_NO_REMAINING_CONCRETE_FINDING_IN_REVIEWED_SCOPE"
+  },
+  "limits": [
+    "No native inference, consumer runtime acceptance or GNATIVE is claimed before hosted execution. Empty/unsupported model catalogs remain explicit observations.",
+    "Native execution covers only the three available canonical operations. Work-list and AM02 handoff remain precise separate gaps.",
+    "The predecessor answer remains unconfirmed; confirmed-answer reuse and material-change reopen are not claimed by this increment.",
+    "One real native contribution is consumed idempotently; the deliberately existing review predecessor is a distinct real thread, not hidden in thread totals.",
+    "Human material condition.record is not a QuestionPlanningInput source today: both producer and verifier admit only current C10 pending/missing coverage conditions.",
+    "Focused preparation reduces unnecessary work but does not claim to have measured or fixed the W11 timeout. Existing human-consumer deadline remains 180000ms; the new native case has 300000ms."
+  ],
+  "independentReview": [
+    {
+      "agent": "/root/compose_typecheck",
+      "status": "APPROVED_STATIC_SCOPE",
+      "findingsCorrected": [
+        "Removed duplicate sf_answer_read in human consumer operation grants.",
+        "Restricted native mission requestedOperationScope to five actually granted skill operations; no unsupported handoff permission requested."
+      ],
+      "notes": [
+        "C10 human pending/derived distinction preserved.",
+        "Actual pmo-capex endpoints and Planner additional evidence are accepted by the published relation/verifier ports.",
+        "Predecessor questionRef is a real answered C06 thread; answer remains unconfirmed.",
+        "Public thread-read and canonical origin consumer are separate correctly.",
+        "Replay and contribution consumption after reload match actual question-consumer."
+      ],
+      "productTests": false,
+      "typecheck": false
+    },
+    {
+      "agent": "/root/criteria_resume",
+      "status": "APPROVED_STATIC_SEMANTIC_SCOPE",
+      "notes": [
+        "Three native operations are bound to real receipts/callIds and structured results.",
+        "No sourced relation evidence is forged or inserted into the pending condition.",
+        "C10 derived omission, confirmed answer reuse, work-list and handoff proofs remain explicitly separate."
+      ],
+      "productTests": false,
+      "typecheck": false
+    }
+  ]
+}

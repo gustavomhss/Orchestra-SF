@@ -13,6 +13,10 @@ import type { Wp12CompletedNativeMission, Wp12NativeMissionContext } from "./nat
 type Preparation = Parameters<NonNullable<SfHostServices["analysisInputs"]>["prepare"]>[1]
 type ReviewSnapshot = ReturnType<typeof reviewSnapshot>
 const period = { start: "2027-01-01", end: "2027-12-31" }
+// Two real source lines produce 24 monthly cells per forecast, already beyond
+// the 12-row preview boundary. Extra rows of the same shape do not strengthen the
+// complete-export counterproof and multiply repeated source validation.
+const sourceLineCount = 2
 const operations = ["sf_case_draft", "sf_case_read", "sf_context_get", "sf_source_get", "sf_forecast_compare",
   "sf_review_prepare", "sf_report_prepare", "sf_artifact_get", "sf_work_list"]
 const executiveRequiredOperations = ["sf_review_prepare", "sf_case_read", "sf_source_get", "sf_routine_catalog",
@@ -28,14 +32,14 @@ test("real executive and meeting inputs use a preserved WP07 review and complete
     humanActions: ["analysis.prepare", "analysis.start", "analysis.read", "analysis.cancel", "reviews.preserve"],
     initialize: initializeReviewSources }, async (harness) => {
     const initial = await harness.open("initial", async (context) => {
-      const sources = await context.ui("sf_case_draft", { purpose: "executive-meeting-source-selection" }, async (call) => {
+      const sources = await reviewPhase("source-selection", () => context.ui("sf_case_draft", { purpose: "executive-meeting-source-selection" }, async (call) => {
         const base = await context.business.plannerProduct.issueSource("wp12-review-0", call)
         const candidate = await context.business.plannerProduct.issueSource("wp12-review-1", call)
         if (base.status !== "ok" || candidate.status !== "ok") throw new Error("The real Planner review sources were not issued")
         return [base.value.evidence, candidate.value.evidence] as const
-      })
+      }))
       const draft = { objective, horizon: period, currency: "USD", criteria: ["Keep factual coverage and source gaps visible"], sourceRefs: sources }
-      const created = await context.ui("sf_case_draft", draft, (call) => context.business.cases.draft(draft, call))
+      const created = await reviewPhase("case-draft", () => context.ui("sf_case_draft", draft, (call) => context.business.cases.draft(draft, call)))
       if (created.status !== "ok") throw new Error(`The executive case was not persisted: ${created.reason}`)
       const caseRef = { id: created.value.id, incarnation: created.value.incarnation, version: created.value.version }
       const domainBefore = await plannerDigest(context)
@@ -215,7 +219,7 @@ test("real executive and meeting inputs use a preserved WP07 review and complete
 async function initializeReviewSources(persistence: Wp12NativeMissionContext["persistence"]) {
   await persistence.transaction("planner", async (snapshot) => {
     snapshot.data = { versions: [0, 1].map((side) => ({ id: `wp12-review-${side}`, name: `Explicit synthetic review forecast ${side}`, year: 2027, closed: 0,
-      lines: Array.from({ length: 16 }, (_, index) => ({ id: `review-${side}-${String(index + 1).padStart(2, "0")}`, name: `Synthetic review line ${index + 1}`,
+      lines: Array.from({ length: sourceLineCount }, (_, index) => ({ id: `review-${side}-${String(index + 1).padStart(2, "0")}`, name: `Synthetic review line ${index + 1}`,
         ownerId: "wp12-owner", sec: "opex", el: "licenses", cur: "USD", b: Array<number>(12).fill(100 + index),
         a: Array<null>(12).fill(null), f: Array<number>(12).fill(100 + index - side * 5) })),
       fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} })),
@@ -233,24 +237,30 @@ function missionRequest(context: Wp12NativeMissionContext, skillId: string, case
 }
 
 async function prepareThroughHost(context: Wp12NativeMissionContext, input: Preparation) {
-  const response = await context.services.productHttp?.(context.request({ action: "prepare", input }, "/sucafina/planner?sf=workbench-analysis"), "planner")
-  if (!response) throw new Error("The host did not mount workbench analysis preparation")
-  return { response, body: object(await response.json()) }
+  return reviewPhase(`analysis-prepare:${input.request.skillId}`, async () => {
+    const response = await context.services.productHttp?.(context.request({ action: "prepare", input }, "/sucafina/planner?sf=workbench-analysis"), "planner")
+    if (!response) throw new Error("The host did not mount workbench analysis preparation")
+    return { response, body: object(await response.json()) }
+  })
 }
 
 async function postReview(context: Wp12NativeMissionContext, action: string, body: unknown) {
-  const response = await context.services.productHttp?.(context.request(body, `/sucafina/dashboard?sf=${action}`), "dashboard")
-  if (!response) throw new Error(`The host did not mount ${action}`)
-  return { response, body: object(await response.json()) }
+  return reviewPhase(`http:${action}`, async () => {
+    const response = await context.services.productHttp?.(context.request(body, `/sucafina/dashboard?sf=${action}`), "dashboard")
+    if (!response) throw new Error(`The host did not mount ${action}`)
+    return { response, body: object(await response.json()) }
+  })
 }
 
 async function getReview(context: Wp12NativeMissionContext, id: string) {
-  const response = await context.services.productHttp?.(context.request(undefined, `/sucafina/dashboard?sf=review-read&reviewRef=${encodeURIComponent(id)}`, "GET"), "dashboard")
-  if (!response) throw new Error("The host did not mount review-read")
-  const body = object(await response.json())
-  expect(response.status).toBe(200)
-  expect(body.status).toBe("ok")
-  return reviewSnapshot(body.value)
+  return reviewPhase("http:review-read", async () => {
+    const response = await context.services.productHttp?.(context.request(undefined, `/sucafina/dashboard?sf=review-read&reviewRef=${encodeURIComponent(id)}`, "GET"), "dashboard")
+    if (!response) throw new Error("The host did not mount review-read")
+    const body = object(await response.json())
+    expect(response.status).toBe(200)
+    expect(body.status).toBe("ok")
+    return reviewSnapshot(body.value)
+  })
 }
 
 function reviewSnapshot(value: unknown) {
@@ -272,13 +282,15 @@ function reviewSnapshot(value: unknown) {
 }
 
 async function downloadReview(context: Wp12NativeMissionContext, artifactRef: string) {
-  const response = await context.services.productHttp?.(context.request(undefined, `/sucafina/dashboard?sf=review-download&artifactRef=${encodeURIComponent(artifactRef)}`, "GET"), "dashboard")
-  if (!response) throw new Error("The host did not mount review-download")
-  expect(response.status).toBe(200)
-  expect(response.headers.get("content-type")).toContain("officedocument")
-  const bytes = Buffer.from(await response.arrayBuffer())
-  expect(bytes.length).toBeGreaterThan(1000)
-  return { bytes, digest: createHash("sha256").update(bytes).digest("hex") }
+  return reviewPhase("http:review-download", async () => {
+    const response = await context.services.productHttp?.(context.request(undefined, `/sucafina/dashboard?sf=review-download&artifactRef=${encodeURIComponent(artifactRef)}`, "GET"), "dashboard")
+    if (!response) throw new Error("The host did not mount review-download")
+    expect(response.status).toBe(200)
+    expect(response.headers.get("content-type")).toContain("officedocument")
+    const bytes = Buffer.from(await response.arrayBuffer())
+    expect(bytes.length).toBeGreaterThan(1000)
+    return { bytes, digest: createHash("sha256").update(bytes).digest("hex") }
+  })
 }
 
 async function consumeReviewContribution(context: Wp12NativeMissionContext, completed: Wp12CompletedNativeMission, review: ReviewSnapshot) {
@@ -358,4 +370,22 @@ function assertCompleteArchive(bytes: Buffer, format: "docx" | "pptx", review: R
   }
   expect(text).toContain(period.start)
   expect(text).toContain(period.end)
+}
+
+let reviewPhaseSequence = 0
+async function reviewPhase<T>(phase: string, work: () => Promise<T>): Promise<T> {
+  const sequence = ++reviewPhaseSequence
+  const started = performance.now()
+  const record = (state: "started" | "returned" | "failed") => console.log("SF_WP12_NATIVE_REVIEW_PHASE:" + JSON.stringify({
+    githubSha: process.env.GITHUB_SHA ?? null, phase, sequence, state, elapsedMs: Math.round(performance.now() - started),
+  }))
+  record("started")
+  try {
+    const result = await work()
+    record("returned")
+    return result
+  } catch (error) {
+    record("failed")
+    throw error
+  }
 }

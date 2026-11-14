@@ -1,0 +1,88 @@
+{
+  "schema": "sf-wp12-own-increment-v1",
+  "status": "frozen-for-W15",
+  "purpose": "Retain the Finance AM02 BI route and restore the distinct Maestro AM02 Dashboard route through the same real BI mission producer and consumer.",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-bi.test.ts",
+      "beforeBlob": "09485fec7126df97bc8947a3f81e744ff088f7ba",
+      "beforeSha256": "f6cb829c7284d4a32f3ddce43aafed385e53e1be39c7ee98ced5c269e6cea978",
+      "blob": "7e29eba6598ce78fe1a8e7416220e229ea4b219c",
+      "sha256": "b66980f040afc09dad0b1c680b0b58a581693ca7b08e89bfbbd4e48fe27fafbb",
+      "bytes": 15791
+    }
+  ],
+  "runtimeRoutes": [
+    {
+      "profileId": "sf_finance",
+      "skillId": "sf-produzir-bi-contextual",
+      "am02Operation": "sf_bi_view"
+    },
+    {
+      "profileId": "sf_maestro",
+      "skillId": "sf-produzir-bi-contextual",
+      "am02Operation": "sf_dashboard_read"
+    }
+  ],
+  "grantEvidence": "Each variant asserts selected profile allowedSkills, skill allowedProfiles and all three requested operation grants in profile, skill and selected operationIds; native branch asserts the actual loaded-skill receipt profile/skill and actual native tools.",
+  "readOnlyPins": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/profiles/sf_finance.json",
+      "blob": "3f6c6d59ef7374f7ede0c6f21f9c652ee8019e25"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/profiles/sf_maestro.json",
+      "blob": "77421be809ca53f5e4ef9d8f1dc719137ab1d406"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/manifests/resident.json",
+      "blob": "453c6f3a5b48c081223909af8293f854ad31d7c8"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/normative-contracts.json",
+      "blob": "a59ecb7ea7315504cb78ced5c6b6dd828e238730"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/runtime.ts",
+      "blob": "beba733084e87da8664b0f4067b52d4b29795c5c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/resident-ai.ts",
+      "blob": "38e3d664f4dedb56f3e614bde41d51548e44f805"
+    }
+  ],
+  "preserved": [
+    "Finance objective, authorized source selection, input body, requested operation scope and required native tools",
+    "BI08 projection/table identity and digests, missing milestone date null, real WP05 presentation and source drilldown",
+    "Host reopen, durable artifact identity, changed filters/version refusals and source deletion rejection",
+    "Canonical output equality and separate unavailable-model observation; no GNATIVE acceptance fabricated",
+    "Existing requiredOperations inventory including sf_kpi_explain and truthful missing-required-operations output",
+    "600000ms test timeout"
+  ],
+  "financeChangesLimitedTo": [
+    "Distinct test name [sf_finance]",
+    "Additional assertions of already-selected grants",
+    "Profile-specific log metadata and AM02 operation derived from the same Finance route constant"
+  ],
+  "surgicalSelection": {
+    "package": "modules/sucafina/Sucafinav1",
+    "file": "test/product/wp12/native-execution-bi.test.ts",
+    "args": [
+      "--test-name-pattern",
+      "native contextual BI \\[sf_maestro\\]"
+    ],
+    "note": "Select only Maestro after the pending Finance W14 run. Do not launch an equivalent Finance run merely because the shared loop now also defines Maestro."
+  },
+  "verification": {
+    "staticParse": "node:module stripTypeScriptTypes and node --check emitted JavaScript PASS; no imports or test bodies executed",
+    "independentReview": {
+      "reviewer": "criteria_resume",
+      "reviewedBlob": "7e29eba6598ce78fe1a8e7416220e229ea4b219c",
+      "verdict": "No concrete type, API or grant defect found; Finance semantics retained and Maestro witness distinct."
+    },
+    "productTestsLocally": false,
+    "typecheckLocally": false,
+    "ciDispatched": false,
+    "foreignSourceModified": false
+  }
+}
