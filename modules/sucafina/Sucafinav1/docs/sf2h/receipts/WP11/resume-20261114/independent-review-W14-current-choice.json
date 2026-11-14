@@ -1,0 +1,48 @@
+{
+  "schema": "wp11-independent-current-choice-read-fence-review-v1",
+  "reviewer": "ci_reconciliation",
+  "baseProductSha": "d7775d6f1eb17af1590ccfb98547259eb017cd1b",
+  "baseProductTree": "e6831add3e891e020d34540234bd685a7dd05e01",
+  "status": "NO_STATIC_BLOCKER_FOUND_HOSTED_VALIDATION_PENDING",
+  "reviewedFiles": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+      "publishedBaseBlob": "12f9bda4f964763e8c6d60fb67e5fb68a08cd9ee",
+      "reviewedWorkingBlob": "38f82f4b931682e255a18d52856e192f2ee43390",
+      "sha256": "74b8964deabc274b59892f48de8bc54c774aab242d911a9b0713f9ad36f76095",
+      "bytes": 17490
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts",
+      "publishedBaseBlob": null,
+      "reviewedWorkingBlob": "46b004a1b374229ad46077930134ba0469213087",
+      "sha256": "12dbbe50b2044ce12112cc13d1655d5cc138c58cd387b1f9ffcc799ff1e6fb98",
+      "bytes": 13761
+    }
+  ],
+  "findings": [],
+  "verifiedMechanisms": [
+    "The final case authorization and host revalidation execute before preferences authorization and the final joint C08 read.",
+    "The private preferences namespace is read-authorized again after external callbacks; read does not request write authority.",
+    "A single final C08 callback captures the decision, reviewed result, producer result and private binding; full digests and authority are compared before returning the final binding.",
+    "No external product callback follows that final C08 read; request cancellation is checked before releasing the value.",
+    "The new parameterized regression uses one consumed real UI lease, real SQLite/C08 transactions and real result-store read/write. The private binding writer uses the same WeakSet as the state provider.",
+    "The membership variant commits a real CAS during the second preview authorizeCase call while global UI authority remains valid. The preferences variant denies only private read access after the same callback, preserving case access.",
+    "Result-store callbacks use a separate authorizeCase function, so the preview-specific two-callback counter does not count nested result authorization.",
+    "The positive baseline denies preferences writes before reading, proving the reader does not acquire write authority. All calculation, promotion, prepare and dispatch callbacks are non-returning guards and asserted unused."
+  ],
+  "authorizationScopeReview": {
+    "stateProvider": "product/host-binding/state-provider.ts returns a cloned entire C08 state inside one Dashboard SQLite transaction; final namespace authorization is revalidated inside that transaction.",
+    "productionGrantRevision": "product/integration/product-authority.ts includes namespace grants in accessRevision. The final cases authority digest therefore also rejects a changed production namespace grant."
+  },
+  "proofBoundaries": [
+    "The case, historical choice, source evidence references and private binding are deliberately seeded for reader isolation. They do not prove a canonical financial calculation, human choice journey or native session.",
+    "Financial totals remain unknown/null; no formula or arithmetic is asserted in this regression.",
+    "Static review does not establish runtime success, TypeScript success, or exact run duration. No local product execution occurred.",
+    "Published historical passing tests retain their original SHAs/runs and overall source-run outcomes."
+  ],
+  "requiredHostedValidation": [
+    "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts"
+  ],
+  "graphArtifact": "/workspace/scratch/c3f9350f32d4/ci-analysis/current-choice-W14-static-impact.json"
+}
