@@ -1,0 +1,394 @@
+{
+  "mission": "forecast-cancel-visibility",
+  "status": "READY_FOR_INTEGRATION",
+  "finding": "WP10-U30-CANCEL-VISIBILITY",
+  "finding_status": "RESOLVED_WITH_EVIDENCE",
+  "branch": "ui-review",
+  "pr": 45,
+  "base": "interface-resume",
+  "initial_head": "32bae2bcc8008b2e81948e434dc1e3326dc4f947",
+  "product_candidate": "765a9a5b86c21791ed59152098971b2dfbe8398e",
+  "product_tree": "dad99c523acce16873331fae2df3f10b82451695",
+  "source_manifest": [
+    {
+      "path": "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+      "blob": "c57e1f01044d12bf5c86bb5d7d68408950a83fc1",
+      "sha256": "59d9c86ef6cf885b6529cfa9f8c8b5828ddaf8761a6b96b9a86ef30b625048ab"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts",
+      "blob": "dad8eeb1879e6c93bc9a448c6567fc0e2ee0f747",
+      "sha256": "3a59606e892ff67c0cfde99ed292e571add4b055de0a1aa9879054ab4f523fd5"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/forecast-cancel-visibility/controls.ts",
+      "blob": "c72f26d769276275d2124b39723bdf287eb9ebdc",
+      "size": 1722
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/forecast-cancel-visibility/fixture.ts",
+      "blob": "3f7fdbc50bd1e879a84008a5cf7acc95a2e5d346",
+      "size": 4534
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/forecast-cancel-visibility/forecast-submit.test.ts",
+      "blob": "aa2ddcd4f4fb405739f90ebf48a1d17fe15d6ab1",
+      "size": 12100
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/forecast-cancel-visibility/journey.ts",
+      "blob": "bb70fd8e7da9db90fdd4851078beade6191ad507",
+      "size": 7508
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/forecast-cancel-visibility/recovery.test.ts",
+      "blob": "7ee91814cd7e538611a9dec559df2b4b6612f27c",
+      "size": 4160
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/forecast-cancel-visibility/revocation.test.ts",
+      "blob": "d5b6c5b988c9160b27aae4b1460852f686a6c101",
+      "sha256": "90dc0ba694da9ee2ccade9e9eb6d3b8d3017d950a299fab489039b9009b08842"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/forecast-cancel-visibility/states.test.ts",
+      "blob": "7c5af7447ab003acc6019305585dea507cceadba",
+      "size": 3211
+    }
+  ],
+  "attempts": [
+    {
+      "W": "f250a790f80710f939f02f1cc28ec6174887fc37",
+      "W_tree": "b148b198e3d99fef065fb8fb902f7a17c4270d64",
+      "S": "ed3dfa599723630aec7fe72d746ac7dd5fff15e9",
+      "S_tree": "2dac2c9c997f068bd9a98e1254028fccee2a9301",
+      "run": 43632553311,
+      "result": "FAIL 3/1",
+      "request_sha256": "82326c9b49e6111d1e440aaad02209549c3a1e67c70fea8c431291285d54b64c",
+      "selected_files": [
+        "Sucafinav1/test/product/wp01/browser-startup.test.ts",
+        "Sucafinav1/test/product/forecast-cancel-visibility/forecast-submit.test.ts",
+        "Sucafinav1/test/product/wp01/browser-lifecycle.test.ts"
+      ],
+      "browser_driver": {
+        "consumer": "wp01-shared-pool",
+        "clientRuntime": {
+          "name": "bun",
+          "version": "1.3.14",
+          "pid": 4257
+        },
+        "driverRuntime": {
+          "name": "node",
+          "version": "24.22.2",
+          "pid": 4277
+        },
+        "playwrightVersion": "1.59.1",
+        "browserVersion": "157.0.8103.50",
+        "browserPid": 4292,
+        "transport": "playwright-unix-pipe-node-websocket",
+        "spawnBoundary": "AppProcess",
+        "browserStdioCount": 5,
+        "browserUsesPipe": true,
+        "browserPipeOwner": "node",
+        "bridge": {
+          "framing": "json-nul",
+          "acceptedClients": 1,
+          "framesToBrowser": 67,
+          "framesFromBrowser": 193,
+          "peakQueuedBytes": 3042,
+          "peakBufferedBytes": 1575,
+          "maxFrameBytes": 16777216,
+          "maxQueuedBytes": 33554432,
+          "directoryMode": 448,
+          "socketMode": 384
+        },
+        "lifecycle": {
+          "remainingContexts": 0,
+          "connected": false,
+          "nodeExitCode": 0,
+          "browserExitCode": 0,
+          "browserSignal": null,
+          "bridgeClosed": true,
+          "listenerClosed": true,
+          "socketClosed": true,
+          "pipeEnded": true,
+          "webSocketOpened": true,
+          "webSocketClosed": true,
+          "webSocketCloseCode": 1000,
+          "webSocketCloseWasClean": true,
+          "pendingFrameBytes": 0,
+          "queuedWriteBytes": 0,
+          "socketRemoved": true,
+          "directoryRemoved": true
+        }
+      },
+      "request_envelope_only": true
+    },
+    {
+      "W": "cecd1de92bf4cbed7d6735e74fd5ffd4944e7dde",
+      "W_tree": "2e92d47791b1c39a7c774acc84e41d55537c8d2d",
+      "S": "a03193f99c3e28c149e1d47c5913b3a673fecc27",
+      "S_tree": "2214579196870d4d85ce19744127d5839f5754d3",
+      "run": 43633001171,
+      "result": "FAIL 14/1",
+      "request_sha256": "4490f8aae564082fd1d7432194b9eb6b9ce0f2bc22a29fff547efe853725e236",
+      "selected_files": [
+        "Sucafinav1/test/product/wp01/browser-startup.test.ts",
+        "Sucafinav1/test/product/forecast-cancel-visibility/forecast-submit.test.ts",
+        "Sucafinav1/test/product/forecast-cancel-visibility/states.test.ts",
+        "Sucafinav1/test/product/forecast-cancel-visibility/recovery.test.ts",
+        "Sucafinav1/test/product/forecast-cancel-visibility/revocation.test.ts",
+        "Sucafinav1/test/product/wp01/browser-lifecycle.test.ts"
+      ],
+      "browser_driver": {
+        "consumer": "wp01-shared-pool",
+        "clientRuntime": {
+          "name": "bun",
+          "version": "1.3.14",
+          "pid": 4735
+        },
+        "driverRuntime": {
+          "name": "node",
+          "version": "24.22.2",
+          "pid": 4755
+        },
+        "playwrightVersion": "1.59.1",
+        "browserVersion": "157.0.8103.50",
+        "browserPid": 4770,
+        "transport": "playwright-unix-pipe-node-websocket",
+        "spawnBoundary": "AppProcess",
+        "browserStdioCount": 5,
+        "browserUsesPipe": true,
+        "browserPipeOwner": "node",
+        "bridge": {
+          "framing": "json-nul",
+          "acceptedClients": 1,
+          "framesToBrowser": 384,
+          "framesFromBrowser": 972,
+          "peakQueuedBytes": 3044,
+          "peakBufferedBytes": 1576,
+          "maxFrameBytes": 16777216,
+          "maxQueuedBytes": 33554432,
+          "directoryMode": 448,
+          "socketMode": 384
+        },
+        "lifecycle": {
+          "remainingContexts": 0,
+          "connected": false,
+          "nodeExitCode": 0,
+          "browserExitCode": 0,
+          "browserSignal": null,
+          "bridgeClosed": true,
+          "listenerClosed": true,
+          "socketClosed": true,
+          "pipeEnded": true,
+          "webSocketOpened": true,
+          "webSocketClosed": true,
+          "webSocketCloseCode": 1000,
+          "webSocketCloseWasClean": true,
+          "pendingFrameBytes": 0,
+          "queuedWriteBytes": 0,
+          "socketRemoved": true,
+          "directoryRemoved": true
+        }
+      },
+      "request_envelope_only": true
+    },
+    {
+      "W": "765a9a5b86c21791ed59152098971b2dfbe8398e",
+      "W_tree": "dad99c523acce16873331fae2df3f10b82451695",
+      "S": "d332d30008e5bc4933d7cbd76ca08b3ca60608d3",
+      "S_tree": "f0c03f75267521533a47c28377b3d2a00f8df9b0",
+      "run": 43633471899,
+      "result": "PASS 4/0",
+      "request_sha256": "9d0debce63f9ca353fc6abd2d0ef5f800ba066d573c890792cde1ed9344e8444",
+      "selected_files": [
+        "Sucafinav1/test/product/wp01/browser-startup.test.ts",
+        "Sucafinav1/test/product/forecast-cancel-visibility/revocation.test.ts",
+        "Sucafinav1/test/product/wp01/browser-lifecycle.test.ts"
+      ],
+      "browser_driver": {
+        "consumer": "wp01-shared-pool",
+        "clientRuntime": {
+          "name": "bun",
+          "version": "1.3.14",
+          "pid": 4048
+        },
+        "driverRuntime": {
+          "name": "node",
+          "version": "24.22.2",
+          "pid": 4068
+        },
+        "playwrightVersion": "1.59.1",
+        "browserVersion": "157.0.8103.50",
+        "browserPid": 4083,
+        "transport": "playwright-unix-pipe-node-websocket",
+        "spawnBoundary": "AppProcess",
+        "browserStdioCount": 5,
+        "browserUsesPipe": true,
+        "browserPipeOwner": "node",
+        "bridge": {
+          "framing": "json-nul",
+          "acceptedClients": 1,
+          "framesToBrowser": 65,
+          "framesFromBrowser": 160,
+          "peakQueuedBytes": 2013,
+          "peakBufferedBytes": 1575,
+          "maxFrameBytes": 16777216,
+          "maxQueuedBytes": 33554432,
+          "directoryMode": 448,
+          "socketMode": 384
+        },
+        "lifecycle": {
+          "remainingContexts": 0,
+          "connected": false,
+          "nodeExitCode": 0,
+          "browserExitCode": 0,
+          "browserSignal": null,
+          "bridgeClosed": true,
+          "listenerClosed": true,
+          "socketClosed": true,
+          "pipeEnded": true,
+          "webSocketOpened": true,
+          "webSocketClosed": true,
+          "webSocketCloseCode": 1000,
+          "webSocketCloseWasClean": true,
+          "pendingFrameBytes": 0,
+          "queuedWriteBytes": 0,
+          "socketRemoved": true,
+          "directoryRemoved": true
+        }
+      },
+      "request_envelope_only": true
+    }
+  ],
+  "unchanged_U30": {
+    "source_commit": "54317229d7f8fcb7e92921c2f4a8dc6f9310270b",
+    "source_path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/forecast-submit.test.ts",
+    "source_blob": "b312f2dda7029b79c7420af91d52ca6fec1b098d",
+    "copied_path": "modules/sucafina/Sucafinav1/test/product/forecast-cancel-visibility/forecast-submit.test.ts",
+    "copied_blob": "aa2ddcd4f4fb405739f90ebf48a1d17fe15d6ab1",
+    "normalization": [
+      "Remove three read-only SF_FORECAST_CONTROL_STATE console lines",
+      "Restore observational lastRead assignment to original response object",
+      "Ignore import relocation and exact forecastPage extraction"
+    ],
+    "body_exactly_equal_after_normalization": true,
+    "original_body_sha256": "f23bf546bc4e2d58876bbce147255fc8aa888c6caad73587bd2cd6a8023a7f7f",
+    "normalized_copy_body_sha256": "f23bf546bc4e2d58876bbce147255fc8aa888c6caad73587bd2cd6a8023a7f7f",
+    "assertion_statements": 17
+  },
+  "dedupe": {
+    "one_mission_run_in_flight": true,
+    "queried": [
+      "recent100",
+      "in_progress100",
+      "queued100",
+      "exact snapshot branch"
+    ],
+    "reattachment": {
+      "source_W": "cecd1de92bf4cbed7d6735e74fd5ffd4944e7dde",
+      "source_S": "a03193f99c3e28c149e1d47c5913b3a673fecc27",
+      "source_run": 43633001171,
+      "target_W": "765a9a5b86c21791ed59152098971b2dfbe8398e",
+      "source_run_conclusion": "FAIL 14/1; individual passes only reattached, not an aggregate green",
+      "changed_nonreceipt_files": [
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/forecast-cancel-visibility/revocation.test.ts",
+          "status": "modified",
+          "additions": 49,
+          "deletions": 7,
+          "changes": 56,
+          "previous_filename": null
+        }
+      ],
+      "unchanged_product_blobs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+          "blob": "c57e1f01044d12bf5c86bb5d7d68408950a83fc1",
+          "sha256": "59d9c86ef6cf885b6529cfa9f8c8b5828ddaf8761a6b96b9a86ef30b625048ab"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts",
+          "blob": "dad8eeb1879e6c93bc9a448c6567fc0e2ee0f747",
+          "sha256": "3a59606e892ff67c0cfde99ed292e571add4b055de0a1aa9879054ab4f523fd5"
+        }
+      ],
+      "unaffected_test_and_helper_blobs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/forecast-cancel-visibility/controls.ts",
+          "blob": "c72f26d769276275d2124b39723bdf287eb9ebdc",
+          "size": 1722
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/forecast-cancel-visibility/fixture.ts",
+          "blob": "3f7fdbc50bd1e879a84008a5cf7acc95a2e5d346",
+          "size": 4534
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/forecast-cancel-visibility/forecast-submit.test.ts",
+          "blob": "aa2ddcd4f4fb405739f90ebf48a1d17fe15d6ab1",
+          "size": 12100
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/forecast-cancel-visibility/journey.ts",
+          "blob": "bb70fd8e7da9db90fdd4851078beade6191ad507",
+          "size": 7508
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/forecast-cancel-visibility/recovery.test.ts",
+          "blob": "7ee91814cd7e538611a9dec559df2b4b6612f27c",
+          "size": 4160
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/forecast-cancel-visibility/states.test.ts",
+          "blob": "7c5af7447ab003acc6019305585dea507cceadba",
+          "size": 3211
+        }
+      ],
+      "basis": "Compare source_W..target_W modifies only revocation.test.ts and adds append-only receipts. Startup, lifecycle, browser driver, renderer, controller, shell, resident catalog, all other fixtures/config/environment and three passing test files remain byte-identical.",
+      "reattached_passes": [
+        "U30 click positive and Enter409",
+        "all six terminal cases and three active states",
+        "status read retry before/after running",
+        "cancel confirmed",
+        "503 cancellation status reconciliation"
+      ],
+      "rechecked": "Entire revocation.test.ts plus required browser startup/lifecycle",
+      "not_claimed": "Do not report 15/0 for the 14/1 run, or report the complete selection executed on target_W."
+    }
+  },
+  "limits": {
+    "real": [
+      "forecastAnalysisForm",
+      "forecastAnalysisScript",
+      "documentHtml/pageMain shell",
+      "distributed resident catalog",
+      "Chromium and existing WP01/WP02 browser pool"
+    ],
+    "fixture": [
+      "case and evidence data",
+      "model catalog",
+      "HTTP prepare/start/read/output responses"
+    ],
+    "not_claimed": [
+      "financial producer",
+      "native model or Session",
+      "AM01-AM06",
+      "GLOBAL_RELEASE"
+    ],
+    "additional": [
+      "503 after fixture cancellation is not a physical network/process loss",
+      "No deliberately delayed read/output response across revocation was executed",
+      "HTTP403 is an explicit response fixture; authentication and authorization are not exercised",
+      "Viewport/focus matrix and native financial production remain outside this proof"
+    ]
+  },
+  "gates": {
+    "functional": "PASS within declared HTTP fixture UI boundary across recorded runs; previous aggregate failures retained",
+    "typecheck": "NOT_RUN: no hosted path inside mission write scope; existing workflows bind foreign refs",
+    "guards": "NOT_RUN: same restriction; no shared workflow/config changes or foreign ref updates"
+  },
+  "previous_review_status": "PARTIAL_OWNER_INTEGRATION_REQUIRED",
+  "publication": "The following receipt-only commit adds evidence; test results retain the recorded W/S and are not relabeled as executions on the receipt head."
+}

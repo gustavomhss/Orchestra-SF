@@ -1,0 +1,182 @@
+{
+  "finding": "WP10-U30-CANCEL-VISIBILITY",
+  "finding_status": "RESOLVED_WITH_EVIDENCE",
+  "applies_to": {
+    "branch": "ui-review",
+    "W": "765a9a5b86c21791ed59152098971b2dfbe8398e"
+  },
+  "actor": "S1-A",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "source_pack": "docs/sf2h-plan/execution/actors/S1-A.json",
+  "rule": "These are bounded evidence contributions, not acceptance of complete canonical criteria, WP, campaign, Finance or native proof.",
+  "criteria": [
+    {
+      "criterion_id": "WP01.T05.CHK.31",
+      "criterion_text": "Para cada classe de saída da matriz, provocar falta de entrada, falha, cancelamento e mudança material durante execução: consumidor mostra needs-input/failed/cancelled/stale e preserva trabalho confirmado; não cria saída pronta nem amplia acesso por perfil. Variantes podem compartilhar uma execução de prova.",
+      "entity_id": "WP01.T05",
+      "scope": "local",
+      "status": "PASS",
+      "contribution": "Forecast active/terminal/cancel/failure/stale states and status recovery; only the forecast class of output",
+      "full_criterion_accepted": false,
+      "run": 43633001171,
+      "evidence_uri": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43633001171",
+      "candidate_sha": "cecd1de92bf4cbed7d6735e74fd5ffd4944e7dde",
+      "ci_snapshot_sha": "a03193f99c3e28c149e1d47c5913b3a673fecc27"
+    },
+    {
+      "criterion_id": "WP01.T05.CMP.01",
+      "criterion_text": "Cobrir novo caso, caso existente, lacuna, análise em curso, cancelamento, falha, stale, escolha, aplicação parcial, reavaliação e acesso revogado.",
+      "entity_id": "WP01.T05",
+      "scope": "local",
+      "status": "PASS",
+      "contribution": "Forecast running/cancellation/failure/stale and revoked-access presentation; not the complete decision journey",
+      "full_criterion_accepted": false,
+      "run": 43633471899,
+      "evidence_uri": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43633471899",
+      "candidate_sha": "765a9a5b86c21791ed59152098971b2dfbe8398e",
+      "ci_snapshot_sha": "d332d30008e5bc4933d7cbd76ca08b3ca60608d3"
+    },
+    {
+      "criterion_id": "WP01.T05.CHK.02",
+      "criterion_text": "Trocar permissões com análise antiga e confirmar ausência de vazamento na tela e nos detalhes.",
+      "entity_id": "WP01.T05",
+      "scope": "local",
+      "status": "PASS",
+      "contribution": "Controller scrubs controls, fields/config and history when revoked through declared HTTP/event fixtures",
+      "full_criterion_accepted": false,
+      "run": 43633471899,
+      "evidence_uri": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43633471899",
+      "candidate_sha": "765a9a5b86c21791ed59152098971b2dfbe8398e",
+      "ci_snapshot_sha": "d332d30008e5bc4933d7cbd76ca08b3ca60608d3"
+    },
+    {
+      "criterion_id": "WP01.T05.INV.01",
+      "criterion_text": "UI nunca inventa permissão, confirmação, resultado de IA ou sucesso de comando; chat não é fonte única dos dados da decisão.",
+      "entity_id": "WP01.T05",
+      "scope": "local",
+      "status": "PASS",
+      "contribution": "Real UI consumes explicit HTTP outcomes and does not fabricate a ready output for terminal non-ready states",
+      "full_criterion_accepted": false,
+      "run": 43633001171,
+      "evidence_uri": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43633001171",
+      "candidate_sha": "cecd1de92bf4cbed7d6735e74fd5ffd4944e7dde",
+      "ci_snapshot_sha": "a03193f99c3e28c149e1d47c5913b3a673fecc27"
+    },
+    {
+      "criterion_id": "WP01.T05.QLT.01",
+      "criterion_text": "Uma ação principal por estado, fonte consultável, foco preservado, teclado/toque e layout legível em 320/768/1440 px.",
+      "entity_id": "WP01.T05",
+      "scope": "local",
+      "status": "PASS",
+      "contribution": "Original positive click and negative Enter409; status-specific controls. No claim for full viewport/touch/focus coverage",
+      "full_criterion_accepted": false,
+      "run": 43633001171,
+      "evidence_uri": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43633001171",
+      "candidate_sha": "cecd1de92bf4cbed7d6735e74fd5ffd4944e7dde",
+      "ci_snapshot_sha": "a03193f99c3e28c149e1d47c5913b3a673fecc27"
+    },
+    {
+      "criterion_id": "WP01.T03.DOD.01",
+      "criterion_text": "Salvamento, validação, cancelamento e conflito têm estados completos e recuperáveis nos componentes reais.",
+      "entity_id": "WP01.T03",
+      "scope": "local",
+      "status": "PASS",
+      "contribution": "Forecast cancel and status-recovery states in the real components only",
+      "full_criterion_accepted": false,
+      "run": 43633001171,
+      "evidence_uri": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43633001171",
+      "candidate_sha": "cecd1de92bf4cbed7d6735e74fd5ffd4944e7dde",
+      "ci_snapshot_sha": "a03193f99c3e28c149e1d47c5913b3a673fecc27"
+    },
+    {
+      "criterion_id": "WP01.T03.CHK.01",
+      "criterion_text": "Uma falha não exibe Saved e não descarta o texto digitado.",
+      "entity_id": "WP01.T03",
+      "scope": "local",
+      "status": "PASS",
+      "contribution": "EUR survives rejected prepare/status failure and remains available after recovery; no claim that every input value was independently compared",
+      "full_criterion_accepted": false,
+      "run": 43633001171,
+      "evidence_uri": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43633001171",
+      "candidate_sha": "cecd1de92bf4cbed7d6735e74fd5ffd4944e7dde",
+      "ci_snapshot_sha": "a03193f99c3e28c149e1d47c5913b3a673fecc27"
+    },
+    {
+      "criterion_id": "WP01.T03.SUC.01",
+      "criterion_text": "A pessoa consegue corrigir o problema e continuar sem redigitar sua contribuição.",
+      "entity_id": "WP01.T03",
+      "scope": "local",
+      "status": "PASS",
+      "contribution": "Submit/currency and all six inputs are reenabled at terminal states; EUR remains selected",
+      "full_criterion_accepted": false,
+      "run": 43633001171,
+      "evidence_uri": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43633001171",
+      "candidate_sha": "cecd1de92bf4cbed7d6735e74fd5ffd4944e7dde",
+      "ci_snapshot_sha": "a03193f99c3e28c149e1d47c5913b3a673fecc27"
+    },
+    {
+      "criterion_id": "WP01.INV.01",
+      "criterion_text": "Visibilidade de controles não substitui autorização; pesquisa e preferências nunca expõem dados fora do acesso existente.",
+      "entity_id": "WP01.INV",
+      "scope": "local",
+      "status": "PASS",
+      "contribution": "Changes affect presentation and revocation cleanup only; do not confer authority. HTTP403 is a fixture boundary",
+      "full_criterion_accepted": false,
+      "run": 43633471899,
+      "evidence_uri": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43633471899",
+      "candidate_sha": "765a9a5b86c21791ed59152098971b2dfbe8398e",
+      "ci_snapshot_sha": "d332d30008e5bc4933d7cbd76ca08b3ca60608d3"
+    }
+  ],
+  "mission_checks": [
+    {
+      "check": "Cancel hidden before execution",
+      "observed": "ready=true; hidden=true; computed display=none; rectangles=0",
+      "run": 43633001171
+    },
+    {
+      "check": "Cancel visible when cancellable",
+      "observed": "preparing/queued/running; hidden absent; computed display=flex; rectangles>0; enabled",
+      "run": 43633001171
+    },
+    {
+      "check": "Cancel hidden at every terminal state",
+      "observed": "ready/needs-input/unavailable/failed/cancelled/stale; display none; six fields reenabled",
+      "run": 43633001171
+    },
+    {
+      "check": "Remove after revocation",
+      "observed": "HTTP403 removes both action nodes and clears config/inputs; shell event scrubs old form/history then removes view and output",
+      "run": 43633471899
+    },
+    {
+      "check": "Preserve other controls/status retry",
+      "observed": "Real refresh control hidden idle/terminal, visible during running/error; same runRef; one prepare and start; Start remains visible",
+      "run": 43633001171
+    },
+    {
+      "check": "Finish all U30 assertions",
+      "observed": "Positive click and Enter409 PASS; full prepare/start/read/output payloads and order; all request keys; EUR; reenabled controls; pageErrors=[]",
+      "run": 43633001171
+    },
+    {
+      "check": "Preserve Review and scope",
+      "observed": "Only shell hidden rule and forecast revoke cleanup change production; prior Escape/aria-expanded and all prior Review files stay intact",
+      "evidence": "scope-and-reattachment.json"
+    }
+  ],
+  "not_claimed": [
+    "financial/native producer proof",
+    "AM01-AM06",
+    "GLOBAL_RELEASE",
+    "all WP01 criteria accepted",
+    "all tests run on one new W",
+    "delayed response revocation race",
+    "responsive/viewport audit"
+  ],
+  "gates": {
+    "functional": "PASS within declared HTTP fixture UI boundary across recorded runs; previous aggregate failures retained",
+    "typecheck": "NOT_RUN: no hosted path inside mission write scope; existing workflows bind foreign refs",
+    "guards": "NOT_RUN: same restriction; no shared workflow/config changes or foreign ref updates"
+  }
+}
