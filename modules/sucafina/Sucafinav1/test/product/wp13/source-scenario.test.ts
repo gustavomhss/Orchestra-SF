@@ -162,6 +162,14 @@ async function composePortfolio(history: Awaited<ReturnType<typeof createWp13Pol
   if (baseline.status !== "ok" || baseline.value.kind !== "scenario" || digestSfValue(baseline.value.caseRef) !== digestSfValue(phase.caseRef) || baseline.value.requestDigest !== digestSfValue(phase.baselineScenario) || baseline.value.resultDigest !== digestSfValue(phase.baselineResult) || baseline.value.result.total !== 240000 || baseline.value.result.comparisonStatus !== "complete" || baseline.value.result.costCoverage.coverageState !== "complete" || !baseline.value.sourceRefs.length || !await evidenceCurrent(baseline.value.sourceRefs, context)) throw new Error("The ceiling requires the exact complete USD 240000 C08 baseline and current evidence")
   expect(baseline.value.result).toMatchObject({ knownSubtotal: 240000, total: 240000, currency: "USD", comparisonStatus: "complete", costCoverage: { coverageState: "complete", derivedMissingCategoryIds: [] } })
   expect(baseline.value.result.sourceRefs).toEqual(phase.baselineResult.sourceRefs)
+  expect(phase.baselineRef).toBe(phase.baselineMutation.resultRef)
+  expect(phase.baselineMutation.caseRef).toEqual(phase.caseRef)
+  const currentScenarios = await state.read(history.fixture.request, "cases", (value) => Object.values(value.decisionResults ?? {}).filter((record) => record.kind === "scenario" && digestSfValue(record.caseRef) === digestSfValue(phase.caseRef)))
+  if (currentScenarios.status !== "ok") throw new Error("Current scenario C08 records unavailable")
+  for (const expected of [{ resultRef: phase.baselineRef, scenario: phase.baselineScenario, result: phase.baselineResult }, { resultRef: phase.selectedRef, scenario: phase.scenario, result: phase.selectedResult }]) {
+    const matches = currentScenarios.value.filter((record) => record.requestDigest === digestSfValue(expected.scenario) && record.resultDigest === digestSfValue(expected.result))
+    expect(matches.map((record) => record.resultRef)).toEqual([expected.resultRef])
+  }
   const sources: PlannerSourceHost = {
     resolveForecastSource: async (reference, trusted) => {
       const source = phase.sourceRefs.find((ref) => ref.kind === "record" && ref.refId === reference && ref.target.surface === "planner" && ref.target.recordType === "planner-version")

@@ -1,0 +1,158 @@
+{
+  "schema": "sf-wp13-source-scenario-fix-v1",
+  "createdAtUtc": "2026-11-14 13:01:01 UTC",
+  "author": "/root/review_portfolio",
+  "authorization": {
+    "owner": "/root",
+    "scope": "Minimal OWN source-scenario fixture/test correction after W6 hosted failure; no foreign edits or local runtime."
+  },
+  "role": "Independent causal investigation; author of this fix. This receipt is not an independent review of the fix.",
+  "baseline": {
+    "label": "W6",
+    "commit": "8bb72c8cdeda149b000d91403c368642c3b53dec"
+  },
+  "status": "FIX_IMPLEMENTED_STATICALLY_INSPECTED_NOT_RUN",
+  "runtimeStatus": "NOT_RUN",
+  "typecheckStatus": "NOT_RUN",
+  "productPass": false,
+  "acceptance": false,
+  "observedFailure": {
+    "path": "docs/sf2h/receipts/WP13/astra-intelligence-ci/w6-recovery/job-132450853486.log",
+    "sha256": "ac4d705900acd37efb1bc41f46edddc32a589539cf2b0b063fa2734516f6f714",
+    "job": "132450853486",
+    "summary": {
+      "pass": 16,
+      "fail": 1,
+      "expectCalls": 167,
+      "files": 4,
+      "elapsedSeconds": 380.23
+    },
+    "failedTest": "portfolio replays the USD 240000 ceiling and USD 20000 advantage in the same chosen case when training is confirmed",
+    "testElapsedMs": 20415.49,
+    "error": {
+      "status": "unavailable",
+      "reason": "scenario-results-unavailable"
+    },
+    "location": "source-scenario.test.ts:199, composePortfolio called at :34",
+    "observedSetupResults": 5,
+    "omni": "not applicable; no declaring test ran; no Omni proof",
+    "limit": "The log exposes the wrapped comparison failure, not the underlying lookup result. The duplicate-record causal chain is established by the exact code below."
+  },
+  "diagnosis": {
+    "severity": "P1",
+    "ownership": "OWN fixture setup bug already present before W6; causal foreign producer blobs unchanged from W5 to W6.",
+    "originalFlow": [
+      "advance(selected) uses mutation.addAlternative; saveCase creates selected C08 at case version N-1.",
+      "advance(baseline) is last and creates baseline C08 at final case version N.",
+      "publish(selected) writes the same selected alternative at final version N, leaving its N-1 history intact.",
+      "publish(baseline) writes a second baseline C08 at the same final version N with identical requestDigest and resultDigest.",
+      "createDecisionScenarioLookup selects the latest matching case version and rejects two matches with conflict/scenario-result-ambiguous.",
+      "createDecisionComparisonService maps any failed lookup to unavailable/scenario-results-unavailable, matching the hosted failure."
+    ],
+    "evidence": [
+      {
+        "path": "test/product/wp13/source-scenario-fixture.ts",
+        "w6Lines": "166-180",
+        "note": "Both mutations followed by both publication writes."
+      },
+      {
+        "path": "product/decisions/mutations.ts",
+        "lines": "232-261",
+        "note": "saveCase stores scenario C08 atomically with the new case and returns its resultRef."
+      },
+      {
+        "path": "product/decisions/scenario-lookup.ts",
+        "lines": "19-28",
+        "note": "Matching uses exact scenario/result digests; newest version must have exactly one C08."
+      },
+      {
+        "path": "product/decisions/comparison.ts",
+        "lines": "30-31",
+        "note": "Underlying lookup failure is wrapped."
+      }
+    ]
+  },
+  "files": [
+    {
+      "path": "test/product/wp13/source-scenario-fixture.ts",
+      "beforeBlob": "47622797c1f3df33bf68ddc0bed6616997205a58",
+      "afterBlob": "39a6164af40df18c4634196e31e84a8180c822a5",
+      "sha256": "073e52e3d32de47d588d46332e92f4685b52eea5ab543c4572ea6cc1dd5cdc41",
+      "bytes": 28220,
+      "added": 9,
+      "removed": 3
+    },
+    {
+      "path": "test/product/wp13/source-scenario.test.ts",
+      "beforeBlob": "90f32c029238dce63adee7e2866380312b234329",
+      "afterBlob": "d5ad83048d49c79d7f83bd13b4f6c81e3d4ca31c",
+      "sha256": "d4d67b108df0f98e11f5a4fa6b520c285d6d630f5c1a9c472c5d7131a2bf782f",
+      "bytes": 27509,
+      "added": 8,
+      "removed": 0
+    }
+  ],
+  "preservedCausalDependencies": [
+    {
+      "path": "product/decisions/scenario-lookup.ts",
+      "blob": "40c78dee5908cd8af58cc3d58435f3cfb4542045",
+      "w5EqualsW6": true
+    },
+    {
+      "path": "product/decisions/comparison.ts",
+      "blob": "8d86bc416c711169fdc678635cc5eed12481fdea",
+      "w5EqualsW6": true
+    },
+    {
+      "path": "product/decisions/mutations.ts",
+      "blob": "922358d17c470c16b43076510bdf04744e2306e4",
+      "w5EqualsW6": true
+    },
+    {
+      "path": "product/decisions/result-store.ts",
+      "blob": "d7d8eb3ca267551797b191ccfb1d037149757898",
+      "w5EqualsW6": true
+    }
+  ],
+  "change": [
+    "advance returns the real successful mutation receipt and requires its emitted resultRef.",
+    "preparePhase captures the last baseline mutation receipt and reads that C08 through the normal result store.",
+    "The read must match the emitted resultRef, the final case identity/version, baseline ScenarioRequest digest and the current baseline alternative result digest.",
+    "The fixture no longer performs publish(baseline). Selected is still published at the final case version; previous history is never deleted.",
+    "Each composePortfolio invocation asserts the baseline resultRef is the mutation's resultRef and the mutation caseRef equals the current phase.",
+    "An authorized state read requires exactly one current C08 for each baseline/selected requestDigest+resultDigest and requires that exact expected reference."
+  ],
+  "preservation": {
+    "former57ExpectStatementsUnchanged": true,
+    "newTextualExpectStatements": 60,
+    "testDeclarationsBefore": 1,
+    "testDeclarationsAfter": 1,
+    "timeoutMsBefore": 180000,
+    "timeoutMsAfter": 180000,
+    "scope": "Checks execute in both omitted and confirmed phases within the same existing test.",
+    "originalOracles": [
+      "baseline 240000 complete",
+      "omitted 210000 known / total null / training absent / both criteria unknown",
+      "confirmed 250000 with training 40000 / both criteria failed",
+      "ceiling 240000 and minimum advantage 20000",
+      "actual Planner replay and two-criterion C08 binding",
+      "immutable original choice and C08 digests",
+      "retry idempotency and no prepared changes or receipts",
+      "substituted baseline and revoked-provider negatives with observed hits"
+    ],
+    "noForeignMutation": true,
+    "noProductMutation": true,
+    "noLookupRelaxation": true,
+    "noHistoricalDeletion": true,
+    "noNumericConstantChange": true
+  },
+  "verification": {
+    "diffCheck": "CLEAN (text/whitespace only; git diff --check restricted to these two files)",
+    "hashCapture": "Exact files read and hashed after edit.",
+    "staticAssertionPreservation": "All 57 previous expect statements are still present byte-for-byte as trimmed source lines.",
+    "runtime": "NOT_RUN",
+    "hostedGate": "Root must run source-scenario.test.ts on the exact composed W7 snapshot; this fix has no transferred PASS from the other 16 W6 tests.",
+    "independentReview": "Requested from /root/wp13; not assumed completed by this receipt.",
+    "scopeBoundary": "Other W7 verification/threshold/sensitivity-store changes belong to /root/wp13 and were not edited here."
+  }
+}

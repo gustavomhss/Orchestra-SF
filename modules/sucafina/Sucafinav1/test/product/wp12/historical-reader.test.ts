@@ -8,6 +8,7 @@ import { openLocalStore } from "../../../runtime/local-store.ts"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
 import type { ContributionEnvelope } from "../../../product/contracts/resident-ai.ts"
+import type { SfProductStatePort } from "../../../product/contracts/state.ts"
 import { sfCaseFixture, sfRunFixture } from "./run-fixture.ts"
 
 test("historical contribution survives SQLite reopen and requires current access to case and sources", async () => {
@@ -17,13 +18,20 @@ test("historical contribution survives SQLite reopen and requires current access
   const context = { kind: "ui", binding: authority } as unknown as TrustedDomainContext
   const access = { case: true, source: true, revokeAtSecondVerification: false, verifications: 0, mutateAtVerification: 0, mutateAtEgress: false, cyclicAtVerification: 0 }
   const retained: { output?: ContributionEnvelope } = {}
+  const boundary: { namespace?: "cases" | "contributions"; mutate?: () => void; contributionReads: number } = { contributionReads: 0 }
   let mutateIdentity: (() => void) | undefined
   const fixture = sfRunFixture()
   const open = async () => {
     const persistence = await openLocalStore(directory)
     const state = createSfProductState({ persistence, createId: () => "store", resolveTarget: async () => ({ incarnation: "inc" }),
       authorize: async () => access.case ? authority : undefined })
-    const read = createSfHistoricalContributionReader({ state, requestFor: () => request, revalidate: async () => {
+    const readerState: SfProductStatePort = { ...state, read: async (source, namespace, select) => {
+      if (namespace === "contributions") boundary.contributionReads++
+      const found = await state.read(source, namespace, select)
+      if (namespace === boundary.namespace) boundary.mutate?.()
+      return found
+    } }
+    const read = createSfHistoricalContributionReader({ state: readerState, requestFor: () => request, revalidate: async () => {
       if (access.mutateAtEgress && access.verifications === 2 && retained.output) retained.output.createdAt = "2026-11-14T00:00:00Z"
       if (access.verifications === 2) mutateIdentity?.()
       return access.case
@@ -103,6 +111,19 @@ test("historical contribution survives SQLite reopen and requires current access
         change.restore()
       }
       mutateIdentity = undefined
+      for (const namespace of ["cases", "contributions"] as const) {
+        access.verifications = 0
+        boundary.namespace = namespace
+        boundary.contributionReads = 0
+        boundary.mutate = () => { selection.currentCase = { ...fixture.caseRef, version: 2 } }
+        expect({ namespace, result: await reopened.read(selection, context) }).toEqual({ namespace,
+          result: { status: "denied", reason: "contribution-read-identity-changed" } })
+        expect(boundary.contributionReads).toBe(namespace === "cases" ? 0 : 1)
+        expect(access.verifications).toBe(0)
+        selection.currentCase = fixture.caseRef
+        boundary.namespace = undefined
+        boundary.mutate = undefined
+      }
       expect(await reopened.state.read(request, "contributions", (state) => digestSfValue(state.contributions[fixture.output.id]))).toMatchObject({ status: "ok", value: digestSfValue(fixture.output) })
       expect(await reopened.read({ ...selection, currentCase: { ...fixture.caseRef, incarnation: "replacement" } }, context)).toMatchObject({ status: "unavailable" })
       access.case = false

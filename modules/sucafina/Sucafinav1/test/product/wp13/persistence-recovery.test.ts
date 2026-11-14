@@ -116,6 +116,7 @@ async function portfolioRecovery(failure: "before" | "after") {
 async function sensitivityRecovery(failure: "before" | "after") {
   const world = await createWp13SensitivityFixture()
   try {
+    let evaluations = 0
     const actualBindings = createCriterionResultBindings({
       state: world.state,
       host: world.host,
@@ -140,15 +141,17 @@ async function sensitivityRecovery(failure: "before" | "after") {
       },
     }
     const open = () => {
+      const evaluate = createPlannerSensitivity({ results: world.results, resolve: world.issuer.resolve, revalidate: world.issuer.revalidate, preview: (input, context) => comparePlannerPreview({ host: world.host, sources: world.sources, scenarios: world.scenarios, planner: world.planner }, input, context), idempotencyKey: async (digest) => `sensitivity-${digest}` })
       const portfolio: PortfolioPort = {
         evaluate: async () => ({ status: "unavailable", reason: "not-used-by-sensitivity-recovery" }),
-        sensitivity: createPlannerSensitivity({ results: world.results, resolve: world.issuer.resolve, revalidate: world.issuer.revalidate, preview: (input, context) => comparePlannerPreview({ host: world.host, sources: world.sources, scenarios: world.scenarios, planner: world.planner }, input, context), idempotencyKey: async (digest) => `sensitivity-${digest}` }),
+        sensitivity: (request, context) => { evaluations++; return evaluate(request, context) },
       }
       return createPersistentSensitivityPort({ portfolio, results: world.results, bindings, resolveBinding: world.issuer.resolve, idempotencyKey: async () => "recovery-sensitivity" })
     }
     const before = world.ids.value
     const first = await open().evaluateAndStore(world.sensitivityRequest, world.caseRef, world.context)
     expect(first).toEqual({ status: "unavailable", reason: failure === "before" ? "injected-before-binding-commit" : "injected-lost-binding-reply" })
+    expect(evaluations).toBe(1)
     const saved = await world.results.readByRequest({ caseRef: world.caseRef, kind: "sensitivity", idempotencyKey: "sensitivity:recovery-sensitivity", requestDigest: digestSfValue(world.sensitivityRequest) }, world.context)
     expect(saved.status === "ok" && saved.value.state).toBe("found")
     if (saved.status !== "ok" || saved.value.state !== "found") throw new Error("sensitivity result was not persisted before the binding fault")
@@ -163,10 +166,12 @@ async function sensitivityRecovery(failure: "before" | "after") {
     expect(retried.value.sensitivity.evaluated.map((sample) => sample.resultRef)).toEqual(world.saved.sensitivity.evaluated.map((sample) => sample.resultRef))
     expect(world.ids.value).toBe(allocated)
     expect(attempts).toBe(failure === "before" ? 2 : 1)
+    expect(evaluations).toBe(failure === "before" ? 2 : 1)
     expect(await open().read(resultRef, world.context)).toEqual(retried)
     expect(await open().evaluateAndStore(world.sensitivityRequest, world.caseRef, world.context)).toEqual(retried)
     expect(world.ids.value).toBe(allocated)
     expect(attempts).toBe(failure === "before" ? 2 : 1)
+    expect(evaluations).toBe(failure === "before" ? 2 : 1)
   } finally {
     await world.cleanup()
   }

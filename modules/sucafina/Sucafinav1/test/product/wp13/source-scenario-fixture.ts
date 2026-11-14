@@ -146,6 +146,8 @@ export async function createWp13PolicyHistory(options: { training: "omitted" | "
       current.identity = `promote-${alternativeId}-${selected.version + 1}`
       const advanced = await mutation.addAlternative({ caseRef: refFor(decision), alternativeRef: { id: selected.id, version: selected.version }, title: selected.title, scenario, coverageRef }, fixture.context)
       if (advanced.status !== "ok") throw new Error(`Alternative revision: ${advanced.reason}`)
+      if (!advanced.value.resultRef) throw new Error("Alternative revision did not emit its C08 result")
+      return { ...structuredClone(advanced.value), resultRef: advanced.value.resultRef }
     }
     const preparePhase = async (source: RecordEvidence, basis: CostCoverageBasis, scenario: ScenarioRequest, training: "omitted" | "confirmed" | "bundled") => {
       await checkpoint(`prepare:${source.refId}:start`)
@@ -165,7 +167,7 @@ export async function createWp13PolicyHistory(options: { training: "omitted" | "
       const renewalCoverageRef = await register(renewalSource, basis, renewalEntries)
       await advance("selected", scenario, selectedCoverageRef)
       const baselineScenario: ScenarioRequest = { baseRef: renewalSource.refId, operations: [], assumptions: [] }
-      await advance("baseline", baselineScenario, renewalCoverageRef)
+      const baselineMutation = await advance("baseline", baselineScenario, renewalCoverageRef)
       const decision = await readCase()
       const caseRef = refFor(decision)
       const publish = async (id: string) => {
@@ -177,7 +179,11 @@ export async function createWp13PolicyHistory(options: { training: "omitted" | "
         return saved.value
       }
       const selected = await publish("selected")
-      const renewed = await publish("baseline")
+      // The last mutation already emitted the baseline at this case version. Reuse
+      // its C08 receipt; another write here makes the current scenario lookup ambiguous.
+      const emittedBaseline = await results.read({ kind: "scenario", resultRef: baselineMutation.resultRef }, fixture.context)
+      if (emittedBaseline.status !== "ok" || emittedBaseline.value.kind !== "scenario" || emittedBaseline.value.resultRef !== baselineMutation.resultRef || digestSfValue(baselineMutation.caseRef) !== digestSfValue(caseRef) || digestSfValue(emittedBaseline.value.caseRef) !== digestSfValue(caseRef) || emittedBaseline.value.requestDigest !== digestSfValue(baselineScenario) || emittedBaseline.value.resultDigest !== digestSfValue(decision.alternatives.find((alternative) => alternative.id === "baseline")?.result)) throw new Error("Current baseline mutation C08 mismatch")
+      const renewed = emittedBaseline.value
       const units = await issuer.issue({ scenarioRef: selected.resultRef, baselineRef: renewed.resultRef, parameterRef: "implementation:11" }, fixture.context)
       if (units.status !== "ok") throw new Error(`Current units: ${units.reason}`)
       current.identity = `rule-${caseRef.version}`
@@ -196,7 +202,7 @@ export async function createWp13PolicyHistory(options: { training: "omitted" | "
       const rule = await rules.resolve({ caseRef, criterionId: "renewal-difference" }, fixture.context)
       if (classification.status !== "ok" || rule.status !== "ok") throw new Error("Current classification or rule unavailable")
       await checkpoint(`prepare:${source.refId}:complete`)
-      return { caseRef, selectedRef: selected.resultRef, baselineRef: renewed.resultRef, comparisonRef: comparisonStored.value.resultRef, comparison: compared.value, advantageComparison: advantage.value, selectedResult: selected.result, baselineResult: renewed.result, scenario, baselineScenario, projection: projection.value.candidate, sourceRefs: basis.sourceRefs, basis, planner: withCriteria, results, evidence, cases, issuer, exact, preview, classification: classification.value, rule: rule.value, sensitivityRequest: { scenarioRef: selected.resultRef, parameterBounds: { parameterRef: "implementation:11", minimum: 10000, maximum: 70000, steps: 2 }, criterion: { id: "renewal-difference", operator: "lte" as const, value: -20000 } } }
+      return { caseRef, selectedRef: selected.resultRef, baselineRef: renewed.resultRef, baselineMutation, comparisonRef: comparisonStored.value.resultRef, comparison: compared.value, advantageComparison: advantage.value, selectedResult: selected.result, baselineResult: renewed.result, scenario, baselineScenario, projection: projection.value.candidate, sourceRefs: basis.sourceRefs, basis, planner: withCriteria, results, evidence, cases, issuer, exact, preview, classification: classification.value, rule: rule.value, sensitivityRequest: { scenarioRef: selected.resultRef, parameterBounds: { parameterRef: "implementation:11", minimum: 10000, maximum: 70000, steps: 2 }, criterion: { id: "renewal-difference", operator: "lte" as const, value: -20000 } } }
     }
     const originalSource = fixture.sourceRefs.find((ref) => ref.refId === fixture.scenario.baseRef)
     if (!originalSource) throw new Error("Original source unavailable")

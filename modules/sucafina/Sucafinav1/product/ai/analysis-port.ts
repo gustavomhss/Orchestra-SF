@@ -293,7 +293,7 @@ export async function runSfAnalysis(input: {
     }
     if (outcome.state === "cancelled") {
       const saved = await cancelSfAnalysis({ host: input.host, runRef: admission.runRef, sessionID: admission.sessionID, executionTicket: admission.executionTicket,
-        skillReceipt: admission.skillReceipt, caseRef: input.request.caseRef, contextFingerprint: input.request.contextFingerprint })
+        skillReceipt: admission.skillReceipt, caseRef: input.request.caseRef, contextFingerprint: input.request.contextFingerprint, reviewTarget: input.reviewTarget })
       return saved.status === "ok" ? { status: "unavailable", reason: "analysis-cancelled" } : saved
     }
     const saved = await withLifecycleContext(input.host, admission.runRef, (context) => input.host.settle(admission.runRef, "unavailable", "native-result-not-final", context))
@@ -329,18 +329,34 @@ export async function cancelSfAnalysis(input: {
   skillReceipt: SkillLoadReceipt
   caseRef: ContributionEnvelope["caseRef"]
   contextFingerprint: string
+  /** Optional consistency assertion; authority always comes from the durable run. */
+  reviewTarget?: SfReviewTarget
 }) {
   if (input.skillReceipt.nativeSessionId !== input.sessionID || input.skillReceipt.runId !== input.runRef) return { status: "denied", reason: "session-mismatch" } as const
-  const authorized = await input.host.withRunContext(input.runRef, async (context) => {
-    const current = await input.host.readRun(input.runRef, context)
+  const { host, runRef, executionTicket } = input
+  const command = () => ({ runRef: input.runRef, sessionID: input.sessionID, skillReceipt: input.skillReceipt,
+    caseRef: input.caseRef, contextFingerprint: input.contextFingerprint, reviewTarget: input.reviewTarget })
+  const commandDigest = digestSfValue(command())
+  const pins: { value: unknown; digest: string }[] = []
+  const identities: (() => boolean)[] = []
+  const unchanged = () => input.host === host && input.executionTicket === executionTicket && matchesDigest(command(), commandDigest) &&
+    identities.every((matches) => matches()) && pins.every((pin) => matchesDigest(pin.value, pin.digest))
+  const changed = { status: "denied", reason: "cancellation-input-changed-during-authorization" } as const
+  const authorized = await host.withRunContext(runRef, async (context) => {
+    identities.push(retainScopeIdentity(context))
+    if (!unchanged()) return changed
+    const current = await host.readRun(runRef, context)
+    if (!unchanged()) return changed
     if (current.status !== "ok") return current
-    const run = current.value
-    if (run.runRef !== input.runRef || !run.native || run.native.sessionID !== input.sessionID ||
+    const run = structuredClone(current.value)
+    const runDigest = digestSfValue(run)
+    pins.push({ value: current.value, digest: runDigest }, { value: run, digest: runDigest })
+    if (run.runRef !== runRef || !run.native || run.native.sessionID !== input.sessionID ||
       digestSfValue(run.native.skillReceipt) !== digestSfValue(input.skillReceipt) || digestSfValue(run.caseRef) !== digestSfValue(input.caseRef) ||
-      run.contextFingerprint !== input.contextFingerprint) return { status: "denied", reason: "run-binding-mismatch" } as const
+      run.contextFingerprint !== input.contextFingerprint || (input.reviewTarget && digestSfValue(input.reviewTarget) !== digestSfValue(run.reviewTarget))) return { status: "denied", reason: "run-binding-mismatch" } as const
     // The review target comes from durable host state, never from caller/model metadata.
-    return input.host.revalidate(context, {
-      runRef: input.runRef,
+    const checked = await host.revalidate(context, {
+      runRef,
       caseRef: run.caseRef,
       contextFingerprint: run.contextFingerprint,
       manifestDigest: run.selection.manifestDigest,
@@ -348,15 +364,23 @@ export async function cancelSfAnalysis(input: {
       skillReceipts: [run.native.skillReceipt],
       reviewTarget: run.reviewTarget,
     })
+    return unchanged() ? checked : changed
   })
+  if (!unchanged()) return changed
   if (authorized.status !== "ok" && authorized.status !== "stale") return authorized
-  const cancelled = await input.host.withRunContext(input.runRef, (context) => input.host.analysis.cancel(input.runRef, context))
+  const cancelled = await host.withRunContext(runRef, async (context) => {
+    identities.push(retainScopeIdentity(context))
+    return unchanged() ? host.analysis.cancel(runRef, context) : changed
+  })
+  if (!unchanged()) return changed
   if (cancelled.status !== "ok" || !cancelled.value.cancelled) return cancelled
-  const interrupted = await input.host.withRunContext(input.runRef, async (context) => {
+  const interrupted = await host.withRunContext(runRef, async (context) => {
+    identities.push(retainScopeIdentity(context))
     // Cancellation is already durable. The execution host must authorize this one-shot interrupt
     // against its own ticket/session registry even though ordinary run revalidation now rejects it.
-    return input.host.execution.interrupt(input.executionTicket, context)
+    return unchanged() ? host.execution.interrupt(executionTicket, context) : changed
   })
+  if (!unchanged()) return changed
   if (interrupted.status !== "ok") return interrupted
   return cancelled
 }
@@ -365,24 +389,30 @@ export async function cancelSfAnalysis(input: {
 export async function readSfAnalysisRun(input: { host: SfAnalysisHost; runRef: string }): Promise<PortResult<{ run: SfAnalysisRunProgress; output?: ContributionEnvelope }>> {
   const { host, runRef } = input
   const sameInput = () => input.host === host && input.runRef === runRef
+  const pins: { value: unknown; digest: string }[] = []
+  const originalsMatch = () => pins.every((pin) => matchesDigest(pin.value, pin.digest))
   let lifecycleIdentity = () => true
   let lifecycleDigest: string | undefined
   const read = await withLifecycleContext(host, runRef, async (context) => {
     lifecycleIdentity = retainScopeIdentity(context)
+    if (!sameInput() || !lifecycleIdentity()) return { status: "denied", reason: "analysis-read-identity-changed" } as const
     const found = await host.readRun(runRef, context)
     if (!sameInput() || !lifecycleIdentity()) return { status: "denied", reason: "analysis-read-identity-changed" } as const
     if (found.status !== "ok") return found
     const value = structuredClone(found.value)
     lifecycleDigest = digestSfValue(value)
+    pins.push({ value: found.value, digest: lifecycleDigest }, { value, digest: lifecycleDigest })
     return { status: "ok", value } as const
   })
   if (!sameInput() || !lifecycleIdentity()) return { status: "denied", reason: "analysis-read-identity-changed" }
+  if (!originalsMatch()) return { status: "denied", reason: "analysis-read-mutated-input" }
   if (read.status !== "ok") return read
   if (!lifecycleDigest || !matchesDigest(read.value, lifecycleDigest)) return { status: "denied", reason: "analysis-read-mutated-input" }
   const run = read.value
   if (run.runRef !== runRef) return { status: "denied", reason: "run-identity-mismatch" }
   const runDigest = digestSfValue(run)
-  const progress: SfAnalysisRunProgress = { runRef: run.runRef, version: run.version, caseRef: run.caseRef, skillId: run.skillId, state: run.state, createdAt: run.createdAt, updatedAt: run.updatedAt,
+  pins.push({ value: run, digest: runDigest })
+  const progress: SfAnalysisRunProgress = { runRef: run.runRef, version: run.version, caseRef: structuredClone(run.caseRef), skillId: run.skillId, state: run.state, createdAt: run.createdAt, updatedAt: run.updatedAt,
     ...("reason" in run && run.reason ? { reason: run.reason } : {}), ...(run.outputRef ? { outputRef: run.outputRef } : {}) }
   if (run.state !== "ready") return { status: "ok", value: { run: structuredClone(progress) } }
   if (!run.outputRef || !run.native) return { status: "unavailable", reason: "ready-output-unavailable" }
@@ -391,14 +421,16 @@ export async function readSfAnalysisRun(input: { host: SfAnalysisHost; runRef: s
   let resultDigest: string | undefined
   const result = await host.withRunContext<{ run: SfAnalysisRunProgress; output?: Extract<ContributionEnvelope, { state: "ready" }> }>(runRef, async (context) => {
     contentIdentity = retainScopeIdentity(context)
-    const identityMatches = () => sameInput() && contentIdentity()
+    const identityMatches = () => sameInput() && lifecycleIdentity() && contentIdentity()
+    if (!identityMatches()) return { status: "denied", reason: "analysis-read-identity-changed" }
+    if (!originalsMatch()) return { status: "denied", reason: "analysis-read-mutated-input" }
     const output = await host.analysis.read(run.runRef, context)
     if (!identityMatches()) return { status: "denied", reason: "analysis-read-identity-changed" }
     if (output.status !== "ok") return output
-    if (!matchesDigest(run, runDigest)) return { status: "denied", reason: "analysis-read-mutated-input" }
+    if (!originalsMatch()) return { status: "denied", reason: "analysis-read-mutated-input" }
     if (output.value.state !== "ready" || output.value.id !== run.outputRef || !matchesSfRunOutput(run, output.value)) return { status: "denied", reason: "run-output-provenance-mismatch" }
     const outputDigest = digestSfValue(output.value)
-    const originalsMatch = () => matchesDigest(run, runDigest) && matchesDigest(output.value, outputDigest)
+    pins.push({ value: output.value, digest: outputDigest })
     const authorized = await host.revalidate(context, { runRef: run.runRef, caseRef: run.caseRef, contextFingerprint: run.contextFingerprint, manifestDigest: run.selection.manifestDigest,
       accessRevision: run.accessRevision, outputKind: output.value.kind, evidenceRefs: output.value.evidenceRefs, output: output.value, skillReceipts: [receipt], reviewTarget: run.reviewTarget })
     if (!identityMatches()) return { status: "denied", reason: "analysis-read-identity-changed" }
@@ -409,17 +441,20 @@ export async function readSfAnalysisRun(input: { host: SfAnalysisHost; runRef: s
     if (current.status !== "ok") return current
     if (!originalsMatch()) return { status: "denied", reason: "analysis-read-mutated-input" }
     if (!matchesDigest(current.value, runDigest)) return { status: "stale", reason: "run-changed-during-read" }
+    pins.push({ value: current.value, digest: runDigest })
     const authorizedAgain = await host.revalidate(context, { runRef: run.runRef, caseRef: run.caseRef, contextFingerprint: run.contextFingerprint, manifestDigest: run.selection.manifestDigest,
       accessRevision: run.accessRevision, outputKind: output.value.kind, evidenceRefs: output.value.evidenceRefs, output: output.value, skillReceipts: [receipt], reviewTarget: run.reviewTarget })
     if (!identityMatches()) return { status: "denied", reason: "analysis-read-identity-changed" }
     if (authorizedAgain.status !== "ok") return authorizedAgain
     if (!originalsMatch() || !matchesDigest(current.value, runDigest)) return { status: "denied", reason: "analysis-read-mutated-input" }
     const value = { run: structuredClone(progress), output: structuredClone(output.value) }
-    resultDigest = digestSfValue(value)
-    return { status: "ok", value }
+    const ready = { status: "ok", value } as const
+    resultDigest = digestSfValue(ready)
+    pins.push({ value: ready, digest: resultDigest })
+    return ready
   })
-  if (!sameInput() || !contentIdentity()) return { status: "denied", reason: "analysis-read-identity-changed" }
-  if (result.status === "ok" && (!resultDigest || !matchesDigest(result.value, resultDigest))) return { status: "denied", reason: "analysis-read-mutated-input" }
+  if (!sameInput() || !lifecycleIdentity() || !contentIdentity()) return { status: "denied", reason: "analysis-read-identity-changed" }
+  if (!originalsMatch() || (result.status === "ok" && (!resultDigest || !matchesDigest(result, resultDigest)))) return { status: "denied", reason: "analysis-read-mutated-input" }
   return result.status === "ok" ? { status: "ok", value: structuredClone(result.value) } : result
 }
 

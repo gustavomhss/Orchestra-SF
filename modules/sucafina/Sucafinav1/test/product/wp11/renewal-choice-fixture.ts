@@ -79,7 +79,7 @@ export async function createRenewalChoiceHistory(options: { training: "omitted" 
     }
     const planner = createPlannerPort({ host: fixture.host, sources, evidence })
     const baseline = createDecisionBaselineCoverage({ state, host: fixture.host, resolveCase: async () => ({ status: "ok", value: refFor(await readCase()) }), authorizeCase, authorizeCoverage: async () => true,
-      projectForecast: async (sourceRef, _caseRef, context) => { const value = await planner.compareForecast({ baseRef: sourceRef, candidateRef: sourceRef, period: wp05Horizon, currency: "USD" }, context); return value.status === "ok" ? { status: "ok", value: value.value.candidate } : value },
+      projectForecast: async (sourceRef, _caseRef, context) => { const value = await sourcePlanner.compareForecast({ baseRef: sourceRef, candidateRef: sourceRef, period: wp05Horizon, currency: "USD" }, context); return value.status === "ok" ? { status: "ok", value: value.value.candidate } : value },
       resolveEvidence: (refs, context) => evidence.context({ refs }, context),
       supports: (entry, resolved) => entry.status === "not-applicable" && entry.evidenceRefs.some((ref) => declarations.get(ref.refDigest)?.entries.some((candidate) => digestSfValue(candidate) === digestSfValue(entry))) && entry.evidenceRefs.every((ref) => resolved.some((value) => value.state === "fresh" && digestSfValue(value.ref) === digestSfValue(ref))),
       verifySnapshot: (snapshot, request, record) => snapshotMatches(snapshot, [request.source, ...record.basis.sourceRefs, ...record.assessment.evaluatedSourceRefs]), operationIdentity: () => current.identity, proposalCoverageWrites: writes, now })
@@ -91,7 +91,9 @@ export async function createRenewalChoiceHistory(options: { training: "omitted" 
     // calculation/comparison Planner below without re-entering it for every target.
     const operationSources: PlannerSourceHost = {
       resolveForecastSource: (reference, context) => trace.measure("operation-source", () => current.sources.resolveForecastSource(reference, context)),
-      resolveForecastCoverage: (reference, context) => trace.measure("operation-coverage", () => current.sources.resolveForecastCoverage(reference, context)),
+      // This auxiliary port supplies source projections and target admission only.
+      // C10 is observed by the classified Planner at judgment and promotion.
+      resolveForecastCoverage: () => trace.measure("operation-coverage", async () => ({ status: "unavailable" as const, reason: "coverage-not-needed-for-operation-admission" })),
     }
     // Stored scenarios retain their persisted C10 result and basis. This port
     // supplies only the canonical source DomainProjection; judgment and preview
@@ -133,12 +135,12 @@ export async function createRenewalChoiceHistory(options: { training: "omitted" 
     const preparePhase = async (source: RecordEvidence, basis: CostCoverageBasis, scenario: ScenarioRequest, training: "omitted" | "confirmed" | "bundled") => {
       await checkpoint(`prepare:${source.refId}:start`)
       const phaseRefs = [...basis.sourceRefs].filter((ref): ref is RecordEvidence => ref.kind === "record")
-      const coverage = await renewalCoverage({ ...fixture, planner, sources, evidence, scenario, basis, sourceRefs: phaseRefs, caseRef: refFor(await readCase()) }, training)
+      const coverage = await renewalCoverage({ ...fixture, planner: sourcePlanner, sources, evidence, scenario, basis, sourceRefs: phaseRefs, caseRef: refFor(await readCase()) }, training)
       declarations.set(coverage.statement.refDigest, { ref: coverage.statement, entries: coverage.entries })
       const selectedCoverageRef = await register(source, basis, coverage.entries)
       const renewalSource = phaseRefs.find((ref) => ref.refId === fixture.baselineScenario.baseRef)
       if (!renewalSource) throw new Error("Renewal source unavailable")
-      const renewalProjection = await planner.compareForecast({ baseRef: renewalSource.refId, candidateRef: renewalSource.refId, period: wp05Horizon, currency: "USD" }, fixture.context)
+      const renewalProjection = await sourcePlanner.compareForecast({ baseRef: renewalSource.refId, candidateRef: renewalSource.refId, period: wp05Horizon, currency: "USD" }, fixture.context)
       if (renewalProjection.status !== "ok") throw new Error(renewalProjection.reason)
       const description = "The synthetic renewal quote has one final service price; this transition category does not apply to retaining that service."
       const unsigned: RecordEvidence = { schema: "sf-evidence-v1", kind: "record", refId: `renewal-scope-${basis.version}`, installationId: "install", projectId: "project", refDigest: "", evidenceLevel: "observed", target: { surface: "planner", recordType: "synthetic-scope", recordId: `renewal-scope-${basis.version}`, incarnation: "renewal-scope", version: basis.version, fields: [...basis.categoryIds], period: wp05Horizon, projectionDigest: digestSfValue({ description, source: renewalSource }) } }

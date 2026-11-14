@@ -84,13 +84,13 @@ export function createSfHistoricalContributionReader(input: {
         if (!current || current.incarnation !== request.currentCase.incarnation || current.version !== request.currentCase.version || authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion || !current.participants.includes(authority.principalRef)) return undefined
         return current
       })
-      if (cases.status !== "ok" || !cases.value) return undefined
+      if (!identityMatches() || cases.status !== "ok" || !cases.value) return undefined
       const found = await input.state.read(source, "contributions", (state, authority) => {
         if (authority.principalRef !== context.binding.principalRef || authority.accessRevision !== context.binding.accessRevision || authority.policyVersion !== context.binding.policyVersion) return undefined
         const output = state.contributions[request.outputRef]
         return { output, run: output && state.nativeRuns?.[output.runProvenance.runId] }
       })
-      if (found.status !== "ok" || !found.value) return undefined
+      if (!identityMatches() || found.status !== "ok" || !found.value) return undefined
       const decoded = decodeSfContributionEnvelope(found.value.output)
       const run = found.value.run
       if (!decoded.ok || decoded.value.id !== request.outputRef || decoded.value.state !== "ready" || decoded.value.caseRef.id !== request.currentCase.id ||
