@@ -1,0 +1,2945 @@
+--- a/modules/sucafina/Sucafinav1/product/reviews/collaboration-client.ts
++++ b/modules/sucafina/Sucafinav1/product/reviews/collaboration-client.ts
+@@ -7,32 +7,94 @@
+ export type ReviewDiscussionThread = { id: string; recipientRef: string; state: string; messages: ReviewDiscussionMessage[] }
+ export type ReviewPreparedAnswer = { answerRef: string; answer: string; authorRef: string; observationRef: string; observedSourceVersion: number; expectedScopeFingerprint: string; reviewContext: ReviewDiscussionPin; projection: DomainProjection }
+ 
+-/** Presentation transport only. Every call is admitted by the installed host;
+- * neither URL selections nor the principal shown by the UI confer authority.
++export type ReviewDiscussionTransport = {
++  fetch: (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>
++  url: () => string
++  binding: () => string | undefined
++}
++
++export class ReviewDiscussionError extends Error {
++  constructor(message: string, readonly kind: "access" | "recoverable" | "conflict" | "invalid", readonly outcome: "rejected" | "unknown") {
++    super(message)
++    this.name = "ReviewDiscussionError"
++  }
++}
++
++/** Presentation transport only. The binding is an equality guard, never a grant.
++ * The installed host must check it before invoking an action and echo it.
++ * A missing response echo withholds data for explicit reconciliation; a
++ * different echo proves that this discussion's authorization scope changed.
+  */
+-export function createReviewDiscussionClient(accessLost: () => void) {
++export function createReviewDiscussionClient(accessLost: () => void, transport: ReviewDiscussionTransport = {
++  fetch: (...args) => fetch(...args),
++  url: () => location.href,
++  binding: () => document.querySelector<HTMLMetaElement>('meta[name="sf-access-revision"]')?.content,
++}) {
+   const pending = new Set<AbortController>()
++  const binding = transport.binding()
++  const endpoint = new URL(transport.url())
+   let disposed = false
++  const dispose = () => { disposed = true; pending.forEach((controller) => controller.abort()); pending.clear() }
++  const lost = () => {
++    if (!disposed) { dispose(); accessLost() }
++    return new ReviewDiscussionError("Review discussion access changed. Reopen an authorized review.", "access", "rejected")
++  }
++  const unverified = () => {
++    // An unsupported host is not evidence that the independent meeting was revoked.
++    dispose()
++    return new ReviewDiscussionError("Review discussion binding could not be verified. Reopen an authorized review.", "access", "rejected")
++  }
++  const checkBinding = () => {
++    if (disposed) throw new ReviewDiscussionError("Review discussion unavailable", "access", "rejected")
++    if (!binding || !/^[a-f0-9]{64}$/.test(binding)) throw unverified()
++    if (transport.binding() !== binding) throw lost()
++    const current = new URL(transport.url())
++    if (current.origin !== endpoint.origin || current.pathname !== endpoint.pathname || current.searchParams.get("reviewRef") !== endpoint.searchParams.get("reviewRef")) throw lost()
++  }
+   const post = async (mode: string, payload: unknown, key?: string) => {
+-    if (disposed) throw new Error("Review discussion unavailable")
+-    const url = new URL(location.href)
++    checkBinding()
++    const url = new URL(transport.url())
+     url.search = new URLSearchParams({ sf: mode }).toString()
+     url.hash = ""
+     const controller = new AbortController()
+     const bodyText = JSON.stringify(payload)
+     pending.add(controller)
+     const deadline = setTimeout(() => controller.abort(), 30_000)
+-    const response = await fetch(url, { method: "POST", credentials: "same-origin", cache: "no-store", signal: controller.signal,
+-      headers: { "Content-Type": "application/json", ...(key ? { "Idempotency-Key": key } : {}) }, body: bodyText,
+-    }).catch(() => undefined)
+-    const body: unknown = await response?.json().catch(() => undefined)
+-    clearTimeout(deadline)
+-    pending.delete(controller)
+-    if (disposed || controller.signal.aborted) throw new Error("Review discussion unavailable")
+-    if (response?.status === 401 || response?.status === 403) accessLost()
+-    const result = discussionObject(body)
+-    if (!response?.ok || result.status !== "ok") throw new Error(typeof result.reason === "string" ? result.reason : "Review discussion unavailable")
+-    return result.value
++    try {
++      const response = await transport.fetch(url, { method: "POST", credentials: "same-origin", cache: "no-store", signal: controller.signal,
++        headers: { "Content-Type": "application/json", "X-SF-Review-Binding": binding!, ...(key ? { "Idempotency-Key": key } : {}) }, body: bodyText,
++      }).catch(() => undefined)
++      checkBinding()
++      if (!response) throw new ReviewDiscussionError("The response was not received. Your draft and action are retained.", "recoverable", "unknown")
++      const destination = response.url ? new URL(response.url, url) : undefined
++      if (response.status === 401 || response.status === 403 || (response.redirected && (destination?.origin !== url.origin || /\/auth\/login\/?$/.test(destination.pathname)))) throw lost()
++      const echo = response.headers.get("X-SF-Review-Binding")
++      if (echo !== null && echo !== binding) throw lost()
++      if (controller.signal.aborted) throw new ReviewDiscussionError("The response was not received. Your draft and action are retained.", "recoverable", "unknown")
++      const body: unknown = await response.json().catch(() => undefined)
++      checkBinding()
++      const result = body && typeof body === "object" && !Array.isArray(body) ? body as Record<string, unknown> : undefined
++      if (result?.status === "denied") throw lost()
++      if (controller.signal.aborted) throw new ReviewDiscussionError("The response was not received. Your draft and action are retained.", "recoverable", "unknown")
++      // Unavailable is not an authorization verdict. The coherent producer
++      // contract carries real revocation as denied; read drift/failure retains
++      // the attempt and requires an authorized read before an explicit retry.
++      if (response.status === 409 || result?.status === "stale" || result?.status === "conflict" || result?.status === "provider-conflict") {
++        // Only these producer results establish a precommit CAS rejection.
++        // Idempotency/target conflicts can refer to an earlier durable commit.
++        const rejected = echo === binding && key !== undefined && (result?.reason === "product-state-changed" || result?.reason === "thread-changed")
++        throw new ReviewDiscussionError(typeof result?.reason === "string" ? result.reason : "The action conflicts with a newer version.", "conflict", rejected ? "rejected" : "unknown")
++      }
++      if (response.status >= 500 || result?.status === "unavailable")
++        throw new ReviewDiscussionError(typeof result?.reason === "string" ? result.reason : "The action outcome is unavailable.", "recoverable", "unknown")
++      if (!response.ok || result?.status !== "ok")
++        throw new ReviewDiscussionError(typeof result?.reason === "string" ? result.reason : "Review discussion response unavailable", "invalid", "unknown")
++      if (echo === null) throw new ReviewDiscussionError("The response binding could not be verified. Reconcile the discussion; your draft and action are retained.", "recoverable", "unknown")
++      return result.value
++    } finally {
++      clearTimeout(deadline)
++      pending.delete(controller)
++    }
+   }
+   const mutation = async () => ({ expectedStorageVersion: discussionVersion(await post("collaboration-storage-version", { namespace: "threads" }), 0), idempotencyKey: crypto.randomUUID() })
+   return {
+@@ -45,10 +107,10 @@
+     },
+     async thread(id: string) {
+       const thread = discussionThread(await post("collaboration-thread-read", { id }))
+-      if (thread.id !== id) throw new Error("Review discussion unavailable")
++      if (thread.id !== id) throw lost()
+       return thread
+     },
+-    dispose() { disposed = true; pending.forEach((controller) => controller.abort()); pending.clear() },
++    dispose,
+   }
+ }
+ 
+@@ -96,3 +158,5 @@
+   if (!Array.isArray(projection.values) || !Array.isArray(projection.components) || !Array.isArray(projection.missing) || !projection.context) throw new Error("Preserved projection unavailable")
+   return { answerRef: discussionText(answer.answerRef), answer: discussionText(answer.answer), authorRef: discussionText(answer.authorRef), observationRef: discussionText(answer.observationRef), observedSourceVersion: discussionVersion(answer.observedSourceVersion), expectedScopeFingerprint: discussionText(answer.expectedScopeFingerprint), reviewContext: discussionPin(answer.reviewContext), projection: projection as DomainProjection }
+ }
++
++
+--- a/modules/sucafina/Sucafinav1/product/reviews/collaboration-view.ts
++++ b/modules/sucafina/Sucafinav1/product/reviews/collaboration-view.ts
+@@ -1,21 +1,39 @@
+ import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
+ import type { DomainProjection, PreservedReview } from "../contracts/context.ts"
+-import { createReviewDiscussionClient, discussionAnswer, discussionMessage, discussionObject, discussionPin, discussionText, discussionThread } from "./collaboration-client.ts"
++import { createReviewDiscussionClient, ReviewDiscussionError, discussionAnswer, discussionMessage, discussionObject, discussionPin, discussionText, discussionThread } from "./collaboration-client.ts"
+ import type { ReviewDiscussionBasis, ReviewDiscussionMessage, ReviewDiscussionPin, ReviewDiscussionThread, ReviewPreparedAnswer } from "./collaboration-client.ts"
+ 
+-/** Human actions against a preserved C05. The host owns source, recipient and
+- * final access checks; no local selection or displayed principal grants access.
++/** Human actions against a preserved C05. All access and replay decisions remain
++ * in the installed host. A displayed principal, draft or URL grants no access.
+  */
+ export function createReviewCollaborationView(input: { review: PreservedReview; principalRef: string }) {
+   const root = region("Review discussion")
+   const status = document.createElement("p")
+   status.setAttribute("role", "status")
+   const form = document.createElement("div"), messages = document.createElement("div")
++  const recovery = region("Action recovery")
+   const confirmation = region("Answer confirmation"), confirmed = region("Confirmed answer"), history = region("Answer history")
+-  root.append(heading("Discuss this preserved review"), status, form, messages, confirmation, confirmed, history)
+-  let closed = false, busy = false
++  root.append(heading("Discuss this preserved review"), status, form, recovery, messages, confirmation, confirmed, history)
++  let closed = false, busy = false, suspended = true
++  let targetThread = new URL(location.href).searchParams.get("reviewThread")
+   let thread: ReviewDiscussionThread | undefined
+   let prepared: ReviewPreparedAnswer | undefined
++  const replies = new Map<string, string>()
++  const edits = new Map<string, { text: string; message: ReviewDiscussionMessage; dirty: boolean }>()
++  type Intent = {
++    kind: "question" | "reply" | "edit" | "confirm"
++    mode: string
++    payload: string
++    key: string
++    text: string
++    threadId?: string
++    original?: ReviewDiscussionMessage
++    reconcileQuestion?: () => Promise<void>
++    complete: (value: unknown) => Promise<void>
++    reconciled: boolean
++    rejected: boolean
++  }
++  let intent: Intent | undefined
+   const client = createReviewDiscussionClient(() => {
+     dispose()
+     window.dispatchEvent(new Event("sf-access-revoked"))
+@@ -34,37 +52,87 @@
+   const chooseSources = () => {
+     source.replaceChildren(...references().map((ref) => new Option(`${ref.target.surface} · ${ref.target.recordId} · version ${ref.target.version}`, ref.refId)))
+   }
+-  section.addEventListener("change", chooseSources)
++  section.addEventListener("change", () => { question.value = ""; chooseSources() })
++  source.addEventListener("change", () => { question.value = "" })
++  recipient.addEventListener("change", () => { question.value = "" })
+   chooseSources()
+   const ask = button("Ask about this review", async () => {
+     const chosen = selected(), reference = references().find((ref) => ref.refId === source.value)
+-    if (!chosen || !reference || !recipient.value || !question.value.trim()) throw new Error("Choose a source, recipient and question")
++    const body = question.value, recipientRef = recipient.value
++    if (!chosen || !reference || !recipientRef || !body.trim()) throw new Error("Choose a source, recipient and question")
+     const basis: ReviewDiscussionBasis = { sourceRef: reference.refId, sourceIncarnation: reference.target.incarnation, observedVersion: reference.target.version, period: chosen.period, evidenceRefs: [reference] }
+-    const pin = discussionPin(await client.post("review-thread-context", { reviewRef: input.review.id, sectionId: chosen.id, basis }))
+-    if (pin.reviewRef !== input.review.id || pin.reviewVersion !== input.review.version || pin.sectionId !== chosen.id) throw new Error("Preserved review context changed")
++    const context = { reviewRef: input.review.id, sectionId: chosen.id, basis }
++    const pin = discussionPin(await client.post("review-thread-context", context))
++    live()
++    if (pin.reviewRef !== input.review.id || pin.reviewVersion !== input.review.version || pin.sectionId !== chosen.id) return changedScope()
+     const mutation = await client.mutation()
+-    const created = discussionThread(await client.post("collaboration-thread-create", { draft: { kind: "clarification", ...basis, reviewContext: pin, recipientRef: recipient.value, body: question.value }, mutation }, mutation.idempotencyKey))
+-    checkThread(created)
++    live()
++    intent = {
++      kind: "question", mode: "collaboration-thread-create", key: mutation.idempotencyKey,
++      payload: JSON.stringify({ draft: { kind: "clarification", ...basis, reviewContext: pin, recipientRef, body }, mutation }),
++      text: body, reconciled: false, rejected: false,
++      reconcileQuestion: async () => {
++        const people = await client.recipients()
++        if (!people.some((person) => person.id === recipientRef)) return changedScope()
++        const current = discussionPin(await client.post("review-thread-context", context))
++        if (!samePin(current, pin)) return changedScope()
++      },
++      complete: async (value) => {
++        const created = discussionThread(value)
++        checkThread(created, true)
++        if (intent) intent.threadId = created.id
++        const current = await client.thread(created.id)
++        live(); checkThread(current, true)
++        adoptQuestion(created.id)
++        replies.clear(); edits.clear()
++        thread = current
++        question.value = ""
++        prepared = undefined; confirmation.replaceChildren(); history.replaceChildren()
++        renderThread(); await readConfirmed()
++        live(); status.textContent = "Question saved against the preserved review."
++      },
++    }
++    await submitIntent()
++  })
++  ask.disabled = true
++  form.append(label("Review section", section), label("Review source", source), label("Recipient", recipient), label("Question", question), ask)
++
++  function live() {
++    if (closed) throw new ReviewDiscussionError("Review discussion closed", "access", "rejected")
++    if (new URL(location.href).searchParams.get("reviewThread") !== targetThread) return changedScope()
++  }
++  function changedScope(): never {
++    dispose()
++    window.dispatchEvent(new Event("sf-access-revoked"))
++    throw new ReviewDiscussionError("Review discussion context changed", "access", "rejected")
++  }
++  function adoptQuestion(id: string) {
++    live()
+     const url = new URL(location.href)
+-    url.searchParams.set("reviewThread", created.id)
++    url.searchParams.set("reviewThread", id)
+     for (const key of ["reviewMessage", "reviewIncarnation", "reviewVersion"]) url.searchParams.delete(key)
++    targetThread = id
+     window.history.replaceState(null, "", url)
+-    thread = await client.thread(created.id)
+-    question.value = ""
+-    prepared = undefined; confirmation.replaceChildren(); history.replaceChildren()
+-    renderThread()
+-    await readConfirmed()
+-    status.textContent = "Question saved against the preserved review."
+-  })
+-  form.append(label("Review section", section), label("Review source", source), label("Recipient", recipient), label("Question", question), ask)
+-
+-  function checkThread(value: ReviewDiscussionThread) {
+-    if (!value.messages.length || value.messages.some((message) => message.sourceContext.reviewContext.reviewRef !== input.review.id || message.sourceContext.reviewContext.reviewVersion !== input.review.version || !input.review.sections.some((entry) => entry.id === message.sourceContext.reviewContext.sectionId))) throw new Error("This discussion does not belong to the preserved review")
+-  }
++  }
++  function checkThread(value: ReviewDiscussionThread, newQuestion = false) {
++    live()
++    if (!value.messages.length || value.messages.some((message) => message.sourceContext.reviewContext.reviewRef !== input.review.id || message.sourceContext.reviewContext.reviewVersion !== input.review.version || !input.review.sections.some((entry) => entry.id === message.sourceContext.reviewContext.sectionId))) return changedScope()
++    if (!newQuestion && thread && (value.id !== thread.id || value.recipientRef !== thread.recipientRef || !samePin(value.messages[0]!.sourceContext.reviewContext, thread.messages[0]!.sourceContext.reviewContext))) return changedScope()
++    if (!newQuestion && thread) {
++      for (const previous of thread.messages) {
++        const next = value.messages.find((message) => message.id === previous.id)
++        if (!next || next.incarnation !== previous.incarnation || next.authorRef !== previous.authorRef) return changedScope()
++        const left = next.sourceContext, right = previous.sourceContext
++        if (!samePin(left.reviewContext, right.reviewContext) || left.sourceRef !== right.sourceRef || left.sourceIncarnation !== right.sourceIncarnation || left.observedVersion !== right.observedVersion || left.period.start !== right.period.start || left.period.end !== right.period.end || JSON.stringify(left.evidenceRefs) !== JSON.stringify(right.evidenceRefs)) return changedScope()
++      }
++    }
++  }
++  const editKey = (id: string, message: ReviewDiscussionMessage) => JSON.stringify([id, message.id, message.incarnation])
+ 
+   function renderThread() {
++    if (closed) return
+     messages.replaceChildren()
+-    if (!thread || closed) return
++    if (!thread) return
+     checkThread(thread)
+     const current = thread
+     messages.append(heading("Question and answers"))
+@@ -74,6 +142,7 @@
+       article.append(paragraph(`${message.authorRef} · version ${message.version} · ${message.createdAt}`), paragraph(message.body))
+       if (index > 0) article.append(button("Review this answer", async () => {
+         const result = discussionAnswer(await client.post("collaboration-answer-prepare-message", { questionId: current.id, messageId: message.id, incarnation: message.incarnation, version: message.version }))
++        live()
+         if (!samePin(result.reviewContext, message.sourceContext.reviewContext) || result.answer !== message.body || result.authorRef !== message.authorRef || result.observedSourceVersion !== message.sourceContext.observedVersion) throw new Error("The selected answer changed; review it again")
+         prepared = result
+         rememberOriginal(message)
+@@ -81,37 +150,153 @@
+         status.textContent = "Inspect the captured source and answer before confirming."
+       }))
+       if (index > 0 && message.authorRef === input.principalRef) {
++        const key = editKey(current.id, message), saved = edits.get(key)
++        const draft = saved?.dirty ? saved : { text: message.body, message, dirty: false }
++        edits.set(key, draft)
+         const edit = document.createElement("textarea")
+-        edit.setAttribute("aria-label", "Edited answer"); edit.value = message.body
++        edit.setAttribute("aria-label", "Edited answer"); edit.value = draft.text
++        edit.addEventListener("input", () => { draft.text = edit.value; draft.dirty = true })
+         article.append(label("Edited answer", edit), button("Save answer edit", async () => {
+-          if (!edit.value.trim()) throw new Error("Enter the edited answer")
++          const body = edit.value, original = draft.message
++          if (!body.trim()) throw new Error("Enter the edited answer")
++          draft.text = body; draft.dirty = true
+           const mutation = await client.mutation()
+-          const receipt = discussionObject(await client.post("collaboration-thread-edit", { id: current.id, messageId: message.id, expectedVersion: message.version, body: edit.value, mutation }, mutation.idempotencyKey))
+-          if (receipt.id !== current.id || receipt.messageId !== message.id || receipt.version !== message.version + 1) throw new Error("Answer edit unavailable")
+-          rememberOriginal(message)
+-          prepared = undefined; confirmation.replaceChildren(); confirmed.replaceChildren()
+-          thread = await client.thread(current.id)
+-          renderThread(); renderHistory()
+-          await readConfirmed()
+-          status.textContent = "Answer edited. Its previous version remains protected history; review the new answer before confirming again."
++          live()
++          intent = {
++            kind: "edit", mode: "collaboration-thread-edit", key: mutation.idempotencyKey,
++            payload: JSON.stringify({ id: current.id, messageId: original.id, expectedVersion: original.version, body, mutation }),
++            text: body, threadId: current.id, original, reconciled: false, rejected: false,
++            complete: async (value) => {
++              const receipt = discussionObject(value)
++              if (receipt.id !== current.id || receipt.messageId !== original.id || receipt.version !== original.version + 1) throw new Error("Answer edit unavailable")
++              const updated = await client.thread(current.id)
++              live(); checkThread(updated)
++              rememberOriginal(original)
++              thread = updated; edits.delete(key)
++              prepared = undefined; confirmation.replaceChildren(); confirmed.replaceChildren()
++              renderThread(); renderHistory(); await readConfirmed()
++              live(); status.textContent = "Answer edited. Its previous version remains protected history; review the new answer before confirming again."
++            },
++          }
++          await submitIntent()
+         }))
+       }
+       messages.append(article)
+     })
+     const reply = document.createElement("textarea")
+-    reply.setAttribute("aria-label", "Reply")
++    reply.setAttribute("aria-label", "Reply"); reply.value = replies.get(current.id) ?? ""
++    reply.addEventListener("input", () => { replies.set(current.id, reply.value) })
+     messages.append(label("Reply", reply), button("Send reply", async () => {
+-      if (!reply.value.trim()) throw new Error("Enter a reply")
++      const body = reply.value
++      if (!body.trim()) throw new Error("Enter a reply")
++      replies.set(current.id, body)
+       const mutation = await client.mutation()
+-      const updated = discussionThread(await client.post("collaboration-thread-reply", { id: current.id, body: reply.value, mutation }, mutation.idempotencyKey))
+-      if (updated.id !== current.id) throw new Error("Reply unavailable")
+-      thread = await client.thread(current.id)
+-      prepared = undefined; confirmation.replaceChildren()
+-      renderThread(); await readConfirmed()
+-      status.textContent = "Reply saved. Review and confirm the exact answer before reusing it."
++      live()
++      intent = {
++        kind: "reply", mode: "collaboration-thread-reply", key: mutation.idempotencyKey,
++        payload: JSON.stringify({ id: current.id, body, mutation }), text: body, threadId: current.id, reconciled: false, rejected: false,
++        complete: async (value) => {
++          const receipt = discussionThread(value)
++          if (receipt.id !== current.id) throw new Error("Reply unavailable")
++          const updated = await client.thread(current.id)
++          live(); checkThread(updated)
++          thread = updated; replies.delete(current.id)
++          prepared = undefined; confirmation.replaceChildren()
++          renderThread(); await readConfirmed()
++          live(); status.textContent = "Reply saved in this preserved review."
++        },
++      }
++      await submitIntent()
+     }))
+-  }
+-
++    lockDrafts()
++  }
++
++  function lockDrafts() {
++    root.querySelectorAll("textarea").forEach((element) => { element.readOnly = !!intent })
++    for (const element of [section, source, recipient]) element.disabled = !!intent || suspended
++    root.querySelectorAll<HTMLButtonElement>("button").forEach((element) => {
++      element.disabled = element.dataset.reviewRecovery !== "true" && (!!intent || suspended)
++    })
++    ask.disabled = !!intent || suspended || !recipient.options.length
++  }
++
++  async function submitIntent() {
++    const current = intent
++    if (!current) return
++    live()
++    current.reconciled = false; current.rejected = false
++    prepared = undefined; confirmation.replaceChildren(); confirmed.replaceChildren()
++    lockDrafts()
++    // Parsing the stored JSON preserves the original serialized bytes, including
++    // source/storage versions and key. Never acquire a fresh CAS for this retry.
++    const value = await client.post(current.mode, JSON.parse(current.payload), current.key).catch((error: unknown) => {
++      // Only this mutation's definite rejection permits a new decision. A
++      // failed read after a committed command cannot release its replay key.
++      if (error instanceof ReviewDiscussionError && error.outcome === "rejected" && error.kind === "conflict") current.rejected = true
++      throw error
++    })
++    live()
++    await current.complete(value)
++    live()
++    if (intent === current) intent = undefined
++    recovery.replaceChildren(); lockDrafts()
++  }
++
++  function renderRecovery() {
++    recovery.replaceChildren()
++    if (closed) return
++    if (!intent) {
++      if (suspended) recovery.append(heading("Discussion needs reconciliation"), paragraph("Your drafts are retained. Reconcile access before sending another action."), button("Reconcile discussion", readDiscussion, true))
++      return
++    }
++    const current = intent
++    recovery.append(heading("Your action is retained"), paragraph(current.text), paragraph("No action is sent by refreshing or reconciling. Resolve this attempt before starting another."))
++    recovery.append(button("Reconcile action", async () => {
++      if (intent !== current) return
++      current.reconciled = false
++      if (current.threadId) {
++        const updated = await client.thread(current.threadId)
++        live(); checkThread(updated, current.kind === "question")
++        if (current.kind === "question") { adoptQuestion(updated.id); replies.clear(); edits.clear() }
++        if (current.original && !updated.messages.some((message) => message.id === current.original!.id && message.incarnation === current.original!.incarnation)) return changedScope()
++        thread = updated; renderThread(); renderHistory()
++      } else {
++        await current.reconcileQuestion?.()
++        live()
++      }
++      suspended = false; current.reconciled = true
++      renderRecovery(); lockDrafts()
++      status.textContent = "Action reconciled. Retry the same action explicitly to recover its receipt."
++    }, true))
++    if (!current.reconciled) return
++    recovery.append(button("Retry same action", async () => {
++      if (intent === current && current.reconciled) await submitIntent()
++    }, true))
++    // Only a definite rejected conflict may become a NEW human decision. An
++    // unknown outcome cannot discard its key and thereby duplicate a commit.
++    if (!current.rejected) return
++    const latest = current.original && thread?.messages.find((message) => message.id === current.original!.id && message.incarnation === current.original!.incarnation)
++    if (current.kind === "edit" && latest && current.threadId) {
++      recovery.append(paragraph(`Current answer version ${latest.version}: ${latest.body}`), button("Apply preserved draft to this version", async () => {
++        if (intent !== current) return
++        edits.set(editKey(current.threadId!, latest), { text: current.text, message: latest, dirty: true })
++        intent = undefined; recovery.replaceChildren(); renderThread(); lockDrafts()
++        status.textContent = "Draft retained against the displayed version. Inspect it, then save the edit explicitly."
++      }, true))
++    } else if (current.kind === "confirm") {
++      recovery.append(button("Review the answer again", async () => {
++        if (intent !== current) return
++        intent = undefined; prepared = undefined; confirmation.replaceChildren(); recovery.replaceChildren(); lockDrafts()
++        status.textContent = "Rejected confirmation closed. Select and inspect the answer again before a new confirmation."
++      }, true))
++    } else {
++      recovery.append(button("Keep draft for a new attempt", async () => {
++        if (intent !== current) return
++        intent = undefined; recovery.replaceChildren(); lockDrafts()
++        status.textContent = "Rejected attempt closed. Inspect the retained draft before submitting a new action."
++      }, true))
++    }
++  }
+   function renderConfirmation(questionId: string, answer: ReviewPreparedAnswer) {
+     confirmation.replaceChildren(heading("Confirm the preserved answer"), paragraph(answer.answer), paragraph(`Preserved review ${answer.reviewContext.reviewRef}, version ${answer.reviewContext.reviewVersion}. This confirmation concerns the displayed answer and source.`))
+     const table = document.createElement("table"), header = document.createElement("tr")
+@@ -133,20 +318,31 @@
+       // Use the exact inspected observation. A new preparation would silently
+       // change the human decision and is deliberately not performed here.
+       const mutation = { ...await client.mutation(), observationRef: answer.observationRef, observedSourceVersion: answer.observedSourceVersion, expectedScopeFingerprint: answer.expectedScopeFingerprint }
+-      const receipt = discussionObject(await client.post("collaboration-answer-confirm", { questionId, answerRef: answer.answerRef, mutation }, mutation.idempotencyKey))
+-      if (receipt.answerRef !== answer.answerRef || receipt.observedVersion !== answer.observedSourceVersion) throw new Error("Answer confirmation unavailable")
+-      prepared = undefined; confirmation.replaceChildren()
+-      await readConfirmed()
+-      status.textContent = "Answer confirmed against the inspected preserved source."
++      live()
++      intent = {
++        kind: "confirm", mode: "collaboration-answer-confirm", key: mutation.idempotencyKey,
++        payload: JSON.stringify({ questionId, answerRef: answer.answerRef, mutation }), text: answer.answer, threadId: questionId, reconciled: false, rejected: false,
++        complete: async (value) => {
++          const receipt = discussionObject(value)
++          if (receipt.answerRef !== answer.answerRef || receipt.observedVersion !== answer.observedSourceVersion) throw new Error("Answer confirmation unavailable")
++          prepared = undefined; confirmation.replaceChildren()
++          await readConfirmed()
++          live(); status.textContent = "Answer confirmed against the inspected preserved source."
++        },
++      }
++      await submitIntent()
+     }))
+   }
+ 
+   async function readConfirmed() {
+     confirmed.replaceChildren()
+     if (!thread || closed) return
+-    const result = await client.post("collaboration-answer-read", { questionId: thread.id }).then(discussionObject, () => undefined)
++    const result = await client.post("collaboration-answer-read", { questionId: thread.id }).then(discussionObject, (error: unknown) => {
++      if (error instanceof ReviewDiscussionError && error.kind === "access") throw error
++      return undefined
++    })
+     if (closed) return
+-    if (!result) { confirmed.append(paragraph("No currently reusable confirmed answer.")); return }
++    if (!result) { confirmed.append(paragraph("No confirmed answer is currently available to read or reuse.")); return }
+     const pin = discussionPin(result.reviewContext)
+     if (!samePin(pin, thread.messages[0]!.sourceContext.reviewContext)) throw new Error("Confirmed answer context unavailable")
+     confirmed.append(heading("Confirmed answer"), paragraph(discussionText(result.answer)), paragraph(`Author ${discussionText(result.authorRef)} · preserved source version ${result.observedVersion}`))
+@@ -166,6 +362,7 @@
+     const questionId = thread.id
+     history.append(button("Read original answer", async () => {
+       const historical = discussionObject(await client.post("collaboration-thread-history", { id: questionId, messageId, incarnation, version }))
++      live()
+       const message = discussionMessage(historical.message)
+       const pin = discussionPin(historical.reviewContext)
+       if (!thread || thread.id !== questionId || message.id !== messageId || message.incarnation !== incarnation || message.version !== version || !samePin(pin, message.sourceContext.reviewContext) || !samePin(pin, thread.messages[0]!.sourceContext.reviewContext)) throw new Error("Original answer unavailable")
+@@ -179,42 +376,90 @@
+     busy = true; root.inert = true
+     try { await action() } catch (error) {
+       if (!closed) {
+-        thread = undefined; prepared = undefined
+-        messages.replaceChildren(); confirmation.replaceChildren(); confirmed.replaceChildren(); history.replaceChildren()
+-        status.textContent = error instanceof Error ? error.message : "Review discussion unavailable"
++        if (error instanceof ReviewDiscussionError && error.kind === "access") {
++          dispose(error.message)
++          return
++        }
++        // Keep drafts and the immutable attempt. A transport failure is neither
++        // an authorization decision nor permission to send a new command.
++        suspended = true
++        prepared = undefined; confirmation.replaceChildren(); confirmed.replaceChildren()
++        if (intent) {
++          intent.reconciled = false
++        }
++        renderRecovery(); lockDrafts()
++        status.textContent = `${error instanceof Error ? error.message : "Review discussion unavailable"}${intent ? " Draft and original action retained. Reconcile before an explicit retry." : " Your draft is retained."}`
+       }
+     } finally { busy = false; if (!closed) root.inert = false }
+   }
+ 
+-  function button(text: string, action: () => Promise<void>) {
++  function button(text: string, action: () => Promise<void>, recoveryAction = false) {
+     const element = document.createElement("button")
+     element.type = "button"; element.textContent = text
+-    element.addEventListener("click", () => { void run(action) })
++    element.dataset.reviewRecovery = String(recoveryAction)
++    element.addEventListener("click", () => { void run(async () => {
++      live()
++      if (suspended && !recoveryAction) throw new Error("Reconcile the discussion before starting another action")
++      if (intent && !recoveryAction) throw new Error("Resolve the retained action before starting another")
++      await action()
++    }) })
+     return element
+   }
+ 
+   async function refresh() {
+-    await run(async () => {
+-      const people = await client.recipients()
+-      const chosen = recipient.value
+-      recipient.replaceChildren(...people.map((person) => new Option(person.name, person.id)))
+-      if (people.some((person) => person.id === chosen)) recipient.value = chosen
+-      ask.disabled = !people.length
+-      if (!people.length) status.textContent = "No authorized recipient is available."
+-      const id = new URL(location.href).searchParams.get("reviewThread")
+-      prepared = undefined; confirmation.replaceChildren()
+-      if (!id) return
+-      thread = await client.thread(id)
++    await run(readDiscussion)
++  }
++
++  async function readDiscussion() {
++    live()
++    const people = await client.recipients()
++    live()
++    const chosen = recipient.value
++    if (chosen && !people.some((person) => person.id === chosen)) return changedScope()
++    recipient.replaceChildren(...people.map((person) => new Option(person.name, person.id)))
++    if (people.some((person) => person.id === chosen)) recipient.value = chosen
++    lockDrafts()
++    if (!people.length) status.textContent = "No authorized recipient is available."
++    const id = new URL(location.href).searchParams.get("reviewThread")
++    if (thread && thread.id !== id) return changedScope()
++    prepared = undefined; confirmation.replaceChildren()
++    if (id) {
++      const updated = await client.thread(id)
++      live(); checkThread(updated)
++      thread = updated
+       renderThread(); renderHistory(); await readConfirmed()
+-    })
+-  }
+-
+-  function dispose() {
++    } else {
++      const chosen = selected(), reference = references().find((ref) => ref.refId === source.value)
++      if (chosen && reference && recipient.value) {
++        const basis: ReviewDiscussionBasis = { sourceRef: reference.refId, sourceIncarnation: reference.target.incarnation, observedVersion: reference.target.version, period: chosen.period, evidenceRefs: [reference] }
++        const pin = discussionPin(await client.post("review-thread-context", { reviewRef: input.review.id, sectionId: chosen.id, basis }))
++        live()
++        if (pin.reviewRef !== input.review.id || pin.reviewVersion !== input.review.version || pin.sectionId !== chosen.id) return changedScope()
++      }
++    }
++    live()
++    if (people.length && suspended) status.textContent = "Discussion reconciled. Your drafts are retained; send an action explicitly."
++    suspended = false; renderRecovery(); lockDrafts()
++    // Refresh can update the displayed record but never resolves or sends the
++    // pending intent. Its explicit reconciliation control remains necessary.
++  }
++
++  function accessRevoked() { dispose() }
++  function dispose(message?: string) {
+     if (closed) return
+-    closed = true; thread = undefined; prepared = undefined
+-    client.dispose(); root.replaceChildren(); root.remove()
+-  }
+-
++    closed = true; thread = undefined; prepared = undefined; intent = undefined
++    replies.clear(); edits.clear()
++    question.value = ""
++    root.querySelectorAll("textarea").forEach((element) => { element.value = "" })
++    window.removeEventListener("sf-access-revoked", accessRevoked)
++    window.removeEventListener("pagehide", accessRevoked)
++    client.dispose(); root.replaceChildren(); root.inert = false
++    if (message) root.append(heading("Review discussion unavailable"), paragraph(message))
++    else root.remove()
++  }
++
++  window.addEventListener("sf-access-revoked", accessRevoked)
++  window.addEventListener("pagehide", accessRevoked)
+   void refresh()
+   return { element: root, refresh, dispose }
+ }
+@@ -224,3 +469,5 @@
+ function paragraph(text: string) { const element = document.createElement("p"); element.textContent = text; return element }
+ function label(text: string, control: HTMLElement) { const element = document.createElement("label"); element.append(document.createTextNode(text), control); return element }
+ function samePin(left: ReviewDiscussionPin, right: ReviewDiscussionPin) { return left.reviewRef === right.reviewRef && left.reviewVersion === right.reviewVersion && left.reviewDigest === right.reviewDigest && left.sectionId === right.sectionId }
++
++
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/reports-draft-and-journey/discussion-client.test.ts
+@@ -0,0 +1,297 @@
++import { expect, test } from "bun:test"
++import { createReviewDiscussionClient, ReviewDiscussionError } from "../../../product/reviews/collaboration-client.ts"
++
++// These are transport fault regressions of the production client. Responses do
++// not establish an identity, grant, real provider or native execution witness.
++const binding = "a".repeat(64)
++const address = "https://reports.example.invalid/sucafina/dashboard?reviewRef=transport-review#meeting"
++const payload = {
++  id: "transport-thread",
++  body: "  Exact unsent draft\nwith the user's final line.  ",
++  mutation: { expectedStorageVersion: 7, idempotencyKey: "transport-intent-01" },
++}
++
++test("a lost reply response remains unknown and sends again only on an explicit exact retry", async () => {
++  const state = { loseResponse: true }
++  const transport = fixture(() => {
++    if (state.loseResponse) throw new TypeError("transport response lost")
++    return ok({ transportReceipt: "same-intent" })
++  })
++  try {
++    await failure(transport.client.post("collaboration-thread-reply", payload, payload.mutation.idempotencyKey), "recoverable", "unknown")
++    expect(transport.requests).toHaveLength(1)
++    expect(transport.state.accessLost).toBe(0)
++    const first = transport.requests[0]!
++    expect(first.url).toBe("https://reports.example.invalid/sucafina/dashboard?sf=collaboration-thread-reply")
++    expect(first.method).toBe("POST")
++    // Inspect the actual fetch boundary: Bun's Request clone normalizes these
++    // browser options instead of retaining the supplied RequestInit values.
++    expect(transport.options[0]?.credentials).toBe("same-origin")
++    expect(transport.options[0]?.cache).toBe("no-store")
++    expect(first.headers.get("X-SF-Review-Binding")).toBe(binding)
++    expect(first.headers.get("Idempotency-Key")).toBe(payload.mutation.idempotencyKey)
++    const body = await first.clone().text()
++    expect(JSON.parse(body)).toEqual(payload)
++    state.loseResponse = false
++    expect(await transport.client.post("collaboration-thread-reply", payload, payload.mutation.idempotencyKey)).toEqual({ transportReceipt: "same-intent" })
++    expect(transport.requests).toHaveLength(2)
++    expect(await transport.requests[1]!.text()).toBe(body)
++    expect(transport.requests[1]!.headers.get("Idempotency-Key")).toBe(first.headers.get("Idempotency-Key"))
++    expect(transport.state.accessLost).toBe(0)
++  } finally { transport.client.dispose() }
++})
++
++test("a 503 is recoverable with unknown outcome and never retries the edit", async () => {
++  const transport = fixture(() => Response.json({ status: "unavailable", reason: "temporarily-unavailable" }, { status: 503 }))
++  try {
++    await failure(transport.client.post("collaboration-thread-edit", payload, payload.mutation.idempotencyKey), "recoverable", "unknown")
++    expect(transport.requests).toHaveLength(1)
++    expect(transport.state.accessLost).toBe(0)
++  } finally { transport.client.dispose() }
++})
++
++test("a stale CAS is a rejected conflict, preserving the supplied version and avoiding another mutation", async () => {
++  const transport = fixture(() => Response.json({ status: "conflict", reason: "product-state-changed" }, { status: 409, headers: { "X-SF-Review-Binding": binding } }))
++  try {
++    await failure(transport.client.post("collaboration-thread-edit", payload, payload.mutation.idempotencyKey), "conflict", "rejected")
++    expect(transport.requests).toHaveLength(1)
++    expect(await transport.requests[0]!.json()).toEqual(payload)
++    expect(transport.state.accessLost).toBe(0)
++  } finally { transport.client.dispose() }
++})
++
++test.each(["idempotency-content-changed", "target-replaced"])("conflict %s cannot discard an earlier durable intent", async (reason) => {
++  const transport = fixture(() => Response.json({ status: "conflict", reason }, { status: 409, headers: { "X-SF-Review-Binding": binding } }))
++  try {
++    await failure(transport.client.post("collaboration-thread-edit", payload, payload.mutation.idempotencyKey), "conflict", "unknown")
++    expect(transport.requests).toHaveLength(1)
++    expect(transport.state.accessLost).toBe(0)
++  } finally { transport.client.dispose() }
++})
++
++test.each(["product-state-changed", "thread-changed"])("a conflict %s without verified response binding cannot release the original key", async (reason) => {
++  const transport = fixture(() => Response.json({ status: "conflict", reason }, { status: 409 }))
++  try {
++    await failure(transport.client.post("collaboration-thread-edit", payload, payload.mutation.idempotencyKey), "conflict", "unknown")
++    expect(transport.requests).toHaveLength(1)
++    expect(transport.requests[0]!.headers.get("Idempotency-Key")).toBe(payload.mutation.idempotencyKey)
++    expect(await transport.requests[0]!.json()).toEqual(payload)
++    expect(transport.state.accessLost).toBe(0)
++  } finally { transport.client.dispose() }
++})
++
++test.each([401, 403, 200])("denial status %s closes the client and invokes access loss once", async (status) => {
++  const transport = fixture(() => Response.json({ status: "denied", reason: "access-unavailable" }, { status, headers: { "X-SF-Review-Binding": binding } }))
++  try {
++    await failure(transport.client.post("collaboration-thread-read", { id: payload.id }), "access", "rejected")
++    expect(transport.state.accessLost).toBe(1)
++    await failure(transport.client.post("collaboration-thread-reply", payload, payload.mutation.idempotencyKey), "access", "rejected")
++    expect(transport.requests).toHaveLength(1)
++    expect(transport.state.accessLost).toBe(1)
++  } finally { transport.client.dispose() }
++})
++
++test.each([200, 503])("ambiguous legacy thread unavailability at HTTP %s retains the client for an authorized read", async (status) => {
++  const state = { unavailable: true }
++  const transport = fixture(() => state.unavailable ? Response.json({ status: "unavailable", reason: "thread-access-unavailable" }, { status, headers: { "X-SF-Review-Binding": binding } }) : ok({ authorizedRead: true }))
++  try {
++    await failure(transport.client.thread(payload.id), "recoverable", "unknown")
++    expect(transport.state.accessLost).toBe(0)
++    expect(transport.requests).toHaveLength(1)
++    state.unavailable = false
++    expect(await transport.client.post("collaboration-thread-read", { id: payload.id })).toEqual({ authorizedRead: true })
++    expect(transport.requests).toHaveLength(2)
++    expect(transport.requests.every((request) => new URL(request.url).searchParams.get("sf") === "collaboration-thread-read")).toBe(true)
++    expect(transport.state.accessLost).toBe(0)
++  } finally { transport.client.dispose() }
++})
++
++test.each(["thread-content-changed", "thread-changed", "product-state-changed"])("a read conflict %s cannot reject a pending mutation's original intent", async (reason) => {
++  const transport = fixture(() => Response.json({ status: "stale", reason }, { status: 409, headers: { "X-SF-Review-Binding": binding } }))
++  try {
++    await failure(transport.client.thread(payload.id), "conflict", "unknown")
++    expect(transport.requests).toHaveLength(1)
++    expect(transport.state.accessLost).toBe(0)
++  } finally { transport.client.dispose() }
++})
++
++test("a followed login redirect purges access even when its HTML response is 200", async () => {
++  class LoginResponse extends Response {
++    override get url() { return "https://reports.example.invalid/auth/login" }
++    override get redirected() { return true }
++  }
++  const transport = fixture(() => new LoginResponse("<!doctype html><title>Sign in</title>", { headers: { "Content-Type": "text/html" } }))
++  try {
++    await failure(transport.client.post("collaboration-thread-read", { id: payload.id }), "access", "rejected")
++    expect(transport.state.accessLost).toBe(1)
++    expect(transport.requests).toHaveLength(1)
++  } finally { transport.client.dispose() }
++})
++
++test("a missing response binding withholds the value and preserves the client for explicit reconciliation", async () => {
++  const state = { echo: false }
++  const transport = fixture(() => Response.json({ status: "ok", value: { body: "protected response" } }, { headers: state.echo ? { "X-SF-Review-Binding": binding } : {} }))
++  try {
++    await failure(transport.client.post("collaboration-thread-read", { id: payload.id }), "recoverable", "unknown")
++    expect(transport.state.accessLost).toBe(0)
++    expect(transport.requests).toHaveLength(1)
++    state.echo = true
++    expect(await transport.client.post("collaboration-thread-read", { id: payload.id })).toEqual({ body: "protected response" })
++    expect(transport.requests).toHaveLength(2)
++    expect(transport.requests.every((request) => new URL(request.url).searchParams.get("sf") === "collaboration-thread-read")).toBe(true)
++    expect(transport.state.accessLost).toBe(0)
++  } finally { transport.client.dispose() }
++})
++
++test.each([200, 503])("a changed response binding at HTTP %s purges access even if the body is unavailable", async (status) => {
++  const transport = fixture(() => Response.json(status === 200 ? { status: "ok", value: { body: "must not be released" } } : { status: "unavailable", reason: "thread-read-unavailable" }, { status, headers: { "X-SF-Review-Binding": "b".repeat(64) } }))
++  try {
++    await failure(transport.client.post("collaboration-thread-read", { id: payload.id }), "access", "rejected")
++    expect(transport.state.accessLost).toBe(1)
++    await failure(transport.client.post("collaboration-thread-read", { id: payload.id }), "access", "rejected")
++    expect(transport.requests).toHaveLength(1)
++  } finally { transport.client.dispose() }
++})
++
++test("a changed response binding purges before consuming an unavailable response body", async () => {
++  let bodyReads = 0
++  class BrokenBodyResponse extends Response {
++    override async json(): Promise<unknown> { bodyReads++; throw new TypeError("body transport failed") }
++  }
++  const transport = fixture(() => new BrokenBodyResponse(null, { status: 503, headers: { "X-SF-Review-Binding": "b".repeat(64) } }))
++  try {
++    await failure(transport.client.post("collaboration-thread-read", { id: payload.id }), "access", "rejected")
++    expect(bodyReads).toBe(0)
++    expect(transport.state.accessLost).toBe(1)
++    expect(transport.requests).toHaveLength(1)
++  } finally { transport.client.dispose() }
++})
++
++test.each([undefined, "not-an-access-digest"])("an absent or malformed initial binding fails closed without a global revocation claim (%s)", async (initialBinding) => {
++  const transport = fixture(() => ok({ body: "must not be requested" }), { binding: initialBinding })
++  try {
++    await failure(transport.client.post("collaboration-thread-read", { id: payload.id }), "access", "rejected")
++    expect(transport.requests).toHaveLength(0)
++    expect(transport.state.accessLost).toBe(0)
++  } finally { transport.client.dispose() }
++})
++
++test("changing the local access binding refuses a request before transport", async () => {
++  const transport = fixture(() => ok({ body: "must not be requested" }))
++  try {
++    transport.state.binding = "b".repeat(64)
++    await failure(transport.client.post("collaboration-thread-reply", payload, payload.mutation.idempotencyKey), "access", "rejected")
++    expect(transport.requests).toHaveLength(0)
++    expect(transport.state.accessLost).toBe(1)
++  } finally { transport.client.dispose() }
++})
++
++test("a response from an earlier access binding cannot resolve after the binding changes", async () => {
++  const entered = Promise.withResolvers<void>()
++  const held = Promise.withResolvers<Response>()
++  const transport = fixture(() => { entered.resolve(); return held.promise })
++  try {
++    const pending = transport.client.post("collaboration-thread-read", { id: payload.id })
++    await entered.promise
++    transport.state.binding = "b".repeat(64)
++    held.resolve(ok({ body: "stale protected response" }))
++    await failure(pending, "access", "rejected")
++    expect(transport.requests).toHaveLength(1)
++    expect(transport.state.accessLost).toBe(1)
++  } finally { held.resolve(ok(undefined)); transport.client.dispose() }
++})
++
++test("dispose aborts transport and rejects even a late successful response", async () => {
++  const entered = Promise.withResolvers<void>()
++  const held = Promise.withResolvers<Response>()
++  const transport = fixture(() => { entered.resolve(); return held.promise })
++  try {
++    const pending = transport.client.post("collaboration-thread-read", { id: payload.id })
++    await entered.promise
++    transport.client.dispose()
++    expect(transport.requests[0]!.signal.aborted).toBe(true)
++    held.resolve(ok({ body: "stale protected response" }))
++    await failure(pending, "access", "rejected")
++    await failure(transport.client.post("collaboration-thread-read", { id: payload.id }), "access", "rejected")
++    expect(transport.requests).toHaveLength(1)
++    expect(transport.state.accessLost).toBe(0)
++  } finally { held.resolve(ok(undefined)); transport.client.dispose() }
++})
++
++test("binding changes during response body consumption still suppress its protected value", async () => {
++  const entered = Promise.withResolvers<void>()
++  const held = Promise.withResolvers<unknown>()
++  class HeldBodyResponse extends Response {
++    override async json() { entered.resolve(); return await held.promise }
++  }
++  const transport = fixture(() => new HeldBodyResponse(null, { headers: { "X-SF-Review-Binding": binding } }))
++  try {
++    const pending = transport.client.post("collaboration-thread-read", { id: payload.id })
++    await entered.promise
++    transport.state.binding = "b".repeat(64)
++    held.resolve({ status: "ok", value: { body: "stale protected body" } })
++    await failure(pending, "access", "rejected")
++    expect(transport.state.accessLost).toBe(1)
++    expect(transport.requests).toHaveLength(1)
++  } finally { held.resolve(undefined); transport.client.dispose() }
++})
++
++test("a response cannot restore the discussion after navigation to another review", async () => {
++  const entered = Promise.withResolvers<void>()
++  const held = Promise.withResolvers<Response>()
++  const transport = fixture(() => { entered.resolve(); return held.promise })
++  try {
++    const pending = transport.client.post("collaboration-thread-read", { id: payload.id })
++    await entered.promise
++    transport.state.url = address.replace("transport-review", "another-review")
++    held.resolve(ok({ body: "late response for the previous review" }))
++    await failure(pending, "access", "rejected")
++    expect(transport.state.accessLost).toBe(1)
++    expect(transport.requests).toHaveLength(1)
++    await failure(transport.client.post("collaboration-thread-read", { id: payload.id }), "access", "rejected")
++    expect(transport.requests).toHaveLength(1)
++  } finally { held.resolve(ok(undefined)); transport.client.dispose() }
++})
++
++test("malformed JSON is an unknown outcome and does not trigger an automatic resend", async () => {
++  const transport = fixture(() => new Response("{broken-json", { headers: { "Content-Type": "application/json", "X-SF-Review-Binding": binding } }))
++  try {
++    await failure(transport.client.post("collaboration-thread-reply", payload, payload.mutation.idempotencyKey), "invalid", "unknown")
++    expect(transport.requests).toHaveLength(1)
++    expect(transport.state.accessLost).toBe(0)
++  } finally { transport.client.dispose() }
++})
++
++function ok(value: unknown) {
++  return Response.json({ status: "ok", value }, { headers: { "X-SF-Review-Binding": binding } })
++}
++
++function fixture(respond: (request: Request) => Response | Promise<Response>, initial: { binding: string | undefined } = { binding }) {
++  const state: { binding: string | undefined; accessLost: number; url: string } = { binding: initial.binding, accessLost: 0, url: address }
++  const requests: Request[] = []
++  const options: RequestInit[] = []
++  const send = async (input: RequestInfo | URL, init?: RequestInit) => {
++    options.push({ ...init })
++    const request = new Request(input, init)
++    requests.push(request.clone())
++    return await respond(request)
++  }
++  const client = createReviewDiscussionClient(() => { state.accessLost += 1 }, {
++    // Only the injected transport is simulated; the production client runs intact.
++    fetch: send as typeof fetch,
++    url: () => state.url,
++    binding: () => state.binding,
++  })
++  return { state, requests, options, client }
++}
++
++async function failure(pending: Promise<unknown>, kind: ReviewDiscussionError["kind"], outcome: ReviewDiscussionError["outcome"]) {
++  const result = await pending.then((value) => ({ resolved: true, value }), (error: unknown) => ({ resolved: false, error }))
++  expect(result.resolved).toBe(false)
++  if (!("error" in result)) throw new Error("Expected a rejected discussion operation")
++  expect(result.error).toBeInstanceOf(ReviewDiscussionError)
++  if (!(result.error instanceof ReviewDiscussionError)) throw new Error("Unexpected discussion error type")
++  expect(result.error.kind).toBe(kind)
++  expect(result.error.outcome).toBe(outcome)
++}
++
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/authority-boundary.test.ts
+@@ -0,0 +1,77 @@
++import { expect, test } from "bun:test"
++import { createReadBoundaryFixture, discussionFailure } from "./read-boundary-fixture.ts"
++
++for (const fault of ["throw", "unavailable", "stale"] as const) {
++  test(`evidence ${fault} cannot become an affirmative source revocation`, async () => {
++    const f = await createReadBoundaryFixture("base")
++    try {
++      f.evidence.fault = fault
++      const failure = await discussionFailure(f.read())
++      expect(failure.kind).toBe("recoverable")
++      expect(failure.outcome).toBe("unknown")
++      expect(f.evidence.calls).toBeGreaterThan(0)
++      expect(f.lost).toEqual([])
++      expect(f.requests[0]!.status).toBe(503)
++      expect(f.requests[0]!.result.status).toBe("unavailable")
++      expect(f.requests[0]!.result).not.toHaveProperty("value")
++      f.evidence.fault = ""
++      const current = await f.read() as { messages: { body: string }[] }
++      expect(current.messages.map((message) => message.body)).toEqual(["Explain this exact source."])
++      expect(f.requests.map((request) => request.mode)).toEqual(["collaboration-thread-read", "collaboration-thread-read"])
++      expect(f.lost).toEqual([])
++    } finally { await f.dispose() }
++  })
++}
++
++test("an explicit revoked evidence result is denied through the real authority and HTTP adapters", async () => {
++  const f = await createReadBoundaryFixture("base")
++  try {
++    f.evidence.fault = "revoked"
++    expect((await discussionFailure(f.read())).kind).toBe("access")
++    expect(f.evidence.calls).toBeGreaterThan(0)
++    expect(f.lost).toEqual(["access"])
++    expect(f.requests[0]!.status).toBe(403)
++    expect(f.requests[0]!.result.status).toBe("denied")
++    expect(f.requests[0]!.result).not.toHaveProperty("value")
++    f.evidence.fault = ""
++    expect((await discussionFailure(f.read())).kind).toBe("access")
++    expect(f.requests).toHaveLength(1)
++    expect(f.lost).toEqual(["access"])
++  } finally { await f.dispose() }
++})
++
++test("a read admission exception is unavailable instead of a fabricated denial", async () => {
++  const f = await createReadBoundaryFixture("base")
++  try {
++    f.admission.unavailable = true
++    const failure = await discussionFailure(f.read())
++    expect(failure.kind).toBe("recoverable")
++    expect(failure.outcome).toBe("unknown")
++    expect(f.requests[0]!.status).toBe(503)
++    expect(f.requests[0]!.result).toEqual({ status: "unavailable", reason: "collaboration-authority-unavailable" })
++    expect(f.lost).toEqual([])
++    f.admission.unavailable = false
++    const current = await f.read() as { id: string }
++    expect(current.id).toBe(f.question.id)
++    expect(f.requests).toHaveLength(2)
++    expect(f.lost).toEqual([])
++  } finally { await f.dispose() }
++})
++
++test("the legacy ambiguous unavailable reason is not affirmative proof of revocation", async () => {
++  const f = await createReadBoundaryFixture("base")
++  try {
++    f.io.armed = true; f.io.failSecond = true; f.io.failureReason = "thread-access-unavailable"
++    const failure = await discussionFailure(f.read())
++    expect(failure.kind).toBe("recoverable")
++    expect(failure.outcome).toBe("unknown")
++    expect(f.io.reads).toBe(2)
++    expect(f.requests[0]!.status).toBe(503)
++    expect(f.requests[0]!.result).toEqual({ status: "unavailable", reason: "thread-access-unavailable" })
++    expect(f.lost).toEqual([])
++    const current = await f.read() as { id: string }
++    expect(current.id).toBe(f.question.id)
++    expect(f.requests).toHaveLength(2)
++    expect(f.lost).toEqual([])
++  } finally { await f.dispose() }
++})
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/history-provider-read.test.ts
+@@ -0,0 +1,142 @@
++import { expect, test } from "bun:test"
++import { createSfReviewHistory } from "../../../../../../apps/cli/src/sucafina-product/review-history.ts"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import type { SourceRef } from "../../../product/contracts/context.ts"
++import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
++import type { SfProductStatePort } from "../../../product/contracts/state.ts"
++import { createReviewServices } from "../../../product/reviews/services.ts"
++import { DashboardPortfolio } from "../../../runtime/dashboard-portfolio.ts"
++import { object } from "../../../runtime/contract.ts"
++import { createReviewAnswersFixture } from "../wp08/review-answers-fixture.ts"
++
++/** Installed history implementation over the fixture's actual C05/C08 receipt,
++ * SQLite, scoped-source provider and authenticated contexts. Actor/ACL grants
++ * remain the existing fixture boundary; this is not a native host witness.
++ */
++async function createHistoryFixture() {
++  const fixture = await createReviewAnswersFixture()
++  const source = fixture.review.sourceRefs.find((ref) => ref.incarnation === fixture.source.target.incarnation)
++  if (!source || fixture.review.sourceRefs.length !== 1) throw new Error("Actual captured source is required")
++  const captured = await fixture.state.read(fixture.request("person"), "reviews", (state) => Object.values(state.transactions).filter((entry) => {
++    const value = object(entry.value)
++    return entry.namespace === "reviews" && entry.principalRef === fixture.author.binding.principalRef && entry.targetRef === fixture.creationTarget.ref && entry.targetIncarnation === fixture.creationTarget.incarnation && value.schema === "sf-review-receipt-v1" && value.reviewRef === fixture.review.id && value.reviewDigest === digestSfValue(fixture.review)
++  }))
++  if (captured.status !== "ok") throw new Error("Actual durable C05 receipt unavailable")
++  expect(captured.value).toHaveLength(1)
++  const io = { armed: false, captures: 0 }
++  const state: SfProductStatePort = { ...fixture.state, read: async (request, namespace, inspect) => {
++    const result = await fixture.state.read(request, namespace, inspect)
++    if (io.armed && namespace === "reviews" && ++io.captures === 2) {
++      io.armed = false
++      return { status: "unavailable", reason: "test-history-c08-read-unavailable" }
++    }
++    return result
++  } }
++  const drift: { armed: boolean; nextStatus: string; versions: number[] } = { armed: false, nextStatus: "On Hold", versions: [] }
++  const changeStatus = async (status: string) => {
++    const before = await fixture.snapshots()
++    await fixture.mutate("dashboard", DashboardPortfolio.domain, { page: "All Projects", action: "save", id: "project", version: before.dashboard.versions["projects:project"]!.version, values: { status } })
++  }
++  const persistence = { ...fixture.persistence, resolveScopedSource: async (...args: Parameters<typeof fixture.persistence.resolveScopedSource>) => {
++    const result = await fixture.persistence.resolveScopedSource(...args)
++    if (drift.armed && args[0] === source.surface && args[1] === source.incarnation) {
++      if (!result) throw new Error("The authorized scoped read must succeed before injecting content drift")
++      drift.versions.push(result.version)
++      if (drift.versions.length === 1) await changeStatus(drift.nextStatus)
++      if (drift.versions.length === 2) drift.armed = false
++    }
++    return result
++  } }
++  const history = createSfReviewHistory({ authority: { host: fixture.host, state, creationTarget: fixture.creationTarget }, persistence, evidence: fixture.evidence })
++  const sources = async (context: TrustedDomainContext, refs: readonly SourceRef[]) => {
++    if (!await fixture.host.revalidate(context)) return false
++    const values = await Promise.all(refs.map((ref) => history.historicalSource(ref, context)))
++    return values.every(Boolean) && await fixture.host.revalidate(context)
++  }
++  const services = createReviewServices({
++    state: fixture.state, host: fixture.host, authority: fixture.domainAuthority, evidence: history.evidence,
++    creationTarget: fixture.creationTarget, operationIdentity: (context) => context.kind === "ui" ? fixture.ui.operationIdentity(context) : undefined,
++    requiredAuthority: [], maxBytes: 5_000_000, now: () => "2026-11-13T00:00:00Z",
++    selection: {
++      select: async (_selection, ids, context) => {
++        if (ids.length !== 1 || ids[0] !== "project" || !fixture.access[context.binding.principalRef]) return { status: "denied", reason: "fixture-review-selection-denied" }
++        const projection = await fixture.records.read(fixture.source.refId, context)
++        return projection.status === "ok" ? { status: "ok", value: [{ id: "project", title: "Preserved project answer", period: fixture.period, recordCount: 1, projection: projection.value }] } : projection
++      },
++      authorizeSections: async (context, sections) => fixture.access[context.binding.principalRef] === true && sections.every((section) => section.id === "project") && await sources(context, sections.flatMap((section) => section.sourceRefs)),
++      revalidate: sources,
++      authorizeComments: async (context, values) => values.length === 0 && await fixture.host.revalidate(context),
++      authorizeDecision: async (context, values) => values.length === 0 && await fixture.host.revalidate(context),
++      authorizeOutcome: async (context, values) => values.length === 0 && await fixture.host.revalidate(context),
++      authorizeOutcomeComparison: async (context, values) => values.length === 0 && await fixture.host.revalidate(context),
++      authorizeSensitivity: async (context, values) => values.length === 0 && await fixture.host.revalidate(context),
++    },
++  })
++  return { fixture, source, history, services, io, drift, receipt: captured.value, dispose: fixture.dispose }
++}
++
++test("installed history C08 capture unavailability remains unknown and the real C05 reader normalizes it", async () => {
++  const f = await createHistoryFixture()
++  try {
++    expect(await f.history.historicalSource(f.source, f.fixture.author)).toBe(true)
++    f.io.armed = true
++    await expect(f.history.historicalSource(f.source, f.fixture.author)).rejects.toThrow("REVIEW_HISTORY_READ_UNAVAILABLE")
++    expect(f.io.captures).toBe(2)
++    expect(await f.history.historicalSource(f.source, f.fixture.author)).toBe(true)
++    f.io.captures = 0; f.io.armed = true
++    const unknown = await f.services.reviews.read(f.fixture.review.id, f.fixture.author)
++    expect(unknown).toEqual({ status: "unavailable", reason: "review-read-unavailable" })
++    expect(f.io.captures).toBe(2)
++    expect(await f.services.reviews.read(f.fixture.review.id, f.fixture.author)).toEqual({ status: "ok", value: f.fixture.review })
++  } finally { await f.dispose() }
++}, 120000)
++
++test("installed history two authorized scoped reads with legitimate source drift require reconciliation", async () => {
++  const f = await createHistoryFixture()
++  try {
++    expect(await f.history.historicalSource(f.source, f.fixture.author)).toBe(true)
++    f.drift.armed = true
++    await expect(f.history.historicalSource(f.source, f.fixture.author)).rejects.toThrow("REVIEW_HISTORY_CHANGED")
++    expect(f.drift.versions).toHaveLength(2)
++    expect(f.drift.versions[1]!).toBeGreaterThan(f.drift.versions[0]!)
++    expect(await f.fixture.host.revalidate(f.fixture.author)).toBe(true)
++    expect(await f.history.historicalSource(f.source, f.fixture.author)).toBe(true)
++    f.drift.versions.length = 0; f.drift.nextStatus = "Completed"; f.drift.armed = true
++    const unknown = await f.services.reviews.read(f.fixture.review.id, f.fixture.author)
++    expect(unknown).toEqual({ status: "unavailable", reason: "review-read-unavailable" })
++    expect(f.drift.versions).toHaveLength(2)
++    expect(f.drift.versions[1]!).toBeGreaterThan(f.drift.versions[0]!)
++    expect(await f.fixture.host.revalidate(f.fixture.author)).toBe(true)
++    expect(await f.services.reviews.read(f.fixture.review.id, f.fixture.author)).toEqual({ status: "ok", value: f.fixture.review })
++  } finally { await f.dispose() }
++}, 120000)
++
++test("installed history actual actor revocation remains an explicit refusal", async () => {
++  const f = await createHistoryFixture()
++  try {
++    expect(await f.history.historicalSource(f.source, f.fixture.author)).toBe(true)
++    f.fixture.actors.person!.enabled = false
++    expect(await f.history.historicalSource(f.source, f.fixture.author)).toBe(false)
++    const denied = await f.services.reviews.read(f.fixture.review.id, f.fixture.author)
++    expect(denied.status).toBe("denied")
++    expect(denied).not.toHaveProperty("value")
++  } finally { await f.dispose() }
++}, 120000)
++
++test("installed history refuses a disappeared C05 target despite the original durable receipt", async () => {
++  const f = await createHistoryFixture()
++  try {
++    expect(await f.history.historicalSource(f.source, f.fixture.author)).toBe(true)
++    // Explicit storage lifecycle fault, not an authorized mutation of C05.
++    await f.fixture.persistence.transaction("dashboard", async (snapshot) => {
++      delete object(object(snapshot.data.__sfProductV1).reviews)[f.fixture.review.id]
++      return { commit: true, value: undefined }
++    })
++    const receipt = await f.fixture.state.read(f.fixture.request("person"), "reviews", (state) => Object.values(state.transactions).filter((entry) => object(entry.value).reviewRef === f.fixture.review.id))
++    if (receipt.status !== "ok") throw new Error("Durable original receipt unavailable")
++    expect(receipt.value).toEqual(f.receipt)
++    expect(await f.fixture.host.revalidate(f.fixture.author)).toBe(true)
++    expect(await f.history.historicalSource(f.source, f.fixture.author)).toBe(false)
++    expect(await f.services.reviews.read(f.fixture.review.id, f.fixture.author)).toEqual({ status: "denied", reason: "review-target-changed" })
++  } finally { await f.dispose() }
++}, 120000)
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/installed-read-integrity.test.ts
+@@ -0,0 +1,119 @@
++import { expect, test } from "bun:test"
++import { protectSfReviewReads } from "../../../../../../apps/cli/src/sucafina-product/review-read-integrity.ts"
++import type { SfProductStatePort } from "../../../product/contracts/state.ts"
++import { object } from "../../../runtime/contract.ts"
++import { available } from "../wp08/relations-fixture.ts"
++import { receiptQuestion } from "../wp08/recipient-receipt-fixture.ts"
++import { createReviewReadBoundaryFixture } from "./review-read-boundary-fixture.ts"
++
++/** Actual installed wrapper over the fixture's real C05 reader, C08 receipt,
++ * SQLite, authenticated Request and host. Failure seams replace only negative
++ * I/O results after the underlying read; no successful proof is manufactured.
++ */
++async function createInstalledIntegrityFixture(localSnapshotReaders: boolean) {
++  const f = await createReviewReadBoundaryFixture()
++  const raw: { calls: number; unavailableAt?: number; afterRead?: () => Promise<void> } = { calls: 0 }
++  const proof: { calls: number; unavailableAt?: number; afterProof?: () => Promise<void> } = { calls: 0 }
++  const read = f.services.reviews.read.bind(f.services.reviews)
++  const reviews = { ...f.services.reviews, read: async (...args: Parameters<typeof read>) => {
++    const ordinal = ++raw.calls
++    const result = await read(...args)
++    if (result.status === "ok") await raw.afterRead?.()
++    return ordinal === raw.unavailableAt ? { status: "unavailable" as const, reason: "test-integrity-read-unavailable" } : result
++  } }
++  const state: SfProductStatePort = { ...f.fixture.state, read: async (request, namespace, inspect) => {
++    const result = await f.fixture.state.read(request, namespace, inspect)
++    if (namespace !== "reviews") return result
++    const ordinal = ++proof.calls
++    await proof.afterProof?.()
++    return ordinal === proof.unavailableAt ? { status: "unavailable", reason: "test-integrity-proof-unavailable" } : result
++  } }
++  const scope = protectSfReviewReads({ authority: { host: f.fixture.host, state, creationTarget: f.fixture.creationTarget }, reviews, localSnapshotReaders })
++  const request = f.fixture.host.requestFor(f.fixture.author)
++  if (!request) throw new Error("Actual admitted C05 Request unavailable")
++  return { f, raw, proof, read: () => scope.run(request, () => reviews.read(f.fixture.review.id, f.fixture.author)),
++    removeReceipt: () => f.fixture.persistence.transaction("dashboard", async (snapshot) => {
++      const transactions = object(object(snapshot.data.__sfProductV1).transactions)
++      let removed = 0
++      for (const [key, entry] of Object.entries(transactions)) {
++        const transaction = object(entry), value = object(transaction.value)
++        if (transaction.namespace === "reviews" && (value.reviewRef === f.fixture.review.id || value.id === f.fixture.review.id)) {
++          delete transactions[key]; removed += 1
++        }
++      }
++      if (!removed) throw new Error("Actual C08 review receipt unavailable")
++      return { commit: true, value: undefined }
++    }),
++    dispose: f.dispose,
++  }
++}
++
++test("installed legacy integrity reader preserves unavailable from its second canonical read", async () => {
++  const f = await createInstalledIntegrityFixture(false)
++  try {
++    f.raw.unavailableAt = 2
++    expect(await f.read()).toEqual({ status: "unavailable", reason: "test-integrity-read-unavailable" })
++    expect(f.raw.calls).toBe(2)
++    f.raw.unavailableAt = undefined
++    expect(await f.read()).toEqual({ status: "ok", value: f.f.fixture.review })
++  } finally { await f.dispose() }
++}, 120000)
++
++test("installed snapshot integrity reader preserves an unavailable after-read C08 proof", async () => {
++  const f = await createInstalledIntegrityFixture(true)
++  try {
++    f.proof.unavailableAt = 2
++    expect(await f.read()).toEqual({ status: "unavailable", reason: "test-integrity-proof-unavailable" })
++    expect(f.raw.calls).toBe(1)
++    expect(f.proof.calls).toBe(2)
++    f.proof.unavailableAt = undefined
++    expect(await f.read()).toEqual({ status: "ok", value: f.f.fixture.review })
++  } finally { await f.dispose() }
++}, 120000)
++
++test("installed snapshot integrity reader reports recoverable drift during two authorized replies", async () => {
++  const f = await createInstalledIntegrityFixture(true)
++  try {
++    const fixture = f.f.fixture
++    const question = await receiptQuestion(fixture)
++    let replies = 0
++    f.raw.afterRead = async () => {
++      const body = `Concurrent authorized integrity reply ${++replies}`
++      const mutation = { expectedStorageVersion: available(await fixture.port.storageVersion("threads", fixture.author)), idempotencyKey: `reports48-integrity-${crypto.randomUUID()}` }
++      const intent = { id: question.id, body, mutation }
++      const result = await fixture.port.threads.reply(question.id, body, mutation, await fixture.admit("person", "collaboration.thread.reply", intent))
++      expect(result.status).toBe("ok")
++    }
++    expect(await f.read()).toEqual({ status: "stale", reason: "review-read-changed" })
++    expect(replies).toBe(2)
++    const thread = available(await fixture.port.threads.read(question.id, fixture.author))
++    expect(thread.messages.slice(-2).map((message) => message.body)).toEqual(["Concurrent authorized integrity reply 1", "Concurrent authorized integrity reply 2"])
++    f.raw.afterRead = undefined
++    expect(await f.read()).toEqual({ status: "ok", value: fixture.review })
++  } finally { await f.dispose() }
++}, 120000)
++
++for (const local of [false, true]) {
++  test(`installed integrity reader local=${local} gives real revocation precedence over unavailable proof`, async () => {
++    const f = await createInstalledIntegrityFixture(local)
++    try {
++      f.proof.unavailableAt = 1
++      f.proof.afterProof = async () => { f.f.fixture.actors.person!.enabled = false }
++      const result = await f.read()
++      expect(result).toEqual({ status: "denied", reason: "review-integrity-unavailable" })
++      expect(result).not.toHaveProperty("value")
++    } finally { await f.dispose() }
++  }, 120000)
++
++  test(`installed integrity reader local=${local} denies an actually removed C08 receipt`, async () => {
++    const f = await createInstalledIntegrityFixture(local)
++    try {
++      expect(await f.read()).toEqual({ status: "ok", value: f.f.fixture.review })
++      // Deliberate hostile storage lifecycle, not an authorized C05 mutation.
++      await f.removeReceipt()
++      const result = await f.read()
++      expect(result).toEqual({ status: "denied", reason: "review-integrity-unavailable" })
++      expect(result).not.toHaveProperty("value")
++    } finally { await f.dispose() }
++  }, 120000)
++}
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/lost-response.test.ts
+@@ -0,0 +1,52 @@
++import { expect, test } from "bun:test"
++import { createReadBoundaryFixture, discussionFailure } from "./read-boundary-fixture.ts"
++
++for (const action of ["reply", "edit"] as const) {
++  test(`lost ${action} response: explicit replay after SQLite reopen retains the exact request and one effect`, async () => {
++    const f = await createReadBoundaryFixture(action === "edit" ? "base" : "recipient")
++    try {
++      if (action === "edit") await f.reply("Original author answer")
++      const before = await f.read() as { messages: { id: string; incarnation: string; version: number; body: string }[] }
++      const original = before.messages.at(-1)!
++      const mutation = await f.client.mutation()
++      const payload = action === "reply"
++        ? { id: f.question.id, body: "Private reply kept after response loss", mutation }
++        : { id: f.question.id, messageId: original.id, expectedVersion: original.version, body: "Private edit kept after response loss", mutation }
++      const serializedIntent = JSON.stringify(payload)
++      const mode = `collaboration-thread-${action}`
++      f.transport.drop = mode
++      const failure = await discussionFailure(f.client.post(mode, JSON.parse(serializedIntent), mutation.idempotencyKey))
++      expect(failure.kind).toBe("recoverable")
++      expect(failure.outcome).toBe("unknown")
++      expect(f.lost).toEqual([])
++      const first = f.requests.filter((request) => request.mode === mode)
++      expect(first).toHaveLength(1)
++      // The fault occurs only after the actual domain and HTTP adapter succeed.
++      expect(first[0]!.status).toBe(200)
++      expect(first[0]!.body).toBe(serializedIntent)
++      expect(first[0]!.key).toBe(mutation.idempotencyKey)
++
++      await f.reopen()
++      const reopened = await f.read() as { messages: { id: string; incarnation: string; version: number; body: string }[] }
++      expect(reopened.messages).toHaveLength(2)
++      expect(reopened.messages.at(-1)!.body).toBe(payload.body)
++      expect(reopened.messages.at(-1)!.version).toBe(action === "reply" ? 1 : original.version + 1)
++      // New admission/reopen and authorized reads do not resend the command.
++      expect(f.requests.filter((request) => request.mode === mode)).toHaveLength(1)
++      expect(JSON.stringify(payload)).toBe(serializedIntent)
++      await f.client.post(mode, JSON.parse(serializedIntent), mutation.idempotencyKey)
++      const retried = f.requests.filter((request) => request.mode === mode)
++      expect(retried).toHaveLength(2)
++      expect(retried.map((request) => request.body)).toEqual([serializedIntent, serializedIntent])
++      expect(retried.map((request) => request.key)).toEqual([mutation.idempotencyKey, mutation.idempotencyKey])
++      expect(retried.map((request) => request.status)).toEqual([200, 200])
++      expect(await f.read()).toEqual(reopened)
++      expect(f.lost).toEqual([])
++      if (action === "edit") {
++        const history = await f.client.post("collaboration-thread-history", { id: f.question.id, messageId: original.id, incarnation: original.incarnation, version: original.version }) as { message: { body: string; version: number } }
++        expect(history.message.body).toBe("Original author answer")
++        expect(history.message.version).toBe(original.version)
++      }
++    } finally { await f.dispose() }
++  })
++}
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/read-boundary-fixture.ts
+@@ -0,0 +1,119 @@
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import { createCollaborationHttp } from "../../../product/collaboration/http.ts"
++import { createSfHumanAuthority, sfHumanReadActions } from "../../../product/integration/human-authority.ts"
++import { createReviewDiscussionClient, ReviewDiscussionError } from "../../../product/reviews/collaboration-client.ts"
++import { createThreadActorsFixture } from "../wp08/thread-actors-fixture.ts"
++import { receiptQuestion } from "../wp08/recipient-receipt-fixture.ts"
++import { available } from "../wp08/relations-fixture.ts"
++
++/** Actual SQLite/C03/C08, source issuers, admissions, readers and HTTP adapter.
++ * Actor identities and recipient grants are the existing explicit WP08 fixture;
++ * this is a boundary proof, not an installed/native or corporate identity proof.
++ */
++export async function createReadBoundaryFixture(reader: "base" | "recipient", selectedActor?: string) {
++  const fixture = await createThreadActorsFixture()
++  // Use the installed transport's digest shape in the fixture's authority input,
++  // then obtain fresh admissions through the real authority registry.
++  for (const [id, actor] of Object.entries(fixture.actors)) actor.access = digestSfValue({ actor: id, revision: 1 })
++  fixture.author = await fixture.admitRead("person")
++  fixture.recipient = await fixture.admitRead("reader-b")
++  fixture.homonym = await fixture.admitRead("reader-c")
++  const actor = selectedActor ?? (reader === "base" ? "person" : "reader-b")
++  const binding = fixture.actors[actor]!.access
++  const question = await receiptQuestion(fixture)
++  const humanRead = createSfHumanAuthority({ origin: "https://example.test", ui: fixture.ui })
++  const io: { armed: boolean; reads: number; failSecond: boolean; failureReason: string; afterFirst?: () => Promise<void> } = { armed: false, reads: 0, failSecond: false, failureReason: "test-storage-read-unavailable" }
++  const originalRead = fixture.state.read
++  fixture.state.read = async (request, namespace, inspect) => {
++    const selected = io.armed && namespace === "threads" && request.headers.get("X-SF-Test-Read") === "reports48"
++    const ordinal = selected ? ++io.reads : 0
++    if (ordinal === 2 && io.failSecond) {
++      io.armed = false
++      return { status: "unavailable", reason: io.failureReason }
++    }
++    const result = await originalRead(request, namespace, inspect)
++    if (ordinal === 1) await io.afterFirst?.()
++    if (ordinal === 2) io.armed = false
++    return result
++  }
++  const evidence: { fault: "" | "throw" | "unavailable" | "stale" | "revoked"; calls: number } = { fault: "", calls: 0 }
++  const originalContext = fixture.evidence.context
++  fixture.evidence.context = async (selection, context) => {
++    const result = await originalContext(selection, context)
++    const selected = fixture.host.requestFor(context)?.headers.get("X-SF-Test-Read") === "reports48"
++    if (!selected || !evidence.fault) return result
++    evidence.calls += 1
++    if (evidence.fault === "throw") throw new Error("Injected evidence transport outage after the real read")
++    const state = evidence.fault
++    return result.map((resolution) => ({ ...resolution, state }))
++  }
++  const admission = { unavailable: false }
++  const requests: { mode: string; body: string; key: string | null; status: number; result: Record<string, unknown> }[] = []
++  const lost: string[] = []
++  const transport = { drop: "", afterResponse: undefined as undefined | (() => Promise<void>) }
++  const compose = () => createCollaborationHttp({
++    origin: "https://example.test", mount: "/product",
++    host: reader === "base" ? { ...fixture.port, recipientThread: undefined } : fixture.port,
++    human: fixture.human,
++    admitRead: async (request, operation, payload) => {
++      if (admission.unavailable) throw new Error("Injected read admission transport outage")
++      const action = sfHumanReadActions.find((value) => value === operation)
++      return action ? humanRead.admit(request, action, payload) : { status: "denied", reason: "unregistered-test-read" }
++    },
++    finishRead: humanRead.finish,
++  })
++  let http = compose()
++  const createClient = () => createReviewDiscussionClient(() => { lost.push("access") }, {
++    url: () => "https://example.test/product?review=preserved",
++    binding: () => binding,
++    fetch: async (input, init) => {
++      const headers = new Headers(init?.headers)
++      headers.set("actor", actor); headers.set("origin", "https://example.test")
++      headers.set("X-SF-Test-Read", "reports48")
++      const request = new Request(input, { ...init, headers })
++      const mode = new URL(request.url).searchParams.get("sf") ?? ""
++      const body = await request.clone().text()
++      const response = await http(request)
++      if (!response) throw new Error("Actual collaboration route was not mounted")
++      const result = await response.clone().json() as Record<string, unknown>
++      requests.push({ mode, body, key: request.headers.get("Idempotency-Key"), status: response.status, result })
++      await transport.afterResponse?.()
++      if (transport.drop === mode) {
++        transport.drop = ""
++        throw new TypeError("Synthetic transport loss after the actual HTTP response")
++      }
++      return response
++    },
++  })
++  let client = createClient()
++  return { fixture, actor, binding, question, io, evidence, admission, requests, lost, transport,
++    get client() { return client },
++    read: () => client.post("collaboration-thread-read", { id: question.id }),
++    reply: async (body = "Concurrent authorized reply") => {
++      const author = reader === "base" ? "person" : "reader-b"
++      const context = reader === "base" ? fixture.author : fixture.recipient
++      const mutation = { expectedStorageVersion: available(await fixture.port.storageVersion("threads", context)), idempotencyKey: `reports48-${crypto.randomUUID()}` }
++      const intent = { id: question.id, body, mutation }
++      if (reader === "base") return available(await fixture.port.threads.reply(question.id, body, mutation, await fixture.admit(author, "collaboration.thread.reply", intent)))
++      if (!fixture.port.recipientActions) throw new Error("Actual recipient actions are required")
++      return available(await fixture.port.recipientActions.reply(question.id, body, mutation, await fixture.admit(author, "collaboration.thread.reply", intent)))
++    },
++    reopen: async () => {
++      client.dispose()
++      await fixture.reopen()
++      fixture.author = await fixture.admitRead("person")
++      fixture.recipient = await fixture.admitRead("reader-b")
++      fixture.port = fixture.compose()
++      http = compose(); client = createClient()
++    },
++    dispose: async () => { client.dispose(); fixture.state.read = originalRead; fixture.evidence.context = originalContext; await fixture.dispose() },
++  }
++}
++
++export async function discussionFailure(operation: Promise<unknown>) {
++  try { await operation } catch (error) {
++    if (error instanceof ReviewDiscussionError) return error
++    throw error
++  }
++  throw new Error("Expected the real discussion client to reject this boundary result")
++}
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/read-boundary.test.ts
+@@ -0,0 +1,90 @@
++import { expect, test } from "bun:test"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import { createReadBoundaryFixture, discussionFailure } from "./read-boundary-fixture.ts"
++
++for (const reader of ["base", "recipient"] as const) {
++  test(`${reader}: authorized reply between state reads requires reconciliation without revoking`, async () => {
++    const f = await createReadBoundaryFixture(reader)
++    try {
++      f.io.armed = true
++      f.io.afterFirst = async () => { await f.reply() }
++      const failure = await discussionFailure(f.read())
++      expect(failure.kind).toBe("conflict")
++      expect(failure.outcome).toBe("unknown")
++      expect(failure.message).toBe("thread-content-changed")
++      expect(f.io.reads).toBe(2)
++      expect(f.lost).toEqual([])
++      expect(f.requests[0]!.status).toBe(409)
++      expect(f.requests[0]!.result).toEqual({ status: "stale", reason: "thread-content-changed" })
++      const current = await f.read() as { messages: { body: string }[] }
++      expect(current.messages.map((message) => message.body)).toEqual(["Explain this exact source.", "Concurrent authorized reply"])
++      expect(f.requests.map((request) => request.mode)).toEqual(["collaboration-thread-read", "collaboration-thread-read"])
++      expect(f.lost).toEqual([])
++    } finally { await f.dispose() }
++  })
++
++  test(`${reader}: second state read failure keeps the client alive for an authorized reread`, async () => {
++    const f = await createReadBoundaryFixture(reader)
++    try {
++      f.io.armed = true; f.io.failSecond = true
++      const failure = await discussionFailure(f.read())
++      expect(failure.kind).toBe("recoverable")
++      expect(failure.outcome).toBe("unknown")
++      expect(f.io.reads).toBe(2)
++      expect(f.lost).toEqual([])
++      expect(f.requests[0]!.status).toBe(503)
++      expect(f.requests[0]!.result).toEqual({ status: "unavailable", reason: reader === "base" ? "test-storage-read-unavailable" : "thread-read-unavailable" })
++      const current = await f.read() as { messages: { body: string }[] }
++      expect(current.messages.map((message) => message.body)).toEqual(["Explain this exact source."])
++      expect(f.requests.map((request) => request.mode)).toEqual(["collaboration-thread-read", "collaboration-thread-read"])
++      expect(f.lost).toEqual([])
++    } finally { await f.dispose() }
++  })
++
++  test(`${reader}: actual authorization loss after the first state read is denied and terminal`, async () => {
++    const f = await createReadBoundaryFixture(reader)
++    try {
++      f.io.armed = true
++      f.io.afterFirst = async () => { f.fixture.actors[f.actor]!.enabled = false }
++      const failure = await discussionFailure(f.read())
++      expect(failure.kind).toBe("access")
++      expect(f.lost).toEqual(["access"])
++      expect(f.requests[0]!.status).toBe(403)
++      expect(f.requests[0]!.result.status).toBe("denied")
++      expect(f.requests[0]!.result).not.toHaveProperty("value")
++      f.fixture.actors[f.actor]!.enabled = true
++      expect((await discussionFailure(f.read())).kind).toBe("access")
++      expect(f.requests).toHaveLength(1)
++      expect(f.lost).toEqual(["access"])
++    } finally { await f.dispose() }
++  })
++}
++
++test("recipient denial cannot fall through to the older ambiguous base reader", async () => {
++  const f = await createReadBoundaryFixture("recipient", "reader-c")
++  try {
++    const failure = await discussionFailure(f.read())
++    expect(failure.kind).toBe("access")
++    expect(f.lost).toEqual(["access"])
++    expect(f.requests[0]!.status).toBe(403)
++    expect(f.requests[0]!.result.status).toBe("denied")
++    expect(f.requests[0]!.result).not.toHaveProperty("value")
++  } finally { await f.dispose() }
++})
++
++test("binding change during the actual reader wins over recoverable content drift", async () => {
++  const f = await createReadBoundaryFixture("recipient")
++  try {
++    f.io.armed = true
++    f.io.afterFirst = async () => {
++      await f.reply()
++      f.fixture.actors[f.actor]!.access = digestSfValue({ actor: f.actor, revision: 2 })
++    }
++    const failure = await discussionFailure(f.read())
++    expect(failure.kind).toBe("access")
++    expect(f.lost).toEqual(["access"])
++    expect(f.requests[0]!.status).toBe(403)
++    expect(f.requests[0]!.result.status).toBe("denied")
++    expect(f.requests[0]!.result).not.toHaveProperty("value")
++  } finally { await f.dispose() }
++})
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-read-boundary-fixture.ts
+@@ -0,0 +1,121 @@
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import type { SourceRef } from "../../../product/contracts/context.ts"
++import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
++import { createSfHumanAuthority } from "../../../product/integration/human-authority.ts"
++import { createReviewServices } from "../../../product/reviews/services.ts"
++import { createReviewHttp } from "../../../product/reviews/http.ts"
++import { createReviewHumanPort } from "../../../product/reviews/human.ts"
++import { createReviewClosurePort } from "../../../product/reviews/closure-action.ts"
++import type { ReviewActionHandoff } from "../../../product/reviews/closure-action.ts"
++import { createReviewHandoffVerifier } from "../../../product/reviews/handoff-access.ts"
++import { createReviewDownloadHandler } from "../../../product/reports/download.ts"
++import { object } from "../../../runtime/contract.ts"
++import { createReviewAnswersFixture } from "../wp08/review-answers-fixture.ts"
++import { available } from "../wp08/relations-fixture.ts"
++
++/** Reopen an actually preserved C05 with a second production consumer. The
++ * existing fixture owns actor/ACL/history grants. Only this consumer's evidence
++ * I/O is faulted; its source selection still uses the original real resolver.
++ */
++export async function createReviewReadBoundaryFixture() {
++  const fixture = await createReviewAnswersFixture()
++  const projection = available(await fixture.records.read(fixture.source.refId, fixture.author))
++  const evidence: { fault: "" | "throw" | "unavailable" | "stale" | "revoked"; calls: number } = { fault: "", calls: 0 }
++  const sources = async (context: TrustedDomainContext, refs: readonly SourceRef[]) => {
++    if (!await fixture.host.revalidate(context) || refs.some((ref) => !projection.context.sourceRefs.some((source) => digestSfValue(source) === digestSfValue(ref)))) return false
++    const resolution = await fixture.evidence.resolve(fixture.source, context)
++    return ["fresh", "historical"].includes(resolution.state) && resolution.accessRevision === context.binding.accessRevision && digestSfValue(resolution.ref) === digestSfValue(fixture.source) && await fixture.host.revalidate(context)
++  }
++  const services = createReviewServices({
++    state: fixture.state, host: fixture.host, authority: fixture.domainAuthority,
++    evidence: { resolve: async (ref, context) => {
++      const result = await fixture.evidence.resolve(ref, context)
++      if (!evidence.fault) return result
++      evidence.calls += 1
++      if (evidence.fault === "throw") throw new Error("Injected C05 evidence transport failure after the real resolution")
++      return { ...result, state: evidence.fault }
++    } },
++    creationTarget: fixture.creationTarget,
++    operationIdentity: (context) => context.kind === "ui" ? fixture.ui.operationIdentity(context) : undefined,
++    requiredAuthority: [], maxBytes: 5_000_000, now: () => "2026-11-13T00:00:00Z",
++    selection: {
++      select: async (_selection, ids, context) => {
++        if (ids.length !== 1 || ids[0] !== "project" || !fixture.access[context.binding.principalRef]) return { status: "denied", reason: "fixture-review-selection-denied" }
++        const current = await fixture.records.read(fixture.source.refId, context)
++        return current.status === "ok" ? { status: "ok", value: [{ id: "project", title: "Preserved project answer", period: fixture.period, recordCount: 1, projection: current.value }] } : current
++      },
++      authorizeSections: async (context, sections) => fixture.access[context.binding.principalRef] === true && sections.every((section) => section.id === "project") && await sources(context, sections.flatMap((section) => section.sourceRefs)),
++      revalidate: sources,
++      authorizeComments: async (context, values) => values.length === 0 && await fixture.host.revalidate(context),
++      authorizeDecision: async (context, values) => values.length === 0 && await fixture.host.revalidate(context),
++      authorizeOutcome: async (context, values) => values.length === 0 && await fixture.host.revalidate(context),
++      authorizeOutcomeComparison: async (context, values) => values.length === 0 && await fixture.host.revalidate(context),
++      authorizeSensitivity: async (context, values) => values.length === 0 && await fixture.host.revalidate(context),
++    },
++  })
++  const humanAuthority = createSfHumanAuthority({ origin: "https://example.test", ui: fixture.ui })
++  const closure = createReviewClosurePort({
++    state: fixture.state, host: fixture.host, reviews: services.reviews, human: humanAuthority, ui: fixture.ui,
++    creationTarget: fixture.creationTarget, operationIdentity: (context) => context.kind === "ui" ? fixture.ui.operationIdentity(context) : undefined,
++    handoff: { create: async (intent, context) => {
++      const result = await fixture.port.handoff.create(intent, context)
++      if (result.status !== "ok") return result
++      if (result.value.state !== "created" && result.value.state !== "existing") return { status: "unavailable", reason: "handoff-state-unavailable" }
++      return { status: "ok", value: { ...result.value, state: result.value.state } }
++    } },
++    verifyHandoff: createReviewHandoffVerifier({ host: fixture.host, relations: fixture.port.relations, hotTopics: fixture.port.hotTopics }),
++    readAction: fixture.port.hotTopics.read,
++  })
++  const admission: { fault: "" | "unavailable" | "throw"; calls: number } = { fault: "", calls: 0 }
++  const ui = { ...fixture.ui, admit: async (...args: Parameters<typeof fixture.ui.admit>) => {
++    const result = await fixture.ui.admit(...args)
++    if (result.status !== "ok" || !admission.fault) return result
++    fixture.ui.finish(result.value)
++    admission.calls += 1
++    if (admission.fault === "throw") throw new Error("Injected admission response loss after real admission was closed")
++    return { status: "unavailable" as const, reason: "test-review-admission-unavailable" }
++  } }
++  const http = createReviewHttp({
++    origin: "https://example.test", ui, authority: fixture.domainAuthority, reviews: services.reviews,
++    threadContext: services.threadContext, closure, humanAuthority, descriptors: services.descriptors,
++    human: createReviewHumanPort({ state: fixture.state, reviews: services.reviews, human: humanAuthority, ui: fixture.ui, creationTarget: fixture.creationTarget }),
++    download: createReviewDownloadHandler({ authority: fixture.ui, storage: services.artifacts }), maxBodyBytes: 8192,
++  })
++  const basis = { sourceRef: fixture.basis.sourceRef, sourceIncarnation: fixture.basis.sourceIncarnation, observedVersion: fixture.basis.observedVersion, period: fixture.basis.period, evidenceRefs: fixture.basis.evidenceRefs }
++  const pin = fixture.basis.reviewContext!
++  const send = async (mode: "review-read" | "review-thread-context" | "review-closure", closureRef?: string) => {
++    const url = new URL("https://example.test/product")
++    url.searchParams.set("sf", mode)
++    if (mode === "review-read") url.searchParams.set("reviewRef", fixture.review.id)
++    if (mode === "review-closure") url.searchParams.set("closureRef", closureRef ?? "")
++    const request = new Request(url, { method: mode === "review-thread-context" ? "POST" : "GET", headers: { actor: "person", origin: "https://example.test", "content-type": "application/json" }, ...(mode === "review-thread-context" ? { body: JSON.stringify({ reviewRef: fixture.review.id, sectionId: "project", basis }) } : {}) })
++    const response = await http(request, "dashboard")
++    if (!response) throw new Error("Actual review route was not mounted")
++    return { status: response.status, body: await response.json() as Record<string, unknown> }
++  }
++  return { fixture, services, evidence, admission, basis, pin, send,
++    close: async () => {
++      const handoff: ReviewActionHandoff = { sourceRef: fixture.source.refId, recipientRef: "person", relationKey: "reports48-review-admission-action", intent: { correlationKey: "reports48-review-admission-action", sourceRefs: [fixture.source], action: "Follow up the preserved review", owner: "Author", due: "2026-12-01", priority: "normal", notes: "" } }
++      const request = fixture.request("person")
++      const digest = digestSfValue({ reviewRef: fixture.review.id })
++      const read = available(await fixture.ui.admit(request, "sf_review_prepare", digest))
++      if (!await fixture.ui.validate(read, "sf_review_prepare", digest)) throw new Error("Actual review admission unavailable")
++      const action = available(await humanAuthority.admit(request, "collaboration.handoff.confirm", handoff))
++      try { return available(await closure.confirm(fixture.review.id, handoff, read, action)).closureRef }
++      finally { fixture.ui.finish(read); humanAuthority.finish(action) }
++    },
++    alterTarget: async (kind: "missing" | "identity") => {
++      // Explicit hostile storage lifecycle boundary. No grant is invented and
++      // this is not claimed as an authorized operation on immutable C05.
++      await fixture.persistence.transaction("dashboard", async (snapshot) => {
++        const reviews = object(object(snapshot.data.__sfProductV1).reviews)
++        const stored = object(reviews[fixture.review.id])
++        if (stored.id !== fixture.review.id) throw new Error("Actual preserved review target unavailable")
++        if (kind === "missing") delete reviews[fixture.review.id]
++        else reviews[fixture.review.id] = { ...stored, id: `${fixture.review.id}-replacement` }
++        return { commit: true, value: undefined }
++      })
++    },
++    dispose: fixture.dispose,
++  }
++}
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-read-boundary.test.ts
+@@ -0,0 +1,128 @@
++import { expect, test } from "bun:test"
++import { createReviewReadBoundaryFixture } from "./review-read-boundary-fixture.ts"
++
++test("C05 persistent shared evidence outage remains unavailable before boolean source gates", async () => {
++  const f = await createReviewReadBoundaryFixture()
++  const resolve = f.fixture.evidence.resolve
++  let calls = 0
++  try {
++    expect(await f.fixture.services.threadContext.authorize(f.pin, f.basis, f.fixture.author)).toBe(true)
++    f.fixture.evidence.resolve = async (...args: Parameters<typeof resolve>) => {
++      const result = await resolve(...args)
++      calls += 1
++      return { ...result, state: "unavailable" as const }
++    }
++    // This shared dependency is also called inside the fixture's actual
++    // authorizeSections/revalidate gates, not only by the isolated consumer.
++    for (const services of [f.fixture.services, f.services]) {
++      expect(await services.reviews.read(f.fixture.review.id, f.fixture.author)).toEqual({ status: "unavailable", reason: "review-read-unavailable" })
++      const pin = await services.threadContext.read(f.pin, f.basis, f.fixture.author)
++      expect(pin.status).toBe("unavailable")
++      expect(pin).not.toHaveProperty("value")
++    }
++    for (const mode of ["review-read", "review-thread-context"] as const) {
++      const response = await f.send(mode)
++      expect(response.status).toBe(503)
++      expect(response.body.status).toBe("unavailable")
++      expect(response.body).not.toHaveProperty("value")
++    }
++    expect(calls).toBeGreaterThan(0)
++    f.fixture.evidence.resolve = resolve
++    expect(await f.fixture.services.reviews.read(f.fixture.review.id, f.fixture.author)).toEqual({ status: "ok", value: f.fixture.review })
++    expect(await f.fixture.services.threadContext.authorize(f.pin, f.basis, f.fixture.author)).toBe(true)
++    expect((await f.send("review-read")).status).toBe(200)
++    expect((await f.send("review-thread-context")).body).toEqual({ status: "ok", value: f.pin })
++  } finally { f.fixture.evidence.resolve = resolve; await f.dispose() }
++}, 120000)
++
++// Same 120000 budget as the existing real C05/recipient fixture journeys.
++for (const fault of ["throw", "unavailable", "stale"] as const) {
++  test(`C05 evidence ${fault} remains unavailable through services, pin and HTTP`, async () => {
++    const f = await createReviewReadBoundaryFixture()
++    try {
++      expect(await f.services.threadContext.authorize(f.pin, f.basis, f.fixture.author)).toBe(true)
++      f.evidence.fault = fault
++      const read = await f.services.reviews.read(f.fixture.review.id, f.fixture.author)
++      expect(read.status).toBe("unavailable")
++      expect(read).not.toHaveProperty("value")
++      expect(f.evidence.calls).toBeGreaterThan(0)
++      const pin = await f.services.threadContext.read(f.pin, f.basis, f.fixture.author)
++      expect(pin.status).toBe("unavailable")
++      expect(pin).not.toHaveProperty("value")
++      for (const mode of ["review-read", "review-thread-context"] as const) {
++        const response = await f.send(mode)
++        expect(response.status).toBe(503)
++        expect(response.body.status).toBe("unavailable")
++        expect(response.body).not.toHaveProperty("value")
++      }
++      f.evidence.fault = ""
++      expect(await f.services.reviews.read(f.fixture.review.id, f.fixture.author)).toEqual({ status: "ok", value: f.fixture.review })
++      expect(await f.services.threadContext.authorize(f.pin, f.basis, f.fixture.author)).toBe(true)
++      expect((await f.send("review-thread-context")).body).toEqual({ status: "ok", value: f.pin })
++    } finally { await f.dispose() }
++  }, 120000)
++}
++
++test("C05 explicit revoked evidence is denied through services, pin and HTTP", async () => {
++  const f = await createReviewReadBoundaryFixture()
++  try {
++    expect(await f.services.threadContext.authorize(f.pin, f.basis, f.fixture.author)).toBe(true)
++    f.evidence.fault = "revoked"
++    const read = await f.services.reviews.read(f.fixture.review.id, f.fixture.author)
++    expect(read.status).toBe("denied")
++    expect(read).not.toHaveProperty("value")
++    expect(await f.services.threadContext.authorize(f.pin, f.basis, f.fixture.author)).toBe(false)
++    expect(f.evidence.calls).toBeGreaterThan(0)
++    for (const mode of ["review-read", "review-thread-context"] as const) {
++      const response = await f.send(mode)
++      expect(response.status).toBe(403)
++      expect(response.body.status).toBe("denied")
++      expect(response.body).not.toHaveProperty("value")
++    }
++  } finally { await f.dispose() }
++}, 120000)
++
++for (const kind of ["missing", "identity"] as const) {
++  test(`C05 actual storage target ${kind} invalidates the preserved pin`, async () => {
++    const f = await createReviewReadBoundaryFixture()
++    try {
++      expect(await f.services.threadContext.authorize(f.pin, f.basis, f.fixture.author)).toBe(true)
++      expect((await f.send("review-thread-context")).status).toBe(200)
++      await f.alterTarget(kind)
++      const read = await f.services.reviews.read(f.fixture.review.id, f.fixture.author)
++      expect(read).toEqual({ status: "denied", reason: "review-target-changed" })
++      expect(await f.services.threadContext.authorize(f.pin, f.basis, f.fixture.author)).toBe(false)
++      for (const mode of ["review-read", "review-thread-context"] as const) {
++        const response = await f.send(mode)
++        expect(response.status).toBe(403)
++        expect(response.body.status).toBe("denied")
++        expect(response.body).not.toHaveProperty("value")
++      }
++    } finally { await f.dispose() }
++  }, 120000)
++}
++
++for (const mode of ["review-read", "review-thread-context", "review-closure"] as const) {
++  test(`${mode} admission unavailability is not converted to authorization loss`, async () => {
++    const f = await createReviewReadBoundaryFixture()
++    try {
++      const closureRef = mode === "review-closure" ? await f.close() : undefined
++      expect((await f.send(mode, closureRef)).status).toBe(200)
++      for (const fault of ["unavailable", "throw"] as const) {
++        f.admission.fault = fault
++        const response = await f.send(mode, closureRef)
++        expect(response.status).toBe(503)
++        expect(response.body.status).toBe("unavailable")
++        expect(response.body).not.toHaveProperty("value")
++      }
++      expect(f.admission.calls).toBe(2)
++      f.admission.fault = ""
++      expect((await f.send(mode, closureRef)).status).toBe(200)
++      f.fixture.actors.person!.enabled = false
++      const revoked = await f.send(mode, closureRef)
++      expect(revoked.status).toBe(403)
++      expect(revoked.body.status).toBe("denied")
++      expect(revoked.body).not.toHaveProperty("value")
++    } finally { await f.dispose() }
++  }, 120000)
++}
+--- a/packages/app-shell/e2e/sucafina/reports-support/human-answer-flow.ts
++++ b/packages/app-shell/e2e/sucafina/reports-support/human-answer-flow.ts
+@@ -7,13 +7,17 @@
+ import { expectConfirmedReviewAnswer, expectCreatedReviewQuestion, expectEditedReviewAnswer, expectPreparedReviewAnswer, expectRepliedReviewQuestion, reportsCollaboration } from "./confirmation.ts"
+ import type { ReportsCollaboration, ReviewAnswer, ReviewBasis, ReviewPin } from "./confirmation.ts"
+ import { expectCapturedBudget } from "./review-flow.ts"
++import { recoverLostReplyResponse } from "./lost-reply-response.ts"
++import { recoverFailedEditRequest } from "./failed-edit-request.ts"
++import { recoverLostEditResponse } from "./lost-edit-response.ts"
++import { recoverCreatedQuestionAfterReadLoss } from "./lost-created-thread-read.ts"
+ 
+ /** The installed Review controls perform every human mutation. Direct HTTP
+  * calls below only read back authority/state or probe negative boundaries.
+  * The real local operator is the recipient; distinct-person authority is not
+  * asserted without a genuinely admitted second identity.
+  */
+-export async function confirmHumanAnswer(page: Page, app: ReportsInstallation, saved: PreservedReview, corpus: ReportsCorpus, info: TestInfo) {
++export async function confirmHumanAnswer(page: Page, app: ReportsInstallation, saved: PreservedReview, corpus: ReportsCorpus, info: TestInfo, options: { loseReplyResponse?: boolean; loseCreatedThreadRead?: boolean } = {}) {
+   const sections = saved.sections.filter((section) => section.title === "Budget")
+   expect(sections).toHaveLength(1)
+   const section = sections[0]!
+@@ -37,13 +41,17 @@
+ 
+   const discussion = page.getByRole("region", { name: "Review discussion", exact: true })
+   await expect(discussion).toBeVisible()
++  await expect(discussion.getByLabel("Recipient", { exact: true }),
++    "The installed host must provide its authorized recipient and verifiable X-SF-Review-Binding before a C05 mutation").toHaveValue(app.actorId)
+   await discussion.getByLabel("Review section", { exact: true }).selectOption(section.id)
+   await discussion.getByLabel("Review source", { exact: true }).selectOption(source.refId)
+   await discussion.getByLabel("Recipient", { exact: true }).selectOption(app.actorId)
+   const questionBody = `Confirm the preserved ${corpus.year} forecast of ${corpus.before}; distinguish it from the current source.`
+   await discussion.getByRole("textbox", { name: "Question", exact: true }).fill(questionBody)
+   const beforeQuestion = await api.version()
+-  const created = await submit(page, app, discussion.getByRole("button", { name: "Ask about this review", exact: true }), "collaboration-thread-create")
++  const created = options.loseCreatedThreadRead
++    ? await recoverCreatedQuestionAfterReadLoss({ page, app, api, discussion, body: questionBody, expectedStorageVersion: beforeQuestion, info })
++    : await submit(page, app, discussion.getByRole("button", { name: "Ask about this review", exact: true }), "collaboration-thread-create")
+   expect(created.payload.draft).toEqual({
+     kind: "clarification", ...basis, reviewContext: pin, recipientRef: app.actorId, body: questionBody,
+   })
+@@ -55,11 +63,13 @@
+   const replyBody = `Human answer: this review retains ${corpus.before} for ${corpus.annual.start} through ${corpus.annual.end}. REPORTS_HUMAN_ORIGINAL`
+   await discussion.getByRole("textbox", { name: "Reply", exact: true }).fill(replyBody)
+   const beforeReply = await api.version()
+-  const replied = await submit(page, app, discussion.getByRole("button", { name: "Send reply", exact: true }), "collaboration-thread-reply")
++  const replied = options.loseReplyResponse
++    ? await recoverLostReplyResponse({ page, app, api, discussion, question, body: replyBody, expectedStorageVersion: beforeReply, info })
++    : await submit(page, app, discussion.getByRole("button", { name: "Send reply", exact: true }), "collaboration-thread-reply")
+   expect(replied.payload).toMatchObject({ id: question.id, body: replyBody })
+   expectMutation(replied.payload.mutation, beforeReply)
+   const message = await expectRepliedReviewQuestion(api, question, { principalRef: app.actorId, body: replyBody }, replied.value)
+-  await expect(discussion.getByRole("status")).toHaveText("Reply saved. Review and confirm the exact answer before reusing it.")
++  await expect(discussion.getByRole("status")).toHaveText("Reply saved in this preserved review.")
+   const article = discussion.getByRole("article", { name: `Message ${message.id}`, exact: true })
+   await expect(article).toContainText(message.body)
+   const prepared = await submit(page, app, article.getByRole("button", { name: "Review this answer", exact: true }), "collaboration-answer-prepare-message")
+@@ -114,12 +124,16 @@
+   await expect(page).toHaveURL((url) => url.searchParams.get("reviewThread") === answer.questionId)
+ }
+ 
+-export async function editHumanAnswer(page: Page, app: ReportsInstallation, api: ReportsCollaboration, answer: ReviewAnswer, body: string) {
++export async function editHumanAnswer(page: Page, app: ReportsInstallation, api: ReportsCollaboration, answer: ReviewAnswer, body: string, recovery?: { recoverRequestFailure: true; info: TestInfo } | { loseResponse: true; info: TestInfo }) {
+   const discussion = page.getByRole("region", { name: "Review discussion", exact: true })
+   const article = discussion.getByRole("article", { name: `Message ${answer.message.id}`, exact: true })
+   await article.getByRole("textbox", { name: "Edited answer", exact: true }).fill(body)
+   const beforeEdit = await api.version()
+-  const edited = await submit(page, app, article.getByRole("button", { name: "Save answer edit", exact: true }), "collaboration-thread-edit")
++  const edited = recovery && "recoverRequestFailure" in recovery
++    ? await recoverFailedEditRequest({ page, app, api, discussion, article, answer, body, expectedStorageVersion: beforeEdit, info: recovery.info })
++    : recovery && "loseResponse" in recovery
++      ? await recoverLostEditResponse({ page, app, api, discussion, article, answer, body, expectedStorageVersion: beforeEdit, info: recovery.info })
++      : await submit(page, app, article.getByRole("button", { name: "Save answer edit", exact: true }), "collaboration-thread-edit")
+   expect(edited.payload).toMatchObject({
+     id: answer.questionId, messageId: answer.message.id, expectedVersion: answer.message.version, body,
+   })
+@@ -128,7 +142,7 @@
+   await expect(discussion.getByRole("status")).toHaveText("Answer edited. Its previous version remains protected history; review the new answer before confirming again.")
+   await expect(article).toContainText(body)
+   const unavailable = discussion.getByRole("region", { name: "Confirmed answer", exact: true })
+-  await expect(unavailable).toHaveText("No currently reusable confirmed answer.")
++  await expect(unavailable).toHaveText("No confirmed answer is currently available to read or reuse.")
+   await expect(unavailable.getByRole("heading")).toHaveCount(0)
+   await expect(unavailable).not.toContainText(answer.message.body)
+   const history = discussion.getByRole("region", { name: "Answer history", exact: true })
+--- /dev/null
++++ b/packages/app-shell/e2e/sucafina/reports-support/lost-created-thread-read.ts
+@@ -0,0 +1,144 @@
++import { expect } from "@playwright/test"
++import type { Locator, Page, Request, Route, TestInfo } from "@playwright/test"
++import type { ReportsCollaboration } from "./confirmation.ts"
++import type { ReportsInstallation } from "./production-installation.ts"
++import { object, responseFor, text } from "./model.ts"
++
++/** The create receipt reaches the browser. Only its first authorized follow-up
++ * read is lost; reconciling must adopt that known thread before a focus refresh.
++ */
++export async function recoverCreatedQuestionAfterReadLoss(input: {
++  page: Page
++  app: ReportsInstallation
++  api: ReportsCollaboration
++  discussion: Locator
++  body: string
++  expectedStorageVersion: number
++  info: TestInfo
++}) {
++  const { page, app, api, discussion } = input
++  const mode = "collaboration-thread-create", readMode = "collaboration-thread-read"
++  const base = new URL(app.dashboardURL)
++  const matches = (url: URL, expected: string) => url.origin === base.origin && url.pathname === base.pathname && url.searchParams.get("sf") === expected
++  const matchesRead = (url: URL) => matches(url, readMode)
++  const writes: string[] = []
++  const record = (request: Request) => {
++    if (request.method() === "POST" && matches(new URL(request.url()), mode)) writes.push(text(request.postData()))
++  }
++  expect(new URL(page.url()).searchParams.get("reviewThread")).toBeNull()
++  const createdResponse = page.waitForResponse(responseFor(app.dashboardURL, mode, "POST"))
++  const receipt = createdResponse.then(async (response) => {
++    expect(response.status()).toBe(200)
++    expect(response.headers()["cache-control"]).toContain("no-store")
++    const result = object(await response.json())
++    expect(result.status).toBe("ok")
++    const request = response.request(), payload = object(request.postDataJSON())
++    const key = text(await request.headerValue("idempotency-key"))
++    expect(object(payload.draft).body).toBe(input.body)
++    expect(object(payload.mutation)).toMatchObject({ expectedStorageVersion: input.expectedStorageVersion, idempotencyKey: key })
++    return { serialized: text(request.postData()), payload, key, value: object(result.value) }
++  })
++  let resolve!: () => void, reject!: (reason: unknown) => void
++  const droppedRead = new Promise<void>((yes, no) => { resolve = yes; reject = no })
++  const loseRead = async (route: Route) => {
++    try {
++      const created = await receipt
++      expect(route.request().method()).toBe("POST")
++      expect(route.request().postDataJSON()).toEqual({ id: text(created.value.id) })
++      const response = await route.fetch({ maxRetries: 0, maxRedirects: 0 })
++      expect(response.status()).toBe(200)
++      expect(response.headers()["cache-control"]).toContain("no-store")
++      const result = object(await response.json())
++      expect(result.status).toBe("ok")
++      expect(object(result.value).id).toBe(created.value.id)
++      resolve()
++      await route.abort("failed")
++    } catch (error) {
++      reject(error)
++      await route.abort("failed").catch(() => {})
++    }
++  }
++  page.on("request", record)
++  await page.route(matchesRead, loseRead, { times: 1 })
++  try {
++    const failed = page.waitForEvent("requestfailed", { predicate: (request) => request.method() === "POST" && matchesRead(new URL(request.url())) })
++    await discussion.getByRole("button", { name: "Ask about this review", exact: true }).click()
++    const [created] = await Promise.all([receipt, droppedRead, failed])
++    const questionId = text(created.value.id), question = discussion.getByRole("textbox", { name: "Question", exact: true })
++    const saved = await api.thread(questionId)
++    expect(saved.messages).toHaveLength(1)
++    expect(saved.messages).toEqual(created.value.messages)
++    await expect(question).toHaveValue(input.body)
++    await expect(question).not.toBeEditable()
++    await expect(discussion.getByRole("button", { name: "Reconcile action", exact: true })).toBeEnabled()
++    expect(new URL(page.url()).searchParams.get("reviewThread")).toBeNull()
++    expect(writes).toEqual([created.serialized])
++    expect(await api.version()).toBe(input.expectedStorageVersion + 1)
++
++    const reconciliation = page.waitForResponse(responseFor(app.dashboardURL, readMode, "POST"))
++    await discussion.getByRole("button", { name: "Reconcile action", exact: true }).click()
++    const authorized = await reconciliation
++    expect(authorized.status()).toBe(200)
++    expect(authorized.request().postDataJSON()).toEqual({ id: questionId })
++    expect(object(object(await authorized.json()).value).messages).toEqual(saved.messages)
++    await expect(page).toHaveURL((url) => url.searchParams.get("reviewThread") === questionId)
++    await expect(discussion.getByRole("status")).toHaveText("Action reconciled. Retry the same action explicitly to recover its receipt.")
++    await expect(question).toHaveValue(input.body)
++    await expect(question).not.toBeEditable()
++
++    // Exercise the installed host's real access probe and collaboration refresh.
++    // The event supplies no data or permission and cannot submit the intent.
++    const focusURL = page.url()
++    const probe = page.waitForResponse((response) => response.request().method() === "GET" && response.url() === focusURL)
++    const refreshed = page.waitForResponse(responseFor(app.dashboardURL, readMode, "POST"))
++    const answerRead = page.waitForResponse(responseFor(app.dashboardURL, "collaboration-answer-read", "POST"))
++    await page.evaluate(() => { window.dispatchEvent(new Event("focus")) })
++    const [probed, reread, unanswered] = await Promise.all([probe, refreshed, answerRead])
++    expect(probed.status()).toBe(200)
++    expect(reread.status()).toBe(200)
++    expect(reread.request().postDataJSON()).toEqual({ id: questionId })
++    expect(object(object(await reread.json()).value).messages).toEqual(saved.messages)
++    expect(unanswered.status()).toBe(503)
++    expect(await unanswered.json()).toEqual({ status: "unavailable", reason: "answer-reuse-unavailable" })
++    await expect(discussion).toHaveJSProperty("inert", false)
++    await expect(discussion).toBeVisible()
++    await expect(question).toHaveValue(input.body)
++    await expect(question).not.toBeEditable()
++    await expect(discussion.getByRole("button", { name: "Ask about this review", exact: true })).toBeDisabled()
++    const retry = discussion.getByRole("button", { name: "Retry same action", exact: true })
++    await expect(retry).toBeEnabled()
++    await expect(page).toHaveURL((url) => url.searchParams.get("reviewThread") === questionId)
++    expect(writes, "Focus refresh must preserve the retained create without sending it").toEqual([created.serialized])
++    expect(await api.version()).toBe(input.expectedStorageVersion + 1)
++
++    const recovered = page.waitForResponse(responseFor(app.dashboardURL, mode, "POST"))
++    await retry.click()
++    const response = await recovered
++    expect(response.status()).toBe(200)
++    expect(response.headers()["cache-control"]).toContain("no-store")
++    expect(response.request().postData()).toBe(created.serialized)
++    expect(await response.request().headerValue("idempotency-key")).toBe(created.key)
++    const result = object(await response.json())
++    expect(result.status).toBe("ok")
++    expect(result.value).toEqual(created.value)
++    await expect(discussion.getByRole("status")).toHaveText("Question saved against the preserved review.")
++    await expect(question).toHaveValue("")
++    expect(writes).toEqual([created.serialized, created.serialized])
++    expect(await api.version(), "Recovering a known create receipt must not create another thread").toBe(input.expectedStorageVersion + 1)
++    expect((await api.thread(questionId)).messages).toEqual(saved.messages)
++    await input.info.attach("reports-created-thread-read-loss", {
++      body: JSON.stringify({
++        questionId, idempotencyKey: created.key, originalPayload: created.payload,
++        retryPayload: object(response.request().postDataJSON()),
++        originalStorageVersion: input.expectedStorageVersion, resultingStorageVersion: input.expectedStorageVersion + 1,
++        createRequests: writes.length, threadWrites: 1, automaticRetry: false,
++        failure: "first real authorized thread read after received create200 discarded",
++        reconciliation: "explicit authorized read adopts known thread; real focus probe/read retains draft and intent before exact explicit receipt replay",
++      }, null, 2), contentType: "application/json",
++    })
++    return { payload: created.payload, value: result.value }
++  } finally {
++    page.off("request", record)
++    await page.unroute(matchesRead, loseRead)
++  }
++}
+--- /dev/null
++++ b/packages/app-shell/e2e/sucafina/reports-support/lost-edit-response.ts
+@@ -0,0 +1,116 @@
++import { expect } from "@playwright/test"
++import type { Locator, Page, Request, Route, TestInfo } from "@playwright/test"
++import type { ReportsCollaboration, ReviewAnswer } from "./confirmation.ts"
++import type { ReportsInstallation } from "./production-installation.ts"
++import { object, responseFor, text } from "./model.ts"
++
++/** Lose a real committed edit's response. A fresh authorized read must retain
++ * the exact old CAS/payload/key until the human explicitly recovers its receipt.
++ */
++export async function recoverLostEditResponse(input: {
++  page: Page
++  app: ReportsInstallation
++  api: ReportsCollaboration
++  discussion: Locator
++  article: Locator
++  answer: ReviewAnswer
++  body: string
++  expectedStorageVersion: number
++  info: TestInfo
++}) {
++  const { page, app, api, discussion, article, answer } = input
++  const mode = "collaboration-thread-edit"
++  const base = new URL(app.dashboardURL)
++  const matches = (url: URL) => url.origin === base.origin && url.pathname === base.pathname && url.searchParams.get("sf") === mode
++  const before = await api.thread(answer.questionId)
++  const writes: string[] = []
++  const record = (request: Request) => {
++    if (request.method() === "POST" && matches(new URL(request.url()))) writes.push(text(request.postData()))
++  }
++  type Receipt = { serialized: string; key: string; payload: Record<string, unknown>; value: unknown }
++  let resolve!: (value: Receipt) => void, reject!: (reason: unknown) => void
++  const committed = new Promise<Receipt>((yes, no) => { resolve = yes; reject = no })
++  const drop = async (route: Route) => {
++    try {
++      const request = route.request()
++      expect(request.method()).toBe("POST")
++      const serialized = text(request.postData()), payload = object(request.postDataJSON())
++      const key = text(await request.headerValue("idempotency-key"))
++      const response = await route.fetch({ maxRetries: 0, maxRedirects: 0 })
++      expect(response.status(), "Only an actual successful edit response may be discarded").toBe(200)
++      expect(response.headers()["cache-control"]).toContain("no-store")
++      const result = object(await response.json())
++      expect(result.status).toBe("ok")
++      resolve({ serialized, payload, key, value: result.value })
++      await route.abort("failed")
++    } catch (error) {
++      reject(error)
++      await route.abort("failed").catch(() => {})
++    }
++  }
++  page.on("request", record)
++  await page.route(matches, drop, { times: 1 })
++  try {
++    const failed = page.waitForEvent("requestfailed", { predicate: (request) => request.method() === "POST" && matches(new URL(request.url())) })
++    await article.getByRole("button", { name: "Save answer edit", exact: true }).click()
++    const [receipt] = await Promise.all([committed, failed])
++    expect(receipt.payload).toMatchObject({ id: answer.questionId, messageId: answer.message.id, expectedVersion: answer.message.version, body: input.body })
++    expect(object(receipt.payload.mutation)).toMatchObject({ expectedStorageVersion: input.expectedStorageVersion, idempotencyKey: receipt.key })
++    expect(receipt.value).toEqual({ id: answer.questionId, messageId: answer.message.id, version: answer.message.version + 1 })
++    const editor = article.getByRole("textbox", { name: "Edited answer", exact: true })
++    await expect(editor).toHaveValue(input.body)
++    await expect(editor).not.toBeEditable()
++    const reconcile = discussion.getByRole("button", { name: "Reconcile action", exact: true })
++    await expect(reconcile).toBeEnabled()
++    expect(writes).toEqual([receipt.serialized])
++    expect(await api.version()).toBe(input.expectedStorageVersion + 1)
++    const saved = await api.thread(answer.questionId)
++    expect(saved.messages).toHaveLength((before.messages as unknown[]).length)
++    expect((saved.messages as unknown[]).map(object).filter((message) => message.id === answer.message.id))
++      .toMatchObject([{ version: answer.message.version + 1, body: input.body }])
++
++    const reread = page.waitForResponse(responseFor(app.dashboardURL, "collaboration-thread-read", "POST"))
++    await reconcile.click()
++    const authorized = await reread
++    expect(authorized.status()).toBe(200)
++    expect(authorized.request().postDataJSON()).toEqual({ id: answer.questionId })
++    expect(object(object(await authorized.json()).value).messages).toEqual(saved.messages)
++    await expect(discussion.getByRole("status")).toHaveText("Action reconciled. Retry the same action explicitly to recover its receipt.")
++    await expect(editor).toHaveValue(input.body)
++    await expect(editor).not.toBeEditable()
++    const retry = discussion.getByRole("button", { name: "Retry same action", exact: true })
++    await expect(retry).toBeEnabled()
++    expect(writes, "A newer authorized version must never silently rebase and send the retained edit").toEqual([receipt.serialized])
++    expect(await api.version()).toBe(input.expectedStorageVersion + 1)
++
++    const recovered = page.waitForResponse(responseFor(app.dashboardURL, mode, "POST"))
++    await retry.click()
++    const response = await recovered
++    expect(response.status()).toBe(200)
++    expect(response.headers()["cache-control"]).toContain("no-store")
++    expect(response.request().postData()).toBe(receipt.serialized)
++    expect(await response.request().headerValue("idempotency-key")).toBe(receipt.key)
++    const result = object(await response.json())
++    expect(result.status).toBe("ok")
++    expect(result.value).toEqual(receipt.value)
++    await expect(discussion.getByRole("status")).toHaveText("Answer edited. Its previous version remains protected history; review the new answer before confirming again.")
++    await expect(editor).toHaveValue(input.body)
++    expect(writes).toEqual([receipt.serialized, receipt.serialized])
++    expect(await api.version(), "Recovering the committed receipt cannot write another answer version").toBe(input.expectedStorageVersion + 1)
++    expect((await api.thread(answer.questionId)).messages).toEqual(saved.messages)
++    await input.info.attach("reports-real-lost-edit-response", {
++      body: JSON.stringify({
++        questionId: answer.questionId, messageId: answer.message.id,
++        originalStorageVersion: input.expectedStorageVersion, committedStorageVersion: input.expectedStorageVersion + 1,
++        idempotencyKey: receipt.key, originalPayload: receipt.payload, retryPayload: object(response.request().postDataJSON()),
++        editCount: 1, networkWrites: writes.length, automaticRetry: false,
++        failure: "real successful edit response discarded after route.fetch; no positive response fabricated",
++        reconciliation: "current authorized thread read before explicit replay with original payload, key and expected versions",
++      }, null, 2), contentType: "application/json",
++    })
++    return { payload: receipt.payload, value: result.value }
++  } finally {
++    page.off("request", record)
++    await page.unroute(matches, drop)
++  }
++}
+--- a/packages/app-shell/e2e/sucafina/reports-support/production-installation.ts
++++ b/packages/app-shell/e2e/sucafina/reports-support/production-installation.ts
+@@ -1,13 +1,10 @@
+-import { AppProcess } from "@orchestra/core/process"
+-import { LayerNode } from "@orchestra/core/effect/layer-node"
+ import type { Page } from "@playwright/test"
+-import { Deferred, Effect, Stream } from "effect"
+-import { ChildProcess } from "effect/unstable/process"
+ import type { ChildProcessHandle } from "effect/unstable/process/ChildProcessSpawner"
+ import { chmod, mkdir, mkdtemp, readFile, realpath, rm } from "node:fs/promises"
+ import { tmpdir } from "node:os"
+ import path from "node:path"
+ import { fileURLToPath } from "node:url"
++import { readOperatorSessionCookie } from "../decisions-support/operator-session-cookie"
+ 
+ /** This fixture starts the existing CLI installation, never a fixture HTTP server. */
+ export type ReportsInstallation = {
+@@ -42,6 +39,18 @@
+   const repository = path.resolve(support, "../../../../..")
+   const entry = path.resolve(support, input.setupEntry)
+   if (path.dirname(entry) !== support || !entry.endsWith(".ts")) throw new Error("Reports setup must stay in reports-support")
++  // Playwright lists this file under Node before any fixture is admitted. Core's
++  // process graph reaches platform/global initialization, so load it only for
++  // this real fixture; listing must not initialize process services or state.
++  const [{ AppProcess }, { LayerNode }, { Deferred, Effect, Stream }, { ChildProcess }] = await Promise.all([
++    import("@orchestra/core/process"),
++    import("@orchestra/core/effect/layer-node"),
++    import("effect"),
++    import("effect/unstable/process"),
++  ]).catch((error: unknown) => {
++    const detail = error instanceof Error ? error.stack ?? error.message : String(error)
++    throw new Error(`Reports fixture dependencies failed to load: ${redact(detail)}`)
++  })
+   const local = path.join(repository, "modules/sucafina/Sucafinav1/local")
+   const owned: { child?: ChildProcessHandle } = {}
+ 
+@@ -130,7 +139,7 @@
+         Stream.splitLines,
+         Stream.runForEach((line) => {
+           tail.value = `${tail.value}\n${redact(line)}`.slice(-8192)
+-          return /^server listening on http:\/\/(?:localhost|127\.0\.0\.1|\[::1\]):4110\/?$/.test(line.trim())
++          return /^server listening on http:\/\/(?:localhost|127\.0\.0\.1|\[::1\]|::1):4110\/?$/.test(line.trim())
+             ? Deferred.succeed(ready, undefined)
+             : Effect.void
+         }),
+@@ -209,14 +218,13 @@
+     throw new Error("Production operator enrollment transport failed")
+   })
+   if (response.status !== 303 || response.headers.get("location") !== `${installation.mount}/dashboard`) throw new Error(`Production operator enrollment failed (${response.status})`)
+-  const cookies = response.headers.getSetCookie()
+-  const match = cookies.length === 1 ? /^(sucafina_operator_[a-f0-9]{24})=([a-f0-9]{64}); Path=(\/sucafina); HttpOnly; SameSite=Lax; Max-Age=(28800)$/.exec(cookies[0]!) : undefined
+-  if (!match) throw new Error("Production operator enrollment did not issue the expected scoped session")
++  // Reuse the transport-normalization fix qualified by Decisions44. It keeps
++  // the exact cookie policy while accepting Effect's attribute serialization.
++  const cookie = readOperatorSessionCookie(response.headers)
+   signal.throwIfAborted()
+   await page.context().addCookies([{
+-    name: match[1]!, value: match[2]!, domain: new URL(installation.origin).hostname,
+-    path: match[3]!, httpOnly: true, sameSite: "Lax", secure: false,
+-    expires: Math.floor(Date.now() / 1000) + Number(match[4]),
++    ...cookie, domain: new URL(installation.origin).hostname,
++    expires: Math.floor(Date.now() / 1000) + 28_800,
+   }])
+   signal.throwIfAborted()
+   await rm(artifact)
+--- /dev/null
++++ b/packages/app-shell/e2e/sucafina/reports-support/read-reconciliation.ts
+@@ -0,0 +1,112 @@
++import { expect } from "@playwright/test"
++import type { Page, Request, Route, TestInfo } from "@playwright/test"
++import type { ReportsCollaboration, ReviewAnswer } from "./confirmation.ts"
++import type { ReportsInstallation } from "./production-installation.ts"
++import { object, responseFor } from "./model.ts"
++
++/** Discard only authorized, successful read responses. The real producer runs
++ * unchanged; the fault is transport loss, never fabricated permission or data.
++ */
++export async function reconcilePrivateDraftsAfterReadLoss(page: Page, app: ReportsInstallation, api: ReportsCollaboration, answer: ReviewAnswer, info: TestInfo) {
++  const discussion = page.getByRole("region", { name: "Review discussion", exact: true })
++  const article = discussion.getByRole("article", { name: `Message ${answer.message.id}`, exact: true })
++  const question = discussion.getByRole("textbox", { name: "Question", exact: true })
++  const reply = discussion.getByRole("textbox", { name: "Reply", exact: true })
++  const edit = article.getByRole("textbox", { name: "Edited answer", exact: true })
++  const drafts = {
++    question: "Private question draft retained during authorized reconciliation. REPORTS_PRIVATE_QUESTION",
++    reply: "Private reply draft retained during authorized reconciliation. REPORTS_PRIVATE_REPLY",
++    edit: "Private edit draft retained during authorized reconciliation. REPORTS_PRIVATE_EDIT",
++  }
++  await question.fill(drafts.question)
++  await reply.fill(drafts.reply)
++  await edit.fill(drafts.edit)
++  const original = await api.thread(answer.questionId)
++  const version = await api.version()
++  const mutations: string[] = []
++  const mutationModes = new Set(["collaboration-thread-create", "collaboration-thread-reply", "collaboration-thread-edit", "collaboration-answer-confirm"])
++  const base = new URL(app.dashboardURL)
++  const record = (request: Request) => {
++    const url = new URL(request.url())
++    if (request.method() === "POST" && url.origin === base.origin && url.pathname === base.pathname && mutationModes.has(url.searchParams.get("sf") ?? ""))
++      mutations.push(request.postData() ?? "")
++  }
++  const losses: { mode: string; httpStatus: number; status: string }[] = []
++  const pendingRoutes: { matches: (url: URL) => boolean; handler: (route: Route) => Promise<void> }[] = []
++  const lose = async (mode: string) => {
++    const matches = (url: URL) => url.origin === base.origin && url.pathname === base.pathname && url.searchParams.get("sf") === mode
++    let resolve!: () => void, reject!: (reason: unknown) => void
++    const observed = new Promise<void>((yes, no) => { resolve = yes; reject = no })
++    const handler = async (route: Route) => {
++      try {
++        expect(route.request().method()).toBe("POST")
++        const response = await route.fetch({ maxRetries: 0, maxRedirects: 0 })
++        expect(response.status()).toBe(200)
++        expect(response.headers()["cache-control"]).toContain("no-store")
++        const body = object(await response.json())
++        expect(body.status).toBe("ok")
++        losses.push({ mode, httpStatus: response.status(), status: String(body.status) })
++        resolve()
++        await route.abort("failed")
++      } catch (error) {
++        reject(error)
++        await route.abort("failed").catch(() => {})
++      }
++    }
++    pendingRoutes.push({ matches, handler })
++    await page.route(matches, handler, { times: 1 })
++    const failed = page.waitForEvent("requestfailed", { predicate: (request) => request.method() === "POST" && matches(new URL(request.url())) })
++    return { observed, failed }
++  }
++  const retained = async () => {
++    await expect(discussion).toBeVisible()
++    await expect(question).toHaveValue(drafts.question)
++    await expect(reply).toHaveValue(drafts.reply)
++    await expect(edit).toHaveValue(drafts.edit)
++    await expect(discussion.getByRole("button", { name: "Ask about this review", exact: true })).toBeDisabled()
++    await expect(discussion.getByRole("button", { name: "Send reply", exact: true })).toBeDisabled()
++    await expect(article.getByRole("button", { name: "Save answer edit", exact: true })).toBeDisabled()
++    await expect(discussion.getByRole("button", { name: "Reconcile discussion", exact: true })).toBeEnabled()
++    expect(mutations).toEqual([])
++  }
++  page.on("request", record)
++  try {
++    const historyLoss = await lose("collaboration-thread-history")
++    await discussion.getByRole("region", { name: "Answer history", exact: true })
++      .getByRole("button", { name: "Read original answer", exact: true }).click()
++    await Promise.all([historyLoss.observed, historyLoss.failed])
++    await retained()
++    const threadLoss = await lose("collaboration-thread-read")
++    await discussion.getByRole("button", { name: "Reconcile discussion", exact: true }).click()
++    await Promise.all([threadLoss.observed, threadLoss.failed])
++    await retained()
++    const reread = page.waitForResponse(responseFor(app.dashboardURL, "collaboration-thread-read", "POST"))
++    await discussion.getByRole("button", { name: "Reconcile discussion", exact: true }).click()
++    const response = await reread
++    expect(response.status()).toBe(200)
++    expect(response.request().postDataJSON()).toEqual({ id: answer.questionId })
++    expect(object(object(await response.json()).value).messages).toEqual(original.messages)
++    await expect(question).toHaveValue(drafts.question)
++    await expect(reply).toHaveValue(drafts.reply)
++    await expect(edit).toHaveValue(drafts.edit)
++    await expect(discussion.getByRole("button", { name: "Ask about this review", exact: true })).toBeEnabled()
++    await expect(discussion.getByRole("button", { name: "Send reply", exact: true })).toBeEnabled()
++    await expect(article.getByRole("button", { name: "Save answer edit", exact: true })).toBeEnabled()
++    expect(mutations, "Reading and reconciling cannot submit any private draft").toEqual([])
++    expect(await api.version()).toBe(version)
++    expect((await api.thread(answer.questionId)).messages).toEqual(original.messages)
++    expect(page.url()).not.toContain(drafts.question)
++    expect(page.url()).not.toContain(drafts.reply)
++    expect(page.url()).not.toContain(drafts.edit)
++    await info.attach("reports-real-read-loss-reconciliation", {
++      body: JSON.stringify({
++        questionId: answer.questionId, losses, originalStorageVersion: version, resultingStorageVersion: version,
++        retainedDrafts: ["question", "reply", "edit"], mutationRequests: mutations.length,
++        reconciliations: 2, permissionSynthesized: false, privateViewPreserved: true,
++      }, null, 2), contentType: "application/json",
++    })
++  } finally {
++    page.off("request", record)
++    for (const route of pendingRoutes) await page.unroute(route.matches, route.handler)
++  }
++}
+--- a/packages/app-shell/e2e/sucafina/reports.spec.ts
++++ b/packages/app-shell/e2e/sucafina/reports.spec.ts
+@@ -5,15 +5,19 @@
+ import { confirmHumanAnswer, editHumanAnswer, expectConfirmedAnswerVisible, observed } from "./reports-support/human-answer-flow.ts"
+ import { object, readReview, responseFor } from "./reports-support/model.ts"
+ import { revokeReportsSession } from "./reports-support/revocation.ts"
++import { reconcilePrivateDraftsAfterReadLoss } from "./reports-support/read-reconciliation.ts"
+ 
+ // Nominal CI-UI-REPORTS: e2e/playwright.production.config.ts, this file only,
+ // workers=1, retries=0. The fixture launches the real CLI installation in Actions.
+-// Missing producer composition fails the assertions; it is never skip/xfail or PASS.
++// These four scenarios exercise the explicitly manifested composed candidate.
++// Missing authority resources fail the assertions; no scenario becomes skip/xfail.
++// These worker options must be set at file scope. Real operator credentials
++// must never enter retained Playwright API/network traces; explicit synthetic
++// content receipts and downloaded reports remain the evidence.
++reportsTest.use({ trace: "off", video: "off", screenshot: "off" })
++
+ reportsTest.describe("CI-UI-REPORTS · real preserved dossier", () => {
+   reportsTest.describe.configure({ retries: 0, timeout: 180_000 })
+-  // Real operator credentials must never enter retained Playwright API/network traces.
+-  // Explicit synthetic-content receipts and downloaded reports remain the evidence.
+-  reportsTest.use({ trace: "off", video: "off", screenshot: "off" })
+ 
+   reportsTest("RPT-01 preserves authorized sources, exports 25 real projects and reopens before following the current source", async ({ page, reports }, info) => {
+     const { app, corpus } = reports
+@@ -34,7 +38,7 @@
+     const { saved } = await prepareReview(page, app, corpus, info)
+     await changeForecast(page, app, corpus)
+     await openAndReopenMeeting(page, app, saved)
+-    const { api, answer } = await reportsTest.step("Confirm through the installed Review controls against the exact visible preserved projection", () => confirmHumanAnswer(page, app, saved, corpus, info))
++    const { api, answer } = await reportsTest.step("Confirm through the installed Review controls against the exact visible preserved projection", () => confirmHumanAnswer(page, app, saved, corpus, info, { loseReplyResponse: true, loseCreatedThreadRead: true }))
+     const beforeReload = await api.version()
+     const read = page.waitForResponse(responseFor(app.dashboardURL, "review-read", "GET"))
+     const answerRead = page.waitForResponse(responseFor(app.dashboardURL, "collaboration-answer-read", "POST"))
+@@ -53,8 +57,10 @@
+       expect(await api.version()).toBe(beforeReload)
+       await expectConfirmedAnswerVisible(page, answer)
+     })
++    await reportsTest.step("Keep question, reply and edit drafts through repeated authorized read loss without sending", () =>
++      reconcilePrivateDraftsAfterReadLoss(page, app, api, answer, info))
+     const edited = await reportsTest.step("Edit once through Review; reject old selector/reuse and read the exact original through history", () => editHumanAnswer(page, app, api, answer,
+-      `Edited human answer: the current source is ${corpus.after}. REPORTS_HUMAN_EDITED`))
++      `Edited human answer: the current source is ${corpus.after}. REPORTS_HUMAN_EDITED`, { recoverRequestFailure: true, info }))
+     expect(edited.incarnation).toBe(answer.message.incarnation)
+     expect(edited.version).toBe(answer.message.version + 1)
+     expect(await readReview(page.request, app.dashboardURL, saved.id)).toEqual(saved)
+@@ -64,6 +70,32 @@
+       originalVersion: answer.message.version, currentVersion: edited.version,
+       oldSelector: "stale", oldConfirmation: "unavailable", historicalMessage: "unchanged", preservedReview: "unchanged",
+     }, null, 2), contentType: "application/json" })
++    const recovered = await reportsTest.step("Recover a committed edit after its response is lost, using only the exact original intent", () =>
++      editHumanAnswer(page, app, api, { ...answer, message: edited },
++        "Second explicit human edit retained through response loss. REPORTS_HUMAN_EDIT_LOST_RESPONSE", { loseResponse: true, info }))
++    expect(recovered.incarnation).toBe(answer.message.incarnation)
++    expect(recovered.version).toBe(answer.message.version + 2)
++    const beforeReopen = await api.version()
++    const threadRead = page.waitForResponse(responseFor(app.dashboardURL, "collaboration-thread-read", "POST"))
++    const reviewRead = page.waitForResponse(responseFor(app.dashboardURL, "review-read", "GET"))
++    await page.reload()
++    const [threadResponse, reviewResponse] = await Promise.all([threadRead, reviewRead])
++    expect(threadResponse.status()).toBe(200)
++    expect(reviewResponse.status()).toBe(200)
++    expect(object(await reviewResponse.json()).value).toEqual(saved)
++    const currentThread = object(object(await threadResponse.json()).value)
++    const reopenedMessages = (currentThread.messages as unknown[]).map(object).filter((message) => message.id === answer.message.id)
++    expect(reopenedMessages).toHaveLength(1)
++    expect(reopenedMessages).toMatchObject([recovered])
++    await expect(page.getByRole("region", { name: "Review discussion", exact: true })
++      .getByRole("article", { name: `Message ${answer.message.id}`, exact: true })).toContainText(recovered.body)
++    expect(await api.version(), "Reopening after receipt recovery cannot write another edit").toBe(beforeReopen)
++    for (const prior of [answer.message, edited]) {
++      const historical = object(await api.ok("collaboration-thread-history", {
++        id: answer.questionId, messageId: prior.id, incarnation: prior.incarnation, version: prior.version,
++      }))
++      expect(historical.message).toMatchObject(prior)
++    }
+   })
+ 
+   reportsTest("RPT-03 removes one authorized record without editing its source and creates only an explicit new revision", async ({ page, reports }, info) => {
+--- a/packages/app-shell/e2e/sucafina/reports-support/revocation.ts
++++ b/packages/app-shell/e2e/sucafina/reports-support/revocation.ts
+@@ -1,12 +1,12 @@
+ import { createHash } from "node:crypto"
+ import { expect } from "@playwright/test"
+-import type { APIRequestContext, Browser, Page, TestInfo } from "@playwright/test"
++import type { APIRequestContext, Browser, Page, Request, Route, TestInfo } from "@playwright/test"
+ import type { PreservedReview } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
+ import type { ReviewAnswer } from "./confirmation.ts"
+ import { expectReusedReviewAnswer, reportsCollaboration } from "./confirmation.ts"
+ import { expectConfirmedAnswerVisible } from "./human-answer-flow.ts"
+ import type { ReportsInstallation } from "./production-installation.ts"
+-import { productURL, readReview } from "./model.ts"
++import { object, productURL, readReview, responseFor, text } from "./model.ts"
+ 
+ export async function revokeReportsSession(input: {
+   browser: Browser; page: Page; app: ReportsInstallation; saved: PreservedReview; answer: ReviewAnswer
+@@ -17,6 +17,7 @@
+   // Never persist this state or attach cookies/enrollment codes to the receipt.
+   const old = await browser.newContext({ storageState: await page.context().storageState() })
+   const fresh = await browser.newContext()
++  const cleanup: (() => Promise<void>)[] = []
+   try {
+     expect(await readReview(old.request, app.dashboardURL, saved.id)).toEqual(saved)
+     await expectReusedReviewAnswer(reportsCollaboration(old.request, app.dashboardURL), answer)
+@@ -25,6 +26,12 @@
+     const meeting = retained.getByRole("region", { name: "Preserved review meeting", exact: true })
+     await expect(meeting.getByRole("heading", { level: 2 })).toHaveText("Projects")
+     await expectConfirmedAnswerVisible(retained, answer)
++    const localPending = await retainUnsentReply(page, app, answer, "logout")
++    cleanup.push(localPending.cleanup)
++    const retainedPending = await retainUnsentReply(retained, app, answer, "retained")
++    cleanup.push(retainedPending.cleanup)
++    expect(retainedPending.storageVersion).toBe(localPending.storageVersion)
++    expect(retainedPending.key).not.toBe(localPending.key)
+     const pendingLogout = page.waitForResponse((response) => response.url() === `${app.origin}${app.mount}/auth/logout` && response.request().method() === "POST")
+     await page.getByRole("button", { name: "Sign out", exact: true }).click()
+     const logout = await pendingLogout
+@@ -33,7 +40,17 @@
+     await expect(page).toHaveURL((url) => url.origin === app.origin && url.pathname === `${app.mount}/auth/login`)
+     await expect(page.getByRole("region", { name: "Preserved review meeting", exact: true })).toHaveCount(0)
+     await expect(page.getByRole("region", { name: "Review discussion", exact: true })).toHaveCount(0)
+-    await meeting.getByRole("button", { name: "Next topic", exact: true }).click()
++    await expectPrivateAttemptCleared(page, localPending.drafts)
++    const deniedRead = retained.waitForResponse(responseFor(app.dashboardURL, "collaboration-thread-read", "POST"))
++    await retained.getByRole("region", { name: "Review discussion", exact: true })
++      .getByRole("button", { name: "Reconcile action", exact: true }).click()
++    const forbidden = await deniedRead
++    expect(forbidden.status()).toBe(403)
++    expect(forbidden.request().postDataJSON()).toEqual({ id: answer.questionId })
++    expect(forbidden.headers()["cache-control"]).toContain("no-store")
++    const deniedBody = await forbidden.text()
++    for (const secret of [answer.message.body, answer.pin.reviewDigest, ...Object.values(retainedPending.drafts)])
++      expect(deniedBody, "The real denied read must not return protected content or drafts").not.toContain(secret)
+     const cleared = retained.locator("[data-sf-review-workspace]")
+     await expect(cleared.getByRole("status")).toHaveText("O acesso mudou. Reabra uma revisão autorizada.")
+     // The installed host now disposes all protected views on denied access.
+@@ -47,6 +64,7 @@
+     await expect(retained.getByRole("region", { name: "Review discussion", exact: true })).toHaveCount(0)
+     await expect(retained.getByRole("region", { name: "Confirmed answer", exact: true })).toHaveCount(0)
+     await expect(retained.getByRole("button", { name: "Next topic", exact: true })).toHaveCount(0)
++    await expectPrivateAttemptCleared(retained, retainedPending.drafts)
+     for (const secret of [answer.message.body, answer.pin.reviewDigest, "REPORTS_LONG_NOTE_END", "reports-project-01", "totalForecast", "1320"])
+       await expect(cleared, "Revocation must remove cached review and answer content").not.toContainText(secret)
+     await denied(old.request, app, saved, answer, artifact.href, true)
+@@ -57,21 +75,104 @@
+     await app.signIn(control)
+     expect(await readReview(control.request, app.dashboardURL, saved.id)).toEqual(saved)
+     await expectReusedReviewAnswer(reportsCollaboration(control.request, app.dashboardURL), answer)
++    const current = reportsCollaboration(control.request, app.dashboardURL)
++    expect(await current.version(), "Logout and denied reconciliation must not submit either retained reply").toBe(localPending.storageVersion)
++    expect((await current.thread(answer.questionId)).messages).toEqual(localPending.messages)
++    expect(localPending.writes).toEqual([localPending.serialized])
++    expect(retainedPending.writes).toEqual([retainedPending.serialized])
+     const download = await control.request.get(artifact.href, { maxRedirects: 0 })
+     expect(download.status()).toBe(200)
+     expect(download.headers()["content-type"]).toContain("application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+     expect(createHash("sha256").update(await download.body()).digest("hex")).toBe(artifact.sha256)
+     await denied(old.request, app, saved, answer, artifact.href, false)
++    await expectPrivateAttemptCleared(page, localPending.drafts)
++    await expectPrivateAttemptCleared(retained, retainedPending.drafts)
++    expect(localPending.writes).toEqual([localPending.serialized])
++    expect(retainedPending.writes).toEqual([retainedPending.serialized])
+     await info.attach("session-revocation", { body: JSON.stringify({
+       reviewRef: saved.id, answerRef: answer.answerRef, oldSession: "denied before and after fresh enrollment",
+       cachedMeeting: "cleared", freshSession: "same review, answer and artifact digest",
+       logoutRoute: "installed Sign out control", clearedViews: ["meeting", "discussion", "confirmed answer", "topic navigation"],
++      clearedDrafts: ["question", "reply", "edit"], clearedPendingAttempts: ["logout", "retained real403"],
++      attempts: [localPending, retainedPending].map((attempt) => ({
++        idempotencyKey: attempt.key, originalPayload: attempt.payload, requests: attempt.writes.length,
++        outcome: "aborted before sending; no retry on logout, denied read or fresh enrollment",
++      })),
+       scope: "durable operator-session revocation", selectiveTalentRevocation: "NOT_PROVEN",
+     }, null, 2), contentType: "application/json" })
+   } finally {
+-    await fresh.close()
+-    await old.close()
+-  }
++    try { for (const stop of cleanup) await stop() }
++    finally { await fresh.close(); await old.close() }
++  }
++}
++
++async function retainUnsentReply(page: Page, app: ReportsInstallation, answer: ReviewAnswer, scope: string) {
++  const discussion = page.getByRole("region", { name: "Review discussion", exact: true })
++  const drafts = {
++    question: `Private question before ${scope}. REPORTS_REVOKED_QUESTION_${scope}`,
++    reply: `Private reply before ${scope}. REPORTS_REVOKED_REPLY_${scope}`,
++    edit: `Private edit before ${scope}. REPORTS_REVOKED_EDIT_${scope}`,
++  }
++  await discussion.getByRole("textbox", { name: "Question", exact: true }).fill(drafts.question)
++  await discussion.getByRole("textbox", { name: "Reply", exact: true }).fill(drafts.reply)
++  await discussion.getByRole("article", { name: `Message ${answer.message.id}`, exact: true })
++    .getByRole("textbox", { name: "Edited answer", exact: true }).fill(drafts.edit)
++  const api = reportsCollaboration(page.request, app.dashboardURL)
++  const storageVersion = await api.version(), before = await api.thread(answer.questionId)
++  const base = new URL(app.dashboardURL), mode = "collaboration-thread-reply"
++  const matches = (url: URL) => url.origin === base.origin && url.pathname === base.pathname && url.searchParams.get("sf") === mode
++  const writes: string[] = []
++  const record = (request: Request) => {
++    if (request.method() === "POST" && matches(new URL(request.url()))) writes.push(text(request.postData()))
++  }
++  let resolve!: (attempt: { serialized: string; key: string; payload: Record<string, unknown> }) => void, reject!: (reason: unknown) => void
++  const attempted = new Promise<{ serialized: string; key: string; payload: Record<string, unknown> }>((yes, no) => { resolve = yes; reject = no })
++  const abort = async (route: Route) => {
++    try {
++      const request = route.request(), payload = object(request.postDataJSON())
++      const key = text(await request.headerValue("idempotency-key"))
++      expect(request.method()).toBe("POST")
++      expect(payload).toMatchObject({ id: answer.questionId, body: drafts.reply })
++      expect(object(payload.mutation)).toMatchObject({ expectedStorageVersion: storageVersion, idempotencyKey: key })
++      resolve({ serialized: text(request.postData()), key, payload })
++      // Deliberately do not call route.fetch/continue: no mutation reaches the producer.
++      await route.abort("failed")
++    } catch (error) {
++      reject(error)
++      await route.abort("failed").catch(() => {})
++    }
++  }
++  page.on("request", record)
++  await page.route(matches, abort, { times: 1 })
++  const cleanup = async () => { page.off("request", record); await page.unroute(matches, abort) }
++  try {
++    const failed = page.waitForEvent("requestfailed", { predicate: (request) => request.method() === "POST" && matches(new URL(request.url())) })
++    await discussion.getByRole("button", { name: "Send reply", exact: true }).click()
++    const [attempt] = await Promise.all([attempted, failed])
++    for (const [label, draft] of [["Question", drafts.question], ["Reply", drafts.reply], ["Edited answer", drafts.edit]] as const) {
++      const field = discussion.getByRole("textbox", { name: label, exact: true })
++      await expect(field).toHaveValue(draft)
++      await expect(field).not.toBeEditable()
++    }
++    await expect(discussion.getByRole("button", { name: "Reconcile action", exact: true })).toBeEnabled()
++    await expect(discussion.getByRole("button", { name: "Retry same action", exact: true })).toHaveCount(0)
++    expect(writes).toEqual([attempt.serialized])
++    expect(await api.version()).toBe(storageVersion)
++    expect((await api.thread(answer.questionId)).messages).toEqual(before.messages)
++    return { ...attempt, drafts, storageVersion, messages: before.messages, writes, cleanup }
++  } catch (error) {
++    await cleanup()
++    throw error
++  }
++}
++
++async function expectPrivateAttemptCleared(page: Page, drafts: { question: string; reply: string; edit: string }) {
++  for (const label of ["Question", "Reply", "Edited answer"])
++    await expect(page.getByRole("textbox", { name: label, exact: true })).toHaveCount(0)
++  await expect(page.getByRole("region", { name: "Action recovery", exact: true })).toHaveCount(0)
++  await expect(page.getByRole("button", { name: "Reconcile action", exact: true })).toHaveCount(0)
++  await expect(page.getByRole("button", { name: "Retry same action", exact: true })).toHaveCount(0)
++  for (const draft of Object.values(drafts)) await expect(page.locator("body")).not.toContainText(draft)
+ }
+ 
+ async function denied(request: APIRequestContext, app: ReportsInstallation, saved: PreservedReview, answer: ReviewAnswer, artifactURL: string, checkExport: boolean) {
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/reports-draft-and-journey/reports-selection.test.ts
+@@ -0,0 +1,49 @@
++import { expect, test } from "bun:test"
++import { fileURLToPath } from "node:url"
++import { AppProcess } from "@orchestra/core/process"
++import { LayerNode } from "@orchestra/core/effect/layer-node"
++import { Effect } from "effect"
++import { ChildProcess } from "effect/unstable/process"
++import { expectSpawn } from "../../../../../../packages/core/test/fixture/omni-expect.ts"
++import { playwrightArgs, validateRequest } from "../../../../../../script/test-ci-request.ts"
++import { locateTestPackage } from "../../../../../../script/test-ci-location.ts"
++
++// A collection regression of the existing Playwright interface, not a second
++// runner for the journeys. --list starts no product fixture or web server.
++// test-ci's JSON listing failure currently discards stdout; retain the actual
++// diagnostic here while keeping its exit failure and exact four-case oracle.
++test("the existing production Playwright interface collects all four Reports journeys", async () => {
++  expectSpawn(import.meta.path)
++  const directory = fileURLToPath(new URL("../../../../../../packages/app-shell/", import.meta.url))
++  const repository = fileURLToPath(new URL("../../../../../../", import.meta.url))
++  const request = validateRequest({
++    package: "app", packageSelector: "packages/app", directory: "packages/app-shell",
++    runner: "playwright", args: ["e2e/sucafina/reports.spec.ts"],
++    config: "e2e/playwright.production.config.ts", env: { ORCHESTRA_CHANNEL: "prod" },
++  }, (file) => Bun.file(repository + file).size > 0, (selector) => locateTestPackage(repository, selector))
++  const command = ChildProcess.make("bun", [
++    "run", "test:e2e:local", ...playwrightArgs(request), "--list", "--reporter=json",
++  ], { cwd: directory, env: { ...process.env, ORCHESTRA_CHANNEL: "prod" }, stdin: "ignore", stdout: "pipe", stderr: "pipe" })
++  const result = await Effect.runPromise(Effect.scoped(Effect.gen(function* () {
++    const launcher = yield* AppProcess.Service
++    return yield* launcher.run(command, { maxOutputBytes: 256 * 1024, maxErrorBytes: 64 * 1024 })
++  })).pipe(Effect.provide(LayerNode.compile(AppProcess.node))))
++  expect(result.stdoutTruncated).toBe(false)
++  expect(result.stderrTruncated).toBe(false)
++  if (result.exitCode !== 0) {
++    console.error("REPORTS_COLLECTION_STDOUT", result.stdout.toString("utf8"))
++    console.error("REPORTS_COLLECTION_STDERR", result.stderr.toString("utf8"))
++  }
++  expect(result.exitCode).toBe(0)
++  const report = JSON.parse(result.stdout.toString("utf8")) as { errors: unknown[]; suites: Suite[] }
++  expect(report.errors).toEqual([])
++  const titles = report.suites.flatMap(collect)
++  expect(titles).toHaveLength(4)
++  expect(titles.map((title) => title.match(/^RPT-0[1-4]/)?.[0]).sort()).toEqual(["RPT-01", "RPT-02", "RPT-03", "RPT-04"])
++})
++
++type Suite = { suites?: Suite[]; specs?: { title: string; tests: unknown[] }[] }
++function collect(suite: Suite): string[] {
++  return [...(suite.specs ?? []).filter((spec) => spec.tests.length > 0).map((spec) => spec.title), ...(suite.suites ?? []).flatMap(collect)]
++}
++
+--- /dev/null
++++ b/packages/app-shell/e2e/sucafina/reports-support/failed-edit-request.ts
+@@ -0,0 +1,112 @@
++import { expect } from "@playwright/test"
++import type { Locator, Page, Request, Route, TestInfo } from "@playwright/test"
++import type { ReportsCollaboration, ReviewAnswer } from "./confirmation.ts"
++import type { ReportsInstallation } from "./production-installation.ts"
++import { object, responseFor, text } from "./model.ts"
++
++/** A transport failure before the real edit reaches the server must preserve
++ * the editor. Only the explicit retry after authorized reconciliation may edit.
++ */
++export async function recoverFailedEditRequest(input: {
++  page: Page
++  app: ReportsInstallation
++  api: ReportsCollaboration
++  discussion: Locator
++  article: Locator
++  answer: ReviewAnswer
++  body: string
++  expectedStorageVersion: number
++  info: TestInfo
++}) {
++  const { page, app, api, discussion, article, answer } = input
++  const feedback = discussion.getByRole("status")
++  const previousFeedback = await feedback.textContent()
++  const mode = "collaboration-thread-edit"
++  const base = new URL(app.dashboardURL)
++  const matches = (url: URL) => url.origin === base.origin && url.pathname === base.pathname && url.searchParams.get("sf") === mode
++  const before = await api.thread(answer.questionId)
++  const writes: string[] = []
++  const record = (request: Request) => {
++    if (request.method() === "POST" && matches(new URL(request.url()))) writes.push(text(request.postData()))
++  }
++  type Attempt = { serialized: string; key: string; payload: Record<string, unknown> }
++  let resolve!: (value: Attempt) => void, reject!: (reason: unknown) => void
++  const attempted = new Promise<Attempt>((yes, no) => { resolve = yes; reject = no })
++  const drop = async (route: Route) => {
++    try {
++      const request = route.request()
++      expect(request.method()).toBe("POST")
++      resolve({ serialized: text(request.postData()), key: text(await request.headerValue("idempotency-key")), payload: object(request.postDataJSON()) })
++      // Do not forward this failed attempt or synthesize a server response.
++      await route.abort("failed")
++    } catch (error) {
++      reject(error)
++      await route.abort("failed").catch(() => {})
++    }
++  }
++  page.on("request", record)
++  await page.route(matches, drop, { times: 1 })
++  try {
++    const failed = page.waitForEvent("requestfailed", { predicate: (request) => request.method() === "POST" && matches(new URL(request.url())) })
++    await article.getByRole("button", { name: "Save answer edit", exact: true }).click()
++    const [attempt] = await Promise.all([attempted, failed])
++    expect(attempt.payload).toMatchObject({ id: answer.questionId, messageId: answer.message.id, expectedVersion: answer.message.version, body: input.body })
++    const mutation = object(attempt.payload.mutation)
++    expect(mutation.expectedStorageVersion).toBe(input.expectedStorageVersion)
++    expect(mutation.idempotencyKey).toBe(attempt.key)
++
++    const editor = article.getByRole("textbox", { name: "Edited answer", exact: true })
++    await expect(editor, "A failed edit request must retain the typed answer").toHaveValue(input.body)
++    const reconcile = discussion.getByRole("button", { name: "Reconcile action", exact: true })
++    await expect(reconcile).toBeEnabled()
++    await expect(feedback, "The recoverable edit failure must give visible feedback").not.toHaveText(previousFeedback ?? "")
++    expect(writes).toEqual([attempt.serialized])
++    expect(await api.version()).toBe(input.expectedStorageVersion)
++    expect((await api.thread(answer.questionId)).messages).toEqual(before.messages)
++
++    const reread = page.waitForResponse(responseFor(app.dashboardURL, "collaboration-thread-read", "POST"))
++    await reconcile.click()
++    const authorized = await reread
++    expect(authorized.status()).toBe(200)
++    expect(authorized.request().postDataJSON()).toEqual({ id: answer.questionId })
++    expect(object(object(await authorized.json()).value).messages).toEqual(before.messages)
++    await expect(discussion.getByRole("status")).toHaveText("Action reconciled. Retry the same action explicitly to recover its receipt.")
++    await expect(editor).toHaveValue(input.body)
++    const retry = discussion.getByRole("button", { name: "Retry same action", exact: true })
++    await expect(retry).toBeEnabled()
++    expect(writes, "Reconciliation must not submit the retained edit").toEqual([attempt.serialized])
++    expect(await api.version()).toBe(input.expectedStorageVersion)
++
++    const recovered = page.waitForResponse(responseFor(app.dashboardURL, mode, "POST"))
++    await retry.click()
++    const response = await recovered
++    expect(response.status()).toBe(200)
++    expect(response.headers()["cache-control"]).toContain("no-store")
++    expect(response.request().postData()).toBe(attempt.serialized)
++    expect(await response.request().headerValue("idempotency-key")).toBe(attempt.key)
++    const result = object(await response.json())
++    expect(result.status).toBe("ok")
++    await expect(discussion.getByRole("status")).toHaveText("Answer edited. Its previous version remains protected history; review the new answer before confirming again.")
++    await expect(editor).toHaveValue(input.body)
++    expect(writes).toEqual([attempt.serialized, attempt.serialized])
++    expect(await api.version(), "The explicit retry commits exactly one edit").toBe(input.expectedStorageVersion + 1)
++    const current = await api.thread(answer.questionId)
++    expect(current.messages).toHaveLength((before.messages as unknown[]).length)
++    expect((current.messages as unknown[]).map(object).filter((message) => message.id === answer.message.id))
++      .toMatchObject([{ version: answer.message.version + 1, body: input.body }])
++    await input.info.attach("reports-real-failed-edit-request", {
++      body: JSON.stringify({
++        questionId: answer.questionId, messageId: answer.message.id,
++        originalStorageVersion: input.expectedStorageVersion, committedStorageVersion: input.expectedStorageVersion + 1,
++        idempotencyKey: attempt.key, originalPayload: attempt.payload, retryPayload: object(response.request().postDataJSON()),
++        editCount: 1, networkWrites: writes.length, automaticRetry: false,
++        failure: "request aborted before the actual server; no positive response fabricated",
++        reconciliation: "authorized thread reread before an explicit same-intent retry",
++      }, null, 2), contentType: "application/json",
++    })
++    return { payload: attempt.payload, value: result.value }
++  } finally {
++    page.off("request", record)
++    await page.unroute(matches, drop)
++  }
++}
+--- /dev/null
++++ b/packages/app-shell/e2e/sucafina/reports-support/lost-reply-response.ts
+@@ -0,0 +1,125 @@
++import { expect } from "@playwright/test"
++import type { Locator, Page, Request, Route, TestInfo } from "@playwright/test"
++import type { ReportsCollaboration } from "./confirmation.ts"
++import type { ReportsInstallation } from "./production-installation.ts"
++import { object, responseFor, text } from "./model.ts"
++
++/** Drop only the response of a real admitted reply. The installed producer
++ * commits once; the human must reconcile and explicitly recover its receipt.
++ * No positive response, identity, recipient authority or source is synthesized.
++ */
++export async function recoverLostReplyResponse(input: {
++  page: Page
++  app: ReportsInstallation
++  api: ReportsCollaboration
++  discussion: Locator
++  question: { id: string; messages: readonly unknown[] }
++  body: string
++  expectedStorageVersion: number
++  info: TestInfo
++}) {
++  const { page, app, api, discussion, question } = input
++  const feedback = discussion.getByRole("status")
++  const previousFeedback = await feedback.textContent()
++  const mode = "collaboration-thread-reply"
++  const base = new URL(app.dashboardURL)
++  const matches = (url: URL) => url.origin === base.origin && url.pathname === base.pathname && url.searchParams.get("sf") === mode
++  const writes: string[] = []
++  const record = (request: Request) => {
++    if (request.method() === "POST" && matches(new URL(request.url()))) writes.push(text(request.postData()))
++  }
++  type Committed = { serialized: string; key: string; payload: Record<string, unknown>; value: unknown; httpStatus: number; cacheControl: string | undefined }
++  let resolve!: (value: Committed) => void, reject!: (reason: unknown) => void
++  const committed = new Promise<Committed>((yes, no) => { resolve = yes; reject = no })
++  const drop = async (route: Route) => {
++    try {
++      const request = route.request()
++      expect(request.method()).toBe("POST")
++      const serialized = text(request.postData())
++      const payload = object(request.postDataJSON())
++      const key = text(await request.headerValue("idempotency-key"))
++      // Forward this exact UI request once to the actual installed producer.
++      const response = await route.fetch({ maxRetries: 0, maxRedirects: 0 })
++      const result = object(await response.json())
++      expect(result.status, "The discarded response must be a successful server receipt").toBe("ok")
++      resolve({ serialized, key, payload, value: result.value, httpStatus: response.status(), cacheControl: response.headers()["cache-control"] })
++      await route.abort("failed")
++    } catch (error) {
++      reject(error)
++      await route.abort("failed").catch(() => {})
++    }
++  }
++  page.on("request", record)
++  await page.route(matches, drop, { times: 1 })
++  try {
++    const failed = page.waitForEvent("requestfailed", { predicate: (request) => request.method() === "POST" && matches(new URL(request.url())) })
++    await discussion.getByRole("button", { name: "Send reply", exact: true }).click()
++    const [receipt] = await Promise.all([committed, failed])
++    expect(receipt.httpStatus, "The lost response must belong to a real successful commit").toBe(200)
++    expect(receipt.cacheControl).toContain("no-store")
++    expect(receipt.payload).toMatchObject({ id: question.id, body: input.body })
++    const mutation = object(receipt.payload.mutation)
++    expect(mutation.expectedStorageVersion).toBe(input.expectedStorageVersion)
++    expect(mutation.idempotencyKey).toBe(receipt.key)
++    const saved = object(receipt.value)
++    expect(saved.id).toBe(question.id)
++    expect(Array.isArray(saved.messages)).toBe(true)
++    expect(saved.messages).toHaveLength(question.messages.length + 1)
++
++    const reply = discussion.getByRole("textbox", { name: "Reply", exact: true })
++    await expect(reply, "A lost network response must retain the typed reply").toHaveValue(input.body)
++    const reconcile = discussion.getByRole("button", { name: "Reconcile action", exact: true })
++    await expect(reconcile).toBeEnabled()
++    await expect(feedback, "The recoverable failure must explain that the action needs attention").not.toHaveText(previousFeedback ?? "")
++    expect(writes).toEqual([receipt.serialized])
++    expect(await api.version()).toBe(input.expectedStorageVersion + 1)
++    expect((await api.thread(question.id)).messages).toEqual(saved.messages)
++
++    const reread = page.waitForResponse(responseFor(app.dashboardURL, "collaboration-thread-read", "POST"))
++    await reconcile.click()
++    const authorized = await reread
++    expect(authorized.status()).toBe(200)
++    expect(authorized.request().postDataJSON()).toEqual({ id: question.id })
++    expect(object(object(await authorized.json()).value).messages).toEqual(saved.messages)
++    await expect(discussion.getByRole("status")).toHaveText("Action reconciled. Retry the same action explicitly to recover its receipt.")
++    await expect(reply).toHaveValue(input.body)
++    const retry = discussion.getByRole("button", { name: "Retry same action", exact: true })
++    await expect(retry).toBeEnabled()
++    expect(writes, "Reconciliation reads current authority without automatically sending").toEqual([receipt.serialized])
++    expect(await api.version()).toBe(input.expectedStorageVersion + 1)
++
++    const recovered = page.waitForResponse(responseFor(app.dashboardURL, mode, "POST"))
++    await retry.click()
++    const response = await recovered
++    expect(response.status()).toBe(200)
++    expect(response.headers()["cache-control"]).toContain("no-store")
++    expect(response.request().postData()).toBe(receipt.serialized)
++    expect(await response.request().headerValue("idempotency-key")).toBe(receipt.key)
++    const result = object(await response.json())
++    expect(result.status).toBe("ok")
++    expect(result.value).toEqual(receipt.value)
++    await expect(discussion.getByRole("status")).toHaveText("Reply saved in this preserved review.")
++    await expect(reply).toHaveValue("")
++    expect(writes, "Only the original intent and the explicit retry may be sent").toEqual([receipt.serialized, receipt.serialized])
++    expect(await api.version(), "Recovering the original receipt must not commit a duplicate reply").toBe(input.expectedStorageVersion + 1)
++    expect((await api.thread(question.id)).messages).toEqual(saved.messages)
++    await infoReceipt(input.info, {
++      questionId: question.id, originalStorageVersion: input.expectedStorageVersion,
++      committedStorageVersion: input.expectedStorageVersion + 1, idempotencyKey: receipt.key,
++      originalPayload: receipt.payload, retryPayload: object(response.request().postDataJSON()),
++      replyCount: 1, networkWrites: writes.length, automaticRetry: false,
++      reconciliation: "authorized thread reread before an explicit same-intent retry",
++      responseLoss: "real server response discarded after route.fetch; no positive response fabricated",
++    })
++    return { payload: receipt.payload, value: result.value }
++  } finally {
++    page.off("request", record)
++    await page.unroute(matches, drop)
++  }
++}
++
++async function infoReceipt(info: TestInfo, receipt: Record<string, unknown>) {
++  await info.attach("reports-real-lost-reply-response", {
++    body: JSON.stringify(receipt, null, 2), contentType: "application/json",
++  })
++}
+--- a/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts
++++ b/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts
+@@ -23,10 +23,10 @@
+     await form.getByRole("checkbox", { name: title, exact: true }).check()
+   await form.getByRole("button", { name: "Generate Report", exact: true }).click()
+ 
+-  // WP07 already exports this exact view. WP10 must mount it from the existing entry;
+-  // a legacy live-data download is not accepted as a preserved-review journey.
++  // C6 mounts the delivered preparation view from the existing Reports entry.
++  // This journey uses that installed composition and its preserved selection.
+   const preparation = page.getByRole("region", { name: "Prepare review", exact: true })
+-  await expect(preparation, "BLOCKED_COMPOSITION: Generate Report must mount the real ReviewPreparationView").toBeVisible()
++  await expect(preparation, "Generate Report opens the installed ReviewPreparationView").toBeVisible()
+   const load = preparation.getByRole("button", { name: "Load selection", exact: true })
+   await expect(load).toBeEnabled()
+   const pendingAgenda = page.waitForResponse(responseFor(app.dashboardURL, "review-agenda", "POST"))
+@@ -224,6 +224,11 @@
+   expect(artifact).toMatch(/^report:[a-f0-9]{64}$/)
+   const link = preparation.getByRole("link", { name: "Download generated report", exact: true })
+   await expect(link).toHaveCount(1)
++  const expectedDownload = new URL(app.dashboardURL)
++  expectedDownload.search = new URLSearchParams({ sf: "review-download", artifactRef: artifact }).toString()
++  // A previous format remains visible while this response is processed. Wait
++  // for this artifact, not merely the already existing download link.
++  await expect(link).toHaveAttribute("href", expectedDownload.toString())
+   const href = new URL(text(await link.getAttribute("href")), page.url())
+   expect(href.origin).toBe(app.origin)
+   expect(href.pathname).toBe(new URL(app.dashboardURL).pathname)
+@@ -283,8 +288,29 @@
+   const link = navigation.getByRole("button", { name: `Open source ${reference.refId}`, exact: true })
+   await expect(link, "The installed meeting must use the existing authorized source resolver").toBeEnabled()
+   const read = page.waitForResponse(responseFor(app.dashboardURL, "review-read", "GET"))
++  const resolution = page.waitForResponse(responseFor(app.dashboardURL, "review-source", "GET"))
+   await link.click()
+   expect(object(await (await read).json()).value).toEqual(saved)
++  const resolved = await resolution
++  expect(resolved.status()).toBe(200)
++  expect(resolved.headers()["cache-control"]).toBe("no-store")
++  const links = object(await resolved.json()).links
++  expect(Array.isArray(links)).toBe(true)
++  expect(links).toHaveLength(1)
++  const authorized = object((links as unknown[])[0])
++  const destination = new URL(text(authorized.url), app.dashboardURL)
++  expect(destination.origin).toBe(app.origin)
++  expect(destination.pathname).toBe(new URL(app.dashboardURL).pathname)
++  expect(destination.searchParams.get("page")).toBe("Budget Overview")
++  expect(destination.searchParams.get("year")).toBe(String(corpus.year))
++  // The host offers the producer-authorized destination for an explicit choice.
++  // Opening the evidence button alone does not navigate away from the review.
++  const sources = page.getByRole("navigation", { name: "Origens autorizadas da revisão", exact: true })
++  const open = sources.getByRole("link", { name: text(authorized.label), exact: true })
++  await expect(open).toHaveCount(1)
++  await expect(open).toHaveAttribute("href", destination.toString())
++  await open.click()
++  await expect(page).toHaveURL(destination.toString())
+   await expect(page.locator("#content").getByRole("heading", { name: "Budget Overview", exact: true })).toBeVisible()
+   const target = new URL(page.url())
+   expect(target.origin).toBe(app.origin)

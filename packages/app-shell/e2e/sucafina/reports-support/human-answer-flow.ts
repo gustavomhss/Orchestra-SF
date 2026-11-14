@@ -10,13 +10,14 @@ import { expectCapturedBudget } from "./review-flow.ts"
 import { recoverLostReplyResponse } from "./lost-reply-response.ts"
 import { recoverFailedEditRequest } from "./failed-edit-request.ts"
 import { recoverLostEditResponse } from "./lost-edit-response.ts"
+import { recoverCreatedQuestionAfterReadLoss } from "./lost-created-thread-read.ts"
 
 /** The installed Review controls perform every human mutation. Direct HTTP
  * calls below only read back authority/state or probe negative boundaries.
  * The real local operator is the recipient; distinct-person authority is not
  * asserted without a genuinely admitted second identity.
  */
-export async function confirmHumanAnswer(page: Page, app: ReportsInstallation, saved: PreservedReview, corpus: ReportsCorpus, info: TestInfo, options: { loseReplyResponse?: boolean } = {}) {
+export async function confirmHumanAnswer(page: Page, app: ReportsInstallation, saved: PreservedReview, corpus: ReportsCorpus, info: TestInfo, options: { loseReplyResponse?: boolean; loseCreatedThreadRead?: boolean } = {}) {
   const sections = saved.sections.filter((section) => section.title === "Budget")
   expect(sections).toHaveLength(1)
   const section = sections[0]!
@@ -48,7 +49,9 @@ export async function confirmHumanAnswer(page: Page, app: ReportsInstallation, s
   const questionBody = `Confirm the preserved ${corpus.year} forecast of ${corpus.before}; distinguish it from the current source.`
   await discussion.getByRole("textbox", { name: "Question", exact: true }).fill(questionBody)
   const beforeQuestion = await api.version()
-  const created = await submit(page, app, discussion.getByRole("button", { name: "Ask about this review", exact: true }), "collaboration-thread-create")
+  const created = options.loseCreatedThreadRead
+    ? await recoverCreatedQuestionAfterReadLoss({ page, app, api, discussion, body: questionBody, expectedStorageVersion: beforeQuestion, info })
+    : await submit(page, app, discussion.getByRole("button", { name: "Ask about this review", exact: true }), "collaboration-thread-create")
   expect(created.payload.draft).toEqual({
     kind: "clarification", ...basis, reviewContext: pin, recipientRef: app.actorId, body: questionBody,
   })

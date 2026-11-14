@@ -1,0 +1,214 @@
+{
+  "schema": "sf-mission48-boundary-tests-v1",
+  "status": "PROPOSED_NOT_EXECUTED",
+  "execution": {
+    "local_product_tests": "NOT_RUN",
+    "hosted_tests": "ROOT_DISPATCH_REQUIRED",
+    "remote_mutations": "NONE"
+  },
+  "code_base": "6470bebdc9bb5044df7959e697cb7d8629157e23",
+  "source_lane": "eea139fb9f7f13400ad7bbe1e67f18ffaeaaec64",
+  "planning": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "owned_test_root": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation",
+  "read_ack": "READ-ACK.json",
+  "tests": [
+    {
+      "file": "read-boundary-fixture.ts",
+      "cases": 0,
+      "bytes": 7089,
+      "sha256": "5a746f8727bc319b09325a58a22160002d69d7b2f279e8c388cdc6fbfa17ba9d",
+      "blob": "5e24513ec7f015e52d0b944011ae25d1529ac6e2",
+      "target": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/read-boundary-fixture.ts"
+    },
+    {
+      "file": "read-boundary.test.ts",
+      "cases": 8,
+      "bytes": 4361,
+      "sha256": "d7bae62bc7bfa8a9c8d45162d5fb21de57410ac75988a2564239c4e25e87af03",
+      "blob": "332b91ee3bac6303073f397e72d7f09afcd134da",
+      "target": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/read-boundary.test.ts"
+    },
+    {
+      "file": "lost-response.test.ts",
+      "cases": 2,
+      "bytes": 3297,
+      "sha256": "5a3dbf671bacd4b3da34b40bbcd7f1cd3c618bc053a809f0e85d2da6bb7ffcb3",
+      "blob": "ae37b110099b63ddde6188b9d89be4947408b087",
+      "target": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/lost-response.test.ts"
+    },
+    {
+      "file": "authority-boundary.test.ts",
+      "cases": 6,
+      "bytes": 3502,
+      "sha256": "4964ada7938cfe0fc94a28c12ca14c63fa6d1f9b3550d4e63194530454cd127e",
+      "blob": "6c05d1de35d2176530cc70ecfa1f849afe95ff0d",
+      "target": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/authority-boundary.test.ts"
+    },
+    {
+      "file": "review-read-boundary-fixture.ts",
+      "cases": 0,
+      "bytes": 9580,
+      "sha256": "2627103111d38dde7c75891be73bdc82a51f27ee48d34e6291fecde983c5194d",
+      "blob": "6d03d60364ea5cac477fa0623e749c7f9ba947bc",
+      "target": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-read-boundary-fixture.ts"
+    },
+    {
+      "file": "review-read-boundary.test.ts",
+      "cases": 10,
+      "bytes": 6669,
+      "sha256": "23c90baddc6b7bb8b4e8918106afb2187579116dd62d2119dfac2d5e2b5c0a19",
+      "blob": "c874e2070e7d92b118eaa8fffe0caf6baf9b0144",
+      "target": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-read-boundary.test.ts"
+    },
+    {
+      "file": "installed-read-integrity.test.ts",
+      "cases": 7,
+      "bytes": 6592,
+      "sha256": "a00127e4f16483b32f6d3cf03c11555a1e048d0374eb0bc8769cb5b82e4b9baf",
+      "blob": "65dd8c157ad31d288ee0f9142e1b41e08221de7c",
+      "target": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/installed-read-integrity.test.ts"
+    }
+  ],
+  "required_composition": [
+    "C12 plus complete binding36/producer48 shared postimages and own Reports48 client/view/test changes",
+    "cookie44 for browser qualification, independently tracked by qualification agent"
+  ],
+  "fixture_authority_limits": [
+    "Actual SQLite/C03/C08/domain sources/admissions/providers/HTTP/client are composed.",
+    "Actor directory, identities and recipient grants are inherited explicit WP08 fixture boundaries; no installed/native/corporate identity claim.",
+    "State/evidence/admission/transport failure injections wrap real dependency I/O and are selected to one fixture/request boundary; no global mocks.",
+    "Lost-response tests retain exact serialized intent in harness memory; SQLite reopen is not process restart or browser reload evidence.",
+    "Tests invoke actual client.post; C05 discussion parser/view/browser preservation remain separate parent/E2E obligations.",
+    "No assertions or budgets from existing tests were modified."
+  ],
+  "criteria_supported": [
+    "CAMP.QLT.03",
+    "CAMP.CMP.02",
+    "CAMP.INV.04",
+    "WP07.INV.01",
+    "WP07.T02.CHK.02",
+    "WP07.T02.INV.02",
+    "WP07.T02.CMP.01"
+  ],
+  "transitive_recommendation": [
+    {
+      "name": "collaboration-http.test.ts",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/collaboration-http.test.ts",
+      "blob": "6dec97c58bc556ed76761e8cd57cbb12085eabe3",
+      "read": "FULL",
+      "execution": "NOT_RUN"
+    },
+    {
+      "name": "thread-actors.test.ts",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/thread-actors.test.ts",
+      "blob": "97feec47f26df8f3ce1095b53fb2121200ce67f3",
+      "read": "FULL",
+      "execution": "NOT_RUN"
+    },
+    {
+      "name": "thread-history-continuity.test.ts",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/thread-history-continuity.test.ts",
+      "blob": "32f1b1411df10b79e31066c8e9bef5a5b6ff0e72",
+      "read": "FULL",
+      "execution": "NOT_RUN"
+    },
+    {
+      "name": "review-recipient-authority.test.ts",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/review-recipient-authority.test.ts",
+      "blob": "85cbd3d88a224a816ffdd9340537d69025b1dbd1",
+      "read": "FULL",
+      "execution": "NOT_RUN"
+    },
+    {
+      "name": "recipient-receipt-recovery.test.ts",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/recipient-receipt-recovery.test.ts",
+      "blob": "f3f622a95be54f62e167bf3b3cbef31b95aaff9c",
+      "read": "FULL",
+      "execution": "NOT_RUN"
+    },
+    {
+      "name": "threads-lifecycle.test.ts",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/threads-lifecycle.test.ts",
+      "blob": "62cb309bd8f192f8cedc6801869df1b0ad4ba458",
+      "read": "FULL",
+      "execution": "NOT_RUN"
+    }
+  ],
+  "known_regression_risk": [
+    "threads-lifecycle.test.ts expects old unavailable/thread-access-unavailable in three loops; any new semantic result must be checked against actual provider evidence and exact assertions updated through complete shared patch, never weakened.",
+    "Strict source-read uncertainty must yield a typed unavailable PortResult to direct consumers; a rejected Promise observed only by HTTP is not sufficient contract evidence."
+  ],
+  "agents_provenance": {
+    "root_agents": {
+      "blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+      "retrieval": "parent root fetched; child read complete local copy"
+    },
+    "absent_at_source_lane": {
+      "provenance": "parent root MCP confirmed all below; child independently MCP-confirmed all except module root",
+      "paths": [
+        "modules/AGENTS.md",
+        "modules/sucafina/AGENTS.md",
+        "modules/sucafina/Sucafinav1/AGENTS.md",
+        "modules/sucafina/Sucafinav1/test/AGENTS.md",
+        "modules/sucafina/Sucafinav1/test/product/AGENTS.md"
+      ]
+    }
+  },
+  "total_cases": 37,
+  "c05_addendum": {
+    "cases": 10,
+    "budget_ms": 120000,
+    "budget_source": "Existing C05 fixture test/product/wp07/review-thread-context.test.ts and wp08/review-recipient-authority.test.ts both use 120000; unchanged existing budgets.",
+    "composition": "Actual createReviewAnswersFixture preserved C05 plus a second createReviewServices consumer, actual review HTTP/human/download/closure adapters.",
+    "fault_scope": "Nine original cases isolate the C05 consumer evidence.resolve after actual original resolution. One additional case faults fixture.evidence.resolve persistently after each real resolution, covering both the original C05 services and second consumer including the dependency consulted by authorizeSections/revalidate; it restores the resolver and proves explicit read recovery without changing grants.",
+    "target_boundary": "Missing and identity-mismatched target injected explicitly into real SQLite persistence after an authorized original C05 read; no claim of authorized immutable-review mutation.",
+    "admission_boundary": "Actual admission obtains and closes its authentic context before an injected unavailable or transport exception. No admission is forged.",
+    "routes": [
+      "review-thread-context",
+      "review-read",
+      "review-closure"
+    ],
+    "limits": "No client binding shape is changed or fabricated. This addendum proves C05 producer/pin/HTTP semantics; client/view proof remains separate.",
+    "persistent_shared_case_author": "producer_contract at root request after boundary_tests froze the original six files"
+  },
+  "installed_integrity_addendum": {
+    "cases": 7,
+    "budget_ms": 120000,
+    "source": "apps/cli/src/sucafina-product/review-read-integrity.ts",
+    "source_blob": "2a04d86546c1c5361ec523a5f7c7189b5a8d2d65",
+    "composition": "Installed protectSfReviewReads over actual C05 services, Request, host, SQLite, C08 receipt and creationTarget from existing WP08 fixture. The factory authority input is narrowed to the three fields it consumes.",
+    "faults": "After actual canonical reads and actual C08 proof reads, replace only the failure response. Actual actor enabled=false and actual receipt deletion test denial. Actual admitted thread replies during both proof attempts test stale drift without altering C05.",
+    "execution": "NOT_RUN",
+    "limits": "Fixtures retain explicit actor/grant boundaries; this is a wrapper contract proof, not an installed corporate/native identity claim. No cast or fabricated positive authority is used."
+  },
+  "history_provider_addendum": {
+    "schema": "sf-mission48-history-provider-test-v1",
+    "file": "history-provider-read.test.ts",
+    "target": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/history-provider-read.test.ts",
+    "cases": 4,
+    "bytes": 9924,
+    "sha256": "ab808089ce3bbda320a0288e16d4309afa403aa5c5a6b5599292f49055748d36",
+    "blob": "291e72cf1c356d76f1671ec971eac5b44a70edd0",
+    "base_commit": "31578c35c1e66371647f1e00ceefff1cdb85fed3",
+    "provider_path": "apps/cli/src/sucafina-product/review-history.ts",
+    "provider_preimage_blob": "965ad8445deb9b97d1f1c76f18d4036bc2006975",
+    "status": "PROPOSED_NOT_EXECUTED",
+    "local_tests": "NOT_RUN",
+    "remote_mutations": "NONE",
+    "composition": "Actual createSfReviewHistory installed provider over real fixture host, state and creationTarget, actual preserved C05 with matching C08 receipt, actual scoped-source provider and actual admissions. History and calculation-history input types narrowed by root authorization; no authority cast or replacement grant.",
+    "faults": [
+      "Only second C08 history captures read returns unavailable after the real read.",
+      "Actual DashboardPortfolio command updates selected status between two successfully authorized scoped reads.",
+      "Actual fixture actor revocation.",
+      "Explicit storage disappearance of original C05 target while original receipt remains."
+    ],
+    "normalization": "Actual second createReviewServices consumer uses history.historicalSource for source authorization; unknown exceptions normalize to PortResult unavailable/review-read-unavailable.",
+    "limits": [
+      "Actor/ACL/history grants remain explicit existing fixture boundaries; no installed native host execution or corporate identity claim.",
+      "Storage target deletion is an injected lifecycle fault, not an authorized mutation of immutable C05.",
+      "No earlier six files altered by this addendum."
+    ],
+    "budget_ms": 120000,
+    "budget_source": "Existing C05 real fixture journeys use120000; existing budgets unchanged."
+  }
+}

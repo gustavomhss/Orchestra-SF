@@ -1,12 +1,12 @@
 import { createHash } from "node:crypto"
 import { expect } from "@playwright/test"
-import type { APIRequestContext, Browser, Page, TestInfo } from "@playwright/test"
+import type { APIRequestContext, Browser, Page, Request, Route, TestInfo } from "@playwright/test"
 import type { PreservedReview } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
 import type { ReviewAnswer } from "./confirmation.ts"
 import { expectReusedReviewAnswer, reportsCollaboration } from "./confirmation.ts"
 import { expectConfirmedAnswerVisible } from "./human-answer-flow.ts"
 import type { ReportsInstallation } from "./production-installation.ts"
-import { productURL, readReview } from "./model.ts"
+import { object, productURL, readReview, responseFor, text } from "./model.ts"
 
 export async function revokeReportsSession(input: {
   browser: Browser; page: Page; app: ReportsInstallation; saved: PreservedReview; answer: ReviewAnswer
@@ -17,6 +17,7 @@ export async function revokeReportsSession(input: {
   // Never persist this state or attach cookies/enrollment codes to the receipt.
   const old = await browser.newContext({ storageState: await page.context().storageState() })
   const fresh = await browser.newContext()
+  const cleanup: (() => Promise<void>)[] = []
   try {
     expect(await readReview(old.request, app.dashboardURL, saved.id)).toEqual(saved)
     await expectReusedReviewAnswer(reportsCollaboration(old.request, app.dashboardURL), answer)
@@ -25,6 +26,12 @@ export async function revokeReportsSession(input: {
     const meeting = retained.getByRole("region", { name: "Preserved review meeting", exact: true })
     await expect(meeting.getByRole("heading", { level: 2 })).toHaveText("Projects")
     await expectConfirmedAnswerVisible(retained, answer)
+    const localPending = await retainUnsentReply(page, app, answer, "logout")
+    cleanup.push(localPending.cleanup)
+    const retainedPending = await retainUnsentReply(retained, app, answer, "retained")
+    cleanup.push(retainedPending.cleanup)
+    expect(retainedPending.storageVersion).toBe(localPending.storageVersion)
+    expect(retainedPending.key).not.toBe(localPending.key)
     const pendingLogout = page.waitForResponse((response) => response.url() === `${app.origin}${app.mount}/auth/logout` && response.request().method() === "POST")
     await page.getByRole("button", { name: "Sign out", exact: true }).click()
     const logout = await pendingLogout
@@ -33,7 +40,17 @@ export async function revokeReportsSession(input: {
     await expect(page).toHaveURL((url) => url.origin === app.origin && url.pathname === `${app.mount}/auth/login`)
     await expect(page.getByRole("region", { name: "Preserved review meeting", exact: true })).toHaveCount(0)
     await expect(page.getByRole("region", { name: "Review discussion", exact: true })).toHaveCount(0)
-    await meeting.getByRole("button", { name: "Next topic", exact: true }).click()
+    await expectPrivateAttemptCleared(page, localPending.drafts)
+    const deniedRead = retained.waitForResponse(responseFor(app.dashboardURL, "collaboration-thread-read", "POST"))
+    await retained.getByRole("region", { name: "Review discussion", exact: true })
+      .getByRole("button", { name: "Reconcile action", exact: true }).click()
+    const forbidden = await deniedRead
+    expect(forbidden.status()).toBe(403)
+    expect(forbidden.request().postDataJSON()).toEqual({ id: answer.questionId })
+    expect(forbidden.headers()["cache-control"]).toContain("no-store")
+    const deniedBody = await forbidden.text()
+    for (const secret of [answer.message.body, answer.pin.reviewDigest, ...Object.values(retainedPending.drafts)])
+      expect(deniedBody, "The real denied read must not return protected content or drafts").not.toContain(secret)
     const cleared = retained.locator("[data-sf-review-workspace]")
     await expect(cleared.getByRole("status")).toHaveText("O acesso mudou. Reabra uma revisão autorizada.")
     // The installed host now disposes all protected views on denied access.
@@ -47,6 +64,7 @@ export async function revokeReportsSession(input: {
     await expect(retained.getByRole("region", { name: "Review discussion", exact: true })).toHaveCount(0)
     await expect(retained.getByRole("region", { name: "Confirmed answer", exact: true })).toHaveCount(0)
     await expect(retained.getByRole("button", { name: "Next topic", exact: true })).toHaveCount(0)
+    await expectPrivateAttemptCleared(retained, retainedPending.drafts)
     for (const secret of [answer.message.body, answer.pin.reviewDigest, "REPORTS_LONG_NOTE_END", "reports-project-01", "totalForecast", "1320"])
       await expect(cleared, "Revocation must remove cached review and answer content").not.toContainText(secret)
     await denied(old.request, app, saved, answer, artifact.href, true)
@@ -57,21 +75,104 @@ export async function revokeReportsSession(input: {
     await app.signIn(control)
     expect(await readReview(control.request, app.dashboardURL, saved.id)).toEqual(saved)
     await expectReusedReviewAnswer(reportsCollaboration(control.request, app.dashboardURL), answer)
+    const current = reportsCollaboration(control.request, app.dashboardURL)
+    expect(await current.version(), "Logout and denied reconciliation must not submit either retained reply").toBe(localPending.storageVersion)
+    expect((await current.thread(answer.questionId)).messages).toEqual(localPending.messages)
+    expect(localPending.writes).toEqual([localPending.serialized])
+    expect(retainedPending.writes).toEqual([retainedPending.serialized])
     const download = await control.request.get(artifact.href, { maxRedirects: 0 })
     expect(download.status()).toBe(200)
     expect(download.headers()["content-type"]).toContain("application/vnd.openxmlformats-officedocument.wordprocessingml.document")
     expect(createHash("sha256").update(await download.body()).digest("hex")).toBe(artifact.sha256)
     await denied(old.request, app, saved, answer, artifact.href, false)
+    await expectPrivateAttemptCleared(page, localPending.drafts)
+    await expectPrivateAttemptCleared(retained, retainedPending.drafts)
+    expect(localPending.writes).toEqual([localPending.serialized])
+    expect(retainedPending.writes).toEqual([retainedPending.serialized])
     await info.attach("session-revocation", { body: JSON.stringify({
       reviewRef: saved.id, answerRef: answer.answerRef, oldSession: "denied before and after fresh enrollment",
       cachedMeeting: "cleared", freshSession: "same review, answer and artifact digest",
       logoutRoute: "installed Sign out control", clearedViews: ["meeting", "discussion", "confirmed answer", "topic navigation"],
+      clearedDrafts: ["question", "reply", "edit"], clearedPendingAttempts: ["logout", "retained real403"],
+      attempts: [localPending, retainedPending].map((attempt) => ({
+        idempotencyKey: attempt.key, originalPayload: attempt.payload, requests: attempt.writes.length,
+        outcome: "aborted before sending; no retry on logout, denied read or fresh enrollment",
+      })),
       scope: "durable operator-session revocation", selectiveTalentRevocation: "NOT_PROVEN",
     }, null, 2), contentType: "application/json" })
   } finally {
-    await fresh.close()
-    await old.close()
+    try { for (const stop of cleanup) await stop() }
+    finally { await fresh.close(); await old.close() }
   }
+}
+
+async function retainUnsentReply(page: Page, app: ReportsInstallation, answer: ReviewAnswer, scope: string) {
+  const discussion = page.getByRole("region", { name: "Review discussion", exact: true })
+  const drafts = {
+    question: `Private question before ${scope}. REPORTS_REVOKED_QUESTION_${scope}`,
+    reply: `Private reply before ${scope}. REPORTS_REVOKED_REPLY_${scope}`,
+    edit: `Private edit before ${scope}. REPORTS_REVOKED_EDIT_${scope}`,
+  }
+  await discussion.getByRole("textbox", { name: "Question", exact: true }).fill(drafts.question)
+  await discussion.getByRole("textbox", { name: "Reply", exact: true }).fill(drafts.reply)
+  await discussion.getByRole("article", { name: `Message ${answer.message.id}`, exact: true })
+    .getByRole("textbox", { name: "Edited answer", exact: true }).fill(drafts.edit)
+  const api = reportsCollaboration(page.request, app.dashboardURL)
+  const storageVersion = await api.version(), before = await api.thread(answer.questionId)
+  const base = new URL(app.dashboardURL), mode = "collaboration-thread-reply"
+  const matches = (url: URL) => url.origin === base.origin && url.pathname === base.pathname && url.searchParams.get("sf") === mode
+  const writes: string[] = []
+  const record = (request: Request) => {
+    if (request.method() === "POST" && matches(new URL(request.url()))) writes.push(text(request.postData()))
+  }
+  let resolve!: (attempt: { serialized: string; key: string; payload: Record<string, unknown> }) => void, reject!: (reason: unknown) => void
+  const attempted = new Promise<{ serialized: string; key: string; payload: Record<string, unknown> }>((yes, no) => { resolve = yes; reject = no })
+  const abort = async (route: Route) => {
+    try {
+      const request = route.request(), payload = object(request.postDataJSON())
+      const key = text(await request.headerValue("idempotency-key"))
+      expect(request.method()).toBe("POST")
+      expect(payload).toMatchObject({ id: answer.questionId, body: drafts.reply })
+      expect(object(payload.mutation)).toMatchObject({ expectedStorageVersion: storageVersion, idempotencyKey: key })
+      resolve({ serialized: text(request.postData()), key, payload })
+      // Deliberately do not call route.fetch/continue: no mutation reaches the producer.
+      await route.abort("failed")
+    } catch (error) {
+      reject(error)
+      await route.abort("failed").catch(() => {})
+    }
+  }
+  page.on("request", record)
+  await page.route(matches, abort, { times: 1 })
+  const cleanup = async () => { page.off("request", record); await page.unroute(matches, abort) }
+  try {
+    const failed = page.waitForEvent("requestfailed", { predicate: (request) => request.method() === "POST" && matches(new URL(request.url())) })
+    await discussion.getByRole("button", { name: "Send reply", exact: true }).click()
+    const [attempt] = await Promise.all([attempted, failed])
+    for (const [label, draft] of [["Question", drafts.question], ["Reply", drafts.reply], ["Edited answer", drafts.edit]] as const) {
+      const field = discussion.getByRole("textbox", { name: label, exact: true })
+      await expect(field).toHaveValue(draft)
+      await expect(field).not.toBeEditable()
+    }
+    await expect(discussion.getByRole("button", { name: "Reconcile action", exact: true })).toBeEnabled()
+    await expect(discussion.getByRole("button", { name: "Retry same action", exact: true })).toHaveCount(0)
+    expect(writes).toEqual([attempt.serialized])
+    expect(await api.version()).toBe(storageVersion)
+    expect((await api.thread(answer.questionId)).messages).toEqual(before.messages)
+    return { ...attempt, drafts, storageVersion, messages: before.messages, writes, cleanup }
+  } catch (error) {
+    await cleanup()
+    throw error
+  }
+}
+
+async function expectPrivateAttemptCleared(page: Page, drafts: { question: string; reply: string; edit: string }) {
+  for (const label of ["Question", "Reply", "Edited answer"])
+    await expect(page.getByRole("textbox", { name: label, exact: true })).toHaveCount(0)
+  await expect(page.getByRole("region", { name: "Action recovery", exact: true })).toHaveCount(0)
+  await expect(page.getByRole("button", { name: "Reconcile action", exact: true })).toHaveCount(0)
+  await expect(page.getByRole("button", { name: "Retry same action", exact: true })).toHaveCount(0)
+  for (const draft of Object.values(drafts)) await expect(page.locator("body")).not.toContainText(draft)
 }
 
 async function denied(request: APIRequestContext, app: ReportsInstallation, saved: PreservedReview, answer: ReviewAnswer, artifactURL: string, checkExport: boolean) {

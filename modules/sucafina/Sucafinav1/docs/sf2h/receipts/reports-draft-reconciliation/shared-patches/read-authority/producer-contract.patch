@@ -1,0 +1,1042 @@
+--- a/modules/sucafina/Sucafinav1/product/collaboration/threads.ts
++++ b/modules/sucafina/Sucafinav1/product/collaboration/threads.ts
+@@ -59,7 +59,10 @@
+       const request = input.host.requestFor(context)
+       if (!request || !await input.human.authorize(context, "collaboration.thread.create", selected) || !await input.host.revalidate(context)) return { status: "denied", reason: "thread-access-unavailable" }
+       const review = selected.draft.reviewContext ? await input.state.read(request, "reviews", (_state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion) : undefined
+-      if (selected.draft.reviewContext && (review?.status !== "ok" || !review.value)) return { status: "denied", reason: "review-thread-context-unavailable" }
++      if (review && (input.host.requestFor(context) !== request || !await input.host.revalidate(context) || input.host.requestFor(context) !== request)) return { status: "denied", reason: "review-thread-context-unavailable" }
++      if (review && "reason" in review) return review
++      if (selected.draft.reviewContext && review?.status !== "ok") return { status: "unavailable", reason: "review-thread-context-unavailable" }
++      if (review?.status === "ok" && !review.value) return { status: "denied", reason: "review-thread-context-unavailable" }
+       const sourceContext: ThreadSourceContext | undefined = selected.draft.reviewContext ? { sourceRef: selected.draft.sourceRef, sourceIncarnation: selected.draft.sourceIncarnation, observedVersion: selected.draft.observedVersion, period: selected.draft.period, evidenceRefs: selected.draft.evidenceRefs, reviewContext: selected.draft.reviewContext } : undefined
+       const prepareReviewFence = input.prepareReviewThreadFence
+       const checkReviewRecipient = input.checkReviewRecipientAtCommit
+@@ -76,7 +79,10 @@
+       })
+       if (saved.status === "preview") return { status: "conflict", reason: "thread-not-committed" }
+       if ("reason" in saved) return saved
+-      if (!saved.value || !await input.host.revalidate(context) || !await input.authorize(saved.value, context, "read")) return { status: "unavailable", reason: "thread-access-unavailable" }
++      if (!saved.value) return { status: "unavailable", reason: "thread-read-unavailable" }
++      const readable = await input.authorize(saved.value, context, "read").catch(() => undefined)
++      if (readable === false || input.host.requestFor(context) !== request || !await input.host.revalidate(context) || input.host.requestFor(context) !== request) return { status: "denied", reason: "thread-access-unavailable" }
++      if (readable !== true) return { status: "unavailable", reason: "thread-read-unavailable" }
+       return { status: "ok", value: publicThreadProjection(saved.value) }
+     },
+     reply: (id: string, body: string, mutation: Mutation, context: TrustedDomainContext) => change(id, { kind: "reply", body }, mutation, context),
+@@ -84,14 +90,37 @@
+     read: async (id: string, context: TrustedDomainContext): Promise<PortResult<CollaborationThread>> => {
+       if (typeof id !== "string" || !id.trim()) return { status: "needs-input", reason: "invalid-thread-reference" }
+       const request = input.host.requestFor(context)
+-      if (!request || !await input.host.revalidate(context)) return { status: "denied", reason: "thread-access-unavailable" }
+-      const read = await input.state.read(request, "threads", (state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? state.threads[id] : undefined)
+-      if (read.status === "preview") return { status: "unavailable", reason: "unexpected-state-preview" }
+-      if ("reason" in read) return read
+-      if (!isThread(read.value) || read.value.id !== id || !await input.authorize(read.value, context, "read") || !await input.host.revalidate(context)) return { status: "unavailable", reason: "thread-access-unavailable" }
+-      const again = await input.state.read(request, "threads", (state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? state.threads[id] : undefined)
+-      if (again.status !== "ok" || !isThread(again.value) || again.value.id !== id || digestSfValue(again.value) !== digestSfValue(read.value) || !await input.authorize(again.value, context, "read") || !await input.host.revalidate(context)) return { status: "unavailable", reason: "thread-access-unavailable" }
+-      return { status: "ok", value: publicThreadProjection(read.value) }
++      const current = async () => !!request && input.host.requestFor(context) === request && await input.host.revalidate(context) && input.host.requestFor(context) === request
++      try {
++        if (!request || !await current()) return { status: "denied", reason: "thread-access-unavailable" }
++        const read = () => input.state.read(request, "threads", (state, authority) => {
++          const bound = authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion
++          return { bound, thread: bound ? state.threads[id] : undefined }
++        })
++        const first = await read()
++        if (!await current()) return { status: "denied", reason: "thread-access-unavailable" }
++        if (first.status !== "ok") return "reason" in first ? first : { status: "unavailable", reason: "thread-read-unavailable" }
++        if (!first.value.bound) return { status: "denied", reason: "thread-access-binding-changed" }
++        if (first.value.thread === undefined) return { status: "denied", reason: "thread-target-changed" }
++        if (!isThread(first.value.thread)) return { status: "unavailable", reason: "thread-read-unavailable" }
++        const thread = first.value.thread
++        if (thread.id !== id || !await input.authorize(thread, context, "read") || !await current()) return { status: "denied", reason: "thread-access-unavailable" }
++        const again = await read()
++        // A new read may fail or observe a legitimate reply. Neither proves that
++        // access was revoked; actual authority loss takes precedence over drift.
++        if (!await current()) return { status: "denied", reason: "thread-access-unavailable" }
++        if (again.status !== "ok") return "reason" in again ? again : { status: "unavailable", reason: "thread-read-unavailable" }
++        if (!again.value.bound) return { status: "denied", reason: "thread-access-binding-changed" }
++        if (again.value.thread === undefined) return { status: "denied", reason: "thread-target-changed" }
++        if (!isThread(again.value.thread)) return { status: "unavailable", reason: "thread-read-unavailable" }
++        if (!sameThreadReadScope(thread, again.value.thread) || !await input.authorize(again.value.thread, context, "read") || !await current()) return { status: "denied", reason: "thread-access-unavailable" }
++        if (digestSfValue(again.value.thread) !== digestSfValue(thread)) return { status: "stale", reason: "thread-content-changed" }
++        return { status: "ok", value: publicThreadProjection(thread) }
++      } catch {
++        const authorized = await current().catch(() => undefined)
++        if (authorized === false) return { status: "denied", reason: "thread-access-unavailable" }
++        return { status: "unavailable", reason: "thread-read-unavailable" }
++      }
+     },
+   }
+ 
+@@ -109,7 +138,10 @@
+     if (!isThread(read.value) || read.value.id !== id) return { status: "unavailable", reason: "thread-access-unavailable" }
+     const prior = read.value
+     const review = prior.messages[0]?.sourceContext?.reviewContext ? await input.state.read(request, "reviews", (_state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion) : undefined
+-    if (prior.messages[0]?.sourceContext?.reviewContext && (review?.status !== "ok" || !review.value)) return { status: "denied", reason: "review-thread-context-unavailable" }
++    if (review && (input.host.requestFor(context) !== request || !await input.host.revalidate(context) || input.host.requestFor(context) !== request)) return { status: "denied", reason: "review-thread-context-unavailable" }
++    if (review && "reason" in review) return review
++    if (prior.messages[0]?.sourceContext?.reviewContext && review?.status !== "ok") return { status: "unavailable", reason: "review-thread-context-unavailable" }
++    if (review?.status === "ok" && !review.value) return { status: "denied", reason: "review-thread-context-unavailable" }
+     const reviewBasis = prior.messages[0]?.sourceContext?.reviewContext ? prior.messages[0].sourceContext : undefined
+     const prepareReviewFence = input.prepareReviewThreadFence
+     const checkReviewRecipient = input.checkReviewRecipientAtCommit
+@@ -129,9 +161,21 @@
+     })
+     if (saved.status === "preview") return { status: "conflict", reason: "thread-changed" }
+     if ("reason" in saved) return saved
+-    if (!saved.value || !await input.host.revalidate(context) || !await input.authorize(saved.value, context, "read")) return { status: "unavailable", reason: "thread-access-unavailable" }
++    if (!saved.value) return { status: "unavailable", reason: "thread-read-unavailable" }
++    const readable = await input.authorize(saved.value, context, "read").catch(() => undefined)
++    if (readable === false || input.host.requestFor(context) !== request || !await input.host.revalidate(context) || input.host.requestFor(context) !== request) return { status: "denied", reason: "thread-access-unavailable" }
++    if (readable !== true) return { status: "unavailable", reason: "thread-read-unavailable" }
+     return { status: "ok", value: publicThreadProjection(saved.value) }
+   }
++}
++
++/** Replies and edits may change content, but cannot retarget the retained discussion. */
++export function sameThreadReadScope(previous: CollaborationThread, current: CollaborationThread) {
++  const scope = (thread: CollaborationThread) => ({ id: thread.id, kind: thread.kind, sourceRef: thread.sourceRef, sourceIncarnation: thread.sourceIncarnation, observedVersion: thread.observedVersion, period: thread.period, recipientRef: thread.recipientRef ?? null, evidenceRefs: thread.evidenceRefs })
++  return digestSfValue(scope(previous)) === digestSfValue(scope(current)) && previous.messages.every((message) => {
++    const next = current.messages.find((entry) => entry.id === message.id)
++    return !!next && next.incarnation === message.incarnation && next.authorRef === message.authorRef && digestSfValue(threadMessageContext(previous, message)) === digestSfValue(threadMessageContext(current, next))
++  })
+ }
+ 
+ /** Case provenance and stored revisions have separate, currently authorized readers. */
+--- a/modules/sucafina/Sucafinav1/product/collaboration/recipient-thread.ts
++++ b/modules/sucafina/Sucafinav1/product/collaboration/recipient-thread.ts
+@@ -3,7 +3,7 @@
+ import type { DomainPortHost, PortResult } from "../contracts/ports.ts"
+ import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
+ import type { SfProductStatePort } from "../contracts/state.ts"
+-import { isThread } from "./threads.ts"
++import { isThread, sameThreadReadScope } from "./threads.ts"
+ import type { CollaborationThread } from "./threads.ts"
+ import type { createCollaborationReissuer } from "./reissue.ts"
+ import type { CollaborationWorkSourceRefresh } from "./work-source-refresh.ts"
+@@ -31,42 +31,73 @@
+   return async (id: string, context: TrustedDomainContext): Promise<PortResult<RecipientThread>> => {
+     if (typeof id !== "string" || !id.trim()) return { status: "needs-input", reason: "invalid-thread-reference" }
+     const request = input.host.requestFor(context)
+-    if (!request || !await input.host.revalidate(context)) return { status: "denied", reason: "thread-access-unavailable" }
+-    const read = () => input.state.read(request, "threads", (state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? state.threads[id] : undefined)
+-    const first = await read()
+-    if (first.status !== "ok" || !isThread(first.value) || first.value.id !== id) return { status: "unavailable", reason: "thread-access-unavailable" }
+-    const thread = first.value
+-    if (thread.recipientRef !== context.binding.principalRef && !thread.messages.some((message) => message.authorRef === context.binding.principalRef)) return { status: "denied", reason: "thread-access-unavailable" }
+-    const originals = thread.evidenceRefs
+-    const sourceIndex = originals.findIndex((ref) => ref.kind === "record" && ref.refId === thread.sourceRef && ref.target.incarnation === thread.sourceIncarnation)
+-    if (sourceIndex < 0 || originals.filter((ref) => ref.refId === thread.sourceRef).length !== 1) return { status: "unavailable", reason: "thread-source-unavailable" }
+-    const messageContexts = thread.messages.map((message) => threadMessageContext(thread, message))
+-    if (messageContexts.some((basis) => !basis)) return { status: "unavailable", reason: "thread-source-unavailable" }
+-    const historyRefs = [...new Map([...originals, ...messageContexts.flatMap((basis) => basis!.evidenceRefs)].map((ref) => [ref.refDigest, ref])).values()]
+-    const preserved = input.authorizeHistorical ? await input.authorizeHistorical(historyRefs, context) : false
+-    const reviewBasis = messageContexts[0]?.reviewContext ? messageContexts[0] : undefined
+-    if (reviewBasis && (!preserved || !input.authorizeContext || !await input.authorizeContext(reviewBasis, context))) return { status: "unavailable", reason: "review-thread-context-unavailable" }
+-    const records = historyRefs.filter((ref): ref is RecordEvidence => ref.kind === "record")
+-    const supplements = historyRefs.filter((ref) => ref.kind !== "record")
+-    const contextScopes = await Promise.all(records.map((ref) => input.reissue(ref, context)))
+-    const changed = contextScopes.some((result) => result.status !== "ok")
+-    if (changed && !preserved) return { status: "unavailable", reason: "thread-source-unavailable" }
+-    // Refresh proves physical continuity for every stored basis; it never authorizes historical text by itself.
+-    const renew = () => Promise.all(records.map((ref) => changed && input.refresh ? input.refresh(ref, context) : input.reissue(ref, context)))
+-    const issued = changed ? await renew() : contextScopes
+-    if (issued.some((result) => result.status !== "ok")) return { status: "unavailable", reason: "thread-source-unavailable" }
+-    const issuedByDigest = new Map(issued.flatMap((result, index) => result.status === "ok" ? [[records[index]!.refDigest, result.value] as const] : []))
+-    const projection = (refs: readonly BusinessEvidenceRef[]) => refs.map((ref) => ref.kind === "record" ? issuedByDigest.get(ref.refDigest)! : ref)
+-    const current = projection(originals)
+-    const canonical = digestSfValue(current.map((ref) => ref.refDigest).sort())
+-    if (messageContexts.some((basis) => digestSfValue(projection(basis!.evidenceRefs).map((ref) => ref.refDigest).sort()) !== canonical)) return { status: "unavailable", reason: "thread-source-continuity-unavailable" }
+-    const sourceRef = current[sourceIndex]
+-    const authorizeCurrent = async () => await input.authorize(current.filter((ref) => ref.kind === "record"), context) && (!supplements.length || await (input.authorizeHistorical ?? input.authorize)(supplements, context))
+-    if (!sourceRef || sourceRef.kind !== "record" || !await authorizeCurrent()) return { status: "unavailable", reason: "thread-source-unavailable" }
+-    const again = await read()
+-    const finalScopes = await renew()
+-    if (again.status !== "ok" || !isThread(again.value) || again.value.id !== id || digestSfValue(again.value) !== digestSfValue(thread) || digestSfValue(finalScopes) !== digestSfValue(issued) || !await authorizeCurrent() || preserved && !await input.authorizeHistorical!(historyRefs, context) || reviewBasis && !await input.authorizeContext!(reviewBasis, context) || !await input.host.revalidate(context)) return { status: "unavailable", reason: "thread-access-unavailable" }
+-    return { status: "ok", value: { id: thread.id, kind: thread.kind, ...(thread.recipientRef ? { recipientRef: thread.recipientRef } : {}), state: thread.state, messages: thread.messages, observed: { version: thread.observedVersion, period: thread.period }, current: { sourceRef, evidenceRefs: current }, ...(preserved ? { historical: { sourceRef: thread.sourceRef, sourceIncarnation: thread.sourceIncarnation, observedVersion: thread.observedVersion, period: thread.period, evidenceRefs: originals } } : {}), continuity: changed ? "historical" : "unchanged" } }
++    const currentAccess = async () => !!request && input.host.requestFor(context) === request && await input.host.revalidate(context) && input.host.requestFor(context) === request
++    try {
++      if (!request || !await currentAccess()) return { status: "denied", reason: "thread-access-unavailable" }
++      const read = () => input.state.read(request, "threads", (state, authority) => {
++        const bound = authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion
++        return { bound, thread: bound ? state.threads[id] : undefined }
++      })
++      const first = await read()
++      if (!await currentAccess()) return { status: "denied", reason: "thread-access-unavailable" }
++      if (first.status !== "ok") return first.status === "denied" ? first : { status: "unavailable", reason: "thread-read-unavailable" }
++      if (!first.value.bound) return { status: "denied", reason: "thread-access-binding-changed" }
++      if (first.value.thread === undefined) return { status: "denied", reason: "thread-target-changed" }
++      if (!isThread(first.value.thread)) return { status: "unavailable", reason: "thread-read-unavailable" }
++      const thread = first.value.thread
++      if (thread.id !== id) return { status: "denied", reason: "thread-target-changed" }
++      if (thread.recipientRef !== context.binding.principalRef && !thread.messages.some((message) => message.authorRef === context.binding.principalRef)) return { status: "denied", reason: "thread-access-unavailable" }
++      const originals = thread.evidenceRefs
++      const sourceIndex = originals.findIndex((ref) => ref.kind === "record" && ref.refId === thread.sourceRef && ref.target.incarnation === thread.sourceIncarnation)
++      if (sourceIndex < 0 || originals.filter((ref) => ref.refId === thread.sourceRef).length !== 1) return { status: "unavailable", reason: "thread-source-unavailable" }
++      const messageContexts = thread.messages.map((message) => threadMessageContext(thread, message))
++      if (messageContexts.some((basis) => !basis)) return { status: "unavailable", reason: "thread-source-unavailable" }
++      const historyRefs = [...new Map([...originals, ...messageContexts.flatMap((basis) => basis!.evidenceRefs)].map((ref) => [ref.refDigest, ref])).values()]
++      // Historical access is optional for ordinary threads: an inconclusive
++      // probe may still be followed by independent current-ref issuance below.
++      const historical = input.authorizeHistorical ? await input.authorizeHistorical(historyRefs, context).catch(() => undefined) : undefined
++      const preserved = historical === true
++      const reviewBasis = messageContexts[0]?.reviewContext ? messageContexts[0] : undefined
++      if (reviewBasis && (historical === undefined || !input.authorizeContext)) return { status: "unavailable", reason: "thread-read-unavailable" }
++      if (reviewBasis && (!preserved || !await input.authorizeContext!(reviewBasis, context))) return { status: "denied", reason: "review-thread-context-unavailable" }
++      const records = historyRefs.filter((ref): ref is RecordEvidence => ref.kind === "record")
++      const supplements = historyRefs.filter((ref) => ref.kind !== "record")
++      const contextScopes = await Promise.all(records.map((ref) => input.reissue(ref, context)))
++      if (!await currentAccess() || contextScopes.some((result) => result.status === "denied")) return { status: "denied", reason: "thread-source-unavailable" }
++      const changed = contextScopes.some((result) => result.status !== "ok")
++      if (changed && !preserved) return { status: "unavailable", reason: "thread-source-unavailable" }
++      // Refresh proves physical continuity for every stored basis; it never authorizes historical text by itself.
++      const renew = () => Promise.all(records.map((ref) => changed && input.refresh ? input.refresh(ref, context) : input.reissue(ref, context)))
++      const issued = changed ? await renew() : contextScopes
++      if (!await currentAccess() || issued.some((result) => result.status === "denied")) return { status: "denied", reason: "thread-source-unavailable" }
++      if (issued.some((result) => result.status !== "ok")) return { status: "unavailable", reason: "thread-source-unavailable" }
++      const issuedByDigest = new Map(issued.flatMap((result, index) => result.status === "ok" ? [[records[index]!.refDigest, result.value] as const] : []))
++      const projection = (refs: readonly BusinessEvidenceRef[]) => refs.map((ref) => ref.kind === "record" ? issuedByDigest.get(ref.refDigest)! : ref)
++      const current = projection(originals)
++      const canonical = digestSfValue(current.map((ref) => ref.refDigest).sort())
++      if (messageContexts.some((basis) => digestSfValue(projection(basis!.evidenceRefs).map((ref) => ref.refDigest).sort()) !== canonical)) return { status: "unavailable", reason: "thread-source-continuity-unavailable" }
++      const sourceRef = current[sourceIndex]
++      const authorizeCurrent = async () => await input.authorize(current.filter((ref) => ref.kind === "record"), context) && (!supplements.length || await (input.authorizeHistorical ?? input.authorize)(supplements, context))
++      if (!sourceRef || sourceRef.kind !== "record") return { status: "unavailable", reason: "thread-source-unavailable" }
++      if (!await authorizeCurrent() || !await currentAccess()) return { status: "denied", reason: "thread-source-unavailable" }
++      const again = await read()
++      if (!await currentAccess()) return { status: "denied", reason: "thread-access-unavailable" }
++      if (again.status !== "ok") return again.status === "denied" ? again : { status: "unavailable", reason: "thread-read-unavailable" }
++      if (!again.value.bound) return { status: "denied", reason: "thread-access-binding-changed" }
++      if (again.value.thread === undefined) return { status: "denied", reason: "thread-target-changed" }
++      if (!isThread(again.value.thread)) return { status: "unavailable", reason: "thread-read-unavailable" }
++      if (!sameThreadReadScope(thread, again.value.thread)) return { status: "denied", reason: "thread-target-changed" }
++      const finalScopes = await renew()
++      if (!await currentAccess() || finalScopes.some((result) => result.status === "denied")) return { status: "denied", reason: "thread-access-unavailable" }
++      if (finalScopes.some((result) => result.status !== "ok")) return { status: "unavailable", reason: "thread-read-unavailable" }
++      if (!await authorizeCurrent() || preserved && !await input.authorizeHistorical!(historyRefs, context) || reviewBasis && !await input.authorizeContext!(reviewBasis, context) || !await currentAccess()) return { status: "denied", reason: "thread-access-unavailable" }
++      if (digestSfValue(again.value.thread) !== digestSfValue(thread) || digestSfValue(finalScopes) !== digestSfValue(issued)) return { status: "stale", reason: "thread-content-changed" }
++      return { status: "ok", value: { id: thread.id, kind: thread.kind, ...(thread.recipientRef ? { recipientRef: thread.recipientRef } : {}), state: thread.state, messages: thread.messages, observed: { version: thread.observedVersion, period: thread.period }, current: { sourceRef, evidenceRefs: current }, ...(preserved ? { historical: { sourceRef: thread.sourceRef, sourceIncarnation: thread.sourceIncarnation, observedVersion: thread.observedVersion, period: thread.period, evidenceRefs: originals } } : {}), continuity: changed ? "historical" : "unchanged" } }
++    } catch {
++      const authorized = await currentAccess().catch(() => undefined)
++      if (authorized === false) return { status: "denied", reason: "thread-access-unavailable" }
++      return { status: "unavailable", reason: "thread-read-unavailable" }
++    }
+   }
+ }
+ 
+--- a/modules/sucafina/Sucafinav1/product/collaboration/thread-reads.ts
++++ b/modules/sucafina/Sucafinav1/product/collaboration/thread-reads.ts
+@@ -9,6 +9,9 @@
+   return { read: async (id: string, context: TrustedDomainContext) => {
+     if (recipientThread) {
+       const projected = await recipientThread(id, context)
++      // A fallback cannot overrule denial or hide an inconclusive read. The
++      // canonical reader remains available for unsupported source projections.
++      if (projected.status === "denied" || projected.status === "stale" || projected.status === "unavailable" && projected.reason === "thread-read-unavailable") return projected
+       if (projected.status === "ok") {
+         const period = projected.value.current.sourceRef.target.period
+         const observed = projected.value.observed.period
+@@ -23,6 +26,7 @@
+   }, readHistorical: async (id: string, context: TrustedDomainContext): Promise<PortResult<CollaborationThread>> => {
+     if (recipientThread) {
+       const projected = await recipientThread(id, context)
++      if (projected.status === "denied" || projected.status === "stale" || projected.status === "unavailable" && projected.reason === "thread-read-unavailable") return projected
+       if (projected.status === "ok" && projected.value.historical) return { status: "ok", value: { id: projected.value.id, kind: projected.value.kind, ...(projected.value.recipientRef ? { recipientRef: projected.value.recipientRef } : {}), state: projected.value.state, messages: projected.value.messages, ...projected.value.historical } }
+     }
+     return threads.read(id, context)
+--- a/modules/sucafina/Sucafinav1/product/collaboration/thread-history.ts
++++ b/modules/sucafina/Sucafinav1/product/collaboration/thread-history.ts
+@@ -5,7 +5,7 @@
+ import type { CollaborationHumanAuthority } from "./human.ts"
+ import type { CollaborationMutationFence } from "./mutation-fence.ts"
+ import type { createRecipientAwareThreadReads } from "./thread-reads.ts"
+-import { isThread } from "./threads.ts"
++import { isThread, sameThreadReadScope } from "./threads.ts"
+ import type { CollaborationThread } from "./threads.ts"
+ import { threadMessageContext } from "./thread-context.ts"
+ import type { ThreadSourceContext } from "./thread-context.ts"
+@@ -32,14 +32,31 @@
+ }) {
+   const load = async (id: string, context: TrustedDomainContext, historical = false): Promise<PortResult<{ thread: RevisionThread; visible: CollaborationThread }>> => {
+     const request = input.host.requestFor(context)
+-    if (!request || !await input.host.revalidate(context)) return { status: "denied", reason: "thread-access-unavailable" }
+-    const visible = await (historical && input.readHistorical ? input.readHistorical : input.read)(id, context)
+-    if (visible.status !== "ok") return visible
+-    const raw = await input.state.read(request, "threads", (state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? state.threads[id] : undefined)
+-    if (raw.status !== "ok" || !isThread(raw.value) || raw.value.id !== id || digestSfValue(raw.value.messages) !== digestSfValue(visible.value.messages) || !await input.host.revalidate(context)) return { status: "unavailable", reason: "thread-access-unavailable" }
+-    const thread = raw.value as RevisionThread
+-    if (thread.messageRevisions !== undefined && (!Array.isArray(thread.messageRevisions) || thread.messageRevisions.some((message) => !message || typeof message.id !== "string" || typeof message.incarnation !== "string" || !Number.isSafeInteger(message.version) || message.version < 1 || typeof message.body !== "string" || typeof message.authorRef !== "string" || typeof message.createdAt !== "string"))) return { status: "unavailable", reason: "thread-history-unavailable" }
+-    return { status: "ok", value: { thread, visible: visible.value } }
++    const currentAccess = async () => !!request && input.host.requestFor(context) === request && await input.host.revalidate(context) && input.host.requestFor(context) === request
++    try {
++      if (!request || !await currentAccess()) return { status: "denied", reason: "thread-access-unavailable" }
++      const visible = await (historical && input.readHistorical ? input.readHistorical : input.read)(id, context)
++      if (visible.status !== "ok") return visible
++      const raw = await input.state.read(request, "threads", (state, authority) => {
++        const bound = authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion
++        return { bound, thread: bound ? state.threads[id] : undefined }
++      })
++      if (input.host.requestFor(context) !== request || !await input.host.revalidate(context)) return { status: "denied", reason: "thread-access-unavailable" }
++      if ("reason" in raw) return raw
++      if (raw.status !== "ok") return { status: "unavailable", reason: "thread-read-unavailable" }
++      if (!raw.value.bound) return { status: "denied", reason: "thread-access-binding-changed" }
++      if (raw.value.thread === undefined) return { status: "denied", reason: "thread-target-changed" }
++      if (!isThread(raw.value.thread)) return { status: "unavailable", reason: "thread-read-unavailable" }
++      if (raw.value.thread.id !== id || raw.value.thread.kind !== visible.value.kind || raw.value.thread.recipientRef !== visible.value.recipientRef || raw.value.thread.observedVersion !== visible.value.observedVersion || digestSfValue(raw.value.thread.period) !== digestSfValue(visible.value.period) || visible.value.messages[0]?.sourceContext?.reviewContext && !sameThreadReadScope(visible.value, raw.value.thread)) return { status: "denied", reason: "thread-target-changed" }
++      if (digestSfValue(raw.value.thread.messages) !== digestSfValue(visible.value.messages)) return { status: "stale", reason: "thread-content-changed" }
++      const thread = raw.value.thread as RevisionThread
++      if (thread.messageRevisions !== undefined && (!Array.isArray(thread.messageRevisions) || thread.messageRevisions.some((message) => !message || typeof message.id !== "string" || typeof message.incarnation !== "string" || !Number.isSafeInteger(message.version) || message.version < 1 || typeof message.body !== "string" || typeof message.authorRef !== "string" || typeof message.createdAt !== "string"))) return { status: "unavailable", reason: "thread-history-unavailable" }
++      return { status: "ok", value: { thread, visible: visible.value } }
++    } catch {
++      const authorized = await currentAccess().catch(() => undefined)
++      if (authorized === false) return { status: "denied", reason: "thread-access-unavailable" }
++      return { status: "unavailable", reason: "thread-read-unavailable" }
++    }
+   }
+   return {
+     edit: async (id: string, messageId: string, expectedVersion: number, body: string, mutation: Mutation, context: TrustedDomainContext): Promise<PortResult<{ id: string; messageId: string; version: number }>> => {
+@@ -53,9 +70,15 @@
+       const message = prior.messages.find((entry) => entry.id === selected.messageId)
+       if (!message || message.authorRef !== context.binding.principalRef || message.version >= Number.MAX_SAFE_INTEGER) return { status: "denied", reason: "thread-access-unavailable" }
+       const basis = threadMessageContext(prior, message)
+-      if (!basis || input.authorizeSources && !await input.authorizeSources(basis, context)) return { status: "unavailable", reason: "thread-history-unavailable" }
++      if (!basis) return { status: "unavailable", reason: "thread-history-unavailable" }
++      const readable = input.authorizeSources ? await input.authorizeSources(basis, context).catch(() => undefined) : true
++      if (readable === false || input.host.requestFor(context) !== request || !await input.host.revalidate(context) || input.host.requestFor(context) !== request) return { status: "denied", reason: "thread-history-unavailable" }
++      if (readable !== true) return { status: "unavailable", reason: "thread-read-unavailable" }
+       const review = basis.reviewContext ? await input.state.read(request, "reviews", (_state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion) : undefined
+-      if (basis.reviewContext && (review?.status !== "ok" || !review.value)) return { status: "denied", reason: "review-thread-context-unavailable" }
++      if (review && (input.host.requestFor(context) !== request || !await input.host.revalidate(context) || input.host.requestFor(context) !== request)) return { status: "denied", reason: "review-thread-context-unavailable" }
++      if (review && "reason" in review) return review
++      if (basis.reviewContext && review?.status !== "ok") return { status: "unavailable", reason: "review-thread-context-unavailable" }
++      if (review?.status === "ok" && !review.value) return { status: "denied", reason: "review-thread-context-unavailable" }
+       const prepareReviewFence = input.prepareReviewThreadFence
+       const checkReviewRecipient = input.checkReviewRecipientAtCommit
+       const reviewFence = basis.reviewContext && prepareReviewFence ? await prepareReviewFence(basis, context) : undefined
+@@ -73,23 +96,36 @@
+       input.threadHistoryWrites.add(work)
+       const saved = await input.state.transaction(request, { namespace: "threads", ...selected.mutation, ...(review?.status === "ok" ? { sourceFence: "all" as const, checkNamespaces: [{ namespace: "reviews" as const, expectedStorageVersion: review.storageVersion }] } : {}), commandDigest: digestSfValue({ id, messageId, expectedVersion, body }), targetRef: input.target.ref, targetIncarnation: input.target.incarnation }, work).finally(() => input.threadHistoryWrites.delete(work))
+       if (saved.status === "preview") return { status: "conflict", reason: "thread-changed" }
+-      if (saved.status !== "ok" || !saved.value) return { status: "unavailable", reason: "thread-access-unavailable" }
++      if ("reason" in saved) return saved
++      if (!saved.value) return { status: "unavailable", reason: "thread-access-unavailable" }
+       const current = await load(id, context)
+-      if (current.status !== "ok" || !current.value.thread.messages.some((entry) => entry.id === message.id && entry.incarnation === message.incarnation && entry.version === saved.value) || !await input.host.revalidate(context)) return { status: "unavailable", reason: "thread-access-unavailable" }
++      if (current.status !== "ok") return current
++      if (input.host.requestFor(context) !== request || !await input.host.revalidate(context) || input.host.requestFor(context) !== request || !sameThreadReadScope(prior, current.value.thread)) return { status: "denied", reason: "thread-access-unavailable" }
++      if (!current.value.thread.messages.some((entry) => entry.id === message.id && entry.incarnation === message.incarnation && entry.version === saved.value)) return { status: "stale", reason: "thread-content-changed" }
+       return { status: "ok", value: { id, messageId, version: saved.value } }
+     },
+     readVersion: async (id: string, messageId: string, incarnation: string, version: number, context: TrustedDomainContext): Promise<PortResult<{ message: Message } & ThreadSourceContext>> => {
+-      if (typeof id !== "string" || !id.trim() || typeof messageId !== "string" || !messageId.trim() || typeof incarnation !== "string" || !incarnation.trim() || !Number.isSafeInteger(version) || version < 1) return { status: "needs-input", reason: "invalid-message-version" }
+-      const first = await load(id, context, true)
+-      if (first.status !== "ok") return first
+-      const matches = [...first.value.thread.messages, ...(first.value.thread.messageRevisions ?? [])].filter((message) => message.id === messageId && message.incarnation === incarnation && message.version === version)
+-      if (matches.length !== 1) return { status: "unavailable", reason: "thread-history-unavailable" }
+-      const basis = threadMessageContext(first.value.thread, matches[0]!)
+-      if (!basis || input.authorizeSources && !await input.authorizeSources(basis, context) || !input.authorizeSources && digestSfValue(basis.evidenceRefs) !== digestSfValue(first.value.visible.evidenceRefs)) return { status: "unavailable", reason: "thread-history-unavailable" }
+-      const again = await load(id, context, true)
+-      if (again.status !== "ok" || digestSfValue(again.value.thread) !== digestSfValue(first.value.thread) || digestSfValue(again.value.visible.evidenceRefs) !== digestSfValue(first.value.visible.evidenceRefs) || !await input.host.revalidate(context)) return { status: "unavailable", reason: "thread-history-unavailable" }
+-      if (input.authorizeSources && !await input.authorizeSources(basis, context) || !await input.host.revalidate(context)) return { status: "unavailable", reason: "thread-history-unavailable" }
+-      return { status: "ok", value: { message: matches[0]!, ...basis } }
++      const request = input.host.requestFor(context)
++      const currentAccess = async () => !!request && input.host.requestFor(context) === request && await input.host.revalidate(context) && input.host.requestFor(context) === request
++      try {
++        if (typeof id !== "string" || !id.trim() || typeof messageId !== "string" || !messageId.trim() || typeof incarnation !== "string" || !incarnation.trim() || !Number.isSafeInteger(version) || version < 1) return { status: "needs-input", reason: "invalid-message-version" }
++        const first = await load(id, context, true)
++        if (first.status !== "ok") return first
++        const matches = [...first.value.thread.messages, ...(first.value.thread.messageRevisions ?? [])].filter((message) => message.id === messageId && message.incarnation === incarnation && message.version === version)
++        if (matches.length !== 1) return { status: "unavailable", reason: "thread-history-unavailable" }
++        const basis = threadMessageContext(first.value.thread, matches[0]!)
++        if (!basis) return { status: "unavailable", reason: "thread-history-unavailable" }
++        if (input.authorizeSources && !await input.authorizeSources(basis, context) || !input.authorizeSources && digestSfValue(basis.evidenceRefs) !== digestSfValue(first.value.visible.evidenceRefs)) return { status: "denied", reason: "thread-history-unavailable" }
++        const again = await load(id, context, true)
++        if (again.status !== "ok") return again
++        if (!sameThreadReadScope(first.value.thread, again.value.thread) || input.authorizeSources && !await input.authorizeSources(basis, context) || !await input.host.revalidate(context)) return { status: "denied", reason: "thread-history-unavailable" }
++        if (digestSfValue(again.value.thread) !== digestSfValue(first.value.thread) || digestSfValue(again.value.visible.evidenceRefs) !== digestSfValue(first.value.visible.evidenceRefs)) return { status: "stale", reason: "thread-content-changed" }
++        return { status: "ok", value: { message: matches[0]!, ...basis } }
++      } catch {
++        const authorized = await currentAccess().catch(() => undefined)
++        if (authorized === false) return { status: "denied", reason: "thread-access-unavailable" }
++        return { status: "unavailable", reason: "thread-read-unavailable" }
++      }
+     },
+   }
+ }
+--- a/modules/sucafina/Sucafinav1/product/collaboration/http.ts
++++ b/modules/sucafina/Sucafinav1/product/collaboration/http.ts
+@@ -32,12 +32,16 @@
+     const keys = [...route.keys, ...(route.optional ?? [])]
+     if (Object.keys(payload).some((key) => !keys.includes(key)) || route.keys.some((key) => !Object.hasOwn(payload, key)) || route.validate && !route.validate(payload)) return reply({ status: "needs-input", reason: "invalid-collaboration-payload" })
+     if (request.signal.aborted) return reply({ status: "unavailable", reason: "collaboration-request-cancelled" })
+-    const admitted = await (route.action ? input.human.admit(request, route.action, payload) : input.admitRead(request, route.read!, payload)).catch(() => ({ status: "denied" as const, reason: "collaboration-authority-unavailable" }))
++    const admitted = await (route.action ? input.human.admit(request, route.action, payload) : input.admitRead(request, route.read!, payload)).catch(() => ({ status: "unavailable" as const, reason: "collaboration-authority-unavailable" }))
+     if (admitted.status !== "ok") return reply(admitted)
+     try {
++      // An expected revision is an identity fence, never an access grant. The
++      // host digest already binds installation, project, principal and scope.
++      const expectedBinding = request.headers.get("X-SF-Review-Binding")
++      if (expectedBinding !== null && (!/^[a-f0-9]{64}$/.test(expectedBinding) || expectedBinding !== admitted.value.binding.accessRevision)) return reply({ status: "denied", reason: "review-discussion-binding-changed" })
+       const result = await Promise.resolve().then(() => route.invoke(payload, admitted.value)).catch(() => ({ status: "unavailable" as const, reason: "collaboration-operation-unavailable" }))
+       if (request.signal.aborted) return reply({ status: "unavailable", reason: "collaboration-request-cancelled" })
+-      return reply(result)
++      return reply(result, undefined, expectedBinding === null ? undefined : admitted.value.binding.accessRevision)
+     } finally {
+       if (route.action) input.human.finish(admitted.value)
+       if (!route.action) input.finishRead(admitted.value)
+@@ -45,8 +49,8 @@
+   }
+ }
+ 
+-function reply(result: PortResult<unknown>, status = result.status === "ok" ? 200 : result.status === "needs-input" ? 400 : result.status === "denied" ? 403 : ["stale", "conflict", "provider-conflict"].includes(result.status) ? 409 : 503) {
+-  return Response.json(result, { status, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } })
++function reply(result: PortResult<unknown>, status = result.status === "ok" ? 200 : result.status === "needs-input" ? 400 : result.status === "denied" ? 403 : ["stale", "conflict", "provider-conflict"].includes(result.status) ? 409 : 503, reviewBinding?: string) {
++  return Response.json(result, { status, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff", ...(reviewBinding === undefined ? {} : { "X-SF-Review-Binding": reviewBinding }) } })
+ }
+ 
+ async function bounded(request: Request, limit: number) {
+--- a/modules/sucafina/Sucafinav1/product/reviews/http.ts
++++ b/modules/sucafina/Sucafinav1/product/reviews/http.ts
+@@ -38,6 +38,7 @@
+   maxBodyBytes: number
+ }) {
+   if (!URL.canParse(input.origin) || new URL(input.origin).origin !== input.origin || !Number.isSafeInteger(input.maxBodyBytes) || input.maxBodyBytes <= 0) throw new Error("SF_REVIEW_HTTP_CONFIG_INVALID")
++  const readStatus = (status: string) => status === "ok" ? 200 : status === "denied" ? 403 : status === "needs-input" ? 400 : status === "stale" || status === "conflict" ? 409 : 503
+   return async (request: Request, surface: string): Promise<Response | undefined> => {
+     const url = new URL(request.url)
+     const mode = url.searchParams.get("sf")
+@@ -79,17 +80,28 @@
+         const authorize = producer.authorize
+         const current = () => input.threadContext === producer && producer.prepare === prepare && producer.authorize === authorize
+         const digest = digestSfValue(selected)
+-        const admitted = await input.ui.admit(request, "sf_review_prepare", digest)
+-        if (admitted.status !== "ok") return json({ status: "denied", reason: "review-thread-context-unavailable" }, 403)
+-        try {
++        const admitted = await input.ui.admit(request, "sf_review_prepare", digest).catch(() => ({ status: "unavailable" as const, reason: "review-authority-unavailable" }))
++        if (admitted.status !== "ok") return json(admitted, readStatus(admitted.status))
++        try {
++          const expectedBinding = request.headers.get("X-SF-Review-Binding")
++          if (expectedBinding !== null && (!/^[a-f0-9]{64}$/.test(expectedBinding) || expectedBinding !== admitted.value.binding.accessRevision)) return json({ status: "denied", reason: "review-discussion-binding-changed" }, 403)
+           if (!current() || !await input.ui.validate(admitted.value, "sf_review_prepare", digest) || input.ui.requestFor(admitted.value) !== request || !await input.ui.revalidate(admitted.value)) return json({ status: "denied", reason: "review-thread-context-unavailable" }, 403)
+           const result = await prepare.call(producer, { reviewRef: selected.reviewRef, sectionId: selected.sectionId }, structuredClone(selected.basis), admitted.value).catch(() => undefined)
+-          if (!current() || !result) return json({ status: "unavailable", reason: "review-thread-context-unavailable" }, 503)
+-          if (result.status !== "ok") return json({ status: result.status === "needs-input" ? "needs-input" : result.status === "denied" ? "denied" : "unavailable", reason: "review-thread-context-unavailable" }, result.status === "needs-input" ? 400 : result.status === "denied" ? 403 : 503)
++          if (!current() || !await input.ui.revalidate(admitted.value) || input.ui.requestFor(admitted.value) !== request) return json({ status: "denied", reason: "review-thread-context-unavailable" }, 403)
++          if (!result) return json({ status: "unavailable", reason: "review-thread-context-unavailable" }, 503)
++          if (result.status !== "ok") return json(result, readStatus(result.status))
+           if (!isReviewThreadContext(result.value) || result.value.reviewRef !== selected.reviewRef || result.value.sectionId !== selected.sectionId) return json({ status: "unavailable", reason: "review-thread-context-unavailable" }, 503)
+           const pin = structuredClone(result.value)
+-          if (!await authorize.call(producer, structuredClone(pin), structuredClone(selected.basis), admitted.value).catch(() => false) || !current() || !await input.ui.revalidate(admitted.value) || !current() || input.ui.requestFor(admitted.value) !== request) return json({ status: "denied", reason: "review-thread-context-unavailable" }, 403)
+-          return json({ status: "ok", value: { reviewRef: pin.reviewRef, reviewVersion: pin.reviewVersion, reviewDigest: pin.reviewDigest, sectionId: pin.sectionId } }, 200)
++          const authorized = await authorize.call(producer, structuredClone(pin), structuredClone(selected.basis), admitted.value).catch(() => undefined)
++          if (authorized === false || !current() || !await input.ui.revalidate(admitted.value) || !current() || input.ui.requestFor(admitted.value) !== request) return json({ status: "denied", reason: "review-thread-context-unavailable" }, 403)
++          if (authorized !== true) return json({ status: "unavailable", reason: "review-thread-context-unavailable" }, 503)
++          const response = json({ status: "ok", value: { reviewRef: pin.reviewRef, reviewVersion: pin.reviewVersion, reviewDigest: pin.reviewDigest, sectionId: pin.sectionId } }, 200)
++          if (expectedBinding !== null) response.headers.set("X-SF-Review-Binding", admitted.value.binding.accessRevision)
++          return response
++        } catch {
++          const authorized = await input.ui.revalidate(admitted.value).catch(() => undefined)
++          if (authorized === false || !current() || input.ui.requestFor(admitted.value) !== request) return json({ status: "denied", reason: "review-thread-context-unavailable" }, 403)
++          return json({ status: "unavailable", reason: "review-thread-context-unavailable" }, 503)
+         } finally { input.ui.finish(admitted.value) }
+       }
+       if (mode === "review-contribution") {
+@@ -158,13 +170,17 @@
+       const closureRef = url.searchParams.get("closureRef") ?? ""
+       if (!/^review-closure:[a-f0-9]{64}$/.test(closureRef)) return json({ status: "needs-input", reason: "invalid-reference" }, 400)
+       const digest = digestSfValue({ closureRef })
+-      const admitted = await input.ui.admit(request, "sf_review_prepare", digest)
+-      if (admitted.status !== "ok") return json({ status: "denied", reason: "closure-unavailable" }, 403)
++      const admitted = await input.ui.admit(request, "sf_review_prepare", digest).catch(() => ({ status: "unavailable" as const, reason: "review-authority-unavailable" }))
++      if (admitted.status !== "ok") return json(admitted, readStatus(admitted.status))
+       try {
+         if (!await input.ui.validate(admitted.value, "sf_review_prepare", digest) || input.ui.requestFor(admitted.value) !== request) return json({ status: "denied", reason: "closure-unavailable" }, 403)
+         const result = await input.closure.read(closureRef, admitted.value)
+-        if (result.status !== "ok" || !await input.ui.revalidate(admitted.value)) return json({ status: "denied", reason: "closure-unavailable" }, 403)
+-        return json(result, 200)
++        if (!await input.ui.revalidate(admitted.value) || input.ui.requestFor(admitted.value) !== request) return json({ status: "denied", reason: "closure-unavailable" }, 403)
++        return json(result, result.status === "ok" ? 200 : result.status === "denied" ? 403 : result.status === "needs-input" ? 400 : result.status === "stale" || result.status === "conflict" ? 409 : 503)
++      } catch {
++        const authorized = await input.ui.revalidate(admitted.value).catch(() => undefined)
++        if (authorized === false || input.ui.requestFor(admitted.value) !== request) return json({ status: "denied", reason: "closure-unavailable" }, 403)
++        return json({ status: "unavailable", reason: "closure-unavailable" }, 503)
+       } finally { input.ui.finish(admitted.value) }
+     }
+     if (request.method !== "GET") return json({ status: "denied", reason: "method-unavailable" }, 405)
+@@ -175,8 +191,8 @@
+     const commentId = currentConversation ? url.searchParams.get("commentId") ?? "" : undefined
+     if (currentConversation && (!commentId?.trim() || commentId.length > 8192)) return json({ status: "needs-input", reason: "invalid-reference" }, 400)
+     const digest = digestSfValue(currentConversation ? { reviewRef, commentId } : { reviewRef })
+-    const admitted = await input.ui.admit(request, "sf_review_prepare", digest)
+-    if (admitted.status !== "ok") return json({ status: "denied", reason: "review-unavailable" }, 403)
++    const admitted = await input.ui.admit(request, "sf_review_prepare", digest).catch(() => ({ status: "unavailable" as const, reason: "review-authority-unavailable" }))
++    if (admitted.status !== "ok") return json(admitted, readStatus(admitted.status))
+     try {
+       if (!await input.ui.validate(admitted.value, "sf_review_prepare", digest) || input.ui.requestFor(admitted.value) !== request || !await input.ui.revalidate(admitted.value)) return json({ status: "denied", reason: "review-unavailable" }, 403)
+       if (currentConversation) {
+@@ -192,8 +208,12 @@
+         return json(result, result.status === "ok" ? 200 : result.status === "denied" ? 403 : result.status === "needs-input" ? 400 : result.status === "conflict" || result.status === "stale" ? 409 : 503)
+       }
+       const result = await input.reviews.read(reviewRef, admitted.value)
+-      if (result.status !== "ok" || !await input.ui.revalidate(admitted.value)) return json({ status: "unavailable", reason: "review-unavailable" }, 403)
+-      return json(result, 200)
++      if (!await input.ui.revalidate(admitted.value) || input.ui.requestFor(admitted.value) !== request) return json({ status: "denied", reason: "review-unavailable" }, 403)
++      return json(result, result.status === "ok" ? 200 : result.status === "denied" ? 403 : result.status === "needs-input" ? 400 : result.status === "stale" || result.status === "conflict" ? 409 : 503)
++    } catch {
++      const authorized = await input.ui.revalidate(admitted.value).catch(() => undefined)
++      if (authorized === false || input.ui.requestFor(admitted.value) !== request) return json({ status: "denied", reason: "review-unavailable" }, 403)
++      return json({ status: "unavailable", reason: "review-unavailable" }, 503)
+     } finally {
+       input.ui.finish(admitted.value)
+     }
+--- a/apps/cli/src/sucafina-product/extended-browser.ts
++++ b/apps/cli/src/sucafina-product/extended-browser.ts
+@@ -29,6 +29,7 @@
+ }
+ if (root && bootstrap) {
+   const value = JSON.parse(bootstrap.textContent ?? "null")
++  const accessRevision = document.querySelector<HTMLMetaElement>('meta[name="sf-access-revision"]')?.content
+   bootstrap.remove()
+   let closed = false, generation = 0
+   let dispose = () => {}
+@@ -67,7 +68,11 @@
+     const timer = setTimeout(() => controller.abort(), 30_000)
+     try {
+       const response = await fetch(location.href, { credentials: "same-origin", cache: "no-store", signal: controller.signal })
+-      if (accessDenied(response)) clearPrivate()
++      const echoedAccess = response.headers.get("X-SF-Access-Revision")
++      if (accessDenied(response) || echoedAccess !== null && accessRevision !== undefined && echoedAccess !== accessRevision) {
++        clearPrivate()
++        window.dispatchEvent(new Event("sf-access-revoked"))
++      }
+       await response.body?.cancel()
+     } catch { /* A network failure does not authorize a new render or erase preserved history. */ }
+     finally { clearTimeout(timer); pending.delete(controller); probing = false }
+--- a/modules/sucafina/Sucafinav1/product/collaboration/authority.ts
++++ b/modules/sucafina/Sucafinav1/product/collaboration/authority.ts
+@@ -42,6 +42,25 @@
+     if (!authorize || !validThreadSourceContext(selected) || !await input.host.revalidate(context)) return false
+     return await authorize(selected.reviewContext!, selected, context).catch(() => false) && input.authorizeReviewThreadContext === authorize && await input.host.revalidate(context)
+   }
++  // Read authorization preserves uncertainty separately from explicit refusal.
++  // Legacy boolean probes below still negotiate actor-scoped reissue; these
++  // strict readers never grant access from an incomplete provider response.
++  const readSources = async (refs: readonly BusinessEvidenceRef[], context: TrustedDomainContext, historical = false) => {
++    if (!refs.length || refs.some((ref) => !ref || typeof ref !== "object" || ref.installationId !== context.binding.installationId || ref.projectId !== context.binding.projectId) || !await input.host.revalidate(context)) return false
++    const resolved = await input.evidence.context({ refs: structuredClone(refs) }, context)
++    if (!await input.host.revalidate(context) || resolved.some((item) => ["revoked", "replaced", "missing", "invalid"].includes(item.state))) return false
++    if (resolved.length !== refs.length || resolved.some((item) => item.state !== "fresh" && !(historical && item.state === "historical" && !!item.currentRef && !!item.authorizedProjection && !!item.differences))) throw new Error("COLLABORATION_SOURCE_READ_UNAVAILABLE")
++    return resolved.every((item, index) => item.accessRevision === context.binding.accessRevision && digestSfValue(item.ref) === digestSfValue(refs[index])) && await input.host.revalidate(context)
++  }
++  const readHistoricalSources = (refs: readonly BusinessEvidenceRef[], context: TrustedDomainContext) => readSources(refs, context, true)
++  const readReviewThreadBasis = async (basis: ThreadSourceContext, context: TrustedDomainContext) => {
++    if (!basis.reviewContext) return true
++    const authorize = input.authorizeReviewThreadContext
++    const selected = structuredClone(basis)
++    if (!validThreadSourceContext(selected) || !await input.host.revalidate(context)) return false
++    if (!authorize) throw new Error("COLLABORATION_REVIEW_AUTHORITY_UNAVAILABLE")
++    return await authorize(selected.reviewContext!, selected, context) && input.authorizeReviewThreadContext === authorize && await input.host.revalidate(context)
++  }
+   const reviewRecipientSources = async (recipientRef: string, basis: ThreadSourceContext, context: TrustedDomainContext, requireSelfLease = false) => {
+     const selected = structuredClone(basis)
+     if (!recipientRef.trim() || !selected.reviewContext || !validThreadSourceContext(selected) || !await reviewThreadBasis(selected, context) || !await historicalSources(selected.evidenceRefs, context)) return false
+@@ -70,7 +89,7 @@
+     return true
+   }
+   const recipientSources = createRecipientSourceAuthorizer({ sources, revalidate: input.host.revalidate, recipientAuthority: input.recipientAuthority })
+-  const recipient = async (id: string, context: TrustedDomainContext) => {
++  const recipient = async (id: string, context: TrustedDomainContext, strictRead = false) => {
+     const request = input.host.requestFor(context)
+     if (!request || !id.trim() || !await input.host.revalidate(context)) return undefined
+     const environment = await input.host.environment(request)
+@@ -80,7 +99,7 @@
+       const actor = await input.host.authenticate(request, { surface: "dashboard", roleMap: roleMap(snapshot, "dashboard") })
+       const access = object(snapshot.data.access)
+       return { commit: false, value: !!actor && actor.id === context.binding.principalRef && !actor.id.startsWith("local:") && Object.hasOwn(access, id) && !!access[id] && typeof access[id] === "object" && !Array.isArray(access[id]) }
+-    }, { signal: request.signal }).catch(() => false)
++    }, { signal: request.signal }).catch((error: unknown) => { if (strictRead) throw error; return false })
+     if (!allowed || !await input.host.revalidate(context)) return undefined
+     return { id: person.id, name: person.name }
+   }
+@@ -88,7 +107,11 @@
+     sources,
+     historicalSources,
+     reviewThreadBasis,
++    readSources,
++    readHistoricalSources,
++    readReviewThreadBasis,
+     recipient,
++    readRecipient: (id: string, context: TrustedDomainContext) => recipient(id, context, true),
+     recipientSources,
+     reviewRecipientSources,
+     checkRecipientAtCommit: createRecipientCommitCheck(input.recipientAuthority),
+@@ -105,12 +128,12 @@
+       if (!Array.isArray(thread.evidenceRefs) || thread.evidenceRefs.some((ref) => !ref || typeof ref !== "object")) return false
+       const pin = thread.messages ? thread.messages[0]?.sourceContext?.reviewContext : thread.reviewContext
+       const basis = pin ? { sourceRef: thread.sourceRef, sourceIncarnation: thread.sourceIncarnation, observedVersion: thread.observedVersion, period: thread.period, evidenceRefs: thread.evidenceRefs, reviewContext: pin } : undefined
+-      if (basis && (!validThreadSourceContext(basis) || !await reviewThreadBasis(basis, context) || mode === "write" && thread.recipientRef && !await reviewRecipientSources(thread.recipientRef, basis, context))) return false
+-      const authorizeSources = pin ? historicalSources : sources
++      if (basis && (!validThreadSourceContext(basis) || !await (mode === "read" ? readReviewThreadBasis : reviewThreadBasis)(basis, context) || mode === "write" && thread.recipientRef && !await reviewRecipientSources(thread.recipientRef, basis, context))) return false
++      const authorizeSources = mode === "read" ? pin ? readHistoricalSources : readSources : pin ? historicalSources : sources
+       if (!thread.evidenceRefs.some((ref) => ref.refId === thread.sourceRef) || !await authorizeSources(thread.evidenceRefs, context)) return false
+       const messageRefs = [...new Map((thread.messages ?? []).flatMap((message) => message.sourceContext?.evidenceRefs ?? []).map((ref) => [ref.refDigest, ref])).values()]
+       if (messageRefs.length && !await authorizeSources(messageRefs, context)) return false
+-      if (thread.recipientRef && (!await recipient(thread.recipientRef, context) || mode === "write" && !pin && !await recipientSources(thread.recipientRef, thread.evidenceRefs, context))) return false
++      if (thread.recipientRef && (!await recipient(thread.recipientRef, context, mode === "read") || mode === "write" && !pin && !await recipientSources(thread.recipientRef, thread.evidenceRefs, context))) return false
+       if (!thread.messages) return mode === "write"
+       return thread.recipientRef === context.binding.principalRef || thread.messages.some((message) => message.authorRef === context.binding.principalRef)
+     },
+--- a/modules/sucafina/Sucafinav1/product/collaboration/host.ts
++++ b/modules/sucafina/Sucafinav1/product/collaboration/host.ts
+@@ -109,7 +109,7 @@
+   const baseSelections = input.workSelections ?? createWorkSelectionPort({ collections: input.collections, authority, captureMember: input.captureWorkSource })
+   const caseSelection = input.caseSelectionWrites ? createCaseWorkSelection({ host: input.host, state: input.state, cases: input.cases, authority, human: input.human, fence: createCollaborationMutationFence(input.host), fallback: baseSelections, reissue, refreshWorkSource, workCaseAuthority: input.workCaseAuthority, target: input.creationTarget, createId: input.createId, caseSelectionWrites: input.caseSelectionWrites }) : undefined
+   const selections = caseSelection?.port ?? baseSelections
+-  const recipientThread = reissue ? createRecipientThreadReader({ host: input.host, state: input.state, reissue, refresh: refreshThreadSource, authorize: authority.sources, authorizeHistorical: authority.historicalSources, authorizeContext: authority.reviewThreadBasis }) : undefined
++  const recipientThread = reissue ? createRecipientThreadReader({ host: input.host, state: input.state, reissue, refresh: refreshThreadSource, authorize: authority.readSources, authorizeHistorical: authority.readHistoricalSources, authorizeContext: authority.readReviewThreadBasis }) : undefined
+   const authorizeThreadSourceContinuity = reissue ? createThreadSourceContinuity({ host: input.host, reissue, refresh: refreshThreadSource, authorizeHistorical: authority.historicalSources }) : undefined
+   const confirmation = (() => {
+     if (!input.confirmationSource || typeof input.confirmationSource.verifyManifest !== "function" || typeof input.confirmationSource.fenceManifest !== "function") return undefined
+@@ -163,7 +163,7 @@
+   }
+   const recipientActions = recipientThread ? createRecipientThreadActions({ state: input.state, host: input.host, human: input.human, mutationFence: createCollaborationMutationFence(input.host), read: recipientThread, prepareReviewThreadFence, authorizeReviewRecipient: authority.reviewRecipientSources, checkReviewRecipientAtCommit: authority.checkReviewRecipientAtCommit, answerWork: answerWork?.project, creationTarget: input.creationTarget, createId: input.createId, now: input.now }) : undefined
+   const answerEvidence = createThreadAnswerEvidence(threadReads)
+-  const threadHistory = input.threadHistoryWrites ? createThreadHistory({ host: input.host, state: input.state, read: threadReads.read, readHistorical: threadReads.readHistorical, prepareReviewThreadFence, authorizeReviewRecipient: authority.reviewRecipientSources, checkReviewRecipientAtCommit: authority.checkReviewRecipientAtCommit, authorizeSources: async (basis, context) => await authority.historicalSources(basis.evidenceRefs, context) && await authority.reviewThreadBasis(basis, context), human: input.human, fence: createCollaborationMutationFence(input.host), target: input.creationTarget, threadHistoryWrites: input.threadHistoryWrites }) : undefined
++  const threadHistory = input.threadHistoryWrites ? createThreadHistory({ host: input.host, state: input.state, read: threadReads.read, readHistorical: threadReads.readHistorical, prepareReviewThreadFence, authorizeReviewRecipient: authority.reviewRecipientSources, checkReviewRecipientAtCommit: authority.checkReviewRecipientAtCommit, authorizeSources: async (basis, context) => await authority.readHistoricalSources(basis.evidenceRefs, context) && await authority.readReviewThreadBasis(basis, context), human: input.human, fence: createCollaborationMutationFence(input.host), target: input.creationTarget, threadHistoryWrites: input.threadHistoryWrites }) : undefined
+   const storageVersion = async (namespace: "threads" | "relations" | "confirmations", context: TrustedDomainContext): Promise<PortResult<number>> => {
+     const request = input.host.requestFor(context)
+     if (!request || !await input.host.revalidate(context)) return { status: "denied", reason: "collaboration-state-unavailable" }
+@@ -178,8 +178,8 @@
+     const directory = (await input.host.environment(request)).directory
+     if (directory.length > 1000) return { status: "unavailable", reason: "recipient-directory-unavailable" }
+     const candidates = directory.filter((person) => person.id.trim() && person.name.trim() && directory.filter((other) => other.id === person.id).length === 1)
+-    const permitted = await Promise.all(candidates.map((person) => authority.recipient(person.id, context)))
+-    const confirmed = await Promise.all(permitted.filter((person): person is { id: string; name: string } => !!person).map((person) => authority.recipient(person.id, context)))
++    const permitted = await Promise.all(candidates.map((person) => authority.readRecipient(person.id, context)))
++    const confirmed = await Promise.all(permitted.filter((person): person is { id: string; name: string } => !!person).map((person) => authority.readRecipient(person.id, context)))
+     const current = (await input.host.environment(request)).directory
+     if (confirmed.some((person) => !person) || digestSfValue(current) !== digestSfValue(directory) || !await input.host.revalidate(context)) return { status: "unavailable", reason: "recipient-directory-unavailable" }
+     return { status: "ok", value: confirmed.filter((person): person is { id: string; name: string } => !!person).sort((a, b) => a.name.localeCompare(b.name) || a.id.localeCompare(b.id)) }
+--- a/modules/sucafina/Sucafinav1/product/reviews/thread-context.ts
++++ b/modules/sucafina/Sucafinav1/product/reviews/thread-context.ts
+@@ -35,12 +35,15 @@
+     const current = () => input.reviews === reviews && input.host === host && reviews.read === readReview && host.revalidate === revalidate
+     if (!current() || !await revalidate.call(host, context) || !current()) return { status: "denied", reason: "review-thread-context-unavailable" }
+     const first = await readReview.call(reviews, selected.selection.reviewRef, context)
+-    if (!current() || first.status !== "ok") return { status: "denied", reason: "review-thread-context-unavailable" }
++    if (!current() || !await revalidate.call(host, context) || !current()) return { status: "denied", reason: "review-thread-context-unavailable" }
++    if (first.status !== "ok") return first
+     const review = structuredClone(first.value)
+     const pin: ReviewThreadContext = { reviewRef: review.id, reviewVersion: review.version, reviewDigest: digestSfValue(review), sectionId: selected.selection.sectionId }
+     if (!isReviewThreadContext(pin) || pin.reviewRef !== selected.selection.reviewRef || selected.expected && digestSfValue(selected.expected) !== digestSfValue(pin) || !containsBasis(review, pin, selected.basis)) return { status: "denied", reason: "review-thread-context-unavailable" }
+     const again = await readReview.call(reviews, selected.selection.reviewRef, context)
+-    if (!current() || again.status !== "ok" || digestSfValue(again.value) !== pin.reviewDigest || !containsBasis(again.value, pin, selected.basis) || !await revalidate.call(host, context) || !current()) return { status: "denied", reason: "review-thread-context-unavailable" }
++    if (!current() || !await revalidate.call(host, context) || !current()) return { status: "denied", reason: "review-thread-context-unavailable" }
++    if (again.status !== "ok") return again
++    if (digestSfValue(again.value) !== pin.reviewDigest || !containsBasis(again.value, pin, selected.basis)) return { status: "denied", reason: "review-thread-context-unavailable" }
+     return { status: "ok", value: { pin, review } }
+   }
+   return {
+@@ -56,7 +59,9 @@
+     },
+     authorize: async (pin: ReviewThreadContext, basis: ThreadSourceContext, context: TrustedDomainContext): Promise<boolean> => {
+       if (!isReviewThreadContext(pin)) return false
+-      return read({ reviewRef: pin.reviewRef, sectionId: pin.sectionId }, basis, context, pin).then((result) => result.status === "ok", () => false)
++      const result = await read({ reviewRef: pin.reviewRef, sectionId: pin.sectionId }, basis, context, pin)
++      if (result.status !== "ok" && result.status !== "denied" && result.status !== "needs-input") throw new Error("REVIEW_THREAD_CONTEXT_READ_UNAVAILABLE")
++      return result.status === "ok"
+     },
+   }
+ }
+--- a/modules/sucafina/Sucafinav1/product/reviews/port.ts
++++ b/modules/sucafina/Sucafinav1/product/reviews/port.ts
+@@ -37,6 +37,9 @@
+   authorizeSensitivity: (binding: TrustedDomainContext, results: readonly SensitivityResult[]) => Promise<boolean>
+   revalidate: (binding: TrustedDomainContext, refs: readonly SourceRef[]) => Promise<boolean>
+   revalidateEvidence: (binding: TrustedDomainContext, refs: readonly BusinessEvidenceRef[]) => Promise<boolean>
++  /** Read-only classification keeps unavailable evidence distinct from refusal. */
++  revalidateReadEvidence?: (binding: TrustedDomainContext, refs: readonly BusinessEvidenceRef[]) => Promise<boolean>
++  revalidateReadAccess?: (binding: TrustedDomainContext) => Promise<boolean>
+   select: (selectionRef: string, sectionRefs: readonly string[], binding: TrustedDomainContext, period?: Period) => Promise<PortResult<readonly ReviewSection[]>>
+   /** Only a server-issued immutable result selection may retain historical authority stamps. */
+   isHistoricalSelection?: (selectionRef: string, binding: TrustedDomainContext) => boolean
+@@ -128,37 +131,49 @@
+     },
+     async read(id: string, binding: TrustedDomainContext): Promise<PortResult<PreservedReview>> {
+       const request = host.requestFor(binding)
+-      if (!request) return { status: "denied", reason: "binding-unavailable" } as const
+-      const result = await host.state.read(request, "reviews", (state) => state.reviews[id] ? structuredClone(state.reviews[id]) : null)
+-      if ("reason" in result) return result
+-      if (result.status !== "ok") return { status: "unavailable", reason: "not-committed" }
+-      if (!result.value) return { status: "unavailable", reason: "review-unavailable" } as const
+-      if (result.value.id !== id) return { status: "unavailable", reason: "review-identity-mismatch" } as const
+-      if (!Array.isArray(result.value.sections) || !Array.isArray(result.value.comments)) return { status: "unavailable", reason: "invalid-review-sources" } as const
+-      if (!(await host.authorizeSections(binding, result.value.sections)) || !(await host.authorizeComments(binding, result.value.comments))) return { status: "denied", reason: "access-unavailable" } as const
+-      if (!validReviewSources(result.value)) return { status: "unavailable", reason: "invalid-review-sources" } as const
+-      const comparisons = result.value.sections.flatMap((section) => {
+-        const comparison = (section.content as DomainProjection & { reviewOutcomeComparison?: ReviewOutcomeComparison }).reviewOutcomeComparison
+-        return comparison ? [comparison] : []
+-      })
+-      if (!(await host.authorizeOutcomeComparison(binding, comparisons))) return { status: "denied", reason: "access-unavailable" } as const
+-      const outcomes = result.value.sections.flatMap((section) => {
+-        const outcome = (section.content as DomainProjection & { reviewOutcome?: ObservedResultProjection }).reviewOutcome
+-        return outcome ? [outcome] : []
+-      })
+-      if (!(await host.authorizeOutcome(binding, outcomes))) return { status: "denied", reason: "access-unavailable" } as const
+-      const decisions = result.value.sections.flatMap((section) => (section.content as DomainProjection).decision ? [(section.content as DomainProjection).decision!] : [])
+-      if (!(await host.authorizeDecision(binding, decisions))) return { status: "denied", reason: "access-unavailable" } as const
+-      const charts = result.value.sections.map((section) => (section.content as DomainProjection & { reviewChart?: ReviewChart }).reviewChart)
+-      if (!(await host.authorizeSensitivity(binding, charts.flatMap((chart) => chart?.status === "ok" && chart.sensitivity ? [chart.sensitivity.result] : [])))) return { status: "denied", reason: "access-unavailable" } as const
+-      const projections = result.value.sections.map((section) => section.content as DomainProjection)
+-      // Root and projection may contain the same exact source. Deduplicate only
+-      // the complete body in this pass; distinct versions/scopes remain checked.
+-      const sources = [...new Map([...result.value.sourceRefs, ...projections.flatMap(reviewProjectionSources)].map((ref) => [digestSfValue(ref), ref] as const)).values()]
+-      if (!(await host.revalidate(binding, sources))) return { status: "denied", reason: "access-unavailable" } as const
+-      if (projections.some((projection) => !projection || !Array.isArray(projection.values) || projection.values.some((value: DomainProjection["values"][number]) => !Array.isArray(value.sourceRefs) || (value.value !== null && typeof value.value !== "string" && typeof value.value !== "boolean" && (typeof value.value !== "number" || !Number.isFinite(value.value))) || (value.value !== null && value.sourceRefs.length === 0)))) return { status: "unavailable", reason: "evidence-unavailable" } as const
+-      if (!(await host.revalidateEvidence(binding, projections.flatMap((projection) => reviewProjectionEvidence(projection))))) return { status: "denied", reason: "access-unavailable" } as const
+-      return { status: "ok", value: result.value } as const
++      const current = async () => !!request && host.requestFor(binding) === request && await (host.revalidateReadAccess ? host.revalidateReadAccess(binding) : host.revalidate(binding, [])) && host.requestFor(binding) === request
++      try {
++        if (!request || !await current()) return { status: "denied", reason: "binding-unavailable" } as const
++        const result = await host.state.read(request, "reviews", (state) => state.reviews[id] ? structuredClone(state.reviews[id]) : null)
++        if (!await current()) return { status: "denied", reason: "binding-unavailable" } as const
++        if ("reason" in result) return result
++        if (result.status !== "ok") return { status: "unavailable", reason: "not-committed" }
++        if (!result.value) return { status: "denied", reason: "review-target-changed" } as const
++        if (result.value.id !== id) return { status: "denied", reason: "review-target-changed" } as const
++        if (!Array.isArray(result.value.sections) || !Array.isArray(result.value.comments)) return { status: "unavailable", reason: "invalid-review-sources" } as const
++        if (!validReviewSources(result.value)) return { status: "unavailable", reason: "invalid-review-sources" } as const
++        const projections = result.value.sections.map((section) => section.content as DomainProjection)
++        // Classify source uncertainty before legacy boolean selection gates can
++        // collapse a temporarily unavailable source into a negative decision.
++        if (host.revalidateReadEvidence && !await host.revalidateReadEvidence(binding, projections.flatMap((projection) => reviewProjectionEvidence(projection)))) return { status: "denied", reason: "access-unavailable" } as const
++        if (!(await host.authorizeSections(binding, result.value.sections)) || !(await host.authorizeComments(binding, result.value.comments))) return { status: "denied", reason: "access-unavailable" } as const
++        const comparisons = result.value.sections.flatMap((section) => {
++          const comparison = (section.content as DomainProjection & { reviewOutcomeComparison?: ReviewOutcomeComparison }).reviewOutcomeComparison
++          return comparison ? [comparison] : []
++        })
++        if (!(await host.authorizeOutcomeComparison(binding, comparisons))) return { status: "denied", reason: "access-unavailable" } as const
++        const outcomes = result.value.sections.flatMap((section) => {
++          const outcome = (section.content as DomainProjection & { reviewOutcome?: ObservedResultProjection }).reviewOutcome
++          return outcome ? [outcome] : []
++        })
++        if (!(await host.authorizeOutcome(binding, outcomes))) return { status: "denied", reason: "access-unavailable" } as const
++        const decisions = result.value.sections.flatMap((section) => (section.content as DomainProjection).decision ? [(section.content as DomainProjection).decision!] : [])
++        if (!(await host.authorizeDecision(binding, decisions))) return { status: "denied", reason: "access-unavailable" } as const
++        const charts = result.value.sections.map((section) => (section.content as DomainProjection & { reviewChart?: ReviewChart }).reviewChart)
++        if (!(await host.authorizeSensitivity(binding, charts.flatMap((chart) => chart?.status === "ok" && chart.sensitivity ? [chart.sensitivity.result] : [])))) return { status: "denied", reason: "access-unavailable" } as const
++        // Root and projection may contain the same exact source. Deduplicate only
++        // the complete body in this pass; distinct versions/scopes remain checked.
++        const sources = [...new Map([...result.value.sourceRefs, ...projections.flatMap(reviewProjectionSources)].map((ref) => [digestSfValue(ref), ref] as const)).values()]
++        if (!(await host.revalidate(binding, sources))) return { status: "denied", reason: "access-unavailable" } as const
++        if (projections.some((projection) => !projection || !Array.isArray(projection.values) || projection.values.some((value: DomainProjection["values"][number]) => !Array.isArray(value.sourceRefs) || (value.value !== null && typeof value.value !== "string" && typeof value.value !== "boolean" && (typeof value.value !== "number" || !Number.isFinite(value.value))) || (value.value !== null && value.sourceRefs.length === 0)))) return { status: "unavailable", reason: "evidence-unavailable" } as const
++        if (!(await (host.revalidateReadEvidence ?? host.revalidateEvidence)(binding, projections.flatMap((projection) => reviewProjectionEvidence(projection))))) return { status: "denied", reason: "access-unavailable" } as const
++        if (!await current()) return { status: "denied", reason: "binding-unavailable" } as const
++        return { status: "ok", value: result.value } as const
++      } catch {
++        const authorized = await current().catch(() => undefined)
++        if (authorized === false) return { status: "denied", reason: "binding-unavailable" }
++        return { status: "unavailable", reason: "review-read-unavailable" }
++      }
+     },
+   }
+ }
+--- a/modules/sucafina/Sucafinav1/product/reviews/services.ts
++++ b/modules/sucafina/Sucafinav1/product/reviews/services.ts
+@@ -30,6 +30,21 @@
+     now: input.now,
+     requestFor: input.host.requestFor,
+     ...input.selection,
++    revalidateReadAccess: input.host.revalidate,
++    revalidateReadEvidence: async (context, refs) => {
++      const references = new Map(refs.map((ref) => [canonicalSfValue(ref), structuredClone(ref)]))
++      if (!await input.host.revalidate(context)) return false
++      const resolutions = await Promise.all([...references].map(async ([expected, ref]) => {
++        const result = await input.evidence.resolve(ref, context).catch(() => undefined)
++        if (!result) return "unavailable"
++        if (["revoked", "replaced", "missing", "invalid"].includes(result.state)) return "denied"
++        if (result.state !== "fresh" && result.state !== "historical") return "unavailable"
++        return result.accessRevision === context.binding.accessRevision && canonicalSfValue(result.ref) === expected ? "ok" : "denied"
++      }))
++      if (!await input.host.revalidate(context) || resolutions.includes("denied")) return false
++      if (resolutions.some((status) => status !== "ok")) throw new Error("REVIEW_EVIDENCE_READ_UNAVAILABLE")
++      return true
++    },
+     revalidateEvidence: async (context, refs) => {
+       // Many captured cells refer to the same immutable source. Resolve each complete
+       // reference once per pass; never reuse authorization across passes or requests.
+--- a/apps/cli/src/sucafina-product/review-read-integrity.ts
++++ b/apps/cli/src/sucafina-product/review-read-integrity.ts
+@@ -9,13 +9,15 @@
+ import { roleMap } from "../../../../modules/sucafina/Sucafinav1/runtime/admin.ts"
+ 
+ type ReviewResult = PortResult<PreservedReview>
++type ReadFailure = Exclude<ReviewResult, { status: "ok" }>
++type SnapshotProof = { digest: string; receipt: string; access: string; fence: string }
+ type ReadProof = { fence: string; result: ReviewResult }
+ type ReadScope = { request: Request; open: boolean; calls: WeakMap<TrustedDomainContext, Map<string, ReadProof>>;
+   delegated: WeakMap<TrustedDomainContext, Set<string>> }
+ 
+ /** Every consumer reopens the body's own C08 receipt, in addition to producer ACL checks. */
+ export function protectSfReviewReads(input: {
+-  authority: ReturnType<typeof createSfProductAuthority>
++  authority: Pick<ReturnType<typeof createSfProductAuthority>, "host" | "state" | "creationTarget">
+   reviews: ReturnType<typeof createReviewPort>
+   /** Only the default installation readers have their entire authority in these snapshots. */
+   localSnapshotReaders?: boolean
+@@ -39,89 +41,126 @@
+     })
+     return receipts.length ? digestSfValue(receipts) : undefined
+   }
+-  const snapshot = async (id: string, call: TrustedDomainContext, scope: ReadScope, binding: string) => {
+-    if (!sameCall(scope, call, binding) || !await host.revalidate(call) || !sameCall(scope, call, binding)) return undefined
+-    const checked = await authority.state.read(scope.request, "reviews", async (state, actor) => {
+-      if (!sameCall(scope, call, binding) || actor.principalRef !== call.binding.principalRef || actor.accessRevision !== call.binding.accessRevision ||
+-        actor.policyVersion !== call.binding.policyVersion) return undefined
+-      const snapshots = host.persistence.currentSnapshots?.()
+-      const review = state.reviews[id]
+-      if (!snapshots || !review) return undefined
+-      const digest = digestSfValue(review), receipt = receiptDigest(state, id, digest)
+-      if (!receipt) return undefined
+-      // Reauthenticate the actual domain principals as well as the C08 reader.
+-      // Full snapshots include unversioned case/body/receipt changes and source metadata.
+-      const principals = await Promise.all((["dashboard", "planner", "procurement"] as const).map(async (surface) =>
+-        [surface, await host.authenticate(scope.request, { surface, roleMap: roleMap(snapshots[surface], surface) })] as const))
+-      const at = (await host.environment(scope.request)).at
+-      if (!Number.isFinite(Date.parse(at)) || !await host.revalidate(call) || !sameCall(scope, call, binding) ||
+-        digestSfValue(host.persistence.currentSnapshots?.()) !== digestSfValue(snapshots)) return undefined
+-      return { digest, fence: digestSfValue({ snapshots, actor, principals, binding, day: new Date(at).toISOString().slice(0, 10), id, digest, receipt }) }
+-    })
+-    // C08 reauthorizes after its callback. Do not await again after that fence.
+-    return checked.status === "ok" && sameCall(scope, call, binding) ? checked.value : undefined
++  const denied = (): ReadFailure => ({ status: "denied", reason: "review-integrity-unavailable" })
++  const unavailable = (): ReadFailure => ({ status: "unavailable", reason: "review-integrity-unavailable" })
++  const changed = (): ReadFailure => ({ status: "stale", reason: "review-read-changed" })
++  const snapshot = async (id: string, call: TrustedDomainContext, scope: ReadScope, binding: string): Promise<PortResult<SnapshotProof>> => {
++    const current = async () => sameCall(scope, call, binding) && await host.revalidate(call) && sameCall(scope, call, binding)
++    try {
++      if (!await current()) return denied()
++      const checked = await authority.state.read(scope.request, "reviews", async (state, actor): Promise<PortResult<SnapshotProof>> => {
++        if (!sameCall(scope, call, binding) || actor.principalRef !== call.binding.principalRef || actor.accessRevision !== call.binding.accessRevision ||
++          actor.policyVersion !== call.binding.policyVersion) return denied()
++        const snapshots = host.persistence.currentSnapshots?.()
++        const review = state.reviews[id]
++        if (!review || review.id !== id) return denied()
++        if (!snapshots) return unavailable()
++        const digest = digestSfValue(review), receipt = receiptDigest(state, id, digest)
++        if (!receipt) return denied()
++        // Reauthenticate the actual domain principals as well as the C08 reader.
++        // Full snapshots include unversioned case/body/receipt changes and source metadata.
++        const principals = await Promise.all((["dashboard", "planner", "procurement"] as const).map(async (surface) =>
++          [surface, await host.authenticate(scope.request, { surface, roleMap: roleMap(snapshots[surface], surface) })] as const))
++        const at = (await host.environment(scope.request)).at
++        if (!await current()) return denied()
++        if (!Number.isFinite(Date.parse(at))) return unavailable()
++        if (digestSfValue(host.persistence.currentSnapshots?.()) !== digestSfValue(snapshots)) return changed()
++        return { status: "ok", value: { digest, receipt, access: digestSfValue({ actor, principals, binding }),
++          fence: digestSfValue({ snapshots, actor, principals, binding, day: new Date(at).toISOString().slice(0, 10), id, digest, receipt }) } }
++      })
++      // C08 reauthorizes after its callback. Successful proofs have no later await;
++      // failed reads revalidate again before preserving an uncertain result.
++      if (!sameCall(scope, call, binding)) return denied()
++      if ("reason" in checked) return checked.status === "denied" || await current() ? checked : denied()
++      return checked.status === "ok" ? checked.value : unavailable()
++    } catch {
++      const authorized = await current().catch(() => undefined)
++      return authorized === false ? denied() : unavailable()
++    }
+   }
+   const legacyRead = async (id: string, call: TrustedDomainContext): Promise<ReviewResult> => {
+-    const denied = (): PortResult<PreservedReview> => ({ status: "denied", reason: "review-integrity-unavailable" })
++    const request = host.requestFor(call)
++    const binding = digestSfValue([call.kind, call.binding])
++    const pinned = () => !!request && host.requestFor(call) === request && !request.signal.aborted && binding === digestSfValue([call.kind, call.binding])
++    const currentAccess = async () => pinned() && await host.revalidate(call) && pinned()
+     try {
+-      const request = authority.host.requestFor(call)
+-      if (!request || request.signal.aborted || !await authority.host.revalidate(call)) return denied()
+-      const binding = digestSfValue([call.kind, call.binding])
++      if (!request || !await currentAccess()) return denied()
+       const first = await read(id, call)
++      if (!await currentAccess()) return denied()
+       if (first.status !== "ok") return first
+       const digest = digestSfValue(first.value)
+-      const proof = () => authority.state.read(request, "reviews", (state, actor) => {
+-        if (actor.principalRef !== call.binding.principalRef || actor.accessRevision !== call.binding.accessRevision || actor.policyVersion !== call.binding.policyVersion ||
+-          !state.reviews[id] || digestSfValue(state.reviews[id]) !== digest) return undefined
+-        // The original writer may differ from the current authorized reader.
+-        return receiptDigest(state, id, digest)
+-      })
++      const proof = async (): Promise<PortResult<string>> => {
++        if (!await currentAccess()) return denied()
++        const checked = await authority.state.read(request, "reviews", (state, actor): PortResult<string> => {
++          if (!pinned() || actor.principalRef !== call.binding.principalRef || actor.accessRevision !== call.binding.accessRevision || actor.policyVersion !== call.binding.policyVersion ||
++            !state.reviews[id] || digestSfValue(state.reviews[id]) !== digest) return denied()
++          // The original writer may differ from the current authorized reader.
++          const receipt = receiptDigest(state, id, digest)
++          return receipt ? { status: "ok", value: receipt } : denied()
++        })
++        if (!pinned()) return denied()
++        if ("reason" in checked) return checked.status === "denied" || await currentAccess() ? checked : denied()
++        return checked.status === "ok" ? checked.value : unavailable()
++      }
+       const before = await proof()
+-      if (before.status !== "ok" || !before.value) return denied()
++      if (before.status !== "ok") return before
+       const current = await read(id, call)
++      if (!await currentAccess()) return denied()
++      if (current.status !== "ok") return current
++      if (digestSfValue(current.value) !== digest) return denied()
+       const after = await proof()
+-      if (current.status !== "ok" || digestSfValue(current.value) !== digest || after.status !== "ok" || after.value !== before.value ||
+-        request.signal.aborted || binding !== digestSfValue([call.kind, call.binding]) || !await authority.host.revalidate(call)) return denied()
++      if (!await currentAccess()) return denied()
++      if (after.status !== "ok") return after
++      if (after.value !== before.value) return denied()
+       return first
+-    } catch { return denied() }
++    } catch {
++      const authorized = await currentAccess().catch(() => undefined)
++      return authorized === false ? denied() : unavailable()
++    }
+   }
+   const protectedRead = async (id: string, call: TrustedDomainContext): Promise<ReviewResult> => {
+     const scope = execution.getStore()
+     if (!scope || !input.localSnapshotReaders) return legacyRead(id, call)
+-    const denied = (): ReviewResult => ({ status: "denied", reason: "review-integrity-unavailable" })
+     const binding = digestSfValue([call.kind, call.binding])
++    const currentAccess = async () => sameCall(scope, call, binding) && await host.revalidate(call) && sameCall(scope, call, binding)
+     try {
+-      if (!sameCall(scope, call, binding)) return denied()
++      if (!await currentAccess()) return denied()
+       let proofs = scope.calls.get(call)
+       if (!proofs) { proofs = new Map(); scope.calls.set(call, proofs) }
+       const prior = proofs.get(id)
+       const before = await snapshot(id, call, scope, binding)
+-      if (before && prior?.fence === before.fence) return structuredClone(prior.result)
++      if (before.status === "ok" && prior?.fence === before.value.fence) return structuredClone(prior.result)
+       proofs.delete(id)
++      if (before.status !== "ok") return before
+       // A canonical producer can materialize scoped source metadata. Never invoke
+       // it from the final read-only C08 group when its complete proof has changed.
+-      if (host.persistence.currentSnapshots?.()) return scope.delegated.get(call)?.has(id) ? legacyRead(id, call) : denied()
+-      let first = before
++      // A missing proof is uncertainty, not evidence of lost authorization.
++      if (host.persistence.currentSnapshots?.()) return scope.delegated.get(call)?.has(id) ? legacyRead(id, call) : unavailable()
++      let first = before.value
+       for (let attempt = 0; attempt < 2; attempt++) {
+         const result = structuredClone(await read(id, call))
++        if (result.status !== "ok") return await currentAccess() ? result : denied()
+         const after = await snapshot(id, call, scope, binding)
+-        if (!sameCall(scope, call, binding)) return denied()
+-        if (first && after?.fence === first.fence && (result.status !== "ok" ||
+-          digestSfValue(result.value) === after.digest && snapshotBoundReview(result.value))) {
+-          proofs.set(id, { fence: after.fence, result: structuredClone(result) })
++        if (after.status !== "ok") return after
++        if (first.digest !== after.value.digest || first.receipt !== after.value.receipt || first.access !== after.value.access ||
++          digestSfValue(result.value) !== after.value.digest) return denied()
++        if (first.fence === after.value.fence && snapshotBoundReview(result.value)) {
++          proofs.set(id, { fence: after.value.fence, result: structuredClone(result) })
+           return result
+         }
+-        if (result.status !== "ok") return result
+         if (!snapshotBoundReview(result.value)) {
+           let delegated = scope.delegated.get(call)
+           if (!delegated) { delegated = new Set(); scope.delegated.set(call, delegated) }
+           delegated.add(id)
+           return legacyRead(id, call)
+         }
+-        first = after
++        first = after.value
+       }
+-      return denied()
+-    } catch { return denied() }
++      return changed()
++    } catch {
++      const authorized = await currentAccess().catch(() => undefined)
++      return authorized === false ? denied() : unavailable()
++    }
+   }
+   reviews.read = protectedRead
+   return {
+--- a/apps/cli/src/sucafina-product/review-history.ts
++++ b/apps/cli/src/sucafina-product/review-history.ts
+@@ -12,7 +12,7 @@
+ 
+ /** Read-only history is anchored in immutable review bodies and their atomic C08 receipts. */
+ export function createSfReviewHistory(input: {
+-  authority: ReturnType<typeof createSfProductAuthority>
++  authority: Pick<ReturnType<typeof createSfProductAuthority>, "host" | "state" | "creationTarget">
+   persistence: SfScopedSourcePort
+   evidence: BusinessContextService
+   authorizeCase?: Parameters<typeof createSfReviewCalculationHistory>[0]["authorizeCase"]
+@@ -68,7 +68,10 @@
+           value.schema === undefined && value.id === review.id && Array.isArray(value.sections) && Array.isArray(value.sourceRefs) && digestSfValue(value) === digestSfValue(review)
+       })).map((review) => structuredClone(review))
+     })
+-    return found.status === "ok" && found.value && !request.signal.aborted && await host.revalidate(call) ? found.value : undefined
++    if (request.signal.aborted || host.requestFor(call) !== request || !await host.revalidate(call) || host.requestFor(call) !== request) return undefined
++    if (found.status === "denied") return undefined
++    if (found.status !== "ok") throw new Error("REVIEW_HISTORY_READ_UNAVAILABLE")
++    return found.value
+   }
+   const historicalSource = async (ref: SourceRef, call: TrustedDomainContext) => {
+     const first = await captures(call)
+@@ -78,7 +81,9 @@
+     const again = await captures(call)
+     if (!current || !again || matching.some((review) => !again.some((value) => same(review, value)))) return false
+     const checked = await scoped(ref, call)
+-    return !!checked && same(current, checked) && await host.revalidate(call)
++    if (!checked || !await host.revalidate(call)) return false
++    if (!same(current, checked)) throw new Error("REVIEW_HISTORY_CHANGED")
++    return true
+   }
+   const currentSource = async (ref: SourceRef, call: TrustedDomainContext) => (await scoped(ref, call))?.version === ref.version
+   const resolve: BusinessContextService["resolve"] = async (ref, call) => {
+--- a/apps/cli/src/sucafina-product/review-calculation-history.ts
++++ b/apps/cli/src/sucafina-product/review-calculation-history.ts
+@@ -8,7 +8,7 @@
+ 
+ /** Proves the original run and current case access; it never reissues a fresh calculation. */
+ export function createSfReviewCalculationHistory(input: {
+-  authority: ReturnType<typeof createSfProductAuthority>
++  authority: Pick<ReturnType<typeof createSfProductAuthority>, "host" | "state">
+   authorizeCase?: (value: DecisionCase, call: TrustedDomainContext) => Promise<boolean>
+ }) {
+   return async (ref: Extract<BusinessEvidenceRef, { kind: "calculation" }>, call: TrustedDomainContext) => {
+--- a/modules/sucafina/Sucafinav1/test/product/wp08/threads-lifecycle.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp08/threads-lifecycle.test.ts
+@@ -48,23 +48,28 @@
+     }
+     expect(await fixture.snapshots()).toEqual(outsideScope)
+     fixture.gate.dashboard = false
+-    for (const thread of conversations) expect(await fixture.threads.read(thread.id, fixture.read)).toEqual({ status: "unavailable", reason: "thread-access-unavailable" })
++    // This legacy resolver reports unavailable for every nonfresh source; the
++    // consumer cannot infer revocation from that ambiguous provider result.
++    expect(await fixture.evidence.context({ refs: [source] }, fixture.read)).toMatchObject([{ state: "unavailable", ref: source }])
++    for (const thread of conversations) expect(await fixture.threads.read(thread.id, fixture.read)).toEqual({ status: "unavailable", reason: "thread-read-unavailable" })
+     fixture.gate.dashboard = true
+     for (const thread of conversations) expect((await fixture.threads.read(thread.id, fixture.read)).status).toBe("ok")
+     expect(await fixture.snapshots()).toEqual(outsideScope)
+     await fixture.mutate("dashboard", DashboardPortfolio.domain, { page: "All Projects", action: "save", id: "project", version: outsideScope.dashboard.versions["projects:project"]!.version, values: { status: "On Hold" } })
+     const materiallyChanged = await fixture.snapshots()
+     expect(rows(materiallyChanged.dashboard.data.projects)).toMatchObject([{ id: "project", status: "On Hold" }])
++    expect(await fixture.evidence.context({ refs: [source] }, fixture.read)).toMatchObject([{ state: "unavailable", ref: source }])
+     for (const thread of conversations) {
+       // Current producers reject stale material projections. This does not prove a historical C05 reader.
+-      expect(await fixture.threads.read(thread.id, fixture.read)).toEqual({ status: "unavailable", reason: "thread-access-unavailable" })
++      expect(await fixture.threads.read(thread.id, fixture.read)).toEqual({ status: "unavailable", reason: "thread-read-unavailable" })
+       expect(await fixture.state.read(fixture.request(), "threads", (state) => state.threads[thread.id])).toMatchObject({ status: "ok", storageVersion: conversations.length * 3, value: { sourceRef: source.refId, sourceIncarnation: source.target.incarnation, observedVersion: source.target.version, period: thread.period, messages: [{ body: `${thread.kind} context ${thread.period.start}` }, { body: `${thread.kind} explanation ${thread.period.start}` }] } })
+     }
+     expect(await fixture.snapshots()).toEqual(materiallyChanged)
+     await fixture.mutate("dashboard", DashboardPortfolio.domain, { page: "All Projects", action: "delete", id: "project", version: materiallyChanged.dashboard.versions["projects:project"]!.version, values: {} })
+     const deleted = await fixture.snapshots()
+     expect(rows(deleted.dashboard.data.projects)).toEqual([])
+-    for (const thread of conversations) expect(await fixture.threads.read(thread.id, fixture.read)).toEqual({ status: "unavailable", reason: "thread-access-unavailable" })
++    expect(await fixture.evidence.context({ refs: [source] }, fixture.read)).toMatchObject([{ state: "unavailable", ref: source }])
++    for (const thread of conversations) expect(await fixture.threads.read(thread.id, fixture.read)).toEqual({ status: "unavailable", reason: "thread-read-unavailable" })
+     expect(await fixture.snapshots()).toEqual(deleted)
+     expect(deleted.procurement).toEqual(before.procurement)
+     expect(deleted.planner).toEqual(before.planner)

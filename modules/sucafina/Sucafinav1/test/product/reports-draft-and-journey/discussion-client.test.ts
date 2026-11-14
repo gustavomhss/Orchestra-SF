@@ -69,6 +69,17 @@ test.each(["idempotency-content-changed", "target-replaced"])("conflict %s canno
   } finally { transport.client.dispose() }
 })
 
+test.each(["product-state-changed", "thread-changed"])("a conflict %s without verified response binding cannot release the original key", async (reason) => {
+  const transport = fixture(() => Response.json({ status: "conflict", reason }, { status: 409 }))
+  try {
+    await failure(transport.client.post("collaboration-thread-edit", payload, payload.mutation.idempotencyKey), "conflict", "unknown")
+    expect(transport.requests).toHaveLength(1)
+    expect(transport.requests[0]!.headers.get("Idempotency-Key")).toBe(payload.mutation.idempotencyKey)
+    expect(await transport.requests[0]!.json()).toEqual(payload)
+    expect(transport.state.accessLost).toBe(0)
+  } finally { transport.client.dispose() }
+})
+
 test.each([401, 403, 200])("denial status %s closes the client and invokes access loss once", async (status) => {
   const transport = fixture(() => Response.json({ status: "denied", reason: "access-unavailable" }, { status, headers: { "X-SF-Review-Binding": binding } }))
   try {
@@ -117,13 +128,41 @@ test("a followed login redirect purges access even when its HTML response is 200
   } finally { transport.client.dispose() }
 })
 
-test.each([undefined, "b".repeat(64)])("a missing or changed response binding never releases a protected response (%s)", async (echo) => {
-  const transport = fixture(() => Response.json({ status: "ok", value: { body: "must not be released" } }, { headers: echo ? { "X-SF-Review-Binding": echo } : {} }))
+test("a missing response binding withholds the value and preserves the client for explicit reconciliation", async () => {
+  const state = { echo: false }
+  const transport = fixture(() => Response.json({ status: "ok", value: { body: "protected response" } }, { headers: state.echo ? { "X-SF-Review-Binding": binding } : {} }))
+  try {
+    await failure(transport.client.post("collaboration-thread-read", { id: payload.id }), "recoverable", "unknown")
+    expect(transport.state.accessLost).toBe(0)
+    expect(transport.requests).toHaveLength(1)
+    state.echo = true
+    expect(await transport.client.post("collaboration-thread-read", { id: payload.id })).toEqual({ body: "protected response" })
+    expect(transport.requests).toHaveLength(2)
+    expect(transport.requests.every((request) => new URL(request.url).searchParams.get("sf") === "collaboration-thread-read")).toBe(true)
+    expect(transport.state.accessLost).toBe(0)
+  } finally { transport.client.dispose() }
+})
+
+test.each([200, 503])("a changed response binding at HTTP %s purges access even if the body is unavailable", async (status) => {
+  const transport = fixture(() => Response.json(status === 200 ? { status: "ok", value: { body: "must not be released" } } : { status: "unavailable", reason: "thread-read-unavailable" }, { status, headers: { "X-SF-Review-Binding": "b".repeat(64) } }))
   try {
     await failure(transport.client.post("collaboration-thread-read", { id: payload.id }), "access", "rejected")
-    // A missing capability closes this client without asserting global revocation.
-    expect(transport.state.accessLost).toBe(echo === undefined ? 0 : 1)
+    expect(transport.state.accessLost).toBe(1)
     await failure(transport.client.post("collaboration-thread-read", { id: payload.id }), "access", "rejected")
+    expect(transport.requests).toHaveLength(1)
+  } finally { transport.client.dispose() }
+})
+
+test("a changed response binding purges before consuming an unavailable response body", async () => {
+  let bodyReads = 0
+  class BrokenBodyResponse extends Response {
+    override async json(): Promise<unknown> { bodyReads++; throw new TypeError("body transport failed") }
+  }
+  const transport = fixture(() => new BrokenBodyResponse(null, { status: 503, headers: { "X-SF-Review-Binding": "b".repeat(64) } }))
+  try {
+    await failure(transport.client.post("collaboration-thread-read", { id: payload.id }), "access", "rejected")
+    expect(bodyReads).toBe(0)
+    expect(transport.state.accessLost).toBe(1)
     expect(transport.requests).toHaveLength(1)
   } finally { transport.client.dispose() }
 })

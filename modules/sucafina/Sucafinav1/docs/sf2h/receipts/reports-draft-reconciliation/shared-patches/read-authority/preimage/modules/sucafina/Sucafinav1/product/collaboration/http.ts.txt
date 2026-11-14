@@ -1,0 +1,67 @@
+import type { PortResult } from "../contracts/ports.ts"
+import type { TrustedUiContext } from "../contracts/sf-execution.ts"
+import type { createCollaborationHost } from "./host.ts"
+import type { createCollaborationHumanAuthority } from "./human.ts"
+import { createCollaborationHttpRoutes } from "./http-routes.ts"
+
+/** Private presentation adapter mounted by WP10 in the existing authenticated application. */
+export function createCollaborationHttp(input: {
+  origin: string
+  mount: string
+  host: ReturnType<typeof createCollaborationHost>
+  human: Pick<ReturnType<typeof createCollaborationHumanAuthority>, "admit" | "finish">
+  admitRead: (request: Request, operation: string, payload: unknown) => Promise<PortResult<TrustedUiContext>>
+  finishRead: (context: TrustedUiContext) => void
+}) {
+  const routes = createCollaborationHttpRoutes(input.host)
+  return async (request: Request): Promise<Response | undefined> => {
+    const url = new URL(request.url)
+    const mode = url.searchParams.get("sf")
+    if (!mode?.startsWith("collaboration-")) return undefined
+    if (url.origin !== input.origin || url.pathname !== input.mount || request.headers.get("origin") !== input.origin || request.headers.get("sec-fetch-site") === "cross-site") return reply({ status: "denied", reason: "collaboration-origin-denied" })
+    if (request.method !== "POST") return reply({ status: "needs-input", reason: "collaboration-post-required" }, 405)
+    if ([...url.searchParams.keys()].some((key) => key !== "sf") || url.searchParams.getAll("sf").length !== 1) return reply({ status: "needs-input", reason: "invalid-collaboration-route" })
+    const route = routes.get(mode.slice("collaboration-".length))
+    if (!route) return reply({ status: "unavailable", reason: "collaboration-route-unavailable" }, 404)
+    if (request.headers.get("content-type")?.split(";", 1)[0]?.trim().toLowerCase() !== "application/json") return reply({ status: "needs-input", reason: "collaboration-json-required" }, 415)
+    const bytes = await bounded(request, 131072).catch(() => undefined)
+    if (!bytes) return reply({ status: "needs-input", reason: "collaboration-request-too-large-or-unavailable" }, 413)
+    const decoded: unknown = await Promise.resolve().then(() => JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes))).catch(() => undefined)
+    if (!decoded || typeof decoded !== "object" || Array.isArray(decoded)) return reply({ status: "needs-input", reason: "invalid-collaboration-payload" })
+    const payload = decoded as Record<string, unknown>
+    const keys = [...route.keys, ...(route.optional ?? [])]
+    if (Object.keys(payload).some((key) => !keys.includes(key)) || route.keys.some((key) => !Object.hasOwn(payload, key)) || route.validate && !route.validate(payload)) return reply({ status: "needs-input", reason: "invalid-collaboration-payload" })
+    if (request.signal.aborted) return reply({ status: "unavailable", reason: "collaboration-request-cancelled" })
+    const admitted = await (route.action ? input.human.admit(request, route.action, payload) : input.admitRead(request, route.read!, payload)).catch(() => ({ status: "denied" as const, reason: "collaboration-authority-unavailable" }))
+    if (admitted.status !== "ok") return reply(admitted)
+    try {
+      const result = await Promise.resolve().then(() => route.invoke(payload, admitted.value)).catch(() => ({ status: "unavailable" as const, reason: "collaboration-operation-unavailable" }))
+      if (request.signal.aborted) return reply({ status: "unavailable", reason: "collaboration-request-cancelled" })
+      return reply(result)
+    } finally {
+      if (route.action) input.human.finish(admitted.value)
+      if (!route.action) input.finishRead(admitted.value)
+    }
+  }
+}
+
+function reply(result: PortResult<unknown>, status = result.status === "ok" ? 200 : result.status === "needs-input" ? 400 : result.status === "denied" ? 403 : ["stale", "conflict", "provider-conflict"].includes(result.status) ? 409 : 503) {
+  return Response.json(result, { status, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } })
+}
+
+async function bounded(request: Request, limit: number) {
+  if (!request.body) return undefined
+  const reader = request.body.getReader()
+  const chunks: Uint8Array[] = []
+  let length = 0
+  for (;;) {
+    const part = await reader.read()
+    if (part.done) break
+    length += part.value.byteLength
+    if (length > limit) { await reader.cancel(); return undefined }
+    chunks.push(part.value)
+  }
+  const bytes = new Uint8Array(length)
+  chunks.reduce((offset, chunk) => { bytes.set(chunk, offset); return offset + chunk.byteLength }, 0)
+  return bytes
+}

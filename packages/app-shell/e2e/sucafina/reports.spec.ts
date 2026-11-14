@@ -38,7 +38,7 @@ reportsTest.describe("CI-UI-REPORTS · real preserved dossier", () => {
     const { saved } = await prepareReview(page, app, corpus, info)
     await changeForecast(page, app, corpus)
     await openAndReopenMeeting(page, app, saved)
-    const { api, answer } = await reportsTest.step("Confirm through the installed Review controls against the exact visible preserved projection", () => confirmHumanAnswer(page, app, saved, corpus, info, { loseReplyResponse: true }))
+    const { api, answer } = await reportsTest.step("Confirm through the installed Review controls against the exact visible preserved projection", () => confirmHumanAnswer(page, app, saved, corpus, info, { loseReplyResponse: true, loseCreatedThreadRead: true }))
     const beforeReload = await api.version()
     const read = page.waitForResponse(responseFor(app.dashboardURL, "review-read", "GET"))
     const answerRead = page.waitForResponse(responseFor(app.dashboardURL, "collaboration-answer-read", "POST"))

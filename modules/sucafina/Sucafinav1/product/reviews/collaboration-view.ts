@@ -83,11 +83,7 @@ export function createReviewCollaborationView(input: { review: PreservedReview; 
         if (intent) intent.threadId = created.id
         const current = await client.thread(created.id)
         live(); checkThread(current, true)
-        const url = new URL(location.href)
-        url.searchParams.set("reviewThread", created.id)
-        for (const key of ["reviewMessage", "reviewIncarnation", "reviewVersion"]) url.searchParams.delete(key)
-        targetThread = created.id
-        window.history.replaceState(null, "", url)
+        adoptQuestion(created.id)
         replies.clear(); edits.clear()
         thread = current
         question.value = ""
@@ -109,6 +105,14 @@ export function createReviewCollaborationView(input: { review: PreservedReview; 
     dispose()
     window.dispatchEvent(new Event("sf-access-revoked"))
     throw new ReviewDiscussionError("Review discussion context changed", "access", "rejected")
+  }
+  function adoptQuestion(id: string) {
+    live()
+    const url = new URL(location.href)
+    url.searchParams.set("reviewThread", id)
+    for (const key of ["reviewMessage", "reviewIncarnation", "reviewVersion"]) url.searchParams.delete(key)
+    targetThread = id
+    window.history.replaceState(null, "", url)
   }
   function checkThread(value: ReviewDiscussionThread, newQuestion = false) {
     live()
@@ -253,7 +257,7 @@ export function createReviewCollaborationView(input: { review: PreservedReview; 
       if (current.threadId) {
         const updated = await client.thread(current.threadId)
         live(); checkThread(updated, current.kind === "question")
-        if (current.kind === "question") { replies.clear(); edits.clear() }
+        if (current.kind === "question") { adoptQuestion(updated.id); replies.clear(); edits.clear() }
         if (current.original && !updated.messages.some((message) => message.id === current.original!.id && message.incarnation === current.original!.incarnation)) return changedScope()
         thread = updated; renderThread(); renderHistory()
       } else {

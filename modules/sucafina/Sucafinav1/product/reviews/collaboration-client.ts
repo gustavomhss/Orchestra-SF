@@ -22,7 +22,8 @@ export class ReviewDiscussionError extends Error {
 
 /** Presentation transport only. The binding is an equality guard, never a grant.
  * The installed host must check it before invoking an action and echo it.
- * Missing support closes this discussion, including its recipients preflight.
+ * A missing response echo withholds data for explicit reconciliation; a
+ * different echo proves that this discussion's authorization scope changed.
  */
 export function createReviewDiscussionClient(accessLost: () => void, transport: ReviewDiscussionTransport = {
   fetch: (...args) => fetch(...args),
@@ -64,30 +65,31 @@ export function createReviewDiscussionClient(accessLost: () => void, transport: 
         headers: { "Content-Type": "application/json", "X-SF-Review-Binding": binding!, ...(key ? { "Idempotency-Key": key } : {}) }, body: bodyText,
       }).catch(() => undefined)
       checkBinding()
-      if (!response || controller.signal.aborted) throw new ReviewDiscussionError("The response was not received. Your draft and action are retained.", "recoverable", "unknown")
+      if (!response) throw new ReviewDiscussionError("The response was not received. Your draft and action are retained.", "recoverable", "unknown")
       const destination = response.url ? new URL(response.url, url) : undefined
       if (response.status === 401 || response.status === 403 || (response.redirected && (destination?.origin !== url.origin || /\/auth\/login\/?$/.test(destination.pathname)))) throw lost()
+      const echo = response.headers.get("X-SF-Review-Binding")
+      if (echo !== null && echo !== binding) throw lost()
+      if (controller.signal.aborted) throw new ReviewDiscussionError("The response was not received. Your draft and action are retained.", "recoverable", "unknown")
       const body: unknown = await response.json().catch(() => undefined)
       checkBinding()
-      if (controller.signal.aborted) throw new ReviewDiscussionError("The response was not received. Your draft and action are retained.", "recoverable", "unknown")
       const result = body && typeof body === "object" && !Array.isArray(body) ? body as Record<string, unknown> : undefined
       if (result?.status === "denied") throw lost()
+      if (controller.signal.aborted) throw new ReviewDiscussionError("The response was not received. Your draft and action are retained.", "recoverable", "unknown")
       // Unavailable is not an authorization verdict. The coherent producer
       // contract carries real revocation as denied; read drift/failure retains
       // the attempt and requires an authorized read before an explicit retry.
       if (response.status === 409 || result?.status === "stale" || result?.status === "conflict" || result?.status === "provider-conflict") {
         // Only these producer results establish a precommit CAS rejection.
         // Idempotency/target conflicts can refer to an earlier durable commit.
-        const rejected = key !== undefined && (result?.reason === "product-state-changed" || result?.reason === "thread-changed")
+        const rejected = echo === binding && key !== undefined && (result?.reason === "product-state-changed" || result?.reason === "thread-changed")
         throw new ReviewDiscussionError(typeof result?.reason === "string" ? result.reason : "The action conflicts with a newer version.", "conflict", rejected ? "rejected" : "unknown")
       }
       if (response.status >= 500 || result?.status === "unavailable")
         throw new ReviewDiscussionError(typeof result?.reason === "string" ? result.reason : "The action outcome is unavailable.", "recoverable", "unknown")
       if (!response.ok || result?.status !== "ok")
         throw new ReviewDiscussionError(typeof result?.reason === "string" ? result.reason : "Review discussion response unavailable", "invalid", "unknown")
-      const echo = response.headers.get("X-SF-Review-Binding")
-      if (echo === null) throw unverified()
-      if (echo !== binding) throw lost()
+      if (echo === null) throw new ReviewDiscussionError("The response binding could not be verified. Reconcile the discussion; your draft and action are retained.", "recoverable", "unknown")
       return result.value
     } finally {
       clearTimeout(deadline)

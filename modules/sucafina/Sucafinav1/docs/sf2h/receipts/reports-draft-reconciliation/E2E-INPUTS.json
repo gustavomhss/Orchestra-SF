@@ -1,0 +1,367 @@
+{
+  "schema": "orchestra-sf.mission48.e2e-qualification-proposal.v1",
+  "status": "LOCAL_PROPOSAL_NOT_EXECUTED_NOT_PUBLISHED",
+  "prepared_at": "2026-11-14T23:17:27Z",
+  "scope": "Reports-owned E2E changes only. Root is sole remote writer/CI dispatcher.",
+  "source": {
+    "branch": "astra-wp07",
+    "pr": 27,
+    "terminal36": "eea139fb9f7f13400ad7bbe1e67f18ffaeaaec64",
+    "ack48": "20aa42350d674fb2850dc6926d5fcaa8aeb3e567"
+  },
+  "target": {
+    "symbol": "C13",
+    "commit": "31578c35c1e66371647f1e00ceefff1cdb85fed3",
+    "tree": "26830e38d957219cb4af04050d7bdb0f9b79b4f6",
+    "evidence": "Root reports integrator47 released Finance34 runtime/local-store.ts plus 5 tests only. Root performs final all-path preimage verification before W assembly.",
+    "preimage_baseline": {
+      "symbol": "C12",
+      "commit": "6470bebdc9bb5044df7959e697cb7d8629157e23",
+      "verification": "Child fetched all listed preimages through GitHub MCP. C13 equivalence must be confirmed by root."
+    }
+  },
+  "atomic_W_requirements": [
+    "Start with complete C13 tree; retain all non-overlaid blobs unchanged.",
+    "Materialize the complete released36 owned overlay, substituting mission48 client/view/tests/E2E postimages.",
+    "Materialize producer/HTTP/shared patches together with client/view fixes; root supplies complete exact pre/post shared manifests.",
+    "Add immutable released44 operator-session-cookie helper dependency. Do not overwrite wp03/installation-fixture.ts.",
+    "Do not add or edit Agenda39 paths, workflows45 or other active branch snapshots.",
+    "Record W commit/tree and exact overlay manifest; derive request-only S from that W; S may differ only at .ci-run.json.",
+    "Qualify boundary contracts before the single nominal Reports request; transfer no old source PASS as accepted composed proof."
+  ],
+  "owned_changes": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/human-answer-flow.ts",
+      "preimage_source36": "c2553d992f3b5ca9d222509c8ae2d635013f4d6a",
+      "preimage_C12": "02b0f6f6957bdc537c75c527aea1fc6cb95ff7a4",
+      "postimage": "9db3ae6a537a45d86089f5637d150a5ea1a713fc",
+      "postimage_sha256": "a353eee46422f639bebf5f0e864ae70c25737ebab40e2e6e0c791ab426d3681e",
+      "local_path": "postimages/human-answer-flow.ts"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/lost-created-thread-read.ts",
+      "preimage_source36": null,
+      "preimage_C12": null,
+      "postimage": "dc1d4849a24a0b42756978daaa76930ab99d52e6",
+      "postimage_sha256": "0228472125c2931fb6f674a76f02488699d9decfa41d9a58ce6e27569fc3ebf2",
+      "local_path": "postimages/lost-created-thread-read.ts"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/lost-edit-response.ts",
+      "preimage_source36": null,
+      "preimage_C12": null,
+      "postimage": "ebbf5b9365e6f5268f00004c1bdf766ecfca4dad",
+      "postimage_sha256": "7977a11cccd2fa9968fba86a7284144d54ab5ab7d22cdf54efe432eec74193e3",
+      "local_path": "postimages/lost-edit-response.ts"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/production-installation.ts",
+      "preimage_source36": "1465b8a2f2c512705f965ec493cd4c08a80d23f0",
+      "preimage_C12": "40591b3e4e2f672a80a898ac6d6238fa08f4d565",
+      "postimage": "977dc142768d8e7d79d6862a3b2353934dfb833a",
+      "postimage_sha256": "bcaa39d986cae374ebd59957a35f7814db5fd3ac2ddc6104ec6b464acdc18934",
+      "local_path": "postimages/production-installation.ts"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/read-reconciliation.ts",
+      "preimage_source36": null,
+      "preimage_C12": null,
+      "postimage": "b145caac8a47e029aded4418253488d250d680e1",
+      "postimage_sha256": "9165d013e59f25e4ee287b96d8eb35d6f8c2c02dc3151fd4800f29e022cafb1e",
+      "local_path": "postimages/read-reconciliation.ts"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports.spec.ts",
+      "preimage_source36": "c332c865c9241df073553b1ddc8dfcb6af65399a",
+      "preimage_C12": "afc8b97cdc7425fedf1368275a1436f0227f89e8",
+      "postimage": "857f339fe477839986e6e70cf4781c9f4f16e009",
+      "postimage_sha256": "b60d5ce4a20040296920538f45c7582b45bcc650335d4858b666b990654bf794",
+      "local_path": "postimages/reports.spec.ts"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/revocation.ts",
+      "preimage_source36": "21d21cac3b28211e3360ccbc8a3a4abe58653232",
+      "preimage_C12": "21d21cac3b28211e3360ccbc8a3a4abe58653232",
+      "postimage": "7a7a31e9a139fc41dfecdf6944edc18c41ad78b4",
+      "postimage_sha256": "77d26874147b92102195906a8a478a2af1c86e1ab1618aa518493cf28c8111ac",
+      "local_path": "postimages/revocation.ts"
+    }
+  ],
+  "inherited36_overlay": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/collaboration-client.ts",
+      "preimage_C12": "8c5b413e25ed7c8100cf516f8538da1a22602df2",
+      "source36_postimage": "144aa0f9137403735ffdfd85c9b5ea7963613cb2",
+      "resolution": "Replace with final mission48 postimage where applicable; otherwise retain this released36 blob."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/collaboration-view.ts",
+      "preimage_C12": "4b45a5fe673c5653f0979ba1b1044da4907383e1",
+      "source36_postimage": "e23eeddb79dbcd0fa2b80dc6fffbfa3ffee6b6ca",
+      "resolution": "Replace with final mission48 postimage where applicable; otherwise retain this released36 blob."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-and-journey/discussion-client.test.ts",
+      "preimage_C12": null,
+      "source36_postimage": "cf67dc28e24e0dcca00de604739a1eaddf2db3ed",
+      "resolution": "Replace with final mission48 postimage where applicable; otherwise retain this released36 blob."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-and-journey/reports-selection.test.ts",
+      "preimage_C12": null,
+      "source36_postimage": "540d5dbfee126a0e2f03f83bbed14ef5107eb8ee",
+      "resolution": "Replace with final mission48 postimage where applicable; otherwise retain this released36 blob."
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/failed-edit-request.ts",
+      "preimage_C12": null,
+      "source36_postimage": "604bd5d8bd9cd66370d3f15e6477fe4186951e49",
+      "resolution": "Replace with final mission48 postimage where applicable; otherwise retain this released36 blob."
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/human-answer-flow.ts",
+      "preimage_C12": "02b0f6f6957bdc537c75c527aea1fc6cb95ff7a4",
+      "source36_postimage": "c2553d992f3b5ca9d222509c8ae2d635013f4d6a",
+      "resolution": "Replace with final mission48 postimage where applicable; otherwise retain this released36 blob."
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/lost-reply-response.ts",
+      "preimage_C12": null,
+      "source36_postimage": "a15b1f6e52e4a5418a13bb850255711b1ca70186",
+      "resolution": "Replace with final mission48 postimage where applicable; otherwise retain this released36 blob."
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/production-installation.ts",
+      "preimage_C12": "40591b3e4e2f672a80a898ac6d6238fa08f4d565",
+      "source36_postimage": "1465b8a2f2c512705f965ec493cd4c08a80d23f0",
+      "resolution": "Replace with final mission48 postimage where applicable; otherwise retain this released36 blob."
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/review-flow.ts",
+      "preimage_C12": "98abf576128aa1c9ea7ae0c99230cc1dd16d4a0d",
+      "source36_postimage": "4af1d169e39f945de01314fef73e3689ff297545",
+      "resolution": "Replace with final mission48 postimage where applicable; otherwise retain this released36 blob."
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports.spec.ts",
+      "preimage_C12": "afc8b97cdc7425fedf1368275a1436f0227f89e8",
+      "source36_postimage": "c332c865c9241df073553b1ddc8dfcb6af65399a",
+      "resolution": "Replace with final mission48 postimage where applicable; otherwise retain this released36 blob."
+    }
+  ],
+  "unchanged_reports_inputs": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/confirmation.ts",
+      "preimage_C12": "9580eaf32f59508ad50d02339b4e8cf396ff405e"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/corpus.ts",
+      "preimage_C12": "301e30515aac62a2fb50937eb5d507d7faae06fd"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/fixture.ts",
+      "preimage_C12": "2a53115e2f116f49dc23c779aff2349cd149dc1c"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/model.ts",
+      "preimage_C12": "dc4c34866e35b8eee0911897b79396dce51a600e"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/ooxml.ts",
+      "preimage_C12": "8ab65231d7f94a18e71ac3a78ef2b9a4995b1c79"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/production-state.ts",
+      "preimage_C12": "a32cac26786e4ace96490f719677370e42f87958"
+    }
+  ],
+  "cookie44": {
+    "commit": "b6d0ef56e69a3837c9df9dd69b61dbb8724e4b49",
+    "path": "packages/app-shell/e2e/sucafina/decisions-support/operator-session-cookie.ts",
+    "preimage_C12": null,
+    "postimage": "81a6863f68fc2b83c4b331c19920c59267b5d060",
+    "local_path": "dependencies/operator-session-cookie.ts",
+    "source_sha256": "c544459449f16159041d8f20964978e0e943a9fd4283c830bc9747dffb3fbeb2",
+    "policy": "Reuse immutable helper released44. Exact one cookie, exact name/token/policy attrs, duplicate/extra attrs rejected; only attribute order is normalized.",
+    "shared_wp03_patch_not_needed_by_Reports": true,
+    "source_WRITE_by48": false
+  },
+  "protocol_inputs": [
+    {
+      "path": ".github/workflows/test-ci.yml",
+      "blob_C12": "9f078f4e37b758691bcd073e5590f05d5444392a",
+      "overlay": "UNCHANGED"
+    },
+    {
+      "path": "script/test-ci.ts",
+      "blob_C12": "6f67619958ce0567ea93dd66c53ae3aca242cb95",
+      "overlay": "UNCHANGED"
+    },
+    {
+      "path": "script/test-ci-request.ts",
+      "blob_C12": "5007e48270b80c83eb719d35cec9e6343206a195",
+      "overlay": "UNCHANGED"
+    },
+    {
+      "path": "script/test-ci-location.ts",
+      "blob_C12": "ee07aaf93c54fa935e6c4e9d845aa73af3b464ee",
+      "overlay": "UNCHANGED"
+    },
+    {
+      "path": "script/test-ci-package.ts",
+      "blob_C12": "a10c7b04ca6633f688b62069a9a9832aaa4543dd",
+      "overlay": "UNCHANGED"
+    },
+    {
+      "path": "packages/app-shell/e2e/playwright.production.config.ts",
+      "blob_C12": "ae56b7fc9da248ee8e34d73d0eb13c8fe8e0c088",
+      "overlay": "UNCHANGED"
+    },
+    {
+      "path": "packages/app-shell/playwright.config.ts",
+      "blob_C12": "d935c68f5b996c0e53195ec832b969c217fcf858",
+      "overlay": "UNCHANGED"
+    },
+    {
+      "path": "packages/app-shell/e2e/tsconfig.json",
+      "blob_C12": "2bb15622053039562aab716f9afce410071afaf3",
+      "overlay": "UNCHANGED"
+    },
+    {
+      "path": "modules/sucafina/bunfig.toml",
+      "blob_C12": "7000633db2c4f11e3f1aff351cd28c0df9affeca",
+      "overlay": "UNCHANGED"
+    }
+  ],
+  "nominal_request": {
+    "package": "app",
+    "packageSelector": "packages/app",
+    "directory": "packages/app-shell",
+    "runner": "playwright",
+    "args": [
+      "e2e/sucafina/reports.spec.ts"
+    ],
+    "env": {
+      "ORCHESTRA_CHANNEL": "prod"
+    },
+    "config": "e2e/playwright.production.config.ts"
+  },
+  "nominal_controls": {
+    "workers": 1,
+    "retries": 0,
+    "repeatEach": 1,
+    "test_timeout_ms": 180000,
+    "trace": "off",
+    "video": "off",
+    "screenshot": "off",
+    "test_count": 4,
+    "existing_assertions_retained": true,
+    "new_suites": 0,
+    "local_product_execution": 0
+  },
+  "new_RPT02_oracles": [
+    "Real successful history read dropped after route.fetch; question/reply/edit private drafts stay visible while mutations are disabled.",
+    "First explicit Reconcile discussion loses another real successful thread read; all drafts remain; second explicit reconcile restores actions without sending drafts.",
+    "Zero mutation requests and unchanged storage version through read reconciliation.",
+    "Existing lost reply response, reopen and pre-send failed edit request remain unchanged.",
+    "Second explicit edit commits once and its real successful response is dropped; exact serialized intent/key/CAS retained.",
+    "Authorized reread shows newer message version; no mutation retry until explicit Retry same action.",
+    "Receipt recovery sends exact original payload/key and cannot increment storage/message version again; both historical versions remain protected after reopen.",
+    "Receive actual create200 then lose only its first real authorized thread read; retain private question draft and exact pending payload/key/CAS.",
+    "Explicit Reconcile action reads the known created thread and adopts its URL; a real focus access probe and authorized thread read cannot purge or submit the pending create.",
+    "Only explicit Retry same action recovers the original create receipt using exact bytes/key; storage remains plus one and the thread has one initial message."
+  ],
+  "readiness_fix": {
+    "source": "Decisions44 hosted nominal run43649103661 job132613359447 and current CLI formatAddress output",
+    "observed_line": "server listening on http://::1:4110",
+    "change": "Accept emitted unbracketed IPv6 loopback in own readiness regex; same 4110 port and existing deadline."
+  },
+  "check_interface": {
+    "workflow": ".github/workflows/astra-wp07-check.yml",
+    "source36_blob": "28c453f4b7735f944e1237715e399e955d86546c",
+    "trigger": "push to astra-check-wp07",
+    "observed_ref": "73b716b89d84dfba10070cf4a9369ca9c9e75159",
+    "commands": [
+      {
+        "cwd": "modules/sucafina",
+        "command": "bun typecheck"
+      },
+      {
+        "cwd": ".",
+        "command": "bun run check:guards --base origin/dev"
+      }
+    ],
+    "constraint": "Existing source workflow only; absent C12. Check source result is not proof for composed W. Reconcile current ref/CAS and in-flight owner45 before dispatch; no workflow edits by48."
+  },
+  "dispatch": {
+    "transport": "GitHub MCP/CAS only",
+    "request_blob_original_pretty": "d5e2641c9d230e697c6d11d5a51be3c3eca5344b",
+    "request_sha256_pretty": "01608e6052545eb2729fb5cca8e3d1c2ca72302b5ee9cb4181330c7041c97766",
+    "normalized_request_sha256": "37251a43f26b5cd4b6a513334f38c537a80b7a613ac8da8fa9aa819ca3cbc22f",
+    "ref_pattern": "ci-run-linux-astra-wp07-<Wshort>-37251a43-m48-<attempt>",
+    "ref_rule": "Create a unique ref directly at complete S only after no in-flight equivalent/WP run; do not create at W and update afterward.",
+    "dedupe_tuple": [
+      "W product tree",
+      "normalized request",
+      "env/config/fixture closure",
+      "attempt"
+    ],
+    "last_observed_inflight": {
+      "run": 43651791685,
+      "ref": "ci-run-linux-astra-wp07-7c54573f-04335bcb-m39-05",
+      "sha": "3d40a1edf534b431fe6e97ca46e3be64a6dbaf3b",
+      "warning": "Historical observation only; root must recheck at dispatch."
+    },
+    "validator_limits": "Actual validator admits existing .spec.ts file targets; no title/grep selector or timeout option. Exact Reports file emits all four journeys.",
+    "latest_root_dispatch_observation": "Agenda39 m39-05 completed failure; root now waits for m39-06 in progress. Child did not poll or dispatch."
+  },
+  "readings": {
+    "E2E_AGENTS_blob": "2e24eecc8ccea104922263bf6c7ccc8e93da24ec",
+    "complete_official_docs_ack": "2026-11-14T23:12:53Z",
+    "repository": "microsoft/playwright",
+    "ref": "d466ac5358cae058cdc75d2ae3ab3ad220042730",
+    "version": "v1.59.1",
+    "docs": [
+      {
+        "path": "docs/src/best-practices-js.md",
+        "blob": "67930b095301117fd204434a34553ef94622b586"
+      },
+      {
+        "path": "docs/src/actionability.md",
+        "blob": "3510171e5c328c19fe1c249e991a68b7b60ef4cf"
+      },
+      {
+        "path": "docs/src/test-assertions-js.md",
+        "blob": "c809dce782764abb0e52d46f8a7652331268fa47"
+      },
+      {
+        "path": "docs/src/locators.md",
+        "blob": "3a6a5de389fd6ec3bdf630bbebc0e669c1c77209"
+      },
+      {
+        "path": "docs/src/network.md",
+        "blob": "7ee76e8c71f7fce04e32cba4a12434119dfa0970"
+      },
+      {
+        "path": "docs/src/browser-contexts.md",
+        "blob": "d34759c18549026d7cba3558ce8357d6e441c4c7"
+      }
+    ]
+  },
+  "remaining": "Root must publish coherent changes, finalize exact W/S manifests and obtain actual hosted results. This proposal makes no PASS or criterion-completion claim.",
+  "complete_owned_patch": {
+    "path": "reports-e2e48.patch",
+    "sha256": "f73b2094abf493463a5c03820525df0cfe88b8fe689f3846e93b875d7f44229b",
+    "targets": 7,
+    "preimage_authority": "source36 terminal; no shared live-source writes"
+  },
+  "updated_at": "2026-11-14T23:32:31.668696Z",
+  "new_RPT04_oracles": [
+    "Fill private question/reply/edit drafts in both logout and retained-session pages, then abort one real reply attempt in each page before any producer submission.",
+    "Validate original payload/key/CAS, read-only drafts, recovery controls, one captured request per page, unchanged storage and unchanged thread before logout.",
+    "Installed logout clears private drafts and recovery controls in the first page. Explicit pending-action reconciliation on the retained real credential receives actual403 and purges all protected views, fields and recovery controls.",
+    "After fresh legitimate enrollment, both old attempts remain absent, no retry was emitted, storage/thread are unchanged, and every previous access/artifact positive and negative oracle remains."
+  ],
+  "revocation_trigger_change": "The former retained-page Next topic trigger is replaced by Reconcile action to directly exercise the genuine POST403 client/view purge. All existing visibility/content/access assertions are retained.",
+  "preimage_materialization_note": "Removed one extra trailing LF from locally supplied revocation.ts preimage to recover exact previously fetched source/C12 blob21d21cac3b28211e3360ccbc8a3a4abe58653232. No code was changed in that preimage."
+}
