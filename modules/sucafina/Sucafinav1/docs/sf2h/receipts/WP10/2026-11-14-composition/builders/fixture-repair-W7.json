@@ -1,0 +1,191 @@
+{
+  "schema": "sf2.wp10.builder-receipt.v1",
+  "created_at": "2026-11-14T04:54:28.479720+00:00",
+  "builder": {
+    "id": "/root/fixture_repair_w6",
+    "role": "author of own WP10 integration tests/helpers",
+    "lease": "CLOSED",
+    "independent_reviewer": false
+  },
+  "task": "W7 BI case-only access counterproof, cooperative Review deadline and reconciliation of concurrently published W11 Review proofs",
+  "source_lineage": {
+    "W6": {
+      "sha": "d1ca0b2b02936d4824a9201af5c133d7bbf2056c",
+      "tree": "53c7bc80f4e6c65c492a233d2cd26b4d0c5c8144"
+    },
+    "W11": {
+      "sha": "9c427835a029ac8594421436bffb4c5c23da059c",
+      "tree": "f2f38d45ce24b92296dcd8806b5eb71b7a8ab33a",
+      "review_blob_verified": "0a59d365c1e1602b9eb08ce7c38c51113c554f9a",
+      "source": "analysis/concurrent-W11/repo",
+      "all_published_review_expect_lines_retained": 65
+    },
+    "pre_reconciliation_delta": {
+      "path": "analysis/fixture-repair-W7-review-before-W11.patch",
+      "sha256": "fc31cc928ca78624d4f9e2b1d27923749e11fe059aca3785f01164e76fbdc17c",
+      "git_blob_sha1": "b9b7f7923f56dcd4bc5407c2739657bf0537c8e3",
+      "bytes": 12737
+    },
+    "independent_R1_input": {
+      "path": "analysis/reviews/R1-product-W6.json",
+      "sha256": "50bc613d0acb6587e8379d566174165c68b65ae1c37080ec7c2e56edc5dd2432",
+      "finding": "R1-UX-09",
+      "verdict": "needs-hosted-evidence"
+    }
+  },
+  "authored_files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-access-browser-fixture.ts",
+      "sha256": "e1684d618d27ab8f0ea45463955d56003acde6d78d6140f5538bbd41c4c0e86c",
+      "git_blob_sha1": "c491c4fe6e41a2a255f0c3e9c37b7f3d6489ef9f",
+      "bytes": 7804,
+      "base": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-case-access.test.ts",
+      "sha256": "56ef9fe0f114860370324e5aced89717b221f4c6bba968f1041dbd77c26e5924",
+      "git_blob_sha1": "58c543793d424ce9c2d5e5c30153040467be7540",
+      "bytes": 13162,
+      "base": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts",
+      "sha256": "d3db838157ddfd9143302f84b49b5790e0f949af1ed0e0ce08074b98b97c493c",
+      "git_blob_sha1": "3eb140557b597156baf52578d8981d332e52aef3",
+      "bytes": 2313,
+      "base": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-access-browser-fixture.ts",
+      "sha256": "72f948e8b39ac6da0369af1da93d5112a354098765ea323bb964e533e23c6192",
+      "git_blob_sha1": "2ee59326928d83253529cc2873ecc5b40731bd75",
+      "bytes": 6833,
+      "base": {
+        "label": "W6",
+        "sha": "d1ca0b2b02936d4824a9201af5c133d7bbf2056c",
+        "sha256": "b73326eea079e0fbfa93269119562a287e22771518cf5d9079c33227614da5f8",
+        "git_blob_sha1": "6e1656238b9344c0a5c4f87bfcd3f52878b920c7",
+        "bytes": 6789
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "sha256": "b10bddf3ce9230897182c88032ff99f63180bcca15f62e0932792aad9ca33afb",
+      "git_blob_sha1": "9653f61955db808e761a0f8e6e7ab497e9b4ac17",
+      "bytes": 28367,
+      "base": {
+        "label": "W11",
+        "sha": "9c427835a029ac8594421436bffb4c5c23da059c",
+        "sha256": "3a6ef80f99f6cde3b0a83a1feb628b4536e7f1dd05049d784d5f06d2efb4ee4a",
+        "git_blob_sha1": "0a59d365c1e1602b9eb08ce7c38c51113c554f9a",
+        "bytes": 27306
+      }
+    }
+  ],
+  "root_owned_dependencies_not_edited": [
+    "apps/cli/src/sucafina-product/extended-http.ts",
+    "apps/cli/src/sucafina-product/extended-bi-options.ts",
+    "apps/cli/src/sucafina-product/bi-services.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp10/integration/financial-composition-fixture.ts"
+  ],
+  "implemented": [
+    "New BI test seeds only Planner domain inputs, an empty case and an empty USD Procurement queue; actual human coverage registration and two real HTTP decision-promote calls produce the scenarios in SQLite/C08.",
+    "Both version-derived scenarios retain conditioned comparison, null total, pending coverage and included service; no financial choice is recorded. Actual comparison and createSfPlannerCalculationServices persistence produce the comparison ref.",
+    "BI05 options must positively enumerate the real authorized empty queue. BI09 Chromium must enumerate the exact persisted tuple, render real bi-data200 with a bound UI receipt and input/result digests, and expose an actual source200.",
+    "The dispatcher observation wrapper returns the real first result unchanged and invokes the original dispatcher again with the same call. Replay must be denied without value. No validator, authorization decision, source body or status is invented.",
+    "The case participant list alone is removed. The fixture identity remains active, the existing host lease revalidates, and a fresh authenticated read admission revalidates. The next real browser source request must receive403 and clear private content, tables, navigation, selected result options and bootstrap.",
+    "The transport holds an actual previously authorized source200, then releases those exact bytes after403 cleanup. Another browser task must observe the DOM still cleared. Direct revoked bi-data must independently return403 without projection/presentation.",
+    "Review and BI keep the120000ms Bun budget and gain105000ms cooperative cancellation, propagated Request signals, authority environment clock checks, named phase log records and cleanup of all owned resources even when ports translate cancellation to denial.",
+    "Review reconciliation keeps all W11 real-February exclusion/source-unchanged asserts, case/session egress races, recovery asserts, the original Review browser case-only test, tamper/history negatives and ordinary stale-source409 with authorized history200."
+  ],
+  "source_diagnoses_sent_to_root": [
+    {
+      "path": "apps/cli/src/sucafina-product/extended-bi-options.ts",
+      "issue": "Nested sf_bi_view and sf_work_list admissions were not consumed before producer readers needed host.requestFor; root owns exact single-consumption composition fix."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-http.ts",
+      "issue": "BI decision caseFor and withCase could run before shared C16 dispatcher consumption. Root moved case derivation/binding into post-consumption BI source callbacks, retaining shared dispatcher validation and receipts."
+    }
+  ],
+  "empty_operations_source_check": {
+    "allowed_path": "product/decisions/mutations.ts addAlternative lines70-102 accepts actual ScenarioRequest including operations[] and produces/reassesses/persists the selected forecast; portfolio-coverage remember uses the same schema. Existing own portfolio-promotion.test.ts promotes two distinct forecast versions this way.",
+    "different_contract": "Portfolio evaluation candidate-operation-required is not this decision-promote path; the new BI proof never calls Portfolio evaluate or Apply."
+  },
+  "static_verification": {
+    "local_product_tests_build_typecheck_import_server_browser_execution": 0,
+    "remote_writes": 0,
+    "foreign_product_writes": 0,
+    "assertion_lines_preserved_from_W11": 65,
+    "missing_W11_assertion_lines": [],
+    "Review_test_declarations": 1,
+    "new_BI_test_declarations": 1,
+    "merge_markers": 0,
+    "trailing_whitespace": 0,
+    "execution_pass_claimed": false
+  },
+  "latest_hosted_input": {
+    "runId": 43557027877,
+    "jobId": 132332098591,
+    "W": "d1ca0b2b02936d4824a9201af5c133d7bbf2056c",
+    "S": "ebcd344c1b138b931b9ca76feaa10da0c318dd43",
+    "conclusion": "failure",
+    "log": "analysis/hosted/job-132332098591.log",
+    "logSha256": "b4c9419695b4bc963143d555e8f4700c4108cb336e220ea6c55d0c422d027ad2",
+    "review_observation": [
+      {
+        "path": "Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+        "tests": [
+          {
+            "verdict": "fail",
+            "name": "default Review HTTP retains a persisted Portfolio at N after the case reaches N+1 and suppresses revoked history",
+            "durationMs": 165570.13,
+            "logLine": 953
+          }
+        ],
+        "counts": {
+          "fail": 1
+        },
+        "durationMs": 165570.13
+      }
+    ],
+    "qualification": "Historical W6 failure, not execution evidence for these W7 changes; Review timed out before browser proof."
+  },
+  "required_hosted_checks": [
+    {
+      "path": "Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "budget_ms": 120000,
+      "cooperative_ms": 105000
+    },
+    {
+      "path": "Sucafinav1/test/product/wp10/integration/bi-case-access.test.ts",
+      "budget_ms": 120000,
+      "cooperative_ms": 105000
+    }
+  ],
+  "criteria_preserved": [
+    "WP10.CMP.02",
+    "WP10.T01.SUC.10",
+    "WP10.T02.QLT.01",
+    "WP10.T03.CHK.01"
+  ],
+  "acceptance": {
+    "criterion_acceptance_granted": false,
+    "canonical_171_modified": false,
+    "native_global_acceptance": false,
+    "independent_review_substituted": false,
+    "merge_or_deploy": false
+  },
+  "limitations": [
+    "No local runtime execution; source implementation and static reconciliation only. Hosted CI must observe positive, negative, latency and cleanup outcomes on the final candidate.",
+    "Browser transport is Playwright route forwarding of exact real handler bytes; it does not qualify TCP/deployed hosting, installed identity or native/global E2E.",
+    "Fixture identity/domain inputs and explicit human coverage choices are declared boundaries. Financial totals remain conditioned with unresolved categories. No complete cost, waterfall, timeline, native model, Apply or business choice acceptance is asserted.",
+    "Independent R1/R2/R3 review of the final frozen candidate remains necessary. The author is ineligible as independent reviewer of these changes."
+  ],
+  "patch": {
+    "path": "analysis/fixture-repair-W7.patch",
+    "sha256": "1547af357ffd9328335a63fd480e805d16022db23689ba6903f7bf0fd332fe2f",
+    "git_blob_sha1": "f6e98d5302e637c36af3cb4bad725fe80e4f6cea",
+    "bytes": 40994
+  }
+}

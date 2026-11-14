@@ -1,0 +1,116 @@
+{
+  "schema": "sf2h-compose-increment-receipt-v1",
+  "owner": "Astra / WP10",
+  "scope": "Protected record history and Dashboard C12 readability after apply",
+  "status": "IMPLEMENTED_NOT_REVALIDATED",
+  "base": {
+    "pr": 32,
+    "head": "4306b310e4d6dac77f9beab461adad4e8e924849",
+    "tree": "b786e0cee23f13c11542cea32db38ef532071576"
+  },
+  "finding": "https://github.com/gustavomhss/Orchestra-SF/pull/32#issuecomment-6875055225",
+  "implementation": [
+    "Atlas readOriginalCapture returns the verified durable original projection and reference; readOriginal remains compatible. It preserves current C08 membership/native case binding and exact Request/binding/selector fences.",
+    "Dashboard/Planner record history keeps original projection bytes and authority metadata unchanged. Current authorization, source reference and physical incarnation are checked separately and repeatedly through actual producers.",
+    "C12 prepare captures actual original records.read projections before mutation, verifies them under the C08 all-surface commit, and binds capture digests into the protected prepared binding recordDigest. The hypothetical command preview is never an original.",
+    "The Dashboard receipt reader correlates current authorized case membership, choice, prepared binding, command, case receipt, durable state receipt and its actual C08 transaction proof. It reads current source ACL/physical lineage without admitting another human apply.",
+    "Read-only resolution of an already recorded Hot Topic operation requires the exact case/version, draft, operation, protected C12 binding, real receipt and currently authorized fresh/historical source projections. New preparation and application retain the existing live-draft and human-review checks.",
+    "Legacy bindings without a sufficient original capture remain unavailable. No old projection, receipt or native evidence is reconstructed."
+  ],
+  "composition_required": {
+    "path": "apps/cli/src/sucafina-product/business-services.ts",
+    "change": "Pass dashboardEvidence: dashboardDecisions to createSfAtlasBusiness.",
+    "coordination": "Root applies the one-line additive hunk to its current W5 business-services staging, retaining the separate C17 finance and OPS-HOST-01B changes."
+  },
+  "checks": {
+    "product_execution": "NOT_RUN_LOCALLY",
+    "required_hosted_scope": [
+      "test/product/wp10/integration/dashboard-after-apply.test.ts",
+      "test/product/wp10/atlas-business/record-history.test.ts",
+      "test/product/wp10/atlas-business/atlas-recovery.test.ts"
+    ],
+    "typecheck": "bun typecheck in modules/sucafina/Sucafinav1 on GitHub Actions at the published composition SHA",
+    "guards": "Apply package AGENTS guards to the published composition; reuse equivalent same-tree evidence and do not launch the epic.",
+    "runs": [],
+    "static_review": "Composition teammate reviewed the four own source files without finding an authorization bypass; this is not one of the required independent final reviews."
+  },
+  "proof_boundaries": [
+    "After-apply test uses real product authority, SQLite/C08, Dashboard producers, prepare, human review/apply, BCS, scenario access and case read. Only the initial records and an explicitly conditioned existing choice are fixture data.",
+    "record-history.test injects a clearly identified immutable-capture fixture while exercising real source producers and physical source lifecycle. It does not claim a native Atlas run.",
+    "atlas-recovery.test retains the real scanner/durable-append/reopen path for readOriginalCapture and its non-aliasing/current-grant checks.",
+    "New tests assert receipt/command/proof mismatches, ambiguous changes, membership revocation, missing legacy captures, source replacement and mutated operation selectors. They still require hosted execution."
+  ],
+  "remaining_findings": [
+    {
+      "id": "WP10-C17-PLANNER-HISTORICAL-OPERATIONS",
+      "owner": "WP10 composition; WP03 producer only if a missing replay seam is confirmed",
+      "status": "OPEN",
+      "path": "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+      "base_blob": "f27b25e5e7fdea3a4a228cbe7d79ef82bf4b0fdf",
+      "condition": "Stored Planner scenarios with operations still require resolveForecastSource(scenario.baseRef) to be fresh. A protected historical record resolved by BCS alone does not prove that the complete stored Planner case can reopen.",
+      "safe_next_step": "Evaluate a focused own-verifier patch that consumes an already authorized original capture plus its currentRef/current ACL and physical continuity. Validate each operation's component IDs and replacement source against that original producer projection. Financial hypothetical/comparison replay must still use an authenticated producer calculation/result receipt and current dependencies; never label an old result as a new current calculation.",
+      "producer_dependency_if_needed": "If a replacement or calculation cannot be replayed from the protected original with existing canonical producer APIs, request an explicit WP03 read-only historical source/project/replay seam carrying the original input digest, source incarnation/version and current authorization. Do not substitute current values or relax financial completeness."
+    },
+    {
+      "id": "WP10-C17-NATIVE-PRECEDENT-ACCESS",
+      "owner": "WP11 protected case access + WP14 recall; composed by WP10",
+      "status": "BLOCKED_EXTERNAL",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/decision-memory/case-recall.ts",
+        "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+        "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts"
+      ],
+      "condition": "PR36 candidateAccess exists, but ordinary cases.read and Atlas reads intentionally require the original native case ID/incarnation/version. Passing those ordinary readers for another case cannot grant native precedent access.",
+      "required_seam": "A protected read-only precedent producer must bind the exact admitted recall selection/query/period to the original Request, native run/binding/generation, current candidate membership, source authorization and physical identity. It must preserve the existing original native binding.",
+      "forbidden_substitutes": [
+        "rewritten case binding",
+        "synthetic UI call",
+        "fabricated native receipt",
+        "ordinary cases.read exposed as candidate access"
+      ]
+    },
+    {
+      "id": "WP10-C17-HOTTOPIC-PERIOD",
+      "owner": "WP02 Dashboard source producer + WP10 composition",
+      "status": "OPEN",
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/sources.ts",
+      "condition": "Hot Topic record reads require the observation-day period. This increment proves same-period after-apply history; it does not claim cross-day Hot Topic historical reads when the current producer rejects the original period.",
+      "required_seam": "An explicit producer policy for current reauthorization of a captured past observation period, without changing the original period or falsely labelling current values as the original."
+    },
+    {
+      "id": "WP14-ATLAS-FIXTURE-REQUEST-STABILITY",
+      "owner": "WP14 / PR36",
+      "status": "OWNER_PATCH_POSTED_NOT_APPLIED",
+      "comment": "https://github.com/gustavomhss/Orchestra-SF/pull/36#issuecomment-6875348162",
+      "consumed_owner_head": "2fb7e9c792327725384d99d656cc44b232ddc485",
+      "current_owner_head_observed": "46c904ead4e9b363422f6739258e492913ae6e2e",
+      "files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp14/atlas-restart-reader.ts",
+          "w4_blob": "9268b8797955057559bf22c0625b3b302c49cfe5",
+          "owner_current_blob": "60f768da8420782418b516b2f7e839845a101197",
+          "after_blob": "09d866a12c69661ef934da363f2849ab4948bbcf"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+          "w4_blob": "d31c8dc6867bcbb7f389bde79df644a5133de51a",
+          "owner_current_blob": "d31c8dc6867bcbb7f389bde79df644a5133de51a",
+          "after_blob": "3a5cceb41d55de565e7b738df06ef806b9a00d6f"
+        }
+      ],
+      "patch": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/patches/wp14-request-stability.patch",
+      "condition": "Two Atlas fixtures construct a new Request at every requestFor call; the original-capture identity fence correctly rejects this. Preserve a WeakMap-bound original Request per TrustedDomainContext, as production UI/native registries do.",
+      "validation": "Static only; product tests not run. No owner product or branch mutation."
+    }
+  ],
+  "global_gates": {
+    "approved_plan": "UNCHANGED",
+    "criterion_maps": "Preserve all 85 WP00 and 171 WP10 criteria; update proof status only for the exact published SHA/tree and hosted evidence.",
+    "eight_final_selections": "PRESERVED_PENDING_NATIVE_EVIDENCE",
+    "AM01_AM06": "PRESERVED_PENDING_REQUIRED_EVIDENCE",
+    "independent_reviews": "THREE_REQUIRED; authorship/static teammate discussion is not counted",
+    "C_G7_D_G8": "PRESERVED",
+    "global_release": false
+  },
+  "next_action": "Root publishes the own increment with the one-line consumer composition, pins the resulting head/tree, runs the surgical hosted checks and records the outcome before claiming READY for this scope. C17 remains incomplete."
+}

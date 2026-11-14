@@ -1,0 +1,293 @@
+{
+  "schema": "sf2-independent-review-v1",
+  "reviewer": "/root/review_product_ux_w8",
+  "review_role": "produto/UX/documentação",
+  "review_phase": "PRELIMINARY_AWAITING_OWNER_CORRECTION_AND_EXACT_CHECKS",
+  "reviewed_head": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+  "reviewed_tree": "051391628c61f6a4333c8f13567c5518c4ff8f86",
+  "no_author_overlap": true,
+  "authorship_exclusions": {
+    "product_edits": false,
+    "test_edits": false,
+    "workflow_edits": false,
+    "local_product_execution": false,
+    "github_mutations": false,
+    "scope": "Read-only inspection; writes restricted to this review report and source hash metadata."
+  },
+  "source_plan": {
+    "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "campaign_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+    "observed_campaign_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+    "campaign_bytes": 1503706,
+    "handoff": "a3d29d011ba3607a57914701300f09117a3e2de9"
+  },
+  "examined_paths": [
+    {
+      "path": "apps/cli/src/sucafina-product/extended-http.ts",
+      "blob": "43f73f337fa570d87f7a2f5f7aad19a038767fea",
+      "local_blob": "43f73f337fa570d87f7a2f5f7aad19a038767fea",
+      "matches_published_W8": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-browser.ts",
+      "blob": "fadc7cf0a3dc2a8df187c3f0634a824e801de560",
+      "local_blob": "fadc7cf0a3dc2a8df187c3f0634a824e801de560",
+      "matches_published_W8": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-assets.ts",
+      "blob": "d4f61546186a0f752be4c103b3a2e112deb4a582",
+      "local_blob": "d4f61546186a0f752be4c103b3a2e112deb4a582",
+      "matches_published_W8": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/bi-services.ts",
+      "blob": "7d44c1982c3c62fdaf21f98945ded9e572fd359a",
+      "local_blob": "7d44c1982c3c62fdaf21f98945ded9e572fd359a",
+      "matches_published_W8": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-bi-options.ts",
+      "blob": "8b9d1de02f4187113ff09bc3f2ca7e953f420abb",
+      "local_blob": "8b9d1de02f4187113ff09bc3f2ca7e953f420abb",
+      "matches_published_W8": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+      "blob": "d69bb554ba35863b0bf248c6aa0382205614d12a",
+      "local_blob": "d69bb554ba35863b0bf248c6aa0382205614d12a",
+      "matches_published_W8": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/bi-entry.ts",
+      "blob": "305ee63cd74658f6665a6ebbca885fe5995ea95f",
+      "local_blob": "305ee63cd74658f6665a6ebbca885fe5995ea95f",
+      "matches_published_W8": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+      "blob": "2e6c081ad2a5282654707f7fc7278183e7dfb20d",
+      "local_blob": "2e6c081ad2a5282654707f7fc7278183e7dfb20d",
+      "matches_published_W8": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts",
+      "blob": "42878a8eb5eb6e33c0140559e6390d537c3000f0",
+      "local_blob": "42878a8eb5eb6e33c0140559e6390d537c3000f0",
+      "matches_published_W8": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/components.ts",
+      "blob": "8de96e7fef8b1db5f174baaff47864b68f8d2fca",
+      "local_blob": "8de96e7fef8b1db5f174baaff47864b68f8d2fca",
+      "matches_published_W8": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/meeting.ts",
+      "blob": "c2c8bf7ff6209daf43edc6a74faafc1da5604329",
+      "local_blob": "c2c8bf7ff6209daf43edc6a74faafc1da5604329",
+      "matches_published_W8": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/workspace.ts",
+      "blob": "74ea2daa2cc37fab3edb7c0d4ab2e31f7bceb1e6",
+      "local_blob": "74ea2daa2cc37fab3edb7c0d4ab2e31f7bceb1e6",
+      "matches_published_W8": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts",
+      "blob": "9b39e67b932f93e09ea28436144b668208849155",
+      "local_blob": "9b39e67b932f93e09ea28436144b668208849155",
+      "matches_published_W8": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-access-browser-fixture.ts",
+      "blob": "c3d11836a54c04f6e86c60e9d8a19d403dcbf3ca",
+      "local_blob": "c3d11836a54c04f6e86c60e9d8a19d403dcbf3ca",
+      "matches_published_W8": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/README.md",
+      "blob": "511db1593b7d6adb9bb248d05dc53195646d7a1a",
+      "local_blob": "511db1593b7d6adb9bb248d05dc53195646d7a1a",
+      "matches_published_W8": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json",
+      "blob": "5cc315a2fb88118dbfa9ed5259e0fdf792dbf6b7",
+      "local_blob": "5cc315a2fb88118dbfa9ed5259e0fdf792dbf6b7",
+      "matches_published_W8": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-bi-browser.ts",
+      "blob": "e3edc3ed317be3399855edee3b4ffd4eaa5e5b5e",
+      "local_blob": "e3edc3ed317be3399855edee3b4ffd4eaa5e5b5e",
+      "matches_published_W8": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/view.ts",
+      "blob": "9b279523da60f18eebdc270707d1b42c865e3dca",
+      "local_blob": "9b279523da60f18eebdc270707d1b42c865e3dca",
+      "matches_published_W8": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/decision-view.ts",
+      "blob": "3e5cf79d39a09c383b792ee27c867023a624231a",
+      "local_blob": "3e5cf79d39a09c383b792ee27c867023a624231a",
+      "matches_published_W8": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/portfolio-view.ts",
+      "blob": "35c94e7274127926cef17aa40664db075074d4d4",
+      "local_blob": "35c94e7274127926cef17aa40664db075074d4d4",
+      "matches_published_W8": true
+    }
+  ],
+  "method": [
+    "Read AGENTS, START, WORKFLOW, COMMON, WP00/WP10 handoffs and relevant canonical task/global criteria.",
+    "Read real mounted BI/review/shell composition, UI decision application/contribution renderers, source navigation, README and lifecycle tests.",
+    "Verified immutable W8 commit/tree and 20 examined blobs through GitHub MCP.",
+    "Metadata-only SHA256 comparison of freeze9 artifacts: 38/38 equal; 17 contracts, 5 profiles, 18 skills, 8 packs, 39 operations and 6 required proofs. This verifies identity, not behavior.",
+    "No browser or product execution by reviewer; Actions runtime evidence remains separately identified by W/S."
+  ],
+  "findings": [
+    {
+      "id": "UX-WP10-BI-RETURN-CONTEXT-01",
+      "severity": "MUST_FIX",
+      "owner": "WP10",
+      "state": "OPEN",
+      "evidence_kind": "SOURCE_PATH_DEMONSTRATION_NOT_RUNTIME_REPRODUCTION",
+      "paths": [
+        "apps/cli/src/sucafina-product/extended-bi-browser.ts",
+        "modules/sucafina/Sucafinav1/product/interface/bi-entry.ts",
+        "modules/sucafina/Sucafinav1/product/analytics/view.ts"
+      ],
+      "criterion_ids": [
+        "CAMP.QLT.01",
+        "CAMP.QLT.03",
+        "WP10.T02.CMP.01",
+        "WP10.T02.SUC.01",
+        "WP10.T03.CHK.02"
+      ],
+      "scenario": "Open the real BI route, select another view/period and specific base/candidate/currency or result, render it, open one authorized origin, then navigate Back.",
+      "observed_source": "Extended BI initializes state only from initial location URL; control changes/load do not update URL or history.state. Source anchors navigate in the same tab. pagehide clears the workspace and persisted pageshow forces reload. restoreBiFocus is not imported/called. Therefore the return path reconstructs the initial selection, losing the subsequent human selection and row focus.",
+      "impact": "The reviewer must reconstruct a comparison to continue; a return to the original initial view may be mistaken for the comparison just inspected.",
+      "expected_correction": "Preserve the exact authorized selection and focus through origin navigation/Back; reauthorize before render and clear retained identity on revocation. Never persist protected projection bytes or silently choose a substitute when a selection is stale.",
+      "required_recheck": "Hosted real-browser change filters/versions/currency -> explicit origin -> Back -> same choices and focus after current authorization; revoked/stale selection produces explicit unavailable and no stale private content.",
+      "notified": "Root received immediately and acknowledged correction planned for W9."
+    },
+    {
+      "id": "UX-WP10-BI-DECISION-NAV-02",
+      "severity": "MUST_FIX",
+      "owner": "WP10; canonical destination producers if absent",
+      "state": "OPEN",
+      "evidence_kind": "SOURCE_PATH_DEMONSTRATION_NOT_RUNTIME_REPRODUCTION",
+      "paths": [
+        "apps/cli/src/sucafina-product/extended-bi-browser.ts",
+        "modules/sucafina/Sucafinav1/product/analytics/view.ts",
+        "modules/sucafina/Sucafinav1/product/analytics/decision-view.ts",
+        "modules/sucafina/Sucafinav1/product/analytics/portfolio-view.ts"
+      ],
+      "criterion_ids": [
+        "WP10.T01.DOD.01",
+        "WP10.T01.CMP.01",
+        "WP10.T02.CMP.01",
+        "WP10.SUC.10",
+        "CAMP.SUC.90"
+      ],
+      "scenario": "Read a persisted scenario/portfolio/sensitivity in BI09-BI11 and try to open its recorded result, component source, cost coverage, pending question or case.",
+      "observed_source": "Extended BI passes only four arguments to renderBiView. The fifth BiDecisionNavigation argument is absent. Producers gate openResult/openSource/openEvidence/openCoverage/openQuestion/openCase controls on these callbacks; without them they render identifiers as text. The supplied callback handles ProjectionValue drilldown only, using valueId/refDigest.",
+      "impact": "Decision BI presents evidence references without the expected path to inspect their original contextual artifacts; the producer API is present but not consumed.",
+      "expected_correction": "Compose only canonical authorized destinations for exact protected references, with source/case/ACL revalidation and no guessed destination based solely on a textual ID. Missing producer destinations must be explicit dependencies, not declared implemented.",
+      "required_recheck": "Hosted real BI decision -> each supported result/source/coverage/question/case target; ambiguous/foreign ref, revoked membership, changed source and late response must not supply destinations.",
+      "notified": "Root received immediately and acknowledged destination inspection/correction."
+    },
+    {
+      "id": "UX-WP10-REVIEW-SHELL-REFRESH-03",
+      "severity": "MUST_FIX",
+      "owner": "WP10",
+      "state": "OPEN",
+      "evidence_kind": "SOURCE_PATH_DEMONSTRATION_NOT_RUNTIME_REPRODUCTION",
+      "paths": [
+        "apps/cli/src/sucafina-product/extended-http.ts",
+        "apps/cli/src/sucafina-product/extended-browser.ts",
+        "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+        "modules/sucafina/Sucafinav1/product/reviews/meeting.ts",
+        "modules/sucafina/Sucafinav1/product/reviews/workspace.ts"
+      ],
+      "criterion_ids": [
+        "WP10.T01.DOD.01",
+        "WP10.T02.QLT.01",
+        "WP10.T02.SUC.01",
+        "WP10.T03.CHK.02",
+        "CAMP.QLT.01",
+        "CAMP.QLT.03"
+      ],
+      "scenario": "Open an authorized preserved review or preparation workspace, keep focus outside a form, then click the canonical shell Refresh data or let its30-second poll complete.",
+      "observed_source": "Extended HTTP marks only BI with data-sf-retain-view. Review workspace has neither that marker nor a listener that claims sucafina:main-refresh. The shell replaces main with newly fetched HTML containing Loading review and calls only its own attach(); the review bundle/bootstrap remain outside main and are not re-executed. The mounted reader is therefore replaced by an uninitialized loading placeholder. In addition, extended-browser has no sf-access-revoked subscription to dispose/abort its retained object when the shell revokes.",
+      "impact": "The user loses the review/preparation consumer at ordinary authorized refresh. The disconnected reader also lacks coordinated shell-revocation teardown. This is a functional/lifecycle finding; no claim of a new server authorization leak.",
+      "expected_correction": "Keep or intentionally reinitialize the live review consumer across shell refresh while continuing current authority checks; coordinate deterministic abort/disposal on access loss and do not let held successes recreate removed private content.",
+      "required_recheck": "Hosted real shell+compiled review: manual and periodic refresh retain an operable review/preparation consumer; updates preserve original review, and actual session/case/source revocation disposes both connected and held views.",
+      "notified": "Root received immediately before report preparation."
+    }
+  ],
+  "positive_static_observations": [
+    "BI call generation and AbortController handling prevent a superseded request from replacing a newer projection; clearPrivate removes selection/version options, links and projection and aborts pending reads.",
+    "BI source HTTP selection reopens the protected projection after destination resolution; explicit refDigest must belong to the current selected value, with no A/B array-order fallback.",
+    "BI lifecycle W8 test uses actual Chromium cookie/navigation, local-operator encrypted session revocation and real compiled shell/BI bundle. It does not assert installed native authority or AM proof.",
+    "Prepared-change UI binds reviewDigest, human checkbox and exact idempotency body/key; uncertain response locks the original request rather than creating a new application.",
+    "Scenario/AlternativeDraft presentation preserves subtotal versus total and unresolved coverage; proposal is visibly not applied.",
+    "README declares composition under review, material C07/C12/C17/native limits, real-producer requirement, and distinction between candidate checks and global acceptance."
+  ],
+  "check_evidence": {
+    "W8": {
+      "ci": "NOT_OBSERVED_AT_PRELIMINARY_REVIEW",
+      "package_checks": "NOT_OBSERVED_AT_PRELIMINARY_REVIEW"
+    },
+    "historical_W7": {
+      "product": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "ci_run": 43584781236,
+      "ci_snapshot": "8d03f8e6e15d2da63f35e4eefd2a6ae2ed092ec9",
+      "conclusion": "FAILURE",
+      "observed_pass": 36,
+      "observed_fail": 11,
+      "package_run": 43584817547,
+      "package_snapshot": "b9ab9e5bf6916ccc6b08693baae2fec95913343f",
+      "transfer_to_W8": false,
+      "source": "evidence/compose-w7-ci-result.json; parent run receipts; not independently re-fetched logs by this reviewer"
+    }
+  },
+  "limitations": [
+    "This is a bounded independent product/UX source review, not observation of all J01-J13 in an installed environment.",
+    "No native UI walkthrough, actual user comprehension study or 320/768/1440px at 200% zoom on the reviewed W8 has been observed by this reviewer.",
+    "No 30 comparable performance repetitions or p95 baseline analysis; source optimizations and test timeouts are not performance qualification.",
+    "Existing Finance/Operations C12 CAS, no-op coverage proof and HotTopic source-domain findings prevent some preparation -> promotion -> application paths; retain their owner findings rather than reclassifying them as acceptable UX.",
+    "C17 source drift, mixed/nested historical calculation without authentic replay/capture, policy and project memory are not closed by W8.",
+    "All eight final selections, AM01-AM06, installed native authority/model/scanner/Relay evidence, three final-bundle independent acceptances and C/G7 then D/G8 remain mandatory."
+  ],
+  "preserved_global_gates": {
+    "final_selections": [
+      "CI-SF",
+      "CI-CLI",
+      "CI-APP-SRC",
+      "CI-APP-BROWSER",
+      "CI-ATLAS-BUSINESS",
+      "CI-UI-OPERATIONS",
+      "CI-UI-DECISIONS",
+      "CI-UI-REPORTS"
+    ],
+    "proofs": [
+      "AM01",
+      "AM02",
+      "AM03",
+      "AM04",
+      "AM05",
+      "AM06"
+    ],
+    "reviews": 3,
+    "C_G7": "OPEN",
+    "D_G8": "OPEN",
+    "global_release": false
+  },
+  "verdict": "CHANGES_REQUIRED; exact affected hosted checks and independent recheck required after owner corrections. No global acceptance."
+}

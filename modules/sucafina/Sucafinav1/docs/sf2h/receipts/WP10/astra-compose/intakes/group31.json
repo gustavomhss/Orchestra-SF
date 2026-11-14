@@ -1,0 +1,505 @@
+{
+  "schema": "sf2-astra-group31-intake-v1",
+  "repository": "gustavomhss/Orchestra-SF",
+  "observed_at_utc": "2026-11-14T09:06:32.279307+00:00",
+  "source": {
+    "pr": 31,
+    "head": "903bcee2e007809f7614a7fff39dd5019f7f7733",
+    "tree": "524b6878a6a4ab40753ab4f8e1c80498785d7c38",
+    "sucafina_tree": "8dc6133476830e642280021731e1ebca06a50dde",
+    "tree_entries": 777,
+    "truncated": false
+  },
+  "comparison": {
+    "pr": 29,
+    "head": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+    "tree": "a3e36522b4b403a394f2f5127d8eb7f692b53de6",
+    "composed_product_at_assignment": "ff7a99753d1fd1bc8b68b4f2642fed26e3cadbdf",
+    "note": "None of the accepted paths was changed by the ff7a997 WP10 product delta. Root must reconcile any subsequent candidate changes before publishing."
+  },
+  "summary": {
+    "eligible_paths": 16,
+    "source_paths": 6,
+    "test_fixture_paths": 9,
+    "guide_paths": 1,
+    "product_deletions_selected": 0,
+    "remote_mutations": false,
+    "local_product_tests": false
+  },
+  "accepted": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+      "blob": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+      "pin": "903bcee2e007809f7614a7fff39dd5019f7f7733",
+      "tree": "524b6878a6a4ab40753ab4f8e1c80498785d7c38",
+      "pr": 31,
+      "owner": "WP01",
+      "target_blob_at_wp10": "78afc0f2eb104aa4f47eda302e731f353f0ed2c7",
+      "content_sha256": "d865cfc49b1d8cf079bc2dafbfd0815215671b0602d26e43ad26e4fe1cf71513",
+      "content_blob_verified": true,
+      "atomic_group": "analysis-read-narrowing",
+      "operation": "copy_exact_blob_only",
+      "disposition": "ELIGIBLE_FOR_SCOPED_COMPOSITION",
+      "why": "Isola a leitura SfNativeRunRecord das outras variantes; conserva admissão, revalidação e projeção mínima sem native binding.",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/903bcee2e007809f7614a7fff39dd5019f7f7733/modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+      "target_proof_status": "NOT_REVALIDATED",
+      "upstream_pass_transferred": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts",
+      "blob": "e45c51206b6011baf7f6fb952c4f6e916d0a98d9",
+      "pin": "903bcee2e007809f7614a7fff39dd5019f7f7733",
+      "tree": "524b6878a6a4ab40753ab4f8e1c80498785d7c38",
+      "pr": 31,
+      "owner": "WP02",
+      "target_blob_at_wp10": null,
+      "content_sha256": "0d93699704a99dc1a6c7b4f356895591d79a4aab7ddf9cf023d7187685c2021d",
+      "content_blob_verified": true,
+      "atomic_group": "dashboard-workbench-recovery",
+      "operation": "copy_exact_blob_only",
+      "disposition": "ELIGIBLE_FOR_SCOPED_COMPOSITION",
+      "why": "Compõe controles e recuperação Dashboard com discovery, revisão humana, digest e tentativa original; testes próprios de browser/SQLite e handlers reais.",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/903bcee2e007809f7614a7fff39dd5019f7f7733/modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts",
+      "target_proof_status": "NOT_REVALIDATED",
+      "upstream_pass_transferred": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/html.ts",
+      "blob": "ff0d2f99aa1b5eb92a6687194df193ec408e7e2c",
+      "pin": "903bcee2e007809f7614a7fff39dd5019f7f7733",
+      "tree": "524b6878a6a4ab40753ab4f8e1c80498785d7c38",
+      "pr": 31,
+      "owner": "WP01",
+      "target_blob_at_wp10": "df11508dbec2e32b22941588c9c8ca136b672a2f",
+      "content_sha256": "2146c3dd56d51c5f7a0152b65c4c4c6431f6d897a477527ea2a09bcae1e05d2b",
+      "content_blob_verified": true,
+      "atomic_group": "dashboard-workbench-recovery",
+      "operation": "copy_exact_blob_only",
+      "disposition": "ELIGIBLE_FOR_SCOPED_COMPOSITION",
+      "why": "Compõe controles e recuperação Dashboard com discovery, revisão humana, digest e tentativa original; testes próprios de browser/SQLite e handlers reais.",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/903bcee2e007809f7614a7fff39dd5019f7f7733/modules/sucafina/Sucafinav1/product/interface/html.ts",
+      "target_proof_status": "NOT_REVALIDATED",
+      "upstream_pass_transferred": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/shell-command.ts",
+      "blob": "0b139ed2c8bc2371c7a5933e00eaa970876d55b8",
+      "pin": "903bcee2e007809f7614a7fff39dd5019f7f7733",
+      "tree": "524b6878a6a4ab40753ab4f8e1c80498785d7c38",
+      "pr": 31,
+      "owner": "WP01",
+      "target_blob_at_wp10": null,
+      "content_sha256": "6cb85d8e4e7bff27c74f12f1380062d2808555c37df46792b19c0fd1b1966b75",
+      "content_blob_verified": true,
+      "atomic_group": "shell-command-recovery",
+      "operation": "copy_exact_blob_only",
+      "disposition": "ELIGIBLE_FOR_SCOPED_COMPOSITION",
+      "why": "Recuperação de entrega e preview no shell existente, sem reenvio de comando genérico incerto; corpo/chave e autoridade preservados.",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/903bcee2e007809f7614a7fff39dd5019f7f7733/modules/sucafina/Sucafinav1/product/ui/shell-command.ts",
+      "target_proof_status": "NOT_REVALIDATED",
+      "upstream_pass_transferred": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/shell-preview.ts",
+      "blob": "f085a26efa754f8f583461d7bf1931251a63a0ef",
+      "pin": "903bcee2e007809f7614a7fff39dd5019f7f7733",
+      "tree": "524b6878a6a4ab40753ab4f8e1c80498785d7c38",
+      "pr": 31,
+      "owner": "WP01",
+      "target_blob_at_wp10": null,
+      "content_sha256": "afc2c2f0c76fe29825148805b492d216e925dbba4d79436243a4a2092631c09c",
+      "content_blob_verified": true,
+      "atomic_group": "shell-command-recovery",
+      "operation": "copy_exact_blob_only",
+      "disposition": "ELIGIBLE_FOR_SCOPED_COMPOSITION",
+      "why": "Recuperação de entrega e preview no shell existente, sem reenvio de comando genérico incerto; corpo/chave e autoridade preservados.",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/903bcee2e007809f7614a7fff39dd5019f7f7733/modules/sucafina/Sucafinav1/product/ui/shell-preview.ts",
+      "target_proof_status": "NOT_REVALIDATED",
+      "upstream_pass_transferred": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+      "blob": "db1fbf64fc5a0200474a3aa28f1694b3a940c3db",
+      "pin": "903bcee2e007809f7614a7fff39dd5019f7f7733",
+      "tree": "524b6878a6a4ab40753ab4f8e1c80498785d7c38",
+      "pr": 31,
+      "owner": "WP01",
+      "target_blob_at_wp10": "0650fe24b70ea4ac561645ff98640a57a443ec32",
+      "content_sha256": "abc2ec908dabd72cafae181a6df7aecd6fef55d2188ce7e77d4b379b3a8d406d",
+      "content_blob_verified": true,
+      "atomic_group": "shell-command-recovery",
+      "operation": "copy_exact_blob_only",
+      "disposition": "ELIGIBLE_FOR_SCOPED_COMPOSITION",
+      "why": "Recuperação de entrega e preview no shell existente, sem reenvio de comando genérico incerto; corpo/chave e autoridade preservados.",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/903bcee2e007809f7614a7fff39dd5019f7f7733/modules/sucafina/Sucafinav1/src/screen-shell.ts",
+      "target_proof_status": "NOT_REVALIDATED",
+      "upstream_pass_transferred": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/personal-views.test.ts",
+      "blob": "78782eefb64824c440066055be6908a962055725",
+      "pin": "903bcee2e007809f7614a7fff39dd5019f7f7733",
+      "tree": "524b6878a6a4ab40753ab4f8e1c80498785d7c38",
+      "pr": 31,
+      "owner": "WP01",
+      "target_blob_at_wp10": "44f87836fc716e521d69c79ca5095795aac89e03",
+      "content_sha256": "cb7e19c081dbe83fee8135dc53e6d619fcfe8363bcadabb064c935f3fff3f97f",
+      "content_blob_verified": true,
+      "atomic_group": "browser-driver-consumers",
+      "operation": "copy_exact_blob_only",
+      "disposition": "ELIGIBLE_FOR_SCOPED_COMPOSITION",
+      "why": "Troca somente transporte/lifecycle do browser por Node/AppProcess com controle Omni declarado, conservando assertions de principal/visão.",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/903bcee2e007809f7614a7fff39dd5019f7f7733/modules/sucafina/Sucafinav1/test/product/wp01/personal-views.test.ts",
+      "target_proof_status": "NOT_REVALIDATED",
+      "upstream_pass_transferred": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/preview-browser.test.ts",
+      "blob": "9296d34c30aeabed0796fdf8544c514e99f12365",
+      "pin": "903bcee2e007809f7614a7fff39dd5019f7f7733",
+      "tree": "524b6878a6a4ab40753ab4f8e1c80498785d7c38",
+      "pr": 31,
+      "owner": "WP01",
+      "target_blob_at_wp10": "75c3efe12afac9e94c6b2c932b785cbb133e9461",
+      "content_sha256": "27cbabc4423e5890ae4868991b0ca5530b198c90946e63b24fa072199bcb8ab6",
+      "content_blob_verified": true,
+      "atomic_group": "shell-command-recovery",
+      "operation": "copy_exact_blob_only",
+      "disposition": "ELIGIBLE_FOR_SCOPED_COMPOSITION",
+      "why": "Recuperação de entrega e preview no shell existente, sem reenvio de comando genérico incerto; corpo/chave e autoridade preservados.",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/903bcee2e007809f7614a7fff39dd5019f7f7733/modules/sucafina/Sucafinav1/test/product/wp01/preview-browser.test.ts",
+      "target_proof_status": "NOT_REVALIDATED",
+      "upstream_pass_transferred": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-recovery.test.ts",
+      "blob": "d4a0c111d326401e44327258ab9f9bd02ecbe60b",
+      "pin": "903bcee2e007809f7614a7fff39dd5019f7f7733",
+      "tree": "524b6878a6a4ab40753ab4f8e1c80498785d7c38",
+      "pr": 31,
+      "owner": "WP01",
+      "target_blob_at_wp10": null,
+      "content_sha256": "4bfe2e12fc82a7a28f580ae0c834aa8874c61c1f73da34415f98c7f1de74de50",
+      "content_blob_verified": true,
+      "atomic_group": "shell-command-recovery",
+      "operation": "copy_exact_blob_only",
+      "disposition": "ELIGIBLE_FOR_SCOPED_COMPOSITION",
+      "why": "Recuperação de entrega e preview no shell existente, sem reenvio de comando genérico incerto; corpo/chave e autoridade preservados.",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/903bcee2e007809f7614a7fff39dd5019f7f7733/modules/sucafina/Sucafinav1/test/product/wp01/shell-recovery.test.ts",
+      "target_proof_status": "NOT_REVALIDATED",
+      "upstream_pass_transferred": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+      "blob": "621ba3341970a303ec7fa33739dc13df2e43e4da",
+      "pin": "903bcee2e007809f7614a7fff39dd5019f7f7733",
+      "tree": "524b6878a6a4ab40753ab4f8e1c80498785d7c38",
+      "pr": 31,
+      "owner": "WP01",
+      "target_blob_at_wp10": "637c9ef37ef4fd07d3a54aec0ce4c655c8ddaf64",
+      "content_sha256": "b22fe7cb64bab59016711ff9e76f8b9651366bf3456d285b378367126d75e64c",
+      "content_blob_verified": true,
+      "atomic_group": "analysis-read-narrowing",
+      "operation": "copy_exact_blob_only",
+      "disposition": "ELIGIBLE_FOR_SCOPED_COMPOSITION",
+      "why": "Explicita C08 inicializado versus indisponível, 5 perfis e fontes ausentes; conserva contraprovas sem escrever saídas.",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/903bcee2e007809f7614a7fff39dd5019f7f7733/modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+      "target_proof_status": "NOT_REVALIDATED",
+      "upstream_pass_transferred": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts",
+      "blob": "87fd7e777622555054ac807c9444796e4d309fa4",
+      "pin": "903bcee2e007809f7614a7fff39dd5019f7f7733",
+      "tree": "524b6878a6a4ab40753ab4f8e1c80498785d7c38",
+      "pr": 31,
+      "owner": "WP02",
+      "target_blob_at_wp10": null,
+      "content_sha256": "48dfa0389a76bfa78ebcfb2a85cd8e6d274784d7df5e1c70a3aaa92e83acdf53",
+      "content_blob_verified": true,
+      "atomic_group": "dashboard-workbench-recovery",
+      "operation": "copy_exact_blob_only",
+      "disposition": "ELIGIBLE_FOR_SCOPED_COMPOSITION",
+      "why": "Compõe controles e recuperação Dashboard com discovery, revisão humana, digest e tentativa original; testes próprios de browser/SQLite e handlers reais.",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/903bcee2e007809f7614a7fff39dd5019f7f7733/modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts",
+      "target_proof_status": "NOT_REVALIDATED",
+      "upstream_pass_transferred": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/dashboard-browser.test.ts",
+      "blob": "72b0a66701b30c1adffc3c28a8e58abf8cb65505",
+      "pin": "903bcee2e007809f7614a7fff39dd5019f7f7733",
+      "tree": "524b6878a6a4ab40753ab4f8e1c80498785d7c38",
+      "pr": 31,
+      "owner": "WP02",
+      "target_blob_at_wp10": "8581cf0e6432089c68556134c3877dfc5981af1e",
+      "content_sha256": "a3b73db229bdf7e4204654050c634f19d531d5c2d61141b79a7f6256abfc76d9",
+      "content_blob_verified": true,
+      "atomic_group": "dashboard-workbench-recovery",
+      "operation": "copy_exact_blob_only",
+      "disposition": "ELIGIBLE_FOR_SCOPED_COMPOSITION",
+      "why": "Compõe controles e recuperação Dashboard com discovery, revisão humana, digest e tentativa original; testes próprios de browser/SQLite e handlers reais.",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/903bcee2e007809f7614a7fff39dd5019f7f7733/modules/sucafina/Sucafinav1/test/product/wp02/dashboard-browser.test.ts",
+      "target_proof_status": "NOT_REVALIDATED",
+      "upstream_pass_transferred": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts",
+      "blob": "cffc985d9714dd0ae6201c37ca9622a35ab501c8",
+      "pin": "903bcee2e007809f7614a7fff39dd5019f7f7733",
+      "tree": "524b6878a6a4ab40753ab4f8e1c80498785d7c38",
+      "pr": 31,
+      "owner": "WP02",
+      "target_blob_at_wp10": "2477657944d85c59c2ae093bc247ee759f434ef6",
+      "content_sha256": "aeb0810802943e2f1286cbe2c4673597041986159141febc1e80a0a637835713",
+      "content_blob_verified": true,
+      "atomic_group": "dashboard-workbench-recovery",
+      "operation": "copy_exact_blob_only",
+      "disposition": "ELIGIBLE_FOR_SCOPED_COMPOSITION",
+      "why": "Compõe controles e recuperação Dashboard com discovery, revisão humana, digest e tentativa original; testes próprios de browser/SQLite e handlers reais.",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/903bcee2e007809f7614a7fff39dd5019f7f7733/modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts",
+      "target_proof_status": "NOT_REVALIDATED",
+      "upstream_pass_transferred": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery-fixture.ts",
+      "blob": "b82a5800470641ff1298475f0189882c38299b5e",
+      "pin": "903bcee2e007809f7614a7fff39dd5019f7f7733",
+      "tree": "524b6878a6a4ab40753ab4f8e1c80498785d7c38",
+      "pr": 31,
+      "owner": "WP02",
+      "target_blob_at_wp10": null,
+      "content_sha256": "5fdfd128abccb54a9edb4f2bb5430896b648c6a494fea9bc4f4ade2f822b41b9",
+      "content_blob_verified": true,
+      "atomic_group": "dashboard-workbench-recovery",
+      "operation": "copy_exact_blob_only",
+      "disposition": "ELIGIBLE_FOR_SCOPED_COMPOSITION",
+      "why": "Compõe controles e recuperação Dashboard com discovery, revisão humana, digest e tentativa original; testes próprios de browser/SQLite e handlers reais.",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/903bcee2e007809f7614a7fff39dd5019f7f7733/modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery-fixture.ts",
+      "target_proof_status": "NOT_REVALIDATED",
+      "upstream_pass_transferred": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+      "blob": "8d6a9c0a38497ab6842060828ba6307471b647ae",
+      "pin": "903bcee2e007809f7614a7fff39dd5019f7f7733",
+      "tree": "524b6878a6a4ab40753ab4f8e1c80498785d7c38",
+      "pr": 31,
+      "owner": "WP02",
+      "target_blob_at_wp10": null,
+      "content_sha256": "e182e20ccfa7c9d2b1d5446585bfc0b3556740d7da5098ad8a8d1179a9255f1a",
+      "content_blob_verified": true,
+      "atomic_group": "dashboard-workbench-recovery",
+      "operation": "copy_exact_blob_only",
+      "disposition": "ELIGIBLE_FOR_SCOPED_COMPOSITION",
+      "why": "Compõe controles e recuperação Dashboard com discovery, revisão humana, digest e tentativa original; testes próprios de browser/SQLite e handlers reais.",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/903bcee2e007809f7614a7fff39dd5019f7f7733/modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+      "target_proof_status": "NOT_REVALIDATED",
+      "upstream_pass_transferred": false
+    },
+    {
+      "path": "docs/guides/sucafina-workbench.md",
+      "blob": "15456c27fc81f12ce96058e4ff3791f6a58be7e5",
+      "pin": "903bcee2e007809f7614a7fff39dd5019f7f7733",
+      "tree": "524b6878a6a4ab40753ab4f8e1c80498785d7c38",
+      "pr": 31,
+      "owner": "WP01",
+      "target_blob_at_wp10": "69f85c5f26b2c3eebc8f902099432033ad323db4",
+      "content_sha256": "16e19958116f1801f830fc8fa86e44b1e4866563b35ff73c0833e1a518fc5a88",
+      "content_blob_verified": true,
+      "atomic_group": "user-guide",
+      "operation": "copy_exact_blob_only",
+      "disposition": "ELIGIBLE_FOR_SCOPED_COMPOSITION",
+      "why": "Documenta recuperação e limites do comando genérico, preview e controles Dashboard sem declarar prova nativa.",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/903bcee2e007809f7614a7fff39dd5019f7f7733/docs/guides/sucafina-workbench.md",
+      "target_proof_status": "NOT_REVALIDATED",
+      "upstream_pass_transferred": false
+    }
+  ],
+  "atomic_groups": {
+    "shell-command-recovery": {
+      "requires": [
+        "product/ui/shell-command.ts",
+        "product/ui/shell-preview.ts",
+        "src/screen-shell.ts"
+      ],
+      "combined_with": "New src/screen-shell.ts imports both new scripts. Consume together, preserving current runtime/application.ts and all source/ACL fences."
+    },
+    "dashboard-workbench-recovery": {
+      "requires": [
+        "product/interface/html.ts",
+        "product/interface/dashboard-workbench.ts",
+        "test/product/wp02/browser-driver-fixture.ts"
+      ],
+      "provider_status": "Current composition already publishes apps/cli/src/sucafina-product/dashboard-http.ts, dashboard-services.ts and dashboard-decisions.ts, domain draft/review/apply readers and exact reviewDigest contract. Do not import the older host/services/contracts bundled by PR31."
+    },
+    "browser-driver-consumers": {
+      "requires": [
+        "test/product/wp02/browser-driver-fixture.ts"
+      ],
+      "preserves": "AppProcess boundary and per-test expectSpawn/report; does not replace native proof with a mock."
+    },
+    "analysis-read-narrowing": {
+      "contract": "Current SfHostServices.analyses.read returns PortResult<SfNativeRunRecord>; source narrowing is compatible without changing the public contract."
+    }
+  },
+  "supersedes_pending_old_intake": {
+    "note": "If not yet published, prefer these exact group31 versions over accepted-other-increments.json where paths overlap; keep its other WP00 documents. If already published, apply current blobs as a new increment.",
+    "paths": [
+      "docs/guides/sucafina-workbench.md",
+      "modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp02/dashboard-browser.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts"
+    ]
+  },
+  "rejected_snapshot_paths": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/document-http.ts",
+      "source_blob": "fbb76f54c1ebfa475189a92ecad6092e22733c81",
+      "reason": "Foreign WP06 snapshot drops published workbench routes, document search/request selectors, import reference and dispatcher behavior. Preserve composition blob."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/import-http.ts",
+      "source_blob": "9ef67dac700401023fc6218b6f269286d67eff72",
+      "reason": "Foreign WP06 snapshot drops published workbench routes, document search/request selectors, import reference and dispatcher behavior. Preserve composition blob."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/document-scenario-http.ts",
+      "source_blob": null,
+      "reason": "Absent in group31 snapshot. Do not delete the WP06 source already composed."
+    }
+  ],
+  "not_selected": "All other foreign source/test/contract/C08/C15/scanner/Atlas/engine/runtime snapshots, historical receipts, workflows and removals. Published branch typecheck used older foreign contracts and is not approval of the composed product.",
+  "source_evidence": [
+    {
+      "run_id": 43578289951,
+      "job_id": 132397305633,
+      "product_sha": "903bcee2e007809f7614a7fff39dd5019f7f7733",
+      "head_sha": "903bcee2e007809f7614a7fff39dd5019f7f7733",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43578289951",
+      "observed": "bun typecheck and guards passed on source branch; guards78 rules,654 paths,0 gate,25 warn,0 errors.",
+      "reusable_as": "SOURCE_ONLY_NOT_COMPOSITION_APPROVAL"
+    },
+    {
+      "run_id": 43578288307,
+      "job_id": 132397300697,
+      "product_sha": "903bcee2e007809f7614a7fff39dd5019f7f7733",
+      "snapshot_sha": "5047d2cf4e39e215e8c7add05d7597ed8254a101",
+      "snapshot_tree": "1118cd654a1de803efc20b5d025eac46ffd1dfd9",
+      "request_sha256": "18ec58e5f7c08d8472c1681bc3e3ca59a6f6aed69a0905321a424f80e4bdfbcd",
+      "request_blob": "3c20002402daf8bd9e97fac307141b9355ed682c",
+      "status": "in_progress",
+      "conclusion": null,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43578288307",
+      "snapshot_comparison": {
+        "ahead": 1,
+        "files": [
+          {
+            "path": ".ci-run.json",
+            "status": "added"
+          }
+        ]
+      },
+      "reusable_as": "NOT_A_PASS_WHILE_RUNNING",
+      "request_content_verified": true,
+      "selected_test_files": 42,
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp01/preview-browser.test.ts",
+          "./Sucafinav1/test/product/wp01/bi-browser.test.ts",
+          "./Sucafinav1/test/product/wp01/components.test.ts",
+          "./Sucafinav1/test/product/wp01/http.test.ts",
+          "./Sucafinav1/test/product/wp01/import-receipt-browser.test.ts",
+          "./Sucafinav1/test/product/wp01/personal-views.test.ts",
+          "./Sucafinav1/test/product/wp01/planner-monthly.test.ts",
+          "./Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+          "./Sucafinav1/test/product/wp01/component-coverage.test.ts",
+          "./Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+          "./Sucafinav1/test/product/wp01/record-search.test.ts",
+          "./Sucafinav1/test/product/wp01/shell-state.test.ts",
+          "./Sucafinav1/test/product/wp01/view-recovery.test.ts",
+          "./Sucafinav1/test/form-layout.test.ts",
+          "./Sucafinav1/test/screen.test.ts",
+          "./Sucafinav1/test/visual-layout.test.ts",
+          "./Sucafinav1/test/product/wp10/integration/ui-authority.test.ts",
+          "./Sucafinav1/test/product/wp01/contextual-decision.test.ts",
+          "./Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+          "./Sucafinav1/test/product/wp01/portfolio-recovery.test.ts",
+          "./Sucafinav1/test/product/wp02/agenda.test.ts",
+          "./Sucafinav1/test/product/wp02/agenda-subselections.test.ts",
+          "./Sucafinav1/test/product/wp02/confirmation.test.ts",
+          "./Sucafinav1/test/product/wp02/historical-reissue.test.ts",
+          "./Sucafinav1/test/product/wp02/historical-bindings.test.ts",
+          "./Sucafinav1/test/product/wp02/hot-topic-draft.test.ts",
+          "./Sucafinav1/test/product/wp02/hot-topics.test.ts",
+          "./Sucafinav1/test/product/wp02/prepared-review.test.ts",
+          "./Sucafinav1/test/product/wp02/privacy-egress.test.ts",
+          "./Sucafinav1/test/product/wp02/review-completion.test.ts",
+          "./Sucafinav1/test/product/wp02/validation-feedback.test.ts",
+          "./Sucafinav1/test/product/wp02/host-integration.test.ts",
+          "./Sucafinav1/test/product/wp02/dashboard-browser.test.ts",
+          "./Sucafinav1/test/product/wp02/host-workbench.test.ts",
+          "./Sucafinav1/test/product/wp02/collaboration-consumer.test.ts",
+          "./Sucafinav1/test/product/wp02/native-capabilities.test.ts",
+          "./Sucafinav1/test/product/wp02/atlas-consumer.test.ts",
+          "./Sucafinav1/test/product/wp02/import-report-consumer.test.ts",
+          "./Sucafinav1/test/product/wp02/capabilities-e2e.test.ts",
+          "./Sucafinav1/test/product/wp01/shell-recovery.test.ts",
+          "./Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+          "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      }
+    }
+  ],
+  "remaining_findings": [
+    {
+      "id": "COMPOSE-WP01-BI-LIFECYCLE",
+      "owner": "WP01+WP10",
+      "status": "OPEN",
+      "reason": "data-sf-retain-view preserves an open/busy/pending dashboard panel. It does not itself make BI mount revalidation lifecycle safe or execute scripts after DOMParser replacement. Keep root owner finding and require explicit published seam/consumer.",
+      "forwarded": "https://github.com/gustavomhss/Orchestra-SF/pull/31#issuecomment-6874899452"
+    },
+    {
+      "id": "COMPOSE-WP01-ALTERNATIVE-TYPES",
+      "owner": "WP01",
+      "status": "OPEN",
+      "reason": "No change to components.ts or contribution-body.ts in this pin; source green with older foreign contracts does not fix the two composed AlternativeDraft diagnostics.",
+      "forwarded": "https://github.com/gustavomhss/Orchestra-SF/pull/31#issuecomment-6874899452"
+    },
+    {
+      "id": "GROUP31-DRAFT-RECOVERY-BOUNDARIES",
+      "owner": "WP01/WP02",
+      "status": "ACKNOWLEDGED_BY_OWNER_NOT_GLOBAL_ACCEPTANCE",
+      "reason": "Owner PR body explicitly keeps removed-view consumer, Hot Topic incarnation fences, selector seams and unknown generic/new-draft outcomes open. Current increment must not be represented as all WP01/WP02 criteria complete."
+    }
+  ],
+  "proposed_scoped_consumers": [
+    "Sucafinav1/test/product/wp01/shell-recovery.test.ts",
+    "Sucafinav1/test/product/wp01/preview-browser.test.ts",
+    "Sucafinav1/test/product/wp01/personal-views.test.ts",
+    "Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+    "Sucafinav1/test/product/wp02/dashboard-browser.test.ts",
+    "Sucafinav1/test/product/wp02/host-workbench.test.ts",
+    "Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+    "Sucafinav1/test/product/wp10/integration/bi-case-access.test.ts"
+  ],
+  "validation": {
+    "method": "Read-only GitHub MCP, exact remote tree comparison and local SHA1/SHA256/import metadata checks only. No product execution or source modification.",
+    "all_accepted_blob_hashes_verified": true,
+    "relative_imports_resolve_in_composed_tree_plus_atomic_group": true,
+    "native_proof_claimed": false,
+    "independent_final_review_claimed": false,
+    "automatic_acceptance": "NONE"
+  }
+}

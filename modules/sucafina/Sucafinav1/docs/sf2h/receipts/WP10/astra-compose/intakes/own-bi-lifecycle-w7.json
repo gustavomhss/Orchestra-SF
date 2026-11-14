@@ -1,0 +1,258 @@
+{
+  "schema": "astra-own-bi-composition-v1",
+  "status": "NOT_REVALIDATED",
+  "published_head": null,
+  "published_tree": null,
+  "base": {
+    "head": "7c7e5b086a9de405cd3f8e18e8d631af55cf0979",
+    "tree": "3deb1ed790fc247a6633c9cc25a11523ae3f61b1"
+  },
+  "source": {
+    "pr": 29,
+    "head": "78f80881e94913b9b211bad7d17fbc95467ce0d7",
+    "tree": "ffae7f1279c8c7af7b98f19f3ebc04960db75cc7"
+  },
+  "changes": [
+    {
+      "path": "apps/cli/src/sucafina-product/extended-bi-browser.ts",
+      "base_head": "7c7e5b086a9de405cd3f8e18e8d631af55cf0979",
+      "base_blob": "e109061a32e07d6ddfd1b7ae40d8ceae380beed7",
+      "blob": "e3edc3ed317be3399855edee3b4ffd4eaa5e5b5e",
+      "bytes": 16771,
+      "source_pr": 29,
+      "source_head": "78f80881e94913b9b211bad7d17fbc95467ce0d7",
+      "source_blob": "01784671852a41fd87dddbfbd3aaaf988250b3ef",
+      "selection": "OWN_RECONCILED",
+      "why": "Reconcile PR29/78 lifecycle; keep canonical shell; bound/abort reads; invalidate data and options on selection changes; stop/clear on authority loss and logout; transport explicit row origin refDigest."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-http.ts",
+      "base_head": "7c7e5b086a9de405cd3f8e18e8d631af55cf0979",
+      "base_blob": "34a2e30f19cb49eb65feb872e4804517429dbb34",
+      "blob": "43f73f337fa570d87f7a2f5f7aad19a038767fea",
+      "bytes": 17053,
+      "source_pr": 29,
+      "source_head": "78f80881e94913b9b211bad7d17fbc95467ce0d7",
+      "source_blob": "149a1a5f0e643d441e1828fd9ede79eb79fd49ac",
+      "selection": "OWN_RECONCILED",
+      "why": "Retain canonical shell and BI DOM; expose actual accessRevision; re-read protected projection after destination await; resolve only selected current row origin; preserve literal bundle callback."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-access-browser-fixture.ts",
+      "base_head": "7c7e5b086a9de405cd3f8e18e8d631af55cf0979",
+      "base_blob": "72dce0adc358ba69f45216a104bdcb94a7b3da97",
+      "blob": "cc9ab830592c5f27a84c73a4fdda2dfde3216b86",
+      "bytes": 15951,
+      "source_pr": 29,
+      "source_head": "78f80881e94913b9b211bad7d17fbc95467ce0d7",
+      "source_blob": "0fe5e0155b47be5c6a5be928e75600bdfcf79bc5",
+      "selection": "OWN_RECONCILED",
+      "why": "Real handler transport, diagnostic stages and asset digests; assert canonical shell plus exact compiled BI script; preserve ArrayBuffer body copy."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-call-scope.test.ts",
+      "base_head": "7c7e5b086a9de405cd3f8e18e8d631af55cf0979",
+      "base_blob": "519720059c64487f623872fd15b78ba1523511f8",
+      "blob": "524eb3fe1bb2b723a983258290e099fb84768125",
+      "bytes": 29046,
+      "source_pr": 29,
+      "source_head": "78f80881e94913b9b211bad7d17fbc95467ce0d7",
+      "source_blob": "08505e70b5994d2b6845dd69ac60cde79fed6035",
+      "selection": "OWN_RECONCILED",
+      "why": "Append real source HTTP post-destination case-revocation regression with explicit imports, retaining W6 scope/type fixes."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-case-access.test.ts",
+      "base_head": "7c7e5b086a9de405cd3f8e18e8d631af55cf0979",
+      "base_blob": "3c6782b58c341d24ac7a094bab8dfd38f46401d8",
+      "blob": "c2cd2484272e2f1fff369358e0438bbcae9f44bf",
+      "bytes": 15057,
+      "source_pr": 29,
+      "source_head": "f075e9824b7d8aed50b7f42c597528ef198177db",
+      "source_blob": "c2cd2484272e2f1fff369358e0438bbcae9f44bf",
+      "selection": "OWN_RECONCILED",
+      "why": "Pass actual compiled asset to browser acceptance fixture; preserve all real case-only revocation and delayed-source assertions."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts",
+      "base_head": "7c7e5b086a9de405cd3f8e18e8d631af55cf0979",
+      "base_blob": null,
+      "blob": "f8191c00120ca3ace3dece882dc615849c132525",
+      "bytes": 23037,
+      "source_pr": null,
+      "source_head": null,
+      "source_blob": null,
+      "selection": "OWN_NEW",
+      "why": "New real loopback cookie/session, SQLite/C08/C16 and compiled-client lifecycle counterproofs; explicit-origin HTTP test uses real Planner producers. Fixture identity only; no installed/native/global claim."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/compose-bi-lifecycle.md",
+      "base_head": "7c7e5b086a9de405cd3f8e18e8d631af55cf0979",
+      "base_blob": null,
+      "blob": "f72cd26c8b66559b3853aeade7e5ef8aba9e7be5",
+      "bytes": 8822,
+      "source_pr": null,
+      "source_head": null,
+      "source_blob": null,
+      "selection": "OWN_NEW",
+      "why": "Bounded composition receipt, source run provenance and all12 failures, exact new-SHA gates and dependencies."
+    }
+  ],
+  "source_run": {
+    "run_id": 43580252381,
+    "job_id": 132403235716,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43580252381",
+    "product_head": "f075e9824b7d8aed50b7f42c597528ef198177db",
+    "product_tree": "2751625f28928baf371d39576fe46777aa81f74e",
+    "snapshot_head": "dd648c423ab97fbe6e806b620057a328a5816b5f",
+    "snapshot_tree": "ac9a7f96aa0f8bd6b30200c5628c37058e8176b0",
+    "request_sha256": "bc01cc977b331e5538d4dad42e38048c943a2747fde600eb7cee580fd05c371b",
+    "snapshot_equivalence": "Verified direct parent W; GitHub comparison has only .ci-run.json added",
+    "conclusion": "FAILURE",
+    "counts": {
+      "pass": 198,
+      "skip": 2,
+      "fail": 12,
+      "assertions": 2163,
+      "files": 24,
+      "duration_seconds": 2274.65
+    },
+    "omni": {
+      "result": "PASS",
+      "spawns": 38,
+      "declared_tests": 22,
+      "delegated": 0,
+      "nonce": "61ba1e84741e852d5655bf54b0582c01"
+    },
+    "bi_case_test": "PASS only on f075; log asset scriptCount1 proves shell was removed there. No transfer to78 or W7.",
+    "failures": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts",
+        "test": "Dashboard contextual controls preserve a real agenda and record, then review and apply an existing C12 choice",
+        "cause_observed": "Case selector contained only the placeholder; expected existing case Review the action (line168).",
+        "owner": "WP02/interface",
+        "current_resolution": "NOT_REVALIDATED; owner intake and W7 composition require exact new-SHA evidence"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts",
+        "test": "Dashboard draft conflict reloads the same draft identity and preserves local edits until the current base is confirmed",
+        "cause_observed": "Existing case option absent; selectOption timed out at15s (line301).",
+        "owner": "WP02/interface",
+        "current_resolution": "NOT_REVALIDATED; owner intake and W7 composition require exact new-SHA evidence"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts",
+        "test": "Dashboard discovery fences participant removal after options were assembled",
+        "cause_observed": "Expected denied/stale after participant removal; received ok with empty cases/drafts/preparations/changes (line439).",
+        "owner": "WP02/interface",
+        "current_resolution": "NOT_REVALIDATED; owner intake and W7 composition require exact new-SHA evidence"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts",
+        "test": "Dashboard contextual draft retains edits when current write authority is withdrawn",
+        "cause_observed": "Existing case option absent; selectOption timed out at30s (line489).",
+        "owner": "WP02/interface",
+        "current_resolution": "NOT_REVALIDATED; owner intake and W7 composition require exact new-SHA evidence"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+        "test": "Dashboard recovers a committed draft after response loss, restores only its authorized identity on reload, and fences revoked late discovery",
+        "cause_observed": "Fixture could not choose existing case; selectOption timed out at30s in editNewDraft line23 (caller60).",
+        "owner": "WP02/interface",
+        "current_resolution": "NOT_REVALIDATED; owner intake and W7 composition require exact new-SHA evidence"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+        "test": "Dashboard discards an uncertain private application review when fresh discovery no longer authorizes its case",
+        "cause_observed": "Fixture could not choose existing case; selectOption timed out at30s in editNewDraft line23 (caller153).",
+        "owner": "WP02/interface",
+        "current_resolution": "NOT_REVALIDATED; owner intake and W7 composition require exact new-SHA evidence"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+        "test": "Dashboard recovers the same C12 application receipt after a committed response is lost and the page reloads",
+        "cause_observed": "Fixture could not choose existing case; selectOption timed out at30s in editNewDraft line23 (caller208).",
+        "owner": "WP02/interface",
+        "current_resolution": "NOT_REVALIDATED; owner intake and W7 composition require exact new-SHA evidence"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-recovery.test.ts",
+        "test": "(unnamed)",
+        "cause_observed": "Actions selection omitted required browser-lifecycle.test.ts last; beforeAll/unnamed failed in browser-fixture.ts67. This is a request protocol failure, not shell product evidence.",
+        "owner": "WP01/interface + CI request author",
+        "current_resolution": "NOT_REVALIDATED; owner intake and W7 composition require exact new-SHA evidence"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/alternative-selection.test.ts",
+        "test": "canonical comparison drafts the exact human-selected second alternative and supports only the private replay context",
+        "cause_observed": "105000ms cooperative fixture deadline during January draft/private replay; high repeated source verification fan-out.",
+        "owner": "WP10/composition",
+        "current_resolution": "NOT_REVALIDATED; separate C17/performance candidate does not prove these four cases"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/alternative-selection.test.ts",
+        "test": "comparison capture refuses missing or outside selections and a running draft cannot adopt a newer human selection",
+        "cause_observed": "105000ms cooperative fixture deadline during January selection-change/draft.",
+        "owner": "WP10/composition",
+        "current_resolution": "NOT_REVALIDATED; separate C17/performance candidate does not prove these four cases"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/alternative-selection.test.ts",
+        "test": "annual 2026 canonical comparison drafts the exact human-selected second alternative and supports only the private replay context",
+        "cause_observed": "105000ms cooperative fixture deadline during annual2026 draft/private replay.",
+        "owner": "WP10/composition",
+        "current_resolution": "NOT_REVALIDATED; separate C17/performance candidate does not prove these four cases"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/alternative-selection.test.ts",
+        "test": "annual 2026 comparison capture refuses missing or outside selections and a running draft cannot adopt a newer human selection",
+        "cause_observed": "105000ms cooperative fixture deadline during annual2026 selection-change/draft.",
+        "owner": "WP10/composition",
+        "current_resolution": "NOT_REVALIDATED; separate C17/performance candidate does not prove these four cases"
+      }
+    ]
+  },
+  "static_validation": {
+    "remote_base_and_source_blob_hashes": "MATCH",
+    "relative_import_paths": "RESOLVE in staging or W6; no TypeScript execution",
+    "literal_bundle_callback": "PRESERVED",
+    "typed_array_copy": "PRESERVED",
+    "canonical_shell": "PRESERVED; not included in payload",
+    "product_execution": "NONE",
+    "independent_final_review": "NONE"
+  },
+  "dependencies": [
+    {
+      "owner": "WP01/interface",
+      "path": "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+      "base_blob": "db1fbf64fc5a0200474a3aa28f1694b3a940c3db",
+      "optional_owner_head": "50906b86da953f9e6fb24f989c51db0fc69496c1",
+      "optional_owner_blob": "d69bb554ba35863b0bf248c6aa0382205614d12a",
+      "requirement": "retain-view; canonical logout bound;30s authority polling;sf-access-revoked"
+    },
+    {
+      "owner": "WP05/finance",
+      "head": "217c9bcc75d499eff3884fb4afe662d5c0029935",
+      "tree": "eeae1c748b3e1e73be8686c3f1df325e2fac3824",
+      "requirement": "Separate owner intake of analytics/source-navigation,view,waterfall for actual A/B chooser; no foreign file in this payload."
+    },
+    {
+      "owner": "WP10 + WP11",
+      "requirement": "New PR35 C17 calculation-history consumer wiring and fresh-only source-links remain separately pending; no full C17 claim."
+    }
+  ],
+  "pending": [
+    "publish final W/tree",
+    "new-SHA Actions lifecycle/case proof",
+    "new-SHA C16/source-egress proof",
+    "bun typecheck in package via Actions",
+    "required guards via Actions",
+    "all final/native/global gates retained"
+  ],
+  "payload": {
+    "path": "/workspace/scratch/4c48b09c5c29/incoming-cache/bi-w7-payloads.json",
+    "count": 7,
+    "bytes": 131484,
+    "sha256": "9ed056a80473187adbb93bb43bbbc866397c9ad6b73b1cab259d3cb25dc4bd65"
+  }
+}

@@ -179,17 +179,20 @@ export const domain: Domain = {
           }
           const heatmap = rows(snapshot.data.opsHeatmap).filter((row) => row.year === year && row.month === month)
           const security = rows(snapshot.data.secKpi)
-            .filter((row) => row.year === year && finite(row.month) <= month)
+            .filter((row) => row.year === year && Number.isInteger(row.month) && finite(row.month) >= 1 && finite(row.month) <= month)
             .sort((a, b) => finite(b.month) - finite(a.month))
           const kpis = SECURITY_KPIS.map((def) => {
             const latest = security
-              .map((entry) => (def.key === "socClosure" ? socClosureValue(entry) : entry[def.key]))
-              .find((value) => value !== undefined && value !== null && value !== "")
-            const value = latest === undefined ? null : Number(latest)
+              .map((entry) => ({ entry, raw: def.key === "socClosure" ? socClosureValue(entry) : entry[def.key] }))
+              .find(({ raw }) => raw !== undefined && raw !== null && raw !== "")
+            const numeric = latest === undefined ? null : Number(latest.raw)
+            const value = numeric !== null && Number.isFinite(numeric) ? numeric : null
             return {
               key: def.key,
               value,
               status: securityKpiStatus(def.better, def.target, def.moderate, value),
+              sourceYear: value === null ? null : latest?.entry.year ?? null,
+              sourceMonth: value === null ? null : latest?.entry.month ?? null,
             }
           })
           return [
@@ -676,7 +679,7 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
         ],
       )}<button>Show selected period</button></form>` +
       `<p>Figures below use different references; this view is not a preserved historical review.</p><p>Budget: year ${context.year}. People and delivery: current records; departures use the selected year and month.</p>` +
-      `<section><h2>Attention</h2><p>Current records as of ${esc(context.at.slice(0, 10))}; eligibility follows the rule shown for each item.</p>${rows(data.signals).length ? table(["Fact", "Rule", "Date", "Source"], rows(data.signals).map((signal) => [esc(text(signal.fact)), esc(text(signal.rule)), esc(text(signal.date) || "Not specified"), `<a href="?page=${encodeURIComponent(text(signal.page))}#record-${encodeURIComponent(text(signal.recordId))}">Open record</a>`])) : "<p>No eligible signals in accessible records.</p>"}</section>` +
+      `<section data-dashboard-signals><h2>Attention</h2><p>Current records as of ${esc(context.at.slice(0, 10))}; eligibility follows the rule shown for each item. Showing ${rows(data.signals).length} of ${rows(data.signals).length} eligible signals from accessible records.</p><p data-signal-order aria-live="polite">Your priorities first, then recorded date; undated records follow. Priorities belong to this view and do not change the records.</p>${rows(data.signals).length ? table(["Fact", "Rule", "Date", "Source", "Your priority"], rows(data.signals).map((signal) => [esc(text(signal.fact)), esc(text(signal.rule)), esc(text(signal.date) || "Not specified"), `<a data-dashboard-signal-link href="?page=${encodeURIComponent(text(signal.page))}&amp;year=${context.year}#record-${encodeURIComponent(text(signal.recordId))}">Open record</a>`, `<button type="button" data-signal-priority="${esc(text(signal.id))}" data-signal-label="${esc(text(signal.fact))}" aria-pressed="false" aria-label="Prioritize ${esc(text(signal.fact))}">Prioritize</button>`])) : "<p>No eligible signals in accessible records.</p>"}</section>` +
       summary +
       `<h2>People &amp; efficiency</h2><p>IT users use the selected month or the existing fallback entry when that month is absent.</p>` +
       metricGrid([
@@ -704,7 +707,7 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
           Array.isArray(executive.monthlyDepartures) ? count(executive.monthlyDepartures[context.month - 1]) : "Unavailable",
         ),
       ], 3) +
-      `<h2>Service operations</h2><p>Operations reference: ${esc(String(context.year))}-${esc(String(opsMonth).padStart(2, "0"))}. <a href="?page=IT%20Operations">Open IT Operations</a></p>` +
+      `<h2>Service operations</h2><p>Operations reference: ${esc(String(context.year))}-${esc(String(opsMonth).padStart(2, "0"))}. <a href="?page=IT%20Operations&amp;opsYear=${context.year}&amp;operationsMonth=${opsMonth}">Open IT Operations</a></p>` +
       `<form method="get" class="filter-bar"><input type="hidden" name="page" value="Executive Dashboard"><input type="hidden" name="year" value="${finite(data.sidebarYear, 2026)}"><input type="hidden" name="execYear" value="${context.year}"><input type="hidden" name="executiveMonth" value="${context.month}">${fields([{ name: "opsMonth", label: "Operations month", type: "select", value: opsMonth, options: Array.from({ length: 12 }, (_, index) => String(index + 1)) }])}<button>Show operations</button></form>` +
       metricGrid([
         metric("Tickets opened", typeof ops.opened === "number" ? String(ops.opened) : "Unavailable — incomplete data"),
@@ -720,16 +723,18 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
         slaMetric("Incidents SLA YTD", ops.incYtd, 95),
         slaMetric("Service Requests SLA YTD", ops.svcYtd, 90),
       ], 4) +
-      `<h2>Security overview</h2>` +
+      `<h2>Security overview</h2><p>P1 reference: ${esc(String(context.year))}-${esc(String(opsMonth).padStart(2, "0"))}, from IT Operations. Open security incidents: current records as of ${esc(context.at.slice(0, 10))}.</p>` +
       metricGrid([
         `<section class="metric-tone" data-tone="${typeof ops.p1 !== "number" ? "neutral" : ops.p1 > 0 ? "red" : "green"}">${metric("P1", count(ops.p1))}</section>`,
         metric("Open security incidents", count(monthly.openIncidents)),
       ], 2) +
+      `<p>Security KPI values use the latest nonempty measurement at or before ${esc(String(context.year))}-${esc(String(context.month).padStart(2, "0"))}. Each source period is shown below.</p>` +
       table(
-        ["Security KPI", "Latest value", "Status"],
+        ["Security KPI", "Latest value", "Source period", "Status"],
         rows(monthly.kpis).map((row) => [
           esc(text(row.key)),
           row.value == null ? "—" : esc(String(row.value)),
+          typeof row.sourceYear === "number" && typeof row.sourceMonth === "number" ? `${esc(String(row.sourceYear))}-${esc(String(row.sourceMonth).padStart(2, "0"))}` : "Unavailable",
           esc(text(row.status)),
         ]),
       ) +
@@ -889,7 +894,7 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
             allowed,
           ) +
           table(
-            ["Month", "Effective budget", "Actual", "Forecast", "Deviation", "Flag", "Utilization", "Edit all months"],
+            ["Month", "Effective budget", "Actual", "Forecast", "Deviation", "Flag", "Utilization", "Edit"],
             Array.from({ length: 12 }, (_, index) => {
               const entry = monthEntries.find((row) => row.month === index + 1)
               const budget = typeof owner.budget === "number" || (typeof entry?.budget === "number" && entry.budget > 0) ? effectiveMonthlyBudget(typeof entry?.budget === "number" ? entry.budget : undefined, typeof owner.budget === "number" ? owner.budget : undefined) : null
@@ -914,7 +919,8 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
                 actual === null ? "Not available" : money(actual),
                 forecast === null ? "Not available" : money(forecast),
                 deviation === null ? "Not available" : `<span data-tone="${deviation > 0 ? "red" : "green"}">${money(deviation)}</span>`,
-                esc(flag) +
+                esc(flag),
+                `<span data-utilization="${utilization ?? ""}" data-tone="${utilizationTone}">${utilization !== null ? `${utilization}%` : budget === null ? "Unavailable — budget missing" : budget === 0 ? "Unavailable — budget is zero" : "Unavailable — actual missing"}</span>`,
                   control(
                     "save-deviation",
                     id,
@@ -941,8 +947,7 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
                     ]),
                     "Save deviation",
                     allowed,
-                  ),
-                `<span data-utilization="${utilization ?? ""}" data-tone="${utilizationTone}">${utilization !== null ? `${utilization}%` : budget === null ? "Unavailable — budget missing" : budget === 0 ? "Unavailable — budget is zero" : "Unavailable — actual missing"}</span>`,
+                  ) +
                 control(
                   "save-entry",
                   String(entry?.id ?? ""),
@@ -973,7 +978,7 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
             "annual-entry",
             id,
             `${collection}:${id}`,
-            fields([
+            `<p>Annual Entry writes the selected field in all 12 months of ${context.year} for this line.</p>` + fields([
               {
                 name: "annual",
                 label: "Annual Entry ÷12",
@@ -994,7 +999,7 @@ export function render(page: string, data: Record<string, unknown>, context: Ren
             "year-amount",
             id,
             "budgetYtd",
-            fields([
+            `<p>Year amount writes actual through month ${current} and forecast in all 12 months of ${context.year}. Clearing removes the year hint without rewriting monthly entries.</p>` + fields([
               {
                 name: "amount",
                 label: "Year amount",

@@ -1,0 +1,99 @@
+{
+  "schema": "sf2-c17-joint-finding-ci6-appendix-v1",
+  "finding": "CI6-WP10-STALE-C17-TIMEOUT-01",
+  "parentFinding": "C17 joint observation/producer performance boundary diagnosed from CI5",
+  "status": "OBSERVABILITY_STAGED_NO_PERFORMANCE_FIX",
+  "pins": {
+    "observedW": "00304ac25cc82ffd87ebd3096bd2f5cfec5222e1",
+    "observedTree": "884138976f1e5ab04d924c3f29f4ba6584acb070",
+    "observedS": "747e1006562677391187c501e99d5bdd9751949a",
+    "runId": 43592994998,
+    "jobId": 132441498485,
+    "candidateW": "f9990ecc7ade0d64122633d51258ddafe2c93802",
+    "candidateTree": "195f4ea0f9b0099b0070b009570f79bf0a62d0be",
+    "sourceBaseBlob": "727997f3fb0554c44056a7e2930888a28e6184ca",
+    "proposedBlob": "e8b12ab55f3b4101f7e8585d070bcb770ac2e537"
+  },
+  "measuredOnly": [
+    {
+      "status": "fail",
+      "name": "Late captured calculation settles its original output after case advance without changing the active selector, and survives restart",
+      "ms": 105020.74,
+      "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+      "line": 1912
+    },
+    {
+      "status": "pass",
+      "name": "Late calculation settlement rejects another case, a later producer, missing ledger/capture and changed sources without writing output",
+      "ms": 89885.26,
+      "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+      "line": 1913
+    },
+    {
+      "status": "fail",
+      "name": "Private historical read refuses a substituted Request, first or last authorization loss, and closes every admitted lease",
+      "ms": 105009.11,
+      "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+      "line": 1924
+    }
+  ],
+  "observed": [
+    "CI6 records two cooperative105000ms timeouts and one89885.26ms PASS for this file, without phase or internal counter telemetry.",
+    "No log evidence isolates setup, archive, preflight, private historical read, commit or restart as the dominant phase.",
+    "The lineage/source PASS covers that one test on W10/S CI6 only. It does not approve the two failures or candidateW12 with later Finance changes."
+  ],
+  "sourceDerivedHypotheses": [
+    {
+      "hypothesis": "Shared real calculation production and Atlas archive may consume material fixture budget before settlement.",
+      "howToResolve": "fixture.prepare, runtime, calculation source/simulate/persist/issue and atlas-archive phase times."
+    },
+    {
+      "hypothesis": "Positive settlement may spend most time in repeated historical proofs: scoped refusal, source warmup, locked private preflight and commit are distinct observations.",
+      "howToResolve": "positive original-scoped-read/preserve-stale and settlement original/private context plus preflight/commit phases; current/historical entered/settled counts."
+    },
+    {
+      "hypothesis": "The last-authorize and finish counterexamples require the historical read before fault injection; their accumulated cost may exceed the unchanged shared deadline.",
+      "howToResolve": "fault.request, fault.first-authorize, fault.last-authorize and fault.finish phases within the same original test."
+    },
+    {
+      "hypothesis": "Large snapshot cloning/authorization or source-resolution amplification may dominate a phase.",
+      "howToResolve": "Per-phase transaction/currentSnapshotReads/authentications/environments/coverage counters distinguish call volume, but do not themselves prove CPU or memory cause."
+    }
+  ],
+  "instrumentation": {
+    "onlyStagedPath": "/workspace/scratch/4c48b09c5c29/owned-patch-round13/modules/sucafina/Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+    "manifest": "/workspace/scratch/4c48b09c5c29/incoming-cache/stale-timeout-round13/manifest.json",
+    "diff": "/workspace/scratch/4c48b09c5c29/incoming-cache/stale-timeout-round13/analysis-stale-calculation-observability.patch",
+    "payload": "/workspace/scratch/4c48b09c5c29/incoming-cache/stale-timeout-round13/payloads.json",
+    "logMarker": "SF_STALE_CALCULATION_COUNTERS",
+    "nestedDeltas": "inclusive; do not sum nested phase deltas",
+    "settledMeaning": "promise settled, including unavailable or rejection; never a proof-success count",
+    "snapshotMeaning": "currentSnapshots invocations, not guaranteed copied snapshots",
+    "scope": "Per-fixture counters; original calls, arguments, result values, mutations, assertions and cleanups retained. Existing deadline.phase supplies timing and deadline checks."
+  },
+  "owners": [
+    {
+      "owner": "Astra WP10",
+      "next": "Publish this single test instrumentation; run only this complete file via CI.md/GitHub MCP on its exact new head, preserving all three tests and budgets."
+    },
+    {
+      "owner": "WP14 Atlas/source-access + Finance WP11 C17 issuer",
+      "next": "Use resulting per-phase evidence with the existing joint observation-boundary finding; no consumer-only cache or weakening of final observation/replay fences."
+    }
+  ],
+  "nextCI": {
+    "dispatchByDiagnostic": false,
+    "selector": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+    "packageTypecheck": "bun typecheck through GitHub Actions",
+    "guards": "Applicable AGENTS guards through GitHub Actions",
+    "constraints": [
+      "No deadline increases",
+      "No split to escape budget",
+      "No assertion/fault/input changes",
+      "No native AM or READY claims",
+      "No previous-SHA green transferred"
+    ]
+  },
+  "localProductExecution": false,
+  "independentReviewCredit": false
+}

@@ -1,0 +1,35 @@
+{
+  "schema": "wp10-published-namespace-intake-v1",
+  "status": "CLOSED",
+  "sourceCommit": "357177bff8d9ed8c82f3ff47988a2336dd73f882",
+  "baseCommit": "c9f1fee77c26b01a6ddff6b238a5914c4e4bb319",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/local-store.test.ts",
+      "sourceCommit": "357177bff8d9ed8c82f3ff47988a2336dd73f882",
+      "blobSha": "d7a5e9517ed4b3e21354660169b03ae4a397ac60",
+      "sha256": "81bdcc015f0dfc55c0f0e0deaf4596478cd2ec0232c8ce27714b063d486c0b83",
+      "publisher": "astra-wp06",
+      "before": {
+        "blobSha": "39fe4f8926e1a78de49015f334192be7806e1428",
+        "sha256": "e6704dfb7eb1e41a939420c785cf814315b17bffb3571786012d13aebd2e4309"
+      },
+      "exactPublished": true
+    }
+  ],
+  "foreignPins": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/local-store.test.ts",
+      "sourceCommit": "357177bff8d9ed8c82f3ff47988a2336dd73f882",
+      "blobSha": "d7a5e9517ed4b3e21354660169b03ae4a397ac60",
+      "sha256": "81bdcc015f0dfc55c0f0e0deaf4596478cd2ec0232c8ce27714b063d486c0b83",
+      "publisher": "astra-wp06"
+    }
+  ],
+  "cause": "The owner test expectation omitted persisted sfBlobGenerations for each namespace. Published assertion now checks both isolated snapshots and same-key blobs.",
+  "qualification": "Only exact published test bytes consumed; W4 failure remains historical and latest hosted rerun pending. No authoring foreign paths.",
+  "notConsumed": [
+    "WP01 personal views instrumentation",
+    "WP13 sensitivity scoped timeout instrumentation"
+  ]
+}

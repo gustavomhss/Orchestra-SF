@@ -1,0 +1,43 @@
+{
+  "finding": "ASTRA-WP10-PROMOTION-PROOF-01",
+  "owner": "WP11 / astra-finance PR35",
+  "productHead": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+  "productTree": "2a61f73fc5bf404501d61f71f552861f5e1338e1",
+  "run": 43584781236,
+  "job": 132416826537,
+  "observed": "7 BI tests fail at first real decision-promote with HTTP409; 36pass11fail47tests15files; body/reason not logged",
+  "staticMechanism": "Source-only canonical scenario returns exact coverage assessment, mutations skips entries when !reassessed, own portfolio-coverage proof remains absent, synchronous commit fence fails",
+  "inferredReason": "case-changed from preview; not printed by CI4",
+  "checkedOwnerHead": "fe13ee693bdcec1830190bcdb5cc7f2794942c1f",
+  "checkedOwnerBlobs": {
+    "product/decisions/mutations.ts": "922358d17c470c16b43076510bdf04744e2306e4",
+    "product/planner/scenario-port.ts": "fc15d2d9130e23d0a290f5a14f61423152d2c72c"
+  },
+  "composedBlobs": {
+    "modules/sucafina/Sucafinav1/product/decisions/mutations.ts": "922358d17c470c16b43076510bdf04744e2306e4",
+    "modules/sucafina/Sucafinav1/product/planner/scenario-port.ts": "9ef6d197759bbfb9513cce5118c93c08ac797303",
+    "apps/cli/src/sucafina-product/portfolio-coverage.ts": "d8a668281ea9cac6a3a04c6bea19811ee8954808"
+  },
+  "proposal": "Always call actual entries and reassess when provider exists; preserve exact full-result commit proof and fallback behavior without provider",
+  "affectedConsumers": [
+    "BI real comparison preparation",
+    "Alternative promotion"
+  ],
+  "comment": "https://github.com/gustavomhss/Orchestra-SF/pull/35#issuecomment-6875919952",
+  "proofRequired": [
+    "Both actual no-operation source promotions including inverted source order",
+    "Changed scenario still reassessed by canonical producer",
+    "Current source/C08/Request/authority mutation between preparation and commit denies"
+  ],
+  "status": "OWNER_PATCH_PROPOSED_NOT_APPLIED_NOT_RUN",
+  "artifacts": {
+    "wp11-noop-promotion-coverage.md": {
+      "gitBlob": "f2b972355daadec0e30256a033a2824910e7220f",
+      "sha256": "349a04f668d8827acae13dc3213d8c408ba64bb7174b358f545eca8102a99e6a"
+    },
+    "wp11-noop-promotion-coverage.patch": {
+      "gitBlob": "3161c93c629249105a358d7acbcc849bc352f12d",
+      "sha256": "88e84008d2412b54fc4ff68d7667ef7420ee300c361232374a46ffe5c19085a5"
+    }
+  }
+}

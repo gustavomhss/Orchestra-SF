@@ -1,0 +1,146 @@
+{
+  "sourceHead": "6016a70d7ab0c3d50f1ec2827a534a80e48a5c56",
+  "sourceTree": "f84399d12c35bb8fd66cf4631bae56b02e84123a",
+  "sourceRuns": [
+    {
+      "runId": 43586476432,
+      "jobId": 132421957166,
+      "conclusion": "success",
+      "sourceHead": "6016a70d7ab0c3d50f1ec2827a534a80e48a5c56",
+      "snapshotHead": "e4757d462dd0b466829b1736eea35f2da0c7b35b",
+      "snapshotTree": "3ebf30b70770f40e075f81d839a81729fe5a5088",
+      "requestBlob": "e6edb2cc56406103ec9ba01589ef8c9c1255416f",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+          "./Sucafinav1/test/product/wp03/resume-engine-freshness.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "proof": {
+        "parent": "6016a70d7ab0c3d50f1ec2827a534a80e48a5c56",
+        "diff": [
+          {
+            "path": ".ci-run.json",
+            "blob": "e6edb2cc56406103ec9ba01589ef8c9c1255416f",
+            "status": "added"
+          }
+        ]
+      },
+      "pass": 14,
+      "fail": 0,
+      "assertions": 78,
+      "durationSeconds": 22.37,
+      "summary": [
+        "2026-11-14T10:43:29.1159297Z (pass) one sibling batch shares only its two canonical case observations and retains every result reread [2660.54ms]",
+        "2026-11-14T10:43:35.2970575Z (pass) units emit the identical binding with six canonical case reads, while a legacy host still performs ten [6181.17ms]",
+        "2026-11-14T10:43:38.5080419Z (pass) comparison starts independent batches for its initial and final observations [3210.58ms]",
+        "2026-11-14T10:43:41.7604117Z (pass) different cases and historical producer versions form separate groups and retain order, cardinality and refusal [3252.63ms]",
+        "2026-11-14T10:43:44.3458762Z (pass) ledger, alternative and coverage changes between phases invalidate every sibling without a version shortcut [2585.46ms]",
+        "2026-11-14T10:43:45.0239630Z (pass) authority revoked after result rereads is rejected by the fresh final case observation [678.08ms]",
+        "2026-11-14T10:43:45.6619583Z (pass) a real Planner source change during projection invalidates both stored siblings [638.01ms]",
+        "2026-11-14T10:43:46.6479767Z (pass) retained store and case callback objects cannot rewrite an earlier observation [985.99ms]",
+        "2026-11-14T10:43:48.1897903Z (pass) batch refusals and malformed cardinality never fall back to individual resolution [1541.75ms]",
+        "2026-11-14T10:43:48.2847493Z (pass) scenario comparison snapshots each cached resolver result before resolving the next reference [92.86ms]",
+        "2026-11-14T10:43:48.3696704Z (pass) criterion mutation in a reused response cannot erase the first freshness observation [84.69ms]",
+        "2026-11-14T10:43:48.4648976Z (pass) distinct criterion observations remain associated when the evaluator reuses one cache object [95.46ms]",
+        "2026-11-14T10:43:48.5680440Z (pass) preview comparison rejects a reused baseline cache changed after a real simulation [103.13ms]",
+        "2026-11-14T10:43:48.6592605Z (pass) stable preview remains conditioned with the canonical cost difference and preserved domain [91.20ms]",
+        "2026-11-14T10:43:48.6608783Z  14 pass",
+        "2026-11-14T10:43:48.6608953Z  0 fail",
+        "2026-11-14T10:43:48.6609120Z  78 expect() calls",
+        "2026-11-14T10:43:48.6609379Z Ran 14 tests across 2 files. [22.37s]"
+      ]
+    },
+    {
+      "runId": 43586901880,
+      "jobId": 132423252559,
+      "conclusion": "success",
+      "sourceHead": "6016a70d7ab0c3d50f1ec2827a534a80e48a5c56",
+      "snapshotHead": "f9c0d0d2e8ec0b281dce7033cdcfbdb3107bca83",
+      "snapshotTree": "add8af50ad8bc1696423c761f170c20d957a3ef4",
+      "requestBlob": "d204e7b1fb09b52d38430522b25cb99fe4f505b5",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp03/composed-threshold.test.ts",
+          "./Sucafinav1/test/product/wp03/scenario-capability-parity.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "proof": {
+        "parent": "6016a70d7ab0c3d50f1ec2827a534a80e48a5c56",
+        "diff": [
+          {
+            "path": ".ci-run.json",
+            "blob": "d204e7b1fb09b52d38430522b25cb99fe4f505b5",
+            "status": "added"
+          }
+        ]
+      },
+      "pass": 5,
+      "fail": 0,
+      "durationSeconds": 348.46,
+      "summary": [
+        "2026-11-14T10:49:31.7273665Z (pass) composed Planner operations preserve all fixed costs while proving the real 55000 boundary [53504.70ms]",
+        "2026-11-14T10:52:22.2166829Z (pass) composed Planner threshold includes confirmed training once and distinguishes zero from missing price [170489.30ms]",
+        "2026-11-14T10:53:00.4221302Z (pass) composed interval and threshold refuse changing fixed costs or source revocation [38205.50ms]",
+        "2026-11-14T10:53:37.5176551Z (pass) composed proof refuses duplicate and indirect writes to the varying parameter [37095.46ms]",
+        "2026-11-14T10:54:26.6168307Z (pass) C16 scenario simulation and comparison share UI/MCP handlers and persist their real results in C08 [48830.77ms]",
+        "2026-11-14T10:54:26.6196341Z  5 pass",
+        "2026-11-14T10:54:26.6196614Z  0 fail",
+        "2026-11-14T10:54:26.6196867Z  114 expect() calls",
+        "2026-11-14T10:54:26.6197252Z Ran 5 tests across 2 files. [348.46s]"
+      ]
+    },
+    {
+      "runId": 43586902727,
+      "jobId": 132423255218,
+      "status": "in_progress",
+      "conclusion": null,
+      "snapshotHead": "78f709e52a052768188343f93cd5fa36ba867da2",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp05/engine-coverage.test.ts",
+          "./Sucafinav1/test/product/wp05/choice-history-bi.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "scope": "Pending result; no PASS credited. Snapshot parent/diff not yet verified."
+    }
+  ],
+  "sourceCheck": {
+    "exactHeadCheckRunsReturned": 0,
+    "query": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/6016a70d7ab0c3d50f1ec2827a534a80e48a5c56/check-runs",
+    "ancestorRun": {
+      "runId": 43585498891,
+      "head": "61d92392e9bded167eb2794995a623b2719cc4ba",
+      "conclusion": "failure",
+      "creditedTo6016": false
+    },
+    "composedCandidateVerified": false
+  },
+  "limitations": [
+    "These source runs do not validate composed W8/W9.",
+    "No exact-6016 typecheck PASS is established.",
+    "The source tests do not provide native/installed acceptance or GLOBAL_RELEASE evidence.",
+    "No local product commands, tests, typecheck or guards were run for this intake."
+  ]
+}

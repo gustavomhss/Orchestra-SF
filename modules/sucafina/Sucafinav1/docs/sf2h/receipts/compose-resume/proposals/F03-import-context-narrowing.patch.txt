@@ -1,0 +1,33 @@
+--- a/modules/sucafina/Sucafinav1/test/product/wp06/native/import-analysis.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp06/native/import-analysis.test.ts
+@@ -127,7 +127,9 @@
+     const forecastProof = await fixture.human("analysis.read", { caseRef: fixture.caseRef }, (call) =>
+       fixture.stage("forecast:verify", () => producer.verifier.verify(prepared.value, analysisRequest, call)))
+     if (forecastProof.status !== "ok") throw new Error(forecastProof.reason)
+-    expect(forecastProof.value.promptContext?.importPreview.manifest).toEqual(chosen)
++    const forecastContext = forecastProof.value.promptContext
++    if (!forecastContext || !("importPreview" in forecastContext)) throw new Error("Forecast proof did not include the selected import preview")
++    expect(forecastContext.importPreview.manifest).toEqual(chosen)
+     const forecastPrompt = sfAnalysisPrompt(analysisRequest.objective, forecastProof.value)
+     const native = await fixture.bind("sf-explicar-forecast", prepared.value, forecastPrompt)
+     expect(native.requestedModel).not.toHaveProperty("variant")
+@@ -163,7 +165,7 @@
+     const forecastReference = await fixture.importHttp(new Request(forecastLink, { headers: { cookie: app.cookie } }), "planner")
+     if (!forecastReference) throw new Error("Rendered import reference unavailable")
+     const reference = await readNativeResponse<{ manifest: ImportManifest; detail: ImportDetail }>(forecastReference)
+-    expect(forecastProof.value.promptContext?.importPreview).toEqual({ importPreviewRef: chosen.id, manifest: chosen, detail: reference.detail })
++    expect(forecastContext.importPreview).toEqual({ importPreviewRef: chosen.id, manifest: chosen, detail: reference.detail })
+     expect(reference.manifest).toEqual(chosen)
+     expect(reference.manifest.domainApplied).toBe(false)
+     expect(reference.manifest.issues).toEqual(chosen.issues)
+@@ -202,7 +204,9 @@
+       fixture.stage("intent:verify", () => intentProducer.verifier.verify(intentPrepared.value, intentRequest, call)))
+     if (intentProof.status !== "ok") throw new Error(intentProof.reason)
+     expect(intentProof.status).toBe("ok")
+-    expect(intentProof.value.promptContext?.importPreview).toEqual({ importPreviewRef: chosen.id, manifest: chosen, detail: reference.detail })
++    const intentContext = intentProof.value.promptContext
++    if (!intentContext || !("importPreview" in intentContext)) throw new Error("Intent proof did not include the selected import preview")
++    expect(intentContext.importPreview).toEqual({ importPreviewRef: chosen.id, manifest: chosen, detail: reference.detail })
+     const intentPrompt = sfAnalysisPrompt(intentRequest.objective, intentProof.value)
+     const intentNative = await fixture.bind("sf-enquadrar-decisao", intentPrepared.value, intentPrompt)
+     expect(intentNative.promptAdmission?.prompt.text).toBe(intentPrompt)

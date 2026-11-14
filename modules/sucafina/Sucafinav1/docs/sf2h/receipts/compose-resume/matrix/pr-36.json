@@ -1,0 +1,4802 @@
+{
+  "schema": "compose-resume-path-reconciliation-v1",
+  "source": {
+    "pr": 36,
+    "branch": "astra-intelligence",
+    "head": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+    "tree": "7c445488ea55c1c6d8d31cf91cb61b01665dac7b",
+    "parents": [
+      "8bb72c8cdeda149b000d91403c368642c3b53dec"
+    ],
+    "ancestry": "diverged",
+    "merge_base": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+    "disposition": "HELD_OR_ALREADY_PRESENT_NO_NEW_INTAKE",
+    "latest": {
+      "head": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+      "tree": "7c445488ea55c1c6d8d31cf91cb61b01665dac7b"
+    }
+  },
+  "candidate": {
+    "sha": "e1a1888bd2117616d53c5af5f5014e81c4b4e530",
+    "tree": "64d26157c0044018712074e55a4a56f36db15d5f"
+  },
+  "scope": [
+    "WP12",
+    "WP13",
+    "WP14"
+  ],
+  "coverage": "All blob paths in owned scope in origin, initial source or latest observed source; documented product/interface assignment applied. Other snapshots are comparisons, never source authority. Docs indexed separately.",
+  "reason_for_held_paths": "H-INTELLIGENCE: grouped WP12/WP13/WP14 versions overlap individual sources. Dedupe exact blobs; preserve threshold-proof and memory current-authority/replay semantics alongside finance/read-snapshot and original Atlas scenario.",
+  "decision_legend": {
+    "CONSUMED_EXACT_BLOB": "Published owner blob copied byte-for-byte; exact provenance in R04-reconciliation.json.",
+    "DEDUP_IDENTICAL_TO_CONSUMED": "Identical resulting blob already consumed from another pinned input; no second application.",
+    "ALREADY_PRESENT_IDENTICAL": "Same blob in W0 and C; no new intake or behavior claim.",
+    "KEEP_COMPOSITION_PATH": "Source absence does not authorize deleting existing composition.",
+    "KEEP_NEWER_COMPOSITION": "Source is still at merge-base blob; retain composition changes.",
+    "HOLD_OWNER_RECONCILIATION": "H-INTELLIGENCE: grouped WP12/WP13/WP14 versions overlap individual sources. Dedupe exact blobs; preserve threshold-proof and memory current-authority/replay semantics alongside finance/read-snapshot and original Atlas scenario.",
+    "HOLD_NEW_EXPLICIT_INPUT": "Path only appeared after pin; latest blob recorded, not consumed."
+  },
+  "evidence_limitation": "Byte equality proves identity, not behavioral acceptance. Scoped CI only covers its explicit selection. No native/final gate credit.",
+  "counts": {
+    "DEDUP_IDENTICAL_TO_CONSUMED": 3,
+    "HOLD_OWNER_RECONCILIATION": 82,
+    "ALREADY_PRESENT_IDENTICAL": 62
+  },
+  "paths": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/analysis-host.ts",
+      "owner": "WP12",
+      "merge_base_blob": "7efbb467220eac13dbbca95a69a87c164a2a1e14",
+      "origin_blob": "337f6764a6e4fa84c09d4b53afd87c814a8d1fab",
+      "candidate_blob": "79bc5b933253daf8db73171d20e84f77436f5bbe",
+      "proposed_blob": "79bc5b933253daf8db73171d20e84f77436f5bbe",
+      "latest_observed_blob": "79bc5b933253daf8db73171d20e84f77436f5bbe",
+      "decision": "DEDUP_IDENTICAL_TO_CONSUMED",
+      "equivalent_initial_source_prs": [
+        29,
+        36,
+        39
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "79bc5b933253daf8db73171d20e84f77436f5bbe",
+          "initial_prs": [
+            29,
+            36,
+            39
+          ],
+          "canonical_owner_source_prs": [
+            36,
+            39
+          ]
+        },
+        {
+          "blob": "7efbb467220eac13dbbca95a69a87c164a2a1e14",
+          "initial_prs": [
+            34,
+            38,
+            41,
+            42,
+            43
+          ],
+          "canonical_owner_source_prs": []
+        }
+      ],
+      "consumed_from_pr": 39
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+      "owner": "WP12",
+      "merge_base_blob": "10903c2d183978f0539b0ff3b5d610213ad31852",
+      "origin_blob": "03f6ba173ca1d27693f784fdf149d2c674ca5edf",
+      "candidate_blob": "47e25de4ed1e743a2366c234a56baf2633c805bb",
+      "proposed_blob": "f1127503cf3d25a44d76c766d6d52fcd3c41bd1d",
+      "latest_observed_blob": "f1127503cf3d25a44d76c766d6d52fcd3c41bd1d",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36
+      ],
+      "exclusive_among_observed_sources": true,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "10903c2d183978f0539b0ff3b5d610213ad31852",
+          "initial_prs": [
+            34,
+            38,
+            41,
+            42,
+            43
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "3c78f724a50c37757570e80ba18af950a9469132",
+          "initial_prs": [
+            29
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "47e25de4ed1e743a2366c234a56baf2633c805bb",
+          "initial_prs": [
+            39
+          ],
+          "canonical_owner_source_prs": [
+            39
+          ]
+        },
+        {
+          "blob": "f1127503cf3d25a44d76c766d6d52fcd3c41bd1d",
+          "initial_prs": [
+            36
+          ],
+          "canonical_owner_source_prs": [
+            36
+          ]
+        }
+      ],
+      "consumed_from_pr": 39
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/continuation.ts",
+      "owner": "WP12",
+      "merge_base_blob": "a4738e01064caaeabd686259b2b1053e73d2d12c",
+      "origin_blob": "940a98787420b7f88e625d7f7e9aeee39373f215",
+      "candidate_blob": "940a98787420b7f88e625d7f7e9aeee39373f215",
+      "proposed_blob": "940a98787420b7f88e625d7f7e9aeee39373f215",
+      "latest_observed_blob": "940a98787420b7f88e625d7f7e9aeee39373f215",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        36,
+        39
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/contribution-builder.ts",
+      "owner": "WP12",
+      "merge_base_blob": "329024187082992bab26c415385c0114b2b24384",
+      "origin_blob": "e0f70be52df22cac36dbaa88aa1ca7404f4abecc",
+      "candidate_blob": "e0f70be52df22cac36dbaa88aa1ca7404f4abecc",
+      "proposed_blob": "e0f70be52df22cac36dbaa88aa1ca7404f4abecc",
+      "latest_observed_blob": "e0f70be52df22cac36dbaa88aa1ca7404f4abecc",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        36,
+        39
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/contribution-reader.ts",
+      "owner": "WP12",
+      "merge_base_blob": "b37ba4c19209fa58b8fdf62ab23787058955c5eb",
+      "origin_blob": "db9faeec0e1d35c0724a25a0d9cf53fee93961ee",
+      "candidate_blob": "db9faeec0e1d35c0724a25a0d9cf53fee93961ee",
+      "proposed_blob": "db9faeec0e1d35c0724a25a0d9cf53fee93961ee",
+      "latest_observed_blob": "db9faeec0e1d35c0724a25a0d9cf53fee93961ee",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        36,
+        39
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/manifests/native-probe.json",
+      "owner": "WP12",
+      "merge_base_blob": "4e257c2bc83968759619a3698df0bee55b4c274b",
+      "origin_blob": "4e257c2bc83968759619a3698df0bee55b4c274b",
+      "candidate_blob": "4e257c2bc83968759619a3698df0bee55b4c274b",
+      "proposed_blob": "4e257c2bc83968759619a3698df0bee55b4c274b",
+      "latest_observed_blob": "4e257c2bc83968759619a3698df0bee55b4c274b",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        34,
+        36,
+        38,
+        39,
+        41,
+        42,
+        43
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/manifests/resident.json",
+      "owner": "WP12",
+      "merge_base_blob": "6c2a9a7084379a91995842d9e8577f710f687465",
+      "origin_blob": "453c6f3a5b48c081223909af8293f854ad31d7c8",
+      "candidate_blob": "453c6f3a5b48c081223909af8293f854ad31d7c8",
+      "proposed_blob": "453c6f3a5b48c081223909af8293f854ad31d7c8",
+      "latest_observed_blob": "453c6f3a5b48c081223909af8293f854ad31d7c8",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        36,
+        39
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/profiles/sf_finance.json",
+      "owner": "WP12",
+      "merge_base_blob": "3f6c6d59ef7374f7ede0c6f21f9c652ee8019e25",
+      "origin_blob": "3f6c6d59ef7374f7ede0c6f21f9c652ee8019e25",
+      "candidate_blob": "3f6c6d59ef7374f7ede0c6f21f9c652ee8019e25",
+      "proposed_blob": "3f6c6d59ef7374f7ede0c6f21f9c652ee8019e25",
+      "latest_observed_blob": "3f6c6d59ef7374f7ede0c6f21f9c652ee8019e25",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        34,
+        36,
+        38,
+        39,
+        41,
+        42,
+        43
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/profiles/sf_maestro.json",
+      "owner": "WP12",
+      "merge_base_blob": "77421be809ca53f5e4ef9d8f1dc719137ab1d406",
+      "origin_blob": "77421be809ca53f5e4ef9d8f1dc719137ab1d406",
+      "candidate_blob": "77421be809ca53f5e4ef9d8f1dc719137ab1d406",
+      "proposed_blob": "77421be809ca53f5e4ef9d8f1dc719137ab1d406",
+      "latest_observed_blob": "77421be809ca53f5e4ef9d8f1dc719137ab1d406",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        34,
+        36,
+        38,
+        39,
+        41,
+        42,
+        43
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/profiles/sf_portfolio.json",
+      "owner": "WP12",
+      "merge_base_blob": "1aabebe2ea6effa98dc1869ebcaf947092d7c4ba",
+      "origin_blob": "744918076fa510339a3216487da8f59b06fe45e8",
+      "candidate_blob": "744918076fa510339a3216487da8f59b06fe45e8",
+      "proposed_blob": "744918076fa510339a3216487da8f59b06fe45e8",
+      "latest_observed_blob": "744918076fa510339a3216487da8f59b06fe45e8",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        36,
+        39
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/profiles/sf_procurement.json",
+      "owner": "WP12",
+      "merge_base_blob": "5c1b3c641396c3ab7ee61b1314c3f945d7231b9e",
+      "origin_blob": "5c1b3c641396c3ab7ee61b1314c3f945d7231b9e",
+      "candidate_blob": "5c1b3c641396c3ab7ee61b1314c3f945d7231b9e",
+      "proposed_blob": "5c1b3c641396c3ab7ee61b1314c3f945d7231b9e",
+      "latest_observed_blob": "5c1b3c641396c3ab7ee61b1314c3f945d7231b9e",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        34,
+        36,
+        38,
+        39,
+        41,
+        42,
+        43
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/profiles/sf_reviewer.json",
+      "owner": "WP12",
+      "merge_base_blob": "e90c2e04fe618c361b595882c4d1ff25a2e835f8",
+      "origin_blob": "e90c2e04fe618c361b595882c4d1ff25a2e835f8",
+      "candidate_blob": "e90c2e04fe618c361b595882c4d1ff25a2e835f8",
+      "proposed_blob": "e90c2e04fe618c361b595882c4d1ff25a2e835f8",
+      "latest_observed_blob": "e90c2e04fe618c361b595882c4d1ff25a2e835f8",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        34,
+        36,
+        38,
+        39,
+        41,
+        42,
+        43
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/resident.ts",
+      "owner": "WP12",
+      "merge_base_blob": "3e025a1395511af4f09de903b35d6b1cf20198ac",
+      "origin_blob": "7e3d3849272bb5755d793a9e2b00ad34c523c188",
+      "candidate_blob": "7e3d3849272bb5755d793a9e2b00ad34c523c188",
+      "proposed_blob": "7e3d3849272bb5755d793a9e2b00ad34c523c188",
+      "latest_observed_blob": "7e3d3849272bb5755d793a9e2b00ad34c523c188",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        36,
+        39
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/run-provenance.ts",
+      "owner": "WP12",
+      "merge_base_blob": null,
+      "origin_blob": "b303ef7a4968ffb2cc2f51e6318e165a07ac3c73",
+      "candidate_blob": "b303ef7a4968ffb2cc2f51e6318e165a07ac3c73",
+      "proposed_blob": "b303ef7a4968ffb2cc2f51e6318e165a07ac3c73",
+      "latest_observed_blob": "b303ef7a4968ffb2cc2f51e6318e165a07ac3c73",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        36,
+        38,
+        39
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+      "owner": "WP12",
+      "merge_base_blob": "9fb3be23997d87a5544dec543bf6e02fb7835b19",
+      "origin_blob": "a3c306b720fd7f82e32340682e5001b1e6f4ef8e",
+      "candidate_blob": "978e4d54d2d54d1308152b7a4e9625f5c54b36ae",
+      "proposed_blob": "978e4d54d2d54d1308152b7a4e9625f5c54b36ae",
+      "latest_observed_blob": "978e4d54d2d54d1308152b7a4e9625f5c54b36ae",
+      "decision": "DEDUP_IDENTICAL_TO_CONSUMED",
+      "equivalent_initial_source_prs": [
+        29,
+        36,
+        39
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "1ebb11deacb55df8d09e3071130b52f34159d47c",
+          "initial_prs": [
+            34
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "978e4d54d2d54d1308152b7a4e9625f5c54b36ae",
+          "initial_prs": [
+            29,
+            36,
+            39
+          ],
+          "canonical_owner_source_prs": [
+            36,
+            39
+          ]
+        },
+        {
+          "blob": "9fb3be23997d87a5544dec543bf6e02fb7835b19",
+          "initial_prs": [
+            41,
+            42,
+            43
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "a547883f113e5879f13fb13ad23f31704209b4dc",
+          "initial_prs": [
+            38
+          ],
+          "canonical_owner_source_prs": []
+        }
+      ],
+      "consumed_from_pr": 39
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-avaliar-sensibilidade/SKILL.md",
+      "owner": "WP12",
+      "merge_base_blob": "4a31425aa1b87b6cd9f4127951cdd355c9948761",
+      "origin_blob": "4a31425aa1b87b6cd9f4127951cdd355c9948761",
+      "candidate_blob": "4a31425aa1b87b6cd9f4127951cdd355c9948761",
+      "proposed_blob": "4a31425aa1b87b6cd9f4127951cdd355c9948761",
+      "latest_observed_blob": "4a31425aa1b87b6cd9f4127951cdd355c9948761",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        34,
+        36,
+        38,
+        39,
+        41,
+        42,
+        43
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-comparar-cenarios/SKILL.md",
+      "owner": "WP12",
+      "merge_base_blob": "8cccc31aaf8b304da167dfd11895ee3f1e8a4c16",
+      "origin_blob": "8cccc31aaf8b304da167dfd11895ee3f1e8a4c16",
+      "candidate_blob": "8cccc31aaf8b304da167dfd11895ee3f1e8a4c16",
+      "proposed_blob": "8cccc31aaf8b304da167dfd11895ee3f1e8a4c16",
+      "latest_observed_blob": "8cccc31aaf8b304da167dfd11895ee3f1e8a4c16",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        34,
+        36,
+        38,
+        39,
+        41,
+        42,
+        43
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-comparar-sourcing/SKILL.md",
+      "owner": "WP12",
+      "merge_base_blob": "7efc33c59e5545caa38b7bf3b51749699c398e4f",
+      "origin_blob": "7efc33c59e5545caa38b7bf3b51749699c398e4f",
+      "candidate_blob": "7efc33c59e5545caa38b7bf3b51749699c398e4f",
+      "proposed_blob": "7efc33c59e5545caa38b7bf3b51749699c398e4f",
+      "latest_observed_blob": "7efc33c59e5545caa38b7bf3b51749699c398e4f",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        34,
+        36,
+        38,
+        39,
+        41,
+        42,
+        43
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-compor-portfolio/SKILL.md",
+      "owner": "WP12",
+      "merge_base_blob": "d18d1341425faeee2dc0e21f9a60ed7dba490f47",
+      "origin_blob": "255226879e40d87bfba55a644b67fd7bc7371115",
+      "candidate_blob": "255226879e40d87bfba55a644b67fd7bc7371115",
+      "proposed_blob": "255226879e40d87bfba55a644b67fd7bc7371115",
+      "latest_observed_blob": "255226879e40d87bfba55a644b67fd7bc7371115",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        36,
+        39
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-consultar-memoria-decisoria/SKILL.md",
+      "owner": "WP12",
+      "merge_base_blob": "2ee966afb19228329610bd4f468bcd57c6dd0ad0",
+      "origin_blob": "2ee966afb19228329610bd4f468bcd57c6dd0ad0",
+      "candidate_blob": "2ee966afb19228329610bd4f468bcd57c6dd0ad0",
+      "proposed_blob": "2ee966afb19228329610bd4f468bcd57c6dd0ad0",
+      "latest_observed_blob": "2ee966afb19228329610bd4f468bcd57c6dd0ad0",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        34,
+        36,
+        38,
+        39,
+        41,
+        42,
+        43
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-contestar-decisao/SKILL.md",
+      "owner": "WP12",
+      "merge_base_blob": "886d0666c5ae5c2cfa48316d99f3cd3f75521ed5",
+      "origin_blob": "886d0666c5ae5c2cfa48316d99f3cd3f75521ed5",
+      "candidate_blob": "886d0666c5ae5c2cfa48316d99f3cd3f75521ed5",
+      "proposed_blob": "886d0666c5ae5c2cfa48316d99f3cd3f75521ed5",
+      "latest_observed_blob": "886d0666c5ae5c2cfa48316d99f3cd3f75521ed5",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        34,
+        36,
+        38,
+        39,
+        41,
+        42,
+        43
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-coordenar-perguntas/SKILL.md",
+      "owner": "WP12",
+      "merge_base_blob": "71214d50fc1d51400ad5a2b2b277fe819c460e17",
+      "origin_blob": "71214d50fc1d51400ad5a2b2b277fe819c460e17",
+      "candidate_blob": "71214d50fc1d51400ad5a2b2b277fe819c460e17",
+      "proposed_blob": "71214d50fc1d51400ad5a2b2b277fe819c460e17",
+      "latest_observed_blob": "71214d50fc1d51400ad5a2b2b277fe819c460e17",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        34,
+        36,
+        38,
+        39,
+        41,
+        42,
+        43
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-enquadrar-decisao/SKILL.md",
+      "owner": "WP12",
+      "merge_base_blob": "7a6ee1ca2baad915ab2c21b35001d3e49103ba9e",
+      "origin_blob": "7a6ee1ca2baad915ab2c21b35001d3e49103ba9e",
+      "candidate_blob": "7a6ee1ca2baad915ab2c21b35001d3e49103ba9e",
+      "proposed_blob": "7a6ee1ca2baad915ab2c21b35001d3e49103ba9e",
+      "latest_observed_blob": "7a6ee1ca2baad915ab2c21b35001d3e49103ba9e",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        34,
+        36,
+        38,
+        39,
+        41,
+        42,
+        43
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-explicar-forecast/SKILL.md",
+      "owner": "WP12",
+      "merge_base_blob": "f22c114e97ceea6d8839efe892f57b2c1dcb58ae",
+      "origin_blob": "f22c114e97ceea6d8839efe892f57b2c1dcb58ae",
+      "candidate_blob": "f22c114e97ceea6d8839efe892f57b2c1dcb58ae",
+      "proposed_blob": "f22c114e97ceea6d8839efe892f57b2c1dcb58ae",
+      "latest_observed_blob": "f22c114e97ceea6d8839efe892f57b2c1dcb58ae",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        34,
+        36,
+        38,
+        39,
+        41,
+        42,
+        43
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-extrair-evidencias/SKILL.md",
+      "owner": "WP12",
+      "merge_base_blob": "15b2ad72102d0da92a626315852c6dc1c4e556e6",
+      "origin_blob": "15b2ad72102d0da92a626315852c6dc1c4e556e6",
+      "candidate_blob": "15b2ad72102d0da92a626315852c6dc1c4e556e6",
+      "proposed_blob": "15b2ad72102d0da92a626315852c6dc1c4e556e6",
+      "latest_observed_blob": "15b2ad72102d0da92a626315852c6dc1c4e556e6",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        34,
+        36,
+        38,
+        39,
+        41,
+        42,
+        43
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-preparar-compra/SKILL.md",
+      "owner": "WP12",
+      "merge_base_blob": "88ce0b23673866e82485b970d3a2a559091d277f",
+      "origin_blob": "88ce0b23673866e82485b970d3a2a559091d277f",
+      "candidate_blob": "88ce0b23673866e82485b970d3a2a559091d277f",
+      "proposed_blob": "88ce0b23673866e82485b970d3a2a559091d277f",
+      "latest_observed_blob": "88ce0b23673866e82485b970d3a2a559091d277f",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        34,
+        36,
+        38,
+        39,
+        41,
+        42,
+        43
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-preparar-revisao-executiva/SKILL.md",
+      "owner": "WP12",
+      "merge_base_blob": "b331ec5ba4c55aae7387c22ff5c0d3532766cb4f",
+      "origin_blob": "b331ec5ba4c55aae7387c22ff5c0d3532766cb4f",
+      "candidate_blob": "b331ec5ba4c55aae7387c22ff5c0d3532766cb4f",
+      "proposed_blob": "b331ec5ba4c55aae7387c22ff5c0d3532766cb4f",
+      "latest_observed_blob": "b331ec5ba4c55aae7387c22ff5c0d3532766cb4f",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        34,
+        36,
+        38,
+        39,
+        41,
+        42,
+        43
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-produzir-bi-contextual/SKILL.md",
+      "owner": "WP12",
+      "merge_base_blob": "313d50dca7c9ca78e57ca2818f778e5c2680177e",
+      "origin_blob": "313d50dca7c9ca78e57ca2818f778e5c2680177e",
+      "candidate_blob": "313d50dca7c9ca78e57ca2818f778e5c2680177e",
+      "proposed_blob": "313d50dca7c9ca78e57ca2818f778e5c2680177e",
+      "latest_observed_blob": "313d50dca7c9ca78e57ca2818f778e5c2680177e",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        34,
+        36,
+        38,
+        39,
+        41,
+        42,
+        43
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-produzir-material-reuniao/SKILL.md",
+      "owner": "WP12",
+      "merge_base_blob": "d9eb1442a99334424431614942ab98304d196596",
+      "origin_blob": "d9eb1442a99334424431614942ab98304d196596",
+      "candidate_blob": "d9eb1442a99334424431614942ab98304d196596",
+      "proposed_blob": "d9eb1442a99334424431614942ab98304d196596",
+      "latest_observed_blob": "d9eb1442a99334424431614942ab98304d196596",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        34,
+        36,
+        38,
+        39,
+        41,
+        42,
+        43
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-reavaliar-compromissos/SKILL.md",
+      "owner": "WP12",
+      "merge_base_blob": "e287b51c600f512895b8fe70b47059c0e6cd5369",
+      "origin_blob": "e287b51c600f512895b8fe70b47059c0e6cd5369",
+      "candidate_blob": "e287b51c600f512895b8fe70b47059c0e6cd5369",
+      "proposed_blob": "e287b51c600f512895b8fe70b47059c0e6cd5369",
+      "latest_observed_blob": "e287b51c600f512895b8fe70b47059c0e6cd5369",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        34,
+        36,
+        38,
+        39,
+        41,
+        42,
+        43
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-revisar-condicoes-contratuais/SKILL.md",
+      "owner": "WP12",
+      "merge_base_blob": "af90ae46fd08f976780ee9ce470ddda93cdd0780",
+      "origin_blob": "af90ae46fd08f976780ee9ce470ddda93cdd0780",
+      "candidate_blob": "af90ae46fd08f976780ee9ce470ddda93cdd0780",
+      "proposed_blob": "af90ae46fd08f976780ee9ce470ddda93cdd0780",
+      "latest_observed_blob": "af90ae46fd08f976780ee9ce470ddda93cdd0780",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        34,
+        36,
+        38,
+        39,
+        41,
+        42,
+        43
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-revisar-dependencias/SKILL.md",
+      "owner": "WP12",
+      "merge_base_blob": "b73080dc07de0f1a2298f17354b25e0ecae081c5",
+      "origin_blob": "b73080dc07de0f1a2298f17354b25e0ecae081c5",
+      "candidate_blob": "b73080dc07de0f1a2298f17354b25e0ecae081c5",
+      "proposed_blob": "b73080dc07de0f1a2298f17354b25e0ecae081c5",
+      "latest_observed_blob": "b73080dc07de0f1a2298f17354b25e0ecae081c5",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        34,
+        36,
+        38,
+        39,
+        41,
+        42,
+        43
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/skills/sf-revisar-evidencias/SKILL.md",
+      "owner": "WP12",
+      "merge_base_blob": "f993b283c94df093c158dbc06acc80ef9395d4b6",
+      "origin_blob": "f993b283c94df093c158dbc06acc80ef9395d4b6",
+      "candidate_blob": "f993b283c94df093c158dbc06acc80ef9395d4b6",
+      "proposed_blob": "f993b283c94df093c158dbc06acc80ef9395d4b6",
+      "latest_observed_blob": "f993b283c94df093c158dbc06acc80ef9395d4b6",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        34,
+        36,
+        38,
+        39,
+        41,
+        42,
+        43
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/atlas-projection.ts",
+      "owner": "WP14",
+      "merge_base_blob": "2b2271834edf3be7ddb3e16885a9a1861d5561f6",
+      "origin_blob": "7c1b3dd08dc663e9dfa406b09dc2af5920281131",
+      "candidate_blob": "7c1b3dd08dc663e9dfa406b09dc2af5920281131",
+      "proposed_blob": "4ffa4bffc3e3fe3bfffd3a047f1e11c473697e36",
+      "latest_observed_blob": "4ffa4bffc3e3fe3bfffd3a047f1e11c473697e36",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        29,
+        36,
+        38
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "2b2271834edf3be7ddb3e16885a9a1861d5561f6",
+          "initial_prs": [
+            34,
+            41,
+            42,
+            43
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "4ffa4bffc3e3fe3bfffd3a047f1e11c473697e36",
+          "initial_prs": [
+            29,
+            36,
+            38
+          ],
+          "canonical_owner_source_prs": [
+            36,
+            38
+          ]
+        },
+        {
+          "blob": "7c1b3dd08dc663e9dfa406b09dc2af5920281131",
+          "initial_prs": [
+            39
+          ],
+          "canonical_owner_source_prs": []
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/case-features.ts",
+      "owner": "WP14",
+      "merge_base_blob": null,
+      "origin_blob": "ff95a311352c0c04b9ca42ab6523783284a8001e",
+      "candidate_blob": "ff95a311352c0c04b9ca42ab6523783284a8001e",
+      "proposed_blob": "ff95a311352c0c04b9ca42ab6523783284a8001e",
+      "latest_observed_blob": "ff95a311352c0c04b9ca42ab6523783284a8001e",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        36,
+        38,
+        39
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/case-recall.ts",
+      "owner": "WP14",
+      "merge_base_blob": null,
+      "origin_blob": "fdc378d5f251511f66bb256b78240f472f1d566c",
+      "candidate_blob": "fdc378d5f251511f66bb256b78240f472f1d566c",
+      "proposed_blob": "03e75875386483c7e37dce3f7bb21189f3066774",
+      "latest_observed_blob": "03e75875386483c7e37dce3f7bb21189f3066774",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36,
+        38
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "03e75875386483c7e37dce3f7bb21189f3066774",
+          "initial_prs": [
+            36,
+            38
+          ],
+          "canonical_owner_source_prs": [
+            36,
+            38
+          ]
+        },
+        {
+          "blob": "80291e7ab170ee0c445098b0bcdecebf8894f8e3",
+          "initial_prs": [
+            34
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "fdc378d5f251511f66bb256b78240f472f1d566c",
+          "initial_prs": [
+            29,
+            39,
+            43
+          ],
+          "canonical_owner_source_prs": []
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/domain-outcome.ts",
+      "owner": "WP14",
+      "merge_base_blob": null,
+      "origin_blob": "024733060d3a5eb0729a81ea81f2487b6420843f",
+      "candidate_blob": "024733060d3a5eb0729a81ea81f2487b6420843f",
+      "proposed_blob": "aad2b8a655c3259a86e526efcf562602851df8bc",
+      "latest_observed_blob": "aad2b8a655c3259a86e526efcf562602851df8bc",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36,
+        38
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "024733060d3a5eb0729a81ea81f2487b6420843f",
+          "initial_prs": [
+            29,
+            39
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "aad2b8a655c3259a86e526efcf562602851df8bc",
+          "initial_prs": [
+            36,
+            38
+          ],
+          "canonical_owner_source_prs": [
+            36,
+            38
+          ]
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/invalidation.ts",
+      "owner": "WP14",
+      "merge_base_blob": null,
+      "origin_blob": "430cad970087abab2fcb05d299f5d358834c93e9",
+      "candidate_blob": "430cad970087abab2fcb05d299f5d358834c93e9",
+      "proposed_blob": "3bafcac1d0114eff9cd6869fd8040a9fe414ed7f",
+      "latest_observed_blob": "3bafcac1d0114eff9cd6869fd8040a9fe414ed7f",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36
+      ],
+      "exclusive_among_observed_sources": true,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "3bafcac1d0114eff9cd6869fd8040a9fe414ed7f",
+          "initial_prs": [
+            36
+          ],
+          "canonical_owner_source_prs": [
+            36
+          ]
+        },
+        {
+          "blob": "430cad970087abab2fcb05d299f5d358834c93e9",
+          "initial_prs": [
+            29
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "acca5b77dfef2cf4552ccf1caf27e19e74a98cf2",
+          "initial_prs": [
+            38
+          ],
+          "canonical_owner_source_prs": [
+            38
+          ]
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/materiality.ts",
+      "owner": "WP14",
+      "merge_base_blob": "6e847ce8338e6a5145349249d7eb7559576b7415",
+      "origin_blob": "cd87d8a7af91ac66e8e6a8d2e9ae48ed1db5ec74",
+      "candidate_blob": "cd87d8a7af91ac66e8e6a8d2e9ae48ed1db5ec74",
+      "proposed_blob": "1c586d321cf10bdaeccd95b4ac2a2100b439fe7f",
+      "latest_observed_blob": "1c586d321cf10bdaeccd95b4ac2a2100b439fe7f",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36
+      ],
+      "exclusive_among_observed_sources": true,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "0299a2a5dadecbec526a5dcea127d8a010488824",
+          "initial_prs": [
+            38
+          ],
+          "canonical_owner_source_prs": [
+            38
+          ]
+        },
+        {
+          "blob": "1c586d321cf10bdaeccd95b4ac2a2100b439fe7f",
+          "initial_prs": [
+            36
+          ],
+          "canonical_owner_source_prs": [
+            36
+          ]
+        },
+        {
+          "blob": "6e847ce8338e6a5145349249d7eb7559576b7415",
+          "initial_prs": [
+            34,
+            41,
+            42,
+            43
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "cd87d8a7af91ac66e8e6a8d2e9ae48ed1db5ec74",
+          "initial_prs": [
+            29,
+            39
+          ],
+          "canonical_owner_source_prs": []
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/observation-time.ts",
+      "owner": "WP14",
+      "merge_base_blob": null,
+      "origin_blob": null,
+      "candidate_blob": null,
+      "proposed_blob": "0b567eb3c4b4363c41d50e1147f76b97ac051449",
+      "latest_observed_blob": "0b567eb3c4b4363c41d50e1147f76b97ac051449",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36,
+        38
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/outcome-review.ts",
+      "owner": "WP14",
+      "merge_base_blob": null,
+      "origin_blob": "08dbdc8fe96069030afc1a2617260ca2eb7088b6",
+      "candidate_blob": "08dbdc8fe96069030afc1a2617260ca2eb7088b6",
+      "proposed_blob": "08dbdc8fe96069030afc1a2617260ca2eb7088b6",
+      "latest_observed_blob": "08dbdc8fe96069030afc1a2617260ca2eb7088b6",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        36,
+        38,
+        39
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/outcome-selection.ts",
+      "owner": "WP14",
+      "merge_base_blob": null,
+      "origin_blob": "bc30d168f18a186a9cbdc149607fec9c30223247",
+      "candidate_blob": "bc30d168f18a186a9cbdc149607fec9c30223247",
+      "proposed_blob": "790e7c98820df61306ad67bd5897b1301118d335",
+      "latest_observed_blob": "790e7c98820df61306ad67bd5897b1301118d335",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36
+      ],
+      "exclusive_among_observed_sources": true,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "03a3ddf8dacd2e7b050b20b73b14b2bd3e974f4c",
+          "initial_prs": [
+            38
+          ],
+          "canonical_owner_source_prs": [
+            38
+          ]
+        },
+        {
+          "blob": "790e7c98820df61306ad67bd5897b1301118d335",
+          "initial_prs": [
+            36
+          ],
+          "canonical_owner_source_prs": [
+            36
+          ]
+        },
+        {
+          "blob": "bc30d168f18a186a9cbdc149607fec9c30223247",
+          "initial_prs": [
+            29,
+            39
+          ],
+          "canonical_owner_source_prs": []
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/outcome.ts",
+      "owner": "WP14",
+      "merge_base_blob": null,
+      "origin_blob": "c84aac867aab332b9ac7e4e92d03bf3f7e7ad430",
+      "candidate_blob": "c84aac867aab332b9ac7e4e92d03bf3f7e7ad430",
+      "proposed_blob": "97d23e90f627472e525c50288fdf4163e3cc3c54",
+      "latest_observed_blob": "97d23e90f627472e525c50288fdf4163e3cc3c54",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36
+      ],
+      "exclusive_among_observed_sources": true,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "97d23e90f627472e525c50288fdf4163e3cc3c54",
+          "initial_prs": [
+            36
+          ],
+          "canonical_owner_source_prs": [
+            36
+          ]
+        },
+        {
+          "blob": "c84aac867aab332b9ac7e4e92d03bf3f7e7ad430",
+          "initial_prs": [
+            29,
+            39
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "d1c524a976e07524d9b2b197635805dde9ae650c",
+          "initial_prs": [
+            38
+          ],
+          "canonical_owner_source_prs": [
+            38
+          ]
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/planner-materiality.ts",
+      "owner": "WP14",
+      "merge_base_blob": null,
+      "origin_blob": "0c5f8ba9d7bb2c043ae5d62f044e9fcf8eb9ee7a",
+      "candidate_blob": "0c5f8ba9d7bb2c043ae5d62f044e9fcf8eb9ee7a",
+      "proposed_blob": "0c5f8ba9d7bb2c043ae5d62f044e9fcf8eb9ee7a",
+      "latest_observed_blob": "0c5f8ba9d7bb2c043ae5d62f044e9fcf8eb9ee7a",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        36,
+        38,
+        39
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/recall.ts",
+      "owner": "WP14",
+      "merge_base_blob": "84b66e7f7737b291510bee7f746323654415986a",
+      "origin_blob": "b63fcc3744065daed31406ad19bc18a3ec983110",
+      "candidate_blob": "b63fcc3744065daed31406ad19bc18a3ec983110",
+      "proposed_blob": "2d8524b42448ea63a7dd9ab0e9337c90540dc383",
+      "latest_observed_blob": "2d8524b42448ea63a7dd9ab0e9337c90540dc383",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36
+      ],
+      "exclusive_among_observed_sources": true,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "2d8524b42448ea63a7dd9ab0e9337c90540dc383",
+          "initial_prs": [
+            36
+          ],
+          "canonical_owner_source_prs": [
+            36
+          ]
+        },
+        {
+          "blob": "57a9f7425de54eda1673a4f488d5567c66e94d5c",
+          "initial_prs": [
+            38
+          ],
+          "canonical_owner_source_prs": [
+            38
+          ]
+        },
+        {
+          "blob": "6c4c972fb678ca31fc09606008feef5090602b1f",
+          "initial_prs": [
+            29,
+            39
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "84b66e7f7737b291510bee7f746323654415986a",
+          "initial_prs": [
+            34,
+            41,
+            42
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "b63fcc3744065daed31406ad19bc18a3ec983110",
+          "initial_prs": [
+            43
+          ],
+          "canonical_owner_source_prs": []
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/signal-list.ts",
+      "owner": "WP14",
+      "merge_base_blob": null,
+      "origin_blob": "2d41f7fc3a718b625a49e2fe85e414cca1c473c8",
+      "candidate_blob": "2d41f7fc3a718b625a49e2fe85e414cca1c473c8",
+      "proposed_blob": "c4a1d8d1f4e540c41c3e7d09efb92bb003ab6d8b",
+      "latest_observed_blob": "c4a1d8d1f4e540c41c3e7d09efb92bb003ab6d8b",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36
+      ],
+      "exclusive_among_observed_sources": true,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "2d41f7fc3a718b625a49e2fe85e414cca1c473c8",
+          "initial_prs": [
+            29,
+            39
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "905770233118a2b0707dfed37f9038f89fb884ac",
+          "initial_prs": [
+            38
+          ],
+          "canonical_owner_source_prs": [
+            38
+          ]
+        },
+        {
+          "blob": "c4a1d8d1f4e540c41c3e7d09efb92bb003ab6d8b",
+          "initial_prs": [
+            36
+          ],
+          "canonical_owner_source_prs": [
+            36
+          ]
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/signal-registry.ts",
+      "owner": "WP14",
+      "merge_base_blob": null,
+      "origin_blob": "83b77eab0314943f3a6e5dfc16b648f1a166db33",
+      "candidate_blob": "83b77eab0314943f3a6e5dfc16b648f1a166db33",
+      "proposed_blob": "b6edcf44f55923cbaa764ff9374ce127145b0f9e",
+      "latest_observed_blob": "b6edcf44f55923cbaa764ff9374ce127145b0f9e",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36
+      ],
+      "exclusive_among_observed_sources": true,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "83b77eab0314943f3a6e5dfc16b648f1a166db33",
+          "initial_prs": [
+            29,
+            39
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "b6edcf44f55923cbaa764ff9374ce127145b0f9e",
+          "initial_prs": [
+            36
+          ],
+          "canonical_owner_source_prs": [
+            36
+          ]
+        },
+        {
+          "blob": "d329fc03041ae86d7d0e57a5d31e05e98be46fe5",
+          "initial_prs": [
+            38
+          ],
+          "canonical_owner_source_prs": [
+            38
+          ]
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/signal-work.ts",
+      "owner": "WP14",
+      "merge_base_blob": null,
+      "origin_blob": "44d56975554badd68d9156622c9f94df8145bcdd",
+      "candidate_blob": "44d56975554badd68d9156622c9f94df8145bcdd",
+      "proposed_blob": "3cc6b0ae5fd75ce84724eeafc053264fc9370740",
+      "latest_observed_blob": "3cc6b0ae5fd75ce84724eeafc053264fc9370740",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36
+      ],
+      "exclusive_among_observed_sources": true,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "3cc6b0ae5fd75ce84724eeafc053264fc9370740",
+          "initial_prs": [
+            36
+          ],
+          "canonical_owner_source_prs": [
+            36
+          ]
+        },
+        {
+          "blob": "44d56975554badd68d9156622c9f94df8145bcdd",
+          "initial_prs": [
+            29
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "8e03cb17343b87304238a8f9f17b9e0e130b5149",
+          "initial_prs": [
+            38
+          ],
+          "canonical_owner_source_prs": [
+            38
+          ]
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/signals.ts",
+      "owner": "WP14",
+      "merge_base_blob": null,
+      "origin_blob": "bf432c915607ed99d050faae373c7fab3f741f88",
+      "candidate_blob": "bf432c915607ed99d050faae373c7fab3f741f88",
+      "proposed_blob": "bf432c915607ed99d050faae373c7fab3f741f88",
+      "latest_observed_blob": "bf432c915607ed99d050faae373c7fab3f741f88",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        36,
+        38,
+        39
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts",
+      "owner": "WP14",
+      "merge_base_blob": "3cff741ce7dd96b7fdec8ac803e3b27c6170a463",
+      "origin_blob": "41741c5131ea66242c881126c22c6d03cfd9c3c3",
+      "candidate_blob": "41741c5131ea66242c881126c22c6d03cfd9c3c3",
+      "proposed_blob": "e4e648feecb4e12ace3da41e1b91c45b527c7247",
+      "latest_observed_blob": "e4e648feecb4e12ace3da41e1b91c45b527c7247",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36,
+        38,
+        39
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "15f3da92e658ec21b234888a16ed7f1b87cc5f4e",
+          "initial_prs": [
+            43
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "3cff741ce7dd96b7fdec8ac803e3b27c6170a463",
+          "initial_prs": [
+            41,
+            42
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "3d5628ca00dcc59b8a840c25450578d6f60e83b7",
+          "initial_prs": [
+            34
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "41741c5131ea66242c881126c22c6d03cfd9c3c3",
+          "initial_prs": [
+            29
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "e4e648feecb4e12ace3da41e1b91c45b527c7247",
+          "initial_prs": [
+            36,
+            38,
+            39
+          ],
+          "canonical_owner_source_prs": [
+            36,
+            38
+          ]
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/README.md",
+      "owner": "WP13",
+      "merge_base_blob": "760f3cca4b572a49f3b9087100205b63185894bd",
+      "origin_blob": "6095c6ec91cabd1a29ce851d5eb20c987d450d6d",
+      "candidate_blob": "6095c6ec91cabd1a29ce851d5eb20c987d450d6d",
+      "proposed_blob": "4bdad097bb82f3dc96a74090bacc567835295680",
+      "latest_observed_blob": "4bdad097bb82f3dc96a74090bacc567835295680",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        29,
+        36
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "4bdad097bb82f3dc96a74090bacc567835295680",
+          "initial_prs": [
+            29,
+            36
+          ],
+          "canonical_owner_source_prs": [
+            36
+          ]
+        },
+        {
+          "blob": "760f3cca4b572a49f3b9087100205b63185894bd",
+          "initial_prs": [
+            34,
+            38,
+            39,
+            41,
+            43
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "7b7779960f4ca5658bda5917f7033c51dad663f2",
+          "initial_prs": [
+            42
+          ],
+          "canonical_owner_source_prs": [
+            42
+          ]
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/S4-C-CHECKPOINT.md",
+      "owner": "WP13",
+      "merge_base_blob": null,
+      "origin_blob": null,
+      "candidate_blob": null,
+      "proposed_blob": "f5ea8480fc9514c34f666f673b12e80c92f9d1dd",
+      "latest_observed_blob": "f5ea8480fc9514c34f666f673b12e80c92f9d1dd",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36,
+        42
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/analysis.ts",
+      "owner": "WP13",
+      "merge_base_blob": "9a74bc4b5b92054a32e3ae2b084b661937ce4964",
+      "origin_blob": "347d1c97952167523f9b2b04f1ab4fac7178cc9a",
+      "candidate_blob": "347d1c97952167523f9b2b04f1ab4fac7178cc9a",
+      "proposed_blob": "347d1c97952167523f9b2b04f1ab4fac7178cc9a",
+      "latest_observed_blob": "347d1c97952167523f9b2b04f1ab4fac7178cc9a",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        36,
+        42
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/campaign-proposals.ts",
+      "owner": "WP13",
+      "merge_base_blob": null,
+      "origin_blob": "5d09df9ff7f2c1cc81993459116ea8267dfbb78a",
+      "candidate_blob": "5d09df9ff7f2c1cc81993459116ea8267dfbb78a",
+      "proposed_blob": "5d09df9ff7f2c1cc81993459116ea8267dfbb78a",
+      "latest_observed_blob": "5d09df9ff7f2c1cc81993459116ea8267dfbb78a",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        36
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/campaign.ts",
+      "owner": "WP13",
+      "merge_base_blob": null,
+      "origin_blob": "d364563602bb002ebe24f22d36572b888008f665",
+      "candidate_blob": "d364563602bb002ebe24f22d36572b888008f665",
+      "proposed_blob": "d5fe38ec0a02ce23dedd756869a8f10c15e3db4d",
+      "latest_observed_blob": "d5fe38ec0a02ce23dedd756869a8f10c15e3db4d",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36,
+        42
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "d364563602bb002ebe24f22d36572b888008f665",
+          "initial_prs": [
+            29
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "d5fe38ec0a02ce23dedd756869a8f10c15e3db4d",
+          "initial_prs": [
+            36,
+            42
+          ],
+          "canonical_owner_source_prs": [
+            36,
+            42
+          ]
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/candidates.ts",
+      "owner": "WP13",
+      "merge_base_blob": "34e1f60df0d31db15597cce55718506ffaa5b6b1",
+      "origin_blob": "5a56fb5305e64922af8b6b3246b8807256e79138",
+      "candidate_blob": "5a56fb5305e64922af8b6b3246b8807256e79138",
+      "proposed_blob": "5a56fb5305e64922af8b6b3246b8807256e79138",
+      "latest_observed_blob": "5a56fb5305e64922af8b6b3246b8807256e79138",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        36,
+        42
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/capabilities.ts",
+      "owner": "WP13",
+      "merge_base_blob": "3fd9f28d2d4b19181f11563039b7440ba8e3e4fe",
+      "origin_blob": "3fd9f28d2d4b19181f11563039b7440ba8e3e4fe",
+      "candidate_blob": "3fd9f28d2d4b19181f11563039b7440ba8e3e4fe",
+      "proposed_blob": "3fd9f28d2d4b19181f11563039b7440ba8e3e4fe",
+      "latest_observed_blob": "3fd9f28d2d4b19181f11563039b7440ba8e3e4fe",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        34,
+        36,
+        38,
+        39,
+        41,
+        42,
+        43
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/catalog.ts",
+      "owner": "WP13",
+      "merge_base_blob": "e81c2292873600cf605bad9494e671d94d6c1de8",
+      "origin_blob": "6feaa3d88691460436b9c64699d6a6946357498d",
+      "candidate_blob": "6feaa3d88691460436b9c64699d6a6946357498d",
+      "proposed_blob": "cb75aeeae32310911063b673fc27e9c94eef3762",
+      "latest_observed_blob": "cb75aeeae32310911063b673fc27e9c94eef3762",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36,
+        42
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "6feaa3d88691460436b9c64699d6a6946357498d",
+          "initial_prs": [
+            29,
+            39
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "841a02df28796dfd4e96a21cb6d8a484a2536ad7",
+          "initial_prs": [
+            34,
+            43
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "cb75aeeae32310911063b673fc27e9c94eef3762",
+          "initial_prs": [
+            36,
+            42
+          ],
+          "canonical_owner_source_prs": [
+            36,
+            42
+          ]
+        },
+        {
+          "blob": "e81c2292873600cf605bad9494e671d94d6c1de8",
+          "initial_prs": [
+            38,
+            41
+          ],
+          "canonical_owner_source_prs": []
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/contribution.ts",
+      "owner": "WP13",
+      "merge_base_blob": "bdc058569dccc53a049b0fcc84506e5520435e0c",
+      "origin_blob": "527549734e66439a4298877f5b9e90918dd8b3f5",
+      "candidate_blob": "527549734e66439a4298877f5b9e90918dd8b3f5",
+      "proposed_blob": "527549734e66439a4298877f5b9e90918dd8b3f5",
+      "latest_observed_blob": "527549734e66439a4298877f5b9e90918dd8b3f5",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        36,
+        42
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/coverage-preview.ts",
+      "owner": "WP13",
+      "merge_base_blob": null,
+      "origin_blob": null,
+      "candidate_blob": null,
+      "proposed_blob": "9f7e12113b38e73befb64f99a94fb8ca28d05eee",
+      "latest_observed_blob": "9f7e12113b38e73befb64f99a94fb8ca28d05eee",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        29,
+        36,
+        42
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/handoff.ts",
+      "owner": "WP13",
+      "merge_base_blob": "64fe0f4a98e2bfadc972e3b760bcfd4e40ff8db0",
+      "origin_blob": "00ca4f72b811e7a85ebd2995ad8f982083c18af9",
+      "candidate_blob": "00ca4f72b811e7a85ebd2995ad8f982083c18af9",
+      "proposed_blob": "7a236670dcec3ba93a316c7e41db59daefbaaca4",
+      "latest_observed_blob": "7a236670dcec3ba93a316c7e41db59daefbaaca4",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36
+      ],
+      "exclusive_among_observed_sources": true,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "00ca4f72b811e7a85ebd2995ad8f982083c18af9",
+          "initial_prs": [
+            29,
+            39
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "3488f1d757fca6fd6527540679f4fb68a533aee0",
+          "initial_prs": [
+            42
+          ],
+          "canonical_owner_source_prs": [
+            42
+          ]
+        },
+        {
+          "blob": "64fe0f4a98e2bfadc972e3b760bcfd4e40ff8db0",
+          "initial_prs": [
+            38,
+            41
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "7a236670dcec3ba93a316c7e41db59daefbaaca4",
+          "initial_prs": [
+            36
+          ],
+          "canonical_owner_source_prs": [
+            36
+          ]
+        },
+        {
+          "blob": "7b56f439ce6e1a1483242d87f7feb42079a7cd11",
+          "initial_prs": [
+            34,
+            43
+          ],
+          "canonical_owner_source_prs": []
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/history-provenance.ts",
+      "owner": "WP13",
+      "merge_base_blob": "4a3049d462c5fc24b81163c8468b8bd314d8aa61",
+      "origin_blob": "5b1877a97620c1863c7ee43d3274594ddedde8f9",
+      "candidate_blob": "5b1877a97620c1863c7ee43d3274594ddedde8f9",
+      "proposed_blob": "caa3b783b41f95287bba8a4bab3c652c8375c320",
+      "latest_observed_blob": "caa3b783b41f95287bba8a4bab3c652c8375c320",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        29,
+        36
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "4a3049d462c5fc24b81163c8468b8bd314d8aa61",
+          "initial_prs": [
+            34,
+            38,
+            39,
+            41,
+            43
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "caa3b783b41f95287bba8a4bab3c652c8375c320",
+          "initial_prs": [
+            29,
+            36
+          ],
+          "canonical_owner_source_prs": [
+            36
+          ]
+        },
+        {
+          "blob": "de5846f024f85ad8203fa12adf27212c23850d4f",
+          "initial_prs": [
+            42
+          ],
+          "canonical_owner_source_prs": [
+            42
+          ]
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/persistent-capabilities.ts",
+      "owner": "WP13",
+      "merge_base_blob": "ca28bef0a1593bd5c7d63fe198caa668303e4bc9",
+      "origin_blob": "ca28bef0a1593bd5c7d63fe198caa668303e4bc9",
+      "candidate_blob": "ca28bef0a1593bd5c7d63fe198caa668303e4bc9",
+      "proposed_blob": "ca28bef0a1593bd5c7d63fe198caa668303e4bc9",
+      "latest_observed_blob": "ca28bef0a1593bd5c7d63fe198caa668303e4bc9",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        34,
+        36,
+        38,
+        39,
+        41,
+        42,
+        43
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-host.ts",
+      "owner": "WP13",
+      "merge_base_blob": "2428a9f7c34ddbeacdba5aa678888bc20823c6d1",
+      "origin_blob": "2428a9f7c34ddbeacdba5aa678888bc20823c6d1",
+      "candidate_blob": "2428a9f7c34ddbeacdba5aa678888bc20823c6d1",
+      "proposed_blob": "2428a9f7c34ddbeacdba5aa678888bc20823c6d1",
+      "latest_observed_blob": "2428a9f7c34ddbeacdba5aa678888bc20823c6d1",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        34,
+        36,
+        38,
+        39,
+        41,
+        42,
+        43
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+      "owner": "WP13",
+      "merge_base_blob": "31f327a784316f4f099f83e901d443531340bb63",
+      "origin_blob": "604d2a7806dcd7594e03207bf3011d6c1dc801b8",
+      "candidate_blob": "604d2a7806dcd7594e03207bf3011d6c1dc801b8",
+      "proposed_blob": "ee1a9586231ec9027bb323a817c4a469c4b207a6",
+      "latest_observed_blob": "ee1a9586231ec9027bb323a817c4a469c4b207a6",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        29,
+        36
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "1b103be1730a0227df903800f7c176f9763ab758",
+          "initial_prs": [
+            43
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "31f327a784316f4f099f83e901d443531340bb63",
+          "initial_prs": [
+            38,
+            41
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "3dec070ca5f56f7bd03a09b4b19468c950d82214",
+          "initial_prs": [
+            42
+          ],
+          "canonical_owner_source_prs": [
+            42
+          ]
+        },
+        {
+          "blob": "604d2a7806dcd7594e03207bf3011d6c1dc801b8",
+          "initial_prs": [
+            39
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "dca2ed80d43fffff5581181538156cec714ed49b",
+          "initial_prs": [
+            34
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "ee1a9586231ec9027bb323a817c4a469c4b207a6",
+          "initial_prs": [
+            29,
+            36
+          ],
+          "canonical_owner_source_prs": [
+            36
+          ]
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts.draft",
+      "owner": "WP13",
+      "merge_base_blob": null,
+      "origin_blob": null,
+      "candidate_blob": null,
+      "proposed_blob": "6391fb0608872e47d4cabc6cafa96044ab098b1f",
+      "latest_observed_blob": "6391fb0608872e47d4cabc6cafa96044ab098b1f",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36,
+        42
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+      "owner": "WP13",
+      "merge_base_blob": "9c678d6b8db1d00242ae0ae5c02cdff9219009c7",
+      "origin_blob": "7edeb37247fd3f9229749e2bb94460b8ac57271f",
+      "candidate_blob": "7edeb37247fd3f9229749e2bb94460b8ac57271f",
+      "proposed_blob": "452877ad2c82835fe883ea05dbf15f80f84f51c5",
+      "latest_observed_blob": "452877ad2c82835fe883ea05dbf15f80f84f51c5",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36
+      ],
+      "exclusive_among_observed_sources": true,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "452877ad2c82835fe883ea05dbf15f80f84f51c5",
+          "initial_prs": [
+            36
+          ],
+          "canonical_owner_source_prs": [
+            36
+          ]
+        },
+        {
+          "blob": "7edeb37247fd3f9229749e2bb94460b8ac57271f",
+          "initial_prs": [
+            29,
+            34,
+            39
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "84151d62b46e949c90a48a5965f5bdd244b0c5fb",
+          "initial_prs": [
+            42
+          ],
+          "canonical_owner_source_prs": [
+            42
+          ]
+        },
+        {
+          "blob": "9c678d6b8db1d00242ae0ae5c02cdff9219009c7",
+          "initial_prs": [
+            38,
+            41
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "cf8903ea6854a1c10f7bc6e2980a2b422b11d0d4",
+          "initial_prs": [
+            43
+          ],
+          "canonical_owner_source_prs": []
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/product.ts",
+      "owner": "WP13",
+      "merge_base_blob": "495169ccb0da1c775622907facf9b2ba13e0bb5c",
+      "origin_blob": "8fc915379f153fdb437be09c2c84924d7d59b6ed",
+      "candidate_blob": "8fc915379f153fdb437be09c2c84924d7d59b6ed",
+      "proposed_blob": "d4c5d9c9aabcf70bb71739d3952776517dc55923",
+      "latest_observed_blob": "d4c5d9c9aabcf70bb71739d3952776517dc55923",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        29,
+        36,
+        42
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "495169ccb0da1c775622907facf9b2ba13e0bb5c",
+          "initial_prs": [
+            34,
+            38,
+            39,
+            41,
+            43
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "d4c5d9c9aabcf70bb71739d3952776517dc55923",
+          "initial_prs": [
+            29,
+            36,
+            42
+          ],
+          "canonical_owner_source_prs": [
+            36,
+            42
+          ]
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/production.ts",
+      "owner": "WP13",
+      "merge_base_blob": "ead16a6d11698ac0385ab884520bb9615162607d",
+      "origin_blob": "a1765988434920f8dc9c71eaea2427b6ecac59cb",
+      "candidate_blob": "a1765988434920f8dc9c71eaea2427b6ecac59cb",
+      "proposed_blob": "a1765988434920f8dc9c71eaea2427b6ecac59cb",
+      "latest_observed_blob": "a1765988434920f8dc9c71eaea2427b6ecac59cb",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        36,
+        42
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/projection.ts",
+      "owner": "WP13",
+      "merge_base_blob": "266c97092d1c0f91f5694879883bd7839c081626",
+      "origin_blob": "266c97092d1c0f91f5694879883bd7839c081626",
+      "candidate_blob": "266c97092d1c0f91f5694879883bd7839c081626",
+      "proposed_blob": "266c97092d1c0f91f5694879883bd7839c081626",
+      "latest_observed_blob": "266c97092d1c0f91f5694879883bd7839c081626",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        34,
+        36,
+        38,
+        39,
+        41,
+        42,
+        43
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/proof.ts",
+      "owner": "WP13",
+      "merge_base_blob": null,
+      "origin_blob": null,
+      "candidate_blob": null,
+      "proposed_blob": "e07714d6c390a655b6eac7f5c2d56193b7bbfc7b",
+      "latest_observed_blob": "e07714d6c390a655b6eac7f5c2d56193b7bbfc7b",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        29,
+        36
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "19ac96241c24fbcd2038c70b961fa5a8d25d4418",
+          "initial_prs": [
+            42
+          ],
+          "canonical_owner_source_prs": [
+            42
+          ]
+        },
+        {
+          "blob": "e07714d6c390a655b6eac7f5c2d56193b7bbfc7b",
+          "initial_prs": [
+            29,
+            36
+          ],
+          "canonical_owner_source_prs": [
+            36
+          ]
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/reconciliation.ts",
+      "owner": "WP13",
+      "merge_base_blob": null,
+      "origin_blob": null,
+      "candidate_blob": null,
+      "proposed_blob": "aedc80310eee2752d067dd52afa6312a9558b87a",
+      "latest_observed_blob": "aedc80310eee2752d067dd52afa6312a9558b87a",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        29,
+        36
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "387e78deeb6a1e97a21a68bd84839c3f1e979254",
+          "initial_prs": [
+            42
+          ],
+          "canonical_owner_source_prs": [
+            42
+          ]
+        },
+        {
+          "blob": "aedc80310eee2752d067dd52afa6312a9558b87a",
+          "initial_prs": [
+            29,
+            36
+          ],
+          "canonical_owner_source_prs": [
+            36
+          ]
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/result-store.ts",
+      "owner": "WP13",
+      "merge_base_blob": "a5c35991f028e723fa5dcfc4f1e481911297ce72",
+      "origin_blob": "f134c70c0e38879bfb36bc31c9743c99a6ad509a",
+      "candidate_blob": "f134c70c0e38879bfb36bc31c9743c99a6ad509a",
+      "proposed_blob": "ee4e54c4b7761109ebddc1a4a2f6e6becea4ba48",
+      "latest_observed_blob": "ee4e54c4b7761109ebddc1a4a2f6e6becea4ba48",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36
+      ],
+      "exclusive_among_observed_sources": true,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "1d68174e4e54551fef742630c77c5733cd6b1b7b",
+          "initial_prs": [
+            42
+          ],
+          "canonical_owner_source_prs": [
+            42
+          ]
+        },
+        {
+          "blob": "a5c35991f028e723fa5dcfc4f1e481911297ce72",
+          "initial_prs": [
+            34,
+            38,
+            39,
+            41,
+            43
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "ee4e54c4b7761109ebddc1a4a2f6e6becea4ba48",
+          "initial_prs": [
+            36
+          ],
+          "canonical_owner_source_prs": [
+            36
+          ]
+        },
+        {
+          "blob": "f134c70c0e38879bfb36bc31c9743c99a6ad509a",
+          "initial_prs": [
+            29
+          ],
+          "canonical_owner_source_prs": []
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/selection.ts",
+      "owner": "WP13",
+      "merge_base_blob": "6dd2fd49f585d9449f4dbd93e03a19f6c49449ec",
+      "origin_blob": "6dd2fd49f585d9449f4dbd93e03a19f6c49449ec",
+      "candidate_blob": "6dd2fd49f585d9449f4dbd93e03a19f6c49449ec",
+      "proposed_blob": "6dd2fd49f585d9449f4dbd93e03a19f6c49449ec",
+      "latest_observed_blob": "6dd2fd49f585d9449f4dbd93e03a19f6c49449ec",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        34,
+        36,
+        38,
+        39,
+        41,
+        42,
+        43
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-store.ts",
+      "owner": "WP13",
+      "merge_base_blob": "3d7d19b1de537638d0b1f9918c27c3712e2f534d",
+      "origin_blob": "4919ebc3367bb388974839382ff220a94667ad21",
+      "candidate_blob": "4919ebc3367bb388974839382ff220a94667ad21",
+      "proposed_blob": "d2528cc98eabfea36025f25cdb0cb2bf9c54c42c",
+      "latest_observed_blob": "d2528cc98eabfea36025f25cdb0cb2bf9c54c42c",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36
+      ],
+      "exclusive_among_observed_sources": true,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "22e23b3f6f3f59b603a25162a11e935da6937e44",
+          "initial_prs": [
+            34,
+            43
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "33a8d973c045769b456342499e1c247d524f6c53",
+          "initial_prs": [
+            42
+          ],
+          "canonical_owner_source_prs": [
+            42
+          ]
+        },
+        {
+          "blob": "3d7d19b1de537638d0b1f9918c27c3712e2f534d",
+          "initial_prs": [
+            38,
+            41
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "4919ebc3367bb388974839382ff220a94667ad21",
+          "initial_prs": [
+            29,
+            39
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "d2528cc98eabfea36025f25cdb0cb2bf9c54c42c",
+          "initial_prs": [
+            36
+          ],
+          "canonical_owner_source_prs": [
+            36
+          ]
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-v6.ts",
+      "owner": "WP13",
+      "merge_base_blob": "28b9bcdb5df9786dd5de140255e382d1f89f7522",
+      "origin_blob": "bf8f775085a26adcaf4566fba4daff22ae33262b",
+      "candidate_blob": "bf8f775085a26adcaf4566fba4daff22ae33262b",
+      "proposed_blob": "f675fdca70dd48caa4635cb1542b85bbc25d204c",
+      "latest_observed_blob": "f675fdca70dd48caa4635cb1542b85bbc25d204c",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36
+      ],
+      "exclusive_among_observed_sources": true,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "28b9bcdb5df9786dd5de140255e382d1f89f7522",
+          "initial_prs": [
+            34,
+            38,
+            39,
+            41,
+            43
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "bf8f775085a26adcaf4566fba4daff22ae33262b",
+          "initial_prs": [
+            29
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "ec0053c5fe571cf3867cdae09ae66c3b999b9a4d",
+          "initial_prs": [
+            42
+          ],
+          "canonical_owner_source_prs": [
+            42
+          ]
+        },
+        {
+          "blob": "f675fdca70dd48caa4635cb1542b85bbc25d204c",
+          "initial_prs": [
+            36
+          ],
+          "canonical_owner_source_prs": [
+            36
+          ]
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity.ts",
+      "owner": "WP13",
+      "merge_base_blob": "247f82eb6e3ca4b097327aeacd33f268099b1770",
+      "origin_blob": "6c08aae11dd559553d5f9274d1aa5750686ff8fc",
+      "candidate_blob": "6c08aae11dd559553d5f9274d1aa5750686ff8fc",
+      "proposed_blob": "247a0cdc456f386475f53765e6da2e1db156eba8",
+      "latest_observed_blob": "247a0cdc456f386475f53765e6da2e1db156eba8",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        29,
+        36
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "247a0cdc456f386475f53765e6da2e1db156eba8",
+          "initial_prs": [
+            29,
+            36
+          ],
+          "canonical_owner_source_prs": [
+            36
+          ]
+        },
+        {
+          "blob": "247f82eb6e3ca4b097327aeacd33f268099b1770",
+          "initial_prs": [
+            34,
+            38,
+            39,
+            41,
+            43
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "527db7238ae9e7c5a5233e2fedfbb8431017e3d5",
+          "initial_prs": [
+            42
+          ],
+          "canonical_owner_source_prs": [
+            42
+          ]
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/stored.ts",
+      "owner": "WP13",
+      "merge_base_blob": "f9cb4130bd79ec9a654b285fa8df27e4c44a8ea2",
+      "origin_blob": "f9cb4130bd79ec9a654b285fa8df27e4c44a8ea2",
+      "candidate_blob": "f9cb4130bd79ec9a654b285fa8df27e4c44a8ea2",
+      "proposed_blob": "f9cb4130bd79ec9a654b285fa8df27e4c44a8ea2",
+      "latest_observed_blob": "f9cb4130bd79ec9a654b285fa8df27e4c44a8ea2",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        34,
+        36,
+        38,
+        39,
+        41,
+        42,
+        43
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/threshold-proof.ts",
+      "owner": "WP13",
+      "merge_base_blob": null,
+      "origin_blob": "056a857364cf8a6c2a2bc97bf107276612edf55d",
+      "candidate_blob": "056a857364cf8a6c2a2bc97bf107276612edf55d",
+      "proposed_blob": "89ba60857babe8a5c80f409de39b7e0598695b96",
+      "latest_observed_blob": "89ba60857babe8a5c80f409de39b7e0598695b96",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36
+      ],
+      "exclusive_among_observed_sources": true,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "056a857364cf8a6c2a2bc97bf107276612edf55d",
+          "initial_prs": [
+            29,
+            39,
+            42
+          ],
+          "canonical_owner_source_prs": [
+            42
+          ]
+        },
+        {
+          "blob": "89ba60857babe8a5c80f409de39b7e0598695b96",
+          "initial_prs": [
+            36
+          ],
+          "canonical_owner_source_prs": [
+            36
+          ]
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+      "owner": "WP13",
+      "merge_base_blob": "6723576021e0c8b7df91c0823fe0448aa58f4972",
+      "origin_blob": "c2f37e94777d2bdd7d7e565b37f6b4140b3906d9",
+      "candidate_blob": "c2f37e94777d2bdd7d7e565b37f6b4140b3906d9",
+      "proposed_blob": "b2ac17f210886353d3596fc6a891242c7ea40f0a",
+      "latest_observed_blob": "b2ac17f210886353d3596fc6a891242c7ea40f0a",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36
+      ],
+      "exclusive_among_observed_sources": true,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "199d8ae6bbda17925b2b2b0423137cbb17211dc8",
+          "initial_prs": [
+            29
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "6723576021e0c8b7df91c0823fe0448aa58f4972",
+          "initial_prs": [
+            38,
+            41
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "912df8ecd8552b245e124b93c46644c92a32f3ac",
+          "initial_prs": [
+            42
+          ],
+          "canonical_owner_source_prs": [
+            42
+          ]
+        },
+        {
+          "blob": "b2ac17f210886353d3596fc6a891242c7ea40f0a",
+          "initial_prs": [
+            36
+          ],
+          "canonical_owner_source_prs": [
+            36
+          ]
+        },
+        {
+          "blob": "b7645ecd8043969fbfe18326bc64366e01b5e6cf",
+          "initial_prs": [
+            34
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "c2f37e94777d2bdd7d7e565b37f6b4140b3906d9",
+          "initial_prs": [
+            39
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "f23f28c0662a3a805648344fcabe8df129f2d9ba",
+          "initial_prs": [
+            43
+          ],
+          "canonical_owner_source_prs": []
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/analysis.test.ts",
+      "owner": "WP12",
+      "merge_base_blob": "df5773c7f720a20a09a143f5d342de9ab8b9822a",
+      "origin_blob": "6d81c4df8d69be1a24581a316ba6e346343d6f67",
+      "candidate_blob": "ab321fb2d1562255cf987571477233767c5240e3",
+      "proposed_blob": "26a68897d99f4de620a7e54992d94a9a48820f3b",
+      "latest_observed_blob": "26a68897d99f4de620a7e54992d94a9a48820f3b",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        29,
+        36
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "26a68897d99f4de620a7e54992d94a9a48820f3b",
+          "initial_prs": [
+            29,
+            36
+          ],
+          "canonical_owner_source_prs": [
+            36
+          ]
+        },
+        {
+          "blob": "ab321fb2d1562255cf987571477233767c5240e3",
+          "initial_prs": [
+            39
+          ],
+          "canonical_owner_source_prs": [
+            39
+          ]
+        },
+        {
+          "blob": "df5773c7f720a20a09a143f5d342de9ab8b9822a",
+          "initial_prs": [
+            34,
+            38,
+            41,
+            42,
+            43
+          ],
+          "canonical_owner_source_prs": []
+        }
+      ],
+      "consumed_from_pr": 39
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/author-reader.test.ts",
+      "owner": "WP12",
+      "merge_base_blob": "4038c152a9c3483d66b7f4a60fa1b9231fe92ba7",
+      "origin_blob": "9b92175ccc462d20af3d6afec3c44b41f7aeb75e",
+      "candidate_blob": "9b92175ccc462d20af3d6afec3c44b41f7aeb75e",
+      "proposed_blob": "9b92175ccc462d20af3d6afec3c44b41f7aeb75e",
+      "latest_observed_blob": "9b92175ccc462d20af3d6afec3c44b41f7aeb75e",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        36
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/continuation.test.ts",
+      "owner": "WP12",
+      "merge_base_blob": null,
+      "origin_blob": "14c0349d5d425533c6132e7eec802bae35425644",
+      "candidate_blob": "14c0349d5d425533c6132e7eec802bae35425644",
+      "proposed_blob": "14c0349d5d425533c6132e7eec802bae35425644",
+      "latest_observed_blob": "14c0349d5d425533c6132e7eec802bae35425644",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        36,
+        39
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/contribution-builder.test.ts",
+      "owner": "WP12",
+      "merge_base_blob": "1641d4a598a03a2c396934028642e0ed0d0becfb",
+      "origin_blob": "9d8272cfc49899193d396f143235cb48709f0f43",
+      "candidate_blob": "9d8272cfc49899193d396f143235cb48709f0f43",
+      "proposed_blob": "9d8272cfc49899193d396f143235cb48709f0f43",
+      "latest_observed_blob": "9d8272cfc49899193d396f143235cb48709f0f43",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        36
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/contribution-reader.test.ts",
+      "owner": "WP12",
+      "merge_base_blob": "85303e5290514570931cda5b6a5ad14a230c2705",
+      "origin_blob": "5ec69851b6f94dd20804ba1e69ea4178edf97204",
+      "candidate_blob": "5ec69851b6f94dd20804ba1e69ea4178edf97204",
+      "proposed_blob": "5ec69851b6f94dd20804ba1e69ea4178edf97204",
+      "latest_observed_blob": "5ec69851b6f94dd20804ba1e69ea4178edf97204",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        36
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/historical-reader.test.ts",
+      "owner": "WP12",
+      "merge_base_blob": null,
+      "origin_blob": "27783a6de704414b263b056786eb25d84594ba75",
+      "candidate_blob": "27783a6de704414b263b056786eb25d84594ba75",
+      "proposed_blob": "27783a6de704414b263b056786eb25d84594ba75",
+      "latest_observed_blob": "27783a6de704414b263b056786eb25d84594ba75",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        36
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-admission.test.ts",
+      "owner": "WP12",
+      "merge_base_blob": null,
+      "origin_blob": null,
+      "candidate_blob": null,
+      "proposed_blob": "7525801e2706e6e71e0a8e3dce53c35079992859",
+      "latest_observed_blob": "7525801e2706e6e71e0a8e3dce53c35079992859",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36,
+        39
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/publication-lifecycle.test.ts",
+      "owner": "WP12",
+      "merge_base_blob": null,
+      "origin_blob": null,
+      "candidate_blob": "6bf1130c94bca4b3cd1377875492b8f910b4259a",
+      "proposed_blob": "6bf1130c94bca4b3cd1377875492b8f910b4259a",
+      "latest_observed_blob": "6bf1130c94bca4b3cd1377875492b8f910b4259a",
+      "decision": "DEDUP_IDENTICAL_TO_CONSUMED",
+      "equivalent_initial_source_prs": [
+        29,
+        36,
+        39
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "consumed_from_pr": 39
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/resident-authority.test.ts",
+      "owner": "WP12",
+      "merge_base_blob": null,
+      "origin_blob": null,
+      "candidate_blob": null,
+      "proposed_blob": "a2da68aa5f5bf2122616b82b74a06aa4f54a3988",
+      "latest_observed_blob": "a2da68aa5f5bf2122616b82b74a06aa4f54a3988",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36
+      ],
+      "exclusive_among_observed_sources": true,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "a2da68aa5f5bf2122616b82b74a06aa4f54a3988",
+          "initial_prs": [
+            36
+          ],
+          "canonical_owner_source_prs": [
+            36
+          ]
+        },
+        {
+          "blob": "c49afce4a463d07d6a0f5f853ac30a5bdd3316a1",
+          "initial_prs": [
+            39
+          ],
+          "canonical_owner_source_prs": [
+            39
+          ]
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/resident-native-fixture.ts",
+      "owner": "WP12",
+      "merge_base_blob": null,
+      "origin_blob": null,
+      "candidate_blob": null,
+      "proposed_blob": "3b5b19e78a3dfe04c445e098841d488d36d5a51a",
+      "latest_observed_blob": "3b5b19e78a3dfe04c445e098841d488d36d5a51a",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36,
+        39
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/resident-native.test.ts",
+      "owner": "WP12",
+      "merge_base_blob": null,
+      "origin_blob": "1edebb418e33025cf4d33c853807ed9bb040d931",
+      "candidate_blob": "1edebb418e33025cf4d33c853807ed9bb040d931",
+      "proposed_blob": "d6efa62544a8a5d6d3037f941951b6d415a38907",
+      "latest_observed_blob": "d6efa62544a8a5d6d3037f941951b6d415a38907",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36
+      ],
+      "exclusive_among_observed_sources": true,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "1edebb418e33025cf4d33c853807ed9bb040d931",
+          "initial_prs": [
+            29
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "b95e8b8b5c281872b07164f7faa47f21f64de684",
+          "initial_prs": [
+            39
+          ],
+          "canonical_owner_source_prs": [
+            39
+          ]
+        },
+        {
+          "blob": "d6efa62544a8a5d6d3037f941951b6d415a38907",
+          "initial_prs": [
+            36
+          ],
+          "canonical_owner_source_prs": [
+            36
+          ]
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/resident.test.ts",
+      "owner": "WP12",
+      "merge_base_blob": "2234f0e18974e1e44528f2a591f03b97f5b813a4",
+      "origin_blob": "2234f0e18974e1e44528f2a591f03b97f5b813a4",
+      "candidate_blob": "2234f0e18974e1e44528f2a591f03b97f5b813a4",
+      "proposed_blob": "a5151b55edd232a5bb3426ff705f759e02e1326e",
+      "latest_observed_blob": "a5151b55edd232a5bb3426ff705f759e02e1326e",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36
+      ],
+      "exclusive_among_observed_sources": true,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "2234f0e18974e1e44528f2a591f03b97f5b813a4",
+          "initial_prs": [
+            29,
+            34,
+            38,
+            41,
+            42,
+            43
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "6b83c09abb8a65ca109f31d953de30e8f9f955d3",
+          "initial_prs": [
+            39
+          ],
+          "canonical_owner_source_prs": [
+            39
+          ]
+        },
+        {
+          "blob": "a5151b55edd232a5bb3426ff705f759e02e1326e",
+          "initial_prs": [
+            36
+          ],
+          "canonical_owner_source_prs": [
+            36
+          ]
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/restart-reader.ts",
+      "owner": "WP12",
+      "merge_base_blob": null,
+      "origin_blob": null,
+      "candidate_blob": null,
+      "proposed_blob": "430ca1ac52a85bdd56840175326e492d12c9cc31",
+      "latest_observed_blob": "430ca1ac52a85bdd56840175326e492d12c9cc31",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36
+      ],
+      "exclusive_among_observed_sources": true,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/run-fixture.ts",
+      "owner": "WP12",
+      "merge_base_blob": null,
+      "origin_blob": "5d528e810ab79fb1e3beb571dcb216192d551e91",
+      "candidate_blob": "5d528e810ab79fb1e3beb571dcb216192d551e91",
+      "proposed_blob": "5d528e810ab79fb1e3beb571dcb216192d551e91",
+      "latest_observed_blob": "5d528e810ab79fb1e3beb571dcb216192d551e91",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        36,
+        39
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/run-restart.test.ts",
+      "owner": "WP12",
+      "merge_base_blob": null,
+      "origin_blob": null,
+      "candidate_blob": null,
+      "proposed_blob": "2bb82f2940853f0a07a5fe2ff9696fba488a1216",
+      "latest_observed_blob": "2bb82f2940853f0a07a5fe2ff9696fba488a1216",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36
+      ],
+      "exclusive_among_observed_sources": true,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/run-store.test.ts",
+      "owner": "WP12",
+      "merge_base_blob": "fa40553f3939961ca60ac6e27ed6448ee8ceb837",
+      "origin_blob": "0353e266c6225d0ee0961e8c391bd045f84e92b9",
+      "candidate_blob": "d12d8702f5914c94475b3ad1205718ecf1899fe9",
+      "proposed_blob": "d058f2fea94329fab357c386386a76f8435da879",
+      "latest_observed_blob": "d058f2fea94329fab357c386386a76f8435da879",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36
+      ],
+      "exclusive_among_observed_sources": true,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "5620d5aac6bd469f726dfba18dabcbd889c36b35",
+          "initial_prs": [
+            29
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "d058f2fea94329fab357c386386a76f8435da879",
+          "initial_prs": [
+            36
+          ],
+          "canonical_owner_source_prs": [
+            36
+          ]
+        },
+        {
+          "blob": "d12d8702f5914c94475b3ad1205718ecf1899fe9",
+          "initial_prs": [
+            39
+          ],
+          "canonical_owner_source_prs": [
+            39
+          ]
+        },
+        {
+          "blob": "fa40553f3939961ca60ac6e27ed6448ee8ceb837",
+          "initial_prs": [
+            34,
+            38,
+            41,
+            42,
+            43
+          ],
+          "canonical_owner_source_prs": []
+        }
+      ],
+      "consumed_from_pr": 39
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/analysis-recovery.test.ts",
+      "owner": "WP13",
+      "merge_base_blob": null,
+      "origin_blob": "e5018d275bfe420e9cc066c6d58587bb3b584442",
+      "candidate_blob": "e5018d275bfe420e9cc066c6d58587bb3b584442",
+      "proposed_blob": "d85a362360301686d2c5ca72f3938551c119b38a",
+      "latest_observed_blob": "d85a362360301686d2c5ca72f3938551c119b38a",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36
+      ],
+      "exclusive_among_observed_sources": true,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "6c92ae341623724fde5843292fdd81b3799eef93",
+          "initial_prs": [
+            42
+          ],
+          "canonical_owner_source_prs": [
+            42
+          ]
+        },
+        {
+          "blob": "d85a362360301686d2c5ca72f3938551c119b38a",
+          "initial_prs": [
+            36
+          ],
+          "canonical_owner_source_prs": [
+            36
+          ]
+        },
+        {
+          "blob": "e5018d275bfe420e9cc066c6d58587bb3b584442",
+          "initial_prs": [
+            29
+          ],
+          "canonical_owner_source_prs": []
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/campaign.test.ts",
+      "owner": "WP13",
+      "merge_base_blob": null,
+      "origin_blob": "1f66588a3db522f40fb8ed98bcecfc09c7e74098",
+      "candidate_blob": "1f66588a3db522f40fb8ed98bcecfc09c7e74098",
+      "proposed_blob": "60693fea1a9fa238ecf57c43c73d8d113911b74a",
+      "latest_observed_blob": "60693fea1a9fa238ecf57c43c73d8d113911b74a",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36
+      ],
+      "exclusive_among_observed_sources": true,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "1f66588a3db522f40fb8ed98bcecfc09c7e74098",
+          "initial_prs": [
+            29
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "60693fea1a9fa238ecf57c43c73d8d113911b74a",
+          "initial_prs": [
+            36
+          ],
+          "canonical_owner_source_prs": [
+            36
+          ]
+        },
+        {
+          "blob": "e83d632e6cd26ad360a9ea7ff72ba04a31c97eb4",
+          "initial_prs": [
+            42
+          ],
+          "canonical_owner_source_prs": [
+            42
+          ]
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/candidates-store.test.ts",
+      "owner": "WP13",
+      "merge_base_blob": "0ffe2ce818f32f40662fd0c56ea8ca778644f7db",
+      "origin_blob": "fbecfabcd66aab023279d9b7ee3c14beccf1fcad",
+      "candidate_blob": "fbecfabcd66aab023279d9b7ee3c14beccf1fcad",
+      "proposed_blob": "fbecfabcd66aab023279d9b7ee3c14beccf1fcad",
+      "latest_observed_blob": "fbecfabcd66aab023279d9b7ee3c14beccf1fcad",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        36,
+        39,
+        42
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/candidates.test.ts",
+      "owner": "WP13",
+      "merge_base_blob": "779ef2b17e5cf0a3ea0af2964751e92bfc1e8bd5",
+      "origin_blob": "779ef2b17e5cf0a3ea0af2964751e92bfc1e8bd5",
+      "candidate_blob": "779ef2b17e5cf0a3ea0af2964751e92bfc1e8bd5",
+      "proposed_blob": "aa3e3ef05ec9034592eeccc9a900caa922571505",
+      "latest_observed_blob": "aa3e3ef05ec9034592eeccc9a900caa922571505",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36,
+        42
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "779ef2b17e5cf0a3ea0af2964751e92bfc1e8bd5",
+          "initial_prs": [
+            29,
+            34,
+            38,
+            39,
+            41,
+            43
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "aa3e3ef05ec9034592eeccc9a900caa922571505",
+          "initial_prs": [
+            36,
+            42
+          ],
+          "canonical_owner_source_prs": [
+            36,
+            42
+          ]
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/contribution.test.ts",
+      "owner": "WP13",
+      "merge_base_blob": "1e86674d832420261aecde04ed146ef8a77a29cd",
+      "origin_blob": "4c4b89cc9777a21740eee43c4ce3295473d414c9",
+      "candidate_blob": "4c4b89cc9777a21740eee43c4ce3295473d414c9",
+      "proposed_blob": "4c4b89cc9777a21740eee43c4ce3295473d414c9",
+      "latest_observed_blob": "4c4b89cc9777a21740eee43c4ce3295473d414c9",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        36,
+        42
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-preview-fixture.ts",
+      "owner": "WP13",
+      "merge_base_blob": null,
+      "origin_blob": null,
+      "candidate_blob": null,
+      "proposed_blob": "6e56a64ee1b76422706d685e2f646a156a8ade39",
+      "latest_observed_blob": "6e56a64ee1b76422706d685e2f646a156a8ade39",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        29,
+        36,
+        42
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-preview.test.ts",
+      "owner": "WP13",
+      "merge_base_blob": null,
+      "origin_blob": null,
+      "candidate_blob": null,
+      "proposed_blob": "3d7a0cc397b6afd0877779fdac642bc50e5c40a6",
+      "latest_observed_blob": "3d7a0cc397b6afd0877779fdac642bc50e5c40a6",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36
+      ],
+      "exclusive_among_observed_sources": true,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "3d7a0cc397b6afd0877779fdac642bc50e5c40a6",
+          "initial_prs": [
+            36
+          ],
+          "canonical_owner_source_prs": [
+            36
+          ]
+        },
+        {
+          "blob": "ea5f94f0c3f036625688c7e60ce9ee9c4ad328d2",
+          "initial_prs": [
+            42
+          ],
+          "canonical_owner_source_prs": [
+            42
+          ]
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+      "owner": "WP13",
+      "merge_base_blob": null,
+      "origin_blob": null,
+      "candidate_blob": null,
+      "proposed_blob": "1a0dc5a9bc71923aafd3ec5eaf476f7a3f780bdc",
+      "latest_observed_blob": "1a0dc5a9bc71923aafd3ec5eaf476f7a3f780bdc",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36
+      ],
+      "exclusive_among_observed_sources": true,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "1a0dc5a9bc71923aafd3ec5eaf476f7a3f780bdc",
+          "initial_prs": [
+            36
+          ],
+          "canonical_owner_source_prs": [
+            36
+          ]
+        },
+        {
+          "blob": "4195ec55c7d9cdfe5e308d192414562bb998d7c0",
+          "initial_prs": [
+            42
+          ],
+          "canonical_owner_source_prs": [
+            42
+          ]
+        },
+        {
+          "blob": "5b4579143250700a313744cc2240741f1bc15237",
+          "initial_prs": [
+            29
+          ],
+          "canonical_owner_source_prs": []
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage.test.ts",
+      "owner": "WP13",
+      "merge_base_blob": "64a05c6d18aa71a85cd8a5a23eb3706f672a8c81",
+      "origin_blob": "b6ff1dd3b2f2cad15556521a9406ba6985dcb753",
+      "candidate_blob": "b6ff1dd3b2f2cad15556521a9406ba6985dcb753",
+      "proposed_blob": "775a63f5cd25a68542508f6f8fa154fe7324a2bc",
+      "latest_observed_blob": "775a63f5cd25a68542508f6f8fa154fe7324a2bc",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        29,
+        36
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "0a5f3d28435378bae4637d629ff991fb03993f27",
+          "initial_prs": [
+            42
+          ],
+          "canonical_owner_source_prs": [
+            42
+          ]
+        },
+        {
+          "blob": "64a05c6d18aa71a85cd8a5a23eb3706f672a8c81",
+          "initial_prs": [
+            34,
+            38,
+            39,
+            41,
+            43
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "775a63f5cd25a68542508f6f8fa154fe7324a2bc",
+          "initial_prs": [
+            29,
+            36
+          ],
+          "canonical_owner_source_prs": [
+            36
+          ]
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-c08-integration.test.ts",
+      "owner": "WP13",
+      "merge_base_blob": null,
+      "origin_blob": null,
+      "candidate_blob": null,
+      "proposed_blob": "d5327a70410a6c52c64b534056939cbfc9eb9483",
+      "latest_observed_blob": "d5327a70410a6c52c64b534056939cbfc9eb9483",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36
+      ],
+      "exclusive_among_observed_sources": true,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-domain-integration.test.ts",
+      "owner": "WP13",
+      "merge_base_blob": null,
+      "origin_blob": null,
+      "candidate_blob": null,
+      "proposed_blob": "de2315abe69288edc26d66424f676ce5dbe625ea",
+      "latest_observed_blob": "de2315abe69288edc26d66424f676ce5dbe625ea",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36
+      ],
+      "exclusive_among_observed_sources": true,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "1438625ca251804cb89c3be4a2f680a9d20eee4c",
+          "initial_prs": [
+            42
+          ],
+          "canonical_owner_source_prs": [
+            42
+          ]
+        },
+        {
+          "blob": "de2315abe69288edc26d66424f676ce5dbe625ea",
+          "initial_prs": [
+            36
+          ],
+          "canonical_owner_source_prs": [
+            36
+          ]
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-integration.test.ts",
+      "owner": "WP13",
+      "merge_base_blob": null,
+      "origin_blob": "9fefc7bc347bfa123fc718fa9b0000d82dfc8a80",
+      "candidate_blob": "9fefc7bc347bfa123fc718fa9b0000d82dfc8a80",
+      "proposed_blob": "9fefc7bc347bfa123fc718fa9b0000d82dfc8a80",
+      "latest_observed_blob": "9fefc7bc347bfa123fc718fa9b0000d82dfc8a80",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        36
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-persistence.test.ts",
+      "owner": "WP13",
+      "merge_base_blob": null,
+      "origin_blob": null,
+      "candidate_blob": null,
+      "proposed_blob": "c844715b58fc3f911d032c96aa94b1d5aaed94a9",
+      "latest_observed_blob": "c844715b58fc3f911d032c96aa94b1d5aaed94a9",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36
+      ],
+      "exclusive_among_observed_sources": true,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff.test.ts",
+      "owner": "WP13",
+      "merge_base_blob": "b4108f3095e680cb2941f570d3a0ccdf04f784ec",
+      "origin_blob": "f3895ac74c4245c3551bc696ff41ed0d2065bec9",
+      "candidate_blob": "f3895ac74c4245c3551bc696ff41ed0d2065bec9",
+      "proposed_blob": "f289bde6c2b97278a9b3a7cfe1462b41b0f1ab7a",
+      "latest_observed_blob": "f289bde6c2b97278a9b3a7cfe1462b41b0f1ab7a",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36
+      ],
+      "exclusive_among_observed_sources": true,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "22e9e17fdfc2fb07f6a5ef3c23e521fc3781c25f",
+          "initial_prs": [
+            42
+          ],
+          "canonical_owner_source_prs": [
+            42
+          ]
+        },
+        {
+          "blob": "b4108f3095e680cb2941f570d3a0ccdf04f784ec",
+          "initial_prs": [
+            34,
+            38,
+            39,
+            41,
+            43
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "f289bde6c2b97278a9b3a7cfe1462b41b0f1ab7a",
+          "initial_prs": [
+            36
+          ],
+          "canonical_owner_source_prs": [
+            36
+          ]
+        },
+        {
+          "blob": "f3895ac74c4245c3551bc696ff41ed0d2065bec9",
+          "initial_prs": [
+            29
+          ],
+          "canonical_owner_source_prs": []
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+      "owner": "WP13",
+      "merge_base_blob": null,
+      "origin_blob": "af081946dfffcb885059bff9e56c691460ff1a56",
+      "candidate_blob": "af081946dfffcb885059bff9e56c691460ff1a56",
+      "proposed_blob": "9af706b6a1ab27229fb8514e117550036a13b249",
+      "latest_observed_blob": "9af706b6a1ab27229fb8514e117550036a13b249",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36
+      ],
+      "exclusive_among_observed_sources": true,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "9af706b6a1ab27229fb8514e117550036a13b249",
+          "initial_prs": [
+            36
+          ],
+          "canonical_owner_source_prs": [
+            36
+          ]
+        },
+        {
+          "blob": "af081946dfffcb885059bff9e56c691460ff1a56",
+          "initial_prs": [
+            29
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "d1ae1a8bb747c1bb8779da133de4df22c81fa3b4",
+          "initial_prs": [
+            42
+          ],
+          "canonical_owner_source_prs": [
+            42
+          ]
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/persistence-recovery.test.ts",
+      "owner": "WP13",
+      "merge_base_blob": null,
+      "origin_blob": null,
+      "candidate_blob": null,
+      "proposed_blob": "63f262129fb37adf74013f58ea5fc56bb4ecd79e",
+      "latest_observed_blob": "63f262129fb37adf74013f58ea5fc56bb4ecd79e",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36
+      ],
+      "exclusive_among_observed_sources": true,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "4efa414f8ecadde5799e7246337863b145373210",
+          "initial_prs": [
+            42
+          ],
+          "canonical_owner_source_prs": [
+            42
+          ]
+        },
+        {
+          "blob": "63f262129fb37adf74013f58ea5fc56bb4ecd79e",
+          "initial_prs": [
+            36
+          ],
+          "canonical_owner_source_prs": [
+            36
+          ]
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/persistent-store.test.ts",
+      "owner": "WP13",
+      "merge_base_blob": "ea54e03a06787a74c603c4e14a2c80d09a8c9700",
+      "origin_blob": "ea54e03a06787a74c603c4e14a2c80d09a8c9700",
+      "candidate_blob": "ea54e03a06787a74c603c4e14a2c80d09a8c9700",
+      "proposed_blob": "4d89fefdf9a4477b6ab2d8188837a79846ef4efd",
+      "latest_observed_blob": "4d89fefdf9a4477b6ab2d8188837a79846ef4efd",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36
+      ],
+      "exclusive_among_observed_sources": true,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "4d89fefdf9a4477b6ab2d8188837a79846ef4efd",
+          "initial_prs": [
+            36
+          ],
+          "canonical_owner_source_prs": [
+            36
+          ]
+        },
+        {
+          "blob": "ea54e03a06787a74c603c4e14a2c80d09a8c9700",
+          "initial_prs": [
+            29,
+            34,
+            38,
+            39,
+            41,
+            42,
+            43
+          ],
+          "canonical_owner_source_prs": [
+            42
+          ]
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/planner-composition.test.ts",
+      "owner": "WP13",
+      "merge_base_blob": null,
+      "origin_blob": null,
+      "candidate_blob": null,
+      "proposed_blob": "6ba00f85e5448d3b43f224aca5b9dfb93037ce9c",
+      "latest_observed_blob": "6ba00f85e5448d3b43f224aca5b9dfb93037ce9c",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        29,
+        36
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/planner-sensitivity-boundary.test.ts",
+      "owner": "WP13",
+      "merge_base_blob": null,
+      "origin_blob": "33193aabe586aee6bdedb8a8a06238783ece25a2",
+      "candidate_blob": "33193aabe586aee6bdedb8a8a06238783ece25a2",
+      "proposed_blob": "e20e97e54d60c156952fbc43fab356cf479221de",
+      "latest_observed_blob": "e20e97e54d60c156952fbc43fab356cf479221de",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36
+      ],
+      "exclusive_among_observed_sources": true,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "33193aabe586aee6bdedb8a8a06238783ece25a2",
+          "initial_prs": [
+            29,
+            42
+          ],
+          "canonical_owner_source_prs": [
+            42
+          ]
+        },
+        {
+          "blob": "e20e97e54d60c156952fbc43fab356cf479221de",
+          "initial_prs": [
+            36
+          ],
+          "canonical_owner_source_prs": [
+            36
+          ]
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/portfolio.test.ts",
+      "owner": "WP13",
+      "merge_base_blob": "5314df8bf31032b8a787058f2a4cffef451882f6",
+      "origin_blob": "5314df8bf31032b8a787058f2a4cffef451882f6",
+      "candidate_blob": "5314df8bf31032b8a787058f2a4cffef451882f6",
+      "proposed_blob": "2e103fe41fd5ba5a740247bb65a4ac13d262e7da",
+      "latest_observed_blob": "2e103fe41fd5ba5a740247bb65a4ac13d262e7da",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36
+      ],
+      "exclusive_among_observed_sources": true,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "2e103fe41fd5ba5a740247bb65a4ac13d262e7da",
+          "initial_prs": [
+            36
+          ],
+          "canonical_owner_source_prs": [
+            36
+          ]
+        },
+        {
+          "blob": "5314df8bf31032b8a787058f2a4cffef451882f6",
+          "initial_prs": [
+            29,
+            38,
+            39,
+            41
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "57ec7d22fc2fa20506547ae5d4a3bca40a91db04",
+          "initial_prs": [
+            42
+          ],
+          "canonical_owner_source_prs": [
+            42
+          ]
+        },
+        {
+          "blob": "f7968d5fe3a123df4531c7fb4caeac60702b062a",
+          "initial_prs": [
+            34
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "fdfff64a4067a4d9a36398af42f4044b266f749e",
+          "initial_prs": [
+            43
+          ],
+          "canonical_owner_source_prs": []
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/production.test.ts",
+      "owner": "WP13",
+      "merge_base_blob": "ec3969a0f9585a6bf02a8037d13c21ffaf78fed9",
+      "origin_blob": "af3d903b5cf476649d213a417ea673f8114071ee",
+      "candidate_blob": "af3d903b5cf476649d213a417ea673f8114071ee",
+      "proposed_blob": "af3d903b5cf476649d213a417ea673f8114071ee",
+      "latest_observed_blob": "af3d903b5cf476649d213a417ea673f8114071ee",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        36,
+        39,
+        42
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/projection.test.ts",
+      "owner": "WP13",
+      "merge_base_blob": "191e49d579f79ce012b7455172e3f44da226f156",
+      "origin_blob": "191e49d579f79ce012b7455172e3f44da226f156",
+      "candidate_blob": "191e49d579f79ce012b7455172e3f44da226f156",
+      "proposed_blob": "191e49d579f79ce012b7455172e3f44da226f156",
+      "latest_observed_blob": "191e49d579f79ce012b7455172e3f44da226f156",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        34,
+        36,
+        38,
+        39,
+        41,
+        42,
+        43
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/reconciliation-price-integration.test.ts",
+      "owner": "WP13",
+      "merge_base_blob": null,
+      "origin_blob": null,
+      "candidate_blob": null,
+      "proposed_blob": "ce02051d09115665056d36382bde5f1dbd0d9238",
+      "latest_observed_blob": "ce02051d09115665056d36382bde5f1dbd0d9238",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        29,
+        36,
+        42
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/reconciliation.test.ts",
+      "owner": "WP13",
+      "merge_base_blob": null,
+      "origin_blob": null,
+      "candidate_blob": null,
+      "proposed_blob": "6b2a318f73aa8adb67840958add758f151f0bade",
+      "latest_observed_blob": "6b2a318f73aa8adb67840958add758f151f0bade",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        29,
+        36
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "5c53193ea3f2ac32bf2b5fd4a508215682c4b11c",
+          "initial_prs": [
+            42
+          ],
+          "canonical_owner_source_prs": [
+            42
+          ]
+        },
+        {
+          "blob": "6b2a318f73aa8adb67840958add758f151f0bade",
+          "initial_prs": [
+            29,
+            36
+          ],
+          "canonical_owner_source_prs": [
+            36
+          ]
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/renewal-read-scope.test.ts",
+      "owner": "WP13",
+      "merge_base_blob": null,
+      "origin_blob": null,
+      "candidate_blob": null,
+      "proposed_blob": "bcd5ed7f2cc26b2d9e271dae421b4d86e2f05591",
+      "latest_observed_blob": "bcd5ed7f2cc26b2d9e271dae421b4d86e2f05591",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36,
+        42
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/renewal-restart-reader.ts",
+      "owner": "WP13",
+      "merge_base_blob": null,
+      "origin_blob": null,
+      "candidate_blob": null,
+      "proposed_blob": "1f2dc2935b3964b022dd5ab77790040a6b5e75d5",
+      "latest_observed_blob": "1f2dc2935b3964b022dd5ab77790040a6b5e75d5",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        29,
+        36
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/renewal-sensitivity.test.ts",
+      "owner": "WP13",
+      "merge_base_blob": null,
+      "origin_blob": null,
+      "candidate_blob": null,
+      "proposed_blob": "fbd176312c247e445054aa86a5bf3d153eb9b56c",
+      "latest_observed_blob": "fbd176312c247e445054aa86a5bf3d153eb9b56c",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36
+      ],
+      "exclusive_among_observed_sources": true,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "f68bcdf3c5a7ffeeb10cd9ed11a577e63c40062e",
+          "initial_prs": [
+            29
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "fbd176312c247e445054aa86a5bf3d153eb9b56c",
+          "initial_prs": [
+            36
+          ],
+          "canonical_owner_source_prs": [
+            36
+          ]
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-fixture.ts",
+      "owner": "WP13",
+      "merge_base_blob": null,
+      "origin_blob": "ab00e903d0d263fddaf7aa481c201627b9835b1d",
+      "candidate_blob": "ab00e903d0d263fddaf7aa481c201627b9835b1d",
+      "proposed_blob": "5b868fdcb3cc9371a6592b000f33ba0b357329c5",
+      "latest_observed_blob": "5b868fdcb3cc9371a6592b000f33ba0b357329c5",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        29,
+        36
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "5b868fdcb3cc9371a6592b000f33ba0b357329c5",
+          "initial_prs": [
+            29,
+            36
+          ],
+          "canonical_owner_source_prs": [
+            36
+          ]
+        },
+        {
+          "blob": "ecc4678cf757e68c5763f8bc99d5f3573df86bc5",
+          "initial_prs": [
+            42
+          ],
+          "canonical_owner_source_prs": [
+            42
+          ]
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-retry-boundary.test.ts",
+      "owner": "WP13",
+      "merge_base_blob": null,
+      "origin_blob": null,
+      "candidate_blob": null,
+      "proposed_blob": "674fae533af967f87e49a5a79d25ac1a6a925e3a",
+      "latest_observed_blob": "674fae533af967f87e49a5a79d25ac1a6a925e3a",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36
+      ],
+      "exclusive_among_observed_sources": true,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+      "owner": "WP13",
+      "merge_base_blob": "242d6c499afd338e2339004ad02a203fc38a7fe4",
+      "origin_blob": "f81469e41928f9fe1d2fbc2303158cfe4e5b5809",
+      "candidate_blob": "f81469e41928f9fe1d2fbc2303158cfe4e5b5809",
+      "proposed_blob": "dbbe5f7dc64d3accee536b38ae4196034562cf8f",
+      "latest_observed_blob": "dbbe5f7dc64d3accee536b38ae4196034562cf8f",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36
+      ],
+      "exclusive_among_observed_sources": true,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "242d6c499afd338e2339004ad02a203fc38a7fe4",
+          "initial_prs": [
+            38,
+            41
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "2aa8d065edd25c94a90b84a64839c0fc72dce5c2",
+          "initial_prs": [
+            43
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "360806db367feca8c8dc199d3739632e72767ed9",
+          "initial_prs": [
+            34
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "bf07b1c804138f04e01f9cf5a518b6d89ab24b9a",
+          "initial_prs": [
+            39,
+            42
+          ],
+          "canonical_owner_source_prs": [
+            42
+          ]
+        },
+        {
+          "blob": "dbbe5f7dc64d3accee536b38ae4196034562cf8f",
+          "initial_prs": [
+            36
+          ],
+          "canonical_owner_source_prs": [
+            36
+          ]
+        },
+        {
+          "blob": "f81469e41928f9fe1d2fbc2303158cfe4e5b5809",
+          "initial_prs": [
+            29
+          ],
+          "canonical_owner_source_prs": []
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-v6.test.ts",
+      "owner": "WP13",
+      "merge_base_blob": "f634dd4a929e33da3e54759729641d5ebd7fc14f",
+      "origin_blob": "7d9d1454aa0f7dbe780989d129a3e35f1d05a0b7",
+      "candidate_blob": "7d9d1454aa0f7dbe780989d129a3e35f1d05a0b7",
+      "proposed_blob": "a3b1cd5326dc4dfbbaa4a16cb0134c9d0fe15a4c",
+      "latest_observed_blob": "a3b1cd5326dc4dfbbaa4a16cb0134c9d0fe15a4c",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36
+      ],
+      "exclusive_among_observed_sources": true,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "26f2ad65abc551c33561420cf7e23b04522255f6",
+          "initial_prs": [
+            42
+          ],
+          "canonical_owner_source_prs": [
+            42
+          ]
+        },
+        {
+          "blob": "7d9d1454aa0f7dbe780989d129a3e35f1d05a0b7",
+          "initial_prs": [
+            29
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "a3b1cd5326dc4dfbbaa4a16cb0134c9d0fe15a4c",
+          "initial_prs": [
+            36
+          ],
+          "canonical_owner_source_prs": [
+            36
+          ]
+        },
+        {
+          "blob": "f634dd4a929e33da3e54759729641d5ebd7fc14f",
+          "initial_prs": [
+            34,
+            38,
+            39,
+            41,
+            43
+          ],
+          "canonical_owner_source_prs": []
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity.test.ts",
+      "owner": "WP13",
+      "merge_base_blob": "310489df94a94cc3955973936997745b082f47bf",
+      "origin_blob": "41be1c7840056f40b6693feec56431e95bc438d6",
+      "candidate_blob": "41be1c7840056f40b6693feec56431e95bc438d6",
+      "proposed_blob": "76ea3fa6902105c7be42956dae99ea4e4f9a4c3b",
+      "latest_observed_blob": "76ea3fa6902105c7be42956dae99ea4e4f9a4c3b",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36
+      ],
+      "exclusive_among_observed_sources": true,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "310489df94a94cc3955973936997745b082f47bf",
+          "initial_prs": [
+            34,
+            38,
+            39,
+            41,
+            43
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "41be1c7840056f40b6693feec56431e95bc438d6",
+          "initial_prs": [
+            29
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "76ea3fa6902105c7be42956dae99ea4e4f9a4c3b",
+          "initial_prs": [
+            36
+          ],
+          "canonical_owner_source_prs": [
+            36
+          ]
+        },
+        {
+          "blob": "a77713b4a8dff26a7d105775633a9f15c1248f21",
+          "initial_prs": [
+            42
+          ],
+          "canonical_owner_source_prs": [
+            42
+          ]
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/source-scenario-fixture.ts",
+      "owner": "WP13",
+      "merge_base_blob": null,
+      "origin_blob": null,
+      "candidate_blob": null,
+      "proposed_blob": "39a6164af40df18c4634196e31e84a8180c822a5",
+      "latest_observed_blob": "39a6164af40df18c4634196e31e84a8180c822a5",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36
+      ],
+      "exclusive_among_observed_sources": true,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/source-scenario.test.ts",
+      "owner": "WP13",
+      "merge_base_blob": null,
+      "origin_blob": null,
+      "candidate_blob": null,
+      "proposed_blob": "d5ad83048d49c79d7f83bd13b4f6c81e3d4ca31c",
+      "latest_observed_blob": "d5ad83048d49c79d7f83bd13b4f6c81e3d4ca31c",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36
+      ],
+      "exclusive_among_observed_sources": true,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "01d7a1a299c61ebe824634c39e3d598cf2f59dc3",
+          "initial_prs": [
+            42
+          ],
+          "canonical_owner_source_prs": [
+            42
+          ]
+        },
+        {
+          "blob": "d5ad83048d49c79d7f83bd13b4f6c81e3d4ca31c",
+          "initial_prs": [
+            36
+          ],
+          "canonical_owner_source_prs": [
+            36
+          ]
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/stored-store.test.ts",
+      "owner": "WP13",
+      "merge_base_blob": "78e958d481319c3fdaf5871945be1898c88aa67f",
+      "origin_blob": "601af4ad1f504c9c7be47dce4e72d84587a38856",
+      "candidate_blob": "601af4ad1f504c9c7be47dce4e72d84587a38856",
+      "proposed_blob": "601af4ad1f504c9c7be47dce4e72d84587a38856",
+      "latest_observed_blob": "601af4ad1f504c9c7be47dce4e72d84587a38856",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        36,
+        39,
+        42
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/stored.test.ts",
+      "owner": "WP13",
+      "merge_base_blob": "87fd1572c38eb436a65f4eaefb2c8f6ff4bb0ed9",
+      "origin_blob": "87fd1572c38eb436a65f4eaefb2c8f6ff4bb0ed9",
+      "candidate_blob": "87fd1572c38eb436a65f4eaefb2c8f6ff4bb0ed9",
+      "proposed_blob": "87fd1572c38eb436a65f4eaefb2c8f6ff4bb0ed9",
+      "latest_observed_blob": "87fd1572c38eb436a65f4eaefb2c8f6ff4bb0ed9",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        34,
+        36,
+        38,
+        39,
+        41,
+        42,
+        43
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/threshold-recertification.test.ts",
+      "owner": "WP13",
+      "merge_base_blob": null,
+      "origin_blob": null,
+      "candidate_blob": null,
+      "proposed_blob": "42ddb74c93873d0dec1e9d255ba90a2ae71cab7d",
+      "latest_observed_blob": "42ddb74c93873d0dec1e9d255ba90a2ae71cab7d",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36
+      ],
+      "exclusive_among_observed_sources": true,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/atlas-projection.test.ts",
+      "owner": "WP14",
+      "merge_base_blob": "02d97376f4ce882ba38cb12942538e1a3aba19f1",
+      "origin_blob": "30ebaf3aac1940c2760b21761dcd72be52d050d9",
+      "candidate_blob": "30ebaf3aac1940c2760b21761dcd72be52d050d9",
+      "proposed_blob": "c2efe0e5054b4a33a35daae1d5353ff730434577",
+      "latest_observed_blob": "c2efe0e5054b4a33a35daae1d5353ff730434577",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36,
+        38
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "02d97376f4ce882ba38cb12942538e1a3aba19f1",
+          "initial_prs": [
+            34,
+            39,
+            41,
+            42,
+            43
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "30ebaf3aac1940c2760b21761dcd72be52d050d9",
+          "initial_prs": [
+            29
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "c2efe0e5054b4a33a35daae1d5353ff730434577",
+          "initial_prs": [
+            36,
+            38
+          ],
+          "canonical_owner_source_prs": [
+            36,
+            38
+          ]
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/atlas-restart-reader.ts",
+      "owner": "WP14",
+      "merge_base_blob": null,
+      "origin_blob": "9268b8797955057559bf22c0625b3b302c49cfe5",
+      "candidate_blob": "9268b8797955057559bf22c0625b3b302c49cfe5",
+      "proposed_blob": "6194f415573636efd47751f977cd157c9396f17d",
+      "latest_observed_blob": "6194f415573636efd47751f977cd157c9396f17d",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36
+      ],
+      "exclusive_among_observed_sources": true,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "439ba78e8208133e498ebfb87b00e4eb882dd8fd",
+          "initial_prs": [
+            38
+          ],
+          "canonical_owner_source_prs": [
+            38
+          ]
+        },
+        {
+          "blob": "60f768da8420782418b516b2f7e839845a101197",
+          "initial_prs": [
+            29
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "6194f415573636efd47751f977cd157c9396f17d",
+          "initial_prs": [
+            36
+          ],
+          "canonical_owner_source_prs": [
+            36
+          ]
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/domain-outcome.test.ts",
+      "owner": "WP14",
+      "merge_base_blob": null,
+      "origin_blob": "3904520e863976a432c98b98de942c42ebf32e08",
+      "candidate_blob": "3904520e863976a432c98b98de942c42ebf32e08",
+      "proposed_blob": "3510dac982bc4e4dafe412b19f1e0866fc569698",
+      "latest_observed_blob": "3510dac982bc4e4dafe412b19f1e0866fc569698",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36
+      ],
+      "exclusive_among_observed_sources": true,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "210bac0815396bb4769ec8f7a5d3e4b948fe13a6",
+          "initial_prs": [
+            38
+          ],
+          "canonical_owner_source_prs": [
+            38
+          ]
+        },
+        {
+          "blob": "3510dac982bc4e4dafe412b19f1e0866fc569698",
+          "initial_prs": [
+            36
+          ],
+          "canonical_owner_source_prs": [
+            36
+          ]
+        },
+        {
+          "blob": "3904520e863976a432c98b98de942c42ebf32e08",
+          "initial_prs": [
+            29
+          ],
+          "canonical_owner_source_prs": []
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/invalidation.test.ts",
+      "owner": "WP14",
+      "merge_base_blob": null,
+      "origin_blob": null,
+      "candidate_blob": null,
+      "proposed_blob": "90e6dd5f1b87b03f6fe2440703443b64507ed375",
+      "latest_observed_blob": "90e6dd5f1b87b03f6fe2440703443b64507ed375",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36
+      ],
+      "exclusive_among_observed_sources": true,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "54438ff168810a69af2ef71ce2df149805ee78a8",
+          "initial_prs": [
+            38
+          ],
+          "canonical_owner_source_prs": [
+            38
+          ]
+        },
+        {
+          "blob": "90e6dd5f1b87b03f6fe2440703443b64507ed375",
+          "initial_prs": [
+            36
+          ],
+          "canonical_owner_source_prs": [
+            36
+          ]
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/materiality.test.ts",
+      "owner": "WP14",
+      "merge_base_blob": "c30d457f674bc7abb0737620f0b72dea5851cb33",
+      "origin_blob": "aee559a4815e95c5a40ee2a0c867389630bba944",
+      "candidate_blob": "aee559a4815e95c5a40ee2a0c867389630bba944",
+      "proposed_blob": "832dec005b43eca42d6b4bde027aee77c5857d00",
+      "latest_observed_blob": "832dec005b43eca42d6b4bde027aee77c5857d00",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36
+      ],
+      "exclusive_among_observed_sources": true,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "81a37a4c2945c2af64d0749be3b909a54ae97508",
+          "initial_prs": [
+            38
+          ],
+          "canonical_owner_source_prs": [
+            38
+          ]
+        },
+        {
+          "blob": "832dec005b43eca42d6b4bde027aee77c5857d00",
+          "initial_prs": [
+            36
+          ],
+          "canonical_owner_source_prs": [
+            36
+          ]
+        },
+        {
+          "blob": "aee559a4815e95c5a40ee2a0c867389630bba944",
+          "initial_prs": [
+            29
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "c30d457f674bc7abb0737620f0b72dea5851cb33",
+          "initial_prs": [
+            34,
+            39,
+            41,
+            42,
+            43
+          ],
+          "canonical_owner_source_prs": []
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/outcome-signals.test.ts",
+      "owner": "WP14",
+      "merge_base_blob": null,
+      "origin_blob": "533103800b6e5037644be6f12ee3a80357235e34",
+      "candidate_blob": "533103800b6e5037644be6f12ee3a80357235e34",
+      "proposed_blob": "1c33f4da2a87b25ae8b22cf181c755ee6fa60bc7",
+      "latest_observed_blob": "1c33f4da2a87b25ae8b22cf181c755ee6fa60bc7",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36
+      ],
+      "exclusive_among_observed_sources": true,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "1c33f4da2a87b25ae8b22cf181c755ee6fa60bc7",
+          "initial_prs": [
+            36
+          ],
+          "canonical_owner_source_prs": [
+            36
+          ]
+        },
+        {
+          "blob": "2c84f9e2a0ae600ee7120c5c4bcbb7aaa255028b",
+          "initial_prs": [
+            38
+          ],
+          "canonical_owner_source_prs": [
+            38
+          ]
+        },
+        {
+          "blob": "533103800b6e5037644be6f12ee3a80357235e34",
+          "initial_prs": [
+            29
+          ],
+          "canonical_owner_source_prs": []
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/planner-materiality.test.ts",
+      "owner": "WP14",
+      "merge_base_blob": null,
+      "origin_blob": "7361b78c548f4e5fab2a2485b860846ee085cb5f",
+      "candidate_blob": "7361b78c548f4e5fab2a2485b860846ee085cb5f",
+      "proposed_blob": "7361b78c548f4e5fab2a2485b860846ee085cb5f",
+      "latest_observed_blob": "7361b78c548f4e5fab2a2485b860846ee085cb5f",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        36,
+        38
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/recall.test.ts",
+      "owner": "WP14",
+      "merge_base_blob": "54714ee6ea51b2f0cf7a75c4df503c781137d7e4",
+      "origin_blob": "42e2a8df724b4771b48f8ebc4509c678a1ce5e2a",
+      "candidate_blob": "42e2a8df724b4771b48f8ebc4509c678a1ce5e2a",
+      "proposed_blob": "789bd248dff04f61119fd7bef5108754f14af423",
+      "latest_observed_blob": "789bd248dff04f61119fd7bef5108754f14af423",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36
+      ],
+      "exclusive_among_observed_sources": true,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "42e2a8df724b4771b48f8ebc4509c678a1ce5e2a",
+          "initial_prs": [
+            29
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "54714ee6ea51b2f0cf7a75c4df503c781137d7e4",
+          "initial_prs": [
+            34,
+            39,
+            41,
+            42,
+            43
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "789bd248dff04f61119fd7bef5108754f14af423",
+          "initial_prs": [
+            36
+          ],
+          "canonical_owner_source_prs": [
+            36
+          ]
+        },
+        {
+          "blob": "d870d96e0fc5440593d0fead7d9c9fd837cd506e",
+          "initial_prs": [
+            38
+          ],
+          "canonical_owner_source_prs": [
+            38
+          ]
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/signal-registry.test.ts",
+      "owner": "WP14",
+      "merge_base_blob": null,
+      "origin_blob": "3e8d2e790d9b1224723b685f8962ceda534605b6",
+      "candidate_blob": "3e8d2e790d9b1224723b685f8962ceda534605b6",
+      "proposed_blob": "8aa8e69757b14fb1ef7b4173b974c9a9204917c2",
+      "latest_observed_blob": "8aa8e69757b14fb1ef7b4173b974c9a9204917c2",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36
+      ],
+      "exclusive_among_observed_sources": true,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "3e8d2e790d9b1224723b685f8962ceda534605b6",
+          "initial_prs": [
+            29
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "8aa8e69757b14fb1ef7b4173b974c9a9204917c2",
+          "initial_prs": [
+            36
+          ],
+          "canonical_owner_source_prs": [
+            36
+          ]
+        },
+        {
+          "blob": "cef1f6bd6fcecbd569522c7e33d65d6767155182",
+          "initial_prs": [
+            38
+          ],
+          "canonical_owner_source_prs": [
+            38
+          ]
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+      "owner": "WP14",
+      "merge_base_blob": "259cdbcdb90627d57a6ad10b6b323fe0b14bcdb1",
+      "origin_blob": "d31c8dc6867bcbb7f389bde79df644a5133de51a",
+      "candidate_blob": "d31c8dc6867bcbb7f389bde79df644a5133de51a",
+      "proposed_blob": "7f9b392ff55cf0193fbfa7542a0f4eaea4070746",
+      "latest_observed_blob": "7f9b392ff55cf0193fbfa7542a0f4eaea4070746",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36
+      ],
+      "exclusive_among_observed_sources": true,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "259cdbcdb90627d57a6ad10b6b323fe0b14bcdb1",
+          "initial_prs": [
+            41,
+            42,
+            43
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "4b0edefc2ed818c2c9cd17e035e6d0b84e110dcf",
+          "initial_prs": [
+            38
+          ],
+          "canonical_owner_source_prs": [
+            38
+          ]
+        },
+        {
+          "blob": "7f9b392ff55cf0193fbfa7542a0f4eaea4070746",
+          "initial_prs": [
+            36
+          ],
+          "canonical_owner_source_prs": [
+            36
+          ]
+        },
+        {
+          "blob": "d31c8dc6867bcbb7f389bde79df644a5133de51a",
+          "initial_prs": [
+            29,
+            39
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "fbe627ffde443ff7e2d3b1204bbcf67523404f41",
+          "initial_prs": [
+            34
+          ],
+          "canonical_owner_source_prs": []
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-dashboard-record.test.ts",
+      "owner": "WP14",
+      "merge_base_blob": "4c678b20e46cc42dbe3b26fb5a7e0ab038209579",
+      "origin_blob": "4c678b20e46cc42dbe3b26fb5a7e0ab038209579",
+      "candidate_blob": "4c678b20e46cc42dbe3b26fb5a7e0ab038209579",
+      "proposed_blob": "4c678b20e46cc42dbe3b26fb5a7e0ab038209579",
+      "latest_observed_blob": "4c678b20e46cc42dbe3b26fb5a7e0ab038209579",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        34,
+        36,
+        38,
+        39,
+        41,
+        42,
+        43
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-document.test.ts",
+      "owner": "WP14",
+      "merge_base_blob": "6afd17d18f236840e4e97db29a89bbbc011987f9",
+      "origin_blob": "6afd17d18f236840e4e97db29a89bbbc011987f9",
+      "candidate_blob": "6afd17d18f236840e4e97db29a89bbbc011987f9",
+      "proposed_blob": "6afd17d18f236840e4e97db29a89bbbc011987f9",
+      "latest_observed_blob": "6afd17d18f236840e4e97db29a89bbbc011987f9",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        34,
+        36,
+        38,
+        39,
+        41,
+        42,
+        43
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts",
+      "owner": "WP14",
+      "merge_base_blob": "9506535855a0b2bc8546d37df668f89a765c4057",
+      "origin_blob": "687007a3e8ed34373bbce1200570f79fa78731ec",
+      "candidate_blob": "687007a3e8ed34373bbce1200570f79fa78731ec",
+      "proposed_blob": "ad6a5cea4e1eb5eb5e1b7faeea5ed2091f9f73f1",
+      "latest_observed_blob": "ad6a5cea4e1eb5eb5e1b7faeea5ed2091f9f73f1",
+      "decision": "HOLD_OWNER_RECONCILIATION",
+      "equivalent_initial_source_prs": [
+        36
+      ],
+      "exclusive_among_observed_sources": true,
+      "source_changed_after_pin": false,
+      "evidence": [],
+      "overlapping_versions": [
+        {
+          "blob": "687007a3e8ed34373bbce1200570f79fa78731ec",
+          "initial_prs": [
+            29
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "8adc906eac19e275118d1e5b3d9f66ce09104aa8",
+          "initial_prs": [
+            38,
+            39
+          ],
+          "canonical_owner_source_prs": [
+            38
+          ]
+        },
+        {
+          "blob": "9506535855a0b2bc8546d37df668f89a765c4057",
+          "initial_prs": [
+            41,
+            42
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "ad6a5cea4e1eb5eb5e1b7faeea5ed2091f9f73f1",
+          "initial_prs": [
+            36
+          ],
+          "canonical_owner_source_prs": [
+            36
+          ]
+        },
+        {
+          "blob": "c906976e26b1fa182dd4532b68d32c3831fc17f2",
+          "initial_prs": [
+            34
+          ],
+          "canonical_owner_source_prs": []
+        },
+        {
+          "blob": "cc33cb115e31b5f07c0bd338e1372fdff8383dd0",
+          "initial_prs": [
+            43
+          ],
+          "canonical_owner_source_prs": []
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access.test.ts",
+      "owner": "WP14",
+      "merge_base_blob": "991d294fdbe41a56990a58acf16bbc7733aba4ba",
+      "origin_blob": "991d294fdbe41a56990a58acf16bbc7733aba4ba",
+      "candidate_blob": "991d294fdbe41a56990a58acf16bbc7733aba4ba",
+      "proposed_blob": "991d294fdbe41a56990a58acf16bbc7733aba4ba",
+      "latest_observed_blob": "991d294fdbe41a56990a58acf16bbc7733aba4ba",
+      "decision": "ALREADY_PRESENT_IDENTICAL",
+      "equivalent_initial_source_prs": [
+        29,
+        34,
+        36,
+        38,
+        39,
+        41,
+        42,
+        43
+      ],
+      "exclusive_among_observed_sources": false,
+      "source_changed_after_pin": false,
+      "evidence": []
+    }
+  ]
+}

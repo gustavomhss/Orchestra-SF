@@ -1,0 +1,239 @@
+{
+  "schema": "astra-compose-own-run-context-intake-w9-v1",
+  "repository": "gustavomhss/Orchestra-SF",
+  "source": {
+    "pr": 29,
+    "head": "2ec17b2c8204d5e953eec3186b7e236c0faaad47",
+    "tree": "526f67866223b8b73e1bcae16e45ec9377b1af2e",
+    "head_verified_by": "MCP PR metadata plus exact Git commit metadata",
+    "compare_parent": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+    "compare_paths": 28,
+    "compare_commits": 1
+  },
+  "target": {
+    "base_W8_head": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+    "base_W8_tree": "051391628c61f6a4333c8f13567c5518c4ff8f86",
+    "required_prior_staging": "incoming-cache/owner-round9/pr29-analysis-closure-payload.json",
+    "required_helper": {
+      "path": "apps/cli/src/sucafina-product/analysis-stale-commit.ts",
+      "blob": "f40a30aca8668f3ef7636ca8af4bf65d4e987217"
+    },
+    "host_staged_lease": "28046172e5a540c8418aff0b968b2e098888c432",
+    "host_W8_lease": "0d3abcf642deb3d2f6c6346cdddc8bfb40141532"
+  },
+  "accepted": [
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-run-context.ts",
+      "source_pr": 29,
+      "source_head": "2ec17b2c8204d5e953eec3186b7e236c0faaad47",
+      "source_tree": "526f67866223b8b73e1bcae16e45ec9377b1af2e",
+      "source_blob": "5b0f9e394f433bc904724019678d08555078dc0b",
+      "base_stage": "W8 plus previously delivered f3 analysis closure",
+      "base_head": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+      "base_blob": null,
+      "base_W8_head": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "base_W8_tree": "051391628c61f6a4333c8f13567c5518c4ff8f86",
+      "base_W8_blob": null,
+      "worktree_blob": null,
+      "new_path_absence_proof": "MCP compare f3..2ec status=added; W8 materialized path absent",
+      "content_sha256": "9d497b424797430aa713cae24a3bdd6a433ddbf678f4acc88da87d66230f6abf",
+      "MCP_git_blob_hash_verified": true,
+      "cached_parent_compare_sha_matches": true,
+      "operation": "add_exact_source_blob",
+      "disposition": "ELIGIBLE_OWN_WP10_INCREMENT_PENDING_TARGET_CI",
+      "staged_source": "incoming-cache/owner-round9/pr29-run-context-src/source/apps/cli/src/sucafina-product/analysis-run-context.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "source_pr": 29,
+      "source_head": "2ec17b2c8204d5e953eec3186b7e236c0faaad47",
+      "source_tree": "526f67866223b8b73e1bcae16e45ec9377b1af2e",
+      "source_blob": "834b3c967d73411771e1f5aa82b683c6427e6769",
+      "base_stage": "W8 plus previously delivered f3 analysis closure",
+      "base_head": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+      "base_blob": "28046172e5a540c8418aff0b968b2e098888c432",
+      "base_W8_head": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "base_W8_tree": "051391628c61f6a4333c8f13567c5518c4ff8f86",
+      "base_W8_blob": "0d3abcf642deb3d2f6c6346cdddc8bfb40141532",
+      "worktree_blob": "0d3abcf642deb3d2f6c6346cdddc8bfb40141532",
+      "new_path_absence_proof": null,
+      "content_sha256": "6a608e24847fe730b645d5f51f86e47d83e803875162820038e0c05d18f96772",
+      "MCP_git_blob_hash_verified": true,
+      "cached_parent_compare_sha_matches": true,
+      "operation": "apply_exact_two_host_hunks_after_f3",
+      "disposition": "ELIGIBLE_OWN_WP10_INCREMENT_PENDING_TARGET_CI",
+      "staged_source": "incoming-cache/owner-round9/pr29-run-context-src/source/apps/cli/src/sucafina-product/host-context.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/analysis-run-context.test.ts",
+      "source_pr": 29,
+      "source_head": "2ec17b2c8204d5e953eec3186b7e236c0faaad47",
+      "source_tree": "526f67866223b8b73e1bcae16e45ec9377b1af2e",
+      "source_blob": "c6be5fbecf49e93237b873bb79ac12260022bdf1",
+      "base_stage": "W8 plus previously delivered f3 analysis closure",
+      "base_head": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+      "base_blob": null,
+      "base_W8_head": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "base_W8_tree": "051391628c61f6a4333c8f13567c5518c4ff8f86",
+      "base_W8_blob": null,
+      "worktree_blob": null,
+      "new_path_absence_proof": "MCP compare f3..2ec status=added; W8 materialized path absent",
+      "content_sha256": "408b5143a34452e85628b51211d032f053d97920fe76aca59726f04c4330bab1",
+      "MCP_git_blob_hash_verified": true,
+      "cached_parent_compare_sha_matches": true,
+      "operation": "add_exact_source_blob",
+      "disposition": "ELIGIBLE_OWN_WP10_INCREMENT_PENDING_TARGET_CI",
+      "staged_source": "incoming-cache/owner-round9/pr29-run-context-src/source/modules/sucafina/Sucafinav1/test/product/wp10/integration/analysis-run-context.test.ts"
+    }
+  ],
+  "summary": {
+    "paths": 3,
+    "product_paths": 2,
+    "test_paths": 1,
+    "host_hunks": 2,
+    "foreign_paths_selected": 0,
+    "worktree_edits": 0
+  },
+  "criterion_map": [
+    {
+      "criterion": "SEM-ANALYSIS-CASE-ADVANCE-01",
+      "code_status": "ADDRESSES_STRICT_REENTRY_BLOCKER_STATICALLY",
+      "reason": "withRunContext now uses the already-published withCase allowHistoricalRetry mode. It retains the original selected case version rather than silently upgrading it, so reentry can reach lifecycle operations after a version advance. W8 analysis-port already calls markStale/preserveStale on stale outcomes; f3 helper handles their current-authority commit.",
+      "proof_limit": "No executed result or persisted markStale witness produced in this intake. The selected test exercises reentry and real case metadata, not a native run."
+    },
+    {
+      "criterion": "ACTIVE_EXECUTION_AND_PUBLICATION_GUARDS",
+      "code_status": "UNCHANGED_STRICT_CONSUMERS",
+      "reason": "W8 business-services selectedCase and resolveCase require exact selected case version; nonterminal run-store commit requires exact current case version and keeps private alternative capture/CAS. The helper reauthorizes original analysis.start intent at egress and checks original Request, abort, active host and replay binding."
+    }
+  ],
+  "dependency_inventory": [
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "blob": "4b02413b5a98e750187fa8f5fa54f3cb2415f4e3",
+      "head": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "verified": "MCP W8 content from earlier round9 dependency fetch",
+      "provided": [
+        "withCase options.allowHistoricalRetry",
+        "selectedCase exact case version",
+        "resolveCase exact case version"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/financial-composition-fixture.ts",
+      "blob": "febb795303b8c4ada5fb6f39d6373667ee71dac1",
+      "head": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "verified": "MCP exact immutable file plus Git blob SHA check"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts",
+      "blob": "3eb140557b597156baf52578d8981d332e52aef3",
+      "head": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "verified": "MCP exact immutable file plus Git blob SHA check"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/analysis-host.ts",
+      "blob": "337f6764a6e4fa84c09d4b53afd87c814a8d1fab",
+      "head": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "verified": "MCP exact immutable file plus Git blob SHA check"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+      "blob": "a3c306b720fd7f82e32340682e5001b1e6f4ef8e",
+      "head": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "verified": "Previous f3 closure proved exact same blob at W8 and f3",
+      "provided": [
+        "readLifecycle",
+        "terminal stale CAS/current-case membership",
+        "nonterminal exact case version"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+      "blob": "03f6ba173ca1d27693f784fdf149d2c674ca5edf",
+      "head": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "verified": "MCP exact W8 file; existing stale settlement branches read",
+      "provided": [
+        "markStale after stale admission/execute/collect/outcome",
+        "preserveStale around publication"
+      ]
+    }
+  ],
+  "foreign_delta_excluded": {
+    "path": "modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+    "source_blob": "5526b59d0c7a06791968c9dbb4d94cd3145a5bf6",
+    "W8_blob": "03f6ba173ca1d27693f784fdf149d2c674ca5edf",
+    "Finance6016_blob": "10903c2d183978f0539b0ff3b5d610213ad31852",
+    "Finance6016_head": "6016a70d7ab0c3d50f1ec2827a534a80e48a5c56",
+    "decision": "DO_NOT_IMPORT_FOREIGN_WP12_SOURCE",
+    "specific_scope": "The f3..2ec change adds settlement when final publish returns unavailable or needs-input. It does not create the existing stale branches and is not required for this reentry closure.",
+    "Finance_snapshot_relationship": "Finance6016 holds an older foreign analysis-port snapshot lacking several composed W8 lifecycle/provenance features; no downgrade or snapshot replacement attempted",
+    "unresolved_separate_behavior": "Post-publication unavailable/needs-input settlement remains outside this 3-path WP10 intake; owner WP12 must authorize/publish that source increment separately."
+  },
+  "test_review": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/analysis-run-context.test.ts",
+    "uses_real": [
+      "production reentry helper",
+      "C08 persistence and case transaction",
+      "human admission/finish",
+      "business withCase/selectedCase/resolveCase"
+    ],
+    "positive_cases": [
+      "Original version reentry and cleanup",
+      "Case advancement permits current lifecycle metadata while fresh selectors refuse upgrade",
+      "Membership restoration works under fresh admission"
+    ],
+    "negative_cases": [
+      "Strict withCase refuses advanced version and never enters callback",
+      "Other run ID",
+      "Removed case membership",
+      "Revoked identity provider",
+      "Inactive host",
+      "Aborted Request never enters callback",
+      "Replacement case incarnation"
+    ],
+    "no_native_execution_fabricated": true,
+    "actual_native_run_or_durable_markStale_in_fixture": false,
+    "test_executed_by_intake": false
+  },
+  "source_CI": {
+    "run_id": 43588533216,
+    "source_head_reported": "2ec17b2c8204d5e953eec3186b7e236c0faaad47",
+    "status": "FAIL_REPORTED_BY_ROOT",
+    "run_result_read_by_intake": false,
+    "upstream_pass_transferred": false,
+    "observations": {
+      "passed": 51,
+      "failed": 4,
+      "omni": "FAIL",
+      "selected_file_count": 4,
+      "new_analysis_run_context_test_selected": false
+    },
+    "result_provenance": "Parent root reported inspected completion; this intake did not expand into source failures",
+    "approval_for_three_path_closure": false
+  },
+  "proposed_target_checks": {
+    "executor": "GitHub Actions only, root",
+    "focused_paths": [
+      "modules/sucafina/Sucafinav1/test/product/wp10/integration/analysis-run-context.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp12/analysis.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp12/run-store.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts"
+    ],
+    "package_checks": "Root schedules bun typecheck in affected packages and applicable AGENTS guards; no epic",
+    "remaining_witness": "Reopened authorized context after real case advance reaches markStale and persists stale without permitting active publication or native resumption"
+  },
+  "limits": {
+    "product_execution": false,
+    "typecheck_execution": false,
+    "guards_execution": false,
+    "CI_dispatch": false,
+    "GitHub_mutation": false,
+    "product_worktree_edit": false,
+    "independent_review": false,
+    "GLOBAL_RELEASE": false
+  },
+  "payload": "incoming-cache/owner-round9/pr29-run-context-payload.json",
+  "patch": "incoming-cache/owner-round9/pr29-run-context.patch",
+  "status": "COMPOSABLE_ON_W8_PLUS_F3_PENDING_EXACT_TARGET_VALIDATION"
+}

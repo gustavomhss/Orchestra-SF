@@ -1,0 +1,28 @@
+{
+  "schema": "sf2.wp10.builder-receipt.v1",
+  "builder": "/root",
+  "state": "CLOSED",
+  "baseCandidate": "68027467de0bbe3e9136be7b458724e387f55839",
+  "finding": "R2-W8-F06-FIXTURE-OWNERSHIP",
+  "change": "Register the actual fixture dispose inside the awaited initialize callback before compositionTestDeadline.phase performs its post-await deadline check. Keep all assertions, producer calls, cooperative/outer budgets and final cleanup unchanged.",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-metric.test.ts",
+      "beforeSha256": "6113a9b5ebf6be479c38c7f9c7c5ac0b8a3cfcbdaa14a16abbc934e8e321b75b",
+      "afterSha256": "956134aed4be5cdb5fd7ca3dd2f64de05dadfcb1700c636a6a48461917581b12",
+      "afterBlobSha": "34f85b4108a67026716f72ce762d370b5c19856f",
+      "assertionLinesPreserved": 12
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-promotion.test.ts",
+      "beforeSha256": "8780e2f5eb875b439be2b9f3e962de376812f4382a431538c09cdd9a4835f2f5",
+      "afterSha256": "aea9c62ecda9e230e2c5b8911ddae99b033da339e458db4d481273db9f3e94d7",
+      "afterBlobSha": "7075e3a3864b3d48b06d59331d7649701b1a6c29",
+      "assertionLinesPreserved": 61
+    }
+  ],
+  "localProductExecution": false,
+  "qualification": "Source correction only. Independent R2 successor recheck and hosted affected tests required; author does not close reviewer finding.",
+  "successorLabel": "W12",
+  "labelReason": "W9, W10 and W11 identify preserved concurrent historical candidates; use W12 for this new successor."
+}

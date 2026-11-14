@@ -1,0 +1,285 @@
+{
+  "schema": "sf2h.compose-resume.intake.v1",
+  "increment": "R01",
+  "state": "PUBLISHED_INPUTS_PENDING_COMPOSED_VALIDATION",
+  "branch": "compose-resume",
+  "parent": {
+    "head": "9048e0e65351a5bd80768458a79fed94a4993db7",
+    "tree": "f073278e9fb11ca93b129c16331460e1fb6e25c4"
+  },
+  "origin": {
+    "pr": 32,
+    "branch": "astra-compose",
+    "head": "9048e0e65351a5bd80768458a79fed94a4993db7",
+    "tree": "f073278e9fb11ca93b129c16331460e1fb6e25c4"
+  },
+  "plan": {
+    "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "campaign_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+    "wps": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610,
+    "modified": false
+  },
+  "source_heads": [
+    {
+      "pr": 29,
+      "branch": "astra-wp10",
+      "head": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+      "tree": "ee95a2e3d0f02efabe6a4442fcf59479265a9f61",
+      "parents": [
+        "abb9eb9983b8a7cbb4ffe2d153ab9bf85f9cc6a9"
+      ],
+      "ancestry": "diverged",
+      "merge_base": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+      "disposition": "RECONCILING_NO_HEAD_WIDE_INTAKE"
+    },
+    {
+      "pr": 34,
+      "branch": "astra-operations",
+      "head": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+      "tree": "eb427121bcfd8c2511aac31d908f3c0d52c1915e",
+      "parents": [
+        "8ad7e16064e9f886b46519581aae5fb6182a2829"
+      ],
+      "ancestry": "diverged",
+      "merge_base": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+      "disposition": "RECONCILING_NO_HEAD_WIDE_INTAKE"
+    },
+    {
+      "pr": 36,
+      "branch": "astra-intelligence",
+      "head": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+      "tree": "7c445488ea55c1c6d8d31cf91cb61b01665dac7b",
+      "parents": [
+        "8bb72c8cdeda149b000d91403c368642c3b53dec"
+      ],
+      "ancestry": "diverged",
+      "merge_base": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+      "disposition": "RECONCILING_NO_HEAD_WIDE_INTAKE"
+    },
+    {
+      "pr": 38,
+      "branch": "astra-wp14",
+      "head": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+      "tree": "7f76f3db44cb3cbaa69d070c6268560150067603",
+      "parents": [
+        "302332e2d30ecb3426265aac3adaa518b81a5ea3"
+      ],
+      "ancestry": "diverged",
+      "merge_base": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+      "disposition": "RECONCILING_NO_HEAD_WIDE_INTAKE"
+    },
+    {
+      "pr": 39,
+      "branch": "astra-wp12",
+      "head": "812f8427423dc143cefc2731edc3485eeb8d1f04",
+      "tree": "37282950a3d1b07a08b2616c18a2bd06c1f4364e",
+      "parents": [
+        "449072d08500c744ac17d7ac73d46d2f620a56b2"
+      ],
+      "ancestry": "diverged",
+      "merge_base": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+      "disposition": "RECONCILING_NO_HEAD_WIDE_INTAKE"
+    },
+    {
+      "pr": 41,
+      "branch": "collab-resume",
+      "head": "20821df310ebc6ea08ccab27e829008d72a04de6",
+      "tree": "98d5c2f4f62a778f4acf6ec1b69ef5bfd19d5783",
+      "parents": [
+        "ff557552936197b6734e57f0ecea0c44b19139b1"
+      ],
+      "ancestry": "diverged",
+      "merge_base": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+      "disposition": "PARTIAL_PATH_INTAKE"
+    },
+    {
+      "pr": 42,
+      "branch": "finance-resume",
+      "head": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+      "tree": "e7e471f64dfd7a34c9d4143968d76b711b0a2966",
+      "parents": [
+        "3c20b46b4aa97bced6fb3f13c2f9c891cf8cf3b5",
+        "e8949be0e31952d5be4987c099003cd0b46e2add"
+      ],
+      "ancestry": "diverged",
+      "merge_base": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+      "disposition": "PARTIAL_PATH_INTAKE"
+    },
+    {
+      "pr": 43,
+      "branch": "interface-resume",
+      "head": "ad94fd2d78be47cecfb91f801ce7764127667b60",
+      "tree": "2677e5209f65a1b5dd26f50803ca98a760e6e40f",
+      "parents": [
+        "b1a477cd2346be755e10caec2941b1ba11171430"
+      ],
+      "ancestry": "diverged",
+      "merge_base": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+      "disposition": "RECONCILING_NO_HEAD_WIDE_INTAKE"
+    }
+  ],
+  "changes": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b",
+      "previous_blob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+      "source": {
+        "pr": 42,
+        "branch": "finance-resume",
+        "commit": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+        "tree": "e7e471f64dfd7a34c9d4143968d76b711b0a2966",
+        "author": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "date": "2026-11-14T16:36:33Z"
+        },
+        "committer": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "date": "2026-11-14T16:36:33Z"
+        }
+      },
+      "owner": "WP03",
+      "decision": "CONSUME_EXACT_PUBLISHED_BLOB",
+      "limitation": "Pending exact composed Actions evidence; source publication is not acceptance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "13800a1ac7dbe1b9bc95ca0a10480708760b4936",
+      "previous_blob": "8389709232225424b5905638d0951d8cdbb71dd7",
+      "source": {
+        "pr": 42,
+        "branch": "finance-resume",
+        "commit": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+        "tree": "e7e471f64dfd7a34c9d4143968d76b711b0a2966",
+        "author": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "date": "2026-11-14T16:36:33Z"
+        },
+        "committer": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "date": "2026-11-14T16:36:33Z"
+        }
+      },
+      "owner": "WP03",
+      "decision": "CONSUME_EXACT_PUBLISHED_BLOB",
+      "limitation": "Pending exact composed Actions evidence; source publication is not acceptance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/rate-identity-qualification.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "130c4940746088518376aa4c325bd68ade46aa87",
+      "previous_blob": null,
+      "source": {
+        "pr": 42,
+        "branch": "finance-resume",
+        "commit": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+        "tree": "e7e471f64dfd7a34c9d4143968d76b711b0a2966",
+        "author": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "date": "2026-11-14T16:36:33Z"
+        },
+        "committer": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "date": "2026-11-14T16:36:33Z"
+        }
+      },
+      "owner": "WP03",
+      "decision": "CONSUME_EXACT_PUBLISHED_BLOB",
+      "limitation": "Pending exact composed Actions evidence; source publication is not acceptance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/routines/schedule.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c2f76fb6ebf2f05b8b89a08561bfac14cc52ad66",
+      "previous_blob": "56ca29211a52d2226686fc8ea8ddb1999cfb4e6c",
+      "source": {
+        "pr": 41,
+        "branch": "collab-resume",
+        "commit": "20821df310ebc6ea08ccab27e829008d72a04de6",
+        "tree": "98d5c2f4f62a778f4acf6ec1b69ef5bfd19d5783",
+        "author": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "date": "2026-11-14T16:40:18Z"
+        },
+        "committer": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "date": "2026-11-14T16:40:18Z"
+        }
+      },
+      "owner": "WP09",
+      "decision": "CONSUME_EXACT_PUBLISHED_BLOB",
+      "limitation": "Pending exact composed Actions evidence; source publication is not acceptance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/schedule-boundaries.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2e4b277dc0e2b15bbc7ff83fc3d6fae0d0d2f400",
+      "previous_blob": "c54a9c651f79c22ed747bee780d0a9177998f854",
+      "source": {
+        "pr": 41,
+        "branch": "collab-resume",
+        "commit": "20821df310ebc6ea08ccab27e829008d72a04de6",
+        "tree": "98d5c2f4f62a778f4acf6ec1b69ef5bfd19d5783",
+        "author": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "date": "2026-11-14T16:40:18Z"
+        },
+        "committer": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "date": "2026-11-14T16:40:18Z"
+        }
+      },
+      "owner": "WP09",
+      "decision": "CONSUME_EXACT_PUBLISHED_BLOB",
+      "limitation": "Pending exact composed Actions evidence; source publication is not acceptance."
+    }
+  ],
+  "reason": [
+    "Consume the published canonical HR-normalization delta with its complete runtime export and discriminating real C02 tests. Original Planner port changes beyond the normalizer replacement remain byte-identical.",
+    "Consume WP09 provider identity fencing and additive regression cases. Existing schedule implementation preimage equals the collab-resume author's declared original blob."
+  ],
+  "ownership": "No original author branch or canonical source edited. Imported content is verbatim with original source author/commit/blob recorded. No new functional correction authored by this integrator.",
+  "checks": {
+    "required": [
+      "bun typecheck in modules/sucafina",
+      "bun typecheck in apps/cli",
+      "bun run check:guards --base origin/dev",
+      "change-scoped test-ci Actions after dedup"
+    ],
+    "state": "NOT_RUN_FOR_R01"
+  },
+  "preservation": {
+    "old_receipts": "all retained byte-for-byte",
+    "source_snapshots": "not merged",
+    "foreign_archives": "not overwritten",
+    "test_assertions": "old schedule assertions retained; two new Planner cases added",
+    "deletions": 0,
+    "new_agents": 0
+  },
+  "remaining": [
+    "Full path/overlap disposition for the eight source heads",
+    "Bounded dependency review before further intake",
+    "Owner findings for all 14 prior typecheck diagnostics",
+    "AM01-AM06, three independent reviews, final C and D qualification remain with S0"
+  ],
+  "global_release": false
+}

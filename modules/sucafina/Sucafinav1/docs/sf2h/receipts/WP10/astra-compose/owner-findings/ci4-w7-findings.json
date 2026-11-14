@@ -1,0 +1,290 @@
+{
+  "schema": "astra-compose-ci4-findings-v1",
+  "scope": "STATIC_DIAGNOSIS_AND_OWNER_PATCH_ONLY",
+  "repository": "gustavomhss/Orchestra-SF",
+  "product": {
+    "head": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+    "tree": "2a61f73fc5bf404501d61f71f552861f5e1338e1"
+  },
+  "evidence": {
+    "run": 43584781236,
+    "job": 132416826537,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43584781236/job/132416826537",
+    "log": "evidence/ci4.log",
+    "log_sha256": "39ae77af90bcf8eda4e6bcabbb6112ceb5dd5233895484832dc018f304bbb6c2"
+  },
+  "source_proofs": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts",
+      "head": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "tree": "2a61f73fc5bf404501d61f71f552861f5e1338e1",
+      "blob": "dc480a2e1e343e7f2a8844a3c23ec9f06582d5ad",
+      "sha256": "ba2291fdcb64f5f4d8503da6c6dfa12c1bf268364b15bc576fa5519ea862d9fe",
+      "mcp_verified": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "head": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "tree": "2a61f73fc5bf404501d61f71f552861f5e1338e1",
+      "blob": "2fd55c7304add0829d7434917c80664fe86356b9",
+      "sha256": "de25a3d2c5fc8725debb538ec0efb45b3a3c986ff478156cce734038f87d7268",
+      "mcp_verified": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/dashboard-decisions.ts",
+      "head": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "tree": "2a61f73fc5bf404501d61f71f552861f5e1338e1",
+      "blob": "f8914c141ba5c72439f5fdba50e9153c4cd477d4",
+      "sha256": "066292b447d006f9f442e96ec95875a0c1cad6e43deedd3373e3bf829da7a574",
+      "mcp_verified": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/dashboard-services.ts",
+      "head": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "tree": "2a61f73fc5bf404501d61f71f552861f5e1338e1",
+      "blob": "0891d178833165fff098e3c05f3a64c5f5b35043",
+      "sha256": "7a44e3ebca4ecc31bca3e4842c09f2e31fff0bb24523d869fbcc7e1125e40611",
+      "mcp_verified": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery-fixture.ts",
+      "head": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "tree": "2a61f73fc5bf404501d61f71f552861f5e1338e1",
+      "blob": "593a46dad67e490dcfdd4fdc1878353088138dc7",
+      "sha256": "7f1d7b9c8f527f2298d6f0ce3fa76350bd400e2bb42cd0bb9578cbdafeecda28",
+      "mcp_verified": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/real-review-fixture.ts",
+      "head": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "tree": "2a61f73fc5bf404501d61f71f552861f5e1338e1",
+      "blob": "c0017ee1b77d218972dc05a3eeb0edec0203997f",
+      "sha256": "cf4b11907fc836c64be7aedfd66a524303b3ccb1ce24f4b79655cd41191d7b10",
+      "mcp_verified": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+      "head": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "tree": "2a61f73fc5bf404501d61f71f552861f5e1338e1",
+      "blob": "922358d17c470c16b43076510bdf04744e2306e4",
+      "sha256": "94f28f541f238aba4542f3b77259effcf4817ed22756a3a9895953605a4ec5d6",
+      "mcp_verified": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+      "head": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "tree": "2a61f73fc5bf404501d61f71f552861f5e1338e1",
+      "blob": "9ef6d197759bbfb9513cce5118c93c08ac797303",
+      "sha256": "a0e63b0c46001df807f9d56fa01f83d10ecc70cc69aca35a76b58f3c6c4c8b52",
+      "mcp_verified": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-coverage.ts",
+      "head": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "tree": "2a61f73fc5bf404501d61f71f552861f5e1338e1",
+      "blob": "d8a668281ea9cac6a3a04c6bea19811ee8954808",
+      "sha256": "82f97205f8a1758a71cb4a2708baeee88abbef2e74ef261094c34a483790fd45",
+      "mcp_verified": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "head": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "tree": "2a61f73fc5bf404501d61f71f552861f5e1338e1",
+      "blob": "c434de513cb7ceae4acad1fc595e776785ec85af",
+      "sha256": "37b52ca56bf3ad3fce18e642ee4fe8ff30e8955a116f71bbf22b12e971abaf18",
+      "mcp_verified": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-services.ts",
+      "head": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "tree": "2a61f73fc5bf404501d61f71f552861f5e1338e1",
+      "blob": "83c525e733b2cb21637734e3b1e07950e72f4f97",
+      "sha256": "034f02c64c3da409c8117530e0eaf80071f5c9ba69228c53c09561d0a3b0d149",
+      "mcp_verified": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "head": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "tree": "2a61f73fc5bf404501d61f71f552861f5e1338e1",
+      "blob": "d7d8eb3ca267551797b191ccfb1d037149757898",
+      "sha256": "2ddd4c7f64c24e781b5914cec322b0efa3ee0aa02c5f9b27cdd61271bb17fd5d",
+      "mcp_verified": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-request-store.ts",
+      "head": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "tree": "2a61f73fc5bf404501d61f71f552861f5e1338e1",
+      "blob": "0d677d2d0b3a9df7127f13b25fe3968757f0dceb",
+      "sha256": "8d2164156cb51c038c77bf08ddeda0f7298e429075f8213041c4c2cdc1f20b47",
+      "mcp_verified": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-call-scope.test.ts",
+      "head": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "tree": "2a61f73fc5bf404501d61f71f552861f5e1338e1",
+      "blob": "524eb3fe1bb2b723a983258290e099fb84768125",
+      "sha256": "a8c2fec9dd73336f52062c5351b2cf1dcdd9510ef00ad5ff8ea83e14635d2119",
+      "mcp_verified": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-case-access.test.ts",
+      "head": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "tree": "2a61f73fc5bf404501d61f71f552861f5e1338e1",
+      "blob": "c2cd2484272e2f1fff369358e0438bbcae9f44bf",
+      "sha256": "539b1b5dac98a0fdf705b91047e1f109bf03eb1f95ee77f2afefb4126df84af7",
+      "mcp_verified": true
+    }
+  ],
+  "findings": [
+    {
+      "id": "CI4-HOT-TOPIC-DOMAIN-SNAPSHOT",
+      "owner": "WP11 / Finance #35",
+      "consumers": [
+        "WP01 shared apply",
+        "WP02 Dashboard"
+      ],
+      "status": "PUBLISHED_TO_OWNER_PROPOSED_PATCH_NOT_APPLIED",
+      "observed": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/real-review-fixture.ts",
+        "line": 17,
+        "http_status": 409,
+        "reason": "hot-topic-draft-unavailable",
+        "log_line": 908,
+        "stage": "first draft, before review/apply"
+      },
+      "cause_static": "Store requests domainSurface planner; C08 passes snapshots.planner to callback; actual Dashboard callback verifies Dashboard source scopes in that snapshot and fails for the real Dashboard source. Callback preview maps to conflict/hot-topic-draft-unavailable. Internal callback return was not separately logged; static defect independently exists.",
+      "contract_check": "Store.valid fixes target.surface=dashboard and type=hotTopics. createDecisionHostProduct delegates specifically to verifyHotTopicSourcesLocked, not a generic Planner verifier.",
+      "proposed_patch": {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts",
+        "base_blob": "dc480a2e1e343e7f2a8844a3c23ec9f06582d5ad",
+        "new_blob": "5e0b80a470958dd201db4283bde96d594935e68d",
+        "patch": "incoming-cache/ci4-hot-topic-domain-owner.patch",
+        "full_payload": "incoming-cache/ci4-hot-topic-domain-proposed-payload.json",
+        "change": "domainSurface planner → dashboard only"
+      },
+      "preserved": [
+        "transactionAll with all-surface lock",
+        "preferences and cases version/CAS",
+        "target/incarnation",
+        "human edit authority",
+        "proposalCoverageWrites callback identity",
+        "request/record digests",
+        "idempotency",
+        "source freshness",
+        "egress authorization"
+      ],
+      "owner_latest_observed_at_comment": "fe13ee693bdcec1830190bcdb5cc7f2794942c1f",
+      "owner_blob_at_observation": "dc480a2e1e343e7f2a8844a3c23ec9f06582d5ad",
+      "comments": [
+        "https://github.com/gustavomhss/Orchestra-SF/pull/35#issuecomment-6875917412",
+        "https://github.com/gustavomhss/Orchestra-SF/pull/31#issuecomment-6875919621"
+      ],
+      "proposed_actions_tests": [
+        "Owner publishes narrow patch; integrate exact published blob.",
+        "Actions affected decision-mutations.test.ts and real WP02 draft/recovery selectors preserving browser startup/finalizer ordering.",
+        "Real C08 snapshot-boundary regression: Dashboard snapshot observed; stale/changed source still denied.",
+        "bun typecheck in package; guards per AGENTS/CI.md."
+      ],
+      "tests_executed_by_this_analysis": false
+    },
+    {
+      "id": "CI4-BI-NOOP-PROMOTION-PROOF-GAP",
+      "owner": "WP11 mutation caller / WP10 portfolio coverage seam",
+      "status": "STATIC_DEFECT_CONFIRMED_RUNTIME_BRANCH_AWAITS_BODY",
+      "observed": {
+        "affected": 7,
+        "test_files": [
+          "test/product/wp10/integration/bi-case-access.test.ts",
+          "test/product/wp10/integration/bi-call-scope.test.ts"
+        ],
+        "http_status": 409,
+        "phase": "promotion.0",
+        "response_body_available": false,
+        "phase_observations": [
+          {
+            "fixture": "bi-case-access",
+            "phase": "promotion.0",
+            "state": "returned",
+            "phaseMs": 1843,
+            "elapsedMs": 2811,
+            "aborted": false
+          },
+          {
+            "fixture": "bi-call-scope-identity",
+            "phase": "promotion.0",
+            "state": "returned",
+            "phaseMs": 1838,
+            "elapsedMs": 2781,
+            "aborted": false
+          },
+          {
+            "fixture": "bi-call-scope-lexical",
+            "phase": "promotion.0",
+            "state": "returned",
+            "phaseMs": 1824,
+            "elapsedMs": 2801,
+            "aborted": false
+          },
+          {
+            "fixture": "bi-call-scope-state",
+            "phase": "promotion.0",
+            "state": "returned",
+            "phaseMs": 1842,
+            "elapsedMs": 2819,
+            "aborted": false
+          },
+          {
+            "fixture": "bi-call-scope-sources",
+            "phase": "promotion.0",
+            "state": "returned",
+            "phaseMs": 1839,
+            "elapsedMs": 2768,
+            "aborted": false
+          },
+          {
+            "fixture": "bi-call-scope-egress",
+            "phase": "promotion.0",
+            "state": "returned",
+            "phaseMs": 1811,
+            "elapsedMs": 2762,
+            "aborted": false
+          },
+          {
+            "fixture": "bi-source-http-egress",
+            "phase": "promotion.0",
+            "state": "returned",
+            "phaseMs": 1860,
+            "elapsedMs": 2799,
+            "aborted": false
+          }
+        ],
+        "stage": "before comparison/BI consumption"
+      },
+      "static_path": [
+        "No-op source scenario returns the actual assessment unchanged.",
+        "mutations.addAlternative compares scenario.costCoverage to coverage.assessment and skips coverageEvidence.entries when equal.",
+        "portfolio-coverage emits proofs only inside entries.",
+        "saveCase always invokes sourceFence when coverageEvidence exists; portfolio.verifySnapshot requires proof; missing proof yields preview and mutation failure maps to conflict/case-changed."
+      ],
+      "excluded_candidates": [
+        "New readHistorical result/request branches are not called by the first no-op promotion, which writes its result directly in saveCase.",
+        "C17 recordOnly verifier is not reached by these source-only inputs before first promotion.",
+        "Timing alone cannot establish cause or transfer source-f075 passes."
+      ],
+      "coordination": "composition_wp10 confirmed call graph and owns detailed mutation patch; contracts_wp00 adds bounded actual HTTP failure body diagnostics to two own test fixtures without modifying inputs/permissions/assertion.",
+      "owner_comment": "https://github.com/gustavomhss/Orchestra-SF/pull/35#issuecomment-6875919952",
+      "remedy_constraints": [
+        "Never accept absent proof or bypass verifySnapshot.",
+        "Acquire proof before commit for unchanged coverage too.",
+        "Do not only call entries then retain an unequal attributed result: canonical reassessment can reorder evaluated refs; final expected result must match.",
+        "Financial amounts/components/currency/horizon stay producer-authored."
+      ],
+      "tests_executed_by_this_analysis": false
+    }
+  ],
+  "worktree_source_edits": false,
+  "test_edits": false,
+  "ci_edits_or_dispatch": false,
+  "independent_final_review": false,
+  "global_release_claim": false
+}

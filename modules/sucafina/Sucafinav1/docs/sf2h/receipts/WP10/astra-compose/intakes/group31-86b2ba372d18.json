@@ -1,0 +1,652 @@
+{
+  "schema": "sf2-astra-group31-newer-intake-v1",
+  "repository": "gustavomhss/Orchestra-SF",
+  "observed_at_utc": "2026-11-14T09:42:29.771218+00:00",
+  "source": {
+    "pr": 31,
+    "head": "86b2ba372d187d229820015d8311a0dd54a2c5d5",
+    "tree": "9f6ecfd420189dad05fc8a5557f2cf84192da5da",
+    "sucafina_tree": "ec7b5b0aa8e287082da77811d3bfc9e038f2cc6d",
+    "tree_entries": 793,
+    "truncated": false,
+    "direct_parent": "b13b28a8c8843b1c1b8cd81a3c7e627e700287de",
+    "source_base": "e5afff327dc64735bbd8a646124570a0c97a9c6b",
+    "delta_commits": [
+      "b13b28a8c8843b1c1b8cd81a3c7e627e700287de",
+      "86b2ba372d187d229820015d8311a0dd54a2c5d5"
+    ]
+  },
+  "comparison": {
+    "pr": 32,
+    "head": "4306b310e4d6dac77f9beab461adad4e8e924849",
+    "tree": "b786e0cee23f13c11542cea32db38ef532071576",
+    "pending_manifest": "incoming-cache/accepted-group31-next.json",
+    "method": "Complete direct immutable source tree; 2-commit e5->86 compare; all 9 candidate content hashes verified. Three exact paths supersede pending e5 entries; remaining accepted path bases equal materialized published W4. No snapshot or foreign deletion import."
+  },
+  "summary": {
+    "eligible_paths": 7,
+    "source_paths": 1,
+    "test_fixture_paths": 6,
+    "guide_paths": 0,
+    "deferred_paths": 2,
+    "superseded_pending_e5_paths": 3,
+    "combined_with_prior_e5_unique_paths": 17,
+    "product_deletions_selected": 0,
+    "source_conflicts": 0,
+    "local_product_tests": false,
+    "remote_test_dispatch": false,
+    "remote_owner_branch_mutations": false
+  },
+  "accepted": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts",
+      "blob": "bad4b08050949eb7cde69615b131649f1c0bcad7",
+      "pin": "86b2ba372d187d229820015d8311a0dd54a2c5d5",
+      "head": "86b2ba372d187d229820015d8311a0dd54a2c5d5",
+      "tree": "9f6ecfd420189dad05fc8a5557f2cf84192da5da",
+      "pr": 31,
+      "base_head": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "base_tree": "b786e0cee23f13c11542cea32db38ef532071576",
+      "target_blob_at_wp10": "e45c51206b6011baf7f6fb952c4f6e916d0a98d9",
+      "source_base_head": "e5afff327dc64735bbd8a646124570a0c97a9c6b",
+      "source_base_blob": "bfb9859c3ec6c8e415ef86bac796689fa62de4fd",
+      "pending_e5_blob_superseded": "bfb9859c3ec6c8e415ef86bac796689fa62de4fd",
+      "content_sha256": "b32b5963660795b8f0f41e857b97fcd613d0e83f4e7e99a3f8a1d1c0ae74ea6c",
+      "content_blob_verified": true,
+      "staged_source": "/workspace/scratch/4c48b09c5c29/incoming-cache/group31-newer-src/modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts",
+      "operation": "copy_exact_blob_only",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/86b2ba372d187d229820015d8311a0dd54a2c5d5/modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts",
+      "target_proof_status": "NOT_REVALIDATED",
+      "upstream_pass_transferred": false,
+      "owner": "WP02",
+      "atomic_group": "dashboard-recovery-real-authority",
+      "why": "Dirty/pending recovery requires the original case and draft/source identity still authorized. Denied post-commit responses retain the immutable retry attempt; deletion or replacement clears private content.",
+      "disposition": "ELIGIBLE_FOR_SCOPED_COMPOSITION"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts",
+      "blob": "67d9ca1c8b880d555f90a1aef227a78e5b9170e8",
+      "pin": "86b2ba372d187d229820015d8311a0dd54a2c5d5",
+      "head": "86b2ba372d187d229820015d8311a0dd54a2c5d5",
+      "tree": "9f6ecfd420189dad05fc8a5557f2cf84192da5da",
+      "pr": 31,
+      "base_head": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "base_tree": "b786e0cee23f13c11542cea32db38ef532071576",
+      "target_blob_at_wp10": "3a747f523a1705fdf32146e95e5c1571fbb9a88b",
+      "source_base_head": "e5afff327dc64735bbd8a646124570a0c97a9c6b",
+      "source_base_blob": "3a747f523a1705fdf32146e95e5c1571fbb9a88b",
+      "pending_e5_blob_superseded": null,
+      "content_sha256": "7a1e5bece6cea161d7b785a14a696d7145772b001b7cb4a7bcf96aa0734a0109",
+      "content_blob_verified": true,
+      "staged_source": "/workspace/scratch/4c48b09c5c29/incoming-cache/group31-newer-src/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts",
+      "operation": "copy_exact_blob_only",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/86b2ba372d187d229820015d8311a0dd54a2c5d5/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts",
+      "target_proof_status": "NOT_REVALIDATED",
+      "upstream_pass_transferred": false,
+      "owner": "WP01",
+      "atomic_group": "node-owned-browser-pool",
+      "why": "One exclusive-lease pool consumes the published WP02 Node/AppProcess driver; caller deadline cancels owned acquisition and finalizer verifies actual browser PID exit.",
+      "disposition": "ELIGIBLE_FOR_SCOPED_COMPOSITION"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "blob": "260151909d86dfc77f6dc3229b660e63e5745033",
+      "pin": "86b2ba372d187d229820015d8311a0dd54a2c5d5",
+      "head": "86b2ba372d187d229820015d8311a0dd54a2c5d5",
+      "tree": "9f6ecfd420189dad05fc8a5557f2cf84192da5da",
+      "pr": 31,
+      "base_head": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "base_tree": "b786e0cee23f13c11542cea32db38ef532071576",
+      "target_blob_at_wp10": "ee88e46d2633ff3dcdd53470c9cbaed2aac4ddd3",
+      "source_base_head": "e5afff327dc64735bbd8a646124570a0c97a9c6b",
+      "source_base_blob": "ee88e46d2633ff3dcdd53470c9cbaed2aac4ddd3",
+      "pending_e5_blob_superseded": null,
+      "content_sha256": "db0ea9a106a32299366670c41ce6275eb26fce705aa0f1f41449f42498d7356b",
+      "content_blob_verified": true,
+      "staged_source": "/workspace/scratch/4c48b09c5c29/incoming-cache/group31-newer-src/modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "operation": "copy_exact_blob_only",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/86b2ba372d187d229820015d8311a0dd54a2c5d5/modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "target_proof_status": "NOT_REVALIDATED",
+      "upstream_pass_transferred": false,
+      "owner": "WP01",
+      "atomic_group": "node-owned-browser-pool",
+      "why": "The last selected test verifies one launch, balanced leases, zero contexts, disconnect, driver closure and actual browser process exit before proof is emitted.",
+      "disposition": "ELIGIBLE_FOR_SCOPED_COMPOSITION"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "blob": "6952098674a027afafb11ff9cdf6d942580c4149",
+      "pin": "86b2ba372d187d229820015d8311a0dd54a2c5d5",
+      "head": "86b2ba372d187d229820015d8311a0dd54a2c5d5",
+      "tree": "9f6ecfd420189dad05fc8a5557f2cf84192da5da",
+      "pr": 31,
+      "base_head": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "base_tree": "b786e0cee23f13c11542cea32db38ef532071576",
+      "target_blob_at_wp10": null,
+      "source_base_head": "e5afff327dc64735bbd8a646124570a0c97a9c6b",
+      "source_base_blob": null,
+      "pending_e5_blob_superseded": null,
+      "content_sha256": "aab192f98e0796f149a8a45b728ac533e23975b701cc4e7e2713a8fa208bb90e",
+      "content_blob_verified": true,
+      "staged_source": "/workspace/scratch/4c48b09c5c29/incoming-cache/group31-newer-src/modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "operation": "copy_exact_blob_only",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/86b2ba372d187d229820015d8311a0dd54a2c5d5/modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "target_proof_status": "NOT_REVALIDATED",
+      "upstream_pass_transferred": false,
+      "owner": "WP01",
+      "atomic_group": "node-owned-browser-pool",
+      "why": "The first explicit selected test declares its own spawn expectation and starts exactly one browser before consumers.",
+      "disposition": "ELIGIBLE_FOR_SCOPED_COMPOSITION"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts",
+      "blob": "e476274c6d997a3e305cdf7c139cc3e03430890e",
+      "pin": "86b2ba372d187d229820015d8311a0dd54a2c5d5",
+      "head": "86b2ba372d187d229820015d8311a0dd54a2c5d5",
+      "tree": "9f6ecfd420189dad05fc8a5557f2cf84192da5da",
+      "pr": 31,
+      "base_head": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "base_tree": "b786e0cee23f13c11542cea32db38ef532071576",
+      "target_blob_at_wp10": "87fd7e777622555054ac807c9444796e4d309fa4",
+      "source_base_head": "e5afff327dc64735bbd8a646124570a0c97a9c6b",
+      "source_base_blob": "52dbc91951643be61d518ed2f9a80749790268f7",
+      "pending_e5_blob_superseded": "52dbc91951643be61d518ed2f9a80749790268f7",
+      "content_sha256": "bb3b376b79728bdad7ec0bb3520f717c82b5de275b5ba96c405937bdd1d98deb",
+      "content_blob_verified": true,
+      "staged_source": "/workspace/scratch/4c48b09c5c29/incoming-cache/group31-newer-src/modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts",
+      "operation": "copy_exact_blob_only",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/86b2ba372d187d229820015d8311a0dd54a2c5d5/modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts",
+      "target_proof_status": "NOT_REVALIDATED",
+      "upstream_pass_transferred": false,
+      "owner": "WP02",
+      "atomic_group": "node-owned-browser-pool",
+      "why": "Adds optional cancellation/deadline ownership and phase diagnostics without changing existing callers; failure aborts and awaits AppProcess cleanup.",
+      "disposition": "ELIGIBLE_FOR_SCOPED_COMPOSITION"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery-fixture.ts",
+      "blob": "593a46dad67e490dcfdd4fdc1878353088138dc7",
+      "pin": "86b2ba372d187d229820015d8311a0dd54a2c5d5",
+      "head": "86b2ba372d187d229820015d8311a0dd54a2c5d5",
+      "tree": "9f6ecfd420189dad05fc8a5557f2cf84192da5da",
+      "pr": 31,
+      "base_head": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "base_tree": "b786e0cee23f13c11542cea32db38ef532071576",
+      "target_blob_at_wp10": "b82a5800470641ff1298475f0189882c38299b5e",
+      "source_base_head": "e5afff327dc64735bbd8a646124570a0c97a9c6b",
+      "source_base_blob": "b82a5800470641ff1298475f0189882c38299b5e",
+      "pending_e5_blob_superseded": null,
+      "content_sha256": "7f1d7b9c8f527f2298d6f0ce3fa76350bd400e2bb42cd0bb9578cbdafeecda28",
+      "content_blob_verified": true,
+      "staged_source": "/workspace/scratch/4c48b09c5c29/incoming-cache/group31-newer-src/modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery-fixture.ts",
+      "operation": "copy_exact_blob_only",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/86b2ba372d187d229820015d8311a0dd54a2c5d5/modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery-fixture.ts",
+      "target_proof_status": "NOT_REVALIDATED",
+      "upstream_pass_transferred": false,
+      "owner": "WP02",
+      "atomic_group": "dashboard-recovery-real-authority",
+      "why": "Replaces synthetic fresh-only BusinessContext with the real createSfBusinessServices, resident bundle/Atlas initialization, Dashboard decisions and disposal. Current target keeps procurement writes optional.",
+      "disposition": "ELIGIBLE_FOR_SCOPED_COMPOSITION"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+      "blob": "e6c22b6df3ec47ebc7dff5c745514da94d0d53a2",
+      "pin": "86b2ba372d187d229820015d8311a0dd54a2c5d5",
+      "head": "86b2ba372d187d229820015d8311a0dd54a2c5d5",
+      "tree": "9f6ecfd420189dad05fc8a5557f2cf84192da5da",
+      "pr": 31,
+      "base_head": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "base_tree": "b786e0cee23f13c11542cea32db38ef532071576",
+      "target_blob_at_wp10": "8d6a9c0a38497ab6842060828ba6307471b647ae",
+      "source_base_head": "e5afff327dc64735bbd8a646124570a0c97a9c6b",
+      "source_base_blob": "c473886b3ee00e7b6463733718c3e9f9fda6a68c",
+      "pending_e5_blob_superseded": "c473886b3ee00e7b6463733718c3e9f9fda6a68c",
+      "content_sha256": "23d3b05c7bf5654f04242f4f6f23f62d95b51ae1cf0cfe342cdb62b4ae37cbbb",
+      "content_blob_verified": true,
+      "staged_source": "/workspace/scratch/4c48b09c5c29/incoming-cache/group31-newer-src/modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+      "operation": "copy_exact_blob_only",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/86b2ba372d187d229820015d8311a0dd54a2c5d5/modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+      "target_proof_status": "NOT_REVALIDATED",
+      "upstream_pass_transferred": false,
+      "owner": "WP02",
+      "atomic_group": "dashboard-recovery-real-authority",
+      "why": "Exercises real host post-commit denial/retry and privacy purge after canonical delete or source replacement with the same public id. It imports the real composition fixture.",
+      "disposition": "ELIGIBLE_FOR_SCOPED_COMPOSITION"
+    }
+  ],
+  "deferred": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/README.md",
+      "blob": "480513d0bbb50f4c05c3997fb31541fedac14361",
+      "pin": "86b2ba372d187d229820015d8311a0dd54a2c5d5",
+      "head": "86b2ba372d187d229820015d8311a0dd54a2c5d5",
+      "tree": "9f6ecfd420189dad05fc8a5557f2cf84192da5da",
+      "pr": 31,
+      "base_head": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "base_tree": "b786e0cee23f13c11542cea32db38ef532071576",
+      "target_blob_at_wp10": null,
+      "source_base_head": "e5afff327dc64735bbd8a646124570a0c97a9c6b",
+      "source_base_blob": null,
+      "pending_e5_blob_superseded": null,
+      "content_sha256": "6ea30d8eb1f21237eb5591e3fb72b5fa941d24eaba9d75bf8264cb5c069c4ff4",
+      "content_blob_verified": true,
+      "staged_source": "/workspace/scratch/4c48b09c5c29/incoming-cache/group31-newer-src/modules/sucafina/Sucafinav1/test/product/wp01/README.md",
+      "operation": "copy_exact_blob_only",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/86b2ba372d187d229820015d8311a0dd54a2c5d5/modules/sucafina/Sucafinav1/test/product/wp01/README.md",
+      "target_proof_status": "NOT_REVALIDATED",
+      "upstream_pass_transferred": false,
+      "owner": "WP01",
+      "disposition": "DEFERRED_EXACT_SOURCE_PRESERVED",
+      "why": "Guide lists the new meeting-number.test.ts in its 18-consumer selection. Hold it with that deferred test so the composed tree does not publish an executable selection containing an absent path. Browser selection requirements are recorded in this integration receipt."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/meeting-number.test.ts",
+      "blob": "d2be5cbe5badb21c1be6a4cfa19683c3a58cfa51",
+      "pin": "86b2ba372d187d229820015d8311a0dd54a2c5d5",
+      "head": "86b2ba372d187d229820015d8311a0dd54a2c5d5",
+      "tree": "9f6ecfd420189dad05fc8a5557f2cf84192da5da",
+      "pr": 31,
+      "base_head": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "base_tree": "b786e0cee23f13c11542cea32db38ef532071576",
+      "target_blob_at_wp10": null,
+      "source_base_head": "e5afff327dc64735bbd8a646124570a0c97a9c6b",
+      "source_base_blob": null,
+      "pending_e5_blob_superseded": null,
+      "content_sha256": "8aa300fdf26d0e717976bfc9db3d57c67aa4dda7d09685f4cb462748c0566af2",
+      "content_blob_verified": true,
+      "staged_source": "/workspace/scratch/4c48b09c5c29/incoming-cache/group31-newer-src/modules/sucafina/Sucafinav1/test/product/wp01/meeting-number.test.ts",
+      "operation": "copy_exact_blob_only",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/86b2ba372d187d229820015d8311a0dd54a2c5d5/modules/sucafina/Sucafinav1/test/product/wp01/meeting-number.test.ts",
+      "target_proof_status": "NOT_REVALIDATED",
+      "upstream_pass_transferred": false,
+      "owner": "WP01",
+      "disposition": "DEFERRED_EXACT_SOURCE_PRESERVED",
+      "why": "Known two TS2769 failures at lines 76 and 139: unknown capture.captureId passed to expect<string|null>. Exact blob remains identical to the checked b13 source. Owner must narrow/validate the capture id; no foreign source edit or suppression accepted.",
+      "source_check": {
+        "run_id": 43580186410,
+        "job_id": 132403043627,
+        "product_head": "b13b28a8c8843b1c1b8cd81a3c7e627e700287de",
+        "blob_unchanged_at_candidate": true
+      }
+    }
+  ],
+  "excluded": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/findings/work-selection.md",
+      "blob": "3c4d9a255199d33d1a22abeb042149ec25e38cde",
+      "reason": "Owner receipts/findings retained as evidence only; no wholesale receipts/control import."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43578288307.json",
+      "blob": "4ef9c9848933608f9acf91799d1a6878519fccc7",
+      "reason": "Owner receipts/findings retained as evidence only; no wholesale receipts/control import."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43578288307.request.json",
+      "blob": "3c20002402daf8bd9e97fac307141b9355ed682c",
+      "reason": "Owner receipts/findings retained as evidence only; no wholesale receipts/control import."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/astra-interface/findings/c12-evidence-routing.md",
+      "blob": "70c9d7e542a8d7bae234386e7378a104db66430e",
+      "reason": "Owner receipts/findings retained as evidence only; no wholesale receipts/control import."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/astra-interface/findings/drafts-and-source-continuity.md",
+      "blob": "8366b415874182b6b08494955ee2596f5291bc04",
+      "reason": "Owner receipts/findings retained as evidence only; no wholesale receipts/control import."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/astra-interface/findings/preserved-meeting-history.md",
+      "blob": "ae82af58c33362b4e5125650fadc81bd10227780",
+      "reason": "Owner receipts/findings retained as evidence only; no wholesale receipts/control import."
+    }
+  ],
+  "local_validation": {
+    "content_checks": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts",
+        "blob_verified": true,
+        "source_tree_match": true,
+        "base_unchanged_or_pending_e5_exact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/README.md",
+        "blob_verified": true,
+        "source_tree_match": true,
+        "base_unchanged_or_pending_e5_exact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts",
+        "blob_verified": true,
+        "source_tree_match": true,
+        "base_unchanged_or_pending_e5_exact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+        "blob_verified": true,
+        "source_tree_match": true,
+        "base_unchanged_or_pending_e5_exact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+        "blob_verified": true,
+        "source_tree_match": true,
+        "base_unchanged_or_pending_e5_exact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/meeting-number.test.ts",
+        "blob_verified": true,
+        "source_tree_match": true,
+        "base_unchanged_or_pending_e5_exact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts",
+        "blob_verified": true,
+        "source_tree_match": true,
+        "base_unchanged_or_pending_e5_exact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery-fixture.ts",
+        "blob_verified": true,
+        "source_tree_match": true,
+        "base_unchanged_or_pending_e5_exact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+        "blob_verified": true,
+        "source_tree_match": true,
+        "base_unchanged_or_pending_e5_exact": true
+      }
+    ],
+    "relative_imports_all_candidates": 30,
+    "relative_imports_accepted": 27,
+    "unresolved_relative_imports": 0,
+    "imports": [
+      {
+        "from": "modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts",
+        "specifier": "../wp02/browser-driver-fixture.ts",
+        "path": "modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts",
+        "source": "newer"
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+        "specifier": "./browser-fixture.ts",
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts",
+        "source": "newer"
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+        "specifier": "./browser-fixture.ts",
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts",
+        "source": "newer"
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts",
+        "specifier": "../../../runtime/contract.ts",
+        "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+        "source": "current-worktree"
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery-fixture.ts",
+        "specifier": "../../../index.ts",
+        "path": "modules/sucafina/Sucafinav1/index.ts",
+        "source": "current-worktree"
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery-fixture.ts",
+        "specifier": "../../../runtime/local-store.ts",
+        "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "source": "current-worktree"
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery-fixture.ts",
+        "specifier": "../../../runtime/operator-identity.ts",
+        "path": "modules/sucafina/Sucafinav1/runtime/operator-identity.ts",
+        "source": "current-worktree"
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery-fixture.ts",
+        "specifier": "../../../product/integration/source-lifecycle.ts",
+        "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+        "source": "current-worktree"
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery-fixture.ts",
+        "specifier": "../../../product/integration/source-inventory.ts",
+        "path": "modules/sucafina/Sucafinav1/product/integration/source-inventory.ts",
+        "source": "current-worktree"
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery-fixture.ts",
+        "specifier": "../../../product/integration/source-projections.ts",
+        "path": "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+        "source": "current-worktree"
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery-fixture.ts",
+        "specifier": "../../../product/integration/product-authority.ts",
+        "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+        "source": "current-worktree"
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery-fixture.ts",
+        "specifier": "../../../product/decisions/choice.ts",
+        "path": "modules/sucafina/Sucafinav1/product/decisions/choice.ts",
+        "source": "current-worktree"
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery-fixture.ts",
+        "specifier": "../../../product/interface/html.ts",
+        "path": "modules/sucafina/Sucafinav1/product/interface/html.ts",
+        "source": "current-worktree"
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery-fixture.ts",
+        "specifier": "../../../product/contracts/canonical.ts",
+        "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+        "source": "current-worktree"
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery-fixture.ts",
+        "specifier": "../../../product/contracts/decisions.ts",
+        "path": "modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+        "source": "current-worktree"
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery-fixture.ts",
+        "specifier": "../../../product/contracts/sf-execution.ts",
+        "path": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+        "source": "current-worktree"
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery-fixture.ts",
+        "specifier": "../../../product/decisions/hot-topic-draft.ts",
+        "path": "modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts",
+        "source": "current-worktree"
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery-fixture.ts",
+        "specifier": "../../../../../atlas/boundary/package.json",
+        "path": "modules/atlas/boundary/package.json",
+        "source": "exact-target-mcp-file",
+        "blob": "6a5e7bddf5b9ea31dd0fb795f38be4fc98a231b7",
+        "head": "4306b310e4d6dac77f9beab461adad4e8e924849",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/4306b310e4d6dac77f9beab461adad4e8e924849/modules/atlas/boundary/package.json"
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery-fixture.ts",
+        "specifier": "../../../product/contracts/freeze-v1.json",
+        "path": "modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json",
+        "source": "current-worktree"
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery-fixture.ts",
+        "specifier": "../../../product/ai/resident.ts",
+        "path": "modules/sucafina/Sucafinav1/product/ai/resident.ts",
+        "source": "current-worktree"
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery-fixture.ts",
+        "specifier": "../../../../../../apps/cli/src/sucafina-product/business-services.ts",
+        "path": "apps/cli/src/sucafina-product/business-services.ts",
+        "source": "current-worktree"
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery-fixture.ts",
+        "specifier": "../../../../../../apps/cli/src/sucafina-product/dashboard-http.ts",
+        "path": "apps/cli/src/sucafina-product/dashboard-http.ts",
+        "source": "current-worktree"
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+        "specifier": "../../../runtime/contract.ts",
+        "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+        "source": "current-worktree"
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+        "specifier": "../../../product/contracts/canonical.ts",
+        "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+        "source": "current-worktree"
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+        "specifier": "../../../product/integration/source-lifecycle.ts",
+        "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+        "source": "current-worktree"
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+        "specifier": "./browser-driver-fixture.ts",
+        "path": "modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts",
+        "source": "newer"
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+        "specifier": "./workbench-recovery-fixture.ts",
+        "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery-fixture.ts",
+        "source": "newer"
+      }
+    ],
+    "method": "Static source inspection, exact blob hashing and relative path closure only; no product execution."
+  },
+  "source_evidence": {
+    "schema": "sf2-astra-group31-newer-proof-v1",
+    "scope": "Source browser startup/preview/lifecycle only; not recovery, C05, native residents, composed target or global release.",
+    "product_head": "86b2ba372d187d229820015d8311a0dd54a2c5d5",
+    "product_tree": "9f6ecfd420189dad05fc8a5557f2cf84192da5da",
+    "run_id": 43581283802,
+    "job_id": 132406342669,
+    "status": "completed",
+    "conclusion": "success",
+    "snapshot_sha": "1b122b629d4b407f783f329ecc5fbb9d14b320a4",
+    "snapshot_tree": "54aec8a62a5f679b24156960d385386257a09484",
+    "snapshot_parent_verified": true,
+    "snapshot_delta": [
+      ".ci-run.json"
+    ],
+    "request_blob": "cabd199f198840f4b1097dc9467c28bb4561f073",
+    "request_sha256": "771bab2e7dfe3fbea29a5bd0495714a3fe8b5d0f0ec63665c40b304c5e9cba57",
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "packageSelector": "packages/sucafina",
+      "runner": "bun",
+      "args": [
+        "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+        "./Sucafinav1/test/product/wp01/preview-browser.test.ts",
+        "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "env": {
+        "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+      }
+    },
+    "tests_passed": 6,
+    "tests_failed": 0,
+    "selected_files": 3,
+    "browser_observations": {
+      "runtime": "Node 24.22.2",
+      "bun": "1.3.14",
+      "playwright": "1.59.1",
+      "browser": "157.0.8103.50",
+      "pool_driver_pid": 4269,
+      "pool_browser_pid": 4284,
+      "preview_driver_pid": 4440,
+      "preview_browser_pid": 4455,
+      "owned_spawn_boundary": "AppProcess",
+      "clean_exit_and_transport_reported": true,
+      "omni_positive_control": "2 declared tests, 2 Omni spawns, 0 delegated"
+    },
+    "log_file": "incoming-cache/group31-newer-run.log",
+    "log_sha256": "577d02a8ce48df4700ace1a725173eba720bb4cf752d43f6896e3af7dfa07dc3",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43581283802",
+    "source_typecheck": {
+      "run_id": 43580186410,
+      "job_id": 132403043627,
+      "head": "b13b28a8c8843b1c1b8cd81a3c7e627e700287de",
+      "conclusion": "failure",
+      "sucafina_errors": 2,
+      "cli_errors": 12,
+      "guards": "78 rules, 666 changed paths, 0 gate findings, 27 warnings, 0 errors",
+      "guard_base": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+      "log_file": "incoming-cache/group31-newer-check.log",
+      "log_sha256": "c080294a3e2edf1d9332267e3b4645a51fe2fb443ab230e6668ea24d49c78d9b",
+      "candidate_typecheck_not_run": true,
+      "green_transferred": false
+    },
+    "target_pass_transferred": false,
+    "local_product_execution": false,
+    "remote_dispatch_by_auditor": false
+  },
+  "required_composition_dependencies": [
+    "Consume this 7-path group after or instead of its three matching e5 pending paths. Keep the other ten e5 paths plus the owned personal-view-persistence companion patch.",
+    "The recovery fixture intentionally uses actual WP10 BusinessContext/Atlas/C12 composition. Root/contracts dashboard receipt/history seam remains a concrete dependency for positive receipt and preserved-history behavior; this source browser run does not cover it.",
+    "WP01 browser requests must explicitly put browser-startup.test.ts first and browser-lifecycle.test.ts last, with at least one direct consumer between. Only exact paths and --timeout are accepted; no discovery, filters, reorder, parallelism, sharding or isolated module caches.",
+    "Keep the approved eight final logical selections, AM01-AM06, three independent reviews, C/G7 and D/G8. Reconcile startup/finalizer as the pool implementation dependency without changing the approved plan or duplicating an equivalent run.",
+    "C08 source/authority checks, C15 bootstrap fences and C17 physical/source incarnation checks are retained. No operator identity, financial policy, engines, Azure or deployment changes are imported."
+  ],
+  "open_findings": [
+    {
+      "owner": "WP01",
+      "id": "meeting-number-typecheck",
+      "state": "OPEN",
+      "why": "Exact unchanged d2be5cbe blob has two TS2769 failures; meeting-number proof and its README are deferred pending an owner-published narrowing fix."
+    },
+    {
+      "owner": "WP01",
+      "id": "OPS-CONSUMER03",
+      "state": "OPEN_UNCHANGED",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/31#issuecomment-6875179595",
+      "why": "No shared decision-apply reviewDigest transport change in e5->86."
+    },
+    {
+      "owner": "WP01",
+      "id": "AlternativeDraft-and-fixtures",
+      "state": "OPEN_UNCHANGED",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/31#issuecomment-6875248569",
+      "why": "No UI AlternativeDraft/component rendering or listed old fixtures repair in this delta. The real recovery fixture removes its synthetic BCS construction; target typecheck is still required."
+    },
+    {
+      "owner": "WP01",
+      "id": "BI-refresh-screen-shell",
+      "state": "OPEN_UNCHANGED",
+      "why": "No BI refresh or src/screen-shell.ts change in this delta."
+    },
+    {
+      "owner": "WP10/WP00",
+      "id": "C17-positive-recovery-composition",
+      "state": "PENDING_TARGET_PROOF",
+      "why": "Real fixture exposes actual composition contracts; C12 receipt/history implementation and surgical Actions evidence belong to the composed target."
+    }
+  ],
+  "required_next_actions": [
+    "Publish only accepted exact blobs in astra-compose and record the resulting head/tree; never mutate astra-interface.",
+    "Reattach source run 43581283802 as narrow source evidence, with its request SHA and exact parent. It is not a pass for the composed target or remaining browser consumers.",
+    "Ask WP01 for the two-line typed capture-id repair, then consume that new exact test blob and README together. Keep C05 proof pending in the criteria map.",
+    "Run only parent-owned, change-specific GitHub Actions/checks on the published composed SHA; no epic dispatch by this agent. Do not declare READY beyond evidence or GLOBAL_RELEASE."
+  ],
+  "review_classification": "Intake audit only; own composition authorship does not count as an independent final review."
+}

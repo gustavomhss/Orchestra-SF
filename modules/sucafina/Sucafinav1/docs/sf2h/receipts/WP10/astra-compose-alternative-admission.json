@@ -1,0 +1,121 @@
+{
+  "schema": "astra-compose-wp10-integration-increment-v1",
+  "scope": "WP10 Alternative authenticated admission fan-out",
+  "status": "IMPLEMENTED_AWAITING_GITHUB_ACTIONS",
+  "product_base": "ff7a997 (root-published first round); alternative-selection test preserves composition-patch-next revocation delta",
+  "local_staging": "composition-perf-patch",
+  "remote_mutations": false,
+  "local_product_execution": false,
+  "cause": {
+    "before": "One Alternative fence sampled the same authenticated admission separately for input and selection. Each public reader reopened the real run twice.",
+    "after": "One verifiedAlternativeAdmissionFor sample returns input and a synchronously validated selection from the same cloned admission. Every invocation still reopens the real run twice."
+  },
+  "static_call_counts": {
+    "per_joint_pair_before": {
+      "verifiedAdmissionFor": 2,
+      "readRun": 4,
+      "selectedCase": 4
+    },
+    "per_joint_pair_after": {
+      "verifiedAdmissionFor": 1,
+      "readRun": 2,
+      "selectedCase": 2
+    },
+    "native_authenticate_calls_per_removed_admission_sample_estimate": 105,
+    "counts_are_static_estimates_not_run_measurements": true
+  },
+  "invariants": [
+    "Real C08 run read twice per sample, with selectedCase and native host revalidation on each pass.",
+    "Full C08/source/day/binding fingerprints and before/after Alternative fences unchanged.",
+    "Private holder identity/content, private UI run scope, Request, abort and binding digest checked after final awaited authentication.",
+    "Selection schema, request/input digests, case, actor, policy and access revision constraints preserved.",
+    "No cross-call or persistent authority cache; legacy separate-reader fallback preserved.",
+    "No model/native execution proof or GLOBAL_RELEASE claim."
+  ],
+  "checks": {
+    "static_review": {
+      "agent": "contracts_wp00",
+      "result": "No blocker found; not a final independent review"
+    },
+    "product_tests": "NOT_RUN_BY_CHILD",
+    "planned_exact_files": [
+      "test/product/wp10/analysis-composition/native-inputs.test.ts",
+      "test/product/wp10/analysis-composition/alternative-selection.test.ts",
+      "test/product/wp10/integration/alternative-call-scope.test.ts"
+    ],
+    "required_package_checks": [
+      "apps/cli: bun typecheck",
+      "Sucafinav1: bun typecheck",
+      "repository guards per AGENTS"
+    ],
+    "run_ids": []
+  },
+  "findings": [
+    {
+      "owner": "WP10",
+      "finding": "Duplicate authenticated-admission read eliminated without reducing two-pass validation.",
+      "state": "implemented-awaiting-CI"
+    },
+    {
+      "owner": "WP10/WP11",
+      "finding": "Full Alternative pipeline still includes repeated case, coverage and canonical comparison producers. This narrow reduction alone does not establish passing105s.",
+      "state": "open-measurement-required"
+    }
+  ],
+  "freeze": {
+    "path": "apps/cli/src/sucafina-product/host-context.ts",
+    "requires_explicit_revision": 9
+  },
+  "next_action": "Root publish7 files plus receipt, update freeze revision9 from new published host-context bytes, attach exact-sha surgical Actions evidence.",
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/alternative-call-scope.ts",
+      "base_blob": "e8b72de6eca8b214646cf4335e9254334f5937dc",
+      "new_blob": "9b94ae0833a13198cb5fbd301e37820d46d0ad19",
+      "sha256": "142dd1a5afcea1ca6990cb73f0b7ebdfb31aea34c3999c9e51c35723b2318f59",
+      "change": "joint authenticated admission sample"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-native-inputs.ts",
+      "base_blob": "f1a39b70748dbe771bccc80ad81f29eea1312027",
+      "new_blob": "42439e65042399bb2597dc4e6e3ccb81c88f4d9b",
+      "sha256": "c573f84f959b1590f65dae9b95cb99f8a14159278a561515252f187122e36379",
+      "change": "joint authenticated admission sample"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/decision-alternative-services.ts",
+      "base_blob": "1212a2eb14b5a39575a9a321c8bb60b42503830e",
+      "new_blob": "db35f76e454ecd85f26254c0371f62499e48caba",
+      "sha256": "e615cde3be3b82f58a85057726f0cc733d6aed3e5704b55f7655ebb7931b9d10",
+      "change": "joint authenticated admission sample"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+      "base_blob": "8a97e942cc70a27e9faceb5ddb44998bb74dc235",
+      "new_blob": "6facc71b1351aea04ed3e7d51d1d0ed5d81c24d9",
+      "sha256": "9b7e36cc1ba84d075bda947151f7c3ca63c34ef6616596ec1c9107760e3c8b70",
+      "change": "joint authenticated admission sample"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "base_blob": "edf6b70a249f9a1bc85d46cd06e5a32a85c8e74b",
+      "new_blob": "0d3abcf642deb3d2f6c6346cdddc8bfb40141532",
+      "sha256": "4c654665a12aa02a6d5a851cdbe662f6f0fabdacf21e4b600f598e499a3a1922",
+      "change": "joint authenticated admission sample"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/alternative-selection.test.ts",
+      "base_blob": "45ea2980d3678c5979e165b73a6c0d8b3a91ed1e",
+      "new_blob": "2ab277be76e42ce1eb69382282c26048a12c6d85",
+      "sha256": "16b55108baf4b80d496854274b8e4e98f9f351c88baa17d6487580f3683549b9",
+      "change": "real C08 counterproof and composed reader wiring"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts",
+      "base_blob": "34f2ba7495db931b70bf3745e91c65f1ee7da873",
+      "new_blob": "8a9eb8eb63274c004ef188ff46eb33f18cf215d6",
+      "sha256": "8f22b0e8ea97dbdeac42865daf37a2af85caadc98a286e09ba0e68699d4659e8",
+      "change": "real C08 counterproof and composed reader wiring"
+    }
+  ]
+}

@@ -1,0 +1,599 @@
+{
+  "schema": "sf2-independent-runtime-review-v1",
+  "state": "PRELIMINARY_ROUND_CLOSED_FOLLOWUP_REQUIRED_FOR_NEW_CANDIDATE_AND_CHECKS",
+  "reviewer": "Astra independent child /root/review_runtime_w8",
+  "reviewed_head": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+  "reviewed_tree": "051391628c61f6a4333c8f13567c5518c4ff8f86",
+  "pr": "https://github.com/gustavomhss/Orchestra-SF/pull/32",
+  "no_author_overlap": true,
+  "independence": {
+    "fresh_reviewer": true,
+    "product_edits": false,
+    "source_branch_edits": false,
+    "github_writes": false,
+    "local_product_executions": false,
+    "actions_dispatched": false,
+    "report_only_directory": "independent-review-staging/runtime-authority/",
+    "global_bundle_review": false
+  },
+  "scope": "Static independent review of the W8 runtime/authority/MCP/Atlas/Relay/docs/CI composition and bounded inspection of the published WP11 apply closure; exact scope, no global approval.",
+  "normative_inputs": {
+    "plan_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "campaign_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+    "handoff_commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+    "files": [
+      "context/agents.md",
+      "context/START.md",
+      "context/WORKFLOW.md",
+      "context/COMMON.md",
+      "context/ci.md",
+      "context/wp00.md",
+      "context/wp10.md",
+      "context/WP00.pack.json",
+      "context/WP10.pack.json"
+    ],
+    "pack_review": "Canonical WP00/WP10 tasks, criteria, ownership, contract and proof boundaries consulted; this focused review does not assert completion of every criterion or independent review of every upstream WP.",
+    "wp00_criteria": 85,
+    "wp10_criteria": 171,
+    "inherited_campaign_criteria": 50
+  },
+  "examined_paths": [
+    {
+      "path": "apps/cli/src/sucafina-product/planner-calculation-history.ts",
+      "blob": "9805676b50cb5d12f37a4a91350f01ba227a168f",
+      "bytes": 11862,
+      "intake08_matches": true,
+      "review_extent": "Source read"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+      "blob": "bc224c0b2830fe54a02c3b2bc356cb6bf2b1c327",
+      "bytes": 18307,
+      "intake08_matches": true,
+      "review_extent": "Source read"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "blob": "4b02413b5a98e750187fa8f5fa54f3cb2415f4e3",
+      "bytes": 57170,
+      "intake08_matches": true,
+      "review_extent": "Relevant symbols and call paths; not entire file"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "blob": "0d3abcf642deb3d2f6c6346cdddc8bfb40141532",
+      "bytes": 74900,
+      "intake08_matches": null,
+      "review_extent": "Relevant symbols and call paths; not entire file"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/native-host.ts",
+      "blob": "f43e9ae216a94f16daf985bac32f2c9e2627a2b7",
+      "bytes": 19114,
+      "intake08_matches": null,
+      "review_extent": "Source read"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/token-gate.ts",
+      "blob": "4d7b395aa29a03a8311d8dec87cb1e69e0a4ab30",
+      "bytes": 17340,
+      "intake08_matches": null,
+      "review_extent": "Source read"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/contribution.ts",
+      "blob": "8d44320acedc4afec9ffc100f5f6a171cdf26993",
+      "bytes": 4185,
+      "intake08_matches": null,
+      "review_extent": "Source read"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-publication.ts",
+      "blob": "3bc63f611beb36d535fd3ccedd9c5ae846ee4ca5",
+      "bytes": 4072,
+      "intake08_matches": null,
+      "review_extent": "Source read"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-services.ts",
+      "blob": "8b76b7591bf3ce0312108faafcda6b244a2d5e89",
+      "bytes": 22455,
+      "intake08_matches": null,
+      "review_extent": "Source read"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/bi-call-scope.ts",
+      "blob": "c3fd5dc0eabcdbb24d20023b63ddeedff526e9ca",
+      "bytes": 11839,
+      "intake08_matches": null,
+      "review_extent": "Source read"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-assets.ts",
+      "blob": "d4f61546186a0f752be4c103b3a2e112deb4a582",
+      "bytes": 995,
+      "intake08_matches": null,
+      "review_extent": "Source read"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/installation.ts",
+      "blob": "30ffcb8353cdf478808fbb8d6bc67b48b10a6109",
+      "bytes": 2463,
+      "intake08_matches": null,
+      "review_extent": "Source read"
+    },
+    {
+      "path": "apps/cli/src/commands/handlers/serve.ts",
+      "blob": "6bfe580422d8b36f7b0ca68f42b3aa42c61d08c4",
+      "bytes": 8708,
+      "intake08_matches": null,
+      "review_extent": "Relevant symbols and call paths; not entire file"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/execution-context.ts",
+      "blob": "18a9d4dbfa4bd8b3421685482f431fa6b5b1469f",
+      "bytes": 10224,
+      "intake08_matches": null,
+      "review_extent": "Source read"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/sf-mcp-bridge.ts",
+      "blob": "bc00a2fe70bb37d6132369c3767388e544e18510",
+      "bytes": 10010,
+      "intake08_matches": null,
+      "review_extent": "Source read"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/verified-call.ts",
+      "blob": "d4d8f62ae7418535d382fa47b464eb778b008831",
+      "bytes": 424,
+      "intake08_matches": null,
+      "review_extent": "Source read"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/capability-dispatch.ts",
+      "blob": "6ba1b02eee73d44133c78599284f9772b26007b1",
+      "bytes": 3445,
+      "intake08_matches": null,
+      "review_extent": "Source read"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/resident-agents.ts",
+      "blob": "a1413fd5224f373d704bbdfca7a489a904875d00",
+      "bytes": 5054,
+      "intake08_matches": null,
+      "review_extent": "Source read"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+      "blob": "0a26a1ed086b9ce0a4a1907a233b705e6061e659",
+      "bytes": 6713,
+      "intake08_matches": null,
+      "review_extent": "Source read"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "blob": "2fd55c7304add0829d7434917c80664fe86356b9",
+      "bytes": 19836,
+      "intake08_matches": null,
+      "review_extent": "Source read"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "blob": "5cca27ce239c92a8e3c9f9f92f816f5224562904",
+      "bytes": 46099,
+      "intake08_matches": true,
+      "review_extent": "Source read"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+      "blob": "91e8bc8f5d80f83b7756b4647c790cc5e5936d59",
+      "bytes": 34119,
+      "intake08_matches": null,
+      "review_extent": "Source read"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-recall-scope.ts",
+      "blob": "30697fcbeee6b7011cc7786a0a3bc64bd0d3449e",
+      "bytes": 13845,
+      "intake08_matches": null,
+      "review_extent": "Source read"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/calculation-history.ts",
+      "blob": "4e92219aae9046891f167502139412bf9c509529",
+      "bytes": 3795,
+      "intake08_matches": null,
+      "review_extent": "Source read"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "blob": "d7d8eb3ca267551797b191ccfb1d037149757898",
+      "bytes": 17054,
+      "intake08_matches": null,
+      "review_extent": "Relevant symbols and call paths; not entire file"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-request-store.ts",
+      "blob": "0d677d2d0b3a9df7127f13b25fe3968757f0dceb",
+      "bytes": 11757,
+      "intake08_matches": null,
+      "review_extent": "Relevant symbols and call paths; not entire file"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+      "blob": "fed7feb25d9af2fecebba8d2b1d2e2a6b1a3e0ac",
+      "bytes": 12410,
+      "intake08_matches": null,
+      "review_extent": "Source read"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "blob": "90c3e981d8418c562342660bd3d56d03f9995383",
+      "bytes": 14701,
+      "intake08_matches": null,
+      "review_extent": "Source read"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-change.ts",
+      "blob": "fc9dc0b25e1a1d646318bc0df3e0d41f95b9562e",
+      "bytes": 2147,
+      "intake08_matches": null,
+      "review_extent": "Source read"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+      "blob": "922358d17c470c16b43076510bdf04744e2306e4",
+      "bytes": 36034,
+      "intake08_matches": null,
+      "review_extent": "Source read"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+      "blob": "23d9291b3dcedda36edc4aa4f38856024e3c58f4",
+      "bytes": 43049,
+      "intake08_matches": null,
+      "review_extent": "Relevant symbols and call paths; not entire file"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/recipient-authority.ts",
+      "blob": "bf1845e8673fd10425713085e20b04373885fabb",
+      "bytes": 2670,
+      "intake08_matches": null,
+      "review_extent": "Source read"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/host.ts",
+      "blob": "b02d38ad37877f00ee3033a3931c0e1ea620d6d8",
+      "bytes": 24061,
+      "intake08_matches": null,
+      "review_extent": "Relevant symbols and call paths; not entire file"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/routines/result-access.ts",
+      "blob": "098a92920857926f117e266f5b63325f6ad112ca",
+      "bytes": 9097,
+      "intake08_matches": null,
+      "review_extent": "Source read"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/bi-http.ts",
+      "blob": "23c183666cef9d97925ba05c67fe678d9b058255",
+      "bytes": 10803,
+      "intake08_matches": null,
+      "review_extent": "Source read"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/build-bi.ts",
+      "blob": "b7a97cf867a2649bc5033fc9eb978c0e6d21182d",
+      "bytes": 775,
+      "intake08_matches": null,
+      "review_extent": "Source read"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "blob": "b753e3ffbfcdc06de373388845c686afac26dec8",
+      "bytes": 25981,
+      "intake08_matches": null,
+      "review_extent": "Relevant symbols and call paths; not entire file"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/installation.ts",
+      "blob": "66fcbe749ffd7e9d0c19b29c27b5b212139a29f7",
+      "bytes": 4533,
+      "intake08_matches": null,
+      "review_extent": "Source read"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "blob": "26a330c62a0e5e9f3e2ea79be0b6854e7dca7363",
+      "bytes": 22887,
+      "intake08_matches": null,
+      "review_extent": "Relevant symbols and call paths; not entire file"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/index.ts",
+      "blob": "91facf5b78b1d7150a28a25749057e474acb7fe7",
+      "bytes": 1456,
+      "intake08_matches": null,
+      "review_extent": "Source read"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/README.md",
+      "blob": "511db1593b7d6adb9bb248d05dc53195646d7a1a",
+      "bytes": 28297,
+      "intake08_matches": true,
+      "review_extent": "Source read"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "blob": "80b44373f154a70553f1c9ab84139091be3e0238",
+      "bytes": 44150,
+      "intake08_matches": true,
+      "review_extent": "Relevant symbols and call paths; not entire file"
+    },
+    {
+      "path": ".github/workflows/astra-compose-check.yml",
+      "blob": "e7a815a797e960e826af4268dd381cb4c5df6ffc",
+      "bytes": 6249,
+      "intake08_matches": null,
+      "review_extent": "Source read"
+    }
+  ],
+  "direct_remote_blob_checks": [
+    {
+      "sha": "9805676b50cb5d12f37a4a91350f01ba227a168f",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/35b9fd4f532abeb1058f00281d4ad8885ca9966f/apps/cli/src/sucafina-product/planner-calculation-history.ts"
+    },
+    {
+      "sha": "bc224c0b2830fe54a02c3b2bc356cb6bf2b1c327",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/35b9fd4f532abeb1058f00281d4ad8885ca9966f/apps/cli/src/sucafina-product/planner-calculation-services.ts"
+    },
+    {
+      "sha": "5cca27ce239c92a8e3c9f9f92f816f5224562904",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/35b9fd4f532abeb1058f00281d4ad8885ca9966f/modules/sucafina/Sucafinav1/product/host-binding/business-context.ts"
+    },
+    {
+      "sha": "e7a815a797e960e826af4268dd381cb4c5df6ffc",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/35b9fd4f532abeb1058f00281d4ad8885ca9966f/.github/workflows/astra-compose-check.yml"
+    },
+    {
+      "sha": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/35b9fd4f532abeb1058f00281d4ad8885ca9966f/AGENTS.md"
+    }
+  ],
+  "observations": [
+    {
+      "id": "RUNTIME-W8-O1",
+      "area": "Request/C08/case authority",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/host-binding/execution-context.ts",
+        "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+        "modules/sucafina/Sucafinav1/runtime/local-store.ts"
+      ],
+      "assessment": "Current Request identity, principal/policy/access revision, case incarnation/membership and transaction target are revalidated. C08 CAS, namespace isolation, idempotency receipts and protected callback writer guards remain present. SQLite commit is awaited; nested writes poison/reject rather than silently commit."
+    },
+    {
+      "id": "RUNTIME-W8-O2",
+      "area": "Private MCP and native host",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/host-binding/sf-mcp-bridge.ts",
+        "modules/sucafina/Sucafinav1/product/host-binding/resident-agents.ts",
+        "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+        "apps/cli/src/sucafina-product/native-host.ts",
+        "apps/cli/src/sucafina-product/token-gate.ts"
+      ],
+      "assessment": "Actual SDK transport/listTools/callTool uses private single-use leases and current generation; profile/skill grants are intersected. Homonymous providers reject. Both transports close before final revalidation/output capture. Resident sources have physical-path/digest checks. SessionV2 and stream token enforcement are integrated; no installed-native AM receipt inferred from static code."
+    },
+    {
+      "id": "RUNTIME-W8-O3",
+      "area": "Atlas lexical authorization scope",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/host-binding/atlas-recall-scope.ts",
+        "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+        "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts"
+      ],
+      "assessment": "Memoized completed proofs are bounded to a single current Request/call/binding/case/source/UTC-day scope. Reentrant and mixed/history inputs leave the narrow fast path. Protected Atlas reads revalidate partition/case/current source authority at egress; capture bytes do not grant a fresh write. Real Atlas factories and scanner boundary are used."
+    },
+    {
+      "id": "RUNTIME-W8-O4",
+      "area": "W8 C17 calculation history",
+      "paths": [
+        "apps/cli/src/sucafina-product/planner-calculation-history.ts",
+        "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+        "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts"
+      ],
+      "assessment": "New helper accepts only planner:scenario, planner-runtime-v1 and a record-only source closure. It requires an existing protected original capture, an exact ledger association, the same physical case with a later current version, a persisted request/result, canonical producer replay and repeated Request/C08/source/day/capture fences. It returns original projection plus case.version difference; it cannot register requests, persist results or grant current issuance. No concrete authority bypass found in examined paths."
+    },
+    {
+      "id": "RUNTIME-W8-O5",
+      "area": "Bootstrap, assets, disposal and documentation",
+      "paths": [
+        "apps/cli/src/sucafina-product/installation.ts",
+        "apps/cli/src/commands/handlers/serve.ts",
+        "modules/sucafina/Sucafinav1/local/entry.ts",
+        "apps/cli/src/sucafina-product/extended-assets.ts",
+        "modules/sucafina/Sucafinav1/README.md"
+      ],
+      "assessment": "The explicit factory joins the existing listener and host contribution graph. Routes enforce configured origin/host; assets use checked-in literal entries and failures remain unavailable. Host lease/session cleanup and installation finalizers are wired. README identifies C07/C12/native/historical limits and does not claim global release. Installed distribution/bundle/browser behavior still requires the designated evidence."
+    },
+    {
+      "id": "RUNTIME-W8-O6",
+      "area": "CI exact identity",
+      "paths": [
+        ".github/workflows/astra-compose-check.yml"
+      ],
+      "assessment": "Check envelope validates declared W as HEAD first parent and permits only added .astra-compose-check.json relative to W, then checks out W and records W/tree/dev before package checks. Delivery mode permits only new 100644 WP00/WP10 json/md/txt receipts and runs real guards on D. This subset check is not full C/G7 or D/G8 qualification: receipt content/provenance and absence of new import/glob/build/runtime inputs require separate verification."
+    }
+  ],
+  "new_concrete_defects": [],
+  "confirmed_open_dependencies": [
+    {
+      "id": "RUNTIME-W8-D1",
+      "classification": "EXISTING_FUNCTIONAL_GAP",
+      "owners": [
+        "WP10",
+        "WP09",
+        "S0/native provider owner"
+      ],
+      "criteria": [
+        "WP10.T01",
+        "WP10.T06",
+        "AM02",
+        "AM06"
+      ],
+      "paths": [
+        "apps/cli/src/sucafina-product/host-context.ts",
+        "apps/cli/src/sucafina-product/routine-services.ts"
+      ],
+      "finding": "No installed public C07 native/publication/admission/run/result provider is supplied at the composition root. The six routine descriptors are not advertised. The typed adapters fail closed. Required governed Relay/Schedule and completed historical result journeys remain unqualified.",
+      "next_action": "Owner supplies the real governed native provider/immutable admission and terminal evidence; WP10 composes it and rechecks prepare/start/result/UI on the candidate."
+    },
+    {
+      "id": "RUNTIME-W8-D2",
+      "classification": "EXISTING_FUNCTIONAL_GAP",
+      "owners": [
+        "WP10",
+        "WP07/WP08",
+        "Authoritative recipient identity/access provider owner"
+      ],
+      "criteria": [
+        "WP10.T01",
+        "WP10.T06",
+        "AM03",
+        "AM06"
+      ],
+      "paths": [
+        "apps/cli/src/sucafina-product/business-services.ts",
+        "modules/sucafina/Sucafinav1/product/collaboration/recipient-authority.ts"
+      ],
+      "finding": "createCollaborationHost receives no recipientAuthority. Cross-person writes fail closed; caller identity or directory membership is not current recipient source permission.",
+      "next_action": "Supply authoritative recipient access with a host-private lease and synchronous checkAtCommit bound to exact Request, recipient, evidence fields/periods/incarnations, ACL revision and provider generation; then exercise a real two-user positive and revocation cycle."
+    },
+    {
+      "id": "RUNTIME-W8-D3",
+      "classification": "CURRENT_CANDIDATE_CHECK_FAILURE",
+      "owners": [
+        "WP01/WP02/WP04",
+        "WP06",
+        "WP08/WP09",
+        "WP13/WP14",
+        "WP10 integration"
+      ],
+      "criteria": [
+        "WP10.T02",
+        "WP10.T05",
+        "C/G7"
+      ],
+      "finding": "Exact W8 check6 fails Sucafina package typecheck with 20 diagnostics. CLI, Atlas generation/diff/typecheck and guards passing does not make the aggregate check PASS.",
+      "next_action": "Consume owner-published compatible fixes and run affected candidate checks; retain actual source SHA/run identity."
+    },
+    {
+      "id": "RUNTIME-W8-D4",
+      "classification": "DOCUMENTED_SCOPE_LIMIT_REQUIRES_REMAINING_PROOF",
+      "owners": [
+        "WP10",
+        "WP03/WP11",
+        "WP14"
+      ],
+      "criteria": [
+        "WP10.T07",
+        "AM03",
+        "AM05"
+      ],
+      "finding": "W8 calculation-history lane does not support material financial source drift, mixed/nested historical ancestry or first capture after case advance. This is explicit fail-closed behavior and not complete C17 historical coverage.",
+      "next_action": "Preserve original capture and current source authority semantics while owners complete remaining producers/cases; keep those criteria open."
+    },
+    {
+      "id": "RUNTIME-W8-D5",
+      "classification": "EXISTING_C12_PRODUCER_BLOCKER",
+      "owners": [
+        "WP11/Finance",
+        "WP04",
+        "WP10"
+      ],
+      "criteria": [
+        "WP10.T01",
+        "AM04"
+      ],
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+        "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts"
+      ],
+      "finding": "W8 apply reconciliation uses the pre-domain cases storage version after the receipt transaction advances cases. Published WP11 11261 provides a bounded fix; it is outside reviewed W8 and has no transferred PASS.",
+      "next_action": "Consume owner-exact apply+helper closure if selected, then run C12/H09/lost-reply consumer checks on the new candidate. No-op promotion coverage remains a separate owner dependency."
+    }
+  ],
+  "checks": [
+    {
+      "id": "check6",
+      "run": 43586748889,
+      "job": 132422800954,
+      "product_sha": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "product_tree": "051391628c61f6a4333c8f13567c5518c4ff8f86",
+      "snapshot_sha": "3bd08ffc7dcc0924422f37b3e01645482bc16c1b",
+      "conclusion": "FAILURE",
+      "source": "Direct read-only GitHub MCP job summaries plus evidence/check6.log",
+      "failed": "Sucafina bun typecheck: 20 diagnostics",
+      "passed": [
+        "CLI bun typecheck",
+        "Atlas generate/check:generated/generated diff",
+        "Atlas boundary bun typecheck",
+        "check:spawn-imports",
+        "check:guards --base origin/dev"
+      ],
+      "guards": {
+        "rules": 78,
+        "changed_paths": 1308,
+        "gate_findings": 0,
+        "warnings": 46,
+        "errors": 0
+      },
+      "artifact": 14109904080
+    },
+    {
+      "id": "CI5",
+      "product_sha": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "conclusion": "NOT_YET_RECONCILED_BY_THIS_REVIEWER",
+      "scope": "Affected W8 C17/history and BI lifecycle selection only"
+    },
+    {
+      "id": "CI4/check5",
+      "product_sha": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "conclusion": "FAILURE",
+      "candidate_relation": "EARLIER_W7_NO_RESULT_TRANSFER"
+    }
+  ],
+  "wp11_bounded_intake": {
+    "head": "11261a57ebb5ad7281bb7bcdd9d3f2687c2c76de",
+    "tree": "e63f555351ec6a21402319797e044fd51e8eb4fb",
+    "paths": [
+      "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+      "modules/sucafina/Sucafinav1/product/decisions/application-attempt.ts"
+    ],
+    "helper_blob": "d7ef49df787cc4b058f0992b1fbbdc5c0cb6634e",
+    "assessment": "Static closure is compatible with W8 imports/contracts/C08/prepared-apply. Durable attempt uses existing state.transactions, advances namespace but not case.version, and the domain reopens storage after reservation. Reconciliation reads cases again after receipt commit. W8 lacks rejectChange, so the new mutations rejectChange feature is not a dependency of this closure. No local execution or acceptance of the failed source run.",
+    "behavior_change": "A committed reservation without an authoritative receipt remains indeterminate and cannot dispatch again, including a crash before actual domain dispatch.",
+    "separate_open_dependency": "mutations.ts no-op coverage does not capture the protected source proof when reassessment is skipped; this source publication does not close promotion coverage.",
+    "source_run": 43586380221,
+    "source_run_conclusion": "FAILURE_REPORTED_BY_PARENT_NOT_ACCEPTED",
+    "actions": "No source edits or integration performed by reviewer."
+  },
+  "limitations": [
+    "Static source inspection and supplied hosted evidence only; no local product, typecheck, guard or browser execution.",
+    "Local worktree is sparse and is not a Git checkout; reviewed byte hashes recorded, with critical changed blobs independently matched to W8 via GitHub MCP.",
+    "This review does not substitute installed GNATIVE or AM01–AM06 across all 5 profiles, 18 skills, 39 operations and 8 packs.",
+    "SQLite/scanner integration fixtures do not by themselves establish full installed native qualification.",
+    "Full final eight selections and additional epic tests belong to S0 on the complete final candidate; none were dispatched here.",
+    "Three fresh independent review sections must refer to the actual final S0 bundle. This report is one focused independent section for W8 only.",
+    "C/G7 acceptance and D/G8 provenance/envelope/guard remain open; no GLOBAL_RELEASE."
+  ],
+  "verdict": {
+    "static_scope": "No new concrete authority bypass found in the examined W8 paths.",
+    "acceptance": "BLOCKED_FOR_FULL_WP00_WP10_ACCEPTANCE",
+    "candidate_scope_ready": false,
+    "reason": "C07/recipient/native/global and exact-candidate package check obligations remain open; product CI5 and any later delta must be reconciled before finalizing this scoped report.",
+    "global_release": false
+  }
+}
+

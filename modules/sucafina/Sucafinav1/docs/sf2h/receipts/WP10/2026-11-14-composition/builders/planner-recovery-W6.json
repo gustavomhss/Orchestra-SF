@@ -1,0 +1,113 @@
+{
+  "schema": "sf2.wp10.planner-calculation-recovery.v1",
+  "status": "CLOSED",
+  "builder": "/root/planner_recovery_w6",
+  "baseCandidate": "7377e364e4870e832e49d99d0d2bdbde9eb63a5f",
+  "authorshipIsIndependentReview": false,
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+      "before": {
+        "blobSha": "6898b08eb4b018f5a83167555836ac876d288976",
+        "sha256": "4fbe85a796f92b2fa154b46997d1f6c9ab4af53f6e96e8ff1ebd3c3a438e9510"
+      },
+      "after": {
+        "blobSha": "bc791c271cb8f49acd2d75ce5f4a811a9007b14c",
+        "sha256": "3d381754d4c0cb839a3b1e6538fc545c2a935c1d2c3bb16e5f4e441e773c5938"
+      },
+      "ownership": "WP10-own",
+      "kind": "source"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "before": {
+        "blobSha": "ac40579bdd8882f0f4cfd9c9e47b61b52311b0cd",
+        "sha256": "8a5274305b40acf8981226deed37332b0fc430d4fc16b0036a401c737b25f07c"
+      },
+      "after": {
+        "blobSha": "6a4f60cb1f14493e88df5577205654c7f158c63e",
+        "sha256": "6d661beaa1265aff11bbe215179c3e0ffc2250571971cae99fc2e74e19724c92"
+      },
+      "ownership": "WP10-own",
+      "kind": "regression-test"
+    }
+  ],
+  "hostedFailure": {
+    "candidate": "09d942cc59af77197179f586fa727de5d62ac16b",
+    "runId": 43552376149,
+    "jobId": 132317504686,
+    "logSha256": "6f4b92e753492328aa0f850c1542ee342810b769a3440673f6366df61a703336",
+    "observation": "Planner calculation regression reached recall after reopen and returned unavailable; duration171330.23ms. W4 evidence only."
+  },
+  "diagnosis": {
+    "observedSourceMechanisms": [
+      "Atlas recall resolves the case-event, calculation and its record closure in parallel for one call.",
+      "The published calculation producer has an active binding/runId recursion guard: a parallel replay of the same runId is rejected as calculation-replay-cycle.",
+      "The own withCalculationCase wrapper shares a temporary case binding on the same TrustedDomainContext; competing lifetimes can release another parallel branch's binding."
+    ],
+    "limit": "These source mechanisms explain a concrete composition collision. No local runtime reproduction was executed; the hosted W6 rerun must confirm the repair and remaining recall path."
+  },
+  "change": [
+    "Queue only calculation.issue entries for the same TrustedDomainContext; different call objects keep independent queues.",
+    "Every entry reads its own current request/result binding and performs the unchanged complete producer replay after the prior entry settles. No result or authorization is cached or inherited.",
+    "The queue entry is removed only by its own finalizer if it is still the tail. Rejected predecessors are waited on without suppressing the current entry's fresh checks."
+  ],
+  "reentrancyReview": {
+    "noRecursiveQueueInRecordOnlyPath": true,
+    "reason": "The queued producer receives request/result readForCalculation and record-only Planner replay. Request assumptions and replacement references are rejected; coverage/evidence closure must contain records only. Those callbacks do not invoke the own calculation.issue recursively. Foreign recursion and depth checks remain intact.",
+    "nativeScopeLimit": "This proves no native/global acceptance. The queue is per call object; the existing published native binding guard remains authoritative across distinct native contexts."
+  },
+  "regressions": [
+    "Two concurrent BCS resolves of the actual persisted calculation through one real UI admission must both be fresh with the exact reference.",
+    "A real Planner environment read pauses one proof; another proof queues; current principal is revoked before release and both outcomes must be non-ok.",
+    "Existing SQLite reopen, real Atlas write/recall, exact retry, tamper, source-change and revoked-reader assertions are retained."
+  ],
+  "testPreservation": {
+    "originalExpectLines": 22,
+    "currentExpectLines": 26,
+    "allOriginalExpectLinesRetained": true,
+    "oldTestTimeoutMs": 300000,
+    "newTestTimeoutMs": 120000,
+    "cooperativeDeadlineMs": 105000
+  },
+  "unchangedForeignReaders": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/calculation-evidence.ts",
+      "blobSha": "a1d2b84c59732b05c5944cd81be82f247c2c9c91",
+      "sha256": "e5726e7f60690ac451c07c49fecfa4a2254b4b6f5cda017f800ef9c208ef294d",
+      "sameAsW5": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-request-store.ts",
+      "blobSha": "848fe10663e14ba04ae09c36e1a34bca0c3744c6",
+      "sha256": "ea061795f1c9ddc20b87593ba7b6524a905102e5f07cb50172fbe2fe19f901d6",
+      "sameAsW5": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "blobSha": "0d2977360afb7b9af6d39b19eff6e9198c7c1c55",
+      "sha256": "beff852cf85a71893dc596c3b673dbce638e4bbb9a4787bff476448d66a8377e",
+      "sameAsW5": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts",
+      "blobSha": "9a29a61dca38f723aca5c0bcd416c26a1cc636b1",
+      "sha256": "e590c1e022e5bfb5e7c9b5a37ad2d5057b4c4b7eaa184ca51e1d694173d9ec53",
+      "sameAsW5": true
+    }
+  ],
+  "validation": {
+    "localProductExecution": false,
+    "localTypecheck": false,
+    "staticDiffAndHashes": true,
+    "hostedExecutionRequired": [
+      "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts"
+    ],
+    "runtimeResult": "PENDING"
+  },
+  "limits": [
+    "Not an independent review. Builder cannot close reviewer findings.",
+    "No source/financial/native/global acceptance claimed.",
+    "The scanner configuration is unchanged on reopen; recall does not require rescanning."
+  ]
+}

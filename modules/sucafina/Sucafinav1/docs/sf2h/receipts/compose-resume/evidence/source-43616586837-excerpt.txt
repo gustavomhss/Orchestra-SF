@@ -1,0 +1,14 @@
+258 |       const saved = await fixture.authority.state.transaction(fixture.request(), { namespace: "cases", expectedStorageVersion: current.storageVersion, targetRef: changed.id, targetIncarnation: changed.incarnation, idempotencyKey: randomUUID(), commandDigest: digestSfValue(changed) }, async (state) => { state.cases[changed.id] = changed; return { commit: true, value: true } })
+259 |       if (saved.status !== "ok") throw new Error("concurrent real case edit failed")
+260 |     })
+261 |     const conflict = await fixture.http("decision-apply", application)
+262 |     expect(conflict.response.status).toBe(409)
+                                           ^
+error: expect(received).toBe(expected)
+
+Expected: 409
+Received: 200
+
+      at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts:262:38)
+(fail) a real case edit between durable receipt and reconciliation preserves the conflict without reapplying [11341.16ms]
+wp04-host-metrics {"scenario":"H06","milliseconds":24014,"sqliteTransactions":6911,"sqliteAllTransactions":20,"sqliteMilliseconds":34635,"http":[{"mode":"decision-prepare-changes","status":200,"milliseconds":700,"sqliteTransactions":442},{"mode":"decision-review","status":200,"milliseconds":4935,"sqliteTransactions":1243},{"mode":"decision-apply","status":503,"milliseconds":5214,"sqliteTransactions":1286},{"mode":"decision-apply","status":409,"milliseconds":3775,"sqliteTransactions":1135},{"mode":"decision-apply","status":200,"milliseconds":4081,"sqliteTransactions":1194},{"mode":"decision-apply","status":403,"milliseconds":5043,"sqliteTransactions":1446}]}

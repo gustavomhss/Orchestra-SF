@@ -1,9 +1,12 @@
+import type { SfAnalysisRequest } from "./analysis-verifier.ts"
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { BusinessContextService, BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
 import type { ScenarioComparisonInput } from "../../../../modules/sucafina/Sucafinav1/product/contracts/skill-inputs.ts"
 import type { DecisionCasePort, PlannerPort, PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import { encodeCaseRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+
+export type SfInputProducer = { skillIds: readonly string[]; prepare: (selection: unknown, request: SfAnalysisRequest, call: TrustedDomainContext) => Promise<PortResult<unknown>> }
 
 export type SfScenarioAlternativeSelection = { readonly id: string; readonly version: number }
 export type SfScenarioComparisonSelection = {

@@ -1,13 +1,15 @@
 import type { WorkbookOutcome } from "./detail.ts"
 import type { ParsedImport } from "./files.ts"
+import { normName } from "../../src/planner-accounts.ts"
 
-/** Reports only workbook cells whose original Planner line and authorized projections all agree. */
-export function plannerUnchangedOutcomes(input: { parsed: ParsedImport; before: PlannerProjection; after: PlannerProjection; versionId: string }): WorkbookOutcome[] {
+/** Classifies physical input only against the actual authorized before/after values.
+ * Retained inputs are reported without copying role rules or exposing their values. */
+export function plannerUnchangedOutcomes(input: { parsed: ParsedImport; before: PlannerProjection; after: PlannerProjection; versionId: string; afterVersionId?: string }): WorkbookOutcome[] {
   if (!input.versionId.trim() || !input.parsed.sheets || !input.parsed.origins) return []
   const beforeVersions = versions(input.before)
   const afterVersions = versions(input.after)
   const before = beforeVersions.filter((version) => version.id === input.versionId)
-  const after = afterVersions.filter((version) => version.id === input.versionId)
+  const after = afterVersions.filter((version) => version.id === (input.afterVersionId ?? input.versionId))
   if (before.length !== 1 || after.length !== 1) return []
   const beforeLines = records(before[0]!.lines)
   const afterLines = records(after[0]!.lines)
@@ -22,17 +24,29 @@ export function plannerUnchangedOutcomes(input: { parsed: ParsedImport; before: 
     const right = afterLines.filter((line) => line.id === lineId)
     if (left.length !== 1 || right.length !== 1 || left[0]!.sec !== sec || right[0]!.sec !== sec || left[0]!.synthetic === true || right[0]!.synthetic === true) return []
     const monthlyField = measure === "budget" ? "b" : measure === "actual" ? "a" : "f"
-    return months.flatMap((month, index) => {
+    const outcome = (field: string, reason: "domain-no-change" | "domain-retained-value"): WorkbookOutcome[] => {
+      const origins = input.parsed.origins!.filter((origin) => origin.sheet === sheet && origin.recordIndex === recordIndex && origin.field === field)
+      if (origins.length !== 1 || !validOrigin(origins[0]!)) return []
+      const origin = origins[0]!
+      return [{ kind: "unchanged", source: { sheet: origin.sheet, row: origin.row, column: origin.column, address: origin.address, field: origin.field }, reason }]
+    }
+    const outcomes = months.flatMap((month, index) => {
       const source = row[month]
       if (source !== null && (typeof source !== "number" || !Number.isFinite(source))) return []
       const beforeValues = left[0]![monthlyField]
       const afterValues = right[0]![monthlyField]
-      if (!Array.isArray(beforeValues) || !Array.isArray(afterValues) || index >= beforeValues.length || index >= afterValues.length || !sameValue(source, beforeValues[index], afterValues[index])) return []
-      const origins = input.parsed.origins!.filter((origin) => origin.sheet === sheet && origin.recordIndex === recordIndex && origin.field === month)
-      if (origins.length !== 1 || !validOrigin(origins[0]!)) return []
-      const origin = origins[0]!
-      return [{ kind: "unchanged" as const, source: { sheet: origin.sheet, row: origin.row, column: origin.column, address: origin.address, field: origin.field }, reason: "domain-no-change" as const }]
+      if (!Array.isArray(beforeValues) || !Array.isArray(afterValues) || index >= beforeValues.length || index >= afterValues.length || !sameValue(beforeValues[index], afterValues[index])) return []
+      return outcome(month, source === beforeValues[index] ? "domain-no-change" : "domain-retained-value")
     })
+    for (const [column, field] of [["Vendor / item", "name"], ["Description", "desc"], ["Currency", "cur"], ["Owner", "owner"]] as const) {
+      const source = row[column]
+      const beforeValue = field === "owner" ? ownerName(left[0]![field]) : left[0]![field]
+      const afterValue = field === "owner" ? ownerName(right[0]![field]) : right[0]![field]
+      if (typeof source !== "string" || typeof beforeValue !== "string" || typeof afterValue !== "string" || beforeValue !== afterValue) continue
+      const normalize = (value: string) => field === "cur" ? value.trim().toUpperCase() : field === "owner" ? normName(value) : value.trim()
+      if (normalize(source) !== normalize(beforeValue)) outcomes.push(...outcome(column, "domain-retained-value"))
+    }
+    return outcomes
   }))
 }
 
@@ -49,8 +63,15 @@ function records(value: unknown) {
   return Array.isArray(value) ? value.filter((entry): entry is Record<string, unknown> => !!entry && typeof entry === "object" && !Array.isArray(entry)) : []
 }
 
-function sameValue(source: unknown, before: unknown, after: unknown) {
-  return (source === null || typeof source === "number" && Number.isFinite(source)) && source === before && before === after
+function sameValue(before: unknown, after: unknown) {
+  return (before === null || typeof before === "number" && Number.isFinite(before)) && before === after
+}
+
+function ownerName(value: unknown) {
+  if (typeof value === "string") return value
+  if (!value || typeof value !== "object" || Array.isArray(value)) return undefined
+  const owner = value as Record<string, unknown>
+  return typeof owner.name === "string" ? owner.name : undefined
 }
 
 function validOrigin(origin: NonNullable<ParsedImport["origins"]>[number]) {

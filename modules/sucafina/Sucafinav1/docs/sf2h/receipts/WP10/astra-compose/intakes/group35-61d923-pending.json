@@ -1,0 +1,96 @@
+{
+  "schema": "sf2-astra-owner-head-observation-v1",
+  "pr": 35,
+  "observed_head": "61d92392e9bded167eb2794995a623b2719cc4ba",
+  "consumed_head": "217c9bcc75d499eff3884fb4afe662d5c0029935",
+  "status": "PENDING_SEPARATE_DEPENDENCY_AND_EXACT_HEAD_VALIDATION",
+  "scope": "New canonical advantage projection and sibling scenario batch are not required to silently replace the current W7 closure while its published changes are being qualified.",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/advantage-view.ts",
+      "blob": "47b271f492292956a8d8696cc32cd999e9878661",
+      "status": "added"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/projection.ts",
+      "blob": "29f32617de3ce33bbf414a7439f97d64806bbaa9",
+      "status": "modified"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/scenario.ts",
+      "blob": "b7174b16b485323f767d63e6842f3d61284245eb",
+      "status": "modified"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/stored-scenario.ts",
+      "blob": "f5bb6d732ffc588626553097d53d3c0e1457a81c",
+      "status": "modified"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/view.ts",
+      "blob": "4a6d481a8c7de805d7e13a3d3ab334beffd5692e",
+      "status": "modified"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+      "blob": "1782c2094239c3712d3a895a6a25f4160fb429c7",
+      "status": "modified"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+      "blob": "fc15d2d9130e23d0a290f5a14f61423152d2c72c",
+      "status": "modified"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+      "blob": "1673c86995cf71b61e288d91492ae7b691934171",
+      "status": "modified"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+      "blob": "fca509789efd2bf1b7d9453d09a3a460ee778feb",
+      "status": "modified"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-engine-fixture.ts",
+      "blob": "fd6a6b8b75152e858961360d16f7432233700b2f",
+      "status": "modified"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+      "blob": "8ba0ad3e8e4ce04df044dbe77df8e745008f5191",
+      "status": "modified"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/choice-history-bi.test.ts",
+      "blob": "40fbaf6eb4a7b88c3f4feb54773961188cd007da",
+      "status": "modified"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/projection.test.ts",
+      "blob": "52e71583353ca80cfbba6746c5bb0dadac48d042",
+      "status": "modified"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/stored-bi-fences.test.ts",
+      "blob": "2e18729fa382d1c8c1cc68d98703644e5c018be7",
+      "status": "modified"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/scenario-batch-fixture.ts",
+      "blob": "76602236238df061e96af1338d05d01799c5ecab",
+      "status": "added"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+      "blob": "044de4c276dde8850abdacd9c2328c7f2836fdd0",
+      "status": "added"
+    }
+  ],
+  "findings": [
+    "No-op promotion coverage proof regression remains forwarded to owner, comment6875919952.",
+    "HotTopic C08 domainSurface mismatch remains forwarded to owner, comment6875917412.",
+    "C12 CAS restoration requires owner/S0 source integration, comment6875610872."
+  ],
+  "global_release": false
+}

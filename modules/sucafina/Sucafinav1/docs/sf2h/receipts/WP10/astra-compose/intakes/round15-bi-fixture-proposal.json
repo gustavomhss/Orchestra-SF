@@ -1,0 +1,113 @@
+{
+  "schema": "sf2-wp10-bi-ci7-fixture-proposal-v1",
+  "status": "PROPOSED_OWN_FIXTURE_BOUNDARIES_NOT_EXECUTED",
+  "author": "/root/composition_wp10",
+  "independent_review": false,
+  "base": {
+    "head": "9a475b5fb28655f1c4309cd3e68b6e4d76269a2e",
+    "tree": "2bedbc721d0b402b41c942b770c49bf36e6a9e0b"
+  },
+  "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts",
+  "base_blob": "542a1c4405e063c99f8888ff9ab895e958f17f86",
+  "base_sha256": "81ea989ea6f9cc5c1a3035281fcd7dd12039d700dc8304d076467875960bfa0d",
+  "proposed": {
+    "blob": "7ac0a8b590e52bbe001e15015335cfa8aed7f0f6",
+    "sha256": "c98f9094ae4c4b351f6bdbdcee1037b5da089d03873bbe9df12276025d0733a9",
+    "bytes": 35257,
+    "path": "incoming-cache/bi-w15/patch/modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts"
+  },
+  "diff": {
+    "path": "incoming-cache/bi-w15/bi-lifecycle.patch",
+    "blob": "28e375ae3cd01a66f09b55072c4c7b08d76977c5",
+    "sha256": "2f111c41f016bbc641c66b7181fbf8ac6100eae57d1379bed7cc537cc7688e73",
+    "bytes": 10352
+  },
+  "evidence": {
+    "run": 43598770529,
+    "job": 132458824188,
+    "W": "9a475b5fb28655f1c4309cd3e68b6e4d76269a2e",
+    "S": "be9c1606e8a4bc0a3fe52814cd2089aabc284bc7",
+    "log": {
+      "path": "evidence/ci7.log",
+      "blob": "c34a467bec18bc775c3c77e66a77100dbcf67fe2",
+      "sha256": "25dc690dccf2ba6f0eeaa0b2c36ada8293befcb73a606ac89fda34c61387c9f8",
+      "bytes": 358629
+    }
+  },
+  "findings": [
+    {
+      "id": "CI7-BI-AUTHORITY-TICK-BOUNDARY",
+      "observed": "12759.57ms failure at old line313 waiting for data-access-unavailable after1s+29s. No shell request/response phase was recorded. Cleanup passed.",
+      "static": "The test inferred the first shell interval origin after clock installation before document navigation; it did not observe that first interval. Shell authorization is a real independent30s interval, while BI held read has its own30s timer.",
+      "proposal": "Anchor a completed actual200 shell+BI timer refresh before opening the held read1s into the following interval. Advance only29s with parallel real shell response observer, require403, require held read age<30000ms, then observe DOM denial and retain every late-render/abort/no-future-traffic assertion.",
+      "not_proven": "CI7 does not prove that timer origin caused the failure. This proposal removes the inferred origin and exposes HTTP versus DOM versus clock phases without claiming a passing fix."
+    },
+    {
+      "id": "CI7-BI-RETURN-ERROR-MASKING",
+      "observed": "24983.49ms failure shows only WP07 cleanup: connectedtrue, context.close/CDP Browser.close/browser.close unsettled. Setup874ms; no intervening phase reveals the failed action.",
+      "static": "An awaited finally close rejection replaces the body exception. The shared deadline closes only registered cleanup failures; it has no body exception input.",
+      "proposal": "Preserve primary and cleanup failures in order; both still fail. Resume normal clock for this navigation-only case, retain actionability with noWaitAfter and the original explicit waitForURL/default15s navigation readiness, and observe real BI/source/return HTTP and DOM phases.",
+      "not_proven": "No basis to assert CI7 navigation or fake-clock deferral is the cleanup cause. A transport failure may remain and must still fail."
+    },
+    {
+      "id": "CI7-WP07-CLEANUP-OWNER",
+      "owner": "WP07 / PR33",
+      "status": "FORWARDED_BY_ROOT",
+      "comment": "https://github.com/gustavomhss/Orchestra-SF/pull/33#issuecomment-6878062059",
+      "scope": "No WP07 source or process cleanup protocol changed."
+    }
+  ],
+  "invariants": [
+    "Five tests retain names and120000ms outer budgets; cooperative105000ms/defaults unchanged.",
+    "Held BI request still has only29s elapsed after its actual start; shell403 must be observed while its30s timeout is not due.",
+    "Real cookie revocation, current HTTP/C08/C16, exact filters/version pair/currency/focus, no late payload/render and no future requests remain asserted.",
+    "No fabricated access event, timer replacement, authority cache, retry or timeout increase.",
+    "Cleanup is always awaited; body-only, cleanup-only and combined failures remain failures.",
+    "No changes to product, canonical shell, extended BI browser, foreign WP07, workflows or worktree."
+  ],
+  "static_counterproof_matrix": [
+    {
+      "body_failure": true,
+      "cleanup_failure": false,
+      "required": "Throw the primary failure."
+    },
+    {
+      "body_failure": false,
+      "cleanup_failure": true,
+      "required": "Throw cleanup failure; no transport success inferred."
+    },
+    {
+      "body_failure": true,
+      "cleanup_failure": true,
+      "required": "Throw AggregateError retaining both failures, primary first."
+    },
+    {
+      "body_failure": false,
+      "cleanup_failure": false,
+      "required": "Only succeeds after every existing domain/navigation/revocation assertion."
+    }
+  ],
+  "validation_required": "Root Actions CI8 whole bi-lifecycle.test.ts fivecases on exact published W/S. Source inference and static patch are not runtime/native evidence.",
+  "official_primary_sources": [
+    "https://playwright.dev/docs/clock",
+    "https://playwright.dev/docs/api/class-clock",
+    "https://playwright.dev/docs/api/class-locator#locator-click",
+    "https://playwright.dev/docs/best-practices",
+    "https://playwright.dev/docs/actionability",
+    "https://playwright.dev/docs/test-assertions"
+  ],
+  "playwright_source_read": {
+    "repository": "microsoft/playwright",
+    "ref": "v1.59.1",
+    "server_clock_blob": "4c15f9ec138671dc21686cce762b299fdc21921e",
+    "injected_clock_blob": "e081a2c8733794ad65382c34993e7f64ca7a7410",
+    "observation": "runFor advances due timers and yields to real tasks; interval reschedules from prior callAt. pauseAt stops timers. Native source read was static only; no version-exact reproduction was run."
+  },
+  "local_product_execution": false,
+  "CI_dispatched": false,
+  "GitHub_writes": false,
+  "worktree_edits": false,
+  "foreign_source_edits": false,
+  "full_criterion_accepted": false,
+  "global_release": false
+}

@@ -1,0 +1,154 @@
+{
+  "schema": "sf2-compose-surgical-ci-receipt-v1",
+  "status": "COMPLETED_FAILURE",
+  "run": 43603388390,
+  "job": 132472742026,
+  "W": "34e6dd4f3588a64a3963a854ee29729f82fdd594",
+  "W_tree": "a73e41901be0e861d9e4ffa96810d1c6dd653d66",
+  "S": "068673ebc436f256cae085fd736797c443bb8f24",
+  "S_tree": "c2ceaf14f87cc2c92569b1801393c3d54f77d521",
+  "request_blob": "5b9f8e9b1596373f13f4db513fb380f2ee5476ac",
+  "request_sha256": "0a70108b8d488331f395637a1718a517bd8162fa7534380e5ba24ec56fc60e85",
+  "branch": "ci-run-linux-astra-compose-34e6dd4f-0a70108b-a1",
+  "first_and_only_parent": "34e6dd4f3588a64a3963a854ee29729f82fdd594",
+  "snapshot_diff": [
+    {
+      "path": ".ci-run.json",
+      "status": "added",
+      "sha": "5b9f8e9b1596373f13f4db513fb380f2ee5476ac"
+    }
+  ],
+  "selection": {
+    "files": 2,
+    "expected_cases": 8,
+    "observed_cases": 8,
+    "full_files": true,
+    "scope": {
+      "path": "ci-source/request-compose-09-w16.scope.json",
+      "bytes": 1657,
+      "sha256": "bf3783701a22a5535370f26e5a3551aa8c192d66731e59caecf194365d00c714"
+    }
+  },
+  "canonical_validator": "validateRequest + locateTestPackage; metadata-only local validation",
+  "cleanup": {
+    "job": 132473502059,
+    "status": "COMPLETED",
+    "conclusion": "SUCCESS",
+    "scope": "Deletes snapshot branch only; does not close browser-cleanup finding."
+  },
+  "result": {
+    "pass": 7,
+    "fail": 1,
+    "tests": 8,
+    "files": 2,
+    "assertions": 146,
+    "seconds": 66.25,
+    "unhandled_errors": 0
+  },
+  "omni": {
+    "status": "NOT_APPLICABLE",
+    "nonce": "d744b790966223a78de7fd43cf4d0b46",
+    "declaring_tests": 0,
+    "spawns": 0,
+    "delegated": 0,
+    "reason": "Focused selection ran no declaring test. Actual control says it proved nothing about Omni."
+  },
+  "artifacts": [],
+  "log": {
+    "path": "evidence/ci9.log",
+    "bytes": 87586,
+    "sha256": "240925e8f62a345e5b97cf6505bcf4c154483e58454a15785cef3f1b4de6ab8f"
+  },
+  "parser": {
+    "path": "/workspace/scratch/4c48b09c5c29/evidence/parse_ci_log_metadata.py",
+    "sha256": "bbd094b9bdce8ac3e82193eddf9a825c1a891159f03a0b53c15dadf98affb194"
+  },
+  "cases": [
+    {
+      "status": "pass",
+      "name": "BI keeps the canonical shell, refreshes on manual focus and timer, and signs out once while discarding a held genuine success",
+      "milliseconds": 22612.06,
+      "duration_text": "22612.06ms",
+      "file": "Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts",
+      "line": 837,
+      "timestamp": "2026-11-14T14:11:38.2713173Z"
+    },
+    {
+      "status": "pass",
+      "name": "the canonical shell still polls authority while BI awaits a held result and revocation prevents every late render",
+      "milliseconds": 2025.68,
+      "duration_text": "2025.68ms",
+      "file": "Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts",
+      "line": 857,
+      "timestamp": "2026-11-14T14:11:40.2970114Z"
+    },
+    {
+      "status": "pass",
+      "name": "clearing the BI selection while genuine authorized options are delayed prevents restoration of the previous selection",
+      "milliseconds": 1332.21,
+      "duration_text": "1332.21ms",
+      "file": "Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts",
+      "line": 865,
+      "timestamp": "2026-11-14T14:11:41.6292391Z"
+    },
+    {
+      "status": "fail",
+      "name": "BI returns from a real source with the same human filters, version pair, currency and mark focus after current reauthorization",
+      "milliseconds": 24733.08,
+      "duration_text": "24733.08ms",
+      "file": "Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts",
+      "line": 945,
+      "timestamp": "2026-11-14T14:12:06.3647787Z"
+    },
+    {
+      "status": "pass",
+      "name": "BI origin digests select only an explicit source of the real current Planner difference and never choose A or B implicitly",
+      "milliseconds": 633.23,
+      "duration_text": "633.23ms",
+      "file": "Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts",
+      "line": 962,
+      "timestamp": "2026-11-14T14:12:06.9955976Z"
+    },
+    {
+      "status": "pass",
+      "name": "BI transports only explicit persisted inverse selectors and preserves existing selector filters",
+      "milliseconds": 0.49,
+      "duration_text": "0.49ms",
+      "file": "Sucafinav1/test/product/wp10/integration/bi-advantage-selection.test.ts",
+      "line": 965,
+      "timestamp": "2026-11-14T14:12:07.0017311Z"
+    },
+    {
+      "status": "pass",
+      "name": "BI offers every authorized inverse separately and binds the current exact case pair without changing canonical values",
+      "milliseconds": 6621.8,
+      "duration_text": "6621.80ms",
+      "file": "Sucafinav1/test/product/wp10/integration/bi-advantage-selection.test.ts",
+      "line": 966,
+      "timestamp": "2026-11-14T14:12:13.6235433Z"
+    },
+    {
+      "status": "pass",
+      "name": "BI refuses lease loss after its first and last real authorization awaits and a changed final Request",
+      "milliseconds": 7779.7,
+      "duration_text": "7779.70ms",
+      "file": "Sucafinav1/test/product/wp10/integration/bi-advantage-selection.test.ts",
+      "line": 967,
+      "timestamp": "2026-11-14T14:12:21.4032476Z"
+    }
+  ],
+  "positive_scope": "Mounted-cookie revocation now passes actual shell403 before held-read deadline, DOM clearing and late-payload exclusion. All three BI advantage tests pass, including first/last header mutation. BI lifecycle4/5 pass.",
+  "open_findings": [
+    "BI return: actual view/period options200, exact form validity and enabled submit passed; comparison.http then timed out10000ms before source/navigation. Cause not established.",
+    "Independent browser cleanup failure: connectedtrue and three unsettled close RPCs; original WP07 fixture unchanged.",
+    "W15 lifecycle/Finance/readers observations remain bound to W15, not reexecuted here. Four older C17 timeouts remain open.",
+    "No full WP/native/AM/global acceptance."
+  ],
+  "terminal_mcp_observations": {
+    "path": "evidence/w16-terminal-mcp-observations.json",
+    "bytes": 42203,
+    "sha256": "8d31c8b3e66cdfb3eafeb666863e5c3903af56c1dc4934529436e842a507c6b6"
+  },
+  "local_product_execution": false,
+  "global_release": false
+}

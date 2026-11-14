@@ -1,0 +1,110 @@
+{
+  "qualification": "All patch files are review artifacts only. None has been applied to product or executed. They are not accepted inputs or replacements for owner delivery.",
+  "patches": [
+    {
+      "id": "F01-analysis-history-export",
+      "path": "modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts",
+      "owners": [
+        "WP01/interface-resume",
+        "WP04/astra-operations"
+      ],
+      "contracts": [
+        "C09",
+        "C11",
+        "C15"
+      ],
+      "preimage_blob": "973a2f09b394426364c514b923ecdc8e10ffb184",
+      "proposed_blob": "b28342c434bf79ce737d83187f32b46f89428911",
+      "patch_sha256": "1d5554fe8da0fa679bbacf167b8932d216bfa14eeef4d4e4e68d08f6605a10b9",
+      "source": null,
+      "reason": "Share the exact existing history markup with sourcing-analysis; does not invent a history implementation or remove its consumer.",
+      "state": "PROPOSED_NOT_APPLIED_NOT_TESTED",
+      "apply_decision": "Owner and S0; preserve existing behavior/assertions and revalidate affected consumers in Actions."
+    },
+    {
+      "id": "F02-sourcing-resolver-shape",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts",
+      "owners": [
+        "WP04/astra-operations"
+      ],
+      "contracts": [
+        "C17"
+      ],
+      "preimage_blob": "c9fa74a4e59e9204e6873619b9c580257d7d793d",
+      "proposed_blob": "0ca03173c29d6b087f92600a4f67320d61c7d881",
+      "patch_sha256": "536ab8e47e64e9cdc4e9fc32cda133fca6500526033f898393228191730fce9a",
+      "source": null,
+      "reason": "Match the published resolver object API while preserving receiver identity; no fake authority and no assertion removal.",
+      "state": "PROPOSED_NOT_APPLIED_NOT_TESTED",
+      "apply_decision": "Owner and S0; preserve existing behavior/assertions and revalidate affected consumers in Actions."
+    },
+    {
+      "id": "F03-import-context-narrowing",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/native/import-analysis.test.ts",
+      "owners": [
+        "WP06/astra-operations",
+        "WP12/astra-wp12"
+      ],
+      "contracts": [
+        "C04",
+        "C11",
+        "C15"
+      ],
+      "preimage_blob": "4087659570356188c546b59ba112dfd33a2a189c",
+      "proposed_blob": "e6721d6b7b5b89e93ffec22a1bcb76419f3a8747",
+      "patch_sha256": "e84d7add4363a0950d60441a055f9e054fc5e654868f9f1067896b8ca604f379",
+      "source": null,
+      "reason": "Add positive union checks and retain all semantic assertions. Does not fix the separate contribution(output, options) route/arity defect at original line 324.",
+      "state": "PROPOSED_NOT_APPLIED_NOT_TESTED",
+      "apply_decision": "Owner and S0; preserve existing behavior/assertions and revalidate affected consumers in Actions."
+    },
+    {
+      "id": "F08-operations-published-C12-comparison",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+      "owners": [
+        "WP11/finance-resume",
+        "WP04/astra-operations",
+        "WP10/astra-wp10"
+      ],
+      "contracts": [
+        "C12"
+      ],
+      "preimage_blob": "229e64c2d8109b413a7667bbe1b208ffa3ab0a73",
+      "proposed_blob": "994a537acb22521310f935a15157eec43b01f806",
+      "patch_sha256": "a5d30bb04bcdac800dc89798749b8f0220fd9abfe6dc2b7d95539734873565ac",
+      "source": {
+        "pr": 34,
+        "head": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "comparison_blob": "4bdd12ac162d61465557363953e25dfd99fad5e8",
+        "canonical_owner": false
+      },
+      "reason": "Minimal proposed post-commit selected-case equality fence derived from the Operations-published comparison. Preserves ALL current application-attempt reservation, receipt proof, producer checks and current reconciliation code. Full replacement with Operations blob would remove durable attempt protections and is rejected. Finance must reconcile with latest f8404c18abc040c49cf111eb4561ce4c2873a4c6 and prove conflict plus positive replay/restart/lost-response behavior. Not applied.",
+      "state": "PROPOSED_NOT_APPLIED_NOT_TESTED",
+      "apply_decision": "Owner and S0; preserve existing behavior/assertions and revalidate affected consumers in Actions."
+    },
+    {
+      "id": "F08-interface-published-proof-comparison",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "owners": [
+        "WP11/finance-resume",
+        "WP10/astra-wp10",
+        "WP01/interface-resume"
+      ],
+      "contracts": [
+        "C12"
+      ],
+      "preimage_blob": "90c3e981d8418c562342660bd3d56d03f9995383",
+      "proposed_blob": "a45436a6fef8598b7ef9eae33d061ddebf0aa43d",
+      "patch_sha256": "387166070b2dbea65c6f2c93b959c1bc6caf93b502cf66d46f3abf895c864106",
+      "source": {
+        "pr": 43,
+        "head": "ad94fd2d78be47cecfb91f801ce7764127667b60",
+        "blob": "a45436a6fef8598b7ef9eae33d061ddebf0aa43d",
+        "canonical_owner": false
+      },
+      "reason": "Foreign-owned published proposal for receipt/proof binding. Do not apply from Interface as canonical; Finance/host must reconcile with their complete closure.",
+      "state": "PROPOSED_NOT_APPLIED_NOT_TESTED",
+      "apply_decision": "Owner and S0; preserve existing behavior/assertions and revalidate affected consumers in Actions."
+    }
+  ]
+}

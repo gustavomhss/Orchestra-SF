@@ -1,0 +1,27 @@
+{
+  "schema": "sf2.wp10.builder-receipt.v1",
+  "builder": "/root",
+  "state": "CLOSED",
+  "createdAt": "2026-11-14T06:30:39.137055+00:00",
+  "successorLabel": "W12",
+  "baseCandidate": "68027467de0bbe3e9136be7b458724e387f55839",
+  "finding": "R1-UX-10",
+  "supersedesTestHashFrom": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-composition/builders/decision-controls-replacement-W12.json",
+  "change": "Extend the prepared real Chromium journey through unconfirmed replacement (no persisted change), explicit confirmation, actual POST, full reload and revision 2. Keep exact source and mapped components/evidence while changing only the human scope note. Missing pending reasons are not reconstructed or claimed persisted.",
+  "file": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/decision-controls.test.ts",
+    "priorPreparedSha256": "64fe83eb37dd2520c59b7f15b34925e8dff62304d29ecfa0f70de968b7355153",
+    "afterSha256": "9627abb6cc0235316e882400b6ee400b32f0650a19e3e8967a54849243aa4a72",
+    "afterBlobSha": "13921380b9eb7bccb87ce4dab92d64a9beb72c6a",
+    "bytes": 29202
+  },
+  "assertionInventory": {
+    "W8ExpectLines": 58,
+    "W12ExpectLines": 80,
+    "originalLinesRetainedWithMultiplicity": true,
+    "outerTestBudgetsUnchanged": true
+  },
+  "productChangedByThisAddendum": false,
+  "localProductExecution": false,
+  "qualification": "Additional proof authored but not executed locally. Exact W12 hosted run and independent R1 review must determine closure. No native/global acceptance."
+}

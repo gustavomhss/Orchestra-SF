@@ -1,6 +1,11 @@
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import { decodeSfSkillInput } from "../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
+import type { PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
+import type { SfNativeRunRecord } from "../../../../modules/sucafina/Sucafinav1/product/contracts/state.ts"
+import { verifyAlternativePublication } from "../../../../modules/sucafina/Sucafinav1/product/decisions/alternative-provenance.ts"
+import type { AlternativeCapabilityProvenance } from "../../../../modules/sucafina/Sucafinav1/product/decisions/alternative-provenance.ts"
+import type { createAlternativeReadOnlyReplay } from "../../../../modules/sucafina/Sucafinav1/product/decisions/alternative-replay.ts"
 import type { createPortfolioProofVerifier } from "../../../../modules/sucafina/Sucafinav1/product/portfolio/verification.ts"
 import { createDecisionCandidateResolver, portfolioCandidateRef } from "../../../../modules/sucafina/Sucafinav1/product/portfolio/candidates.ts"
 import { decisionCoverageRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/coverage-access.ts"
@@ -9,6 +14,8 @@ import type { SfAnalysisDependencies, SfAnalysisVerifier } from "./analysis-veri
 
 export function createSfPortfolioVerifier(dependencies: SfAnalysisDependencies & {
   portfolioProof: Pick<ReturnType<typeof createPortfolioProofVerifier>, "replayPortfolio">
+  readAlternativeCapture?: (runRef: string, resultDigest: string, call: TrustedDomainContext) => Promise<PortResult<{ run: SfNativeRunRecord; record: AlternativeCapabilityProvenance }>>
+  replayAlternative?: ReturnType<typeof createAlternativeReadOnlyReplay>
 }): SfAnalysisVerifier {
   const resolveCandidate = createDecisionCandidateResolver(dependencies.cases)
   return {
@@ -46,7 +53,22 @@ export function createSfPortfolioVerifier(dependencies: SfAnalysisDependencies &
       const proof = await read(call)
       if (!proof) return { status: "unavailable", reason: "analysis-source-unavailable" }
       return { status: "ok", value: { current: proof.current, input: value, sources: proof.sources, acceptsOutput: async (output, currentCall) => {
-        if (output.state !== "ready" || output.kind !== "PortfolioComparison" || digestSfValue(output.evidenceRefs) !== digestSfValue(output.payload.evidenceRefs) || !await read(currentCall)) return { status: "unavailable", reason: "analysis-output-unverified" }
+        if (output.state !== "ready" || !await read(currentCall)) return { status: "unavailable", reason: "analysis-output-unverified" }
+        if (output.kind === "AlternativeDraft") {
+          if (!dependencies.readAlternativeCapture || !dependencies.replayAlternative) return { status: "unavailable", reason: "alternative-capture-unavailable" }
+          const capture = await dependencies.readAlternativeCapture(output.runProvenance.runId, digestSfValue(output.payload), currentCall)
+          if (capture.status !== "ok" || (capture.value.run.state !== "running" && (capture.value.run.state !== "ready" || capture.value.run.outputRef !== output.id)) || !verifyAlternativePublication(capture.value.record, { ...capture.value.run, state: "ready", outputRef: output.id }, output)) return { status: "unavailable", reason: "alternative-capture-unavailable" }
+          const replay = await dependencies.replayAlternative(capture.value.record, currentCall)
+          if (replay.status !== "ok" || digestSfValue(replay.value.output) !== digestSfValue(output.payload)) return { status: "unavailable", reason: "analysis-output-unverified" }
+          const refs = [...output.payload.proposal.result.sourceRefs, ...output.payload.proposal.result.costCoverage.evaluatedSourceRefs, ...output.payload.proposal.result.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs)]
+          if (refs.some((ref) => !output.evidenceRefs.some((item) => digestSfValue(item) === digestSfValue(ref)))) return { status: "unavailable", reason: "analysis-output-unverified" }
+          const sources = await dependencies.context.context({ refs: output.evidenceRefs }, currentCall)
+          if (sources.length !== output.evidenceRefs.length || sources.some((item, index) => item.state !== "fresh" || item.accessRevision !== currentCall.binding.accessRevision || !item.authorizedProjection || !item.currentRef || digestSfValue(item.ref) !== digestSfValue(output.evidenceRefs[index]) || digestSfValue(item.currentRef) !== digestSfValue(item.ref))) return { status: "unavailable", reason: "analysis-source-unavailable" }
+          const again = await dependencies.readAlternativeCapture(output.runProvenance.runId, digestSfValue(output.payload), currentCall)
+          if (again.status !== "ok" || digestSfValue(again.value) !== digestSfValue(capture.value) || !await read(currentCall) || !await dependencies.host.revalidate(currentCall)) return { status: "unavailable", reason: "analysis-output-unverified" }
+          return { status: "ok", value: true }
+        }
+        if (output.kind !== "PortfolioComparison" || digestSfValue(output.evidenceRefs) !== digestSfValue(output.payload.evidenceRefs)) return { status: "unavailable", reason: "analysis-output-unverified" }
         if (!await dependencies.portfolioProof.replayPortfolio(value.request, output.payload, currentCall) || !await read(currentCall)) return { status: "unavailable", reason: "analysis-output-unverified" }
         return { status: "ok", value: true }
       } } }

@@ -1,0 +1,69 @@
+--- a/modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts
+@@ -57,13 +57,13 @@
+ 
+   test("rejects a binding whose digest does not cover its contents", async () => {
+     const input = harness()
+-    input.readHistoricalBinding = async () => ({ status: "ok", value: { binding: { ...makeBinding(), resultRef: "decision-result:substituted" }, selection: { selectionDigest: "selection-a" } } as never)
++    input.readHistoricalBinding = async () => ({ status: "ok", value: { binding: { ...makeBinding(), resultRef: "decision-result:substituted" }, selection: { selectionDigest: "selection-a" } } } as never)
+     expect(await createPortfolioHistoricalProvenance(input)(stored, context)).toBe(false)
+   })
+ 
+   test("rejects a selection that differs from the binding proof", async () => {
+     const input = harness()
+-    input.readHistoricalBinding = async () => ({ status: "ok", value: { binding: makeBinding(), selection: { selectionDigest: "selection-other" } } as never)
++    input.readHistoricalBinding = async () => ({ status: "ok", value: { binding: makeBinding(), selection: { selectionDigest: "selection-other" } } } as never)
+     expect(await createPortfolioHistoricalProvenance(input)(stored, context)).toBe(false)
+   })
+ 
+--- a/modules/sucafina/Sucafinav1/product/portfolio/catalog.ts
++++ b/modules/sucafina/Sucafinav1/product/portfolio/catalog.ts
+@@ -12,7 +12,7 @@
+     if (!await input.revalidate(context)) return { status: "denied", reason: "invalid-binding" } as const
+     const current = await Promise.all(request.caseRefs.map((caseRef) => input.cases.read({ caseRef }, context)))
+     const failure = current.find((item) => item.status !== "ok")
+-    if (failure && failure.status !== "ok") return failure
++    if (failure) return failure
+     if (current.some((item, index) => { const ref = parseCaseRef(request.caseRefs[index]!); return !ref || item.status !== "ok" || item.value.case.id !== ref.id || item.value.case.incarnation !== ref.incarnation })) return { status: "stale", reason: "portfolio-catalog-changed" } as const
+     if (!input.validateSources || !(await Promise.all(current.map((item) => item.status === "ok" && input.validateSources!(item.value, context)))).every(Boolean)) return { status: "unavailable", reason: "portfolio-catalog-sources-unavailable" } as const
+     const entries = current.flatMap((item, index) => {
+--- a/modules/sucafina/Sucafinav1/product/portfolio/handoff.ts
++++ b/modules/sucafina/Sucafinav1/product/portfolio/handoff.ts
+@@ -38,7 +38,7 @@
+   if (selected.eligibility === "ineligible" || selected.eligibility === "unavailable") return { status: "conflict", reason: "combination-not-available" }
+   const resolved = await Promise.all(input.selectedCandidateRefs.map((ref) => input.host.resolveCandidate(ref, context)))
+   const failure = resolved.find((item) => item.status !== "ok")
+-  if (failure && failure.status !== "ok") return failure
++  if (failure) return failure
+   const candidates = resolved.flatMap((item) => item.status === "ok" ? [item.value] : [])
+   const operations = [...input.request.operations, ...candidates.flatMap((candidate) => candidate.operations)]
+   if (digestSfValue({ candidates: candidates.map((candidate) => candidate.ref), operations }) !== input.combinationId) return { status: "stale", reason: "combination-changed" }
+@@ -76,7 +76,7 @@
+   if (selected.eligibility === "ineligible" || selected.eligibility === "unavailable") return { status: "conflict", reason: "combination-not-available" }
+   const resolved = await Promise.all(input.selectedCandidateRefs.map((ref) => input.host.resolveCandidate(ref, context)))
+   const failure = resolved.find((item) => item.status !== "ok")
+-  if (failure && failure.status !== "ok") return failure
++  if (failure) return failure
+   const candidates = resolved.flatMap((item) => item.status === "ok" ? [item.value] : [])
+   const operations = [...input.request.operations, ...candidates.flatMap((candidate) => candidate.operations)]
+   if (digestSfValue({ candidates: candidates.map((candidate) => candidate.ref), operations }) !== input.combinationId) return { status: "stale", reason: "combination-changed" }
+@@ -93,7 +93,7 @@
+   try {
+     const resolved = await Promise.all(refs.map((ref) => host.resolveCandidate(ref, context)))
+     const failure = resolved.find((item) => item.status !== "ok")
+-    if (failure && failure.status !== "ok") return failure
++    if (failure) return failure
+     const candidates = resolved.flatMap((item) => item.status === "ok" ? [item.value] : [])
+     if (digestSfValue(candidates) !== digestSfValue(expected)) return { status: "stale", reason: "candidate-changed-before-handoff" }
+     if (!await host.revalidate(context)) return { status: "stale", reason: "authority-changed" }
+--- a/modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts
++++ b/modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts
+@@ -77,7 +77,7 @@
+         return { status: "ok", value: { resultRef: saved.value.resultRef, scenario: saved.value.result, criterionValue: preview.value.comparison.knownDifference, parameterUnit: binding.parameterUnit, resultUnit: binding.resultUnit, unitMetadataRef: binding.unitMetadataRef, unitMetadataVersion: binding.unitMetadataVersion } }
+       },
+       exactThreshold: async (_request, trusted) => {
+-        if (!input.exactThreshold || samples.some((sample) => !sample.complete) || baseline.value.result.costCoverage.coverageState !== "complete" || source.value.result.costCoverage.coverageState !== "complete") return { status: "unavailable", reason: "exact-threshold-not-proven" }
++        if (!input.exactThreshold || samples.some((sample) => !sample.complete) || baseline.value.kind !== "scenario" || source.value.kind !== "scenario" || baseline.value.result.costCoverage.coverageState !== "complete" || source.value.result.costCoverage.coverageState !== "complete") return { status: "unavailable", reason: "exact-threshold-not-proven" }
+         const result = await input.exactThreshold(request, binding, trusted)
+         if (result.status === "ok") exactEvidence.value = result.value
+         return result

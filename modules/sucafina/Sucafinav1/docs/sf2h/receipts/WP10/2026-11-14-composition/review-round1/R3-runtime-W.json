@@ -1,0 +1,237 @@
+{
+  "schema": "sf2.wp10.independent-review.v1",
+  "review_id": "R3-runtime-W",
+  "issued_at": "2026-11-14T02:15:14Z",
+  "reviewer": {
+    "agent": "/root/review_runtime",
+    "role": "R3 — IA, Relay e integração",
+    "independent": true,
+    "product_authorship": [],
+    "product_files_modified": [],
+    "author_overlap": false,
+    "authors_disclosed_by_controller": "Root, três builders e produtores estrangeiros; nenhum é o reviewer R3. O rascunho de critérios e o finding C07 do builder foram tratados como insumos a refutar, não pareceres."
+  },
+  "lease": {
+    "accepted_before_review": true,
+    "mode": "readonly-product",
+    "builders_status_at_start": "CLOSED",
+    "allowed_writes": ["analysis/reviews/R3-runtime-W.json", "analysis/reviews/R3-runtime-W.md"],
+    "remote_writes": 0,
+    "local_product_tests_build_typecheck": 0,
+    "later_root_fixes_excluded": true,
+    "frozen_read_root": "/workspace/scratch/cca507855f4a/analysis/frozen-W/repo"
+  },
+  "candidate": {
+    "name": "W",
+    "repository": "gustavomhss/Orchestra-SF",
+    "branch": "astra-wp10",
+    "base": "sf2-stack",
+    "pull_request": "https://github.com/gustavomhss/Orchestra-SF/pull/29",
+    "commit": "eee00ac3ef2b68c987970535ba5bba5e4c6ad01b",
+    "tree": "dcfc04896c3a83e6a69d3ecd1d948ff54231ddf7",
+    "parent": "fdbb184f1df7c58f00ee8555e42bce017fd0e942",
+    "remote_head_independently_confirmed": true,
+    "remote_pr_state_observed": "open, draft",
+    "manifest": "analysis/publication/frozen-candidate.json",
+    "manifest_changed_files": 175,
+    "manifest_foreign_pins": 103,
+    "sha256_verification": {
+      "result": "175/175 matched before root resumed corrections",
+      "command": "jq -r '.files[] | \"\\(.sha256)  repo/\\(.path)\"' analysis/publication/frozen-candidate.json | sha256sum --check --quiet",
+      "exit_code": 0,
+      "scope": "The 175 manifest deltas; not an assertion that the partial checkout is a full Git tree."
+    }
+  },
+  "verdict": "changes-required",
+  "acceptance": {
+    "wp10_owned_behavior": "CHANGES_REQUIRED",
+    "native_qualification": "NOT_ESTABLISHED",
+    "global_candidate_C": "NOT_ACCEPTED_BY_THIS_REVIEW",
+    "delivery_D": "NOT_REVIEWED",
+    "reason": "Two mandatory WP10 defects remain in W; C07 real native admission/execution is an explicit foreign/native prerequisite. Hosted receipts for W and live native/Atlas proofs were not available to R3 at report closure."
+  },
+  "source_basis": {
+    "instructions": ["repo/AGENTS.md", "context/handoff.md"],
+    "plan": "context/pack.json canonical_work_package",
+    "canonical_tasks": 7,
+    "canonical_criteria": 171,
+    "independently_counted_unique_criteria": 171,
+    "intake": "context/intake.json",
+    "non_acceptance_inputs": ["analysis/criteria-current-draft.json", "analysis/runtime/c07-native-api-findings.md"],
+    "contracts_read": ["C07", "C15", "C16", "C17"],
+    "contract_freeze": "modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json",
+    "canonical_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba"
+  },
+  "findings": [
+    {
+      "id": "R3-C11-01",
+      "severity": "P1",
+      "mandatory": true,
+      "owner": "WP10 / host native-input composition",
+      "classification": "owned-fix",
+      "status": "OPEN_IN_W",
+      "title": "Alternative publication veto can return success without any commit",
+      "candidate": "eee00ac3ef2b68c987970535ba5bba5e4c6ad01b",
+      "criteria": ["WP10.T01.INV.02", "WP10.T01.INV.03", "WP10.T01.CHK.05", "WP10.T06.CHK.04", "WP10.T06.QLT.60"],
+      "evidence": [
+        {"path": "apps/cli/src/sucafina-product/analysis-native-inputs.ts", "lines": "137-162", "detail": "The guarded callback awaits work, then vetoes at lines 149 and 153-156 using {...result, commit:false}, preserving work's success value."},
+        {"path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts", "lines": "88-95", "detail": "A callback with commit:false becomes status:preview with the unchanged callback value when request, actor and target remain authorized."},
+        {"path": "modules/sucafina/Sucafinav1/product/ai/run-store.ts", "lines": "116-124", "detail": "Inner work returns {status:ok,value:record}; mutate returns saved.value immediately for preview, before the post-commit read."}
+      ],
+      "reproduction": [
+        "Start an authorized native AlternativeDraft run with a valid private capture; keep the UI/request actor and target authorization unchanged.",
+        "After run-store's inner callback validates and stages ready/output/provenance, revoke the native binding or invalidate its provider generation before the wrapper's captureCurrent check.",
+        "The wrapper rejects commit, preserving {status:ok,value:readyRecord}; C08 wraps it as preview and run-store.publish returns ok.",
+        "Observe that persisted run remains running and output/provenance are absent although publish returned ready success."
+      ],
+      "reproduction_kind": "deterministic source trace; not a local product execution",
+      "impact": "Breaks C11 publication semantics and reports completed output without durable run/output/provenance. Generic request abort is separately caught by C08; the discriminating counterexample retains UI authorization while invalidating the native capture.",
+      "minimum_fix": "On every publication-wrapper veto, return a non-success discriminated value (or remove a success value so the store reports stale). Never propagate the inner success through commit:false. Preserve atomic staging and the final nativePublicationGuard.",
+      "required_recheck": "Hosted real run-store plus C08 wrapper test for native binding/generation invalidation after inner staging; expect non-ok publish and zero changes to run, contribution and provenance. Recheck the immutable replacement SHA.",
+      "controller_notified_immediately": true,
+      "controller_triage": "Accepted mandatory owned correction; not fixed or rechecked by R3."
+    },
+    {
+      "id": "R3-LIFE-01",
+      "severity": "P2",
+      "mandatory": true,
+      "owner": "WP10 / native-execution lifecycle",
+      "classification": "owned-fix",
+      "status": "OPEN_IN_W",
+      "title": "Preparation that cannot attach leaks host-owned run resources after revocation or abort",
+      "candidate": "eee00ac3ef2b68c987970535ba5bba5e4c6ad01b",
+      "criteria": ["WP10.T06.CHK.04", "WP10.T06.CHK.06", "WP10.T06.QLT.01", "WP10.T06.CMP.01", "WP10.T06.INV.40"],
+      "evidence": [
+        {"path": "apps/cli/src/sucafina-product/native-execution.ts", "lines": "61-92", "detail": "Successful host.prepare is followed by attach; attach failure only calls host.interrupt. Active ownership is inserted later at 84-85; an announcement failure removes it before attempting interrupt."},
+        {"path": "apps/cli/src/sucafina-product/native-host.ts", "lines": "105-109,192-201,241-259", "detail": "interrupt requires current authority and returns denied on aborted/expired/revoked requests without invoking release; release is the host-owned cleanup operation."},
+        {"path": "apps/cli/src/sucafina-product/host-context.ts", "lines": "414-419,571-577", "detail": "withRunContext rejects an aborted request; background cleanup delegates to execution.releaseRun."},
+        {"path": "apps/cli/src/sucafina-product/native-execution.ts", "lines": "205-213", "detail": "releaseRun returns immediately when no active entry exists, so it cannot clean a run which never attached or whose entry was removed."}
+      ],
+      "reproduction": [
+        "Allow host.prepare to succeed and retain its native binding, token ticket and skill observation.",
+        "Abort the original request or revoke its authority before the subsequent withRunContext/attach completes.",
+        "attach returns denied; host.interrupt also returns denied because the original authority is no longer current.",
+        "The execution was never added to active. Outer releaseRun is a no-op; host observations/runs/binding/token-ticket remain retained until global host disposal. Repeat canceled admissions to accumulate retained requests and resources."
+      ],
+      "reproduction_kind": "deterministic source trace; not a local product execution",
+      "impact": "Violates deterministic lifecycle cleanup and retains Request/admission resources beyond a rejected run. Existing authority checks still deny data/model execution after abort; this finding does not assert an authorization bypass.",
+      "minimum_fix": "Establish unconditional host.release ownership for every prepare-ok result until an active ticket successfully assumes ownership. Use a finalizer/try-finally so attach exceptions, denied attach and announcement failure all clean up independently of business authorization.",
+      "required_recheck": "Hosted counterexamples for abort and revocation between prepare and attach, thrown attach and throwing admission callback; verify no remaining binding, budget ticket or skill observation. Preserve unrelated Session execution and the global disposal test.",
+      "controller_notified_immediately": true,
+      "controller_triage": "Accepted mandatory owned correction; not fixed or rechecked by R3."
+    },
+    {
+      "id": "R3-C07",
+      "severity": "P1",
+      "mandatory": true,
+      "owner": "Native Task/Relay owner and WP09 producer; WP10 consumes the published seam",
+      "classification": "foreign-native-prerequisite",
+      "status": "BLOCKED_IN_W",
+      "title": "Real Relay publication is mounted but native routine admission and execution are not",
+      "candidate": "eee00ac3ef2b68c987970535ba5bba5e4c6ad01b",
+      "criteria": ["WP10.T01.CHK.03", "WP10.T01.DOD.01", "WP10.T06.CHK.07", "WP10.T06.CHK.60", "WP10.T06.DOD.60", "WP10.T06.SUC.60"],
+      "evidence": [
+        {"path": "apps/cli/src/sucafina-product/host-context.ts", "lines": "287-290", "detail": "Routine services are created with publication, readers and prepareWatch but no native port."},
+        {"path": "apps/cli/src/sucafina-product/routine-services.ts", "lines": "40-59,69-70,141-146,180-184,214-236,259-264", "detail": "The native reader/admission/start/terminal/artifact/index callbacks are optional and absent; affected paths return explicit unavailable."},
+        {"path": "packages/core/src/tool/task.ts", "lines": "425-456", "blob": "0e82455ca428e5b498551496bc65bdc0f6551df3", "detail": "Independently read at W via GitHub MCP: requireParent requires the exact recorded assistant task part and input; arbitrary UI/sf_* contexts do not satisfy native Task admission."},
+        {"path": "packages/core/src/tool/task-governance.ts", "blob": "12173c0769e62212a4a01003a0a253e7d1d1ba38", "detail": "Independently read at W: governance hooks cannot replace Task target/model/depth/placement/approval checks or publish Session events."}
+      ],
+      "reproduction": ["Use the mounted host with a valid published workflow and authorized SF context.", "Catalog can read real publication, but no native resolvePlan/prepare/start/readExecution/readArtifact provider is installed.", "Prepare/run/read follows the explicit native-routine-*-unavailable branch; a fixture port is not native qualification."],
+      "reproduction_kind": "composition/source trace plus independently pinned native API reads",
+      "impact": "Required routine routes cannot produce a real admitted run or terminal result in W. Catalogue and descriptor counts do not close AM02/AM06 or GNATIVE.",
+      "minimum_fix": "Native owner publishes a governed host invocation that preserves Task checks and binds current SF principal/project/case/input/plan/publication, with read/revalidate/index/start and immutable terminal/artifact receipts. WP09/WP10 then compose that real adapter. Do not fabricate assistant task messages or substitute SessionV2.resume.",
+      "required_recheck": "Published producer SHA and consumer pin; hosted native positive/negative receipt, current admission, retry, revocation, version and terminal/artifact digest checks in the integrated candidate.",
+      "controller_notified_immediately": true,
+      "controller_triage": "Confirmed prerequisite blocker; not an optional finding and not evidence of global acceptance."
+    }
+  ],
+  "coverage": [
+    {
+      "area": "Host lifecycle, installation, placement and shared services",
+      "paths": ["apps/cli/src/sucafina-product/installation.ts", "apps/cli/src/sucafina-product/host-context.ts", "apps/cli/src/sucafina-product/business-services.ts"],
+      "observed": "Trusted installation factory injects createSfHostRuntime; runtime uses existing Project, SessionStore and LocationServiceMap with installation/project/location identity. Domain producers and Persistence are composed at the host root. Finalizers clear service maps; native admission cleanup has R3-LIFE-01.",
+      "status": "STATIC_REVIEWED_WITH_FINDING"
+    },
+    {
+      "area": "C00 pins and C15 distributed profile/skill inventory",
+      "paths": ["modules/sucafina/Sucafinav1/product/ai/manifests/resident.json", "modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json", "modules/sucafina/Sucafinav1/product/host-binding/resident-agents.ts", "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts"],
+      "observed": "Independent JSON inspection counts 5 profiles, 18 skills, 8 packs and 39 frozen operations. Registration waits for config-agent, sets own sf_* profiles and deny-default grants, reserves the directory source. Loader checks real path containment, pinned source/instructions digests, exact SessionV2.skill synthetic message and unchanged source after load.",
+      "status": "STATIC_INVENTORY_ONLY",
+      "limit": "Counts, code and 175 manifest hashes do not prove all 18 sources loaded or 39 routes executed. Canonical type reconciliation and transitive producer acceptance require the controller's pinned CI/evidence."
+    },
+    {
+      "area": "C16 MCP and native binding/leases",
+      "paths": ["apps/cli/src/sucafina-product/contribution.ts", "modules/sucafina/Sucafinav1/product/host-binding/execution-context.ts", "modules/sucafina/Sucafinav1/product/host-binding/sf-mcp-bridge.ts", "modules/sucafina/Sucafinav1/product/host-binding/capability-dispatch.ts", "modules/sucafina/Sucafinav1/product/host-binding/verified-call.ts"],
+      "observed": "Real SDK Server/Client/InMemoryTransport per call; config collision check avoids connecting to homonymous external providers; leases bind Tool.Context, profile, loaded skill, operation, digest, call identity, expiry and generation. Consumption is one-shot. UI/native bridge share dispatch/descriptor and result receipt checks, and transports close in finally. routine-result rejects prepare/run.",
+      "status": "STATIC_REVIEWED",
+      "limit": "No live two-session, two-principal, 39-route or provider-revocation proof is accepted by this report. R3-LIFE-01 remains open."
+    },
+    {
+      "area": "Native Session execution, model budget and cancellation",
+      "paths": ["apps/cli/src/sucafina-product/native-host.ts", "apps/cli/src/sucafina-product/native-execution.ts", "apps/cli/src/sucafina-product/token-gate.ts", "packages/core/src/session.ts"],
+      "observed": "Dedicated SessionV2.create/skill/prompt(resume:false)/resume uses existing process SessionExecution. Pinned Core session.ts lines 735-740 confirms delegation to execution.resume/interrupt. Host/source/model/receipt and output digests are checked. Token gate uses captured model object and restricts SF execution to supported responses transport; unsupported hosts fail closed.",
+      "status": "STATIC_REVIEWED_WITH_FINDING",
+      "limit": "No real provider token-count, native output, persistence/restart or cancellation receipt observed in this review. Native C15/GNATIVE remains unqualified."
+    },
+    {
+      "area": "Native input and C11 AlternativeDraft publication",
+      "paths": ["apps/cli/src/sucafina-product/analysis-native-inputs.ts", "apps/cli/src/sucafina-product/alternative-captures.ts", "apps/cli/src/sucafina-product/decision-alternative-services.ts", "apps/cli/src/sucafina-product/decision-change-services.ts", "apps/cli/src/sucafina-product/analysis-verifier-portfolio.ts", "modules/sucafina/Sucafinav1/product/ai/run-store.ts"],
+      "observed": "Admitted input is host-private and tied to persisted run, exact request, current case, principal/access/policy and skill receipt. Alternative capture comes from verified private bridge receipt, not model provenance. Publication stages run/output/provenance together with source fences and a private commit guard.",
+      "status": "CHANGES_REQUIRED",
+      "finding": "R3-C11-01"
+    },
+    {
+      "area": "C07 Relay catalog, plan, admission, terminal and result",
+      "paths": ["apps/cli/src/sucafina-product/routine-publication.ts", "apps/cli/src/sucafina-product/routine-services.ts", "modules/sucafina/Sucafinav1/product/routines/result-access.ts", "packages/core/src/relay-workflow-binding.ts"],
+      "observed": "Publication is the real Location-bound WorkflowRelayV2 publication adapter. Plan/input/write scope/source/publication and immutable artifact/terminal checks are present in the consuming port. Absence of native provider is fail closed.",
+      "status": "BLOCKED_FOREIGN_NATIVE_PREREQUISITE",
+      "finding": "R3-C07"
+    },
+    {
+      "area": "C17 BCS and Atlas transactional provider",
+      "paths": ["modules/sucafina/Sucafinav1/product/host-binding/business-context.ts", "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts", "modules/sucafina/Sucafinav1/product/host-binding/atlas-store.ts", "modules/sucafina/Sucafinav1/product/host-binding/atlas-scanner.ts"],
+      "observed": "Real createMemoryEmit/read imports, host-derived owner, synchronous snapshot DurableMemory, serialized source fences, protected envelope/index/outbox transaction, replay and source authorization checks. Scanner is host-selected from the native boundary with clean=false, hit=true and could-not-run=throw. Missing trusted scanner stays unavailable. No source code was executed by R3.",
+      "status": "STATIC_REVIEWED_NO_NATIVE_ACCEPTANCE",
+      "limit": "R2's calculation-source finding is owned by its independent review and is not resolved here. Real scanner/append/commit/process restart/recall/UI AM05 evidence is still required."
+    },
+    {
+      "area": "Atlas package and generated artifacts",
+      "paths": ["modules/atlas/boundary/package.json", "modules/atlas/boundary/script/build.ts", "modules/atlas/boundary/src/business-memory-entry.ts", "modules/atlas/packages/adapter-io/src/native-bound.ts", "modules/atlas/boundary/test/business-memory-ports.test.ts", "modules/atlas/boundary/src/generated/business-memory-ports.js", "modules/atlas/boundary/src/generated/business-memory-ports.d.ts", "modules/atlas/boundary/src/generated/native-memory.js", "modules/atlas/boundary/src/generated/native-memory.d.ts"],
+      "observed": "All nine paths independently fetched at W using GitHub MCP. Canonical generator externalizes only the literal memory-emit scanner edge, carries AST/spawn admission and counterexamples. Generated business JS includes literal NO_SCANNER_NAME import from @orchestra/atlas-boundary/native-memory; business exports factories and native exports only bound API plus scanners. Unresolved @atlas aliases were not present in fetched artifact text.",
+      "status": "SOURCE_AND_ARTIFACTS_PRESENT_EXECUTION_PENDING",
+      "limit": "Text/source inspection is not execution of AST/generate/check:generated/typecheck/check:spawn-imports. Current hosted evidence must establish generation reproducibility and guard validity."
+    }
+  ],
+  "remote_evidence": [
+    {"path":"packages/core/src/session.ts","blob":"00b276d8f2c9e634ae55a37e800fae388eb595e6"},
+    {"path":"packages/core/src/tool/task.ts","blob":"0e82455ca428e5b498551496bc65bdc0f6551df3"},
+    {"path":"packages/core/src/tool/task-governance.ts","blob":"12173c0769e62212a4a01003a0a253e7d1d1ba38"},
+    {"path":"packages/core/src/relay-workflow-binding.ts","blob":"7149e276e0c214d70c2dafad90dadff5d2c21059"},
+    {"path":"modules/atlas/boundary/package.json","blob":"6a5e7bddf5b9ea31dd0fb795f38be4fc98a231b7"},
+    {"path":"modules/atlas/boundary/script/build.ts","blob":"69d8473a2dd08704d7aaf8bf36a2930cb8de3e31"},
+    {"path":"modules/atlas/boundary/src/business-memory-entry.ts","blob":"06f8085df12d57baf7973d0df500da3e366dc29a"},
+    {"path":"modules/atlas/packages/adapter-io/src/native-bound.ts","blob":"fb3d542eb22e9b8dc9a139ce1ff98189812d6e0d"},
+    {"path":"modules/atlas/boundary/test/business-memory-ports.test.ts","blob":"22d2bad87dd87cfb7dd7b2c08c0da6ca75da6238"},
+    {"path":"modules/atlas/boundary/src/generated/business-memory-ports.js","blob":"cfc144ffec16c1eec41b7350ae8c8d47452088c0"},
+    {"path":"modules/atlas/boundary/src/generated/business-memory-ports.d.ts","blob":"7331e839a166dd9690610b99ec6b595aec50c6e5"},
+    {"path":"modules/atlas/boundary/src/generated/native-memory.js","blob":"820a3010be24a817edae7ff26299919d448ad4bf"},
+    {"path":"modules/atlas/boundary/src/generated/native-memory.d.ts","blob":"bc73667c5513e622ff2b5f4f553605fb3532b395"}
+  ],
+  "hosted_evidence_at_close": {
+    "controller_reported_unit_snapshot": "d6dd636ec1ff6c6162eab8bd67f9398f847cc0d5",
+    "controller_reported_check_snapshot": "e216f8c3ce944eb81d4869828959ed189068a73d",
+    "controller_reported_unit_selection": "42 files: 38 owned and 4 consumers",
+    "run_ids_and_artifact_results_seen_by_R3": [],
+    "qualification": "PENDING; dispatch information alone is not PASS",
+    "required_identity": "Product W, CI snapshot, request hash, observed selectors, run/attempt/job/control/artifacts and blob equality must be linked before credit. W2 needs affected new proof."
+  },
+  "limits_and_handoff": [
+    "Review is static source/contract review and pinned remote reads, with data-only SHA/count checks. No product tests, build, typecheck or native Session were executed locally.",
+    "The partial checkout is not treated as evidence of missing Atlas or core APIs; remote W files were read explicitly.",
+    "C00 canonical API changes belong to WP00/S0; local analysisInputs and verified-call intersections are composition seams, not proof of canonical reconciliation or a presumed compiler failure.",
+    "No historical CI, fixture, catalog, screenshot or builder claim closes runtime, consumer or global criteria.",
+    "Epic, eight final suites and AM01-AM06 across the full bundle remain S0 duties after composition; they were neither dispatched nor accepted by R3.",
+    "Both owned findings were reported immediately and accepted by the controller. Root/builders make corrections; R3 remains independent and must recheck an explicitly frozen new SHA after builders close.",
+    "No claim is made that the other 171 criteria, UX, financial semantics, all foreign producer outputs or C/D delivery are accepted."
+  ]
+}

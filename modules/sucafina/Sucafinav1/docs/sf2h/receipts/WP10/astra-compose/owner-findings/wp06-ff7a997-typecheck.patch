@@ -1,0 +1,11 @@
+--- a/modules/sucafina/Sucafinav1/product/imports/dashboard.ts
++++ b/modules/sucafina/Sucafinav1/product/imports/dashboard.ts
+@@ -14,7 +14,7 @@
+ 
+ type ImportFormat = DashboardImportFormat | "backup"
+ type DashboardBackupAdapter = {
+-  preview: (snapshot: Snapshot, actor: Actor, command: Command, environment: Environment) => ReturnType<typeof previewDashboardImport>
++  preview: typeof simulateBackup
+   apply: (snapshot: Snapshot, actor: Actor, command: Command, environment: Environment, baseDigest: string, commandDigest: string) => ReturnType<typeof applyDashboardImport>
+ }
+ 

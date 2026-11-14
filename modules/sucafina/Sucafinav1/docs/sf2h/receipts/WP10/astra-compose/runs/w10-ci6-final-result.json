@@ -1,0 +1,894 @@
+{
+  "W": {
+    "sha": "00304ac25cc82ffd87ebd3096bd2f5cfec5222e1",
+    "tree": "884138976f1e5ab04d924c3f29f4ba6584acb070"
+  },
+  "S": {
+    "sha": "747e1006562677391187c501e99d5bdd9751949a",
+    "tree": "bcdb9652c76688fb0fd27b75f940e6811fc44562",
+    "request_blob": "298fe6d828047a0412b5e4acb9d7dd0b89a142ee",
+    "request_sha256": "a6a0000f2e1d95139937e400ad2bad7a2bce8b6197f147651ee364c1b5e0e78c",
+    "parents": [
+      "00304ac25cc82ffd87ebd3096bd2f5cfec5222e1"
+    ],
+    "envelope_changed_paths": [
+      ".ci-run.json"
+    ]
+  },
+  "run": {
+    "id": 43592994998,
+    "job": 132441498485,
+    "cleanup_job": 132449334641,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43592994998",
+    "conclusion": "failure"
+  },
+  "result": {
+    "pass_count": 103,
+    "fail_count": 15,
+    "tests": 118,
+    "files": 23,
+    "expect_calls": 1594,
+    "seconds": 1775.36,
+    "omni": {
+      "conclusion": "pass",
+      "nonce": "2506c51d5d74b7804a84510e84820071",
+      "declared_tests": 7,
+      "spawns": 10,
+      "delegated": 0
+    },
+    "artifacts": []
+  },
+  "case_results": [
+    {
+      "status": "pass",
+      "name": "WP01 starts one Node-owned Chromium through Omni before leasing it across files",
+      "ms": 7211.42,
+      "file": "Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "line": 871
+    },
+    {
+      "status": "pass",
+      "name": "contract context uses mounted evidence, survives a lost response, and rejects tamper and revocation",
+      "ms": 5139.69,
+      "file": "Sucafinav1/test/product/wp01/contextual-decision.test.ts",
+      "line": 885
+    },
+    {
+      "status": "pass",
+      "name": "workbench uses actual identity, SQLite and case dispatcher with revocation and CSRF",
+      "ms": 1780.59,
+      "file": "Sucafinav1/test/product/wp01/http.test.ts",
+      "line": 899
+    },
+    {
+      "status": "pass",
+      "name": "decision edit replays its frozen request after uncertainty and confirmed",
+      "ms": 447.13,
+      "file": "Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+      "line": 907
+    },
+    {
+      "status": "pass",
+      "name": "decision edit replays its frozen request after uncertainty and conflict",
+      "ms": 419.32,
+      "file": "Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+      "line": 908
+    },
+    {
+      "status": "pass",
+      "name": "a definite edit conflict compares current values without discarding the user's draft or enabling a restricted field",
+      "ms": 316.23,
+      "file": "Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+      "line": 909
+    },
+    {
+      "status": "pass",
+      "name": "decision edit 401 scrubs its fields, source context and future submissions",
+      "ms": 323.33,
+      "file": "Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+      "line": 910
+    },
+    {
+      "status": "pass",
+      "name": "decision edit 403 scrubs its fields, source context and future submissions",
+      "ms": 340.72,
+      "file": "Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+      "line": 911
+    },
+    {
+      "status": "pass",
+      "name": "a delayed current-value read cannot restore an edit after access revocation",
+      "ms": 371.17,
+      "file": "Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+      "line": 912
+    },
+    {
+      "status": "pass",
+      "name": "prepared application retains its reviewed request after uncertainty and confirmed",
+      "ms": 461.29,
+      "file": "Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+      "line": 913
+    },
+    {
+      "status": "pass",
+      "name": "prepared application retains its reviewed request after uncertainty and conflict",
+      "ms": 469.55,
+      "file": "Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+      "line": 914
+    },
+    {
+      "status": "pass",
+      "name": "prepared application 401 clears its former review and blocks another write",
+      "ms": 366.97,
+      "file": "Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+      "line": 915
+    },
+    {
+      "status": "pass",
+      "name": "prepared application 403 clears its former review and blocks another write",
+      "ms": 365.63,
+      "file": "Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+      "line": 916
+    },
+    {
+      "status": "pass",
+      "name": "a late prepared-change review cannot repopulate the revoked entry",
+      "ms": 313.42,
+      "file": "Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+      "line": 917
+    },
+    {
+      "status": "pass",
+      "name": "a malformed edit acknowledgement cannot unlock the unconfirmed intention or report a saved decision",
+      "ms": 304.06,
+      "file": "Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+      "line": 918
+    },
+    {
+      "status": "pass",
+      "name": "an initial apply conflict after domain receipt observation remains unconfirmed and replays the same intention",
+      "ms": 430.2,
+      "file": "Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+      "line": 919
+    },
+    {
+      "status": "pass",
+      "name": "shared Apply refuses a missing review proof before enabling confirmation",
+      "ms": 335.23,
+      "file": "Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+      "line": 920
+    },
+    {
+      "status": "pass",
+      "name": "shared Apply refuses a malformed review proof before enabling confirmation",
+      "ms": 319.74,
+      "file": "Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+      "line": 921
+    },
+    {
+      "status": "pass",
+      "name": "shared Apply refuses a stale review proof before enabling confirmation",
+      "ms": 302.92,
+      "file": "Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+      "line": 922
+    },
+    {
+      "status": "pass",
+      "name": "real host protects metadata writes and captures under the all-surface C08 lock",
+      "ms": 247.01,
+      "file": "Sucafinav1/test/product/wp02/host-integration.test.ts",
+      "line": 931
+    },
+    {
+      "status": "pass",
+      "name": "ReviewHost.select consumes real Performance item lifecycle and preserves an authorized subset",
+      "ms": 500.41,
+      "file": "Sucafinav1/test/product/wp02/host-integration.test.ts",
+      "line": 932
+    },
+    {
+      "status": "pass",
+      "name": "C12 host persists the real draft and prepared binding, applies once, and reconciles its receipt",
+      "ms": 4091.2,
+      "file": "Sucafinav1/test/product/wp02/host-integration.test.ts",
+      "line": 933
+    },
+    {
+      "status": "pass",
+      "name": "prepared host refuses replaced choice and forged metadata before touching the target or receipt",
+      "ms": 2770.99,
+      "file": "Sucafinav1/test/product/wp02/host-integration.test.ts",
+      "line": 934
+    },
+    {
+      "status": "pass",
+      "name": "HTTP consumer checks origin, payload, action grant and never admits caller-supplied commands",
+      "ms": 47.27,
+      "file": "Sucafinav1/test/product/wp02/host-integration.test.ts",
+      "line": 935
+    },
+    {
+      "status": "pass",
+      "name": "changing protected prepared content or its digest cannot substitute a C12 command",
+      "ms": 2021.18,
+      "file": "Sucafinav1/test/product/wp02/host-integration.test.ts",
+      "line": 936
+    },
+    {
+      "status": "pass",
+      "name": "Dashboard contextual controls preserve a real agenda and record, then review and apply an existing C12 choice",
+      "ms": 23295.86,
+      "file": "Sucafinav1/test/product/wp02/host-workbench.test.ts",
+      "line": 955
+    },
+    {
+      "status": "pass",
+      "name": "Dashboard draft conflict reloads the same draft identity and preserves local edits until the current base is confirmed",
+      "ms": 11761.11,
+      "file": "Sucafinav1/test/product/wp02/host-workbench.test.ts",
+      "line": 1033
+    },
+    {
+      "status": "pass",
+      "name": "Dashboard discovery fences participant removal after options were assembled",
+      "ms": 69.64,
+      "file": "Sucafinav1/test/product/wp02/host-workbench.test.ts",
+      "line": 1035
+    },
+    {
+      "status": "pass",
+      "name": "Dashboard discovery resolves real ticket months and Executive signal records",
+      "ms": 537.27,
+      "file": "Sucafinav1/test/product/wp02/host-workbench.test.ts",
+      "line": 1036
+    },
+    {
+      "status": "fail",
+      "name": "Dashboard contextual draft retains edits when current write authority is withdrawn",
+      "ms": 31790.07,
+      "file": "Sucafinav1/test/product/wp02/host-workbench.test.ts",
+      "line": 1065
+    },
+    {
+      "status": "pass",
+      "name": "real host composes C06 confirmation, current evidence routing and the WP09 dossier",
+      "ms": 2445.78,
+      "file": "Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "line": 1069
+    },
+    {
+      "status": "fail",
+      "name": "real HTTP prepares, reviews and applies C12 with one durable effect and authorized historical evidence",
+      "ms": 60166.81,
+      "file": "Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "line": 1070
+    },
+    {
+      "status": "fail",
+      "name": "private original evidence is immutable and a replacement Request cannot revive historical facts or receipts",
+      "ms": 64869.64,
+      "file": "Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "line": 1073
+    },
+    {
+      "status": "pass",
+      "name": "Procurement decision HTTP rejects injected commands, ungranted actors and cross-origin intent",
+      "ms": 995.67,
+      "file": "Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "line": 1077
+    },
+    {
+      "status": "fail",
+      "name": "a real case edit between durable receipt and reconciliation preserves the conflict without reapplying",
+      "ms": 26045.65,
+      "file": "Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "line": 1078
+    },
+    {
+      "status": "fail",
+      "name": "a durable application recovers after a lost commit response and cleared review cache",
+      "ms": 48593.71,
+      "file": "Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "line": 1099
+    },
+    {
+      "status": "pass",
+      "name": "C12 rejects another review proof, changed human intent and an expired observed review",
+      "ms": 19640.23,
+      "file": "Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "line": 1103
+    },
+    {
+      "status": "pass",
+      "name": "C12 rereads the real review producer before the first application and rejects a changed source",
+      "ms": 23488.54,
+      "file": "Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "line": 1105
+    },
+    {
+      "status": "fail",
+      "name": "real Procurement UI carries the reviewed proof and retries one durable application after a withheld response",
+      "ms": 35078.23,
+      "file": "Sucafinav1/test/product/wp04/host-integration.test.ts",
+      "line": 1128
+    },
+    {
+      "status": "pass",
+      "name": "native Schedule controls and deduped prompt receipts remain distinct from a completed routine",
+      "ms": 196.53,
+      "file": "Sucafinav1/test/product/wp09/schedule-native.test.ts",
+      "line": 1131
+    },
+    {
+      "status": "pass",
+      "name": "admitted plus resultRef remains blocked without execution or authenticated output readers",
+      "ms": 1.4,
+      "file": "Sucafinav1/test/product/wp09/schedule-native.test.ts",
+      "line": 1132
+    },
+    {
+      "status": "pass",
+      "name": "native execution failed cannot become reviewable because a result reference exists",
+      "ms": 0.34,
+      "file": "Sucafinav1/test/product/wp09/schedule-native.test.ts",
+      "line": 1133
+    },
+    {
+      "status": "pass",
+      "name": "native execution cancelled cannot become reviewable because a result reference exists",
+      "ms": 0.16,
+      "file": "Sucafinav1/test/product/wp09/schedule-native.test.ts",
+      "line": 1134
+    },
+    {
+      "status": "pass",
+      "name": "reviewable requires matching native completion and the authenticated immutable artifact",
+      "ms": 1.24,
+      "file": "Sucafinav1/test/product/wp09/schedule-native.test.ts",
+      "line": 1135
+    },
+    {
+      "status": "pass",
+      "name": "result authorization denial never returns schedule result metadata",
+      "ms": 0.22,
+      "file": "Sucafinav1/test/product/wp09/schedule-native.test.ts",
+      "line": 1136
+    },
+    {
+      "status": "pass",
+      "name": "completion rejects a substituted runRef before reading output",
+      "ms": 0.17,
+      "file": "Sucafinav1/test/product/wp09/schedule-native.test.ts",
+      "line": 1137
+    },
+    {
+      "status": "pass",
+      "name": "completion rejects a substituted resultRef before reading output",
+      "ms": 0.11,
+      "file": "Sucafinav1/test/product/wp09/schedule-native.test.ts",
+      "line": 1138
+    },
+    {
+      "status": "pass",
+      "name": "completion rejects a substituted outputDigest before reading output",
+      "ms": 0.09,
+      "file": "Sucafinav1/test/product/wp09/schedule-native.test.ts",
+      "line": 1139
+    },
+    {
+      "status": "pass",
+      "name": "cancellation after the artifact read invalidates the earlier completion snapshot",
+      "ms": 0.54,
+      "file": "Sucafinav1/test/product/wp09/schedule-native.test.ts",
+      "line": 1140
+    },
+    {
+      "status": "pass",
+      "name": "a changed schedule revision during result recovery cannot return its older occurrence",
+      "ms": 0.58,
+      "file": "Sucafinav1/test/product/wp09/schedule-native.test.ts",
+      "line": 1141
+    },
+    {
+      "status": "pass",
+      "name": "a substituted owner binding during result recovery cannot expose the former owner's result",
+      "ms": 0.48,
+      "file": "Sucafinav1/test/product/wp09/schedule-native.test.ts",
+      "line": 1142
+    },
+    {
+      "status": "pass",
+      "name": "a replacement schedule-service cannot release identical result bytes through the previous provider",
+      "ms": 0.67,
+      "file": "Sucafinav1/test/product/wp09/schedule-native.test.ts",
+      "line": 1143
+    },
+    {
+      "status": "pass",
+      "name": "a replacement schedule-get cannot release identical result bytes through the previous provider",
+      "ms": 0.26,
+      "file": "Sucafinav1/test/product/wp09/schedule-native.test.ts",
+      "line": 1144
+    },
+    {
+      "status": "pass",
+      "name": "a replacement owner-resolver cannot release identical result bytes through the previous provider",
+      "ms": 0.22,
+      "file": "Sucafinav1/test/product/wp09/schedule-native.test.ts",
+      "line": 1145
+    },
+    {
+      "status": "pass",
+      "name": "a replacement source-authority cannot release identical result bytes through the previous provider",
+      "ms": 0.23,
+      "file": "Sucafinav1/test/product/wp09/schedule-native.test.ts",
+      "line": 1146
+    },
+    {
+      "status": "pass",
+      "name": "a replacement routine-reader cannot release identical result bytes through the previous provider",
+      "ms": 0.3,
+      "file": "Sucafinav1/test/product/wp09/schedule-native.test.ts",
+      "line": 1147
+    },
+    {
+      "status": "pass",
+      "name": "a replacement execution-reader cannot release identical result bytes through the previous provider",
+      "ms": 0.25,
+      "file": "Sucafinav1/test/product/wp09/schedule-native.test.ts",
+      "line": 1148
+    },
+    {
+      "status": "pass",
+      "name": "a replacement result-reader cannot release identical result bytes through the previous provider",
+      "ms": 0.18,
+      "file": "Sucafinav1/test/product/wp09/schedule-native.test.ts",
+      "line": 1149
+    },
+    {
+      "status": "pass",
+      "name": "a replacement result-read-call cannot release identical result bytes through the previous provider",
+      "ms": 0.22,
+      "file": "Sucafinav1/test/product/wp09/schedule-native.test.ts",
+      "line": 1150
+    },
+    {
+      "status": "pass",
+      "name": "a provider replacement during initial authorization stops before result recovery",
+      "ms": 0.18,
+      "file": "Sucafinav1/test/product/wp09/schedule-native.test.ts",
+      "line": 1151
+    },
+    {
+      "status": "pass",
+      "name": "a provider replacement during final authorization cannot release an already recovered result",
+      "ms": 0.58,
+      "file": "Sucafinav1/test/product/wp09/schedule-native.test.ts",
+      "line": 1152
+    },
+    {
+      "status": "fail",
+      "name": "BI keeps the canonical shell, refreshes on manual focus and timer, and signs out once while discarding a held genuine success",
+      "ms": 647.22,
+      "file": "Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts",
+      "line": 1176
+    },
+    {
+      "status": "fail",
+      "name": "the canonical shell still polls authority while BI awaits a held result and revocation prevents every late render",
+      "ms": 538.19,
+      "file": "Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts",
+      "line": 1198
+    },
+    {
+      "status": "fail",
+      "name": "clearing the BI selection while genuine authorized options are delayed prevents restoration of the previous selection",
+      "ms": 589.62,
+      "file": "Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts",
+      "line": 1220
+    },
+    {
+      "status": "fail",
+      "name": "BI returns from a real source with the same human filters, version pair, currency and mark focus after current reauthorization",
+      "ms": 531.08,
+      "file": "Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts",
+      "line": 1242
+    },
+    {
+      "status": "pass",
+      "name": "BI origin digests select only an explicit source of the real current Planner difference and never choose A or B implicitly",
+      "ms": 593.64,
+      "file": "Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts",
+      "line": 1259
+    },
+    {
+      "status": "pass",
+      "name": "BI transports only explicit persisted inverse selectors and preserves existing selector filters",
+      "ms": 0.44,
+      "file": "Sucafinav1/test/product/wp10/integration/bi-advantage-selection.test.ts",
+      "line": 1262
+    },
+    {
+      "status": "pass",
+      "name": "BI offers every authorized inverse separately and binds the current exact case pair without changing canonical values",
+      "ms": 5849.67,
+      "file": "Sucafinav1/test/product/wp10/integration/bi-advantage-selection.test.ts",
+      "line": 1263
+    },
+    {
+      "status": "fail",
+      "name": "BI refuses lease loss after its first and last real authorization awaits and a changed final Request",
+      "ms": 5286.29,
+      "file": "Sucafinav1/test/product/wp10/integration/bi-advantage-selection.test.ts",
+      "line": 1277
+    },
+    {
+      "status": "pass",
+      "name": "BI decision destinations read the actual recorded scenario, comparison, sensitivity sample and cost coverage",
+      "ms": 57971.66,
+      "file": "Sucafinav1/test/product/wp10/integration/bi-decision-navigation.test.ts",
+      "line": 1280
+    },
+    {
+      "status": "pass",
+      "name": "BI decision destinations reject a foreign association, changed physical ref, changed authority and revoked source",
+      "ms": 58122.94,
+      "file": "Sucafinav1/test/product/wp10/integration/bi-decision-navigation.test.ts",
+      "line": 1281
+    },
+    {
+      "status": "pass",
+      "name": "BI decision HTTP rejects duplicate selectors and unassociated results through actual UI admission",
+      "ms": 31.53,
+      "file": "Sucafinav1/test/product/wp10/integration/bi-decision-navigation.test.ts",
+      "line": 1282
+    },
+    {
+      "status": "pass",
+      "name": "BI clears a real persisted case after participant revocation with the session valid and discards a delayed authorized source",
+      "ms": 60575.57,
+      "file": "Sucafinav1/test/product/wp10/integration/bi-case-access.test.ts",
+      "line": 1344
+    },
+    {
+      "status": "pass",
+      "name": "BI proof starts only after real UI consumption, clones within one invocation and cannot cross a new call or UTC day",
+      "ms": 33871.41,
+      "file": "Sucafinav1/test/product/wp10/integration/bi-call-scope.test.ts",
+      "line": 1375
+    },
+    {
+      "status": "pass",
+      "name": "BI proof refuses overlapping and reentrant callers without lending or invalidating the owning invocation",
+      "ms": 29061.57,
+      "file": "Sucafinav1/test/product/wp10/integration/bi-call-scope.test.ts",
+      "line": 1400
+    },
+    {
+      "status": "pass",
+      "name": "BI proof rejects current case revocation, unversioned C08 result corruption and changed input without repeating a producer",
+      "ms": 35371.55,
+      "file": "Sucafinav1/test/product/wp10/integration/bi-call-scope.test.ts",
+      "line": 1429
+    },
+    {
+      "status": "pass",
+      "name": "BI proof fences all three actual domain snapshots even when the C08 revision and Planner reference stay unchanged",
+      "ms": 35718.07,
+      "file": "Sucafinav1/test/product/wp10/integration/bi-call-scope.test.ts",
+      "line": 1460
+    },
+    {
+      "status": "pass",
+      "name": "BI egress returns denied after actor revocation, Request abort or lease removal at its final asynchronous boundaries",
+      "ms": 36315.77,
+      "file": "Sucafinav1/test/product/wp10/integration/bi-call-scope.test.ts",
+      "line": 1491
+    },
+    {
+      "status": "pass",
+      "name": "BI source HTTP reopens its real case after destination resolution and returns no links after participation is revoked",
+      "ms": 75569.11,
+      "file": "Sucafinav1/test/product/wp10/integration/bi-call-scope.test.ts",
+      "line": 1520
+    },
+    {
+      "status": "pass",
+      "name": "default Review HTTP retains the persisted Portfolio at N after the case reaches N+1",
+      "ms": 21698.12,
+      "file": "Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "line": 1547
+    },
+    {
+      "status": "pass",
+      "name": "Review creates a real report and download and rejects both case and session revocation",
+      "ms": 86664.87,
+      "file": "Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "line": 1586
+    },
+    {
+      "status": "pass",
+      "name": "Review compares an actually preserved historical Portfolio successor",
+      "ms": 79131.91,
+      "file": "Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "line": 1613
+    },
+    {
+      "status": "pass",
+      "name": "Review HTTP fences case revocation after reading the real browser asset and recovers",
+      "ms": 27198.48,
+      "file": "Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "line": 1640
+    },
+    {
+      "status": "pass",
+      "name": "Review HTTP fences session revocation after reading the real browser asset and recovers",
+      "ms": 28443.55,
+      "file": "Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "line": 1667
+    },
+    {
+      "status": "fail",
+      "name": "Review browser clears selected content after case revocation while the session remains authenticated",
+      "ms": 59816.95,
+      "file": "Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "line": 1729
+    },
+    {
+      "status": "pass",
+      "name": "Review historical HTTP rejects a replacement case incarnation and recovers the original",
+      "ms": 16848.93,
+      "file": "Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "line": 1756
+    },
+    {
+      "status": "pass",
+      "name": "Review historical HTTP rejects an altered Portfolio binding and recovers the actual binding",
+      "ms": 17113.9,
+      "file": "Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "line": 1783
+    },
+    {
+      "status": "pass",
+      "name": "Review historical HTTP rejects an altered stored Portfolio result and recovers the real result",
+      "ms": 15932.17,
+      "file": "Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "line": 1810
+    },
+    {
+      "status": "pass",
+      "name": "Review rejects an altered body despite a legitimate successor and preserves history after a real source edit",
+      "ms": 70975.9,
+      "file": "Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "line": 1847
+    },
+    {
+      "status": "pass",
+      "name": "Review historical capture needs its own intact receipt after a source edit despite a legitimate successor",
+      "ms": 51681.68,
+      "file": "Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "line": 1880
+    },
+    {
+      "status": "fail",
+      "name": "Analysis reentry reaches current lifecycle metadata after case advancement without upgrading its original fresh selector",
+      "ms": 94.52,
+      "file": "Sucafinav1/test/product/wp10/integration/analysis-run-context.test.ts",
+      "line": 1899
+    },
+    {
+      "status": "fail",
+      "name": "Late captured calculation settles its original output after case advance without changing the active selector, and survives restart",
+      "ms": 105020.74,
+      "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+      "line": 1912
+    },
+    {
+      "status": "pass",
+      "name": "Late calculation settlement rejects another case, a later producer, missing ledger/capture and changed sources without writing output",
+      "ms": 89885.26,
+      "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+      "line": 1913
+    },
+    {
+      "status": "fail",
+      "name": "Private historical read refuses a substituted Request, first or last authorization loss, and closes every admitted lease",
+      "ms": 105009.11,
+      "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+      "line": 1924
+    },
+    {
+      "status": "pass",
+      "name": "dependency variants reopen exact C09 choice and Dashboard milestone and preserve human declarations",
+      "ms": 5679.96,
+      "file": "Sucafinav1/test/product/wp10/analysis-composition/analysis-variants.test.ts",
+      "line": 1982
+    },
+    {
+      "status": "pass",
+      "name": "dependency variants refuse absent choices, noncanonical IDs, ambiguous milestones, stale evidence and revocation",
+      "ms": 2783.58,
+      "file": "Sucafinav1/test/product/wp10/analysis-composition/analysis-variants.test.ts",
+      "line": 2066
+    },
+    {
+      "status": "pass",
+      "name": "DependencyConflict preserves a real confirmed relation and selected unverified constraint as needs-input",
+      "ms": 34166.95,
+      "file": "Sucafinav1/test/product/wp10/analysis-composition/analysis-variants.test.ts",
+      "line": 2128
+    },
+    {
+      "status": "pass",
+      "name": "DependencyConflict refuses reversed relations and unselected or unrelated constraints",
+      "ms": 42295.91,
+      "file": "Sucafinav1/test/product/wp10/analysis-composition/analysis-variants.test.ts",
+      "line": 2200
+    },
+    {
+      "status": "pass",
+      "name": "DependencyConflict preserves the literal declaration without inventing capacity",
+      "ms": 27861.05,
+      "file": "Sucafinav1/test/product/wp10/analysis-composition/analysis-variants.test.ts",
+      "line": 2254
+    },
+    {
+      "status": "pass",
+      "name": "DependencyConflict requires exact payload and envelope evidence",
+      "ms": 33671.68,
+      "file": "Sucafinav1/test/product/wp10/analysis-composition/analysis-variants.test.ts",
+      "line": 2317
+    },
+    {
+      "status": "pass",
+      "name": "DependencyConflict revalidates selected input and actual relation removal",
+      "ms": 18649.87,
+      "file": "Sucafinav1/test/product/wp10/analysis-composition/analysis-variants.test.ts",
+      "line": 2366
+    },
+    {
+      "status": "pass",
+      "name": "real Dashboard confirmations preserve stale and executive output cannot erase the confirmation gap",
+      "ms": 9423.9,
+      "file": "Sucafinav1/test/product/wp10/analysis-composition/analysis-variants.test.ts",
+      "line": 2419
+    },
+    {
+      "status": "pass",
+      "name": "C06 Planner summary uses the selected subperiod of annual source evidence",
+      "ms": 858.8,
+      "file": "Sucafinav1/test/product/wp10/analysis-composition/analysis-variants.test.ts",
+      "line": 2438
+    },
+    {
+      "status": "pass",
+      "name": "confirmation composition rejects a real source change between observations and never skips unavailable matches",
+      "ms": 1603.53,
+      "file": "Sucafinav1/test/product/wp10/analysis-composition/analysis-variants.test.ts",
+      "line": 2462
+    },
+    {
+      "status": "pass",
+      "name": "HTTP preview persists across reload and applies once with the domain receipt in the same commit",
+      "ms": 355.05,
+      "file": "Sucafinav1/test/product/wp10/integration/dashboard-preview.test.ts",
+      "line": 2465
+    },
+    {
+      "status": "pass",
+      "name": "C08 preserved domain values survive an ordinary edit, while revocation, replacement and receipt tampering deny history and downloads",
+      "ms": 1852.34,
+      "file": "Sucafinav1/test/product/wp10/integration/review-history-composition.test.ts",
+      "line": 2468
+    },
+    {
+      "status": "pass",
+      "name": "real prepared execution reconciles normal without repeating Planner effects",
+      "ms": 89.52,
+      "file": "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+      "line": 2471
+    },
+    {
+      "status": "pass",
+      "name": "real prepared execution reconciles lost-response without repeating Planner effects",
+      "ms": 126.46,
+      "file": "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+      "line": 2472
+    },
+    {
+      "status": "pass",
+      "name": "real prepared execution reconciles revoked without repeating Planner effects",
+      "ms": 95.64,
+      "file": "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+      "line": 2473
+    },
+    {
+      "status": "pass",
+      "name": "source-only promotions prepare the exact coverage proof for both source orders and persist without creating a choice or applying commands",
+      "ms": 266.21,
+      "file": "Sucafinav1/test/product/wp11/source-promotion-coverage.test.ts",
+      "line": 2476
+    },
+    {
+      "status": "pass",
+      "name": "a changed scenario still consumes coverage proof without upgrading hypothetical total",
+      "ms": 86.67,
+      "file": "Sucafinav1/test/product/wp11/source-promotion-coverage.test.ts",
+      "line": 2477
+    },
+    {
+      "status": "pass",
+      "name": "source promotion rejects entries changes before commit without a partial alternative or result",
+      "ms": 60.21,
+      "file": "Sucafinav1/test/product/wp11/source-promotion-coverage.test.ts",
+      "line": 2478
+    },
+    {
+      "status": "pass",
+      "name": "source promotion rejects source changes before commit without a partial alternative or result",
+      "ms": 83.55,
+      "file": "Sucafinav1/test/product/wp11/source-promotion-coverage.test.ts",
+      "line": 2479
+    },
+    {
+      "status": "pass",
+      "name": "source promotion rejects case changes before commit without a partial alternative or result",
+      "ms": 77.37,
+      "file": "Sucafinav1/test/product/wp11/source-promotion-coverage.test.ts",
+      "line": 2480
+    },
+    {
+      "status": "pass",
+      "name": "source promotion rejects authority changes before commit without a partial alternative or result",
+      "ms": 75.73,
+      "file": "Sucafinav1/test/product/wp11/source-promotion-coverage.test.ts",
+      "line": 2481
+    },
+    {
+      "status": "pass",
+      "name": "source promotion rejects abort changes before commit without a partial alternative or result",
+      "ms": 73.44,
+      "file": "Sucafinav1/test/product/wp11/source-promotion-coverage.test.ts",
+      "line": 2482
+    },
+    {
+      "status": "pass",
+      "name": "Hot Topic drafts verify the Dashboard snapshot, persist once without domain application and reject a source race",
+      "ms": 39.74,
+      "file": "Sucafinav1/test/product/wp11/hot-topic-draft-domain.test.ts",
+      "line": 2485
+    },
+    {
+      "status": "pass",
+      "name": "WP01 shares one Chromium across files, releases every lease, and proves final process exit",
+      "ms": 71.94,
+      "file": "Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "line": 2517
+    }
+  ],
+  "own_failure_count": 9,
+  "foreign_failure_count": 6,
+  "own_action": "Seven fixture failures have bounded staged fixes (4BI read identities,1BI optional callback counter,1Review navigation wait,1Analysis denied self-restoration). Two stale-calculation deadlines remain blocked and gain phase-only observability. No product authority relaxation.",
+  "owner_findings": [
+    {
+      "owner": "Operations/WP04 + Finance/WP11",
+      "comment": 6877409496,
+      "pr": 34,
+      "cases": 5,
+      "note": "H02/H03/H05/H06 timeouts; H05 late expected409/received200; H09 missing review response."
+    },
+    {
+      "owner": "Interface/WP02",
+      "comment": 6877409640,
+      "pr": 31,
+      "cases": 1,
+      "note": "Write-authority loss message not observed; local draft retention subsequent assertions not reached."
+    }
+  ],
+  "limits": [
+    "All observations belong to W10/S747e1006, not the later composition",
+    "No native AM or full C12 acceptance from deterministic execution-reconciliation cases",
+    "Four prior C17 timeouts from CI5 remain; two new stale-analysis timeouts do not establish a common cause without phase evidence"
+  ],
+  "global_release": false
+}

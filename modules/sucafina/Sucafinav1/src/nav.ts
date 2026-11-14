@@ -64,7 +64,7 @@ export function showPage(key: string): { drawn: true; surface: "dashboard" | "pl
 }
 
 export function sidebarYear(year?: number): number {
-  if (year == null || year < 2024 || year > 2027) return 2026
+  if (year == null || !Number.isInteger(year) || year < 2024 || year > 2027) return 2026
   return year
 }
 
@@ -76,7 +76,7 @@ export function yearFor(page: string, sidebar: number, own: number | undefined):
 export function setYear(page: string, year: number, sidebar: number): { page: string; year: number; sidebar: number } | { ok: false } {
   const drawn = showPage(page)
   if (!drawn.drawn || drawn.surface !== "dashboard") return { ok: false }
-  if (year < 2024 || year > 2027) return { ok: false }
+  if (!Number.isInteger(year) || year < 2024 || year > 2027) return { ok: false }
   if (OWN_YEAR.has(page)) return { page, year, sidebar }
   return { page, year, sidebar: year }
 }
@@ -144,3 +144,4 @@ export function plannerKeys(actor: { roles: string[] }): string[] {
 export function procurementKeys(actor: { roles: string[] }): string[] {
   return PROCUREMENT_NAV.filter((key) => openProcurement(key, actor).drawn)
 }
+

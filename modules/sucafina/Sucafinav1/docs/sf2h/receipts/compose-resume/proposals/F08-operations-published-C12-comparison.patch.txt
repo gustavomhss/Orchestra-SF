@@ -1,0 +1,11 @@
+--- a/modules/sucafina/Sucafinav1/product/decisions/apply.ts
++++ b/modules/sucafina/Sucafinav1/product/decisions/apply.ts
+@@ -102,6 +102,8 @@
+     // Reopen it after the domain result and preserve unrelated, versioned case edits.
+     const reconciliation = await input.state.read(source, "cases", (state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision ? state.cases[value.id] : undefined).catch(() => undefined)
+     if (!reconciliation || reconciliation.status !== "ok" || !reconciliation.value) return { status: "unavailable", reason: "case-reconciliation-pending" }
++    // Proposed C12 fence: the domain may advance storage CAS, not the selected case.
++    if (digestSfValue(reconciliation.value) !== digestSfValue(value)) return { status: "stale", reason: "case-changed-after-application" }
+     const fresh = reconciliation.value
+     const selected = fresh.preparedChanges.find((item) => item.id === change.id && item.choiceId === request.choiceId)
+     if (fresh.incarnation !== value.incarnation || fresh.version < value.version || !fresh.participants.includes(context.binding.principalRef) || !fresh.choices.some((choice) => choice.id === request.choiceId) || !selected || !await input.authorizeCase(fresh, context).catch(() => false) || !await input.authorizeApplication(request, selected, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "case-access-unavailable" }

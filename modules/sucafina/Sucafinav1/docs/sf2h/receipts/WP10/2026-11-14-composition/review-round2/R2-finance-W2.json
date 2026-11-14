@@ -1,0 +1,1557 @@
+{
+  "schema": "sf-wp10-independent-review-v2",
+  "reviewedAt": "2026-11-14T03:04:32.281Z",
+  "provisional": true,
+  "reviewer": {
+    "id": "R2",
+    "task": "/root/review_finance",
+    "domain": "finance, semantics, permissions, persistence",
+    "independent": true,
+    "productAuthorship": [],
+    "productEdits": 0
+  },
+  "candidate": {
+    "sha": "b7a6b5d4b66acf172762aba72f01e424bf9c0b90",
+    "tree": "4fba27f0de68963a0da60debb8ced17fe3abd1e8",
+    "parent": "a43883c930cf996472b27c524aadb4694c13b5a3",
+    "published": true,
+    "globalCandidateC": null
+  },
+  "lease": {
+    "mode": "readonly frozen W2",
+    "sourceRoot": "/workspace/scratch/cca507855f4a/analysis/frozen-W2/repo",
+    "buildersClosed": true,
+    "firstConfirmedBeforeReads": true,
+    "writeAllowlist": [
+      "analysis/reviews/R2-finance-W2.json",
+      "analysis/reviews/R2-finance-W2.md"
+    ]
+  },
+  "integrity": {
+    "manifest": "analysis/frozen-W2/manifest.json",
+    "manifestSha256": "4a2e542c5ba300543a822f8ac45fd0d37e051339054b28ea84219493f9b29063",
+    "blobs": 841,
+    "verifiedBytesSha256AndGitBlobSha1": 841,
+    "mismatches": 0,
+    "method": "Filesystem-only static hashing; no product imports or execution."
+  },
+  "authorship": {
+    "reviewer": "R2 /root/review_finance",
+    "authorsReportedInSession": [
+      "root",
+      "authority_builder",
+      "composition_intake",
+      "runtime_analysis",
+      "published producer owners"
+    ],
+    "w2FixAuthorIdentity": "Root is responsible for W2 composition; exact individual W2 fix-author IDs were not independently established from the snapshot.",
+    "disjoint": true,
+    "basis": "R2 has only read frozen product source and written the two review reports. It has authored no product or tests in W/W2."
+  },
+  "methods": [
+    "Read-only source review and static call-chain reproduction on immutable W2.",
+    "Static inspection of test source; no tests, typecheck, build or product imports executed locally.",
+    "Inspection of root-provided hosted exact-candidate check log; no CI dispatch or remote mutation.",
+    "Original canonical pack independently extracted; builder criteria status is not acceptance evidence."
+  ],
+  "findings": [
+    {
+      "id": "R2-F01",
+      "originalSeverity": "high",
+      "mandatory": true,
+      "state": "STATIC_FIX_OBSERVED_HOSTED_PROOF_PENDING",
+      "owner": "WP10 own Portfolio composition; C12 Apply prerequisite remains with published Procurement/decision producers",
+      "candidateSha": "b7a6b5d4b66acf172762aba72f01e424bf9c0b90",
+      "criteria": [
+        "WP10.T01.DOD.01",
+        "WP10.T01.SUC.01",
+        "WP10.SUC.10"
+      ],
+      "title": "Real default Portfolio preparation replaces the absent callbacks; full producer path is not yet qualified",
+      "evidence": [
+        {
+          "path": "apps/cli/src/sucafina-product/portfolio-services.ts",
+          "lines": "30-49,85-100",
+          "observation": "Default composed preparation is installed; parent-grant wrappers are used by HTTP and contribution prepare/promote.",
+          "blobSha": "140414317a062145b9b20eecaafb13e12e5711e4",
+          "sha256": "b4de67b25a7052605fac243222125bd00294d6ff8ce0e6a2c9ddbfb9ee1e1e0b",
+          "candidateSha": "b7a6b5d4b66acf172762aba72f01e424bf9c0b90"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/portfolio-preparation.ts",
+          "lines": "24-47,49-87",
+          "observation": "Real human choice/answer checks, domain metrics and Procurement preparation replace unavailable defaults; the private handoff permits only the exact derived child.",
+          "blobSha": "3e20fec88c29fb86fda94581ca29d4c1b30a51c1",
+          "sha256": "1425e5f337c4594b510b3cb37eea0a5af1d59811e7f9df48d876df9ea308df19",
+          "candidateSha": "b7a6b5d4b66acf172762aba72f01e424bf9c0b90"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/portfolio-handoff.ts",
+          "lines": "25-65,67-87",
+          "observation": "Parent payload and child command digests are bound in a private WeakMap; persisted parent/child receipt is reopened before mutable candidate evaluation on retry.",
+          "blobSha": "b0b585b8e552fb600623880de287647388aa2e76",
+          "sha256": "6b26d5690e7828f515513994f6d32214fbd86fee774dd431e6192ad8ece8a713",
+          "candidateSha": "b7a6b5d4b66acf172762aba72f01e424bf9c0b90"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+          "lines": "29-67,71-101",
+          "observation": "Same mounted route accepts dashboard/planner/procurement with exact path, origin, method, closed schema, authenticated intent and case binding.",
+          "blobSha": "c434de513cb7ceae4acad1fc595e776785ec85af",
+          "sha256": "37b52ca56bf3ad3fce18e642ee4fe8ff30e8955a116f71bbf22b12e971abaf18",
+          "candidateSha": "b7a6b5d4b66acf172762aba72f01e424bf9c0b90"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "lines": "260-272,812",
+          "observation": "Host passes procurementEvidenceWrites and mounts portfolioHttp before extended/procurement fallback routes.",
+          "blobSha": "d576b5dbf7e16c4c77043d39c3720e8b15d64612",
+          "sha256": "2ca716338bfe5ea3e8c810170c5349ff7eb9dab6f597d9554d59219af3405698",
+          "candidateSha": "b7a6b5d4b66acf172762aba72f01e424bf9c0b90"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+          "lines": "44-68,231-260",
+          "observation": "C08 transaction contains case mutation and portfolioReplay; replay rechecks current membership, incarnation, authority and persisted result identity.",
+          "blobSha": "c9b380d4f9e3f0b35eae027374d57bf4c9b65c3e",
+          "sha256": "aafab15ce407e6d6cbc808e05cbad7f3cb15238f2fe53941434405caef3b36ba",
+          "candidateSha": "b7a6b5d4b66acf172762aba72f01e424bf9c0b90"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+          "lines": "11-41",
+          "observation": "Actual default supports only explicit Procurement request amount replace, matching choice, evidence, currency and period.",
+          "blobSha": "8c83680aaffa06c7b265f17e612118b1e008615a",
+          "sha256": "0a734ad4f69ffc257714f1d89202f980792af1d63105c130dfd3f63c6e880c70",
+          "candidateSha": "b7a6b5d4b66acf172762aba72f01e424bf9c0b90"
+        }
+      ],
+      "staticConclusion": "The original missing-callback defect is repaired in the inspected code. Exact human intent and parent-to-child command derivation are enforced; no new static bypass was found in this bounded recheck.",
+      "testQualification": {
+        "source": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-preparation-composition.test.ts",
+        "lines": "10-30,33-77",
+        "executedByReviewer": false,
+        "scope": "Source tests verify intent rejection and HTTP replay of a C08 receipt manually committed by the fixture. Positive replay exercises Planner and Dashboard. They do not produce a new valid prepared command through the full Portfolio evaluator, and do not exercise a positive Procurement HTTP request."
+      },
+      "remainingProof": [
+        "New valid human choice -> Portfolio evaluation -> real Procurement replacement preparation -> atomic C08 receipt through all three mounted surfaces.",
+        "Retry the actual committed operation after a lost reply; verify no second prepared change, case increment or receipt.",
+        "Changed payload, candidate/choice, principal, membership, source/version and cross-origin requests fail at the actual consumer."
+      ],
+      "foreignPrerequisite": {
+        "state": "OPEN_NOT_GLOBALIZED",
+        "owner": "Published Procurement/decision producer owners (WP04/WP11)",
+        "evidence": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+            "lines": "168-177",
+            "observation": "createSfPreparedApply composition omits reviewDigestFor; the reviewed producer also lacks the required revalidateProducer composition.",
+            "blobSha": "0c970d36c5af4f5a58dfca80e1c46cf12d478f5f",
+            "sha256": "2724422b8e7dbeb60b344fbdc437151618957851b571f9e19084c27c958c2f00",
+            "candidateSha": "b7a6b5d4b66acf172762aba72f01e424bf9c0b90"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+            "lines": "25,48-60",
+            "observation": "Execute calls the required reviewDigestFor before receipt binding.",
+            "blobSha": "60c1b9d21f82f0871a8d15886f1949e1396de57a",
+            "sha256": "7dd20ec50a9c5123387995efe56dc9eb5656b88b2ee38503187a88b83bd09e98",
+            "candidateSha": "b7a6b5d4b66acf172762aba72f01e424bf9c0b90"
+          }
+        ],
+        "qualification": "Do not label C12 Apply complete. This does not erase the mandatory WP10 preparation/HTTP proof obligation. No producer files were edited by R2."
+      },
+      "nativePass": false,
+      "criterionAccepted": false
+    },
+    {
+      "id": "R2-F02",
+      "originalSeverity": "high",
+      "mandatory": true,
+      "state": "STATIC_WIRING_FIXED_CHECK_BLOCKED_RUNTIME_PENDING",
+      "owner": "WP10 calculation composition; published WP03/WP11 contracts remain owner-controlled",
+      "candidateSha": "b7a6b5d4b66acf172762aba72f01e424bf9c0b90",
+      "criteria": [
+        "WP10.T01.DOD.01",
+        "WP10.T07.DOD.01",
+        "WP10.T07.CMP.01",
+        "WP10.T07.SUC.01",
+        "WP10.SUC.10"
+      ],
+      "title": "Canonical Planner calculation is wired through original request binding, replay, BCS and Atlas; W2 check is not green",
+      "evidence": [
+        {
+          "path": "apps/cli/src/sucafina-product/business-services.ts",
+          "lines": "199-228,277-280,334",
+          "observation": "Private calculation case binding checks current C08 membership/incarnation/version without recursively reading case evidence; actual persistence is wrapped and the calculation resolver is passed to BCS/Atlas composition.",
+          "blobSha": "9f0216f2d58b973dcfa5665753bc3c3b8855d4d6",
+          "sha256": "7bb3e1bffcf353bc570c3d5656ac9984c5db18de570052ff1356cb9d89222cea",
+          "candidateSha": "b7a6b5d4b66acf172762aba72f01e424bf9c0b90"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+          "lines": "32-67,68-97,98-142",
+          "observation": "Original request/result digest capture is producer-private; published request store and record-only Planner replay issue the canonical ref. Resolver compares the full issued ref, current sources, persisted result and request binding and preserves null/coverage restrictions in its projection.",
+          "blobSha": "a7926e7b50016eee324dcfb74bb7627afbd6295f",
+          "sha256": "0a227c197f6c5030b821b0cd354ae37049945e81265a937f43ed524b0f5b4b4d",
+          "candidateSha": "b7a6b5d4b66acf172762aba72f01e424bf9c0b90"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-request-store.ts",
+          "lines": "26-69",
+          "observation": "Protected preferences bind actual canonical request to stored scenario; current case and source fences are checked and binding is re-read.",
+          "blobSha": "848fe10663e14ba04ae09c36e1a34bca0c3744c6",
+          "sha256": "ea061795f1c9ddc20b87593ba7b6524a905102e5f07cb50172fbe2fe19f901d6",
+          "candidateSha": "b7a6b5d4b66acf172762aba72f01e424bf9c0b90"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/planner/calculation-evidence.ts",
+          "lines": "21-53,65-72",
+          "observation": "Published issuer emits kind=calculation with calculationId planner:scenario, engine/input/result/source digests after two record-only replays; recursive/unsupported evidence is refused.",
+          "blobSha": "a1d2b84c59732b05c5944cd81be82f247c2c9c91",
+          "sha256": "e5726e7f60690ac451c07c49fecfa4a2254b4b6f5cda017f800ef9c208ef294d",
+          "candidateSha": "b7a6b5d4b66acf172762aba72f01e424bf9c0b90"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+          "lines": "159-190,262-278",
+          "observation": "Calculation route and current-source continuity proof now exist in the complete router.",
+          "blobSha": "e48a4441fc26b948ee34c5cc052b0293e0611a30",
+          "sha256": "ff75a1dd28693c54b7ddd446406b77a8c8aa72bcb85d1c3d3f8769b6e722b8bc",
+          "candidateSha": "b7a6b5d4b66acf172762aba72f01e424bf9c0b90"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+          "lines": "24-44,93-94",
+          "observation": "readForCalculation remains version-exact and record-only; historical Review calculation reading is deliberately separate.",
+          "blobSha": "0d2977360afb7b9af6d39b19eff6e9198c7c1c55",
+          "sha256": "beff852cf85a71893dc596c3b673dbce638e4bbb9a4787bff476448d66a8377e",
+          "candidateSha": "b7a6b5d4b66acf172762aba72f01e424bf9c0b90"
+        }
+      ],
+      "staticConclusion": "The orphaned calculation factory/router failure is repaired structurally. The returned calculation is the actual published canonical issuer output, not an invented alternative representation. A DomainProjection of the stored scenario is assembled after checking that canonical output. Type error R2-W2-F04 blocks acceptance of this candidate.",
+      "testQualification": {
+        "source": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+        "lines": "26-29,104-145,146-189",
+        "executedByReviewer": false,
+        "scope": "Test source uses real SQLite, source issuer, Planner, protected request/result stores, sf_source_get descriptor, BCS and real pinned scanner/Atlas reopen path; coverage and accepted ledger event are explicit fixtures. No hosted W2 execution result was available to R2 at report time."
+      },
+      "remainingProof": [
+        "Hosted W2-successor execution of this exact test selection, with collected-test count and scanner/process evidence.",
+        "Canonical issue -> sf_source_get -> BCS/Atlas append -> reopen -> recall/dedup, plus tampered input/result/engine/source, cycle/budget and revocation failures.",
+        "Any normal case N->N+1 requirement for current calculations must be reconciled by the C09 owner; current reader intentionally refuses it. Review history is not a fresh C17 result."
+      ],
+      "nativePass": false,
+      "criterionAccepted": false
+    },
+    {
+      "id": "R2-F03",
+      "originalSeverity": "high",
+      "severity": "high",
+      "mandatory": true,
+      "state": "OPEN_PARTIALLY_FIXED",
+      "owner": "WP10 Review composition",
+      "candidateSha": "b7a6b5d4b66acf172762aba72f01e424bf9c0b90",
+      "criteria": [
+        "WP10.T02.CHK.02",
+        "WP10.T01.DOD.01",
+        "WP10.T01.SUC.10",
+        "WP10.T03.CHK.01"
+      ],
+      "title": "Historical records are repaired, but real Review UI cannot reach historical Portfolio after case version advancement",
+      "evidence": [
+        {
+          "path": "apps/cli/src/sucafina-product/review-history.ts",
+          "lines": "21-76,79-118",
+          "observation": "Historical record access requires current scoped-source ACL/fields/period/incarnation and immutable preserved body backed by the original principal’s atomic review receipt; it no longer requires equal source version.",
+          "blobSha": "0c9a68225d114ba77617af4a0e3acc2607ea0e5a",
+          "sha256": "2d3fc4f4ca0297eeec13b1376c19911f706734780cfee80e1b3a9453097f3064",
+          "candidateSha": "b7a6b5d4b66acf172762aba72f01e424bf9c0b90"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/review-calculation-history.ts",
+          "lines": "14-49",
+          "observation": "Historical calculation proof checks original C08 scenario/input binding and current case membership/incarnation, without claiming a fresh calculation.",
+          "blobSha": "012c83ed8b6382bebc0046526985f2f900f04035",
+          "sha256": "4b9d2f230eaf2c60a94b7a9a5fe92eed2bbccb4a3f23dd483c0e8aa2a16cb772",
+          "candidateSha": "b7a6b5d4b66acf172762aba72f01e424bf9c0b90"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/review-services.ts",
+          "lines": "45-60,80-98",
+          "observation": "History and actual handoff are mounted, but both currentCase and Portfolio provenance caseFor use business.resolveCase.",
+          "blobSha": "acdd613efe98532e61812fd2fbfd78d6a5891ed3",
+          "sha256": "6430012dda8c3b18864aa43f8b08ce90476e18c28e9f7494c3a0456f54692e9a",
+          "candidateSha": "b7a6b5d4b66acf172762aba72f01e424bf9c0b90"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/business-services.ts",
+          "lines": "165,185-197",
+          "observation": "UI resolveCase requires a private caseBindings entry; without it, case-selection-unavailable is returned.",
+          "blobSha": "9f0216f2d58b973dcfa5665753bc3c3b8855d4d6",
+          "sha256": "7bb3e1bffcf353bc570c3d5656ac9984c5db18de570052ff1356cb9d89222cea",
+          "candidateSha": "b7a6b5d4b66acf172762aba72f01e424bf9c0b90"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/reviews/http.ts",
+          "lines": "140-159",
+          "observation": "Actual GET review-read admits a new UI context and calls reviews.read without any case binding; only sf/reviewRef query keys are accepted.",
+          "blobSha": "3411fe33f7e907cdb98c35841161342fda43a3c8",
+          "sha256": "17c808c3bbb98de06bd1a0f7e0b3ab82a60fc577fa3649781d25cc8a964c09a5",
+          "candidateSha": "b7a6b5d4b66acf172762aba72f01e424bf9c0b90"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/extended-http.ts",
+          "lines": "125-132",
+          "observation": "The rendered preserved-review page also reads the review directly without a case binding.",
+          "blobSha": "a888757e024f0c156d308b22eaf1bf193c3c12c0",
+          "sha256": "d13aff1b4d2055e88f14ac9bf47619e8832a7142b710f005866f93364a2bff2c",
+          "candidateSha": "b7a6b5d4b66acf172762aba72f01e424bf9c0b90"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/reviews/decision-access.ts",
+          "lines": "34-41",
+          "observation": "After current Portfolio read fails, historical fallback first calls currentCase; unavailable prevents history.",
+          "blobSha": "1b75f4b1786bb351c15821d76a31030fba677e7e",
+          "sha256": "d7e9cc9215470d724d0d0452f2239d24a7b2fe0fa1ef2688c8adc9481421bdeb",
+          "candidateSha": "b7a6b5d4b66acf172762aba72f01e424bf9c0b90"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+          "lines": "42-44,93-94",
+          "observation": "Current Portfolio read is version-exact, so a normal case version increment triggers that fallback.",
+          "blobSha": "0d2977360afb7b9af6d39b19eff6e9198c7c1c55",
+          "sha256": "beff852cf85a71893dc596c3b673dbce638e4bbb9a4787bff476448d66a8377e",
+          "candidateSha": "b7a6b5d4b66acf172762aba72f01e424bf9c0b90"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/reviews/port.ts",
+          "lines": "125-153",
+          "observation": "Preserved review read reauthorizes decisions; failure denies the saved review.",
+          "blobSha": "1b93fd89a1f544808455c15d12f9c06cc18e21f3",
+          "sha256": "d7e90864107251cc988511b5afe66c2362baf2aa317c6b0b09cd990832493377",
+          "candidateSha": "b7a6b5d4b66acf172762aba72f01e424bf9c0b90"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/review-handoffs.ts",
+          "lines": "13-45",
+          "observation": "Default handoff uses actual collaboration producer and reopens relation/action/correlation/assignment; no synthetic closure receipt.",
+          "blobSha": "5e797c295fdd3f0f3ddbd691aed943f82adb2d4c",
+          "sha256": "a698da3d00ae254a0bf2da470fc66bf89a9e89a168dcf07e8bbdda33b2cd3f61",
+          "candidateSha": "b7a6b5d4b66acf172762aba72f01e424bf9c0b90"
+        }
+      ],
+      "reproduction": {
+        "kind": "static call chain, not product execution",
+        "steps": [
+          "Preserve a review containing an authorized Portfolio result for case N through a context in which the case was selected.",
+          "Advance that same accessible case to N+1 without replacing its incarnation.",
+          "Open the normal dashboard review-read GET for the saved review.",
+          "Current Portfolio result read fails exact case version; decision-access invokes business.resolveCase on the fresh unbound UI context.",
+          "case-selection-unavailable prevents Portfolio history; authorizeDecision fails and preserved review read returns denial. The Review page/report path cannot be qualified as preserved Portfolio access."
+        ]
+      },
+      "impact": "Ordinary case evolution still makes a preserved Portfolio review inaccessible from the actual product UI. Mounting the historical reader alone does not satisfy the preservation journey.",
+      "minimumCorrection": "Compose a private historical Review case scope from an authenticated persisted result/review reference, with current membership, same incarnation, current version and egress recheck. Apply it to the real read/preview/download consumers that need Portfolio history. Do not accept an arbitrary caller-supplied case or weaken current C09 validation. A host adapter can resolve this within WP10 ownership.",
+      "recheck": [
+        "Preserve real Portfolio at N; advance same case to N+1; reopen via actual Review HTTP and rendered page; confirm original body unchanged.",
+        "Preview/report/download and successor comparison through the same authorized historical lane.",
+        "Membership removal, incarnation replacement, altered stored binding/review/receipt and revocation suppress historical content.",
+        "Historical calculation capture plus Review body/receipt and actual closure handoff require integrated proof; the separate calculation helper test alone does not cover that consumer."
+      ],
+      "testQualification": {
+        "sources": [
+          "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-history-composition.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-calculation-history.test.ts"
+        ],
+        "executedByReviewer": false,
+        "scope": "First source checks a simple dashboard-record Review using a manually assembled review service, with decisions explicitly empty; it does not cover the default Portfolio historical composition or Review HTTP. Second source checks historical calculation helper against seeded C08 run/input records and current membership/incarnation; it does not create a real historical Review containing that calculation."
+      },
+      "nativePass": false,
+      "criterionAccepted": false
+    },
+    {
+      "id": "R2-W2-F04",
+      "severity": "high",
+      "mandatory": true,
+      "state": "OPEN_HOSTED_CHECK_FAILURE",
+      "owner": "WP10 own Planner calculation composition",
+      "candidateSha": "b7a6b5d4b66acf172762aba72f01e424bf9c0b90",
+      "criteria": [
+        "WP10.T04.DOD.01",
+        "WP10.T04.DOD.10",
+        "WP10.T04.QLT.10"
+      ],
+      "title": "New calculation projection does not typecheck in hosted W2",
+      "evidence": [
+        {
+          "path": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+          "lines": "112-116",
+          "observation": "The check for context in authorizedProjection does not narrow its context union to ProductContext before accessing sourceRefs.",
+          "blobSha": "a7926e7b50016eee324dcfb74bb7627afbd6295f",
+          "sha256": "0a227c197f6c5030b821b0cd354ae37049945e81265a937f43ed524b0f5b4b4d",
+          "candidateSha": "b7a6b5d4b66acf172762aba72f01e424bf9c0b90"
+        }
+      ],
+      "reproduction": {
+        "kind": "hosted failure independently inspected, originally reported by root",
+        "runId": "43548947850",
+        "jobId": "132306683850",
+        "log": "analysis/hosted/job-132306683850.log",
+        "lines": "277,329-337,561-566",
+        "diagnostic": "TS2339 at planner-calculation-services.ts(116,162): sourceRefs does not exist on ProductContext | runtime/native/UI context union.",
+        "reviewerExecuted": false
+      },
+      "impact": "The candidate’s own CLI typecheck fails. F02 cannot be accepted as a verified working integration on this SHA.",
+      "minimumCorrection": "Narrow authorizedProjection/context using the actual DomainProjection shape before reading sourceRefs; preserve rejection of unsupported evidence projections. Run required hosted check on the new frozen SHA without casts that bypass validation.",
+      "recheck": [
+        "Hosted own CLI typecheck on successor SHA has no corresponding error.",
+        "Canonical calculation projection/source closure behavior still passes the scoped hosted test."
+      ],
+      "criterionAccepted": false
+    }
+  ],
+  "coverage": [
+    {
+      "section": "F01 human intent, preparation, HTTP, idempotency",
+      "authors": [
+        "root",
+        "published WP04/WP11/WP13 producers"
+      ],
+      "reviewer": "R2",
+      "disjoint": true,
+      "state": "static correction observed; forward producer proof pending"
+    },
+    {
+      "section": "F02 request persistence, canonical calculation, BCS and Atlas",
+      "authors": [
+        "root",
+        "runtime_analysis",
+        "published WP03/WP11 producers"
+      ],
+      "reviewer": "R2",
+      "disjoint": true,
+      "state": "static wiring observed; own check failure and no hosted unit proof"
+    },
+    {
+      "section": "F03 records, Portfolio, calculation history, handoff and restricted outputs",
+      "authors": [
+        "root",
+        "composition_intake",
+        "published WP07/WP08/WP11/WP13 producers"
+      ],
+      "reviewer": "R2",
+      "disjoint": true,
+      "state": "record/history repairs observed; Portfolio UI residual open"
+    },
+    {
+      "section": "Hosted exact-candidate static gates",
+      "authors": [
+        "root"
+      ],
+      "reviewer": "R2",
+      "disjoint": true,
+      "state": "failure observed"
+    }
+  ],
+  "hostedEvidence": {
+    "check": {
+      "runId": "43548947850",
+      "jobId": "132306683850",
+      "sourceCandidate": "b7a6b5d4b66acf172762aba72f01e424bf9c0b90",
+      "dispatchCommit": "55e5300c23b39054874060b34e36abda0a6f443d",
+      "log": "analysis/hosted/job-132306683850.log",
+      "logSha256": "80df430efea9b2e8654db4cb5441622ff6b8fa89a6f5a9483b1cf6290b70e341",
+      "scope": "The log explicitly checks out W2 before check steps. Own TS2339 is independently observed; no current check PASS."
+    },
+    "unit": {
+      "state": "NOT_AVAILABLE_TO_R2_AT_REPORT",
+      "qualification": "Root reported concurrent predecessor unit run; R2 does not attribute it to W2."
+    },
+    "excludedPredecessorRun": "43548298822",
+    "otherObservedBlockers": [
+      {
+        "owner": "WP10 root packaging",
+        "kind": "guard agent-scratch",
+        "logLines": "702-703,739-741",
+        "paths": [
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-composition/hosted-round1/job-132293688965.log",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-composition/hosted-round1/job-132293700346.log"
+        ],
+        "state": "OPEN root acknowledged; not a finance source edit"
+      },
+      {
+        "owner": "Published foreign producer owners",
+        "kind": "Additional type/syntax diagnostics in hosted cumulative dependency tree",
+        "state": "Not repaired or reclassified as WP10 authorship by R2; root/owners must reconcile exact published prerequisites."
+      }
+    ]
+  },
+  "canonicalCriteria": {
+    "count": 171,
+    "tasks": 7,
+    "source": "context/pack.json canonical_work_package",
+    "matchedBuilderIdTextTaskFamilyOnly": true,
+    "builderAcceptanceUsed": false,
+    "canonicalSortedJsonSha256": "694a75ef774a4952c4aa0b789128b73cdffe475b062e571db6e870d467e7941f",
+    "qualification": "All 171 exact IDs/texts/families/tasks are preserved below as the criterion universe. R2 only evaluates the scoped findings above; no 171-criterion PASS is inferred.",
+    "items": [
+      {
+        "id": "WP10.CMP.01",
+        "task": "WP10",
+        "family": "completeness_criteria",
+        "text": "Todas as capacidades antigas e novas, três superfícies, quatro rotinas, oito gráficos e estados relevantes têm cobertura rastreável."
+      },
+      {
+        "id": "WP10.CMP.02",
+        "task": "WP10",
+        "family": "completeness_criteria",
+        "text": "Inclui regressão, concorrência, permissões, migração de estado anterior, export completo, falha e ausência de dados."
+      },
+      {
+        "id": "WP10.CMP.10",
+        "task": "WP10",
+        "family": "completeness_criteria",
+        "text": "Todas as obrigações 5/18/8/C17 desta frente têm task, owner, paths, consumidor e negativos discriminantes."
+      },
+      {
+        "id": "WP10.CMP.40",
+        "task": "WP10",
+        "family": "completeness_criteria",
+        "text": "Incluir empacotamento Atlas, APP src/APP browser separados, provas AM01-AM06, transferências e rechecagem do candidato."
+      },
+      {
+        "id": "WP10.CMP.60",
+        "task": "WP10",
+        "family": "completeness_criteria",
+        "text": "Verificar imports transitivos, export surfaces, geração reproduzível, scanner clean/canary/unavailable e ownership exclusivo, com negativos que rejeitam bundle errado."
+      },
+      {
+        "id": "WP10.DOD.01",
+        "task": "WP10",
+        "family": "dod",
+        "text": "Todos os WPs e suas tasks satisfazem os axiomas locais e as jornadas integradas; três pareceres independentes não têm achado obrigatório aberto."
+      },
+      {
+        "id": "WP10.DOD.02",
+        "task": "WP10",
+        "family": "dod",
+        "text": "O candidato de produto C possui evidência de CI, comportamento, autorização, visualização e preservação correspondente ao seu conteúdo. O commit de entrega D arquiva essa evidência e passa a verificação do envelope e seu próprio guard, sem alegar que CI de C executou em D."
+      },
+      {
+        "id": "WP10.DOD.10",
+        "task": "WP10",
+        "family": "dod",
+        "text": "As entregas residentes atribuídas a WP10 têm produção, consumo e provas reais completos."
+      },
+      {
+        "id": "WP10.DOD.40",
+        "task": "WP10",
+        "family": "dod",
+        "text": "Runtime, Atlas, composição, CI e julgamentos têm atores/paths/recibos explícitos; cinco perfis/18 skills/oito packs e Atlas são integrados em G4."
+      },
+      {
+        "id": "WP10.DOD.60",
+        "task": "WP10",
+        "family": "dod",
+        "text": "Os dois subpaths canônicos resolvem, quatro artefatos são gerados, AST/guard passam e AM05 preserva scanner real."
+      },
+      {
+        "id": "WP10.INV.01",
+        "task": "WP10",
+        "family": "invariants",
+        "text": "Só WP10 escreve composição compartilhada; defeitos em arquivos de domínio retornam ao owner, com revisão do delta."
+      },
+      {
+        "id": "WP10.INV.02",
+        "task": "WP10",
+        "family": "invariants",
+        "text": "Nenhum gate é removido, teste enfraquecido, dado real exposto ou frente de deploy alterada para fechar a campanha."
+      },
+      {
+        "id": "WP10.INV.10",
+        "task": "WP10",
+        "family": "invariants",
+        "text": "WP10 conserva autoridade, dados oficiais e ownership; não assume identidade técnica ou novo acesso empresarial."
+      },
+      {
+        "id": "WP10.INV.40",
+        "task": "WP10",
+        "family": "invariants",
+        "text": "S0 não escreve arquivos delegados; nenhum autor assina aceitação independente de sua própria seção."
+      },
+      {
+        "id": "WP10.INV.60",
+        "task": "WP10",
+        "family": "invariants",
+        "text": "Nove paths Atlas exatos; nenhum algoritmo/guard/allowlist alterado, nenhum factory sem binding em native-bound e nenhum novo site spawning."
+      },
+      {
+        "id": "WP10.QLT.01",
+        "task": "WP10",
+        "family": "quality_standards",
+        "text": "Evidências são pequenas e suficientes para julgar cada resultado; validade é do comportamento observado, não da quantidade de testes."
+      },
+      {
+        "id": "WP10.QLT.02",
+        "task": "WP10",
+        "family": "quality_standards",
+        "text": "A entrega usa linguagem de produto e inclui limites materiais e semântica dos números."
+      },
+      {
+        "id": "WP10.QLT.10",
+        "task": "WP10",
+        "family": "quality_standards",
+        "text": "Interfaces são concretas, versões/digests são verificáveis e falhas possuem causa e estado explícitos."
+      },
+      {
+        "id": "WP10.QLT.40",
+        "task": "WP10",
+        "family": "quality_standards",
+        "text": "Gates distinguem source shipping, runtime loading, domínio real, CI selection e consumo final no mesmo candidato. Mesmo candidato significa C; D apenas arquiva provas admitidas e conserva a identidade de cada execução."
+      },
+      {
+        "id": "WP10.QLT.60",
+        "task": "WP10",
+        "family": "quality_standards",
+        "text": "Resolução da aresta exata é explícita, verificável e falha fechada; mesma constante/função canônica, sem confiar em tree-shaking."
+      },
+      {
+        "id": "WP10.SUC.01",
+        "task": "WP10",
+        "family": "success_criteria",
+        "text": "As jornadas de contribuição, comparação, decisão, reunião e retomada funcionam com identidades e dados compartilhados no módulo real."
+      },
+      {
+        "id": "WP10.SUC.02",
+        "task": "WP10",
+        "family": "success_criteria",
+        "text": "André e o time podem completar suas tarefas sem reconstruir contexto em ferramentas auxiliares para os cenários cobertos."
+      },
+      {
+        "id": "WP10.SUC.10",
+        "task": "WP10",
+        "family": "success_criteria",
+        "text": "O consumidor integrado utiliza a saída de produção sem substituto fictício e o revisor consegue reproduzir o resultado."
+      },
+      {
+        "id": "WP10.SUC.40",
+        "task": "WP10",
+        "family": "success_criteria",
+        "text": "O produto inteiro é revisável sem depender de trabalho oculto de coordenadores ou de checks atribuídos a seleção que não rodou."
+      },
+      {
+        "id": "WP10.SUC.60",
+        "task": "WP10",
+        "family": "success_criteria",
+        "text": "O consumidor usa emit/read e scanner reais dentro do guard existente; dependência de subprocesso não é duplicada nem ocultada."
+      },
+      {
+        "id": "WP10.T01.CHK.01",
+        "task": "WP10.T01",
+        "family": "checks",
+        "text": "Inicializar estado anterior e acessar as 28 capacidades sem perda de dados ou mudança de permissão."
+      },
+      {
+        "id": "WP10.T01.CHK.02",
+        "task": "WP10.T01",
+        "family": "checks",
+        "text": "Abrir cada função nova através da navegação real e observar leitura/escrita no domínio correto."
+      },
+      {
+        "id": "WP10.T01.CHK.03",
+        "task": "WP10.T01",
+        "family": "checks",
+        "text": "Rotinas usam recibo de run real; gráficos, imports e relatórios usam os mesmos valores autorizados dos domínios."
+      },
+      {
+        "id": "WP10.T01.CHK.04",
+        "task": "WP10.T01",
+        "family": "checks",
+        "text": "Salvar preferência, revisão, thread/vínculo e recibo/correlação; recarregar em nova sessão autorizada: o estado permanece. Migrar a mesma base antiga duas vezes produz o mesmo estado, sem duplicar registro nem ampliar acesso."
+      },
+      {
+        "id": "WP10.T01.CHK.05",
+        "task": "WP10.T01",
+        "family": "checks",
+        "text": "Injetar falha antes do commit de Apply: nenhum efeito. Perder resposta depois do commit e repetir correlação: recuperar o mesmo resultado sem aplicar outra vez; edição independente não é perdida. Se o store existente não suportar a atomicidade exigida, registrar incompatibilidade em C08 e resolver dentro da fronteira de produto antes de declarar pronto."
+      },
+      {
+        "id": "WP10.T01.CHK.10",
+        "task": "WP10.T01",
+        "family": "checks",
+        "text": "Export JSON/audit/preview do usuário Dashboard não revela memória/documento/HR de outro domínio mesmo com admin local desse surface."
+      },
+      {
+        "id": "WP10.T01.CHK.11",
+        "task": "WP10.T01",
+        "family": "checks",
+        "text": "Import com __sfProductV1 ou refs/owners/scannerReceipt fornecidos rejeita metadados e conserva estado confiável; nova encarnação invalida referências."
+      },
+      {
+        "id": "WP10.T01.CHK.12",
+        "task": "WP10.T01",
+        "family": "checks",
+        "text": "T06/T07 usam a mesma instância Persistence de HTTP/jobs; restart não cria store git ou runtime paralelo."
+      },
+      {
+        "id": "WP10.T01.CMP.01",
+        "task": "WP10.T01",
+        "family": "completeness_criteria",
+        "text": "Cobrir entrypoint, rotas, handlers, contratos legados, preferências, revisões, relações, imports e rotinas. Incluir guia por papel, roteiro sintético e changelog de produto em C, cobrindo os incrementos tardios até T75."
+      },
+      {
+        "id": "WP10.T01.CMP.02",
+        "task": "WP10.T01",
+        "family": "completeness_criteria",
+        "text": "Preferências, C05/C06, recibos/referências C04/C07 e correlação têm formato, migração, save/load, ACL e falha antes/depois do commit verificados."
+      },
+      {
+        "id": "WP10.T01.CMP.10",
+        "task": "WP10.T01",
+        "family": "completeness_criteria",
+        "text": "Leitura, escrita, import, export, audit, retry, cancelamento e restart cobrem namespace protegido."
+      },
+      {
+        "id": "WP10.T01.DOD.01",
+        "task": "WP10.T01",
+        "family": "dod",
+        "text": "As superfícies reais consomem todas as portas e funções da campanha, sem caminhos de produção vazios ou simulados. O README de uso, roteiro e changelog correspondente estão incluídos em C e disponíveis para T05."
+      },
+      {
+        "id": "WP10.T01.DOD.10",
+        "task": "WP10.T01",
+        "family": "dod",
+        "text": "Provider protegido C09–C17 é consumido pelas portas reais e persiste após restart."
+      },
+      {
+        "id": "WP10.T01.INV.01",
+        "task": "WP10.T01",
+        "family": "invariants",
+        "text": "Composição não altera fórmulas/políticas por conveniência e não escreve arquivos de feature de outro WP. Guias normativos usam o README já possuído por S0 e não entram como evidência nova em D."
+      },
+      {
+        "id": "WP10.T01.INV.02",
+        "task": "WP10.T01",
+        "family": "invariants",
+        "text": "A composição preserva atomicidade dentro de cada domínio: comando e recibo local são commitados juntos ou nenhum deles é gravado. Uma operação entre domínios pode ficar parcial, com esse estado e seus recibos explícitos, sem repetir efeitos aplicados."
+      },
+      {
+        "id": "WP10.T01.INV.03",
+        "task": "WP10.T01",
+        "family": "invariants",
+        "text": "Cada comando preparado leva idempotencyKey e digest de conteúdo/ator/target/encarnação. O adapter WP10 consulta e grava o recibo no MESMO snapshot/commit da mutação daquele domínio. Retry idêntico revalida acesso e retorna o recibo; mesma chave com digest diferente é conflito. O caso central reconcilia recibos depois e pode estar parcialmente atualizado; nunca repetir uma mutação porque a resposta se perdeu."
+      },
+      {
+        "id": "WP10.T01.INV.10",
+        "task": "WP10.T01",
+        "family": "invariants",
+        "text": "Storage central não concede acesso cross-domain nem inventa quarto Surface; commitar domínio e memória não promete transação global."
+      },
+      {
+        "id": "WP10.T01.QLT.01",
+        "task": "WP10.T01",
+        "family": "quality_standards",
+        "text": "Mudanças de compatibilidade são aditivas, pequenas e documentadas junto ao consumidor afetado. O guia por papel descreve as tarefas e os números do produto, reconciliado com o comportamento integrado antes de congelar C."
+      },
+      {
+        "id": "WP10.T01.QLT.10",
+        "task": "WP10.T01",
+        "family": "quality_standards",
+        "text": "Migration/idempotency preservam estado prévio; audit genérico não contém texto sensível."
+      },
+      {
+        "id": "WP10.T01.SUC.01",
+        "task": "WP10.T01",
+        "family": "success_criteria",
+        "text": "A funcionalidade deixa de depender de abrir páginas isoladas ou scripts de demonstração para existir. T05 entrega instruções já presentes no candidato testado, sem iniciar outro ciclo de produto apenas para escrever o guia."
+      },
+      {
+        "id": "WP10.T01.SUC.10",
+        "task": "WP10.T01",
+        "family": "success_criteria",
+        "text": "Usuário autorizado retoma contribuição/memória e usuário sem acesso não obtém conteúdo por nenhuma superfície."
+      },
+      {
+        "id": "WP10.T02.CHK.01",
+        "task": "WP10.T02",
+        "family": "checks",
+        "text": "Um segundo usuário altera o registro entre leitura e escrita: entrada local preservada, conflito visível, nenhuma perda silenciosa."
+      },
+      {
+        "id": "WP10.T02.CHK.02",
+        "task": "WP10.T02",
+        "family": "checks",
+        "text": "Após salvar revisão, alterar origem não muda o apresentado; comparação seguinte mostra a mudança."
+      },
+      {
+        "id": "WP10.T02.CHK.03",
+        "task": "WP10.T02",
+        "family": "checks",
+        "text": "Gerar relatório com25 registros preserva cobertura e nega dado sensível fora do papel."
+      },
+      {
+        "id": "WP10.T02.CHK.04",
+        "task": "WP10.T02",
+        "family": "checks",
+        "text": "Demo de preparar→revisar→decidir→acompanhar percorre o caminho de produto, não botões de mockup."
+      },
+      {
+        "id": "WP10.T02.CHK.05",
+        "task": "WP10.T02",
+        "family": "checks",
+        "text": "No ambiente/corpus fixados em G0, medir resposta visual e conclusão com30repetições comparáveis. Verificar feedback em até200ms e investigar p95 que regrida mais de20%; registrar resultado observado, sem inventar benchmark."
+      },
+      {
+        "id": "WP10.T02.CHK.10",
+        "task": "WP10.T02",
+        "family": "checks",
+        "text": "Remover uma skill ou deixar saída sem consumidor faz a matriz falhar mesmo quando as jornadas genéricas passam."
+      },
+      {
+        "id": "WP10.T02.CHK.11",
+        "task": "WP10.T02",
+        "family": "checks",
+        "text": "Sem trace do Atlas real+restart ou sem paridade dos 8 packs, aceite integral permanece aberto."
+      },
+      {
+        "id": "WP10.T02.CMP.01",
+        "task": "WP10.T02",
+        "family": "completeness_criteria",
+        "text": "Cobrir usuários, formatos, moedas, períodos, comparações, approvals, revisão, rotinas, busca, filtros e acessibilidade previstos."
+      },
+      {
+        "id": "WP10.T02.CMP.10",
+        "task": "WP10.T02",
+        "family": "completeness_criteria",
+        "text": "Os 5 perfis/18 skills/8 packs e C17 estão cobertos, incluindo failure/retry/revogação."
+      },
+      {
+        "id": "WP10.T02.DOD.01",
+        "task": "WP10.T02",
+        "family": "dod",
+        "text": "Jornadas e estados de interface foram observados na composição real, com evidência suficiente para reproduzir cada conclusão."
+      },
+      {
+        "id": "WP10.T02.DOD.10",
+        "task": "WP10.T02",
+        "family": "dod",
+        "text": "As 6 provas integradas possuem evidência positiva e negativa no mesmo candidato."
+      },
+      {
+        "id": "WP10.T02.INV.01",
+        "task": "WP10.T02",
+        "family": "invariants",
+        "text": "Captura bonita ou teste de markup não substitui comportamento; identidade de teste não pode ter privilégios extras ocultos."
+      },
+      {
+        "id": "WP10.T02.INV.10",
+        "task": "WP10.T02",
+        "family": "invariants",
+        "text": "Não reciclar review histórico/fixture/catalogo como prova de runtime."
+      },
+      {
+        "id": "WP10.T02.QLT.01",
+        "task": "WP10.T02",
+        "family": "quality_standards",
+        "text": "Toda falha visual com perda de conteúdo/ação e toda perda de contexto relevante recebe correção antes do aceite."
+      },
+      {
+        "id": "WP10.T02.QLT.10",
+        "task": "WP10.T02",
+        "family": "quality_standards",
+        "text": "Recibos identificam handler/modulo, run, versões, digests e ação do consumidor."
+      },
+      {
+        "id": "WP10.T02.SUC.01",
+        "task": "WP10.T02",
+        "family": "success_criteria",
+        "text": "Cada persona conclui sua tarefa e entende o resultado; entender uma aprovação em cerca de30 segundos é objetivo observado no roteiro, não promessa universal."
+      },
+      {
+        "id": "WP10.T02.SUC.10",
+        "task": "WP10.T02",
+        "family": "success_criteria",
+        "text": "Pessoa que não construiu reproduz caminhos felizes e contraprovas sem reconstruir o produto no chat."
+      },
+      {
+        "id": "WP10.T03.CHK.01",
+        "task": "WP10.T03",
+        "family": "checks",
+        "text": "Juiz identifica se o comparador confunde margem e economia, se o aging usa evento errado ou se dados restritos escapam por relatório."
+      },
+      {
+        "id": "WP10.T03.CHK.02",
+        "task": "WP10.T03",
+        "family": "checks",
+        "text": "Juiz de UX percorre contribuição e conclusão, não apenas a home de André."
+      },
+      {
+        "id": "WP10.T03.CHK.03",
+        "task": "WP10.T03",
+        "family": "checks",
+        "text": "Recibo de autor não conta como parecer independente; correção relevante invalida evidência afetada."
+      },
+      {
+        "id": "WP10.T03.CHK.40",
+        "task": "WP10.T03",
+        "family": "checks",
+        "text": "Cada seção dos três pareceres identifica reviewer e authors; seção com interseção não fecha aceite até ser reatribuída."
+      },
+      {
+        "id": "WP10.T03.CMP.01",
+        "task": "WP10.T03",
+        "family": "completeness_criteria",
+        "text": "Produto/UX cobre tarefa e conclusão; semântica cobre cálculo, estado, papéis, fontes, versões e automações."
+      },
+      {
+        "id": "WP10.T03.CMP.02",
+        "task": "WP10.T03",
+        "family": "completeness_criteria",
+        "text": "Cobrir produto/UX, finanças/permissões/persistência e IA/Relay/integração com três revisores sem autoria nos arquivos julgados; cobrir substituição de revisor caso um assuma WP14."
+      },
+      {
+        "id": "WP10.T03.CMP.40",
+        "task": "WP10.T03",
+        "family": "completeness_criteria",
+        "text": "CobrirUX, semântica, IA/MCP/Atlas/Relay/documentos/WP14 e todas as fontes de skills."
+      },
+      {
+        "id": "WP10.T03.DOD.01",
+        "task": "WP10.T03",
+        "family": "dod",
+        "text": "Três juízes independentes emitem aceite fundamentado no candidato final, após correções necessárias."
+      },
+      {
+        "id": "WP10.T03.DOD.40",
+        "task": "WP10.T03",
+        "family": "dod",
+        "text": "Três pareceres consolidados sem autojulgamento no candidato final."
+      },
+      {
+        "id": "WP10.T03.INV.01",
+        "task": "WP10.T03",
+        "family": "invariants",
+        "text": "Nenhum achado que viole axioma obrigatório pode ser reclassificado como opcional só para encerrar."
+      },
+      {
+        "id": "WP10.T03.INV.40",
+        "task": "WP10.T03",
+        "family": "invariants",
+        "text": "Escrever uma correção remove o direito de aceitar aquela seção independentemente."
+      },
+      {
+        "id": "WP10.T03.QLT.01",
+        "task": "WP10.T03",
+        "family": "quality_standards",
+        "text": "Pareceres citam cenário, comportamento e consequência; evitar notas genéricas ou placares sem evidência."
+      },
+      {
+        "id": "WP10.T03.QLT.40",
+        "task": "WP10.T03",
+        "family": "quality_standards",
+        "text": "Achado registra critério/evidência/impacto/correção/recheck e SHA."
+      },
+      {
+        "id": "WP10.T03.SUC.01",
+        "task": "WP10.T03",
+        "family": "success_criteria",
+        "text": "Um revisor sem autoria da implementação consegue sustentar o aceite e explicar seus limites concretos."
+      },
+      {
+        "id": "WP10.T03.SUC.40",
+        "task": "WP10.T03",
+        "family": "success_criteria",
+        "text": "Revisão encontra lacunas sem contar S0-A/B builders como revisores livres."
+      },
+      {
+        "id": "WP10.T04.CHK.01",
+        "task": "WP10.T04",
+        "family": "checks",
+        "text": "Mudança de produto depois de um run cria novo C e invalida os critérios afetados até nova verificação; não chamar green antigo de green atual. Apenas adições evidenciais que satisfazem integralmente execution.candidate_delivery podem formar D sem reexecutar o produto C, mantendo seus SHAs e guard próprio de D."
+      },
+      {
+        "id": "WP10.T04.CHK.02",
+        "task": "WP10.T04",
+        "family": "checks",
+        "text": "As suítes necessárias executam testes reais e não somente passam com zero testes coletados."
+      },
+      {
+        "id": "WP10.T04.CHK.03",
+        "task": "WP10.T04",
+        "family": "checks",
+        "text": "Não rodar bun test local nem alterar guards para fugir do caminho exigido pelo repositório."
+      },
+      {
+        "id": "WP10.T04.CHK.10",
+        "task": "WP10.T04",
+        "family": "checks",
+        "text": "Regenerar a boundary no mesmo baseline dá bytes idênticos; geração faltante/obsoleta ou import @atlas/* não resolvido falha."
+      },
+      {
+        "id": "WP10.T04.CHK.11",
+        "task": "WP10.T04",
+        "family": "checks",
+        "text": "Scanner/provedor/driver indisponível, suite pulada ou pacote sem execução real não satisfaz AM05."
+      },
+      {
+        "id": "WP10.T04.CHK.40",
+        "task": "WP10.T04",
+        "family": "checks",
+        "text": "CI-APP-SRC seleciona src e CI-APP-BROWSER seleciona test-browser, com requests/results diferentes e mesmo productcandidate SHA."
+      },
+      {
+        "id": "WP10.T04.CHK.41",
+        "task": "WP10.T04",
+        "family": "checks",
+        "text": "Oito requests mínimas, generated/typecheck e inventário do epic aparecem no recibo final; missing/empty/mismatched selection falha."
+      },
+      {
+        "id": "WP10.T04.CMP.01",
+        "task": "WP10.T04",
+        "family": "completeness_criteria",
+        "text": "Cobrir seletores de domínio, integração, browsers, relatórios, imports, concorrência, rotinas e guards afetados."
+      },
+      {
+        "id": "WP10.T04.CMP.10",
+        "task": "WP10.T04",
+        "family": "completeness_criteria",
+        "text": "Gate cobre gerador, types, bundle, consumer e drivers de persistência/scanner reais."
+      },
+      {
+        "id": "WP10.T04.CMP.40",
+        "task": "WP10.T04",
+        "family": "completeness_criteria",
+        "text": "CobrirSF/CLI/app/src/app/test-browser/atlas-boundary/trêsPW e suites adicionais exigidas pelo footprint/epic. As seleções e seis provas AM finais identificam o mesmo C; distinguir seu aceite do envelope D."
+      },
+      {
+        "id": "WP10.T04.DOD.01",
+        "task": "WP10.T04",
+        "family": "dod",
+        "text": "O candidato final de produto C tem resultados válidos das verificações exigidas, sem falha obrigatória ou prova desatualizada. O guard do envelope D é verificado separadamente por T05 antes de G8."
+      },
+      {
+        "id": "WP10.T04.DOD.10",
+        "task": "WP10.T04",
+        "family": "dod",
+        "text": "CI pertinente à boundary e aos novos consumers fecha com evidência do candidato final de produto C."
+      },
+      {
+        "id": "WP10.T04.DOD.40",
+        "task": "WP10.T04",
+        "family": "dod",
+        "text": "Seleções CI exigidas e gates estáticos de produto têm recibos do candidato aceito C; D mantém essas identidades e requer seu próprio guard em G8."
+      },
+      {
+        "id": "WP10.T04.INV.01",
+        "task": "WP10.T04",
+        "family": "invariants",
+        "text": "CI verde não prova automaticamente UX; pareceres e jornadas continuam obrigatórios e separados."
+      },
+      {
+        "id": "WP10.T04.INV.10",
+        "task": "WP10.T04",
+        "family": "invariants",
+        "text": "Não mudar CI/validator/engine para ocultar falha; exceção de packaging fica restrita."
+      },
+      {
+        "id": "WP10.T04.INV.40",
+        "task": "WP10.T04",
+        "family": "invariants",
+        "text": "Playwright SF não substitui Bun browser; checks em outro SHA não viram verde atual. D não recebe o SHA de execução de C; seu receipt aponta C e o envelope mantém o produto intacto."
+      },
+      {
+        "id": "WP10.T04.QLT.01",
+        "task": "WP10.T04",
+        "family": "quality_standards",
+        "text": "Reusar evidência ainda válida e repetir somente o necessário para resolver risco concreto ou gate exigido. Arquivar prova em D não exige novo teste de produto quando o envelope passa, mas exige verificação própria e guard de D."
+      },
+      {
+        "id": "WP10.T04.QLT.10",
+        "task": "WP10.T04",
+        "family": "quality_standards",
+        "text": "Dependency/runtime import e generated declarations são verificados de forma reproduzível."
+      },
+      {
+        "id": "WP10.T04.QLT.40",
+        "task": "WP10.T04",
+        "family": "quality_standards",
+        "text": "Medirfila/setup/run/coleta e capacidade disponível, sem afirmar que timeout 45 é duração prevista."
+      },
+      {
+        "id": "WP10.T04.SUC.01",
+        "task": "WP10.T04",
+        "family": "success_criteria",
+        "text": "Qualquer pessoa consegue ligar cada resultado declarado ao commit e à execução que o demonstraram. O índice de D aponta C e preserva cada run, attempt, seleção e hash original, sem alegar execução inexistente em D."
+      },
+      {
+        "id": "WP10.T04.SUC.10",
+        "task": "WP10.T04",
+        "family": "success_criteria",
+        "text": "Uma instalação limpa recebe o mesmo API/runtime bundle sem depender do checkout interno Atlas."
+      },
+      {
+        "id": "WP10.T04.SUC.40",
+        "task": "WP10.T04",
+        "family": "success_criteria",
+        "text": "Aceite CI é verificável porselection/request/run, e prazo 120 permanece condicional à medição."
+      },
+      {
+        "id": "WP10.T05.CHK.01",
+        "task": "WP10.T05",
+        "family": "checks",
+        "text": "Todas as tasks, WPs e capacidades obrigatórias da matriz canônica têm aceite e evidência válidos; o encerramento consulta a lista, sem contagem antiga fixa. A aceitação distingue C de D: todas as provas de produto obrigatórias pertencem a C; o envelope de D admite apenas adições novas, com hashes e guard próprios. Alteração, remoção, rename, modo indevido, fonte normativa ou input runtime/teste/build no diff rejeita D como entrega evidencial."
+      },
+      {
+        "id": "WP10.T05.CHK.02",
+        "task": "WP10.T05",
+        "family": "checks",
+        "text": "Uma pessoa executa o roteiro a partir do guia sem depender desta conversa."
+      },
+      {
+        "id": "WP10.T05.CHK.03",
+        "task": "WP10.T05",
+        "family": "checks",
+        "text": "Itens explicitamente fora de escopo não são apresentados como entregues e capacidades aceitas não são movidas para depois sem mudança de escopo."
+      },
+      {
+        "id": "WP10.T05.CHK.10",
+        "task": "WP10.T05",
+        "family": "checks",
+        "text": "Catálogo completo com skill nunca carregada, pack parcial ou memória sem Atlas bloqueia aceite."
+      },
+      {
+        "id": "WP10.T05.CMP.01",
+        "task": "WP10.T05",
+        "family": "completeness_criteria",
+        "text": "Incluir todas as personas, principais jornadas, gráficos/rotinas, import/export, estados de erro e semânticas alteradas. Conferir todos os paths/status/modos/blobs do diff C→D, índice de evidências, ancestralidade e guard próprio de D; diff truncado ou dependência desconhecida falha."
+      },
+      {
+        "id": "WP10.T05.CMP.10",
+        "task": "WP10.T05",
+        "family": "completeness_criteria",
+        "text": "Nenhum perfil, skill, pack, caso de identidade ou roundtrip Atlas obrigatório está órfão."
+      },
+      {
+        "id": "WP10.T05.DOD.01",
+        "task": "WP10.T05",
+        "family": "dod",
+        "text": "Campanha fechada somente com cobertura completa, critérios satisfeitos no produto C e pacote D coerente: ancestralidade, envelope append-only, inputs preservados, hashes e guard de D verificados após G7."
+      },
+      {
+        "id": "WP10.T05.DOD.10",
+        "task": "WP10.T05",
+        "family": "dod",
+        "text": "Recibo de entrega inclui todas novas capacidades e seus consumidores/provas."
+      },
+      {
+        "id": "WP10.T05.INV.01",
+        "task": "WP10.T05",
+        "family": "invariants",
+        "text": "Planejamento, implementação, revisão, publicação e deploy são estados distintos; não confundir um com outro. D não altera produto, guias normativos, testes, skills, configurações ou recibos antigos; a evidência conserva os SHAs e runs originais. Não gravar o próprio SHA/hash/guard posterior dentro de D."
+      },
+      {
+        "id": "WP10.T05.INV.10",
+        "task": "WP10.T05",
+        "family": "invariants",
+        "text": "Prazo não transforma NOT_RUN/HOLD em PASS."
+      },
+      {
+        "id": "WP10.T05.QLT.01",
+        "task": "WP10.T05",
+        "family": "quality_standards",
+        "text": "Guia explica o trabalho do usuário e o significado dos dados; detalhes internos ficam nas referências técnicas pertinentes. Consumir o guia já incluído em C; o índice de entrega liga evidências sem copiar afirmações de um candidato para outro."
+      },
+      {
+        "id": "WP10.T05.QLT.10",
+        "task": "WP10.T05",
+        "family": "quality_standards",
+        "text": "Limitações e falhas são específicas e rastreáveis ao produtor."
+      },
+      {
+        "id": "WP10.T05.SUC.01",
+        "task": "WP10.T05",
+        "family": "success_criteria",
+        "text": "André e time conseguem usar e retomar o trabalho; o usuário recebe uma entrega comprovada e fácil de revisar. O usuário recebe C testado e D verificável, sem reexecução causada somente pela gravação da própria evidência."
+      },
+      {
+        "id": "WP10.T05.SUC.10",
+        "task": "WP10.T05",
+        "family": "success_criteria",
+        "text": "Escopo total pode ser revisado e reproduzido sem confiar em afirmações de implementação."
+      },
+      {
+        "id": "WP10.T06.CHK.01",
+        "task": "WP10.T06",
+        "family": "checks",
+        "text": "Perfil sf_finance real carrega sf-explicar-forecast por SessionV2.skill; mensagem/instructionsDigest corresponde aos bytes pinados e compareForecast real produz resultado consumido."
+      },
+      {
+        "id": "WP10.T06.CHK.02",
+        "task": "WP10.T06",
+        "family": "checks",
+        "text": "Duas sessões com mesmo perfil e usuários/casos diferentes em concorrência mantêm principal/input/output isolados."
+      },
+      {
+        "id": "WP10.T06.CHK.03",
+        "task": "WP10.T06",
+        "family": "checks",
+        "text": "Actor/role/project/session/profile/provider/endpoint em args não altera autoridade; chamada sem binding ou direto a operação não concedida falha."
+      },
+      {
+        "id": "WP10.T06.CHK.04",
+        "task": "WP10.T06",
+        "family": "checks",
+        "text": "Revogação entre listTools e callTool e entre resultado do modelo e egress bloqueia dados/efeitos, inclusive links."
+      },
+      {
+        "id": "WP10.T06.CHK.05",
+        "task": "WP10.T06",
+        "family": "checks",
+        "text": "Provider configurado sucafina-workbench ou nome normalizado colidente produz provider-conflict; nenhum client externo é escolhido."
+      },
+      {
+        "id": "WP10.T06.CHK.06",
+        "task": "WP10.T06",
+        "family": "checks",
+        "text": "Trocar generation, expirar lease, usar lease duas vezes ou alterar inputDigest recusa sem chamar domínio."
+      },
+      {
+        "id": "WP10.T06.CHK.07",
+        "task": "WP10.T06",
+        "family": "checks",
+        "text": "Os 8 packs listam só operações implementadas; prova final invoca 39 rotas e confirma mesmos handlers/resultados UI/native/MCP."
+      },
+      {
+        "id": "WP10.T06.CHK.08",
+        "task": "WP10.T06",
+        "family": "checks",
+        "text": "Skill ausente, digest alterado, fonte homônima ou perfil desconhecido falha antes do prompt; nenhum catalog-only passa."
+      },
+      {
+        "id": "WP10.T06.CHK.09",
+        "task": "WP10.T06",
+        "family": "checks",
+        "text": "Revisor executa em sessão/run novos e não acessa ferramentas de Maestro/Atlas seats ou aprovação."
+      },
+      {
+        "id": "WP10.T06.CHK.10",
+        "task": "WP10.T06",
+        "family": "checks",
+        "text": "Restart não reidrata credential/grant; nova ligação autenticada retoma histórico autorizado com novo run."
+      },
+      {
+        "id": "WP10.T06.CHK.40",
+        "task": "WP10.T06",
+        "family": "checks",
+        "text": "NATIVE-RUNTIME T+16 é consumido 18 sem alegar T06 inteiro concluído; bundle full 42 entra 45 e todos os 8 packs são exercidos até 75."
+      },
+      {
+        "id": "WP10.T06.CHK.60",
+        "task": "WP10.T06",
+        "family": "checks",
+        "text": "Validar existência de rota perfil+skill para cada operação; negar calls sem skill e prepare/run em routine-result. AM02 prova as 39 rotas reais. Registrar entrada, binding/skill, saída, efeito de domínio e consumidor no mesmo candidato."
+      },
+      {
+        "id": "WP10.T06.CMP.01",
+        "task": "WP10.T06",
+        "family": "completeness_criteria",
+        "text": "Provar duas sessões/atores, forged args, revogação, homônimo, generation, carga de 18 skills, Revisor e paridade de 8 packs."
+      },
+      {
+        "id": "WP10.T06.CMP.40",
+        "task": "WP10.T06",
+        "family": "completeness_criteria",
+        "text": "Contar cinco perfis/dezoito skills/oito packs, incluindo chamada forçada, revogação e provider homônimo."
+      },
+      {
+        "id": "WP10.T06.CMP.60",
+        "task": "WP10.T06",
+        "family": "completeness_criteria",
+        "text": "Cobrir caminho autorizado, falta de SkillLoadReceipt, permissão revogada e os estados de preview/admissão pertinentes à task. Validar existência de rota perfil+skill para cada operação; negar calls sem skill e prepare/run em routine-result. AM02 prova as 39 rotas reais."
+      },
+      {
+        "id": "WP10.T06.DOD.01",
+        "task": "WP10.T06",
+        "family": "dod",
+        "text": "Os 5 perfis/18 skills estão registrados e carregados; MCP de 8 packs usa contexto confiável e produz recibos consumidos."
+      },
+      {
+        "id": "WP10.T06.DOD.40",
+        "task": "WP10.T06",
+        "family": "dod",
+        "text": "Early runtime e runtime completo têm recibos distintos e fonte distribuída real."
+      },
+      {
+        "id": "WP10.T06.DOD.60",
+        "task": "WP10.T06",
+        "family": "dod",
+        "text": "A alteração descrita é integrada aos produtores/consumidores reais e provada por AM02/AM06 conforme o domínio. Validar existência de rota perfil+skill para cada operação; negar calls sem skill e prepare/run em routine-result. AM02 prova as 39 rotas reais."
+      },
+      {
+        "id": "WP10.T06.INV.01",
+        "task": "WP10.T06",
+        "family": "invariants",
+        "text": "Identidade vem de request/host, o destino revalida; nomes e dados do modelo não concedem autoridade."
+      },
+      {
+        "id": "WP10.T06.INV.40",
+        "task": "WP10.T06",
+        "family": "invariants",
+        "text": "Bridge privada/grant não dependem de McpProvided global nem de identidade gerada."
+      },
+      {
+        "id": "WP10.T06.INV.60",
+        "task": "WP10.T06",
+        "family": "invariants",
+        "text": "Identidade, perfil, skill carregada, concessão e autorização atual continuam obrigatórios; prévia não aplica e rotina não inventa admissão. Validar existência de rota perfil+skill para cada operação; negar calls sem skill e prepare/run em routine-result. AM02 prova as 39 rotas reais."
+      },
+      {
+        "id": "WP10.T06.QLT.01",
+        "task": "WP10.T06",
+        "family": "quality_standards",
+        "text": "API usa seams públicos, schema fechado, falha explícita, budgets/cancelamento e provider object identity."
+      },
+      {
+        "id": "WP10.T06.QLT.40",
+        "task": "WP10.T06",
+        "family": "quality_standards",
+        "text": "Todos os handlers publicados declaram producer e readiness; sem sucesso quando indisponível."
+      },
+      {
+        "id": "WP10.T06.QLT.60",
+        "task": "WP10.T06",
+        "family": "quality_standards",
+        "text": "Grant, entrada, saída e estado visível concordam entre manifesto, wrapper e UI; falha tem motivo verificável. Validar existência de rota perfil+skill para cada operação; negar calls sem skill e prepare/run em routine-result. AM02 prova as 39 rotas reais."
+      },
+      {
+        "id": "WP10.T06.SUC.01",
+        "task": "WP10.T06",
+        "family": "success_criteria",
+        "text": "Usuário obtém contribuições especializadas rastreáveis e chamadas indevidas falham por caminho real."
+      },
+      {
+        "id": "WP10.T06.SUC.40",
+        "task": "WP10.T06",
+        "family": "success_criteria",
+        "text": "Cadeia T20 e equipe completa T75 usam as mesmas portas/contratos, não dois runtimes."
+      },
+      {
+        "id": "WP10.T06.SUC.60",
+        "task": "WP10.T06",
+        "family": "success_criteria",
+        "text": "A pessoa consegue utilizar a contribuição prevista e abrir seu resultado real; uma ferramenta sempre recusada não conta como entregue. Validar existência de rota perfil+skill para cada operação; negar calls sem skill e prepare/run em routine-result. AM02 prova as 39 rotas reais."
+      },
+      {
+        "id": "WP10.T07.CHK.01",
+        "task": "WP10.T07",
+        "family": "checks",
+        "text": "Bundle/package import de produção chama createMemoryEmit/read; neutralizar um factory real faz a prova integrada falhar."
+      },
+      {
+        "id": "WP10.T07.CHK.02",
+        "task": "WP10.T07",
+        "family": "checks",
+        "text": "Append admitido -> commit driver SF real -> reinício de processo -> recall real -> consumidor de UI recupera razão/diferenças."
+      },
+      {
+        "id": "WP10.T07.CHK.03",
+        "task": "WP10.T07",
+        "family": "checks",
+        "text": "Dois atores usando mesmo perfil só veem casos/fontes atuais permitidas; owner omitido/forjado não amplia; um campo revogado suprime registro completo."
+      },
+      {
+        "id": "WP10.T07.CHK.04",
+        "task": "WP10.T07",
+        "family": "checks",
+        "text": "Scanner real admite clean, bloqueia canary e distingue ausente/timeout/erro como unavailable; zero append nos refusals."
+      },
+      {
+        "id": "WP10.T07.CHK.05",
+        "task": "WP10.T07",
+        "family": "checks",
+        "text": "Falha/cancelamento antes commit deixa zero evento após restart; resposta perdida após commit retorna mesmo event/receipt sem duplicar."
+      },
+      {
+        "id": "WP10.T07.CHK.06",
+        "task": "WP10.T07",
+        "family": "checks",
+        "text": "Dois writers concorrentes/mesmo owner não perdem eventos; cap/project gate é calculado no snapshot serializado e não por cópia antiga."
+      },
+      {
+        "id": "WP10.T07.CHK.07",
+        "task": "WP10.T07",
+        "family": "checks",
+        "text": "Import substitui encarnação mesmo ID e invalida ref/caches; namespace/audit/JSON export não revela memória privada."
+      },
+      {
+        "id": "WP10.T07.CHK.08",
+        "task": "WP10.T07",
+        "family": "checks",
+        "text": "Template empresarial errado, key extra, kind pr/logbook ou raw BusinessEvidenceRef objeto são recusados por map/validator antes da escrita."
+      },
+      {
+        "id": "WP10.T07.CHK.09",
+        "task": "WP10.T07",
+        "family": "checks",
+        "text": "Map snapshot read/append permanece síncrono; não retornar Promise de DurableMemory nem admitir antes await Persistence.transaction."
+      },
+      {
+        "id": "WP10.T07.CHK.10",
+        "task": "WP10.T07",
+        "family": "checks",
+        "text": "generate/check:generated/typecheck da boundary e check:spawn-imports raiz passam no candidato; quatro artefatos derivados, scanner no subpath nativo e import real SF, sem edição manual ou allowlist ampliada."
+      },
+      {
+        "id": "WP10.T07.CHK.40",
+        "task": "WP10.T07",
+        "family": "checks",
+        "text": "ATLAS-PACKAGE20 resolve os dois subpaths SF; AST, check:generated/typecheck e check:spawn-imports ficam vinculados ao candidato, além de CI-ATLAS-BUSINESS."
+      },
+      {
+        "id": "WP10.T07.CHK.41",
+        "task": "WP10.T07",
+        "family": "checks",
+        "text": "ATLAS-FULL T+55 consome resolver 20, map 20 e protected-store 25; append/read/restart são pelo Atlas real."
+      },
+      {
+        "id": "WP10.T07.CHK.60",
+        "task": "WP10.T07",
+        "family": "checks",
+        "text": "AST do business-memory-ports contém zero spawning imports e zero imports computados/dinâmicos; a única ligação do NO_SCANNER_NAME de memory-emit é o import literal external native-memory. Adicionar scanner export ao novo bundle ou desfazer externalização deve reprovar."
+      },
+      {
+        "id": "WP10.T07.CHK.61",
+        "task": "WP10.T07",
+        "family": "checks",
+        "text": "Native-bound preserva todos os exports bound e comportamento de createNativeMemory; scanner exports são reexports das funções/constante originais e não expõem createMemoryRead/createMemoryEmit/createDurableMemory, owner ou root mutáveis."
+      },
+      {
+        "id": "WP10.T07.CHK.62",
+        "task": "WP10.T07",
+        "family": "checks",
+        "text": "Gerar os dois pares JS/d.ts e executar check:spawn-imports com guard/allowlist inalterados; nova ocorrência em business-memory-ports reprova. Os nove paths Atlas e atlas-scanner.ts/capabilities.ts têm escritor exclusivo S0-A."
+      },
+      {
+        "id": "WP10.T07.CMP.01",
+        "task": "WP10.T07",
+        "family": "completeness_criteria",
+        "text": "Recobrir owner/kind/templates, ACL por campo/registro, incarnation, concurrency, cancel, retry, scanner e consumidor instrumentado."
+      },
+      {
+        "id": "WP10.T07.CMP.40",
+        "task": "WP10.T07",
+        "family": "completeness_criteria",
+        "text": "Empacotamento e 8 casos AM05 integram o orçamento/proof-map, não só o teste doledgerSF."
+      },
+      {
+        "id": "WP10.T07.CMP.60",
+        "task": "WP10.T07",
+        "family": "completeness_criteria",
+        "text": "Verificar imports transitivos, export surfaces, geração reproduzível, scanner clean/canary/unavailable e ownership exclusivo, com negativos que rejeitam bundle errado."
+      },
+      {
+        "id": "WP10.T07.DOD.01",
+        "task": "WP10.T07",
+        "family": "dod",
+        "text": "BCS e Atlas real entregam refs, resolução, emit/read persistentes, scanner e recuperação autorizada após restart."
+      },
+      {
+        "id": "WP10.T07.DOD.40",
+        "task": "WP10.T07",
+        "family": "dod",
+        "text": "Boundary publicável, BCS, Atlas ports e provider durável têm owner/path/minutos/provas reais."
+      },
+      {
+        "id": "WP10.T07.DOD.60",
+        "task": "WP10.T07",
+        "family": "dod",
+        "text": "Os dois subpaths canônicos resolvem, quatro artefatos são gerados, AST/guard passam e AM05 preserva scanner real."
+      },
+      {
+        "id": "WP10.T07.INV.01",
+        "task": "WP10.T07",
+        "family": "invariants",
+        "text": "Ledger SF é oficial; scope Atlas não é ACL; sem novos acessos, store git, identidade técnica ou engine paralelo."
+      },
+      {
+        "id": "WP10.T07.INV.40",
+        "task": "WP10.T07",
+        "family": "invariants",
+        "text": "Nenhuma escrita fora dos nove paths Atlas exatos; gerados são produzidos pelo gerador, engines/guard/allowlist permanecem fonte inalterada."
+      },
+      {
+        "id": "WP10.T07.INV.60",
+        "task": "WP10.T07",
+        "family": "invariants",
+        "text": "Nove paths Atlas exatos; nenhum algoritmo/guard/allowlist alterado, nenhum factory sem binding em native-bound e nenhum novo site spawning."
+      },
+      {
+        "id": "WP10.T07.QLT.01",
+        "task": "WP10.T07",
+        "family": "quality_standards",
+        "text": "Forms/types reais, atomicidade explícita, causas de scanner preservadas e build do pacote reproduzível."
+      },
+      {
+        "id": "WP10.T07.QLT.40",
+        "task": "WP10.T07",
+        "family": "quality_standards",
+        "text": "Falha descan/commit/ACL é observável e não produz sucesso persistido."
+      },
+      {
+        "id": "WP10.T07.QLT.60",
+        "task": "WP10.T07",
+        "family": "quality_standards",
+        "text": "Resolução da aresta exata é explícita, verificável e falha fechada; mesma constante/função canônica, sem confiar em tree-shaking."
+      },
+      {
+        "id": "WP10.T07.SUC.01",
+        "task": "WP10.T07",
+        "family": "success_criteria",
+        "text": "Precedente útil sobrevive ao processo e nunca retorna conteúdo revogado ou referência substituída como válida."
+      },
+      {
+        "id": "WP10.T07.SUC.40",
+        "task": "WP10.T07",
+        "family": "success_criteria",
+        "text": "Memória recupera precedente real após reinício comfonte/versão/acesso atual."
+      },
+      {
+        "id": "WP10.T07.SUC.60",
+        "task": "WP10.T07",
+        "family": "success_criteria",
+        "text": "O consumidor usa emit/read e scanner reais dentro do guard existente; dependência de subprocesso não é duplicada nem ocultada."
+      }
+    ]
+  },
+  "evidenceLimits": [
+    "No local product execution, no native run, no browser journey, no source mutations and no remote writes.",
+    "No W2 hosted unit result at report time. Test descriptions are inspection, not execution evidence.",
+    "The seeded Portfolio receipt test cannot establish a new successful preparation or complete Apply.",
+    "Atlas restart/scanner test source is not an observed AM05 runtime proof. The test explicitly fixtures coverage and accepted ledger event.",
+    "C09 current calculations remain version-exact; historical Review calculation proof is a separate preserved-data lane.",
+    "Earlier R2 W coverage of margins versus savings, approval-stage aging, C08 migration/CAS, C11 provenance, materiality and restricted reports remains a historical review; this targeted W2 recheck does not create new runtime qualification for those areas.",
+    "Epic/global/AM acceptance remains with S0 after the full bundle; this provisional review does not close the campaign."
+  ],
+  "verdict": {
+    "status": "CHANGES_REQUIRED",
+    "mandatoryOpen": [
+      "R2-F03",
+      "R2-W2-F04"
+    ],
+    "staticDefectRepairsObserved": [
+      "R2-F01",
+      "R2-F02"
+    ],
+    "proofPending": [
+      "R2-F01 full forward path and three surfaces",
+      "R2-F02 hosted canonical calculation/Atlas path",
+      "R2-F03 integrated Portfolio/calculation/handoff consumers"
+    ],
+    "currentNativePass": false,
+    "currentCiPass": false,
+    "currentUnitPass": false,
+    "campaignClosed": false,
+    "rationale": "The historical Portfolio UI remains statically blocked after normal case version advancement. Hosted exact-W2 check also has an own calculation type error and two guard gates. Corrections in source and tests inspected do not provide runtime acceptance."
+  }
+}

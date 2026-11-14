@@ -1,0 +1,119 @@
+name: compose-resume-check
+
+# Astra composition checks the exact published product in a one-file snapshot.
+# Product tests continue to use the existing test-ci.yml protocol.
+on:
+  push:
+    branches: [compose-resume-check]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: compose-resume-check
+  cancel-in-progress: false
+
+jobs:
+  composition:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout check envelope
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Validate exact product and envelope
+        id: product
+        run: |
+          node --input-type=module <<'NODE'
+          import { appendFileSync, readFileSync } from 'node:fs'
+          import { execFileSync } from 'node:child_process'
+          const input = JSON.parse(readFileSync('.compose-resume-check.json', 'utf8'))
+          const keys = Object.keys(input).sort().join(',')
+          const delivery = keys === 'candidateSha,devSha,productSha'
+          if ((!delivery && keys !== 'devSha,productSha') ||
+              ![input.productSha, input.devSha, ...(delivery ? [input.candidateSha] : [])].every(value => typeof value === 'string' && /^[a-f0-9]{40}$/.test(value)))
+            throw new Error('Invalid composition check envelope')
+          const git = (...args) => execFileSync('git', args, { encoding: 'utf8' }).trim()
+          if (git('rev-parse', 'HEAD') !== process.env.GITHUB_SHA || git('rev-parse', 'HEAD^') !== input.productSha)
+            throw new Error('The check must descend directly from the declared product SHA')
+          if (git('diff-tree', '--no-commit-id', '--name-status', '-r', input.productSha, 'HEAD') !== 'A\t.compose-resume-check.json')
+            throw new Error('The check snapshot changed product blobs')
+          git('merge-base', '--is-ancestor', '6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0', input.productSha)
+          if (delivery) {
+            git('merge-base', '--is-ancestor', input.candidateSha, input.productSha)
+            const changes = git('diff', '--name-status', input.candidateSha, input.productSha).split('\n').filter(Boolean)
+            if (!changes.length || changes.some(line => !/^A\tmodules\/sucafina\/Sucafinav1\/docs\/sf2h\/receipts\/(WP00|WP10)\/.+\.(json|md|txt)$/.test(line)))
+              throw new Error('Delivery must add only WP00/WP10 evidence; it cannot edit candidate or existing receipts')
+            for (const line of changes) {
+              const path = line.slice(2)
+              if (!git('ls-tree', input.productSha, '--', path).startsWith('100644 blob ')) throw new Error('Invalid evidence mode')
+            }
+          }
+          appendFileSync(process.env.GITHUB_OUTPUT, `sha=${input.productSha}\ndev=${input.devSha}\ndelivery=${delivery}\n`)
+          NODE
+
+      - name: Checkout exact product
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          ref: ${{ steps.product.outputs.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Record product and guard base
+        env:
+          PRODUCT_SHA: ${{ steps.product.outputs.sha }}
+          DEV_SHA: ${{ steps.product.outputs.dev }}
+          EVIDENCE: ${{ runner.temp }}/compose-resume-evidence
+        run: |
+          test "$(git rev-parse HEAD)" = "$PRODUCT_SHA"
+          test "$(git rev-parse origin/dev)" = "$DEV_SHA"
+          mkdir -p "$EVIDENCE"
+          git merge-base HEAD origin/dev > "$EVIDENCE/merge-base.txt"
+          git rev-parse HEAD HEAD^{tree} origin/dev > "$EVIDENCE/revisions.txt"
+
+      - name: Setup Bun
+        id: setup
+        uses: ./.github/actions/setup-bun
+
+      - name: Typecheck Sucafina
+        if: ${{ !cancelled() && steps.setup.outcome == 'success' && steps.product.outputs.delivery != 'true' }}
+        working-directory: modules/sucafina
+        run: |
+          set -o pipefail
+          bun typecheck 2>&1 | tee "$RUNNER_TEMP/compose-resume-evidence/sucafina-typecheck.log"
+
+      - name: Typecheck CLI consumers
+        if: ${{ !cancelled() && steps.setup.outcome == 'success' && steps.product.outputs.delivery != 'true' }}
+        working-directory: apps/cli
+        run: |
+          set -o pipefail
+          bun typecheck 2>&1 | tee "$RUNNER_TEMP/compose-resume-evidence/cli-typecheck.log"
+
+      - name: Guard subprocess imports
+        if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
+        run: |
+          set -o pipefail
+          bun run check:spawn-imports 2>&1 | tee "$RUNNER_TEMP/compose-resume-evidence/spawn-imports.log"
+
+      - name: Guard product against origin/dev
+        if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
+        run: |
+          set -o pipefail
+          bun run check:guards --base origin/dev 2>&1 | tee "$RUNNER_TEMP/compose-resume-evidence/guards.log"
+
+      - name: Upload exact-check evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: compose-resume-check-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/compose-resume-evidence
+          if-no-files-found: error
+          retention-days: 14
+

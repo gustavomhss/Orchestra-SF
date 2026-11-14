@@ -1,0 +1,145 @@
+{
+  "schema": "sf2.wp10.builder-receipt.v1",
+  "created_at": "2026-11-14T05:35:07.273038+00:00",
+  "builder": {
+    "id": "/root/fixture_repair_w6",
+    "role": "author of own WP10 Review browser helper",
+    "lease": "CLOSED",
+    "independent_reviewer": false
+  },
+  "task": "Additive W8b: await real Review browser request/handler/transport without an unobserved response timeout",
+  "source_lineage": {
+    "base": {
+      "sha": "207bf82a7a7beade4e6909a5d74ed647bfc5aad6",
+      "tree": "3cb60a653fd340732d0e5f437c2e90f700976f03",
+      "note": "This helper remained byte-identical to W7 at the start of W8b."
+    },
+    "W8_closed_receipt": {
+      "path": "analysis/fixture-repair-W8.json",
+      "sha256": "0c251a2eb811312b670eedb72c11a9c1a56beeaf17f3185299a8ca78a4626cc6",
+      "git_blob_sha1": "28d3b6722633a417f3aa5cd1901c4dd05e5956e3",
+      "bytes": 16739
+    },
+    "W8_authored_files_unchanged": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/analysis-variants.test.ts",
+        "sha256": "86df3162af57014a0c6ebbe26e9d13b4543e5ad7f004acd92a3a1ddce59971b5"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-access-browser-fixture.ts",
+        "sha256": "f799156500b271750f73f955c74266db9b746bb515c80b43ff884adc3dd2379d"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-case-access.test.ts",
+        "sha256": "610dfb92c0615a3596bc5533ebd9936f69b1e3c9af1d658f4b3da004b1ed3d72"
+      }
+    ]
+  },
+  "authored_files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-access-browser-fixture.ts",
+      "sha256": "61ddb847a5b92a812e8817c38b22383c2cd995065b102fbd7a1eaba3abb21711",
+      "git_blob_sha1": "2abbd120ff65d769fa63b9dc729900ed1fd52b4f",
+      "bytes": 10063,
+      "base": {
+        "path": "analysis/frozen-W7/repo/modules/sucafina/Sucafinav1/test/product/wp10/integration/review-access-browser-fixture.ts",
+        "sha256": "72f948e8b39ac6da0369af1da93d5112a354098765ea323bb964e533e23c6192",
+        "git_blob_sha1": "2ee59326928d83253529cc2873ecc5b40731bd75",
+        "bytes": 6833
+      }
+    }
+  ],
+  "patch": {
+    "path": "analysis/fixture-repair-W8b.patch",
+    "sha256": "28def4294c54a4ef5329871419189b36c7c7e631ec3be1ecc3bff7965b1f77af",
+    "git_blob_sha1": "57bc03350e2b9d522100e3d24789de4240109def",
+    "bytes": 11018
+  },
+  "hosted_input": {
+    "W": "207bf82a7a7beade4e6909a5d74ed647bfc5aad6",
+    "treeW": "3cb60a653fd340732d0e5f437c2e90f700976f03",
+    "S": "4d531e61bb48efeea3eb0198e86bb5b2c8595025",
+    "tree": "75e1a5f2cf7862ebd9a39c7cdec752fdd7e77c15",
+    "runId": 43559996968,
+    "jobId": 132341319922,
+    "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43559996968",
+    "conclusion": "failure",
+    "logSha256": "db911d74372745fbf8c38884deaf9b354580717addc64cea1fc1c5764be2a4f4"
+  },
+  "motivation": "The original helper created10s waitForResponse promises before goto. A slow actual HTML/bundle handler could reject those promises while goto was still awaited, as already observed for BI. W7 Review page handling measured10387ms; the Review browser proof itself was not reached because the earlier aggregate comparison exhausted105s. This is a source-level synchronization correction, not a claim that W7 observed the Review helper failure.",
+  "implemented": [
+    "Each observer is armed before navigation or click and deferred promises immediately have rejection handlers. Awaiting the original promise still propagates the exact handler failure.",
+    "Observer matching is by page, sf mode and actual Playwright Request identity. First reads for two pages cannot satisfy each other; later focus/source responses cannot satisfy the held source observer.",
+    "Arrival waits retain10s. Actual producer completion is awaited under the caller AbortSignal and unchanged105s deadline. Response delivery retains10s after real handler output. goto waits for commit with the same15s navigation limit.",
+    "The first actual focus-page source200 is captured after the real handler finishes and held. The source producer is not given the transport10s clock; after release, settlement retains the same10s bound.",
+    "Exact Response status, headers and body bytes are forwarded unchanged. No successful or denied payload, access decision, authorized response cache or source cache is added.",
+    "On cleanup all observation gates are rejected through already-handled promises, the retained source is released, and existing captureChromiumCleanup closes owned processes. Handler failures abort actual routes and remain observable.",
+    "Added SF_REVIEW_BROWSER_HTTP started/handled logs with page, mode, actual status and elapsed producer milliseconds. No private response body is logged.",
+    "AbortSignal is now required; the sole actual caller already passes deadline.signal. No fallback can leave producer waits without the caller deadline."
+  ],
+  "preserved_assertions": {
+    "statement_count_before": 11,
+    "statement_count_after": 11,
+    "assertion_changes": [
+      {
+        "old": "goto status200",
+        "new": "goto commit status200"
+      },
+      {
+        "old": "firstRead status200",
+        "new": "observed real firstRead response status200"
+      },
+      {
+        "old": "held actual source status200 under mixed clock",
+        "new": "held actual source status200 after producer completion"
+      }
+    ],
+    "unchanged": [
+      "two actual pages with visible table and private selected text",
+      "bootstrap absent before revocation",
+      "focus probe actual403",
+      "other-page source actual403",
+      "no private table/link/button/selected section",
+      "private text removed",
+      "bootstrap absent after revocation",
+      "both pages checked before and after delayed real source release",
+      "errors remains empty"
+    ],
+    "no_weakening": "All previous expected statuses and DOM assertions are retained. The change only observes actual requests and separates producer work from transport."
+  },
+  "budgets": {
+    "launch_ms": 15000,
+    "navigation_ms": 15000,
+    "browser_action_default_ms": 10000,
+    "request_arrival_ms": 10000,
+    "response_delivery_ms": 10000,
+    "held_source_delivery_ms": 10000,
+    "caller_cooperative_ms": 105000,
+    "caller_outer_ms": 120000,
+    "increased": false
+  },
+  "seam_qualification": "Real Chromium executes composed HTML/bundle; route forwarding supplies exact actual handler output. This is not TCP hosting, installed identity, native AI or global E2E. The late source200 remains the actual pre-revocation producer output.",
+  "coordination": {
+    "review_portfolio_http_test_edited_by_this_builder": false,
+    "caller_owner": "/root/ci_triage",
+    "message": "CI triage is independently placing browserChecks.current and fixture/lease resource registration inside deadline.phase callbacks before the post-check. No caller edits were made here. Asset prebuild remains a caller decision."
+  },
+  "validation": {
+    "static_expectation_comparison": true,
+    "no_trailing_whitespace": true,
+    "W8_receipt_and_three_sources_unchanged": true,
+    "local_product_tests": false,
+    "local_product_builds_typechecks_imports": false,
+    "local_browser_or_server_execution": false,
+    "remote_mutations": false,
+    "hosted_W8b_pass_claim": false,
+    "native_acceptance": false,
+    "global_acceptance": false
+  },
+  "pending": [
+    "Root freeze/publish W8 composition including additive W8b helper and separately owned caller changes",
+    "Hosted proof must reach both initial real200 pages/read responses, held actual source200, actual focus403/source403 and DOM clearing before/after source release",
+    "Navigation remains15s and real producer cost remains inside caller105s; production latency can still fail those unchanged limits",
+    "Independent R1/R2/R3 review of published source and hosted evidence; builder self-check is not independent acceptance"
+  ]
+}

@@ -1,0 +1,62 @@
+--- a/modules/sucafina/Sucafinav1/product/decisions/alternative-replay.ts
++++ b/modules/sucafina/Sucafinav1/product/decisions/alternative-replay.ts
+@@ -1,5 +1,6 @@
+ import { digestSfValue } from "../contracts/canonical.ts"
+ import type { DecisionCasePort, DomainPortHost, PlannerPort, PlannerSourceHost, PortResult } from "../contracts/ports.ts"
++import type { ScenarioResult } from "../contracts/decisions.ts"
+ import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
+ import type { createDecisionProposalService } from "./proposals.ts"
+ import type { AlternativeCapabilityProvenance } from "./alternative-provenance.ts"
+@@ -38,7 +39,9 @@
+       const previous = current.value.case.alternatives.find((item) => item.id === evaluated.costCoverage.alternativeId)
+       const provisional = evaluated.costCoverage.alternativeVersion !== (previous?.version ?? 0) + 1 || current.value.case.alternatives.some((item) => item.result.id === evaluated.id)
+       const identity = provisional ? { alternativeId: `proposal:${digestSfValue({ caseRef: record.request.caseRef, request: record.request, scenario: resolved.value.scenario })}`, alternativeVersion: 1 } : { alternativeId: evaluated.costCoverage.alternativeId, alternativeVersion: evaluated.costCoverage.alternativeVersion }
+-      const result = { ...evaluated, costCoverage: { ...evaluated.costCoverage, ...identity } }
++      const result: ScenarioResult = evaluated.comparisonStatus === "complete"
++        ? { ...evaluated, costCoverage: { ...evaluated.costCoverage, ...identity } }
++        : { ...evaluated, costCoverage: { ...evaluated.costCoverage, ...identity } }
+       if (validateScenarioCoverage(result, coverage.value.basis, result.costCoverage)) return { status: "stale", reason: "alternative-coverage-changed" }
+       const proposal = { id: identity.alternativeId, version: identity.alternativeVersion, title: record.request.proposal.title, scenario: resolved.value.scenario, result }
+       if (!await input.authorizeProposal(record.request, proposal, coverage.value.basis, context)) return { status: "denied", reason: "alternative-access-unavailable" }
+--- a/modules/sucafina/Sucafinav1/product/decisions/mutations.ts
++++ b/modules/sucafina/Sucafinav1/product/decisions/mutations.ts
+@@ -116,7 +116,7 @@
+       if (hotTopics.length && !input.resolveHotTopicDraft) return { status: "unavailable", reason: "hot-topic-draft-unavailable" }
+       const drafts = await Promise.all(hotTopics.map((operation) => callMutationPort(() => input.resolveHotTopicDraft!({ caseRef: request.caseRef, draftRef: operation.replacementRef! }, context))))
+       const failedDraft = drafts.find((item) => item.status !== "ok")
+-      if (failedDraft && failedDraft.status !== "ok") return failedDraft
++      if (failedDraft) return failedDraft
+       const prepared = await callMutationPort(() => input.prepareDomainCommands(request.caseRef, request.choiceId, request.operations, context))
+       if (prepared.status !== "ok") return prepared
+       if (!prepared.value.length) return { status: "unavailable", reason: "domain-commands-unavailable" }
+--- a/modules/sucafina/Sucafinav1/product/decisions/proposals.ts
++++ b/modules/sucafina/Sucafinav1/product/decisions/proposals.ts
+@@ -95,7 +95,7 @@
+     if (new Set(resolved.value.changes.map((item) => item.command.idempotencyKey)).size !== resolved.value.changes.length) return { status: "conflict", reason: "change-identity-conflict" }
+     const previews = await Promise.all(resolved.value.changes.map((item) => input.resolvePreview({ caseRef: scopedCase, choiceId: parsed.value.choiceRef, preview: item.preview }, context)))
+     const failedPreview = previews.find((item) => item.status !== "ok")
+-    if (failedPreview && failedPreview.status !== "ok") return failedPreview
++    if (failedPreview) return failedPreview
+     const changes = resolved.value.changes.map((item, index) => {
+       const target = item.command.target
+       const evidence = item.targetEvidence
+--- a/modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts
++++ b/modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts
+@@ -6,6 +6,8 @@
+ import type { SfProductStatePort } from "../contracts/state.ts"
+ import type { Actor, Environment, Snapshot } from "../../runtime/contract.ts"
+ import { isReviewDigest, receiptProofKey, receiptProofTransactionKey, receiptReviewBinding, type ReviewDigestFor } from "./receipt-review-binding.ts"
++
++type PreparedTransactionValue = CommandReceipt | { existing: CommandReceipt } | { failure: "unavailable" | "conflict" } | null
+ 
+ /** The callbacks resolve current host authority and domain data; none are supplied by a capability caller. */
+ export function createSfPreparedApply(input: {
+@@ -82,7 +84,7 @@
+       if (!receipts || receipts.status !== "ok" || !receipts.value) return { status: "unavailable", reason: "receipt-unavailable" }
+       const id = input.createId()
+       if (!id.trim()) return { status: "unavailable", reason: "receipt-identity-unavailable" }
+-      const applied = await input.state.transaction(source, { namespace: "receipts", domainSurface: change.target.surface, expectedStorageVersion: receipts.storageVersion, additionalNamespaces: [{ namespace: "cases", expectedStorageVersion: current.storageVersion }], targetRef: change.target.id, targetIncarnation: change.target.incarnation, idempotencyKey: receiptProofKey(change.idempotencyKey), commandDigest: binding }, async (state, authority, snapshot) => {
++      const applied = await input.state.transaction<PreparedTransactionValue>(source, { namespace: "receipts", domainSurface: change.target.surface, expectedStorageVersion: receipts.storageVersion, additionalNamespaces: [{ namespace: "cases", expectedStorageVersion: current.storageVersion }], targetRef: change.target.id, targetIncarnation: change.target.incarnation, idempotencyKey: receiptProofKey(change.idempotencyKey), commandDigest: binding }, async (state, authority, snapshot) => {
+         const actual = state.cases[request.caseRef.id]
+         const selected = actual?.preparedChanges.find((item) => item.id === request.changeId && item.choiceId === request.choiceId)
+         if (!sameAuthority(authority, context) || !actual || actual.incarnation !== decision.incarnation || actual.version !== decision.version || !actual.participants.includes(context.binding.principalRef) || !actual.choices.some((choice) => choice.id === request.choiceId) || !selected || selected.state !== "planned" || digestSfValue(selected) !== digestSfValue(change)) return { commit: false, value: null }

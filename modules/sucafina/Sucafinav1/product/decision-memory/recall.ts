@@ -63,7 +63,7 @@ function rankSfCases(input: RecallInput, proofs?: RecallProof) {
 /** Host-only: callbacks must authenticate the current call and retrieve originals from protected Atlas. */
 export async function rankSfRecalledCasesAuthorized(input: RecallInput & {
   call: TrustedDomainContext
-  authorizeAtlas: (candidate: AuthorizedMemoryProjection, call: TrustedDomainContext) => Promise<boolean>
+  authorizeAtlas: (candidate: AuthorizedMemoryProjection, call: TrustedDomainContext, phase: "before" | "egress") => Promise<boolean>
   proveContinuity: (original: BusinessEvidenceRef, current: BusinessEvidenceRef, call: TrustedDomainContext) => Promise<boolean>
   revalidate: (call: TrustedDomainContext) => Promise<boolean>
 }): Promise<{ status: "ok"; cases: ReturnType<typeof rankSfRecalledCases> } | { status: "unavailable" }> {
@@ -73,11 +73,12 @@ export async function rankSfRecalledCasesAuthorized(input: RecallInput & {
     const scopeDigest = digestSfValue(input.scope)
     const bindingDigest = digestSfValue([input.call.kind, input.call.binding])
     const proofs: RecallProof = new WeakMap()
-    const check = async (candidate: AuthorizedMemoryProjection) => {
+    const check = async (candidate: AuthorizedMemoryProjection, phase: "before" | "egress") => {
       const context = candidate.case.context
       if (context.kind !== input.call.kind || (context.kind === "native" && (input.call.kind !== "native" || context.profileId !== input.call.binding.profileId))) return false
-      if (!await input.revalidate(input.call) || !await input.authorizeAtlas(candidate, input.call)) return false
-      const refs = [...candidate.envelope.evidenceRefs, ...candidate.envelope.dependencies].flatMap(expandEvidence)
+      if (!await input.revalidate(input.call) || !await input.authorizeAtlas(candidate, input.call, phase)) return false
+      // An event and its dependencies may repeat the same complete reference within this phase.
+      const refs = [...new Map([...candidate.envelope.evidenceRefs, ...candidate.envelope.dependencies].flatMap(expandEvidence).map((ref) => [digestSfValue(ref), ref])).values()]
       if (!refs.length) return false
       for (const ref of refs) {
         const resolutions = candidate.resolutions.filter((item) => digestSfValue(item.ref) === digestSfValue(ref) && item.accessRevision === binding.accessRevision)
@@ -89,13 +90,13 @@ export async function rankSfRecalledCasesAuthorized(input: RecallInput & {
     }
     for (const candidate of input.candidates) {
       const fingerprint = digestSfValue([candidate, input.scope])
-      if (!await check(candidate) || fingerprint !== digestSfValue([candidate, input.scope]) || scopeDigest !== digestSfValue(input.scope)) return { status: "unavailable" }
+      if (!await check(candidate, "before") || fingerprint !== digestSfValue([candidate, input.scope]) || scopeDigest !== digestSfValue(input.scope)) return { status: "unavailable" }
       proofs.set(candidate, fingerprint)
       if (!rankSfCases({ scope: input.scope, features: candidate.features, candidates: [candidate] }, proofs).length) return { status: "unavailable" }
     }
     const cases = rankSfCases(input, proofs)
     for (const candidate of input.candidates) {
-      if (!await check(candidate) || proofs.get(candidate) !== digestSfValue([candidate, input.scope]) || scopeDigest !== digestSfValue(input.scope)) return { status: "unavailable" }
+      if (!await check(candidate, "egress") || proofs.get(candidate) !== digestSfValue([candidate, input.scope]) || scopeDigest !== digestSfValue(input.scope)) return { status: "unavailable" }
     }
     if (bindingDigest !== digestSfValue([input.call.kind, input.call.binding]) || !await input.revalidate(input.call)) return { status: "unavailable" }
     return { status: "ok", cases }

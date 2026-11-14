@@ -1,0 +1,505 @@
+{
+  "schema": "sf2.wp10.independent-review.v1",
+  "reviewer": {
+    "id": "R2",
+    "task": "/root/review_finance",
+    "domain": "finanças, semântica, permissões e persistência",
+    "independent": true,
+    "productAuthorship": [],
+    "productEdits": 0
+  },
+  "reviewedAt": "2026-11-14T02:14:53Z",
+  "candidate": {
+    "sha": "eee00ac3ef2b68c987970535ba5bba5e4c6ad01b",
+    "tree": "dcfc04896c3a83e6a69d3ecd1d948ff54231ddf7",
+    "parent": "fdbb184f1df7c58f00ee8555e42bce017fd0e942",
+    "branch": "astra-wp10",
+    "pr": 29,
+    "base": "sf2-stack",
+    "acceptedAsProductC": false
+  },
+  "lease": {
+    "mode": "readonly-W",
+    "acceptedBeforeReview": true,
+    "buildersClosedAtAdmission": "reported by coordinator",
+    "initialSource": "/workspace/scratch/cca507855f4a/repo",
+    "immutableSource": "/workspace/scratch/cca507855f4a/analysis/frozen-W/repo",
+    "switchedWhenRootStartedCorrections": true,
+    "allowedWrites": [
+      "analysis/reviews/R2-finance-W.json",
+      "analysis/reviews/R2-finance-W.md"
+    ]
+  },
+  "authorship": {
+    "authorsReportedByCoordinator": [
+      "root",
+      "authority_builder",
+      "composition_intake",
+      "runtime_analysis",
+      "published producers"
+    ],
+    "reviewerDisjointFromAuthors": true,
+    "basis": "R2 did not implement, edit, or test product; findings and report only. Published foreign sources retain their WP owners."
+  },
+  "integrity": {
+    "manifest": "analysis/publication/frozen-candidate.json",
+    "changedFilesChecked": 175,
+    "sha256AndGitBlobMismatches": 0,
+    "frozenCopySha256Mismatches": 0,
+    "foreignPinsChecked": 103,
+    "foreignPinBlobMismatches": 0,
+    "missingForeignPins": 0,
+    "remoteCommitReadThroughMcp": true,
+    "treeAndParentSource": "coordinator frozen manifest; normalized MCP commit response did not expose tree/parent"
+  },
+  "scope": {
+    "canonicalPackage": "context/pack.json#canonical_work_package",
+    "taskCount": 7,
+    "ownCriteriaCount": 171,
+    "builderMatrix": "analysis/criteria-current-draft.json",
+    "builderMatrixIsAcceptance": false,
+    "wholePackageAccepted": false,
+    "fullEpicAndAMOwner": "S0 after full bundle; not run prematurely for isolated WP10"
+  },
+  "methods": [
+    "Static source and call-chain review",
+    "JSON/manifest inspection",
+    "File SHA-256 and Git blob hashing without product import",
+    "Read-only GitHub MCP of exact W dependencies missing from local reconstruction"
+  ],
+  "prohibitedActionsNotPerformed": [
+    "local tests",
+    "typecheck",
+    "build",
+    "product imports",
+    "product edits",
+    "remote writes",
+    "git remote operations",
+    "gh"
+  ],
+  "findings": [
+    {
+      "id": "R2-F01",
+      "severity": "high",
+      "mandatory": true,
+      "disposition": "changes-required",
+      "owner": "WP10 composition",
+      "title": "Portfolio preparation is composed with permanently unavailable callbacks",
+      "candidateSha": "eee00ac3ef2b68c987970535ba5bba5e4c6ad01b",
+      "criteria": [
+        "WP10.T01.DOD.01",
+        "WP10.T01.SUC.01",
+        "WP10.SUC.10"
+      ],
+      "evidence": [
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "lines": "259-267",
+          "observation": "createSfExtendedBusinessServices receives no preparation; sharedPortfolio is passed into decisionDomain."
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/extended-business-services.ts",
+          "lines": "38-39",
+          "observation": "Undefined preparation is forwarded to portfolio services."
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/portfolio-services.ts",
+          "lines": "30-43,79-81",
+          "observation": "confirmChoice/confirmAnswer are false; resolveChoiceValues/prepareDomainCommands return unavailable."
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+          "lines": "123-134",
+          "observation": "The prepared Procurement callback is not used when the shared product exists; the shared product is selected."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/handoff.ts",
+          "lines": "20-54",
+          "observation": "A valid reviewed combination reaches decisions.prepareChanges."
+        }
+      ],
+      "reproduction": {
+        "kind": "static-call-chain, not executed",
+        "steps": [
+          "Compose the production host at W.",
+          "Use a current, authorized Portfolio combination and a matching human choice.",
+          "Follow preparePortfolioChoice through its evidence and choice checks.",
+          "The shared mutations.prepareChanges delegates to the default unavailable domain preparation callback. Human choice/answer callbacks also remain false."
+        ]
+      },
+      "impact": "Evaluation and proof factories do not complete the Portfolio-to-domain preparation path. Fail-closed behavior prevents false success but does not satisfy required delivery.",
+      "minimumCorrection": "Wire the actual WP11/domain preparation, choice values and human confirmation callbacks in WP10, bound to the exact action/payload, principal, case version and current domain evidence. Preserve atomic receipts; request a foreign-owner delta only if its published seam is insufficient.",
+      "recheck": [
+        "Authorized human combination -> preparation -> review -> Apply -> receipt",
+        "Altered payload, choice, principal, case version or domain source rejected",
+        "Lost response retry returns the original receipt without duplicate effect",
+        "No second side-effect path"
+      ],
+      "distinction": "Own missing composition, not a final global gate or optional enhancement. Root acknowledged mandatory correction."
+    },
+    {
+      "id": "R2-F02",
+      "severity": "high",
+      "mandatory": true,
+      "disposition": "changes-required",
+      "owner": "WP10 composition; WP03 if a new producer seam is required",
+      "title": "C17 calculation evidence producer is published but not connected to the evidence router",
+      "candidateSha": "eee00ac3ef2b68c987970535ba5bba5e4c6ad01b",
+      "criteria": [
+        "WP10.T01.DOD.01",
+        "WP10.T07.DOD.01",
+        "WP10.T07.CMP.01",
+        "WP10.T07.SUC.01",
+        "WP10.SUC.10"
+      ],
+      "evidence": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+          "lines": "169-187,256-273",
+          "observation": "No calculation branch, calculation continuity proof, or producer wiring; unknown kinds return unavailable."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/planner/calculation-evidence.ts",
+          "lines": "14-42,44-62",
+          "observation": "The published factory performs record-only replay and creates canonical kind=calculation, refId planner-calculation:<runId>, calculationId planner:scenario, input/result/engine/source digests."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+          "lines": "84-88,250-253",
+          "observation": "Expanded calculation ancestry must resolve fresh before append; the disconnected router makes it unavailable."
+        }
+      ],
+      "reproduction": {
+        "kind": "static-call-chain, not executed",
+        "steps": [
+          "Take a canonical calculation reference of the exact shape emitted by createPlannerCalculationEvidence at lines 41-42, backed by an authorized stored/replayable scenario.",
+          "Pass it through the host BCS resolve/source capability.",
+          "The router reaches its fallback unavailable because it handles no calculation kind.",
+          "The same reference as ledger ancestry prevents a new Atlas append from obtaining source authorization."
+        ]
+      },
+      "impact": "Calculation provenance and safe replay remain an orphaned producer. Reference validation and fail-closed fallback do not provide the required real C17 consumer.",
+      "minimumCorrection": "Compose the published record-only reader/replay producer and route calculation resolution plus continuity through its real output. Validate full canonical reference and current source closure. Do not synthesize a projection or accept a caller's digest as proof.",
+      "recheck": [
+        "Current calculation issued, resolved and consumed by C17",
+        "Tampered input/result/engine version or source rejected",
+        "Recursive ancestry/cycle and budget refusal",
+        "Source revocation before egress",
+        "Append/restart/recall only after actual runtime evidence"
+      ],
+      "qualification": "The canonical producer and reference shape were observed in source. R2 did not execute an emission; W has no observed production instantiation of that factory. Repository-wide partial reconstruction is not used as proof of remote absence; the decisive missing routing is in the complete WP10 router."
+    },
+    {
+      "id": "R2-F03",
+      "severity": "high",
+      "mandatory": true,
+      "disposition": "changes-required",
+      "owner": "WP10 review composition; source-owner changes only when necessary",
+      "title": "A preserved review becomes unreadable after an ordinary authorized source edit",
+      "candidateSha": "eee00ac3ef2b68c987970535ba5bba5e4c6ad01b",
+      "criteria": [
+        "WP10.T02.CHK.02",
+        "WP10.T01.DOD.01",
+        "WP10.T01.SUC.10",
+        "WP10.T03.CHK.01"
+      ],
+      "evidence": [
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "lines": "258-263",
+          "observation": "Review readers include contributions and outcome, but no historicalSource."
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/review-services.ts",
+          "lines": "43-80,115-126",
+          "observation": "Current source requires exact version at line 65; historical authorization only exists when the missing callback is supplied."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+          "lines": "172-190",
+          "observation": "A material domain edit increments the scoped source version while preserving its incarnation."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/reviews/port.ts",
+          "lines": "125-153",
+          "observation": "Reading a preserved review requires authorizeSections and revalidate; failed historical authorization returns denied/access-unavailable."
+        }
+      ],
+      "reproduction": {
+        "kind": "static-call-chain, not executed",
+        "steps": [
+          "Preserve a review with a current SourceRef version 1.",
+          "Edit a projected field in the same domain record under a still-authorized actor without replacing its incarnation.",
+          "The source scope advances to version 2.",
+          "Reopen the preserved version 1 review: currentSource returns false and historicalSource is absent; the review port returns denied."
+        ]
+      },
+      "impact": "The saved review body may remain durable, but the user cannot reopen it after ordinary source evolution or create a next review that relies on reading the previous one. The required preservation/comparison journey is incomplete.",
+      "minimumCorrection": "Compose a real historical source reader that checks current record/field access, source incarnation and immutable captured content. Do not replace version validation with unconditional acceptance. Also reconcile the adjacent missing portfolioHistory and handoff readers for their required paths.",
+      "recheck": [
+        "Source edit preserves the original displayed snapshot and next comparison shows the difference",
+        "Current access revocation suppresses historical content and report download",
+        "Replacement incarnation cannot reuse the old history",
+        "Historical Portfolio and closure handoff paths use their real readers"
+      ],
+      "corroboration": "R1 independently reported the same source-version/historicalSource failure during this review."
+    }
+  ],
+  "coverage": [
+    {
+      "section": "C08 atomicity/CAS/migration/namespace and cross-surface persistence",
+      "reviewer": "R2",
+      "authors": [
+        "root",
+        "authority_builder",
+        "published producers"
+      ],
+      "producerOwners": [
+        "WP10",
+        "WP00",
+        "WP11",
+        "WP04"
+      ],
+      "status": "static-reviewed; runtime unqualified",
+      "observations": [
+        "State provider compares per-namespace versions, disallows unrelated stored namespace changes including transactions, binds idempotency to actor/namespace/target/digest/incarnation/scope and reauthorizes retries.",
+        "State and domain snapshot share transactionAll when domainSurface/sourceFence is required.",
+        "SQLite driver awaits COMMIT, rolls back on exit without commit and refuses nested writes; migration of the older 11-namespace state is additive.",
+        "No new mandatory defect established by this static pass."
+      ],
+      "paths": [
+        "product/host-binding/state-provider.ts",
+        "runtime/local-store.ts",
+        "product/integration/source-lifecycle.ts",
+        "product/decisions/prepared-apply.ts"
+      ]
+    },
+    {
+      "section": "Human intent, principal, roles, versions and revocation",
+      "reviewer": "R2",
+      "authors": [
+        "root",
+        "authority_builder",
+        "composition_intake"
+      ],
+      "producerOwners": [
+        "WP10"
+      ],
+      "status": "static-reviewed; runtime unqualified",
+      "observations": [
+        "Human admission requires same-origin POST and exact action/payload digest.",
+        "Actor derives from authentication and installation grant; revalidation includes current roles/scopes/policy/access revision.",
+        "BI/sensitivity/alternative selection is explicit, actor/case/version bound and durable; no latest-record selection observed in inspected code."
+      ],
+      "paths": [
+        "product/integration/product-authority.ts",
+        "product/integration/human-authority.ts",
+        "apps/cli/src/sucafina-product/analysis-choice-services.ts",
+        "apps/cli/src/sucafina-product/alternative-selections.ts"
+      ]
+    },
+    {
+      "section": "BCS/C17 ancestry, replay, budget, deduplication",
+      "reviewer": "R2",
+      "authors": [
+        "root",
+        "runtime_analysis",
+        "published producers"
+      ],
+      "producerOwners": [
+        "WP10",
+        "WP03",
+        "WP14"
+      ],
+      "status": "changes-required",
+      "findings": [
+        "R2-F02"
+      ],
+      "observations": [
+        "Ancestry budget and cycle/depth checks, per-pass duplicate sharing and before-egress revalidation were inspected.",
+        "Budget presence is not a performance/runtime proof; calculation producer is not wired."
+      ]
+    },
+    {
+      "section": "Atlas persistence/scanner",
+      "reviewer": "R2",
+      "authors": [
+        "root",
+        "runtime_analysis",
+        "published producers"
+      ],
+      "producerOwners": [
+        "WP10",
+        "WP14",
+        "WP00"
+      ],
+      "status": "static-reviewed; AM05 and packaging proof outstanding",
+      "observations": [
+        "Actual Atlas boundary factories are imported; durable adapter methods are synchronous inside staged SF transactions.",
+        "Event, envelope, index, capture digests and outbox/receipt are committed together; scanner blocked/unavailable are distinct from success.",
+        "Scanner clean/canary/unavailable, actual bundle identity, generated artifact/AST guard and process restart were not run or observed by R2."
+      ]
+    },
+    {
+      "section": "C11 AlternativeDraft provenance",
+      "reviewer": "R2",
+      "authors": [
+        "root",
+        "composition_intake",
+        "runtime_analysis",
+        "published producers"
+      ],
+      "producerOwners": [
+        "WP10",
+        "WP11"
+      ],
+      "status": "static-reviewed selected paths; runtime unqualified",
+      "observations": [
+        "Human request/scenario/coverage selection, capture run/session/principal/policy/generation, C08 persistence and read-only replay were traced.",
+        "No proof of real current-W native generation/consumption; no native PASS asserted."
+      ]
+    },
+    {
+      "section": "Baseline/Planner coverage, period, currency and financial meaning",
+      "reviewer": "R2",
+      "authors": [
+        "root",
+        "composition_intake",
+        "published producers"
+      ],
+      "producerOwners": [
+        "WP10",
+        "WP03",
+        "WP11"
+      ],
+      "status": "static-reviewed selected paths",
+      "observations": [
+        "Baseline requires supported Planner records, actual human cost classification and current case period; unsupported non-applicability/external producers fail explicitly.",
+        "Projection requires whole months in one year and USD; currency/period mismatch does not invent conversion.",
+        "Cost change is alternative minus baseline; savings is its inverse. Budget margin is outlook minus budget, independently checked in the core variance function.",
+        "Incomplete coverage keeps completeDifference null; missing/HR-restricted components do not establish complete savings."
+      ]
+    },
+    {
+      "section": "Portfolio/criteria/sensitivity",
+      "reviewer": "R2",
+      "authors": [
+        "root",
+        "composition_intake",
+        "published producers"
+      ],
+      "producerOwners": [
+        "WP10",
+        "WP11",
+        "WP13"
+      ],
+      "status": "changes-required",
+      "findings": [
+        "R2-F01"
+      ],
+      "observations": [
+        "Evidence-current metric and proof/result-binding composition inspected.",
+        "Deep algorithmic adjudication and runtime sensitivity runs are outside completed evidence of this first pass."
+      ]
+    },
+    {
+      "section": "Procurement prepare/apply/receipts and aging",
+      "reviewer": "R2",
+      "authors": [
+        "root",
+        "composition_intake",
+        "published producers"
+      ],
+      "producerOwners": [
+        "WP10",
+        "WP04",
+        "WP11"
+      ],
+      "status": "static-reviewed selected paths; runtime unqualified",
+      "observations": [
+        "Prepared Apply binds human review digest, selected target/version, actor and idempotency, and stores domain effect plus receipt in the same transaction.",
+        "Aging derives from the entry into the current approval holder's stage: last submission for the first holder, last prior-level approval for later holders. Missing transitions yield null.",
+        "No local concurrency, failure injection or lost-response execution performed."
+      ]
+    },
+    {
+      "section": "Review/output access and materiality",
+      "reviewer": "R2",
+      "authors": [
+        "root",
+        "composition_intake",
+        "runtime_analysis",
+        "published producers"
+      ],
+      "producerOwners": [
+        "WP10",
+        "WP07",
+        "WP14"
+      ],
+      "status": "changes-required",
+      "findings": [
+        "R2-F03"
+      ],
+      "observations": [
+        "Review sections, sensitivity, decision, outcome and downloadable artifacts are subject to current authorization checks.",
+        "Materiality uses explicit condition/choice/source selectors and current comparison; watch preparation explicitly returns native-watch-admission-port-unavailable.",
+        "The watch gap remains mandatory, coordinated with R3's C07 review; it is not accepted as a delivered routine."
+      ]
+    },
+    {
+      "section": "Protected export/import/audit",
+      "reviewer": "R2",
+      "authors": [
+        "root",
+        "authority_builder",
+        "published producers"
+      ],
+      "producerOwners": [
+        "WP10",
+        "WP00",
+        "WP06"
+      ],
+      "status": "static-reviewed selected paths; full export matrix unobserved",
+      "observations": [
+        "publicSfData recursively excludes __sfProductV1; Dashboard import/restore rejects the protected namespace and preserves trusted state; source replacement changes incarnations.",
+        "All report/download paths and role combinations were not exercised at runtime."
+      ]
+    }
+  ],
+  "remoteSources": [
+    {
+      "path": "modules/sucafina/Sucafinav1/src/procurement-screen.ts",
+      "sha": "510be5b2aeb82e740f342a5b649619116cb8ff1c",
+      "ref": "eee00ac3ef2b68c987970535ba5bba5e4c6ad01b",
+      "lines": "228-243",
+      "purpose": "approvalStageEntry"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/planner-accounts.ts",
+      "sha": "6ca9b19e8b54e3279c2c16667e92ad7df748b3ea",
+      "ref": "eee00ac3ef2b68c987970535ba5bba5e4c6ad01b",
+      "lines": "73-76",
+      "purpose": "variance definition"
+    }
+  ],
+  "evidenceLimits": [
+    "This is an independent static first review, not an executed product acceptance.",
+    "Coordinator reported CI snapshots unitS=d6dd636ec1ff6c6162eab8bd67f9398f847cc0d5 and checkS=e216f8c3ce944eb81d4869828959ed189068a73d. R2 has no completed run/attempt/job/control/artifact evidence and attributes no green to W.",
+    "No native AM01-AM06, real scanner trace, process restart or user journey observation was supplied to R2.",
+    "Full epic, eight final selections, AM bundle and C/D envelope remain S0/global gates; their absence does not reclassify F01-F03.",
+    "Foreign source reads do not transfer authorship or authority to edit them.",
+    "A future product correction requires new frozen W2, scoped hosted evidence and independent recheck of affected claims."
+  ],
+  "verdict": {
+    "status": "CHANGES_REQUIRED",
+    "mandatoryOpen": [
+      "R2-F01",
+      "R2-F02",
+      "R2-F03"
+    ],
+    "currentNativePass": false,
+    "currentCiPass": false,
+    "campaignClosed": false,
+    "rationale": "Three reproducible static composition gaps block the required consumer/preservation paths. Positive structural findings do not establish runtime acceptance."
+  }
+}

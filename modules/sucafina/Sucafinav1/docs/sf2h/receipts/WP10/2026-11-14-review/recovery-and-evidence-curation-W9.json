@@ -1,0 +1,35 @@
+{
+  "schema": "wp10-evidence-curation-v1",
+  "stage": "PRODUCT_C_BEFORE_FREEZE",
+  "rule": {
+    "path": "script/guards/rules/agent-scratch.toml",
+    "blobSha": "71ce321c30465faaf957a08256bd6b7d007d4173",
+    "reason": "Raw console/tool output does not belong in the product change; retain curated receipts and immutable published evidence references."
+  },
+  "historicalEvidencePreserved": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-composition/hosted-round1/job-132293688965.log",
+      "blobSha": "52ff1ff5b90ff3dcd9cedf4b4cd4ff54c44700f6",
+      "sourceCommit": "b7a6b5d4b66acf172762aba72f01e424bf9c0b90",
+      "immutableUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/b7a6b5d4b66acf172762aba72f01e424bf9c0b90/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-composition/hosted-round1/job-132293688965.log",
+      "currentCandidateAction": "REMOVE_RAW_DUMP; no renamed copy; original remains in immutable commit history",
+      "runId": 43544861337,
+      "jobId": 132293688965
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-composition/hosted-round1/job-132293700346.log",
+      "blobSha": "2ce69a8bdc01ed7b6468db38c949d904d6b97a8b",
+      "sourceCommit": "b7a6b5d4b66acf172762aba72f01e424bf9c0b90",
+      "immutableUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/b7a6b5d4b66acf172762aba72f01e424bf9c0b90/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-composition/hosted-round1/job-132293700346.log",
+      "currentCandidateAction": "REMOVE_RAW_DUMP; no renamed copy; original remains in immutable commit history",
+      "runId": 43544864518,
+      "jobId": 132293700346
+    }
+  ],
+  "verificationRun": 43548947850,
+  "verificationJob": 132306683850,
+  "foreignArchiveTouched": false,
+  "oldContentRewritten": false,
+  "newDeliveryPolicy": "Append structured evidence receipts, requests, hashes, review findings and links; no raw job console dumps.",
+  "resolution": "Raw dumps removed by preserved recovered8aded9 parent of09d. W9 adds no raw log dumps or renamed copies; immutable b7/Actions references remain."
+}

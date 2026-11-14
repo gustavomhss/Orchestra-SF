@@ -1,0 +1,99 @@
+{
+  "product": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+  "tree": "051391628c61f6a4333c8f13567c5518c4ff8f86",
+  "base": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+  "rootDocs": [
+    {
+      "path": "docs/guides/sucafina-workbench.md",
+      "sha": "e112f63432fe922a59242fdf08d4c28367abccf1",
+      "old": "69f85c5f26b2c3eebc8f902099432033ad323db4"
+    }
+  ],
+  "lock": {
+    "base": "c190f0e6158ffff3a73fd0d84df72d3d1ba0b31f",
+    "current": "e3f0c6443c12dd16cb66030f75e2f71f16508098",
+    "changes": [
+      {
+        "op": "add",
+        "line": 10,
+        "text": "        \"@orchestra/relay\": \"workspace:*\","
+      },
+      {
+        "op": "add",
+        "line": 11,
+        "text": "        \"@orchestra/schema\": \"workspace:*\","
+      },
+      {
+        "op": "add",
+        "line": 328,
+        "text": "        \"@orchestra/relay\": \"workspace:*\","
+      },
+      {
+        "op": "add",
+        "line": 329,
+        "text": "        \"@orchestra/schema\": \"workspace:*\","
+      }
+    ]
+  },
+  "rootPackageDependenciesAdded": [
+    "@orchestra/relay workspace:*",
+    "@orchestra/schema workspace:*"
+  ],
+  "unchangedModuleTrees": [
+    {
+      "path": "modules/app-dock",
+      "tree": "19d619fb5176ad89704980654d7a6781134fabcc"
+    },
+    {
+      "path": "modules/atlas",
+      "tree": "cf7fdc434560d994fbe66e821a621622d0b2c85b"
+    },
+    {
+      "path": "modules/capability-assets",
+      "tree": "f6100cc06aafc32a63d3c6251d42fb0cebdf5537"
+    },
+    {
+      "path": "modules/continuity",
+      "tree": "8e0b9abd313a2a03c7c38fc12dde92c955e4ca5e"
+    },
+    {
+      "path": "modules/engine-adapters",
+      "tree": "4ba23f85e5f15c279060f6376caa0f97168e570e"
+    },
+    {
+      "path": "modules/janitor",
+      "tree": "019a6cc89983e412981f5939422978037c4e7ccd"
+    },
+    {
+      "path": "modules/maestro",
+      "tree": "e1426eefa49939d584c1ab8db93289c0e726cd3e"
+    },
+    {
+      "path": "modules/rag-studio",
+      "tree": "d9e1a4265159c4d3603bd5ab5cc7c79f6038ee47"
+    },
+    {
+      "path": "modules/relay",
+      "tree": "cd61675eb3aa08dec4a9e23e3e2196db0216eb56"
+    },
+    {
+      "path": "modules/specialists",
+      "tree": "ece90101d4ece2e14f51b9eb10fa29742d3ead75"
+    }
+  ],
+  "unchangedNonCLIApps": [
+    {
+      "path": "apps/desktop",
+      "tree": "4c3fceae4c156277f8c9945d54dc5334060dcfa8"
+    },
+    {
+      "path": "apps/storybook",
+      "tree": "e0a7e1132f28507ed4345c10b057028677b529cb"
+    },
+    {
+      "path": "apps/web",
+      "tree": "56623717d63cc1b68452c928661262111ab2ddb5"
+    }
+  ],
+  "interpretation": "Only Sucafina module tree changed; Atlas, Maestro, Relay and engine-adapters byte-identical to sf2-stack base. Existing Relay/schema packages are consumed as workspace dependencies, not modified. No dev/sf2-control ancestry added."
+}

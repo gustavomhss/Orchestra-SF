@@ -121,3 +121,26 @@ test("document writes require a transaction holding every source surface", async
     expect(await missing.transaction(request, { ...command, namespace: "receipts", additionalNamespaces: [{ namespace: "documents", expectedStorageVersion: 1 }] }, async () => ({ commit: true, value: true }))).toMatchObject({ status: "unavailable", reason: "cross-surface-transaction-unavailable" })
   } finally { await store.dispose(); await rm(directory, { recursive: true, force: true }) }
 })
+
+test("explicit all-source fence holds every surface and is bound to idempotency", async () => {
+  const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-source-lock-"))
+  await chmod(directory, 0o700)
+  const store = await openLocalStore(directory)
+  try {
+    const product = createSfProductState({ persistence: store, createId: () => "inc",
+      authorize: async () => ({ principalRef: "person", policyVersion: "policy", accessRevision: "access" }),
+      resolveTarget: async () => ({ incarnation: "target-inc" }) })
+    const request = new Request("https://example.test/")
+    const command = { namespace: "preferences" as const, sourceFence: "all" as const, expectedStorageVersion: 0,
+      idempotencyKey: "fenced", commandDigest: "a".repeat(64), targetRef: "target", targetIncarnation: "target-inc" }
+    expect(await product.transaction(request, command, async (state) => {
+      expect(store.currentSnapshots?.()).toBeDefined()
+      state.preferences.fenced = true
+      return { commit: true, value: true }
+    })).toMatchObject({ status: "ok" })
+    const withoutFence = { ...command, sourceFence: undefined }
+    expect(await product.transaction(request, withoutFence, async () => ({ commit: true, value: true }))).toMatchObject({ status: "conflict" })
+    const invalid = { ...command, sourceFence: "other" } as unknown as typeof command
+    expect(await product.transaction(request, invalid, async () => ({ commit: true, value: true }))).toMatchObject({ status: "conflict", reason: "invalid-source-fence" })
+  } finally { await store.dispose(); await rm(directory, { recursive: true, force: true }) }
+})

@@ -1,0 +1,102 @@
+{
+  "schema": "astra-compose-c17-increment-v1",
+  "base": {
+    "head": "7c7e5b086a9de405cd3f8e18e8d631af55cf0979",
+    "tree": "3deb1ed790fc247a6633c9cc25a11523ae3f61b1"
+  },
+  "status": "staged-awaiting-github-actions",
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "baseCommit": "7c7e5b086a9de405cd3f8e18e8d631af55cf0979",
+      "baseBlob": "0e5a508722c9e741a1737beb7d88ccb596a6f495",
+      "blob": "e318eccefac8fcbd0ad2a60837d9a0a24a88eeff",
+      "sha256": "f5ba6a71c34ae63cdc16197e94953773d8672bca5754b0cff0bbb2b6193490b2",
+      "sourceCommit": "f075e9824b7d8aed50b7f42c597528ef198177db",
+      "sourceBlob": "14600913fcf85e6311d0d4ec3b90500231444372",
+      "exactSource": false
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+      "baseCommit": "7c7e5b086a9de405cd3f8e18e8d631af55cf0979",
+      "baseBlob": "48a9cdd2d38fad855d8a338f8dc119c64f81057f",
+      "blob": "6678372b0c955d551e9910060e405a6765c79ccd",
+      "sha256": "2184af3958d0c4834bd5f7c9748a337b79c862f9afea2edb02ef542886096a1e",
+      "sourceCommit": "f075e9824b7d8aed50b7f42c597528ef198177db",
+      "sourceBlob": "6898b08eb4b018f5a83167555836ac876d288976",
+      "exactSource": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-recall-scope.ts",
+      "baseCommit": "7c7e5b086a9de405cd3f8e18e8d631af55cf0979",
+      "baseBlob": null,
+      "blob": "30697fcbeee6b7011cc7786a0a3bc64bd0d3449e",
+      "sha256": "ac95c12bb81b42f0186c1bafcd801b71e50aebe576791e844f4d7c849e25bb47",
+      "sourceCommit": "f075e9824b7d8aed50b7f42c597528ef198177db",
+      "sourceBlob": "30697fcbeee6b7011cc7786a0a3bc64bd0d3449e",
+      "exactSource": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "baseCommit": "7c7e5b086a9de405cd3f8e18e8d631af55cf0979",
+      "baseBlob": "f6cfe69432142cdc4063494522627d6d3d50c5d8",
+      "blob": "5f9a4761693beaf2fc0830d03ea8a2421de7f794",
+      "sha256": "35b4a1d516c076848139db127e77103df230609b5bace26758f2dd8e8b6a0bbd",
+      "sourceCommit": "f075e9824b7d8aed50b7f42c597528ef198177db",
+      "sourceBlob": "60e23ea586cdfdb961cf084388b47f54ccef84b7",
+      "exactSource": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-case-scope.test.ts",
+      "baseCommit": "7c7e5b086a9de405cd3f8e18e8d631af55cf0979",
+      "baseBlob": "37c3ebc9f88065b5c6d40f6fbce06088e414a1c7",
+      "blob": "1597762d1d983d32fb710d49c497b70278d1a53b",
+      "sha256": "8b9aa9a8d0cd296a337f9613dbb1f6ff0b8b83f2e2cc58b7f555f5517e5897bf",
+      "sourceCommit": "f075e9824b7d8aed50b7f42c597528ef198177db",
+      "sourceBlob": "37c3ebc9f88065b5c6d40f6fbce06088e414a1c7",
+      "exactSource": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "baseCommit": "7c7e5b086a9de405cd3f8e18e8d631af55cf0979",
+      "baseBlob": "e4dcb97632b3b32131904296f02b4425a79367f4",
+      "blob": "ecdc6a22936b6df734eb9ae4f6fac58927519f2d",
+      "sha256": "363f86f96f4ecec611fbb26fdfa3d5c17607ed706171b69a44762654d103fa87",
+      "sourceCommit": "f075e9824b7d8aed50b7f42c597528ef198177db",
+      "sourceBlob": "2bc069d03fc39cede7635c94e0cf3f09f7f26882",
+      "exactSource": false
+    }
+  ],
+  "dependencies": [
+    {
+      "pr": 35,
+      "head": "a274302d15990919007dbe958d95653508c730a7",
+      "path": "modules/sucafina/Sucafinav1/product/planner/calculation-evidence.ts",
+      "blob": "aaacc8bf7df9fa67870c4067154fe67a58c34a22",
+      "reason": "ALS ancestry supports legitimate same-run parallel replay while rejecting actual recursive ancestry; consumed W6"
+    }
+  ],
+  "checks": {
+    "localProductExecuted": false,
+    "remoteActionsDispatched": false,
+    "static": "Exact source bytes and git blob hashes verified; manual diff inspection. Awaiting product/typecheck/guard evidence on composed head."
+  },
+  "requiredTests": [
+    "test/product/wp10/integration/calculation-case-scope.test.ts",
+    "test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+    "test/product/wp10/integration/planner-calculation.test.ts"
+  ],
+  "preserved": [
+    "nested canonical replay twice; full mixed/nested evidence verification",
+    "existing original/history projections and C12/C17 continuity",
+    "105000ms cooperative deadlines and 120000ms test budgets",
+    "real Request and current authentication; no authorization result cache",
+    "C08 membership/version/source fences; original caller binding",
+    "stored result/request two-pass readers and zero-payload denials"
+  ],
+  "findings": [
+    "Wrong-case fixture previously expected the private wrapper denial, but the real request/result stores refuse earlier with scenario-request-unavailable. Exact reason, no value, zero coverage reads and independent recovery retained.",
+    "PR29 planner-calculation-services snapshot rejected because it removes the nested ancestry integration; only atlas scope, targeted wiring and own tests reconciled.",
+    "No assertion of performance improvement until exact composed GitHub Actions run completes."
+  ]
+}

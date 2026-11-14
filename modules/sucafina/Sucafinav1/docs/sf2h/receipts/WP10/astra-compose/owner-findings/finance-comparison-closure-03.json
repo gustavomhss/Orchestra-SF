@@ -1,0 +1,68 @@
+{
+  "id": "ASTRA-FINANCE-COMPARISON-FIXTURE-CLOSURE-03",
+  "owner": "Finance/WP05-WP11",
+  "integration_owner": "Astra WP10",
+  "base": {
+    "head": "f9990ecc7ade0d64122633d51258ddafe2c93802",
+    "tree": "195f4ea0f9b0099b0070b009570f79bf0a62d0be"
+  },
+  "status": "GROUP_RESTORED_TO_W10_PENDING_COMPATIBLE_OWNER_CLOSURE",
+  "observed_check": {
+    "run": 43595256149,
+    "S": "02576bd6dc61391feb47709970f2fafc3b9c8f16",
+    "result": "FAILURE",
+    "new_diagnostic": "renewal-choice-fixture.ts:118:60 TS2353: extra state in literal outside the new Pick Fixture"
+  },
+  "source": {
+    "pr": 35,
+    "head": "29172d2e4db859eedac31e84778c447bb97f6c08",
+    "tree": "8d7a7657597d024c5a55a9f5a4fdccf604c40d25",
+    "helper_blob": "d1b8c7b91c071ee970ff217c3a2745d84b99486b",
+    "unconsumed_choice_fixture_blob": "a7fbf1ab3e35810cc717980b89421f039eae41f1"
+  },
+  "missing_direct_dependencies": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/fixture-trace.ts",
+      "present": false,
+      "blob": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-fixture.ts",
+      "present": false,
+      "blob": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+      "present": false,
+      "blob": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-restart-reader.ts",
+      "present": false,
+      "blob": null
+    }
+  ],
+  "remedy": "Owner may publish a bounded compatible renewalCoverage/caller type change over composed choice fixture52dc09126bc81da39aa4b5beb0a28d0218d7560d, or supply and qualify the complete new source/operation/restart fixture closure for separate intake. No custom foreign hunk applied.",
+  "restored_paths": [
+    "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp11/composite-coverage.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp11/renewal-coverage-fixture.ts"
+  ],
+  "retained_finance_paths": [
+    "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+    "modules/sucafina/Sucafinav1/product/decisions/scenario-request-store.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp11/calculation-history.test.ts",
+    "modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts"
+  ],
+  "supersedes": [
+    "intake11 comparison fixture acceptance",
+    "intake12 Finance helper closure"
+  ],
+  "comment": {
+    "pr": 35,
+    "id": 6877417563
+  },
+  "local_product_execution": false,
+  "global_release": false
+}

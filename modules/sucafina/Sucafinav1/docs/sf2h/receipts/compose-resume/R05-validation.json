@@ -1,0 +1,1269 @@
+{
+  "schema": "compose-resume-validation-v1",
+  "execution_candidate": {
+    "sha": "e1a1888bd2117616d53c5af5f5014e81c4b4e530",
+    "tree": "64d26157c0044018712074e55a4a56f36db15d5f"
+  },
+  "same_candidate_focused_totals": {
+    "tests": 130,
+    "assertions": 1457,
+    "files": 12,
+    "failed": 0
+  },
+  "runs": [
+    {
+      "run": 43618246738,
+      "job": 132517940968,
+      "W": "f56b413147a5c9425c1da688775ce327d0bad5a5",
+      "S": "592632fec81824f283c8016137449693f1182d4e",
+      "snapshotTree": "c7fb2101b5cfc7ad9f5c1b02fdda0a0c040338ad",
+      "branch": "ci-run-linux-compose-resume-r01-f56b413-e4009a4c-1",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp03/rate-identity-qualification.test.ts",
+          "./Sucafinav1/test/product/wp09/schedule-boundaries.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "artifacts": {
+        "artifacts": []
+      },
+      "conclusion": "success",
+      "productTree": "f07d2c42d350e33ec629d3228f9fc026831c32ba",
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43618246738",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43618246738/job/132517940968",
+      "attempt": 1,
+      "remote_log_sha256": "0a87b704c99c6022e76c63525e8ae0b43ee364f8e2fb33bddc921e5143214945",
+      "remote_log_bytes": 73951,
+      "snapshot_proof": {
+        "id": "ci01",
+        "W": "f56b413147a5c9425c1da688775ce327d0bad5a5",
+        "productTree": "f07d2c42d350e33ec629d3228f9fc026831c32ba",
+        "S": "592632fec81824f283c8016137449693f1182d4e",
+        "snapshotTree": "c7fb2101b5cfc7ad9f5c1b02fdda0a0c040338ad",
+        "parents": [
+          "f56b413147a5c9425c1da688775ce327d0bad5a5"
+        ],
+        "changedRootEntries": [
+          ".ci-run.json"
+        ],
+        "requestBlob": "4d855eda3e5f312bc3d50b9986a82f55fc809e62",
+        "allOtherRootEntrySHAsEqual": true,
+        "method": "Exact root Merkle tree entry equality: each equal subtree SHA proves recursive blob equality, including product, tests, config and fixtures."
+      },
+      "log_read": true,
+      "normalized_request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp03/rate-identity-qualification.test.ts",
+          "./Sucafinav1/test/product/wp09/schedule-boundaries.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "normalized_request_sha256": "e4009a4c0143b328c715d5ad2d41a8b35b3a12f6270b87a76cb4b05d0e27aa36",
+      "request_validation": "Existing test-ci.yml canonical validator passed; exact explicit selection. No validator/runner changes.",
+      "expected_files": [
+        "Sucafinav1/test/product/wp03/rate-identity-qualification.test.ts",
+        "Sucafinav1/test/product/wp09/schedule-boundaries.test.ts"
+      ],
+      "observed_files": [
+        "Sucafinav1/test/product/wp03/rate-identity-qualification.test.ts",
+        "Sucafinav1/test/product/wp09/schedule-boundaries.test.ts"
+      ],
+      "passed": 34,
+      "failed": 0,
+      "assertions": 149,
+      "summary": "Ran 34 tests across 2 files. [296.00ms]",
+      "omni_control": "omni positive control [c4e61a9873f236ec8fa9178ae925bafc]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+      "physical_browser_proofs": [],
+      "same_W_current_execution_qualification": false,
+      "limitations": "Focused deterministic/browser evidence only. No resident model/Session/skill/MCP/Relay/Atlas scanner acceptance. Historical W remains historical; normative guide and evidence publication are NOT D.",
+      "published_log_excerpt": "evidence/ci01-log-excerpt.txt"
+    },
+    {
+      "run": 43618458040,
+      "job": 132518590757,
+      "W": "e9d07f0ffe36925b1b0e044738a78cefb2eb2aca",
+      "S": "b461d0220e45362b76ff1d68a8e090e74bce0d05",
+      "snapshotTree": "39cdf80efe98395b4d3c70cd8543c7a5e149b0c6",
+      "branch": "ci-run-linux-compose-resume-r02-e9d07f0-f89a393e-1",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+          "./Sucafinav1/test/product/wp01/shell-state.test.ts",
+          "./Sucafinav1/test/product/wp01/shell-refresh.test.ts",
+          "./Sucafinav1/test/product/wp02/record-capture-scope.test.ts",
+          "./Sucafinav1/test/product/wp02/workbench-ack.test.ts",
+          "./Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+          "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "artifacts": {
+        "artifacts": []
+      },
+      "conclusion": "success",
+      "productTree": "1ca2a658f46fd1fedae77b5f88c31b1183676a1d",
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43618458040",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43618458040/job/132518590757",
+      "attempt": 1,
+      "remote_log_sha256": "ad9f12ddee3c3852b267851d27cc89e4e82e5d53043407836e0dc6b398b23eaa",
+      "remote_log_bytes": 110727,
+      "snapshot_proof": {
+        "id": "ci02",
+        "W": "e9d07f0ffe36925b1b0e044738a78cefb2eb2aca",
+        "productTree": "1ca2a658f46fd1fedae77b5f88c31b1183676a1d",
+        "S": "b461d0220e45362b76ff1d68a8e090e74bce0d05",
+        "snapshotTree": "39cdf80efe98395b4d3c70cd8543c7a5e149b0c6",
+        "parents": [
+          "e9d07f0ffe36925b1b0e044738a78cefb2eb2aca"
+        ],
+        "changedRootEntries": [
+          ".ci-run.json"
+        ],
+        "requestBlob": "125d629654a6f3fcb098a5d737cd17c090509022",
+        "allOtherRootEntrySHAsEqual": true,
+        "method": "Exact root Merkle tree entry equality: each equal subtree SHA proves recursive blob equality, including product, tests, config and fixtures."
+      },
+      "log_read": true,
+      "normalized_request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+          "./Sucafinav1/test/product/wp01/shell-state.test.ts",
+          "./Sucafinav1/test/product/wp01/shell-refresh.test.ts",
+          "./Sucafinav1/test/product/wp02/record-capture-scope.test.ts",
+          "./Sucafinav1/test/product/wp02/workbench-ack.test.ts",
+          "./Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+          "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "normalized_request_sha256": "f89a393edaa83ae6be49f1e9aba4d4ba3b4c06407b70e2310b339c53db627015",
+      "request_validation": "Existing test-ci.yml canonical validator passed; exact explicit selection. No validator/runner changes.",
+      "expected_files": [
+        "Sucafinav1/test/product/wp01/browser-startup.test.ts",
+        "Sucafinav1/test/product/wp01/shell-state.test.ts",
+        "Sucafinav1/test/product/wp01/shell-refresh.test.ts",
+        "Sucafinav1/test/product/wp02/record-capture-scope.test.ts",
+        "Sucafinav1/test/product/wp02/workbench-ack.test.ts",
+        "Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+        "Sucafinav1/test/product/wp01/browser-lifecycle.test.ts"
+      ],
+      "observed_files": [
+        "Sucafinav1/test/product/wp01/browser-startup.test.ts",
+        "Sucafinav1/test/product/wp01/shell-state.test.ts",
+        "Sucafinav1/test/product/wp01/shell-refresh.test.ts",
+        "Sucafinav1/test/product/wp02/record-capture-scope.test.ts",
+        "Sucafinav1/test/product/wp02/workbench-ack.test.ts",
+        "Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+        "Sucafinav1/test/product/wp01/browser-lifecycle.test.ts"
+      ],
+      "passed": 30,
+      "failed": 0,
+      "assertions": 513,
+      "summary": "Ran 30 tests across 7 files. [119.81s]",
+      "omni_control": "omni positive control [dadc54b4a212fb9af9f3440b00e2aaed]: pass (declared: 6 test(s) in Sucafinav1/test/product/wp01/browser-startup.test.ts, Sucafinav1/test/product/wp02/workbench-recovery.test.ts); 6 omni spawn(s), 0 delegated.",
+      "physical_browser_proofs": [
+        {
+          "consumer": "host-draft-recovery",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4095
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 4982
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 4997,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 82,
+            "framesFromBrowser": 227,
+            "peakQueuedBytes": 3941,
+            "peakBufferedBytes": 3608,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        },
+        {
+          "consumer": "host-egress-recovery",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4095
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 5118
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 5133,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 33,
+            "framesFromBrowser": 125,
+            "peakQueuedBytes": 3965,
+            "peakBufferedBytes": 3633,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        },
+        {
+          "consumer": "host-source-recovery",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4095
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 5254
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 5269,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 97,
+            "framesFromBrowser": 305,
+            "peakQueuedBytes": 2459,
+            "peakBufferedBytes": 560,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        },
+        {
+          "consumer": "host-access-recovery",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4095
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 5494
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 5509,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 53,
+            "framesFromBrowser": 149,
+            "peakQueuedBytes": 2457,
+            "peakBufferedBytes": 1589,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        },
+        {
+          "consumer": "host-response-recovery",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4095
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 5627
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 5642,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 60,
+            "framesFromBrowser": 184,
+            "peakQueuedBytes": 2457,
+            "peakBufferedBytes": 1589,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        },
+        {
+          "consumer": "wp01-shared-pool",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4095
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 4115
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 4130,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 541,
+            "framesFromBrowser": 1702,
+            "peakQueuedBytes": 17023,
+            "peakBufferedBytes": 13337,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        }
+      ],
+      "same_W_current_execution_qualification": false,
+      "limitations": "Focused deterministic/browser evidence only. No resident model/Session/skill/MCP/Relay/Atlas scanner acceptance. Historical W remains historical; normative guide and evidence publication are NOT D.",
+      "published_log_excerpt": "evidence/ci02-log-excerpt.txt"
+    },
+    {
+      "run": 43618683440,
+      "job": 132519270810,
+      "W": "e1a1888bd2117616d53c5af5f5014e81c4b4e530",
+      "S": "5a658cfcceeb618b5167315cc1dbc161a8c9516e",
+      "snapshotTree": "4550ff99bb61e2e34af5ec4146267f7f9bbb105c",
+      "branch": "ci-run-linux-compose-resume-r03-e1a1888-1bf35f67-1",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp12/analysis.test.ts",
+          "./Sucafinav1/test/product/wp12/run-store.test.ts",
+          "./Sucafinav1/test/product/wp12/publication-lifecycle.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "artifacts": {
+        "artifacts": []
+      },
+      "conclusion": "success",
+      "productTree": "64d26157c0044018712074e55a4a56f36db15d5f",
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43618683440",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43618683440/job/132519270810",
+      "attempt": 1,
+      "remote_log_sha256": "7963eae33e765ec903ed51bf06a5acb1a66b23970dcdca8314fef530967a4c40",
+      "remote_log_bytes": 77857,
+      "snapshot_proof": {
+        "id": "ci03",
+        "W": "e1a1888bd2117616d53c5af5f5014e81c4b4e530",
+        "productTree": "64d26157c0044018712074e55a4a56f36db15d5f",
+        "S": "5a658cfcceeb618b5167315cc1dbc161a8c9516e",
+        "snapshotTree": "4550ff99bb61e2e34af5ec4146267f7f9bbb105c",
+        "parents": [
+          "e1a1888bd2117616d53c5af5f5014e81c4b4e530"
+        ],
+        "changedRootEntries": [
+          ".ci-run.json"
+        ],
+        "requestBlob": "494a260f7a4687146f090650dbba88453f0cf5f3",
+        "allOtherRootEntrySHAsEqual": true,
+        "method": "Exact root Merkle tree entry equality: each equal subtree SHA proves recursive blob equality, including product, tests, config and fixtures."
+      },
+      "log_read": true,
+      "normalized_request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp12/analysis.test.ts",
+          "./Sucafinav1/test/product/wp12/run-store.test.ts",
+          "./Sucafinav1/test/product/wp12/publication-lifecycle.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "normalized_request_sha256": "1bf35f678fdee863a896746b27098dcc0ad03e5f24470db2bed67cc1d9e918d1",
+      "request_validation": "Existing test-ci.yml canonical validator passed; exact explicit selection. No validator/runner changes.",
+      "expected_files": [
+        "Sucafinav1/test/product/wp12/analysis.test.ts",
+        "Sucafinav1/test/product/wp12/run-store.test.ts",
+        "Sucafinav1/test/product/wp12/publication-lifecycle.test.ts"
+      ],
+      "observed_files": [
+        "Sucafinav1/test/product/wp12/analysis.test.ts",
+        "Sucafinav1/test/product/wp12/run-store.test.ts",
+        "Sucafinav1/test/product/wp12/publication-lifecycle.test.ts"
+      ],
+      "passed": 66,
+      "failed": 0,
+      "assertions": 795,
+      "summary": "Ran 66 tests across 3 files. [4.06s]",
+      "omni_control": "omni positive control [2d0a4d2aa1d57ac454058479859aa17a]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+      "physical_browser_proofs": [],
+      "same_W_current_execution_qualification": true,
+      "limitations": "Focused deterministic/browser evidence only. No resident model/Session/skill/MCP/Relay/Atlas scanner acceptance. Historical W remains historical; normative guide and evidence publication are NOT D.",
+      "published_log_excerpt": "evidence/ci03-log-excerpt.txt"
+    },
+    {
+      "run": 43619530864,
+      "job": 132521818078,
+      "W": "e1a1888bd2117616d53c5af5f5014e81c4b4e530",
+      "S": "b31d8df5011a7e8307e80d79366253c16620c585",
+      "snapshotTree": "e8022862f9a9ace556e03c4e8e09df939971c16e",
+      "branch": "ci-run-linux-compose-resume-r04-e1a1888-f89a393e-1",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+          "./Sucafinav1/test/product/wp01/shell-state.test.ts",
+          "./Sucafinav1/test/product/wp01/shell-refresh.test.ts",
+          "./Sucafinav1/test/product/wp02/record-capture-scope.test.ts",
+          "./Sucafinav1/test/product/wp02/workbench-ack.test.ts",
+          "./Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+          "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "artifacts": {
+        "artifacts": []
+      },
+      "conclusion": "success",
+      "productTree": "64d26157c0044018712074e55a4a56f36db15d5f",
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43619530864",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43619530864/job/132521818078",
+      "attempt": 1,
+      "remote_log_sha256": "435493fa867cc91d758b6e90c434f8b461b59077f6af84b8ff709595d7c28eb0",
+      "remote_log_bytes": 105704,
+      "snapshot_proof": {
+        "id": "ci04",
+        "W": "e1a1888bd2117616d53c5af5f5014e81c4b4e530",
+        "productTree": "64d26157c0044018712074e55a4a56f36db15d5f",
+        "S": "b31d8df5011a7e8307e80d79366253c16620c585",
+        "snapshotTree": "e8022862f9a9ace556e03c4e8e09df939971c16e",
+        "parents": [
+          "e1a1888bd2117616d53c5af5f5014e81c4b4e530"
+        ],
+        "changedRootEntries": [
+          ".ci-run.json"
+        ],
+        "requestBlob": "c7605cf227d4078f880acff2e3726e8175a3869a",
+        "allOtherRootEntrySHAsEqual": true,
+        "method": "Exact root Merkle tree entry equality: each equal subtree SHA proves recursive blob equality, including product, tests, config and fixtures."
+      },
+      "log_read": true,
+      "normalized_request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+          "./Sucafinav1/test/product/wp01/shell-state.test.ts",
+          "./Sucafinav1/test/product/wp01/shell-refresh.test.ts",
+          "./Sucafinav1/test/product/wp02/record-capture-scope.test.ts",
+          "./Sucafinav1/test/product/wp02/workbench-ack.test.ts",
+          "./Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+          "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "normalized_request_sha256": "f89a393edaa83ae6be49f1e9aba4d4ba3b4c06407b70e2310b339c53db627015",
+      "request_validation": "Existing test-ci.yml canonical validator passed; exact explicit selection. No validator/runner changes.",
+      "expected_files": [
+        "Sucafinav1/test/product/wp01/browser-startup.test.ts",
+        "Sucafinav1/test/product/wp01/shell-state.test.ts",
+        "Sucafinav1/test/product/wp01/shell-refresh.test.ts",
+        "Sucafinav1/test/product/wp02/record-capture-scope.test.ts",
+        "Sucafinav1/test/product/wp02/workbench-ack.test.ts",
+        "Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+        "Sucafinav1/test/product/wp01/browser-lifecycle.test.ts"
+      ],
+      "observed_files": [
+        "Sucafinav1/test/product/wp01/browser-startup.test.ts",
+        "Sucafinav1/test/product/wp01/shell-state.test.ts",
+        "Sucafinav1/test/product/wp01/shell-refresh.test.ts",
+        "Sucafinav1/test/product/wp02/record-capture-scope.test.ts",
+        "Sucafinav1/test/product/wp02/workbench-ack.test.ts",
+        "Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+        "Sucafinav1/test/product/wp01/browser-lifecycle.test.ts"
+      ],
+      "passed": 30,
+      "failed": 0,
+      "assertions": 513,
+      "summary": "Ran 30 tests across 7 files. [113.71s]",
+      "omni_control": "omni positive control [dacb86acc99ae9b4436dbb6072b22b2e]: pass (declared: 6 test(s) in Sucafinav1/test/product/wp01/browser-startup.test.ts, Sucafinav1/test/product/wp02/workbench-recovery.test.ts); 6 omni spawn(s), 0 delegated.",
+      "physical_browser_proofs": [
+        {
+          "consumer": "host-draft-recovery",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4068
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 4963
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 4978,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 82,
+            "framesFromBrowser": 227,
+            "peakQueuedBytes": 3941,
+            "peakBufferedBytes": 3608,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        },
+        {
+          "consumer": "host-egress-recovery",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4068
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 5103
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 5118,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 33,
+            "framesFromBrowser": 125,
+            "peakQueuedBytes": 3965,
+            "peakBufferedBytes": 3633,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        },
+        {
+          "consumer": "host-source-recovery",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4068
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 5240
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 5255,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 97,
+            "framesFromBrowser": 305,
+            "peakQueuedBytes": 2459,
+            "peakBufferedBytes": 560,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        },
+        {
+          "consumer": "host-access-recovery",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4068
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 5480
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 5495,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 53,
+            "framesFromBrowser": 149,
+            "peakQueuedBytes": 2458,
+            "peakBufferedBytes": 1589,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        },
+        {
+          "consumer": "host-response-recovery",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4068
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 5620
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 5635,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 60,
+            "framesFromBrowser": 182,
+            "peakQueuedBytes": 2460,
+            "peakBufferedBytes": 1589,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        },
+        {
+          "consumer": "wp01-shared-pool",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4068
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 4089
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 4104,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 541,
+            "framesFromBrowser": 1703,
+            "peakQueuedBytes": 17023,
+            "peakBufferedBytes": 13337,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        }
+      ],
+      "same_W_current_execution_qualification": true,
+      "limitations": "Focused deterministic/browser evidence only. No resident model/Session/skill/MCP/Relay/Atlas scanner acceptance. Historical W remains historical; normative guide and evidence publication are NOT D.",
+      "published_log_excerpt": "evidence/ci04-log-excerpt.txt"
+    },
+    {
+      "run": 43619906853,
+      "job": 132523011410,
+      "W": "e1a1888bd2117616d53c5af5f5014e81c4b4e530",
+      "S": "094cba0f487059ecfd111eb30ea556fa6a91e5ef",
+      "snapshotTree": "01e675eb1ece014d9e4f7f23d618d58ff6bdce3b",
+      "branch": "ci-run-linux-compose-resume-r05-e1a1888-e4009a4c-1",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp03/rate-identity-qualification.test.ts",
+          "./Sucafinav1/test/product/wp09/schedule-boundaries.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "artifacts": {
+        "artifacts": []
+      },
+      "conclusion": "success",
+      "productTree": "64d26157c0044018712074e55a4a56f36db15d5f",
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43619906853",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43619906853/job/132523011410",
+      "attempt": 1,
+      "remote_log_sha256": "0128db8585cad6078bb21ae2fc1afc57f393d00078b18cee83022b91e56c25e1",
+      "remote_log_bytes": 73950,
+      "snapshot_proof": {
+        "id": "ci05",
+        "W": "e1a1888bd2117616d53c5af5f5014e81c4b4e530",
+        "productTree": "64d26157c0044018712074e55a4a56f36db15d5f",
+        "S": "094cba0f487059ecfd111eb30ea556fa6a91e5ef",
+        "snapshotTree": "01e675eb1ece014d9e4f7f23d618d58ff6bdce3b",
+        "parents": [
+          "e1a1888bd2117616d53c5af5f5014e81c4b4e530"
+        ],
+        "changedRootEntries": [
+          ".ci-run.json"
+        ],
+        "requestBlob": "01e7766fd6abe6647bce8650f9c9d3c1c318e5aa",
+        "allOtherRootEntrySHAsEqual": true,
+        "method": "Exact root Merkle entry equality proves recursive blobs unchanged except request."
+      },
+      "log_read": true,
+      "normalized_request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp03/rate-identity-qualification.test.ts",
+          "./Sucafinav1/test/product/wp09/schedule-boundaries.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "normalized_request_sha256": "e4009a4c0143b328c715d5ad2d41a8b35b3a12f6270b87a76cb4b05d0e27aa36",
+      "request_validation": "Existing test-ci.yml canonical validator passed; exact explicit selection. No validator/runner changes.",
+      "expected_files": [
+        "Sucafinav1/test/product/wp03/rate-identity-qualification.test.ts",
+        "Sucafinav1/test/product/wp09/schedule-boundaries.test.ts"
+      ],
+      "observed_files": [
+        "Sucafinav1/test/product/wp03/rate-identity-qualification.test.ts",
+        "Sucafinav1/test/product/wp09/schedule-boundaries.test.ts"
+      ],
+      "passed": 34,
+      "failed": 0,
+      "assertions": 149,
+      "summary": "Ran 34 tests across 2 files. [281.00ms]",
+      "omni_control": "omni positive control [a8aa59e56dffb2961a6829da91be6ba1]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+      "physical_browser_proofs": [],
+      "same_W_current_execution_qualification": true,
+      "limitations": "Focused deterministic/browser evidence only. No resident model/Session/skill/MCP/Relay/Atlas scanner acceptance. Historical W remains historical; normative guide and evidence publication are NOT D.",
+      "published_log_excerpt": "evidence/ci05-log-excerpt.txt"
+    },
+    {
+      "run": 43618711524,
+      "job": 132519350118,
+      "W": "e1a1888bd2117616d53c5af5f5014e81c4b4e530",
+      "productTree": "64d26157c0044018712074e55a4a56f36db15d5f",
+      "S": "8bc10a569472662121586b07dee8098e52bfadde",
+      "snapshotTree": "0f8118fd8b00f11b0f6798c4054181a69807d7ac",
+      "branch": "compose-resume-check",
+      "envelope": {
+        "productSha": "e1a1888bd2117616d53c5af5f5014e81c4b4e530",
+        "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+      },
+      "artifacts": {
+        "artifacts": [
+          {
+            "id": 14123161341,
+            "name": "compose-resume-check-1",
+            "size_in_bytes": 3353,
+            "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14123161341",
+            "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14123161341/zip",
+            "expired": false,
+            "created_at": "2026-11-14T17:02:57Z",
+            "expires_at": "2026-11-28T17:02:56Z",
+            "updated_at": "2026-11-14T17:02:57Z",
+            "digest": "sha256:25c5bdffc6ddc23b78b53ed7454e894037b47589bb06a05f3361b30d5703664d",
+            "workflow_run": {
+              "id": 43618711524,
+              "repository_id": 1455724710,
+              "head_repository_id": 1455724710,
+              "head_branch": "compose-resume-check",
+              "head_sha": "8bc10a569472662121586b07dee8098e52bfadde"
+            }
+          }
+        ]
+      },
+      "conclusion": "failure",
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43618711524",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43618711524/job/132519350118",
+      "attempt": 1,
+      "remote_log_sha256": "fee89f8684a410810ff9d59f3a30b96ee69b5d788b1dccbb7cc3583591a34c58",
+      "remote_log_bytes": 85737,
+      "snapshot_proof": {
+        "id": "check01",
+        "W": "e1a1888bd2117616d53c5af5f5014e81c4b4e530",
+        "productTree": "64d26157c0044018712074e55a4a56f36db15d5f",
+        "S": "8bc10a569472662121586b07dee8098e52bfadde",
+        "snapshotTree": "0f8118fd8b00f11b0f6798c4054181a69807d7ac",
+        "parents": [
+          "e1a1888bd2117616d53c5af5f5014e81c4b4e530"
+        ],
+        "changedRootEntries": [
+          ".compose-resume-check.json"
+        ],
+        "allOtherRootEntrySHAsEqual": true,
+        "envelopeBlob": "2503260da99665e02fb2ac17e76a74a80baec8d2"
+      },
+      "log_read": true,
+      "commands": [
+        {
+          "cwd": "modules/sucafina",
+          "command": "bun typecheck",
+          "conclusion": "failure",
+          "diagnostics": 14
+        },
+        {
+          "cwd": "apps/cli",
+          "command": "bun typecheck",
+          "conclusion": "success"
+        },
+        {
+          "cwd": ".",
+          "command": "bun run check:spawn-imports",
+          "conclusion": "success"
+        },
+        {
+          "cwd": ".",
+          "command": "bun run check:guards --base origin/dev",
+          "conclusion": "success",
+          "rules": 78,
+          "changed_paths": 1432,
+          "gates": 0,
+          "warnings": 47,
+          "errors": 0
+        }
+      ],
+      "diagnostics": [
+        "product/procurement/sourcing-analysis.ts(4,10): error TS2305: Module '\"../ui/forecast-analysis.ts\"' has no exported member 'analysisHistory'.",
+        "test/product/wp04/finance-sourcing-integration.test.ts(388,65): error TS2322: Type '(ref: string, binding: TrustedDomainContext) => Promise<PortResult<{ evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; ... 6 more ...; projectionDigest: string; }; }; context: ProductContext; }>>' is not assignable to type 'Pick<{ issue: (kind: \"procurement-request\" | \"procurement-supplier\", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }, \"resolve\">'.",
+        "test/product/wp04/finance-sourcing-integration.test.ts(394,40): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (call: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, call: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options?: Ran...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+        "test/product/wp06/native/import-analysis.test.ts(130,47): error TS2339: Property 'importPreview' does not exist on type '{ importPreview: { importPreviewRef: string; manifest: ImportManifest; detail: ImportDetail; }; } | { decisionRecall: SfMemoryPrompt; }'.",
+        "test/product/wp06/native/import-analysis.test.ts(166,47): error TS2339: Property 'importPreview' does not exist on type '{ importPreview: { importPreviewRef: string; manifest: ImportManifest; detail: ImportDetail; }; } | { decisionRecall: SfMemoryPrompt; }'.",
+        "test/product/wp06/native/import-analysis.test.ts(205,45): error TS2339: Property 'importPreview' does not exist on type '{ importPreview: { importPreviewRef: string; manifest: ImportManifest; detail: ImportDetail; }; } | { decisionRecall: SfMemoryPrompt; }'.",
+        "test/product/wp06/native/import-analysis.test.ts(324,37): error TS2554: Expected 1 arguments, but got 2.",
+        "test/product/wp08/collaboration-journey.test.ts(79,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ host: DomainPortHost; state: SfProductStatePort; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+        "test/product/wp08/confirmation-work-integration.test.ts(82,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+        "test/product/wp08/host-answer-reuse.test.ts(78,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+        "test/product/wp08/question-consumer.test.ts(44,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ host: DomainPortHost; state: SfProductStatePort; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+        "test/product/wp09/decision-answer-consumer.test.ts(76,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; evidence: BusinessContextService; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (binding: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, binding: TrustedDomainContext) => Promise<...>; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+        "test/product/wp13/sensitivity-units-boundary.test.ts(158,127): error TS2322: Type 'PlannerSourceHost' is not assignable to type 'PlannerSourceHost & { projectForecastSource: SfPlannerSourceProjector; }'.",
+        "test/product/wp14/atlas-restart-reader.ts(54,40): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: () => string; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options?: RandomUUIDOptions | undefined) => `${s...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'."
+      ],
+      "comparison_to_origin": {
+        "run": 43604348151,
+        "product": "9048e0e65351a5bd80768458a79fed94a4993db7",
+        "diagnostic_locations_codes_equal": true,
+        "entire_diagnostic_messages_equal": true
+      },
+      "guards_warnings": [
+        "WARN apps/cli/package.json:37 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+        "WARN modules/atlas/boundary/package.json:66 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+        "WARN modules/atlas/boundary/package.json:67 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+        "WARN modules/atlas/boundary/package.json:68 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+        "WARN modules/sucafina/package.json:17 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+        "WARN modules/sucafina/package.json:18 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+        "WARN modules/sucafina/package.json:19 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+        "WARN modules/sucafina/package.json:20 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+        "WARN modules/sucafina/package.json:21 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+        "WARN modules/sucafina/package.json:22 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+        "WARN modules/sucafina/package.json:23 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+        "WARN modules/sucafina/package.json:24 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+        "WARN package.json:126 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+        "WARN package.json:127 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+        "WARN modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/stop-handoff.json:5 [local-abs-path] Absolute path into a personal home directory. Use a relative path, an environment variable or os.homedir().",
+        "WARN modules/sucafina/Sucafinav1/test/product/wp01/contextual-decision.test.ts:113 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+        "WARN modules/sucafina/Sucafinav1/test/product/wp01/contextual-decision.test.ts:162 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+        "WARN modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts:41 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+        "WARN modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts:158 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+        "WARN modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts:417 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+        "WARN modules/sucafina/Sucafinav1/test/product/wp01/planner-monthly.test.ts:60 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+        "WARN modules/sucafina/Sucafinav1/test/product/wp01/portfolio-recovery.test.ts:78 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+        "WARN modules/sucafina/Sucafinav1/test/product/wp01/portfolio-recovery.test.ts:168 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+        "WARN modules/sucafina/Sucafinav1/test/product/wp01/portfolio-recovery.test.ts:321 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+        "WARN modules/sucafina/Sucafinav1/test/product/wp01/record-search.test.ts:77 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+        "WARN modules/sucafina/Sucafinav1/test/product/wp01/shell-recovery.test.ts:87 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+        "WARN modules/sucafina/Sucafinav1/test/product/wp01/shell-recovery.test.ts:227 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+        "WARN modules/sucafina/Sucafinav1/test/product/wp01/shell-refresh.test.ts:60 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+        "WARN modules/sucafina/Sucafinav1/test/product/wp01/shell-refresh.test.ts:110 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+        "WARN modules/sucafina/Sucafinav1/test/product/wp01/two-actor-conflict.test.ts:81 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+        "WARN modules/sucafina/Sucafinav1/test/product/wp01/unavailable-views.test.ts:79 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+        "WARN modules/sucafina/Sucafinav1/test/product/wp01/view-recovery.test.ts:38 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+        "WARN modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts:262 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+        "WARN modules/sucafina/Sucafinav1/test/product/wp02/workbench-ack.test.ts:19 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+        "WARN modules/sucafina/Sucafinav1/test/product/wp05/browser.ts:38 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+        "WARN modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/decision-controls.test.ts:227 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+        "WARN modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/decision-controls.test.ts:266 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+        "WARN modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/decision-controls.test.ts:268 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+        "WARN modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/decision-controls.test.ts:328 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+        "WARN modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/decision-controls.test.ts:340 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+        "WARN modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-access-browser-fixture.ts:103 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+        "WARN modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts:203 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+        "WARN modules/sucafina/Sucafinav1/test/product/wp10/integration/review-access-browser-fixture.ts:115 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+        "WARN modules/sucafina/Sucafinav1/test/visual-layout.test.ts:74 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+        "WARN packages/app-shell/e2e/sucafina/wp10/composition.spec.ts:213 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+        "WARN packages/app-shell/e2e/sucafina/wp10/composition.spec.ts:280 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer.",
+        "WARN packages/app-shell/e2e/sucafina/wp10/composition.spec.ts:336 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer."
+      ],
+      "new_warning_since_origin": [
+        "WARN modules/sucafina/Sucafinav1/test/product/wp02/workbench-ack.test.ts:19 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer."
+      ],
+      "guard_scope": "Exact W=e1a1888 only. Not a G7 decision and not guard D/G8. Final guide/evidence head has not inherited this guard result.",
+      "limitations": "Sucafina typecheck failed. CLI/spawn/guards success does not turn the combined check green. No source paths fixed solely to silence diagnostics.",
+      "published_log_excerpt": "evidence/check01-log-excerpt.txt"
+    }
+  ],
+  "coverage_policy": "CI01 and CI02 preserved as historical results. CI03/CI04/CI05 qualify the same execution W; later code dependencies required CI04/CI05. No documentation-only product test repeats. All W/S pairs retain exact identities. Three guide hunks later change normative material; delivery is not D and does not inherit global acceptance."
+}

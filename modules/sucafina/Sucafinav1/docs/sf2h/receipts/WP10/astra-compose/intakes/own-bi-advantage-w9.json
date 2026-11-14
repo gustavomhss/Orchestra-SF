@@ -1,0 +1,375 @@
+{
+  "schema": "astra-compose-owned-delta-v1",
+  "observed_at": "2026-11-14T11:17:20.684021+00:00",
+  "owner": "WP10 composition",
+  "base_head": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+  "base_tree": "051391628c61f6a4333c8f13567c5518c4ff8f86",
+  "status": "IMPLEMENTED_PENDING_PUBLISHED_ACTIONS",
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/bi-selections.ts",
+      "base_blob": "5bb690b8072d932f1717206b5967c95b45e3b365",
+      "blob": "3e1d2ec43831e689c19c5178a0ff370e60001e40",
+      "sha256": "9897d60038a4a488735b805e83862d43d0edf0745ca47d67e6979c60aa275872",
+      "staging": "/workspace/scratch/4c48b09c5c29/owned-patch-round9/apps/cli/src/sucafina-product/bi-selections.ts",
+      "diff": "/workspace/scratch/4c48b09c5c29/incoming-cache/bi-advantage-round9/diffs/apps/cli/src/sucafina-product/bi-selections.ts.diff"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/bi-services.ts",
+      "base_blob": "7d44c1982c3c62fdaf21f98945ded9e572fd359a",
+      "blob": "f2f25da7875267f722d88cfa36820b5daa6c6c74",
+      "sha256": "593aee09fabf9254b25f5f3dd370152cdfe1591730408b19496afe6faf659823",
+      "staging": "/workspace/scratch/4c48b09c5c29/owned-patch-round9/apps/cli/src/sucafina-product/bi-services.ts",
+      "diff": "/workspace/scratch/4c48b09c5c29/incoming-cache/bi-advantage-round9/diffs/apps/cli/src/sucafina-product/bi-services.ts.diff"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-bi-options.ts",
+      "base_blob": "8b9d1de02f4187113ff09bc3f2ca7e953f420abb",
+      "blob": "865eb0ca54fce9dd9c85ea227b0bc6e947f9e170",
+      "sha256": "df89125fdd9078c78a0fbe46d4403eed49a11b9414e6c3f9a8eb0fef440b356c",
+      "staging": "/workspace/scratch/4c48b09c5c29/owned-patch-round9/apps/cli/src/sucafina-product/extended-bi-options.ts",
+      "diff": "/workspace/scratch/4c48b09c5c29/incoming-cache/bi-advantage-round9/diffs/apps/cli/src/sucafina-product/extended-bi-options.ts.diff"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-advantage-selection.test.ts",
+      "base_blob": null,
+      "blob": "9ca38cbe7ef3f2094a62a66725cda0536e7e32af",
+      "sha256": "09ef53dc6f97a309feab32bed94c8f5bbc2ebb5a7d6ca6a4ca5e275c14d63299",
+      "staging": "/workspace/scratch/4c48b09c5c29/owned-patch-round9/modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-advantage-selection.test.ts",
+      "diff": "/workspace/scratch/4c48b09c5c29/incoming-cache/bi-advantage-round9/diffs/modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-advantage-selection.test.ts.diff"
+    }
+  ],
+  "dependencies": {
+    "source_pr": 35,
+    "source_head": "6016a70d7ab0c3d50f1ec2827a534a80e48a5c56",
+    "source_tree": "f84399d12c35bb8fd66cf4631bae56b02e84123a",
+    "manifest": "incoming-cache/finance-round9/accepted-manifest.json",
+    "required_paths": [
+      "product/analytics/stored-scenario.ts",
+      "product/analytics/scenario.ts",
+      "product/analytics/projection.ts",
+      "product/analytics/advantage-view.ts",
+      "product/analytics/view.ts",
+      "test/product/wp11/scenario-batch-fixture.ts"
+    ],
+    "imports": [
+      {
+        "importer": "apps/cli/src/sucafina-product/bi-selections.ts",
+        "target": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+        "present": true,
+        "blob": "1769271386cdda1017c38023b0988ce2d64423d2"
+      },
+      {
+        "importer": "apps/cli/src/sucafina-product/bi-selections.ts",
+        "target": "modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts",
+        "present": true,
+        "blob": "c0c615b006d4b638015217e9d5b4d353b4ea41e6"
+      },
+      {
+        "importer": "apps/cli/src/sucafina-product/bi-selections.ts",
+        "target": "modules/sucafina/Sucafinav1/product/contracts/operations.ts",
+        "present": true,
+        "blob": "88550f78693ba1a66b285f2f53abcd3f8c09afdc"
+      },
+      {
+        "importer": "apps/cli/src/sucafina-product/bi-services.ts",
+        "target": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+        "present": true,
+        "blob": "1769271386cdda1017c38023b0988ce2d64423d2"
+      },
+      {
+        "importer": "apps/cli/src/sucafina-product/bi-services.ts",
+        "target": "modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts",
+        "present": true,
+        "blob": "c0c615b006d4b638015217e9d5b4d353b4ea41e6"
+      },
+      {
+        "importer": "apps/cli/src/sucafina-product/bi-services.ts",
+        "target": "modules/sucafina/Sucafinav1/product/contracts/context.ts",
+        "present": true,
+        "blob": "ae2d6b73a24970ba23d21e17694b54fd32d1a700"
+      },
+      {
+        "importer": "apps/cli/src/sucafina-product/bi-services.ts",
+        "target": "modules/sucafina/Sucafinav1/product/contracts/operations.ts",
+        "present": true,
+        "blob": "88550f78693ba1a66b285f2f53abcd3f8c09afdc"
+      },
+      {
+        "importer": "apps/cli/src/sucafina-product/bi-services.ts",
+        "target": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+        "present": true,
+        "blob": "88b6efb4840b8731f707862a8baf14683526c7a9"
+      },
+      {
+        "importer": "apps/cli/src/sucafina-product/bi-services.ts",
+        "target": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+        "present": true,
+        "blob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95"
+      },
+      {
+        "importer": "apps/cli/src/sucafina-product/bi-services.ts",
+        "target": "modules/sucafina/Sucafinav1/product/analytics/factory.ts",
+        "present": true,
+        "blob": "93bc4fb74dee9c55fa3e396bd7108ebc9d3da895"
+      },
+      {
+        "importer": "apps/cli/src/sucafina-product/bi-services.ts",
+        "target": "modules/sucafina/Sucafinav1/product/analytics/consumer.ts",
+        "present": true,
+        "blob": "117c0fc6191b9d7797a4e08db19e90c3079fe129"
+      },
+      {
+        "importer": "apps/cli/src/sucafina-product/bi-services.ts",
+        "target": "modules/sucafina/Sucafinav1/product/analytics/capabilities.ts",
+        "present": true,
+        "blob": "87e36883d92f6982cc8765337f8802ffacd6e52c"
+      },
+      {
+        "importer": "apps/cli/src/sucafina-product/bi-services.ts",
+        "target": "modules/sucafina/Sucafinav1/product/analytics/stored-scenario.ts",
+        "present": true,
+        "blob": "f5bb6d732ffc588626553097d53d3c0e1457a81c"
+      },
+      {
+        "importer": "apps/cli/src/sucafina-product/bi-services.ts",
+        "target": "modules/sucafina/Sucafinav1/product/analytics/stored-scenario.ts",
+        "present": true,
+        "blob": "f5bb6d732ffc588626553097d53d3c0e1457a81c"
+      },
+      {
+        "importer": "apps/cli/src/sucafina-product/bi-services.ts",
+        "target": "modules/sucafina/Sucafinav1/product/analytics/projection.ts",
+        "present": true,
+        "blob": "29f32617de3ce33bbf414a7439f97d64806bbaa9"
+      },
+      {
+        "importer": "apps/cli/src/sucafina-product/bi-services.ts",
+        "target": "modules/sucafina/Sucafinav1/product/analytics/semantics.ts",
+        "present": true,
+        "blob": "ef1adaaf457c2ef3846fe12be8674455ca2d72c4"
+      },
+      {
+        "importer": "apps/cli/src/sucafina-product/bi-services.ts",
+        "target": "modules/sucafina/Sucafinav1/product/portfolio/projection.ts",
+        "present": true,
+        "blob": "266c97092d1c0f91f5694879883bd7839c081626"
+      },
+      {
+        "importer": "apps/cli/src/sucafina-product/bi-services.ts",
+        "target": "modules/sucafina/Sucafinav1/product/dashboard/bi.ts",
+        "present": true,
+        "blob": "8a88163e8fed6c356af8b433f81ef6f0f78098c6"
+      },
+      {
+        "importer": "apps/cli/src/sucafina-product/bi-services.ts",
+        "target": "modules/sucafina/Sucafinav1/product/dashboard/bi-metadata.ts",
+        "present": true,
+        "blob": "da697797e33a54f8d7c3c3ecc0d7f16d516c68c3"
+      },
+      {
+        "importer": "apps/cli/src/sucafina-product/bi-services.ts",
+        "target": "modules/sucafina/Sucafinav1/product/planner/bi.ts",
+        "present": true,
+        "blob": "4e2aa318ec7ee98fb0cb43c4c3d604f0e746c0f6"
+      },
+      {
+        "importer": "apps/cli/src/sucafina-product/bi-services.ts",
+        "target": "modules/sucafina/Sucafinav1/product/planner/bi-difference.ts",
+        "present": true,
+        "blob": "86ef1b9781ee46bc8cb30eeabc66870332094e7d"
+      },
+      {
+        "importer": "apps/cli/src/sucafina-product/bi-services.ts",
+        "target": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+        "present": true,
+        "blob": "2c82d60d220d8d5365da8322bad648a64bbb62d2"
+      },
+      {
+        "importer": "apps/cli/src/sucafina-product/bi-services.ts",
+        "target": "apps/cli/src/sucafina-product/business-services.ts",
+        "present": true,
+        "blob": "4b02413b5a98e750187fa8f5fa54f3cb2415f4e3"
+      },
+      {
+        "importer": "apps/cli/src/sucafina-product/bi-services.ts",
+        "target": "apps/cli/src/sucafina-product/portfolio-services.ts",
+        "present": true,
+        "blob": "83c525e733b2cb21637734e3b1e07950e72f4f97"
+      },
+      {
+        "importer": "apps/cli/src/sucafina-product/bi-services.ts",
+        "target": "apps/cli/src/sucafina-product/bi-selections.ts",
+        "present": true,
+        "blob": "3e1d2ec43831e689c19c5178a0ff370e60001e40"
+      },
+      {
+        "importer": "apps/cli/src/sucafina-product/bi-services.ts",
+        "target": "apps/cli/src/sucafina-product/bi-call-scope.ts",
+        "present": true,
+        "blob": "c3fd5dc0eabcdbb24d20023b63ddeedff526e9ca"
+      },
+      {
+        "importer": "apps/cli/src/sucafina-product/extended-bi-options.ts",
+        "target": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+        "present": true,
+        "blob": "1769271386cdda1017c38023b0988ce2d64423d2"
+      },
+      {
+        "importer": "apps/cli/src/sucafina-product/extended-bi-options.ts",
+        "target": "modules/sucafina/Sucafinav1/product/contracts/context.ts",
+        "present": true,
+        "blob": "ae2d6b73a24970ba23d21e17694b54fd32d1a700"
+      },
+      {
+        "importer": "apps/cli/src/sucafina-product/extended-bi-options.ts",
+        "target": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+        "present": true,
+        "blob": "88b6efb4840b8731f707862a8baf14683526c7a9"
+      },
+      {
+        "importer": "apps/cli/src/sucafina-product/extended-bi-options.ts",
+        "target": "modules/sucafina/Sucafinav1/product/contracts/state.ts",
+        "present": true,
+        "blob": "755639b2a16265fe164ba2e6343738c1362d168c"
+      },
+      {
+        "importer": "apps/cli/src/sucafina-product/extended-bi-options.ts",
+        "target": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+        "present": true,
+        "blob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95"
+      },
+      {
+        "importer": "apps/cli/src/sucafina-product/extended-bi-options.ts",
+        "target": "modules/sucafina/Sucafinav1/product/dashboard/bi-metadata.ts",
+        "present": true,
+        "blob": "da697797e33a54f8d7c3c3ecc0d7f16d516c68c3"
+      },
+      {
+        "importer": "apps/cli/src/sucafina-product/extended-bi-options.ts",
+        "target": "modules/sucafina/Sucafinav1/product/integration/dashboard-sources.ts",
+        "present": true,
+        "blob": "4ddee38662690ce5284cc46ef04d315cb3fb4f6c"
+      },
+      {
+        "importer": "apps/cli/src/sucafina-product/extended-bi-options.ts",
+        "target": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+        "present": true,
+        "blob": "65867a3e6aa9b5b85266bb637fb22cf1c6c6d539"
+      },
+      {
+        "importer": "apps/cli/src/sucafina-product/extended-bi-options.ts",
+        "target": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+        "present": true,
+        "blob": "2c82d60d220d8d5365da8322bad648a64bbb62d2"
+      },
+      {
+        "importer": "apps/cli/src/sucafina-product/extended-bi-options.ts",
+        "target": "apps/cli/src/sucafina-product/business-services.ts",
+        "present": true,
+        "blob": "4b02413b5a98e750187fa8f5fa54f3cb2415f4e3"
+      },
+      {
+        "importer": "apps/cli/src/sucafina-product/extended-bi-options.ts",
+        "target": "apps/cli/src/sucafina-product/bi-services.ts",
+        "present": true,
+        "blob": "f2f25da7875267f722d88cfa36820b5daa6c6c74"
+      },
+      {
+        "importer": "apps/cli/src/sucafina-product/extended-bi-options.ts",
+        "target": "apps/cli/src/sucafina-product/bi-selections.ts",
+        "present": true,
+        "blob": "3e1d2ec43831e689c19c5178a0ff370e60001e40"
+      },
+      {
+        "importer": "apps/cli/src/sucafina-product/extended-bi-options.ts",
+        "target": "modules/sucafina/Sucafinav1/product/analytics/catalog.ts",
+        "present": true,
+        "blob": "2b92394e3f1ce66e715e83a79b249b7972305ff6"
+      },
+      {
+        "importer": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-advantage-selection.test.ts",
+        "target": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+        "present": true,
+        "blob": "1769271386cdda1017c38023b0988ce2d64423d2"
+      },
+      {
+        "importer": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-advantage-selection.test.ts",
+        "target": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+        "present": true,
+        "blob": "88b6efb4840b8731f707862a8baf14683526c7a9"
+      },
+      {
+        "importer": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-advantage-selection.test.ts",
+        "target": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+        "present": true,
+        "blob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95"
+      },
+      {
+        "importer": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-advantage-selection.test.ts",
+        "target": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+        "present": true,
+        "blob": "e365ac59376482dfcc6f81aed045b0153f911038"
+      },
+      {
+        "importer": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-advantage-selection.test.ts",
+        "target": "modules/sucafina/Sucafinav1/test/product/wp11/scenario-batch-fixture.ts",
+        "present": true,
+        "blob": "0bd661681e2dd3c3daafdea82851af88c772f0cf"
+      },
+      {
+        "importer": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-advantage-selection.test.ts",
+        "target": "apps/cli/src/sucafina-product/bi-services.ts",
+        "present": true,
+        "blob": "f2f25da7875267f722d88cfa36820b5daa6c6c74"
+      },
+      {
+        "importer": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-advantage-selection.test.ts",
+        "target": "apps/cli/src/sucafina-product/bi-selections.ts",
+        "present": true,
+        "blob": "3e1d2ec43831e689c19c5178a0ff370e60001e40"
+      },
+      {
+        "importer": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-advantage-selection.test.ts",
+        "target": "apps/cli/src/sucafina-product/extended-bi-options.ts",
+        "present": true,
+        "blob": "865eb0ca54fce9dd9c85ea227b0bc6e947f9e170"
+      }
+    ]
+  },
+  "changes": [
+    "Transport advantageComparisonRef only as a nonblank string in scenario selectors; retain portfolio exclusion, strict fields, length and canonical encoding filters.",
+    "Compose the published C08 inverse comparison reader with exact selector equality, current Request/binding/input guards at admission, each host observation and after final reauthorization. The producer still checks the direct/inverse pair, case and both result/source observations.",
+    "Keep inverse selections on the complete producer path; do not reuse the original-pair proof whose dependency enumeration lacks the inverse result. Original no-advantage selection behavior remains scoped as before.",
+    "Expose original options plus one explicit option per already authorized inverse with exact same case and reversed pair. No new comparison is calculated or persisted, no first/latest is selected.",
+    "Guard options against Request replacement/abort, binding and filter mutation before and after authority awaits.",
+    "Add regressions using actual Planner arithmetic, UI leases and C08: explicit canonical inverse, multiple inverse choices, same-direct/wrong-case rejection, selection mismatch, revoked authority, lease loss after first/final await and a different real Request at egress.",
+    "Bound the complete planned option cardinality to 300 candidate choices, matching the existing result budget. Reserve every scenario/sensitivity/inverse combination before constructing any selector or invoking C16 per choice; overflow returns needs-input without partial value or silent truncation. Regression uses 300 identifier-only counterexample records whose eligible pairs exceed that budget."
+  ],
+  "proofLimits": [
+    "No product execution, typecheck, guards or CI dispatch was performed locally or remotely by this agent.",
+    "New tests require Actions on the actual composed SHA; no PASS is claimed.",
+    "Scenario batch fixture is a published producer fixture with real UI/store/Planner and explicit test authority boundaries; it is not installed/native acceptance or the still-blocked promotion HTTP workflow.",
+    "First no-op promotion and hot-topic source findings remain open; this patch does not replace foreign fixes.",
+    "Existing C17 historical limits, all eight final selections, AM01-AM06, three independent final reviews and C/G7 D/G8 remain required."
+  ],
+  "proposedSurgicalTest": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-advantage-selection.test.ts",
+  "scopeExclusions": [
+    "No extended-bi-browser/http/navigation files changed.",
+    "No worktree, README, 38 freeze artifacts, approved plan, source owner branches, engines or policies changed."
+  ],
+  "independentFinalReview": false,
+  "globalRelease": false,
+  "choiceBudget": {
+    "records": 300,
+    "planned_choices": 300,
+    "basis": "Existing createSfExtendedBiOptions record limit; explicit host work budget, not a financial threshold.",
+    "failure": {
+      "status": "needs-input",
+      "reason": "too-many-bi-choices-refine-period-or-select-case-in-workbench"
+    },
+    "partial_value": false,
+    "first_or_latest_selection": false,
+    "progressive_case_chooser": "Not added; oversized collections remain explicitly unavailable pending narrower selection."
+  }
+}

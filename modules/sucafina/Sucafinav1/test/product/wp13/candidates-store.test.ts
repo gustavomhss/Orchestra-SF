@@ -24,7 +24,7 @@ test("portfolio resolves a persisted decision alternative and respects revocatio
   const open = async () => {
     const store = await openLocalStore(directory)
     const state = createSfProductState({ persistence: store, createId: () => "state-inc", resolveTarget: async () => ({ incarnation: "inc" }), authorize: async () => access.allowed ? { principalRef: "principal", policyVersion: "policy", accessRevision: "access" } : undefined })
-    const cases = createDecisionCasePort({ state, host: { requestFor: () => request, revalidate: async () => access.allowed }, creationTarget: { ref: "case", incarnation: "inc" }, operationIdentity: () => "operation", authorizeCase: async () => access.allowed, evidence, createId: () => "unused", now: () => "2026-11-13T00:00:00Z" })
+    const cases = createDecisionCasePort({ state, host: { requestFor: () => request, revalidate: async () => access.allowed }, creationTarget: { ref: "case", incarnation: "inc" }, operationIdentity: () => "operation", authorizeCase: async () => access.allowed, verifyScenarioOperations: async () => access.allowed, evidence, createId: () => "unused", now: () => "2026-11-13T00:00:00Z" })
     return { store, state, cases }
   }
   try {

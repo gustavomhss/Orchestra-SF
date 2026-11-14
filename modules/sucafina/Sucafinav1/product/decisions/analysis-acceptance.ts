@@ -43,7 +43,11 @@ export function createAnalysisAcceptance(input: {
       const saved = prior.value
       if (!saved || typeof saved !== "object" || !("id" in saved) || !("incarnation" in saved) || !("version" in saved) || saved.id !== decision.id || saved.incarnation !== decision.incarnation || !Number.isSafeInteger(saved.version) || !await input.host.revalidate(context).catch(() => false)) return { status: "unavailable", reason: "invalid-acceptance-receipt" }
       if (!("ledger" in saved) || !Array.isArray(saved.ledger)) return { status: "unavailable", reason: "invalid-acceptance-receipt" }
-      const events = (saved as unknown as DecisionCase).ledger.filter((event) => event.kind === "analysis-accepted" && event.analysisRunId === request.runRef && event.caseRef.id === decision.id && event.caseRef.incarnation === decision.incarnation && event.caseRef.version === saved.version && event.principalRef === context.binding.principalRef)
+      const savedVersion = Number(saved.version)
+      const events = saved.ledger.filter((event: unknown): event is { id: string; outputDigest: string } => {
+        if (!event || typeof event !== "object" || !("id" in event) || typeof event.id !== "string" || !("outputDigest" in event) || typeof event.outputDigest !== "string" || !("kind" in event) || event.kind !== "analysis-accepted" || !("analysisRunId" in event) || event.analysisRunId !== request.runRef || !("principalRef" in event) || event.principalRef !== context.binding.principalRef || !("caseRef" in event) || !event.caseRef || typeof event.caseRef !== "object") return false
+        return "id" in event.caseRef && event.caseRef.id === decision.id && "incarnation" in event.caseRef && event.caseRef.incarnation === decision.incarnation && "version" in event.caseRef && event.caseRef.version === savedVersion
+      })
       if (events.length !== 1 || !/^[a-f0-9]{64}$/.test(events[0]!.outputDigest) || decision.ledger.filter((event) => event.id === events[0]!.id && digestSfValue(event) === digestSfValue(events[0])).length !== 1 || !await input.host.revalidate(context).catch(() => false)) return { status: "unavailable", reason: "acceptance-event-unavailable" }
       return { status: "ok", value: { caseRef: { id: decision.id, incarnation: decision.incarnation, version: Number(saved.version) } } }
     }
@@ -55,14 +59,14 @@ export function createAnalysisAcceptance(input: {
     if (resolved.status !== "ok") return resolved
     const output = resolved.value.output
     const run = resolved.value.run
-    if (!matches(output, run, request, context) || !await input.confirmAcceptance(request, output, context).catch(() => false) || !await input.authorizeCase(decision, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "human-acceptance-unavailable" }
+    if (!validateAnalysisContribution(output, run, request, context) || !await input.confirmAcceptance(request, output, context).catch(() => false) || !await input.authorizeCase(decision, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) return { status: "denied", reason: "human-acceptance-unavailable" }
     const event = { id: input.createId(), caseRef: { id: decision.id, incarnation: decision.incarnation, version: decision.version + 1 }, kind: "analysis-accepted" as const, principalRef: context.binding.principalRef, at: input.now(), analysisRunId: run.runRef, consideredActions: [], factualGaps: [], lifecycleState: decision.state, rationale: request.rationale, evidenceRefs: output.evidenceRefs, outputDigest: output.outputDigest }
     if (!event.id.trim() || !Number.isFinite(Date.parse(event.at))) return { status: "unavailable", reason: "acceptance-identity-unavailable" }
     const saved = await input.state.transaction(source, { namespace: "cases", domainSurface: "planner", expectedStorageVersion: current.storageVersion, additionalNamespaces: [{ namespace: "outbox", expectedStorageVersion: outbox.storageVersion }], targetRef: decision.id, targetIncarnation: decision.incarnation, idempotencyKey: `${operation}:accept-analysis`, commandDigest }, async (state, authority, snapshot) => {
       const actual = state.cases[decision.id]
       const stored = state.contributions[request.outputRef]
       const storedRun = state.nativeRuns?.[request.runRef]
-      if (!sameAuthority(authority, context) || !input.verifyAcceptance(snapshot, request, output, context) || !actual || actual.incarnation !== decision.incarnation || actual.version !== decision.version || !actual.participants.includes(context.binding.principalRef) || !stored || !storedRun || digestSfValue(stored) !== digestSfValue(output) || digestSfValue(storedRun) !== digestSfValue(run) || !matches(stored, storedRun, request, context) || actual.ledger.some((item) => item.id === event.id || (item.kind === "analysis-accepted" && item.outputDigest === event.outputDigest && item.analysisRunId === event.analysisRunId))) return { commit: false, value: null }
+      if (!sameAuthority(authority, context) || !input.verifyAcceptance(snapshot, request, output, context) || !actual || actual.incarnation !== decision.incarnation || actual.version !== decision.version || !actual.participants.includes(context.binding.principalRef) || !stored || !storedRun || digestSfValue(stored) !== digestSfValue(output) || digestSfValue(storedRun) !== digestSfValue(run) || !validateAnalysisContribution(stored, storedRun, request, context) || actual.ledger.some((item) => item.id === event.id || (item.kind === "analysis-accepted" && item.outputDigest === event.outputDigest && item.analysisRunId === event.analysisRunId))) return { commit: false, value: null }
       const updated = { ...actual, version: actual.version + 1, ledger: [...actual.ledger, event] }
       state.cases[actual.id] = updated
       if (enqueueSfLedgerEvent(state, event, { installationId: context.binding.installationId, projectId: context.binding.projectId, authority }).status !== "ok") return { commit: false, value: null }
@@ -78,7 +82,7 @@ function sameAuthority(authority: { principalRef: string; policyVersion: string;
   return authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision
 }
 
-function matches(output: ContributionEnvelope, run: SfNativeRunRecord, request: Request, context: TrustedDomainContext) {
+export function validateAnalysisContribution(output: ContributionEnvelope, run: SfNativeRunRecord, request: Request, context: TrustedDomainContext) {
   try {
   if (output.id !== request.outputRef || output.state !== "ready" || output.accessRevision !== context.binding.accessRevision || digestSfContribution(output) !== output.outputDigest || digestSfValue(output.caseRef) !== digestSfValue(request.caseRef) || run.runRef !== request.runRef || run.state !== "ready" || run.outputRef !== output.id || run.principalRef !== context.binding.principalRef || run.accessRevision !== context.binding.accessRevision || run.policyVersion !== context.binding.policyVersion || digestSfValue(run.caseRef) !== digestSfValue(request.caseRef) || !run.native || run.native.sessionID !== run.native.skillReceipt.nativeSessionId || run.runRef !== run.native.skillReceipt.runId || run.native.skillReceipt.runId !== output.runProvenance.runId) return false
   return digestSfValue(run.native.skillReceipt) === digestSfValue(Object.fromEntries(Object.keys(run.native.skillReceipt).map((key) => [key, output.runProvenance[key as keyof typeof output.runProvenance]])))

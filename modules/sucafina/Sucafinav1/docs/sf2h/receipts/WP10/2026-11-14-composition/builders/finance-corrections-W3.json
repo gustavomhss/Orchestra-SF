@@ -1,0 +1,80 @@
+{
+  "builder": "/root/finance_fix_w3",
+  "status": "CLOSED",
+  "baseCandidate": "b7a6b5d4b66acf172762aba72f01e424bf9c0b90",
+  "baseTree": "4fba27f0de68963a0da60debb8ced17fe3abd1e8",
+  "sourceStatus": "AUTHORED_NOT_HOSTED_QUALIFIED",
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/review-services.ts",
+      "bytes": 7837,
+      "sha256": "1878bc879f73501d8ac23d446d98f1471f617d9dfe6ae7f3382a0cd9ae0662da",
+      "gitBlobSha": "e795aa2e8667a0da134a00ce6012fe1f7f1dc712"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/review-portfolio-history.ts",
+      "bytes": 7222,
+      "sha256": "f7dfeb4ac76bcd016c183359169551ee6ede29fe295e6cf80c379c6b95566279",
+      "gitBlobSha": "4d11a5c8c81d99f117709fc65327373055ee2cc1"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/review-read-integrity.ts",
+      "bytes": 3459,
+      "sha256": "95d23ec4e7196d976605f13a27b42dd6a578970dd2a33fcca390679901a023c1",
+      "gitBlobSha": "2bd1fbd753e38f38ef58e4d71f364972ac22703e"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "bytes": 20034,
+      "sha256": "040569a7d8df43328c05f219c31d5faa5cd9f8c1072966711ff8854d1d7b0013",
+      "gitBlobSha": "1ab5d1cabc8aa687681c299c344f6a3dcb035ce2"
+    }
+  ],
+  "changes": [
+    {
+      "finding": "R2-F03",
+      "status": "SOURCE_CORRECTED_HOSTED_RECHECK_PENDING",
+      "behavior": "Default Review decision authorization derives a private case scope for each persisted Portfolio resultRef. It reopens C08 under the current authenticated principal, verifies exact result/schema/request digest, same case incarnation and current membership, then pins and rechecks the full result/case digest before egress. Each result has its own closure; no business.withCase/ambient request binding is required or created. Published Portfolio history/provenance readers and current C09 guards remain intact."
+    },
+    {
+      "finding": "R2-W3-READ-INTEGRITY",
+      "status": "SOURCE_CORRECTED_HOSTED_RECHECK_PENDING",
+      "behavior": "protectSfReviewReads decorates the shared composed Review port before consumers run. HTTP read, rendered page, report, download, comparison and closure keep the published producer ACL checks and additionally verify the exact body against its own original C08 receipt twice around a second source authorization pass. A separate valid review of identical sources cannot authorize a tampered body/receipt. Legacy full-body receipts remain supported; the original writer may differ from the current authorized reader."
+    }
+  ],
+  "hostedSelection": [
+    "test/product/wp10/integration/review-portfolio-http.test.ts"
+  ],
+  "proposedAssertions": [
+    "Real Planner/Portfolio evaluation with explicit pending coverage fixture; persisted C08 result and actual Review preserve receipt",
+    "Fresh Review HTTP GET has no private case binding; current result reader rejects N after case reaches N+1; default Review HTTP still returns the identical preserved body",
+    "Actual rendered page and docx report/download remain authorized through historical route",
+    "Successor comparison reads both immutable bodies",
+    "Membership removal, case incarnation replacement, stored result digest change, binding change, body change and own receipt change deny content",
+    "Legitimate successor citing the same sources cannot authorize corrupted original review",
+    "Source version advance preserves exact authorized history; host revocation suppresses read/download"
+  ],
+  "fixtureLimits": [
+    "The historical human selection/binding are explicit protected C08 fixture data. This does not qualify actual Portfolio selection registration or C12 Apply.",
+    "The published ReviewAgenda has no direct Portfolio item; the fixture captures one selected authorized section through the real Review preserve port, then uses the unmodified default application HTTP/renderer/report/download consumers.",
+    "No browser interaction/native execution/AM/global acceptance is asserted.",
+    "No local tests/typechecks/builds/product imports were executed. All behavior awaits hosted CI and an independent recheck."
+  ],
+  "ownership": {
+    "ownOnly": true,
+    "foreignProductEdits": false,
+    "businessServicesEdited": false,
+    "hostContextEdited": false,
+    "remoteMutations": false
+  },
+  "validationPerformed": [
+    "Read AGENTS, pack ownership and independent R2 W2 findings",
+    "Statically inspected exact producer/result/binding/history/Review/HTTP/report code and relative imports",
+    "Byte/hash check of four own files; no conflict markers"
+  ],
+  "reviewRequirements": [
+    "Freeze a published successor SHA after all builders CLOSED",
+    "Run the scoped hosted test plus own CLI/Sucafina checks",
+    "Independent R2 must recheck; builder report cannot close the findings"
+  ]
+}

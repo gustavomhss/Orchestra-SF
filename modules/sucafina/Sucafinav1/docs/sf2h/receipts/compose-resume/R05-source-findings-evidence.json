@@ -1,0 +1,55 @@
+[
+  {
+    "run": 43616586837,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43616586837",
+    "job": 132512863120,
+    "S": "c4e212a3970be85fc639007a31e156e9ef5883b7",
+    "W": "3d59829e5d9e438cbb443428a9479d7f63b5bf31",
+    "snapshotTree": "dd968ebaa9b8712730aa6ac9c15d0ca7d2beb762",
+    "conclusion": "failure",
+    "log_sha256": "826e36dfbc4515fe5f6ff9c21a10004e4a7af3b01dc216e93f35142ca2b15013",
+    "summary": [
+      " 42 pass",
+      " 1 fail",
+      " 429 expect() calls",
+      "Ran 43 tests across 3 files. [239.74s]"
+    ],
+    "failure": [
+      "(fail) a real case edit between durable receipt and reconciliation preserves the conflict without reapplying [11341.16ms]",
+      "wp04-host-metrics {\"scenario\":\"H06\",\"milliseconds\":24014,\"sqliteTransactions\":6911,\"sqliteAllTransactions\":20,\"sqliteMilliseconds\":34635,\"http\":[{\"mode\":\"decision-prepare-changes\",\"status\":200,\"milliseconds\":700,\"sqliteTransactions\":442},{\"mode\":\"decision-review\",\"status\":200,\"milliseconds\":4935,\"sqliteTransactions\":1243},{\"mode\":\"decision-apply\",\"status\":503,\"milliseconds\":5214,\"sqliteTransactions\":1286},{\"mode\":\"decision-apply\",\"status\":409,\"milliseconds\":3775,\"sqliteTransactions\":1135},{\"mode\":\"decision-apply\",\"status\":200,\"milliseconds\":4081,\"sqliteTransactions\":1194},{\"mode\":\"decision-apply\",\"status\":403,\"milliseconds\":5043,\"sqliteTransactions\":1446}]}"
+    ],
+    "limitation": "Observed on this exact SOURCE W, not executed on compose-resume. Later owner runs may supersede it only with explicit W/S/blob proof.",
+    "finding": "H05 expected HTTP 409 after concurrent selected-case edit between domain receipt and reconciliation; received 200.",
+    "owner": [
+      "WP10",
+      "WP11",
+      "WP04"
+    ]
+  },
+  {
+    "run": 43615955284,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43615955284",
+    "job": 132510939072,
+    "S": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+    "W": "6880666b15dc18bf400c908a8457580526b70f4d",
+    "snapshotTree": "3113a6c8c57dda0cd8ec740faaa3862ca1117a09",
+    "conclusion": "failure",
+    "log_sha256": "bacf25008bb8c9a5ab330211851a652462a294a126cc90a93536a25584a808a0",
+    "summary": [
+      " 2 pass",
+      " 1 fail",
+      " 446 expect() calls",
+      "Ran 3 tests across 2 files. [729.62s]"
+    ],
+    "failure": [
+      "(fail) native question work list uses a public Procurement selection for its own pending case and reopens its real consumers [448134.68ms]",
+      "  ^ this test timed out after 360000ms."
+    ],
+    "limitation": "Observed on this exact SOURCE W, not executed on compose-resume. Later owner runs may supersede it only with explicit W/S/blob proof.",
+    "finding": "Question Work exceeded its 360000ms deadline (448134.68ms); installed host catalog was empty and inferenceExecuted/gnativeAccepted remained false.",
+    "owner": [
+      "WP12",
+      "WP10"
+    ]
+  }
+]

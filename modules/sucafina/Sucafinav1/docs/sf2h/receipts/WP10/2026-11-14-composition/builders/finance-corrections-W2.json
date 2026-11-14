@@ -1,0 +1,250 @@
+{
+  "schema": "sf-wp10-builder-corrections-v1",
+  "builder": "authority_builder",
+  "role": "author; not independent reviewer",
+  "baseReview": "analysis/reviews/R2-finance-W.json",
+  "baseCommit": "eee00ac3ef2b68c987970535ba5bba5e4c6ad01b",
+  "status": "authored-not-hosted",
+  "localProductExecution": false,
+  "remoteWrites": false,
+  "frozenSnapshotModified": false,
+  "findings": {
+    "R2-F01": {
+      "status": "authored-not-hosted",
+      "changes": [
+        "Default preparation composes real C12 Procurement command producer and shared protected evidence writer",
+        "Choice values come from persisted human criterion rules and repeated domain metric reads; confirmations require exact consumed human payload",
+        "Portfolio parent grant is private per call and derived child is checked against actual candidates; source fences remain locked at C08 commit",
+        "Canonical WP11 HTTP action names dispatch to actual factories with closed inputs, current case scope, human admission and historical retry receipt read before recomputation"
+      ],
+      "remaining": "End-to-end prepare-review-apply remains blocked by unchanged published C12 producer missing mandatory reviewDigestFor/revalidateProducer callbacks; no apply success asserted"
+    },
+    "R2-F03": {
+      "status": "authored-not-hosted",
+      "changes": [
+        "Historical SourceRef/record resolution is limited to exact immutable review bodies backed by matching C08 compact or legacy receipt",
+        "Current scoped authentication, field visibility, policy/access revision, period and incarnation are checked in two passes",
+        "Calculation history additionally requires the exact C08 run, canonical persisted scenario request, request/result/source closure digests and current membership in the original case incarnation; never reissues a fresh calculation",
+        "Real portfolio historical provenance and WP08 handoff/WP02 action readers are composed"
+      ]
+    },
+    "W1-owned-errors": {
+      "status": "authored-not-hosted",
+      "changes": [
+        "planner-evidence fixture consumes the admitted UI lease before source issue",
+        "ScenarioResult discriminant/costCoverage relation preserved without weakening type",
+        "Already narrowed failure branch removes impossible second status comparison"
+      ]
+    }
+  },
+  "wiring": {
+    "portfolioHTTP": "const portfolioHttp = extended.portfolioServices.http({ origin: input.origin, mount: input.mount }); then await portfolioHttp(request, surface) in productHttp chain",
+    "surfaces": [
+      "dashboard",
+      "planner",
+      "procurement"
+    ],
+    "procurementEvidenceWrites": "same root WeakSet passed through extended to portfolio-services",
+    "dispose": "extended.dispose calls portfolioServices.dispose",
+    "review": "createSfReviewServices internally composes real history, portfolio history and closure handoffs; optional readers remain explicit"
+  },
+  "hostedTestsRequired": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-evidence.test.ts",
+      "purpose": "Real consumed UI lease permits direct Planner coverage projection without recursion"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-history-composition.test.ts",
+      "purpose": "Real Dashboard record + UI human + C08 preserve/read/update/compare/DOCX; deny revocation, body tamper, incarnation replacement"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-preparation-composition.test.ts",
+      "purpose": "Exact human confirmation and actual C08 receipt replay through canonical HTTP (planner/dashboard), malformed/cross-origin/surface mismatch/change/revocation denial; receipt fixture is synthetic and is not an execution or financial acceptance proof"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-calculation-history.test.ts",
+      "purpose": "Historical calculation original C08 run/request binding accepts current same incarnation membership and rejects wrong digest, removal and incarnation replacement"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/extended-composition.test.ts",
+      "purpose": "Previously authored real extended factory runtime import/schema/source read/build coverage now includes new real default callbacks"
+    }
+  ],
+  "preciseDependencies": [
+    {
+      "owner": "published WP04/C12 producer",
+      "path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+      "details": "createSfPreparedApply call at line 168 omits reviewDigestFor required by product/decisions/prepared-apply.ts; createPreparedExecution call at line 187 omits revalidateProducer required by product/decisions/apply.ts. Do not forge reviewDigest or use permissive producer callback; producer revision or exact compatible published bridge is required."
+    },
+    {
+      "owner": "S0 / independent reviewers",
+      "details": "W2 hosted runs and independent rechecks pending; no native or global acceptance claimed. Foreign 128 archive and exact selected product pins were not edited by this builder."
+    }
+  ],
+  "staticFileChecks": {
+    "missingRelativeImports": [],
+    "trailingWhitespace": []
+  },
+  "unchangedForeignInputs": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+      "gitBlobSha": "0c970d36c5af4f5a58dfca80e1c46cf12d478f5f",
+      "sameAsFrozenW1": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "gitBlobSha": "60c1b9d21f82f0871a8d15886f1949e1396de57a",
+      "sameAsFrozenW1": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+      "gitBlobSha": "fed7feb25d9af2fecebba8d2b1d2e2a6b1a3e0ac",
+      "sameAsFrozenW1": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/port.ts",
+      "gitBlobSha": "1b93fd89a1f544808455c15d12f9c06cc18e21f3",
+      "sameAsFrozenW1": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/calculation-evidence.ts",
+      "gitBlobSha": "a1d2b84c59732b05c5944cd81be82f247c2c9c91",
+      "sameAsFrozenW1": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-request-store.ts",
+      "gitBlobSha": "848fe10663e14ba04ae09c36e1a34bca0c3744c6",
+      "sameAsFrozenW1": true
+    }
+  ],
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/alternative-services.ts",
+      "bytes": 11206,
+      "lines": 128,
+      "sha256": "58e72d8b4fc86bd19b4c144fd2e7d4f8b0fe1e114e6d6a768c132ff17c0d05f1",
+      "gitBlobSha": "072a807ebb7516934e7a738db8c7bdc54cb2e230",
+      "frozenW1BlobSha": "9b51dc6f9345944702e3ed644f51a9ebb9071384"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/change-proposal-services.ts",
+      "bytes": 11433,
+      "lines": 120,
+      "sha256": "ae9e64ca1380298cf2a8e0ae40b407ec59f1f13cfca4e6bd432faa2c6cfff65c",
+      "gitBlobSha": "4ced95ae5b0be38626e59010f48909d54c95f4cd",
+      "frozenW1BlobSha": "f374a0ba3308f3bfbebb1dcb22fdbd235f2fe13e"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-authority.ts",
+      "bytes": 8616,
+      "lines": 94,
+      "sha256": "b2dd13a0ac3ce58dae5558a845cbbde038704aaeea5be3547a57b3d87a322ce1",
+      "gitBlobSha": "1bad407f07af6fd9f92f5dce65f1987b42f14290",
+      "frozenW1BlobSha": "108cea2e30dcd429c51e74969326e5d4c59e7438"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-services.ts",
+      "bytes": 9138,
+      "lines": 102,
+      "sha256": "b4de67b25a7052605fac243222125bd00294d6ff8ce0e6a2c9ddbfb9ee1e1e0b",
+      "gitBlobSha": "140414317a062145b9b20eecaafb13e12e5711e4",
+      "frozenW1BlobSha": "dd0939a04a51c970e548ff3e3fc51f043b1f2765"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-preparation.ts",
+      "bytes": 8439,
+      "lines": 90,
+      "sha256": "1425e5f337c4594b510b3cb37eea0a5af1d59811e7f9df48d876df9ea308df19",
+      "gitBlobSha": "3e20fec88c29fb86fda94581ca29d4c1b30a51c1",
+      "frozenW1BlobSha": null
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-handoff.ts",
+      "bytes": 7777,
+      "lines": 90,
+      "sha256": "6b26d5690e7828f515513994f6d32214fbd86fee774dd431e6192ad8ece8a713",
+      "gitBlobSha": "b0b585b8e552fb600623880de287647388aa2e76",
+      "frozenW1BlobSha": null
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "bytes": 11760,
+      "lines": 120,
+      "sha256": "37b52ca56bf3ad3fce18e642ee4fe8ff30e8955a116f71bbf22b12e971abaf18",
+      "gitBlobSha": "c434de513cb7ceae4acad1fc595e776785ec85af",
+      "frozenW1BlobSha": null
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/review-services.ts",
+      "bytes": 8211,
+      "lines": 99,
+      "sha256": "6430012dda8c3b18864aa43f8b08ce90476e18c28e9f7494c3a0456f54692e9a",
+      "gitBlobSha": "acdd613efe98532e61812fd2fbfd78d6a5891ed3",
+      "frozenW1BlobSha": "e60a73600333bd539ab16a1da31ad4a8ee3a37a7"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/review-history.ts",
+      "bytes": 12004,
+      "lines": 150,
+      "sha256": "2d3fc4f4ca0297eeec13b1376c19911f706734780cfee80e1b3a9453097f3064",
+      "gitBlobSha": "0c9a68225d114ba77617af4a0e3acc2607ea0e5a",
+      "frozenW1BlobSha": null
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/review-calculation-history.ts",
+      "bytes": 5632,
+      "lines": 53,
+      "sha256": "4b9d2f230eaf2c60a94b7a9a5fe92eed2bbccb4a3f23dd483c0e8aa2a16cb772",
+      "gitBlobSha": "012c83ed8b6382bebc0046526985f2f900f04035",
+      "frozenW1BlobSha": null
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/review-handoffs.ts",
+      "bytes": 4213,
+      "lines": 47,
+      "sha256": "a698da3d00ae254a0bf2da470fc66bf89a9e89a168dcf07e8bbdda33b2cd3f61",
+      "gitBlobSha": "5e797c295fdd3f0f3ddbd691aed943f82adb2d4c",
+      "frozenW1BlobSha": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-evidence.test.ts",
+      "bytes": 5047,
+      "lines": 67,
+      "sha256": "b63c203927e5e36a334c98e4e496f1062a8620945d93c356002f6cf51ddd9ac6",
+      "gitBlobSha": "b9ec9e16db9d7a4e11627a4de9138123bbe1f740",
+      "frozenW1BlobSha": "9d397501fe917957afab60625039c89f73ad3486"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/financial-composition-fixture.ts",
+      "bytes": 4899,
+      "lines": 56,
+      "sha256": "a8d7c203ee7a260869f3c2c6e690a2d2097c6006ea6ddd62235a760906681f97",
+      "gitBlobSha": "90f4fcd77fddc0fdd5a7efee51aacc51612cf002",
+      "frozenW1BlobSha": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-history-composition.test.ts",
+      "bytes": 7521,
+      "lines": 92,
+      "sha256": "a4cf2a425b3f7bc8ef078ab229a39666ef85fdb9eb5f5262d1439ac542a39c80",
+      "gitBlobSha": "9ec313c4c474a6d7cddab4120018eaf17640d856",
+      "frozenW1BlobSha": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-preparation-composition.test.ts",
+      "bytes": 8587,
+      "lines": 93,
+      "sha256": "7b03f9fac967ffbe524bb975536f382b95f184fee3c95f957f94a2d5d44f9b4c",
+      "gitBlobSha": "892d1e51744dd2fa12ca8bd61e63ba0541b1d8b5",
+      "frozenW1BlobSha": null
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-calculation-history.test.ts",
+      "bytes": 6237,
+      "lines": 68,
+      "sha256": "fe2bbfe5dcc8af8f5dfbead05706fb22f3d33ff44f10a6fe1ce18181f0f0fc10",
+      "gitBlobSha": "0aaef8f596b5be01cd386f0f2987dfca35517425",
+      "frozenW1BlobSha": null
+    }
+  ]
+}

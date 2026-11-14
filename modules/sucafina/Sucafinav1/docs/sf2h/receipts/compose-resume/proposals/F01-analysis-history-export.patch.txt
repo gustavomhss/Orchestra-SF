@@ -1,0 +1,18 @@
+--- a/modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts
++++ b/modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts
+@@ -26,10 +26,14 @@
+   return `<section><h3>Frame this decision</h3><p>Use the current objective and attached sources to clarify the decision. Review the resulting contribution before accepting it.</p><form data-intent-analysis data-config="${esc(JSON.stringify(config))}"><button type="submit">Prepare decision framing</button><p role="status" aria-live="polite"></p></form></section>`
+ }
+ 
++export function analysisHistory(projection: AuthorizedCaseProjection) {
++  return `<section data-analysis-history data-case="${esc(JSON.stringify({ id: projection.case.id, incarnation: projection.case.incarnation, version: projection.case.version }))}"><h3>Analysis history</h3><p role="status">Loading analysis history…</p><div data-results></div></section>`
++}
++
+ /** The selections and source references are restricted to the authorized case. */
+ export async function forecastAnalysisForm(projection: AuthorizedCaseProjection, runtime: SfHostServices) {
+   if (!runtime.analyses) return "<p>Forecast analysis is currently unavailable.</p>"
+-  const history = `<section data-analysis-history data-case="${esc(JSON.stringify({ id: projection.case.id, incarnation: projection.case.incarnation, version: projection.case.version }))}"><h3>Analysis history</h3><p role="status">Loading analysis history…</p><div data-results></div></section>`
++  const history = analysisHistory(projection)
+   if (!runtime.forecastInputs) return `${history}<p>Forecast analysis is currently unavailable.</p>`
+   const parent = runtime.selected.find((item) => item.skills.some((skill) => skill.id === "sf-explicar-forecast"))
+   const skill = parent?.skills.find((item) => item.id === "sf-explicar-forecast")

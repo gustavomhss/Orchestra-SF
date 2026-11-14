@@ -46,7 +46,7 @@ const caseRef = { id: "case", incarnation: "case-incarnation", version: 1 }
 const initial = (): Snapshot => ({
   data: {
     roleMap: [{ surface: "planner", role: "finance", entra: "finance-group", version: 1, by: "admin" }],
-    versions: [{ id: "v0", year: 2027, closed: 9, lines: [{ id: "line", sec: "opex", el: "licenses", cur: "EUR", b: Array(12).fill(100000), a: Array(12).fill(null), f: [null, null, null, null, null, null, null, null, null, 100000, 112000, 100000] }], fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }],
+    versions: [{ id: "v0", year: 2027, closed: 9, lines: [{ id: "line", sec: "opex", el: "licenses", cur: "EUR", b: Array(12).fill(100000), a: Array(12).fill(null), f: [null, null, null, null, null, null, null, null, null, 100000, 112000, 100000] }], fx: [{ cur: "EUR", rate: null }], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }],
   },
   versions: {}, sequences: {}, audit: [], notices: [],
 })
@@ -56,9 +56,11 @@ test("real Planner sensitivity keeps EUR input separate from USD output and leav
   await chmod(directory, 0o700)
   const request = new Request("https://example.test")
   const context = { kind: "ui", binding: { installationId: "install", projectId: "project", principalRef: "finance", requestId: "request", policyVersion: "policy", accessRevision: "access", expiresAt: "2100-01-01T00:00:00Z" }, lease: {} } as unknown as TrustedUiContext
-  const access = { allowed: true }
+  const access = { allowed: true, historical: false }
   const store = await openLocalStore(directory)
   try {
+    const transactionAll = store.transactionAll
+    if (!transactionAll) throw new Error("cross-surface transactions required")
     const seededPlanner = await store.transaction("planner", async (snapshot) => {
       snapshot.data = initial().data
       return { commit: true, value: true }
@@ -91,7 +93,7 @@ test("real Planner sensitivity keeps EUR input separate from USD output and leav
     expect(comparison.value.baseline.missing.some((item) => item.reason === "missing-fx")).toBe(true)
     const proposalCoverageWrites = new WeakSet<object>()
     const state = createSfProductState({ persistence: store, proposalCoverageWrites, createId: () => "state-incarnation", resolveTarget: async () => ({ incarnation: caseRef.incarnation }), authorize: async () => access.allowed ? { principalRef: "finance", policyVersion: "policy", accessRevision: "access" } : undefined })
-    const evidenceService: BusinessContextService = { resolve: async (ref) => ({ state: access.allowed ? "fresh" : "revoked", ref, accessRevision: "access", checkedAt: "2026-11-13T00:00:00Z" }), context: async ({ refs }) => refs.map((ref) => ({ state: access.allowed ? "fresh" : "revoked", ref, accessRevision: "access", checkedAt: "2026-11-13T00:00:00Z" })), recall: async () => [], emitFromLedger: async () => { throw new Error("unexpected memory") } }
+    const evidenceService: BusinessContextService = { resolve: async (ref) => ({ state: access.allowed ? access.historical ? "historical" : "fresh" : "revoked", ref, accessRevision: "access", checkedAt: "2026-11-13T00:00:00Z" }), context: async ({ refs }) => refs.map((ref) => ({ state: access.allowed ? access.historical ? "historical" : "fresh" : "revoked", ref, accessRevision: "access", checkedAt: "2026-11-13T00:00:00Z" })), recall: async () => [], emitFromLedger: async () => { throw new Error("unexpected memory") } }
     const scenario = { baseRef: "v0", operations: [{ kind: "replace" as const, targetRef: "line:11", amount: 112000, currency: "EUR", period: november }], assumptions: [] }
     const baselineScenario = { ...scenario, operations: [{ ...scenario.operations[0], amount: 100000 }] }
     const selectedPreview = await planner.simulateScenario(scenario, context)
@@ -114,7 +116,7 @@ test("real Planner sensitivity keeps EUR input separate from USD output and leav
     if (selectedStored.status !== "ok" || baselineStored.status !== "ok") return
     const selectedRef = selectedStored.value.resultRef
     const baselineRef = baselineStored.value.resultRef
-    const cases = createDecisionCasePort({ state, host, creationTarget: { ref: caseRef.id, incarnation: caseRef.incarnation }, operationIdentity: () => "case-op", authorizeCase: async () => access.allowed, evidence: evidenceService, createId: () => "unused", now: () => "2026-11-13T00:00:00Z" })
+    const cases = createDecisionCasePort({ state, host, creationTarget: { ref: caseRef.id, incarnation: caseRef.incarnation }, operationIdentity: () => "case-op", authorizeCase: async () => access.allowed, verifyScenarioOperations: async () => access.allowed, evidence: evidenceService, createId: () => "unused", now: () => "2026-11-13T00:00:00Z" })
     coverageAccess.resolve = createDecisionCoverageAccess({ state, host, authorizeCase: async () => access.allowed, verifyEvidence: async () => access.allowed })
     const scenarios = createStoredPlannerScenarioHost({ store: results, cases, planner, coverageRefFor: (ref, alternative) => decisionCoverageRef(ref, alternative.id, alternative.version) })
     const ruleOperation = { id: "criterion-op" }
@@ -135,12 +137,14 @@ test("real Planner sensitivity keeps EUR input separate from USD output and leav
     const selectPortfolio = createPortfolioSelectionResolver({ selection, results, caseFor: async () => ({ status: "ok", value: caseRef }) })
     expect(await selectPortfolio(analysisRequest, context)).toEqual({ status: "unavailable", reason: "portfolio-analysis-not-yet-persisted" })
     expect((await selection.register({ caseRef, baselineAlternativeId: "baseline", alternativeId: "selected", criteria: ["renewal-difference"], expectedVersion: 0 }, context)).status).toBe("ok")
-    const analysis = createPortfolioAnalysis({ planner: plannerWithCriteria, results, bindings: comparisonBindings, persist: createPlannerResultPersistence({ store: results, scenarios, resolveCase: async () => ({ status: "ok", value: caseRef }) }), select: selectPortfolio, idempotencyKey: async (digest) => `portfolio-${digest}` })
+    const analysis = createPortfolioAnalysis({ planner: plannerWithCriteria, results, bindings: comparisonBindings, persist: createPlannerResultPersistence({ store: results, scenarios, comparisonBindings, replay: plannerWithCriteria, resolveCase: async () => ({ status: "ok", value: caseRef }) }), select: selectPortfolio, idempotencyKey: async (digest) => `portfolio-${digest}` })
     const compared = await analysis.evaluate(analysisRequest, context)
     expect(compared.status).toBe("ok")
     if (compared.status !== "ok") return
     expect(compared.value.constraints[0].state).toBe("unknown")
     expect(await analysis.revalidate(compared.value.analysis, context)).toBe(true)
+    expect(await analysis.revalidate({ ...compared.value.analysis, scenarioResultRef: baselineRef }, context)).toBe(false)
+    expect(await analysis.revalidate({ ...compared.value.analysis, scenario: { ...compared.value.analysis.scenario, knownSubtotal: 1 } }, context)).toBe(false)
     const orphanComparison = await results.write({ kind: "comparison", result: compared.value.analysis.comparison, caseRef, requestDigest: digestSfValue({ scenarioRefs: [baselineRef, selectedRef], criteria: ["renewal-difference"] }), sourceRefs: [evidence], idempotencyKey: "orphan-comparison" }, context)
     expect(orphanComparison.status).toBe("ok")
     if (orphanComparison.status === "ok") expect(await analysis.revalidate({ ...compared.value.analysis, comparisonRef: orphanComparison.value.resultRef }, context)).toBe(false)
@@ -156,6 +160,9 @@ test("real Planner sensitivity keeps EUR input separate from USD output and leav
     const productCatalog = await product.http.catalog([otherCase, caseRef], context)
     expect(productCatalog.status === "ok" && productCatalog.value.cases.map((entry) => entry.caseRef)).toEqual([otherCase, caseRef])
     if (productCatalog.status === "ok") expect(new Set(productCatalog.value.cases.map((entry) => entry.alternatives[0].candidateRef)).size).toBe(2)
+    access.historical = true
+    expect((await product.http.catalog([caseRef], context)).status).toBe("unavailable")
+    access.historical = false
     expect((await product.http.preview(portfolioRequest, { ...caseRef, version: 2 }, context)).status).toBe("denied")
     expect((await product.http.preview(portfolioRequest, caseRef, context)).status).toBe("ok")
     const unitsFromHttp = await product.http.sensitivityUnits({ caseRef, scenarioRef: selectedRef, baselineRef, parameterRef: "line:11" }, context)
@@ -215,7 +222,7 @@ test("real Planner sensitivity keeps EUR input separate from USD output and leav
     const beforeRead = ids.value
     expect((await product.http.readSensitivity(saved.value.sensitivityResultRef, caseRef, context)).status).toBe("ok")
     expect(ids.value).toBe(beforeRead)
-    const verifier = createPortfolioProofVerifier({ cases, planner: plannerWithCriteria, sources, evidence: evidenceService, results, revalidate: host.revalidate, readSourceFences: async () => access.allowed ? store.transactionAll(async (snapshots) => ({ commit: false, value: { dashboard: sfRunSourceFence(snapshots.dashboard), planner: sfRunSourceFence(snapshots.planner), procurement: sfRunSourceFence(snapshots.procurement) } })) : undefined, lockedSourceFences: () => { const snapshots = store.currentSnapshots?.(); return snapshots ? { dashboard: sfRunSourceFence(snapshots.dashboard), planner: sfRunSourceFence(snapshots.planner), procurement: sfRunSourceFence(snapshots.procurement) } : undefined }, caseFor: async () => ({ status: "ok", value: caseRef }), idempotencyKey: async (digest) => `verify-${digest}`, decisions: { prepareChanges: async () => ({ status: "unavailable", reason: "unused" }) }, createReceipt: async () => undefined, candidateCoverageRefFor: async (candidate) => { const ref = parseCaseRef(candidate.caseRef); return ref && candidate.result ? { status: "ok", value: decisionCoverageRef(ref, candidate.result.costCoverage.alternativeId, candidate.result.costCoverage.alternativeVersion) } : { status: "unavailable", reason: "candidate-unavailable" } }, revalidateAnalysis: analysis.revalidate, units: issuer, sensitivityPreview: (input, trusted) => comparePlannerPreview({ host, sources, scenarios, planner }, input, trusted) })
+    const verifier = createPortfolioProofVerifier({ cases, planner: plannerWithCriteria, sources, evidence: evidenceService, results, revalidate: host.revalidate, readSourceFences: async () => access.allowed ? transactionAll(async (snapshots) => ({ commit: false, value: { dashboard: sfRunSourceFence(snapshots.dashboard), planner: sfRunSourceFence(snapshots.planner), procurement: sfRunSourceFence(snapshots.procurement) } })) : undefined, lockedSourceFences: () => { const snapshots = store.currentSnapshots?.(); return snapshots ? { dashboard: sfRunSourceFence(snapshots.dashboard), planner: sfRunSourceFence(snapshots.planner), procurement: sfRunSourceFence(snapshots.procurement) } : undefined }, caseFor: async () => ({ status: "ok", value: caseRef }), idempotencyKey: async (digest) => `verify-${digest}`, decisions: { prepareChanges: async () => ({ status: "unavailable", reason: "unused" }) }, createReceipt: async () => undefined, candidateCoverageRefFor: async (candidate) => { const ref = parseCaseRef(candidate.caseRef); return ref && candidate.result ? { status: "ok", value: decisionCoverageRef(ref, candidate.result.costCoverage.alternativeId, candidate.result.costCoverage.alternativeVersion) } : { status: "unavailable", reason: "candidate-unavailable" } }, revalidateAnalysis: analysis.revalidate, units: issuer, sensitivityPreview: (input, trusted) => comparePlannerPreview({ host, sources, scenarios, planner }, input, trusted) })
     const portfolioProof = await portfolioBindings.read({ caseRef, resultRef: portfolioSaved.value.portfolioResultRef }, context)
     const portfolioRecord = await results.read({ kind: "portfolio", resultRef: portfolioSaved.value.portfolioResultRef }, context)
     const comparisonProof = await comparisonBindings.read({ caseRef, resultRef: compared.value.analysis.comparisonRef }, context)
@@ -227,7 +234,7 @@ test("real Planner sensitivity keeps EUR input separate from USD output and leav
     expect(await verifier.verifyPortfolio(portfolioProof.value, portfolioRecord.value, context)).toBe(true)
     expect(await verifier.verifyComparison(comparisonProof.value, comparisonRecord.value, context)).toBe(true)
     expect(await verifier.verifySensitivity(sensitivityProof.value, sensitivityRecord.value, context)).toBe(true)
-    const fence = await store.transactionAll(async (snapshots) => ({ commit: false, value: { current: verifier.verifySnapshot(snapshots.planner, portfolioProof.value, context), changed: verifier.verifySnapshot({ ...snapshots.planner, data: { ...snapshots.planner.data, changed: true } }, portfolioProof.value, context) } }))
+    const fence = await transactionAll(async (snapshots) => ({ commit: false, value: { current: verifier.verifySnapshot(snapshots.planner, portfolioProof.value, context), changed: verifier.verifySnapshot({ ...snapshots.planner, data: { ...snapshots.planner.data, changed: true } }, portfolioProof.value, context) } }))
     expect(fence).toEqual({ current: true, changed: false })
     expect(ids.value).toBe(beforeVerification)
     expect(await persistent.evaluateAndStore(sensitivityRequest, caseRef, context)).toEqual(saved)

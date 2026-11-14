@@ -1,0 +1,12 @@
+{
+  "schema": "sf2-astra-own-review-correction-v1",
+  "finding": "UX-WP10-BI-DETAIL-REFRESH-05",
+  "owner": "WP10/root",
+  "base_head": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+  "path": "apps/cli/src/sucafina-product/extended-bi-browser.ts",
+  "prior_staged_blob": "debf7353155b88cd98c2ab2a2156b23f5a0e4fb0",
+  "final_blob": "e491194f76b2183d04666a7f82c53a9490822678",
+  "reason": "Retain destination identifiers and reading position only. Every automatic/focus/manual refresh obtains fresh BI projection membership and reopens protected detail under new C16 invocation. Preserve local table scroll, document scroll and focus after successful reauthorization. Clear detail on selection/filter/revocation/logout/close and report invalidated membership explicitly.",
+  "runtime_evidence": "PENDING_ACTIONS_BROWSER; positive decision-promote journey remains blocked by foreign WP11 producer",
+  "author_is_not_independent_reviewer": true
+}

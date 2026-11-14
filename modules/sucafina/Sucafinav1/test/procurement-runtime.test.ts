@@ -1,7 +1,8 @@
 import { act } from "../../porta/act.ts"
-import { legalInitialSettings } from "../src/initial-settings.ts"
+import { initialProcurementSettings, legalInitialSettings } from "../src/initial-settings.ts"
 import { expect, test } from "bun:test"
 import { domain, pages, render } from "../runtime/procurement.ts"
+import { object, rows } from "../runtime/contract.ts"
 import type { Snapshot } from "../runtime/contract.ts"
 const actor = { id: "directory-admin", canWrite: true, roles: ["admin"] }
 const at = "2026-11-11T12:00:00Z"
@@ -159,23 +160,44 @@ test("complete procurement field roundtrip and frozen approvals survive settings
         page,
         action,
         id,
-        version: state.versions[page === "Settings" ? "settings" : `requests:${id ?? ""}`]?.version ?? 0,
+        version: state.versions[page === "Settings" ? "settings" : `${page === "Suppliers" ? "suppliers" : "requests"}:${id ?? ""}`]?.version ?? 0,
         values,
       },
       environment,
     )
   expect(run(actor, "reset", {}, undefined, "Settings").ok).toBe(true)
+  const completeSettings = {
+    ...initialProcurementSettings(),
+    levels: [{ id: "L1", name: "Level one", threshold: 0, holderId: "holder" }, { id: "L2", name: "Level two", threshold: 10000, holderId: "senior-holder" }],
+    paymentTerms: ["Net 30", "Negotiated milestone"], categories: ["Services", "Software"], incoterms: ["N/A (service)", "DAP"],
+    billingAddress: "Recorded billing address", defaultDeliveryAddress: "Recorded delivery address", fxUpdated: "2026-11-10",
+    reminderDays: 3, escalationDays: 7, uploadCap: 8000000,
+  }
   expect(
     run(
       actor,
       "save",
-      {
-        levels: [{ id: "L1", name: "Level one", threshold: 0, holderId: "holder" }],
-      },
+      completeSettings,
       undefined,
       "Settings",
     ).ok,
   ).toBe(true)
+  expect(domain.view(state, actor, environment).data.settings).toEqual(completeSettings)
+  // Retained imported allocation must remain the floor for the next real PO.
+  object(object(state.data.store).issued).po = ["PO-2026-9999"]
+  const supplier = {
+    legalName: "Vendor", tradingName: "Vendor trading", type: "company", country: "CH", address: "Supplier address", taxId: "CH-123", regNo: "REG-123",
+    contactName: "Commercial contact", contactEmail: "commercial@example.test", contactPhone: "+410000001", financeEmail: "finance@example.test",
+    paymentTerms: "Net 30", currency: "USD", incoterm: "N/A (service)", riskRating: "low", dueDiligence: true, sanctionsDate: "2026-11-01",
+    nda: true, dpa: true, certifications: "ISO 9001", categories: ["Services", "Software"],
+    contacts: [{ name: "Commercial contact", email: "commercial@example.test", phone: "+410000001" }, { name: "Delivery contact", email: "delivery@example.test", phone: "+410000002" }],
+    commercial: { notes: "Agreed service terms" }, compliance: { notes: "Recorded due diligence" }, notes: "Supplier notes",
+  }
+  expect(run(buyer, "create", supplier, undefined, "Suppliers").ok).toBe(true)
+  expect(run(buyer, "save", supplier, "vendor", "Suppliers").ok).toBe(true)
+  const savedSupplier = rows(domain.view(state, buyer, environment).data.suppliers).find((row) => row.id === "vendor")
+  expect(savedSupplier).toMatchObject(supplier)
+  expect(savedSupplier?.contacts).toEqual(supplier.contacts)
   const pr = {
     title: "Services",
     type: "service",
@@ -184,8 +206,12 @@ test("complete procurement field roundtrip and frozen approvals survive settings
     costCenter: "IT",
     needBy: "2026-12-01",
     justification: "Delivery",
-    recurring: false,
+    recurring: true,
+    frequency: "quarterly",
+    estAnnual: 2000,
     expenseType: "OPEX",
+    category: "Services",
+    requesterName: "Recorded requester contact",
   }
   const creation = run(requester, "create", { pr })
   expect(creation.ok).toBe(true)
@@ -215,7 +241,7 @@ test("complete procurement field roundtrip and frozen approvals survive settings
       {
         id: "q1",
         supplier: "Vendor",
-        supplierId: null,
+        supplierId: "vendor",
         currency: "USD",
         total: 500,
         qty: 1,
@@ -223,18 +249,20 @@ test("complete procurement field roundtrip and frozen approvals survive settings
         techPass: true,
         scores: [5],
         cscores: [],
+        description: "First complete quotation", notes: "Quoted service scope", attachments: [{ id: "quote-recorded-1", name: "quote.pdf" }],
       },
+      { id: "q2", supplier: "Alternative Vendor", supplierId: null, currency: "USD", total: 600, qty: 2, unitPrice: 300, techPass: true, scores: [4], cscores: [], description: "Second complete quotation", notes: "Alternative terms", attachments: [] },
     ],
     evaluator: "Engineer",
     selectedId: "q1",
-    fewQuotesJustification: "Sole source",
+    fewQuotesJustification: "Two suppliers responded",
     selectionJustification: "Best",
     contractStrategy: "new",
     weights: {
       tech: 60,
       comm: 40,
-      criteria: [{ weight: 1 }],
-      commCriteria: [{ weight: 1, auto: true }],
+      criteria: [{ name: "Recorded technical fit", weight: 1 }],
+      commCriteria: [{ name: "Recorded price", weight: 1, auto: true }],
     },
   }
   expect(run(buyer, "save", { sourcing }, id).ok).toBe(true)
@@ -243,14 +271,22 @@ test("complete procurement field roundtrip and frozen approvals survive settings
   const newHolder = { ...holder, id: "different" }
   expect(run(newHolder, "approve", {}, id).ok).toBe(true)
   const po = {
+    currency: "USD",
+    supplier: "Vendor",
+    supplierId: "vendor",
     description: "Consulting deliverable",
     paymentTerms: "Net 30",
     deliveryDate: "2026-12-20",
     deliveryConditions: "Remote",
     contractRef: "C-1",
     assetRef: "Text reference",
-    lines: [{ description: "Milestone", qty: 1, unitPrice: 500 }],
+    lines: [
+      { description: "Milestone one", desc: "Short one", unit: "day", uom: "DAY", notes: "First line notes", qty: 2, unitPrice: 100 },
+      { description: "Milestone two", desc: "Short two", unit: "deliverable", uom: "EA", notes: "Second line notes", qty: 1, unitPrice: 300 },
+    ],
     expenseType: "OPEX",
+    incoterm: "N/A (service)", incoterms: "Negotiated service terms", supplierContact: "Delivery contact", quoteRef: "Q-2026-1",
+    billingAddress: "Negotiated billing address", deliveryAddress: "Negotiated delivery address", acceptance: "Recorded acceptance conditions", warranty: "12 months", notes: "Order notes",
   }
   expect(run(buyer, "submit_po", { po }, id).ok).toBe(true)
   expect(run(newHolder, "approve", {}, id).ok).toBe(true)
@@ -258,8 +294,13 @@ test("complete procurement field roundtrip and frozen approvals survive settings
   const view = domain.view(state, buyer, environment)
   const record = (view.data.requests as Record<string, unknown>[])[0]!
   expect(record.status).toBe("po_issued")
+  expect(record.pr).toEqual({ ...pr, contractRecommended: true })
   expect(record.po).toMatchObject(po)
+  expect(object(record.po).lines).toEqual(po.lines)
   expect(record.sourcing).toMatchObject(sourcing)
+  expect(object(record.sourcing).quotes).toEqual(sourcing.quotes)
+  expect(object(record.po).number).toBe("PO-2026-10000")
+  expect(object(object(state.data.store).issued).po).toEqual(["PO-2026-9999", "PO-2026-10000"])
   expect(record.po).toMatchObject({ approvalBaseCurrency: "USD" })
   expect(record.sourcing).toMatchObject({ approvalBaseCurrency: "USD" })
   const changedBase = structuredClone(state)

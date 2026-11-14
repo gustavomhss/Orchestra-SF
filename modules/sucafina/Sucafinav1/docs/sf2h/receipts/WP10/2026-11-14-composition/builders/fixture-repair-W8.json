@@ -1,0 +1,385 @@
+{
+  "schema": "sf2.wp10.builder-receipt.v1",
+  "created_at": "2026-11-14T05:30:19.084450+00:00",
+  "builder": {
+    "id": "/root/fixture_repair_w6",
+    "role": "author of own WP10 tests/helpers",
+    "lease": "CLOSED",
+    "independent_reviewer": false
+  },
+  "task": "W8 DependencyConflict counterproof partition and causal instrumentation; BI real browser synchronization and monthly authority/privacy fixture",
+  "source_lineage": {
+    "W7": {
+      "sha": "207bf82a7a7beade4e6909a5d74ed647bfc5aad6",
+      "tree": "3cb60a653fd340732d0e5f437c2e90f700976f03",
+      "parent": "9c427835a029ac8594421436bffb4c5c23da059c",
+      "manifest": {
+        "path": "analysis/frozen-W7/manifest.json",
+        "sha256": "ea2b3a5b9c8c0b288db9d2c46ae1c4fc203980ef5858f3bb9cf9ab00b9c1e00e",
+        "git_blob_sha1": "c8c89f39f460dc51f3082179f74c398f375fca70",
+        "bytes": 263373
+      }
+    },
+    "prior_authorship_receipt": {
+      "path": "analysis/fixture-repair-W7.json",
+      "sha256": "8c385085e2ed5dc7134fdaa602e017ccc06db60b5c6e77b31610605ae5b79e74",
+      "git_blob_sha1": "e946790ad76c9731adcf57e1be6ae121cb424a6f",
+      "bytes": 10178
+    }
+  },
+  "authored_files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/analysis-variants.test.ts",
+      "sha256": "86df3162af57014a0c6ebbe26e9d13b4543e5ad7f004acd92a3a1ddce59971b5",
+      "git_blob_sha1": "3dedc8456cd0772ee58546396554173bd3c18939",
+      "bytes": 37626,
+      "base": {
+        "label": "W7",
+        "sha256": "dccae3cd18f9c1ada1858c9e1bc5c951da4ea711fc329d69951a0ad88fb25f84",
+        "git_blob_sha1": "d7618930f72c0b76f8725c83e84fbbc35ec3e399",
+        "bytes": 32157
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-access-browser-fixture.ts",
+      "sha256": "f799156500b271750f73f955c74266db9b746bb515c80b43ff884adc3dd2379d",
+      "git_blob_sha1": "0c0146ec784c5a653bdebcc84ce05e779e159b63",
+      "bytes": 10927,
+      "base": {
+        "label": "W7",
+        "sha256": "e1684d618d27ab8f0ea45463955d56003acde6d78d6140f5538bbd41c4c0e86c",
+        "git_blob_sha1": "c491c4fe6e41a2a255f0c3e9c37b7f3d6489ef9f",
+        "bytes": 7804
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-case-access.test.ts",
+      "sha256": "610dfb92c0615a3596bc5533ebd9936f69b1e3c9af1d658f4b3da004b1ed3d72",
+      "git_blob_sha1": "f0c9e6514779bfd8a38d0183dee7e7862890525b",
+      "bytes": 13956,
+      "base": {
+        "label": "W7",
+        "sha256": "56ef9fe0f114860370324e5aced89717b221f4c6bba968f1041dbd77c26e5924",
+        "git_blob_sha1": "58c543793d424ce9c2d5e5c30153040467be7540",
+        "bytes": 13162
+      }
+    }
+  ],
+  "patch": {
+    "path": "analysis/fixture-repair-W8.patch",
+    "sha256": "898e9e98cf36ae52166564dd8fa322c373a550ff141ecb6b3c1342ec361e5b63",
+    "git_blob_sha1": "c25dc6b519899d451fbee96dd1403ffb5015abe2",
+    "bytes": 55987
+  },
+  "hosted_input": [
+    {
+      "path": "analysis/hosted/W6-consumers-results.json",
+      "sha256": "d84640a2d0a0378ea24cafcbc5385759ab78baaf0fe2594c42a87ead5ebdbe4d",
+      "git_blob_sha1": "8d6f1537e42db7402e6d4e1416d3cc5c4a872b24",
+      "bytes": 49212,
+      "W": "d1ca0b2b02936d4824a9201af5c133d7bbf2056c",
+      "treeW": "53c7bc80f4e6c65c492a233d2cd26b4d0c5c8144",
+      "S": "31aaeeb33fc613cb9a8ef2bd3129d3ccf008d6de",
+      "tree": "613da74998287af78d247a776dccea9d36ac865c",
+      "runId": 43557944494,
+      "jobId": 132334945491,
+      "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43557944494",
+      "conclusion": "failure",
+      "logSha256": "6224636be71c595446b889d2e6a11d48605203ed6c6c5c01c005e361933d488b",
+      "observedCounts": {
+        "pass": 152,
+        "fail": 4
+      }
+    },
+    {
+      "path": "analysis/hosted/W7-core-results.json",
+      "sha256": "49faa2d75ffa0219a967d7cb37e3f95778b76a621aaad7247ddc161277a47a78",
+      "git_blob_sha1": "e3f3a8c4bfa59ab8144f7e7baac6ea19c088ed43",
+      "bytes": 59152,
+      "W": "207bf82a7a7beade4e6909a5d74ed647bfc5aad6",
+      "treeW": "3cb60a653fd340732d0e5f437c2e90f700976f03",
+      "S": "4d531e61bb48efeea3eb0198e86bb5b2c8595025",
+      "tree": "75e1a5f2cf7862ebd9a39c7cdec752fdd7e77c15",
+      "runId": 43559996968,
+      "jobId": 132341319922,
+      "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43559996968",
+      "conclusion": "failure",
+      "logSha256": "db911d74372745fbf8c38884deaf9b354580717addc64cea1fc1c5764be2a4f4",
+      "observedCounts": {
+        "pass": 151,
+        "skip": 2,
+        "fail": 4
+      }
+    }
+  ],
+  "findings": [
+    "W6 consumers DependencyConflict observed109236.14ms for a60000ms outer test, with15 actual accept calls and repeated full dependency composition. No exception proving a dependency conflict was logged: it was a timeout. Per-call latency remains unknown until the new hosted phase/counter output.",
+    "W7 BI setup reached actual comparison persistence at50830ms and BI05 options at50946ms. Browser prepare started50947ms; the pre-created10s waitForResponse promise rejected before the helper awaited it, and helper cleanup/return was only observed at75980ms. Neither BI private DOM clearing nor delayed response discard was reached.",
+    "W7 Review historical read/page/report/download/successor completed. Comparison began75028ms and cooperatively aborted105022ms; no Review browser or revocation acceptance was reached. Review is unchanged by this lease."
+  ],
+  "dependency_conflict": {
+    "groups": {
+      "states": 4,
+      "relations": 5,
+      "declarations": 3,
+      "evidence": 4,
+      "scope": 3
+    },
+    "original_semantic_accept_count": 15,
+    "new_positive_baselines": 4,
+    "new_total_accept_count": 19,
+    "original_accept_mapping": [
+      {
+        "original_accept": 1,
+        "case": "valid literal human declaration, needs-input",
+        "group": "states",
+        "group_accept": 1
+      },
+      {
+        "original_accept": 2,
+        "case": "valid selected related milestone, needs-input",
+        "group": "states",
+        "group_accept": 2
+      },
+      {
+        "original_accept": 3,
+        "case": "payload state conflict",
+        "group": "states",
+        "group_accept": 3
+      },
+      {
+        "original_accept": 4,
+        "case": "payload state unavailable",
+        "group": "states",
+        "group_accept": 4
+      },
+      {
+        "original_accept": 5,
+        "case": "reversed fromRef/toRef",
+        "group": "relations",
+        "group_accept": 2
+      },
+      {
+        "original_accept": 6,
+        "case": "unselected declaration index1",
+        "group": "relations",
+        "group_accept": 3
+      },
+      {
+        "original_accept": 7,
+        "case": "outside/unselected milestone",
+        "group": "relations",
+        "group_accept": 4
+      },
+      {
+        "original_accept": 8,
+        "case": "selected but unrelated milestone",
+        "group": "relations",
+        "group_accept": 5
+      },
+      {
+        "original_accept": 9,
+        "case": "invented capacity reason",
+        "group": "declarations",
+        "group_accept": 2
+      },
+      {
+        "original_accept": 10,
+        "case": "trimmed original declaration reason",
+        "group": "declarations",
+        "group_accept": 3
+      },
+      {
+        "original_accept": 11,
+        "case": "missing payload evidence",
+        "group": "evidence",
+        "group_accept": 2
+      },
+      {
+        "original_accept": 12,
+        "case": "duplicated payload evidence",
+        "group": "evidence",
+        "group_accept": 3
+      },
+      {
+        "original_accept": 13,
+        "case": "empty envelope evidence",
+        "group": "evidence",
+        "group_accept": 4
+      },
+      {
+        "original_accept": 14,
+        "case": "tampered selected input",
+        "group": "scope",
+        "group_accept": 2
+      },
+      {
+        "original_accept": 15,
+        "case": "same output after real C06 relation removal",
+        "group": "scope",
+        "group_accept": 3
+      }
+    ],
+    "additional_baselines": {
+      "relations": 1,
+      "declarations": 1,
+      "evidence": 1,
+      "scope": 1
+    },
+    "fixture": "Each group creates the same original SQLite/C08 case and createChoiceSnapshot fixture, actual source records, actual human-confirmed relation, original selection and real prepare/verifier. No additional seeded evidence or financial output; no result/auth/source cache.",
+    "budget": {
+      "outer_per_group_ms": 60000,
+      "cooperative_per_group_ms": 50000,
+      "other_fixture_cooperative_ms": 25000,
+      "other_outer_tests_unchanged_ms": 30000
+    },
+    "instrumentation": {
+      "markers": [
+        "SF_COMPOSITION_PHASE",
+        "SF_ANALYSIS_VARIANTS_COUNTERS",
+        "SF_ANALYSIS_VARIANTS_CLEANUP"
+      ],
+      "counters": [
+        "transactions",
+        "allTransactions",
+        "snapshotCopies",
+        "authentications",
+        "environments",
+        "caseReads",
+        "relationReads",
+        "dashboardReads",
+        "evidenceContexts",
+        "evidenceResolutions"
+      ],
+      "semantics": "Transparent forwarding of actual methods. Phase counter deltas include nested phases and must not be summed as disjoint totals. Group label scopes prepare/accept counters."
+    },
+    "cancellation": "Original Request carries AbortSignal; transaction/currentSnapshots, authenticate/environment/command identity and measured producer boundaries check deadline. Expiry throws after a phase and again during cleanup even when a product port translates boundary cancellation into unavailable; a negative cannot pass through timeout. Human leases, business, store and directory are owned and cleaned on failure.",
+    "performance_qualification": "Partitioning isolates independent counterexamples within their per-test budget; it is not an optimization or acceptance of production latency. All original authoritative rereads remain."
+  },
+  "bi_browser": {
+    "preserved": [
+      "actual BI05 empty-queue options positive",
+      "actual BI09 exact tuple options",
+      "real UI receipt with input/result digests",
+      "same-admission replay denial",
+      "actual source200 before revocation",
+      "session and fresh host admission remain valid",
+      "case-only participant removal",
+      "actual source403 without private payload",
+      "private table/buttons/links/selection/bootstrap cleared",
+      "late actual200 cannot repopulate DOM",
+      "actual data403 after case revocation"
+    ],
+    "synchronization": "Observers are armed before navigation/click and every deferred rejection immediately has a handler. Request arrival and actual browser response delivery retain10s bounds; actual handler work is awaited under the unchanged105s whole-test AbortSignal. goto uses commit and retains15s. The real bundle is prepared inside the same total deadline before navigation. There is no authenticated response cache or fake status/body.",
+    "cleanup": "Owned Chromium cleanup retained. On close, release held source and reject observed gates; catches abort real routes. Fixture and browser disposers are registered before phase post-check, so expiry there cannot leak them.",
+    "budget": {
+      "outer_ms": 120000,
+      "whole_test_cooperative_ms": 105000,
+      "browser_launch_ms": 15000,
+      "navigation_ms": 15000,
+      "request_and_delivery_ms": 10000
+    },
+    "period": {
+      "case_projection_and_coverage": {
+        "start": "2026-01-01",
+        "end": "2026-01-31"
+      },
+      "unchanged_source_evidence": {
+        "start": "2026-01-01",
+        "end": "2026-12-31"
+      },
+      "source_support": "decision-baseline-services projects case horizon; baseline-coverage permits contained subperiod with exact source identity; scenario-port uses assessment.horizon; stored-scenarios reprojects result.horizon; Planner accepts whole months; source links use the actual annual record/version."
+    },
+    "financial_qualification": "This is a one-month authority/privacy fixture with two actual annual forecast sources, human coverage registration, two real human HTTP promotions, actual comparison and C08 persistence. It retains pending cost coverage, conditioned comparison, null totals and zero choices. It does not prove annual or complete financial coverage.",
+    "seam_qualification": "Actual Chromium executes the composed HTML/bundle and browser requests. Playwright route forwards exact handler Response status/headers/bytes. This is an HTTP/UI transport seam, not TCP hosting, installed identity, native tool execution or global epic acceptance.",
+    "source_inspection": [
+      {
+        "path": "apps/cli/src/sucafina-product/decision-baseline-services.ts",
+        "sha256": "17fdc608af6af1bca5780637d37419d49301b9c4158e36f89d701accd1cadd1e",
+        "git_blob_sha1": "1c5cc2cc2f3c0f5aff1ce730972a2eda80292dab",
+        "bytes": 8790
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/baseline-coverage.ts",
+        "sha256": "c8c9d623b86b1ef78822d94d575c5446d1c289076850bfae06344023839e393d",
+        "git_blob_sha1": "6ce45e74568c0b8ab35fa6b39083bb556bdfe08c",
+        "bytes": 21199
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+        "sha256": "731e566e9e07bca8e2ee4a8077b2983dc16671915304a1eba3b9bc84f2d3b50c",
+        "git_blob_sha1": "f474ed278b7f41e1a754d6ba7a59d2108b6785d3",
+        "bytes": 14052
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+        "sha256": "659c483b654c54765a6f5636e44c93537f9cb0ef19ee136256515b9665f1fbc9",
+        "git_blob_sha1": "5433cb0518e770ff1a4dc1fa0fe14f8b89869c9b",
+        "bytes": 3864
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+        "sha256": "d66bf0f6e47bbd7e8223c362fa1a67a4625f2cc1156eb0d0a46dc1a1c9419456",
+        "git_blob_sha1": "dba62042653bd061fa099e2956cae4d11a0475ce",
+        "bytes": 24849
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/extended-source-links.ts",
+        "sha256": "f1bdc31ba1bb8ae968cd9c48a3869ab2d0c231ce22a297d72800a1cbba367ce5",
+        "git_blob_sha1": "147b3a687aa8786a7429ba8e7452db40290081d5",
+        "bytes": 3994
+      }
+    ]
+  },
+  "review_latency_ms": {
+    "read": 776,
+    "read_after_case_advance": 5326,
+    "page": 10387,
+    "report": 27276,
+    "download": 17117,
+    "successor": 11922,
+    "comparison_until_abort": 29995,
+    "total_at_abort": 105022
+  },
+  "unchanged_review": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+    "sha256": "b10bddf3ce9230897182c88032ff99f63180bcca15f62e0932792aad9ca33afb",
+    "git_blob_sha1": "9653f61955db808e761a0f8e6e7ab497e9b4ac17",
+    "bytes": 28367,
+    "matches_frozen_W7": true
+  },
+  "static_checks": {
+    "five_other_analysis_test_bodies_byte_identical": [
+      "dependency variants reopen exact C09 choice and Dashboard milestone and preserve human declarations",
+      "dependency variants refuse absent choices, noncanonical IDs, ambiguous milestones, stale evidence and revocation",
+      "real Dashboard confirmations preserve stale and executive output cannot erase the confirmation gap",
+      "C06 Planner summary uses the selected subperiod of annual source evidence",
+      "confirmation composition rejects a real source change between observations and never skips unavailable matches"
+    ],
+    "ten_invalid_payloads_identical": true,
+    "payload_indices_cover_each_0_to_9_once": true,
+    "all_prior_BI_expectations_preserved": true,
+    "goto_status200_preserved_with_commit_wait": true,
+    "three_new_period_assertion_statements": true,
+    "no_trailing_whitespace": true,
+    "budget_increase": false
+  },
+  "validation": {
+    "product_tests_local": false,
+    "product_builds_local": false,
+    "typechecks_local": false,
+    "imports_or_servers_local": false,
+    "browser_execution_local": false,
+    "remote_mutations_by_builder": false,
+    "published_or_hosted_W8_result": null,
+    "native_acceptance": false,
+    "global_acceptance": false
+  },
+  "pending": [
+    "Root publish immutable W8 and run hosted surgical CI for analysis-variants and BI case access",
+    "Observe all five dependency groups plus successful cleanup; inspect per-call counts and latency",
+    "Observe actual BI options/data/source positives, replay denial, case403, private DOM clear and late200 discard within105s",
+    "Review latency remains an independent root-owned pending risk; no budget adjustment here",
+    "Independent R1/R2/R3 review of the published W8 source; builder self-check is not independent review"
+  ]
+}

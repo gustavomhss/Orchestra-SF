@@ -1,0 +1,114 @@
+{
+  "W": "00304ac25cc82ffd87ebd3096bd2f5cfec5222e1",
+  "tree": "884138976f1e5ab04d924c3f29f4ba6584acb070",
+  "check8": {
+    "run": 43592553081,
+    "S": "c36ad57b7c0c0440f02f601cdbdb4c80d59c197b",
+    "tree": "357db3d4138d2e60d4ac57ea0e68e4ea6cd5bef1",
+    "envelope_blob": "ea455bd24f9bc94979344b702d3328c3b98e78a1",
+    "dev": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+    "status": "COMPLETED",
+    "parents": [
+      "00304ac25cc82ffd87ebd3096bd2f5cfec5222e1",
+      "83c2c898fa9fc0be57afd2cb4cd6a95269c4e8ce"
+    ],
+    "envelope_changed_paths": [
+      ".astra-compose-check.json"
+    ],
+    "conclusion": "failure",
+    "job": 132440187676,
+    "diagnostics": {
+      "sucafina": 14,
+      "cli": 0,
+      "own": 0,
+      "foreign": 14,
+      "by_owner": {
+        "WP04": 3,
+        "WP06": 4,
+        "WP08": 4,
+        "WP09": 1,
+        "WP13": 1,
+        "WP14": 1
+      }
+    },
+    "steps": {
+      "sucafina_typecheck": "FAIL",
+      "cli_typecheck": "PASS",
+      "atlas_generate_check_diff": "PASS",
+      "atlas_typecheck": "PASS",
+      "spawn": "PASS",
+      "guards": "PASS"
+    },
+    "guards": {
+      "rules": 78,
+      "paths": 1356,
+      "gate_findings": 0,
+      "warnings": 46,
+      "errors": 0
+    },
+    "spawn": {
+      "files": 4671,
+      "allowlisted_sites": 66
+    },
+    "artifact": {
+      "id": 14113106626,
+      "bytes": 3952,
+      "sha256": "114a087e4e30160622d364a22904d33d751dd437635d471d670f806498eaf6d1"
+    }
+  },
+  "ci6": {
+    "status": "IN_PROGRESS",
+    "request_sha256": "a6a0000f2e1d95139937e400ad2bad7a2bce8b6197f147651ee364c1b5e0e78c",
+    "selectors": 23,
+    "reason": "CI5 completed; no other WP10 testflight active at dispatch",
+    "S": "747e1006562677391187c501e99d5bdd9751949a",
+    "tree": "bcdb9652c76688fb0fd27b75f940e6811fc44562",
+    "request_blob": "298fe6d828047a0412b5e4acb9d7dd0b89a142ee",
+    "branch": "ci-run-linux-astra-compose-00304ac2-a6a0000f-a1",
+    "run": 43592994998,
+    "selection": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "packageSelector": "packages/sucafina",
+      "runner": "bun",
+      "args": [
+        "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+        "./Sucafinav1/test/product/wp01/contextual-decision.test.ts",
+        "./Sucafinav1/test/product/wp01/http.test.ts",
+        "./Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+        "./Sucafinav1/test/product/wp02/host-integration.test.ts",
+        "./Sucafinav1/test/product/wp02/host-workbench.test.ts",
+        "./Sucafinav1/test/product/wp04/host-integration.test.ts",
+        "./Sucafinav1/test/product/wp09/schedule-native.test.ts",
+        "./Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts",
+        "./Sucafinav1/test/product/wp10/integration/bi-advantage-selection.test.ts",
+        "./Sucafinav1/test/product/wp10/integration/bi-decision-navigation.test.ts",
+        "./Sucafinav1/test/product/wp10/integration/bi-case-access.test.ts",
+        "./Sucafinav1/test/product/wp10/integration/bi-call-scope.test.ts",
+        "./Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+        "./Sucafinav1/test/product/wp10/integration/analysis-run-context.test.ts",
+        "./Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+        "./Sucafinav1/test/product/wp10/analysis-composition/analysis-variants.test.ts",
+        "./Sucafinav1/test/product/wp10/integration/dashboard-preview.test.ts",
+        "./Sucafinav1/test/product/wp10/integration/review-history-composition.test.ts",
+        "./Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+        "./Sucafinav1/test/product/wp11/source-promotion-coverage.test.ts",
+        "./Sucafinav1/test/product/wp11/hot-topic-draft-domain.test.ts",
+        "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "env": {
+        "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+      }
+    },
+    "parents": [
+      "00304ac25cc82ffd87ebd3096bd2f5cfec5222e1"
+    ],
+    "envelope_changed_paths": [
+      ".ci-run.json"
+    ],
+    "job": 132441498485
+  },
+  "global_release": false
+}

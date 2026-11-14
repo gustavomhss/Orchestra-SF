@@ -1,0 +1,986 @@
+{
+  "round": 11,
+  "oneRoundOnly": true,
+  "base": {
+    "head": "00304ac25cc82ffd87ebd3096bd2f5cfec5222e1",
+    "tree": "884138976f1e5ab04d924c3f29f4ba6584acb070"
+  },
+  "heads": [
+    {
+      "pr": 20,
+      "head": "0a5ce33012d008af1f56d11596a1f1f4eaba5b9d",
+      "tree": "a627a2deff7f5d74e35a8b9afef06fa0f67362bd",
+      "parents": [
+        "181953e9cee36166558c5f429cbe11e0dd5105d1"
+      ],
+      "branch": "astra-wp00",
+      "baseBranch": "sf2-stack",
+      "draft": true,
+      "state": "open",
+      "updatedAt": "2026-11-14T01:29:33Z",
+      "previousHead": "0a5ce33012d008af1f56d11596a1f1f4eaba5b9d",
+      "changedSinceLastObservation": false,
+      "treeProvenance": "Reused previously fetched immutable head/tree; live PR head unchanged in round11",
+      "bodySha256": "5e377e0a57a00ecf6b7c2dd5969e34ef9649ceadcc8fe3602235b0b8cd0e3ba6",
+      "claimedRuns": [
+        "43537536421",
+        "43538370444",
+        "43537760359",
+        "43539552540",
+        "43539548039",
+        "43540619838"
+      ],
+      "receiptLinks": [
+        "https://github.com/gustavomhss/Orchestra-SF/blob/0a5ce33012d008af1f56d11596a1f1f4eaba5b9d/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP00/final-acceptance.md",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/0a5ce33012d008af1f56d11596a1f1f4eaba5b9d/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP00/ci-execution-evidence.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/0a5ce33012d008af1f56d11596a1f1f4eaba5b9d/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP00/consumer-coverage-observations.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/0a5ce33012d008af1f56d11596a1f1f4eaba5b9d/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP00/ui-bootstrap-observations.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/0a5ce33012d008af1f56d11596a1f1f4eaba5b9d/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP00/historical-baseline-compatibility.md"
+      ],
+      "observedTerminals": [
+        {
+          "pr": 20,
+          "runId": "43540619838",
+          "status": "completed",
+          "conclusion": "failure",
+          "snapshotOrHead": "1744579b19071aef7405c0c2f41c9771704268b7",
+          "headBranch": "astra-check-wp00",
+          "workflow": ".github/workflows/astra-wp00-check.yml",
+          "htmlUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43540619838",
+          "createdAt": "2026-11-14T01:26:38Z",
+          "updatedAt": "2026-11-14T01:28:18Z",
+          "runAttempt": 1,
+          "envelopeDiffVerified": true,
+          "envelopeDiff": {
+            "status": "ahead",
+            "aheadBy": 11,
+            "behindBy": 0,
+            "baseCommit": "0a5ce33012d008af1f56d11596a1f1f4eaba5b9d",
+            "paths": [
+              {
+                "path": ".astra-wp00-check.json",
+                "blob": "e6c73a681b2eddc73ae12972484a97c6167ca1bd",
+                "status": "added"
+              }
+            ]
+          },
+          "limit": "Remote terminal metadata observed; no log assertion counts inferred and no qualification transferred to Compose."
+        }
+      ],
+      "evidenceRule": "Title, draft, body assertions and a green on another SHA are not approval.",
+      "disposition": "UNCHANGED_HEAD_NO_NEW_TARGET_FIX"
+    },
+    {
+      "pr": 21,
+      "head": "6ce14163ec6de963b50ada3d610aa8161176adee",
+      "tree": "4a4d1736b051785f22493ba43d116020821e73be",
+      "parents": [
+        "e349d3f2d2dc8920f30a27d5968e6724e49ebe07"
+      ],
+      "branch": "astra-wp02",
+      "baseBranch": "sf2-stack",
+      "draft": true,
+      "state": "open",
+      "updatedAt": "2026-11-14T03:04:31Z",
+      "previousHead": "6ce14163ec6de963b50ada3d610aa8161176adee",
+      "changedSinceLastObservation": false,
+      "treeProvenance": "Reused previously fetched immutable head/tree; live PR head unchanged in round11",
+      "bodySha256": "1b6fbd57411436331cb3d29d89465d5c7e242cd86fbcc47fe22c585b5492b53e",
+      "claimedRuns": [
+        "43549559903",
+        "43549564435",
+        "43547644446",
+        "43547648573",
+        "43544765164",
+        "43544432008",
+        "43544435213",
+        "43542458640",
+        "43540740865"
+      ],
+      "receiptLinks": [],
+      "observedTerminals": [
+        {
+          "pr": 21,
+          "runId": "43549559903",
+          "status": "completed",
+          "conclusion": "success",
+          "snapshotOrHead": "f0f65f6cb064ee06b48ddd8c2a64897a5ff89c9b",
+          "headBranch": "ci-run-linux-astra-wp02-6ce1416-29f2e82e5ea4-12diag",
+          "workflow": ".github/workflows/test-ci.yml",
+          "htmlUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43549559903",
+          "createdAt": "2026-11-14T03:03:02Z",
+          "updatedAt": "2026-11-14T03:05:56Z",
+          "runAttempt": 1,
+          "envelopeDiffVerified": true,
+          "envelopeDiff": {
+            "status": "ahead",
+            "aheadBy": 1,
+            "behindBy": 0,
+            "baseCommit": "6ce14163ec6de963b50ada3d610aa8161176adee",
+            "paths": [
+              {
+                "path": ".ci-run.json",
+                "blob": "df787fcdc6942d576424d03e375e6705f8f597ef",
+                "status": "added"
+              }
+            ]
+          },
+          "limit": "Remote terminal metadata observed; no log assertion counts inferred and no qualification transferred to Compose."
+        },
+        {
+          "pr": 21,
+          "runId": "43549564435",
+          "status": "completed",
+          "conclusion": "success",
+          "snapshotOrHead": "6ce14163ec6de963b50ada3d610aa8161176adee",
+          "headBranch": "astra-check-wp02",
+          "workflow": ".github/workflows/astra-wp02-check.yml",
+          "htmlUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43549564435",
+          "createdAt": "2026-11-14T03:03:04Z",
+          "updatedAt": "2026-11-14T03:04:49Z",
+          "runAttempt": 1,
+          "envelopeDiffVerified": false,
+          "envelopeDiff": null,
+          "limit": "Remote terminal metadata observed; no log assertion counts inferred and no qualification transferred to Compose."
+        }
+      ],
+      "evidenceRule": "Title, draft, body assertions and a green on another SHA are not approval.",
+      "disposition": "UNCHANGED_HEAD_NO_NEW_TARGET_FIX"
+    },
+    {
+      "pr": 22,
+      "head": "90c467cea436daa24987ad68a588a7d80f91064e",
+      "tree": "62545e5c8a90e03d6ca92298dc5547853e8ea88a",
+      "parents": [
+        "d7be4567ea0eb47fe0022fcaf87ae497e33afcea"
+      ],
+      "branch": "astra-wp03",
+      "baseBranch": "sf2-stack",
+      "draft": true,
+      "state": "open",
+      "updatedAt": "2026-11-14T00:58:49Z",
+      "previousHead": "90c467cea436daa24987ad68a588a7d80f91064e",
+      "changedSinceLastObservation": false,
+      "treeProvenance": "Reused previously fetched immutable head/tree; live PR head unchanged in round11",
+      "bodySha256": "e0b5ba7f75c3f51c4ea07494a4247e4fe82394032bd08850165c97a6df16fe8c",
+      "claimedRuns": [
+        "43534889692",
+        "43535212218",
+        "43535785426",
+        "43536154582",
+        "43535787078",
+        "43537252684",
+        "43527686283",
+        "43528213766",
+        "43528219202",
+        "43529100894",
+        "43523654974",
+        "43524752804",
+        "43520849840",
+        "43517559589"
+      ],
+      "receiptLinks": [
+        "https://github.com/gustavomhss/Orchestra-SF/blob/90c467cea436daa24987ad68a588a7d80f91064e/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/resume-20261114-overview/criteria-matrix.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/90c467cea436daa24987ad68a588a7d80f91064e/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/resume-20261114-overview/dependency-recheck.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/90c467cea436daa24987ad68a588a7d80f91064e/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/resume-20261114-overview/README.md",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/90c467cea436daa24987ad68a588a7d80f91064e/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/resume-20261114-overview/test-proof-catalog.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/90c467cea436daa24987ad68a588a7d80f91064e/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/resume-20261114-overview/execution-evidence.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/90c467cea436daa24987ad68a588a7d80f91064e/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/resume-20261114-overview/evidence-index.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/bc8342d0955de936873e7e1250f5bb8d3e091b79/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/resume-20261113/README.md",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/bc8342d0955de936873e7e1250f5bb8d3e091b79/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/resume-20261113/criteria-matrix.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/bc8342d0955de936873e7e1250f5bb8d3e091b79/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/resume-20261113/test-proof-catalog.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/bc8342d0955de936873e7e1250f5bb8d3e091b79/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/resume-20261113/evidence-index.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/bc8342d0955de936873e7e1250f5bb8d3e091b79/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/resume-20261113/typecheck-attribution.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/bc8342d0955de936873e7e1250f5bb8d3e091b79/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/resume-20261113/green-ci-request.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/bc8342d0955de936873e7e1250f5bb8d3e091b79/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/wp10-installation-router-handoff.md",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/f1eca7591b14e6cf8fda7cfb7b7a7a77959314be/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/baseline-decisions.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/f1eca7591b14e6cf8fda7cfb7b7a7a77959314be/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/ci-request.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/f1eca7591b14e6cf8fda7cfb7b7a7a77959314be/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/external-typecheck-handoff.md",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/f1eca7591b14e6cf8fda7cfb7b7a7a77959314be/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/execution-evidence.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/f1eca7591b14e6cf8fda7cfb7b7a7a77959314be/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/criteria-matrix.md",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/f1eca7591b14e6cf8fda7cfb7b7a7a77959314be/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/criteria-matrix.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/f1eca7591b14e6cf8fda7cfb7b7a7a77959314be/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/execution-receipt.md",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/f1eca7591b14e6cf8fda7cfb7b7a7a77959314be/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/wp10-installation-router-handoff.md",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/f1eca7591b14e6cf8fda7cfb7b7a7a77959314be/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/wp01-overview-versions-handoff.md",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/f1eca7591b14e6cf8fda7cfb7b7a7a77959314be/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/wp13-comparison-persistence-handoff.md",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/f1eca7591b14e6cf8fda7cfb7b7a7a77959314be/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/native-runtime-handoff.md"
+      ],
+      "observedTerminals": [
+        {
+          "pr": 22,
+          "runId": "43537252684",
+          "status": "completed",
+          "conclusion": "failure",
+          "snapshotOrHead": "90c467cea436daa24987ad68a588a7d80f91064e",
+          "headBranch": "astra-check-wp03",
+          "workflow": ".github/workflows/astra-wp03-check.yml",
+          "htmlUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43537252684",
+          "createdAt": "2026-11-14T00:54:32Z",
+          "updatedAt": "2026-11-14T00:56:16Z",
+          "runAttempt": 1,
+          "envelopeDiffVerified": false,
+          "envelopeDiff": null,
+          "limit": "Remote terminal metadata observed; no log assertion counts inferred and no qualification transferred to Compose."
+        }
+      ],
+      "evidenceRule": "Title, draft, body assertions and a green on another SHA are not approval.",
+      "disposition": "UNCHANGED_HEAD_NO_NEW_TARGET_FIX"
+    },
+    {
+      "pr": 23,
+      "head": "91e1f60bc6f7e85517e2b4f963eec5ac7da13e62",
+      "tree": "e7d11d7fff0f35d180083ba2497b5b750eeb206d",
+      "parents": [],
+      "branch": "astra-wp04",
+      "baseBranch": "sf2-stack",
+      "draft": true,
+      "state": "open",
+      "updatedAt": "2026-11-14T00:47:12Z",
+      "previousHead": "91e1f60bc6f7e85517e2b4f963eec5ac7da13e62",
+      "changedSinceLastObservation": false,
+      "treeProvenance": "Reused previously fetched immutable head/tree; live PR head unchanged in round11",
+      "bodySha256": "da8c184540d2525a395881c2dc07cd042380764646364e79d576d908f4322615",
+      "claimedRuns": [
+        "43534137756",
+        "43534795463",
+        "43534115446",
+        "43536188749"
+      ],
+      "receiptLinks": [
+        "https://github.com/gustavomhss/Orchestra-SF/blob/91e1f60bc6f7e85517e2b4f963eec5ac7da13e62/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/resume-20261113/HANDOFF.md",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/91e1f60bc6f7e85517e2b4f963eec5ac7da13e62/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/resume-20261113/criteria.md",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/91e1f60bc6f7e85517e2b4f963eec5ac7da13e62/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/resume-20261113/criteria.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/91e1f60bc6f7e85517e2b4f963eec5ac7da13e62/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/resume-20261113/ci-evidence.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/91e1f60bc6f7e85517e2b4f963eec5ac7da13e62/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/resume-20261113/test-results.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/91e1f60bc6f7e85517e2b4f963eec5ac7da13e62/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/resume-20261113/final-mapping-audit.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/91e1f60bc6f7e85517e2b4f963eec5ac7da13e62/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/resume-20261113/coverage-inventory.md",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/91e1f60bc6f7e85517e2b4f963eec5ac7da13e62/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/resume-20261113/modified-paths.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/91e1f60bc6f7e85517e2b4f963eec5ac7da13e62/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/resume-20261113/shared-seams.md",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/91e1f60bc6f7e85517e2b4f963eec5ac7da13e62/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/resume-20261113/integration-requests.md",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/91e1f60bc6f7e85517e2b4f963eec5ac7da13e62/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/resume-20261113/preservation-receipt.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/91e1f60bc6f7e85517e2b4f963eec5ac7da13e62/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/resume-20261113/document-manifest.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/91e1f60bc6f7e85517e2b4f963eec5ac7da13e62/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/resume-20261113/publication-link-normalization.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/91e1f60bc6f7e85517e2b4f963eec5ac7da13e62/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/resume-20261113/proof-boundaries.md"
+      ],
+      "observedTerminals": [
+        {
+          "pr": 23,
+          "runId": "43536188749",
+          "status": "completed",
+          "conclusion": "success",
+          "snapshotOrHead": "91e1f60bc6f7e85517e2b4f963eec5ac7da13e62",
+          "headBranch": "astra-check-wp04",
+          "workflow": ".github/workflows/astra-wp04-check.yml",
+          "htmlUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43536188749",
+          "createdAt": "2026-11-14T00:44:20Z",
+          "updatedAt": "2026-11-14T00:46:05Z",
+          "runAttempt": 1,
+          "envelopeDiffVerified": false,
+          "envelopeDiff": null,
+          "limit": "Remote terminal metadata observed; no log assertion counts inferred and no qualification transferred to Compose."
+        }
+      ],
+      "evidenceRule": "Title, draft, body assertions and a green on another SHA are not approval.",
+      "disposition": "UNCHANGED_HEAD_NO_NEW_TARGET_FIX"
+    },
+    {
+      "pr": 24,
+      "head": "0881fee21f07bf8a9a1153d7d55727837cdf497a",
+      "tree": "220df3c21c228afee30bc7d06e998eaa4fca2f36",
+      "parents": [
+        "8f8a1a72dec4065c4cfb798d6d48ca13ca6d5760"
+      ],
+      "branch": "astra-wp05",
+      "baseBranch": "sf2-stack",
+      "draft": true,
+      "state": "open",
+      "updatedAt": "2026-11-14T00:58:07Z",
+      "previousHead": "0881fee21f07bf8a9a1153d7d55727837cdf497a",
+      "changedSinceLastObservation": false,
+      "treeProvenance": "Reused previously fetched immutable head/tree; live PR head unchanged in round11",
+      "bodySha256": "a7021d570055670c6f1b6d87512b46279f537b066b2c9a3c9cef8adb963b5dc9",
+      "claimedRuns": [
+        "43535162840",
+        "43534686609",
+        "43534688410",
+        "43518126352",
+        "43519544728",
+        "43518137324",
+        "43519560894",
+        "43520127151"
+      ],
+      "receiptLinks": [
+        "https://github.com/gustavomhss/Orchestra-SF/blob/0881fee21f07bf8a9a1153d7d55727837cdf497a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/resume-validation-20261114.md",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/0881fee21f07bf8a9a1153d7d55727837cdf497a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/resume-ci-20261114.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/0881fee21f07bf8a9a1153d7d55727837cdf497a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/criteria-resume-20261114.md",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/0881fee21f07bf8a9a1153d7d55727837cdf497a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/criteria-resume-20261114.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/0881fee21f07bf8a9a1153d7d55727837cdf497a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/resume-proof-notes-20261114.md",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/eff8e9dccae6ed3b2fd7c308d245fa62a11facbd/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/criteria.md",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/eff8e9dccae6ed3b2fd7c308d245fa62a11facbd/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/implementation-map.md",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/eff8e9dccae6ed3b2fd7c308d245fa62a11facbd/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/ci-evidence.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/eff8e9dccae6ed3b2fd7c308d245fa62a11facbd/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/engine-boundary.md",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/eff8e9dccae6ed3b2fd7c308d245fa62a11facbd/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/dependency-ledger.md"
+      ],
+      "observedTerminals": [
+        {
+          "pr": 24,
+          "runId": "43535162840",
+          "status": "completed",
+          "conclusion": "failure",
+          "snapshotOrHead": "e4c521993fc13b3844f5523a4863d1fbff700177",
+          "headBranch": "ci-run-linux-astra-wp05-8f8a1a72-proof-3",
+          "workflow": ".github/workflows/test-ci.yml",
+          "htmlUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43535162840",
+          "createdAt": "2026-11-14T00:35:03Z",
+          "updatedAt": "2026-11-14T00:40:59Z",
+          "runAttempt": 1,
+          "envelopeDiffVerified": false,
+          "envelopeDiff": null,
+          "limit": "Remote terminal metadata observed; no log assertion counts inferred and no qualification transferred to Compose."
+        }
+      ],
+      "evidenceRule": "Title, draft, body assertions and a green on another SHA are not approval.",
+      "disposition": "UNCHANGED_HEAD_NO_NEW_TARGET_FIX"
+    },
+    {
+      "pr": 25,
+      "head": "6f4360bf0bdd444a19a7d4f97e18306ae7618b6f",
+      "tree": "514e64f2d5bf25cb2bc2cf0caeeeb2526d77e2b6",
+      "parents": [
+        "61348f2279d301a5f9f8e28c562208ce3b8160ee"
+      ],
+      "branch": "astra-wp01",
+      "baseBranch": "sf2-stack",
+      "draft": true,
+      "state": "open",
+      "updatedAt": "2026-11-14T01:20:52Z",
+      "previousHead": "6f4360bf0bdd444a19a7d4f97e18306ae7618b6f",
+      "changedSinceLastObservation": false,
+      "treeProvenance": "Reused previously fetched immutable head/tree; live PR head unchanged in round11",
+      "bodySha256": "eee09ec4c5dcf32261813a69868d31c899e9aac7f6006b61a1311238fcfe2a7e",
+      "claimedRuns": [
+        "43537602523",
+        "43537953955",
+        "43537002262",
+        "43539653257"
+      ],
+      "receiptLinks": [
+        "https://github.com/gustavomhss/Orchestra-SF/blob/6f4360bf0bdd444a19a7d4f97e18306ae7618b6f/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/ACCEPTANCE.md",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/6f4360bf0bdd444a19a7d4f97e18306ae7618b6f/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/criteria.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/6f4360bf0bdd444a19a7d4f97e18306ae7618b6f/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/CI.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/6f4360bf0bdd444a19a7d4f97e18306ae7618b6f/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/IMPLEMENTATION.md",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/6f4360bf0bdd444a19a7d4f97e18306ae7618b6f/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/TEST-S10.txt",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/6f4360bf0bdd444a19a7d4f97e18306ae7618b6f/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/TEST-S9.txt"
+      ],
+      "observedTerminals": [
+        {
+          "pr": 25,
+          "runId": "43539653257",
+          "status": "completed",
+          "conclusion": "failure",
+          "snapshotOrHead": "6f4360bf0bdd444a19a7d4f97e18306ae7618b6f",
+          "headBranch": "astra-check-wp01",
+          "workflow": ".github/workflows/astra-wp01-check.yml",
+          "htmlUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43539653257",
+          "createdAt": "2026-11-14T01:17:10Z",
+          "updatedAt": "2026-11-14T01:18:42Z",
+          "runAttempt": 1,
+          "envelopeDiffVerified": false,
+          "envelopeDiff": null,
+          "limit": "Remote terminal metadata observed; no log assertion counts inferred and no qualification transferred to Compose."
+        }
+      ],
+      "evidenceRule": "Title, draft, body assertions and a green on another SHA are not approval.",
+      "disposition": "UNCHANGED_HEAD_NO_NEW_TARGET_FIX"
+    },
+    {
+      "pr": 26,
+      "head": "e7fd8ff797441681f360e7775155a8cc2830280c",
+      "tree": "72e5df050703e89599bffc5697381d7f26d958fe",
+      "parents": [],
+      "branch": "astra-wp06",
+      "baseBranch": "sf2-stack",
+      "draft": true,
+      "state": "open",
+      "updatedAt": "2026-11-14T08:54:19Z",
+      "previousHead": "e7fd8ff797441681f360e7775155a8cc2830280c",
+      "changedSinceLastObservation": false,
+      "treeProvenance": "Reused previously fetched immutable head/tree; live PR head unchanged in round11",
+      "bodySha256": "534cf5467d4d7aa7d57fe6e8d9390feeed552d75c3989837436230df6281d052",
+      "claimedRuns": [
+        "43556886355",
+        "43556882437",
+        "43557187051",
+        "43552127199",
+        "43554658437",
+        "43555674548"
+      ],
+      "receiptLinks": [],
+      "observedTerminals": [
+        {
+          "pr": 26,
+          "runId": "43556886355",
+          "status": "completed",
+          "conclusion": "success",
+          "snapshotOrHead": "449cfa1132f520dba09cb3a076ce5bbdd3d20294",
+          "headBranch": "astra-check-wp06",
+          "workflow": ".github/workflows/astra-wp06-check.yml",
+          "htmlUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43556886355",
+          "createdAt": "2026-11-14T04:29:17Z",
+          "updatedAt": "2026-11-14T04:30:50Z",
+          "runAttempt": 1,
+          "envelopeDiffVerified": true,
+          "envelopeDiff": {
+            "status": "ahead",
+            "aheadBy": 1,
+            "behindBy": 0,
+            "baseCommit": "e7fd8ff797441681f360e7775155a8cc2830280c",
+            "paths": [
+              {
+                "path": ".astra-wp06-check.json",
+                "blob": "99d92dc84785e13cf9a04d12aa9c9bce97439bb7",
+                "status": "added"
+              }
+            ]
+          },
+          "limit": "Remote terminal metadata observed; no log assertion counts inferred and no qualification transferred to Compose."
+        },
+        {
+          "pr": 26,
+          "runId": "43557187051",
+          "status": "completed",
+          "conclusion": "success",
+          "snapshotOrHead": "2fa1f2cf08fd575e162c252c87a07e9aed104822",
+          "headBranch": "ci-run-linux-astra-wp06-e7fd8ff797-8cee13c18cac-1",
+          "workflow": ".github/workflows/test-ci.yml",
+          "htmlUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43557187051",
+          "createdAt": "2026-11-14T04:32:50Z",
+          "updatedAt": "2026-11-14T04:39:11Z",
+          "runAttempt": 1,
+          "envelopeDiffVerified": true,
+          "envelopeDiff": {
+            "status": "ahead",
+            "aheadBy": 1,
+            "behindBy": 0,
+            "baseCommit": "e7fd8ff797441681f360e7775155a8cc2830280c",
+            "paths": [
+              {
+                "path": ".ci-run.json",
+                "blob": "8b3e25590a2da6f3b7662f4c9f54aede632571fa",
+                "status": "added"
+              }
+            ]
+          },
+          "limit": "Remote terminal metadata observed; no log assertion counts inferred and no qualification transferred to Compose."
+        }
+      ],
+      "evidenceRule": "Title, draft, body assertions and a green on another SHA are not approval.",
+      "disposition": "UNCHANGED_HEAD_NO_NEW_TARGET_FIX"
+    },
+    {
+      "pr": 27,
+      "head": "9839a46aa8d4e379268b2a724050247e2a0d8aa1",
+      "tree": "4aaf22d1b5726623d8ac31893faab3c6825fbce2",
+      "parents": [
+        "dcde725380e76ff3180b1415e3c0838b9ca7df34"
+      ],
+      "branch": "astra-wp07",
+      "baseBranch": "sf2-stack",
+      "draft": true,
+      "state": "open",
+      "updatedAt": "2026-11-14T01:08:21Z",
+      "previousHead": "9839a46aa8d4e379268b2a724050247e2a0d8aa1",
+      "changedSinceLastObservation": false,
+      "treeProvenance": "Reused previously fetched immutable head/tree; live PR head unchanged in round11",
+      "bodySha256": "71dc1a1e933aca0b59be0787e98650ba9e1c6c217e711c42788e14e63a59edee",
+      "claimedRuns": [
+        "43537439411",
+        "43537891941",
+        "43537045211",
+        "43537466887"
+      ],
+      "receiptLinks": [
+        "https://github.com/gustavomhss/Orchestra-SF/blob/9839a46aa8d4e379268b2a724050247e2a0d8aa1/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/checks.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/9839a46aa8d4e379268b2a724050247e2a0d8aa1/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/TYPECHECK-EXTERNAL.md",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/9839a46aa8d4e379268b2a724050247e2a0d8aa1/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/visual-check-43537045211.md",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/9839a46aa8d4e379268b2a724050247e2a0d8aa1/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/visual-check-43537045211.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/9839a46aa8d4e379268b2a724050247e2a0d8aa1/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/criteria.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/9839a46aa8d4e379268b2a724050247e2a0d8aa1/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/EXECUTION.md",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/9839a46aa8d4e379268b2a724050247e2a0d8aa1/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/t03-review.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/9839a46aa8d4e379268b2a724050247e2a0d8aa1/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/INTEGRATION-DELTA.md",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/9839a46aa8d4e379268b2a724050247e2a0d8aa1/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/PRODUCER-RECHECK.md",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/9839a46aa8d4e379268b2a724050247e2a0d8aa1/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/C11-PRODUCER-RECHECK.md",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/9839a46aa8d4e379268b2a724050247e2a0d8aa1/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/wp10-producer-bindings.patch"
+      ],
+      "observedTerminals": [
+        {
+          "pr": 27,
+          "runId": "43537045211",
+          "status": "completed",
+          "conclusion": "failure",
+          "snapshotOrHead": "dcde725380e76ff3180b1415e3c0838b9ca7df34",
+          "headBranch": "astra-check-wp07",
+          "workflow": ".github/workflows/astra-wp07-check.yml",
+          "htmlUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43537045211",
+          "createdAt": "2026-11-14T00:52:36Z",
+          "updatedAt": "2026-11-14T00:54:16Z",
+          "runAttempt": 1,
+          "envelopeDiffVerified": false,
+          "envelopeDiff": null,
+          "limit": "Remote terminal metadata observed; no log assertion counts inferred and no qualification transferred to Compose."
+        }
+      ],
+      "evidenceRule": "Title, draft, body assertions and a green on another SHA are not approval.",
+      "disposition": "UNCHANGED_HEAD_NO_NEW_TARGET_FIX"
+    },
+    {
+      "pr": 28,
+      "head": "08d808aa91696a30c6eb04293858fcae4fde4229",
+      "tree": "e4973f3c30237a7dcb8605d7aa2be45c44883dcd",
+      "parents": [
+        "156f074d15c9787a9fc1b6430e632504ee3a69e6"
+      ],
+      "branch": "astra-wp08",
+      "baseBranch": "sf2-stack",
+      "draft": true,
+      "state": "open",
+      "updatedAt": "2026-11-14T00:30:32Z",
+      "previousHead": "08d808aa91696a30c6eb04293858fcae4fde4229",
+      "changedSinceLastObservation": false,
+      "treeProvenance": "Reused previously fetched immutable head/tree; live PR head unchanged in round11",
+      "bodySha256": "f538090b532c7f2b420fbbc0ab30ec666c60472fb16e082736e5a9e7ca372097",
+      "claimedRuns": [
+        "43533574980",
+        "43533577577",
+        "43534237864"
+      ],
+      "receiptLinks": [
+        "https://github.com/gustavomhss/Orchestra-SF/blob/08d808aa91696a30c6eb04293858fcae4fde4229/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP08/astra-20261113/README.md",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/08d808aa91696a30c6eb04293858fcae4fde4229/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP08/astra-20261113/criteria-132.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/08d808aa91696a30c6eb04293858fcae4fde4229/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP08/astra-20261113/criteria-index.md",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/08d808aa91696a30c6eb04293858fcae4fde4229/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP08/astra-20261113/ci-request.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/08d808aa91696a30c6eb04293858fcae4fde4229/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP08/astra-20261113/typecheck-diagnostics.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/08d808aa91696a30c6eb04293858fcae4fde4229/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP08/astra-20261113/validation.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/08d808aa91696a30c6eb04293858fcae4fde4229/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP08/astra-20261113/test-results.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/08d808aa91696a30c6eb04293858fcae4fde4229/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP08/astra-20261113/evidence-catalog.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/08d808aa91696a30c6eb04293858fcae4fde4229/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP08/astra-20261113/integration-delta.md",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/08d808aa91696a30c6eb04293858fcae4fde4229/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP08/astra-20261113/change-manifest.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/08d808aa91696a30c6eb04293858fcae4fde4229/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP08/astra-20261113/input-preservation.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/08d808aa91696a30c6eb04293858fcae4fde4229/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP08/astra-20261113/producer-pins.json"
+      ],
+      "observedTerminals": [
+        {
+          "pr": 28,
+          "runId": "43533577577",
+          "status": "completed",
+          "conclusion": "failure",
+          "snapshotOrHead": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+          "headBranch": "astra-check-wp08",
+          "workflow": ".github/workflows/astra-wp08-check.yml",
+          "htmlUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43533577577",
+          "createdAt": "2026-11-14T00:20:56Z",
+          "updatedAt": "2026-11-14T00:22:26Z",
+          "runAttempt": 1,
+          "envelopeDiffVerified": false,
+          "envelopeDiff": null,
+          "limit": "Remote terminal metadata observed; no log assertion counts inferred and no qualification transferred to Compose."
+        }
+      ],
+      "evidenceRule": "Title, draft, body assertions and a green on another SHA are not approval.",
+      "disposition": "UNCHANGED_HEAD_NO_NEW_TARGET_FIX"
+    },
+    {
+      "pr": 29,
+      "head": "8b1cc71d8ab2484055a0d055c8487d4579476b9b",
+      "tree": "6bace347fcd4deec2018185aff7ec152d79eaec5",
+      "parents": [
+        "2ec17b2c8204d5e953eec3186b7e236c0faaad47"
+      ],
+      "branch": "astra-wp10",
+      "baseBranch": "sf2-stack",
+      "draft": true,
+      "state": "open",
+      "updatedAt": "2026-11-14T12:12:36Z",
+      "previousHead": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+      "changedSinceLastObservation": true,
+      "treeProvenance": "GitHub MCP immutable git commit observed in round11",
+      "bodySha256": "d640ca6f0a061072daeb97ef3325cc38a7a5cb28ea250d52e17b39c3986bfcd7",
+      "claimedRuns": [
+        "43591239877",
+        "43591262845",
+        "43585812801",
+        "43587702180",
+        "43588533216"
+      ],
+      "receiptLinks": [
+        "https://github.com/gustavomhss/Orchestra-SF/tree/8b1cc71d8ab2484055a0d055c8487d4579476b9b/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-recovery/preparation-W18"
+      ],
+      "observedTerminals": [
+        {
+          "pr": 29,
+          "runId": "43591239877",
+          "status": "completed",
+          "conclusion": "failure",
+          "snapshotOrHead": "6d72852aa48f864338caa93204ae894ec1e978fe",
+          "headBranch": "astra-check-wp10",
+          "workflow": ".github/workflows/astra-wp10-check.yml",
+          "htmlUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43591239877",
+          "createdAt": "2026-11-14T11:41:44Z",
+          "updatedAt": "2026-11-14T11:44:49Z",
+          "runAttempt": 1,
+          "envelopeDiffVerified": true,
+          "envelopeDiff": {
+            "status": "ahead",
+            "aheadBy": 25,
+            "behindBy": 0,
+            "baseCommit": "8b1cc71d8ab2484055a0d055c8487d4579476b9b",
+            "paths": [
+              {
+                "path": ".astra-wp10-check.json",
+                "blob": "0e8e26faaccbee788afbefb2b9c000c24a054a20",
+                "status": "added"
+              }
+            ]
+          },
+          "limit": "Remote terminal metadata observed; no log assertion counts inferred and no qualification transferred to Compose."
+        },
+        {
+          "pr": 29,
+          "runId": "43591262845",
+          "status": "completed",
+          "conclusion": "failure",
+          "snapshotOrHead": "f84d2f41bb5755d350d524053c391fc8338e7bdd",
+          "headBranch": "ci-run-linux-astra-wp10-8b1cc71d-480ce73a-01",
+          "workflow": ".github/workflows/test-ci.yml",
+          "htmlUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43591262845",
+          "createdAt": "2026-11-14T11:42:02Z",
+          "updatedAt": "2026-11-14T12:01:26Z",
+          "runAttempt": 1,
+          "envelopeDiffVerified": true,
+          "envelopeDiff": {
+            "status": "ahead",
+            "aheadBy": 1,
+            "behindBy": 0,
+            "baseCommit": "8b1cc71d8ab2484055a0d055c8487d4579476b9b",
+            "paths": [
+              {
+                "path": ".ci-run.json",
+                "blob": "4a028d58b9baeb7eaf7d21d3dbeac740ce459cd9",
+                "status": "added"
+              }
+            ]
+          },
+          "limit": "Remote terminal metadata observed; no log assertion counts inferred and no qualification transferred to Compose."
+        }
+      ],
+      "evidenceRule": "Title, draft, body assertions and a green on another SHA are not approval.",
+      "disposition": "HEAD_ADVANCED_RECONCILED_ONLY_NO_SOURCE_INTAKE"
+    },
+    {
+      "pr": 30,
+      "head": "1998acb0dcb59e68d41ee924eca4737bccbd5148",
+      "tree": "d55821143e3f522c3a3ea7ad6c076bd8cfac6bfb",
+      "parents": [
+        "a3dcbb62c88231f95a7c57afb32e975404a3b59c"
+      ],
+      "branch": "astra-wp09",
+      "baseBranch": "sf2-stack",
+      "draft": true,
+      "state": "open",
+      "updatedAt": "2026-11-14T08:53:17Z",
+      "previousHead": "1998acb0dcb59e68d41ee924eca4737bccbd5148",
+      "changedSinceLastObservation": false,
+      "treeProvenance": "Reused previously fetched immutable head/tree; live PR head unchanged in round11",
+      "bodySha256": "93cba7683f2bb01e903dd73f7b1ff73c475ba736cd74e33d272cb84a14abafcc",
+      "claimedRuns": [
+        "43540247856",
+        "43540252662",
+        "43540684025"
+      ],
+      "receiptLinks": [
+        "https://github.com/gustavomhss/Orchestra-SF/blob/1998acb0dcb59e68d41ee924eca4737bccbd5148/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP09/README.md",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/1998acb0dcb59e68d41ee924eca4737bccbd5148/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP09/criterion-map.md",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/1998acb0dcb59e68d41ee924eca4737bccbd5148/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP09/criterion-map.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/1998acb0dcb59e68d41ee924eca4737bccbd5148/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP09/ci-evidence.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/1998acb0dcb59e68d41ee924eca4737bccbd5148/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP09/hosted-tests.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/1998acb0dcb59e68d41ee924eca4737bccbd5148/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP09/file-manifest.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/1998acb0dcb59e68d41ee924eca4737bccbd5148/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP09/dependency-provenance.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/1998acb0dcb59e68d41ee924eca4737bccbd5148/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP09/shared-typecheck-findings.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/1998acb0dcb59e68d41ee924eca4737bccbd5148/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP09/native-host-deltas.md",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/1998acb0dcb59e68d41ee924eca4737bccbd5148/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP09/latest-host-intake.md",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/1998acb0dcb59e68d41ee924eca4737bccbd5148/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP09/independent-review.md",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/1998acb0dcb59e68d41ee924eca4737bccbd5148/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP09/criterion-audit.md"
+      ],
+      "observedTerminals": [
+        {
+          "pr": 30,
+          "runId": "43540252662",
+          "status": "completed",
+          "conclusion": "failure",
+          "snapshotOrHead": "16a58925e65f410c95e2096778ea24f912919427",
+          "headBranch": "astra-check-wp09",
+          "workflow": ".github/workflows/astra-wp09-check.yml",
+          "htmlUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43540252662",
+          "createdAt": "2026-11-14T01:22:57Z",
+          "updatedAt": "2026-11-14T01:24:29Z",
+          "runAttempt": 1,
+          "envelopeDiffVerified": false,
+          "envelopeDiff": null,
+          "limit": "Remote terminal metadata observed; no log assertion counts inferred and no qualification transferred to Compose."
+        }
+      ],
+      "evidenceRule": "Title, draft, body assertions and a green on another SHA are not approval.",
+      "disposition": "UNCHANGED_HEAD_NO_NEW_TARGET_FIX"
+    },
+    {
+      "pr": 31,
+      "head": "5fe39f1259d2f8631cef6172aaa7e6c92f436801",
+      "tree": "68a8d13d3d60164670a7e95310b2cf1afb294e43",
+      "parents": [
+        "edefb5b66706aea866ee45c7e8e76332c27c342a"
+      ],
+      "branch": "astra-interface",
+      "baseBranch": "sf2-stack",
+      "draft": true,
+      "state": "open",
+      "updatedAt": "2026-11-14T12:06:39Z",
+      "previousHead": "cccd00c568aea65bb0c1b5cb4a82c2a236c7e775",
+      "changedSinceLastObservation": true,
+      "treeProvenance": "GitHub MCP immutable git commit observed in round11",
+      "bodySha256": "e17a88493af04d236f03ebfd545001b7b82e439b87c0317f522dff411f45dd81",
+      "claimedRuns": [
+        "43593121437",
+        "43593123221",
+        "43592240575",
+        "43592242039"
+      ],
+      "receiptLinks": [
+        "https://github.com/gustavomhss/Orchestra-SF/blob/5fe39f1259d2f8631cef6172aaa7e6c92f436801/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/w15-change-scope.md",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/5fe39f1259d2f8631cef6172aaa7e6c92f436801/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/w15-recipient-label-own.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/5fe39f1259d2f8631cef6172aaa7e6c92f436801/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/w15-recipient-label-peer-read.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/5fe39f1259d2f8631cef6172aaa7e6c92f436801/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/findings/w15-recipient-label.md",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/5fe39f1259d2f8631cef6172aaa7e6c92f436801/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43592240575.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/5fe39f1259d2f8631cef6172aaa7e6c92f436801/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43592242039.static.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/5fe39f1259d2f8631cef6172aaa7e6c92f436801/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/w14-preservation-audit.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/edefb5b66706aea866ee45c7e8e76332c27c342a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/recovery.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/edefb5b66706aea866ee45c7e8e76332c27c342a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/w14-change-scope.md",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/edefb5b66706aea866ee45c7e8e76332c27c342a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/findings/w14-work-selection.md",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/edefb5b66706aea866ee45c7e8e76332c27c342a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/findings/w14-delayed-review.md",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/edefb5b66706aea866ee45c7e8e76332c27c342a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/w13-g03-published-inputs.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/edefb5b66706aea866ee45c7e8e76332c27c342a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/w14-published-caller-intake.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/edefb5b66706aea866ee45c7e8e76332c27c342a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43589003673.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/edefb5b66706aea866ee45c7e8e76332c27c342a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43589005251.static.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/edefb5b66706aea866ee45c7e8e76332c27c342a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43590725536.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/edefb5b66706aea866ee45c7e8e76332c27c342a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43590727281.static.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/edefb5b66706aea866ee45c7e8e76332c27c342a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/findings/w13-static-foreign-closure.md",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/edefb5b66706aea866ee45c7e8e76332c27c342a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/w13-c12-held-inputs.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/edefb5b66706aea866ee45c7e8e76332c27c342a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/findings/ownership-closure-w13.md",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/edefb5b66706aea866ee45c7e8e76332c27c342a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/w12-preservation-audit.json"
+      ],
+      "observedTerminals": [],
+      "evidenceRule": "Title, draft, body assertions and a green on another SHA are not approval.",
+      "disposition": "103_PATH_DELTA_INSPECTED_NO_NEW_14_DIAGNOSTIC_OR_ADVANTAGE_REFLOW_FIX_SELECTED"
+    },
+    {
+      "pr": 33,
+      "head": "2784daafbb0d3b58b6019822288a07fa38e5c5b0",
+      "tree": "fd1c89074488008ff0e60fd07577268a34329069",
+      "parents": [],
+      "branch": "astra-collaboration",
+      "baseBranch": "sf2-stack",
+      "draft": true,
+      "state": "open",
+      "updatedAt": "2026-11-14T11:56:45Z",
+      "previousHead": "2784daafbb0d3b58b6019822288a07fa38e5c5b0",
+      "changedSinceLastObservation": false,
+      "treeProvenance": "Reused previously fetched immutable head/tree; live PR head unchanged in round11",
+      "bodySha256": "e6b8018cea6c87b2d47cebd99812365fe60d66788cbfebd3d843cff95eb08d99",
+      "claimedRuns": [],
+      "receiptLinks": [
+        "https://github.com/gustavomhss/Orchestra-SF/blob/afe42b6be10b9e9251309d94d743c0254d728e84/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP08/collaboration-20261114/intake.json"
+      ],
+      "observedTerminals": [],
+      "evidenceRule": "Title, draft, body assertions and a green on another SHA are not approval.",
+      "disposition": "UNCHANGED_HEAD_NO_NEW_TARGET_FIX"
+    },
+    {
+      "pr": 34,
+      "head": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+      "tree": "eb427121bcfd8c2511aac31d908f3c0d52c1915e",
+      "parents": [],
+      "branch": "astra-operations",
+      "baseBranch": "sf2-stack",
+      "draft": true,
+      "state": "open",
+      "updatedAt": "2026-11-14T12:06:42Z",
+      "previousHead": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+      "changedSinceLastObservation": false,
+      "treeProvenance": "Reused previously fetched immutable head/tree; live PR head unchanged in round11",
+      "bodySha256": "eb552f09eb354e0e6fbf8bdcd4f3fce32b7300bde955502d8e4fcee453779c50",
+      "claimedRuns": [
+        "43578845234",
+        "43580401528",
+        "43580976466",
+        "43582205250",
+        "43582881446",
+        "43584394810",
+        "43584405211",
+        "43586114915",
+        "43586639212",
+        "43534137756",
+        "43534795463",
+        "43557187051",
+        "43556886355",
+        "43556882437"
+      ],
+      "receiptLinks": [
+        "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/OPERATIONS-DELIVERY.md",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/operations-criteria-111.md",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/operations-criteria-111.normalized.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/operations-criteria-140-W5.md",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/operations-criteria-140-W5.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/delivery-criteria-integrity.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/artifact-index.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/delivery-status.json",
+        "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/post-delivery-owner-refresh.json"
+      ],
+      "observedTerminals": [],
+      "evidenceRule": "Title, draft, body assertions and a green on another SHA are not approval.",
+      "disposition": "UNCHANGED_HEAD_NO_NEW_TARGET_FIX"
+    },
+    {
+      "pr": 35,
+      "head": "29172d2e4db859eedac31e84778c447bb97f6c08",
+      "tree": "8d7a7657597d024c5a55a9f5a4fdccf604c40d25",
+      "parents": [
+        "332c5a762365e8550eaac7a278c864be0452651d"
+      ],
+      "disposition": "SEVEN_EXACT_FINANCE_FILES_ACCEPTED",
+      "observationMode": "Fixed immutable source specified by parent, not an extra mutable head poll",
+      "evidenceRule": "Source2917 is not declared CI-green; exact composition requires hosted validation."
+    },
+    {
+      "pr": 36,
+      "head": "d697bcc1076a62375cbf0439376c9f0a4f81173f",
+      "tree": "464902873b604ceabe4518f34d16643c5dfb2a18",
+      "parents": [
+        "e5b3adf215939e9a5c16cbcaf3ad028475e0a693"
+      ],
+      "branch": "astra-intelligence",
+      "baseBranch": "sf2-stack",
+      "draft": true,
+      "state": "open",
+      "updatedAt": "2026-11-14T12:09:23Z",
+      "previousHead": "c21a990c57b714cd60bb7f915beb6be51acbafdb",
+      "changedSinceLastObservation": true,
+      "treeProvenance": "GitHub MCP immutable git commit observed in round11",
+      "bodySha256": "0cc65db8e4eac4e1ddea29331377cc31cce2ff79495e895c77c1460cc15a3981",
+      "claimedRuns": [
+        "43581164222",
+        "43581167804",
+        "43581170616",
+        "43581182085",
+        "43586166717",
+        "43586171924",
+        "43586169806",
+        "43586192594"
+      ],
+      "receiptLinks": [],
+      "observedTerminals": [],
+      "evidenceRule": "Title, draft, body assertions and a green on another SHA are not approval.",
+      "disposition": "EXACT_TWO_FILE_ATLAS_CLOSURE_ACCEPTED_PORTFOLIO_PIPELINE_HELD"
+    }
+  ],
+  "observed_run_envelopes": [
+    {
+      "pr": 20,
+      "W": "0a5ce33012d008af1f56d11596a1f1f4eaba5b9d",
+      "S": "1744579b19071aef7405c0c2f41c9771704268b7",
+      "status": "ahead",
+      "ahead_by": 11,
+      "files": [
+        {
+          "path": ".astra-wp00-check.json",
+          "status": "added",
+          "blob": "e6c73a681b2eddc73ae12972484a97c6167ca1bd"
+        }
+      ],
+      "source_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/compare/0a5ce33012d008af1f56d11596a1f1f4eaba5b9d...1744579b19071aef7405c0c2f41c9771704268b7"
+    },
+    {
+      "pr": 21,
+      "W": "6ce14163ec6de963b50ada3d610aa8161176adee",
+      "S": "f0f65f6cb064ee06b48ddd8c2a64897a5ff89c9b",
+      "status": "ahead",
+      "ahead_by": 1,
+      "files": [
+        {
+          "path": ".ci-run.json",
+          "status": "added",
+          "blob": "df787fcdc6942d576424d03e375e6705f8f597ef"
+        }
+      ],
+      "source_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/compare/6ce14163ec6de963b50ada3d610aa8161176adee...f0f65f6cb064ee06b48ddd8c2a64897a5ff89c9b"
+    },
+    {
+      "pr": 26,
+      "W": "e7fd8ff797441681f360e7775155a8cc2830280c",
+      "S": "449cfa1132f520dba09cb3a076ce5bbdd3d20294",
+      "status": "ahead",
+      "ahead_by": 1,
+      "files": [
+        {
+          "path": ".astra-wp06-check.json",
+          "status": "added",
+          "blob": "99d92dc84785e13cf9a04d12aa9c9bce97439bb7"
+        }
+      ],
+      "source_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/compare/e7fd8ff797441681f360e7775155a8cc2830280c...449cfa1132f520dba09cb3a076ce5bbdd3d20294"
+    },
+    {
+      "pr": 26,
+      "W": "e7fd8ff797441681f360e7775155a8cc2830280c",
+      "S": "2fa1f2cf08fd575e162c252c87a07e9aed104822",
+      "status": "ahead",
+      "ahead_by": 1,
+      "files": [
+        {
+          "path": ".ci-run.json",
+          "status": "added",
+          "blob": "8b3e25590a2da6f3b7662f4c9f54aede632571fa"
+        }
+      ],
+      "source_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/compare/e7fd8ff797441681f360e7775155a8cc2830280c...2fa1f2cf08fd575e162c252c87a07e9aed104822"
+    },
+    {
+      "pr": 29,
+      "W": "8b1cc71d8ab2484055a0d055c8487d4579476b9b",
+      "S": "6d72852aa48f864338caa93204ae894ec1e978fe",
+      "status": "ahead",
+      "ahead_by": 25,
+      "files": [
+        {
+          "path": ".astra-wp10-check.json",
+          "status": "added",
+          "blob": "0e8e26faaccbee788afbefb2b9c000c24a054a20"
+        }
+      ],
+      "source_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/compare/8b1cc71d8ab2484055a0d055c8487d4579476b9b...6d72852aa48f864338caa93204ae894ec1e978fe"
+    },
+    {
+      "pr": 29,
+      "W": "8b1cc71d8ab2484055a0d055c8487d4579476b9b",
+      "S": "f84d2f41bb5755d350d524053c391fc8338e7bdd",
+      "status": "ahead",
+      "ahead_by": 1,
+      "files": [
+        {
+          "path": ".ci-run.json",
+          "status": "added",
+          "blob": "4a028d58b9baeb7eaf7d21d3dbeac740ce459cd9"
+        }
+      ],
+      "source_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/compare/8b1cc71d8ab2484055a0d055c8487d4579476b9b...f84d2f41bb5755d350d524053c391fc8338e7bdd"
+    }
+  ]
+}
