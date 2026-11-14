@@ -8,8 +8,9 @@ import type { ChoiceRecord, DecisionCase, ScenarioResult } from "../../../produc
 import type { ScenarioRequest } from "../../../product/contracts/operations.ts"
 import type { DomainPortHost } from "../../../product/contracts/ports.ts"
 import type { TrustedUiContext } from "../../../product/contracts/sf-execution.ts"
-import type { SfProductState } from "../../../product/contracts/state.ts"
-import { createCurrentChoicePreview, type CurrentChoiceBinding } from "../../../product/decisions/current-choice-preview.ts"
+import type { SfProductState, SfStateNamespace } from "../../../product/contracts/state.ts"
+import type { Snapshot } from "../../../runtime/contract.ts"
+import { createCurrentChoiceFence, createCurrentChoicePreview, type CurrentChoiceBinding } from "../../../product/decisions/current-choice-preview.ts"
 import type { CurrentChoicePromotion } from "../../../product/decisions/current-choice-promotion.ts"
 import { createSfDecisionResultStore } from "../../../product/decisions/result-store.ts"
 import { createSfProductState } from "../../../product/host-binding/state-provider.ts"
@@ -49,9 +50,12 @@ for (const revocation of ["membership", "preferences read"] as const) test(`curr
     const context = admitted.value
     admittedContext = context
     const host: Pick<DomainPortHost, "requestFor" | "revalidate"> = { requestFor: (trusted) => trusted.kind === "ui" ? ui.requestFor(trusted) : undefined, revalidate: (trusted) => trusted.kind === "ui" ? ui.revalidate(trusted) : Promise.resolve(false) }
+    const fence = createCurrentChoiceFence({ persistence: store, host: () => host, operationIdentity: (trusted) => trusted.kind === "ui" ? ui.operationIdentity(trusted) : undefined, identity: () => identity })
     const writes = new WeakSet<object>()
     const access = { preferencesRead: true, preferencesWrite: true }
-    const state = createSfProductState({ persistence: store, proposalCoverageWrites: writes, createId: () => "state-incarnation", resolveTarget: async () => ({ incarnation: caseRef.incarnation }), authorize: async (incoming, _snapshot, namespace, mode) => incoming === request && (namespace !== "preferences" || (mode === "read" ? access.preferencesRead : access.preferencesWrite)) && await ui.revalidate(context) ? { principalRef: identity.principalRef, policyVersion: identity.policyVersion, accessRevision: identity.accessRevision } : undefined })
+    const stateOptions = { proposalCoverageWrites: writes, createId: () => "state-incarnation", resolveTarget: async () => ({ incarnation: caseRef.incarnation }), authorize: async (incoming: Request, _snapshot: Snapshot, namespace: SfStateNamespace, mode: "read" | "write") => incoming === request && (namespace !== "preferences" || (mode === "read" ? access.preferencesRead : access.preferencesWrite)) && await ui.revalidate(context) ? { principalRef: identity.principalRef, policyVersion: identity.policyVersion, accessRevision: identity.accessRevision } : undefined }
+    const state = createSfProductState({ ...stateOptions, persistence: fence.persistence })
+    const outside = createSfProductState({ ...stateOptions, persistence: store })
     const originalSource = source("original-source", 1)
     const currentSource = source("current-source", 2)
     const originalScenario: ScenarioRequest = { baseRef: originalSource.refId, operations: [], assumptions: [] }
@@ -83,18 +87,20 @@ for (const revocation of ["membership", "preferences read"] as const) test(`curr
     let unexpectedProducerCalls = 0
     const unused = (): never => { unexpectedProducerCalls += 1; throw new Error("Reader must not calculate, prepare, promote or dispatch") }
     const unusedAsync = async (): Promise<never> => unused()
-    const preview = createCurrentChoicePreview({ state, host, results, writes,
+    const preview = createCurrentChoicePreview({ state, host, fence, results, writes,
       sources: { resolveForecastCoverage: unusedAsync }, coverageEvidence: { entries: unusedAsync, resolve: unusedAsync, supports: unused, verifySnapshot: unused },
-      authorizePreview: async () => false, resimulate: unusedAsync, registerCoverage: unusedAsync, verifySnapshot: unused,
+      authorizePreview: async () => false, resimulate: unusedAsync, registerCoverage: unusedAsync,
+      // Legacy binding-only fixture; canonical source snapshot coverage lives in current-choice-cohort.
+      verifySnapshot: (_snapshot, _request, value) => digestSfValue(value.originalSource) === digestSfValue(originalSource) && digestSfValue(value.source) === digestSfValue(currentSource),
       operationIdentity: (trusted) => trusted.kind === "ui" ? ui.operationIdentity(trusted) : undefined,
       verifySources: async (value) => digestSfValue(value.originalSource) === digestSfValue(originalSource) && digestSfValue(value.source) === digestSfValue(currentSource) && await ui.revalidate(context),
       authorizeCase: async (value) => {
         const allowed = await authorizeCase(value)
         if (race.armed && ++race.authorizations === 2) {
           if (revocation === "membership") {
-            const current = await state.read(request, "cases", (stored) => stored.cases[caseRef.id])
+            const current = await outside.read(request, "cases", (stored) => stored.cases[caseRef.id])
             if (current.status !== "ok" || !current.value) throw new Error("Race case unavailable")
-            const removed = await state.transaction(request, { namespace: "cases", expectedStorageVersion: current.storageVersion, targetRef: caseRef.id, targetIncarnation: caseRef.incarnation, idempotencyKey: "remove-member-during-final-authorization", commandDigest: digestSfValue({ caseRef, remove: identity.principalRef }) }, async (stored) => {
+            const removed = await outside.transaction(request, { namespace: "cases", expectedStorageVersion: current.storageVersion, targetRef: caseRef.id, targetIncarnation: caseRef.incarnation, idempotencyKey: "remove-member-during-final-authorization", commandDigest: digestSfValue({ caseRef, remove: identity.principalRef }) }, async (stored) => {
               const actual = stored.cases[caseRef.id]
               if (!actual || digestSfValue(actual) !== digestSfValue(current.value)) return { commit: false, value: false }
               stored.cases[caseRef.id] = { ...actual, version: actual.version + 1, participants: [] }
@@ -129,3 +135,4 @@ for (const revocation of ["membership", "preferences read"] as const) test(`curr
     await rm(directory, { recursive: true, force: true })
   }
 })
+
