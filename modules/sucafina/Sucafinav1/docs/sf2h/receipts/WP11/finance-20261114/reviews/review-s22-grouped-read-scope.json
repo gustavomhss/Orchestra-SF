@@ -1,0 +1,505 @@
+{
+  "schema": "sf-finance-independent-s22-grouped-scope-review-v1",
+  "result": "STATIC_PASS_AFFECTED_ACTIONS_REQUIRED",
+  "reviewer": "/root/renewal_s22_cost_review",
+  "baseline": {
+    "head": "79531aefa2bf72a9d13deba5164f725ec7da0e0f",
+    "tree": "485a3ac2ac1322d03d7421a17eb1791153f11c1b"
+  },
+  "candidateFiles": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-case-read-scope.test.ts",
+      "beforeBlob": null,
+      "candidateBlob": "75a2cbcd0c3907fc2d14f18f2b35f131331ecfb2",
+      "sha256": "fbccc98f43e078bcc735ac9f613507ab152f2fbbdd5fbce09e45b3a580a6929f",
+      "bytes": 6024
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "beforeBlob": "9514f80dc7e8dbb9c8acf1822bbd4f1ea067c0e1",
+      "candidateBlob": "2da82bf379910826f4558b5b330c97cdaf6806df",
+      "sha256": "e25c0f56ec3b9e8efe762e9bf372bb56b2a7d7d08b94cfaf66358033d8401a97",
+      "bytes": 25464
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts",
+      "beforeBlob": "18d95b84d01b26048af9a442c44cb32e8f14e9f5",
+      "candidateBlob": "3bbcabb4272ba2d083aa39b03142498178e95193",
+      "sha256": "55c9b6185dc1d5e053e343c09a97b142239f3d456b577f7614e55e37061394cf",
+      "bytes": 14329
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+      "beforeBlob": "f85c1c8e7196aff1381513b2d5ed2109641d6a45",
+      "candidateBlob": "df3c335c95bf9d8d06d00474ff0bc391dd852b4e",
+      "sha256": "9fb65068cc969ebb04f2e14f9082147d058287f09fa40702d56c4c4838a6d9a1",
+      "bytes": 8303
+    }
+  ],
+  "checks": [
+    {
+      "check": "candidate git blob modules/sucafina/Sucafinav1/test/product/wp11/renewal-case-read-scope.test.ts",
+      "passed": true
+    },
+    {
+      "check": "candidate sha256 modules/sucafina/Sucafinav1/test/product/wp11/renewal-case-read-scope.test.ts",
+      "passed": true
+    },
+    {
+      "check": "candidate size modules/sucafina/Sucafinav1/test/product/wp11/renewal-case-read-scope.test.ts",
+      "passed": true
+    },
+    {
+      "check": "baseline blob fetched at fixed W32 modules/sucafina/Sucafinav1/test/product/wp11/renewal-case-read-scope.test.ts",
+      "passed": true
+    },
+    {
+      "check": "root applied exact candidate modules/sucafina/Sucafinav1/test/product/wp11/renewal-case-read-scope.test.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-case-read-scope.test.ts → ../../../product/contracts/ports.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-case-read-scope.test.ts → ../../../runtime/planner.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-case-read-scope.test.ts → ./renewal-operation-verifier.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-case-read-scope.test.ts → ./renewal-source-fixture.ts",
+      "passed": true
+    },
+    {
+      "check": "candidate git blob modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "passed": true
+    },
+    {
+      "check": "candidate sha256 modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "passed": true
+    },
+    {
+      "check": "candidate size modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "passed": true
+    },
+    {
+      "check": "baseline blob fetched at fixed W32 modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "passed": true
+    },
+    {
+      "check": "root applied exact candidate modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts → ../../../product/contracts/canonical.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts → ../../../product/contracts/business-context.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts → ../../../product/contracts/decisions.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts → ../../../product/contracts/operations.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts → ../../../product/contracts/ports.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts → ../../../product/decisions/baseline-coverage.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts → ../../../product/decisions/case-port.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts → ../../../product/decisions/coverage-access.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts → ../../../product/decisions/criterion-rules.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts → ../../../product/decisions/coverage-classification.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts → ../../../product/decisions/mutations.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts → ../../../product/decisions/result-store.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts → ../../../product/host-binding/state-provider.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts → ../../../product/planner/criterion-metric.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts → ../../../product/planner/exact-threshold.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts → ../../../product/planner/port.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts → ../../../product/planner/preview-comparison.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts → ../../../product/planner/sensitivity-units.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts → ../../../product/planner/stored-scenarios.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts → ../wp05/engine-fixture.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts → ./renewal-coverage-fixture.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts → ./fixture-trace.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts → ./renewal-source-fixture.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts → ./renewal-operation-verifier.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts → ./renewal-restart-reader.ts",
+      "passed": true
+    },
+    {
+      "check": "candidate git blob modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts",
+      "passed": true
+    },
+    {
+      "check": "candidate sha256 modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts",
+      "passed": true
+    },
+    {
+      "check": "candidate size modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts",
+      "passed": true
+    },
+    {
+      "check": "baseline blob fetched at fixed W32 modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts",
+      "passed": true
+    },
+    {
+      "check": "root applied exact candidate modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts → ../../../product/contracts/canonical.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts → ../../../product/contracts/business-context.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts → ../../../product/contracts/decisions.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts → ../../../product/contracts/ports.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts → ../../../product/contracts/sf-execution.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts → ../../../product/decisions/case-port.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts → ../../../product/decisions/coverage-access.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts → ../../../product/decisions/criterion-rules.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts → ../../../product/decisions/mutations.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts → ../../../product/decisions/result-store.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts → ../../../product/host-binding/state-provider.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts → ../../../product/integration/human-authority.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts → ../../../product/integration/ui-authority.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts → ../../../product/planner/criterion-metric.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts → ../../../product/planner/port.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts → ../../../product/planner/preview-comparison.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts → ../../../product/planner/sensitivity-units.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts → ../../../product/planner/stored-scenarios.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts → ../../../runtime/contract.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts → ../wp05/engine-fixture.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts → ./renewal-choice-fixture.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts → ./renewal-operation-verifier.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts → ./renewal-source-fixture.ts",
+      "passed": true
+    },
+    {
+      "check": "candidate git blob modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+      "passed": true
+    },
+    {
+      "check": "candidate sha256 modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+      "passed": true
+    },
+    {
+      "check": "candidate size modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+      "passed": true
+    },
+    {
+      "check": "baseline blob fetched at fixed W32 modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+      "passed": true
+    },
+    {
+      "check": "root applied exact candidate modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts → ../../../product/contracts/canonical.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts → ../../../product/contracts/decisions.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts → ../../../product/contracts/operations.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts → ../../../product/contracts/ports.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts → ../../../product/contracts/sf-execution.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts → ../../../product/contracts/schema-admission.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts → ../../../product/planner/operation-verifier.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts → ../../../product/planner/port.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts → ../../../product/planner/scenario-inputs.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts → ../../../runtime/admin.ts",
+      "passed": true
+    },
+    {
+      "check": "import modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts → ./fixture-trace.ts",
+      "passed": true
+    },
+    {
+      "check": "direct operation verifier function preserved exactly",
+      "passed": true
+    },
+    {
+      "check": "grouped scope retains structuredClone(decision.alternatives.map",
+      "passed": true
+    },
+    {
+      "check": "grouped scope retains host.persistence.transaction(\"planner\"",
+      "passed": true
+    },
+    {
+      "check": "grouped scope retains Promise.all(scenarios.map((scenario) => verify(scenario, context).catch(() => false)))",
+      "passed": true
+    },
+    {
+      "check": "grouped scope retains commit: false",
+      "passed": true
+    },
+    {
+      "check": "grouped scope retains await host.revalidate(context)",
+      "passed": true
+    },
+    {
+      "check": "grouped scope retains host.requestFor(context) === request",
+      "passed": true
+    },
+    {
+      "check": "grouped scope retains digestSfValue(context.binding) === bindingDigest",
+      "passed": true
+    },
+    {
+      "check": "grouped scope retains }, { signal: request.signal }).catch(() => false)",
+      "passed": true
+    },
+    {
+      "check": "no awaited callback after grouped transaction",
+      "passed": true
+    },
+    {
+      "check": "only factory import/construct/callback wiring renewal-choice-fixture.ts",
+      "passed": true
+    },
+    {
+      "check": "real CasePort consumer renewal-choice-fixture.ts",
+      "passed": true
+    },
+    {
+      "check": "only factory import/construct/callback wiring renewal-human-choice-fixture.ts",
+      "passed": true
+    },
+    {
+      "check": "real CasePort consumer renewal-human-choice-fixture.ts",
+      "passed": true
+    },
+    {
+      "check": "four new test cases",
+      "passed": true
+    },
+    {
+      "check": "nineteen authored expect calls",
+      "passed": true
+    },
+    {
+      "check": "discriminant oracle expect(controls.attempted).toBe(true)",
+      "passed": true
+    },
+    {
+      "check": "discriminant oracle expect(controls.domainAccepted).toBe(true)",
+      "passed": true
+    },
+    {
+      "check": "discriminant oracle expect(controls.committed).toBe(false)",
+      "passed": true
+    },
+    {
+      "check": "discriminant oracle expect(controls.caught).toBe(true)",
+      "passed": true
+    },
+    {
+      "check": "discriminant oracle expect(after).toEqual(before)",
+      "passed": true
+    },
+    {
+      "check": "discriminant oracle expect(changed).toBe(true)",
+      "passed": true
+    },
+    {
+      "check": "discriminant oracle expect(await fixture.host.revalidate(fixture.context)).toBe(false)",
+      "passed": true
+    },
+    {
+      "check": "no previous test modified",
+      "passed": true
+    },
+    {
+      "check": "all paths fixture namespace",
+      "passed": true
+    }
+  ],
+  "passed": 108,
+  "failed": 0,
+  "findings": [],
+  "analysis": [
+    "Each CasePort source-admission invocation opens a new LocalStore read-only transaction. Its alternatives share one consistent snapshot; this is distinct from two independently mutable top-level observations inside that scope.",
+    "Every original parser, canonical operation verifier, projection, authority and source check still executes. Every Promise sibling settles before the grouped scope closes.",
+    "Nested writes poison the LocalStore root even if their callback catches the rejection; the group returns false and rolls back. The new test requires a valid canonical command, refused durable commit and unchanged snapshots across every surface.",
+    "The final asynchronous authority callback is inside the protected snapshot. Only signal/request identity/binding digest checks occur afterward. No cross-invocation result, source or authority cache.",
+    "Production CasePort is unchanged. It separately reads the case before and after its first verification, verifies again, then checks host authority. This review does not extend its global race qualification.",
+    "Both the current-source history fixture and the separate human-choice fixture now consume the grouped factory through real CasePort callbacks. Financial calculations, C10 rules, persistence/replay and old tests are unchanged.",
+    "The standalone per-scenario verifier function is byte-identical. Its seven top-level source/authority race cases remain intact. S22 passes do not qualify the new grouped factory."
+  ],
+  "performanceEvidence": "profile-comparison.json",
+  "performanceQualification": "No runtime improvement asserted before new exact W/S Actions. S19/S22 trace boundaries differ and timings overlap; do not subtract nested counters as an isolated causal estimate.",
+  "requiredAffectedTests": [
+    "test/product/wp11/renewal-case-read-scope.test.ts",
+    "test/product/wp11/renewal-source-admission.test.ts",
+    "test/product/wp11/renewal-read-scope.test.ts",
+    "test/product/wp11/renewal-choice-history.test.ts",
+    "test/product/wp11/renewal-choice-revision.test.ts",
+    "test/product/wp11/implementation-quote-history.test.ts",
+    "test/product/wp05/choice-history-bi.test.ts"
+  ],
+  "notExecuted": [
+    "product tests",
+    "Bun",
+    "typecheck",
+    "guards",
+    "native proofs",
+    "C/D acceptance",
+    "remote writes"
+  ]
+}

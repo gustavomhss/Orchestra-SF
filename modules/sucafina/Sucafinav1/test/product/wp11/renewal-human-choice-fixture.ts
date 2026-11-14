@@ -19,7 +19,7 @@ import { createStoredPlannerScenarioHost } from "../../../product/planner/stored
 import type { Snapshot } from "../../../runtime/contract.ts"
 import { wp05Horizon } from "../wp05/engine-fixture.ts"
 import type { createRenewalChoiceHistory } from "./renewal-choice-fixture.ts"
-import { createRenewalOperationVerifier } from "./renewal-operation-verifier.ts"
+import { createRenewalCaseOperationVerifier } from "./renewal-operation-verifier.ts"
 import { renewalEvidenceContext } from "./renewal-source-fixture.ts"
 
 type History = Awaited<ReturnType<typeof createRenewalChoiceHistory>>
@@ -106,8 +106,8 @@ export function createRenewalHumanChoices(history: History) {
   // supplies only the canonical source DomainProjection; judgment and preview
   // keep the classified Planner and revalidate their complete C10 observations.
   const sourcePlanner = createPlannerPort({ host, sources: operationSources })
-  const verifyOperations = createRenewalOperationVerifier(host, operationSources)
-  const cases = createDecisionCasePort({ state, host, creationTarget: { ref: fixture.caseRef.id, incarnation: fixture.caseRef.incarnation }, operationIdentity: (context) => context.kind === "ui" ? ui.operationIdentity(context) : undefined, authorizeCase, verifyScenarioOperations: async (decision, context) => (await Promise.all(decision.alternatives.map((alternative) => verifyOperations(alternative.scenario, context)))).every(Boolean), evidence, createId: () => `unused-human-case-${++controls.event}`, now: () => at })
+  const verifyOperations = createRenewalCaseOperationVerifier(host, operationSources)
+  const cases = createDecisionCasePort({ state, host, creationTarget: { ref: fixture.caseRef.id, incarnation: fixture.caseRef.incarnation }, operationIdentity: (context) => context.kind === "ui" ? ui.operationIdentity(context) : undefined, authorizeCase, verifyScenarioOperations: verifyOperations, evidence, createId: () => `unused-human-case-${++controls.event}`, now: () => at })
   const scenarios = createStoredPlannerScenarioHost({ store: results, cases, planner: sourcePlanner, coverageRefFor: (ref, alternative) => decisionCoverageRef(ref, alternative.id, alternative.version) })
   const preview = (request: Parameters<typeof comparePlannerPreview>[1], context: TrustedDomainContext) => comparePlannerPreview({ host, sources, scenarios, planner }, request, context)
   const metrics: { read?: ReturnType<typeof createPlannerCriterionMetric> } = {}
