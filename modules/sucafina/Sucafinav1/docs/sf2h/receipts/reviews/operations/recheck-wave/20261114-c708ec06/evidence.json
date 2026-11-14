@@ -1,0 +1,1058 @@
+{
+  "schema": "operations-independent-recheck-evidence/v1",
+  "mission_commit": "c708ec0609dbfc95b259707d8c38481617f74f11",
+  "mission_blob": "2704aa0c8e13c294b63d43c142bafdbbcf3568b1",
+  "mission_path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-wave/review-operations-delta.json",
+  "methodology": "Leitura de código/testes/consumidores por commit e blob; metadados oficiais, requests, jobs, logs e comparações Git. Nenhum teste executado/disparado. Git object SHAs conferidos. Não recalculamos hashes SHA256 dos logs nem baixamos/reinspecionamos ZIPs nesta revisão.",
+  "authority": {
+    "branch": "review-operations",
+    "pr": 49,
+    "parent_expected": "048b46acd3d70dc7ddafbea9e9b439f0d2e781d9",
+    "allowed_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reviews/operations/recheck-wave/",
+    "reconciliation": "User explicitly assigned this new independent session; PR49 head matches mission; both previous handoffs terminal, comments empty; next recheck explicit. No writer inferred dead from silence.",
+    "prior_reviews_preserved": [
+      "6830fa159d30b60d001f91a47326ae88c6255282",
+      "048b46acd3d70dc7ddafbea9e9b439f0d2e781d9"
+    ],
+    "new_namespace_was_absent_at_parent": true
+  },
+  "normative": {
+    "plan_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "scope": {
+      "work_packages": 15,
+      "tasks": 74,
+      "contracts": 17,
+      "criteria": 1610
+    },
+    "actor_pack": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S1-R1.json",
+      "blob": "f164c7b081b77b47cec72085de07780a55cd2acb",
+      "read": "Complete pack read across root + three read-only review assistants; all top-level segments assigned once.",
+      "reading_coverage": {
+        "review_operations_fixes": [
+          "write_authority",
+          "allocation",
+          "work_packages",
+          "review_sources_read_only",
+          "review_assignment",
+          "proof_bindings",
+          "consumer_edges"
+        ],
+        "review_import_recovery": [
+          "evidence",
+          "execution_proofs",
+          "numeric_oracles",
+          "ci_plan",
+          "mandatory_appendices"
+        ],
+        "review_sourcing_money": [
+          "contracts",
+          "resident",
+          "resident_gate_requirements",
+          "resident_ui",
+          "code_sources"
+        ],
+        "root": [
+          "provenance",
+          "job_id",
+          "actor",
+          "session",
+          "assignment",
+          "branch_provenance",
+          "common",
+          "physical_slot",
+          "incoming_outgoing_handoffs",
+          "task_output_dependencies",
+          "coverage",
+          "dependency_context",
+          "reference_context_rule",
+          "resident_handoff_interfaces",
+          "source_receipt_index",
+          "workflow",
+          "coverage_source",
+          "selection_pointers",
+          "criterion_ids",
+          "completion"
+        ]
+      }
+    },
+    "common": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/COMMON.md",
+      "blob": "d61f32af03fe10747a50274233f953af044decf6",
+      "read": "Complete by root"
+    },
+    "mission_common": {
+      "commit": "c708ec0609dbfc95b259707d8c38481617f74f11",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-wave/COMMON.md",
+      "blob": "e54d84e3cdfa0046225518e253baf9dcf377fa7c"
+    },
+    "AGENTS": {
+      "path": "AGENTS.md",
+      "blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+      "descendants": "No additional AGENTS found at inspected ancestors of product/procurement/imports/documents/tests/docs/recheck-wave; PR52 Sucafinav1 tree and PR58 imports/test-product trees untruncated.",
+      "application": "Reviewer restriction: no test dispatch or product edits; no C approval."
+    },
+    "appendices": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/product-acceptance.md",
+        "blob": "ded082688fce327def0b48968fa3b89a5831029c",
+        "read": "complete"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/resident-runtime.md",
+        "blob": "033737b1051b23443e633df7874c550629bf55a1",
+        "read": "complete"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/execution-reconciliation.md",
+        "blob": "89d3a9ea372c9700eb04267fab6462feb0c0b9d1",
+        "read": "complete"
+      }
+    ]
+  },
+  "heads_observed": [
+    {
+      "pr": 49,
+      "branch": "review-operations",
+      "reviewed_head": "048b46acd3d70dc7ddafbea9e9b439f0d2e781d9",
+      "latest_head": "048b46acd3d70dc7ddafbea9e9b439f0d2e781d9",
+      "advanced": false,
+      "updated_at": "2026-11-14T17:58:32Z",
+      "state": "open"
+    },
+    {
+      "pr": 34,
+      "branch": "astra-operations",
+      "reviewed_head": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+      "latest_head": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+      "advanced": false,
+      "updated_at": "2026-11-14T19:08:08Z",
+      "state": "open"
+    },
+    {
+      "pr": 52,
+      "branch": "operations-fixes",
+      "reviewed_head": "d48065d391e1557d43b63525bdc7f55b168d5206",
+      "latest_head": "d48065d391e1557d43b63525bdc7f55b168d5206",
+      "advanced": false,
+      "updated_at": "2026-11-14T18:38:01Z",
+      "state": "open"
+    },
+    {
+      "pr": 57,
+      "branch": "sourcing-money",
+      "reviewed_head": "2a185e05967f611d63796684379761ded991092b",
+      "latest_head": "2a185e05967f611d63796684379761ded991092b",
+      "advanced": false,
+      "updated_at": "2026-11-14T18:38:20Z",
+      "state": "open"
+    },
+    {
+      "pr": 58,
+      "branch": "import-recovery",
+      "reviewed_head": "e1dc51a6df8cd40a125d960dce6fa5e5d8b33c5e",
+      "latest_head": "e1dc51a6df8cd40a125d960dce6fa5e5d8b33c5e",
+      "advanced": false,
+      "updated_at": "2026-11-14T18:42:21Z",
+      "state": "open"
+    },
+    {
+      "pr": 60,
+      "branch": "procurement-apply",
+      "reviewed_head": "8e23e592602fb9f2fae9ce8f824322a073073e23",
+      "latest_head": "8e23e592602fb9f2fae9ce8f824322a073073e23",
+      "advanced": false,
+      "updated_at": "2026-11-14T18:43:04Z",
+      "state": "open"
+    }
+  ],
+  "git_commits": [
+    {
+      "sha": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+      "tree": "c011ad6fe1647f9e92d68e6bd9ec723d4db26827",
+      "parents": [
+        "fd363ca6f66dea56422c235f835103467c7ee8ba"
+      ]
+    },
+    {
+      "sha": "d48065d391e1557d43b63525bdc7f55b168d5206",
+      "tree": "fee20b161def03ccefd0fdde3820a9ed83076eb5",
+      "parents": [
+        "c9b14ba6848d87a756c4144a542f5cee571dac37"
+      ]
+    },
+    {
+      "sha": "2a185e05967f611d63796684379761ded991092b",
+      "tree": "5f3f826dcafe7ac78817290160d2540f6a7d1723",
+      "parents": [
+        "a3b7fb9b45d7852a3000e01098336a1aca9526c3"
+      ]
+    },
+    {
+      "sha": "e1dc51a6df8cd40a125d960dce6fa5e5d8b33c5e",
+      "tree": "29a9b20832237eab91a1c15d678db57264bd1de2",
+      "parents": [
+        "95b3c9a33ba1bf66b9edf2bdd35736e6228eb979"
+      ]
+    },
+    {
+      "sha": "ee2e14ac940ba62177052f44c0f0e781132e7564",
+      "tree": "01a10e66482be74e95c099761e31eca2d9be4363",
+      "parents": [
+        "8caafd2455cc149064ad0d5fdb63f48009269de7"
+      ]
+    },
+    {
+      "sha": "c9b14ba6848d87a756c4144a542f5cee571dac37",
+      "tree": "08c06a318a21e8c343742f935c9ad789accc34be",
+      "parents": [
+        "32a73ae7995eb193eaf9a78527736cb2df176a00"
+      ]
+    },
+    {
+      "sha": "8caafd2455cc149064ad0d5fdb63f48009269de7",
+      "tree": "fa7504de55812a21ec0c794b72f0bda9c144150d",
+      "parents": [
+        "86f9c993678668634ab409dc31b6b92865836180"
+      ]
+    },
+    {
+      "sha": "a3b7fb9b45d7852a3000e01098336a1aca9526c3",
+      "tree": "24ef58c1bb91df3b5763d402411b8f5cb73c2812",
+      "parents": [
+        "aa5d8c0ee49777ea82bc707df8c976d311728292"
+      ]
+    },
+    {
+      "sha": "20915a35aa8364a39d1a6014c494f9ab4c1339e8",
+      "tree": "49a833e708e87b605eaff04ff34b712a17982e12",
+      "parents": [
+        "ba8a09e371ce8d93eb917eabb102caaee5affaf4"
+      ]
+    },
+    {
+      "sha": "95b3c9a33ba1bf66b9edf2bdd35736e6228eb979",
+      "tree": "5ac0f080f98d1326b35dc8ff15a7be3521e5bda3",
+      "parents": [
+        "feaa3856ef84b5a85b687fd67e8e20883bc246c2"
+      ]
+    },
+    {
+      "sha": "fd363ca6f66dea56422c235f835103467c7ee8ba",
+      "tree": "f0fc51a399640983b20d29944a56c4dc0610313f",
+      "parents": [
+        "ba8a09e371ce8d93eb917eabb102caaee5affaf4"
+      ]
+    },
+    {
+      "sha": "897484c9a472bd43d17cabe56552f2f8fa890185",
+      "tree": "7ce04850ffe2dc283eae076a625bcdc5d70a4cf4",
+      "parents": [
+        "ba8a09e371ce8d93eb917eabb102caaee5affaf4"
+      ]
+    },
+    {
+      "sha": "9c45f18de1f9bd3d5647e37ef35cb3d5e2855277",
+      "tree": "a105a63918f72022c04cb0c948c0a79979d681ee",
+      "parents": [
+        "897484c9a472bd43d17cabe56552f2f8fa890185"
+      ]
+    },
+    {
+      "sha": "8e23e592602fb9f2fae9ce8f824322a073073e23",
+      "tree": "e69eb3bb67ad85175af1165dbeca86a04dfa42ae",
+      "parents": [
+        "897484c9a472bd43d17cabe56552f2f8fa890185"
+      ]
+    }
+  ],
+  "functional_runs": [
+    {
+      "id": 43624678702,
+      "pr": 52,
+      "scope": "I-OPS-02 / E-OPS-01",
+      "W": "8caafd2455cc149064ad0d5fdb63f48009269de7",
+      "S": "9c173f573e88bf033e9180494114d33da9a4894f",
+      "request_blob": "89a21288231186dbb0ac8e54901e8d755943bd49",
+      "job": 132537765899,
+      "cleanup": 132538391496,
+      "conclusion": "success",
+      "passed": 2,
+      "failed": 0,
+      "expectations": 76,
+      "duration_seconds": 37.36,
+      "selection": [
+        "./Sucafinav1/test/product/operations-fixes/c12-concurrency.test.ts"
+      ],
+      "omni": "pass; nonce d37f1479f16ec5e354c22161bdbe17a2",
+      "interpretation": "BUG_REPRODUCTION. 409→409→409 após reopen, um efeito/receipt. Controle API com versão corrente200; UI não recupera.",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43624678702",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43624678702/job/132537765899",
+      "run_attempt": 1,
+      "review_action": "READ_EXISTING_RUN_ONLY",
+      "request_path": ".ci-run.json",
+      "request_url": "https://github.com/gustavomhss/Orchestra-SF/blob/9c173f573e88bf033e9180494114d33da9a4894f/.ci-run.json",
+      "runner": "bun",
+      "package_directory": "modules/sucafina",
+      "env": {},
+      "request_timeout": 120000,
+      "W_to_S": "Verified by GitHub compare: only added .ci-run.json; parent matches W.",
+      "request": {
+        "package": "sucafina",
+        "packageSelector": "packages/sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/operations-fixes/c12-concurrency.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "request_arguments": [
+        "./Sucafinav1/test/product/operations-fixes/c12-concurrency.test.ts",
+        "--timeout",
+        "120000"
+      ]
+    },
+    {
+      "id": 43625203326,
+      "pr": 52,
+      "scope": "D-OPS-01",
+      "W": "ee2e14ac940ba62177052f44c0f0e781132e7564",
+      "S": "96da0ee1011e4a47086830c0a4bde00b878f54e5",
+      "request_blob": "d4b4a6b5796c6657c35ca09dc5392e34606b6b59",
+      "job": 132539378028,
+      "cleanup": 132539947860,
+      "conclusion": "success",
+      "passed": 8,
+      "failed": 0,
+      "expectations": 96,
+      "duration_seconds": 20.93,
+      "selection": [
+        "./Sucafinav1/test/product/operations-fixes/document-reextract.test.ts",
+        "./Sucafinav1/test/product/operations-fixes/document-workbench.test.ts",
+        "./Sucafinav1/test/product/wp06/documents/extraction-reuse.test.ts",
+        "./Sucafinav1/test/product/wp06/documents/schemas.test.ts"
+      ],
+      "omni": "pass; nonce fc7cd8762c5c4bb20a74a7d409bb934a;1spawn/0delegações",
+      "interpretation": "Correção e negativos documentais; Chromium com transporte controlado, serviços/SQLite reais.",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43625203326",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43625203326/job/132539378028",
+      "run_attempt": 1,
+      "review_action": "READ_EXISTING_RUN_ONLY",
+      "request_path": ".ci-run.json",
+      "request_url": "https://github.com/gustavomhss/Orchestra-SF/blob/96da0ee1011e4a47086830c0a4bde00b878f54e5/.ci-run.json",
+      "runner": "bun",
+      "package_directory": "modules/sucafina",
+      "env": {},
+      "request_timeout": 120000,
+      "W_to_S": "Verified by GitHub compare: only added .ci-run.json; parent matches W.",
+      "request": {
+        "package": "sucafina",
+        "packageSelector": "packages/sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/operations-fixes/document-reextract.test.ts",
+          "./Sucafinav1/test/product/operations-fixes/document-workbench.test.ts",
+          "./Sucafinav1/test/product/wp06/documents/extraction-reuse.test.ts",
+          "./Sucafinav1/test/product/wp06/documents/schemas.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "request_arguments": [
+        "./Sucafinav1/test/product/operations-fixes/document-reextract.test.ts",
+        "./Sucafinav1/test/product/operations-fixes/document-workbench.test.ts",
+        "./Sucafinav1/test/product/wp06/documents/extraction-reuse.test.ts",
+        "./Sucafinav1/test/product/wp06/documents/schemas.test.ts",
+        "--timeout",
+        "120000"
+      ]
+    },
+    {
+      "id": 43626678715,
+      "pr": 52,
+      "scope": "OPS-REV-03",
+      "W": "c9b14ba6848d87a756c4144a542f5cee571dac37",
+      "S": "56b5b3dcd409aa65ced84244999a01f9042570a0",
+      "request_blob": "113bfc26eeb44819590baa06c12625134d11f348",
+      "job": 132543970174,
+      "cleanup": 132544689010,
+      "conclusion": "success",
+      "passed": 4,
+      "failed": 0,
+      "filtered_out": 2,
+      "expectations": 37,
+      "duration_seconds": 42.53,
+      "selection": [
+        "./Sucafinav1/test/product/operations-fixes/document-search.test.ts",
+        "./Sucafinav1/test/product/operations-fixes/document-search-budget.test.ts",
+        "./Sucafinav1/test/product/wp06/documents/egress-fences.test.ts"
+      ],
+      "filter": "OPS-REV-03|search suppresses",
+      "omni": "not applicable; nonce 90950a28e333b1d67c5615abefcdb6a2",
+      "interpretation": "Orçamento/deduplicação após autorização. Dois casos usam reader sintético; filtro e2filteredout preservados.",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43626678715",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43626678715/job/132543970174",
+      "run_attempt": 1,
+      "review_action": "READ_EXISTING_RUN_ONLY",
+      "request_path": ".ci-run.json",
+      "request_url": "https://github.com/gustavomhss/Orchestra-SF/blob/56b5b3dcd409aa65ced84244999a01f9042570a0/.ci-run.json",
+      "runner": "bun",
+      "package_directory": "modules/sucafina",
+      "env": {},
+      "request_timeout": 120000,
+      "W_to_S": "Verified by GitHub compare: only added .ci-run.json; parent matches W.",
+      "request": {
+        "package": "sucafina",
+        "packageSelector": "packages/sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/operations-fixes/document-search.test.ts",
+          "./Sucafinav1/test/product/operations-fixes/document-search-budget.test.ts",
+          "./Sucafinav1/test/product/wp06/documents/egress-fences.test.ts",
+          "--timeout",
+          "120000",
+          "-t",
+          "OPS-REV-03|search suppresses"
+        ],
+        "env": {}
+      },
+      "request_arguments": [
+        "./Sucafinav1/test/product/operations-fixes/document-search.test.ts",
+        "./Sucafinav1/test/product/operations-fixes/document-search-budget.test.ts",
+        "./Sucafinav1/test/product/wp06/documents/egress-fences.test.ts",
+        "--timeout",
+        "120000",
+        "-t",
+        "OPS-REV-03|search suppresses"
+      ]
+    },
+    {
+      "id": 43625920456,
+      "pr": 57,
+      "scope": "OPS-REV-01 regressões e cenário inicial",
+      "W": "aa5d8c0ee49777ea82bc707df8c976d311728292",
+      "S": "532a73aa2d7b8e7f5e57e0156b0de67f7ac1fb1c",
+      "request_blob": "87624d39df3cf8cf4c9d4bbb0f9d50a95da59e30",
+      "job": 132541573935,
+      "conclusion": "success",
+      "passed": 58,
+      "failed": 0,
+      "expectations": 377,
+      "files": 6,
+      "selection_source": "https://github.com/gustavomhss/Orchestra-SF/blob/532a73aa2d7b8e7f5e57e0156b0de67f7ac1fb1c/.ci-run.json",
+      "interpretation": "58 casos no W inicial.5 deles revalidados em W final; não63 casos distintos.",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43625920456",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43625920456/job/132541573935",
+      "run_attempt": 1,
+      "review_action": "READ_EXISTING_RUN_ONLY",
+      "request_path": ".ci-run.json",
+      "request_url": "https://github.com/gustavomhss/Orchestra-SF/blob/532a73aa2d7b8e7f5e57e0156b0de67f7ac1fb1c/.ci-run.json",
+      "runner": "bun",
+      "package_directory": "modules/sucafina",
+      "env": {},
+      "W_to_S": "Verified by GitHub compare: only added .ci-run.json; parent matches W.",
+      "request": {
+        "package": "sucafina",
+        "packageSelector": "packages/sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/review-fixes/sourcing-money/sourcing-stage.test.ts",
+          "./Sucafinav1/test/product/wp04/money.test.ts",
+          "./Sucafinav1/test/product/wp04/finance-material.test.ts",
+          "./Sucafinav1/test/product/wp04/projection.test.ts",
+          "./Sucafinav1/test/product/wp04/comparison-review.test.ts",
+          "./Sucafinav1/test/product/wp04/confirmation.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "selection": [
+        "./Sucafinav1/test/product/review-fixes/sourcing-money/sourcing-stage.test.ts",
+        "./Sucafinav1/test/product/wp04/money.test.ts",
+        "./Sucafinav1/test/product/wp04/finance-material.test.ts",
+        "./Sucafinav1/test/product/wp04/projection.test.ts",
+        "./Sucafinav1/test/product/wp04/comparison-review.test.ts",
+        "./Sucafinav1/test/product/wp04/confirmation.test.ts"
+      ],
+      "request_arguments": [
+        "./Sucafinav1/test/product/review-fixes/sourcing-money/sourcing-stage.test.ts",
+        "./Sucafinav1/test/product/wp04/money.test.ts",
+        "./Sucafinav1/test/product/wp04/finance-material.test.ts",
+        "./Sucafinav1/test/product/wp04/projection.test.ts",
+        "./Sucafinav1/test/product/wp04/comparison-review.test.ts",
+        "./Sucafinav1/test/product/wp04/confirmation.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "request_timeout": 120000
+    },
+    {
+      "id": 43626658534,
+      "pr": 57,
+      "scope": "OPS-REV-01 fluxo real e contraprovas",
+      "W": "a3b7fb9b45d7852a3000e01098336a1aca9526c3",
+      "S": "fb440a03e4d712e0d6f40f021997b31a80943a3d",
+      "request_blob": "3847c4a66c5998d3de3677940908995f0281c284",
+      "job": 132543906292,
+      "conclusion": "success",
+      "passed": 5,
+      "failed": 0,
+      "expectations": 133,
+      "selection": [
+        "./Sucafinav1/test/product/review-fixes/sourcing-money/sourcing-stage.test.ts"
+      ],
+      "interpretation": "C02/C06/comparison108 após FX2, rawLegacyValue200 nesta origem. Não confundir diagnóstico do legado com correção.",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43626658534",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43626658534/job/132543906292",
+      "run_attempt": 1,
+      "review_action": "READ_EXISTING_RUN_ONLY",
+      "request_path": ".ci-run.json",
+      "request_url": "https://github.com/gustavomhss/Orchestra-SF/blob/fb440a03e4d712e0d6f40f021997b31a80943a3d/.ci-run.json",
+      "runner": "bun",
+      "package_directory": "modules/sucafina",
+      "env": {},
+      "request_timeout": 120000,
+      "W_to_S": "Verified by GitHub compare: only added .ci-run.json; parent matches W.",
+      "request": {
+        "package": "sucafina",
+        "packageSelector": "packages/sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/review-fixes/sourcing-money/sourcing-stage.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "request_arguments": [
+        "./Sucafinav1/test/product/review-fixes/sourcing-money/sourcing-stage.test.ts",
+        "--timeout",
+        "120000"
+      ]
+    },
+    {
+      "id": 43626093062,
+      "pr": 58,
+      "scope": "OPS-REV-04 + E-OPS-02 inicial",
+      "W": "20915a35aa8364a39d1a6014c494f9ab4c1339e8",
+      "S": "a0e8b4d9c9ed338d3a3e1e850ae258bf098678c3",
+      "request_blob": "da8bf0816549e4b97bba6ad1359681c885d1e3d8",
+      "job": 132542099820,
+      "conclusion": "success",
+      "passed": 14,
+      "failed": 0,
+      "expectations": 186,
+      "files": 4,
+      "duration_seconds": 16.8,
+      "selection_source": "https://github.com/gustavomhss/Orchestra-SF/blob/a0e8b4d9c9ed338d3a3e1e850ae258bf098678c3/.ci-run.json",
+      "omni": "not applicable; no declaring test ran",
+      "interpretation": "7 admission+4 Apply+3 regressões. W1, não inventar execução em W2.",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43626093062",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43626093062/job/132542099820",
+      "run_attempt": 1,
+      "review_action": "READ_EXISTING_RUN_ONLY",
+      "request_path": ".ci-run.json",
+      "request_url": "https://github.com/gustavomhss/Orchestra-SF/blob/a0e8b4d9c9ed338d3a3e1e850ae258bf098678c3/.ci-run.json",
+      "runner": "bun",
+      "package_directory": "modules/sucafina",
+      "env": {},
+      "request_timeout": 120000,
+      "W_to_S": "Verified by GitHub compare: only added .ci-run.json; parent matches W.",
+      "request": {
+        "package": "sucafina",
+        "packageSelector": "packages/sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/review-fixes/import-recovery/admission-restart.test.ts",
+          "./Sucafinav1/test/product/review-fixes/import-recovery/apply-restart.test.ts",
+          "./Sucafinav1/test/product/wp06/imports/staged-files.test.ts",
+          "./Sucafinav1/test/product/wp06/imports/admission-boundaries.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "selection": [
+        "./Sucafinav1/test/product/review-fixes/import-recovery/admission-restart.test.ts",
+        "./Sucafinav1/test/product/review-fixes/import-recovery/apply-restart.test.ts",
+        "./Sucafinav1/test/product/wp06/imports/staged-files.test.ts",
+        "./Sucafinav1/test/product/wp06/imports/admission-boundaries.test.ts"
+      ],
+      "request_arguments": [
+        "./Sucafinav1/test/product/review-fixes/import-recovery/admission-restart.test.ts",
+        "./Sucafinav1/test/product/review-fixes/import-recovery/apply-restart.test.ts",
+        "./Sucafinav1/test/product/wp06/imports/staged-files.test.ts",
+        "./Sucafinav1/test/product/wp06/imports/admission-boundaries.test.ts",
+        "--timeout",
+        "120000"
+      ]
+    },
+    {
+      "id": 43627493939,
+      "pr": 58,
+      "scope": "E-OPS-02 após ajuste tipado da fixture",
+      "W": "95b3c9a33ba1bf66b9edf2bdd35736e6228eb979",
+      "S": "0a3857a4f3c9f3824c09b6aa76d155d6295e9ed9",
+      "request_blob": "310b5c19356a521e2a3faea37a1cc16d935689ae",
+      "job": 132546551148,
+      "conclusion": "success",
+      "passed": 4,
+      "failed": 0,
+      "expectations": 84,
+      "duration_seconds": 16.89,
+      "selection": [
+        "./Sucafinav1/test/product/review-fixes/import-recovery/apply-restart.test.ts"
+      ],
+      "omni": "not applicable; no declaring test ran",
+      "interpretation": "4 casos reexecutados com runtime/autoridade reconstruídos depois de fechar SQLite; não kill de processo.",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43627493939",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43627493939/job/132546551148",
+      "run_attempt": 1,
+      "review_action": "READ_EXISTING_RUN_ONLY",
+      "request_path": ".ci-run.json",
+      "request_url": "https://github.com/gustavomhss/Orchestra-SF/blob/0a3857a4f3c9f3824c09b6aa76d155d6295e9ed9/.ci-run.json",
+      "runner": "bun",
+      "package_directory": "modules/sucafina",
+      "env": {},
+      "request_timeout": 120000,
+      "W_to_S": "Verified by GitHub compare: only added .ci-run.json; parent matches W.",
+      "request": {
+        "package": "sucafina",
+        "packageSelector": "packages/sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/review-fixes/import-recovery/apply-restart.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "request_arguments": [
+        "./Sucafinav1/test/product/review-fixes/import-recovery/apply-restart.test.ts",
+        "--timeout",
+        "120000"
+      ]
+    },
+    {
+      "id": 43626285237,
+      "pr": 60,
+      "scope": "OPS-REV-02",
+      "W": "897484c9a472bd43d17cabe56552f2f8fa890185",
+      "S": "9c45f18de1f9bd3d5647e37ef35cb3d5e2855277",
+      "request_blob": "70d41b2f0afba1f9bb429d9f5c6ea75c773af828",
+      "job": 132542704491,
+      "cleanup": 132543411849,
+      "conclusion": "success",
+      "passed": 10,
+      "failed": 0,
+      "expectations": 141,
+      "duration_seconds": 43.32,
+      "selection": [
+        "./Sucafinav1/test/product/review-fixes/procurement-apply/refusals.test.ts",
+        "./Sucafinav1/test/product/review-fixes/procurement-apply/real-apply.test.ts",
+        "./Sucafinav1/test/product/wp04/prepared-production.test.ts",
+        "./Sucafinav1/test/product/wp04/finance-prepared-alias.test.ts"
+      ],
+      "omni": "not applicable; nonce d8b6c10d15b6b0aa3c328526026e4d02",
+      "interpretation": "7novos+3regressões; positivos reais HTTP/SQLite, negativos legados sintéticos; replay mesma composição.",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43626285237",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43626285237/job/132542704491",
+      "run_attempt": 1,
+      "review_action": "READ_EXISTING_RUN_ONLY",
+      "request_path": ".ci-run.json",
+      "request_url": "https://github.com/gustavomhss/Orchestra-SF/blob/9c45f18de1f9bd3d5647e37ef35cb3d5e2855277/.ci-run.json",
+      "runner": "bun",
+      "package_directory": "modules/sucafina",
+      "env": {},
+      "request_timeout": 120000,
+      "W_to_S": "Verified by GitHub compare: only added .ci-run.json; parent matches W.",
+      "request": {
+        "package": "sucafina",
+        "packageSelector": "packages/sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/review-fixes/procurement-apply/refusals.test.ts",
+          "./Sucafinav1/test/product/review-fixes/procurement-apply/real-apply.test.ts",
+          "./Sucafinav1/test/product/wp04/prepared-production.test.ts",
+          "./Sucafinav1/test/product/wp04/finance-prepared-alias.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "request_arguments": [
+        "./Sucafinav1/test/product/review-fixes/procurement-apply/refusals.test.ts",
+        "./Sucafinav1/test/product/review-fixes/procurement-apply/real-apply.test.ts",
+        "./Sucafinav1/test/product/wp04/prepared-production.test.ts",
+        "./Sucafinav1/test/product/wp04/finance-prepared-alias.test.ts",
+        "--timeout",
+        "120000"
+      ]
+    },
+    {
+      "id": 43628901747,
+      "pr": 34,
+      "scope": "Consumidores monetários/Atlas e exportações",
+      "W": "fd363ca6f66dea56422c235f835103467c7ee8ba",
+      "S": "80e78d97f15b468b8393c6a1676472f1979d2d33",
+      "request_blob": "417694b0fb189826b91e552f7b501bfbeecd58ff",
+      "job": 132550880255,
+      "cleanup": 132552039173,
+      "conclusion": "failure",
+      "passed": 10,
+      "failed": 2,
+      "skipped": 0,
+      "expectations": 212,
+      "duration_seconds": 144.13,
+      "selection": [
+        "./Sucafinav1/test/product/operations-consumers/monetary-consumers.test.ts",
+        "./Sucafinav1/test/product/operations-consumers/export-owner-regression.test.ts",
+        "./Sucafinav1/test/product/wp14/source-access-atlas.test.ts"
+      ],
+      "omni": "pass; nonce 669e4e5da490881aaf29411e7ca2b727;4spawns/0delegações",
+      "interpretation": "8monetários+2Atlas passam;2regressões export falham. Resultado agregado FAILURE.",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43628901747",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43628901747/job/132550880255",
+      "run_attempt": 1,
+      "review_action": "READ_EXISTING_RUN_ONLY",
+      "request_path": ".ci-run.json",
+      "request_url": "https://github.com/gustavomhss/Orchestra-SF/blob/80e78d97f15b468b8393c6a1676472f1979d2d33/.ci-run.json",
+      "runner": "bun",
+      "package_directory": "modules/sucafina",
+      "env": {},
+      "request_timeout": 120000,
+      "W_to_S": "Verified by GitHub compare: only added .ci-run.json; parent matches W.",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/operations-consumers/monetary-consumers.test.ts",
+          "./Sucafinav1/test/product/operations-consumers/export-owner-regression.test.ts",
+          "./Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "request_arguments": [
+        "./Sucafinav1/test/product/operations-consumers/monetary-consumers.test.ts",
+        "./Sucafinav1/test/product/operations-consumers/export-owner-regression.test.ts",
+        "./Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+        "--timeout",
+        "120000"
+      ]
+    }
+  ],
+  "checks": [
+    {
+      "pr": 52,
+      "id": 43627083716,
+      "job": 132545828766,
+      "examined": "c9b14ba6848d87a756c4144a542f5cee571dac37",
+      "S": "1601f4eef6e556f660217627771b2f8a6a7b17dd",
+      "request_blob": "0789c92cf40d554902167e957cf18c50adb9e171",
+      "conclusion": "failure",
+      "sucafina": "FAIL",
+      "cli": "PASS",
+      "guards": "PASS",
+      "paths": 856,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43627083716",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43627083716/job/132545828766",
+      "request_url": "https://github.com/gustavomhss/Orchestra-SF/blob/1601f4eef6e556f660217627771b2f8a6a7b17dd/.astra-operations-check.json",
+      "commands": {
+        "sucafina": "bun typecheck (modules/sucafina)",
+        "cli": "bun typecheck (apps/cli)",
+        "guards": "bun run check:guards --base origin/dev"
+      },
+      "dev": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+      "rules": 78,
+      "gate_findings": 0,
+      "warnings": 11,
+      "guard_errors": 0,
+      "diagnostic": "TS2741 test/product/wp14/source-access-atlas.test.ts(167,41), missing procurementEvidenceWrites; exit2. Erro fora do delta não é waiver.",
+      "envelope": "Only .astra-operations-check.json added; job checks out examined SHA exactly. Both typechecks executed.",
+      "review_action": "READ_EXISTING_RUN_ONLY"
+    },
+    {
+      "pr": 57,
+      "id": 43626850572,
+      "job": 132544574863,
+      "examined": "a3b7fb9b45d7852a3000e01098336a1aca9526c3",
+      "S": "b47a2787636a4b9584a703b0dd562f392d00e596",
+      "request_blob": "11694cae5e7bc45c469fd8bf706da200e3cfce3c",
+      "conclusion": "failure",
+      "sucafina": "FAIL",
+      "cli": "PASS",
+      "guards": "PASS",
+      "paths": 845,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43626850572",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43626850572/job/132544574863",
+      "request_url": "https://github.com/gustavomhss/Orchestra-SF/blob/b47a2787636a4b9584a703b0dd562f392d00e596/.astra-operations-check.json",
+      "commands": {
+        "sucafina": "bun typecheck (modules/sucafina)",
+        "cli": "bun typecheck (apps/cli)",
+        "guards": "bun run check:guards --base origin/dev"
+      },
+      "dev": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+      "rules": 78,
+      "gate_findings": 0,
+      "warnings": 11,
+      "guard_errors": 0,
+      "diagnostic": "TS2741 test/product/wp14/source-access-atlas.test.ts(167,41), missing procurementEvidenceWrites; exit2. Erro fora do delta não é waiver.",
+      "envelope": "Only .astra-operations-check.json added; job checks out examined SHA exactly. Both typechecks executed.",
+      "review_action": "READ_EXISTING_RUN_ONLY"
+    },
+    {
+      "pr": 58,
+      "id": 43627773376,
+      "job": 132547407913,
+      "examined": "e1dc51a6df8cd40a125d960dce6fa5e5d8b33c5e",
+      "S": "a31f075b3bb29231c791e7d2291d0d18da91a621",
+      "request_blob": "529e2c1854b6f43ceb982b45e6f3690c7c47e621",
+      "conclusion": "failure",
+      "sucafina": "FAIL",
+      "cli": "PASS",
+      "guards": "PASS",
+      "paths": 845,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43627773376",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43627773376/job/132547407913",
+      "request_url": "https://github.com/gustavomhss/Orchestra-SF/blob/a31f075b3bb29231c791e7d2291d0d18da91a621/.astra-operations-check.json",
+      "commands": {
+        "sucafina": "bun typecheck (modules/sucafina)",
+        "cli": "bun typecheck (apps/cli)",
+        "guards": "bun run check:guards --base origin/dev"
+      },
+      "dev": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+      "rules": 78,
+      "gate_findings": 0,
+      "warnings": 11,
+      "guard_errors": 0,
+      "diagnostic": "TS2741 test/product/wp14/source-access-atlas.test.ts(167,41), missing procurementEvidenceWrites; exit2. Erro fora do delta não é waiver.",
+      "envelope": "Only .astra-operations-check.json added; job checks out examined SHA exactly. Both typechecks executed.",
+      "review_action": "READ_EXISTING_RUN_ONLY"
+    },
+    {
+      "pr": 60,
+      "id": 43627354338,
+      "job": 132546331455,
+      "examined": "897484c9a472bd43d17cabe56552f2f8fa890185",
+      "S": "92fe39450c3b5f3db2ac019b8050a6dc5f883ade",
+      "request_blob": "35885d0d023c0bf1dc85ddb54b0c5b8bfd854fd1",
+      "conclusion": "failure",
+      "sucafina": "FAIL",
+      "cli": "PASS",
+      "guards": "PASS",
+      "paths": 843,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43627354338",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43627354338/job/132546331455",
+      "request_url": "https://github.com/gustavomhss/Orchestra-SF/blob/92fe39450c3b5f3db2ac019b8050a6dc5f883ade/.astra-operations-check.json",
+      "commands": {
+        "sucafina": "bun typecheck (modules/sucafina)",
+        "cli": "bun typecheck (apps/cli)",
+        "guards": "bun run check:guards --base origin/dev"
+      },
+      "dev": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+      "rules": 78,
+      "gate_findings": 0,
+      "warnings": 11,
+      "guard_errors": 0,
+      "diagnostic": "TS2741 test/product/wp14/source-access-atlas.test.ts(167,41), missing procurementEvidenceWrites; exit2. Erro fora do delta não é waiver.",
+      "envelope": "Only .astra-operations-check.json added; job checks out examined SHA exactly. Both typechecks executed.",
+      "review_action": "READ_EXISTING_RUN_ONLY"
+    },
+    {
+      "pr": 34,
+      "id": 43629903794,
+      "job": 132553975834,
+      "examined": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+      "S": "df8a7679175f2e30402be8b212052126c674ecd1",
+      "request_blob": "1d158562034087eda94e6218f4cb0f8e6d700be5",
+      "conclusion": "success",
+      "sucafina": "PASS",
+      "cli": "PASS",
+      "guards": "PASS",
+      "paths": 846,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43629903794",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43629903794/job/132553975834",
+      "request_url": "https://github.com/gustavomhss/Orchestra-SF/blob/df8a7679175f2e30402be8b212052126c674ecd1/.astra-operations-check.json",
+      "commands": {
+        "sucafina": "bun typecheck (modules/sucafina)",
+        "cli": "bun typecheck (apps/cli)",
+        "guards": "bun run check:guards --base origin/dev"
+      },
+      "dev": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+      "rules": 78,
+      "gate_findings": 0,
+      "warnings": 11,
+      "guard_errors": 0,
+      "diagnostic": null,
+      "envelope": "Only .astra-operations-check.json added; job checks out examined SHA exactly. Both typechecks executed.",
+      "review_action": "READ_EXISTING_RUN_ONLY"
+    }
+  ],
+  "historical_limited_reviews": [
+    {
+      "id": 43554658437,
+      "job": 132324664659,
+      "S": "af826c317bf6e6a4bd7eb1db7e4b1c8619deedc7",
+      "W": "14cb7e829ed391a64d907a165fc328c5ed94f0f4",
+      "tree": "6f09e31307cec2744569d40c8835d5b23a4d9432",
+      "request_blob": "d06a6d4a63cc35de29e9a63dd0951bb81c0a5ed3",
+      "conclusion": "success",
+      "review_scope": "E-OPS-03 two foreign UID tests only",
+      "observed": "Both directory and database SKIPPED; no PASS credit.",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43554658437",
+      "request_url": "https://github.com/gustavomhss/Orchestra-SF/blob/af826c317bf6e6a4bd7eb1db7e4b1c8619deedc7/.ci-run.json",
+      "excerpts": [
+        "2026-11-14T04:04:24.5040164Z (skip) rejects foreign UID directory (requires root fixture privileges)",
+        "2026-11-14T04:04:24.5040691Z (skip) rejects foreign UID database (requires root fixture privileges)",
+        "2026-11-14T04:14:03.9814045Z (skip) rejects foreign UID directory (requires root fixture privileges)",
+        "2026-11-14T04:14:03.9814814Z (skip) rejects foreign UID database (requires root fixture privileges)"
+      ]
+    },
+    {
+      "id": 43555674548,
+      "job": 132327869450,
+      "S": "98f8ce97edb049a91b22a877894a28399c7316f6",
+      "W": "357177bff8d9ed8c82f3ff47988a2336dd73f882",
+      "tree": "3741e86a086bae3bdbe1c35c97de411d59c42e59",
+      "request_blob": "dce298e0d662281f60157f6f9f669b6fbc478671",
+      "conclusion": "success",
+      "review_scope": "E-OPS-03 two foreign UID tests only",
+      "observed": "Both directory and database SKIPPED; no PASS credit.",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43555674548",
+      "request_url": "https://github.com/gustavomhss/Orchestra-SF/blob/98f8ce97edb049a91b22a877894a28399c7316f6/.ci-run.json",
+      "excerpts": [
+        "2026-11-14T04:16:17.1527474Z (skip) rejects foreign UID directory (requires root fixture privileges)",
+        "2026-11-14T04:16:17.1527976Z (skip) rejects foreign UID database (requires root fixture privileges)",
+        "2026-11-14T04:16:23.1571640Z (skip) rejects foreign UID directory (requires root fixture privileges)",
+        "2026-11-14T04:16:23.1571970Z (skip) rejects foreign UID database (requires root fixture privileges)"
+      ]
+    }
+  ],
+  "source_to_delivery": [
+    {
+      "pr": 52,
+      "from": "c9b14ba6848d87a756c4144a542f5cee571dac37",
+      "to": "d48065d391e1557d43b63525bdc7f55b168d5206",
+      "delta": "Three documentary paths: two additions and four added lines in a previous HANDOFF. Executable inputs identical. This is NOT asserted to be an admissible append-only final D envelope."
+    },
+    {
+      "pr": 52,
+      "from": "ee2e14ac940ba62177052f44c0f0e781132e7564",
+      "to": "d48065d391e1557d43b63525bdc7f55b168d5206",
+      "delta": "Only subsequent executable delta is document-search implementation and three search tests; D-OPS schema/workbench/extraction code/tests unchanged."
+    },
+    {
+      "pr": 52,
+      "from": "8caafd2455cc149064ad0d5fdb63f48009269de7",
+      "to": "d48065d391e1557d43b63525bdc7f55b168d5206",
+      "delta": "C12 UI/host/executor/HTTP blobs remain identical. Subsequent changes concern documents/search/tests/receipts."
+    },
+    {
+      "pr": 57,
+      "from": "a3b7fb9b45d7852a3000e01098336a1aca9526c3",
+      "to": "2a185e05967f611d63796684379761ded991092b",
+      "delta": "Only new RESULT.json and HANDOFF.md; no executable input change."
+    },
+    {
+      "pr": 58,
+      "from": "20915a35aa8364a39d1a6014c494f9ab4c1339e8",
+      "to": "95b3c9a33ba1bf66b9edf2bdd35736e6228eb979",
+      "delta": "Three receipts added; apply-fixture intent parameter gets string annotation preserving default and logic;4Apply cases reexecuted."
+    },
+    {
+      "pr": 58,
+      "from": "95b3c9a33ba1bf66b9edf2bdd35736e6228eb979",
+      "to": "e1dc51a6df8cd40a125d960dce6fa5e5d8b33c5e",
+      "delta": "Only new attempt-02-functional-95b3c9a3.json."
+    },
+    {
+      "pr": 60,
+      "from": "897484c9a472bd43d17cabe56552f2f8fa890185",
+      "to": "8e23e592602fb9f2fae9ce8f824322a073073e23",
+      "delta": "Only new TESTS.json,CHECKS.json,HANDOFF.md."
+    },
+    {
+      "pr": 34,
+      "from": "fd363ca6f66dea56422c235f835103467c7ee8ba",
+      "to": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+      "delta": "Only new HANDOFF.md,RESULTS.json,SOURCE-REVIEW.json. Functional run belongs to W; checker executed exact head."
+    }
+  ],
+  "consumer_import_components_equal": {
+    "heads": [
+      "e1dc51a6df8cd40a125d960dce6fa5e5d8b33c5e",
+      "15df31a67efab0aae6e2bff2b7eb8e5e59511324"
+    ],
+    "qualification": "Static compatibility only; no PR58 run relabeled as PR34.",
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/imports/host.ts",
+        "blob": "40e02a3486c1b5a192395568c3ad37bde8a2e1e5"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/import-services.ts",
+        "blob": "53a1f34779598545cde83295c8ff98b861fabb72"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/imports/store.ts",
+        "blob": "9ae8492b4618d454cf069e27d2b079028759802d"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/interface/import-http.ts",
+        "blob": "72196e5d8ac256e161be0c4bde2fbf1090cc6786"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+        "blob": "6e6338ca557304774051864b47900640e216c031"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "blob": "b753e3ffbfcdc06de373388845c686afac26dec8"
+      }
+    ]
+  },
+  "artifact_metadata_only": [
+    {
+      "run": 43627354338,
+      "id": 14126209098,
+      "size": 1580,
+      "digest": "sha256:8ce77efd1313ed03cb8a5067c7e3aec71c42b063d27df6812f991bf2bf9e51d8"
+    },
+    {
+      "run": 43627773376,
+      "id": 14126357838,
+      "size": 1580,
+      "digest": "sha256:f82106bf40fc8978c2743e30c8785843099bb64671476a117c6a767ce3daed7b"
+    }
+  ],
+  "additional_limits": [
+    "No full campaign criteria acceptance, C/D final qualification, native model inference, human timing or global release.",
+    "Historical reviews and their scopes preserved; only nine original finding IDs reconciled, with two existing export IDs referenced.",
+    "SKIPPED, NOT_RUN, proposed patches, bug reproductions and executed corrections remain distinct."
+  ],
+  "cutoff_utc": "2026-11-14 19:21:09 UTC",
+  "document_integrity": {
+    "paths_unique": true,
+    "expected_findings": true,
+    "statuses": true,
+    "json_roundtrip": true,
+    "normative_complete": true,
+    "unique_runs": true,
+    "root_namespace": true
+  }
+}

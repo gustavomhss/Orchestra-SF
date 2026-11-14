@@ -1,0 +1,669 @@
+{
+  "schema": "orchestra-sf-independent-operations-findings-v1",
+  "reviewedSha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+  "normativeSha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "verdict": "REQUEST_CHANGES",
+  "scope": "Esta contribuição complementar, não a soma de todos os findings da PR documental",
+  "newStaticDefects": 4,
+  "existingEvidenceGapRefined": 1,
+  "localTestsExecuted": false,
+  "newCiTriggered": false,
+  "findings": [
+    {
+      "id": "OPS-REV-01",
+      "title": "Proposta de PO mascara o snapshot da aprovação de sourcing",
+      "severity": "P1",
+      "classification": "STATIC_DEFECT",
+      "execution": "NEEDS_EVIDENCE",
+      "owner": "WP04 / Operações; WP10 para composição e consumidores",
+      "provenance": "monetary.ts é novo na PR #34; defeito demonstrado na composição do helper com o produtor real no SHA fixado.",
+      "primary": {
+        "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "path": "modules/sucafina/Sucafinav1/product/procurement/monetary.ts",
+        "startLine": 18,
+        "endLine": 42,
+        "kind": "code",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/product/procurement/monetary.ts#L18-L42"
+      },
+      "support": [
+        {
+          "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+          "path": "modules/sucafina/Sucafinav1/src/procurement-screen.ts",
+          "startLine": 104,
+          "endLine": 128,
+          "kind": "code",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/src/procurement-screen.ts#L104-L128"
+        },
+        {
+          "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+          "path": "modules/sucafina/porta/act.ts",
+          "startLine": 300,
+          "endLine": 318,
+          "kind": "code",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/porta/act.ts#L300-L318"
+        },
+        {
+          "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+          "path": "modules/sucafina/porta/act.ts",
+          "startLine": 348,
+          "endLine": 361,
+          "kind": "code",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/porta/act.ts#L348-L361"
+        },
+        {
+          "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+          "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+          "startLine": 638,
+          "endLine": 647,
+          "kind": "code",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/runtime/procurement.ts#L638-L647"
+        },
+        {
+          "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+          "path": "modules/sucafina/Sucafinav1/product/procurement/port.ts",
+          "startLine": 101,
+          "endLine": 145,
+          "kind": "code",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/product/procurement/port.ts#L101-L145"
+        },
+        {
+          "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+          "path": "modules/sucafina/Sucafinav1/product/procurement/port.ts",
+          "startLine": 263,
+          "endLine": 278,
+          "kind": "code",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/product/procurement/port.ts#L263-L278"
+        },
+        {
+          "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+          "path": "modules/sucafina/Sucafinav1/product/procurement/confirmation-fields.ts",
+          "startLine": 25,
+          "endLine": 36,
+          "kind": "code",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/product/procurement/confirmation-fields.ts#L25-L36"
+        }
+      ],
+      "preconditions": [
+        "Pedido levado legalmente a sourcing; buyer autorizado; campos e proposta válidos; etapa de aprovação pendente.",
+        "Moeda base USD; proposta EUR 100, qty=1, unitPrice=100; FX EUR=1.08."
+      ],
+      "scenario": [
+        "Executar select_quote e submit_sourcing pelos comandos reais.",
+        "Observar src_pending, sourcing.approval.amount=108, fxSnapshot EUR=1.08 e approvalBaseCurrency=USD. O mesmo fluxo já criou po.lines, fxRate=null e approval=null.",
+        "Alterar legitimamente a taxa configurada EUR para 2, sem modificar o pedido ou snapshot submetido.",
+        "Ler C02 e os campos de confirmação C06; comparar com compareSourcing."
+      ],
+      "staticResult": [
+        "monetary.ts escolhe order=true só porque existem po.lines; a PO ainda não submetida determina frozen=false.",
+        "requestValue usa primeiro po.lines e FX atual: baseAmount=200 USD, fxSource=current e submittedAmount=null; monetaryState permanece pending-approval e moneyEvidence=confirmed.",
+        "A comparação de sourcing continua em 108 USD pelo snapshot; o snapshot persistido de aprovação não foi alterado."
+      ],
+      "consequence": "Valores incompatíveis entre detalhe/C02/C06 e comparação para a mesma decisão pendente. A dependência incorreta de FX corrente pode invalidar uma confirmação sem mudança da base submetida.",
+      "inference": "A recobrança/reconfirmação por consumidores C06 é consequência possível do fingerprint errado; não foi executada pela revisão.",
+      "notDemonstrated": [
+        "Alteração de alçadas, scoring, valor de aprovação persistido ou pagamento real.",
+        "Execução discriminante pelos revisores."
+      ],
+      "criteria": [
+        "WP04.T03.CHK.03",
+        "WP04.T03.DOD.02",
+        "WP04.T03.SUC.02"
+      ],
+      "relatedCriteria": [
+        "WP04.INV.02",
+        "WP04.CMP.02",
+        "WP04.T03.CMP.01",
+        "WP04.T04.QLT.02",
+        "CAMP.INV.01",
+        "CAMP.INV.03",
+        "CAMP.QLT.04",
+        "CAMP.QLT.20",
+        "C02",
+        "C06"
+      ],
+      "existingEvidence": [
+        {
+          "source": {
+            "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+            "path": "modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts",
+            "startLine": 19,
+            "endLine": 23,
+            "kind": "test-source",
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/test/product/wp04/money.test.ts#L19-L23"
+          },
+          "limit": "Sourcing congelado montado sem a PO que select_quote cria."
+        },
+        {
+          "source": {
+            "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+            "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-material.test.ts",
+            "startLine": 72,
+            "endLine": 78,
+            "kind": "test-source",
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/test/product/wp04/finance-material.test.ts#L72-L78"
+          },
+          "limit": "Também monta sourcing sem PO."
+        },
+        {
+          "source": {
+            "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+            "path": "modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts",
+            "startLine": 79,
+            "endLine": 89,
+            "kind": "test-source",
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/test/product/wp04/host-integration.test.ts#L79-L89"
+          },
+          "limit": "H01 injeta sourcing, sem percorrer select_quote → submit_sourcing."
+        }
+      ],
+      "expectedCorrection": "Escolher a base monetária pela etapa efetivamente em decisão, separando a proposta futura de PO da aprovação de sourcing. Preservar alçadas, scoring e snapshots existentes.",
+      "expectedEvidence": "Percorrer os comandos reais que criam a PO; mudar FX após submit_sourcing; verificar C02, resumo, C06 e comparação com o mesmo registro e snapshot. Incluir FX ausente e moeda base alterada sem preencher ausência com zero.",
+      "normativeTexts": [
+        {
+          "id": "WP04.T03.CHK.03",
+          "text": "Mudar a taxa configurada depois da submissão: a decisão pendente preserva o valor/câmbio congelado; remover FX de uma comparação sem snapshot produz indisponibilidade/pendência, nunca total zero."
+        },
+        {
+          "id": "WP04.T03.DOD.02",
+          "text": "Moeda, taxa/snapshot e estado monetário ficam definidos para cada valor exibido."
+        },
+        {
+          "id": "WP04.T03.SUC.02",
+          "text": "O mesmo valor de domínio aparece coerentemente no detalhe, resumo e C02 entregue a consumidores."
+        },
+        {
+          "id": "WP04.INV.02",
+          "text": "Histórico, identificadores já emitidos, versões esperadas e snapshots de aprovação/câmbio são preservados; po_issued continua significando emissão interna."
+        },
+        {
+          "id": "WP04.CMP.02",
+          "text": "A cobertura monetária inclui moeda base, moeda estrangeira, FX ausente, mudança de taxa após submissão, proposta incompleta e divergência entre total informado e quantidade vezes preço."
+        },
+        {
+          "id": "WP04.T03.CMP.01",
+          "text": "Cobrir moedas diferentes, snapshot, FX ausente, empate, proposta não conforme, menos propostas e notas incompletas."
+        },
+        {
+          "id": "WP04.T04.QLT.02",
+          "text": "Resumo curto e drilldown detalhado apresentam os mesmos valores, contexto e limitações."
+        },
+        {
+          "id": "CAMP.INV.01",
+          "text": "Domínios continuam como fontes de verdade. UI, BI, relatórios, importação e IA consomem os mesmos contratos; não mantêm cálculos financeiros ou estados de compra paralelos."
+        },
+        {
+          "id": "CAMP.INV.03",
+          "text": "Ausência, zero observado, valor herdado, estimativa, valor aprovado e emissão interna mantêm significados distintos; período, versão e moeda não mudam silenciosamente."
+        },
+        {
+          "id": "CAMP.QLT.04",
+          "text": "Número relevante informa unidade, referência temporal, origem e limitações. Comparações reconciliam e distinguem descrição de hipótese; narrativa gerada não inventa causalidade."
+        },
+        {
+          "id": "CAMP.QLT.20",
+          "text": "Estado de confirmação e condição financeira são explícitos em UI, rotina, BI, crítica e portfólio, sem inventar permissão, regra fiscal ou valor para preencher ausência."
+        }
+      ]
+    },
+    {
+      "id": "OPS-REV-02",
+      "title": "C12 registra applied para uma substituição ignorada pelo domínio",
+      "severity": "P2",
+      "classification": "STATIC_DEFECT",
+      "execution": "NEEDS_EVIDENCE",
+      "owner": "WP04 produtor; WP11/C12 e WP10 na revisão, Apply e recibo",
+      "provenance": "prepared.ts e scenario-preparation.ts preexistiam; não se atribui a origem do defeito à clonagem ou ao delta da PR #34.",
+      "primary": {
+        "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "path": "modules/sucafina/Sucafinav1/product/procurement/prepared.ts",
+        "startLine": 39,
+        "endLine": 77,
+        "kind": "code",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/product/procurement/prepared.ts#L39-L77"
+      },
+      "support": [
+        {
+          "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+          "path": "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+          "startLine": 16,
+          "endLine": 41,
+          "kind": "code",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts#L16-L41"
+        },
+        {
+          "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+          "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+          "startLine": 484,
+          "endLine": 525,
+          "kind": "code",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/runtime/procurement.ts#L484-L525"
+        },
+        {
+          "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+          "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+          "startLine": 595,
+          "endLine": 654,
+          "kind": "code",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/runtime/procurement.ts#L595-L654"
+        },
+        {
+          "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+          "path": "modules/sucafina/Sucafinav1/product/procurement/prepared-review.ts",
+          "startLine": 26,
+          "endLine": 36,
+          "kind": "code",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/product/procurement/prepared-review.ts#L26-L36"
+        },
+        {
+          "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+          "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-review.ts",
+          "startLine": 34,
+          "endLine": 46,
+          "kind": "code",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/product/decisions/prepared-review.ts#L34-L46"
+        },
+        {
+          "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+          "path": "modules/sucafina/Sucafinav1/product/procurement/decision-http.ts",
+          "startLine": 48,
+          "endLine": 68,
+          "kind": "code",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/product/procurement/decision-http.ts#L48-L68"
+        },
+        {
+          "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+          "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+          "startLine": 94,
+          "endLine": 107,
+          "kind": "code",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts#L94-L107"
+        },
+        {
+          "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+          "path": "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+          "startLine": 58,
+          "endLine": 66,
+          "kind": "code",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/product/ui/decision-apply.ts#L58-L66"
+        }
+      ],
+      "preconditions": [
+        "Pedido canônico em po_draft, salvo legitimamente pelo mesmo buyer, com buyerId, linhas, endereços e demais normalizações estáveis; pr.estAmount=100.",
+        "Escolha persistida/autorizada com replace para 150, moeda/período/fontes válidos; versão e autoridade permanecem vigentes."
+      ],
+      "scenario": [
+        "Preparar a escolha C12 que pretende substituir o valor por 150.",
+        "Ler decision-review pelo endpoint Procurement autorizado e obter o reviewDigest retornado, ainda que fields=[].",
+        "Enviar explicitamente decision-apply com esse digest, por contexto humano autorizado e chave idempotente válida.",
+        "Comparar o PR persistido, evento Saved, CAS e recibo."
+      ],
+      "staticResult": [
+        "scenario-preparation traduz a operação para save com values.pr.estAmount=150 sem limitar a etapa de PR.",
+        "O domínio permite save de PO em po_draft mas só prEdit aplica values.pr; o valor fica 100. Mesmo assim produz ok, Saved e incremento de CAS.",
+        "A preparação confere campos intocados e histórico, porém não exige que os campos solicitados tenham o valor pretendido.",
+        "A revisão produz fields=[] e digest válido; Apply aceita commit:true/status applied e o HTTP expõe outcome=applied."
+      ],
+      "consequence": "A escolha fica aplicada no caso/recibo sem realizar a substituição prometida; a trilha idempotente pode reconciliar a tentativa como concluída.",
+      "inference": null,
+      "notDemonstrated": [
+        "Caminho normal pelo botão da UI: decision-apply.ts:58 bloqueia fields=[]. O finding é backend/HTTP autorizado.",
+        "Elevação de autoridade ou edição proibida de PR: a política do domínio continua impedindo a edição.",
+        "Regressão introduzida especificamente pelo clone ou execução pelos revisores."
+      ],
+      "criteria": [
+        "WP04.QLT.10"
+      ],
+      "relatedCriteria": [
+        "WP04.DOD.02",
+        "C03",
+        "C12",
+        "CAMP.QLT.03",
+        "sf2h-integral-20261112.QLT.07",
+        "CAMP.CMP.02"
+      ],
+      "existingEvidence": [
+        {
+          "source": {
+            "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+            "path": "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+            "startLine": 58,
+            "endLine": 66,
+            "kind": "code",
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/product/ui/decision-apply.ts#L58-L66"
+          },
+          "limit": "A barreira de UI não é uma validação do endpoint/serviço. Os caminhos positivos em draft não discriminam o comando ignorado em po_draft."
+        }
+      ],
+      "expectedCorrection": "Recusar preparo de alteração de PR na etapa incompatível e verificar a pós-condição da intenção executada. Se houver no-op legítimo, representá-lo explicitamente sem afirmar realizada a substituição por 150; não ampliar as permissões de PR.",
+      "expectedEvidence": "Exercitar preparação/review/Apply reais em po_draft e em uma etapa editável, mantendo autoria, moeda, fontes e CAS válidos; provar recusa/estado fiel no primeiro e mutação exata no segundo.",
+      "normativeTexts": [
+        {
+          "id": "WP04.QLT.10",
+          "text": "Interfaces são concretas, versões/digests são verificáveis e falhas possuem causa e estado explícitos."
+        },
+        {
+          "id": "WP04.DOD.02",
+          "text": "Fila, pedido guiado, comparação, resumos por etapa e fornecedores estão demonstrados com os mesmos registros e versões, sem um store paralelo de demonstração."
+        },
+        {
+          "id": "CAMP.QLT.03",
+          "text": "Salvar, cancelar, validar, recusar, carregar, ficar sem dados e conflitar possuem resposta compreensível. Falha ou conflito conserva a entrada local e oferece próximo passo útil."
+        },
+        {
+          "id": "sf2h-integral-20261112.QLT.07",
+          "text": "O produto continua utilizável se a análise de IA demorar, falhar ou for cancelada. Resposta rápida de cálculos, erro junto ao campo, foco preservado e confirmação de gravação efetiva."
+        },
+        {
+          "id": "CAMP.CMP.02",
+          "text": "Cobrir leituras e escritas autorizadas/recusadas, dados completos/parciais/ausentes, concorrência, reenvio, referência removida, perda de acesso e retomada depois de falha."
+        }
+      ]
+    },
+    {
+      "id": "OPS-REV-03",
+      "title": "Limite documental antes de autorização e deduplicação oculta fontes autorizadas",
+      "severity": "P2",
+      "classification": "STATIC_DEFECT",
+      "execution": "NEEDS_EVIDENCE",
+      "owner": "WP06.T05 / documentos",
+      "provenance": "slice(0,100) e limitations pré-ACL aparecem como código preexistente no patch. Defeito presente na entrega; não atribuído como regressão introduzida pela PR #34.",
+      "primary": {
+        "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "path": "modules/sucafina/Sucafinav1/product/documents/capabilities.ts",
+        "startLine": 155,
+        "endLine": 192,
+        "kind": "code",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/product/documents/capabilities.ts#L155-L192"
+      },
+      "support": [
+        {
+          "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+          "path": "modules/sucafina/Sucafinav1/product/documents/capabilities.ts",
+          "startLine": 41,
+          "endLine": 95,
+          "kind": "code",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/product/documents/capabilities.ts#L41-L95"
+        },
+        {
+          "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+          "path": "modules/sucafina/Sucafinav1/product/documents/schemas.ts",
+          "startLine": 13,
+          "endLine": 13,
+          "kind": "code",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/product/documents/schemas.ts#L13"
+        },
+        {
+          "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+          "path": "modules/sucafina/Sucafinav1/product/documents/index.ts",
+          "startLine": 21,
+          "endLine": 38,
+          "kind": "code",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/product/documents/index.ts#L21-L38"
+        },
+        {
+          "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+          "startLine": 21,
+          "endLine": 31,
+          "kind": "code",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts#L21-L31"
+        },
+        {
+          "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+          "path": "modules/sucafina/Sucafinav1/product/documents/host.ts",
+          "startLine": 69,
+          "endLine": 69,
+          "kind": "code",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/product/documents/host.ts#L69"
+        },
+        {
+          "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+          "path": "apps/cli/src/sucafina-product/document-services.ts",
+          "startLine": 23,
+          "endLine": 51,
+          "kind": "code",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/apps/cli/src/sucafina-product/document-services.ts#L23-L51"
+        }
+      ],
+      "preconditions": [
+        "Duas fontes A e B correntes e autorizadas; A foi admitida e extraída antes de B.",
+        "A tem 100 campos válidos; B contém token exclusivo NEEDLE_B."
+      ],
+      "scenario": [
+        "Admitir A e extrair 100 campos; o produtor persiste um sf-document-v1 por campo, além do índice.",
+        "Admitir B depois e buscar NEEDLE_B com limit=10, sem documentRefs ou com [A,B].",
+        "Repetir a análise com registros antigos/inacessíveis de A antes de B, mantendo o corpus autorizado de B."
+      ],
+      "staticResult": [
+        "Object.values dos registros do namespace é filtrado por schema/ref, mas recebe slice(0,100) antes do filtro de instalação/projeto, reader/autorização e deduplicação.",
+        "Os registros repetidos de A consomem o orçamento; B não é lido apesar de haver apenas dois documentos autorizados.",
+        "Registros inacessíveis também consomem orçamento; document-scan-limited depende de records.length anterior à ACL."
+      ],
+      "consequence": "Resultado incompleto por contar candidatos/registros em vez de fontes pesquisáveis. Revogação e estoque de outros escopos podem suprimir resultados legítimos e influenciar metadata.",
+      "inference": "O limiar document-scan-limited pode funcionar como canal de observação de cardinalidade inacessível. Demonstrou-se a dependência estática, não exploração em execução.",
+      "notDemonstrated": [
+        "Vazamento de texto privado ou recuperação de conteúdo de documento revogado.",
+        "Execução do cenário >100 pelos revisores."
+      ],
+      "criteria": [
+        "WP06.T05.CMP.19",
+        "WP06.T05.QLT.18"
+      ],
+      "relatedCriteria": [
+        "CAMP.INV.04",
+        "CAMP.CMP.02",
+        "C17"
+      ],
+      "existingEvidence": [
+        {
+          "source": {
+            "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+            "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/egress-fences.test.ts",
+            "startLine": 115,
+            "endLine": 132,
+            "kind": "test-source",
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/test/product/wp06/documents/egress-fences.test.ts#L115-L132"
+          },
+          "limit": "T256/R18/F082 revalida duas fontes e o egress; não cobre prefixo de 100 candidatos ou registros inacessíveis."
+        },
+        {
+          "authorTestId": "T259/R18/F079",
+          "limit": "Índice sem candidato não distingue cem registros de cem fontes."
+        }
+      ],
+      "expectedCorrection": "Autorizar fontes correntes e deduplicá-las antes de consumir o orçamento; calcular limites/metadata no conjunto autorizado. Preservar as revalidações de saída; adotar paginação autorizada se necessária.",
+      "expectedEvidence": "Duas fontes, A com 100 campos e B com token único; busca deve alcançar B. Repetir com fontes revogadas e outro principal/escopo antes de B, verificando resultados e metadata.",
+      "normativeTexts": [
+        {
+          "id": "WP06.T05.CMP.19",
+          "text": "Cobrir PDF digital, DOCX, texto, sem camada textual, fonte revogada, revisão trocada, busca lexical e digests diferentes."
+        },
+        {
+          "id": "WP06.T05.QLT.18",
+          "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP."
+        },
+        {
+          "id": "CAMP.INV.04",
+          "text": "Nenhum conteúdo restrito reaparece em busca, contagem, comparação, gráfico, comentário, snapshot, exportação, prompt ou resultado de rotina. Ler ou aplicar revalida acesso atual."
+        },
+        {
+          "id": "CAMP.CMP.02",
+          "text": "Cobrir leituras e escritas autorizadas/recusadas, dados completos/parciais/ausentes, concorrência, reenvio, referência removida, perda de acesso e retomada depois de falha."
+        }
+      ]
+    },
+    {
+      "id": "OPS-REV-04",
+      "title": "Interrupção entre blob e catálogo impede retry idêntico de admissão",
+      "severity": "P2",
+      "classification": "STATIC_DEFECT",
+      "execution": "NEEDS_EVIDENCE",
+      "owner": "WP06 / importação; WP10 para persistência e reconciliação",
+      "provenance": "staged-files.ts não aparece no delta enumerado da PR #34; defeito da composição entregue, sem atribuição de introdução ao delta.",
+      "primary": {
+        "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "path": "modules/sucafina/Sucafinav1/product/imports/staged-files.ts",
+        "startLine": 59,
+        "endLine": 85,
+        "kind": "code",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/product/imports/staged-files.ts#L59-L85"
+      },
+      "support": [
+        {
+          "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+          "path": "apps/cli/src/sucafina-product/import-services.ts",
+          "startLine": 76,
+          "endLine": 81,
+          "kind": "code",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/apps/cli/src/sucafina-product/import-services.ts#L76-L81"
+        },
+        {
+          "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+          "path": "modules/sucafina/Sucafinav1/product/imports/host.ts",
+          "startLine": 36,
+          "endLine": 58,
+          "kind": "code",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/product/imports/host.ts#L36-L58"
+        },
+        {
+          "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+          "path": "modules/sucafina/Sucafinav1/product/imports/workbench-script.ts",
+          "startLine": 102,
+          "endLine": 102,
+          "kind": "code",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/product/imports/workbench-script.ts#L102"
+        }
+      ],
+      "preconditions": [
+        "Admissão autorizada com principal, alvo, bytes e chave idempotente estáveis; persistência durável.",
+        "Falha/crash depois do commit do blob e antes da publicação do catálogo."
+      ],
+      "scenario": [
+        "Permitir o commit do blob em staged-files.ts:70.",
+        "Interromper antes da transação de catálogo nas linhas 73–77.",
+        "Reconstruir o host com persistência reaberta e autenticação atual; repetir a mesma operação com os mesmos bytes/alvo/principal."
+      ],
+      "staticResult": [
+        "O ID deriva de principalRef+operation. Sem catálogo, a recuperação das linhas 62–69 não se aplica.",
+        "O blob já existente faz a transação da linha 70 retornar false; a linha 71 retorna file-admission-conflict antes de reconciliar identidade/bytes.",
+        "Uma exceção do catálogo também gera saved=undefined; a limpeza da linha 85 depende de saved, podendo conservar o órfão e produzir o mesmo bloqueio."
+      ],
+      "consequence": "O retry da operação interrompida não progride; requer nova intenção/chave para avançar e deixa blob órfão. A admissão falha antes do preview/Apply.",
+      "inference": null,
+      "notDemonstrated": [
+        "Mutação parcial do domínio, duplicação financeira ou quebra da atomicidade do Apply.",
+        "Execução de crash/fault injection pelos revisores."
+      ],
+      "criteria": [
+        "WP06.QLT.03"
+      ],
+      "relatedCriteria": [
+        "CAMP.CMP.02",
+        "CAMP.QLT.03"
+      ],
+      "existingEvidence": [
+        {
+          "source": {
+            "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+            "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/staged-files.test.ts",
+            "startLine": 49,
+            "endLine": 58,
+            "kind": "test-source",
+            "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/test/product/wp06/imports/staged-files.test.ts#L49-L58"
+          },
+          "limit": "T225/R18/F120 cobre admissão concluída, replay, bytes distintos e revogação; não interrompe entre os dois commits."
+        }
+      ],
+      "expectedCorrection": "Tornar a admissão atômica onde possível ou reconciliar um blob órfão idêntico após revalidar autoridade, alvo, formato e digest. Não apagar um blob cujo catálogo possa ter sido publicado em resultado incerto.",
+      "expectedEvidence": "Injetar interrupção exatamente entre os commits e erro/resultado incerto de catálogo; reabrir SQLite e repetir a admissão. Verificar recuperação idempotente, recusa de bytes/alvo divergentes e revogação.",
+      "normativeTexts": [
+        {
+          "id": "WP06.QLT.03",
+          "text": "Falhas de formato, autoridade e revisão têm tratamento distinto, mantêm arquivo/opções/entrada local quando apropriado e não expõem dados restritos."
+        },
+        {
+          "id": "CAMP.CMP.02",
+          "text": "Cobrir leituras e escritas autorizadas/recusadas, dados completos/parciais/ausentes, concorrência, reenvio, referência removida, perda de acesso e retomada depois de falha."
+        },
+        {
+          "id": "CAMP.QLT.03",
+          "text": "Salvar, cancelar, validar, recusar, carregar, ficar sem dados e conflitar possuem resposta compreensível. Falha ou conflito conserva a entrada local e oferece próximo passo útil."
+        }
+      ]
+    },
+    {
+      "id": "E-OPS-02",
+      "title": "Recuperação do Apply após restart não é demonstrada pelo teste de reopen citado",
+      "severity": "P2",
+      "classification": "NEEDS_EVIDENCE",
+      "execution": "NEEDS_EVIDENCE",
+      "owner": "WP06 + WP10",
+      "provenance": "Refinamento do E-OPS-02 já publicado na PR #49 durante esta revisão. Acrescenta vínculo T224/R18/F105, sequência exata de assertions e critério/prova esperada; não cria outro finding de recovery.",
+      "primary": {
+        "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/end-to-end.test.ts",
+        "startLine": 109,
+        "endLine": 118,
+        "kind": "test-source",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/test/product/wp06/imports/end-to-end.test.ts#L109-L118"
+      },
+      "support": [
+        {
+          "sha": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp06/imports/end-to-end.test.ts",
+          "startLine": 23,
+          "endLine": 23,
+          "kind": "test-source",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/test/product/wp06/imports/end-to-end.test.ts#L23"
+        }
+      ],
+      "preconditions": [
+        "O título do teste menciona atomic receipt and retry survive SQLite reopen; o corpo é a evidência avaliada."
+      ],
+      "scenario": [
+        "Ler a ordem: Apply na linha 110; retry na linha 114; dispose na linha 116; reopen na linha 117.",
+        "Verificar o único assert após reopen na linha 118: audit.length."
+      ],
+      "staticResult": [
+        "O teste exerce Apply e replay na composição original, depois a persistência da auditoria.",
+        "A instância reaberta não reconstrói os serviços/host, recupera referência/recibo ou executa Apply com nova autoridade."
+      ],
+      "consequence": "A observação não fecha recuperação autorizada após perda de resposta e reinício; o comportamento pode funcionar, mas continua sem execução suficiente nesta fronteira.",
+      "inference": null,
+      "notDemonstrated": [
+        "Falha de recuperação do produto.",
+        "Ausência de todas as outras provas possíveis do repositório: a conclusão é sobre a evidência citada e o material auditado."
+      ],
+      "criteria": [
+        "WP06.T03.DOD.02"
+      ],
+      "relatedCriteria": [
+        "C03",
+        "C04",
+        "CAMP.CMP.02"
+      ],
+      "existingEvidence": [
+        {
+          "run": 43554658437,
+          "job": 132324664659,
+          "authorTestId": "T224/R18/F105",
+          "limit": "Caso histórico encontrado nos logs oficiais; não executou retry depois de reabrir."
+        }
+      ],
+      "expectedCorrection": "Não é exigida alteração do produto sem contraprova. Completar a prova discriminante ou apresentar execução existente que cubra o caminho faltante.",
+      "expectedEvidence": "Commit de Apply com resposta perdida; encerrar composição, reabrir SQLite e serviços reais, autenticar novamente, recuperar manifesto/referência/recibo e repetir a mesma intenção; conferir recibo completo, valores, revisões e auditoria sem duplicação. Incluir revogação antes da recuperação.",
+      "normativeTexts": [
+        {
+          "id": "WP06.T03.DOD.02",
+          "text": "Os resultados positivos e negativos possuem provas locais de estados e um roteiro executável contra a composição real do WP10."
+        },
+        {
+          "id": "CAMP.CMP.02",
+          "text": "Cobrir leituras e escritas autorizadas/recusadas, dados completos/parciais/ausentes, concorrência, reenvio, referência removida, perda de acesso e retomada depois de falha."
+        }
+      ],
+      "existingFindingId": "E-OPS-02",
+      "newFinding": false
+    }
+  ]
+}

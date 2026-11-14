@@ -1,0 +1,877 @@
+{
+  "schema": "operations-independent-recheck/v1",
+  "mission": "review-operations-delta",
+  "date": "2026-11-14",
+  "actor": "S1-R1",
+  "independence": {
+    "product_authorship": false,
+    "product_writes": false,
+    "tests_executed_or_dispatched": 0,
+    "review_assistants": 3,
+    "root_only_document_writer": true
+  },
+  "status_semantics": {
+    "RESOLVED_WITH_EVIDENCE": "Causa/prova original resolvida somente no status_scope fixado; não aceite integral ou consumo implícito.",
+    "OPEN": "Defeito atual demonstrado em código e/ou execução no pin indicado.",
+    "NEEDS_RECHECK": "Evidência insuficiente ou não executada para a fronteira indicada; não defeito automaticamente."
+  },
+  "reviewed_heads": {
+    "review": "048b46acd3d70dc7ddafbea9e9b439f0d2e781d9",
+    "baseline": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+    "pr34": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+    "pr52": "d48065d391e1557d43b63525bdc7f55b168d5206",
+    "pr57": "2a185e05967f611d63796684379761ded991092b",
+    "pr58": "e1dc51a6df8cd40a125d960dce6fa5e5d8b33c5e",
+    "pr60": "8e23e592602fb9f2fae9ce8f824322a073073e23"
+  },
+  "findings": [
+    {
+      "id": "D-OPS-01",
+      "title": "Repetir extração pelo workbench cria schema incompatível",
+      "original": {
+        "review_commit": "6830fa159d30b60d001f91a47326ae88c6255282",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reviews/operations/REVIEW.md",
+        "product": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "id": "D-OPS-01"
+      },
+      "severity": "P2",
+      "owner": "WP06.T05 / Operations; intake S0/astra-operations",
+      "status": "RESOLVED_WITH_EVIDENCE",
+      "status_scope": {
+        "pr": 52,
+        "head": "d48065d391e1557d43b63525bdc7f55b168d5206"
+      },
+      "consumer": {
+        "pr": 34,
+        "head": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+        "status": "OPEN",
+        "reason": "Blobs atuais preservam ID derivado da operação e chave aleatória por POST; não existe compensação no seam documental. Não se infere OPEN apenas da ausência de intake."
+      },
+      "cause": "O formulário antigo criava schema novo por operação; o candidato usa identidade física/campo/offset e sameExtraction exige schema igual.",
+      "correction": "Registry reutiliza definição equivalente autorizada e vigente, prefere schema referenciado por candidato, mantém source/CAS/ledger; workbench conserva schemaKey/extractKey durante resposta incerta.",
+      "evidence_runs": [
+        43625203326
+      ],
+      "proof": "Duas submissões completas schema→extract, candidato confirmado, perda de respostas já commitadas, retry sem duplicação e recusas semânticas/revogação/substituição.",
+      "code": [
+        {
+          "commit": "d48065d391e1557d43b63525bdc7f55b168d5206",
+          "path": "modules/sucafina/Sucafinav1/product/documents/schemas.ts",
+          "blob": "fbe4b70444d4a7341a30372c754842a5aca3ce70",
+          "lines": [
+            62,
+            90
+          ],
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d48065d391e1557d43b63525bdc7f55b168d5206/modules/sucafina/Sucafinav1/product/documents/schemas.ts"
+        },
+        {
+          "commit": "d48065d391e1557d43b63525bdc7f55b168d5206",
+          "path": "modules/sucafina/Sucafinav1/product/documents/workbench.ts",
+          "blob": "3d21a461c88da2372eae57d0e066ff59d9f21f55",
+          "lines": [
+            33,
+            45
+          ],
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d48065d391e1557d43b63525bdc7f55b168d5206/modules/sucafina/Sucafinav1/product/documents/workbench.ts"
+        },
+        {
+          "commit": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+          "path": "modules/sucafina/Sucafinav1/product/documents/schemas.ts",
+          "blob": "50e20b20e927f30b5b24e0e3c622c2c8a6b19a76",
+          "lines": [
+            56,
+            68
+          ],
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/15df31a67efab0aae6e2bff2b7eb8e5e59511324/modules/sucafina/Sucafinav1/product/documents/schemas.ts"
+        },
+        {
+          "commit": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+          "path": "modules/sucafina/Sucafinav1/product/documents/workbench.ts",
+          "blob": "d9769a4fbd2dd1d5c73b9f82dd021f8f3298333b",
+          "lines": [
+            23,
+            33
+          ],
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/15df31a67efab0aae6e2bff2b7eb8e5e59511324/modules/sucafina/Sucafinav1/product/documents/workbench.ts"
+        },
+        {
+          "commit": "d48065d391e1557d43b63525bdc7f55b168d5206",
+          "path": "modules/sucafina/Sucafinav1/test/product/operations-fixes/document-reextract.test.ts",
+          "blob": "ec5d8be54fee3c593e2446221b01c154fcb7fa79",
+          "lines": [
+            8,
+            166
+          ],
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d48065d391e1557d43b63525bdc7f55b168d5206/modules/sucafina/Sucafinav1/test/product/operations-fixes/document-reextract.test.ts"
+        },
+        {
+          "commit": "d48065d391e1557d43b63525bdc7f55b168d5206",
+          "path": "modules/sucafina/Sucafinav1/test/product/operations-fixes/document-workbench.test.ts",
+          "blob": "3bfa3f6dc283257d10b537da4ae1e534bd96f4ff",
+          "lines": [
+            20,
+            115
+          ],
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d48065d391e1557d43b63525bdc7f55b168d5206/modules/sucafina/Sucafinav1/test/product/operations-fixes/document-workbench.test.ts"
+        }
+      ],
+      "criteria": [
+        "WP06.SUC.10",
+        "WP06.QLT.10",
+        "WP06.DOD.04",
+        "WP06.CMP.04",
+        "WP06.T05.DOD.01",
+        "C14"
+      ],
+      "limits": [
+        "Transporte Chromium controlado sobre renderer/HTTP/serviços/SQLite reais; não prova recuperação em outra sessão de browser.",
+        "Run atribuído a ee2e14ac; deltas posteriores documentais/busca foram inspecionados, não registrados como nova execução."
+      ],
+      "next_action": "Owner da composição recebe os blobs PR52 sob lease vigente; revisor confere intake e prova pertinente ao candidato consumidor."
+    },
+    {
+      "id": "I-OPS-02",
+      "title": "Retry C12 pós-commit com edição concorrente conserva versão antiga",
+      "original": {
+        "review_commit": "6830fa159d30b60d001f91a47326ae88c6255282",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reviews/operations/REVIEW.md",
+        "product": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "id": "I-OPS-02"
+      },
+      "severity": "P2",
+      "owner": "Interface/WP01 + WP04 host/HTTP + WP11 executor; WP10/S0 composição",
+      "status": "OPEN",
+      "status_scope": {
+        "pr": 52,
+        "head": "d48065d391e1557d43b63525bdc7f55b168d5206"
+      },
+      "consumer": {
+        "pr": 34,
+        "head": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+        "status": "OPEN",
+        "reason": "UI, host, executor e HTTP têm os mesmos blobs defeituosos nas duas branches."
+      },
+      "cause": "A UI mantém caseRef/intenção antiga. readChange e executor recusam a versão divergente sem change.receipt antes do lookup durável; reload perde a intenção.",
+      "correction": "Nenhuma correção aplicada. Há duas propostas documentais NOT_APPLIED; o novo teste reproduz o impasse.",
+      "evidence_runs": [
+        43624678702
+      ],
+      "proof": "firstStatus=409, retryStatus=409, reopenExactStatus=409, financialEffects=1, durableReceipts=1, caseReceiptCount=0; runtimeReconstructed=true, sqliteReopened=true, processRestarted=false, recoveryAccepted=false.",
+      "code": [
+        {
+          "commit": "d48065d391e1557d43b63525bdc7f55b168d5206",
+          "path": "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+          "blob": "2e6c081ad2a5282654707f7fc7278183e7dfb20d",
+          "lines": [
+            31,
+            77
+          ],
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d48065d391e1557d43b63525bdc7f55b168d5206/modules/sucafina/Sucafinav1/product/ui/decision-apply.ts"
+        },
+        {
+          "commit": "d48065d391e1557d43b63525bdc7f55b168d5206",
+          "path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+          "blob": "23d9291b3dcedda36edc4aa4f38856024e3c58f4",
+          "lines": [
+            86,
+            94
+          ],
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d48065d391e1557d43b63525bdc7f55b168d5206/modules/sucafina/Sucafinav1/product/procurement/decision-host.ts"
+        },
+        {
+          "commit": "d48065d391e1557d43b63525bdc7f55b168d5206",
+          "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+          "blob": "4bdd12ac162d61465557363953e25dfd99fad5e8",
+          "lines": [
+            35,
+            38
+          ],
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d48065d391e1557d43b63525bdc7f55b168d5206/modules/sucafina/Sucafinav1/product/decisions/apply.ts"
+        },
+        {
+          "commit": "d48065d391e1557d43b63525bdc7f55b168d5206",
+          "path": "modules/sucafina/Sucafinav1/product/procurement/decision-http.ts",
+          "blob": "e169d335f091c446bb380ee73f450083f917946f",
+          "lines": [
+            29,
+            29
+          ],
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d48065d391e1557d43b63525bdc7f55b168d5206/modules/sucafina/Sucafinav1/product/procurement/decision-http.ts"
+        },
+        {
+          "commit": "d48065d391e1557d43b63525bdc7f55b168d5206",
+          "path": "modules/sucafina/Sucafinav1/test/product/operations-fixes/c12-concurrency.test.ts",
+          "blob": "2f4d1d0455bdf073f9a262943f925c1263a69b60",
+          "lines": [
+            8,
+            151
+          ],
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d48065d391e1557d43b63525bdc7f55b168d5206/modules/sucafina/Sucafinav1/test/product/operations-fixes/c12-concurrency.test.ts"
+        },
+        {
+          "commit": "d48065d391e1557d43b63525bdc7f55b168d5206",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-fixes/c12-owner-handoff.md",
+          "blob": "26895bea48214e36d92293adc77c7dbd3e956cd6",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d48065d391e1557d43b63525bdc7f55b168d5206/modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-fixes/c12-owner-handoff.md"
+        }
+      ],
+      "criteria": [
+        "C03",
+        "C12",
+        "CAMP.CMP.02",
+        "CAMP.QLT.03",
+        "WP04.SUC.10"
+      ],
+      "limits": [
+        "Controle API com versão corrente + digest original consegue 200 e mesmo recibo; a UI não oferece essa recuperação.",
+        "Run success prova as assertions do defeito; não qualifica correção. Nenhuma duplicação financeira foi observada."
+      ],
+      "next_action": "Owners implementam recuperação exclusiva de receipt e correlação durável; consumidor demonstra H05→recuperação→reload/reabertura, mantendo CAS, edição concorrente, digest, revogação e encarnação. Não repetir apenas a reprodução já disponível."
+    },
+    {
+      "id": "OPS-REV-01",
+      "title": "PO futura mascara o snapshot submetido de sourcing",
+      "original": {
+        "review_commit": "048b46acd3d70dc7ddafbea9e9b439f0d2e781d9",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reviews/operations/20261114-ba8a09e/REVIEW.md",
+        "product": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "id": "OPS-REV-01"
+      },
+      "severity": "P1",
+      "owner": "WP04/Operations; WP10/S0 consumidores",
+      "status": "RESOLVED_WITH_EVIDENCE",
+      "status_scope": {
+        "pr": 57,
+        "head": "2a185e05967f611d63796684379761ded991092b",
+        "meaning": "Cenário original C02/C06; não todos os consumidores monetários."
+      },
+      "consumer": {
+        "pr": 34,
+        "head": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+        "status": "RESOLVED_WITH_EVIDENCE",
+        "reason": "Mesmo monetary.ts consumido verbatim e evidência própria dos oito consumidores monetários. Pendências de exportação preservadas separadamente.",
+        "related_open_findings": [
+          "OPS-CONSUMER-EXPORT-01",
+          "OPS-CONSUMER-EXPORT-02"
+        ]
+      },
+      "cause": "Seleção baseada em po.lines priorizava PO futura sem snapshot e usava FX corrente, apesar da aprovação de sourcing submetida.",
+      "correction": "Seleção explícita por etapa; helper recebe projeção po:null durante sourcing, preservando moeda/FX/snapshot submetidos. PR34 aplica a mesma semântica a request.value, registro em memória, Requests sem C02 e detalhe/resumo.",
+      "evidence_runs": [
+        43625920456,
+        43626658534,
+        43628901747
+      ],
+      "proof": "EUR100×1.08 permanece USD108 após FX2 em C02/C06; PO futura exibe separadamente estimativa USD200; PO submetida congela sua própria base. FX ausente não vira zero e moeda base histórica não é reinterpretada.",
+      "code": [
+        {
+          "commit": "2a185e05967f611d63796684379761ded991092b",
+          "path": "modules/sucafina/Sucafinav1/product/procurement/monetary.ts",
+          "blob": "c9a224b12c13b7cec506be90527300caa7e984fd",
+          "lines": [
+            18,
+            49
+          ],
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2a185e05967f611d63796684379761ded991092b/modules/sucafina/Sucafinav1/product/procurement/monetary.ts"
+        },
+        {
+          "commit": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+          "path": "modules/sucafina/Sucafinav1/product/procurement/monetary.ts",
+          "blob": "c9a224b12c13b7cec506be90527300caa7e984fd",
+          "lines": [
+            18,
+            49
+          ],
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/15df31a67efab0aae6e2bff2b7eb8e5e59511324/modules/sucafina/Sucafinav1/product/procurement/monetary.ts"
+        },
+        {
+          "commit": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+          "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+          "blob": "20a3ec5a30ac0fce6b35f05750d1b3dced11c45b",
+          "lines": [
+            886,
+            1603
+          ],
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/15df31a67efab0aae6e2bff2b7eb8e5e59511324/modules/sucafina/Sucafinav1/runtime/procurement.ts"
+        },
+        {
+          "commit": "2a185e05967f611d63796684379761ded991092b",
+          "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/sourcing-money/sourcing-stage.test.ts",
+          "blob": "d1fc2dfe0bc63ed1435e40b73c6ff19dd6d7718e",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2a185e05967f611d63796684379761ded991092b/modules/sucafina/Sucafinav1/test/product/review-fixes/sourcing-money/sourcing-stage.test.ts"
+        },
+        {
+          "commit": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+          "path": "modules/sucafina/Sucafinav1/test/product/operations-consumers/monetary-consumers.test.ts",
+          "blob": "f57ad2e8a745c56797bd7e1b7fe9c8fb0cda83bf",
+          "lines": [
+            9,
+            247
+          ],
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/15df31a67efab0aae6e2bff2b7eb8e5e59511324/modules/sucafina/Sucafinav1/test/product/operations-consumers/monetary-consumers.test.ts"
+        }
+      ],
+      "criteria": [
+        "SD06",
+        "C02",
+        "C06",
+        "WP04.INV.02",
+        "WP04.T03.CHK.03",
+        "WP04.T03.DOD.02",
+        "WP04.T03.SUC.02"
+      ],
+      "limits": [
+        "No SHA PR57, rawLegacyValue=200 é diagnóstico de consumidor ainda incorreto, não fix desse consumidor. O fix legado está na PR34 com prova própria.",
+        "58 casos do W anterior incluem cinco revalidados no W final; não são 63 distintos.",
+        "C06 observer/fingerprint não prova confirmação persistida ou jornada AM/browser integral.",
+        "Run consumidor completo é FAILURE:10 pass/2 fail. Dois defeitos de exportação continuam abertos."
+      ],
+      "next_action": "Preservar o encerramento do cenário original e encaminhar somente os dois findings de exportação já existentes ao owner de downloads."
+    },
+    {
+      "id": "OPS-REV-02",
+      "title": "C12 declara applied para substituição de PR ignorada em po_draft",
+      "original": {
+        "review_commit": "048b46acd3d70dc7ddafbea9e9b439f0d2e781d9",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reviews/operations/20261114-ba8a09e/REVIEW.md",
+        "product": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "id": "OPS-REV-02"
+      },
+      "severity": "P2",
+      "owner": "WP04 produtor; WP11/C12 e WP10 consumidores",
+      "status": "RESOLVED_WITH_EVIDENCE",
+      "status_scope": {
+        "pr": 60,
+        "head": "8e23e592602fb9f2fae9ce8f824322a073073e23"
+      },
+      "consumer": {
+        "pr": 34,
+        "head": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+        "status": "OPEN",
+        "reason": "prepared.ts, scenario-preparation.ts e prepared-review.ts mantêm blobs anteriores, sem gate de etapa nem pós-condição física; runtime executável desse cenário não foi corrigido por outro delta."
+      },
+      "cause": "save de PO era válido em po_draft mas ignorava values.pr; preparo aceitava ok/Saved sem conferir campos pedidos e review podia emitir digest com fields vazio.",
+      "correction": "Gate draft/pr_rejected, no-op explícito, verificação de cada campo físico depois de domain.execute na prévia e Apply; review valida etapa/intenção/moeda. Bridge recompõe a mutação pelo produtor reforçado.",
+      "evidence_runs": [
+        43626285237
+      ],
+      "proof": "10/0/141: positivos HTTP draft/pr_rejected 100→150, recibo único/replay e revogação; po_draft recusa preparo/review e digest nunca emitido não autoriza Apply; no-op não cria Saved/CAS; mismatch e CAS concorrente recusados.",
+      "code": [
+        {
+          "commit": "8e23e592602fb9f2fae9ce8f824322a073073e23",
+          "path": "modules/sucafina/Sucafinav1/product/procurement/prepared.ts",
+          "blob": "e613a1bf32fe1ee75574139cf699c34843cf25d1",
+          "lines": [
+            39,
+            95
+          ],
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/8e23e592602fb9f2fae9ce8f824322a073073e23/modules/sucafina/Sucafinav1/product/procurement/prepared.ts"
+        },
+        {
+          "commit": "8e23e592602fb9f2fae9ce8f824322a073073e23",
+          "path": "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+          "blob": "bdea5d497b4e8fa7e540cfb44d427cd3696678db",
+          "lines": [
+            29,
+            43
+          ],
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/8e23e592602fb9f2fae9ce8f824322a073073e23/modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts"
+        },
+        {
+          "commit": "8e23e592602fb9f2fae9ce8f824322a073073e23",
+          "path": "modules/sucafina/Sucafinav1/product/procurement/prepared-review.ts",
+          "blob": "c8d476a1be6d2b839a087b2bc248293014599791",
+          "lines": [
+            23,
+            46
+          ],
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/8e23e592602fb9f2fae9ce8f824322a073073e23/modules/sucafina/Sucafinav1/product/procurement/prepared-review.ts"
+        },
+        {
+          "commit": "8e23e592602fb9f2fae9ce8f824322a073073e23",
+          "path": "modules/sucafina/Sucafinav1/product/procurement/c12.ts",
+          "blob": "84f27e1312d3c58f3ba1ea5ae78fe5a936e3adc7",
+          "lines": [
+            13,
+            26
+          ],
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/8e23e592602fb9f2fae9ce8f824322a073073e23/modules/sucafina/Sucafinav1/product/procurement/c12.ts"
+        },
+        {
+          "commit": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+          "path": "modules/sucafina/Sucafinav1/product/procurement/prepared.ts",
+          "blob": "9c1b657dc4d6d5ba139c4f9fe854c1c8960cc95b",
+          "lines": [
+            39,
+            77
+          ],
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/15df31a67efab0aae6e2bff2b7eb8e5e59511324/modules/sucafina/Sucafinav1/product/procurement/prepared.ts"
+        },
+        {
+          "commit": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+          "path": "modules/sucafina/Sucafinav1/product/procurement/prepared-review.ts",
+          "blob": "d6382e93faeb7bf7b3118d592a9a47351d482fec",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/15df31a67efab0aae6e2bff2b7eb8e5e59511324/modules/sucafina/Sucafinav1/product/procurement/prepared-review.ts"
+        },
+        {
+          "commit": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+          "path": "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+          "blob": "8c83680aaffa06c7b265f17e612118b1e008615a",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/15df31a67efab0aae6e2bff2b7eb8e5e59511324/modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts"
+        },
+        {
+          "commit": "8e23e592602fb9f2fae9ce8f824322a073073e23",
+          "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/procurement-apply/real-apply.test.ts",
+          "blob": "b4ce031c32276342f041c0ed14beee94e8fd1fee",
+          "lines": [
+            7,
+            73
+          ],
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/8e23e592602fb9f2fae9ce8f824322a073073e23/modules/sucafina/Sucafinav1/test/product/review-fixes/procurement-apply/real-apply.test.ts"
+        },
+        {
+          "commit": "8e23e592602fb9f2fae9ce8f824322a073073e23",
+          "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/procurement-apply/refusals.test.ts",
+          "blob": "86ff640201bc35674b8fc4bb6f96dc4b0896d395",
+          "lines": [
+            11,
+            110
+          ],
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/8e23e592602fb9f2fae9ce8f824322a073073e23/modules/sucafina/Sucafinav1/test/product/review-fixes/procurement-apply/refusals.test.ts"
+        }
+      ],
+      "criteria": [
+        "WP04.QLT.10",
+        "WP04.DOD.02",
+        "C03",
+        "C12",
+        "CAMP.QLT.03",
+        "CAMP.CMP.02"
+      ],
+      "limits": [
+        "Caso/escolha semeados com cobertura de custos pendente; não há execução de modelo.",
+        "Entrada legada e digest não emitido são negativos sintéticos, não prova histórica nem reparo de recibo antigo.",
+        "Controle do save ignorado e intenção mista usam clone descartável. Positivos HTTP persistidos são draft/pr_rejected.",
+        "Replay na mesma composição; não fecha I-OPS-02 ou restart C12."
+      ],
+      "next_action": "S0/astra-operations recebe os três blobs e testes da PR60 sob autoridade vigente e qualifica os consumidores afetados."
+    },
+    {
+      "id": "OPS-REV-03",
+      "title": "Busca documental limita antes da ACL e deduplicação",
+      "original": {
+        "review_commit": "048b46acd3d70dc7ddafbea9e9b439f0d2e781d9",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reviews/operations/20261114-ba8a09e/REVIEW.md",
+        "product": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "id": "OPS-REV-03"
+      },
+      "severity": "P2",
+      "owner": "WP06.T05; intake S0/astra-operations",
+      "status": "RESOLVED_WITH_EVIDENCE",
+      "status_scope": {
+        "pr": 52,
+        "head": "d48065d391e1557d43b63525bdc7f55b168d5206"
+      },
+      "consumer": {
+        "pr": 34,
+        "head": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+        "status": "OPEN",
+        "reason": "capabilities.ts:161 ainda usa records.slice(0,100); metadata na linha192 depende de records.length antes da autorização."
+      },
+      "cause": "Candidatos repetidos/inacessíveis ocupavam o prefixo de cem e ocultavam fontes posteriores autorizadas.",
+      "correction": "Filtra instalação/projeto e autorização/fonte corrente antes da contagem, deduplica identidade física, pesquisa até cem fontes autorizadas e revalida inclusive a testemunha101 e fontes sem match.",
+      "evidence_runs": [
+        43626678715
+      ],
+      "proof": "4 pass/0 fail/2 filtered out: cem candidatos A não escondem B; prefixo104 inacessível não altera resultado/metadata; limite100/101 e egress negado suprimem saída; regressão de fonte alterada passa.",
+      "code": [
+        {
+          "commit": "d48065d391e1557d43b63525bdc7f55b168d5206",
+          "path": "modules/sucafina/Sucafinav1/product/documents/capabilities.ts",
+          "blob": "2753c07ee03472d35d3b93789e3cb9ba309f6a41",
+          "lines": [
+            151,
+            197
+          ],
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d48065d391e1557d43b63525bdc7f55b168d5206/modules/sucafina/Sucafinav1/product/documents/capabilities.ts"
+        },
+        {
+          "commit": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+          "path": "modules/sucafina/Sucafinav1/product/documents/capabilities.ts",
+          "blob": "6b655187d4444cff5b8966e868ba163191adfc42",
+          "lines": [
+            155,
+            192
+          ],
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/15df31a67efab0aae6e2bff2b7eb8e5e59511324/modules/sucafina/Sucafinav1/product/documents/capabilities.ts"
+        },
+        {
+          "commit": "d48065d391e1557d43b63525bdc7f55b168d5206",
+          "path": "modules/sucafina/Sucafinav1/test/product/operations-fixes/document-search.test.ts",
+          "blob": "d0a801209899cdbf29b1dc83c71cb5806cdffb62",
+          "lines": [
+            5,
+            46
+          ],
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d48065d391e1557d43b63525bdc7f55b168d5206/modules/sucafina/Sucafinav1/test/product/operations-fixes/document-search.test.ts"
+        },
+        {
+          "commit": "d48065d391e1557d43b63525bdc7f55b168d5206",
+          "path": "modules/sucafina/Sucafinav1/test/product/operations-fixes/document-search-budget.test.ts",
+          "blob": "8e12e6cfc9c2ad5e4e3dc7803d838ecae4599814",
+          "lines": [
+            4,
+            47
+          ],
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d48065d391e1557d43b63525bdc7f55b168d5206/modules/sucafina/Sucafinav1/test/product/operations-fixes/document-search-budget.test.ts"
+        }
+      ],
+      "criteria": [
+        "WP06.T05.CMP.19",
+        "WP06.T05.QLT.18",
+        "CAMP.INV.04",
+        "CAMP.CMP.02"
+      ],
+      "limits": [
+        "Dois casos de cardinalidade usam reader/política sintéticos explícitos; o caso HTTP usa fonte/admissão reais.",
+        "Não demonstra ACL nativa de104 anexos ou paridade native/UI/MCP integral."
+      ],
+      "next_action": "Intake dos blobs da PR52 e recheck do consumidor; não repetir a suíte apenas para redescobrir o defeito."
+    },
+    {
+      "id": "OPS-REV-04",
+      "title": "Interrupção entre blob e catálogo impede retry idêntico",
+      "original": {
+        "review_commit": "048b46acd3d70dc7ddafbea9e9b439f0d2e781d9",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reviews/operations/20261114-ba8a09e/REVIEW.md",
+        "product": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "id": "OPS-REV-04"
+      },
+      "severity": "P2",
+      "owner": "WP06/importação; WP10/S0 integração",
+      "status": "RESOLVED_WITH_EVIDENCE",
+      "status_scope": {
+        "pr": 58,
+        "head": "e1dc51a6df8cd40a125d960dce6fa5e5d8b33c5e",
+        "meaning": "Admissões produzidas pelo fix com proof durável."
+      },
+      "consumer": {
+        "pr": 34,
+        "head": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+        "status": "OPEN",
+        "reason": "staged-files.ts conserva blob b24558..., cujo teste de blob existente retorna conflito antes de reconciliar o catálogo."
+      },
+      "cause": "Bytes e catálogo tinham commits separados sem prova durável da intenção; retry encontrava bytes e recusava antes do segundo commit.",
+      "correction": "Blob e proof sf-import-admission-v1 na mesma transação; retomada exige digest da entrada/bytes e expiração original, revalida autoridade/alvo e reconcilia catálogo de resultado incerto sem apagar bytes possivelmente publicados.",
+      "evidence_runs": [
+        43626093062
+      ],
+      "proof": "Interrupção antes do catálogo, ACK perdido após commit, reopen com autenticação nova, divergências de bytes/alvo/formato/opções, revogação, expiração e concorrência; um catálogo e nenhuma duplicação.",
+      "code": [
+        {
+          "commit": "e1dc51a6df8cd40a125d960dce6fa5e5d8b33c5e",
+          "path": "modules/sucafina/Sucafinav1/product/imports/staged-files.ts",
+          "blob": "0d42f5242acd3d1c93bc110422285b96975b8ea0",
+          "lines": [
+            70,
+            104
+          ],
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e1dc51a6df8cd40a125d960dce6fa5e5d8b33c5e/modules/sucafina/Sucafinav1/product/imports/staged-files.ts"
+        },
+        {
+          "commit": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+          "path": "modules/sucafina/Sucafinav1/product/imports/staged-files.ts",
+          "blob": "b24558f415f48921b43255169ec0cc82d7037ddb",
+          "lines": [
+            59,
+            85
+          ],
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/15df31a67efab0aae6e2bff2b7eb8e5e59511324/modules/sucafina/Sucafinav1/product/imports/staged-files.ts"
+        },
+        {
+          "commit": "e1dc51a6df8cd40a125d960dce6fa5e5d8b33c5e",
+          "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/import-recovery/admission-restart.test.ts",
+          "blob": "a58a4dec6cfee07474dd0c1b910ba96c4e7d9c03",
+          "lines": [
+            5,
+            173
+          ],
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e1dc51a6df8cd40a125d960dce6fa5e5d8b33c5e/modules/sucafina/Sucafinav1/test/product/review-fixes/import-recovery/admission-restart.test.ts"
+        },
+        {
+          "commit": "e1dc51a6df8cd40a125d960dce6fa5e5d8b33c5e",
+          "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/import-recovery/admission-fixture.ts",
+          "blob": "675c6fff9a395a88665a8f0e55e5129bd3772a8d",
+          "lines": [
+            30,
+            145
+          ],
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e1dc51a6df8cd40a125d960dce6fa5e5d8b33c5e/modules/sucafina/Sucafinav1/test/product/review-fixes/import-recovery/admission-fixture.ts"
+        }
+      ],
+      "criteria": [
+        "WP06.QLT.03",
+        "CAMP.CMP.02",
+        "CAMP.QLT.03"
+      ],
+      "limits": [
+        "Órfãos antigos sem proof não são migrados: são preservados e recusados; não há claim de recuperação universal de órfãos históricos.",
+        "Scanner é fixture de aceitação. Reinício é composição sobre SQLite fechado/reaberto, sem kill de processo."
+      ],
+      "next_action": "Intake do fix/tests da PR58 pelo owner atual; reconciliar preimages e manter explícito o limite de órfãos legados."
+    },
+    {
+      "id": "E-OPS-01",
+      "title": "Recuperação C12 completa após reinício/reload ainda não demonstrada",
+      "original": {
+        "review_commit": "6830fa159d30b60d001f91a47326ae88c6255282",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reviews/operations/REVIEW.md",
+        "product": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "id": "E-OPS-01"
+      },
+      "severity": "EVIDENCE_GAP",
+      "owner": "Interface/WP01 + WP04 + WP10/WP11",
+      "status": "NEEDS_RECHECK",
+      "status_scope": {
+        "prs": [
+          52,
+          34
+        ],
+        "heads": [
+          "d48065d391e1557d43b63525bdc7f55b168d5206",
+          "15df31a67efab0aae6e2bff2b7eb8e5e59511324"
+        ]
+      },
+      "consumer": {
+        "pr": 34,
+        "head": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+        "status": "NEEDS_RECHECK",
+        "reason": "As novas contraprovas são negativas; não há recuperação positiva pela UI até reconciliação."
+      },
+      "cause": "H06 antigo limpa cache na mesma fixture. O novo H05 reconstrói runtime/SQLite mas a intenção original continua409; o controle API200 não é o caminho oferecido pela UI.",
+      "correction": "Nenhuma prova de fechamento encontrada; proposta de recuperação ainda não aplicada.",
+      "evidence_runs": [
+        43624678702
+      ],
+      "proof": "runtimeReconstructed=true e sqliteReopened=true, porém processRestarted=false e recoveryAccepted=false.",
+      "code": [
+        {
+          "commit": "d48065d391e1557d43b63525bdc7f55b168d5206",
+          "path": "modules/sucafina/Sucafinav1/test/product/operations-fixes/c12-concurrency.test.ts",
+          "blob": "2f4d1d0455bdf073f9a262943f925c1263a69b60",
+          "lines": [
+            63,
+            151
+          ],
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d48065d391e1557d43b63525bdc7f55b168d5206/modules/sucafina/Sucafinav1/test/product/operations-fixes/c12-concurrency.test.ts"
+        }
+      ],
+      "criteria": [
+        "C03",
+        "C12",
+        "CAMP.CMP.02",
+        "CAMP.QLT.03"
+      ],
+      "limits": [
+        "Lacuna de evidência conservada, não novo defeito de persistência nem afirmação de ausência universal de provas no repositório."
+      ],
+      "next_action": "Após correção I-OPS-02, owner demonstra fluxo real de recuperação sob acesso corrente, reload/reabertura e negativos, com um efeito e mesmo receipt."
+    },
+    {
+      "id": "E-OPS-02",
+      "title": "Apply de import após reconstrução do runtime",
+      "original": {
+        "review_commit": "048b46acd3d70dc7ddafbea9e9b439f0d2e781d9",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reviews/operations/20261114-ba8a09e/REVIEW.md",
+        "product": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "id": "E-OPS-02"
+      },
+      "severity": "P2",
+      "owner": "WP06 + WP10",
+      "status": "RESOLVED_WITH_EVIDENCE",
+      "status_scope": {
+        "pr": 58,
+        "head": "e1dc51a6df8cd40a125d960dce6fa5e5d8b33c5e",
+        "tested_product": "95b3c9a33ba1bf66b9edf2bdd35736e6228eb979",
+        "meaning": "SQLite reaberto, serviços/autoridade/runtime reconstruídos e replay autorizado; não reinício físico do processo."
+      },
+      "consumer": {
+        "pr": 34,
+        "head": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+        "status": "NEEDS_RECHECK",
+        "reason": "Novo teste ausente e nenhuma execução dessa prova atribuível ao pin PR34; igualdade dos seis componentes centrais é compatibilidade estática, não reatribuição do run."
+      },
+      "cause": "O teste original aplicava/repetia antes de dispose; após reopen verificava apenas audit.length.",
+      "correction": "Prova discriminante nova fecha a lacuna: resposta perdida, driver antigo encerrado, instâncias novas, nova autenticação, recuperação de manifesto/detail/receipt e Apply idêntico após reopen, snapshots completos invariantes.",
+      "evidence_runs": [
+        43626093062,
+        43627493939
+      ],
+      "proof": "4/0/84 no W2; duas variantes financeiras corrente/nova, logout persistido e revogação de grant mesmo com novo login. Forecast72000→84000,518000/null/zero preservados; um efeito/recibo.",
+      "code": [
+        {
+          "commit": "e1dc51a6df8cd40a125d960dce6fa5e5d8b33c5e",
+          "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/import-recovery/apply-restart.test.ts",
+          "blob": "19949fd9821bb8768b9feffcc398b5313aa5fbef",
+          "lines": [
+            12,
+            138
+          ],
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e1dc51a6df8cd40a125d960dce6fa5e5d8b33c5e/modules/sucafina/Sucafinav1/test/product/review-fixes/import-recovery/apply-restart.test.ts"
+        },
+        {
+          "commit": "e1dc51a6df8cd40a125d960dce6fa5e5d8b33c5e",
+          "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/import-recovery/apply-fixture.ts",
+          "blob": "446c0244a71d388cc995f99255c529e72d9dc88b",
+          "lines": [
+            39,
+            124
+          ],
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e1dc51a6df8cd40a125d960dce6fa5e5d8b33c5e/modules/sucafina/Sucafinav1/test/product/review-fixes/import-recovery/apply-fixture.ts"
+        }
+      ],
+      "criteria": [
+        "WP06.T03.DOD.02",
+        "C03",
+        "C04",
+        "CAMP.CMP.02"
+      ],
+      "limits": [
+        "Não kill de processo, restart desktop/server, IdP/scanner corporativo, browser E2E ou AM integral.",
+        "W1 tinha4 casos Apply; anotação TypeScript da fixture mudou em W2 e os4 foram reexecutados. Não são8 casos únicos.",
+        "Não se exigiu patch de Apply sem contraprova de defeito."
+      ],
+      "next_action": "Consumir testes/fix da PR58 e reanexar/produzir evidência pertinente ao candidato composto pelo executor autorizado; revisor somente examina."
+    },
+    {
+      "id": "E-OPS-03",
+      "title": "Recusa de diretório/banco de UID estranho sem execução",
+      "original": {
+        "review_commit": "6830fa159d30b60d001f91a47326ae88c6255282",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reviews/operations/REVIEW.md",
+        "product": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "id": "E-OPS-03"
+      },
+      "severity": "EVIDENCE_GAP",
+      "owner": "WP10",
+      "status": "NEEDS_RECHECK",
+      "status_scope": {
+        "pr": 34,
+        "head": "15df31a67efab0aae6e2bff2b7eb8e5e59511324"
+      },
+      "consumer": {
+        "pr": 34,
+        "head": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+        "status": "NEEDS_RECHECK",
+        "reason": "Nos dois logs históricos os casos directory/database são skip. O código conserva skipIf(getuid!==0); os deltas novos não apresentam execução desses casos."
+      },
+      "cause": "Privilégios exigidos pela fixture de UID65534 não estavam presentes nos runs existentes.",
+      "correction": "Nenhuma execução discriminante nova encontrada no corpus delimitado.",
+      "evidence_runs": [
+        43554658437,
+        43555674548
+      ],
+      "proof": "Logs oficiais dos jobs132324664659 e132327869450 contêm ambos (skip) rejects foreign UID directory/database; agregado verde não comprova os casos.",
+      "code": [
+        {
+          "commit": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+          "path": "modules/sucafina/Sucafinav1/test/local-store.test.ts",
+          "blob": "d7a5e9517ed4b3e21354660169b03ae4a397ac60",
+          "lines": [
+            574,
+            588
+          ],
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/15df31a67efab0aae6e2bff2b7eb8e5e59511324/modules/sucafina/Sucafinav1/test/local-store.test.ts"
+        }
+      ],
+      "criteria": [
+        "CAMP.CMP.02",
+        "CAMP.INV.04"
+      ],
+      "limits": [
+        "Lacuna de execução; não finding de bypass. Nenhum teste foi disparado nesta revisão."
+      ],
+      "next_action": "WP10 apresenta prova executada sob ambiente autorizado que exercite ambas as recusas; não ampliar permissões como atalho nesta revisão."
+    }
+  ],
+  "related_existing_findings": [
+    {
+      "id": "OPS-CONSUMER-EXPORT-01",
+      "status": "OPEN",
+      "existing": true,
+      "head": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+      "owner": "Writer vigente de runtime/downloads.ts; S0/Compose",
+      "code": {
+        "commit": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+        "path": "modules/sucafina/Sucafinav1/runtime/downloads.ts",
+        "blob": "fa365f9d350be341348ab69d789e40779c8b9756",
+        "lines": [
+          151,
+          247
+        ],
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/15df31a67efab0aae6e2bff2b7eb8e5e59511324/modules/sucafina/Sucafinav1/runtime/downloads.ts"
+      },
+      "test": {
+        "commit": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+        "path": "modules/sucafina/Sucafinav1/test/product/operations-consumers/export-owner-regression.test.ts",
+        "blob": "3170c80978ef8c87e0a254c8817ffe8514019d7c",
+        "lines": [
+          12,
+          45
+        ],
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/15df31a67efab0aae6e2bff2b7eb8e5e59511324/modules/sucafina/Sucafinav1/test/product/operations-consumers/export-owner-regression.test.ts"
+      },
+      "run": 43628901747,
+      "observed": "PO futura recebe108USD/FX1.08/submitted/pending-approval e aprovação emprestada de sourcing.",
+      "expected": "200USD/FX2/current/estimate e aprovação própria indisponível.",
+      "proposal": {
+        "commit": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-consumers/attempt-01/downloads-owner.patch",
+        "blob": "d47538f593c2b563e34c75434044def6e070de58",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/15df31a67efab0aae6e2bff2b7eb8e5e59511324/modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-consumers/attempt-01/downloads-owner.patch"
+      },
+      "proposal_status": "PROPOSED_NOT_APPLIED_NOT_VALIDATED"
+    },
+    {
+      "id": "OPS-CONSUMER-EXPORT-02",
+      "status": "OPEN",
+      "existing": true,
+      "head": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+      "owner": "Writer vigente de runtime/downloads.ts; S0/Compose",
+      "code": {
+        "commit": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+        "path": "modules/sucafina/Sucafinav1/runtime/downloads.ts",
+        "blob": "fa365f9d350be341348ab69d789e40779c8b9756",
+        "lines": [
+          205,
+          206
+        ],
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/15df31a67efab0aae6e2bff2b7eb8e5e59511324/modules/sucafina/Sucafinav1/runtime/downloads.ts"
+      },
+      "test": {
+        "commit": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+        "path": "modules/sucafina/Sucafinav1/test/product/operations-consumers/export-owner-regression.test.ts",
+        "blob": "3170c80978ef8c87e0a254c8817ffe8514019d7c",
+        "lines": [
+          48,
+          70
+        ],
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/15df31a67efab0aae6e2bff2b7eb8e5e59511324/modules/sucafina/Sucafinav1/test/product/operations-consumers/export-owner-regression.test.ts"
+      },
+      "run": 43628901747,
+      "observed": "Linhas40/60 apresentadas como100/100.",
+      "expected": "Valores das linhas40/60.",
+      "limits": "Cópia descartável de snapshot de leitura; não prova permissão para editar linhas durante sourcing pendente.",
+      "proposal_status": "PROPOSED_NOT_APPLIED_NOT_VALIDATED"
+    }
+  ],
+  "counts": {
+    "original_findings": 9,
+    "resolved_in_explicit_source_scope": 6,
+    "open_in_source_scope": 1,
+    "needs_recheck": 2,
+    "code_corrections": 5,
+    "evidence_gap_filled": 1
+  },
+  "final_candidate_approval": false
+}
