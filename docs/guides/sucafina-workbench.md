@@ -59,7 +59,7 @@ Quando houver um serviço de análise disponível, **Frame this decision → Pre
 
 O detalhe mostra o estado e a versão do caso, seus critérios, alternativas e resultados disponíveis. Em cada alternativa, leia o estado da comparação e as condições. **Known subtotal** e **Known difference** mostram somente o que pode ser calculado com as informações atuais; não equivalem a um total ou diferença completos. Uma categoria pendente ou ausente não é zero. Abra **Coverage and sources** para consultar a cobertura e as fontes.
 
-Em **Ask a question**, escolha um registro do caso, encontre e selecione o destinatário e escreva sua pergunta. A conversa é criada e depois vinculada à decisão. Se o vínculo não puder ser confirmado, mantenha a tela aberta e tente novamente a mesma solicitação. Em **Question conversations**, selecione **Open conversation** para consultar as mensagens autorizadas.
+Em **Ask a question**, escolha um registro do caso, encontre e selecione o destinatário e escreva sua pergunta. **Find recipients** consulta as pessoas confirmadas pelo diretório com seu acesso atual; essa consulta preserva a pergunta e não cria uma conversa. A conversa é criada e depois vinculada à decisão. Se o vínculo não puder ser confirmado, mantenha a tela aberta e tente novamente a mesma solicitação. Em **Question conversations**, selecione **Open conversation** para consultar as mensagens autorizadas.
 
 Com pelo menos duas alternativas, use **Compare and choose**. Para pedir uma análise especializada das alternativas salvas, use **Analyze alternatives**, escolha duas alternativas diferentes e selecione **Start specialist analysis**; acompanhe o resultado no histórico de análises. A análise não registra a escolha nem aplica uma mudança. Para comparar e escolher:
 

@@ -224,7 +224,7 @@ document.querySelectorAll('[data-case-question]').forEach((form) => {
     if (!active() || busy || reading || thread || pending || completed) return
     const generation = ++readGeneration; reading = true; sync(); status.textContent = 'Finding recipients…'
     try {
-      const items = await send('collaboration-recipient-list', {}, crypto.randomUUID())
+      const items = await send('collaboration-recipients', {}, crypto.randomUUID())
       if (!active() || generation !== readGeneration || busy || pending || thread) return
       if (!Array.isArray(items) || items.some((item) => typeof item?.id !== 'string' || typeof item?.name !== 'string')) throw new Error('unavailable')
       const selected = select.value

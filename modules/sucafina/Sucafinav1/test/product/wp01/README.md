@@ -12,7 +12,7 @@ The finalizer retains the assertions for exactly one launch, at least one lease,
 
 ## Files affected by a pool change
 
-Include the two lifecycle files around these 21 direct consumers when changing the shared pool. Keep any independently affected product tests in the same surgical request if their own changes require them; do not add a second equivalent browser run.
+Include the two lifecycle files around these 22 direct consumers when changing the shared pool. Keep any independently affected product tests in the same surgical request if their own changes require them; do not add a second equivalent browser run.
 
 ```text
 ./Sucafinav1/test/product/wp01/preview-browser.test.ts
@@ -26,6 +26,7 @@ Include the two lifecycle files around these 21 direct consumers when changing t
 ./Sucafinav1/test/product/wp01/meeting-number.test.ts
 ./Sucafinav1/test/product/wp01/planner-monthly.test.ts
 ./Sucafinav1/test/product/wp01/portfolio-recovery.test.ts
+./Sucafinav1/test/product/wp01/question-recipients.test.ts
 ./Sucafinav1/test/product/wp01/record-search.test.ts
 ./Sucafinav1/test/product/wp01/shell-recovery.test.ts
 ./Sucafinav1/test/product/wp01/shell-refresh.test.ts

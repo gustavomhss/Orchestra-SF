@@ -830,7 +830,7 @@ test.each([401, 403])("question %i clears the draft and context and fences an ol
   await browserCase(questionForm, async (request) => {
     const mode = new URL(request.url).searchParams.get("sf")!
     calls.push(mode)
-    if (mode === "collaboration-recipient-list") {
+    if (mode === "collaboration-recipients") {
       await new Promise<void>((resolve) => { gate.release = resolve; gate.started?.() })
       return Response.json({ status: "ok", value: [{ id: "late-recipient", name: "Late restricted recipient" }] }, { headers: { "X-Late-Fixture": "question-recipients" } })
     }
@@ -854,7 +854,7 @@ test.each([401, 403])("question %i clears the draft and context and fences an ol
     expect(await page.content()).not.toContain("restricted-record")
     expect(await page.content()).not.toContain("PRIVATE-DENIAL")
     await page.locator('[data-case-question]').dispatchEvent("submit")
-    expect(calls).toEqual(["collaboration-recipient-list", "collaboration-storage-version"])
+    expect(calls).toEqual(["collaboration-recipients", "collaboration-storage-version"])
   }, () => gate.release?.())
 }, 30_000)
 
@@ -877,7 +877,7 @@ test("transient question recipient and preflight failures preserve the selected 
     expect(await page.locator('[data-case-question]').getAttribute("data-context")).not.toBeNull()
     expect(await page.locator('[data-case-question]').getAttribute("data-dirty")).toBe("true")
     await page.getByLabel("Question", { exact: true }).fill("I can still correct the question")
-    expect(calls).toEqual(["collaboration-recipient-list", "collaboration-storage-version"])
+    expect(calls).toEqual(["collaboration-recipients", "collaboration-storage-version"])
   })
 }, 30_000)
 
