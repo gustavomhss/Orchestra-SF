@@ -27,9 +27,11 @@ function ok<T>(result: PortResult<T>, label: string): T {
 async function promotionFixture(name: string, budgetMs: number) {
   const deadline = compositionTestDeadline(name, budgetMs)
   try {
-    const fixture = await deadline.phase("fixture.initialize", () => financialCompositionFixture({ signal: deadline.signal,
-      beforeEnvironment: async () => deadline.check() }))
-    deadline.own(() => fixture.dispose())
+    const fixture = await deadline.phase("fixture.initialize", async () => {
+      const value = await financialCompositionFixture({ signal: deadline.signal, beforeEnvironment: async () => deadline.check() })
+      deadline.own(() => value.dispose())
+      return value
+    })
     const { authority, business } = fixture
     business.initializeAtlas(undefined, { boundaryVersion: "fixture", schemaVersion: "a".repeat(64), manifestVersion: "b".repeat(64), skillVersion: "c".repeat(64) })
     await fixture.persistence.transaction("planner", async (snapshot) => {

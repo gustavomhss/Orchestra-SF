@@ -75,9 +75,11 @@ for (const change of ["source", "authority", "case-membership", "request"] as co
 }, 120_000)
 
 async function metricFixture(deadline: ReturnType<typeof compositionTestDeadline>) {
-  const fixture = await deadline.phase("fixture.initialize", () => financialCompositionFixture({ signal: deadline.signal,
-    beforeEnvironment: async () => deadline.check() }))
-  deadline.own(() => fixture.dispose())
+  const fixture = await deadline.phase("fixture.initialize", async () => {
+    const value = await financialCompositionFixture({ signal: deadline.signal, beforeEnvironment: async () => deadline.check() })
+    deadline.own(() => value.dispose())
+    return value
+  })
   const call = await fixture.read()
   deadline.own(() => fixture.authority.ui.finish(call))
   const period = { start: "2026-01-01", end: "2026-12-31" }

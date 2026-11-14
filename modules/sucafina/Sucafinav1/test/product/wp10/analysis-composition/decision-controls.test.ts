@@ -18,6 +18,7 @@ import { digestSfValue } from "../../../../product/contracts/canonical.ts"
 import { RENEWAL_TRANSITION_CATEGORIES } from "../../../../product/contracts/decisions.ts"
 import { encodeCaseRef } from "../../../../product/decisions/case-port.ts"
 import type { BaselineCoverageRequest } from "../../../../product/decisions/baseline-coverage.ts"
+import type { CoverageClassification } from "../../../../product/decisions/coverage-classification.ts"
 import { openLocalStore } from "../../../../runtime/local-store.ts"
 
 // Real C08, SQLite, source issuer, domain registries and HTTP. The identity fixture is not a native/global acceptance run.
@@ -219,6 +220,51 @@ test("Chromium navigates the own decision controls, saves real classification an
     expect(stored.value.selected.forecast.source.refDigest).toBe(state.secondSource.refDigest)
     expect(stored.value.selected.forecast.expectedVersion).toBe(1)
     expect(await page.locator("body").textContent()).toContain("Licenças do serviço no período selecionado")
+    const replacement = page.locator('form[data-classification-replacement="true"]')
+    expect(await replacement.count()).toBe(1)
+    expect(await replacement.getByRole("heading", { name: "Nova versão completa da classificação", exact: true }).isVisible()).toBe(true)
+    expect(await replacement.locator("[data-classification-replacement-notice]").textContent()).toContain("substituirá a revisão 1 mostrada acima")
+    const confirmation = replacement.getByLabel("Revisei todas as categorias e confirmo a substituição da classificação registrada.", { exact: true })
+    expect(await confirmation.isChecked()).toBe(false)
+    expect(await confirmation.getAttribute("required")).not.toBeNull()
+    expect(await replacement.getByRole("button", { name: "Substituir classificação registrada", exact: true }).isVisible()).toBe(true)
+    // The empty replacement form is explicitly separate from the preserved
+    // classification above; no unavailable pending notes are reconstructed.
+    expect(await groups.nth(0).getByLabel("Classificação", { exact: true }).inputValue()).toBe("pending")
+    expect(await groups.nth(0).getByLabel("Escopo ou motivo da pendência").inputValue()).toBe("")
+    expect(await components.locator("option:checked").count()).toBe(0)
+    const previousClassification = stored.value.selected.forecast.classification as CoverageClassification
+    expect(previousClassification.mappings).toHaveLength(1)
+    expect(previousClassification.mappings[0]!.entry.categoryId).toBe("service")
+    const replacementNote = "Licenças mantidas; escopo revisado deliberadamente pelo usuário"
+    for (let index = 0; index < RENEWAL_TRANSITION_CATEGORIES.length; index++) await groups.nth(index).getByLabel("Escopo ou motivo da pendência").fill(index === 0 ? replacementNote : "Aguardando comprovante")
+    await groups.nth(0).getByLabel("Classificação", { exact: true }).selectOption("included")
+    await components.selectOption([...previousClassification.mappings[0]!.entry.componentRefs])
+    expect(await replacement.evaluate((element) => (element as HTMLFormElement).checkValidity())).toBe(false)
+    // Browser validation must prevent a second write until the person explicitly
+    // confirms the replacement. A real authorized read verifies unchanged C08.
+    await replacement.getByRole("button", { name: "Substituir classificação registrada", exact: true }).click()
+    const unconfirmed = await (await page.request.get(selected.href)).json()
+    expect(unconfirmed.value.selected.forecast.expectedVersion).toBe(1)
+    expect(unconfirmed.value.selected.forecast.classification).toEqual(previousClassification)
+    await confirmation.check()
+    expect(await replacement.evaluate((element) => (element as HTMLFormElement).checkValidity())).toBe(true)
+    const replacedResponse = page.waitForResponse((response) => response.request().method() === "POST" && new URL(response.url()).searchParams.get("sf") === "decision-coverage")
+    await replacement.getByRole("button", { name: "Substituir classificação registrada", exact: true }).focus()
+    await page.keyboard.press("Enter")
+    expect((await replacedResponse).status()).toBe(200)
+    await page.locator('[data-classification-version="2"]').waitFor({ timeout: 20_000 })
+    await page.reload()
+    await page.locator('[data-classification-version="2"]').waitFor({ timeout: 20_000 })
+    const reopened = await (await page.request.get(selected.href)).json()
+    expect(reopened.value.selected.forecast.source).toEqual(stored.value.selected.forecast.source)
+    expect(reopened.value.selected.forecast.expectedVersion).toBe(2)
+    expect(reopened.value.selected.forecast.classification.mappings).toEqual([{
+      ...previousClassification.mappings[0]!, entry: { ...previousClassification.mappings[0]!.entry, scopeNote: replacementNote },
+    }])
+    expect(await page.locator("body").textContent()).toContain(replacementNote)
+    expect(await replacement.locator("[data-classification-replacement-notice]").textContent()).toContain("substituirá a revisão 2 mostrada acima")
+    expect(await confirmation.isChecked()).toBe(false)
     // Existing test-ci Bun artifact transport; the payload and receipt identify WP10 explicitly.
     const output = path.resolve(import.meta.dir, "../../../../../e2e/test-results/lean-visual")
     await mkdir(output, { recursive: true })
@@ -233,7 +279,7 @@ test("Chromium navigates the own decision controls, saves real classification an
       widths: [320, 768, 1440], height: 1000, screenshots: [320, 768, 1440].map((width) => `wp10-decision-controls-${width}.png`),
       identityQualification: "Two test principals authorized by real C08; no installed enterprise identity or native AI acceptance",
       transportQualification: "Existing test-ci Bun PNG/JSON upload directory; this is WP10 decision controls, not a Lean dashboard proof",
-      observed: ["Published Planner evidence and real classification receipt", "Save submitted by keyboard Enter", "Transient observation timestamp preserves pending edits"],
+      observed: ["Published Planner evidence and real classification receipt", "Save submitted by keyboard Enter", "Transient observation timestamp preserves pending edits", "Existing classification remains visible; blank full-replacement form has explicit consequences and required confirmation", "Unconfirmed replacement preserves revision 1; confirmed replacement persists revision 2 and reopens with exact source, components and revised scope"],
     }, null, 2) + "\n")
     const humanDraft = "Observação humana preservada após edição concorrente"
     await groups.nth(0).getByLabel("Escopo ou motivo da pendência").fill(humanDraft)

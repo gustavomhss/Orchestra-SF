@@ -25,6 +25,7 @@ import { createSfDecisionPlannerActors } from "./decision-baseline-services.ts"
 import type { createSfDecisionBaselineServices } from "./decision-baseline-services.ts"
 import type { createSfBusinessServices } from "./business-services.ts"
 import { createSfAlternativeCallScope } from "./alternative-call-scope.ts"
+import type { SfComparisonInvocation } from "./portfolio-comparison-scope.ts"
 
 type CaseRef = { id: string; incarnation: string; version: number }
 type SelectedScenario = { caseRef: CaseRef; scenario: ScenarioRequest; coverageRef: string }
@@ -42,7 +43,7 @@ export function createSfDecisionAlternativeServices(input: {
   authority: ReturnType<typeof createSfProductAuthority>
   business: ReturnType<typeof createSfBusinessServices>
   baseline: ReturnType<typeof createSfDecisionBaselineServices>
-  selection: Pick<ReturnType<typeof createDecisionPortfolioSelection>, "read">
+  selection: Pick<ReturnType<typeof createDecisionPortfolioSelection>, "read"> & { withComparisonScope?: SfComparisonInvocation }
   checks: Pick<ReturnType<typeof createDecisionEvidenceChecks>, "refs">
   selectedCase: (call: TrustedDomainContext) => Promise<PortResult<CaseRef>>
   verifiedInputFor?: (call: TrustedDomainContext) => Promise<PortResult<unknown>>
@@ -58,6 +59,7 @@ export function createSfDecisionAlternativeServices(input: {
   const callScope = createSfAlternativeCallScope<SelectedScenario>({ authority: input.authority, selectedCase: input.selectedCase,
     lockedSourceFences: business.lockedSourceFences, verifiedInputFor: input.verifiedInputFor,
     verifiedAlternativeSelectionFor: input.verifiedAlternativeSelectionFor, hasAdmittedInputContext: input.hasAdmittedInputContext })
+  const withComparisonScope: SfComparisonInvocation = (call, work) => input.selection.withComparisonScope ? input.selection.withComparisonScope(call, work) : work()
   const comparisonSelection = async (comparison: ScenarioComparisonInput, selection: PortfolioSelection, call: TrustedDomainContext): Promise<PortResult<ComparisonSelection>> => {
     const selected = await input.selectedCase(call)
     if (selected.status !== "ok") return selected
@@ -223,9 +225,10 @@ export function createSfDecisionAlternativeServices(input: {
   const common = { cases: business.cases, planner: business.planner, sources: business.plannerSources, host, resolveAlternative, authorizeProposal, coverageEvidence }
   const alternative = createDecisionProposalService({ ...common, registerProposalCoverage: coverage.registerProposalCoverage })
   const replay = createAlternativeReadOnlyReplay(common)
-  return { captureAlternativeSelection,
-    alternative: (request: Parameters<typeof alternative>[0], call: TrustedDomainContext) => callScope.run(call, () => alternative(request, call)),
-    replayAlternative: (record: Parameters<typeof replay>[0], call: TrustedDomainContext) => callScope.run(call, () => replay(record, call)),
+  return { captureAlternativeSelection: (request: Parameters<typeof captureAlternativeSelection>[0], start: AnalysisStart, call: TrustedDomainContext) =>
+      withComparisonScope(call, () => captureAlternativeSelection(request, start, call)),
+    alternative: (request: Parameters<typeof alternative>[0], call: TrustedDomainContext) => withComparisonScope(call, () => callScope.run(call, () => alternative(request, call))),
+    replayAlternative: (record: Parameters<typeof replay>[0], call: TrustedDomainContext) => withComparisonScope(call, () => callScope.run(call, () => replay(record, call))),
     proposalCoverage: { resolveForecastCoverage: coverage.resolveForecastCoverage } }
 }
 

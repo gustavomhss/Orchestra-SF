@@ -19,6 +19,7 @@ import type { createSfProductAuthority } from "../../../../modules/sucafina/Suca
 import type { createSfBusinessServices } from "./business-services.ts"
 import type { createSfPortfolioServices } from "./portfolio-services.ts"
 import { readSfDecisionBiSelection, readSfPlannerBiSelection, sameSfBiPeriod } from "./bi-selections.ts"
+import { createSfBiCallScope } from "./bi-call-scope.ts"
 
 export function createSfBiServices(input: {
   authority: ReturnType<typeof createSfProductAuthority>
@@ -27,6 +28,7 @@ export function createSfBiServices(input: {
 }) {
   const { authority, business, portfolio } = input
   const host = authority.host
+  const callScope = createSfBiCallScope({ authority, sources: business.plannerSources, lockedSourceFences: business.lockedSourceFences })
   const caseFor = async (selectionRef: string, call: TrustedDomainContext) => {
     const parsed = readSfDecisionBiSelection(selectionRef), request = host.requestFor(call)
     const binding = digestSfValue([call.kind, call.binding])
@@ -118,7 +120,7 @@ export function createSfBiServices(input: {
       },
     } },
     procurement: { views: ["BI05", "BI06"], host: { list: business.procurement.list, revalidate } },
-    scenario: { views: ["BI09", "BI10", "BI11"], host: { readProjection: scenarioProjection, revalidate,
+    scenario: { views: ["BI09", "BI10", "BI11"], host: { readProjection: (selection, call) => callScope.read(selection, call, () => scenarioProjection(selection, call)), revalidate,
       resolve: async (request) => {
         const selected = readSfDecisionBiSelection(request.selectionRef)
         return selected && "scenarioResultRef" in selected ? { status: "ok", value: { ...selected, present: () => decisionPresentation(request) } }
@@ -150,7 +152,8 @@ export function createSfBiServices(input: {
       return result.status === "ok" && result.value === true
     },
   }
-  const dispatchPresentation = (request: BiViewRequest, call: TrustedDomainContext) => dispatchBiPresentation(request, call, presentationSource, authority.authority)
+  const dispatchPresentation = (request: BiViewRequest, call: TrustedDomainContext) =>
+    callScope.run(request, call, () => dispatchBiPresentation(request, call, presentationSource, authority.authority))
   // Review is an authenticated consumer of domain producers, not a second C16 BI invocation.
   const readForReview = async (request: BiViewRequest, call: TrustedDomainContext): Promise<PortResult<{ projection: DomainProjection; presentation: BiPresentation }>> => {
     if (!decodeSfOperationInput("sf_bi_view", request).ok || !host.requestFor(call) || !await host.revalidate(call)) return { status: "denied", reason: "bi-review-authority-unavailable" }

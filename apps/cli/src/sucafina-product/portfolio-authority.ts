@@ -13,6 +13,7 @@ import type { createPortfolioProofVerifier } from "../../../../modules/sucafina/
 import { compareScenarios } from "../../../../modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts"
 import type { createSfProductAuthority } from "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
 import type { createSfBusinessServices } from "./business-services.ts"
+import { createSfPortfolioComparisonScope } from "./portfolio-comparison-scope.ts"
 
 /** Private host callbacks supplement, never replace, the producer's C08 and C17 checks. */
 export function createSfPortfolioAuthority(input: {
@@ -84,11 +85,18 @@ export function createSfPortfolioAuthority(input: {
       const selected = await business.resolveCase(binding)
       return selected.status === "ok" ? rules.evaluate({ ...criterion, caseRef: selected.value }, binding) : selected
     } } }, request, call) : business.planner.compareScenarios }
-  const compare = createDecisionComparisonService({ state: authority.state, host, cases: business.cases, results: business.results, planner })
-  const selection = createDecisionPortfolioSelection({ ...common, compare,
+  const compareCanonical = createDecisionComparisonService({ state: authority.state, host, cases: business.cases, results: business.results, planner })
+  const comparisons = createSfPortfolioComparisonScope({ authority, business, compareCanonical })
+  const compare = comparisons.compare
+  const selectionCanonical = createDecisionPortfolioSelection({ ...common, compare,
     authorizeSelection: (request, call) => intent.authorize(call, "decisions.select-portfolio", request),
     verifySnapshot: (_snapshot, request, _selection, call) => intent.verify(call, "decisions.select-portfolio", request),
   })
+  const selection = { ...selectionCanonical, withComparisonScope: comparisons.run,
+    read: (request: Parameters<typeof selectionCanonical.read>[0], call: TrustedDomainContext) => comparisons.run(call, () => selectionCanonical.read(request, call)),
+    inspect: (request: Parameters<typeof selectionCanonical.inspect>[0], call: TrustedDomainContext) => comparisons.run(call, () => selectionCanonical.inspect(request, call)),
+    register: (request: Parameters<typeof selectionCanonical.register>[0], call: TrustedDomainContext) => comparisons.run(call, () => selectionCanonical.register(request, call)),
+  }
   const sensitivityBindings = createCriterionResultBindings({ ...common, rules, results: business.results,
     verifyBinding: async (binding, rule, result, call) => await fresh([...result.sourceRefs, ...rule.evidenceRefs, ...(rule.sensitivity?.sourceRefs ?? [])], call) &&
       await (input.proof()?.verifySensitivity(binding, result, call) ?? Promise.resolve(false)),

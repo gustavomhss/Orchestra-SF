@@ -13,6 +13,7 @@ import { createSfPortfolioServices } from "../../../../../../../apps/cli/src/suc
 import { createSfNativeAnalysisInputs } from "../../../../../../../apps/cli/src/sucafina-product/analysis-native-inputs.ts"
 import type { SfAdmittedAnalysisInput } from "../../../../../../../apps/cli/src/sucafina-product/analysis-native-inputs.ts"
 import { createSfScenarioComparisonInput } from "../../../../../../../apps/cli/src/sucafina-product/analysis-inputs.ts"
+import { createSfPortfolioComparisonScope } from "../../../../../../../apps/cli/src/sucafina-product/portfolio-comparison-scope.ts"
 import { createSfProductAuthority } from "../../../../product/integration/product-authority.ts"
 import { createSfSourcePersistence } from "../../../../product/integration/source-lifecycle.ts"
 import { enumerateSfSources } from "../../../../product/integration/source-inventory.ts"
@@ -25,7 +26,7 @@ import type { PortResult } from "../../../../product/contracts/ports.ts"
 import type { SfHostServices } from "../../../../product/contracts/host-context.ts"
 import type { ResidentProfile, SkillLoadReceipt, SkillManifest } from "../../../../product/contracts/resident-ai.ts"
 import type { SfSelectedRuntime } from "../../../../product/contracts/runtime.ts"
-import type { SfStateResult } from "../../../../product/contracts/state.ts"
+import type { SfProductState, SfStateResult } from "../../../../product/contracts/state.ts"
 import type { TrustedDomainContext, TrustedExecutionBinding } from "../../../../product/contracts/sf-execution.ts"
 import type { BaselineCoverageRequest } from "../../../../product/decisions/baseline-coverage.ts"
 import { encodeCaseRef } from "../../../../product/decisions/case-port.ts"
@@ -73,7 +74,8 @@ async function fixture() {
     const driver = await openLocalStore(path.join(directory, "store"))
     cleanups.push(() => driver.dispose())
     checkDeadline()
-    const metrics = { transactions: 0, allTransactions: 0, snapshotCopies: 0, authentications: 0, selectionReads: 0, simulations: 0 }
+    const metrics = { transactions: 0, allTransactions: 0, snapshotCopies: 0, authentications: 0, selectionReads: 0, simulations: 0,
+      comparisonScenarioReads: 0, comparisonSourceReads: 0 }
     const phase = async <T>(name: string, work: () => Promise<T>) => {
       const started = performance.now()
       const before = { ...metrics }
@@ -91,8 +93,9 @@ async function fixture() {
       ...(allTransactions ? { transactionAll: allTransactions } : {}),
       ...(driver.currentSnapshots ? { currentSnapshots: () => { metrics.snapshotCopies++; return driver.currentSnapshots!() } } : {}),
     }
+    const control = { active: true, generation: 1, at: "2026-11-14T00:00:00Z" }
     const persistence = { ...metered, ...createSfSourcePersistence({ persistence: metered, createId: randomUUID, enumerate: enumerateSfSources,
-      projectScope: createSfSourceScopeProjector(() => "2026-11-14T00:00:00Z") }) }
+      projectScope: createSfSourceScopeProjector(() => control.at) }) }
     for (const surface of ["dashboard", "planner", "procurement"] as const) await persistence.initializeSources(surface)
     await persistence.transaction("planner", async (snapshot) => {
       snapshot.data.versions = [{ id: "v0", year: 2026, closed: 0, lines: [{ id: "line", sec: "opex", el: "licenses", cur: "USD",
@@ -100,7 +103,6 @@ async function fixture() {
       return { commit: true, value: true }
     })
     await persistence.initializeSources("planner")
-    const control = { active: true, generation: 1 }
     const proposalCoverageWrites = new WeakSet<object>()
     const identity = { installationId: "installation", hostId: "host", projectId: "project", location: Location.Ref.make({ directory: AbsolutePath.make(directory) }) }
     const request = new Request("https://example.test/product", { method: "POST", headers: { origin: "https://example.test" }, signal: cancellation.signal })
@@ -123,7 +125,7 @@ async function fixture() {
         humanActions: ["decisions.coverage", "decisions.select-portfolio", "analysis.prepare", "analysis.start"] }], proposalCoverageWrites,
       now: Date.now, createId: randomUUID,
       authenticate: async (_request, scope) => { metrics.authentications++; checkDeadline(); return control.active && scope ? { id: "person", canWrite: true, roles: [{ surface: scope.surface, role: "admin" }] } : null },
-      environment: async () => { checkDeadline(); return { at: "2026-11-14T00:00:00Z", id: randomUUID, directory: [] } },
+      environment: async () => { checkDeadline(); return { at: control.at, id: randomUUID, directory: [] } },
       commandIdentity: async (_request, operation, digest) => { checkDeadline(); return `${operation}:${digest}` },
       inspectSession: async (id) => { checkDeadline(); return id === sessionID ? session : undefined },
       verifySelection: async (value) => { checkDeadline(); return digestSfValue(value) === digestSfValue(selected) },
@@ -144,7 +146,16 @@ async function fixture() {
     const interleavings: { beforeSimulation?: () => Promise<void> } = {}
     const realBusiness = createSfBusinessServices({ authority, persistence, proposalCoverageWrites })
     cleanups.push(() => realBusiness.dispose())
-    const business = { ...realBusiness, planner: { ...realBusiness.planner,
+    const actualScenarios = realBusiness.plannerProduct.scenarios
+    const business = { ...realBusiness,
+      plannerProduct: { ...realBusiness.plannerProduct, ...(actualScenarios ? { scenarios: { ...actualScenarios,
+        resolve: async (...args: Parameters<typeof actualScenarios.resolve>) => { metrics.comparisonScenarioReads++; return actualScenarios.resolve(...args) },
+      } } : {}) },
+      plannerSources: { ...realBusiness.plannerSources,
+        resolveForecastSource: async (...args: Parameters<typeof realBusiness.plannerSources.resolveForecastSource>) => {
+          metrics.comparisonSourceReads++; return realBusiness.plannerSources.resolveForecastSource(...args)
+        },
+      }, planner: { ...realBusiness.planner,
       simulateScenario: async (...args: Parameters<typeof realBusiness.planner.simulateScenario>) => {
         metrics.simulations++
         const interleave = interleavings.beforeSimulation
@@ -268,7 +279,7 @@ async function fixture() {
       return call
     }
     checkDeadline()
-    return { authority, business, domain, sharedPortfolio, readers, replayContexts, request, caseRef, start, fullRequest, alternatives, skillInput, draftRequest, admitted, control, select, capture, bind, readCall, close, phase,
+    return { authority, business, domain, sharedPortfolio, readers, replayContexts, request, caseRef, start, fullRequest, alternatives, skillInput, draftRequest, admitted, control, select, capture, bind, readCall, close, phase, metrics, store: driver,
       beforeSimulation: (work: () => Promise<void>) => { interleavings.beforeSimulation = work } }
   } catch (error) {
     try { await close() } catch (cleanupError) { throw new AggregateError([error, cleanupError], "Alternative-selection fixture initialization failed") }
@@ -351,5 +362,134 @@ test("a missing admission snapshot stays missing and request/input digests canno
     ]) expect((await state.capture({ ...state.start, skillInput: changedInput })).status).not.toBe("ok")
     state.control.active = false
     expect((await state.readers.verifiedInputFor(call)).status).toBe("unavailable")
+  } finally { await state.close() }
+}, 120_000)
+
+test("canonical comparison reuse reopens Planner authority and remains bound to input, full C08 state, UTC day and one invocation", async () => {
+  const state = await fixture()
+  try {
+    const call = await state.readCall()
+    const request = { caseRef: state.caseRef, baselineAlternativeId: "first", alternativeId: "chosen", criteria: [] }
+    let produced = 0
+    let canonical: Awaited<ReturnType<typeof state.sharedPortfolio.compare>> | undefined
+    const scope = createSfPortfolioComparisonScope({ authority: state.authority, business: state.business,
+      compareCanonical: async (...args) => { produced++; const result = await state.sharedPortfolio.compare(...args); canonical = structuredClone(result); return result } })
+    const mutate = (work: (product: SfProductState) => void) => state.store.transaction("dashboard", async (snapshot) => {
+      work(snapshot.data.__sfProductV1 as SfProductState)
+      return { commit: true, value: undefined }
+    })
+    ok(await state.business.withCase(call, state.caseRef, {}, async () => {
+      ok(await scope.run(call, async () => {
+        const first = ok(await scope.compare(request, call))
+        const pristine = structuredClone(first)
+        const sourcesRead = state.metrics.comparisonSourceReads
+        first.comparison.unresolvedConditions = [...first.comparison.unresolvedConditions, "Caller mutation must remain isolated"]
+        expect(ok(await scope.compare(request, call))).toEqual(pristine)
+        expect(produced).toBe(1)
+        expect(state.metrics.comparisonSourceReads).toBeGreaterThan(sourcesRead)
+        const other = ok(await scope.compare({ ...request, alternativeId: "outside" }, call))
+        expect(other.comparison.alternativeResultRef).not.toBe(pristine.comparison.alternativeResultRef)
+        expect(produced).toBe(2)
+        // Deliberately change C08 without a namespace/version bump. No financial
+        // producer output is seeded or changed; a complete fence must notice it.
+        await mutate((product) => { product.preferences["fixture:comparison-fence"] = "changed" })
+        expect(ok(await scope.compare(request, call))).toEqual(pristine)
+        expect(produced).toBe(3)
+        // Unsupported criterion dependencies must always take the full producer.
+        // Even a rejection is returned from that actual producer, unchanged.
+        await mutate((product) => { product.cases[state.caseRef.id]!.criteria = [{ id: "optional", description: "Fixture optional criterion", required: false }] })
+        for (const attempt of [4, 5]) {
+          expect(await scope.compare(request, call)).toEqual(canonical)
+          expect(produced).toBe(attempt)
+        }
+        await mutate((product) => { product.cases[state.caseRef.id]!.criteria = [] })
+        ok(await scope.compare(request, call))
+        const beforeDay = produced
+        state.control.at = "2026-11-15T00:00:00Z"
+        // Observe the actual new-day producer result; the assertion here is
+        // that an old-day proof cannot prevent that producer from being called.
+        await scope.compare(request, call)
+        expect(produced).toBe(beforeDay + 1)
+        state.control.at = "2026-11-14T00:00:00Z"
+        return { status: "ok", value: true }
+      }))
+      const prior = produced
+      ok(await scope.run(call, async () => {
+        ok(await scope.compare(request, call))
+        expect(produced).toBe(prior + 1)
+        await mutate((product) => { product.cases[state.caseRef.id]!.participants = [] })
+        expect(await state.authority.host.revalidate(call)).toBe(true)
+        const denied = await scope.compare(request, call)
+        expect(denied.status).toBe("denied")
+        expect(denied).not.toHaveProperty("value")
+        return { status: "ok", value: true }
+      }))
+      return { status: "ok", value: true }
+    }))
+  } finally { await state.close() }
+}, 120_000)
+
+test("canonical comparison scopes reject overlap, input replacement and authority lost during their final clock read", async () => {
+  const state = await fixture()
+  try {
+    const call = await state.readCall()
+    const request = { caseRef: state.caseRef, baselineAlternativeId: "first", alternativeId: "chosen", criteria: [] }
+    let produced = 0
+    let interleave: (() => Promise<void>) | undefined
+    const compareCanonical: typeof state.sharedPortfolio.compare = async (...args) => {
+      produced++
+      const result = await state.sharedPortfolio.compare(...args)
+      const work = interleave; interleave = undefined
+      await work?.()
+      return result
+    }
+    const scope = createSfPortfolioComparisonScope({ authority: state.authority, business: state.business, compareCanonical })
+    ok(await state.business.withCase(call, state.caseRef, {}, async () => {
+      const reached = Promise.withResolvers<void>(), release = Promise.withResolvers<void>()
+      interleave = async () => { reached.resolve(); await release.promise }
+      const pending = scope.run(call, () => scope.compare(request, call))
+      try {
+        await Promise.race([reached.promise, pending.then(() => { throw new Error("The real canonical producer did not reach the overlap boundary") })])
+        const overlap = await scope.run(call, () => scope.compare(request, call))
+        expect(overlap.status).toBe("denied")
+        expect(overlap).not.toHaveProperty("value")
+        release.resolve()
+        ok(await pending)
+        expect(produced).toBe(1)
+      } finally { release.resolve() }
+      const changed = { ...request }
+      interleave = async () => { changed.alternativeId = "outside" }
+      const replaced = await scope.run(call, () => scope.compare(changed, call))
+      expect(replaced.status).toBe("stale")
+      expect(replaced).not.toHaveProperty("value")
+      expect(produced).toBe(2)
+      const clockReached = Promise.withResolvers<void>(), clockRelease = Promise.withResolvers<void>()
+      let armed = false, clockReads = 0
+      const authorityAtClock = { ...state.authority, host: { ...state.authority.host, environment: async (source: Request) => {
+        const environment = await state.authority.host.environment(source)
+        if (armed && ++clockReads === 8) { clockReached.resolve(); await clockRelease.promise }
+        return environment
+      } } }
+      const guarded = createSfPortfolioComparisonScope({ authority: authorityAtClock, business: state.business, compareCanonical })
+      ok(await guarded.run(call, async () => {
+        ok(await guarded.compare(request, call))
+        const before = produced
+        armed = true
+        const last = guarded.compare(request, call)
+        try {
+          await Promise.race([clockReached.promise, last.then(() => { throw new Error("Proof reuse did not reach its final actual clock read") })])
+          state.control.active = false
+          clockRelease.resolve()
+          const denied = await last
+          expect(denied.status).toBe("denied")
+          expect(denied).not.toHaveProperty("value")
+          expect(produced).toBe(before)
+          expect(clockReads).toBe(8)
+          expect(await state.authority.host.revalidate(call)).toBe(false)
+          return { status: "ok", value: true }
+        } finally { clockRelease.resolve() }
+      }))
+      return { status: "ok", value: true }
+    }))
   } finally { await state.close() }
 }, 120_000)

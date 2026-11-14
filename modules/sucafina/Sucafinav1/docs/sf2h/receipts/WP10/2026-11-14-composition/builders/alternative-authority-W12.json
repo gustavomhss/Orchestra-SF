@@ -1,0 +1,271 @@
+{
+  "schema": "sf2.wp10.builder-receipt.v1",
+  "created_at": "2026-11-14T06:26:56.826899+00:00",
+  "builder": {
+    "id": "/root/fixture_repair_w6",
+    "role": "author of own WP10 Alternative comparison composition and tests",
+    "lease": "CLOSED",
+    "independent_reviewer": false
+  },
+  "task": "W12 Alternative authority cost: completed canonical comparison proof reuse inside one authenticated lexical invocation",
+  "source_lineage": {
+    "W8": {
+      "sha": "68027467de0bbe3e9136be7b458724e387f55839",
+      "tree": "fe9ed15af54c06c5724b445752efcf91d69f5087",
+      "parent": "207bf82a7a7beade4e6909a5d74ed647bfc5aad6",
+      "manifest": {
+        "path": "analysis/frozen-W8/manifest.json",
+        "sha256": "df95dce5f54cbc809d6507232ad7738bfee1172cd33d9e967a8621fa2604701a",
+        "git_blob_sha1": "ec28c0e7361a20df0bcc4b51c7f52b111bab1f4f",
+        "bytes": 269160
+      }
+    },
+    "lease_correction": "analysis-admission.ts and portfolio-registries.ts do not exist. Parent explicitly expanded the lease to the effective own modules decision-alternative-services.ts, analysis-native-inputs.ts and portfolio-authority.ts plus a new helper. Only the four authored paths below were changed."
+  },
+  "authored_files": [
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-comparison-scope.ts",
+      "sha256": "3bc85fd0f2d80bad3e3ba11438fd23ea4fe89e407230c9cb6c1b054e810db019",
+      "git_blob_sha1": "378f7e3601954f33c24c463995649d96eecde566",
+      "bytes": 9897,
+      "base": null
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-authority.ts",
+      "sha256": "25e025636945b39765e46fdafdee1817db333b8a863a0a90c4260533415dd33c",
+      "git_blob_sha1": "86555f4165b36dbf6bc0468a5ce1885e5a87a6d1",
+      "bytes": 10468,
+      "base": {
+        "sha256": "507ce9a5ad388670c5b6bb7f89913ad65e64471c8c6f50fd6aad5a1253ac3f88",
+        "git_blob_sha1": "d54a6235d72056e5fec0517fef4b611b9660d0d7",
+        "bytes": 9622
+      }
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/decision-alternative-services.ts",
+      "sha256": "42aadaa970cf79b53752dd8891ab1b332e15889f07e5324c839bc7831198848d",
+      "git_blob_sha1": "f7702eaf6fc8fbf5505f026189510093837237ba",
+      "bytes": 23381,
+      "base": {
+        "sha256": "62141b18fdb9f561e2a8602f256609bf7e3343679e41468ca355f8c4920e7603",
+        "git_blob_sha1": "4c30b1eeff2befc70da360de0c5ca31ceb4228a8",
+        "bytes": 22817
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/alternative-selection.test.ts",
+      "sha256": "7dea00d79621b6b5e6805dc9487ae2a93970faf198497a3450e34ed5b1fcdf3e",
+      "git_blob_sha1": "4933e8c24b6288f10dd69b196bd12ab32ecf4f63",
+      "bytes": 38409,
+      "base": {
+        "sha256": "fe5a1e10514b6f47ac1bcca83e2bc000779ec98eabd54603c016f6452f963c86",
+        "git_blob_sha1": "b4d69b8e722fef94f6a154e9d6baab31337f9be3",
+        "bytes": 30194
+      }
+    }
+  ],
+  "patch": {
+    "path": "analysis/alternative-authority-W12.patch",
+    "sha256": "16332ee36b6d0f993eaf61aca0cc6750c2fcc1c84f62a52a23b5461ee7cf0bf2",
+    "git_blob_sha1": "91774e5b63eb0a10b0594bc0843d55f1c93e2b89",
+    "bytes": 31031
+  },
+  "hosted_input": {
+    "path": "analysis/hosted/W8-alternative-results.json",
+    "sha256": "594a6d687ad75c36f0e46c926d50b0e7cd511d70ac5bf82cf61caf5e43d0cf7f",
+    "git_blob_sha1": "b0fc6d52c73d0c9d0f5f83dadcddf1fddb76d59d",
+    "bytes": 23083,
+    "W": "68027467de0bbe3e9136be7b458724e387f55839",
+    "treeW": "fe9ed15af54c06c5724b445752efcf91d69f5087",
+    "S": "97719bc0cd6a74b55ad28b44df9fd1f977fb8874",
+    "tree": "5c97c937391179b066b5cf8922f03ef67870035c",
+    "runId": 43563884446,
+    "jobId": 132353353023,
+    "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43563884446",
+    "conclusion": "failure",
+    "logSha256": "418e5d3f933f781a54a413613da4e966d8fe50f1ef805cb35385ff81431722ae",
+    "observedCounts": {
+      "fail": 3
+    }
+  },
+  "causal_findings": [
+    "The observed W8 monthly run failed all3 tests at the unchanged105000ms cooperative deadline. selection.register took21685–23400ms with10776transactions and28161authentications. Positive capture took29268ms with14495transactions/37843authentications; draft then consumed43718ms before expiry. These are historical observations, not W12 results.",
+    "The effective path is decision-domain-services -> sharedPortfolio.selection in portfolio-authority -> foreign createDecisionPortfolioSelection -> own compareCanonical composition of foreign createDecisionComparisonService. alternative-selections.ts and alternative-services.ts are not the hot path of this test.",
+    "The foreign register calls compare once before commit and invokes read after commit; that read compares twice. captureAlternativeSelection calls selection.read twice, hence four full comparisons when valid. Each canonical comparison independently reopens case, scenario lookup and scenario producers.",
+    "The original AlternativeCallScope reduces repeated selectedScenario work only inside draft/replay. It does not cover registration or the two selection reads during capture. That previously reviewed scope remains unchanged."
+  ],
+  "implementation": {
+    "scope": "New portfolio-comparison-scope owns a WeakMap keyed by exact trusted context plus AsyncLocalStorage lexical identity. A separate overlapping caller cannot join it. Explicit nested composition within the current invocation may reuse it; all proofs are removed in finally.",
+    "keys": "Complete cloned comparison request including target case/alternatives/criteria, plus the entire call kind/binding digest. Original request digest and Request identity/signal are checked after awaited work. Wrong selected case does not qualify for caching.",
+    "proofs": "Only completed status-ok canonical results are stored. No Promise, authorization decision, source resolver result or incomplete producer work is memoized. Values are structured-cloned on storage and reuse.",
+    "eligibility": "Only criterion-free cases with no choices, prepared changes, receipts, ledger or questions; scenarios have no operations; component source surfaces must be Planner; all case/basis/assumption/scenario/result/coverage evidence must be Planner planner-version record refs. Unsupported cases always call the full canonical producer and do not enter the proof map.",
+    "granular_authority": "Every fence reopens every distinct eligible source with the real plannerSources.resolveForecastSource and requires complete evidence-ref equality. Full C08/source hashes alone never authorize document, HR, calculation, Procurement, receipt or command dependencies.",
+    "fence": "Each real source-read sequence is surrounded by two fresh C08 samples. Samples check actual selected case and actor, hash complete C08 state plus all three domain fences, UTC day and binding. Complete state includes preferences, audit, transactions and native runs; no fields are ignored to preserve reuse across writes.",
+    "last_await": "Each sample observes its second UTC clock and final host revalidation inside the C08 read scope; state.read performs its own egress authority check. After state.read only synchronous scope/Request/binding checks occur. Source resolvers and compareCanonical run only after C08 closes, since resolveForecastSource may update source metadata.",
+    "statuses": "A missing final authority fence or invalid Request/lease/scope returns denied without value. An observed changed digest with still-valid scope returns stale without value. Existing full producer failures are preserved on uncached paths.",
+    "composition": "portfolio-authority preserves readMetric unchanged and names the original producer compareCanonical. Its selection.register/read/inspect wrappers open the scope. An optional own withComparisonScope callback lets decision-alternative capture/draft/replay share only their current lexical invocation. The same shared selection.read function remains visible to DecisionDomain.",
+    "expected_cost_change_not_measured": "For the supported unchanged fixture, register needs two canonical productions because its C08 commit invalidates the precommit proof; the repeated postcommit compare may reuse. Two selection reads in a capture may share one canonical production instead of four. Source authorization/fence reads still run on every reuse. Hosted W12 must establish actual counts and latency."
+  },
+  "assertion_inventory": {
+    "original_tests": [
+      {
+        "name": "canonical comparison drafts the exact human-selected second alternative and supports only the private replay context",
+        "body_byte_identical": true,
+        "assertion_statements": 12
+      },
+      {
+        "name": "comparison capture refuses missing or outside selections and a running draft cannot adopt a newer human selection",
+        "body_byte_identical": true,
+        "assertion_statements": 5
+      },
+      {
+        "name": "a missing admission snapshot stays missing and request/input digests cannot reuse a capture",
+        "body_byte_identical": true,
+        "assertion_statements": 6
+      }
+    ],
+    "original_total_expect_statements_including_fixture": 26,
+    "new_total_expect_statements_including_fixture": 51,
+    "original_test_count": 3,
+    "new_test_count": 5,
+    "partitioned": false,
+    "new_tests": [
+      {
+        "name": "canonical comparison reuse reopens Planner authority and remains bound to input, full C08 state, UTC day and one invocation",
+        "proofs": [
+          "actual comparison positive and isolated returned copy",
+          "repeated cache hit still calls actual Planner source resolver",
+          "different alternative uses a distinct key and canonical result",
+          "raw C08 preference mutation without namespace/version bump forces canonical recomputation",
+          "unsupported optional criterion goes through actual canonical producer on both calls",
+          "UTC day change forces actual canonical call, without asserting invented new-day output",
+          "new invocation cannot reuse prior result",
+          "case-only participant removal with host session valid returns denied and no value"
+        ]
+      },
+      {
+        "name": "canonical comparison scopes reject overlap, input replacement and authority lost during their final clock read",
+        "proofs": [
+          "held actual canonical result cannot be borrowed by a separate overlapping invocation; denied/no value",
+          "external request mutation after producer invocation returns stale/no value",
+          "revocation during final real clock read of cached path returns denied/no value without invoking canonical producer again",
+          "all pending barriers release in finally"
+        ]
+      }
+    ],
+    "counters": "Existing transaction/auth/selection/simulation counters retain real forwarding. Added comparisonScenarioReads and comparisonSourceReads count actual stored-scenario/source resolver calls without changing their output.",
+    "budgets": {
+      "cooperative_fixture_ms": 105000,
+      "outer_each_test_ms": 120000,
+      "increased": false
+    }
+  },
+  "preserved": {
+    "unchanged_files": [
+      {
+        "path": "apps/cli/src/sucafina-product/alternative-call-scope.ts",
+        "sha256": "89352f3abad0575d25e189cf6f8227176bda6f71a0d4caa31129a5d3ce573057",
+        "git_blob_sha1": "b92bcf9346b95ec7989939213c9555c86c529703",
+        "bytes": 6135
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/analysis-inputs.ts",
+        "sha256": "f00ad701d4749a8b10287ece8c58d80d1bedc70069d428bbcda1982286957048",
+        "git_blob_sha1": "47681b3ec907c33073755342817bcd288e951e89",
+        "bytes": 7891
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/analysis-native-inputs.ts",
+        "sha256": "c9d9fcdb832c118665c75d217fd48102df0e59f6fae6b4fd9fd6297b5ff8bd42",
+        "git_blob_sha1": "f1a39b70748dbe771bccc80ad81f29eea1312027",
+        "bytes": 15966
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/alternative-services.ts",
+        "sha256": "b504f9e05ac6ee6871e959df76877c9291c5be651defa719abf2461a6d1af6e0",
+        "git_blob_sha1": "7513a155293f6253998033bd1439b636e00a1c96",
+        "bytes": 11206
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/alternative-selections.ts",
+        "sha256": "d48e8095d72a0dd999af30167462310f469ccc0f1c6693a02756a873bbec7213",
+        "git_blob_sha1": "de312607efd8b2e4fa89c27bcf82413fe966c4bf",
+        "bytes": 12020
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/alternative-call-scope.test.ts",
+        "sha256": "1d37d0cf83a9c2c36fc5c441fd61e06ef649ba05f80db4e80c58d8383b2fce9f",
+        "git_blob_sha1": "ea3943e91e29ef35b826650c1531505eafa4048c",
+        "bytes": 6345
+      }
+    ],
+    "readMetric_body_byte_identical": true,
+    "readMetric_body_sha256": "52714b2e9189c9a46a9a291b07b54debde8cc1568708127f14caaa0199fb4a15",
+    "readMetric_test_files_edited": false,
+    "foreign_product_files_edited": false,
+    "BI_files_edited": false,
+    "root_owned_controls_and_Portfolio_fixture_files_edited": false
+  },
+  "source_inspection": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/portfolio-selection.ts",
+      "sha256": "4bfe20db9fb69a1c8a77f32e767450f05bb2598521e04027e601a9c30de67bf3",
+      "git_blob_sha1": "64deee2c7570d718686eb2181ff197f4347e6764",
+      "bytes": 13741
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/comparison.ts",
+      "sha256": "109fb8109e3f09552090f194f7eb77441a139e99f2297ce08055227af5602a13",
+      "git_blob_sha1": "8d86bc416c711169fdc678635cc5eed12481fdea",
+      "bytes": 4484
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+      "sha256": "23767836ce893bfb803243830ab62bd55d3352a917d55c927157d42ca5160643",
+      "git_blob_sha1": "d3098aa94cdeee71193c94ae906f6fafd14bda9b",
+      "bytes": 7667
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+      "sha256": "659c483b654c54765a6f5636e44c93537f9cb0ef19ee136256515b9665f1fbc9",
+      "git_blob_sha1": "5433cb0518e770ff1a4dc1fa0fe14f8b89869c9b",
+      "bytes": 3864
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "sha256": "a34b014aead5afe68cb6b45edf8a7981588b5b80fae99af9a0c082ce6986d47a",
+      "git_blob_sha1": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+      "bytes": 16654
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "sha256": "92bd0da864af19ac4265342d6052bec72d95ee57bfdddc0c87e44178eef00e22",
+      "git_blob_sha1": "34a491f859f7b57b0883a122f816803df43c74c8",
+      "bytes": 54720
+    }
+  ],
+  "qualifications": [
+    "This optimization deliberately covers only the supported Planner-record comparison path; it is not a general external-ACL proof or an annual performance claim. All excluded dependencies retain canonical producer work.",
+    "The fixture remains January over unchanged annual Planner source evidence. Session/skill observations and populated case identities are declared boundary fixtures; financial scenario data comes from actual Planner. No native session or model execution is claimed.",
+    "Original three causal chains and all original assertions remain intact. No timeout, acceptance criterion or authorization was weakened. Actual completion of the original positive draft+private replay is still required in hosted CI.",
+    "W7 annual registration53–55s and broader annual/product latency remain OPEN. No finding or independent review is closed by this builder receipt."
+  ],
+  "validation": {
+    "local_product_tests": false,
+    "local_builds_typechecks_imports": false,
+    "local_servers_or_browser_execution": false,
+    "remote_mutations_or_CI_dispatch": false,
+    "static_body_comparison": true,
+    "no_trailing_whitespace": true,
+    "hosted_W12_pass_claim": false,
+    "native_acceptance": false,
+    "global_acceptance": false
+  },
+  "pending": [
+    "Root freeze/publish the W12 candidate and run hosted surgical CI for alternative-selection, unchanged AlternativeCallScope fences/clock and readMetric tests",
+    "Confirm original positive draft and private replay complete within105s plus all original negatives; new test groups must complete and clean resources",
+    "Compare actual canonical scenario/source counts and host transaction/auth totals against W8; narrow-path static call-count prediction is not measured speedup",
+    "R3 independently reviews final-await source authority, UTC day, native generation and overlapping invocations; R1/R2/R3 acceptance remains separate",
+    "Annual performance, unsupported dependency performance, installed-native and global epic acceptance remain OPEN"
+  ]
+}

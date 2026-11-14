@@ -1,0 +1,463 @@
+{
+  "schema": "sf2.wp10.builder-receipt.v1",
+  "status": "CLOSED",
+  "builder": "/root/planner_recovery_w6",
+  "role": "author-builder; not an independent reviewer",
+  "scope": "W12 bounded BI UI invocation proof reuse and own regression evidence",
+  "base": {
+    "W": "68027467de0bbe3e9136be7b458724e387f55839",
+    "tree": "fe9ed15af54c06c5724b445752efcf91d69f5087"
+  },
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/bi-services.ts",
+      "beforeW8": {
+        "gitBlobSha": "15c3b606619735693eeb64147b3980bd24b76ed3",
+        "sha256": "8aa177d26f98446fb9ab8dc4782cabb6013cd8a05f87153ff4fc7540d4d8d856",
+        "bytes": 14904
+      },
+      "after": {
+        "gitBlobSha": "7d44c1982c3c62fdaf21f98945ded9e572fd359a",
+        "sha256": "5b89fbb1e7dcd1eaab182171c83bbb562be866a237c1470f4dac772be388d8f2",
+        "bytes": 15216
+      }
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/bi-call-scope.ts",
+      "beforeW8": null,
+      "after": {
+        "gitBlobSha": "76db108f8e7d9403553e44f783b7220a5b225768",
+        "sha256": "7603b98913c7a37c7a77520bb239b9592814cdacf6bd78882fd3099b2907b895",
+        "bytes": 11396
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-case-access.test.ts",
+      "beforeW8": {
+        "gitBlobSha": "f0c9e6514779bfd8a38d0183dee7e7862890525b",
+        "sha256": "610dfb92c0615a3596bc5533ebd9936f69b1e3c9af1d658f4b3da004b1ed3d72",
+        "bytes": 13956
+      },
+      "after": {
+        "gitBlobSha": "3c6782b58c341d24ac7a094bab8dfd38f46401d8",
+        "sha256": "a14fb18be78dab08751532c85ed40b501f1b986f71e44f65af33e12cdc9434b2",
+        "bytes": 15037
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-call-scope.test.ts",
+      "beforeW8": null,
+      "after": {
+        "gitBlobSha": "406c191de446b3a70ea4b3e5e02e48610bb1d885",
+        "sha256": "e1e862af512d4bb8584c230603dc26d006b6b14a394c65c077e8aab9088c37e4",
+        "bytes": 22067
+      }
+    }
+  ],
+  "lease": "Only own bi-services.ts, new bi-call-scope.ts, own WP10 BI tests and this receipt. No Portfolio fixture edits, foreign product changes, remote mutation or CI dispatch by this builder.",
+  "patch": {
+    "path": "analysis/bi-call-scope-W12/W8-to-W12.patch",
+    "sha256": "d2fe9a52463495afbb0d903c325e095102565e4cb343bb18646b2078aa977a8b"
+  },
+  "priorHostedObservation": {
+    "W": "68027467de0bbe3e9136be7b458724e387f55839",
+    "S": "aa3b13ca40c6242c852f0af90d97f09a85f0c2b4",
+    "runId": 43562973480,
+    "jobId": 132350534355,
+    "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43562973480",
+    "conclusion": "failure",
+    "logSha256": "bb54e8a0ff27a95a96e05ad9ce501639e3d38b19e1b11c53d478c2ecfbb2afc1",
+    "bi": {
+      "path": "Sucafinav1/test/product/wp10/integration/bi-case-access.test.ts",
+      "tests": [
+        {
+          "verdict": "fail",
+          "name": "BI clears a real persisted case after participant revocation with the session valid and discards a delayed authorized source",
+          "durationMs": 105319.85,
+          "logLine": 985
+        }
+      ],
+      "counts": {
+        "fail": 1
+      },
+      "durationMs": 105319.85
+    },
+    "returnedPhases": [
+      {
+        "fixture": "bi-case-access",
+        "phase": "fixture.initialize",
+        "state": "returned",
+        "phaseMs": 804,
+        "elapsedMs": 804,
+        "aborted": false
+      },
+      {
+        "fixture": "bi-case-access",
+        "phase": "source.0",
+        "state": "returned",
+        "phaseMs": 10,
+        "elapsedMs": 821,
+        "aborted": false
+      },
+      {
+        "fixture": "bi-case-access",
+        "phase": "forecast.0",
+        "state": "returned",
+        "phaseMs": 27,
+        "elapsedMs": 848,
+        "aborted": false
+      },
+      {
+        "fixture": "bi-case-access",
+        "phase": "source.1",
+        "state": "returned",
+        "phaseMs": 10,
+        "elapsedMs": 859,
+        "aborted": false
+      },
+      {
+        "fixture": "bi-case-access",
+        "phase": "forecast.1",
+        "state": "returned",
+        "phaseMs": 28,
+        "elapsedMs": 887,
+        "aborted": false
+      },
+      {
+        "fixture": "bi-case-access",
+        "phase": "coverage.0",
+        "state": "returned",
+        "phaseMs": 438,
+        "elapsedMs": 1332,
+        "aborted": false
+      },
+      {
+        "fixture": "bi-case-access",
+        "phase": "coverage.1",
+        "state": "returned",
+        "phaseMs": 579,
+        "elapsedMs": 1915,
+        "aborted": false
+      },
+      {
+        "fixture": "bi-case-access",
+        "phase": "promotion.0",
+        "state": "returned",
+        "phaseMs": 3690,
+        "elapsedMs": 5605,
+        "aborted": false
+      },
+      {
+        "fixture": "bi-case-access",
+        "phase": "promotion.1",
+        "state": "returned",
+        "phaseMs": 4694,
+        "elapsedMs": 10299,
+        "aborted": false
+      },
+      {
+        "fixture": "bi-case-access",
+        "phase": "comparison.produce",
+        "state": "returned",
+        "phaseMs": 18695,
+        "elapsedMs": 29351,
+        "aborted": false
+      },
+      {
+        "fixture": "bi-case-access",
+        "phase": "comparison.persist",
+        "state": "returned",
+        "phaseMs": 13670,
+        "elapsedMs": 43022,
+        "aborted": false
+      },
+      {
+        "fixture": "bi-case-access",
+        "phase": "bi05.options",
+        "state": "returned",
+        "phaseMs": 89,
+        "elapsedMs": 43112,
+        "aborted": false
+      },
+      {
+        "fixture": "bi-case-access",
+        "phase": "browser.bundle",
+        "state": "returned",
+        "phaseMs": 7,
+        "elapsedMs": 43119,
+        "aborted": false
+      },
+      {
+        "fixture": "bi-case-access",
+        "phase": "browser.prepare",
+        "state": "returned",
+        "phaseMs": 62198,
+        "elapsedMs": 105317,
+        "aborted": true
+      }
+    ],
+    "interpretation": "W8 completed 158 pass / 2 skip / 1 fail. BI reached the unchanged 105000ms cooperative deadline before revocation/late-200 proof. Comparison production/persistence finished at 43022ms, browser preparation returned at 105317ms aborted. These are W8 measurements, not W12 qualification."
+  },
+  "causeFromSource": {
+    "before": "The canonical positive dispatch enters eight full factory reads because own revalidate rereads and canonical describe also rereads. Each complete stored scenario BI projection resolves the stored Planner scenario three times and directly reads scenario/comparison results six times: 24 and 48 respectively per eligible dispatch.",
+    "after": "All canonical read/describe/revalidate callbacks remain. A private holder is created for one dispatch; only the first source callback after actual C16 UI consumption may acquire the Request. One complete canonical stored BI projection is produced, copied privately and reused only under fresh complete fences. The same invocation therefore has three required scenario resolutions and six direct result-store reads; real Planner source authorization and C08 checks still run at every reuse and final egress.",
+    "measurement": "The existing BI/browser test observes each actual scenarios.resolve without replacing its response and requires exactly three per successful dispatch. No W12 timing or passing result is claimed before hosted CI."
+  },
+  "eligibility": {
+    "included": "Consumed UI sf_bi_view, BI09 or BI10, stored scenario/comparison selection with no sensitivity, exact current case id/incarnation/version and membership. The case has no criteria, prepared changes or scenario operations; its complete case/scenario/comparison provenance contains only Planner planner-version record evidence.",
+    "excludedBehavior": "Native, other BI views, Portfolio, sensitivity, review/direct-source reads and cases with external/non-Planner evidence, criteria or operations retain the complete ordinary producer path. No cross-invocation result or authorization cache exists. No TTL or deadline increases.",
+    "limits": "The optimization deliberately does not establish equivalence for external document/calculation authorities or richer cases. Whole-C08 fences also invalidate on unrelated C08 changes, conservatively. No generic historical currentVersion>= rule is added; current case/result version equality is explicit."
+  },
+  "preservedGuards": [
+    "Original createSfBiFactory, descriptor, C16 dispatcher, readBiView/readBiPresentation, receipt validation, sameBiProjection, canonical describe/presentation checks and final source revalidation are unchanged. Existing withinCase still performs its original real case authorization at each callback.",
+    "The first canonical projection still performs all real result-store reads, first/last stored scenario resolutions, case/source/coverage/period/currency/domain-basis checks and result comparisons. Proof reuse never manufactures a financial projection, sensitivity, waterfall, timeline or complete-cost assessment.",
+    "Each fence reads authenticated C08 in full, including stored result digests, case membership/incarnation/version and all preferences/results/transactions; it compares the full state digest rather than only revision numbers. All three real domain snapshot fences are included.",
+    "Every referenced eligible Planner source is reauthorized by the real resolveForecastSource, preserving its scoped projection/actor and first/last source identity checks. Those checks are repeated even when the result proof is reused.",
+    "Actual UI matchesIntent must prove consumption for sf_bi_view and the exact input digest. The private Request identity, no-abort status, complete call binding digest and caller input digest are checked after asynchronous boundaries. Each returned reused projection is a fresh clone.",
+    "UTC day is observed before and inside each locked metadata snapshot. The final clock and host authorization awaits remain inside that snapshot; C08 then performs its own final real authorization. A synchronous current check follows the actual state.read await. A complete final fence runs after the canonical dispatcher finishes.",
+    "Authority/actor, membership/case identity, Request abort, consumed lease, binding or admitted input failures yield denied without value, retaining HTTP 403 privacy semantics. Source/C08 value/clock drift yields stale without value. The holder is discarded in finally, including failures and exceptions."
+  ],
+  "T01": {
+    "sourceAudit": "runtime/local-store.ts reuses the current root snapshots for nested transaction reads, but commit:true poisons/rejects nested writes. integration/source-lifecycle.ts readScopedSource may materialize new/changed scoped metadata. Consequently no resolveForecastSource call is performed under the metadata C08 read.",
+    "implementation": "Each source reauthorization runs outside C08, bracketed by two complete authenticated C08+three-source+UTC/input/binding snapshot proofs whose digests must match. The last metadata snapshot holds its read scope through clock/host awaits and checks identity after C08 final authorization. No foreign store/runtime change.",
+    "counterproof": "The own source test changes an actual forecast input after a valid proof and calls the real scoped source reader, which may materialize the changed source. It requires stale/no value, no extra financial producer, and continued real source-fence reads/authority; an attempted nested write would fail this test."
+  },
+  "counterproofsPrepared": {
+    "file": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-call-scope.test.ts",
+    "testCount": 4,
+    "testNames": [
+      "BI proof starts only after real UI consumption, clones within one invocation and cannot cross a new call or UTC day",
+      "BI proof rejects current case revocation, unversioned C08 result corruption and changed input without repeating a producer",
+      "BI proof fences all three actual domain snapshots even when the C08 revision and Planner reference stay unchanged",
+      "BI egress returns denied after actor revocation, Request abort or lease removal at its final asynchronous boundaries"
+    ],
+    "proofs": [
+      "Only real SQLite/C08, source issuance, human coverage/promotion, public scenario comparison and persisted results create the fixture. Coverage remains conditioned with total:null. Holder boundary tests invoke the actual stored Planner scenario resolver for each fresh production, never a mock response or fake financial result.",
+      "Unconsumed UI admission is denied before any producer. Same-invocation reads return distinct clones and invoke the actual producer once; a separate consumed call invokes it again. Crossing UTC day invalidates proof without recomputation.",
+      "Current case membership removal with the global session valid and changed input both require denied/no value. Unversioned stored comparison resultDigest corruption requires stale/no value. C08 revision and cases version remain unchanged for the corruption counterproofs.",
+      "Independent mutations of Dashboard, Planner and Procurement raw snapshots invalidate reuse even when C08 and the Planner reference remain unchanged. A real forecast change exercises changed scoped metadata without a nested transaction write.",
+      "Observers always delegate to real environment, host.revalidate and state.read, then gate their unchanged returned response. Actor revocation after the final clock read, Request abort there, consumed lease removal during the final host authorization await and after the real final C08 read all require denied/no value."
+    ],
+    "boundaryScope": "These new tests qualify the holder boundaries using actual stored Planner projections; they do not replace the complete BI/browser consumer acceptance test.",
+    "budgetsMs": {
+      "cooperative": 105000,
+      "bun": 120000
+    },
+    "runtime": "NOT_RUN_ON_W12"
+  },
+  "existingBiAcceptance": {
+    "file": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-case-access.test.ts",
+    "preserved": "All 29 original assertion lines remain; one actual resolver-count assertion is added. HTTP 403 on participant revocation, DOM clearing, discarded late 200, genuine receipt digests/one-use replay and no complete-finance claim are retained.",
+    "observation": "A WeakMap counts actual scenarios.resolve per TrustedDomainContext; concurrent calls cannot mix counts. SF_BI_PROOF_READS logs the observed count. The observer delegates every resolution and returns its actual response unchanged.",
+    "budgetsMs": {
+      "cooperative": 105000,
+      "bun": 120000
+    }
+  },
+  "staticAudit": {
+    "relativeImportsMissing": [],
+    "allExistingAssertionLinesPreserved": true,
+    "assertionLinesBefore": 29,
+    "assertionLinesAfter": 30,
+    "removedAssertions": [],
+    "bunBudgetsBefore": [
+      "120_000"
+    ],
+    "bunBudgetsAfter": [
+      "120_000"
+    ],
+    "allExistingOuterBudgetsUnchanged": true,
+    "newTestCount": 4,
+    "analyticsFileCount": 25,
+    "allAnalyticsIdenticalToW8": true,
+    "unchangedSourcePins": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/analytics/factory.ts",
+        "gitBlobSha": "93bc4fb74dee9c55fa3e396bd7108ebc9d3da895",
+        "sha256": "db71e454b967fff204d6a55b780c25dd87be800954e19ffeb6b76af202a7fb31",
+        "bytes": 6651,
+        "identicalToW8": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/analytics/capabilities.ts",
+        "gitBlobSha": "e799cdfed890b15daa49e6bbe24d870b7e55a794",
+        "sha256": "8cb833615f912340259204718fbb2bea240adccebb84404765e879b070762fb1",
+        "bytes": 10025,
+        "identicalToW8": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/analytics/consumer.ts",
+        "gitBlobSha": "df7de2433773b283ab9eb76d34e4208ed9e9bc36",
+        "sha256": "e838046f08cf674597525dca5943ad34abdd0bb08169f60f4847a3b6abc6669f",
+        "bytes": 5311,
+        "identicalToW8": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/analytics/scenario.ts",
+        "gitBlobSha": "e0b5273332d45b8de7cd973ba7f9ced4888161c9",
+        "sha256": "0c8bba530e6a4de03cb07524ee96d87a5f68ddcf787a4d189b0803f21e6b517f",
+        "bytes": 4111,
+        "identicalToW8": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/analytics/stored-scenario.ts",
+        "gitBlobSha": "36e477bb5a37c565e3a719f09b02fa7f70caba2c",
+        "sha256": "a64a1946caac4b975e37c9d0e14f9180964b3ea38554f7718af7ca9ccc26999f",
+        "bytes": 5871,
+        "identicalToW8": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/analytics/projection.ts",
+        "gitBlobSha": "3e585a0d0371fc2d1f642f4b59c8d76325ccd451",
+        "sha256": "78ae896f582ef722457b4887463ec55b679c379396a3b4ed2c4faf53f3919e5b",
+        "bytes": 2723,
+        "identicalToW8": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/analytics/semantics.ts",
+        "gitBlobSha": "ef1adaaf457c2ef3846fe12be8674455ca2d72c4",
+        "sha256": "2f232d406781ceb51f6a8bee95daecb21bfb11f41f3e47fba74c5f8603ec6d08",
+        "bytes": 3722,
+        "identicalToW8": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+        "gitBlobSha": "2c82d60d220d8d5365da8322bad648a64bbb62d2",
+        "sha256": "c3d843a4bb26a0f74fce550aa1114ae490e0410e1bcc4016a33b62c72c49eb81",
+        "bytes": 22358,
+        "identicalToW8": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+        "gitBlobSha": "502fb1ab3a4116a62aeb504a4bb26040c66d81b2",
+        "sha256": "b6e875b8fc9ff731d225af16f84966bf78f6c1f65aefb852ef52a2983c6ec93e",
+        "bytes": 6876,
+        "identicalToW8": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/planner-sources.ts",
+        "gitBlobSha": "8a3201272fddf48b25d137886dcdd290e2d2db3e",
+        "sha256": "1e684c6899ccc4c9eb889a8c07e6ff52fcd1eb56a5d670b6b4c58ef52ac7972f",
+        "bytes": 5696,
+        "identicalToW8": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+        "gitBlobSha": "65867a3e6aa9b5b85266bb637fb22cf1c6c6d539",
+        "sha256": "81cbd49ac10274a29aefce19d23d4739f5d34e97696c16d789440fe2e845c44a",
+        "bytes": 14151,
+        "identicalToW8": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+        "gitBlobSha": "4e0fd90ab35f9c03d79d4a1bb65b7bdc7385681c",
+        "sha256": "00e688d1ad8daa3429a415bc51ff5fec23b64d7505cd7774331ff5a6627824b0",
+        "bytes": 10622,
+        "identicalToW8": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+        "gitBlobSha": "2fd55c7304add0829d7434917c80664fe86356b9",
+        "sha256": "de25a3d2c5fc8725debb538ec0efb45b3a3c986ff478156cce734038f87d7268",
+        "bytes": 19836,
+        "identicalToW8": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+        "gitBlobSha": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+        "sha256": "a34b014aead5afe68cb6b45edf8a7981588b5b80fae99af9a0c082ce6986d47a",
+        "bytes": 16654,
+        "identicalToW8": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+        "gitBlobSha": "0d2977360afb7b9af6d39b19eff6e9198c7c1c55",
+        "sha256": "beff852cf85a71893dc596c3b673dbce638e4bbb9a4787bff476448d66a8377e",
+        "bytes": 13354,
+        "identicalToW8": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+        "gitBlobSha": "5433cb0518e770ff1a4dc1fa0fe14f8b89869c9b",
+        "sha256": "659c483b654c54765a6f5636e44c93537f9cb0ef19ee136256515b9665f1fbc9",
+        "bytes": 3864,
+        "identicalToW8": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+        "gitBlobSha": "dba62042653bd061fa099e2956cae4d11a0475ce",
+        "sha256": "d66bf0f6e47bbd7e8223c362fa1a67a4625f2cc1156eb0d0a46dc1a1c9419456",
+        "bytes": 24849,
+        "identicalToW8": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "gitBlobSha": "b753e3ffbfcdc06de373388845c686afac26dec8",
+        "sha256": "e82f739cb1845c0c7fdd90d50a5de0a62d6c3f79d4c981289b63880e7a8e5460",
+        "bytes": 25981,
+        "identicalToW8": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/business-services.ts",
+        "gitBlobSha": "34a491f859f7b57b0883a122f816803df43c74c8",
+        "sha256": "92bd0da864af19ac4265342d6052bec72d95ee57bfdddc0c87e44178eef00e22",
+        "bytes": 54720,
+        "identicalToW8": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/alternative-call-scope.ts",
+        "gitBlobSha": "b92bcf9346b95ec7989939213c9555c86c529703",
+        "sha256": "89352f3abad0575d25e189cf6f8227176bda6f71a0d4caa31129a5d3ce573057",
+        "bytes": 6135,
+        "identicalToW8": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/extended-http.ts",
+        "gitBlobSha": "a69d632fd44bf387c26391f3e6479ff1c1de0643",
+        "sha256": "fc2f7ecb16f7ab66f894cc1d2bc21a85b25513177da4eeb08a4e827814e618eb",
+        "bytes": 15025,
+        "identicalToW8": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/financial-composition-fixture.ts",
+        "gitBlobSha": "737c19b03fa3d47fcdc7748e4d110b4af30fb7e7",
+        "sha256": "bc8309217742936742c843d82d58d1b4fa456a9b81454e78a8b19779b94d1494",
+        "bytes": 5698,
+        "identicalToW8": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts",
+        "gitBlobSha": "3eb140557b597156baf52578d8981d332e52aef3",
+        "sha256": "d3db838157ddfd9143302f84b49b5790e0f949af1ed0e0ce08074b98b97c493c",
+        "bytes": 2313,
+        "identicalToW8": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-access-browser-fixture.ts",
+        "gitBlobSha": "0c0146ec784c5a653bdebcc84ce05e779e159b63",
+        "sha256": "f799156500b271750f73f955c74266db9b746bb515c80b43ff884adc3dd2379d",
+        "bytes": 10927,
+        "identicalToW8": true
+      }
+    ],
+    "canonicalCriterionCount": 171,
+    "canonicalTaskCount": 7,
+    "packSha256": "b34a53e66e33b88a13bcb30d17fb8b7a2a009f12e6a8922bc7ab7fedbf70d1e7"
+  },
+  "qualification": {
+    "sourceWork": "CLOSED",
+    "runtime": "PENDING_HOSTED_SURGICAL_CI",
+    "performance": "NOT_MEASURED_ON_W12",
+    "independentReview": "PENDING; R1/R2/R3 are independent reviewers, not authors; this builder closes no review finding",
+    "localProductExecution": false,
+    "localTestsBuildTypecheckImportServer": false,
+    "remoteMutationOrDispatch": false,
+    "globalOrNativeAcceptance": false,
+    "criteria": "All 171 criteria and seven tasks remain intact. No criterion or global/native gate is promoted to PASS by this source-only receipt."
+  },
+  "nextHostedSelection": [
+    "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-call-scope.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-case-access.test.ts"
+  ],
+  "coordination": "Root manages publication and surgical hosted CI; parent feedback on T01 and denied/403 semantics was implemented. This is source author work, not one of the three independent reviews."
+}

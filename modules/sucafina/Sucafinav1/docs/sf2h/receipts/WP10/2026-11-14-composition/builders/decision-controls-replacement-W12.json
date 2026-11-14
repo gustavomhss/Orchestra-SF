@@ -1,0 +1,26 @@
+{
+  "schema": "sf2.wp10.builder-receipt.v1",
+  "builder": "/root",
+  "state": "CLOSED",
+  "successorLabel": "W12",
+  "baseCandidate": "68027467de0bbe3e9136be7b458724e387f55839",
+  "finding": "R1-UX-10",
+  "change": "Show an explicit new complete classification after an existing revision, explain that saving replaces the prior classification, and require deliberate confirmation. Keep the preserved included mappings visible. Do not reconstruct pending reasons absent from the published CoverageClassification contract.",
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/decision-controls.ts",
+      "beforeSha256": "7a2a0685702d59959ab2c951bdb2515198768e7bcec425bd0b7f0adf1e3a4413",
+      "afterSha256": "663ca04353fa4a154a9823fe17a6d2158787f267968ba5876cd218c724015c46",
+      "afterBlobSha": "92597c1cb7d82c9c0a2aaf949378d609db00e552"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/decision-controls.test.ts",
+      "beforeSha256": "937dac6645780d045e7f2a1ad98ba77e5292bf249e5820551ed1c4a657dd751f",
+      "afterSha256": "64fe83eb37dd2520c59b7f15b34925e8dff62304d29ecfa0f70de968b7355153",
+      "afterBlobSha": "ebbd99dd2c60d62e6debbe46984cc63eb8ef3c98"
+    }
+  ],
+  "assertions": "All original browser assertions retained; nine actual DOM assertions added for current revision vs replacement intent, initial empty form and required unchecked confirmation. Existing budgets and CAS payload untouched.",
+  "localProductExecution": false,
+  "qualification": "Source correction only. Needs hosted browser and independent R1 review on exact successor. No automatic finding closure or native/global acceptance."
+}

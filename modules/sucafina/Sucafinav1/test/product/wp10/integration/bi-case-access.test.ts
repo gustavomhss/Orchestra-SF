@@ -4,6 +4,7 @@ import { RENEWAL_TRANSITION_CATEGORIES } from "../../../../product/contracts/dec
 import type { DecisionCase } from "../../../../product/contracts/decisions.ts"
 import type { PortResult } from "../../../../product/contracts/ports.ts"
 import type { SfProductState } from "../../../../product/contracts/state.ts"
+import type { TrustedDomainContext } from "../../../../product/contracts/sf-execution.ts"
 import type { BaselineCoverageRequest } from "../../../../product/decisions/baseline-coverage.ts"
 import { createSfBiServices } from "../../../../../../../apps/cli/src/sucafina-product/bi-services.ts"
 import { sfDecisionBiSelection } from "../../../../../../../apps/cli/src/sucafina-product/bi-selections.ts"
@@ -116,15 +117,30 @@ test("BI clears a real persisted case after participant revocation with the sess
     const selectionRef = sfDecisionBiSelection({ scenarioResultRef: candidate.resultRef, comparisonRef: persisted.resultRef })
     const assets = createSfExtendedAssets()
     deadline.own(() => assets.dispose())
-    const actualBi = createSfBiServices({ authority, business, portfolio })
+    const scenarios = business.plannerProduct.scenarios
+    if (!scenarios) throw new Error("Actual stored Planner scenarios unavailable")
+    const scenarioReads = new WeakMap<TrustedDomainContext, number>()
+    const observedBusiness = { ...business, plannerProduct: { ...business.plannerProduct, scenarios: { ...scenarios,
+      resolve: async (reference: string, context: TrustedDomainContext) => {
+        scenarioReads.set(context, (scenarioReads.get(context) ?? 0) + 1)
+        return scenarios.resolve(reference, context)
+      },
+    } } }
+    const actualBi = createSfBiServices({ authority, business: observedBusiness, portfolio })
     const dispatches = { positive: 0, replaysDenied: 0 }
     const bi: typeof actualBi = { ...actualBi,
       dispatchPresentation: async (request, context) => {
         // Observe and return the actual dispatcher output unchanged. Repeating
         // that exact call exercises the original one-use authority, not a
         // substitute validator or an invented successful response.
+        const before = scenarioReads.get(context) ?? 0
         const result = await actualBi.dispatchPresentation(request, context)
         if (result.status !== "ok") return result
+        const resolved = (scenarioReads.get(context) ?? 0) - before
+        console.info("SF_BI_PROOF_READS", JSON.stringify({ viewId: request.viewId, scenarioResolves: resolved }))
+        // Observe the real public producer: its first/last checks still perform
+        // three resolutions, once for this entire consumed UI dispatch.
+        expect(resolved).toBe(3)
         expect(result.value.receipt).toMatchObject({ kind: "ui", operation: "sf_bi_view", handlerExport: "readBiView", inputDigest: digestSfValue(request),
           resultDigest: digestSfValue(result.value.projection), principalRef: context.binding.principalRef, accessRevision: context.binding.accessRevision })
         if (context.kind !== "ui" || result.value.receipt.kind !== "ui") throw new Error("BI HTTP must retain the real UI receipt")
