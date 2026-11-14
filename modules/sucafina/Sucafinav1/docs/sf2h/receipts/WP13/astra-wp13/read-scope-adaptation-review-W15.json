@@ -1,0 +1,124 @@
+{
+  "schema": "wp13-W15-adaptation-static-review-v1",
+  "preparedAt": "2026-11-14T12:36:48.863242+00:00",
+  "reviewer": "/root/wp13_review_acceptance/w6_handoff_static",
+  "verdict": "NO_STATIC_BLOCKER_FOR_OWN_TEST_ADAPTATION_PENDING_HOSTED_TYPECHECK_AND_PRODUCT",
+  "ready": false,
+  "runtimePass": false,
+  "scope": "Only metadata/text/signature/diff review. No product/test source edited by reviewer.",
+  "original": {
+    "path": "reference/owner-1222/modules/sucafina/Sucafinav1/test/product/wp11/renewal-read-scope.test.ts",
+    "blob": "d91a07ddb9dc9cc5d093121112b7603533d4e1fb",
+    "sha256": "8a111fa08b5d4a6c1a569ad12d105e0d80a89f866fc04ff2509eb008c0b002e1",
+    "bytes": 3219
+  },
+  "archivedOriginal": {
+    "path": "reference/wp13-W15-before/modules/sucafina/Sucafinav1/test/product/wp11/renewal-read-scope.test.ts",
+    "blob": "d91a07ddb9dc9cc5d093121112b7603533d4e1fb",
+    "sha256": "8a111fa08b5d4a6c1a569ad12d105e0d80a89f866fc04ff2509eb008c0b002e1",
+    "bytes": 3219
+  },
+  "ownCandidate": {
+    "path": "repo/modules/sucafina/Sucafinav1/test/product/wp13/renewal-read-scope.test.ts",
+    "blob": "bcd5ed7f2cc26b2d9e271dae421b4d86e2f05591",
+    "sha256": "f014f4a675faa9d172eb30f71cc46a8d1cbde4458ca802d60dfc19f5b68bb479",
+    "bytes": 3390
+  },
+  "patch": {
+    "path": "reference/wp13-W15-read-scope-adaptation.patch.txt",
+    "blob": "bf4b91a9dfe47f9d5b7f34b6417722fe219583d5",
+    "sha256": "12d7a3d3c1608a2f27dbf8b4262bae1351686df4f0333b3c1e01fbfc165c9d25",
+    "bytes": 1812
+  },
+  "checks": {
+    "ownedBlobMatchesRequested": true,
+    "originalBlobMatchesPublishedFinance": true,
+    "backupBytesExact": true,
+    "onlyDeclaredAdaptation": true,
+    "testTitlesEqual": true,
+    "assertionLinesEqual": true,
+    "assertionCount": 9,
+    "testCount": 3,
+    "finallyCleanupCount": 3,
+    "secondAndThirdTestsByteExact": true,
+    "allRelativeImportsExist": true,
+    "foreignHelpersRemainExact": true
+  },
+  "genericAndNarrowing": {
+    "contract": "runtime/contract.ts:78 declares transactionAll?: <T>(work:(snapshots:Record<Surface,Snapshot>)=>Promise<{commit:boolean;value:T}>,options?:TransactionOptions)=>Promise<T>.",
+    "narrowing": "Optional chaining produces the bound callable or undefined; the immediately following throw narrows the const before both calls. No non-null assertion/cast and no failure skipping.",
+    "thisBinding": "bind(fixture.store) preserves the adapter receiver; no unbound method call is introduced.",
+    "generic": "The no-argument-partial bind does not constrain T or add a wrapper that changes the generic callback contract. Type inference/actual compiler qualification still belongs to hosted bun typecheck.",
+    "runtime": "Callback bodies and commit:false remain unchanged; snapshots are cloned before comparison. The adapter method is captured once and reused within this fixture invocation only, not cached across tests/calls or used to cache authorization."
+  },
+  "cleanupAndAssertions": {
+    "guardInsideTry": true,
+    "missingMethodBehavior": "Throws a clear fixture-precondition error and still runs finally cleanup; does not silently skip a proof.",
+    "tests": "All3 original tests and9 expect lines preserved; second+third test bodies byte-identical.",
+    "budgets": "Neither original nor adaptation adds an explicit per-test timeout. Existing external/default budget remains unchanged.",
+    "semantics": [
+      "Real durable before/after snapshot equality after both operation and source-only admission.",
+      "Real OPEX.save f10=46000 followed by fresh verifier refusal.",
+      "Lease revoked during awaited source callback is rejected and remains revoked."
+    ],
+    "claimBoundary": "These are preserved assertions, not observed product PASS."
+  },
+  "relativeImports": [
+    {
+      "specifier": "../../../product/contracts/ports.ts",
+      "path": "repo/modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "exists": true
+    },
+    {
+      "specifier": "../../../runtime/planner.ts",
+      "path": "repo/modules/sucafina/Sucafinav1/runtime/planner.ts",
+      "exists": true
+    },
+    {
+      "specifier": "../wp11/renewal-operation-verifier.ts",
+      "path": "repo/modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+      "exists": true
+    },
+    {
+      "specifier": "../wp11/renewal-source-fixture.ts",
+      "path": "repo/modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-fixture.ts",
+      "exists": true
+    }
+  ],
+  "foreignHelpers": [
+    {
+      "path": "repo/modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "blob": "d5395570b44366fa81003d5f5aa68a3023c26fa5",
+      "sha256": "31559515ade97893610d6ccfef80bba7b4eb5c1cc096e6840013fb1309cdbc48",
+      "bytes": 25425,
+      "expectedBlob": "d5395570b44366fa81003d5f5aa68a3023c26fa5",
+      "exactMatch": true,
+      "sourceCommit": "d7775d6f1eb17af1590ccfb98547259eb017cd1b"
+    },
+    {
+      "path": "repo/modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+      "blob": "2338917427497733e4bd88aec852985206cce066",
+      "sha256": "ddaa4cc2a68b466179408513c3f96614265251916e5a31f1638e1c6ebf828eca",
+      "bytes": 3665,
+      "expectedBlob": "2338917427497733e4bd88aec852985206cce066",
+      "exactMatch": true,
+      "sourceCommit": "96fc3162ae309f8b91b2c55524335026f8704714"
+    }
+  ],
+  "plannedRemoval": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-read-scope.test.ts",
+    "stillPresentAtReview": true,
+    "bytesStillExactAtReview": true,
+    "authorizationBoundary": "Root plans to remove only the W14-added test, retaining both helper blobs unchanged. Reviewer did not delete it.",
+    "baseAbsenceEvidence": "W14 intake manifest records previousBlob:null; root explicitly states absence in W13/base. No remote/base tree verification was performed by this reviewer.",
+    "archive": "Exact original remains in reference/wp13-W15-before and the published W14 commit; do not rewrite the owner file.",
+    "followup": "New surgical selection must name test/product/wp13/renewal-read-scope.test.ts; avoid running both copies as equivalent tests."
+  },
+  "localProductTests": false,
+  "localTypecheck": false,
+  "guardsExecuted": false,
+  "ciDispatched": false,
+  "remoteOperations": false,
+  "productOrTestEdits": false,
+  "nextAction": "Root removes only its newly imported WP11 test, publishes the owned adaptation with exact helper pins, then runs the hosted package check and the3 counterexamples in the next authorized surgical selection. No compile or runtime PASS is inferred here."
+}

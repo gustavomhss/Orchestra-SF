@@ -1,17 +1,19 @@
 import { expect, test } from "bun:test"
 import type { PlannerSourceHost } from "../../../product/contracts/ports.ts"
 import { domain } from "../../../runtime/planner.ts"
-import { createRenewalOperationVerifier } from "./renewal-operation-verifier.ts"
-import { createRenewalSourceFixture } from "./renewal-source-fixture.ts"
+import { createRenewalOperationVerifier } from "../wp11/renewal-operation-verifier.ts"
+import { createRenewalSourceFixture } from "../wp11/renewal-source-fixture.ts"
 
 test("renewal admission verifies operations and source-only alternatives without changing any durable snapshot", async () => {
   const fixture = await createRenewalSourceFixture("omitted")
   try {
-    const before = await fixture.store.transactionAll(async (snapshots) => ({ commit: false, value: structuredClone(snapshots) }))
+    const transactionAll = fixture.store.transactionAll?.bind(fixture.store)
+    if (!transactionAll) throw new Error("Renewal read-scope proof requires durable multi-surface snapshots")
+    const before = await transactionAll(async (snapshots) => ({ commit: false, value: structuredClone(snapshots) }))
     const verify = createRenewalOperationVerifier(fixture.host, fixture.sources)
     expect(await verify(fixture.scenario, fixture.context)).toBe(true)
     expect(await verify({ baseRef: fixture.scenario.baseRef, operations: [], assumptions: [] }, fixture.context)).toBe(true)
-    const after = await fixture.store.transactionAll(async (snapshots) => ({ commit: false, value: structuredClone(snapshots) }))
+    const after = await transactionAll(async (snapshots) => ({ commit: false, value: structuredClone(snapshots) }))
     expect(after).toEqual(before)
   } finally { await fixture.cleanup() }
 })
