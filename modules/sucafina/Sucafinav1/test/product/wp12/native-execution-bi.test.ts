@@ -11,6 +11,7 @@ import type { Wp12NativeMissionContext } from "./native-mission-harness.ts"
 const period = { start: "2027-01-01", end: "2027-12-31" }
 const datedId = "milestone:wp12-bi-project:delivery:date"
 const undatedId = "milestone:wp12-bi-project:follow-up:date"
+const requiredOperations = ["sf_bi_view", "sf_kpi_explain", "sf_source_get", "sf_dashboard_read"]
 
 test("native contextual BI uses the real Dashboard producer and durable chart/table selection across host reload", async () => {
   await withWp12NativeMissionHost({ label: "contextual-bi", operations: ["sf_case_draft", "sf_case_read", "sf_dashboard_read", "sf_bi_view", "sf_context_get", "sf_source_get", "sf_kpi_explain"],
@@ -28,7 +29,7 @@ test("native contextual BI uses the real Dashboard producer and durable chart/ta
     },
   }, async ({ open }) => {
     const prepared = await open("initial", async (context) => {
-      const selected = context.services.selected.find((entry) => entry.profile.id === "sf_maestro")
+      const selected = context.services.selected.find((entry) => entry.profile.id === "sf_finance")
       const skill = selected?.skills.find((entry) => entry.id === "sf-produzir-bi-contextual")
       if (!selected || !skill || !context.services.analysisInputs || !context.services.productHttp) throw new Error("The real contextual BI mission is not composed")
       const selection = { page: "Portfolio Dashboard", fields: ["milestoneDates"], period }
@@ -83,7 +84,7 @@ test("native contextual BI uses the real Dashboard producer and durable chart/ta
       if (restored.status !== "ok") throw new Error("The authorized BI selection could not be reopened")
       expect(digestSfValue(await readProducedArtifact(context, caseRef))).toBe(digestSfValue(artifact))
       console.log("SF_WP12_NATIVE_BI_INPUT:" + JSON.stringify({ scope: "real-dashboard-producer-c08-artifacts-and-wp05-http", githubSha: process.env.GITHUB_SHA ?? null,
-        caseRef, inputDigest: digestSfValue(decoded.value), projectionRef: artifact.projectionRef, tableRef: artifact.tableRef,
+        profileId: selected.profile.id, skillId: skill.id, caseRef, inputDigest: digestSfValue(decoded.value), projectionRef: artifact.projectionRef, tableRef: artifact.tableRef,
         tableDigest: artifact.tableDigest, absentDate: undatedId, sourceLinks: sourceLinks.length,
         referencesExposedByCanonicalInput: { canonicalProjectionRefs: Object.hasOwn(decoded.value, "canonicalProjectionRefs"), tableRef: Object.hasOwn(decoded.value, "tableRef") },
         inferenceExecuted: false, gnativeAccepted: false }))
@@ -96,6 +97,8 @@ test("native contextual BI uses the real Dashboard producer and durable chart/ta
       // must obtain everything through the actual admitted input and native tools.
       const witness = await executeWp12NativeMission(context, { request: incoming.request, skillInput: restored.value, expectedKind: "ContextualBIProposal",
         requiredTools: ["sf_dashboard_read", "sf_bi_view", "sf_source_get"].map((operation) => ({ operation })) })
+      expect(witness.receipt.profileId).toBe("sf_finance")
+      expect(witness.receipt.skillId).toBe("sf-produzir-bi-contextual")
       if (witness.output.kind !== "ContextualBIProposal") throw new Error("The native BI output kind changed")
       expect(witness.output.payload).toEqual({ approvedViewId: "BI08", canonicalProjectionRefs: [artifact.projectionRef],
         filters: incoming.selection.filters, tableRef: artifact.tableRef, sourceRefs: decoded.value.projectionRefs })
@@ -113,9 +116,16 @@ test("native contextual BI uses the real Dashboard producer and durable chart/ta
         const consumed = await readWp12NativeMissionAfterReload(context, prepared.witness)
         expect(consumed.output.kind).toBe("ContextualBIProposal")
       }
+      const observedOperations = [...new Set(prepared.witness?.tools.map((tool) => tool.operation) ?? [])]
+      const missingRequiredOperations = requiredOperations.filter((operation) => !observedOperations.includes(operation))
       console.log("SF_WP12_NATIVE_BI_REOPEN:" + JSON.stringify({ scope: "real-persisted-bi-selection-and-wp05-http-after-host-reload", githubSha: process.env.GITHUB_SHA ?? null,
         projectionRef: artifact.projectionRef, tableRef: artifact.tableRef, tableDigest: artifact.tableDigest,
-        consumer: "WP05 bi-data/bi-source", nativeContributionConsumed: Boolean(prepared.witness), gnativeAccepted: false, independentGnativeReview: false }))
+        consumer: "WP05 bi-data/bi-source", nativeContributionConsumed: Boolean(prepared.witness),
+        requiredOperations, observedOperations, missingRequiredOperations, normativeSkillWitnessComplete: missingRequiredOperations.length === 0,
+        am02: { profileId: "sf_finance", skillId: "sf-produzir-bi-contextual", operation: "sf_bi_view",
+          nativeCallObserved: Boolean(prepared.witness && prepared.witness.receipt.profileId === "sf_finance" &&
+            prepared.witness.receipt.skillId === "sf-produzir-bi-contextual" && observedOperations.includes("sf_bi_view")) },
+        gnativeAccepted: false, independentGnativeReview: false }))
       await context.persistence.transaction("dashboard", async (snapshot) => { snapshot.data.projects = []; return { commit: true, value: undefined } })
       const removed = await context.human("analysis.prepare", prepared.incoming, (call) => context.services.analysisInputs!.prepare(call, prepared.incoming))
       expect(removed.status).not.toBe("ok")

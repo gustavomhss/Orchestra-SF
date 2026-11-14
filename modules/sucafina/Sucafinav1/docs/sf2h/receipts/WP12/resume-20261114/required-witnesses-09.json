@@ -1,0 +1,127 @@
+{
+  "schema": "sf-wp12-increment-v1",
+  "owner": "WP12",
+  "baseCommit": "ede812eaf2644cde161f2360b2e4762d9c942146",
+  "status": "FROZEN_FOR_PARENT_PUBLICATION",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-mission-harness.ts",
+      "beforeBlob": "ad0fb691439e56bdb2dd4918440264e44b140bd8",
+      "blob": "9f61ae11b0f1b630427cda98ff44f229bd72d2b5",
+      "sha256": "a89d46560331bc067e0e236da7a45de9d83fa13a90a6876d9158e5f01108b8d5",
+      "bytes": 19397,
+      "syntax": "PASS (node --check; no imports or product execution)"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-import-preparation.ts",
+      "beforeBlob": null,
+      "blob": "96e7d339b152483bc156855b04ab422e740173c2",
+      "sha256": "77cbcdd67b70fbb81dd5884daf0258bd92b98fc9813d723ac62e7b8eba94754f",
+      "bytes": 15083,
+      "syntax": "PASS (node --check; no imports or product execution)"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-finance.test.ts",
+      "beforeBlob": "bb212b96ea795aa9d121c06a9609f8931d9dbbca",
+      "blob": "15f64ede1ffcfae7a9ba35592b9a4dbaf3442097",
+      "sha256": "64139c5921705979a4296140b005a18d0e82dd1a956e6c642c9f7f453c0e8834",
+      "bytes": 28316,
+      "syntax": "PASS (node --check; no imports or product execution)"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-forecast-variants.test.ts",
+      "beforeBlob": "9650090140d3bf85878da315638fab32d3944df4",
+      "blob": "4424cea6540a61131741ea0a1cf7aaa5aa54e337",
+      "sha256": "5e09d78e38f9cec2bf774fe8f2db0e9a0c8c8948bc7580463e7eddde74608282",
+      "bytes": 11241,
+      "syntax": "PASS (node --check; no imports or product execution)"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-intent.test.ts",
+      "beforeBlob": "28c43ff9f5a27db73437edd123b6c4bc02fd2f0c",
+      "blob": "58ab20a7fbe517c832efb6e9688fc66a12389eae",
+      "sha256": "a9ff0588fa5b9a3ab0c2c71ba27a852017189d71cf812d1e91323f30297568ec",
+      "bytes": 17655,
+      "syntax": "PASS (node --check; no imports or product execution)"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/native-required-operations/forecast-kpi-selection.json",
+      "beforeBlob": null,
+      "blob": "17889d0c1068832d16fc050f1fed6921b63a6341",
+      "sha256": "c820c00a62a90120a94b7fa70fde056cd4ce5756f2254db0d57705180e3f18a3",
+      "bytes": 5866,
+      "syntax": null
+    }
+  ],
+  "sources": "source-pins.json",
+  "verification": {
+    "syntax": "PASS",
+    "productTests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "ci": "NOT_RUN",
+    "scanner": "NOT_EXECUTED",
+    "model": "NOT_EXECUTED",
+    "remoteWrites": "NONE"
+  },
+  "coverage": {
+    "sf-enquadrar-decisao": {
+      "newNativeReceiptWitnesses": [
+        "sf_context_get",
+        "sf_import_preview"
+      ],
+      "requiredOperationsInDriver": [
+        "sf_context_get",
+        "sf_case_read",
+        "sf_case_draft",
+        "sf_import_preview"
+      ],
+      "realImportConsumers": [
+        "createSfImportHttp:import-reference",
+        "createSfImportHttp:import-detail",
+        "readCaseAnalysisProjection",
+        "handleSfAnalysis:output (only after real native run)"
+      ],
+      "positiveExecutionRequires": [
+        "existing installed scanner configuration and real accepted scan",
+        "installed supported provider model"
+      ],
+      "gnativeAccepted": false
+    },
+    "sf-explicar-forecast": {
+      "newNativeReceiptWitnesses": [
+        "sf_source_get",
+        "sf_import_preview"
+      ],
+      "requiredOperationsInDriver": [
+        "sf_forecast_compare",
+        "sf_source_get",
+        "sf_import_preview"
+      ],
+      "missingOperation": "sf_kpi_explain",
+      "missingReason": "Published Forecast input lacks a legitimately linked DashboardMetric selection; precise owner finding included.",
+      "importVersusDomain": "C04 replay alternativeResultRef is previewRef, not a persisted Planner source; sf_forecast_compare stays in ordinary-domain missions.",
+      "positiveExecutionRequires": [
+        "existing installed scanner configuration and real accepted scan for import mission",
+        "installed supported provider model"
+      ],
+      "gnativeAccepted": false
+    }
+  },
+  "negativeDiscriminators": [
+    "Unadmitted actual workbook checksum is not a C04 file ref; preview refuses it.",
+    "Changed preview options are stale; host input producer refuses altered selection.",
+    "Real Planner base changes only after positive readers; old C04 preview and optional native output are refused.",
+    "Unchanged case and full Planner data digest before/after admission, preview, analysis and reload."
+  ],
+  "authority": {
+    "harnessChange": "POST FormData only omits manual Content-Type to obtain its real multipart boundary; retains private WeakSet, default JSON POST, GET without body and no headers/auth override.",
+    "scanner": "Only SUCAFINA_LOCAL_CONFIG through published loadLocalConfiguration and scanLocalFile; never creates config, scanner process or credentials.",
+    "syntheticInputs": "Private authentication harness and raw Planner fixture only; actual XLSX bytes admitted through production C04; no seeded C04 rows/receipts/previews/native outputs.",
+    "absence": "Explicit unavailable observation, not native proof or GNATIVE."
+  },
+  "independentReview": {
+    "agent": "/root/criteria_resume",
+    "status": "STATIC_REVIEW_NO_REMAINING_CONCRETE_FINDING_IN_REVIEWED_SCOPE",
+    "findingFixed": "New Finance import output kind changed to canonical FinancialAnalysis; multipart/grants/C04 shape checks confirmed."
+  }
+}

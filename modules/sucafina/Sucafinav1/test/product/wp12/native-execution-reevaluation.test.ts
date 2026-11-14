@@ -76,7 +76,7 @@ test("reevaluation reopens a real human choice and Planner condition without pro
       if (!input.ok) throw new Error("The real reevaluation producer did not return CommitmentReevaluationInput")
       expect(input.value.originalChoice).toEqual(chosen.choice)
       expect(input.value.changes).toHaveLength(1)
-      expect(input.value.changes[0]).toEqual(impact)
+      expect<unknown>(input.value.changes[0]).toEqual(impact)
       expect(input.value.currentComparison.baselineResultRef).toBe(preparedCase.baseline.resultRef)
       expect(input.value.currentComparison.alternativeResultRef).toBe(preparedCase.combined.resultRef)
       expect(input.value.currentComparison.knownDifference).toBe(0)

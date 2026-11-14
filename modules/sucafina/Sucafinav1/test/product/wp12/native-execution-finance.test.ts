@@ -32,6 +32,8 @@ import { enumerateSfSources } from "../../../product/integration/source-inventor
 import { handleSfAnalysis } from "../../../product/interface/analysis-http.ts"
 import { object } from "../../../runtime/contract.ts"
 import { openLocalStore } from "../../../runtime/local-store.ts"
+import { executeWp12NativeMission, observeWp12UnavailableMission, readWp12NativeMissionAfterReload, withWp12NativeMissionHost } from "./native-mission-harness.ts"
+import { assertWp12ChangedImportBaseRefused, assertWp12ImportCaseUnchanged, initializeWp12ImportPlanner, prepareWp12ImportCase, wp12InstalledImportAssets, WP12_IMPORT_PERIOD } from "./native-import-preparation.ts"
 
 // Only the domain data and this private Request authenticator are synthetic.
 // Host/project identities, Session, C15 admission, MCP calls, model completion,
@@ -149,7 +151,7 @@ test("configured Finance executes through the real host and its persisted contri
         const base = await business.plannerProduct.issueSource("wp12-forecast-0", call)
         const candidate = await business.plannerProduct.issueSource("wp12-forecast-1", call)
         if (base.status !== "ok" || candidate.status !== "ok") throw new Error("Native Finance sources were refused by their real issuer")
-        const draft = { objective: "Explique a mudança de forecast desta decisão. Invoque sf_forecast_compare e preserve o resultado canônico no FinancialAnalysis, sem inventar causalidade.",
+        const draft = { objective: "Explique a mudança de forecast desta decisão. Leia as referências selecionadas com sf_source_get e invoque sf_forecast_compare. Preserve o resultado canônico no FinancialAnalysis, sem inventar causalidade.",
           horizon: period, currency: "USD", criteria: ["A comparação deve reconciliar as fontes atuais em USD"], sourceRefs: [base.value.evidence, candidate.value.evidence] }
         return ui(services, "sf_case_draft", draft, (create) => business.cases.draft(draft, create))
       }).finally(() => business.dispose())
@@ -157,7 +159,7 @@ test("configured Finance executes through the real host and its persisted contri
       const caseRef = { id: decision.value.id, incarnation: decision.value.incarnation, version: decision.value.version }
       const incoming = { request: { caseRef, objective: decision.value.objective, profileId: selected.profile.id,
         profileVersion: selected.profile.version, skillId: skill.id, skillVersion: skill.version, manifestDigest: selected.manifestDigest,
-        outputSchemaVersion: "sf-contribution-v1", requestedOperationScope: ["sf_forecast_compare"] },
+        outputSchemaVersion: "sf-contribution-v1", requestedOperationScope: ["sf_forecast_compare", "sf_source_get"] },
         selection: { caseRef, baseRef: decision.value.sourceRefs[0]!.refId, candidateRef: decision.value.sourceRefs[1]!.refId, period, currency: "USD" } }
       const prepared = await human(services, "analysis.prepare", incoming, (call) => services.analysisInputs!.prepare(call, incoming))
       if (prepared.status !== "ok") throw new Error(`Native Finance producer failed: ${prepared.reason}`)
@@ -210,18 +212,18 @@ test("configured Finance executes through the real host and its persisted contri
       const assistants = messages.flatMap((message) => message.type === "assistant" && !!message.time.completed && !message.error ? [message] : [])
       expect(assistants.length).toBeGreaterThan(0)
       const calls = assistants.flatMap((message) => message.content.flatMap((part) => {
-        if (part.type !== "tool" || part.name !== "sf_forecast_compare" || part.state.status !== "completed") return []
+        if (part.type !== "tool" || part.state.status !== "completed") return []
         const receipt = object(part.state.structured.receipt)
-        return part.state.structured.status === "ok" && receipt.kind === "native" && receipt.operation === "sf_forecast_compare" &&
-          receipt.handlerExport === "compareForecast" &&
+        return part.state.structured.status === "ok" && receipt.kind === "native" && receipt.operation === part.name &&
           receipt.runId === runRef && receipt.nativeSessionId === native.sessionID && receipt.principalRef === principalRef && receipt.callId === part.id
-          ? [{ toolCallId: part.id, handlerExport: receipt.handlerExport }] : []
+          ? [{ operation: part.name, toolCallId: part.id, handlerExport: receipt.handlerExport }] : []
       }))
-      expect(calls.length).toBeGreaterThan(0)
+      expect(calls.some((call) => call.operation === "sf_forecast_compare" && call.handlerExport === "compareForecast")).toBe(true)
+      expect(calls.some((call) => call.operation === "sf_source_get" && call.handlerExport === "resolveSfSource")).toBe(true)
       return { runRef, caseRef, inputDigest, outputRef: output.value.id, outputDigest: output.value.outputDigest,
         receipt: native.skillReceipt, actualModel: output.value.runProvenance.actualModel,
         contextFingerprint: output.value.runProvenance.contextFingerprint, accessRevision: output.value.accessRevision,
-        toolCallIds: calls.map((call) => call.toolCallId) }
+        toolCallIds: calls.map((call) => call.toolCallId), tools: calls }
     }).finally(() => first.dispose())
     if (!completed) return
 
@@ -245,3 +247,92 @@ test("configured Finance executes through the real host and its persisted contri
     }).finally(() => reopened.dispose())
   } finally { await rm(directory, { recursive: true, force: true }) }
 }, 240_000)
+
+test("Finance reads a genuinely admitted import preview and retains its conditional analysis after reload", async () => {
+  const assets = await wp12InstalledImportAssets("sf-explicar-forecast")
+  if (!assets) return
+  const objective = "Explique a comparação do arquivo selecionado com a versão de referência. Consulte o arquivo admitido com sf_import_preview usando importPreview, resolva as fontes selecionadas com sf_source_get e preserve a base, a proveniência e as limitações retornadas pelas portas. Produza FinancialAnalysis sem aplicar a importação nem alterar o domínio."
+  await withWp12NativeMissionHost({ label: "finance-import", assets,
+    operations: ["sf_case_draft", "sf_case_read", "sf_source_get", "sf_import_preview"],
+    humanActions: ["analysis.prepare", "analysis.start", "analysis.read", "analysis.cancel", "imports.admit"],
+    initialize: initializeWp12ImportPlanner,
+  }, async ({ open }) => {
+    const completed = await open("initial", async (context) => {
+      const selected = context.services.selected.find((entry) => entry.profile.id === "sf_finance")
+      const skill = selected?.skills.find((entry) => entry.id === "sf-explicar-forecast")
+      if (!selected || !skill || !context.services.analysisInputs || !context.services.productHttp)
+        throw new Error("The real Finance import analysis services are missing")
+      const prepared = await prepareWp12ImportCase(context, objective)
+      const incoming = { request: { caseRef: prepared.caseRef, objective, profileId: selected.profile.id, profileVersion: selected.profile.version,
+        skillId: skill.id, skillVersion: skill.version, manifestDigest: selected.manifestDigest, outputSchemaVersion: "sf-contribution-v1",
+        requestedOperationScope: ["sf_import_preview", "sf_source_get"] },
+        selection: { caseRef: prepared.caseRef, previewRef: prepared.previewRef, importRequest: prepared.importRequest,
+          period: WP12_IMPORT_PERIOD, currency: "USD" } }
+      const response = await context.services.productHttp(context.request({ action: "prepare", input: incoming }, "/sucafina/planner?sf=workbench-analysis"), "planner")
+      if (!response) throw new Error("The real Finance import input route is missing")
+      const body = object(await response.json())
+      expect(response.status).toBe(200)
+      expect(body.status).toBe("ok")
+      const decoded = decodeSfSkillInput("ForecastExplainInput", body.value)
+      if (!decoded.ok) throw new Error("The real import analysis producer failed the ForecastExplainInput contract")
+      expect(decoded.value.importPreview).toEqual(prepared.importRequest)
+      expect(decoded.value.sourceRefs).toEqual([prepared.sourceRef])
+      expect(decoded.value.selectedPeriod).toEqual(WP12_IMPORT_PERIOD)
+      expect(decoded.value.currency).toBe("USD")
+      expect(decoded.value.forecastComparison.analysisBasis).toBe("import-preview")
+      expect(decoded.value.forecastComparison.importPreviewRef).toBe(prepared.previewRef)
+      expect(decoded.value.forecastComparison.domainApplied).toBe(false)
+      expect(decoded.value.forecastComparison.knownDifference).toBe(-20)
+      expect(decoded.value.forecastComparison.completeDifference).toBeNull()
+      expect(decoded.value.forecastComparison.comparison?.comparisonStatus).toBe("conditioned")
+      expect(decoded.value.forecastComparison.gaps).toContain("import-preview-not-applied")
+      expect(decoded.value.forecastComparison.gaps).toContain("import-preview-coverage-unresolved")
+      expect(decoded.value.forecastComparison.candidate.components.some((component) => component.evidenceState === "hypothetical")).toBe(true)
+      const changed = { ...incoming, selection: { ...incoming.selection, importRequest: { ...prepared.importRequest, options: { headerRow: 2 } } } }
+      const refused = await context.human("analysis.prepare", changed, (call) => context.services.analysisInputs!.prepare(call, changed))
+      expect(refused.status).not.toBe("ok")
+      const restored = await context.human("analysis.prepare", incoming, (call) => context.services.analysisInputs!.prepare(call, incoming))
+      if (restored.status !== "ok") throw new Error("The authorized Finance import selection could not be restored")
+      expect(digestSfValue(restored.value)).toBe(digestSfValue(decoded.value))
+      await assertWp12ImportCaseUnchanged(context, prepared)
+      console.log("SF_WP12_NATIVE_FINANCE_IMPORT_INPUT:" + JSON.stringify({ scope: "real-C04-preview-and-Planner-replay-input",
+        githubSha: process.env.GITHUB_SHA ?? null, caseRef: prepared.caseRef, previewRef: prepared.previewRef,
+        inputDigest: digestSfValue(decoded.value), analysisBasis: decoded.value.forecastComparison.analysisBasis,
+        domainApplied: false, completeDifference: null, changedOptionsStatus: refused.status, inferenceExecuted: false, gnativeAccepted: false }))
+      if (!context.models.length) {
+        observeWp12UnavailableMission(context, { request: incoming.request, skillInput: restored.value })
+        return { prepared, witness: undefined }
+      }
+      expectSpawn(import.meta.path)
+      // An import preview reference is not a persisted Planner version selector.
+      // The ordinary-domain mission separately witnesses sf_forecast_compare.
+      const witness = await executeWp12NativeMission(context, { request: incoming.request, skillInput: restored.value,
+        expectedKind: "FinancialAnalysis", requiredTools: [{ operation: "sf_import_preview", handlerExport: "previewImport" },
+          { operation: "sf_source_get", handlerExport: "resolveSfSource" }] })
+      if (witness.output.kind !== "FinancialAnalysis") throw new Error("The Finance import mission changed output kind")
+      expect(witness.output.payload.analysisBasis).toBe("import-preview")
+      expect(witness.output.payload.importPreviewRef).toBe(prepared.previewRef)
+      expect(witness.output.payload.domainApplied).toBe(false)
+      expect(witness.output.payload.knownDifference).toBe(-20)
+      expect(witness.output.payload.completeDifference).toBeNull()
+      expect(witness.output.payload.comparison?.comparisonStatus).toBe("conditioned")
+      expect(witness.output.evidenceRefs).toEqual([prepared.sourceRef])
+      await assertWp12ImportCaseUnchanged(context, prepared)
+      return { prepared, witness }
+    })
+    await open("reopened", async (context) => {
+      await assertWp12ImportCaseUnchanged(context, completed.prepared)
+      console.log("SF_WP12_NATIVE_FINANCE_IMPORT_CONSUMER:" + JSON.stringify({ scope: "reopened-real-C04-reference-detail-and-case",
+        githubSha: process.env.GITHUB_SHA ?? null, caseRef: completed.prepared.caseRef, previewRef: completed.prepared.previewRef,
+        previewDigest: completed.prepared.consumer.digest, domainApplied: false, inferenceExecuted: !!completed.witness, gnativeAccepted: false }))
+      if (completed.witness) {
+        const consumed = await readWp12NativeMissionAfterReload(context, completed.witness)
+        if (consumed.output.kind !== "FinancialAnalysis") throw new Error("The reopened Finance import contribution changed kind")
+        expect(consumed.output.payload.analysisBasis).toBe("import-preview")
+        expect(consumed.output.payload.importPreviewRef).toBe(completed.prepared.previewRef)
+        expect(consumed.output.payload.completeDifference).toBeNull()
+      }
+      await assertWp12ChangedImportBaseRefused(context, completed.prepared, completed.witness?.runRef)
+    })
+  })
+}, 300_000)

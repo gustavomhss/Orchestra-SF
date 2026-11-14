@@ -87,9 +87,10 @@ export async function publishSfContribution(input: {
   runRef: string
   reviewTarget?: SfReviewTarget
 }) {
+  const { host, runRef } = input
   const receipt = input.skillReceipt
   const provenance = input.output.runProvenance
-  if (provenance.runId !== input.runRef || !sameSfSkillLoadReceipt(receipt, provenance) || !provenance.actualModel || !provenance.contextFingerprint) {
+  if (provenance.runId !== runRef || !sameSfSkillLoadReceipt(receipt, provenance) || !provenance.actualModel || !provenance.contextFingerprint) {
     return { status: "failed", reason: "contribution-provenance-mismatch" } as const
   }
   if (receipt.skillId === "sf-contestar-decisao" || receipt.skillId === "sf-revisar-evidencias") {
@@ -110,10 +111,8 @@ export async function publishSfContribution(input: {
   if (input.output.state === "ready" && input.output.kind === "CritiqueReport" && (receipt.profileId !== "sf_reviewer" || !input.reviewTarget || input.output.payload.targetRunId !== input.reviewTarget.targetRunId ||
       input.output.payload.targetOutputDigest !== input.reviewTarget.targetOutputDigest || input.output.payload.reviewerRunId !== receipt.runId ||
       input.output.payload.reviewerSessionId !== receipt.nativeSessionId)) return { status: "failed", reason: "review-target-mismatch" } as const
-  // Revalidation is asynchronous and receives the original envelope. Keep the
-  // caller's complete command pinned even if a callback reseals a changed output.
-  const host = input.host
-  const runRef = input.runRef
+  // Pin the complete command before the first host callback. Re-sealing an
+  // altered envelope cannot replace the receipt or independent review target.
   const command = () => ({ runRef: input.runRef, output: input.output, skillReceipt: input.skillReceipt, reviewTarget: input.reviewTarget })
   const commandDigest = digestSfValue(command())
   const unchanged = () => input.host === host && matchesDigest(command(), commandDigest)
@@ -121,16 +120,14 @@ export async function publishSfContribution(input: {
   const publication = Object.freeze({ outputRef: input.output.id, outputDigest: digestSfValue(input.output) })
   let staleObservation: SfStaleRunObservation | undefined
   const retainStale = async (reason: string) => {
-    if (!unchanged()) return changed
     const preserved = await host.withRunContext(runRef, (context) => unchanged()
       ? host.preserveStale(runRef, reason, input.output, context) : Promise.resolve(changed))
-    if (!unchanged()) return changed
-    if (preserved.status === "ok" || !host.withLifecycleContext || !staleObservation) return preserved
-    // Reopen current lifecycle authority only to reconcile the exact observed
-    // run/publication. Neither candidate content nor capture crosses this boundary.
-    const settled = await host.withLifecycleContext(runRef, (context) => unchanged()
-      ? host.markStale(runRef, reason, context, staleObservation) : Promise.resolve(changed))
-    return unchanged() ? settled : changed
+    if (preserved.status === "ok" || !host.withLifecycleContext || !staleObservation) return unchanged() ? preserved : changed
+    // A stale source can close the old execution scope. Fresh lifecycle authority
+    // may settle metadata only; no output or capture crosses this boundary. Its
+    // original observation remains pinned even if the caller's command changed.
+    const settled = await host.withLifecycleContext(runRef, (context) => host.markStale(runRef, reason, context, staleObservation))
+    return settled.status === "ok" && !unchanged() ? changed : settled
   }
   const authorized = await host.withRunContext(runRef, async (context) => {
     if (!unchanged()) return changed
@@ -138,6 +135,7 @@ export async function publishSfContribution(input: {
       const observed = await host.readRun(runRef, context)
       if (!unchanged()) return changed
       if (observed.status !== "ok") return observed
+      if (!matchesDigest(input.output, publication.outputDigest)) return { status: "failed", reason: "contribution-changed-during-authorization" } as const
       if (observed.value.runRef !== runRef || observed.value.principalRef !== context.binding.principalRef ||
         observed.value.policyVersion !== context.binding.policyVersion || observed.value.accessRevision !== context.binding.accessRevision ||
         !matchesSfRunOutput(observed.value, input.output)) return { status: "denied", reason: "stale-observation-unavailable" } as const
@@ -155,24 +153,23 @@ export async function publishSfContribution(input: {
       skillReceipts: [input.skillReceipt],
       reviewTarget: input.reviewTarget,
     })
-    return unchanged() ? checked : changed
+    // A real stale observation still permits metadata-only settlement of the
+    // original run. A changed command can never enter content preservation.
+    return checked.status === "stale" || unchanged() ? checked : changed
   })
-  if (!unchanged()) return changed
   if (authorized.status === "stale") {
     const stale = await retainStale(authorized.reason)
-    if (!unchanged()) return changed
     if (stale.status !== "ok") return stale
     return authorized
   }
+  if (!unchanged()) return changed
   if (authorized.status !== "ok") return authorized
   const written = await host.withRunContext(runRef, (context) => unchanged()
     ? host.result.write({ runRef, caseRef: input.output.caseRef, output: input.output }, context) : Promise.resolve(changed))
-  if (!unchanged()) return changed
-  if (written.status !== "stale") return written
-  // The result may have committed before its final source check. The store can
-  // retain only that same verified output, never replace a concurrent terminal state.
+  if (written.status !== "stale") return unchanged() ? written : changed
+  // write can detect a changed source either before committing or at its final egress check.
+  // Reopen authority and reconcile the durable state; the store fences any intervening change.
   const stale = await retainStale(written.reason)
-  if (!unchanged()) return changed
   return stale.status === "ok" ? written : stale
 }
 

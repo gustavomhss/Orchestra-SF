@@ -73,9 +73,10 @@ export async function withWp12NativeMissionHost<T>(options: {
   const admittedRequests = new WeakSet<Request>()
   const at = new Date().toISOString()
   const request = (body?: unknown, route = "/sucafina/planner?sf=analysis", method: "GET" | "POST" = "POST") => {
+    const multipart = method === "POST" && body instanceof FormData
     const value = new Request(new URL(route, origin), { method,
-      headers: { origin, "content-type": "application/json", "idempotency-key": randomUUID() },
-      ...(method === "GET" || body === undefined ? {} : { body: JSON.stringify(body) }) })
+      headers: { origin, ...(!multipart ? { "content-type": "application/json" } : {}), "idempotency-key": randomUUID() },
+      ...(method === "GET" || body === undefined ? {} : { body: multipart ? body : JSON.stringify(body) }) })
     admittedRequests.add(value)
     return value
   }

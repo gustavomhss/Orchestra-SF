@@ -6,10 +6,11 @@ import { readCaseAnalysisProjection } from "../../../product/interface/case-anal
 import { object } from "../../../runtime/contract.ts"
 import { executeWp12NativeMission, observeWp12UnavailableMission, readWp12NativeMissionAfterReload, withWp12NativeMissionHost } from "./native-mission-harness.ts"
 import type { Wp12CompletedNativeMission } from "./native-mission-harness.ts"
+import { assertWp12ChangedImportBaseRefused, assertWp12ImportCaseUnchanged, initializeWp12ImportPlanner, prepareWp12ImportCase, wp12InstalledImportAssets, WP12_IMPORT_PERIOD } from "./native-import-preparation.ts"
 
 test("Maestro frames two real case selections and its native contribution reopens with the selected evidence", async () => {
   const period = { start: "2027-01-01", end: "2027-12-31" }
-  const objective = "Enquadre a decisão destas fontes autorizadas. Use sf_case_read e sf_case_draft para produzir IntentFrame com objetivo, período, USD, critérios e sourceRefs retornados pela porta. Preserve analysisBasis domain e domainApplied false."
+  const objective = "Enquadre a decisão destas fontes autorizadas. Leia o contexto de suas referências no período selecionado com sf_context_get e use sf_case_read e sf_case_draft para produzir IntentFrame com objetivo, período, moeda, critérios e sourceRefs retornados pela porta. Preserve os limites e a base da análise, sem aplicar mudanças ao domínio."
   await withWp12NativeMissionHost({ label: "intent", operations: ["sf_case_draft", "sf_case_read", "sf_context_get", "sf_freshness_check"],
     initialize: async (persistence) => {
       await persistence.transaction("planner", async (snapshot) => {
@@ -43,7 +44,7 @@ test("Maestro frames two real case selections and its native contribution reopen
         const caseRef = { id: decision.value.id, incarnation: decision.value.incarnation, version: decision.value.version }
         const incoming = { request: { caseRef, objective, profileId: selected.profile.id, profileVersion: selected.profile.version,
           skillId: skill.id, skillVersion: skill.version, manifestDigest: selected.manifestDigest, outputSchemaVersion: "sf-contribution-v1",
-          requestedOperationScope: ["sf_case_read", "sf_case_draft"] },
+          requestedOperationScope: ["sf_context_get", "sf_case_read", "sf_case_draft"] },
           selection: { evidenceRefIds: decision.value.sourceRefs.map((source) => source.refId) } }
         // This host route admits analysis.prepare and stores the selected input.
         // The older WP01 prepare route uses a different case projection adapter.
@@ -92,7 +93,8 @@ test("Maestro frames two real case selections and its native contribution reopen
         if (restored.status !== "ok") throw new Error("The authorized intent selection could not be restored")
         expect(digestSfValue(restored.value)).toBe(digestSfValue(item.input))
         const witness = await executeWp12NativeMission(context, { request: item.incoming.request, skillInput: restored.value,
-          expectedKind: "IntentFrame", requiredTools: [{ operation: "sf_case_read" }, { operation: "sf_case_draft" }] })
+          expectedKind: "IntentFrame", requiredTools: [{ operation: "sf_context_get", handlerExport: "readSfBusinessContext" },
+            { operation: "sf_case_read" }, { operation: "sf_case_draft" }] })
         if (witness.output.kind !== "IntentFrame") throw new Error("Native Maestro returned a different output kind")
         expect(witness.output.payload.sourceRefs).toEqual(item.sourceRefs)
         expect(witness.output.evidenceRefs).toEqual(item.sourceRefs)
@@ -126,3 +128,82 @@ test("Maestro frames two real case selections and its native contribution reopen
     })
   })
 }, 420_000)
+
+test("Maestro frames a real admitted import selection and reopens its C04 source without applying it", async () => {
+  const assets = await wp12InstalledImportAssets("sf-enquadrar-decisao")
+  if (!assets) return
+  const objective = "Enquadre a decisão do arquivo selecionado. Leia o arquivo admitido com sf_import_preview usando importPreview, obtenha o contexto das referências selecionadas no período recebido com sf_context_get, consulte o caso com sf_case_read e produza IntentFrame por sf_case_draft. Preserve a base, a proveniência e as limitações das portas; não aplique a importação nem modifique o domínio."
+  await withWp12NativeMissionHost({ label: "intent-import", assets,
+    operations: ["sf_context_get", "sf_case_draft", "sf_case_read", "sf_import_preview"],
+    humanActions: ["analysis.prepare", "analysis.start", "analysis.read", "analysis.cancel", "imports.admit"],
+    initialize: initializeWp12ImportPlanner,
+  }, async ({ open }) => {
+    const completed = await open("initial", async (context) => {
+      const selected = context.services.selected.find((entry) => entry.profile.id === "sf_maestro")
+      const skill = selected?.skills.find((entry) => entry.id === "sf-enquadrar-decisao")
+      if (!selected || !skill || !context.services.analysisInputs || !context.services.productHttp)
+        throw new Error("The real Maestro import analysis services are missing")
+      const prepared = await prepareWp12ImportCase(context, objective)
+      const incoming = { request: { caseRef: prepared.caseRef, objective, profileId: selected.profile.id, profileVersion: selected.profile.version,
+        skillId: skill.id, skillVersion: skill.version, manifestDigest: selected.manifestDigest, outputSchemaVersion: "sf-contribution-v1",
+        requestedOperationScope: ["sf_context_get", "sf_case_read", "sf_case_draft", "sf_import_preview"] },
+        selection: { caseRef: prepared.caseRef, previewRef: prepared.previewRef, importRequest: prepared.importRequest, intentText: objective } }
+      const response = await context.services.productHttp(context.request({ action: "prepare", input: incoming }, "/sucafina/planner?sf=workbench-analysis"), "planner")
+      if (!response) throw new Error("The real Maestro import input route is missing")
+      const body = object(await response.json())
+      expect(response.status).toBe(200)
+      expect(body.status).toBe("ok")
+      const decoded = decodeSfSkillInput("DecisionIntentInput", body.value)
+      if (!decoded.ok) throw new Error("The real import intent producer failed the DecisionIntentInput contract")
+      expect(decoded.value.case).toEqual(prepared.caseRef)
+      expect(decoded.value.intentText).toBe(objective)
+      expect(decoded.value.importPreview).toEqual(prepared.importRequest)
+      expect(decoded.value.context.period).toEqual(WP12_IMPORT_PERIOD)
+      expect(decoded.value.context.currency).toBe("USD")
+      expect(decoded.value.context.sourceRefs).toEqual(prepared.consumer.manifest.baseIdentity)
+      expect(decoded.value.selectedSourceRefs).toEqual([prepared.sourceRef])
+      const changed = { ...incoming, selection: { ...incoming.selection, importRequest: { ...prepared.importRequest, options: { headerRow: 2 } } } }
+      const refused = await context.human("analysis.prepare", changed, (call) => context.services.analysisInputs!.prepare(call, changed))
+      expect(refused.status).not.toBe("ok")
+      const restored = await context.human("analysis.prepare", incoming, (call) => context.services.analysisInputs!.prepare(call, incoming))
+      if (restored.status !== "ok") throw new Error("The authorized Maestro import selection could not be restored")
+      expect(digestSfValue(restored.value)).toBe(digestSfValue(decoded.value))
+      await assertWp12ImportCaseUnchanged(context, prepared)
+      console.log("SF_WP12_NATIVE_INTENT_IMPORT_INPUT:" + JSON.stringify({ scope: "real-C04-preview-and-authorized-intent-selection",
+        githubSha: process.env.GITHUB_SHA ?? null, caseRef: prepared.caseRef, previewRef: prepared.previewRef,
+        inputDigest: digestSfValue(decoded.value), changedOptionsStatus: refused.status,
+        domainApplied: false, inferenceExecuted: false, gnativeAccepted: false }))
+      if (!context.models.length) {
+        observeWp12UnavailableMission(context, { request: incoming.request, skillInput: restored.value })
+        return { prepared, witness: undefined }
+      }
+      expectSpawn(import.meta.path)
+      const witness = await executeWp12NativeMission(context, { request: incoming.request, skillInput: restored.value,
+        expectedKind: "IntentFrame", requiredTools: [{ operation: "sf_context_get", handlerExport: "readSfBusinessContext" },
+          { operation: "sf_case_read" }, { operation: "sf_case_draft" }, { operation: "sf_import_preview", handlerExport: "previewImport" }] })
+      if (witness.output.kind !== "IntentFrame") throw new Error("The Maestro import mission changed output kind")
+      expect(witness.output.payload.analysisBasis).toBe("import-preview")
+      expect(witness.output.payload.importPreviewRef).toBe(prepared.previewRef)
+      expect(witness.output.payload.domainApplied).toBe(false)
+      expect(witness.output.payload.sourceRefs).toEqual([prepared.sourceRef])
+      expect(witness.output.evidenceRefs).toEqual([prepared.sourceRef])
+      expect(witness.output.payload.horizon).toEqual(WP12_IMPORT_PERIOD)
+      expect(witness.output.payload.currency).toBe("USD")
+      await assertWp12ImportCaseUnchanged(context, prepared)
+      return { prepared, witness }
+    })
+    await open("reopened", async (context) => {
+      await assertWp12ImportCaseUnchanged(context, completed.prepared)
+      console.log("SF_WP12_NATIVE_INTENT_IMPORT_CONSUMER:" + JSON.stringify({ scope: "reopened-real-C04-reference-detail-and-case",
+        githubSha: process.env.GITHUB_SHA ?? null, caseRef: completed.prepared.caseRef, previewRef: completed.prepared.previewRef,
+        previewDigest: completed.prepared.consumer.digest, domainApplied: false, inferenceExecuted: !!completed.witness, gnativeAccepted: false }))
+      if (completed.witness) {
+        const consumed = await readWp12NativeMissionAfterReload(context, completed.witness)
+        if (consumed.output.kind !== "IntentFrame") throw new Error("The reopened Maestro import contribution changed kind")
+        expect(consumed.output.payload.analysisBasis).toBe("import-preview")
+        expect(consumed.output.payload.importPreviewRef).toBe(completed.prepared.previewRef)
+      }
+      await assertWp12ChangedImportBaseRefused(context, completed.prepared, completed.witness?.runRef)
+    })
+  })
+}, 300_000)

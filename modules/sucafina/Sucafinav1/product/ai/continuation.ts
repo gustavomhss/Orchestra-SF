@@ -24,7 +24,8 @@ export function createSfAnalysisContinuation(input: {
     const command = () => ({ request, skillInput, selection, kind: freshCall.kind, binding: freshCall.binding })
     const commandDigest = digestSafely(command())
     const lease = freshCall.lease
-    const commandUnchanged = () => freshCall.lease === lease && matchesDigest(command(), commandDigest)
+    const binding = freshCall.binding
+    const commandUnchanged = () => freshCall.binding === binding && freshCall.lease === lease && matchesDigest(command(), commandDigest)
     if (!commandDigest) return { status: "denied", reason: "invalid-continuation-input" }
     if (freshCall.kind !== "ui" || !selection.priorRunRef.trim() || !selection.responseRef.trim() || (!Number.isSafeInteger(selection.expectedPriorVersion) || selection.expectedPriorVersion < 1) || (!Number.isSafeInteger(request.caseRef.version) || request.caseRef.version < 1) || !await input.revalidate(freshCall)) return { status: "denied", reason: "fresh-human-authority-required" }
     if (!commandUnchanged()) return { status: "denied", reason: "continuation-input-mutated" }

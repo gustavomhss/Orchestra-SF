@@ -1,0 +1,47 @@
+{
+  "status": "frozen-for-root-publication",
+  "baseCommit": "ede812eaf2644cde161f2360b2e4762d9c942146",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-bi.test.ts",
+      "blob": "09485fec7126df97bc8947a3f81e744ff088f7ba",
+      "sha256": "f6cb829c7284d4a32f3ddce43aafed385e53e1be39c7ee98ced5c269e6cea978",
+      "bytes": 15083,
+      "baseBlob": "927d24805e18ae16149449d9f4ac4e8ef6816c2e"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-executive.test.ts",
+      "blob": "ddf29abc39c40ffe1c680b9acfb7ebd50e1664cf",
+      "sha256": "4b53da42b0b88d8021d53952b8e150b84e5ab5ab65356b276ced4b3094fb1d66",
+      "bytes": 28096,
+      "baseBlob": "ee89ba17f024c7cfe886df767271dc4418f9d3b8"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/astra-wp12-normative-bi-executive.json",
+      "blob": "18ebe8e3a638b23a88aea06b235a544747307b49",
+      "sha256": "9d4214443736d5273c3331ec7a9c02ddd7f22aeb34a44bafd3cc080f642204cc",
+      "bytes": 14905
+    }
+  ],
+  "newImports": [],
+  "newHelpers": [],
+  "tests": [
+    "./Sucafinav1/test/product/wp12/native-execution-bi.test.ts",
+    "./Sucafinav1/test/product/wp12/native-execution-executive.test.ts"
+  ],
+  "withinAlreadyProposedFifteenTargets": true,
+  "productExecuted": false,
+  "typecheckExecuted": false,
+  "ciDispatched": false,
+  "am02Correction": {
+    "biRoute": {
+      "profileId": "sf_finance",
+      "skillId": "sf-produzir-bi-contextual",
+      "operation": "sf_bi_view"
+    },
+    "executiveExactRoutesReported": true,
+    "meetingNotCountedAsExecutive": true,
+    "publicReviewIdentityNotInjectedIntoObjective": true
+  },
+  "staticSyntaxValidation": "node stripTypeScriptTypes + node --check passed for both files; no product execution"
+}

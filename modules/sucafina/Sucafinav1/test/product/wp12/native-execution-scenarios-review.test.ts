@@ -2,6 +2,7 @@ import { expect, test } from "bun:test"
 import { expectSpawn } from "../../../../../../packages/core/test/fixture/omni-expect.ts"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import { decodeSfSkillInput } from "../../../product/contracts/schema-admission.ts"
+import { encodeCaseRef } from "../../../product/decisions/case-port.ts"
 import { readCaseAnalysisProjection } from "../../../product/interface/case-analysis-input.ts"
 import { object } from "../../../runtime/contract.ts"
 import { executeWp12NativeMission, observeWp12UnavailableMission, readWp12NativeMissionAfterReload, withWp12NativeMissionHost } from "./native-mission-harness.ts"
@@ -10,7 +11,7 @@ import { initializeWp12ScenarioSources, prepareWp12ScenarioCase, WP12_SCENARIO_H
 
 test("native Finance preserves pending versus covered scenario costs and a fresh Reviewer critiques its real author", async () => {
   await withWp12NativeMissionHost({ label: "scenarios-review", initialize: initializeWp12ScenarioSources,
-    operations: [...WP12_SCENARIO_OPERATIONS, "sf_evidence_get"], humanActions: WP12_SCENARIO_HUMAN_ACTIONS }, async ({ open }) => {
+    operations: [...WP12_SCENARIO_OPERATIONS, "sf_evidence_get", "sf_alternative_draft"], humanActions: [...WP12_SCENARIO_HUMAN_ACTIONS, "decisions.select-portfolio"] }, async ({ open }) => {
     const completed = await open("initial", async (context) => {
       const finance = context.services.selected.find((entry) => entry.profile.id === "sf_finance")
       const financeSkill = finance?.skills.find((entry) => entry.id === "sf-comparar-cenarios")
@@ -23,10 +24,13 @@ test("native Finance preserves pending versus covered scenario costs and a fresh
       for (const variant of ["pending", "complete"] as const) {
         const alternative = decision[variant]
         const resultRefs = [decision.resultRefs.baseline, decision.resultRefs[variant]]
-        const objective = `Compare somente as duas alternativas selecionadas, USD, ${WP12_SCENARIO_PERIOD.start} a ${WP12_SCENARIO_PERIOD.end}. Use sf_case_read, sf_scenario_simulate para as bases ${decision.baseline.scenario.baseRef} e ${alternative.scenario.baseRef} com operations e assumptions vazios, e sf_scenario_compare para os resultados persistidos ${JSON.stringify(resultRefs)} com criteria vazio. Produza ScenarioComparison idêntico ao resultado da comparação real, inclusive costCoverageRefs, diferença e condições; evidenceRefs deve conter as fontes distintas dessas duas alternativas.`
+        const alternativeRequest = { caseRef: encodeCaseRef(decision.caseRef), proposal: { title: alternative.title,
+          description: "Prepare the explicitly selected existing alternative for review, without applying a change or filling absent costs.",
+          sourceRefs: alternative.result.sourceRefs }, sourceRefs: alternative.result.sourceRefs }
+        const objective = `Compare somente as duas alternativas selecionadas, USD, ${WP12_SCENARIO_PERIOD.start} a ${WP12_SCENARIO_PERIOD.end}. Use sf_case_read, sf_scenario_simulate para as bases ${decision.baseline.scenario.baseRef} e ${alternative.scenario.baseRef} com operations e assumptions vazios, e sf_scenario_compare para os resultados persistidos ${JSON.stringify(resultRefs)} com criteria vazio. Prepare também a alternativa escolhida pelo humano com sf_alternative_draft e este pedido: ${JSON.stringify(alternativeRequest)}. Produza ScenarioComparison idêntico ao resultado da comparação real, inclusive costCoverageRefs, diferença e condições; evidenceRefs deve conter as fontes distintas dessas duas alternativas.`
         const incoming = { request: { caseRef: decision.caseRef, objective, profileId: finance.profile.id, profileVersion: finance.profile.version,
           skillId: financeSkill.id, skillVersion: financeSkill.version, manifestDigest: finance.manifestDigest, outputSchemaVersion: "sf-contribution-v1",
-          requestedOperationScope: ["sf_case_read", "sf_scenario_simulate", "sf_scenario_compare"] },
+          requestedOperationScope: ["sf_case_read", "sf_scenario_simulate", "sf_scenario_compare", "sf_alternative_draft"] },
           selection: { caseRef: decision.caseRef, alternatives: [decision.baseline, alternative].map((item) => ({ id: item.id, version: item.version })) } }
         const response = await context.services.productHttp(context.request({ action: "prepare", input: incoming }, "/sucafina/planner?sf=workbench-analysis"), "planner")
         if (!response) throw new Error("The real scenario preparation route is missing")
@@ -38,7 +42,7 @@ test("native Finance preserves pending versus covered scenario costs and a fresh
         expect(decoded.value.horizon).toEqual(WP12_SCENARIO_PERIOD)
         expect(decoded.value.costCoverageBases).toEqual(decision.case.costCoverageBases)
         expect(decoded.value.alternatives.map((item) => item.result)).toEqual([decision.baseline.result, alternative.result])
-        prepared.push({ variant, incoming, input: decoded.value, resultRefs })
+        prepared.push({ variant, incoming, input: decoded.value, resultRefs, alternativeRequest })
         console.log("SF_WP12_NATIVE_SCENARIO_INPUT:" + JSON.stringify({ scope: "real-host-http-input-producer", githubSha: process.env.GITHUB_SHA ?? null,
           caseRef: decision.caseRef, variant, inputDigest: digestSfValue(decoded.value), resultRefs, inferenceExecuted: false }))
       }
@@ -62,11 +66,25 @@ test("native Finance preserves pending versus covered scenario costs and a fresh
       }
       expectSpawn(import.meta.path)
       const witnesses: Wp12CompletedNativeMission[] = []
+      let selectionVersion = 0
       for (const item of prepared) {
+        // The native draft operation consumes the real human comparison selection
+        // captured by analysis.start, not a caller-created private capture.
+        const selection = { caseRef: decision.caseRef, baselineAlternativeId: decision.baseline.id,
+          alternativeId: decision[item.variant].id, criteria: [], expectedVersion: selectionVersion }
+        const selectedResponse = await context.services.productHttp(context.request(selection, "/sucafina/planner?sf=decision-select-portfolio"), "planner")
+        if (!selectedResponse) throw new Error("The real human comparison-selection route is missing")
+        const selectedBody = object(await selectedResponse.json()), selectedValue = object(selectedBody.value)
+        if (selectedResponse.status !== 200 || selectedBody.status !== "ok" || typeof selectedValue.version !== "number")
+          throw new Error(`The real comparison selection was refused: ${String(selectedBody.reason)}`)
+        expect(selectedValue.baselineAlternativeId).toBe(selection.baselineAlternativeId)
+        expect(selectedValue.alternativeId).toBe(selection.alternativeId)
+        expect(selectedValue.version).toBe(selectionVersion + 1)
+        selectionVersion = selectedValue.version
         const restored = await context.human("analysis.prepare", item.incoming, (call) => context.services.analysisInputs!.prepare(call, item.incoming))
         if (restored.status !== "ok") throw new Error("The authorized scenario selection could not be restored")
         const witness = await executeWp12NativeMission(context, { request: item.incoming.request, skillInput: restored.value,
-          expectedKind: "ScenarioComparison", requiredTools: [{ operation: "sf_case_read" }, { operation: "sf_scenario_simulate" }, { operation: "sf_scenario_compare" }] })
+          expectedKind: "ScenarioComparison", requiredTools: ["sf_case_read", "sf_scenario_simulate", "sf_scenario_compare", "sf_alternative_draft"].map((operation) => ({ operation })) })
         if (witness.output.kind !== "ScenarioComparison") throw new Error("Native Finance returned a different kind")
         expect(witness.output.payload.baselineResultRef).toBe(item.resultRefs[0])
         expect(witness.output.payload.alternativeResultRef).toBe(item.resultRefs[1])
@@ -80,9 +98,9 @@ test("native Finance preserves pending versus covered scenario costs and a fresh
       const author = witnesses[0]!
       if (author.output.kind !== "ScenarioComparison") throw new Error("Reviewer author must be the persisted scenario comparison")
       const incoming = { request: { caseRef: decision.caseRef,
-        objective: `Conteste a comparação autoral sem alterar nem aprovar a decisão. Use sf_case_read e sf_scenario_compare nos resultados ${JSON.stringify(first.resultRefs)} com criteria vazio. Entregue CritiqueReport com objeções e condições materiais descobertas nas fontes e na cobertura autorizadas. O host atribui targetRunId/reviewerRunId; não forneça esses campos no payload do modelo.`,
+        objective: `Conteste a comparação autoral sem alterar nem aprovar a decisão. Use sf_case_read, resolva authorizedEvidenceRefs com sf_evidence_get e reavalie com sf_scenario_simulate exatamente os cenários publicados das duas alternativas selecionadas. Use sf_scenario_compare nos resultados ${JSON.stringify(first.resultRefs)} com criteria vazio. Entregue CritiqueReport com objeções e condições materiais descobertas nas fontes e na cobertura autorizadas. O host atribui targetRunId/reviewerRunId; não forneça esses campos no payload do modelo.`,
         profileId: reviewer.profile.id, profileVersion: reviewer.profile.version, skillId: reviewSkill.id, skillVersion: reviewSkill.version,
-        manifestDigest: reviewer.manifestDigest, outputSchemaVersion: "sf-contribution-v1", requestedOperationScope: ["sf_case_read", "sf_scenario_compare"] },
+        manifestDigest: reviewer.manifestDigest, outputSchemaVersion: "sf-contribution-v1", requestedOperationScope: ["sf_case_read", "sf_evidence_get", "sf_scenario_simulate", "sf_scenario_compare"] },
         selection: { authorRunRef: author.runRef, outputDigest: author.output.outputDigest, choiceRefs: [],
           alternativeRefs: [decision.baseline.id, decision.pending.id], evidenceRefIds: author.output.evidenceRefs.map((ref) => ref.refId) } }
       const reviewResponse = await context.services.productHttp(context.request({ action: "prepare", input: incoming }, "/sucafina/planner?sf=workbench-analysis"), "planner")
@@ -95,7 +113,7 @@ test("native Finance preserves pending versus covered scenario costs and a fresh
       expect(reviewInput.value.comparison).toEqual(author.output.payload)
       expect(reviewInput.value.authorizedEvidenceRefs).toEqual(author.output.evidenceRefs)
       const critique = await executeWp12NativeMission(context, { request: incoming.request, skillInput: reviewInput.value,
-        expectedKind: "CritiqueReport", requiredTools: [{ operation: "sf_case_read" }, { operation: "sf_scenario_compare" }] })
+        expectedKind: "CritiqueReport", requiredTools: ["sf_case_read", "sf_evidence_get", "sf_scenario_simulate", "sf_scenario_compare"].map((operation) => ({ operation })) })
       if (critique.output.kind !== "CritiqueReport") throw new Error("Native Reviewer returned a different kind")
       expect(critique.receipt.profileId).toBe("sf_reviewer")
       expect(critique.receipt.nativeSessionId).not.toBe(author.receipt.nativeSessionId)

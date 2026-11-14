@@ -34,14 +34,14 @@ export async function chooseWp12Alternative(context: Wp12NativeMissionContext, i
   const issued = await post("decision-sensitivity-units", { caseRef: input.caseRef, scenarioRef: input.alternativeResultRef,
     baselineRef: input.baselineResultRef, parameterRef: input.parameterRef })
   const fields = object(issued.units)
-  const refs = decodeSfOperationInput("sf_context_get", { refs: fields.sourceRefs })
+  const refs = decodeSfOperationInput("sf_freshness_check", { evidenceRefs: fields.sourceRefs })
   if (!refs.ok || fields.baselineRef !== input.baselineResultRef || fields.parameterRef !== input.parameterRef ||
     typeof fields.parameterUnit !== "string" || typeof fields.resultUnit !== "string" || typeof fields.engineVersion !== "string" ||
     !fields.parameterUnit || !fields.resultUnit || !fields.engineVersion || fields.resultUnit !== current.value.case.currency ||
-    !refs.value.refs.length || digestSfValue(issued.caseRef) !== digestSfValue(input.caseRef))
+    !refs.value.evidenceRefs.length || digestSfValue(issued.caseRef) !== digestSfValue(input.caseRef))
     throw new Error("The host did not issue current scenario units and real source references")
   const units = { baselineRef: input.baselineResultRef, parameterRef: input.parameterRef, parameterUnit: fields.parameterUnit,
-    resultUnit: fields.resultUnit, engineVersion: fields.engineVersion, sourceRefs: refs.value.refs }
+    resultUnit: fields.resultUnit, engineVersion: fields.engineVersion, sourceRefs: refs.value.evidenceRefs }
   expect(digestSfValue(units)).toBe(digestSfValue(issued.units))
   const rule = await post("decision-criteria", { caseRef: input.caseRef, criterionId: input.criterionId,
     metricRef: "planner:known-subtotal-difference", operator: "lte", value: input.threshold, unit: units.resultUnit,

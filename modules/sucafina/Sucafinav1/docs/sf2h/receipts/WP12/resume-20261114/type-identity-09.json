@@ -1,0 +1,37 @@
+{
+  "choicePreparation": {
+    "schema": "wp12-own-code-increment-v1",
+    "reason": "Use the canonical EvidenceRef array decoder for issued sensitivity units; BusinessContextRequest does not contain refs and expects string selectors plus purpose/period.",
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-choice-preparation.ts",
+        "before_blob": "fd73921d2e06695945a8d31853d7307fc69c6db1",
+        "blob": "206212ffb8afd5ce1f0da70e1e4111b9482a3eb2",
+        "sha256": "b022cab648196c3e818b80573844960d254748b13d5de1fe87a6d7241b6a4766"
+      }
+    ],
+    "validation": {
+      "syntax": "Node --check only; source imports were not evaluated",
+      "product_tests": "NOT_RUN",
+      "typecheck": "NOT_RUN",
+      "ci": "NOT_DISPATCHED"
+    },
+    "behavior": "The actual issued sourceRefs are decoded through sf_freshness_check.evidenceRefs; digest equality against the complete issued units and every existing assertion remain intact. No operation invocation or receipt is claimed by this shape check."
+  },
+  "reevaluation": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-reevaluation.test.ts",
+    "baseProduct": "ede812eaf2644cde161f2360b2e4762d9c942146",
+    "observedRun": 43595299404,
+    "observedJob": 132448394143,
+    "observedDiagnostic": "TS2769 at line 79: expected ChangeImpact versus raw HTTP Record<string, unknown>",
+    "beforeBlob": "a1eeb9278ad966a4d5bdf5b83d4b2b8bcf45d5b1",
+    "blob": "ee1da7e0c0912a63dcc881a6a57e10456620b9d8",
+    "sha256": "b5c52228d7ff4e3d5f5abf84d9a7b5c34d9794b5dd4fd09e7b8d5d3faeb400ac",
+    "typeOnly": true,
+    "emittedJavaScriptIdentical": true,
+    "emittedJavaScriptSHA256": "bf9a0ee22444403794fa4d00ac3fc510a883777b8dea0a58a2daef7f562b5f87",
+    "productExecuted": false,
+    "typecheckExecutedLocally": false,
+    "rationale": "Use expect<unknown> for comparing the decoded ChangeImpact to the raw HTTP object. The exact deep-equality assertion and all runtime logic are unchanged."
+  }
+}

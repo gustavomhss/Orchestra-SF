@@ -10,7 +10,7 @@ import { executeWp12NativeMission, observeWp12UnavailableMission, readWp12Native
 const period = { start: "2027-01-01", end: "2027-12-31" }
 // Keep the objective unchanged between variants. Only the domain source data
 // changes; no expected number, missing field or answer is supplied to the model.
-const objective = "Explique a comparação entre os forecasts selecionados. Invoque sf_forecast_compare e preserve o FinancialAnalysis canônico, suas fontes e limitações. Não invente causa, conversão, cobertura ou valor ausente."
+const objective = "Explique a comparação entre os forecasts selecionados. Leia as referências selecionadas com sf_source_get e invoque sf_forecast_compare. Preserve o FinancialAnalysis canônico, suas fontes e limitações. Não invente causa, conversão, cobertura ou valor ausente."
 const annual = (first: number | null = 50_000) => [first, ...Array<number>(10).fill(50_000), 40_000]
 type Variant = { id: string; base: readonly (number | null)[]; candidate: readonly (number | null)[]; currency: string;
   expectedDifference: number | null; missing?: "missing-fx" | "missing" }
@@ -99,7 +99,7 @@ for (const variant of variants) test(`real host Finance prepares ${variant.id} a
       const caseRef = { id: decision.value.id, incarnation: decision.value.incarnation, version: decision.value.version }
       const incoming = { request: { caseRef, objective, profileId: selected.profile.id, profileVersion: selected.profile.version,
         skillId: skill.id, skillVersion: skill.version, manifestDigest: selected.manifestDigest,
-        outputSchemaVersion: "sf-contribution-v1", requestedOperationScope: ["sf_forecast_compare"] },
+        outputSchemaVersion: "sf-contribution-v1", requestedOperationScope: ["sf_forecast_compare", "sf_source_get"] },
         selection: { caseRef, baseRef: decision.value.sourceRefs[0]!.refId, candidateRef: decision.value.sourceRefs[1]!.refId, period, currency: "USD" } }
       // This is the mounted host route used by the complete skill registry. It
       // authenticates this Request and admits analysis.prepare itself.
@@ -124,7 +124,8 @@ for (const variant of variants) test(`real host Finance prepares ${variant.id} a
       }
       expectSpawn(import.meta.path)
       const completed = await executeWp12NativeMission(context, { request: incoming.request, skillInput: decoded.value,
-        expectedKind: "FinancialAnalysis", requiredTools: [{ operation: "sf_forecast_compare", handlerExport: "compareForecast" }] })
+        expectedKind: "FinancialAnalysis", requiredTools: [{ operation: "sf_forecast_compare", handlerExport: "compareForecast" },
+          { operation: "sf_source_get", handlerExport: "resolveSfSource" }] })
       if (completed.output.kind !== "FinancialAnalysis") throw new Error("Native forecast output kind changed")
       verifyInput({ ...decoded.value, forecastComparison: completed.output.payload }, variant)
       expect(await domainDigest(context)).toBe(before)

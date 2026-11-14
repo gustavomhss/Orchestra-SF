@@ -15,6 +15,11 @@ type ReviewSnapshot = ReturnType<typeof reviewSnapshot>
 const period = { start: "2027-01-01", end: "2027-12-31" }
 const operations = ["sf_case_draft", "sf_case_read", "sf_context_get", "sf_source_get", "sf_forecast_compare",
   "sf_review_prepare", "sf_report_prepare", "sf_artifact_get", "sf_work_list"]
+const executiveRequiredOperations = ["sf_review_prepare", "sf_case_read", "sf_source_get", "sf_routine_catalog",
+  "sf_routine_prepare", "sf_routine_run", "sf_routine_status", "sf_routine_result"]
+const executiveCallRouteOperations = ["sf_source_get", "sf_work_list", "sf_review_prepare", "sf_report_prepare", "sf_artifact_get",
+  "sf_routine_catalog", "sf_routine_prepare", "sf_routine_run", "sf_routine_status", "sf_routine_result"]
+const meetingRequiredOperations = ["sf_review_prepare", "sf_report_prepare", "sf_artifact_get"]
 const objective = "Prepare the factual executive review and complete meeting material for the selected forecasts. Keep observed gaps explicit, preserve each source and period, and do not invent a routine result or a business decision."
 
 test("real executive and meeting inputs use a preserved WP07 review and complete downloadable material, with native consumers when installed", async () => {
@@ -122,6 +127,8 @@ test("real executive and meeting inputs use a preserved WP07 review and complete
         githubSha: process.env.GITHUB_SHA ?? null, caseRef, selectionRef, reviewRef: review.id, reviewDigest: review.digest,
         sectionRefs, capturedValueCount: review.valueIds.length, executiveInputDigest: digestSfValue(executiveInput.value),
         meetingInputDigest: digestSfValue(meetingInput.value), reports, c07ResultsObserved: false, c07AdmissionObserved: false,
+        executiveReportRoute: { publicReviewRef: review.id, inputCarriesPreservedReviewRef: Object.hasOwn(executiveInput.value, "preservedReviewRef"),
+          bindingStatus: "preserved-review-not-selected-by-executive-input", nativeCallObserved: false },
         c09DecisionResultsLinkedToMaterial: 0, inferenceExecuted: false, nativeContributionRef: null, gnativeAccepted: false }))
 
       const completed: Wp12CompletedNativeMission[] = []
@@ -138,7 +145,7 @@ test("real executive and meeting inputs use a preserved WP07 review and complete
         expectSpawn(import.meta.path)
         const witness = await executeWp12NativeMission(context, { request: task.incoming.request, skillInput: restored.body.value,
           expectedKind: task.kind, requiredTools: task.kind === "DecisionBrief"
-            ? [{ operation: "sf_case_read" }, { operation: "sf_review_prepare", handlerExport: "prepareReview" }]
+            ? [{ operation: "sf_case_read" }, { operation: "sf_source_get" }, { operation: "sf_review_prepare", handlerExport: "prepareReview" }]
             : [{ operation: "sf_report_prepare", handlerExport: "prepareReport" }, { operation: "sf_artifact_get", handlerExport: "readArtifact" }] })
         if (witness.output.kind === "DecisionBrief") {
           expect(witness.output.payload.caseRef).toBe(encodeCaseRef(caseRef))
@@ -296,10 +303,21 @@ async function consumeReviewContribution(context: Wp12NativeMissionContext, comp
     expect(value.results).toEqual([])
     expect(value.links).toEqual([])
   }
+  const requiredOperations = completed.output.kind === "DecisionBrief" ? executiveRequiredOperations : meetingRequiredOperations
+  const missingRequiredOperations = requiredOperations.filter((operation) => !completed.tools.some((tool) => tool.operation === operation))
+  const am02 = completed.receipt.skillId === "sf-preparar-revisao-executiva" ? {
+    profileId: completed.receipt.profileId, skillId: completed.receipt.skillId, requiredOperations: executiveCallRouteOperations,
+    observedOperations: [...new Set(completed.tools.map((tool) => tool.operation))],
+    missingOperations: executiveCallRouteOperations.filter((operation) => !completed.tools.some((tool) => tool.operation === operation)),
+    complete: completed.receipt.profileId === "sf_maestro" && executiveCallRouteOperations.every((operation) => completed.tools.some((tool) => tool.operation === operation)),
+  } : null
   console.log("SF_WP12_NATIVE_REVIEW_CONSUMER:" + JSON.stringify({ scope: "native-contribution-consumed-by-WP07",
     githubSha: process.env.GITHUB_SHA ?? null, skillId: completed.receipt.skillId, runRef: completed.runRef,
     outputRef: completed.output.id, outputDigest: completed.output.outputDigest, consumerRef: "createReviewHttp:review-contribution",
     observedAction: completed.output.kind === "MeetingMaterialProposal" ? "opened-preserved-review-and-downloaded-full-artifact" : "opened-durable-decision-brief",
+    requiredOperations, observedOperations: [...new Set(completed.tools.map((tool) => tool.operation))], missingRequiredOperations,
+    normativeSkillWitnessComplete: missingRequiredOperations.length === 0,
+    am02,
     c07ResultsObserved: false, independentGnativeReview: false }))
 }
 
