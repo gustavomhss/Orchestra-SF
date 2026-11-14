@@ -38,6 +38,9 @@ export function createSfProductAuthority(input: {
   providerGeneration: () => Promise<number | undefined>
   /** Composition-owned capability; never returned in browser or model services. */
   proposalCoverageWrites?: WeakSet<object>
+  signalRegistryWrites?: WeakSet<object>
+  caseSelectionWrites?: WeakSet<object>
+  threadHistoryWrites?: WeakSet<object>
   authorizeDocument: (request: Request, snapshot: Snapshot, assetId: string, principal: string, authority: SfStateAuthority) => Promise<{ incarnation: string } | undefined>
 }) {
   const grants = structuredClone(input.grants)
@@ -97,7 +100,7 @@ export function createSfProductAuthority(input: {
     return input.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: await principal(request, snapshot) }), { signal: request.signal })
   }
   const state = createSfProductState({
-    persistence: input.persistence, createId: input.createId, nativeEvidenceWrites, proposalCoverageWrites: input.proposalCoverageWrites,
+    persistence: input.persistence, createId: input.createId, nativeEvidenceWrites, proposalCoverageWrites: input.proposalCoverageWrites, signalRegistryWrites: input.signalRegistryWrites, caseSelectionWrites: input.caseSelectionWrites, threadHistoryWrites: input.threadHistoryWrites,
     authorize: async (request, snapshot, namespace, mode) => {
       const actor = await principal(request, snapshot)
       if (!actor || !actor.grant.namespaces.includes(namespace) || (mode === "write" && !actor.canWrite)) return undefined

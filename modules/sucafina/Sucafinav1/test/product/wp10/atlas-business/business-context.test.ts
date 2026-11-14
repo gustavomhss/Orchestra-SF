@@ -1,24 +1,28 @@
 import { expect, test } from "bun:test"
 import { createSfUiAuthority } from "../../../../product/integration/ui-authority.ts"
 import { digestSfEvidenceRef, sfEvidenceSourceMaps } from "../../../../product/contracts/canonical.ts"
-import type { BusinessContextService, BusinessEvidenceRef, BusinessEvidenceResolution } from "../../../../product/contracts/business-context.ts"
+import type { BusinessEvidenceRef, BusinessEvidenceResolution } from "../../../../product/contracts/business-context.ts"
 import { createSfBusinessContext } from "../../../../product/host-binding/business-context.ts"
 
-test("cyclic case event resolution fails closed and releases the guard", async () => {
+test("shared event dependencies resolve independently in sibling branches", async () => {
   const authority = createSfUiAuthority({ authorize: async () => ({ installationId: "i", projectId: "p", principalRef: "actor", policyVersion: "v1", accessRevision: "a1" }), commandIdentity: async () => "command", createId: () => "request", now: () => 0 })
   const admitted = await authority.admit(new Request("http://localhost"), "sf_evidence_get", "a".repeat(64))
   if (admitted.status !== "ok") throw new Error("UI admission failed")
-  const value: Extract<BusinessEvidenceRef, { kind: "case-event" }> = { schema: "sf-evidence-v1", kind: "case-event", refId: "r", installationId: "i", projectId: "p", refDigest: "", evidenceLevel: "decision", target: { caseId: "case", caseIncarnation: "inc", caseVersion: 1, eventId: "event", outputDigest: "d", evidenceRefs: [] } }
-  const ref = { ...value, refDigest: digestSfEvidenceRef(value) }
-  const context: BusinessContextService = createSfBusinessContext({
+  const event = (id: string, evidenceRefs: BusinessEvidenceRef[]) => {
+    const value: Extract<BusinessEvidenceRef, { kind: "case-event" }> = { schema: "sf-evidence-v1", kind: "case-event", refId: id, installationId: "i", projectId: "p", refDigest: "", evidenceLevel: "decision", target: { caseId: "case", caseIncarnation: "inc", caseVersion: 1, eventId: id, outputDigest: "d", evidenceRefs } }
+    return { ...value, refDigest: digestSfEvidenceRef(value) }
+  }
+  const leaf = event("leaf", [])
+  const root = event("root", [event("left", [leaf]), event("right", [leaf])])
+  const context = createSfBusinessContext({
     revalidate: (call) => call.kind === "ui" ? authority.revalidate(call) : Promise.resolve(false),
-    resolveSource: (source, call) => context.resolve(source, call),
+    resolveSource: async (ref) => ({ state: "fresh", ref, accessRevision: "a1", checkedAt: "2026-01-01" }),
     proveContinuity: async () => false,
     recall: async () => [],
     emitFromLedger: async () => ({ status: "unavailable", sourceEventId: "event", scanner: { name: "", version: "", status: "unavailable" } }),
   })
-  expect((await context.resolve(ref, admitted.value)).state).toBe("unavailable")
-  expect((await context.resolve(ref, admitted.value)).state).toBe("unavailable")
+  expect((await context.resolve(root, admitted.value)).state).toBe("fresh")
+  authority.finish(admitted.value)
 })
 
 test("historical evidence keeps its original identity and requires authorized historical content", async () => {

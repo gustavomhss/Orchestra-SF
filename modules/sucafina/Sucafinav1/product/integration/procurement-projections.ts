@@ -6,6 +6,8 @@ import type { Surface } from "../../src/identity.ts"
 import { procurementKeys } from "../../src/nav.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
 import { digestProcurementSource } from "../procurement/sources.ts"
+import { projectProcurementConfirmationFields } from "../procurement/confirmation-fields.ts"
+import { isSfPeriod } from "../contracts/validation.ts"
 
 const statuses = ["draft", "pr_pending", "pr_rejected", "sourcing", "src_pending", "src_rejected", "po_draft", "po_pending", "po_rejected", "po_approved", "po_issued", "cancelled"]
 
@@ -15,9 +17,17 @@ export function projectSfProcurementScope(surface: Surface, snapshot: Snapshot, 
   if (surface !== "procurement" || selector.roleMapDigest !== digestSfValue(roleMap(snapshot, "procurement")) || typeof selector.canWrite !== "boolean" || !Array.isArray(selector.roles) || !selector.roles.every((role): role is string => typeof role === "string") || !procurementKeys({ roles: selector.roles }).length) return undefined
   const actor: Actor = { id: scope.principalRef, roles: selector.roles, canWrite: selector.canWrite, assigned: [], domains: [] }
   const view = domain.view(snapshot, actor, { at: "1970-01-01T00:00:00Z", directory: [], id: () => "" })
+  if (selector.kind === "procurement-confirmation-v1" && scope.recordType === "procurement-request") {
+    if (!isSfPeriod(selector.period) || typeof selector.currency !== "string" || !/^[A-Z]{3}$/.test(selector.currency) || selector.currency !== text(object(view.data.formSettings).currency) || !Array.isArray(selector.fields) || !selector.fields.every((field): field is string => typeof field === "string") || digestSfValue(selector.fields) !== digestSfValue([...selector.fields].sort())) return undefined
+    const records = rows(view.data.requests).filter((record) => record.number === scope.recordId)
+    if (records.length !== 1) return undefined
+    const material = projectProcurementConfirmationFields(records[0]!, selector.fields, { currency: selector.currency, formSettings: view.data.formSettings })
+    return material ? { id: scope.recordId, ...material } : undefined
+  }
   if (selector.kind === "procurement-record-v1" && (scope.recordType === "procurement-request" || scope.recordType === "procurement-supplier")) {
     const fields = scope.recordType === "procurement-request" ? ["status", "holder", "stageEnteredAt", "ageDays", "baseAmount", "submittedAmount", "submittedCurrency", "submittedFxRate", "originalAmount", "originalCurrency", "fxRate", "fxSource", "monetaryState", "subject", "reason", "nextStep", "sourcing"] : ["number", "legalName", "status", "categories", "taxId"]
-    if (digestSfValue(selector.fields) !== digestSfValue(fields)) return undefined
+    const currentFields = scope.recordType === "procurement-request" ? [...fields.slice(0, 2), "approvalStage", ...fields.slice(2)] : fields
+    if (digestSfValue(selector.fields) !== digestSfValue(fields) && digestSfValue(selector.fields) !== digestSfValue(currentFields)) return undefined
     const records = rows(scope.recordType === "procurement-request" ? view.data.requests : view.data.suppliers).filter((record) => (scope.recordType === "procurement-request" ? record.number : record.id) === scope.recordId)
     if (records.length !== 1) return undefined
     return { id: scope.recordId, privateDependencyDigest: digestProcurementSource(records[0], view.data.formSettings, scope.recordType === "procurement-supplier" ? "supplier" : "request") }

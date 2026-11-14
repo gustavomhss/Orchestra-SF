@@ -12,29 +12,16 @@ import type { ScannerBinarySpec } from "@orchestra/atlas-boundary/native-memory"
 import type { DecisionCase } from "../contracts/decisions.ts"
 
 /** All source readers and memory operations are host-bound; references are selectors, not authority. */
-export function createSfBusinessContext(host: {
+function assembleSfBusinessContext(host: {
   revalidate: (call: TrustedDomainContext) => Promise<boolean>
-  resolveSource: (ref: BusinessEvidenceRef, call: TrustedDomainContext) => Promise<BusinessEvidenceResolution>
+  resolveSource: (ref: BusinessEvidenceRef, call: TrustedDomainContext, ancestors: ReadonlySet<string>) => Promise<BusinessEvidenceResolution>
   proveContinuity: (original: BusinessEvidenceRef, current: BusinessEvidenceRef, call: TrustedDomainContext) => Promise<boolean>
   recall: BusinessContextService["recall"]
   emitFromLedger: BusinessContextService["emitFromLedger"]
-}): BusinessContextService {
-  const activeEvents = new WeakMap<TrustedDomainContext, Set<string>>()
-  async function resolve(ref: BusinessEvidenceRef, call: TrustedDomainContext): Promise<BusinessEvidenceResolution> {
-    if (ref.kind !== "case-event") return resolveSource(ref, call)
-    const active = activeEvents.get(call) ?? new Set<string>()
-    if (active.has(ref.refDigest)) return { state: "unavailable", ref, accessRevision: call.binding.accessRevision, checkedAt: new Date().toISOString() }
-    activeEvents.set(call, active)
-    active.add(ref.refDigest)
-    try {
-      return await resolveSource(ref, call)
-    } finally {
-      active.delete(ref.refDigest)
-      if (!active.size) activeEvents.delete(call)
-    }
-  }
-  async function resolveSource(ref: BusinessEvidenceRef, call: TrustedDomainContext): Promise<BusinessEvidenceResolution> {
+}): { service: BusinessContextService; resolveAncestry: (ref: BusinessEvidenceRef, call: TrustedDomainContext, ancestors: ReadonlySet<string>) => Promise<BusinessEvidenceResolution> } {
+  async function resolveAncestry(ref: BusinessEvidenceRef, call: TrustedDomainContext, ancestors: ReadonlySet<string>): Promise<BusinessEvidenceResolution> {
     const unavailable = (): BusinessEvidenceResolution => ({ state: "unavailable", ref, accessRevision: call.binding.accessRevision, checkedAt: new Date().toISOString() })
+    if (ancestors.has(ref.refDigest) || ancestors.size >= 16) return unavailable()
     if (!(await host.revalidate(call))) return unavailable()
     if (ref.schema !== "sf-evidence-v1" || ref.installationId !== call.binding.installationId || ref.projectId !== call.binding.projectId) return { ...unavailable(), state: "invalid" }
     try {
@@ -42,7 +29,7 @@ export function createSfBusinessContext(host: {
     } catch {
       return { ...unavailable(), state: "invalid" }
     }
-    const result = await host.resolveSource(ref, call)
+    const result = await host.resolveSource(ref, call, ancestors)
     if (!(await host.revalidate(call)) || result.accessRevision !== call.binding.accessRevision || result.ref.refDigest !== ref.refDigest) return unavailable()
     try {
       sfEvidenceSourceMaps([result.ref, ...(result.currentRef ? [result.currentRef] : [])])
@@ -50,8 +37,10 @@ export function createSfBusinessContext(host: {
       return unavailable()
     }
     if (result.state === "fresh") {
-      if (ref.kind === "case-event") {
-        const dependencies = await Promise.all(ref.target.evidenceRefs.map((dependency) => resolve(dependency, call)))
+      if (ref.kind === "case-event" || ref.kind === "calculation") {
+        const children = ref.kind === "case-event" ? ref.target.evidenceRefs : ref.target.sourceRefs
+        const next = new Set([...ancestors, ref.refDigest])
+        const dependencies = await Promise.all(children.map((dependency) => resolveAncestry(dependency, call, next)))
         if (dependencies.some((dependency) => dependency.state !== "fresh" && dependency.state !== "historical") || !(await host.revalidate(call))) return unavailable()
       }
       return result
@@ -65,7 +54,8 @@ export function createSfBusinessContext(host: {
     return { state: result.state, ref, accessRevision: result.accessRevision, checkedAt: result.checkedAt }
   }
 
-  return {
+  const resolve = (ref: BusinessEvidenceRef, call: TrustedDomainContext) => resolveAncestry(ref, call, new Set())
+  const service: BusinessContextService = {
     resolve,
     context: async (request, call) => Promise.all(request.refs.map((ref) => resolve(ref, call))),
     async recall(request, call) {
@@ -98,6 +88,11 @@ export function createSfBusinessContext(host: {
       return receipt
     },
   }
+  return { service, resolveAncestry }
+}
+
+export function createSfBusinessContext(host: Parameters<typeof assembleSfBusinessContext>[0]): BusinessContextService {
+  return assembleSfBusinessContext(host).service
 }
 
 /** Textual IDs cannot carry historical authorization across replacement incarnations. */
@@ -125,10 +120,10 @@ export function createSfEvidenceRouter(input: {
   plannerProof?: ReturnType<typeof createSfSourceContinuityProof>
 }) {
   return {
-    resolveSource(ref: BusinessEvidenceRef, call: TrustedDomainContext): Promise<BusinessEvidenceResolution> {
+    resolveSource(ref: BusinessEvidenceRef, call: TrustedDomainContext, ancestors: ReadonlySet<string> = new Set()): Promise<BusinessEvidenceResolution> {
       if (ref.kind === "record" && ref.target.surface === "dashboard" && ref.target.recordType === "dashboard-page") return input.dashboard(ref, call)
       if (ref.kind === "record" && ref.target.surface === "dashboard" && input.dashboardRecord) return input.dashboardRecord(ref, call)
-      if (ref.kind === "case-event") return input.caseEvent(ref, call)
+      if (ref.kind === "case-event") return input.caseEvent(ref, call, ancestors)
       if (ref.kind === "record" && ref.target.surface === "procurement" && ["procurement-request", "procurement-supplier"].includes(ref.target.recordType)) return input.procurement(ref, call)
       if (ref.kind === "document" && input.document) return input.document(ref, call)
       if (ref.kind === "record" && ref.target.surface === "planner" && ref.target.recordType === "planner-version" && input.planner) return input.planner(ref, call)
@@ -167,8 +162,10 @@ export function createSfAtlasBusiness(input: {
 }) {
   const dashboard = createSfDashboardSourceAccess({ host: input.host, issue: input.dashboardIssue, dashboard: input.dashboard })
   const dashboardRecord = createSfDashboardRecordSourceAccess({ host: input.host, records: input.dashboardRecords })
-  const caseEvent = createSfCaseEventSourceAccess({ host: input.host, state: input.state, authorizeCase: input.authorizeCase, authorizeEvidence: async (refs, call) => {
-    const results = await context.context({ refs }, call)
+  let resolveAncestry: ReturnType<typeof assembleSfBusinessContext>["resolveAncestry"] | undefined
+  const caseEvent = createSfCaseEventSourceAccess({ host: input.host, state: input.state, authorizeCase: input.authorizeCase, authorizeEvidence: async (refs, call, ancestors) => {
+    if (!resolveAncestry) return false
+    const results = await Promise.all(refs.map((ref) => resolveAncestry!(ref, call, ancestors)))
     return results.length === refs.length && results.every((result, index) => (result.state === "fresh" || result.state === "historical") && digestSfValue(result.ref) === digestSfValue(refs[index])) && await input.host.revalidate(call)
   } })
   const procurement = createSfProcurementSourceAccess({ host: input.host, resolve: input.procurementResolve, procurement: input.procurement })
@@ -207,7 +204,7 @@ export function createSfAtlasBusiness(input: {
     documentProof: createSfSourceContinuityProof({ host: input.host, readOriginal, readCurrent: document }),
     plannerProof: createSfSourceContinuityProof({ host: input.host, readOriginal, readCurrent: planner }),
   })
-  const context = createSfBusinessContext({
+  const assembled = assembleSfBusinessContext({
     revalidate: input.host.revalidate, ...router,
     recall: async (request, call) => {
       const records = await Promise.all(request.caseRefs.map((ref) => memory.recall(ref, call)))
@@ -216,6 +213,8 @@ export function createSfAtlasBusiness(input: {
     },
     emitFromLedger: (ref, call) => memory.emitFromLedger(ref, call),
   })
+  const context = assembled.service
+  resolveAncestry = assembled.resolveAncestry
   const memory = createSfAtlasMemory({ state: input.state, cases: input.cases, host: input.host, evidence: context, proveContinuity: router.proveContinuity, scanner: createSfAtlasScanner({ scanners: input.scanner ? [input.scanner.spec] : [] }), scannerVersion: input.scanner?.version ?? "", now: input.now })
   const capabilities = createSfEvidenceCapabilities({ ...input.selections, context, memory, proveContinuity: router.proveContinuity, revalidate: input.host.revalidate, createReceipt: input.authority.receiptFor })
   return { context, memory, capabilities }

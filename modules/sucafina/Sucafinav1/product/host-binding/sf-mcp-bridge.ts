@@ -114,14 +114,16 @@ export const createSfBusinessMcpBridge: CreateSfBusinessMcpBridge = (input) => {
           return reject("unavailable", "private-mcp-response-mismatch")
         if (observed.result.receipt.kind === "native" && observed.result.receipt.callId !== context.toolCallID)
           return reject("unavailable", "private-mcp-receipt-mismatch")
+        if (observed.result.status === "ok" && input.onVerifiedCall && !input.onVerifiedCall(operation, structuredClone(payload), structuredClone(observed.result), lease.value))
+          return reject("unavailable", "private-call-capture-unavailable")
         return observed.result
       } catch {
         if (observed.providerConflict) return reject("provider-conflict", "provider-conflict")
         return reject("unavailable", "private-mcp-unavailable")
       } finally {
         input.registry.finish(lease.value)
-        await client.close()
-        await server.close()
+        await client.close().catch(() => undefined)
+        await server.close().catch(() => undefined)
       }
     },
   }

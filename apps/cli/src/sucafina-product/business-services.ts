@@ -89,7 +89,9 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   const procurement = createProcurementPort(procurementHost)
   const sourcingEvidence = createProcurementSourcingEvidence(procurementHost)
   const dashboardSources = createDashboardSourceHost({ host, scopedSources: input.persistence })
-  const dashboard = createDashboardPort({ host, sources: dashboardSources })
+  const dashboardRecords = createDashboardRecordEvidenceHost({ host, scopedSources: input.persistence,
+    issueRecord: createDashboardRecordSourceIssuer({ host, scopedSources: input.persistence }) })
+  const dashboard = createDashboardPort({ host, sources: dashboardSources, recordEvidence: dashboardRecords })
   const evidence: { current?: BusinessContextService } = {}
   const context: BusinessContextService = {
     resolve: (ref, call) => evidence.current ? evidence.current.resolve(ref, call) : Promise.resolve({ state: "unavailable", ref, accessRevision: call.binding.accessRevision, checkedAt: new Date().toISOString() }),
@@ -150,8 +152,6 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   const baseCount = descriptors.length
   const initializeAtlas = (scanner: Awaited<ReturnType<typeof probeSfAtlasScanner>>, versions: { boundaryVersion: string; schemaVersion: string; manifestVersion: string; skillVersion: string }) => {
     const dashboardIssue = createDashboardSourceIssuer({ host, scopedSources: input.persistence })
-    const dashboardRecords = createDashboardRecordEvidenceHost({ host, scopedSources: input.persistence,
-      issueRecord: createDashboardRecordSourceIssuer({ host, scopedSources: input.persistence }) })
     const featuresForCase = async (value: AuthorizedCaseProjection, call: TrustedDomainContext) => {
       if (!await host.revalidate(call)) return undefined
       const refreshed = await cases.read({ caseRef: encodeCaseRef(value.case) }, call)
