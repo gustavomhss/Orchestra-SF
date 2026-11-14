@@ -20,7 +20,9 @@ import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { setTimeout } from "node:timers/promises"
 if (process.versions.bun || process.release.name !== "node") throw new Error("The browser driver requires Node")
+console.log(JSON.stringify({ event: "phase", phase: "node-import" }))
 const { chromium } = await import(process.argv[1])
+console.log(JSON.stringify({ event: "phase", phase: "node-imported" }))
 const version = JSON.parse(await readFile(new URL(process.argv[2]), "utf8")).version
 const limits = JSON.parse(process.argv[3])
 const stopped = new Promise((resolve) => process.stdin.once("end", resolve))
@@ -145,7 +147,9 @@ async function forward(client) {
   lifecycle.bridgeClosed = client.destroyed && websocket.readyState === WebSocket.CLOSED
 }
 try {
+  console.log(JSON.stringify({ event: "phase", phase: "chromium-launch" }))
   server = await chromium.launchServer({ host: "127.0.0.1", channel: "chrome", headless: true, args: ["--no-sandbox"], timeout: 15000 })
+  console.log(JSON.stringify({ event: "phase", phase: "chromium-launched" }))
   await new Promise((resolve, reject) => {
     listener.once("error", reject)
     listener.listen(endpoint, () => { listener.removeListener("error", reject); resolve() })
@@ -217,45 +221,84 @@ async function within<T>(work: Promise<T>, timeout: number, name: string) {
   finally { if (timer !== undefined) clearTimeout(timer) }
 }
 
-/** Each caller declares expectSpawn in its own test and reports only after assertions and cleanup succeed. */
-export async function launchBrowserDriver(consumer: "host-contextual-controls" | "host-draft-conflict" | "host-write-authority" | "host-response-recovery" | "host-draft-recovery" | "host-access-recovery" | "host-egress-recovery" | "host-source-recovery" | "dashboard-monthly" | "personal-views" | "preview-in-flight" | "wp01-shared-pool") {
+/** Each caller declares expectSpawn in its own test and reports only after assertions and cleanup succeed.
+ * A caller's shorter acquisition deadline cancels the owned process scope, not only its await. */
+export async function launchBrowserDriver(consumer: "host-contextual-controls" | "host-draft-conflict" | "host-write-authority" | "host-response-recovery" | "host-draft-recovery" | "host-access-recovery" | "host-egress-recovery" | "host-source-recovery" | "dashboard-monthly" | "personal-views" | "preview-in-flight" | "wp01-shared-pool", startup?: { signal: AbortSignal; timeoutMs: number }) {
+  const launchTimeout = startup?.timeoutMs ?? 15000
+  if (!Number.isSafeInteger(launchTimeout) || launchTimeout < 1 || launchTimeout > 15000) throw new Error("Invalid browser driver startup deadline")
+  const started = performance.now()
+  const remaining = () => Math.max(1, launchTimeout - Math.ceil(performance.now() - started))
+  let currentPhase = "playwright-import"
+  const phase = (name: string, details: Record<string, string | number | boolean | undefined> = {}) => {
+    currentPhase = name
+    console.info("SF_BROWSER_DRIVER_PHASE", JSON.stringify({ consumer, phase: name, elapsedMs: Math.round(performance.now() - started), ...details }))
+  }
   const node = Bun.which("node")
   if (!node) throw new Error("Node is unavailable for the Playwright browser driver")
-  const { chromium } = await import("@playwright/test")
-  const started = performance.now(), ready = Promise.withResolvers<Ready>(), stop = Promise.withResolvers<void>()
+  phase("playwright-import")
+  const { chromium } = await within(import("@playwright/test"), remaining(), "Browser driver Playwright import")
+  phase("playwright-imported")
+  if (startup?.signal.aborted) throw startup.signal.reason
+  const ready = Promise.withResolvers<Ready>(), stop = Promise.withResolvers<void>()
   const abort = new AbortController()
-  const observed: { pid?: number; ready?: Ready; closed?: ReturnType<typeof closedMessage>; proof?: object } = {}
+  const observed: { pid?: number; ready?: Ready; closed?: ReturnType<typeof closedMessage>; proof?: object; stderr: string } = { stderr: "" }
+  const cancelStartup = () => {
+    phase("startup-cancelled", { waitingAt: currentPhase, driverPid: observed.pid })
+    stop.resolve()
+    abort.abort(startup?.signal.reason ?? new Error("Browser driver startup cancelled"))
+  }
+  startup?.signal.addEventListener("abort", cancelStartup, { once: true })
   const receive = (line: string) => {
     try {
       if (!line || line.length > 8192) throw new Error("Invalid browser driver message")
       const value = object(JSON.parse(line))
+      if (value.event === "phase") {
+        if (typeof value.phase !== "string" || !["node-import", "node-imported", "chromium-launch", "chromium-launched"].includes(value.phase)) throw new Error("Invalid browser driver phase")
+        phase(value.phase, { driverPid: observed.pid })
+        return
+      }
       if (value.event === "ready") {
         if (observed.ready || value.runtime !== "node" || typeof value.nodeVersion !== "string" || !/^\d+\.\d+\.\d+/.test(value.nodeVersion) || value.playwrightVersion !== playwrightPackage.version || typeof value.pid !== "number" || value.pid !== observed.pid || value.pid === process.pid || typeof value.browserPid !== "number" || !Number.isSafeInteger(value.browserPid) || value.browserPid <= 0 || value.browserPid === value.pid || value.browserPid === process.pid || value.browserStdioCount !== 5 || value.browserUsesPipe !== true || typeof value.endpoint !== "string" || value.directoryMode !== 0o700 || value.socketMode !== 0o600) throw new Error("Browser driver runtime or pipe ownership mismatch")
         if (!value.endpoint.startsWith("/") || !value.endpoint.endsWith("/browser.sock") || value.endpoint.includes("\0") || URL.canParse(value.endpoint)) throw new Error("Browser driver endpoint is not a Unix pipe")
         observed.ready = { nodeVersion: value.nodeVersion, playwrightVersion: value.playwrightVersion, pid: value.pid, browserPid: value.browserPid,
           browserStdioCount: value.browserStdioCount, browserUsesPipe: value.browserUsesPipe, endpoint: value.endpoint,
           directoryMode: value.directoryMode, socketMode: value.socketMode }
+        phase("node-ready", { driverPid: value.pid, browserPid: value.browserPid })
         ready.resolve(observed.ready)
         return
       }
       if (value.event !== "closed" || !observed.ready || observed.closed) throw new Error("Unexpected browser driver shutdown message")
       observed.closed = closedMessage(value)
+      phase("node-closed", { driverPid: observed.pid })
     } catch (error) { ready.reject(error); throw error }
   }
   const finished = Effect.gen(function* () {
+    phase("app-process-service")
     const process = yield* AppProcess.Service
+    if (abort.signal.aborted) throw abort.signal.reason
+    phase("app-process-spawn")
     const child = yield* process.spawn(ChildProcess.make(node, ["--input-type=module", "-e", nodeDriver, import.meta.resolve("@playwright/test"), import.meta.resolve("@playwright/test/package.json"), JSON.stringify(limits)], {
       extendEnv: true, stdin: Stream.fromEffect(Effect.promise(() => stop.promise)).pipe(Stream.drain), stdout: "pipe", stderr: "pipe",
     }))
     observed.pid = Number(child.pid)
+    phase("app-process-spawned", { driverPid: observed.pid })
     const stdout = yield* Effect.forkScoped(child.stdout.pipe(Stream.decodeText, Stream.splitLines, Stream.filter((line) => line.length > 0), Stream.runForEach((line) => Effect.sync(() => receive(line)))))
-    const stderr = yield* Effect.forkScoped(AppProcess.collectStream(child.stderr, 16384))
+    const stderr = yield* Effect.forkScoped(AppProcess.collectStream(child.stderr.pipe(Stream.tap((chunk) => Effect.sync(() => {
+      observed.stderr = (observed.stderr + Buffer.from(chunk).toString("utf8")).slice(-16384)
+    }))), 16384))
     const exitCode = yield* child.exitCode
     yield* Fiber.join(stdout)
     const errors = yield* Fiber.join(stderr)
     if (exitCode !== 0) throw new Error(`Node browser driver exited ${exitCode}: ${errors.buffer.toString("utf8")}`)
+    phase("app-process-exited", { driverPid: observed.pid, exitCode })
     return { exitCode }
   }).pipe(Effect.raceFirst(AppProcess.waitForAbort(abort.signal)), Effect.scoped, Effect.provide(LayerNode.compile(AppProcess.node)), Effect.runPromise)
+  // A timeout at the caller must not hide a later owned-process failure.
+  void finished.catch((error: unknown) => {
+    console.error("SF_BROWSER_DRIVER_FAILURE", JSON.stringify({ consumer, phase: currentPhase, driverPid: observed.pid,
+      reason: error instanceof Error ? error.message : String(error), stderr: observed.stderr }))
+    ready.reject(error)
+  })
   const cleanup = async <T>(work: () => Promise<T>) => {
     try { return await within(work(), 5000, "Browser driver cleanup") }
     catch (error) {
@@ -267,10 +310,15 @@ export async function launchBrowserDriver(consumer: "host-contextual-controls" |
     }
   }
   try {
-    const metadata = await within(Promise.race([ready.promise, finished.then(() => { throw new Error("Browser driver exited before connection") })]), 15000, "Browser driver launch")
+    if (startup?.signal.aborted) cancelStartup()
+    const metadata = await within(Promise.race([ready.promise, finished.then(() => { throw new Error("Browser driver exited before connection") })]), remaining(), "Browser driver launch")
+    if (abort.signal.aborted) throw abort.signal.reason
+    phase("pipe-verify", { driverPid: metadata.pid, browserPid: metadata.browserPid })
     const [directory, socket] = await Promise.all([lstat(dirname(metadata.endpoint)), lstat(metadata.endpoint)])
     if (!directory.isDirectory() || !socket.isSocket() || (directory.mode & 0o777) !== metadata.directoryMode || (socket.mode & 0o777) !== metadata.socketMode) throw new Error("Browser Unix pipe permissions differ in the client")
-    const browser = await chromium.connect(metadata.endpoint, { timeout: Math.max(1, 15000 - Math.round(performance.now() - started)) })
+    phase("browser-connect", { driverPid: metadata.pid, browserPid: metadata.browserPid })
+    const browser = await chromium.connect(metadata.endpoint, { timeout: remaining() })
+    phase("browser-connected", { driverPid: metadata.pid, browserPid: metadata.browserPid })
     const browserVersion = browser.version()
     let closing: Promise<void> | undefined
     return { browser,
@@ -297,8 +345,14 @@ export async function launchBrowserDriver(consumer: "host-contextual-controls" |
       },
     }
   } catch (error) {
-    try { await cleanup(async () => { stop.resolve(); await finished }) }
+    console.error("SF_BROWSER_DRIVER_STARTUP_FAILURE", JSON.stringify({ consumer, phase: currentPhase, driverPid: observed.pid,
+      elapsedMs: Math.round(performance.now() - started), reason: error instanceof Error ? error.message : String(error), stderr: observed.stderr }))
+    // Failed startup owns no reusable browser. Cancel immediately and await its
+    // AppProcess finalizer instead of waiting for a handshake that already expired.
+    stop.resolve()
+    abort.abort(error)
+    try { await cleanup(async () => { await Promise.allSettled([finished]) }) }
     catch (closed) { throw new AggregateError([error, closed], "Browser driver startup and cleanup failed") }
     throw error
-  }
+  } finally { startup?.signal.removeEventListener("abort", cancelStartup) }
 }

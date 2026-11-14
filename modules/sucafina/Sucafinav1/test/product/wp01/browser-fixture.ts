@@ -123,59 +123,64 @@ function shutdownBrowser(): Promise<void> {
 async function startBrowser(): Promise<Browser> {
   const deadline = performance.now() + 10_000
   const remaining = () => Math.max(1, Math.ceil(deadline - performance.now()))
+  const startup = new AbortController()
+  const timer = setTimeout(() => startup.abort(new Error("WP01 browser timed out: single Node-owned Chromium launch and PID acquisition")), 10_000)
   try {
-    return await bounded((async () => {
-      await requireLifecycleSelection()
-      if (pool.failed || pool.sealed) throw new Error("WP01 browser startup is no longer admitted")
-      console.info("WP01 browser launch phase", { phase: "published Node browser driver through AppProcess" })
-      const driver = await launchBrowserDriver("wp01-shared-pool")
-      const browser = driver.browser
-      pool.driver = driver
-      pool.browser = browser
-      pool.launches++
-      pool.disconnection = new Promise<void>((resolve) => {
-        browser.once("disconnected", () => {
-          pool.disconnected = true
-          if (!pool.closing) poison(new Error("WP01 shared browser disconnected before its finalizer"))
-          console.info("WP01 browser disconnected", { pid: pool.pid, expected: pool.closing })
-          resolve()
-        })
+    await requireLifecycleSelection()
+    if (startup.signal.aborted) throw startup.signal.reason
+    if (pool.failed || pool.sealed) throw new Error("WP01 browser startup is no longer admitted")
+    console.info("WP01 browser launch phase", { phase: "published Node browser driver through AppProcess" })
+    // The deadline cancels and awaits the driver's owned AppProcess scope.
+    // Racing this await alone would abandon an in-flight driver outside pool.
+    const driver = await launchBrowserDriver("wp01-shared-pool", { signal: startup.signal, timeoutMs: remaining() })
+    const browser = driver.browser
+    pool.driver = driver
+    pool.browser = browser
+    pool.launches++
+    pool.disconnection = new Promise<void>((resolve) => {
+      browser.once("disconnected", () => {
+        pool.disconnected = true
+        if (!pool.closing) poison(new Error("WP01 shared browser disconnected before its finalizer"))
+        console.info("WP01 browser disconnected", { pid: pool.pid, expected: pool.closing })
+        resolve()
       })
-      if (pool.failed || pool.sealed) {
-        await shutdownBrowser()
-        throw new Error("WP01 browser launch completed after its acquisition deadline")
-      }
-      console.info("WP01 browser launch phase", { phase: "read actual browser PID through CDP" })
-      const session = await bounded(browser.newBrowserCDPSession(), "open browser CDP session", remaining())
-      const failures: unknown[] = []
-      try {
-        const result = await bounded(session.send("SystemInfo.getProcessInfo"), "read browser process information", remaining())
-        const processes = result.processInfo.filter((entry) => entry.type === "browser")
-        const pid = processes[0]?.id
-        if (processes.length !== 1 || typeof pid !== "number" || !Number.isSafeInteger(pid) || pid <= 0 || pid === process.pid)
-          throw new Error("CDP did not identify exactly one distinct browser process")
-        pool.pid = pid
-        if (!processExists(pid)) throw new Error("The CDP browser PID is absent before cleanup")
-      } catch (error) { failures.push(error) }
-      try { await bounded(session.detach(), "detach browser PID session", remaining()) }
-      catch (error) { failures.push(error) }
-      if (failures.length === 1) throw failures[0]
-      if (failures.length > 1) throw new AggregateError(failures, "WP01 browser PID acquisition and CDP cleanup failed")
-      if (pool.failed || pool.sealed) {
-        await shutdownBrowser()
-        throw new Error("WP01 browser PID acquisition completed after its deadline")
-      }
-      console.info("WP01 browser launch complete", { pid: pool.pid, launches: pool.launches })
-      return browser
-    })(), "single Node-owned Chromium launch and PID acquisition")
+    })
+    if (pool.failed || pool.sealed || startup.signal.aborted) {
+      await shutdownBrowser()
+      throw new Error("WP01 browser launch completed after its acquisition deadline")
+    }
+    console.info("WP01 browser launch phase", { phase: "read actual browser PID through CDP" })
+    const session = await bounded(browser.newBrowserCDPSession(), "open browser CDP session", remaining())
+    const failures: unknown[] = []
+    try {
+      const result = await bounded(session.send("SystemInfo.getProcessInfo"), "read browser process information", remaining())
+      const processes = result.processInfo.filter((entry) => entry.type === "browser")
+      const pid = processes[0]?.id
+      if (processes.length !== 1 || typeof pid !== "number" || !Number.isSafeInteger(pid) || pid <= 0 || pid === process.pid)
+        throw new Error("CDP did not identify exactly one distinct browser process")
+      pool.pid = pid
+      if (!processExists(pid)) throw new Error("The CDP browser PID is absent before cleanup")
+    } catch (error) { failures.push(error) }
+    try { await bounded(session.detach(), "detach browser PID session", remaining()) }
+    catch (error) { failures.push(error) }
+    if (failures.length === 1) throw failures[0]
+    if (failures.length > 1) throw new AggregateError(failures, "WP01 browser PID acquisition and CDP cleanup failed")
+    if (pool.failed || pool.sealed || startup.signal.aborted) {
+      await shutdownBrowser()
+      throw new Error("WP01 browser PID acquisition completed after its deadline")
+    }
+    console.info("WP01 browser launch complete", { pid: pool.pid, launches: pool.launches })
+    return browser
   } catch (error) {
     poison(error)
+    console.error("WP01 browser acquisition failure observed", { pid: pool.pid, launches: pool.launches,
+      reason: error instanceof Error ? error.message : String(error) })
     if (pool.browser) {
       try { await shutdownBrowser() }
       catch (cleanupError) { throw new AggregateError([error, cleanupError], "WP01 browser acquisition and cleanup failed") }
     }
     throw error
-  }
+  } finally { clearTimeout(timer) }
 }
 
 /** The first named test owns the only Omni spawn. The driver keeps its published
