@@ -202,7 +202,8 @@ test("revocation of current lifecycle authority prevents stale metadata writes a
     const persisted = await f.stored()
     expect(persisted.nativeRuns?.run).toMatchObject({ state: committed ? "ready" : "running", version: committed ? 4 : 3 })
     expect(f.observations.staleCommitHadOutput).toEqual([])
-    expect(persisted.contributions.output).toEqual(committed ? f.material.output : undefined)
+    if (committed) expect(persisted.contributions.output).toEqual(f.material.output)
+    else expect(persisted.contributions.output).toBeUndefined()
     expect(Object.keys(persisted.preferences)).toEqual([])
   }
 })
