@@ -109,9 +109,11 @@ export function createDecisionMutations(input: MutationHost) {
       const attributed: ScenarioResult = scenario.value.comparisonStatus === "complete" ? { ...scenario.value, costCoverage: { ...scenario.value.costCoverage, alternativeId: identity.id, alternativeVersion: identity.version } } : { ...scenario.value, costCoverage: { ...scenario.value.costCoverage, alternativeId: identity.id, alternativeVersion: identity.version } }
       const basis = coverage.value.basis
       const reassessed = digestSfValue(scenario.value.costCoverage) !== digestSfValue(coverage.value.assessment)
-      const entries = reassessed && input.coverageEvidence ? await callMutationPort(() => input.coverageEvidence!.entries(attributed, coverage.value.assessment, context)) : undefined
+      // Matching coverage still needs the current producer proof consumed by the
+      // commit fence. Reassess its entries so the proof binds the canonical result.
+      const entries = input.coverageEvidence ? await callMutationPort(() => input.coverageEvidence!.entries(attributed, coverage.value.assessment, context)) : undefined
       if (entries && entries.status !== "ok") return entries
-      const result = !reassessed ? attributed : input.coverageEvidence && entries?.status === "ok" ? await reassessScenarioCoverage({ scenario: attributed, basis: coverage.value.basis, baseline: coverage.value.assessment, entries: entries.value, resolveEvidence: (refs) => input.coverageEvidence!.resolve(refs, context), supports: input.coverageEvidence.supports }) : undefined
+      const result = input.coverageEvidence && entries?.status === "ok" ? await reassessScenarioCoverage({ scenario: attributed, basis: coverage.value.basis, baseline: coverage.value.assessment, entries: entries.value, resolveEvidence: (refs) => input.coverageEvidence!.resolve(refs, context), supports: input.coverageEvidence.supports }) : !reassessed ? attributed : undefined
       if (!result) return { status: "unavailable", reason: "scenario-coverage-reassessment-unavailable" }
       const coverageError = validateScenarioCoverage(result, coverage.value.basis, result.costCoverage)
       if (coverageError) return { status: "conflict", reason: coverageError }
