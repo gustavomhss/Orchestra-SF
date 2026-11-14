@@ -1,0 +1,125 @@
+{
+  "mission": "MemoryA27 integrity preflight",
+  "attempt": "MI05",
+  "status": "FAIL",
+  "productW": "5d42e44fb623db78a3a6ef025d2317a3fb653432",
+  "productTree": "cb51ae6f05946b76623283f70e78abbd2ed0aef0",
+  "snapshotS": "9b1f70a68f9633d465dd253126e63086f47676a4",
+  "snapshotTree": "708f6ecac951ffb8fb6cb6c3987e734889520002",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/wp10/memory-integrity/preflight.test.ts",
+      "./Sucafinav1/test/product/wp10/memory-integrity/identity.test.ts",
+      "./Sucafinav1/test/product/wp10/memory-integrity/authority.test.ts",
+      "./Sucafinav1/test/product/wp10/memory-integrity/fallback.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+    }
+  },
+  "requestSha256": "5645b4d2cb517ea2253a164cf59416bc28f8bf886a2f37f1eae0bbdf7c5020bd",
+  "requestBlob": "9e82efe7d0b99a72339778c0f2251f679bcc50c2",
+  "run": 43636096246,
+  "job": 132573112673,
+  "cleanupJob": 132574667511,
+  "cleanup": "SUCCESS",
+  "artifacts": [],
+  "pass": 12,
+  "fail": 1,
+  "expects": 102,
+  "tests": 13,
+  "files": 4,
+  "elapsedSeconds": 234.03,
+  "cases": [
+    {
+      "name": "Memory integrity preflight rejects a corrupted Atlas original without rewriting the capture",
+      "status": "PASS",
+      "durationMs": 35789.54
+    },
+    {
+      "name": "Memory integrity keeps authorized metadata-only stale preservation and rejects a later source change",
+      "status": "PASS",
+      "durationMs": 23298.52
+    },
+    {
+      "name": "Memory integrity rejects divergent owner in a persisted capture",
+      "status": "PASS",
+      "durationMs": 11318.65
+    },
+    {
+      "name": "Memory integrity rejects divergent capture-source in a persisted capture",
+      "status": "PASS",
+      "durationMs": 13361.24
+    },
+    {
+      "name": "Memory integrity rejects divergent case-incarnation in a persisted capture",
+      "status": "PASS",
+      "durationMs": 11351.7
+    },
+    {
+      "name": "Memory integrity refuses physical source replacement despite the old fingerprint",
+      "status": "PASS",
+      "durationMs": 7750.76
+    },
+    {
+      "name": "Memory integrity refuses an empty recall after the capture partition moves to another owner",
+      "status": "PASS",
+      "durationMs": 33488.7
+    },
+    {
+      "name": "Memory integrity retains the original Request despite replacement of constructor input",
+      "status": "PASS",
+      "durationMs": 11120.56
+    },
+    {
+      "name": "Memory integrity rejects record mutation after the real Atlas capture reader awaited",
+      "status": "PASS",
+      "durationMs": 10987.93
+    },
+    {
+      "name": "Memory integrity rejects an in-place source change after the real Atlas capture reader awaited",
+      "status": "FAIL",
+      "durationMs": 9767.62
+    },
+    {
+      "name": "Memory integrity respects principal revocation after the last real capture read",
+      "status": "PASS",
+      "durationMs": 13522.99
+    },
+    {
+      "name": "Memory integrity rejects headers changed after the final real revalidation",
+      "status": "PASS",
+      "durationMs": 14891.1
+    },
+    {
+      "name": "Memory integrity uses the real full recall for multiple envelopes and refuses damage outside the referenced capture",
+      "status": "PASS",
+      "durationMs": 36658.27
+    }
+  ],
+  "omni": {
+    "status": "PASS",
+    "spawns": 26,
+    "delegated": 0,
+    "nonce": "fe042b0dc670a358e7965a59385e84d6"
+  },
+  "failure": {
+    "test": "Memory integrity rejects an in-place source change after the real Atlas capture reader awaited",
+    "error": "Nested local write attempted",
+    "classification": "product early-fence ordering",
+    "cause": "The real C08 snapshot changes after the canonical capture read. The helper waits until its final stable() fence before detecting it, allowing router.proveContinuity to enter a reader refresh that poisons C08 with a nested write.",
+    "testInjection": "The fixture mutates the actual outer transaction snapshot and returns commit:false. It does not create a nested write.",
+    "requiredDelta": "Check stable() immediately after pinning the real capture result, before continuity or any further reader await.",
+    "assertion": "denied, unchanged"
+  },
+  "log": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/memory-integrity/attempt-05/job.txt",
+    "bytes": 82867,
+    "sha256": "53554ba108e286fe4f22abbc49d4bb92b02cd6c1bcc677429d7e5c54e0b0694e"
+  }
+}

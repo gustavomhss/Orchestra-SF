@@ -1,0 +1,39 @@
+{
+  "mission": "MemoryA27 integrity preflight",
+  "attempt": "MI06",
+  "status": "PREPARED_NOT_RUN",
+  "parentProductW": "5d42e44fb623db78a3a6ef025d2317a3fb653432",
+  "causeRun": 43636096246,
+  "delta": {
+    "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+    "sha256": "d6df55fbe2ebf1868c3279eb2196108228a1dcd695f8af36fe65429419c7ec65",
+    "change": "Add if (!stable()) return false after the returned capture is pinned and before router.proveContinuity. No other runtime changes."
+  },
+  "staticReview": "memory_boundary_review confirmed the pin-before-fence-before-await order; no execution claimed.",
+  "unchanged": [
+    "all test files and assertions",
+    "historical-memory.test.ts blob ee5c725ae78e0eba5c12600da80eb51b7173c2ed",
+    "historical budgets 225000 / 240000",
+    "case authorization before and after capture reads",
+    "real canonical capture reader and full recall fallback",
+    "final authorization and Request/header/source/snapshot pins"
+  ],
+  "plannedSelection": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/wp10/memory-integrity/authority.test.ts",
+      "-t",
+      "in-place source change",
+      "--timeout",
+      "120000"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+    }
+  },
+  "requestSha256": "b753a2c99edf373a1d754e7db32c2f9a6dd5a5021544beecf7a785bd7788eb54",
+  "nextRequired": "Recheck original historical scenario only after affected source-await assertion passes.",
+  "localTests": "NOT_RUN"
+}

@@ -539,6 +539,7 @@ export function createSfAtlasBusiness(input: {
           const source = known.get(digestSfValue(ref))
           const capture = await memory.readOriginalCapture(caseRef, ref.refDigest, call)
           if (capture) captures.push({ value: capture, identity: digestSfValue(capture) })
+          if (!stable()) return false
           if (!source || !capture || digestSfValue(capture.ref) !== digestSfValue(ref) ||
             (source.state !== "fresh" && source.state !== "historical") ||
             source.accessRevision !== call.binding.accessRevision || !source.currentRef || !source.authorizedProjection ||
