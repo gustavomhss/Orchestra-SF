@@ -1,0 +1,78 @@
+{
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "scope": {
+    "wps": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610
+  },
+  "acceptance_digest": "32205922d4a3a2417d5413c232bf892769b3c8fa95045434a0461b030ba081c4",
+  "authority": {
+    "S0": "same root supervisor/final acceptance",
+    "delegate_product_writer": "session14 S0-C only after real ACK and expectedhead",
+    "target": "sf2-stack",
+    "expected_head": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+    "lease_epoch": 5,
+    "physical_fencing": "not exposed; CAS is ref fencing, not process revocation",
+    "old_native_integrator": "completed; all old native authority revoked in revision32 checkpoint; no resume/spawn"
+  },
+  "native_goal": "prior paused; no active/resume claim or newcontroller",
+  "manual_sessions": [
+    {
+      "number": 14,
+      "id": "bundle-integrator",
+      "branch": "sf2-stack",
+      "state": "PREPARED_NOT_STARTED",
+      "session_id": null,
+      "model_effective": "NOT_VERIFIED",
+      "write_paths": [
+        "sf2-stack product tree: admitted versioned outputs only",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/"
+      ],
+      "lease_epoch": 5
+    },
+    {
+      "number": 15,
+      "id": "ci-failure-triage",
+      "branch": "sf2-ci-triage",
+      "state": "PREPARED_NOT_STARTED",
+      "session_id": null,
+      "model_effective": "NOT_VERIFIED",
+      "write_paths": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/control/integration-assist/ci-triage/"
+      ],
+      "lease_epoch": 1
+    },
+    {
+      "number": 16,
+      "id": "integration-conflict-fixes",
+      "branch": "sf2-seam-fixes",
+      "state": "PREPARED_NOT_STARTED",
+      "session_id": null,
+      "model_effective": "NOT_VERIFIED",
+      "write_paths": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/control/integration-assist/seam-fixes/"
+      ],
+      "lease_epoch": 1
+    },
+    {
+      "number": 17,
+      "id": "composed-bundle-verification",
+      "branch": "sf2-bundle-review",
+      "state": "PREPARED_NOT_STARTED",
+      "session_id": null,
+      "model_effective": "NOT_VERIFIED",
+      "write_paths": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/control/integration-assist/bundle-review/"
+      ],
+      "lease_epoch": 1
+    }
+  ],
+  "transport": "Read each other through versioned GitHub branch outputs; no browser chat/session messaging API is claimed",
+  "prior_sessions": "1-11 userreported started;12-13prepared, lifecycle requires reconciliation; no authority transfer by silence",
+  "CI": "rootS0 retains sole finaldispatcher; no epic/rerun authority in14–17",
+  "readiness": "PREPARED_NOT_STARTED",
+  "GLOBAL_RELEASE": false
+}

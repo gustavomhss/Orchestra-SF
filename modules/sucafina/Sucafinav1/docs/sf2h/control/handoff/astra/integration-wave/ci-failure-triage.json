@@ -1,0 +1,325 @@
+{
+  "id": "ci-failure-triage",
+  "number": 15,
+  "branch": "sf2-ci-triage",
+  "base_kind": "sf2-control",
+  "actor_pack": "S0-A",
+  "authority": "read-only product/CI; write only control triage namespace; NO dispatch/rerun/cancel",
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/docs/sf2h/control/integration-assist/ci-triage/"
+  ],
+  "output_pr": "sf2-ci-triage→sf2-control; own receipts only; never product merge",
+  "mission": "Maintain exact actionable failure queue from actual runs and the evolving composed head; separate productdefect/testoracle/fixture/readiness/typecheck/config/artifact/unknown. Read logs/steps/selection not just green/red/title. Deduplicate same rootcause propagated tobranches (e.g WP14grant alreadyfixed in PR34, oldtypechecks remain old). Reattach existingrun instead of rerun. Distinguish sourceW/snapshotS; identify missing relevant proof forintegratedtree, don't transfergreen automatically.",
+  "steps": [
+    "Seed triage from latest terminalFinanceS6, WP10X29/U30/A27/R27, Collab69inheriteddiagnostics, Operationsexports now session11, and latestliveoutputs. Do not recreate alreadycloseddiagnoses.",
+    "Every queueditem: id, exactsource/tree/run/job/test/error, executedphase, evidence, confidence, normalizedsignature, originalactor/currentwriter, writepaths, dependency and nextminimalaction. Preserve failurehistory.",
+    "Route as file-based requests for existingwriters or integrator. No messagingthirdparties or toolspawns; root/manual handoff transport remains acknowledgedlimitation.",
+    "Prioritize failures that prevent consuming a readyproducer, incorrectauthority or finalcandidateproof. Testsurgicalrequest may be prepared/validated statically but not dispatched.",
+    "Publish queue in small realdeltas, not timestamp/polling-onlycommits. If no newdata, complete remaining loganalysis and return handoff without emptywaiting."
+  ],
+  "acceptance": "Deduplicated actionable queue, terminalrun ledger, W/Sselectionprovenance and suggestedminimalrequests, ready for S0/integrator.",
+  "inputs": [
+    {
+      "pr": 61,
+      "branch": "work-reuse",
+      "base": "ui-work",
+      "head": "854f3dd9a5257c83b703424a8fd73d831f705f46",
+      "observed_updated": "2026-11-14T18:36:19Z"
+    },
+    {
+      "pr": 60,
+      "branch": "procurement-apply",
+      "base": "astra-operations",
+      "head": "8e23e592602fb9f2fae9ce8f824322a073073e23",
+      "observed_updated": "2026-11-14T18:43:04Z"
+    },
+    {
+      "pr": 59,
+      "branch": "diagnose-calculation",
+      "base": "astra-wp10",
+      "head": "e80fdc933dfd25956a50c22dea76bf077e79815b",
+      "observed_updated": "2026-11-14T18:22:36Z"
+    },
+    {
+      "pr": 58,
+      "branch": "import-recovery",
+      "base": "astra-operations",
+      "head": "e1dc51a6df8cd40a125d960dce6fa5e5d8b33c5e",
+      "observed_updated": "2026-11-14T18:42:21Z"
+    },
+    {
+      "pr": 57,
+      "branch": "sourcing-money",
+      "base": "astra-operations",
+      "head": "e1fe9561f199dc594a5fd559d06d450253e571bc",
+      "observed_updated": "2026-11-14T19:27:40Z"
+    },
+    {
+      "pr": 56,
+      "branch": "finance-journey",
+      "base": "finance-resume",
+      "head": "0d2e59ffb14c31ebfb0b717d3d0078985ab2a3b7",
+      "observed_updated": "2026-11-14T18:30:53Z"
+    },
+    {
+      "pr": 55,
+      "branch": "diagnose-memory",
+      "base": "astra-wp10",
+      "head": "0d7fb6f12ed053340391ff6e4f95b6f3c1276ea8",
+      "observed_updated": "2026-11-14T18:16:25Z"
+    },
+    {
+      "pr": 54,
+      "branch": "work-ack",
+      "base": "ui-work",
+      "head": "92243fc68ff81df7fc563ec081ac9db686a24dfa",
+      "observed_updated": "2026-11-14T18:26:27Z"
+    },
+    {
+      "pr": 53,
+      "branch": "work-g03",
+      "base": "ui-work",
+      "head": "031ec153bbd42119dcf8787d8ce358858680f28b",
+      "observed_updated": "2026-11-14T18:25:26Z"
+    },
+    {
+      "pr": 52,
+      "branch": "operations-fixes",
+      "base": "astra-operations",
+      "head": "d48065d391e1557d43b63525bdc7f55b168d5206",
+      "observed_updated": "2026-11-14T18:38:01Z"
+    },
+    {
+      "pr": 51,
+      "branch": "review-contracts",
+      "base": "sf2-control",
+      "head": "097e545ac8dd53e97cae8c12dec47faab5b3f576",
+      "observed_updated": "2026-11-14T19:28:30Z"
+    },
+    {
+      "pr": 50,
+      "branch": "review-finance",
+      "base": "sf2-control",
+      "head": "628f1f26b0fcd679d09c47b976b81d9b1ee92ba0",
+      "observed_updated": "2026-11-14T19:26:30Z"
+    },
+    {
+      "pr": 49,
+      "branch": "review-operations",
+      "base": "sf2-control",
+      "head": "c7171a4d038cd807dd4ca5510243d3641cf74eef",
+      "observed_updated": "2026-11-14T19:22:08Z"
+    },
+    {
+      "pr": 48,
+      "branch": "ui-source",
+      "base": "interface-resume",
+      "head": "1bf7bfff20c5f04dfc0b6faf9ab41024a2feb326",
+      "observed_updated": "2026-11-14T17:33:21Z"
+    },
+    {
+      "pr": 47,
+      "branch": "ui-work",
+      "base": "interface-resume",
+      "head": "79ebf5555eddaa4b5b8b57cbe1df7c5ad22b1244",
+      "observed_updated": "2026-11-14T17:56:56Z"
+    },
+    {
+      "pr": 46,
+      "branch": "ui-recovery",
+      "base": "interface-resume",
+      "head": "db1dd1709483478ca2c8db2f0a479b72aea59821",
+      "observed_updated": "2026-11-14T17:32:58Z"
+    },
+    {
+      "pr": 45,
+      "branch": "ui-review",
+      "base": "interface-resume",
+      "head": "32bae2bcc8008b2e81948e434dc1e3326dc4f947",
+      "observed_updated": "2026-11-14T17:40:20Z"
+    },
+    {
+      "pr": 44,
+      "branch": "compose-resume",
+      "base": "sf2-stack",
+      "head": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "observed_updated": "2026-11-14T17:28:44Z"
+    },
+    {
+      "pr": 43,
+      "branch": "interface-resume",
+      "base": "sf2-stack",
+      "head": "2ee71fc90055814912654ae198f7a1dcf9583943",
+      "observed_updated": "2026-11-14T16:50:11Z"
+    },
+    {
+      "pr": 42,
+      "branch": "finance-resume",
+      "base": "sf2-stack",
+      "head": "7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1",
+      "observed_updated": "2026-11-14T19:11:01Z"
+    },
+    {
+      "pr": 41,
+      "branch": "collab-resume",
+      "base": "sf2-stack",
+      "head": "62e5629dbf31be2bb662dda152c96021f22b0ca5",
+      "observed_updated": "2026-11-14T19:15:11Z"
+    },
+    {
+      "pr": 40,
+      "branch": "astra-wp11",
+      "base": "sf2-stack",
+      "head": "3e1a8ec84ae334b7c7320c86d6b93bd5730ba469",
+      "observed_updated": "2026-11-14T19:27:27Z"
+    },
+    {
+      "pr": 39,
+      "branch": "astra-wp12",
+      "base": "sf2-stack",
+      "head": "ba27411a7cda9301aa162680a94153a5e643be4d",
+      "observed_updated": "2026-11-14T17:30:30Z"
+    },
+    {
+      "pr": 38,
+      "branch": "astra-wp14",
+      "base": "sf2-stack",
+      "head": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+      "observed_updated": "2026-11-14T10:38:04Z"
+    },
+    {
+      "pr": 37,
+      "branch": "astra-wp13",
+      "base": "sf2-stack",
+      "head": "7defe5c9930774c6aa5a15a5f677b4406d08683c",
+      "observed_updated": "2026-11-14T14:14:36Z"
+    },
+    {
+      "pr": 36,
+      "branch": "astra-intelligence",
+      "base": "sf2-stack",
+      "head": "48486a2186c0cc07a3a5558e34e2aa94c89ad5e9",
+      "observed_updated": "2026-11-14T13:35:38Z"
+    },
+    {
+      "pr": 35,
+      "branch": "astra-finance",
+      "base": "sf2-stack",
+      "head": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+      "observed_updated": "2026-11-14T16:09:14Z"
+    },
+    {
+      "pr": 34,
+      "branch": "astra-operations",
+      "base": "sf2-stack",
+      "head": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+      "observed_updated": "2026-11-14T19:08:08Z"
+    },
+    {
+      "pr": 33,
+      "branch": "astra-collaboration",
+      "base": "sf2-stack",
+      "head": "2784daafbb0d3b58b6019822288a07fa38e5c5b0",
+      "observed_updated": "2026-11-14T14:39:01Z"
+    },
+    {
+      "pr": 32,
+      "branch": "astra-compose",
+      "base": "sf2-stack",
+      "head": "9048e0e65351a5bd80768458a79fed94a4993db7",
+      "observed_updated": "2026-11-14T17:47:37Z"
+    },
+    {
+      "pr": 31,
+      "branch": "astra-interface",
+      "base": "sf2-stack",
+      "head": "9d65ea8fcd8ce6ea1249dc669e0fcc248b540241",
+      "observed_updated": "2026-11-14T13:06:01Z"
+    },
+    {
+      "pr": 30,
+      "branch": "astra-wp09",
+      "base": "sf2-stack",
+      "head": "1998acb0dcb59e68d41ee924eca4737bccbd5148",
+      "observed_updated": "2026-11-14T08:53:17Z"
+    },
+    {
+      "pr": 29,
+      "branch": "astra-wp10",
+      "base": "sf2-stack",
+      "head": "54317229d7f8fcb7e92921c2f4a8dc6f9310270b",
+      "observed_updated": "2026-11-14T19:18:17Z"
+    },
+    {
+      "pr": 28,
+      "branch": "astra-wp08",
+      "base": "sf2-stack",
+      "head": "08d808aa91696a30c6eb04293858fcae4fde4229",
+      "observed_updated": "2026-11-14T00:30:32Z"
+    },
+    {
+      "pr": 27,
+      "branch": "astra-wp07",
+      "base": "sf2-stack",
+      "head": "9839a46aa8d4e379268b2a724050247e2a0d8aa1",
+      "observed_updated": "2026-11-14T01:08:21Z"
+    },
+    {
+      "pr": 26,
+      "branch": "astra-wp06",
+      "base": "sf2-stack",
+      "head": "e7fd8ff797441681f360e7775155a8cc2830280c",
+      "observed_updated": "2026-11-14T08:54:19Z"
+    },
+    {
+      "pr": 25,
+      "branch": "astra-wp01",
+      "base": "sf2-stack",
+      "head": "6f4360bf0bdd444a19a7d4f97e18306ae7618b6f",
+      "observed_updated": "2026-11-14T01:20:52Z"
+    },
+    {
+      "pr": 24,
+      "branch": "astra-wp05",
+      "base": "sf2-stack",
+      "head": "0881fee21f07bf8a9a1153d7d55727837cdf497a",
+      "observed_updated": "2026-11-14T00:58:07Z"
+    },
+    {
+      "pr": 23,
+      "branch": "astra-wp04",
+      "base": "sf2-stack",
+      "head": "91e1f60bc6f7e85517e2b4f963eec5ac7da13e62",
+      "observed_updated": "2026-11-14T00:47:12Z"
+    },
+    {
+      "pr": 22,
+      "branch": "astra-wp03",
+      "base": "sf2-stack",
+      "head": "90c467cea436daa24987ad68a588a7d80f91064e",
+      "observed_updated": "2026-11-14T00:58:49Z"
+    },
+    {
+      "pr": 21,
+      "branch": "astra-wp02",
+      "base": "sf2-stack",
+      "head": "6ce14163ec6de963b50ada3d610aa8161176adee",
+      "observed_updated": "2026-11-14T03:04:31Z"
+    },
+    {
+      "pr": 20,
+      "branch": "astra-wp00",
+      "base": "sf2-stack",
+      "head": "0a5ce33012d008af1f56d11596a1f1f4eaba5b9d",
+      "observed_updated": "2026-11-14T01:29:33Z"
+    }
+  ],
+  "state": "PREPARED_NOT_STARTED",
+  "requested_model": "Astra browser, user launches",
+  "effective_model": "NOT_VERIFIED",
+  "session_id": null,
+  "lease_epoch": 1,
+  "common_file": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/integration-wave/COMMON.md",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "T0": "2026-11-13T04:01:10Z"
+}
