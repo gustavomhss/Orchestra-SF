@@ -199,12 +199,85 @@ async function composePortfolio(history: Awaited<ReturnType<typeof createRenewal
     const compared = await planner.compareScenarios(binding.request, trusted)
     return result.kind === "comparison" && compared.status === "ok" && digestSfValue(compared.value) === result.resultDigest
   }, verifySnapshot, operationIdentity: () => `source-comparison-${phase.caseRef.version}`, proposalCoverageWrites: writes, now })
-  const compare = createDecisionComparisonService({ cases: phase.cases, state, results: phase.results, planner, host })
+  const comparisonRequest = { caseRef: phase.caseRef, baselineAlternativeId: "baseline", alternativeId: "selected", criteria: policyCriteria }
+  const readBaselineHistory = () => state.read(history.fixture.request, "cases", (value) => Object.values(value.decisionResults ?? {})
+    .filter((record) => record.kind === "scenario" && digestSfValue(record.caseRef) === digestSfValue(phase.caseRef) &&
+      record.requestDigest === digestSfValue(phase.baselineScenario) && record.resultDigest === digestSfValue(phase.baselineResult))
+    .map((record) => ({ resultRef: record.resultRef, digest: digestSfValue(record) })).sort((a, b) => a.resultRef.localeCompare(b.resultRef)))
+  const baselineHistory = expectedCeilingRuleVersion === 0 ? await readBaselineHistory() : undefined
+  if (baselineHistory) {
+    if (baselineHistory.status !== "ok") throw new Error("Baseline C08 history unavailable")
+    // WP11 promotion and phase publication retain distinct valid C08 envelopes at the same
+    // case version. Alternative-only discovery must continue refusing that ambiguity.
+    expect(baselineHistory.value.length).toBeGreaterThan(1)
+    expect(baselineHistory.value.map((record) => record.resultRef)).toContain(phase.baselineRef)
+    const discover = createDecisionComparisonService({ cases: phase.cases, state, results: phase.results, planner, host })
+    expect(await discover(comparisonRequest, context)).toEqual({ status: "unavailable", reason: "scenario-results-unavailable" })
+  }
+  // Explicit fixture selection of the phase's persisted producer refs, not installed
+  // alternative-only discovery. Every value still comes from fresh C08/case reads and
+  // the canonical Planner comparison; no duplicate record is deleted or picked by age.
+  const compare: ReturnType<typeof createDecisionComparisonService> = async (incoming, trusted) => {
+    const incomingDigest = digestSfValue(incoming)
+    const request = structuredClone({ caseRef: incoming.caseRef, baselineAlternativeId: incoming.baselineAlternativeId, alternativeId: incoming.alternativeId, criteria: incoming.criteria })
+    if (digestSfValue(request) !== digestSfValue(comparisonRequest)) return { status: "needs-input", reason: "fixture-comparison-selection-mismatch" }
+    const source = host.requestFor(trusted)
+    const authority = digestSfValue([trusted.kind, trusted.binding])
+    if (!source || source.signal.aborted || !await host.revalidate(trusted)) return { status: "denied", reason: "comparison-access-unavailable" }
+    const scenarioRefs = [phase.baselineRef, phase.selectedRef]
+    const observe = async () => {
+      const current = structuredClone(await phase.cases.read({ caseRef: encodeCaseRef(request.caseRef) }, trusted))
+      if (current.status !== "ok" || digestSfValue({ id: current.value.case.id, incarnation: current.value.case.incarnation, version: current.value.case.version }) !== digestSfValue(request.caseRef) ||
+        current.value.case.criteria.some((criterion) => criterion.required && !request.criteria.includes(criterion.id)) ||
+        request.criteria.some((criterion) => !current.value.case.criteria.some((item) => item.id === criterion))) return undefined
+      const alternatives = [request.baselineAlternativeId, request.alternativeId].map((id) => current.value.case.alternatives.filter((alternative) => alternative.id === id))
+      if (alternatives.some((items) => items.length !== 1)) return undefined
+      const resultDigests: string[] = []
+      for (const [index, resultRef] of scenarioRefs.entries()) {
+        const stored = structuredClone(await phase.results.readHistoricalScenario({ resultRef }, trusted))
+        const alternative = alternatives[index]![0]!
+        if (stored.status !== "ok" || stored.value.kind !== "scenario" || stored.value.resultRef !== resultRef ||
+          digestSfValue(stored.value.caseRef) !== digestSfValue(request.caseRef) || stored.value.requestDigest !== digestSfValue(alternative.scenario) ||
+          stored.value.resultDigest !== digestSfValue(alternative.result)) return undefined
+        resultDigests.push(digestSfValue(stored.value))
+      }
+      return { caseDigest: digestSfValue(current.value.case), resultDigests }
+    }
+    const before = await observe()
+    if (!before) return { status: "unavailable", reason: "fixture-comparison-results-unavailable" }
+    const requested = { scenarioRefs, criteria: request.criteria }
+    const compared = structuredClone(await planner.compareScenarios(requested, trusted))
+    if (compared.status !== "ok") return compared
+    const after = await observe()
+    if (!after || digestSfValue(after) !== digestSfValue(before) || !await host.revalidate(trusted))
+      return { status: "stale", reason: "fixture-comparison-source-changed" }
+    // Observe case and both exact C08 envelopes together after all producer callbacks.
+    // This catches a final C08 callback changing an earlier observation at the same case version.
+    const retained = await state.read(source, "cases", (value, currentAuthority) =>
+      currentAuthority.principalRef === trusted.binding.principalRef && currentAuthority.policyVersion === trusted.binding.policyVersion && currentAuthority.accessRevision === trusted.binding.accessRevision
+        ? { caseDigest: digestSfValue(value.cases[request.caseRef.id]), resultDigests: scenarioRefs.map((ref) => digestSfValue(value.decisionResults?.[ref])) }
+        : undefined)
+    if (retained.status !== "ok" || digestSfValue(retained.value) !== digestSfValue(before) || source.signal.aborted ||
+      host.requestFor(trusted) !== source || digestSfValue([trusted.kind, trusted.binding]) !== authority || digestSfValue(incoming) !== incomingDigest ||
+      compared.value.baselineResultRef !== phase.baselineRef || compared.value.alternativeResultRef !== phase.selectedRef)
+      return { status: "stale", reason: "fixture-comparison-source-changed" }
+    return { status: "ok", value: { request: requested, comparison: compared.value } }
+  }
+  if (baselineHistory) {
+    expect((await compare({ ...comparisonRequest, baselineAlternativeId: "selected", alternativeId: "baseline" }, context)).status).toBe("needs-input")
+    expect((await compare({ ...comparisonRequest, caseRef: { ...phase.caseRef, version: phase.caseRef.version + 1 } }, context)).status).toBe("needs-input")
+    expect((await compare({ ...comparisonRequest, criteria: ["renewal-difference"] }, context)).status).toBe("needs-input")
+  }
   const selection = createDecisionPortfolioSelection({ state, host, compare, authorizeCase, authorizeSelection: async (_request, trusted) => trusted.kind === "ui" && await host.revalidate(trusted), verifySnapshot, operationIdentity: () => `source-selection-${phase.caseRef.version}`, proposalCoverageWrites: writes, now })
   const inspected = await selection.inspect({ caseRef: phase.caseRef }, context)
   if (inspected.status !== "ok") throw new Error(`Selection inspection: ${JSON.stringify(inspected)}`)
   const selected = await selection.register({ caseRef: phase.caseRef, baselineAlternativeId: "baseline", alternativeId: "selected", criteria: policyCriteria, expectedVersion: inspected.value.version }, context)
   if (selected.status !== "ok") throw new Error(`Human portfolio selection: ${JSON.stringify(selected)}`)
+  if (baselineHistory?.status === "ok") {
+    const retained = await readBaselineHistory()
+    if (retained.status !== "ok") throw new Error("Baseline C08 history unavailable after selection")
+    expect(retained.value).toEqual(baselineHistory.value)
+  }
   const analysis = createPortfolioAnalysis({ planner, results: phase.results, bindings: comparisonBindings, persist: createPlannerResultPersistence({ store: phase.results, scenarios, comparisonBindings, replay: planner, resolveCase: caseFor }), select: createPortfolioSelectionResolver({ selection, results: phase.results, caseFor }), idempotencyKey: async (digest) => `source-analysis-${phase.caseRef.version}:${digest}` })
   const resolveCandidate = createDecisionCandidateResolver(phase.cases)
   const bindings = createPortfolioResultBindings({ state, host, results: phase.results, selection, resolveCandidate, authorizeCase, verifyBinding: async (_binding, result, trusted) => result.kind === "portfolio" && (await Promise.all(result.result.combinations.map((combination) => combination.analysis ? analysis.revalidate(combination.analysis, trusted) : Promise.resolve(false)))).every(Boolean), verifySnapshot, operationIdentity: () => `source-portfolio-${phase.caseRef.version}`, proposalCoverageWrites: writes, now })

@@ -1,0 +1,103 @@
+{
+  "schema": "wp13-term-defer-static-review-v1",
+  "status": "DRAFT_STATIC_REVIEW_PRODUCT_NOT_RUN",
+  "criterion": {
+    "id": "WP13.T03.CHK.02",
+    "text": "Alterar prazo em compromisso sem regra de cancelamento não cria economia artificial; regra existente determina o efeito.",
+    "scope": "Negative monthly-defer interpretation only. Positive contractual cancellation-rule behavior remains pending the canonical financial adapter."
+  },
+  "sourceProduct": {
+    "head": "cb111a14ee527d66748c4e19040c26b828f2bfe4",
+    "tree": "022548856d95a1df933e6f34e70250e86ccd95ec",
+    "label": "W15",
+    "newTestPublished": false
+  },
+  "authoredFile": {
+    "path": "repo/modules/sucafina/Sucafinav1/test/product/wp13/term-defer-boundary.test.ts",
+    "bytes": 9268,
+    "gitBlob": "edb551580d49c817141d3a850be4af36b0a7d647",
+    "sha256": "a977e5f9a69a4fb0b8625955e9517ab32508674bbfca4aecdf693834e9a04c1e"
+  },
+  "writeScope": [
+    "repo/modules/sucafina/Sucafinav1/test/product/wp13/term-defer-boundary.test.ts",
+    "reference/wp13-term-defer-static-review.json"
+  ],
+  "implementation": {
+    "realProducers": [
+      "plannerFixture: LocalStore, private UI authority, scoped source issuer/resolver",
+      "Planner.simulateScenario: baseline observation and monthly defer via real Planner domain command on a copy",
+      "comparePlannerScenarios and plannerScenarioCostPresentation: transient canonical difference and presentation",
+      "createPortfolioPlannerHost/createPortfolioPort: composition, source rereads and canonical replay at egress"
+    ],
+    "controlledSeams": [
+      "One synthetic candidate selection; no persisted DecisionCase/C08 identity claimed",
+      "Explicitly pending C10 inventory bound to the currently authorized source; no completeness or contractual rule fabricated"
+    ],
+    "assertions": [
+      "Current source baseline November112000/December40000; canonical preview November0/December152000 with both changed components hypothetical",
+      "Annual known subtotal remains positive and equal, currency/horizon/source identity retained",
+      "Canonical knownDifference/knownSavings=0 while completeDifference/completeSavings=null and comparison remains conditioned",
+      "WP13 combination remains conditioned, carries coverage:pending, preview-not-applied and analysis-unavailable; retains real source evidence",
+      "Planner versions data, CAS versions, audit and sequences unchanged; reissued original source evidence identical",
+      "After authority revocation, both WP13 evaluate and Planner simulateScenario deny without numeric payload"
+    ],
+    "coverageReferences": "The transient comparator points both observations at the same unresolved source inventory. It claims neither a persisted scenario-specific C10 assessment nor a C08 comparison.",
+    "budget": "No per-test timeout added; no existing budgets changed. Inherits the future surgical request timeout. Runtime not measured."
+  },
+  "staticInspection": {
+    "relativeImportsExist": true,
+    "interfacesRead": [
+      "ScenarioRequest readonly operation list",
+      "PlannerSourceHost and PortResult discriminated union",
+      "CostCoverageBasis/CostCoverageAssessment",
+      "createPortfolioPlannerHost and PortfolioPort callback signatures",
+      "Snapshot versions/audit/sequences",
+      "plannerFixture actual source and authority methods"
+    ],
+    "localProductTestsRun": false,
+    "localTypecheckRun": false,
+    "remoteCallsMade": false,
+    "financialFormulaAdded": false,
+    "foreignFilesChanged": false,
+    "rootOrOtherAgentsMustRunHostedChecks": true
+  },
+  "keySourcePins": [
+    {
+      "path": "repo/modules/sucafina/Sucafinav1/test/product/wp03/planner-fixture.ts",
+      "bytes": 6477,
+      "gitBlob": "19cb4262ca02a680b06cdd4db54d5bb9d33a1219",
+      "sha256": "ce0483cee32f81c4616ae51369152618da94784ea195f5f8c6c3bcdabf038a5f"
+    },
+    {
+      "path": "repo/modules/sucafina/Sucafinav1/product/planner/scenario.ts",
+      "bytes": 5062,
+      "gitBlob": "52b09da8ee31f6681bdc2c29a69bc76755f9d232",
+      "sha256": "b987d62bb811ece3534d44b8c2bbf5a528842ab63db10a22df90cb5e5011aeed"
+    },
+    {
+      "path": "repo/modules/sucafina/Sucafinav1/product/planner/comparison.ts",
+      "bytes": 5994,
+      "gitBlob": "5cf1266faaf73421d4b112bcb3c117a4a27c27dc",
+      "sha256": "917293165bc6c324fb61c010c8b80adbccda4141643d999970a99687812ef263"
+    },
+    {
+      "path": "repo/modules/sucafina/Sucafinav1/product/portfolio/planner-host.ts",
+      "bytes": 2922,
+      "gitBlob": "2428a9f7c34ddbeacdba5aa678888bc20823c6d1",
+      "sha256": "9f7868428cfbd3b52d5eb405fa5fc045d5f787a2ead3a33a6a30fb3199119c6e"
+    },
+    {
+      "path": "repo/modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+      "bytes": 17416,
+      "gitBlob": "84151d62b46e949c90a48a5965f5bdd244b0c5fb",
+      "sha256": "7aaeda6630e20eecf147d6a36ed9b52d87366b1712941302af047febad707e6a"
+    }
+  ],
+  "limits": [
+    "No positive contractual cancellation rule or commitment-effect adapter is supplied. No claim of full T03.CHK.02 acceptance.",
+    "No C08 persistence, human confirmation/application, installed host/UI/BI/GNATIVE proof. Durable no-apply assertion concerns actual Planner storage.",
+    "No units.issue, exact solver, renewal bootstrap, or financial policy substitution.",
+    "Assertions are authored evidence intent, not observed product PASS. Hosted C16 and the future S11 selection are owned by root."
+  ],
+  "nextAction": "Root reviews/publishes the owned test and runs the scoped hosted check and future non-duplicate S11 selection; retain NOT_READY and the financial adapter delta."
+}

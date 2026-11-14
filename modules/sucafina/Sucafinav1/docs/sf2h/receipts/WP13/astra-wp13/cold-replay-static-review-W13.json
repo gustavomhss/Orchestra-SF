@@ -1,0 +1,419 @@
+{
+  "schema": "wp13-cold-replay-static-review-v1",
+  "preparedAt": "2026-11-14T12:32:37.585131+00:00",
+  "author": "/root/wp13_review_acceptance/w6_handoff_static",
+  "status": "STATIC_COST_MODEL_NO_MATERIAL_SAFE_REPLAY_REDUCTION_ESTABLISHED",
+  "scope": {
+    "productHead": "0e73d1dfb179517a4e4341ad554966e6941b2a64",
+    "productTree": "0bee314a9513c5b2242d389d37cf7aab2aaa5ae2",
+    "identitySource": "docs/sf2h/receipts/WP13/astra-wp13/check-W13.json; source files inspected as local W13 composition, hashes below. No remote verification by this reviewer.",
+    "focus": [
+      "omitted training cold reload via WP05 fixture",
+      "bundled training cold reload via WP05 fixture"
+    ],
+    "excluded": [
+      "renewal-choice-history optimization already being reviewed by owners for W14",
+      "cross-call memo or replay scope",
+      "host-owned changes",
+      "budget increases"
+    ],
+    "filesEdited": [
+      "reference/wp13-cold-replay-static-review.json"
+    ],
+    "productEdited": false,
+    "testsExecuted": false,
+    "typecheckExecuted": false,
+    "remoteOperations": false
+  },
+  "conclusion": {
+    "materialOptimizationRecommendedNow": false,
+    "reason": "Repeated canonical replay is structurally multiplied, but current public ports combine calculation with current admission and final rereads. Removing a whole binding/replay/coverage phase cannot be justified as equivalent from these contracts alone. W11 batching lowers per-resolution work but does not collapse the four successful verifier invocations of a cold persistent read.",
+    "safeSmallCandidate": "Within synchronous finalization/validation only, precompute full canonical digests once and perform stable first-occurrence dedup/membership with Set. This changes no port call, authority read, numeric calculation, ordering, coverage state or output. It has no measured material impact and is not proposed as a timeout fix.",
+    "performanceClaim": "No claim that W11 batching, W12 bootstrap splitting, W14 renewal inputs or any proposed micro-optimization meets the 300000ms cold-test budget. The W12 split affects persistence-recovery, not this WP05 fixture path.",
+    "action": "Keep current semantics. If diagnosis is needed in the next already-authorized focused hosted selection, add phase/call timing that does not substitute, cache or skip any producer invocation. Do not add a separate equivalent run or increase timeout."
+  },
+  "observedEvidence": {
+    "oldRunId": 43586147077,
+    "oldProduct": "00f1582e7a26f37b2f4ea4a18f7883f1837e48db",
+    "oldSnapshot": "f54db2faaf1b285fb6ebf8ccf922f9cde5e60459",
+    "status": "completed",
+    "conclusion": "cancelled",
+    "durations": [
+      {
+        "training": "omitted",
+        "ms": 944759.46
+      },
+      {
+        "training": "bundled",
+        "ms": 1592075.58
+      }
+    ],
+    "declaredTestBudgetMs": 300000,
+    "acceptedProductPass": false,
+    "boundary": "These are W5 entire test durations, including fixture/bootstrap, initial evaluate/save, witness/sample reads, service recreation, cold read, revocation and cleanup. There are no per-phase spans. They are not W13 timings and cannot identify cold read as the measured dominant phase.",
+    "currentPackageCheck": {
+      "runId": 43594042447,
+      "status": "FAIL",
+      "ownedDiagnostics": 0,
+      "foreignDiagnostics": 130,
+      "productRuntimeInference": "NONE"
+    }
+  },
+  "currentSetup": [
+    {
+      "source": "test/product/wp13/coverage-preview-fixture.ts:16-18",
+      "fact": "Calls createWp05ComparisonFixture with renewal-usd, training and composed=true. It no longer requests the full WP05 sensitivity fixture."
+    },
+    {
+      "source": "test/product/wp05/engine-fixture.ts:128-187,201-207",
+      "fact": "Real scenario previews/C08, criterion units/rule and canonical persisted comparison remain. createWp05ComparisonFixture constructs sensitivity services but does not evaluate/save sensitivity; that work exists only in createWp05SensitivityFixture."
+    },
+    {
+      "source": "test/product/wp13/coverage-sensitivity-integration.test.ts:195-225",
+      "fact": "endpointRequest sets steps=1, so there are two endpoint samples. persistedServices creates a fresh coverage factory and verifier; the first cold-service operation is persistent.read. Its C08 verifySources uses the declared coverageEvidence seam; source/rule/case/preview authority is still checked by the canonical nested ports."
+    },
+    {
+      "source": "test/product/wp05/engine-fixture.ts:145-147",
+      "fact": "The WP05 case reader still invokes createPlannerOperationVerifier for every alternative, twice through case-port.read. It does not use the candidate renewal-operation verifier or sourcePlanner split being reviewed for W14."
+    }
+  ],
+  "outerCallCounts": {
+    "assumptions": "Successful stable new-save path, two endpoints, exact certificate available. Early denial/unavailable paths stop earlier. Counts are static call-site counts, not instrumentation.",
+    "coldPersistentRead": {
+      "bindingsRead": 2,
+      "verifySensitivityPerBindingsRead": 2,
+      "verifySensitivityTotal": 4,
+      "exactThresholdTotal": 8,
+      "sourceFenceCollections": 8,
+      "directC08ReadCallsExcludingNestedUnitsAndPreview": 33
+    },
+    "coldSources": {
+      "persistentRead": "product/portfolio/sensitivity-store.ts:29-45",
+      "bindingRead": "product/decisions/criterion-rules.ts:166-182",
+      "verifier": "product/portfolio/verification.ts:94-155"
+    },
+    "newEvaluateAndStore": {
+      "producerSensitivityEvaluations": 1,
+      "verifyFromBindBeforeCommit": 1,
+      "verifyFromBindReturnRead": 2,
+      "verifyFromPersistentReturnRead": 4,
+      "verifySensitivityTotal": 7,
+      "exactThresholdTotalIncludingProducer": 16
+    },
+    "newSavePlusColdRead": {
+      "producerSensitivityEvaluations": 1,
+      "verifySensitivityTotal": 11,
+      "exactThresholdTotalIncludingProducer": 24
+    },
+    "outerLimit": "Excludes fixture setup, explicit test witness previews and issuer.resolve, explicit stored-sample reads, denied read and cleanup; confirmed also performs another evaluateAndStore.",
+    "directC08Formula": "One cold persistent.read: 2 direct sensitivity reads + 4 sensitivity reads inside two binding.reads + (1+n) validateSamples reads + 4*(4+n) verifier source/baseline/sample reads = 23+5n =33 for n=2. Nested issuer/preview/C08 verification adds more."
+  },
+  "perVerifierCounts": {
+    "n": 2,
+    "common": {
+      "unitsResolveExplicit": 1,
+      "unitsRevalidateExplicit": 1,
+      "unitsRevalidateCallsResolve": true,
+      "sourceAndBaselineHistoricalReads": 4,
+      "sampleStoredReads": 2,
+      "exactThresholdCalls": 2,
+      "validatePlannerThresholdCalls": 2,
+      "adjacentWitnessPreviews": 4,
+      "sourceFenceCollections": 2
+    },
+    "omitted": {
+      "coverageIssue": 1,
+      "coverageIssueOutcome": "unavailable coverage-incomplete after authority validation, before structural proof",
+      "coverageQualify": 0,
+      "coverageVerify": 0,
+      "coverageRevalidate": 0,
+      "structuralProofs": 0,
+      "unitsIssueIncludingResolveAndExact": 6,
+      "nonExactSolverPreviews": 6,
+      "previewFormula": "n+4 + sum(previews of two exact solver invocations) =6+E1+E2"
+    },
+    "bundled": {
+      "coverageIssue": 1,
+      "coverageQualifyTotalIncludingVerify": 4,
+      "coverageVerify": 2,
+      "coverageRevalidateTotalIncludingVerify": 3,
+      "structuralProofs": 4,
+      "unitsIssueIncludingResolveExactAndStructural": 14,
+      "nonExactSolverPreviews": 20,
+      "coverageAuthorityResolutions": 16,
+      "previewFormula": "n sample + n qualification replay + 4 adjacent witnesses + 2 issue-structure + 2 final-structure + n*(2 structure +1 verify preview +1 qualification replay) =6n+8=20, plus E1+E2"
+    },
+    "coldReadAggregate": {
+      "omittedPreviewFormula": "24 + sum(E1..E8)",
+      "bundledPreviewFormula": "80 + sum(E1..E8)",
+      "omittedUnitsIssue": 24,
+      "bundledUnitsIssue": 56
+    },
+    "producerDifference": "createPlannerSensitivity additionally re-previews both saved samples on final revalidate; producer non-solver previews are8 omitted or22 bundled. Producer also has more resolve/revalidate calls; do not use verifier counts as producer counts.",
+    "solverProbeDefinition": "Ej is the unknown runtime number of canonical previews in one createPlannerExactThreshold invocation:2 endpoints + optional anchor/neighbor probes + binary-search probes +2 adjacent final witnesses. No financial calculation or loop was executed to infer Ej.",
+    "sources": [
+      "product/portfolio/sensitivity.ts:31-49",
+      "product/portfolio/verification.ts:108-148",
+      "product/portfolio/planner-sensitivity.ts:70-124",
+      "product/portfolio/coverage-preview.ts:105-177",
+      "product/planner/interval-proof.ts:15-28",
+      "product/planner/exact-threshold.ts:18-78",
+      "product/portfolio/threshold-proof.ts:34-43"
+    ]
+  },
+  "nestedDependencyMultipliers": [
+    {
+      "entry": "One comparePlannerPreview",
+      "counts": "2 single-baseline scenarios.resolve calls,1 real simulateScenario and source/coverage ingress+egress checks. Each single-reference resolve performs2 case reads and1 compareForecast. In this WP05 fixture, each case read invokes operation verification for2 alternatives twice; each operation verifier performs2 compareForecast calls and1 readonly simulation transaction. Therefore one successful preview entails4 case reads,16 operation-verifier invocations and34 compareForecast calls before other producer internals.",
+      "sources": [
+        "product/planner/preview-comparison.ts:16,28,34-36",
+        "product/planner/stored-scenarios.ts:20-70",
+        "product/decisions/case-port.ts:80,85",
+        "test/product/wp05/engine-fixture.ts:147",
+        "product/planner/operation-verifier.ts:45-46,74-94"
+      ],
+      "limit": "Static API-call count, not CPU/IO duration or database-query count."
+    },
+    {
+      "entry": "One units.issue after W11 batching",
+      "counts": "Two pair resolvePlannerScenarioBatch calls share a case observation within each batch phase. Same-case pair gives4 case reads across both batches, plus2 direct cases.read =6;4 direct compareForecast projections, plus48 compareForecast calls from those6 case reads =52. It also makes12 C08 read calls before producer internals. units.resolve adds1 case read and1 C08 read around its issue.",
+      "sources": [
+        "product/planner/sensitivity-units.ts:31-63,68-91",
+        "product/planner/stored-scenarios.ts:20-70"
+      ],
+      "limit": "The optimization is invocation-local and does not share observations across separate issue/resolve/preview invocations."
+    },
+    {
+      "entry": "Read-only result admission",
+      "counts": "A C08 read performs initial/final stored+case observations, fresh verifySources/authorizeCase and final host revalidation. Repeated C08 reads are not only digest lookups.",
+      "sources": [
+        "product/decisions/result-store.ts:49-70"
+      ],
+      "limit": "No permission result may be reused as a numeric-cache shortcut."
+    }
+  ],
+  "ownershipAndExistingIntake": {
+    "own": [
+      "portfolio/verification.ts",
+      "portfolio/sensitivity-store.ts",
+      "portfolio/planner-sensitivity.ts",
+      "portfolio/sensitivity.ts",
+      "portfolio/coverage-preview.ts",
+      "portfolio/threshold-proof.ts",
+      "test/product/wp13/coverage-preview-fixture.ts",
+      "test/product/wp13/coverage-sensitivity-integration.test.ts"
+    ],
+    "foreignDependencies": [
+      "WP11 criterion-rules/result-store/case-port",
+      "Finance/WP03 stored-scenarios, scenario-comparison-port, sensitivity-units, interval-proof, exact-threshold, preview-comparison and operation-verifier",
+      "WP05 engine-fixture",
+      "WP10 installed host/Atlas composition"
+    ],
+    "W11Effect": "Published batch resolution and comparison-only fixture setup are present in the inspected sources. They reduce repeated work within a pair resolution and eliminate unrelated bootstrap sensitivity, but no cross-call reuse is installed.",
+    "W14CandidateBoundary": "Owner candidate renewal-choice-fixture d5395570, renewal-operation-verifier23389174 and boundary tests d91a07dd affect the renewal fixture branch. The first WP05 cold tests do not import renewal-choice-fixture on their execution path; no automatic gain is credited to them.",
+    "noExternalChangesRequiredByThisReview": true
+  },
+  "optimizationAssessment": [
+    {
+      "id": "KEEP-OUTER-ADMISSION",
+      "candidate": "Remove one bindings.read or replace repeated verifySensitivity with a memo",
+      "decision": "NOT_JUSTIFIED",
+      "reason": "The initial and final binding observations currently bracket sample/result reads and detect binding mutation; each canonical binding read also rechecks current rule/result and invokes numerical reproduction. The public port exposes no cheaper authenticated stable binding observation. Removing a phase changes those guarantees; cross-call memo remains explicitly rejected."
+    },
+    {
+      "id": "KEEP-C10-REPLAY",
+      "candidate": "Drop qualify/verify duplicate previews or interval revalidation",
+      "decision": "NOT_JUSTIFIED_AS_QUICK_FIX",
+      "reason": "Public qualify must check an incoming preview against a fresh producer replay; verify must check issued qualification against current authority and regenerated qualification. A private fusion might be designed, but equivalence across callback mutation and intermediate authority changes has not been established. Do not delete current/final checks or replace real preview with stored qualification."
+    },
+    {
+      "id": "SYNC-DIGEST-DEDUPE",
+      "candidate": "Precompute canonical digests inside synchronous output finalization and membership validation",
+      "decision": "CONCRETE_LOW_RISK_MICRO_OPTIMIZATION_ONLY",
+      "paths": [
+        "product/portfolio/planner-sensitivity.ts:148",
+        "product/portfolio/coverage-preview.ts:128",
+        "product/portfolio/threshold-proof.ts:39"
+      ],
+      "mechanism": "Stable first-occurrence Set of full digestSfValue keys, computed once per reference within the same synchronous section; for certificate membership compute the Set only after the awaited witness previews, then evaluate the same equality predicate. Preserve reference order and the exact full-object equality (not merely refId/refDigest). Do not retain the Set across await, factory calls or future requests.",
+      "effect": "Removes repeated canonical serialization/hashing in nested findIndex/some; worst-case O(R^2) digest evaluations becomes O(R). No producer, case, evidence, rule or authority read is removed. These fixtures have few unique sources, so meaningful runtime improvement is unproven and likely bounded.",
+      "implementationRequested": false,
+      "performanceClaim": "NONE"
+    },
+    {
+      "id": "NO-CONCURRENCY-SHORTCUT",
+      "candidate": "Parallelize or hold a long transaction around whole replay",
+      "decision": "NOT_RECOMMENDED",
+      "reason": "Mutable callback providers, serialized LocalStore transactions and final-read ordering need a separate proof; holding BEGIN during exact probes/coverage would recreate the rejected lock-scope approach. Existing supported Promise.all reads remain unchanged."
+    }
+  ],
+  "nextHostedInstrumentationOnlyIfNeeded": {
+    "phases": [
+      "fixture-bootstrap",
+      "fresh-service-construction",
+      "initial-evaluate-and-store",
+      "explicit-units-and-boundary-witnesses",
+      "explicit-sample-reads",
+      "cold-service-construction",
+      "cold-read",
+      "revoked-read",
+      "cleanup"
+    ],
+    "counters": [
+      "persistent.read",
+      "bindings.read/bind",
+      "verifySensitivity",
+      "units.resolve/issue/revalidate",
+      "coverage.issue/qualify/revalidate/verify",
+      "exactThreshold",
+      "preview",
+      "readSourceFences",
+      "results.read/readHistoricalScenario",
+      "cases.read",
+      "operation verifier and compareForecast only if owner exposes instrumentation"
+    ],
+    "fields": [
+      "invocationId",
+      "parentInvocationId",
+      "phase",
+      "scenarioRef/baselineRef or requestDigest",
+      "operation kind",
+      "durationMs",
+      "status"
+    ],
+    "safety": "Wrappers may time and count the real call and its finally path only. They must preserve callback arguments, cloned observations, exceptions and authority checks. Do not cache results or execute local product code. Whole exact-call time can be measured without wrapping its internal solver or changing its producer wiring.",
+    "runPolicy": "Attach diagnosis to the next approved disjoint hosted selection; no separate equivalent CI dispatch by this reviewer."
+  },
+  "files": [
+    {
+      "path": "repo/modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+      "gitBlob": "8eb97976d7a2f228acf189b25882fd72d960d95b",
+      "sha256": "5c09acc087257862eb16920c893645b75d54aded4a8f73a5d5cbf8416ac1a594",
+      "bytes": 23011
+    },
+    {
+      "path": "repo/modules/sucafina/Sucafinav1/test/product/wp13/coverage-preview-fixture.ts",
+      "gitBlob": "6e56a64ee1b76422706d685e2f646a156a8ade39",
+      "sha256": "c1bd849c0d0c716caf2ca55fb1b8cb0ef58af8297e3e1daa6a5b3f88951f0aec",
+      "bytes": 9717
+    },
+    {
+      "path": "repo/modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+      "gitBlob": "608b1a95b491740041f8689a41b4a064c7254b24",
+      "sha256": "afb559f4b2403025b977a33a5a118be567a5936de5ca46e3308687186b250ad8",
+      "bytes": 22570
+    },
+    {
+      "path": "repo/modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+      "gitBlob": "dd571e43b841dc7cbc37296c4fa9ccd708215ef4",
+      "sha256": "fa2ec4afe016ef0820cce9d08601cd9772e099b1308790e23fd6f538af226320",
+      "bytes": 17055
+    },
+    {
+      "path": "repo/modules/sucafina/Sucafinav1/product/portfolio/sensitivity-store.ts",
+      "gitBlob": "33a8d973c045769b456342499e1c247d524f6c53",
+      "sha256": "180d8117de887296d11e73bf49e1cda9afb53c5144ee6f4ca50dd8b4ef72c3a2",
+      "bytes": 8025
+    },
+    {
+      "path": "repo/modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+      "gitBlob": "3dec070ca5f56f7bd03a09b4b19468c950d82214",
+      "sha256": "ccfd69570f4cc7dbe180f4e60cbf9891522e3f10674a6c8d84c78b61af8b491d",
+      "bytes": 19201
+    },
+    {
+      "path": "repo/modules/sucafina/Sucafinav1/product/portfolio/sensitivity.ts",
+      "gitBlob": "527db7238ae9e7c5a5233e2fedfbb8431017e3d5",
+      "sha256": "1c6a655eedd44c6f09411e8e3a9b5f7cfaa82f6cedcaeb006dd00b293cf5e63c",
+      "bytes": 12310
+    },
+    {
+      "path": "repo/modules/sucafina/Sucafinav1/product/portfolio/coverage-preview.ts",
+      "gitBlob": "9f7e12113b38e73befb64f99a94fb8ca28d05eee",
+      "sha256": "dedee7a05f2fb00a7267b93fc7ba23052c5bd625cfd161ab6bce71f4f07d635e",
+      "bytes": 20097
+    },
+    {
+      "path": "repo/modules/sucafina/Sucafinav1/product/portfolio/threshold-proof.ts",
+      "gitBlob": "056a857364cf8a6c2a2bc97bf107276612edf55d",
+      "sha256": "96ed59925c95abe55fe15185f30f2026f0713f5f916238d4529c29d812aa86bf",
+      "bytes": 6719
+    },
+    {
+      "path": "repo/modules/sucafina/Sucafinav1/product/decisions/criterion-rules.ts",
+      "gitBlob": "c357c6c66aac544394ab355306e1f6f7195395f7",
+      "sha256": "88d63af3bb3b3f115e59bcde29de014dd5337ba71ce68910089d97bd89299217",
+      "bytes": 31605
+    },
+    {
+      "path": "repo/modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "gitBlob": "338889513cfc681bdda91697a9d5bbc16bde8fd1",
+      "sha256": "44c12d1bca211d423296526b7fbe31d713566c86fbba1860c9832f6d53001998",
+      "bytes": 16090
+    },
+    {
+      "path": "repo/modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "gitBlob": "810539cbd2f0b89006102b334710e9d6695151ca",
+      "sha256": "22c59638bb611d8b18c9c19d5c16835be3c9b704e1d0d0b123a436ab92ace9b1",
+      "bytes": 16655
+    },
+    {
+      "path": "repo/modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+      "gitBlob": "1673c86995cf71b61e288d91492ae7b691934171",
+      "sha256": "d83e19bff860ad2a54fc3f41b3b5790d3d31cd3b2b55ea8785a61ea30aa8827b",
+      "bytes": 19887
+    },
+    {
+      "path": "repo/modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+      "gitBlob": "fca509789efd2bf1b7d9453d09a3a460ee778feb",
+      "sha256": "771b060898fce1b1d851461bee7df743014ab55f9c0994a0331f2664a1c8bfd1",
+      "bytes": 6407
+    },
+    {
+      "path": "repo/modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+      "gitBlob": "1782c2094239c3712d3a895a6a25f4160fb429c7",
+      "sha256": "0a7636cb5245b63494e2dc0d83adf909cd750ba71f4be46f62f03f797e71a965",
+      "bytes": 8591
+    },
+    {
+      "path": "repo/modules/sucafina/Sucafinav1/product/planner/preview-comparison.ts",
+      "gitBlob": "f47b42c0e6392c1cdc99de43c79f9e41a2a189b4",
+      "sha256": "51c9b83256825e90e3a8a8b49c11d73339527edcb1a67da4d98ce6e8bf17e143",
+      "bytes": 6770
+    },
+    {
+      "path": "repo/modules/sucafina/Sucafinav1/product/planner/interval-proof.ts",
+      "gitBlob": "55a701b7be49fb3f550a0b52b580e6f7dc819b31",
+      "sha256": "f6e8a733e688221146c2213b8b4e601cda41a2600ef65937006a26ddad6b3f28",
+      "bytes": 4817
+    },
+    {
+      "path": "repo/modules/sucafina/Sucafinav1/product/planner/exact-threshold.ts",
+      "gitBlob": "59fcb482078a1c33a8ab4c6e0d5e691228b6ae43",
+      "sha256": "a85a427a345629af0be0f03095a8f21095c6228ab163105dab6a3258ee5987a4",
+      "bytes": 10472
+    },
+    {
+      "path": "repo/modules/sucafina/Sucafinav1/product/planner/operation-verifier.ts",
+      "gitBlob": "086c0100a39525f5d78f5864ad589e2d72fc40cd",
+      "sha256": "05d1f9c62a415c881bd6b36802abd68a5956cfab2fa4c173d5a0dc63cb53876d",
+      "bytes": 9875
+    }
+  ],
+  "unmodifiedPublishedPlannerPort": {
+    "reference": {
+      "path": "reference/W13-exact/modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "gitBlob": "dba62042653bd061fa099e2956cae4d11a0475ce",
+      "sha256": "d66bf0f6e47bbd7e8223c362fa1a67a4625f2cc1156eb0d0a46dc1a1c9419456",
+      "bytes": 24849
+    },
+    "local": {
+      "path": "repo/modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "gitBlob": "23e9c1b6c39e980c053b5ddf3324c587f4b6dc7f",
+      "sha256": "2407e66a49c6368f54b0c20607dd5c40f60625c99af82ed8116e27efcc36c091",
+      "bytes": 24850
+    },
+    "note": "Root reported local port differs from W13 only by trailing LF. No planner port edit or behavioral inference from this difference was made."
+  },
+  "noAcceptanceClaim": true
+}
