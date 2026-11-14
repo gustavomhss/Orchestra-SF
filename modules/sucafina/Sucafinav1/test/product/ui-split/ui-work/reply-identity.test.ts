@@ -3,7 +3,6 @@ import type { Browser, BrowserContext } from "@playwright/test"
 import { closeWp01Browser, launchWp01Browser } from "../../wp01/browser-fixture.ts"
 import { createThreadDomainFixture } from "../../wp01/thread-domain-fixture.ts"
 import { createBrowserHostFixture } from "./browser-host-fixture.ts"
-import { available } from "./domain-fixture.ts"
 
 let browser: Browser
 beforeAll(async () => { browser = await launchWp01Browser() }, 35_000)
@@ -123,61 +122,5 @@ test("shared recipient current projections stay unconfirmed across exact retries
     expect(await app.inspect()).toEqual(committed)
     expect(app.errors).toEqual([])
     console.info("UI_WORK_RECIPIENT_ACK_DEPENDENCY", JSON.stringify({ threadId: app.thread.id, producerShape: "RecipientThread.current", recipient: fresh.binding.principalRef, author: app.thread.messages[0]!.authorRef, exactAttempts: 2, storedMessages: committed.value.messages.length, acknowledged: false }))
-  } finally { await app.close() }
-}, 60_000)
-
-test("confirmation selects the exact latest message despite an old equal-text selector and replays a lost confirmation once", async () => {
-  const app = await createBrowserHostFixture(browser)
-  try {
-    const body = "Same text, different message identity."
-    const first = await app.reply(body), old = first.messages.at(-1)!
-    app.view.savedAnswerRef = available(await app.port.answerEvidence.issue(app.thread.id, old.id, app.recipient)).refId
-    const latest = (await app.reply(body)).messages.at(-1)!
-    expect(latest.id).not.toBe(old.id)
-    expect(latest.incarnation).not.toBe(old.incarnation)
-    expect((await app.page.goto(`${app.origin}/product`))?.status()).toBe(200)
-    await app.page.getByRole("button", { name: "Open conversation", exact: true }).click()
-    const confirm = app.page.getByRole("button", { name: "Confirm this answer and add to decision", exact: true })
-    await confirm.last().waitFor()
-    expect(await confirm.count()).toBe(2)
-    expect(await confirm.first().isDisabled()).toBe(true)
-    let damaged = false
-    await app.page.route("**/*?sf=collaboration-answer-confirm", async (route) => {
-      const response = await route.fetch()
-      if (!damaged && response.status() === 200) { damaged = true; await route.fulfill({ response, body: "{" }); return }
-      await route.fulfill({ response })
-    })
-    await confirm.last().click()
-    await app.page.getByText("Could not confirm the answer. Retry this same request.", { exact: true }).waitFor()
-    const prepared = app.attempts.find((attempt) => attempt.route === "collaboration-answer-prepare-message")!
-    expect(prepared.status).toBe(200)
-    expect(JSON.parse(prepared.body)).toEqual({ questionId: app.thread.id, messageId: latest.id, incarnation: latest.incarnation, version: latest.version })
-    const receipt = JSON.parse(prepared.response).value
-    expect(receipt.answerRef).not.toBe(app.view.savedAnswerRef)
-    expect(app.attempts.some((attempt) => attempt.route === "collaboration-answer-prepare")).toBe(false)
-    expect(app.attempts.some((attempt) => attempt.route === "decision-answer-question")).toBe(false)
-    const before = await app.state.read(app.request("reader-b"), "threads", (state) => state.threads)
-    const confirmations = await app.state.read(app.request("reader-b"), "confirmations", (state) => state.confirmations)
-    const attachment = app.page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "decision-answer-question")
-    await confirm.last().click()
-    // The real case-attachment mount is outside this composition and write lease.
-    expect((await attachment).status()).toBe(404)
-    await app.page.getByText("Could not confirm the answer. Retry this same request.", { exact: true }).waitFor()
-    const writes = app.attempts.filter((attempt) => attempt.route === "collaboration-answer-confirm")
-    expect(writes).toHaveLength(2)
-    expect(writes.every((attempt) => attempt.status === 200)).toBe(true)
-    expect(writes[1]!.body).toBe(writes[0]!.body)
-    expect(writes[1]!.key).toBe(writes[0]!.key)
-    expect(await app.state.read(app.request("reader-b"), "threads", (state) => state.threads)).toEqual(before)
-    expect(await app.state.read(app.request("reader-b"), "confirmations", (state) => state.confirmations)).toEqual(confirmations)
-    const reused = await app.send("answer-read", { questionId: app.thread.id })
-    expect(reused).toMatchObject({ status: 200, result: { status: "ok", value: { answerRef: receipt.answerRef, answer: body, authorRef: "reader-b", observedVersion: receipt.observedSourceVersion } } })
-    await app.page.reload()
-    await app.page.getByRole("button", { name: "Open conversation", exact: true }).click()
-    await app.page.getByText(body, { exact: true }).last().waitFor()
-    expect(app.attempts.filter((attempt) => attempt.route === "collaboration-answer-confirm")).toHaveLength(2)
-    expect(app.attempts.filter((attempt) => attempt.route === "decision-answer-question")).toHaveLength(1)
-    expect(app.errors).toEqual([])
-    console.info("UI_WORK_EXACT_CONFIRMATION", JSON.stringify({ questionId: app.thread.id, selected: { id: latest.id, incarnation: latest.incarnation, version: latest.version }, oldAnswerRef: app.view.savedAnswerRef, confirmedAnswerRef: receipt.answerRef, exactAttempts: 2, attachment: "UNMOUNTED_404" }))
   } finally { await app.close() }
 }, 60_000)

@@ -1,0 +1,84 @@
+{
+  "schema": "sf2h.ui-work.ci-result.v1",
+  "attempt": 2,
+  "W": "639636280859f5f21f44813658d5d9a0c207fff0",
+  "WTree": "57c12761912d22276edb3ae1f7515a306c6580ce",
+  "S": "aebd6ee7bf597fd6cd742af347e60846f58e5cfc",
+  "STree": "d83b5621879baaa39329d602412d75d49789c295",
+  "requestSha256": "3720e98c558a02d241cc9b7f56d7d35b91833a7beb26ac9d0e208ba9a990e70b",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "./Sucafinav1/test/product/ui-split/ui-work/reply-identity.test.ts",
+      "./Sucafinav1/test/product/ui-split/ui-work/selection-recovery.test.ts",
+      "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+    }
+  },
+  "equivalence": [
+    {
+      "filename": ".ci-run.json",
+      "status": "added",
+      "additions": 16,
+      "deletions": 0,
+      "changes": 16,
+      "previous_filename": null
+    }
+  ],
+  "run": {
+    "id": 43621603578,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43621603578",
+    "conclusion": "failure",
+    "jobId": 132528304173,
+    "jobUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43621603578/job/132528304173"
+  },
+  "counts": {
+    "pass": 5,
+    "fail": 2,
+    "expectCalls": 81,
+    "files": 4
+  },
+  "omni": {
+    "verdict": "pass",
+    "nonce": "93713de3659837dcb6a0731ca2767f75",
+    "declaringTests": 1,
+    "spawns": 1,
+    "delegated": 0
+  },
+  "browser": {
+    "launches": 1,
+    "acquisitions": 2,
+    "releases": 2,
+    "contexts": 0,
+    "driverClosed": true,
+    "processExited": true,
+    "unchangedStartupDeadlineMs": 30000
+  },
+  "cases": [
+    "2026-11-14T17:33:35.7976294Z (pass) WP01 starts one Node-owned Chromium through Omni before leasing it across files [8338.97ms]",
+    "2026-11-14T17:33:42.4799018Z UI_WORK_EXACT_REPLY {\"threadId\":\"fa36668d-60b9-4c12-9507-9474acb8e06b\",\"message\":{\"id\":\"f8b1f5b0-1122-4088-aeb4-70f496e3ca6e\",\"incarnation\":\"de27f719-fc3e-4d6a-b592-c9dc022700ca\",\"version\":1},\"attempts\":2,\"storageVersion\":4,\"equalTextReplies\":3}",
+    "2026-11-14T17:33:42.5376980Z (pass) an exact C08 reply snapshot survives lost delivery and identical concurrent replies without a duplicate after retry or reload [6642.97ms]",
+    "2026-11-14T17:33:49.8844503Z UI_WORK_RECIPIENT_ACK_DEPENDENCY {\"threadId\":\"dc5aa247-371f-4a13-b546-8f3d79f3b01c\",\"producerShape\":\"RecipientThread.current\",\"recipient\":\"reader-b\",\"author\":\"person\",\"exactAttempts\":2,\"storedMessages\":4,\"acknowledged\":false}",
+    "2026-11-14T17:33:49.9108200Z (pass) shared recipient current projections stay unconfirmed across exact retries, reload and fresh distinct-recipient admission [7372.31ms]",
+    "2026-11-14T17:34:09.3738732Z (fail) confirmation selects the exact latest message despite an old equal-text selector and replays a lost confirmation once [19462.90ms]",
+    "2026-11-14T17:34:12.2310642Z UI_WORK_SELECTION_REPLAY {\"caseRef\":\"case:work-decision:work-decision-incarnation\",\"period\":{\"start\":\"2026-03-01\",\"end\":\"2026-03-31\"},\"sourceRef\":\"sf-source:269c0286-1145-4c91-afeb-6554a61414f1:1\",\"selectionRef\":\"sf:case-work-selection:c120a3e8-f8bd-468f-8ed7-f1f096a90b12\",\"attempts\":2,\"storageVersion\":1}",
+    "2026-11-14T17:34:12.2539348Z (pass) first-cycle selection retains case, sources and period after lost delivery, exact retry and reload [2682.93ms]",
+    "2026-11-14T17:34:14.0062560Z UI_WORK_G03_CAS {\"http\":503,\"payload\":{\"status\":\"unavailable\",\"reason\":\"selection-unavailable\"},\"caseRef\":\"case:work-decision:work-decision-incarnation\",\"selected\":true,\"period\":[\"2026-03-01\",\"2026-03-31\"],\"producer\":\"retained baseline; published collab fix awaits owner intake\"}",
+    "2026-11-14T17:34:14.0304245Z (fail) G03 acceptance requires the real precommit CAS conflict and preserves the reviewed selection [1775.82ms]",
+    "2026-11-14T17:34:14.1366701Z (pass) WP01 shares one Chromium across files, releases every lease, and proves final process exit [99.69ms]"
+  ],
+  "limits": [
+    "The exact C08 reply, recipient conservative ACK with distinct actor/reauthorization, and selection loss/retry/reload are scoped component PASS.",
+    "G03 acceptance is FAIL: real producer returns 503 selection-unavailable; assertion remains 409.",
+    "Exact confirmation/reuse remains FAIL: attachment response was not observed within unchanged 5000ms; intermediate outcomes were not retained in this run.",
+    "No installed host, native corporate identity, final case attachment or global acceptance follows."
+  ],
+  "followup": "Isolate the failed confirmation case, retain all assertions/deadlines, add exact selector equality and HTTP outcome diagnostics; do not rerun the three unchanged passing journeys."
+}
