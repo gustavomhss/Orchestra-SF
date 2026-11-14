@@ -1,0 +1,114 @@
+import { expect, test } from "bun:test"
+import { digestSfValue } from "../../../product/contracts/canonical.ts"
+import type { ScenarioRequest } from "../../../product/contracts/operations.ts"
+import type { PlannerPort } from "../../../product/contracts/ports.ts"
+import { createPlannerCapabilities } from "../../../product/planner/capabilities.ts"
+import { createScenarioFixture, scenarioPeriod } from "./fixture.ts"
+
+// The authorized integration owner installs this file with the complete Mission37 assembly.
+// It exercises the canonical descriptor, real producer, SQLite and UI authority.
+test("assembled Procurement capability returns the exact readonly result and bound receipt without persistence", async () => {
+  const fixture = await createScenarioFixture()
+  try {
+    const request = proposal(fixture.sourceRef)
+    const admitted = await admit(fixture, request)
+    const before = await snapshots(fixture)
+    const writes = fixture.writes.length
+    const expected = await fixture.producer.preview(request, admitted.context)
+    if (expected.status !== "ok") throw new Error("Canonical Procurement proposal unavailable")
+    let persistCalls = 0
+    const persist: NonNullable<Parameters<typeof createPlannerCapabilities>[2]> = async () => {
+      persistCalls++
+      throw new Error("Readonly capability called result persistence")
+    }
+    const descriptor = capability(fixture, persist)
+    const inputDigest = digestSfValue(request)
+    const pending = descriptor.handler(request, admitted.context)
+    // The canonical handler must clone before its first asynchronous boundary.
+    request.operations[0]!.amount = 999
+    request.assumptions[0]!.value = "changed-after-admission"
+    const result = await pending
+    expect(result.status).toBe("ok")
+    if (result.status !== "ok") throw new Error("Readonly descriptor did not produce its scenario")
+    expect(result.result).toEqual(expected.value.scenario)
+    expect(result.result).toMatchObject({ knownSubtotal: 140, total: null, comparisonStatus: "conditioned", sourceRefs: [fixture.evidence] })
+    expect(Object.hasOwn(result, "outputRef")).toBe(false)
+    const bound = fixture.ui.receiptFor(admitted.context, "sf_scenario_simulate", inputDigest, digestSfValue(expected.value.scenario))
+    if (!bound) throw new Error("Result is not bound by the real UI authority")
+    expect({ ...result.receipt, at: bound.at }).toEqual(bound)
+    expect(Number.isFinite(Date.parse(result.receipt.at))).toBe(true)
+    expect(result.receipt).toMatchObject({ kind: "ui", operation: "sf_scenario_simulate", handlerExport: "simulateScenario", inputDigest, resultDigest: digestSfValue(result.result), principalRef: "alice", callId: admitted.context.binding.requestId })
+    expect(persistCalls).toBe(0)
+    expect(await snapshots(fixture)).toEqual(before)
+    expect(fixture.writes).toHaveLength(writes)
+    fixture.ui.finish(admitted.context)
+
+    // A transient calculation must also work without a persistence capability.
+    const again = proposal(fixture.sourceRef)
+    const readOnlyAdmission = await admit(fixture, again)
+    const withoutPersistence = await capability(fixture).handler(again, readOnlyAdmission.context)
+    expect(withoutPersistence.status).toBe("ok")
+    if (withoutPersistence.status !== "ok") throw new Error("Readonly descriptor required persistence")
+    expect(withoutPersistence.result).toEqual(expected.value.scenario)
+    expect(Object.hasOwn(withoutPersistence, "outputRef")).toBe(false)
+    expect(await snapshots(fixture)).toEqual(before)
+    expect(fixture.writes).toHaveLength(writes)
+    fixture.ui.finish(readOnlyAdmission.context)
+  } finally { await fixture.dispose() }
+})
+
+test("assembled Procurement capability refuses a changed source without publishing a result or receipt reference", async () => {
+  const fixture = await createScenarioFixture()
+  try {
+    const request = proposal(fixture.sourceRef)
+    const admitted = await admit(fixture, request)
+    const prior = await fixture.snapshot()
+    const changed = await fixture.execute(fixture.requester, { page: "Requests", action: "save", id: fixture.requestId, version: prior.versions[`requests:${fixture.requestId}`]!.version, values: { pr: { title: "A later source revision" } } })
+    expect(changed.ok).toBe(true)
+    const before = await snapshots(fixture)
+    const writes = fixture.writes.length
+    let persistCalls = 0
+    const persist: NonNullable<Parameters<typeof createPlannerCapabilities>[2]> = async () => {
+      persistCalls++
+      throw new Error("Stale source reached result persistence")
+    }
+    const result = await capability(fixture, persist).handler(request, admitted.context)
+    expect(result).toMatchObject({ status: "stale", reason: "requisition-source-changed" })
+    expect(Object.hasOwn(result, "result")).toBe(false)
+    expect(Object.hasOwn(result, "outputRef")).toBe(false)
+    const bound = fixture.ui.receiptFor(admitted.context, "sf_scenario_simulate", digestSfValue(request))
+    if (!bound) throw new Error("Denial lost the real UI admission receipt")
+    expect({ ...result.receipt, at: bound.at }).toEqual(bound)
+    expect(Number.isFinite(Date.parse(result.receipt.at))).toBe(true)
+    expect(Object.hasOwn(result.receipt, "resultDigest")).toBe(false)
+    expect(persistCalls).toBe(0)
+    expect(await snapshots(fixture)).toEqual(before)
+    expect(fixture.writes).toHaveLength(writes)
+    fixture.ui.finish(admitted.context)
+  } finally { await fixture.dispose() }
+})
+
+function proposal(sourceRef: string): ScenarioRequest {
+  return { baseRef: sourceRef, operations: [{ kind: "replace", targetRef: sourceRef, amount: 140, currency: "USD", period: scenarioPeriod }], assumptions: [{ id: "procurement-cost-inventory", value: "renewal-transition-v1", state: "hypothetical", evidenceRefs: [] }] }
+}
+
+async function admit(fixture: Awaited<ReturnType<typeof createScenarioFixture>>, request: ScenarioRequest) {
+  const transport = new Request("https://scenario.invalid/procurement", { headers: { authorization: "Bearer alice" } })
+  const digest = digestSfValue(request)
+  const result = await fixture.ui.admit(transport, "sf_scenario_simulate", digest)
+  if (result.status !== "ok" || !await fixture.ui.validate(result.value, "sf_scenario_simulate", digest)) throw new Error("Real UI scenario admission unavailable")
+  return { context: result.value }
+}
+
+function capability(fixture: Awaited<ReturnType<typeof createScenarioFixture>>, persist?: NonNullable<Parameters<typeof createPlannerCapabilities>[2]>) {
+  const unrelated = async (): Promise<never> => { throw new Error("Procurement simulation called an unrelated Planner route") }
+  const port: PlannerPort = { simulateScenario: fixture.producer.simulateScenario, compareForecast: unrelated, compareScenarios: unrelated, evaluateSensitivity: unrelated }
+  const descriptors = createPlannerCapabilities(port, (context, operation, digest, resultDigest) => context.kind === "ui" ? fixture.ui.receiptFor(context, operation, digest, resultDigest) : undefined, persist, { readOnlyScenario: fixture.producer.supports })
+  const descriptor = descriptors.find((entry) => entry.id === "sf_scenario_simulate")
+  if (!descriptor || descriptor.handlerExport !== "simulateScenario") throw new Error("Canonical scenario descriptor unavailable")
+  return descriptor
+}
+
+function snapshots(fixture: Awaited<ReturnType<typeof createScenarioFixture>>) {
+  return Promise.all([fixture.snapshot(), ...(["dashboard", "planner"] as const).map((surface) => fixture.persistence.transaction(surface, async (snapshot) => ({ commit: false, value: structuredClone(snapshot) })))])
+}

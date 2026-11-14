@@ -1,0 +1,38 @@
+{
+  "schema": "mission37-own-dependencies-v1",
+  "publication": "Parent PR23 implementation commit; hashes bind required bytes independently of commit receipt",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/scenario-producer.ts",
+      "sha256": "aaa4799f7258e8e663df2f8ae10523e3cf5fef7105b2f551782de5574d2cf331",
+      "gitBlob": "83b9fc13c70f464de17946b442ad59e2d40bb765"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+      "sha256": "b81950d76d2112fdb97d14eca7598a1a3fcae3f259d507834a5232fe5df2291b",
+      "gitBlob": "7fce64e7e213693d505f9bc6e08835468b7ead41"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/procurement-alternatives.ts",
+      "sha256": "bbbaa2c918e0893c600efe3a0d160216d6de935ce42917f3cee0ff50eb86e9ff",
+      "gitBlob": "6b60d7536aed70f515e9f41311de606ed7915168"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/procurement-scenario-services.ts",
+      "sha256": "15e3cb14cc755c20a16359dd94c650a99c42930956d3767b4285a7ae1ec02669",
+      "gitBlob": "004282527ee2dde0922ce0f08a5408b9d5fc1cf2"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/prepared.ts",
+      "sha256": "051562c20d0876aeddb9d7ab0d08884efa81ba85a08fb1252c5314489923916a",
+      "gitBlob": "517f50991fb7f057aff943c9e0b626ef6ddc91d6"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/prepared-review.ts",
+      "sha256": "58491136b5845347f3767caa9f80675c0ac238aa85241a14299866cffba6f74c",
+      "gitBlob": "b7d25206bb7ba11d20b293495f09e6cb70430a84"
+    }
+  ],
+  "implementationCommit": "a1b3bd2f353f0edf34d9c2b9b8c8efac8a2ef650",
+  "requiredTogether": "All six files are required: the scenario preparation block does not replace the low-level prepared-command and review monetary guards."
+}

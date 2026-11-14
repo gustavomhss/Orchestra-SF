@@ -1,0 +1,37 @@
+{
+  "schema": "sf2-mission37-reconciliation-v1",
+  "source_head_expected": "0ff0035039f3fd88f5fbffdc3d80f7ff01c10cc1",
+  "mission33_head_observed": "e7e97591edfc15f230856a035e32951f2f700c2f",
+  "candidate": {
+    "symbol": "C11",
+    "commit": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+    "tree": "ab936df4784ad81deacec756af1cee69f739f712",
+    "parent": "9b51c8ee132541ed837eac909611b70c1b991bc3"
+  },
+  "canonical_receipt": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/candidate-C11.json",
+    "blob": "8c79a502640c542c3bdb740176fdba1c7c184353"
+  },
+  "source_continuation": {
+    "owner": "mission37 / procurement-decision-browser37",
+    "finding_ids": [
+      "M31-PRECHOICE-PROCUREMENT",
+      "M31-FINANCIAL-APPROVAL"
+    ],
+    "state": "OPEN_MANDATORY_IMPLEMENTATION_AND_COMPLETE_PATCH_NOT_DELIVERED",
+    "reason": "C10 changes uniqueness and admission-to-reconciliation binding only. It does not produce pre-choice Procurement alternatives or repair Requests/save vs formal-approval state compatibility. Choice/Apply checkbox is not financial approval; original policy remains unchanged."
+  },
+  "consumer_ack": {
+    "source": "Decisions31",
+    "source_release": "c3ae6f6be6a38b9a645cd1ac1e1388b7eabe2137",
+    "source_product": "386d1f9f52ba720e994f9d8feedfca8aa9c9e270",
+    "manifest": "increment-07.json",
+    "ack": "consumer-ack-07.json",
+    "integrated_commit": "3df1bb05f2404056547504fcd84ca6a43a78bda9",
+    "integrated_tree": "ab936df4784ad81deacec756af1cee69f739f712",
+    "source_PASS_transferred": false
+  },
+  "disposition": "C11 consumes Decisions31 and preserves mission37 ownership of the two missing findings. Source PR23 unchanged by that intake. Shared patch preimages must reconcile against C11; source changes remain in the mission37 allowlist. No composed/native/financial acceptance inferred.",
+  "source_PASS_transferred": false,
+  "shared_writes_by_mission37": 0
+}

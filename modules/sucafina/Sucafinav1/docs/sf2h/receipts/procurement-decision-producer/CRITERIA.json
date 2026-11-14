@@ -1,0 +1,310 @@
+{
+  "schema": "sf2-mission37-criteria-v1",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "acceptance": "HOLD_NOT_GRANTED",
+  "global_criteria_preserved": {
+    "work_packages": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610,
+    "T0": "2026-11-13T04:01:10Z"
+  },
+  "canonical_wp04_ids_preserved": [
+    "WP04.CMP.01",
+    "WP04.CMP.02",
+    "WP04.CMP.03",
+    "WP04.CMP.10",
+    "WP04.DOD.01",
+    "WP04.DOD.02",
+    "WP04.DOD.03",
+    "WP04.DOD.10",
+    "WP04.INV.01",
+    "WP04.INV.02",
+    "WP04.INV.03",
+    "WP04.INV.10",
+    "WP04.QLT.01",
+    "WP04.QLT.02",
+    "WP04.QLT.03",
+    "WP04.QLT.10",
+    "WP04.SUC.01",
+    "WP04.SUC.02",
+    "WP04.SUC.03",
+    "WP04.SUC.10",
+    "WP04.T01.CHK.01",
+    "WP04.T01.CHK.02",
+    "WP04.T01.CHK.03",
+    "WP04.T01.CHK.04",
+    "WP04.T01.CHK.18",
+    "WP04.T01.CMP.01",
+    "WP04.T01.CMP.02",
+    "WP04.T01.CMP.18",
+    "WP04.T01.DOD.01",
+    "WP04.T01.DOD.02",
+    "WP04.T01.DOD.18",
+    "WP04.T01.INV.01",
+    "WP04.T01.INV.02",
+    "WP04.T01.INV.18",
+    "WP04.T01.QLT.01",
+    "WP04.T01.QLT.02",
+    "WP04.T01.QLT.18",
+    "WP04.T01.SUC.01",
+    "WP04.T01.SUC.02",
+    "WP04.T01.SUC.18",
+    "WP04.T02.CHK.01",
+    "WP04.T02.CHK.02",
+    "WP04.T02.CHK.03",
+    "WP04.T02.CHK.04",
+    "WP04.T02.CMP.01",
+    "WP04.T02.CMP.02",
+    "WP04.T02.DOD.01",
+    "WP04.T02.DOD.02",
+    "WP04.T02.INV.01",
+    "WP04.T02.INV.02",
+    "WP04.T02.QLT.01",
+    "WP04.T02.QLT.02",
+    "WP04.T02.SUC.01",
+    "WP04.T02.SUC.02",
+    "WP04.T03.CHK.01",
+    "WP04.T03.CHK.02",
+    "WP04.T03.CHK.03",
+    "WP04.T03.CHK.04",
+    "WP04.T03.CHK.05",
+    "WP04.T03.CHK.18",
+    "WP04.T03.CMP.01",
+    "WP04.T03.CMP.02",
+    "WP04.T03.CMP.18",
+    "WP04.T03.DOD.01",
+    "WP04.T03.DOD.02",
+    "WP04.T03.DOD.18",
+    "WP04.T03.INV.01",
+    "WP04.T03.INV.02",
+    "WP04.T03.INV.18",
+    "WP04.T03.QLT.01",
+    "WP04.T03.QLT.02",
+    "WP04.T03.QLT.18",
+    "WP04.T03.SUC.01",
+    "WP04.T03.SUC.02",
+    "WP04.T03.SUC.18",
+    "WP04.T04.CHK.01",
+    "WP04.T04.CHK.02",
+    "WP04.T04.CHK.03",
+    "WP04.T04.CHK.04",
+    "WP04.T04.CHK.05",
+    "WP04.T04.CMP.01",
+    "WP04.T04.CMP.02",
+    "WP04.T04.DOD.01",
+    "WP04.T04.DOD.02",
+    "WP04.T04.INV.01",
+    "WP04.T04.INV.02",
+    "WP04.T04.QLT.01",
+    "WP04.T04.QLT.02",
+    "WP04.T04.SUC.01",
+    "WP04.T04.SUC.02",
+    "WP04.T05.CHK.01",
+    "WP04.T05.CHK.02",
+    "WP04.T05.CHK.03",
+    "WP04.T05.CHK.04",
+    "WP04.T05.CHK.05",
+    "WP04.T05.CHK.18",
+    "WP04.T05.CMP.01",
+    "WP04.T05.CMP.02",
+    "WP04.T05.CMP.18",
+    "WP04.T05.DOD.01",
+    "WP04.T05.DOD.02",
+    "WP04.T05.DOD.18",
+    "WP04.T05.INV.01",
+    "WP04.T05.INV.02",
+    "WP04.T05.INV.18",
+    "WP04.T05.QLT.01",
+    "WP04.T05.QLT.02",
+    "WP04.T05.QLT.18",
+    "WP04.T05.SUC.01",
+    "WP04.T05.SUC.02",
+    "WP04.T05.SUC.18"
+  ],
+  "canonical_related_criteria": [
+    {
+      "id": "WP04.DOD.03",
+      "text": "O handoff lista consumidores, casos adversos, artefatos de evidência e verificações de composição reservadas a WP10; não declara entrega integrada com base apenas em fixtures.",
+      "mission37_disposition": "SCOPED_EVIDENCE_ONLY_NO_WP_ACCEPTANCE_TRANSFER"
+    },
+    {
+      "id": "WP04.INV.01",
+      "text": "Alçadas, papéis, autorização por holder, opção de bloquear autoaprovação, política de fornecedores e transições legais permanecem os do domínio; decidir continua sendo ato explícito da pessoa autorizada.",
+      "mission37_disposition": "SCOPED_EVIDENCE_ONLY_NO_WP_ACCEPTANCE_TRANSFER"
+    },
+    {
+      "id": "WP04.INV.02",
+      "text": "Histórico, identificadores já emitidos, versões esperadas e snapshots de aprovação/câmbio são preservados; po_issued continua significando emissão interna.",
+      "mission37_disposition": "SCOPED_EVIDENCE_ONLY_NO_WP_ACCEPTANCE_TRANSFER"
+    },
+    {
+      "id": "WP04.INV.03",
+      "text": "Recortes autorizados e restrições bancárias valem para tela, exportação, resumo e C02; referência textual ou ausência nunca vira relação, autorização ou valor zero.",
+      "mission37_disposition": "SCOPED_EVIDENCE_ONLY_NO_WP_ACCEPTANCE_TRANSFER"
+    },
+    {
+      "id": "WP04.INV.10",
+      "text": "WP04 conserva autoridade, dados oficiais e ownership; não assume identidade técnica ou novo acesso empresarial.",
+      "mission37_disposition": "SCOPED_EVIDENCE_ONLY_NO_WP_ACCEPTANCE_TRANSFER"
+    },
+    {
+      "id": "WP04.QLT.10",
+      "text": "Interfaces são concretas, versões/digests são verificáveis e falhas possuem causa e estado explícitos.",
+      "mission37_disposition": "SCOPED_EVIDENCE_ONLY_NO_WP_ACCEPTANCE_TRANSFER"
+    },
+    {
+      "id": "WP04.T03.INV.01",
+      "text": "Pesos, mínimo de propostas, critérios, elegibilidade e justificativas continuam os da configuração existente.",
+      "mission37_disposition": "SCOPED_EVIDENCE_ONLY_NO_WP_ACCEPTANCE_TRANSFER"
+    },
+    {
+      "id": "WP04.T03.INV.02",
+      "text": "Ausência de taxa/nota/valor não vira zero, precisão inventada ou confirmação de gasto realizado.",
+      "mission37_disposition": "SCOPED_EVIDENCE_ONLY_NO_WP_ACCEPTANCE_TRANSFER"
+    },
+    {
+      "id": "WP04.T03.INV.18",
+      "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
+      "mission37_disposition": "SCOPED_EVIDENCE_ONLY_NO_WP_ACCEPTANCE_TRANSFER"
+    },
+    {
+      "id": "WP04.T04.CHK.03",
+      "text": "Ator que não é o holder, inclusive admin sem direito de override, recebe a recusa existente também no comando; opção blockSelfApproval continua configurável e respeitada.",
+      "mission37_disposition": "SCOPED_EVIDENCE_ONLY_NO_WP_ACCEPTANCE_TRANSFER"
+    },
+    {
+      "id": "WP04.T04.CHK.04",
+      "text": "Alterar a versão entre abertura e confirmação: decisão é recusada por conflito, comentário local permanece e nenhuma aprovação é reaplicada automaticamente após recarregar.",
+      "mission37_disposition": "SCOPED_EVIDENCE_ONLY_NO_WP_ACCEPTANCE_TRANSFER"
+    },
+    {
+      "id": "WP04.T04.DOD.02",
+      "text": "Preparação read-only e ações humanas estão separadas no contrato exportado.",
+      "mission37_disposition": "SCOPED_EVIDENCE_ONLY_NO_WP_ACCEPTANCE_TRANSFER"
+    },
+    {
+      "id": "WP04.T04.INV.01",
+      "text": "Aprovar uma etapa não pula outras aprovações nem muda os poderes do holder/admin.",
+      "mission37_disposition": "SCOPED_EVIDENCE_ONLY_NO_WP_ACCEPTANCE_TRANSFER"
+    },
+    {
+      "id": "WP04.T04.INV.02",
+      "text": "Uma decisão desatualizada nunca é reaplicada automaticamente e referências textuais não ganham validação fictícia.",
+      "mission37_disposition": "SCOPED_EVIDENCE_ONLY_NO_WP_ACCEPTANCE_TRANSFER"
+    },
+    {
+      "id": "WP04.T04.SUC.02",
+      "text": "Uma preparação automática é útil como rascunho e demonstravelmente não produz decisão de negócio.",
+      "mission37_disposition": "SCOPED_EVIDENCE_ONLY_NO_WP_ACCEPTANCE_TRANSFER"
+    }
+  ],
+  "mission_checks": [
+    {
+      "id": "M37.READONLY",
+      "requirement": "Actual pre-choice calculation uses current source and canonical money calculator without execute, preparation or writes.",
+      "implementation": [
+        "product/procurement/scenario-producer.ts",
+        "apps/cli/src/sucafina-product/procurement-scenario-services.ts"
+      ],
+      "proof": [
+        "producer.test.ts",
+        "controls.test.ts"
+      ],
+      "status": "ACTIONS_RESULT_IN_CI_JSON"
+    },
+    {
+      "id": "M37.TYPED_INTENT",
+      "requirement": "Explicit source, operation, target, amount, currency, period and hypothetical cost inventory; incoming aliases cannot mutate captured request.",
+      "implementation": [
+        "product/ui/procurement-alternatives.ts",
+        "product/procurement/scenario-producer.ts"
+      ],
+      "proof": [
+        "producer.test.ts",
+        "controls.test.ts"
+      ],
+      "status": "SOURCE_PROOF_PLUS_ASSEMBLY_PENDING"
+    },
+    {
+      "id": "M37.C10",
+      "requirement": "Canonical basis and assessment, exact amount/unit/provenance, true missing cost and pending categories; no invented total or Planner allocation.",
+      "proof": [
+        "producer.test.ts"
+      ],
+      "status": "CONDITIONED_ONLY_NOT_COMPLETE_COST_COVERAGE"
+    },
+    {
+      "id": "M37.IDENTITY",
+      "requirement": "Current principal/access/source/target/version/incarnation; ABA change rejected with zero preview commits.",
+      "proof": [
+        "producer.test.ts",
+        "controls.test.ts"
+      ],
+      "status": "ACTIONS_RESULT_IN_CI_JSON"
+    },
+    {
+      "id": "M37.PERSISTENCE",
+      "requirement": "Canonical result saved once and replayed after SQLite reopen, exact original request/source/result, changed contents or authority refused.",
+      "proof": [
+        "producer.test.ts",
+        "controls.test.ts"
+      ],
+      "status": "SOURCE_PROOF_PLUS_ASSEMBLY_PENDING"
+    },
+    {
+      "id": "M37.FINANCIAL_EXACT",
+      "requirement": "Formal approval is for submitted exact amount and exact CAS; old review, different amount, other holder or admin override do not authorize proposal.",
+      "proof": [
+        "financial-policy.test.ts"
+      ],
+      "status": "CANONICAL_APPROVAL_POSITIVE_NOT_FINANCIAL_APPLY_POSITIVE"
+    },
+    {
+      "id": "M37.FINANCIAL_APPLY",
+      "finding": "M31-FINANCIAL-APPROVAL",
+      "requirement": "Approve proposed replacement first and then apply that replacement under existing policy.",
+      "status": "BLOCKED_POLICY_CONTRACT_NOT_SATISFIED",
+      "reason": "Requests/save effect stages draft|pr_rejected are disjoint from formal approval pr_pending and final sourcing; approving old amount is not approval of the new proposal.",
+      "minimal_decision": "S0/WP00 and Procurement/C12 must define intended effect/order: canonical edit-submit-approve, an explicitly different authorized post-approval effect, or a separately authorized new detached approval contract.",
+      "proof": [
+        "FINANCIAL-COMPATIBILITY.md",
+        "financial-policy.test.ts",
+        "preparation.test.ts"
+      ]
+    },
+    {
+      "id": "M37.C12_PRESERVATION",
+      "requirement": "OPS-REV-02, exact review, CAS, single effect/original receipt and recovery; numeric retained command blocked; no new Apply.",
+      "proof": [
+        "preparation.test.ts",
+        "wp04/prepared-production.test.ts",
+        "wp04/finance-prepared-alias.test.ts"
+      ],
+      "status": "NONFINANCIAL_C12_SCOPED_REGRESSION_ONLY"
+    },
+    {
+      "id": "M37.ASSEMBLY",
+      "finding": "M31-PRECHOICE-PROCUREMENT",
+      "requirement": "Complete host/router/descriptor/chooser/calculation/store patches consumed with exact hashes and actual assembled proof.",
+      "status": "PATCH_DELIVERED_CONSUMER_ACK_AND_ASSEMBLED_PROOF_PENDING",
+      "consumer": "session42",
+      "manifests": [
+        "assembly/MANIFEST.json",
+        "assembly-legacy-test/MANIFEST.json",
+        "assembly-tests/MANIFEST.json"
+      ],
+      "original_consumer": "session33",
+      "proof_executor": "S0"
+    }
+  ],
+  "not_claimed": [
+    "Browser or native/AM execution",
+    "human timing or acceptance",
+    "positive financial Apply for the proposed replacement",
+    "full C10 omitted-training/cost-inversion oracle",
+    "full CLI or E2E package typecheck",
+    "global acceptance or release",
+    "migration of old numeric prepared commands into new approval"
+  ]
+}

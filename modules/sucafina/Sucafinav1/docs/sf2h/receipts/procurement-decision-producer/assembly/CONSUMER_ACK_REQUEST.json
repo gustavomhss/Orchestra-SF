@@ -1,0 +1,39 @@
+{
+  "schema": "mission37-consumer-ack-request-v1",
+  "consumer": "session42",
+  "originalConsumer": "session33",
+  "proofExecutor": "S0",
+  "state": "ACK_REQUESTED_NOT_OBSERVED",
+  "requestOrigin": "Mission37 terminal handoff acceptance with later authority reconciliation",
+  "authority": {
+    "observedConsumerHead": "c5ab23fd7c9b231917bf70123958c9ff03e7d420",
+    "priorDocsHead": "bf81f9776b6ba5fb6267828a9a029d7e8d6f5587",
+    "productPreimageHead": "e7e97591edfc15f230856a035e32951f2f700c2f",
+    "controlCommit": "365c4b4f809eac232a46b38f7412bfea8ba55d30",
+    "succession": "Session33 closed; session42 is sole integrator; S0 alone executes tests, typecheck and guards."
+  },
+  "planningSha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "sourcePr": 23,
+  "sourceBranch": "astra-wp04",
+  "implementationCommit": "a1b3bd2f353f0edf34d9c2b9b8c8efac8a2ef650",
+  "assemblyManifest": "MANIFEST.json",
+  "ownDependencies": "OWN_DEPENDENCIES.json",
+  "legacyTestManifest": "../assembly-legacy-test/MANIFEST.json",
+  "newTestManifest": "../assembly-tests/MANIFEST.json",
+  "actionsRequest": "ACTIONS_REQUEST.json",
+  "requiredReply": [
+    "Exact consumed PR23 implementation commit and all six own-path hashes",
+    "Preimage match or explicit reconciliation for each of eleven shared production targets and the legacy test; absence check for new test",
+    "Resulting successor42 assembly commit and tree SHA",
+    "Forward the concrete assembled W plus this surgical proof request to S0; do not execute tests or typecheck in session42",
+    "Confirm transient Procurement simulation has no C08 publication, while explicit human promotion preserves exact request/result/source identity",
+    "Confirm Procurement numeric criterion uses the real source/case/actor snapshot fence and original human intent",
+    "Financial-approval contradiction remains blocked unless an authorized minimum command/policy decision is supplied"
+  ],
+  "prohibitedClaims": [
+    "No claim that patch artifacts alone are a mounted production flow",
+    "No claim that a proposal or choice is financial approval",
+    "No claim of native/AM, browser, deployment or runtime execution from fixture tests",
+    "No claim of a session33 or successor42 ACK before observed evidence"
+  ]
+}

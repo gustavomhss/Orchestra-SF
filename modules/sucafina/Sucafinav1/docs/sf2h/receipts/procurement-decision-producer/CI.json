@@ -1,0 +1,311 @@
+{
+  "schema": "sf2-mission37-ci-v1",
+  "product_head": "a1b3bd2f353f0edf34d9c2b9b8c8efac8a2ef650",
+  "product_tree": "2361ca558a7bc96341ff5b364e33e9753132a934",
+  "protocol": "Existing test-ci envelope and validators through GitHub MCP; no local product execution.",
+  "runs": [
+    {
+      "run": 43647866067,
+      "job": 132609550966,
+      "W": "2616cd9c3e97ec0a48d632edbbccf28678a83bba",
+      "S": "d4cc445389a22d3b0ba671d6910ca97f49abd129",
+      "treeW": "30a1cb65c2886346326eeaaff50628aa4cc18a20",
+      "treeS": "ad37f43eb120f988cd6828405768192de16cf9df",
+      "pass": 14,
+      "fail": 3,
+      "skip": 0,
+      "expect": 190,
+      "files": 6,
+      "omni": "not applicable (focused: no declaring test ran)",
+      "tests": [
+        {
+          "status": "PASS",
+          "name": "prepared Procurement mutation uses current actor and SQLite revision, and retries by receipt",
+          "duration_ms": 134.5
+        },
+        {
+          "status": "PASS",
+          "name": "prepared Procurement mutation records a stale source conflict without changing the domain",
+          "duration_ms": 62.55
+        },
+        {
+          "status": "PASS",
+          "name": "the prepared command retains its reviewed inputs when caller-owned outputs are mutated",
+          "duration_ms": 57.58
+        },
+        {
+          "status": "PASS",
+          "name": "a real hypothetical choice cannot prepare an unapproved financial effect or acquire approval by retry",
+          "duration_ms": 73.65
+        },
+        {
+          "status": "PASS",
+          "name": "a legacy-shaped financial command cannot bypass the low-level preparation or review boundary",
+          "duration_ms": 40.34
+        },
+        {
+          "status": "FAIL",
+          "name": "typed human controls discover attached requisitions and preview without business or case writes",
+          "duration_ms": 29.19
+        },
+        {
+          "status": "FAIL",
+          "name": "typed preview routes reject free-form targets, source drift and changed authority without writes",
+          "duration_ms": 29.69
+        },
+        {
+          "status": "PASS",
+          "name": "canonical approval reviews the exact proposed amount and ends outside the prepared PR-save stage",
+          "duration_ms": 3.94
+        },
+        {
+          "status": "PASS",
+          "name": "approval rejects stale CAS, another holder and admin override and applies one approval once",
+          "duration_ms": 2.59
+        },
+        {
+          "status": "PASS",
+          "name": "approving a pending old amount with a new amount in the payload does not approve the proposal",
+          "duration_ms": 1.37
+        },
+        {
+          "status": "PASS",
+          "name": "rejected proposal requires a new submission and review version for its changed amount",
+          "duration_ms": 3.07
+        },
+        {
+          "status": "PASS",
+          "name": "read-only producer computes the exact hypothetical amount and derives every missing C10 category",
+          "duration_ms": 74.26
+        },
+        {
+          "status": "PASS",
+          "name": "typed Procurement preview rejects target, amount, currency, period and unsupported-operation drift without writes",
+          "duration_ms": 43.52
+        },
+        {
+          "status": "PASS",
+          "name": "missing source cost remains unavailable and a recorded zero remains distinct",
+          "duration_ms": 70.81
+        },
+        {
+          "status": "PASS",
+          "name": "preview revalidates principal, source version, revocation and replacement incarnation",
+          "duration_ms": 76.39
+        },
+        {
+          "status": "PASS",
+          "name": "a delete, replacement and restoration race invalidates preview without reissuing or writing sources",
+          "duration_ms": 54.27
+        },
+        {
+          "status": "FAIL",
+          "name": "canonical result persistence replays one result after SQLite reopen and refuses changed content or authority",
+          "duration_ms": 35.36
+        }
+      ],
+      "failure": "SF_SOURCE_IDENTITIES_UNAVAILABLE in dashboard fixture initialization and aggregate persistence; all product/refusal/C12 assertions reached before that passed.",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "@orchestra/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/procurement-decision-producer/producer.test.ts",
+          "Sucafinav1/test/product/procurement-decision-producer/financial-policy.test.ts",
+          "Sucafinav1/test/product/procurement-decision-producer/preparation.test.ts",
+          "Sucafinav1/test/product/procurement-decision-producer/controls.test.ts",
+          "Sucafinav1/test/product/wp04/prepared-production.test.ts",
+          "Sucafinav1/test/product/wp04/finance-prepared-alias.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "request_sha256": "b94331aa538c1437eaa2ce540d327d8af28f216c2be67a568af567c1d7df9c85",
+      "conclusion": "failure",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43647866067"
+    },
+    {
+      "run": 43648286802,
+      "job": 132610869187,
+      "W": "a1b3bd2f353f0edf34d9c2b9b8c8efac8a2ef650",
+      "S": "6e476faad74d8acf9ed607614a9d30403cfc06d4",
+      "treeW": "2361ca558a7bc96341ff5b364e33e9753132a934",
+      "treeS": "e86aa87dc5b97b5cabb657d84d5ef0fdcfb58db0",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "@orchestra/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/procurement-decision-producer/producer.test.ts",
+          "Sucafinav1/test/product/procurement-decision-producer/preparation.test.ts",
+          "Sucafinav1/test/product/procurement-decision-producer/controls.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "request_sha256": "57e8a4596b8023a8102e49a782222b95a069dbb4d7ced6f3215988bc2ba36a6f",
+      "pass": 10,
+      "fail": 0,
+      "skip": 0,
+      "expect": 177,
+      "files": 3,
+      "omni": "not applicable (focused: no declaring test ran)",
+      "tests": [
+        {
+          "status": "PASS",
+          "name": "read-only producer computes the exact hypothetical amount and derives every missing C10 category",
+          "duration_ms": 88.48
+        },
+        {
+          "status": "PASS",
+          "name": "typed Procurement preview rejects target, amount, currency, period and unsupported-operation drift without writes",
+          "duration_ms": 34.06
+        },
+        {
+          "status": "PASS",
+          "name": "missing source cost remains unavailable and a recorded zero remains distinct",
+          "duration_ms": 60.68
+        },
+        {
+          "status": "PASS",
+          "name": "preview revalidates principal, source version, revocation and replacement incarnation",
+          "duration_ms": 41.27
+        },
+        {
+          "status": "PASS",
+          "name": "a delete, replacement and restoration race invalidates preview without reissuing or writing sources",
+          "duration_ms": 35.85
+        },
+        {
+          "status": "PASS",
+          "name": "canonical result persistence replays one result after SQLite reopen and refuses changed content or authority",
+          "duration_ms": 143.95
+        },
+        {
+          "status": "PASS",
+          "name": "typed human controls discover attached requisitions and preview without business or case writes",
+          "duration_ms": 51.31
+        },
+        {
+          "status": "PASS",
+          "name": "typed preview routes reject free-form targets, source drift and changed authority without writes",
+          "duration_ms": 55.76
+        },
+        {
+          "status": "PASS",
+          "name": "a real hypothetical choice cannot prepare an unapproved financial effect or acquire approval by retry",
+          "duration_ms": 44.09
+        },
+        {
+          "status": "PASS",
+          "name": "a legacy-shaped financial command cannot bypass the low-level preparation or review boundary",
+          "duration_ms": 28.06
+        }
+      ],
+      "conclusion": "success",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43648286802"
+    }
+  ],
+  "checks": [
+    {
+      "run": 43647867608,
+      "job": 132609555905,
+      "W": "2616cd9c3e97ec0a48d632edbbccf28678a83bba",
+      "generation": "PASS",
+      "typecheck": "FAIL_3_OWN_TEST_DIAGNOSTICS",
+      "guards": {
+        "rules": 78,
+        "paths": 731,
+        "gate": 0,
+        "warn": 12,
+        "error": 0,
+        "ownWarning": "js-empty-catch procurement-alternatives.ts:63"
+      },
+      "diagnostics": [
+        "##[error]test/product/procurement-decision-producer/fixture.ts(33,51): error TS2322: Type 'Persistence' is not assignable to type 'AssetPersistence & Pick<Persistence, \"currentSnapshots\" | \"transactionAll\">'.",
+        "##[error]test/product/procurement-decision-producer/preparation.test.ts(33,63): error TS2769: No overload matches this call.",
+        "##[error]test/product/procurement-decision-producer/preparation.test.ts(34,63): error TS2769: No overload matches this call."
+      ],
+      "artifact": {
+        "id": 14134459723,
+        "name": "astra-wp04-checks",
+        "size_in_bytes": 15765,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14134459723",
+        "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14134459723/zip",
+        "expired": false,
+        "created_at": "2026-11-14T22:25:23Z",
+        "expires_at": "2027-02-12T22:23:45Z",
+        "updated_at": "2026-11-14T22:25:23Z",
+        "digest": "sha256:a6455abdc798b4a4a90ede93f8bc9ea431790f7a449ba9ac5ffec1040c863e8a",
+        "workflow_run": {
+          "id": 43647867608,
+          "repository_id": 1455724710,
+          "head_repository_id": 1455724710,
+          "head_branch": "astra-check-wp04",
+          "head_sha": "2616cd9c3e97ec0a48d632edbbccf28678a83bba"
+        }
+      }
+    }
+  ],
+  "qualification": {
+    "unique_tests": 17,
+    "latest_affected_selection": {
+      "run": 43648286802,
+      "tests": 10
+    },
+    "unchanged_tests_from_a1": {
+      "run": 43647866067,
+      "tests": 7,
+      "files": [
+        "Sucafinav1/test/product/procurement-decision-producer/financial-policy.test.ts",
+        "Sucafinav1/test/product/wp04/prepared-production.test.ts",
+        "Sucafinav1/test/product/wp04/finance-prepared-alias.test.ts"
+      ],
+      "reason": "W2 to W3 changes only the new fixture, its literal expected status and a comment in the new UI script. None changes the inputs of these seven tests."
+    },
+    "does_not_sum_repeat_observations": true,
+    "full_source_gate": "FINAL_CHECK_PENDING",
+    "composed_gate": "NOT_RUN_REQUIRES_SESSION42_ASSEMBLY_AND_S0_ACTIONS"
+  },
+  "equality": {
+    "A1": {
+      "root_entries_identical": 43,
+      "only_extra": ".ci-run.json",
+      "envelope_blob": "69fe169b3f8825ed2b0e9dc6128173e5d44b3076"
+    },
+    "A2": {
+      "root_entries_identical": 43,
+      "only_extra": ".ci-run.json",
+      "envelope_blob": "da2fb0909cd9515e29da822aca09dfd4d8355899"
+    }
+  },
+  "dedup": {
+    "A1": {
+      "branch": "ci-run-linux-astra-wp04-m37-2616cd9-b94331aa-a1",
+      "existing_runs_before_dispatch": 0
+    },
+    "A2": {
+      "branch": "ci-run-linux-astra-wp04-m37-a1b3bd2-57e8a459-a2",
+      "existing_runs_before_dispatch": 0,
+      "previous_run_terminal": true,
+      "reason": "Three real failures and three test type errors fixed; selected exactly the three files affected by the changed shared fixture."
+    }
+  },
+  "limits": {
+    "local_tests": 0,
+    "local_typecheck": 0,
+    "local_servers": 0,
+    "epic_or_full": 0,
+    "skips_added": 0,
+    "budget_changes": 0,
+    "workflow_changes": 0,
+    "omni_proved": false,
+    "native_or_AM_proved": false,
+    "browser_proved": false,
+    "financial_apply_proved": false
+  }
+}

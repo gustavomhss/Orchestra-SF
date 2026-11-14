@@ -1,0 +1,55 @@
+{
+  "schema": "sf2h-complete-owner-patch-v1",
+  "mission": 37,
+  "consumer_session": 42,
+  "consumer_commit": "e7e97591edfc15f230856a035e32951f2f700c2f",
+  "source_authority_base": "ce0ee1553d50408c433aa41255601018ba6e02f3",
+  "target_path": "modules/sucafina/Sucafinav1/test/product/wp04/capabilities.test.ts",
+  "state": "prepared-not-applied",
+  "preimage": {
+    "file": "capabilities.test.preimage.txt",
+    "git_blob": "06990c2bcb0ebc68797e275c5c24a6946b7cbb5b",
+    "bytes": 22563
+  },
+  "postimage": {
+    "file": "capabilities.test.postimage.txt",
+    "git_blob": "fa981232c9c8defdf1b5c7ecacd70f4c67a0a454",
+    "bytes": 23476
+  },
+  "patch": {
+    "file": "capabilities.test.patch",
+    "sha256": "776d7a798c54fef64f2807ada870d275e08b113bd010ab107193ee237f720465"
+  },
+  "dependencies": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/scenario-producer.ts",
+      "required_git_blob": "83b9fc13c70f464de17946b442ad59e2d40bb765"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+      "required_git_blob": "7fce64e7e213693d505f9bc6e08835468b7ead41"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/prepared.ts",
+      "required_git_blob": "517f50991fb7f057aff943c9e0b626ef6ddc91d6"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/prepared-review.ts",
+      "required_git_blob": "b7d25206bb7ba11d20b293495f09e6cb70430a84"
+    }
+  ],
+  "reason": "The canonical domain has no approval-compatible pending-to-draft financial replacement. Preserve explicit monetary rejection and positive textual prepared review; keep collateral-scope checks meaningful after financial fail-closed guard.",
+  "application_rule": "Apply only when consumer target blob equals preimage and all source dependencies match the Mission37 product commit recorded by the root. If consumer moves, reconcile exact new preimage; never force or silently skip.",
+  "required_surgical_selection": [
+    "Sucafinav1/test/product/wp04/capabilities.test.ts"
+  ],
+  "required_checks": [
+    "Existing test-ci dispatcher on assembled consumer product W/S",
+    "Existing package bun typecheck and repository guards on assembled consumer product"
+  ],
+  "validation_state": "not-run-by-author; no local product tests; source PR does not overwrite this owner test",
+  "original_consumer_session": 33,
+  "proof_executor": "S0",
+  "observed_consumer_head": "c5ab23fd7c9b231917bf70123958c9ff03e7d420",
+  "authority_succession": "Session33 closed explicitly;42 integrates and ACKs, S0 alone executes existing Actions/typecheck/guards. Documentation-only successors leave the e7 product preimage unchanged."
+}
