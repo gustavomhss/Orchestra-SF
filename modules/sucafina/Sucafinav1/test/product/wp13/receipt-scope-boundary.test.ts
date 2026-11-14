@@ -174,7 +174,7 @@ async function receiptScopeFixture() {
       resolveActor: (_snapshot, context) => current(context) ? { id: "principal", roles: ["finance"], canWrite: true } : undefined,
       resolveMutation: (_snapshot, selected): PreparedDomainMutation => ({
         surface: selected.target.surface, targetIncarnation: selected.target.incarnation, idempotencyKey: selected.idempotencyKey, commandDigest: selected.operation.commandDigest, expectedVersion: selected.expectedVersion,
-        execute: (snapshot) => {
+        execute: (snapshot): ReturnType<PreparedDomainMutation["execute"]> => {
           fault.producerCalls++
           if (snapshot.versions.wp13Amount?.version !== selected.expectedVersion) return { commit: false, value: { status: "conflict" } }
           snapshot.data.wp13Amount = selected.operation.command.values.amount

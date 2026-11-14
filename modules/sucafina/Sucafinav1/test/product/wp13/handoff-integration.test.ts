@@ -133,7 +133,7 @@ test("portfolio handoff prepares two WP11 changes and resumes after pre-dispatch
       resolveMutation: (_snapshot, change): PreparedDomainMutation | undefined => change.target.surface === "procurement" && domain.procurementFails ? undefined : ({
         surface: change.target.surface, targetIncarnation: change.target.incarnation,
         idempotencyKey: change.idempotencyKey, commandDigest: change.operation.commandDigest, expectedVersion: change.expectedVersion,
-        execute: (snapshot) => {
+        execute: (snapshot): ReturnType<PreparedDomainMutation["execute"]> => {
           if (snapshot.versions.wp13Amount?.version !== change.expectedVersion) return { commit: false, value: { status: "conflict" } }
           if (change.target.surface === "planner") domain.plannerCalls++
           if (change.target.surface === "procurement") domain.procurementCalls++
