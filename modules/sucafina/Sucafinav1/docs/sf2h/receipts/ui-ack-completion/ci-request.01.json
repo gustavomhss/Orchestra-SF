@@ -1,0 +1,20 @@
+{
+  "package": "sucafina",
+  "directory": "modules/sucafina",
+  "runner": "bun",
+  "args": [
+    "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+    "./Sucafinav1/test/product/ui-ack-completion/ordinary-thread.test.ts",
+    "./Sucafinav1/test/product/ui-ack-completion/recipient-recovery.test.ts",
+    "./Sucafinav1/test/product/ui-ack-completion/recipient-refusal.test.ts",
+    "./Sucafinav1/test/product/ui-ack-completion/source-replacement.test.ts",
+    "./Sucafinav1/test/product/ui-split/ui-work/static-gates.test.ts",
+    "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+    "--timeout",
+    "120000"
+  ],
+  "env": {
+    "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+  }
+}
+
