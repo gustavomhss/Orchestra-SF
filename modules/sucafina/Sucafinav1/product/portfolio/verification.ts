@@ -17,7 +17,7 @@ import { createSensitivityEvaluator, quantifiedSensitivityScenario } from "./sen
 import { finalizePlannerSensitivity, plannerSensitivityScenario } from "./planner-sensitivity.ts"
 import { validatePlannerThreshold } from "./threshold-proof.ts"
 import type { KnownSubtotalThreshold } from "./threshold-proof.ts"
-import type { createPlannerSensitivity } from "./planner-sensitivity.ts"
+import type { createPlannerSensitivity, SensitivityDisclosureFormat } from "./planner-sensitivity.ts"
 import type { CriterionComparisonBinding } from "../decisions/criterion-comparison.ts"
 import { createProductionPortfolio } from "./production.ts"
 import { portfolioResultDigest } from "./result-store.ts"
@@ -185,8 +185,20 @@ export function createPortfolioProofVerifier(input: {
     })
     const sampled = await evaluate(binding.request, context)
     if (sampled.status !== "ok") return false
-    const result = finalizePlannerSensitivity({ request: binding.request, binding: unitBinding, result: sampled.value, samples, baselineRefs: baseline.value.sourceRefs, exact: exact.value })
-    return result.status === "ok" && digestSfValue(result.value) === stored.resultDigest && await capture(binding, context, initialFence, stage)
+    // Reconstruct only explicit historical serializers from current domain inputs.
+    // No stored condition/evidence array is used as a producer, and each candidate
+    // must match the full stored digest after all Finance certification callbacks.
+    const componentsDisclosure = expectedResult.unresolvedConditions.some((condition) => condition.id === "known-components-threshold")
+    const subtotalDisclosure = expectedResult.unresolvedConditions.some((condition) => condition.id === "known-subtotal-threshold")
+    const formats: readonly SensitivityDisclosureFormat[] = componentsDisclosure
+      ? [subtotalDisclosure ? "union-v1" : "pr37-v1"]
+      : subtotalDisclosure ? ["intelligence-v1"] : ["union-v1", "bundle-v1", "intelligence-v1"]
+    const originalScenarios = sampled.value.comparisonStatus === "complete" ? [] : [{ resultRef: binding.request.scenarioRef, scenario: sourceScenario, coverageRef: unitBinding.scenarioCoverageRef }, { resultRef: unitBinding.baselineRef, scenario: baselineScenario, coverageRef: unitBinding.baselineCoverageRef }]
+    const matches = formats.some((disclosureFormat) => {
+      const result = finalizePlannerSensitivity({ request: binding.request, binding: unitBinding, result: sampled.value, samples, baselineRefs: baseline.value.sourceRefs, exact: exact.value, originalScenarios, disclosureFormat })
+      return result.status === "ok" && digestSfValue(result.value) === stored.resultDigest
+    })
+    return matches && await capture(binding, context, initialFence, stage)
   }
   const verifySensitivity = async (incomingBinding: CriterionResultBinding, incomingStored: StoredDecisionResult, context: TrustedDomainContext) => {
     const host = input.sensitivityReadScope

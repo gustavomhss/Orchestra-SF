@@ -1,0 +1,583 @@
+{
+  "config": {
+    "configFile": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/playwright.production.config.ts",
+    "rootDir": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e",
+    "forbidOnly": true,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": {},
+    "maxFailures": 0,
+    "metadata": {
+      "bundle": "production",
+      "ci": {
+        "commitHref": "https://github.com/gustavomhss/Orchestra-SF/commit/a54db382b9425e68f0c1dee1754aae80e2665726",
+        "commitHash": "a54db382b9425e68f0c1dee1754aae80e2665726",
+        "buildHref": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43639526175"
+      },
+      "gitCommit": {
+        "shortHash": "a54db382",
+        "hash": "a54db382b9425e68f0c1dee1754aae80e2665726",
+        "subject": "test(operations): execute five nominal journeys on published composition",
+        "body": "test(operations): execute five nominal journeys on published composition",
+        "author": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "time": 1794689356000
+        },
+        "committer": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "time": 1794689356000
+        },
+        "branch": "ci-run-linux-astra-wp04-d8ab1d33-88a94dc8fd-m24a1"
+      },
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "bundle": "production",
+          "ci": {
+            "commitHref": "https://github.com/gustavomhss/Orchestra-SF/commit/a54db382b9425e68f0c1dee1754aae80e2665726",
+            "commitHash": "a54db382b9425e68f0c1dee1754aae80e2665726",
+            "buildHref": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43639526175"
+          },
+          "gitCommit": {
+            "shortHash": "a54db382",
+            "hash": "a54db382b9425e68f0c1dee1754aae80e2665726",
+            "subject": "test(operations): execute five nominal journeys on published composition",
+            "body": "test(operations): execute five nominal journeys on published composition",
+            "author": {
+              "name": "gustavomhss",
+              "email": "gmhelmold@gmail.com",
+              "time": 1794689356000
+            },
+            "committer": {
+              "name": "gustavomhss",
+              "email": "gmhelmold@gmail.com",
+              "time": 1794689356000
+            },
+            "branch": "ci-run-linux-astra-wp04-d8ab1d33-88a94dc8fd-m24a1"
+          },
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e",
+        "testIgnore": [
+          "performance/**"
+        ],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "html"
+      ],
+      [
+        "line"
+      ],
+      [
+        "json"
+      ],
+      [
+        "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/utils/flaky-reporter.ts"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.59.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "sucafina/operations.spec.ts",
+      "file": "sucafina/operations.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "CI-UI-OPERATIONS",
+          "file": "sucafina/operations.spec.ts",
+          "line": 10,
+          "column": 6,
+          "specs": [
+            {
+              "title": "OP-PROC-01 real comparison preserves the J04 values and exact C02 drilldown",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "criteria-scope",
+                      "description": "WP04.T03.CHK.01; WP04.T01.INV.01; WP04.T01.CMP.02"
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 175,
+                      "error": {
+                        "message": "Error: CI-UI-OPERATIONS requires the existing Sucafina host to be mounted for operations.spec.ts. The production selection currently starts it only for wp04/procurement.spec.ts; see the Operations dependency receipt. No synthetic fallback is permitted.",
+                        "stack": "Error: CI-UI-OPERATIONS requires the existing Sucafina host to be mounted for operations.spec.ts. The production selection currently starts it only for wp04/procurement.spec.ts; see the Operations dependency receipt. No synthetic fallback is permitted.\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/runtime.ts:19:13\n    at readManifest (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/runtime.ts:17:18)\n    at login (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/runtime.ts:44:20)\n    at procurementComparison (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/procurement-comparison.ts:8:19)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations.spec.ts:15:5",
+                        "location": {
+                          "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/runtime.ts",
+                          "column": 13,
+                          "line": 19
+                        },
+                        "snippet": "   at sucafina/operations-support/runtime.ts:19\n\n\u001b[0m \u001b[90m 17 |\u001b[39m   \u001b[36mconst\u001b[39m source \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m readFile(filename\u001b[33m,\u001b[39m \u001b[32m\"utf8\"\u001b[39m)\u001b[33m.\u001b[39m\u001b[36mcatch\u001b[39m((error\u001b[33m:\u001b[39m unknown) \u001b[33m=>\u001b[39m {\n \u001b[90m 18 |\u001b[39m     \u001b[36mif\u001b[39m (error \u001b[33m&&\u001b[39m \u001b[36mtypeof\u001b[39m error \u001b[33m===\u001b[39m \u001b[32m\"object\"\u001b[39m \u001b[33m&&\u001b[39m \u001b[32m\"code\"\u001b[39m \u001b[36min\u001b[39m error \u001b[33m&&\u001b[39m error\u001b[33m.\u001b[39mcode \u001b[33m===\u001b[39m \u001b[32m\"ENOENT\"\u001b[39m) {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 19 |\u001b[39m       \u001b[36mthrow\u001b[39m \u001b[36mnew\u001b[39m \u001b[33mError\u001b[39m(\u001b[32m\"CI-UI-OPERATIONS requires the existing Sucafina host to be mounted for operations.spec.ts. The production selection currently starts it only for wp04/procurement.spec.ts; see the Operations dependency receipt. No synthetic fallback is permitted.\"\u001b[39m)\n \u001b[90m    |\u001b[39m             \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 20 |\u001b[39m     }\n \u001b[90m 21 |\u001b[39m     \u001b[36mthrow\u001b[39m error\n \u001b[90m 22 |\u001b[39m   })\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/runtime.ts",
+                            "column": 13,
+                            "line": 19
+                          },
+                          "message": "Error: CI-UI-OPERATIONS requires the existing Sucafina host to be mounted for operations.spec.ts. The production selection currently starts it only for wp04/procurement.spec.ts; see the Operations dependency receipt. No synthetic fallback is permitted.\n\n   at sucafina/operations-support/runtime.ts:19\n\n  17 |   const source = await readFile(filename, \"utf8\").catch((error: unknown) => {\n  18 |     if (error && typeof error === \"object\" && \"code\" in error && error.code === \"ENOENT\") {\n> 19 |       throw new Error(\"CI-UI-OPERATIONS requires the existing Sucafina host to be mounted for operations.spec.ts. The production selection currently starts it only for wp04/procurement.spec.ts; see the Operations dependency receipt. No synthetic fallback is permitted.\")\n     |             ^\n  20 |     }\n  21 |     throw error\n  22 |   })\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/runtime.ts:19:13\n    at readManifest (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/runtime.ts:17:18)\n    at login (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/runtime.ts:44:20)\n    at procurementComparison (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/procurement-comparison.ts:8:19)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations.spec.ts:15:5"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-14T20:52:02.907Z",
+                      "annotations": [
+                        {
+                          "type": "criteria-scope",
+                          "description": "WP04.T03.CHK.01; WP04.T01.INV.01; WP04.T01.CMP.02"
+                        }
+                      ],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--3344d-ues-and-exact-C02-drilldown-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--3344d-ues-and-exact-C02-drilldown-chromium/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--3344d-ues-and-exact-C02-drilldown-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--3344d-ues-and-exact-C02-drilldown-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/runtime.ts",
+                        "column": 13,
+                        "line": 19
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "b944adae46abeb4efa4f-22afb77d3ca0df7121ad",
+              "file": "sucafina/operations.spec.ts",
+              "line": 13,
+              "column": 3
+            },
+            {
+              "title": "OP-PROC-02 pending sourcing keeps its submitted FX while the future PO changes",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "criteria-scope",
+                      "description": "WP04.T03.CHK.02; WP04.T03.CHK.03; WP04.T03.INV.02"
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 210,
+                      "error": {
+                        "message": "Error: CI-UI-OPERATIONS requires the existing Sucafina host to be mounted for operations.spec.ts. The production selection currently starts it only for wp04/procurement.spec.ts; see the Operations dependency receipt. No synthetic fallback is permitted.",
+                        "stack": "Error: CI-UI-OPERATIONS requires the existing Sucafina host to be mounted for operations.spec.ts. The production selection currently starts it only for wp04/procurement.spec.ts; see the Operations dependency receipt. No synthetic fallback is permitted.\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/runtime.ts:19:13\n    at readManifest (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/runtime.ts:17:18)\n    at login (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/runtime.ts:44:20)\n    at sourcingSnapshot (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/procurement-snapshot.ts:9:19)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations.spec.ts:20:5",
+                        "location": {
+                          "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/runtime.ts",
+                          "column": 13,
+                          "line": 19
+                        },
+                        "snippet": "   at sucafina/operations-support/runtime.ts:19\n\n\u001b[0m \u001b[90m 17 |\u001b[39m   \u001b[36mconst\u001b[39m source \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m readFile(filename\u001b[33m,\u001b[39m \u001b[32m\"utf8\"\u001b[39m)\u001b[33m.\u001b[39m\u001b[36mcatch\u001b[39m((error\u001b[33m:\u001b[39m unknown) \u001b[33m=>\u001b[39m {\n \u001b[90m 18 |\u001b[39m     \u001b[36mif\u001b[39m (error \u001b[33m&&\u001b[39m \u001b[36mtypeof\u001b[39m error \u001b[33m===\u001b[39m \u001b[32m\"object\"\u001b[39m \u001b[33m&&\u001b[39m \u001b[32m\"code\"\u001b[39m \u001b[36min\u001b[39m error \u001b[33m&&\u001b[39m error\u001b[33m.\u001b[39mcode \u001b[33m===\u001b[39m \u001b[32m\"ENOENT\"\u001b[39m) {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 19 |\u001b[39m       \u001b[36mthrow\u001b[39m \u001b[36mnew\u001b[39m \u001b[33mError\u001b[39m(\u001b[32m\"CI-UI-OPERATIONS requires the existing Sucafina host to be mounted for operations.spec.ts. The production selection currently starts it only for wp04/procurement.spec.ts; see the Operations dependency receipt. No synthetic fallback is permitted.\"\u001b[39m)\n \u001b[90m    |\u001b[39m             \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 20 |\u001b[39m     }\n \u001b[90m 21 |\u001b[39m     \u001b[36mthrow\u001b[39m error\n \u001b[90m 22 |\u001b[39m   })\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/runtime.ts",
+                            "column": 13,
+                            "line": 19
+                          },
+                          "message": "Error: CI-UI-OPERATIONS requires the existing Sucafina host to be mounted for operations.spec.ts. The production selection currently starts it only for wp04/procurement.spec.ts; see the Operations dependency receipt. No synthetic fallback is permitted.\n\n   at sucafina/operations-support/runtime.ts:19\n\n  17 |   const source = await readFile(filename, \"utf8\").catch((error: unknown) => {\n  18 |     if (error && typeof error === \"object\" && \"code\" in error && error.code === \"ENOENT\") {\n> 19 |       throw new Error(\"CI-UI-OPERATIONS requires the existing Sucafina host to be mounted for operations.spec.ts. The production selection currently starts it only for wp04/procurement.spec.ts; see the Operations dependency receipt. No synthetic fallback is permitted.\")\n     |             ^\n  20 |     }\n  21 |     throw error\n  22 |   })\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/runtime.ts:19:13\n    at readManifest (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/runtime.ts:17:18)\n    at login (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/runtime.ts:44:20)\n    at sourcingSnapshot (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/procurement-snapshot.ts:9:19)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations.spec.ts:20:5"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-14T20:52:06.417Z",
+                      "annotations": [
+                        {
+                          "type": "criteria-scope",
+                          "description": "WP04.T03.CHK.02; WP04.T03.CHK.03; WP04.T03.INV.02"
+                        }
+                      ],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--b41a7-while-the-future-PO-changes-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--b41a7-while-the-future-PO-changes-chromium/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--b41a7-while-the-future-PO-changes-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--b41a7-while-the-future-PO-changes-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/runtime.ts",
+                        "column": 13,
+                        "line": 19
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "b944adae46abeb4efa4f-05bfd53af44c9645acd5",
+              "file": "sucafina/operations.spec.ts",
+              "line": 18,
+              "column": 3
+            },
+            {
+              "title": "OP-PROC-03 missing FX stays unavailable and refuses submission without a new version",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "criteria-scope",
+                      "description": "WP04.T03.CHK.03; WP04.T03.CMP.01; WP04.CMP.02"
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 188,
+                      "error": {
+                        "message": "Error: CI-UI-OPERATIONS requires the existing Sucafina host to be mounted for operations.spec.ts. The production selection currently starts it only for wp04/procurement.spec.ts; see the Operations dependency receipt. No synthetic fallback is permitted.",
+                        "stack": "Error: CI-UI-OPERATIONS requires the existing Sucafina host to be mounted for operations.spec.ts. The production selection currently starts it only for wp04/procurement.spec.ts; see the Operations dependency receipt. No synthetic fallback is permitted.\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/runtime.ts:19:13\n    at readManifest (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/runtime.ts:17:18)\n    at login (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/runtime.ts:44:20)\n    at missingFxRefusal (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/procurement-refusal.ts:8:19)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations.spec.ts:25:5",
+                        "location": {
+                          "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/runtime.ts",
+                          "column": 13,
+                          "line": 19
+                        },
+                        "snippet": "   at sucafina/operations-support/runtime.ts:19\n\n\u001b[0m \u001b[90m 17 |\u001b[39m   \u001b[36mconst\u001b[39m source \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m readFile(filename\u001b[33m,\u001b[39m \u001b[32m\"utf8\"\u001b[39m)\u001b[33m.\u001b[39m\u001b[36mcatch\u001b[39m((error\u001b[33m:\u001b[39m unknown) \u001b[33m=>\u001b[39m {\n \u001b[90m 18 |\u001b[39m     \u001b[36mif\u001b[39m (error \u001b[33m&&\u001b[39m \u001b[36mtypeof\u001b[39m error \u001b[33m===\u001b[39m \u001b[32m\"object\"\u001b[39m \u001b[33m&&\u001b[39m \u001b[32m\"code\"\u001b[39m \u001b[36min\u001b[39m error \u001b[33m&&\u001b[39m error\u001b[33m.\u001b[39mcode \u001b[33m===\u001b[39m \u001b[32m\"ENOENT\"\u001b[39m) {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 19 |\u001b[39m       \u001b[36mthrow\u001b[39m \u001b[36mnew\u001b[39m \u001b[33mError\u001b[39m(\u001b[32m\"CI-UI-OPERATIONS requires the existing Sucafina host to be mounted for operations.spec.ts. The production selection currently starts it only for wp04/procurement.spec.ts; see the Operations dependency receipt. No synthetic fallback is permitted.\"\u001b[39m)\n \u001b[90m    |\u001b[39m             \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 20 |\u001b[39m     }\n \u001b[90m 21 |\u001b[39m     \u001b[36mthrow\u001b[39m error\n \u001b[90m 22 |\u001b[39m   })\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/runtime.ts",
+                            "column": 13,
+                            "line": 19
+                          },
+                          "message": "Error: CI-UI-OPERATIONS requires the existing Sucafina host to be mounted for operations.spec.ts. The production selection currently starts it only for wp04/procurement.spec.ts; see the Operations dependency receipt. No synthetic fallback is permitted.\n\n   at sucafina/operations-support/runtime.ts:19\n\n  17 |   const source = await readFile(filename, \"utf8\").catch((error: unknown) => {\n  18 |     if (error && typeof error === \"object\" && \"code\" in error && error.code === \"ENOENT\") {\n> 19 |       throw new Error(\"CI-UI-OPERATIONS requires the existing Sucafina host to be mounted for operations.spec.ts. The production selection currently starts it only for wp04/procurement.spec.ts; see the Operations dependency receipt. No synthetic fallback is permitted.\")\n     |             ^\n  20 |     }\n  21 |     throw error\n  22 |   })\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/runtime.ts:19:13\n    at readManifest (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/runtime.ts:17:18)\n    at login (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/runtime.ts:44:20)\n    at missingFxRefusal (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/procurement-refusal.ts:8:19)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations.spec.ts:25:5"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-14T20:52:07.245Z",
+                      "annotations": [
+                        {
+                          "type": "criteria-scope",
+                          "description": "WP04.T03.CHK.03; WP04.T03.CMP.01; WP04.CMP.02"
+                        }
+                      ],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--048f9-ssion-without-a-new-version-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--048f9-ssion-without-a-new-version-chromium/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--048f9-ssion-without-a-new-version-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--048f9-ssion-without-a-new-version-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/runtime.ts",
+                        "column": 13,
+                        "line": 19
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "b944adae46abeb4efa4f-014331764edf948dc865",
+              "file": "sucafina/operations.spec.ts",
+              "line": 23,
+              "column": 3
+            },
+            {
+              "title": "OP-IMPORT-01 real preview and one Apply recover the same receipt without duplicate effects",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "criteria-scope",
+                      "description": "WP06.T01.INV.01; WP06.T01.QLT.01; WP06.T02.INV.01; WP06.T02.INV.02; WP06.T02.QLT.18; WP06.T03.CHK.04; WP06.T03.INV.01; WP06.T03.INV.03; WP06.T03.QLT.02; WP06.T03.SUC.02; WP06.T04.CHK.02; WP06.T04.INV.01; WP06.T04.QLT.01"
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 185,
+                      "error": {
+                        "message": "Error: CI-UI-OPERATIONS requires the existing Sucafina host to be mounted for operations.spec.ts. The production selection currently starts it only for wp04/procurement.spec.ts; see the Operations dependency receipt. No synthetic fallback is permitted.",
+                        "stack": "Error: CI-UI-OPERATIONS requires the existing Sucafina host to be mounted for operations.spec.ts. The production selection currently starts it only for wp04/procurement.spec.ts; see the Operations dependency receipt. No synthetic fallback is permitted.\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/runtime.ts:19:13\n    at readManifest (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/runtime.ts:17:18)\n    at login (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/runtime.ts:44:20)\n    at importJourney (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/imports.ts:55:19)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations.spec.ts:30:5",
+                        "location": {
+                          "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/runtime.ts",
+                          "column": 13,
+                          "line": 19
+                        },
+                        "snippet": "   at sucafina/operations-support/runtime.ts:19\n\n\u001b[0m \u001b[90m 17 |\u001b[39m   \u001b[36mconst\u001b[39m source \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m readFile(filename\u001b[33m,\u001b[39m \u001b[32m\"utf8\"\u001b[39m)\u001b[33m.\u001b[39m\u001b[36mcatch\u001b[39m((error\u001b[33m:\u001b[39m unknown) \u001b[33m=>\u001b[39m {\n \u001b[90m 18 |\u001b[39m     \u001b[36mif\u001b[39m (error \u001b[33m&&\u001b[39m \u001b[36mtypeof\u001b[39m error \u001b[33m===\u001b[39m \u001b[32m\"object\"\u001b[39m \u001b[33m&&\u001b[39m \u001b[32m\"code\"\u001b[39m \u001b[36min\u001b[39m error \u001b[33m&&\u001b[39m error\u001b[33m.\u001b[39mcode \u001b[33m===\u001b[39m \u001b[32m\"ENOENT\"\u001b[39m) {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 19 |\u001b[39m       \u001b[36mthrow\u001b[39m \u001b[36mnew\u001b[39m \u001b[33mError\u001b[39m(\u001b[32m\"CI-UI-OPERATIONS requires the existing Sucafina host to be mounted for operations.spec.ts. The production selection currently starts it only for wp04/procurement.spec.ts; see the Operations dependency receipt. No synthetic fallback is permitted.\"\u001b[39m)\n \u001b[90m    |\u001b[39m             \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 20 |\u001b[39m     }\n \u001b[90m 21 |\u001b[39m     \u001b[36mthrow\u001b[39m error\n \u001b[90m 22 |\u001b[39m   })\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/runtime.ts",
+                            "column": 13,
+                            "line": 19
+                          },
+                          "message": "Error: CI-UI-OPERATIONS requires the existing Sucafina host to be mounted for operations.spec.ts. The production selection currently starts it only for wp04/procurement.spec.ts; see the Operations dependency receipt. No synthetic fallback is permitted.\n\n   at sucafina/operations-support/runtime.ts:19\n\n  17 |   const source = await readFile(filename, \"utf8\").catch((error: unknown) => {\n  18 |     if (error && typeof error === \"object\" && \"code\" in error && error.code === \"ENOENT\") {\n> 19 |       throw new Error(\"CI-UI-OPERATIONS requires the existing Sucafina host to be mounted for operations.spec.ts. The production selection currently starts it only for wp04/procurement.spec.ts; see the Operations dependency receipt. No synthetic fallback is permitted.\")\n     |             ^\n  20 |     }\n  21 |     throw error\n  22 |   })\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/runtime.ts:19:13\n    at readManifest (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/runtime.ts:17:18)\n    at login (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/runtime.ts:44:20)\n    at importJourney (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/imports.ts:55:19)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations.spec.ts:30:5"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-14T20:52:08.038Z",
+                      "annotations": [
+                        {
+                          "type": "criteria-scope",
+                          "description": "WP06.T01.INV.01; WP06.T01.QLT.01; WP06.T02.INV.01; WP06.T02.INV.02; WP06.T02.QLT.18; WP06.T03.CHK.04; WP06.T03.INV.01; WP06.T03.INV.03; WP06.T03.QLT.02; WP06.T03.SUC.02; WP06.T04.CHK.02; WP06.T04.INV.01; WP06.T04.QLT.01"
+                        }
+                      ],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--a3b16-t-without-duplicate-effects-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--a3b16-t-without-duplicate-effects-chromium/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--a3b16-t-without-duplicate-effects-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--a3b16-t-without-duplicate-effects-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/runtime.ts",
+                        "column": 13,
+                        "line": 19
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "b944adae46abeb4efa4f-e9566aebd8e9d1d91482",
+              "file": "sucafina/operations.spec.ts",
+              "line": 28,
+              "column": 3
+            },
+            {
+              "title": "OP-DOC-01 real schema and confirmation preserve exact evidence through source revocation",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [
+                    {
+                      "type": "criteria-scope",
+                      "description": "WP06.T05.CHK.02; WP06.T05.CHK.19; WP06.T05.INV.01; WP06.T05.QLT.18; WP06.T05.QLT.19; WP06.T05.CMP.19; WP06.T05.SUC.19"
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 184,
+                      "error": {
+                        "message": "Error: CI-UI-OPERATIONS requires the existing Sucafina host to be mounted for operations.spec.ts. The production selection currently starts it only for wp04/procurement.spec.ts; see the Operations dependency receipt. No synthetic fallback is permitted.",
+                        "stack": "Error: CI-UI-OPERATIONS requires the existing Sucafina host to be mounted for operations.spec.ts. The production selection currently starts it only for wp04/procurement.spec.ts; see the Operations dependency receipt. No synthetic fallback is permitted.\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/runtime.ts:19:13\n    at readManifest (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/runtime.ts:17:18)\n    at login (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/runtime.ts:44:20)\n    at documentJourney (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/documents.ts:20:19)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations.spec.ts:35:5",
+                        "location": {
+                          "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/runtime.ts",
+                          "column": 13,
+                          "line": 19
+                        },
+                        "snippet": "   at sucafina/operations-support/runtime.ts:19\n\n\u001b[0m \u001b[90m 17 |\u001b[39m   \u001b[36mconst\u001b[39m source \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m readFile(filename\u001b[33m,\u001b[39m \u001b[32m\"utf8\"\u001b[39m)\u001b[33m.\u001b[39m\u001b[36mcatch\u001b[39m((error\u001b[33m:\u001b[39m unknown) \u001b[33m=>\u001b[39m {\n \u001b[90m 18 |\u001b[39m     \u001b[36mif\u001b[39m (error \u001b[33m&&\u001b[39m \u001b[36mtypeof\u001b[39m error \u001b[33m===\u001b[39m \u001b[32m\"object\"\u001b[39m \u001b[33m&&\u001b[39m \u001b[32m\"code\"\u001b[39m \u001b[36min\u001b[39m error \u001b[33m&&\u001b[39m error\u001b[33m.\u001b[39mcode \u001b[33m===\u001b[39m \u001b[32m\"ENOENT\"\u001b[39m) {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 19 |\u001b[39m       \u001b[36mthrow\u001b[39m \u001b[36mnew\u001b[39m \u001b[33mError\u001b[39m(\u001b[32m\"CI-UI-OPERATIONS requires the existing Sucafina host to be mounted for operations.spec.ts. The production selection currently starts it only for wp04/procurement.spec.ts; see the Operations dependency receipt. No synthetic fallback is permitted.\"\u001b[39m)\n \u001b[90m    |\u001b[39m             \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 20 |\u001b[39m     }\n \u001b[90m 21 |\u001b[39m     \u001b[36mthrow\u001b[39m error\n \u001b[90m 22 |\u001b[39m   })\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/runtime.ts",
+                            "column": 13,
+                            "line": 19
+                          },
+                          "message": "Error: CI-UI-OPERATIONS requires the existing Sucafina host to be mounted for operations.spec.ts. The production selection currently starts it only for wp04/procurement.spec.ts; see the Operations dependency receipt. No synthetic fallback is permitted.\n\n   at sucafina/operations-support/runtime.ts:19\n\n  17 |   const source = await readFile(filename, \"utf8\").catch((error: unknown) => {\n  18 |     if (error && typeof error === \"object\" && \"code\" in error && error.code === \"ENOENT\") {\n> 19 |       throw new Error(\"CI-UI-OPERATIONS requires the existing Sucafina host to be mounted for operations.spec.ts. The production selection currently starts it only for wp04/procurement.spec.ts; see the Operations dependency receipt. No synthetic fallback is permitted.\")\n     |             ^\n  20 |     }\n  21 |     throw error\n  22 |   })\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/runtime.ts:19:13\n    at readManifest (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/runtime.ts:17:18)\n    at login (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/runtime.ts:44:20)\n    at documentJourney (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/documents.ts:20:19)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations.spec.ts:35:5"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-14T20:52:08.831Z",
+                      "annotations": [
+                        {
+                          "type": "criteria-scope",
+                          "description": "WP06.T05.CHK.02; WP06.T05.CHK.19; WP06.T05.INV.01; WP06.T05.QLT.18; WP06.T05.QLT.19; WP06.T05.CMP.19; WP06.T05.SUC.19"
+                        }
+                      ],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-operations-CI-UI--baa3d-e-through-source-revocation-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations-support/runtime.ts",
+                        "column": 13,
+                        "line": 19
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "b944adae46abeb4efa4f-6f9d621cf244a785ed31",
+              "file": "sucafina/operations.spec.ts",
+              "line": 33,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-14T20:51:31.321Z",
+    "duration": 37820.913,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 5,
+    "flaky": 0
+  }
+}

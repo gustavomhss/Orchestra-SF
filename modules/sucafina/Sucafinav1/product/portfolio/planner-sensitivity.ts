@@ -125,9 +125,11 @@ export function createPlannerSensitivity(input: {
     })
     const evaluated = await evaluate(request, context)
     if (evaluated.status !== "ok") return evaluated
-    return finalizePlannerSensitivity({ request, binding, result: evaluated.value, samples, baselineRefs: baseline.value.sourceRefs, exact: exactEvidence.value })
+    return finalizePlannerSensitivity({ request, binding, result: evaluated.value, samples, baselineRefs: baseline.value.sourceRefs, exact: exactEvidence.value, originalScenarios: evaluated.value.comparisonStatus === "complete" ? [] : [{ resultRef: request.scenarioRef, scenario: sourceScenario, coverageRef: binding.scenarioCoverageRef }, { resultRef: binding.baselineRef, scenario: baselineScenario, coverageRef: binding.baselineCoverageRef }] })
   }
 }
+
+export type SensitivityDisclosureFormat = "bundle-v1" | "pr37-v1" | "intelligence-v1" | "union-v1"
 
 /** Attach the same threshold and disclosure semantics to calculated or read-only reproduced samples. */
 export function finalizePlannerSensitivity(input: {
@@ -137,6 +139,9 @@ export function finalizePlannerSensitivity(input: {
   samples: readonly { resultRef: string; coverageRefs: readonly string[]; conditions: readonly string[] }[]
   baselineRefs: readonly BusinessEvidenceRef[]
   exact?: { value: number | null; evidenceRefs: readonly BusinessEvidenceRef[] }
+  originalScenarios?: readonly { resultRef: string; scenario: ScenarioResult; coverageRef: string }[]
+  /** Reconstruct an authenticated historical serialization; all proofs are still rebuilt. */
+  disclosureFormat?: SensitivityDisclosureFormat
 }) {
   const meets = (value: number) => input.request.criterion.operator === "lte" ? value <= input.request.criterion.value : input.request.criterion.operator === "gte" ? value >= input.request.criterion.value : value === input.request.criterion.value
   const points = input.result.evaluated
@@ -145,7 +150,37 @@ export function finalizePlannerSensitivity(input: {
   const complete = input.result.comparisonStatus === "complete" && input.result.unresolvedConditions.every((condition) => condition.category === "hypothesis") && input.samples.every((sample) => !sample.conditions.length)
   const comparable = input.result.comparisonStatus === "complete" || input.result.comparisonStatus === "conditioned"
   const exact = comparable && input.result.threshold !== null && input.exact?.value === input.result.threshold && input.exact.evidenceRefs.length > 0
+  const format = input.disclosureFormat ?? "union-v1"
+  const observations = format === "intelligence-v1" || format === "union-v1"
+    ? [...input.samples, ...(input.originalScenarios ?? []).map(({ resultRef, scenario, coverageRef }) => ({ resultRef, coverageRefs: [coverageRef], conditions: [...scenario.unresolvedConditions, ...scenario.costCoverage.issues, ...(scenario.costCoverage.coverageState === "complete" ? [] : [`coverage:${scenario.costCoverage.coverageState}`]), ...scenario.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [`${entry.categoryId}:${entry.reason}`] : []), ...scenario.costCoverage.derivedMissingCategoryIds.map((category) => `missing-category:${category}`)] }))]
+    : input.samples
   const thresholdRefs = [...input.result.evidenceRefs, ...input.binding.evidenceRefs, ...input.baselineRefs, ...(input.exact?.evidenceRefs ?? [])].filter((ref, index, refs) => refs.findIndex((item) => digestSfValue(item) === digestSfValue(ref)) === index)
-  const thresholdEvidence = exact && input.exact && input.result.threshold !== null ? { state: "exact" as const, value: input.result.threshold, evidenceRefs: thresholdRefs } : transition === undefined ? { state: "unavailable" as const, reason: transitions.length > 1 ? "multiple-sampled-transitions" : points.some((point) => point.value === null) ? "sample-value-unavailable" : "no-sampled-transition" } : { state: "sampled" as const, interval: { minimum: points[transition - 1].parameterValue, maximum: points[transition].parameterValue }, evidenceRefs: thresholdRefs }
-  return attachSensitivityV6({ result: { ...input.result, threshold: exact ? input.result.threshold : null, comparisonStatus: comparable ? complete ? "complete" : "conditioned" : input.result.comparisonStatus, unresolvedConditions: [...input.result.unresolvedConditions, ...input.samples.flatMap((sample) => sample.conditions.map((reason) => ({ id: `${sample.resultRef}:${reason}`, category: "coverage", reason, evidenceRefs: input.baselineRefs }))), ...(complete || input.result.unresolvedConditions.some((condition) => condition.id === "known-components-threshold") ? [] : [{ id: "preview-coverage", category: "coverage", reason: "Threshold evidence concerns known subtotal differences only; unresolved coverage can change the decision.", evidenceRefs: input.baselineRefs }])], evidenceRefs: [...input.result.evidenceRefs, ...input.binding.evidenceRefs, ...input.baselineRefs] }, costCoverageRefs: [...new Set([input.binding.baselineCoverageRef, input.binding.scenarioCoverageRef, ...input.samples.flatMap((sample) => sample.coverageRefs)])], unit: input.binding.unit, engineVersion: input.binding.engineVersion, thresholdEvidence })
+  // Older evidence order is reproduced from fresh domain inputs, never from the
+  // saved result. Numeric precision and current completeness guards stay unchanged.
+  const exactRefs = format === "intelligence-v1" ? input.exact?.evidenceRefs ?? [] : thresholdRefs
+  const sampledRefs = format === "intelligence-v1" ? [...input.binding.evidenceRefs, ...input.baselineRefs, ...input.result.evidenceRefs] : thresholdRefs
+  const thresholdEvidence = exact && input.exact && input.result.threshold !== null ? { state: "exact" as const, value: input.result.threshold, evidenceRefs: exactRefs } : transition === undefined ? { state: "unavailable" as const, reason: transitions.length > 1 ? "multiple-sampled-transitions" : points.some((point) => point.value === null) ? "sample-value-unavailable" : "no-sampled-transition" } : { state: "sampled" as const, interval: { minimum: points[transition - 1].parameterValue, maximum: points[transition].parameterValue }, evidenceRefs: sampledRefs }
+  const disclosed = [...input.result.unresolvedConditions]
+  if (exact && input.result.threshold !== null && input.result.comparisonStatus === "conditioned" && (format === "pr37-v1" || format === "union-v1")) disclosed.push({
+    id: "known-components-threshold", category: "coverage",
+    reason: `The domain-proven threshold ${input.result.threshold} ${input.result.parameterUnit} applies only to the known components. Any missing cost categories remain unresolved and are not treated as zero; their eventual costs can change this conditioned decision.`,
+    evidenceRefs: input.exact!.evidenceRefs,
+  })
+  const preserveSubtotalId = exact && (format === "intelligence-v1" || format === "union-v1")
+  const finalDisclosure = complete || (!preserveSubtotalId && disclosed.some((condition) => condition.id === "known-components-threshold")) ? [] : [{
+    id: preserveSubtotalId ? "known-subtotal-threshold" : "preview-coverage", category: "coverage",
+    reason: "Threshold evidence concerns known subtotal differences only; unresolved coverage can change the decision.",
+    evidenceRefs: input.baselineRefs,
+  }]
+  return attachSensitivityV6({
+    result: {
+      ...input.result,
+      threshold: exact ? input.result.threshold : null,
+      comparisonStatus: comparable ? complete ? "complete" : "conditioned" : input.result.comparisonStatus,
+      unresolvedConditions: [...disclosed, ...observations.flatMap((sample) => sample.conditions.map((reason) => ({ id: `${sample.resultRef}:${reason}`, category: "coverage", reason, evidenceRefs: input.baselineRefs }))), ...finalDisclosure],
+      evidenceRefs: [...input.result.evidenceRefs, ...input.binding.evidenceRefs, ...input.baselineRefs],
+    },
+    costCoverageRefs: [...new Set([input.binding.baselineCoverageRef, input.binding.scenarioCoverageRef, ...observations.flatMap((sample) => sample.coverageRefs)])],
+    unit: input.binding.unit, engineVersion: input.binding.engineVersion, thresholdEvidence,
+  })
 }

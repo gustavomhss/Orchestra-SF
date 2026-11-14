@@ -3,6 +3,7 @@ import { expect } from "@playwright/test"
 import type { APIResponse, Page, Response, TestInfo } from "@playwright/test"
 import type { DocumentEvidence } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts"
 import { login, modeURL, observation } from "./runtime.ts"
+import { commandResponse } from "./procurement.ts"
 
 type Source = { selectionRef: string; label: string; surface: string }
 type Schema = { id: string; version: number; ref: string; fields: { id: string; type: string; unit?: string }[] }
@@ -27,9 +28,28 @@ export async function documentJourney(page: Page, info: TestInfo) {
     return candidate.origin === account.origin && candidate.pathname === new URL(account.baseURL).pathname + "/procurement" && candidate.searchParams.get("sf") === mode
   }
   const waiting = (mode: string, method = "GET") => page.waitForResponse((response) => isMode(response.url(), mode) && response.request().method() === method)
-  const created = await page.request.post(account.baseURL + "/procurement", { maxRetries: 0, headers: { Origin: account.origin }, data: { page: "Suppliers", action: "create", version: 0, values: { legalName: name, country: "France", address: "Isolated E2E supplier", taxId: key, contactEmail: "operations@example.invalid", paymentTerms: "Net 45", currency: "USD", riskRating: "Low" } } })
+  expect((await page.goto(account.baseURL + "/procurement?page=Suppliers"))?.status()).toBe(200)
+  const create = page.locator('form[data-page="Suppliers"][data-command="create"]')
+  await expect(create).toHaveCount(1)
+  for (const [label, value] of [
+    ["Legal name", name],
+    ["Country", "France"],
+    ["Address", "Isolated E2E supplier"],
+    ["Tax ID", key],
+    ["Contact email", "operations@example.invalid"],
+    ["Payment terms", "Net 45"],
+    ["Currency", "USD"],
+  ]) await create.getByLabel(label!, { exact: true }).fill(value!)
+  await create.getByLabel("Risk rating", { exact: true }).selectOption("Low")
+  const creation = commandResponse(page, "create")
+  await create.getByRole("button", { name: "Create supplier", exact: true }).click()
+  const created = await creation
   expect(created.status()).toBe(200)
   expect(await created.json()).toMatchObject({ ok: true })
+  expect(created.request().postDataJSON()).toMatchObject({
+    page: "Suppliers", action: "create", version: 0,
+    values: { legalName: name, country: "France", address: "Isolated E2E supplier", taxId: key, contactEmail: "operations@example.invalid", paymentTerms: "Net 45", currency: "USD", riskRating: "Low" },
+  })
   const suppliersURL = account.baseURL + "/procurement?page=Suppliers&q=" + encodeURIComponent(name)
   expect((await page.goto(suppliersURL))?.status()).toBe(200)
   const supplierLink = page.getByRole("link", { name, exact: true })
@@ -154,9 +174,18 @@ export async function documentJourney(page: Page, info: TestInfo) {
   expect(new URL(currentPresentation.href!, account.origin).searchParams.get("asset")).toBe(assetURL.searchParams.get("asset"))
   await expect(cards.getByRole("heading", { name: "Price: 42 USD", exact: true })).toBeVisible()
   await expect(cards.locator("blockquote")).toHaveText("42")
-  const deleted = await reader.request.post(account.baseURL + "/procurement", { maxRetries: 0, headers: { Origin: account.origin }, data: { page: "Suppliers", action: "delete", id: supplier, version: beforeVersion + 1, values: {} } })
+  const deletion = commandResponse(reader, "delete", supplier)
+  const confirmation = reader.waitForEvent("dialog")
+  const deleting = remove.getByRole("button", { name: "Delete", exact: true }).click()
+  const dialog = await confirmation
+  expect(dialog.type()).toBe("confirm")
+  expect(dialog.message()).toBe("Confirm this change?")
+  await dialog.accept()
+  await deleting
+  const deleted = await deletion
   expect(deleted.status()).toBe(200)
   expect(await deleted.json()).toMatchObject({ ok: true })
+  expect(deleted.request().postDataJSON()).toMatchObject({ page: "Suppliers", action: "delete", id: supplier, version: beforeVersion + 1, values: {}, confirmed: true })
   expect((await reader.goto(suppliersURL))?.status()).toBe(200)
   await expect(reader.getByRole("link", { name, exact: true })).toHaveCount(0)
   await expect(reader.getByRole("link", { name: filename, exact: true })).toHaveCount(0)

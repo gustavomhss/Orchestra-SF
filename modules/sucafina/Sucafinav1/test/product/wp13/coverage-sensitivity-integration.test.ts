@@ -257,3 +257,79 @@ test("WP13 withholds an exact bound for a real null price or missing FX before c
   }
 }, 120000)
 
+
+test("WP13 rejects a false scalar boundary even when it carries the real canonical source evidence", async () => {
+  const fixture = await createPortfolioCoverageFixture("omitted")
+  try {
+    const request = { ...fixture.sensitivityRequest, parameterBounds: { ...fixture.sensitivityRequest.parameterBounds, steps: 1 } }
+    const canonical = await fixture.exact(request, fixture.baselineRef, fixture.context)
+    if (canonical.status !== "ok") throw new Error(`Canonical boundary proof unavailable: ${JSON.stringify(canonical)}`)
+    expect(canonical.value.value).toBeCloseTo(55000, 8)
+    const evaluate = createPlannerSensitivity({ results: fixture.results, resolve: fixture.issuer.resolve, revalidate: fixture.issuer.revalidate, preview: fixture.preview, coveragePreview: fixture.coverage, exactThreshold: async () => ({ status: "ok", value: { ...canonical.value, value: 55001 } }), idempotencyKey: async () => "wp13-false-scalar-certificate" })
+    const result = await evaluate(request, fixture.context)
+    if (result.status !== "ok") throw new Error(`Sampled fallback unavailable: ${JSON.stringify(result)}`)
+    expect(result.value.threshold).toBeNull()
+    expect(result.value.thresholdEvidence).toMatchObject({ state: "sampled", interval: { minimum: 10000, maximum: 70000 } })
+    expect(result.value.comparisonStatus).toBe("conditioned")
+    expect(result.value.unresolvedConditions.some((condition) => condition.reason === "missing-category:training")).toBe(true)
+    expect(fixture.selectedResult.total).toBeNull()
+  } finally { await fixture.cleanup() }
+}, 180000)
+
+for (const format of ["bundle-v1", "pr37-v1", "intelligence-v1"] as const) {
+  test(`semantic union: ${format} sensitivity replays its original C08 digest under current authority`, async () => {
+    const fixture = await createPortfolioCoverageFixture("omitted")
+    try {
+      const label = `disclosure-${format}`
+      const request = { ...fixture.sensitivityRequest, parameterBounds: { ...fixture.sensitivityRequest.parameterBounds, steps: 1 } }
+      const services = await persistedServices(fixture, label)
+      const legacyProducer: typeof services.sensitivity = async (incoming, trusted) => {
+        const found = await services.sensitivity(incoming, trusted)
+        if (found.status !== "ok") return found
+        const baseline = await services.results.readHistoricalScenario({ resultRef: fixture.baselineRef }, trusted)
+        if (baseline.status !== "ok" || baseline.value.kind !== "scenario") throw new Error("Original baseline evidence unavailable")
+        // Reproduce an earlier published serialization, then let the real C08
+        // store and WP11 binding verify it. No shared fixture or stored row is edited.
+        const originalPrefixes = [`${incoming.scenarioRef}:`, `${fixture.baselineRef}:`]
+        const unresolvedConditions = found.value.unresolvedConditions.filter((condition) => condition.id !== "known-subtotal-threshold" && (format === "pr37-v1" || condition.id !== "known-components-threshold") && (format === "intelligence-v1" || !originalPrefixes.some((prefix) => condition.id.startsWith(prefix))))
+        if (format !== "pr37-v1") unresolvedConditions.push({ id: format === "intelligence-v1" ? "known-subtotal-threshold" : "preview-coverage", category: "coverage", reason: "Threshold evidence concerns known subtotal differences only; unresolved coverage can change the decision.", evidenceRefs: baseline.value.sourceRefs })
+        if (format === "intelligence-v1") {
+          const exact = await fixture.exact(incoming, fixture.baselineRef, trusted)
+          if (exact.status !== "ok" || exact.value.value === null) throw new Error("Original Intelligence certificate unavailable")
+          return { status: "ok", value: { ...found.value, unresolvedConditions, thresholdEvidence: { state: "exact", value: exact.value.value, evidenceRefs: exact.value.evidenceRefs } } }
+        }
+        return { status: "ok", value: { ...found.value, unresolvedConditions } }
+      }
+      const persistent = createPersistentSensitivityPort({ portfolio: { evaluate: async () => ({ status: "unavailable", reason: "portfolio-not-requested" }), sensitivity: legacyProducer }, results: services.results, bindings: services.bindings, resolveBinding: fixture.issuer.resolve, idempotencyKey: async (digest) => `wp13-certified-result:${label}:${digest}` })
+      const saved = await persistent.evaluateAndStore(request, fixture.caseRef, fixture.context)
+      if (saved.status !== "ok") throw new Error(`Historical serialization persistence unavailable: ${JSON.stringify(saved)}`)
+      expect(saved.value.sensitivity.threshold).toBeCloseTo(55000, 8)
+      expect(saved.value.sensitivity.comparisonStatus).toBe("conditioned")
+      expect(saved.value.sensitivity.unresolvedConditions.some((condition) => condition.reason === "missing-category:training")).toBe(true)
+      expect(saved.value.sensitivity.unresolvedConditions.some((condition) => condition.id === "known-subtotal-threshold")).toBe(format === "intelligence-v1")
+      expect(saved.value.sensitivity.unresolvedConditions.some((condition) => condition.id === "known-components-threshold")).toBe(format === "pr37-v1")
+      const stored = await services.results.read({ kind: "sensitivity", resultRef: saved.value.sensitivityResultRef }, fixture.context)
+      const binding = await services.bindings.read({ caseRef: fixture.caseRef, resultRef: saved.value.sensitivityResultRef }, fixture.context)
+      if (stored.status !== "ok" || stored.value.kind !== "sensitivity" || binding.status !== "ok") throw new Error("Historical C08 or binding unavailable")
+      const originalDigest = digestSfValue(stored.value)
+      const before = await services.state.read(fixture.request, "cases", (state) => Object.keys(state.decisionResults ?? {}))
+      const reloaded = await persistedServices(fixture, label)
+      // Recreate services over the same open LocalStore. This is not a process restart.
+      expect(await reloaded.persistent.read(saved.value.sensitivityResultRef, fixture.context)).toEqual(saved)
+      expect(await reloaded.persistent.evaluateAndStore(request, fixture.caseRef, fixture.context)).toEqual(saved)
+      expect(reloaded.calls.searches).toBe(0)
+      expect(reloaded.calls.evaluations).toBe(0)
+      expect(reloaded.calls.previews).toBeGreaterThan(0)
+      expect(reloaded.calls.authority).toBeGreaterThan(0)
+      expect(await services.state.read(fixture.request, "cases", (state) => Object.keys(state.decisionResults ?? {}))).toEqual(before)
+      const retained = await services.results.read({ kind: "sensitivity", resultRef: saved.value.sensitivityResultRef }, fixture.context)
+      expect(retained.status === "ok" && digestSfValue(retained.value)).toBe(originalDigest)
+      const forged = structuredClone(stored.value)
+      forged.result.unresolvedConditions = forged.result.unresolvedConditions.filter((condition) => condition.reason !== "missing-category:training")
+      forged.resultDigest = digestSfValue(forged.result)
+      expect(await reloaded.verifier.verifySensitivity(binding.value, forged, fixture.context)).toBe(false)
+      fixture.revokeSource(fixture.scenario.baseRef)
+      expect((await reloaded.persistent.read(saved.value.sensitivityResultRef, fixture.context)).status).not.toBe("ok")
+    } finally { await fixture.cleanup() }
+  }, 180000)
+}

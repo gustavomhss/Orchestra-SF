@@ -1,0 +1,70 @@
+{
+  "schema": "sf2-intake-compatibility-findings-v1",
+  "mission": 23,
+  "increment": 4,
+  "target_examined": "9cc27888581a13b55992cdb5dfbd27e43479ac29",
+  "findings": [
+    {
+      "id": "WP13-P02-C12-RECEIPT-SCOPE",
+      "owner": "Portfolio21/WP13 + C12 receipt-contract owner",
+      "status": "OPEN_STATIC_COUNTEREXAMPLE_NOT_EXECUTED",
+      "source_pr": 67,
+      "source_commit": "ac7d29397db0f639237cdb39fb0754d59c1a929d",
+      "unit": "P02",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-integration.test.ts",
+      "source_postimage": "07f7478f2b8072d9c4a5bb1dd4a831ac537efec8",
+      "current_blob": "9fefc7bc347bfa123fc718fa9b0000d82dfc8a80",
+      "dependency": {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+        "manifest_old_blob": "f8404c18abc040c49cf111eb4561ce4c2873a4c6",
+        "retained_blob": "6ad51e47b22eca073a0a81731575c463d98673e4"
+      },
+      "trigger": "Controlled executePrepared writes receipt proof through state.transaction with namespace=receipts and no additionalNamespaces/domainSurface; first application expects status ok.",
+      "actual_by_static_read": "state-provider stores scopeDigest=digestSfValue(['receipts']); C12 receiptSnapshotMatches requires cases+receipts plus Planner/Procurement domainSurface. Proof mismatch blocks case reconciliation; inferred unavailable/case-reconciliation-pending, not observed test result.",
+      "existing_fixture_also_affected": true,
+      "required_owner_action": "Publish a complete fixture/producer patch matching the current canonical receipt transaction scope, preserving success assertions, uniqueness, no-redispatch guarantees and budgets. Canonical createSfPreparedApply is the reference. Do not weaken Apply or change the expected outcome to hide the mismatch.",
+      "scope_boundary": "The canonical handoff-c08 fixture uses createSfPreparedApply and does not have this identified mismatch; P02 remains held as a complete declared unit.",
+      "downstream_held": [
+        "P02",
+        "P03",
+        "P04"
+      ]
+    },
+    {
+      "id": "OPERATIONS24-PATCH-FILENAME-DOC",
+      "owner": "Operations24",
+      "status": "DOCUMENTARY_DISCREPANCY_RECONCILED_FOR_INTAKE",
+      "source_commit": "0042a95967ad651fe65ac0da216db6af86ed804c",
+      "evidence": "README names shared-only.patch/assembly.patch, but manifest, actual artifact and all postimages identify assembly/shared.patch.",
+      "applied_artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-functional-closure/20261114-m24-a1/assembly/shared.patch",
+      "patch_blob": "50b2fdf2211c3001c90810ea7c49ec38ee6bba26",
+      "source_documents_preserved": true
+    },
+    {
+      "id": "OPERATIONS24-REAL-SCANNER",
+      "owner": "Operations24 + S0 authorized CI environment",
+      "status": "RESOURCE_AND_FUNCTIONAL_PROOF_PENDING",
+      "evidence": "Positive upload/import requires a pre-approved real ClamD endpoint at127.0.0.1 via SF_OPERATIONS_CLAMD_PORT. Missing endpoint fails closed; availability/allowlist not established by source package.",
+      "next": "Qualify using an existing approved service through the existing CI interface; keep no scanner-positive credit until actual evidence. This integration installs/starts no service."
+    },
+    {
+      "id": "CURRENT-CHOICE-COHORT",
+      "owner": "Finance/WP11 + WP10 composition",
+      "status": "HELD_PUBLISHED_ALTERNATIVE",
+      "source_pr": 35,
+      "source_commit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+      "evidence": "Portfolio21 explicitly retains the finding; P01-P04 contain no CurrentChoice cohort replacement.",
+      "next": "Owner supplies the semantic reconciliation with current Finance/host contracts."
+    }
+  ],
+  "preserved_other_findings": [
+    "FIN-IND-005",
+    "C12 legacy conflict/recovery test-oracles",
+    "Memory MI07 history, C17, X29 and native limits",
+    "Decisions coverage and nominal/typecheck/CAS proof",
+    "Reports installed closure",
+    "All earlier pending owners"
+  ],
+  "executed_tests": false,
+  "source_green_transferred": false
+}

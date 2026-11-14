@@ -70,11 +70,16 @@ export async function importJourney(page: Page, info: TestInfo) {
   await expect(versionForm).toHaveCount(1)
   const version = await versionForm.getAttribute("data-record")
   if (!version) throw new Error("The actual Planner did not expose the created version identity")
+  const versionRow = page.getByRole("row").filter({ has: versionForm })
+  await expect(versionRow).toHaveCount(1)
+  await versionRow.getByRole("button", { name: "Manage", exact: true }).click()
+  await expect(versionRow.getByRole("dialog", { name: "Manage record", exact: true })).toBeVisible()
   await versionForm.getByLabel("Name", { exact: true }).fill(name)
   const renamed = page.waitForResponse((response) => response.url() === page.url() && response.request().method() === "POST")
   await versionForm.getByRole("button", { name: "Save", exact: true }).click()
   expect((await renamed).status()).toBe(200)
   await expect(versionForm.getByLabel("Name", { exact: true })).toHaveValue(name)
+  // Seed isolated preconditions through the real domain; line creation is not claimed as UI coverage.
   for (const [id, label, amount] of [[renewal, "Renewal", 72000], [fixed, "Unchanged", 518000]] as const) {
     const response = await page.request.post(account.baseURL + "/planner", { maxRetries: 0, headers: { Origin: account.origin }, data: { page: "OPEX", action: "save", id, version: 0, values: { versionId: version, name: label, el: "licenses", cur: "USD", owner: account.principal, f0: amount } } })
     expect(response.status()).toBe(200)
@@ -183,8 +188,10 @@ export async function importJourney(page: Page, info: TestInfo) {
   expect(await tokens(reader, account, version, [renewal, fixed])).toEqual(afterTokens)
   const viewerPage = await page.context().newPage()
   const viewer = await login(viewerPage, "viewer", "journey")
-  // Same operator and previously valid reference; logout revokes its real credential.
-  expect((await page.request.post(account.baseURL + "/auth/logout", { maxRetries: 0, headers: { Origin: account.origin } })).status()).toBe(204)
+  // Sign out in the same operator's reader tab while the workbench retains the previously valid reference.
+  const signedOut = reader.waitForResponse((response) => response.url() === account.baseURL + "/auth/logout" && response.request().method() === "POST")
+  await reader.getByRole("button", { name: "Sign out", exact: true }).click()
+  expect((await signedOut).status()).toBe(204)
   const denied = waiting("import-reference")
   await root.getByRole("button", { name: "Refresh receipt", exact: true }).click()
   const deniedResponse = await denied

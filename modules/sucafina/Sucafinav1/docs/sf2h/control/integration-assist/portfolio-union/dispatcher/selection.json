@@ -1,0 +1,160 @@
+{
+  "schema": "wp13-semantic-union-dispatcher-selection-v1",
+  "execute_in_preparation": false,
+  "status": "NOT_RUN",
+  "revision_policy": "A sessão14 registra commit C e tree C após os patches e intake dos owners. Nunca usar o SHA documental desta PR como W de produto.",
+  "dedupe_identity": [
+    "C commit",
+    "C tree",
+    "selection files/test names",
+    "runner configuration blobs",
+    "shared fixture blobs",
+    "consumer/dependency blobs"
+  ],
+  "dispatch_policy": "Materializar pelo dispatcher existente; não criar workflow/config/timeout/guard/fixture. U01 antes das seleções caras; parar no primeiro discriminante e manter resultado FAIL/NOT_RUN fiel. Não repetir run existente sem mudança material no input.",
+  "shards": [
+    {
+      "id": "U01",
+      "stage": 1,
+      "scope": "Contraprovas curtas de divulgação, escopo certificado, precisão e critério definitivo",
+      "files": [
+        "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-disclosure.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-v6.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/threshold-recertification.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/portfolio.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/handoff.test.ts"
+      ],
+      "status": "PROPOSED_NOT_RUN",
+      "modify_timeouts": false,
+      "modify_fixtures": false,
+      "modify_assertions": false
+    },
+    {
+      "id": "U02",
+      "stage": 2,
+      "scope": "Egress/Request/lease, retry vinculado sem recálculo, órfãos e read scope novo",
+      "files": [
+        "modules/sucafina/Sucafinav1/test/product/wp13/analysis-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/persistence-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/persistent-store.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/planner-sensitivity-boundary.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-read-scope.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-retry-boundary.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/renewal-read-scope.test.ts"
+      ],
+      "status": "PROPOSED_NOT_RUN",
+      "modify_timeouts": false,
+      "modify_fixtures": false,
+      "modify_assertions": false
+    },
+    {
+      "id": "U03",
+      "stage": 3,
+      "scope": "C10/certificado real e compatibilidade das quatro serializações; preservar os testes agregados e seus budgets",
+      "files": [
+        "modules/sucafina/Sucafinav1/test/product/wp13/coverage-preview.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts"
+      ],
+      "status": "PROPOSED_NOT_RUN",
+      "modify_timeouts": false,
+      "modify_fixtures": false,
+      "modify_assertions": false
+    },
+    {
+      "id": "U04",
+      "stage": 3,
+      "scope": "Escolha/histórico, C08 único e C08 equivalente autenticado, fonte atual e HTTP",
+      "files": [
+        "modules/sucafina/Sucafinav1/test/product/wp13/campaign.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/reconciliation.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/reconciliation-price-integration.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/source-scenario.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts"
+      ],
+      "status": "PROPOSED_NOT_RUN",
+      "modify_timeouts": false,
+      "modify_fixtures": false,
+      "modify_assertions": false
+    },
+    {
+      "id": "U05",
+      "stage": 3,
+      "scope": "Preparação, retomada antes de dispatch, reserva após dispatch e recibos C12 reais",
+      "files": [
+        "modules/sucafina/Sucafinav1/test/product/wp13/handoff-integration.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/handoff-c08-integration.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/handoff-domain-integration.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/handoff-persistence.test.ts"
+      ],
+      "status": "PROPOSED_NOT_RUN",
+      "modify_timeouts": false,
+      "modify_fixtures": false,
+      "modify_assertions": false
+    },
+    {
+      "id": "U06",
+      "stage": 4,
+      "scope": "Limiares 55000/55001 e 15000/15001, restart real e ausência de economia por mero defer",
+      "files": [
+        "modules/sucafina/Sucafinav1/test/product/wp13/renewal-sensitivity.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp13/term-defer-boundary.test.ts"
+      ],
+      "requires_existing_spawn_protocol": true,
+      "status": "PROPOSED_NOT_RUN",
+      "modify_timeouts": false,
+      "modify_fixtures": false,
+      "modify_assertions": false
+    }
+  ],
+  "consumer_followup": {
+    "id": "U07",
+    "stage": 5,
+    "files": [
+      "modules/sucafina/Sucafinav1/test/product/wp05/portfolio.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp05/sensitivity-integration.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-exact-threshold.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-metric.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-preparation-composition.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-promotion.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp10/integration/portfolio-reconciliation.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-portfolio.test.ts"
+    ],
+    "status": "OWNER_COMPOSED_CONSUMER_PROOF_NOT_RUN",
+    "boundary": "Os testes de transporte/componente não substituem UI instalada, BI real, C17/Atlas depois de restart nem AM01–AM06."
+  },
+  "finance_owned_followup": {
+    "reference": "https://github.com/gustavomhss/Orchestra-SF/blob/d8d586e19c824f75a88494a9c3677faac617e81d/modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-journey-closure/integration-intake.json",
+    "product_commit": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+    "short_selection": [
+      "modules/sucafina/Sucafinav1/test/product/finance-journey-closure/original-authority.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/finance-journey-closure/units-batch.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/finance-journey-closure/result-receipt.test.ts"
+    ],
+    "condition": "Somente depois de a sessão14 admitir o intake Finance e se esses inputs forem afetados. Jornada FIN-IND-005 longa exige novo delta causal comprovado pelo owner; não repetir o FAIL180000 por causa desta PR documental.",
+    "status": "NOT_RUN_NOT_OWNED"
+  },
+  "required_result_receipt": {
+    "fields": [
+      "C commit/tree",
+      "dispatcher W/S and request hash",
+      "exact selected files",
+      "job/run URLs",
+      "pass/fail/skipped counts",
+      "executed assertions including original positives",
+      "timeout status at original budget",
+      "source/fixture/authority scope",
+      "SQLite close/reopen versus service reconstruction",
+      "remaining mandatory findings"
+    ],
+    "forbidden_claims": [
+      "static inspection = functional PASS",
+      "source PASS transfers to C",
+      "NOT_RUN = PASS",
+      "WP13 DONE",
+      "GLOBAL_RELEASE"
+    ]
+  }
+}

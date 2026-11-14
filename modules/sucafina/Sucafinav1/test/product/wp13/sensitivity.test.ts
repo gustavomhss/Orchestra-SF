@@ -112,3 +112,25 @@ test("refuses a range whose intermediate arithmetic overflows before consulting 
   })
   expect(await evaluate({ ...request, parameterBounds: { ...request.parameterBounds, minimum: -Number.MAX_VALUE, maximum: Number.MAX_VALUE } }, context)).toEqual({ status: "needs-input", reason: "parameter-range-overflow" })
 })
+
+test("only a certified known-subtotal scope may retain an exact bound with unresolved coverage", async () => {
+  const source = { surface: "planner" as const, type: "line", id: "implementation", incarnation: "line-inc", version: 1, fields: ["amount"], period, observedAt: "2027-01-01T00:00:00Z" }
+  const evidence = [{ refDigest: "synthetic-scope-unit-test" } as unknown as BusinessEvidenceRef]
+  const quantified: ScenarioResult = { ...scenario, sourceRefs: evidence, components: [{ id: "implementation", amount: 45000, currency: "USD", period, sourceRefs: [source], evidenceState: "confirmed" }] }
+  for (const scope of [undefined, "known-subtotal"] as const) {
+    let exactCalls = 0
+    const evaluate = createSensitivityEvaluator({
+      sample: async (_request, value) => ({ status: "ok", value: { resultRef: `scope-sample-${value}`, scenario: quantified, parameterUnit: "USD", resultUnit: "USD", unitMetadataRef: "units-v1", unitMetadataVersion: 1, criterionValue: 75000 - value } }),
+      exactThreshold: async () => { exactCalls++; return { status: "ok", value: { value: 55000, evidenceRefs: evidence, ...(scope ? { scope } : {}) } } },
+      revalidate: async () => true,
+    })
+    const found = await evaluate(request, context)
+    expect(found.status).toBe("ok")
+    if (found.status !== "ok") throw new Error(found.reason)
+    expect(exactCalls).toBe(1)
+    expect(found.value.threshold).toBe(scope === "known-subtotal" ? 55000 : null)
+    expect(found.value.comparisonStatus).toBe("conditioned")
+    expect(found.value.unresolvedConditions.some((condition) => condition.reason === "missing-category:training")).toBe(true)
+    expect(quantified.total).toBeNull()
+  }
+})
