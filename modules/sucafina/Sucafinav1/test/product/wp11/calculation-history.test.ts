@@ -25,9 +25,9 @@ test("an accepted C17 reference reopens through the explicit ledger lane after t
   try {
     for (const surface of ["dashboard", "procurement"] as const) await fixture.persistence.initializeSources(surface)
     let context = await fixture.admit("sf-human:planner.read", {}, "finance", true)
-    const initialHttp = fixture.host.requestFor(context)
-    if (!initialHttp) throw new Error("Real UI authority unavailable")
-    let http: Request = initialHttp
+    const initialRequest = fixture.host.requestFor(context)
+    if (!initialRequest) throw new Error("Real UI authority unavailable")
+    let http = initialRequest
     const issuedSource = await fixture.issueSource("v0", context)
     if (issuedSource.status !== "ok") throw new Error(issuedSource.reason)
     const sourceRef = issuedSource.value.evidence
@@ -195,17 +195,21 @@ test("an accepted C17 reference reopens through the explicit ledger lane after t
       expect(await second.results.readHistoricalCalculation(await second.selectionFor(calculation.value), context)).toEqual({ status: "denied", reason: "historical-calculation-unavailable" })
       await changeCase((value) => ({ ...value, version: value.version + 1, horizon: plannerPeriod }))
       const currentSelection = await second.selectionFor(calculation.value)
+      const revokedContext = context
       fixture.access.allowed = false
       expect((await second.results.readHistoricalCalculation(currentSelection, context)).status).toBe("denied")
       fixture.access.allowed = true
-      // Revocation permanently retires that admission; renewed access needs a new
-      // real UI admission before testing unrelated source and incarnation changes.
-      const revokedContext = context
+      // Revocation deletes the private lease. Restoring the ACL requires a new
+      // consumed admission; otherwise later source negatives test only authority.
       expect(await fixture.host.revalidate(revokedContext)).toBe(false)
-      context = await fixture.admit("sf-human:planner.read", {}, "finance", true)
-      const renewedHttp = fixture.host.requestFor(context)
-      if (!renewedHttp) throw new Error("Renewed UI authority unavailable")
-      http = renewedHttp
+      expect(fixture.host.requestFor(revokedContext)).toBeUndefined()
+      const renewedContext = await fixture.admit("sf-human:planner.read", {}, "finance", true)
+      const renewedRequest = fixture.host.requestFor(renewedContext)
+      if (!renewedRequest) throw new Error("Renewed UI authority unavailable")
+      context = renewedContext
+      http = renewedRequest
+      expect(context.binding.requestId).not.toBe(revokedContext.binding.requestId)
+      expect(context.binding.principalRef).toBe(revokedContext.binding.principalRef)
       expect(await fixture.host.revalidate(context)).toBe(true)
       expect(await second.results.readHistoricalCalculation(currentSelection, context)).toEqual(stored)
       expect((await second.results.readHistoricalCalculation(currentSelection, revokedContext)).status).toBe("denied")
@@ -217,6 +221,7 @@ test("an accepted C17 reference reopens through the explicit ledger lane after t
       expect((await second.results.readHistoricalCalculation(currentSelection, context)).status).not.toBe("ok")
       expect((await second.historicalProducer(currentSelection).issue(stored.value.resultRef, context)).status).not.toBe("ok")
       expect((await second.cases.read({ caseRef: encodeCaseRef(originalCaseRef) }, context)).status).not.toBe("ok")
+      expect(await fixture.host.revalidate(context)).toBe(true)
       await changeCase((value) => ({ ...value, version: value.version + 1, incarnation: "replaced-case" }))
       expect(await second.results.readHistoricalCalculation(await second.selectionFor(calculation.value), context)).toEqual({ status: "denied", reason: "historical-calculation-unavailable" })
     } finally { await reopened.dispose() }
