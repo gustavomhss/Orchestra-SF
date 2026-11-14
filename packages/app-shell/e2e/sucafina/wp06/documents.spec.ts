@@ -151,7 +151,20 @@ async function openDossier(page: Page) {
     }
     if (operation === "sourcing-dossier-read") {
       expect(url.searchParams.get("requestRef")).toBe("request-dossier")
-      await route.fulfill({ json: { status: "ok", value: { request: { values: [{ id: "status", value: "sourcing" }] }, documents: [{ state: "pending", evidence: candidate }] } } })
+      await route.fulfill({ json: { status: "ok", value: {
+        request: { values: [{ id: "status", value: "sourcing" }] },
+        documents: [{ state: "pending", evidence: candidate }, { state: "rejected", fieldCandidate: "Rejected quote", evidenceRef: { refId: "rejected-dossier" } }],
+        explanation: { summary: "Two proposals are available; review the conditions before deciding.", sourceDistinction: "Negotiated terms come from this Request. The supplier register was not selected.",
+          proposals: [{ proposalRef: "A", text: `A: comparable cost USD 42; literal proposal note: ${excerpt}` }, { proposalRef: "B", text: "B: comparable cost USD 48.60; eligible according to the domain." }],
+          selection: { state: "recorded", proposalRef: "B", message: "Recorded human choice: B. Recorded justification: delivery date." } },
+        summary: { ranking: ["A", "B"] },
+        commercialSources: { proposalTerms: { status: "available", sourceRef: { refId: "request-dossier" },
+          offers: [{ offerRef: "A", version: 7, amount: 42, currency: "USD", technicalPass: true }, { offerRef: "B", version: 7, amount: 45, currency: "EUR", technicalPass: true }],
+          submittedBaseCurrency: "USD", submittedFx: [{ from: "EUR", rate: 1.08 }] }, supplierRegister: { status: "not-selected" } },
+        nextSteps: [{ kind: "confirm-document", message: "Review the original Price field before confirming it." },
+          { kind: "review-rejected-document", message: "Review the rejected candidate; it is excluded from dossier premises." }],
+        draft: { conditions: ["Review the recorded commercial conditions."], gaps: ["document-needs-confirmation", "document-rejected"], domainApplied: false },
+      } } })
       return
     }
     expect(operation).toBe("document-open")
@@ -171,17 +184,41 @@ async function openDossier(page: Page) {
   return { root, state, calls }
 }
 
-test("WP06 dossier renderer exposes unit, revision, reference and literal source excerpt without confirming", async ({ page }) => {
+test("WP06 dossier renderer exposes unit, revision, reference and literal source excerpt without confirming", async ({ page }, testInfo) => {
   const fixture = await openDossier(page)
   await expect(fixture.root.getByRole("heading", { name: "Price: 42 USD", exact: true })).toBeVisible()
   await expect(fixture.root.getByText("Pending confirmation · extracted · document revision 7", { exact: true })).toBeVisible()
   await expect(fixture.root.getByText(`Reference evidence-dossier · terms-r1.txt · text:0-${excerpt.length}`, { exact: true })).toBeVisible()
   await expect(fixture.root.getByText(excerpt, { exact: true })).toBeVisible()
   await expect(fixture.root.getByRole("link", { name: "Open original", exact: true })).toHaveAttribute("href", "/sucafina/procurement?download=asset-r1")
+  const comparison = fixture.root.getByRole("article").filter({ has: page.getByRole("heading", { name: "Commercial comparison", exact: true }) })
+  await expect(comparison.getByText("Two proposals are available; review the conditions before deciding.", { exact: true })).toBeVisible()
+  await expect(comparison.getByText("Negotiated terms come from this Request. The supplier register was not selected.", { exact: true })).toBeVisible()
+  await expect(comparison.getByText(`A: comparable cost USD 42; literal proposal note: ${excerpt}`, { exact: true })).toBeVisible()
+  await expect(comparison.getByRole("listitem")).toHaveText(["A", "B"])
+  await expect(comparison.getByText("Recorded human choice: B. Recorded justification: delivery date.", { exact: true })).toBeVisible()
+  const terms = fixture.root.getByRole("article").filter({ has: page.getByRole("heading", { name: "Request proposal terms", exact: true }) })
+  await expect(terms.getByText("Request source request-dossier", { exact: true })).toBeVisible()
+  await expect(terms.locator("pre")).toHaveText(JSON.stringify({
+    offers: [{ offerRef: "A", version: 7, amount: 42, currency: "USD", technicalPass: true }, { offerRef: "B", version: 7, amount: 45, currency: "EUR", technicalPass: true }],
+    submittedBaseCurrency: "USD", submittedFx: [{ from: "EUR", rate: 1.08 }],
+  }, null, 2))
+  await expect(terms.getByText("Supplier register: not-selected", { exact: true })).toBeVisible()
+  const rejected = fixture.root.getByRole("article").filter({ has: page.getByRole("heading", { name: "Rejected quote: Rejected evidence", exact: true }) })
+  await expect(rejected.getByText("This candidate was rejected and is excluded from dossier premises.", { exact: true })).toBeVisible()
+  await expect(rejected.getByText("Reference rejected-dossier", { exact: true })).toBeVisible()
+  await expect(rejected.getByRole("link")).toHaveCount(0)
+  await expect(fixture.root.getByRole("heading", { name: "Evidence unavailable", exact: true })).toHaveCount(0)
+  const next = fixture.root.getByRole("article").filter({ has: page.getByRole("heading", { name: "Next steps", exact: true }) })
+  await expect(next.getByRole("listitem")).toHaveText(["Review the original Price field before confirming it.", "Review the rejected candidate; it is excluded from dossier premises."])
+  const draft = fixture.root.getByRole("article").filter({ has: page.getByRole("heading", { name: "Draft conditions and gaps", exact: true }) })
+  await expect(draft.locator("pre")).toHaveText(JSON.stringify({ conditions: ["Review the recorded commercial conditions."], gaps: ["document-needs-confirmation", "document-rejected"] }, null, 2))
+  await expect(fixture.root.getByRole("button", { name: /confirm|apply|select winner/i })).toHaveCount(0)
   await expect(fixture.root.locator("img")).toHaveCount(0)
   await expect(page.locator("[data-injected]")).toHaveCount(0)
   expect(fixture.calls.map((call) => call.operation)).toEqual(["sourcing-dossier-requests", "sourcing-dossier-read", "document-open"])
   expect(fixture.calls.every((call) => call.method === "GET")).toBe(true)
+  await testInfo.attach("wp06-sourcing-dossier.png", { body: await page.screenshot({ fullPage: true }), contentType: "image/png" })
 })
 
 for (const failure of [
@@ -200,6 +237,10 @@ for (const failure of [
     await expect(fixture.root.getByLabel("Request", { exact: true })).toHaveValue("")
     await expect(fixture.root.getByText(excerpt, { exact: true })).toHaveCount(0)
     await expect(fixture.root.getByRole("link", { name: "Open original", exact: true })).toHaveCount(0)
+    await expect(fixture.root.getByRole("heading", { name: "Commercial comparison", exact: true })).toHaveCount(0)
+    await expect(fixture.root.getByRole("heading", { name: "Request proposal terms", exact: true })).toHaveCount(0)
+    await expect(fixture.root.getByRole("heading", { name: "Rejected quote: Rejected evidence", exact: true })).toHaveCount(0)
+    await expect(fixture.root.getByRole("heading", { name: "Next steps", exact: true })).toHaveCount(0)
     fixture.state.failure = undefined
     await fixture.root.getByRole("button", { name: "Load Requests", exact: true }).click()
     await expect(fixture.root.getByRole("status")).toHaveText("Select a Request and show its dossier.")

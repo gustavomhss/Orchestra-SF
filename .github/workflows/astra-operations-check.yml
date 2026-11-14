@@ -34,9 +34,9 @@ jobs:
           import { execFileSync } from 'node:child_process'
           const input = JSON.parse(readFileSync('.astra-operations-check.json', 'utf8'))
           const keys = Object.keys(input).sort().join(',')
-          if (keys !== (input.mode === 'guards' ? 'devSha,mode,productSha,typecheckSha' : 'devSha,productSha') ||
-              (input.mode !== undefined && input.mode !== 'guards') ||
-              (input.mode === 'guards' && (typeof input.typecheckSha !== 'string' || !/^[a-f0-9]{40}$/.test(input.typecheckSha))) ||
+          if (keys !== (input.mode === 'guards' || input.mode === 'sucafina' ? 'devSha,mode,productSha,typecheckSha' : 'devSha,productSha') ||
+              (input.mode !== undefined && !['guards', 'sucafina'].includes(input.mode)) ||
+              (input.mode !== undefined && (typeof input.typecheckSha !== 'string' || !/^[a-f0-9]{40}$/.test(input.typecheckSha))) ||
               ![input.productSha, input.devSha].every(value => typeof value === 'string' && /^[a-f0-9]{40}$/.test(value)))
             throw new Error('Invalid operations check envelope')
           const git = (...args) => execFileSync('git', args, { encoding: 'utf8' }).trim()
@@ -46,12 +46,15 @@ jobs:
             throw new Error('Product blobs changed in check snapshot')
           git('merge-base', '--is-ancestor', '91e1f60bc6f7e85517e2b4f963eec5ac7da13e62', input.productSha)
           git('merge-base', '--is-ancestor', 'e7fd8ff797441681f360e7775155a8cc2830280c', input.productSha)
-          if (input.mode === 'guards') {
+          if (input.mode !== undefined) {
             git('merge-base', '--is-ancestor', input.typecheckSha, input.productSha)
             const paths = git('diff', '--name-only', input.typecheckSha, input.productSha).split('\n').filter(Boolean)
-            if (paths.some(path => !/^modules\/sucafina\/Sucafinav1\/docs\/sf2h\/receipts\/WP(?:04|06)\/operations-20261114\/[^\n]+\.(?:md|json|patch|log|txt)$/.test(path)))
-              throw new Error('Guard-only mode requires unchanged product, tests, fixtures and configuration')
-            console.log(`Reusing recorded typecheck result for unchanged code at ${input.typecheckSha}`)
+            const receipts = path => /^modules\/sucafina\/Sucafinav1\/docs\/sf2h\/receipts\/WP(?:04|06)\/operations-20261114\/[^\n]+\.(?:md|json|patch|log|txt)$/.test(path)
+            // These two test entries were independently absent from the CLI program in the recorded checks.
+            const sucafinaOnly = path => ['modules/sucafina/Sucafinav1/test/product/wp11/case-port.test.ts', 'modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts', '.github/workflows/astra-operations-check.yml'].includes(path)
+            if (paths.some(path => !receipts(path) && !(input.mode === 'sucafina' && sucafinaOnly(path))))
+              throw new Error('Scoped mode found changed inputs outside its recorded typecheck closure')
+            console.log(`Reusing recorded ${input.mode === 'guards' ? 'typecheck' : 'CLI typecheck'} result for unchanged inputs at ${input.typecheckSha}`)
           }
           appendFileSync(process.env.GITHUB_OUTPUT, `sha=${input.productSha}\ndev=${input.devSha}\nmode=${input.mode ?? 'all'}\n`)
           NODE
@@ -86,7 +89,7 @@ jobs:
           bun typecheck 2>&1 | tee "$RUNNER_TEMP/astra-operations-evidence/sucafina-typecheck.log"
 
       - name: Typecheck CLI consumers
-        if: ${{ !cancelled() && steps.setup.outcome == 'success' && steps.product.outputs.mode != 'guards' }}
+        if: ${{ !cancelled() && steps.setup.outcome == 'success' && steps.product.outputs.mode == 'all' }}
         working-directory: apps/cli
         run: |
           set -o pipefail

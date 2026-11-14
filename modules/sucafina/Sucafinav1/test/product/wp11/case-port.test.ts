@@ -237,12 +237,11 @@ test("partial domain execution reconciles a durable receipt and never repeats it
     domain.revokeOnConfirm = false
     expect((await execute(request, binding)).status).toBe("unavailable")
     domain.loseResponse = false
-    expect((await execute(request, binding)).status).toBe("ok")
-    expect((await execute(request, binding)).status).toBe("ok")
+    expect(await execute(request, binding)).toMatchObject({ status: "unavailable", reason: "review-proof-unbound" })
     expect(domain.calls).toBe(1)
     const result = await state.read(new Request("https://example.test"), "cases", (staged) => staged.cases.case)
     expect(result.status).toBe("ok")
-    if (result.status === "ok") expect(result.value).toMatchObject({ state: "partially-applied", version: 2 })
+    if (result.status === "ok") expect(result.value).toMatchObject({ state: "chosen", version: 1 })
   } finally {
     await store.dispose()
     await rm(directory, { recursive: true, force: true })
