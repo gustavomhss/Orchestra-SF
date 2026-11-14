@@ -35,22 +35,46 @@ import { compositionTestDeadline } from "./composition-test-deadline.ts"
 // Real C08, human authority, Planner calculation, ledger capture and Atlas scanner.
 // The existing WP12 run/output fixture supplies only deterministic lifecycle bytes;
 // it is not a completed provider run, a native witness, or AM acceptance evidence.
-async function staleCalculationFixture(deadline: ReturnType<typeof compositionTestDeadline>) {
+async function staleCalculationFixture(deadline: ReturnType<typeof compositionTestDeadline>, name: string) {
+  const metrics = { transactions: 0, allTransactions: 0, currentSnapshotReads: 0, authentications: 0, environments: 0,
+    coverageReads: 0, calculationReads: 0, calculationSettled: 0, historicalReads: 0, historicalSettled: 0,
+    privateAdmissions: 0, contextReads: 0, privateContextReads: 0, settlements: 0 }
+  // Counters observe existing calls only. Nested phase deltas are inclusive;
+  // a settled calculation can still be unavailable or rejected, not a proof.
+  const phase = <T>(label: string, work: () => Promise<T>) => {
+    const before = { ...metrics }
+    return deadline.phase(label, async () => {
+      try { return await work() }
+      finally {
+        console.info("SF_STALE_CALCULATION_COUNTERS", JSON.stringify({ fixture: name, phase: label,
+          delta: Object.fromEntries(Object.entries(metrics).map(([key, value]) => [key, value - before[key as keyof typeof before]])), total: { ...metrics } }))
+      }
+    })
+  }
+  const observeStore = (driver: Awaited<ReturnType<typeof openLocalStore>>): typeof driver => {
+    const allTransactions: typeof driver.transactionAll = driver.transactionAll
+      ? (work, options) => { metrics.allTransactions++; return driver.transactionAll!(work, options) } : undefined
+    return { ...driver,
+      transaction: (surface, work, options) => { metrics.transactions++; return driver.transaction(surface, work, options) },
+      ...(allTransactions ? { transactionAll: allTransactions } : {}),
+      ...(driver.currentSnapshots ? { currentSnapshots: () => { metrics.currentSnapshotReads++; return driver.currentSnapshots!() } } : {}),
+    }
+  }
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-stale-calculation-"))
   deadline.own(() => rm(directory, { recursive: true, force: true }))
   const storeDirectory = path.join(directory, "store")
   const at = "2027-02-02T00:00:00Z", period = { start: "2027-01-01", end: "2027-12-31" }
   const caseRef = { id: "stale-calculation-case", incarnation: "stale-calculation-inc", version: 1 }
   const control = { active: true }
-  let store = await openLocalStore(storeDirectory)
+  let store = observeStore(await phase("fixture.store-open", () => openLocalStore(storeDirectory)))
   deadline.own(() => store.dispose())
   const services: { current?: ReturnType<typeof createSfBusinessServices> } = {}
   deadline.own(() => services.current?.dispose())
   const known = KNOWN_SCANNERS.find((entry) => entry.name === "gitleaks")
   if (!known) throw new Error("Pinned scanner unavailable")
-  const ready = await Effect.runPromise(BackendToolkit.ensure("gitleaks").pipe(Effect.provideService(BackendToolkit.Root, path.join(directory, "toolkit"))))
+  const ready = await phase("fixture.scanner-ready", () => Effect.runPromise(BackendToolkit.ensure("gitleaks").pipe(Effect.provideService(BackendToolkit.Root, path.join(directory, "toolkit")))))
   const spec = { ...known, command: ready.executable }
-  const probe = await Effect.runPromise(AppProcess.Service.use((process) => process.run(ChildProcess.make(spec.command, ["--version"], { extendEnv: true, stdin: "ignore" }))).pipe(Effect.provide(LayerNode.compile(AppProcess.node))))
+  const probe = await phase("fixture.scanner-version", () => Effect.runPromise(AppProcess.Service.use((process) => process.run(ChildProcess.make(spec.command, ["--version"], { extendEnv: true, stdin: "ignore" }))).pipe(Effect.provide(LayerNode.compile(AppProcess.node)))))
   const version = probe.stdout.toString("utf8").trim()
   if (probe.exitCode !== 0 || !version) throw new Error("Scanner version unavailable")
   const open = async (initialize: boolean) => {
@@ -73,8 +97,8 @@ async function staleCalculationFixture(deadline: ReturnType<typeof compositionTe
     const authority = createSfProductAuthority({ identity: () => identity, installationId: identity.installationId, origin: "https://example.test", policyVersion: "stale-calculation-policy",
       persistence, proposalCoverageWrites, grants: [{ principalRef: "person", namespaces: ["cases", "preferences", "contributions", "atlas", "outbox"],
         operations: ["sf_scenario_simulate", "sf_source_get", "sf_evidence_get", "sf_context_get", "sf_freshness_check", "sf_decision_recall"], humanActions: ["analysis.start"] }],
-      authenticate: async (_request, scope) => { deadline.check(); return control.active && scope ? { id: "person", canWrite: true, roles: [{ surface: scope.surface, role: scope.surface === "planner" ? "finance" : "admin" }] } : null },
-      environment: async () => { deadline.check(); return { at, id: randomUUID, directory: [] } }, createId: randomUUID, now: Date.now,
+      authenticate: async (_request, scope) => { metrics.authentications++; deadline.check(); return control.active && scope ? { id: "person", canWrite: true, roles: [{ surface: scope.surface, role: scope.surface === "planner" ? "finance" : "admin" }] } : null },
+      environment: async () => { metrics.environments++; deadline.check(); return { at, id: randomUUID, directory: [] } }, createId: randomUUID, now: Date.now,
       commandIdentity: async (request, operation) => {
         const key = request.headers.get("Idempotency-Key")
         return key && /^[A-Za-z0-9._:-]{8,128}$/.test(key) ? digestSfValue({ operation, key }) : undefined
@@ -82,7 +106,24 @@ async function staleCalculationFixture(deadline: ReturnType<typeof compositionTe
       verifySkillReceipt: async () => false, providerGeneration: async () => 1, authorizeDocument: async () => undefined })
     const business = createSfBusinessServices({ authority, persistence, proposalCoverageWrites })
     services.current = business
+    const resolveCalculation = business.calculations.resolveEvidence
+    business.calculations.resolveEvidence = async (ref, call) => {
+      const sequence = ++metrics.calculationReads
+      return phase(`calculation.current.${initialize ? "initial" : "reopened"}.${sequence}`, async () => {
+        try { return await resolveCalculation(ref, call) }
+        finally { metrics.calculationSettled++ }
+      })
+    }
+    const resolveHistorical = business.calculations.resolveHistoricalEvidence
+    business.calculations.resolveHistoricalEvidence = async (...args) => {
+      const sequence = ++metrics.historicalReads
+      return phase(`calculation.historical.${initialize ? "initial" : "reopened"}.${sequence}`, async () => {
+        try { return await resolveHistorical(...args) }
+        finally { metrics.historicalSettled++ }
+      })
+    }
     business.bindForecastCoverage(async (reference, call) => {
+      metrics.coverageReads++
       const source = await business.plannerSources.resolveForecastSource(reference, call)
       if (source.status !== "ok") return source
       return { status: "ok", value: { coverageRef: "fixture:explicit-pending-coverage", basis: { id: "fixture-basis", version: 1,
@@ -109,18 +150,18 @@ async function staleCalculationFixture(deadline: ReturnType<typeof compositionTe
     }
     return { persistence, authority, business, atlas, ui, request }
   }
-  let runtime = await open(true)
-  const produced = await runtime.ui("sf_scenario_simulate", {}, (call) => runtime.business.withCase(call, caseRef, {}, async () => {
-    const source = await runtime.business.plannerProduct.issueSource("v0", call)
+  let runtime = await phase("fixture.runtime-initial", () => open(true))
+  const produced = await phase("fixture.calculation-produce", () => runtime.ui("sf_scenario_simulate", {}, (call) => runtime.business.withCase(call, caseRef, {}, async () => {
+    const source = await phase("fixture.calculation-source", () => runtime.business.plannerProduct.issueSource("v0", call))
     if (source.status !== "ok") return source
     const scenario = { baseRef: source.value.evidence.refId, operations: [], assumptions: [] }
-    const result = await runtime.business.planner.simulateScenario(scenario, call)
+    const result = await phase("fixture.calculation-simulate", () => runtime.business.planner.simulateScenario(scenario, call))
     if (result.status !== "ok") return result
-    const saved = await runtime.business.calculations.persist({ kind: "scenario", request: scenario, result: result.value }, "stale-calculation-fixture", call)
+    const saved = await phase("fixture.calculation-persist", () => runtime.business.calculations.persist({ kind: "scenario", request: scenario, result: result.value }, "stale-calculation-fixture", call))
     if (saved.status !== "ok") return saved
-    const issued = await runtime.business.calculations.issue(saved.value.resultRef, call)
+    const issued = await phase("fixture.calculation-issue", () => runtime.business.calculations.issue(saved.value.resultRef, call))
     return issued.status === "ok" ? { status: "ok", value: { source: source.value.evidence, calculation: issued.value } } : issued
-  }))
+  })))
   if (produced.status !== "ok") throw new Error(`Canonical calculation unavailable: ${produced.reason}`)
   const { calculation, source } = produced.value
   const event: CaseLedgerEvent = { id: "stale-calculation-event", caseRef, kind: "analysis-accepted", principalRef: "person", at,
@@ -141,7 +182,7 @@ async function staleCalculationFixture(deadline: ReturnType<typeof compositionTe
       createdAt: at, attempts: 0, state: "pending" }
     return { commit: true, value: true }
   })).status).toBe("ok")
-  expect(await runtime.ui("sf_evidence_get", { evidenceRef: calculation }, (call) => runtime.business.context.emitFromLedger(eventRef, call))).toMatchObject({ status: "committed" })
+  expect(await phase("fixture.atlas-archive", () => runtime.ui("sf_evidence_get", { evidenceRef: calculation }, (call) => runtime.business.context.emitFromLedger(eventRef, call)))).toMatchObject({ status: "committed" })
   const start = { request: { caseRef }, purpose: "Deterministic late-output settlement fixture" }
   const original = sfRunFixture()
   const run: SfNativeRunRecord = { ...original.run, caseRef, principalRef: versions.value.actor.principalRef,
@@ -167,21 +208,21 @@ async function staleCalculationFixture(deadline: ReturnType<typeof compositionTe
     state.cases[caseRef.id]!.version = 2
     return { commit: true, value: true }
   })).status).toBe("ok")
-  const reopen = async () => {
+  const reopen = async () => phase("fixture.restart", async () => {
     runtime.business.dispose()
     services.current = undefined
     await store.dispose()
-    store = await openLocalStore(storeDirectory)
+    store = observeStore(await openLocalStore(storeDirectory))
     runtime = await open(false)
     return runtime
-  }
+  })
   const change = async (work: (state: SfProductState) => void) => store.transaction("dashboard", async (snapshot) => {
     const state = snapshot.data.__sfProductV1 as SfProductState
     if (!state?.cases || !state.atlas) throw new Error("Actual persisted fixture state unavailable")
     work(state)
     return { commit: true, value: undefined }
   })
-  return { runtime, caseRef, calculation, control, start, run, output, reopen, change, at }
+  return { runtime, caseRef, calculation, control, start, run, output, reopen, change, at, phase, metrics }
 }
 
 function settlement(fixture: Awaited<ReturnType<typeof staleCalculationFixture>>, options: {
@@ -189,7 +230,8 @@ function settlement(fixture: Awaited<ReturnType<typeof staleCalculationFixture>>
   privateRequest?: (request: Request) => Request
   afterPrivateAdmission?: (call: TrustedUiContext) => void
 } = {}) {
-  const { runtime, caseRef, calculation, start, run } = fixture
+  const { runtime, caseRef, calculation, start, run, phase, metrics } = fixture
+  const settlementId = ++metrics.settlements
   const { authority, business, persistence } = runtime
   const controller = new AbortController(), base = runtime.request()
   const request = new Request(base, { signal: AbortSignal.any([base.signal, controller.signal]) })
@@ -198,14 +240,18 @@ function settlement(fixture: Awaited<ReturnType<typeof staleCalculationFixture>>
   let originalCall: TrustedDomainContext | undefined
   const human = { ...authority.human, admit: async (...args: Parameters<typeof authority.human.admit>) => {
     const admitted = await authority.human.admit(originalCall && options.privateRequest ? options.privateRequest(args[0]) : args[0], args[1], args[2])
-    if (originalCall && admitted.status === "ok") { privateCalls.push(admitted.value); options.afterPrivateAdmission?.(admitted.value) }
+    if (originalCall && admitted.status === "ok") { metrics.privateAdmissions++; privateCalls.push(admitted.value); options.afterPrivateAdmission?.(admitted.value) }
     return admitted
   } }
   const currentAuthority = { host: authority.host, human }
   const stale = createSfStaleAnalysisAccess({ authority: currentAuthority, persistence, request, start,
     proof: { runRef: run.runRef, caseRef, contextFingerprint: run.contextFingerprint, evidenceRefs: [calculation] },
     context: { context: async (selection, call) => {
-      const sources = await business.context.context(selection, call)
+      const read = ++metrics.contextReads
+      const privateRead = call !== originalCall
+      if (privateRead) metrics.privateContextReads++
+      const sources = await phase(`settlement.${settlementId}.context.${privateRead ? "private" : "original"}.${read}`,
+        () => business.context.context(selection, call))
       if (call !== originalCall) {
         privateStates.push(sources.map((source) => source.state))
         await options.afterPrivateRead?.(call)
@@ -214,7 +260,7 @@ function settlement(fixture: Awaited<ReturnType<typeof staleCalculationFixture>>
     } } })
   const raw = createSfRunStore({ state: authority.state, requestFor: authority.host.requestFor, revalidate: authority.host.revalidate,
     preflight: async (record, call, output) => {
-      if (record.state === "stale") return stale.preflight(record, call, output)
+      if (record.state === "stale") return phase(`settlement.${settlementId}.preflight`, () => stale.preflight(record, call, output))
       const selected = await business.selectedCase(call)
       if (selected.status !== "ok" || digestSfValue(selected.value) !== digestSfValue(record.caseRef)) return { status: "denied", reason: "fixture-original-selector-unavailable" }
       return persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: { status: "ok" as const, value: { sourceFence: sfRunSourceFence(snapshot) } } }))
@@ -222,23 +268,26 @@ function settlement(fixture: Awaited<ReturnType<typeof staleCalculationFixture>>
     revalidateForCommit: async (record, call, snapshot, output) => {
       expect(privateCalls.every((privateCall) => authority.host.requestFor(privateCall) === undefined)).toBe(true)
       if (record.state !== "stale") return { status: "denied", reason: "fixture-fresh-publication-unavailable" }
-      const result = await stale.commit(record, call, snapshot, output)
+      const result = await phase(`settlement.${settlementId}.commit`, () => stale.commit(record, call, snapshot, output))
       expect(privateCalls.every((privateCall) => authority.host.requestFor(privateCall) === undefined)).toBe(true)
       return result
     }, now: () => fixture.at })
   const store = stale.wrapStore(raw)
   const enter = createSfAnalysisRunContext({ authority: currentAuthority, business, request, runRef: run.runRef, caseRef, start,
     active: () => fixture.control.active, replayContexts: new WeakMap() })
-  const withRun = async <T>(action: (call: TrustedDomainContext) => Promise<PortResult<T>>) => enter(run.runRef, async (call) => {
+  const withRun = async <T>(action: (call: TrustedDomainContext) => Promise<PortResult<T>>) => phase(`settlement.${settlementId}.with-run`, () => enter(run.runRef, async (call) => {
     originalCall = call
     try { return await action(call) } finally { originalCall = undefined }
-  })
+  }))
   return { withRun, store, stale, raw, privateCalls, privateStates, request, controller }
 }
 
 async function withStaleCalculation(name: string, work: (fixture: Awaited<ReturnType<typeof staleCalculationFixture>>) => Promise<void>) {
   const deadline = compositionTestDeadline(`analysis-stale-calculation.${name}`, 105_000)
-  try { await work(await staleCalculationFixture(deadline)) }
+  try {
+    const fixture = await deadline.phase("fixture.prepare", () => staleCalculationFixture(deadline, name))
+    await fixture.phase("scenario", () => work(fixture))
+  }
   finally { await deadline.close() }
 }
 
@@ -250,12 +299,12 @@ test("Late captured calculation settles its original output after case advance w
     const access = settlement(fixture)
     const settled = await access.withRun(async (call) => {
       expect((await runtime.business.selectedCase(call)).status).toBe("unavailable")
-      const scoped = await runtime.business.context.resolve(calculation, call)
+      const scoped = await fixture.phase("positive.original-scoped-read", () => runtime.business.context.resolve(calculation, call))
       expect(scoped.state).toBe("unavailable")
       expect(scoped.authorizedProjection).toBeUndefined()
-      const result = await access.store.preserveStale(run.runRef, "case-changed", output, call)
+      const result = await fixture.phase("positive.preserve-stale", () => access.store.preserveStale(run.runRef, "case-changed", output, call))
       expect((await runtime.business.selectedCase(call)).status).toBe("unavailable")
-      expect((await runtime.business.calculations.issue(calculation.target.runId, call)).status).toBe("unavailable")
+      expect((await fixture.phase("positive.original-current-issue", () => runtime.business.calculations.issue(calculation.target.runId, call))).status).toBe("unavailable")
       return result
     })
     expect(settled).toMatchObject({ status: "ok", value: { state: "stale", version: run.version + 1, caseRef, outputRef: output.id } })
@@ -271,8 +320,8 @@ test("Late captured calculation settles its original output after case advance w
     const current = await reopened.authority.state.read(reopened.request(), "cases", (state) => state.cases[caseRef.id])
     expect(current.status === "ok" && current.value?.version).toBe(2)
     const again = settlement({ ...fixture, runtime: reopened })
-    expect(await again.withRun((call) => again.store.readLifecycle(run.runRef, call))).toMatchObject({ status: "ok", value: { state: "stale", caseRef } })
-    expect(await again.withRun((call) => again.store.publish(run.runRef, run.version + 1, output, call)))
+    expect(await fixture.phase("positive.reopened-lifecycle", () => again.withRun((call) => again.store.readLifecycle(run.runRef, call)))).toMatchObject({ status: "ok", value: { state: "stale", caseRef } })
+    expect(await fixture.phase("positive.reopened-publication-refusal", () => again.withRun((call) => again.store.publish(run.runRef, run.version + 1, output, call))))
       .toEqual({ status: "conflict", reason: "invalid-run-output" })
   })
 }, 120_000)
@@ -357,7 +406,7 @@ test("Private historical read refuses a substituted Request, first or last autho
         } : undefined,
       })
       try {
-        const denied = await access.withRun((call) => access.store.preserveStale(run.runRef, "case-changed", output, call))
+        const denied = await fixture.phase(`fault.${fault}`, () => access.withRun((call) => access.store.preserveStale(run.runRef, "case-changed", output, call)))
         expect(fired).toBe(true)
         expect(denied).toEqual({ status: "denied", reason: fault === "first-authorize" || fault === "last-authorize"
           ? "analysis-authority-unavailable" : "analysis-stale-access-unavailable" })

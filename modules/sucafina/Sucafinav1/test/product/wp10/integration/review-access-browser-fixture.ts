@@ -199,7 +199,9 @@ export async function prepareSfReviewAccessBrowser(input: { http: ReturnType<typ
     for (const mode of ["manual", "periodic"] as const) {
       stage = `focus.${mode}-authorized-refresh`
       const refreshed = observe(focusPage, "review")
-      if (mode === "manual") await focusPage.getByRole("button", { name: "Refresh data", exact: true }).click()
+      // Keep click actionability within 10s. The observer above owns the real
+      // request/handler/response boundary, including the caller's producer budget.
+      if (mode === "manual") await focusPage.getByRole("button", { name: "Refresh data", exact: true }).click({ noWaitAfter: true })
       else await focusPage.clock.runFor(30_000)
       expect((await refreshed.response()).status()).toBe(200)
       await focusPage.waitForFunction((count) => Number(document.documentElement.dataset.observedReviewRefreshes) >= count, ++refreshedCount)

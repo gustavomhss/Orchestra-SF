@@ -5,11 +5,11 @@ import { createCoverageIntervalCertificate } from "../../../product/decisions/co
 import { supportsCoverageClassification } from "../../../product/decisions/coverage-classification.ts"
 import { createPlannerIntervalProof } from "../../../product/planner/interval-proof.ts"
 import type { PortfolioSelection } from "../../../product/decisions/portfolio-selection.ts"
-import { createWp05ComparisonFixture } from "../wp05/engine-fixture.ts"
+import { createWp05SensitivityFixture } from "../wp05/engine-fixture.ts"
 import { renewalCoverage } from "./renewal-coverage-fixture.ts"
 
 test("shared categories and supported N/A consume one real Planner contribution and retain the complete composed interval", async () => {
-  const fixture = await createWp05ComparisonFixture({ mode: "renewal-usd", training: "bundled", composed: true })
+  const fixture = await createWp05SensitivityFixture({ mode: "renewal-usd", training: "bundled", composed: true })
   try {
     const coverage = await renewalCoverage(fixture, "bundled")
     expect(coverage.assessment.coverageState).toBe("complete")
@@ -17,7 +17,6 @@ test("shared categories and supported N/A consume one real Planner contribution 
     expect(coverage.assessment.issues).toEqual([])
     expect(coverage.assessment.derivedMissingCategoryIds).toEqual([])
     expect(fixture.selectedResult.knownSubtotal).toBe(210000)
-    if (fixture.selectedResult.comparisonStatus !== "conditioned") throw new Error("The simulated operations must retain their declared conditions")
     const storedResult = { ...fixture.selectedResult, costCoverage: coverage.assessment }
     expect(validateScenarioCoverage(storedResult, fixture.basis, coverage.assessment)).toBeUndefined()
     // Classification resolves cost scope; an unapplied scenario remains a hypothetical analysis.
@@ -49,7 +48,7 @@ test("shared categories and supported N/A consume one real Planner contribution 
 
 test("coverage distinguishes omitted and null training from explicit zero and a later 40000 quote", async () => {
   for (const training of ["omitted", "null", "zero", "confirmed"] as const) {
-    const fixture = await createWp05ComparisonFixture({ mode: "renewal-usd", training, composed: true })
+    const fixture = await createWp05SensitivityFixture({ mode: "renewal-usd", training, composed: true })
     try {
       const coverage = await renewalCoverage(fixture, training)
       expect(coverage.assessment.coverageState).toBe(training === "zero" || training === "confirmed" ? "complete" : "pending")

@@ -1,6 +1,7 @@
 import { expect, test } from "bun:test"
 import { digestSfValue } from "../../../../product/contracts/canonical.ts"
 import type { DecisionCase } from "../../../../product/contracts/decisions.ts"
+import type { SfProductState } from "../../../../product/contracts/state.ts"
 import type { TrustedDomainContext } from "../../../../product/contracts/sf-execution.ts"
 import { createSfAnalysisRunContext } from "../../../../../../../apps/cli/src/sucafina-product/analysis-run-context.ts"
 import { financialCompositionFixture } from "./financial-composition-fixture.ts"
@@ -51,7 +52,7 @@ test("Analysis reentry reaches current lifecycle metadata after case advancement
     if (!last) throw new Error("Real reentry did not run")
     expect(replayContexts.has(last)).toBe(false)
     expect(authority.host.requestFor(last)).toBeUndefined()
-    const edit = async (value: DecisionCase, key: string) => {
+    const edit = async (value: DecisionCase, key: string, expected: "ok" | "denied" = "ok") => {
       const current = await authority.state.read(request, "cases", () => null)
       if (current.status !== "ok") throw new Error("Case edit authority unavailable")
       const saved = await authority.state.transaction(request, { namespace: "cases", expectedStorageVersion: current.storageVersion,
@@ -60,7 +61,7 @@ test("Analysis reentry reaches current lifecycle metadata after case advancement
         state.cases[caseRef.id] = value
         return { commit: true, value: true }
       })
-      expect(saved.status).toBe("ok")
+      expect(saved.status).toBe(expected)
     }
     const advanced = { ...initial, version: 2, objective: "Legitimately edited case" }
     await edit(advanced, "reentry-advance")
@@ -81,7 +82,19 @@ test("Analysis reentry reaches current lifecycle metadata after case advancement
     expect((await withRunContext("other-run", readLifecycle)).status).toBe("denied")
     await edit({ ...advanced, version: 3, participants: [] }, "reentry-remove-member")
     expect((await withRunContext(runRef, readLifecycle)).status).toBe("denied")
-    await edit({ ...advanced, version: 4 }, "reentry-restore-member")
+    const restored = { ...advanced, version: 4 }
+    // A removed participant cannot grant their own access back through C08.
+    await edit(restored, "reentry-self-restoration-refused", "denied")
+    // Model an external fixture membership change in the actual SQLite state.
+    // This is not an authorized human action or a native workflow witness.
+    await fixture.store.transaction("dashboard", async (snapshot) => {
+      const state = snapshot.data.__sfProductV1 as SfProductState
+      expect(state.cases[caseRef.id]).toEqual({ ...advanced, version: 3, participants: [] })
+      state.cases[caseRef.id] = restored
+      state.versions.cases++
+      state.revision++
+      return { commit: true, value: undefined }
+    })
     expect(await withRunContext(runRef, readLifecycle)).toEqual({ status: "ok", value: 4 })
     fixture.active.value = false
     expect((await withRunContext(runRef, readLifecycle)).status).toBe("denied")

@@ -56,7 +56,7 @@ function initial(options: FixtureOptions): Snapshot {
  * Synthetic authorization/evidence callbacks are host boundaries; this is UI admission,
  * not a GNATIVE/provider proof. No callback supplies a computed financial result.
  */
-export async function createWp05ComparisonFixture(options: FixtureOptions = {}) {
+export async function createWp05SensitivityFixture(options: FixtureOptions = {}) {
   const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-wp05-engine-"))
   await chmod(directory, 0o700)
   const store = await openLocalStore(directory)
@@ -180,11 +180,13 @@ export async function createWp05ComparisonFixture(options: FixtureOptions = {}) 
     const sensitivity = createPlannerSensitivity({ results, resolve: issuer.resolve, revalidate: issuer.revalidate, preview, exactThreshold: (input, binding, trusted) => { exactCalls.count++; return exact(input, binding.baselineRef, trusted) }, idempotencyKey: async (digest) => `wp05-samples-${digest}` })
     const persistent = createPersistentSensitivityPort({ portfolio: { evaluate: async () => ({ status: "unavailable", reason: "portfolio-not-requested" }), sensitivity }, results, bindings, resolveBinding: issuer.resolve, idempotencyKey: async (digest) => `wp05-sensitivity-${digest}` })
     const sensitivityRequest: SensitivityRequest = { scenarioRef: selectedRef, parameterBounds: { parameterRef, minimum: options.mode === "renewal-usd" ? 10000 : 100000, maximum: options.mode === "renewal-usd" ? 70000 : 120000, steps: 2 }, criterion }
+    const saved = await persistent.evaluateAndStore(sensitivityRequest, caseRef, context)
+    if (saved.status !== "ok") throw new Error(`Sensitivity persistence unavailable: ${JSON.stringify(saved)}`)
     return {
       context, host, state, store, directory, request, decision, rules, planner, plannerWithCriteria, sources, sourceRefs, basis, cases, caseRef,
       scenario, baselineScenario, selectedResult, baselineResult, selectedRef, baselineRef,
       results, persistent, comparisonBindings, comparisonRef, comparison: compared.value,
-      sensitivityRequest, issuer, exact, exactCalls, preview, evidence: evidenceService,
+      saved: saved.value, sensitivityRequest, issuer, exact, exactCalls, preview, evidence: evidenceService,
       revokeSource: (reference: string) => {
         if (!sourceRefs.some((source) => source.refId === reference)) throw new Error("Unknown fixture source")
         access.revokedSources.add(reference)
@@ -194,19 +196,6 @@ export async function createWp05ComparisonFixture(options: FixtureOptions = {}) 
     }
   } catch (error) {
     await cleanup()
-    throw error
-  }
-}
-
-/** Sensitivity consumers retain a required persisted result; coverage consumers use the comparison fixture. */
-export async function createWp05SensitivityFixture(options: FixtureOptions = {}) {
-  const fixture = await createWp05ComparisonFixture(options)
-  try {
-    const saved = await fixture.persistent.evaluateAndStore(fixture.sensitivityRequest, fixture.caseRef, fixture.context)
-    if (saved.status !== "ok") throw new Error(`Sensitivity persistence unavailable: ${JSON.stringify(saved)}`)
-    return { ...fixture, saved: saved.value }
-  } catch (error) {
-    await fixture.cleanup()
     throw error
   }
 }

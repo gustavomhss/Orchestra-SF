@@ -1,0 +1,61 @@
+{
+  "W": "f9990ecc7ade0d64122633d51258ddafe2c93802",
+  "tree": "195f4ea0f9b0099b0070b009570f79bf0a62d0be",
+  "check10": {
+    "run": 43595256149,
+    "job": 132448264698,
+    "S": "02576bd6dc61391feb47709970f2fafc3b9c8f16",
+    "tree": "e5ffff41aa0851fe270e975dcf4a55b9d70d47e7",
+    "envelope_blob": "9602934c5a23c94794f5a91dc37b000c91bd42a9",
+    "dev": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+    "parents": [
+      "f9990ecc7ade0d64122633d51258ddafe2c93802",
+      "79cfa5addda320b79b90e48f53b091f617a7190f"
+    ],
+    "envelope_changed_paths": [
+      ".astra-compose-check.json"
+    ],
+    "status": "COMPLETED",
+    "conclusion": "failure",
+    "diagnostics": {
+      "sucafina": 15,
+      "own": 0,
+      "cli": 0,
+      "foreign": 15,
+      "by_owner": {
+        "WP04": 3,
+        "WP06": 4,
+        "WP08": 4,
+        "WP09": 1,
+        "WP11": 1,
+        "WP13": 1,
+        "WP14": 1
+      }
+    },
+    "steps": {
+      "sucafina_typecheck": "FAIL",
+      "cli_typecheck": "PASS",
+      "atlas_generate_check_diff": "PASS",
+      "atlas_typecheck": "PASS",
+      "spawn": "PASS",
+      "guards": "PASS"
+    },
+    "guards": {
+      "rules": 78,
+      "paths": 1371,
+      "gate_findings": 0,
+      "warnings": 46,
+      "errors": 0
+    },
+    "spawn": {
+      "files": 4671,
+      "allowlisted_sites": 66
+    },
+    "artifact": {
+      "id": 14113859176,
+      "bytes": 4031,
+      "sha256": "373350e4a857d3bbc770c54c18d640cba634b5848f3c36068e3d4202a440edb9"
+    }
+  },
+  "global_release": false
+}

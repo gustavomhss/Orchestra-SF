@@ -117,7 +117,10 @@ async function prepareBiLifecycle(deadline: ReturnType<typeof compositionTestDea
         location: Location.Ref.make({ directory: AbsolutePath.make(directory) }) }), ...guards,
       grants: [{ principalRef, namespaces: ["cases", "preferences", "bi-artifacts", "reviews", "documents", "threads", "relations", "confirmations", "receipts", "outbox"],
         operations: ["sf_dashboard_read", "sf_bi_view", "sf_work_list", "sf_case_read", "sf_forecast_compare", "sf_scenario_simulate", "sf_scenario_compare", "sf_portfolio_evaluate", "sf_sensitivity_evaluate"], humanActions: [] }],
-      createId: randomUUID, now: Date.now, commandIdentity: async () => undefined, authenticate: identity.authenticate, environment,
+      // Match the real host's read admission policy; this fixture does not
+      // issue command identities for writes or replace cookie authentication.
+      createId: randomUUID, now: Date.now, commandIdentity: async (request) => request.method === "GET" || request.method === "HEAD" ? randomUUID() : undefined,
+      authenticate: identity.authenticate, environment,
       inspectSession: async () => undefined, verifySelection: async () => false, verifySkillReceipt: async () => false,
       providerGeneration: async () => 1, authorizeDocument: async () => undefined })
     const business = createSfBusinessServices({ authority, persistence, ...guards })
@@ -206,10 +209,11 @@ async function prepareBiLifecycle(deadline: ReturnType<typeof compositionTestDea
     const choicesUrl = new URL(`${mount}/dashboard`, origin)
     choicesUrl.search = parameters.toString()
     stage = "browser.choices"
-    const choicesResponse: { status: number; body: { status: string; value?: SfBiOptions } } = await page.evaluate(async (url) => {
+    const choicesResponse: { status: number; body: { status: string; reason?: string; value?: SfBiOptions } } = await page.evaluate(async (url) => {
       const response = await fetch(url, { credentials: "same-origin", cache: "no-store" })
       return { status: response.status, body: await response.json() }
     }, choicesUrl.href)
+    if (choicesResponse.status !== 200) console.error("SF_BI_LIFECYCLE_CHOICES", JSON.stringify({ status: choicesResponse.status, reason: choicesResponse.body.reason }))
     expect(choicesResponse.status).toBe(200)
     signal.throwIfAborted()
     const selectionRef = choicesResponse.body.value?.choices[0]?.selectionRef

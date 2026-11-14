@@ -1,0 +1,72 @@
+{
+  "schema": "astra-owned-increment-v1",
+  "finding": "CI6-WP10-STALE-C17-TIMEOUT-01",
+  "owner": "Astra WP10 diagnostic instrumentation",
+  "baseHead": "f9990ecc7ade0d64122633d51258ddafe2c93802",
+  "baseTree": "195f4ea0f9b0099b0070b009570f79bf0a62d0be",
+  "state": "OBSERVABILITY_STAGED_ACTIONS_PENDING",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+      "baseBlob": "727997f3fb0554c44056a7e2930888a28e6184ca",
+      "blob": "e8b12ab55f3b4101f7e8585d070bcb770ac2e537",
+      "sha256": "aca0cb637b3ede772cf079f9b262754c7e518cbd59185fbcfcc26fa97640bf28",
+      "bytes": 32912,
+      "status": "modified",
+      "stagedPath": "/workspace/scratch/4c48b09c5c29/owned-patch-round13/modules/sucafina/Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts"
+    }
+  ],
+  "observedProductHead": "00304ac25cc82ffd87ebd3096bd2f5cfec5222e1",
+  "observedProductTree": "884138976f1e5ab04d924c3f29f4ba6584acb070",
+  "run": {
+    "id": 43592994998,
+    "jobId": 132441498485,
+    "sha": "747e1006562677391187c501e99d5bdd9751949a",
+    "conclusion": "FAILURE",
+    "log": "evidence/ci6.log",
+    "failureLines": [
+      1912,
+      1924
+    ],
+    "nearBudgetPassLine": 1913
+  },
+  "changes": [
+    "Wrap fixture setup, scanner, canonical calculation source/simulate/persist/issue, archive, restart and scenario in existing deadline.phase.",
+    "Log inclusive per-phase counter deltas and totals for actual persistence, authority, coverage, current/historical calculation and private-context calls.",
+    "Identify settlement instances, private/original context and each existing authority fault without changing inputs or fault callbacks.",
+    "Expose positive original read/preserve/issue and reopened lifecycle/publication stages."
+  ],
+  "invariants": [
+    "Only this owned test file is staged; W12 worktree unchanged.",
+    "Three test names, every assertion, fault and seed value remain.",
+    "105000ms cooperative and120000ms Bun deadlines unchanged.",
+    "No product/contract/producer/authority change, generic cache, reuse, skipped replay or fence.",
+    "No native AM or READY claim.",
+    "Counters add no product calls and preserve returned values and exceptions; settled counters do not mean successful proof."
+  ],
+  "validation": {
+    "local_product_execution": false,
+    "test_execution": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "ci_dispatched": false,
+    "nextSelection": [
+      "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts"
+    ],
+    "existing_counterexample_scenarios": "All three tests retained on the same budget; do not split or filter faults.",
+    "staticArtifactInspection": {
+      "baseBlobMatchesW12Catalog": true,
+      "expectCallsBefore": 38,
+      "expectCallsAfter": 38,
+      "testNamesUnchanged": true,
+      "cooperativeDeadlineUnchanged": true,
+      "bunDeadlinesUnchanged": true,
+      "sourceWorktreeUnchanged": true,
+      "note": "Text/artifact inspection only, not product execution or typecheck."
+    }
+  },
+  "payloadPath": "/workspace/scratch/4c48b09c5c29/incoming-cache/stale-timeout-round13/payloads.json",
+  "patchPath": "/workspace/scratch/4c48b09c5c29/incoming-cache/stale-timeout-round13/analysis-stale-calculation-observability.patch",
+  "payloadSha256": "91148963d5cd036545d0f6de50f7baa0f19236e4850b64fea03c2c39a67bdc16",
+  "patchSha256": "8f3e8ed9f157820d0da6db90e655de120a2c5c8db81debecc9ad5bdbf82394c0"
+}
