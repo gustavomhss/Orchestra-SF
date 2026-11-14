@@ -11,7 +11,7 @@ test.describe("CI-UI-OPERATIONS", () => {
   test.describe.configure({ retries: 0 })
 
   test("OP-PROC-01 real comparison preserves the J04 values and exact C02 drilldown", async ({ page }, info) => {
-    info.annotations.push({ type: "criteria-scope", description: "WP04.T03.CHK.01; WP04.T01.CHK.01; WP04.T01.CHK.04; WP04.T01.INV.01" })
+    info.annotations.push({ type: "criteria-scope", description: "WP04.T03.CHK.01; WP04.T01.INV.01; WP04.T01.CMP.02" })
     await procurementComparison(page, info)
   })
 
