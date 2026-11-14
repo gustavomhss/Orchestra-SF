@@ -1,0 +1,316 @@
+{
+  "schema": "finance-state-read-performance-result-v1",
+  "selection": "S2",
+  "purpose": "Short real C08/SQLite materialization proof plus callback isolation and existing case fences",
+  "W": "a710446e3a002068eacf6ff1ade66365d24005d6",
+  "Wtree": "2083c7594b85505d0a97167acb30c0b6fd65f6b8",
+  "S": "71c5fcff52b381955b2038c90ff5bf3660c7cabb",
+  "Stree": "ef1fd8eaac3df738bdf8dcfddc4b94349f7a7b63",
+  "branch": "ci-run-linux-finance-state-a710446e-s2",
+  "runId": 43639203076,
+  "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43639203076",
+  "jobId": 132582691890,
+  "cleanupJobId": 132583425282,
+  "attempt": 1,
+  "conclusion": "success",
+  "classification": "PASS_SCOPED_SHORT_PROOF",
+  "tests": {
+    "pass": 41,
+    "fail": 0,
+    "assertions": 352,
+    "files": 6,
+    "materializationTestMs": 47616.16,
+    "totalSeconds": 47.96
+  },
+  "measurement": {
+    "sizes": {
+      "stateBytes": 1241296,
+      "caseBytes": 115925,
+      "cases": 1,
+      "results": 10,
+      "transactions": 18
+    },
+    "opaque": {
+      "elapsedMs": 135.69371999999566,
+      "caseReads": 2,
+      "unrelatedClones": 2,
+      "caseClones": 2,
+      "hostChecks": 36
+    },
+    "canonical": {
+      "elapsedMs": 119.60800000000017,
+      "caseReads": 2,
+      "unrelatedClones": 0,
+      "caseClones": 2,
+      "hostChecks": 36
+    },
+    "timings": [
+      {
+        "mode": "canonical",
+        "elapsedMs": 118.27456600000005,
+        "caseReads": 2,
+        "hostChecks": 36
+      },
+      {
+        "mode": "opaque",
+        "elapsedMs": 123.33137899999565,
+        "caseReads": 2,
+        "hostChecks": 36
+      },
+      {
+        "mode": "opaque",
+        "elapsedMs": 128.85495100000117,
+        "caseReads": 2,
+        "hostChecks": 36
+      },
+      {
+        "mode": "canonical",
+        "elapsedMs": 123.84224800000084,
+        "caseReads": 2,
+        "hostChecks": 36
+      },
+      {
+        "mode": "canonical",
+        "elapsedMs": 120.6262410000054,
+        "caseReads": 2,
+        "hostChecks": 36
+      },
+      {
+        "mode": "opaque",
+        "elapsedMs": 135.81740700000228,
+        "caseReads": 2,
+        "hostChecks": 36
+      },
+      {
+        "mode": "opaque",
+        "elapsedMs": 138.37372199999663,
+        "caseReads": 2,
+        "hostChecks": 36
+      },
+      {
+        "mode": "canonical",
+        "elapsedMs": 123.60828900000342,
+        "caseReads": 2,
+        "hostChecks": 36
+      },
+      {
+        "mode": "canonical",
+        "elapsedMs": 122.644650000002,
+        "caseReads": 2,
+        "hostChecks": 36
+      },
+      {
+        "mode": "opaque",
+        "elapsedMs": 139.29503999999724,
+        "caseReads": 2,
+        "hostChecks": 36
+      },
+      {
+        "mode": "opaque",
+        "elapsedMs": 129.28806500000064,
+        "caseReads": 2,
+        "hostChecks": 36
+      },
+      {
+        "mode": "canonical",
+        "elapsedMs": 122.04583099999581,
+        "caseReads": 2,
+        "hostChecks": 36
+      }
+    ],
+    "summary": {
+      "opaque": {
+        "samples": 6,
+        "medianMs": 132.55273600000146,
+        "totalMs": 794.9605639999936,
+        "minimumMs": 123.33137899999565,
+        "maximumMs": 139.29503999999724
+      },
+      "canonical": {
+        "samples": 6,
+        "medianMs": 122.34524049999891,
+        "totalMs": 731.0418250000075,
+        "minimumMs": 118.27456600000005,
+        "maximumMs": 123.84224800000084
+      }
+    },
+    "serializedReadPath": "unchanged real C08/SQLite; inclusive case-read timings are not additive",
+    "disclosure": "synthetic source grants from unchanged renewal fixture; no native or integrated acceptance"
+  },
+  "comparison": {
+    "sameRunnerInterleavedSamplesPerMode": 6,
+    "medianReductionMs": 10.207495500002551,
+    "medianReductionPercent": 7.700705249873108,
+    "fullStateBytes": 1241296,
+    "selectedCaseBytes": 115925,
+    "scope": "Case-port.read inclusive wall time on the same persisted state; not end-to-end speedup. Not added to nested trace timings.",
+    "countDiscriminant": {
+      "unrelatedStateCloneTraversals": {
+        "opaque": 2,
+        "canonical": 0
+      },
+      "freshCaseReads": {
+        "opaque": 2,
+        "canonical": 2
+      },
+      "caseCloneTraversals": {
+        "opaque": 2,
+        "canonical": 2
+      },
+      "hostChecks": {
+        "opaque": 36,
+        "canonical": 36
+      }
+    }
+  },
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "packageSelector": "packages/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/finance-state-read-performance/materialization.test.ts",
+      "Sucafinav1/test/product/finance-state-read-performance/isolation.test.ts",
+      "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "Sucafinav1/test/product/wp11/case-read-fence.test.ts",
+      "Sucafinav1/test/product/wp11/case-lease-egress.test.ts",
+      "Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "requestOnlyChangedFiles": [
+    ".ci-run.json"
+  ],
+  "omni": {
+    "nonce": "bfc0e4c0ecfa90a2e7ff1a067a9e996b",
+    "verdict": "not applicable",
+    "nativeProof": false
+  },
+  "artifacts": [],
+  "artifactPolicy": "Existing Bun test-ci selection has no mandatory upload step; source request, complete job log hash and observed selection bind the evidence.",
+  "bounds": {
+    "fixtureGuardMs": 180000,
+    "shortTestMs": 120000,
+    "originalJourneyBunBudgetMs": 300000,
+    "originalJourneyNotRun": true
+  },
+  "limitations": [
+    "Synthetic source grants from the unchanged renewal fixture; real C08/SQLite; no native or integrated acceptance.",
+    "Representative preparation omits long sensitivity. 18 transactions and 10 results do not equal the prior long checkpoint of20/12.",
+    "Timing has no asserted ratio. Acceptance uses counts and content; measured median reduction is observational.",
+    "Short PASS does not close FIN-IND-005."
+  ],
+  "globalRelease": false,
+  "requestIdentity": {
+    "bytes": 535,
+    "sha256": "9baabd10b3f8cd3a30d03710f7f109ed257c42676b21ce46f7dc76fc51a84fea"
+  },
+  "log": {
+    "bytes": 80463,
+    "sha256": "7c4783e08d7c70db146ac245e0ed2cf6975f30d62b8c919a87bb182d047fb2d5",
+    "archive": "ci-log-archive.json",
+    "archiveSelection": "S2"
+  },
+  "ciMetadata": {
+    "selection": "S2",
+    "runId": 43639203076,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43639203076",
+    "status": "completed",
+    "conclusion": "success",
+    "head_sha": "71c5fcff52b381955b2038c90ff5bf3660c7cabb",
+    "event": "push",
+    "branch": "ci-run-linux-finance-state-a710446e-s2",
+    "attempt": 1,
+    "created_at": "2026-11-14T20:45:46Z",
+    "run_started_at": "2026-11-14T20:45:46Z",
+    "updated_at": "2026-11-14T20:48:32Z",
+    "queueSeconds": 2,
+    "setupSeconds": 108,
+    "testSeconds": 48,
+    "artifactSeconds": 0,
+    "timingDefinition": "Rounded GitHub step timestamps; queue created_at->first job start; setup job start->first command; command and artifact duration sums within one job only; not finance performance."
+  },
+  "jobHeadSha": "71c5fcff52b381955b2038c90ff5bf3660c7cabb",
+  "allJobsTerminal": true,
+  "normalizedRequest": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "packageSelector": "packages/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/finance-state-read-performance/materialization.test.ts",
+      "Sucafinav1/test/product/finance-state-read-performance/isolation.test.ts",
+      "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "Sucafinav1/test/product/wp11/case-read-fence.test.ts",
+      "Sucafinav1/test/product/wp11/case-lease-egress.test.ts",
+      "Sucafinav1/test/product/wp11/case-egress-fence.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "expectedSelectedTestCount": 41,
+  "selectedFiles": [
+    "Sucafinav1/test/product/finance-state-read-performance/materialization.test.ts",
+    "Sucafinav1/test/product/finance-state-read-performance/isolation.test.ts",
+    "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+    "Sucafinav1/test/product/wp11/case-read-fence.test.ts",
+    "Sucafinav1/test/product/wp11/case-lease-egress.test.ts",
+    "Sucafinav1/test/product/wp11/case-egress-fence.test.ts"
+  ],
+  "selectedTestCount": 41,
+  "snapshotParent": "a710446e3a002068eacf6ff1ade66365d24005d6",
+  "jobMatchesSnapshot": true,
+  "deduplicationIdentity": {
+    "productCandidate": "a710446e3a002068eacf6ff1ade66365d24005d6",
+    "productTree": "2083c7594b85505d0a97167acb30c0b6fd65f6b8",
+    "requestSha256": "9baabd10b3f8cd3a30d03710f7f109ed257c42676b21ce46f7dc76fc51a84fea",
+    "configuration": "ci-config-identity.json",
+    "attempt": 1
+  },
+  "testNames": [
+    "C08 case selection detaches its result before the final authority callback and across requests",
+    "C08 opaque and wrapped selectors retain detached mutable callbacks on success, throw and rejection",
+    "C08 selectors observe a mutable or accessor binding after admission instead of a captured authority",
+    "C08 selectors cannot reuse access across principals, Request identity, header mutation or revocation",
+    "C08 selected reads retain cancellation and cannot commit a caught nested-write attempt",
+    "C08 case selectors preserve missing, inherited, legacy and malformed state outcomes",
+    "C08 case selectors preserve accessor counts and omitted parent cases without an extra observation",
+    "FIN-IND-005 case materialization keeps two fresh reads while skipping unrelated state clones",
+    "draft suppresses membership changed by host check 3 before its response",
+    "draft suppresses incarnation changed by host check 3 before its response",
+    "draft suppresses same-version content changed by host check 3 before its response",
+    "prepare-intent suppresses membership changed by host check 5 before its response",
+    "prepare-intent suppresses incarnation changed by host check 5 before its response",
+    "prepare-intent suppresses same-version content changed by host check 5 before its response",
+    "prepare-intent suppresses same-version content changed by host check 3 before its response",
+    "case read refuses a finished lease after the final C08 namespace authorization",
+    "case read refuses a expired lease after the final C08 namespace authorization",
+    "case draft refuses a finished lease after the final C08 namespace authorization",
+    "case draft refuses a expired lease after the final C08 namespace authorization",
+    "case prepare-intent refuses a finished lease after the final C08 namespace authorization",
+    "case prepare-intent refuses a expired lease after the final C08 namespace authorization",
+    "case read suppresses its projection when membership changes during the final host revalidation",
+    "case read suppresses its projection when same-version content changes during the final host revalidation",
+    "dashboard administrator is denied without product authority",
+    "exact retry recovers the result, digest reuse conflicts and principals remain isolated",
+    "concurrent different commands at the same version commit once",
+    "a retry after authority revocation never discloses the stored result",
+    "failure before commit rolls back all staged changes",
+    "read callback cannot mutate persisted state",
+    "revoked authority at egress prevents read disclosure and write commit",
+    "preview does not persist state or consume the command",
+    "writes in another namespace do not invalidate section CAS",
+    "replacing the actual target blocks replay of the old receipt",
+    "target replacement during work prevents commit and disclosure",
+    "a callback cannot mutate a different namespace, versions, or receipts",
+    "malformed command digest is rejected without work or persistence",
+    "admitted Atlas and outbox commit atomically with independent versions",
+    "stale secondary namespace blocks all work",
+    "secondary authority revoked at egress rolls back both sections",
+    "retry with a changed admitted namespace scope conflicts without executing",
+    "runtime rejects internal and prototype-key namespaces before work"
+  ]
+}

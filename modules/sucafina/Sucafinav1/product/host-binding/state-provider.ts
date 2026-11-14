@@ -2,10 +2,32 @@ import type { Persistence, Snapshot } from "../../runtime/contract.ts"
 import { object } from "../../runtime/contract.ts"
 import type { SfProductState, SfProductStatePort, SfStateAuthority, SfStateNamespace, SfStateResult, SfStateMutation } from "../contracts/state.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
+import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import { sfProductStateAdditiveFields } from "../contracts/state-layout.ts"
 
 const namespaces = ["preferences", "reviews", "relations", "threads", "confirmations", "cases", "contributions", "documents", "receipts", "atlas", "outbox", "bi-artifacts"] as const
 const storedNamespaces = ["preferences", "reviews", "relations", "threads", "confirmations", "cases", "contributions", "documents", "receipts", "atlas", "outbox", "transactions"] as const
+
+// Only selectors constructed here may project before cloning. This registry
+// retains code identity, never an observed case, snapshot or admitted authority.
+const caseReads = new WeakMap<object, {
+  id: string
+  project: (cases: SfProductState["cases"], authority: SfStateAuthority) => SfProductState["cases"][string] | undefined
+}>()
+
+export function selectSfCase(id: string, context: TrustedDomainContext) {
+  const read = (state: Pick<SfProductState, "cases">, authority: SfStateAuthority) =>
+    authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision ? state.cases[id] : undefined
+  // Mutable or accessor-backed contexts retain the opaque callback path. The
+  // predicate still runs after C08 admission, at its original observation time.
+  const binding = Object.getOwnPropertyDescriptor(context, "binding")
+  if (typeof id === "string" && Object.isFrozen(context) && binding && "value" in binding && binding.value !== null && typeof binding.value === "object" && Object.isFrozen(binding.value) &&
+    ["principalRef", "policyVersion", "accessRevision"].every((key) => {
+      const field = Object.getOwnPropertyDescriptor(binding.value, key)
+      return !!field && "value" in field && typeof field.value === "string"
+    })) caseReads.set(read, { id, project: (cases, authority) => read({ cases }, authority) })
+  return read
+}
 
 /** The caller composes current product authority; a Dashboard role never grants it implicitly. */
 export function createSfProductState(input: {
@@ -31,7 +53,16 @@ export function createSfProductState(input: {
         if (!authority) return { commit: false, value: { status: "denied", reason: "product-access-unavailable" } }
         const state = readSfState(snapshot)
         if (!state) return { commit: false, value: { status: "unavailable", reason: snapshot.data.__sfProductV1 === undefined ? "product-state-uninitialized" : "invalid-product-state" } }
-        const value = await read(structuredClone(state), authority)
+        const selection = namespace === "cases" ? caseReads.get(read) : undefined
+        const cases = selection ? Object.getOwnPropertyDescriptor(state, "cases") : undefined
+        const selected = selection && cases?.enumerable && "value" in cases && cases.value !== null && typeof cases.value === "object" && !Array.isArray(cases.value)
+          ? Object.getOwnPropertyDescriptor(cases.value, selection.id) : undefined
+        // Keep missing/inherited, accessor and malformed lookups on the original
+        // path. Durable SQLite snapshots contain plain cloneable data.
+        const value = selection && selected?.enumerable && "value" in selected && selected.value &&
+          typeof selected.value === "object" && !Array.isArray(selected.value)
+          ? await selection.project({ [selection.id]: structuredClone(selected.value) }, authority) as T
+          : await read(structuredClone(state), authority)
         if (request.signal.aborted) return { commit: false, value: { status: "unavailable", reason: "cancelled" } }
         const current = await input.authorize(request, snapshot, namespace, "read")
         if (!sameAuthority(authority, current)) return { commit: false, value: { status: "denied", reason: "product-authority-changed" } }

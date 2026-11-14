@@ -1,0 +1,308 @@
+{
+  "schema": "finance-state-read-performance-residual-v1",
+  "finding": "FIN-IND-005",
+  "disposition": "OPEN_IMPLEMENTED_NOT_CLOSED",
+  "implementationDelivered": true,
+  "materialShortReductionProven": true,
+  "W": "1a656f1f7251de8c104e5b03a43b457e80437181",
+  "Wtree": "1ebd1ee9d0e95253526d0ee73cf2353a71ccbe58",
+  "S": "9a2867b258de5cb049876a0005ef54109a4a11c5",
+  "Stree": "40637e9cc6ebb4dbd99a549b33b93973e6a5fffc",
+  "runId": 43640055910,
+  "jobId": 132585426041,
+  "sourceReceipt": "S3-result.json",
+  "shortEvidence": {
+    "receipt": "S2-result.json",
+    "W": "a710446e3a002068eacf6ff1ade66365d24005d6",
+    "runId": 43639203076,
+    "comparison": {
+      "sameRunnerInterleavedSamplesPerMode": 6,
+      "medianReductionMs": 10.207495500002551,
+      "medianReductionPercent": 7.700705249873108,
+      "fullStateBytes": 1241296,
+      "selectedCaseBytes": 115925,
+      "scope": "Case-port.read inclusive wall time on the same persisted state; not end-to-end speedup. Not added to nested trace timings.",
+      "countDiscriminant": {
+        "unrelatedStateCloneTraversals": {
+          "opaque": 2,
+          "canonical": 0
+        },
+        "freshCaseReads": {
+          "opaque": 2,
+          "canonical": 2
+        },
+        "caseCloneTraversals": {
+          "opaque": 2,
+          "canonical": 2
+        },
+        "hostChecks": {
+          "opaque": 36,
+          "canonical": 36
+        }
+      }
+    },
+    "sameProductBlobsInW2": true
+  },
+  "observed": {
+    "originalJourneyPass": false,
+    "originalJourneyTestMs": 180032.11,
+    "fixtureDeadlineElapsedMs": 180018,
+    "confirmedExactStartMs": 148191,
+    "confirmedExactDurationMs": 31827,
+    "confirmedExactStatus": "unavailable",
+    "checkpoints": [
+      {
+        "elapsedMs": 35055,
+        "event": "checkpoint",
+        "label": "omitted.assertions-complete",
+        "caseRef": {
+          "id": "case",
+          "incarnation": "case-incarnation",
+          "version": 3
+        },
+        "knownSubtotal": 210000,
+        "threshold": 55000.000000000015,
+        "comparisonStatus": "conditioned"
+      },
+      {
+        "elapsedMs": 43117,
+        "event": "checkpoint",
+        "label": "choice.persisted",
+        "caseRef": {
+          "id": "case",
+          "incarnation": "case-incarnation",
+          "version": 4
+        },
+        "choiceDigest": "077b2824dc68f8dbcb82604bb00bd0e402754c94715917dd56e45b1418b9929d"
+      },
+      {
+        "elapsedMs": 80178,
+        "event": "checkpoint",
+        "label": "confirmed.assertions-complete",
+        "caseRef": {
+          "id": "case",
+          "incarnation": "case-incarnation",
+          "version": 6
+        },
+        "total": 250000,
+        "advantage": -10000,
+        "choiceDigest": "077b2824dc68f8dbcb82604bb00bd0e402754c94715917dd56e45b1418b9929d"
+      }
+    ],
+    "terminalCounts": {
+      "c08.read.cases": {
+        "calls": 3494,
+        "elapsedMs": 70670,
+        "maximumMs": 47
+      },
+      "host.revalidate": {
+        "calls": 28768,
+        "elapsedMs": 1379,
+        "maximumMs": 18
+      },
+      "operation-source": {
+        "calls": 5672,
+        "elapsedMs": 3998,
+        "maximumMs": 29
+      },
+      "operation-coverage": {
+        "calls": 2216,
+        "elapsedMs": 51,
+        "maximumMs": 8
+      },
+      "c08.read.preferences": {
+        "calls": 694,
+        "elapsedMs": 14654,
+        "maximumMs": 40
+      },
+      "c08.transaction.preferences": {
+        "calls": 6,
+        "elapsedMs": 278,
+        "maximumMs": 90
+      },
+      "classified-source": {
+        "calls": 377,
+        "elapsedMs": 2678,
+        "maximumMs": 30
+      },
+      "classified-coverage": {
+        "calls": 349,
+        "elapsedMs": 37456,
+        "maximumMs": 230
+      },
+      "c08.transaction.cases": {
+        "calls": 15,
+        "elapsedMs": 1236,
+        "maximumMs": 142
+      },
+      "planner.verifySourceOnly": {
+        "calls": 1316,
+        "elapsedMs": 4052,
+        "maximumMs": 10
+      },
+      "planner.verifyOperation": {
+        "calls": 412,
+        "elapsedMs": 5532,
+        "maximumMs": 26
+      },
+      "planner.verifySourceProjection": {
+        "calls": 2632,
+        "elapsedMs": 1924,
+        "maximumMs": 9
+      },
+      "c08.read.outbox": {
+        "calls": 1,
+        "elapsedMs": 10,
+        "maximumMs": 10
+      }
+    },
+    "matchedConfirmedState": {
+      "label": "renewal-choice-history",
+      "phase": "prepare:transition-confirmed:complete",
+      "elapsedMs": 80177,
+      "budgetMs": 180000,
+      "counts": {
+        "c08.read.cases": {
+          "calls": 2225,
+          "elapsedMs": 32810,
+          "maximumMs": 39
+        },
+        "host.revalidate": {
+          "calls": 17089,
+          "elapsedMs": 1032,
+          "maximumMs": 18
+        },
+        "operation-source": {
+          "calls": 4180,
+          "elapsedMs": 1577,
+          "maximumMs": 27
+        },
+        "operation-coverage": {
+          "calls": 2020,
+          "elapsedMs": 51,
+          "maximumMs": 8
+        },
+        "c08.read.preferences": {
+          "calls": 446,
+          "elapsedMs": 6808,
+          "maximumMs": 35
+        },
+        "c08.transaction.preferences": {
+          "calls": 6,
+          "elapsedMs": 278,
+          "maximumMs": 90
+        },
+        "classified-source": {
+          "calls": 242,
+          "elapsedMs": 246,
+          "maximumMs": 26
+        },
+        "classified-coverage": {
+          "calls": 229,
+          "elapsedMs": 14849,
+          "maximumMs": 179
+        },
+        "c08.transaction.cases": {
+          "calls": 13,
+          "elapsedMs": 1013,
+          "maximumMs": 142
+        },
+        "planner.verifySourceOnly": {
+          "calls": 668,
+          "elapsedMs": 1888,
+          "maximumMs": 10
+        },
+        "planner.verifyOperation": {
+          "calls": 412,
+          "elapsedMs": 5532,
+          "maximumMs": 26
+        },
+        "planner.verifySourceProjection": {
+          "calls": 1336,
+          "elapsedMs": 1114,
+          "maximumMs": 9
+        },
+        "c08.read.outbox": {
+          "calls": 1,
+          "elapsedMs": 10,
+          "maximumMs": 10
+        }
+      },
+      "stateBytes": 1311209,
+      "transactionsBytes": 443599,
+      "casesBytes": 115934,
+      "resultBytes": 319129,
+      "transactions": 20,
+      "cases": 1,
+      "results": 12
+    }
+  },
+  "notReached": [
+    "confirmed.threshold-assertions-complete",
+    "witness.15000.assertions-complete",
+    "witness.15001.assertions-complete",
+    "history.assertions-complete",
+    "choice.replay-assertions-complete",
+    "persistence.restart-and-revocation-assertions-complete"
+  ],
+  "nestedTimingRule": "All operation timings are inclusive and nested. Do not add them, multiply the short7.7% across3095/3494 reads, or infer an end-to-end speedup.",
+  "previousLongObservation": {
+    "runId": 43636137688,
+    "casesReads": 3095,
+    "casesInclusiveMs": 71840,
+    "confirmedExactStartMs": 178956,
+    "matchedConfirmedState": {
+      "stateBytes": 1311209,
+      "transactionsBytes": 443599,
+      "casesBytes": 115934,
+      "resultBytes": 319129,
+      "transactions": 20,
+      "cases": 1,
+      "results": 12
+    },
+    "comparisonLimit": "Different runners and amount of work reached. Earlier arrival to exact and more reads within the same guard are observations, not a controlled end-to-end speedup."
+  },
+  "unchangedSerializedStateAtMatchedCheckpoint": {
+    "stateBytes": 1311209,
+    "transactionsBytes": 443599,
+    "casesBytes": 115934,
+    "resultBytes": 319129,
+    "transactions": 20,
+    "cases": 1,
+    "results": 12,
+    "interpretation": "This patch reduces selected materialization; it does not shrink persisted state or replace local-store serialization."
+  },
+  "checks": {
+    "receipt": "K2-result.json",
+    "typecheck": "FAIL",
+    "inheritedDiagnostics": 115,
+    "missionOwnedDiagnostics": 0,
+    "guards": "FAIL",
+    "gates": 43,
+    "warnings": 15,
+    "engineErrors": 0,
+    "sameInheritedFindings": true
+  },
+  "nextBoundary": {
+    "consumer": "session14",
+    "ownerRouting": "Session14/S0 coordinates the provider/persistence or canonical replay owner.",
+    "remainingCost": "Opaque callbacks still require full detached state; SQLite still loads/decodes complete snapshots. Case/source verification and canonical digests remain fresh at each boundary.",
+    "safeSecondDeltaIdentifiedWithinCurrentTwoFiles": false,
+    "reason": "Reusing digests across mutable objects/observation windows, sharing authorization/source checks, or skipping full clones for opaque callbacks would weaken preserved semantics. Unprofiled microchanges are not a basis for another long attempt.",
+    "nextAction": "Intake the selective patch against current preimages, then authorize and prove any additional material change at the appropriate owner boundary before another original-journey attempt.",
+    "mustPreserve": [
+      "both fresh case observations",
+      "original predicates and callbacks",
+      "source/current/final fences",
+      "Request/headers/binding/lease/abort",
+      "CAS and nested-write poison",
+      "15000/15001, actual historical reread, replay, real reopen and access negatives",
+      "180000/300000 budgets"
+    ]
+  },
+  "excludedPathsEdited": false,
+  "additionalLongDispatch": false,
+  "pendingRuns": [],
+  "writeAuthorityEndsWithPublishedHandoff": true,
+  "globalRelease": false
+}

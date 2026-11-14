@@ -6,6 +6,7 @@ import type { CommandReceipt, CommandReceiptView } from "../contracts/context.ts
 import type { DecisionCasePort, DomainPortHost, PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { SfProductStatePort, SfStateResult } from "../contracts/state.ts"
+import { selectSfCase } from "../host-binding/state-provider.ts"
 
 export function encodeCaseRef(value: Pick<DecisionCase, "id" | "incarnation">) {
   return `case:${encodeURIComponent(value.id)}:${encodeURIComponent(value.incarnation)}`
@@ -73,7 +74,7 @@ export function createDecisionCasePort(input: {
         if (!ref) return { status: "needs-input", reason: "invalid-case-reference" }
         if (!source || !await input.host.revalidate(context)) return { status: "denied", reason: "invalid-authority" }
         if (context.kind === "native" && (context.binding.caseId !== ref.id || context.binding.caseIncarnation !== ref.incarnation)) return { status: "denied", reason: "case-access-unavailable" }
-        const read = await input.state.read(source, "cases", (state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision ? state.cases[ref.id] : undefined).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
+        const read = await input.state.read(source, "cases", selectSfCase(ref.id, context)).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
         if (read.status === "preview") return { status: "unavailable", reason: "unexpected-state-preview" }
         if (read.status !== "ok") return failure(read)
         const value = read.value
@@ -87,7 +88,7 @@ export function createDecisionCasePort(input: {
         const checkedAt = input.now()
         // All external checks may await while C08 changes. Keep the second
         // observation after them and release only the same complete case.
-        const again = await input.state.read(source, "cases", (state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision ? state.cases[ref.id] : undefined).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
+        const again = await input.state.read(source, "cases", selectSfCase(ref.id, context)).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
         if (again.status === "preview") return { status: "unavailable", reason: "unexpected-state-preview" }
         if (again.status !== "ok") return failure(again)
         // Namespace authorization may await after the state callback. Check
@@ -176,3 +177,4 @@ function receiptView(receipt: CommandReceipt, changes: DecisionCase["preparedCha
   const status = change && change.state !== "planned" ? change.state : result.ok ? "applied" : result.status === 409 ? "conflict" : "failed"
   return { ...view, status, errors: result.ok ? [] : [result.status === 409 ? "domain-conflict" : "domain-command-failed"] }
 }
+

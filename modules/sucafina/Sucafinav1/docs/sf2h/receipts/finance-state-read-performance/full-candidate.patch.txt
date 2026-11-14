@@ -1,0 +1,595 @@
+--- a/modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts
++++ b/modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts
+@@ -2,9 +2,31 @@
+ import { object } from "../../runtime/contract.ts"
+ import type { SfProductState, SfProductStatePort, SfStateAuthority, SfStateNamespace, SfStateResult, SfStateMutation } from "../contracts/state.ts"
+ import { digestSfValue } from "../contracts/canonical.ts"
++import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
+ 
+ const namespaces = ["preferences", "reviews", "relations", "threads", "confirmations", "cases", "contributions", "documents", "receipts", "atlas", "outbox"] as const
+ const storedNamespaces = [...namespaces, "transactions"] as const
++
++// Only selectors constructed here may project before cloning. This registry
++// retains code identity, never an observed case, snapshot or admitted authority.
++const caseReads = new WeakMap<object, {
++  id: string
++  project: (cases: SfProductState["cases"], authority: SfStateAuthority) => SfProductState["cases"][string] | undefined
++}>()
++
++export function selectSfCase(id: string, context: TrustedDomainContext) {
++  const read = (state: Pick<SfProductState, "cases">, authority: SfStateAuthority) =>
++    authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision ? state.cases[id] : undefined
++  // Mutable or accessor-backed contexts retain the opaque callback path. The
++  // predicate still runs after C08 admission, at its original observation time.
++  const binding = Object.getOwnPropertyDescriptor(context, "binding")
++  if (typeof id === "string" && Object.isFrozen(context) && binding && "value" in binding && binding.value !== null && typeof binding.value === "object" && Object.isFrozen(binding.value) &&
++    ["principalRef", "policyVersion", "accessRevision"].every((key) => {
++      const field = Object.getOwnPropertyDescriptor(binding.value, key)
++      return !!field && "value" in field && typeof field.value === "string"
++    })) caseReads.set(read, { id, project: (cases, authority) => read({ cases }, authority) })
++  return read
++}
+ 
+ /** The caller composes current product authority; a Dashboard role never grants it implicitly. */
+ export function createSfProductState(input: {
+@@ -23,7 +45,16 @@
+         if (!authority) return { commit: false, value: { status: "denied", reason: "product-access-unavailable" } }
+         const state = readSfState(snapshot)
+         if (!state) return { commit: false, value: { status: "unavailable", reason: snapshot.data.__sfProductV1 === undefined ? "product-state-uninitialized" : "invalid-product-state" } }
+-        const value = await read(structuredClone(state), authority)
++        const selection = namespace === "cases" ? caseReads.get(read) : undefined
++        const cases = selection ? Object.getOwnPropertyDescriptor(state, "cases") : undefined
++        const selected = selection && cases?.enumerable && "value" in cases && cases.value !== null && typeof cases.value === "object" && !Array.isArray(cases.value)
++          ? Object.getOwnPropertyDescriptor(cases.value, selection.id) : undefined
++        // Keep missing/inherited, accessor and malformed lookups on the original
++        // path. Durable SQLite snapshots contain plain cloneable data.
++        const value = selection && selected?.enumerable && "value" in selected && selected.value &&
++          typeof selected.value === "object" && !Array.isArray(selected.value)
++          ? await selection.project({ [selection.id]: structuredClone(selected.value) }, authority) as T
++          : await read(structuredClone(state), authority)
+         if (request.signal.aborted) return { commit: false, value: { status: "unavailable", reason: "cancelled" } }
+         const current = await input.authorize(request, snapshot, namespace, "read")
+         if (!sameAuthority(authority, current)) return { commit: false, value: { status: "denied", reason: "product-authority-changed" } }
+@@ -121,3 +152,4 @@
+   if (state.nativeRuns !== undefined && (!state.nativeRuns || typeof state.nativeRuns !== "object" || Array.isArray(state.nativeRuns))) return undefined
+   return state as SfProductState
+ }
++
+--- a/modules/sucafina/Sucafinav1/product/decisions/case-port.ts
++++ b/modules/sucafina/Sucafinav1/product/decisions/case-port.ts
+@@ -6,6 +6,7 @@
+ import type { DecisionCasePort, DomainPortHost, PortResult } from "../contracts/ports.ts"
+ import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
+ import type { SfProductStatePort, SfStateResult } from "../contracts/state.ts"
++import { selectSfCase } from "../host-binding/state-provider.ts"
+ 
+ export function encodeCaseRef(value: Pick<DecisionCase, "id" | "incarnation">) {
+   return `case:${encodeURIComponent(value.id)}:${encodeURIComponent(value.incarnation)}`
+@@ -73,7 +74,7 @@
+         if (!ref) return { status: "needs-input", reason: "invalid-case-reference" }
+         if (!source || !await input.host.revalidate(context)) return { status: "denied", reason: "invalid-authority" }
+         if (context.kind === "native" && (context.binding.caseId !== ref.id || context.binding.caseIncarnation !== ref.incarnation)) return { status: "denied", reason: "case-access-unavailable" }
+-        const read = await input.state.read(source, "cases", (state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision ? state.cases[ref.id] : undefined).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
++        const read = await input.state.read(source, "cases", selectSfCase(ref.id, context)).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
+         if (read.status === "preview") return { status: "unavailable", reason: "unexpected-state-preview" }
+         if (read.status !== "ok") return failure(read)
+         const value = read.value
+@@ -87,7 +88,7 @@
+         const checkedAt = input.now()
+         // All external checks may await while C08 changes. Keep the second
+         // observation after them and release only the same complete case.
+-        const again = await input.state.read(source, "cases", (state, authority) => authority.principalRef === context.binding.principalRef && authority.policyVersion === context.binding.policyVersion && authority.accessRevision === context.binding.accessRevision ? state.cases[ref.id] : undefined).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
++        const again = await input.state.read(source, "cases", selectSfCase(ref.id, context)).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
+         if (again.status === "preview") return { status: "unavailable", reason: "unexpected-state-preview" }
+         if (again.status !== "ok") return failure(again)
+         // Namespace authorization may await after the state callback. Check
+@@ -176,3 +177,4 @@
+   const status = change && change.state !== "planned" ? change.state : result.ok ? "applied" : result.status === 409 ? "conflict" : "failed"
+   return { ...view, status, errors: result.ok ? [] : [result.status === 409 ? "domain-conflict" : "domain-command-failed"] }
+ }
++
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/finance-state-read-performance/fixture.ts
+@@ -0,0 +1,78 @@
++import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
++import { tmpdir } from "node:os"
++import { join } from "node:path"
++import type { DecisionCase } from "../../../product/contracts/decisions.ts"
++import type { TrustedUiContext } from "../../../product/contracts/sf-execution.ts"
++import type { SfStateNamespace } from "../../../product/contracts/state.ts"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import { createSfProductState } from "../../../product/host-binding/state-provider.ts"
++import { createSfUiAuthority } from "../../../product/integration/ui-authority.ts"
++import type { Snapshot } from "../../../runtime/contract.ts"
++import { openLocalStore } from "../../../runtime/local-store.ts"
++
++/** A deliberately empty business case: this fixture proves the C08 boundary,
++ * not a financial result, source grant, native execution or global acceptance. */
++export async function createStateIsolationFixture() {
++  const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-state-read-isolation-"))
++  await chmod(directory, 0o700)
++  const store = await openLocalStore(directory)
++  const at = "2026-11-14T00:00:00Z"
++  const controls: {
++    enabled: boolean
++    checks: { request: Request; namespace: SfStateNamespace; mode: "read" | "write" }[]
++    observe?: (snapshot: Snapshot, request: Request, mode: "read" | "write", index: number) => void | Promise<void>
++  } = { enabled: true, checks: [] }
++  const ui = createSfUiAuthority({
++    authorize: async (request) => controls.enabled && request.headers.get("authorization") === "fixture-token" ? {
++      installationId: "installation", projectId: "project", principalRef: request.headers.get("x-principal") ?? "principal", policyVersion: "policy", accessRevision: "access",
++    } : undefined,
++    commandIdentity: async () => "fixture-state-read", createId: () => crypto.randomUUID(), now: () => Date.parse(at),
++  })
++  const contexts = new WeakMap<Request, TrustedUiContext>()
++  const leases: TrustedUiContext[] = []
++  const admit = async (principal = "principal", signal?: AbortSignal) => {
++    const request = new Request("https://example.test/state-read-isolation", { headers: { authorization: "fixture-token", "x-principal": principal }, signal })
++    const intentDigest = digestSfValue({ caseRef: "case:case:case-incarnation" })
++    const admitted = await ui.admit(request, "sf_case_read", intentDigest)
++    if (admitted.status !== "ok" || !await ui.validate(admitted.value, "sf_case_read", intentDigest)) throw new Error("State read fixture admission unavailable")
++    contexts.set(request, admitted.value)
++    leases.push(admitted.value)
++    return { request, context: admitted.value }
++  }
++  const admitted = await admit()
++  const state = createSfProductState({
++    persistence: store, createId: () => "state-incarnation", resolveTarget: async () => ({ incarnation: "case-incarnation" }),
++    authorize: async (request, snapshot, namespace, mode) => {
++      controls.checks.push({ request, namespace, mode })
++      await controls.observe?.(snapshot, request, mode, controls.checks.length)
++      const context = contexts.get(request)
++      if (!context || !await ui.revalidate(context)) return undefined
++      return { principalRef: context.binding.principalRef, policyVersion: context.binding.policyVersion, accessRevision: context.binding.accessRevision }
++    },
++  })
++  const decision: DecisionCase = {
++    id: "case", incarnation: "case-incarnation", version: 1, state: "draft", objective: "original case", currency: "USD",
++    horizon: { start: "2027-01-01", end: "2027-12-31" }, criteria: [], participants: ["principal"], sourceRefs: [], alternatives: [], costCoverageBases: [], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [],
++  }
++  const command = { namespace: "cases" as const, expectedStorageVersion: 0, targetRef: "case", targetIncarnation: "case-incarnation", idempotencyKey: "seed-isolation", commandDigest: digestSfValue(decision) }
++  const seeded = await state.transaction(admitted.request, { ...command, additionalNamespaces: [{ namespace: "preferences", expectedStorageVersion: 0 }] }, async (stored) => {
++    stored.cases.case = decision
++    stored.preferences.private = { marker: "not part of a case projection", nested: { count: 1 } }
++    return { commit: true, value: true }
++  })
++  if (seeded.status !== "ok" || !seeded.value) {
++    leases.forEach((context) => ui.finish(context))
++    await store.dispose()
++    await rm(directory, { recursive: true, force: true })
++    throw new Error("State read fixture seed unavailable")
++  }
++  controls.checks.length = 0
++  return {
++    ...admitted, state, store, ui, controls, decision, command, admit,
++    close: async () => {
++      leases.forEach((context) => ui.finish(context))
++      await store.dispose()
++      await rm(directory, { recursive: true, force: true })
++    },
++  }
++}
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/finance-state-read-performance/isolation.test.ts
+@@ -0,0 +1,227 @@
++import { expect, test } from "bun:test"
++import type { SfProductState } from "../../../product/contracts/state.ts"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import { selectSfCase } from "../../../product/host-binding/state-provider.ts"
++import { createStateIsolationFixture } from "./fixture.ts"
++
++test("C08 case selection detaches its result before the final authority callback and across requests", async () => {
++  const f = await createStateIsolationFixture()
++  try {
++    const retained: { snapshot?: SfProductState } = {}
++    f.controls.observe = (snapshot, _request, mode, index) => {
++      if (mode !== "read" || index !== 2) return
++      retained.snapshot = snapshot.data.__sfProductV1 as SfProductState
++      retained.snapshot.cases.case!.objective = "mutated during final authority"
++    }
++    const first = await f.state.read(f.request, "cases", selectSfCase("case", f.context))
++    expect(f.controls.checks).toHaveLength(2)
++    expect(first).toMatchObject({ status: "ok", storageVersion: 1, aggregateRevision: 1, value: f.decision })
++    if (first.status !== "ok" || !first.value || !retained.snapshot) throw new Error("Detached case missing")
++    expect(Object.keys(first.value).sort()).toEqual(Object.keys(f.decision).sort())
++    expect(first.value).not.toHaveProperty("preferences")
++    first.value.objective = "mutated by recipient"
++    retained.snapshot.cases.case!.objective = "mutated after transaction scope"
++    f.controls.observe = undefined
++    const secondRequest = await f.admit()
++    const second = await f.state.read(secondRequest.request, "cases", selectSfCase("case", secondRequest.context))
++    expect(second).toMatchObject({ status: "ok", value: f.decision })
++    if (second.status !== "ok") throw new Error("Fresh request unavailable")
++    expect(second.value).not.toBe(first.value)
++    expect(f.controls.checks.map((entry) => entry.request)).toEqual([f.request, f.request, secondRequest.request, secondRequest.request])
++  } finally { await f.close() }
++})
++
++test("C08 opaque and wrapped selectors retain detached mutable callbacks on success, throw and rejection", async () => {
++  const f = await createStateIsolationFixture()
++  try {
++    const observed: { callback?: Readonly<SfProductState>; egress?: SfProductState } = {}
++    f.controls.observe = (snapshot, _request, mode, index) => {
++      if (mode === "read" && index === 2) observed.egress = structuredClone(snapshot.data.__sfProductV1) as SfProductState
++    }
++    const selector = selectSfCase("case", f.context)
++    // Copying a selector's public properties must not confer its internal identity.
++    const wrapped = Object.assign((stored: Readonly<SfProductState>, authority: Parameters<typeof selector>[1]) => {
++      observed.callback = stored
++      stored.cases.case!.objective = "callback-private mutation"
++      stored.preferences.private = "callback-private preference"
++      return selector(stored, authority)
++    }, selector)
++    const result = await f.state.read(f.request, "cases", wrapped)
++    expect(result).toMatchObject({ status: "ok", value: { objective: "callback-private mutation" } })
++    expect(observed.egress?.cases.case).toEqual(f.decision)
++    expect(observed.egress?.preferences.private).toEqual({ marker: "not part of a case projection", nested: { count: 1 } })
++    if (!observed.callback) throw new Error("Opaque callback did not execute")
++    observed.callback.cases.case!.objective = "retained callback mutation"
++    f.controls.observe = undefined
++    for (const asynchronous of [false, true]) {
++      const failure = new Error(asynchronous ? "read rejected" : "read threw")
++      await expect(f.state.read(f.request, "cases", (stored) => {
++        stored.cases.case!.objective = "failed callback mutation"
++        stored.preferences.private = "failed callback preference"
++        if (asynchronous) return Promise.reject(failure)
++        throw failure
++      })).rejects.toThrow(failure.message)
++      expect(await f.state.read(f.request, "cases", selectSfCase("case", f.context))).toMatchObject({ status: "ok", value: f.decision })
++    }
++    expect(await f.state.read(f.request, "preferences", (stored) => stored.preferences.private)).toMatchObject({ status: "ok", value: { marker: "not part of a case projection", nested: { count: 1 } } })
++  } finally { await f.close() }
++})
++
++test("C08 selectors observe a mutable or accessor binding after admission instead of a captured authority", async () => {
++  const f = await createStateIsolationFixture()
++  try {
++    for (const change of ["mutation", "replacement", "accessor"] as const) {
++      const binding = { current: Object.freeze({ ...f.context.binding }) }
++      const mutable = { ...f.context, binding: { ...f.context.binding } }
++      const context = change === "accessor" ? Object.freeze({ ...f.context, get binding() { return binding.current } }) : mutable
++      const selector = selectSfCase("case", context)
++      f.controls.checks.length = 0
++      f.controls.observe = (_snapshot, _request, mode, index) => {
++        if (mode !== "read" || index !== 1) return
++        if (change === "accessor") { binding.current = Object.freeze({ ...binding.current, principalRef: "outsider" }); return }
++        if (change === "replacement") { mutable.binding = { ...mutable.binding, accessRevision: "replacement-access" }; return }
++        mutable.binding.principalRef = "outsider"
++      }
++      expect(await f.state.read(f.request, "cases", selector)).toMatchObject({ status: "ok", value: undefined })
++      expect(f.controls.checks).toHaveLength(2)
++      binding.current = Object.freeze({ ...f.context.binding })
++      mutable.binding = { ...f.context.binding }
++      f.controls.observe = undefined
++      expect(await f.state.read(f.request, "cases", selector)).toMatchObject({ status: "ok", value: f.decision })
++    }
++  } finally { await f.close() }
++})
++
++test("C08 selectors cannot reuse access across principals, Request identity, header mutation or revocation", async () => {
++  const f = await createStateIsolationFixture()
++  try {
++    const selector = selectSfCase("case", f.context)
++    expect(await f.state.read(f.request, "cases", selector)).toMatchObject({ status: "ok", value: f.decision })
++    const outsider = await f.admit("outsider")
++    expect(await f.state.read(outsider.request, "cases", selector)).toMatchObject({ status: "ok", value: undefined })
++    expect(await f.state.read(new Request(f.request), "cases", selector)).toEqual({ status: "denied", reason: "product-access-unavailable" })
++    f.controls.checks.length = 0
++    f.controls.observe = (_snapshot, request, mode, index) => {
++      if (mode === "read" && index === 2) request.headers.set("authorization", "changed-token")
++    }
++    expect(await f.state.read(f.request, "cases", selector)).toEqual({ status: "denied", reason: "product-authority-changed" })
++    f.controls.observe = undefined
++    const fresh = await f.admit()
++    f.controls.checks.length = 0
++    f.controls.observe = (_snapshot, _request, mode, index) => {
++      if (mode === "read" && index === 2) f.controls.enabled = false
++    }
++    expect(await f.state.read(fresh.request, "cases", selectSfCase("case", fresh.context))).toEqual({ status: "denied", reason: "product-authority-changed" })
++    expect(f.controls.checks).toHaveLength(2)
++    f.controls.observe = undefined
++    expect(await f.state.read(fresh.request, "cases", selectSfCase("case", fresh.context))).toEqual({ status: "denied", reason: "product-access-unavailable" })
++  } finally { await f.close() }
++})
++
++test("C08 selected reads retain cancellation and cannot commit a caught nested-write attempt", async () => {
++  const f = await createStateIsolationFixture()
++  try {
++    const cancelled = new AbortController()
++    const admitted = await f.admit("principal", cancelled.signal)
++    f.controls.checks.length = 0
++    f.controls.observe = (_snapshot, _request, mode, index) => {
++      if (mode === "read" && index === 2) cancelled.abort(new Error("selected read cancelled"))
++    }
++    await expect(f.state.read(admitted.request, "cases", selectSfCase("case", admitted.context))).rejects.toThrow("selected read cancelled")
++    f.controls.observe = undefined
++    const poison = { caught: false, worked: false }
++    await expect(f.state.read(f.request, "cases", async (stored) => {
++      await f.state.transaction(f.request, { ...f.command, expectedStorageVersion: 1, idempotencyKey: "nested-write" }, async (staged) => {
++        poison.worked = true
++        staged.cases.case!.objective = "nested write must roll back"
++        return { commit: true, value: true }
++      }).catch(() => { poison.caught = true })
++      return stored.cases.case
++    })).rejects.toThrow("Nested local write attempted")
++    expect(poison).toEqual({ caught: true, worked: true })
++    expect(await f.state.read(f.request, "cases", selectSfCase("case", f.context))).toMatchObject({ status: "ok", storageVersion: 1, value: f.decision })
++    expect(await f.state.transaction(f.request, { ...f.command, idempotencyKey: "stale-cas" }, async () => {
++      throw new Error("Stale CAS must not execute")
++    })).toEqual({ status: "conflict", reason: "product-state-changed" })
++  } finally { await f.close() }
++})
++
++test("C08 case selectors preserve missing, inherited, legacy and malformed state outcomes", async () => {
++  const f = await createStateIsolationFixture()
++  try {
++    const original = await f.store.transaction("dashboard", async (snapshot) => ({ commit: false, value: structuredClone(snapshot.data.__sfProductV1) }))
++    const legacy = original as SfProductState
++    expect(legacy.nativeRuns).toBeUndefined()
++    expect(legacy.decisionResults).toBeUndefined()
++    expect(await f.state.read(f.request, "cases", selectSfCase("case", f.context))).toMatchObject({ status: "ok", value: f.decision })
++    for (const id of ["missing", "constructor", "__proto__", "toString"]) {
++      const baseline = await f.state.read(f.request, "cases", (stored, authority) => authority.principalRef === f.context.binding.principalRef && authority.policyVersion === f.context.binding.policyVersion && authority.accessRevision === f.context.binding.accessRevision ? stored.cases[id] : undefined)
++      const selected = await f.state.read(f.request, "cases", selectSfCase(id, f.context))
++      expect(selected.status).toBe(baseline.status)
++      if (selected.status !== "ok" || baseline.status !== "ok") throw new Error("Malformed reference comparison unavailable")
++      expect(selected.value).toBe(baseline.value)
++    }
++    const malformed: { name: string; value: unknown; reason: string }[] = [
++      { name: "missing", value: undefined, reason: "product-state-uninitialized" },
++      { name: "schema", value: { ...legacy, schemaVersion: 2 }, reason: "invalid-product-state" },
++      { name: "cases", value: { ...legacy, cases: [] }, reason: "invalid-product-state" },
++      { name: "version", value: { ...legacy, versions: { ...legacy.versions, cases: -1 } }, reason: "invalid-product-state" },
++    ]
++    for (const entry of malformed) {
++      await f.store.transaction("dashboard", async (snapshot) => {
++        snapshot.data.__sfProductV1 = structuredClone(entry.value)
++        return { commit: true, value: null }
++      })
++      const before = digestSfValue(entry.value)
++      expect(await f.state.read(f.request, "cases", selectSfCase("case", f.context))).toEqual({ status: "unavailable", reason: entry.reason })
++      const after = await f.store.transaction("dashboard", async (snapshot) => ({ commit: false, value: digestSfValue(snapshot.data.__sfProductV1) }))
++      expect(after).toBe(before)
++    }
++  } finally { await f.close() }
++})
++
++test("C08 case selectors preserve accessor counts and omitted parent cases without an extra observation", async () => {
++  const f = await createStateIsolationFixture()
++  try {
++    const selected = selectSfCase("case", f.context)
++    const original = (stored: Parameters<typeof selected>[0], authority: Parameters<typeof selected>[1]) => authority.principalRef === f.context.binding.principalRef && authority.policyVersion === f.context.binding.policyVersion && authority.accessRevision === f.context.binding.accessRevision ? stored.cases.case : undefined
++    for (const shape of ["accessor", "nonenumerable", "inherited"] as const) {
++      const observations: { getterCalls: number; authorityCalls: number; outcome: unknown }[] = []
++      for (const reader of [original, selected]) {
++        const observed = { getterCalls: 0 }
++        f.controls.checks.length = 0
++        f.controls.observe = (snapshot, _request, mode, index) => {
++          if (mode !== "read" || index !== 1) return
++          const stored = snapshot.data.__sfProductV1 as SfProductState
++          const cases = stored.cases
++          // The descriptor exists only on this real SQLite read snapshot.
++          // commit=false must never serialize it or change the durable shape.
++          if (shape === "accessor") {
++            Object.defineProperty(stored, "cases", { configurable: true, enumerable: true, get: () => { observed.getterCalls += 1; return cases } })
++            return
++          }
++          if (shape === "nonenumerable") {
++            Object.defineProperty(stored, "cases", { configurable: true, enumerable: false, writable: true, value: cases })
++            return
++          }
++          Object.setPrototypeOf(stored, { cases })
++          Reflect.deleteProperty(stored, "cases")
++        }
++        const outcome = await f.state.read(f.request, "cases", reader).then(
++          (result) => ({ kind: "return", result }),
++          (error: unknown) => ({ kind: "throw", typeError: error instanceof TypeError }),
++        )
++        observations.push({ ...observed, authorityCalls: f.controls.checks.length, outcome })
++      }
++      expect(observations[1]).toEqual(observations[0])
++      if (shape === "accessor") {
++        expect(observations[0]?.getterCalls).toBeGreaterThan(0)
++        expect(observations[0]).toMatchObject({ authorityCalls: 2, outcome: { kind: "return", result: { status: "ok", value: f.decision } } })
++        continue
++      }
++      expect(observations[0]).toMatchObject({ authorityCalls: 1, outcome: { kind: "throw", typeError: true } })
++    }
++    f.controls.observe = undefined
++    expect(await f.state.read(f.request, "cases", selected)).toMatchObject({ status: "ok", value: f.decision })
++  } finally { await f.close() }
++})
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/finance-state-read-performance/materialization.test.ts
+@@ -0,0 +1,110 @@
++import { expect, test } from "bun:test"
++import type { Snapshot } from "../../../runtime/contract.ts"
++import type { BlobTransaction } from "../../../runtime/assets.ts"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import type { SfProductState } from "../../../product/contracts/state.ts"
++import { encodeCaseRef } from "../../../product/decisions/case-port.ts"
++import { createRenewalChoiceHistory } from "../wp11/renewal-choice-fixture.ts"
++
++// The original renewal helpers supply the real financial state. This test stops
++// before sensitivity: it is a short C08/SQLite work comparison, not FIN-IND-005.
++test("FIN-IND-005 case materialization keeps two fresh reads while skipping unrelated state clones", async () => {
++  const history = await createRenewalChoiceHistory()
++  try {
++    const chosen = await history.choose()
++    const phase = await history.resolveTraining()
++    expect(phase.selectedResult).toMatchObject({ total: 250000, comparisonStatus: "complete" })
++    expect(phase.advantageComparison.completeDifference).toBe(-10000)
++    const decision = await history.readCase()
++    expect(digestSfValue(decision.choices[0])).toBe(digestSfValue(chosen.choice))
++    const originalDigest = digestSfValue(decision)
++    const sizes = await history.fixture.store.transaction("dashboard", async (snapshot) => {
++      const state = snapshot.data.__sfProductV1 as SfProductState
++      return { commit: false, value: {
++        stateBytes: new TextEncoder().encode(JSON.stringify(state)).length,
++        caseBytes: new TextEncoder().encode(JSON.stringify(state.cases[decision.id])).length,
++        cases: Object.keys(state.cases).length, results: Object.keys(state.decisionResults ?? {}).length,
++        transactions: Object.keys(state.transactions).length,
++      } }
++    })
++    expect(sizes.stateBytes).toBeGreaterThan(800000)
++    expect(sizes.caseBytes).toBeGreaterThan(100000)
++    const observation = { mode: "canonical" as "canonical" | "opaque", instrument: false,
++      caseReads: 0, unrelatedClones: 0, caseClones: 0, hostChecks: 0 }
++    const read = history.state.read
++    history.state.read = (request, namespace, callback) => {
++      if (namespace === "cases") observation.caseReads++
++      // The opaque control reaches exactly the existing full-clone fallback,
++      // without replacing the persistence driver, callback or authority.
++      return read(request, namespace, observation.mode === "opaque"
++        ? (state, authority) => callback(state, authority) : callback)
++    }
++    const revalidate = history.fixture.host.revalidate
++    history.fixture.host.revalidate = (context) => { observation.hostChecks++; return revalidate(context) }
++    const transaction = history.fixture.store.transaction
++    history.fixture.store.transaction = (surface, work, options) => transaction(surface, async (snapshot: Snapshot, blobs: BlobTransaction) => {
++      if (!observation.instrument || surface !== "dashboard") return work(snapshot, blobs)
++      const state = snapshot.data.__sfProductV1 as SfProductState
++      const key = Object.keys(state.preferences)[0]
++      const selected = state.cases[decision.id]
++      if (!key || !selected) throw new Error("Representative read observation missing")
++      const unrelated = state.preferences[key]
++      const objective = selected.objective
++      // Observe clone traversal on the detached SQLite snapshot only. Both
++      // getters return the original value; no global function is replaced.
++      Object.defineProperty(state.preferences, key, { enumerable: true, configurable: true,
++        get: () => { observation.unrelatedClones++; return unrelated } })
++      Object.defineProperty(selected, "objective", { enumerable: true, configurable: true,
++        get: () => { observation.caseClones++; return objective } })
++      const result = await work(snapshot, blobs)
++      if (result.commit) throw new Error("Read measurement must not write an instrumented snapshot")
++      return result
++    }, options)
++    const request = { caseRef: encodeCaseRef(phase.caseRef) }
++    const observe = async (mode: "canonical" | "opaque", instrument: boolean) => {
++      Object.assign(observation, { mode, instrument, caseReads: 0, unrelatedClones: 0, caseClones: 0, hostChecks: 0 })
++      const start = performance.now()
++      const result = await phase.cases.read(request, history.fixture.context)
++      const elapsedMs = performance.now() - start
++      expect(result.status).toBe("ok")
++      if (result.status !== "ok") throw new Error(result.reason)
++      expect(digestSfValue(result.value.case)).toBe(originalDigest)
++      expect(result.value.case).not.toHaveProperty("preferences")
++      return { elapsedMs, caseReads: observation.caseReads, unrelatedClones: observation.unrelatedClones,
++        caseClones: observation.caseClones, hostChecks: observation.hostChecks }
++    }
++    const opaque = await observe("opaque", true)
++    const canonical = await observe("canonical", true)
++    const timings: { mode: "canonical" | "opaque"; elapsedMs: number; caseReads: number; hostChecks: number }[] = []
++    // Alternate order to keep initialization and runner drift out of one arm.
++    for (let pair = 0; pair < 6; pair++) {
++      for (const mode of pair % 2 ? ["opaque", "canonical"] as const : ["canonical", "opaque"] as const) {
++        const sample = await observe(mode, false)
++        timings.push({ mode, elapsedMs: sample.elapsedMs, caseReads: sample.caseReads, hostChecks: sample.hostChecks })
++      }
++    }
++    observation.instrument = false
++    const current = await history.readCase()
++    expect(digestSfValue(current)).toBe(originalDigest)
++    const summarize = (mode: "canonical" | "opaque") => {
++      const values = timings.filter((item) => item.mode === mode).map((item) => item.elapsedMs).sort((a, b) => a - b)
++      return { samples: values.length, medianMs: (values[2]! + values[3]!) / 2,
++        totalMs: values.reduce((sum, value) => sum + value, 0), minimumMs: values[0], maximumMs: values.at(-1) }
++    }
++    console.log("FIN_STATE_READ_MEASUREMENT " + JSON.stringify({
++      sizes, opaque, canonical, timings, summary: { opaque: summarize("opaque"), canonical: summarize("canonical") },
++      serializedReadPath: "unchanged real C08/SQLite; inclusive case-read timings are not additive",
++      disclosure: "synthetic source grants from unchanged renewal fixture; no native or integrated acceptance",
++    }))
++    expect(opaque.caseReads).toBe(2)
++    expect(canonical.caseReads).toBe(2)
++    expect(opaque.caseClones).toBe(2)
++    expect(canonical.caseClones).toBe(2)
++    expect(canonical.hostChecks).toBe(opaque.hostChecks)
++    expect(timings.every((item) => item.caseReads === 2 && item.hostChecks === opaque.hostChecks)).toBe(true)
++    expect(opaque.unrelatedClones).toBe(2)
++    // This fails on the preimage, after recording its real work and timings.
++    // Wall-clock ratios are evidence, never the pass/fail oracle.
++    expect(canonical.unrelatedClones).toBe(0)
++  } finally { await history.cleanup() }
++}, 120000)
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-state-read-performance/intake-01.json
+@@ -0,0 +1,78 @@
++{
++  "schema": "finance-state-read-performance-intake-v1",
++  "mission": 22,
++  "finding": "FIN-IND-005",
++  "campaign": "sf2h-integral-20261112",
++  "T0": "2026-11-13T04:01:10Z",
++  "planningSha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
++  "campaignSha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
++  "missionSha": "f23da37c8a2dd6ccfa69c73cf36837b8943e225e",
++  "missionBlob": "724d9b596dec1c82b56e02edb594a09e187128bd",
++  "actor": "S0-C scoped source-support22; no supervisor/native worker/dispatcher",
++  "leaseEpoch": "browser-source-performance-22",
++  "branch": "finance-resume",
++  "pr": 42,
++  "expectedParent": "d8d586e19c824f75a88494a9c3677faac617e81d",
++  "parentTree": "37e25cf23c449eb1e0fca381301681fa14e9fd4d",
++  "predecessor": {
++    "handoff": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-journey-closure/HANDOFF-FINAL.md",
++    "blob": "aff4a6ce54f550ad742c1d8f8b8534d38916f21a",
++    "writeAuthorityEnded": true
++  },
++  "consumer": "session14",
++  "productWritePaths": [
++    "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
++    "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
++  ],
++  "newNamespaces": [
++    "modules/sucafina/Sucafinav1/test/product/finance-state-read-performance/",
++    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-state-read-performance/"
++  ],
++  "sourceComparison": {
++    "composedSha": "b62c32940d06c15c04f52b88209d5b4930cf1a3e",
++    "provider": {
++      "branchBlob": "b7988a2963a2797a96ea19ab2b3a481564548213",
++      "composedBlob": "2fd55c7304add0829d7434917c80664fe86356b9",
++      "result": "Different. Stack adds state-layout/bi-artifacts migration, protected writer registries, checkNamespaces/sourceFence/native publication guards. Read block is identical. This delta does not transplant the older transaction/validation code. Session14 must apply only exact read/factory hunks."
++    },
++    "casePort": {
++      "branchBlob": "d43849ba101000eb9eb2a6ddc9a04830b004ccc6",
++      "composedBlob": "d43849ba101000eb9eb2a6ddc9a04830b004ccc6",
++      "result": "Identical. Change only initial and final read selectors; draft and prepare-intent unchanged."
++    }
++  },
++  "readSources": {
++    "rootAgents": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
++    "nestedAgents": "No AGENTS under modules/sucafina/Sucafinav1 in complete pinned product tree; modules/AGENTS absent; modules/sucafina listing has no AGENTS.",
++    "start": "522782bb7e113124a937d7ef17313032be9d6850",
++    "workflow": "043205bee6031b4517a98591b3588fca0ab12925",
++    "commonSha256": "a518cf4b3136d5c1126d59304afedf71b5f93168314f1f2f56743dcae719c94e",
++    "actorPack": "4eb6547c53ce65bc2170b9fdd6d8fd580e572e3b",
++    "actorCriteria": 155,
++    "mandatoryAppendices": [
++      "specs/product-acceptance.md",
++      "specs/resident-runtime.md",
++      "specs/atlas-packaging.md"
++    ],
++    "parallelCommon": "c708ec0609dbfc95b259707d8c38481617f74f11",
++    "ciProtocol": {
++      "sha": "a3d29d011ba3607a57914701300f09117a3e2de9",
++      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/CI.md",
++      "blob": "c34ab425e0f3b7dc0899a05826829f38b5af84bb"
++    },
++    "counterexample": {
++      "sha": "29356ad7a554309e9a905749dd84e3f6bd0900ea",
++      "blob": "71dbf3cec182e7f9295d9f36c01b7cac7dba582a",
++      "disposition": "Original predicates retained; coverage-preview.ts untouched. Equal values never substitute an opaque original predicate."
++    }
++  },
++  "validationPlan": {
++    "short": "Real original renewal preparation, C08 and SQLite. Compare canonical selector with opaque fallback in same runner; count cloned unrelated subtree and selected case, both reads and host checks; alternate uninstrumented timing arms. No wallclock ratio assertion.",
++    "safety": "Six new C08 isolation adversaries, existing provider/case read/lease/egress fences, and affected Finance tests. Preserve original test sources.",
++    "long": "Unchanged original journey-phase.test.ts only after material short PASS, preserving 180000 fixture and 300000 Bun test budgets and all assertions.",
++    "checks": "Reuse existing astra-check-fresume workflow for exact W, no workflow edits or parallel mission runs.",
++    "remote": "GitHub MCP only, expected-head fast-forward, no local tests or server starts."
++  },
++  "status": "IMPLEMENTATION_PREPARED_VALIDATION_PENDING",
++  "globalRelease": false
++}
