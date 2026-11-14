@@ -1,0 +1,113 @@
+{
+  "schema": "sf-wp12-document-publication-v1",
+  "increment": "D25",
+  "baseCommit": "dc8f3b19d40f52c19aabd219544c291460592b99",
+  "baseTree": "6e81c0e51f3fa5fb9fef7d88456020e061ca2c7b",
+  "productUnchanged": true,
+  "productionChanges": 0,
+  "testChanges": 0,
+  "foreignSourceChanges": 0,
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/own-obligation-audit/progress-w24.json",
+      "bytes": 56437,
+      "sha256": "b100a45566dd8c816f99aae6fec51294f3fb003e29fe5e38f950269159eb0c8b",
+      "blob": "672806e2daa10d0e632c767c2314ec7215671d53",
+      "kind": "own-document"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/own-obligation-audit/progress-w24-source-pins.json",
+      "bytes": 10534,
+      "sha256": "bd175702f2fa1ac9081ef84749a30c270a477efaa07517803a02bb751ca50aa4",
+      "blob": "3aced4f7c58a56f2642d9389dfcb18fb4393b300",
+      "kind": "own-document"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/own-obligation-audit/progress-w24.md",
+      "bytes": 5846,
+      "sha256": "adebf34b34cf44f75080f70aaf924a2f2e425a84bdf4463d8e01ea608ab36cab",
+      "blob": "fe65c361f33dc3f05b66856f9d29e3fc0f2df643",
+      "kind": "own-document"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/run-19-new-missions.json",
+      "bytes": 28786,
+      "sha256": "1209491b9a6ac10fd3f31711bd7ed324199f99a2af46ff0f7062eb71201e1e01",
+      "blob": "323ee2e1b352201fc1dba53c02b20f7feb4cc065",
+      "kind": "own-document"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/run-19-new-missions-independent-root.json",
+      "bytes": 2653,
+      "sha256": "6a7838f7767ed212fb4e6fdcf02489713d483760369626f862d5cd7641a44664",
+      "blob": "3197e17f37224ea7c1f1080f92a1bb44ccce5e01",
+      "kind": "own-document"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/run-20-checks.json",
+      "bytes": 3844,
+      "sha256": "12ab208cbbd85e94c80dd077978d16beb0731bd5d1e0589896b647f451c3c3a8",
+      "blob": "6618f24e70adffe13b34b2928e828a9ae60d70d7",
+      "kind": "own-document"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/own-obligation-audit/progress-w24-independent-root.json",
+      "bytes": 2945,
+      "sha256": "7b70608e8532a8d2254cef9324f723e2f7f8008a1ae23e37a5aa25d4ff4c5399",
+      "blob": "87af706ca6b307333bb8f7de23a60e233a6df412",
+      "kind": "own-document"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/resume-20261114/d25/obligation-author-freeze-before-review.json",
+      "bytes": 1747,
+      "sha256": "aad2aa6053891292070784be8cf71a24e7de97a9e270552484b12c1b495e3677",
+      "blob": "0a8bd93f0dad001920927fdc02035cf07b3326ac",
+      "kind": "own-document"
+    }
+  ],
+  "independentReview": {
+    "status": "PASS_SCOPED",
+    "reviewer": "root",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/own-obligation-audit/progress-w24-independent-root.json",
+    "reviewSha256": "7b70608e8532a8d2254cef9324f723e2f7f8008a1ae23e37a5aa25d4ff4c5399",
+    "literalFieldsVerified": 243,
+    "pinsVerified": 18,
+    "authorFreezePreservedLiterally": true
+  },
+  "check": {
+    "product": "dc8f3b19d40f52c19aabd219544c291460592b99",
+    "run": 43612042512,
+    "job": 132498975511,
+    "snapshot": "61640e1646294d2a485e9420c64bbce199149b0e",
+    "result": "PASS full package typecheck/spawn/guards",
+    "notClaimedOnDocumentHead": true
+  },
+  "terminal": {
+    "product": "2ef423f09e0297fd9edb3c3e3f703d00410033bd",
+    "run": 43611121344,
+    "job": 132496166091,
+    "snapshot": "270d8d28ae02771c6af079f87d3bd881159c3173",
+    "summary": "2 pass /0 fail /496 assertions /430.66s",
+    "scope": "Handoff and BI KPI actual UI/domain/input/consumer/reopen",
+    "nativeInference": 0,
+    "nativeConsumers": 0
+  },
+  "activeProductAtPreparation": {
+    "run": 43612149925,
+    "product": "2ef423f09e0297fd9edb3c3e3f703d00410033bd",
+    "snapshot": "c3358c7a4e7ae7adeeda4c9fd5b28830648bfcd2",
+    "scope": "Three previously failing Documents/Purchase cases only",
+    "status": "in_progress",
+    "resultNotYetClaimed": true
+  },
+  "pendingOwnFlight": {
+    "product": "dc8f3b19d40f52c19aabd219544c291460592b99",
+    "scope": "One new Review crossroutes test only",
+    "requestSha256": "65752c52ed3942e97a8fecef41562d79b4eb69b365820062eb3e002a3378fa95",
+    "status": "NOT_RUN",
+    "waitForCurrentTerminalAndDedup": true
+  },
+  "fullWp12": false,
+  "localProductTests": false,
+  "localTypecheck": false
+}
