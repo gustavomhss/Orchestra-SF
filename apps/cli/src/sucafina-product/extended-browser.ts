@@ -1,4 +1,7 @@
-import { createReviewBrowser } from "../../../../modules/sucafina/Sucafinav1/product/reviews/browser.ts"
+import { createReviewPreparationBrowser } from "../../../../modules/sucafina/Sucafinav1/product/reviews/browser.ts"
+import { createMeetingViewFromReads } from "../../../../modules/sucafina/Sucafinav1/product/reviews/meeting.ts"
+import type { ReviewComparisonRead } from "../../../../modules/sucafina/Sucafinav1/product/reviews/comparison-port.ts"
+import type { PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
 import { createReviewPreparationView } from "../../../../modules/sucafina/Sucafinav1/product/reviews/workspace.ts"
 import type { ReviewAgendaItem } from "../../../../modules/sucafina/Sucafinav1/product/reviews/selection.ts"
 import type { PreservedReview, DomainProjection } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
@@ -16,14 +19,53 @@ const reviewUrl = (reviewRef: string, sectionId?: string) => {
 }
 if (root && bootstrap) {
   const value = JSON.parse(bootstrap.textContent ?? "null")
+  bootstrap.remove()
+  let closed = false, generation = 0
+  let dispose = () => {}
+  const pending = new Set<AbortController>()
+  const clearPrivate = () => {
+    if (closed) return
+    closed = true; generation += 1
+    for (const controller of pending) controller.abort()
+    pending.clear(); dispose(); bootstrap.remove()
+    const message = document.createElement("p"); message.setAttribute("role", "status"); message.textContent = "O acesso mudou. Reabra uma revisão autorizada."
+    root.replaceChildren(message)
+  }
+  const privateRead = async (url: URL) => {
+    if (closed) return undefined
+    const turn = generation, controller = new AbortController(); pending.add(controller)
+    try {
+      const response = await fetch(url, { credentials: "same-origin", cache: "no-store", signal: controller.signal })
+      if (response.status === 401 || response.status === 403) { clearPrivate(); return undefined }
+      const body = await response.json().catch(() => undefined)
+      return !closed && turn === generation && !controller.signal.aborted ? { response, body } : undefined
+    } catch { return undefined } finally { pending.delete(controller) }
+  }
+  const probe = async () => {
+    if (closed) return
+    const controller = new AbortController(); pending.add(controller)
+    try {
+      const response = await fetch(location.href, { credentials: "same-origin", cache: "no-store", signal: controller.signal })
+      if (response.status === 401 || response.status === 403) clearPrivate()
+      await response.body?.cancel()
+    } catch { /* A network failure does not authorize a new render or erase preserved history. */ }
+    finally { pending.delete(controller) }
+  }
+  window.addEventListener("focus", () => { void probe() })
+  window.addEventListener("pagehide", clearPrivate, { once: true })
   if (value && typeof value === "object" && typeof value.reviewRef === "string") {
     const status = document.createElement("p"), sources = document.createElement("nav")
     status.setAttribute("role", "status"); sources.setAttribute("aria-label", "Origens autorizadas da revisão")
+    let sourceGeneration = 0
     const openSource = async (reference: BusinessEvidenceRef) => {
+      if (closed) return
+      const turn = ++sourceGeneration
       sources.replaceChildren(); status.textContent = "Conferindo a origem e seu acesso…"
       const url = new URL(location.href)
       url.search = new URLSearchParams({ sf: "review-source", reviewRef: value.reviewRef, referenceId: reference.refId }).toString()
-      const response = await fetch(url, { credentials: "same-origin", cache: "no-store" }).catch(() => undefined), body = await response?.json().catch(() => undefined)
+      const found = await privateRead(url)
+      if (closed || turn !== sourceGeneration) return
+      const response = found?.response, body = found?.body
       if (!response?.ok || !Array.isArray(body?.links) || !body.links.length) { status.textContent = "A origem mudou, foi substituída ou não está mais acessível. A revisão preservada permanece separada dos dados atuais."; return }
       const prefix = location.pathname.replace(/\/dashboard\/?$/, "")
       for (const link of body.links) {
@@ -34,10 +76,27 @@ if (root && bootstrap) {
       }
       status.textContent = "Escolha a origem autorizada para abri-la."
     }
-    const view = createReviewBrowser({ reviewRef: value.reviewRef,
+    const view = createMeetingViewFromReads({ reviewRef: value.reviewRef,
+      read: async (reference): Promise<PortResult<PreservedReview>> => {
+        const url = new URL(location.href); url.search = new URLSearchParams({ sf: "review-read", reviewRef: reference }).toString()
+        const found = await privateRead(url), body = found?.body
+        if (!found?.response.ok || body?.status !== "ok" || body.value?.id !== reference || !Array.isArray(body.value?.sections) || !Array.isArray(body.value?.comments))
+          return { status: closed ? "denied" : "unavailable", reason: "review-unavailable" }
+        return { status: "ok", value: body.value }
+      },
+      readComparison: async (reference): Promise<PortResult<ReviewComparisonRead>> => {
+        const url = new URL(location.href); url.search = new URLSearchParams({ sf: "review-comparison", reviewRef: reference }).toString()
+        const found = await privateRead(url), body = found?.body
+        if (!found?.response.ok || body?.status !== "ok" || !body.value || typeof body.value !== "object" || !("comparison" in body.value) || !Array.isArray(body.value?.forwardings) ||
+          !["complete", "partial", "unavailable"].includes(body.value?.forwardingCoverage) || !Array.isArray(body.value?.limitations))
+          return { status: closed ? "denied" : "unavailable", reason: "review-comparison-unavailable" }
+        return { status: "ok", value: body.value }
+      },
       checkUpdate: async (reference) => {
         const url = new URL(location.href); url.search = new URLSearchParams({ sf: "review-update", reviewRef: reference }).toString()
-        const response = await fetch(url, { credentials: "same-origin", cache: "no-store" }).catch(() => undefined), body = await response?.json().catch(() => undefined)
+        const found = await privateRead(url)
+        if (closed) return { status: "denied", reason: "review-access-changed" }
+        const response = found?.response, body = found?.body
         if (!response?.ok || body?.status !== "ok" || typeof body.value?.available !== "boolean") {
           status.textContent = typeof body?.reason === "string" ? `Não foi possível conferir a atualização: ${body.reason}.` : "Não foi possível conferir a atualização. Verifique seu acesso e tente novamente."
           return { status: response?.status === 403 ? "denied" : "unavailable", reason: "review-update-unavailable" }
@@ -47,19 +106,32 @@ if (root && bootstrap) {
         return { status: "ok", value: { available: body.value.available } }
       },
       requestUpdate: (reference) => {
+        if (closed) return
         const url = new URL(location.href); url.searchParams.delete("reviewRef"); url.searchParams.delete("sectionId"); url.searchParams.set("previousReviewRef", reference)
         location.assign(url)
       },
-      openSource, openReviewSection: (reference, sectionId) => location.assign(reviewUrl(reference, sectionId)),
+      openSource, openReviewSection: (reference, sectionId) => { if (!closed) location.assign(reviewUrl(reference, sectionId)) },
     })
     const selected = value.selectedSection as PreservedReview["sections"][number] | undefined
     const selectedView = selected ? selectedSection(selected, openSource) : undefined
     root.replaceChildren(...(selectedView ? [selectedView] : []), view.element, status, sources)
-    window.addEventListener("pagehide", () => view.dispose(), { once: true })
+    dispose = view.dispose
   } else if (value && typeof value === "object" && Array.isArray(value.items)) {
     const update = value as Partial<SfReviewUpdate> & { items: ReviewAgendaItem[] }
+    const client = createReviewPreparationBrowser()
+    const guarded = async <T>(read: () => Promise<PortResult<T>>): Promise<PortResult<T>> => {
+      const turn = generation
+      if (closed) return { status: "denied", reason: "review-access-changed" }
+      const result = await read()
+      if (result.status === "denied") clearPrivate()
+      else if (result.status !== "ok") await probe()
+      return closed || turn !== generation ? { status: "denied", reason: "review-access-changed" } : result
+    }
     const view = createReviewPreparationView({ items: update.items, ...(typeof update.previousReviewRef === "string" ? { previousReviewRef: update.previousReviewRef } : {}),
-      openReview: (reference) => location.assign(reviewUrl(reference)) })
+      client: { ...client, contribution: (payload) => guarded(() => client.contribution(payload)), agenda: (items) => guarded(() => client.agenda(items)),
+        preview: (payload) => guarded(() => client.preview(payload)), preserve: (payload) => guarded(() => client.preserve(payload)), report: (payload) => guarded(() => client.report(payload)),
+        downloadUrl: (reference) => closed ? undefined : client.downloadUrl(reference) },
+      openReview: (reference) => { if (!closed) location.assign(reviewUrl(reference)) } })
     const choices = document.createElement("fieldset"), legend = document.createElement("legend"), message = document.createElement("p")
     legend.textContent = "Seleção da revisão sucessora"; choices.append(legend); message.setAttribute("role", "status")
     const checks: HTMLInputElement[] = []
@@ -76,7 +148,7 @@ if (root && bootstrap) {
       message.textContent = update.items.length ? "A revisão anterior permanecerá preservada. Confirme a seleção de cada tópico para preparar sua sucessora." : "Nenhum tópico pode ser reconstruído com uma seleção exata. Abra a origem e prepare uma nova agenda; nenhum tópico foi substituído automaticamente."
     }
     root.replaceChildren(...(update.previousReviewRef ? [choices, message] : []), view.element)
-    window.addEventListener("pagehide", () => view.dispose(), { once: true })
+    dispose = view.dispose
   }
 }
 

@@ -24,6 +24,7 @@ import { createDecisionCandidateResolver, portfolioCandidateRef } from "../../..
 import { createSfDecisionPlannerActors } from "./decision-baseline-services.ts"
 import type { createSfDecisionBaselineServices } from "./decision-baseline-services.ts"
 import type { createSfBusinessServices } from "./business-services.ts"
+import { createSfAlternativeCallScope } from "./alternative-call-scope.ts"
 
 type CaseRef = { id: string; incarnation: string; version: number }
 type SelectedScenario = { caseRef: CaseRef; scenario: ScenarioRequest; coverageRef: string }
@@ -54,6 +55,9 @@ export function createSfDecisionAlternativeServices(input: {
   const actors = createSfDecisionPlannerActors(input.authority)
   const fences = createDecisionProducerFences({ host, operationIdentity: business.operationIdentity, readSourceFences: business.readSourceFences, lockedSourceFences: business.lockedSourceFences })
   const candidate = createDecisionCandidateResolver(business.cases)
+  const callScope = createSfAlternativeCallScope<SelectedScenario>({ authority: input.authority, selectedCase: input.selectedCase,
+    lockedSourceFences: business.lockedSourceFences, verifiedInputFor: input.verifiedInputFor,
+    verifiedAlternativeSelectionFor: input.verifiedAlternativeSelectionFor, hasAdmittedInputContext: input.hasAdmittedInputContext })
   const comparisonSelection = async (comparison: ScenarioComparisonInput, selection: PortfolioSelection, call: TrustedDomainContext): Promise<PortResult<ComparisonSelection>> => {
     const selected = await input.selectedCase(call)
     if (selected.status !== "ok") return selected
@@ -112,7 +116,7 @@ export function createSfDecisionAlternativeServices(input: {
     return { status: "ok", value: { schema: "sf-admitted-alternative-selection-v1", ...checked.value, requestDigest: digestSfValue(request), inputDigest: digestSfValue(start.skillInput),
       authority: selectionAuthority(call) } }
   }
-  const selectedScenario = async (call: TrustedDomainContext): Promise<PortResult<SelectedScenario>> => {
+  const resolveSelectedScenario = async (call: TrustedDomainContext): Promise<PortResult<SelectedScenario>> => {
     const selected = await input.selectedCase(call)
     if (selected.status !== "ok") return selected
     const current = await business.cases.read({ caseRef: encodeCaseRef(selected.value) }, call)
@@ -162,6 +166,7 @@ export function createSfDecisionAlternativeServices(input: {
     return { status: "ok", value: { caseRef: selected.value, scenario: alternatives[0]!.scenario,
       coverageRef: decisionCoverageRef(selected.value, alternatives[0]!.id, alternatives[0]!.version) } }
   }
+  const selectedScenario = (call: TrustedDomainContext) => callScope.read(call, () => resolveSelectedScenario(call))
   const classifications = new WeakMap<object, CoverageClassification>()
   const coverageEvidence: NonNullable<Parameters<typeof createDecisionProposalService>[0]["coverageEvidence"]> = {
     entries: async (_scenario, baseline, call) => {
@@ -216,8 +221,12 @@ export function createSfDecisionAlternativeServices(input: {
       return !!actor && fences.verify(call, "alternative-coverage", record.inputDigest) && verifyDecisionPlannerSources(snapshot, record.sourceRefs, actor, call)
     } })
   const common = { cases: business.cases, planner: business.planner, sources: business.plannerSources, host, resolveAlternative, authorizeProposal, coverageEvidence }
-  return { captureAlternativeSelection, alternative: createDecisionProposalService({ ...common, registerProposalCoverage: coverage.registerProposalCoverage }),
-    replayAlternative: createAlternativeReadOnlyReplay(common), proposalCoverage: { resolveForecastCoverage: coverage.resolveForecastCoverage } }
+  const alternative = createDecisionProposalService({ ...common, registerProposalCoverage: coverage.registerProposalCoverage })
+  const replay = createAlternativeReadOnlyReplay(common)
+  return { captureAlternativeSelection,
+    alternative: (request: Parameters<typeof alternative>[0], call: TrustedDomainContext) => callScope.run(call, () => alternative(request, call)),
+    replayAlternative: (record: Parameters<typeof replay>[0], call: TrustedDomainContext) => callScope.run(call, () => replay(record, call)),
+    proposalCoverage: { resolveForecastCoverage: coverage.resolveForecastCoverage } }
 }
 
 function same(left: unknown, right: unknown) { return digestSfValue(left) === digestSfValue(right) }

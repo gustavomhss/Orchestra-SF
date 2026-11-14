@@ -440,9 +440,30 @@ export function decodeSnapshot(payload: string): Snapshot {
   return validateSnapshot(decode(envelope[2]))
 }
 
-/** Keep the wire codec's validation and normalization without allocating its JSON text in memory. */
+/** Match the wire codec's normalized tree without allocating tagged nodes or JSON text. */
 function cloneSnapshot(snapshot: Snapshot): Snapshot {
-  return validateSnapshot(decode(encode(snapshot)))
+  return validateSnapshot(copyValue(snapshot))
+}
+
+function copyValue(value: unknown, ancestors = new Set<object>()): unknown {
+  if (value === undefined || value === null || typeof value === "boolean" || typeof value === "string") return value
+  if (typeof value === "number" && Number.isFinite(value)) return value
+  if (typeof value !== "object") throw new Error("Unsupported local snapshot value")
+  if (ancestors.has(value)) throw new Error("Cyclic local snapshot")
+  if (!Array.isArray(value) && Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null)
+    throw new Error("Local snapshots require plain objects")
+  if (Object.getOwnPropertySymbols(value).length) throw new Error("Unsupported symbol properties")
+  ancestors.add(value)
+  try {
+    // Array.from densifies holes; each path is copied separately, including shared aliases.
+    if (Array.isArray(value)) return Array.from(value, (item) => copyValue(item, ancestors))
+    return Object.fromEntries(Object.entries(Object.getOwnPropertyDescriptors(value)).map(([key, descriptor]) => {
+      if (!Object.hasOwn(descriptor, "value")) throw new Error("Unsupported snapshot accessor")
+      return [key, copyValue(descriptor.value, ancestors)]
+    }))
+  } finally {
+    ancestors.delete(value)
+  }
 }
 
 function validateSnapshot(value: unknown): Snapshot {

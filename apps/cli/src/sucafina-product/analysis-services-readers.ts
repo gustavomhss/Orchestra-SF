@@ -172,7 +172,7 @@ export function createSfAnalysisSelectionReaders(input: Input) {
   const recallSelection = (selection: DecisionRecallInput) => async (caseRef: CaseRef, call: TrustedDomainContext): Promise<PortResult<DecisionRecallInput>> => {
     const wanted = structuredClone(selection)
     const selected = await current(caseRef, call)
-    if (!selected || !same(wanted.currentCase, caseRef) || wanted.recallScope.includeHistorical || !wanted.query.trim() ||
+    if (!selected || !same(wanted.currentCase, caseRef) || !wanted.query.trim() ||
       !same(wanted.recallScope.period, selected.case.horizon) || new Set(wanted.recallScope.cases.map((ref) => digestSfValue(ref))).size !== wanted.recallScope.cases.length) return unavailable
     const candidates = await Promise.all(wanted.recallScope.cases.map((ref) => current(ref, call)))
     if (candidates.some((value) => !value || !same(value.case.horizon, wanted.recallScope.period))) return unavailable

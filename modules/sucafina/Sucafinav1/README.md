@@ -20,7 +20,7 @@ Antes de comparar, confira período, moeda, fontes e cobertura. Uma referência 
 | Comparação condicionada | Há dados conhecidos e condições que impedem uma conclusão completa. Mantenha-as no relatório e na decisão. |
 | Moeda/período incompatível | Não somar ou ranquear como equivalentes; conversão e alinhamento precisam de fonte autorizada. |
 | Fonte stale ou substituída | Reabrir a origem e refazer a preparação. Resultado antigo não autoriza nova escrita. |
-| Resultado historical | Deve conservar identidade original e diferenças atuais autorizadas; o percurso integrado ainda está pendente neste candidato. |
+| Resultado historical | Na consulta de memória, selecione histórico explicitamente. O resultado conserva referência original, referência atual autorizada e diferenças; não autoriza nova escrita como se a fonte estivesse fresca. |
 
 Cálculos, cenários e rankings vêm das portas de domínio. Texto do agente não se torna cálculo oficial pela aparência da resposta. Proposta, prévia e contribuição aceita também não são recibos de aplicação.
 
@@ -46,7 +46,7 @@ Os perfis `sf_maestro`, `sf_finance`, `sf_procurement`, `sf_portfolio` e `sf_rev
 5. Aplique pelo fluxo autorizado e consulte o recibo. Em conflito, preserve sua intenção, reabra o estado atual e prepare novamente. Não repita uma escrita cegamente.
 6. Acompanhe perguntas, condições, confirmações e resultados no mesmo caso. Resposta posterior pode exigir reavaliação; não modifica silenciosamente a escolha anterior.
 
-Este é o roteiro de homologação a executar após resolver os deltas de consumidores. O adapter HTTP do host admite a preparação com a ação humana correspondente ao conteúdo selecionado. Preparação e aplicação de portfólio, resultados históricos e rotinas ainda dependem das portas descritas no pacote de revisão. Botões ou descriptors não comprovam esse percurso completo.
+Este é o roteiro de homologação a executar após resolver os deltas de consumidores. O adapter HTTP do host admite a preparação com a ação humana correspondente ao conteúdo selecionado. As rotas de portfólio agora compõem as portas publicadas de avaliação, promoção e preparação. O percurso até Apply continua bloqueado pelos callbacks C12 descritos no pacote de revisão; rotinas dependem da integração C07. Botões ou descriptors não comprovam esse percurso completo.
 
 ### Revisões, relatórios e BI
 
@@ -54,9 +54,15 @@ Uma revisão preservada mantém o conteúdo selecionado. Mudanças posteriores p
 
 Os links de revisão e BI transportam o período efetivamente exibido. Executive Dashboard, IT Operations e IT Security KPIs usam seus próprios seletores de ano e mês; a seleção anual do rodapé não substitui esses valores. Ao atualizar uma revisão de Dashboard, confira os registros atuais antes de preservar a sucessora. A seleção original completa não está armazenada no contrato publicado; o produto pede uma nova confirmação humana, mantém a referência da revisão anterior e conserva notas e tópicos recuperáveis.
 
-BI apresenta escolhas explícitas de versões base/candidata, moeda, coleção Procurement e resultados persistidos de decisão. Uma versão ausente ou uma seleção revogada continua indisponível. A leitura de cálculos do Planner usa o pedido original persistido e as fontes protegidas; o histórico preservado de Review não reemite esse cálculo como resultado atual.
-
 O host compõe as portas publicadas de revisão, comentários e BI no mesmo store. Liga Dashboard BI01/BI07/BI08, Planner BI01–BI04, Procurement BI05/BI06, cenário BI09–BI11 e portfólio BI09/BI10. Cenário e portfólio exigem resultados e seleções persistidos; BI11 exige sensibilidade real. As tabelas de decisão preservam as limitações dos produtores: ainda não há plano publicado de waterfall/timeline para BI09/BI10. A preparação contextual aceita uma seleção humana explícita de Dashboard BI01/BI07/BI08 ou um pointer de artefato previamente salvo. Teste de registro não substitui observação de gráfico, download ou uso por uma pessoa.
+
+A seleção de BI lista apenas versões, coleções e relações de resultados autorizadas. Escolha a versão base, a candidata e a moeda quando a visualização exigir comparação. Ao abrir uma fonte, o host confere sua presença na projeção ou revisão autorizada antes de resolver o destino.
+
+Para atualizar uma revisão preservada, use **Check for updates** e **Create an updated review**. A revisão anterior permanece imutável; a sucessora conserva vínculo, tópicos, ordem, períodos e notas. O contrato atual não guarda toda a seleção original de registros da agenda: confirme explicitamente uma nova seleção autorizada antes de preservá-la. Agendas mistas com gráficos, outcomes ou threads não são reconstruídas silenciosamente.
+
+Após perda confirmada de acesso, o consumidor de revisão remove tópicos, valores, notas, links e o JSON inicial; respostas anteriores ainda em trânsito não podem repor esse conteúdo. Uma mudança autorizada de fonte conserva o histórico e exige revisão sucessora explícita.
+
+O histórico de revisão reabre somente corpos imutáveis correspondentes aos recibos C08. Histórico de cálculo também exige run e pedido originais, digests e participação atual no mesmo caso. O cálculo Planner atual usa o pedido persistido e replay real do domínio; as limitações de cobertura e valores ausentes permanecem. Uma referência histórica de revisão não se transforma em autorização atual para executar uma alteração.
 
 ### Documentos, importação e exportação
 
@@ -78,7 +84,7 @@ Revise a prévia antes de confirmar importação. O parser não executa macros o
 
 A memória usa `createMemoryEmit` e `createMemoryRead` reais do Atlas protegidos pelo C08; ledger Sucafina é oficial. Gitleaks é resolvido pelo toolkit canônico com caminho absoluto e versão observada. Novos appends exigem fontes frescas e fence das três superfícies. Recuperação do recibo revalida caso/evento sem nova varredura.
 
-O host limita custo de ancestralidade antes de IO e não reutiliza autorização entre releituras. Referências exatamente iguais são resolvidas uma vez dentro de cada chamada de contexto; o orçamento é aplicado antes da deduplicação e a próxima chamada volta a ler as fontes. Grafo acima do orçamento técnico retorna indisponibilidade. Política/project, histórico com diferenças de domínio e variantes C17 ainda pendentes não são cobertos por uma prova de caso com fonte inalterada.
+O host limita custo de ancestralidade antes de IO e não reutiliza autorização entre releituras. Referências exatamente iguais são resolvidas uma vez dentro de cada chamada de contexto; o orçamento é aplicado antes da deduplicação e a próxima chamada volta a ler as fontes. Grafo acima do orçamento técnico retorna indisponibilidade. A consulta `sf-consultar-memoria-decisoria` aceita histórico somente com `includeHistorical=true` e seleção humana exata de caso/período. Ela reabre CaseRecall e as fontes, preserva diferenças e referência atual, e refaz essas verificações no retorno. As outras skills continuam exigindo fontes frescas. Política/project e a matriz completa de variantes C17 ainda exigem as provas previstas; uma prova de caso com fonte inalterada não as substitui.
 
 ## Roteiro sintético reproduzível
 
@@ -99,17 +105,17 @@ Dados de fixture, markup, catálogo e autoridade fabricada não contam como jorn
 
 O host compõe autenticação, ambiente, fontes, casos, domínios, documentos/imports, colaboração, revisões, BI e runtime residente. UI, ponte MCP privada e consumers usam contratos compartilhados e revalidam identidade, política e revisão de acesso.
 
-A composição de análise registra os 18 pares canônicos de produtor/verificador quando os serviços documentais estão disponíveis. Inclui enquadramento com e sem import, extração documental, BI contextual, memória atual, dossiê de compra, contestação atual, sensibilidade, portfólio e reavaliação. Os últimos três usam produtores publicados de prova, critérios e materialidade, conectados ao C08 da instalação. O contrato canônico preserva as 39 operações. Os seis serviços de C07 continuam sem a porta pública instalada de publicação/admissão/execução/resultados: seus wrappers retornam indisponibilidade e o host não os anuncia como ferramentas chamáveis. Discovery relata apenas bindings instalados; não relata execuções nativas ou cobertura integral de cada variante.
+A composição de análise registra os 18 pares canônicos de produtor/verificador quando os serviços documentais estão disponíveis. Inclui enquadramento com e sem import, extração documental, BI contextual, memória atual ou histórica explicitamente selecionada, dossiê de compra, contestação atual, sensibilidade, portfólio e reavaliação. Os últimos três usam produtores publicados de prova, critérios e materialidade, conectados ao C08 da instalação. O contrato canônico preserva as 39 operações. Os seis serviços de C07 continuam sem a porta pública instalada de publicação/admissão/execução/resultados: seus wrappers retornam indisponibilidade e o host não os anuncia como ferramentas chamáveis. Discovery relata apenas bindings instalados; não relata execuções nativas ou cobertura integral de cada variante.
 
 Quatro rotas humanas, acessíveis pelas três superfícies do Workbench, registram cobertura de baseline, regra de critério, seleção de portfólio e condição: `decision-coverage`, `decision-criteria`, `decision-select-portfolio` e `decision-condition`. Exigem POST da mesma origem, payload completo, ação humana específica e caso atual. Classificação de custo usa projeção real do Planner; prova de categoria não aplicável continua indisponível. A métrica `planner:known-subtotal-difference` permanece condicionada. Seleção e unidade não são deduzidas do texto do critério.
 
-O link **Controles da decisão** nas áreas Dashboard, Planner e Procurement abre o consumidor próprio desses registros. Escolha um caso autorizado e o forecast que deseja classificar. Para cada categoria, selecione os componentes incluídos ou descreva a pendência; o subtotal permanece condicionado enquanto a cobertura não estiver completa. Para registrar um critério numérico, escolha dois cenários armazenados e um parâmetro, confira as unidades emitidas pelo Planner e informe o limite. Uma regra não transforma uma métrica condicionada em confirmada. O acompanhamento de condição exige uma escolha registrada, dois cenários distintos, uma fonte atual e um responsável do caso. Ele registra o vínculo; agendamento e execução Relay continuam sujeitos à integração C07. A página revalida acesso e fontes em cada leitura/gravação; versões divergentes exigem reabrir o caso.
+O link **Controles da decisão** nas áreas Dashboard, Planner e Procurement abre o consumidor próprio desses registros. Escolha um caso autorizado e o forecast que deseja classificar. Para cada categoria, selecione os componentes incluídos ou descreva a pendência; o subtotal permanece condicionado enquanto a cobertura não estiver completa. Para registrar um critério numérico, escolha dois cenários armazenados e um parâmetro, confira as unidades emitidas pelo Planner e informe o limite. Uma regra não transforma uma métrica condicionada em confirmada. O acompanhamento de condição exige uma escolha registrada, dois cenários distintos, uma fonte atual e um responsável do caso. Ele registra o vínculo; agendamento e execução Relay continuam sujeitos à integração C07. A página revalida acesso e fontes em cada leitura/gravação. Se o caso mudar enquanto o acesso continua autorizado, suas entradas ficam em um rascunho local para copiar; a página remove as projeções anteriores e bloqueia novos envios até você reabrir o caso. Revogação de acesso limpa também esse rascunho.
 
 O seletor identifica cada forecast por seu registro autorizado, período, moeda e revisão. Uma mudança em outro caso não apaga os campos que você está preenchendo. Se o caso ou suas fontes mudarem, o rascunho permanece visível e a gravação fica bloqueada para reconciliação; perda de acesso remove o conteúdo restrito.
 
 Na rota financeira `sf_finance` / `sf-comparar-cenarios`, a criação de alternativa usa a escolha humana de portfólio capturada na admissão da análise e vinculada ao pedido e input completos. Selecione as duas alternativas no Workbench e indique qual deseja usar antes de iniciar a análise. Posição na lista e título não selecionam o cenário. Uma escolha posterior não autoriza um run antigo; alteração da seleção invalida a captura. Sem essa escolha, a comparação pode continuar, mas a criação de alternativa fica pendente. A rota de portfólio continua restrita a um candidato explicitamente vinculado.
 
-A execução utiliza somente o cenário da alternativa escolhida, com operações humanas admitidas. Combinação de múltiplos candidatos de portfólio continua recusada. A captura do bridge acompanha run e saída atomicamente em C08. O writer privado confere o delta de preferences e a identidade do comando; o último guard síncrono verifica binding original, revogação, geração, expiração e Request antes do commit. O replay durante publicação usa um contexto privado do run; a UI comum não recebe essa autoridade. Após a limpeza do run, replay depende de seleção durável equivalente. PreparedChangeSet suporta substituição explícita de valor de requisição Procurement contida na escolha e nos alvos humanos permitidos; prepara e revalida o comando sem executá-lo. Promoção de portfólio, outras operações de alteração, histórico de memória/contestação e resultados C07 mantêm pendências explícitas.
+A execução utiliza somente o cenário da alternativa escolhida, com operações humanas admitidas. Combinação de múltiplos candidatos de portfólio continua recusada. A captura do bridge acompanha run e saída atomicamente em C08. O writer privado confere o delta de preferences e a identidade do comando; o último guard síncrono verifica binding original, revogação, geração, expiração e Request antes do commit. O replay durante publicação usa um contexto privado do run; a UI comum não recebe essa autoridade. Após a limpeza do run, replay depende de seleção durável equivalente. PreparedChangeSet suporta substituição explícita de valor de requisição Procurement contida na escolha e nos alvos humanos permitidos; prepara e revalida o comando sem executá-lo. O consumidor de portfólio usa as portas de promoção/preparação publicadas, com confirmação humana e avaliação exatas; aplicação C12, outras operações de alteração, histórico de contestação e resultados C07 mantêm pendências explícitas.
 
 O adapter próprio de preparação de análise e o encaixe da fila Procurement foram compostos com os deltas publicados da tranche recuperada. O renderer de AlternativeDraft, a aplicação C12 e as jornadas completas ainda exigem as verificações e correções indicadas no pacote de revisão; os contratos compartilhados consumidos permanecem sujeitos à revisão dos respectivos owners/S0.
 
@@ -142,9 +148,24 @@ Três revisores independentes examinam candidato congelado e recibos. Triagem e 
 - Inputs fixados por commit/blob; arquivos estrangeiros arquivados preservados.
 - Operações residentes intersectadas com skills selecionadas; inventário MCP lido sem conectar provedores.
 - Serviços de Dashboard/colaboração/revisão/BI ligados; reinicialização Atlas conserva os demais descriptors.
+- Cálculo Planner com pedido persistido e replay de domínio; histórico de revisão validado por recibos e seleção explícita para revisão sucessora.
+- Portas publicadas de avaliação, promoção e preparação de portfólio compostas nas três superfícies; Apply continua sujeito ao delta C12.
+- Rascunhos humanos dos controles preservados em conflito autorizado, com remoção de projeções antigas; revogação limpa rascunhos, dados e escolhas.
+- BI revalida escolhas no foco e impede reinserção de conteúdo por resposta tardia.
 - Produtor e verificador de análise registrados juntos; bindings ausentes explicitamente indisponíveis.
 - Seleções humanas duráveis para revalidação de análise; writer privado, CAS de caso e isolamento de principal.
 - Contestação nativa exige author e reviewer em runs e sessões distintos, receipt da skill e reviewTarget exato; prova de execução nativa permanece pendente.
 - Schema documental vinculado ao documento autorizado; ajustes de tipos/consumidores restritos aos paths próprios.
 - Atlas protegido por source fence, recuperação durável, revogação, proteção de outbox e orçamento de ancestralidade.
+- Consulta histórica de memória vinculada à seleção humana, referências original/atual e diferenças; as demais skills exigem fontes frescas.
 - Guia, matriz e deltas rastreáveis sem atribuir aceite nativo/global à implementação.
+
+### Seleções complementares de análise
+
+A revisão executiva pode incluir confirmações reais do escopo escolhido. O host lê as confirmações de Dashboard, Planner e Procurement pelos respectivos observadores, mantém condições desatualizadas visíveis e recusa um registro indisponível. A confirmação não substitui um resultado de rotina: incluir resultados C07 continua dependente do adaptador residente publicado.
+
+A revisão de dependências aceita compromissos identificados no caso e marcos de Dashboard selecionados explicitamente. Restrições declaradas pela pessoa permanecem texto humano identificado como não verificado; o produto não as converte em capacidade, FTE ou orçamento. As escolhas, fontes e permissões são relidas antes da devolução da análise.
+
+A composição também incorpora a cópia direta de snapshots com a mesma normalização e rejeições do codec do store, além de evitar duas cópias redundantes em caminhos de leitura. Os guards de persistência continuam ativos. Essa alteração não constitui prova de p95 nem fecha a matriz de desempenho do epic.
+
+A promoção de alternativa reavalia a cobertura pelo produtor publicado com a classificação humana atual; a gravação confere novamente o caso, preferences protegidas, fontes e intenção exata. Categorias pendentes conservam resultado condicionado e total ausente. A escolha pode comparar cenários persistidos em versões sucessivas do mesmo caso pelo leitor histórico autorizado, sem converter um resultado histórico em permissão de alterar suas fontes.

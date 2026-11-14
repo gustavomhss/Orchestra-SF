@@ -9,6 +9,7 @@ import type { createSfDocumentServices } from "./document-services.ts"
 import type { createSfImportServices } from "./import-services.ts"
 import { createSfAnalysisServices } from "./analysis-services.ts"
 import { createSfAnalysisSelectionScope } from "./analysis-selection-scope.ts"
+import { createSfAnalysisConfirmationReader } from "./analysis-confirmation-readers.ts"
 import { createSfAnalysisBiBindings } from "./analysis-bi-bindings.ts"
 import { createSfAnalysisAuthorReader, createSfAnalysisReviewTargetVerifier } from "./analysis-author.ts"
 import { withoutObservationTimes } from "./analysis-verifier.ts"
@@ -114,6 +115,7 @@ export function createSfAnalysisHostServices(input: {
       return { status: "ok", value: {} }
     } })
   const bi = bindings.biSource ? createSfAnalysisBiBindings({ authority, business, workspace: { bi: { source: bindings.biSource } }, selection: scoped.read }) : undefined
+  const confirmations = createSfAnalysisConfirmationReader({ host: authority.host, state: authority.state, confirmation: business.collaboration.confirmation })
   const readBiSelection: NonNullable<SfAnalysisHostBindings["biSelection"]> = async (caseRef, call) => {
     const selected = await scoped.read(caseRef, "sf-produzir-bi-contextual", call)
     if (selected.status !== "ok") return selected
@@ -145,7 +147,8 @@ export function createSfAnalysisHostServices(input: {
   const absent = (skills: readonly string[], ports: readonly string[]) => skills.forEach((skill) => missing.set(skill, ports))
   add(review.producer, review.verifier)
   add(createSfQuestionInputProducer({ ...dependencies, collaboration: business.collaboration }), createSfQuestionVerifier({ ...dependencies, collaboration: business.collaboration }))
-  add(createSfDependencyInputProducer({ ...dependencies, collaboration: business.collaboration }), createSfDependencyVerifier({ ...dependencies, collaboration: business.collaboration }))
+  add(createSfDependencyInputProducer({ ...dependencies, collaboration: business.collaboration, dashboard: business.dashboard, readHumanSelection: scoped.read }),
+    createSfDependencyVerifier({ ...dependencies, collaboration: business.collaboration, dashboard: business.dashboard, readHumanSelection: scoped.read }))
 
   {
     const imports = input.imports?.imports
@@ -208,7 +211,8 @@ export function createSfAnalysisHostServices(input: {
   if (bindings.changeProposals) add(createSfPurchaseInputProducer(dependencies), createSfPurchasePreparationVerifier({ ...dependencies, changeProposals: bindings.changeProposals }))
   else absent(["sf-preparar-compra"], ["decisions.changeStore.readSet"])
   if (bindings.reviews) {
-    add(createSfExecutiveInputProducer({ ...dependencies, reviews: bindings.reviews }), createSfExecutiveReviewVerifier({ ...dependencies, reviews: bindings.reviews }))
+    add(createSfExecutiveInputProducer({ ...dependencies, reviews: bindings.reviews, confirmations, readHumanSelection: scoped.read }),
+      createSfExecutiveReviewVerifier({ ...dependencies, reviews: bindings.reviews, confirmations, readHumanSelection: scoped.read }))
     if (bindings.artifacts) add(createSfMeetingInputProducer({ ...dependencies, reviews: bindings.reviews, results: business.results }),
       createSfMeetingVerifier({ ...dependencies, reviews: bindings.reviews, artifacts: bindings.artifacts, results: business.results }))
     else absent(["sf-produzir-material-reuniao"], ["reviews.artifacts.inclusion"])
@@ -275,10 +279,9 @@ export function createSfAnalysisHostServices(input: {
     const producerCount = count(producers), verifierCount = count(verifiers)
     const limitations = [
       ...(skillId === "sf-compor-portfolio" && (!bindings.readAlternativeCapture || !bindings.replayAlternative) ? ["alternative-output-capture-and-replay-unavailable"] : []),
-      ...(skillId === "sf-consultar-memoria-decisoria" ? ["historical-recall-not-supported-by-published-verifier"] : []),
-      ...(skillId === "sf-produzir-material-reuniao" ? ["factual-routine-results-not-supported-by-published-verifier"] : []),
-      ...(skillId === "sf-preparar-revisao-executiva" ? ["routine-results-confirmations-and-admitted-runs-not-supported-by-published-verifier"] : []),
-      ...(skillId === "sf-revisar-dependencias" ? ["commitments-milestones-and-capacity-not-supported-by-published-verifier"] : []),
+      ...(skillId === "sf-produzir-material-reuniao" ? ["factual-routine-results-unavailable-without-public-C07-adapter"] : []),
+      ...(skillId === "sf-preparar-revisao-executiva" ? ["routine-results-and-admitted-runs-unavailable-without-public-C07-adapter"] : []),
+      ...(skillId === "sf-revisar-dependencias" ? ["human-declared-constraints-remain-unverified-no-free-capacity-inference"] : []),
     ]
     return { skillId, registered: producerCount === 1 && verifierCount === 1, producerCount, verifierCount, missing: missing.get(skillId) ?? [], limitations }
   })

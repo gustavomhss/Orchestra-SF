@@ -1,10 +1,11 @@
 import { randomUUID } from "node:crypto"
+import { createPlannerConfirmationObserver } from "../../../../modules/sucafina/Sucafinav1/product/planner/confirmation.ts"
 import { roleMap } from "../../../../modules/sucafina/Sucafinav1/runtime/admin.ts"
 import { domain } from "../../../../modules/sucafina/Sucafinav1/runtime/procurement.ts"
 import { object, rows, text } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
 import type { Actor, Snapshot } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
 import type { CreateSfHostRuntime } from "../../../../modules/sucafina/Sucafinav1/product/contracts/host-context.ts"
-import type { Period } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
+import type { ConfirmationScope, Period } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
 import type { ForecastCompareRequest } from "../../../../modules/sucafina/Sucafinav1/product/contracts/operations.ts"
 import type { CapabilityDescriptor } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import type { PlannerSourceHost, PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
@@ -72,6 +73,13 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   const lockedSourceFences = () => {
     const snapshots = input.persistence.currentSnapshots?.()
     return snapshots ? fences(snapshots) : undefined
+  }
+  // Only available inside the current C08 transaction; returns a digest, never mutable state.
+  const lockedDecisionStateDigest = (caseId: string) => {
+    const snapshot = input.persistence.currentSnapshots?.()?.dashboard
+    if (!snapshot) return undefined
+    const product = object(snapshot.data.__sfProductV1)
+    return digestSfValue({ case: object(product.cases)[caseId], preferences: product.preferences })
   }
   const key = (call: TrustedDomainContext) => digestSfValue({ installationId: call.binding.installationId, projectId: call.binding.projectId,
     principalRef: call.binding.principalRef, policyVersion: call.binding.policyVersion, accessRevision: call.binding.accessRevision })
@@ -149,9 +157,18 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     authorizeCase,
     verifyScenarioOperations: (value, call) => scenarioOperationAccess ? scenarioOperationAccess(value, call) : Promise.resolve(false),
     evidence: context, createId: randomUUID, now: () => new Date().toISOString() })
+  const plannerConfirmation: { current?: ReturnType<typeof createPlannerConfirmationObserver> } = {}
+  const confirmationSourceFor = (scope: ConfirmationScope) => scope.sourceRef.surface === "dashboard" ? dashboardServices.observer
+    : scope.sourceRef.surface === "planner" ? plannerConfirmation.current : scope.sourceRef.surface === "procurement" ? procurementConfirmation : undefined
+  const confirmationSource: NonNullable<Parameters<typeof createCollaborationHost>[0]["confirmationSource"]> = {
+    verifyManifest: async (scope, call) => (await confirmationSourceFor(scope)?.verifyManifest(scope, call)) ?? false,
+    fenceManifest: async (scope, call) => (await confirmationSourceFor(scope)?.fenceManifest(scope, call)) ?? false,
+    observe: async (scope, call) => (await confirmationSourceFor(scope)?.observe(scope, call)) ?? { state: "dependency-unavailable", sourceVersion: 0 },
+    fence: async (scope, observation, call) => (await confirmationSourceFor(scope)?.fence(scope, observation, call)) ?? false,
+  }
   const collaboration = createCollaborationHost({ host, state: input.authority.state, creationTarget: input.authority.creationTarget,
     scopedSources: input.persistence, evidence: context, procurement, collections: registry, cases,
-    authority: input.authority.authority, human: input.authority.human, confirmationSource: procurementConfirmation,
+    authority: input.authority.authority, human: input.authority.human, confirmationSource,
     captureWorkSource: createProcurementCollectionMemberIssuer({ collection: registry, individual, revalidate: host.revalidate }),
     issueForActor: individual.issueForActor, prepareReissueScope: individual.prepareReissueScope,
     caseSelectionWrites: input.caseSelectionWrites, threadHistoryWrites: input.threadHistoryWrites,
@@ -262,6 +279,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     criteria: { evaluate: (request, call) => decisionDomain.current?.plannerCriteria.evaluate(request, call) ?? Promise.resolve({ status: "unavailable", reason: "decision-domain-not-initialized" }) },
     storedScenarios: { store: results, cases, coverageRefFor: (caseRef, alternative) => decisionCoverageRef(caseRef, alternative.id, alternative.version) } })
   const planner = product.planner
+  plannerConfirmation.current = createPlannerConfirmationObserver({ host, issueSource: product.issueSource, planner })
   plannerHolder.current = planner
   const plannerSources = product.sources
   const documentScenarios = input.documentRead ? createSfDocumentScenarios({ host, product, evidence: context, reader: input.documentRead,
@@ -473,7 +491,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
       return current.status === "ok" && digestSfValue(stable(current.value)) === digestSfValue(stable(material)) && await host.revalidate(call)
     },
   }) }
-  return { host, authorizeCase, dashboardSources, dashboardRecords, dashboard, dashboardServices, dashboardDecisions, procurement, procurementDecisions, procurementConfirmation, procurementDossier, procurementQueueView, collaboration, planner, plannerProduct: product, plannerSources, registry, individual, contracts, cases, context, evidence, caseRecall, results, calculations, scenarioLookup, sourcingEvidence, operationIdentity, receipt, resolveCase, withCase, readSourceFences, lockedSourceFences, descriptors, procurementSelections, forecastInputs, initializeAtlas,
+  return { host, authorizeCase, dashboardSources, dashboardRecords, dashboard, dashboardServices, dashboardDecisions, procurement, procurementDecisions, procurementConfirmation, procurementDossier, procurementQueueView, collaboration, planner, plannerProduct: product, plannerSources, registry, individual, contracts, cases, context, evidence, caseRecall, results, calculations, scenarioLookup, sourcingEvidence, operationIdentity, receipt, resolveCase, withCase, readSourceFences, lockedSourceFences, lockedDecisionStateDigest, descriptors, procurementSelections, forecastInputs, initializeAtlas,
     projectPlannerEvidence, documentScenarios, resolveProcurement, selectedCase, baselineCoverage, bindDecisionDomain,
     bindForecastCoverage: (reader: PlannerSourceHost["resolveForecastCoverage"]) => {
       if (forecastCoverage.current && forecastCoverage.current !== reader) throw new Error("SF_FORECAST_COVERAGE_ALREADY_BOUND")
@@ -481,5 +499,5 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     },
     atlasRecall: () => atlasState.current,
     remainingOperations: () => freeze.operations.map((entry) => entry.operation).filter((operation) => !descriptors.some((descriptor) => descriptor.id === operation)),
-    dispose: () => { dashboardServices.dispose(); procurementDecisions?.dispose(); periods.clear(); evidence.current = undefined; recall.current = undefined; decisionEvidence.current = undefined; atlasState.current = undefined; forecastCoverage.current = undefined; decisionDomain.current = undefined; plannerHolder.current = undefined; clearAtlasDescriptors() } }
+    dispose: () => { plannerConfirmation.current = undefined; dashboardServices.dispose(); procurementDecisions?.dispose(); periods.clear(); evidence.current = undefined; recall.current = undefined; decisionEvidence.current = undefined; atlasState.current = undefined; forecastCoverage.current = undefined; decisionDomain.current = undefined; plannerHolder.current = undefined; clearAtlasDescriptors() } }
 }

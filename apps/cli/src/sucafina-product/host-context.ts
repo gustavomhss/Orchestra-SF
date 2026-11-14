@@ -80,6 +80,7 @@ import { captureAlternativeProvenance } from "../../../../modules/sucafina/Sucaf
 import type { AlternativeCapabilityProvenance } from "../../../../modules/sucafina/Sucafinav1/product/decisions/alternative-provenance.ts"
 import type { SfSkillInputMap } from "../../../../modules/sucafina/Sucafinav1/product/contracts/skill-inputs.ts"
 import { sfAnalysisPrompt, withoutObservationTimes } from "./analysis-verifier.ts"
+import { sfAnalysisSourcesAuthorized, sfHistoricalMemoryRequested, sfMemoryEvidence } from "./analysis-memory-evidence.ts"
 import type { BusinessPorts, PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
 import type { TrustedDomainContext, TrustedExecutionBinding } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import type { SfNativeRunRecord } from "../../../../modules/sucafina/Sucafinav1/product/contracts/state.ts"
@@ -425,14 +426,13 @@ export const createSfHostRuntime: CreateSfHostRuntime = async (input) => {
         const result = await withMaterialSelection(call, "analysis.start", captured, () => verifier.verify(verifiedInput, baseRequest, call))
         if (result.status !== "ok" || digestSfValue(result.value.input) !== digestSfValue(verifiedInput) ||
           result.value.current.id !== baseRequest.caseRef.id || result.value.current.incarnation !== baseRequest.caseRef.incarnation ||
-          result.value.current.version !== baseRequest.caseRef.version || result.value.sources.some((item) => item.state !== "fresh" ||
-            !item.authorizedProjection || !item.currentRef || digestSfValue(item.currentRef) !== digestSfValue(item.ref)) ||
+          result.value.current.version !== baseRequest.caseRef.version || !sfAnalysisSourcesAuthorized(result.value, baseRequest, call) ||
           !await authority.host.revalidate(call)) return undefined
         return { ...result.value, acceptsOutput: (output: Parameters<typeof result.value.acceptsOutput>[0], next: TrustedDomainContext) =>
           withMaterialSelection(next, "analysis.start", captured, () => result.value.acceptsOutput(output, next)) }
       }
       const sourceProjection = (proof: NonNullable<Awaited<ReturnType<typeof verify>>>) => ({
-        sources: proof.sources.map((item) => ({ ref: item.ref, projection: item.authorizedProjection })),
+        sources: proof.sources.map((item) => sfHistoricalMemoryRequested(baseRequest, proof.input) ? sfMemoryEvidence(item) : { ref: item.ref, projection: item.authorizedProjection }),
         ...(proof.promptContext ? { promptContext: proof.promptContext } : {}),
       })
       const first = await verify(context)

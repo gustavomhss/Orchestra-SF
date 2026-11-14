@@ -164,10 +164,39 @@ const decisionControlsScript = `(() => {
   let selected = data.selected;
   const status = document.getElementById('sf-decision-status');
   const selectedRoot = document.getElementById('sf-decision-selected');
-  const clear = () => { selectedRoot.replaceChildren(); document.querySelector('.sf-decision-controls').replaceChildren(status); document.getElementById('sf-decision-data')?.remove(); selected = undefined; data = undefined; status.textContent = 'O acesso ou as fontes mudaram. Abra novamente o caso.'; };
-  let blocked = false;
-  const buttons = new Map([...document.querySelectorAll('[data-decision-action] button')].map(button => [button, button.disabled]));
-  const revalidate = (message) => { blocked = !!message; for (const [button, disabled] of buttons) button.disabled = blocked || disabled; status.textContent = message; };
+  const edited = new Map();
+  let closed = false;
+  const clear = () => { selectedRoot.replaceChildren(); document.querySelector('.sf-decision-controls').replaceChildren(status); document.getElementById('sf-decision-data')?.remove(); edited.clear(); selected = undefined; data = undefined; closed = true; status.textContent = 'O acesso ou as fontes mudaram. Abra novamente o caso.'; };
+  const preserveDraft = () => {
+    const labels = {value:'Limite',operator:'Condição numérica',label:'Descrição da condição',choice:'Referência da escolha',criterion:'Referência do critério',before:'Referência do cenário anterior',after:'Referência do cenário atual',evidence:'Índice da fonte escolhida',recipient:'Referência do responsável'};
+    const titles = {'decision-coverage':'Cobertura de custos','decision-criteria':'Critério numérico','decision-condition':'Condição da escolha'};
+    const lines = [];
+    for (const [form,names] of edited) {
+      if (!form.isConnected) continue;
+      const fields = new FormData(form);
+      lines.push(titles[form.dataset.decisionAction]);
+      for (const name of names) {
+        const category = /^(note|status|components)-(\\d+)$/.exec(name);
+        const label = category ? 'Categoria '+(Number(category[2])+1)+' — '+({note:'observação',status:'classificação',components:'referências dos componentes escolhidos'})[category[1]] : labels[name];
+        if (!label) continue;
+        const values = fields.getAll(name).map(value => String(value));
+        lines.push(label+': '+values.join('; '));
+      }
+    }
+    clear();
+    if (!lines.length) return;
+    closed = false;
+    status.textContent = 'O caso ou as fontes mudaram. Seu rascunho está preservado; reabra o caso para revisar as escolhas.';
+    const label = document.createElement('label'); label.textContent = 'Rascunho local preservado';
+    const draft = document.createElement('textarea'); draft.readOnly = true; draft.id = 'sf-decision-draft'; draft.value = lines.join('\\n'); draft.rows = Math.min(18,Math.max(5,lines.length)); label.append(draft);
+    const help = document.createElement('p'); help.textContent = 'Copie o rascunho antes de reabrir. As fontes e escolhas anteriores foram removidas; nenhum comando pode ser enviado por esta página.';
+    const reopen = document.createElement('a'); reopen.href = '?sf=decision-controls'; reopen.textContent = 'Reabrir casos autorizados';
+    document.querySelector('.sf-decision-controls').append(label,help,reopen);
+  };
+  for (const form of document.querySelectorAll('[data-decision-action]')) {
+    const remember = event => { const name = event.target.name; if (!name) return; const names = edited.get(form) ?? new Set(); names.add(name); edited.set(form,names); };
+    form.addEventListener('input',remember); form.addEventListener('change',remember);
+  }
   const options = (select, values) => { select.replaceChildren(new Option('Selecione', '')); for (const value of values) select.add(new Option(value.label, value.value)); };
   const unitForm = document.getElementById('sf-unit-selection');
   if (unitForm) unitForm.elements.scenario.addEventListener('change', () => {
@@ -181,7 +210,7 @@ const decisionControlsScript = `(() => {
   });
   const commands = new WeakMap();
   for (const form of document.querySelectorAll('[data-decision-action]')) form.addEventListener('submit', async event => {
-    event.preventDefault(); if (blocked || !selected || !form.reportValidity()) return;
+    event.preventDefault(); if (!data || !selected || !form.reportValidity()) return;
     const fields = new FormData(form); const action = form.dataset.decisionAction; let payload;
     try {
       if (action === 'decision-coverage') {
@@ -209,27 +238,36 @@ const decisionControlsScript = `(() => {
         const target = new URL(location.href); target.search = new URLSearchParams({sf:action}).toString();
         const response = await fetch(target, {method:'POST',headers:{'Content-Type':'application/json','Idempotency-Key':command.key},body:command.body,credentials:'same-origin',cache:'no-store'});
         if (response.status === 401 || response.status === 403) { clear(); return; }
+        if (!data || closed) return;
         const result = await response.json();
-        if (!response.ok || result.status !== 'ok') { status.textContent = response.status === 409 ? 'O caso ou a versão mudou. Reabra o caso antes de tentar novamente.' : 'Registro indisponível. Verifique as fontes, as escolhas e os campos informados.'; return; }
+        if (!data || closed) return;
+        if (!response.ok || result.status !== 'ok') { if (response.status === 409) preserveDraft(); else status.textContent = 'Registro indisponível. Verifique as fontes, as escolhas e os campos informados.'; return; }
         status.textContent = 'Registro salvo. Atualizando o caso…'; location.reload();
-      } catch { status.textContent = 'Não foi possível confirmar a resposta. Tente novamente com os mesmos campos para reconciliar o registro.'; }
-      finally { if (button.isConnected) button.disabled = blocked || buttons.get(button); }
+      } catch { if (data && !closed) status.textContent = 'Não foi possível confirmar a resposta. Tente novamente com os mesmos campos para reconciliar o registro.'; }
+      finally { if (button.isConnected) button.disabled = false; }
     } catch (error) { status.textContent = error instanceof Error ? error.message : 'Verifique os campos.'; }
   });
   let verifying = false;
   window.addEventListener('focus', async () => {
-    if (!data || verifying || !document.getElementById('sf-decision-data')) return;
+    if (closed || verifying) return;
     verifying = true;
     try { const target = new URL(location.href); target.searchParams.set('format','json'); const response = await fetch(target,{cache:'no-store',credentials:'same-origin'});
       if (response.status === 401 || response.status === 403) { clear(); return; }
-      if (!response.ok) { revalidate('Não foi possível revalidar. Seu rascunho foi preservado; a gravação está bloqueada até nova verificação.'); return; }
-      const result = await response.json();
-      if (result.status !== 'ok') { revalidate('A fonte está indisponível. Seu rascunho foi preservado; reabra o caso para conferir os dados.'); return; }
-      if (result.value.accessRevision !== data.accessRevision) { clear(); return; }
-      if (result.value.selectionFingerprint !== data.selectionFingerprint) { revalidate('O caso ou suas fontes mudaram. Seu rascunho foi preservado; reabra o caso e reconcilie os campos antes de gravar.'); return; }
-      data.fingerprint = result.value.fingerprint;
-      revalidate('');
-    } catch { revalidate('Não foi possível revalidar. Seu rascunho foi preservado; a gravação está bloqueada até nova verificação.'); } finally { verifying = false; }
+      if (!response.ok) { if (data) preserveDraft(); return; } const result = await response.json();
+      if (result.status !== 'ok' || !result.value) { if (data) preserveDraft(); return; }
+      if (data && result.value.accessRevision !== data.accessRevision) { clear(); return; }
+      if (data && result.value.selectionFingerprint !== data.selectionFingerprint) { preserveDraft(); return; }
+      if (data) {
+        const picker = document.querySelector('select[name="case"]');
+        if (picker && result.value.fingerprint !== data.fingerprint) {
+          const chosen = picker.value;
+          options(picker,result.value.cases.map(item => ({value:item.ref,label:item.title+' · revisão '+item.version})));
+          picker.value = chosen;
+        }
+        data = result.value; selected = data.selected;
+        const serialized = document.getElementById('sf-decision-data'); if (serialized) serialized.textContent = JSON.stringify(data);
+      }
+    } catch { if (data) preserveDraft(); } finally { verifying = false; }
   });
 })();`
 

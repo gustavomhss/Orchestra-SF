@@ -42,7 +42,25 @@ function ok<T>(result: PortResult<T> | SfStateResult<T>): T {
 async function fixture() {
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-alternative-selection-"))
   const driver = await openLocalStore(path.join(directory, "store"))
-  const persistence = { ...driver, ...createSfSourcePersistence({ persistence: driver, createId: randomUUID, enumerate: enumerateSfSources,
+  const metrics = { transactions: 0, allTransactions: 0, snapshotCopies: 0, authentications: 0, selectionReads: 0, simulations: 0 }
+  const phase = async <T>(name: string, work: () => Promise<T>) => {
+    const started = performance.now()
+    const before = { ...metrics }
+    console.info("SF_ALTERNATIVE_PHASE", JSON.stringify({ phase: name, state: "started", ...before }))
+    try { return await work() } finally {
+      console.info("SF_ALTERNATIVE_PHASE", JSON.stringify({ phase: name, state: "returned", elapsedMs: Math.round(performance.now() - started),
+        ...Object.fromEntries(Object.entries(metrics).map(([key, value]) => [key, value - before[key as keyof typeof before]])) }))
+    }
+  }
+  // Count actual calls without replacing data, authorization or producer results.
+  const allTransactions: typeof driver.transactionAll = driver.transactionAll
+    ? async (work, options) => { metrics.allTransactions++; return driver.transactionAll!(work, options) } : undefined
+  const metered: typeof driver = { ...driver,
+    transaction: async (surface, work, options) => { metrics.transactions++; return driver.transaction(surface, work, options) },
+    ...(allTransactions ? { transactionAll: allTransactions } : {}),
+    ...(driver.currentSnapshots ? { currentSnapshots: () => { metrics.snapshotCopies++; return driver.currentSnapshots!() } } : {}),
+  }
+  const persistence = { ...metered, ...createSfSourcePersistence({ persistence: metered, createId: randomUUID, enumerate: enumerateSfSources,
     projectScope: createSfSourceScopeProjector(() => "2026-11-14T00:00:00Z") }) }
   for (const surface of ["dashboard", "planner", "procurement"] as const) await persistence.initializeSources(surface)
   await persistence.transaction("planner", async (snapshot) => {
@@ -73,7 +91,7 @@ async function fixture() {
     grants: [{ principalRef: "person", namespaces: ["cases", "preferences", "contributions"], operations: ["sf_forecast_compare", "sf_alternative_draft"],
       humanActions: ["decisions.coverage", "decisions.select-portfolio", "analysis.prepare", "analysis.start"] }], proposalCoverageWrites,
     now: Date.now, createId: randomUUID,
-    authenticate: async (_request, scope) => control.active && scope ? { id: "person", canWrite: true, roles: [{ surface: scope.surface, role: "admin" }] } : null,
+    authenticate: async (_request, scope) => { metrics.authentications++; return control.active && scope ? { id: "person", canWrite: true, roles: [{ surface: scope.surface, role: "admin" }] } : null },
     environment: async () => ({ at: "2026-11-14T00:00:00Z", id: randomUUID, directory: [] }), commandIdentity: async (_request, operation, digest) => `${operation}:${digest}`,
     inspectSession: async (id) => id === sessionID ? session : undefined, verifySelection: async (value) => digestSfValue(value) === digestSfValue(selected),
     verifySkillReceipt: async (value) => value.sessionID === sessionID && value.runId === receipt.runId && digestSfValue(value.skillReceipts) === digestSfValue([receipt]),
@@ -85,12 +103,25 @@ async function fixture() {
       criteria: [], participants: ["person"], sourceRefs: [], alternatives: [], costCoverageBases: [], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
     return { commit: true, value: true }
   }))
-  const business = createSfBusinessServices({ authority, persistence, proposalCoverageWrites })
+  const interleavings: { beforeSimulation?: () => Promise<void> } = {}
+  const realBusiness = createSfBusinessServices({ authority, persistence, proposalCoverageWrites })
+  const business = { ...realBusiness, planner: { ...realBusiness.planner,
+    simulateScenario: async (...args: Parameters<typeof realBusiness.planner.simulateScenario>) => {
+      metrics.simulations++
+      const interleave = interleavings.beforeSimulation
+      interleavings.beforeSimulation = undefined
+      await interleave?.()
+      return realBusiness.planner.simulateScenario(...args)
+    },
+  } }
   const admitted: { value?: SfAdmittedAnalysisInput } = {}
   const replayContexts = new WeakMap<TrustedDomainContext, string>()
   const readers = createSfNativeAnalysisInputs({ authority, selectedCase: business.selectedCase, requestForRun: (id) => id === "run" ? request : undefined,
     runForContext: (call) => replayContexts.get(call), admittedInput: (id) => id === "run" ? admitted.value : undefined, captures: () => [], revalidateCapture: async () => false })
-  const sharedPortfolio = createSfPortfolioServices({ authority, business, proposalCoverageWrites })
+  const actualPortfolio = createSfPortfolioServices({ authority, business, proposalCoverageWrites })
+  const sharedPortfolio = { ...actualPortfolio, selection: { ...actualPortfolio.selection,
+    read: async (...args: Parameters<typeof actualPortfolio.selection.read>) => { metrics.selectionReads++; return actualPortfolio.selection.read(...args) },
+  } }
   const domain = createSfDecisionDomainServices({ authority, business, baseline: business.baselineCoverage, proposalCoverageWrites, signalRegistryWrites: new WeakSet(),
     selectedCase: business.selectedCase, verifiedInputFor: readers.verifiedInputFor, verifiedAlternativeSelectionFor: readers.verifiedAlternativeSelectionFor,
     hasAdmittedInputContext: readers.hasAdmittedInputContext, sharedPortfolio })
@@ -103,9 +134,9 @@ async function fixture() {
     return call
   }
   const read = await readCall()
-  const source = ok(await business.plannerProduct.issueSource("v0", read)).evidence
+  const source = ok(await phase("fixture.source", () => business.plannerProduct.issueSource("v0", read))).evidence
   const horizon = { start: "2026-01-01", end: "2026-12-31" }
-  const forecast = ok(await business.planner.compareForecast({ baseRef: source.refId, candidateRef: source.refId, period: horizon, currency: "USD" }, read))
+  const forecast = ok(await phase("fixture.forecast", () => business.planner.compareForecast({ baseRef: source.refId, candidateRef: source.refId, period: horizon, currency: "USD" }, read)))
   authority.ui.finish(read)
   const coverage: BaselineCoverageRequest = { caseRef: initial, source, expectedVersion: 0,
     basis: { id: "renewal", version: 1, decisionType: "renewal-transition-v1", categoryIds: [...RENEWAL_TRANSITION_CATEGORIES], additionalCategoryIds: [], sourceRefs: [source] },
@@ -113,12 +144,12 @@ async function fixture() {
       ? { categoryId, status: "included", componentRefs: forecast.baseline.components.map((component) => component.id), evidenceRefs: [source], scopeNote: "Explicit human classification" }
       : { categoryId, status: "pending", reason: "Human review required" }) }
   const coverageCall = ok(await authority.human.admit(request, "decisions.coverage", coverage))
-  ok(await business.withCase(coverageCall, initial, {}, () => domain.baselineCoverage.register(coverage, coverageCall)))
+  ok(await phase("fixture.coverage", () => business.withCase(coverageCall, initial, {}, () => domain.baselineCoverage.register(coverage, coverageCall))))
   const alternatives: DecisionCase["alternatives"][number][] = []
   ok(await business.withCase(coverageCall, initial, {}, async () => {
     for (const id of ["first", "chosen", "outside"]) {
       const scenario: ScenarioRequest = { baseRef: source.refId, operations: [], assumptions: [{ id: "hypothesis", value: id, state: "hypothetical", evidenceRefs: [] }] }
-      const result = ok(await business.planner.simulateScenario(scenario, coverageCall))
+      const result = ok(await phase(`fixture.scenario.${id}`, () => business.planner.simulateScenario(scenario, coverageCall)))
       // Only the fixture's case identities are assigned; financial results and source evidence come from the actual Planner.
       alternatives.push({ id, version: 1, title: "Same title", scenario, result: { ...result, costCoverage: { ...result.costCoverage, alternativeId: id, alternativeVersion: 1 } } })
     }
@@ -144,7 +175,7 @@ async function fixture() {
   const preparing = ok(await authority.human.admit(request, "analysis.prepare", selectedAlternatives))
   const producer = createSfScenarioComparisonInput({ cases: business.cases, planner: sharedPortfolio.planner, scenarioLookup: business.scenarioLookup, context: business.context,
     revalidate: authority.host.revalidate, authorizeSelection: (call, wanted) => authority.human.authorize(call, "analysis.prepare", wanted) })
-  const skillInput = ok(await business.withCase(preparing, caseRef, {}, () => producer.prepare(preparing, selectedAlternatives)))
+  const skillInput = ok(await phase("fixture.input", () => business.withCase(preparing, caseRef, {}, () => producer.prepare(preparing, selectedAlternatives))))
   authority.human.finish(preparing)
   const start: Parameters<NonNullable<SfHostServices["analyses"]>["start"]>[1] = { request: { caseRef, profileId: profile.id, profileVersion: profile.version, skillId: skill.id,
     skillVersion: skill.version, manifestDigest: selected.manifestDigest, outputSchemaVersion: "sf-contribution-v1", requestedOperationScope: ["sf_alternative_draft"], objective: "Compare exact alternatives" },
@@ -153,11 +184,11 @@ async function fixture() {
   const select = async (baselineAlternativeId: string, alternativeId: string, expectedVersion: number) => {
     const selection = { caseRef, baselineAlternativeId, alternativeId, criteria: [], expectedVersion }
     const call = ok(await authority.human.admit(request, "decisions.select-portfolio", selection))
-    try { return await business.withCase(call, caseRef, {}, () => domain.selection.register(selection, call)) } finally { authority.human.finish(call) }
+    try { return await phase("selection.register", () => business.withCase(call, caseRef, {}, () => domain.selection.register(selection, call))) } finally { authority.human.finish(call) }
   }
   const capture = async (incoming = start, full = fullRequest) => {
     const call = ok(await authority.human.admit(request, "analysis.start", incoming))
-    try { return await business.withCase(call, caseRef, {}, () => domain.captureAlternativeSelection(full, incoming, call)) } finally { authority.human.finish(call) }
+    try { return await phase("selection.capture", () => business.withCase(call, caseRef, {}, () => domain.captureAlternativeSelection(full, incoming, call))) } finally { authority.human.finish(call) }
   }
   const draftRequest: AlternativeDraftRequest = { caseRef: encodeCaseRef(caseRef), proposal: { title: "Same title", description: "A name does not select a scenario", sourceRefs: [source] }, sourceRefs: [source] }
   const live: { binding?: TrustedExecutionBinding; call?: Extract<TrustedDomainContext, { kind: "native" }> } = {}
@@ -191,9 +222,10 @@ async function fixture() {
   const close = async () => {
     if (live.call) authority.native.finish(live.call)
     if (live.binding) authority.native.revoke(live.binding)
-    domain.dispose(); business.dispose(); await driver.dispose(); await rm(directory, { recursive: true, force: true })
+    domain.dispose(); actualPortfolio.dispose(); business.dispose(); await driver.dispose(); await rm(directory, { recursive: true, force: true })
   }
-  return { authority, business, domain, sharedPortfolio, readers, replayContexts, request, caseRef, start, fullRequest, alternatives, skillInput, draftRequest, admitted, control, select, capture, bind, readCall, close }
+  return { authority, business, domain, sharedPortfolio, readers, replayContexts, request, caseRef, start, fullRequest, alternatives, skillInput, draftRequest, admitted, control, select, capture, bind, readCall, close, phase,
+    beforeSimulation: (work: () => Promise<void>) => { interleavings.beforeSimulation = work } }
 }
 
 test("canonical comparison drafts the exact human-selected second alternative and supports only the private replay context", async () => {
@@ -208,7 +240,7 @@ test("canonical comparison drafts the exact human-selected second alternative an
     expect(selection.selection.alternativeId).toBe("chosen")
     expect(selection.requestDigest).toBe(digestSfValue(state.fullRequest))
     expect(selection.inputDigest).toBe(digestSfValue(state.skillInput))
-    const draft = ok(await state.domain.alternative(state.draftRequest, call))
+    const draft = ok(await state.phase("draft", () => state.domain.alternative(state.draftRequest, call)))
     expect(draft.domainApplied).toBe(false)
     expect(draft.proposal.scenario).toEqual(state.alternatives[1]!.scenario)
     expect(draft.proposal.scenario).not.toEqual(state.alternatives[0]!.scenario)
@@ -221,7 +253,7 @@ test("canonical comparison drafts the exact human-selected second alternative an
     try {
       expect((await state.readers.verifiedAlternativeSelectionFor(ui)).status).toBe("unavailable")
       state.replayContexts.set(ui, "run")
-      const replay = await state.business.withCase(ui, state.caseRef, {}, () => state.domain.replayAlternative(record, ui))
+      const replay = await state.phase("replay", () => state.business.withCase(ui, state.caseRef, {}, () => state.domain.replayAlternative(record, ui)))
       expect(ok(replay).output).toEqual(draft)
     } finally { state.replayContexts.delete(ui); state.authority.human.finish(ui) }
     state.control.generation = 2
@@ -238,8 +270,11 @@ test("comparison capture refuses missing or outside selections and a running dra
     ok(await state.select("first", "chosen", 1))
     const call = await state.bind()
     const captured = structuredClone(state.admitted.value!.alternativeSelection)
-    ok(await state.select("chosen", "first", 2))
-    expect(await state.domain.alternative(state.draftRequest, call)).toMatchObject({ status: "stale", reason: "alternative-admitted-selection-changed" })
+    // Commit a real new human selection after the running invocation has resolved
+    // its original selection, during the awaited Planner step. Cached proof must not survive it.
+    state.beforeSimulation(async () => { ok(await state.select("chosen", "first", 2)) })
+    expect(await state.phase("draft.selection-change", () => state.domain.alternative(state.draftRequest, call)))
+      .toMatchObject({ status: "stale", reason: "alternative-admitted-selection-changed" })
     expect(state.admitted.value!.alternativeSelection).toEqual(captured)
     state.authority.native.revoke(call.binding)
     expect((await state.readers.verifiedAlternativeSelectionFor(call)).status).toBe("unavailable")

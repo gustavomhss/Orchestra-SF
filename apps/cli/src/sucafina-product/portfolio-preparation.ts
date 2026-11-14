@@ -8,6 +8,7 @@ import type { createSfProductAuthority } from "../../../../modules/sucafina/Suca
 import type { createSfBusinessServices } from "./business-services.ts"
 import type { createSfPortfolioAuthority } from "./portfolio-authority.ts"
 import { createSfPortfolioHandoff } from "./portfolio-handoff.ts"
+import { createSfPortfolioCoverage } from "./portfolio-coverage.ts"
 
 type Mutations = Parameters<typeof createDecisionMutations>[0]
 
@@ -37,10 +38,14 @@ export function createSfPortfolioPreparation(input: {
     operationIdentity: business.operationIdentity, readSourceFences: business.readSourceFences, lockedSourceFences: business.lockedSourceFences,
     createId: randomUUID, now: () => new Date().toISOString(),
   }) : undefined
-  const authorizeMutation: Mutations["authorizeMutation"] = (operation, request, call) => handoff.parent(operation, request, call) !== undefined
-    ? handoff.authorize(operation, request, call) : registries.intent.authorize(call, action(operation), request)
+  const authorizeMutation: Mutations["authorizeMutation"] = async (operation, request, call) => {
+    const authorized = handoff.parent(operation, request, call) !== undefined
+      ? await handoff.authorize(operation, request, call) : await registries.intent.authorize(call, action(operation), request)
+    return authorized && (operation !== "add-alternative" || coverage.remember(request, call))
+  }
   const verifyMutation: Mutations["verifyMutation"] = (_snapshot, operation, request, call) => handoff.parent(operation, request, call) !== undefined
     ? handoff.verify(operation, request, call) : registries.intent.verify(call, action(operation), request)
+  const coverage = createSfPortfolioCoverage({ authority, business, verifyIntent: verifyMutation })
   const confirmChoice: Mutations["confirmChoice"] = async (caseRef, alternativeId, call) => {
     const payload = registries.intent.payload(call, "decisions.choose")
     const value = object(payload)
@@ -83,8 +88,8 @@ export function createSfPortfolioPreparation(input: {
   const prepareDomainCommands: Mutations["prepareDomainCommands"] = (caseRef, choiceId, operations, call) => procurement
     ? procurement.prepareDomainCommands(caseRef, choiceId, operations, call)
     : Promise.resolve({ status: "unavailable", reason: "portfolio-procurement-evidence-authority-unavailable" })
-  return { authorizeMutation, verifyMutation, portfolioParent: handoff.parent, confirmChoice, confirmAnswer, resolveChoiceValues, prepareDomainCommands,
-    handoff, dispose: () => { procurement?.dispose() }, unavailable: input.procurementEvidenceWrites ? [] : ["portfolio-procurement-evidence-authority-unavailable"] }
+  return { authorizeMutation, verifyMutation, coverageEvidence: coverage.evidence, portfolioParent: handoff.parent, confirmChoice, confirmAnswer, resolveChoiceValues, prepareDomainCommands,
+    handoff, dispose: () => { coverage.dispose(); procurement?.dispose() }, unavailable: input.procurementEvidenceWrites ? [] : ["portfolio-procurement-evidence-authority-unavailable"] }
 }
 
 function same(left: unknown, right: unknown) { return digestSfValue(left) === digestSfValue(right) }

@@ -123,6 +123,7 @@ export async function qualifyWp10ExtendedUi(input: { page: Page; origin: string;
   expect(current.value.sections[0].content).not.toEqual(original.value.sections[0].content)
   await page.goto(query("review", { reviewRef: reference!, sectionId: original.value.sections[0].id }))
   await expect(workspace.locator("[data-sf-review-selected-section]").getByRole("heading", { name: "Tópico selecionado: OPEX Detail", exact: true })).toBeVisible()
+  facts.reviewRevocationUrl = query("review", { reviewRef: successor!, sectionId: current.value.sections[0].id })
   facts.reviewPredecessorLinked = true; facts.reviewNonBudgetContextPreserved = true; facts.reviewRequiresNewRecordSelection = true; facts.reviewOrdinarySourceEditPreservedHistory = true
   await testInfo.attach("wp10-review-linked-section.png", { body: await page.screenshot({ fullPage: true }), contentType: "image/png" })
   await testInfo.attach("wp10-extended-ui.json", { body: JSON.stringify({ schema: "wp10-extended-ui-v1", facts }), contentType: "application/json" })

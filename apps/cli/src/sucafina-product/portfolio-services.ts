@@ -38,14 +38,14 @@ export function createSfPortfolioServices(input: {
     authorizeMutation: preparation.authorizeMutation ?? ((operation, request, call) => registries.intent.authorize(call, action(operation), request)),
     verifyMutation: preparation.verifyMutation ?? ((_snapshot, operation, request, call) => registries.intent.verify(call, action(operation), request)),
     ...(preparation.portfolioParent ? { portfolioParent: preparation.portfolioParent } : {}),
-    ...(input.preparation?.coverageEvidence ? { coverageEvidence: input.preparation.coverageEvidence } : {}),
+    ...(preparation.coverageEvidence ? { coverageEvidence: preparation.coverageEvidence } : {}),
     confirmChoice: preparation.confirmChoice,
     confirmAnswer: preparation.confirmAnswer,
     resolveQuestion: business.collaboration.resolveQuestion,
     resolveAnswer: business.collaboration.resolveAnswer,
     resolveChoiceValues: preparation.resolveChoiceValues,
     prepareDomainCommands: preparation.prepareDomainCommands,
-    readScenarioResult: (resultRef, call) => business.results.read({ resultRef, kind: "scenario" }, call),
+    readScenarioResult: (resultRef, call) => business.results.readHistoricalScenario({ resultRef }, call),
     createId: randomUUID, now: () => new Date().toISOString(),
   })
   const scenarios = business.plannerProduct.scenarios

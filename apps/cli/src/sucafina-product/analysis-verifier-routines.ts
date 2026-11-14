@@ -8,10 +8,11 @@ import { reviewInclusion } from "../../../../modules/sucafina/Sucafinav1/product
 import type { ReviewCapabilityHost } from "../../../../modules/sucafina/Sucafinav1/product/reviews/capabilities.ts"
 import { renderReviewBars, renderReviewChart, renderReviewSensitivity, renderReviewTimeline, renderReviewWaterfall } from "../../../../modules/sucafina/Sucafinav1/product/reviews/chart.ts"
 import { matchesSelectedSources } from "../../../../modules/sucafina/Sucafinav1/product/reviews/references.ts"
-import { reviewChartEvidence } from "../../../../modules/sucafina/Sucafinav1/product/reviews/port.ts"
 import type { ReviewChart } from "../../../../modules/sucafina/Sucafinav1/product/reviews/port.ts"
 import { encodeCaseRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
 import type { SfAnalysisDependencies, SfAnalysisVerifier } from "./analysis-verifier.ts"
+import { readSfExecutiveComposition, sfExecutiveHumanSelection, sfExecutiveMaterial } from "./input-producer-executive.ts"
+import type { SfExecutiveConfirmationBindings } from "./analysis-confirmation-readers.ts"
 
 export function createSfMeetingVerifier(dependencies: SfAnalysisDependencies & {
   reviews: ReviewCapabilityHost["reviews"]
@@ -82,26 +83,22 @@ export function createSfMeetingVerifier(dependencies: SfAnalysisDependencies & {
   }
 }
 
-export function createSfExecutiveReviewVerifier(dependencies: SfAnalysisDependencies & { reviews: ReviewCapabilityHost["reviews"] }): SfAnalysisVerifier {
+export function createSfExecutiveReviewVerifier(dependencies: SfAnalysisDependencies & SfExecutiveConfirmationBindings & { reviews: ReviewCapabilityHost["reviews"] }): SfAnalysisVerifier {
   return {
     skillIds: ["sf-preparar-revisao-executiva"],
     verify: async (input, request, call) => {
       const decoded = decodeSfSkillInput("ExecutiveReviewInput", input)
       if (!decoded.ok) return { status: "needs-input", reason: "invalid-analysis-input" }
       const value = decoded.value
-      if (value.factualRoutineResults.length || value.confirmations.length || value.routinePreparation || value.admittedRun) return { status: "unavailable", reason: "review-result-link-unavailable" }
+      if (value.factualRoutineResults.length || value.routinePreparation || value.admittedRun) return { status: "unavailable", reason: "review-result-link-unavailable" }
       if (!value.decisionRefs.some((ref) => digestSfValue(ref) === digestSfValue(request.caseRef))) return { status: "needs-input", reason: "review-case-not-selected" }
       const read = async (currentCall: TrustedDomainContext) => {
-        const current = await dependencies.cases.read({ caseRef: encodeCaseRef(request.caseRef) }, currentCall)
-        if (current.status !== "ok" || current.value.case.version !== request.caseRef.version) return undefined
-        const cases = await Promise.all(value.decisionRefs.map((ref) => dependencies.cases.read({ caseRef: encodeCaseRef(ref) }, currentCall)))
-        if (cases.some((item, index) => item.status !== "ok" || item.value.case.version !== value.decisionRefs[index]?.version)) return undefined
-        const review = await dependencies.reviews.preview(value.reviewSelection.selectionRef, value.reviewSelection.sectionRefs, currentCall, value.reviewSelection.period)
-        if (review.status !== "ok" || review.value.some((section) => !Array.isArray(section.projection.values) || !Array.isArray(section.projection.missing))) return undefined
-        const refs = review.value.flatMap((section) => [...section.projection.values.flatMap((item) => item.sourceRefs), ...reviewChartEvidence(section.chart)]).filter((ref, index, all) => all.findIndex((item) => digestSfValue(item) === digestSfValue(ref)) === index)
-        const sources = await dependencies.context.context({ refs }, currentCall)
-        if (sources.length !== refs.length || sources.some((item, index) => item.state !== "fresh" || !item.authorizedProjection || !item.currentRef || digestSfValue(item.ref) !== digestSfValue(refs[index]) || digestSfValue(item.currentRef) !== digestSfValue(item.ref)) || !await dependencies.host.revalidate(currentCall)) return undefined
-        return { current: current.value.case, review: review.value, refs, sources }
+        const selected = dependencies.readHumanSelection ? await dependencies.readHumanSelection(request.caseRef, "sf-preparar-revisao-executiva", currentCall) : undefined
+        const human = selected?.status === "ok" ? sfExecutiveHumanSelection(selected.value.selection) :
+          !dependencies.readHumanSelection && !value.confirmations.length ? sfExecutiveHumanSelection({ ...value.reviewSelection, decisionRefs: value.decisionRefs, includeConfirmations: false, includeRoutineResults: false }) : undefined
+        if (!human) return undefined
+        const actual = await readSfExecutiveComposition(dependencies, human, request, currentCall)
+        return actual && digestSfValue(sfExecutiveMaterial(actual.input)) === digestSfValue(sfExecutiveMaterial(value)) ? actual : undefined
       }
       const proof = await read(call)
       if (!proof) return { status: "unavailable", reason: "analysis-source-unavailable" }
@@ -110,7 +107,8 @@ export function createSfExecutiveReviewVerifier(dependencies: SfAnalysisDependen
         const current = await read(currentCall)
         if (!current || digestSfValue(current.review) !== digestSfValue(proof.review)) return { status: "unavailable", reason: "analysis-output-unverified" }
         const brief = output.payload
-        const gaps = current.review.flatMap((section) => section.projection.missing.map((item) => ({ id: `${section.id}:${item.field}`, category: item.field, reason: item.reason, evidenceRefs: [] })))
+        const gaps = [...current.review.flatMap((section) => section.projection.missing.map((item) => ({ id: `${section.id}:${item.field}`, category: item.field, reason: item.reason, evidenceRefs: [] }))),
+          ...current.input.confirmations.filter((item) => item.state === "stale").map((item) => ({ id: `confirmation:${item.confirmationId}`, category: "confirmation", reason: item.reason, evidenceRefs: [] }))]
         if (brief.caseRef !== encodeCaseRef(request.caseRef) || brief.caseVersion !== request.caseRef.version || brief.objective !== current.current.objective || brief.orderedResultRefs.length || brief.runRef || brief.resultRef ||
           (brief.choiceRef !== undefined && !current.current.choices.some((choice) => choice.id === brief.choiceRef)) || digestSfValue(brief.conditions) !== digestSfValue(gaps) || digestSfValue(brief.evidenceRefs) !== digestSfValue(current.refs) || digestSfValue(output.evidenceRefs) !== digestSfValue(brief.evidenceRefs)) return { status: "unavailable", reason: "analysis-output-unverified" }
         return { status: "ok", value: true }

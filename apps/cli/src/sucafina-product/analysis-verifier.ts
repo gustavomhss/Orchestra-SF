@@ -7,11 +7,12 @@ import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafina
 import type { ImportManifest } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
 import type { ImportDetail } from "../../../../modules/sucafina/Sucafinav1/product/imports/store.ts"
 import { encodeCaseRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+import type { SfMemoryPrompt } from "./analysis-memory-evidence.ts"
 
 export type SfAnalysisRequest = Omit<Parameters<BusinessPorts["analysis"]["create"]>[0], "contextFingerprint">
 export type SfAnalysisProof = { current: AuthorizedCaseProjection["case"]; input: unknown; sources: readonly BusinessEvidenceResolution[];
   /** Only an authorized verifier may add host context beyond the closed skill input. */
-  promptContext?: { importPreview: { importPreviewRef: string; manifest: ImportManifest; detail: ImportDetail } };
+  promptContext?: { importPreview: { importPreviewRef: string; manifest: ImportManifest; detail: ImportDetail } } | { decisionRecall: SfMemoryPrompt };
   acceptsOutput: (output: ContributionEnvelope, call: TrustedDomainContext) => Promise<PortResult<true>> }
 export type SfAnalysisVerifier = { skillIds: readonly string[]; verify: (input: unknown, request: SfAnalysisRequest, call: TrustedDomainContext) => Promise<PortResult<SfAnalysisProof>> }
 export type SfAnalysisDependencies = { cases: DecisionCasePort; planner: PlannerPort; procurement: ProcurementPort; context: BusinessContextService; host: DomainPortHost }

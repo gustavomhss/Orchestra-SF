@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test"
 import type { Browser } from "@playwright/test"
 import { randomUUID } from "node:crypto"
-import { mkdir, mkdtemp, realpath, rm } from "node:fs/promises"
+import { mkdir, mkdtemp, realpath, rm, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import path from "node:path"
 import { Location } from "@orchestra/core/location"
@@ -32,10 +32,10 @@ async function fixture(origin: string) {
   const signalRegistryWrites = new WeakSet<object>()
   const identity = { installationId: "installation", hostId: "host", projectId: "project", location: Location.Ref.make({ directory: AbsolutePath.make(directory) }) }
   const authority = createSfProductAuthority({ identity: () => identity, installationId: identity.installationId, origin, policyVersion: "policy", persistence,
-    grants: [{ principalRef: "person", namespaces: ["cases", "preferences"], operations: ["sf_case_read", "sf_forecast_compare"],
-      humanActions: ["decisions.coverage", "decisions.criteria", "decisions.select-portfolio", "decisions.condition.record"] }],
+    grants: ["person", "person-two"].map((principalRef) => ({ principalRef, namespaces: ["cases", "preferences"] as const, operations: ["sf_case_read", "sf_forecast_compare"] as const,
+      humanActions: ["decisions.coverage", "decisions.criteria", "decisions.select-portfolio", "decisions.condition.record"] as const })),
     proposalCoverageWrites, signalRegistryWrites, now: Date.now, createId: randomUUID,
-    authenticate: async (_request, scope) => actor.active && scope ? { id: "person", canWrite: actor.canWrite, roles: [{ surface: scope.surface, role: actor.canWrite ? "admin" : "viewer" }] } : null,
+    authenticate: async (request, scope) => actor.active && scope ? { id: request.headers.get("x-sf-test-principal") === "person-two" ? "person-two" : "person", canWrite: actor.canWrite, roles: [{ surface: scope.surface, role: actor.canWrite ? "admin" : "viewer" }] } : null,
     environment: async () => ({ at: new Date(actor.milliseconds).toISOString(), id: randomUUID, directory: [] }),
     commandIdentity: async (request, operation) => request.method === "GET" || request.method === "HEAD" ? randomUUID() : request.headers.get("Idempotency-Key") ? digestSfValue({ operation, key: request.headers.get("Idempotency-Key") }) : undefined,
     inspectSession: async () => undefined, verifySelection: async () => false, verifySkillReceipt: async () => false, providerGeneration: async () => undefined, authorizeDocument: async () => undefined })
@@ -45,7 +45,7 @@ async function fixture(origin: string) {
   const seeded = await authority.state.transaction(request, { namespace: "cases", expectedStorageVersion: 0, targetRef: authority.creationTarget.ref,
     targetIncarnation: authority.creationTarget.incarnation, idempotencyKey: "seed-controls-case", commandDigest: digestSfValue(caseRef) }, async (state) => {
     state.cases.case = { ...caseRef, state: "draft", objective: "Renovação de licenças", horizon, currency: "USD", criteria: [{ id: "cost", description: "Limite de custo", required: true }],
-      participants: ["person"], sourceRefs: [], alternatives: [], costCoverageBases: [], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
+      participants: ["person", "person-two"], sourceRefs: [], alternatives: [], costCoverageBases: [], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
     state.cases.private = { ...structuredClone(state.cases.case), id: "private", incarnation: "private-inc", objective: "SEGREDO OUTRO PARTICIPANTE", participants: ["other"] }
     return { commit: true, value: true }
   })
@@ -161,7 +161,7 @@ test("Chromium navigates the own decision controls, saves real classification an
   const handle: { http?: ReturnType<typeof createSfDecisionDomainHttp> } = {}
   const server = Bun.serve({ hostname: "localhost", port: 0, fetch: async (request) => {
     const response = await handle.http?.(request, "planner")
-    return response ?? new Response(decorateSfDecisionControlsHtml('<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"></head><body><main><h1>Planner</h1></main></body></html>', "planner"), { headers: { "Content-Type": "text/html" } })
+    return response ?? new Response(decorateSfDecisionControlsHtml('<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body><main><h1>Planner</h1></main></body></html>', "planner"), { headers: { "Content-Type": "text/html; charset=utf-8" } })
   } })
   const resources: { state?: Awaited<ReturnType<typeof fixture>>; browser?: Browser; closeBrowser?: () => Promise<void> } = {}
   try {
@@ -175,7 +175,9 @@ test("Chromium navigates the own decision controls, saves real classification an
     const page = await context.newPage()
     const errors: string[] = []
     page.on("pageerror", (error) => errors.push(error.message))
-    await page.goto(`${server.url.origin}/sf/planner`)
+    const landing = await page.goto(`${server.url.origin}/sf/planner`)
+    expect(landing?.status()).toBe(200)
+    expect(await page.evaluate(() => document.characterSet)).toBe("UTF-8")
     await page.getByRole("link", { name: "Controles da decisão" }).click()
     await page.getByLabel("Caso de decisão", { exact: true }).selectOption({ label: "Renovação de licenças · revisão 1" })
     await page.getByRole("button", { name: "Abrir caso", exact: true }).click()
@@ -197,39 +199,84 @@ test("Chromium navigates the own decision controls, saves real classification an
     for (let index = 0; index < RENEWAL_TRANSITION_CATEGORIES.length; index++) await groups.nth(index).getByLabel("Escopo ou motivo da pendência").fill(index === 0 ? "Licenças do serviço no período selecionado" : "Aguardando comprovante")
     await groups.nth(0).getByLabel("Classificação", { exact: true }).selectOption("included")
     await groups.nth(0).getByLabel("Componentes incluídos", { exact: true }).selectOption({ index: 0 })
-    await page.getByRole("button", { name: "Salvar classificação", exact: true }).click()
+    await page.getByRole("button", { name: "Salvar classificação", exact: true }).focus()
+    await page.keyboard.press("Enter")
     await page.locator('[data-classification-version="1"]').waitFor({ timeout: 20_000 })
     const selected = new URL(page.url()); selected.searchParams.set("format", "json")
     const stored = await (await page.request.get(selected.href)).json()
     expect(stored.value.selected.forecast.source.refDigest).toBe(state.secondSource.refDigest)
     expect(stored.value.selected.forecast.expectedVersion).toBe(1)
     expect(await page.locator("body").textContent()).toContain("Licenças do serviço no período selecionado")
-    const output = path.resolve(import.meta.dir, "../../../../../../../test-ci-evidence")
+    // Existing test-ci Bun artifact transport; the payload and receipt identify WP10 explicitly.
+    const output = path.resolve(import.meta.dir, "../../../../../e2e/test-results/lean-visual")
     await mkdir(output, { recursive: true })
     for (const width of [320, 768, 1440]) {
       await page.setViewportSize({ width, height: 1000 })
       await page.screenshot({ path: path.join(output, `wp10-decision-controls-${width}.png`), fullPage: true, timeout: 10_000 })
       expect(await page.locator(".sf-decision-controls").evaluate((element) => element.getBoundingClientRect().width <= window.innerWidth)).toBe(true)
     }
+    await writeFile(path.join(output, "wp10-decision-controls.json"), JSON.stringify({
+      schema: "wp10-decision-controls-viewport-v1", executedSnapshotCommit: process.env.GITHUB_SHA,
+      workflowRunId: process.env.GITHUB_RUN_ID, workflowRunAttempt: process.env.GITHUB_RUN_ATTEMPT,
+      widths: [320, 768, 1440], height: 1000, screenshots: [320, 768, 1440].map((width) => `wp10-decision-controls-${width}.png`),
+      identityQualification: "Two test principals authorized by real C08; no installed enterprise identity or native AI acceptance",
+      transportQualification: "Existing test-ci Bun PNG/JSON upload directory; this is WP10 decision controls, not a Lean dashboard proof",
+      observed: ["Published Planner evidence and real classification receipt", "Save submitted by keyboard Enter", "Transient observation timestamp preserves pending edits"],
+    }, null, 2) + "\n")
+    const humanDraft = "Observação humana preservada após edição concorrente"
+    await groups.nth(0).getByLabel("Escopo ou motivo da pendência").fill(humanDraft)
+    await groups.nth(0).getByLabel("Classificação", { exact: true }).selectOption("included")
+    const secondRequest = new Request(`${server.url.origin}/sf/planner`, { method: "POST", headers: { origin: server.url.origin,
+      "Idempotency-Key": "second-participant-edit", "x-sf-test-principal": "person-two" } })
+    const beforeEdit = await state.authority.state.read(secondRequest, "cases", (_stored, actor) => actor.principalRef)
+    if (beforeEdit.status !== "ok") throw new Error("Concurrent edit fixture cannot read the case")
+    expect(beforeEdit.value).toBe("person-two")
+    const edited = await state.authority.state.transaction(secondRequest, { namespace: "cases", expectedStorageVersion: beforeEdit.storageVersion,
+      targetRef: state.caseRef.id, targetIncarnation: state.caseRef.incarnation, idempotencyKey: "concurrent-authorized-edit",
+      commandDigest: digestSfValue({ objective: "Renovação revisada por participante" }) }, async (stored, actor) => {
+      stored.cases.case!.version += 1
+      stored.cases.case!.objective = "Renovação revisada por participante"
+      return { commit: true, value: actor.principalRef }
+    })
+    expect(edited.status).toBe("ok")
+    if (edited.status === "ok") expect(edited.value).toBe("person-two")
+    const conflictRead = page.waitForResponse((response) => new URL(response.url()).searchParams.get("format") === "json")
+    await page.evaluate(() => window.dispatchEvent(new Event("focus")))
+    expect((await conflictRead).status()).toBe(200)
+    await page.getByLabel("Rascunho local preservado", { exact: true }).waitFor()
+    expect(await page.getByLabel("Rascunho local preservado", { exact: true }).inputValue()).toContain(humanDraft)
+    expect(await page.getByLabel("Rascunho local preservado", { exact: true }).inputValue()).toContain("included")
+    expect(await page.locator('[data-decision-action]').count()).toBe(0)
+    expect(await page.locator("#sf-decision-data").count()).toBe(0)
+    expect(await page.locator("select option").count()).toBe(0)
+    expect(await page.locator("body").textContent()).not.toContain("Renovação de licenças")
+    await page.screenshot({ path: path.join(output, "wp10-decision-controls-preserved-draft.png"), fullPage: true, timeout: 10_000 })
+    const stillAuthorized = page.waitForResponse((response) => new URL(response.url()).searchParams.get("format") === "json")
+    await page.evaluate(() => window.dispatchEvent(new Event("focus")))
+    expect((await stillAuthorized).status()).toBe(200)
+    expect(await page.getByLabel("Rascunho local preservado", { exact: true }).inputValue()).toContain(humanDraft)
     state.actor.active = false
     await page.evaluate(() => window.dispatchEvent(new Event("focus")))
     await page.getByText("O acesso ou as fontes mudaram. Abra novamente o caso.", { exact: true }).waitFor({ timeout: 15_000 })
     expect(await page.locator("#sf-decision-selected").count()).toBe(0)
     expect(await page.locator("#sf-decision-data").count()).toBe(0)
+    expect(await page.locator("#sf-decision-draft").count()).toBe(0)
+    await page.screenshot({ path: path.join(output, "wp10-decision-controls-revoked.png"), fullPage: true, timeout: 10_000 })
     expect(await page.locator("body").textContent()).not.toContain("Renovação de licenças")
     expect(await page.locator("select option").count()).toBe(0)
     state.actor.active = true
     await page.goto(`${server.url.origin}/sf/planner?sf=decision-controls`)
-    expect(await page.getByLabel("Caso de decisão", { exact: true }).textContent()).toContain("Renovação de licenças")
+    expect(await page.getByLabel("Caso de decisão", { exact: true }).textContent()).toContain("Renovação revisada por participante")
     state.actor.active = false
     await page.evaluate(() => window.dispatchEvent(new Event("focus")))
     await page.getByText("O acesso ou as fontes mudaram. Abra novamente o caso.", { exact: true }).waitFor({ timeout: 15_000 })
-    expect(await page.locator("body").textContent()).not.toContain("Renovação de licenças")
+    expect(await page.locator("body").textContent()).not.toContain("Renovação revisada por participante")
     expect(await page.locator("select option").count()).toBe(0)
     expect(errors).toEqual([])
   } finally {
     server.stop(true)
     try {
+      // The published ownership helper bounds Chrome RPC closure and verifies the process group.
       if (resources.closeBrowser) await resources.closeBrowser()
       else await resources.browser?.close()
     } finally { await resources.state?.close() }

@@ -56,7 +56,8 @@ test("current and nested snapshot copies preserve codec normalization and isolat
       const hidden = Object.defineProperty({ visible: true }, "nonEnumerable", { value: undefined, enumerable: false })
       const nullPrototype: Record<string, unknown> = Object.create(null)
       nullPrototype.value = "plain after decoding"
-      snapshot.data.copyFixture = { left: shared, right: shared, sparse, hidden, nullPrototype, minusZero: -0, optional: undefined }
+      Object.defineProperty(nullPrototype, "__proto__", { value: { value: "ordinary own property" }, enumerable: true })
+      snapshot.data.copyFixture = { left: shared, right: shared, sparse, hidden, nullPrototype, minusZero: -0, optional: undefined, text: "\ud800" }
       const wire = decodeSnapshot(encodeSnapshot(snapshot))
       const copies = store.currentSnapshots!()
       if (!copies) throw new Error("missing current snapshots")
@@ -67,6 +68,9 @@ test("current and nested snapshot copies preserve codec normalization and isolat
       expect(copied.optional).toBeUndefined()
       expect(Object.getOwnPropertyDescriptor(object(copied.hidden), "nonEnumerable")).toMatchObject({ value: undefined, enumerable: true, writable: true, configurable: true })
       expect(Object.getPrototypeOf(copied.nullPrototype)).toBe(Object.prototype)
+      expect(Object.hasOwn(object(copied.nullPrototype), "__proto__")).toBe(true)
+      expect(object(copied.nullPrototype).__proto__).toEqual({ value: "ordinary own property" })
+      expect(copied.text).toBe("\ud800")
       expect(copied.left).not.toBe(copied.right)
       expect(copied.left).not.toBe(shared)
       const copiedArray = copied.sparse

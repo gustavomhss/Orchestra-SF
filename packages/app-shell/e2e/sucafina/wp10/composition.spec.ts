@@ -7,9 +7,10 @@ import path from "node:path"
 import { fileURLToPath } from "node:url"
 import type { UiCorpusReceipt } from "../wp00/flows.ts"
 import { qualifyWp10ExtendedUi } from "./extended-flows.ts"
+import { prepareWp10ReviewRevocation } from "./review-revocation.ts"
 
 const origin = "http://localhost:4110"
-const flowNames = ["dashboard-budget", "workbench-create-reopen", "procurement-requests", "bi-table", "extended-ui"] as const
+const flowNames = ["dashboard-budget", "workbench-create-reopen", "procurement-requests", "bi-table", "extended-ui", "bi-revocation"] as const
 type Flow = typeof flowNames[number]
 type Observation = {
   flow: Flow
@@ -319,8 +320,39 @@ test("WP10 composes Dashboard, persisted Workbench decisions, Requests and BI th
           await table.scrollIntoViewIfNeeded()
         })
 
+        let reviewRevocationUrl: string | undefined
         await observe("extended-ui", async (record) => {
-          Object.assign(record.facts, await qualifyWp10ExtendedUi({ page, origin, testInfo }))
+          const facts = await qualifyWp10ExtendedUi({ page, origin, testInfo })
+          Object.assign(record.facts, facts)
+          if (typeof facts.reviewRevocationUrl === "string") reviewRevocationUrl = facts.reviewRevocationUrl
+        })
+
+        await observe("bi-revocation", async (record) => {
+          if (!reviewRevocationUrl) throw new Error("A preserved review is required for the revocation proof")
+          const reviewPrivacy = await prepareWp10ReviewRevocation({ context, url: reviewRevocationUrl, testInfo })
+          try {
+          await page.goto(origin + "/sucafina/dashboard?sf=bi&viewId=BI01&start=2027-01-01&end=2027-12-31")
+          const panel = page.locator("[data-sf-bi]")
+          await expect(panel.getByRole("table", { name: "Dados e referências", exact: true })).toBeVisible({ timeout: 30000 })
+          expect(await panel.getByLabel("Dados para visualizar", { exact: true }).locator("option").count()).toBeGreaterThan(1)
+          const logout = await context.request.post(origin + "/sucafina/auth/logout", { headers: { origin } })
+          record.facts.logoutHttp = logout.status()
+          expect(logout.status()).toBe(204)
+          const rejected = page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "bi-options")
+          await page.evaluate(() => window.dispatchEvent(new Event("focus")))
+          record.facts.recheckHttp = (await rejected).status()
+          expect([401, 403]).toContain(record.facts.recheckHttp)
+          await expect(panel.getByRole("status")).toHaveText("O acesso mudou. Abra novamente os dados autorizados.")
+          await expect(panel.getByRole("table")).toHaveCount(0)
+          for (const label of ["Dados para visualizar", "Versão base", "Versão candidata"]) await expect(panel.getByLabel(label, { exact: true }).locator("option")).toHaveCount(1)
+          await expect(panel.getByRole("navigation", { name: "Fontes e preparação de dados", exact: true }).getByRole("link")).toHaveCount(0)
+          record.facts.privateProjectionRemoved = true
+          record.facts.privateChoicesRemoved = true
+          const reviewStatuses = await reviewPrivacy.verifyAfterLogout()
+          for (const [operation, status] of Object.entries(reviewStatuses)) record.facts[`review-${operation}-denied`] = status
+          record.facts.reviewPrivateSectionsRemoved = true
+          record.facts.reviewLateResponseDiscarded = true
+          } finally { await reviewPrivacy.dispose() }
         })
 
         const failed = observations.filter((record) => record.outcome !== "passed")
