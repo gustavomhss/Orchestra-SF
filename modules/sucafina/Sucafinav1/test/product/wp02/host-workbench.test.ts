@@ -313,10 +313,26 @@ test("Dashboard draft conflict reloads the same draft identity and preserves loc
     await otherPanel.getByLabel("Ação", { exact: true }).fill("Action saved in another tab")
     await save(other, otherPanel, "draft.concurrent-save-and-discovery")
     // A separate draft targets the same case and Hot Topic. Recovery must bind identity, not a matching target or title.
-    await otherPanel.getByLabel(/^Caso/).selectOption({ label: "Review the action" })
-    await otherPanel.getByLabel(/^Rascunho/).selectOption("new")
-    await otherPanel.getByLabel(/^Hot Topic de origem/).selectOption({ label: "Original action" })
-    await otherPanel.getByLabel("Ação", { exact: true }).fill("Independent action draft")
+    await phase("draft.independent-select-case", async () => {
+      const selected = otherPanel.getByLabel(/^Caso/)
+      await selected.selectOption({ label: "Review the action" })
+      expect(await selected.locator("option:checked").textContent()).toBe("Review the action")
+    })
+    await phase("draft.independent-select-new", async () => {
+      const selected = otherPanel.getByLabel(/^Rascunho/)
+      await selected.selectOption("new")
+      expect(await selected.inputValue()).toBe("new")
+    })
+    await phase("draft.independent-select-source", async () => {
+      const selected = otherPanel.getByLabel(/^Hot Topic de origem/)
+      await selected.selectOption({ label: "Original action" })
+      expect(await selected.locator("option:checked").textContent()).toBe("Original action")
+    })
+    await phase("draft.independent-edit-action", async () => {
+      const action = otherPanel.getByLabel("Ação", { exact: true })
+      await action.fill("Independent action draft")
+      expect(await action.inputValue()).toBe("Independent action draft")
+    })
     await save(other, otherPanel, "draft.independent-save-and-discovery")
 
     await phase("draft.stale-write-refused", async () => {
@@ -359,9 +375,23 @@ test("Dashboard draft conflict reloads the same draft identity and preserves loc
     expect(latest.value.find((draft) => draft.label === "Independent action draft")?.version).toBe(1)
     expect(await f.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: rows(snapshot.data.hotTopics)[0]!.action }))).toBe("Original action")
     expect(errors).toEqual([])
-  } catch (error) { failures.push(error) }
+  } catch (error) {
+    failures.push(error)
+    // Emit the Playwright call log before cleanup; a closing renderer must not
+    // replace the original action failure with the outer Bun timeout.
+    console.error("SF_WP02_DRAFT_CONFLICT_FAILURE", error)
+  }
   finally {
-    const closed = await Promise.allSettled([phase("browser.close", () => browser.close()), phase("fixture.close", () => f.close())])
+    const closeBrowser = async () => {
+      let timer: ReturnType<typeof setTimeout> | undefined
+      try {
+        await Promise.race([
+          browser.close(),
+          new Promise<never>((_, reject) => { timer = setTimeout(() => reject(new Error("Browser cleanup exceeded 5000 ms")), 5000) }),
+        ])
+      } finally { if (timer !== undefined) clearTimeout(timer) }
+    }
+    const closed = await Promise.allSettled([phase("browser.close", closeBrowser), phase("fixture.close", () => f.close())])
     for (const result of closed) if (result.status === "rejected") failures.push(result.reason)
   }
   if (failures.length === 1) throw failures[0]
