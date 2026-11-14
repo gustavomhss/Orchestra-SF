@@ -1,0 +1,119 @@
+{
+  "schema": "sf-wp11-fixture-performance-reconciliation-v1",
+  "recordedAtUtc": "2026-11-14T10:31:34.328525+00:00",
+  "repository": "gustavomhss/Orchestra-SF",
+  "ownership": "WP11 own test fixtures and diagnostics only; no authored foreign runtime changes",
+  "authorization": "Root authorized splitting the operational Planner from C10 enrichment, minimizing the nested C17 fixture while preserving canonical replay and all assertions, and adding diagnostics with the original 180000ms budget. No local product execution or typecheck.",
+  "observedFailure": {
+    "runId": 43580722320,
+    "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43580722320",
+    "productSha": "efa0e57e54862f99a07b2837af5e729adb881415",
+    "snapshotSha": "bd0837b1fbd179cf044691981ba57e39c30f031c",
+    "logSha256": "9187121e712bf0dfddfc714cdbc9911d7ee2f442d6334eb4b87503bd80cee063",
+    "runConclusion": "CANCELLED",
+    "aggregatePass": false,
+    "tests": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+        "observedDurationMs": 1724688.33,
+        "declaredTimeoutMs": 180000,
+        "outcome": "FAIL_TIMEOUT",
+        "startUtc": "2026-11-14T09:43:19.4275156Z",
+        "failureUtc": "2026-11-14T10:12:04.1195273Z"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/calculation-persistence.test.ts",
+        "observedDurationMs": 182871.39,
+        "declaredTimeoutMs": 180000,
+        "outcome": "FAIL_TIMEOUT",
+        "startUtc": "2026-11-14T09:39:42.1452052Z",
+        "failureUtc": "2026-11-14T09:42:45.0183041Z"
+      }
+    ]
+  },
+  "staticDiagnosis": {
+    "certainty": "Call graph and state-copy behavior were inspected in source. Counts below are a model of the two-alternative fixture path, not hosted profiler measurements.",
+    "renewalHistory": [
+      "Exact-threshold preview resolves two stored scenarios. Each resolution reads the case twice; each case read verifies operations twice across two alternatives; each operation verifier invokes canonical compareForecast twice. This composes up to 32 operational comparisons for one preview path before the other preview work.",
+      "The operational Planner previously used the same C10-enriched coverage source as judgment. Each comparison re-entered decision baseline coverage twice. At W4 the coverage resolver makes five C08 reads per observation, so that path can induce 320 full C08 reads per preview. The W2 implementation used repeated reads before the published readPair improvement; W4 reduced that duplication but retained the nested fanout.",
+      "C08 state reads clone the aggregate SfProductState. Durable case mutation receipts contain complete historical case values and result receipts also retain result data. No self-nesting cycle was identified; repeated historical snapshots and repeated full reads compound work as history grows.",
+      "The observed 28.74-minute timeout overrun is consistent with synchronous SQLite, hashing and cloning work combined with a continuously busy promise chain delaying the Bun timer. This is an inference; no CPU profile or measured dominant phase was available in W2."
+    ],
+    "nestedCalculation": [
+      "The C17 producer performs repeated request reads, result reads, source verification and scenario replay. Request reads in turn read results and verify calculation requests; both result-source verifiers can reissue ancestor calculations. For one outer calculation with one inner ancestor, static expansion is approximately 34 inner issue calls per outer issue, with no per-pass memoization.",
+      "The previous persistence test initialized the broad WP05 sensitivity fixture, including unrelated sensitivity and threshold construction, and repeatedly resolved record sources through canonical comparisons over that larger durable state. The failure is not explained by an infinite semantic cycle in the test.",
+      "The consumed 660 finance pin isolates traversal guards using AsyncLocalStorage, which addresses false concurrent cycle/depth interference. It does not deduplicate this repeated ancestor verification and does not itself establish that the W2 timeout is fixed."
+    ]
+  },
+  "reconciliation": {
+    "basePublishedProductSha": "c52f7eed38cefd58962251a8d27a41777af18f6d",
+    "financeSourcePin": "660db9a46e4c1d7ff87c23f6bb37f451cc703ccb",
+    "historyOperationPlanner": "A separate real Planner uses the same current canonical source host and authority for operation admission. The classified Planner remains in scenario calculation, comparison, criterion, exact threshold and interval proof. No source check or operation verifier was removed.",
+    "nestedMinimalFixture": "Uses the existing real WP03 plannerFixture, SQLite, source issuer and canonical Planner over three USD lines in the 2027 horizon. Every untouched month is explicitly zero. Coverage is explicitly pending for all renewal categories; the outer scenario still comes from Planner as knownSubtotal 211000, total null and conditioned.",
+    "nestedInvariantsPreserved": [
+      "canonical source/result/request verification",
+      "canonical nested scenario replay of every ancestor",
+      "conservative result and request stores reject unsupported calculation sources",
+      "exact issue/resolve equivalence",
+      "ancestry evidence reference identity",
+      "second SQLite connection reads and replays persisted requests/results",
+      "source invalidation by real canonical Planner CAS while caller remains authorized",
+      "original test timeout 180000ms"
+    ],
+    "diagnostics": "Test-only checkpoints report phase, elapsed wall time, per-operation calls and inclusive duration, C08 aggregate/receipt/case/result byte counts, and counts of persisted objects. Read/transaction callbacks are passed through with their original identity to preserve private WeakSet admission.",
+    "deadline": "A Date.now guard checks the original 180000ms budget around host, source, C08 and replay callbacks. It throws WP11_FIXTURE_DEADLINE_EXCEEDED on overrun and never turns an incomplete assertion or timeout into a passing test.",
+    "negativeNameClarification": "The nested test helper and checkpoint now say source revision: the negative changes the canonical source through CAS; it is not an ACL revocation test."
+  },
+  "independentStaticReview": {
+    "reviewer": "ci_reconciliation",
+    "history": "No concrete blocker found: operational Planner retains canonical source/actor/projection/commands; C10 remains in financial judgment; callback identities and original budget preserved.",
+    "nested": "No concrete type/wiring blocker found: contextual PlannerSourceHost literals and evidence closure are valid by static inspection; original C08 callbacks and all replay/source/request verifiers remain; source revision negative retains active caller authority.",
+    "executionStatus": "NOT_EXECUTED_LOCALLY"
+  },
+  "limitations": [
+    "This change reduces fixture composition fanout. It is not evidence of an optimized installed host.",
+    "Recursive C17 validation still exists; performance and completion must be observed in hosted CI for these exact final bytes.",
+    "The history fixture still uses the existing WP05 factory for bootstrap. The new measurements include its bootstrap cost but do not change its foreign implementation.",
+    "Inclusive timing counters overlap and must not be added as exclusive CPU time.",
+    "The nested source-revision negative is not ACL revocation. Existing source and authority checks are preserved, but no new ACL-revocation claim is made.",
+    "Opening a second SQLite connection while the original driver and host stay alive does not prove a complete native process restart.",
+    "Synthetic coverage declarations and producer/grant fixture boundaries do not prove mounted UI, browser or native C11 authority."
+  ],
+  "validation": {
+    "staticDiffCheck": "PASS_STATIC",
+    "productTests": "NOT_RUN_LOCALLY",
+    "typecheck": "NOT_RUN_LOCALLY",
+    "hostedCi": {
+      "status": "PENDING_FOR_FINAL_BYTES",
+      "commitSha": null,
+      "runId": null
+    },
+    "acceptance": "Do not mark either W2 failure or any criterion PASS from static review. Hosted test results must identify the final candidate and each selected file."
+  },
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/fixture-trace.ts",
+      "gitBlob": "23ed2604b5a8b11d392e57f0424d3d806aaf03a1",
+      "sha256": "3c679344d17a97136ac59f22284527d14ee2b9dde0004f63e548dd454a83f449",
+      "bytes": 2608
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "gitBlob": "b913d9c0ab46a3f624b6c0aee28f5adf6654940a",
+      "sha256": "31756549e2bc37f2810c25ddc8c5a9c43e462513576a66330d21790433d8b2b4",
+      "bytes": 25094
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+      "gitBlob": "02af3b8a606b91949f9009d239e4f2289dd41e7d",
+      "sha256": "b2ed5b6c44fbf56a3d9ca04e3a1519f72a5258f595c67da10f2d584da81287f1",
+      "bytes": 7030
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/calculation-persistence.test.ts",
+      "gitBlob": "bd97cc914ace5cf1965d441ef9fa8e1f553b7d05",
+      "sha256": "e698e797ddd5b9ea129048fe219e2f7ea9d71ce4d8caa13408f704e869722444",
+      "bytes": 15967
+    }
+  ]
+}

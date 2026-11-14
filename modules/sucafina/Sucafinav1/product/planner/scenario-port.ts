@@ -86,7 +86,13 @@ export async function simulateScenario(input: { host: DomainPortHost; sources: P
   const financial = input.qualify({ projection: preview.projection, ref: source.value.evidence, period, binding, at: environment.at })
   if (new Set(financial.components.map((component) => component.id)).size !== financial.components.length) return { status: "unavailable", reason: "duplicate-preview-component-id" }
   const changed = new Set(request.operations.flatMap((operation) => operation.kind === "defer" && operation.period ? [operation.targetRef, `${operation.targetRef.slice(0, operation.targetRef.lastIndexOf(":"))}:${Number(operation.period.start.slice(5, 7))}`] : [operation.targetRef]))
-  const components = financial.components.map((component) => ({ ...component, evidenceState: component.amount === null ? "absent" as const : changed.has(component.id) ? "hypothetical" as const : component.evidenceState }))
+  // A save can normalize the whole legacy row, including untouched null budgets.
+  // Only addressed cells may acquire quantification from that post-command copy.
+  const absentBefore = new Set(current.value.baseline.components.filter((component) => component.amount === null && component.evidenceState === "absent").map((component) => component.id))
+  const components = financial.components.map((component) => {
+    const absent = component.amount === null || !changed.has(component.id) && absentBefore.has(component.id)
+    return { ...component, amount: absent ? null : component.amount, evidenceState: absent ? "absent" as const : changed.has(component.id) ? "hypothetical" as const : component.evidenceState }
+  })
   const rechecked = await input.compare({ baseRef: request.baseRef, candidateRef: request.baseRef, period, currency }, binding)
   const coverageAgain = await input.sources.resolveForecastCoverage(request.baseRef, binding)
   if (rechecked.status !== "ok" || rechecked.value.sourceRefs.some((ref) => ref.refDigest !== source.value.evidence.refDigest) || digestSfValue(coverageAgain) !== digestSfValue(coverage) || !(await input.host.revalidate(binding))) return { status: "stale", reason: "source-or-authority-changed" }
@@ -112,8 +118,12 @@ export async function simulateScenario(input: { host: DomainPortHost; sources: P
     return { status: "ok", value: { ...observation, total: null, costCoverage: assessment, comparisonStatus: "conditioned", unresolvedConditions: [...new Set([...current.value.gaps, ...assessment.issues, ...assessment.entries.flatMap((entry) => entry.status === "pending" ? [`coverage:${entry.categoryId}:${entry.reason}`] : [])])] } }
   }
   const scenarioCoverage = { ...coverage.value.assessment, coverageState: coverage.value.assessment.coverageState === "unavailable" ? "unavailable" as const : "pending" as const, issues: [...coverage.value.assessment.issues, "scenario-coverage-reassessment-required"] }
-  const originalMissing = new Set([...current.value.baseline.missing, ...current.value.candidate.missing].map((entry) => `${entry.field}:${entry.reason}`))
-  const currentGaps = current.value.gaps.filter((gap) => !originalMissing.has(gap))
+  // Re-derive disclosures for addressed cells only; normalization is not evidence
+  // that a missing value in another month has been supplied.
+  const addressedMissing = new Set([...current.value.baseline.missing, ...current.value.candidate.missing]
+    .filter((entry) => changed.has(entry.field.slice(0, entry.field.lastIndexOf(":"))))
+    .map((entry) => `${entry.field}:${entry.reason}`))
+  const currentGaps = current.value.gaps.filter((gap) => !addressedMissing.has(gap))
   const previewGaps = financial.missing.map((entry) => `${entry.field}:${entry.reason}`)
   const unresolved = [...new Set([...currentGaps, ...previewGaps]), "scenario-is-hypothetical", "scenario-coverage-reassessment-required", ...request.assumptions.map((assumption) => `assumption:${assumption.id}:${assumption.state}:not-applied`)]
   return { status: "ok", value: { id: `preview:${digestSfValue({ request, source: source.value.evidence.refDigest })}`, version: 0, components, knownSubtotal, total: null, currency, horizon: period, sourceRefs: [source.value.evidence, ...evidenceRefs], costCoverage: scenarioCoverage, comparisonStatus: "conditioned", unresolvedConditions: unresolved, restrictions: ["preview-not-applied"] } }

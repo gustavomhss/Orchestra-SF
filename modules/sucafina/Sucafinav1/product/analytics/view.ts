@@ -420,10 +420,15 @@ export function renderBiView(request: BiViewRequest, projection: DomainProjectio
 /** The host calls this after returning from a detail screen. */
 export function restoreBiFocus(container: HTMLElement, selection: BiSelection | string) {
   const valueId = typeof selection === "string" ? selection : selection.valueId
-  const target = Array.from(container.querySelectorAll("[data-bi-focus]"))
-    .find((element) => element.getAttribute("data-bi-focus") === valueId)
-    ?? container.querySelector("[data-bi-focus-fallback]")
-  if (!(target instanceof HTMLElement) && !(target instanceof SVGElement)) return false
-  target.focus()
-  return true
+  const candidates = [
+    ...Array.from(container.querySelectorAll("[data-bi-focus]")).filter((element) => element.getAttribute("data-bi-focus") === valueId),
+    ...Array.from(container.querySelectorAll("[data-bi-focus-fallback]")),
+  ]
+  for (const target of candidates) {
+    if (!(target instanceof HTMLElement) && !(target instanceof SVGElement)) continue
+    if (!target.isConnected || target.closest("[hidden], [inert]") || !target.getClientRects().length || getComputedStyle(target).visibility === "hidden") continue
+    target.focus()
+    if (target.ownerDocument.activeElement === target) return true
+  }
+  return false
 }

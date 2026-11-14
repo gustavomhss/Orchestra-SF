@@ -47,11 +47,12 @@ export function createBiSourceChooser(container: HTMLElement, open: (selection: 
     legend.textContent = `Escolher origem de ${label}`
     chooser.setAttribute("aria-label", legend.textContent)
     chooser.append(legend)
-    appendBiSourceButtons(chooser, choices, (selection) => { chooser.hidden = true; open(selection) })
+    const hide = () => { chooser.hidden = true; chooser.replaceChildren() }
+    appendBiSourceButtons(chooser, choices, (selection) => { hide(); open(selection) })
     const cancel = document.createElement("button")
     cancel.type = "button"
     cancel.textContent = "Cancelar escolha de origem"
-    const close = () => { chooser.hidden = true; if (returnFocus instanceof HTMLElement || returnFocus instanceof SVGElement) returnFocus.focus() }
+    const close = () => { hide(); if (returnFocus instanceof HTMLElement || returnFocus instanceof SVGElement) returnFocus.focus() }
     cancel.addEventListener("click", close)
     chooser.onkeydown = (event) => { if (event.key === "Escape") { event.preventDefault(); close() } }
     chooser.append(cancel)

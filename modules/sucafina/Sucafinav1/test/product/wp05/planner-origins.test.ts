@@ -84,6 +84,18 @@ test("real Planner zero and nonzero contributions expose explicit A/B origins th
             const clicked: BiSelection = JSON.parse(await page.locator("body").getAttribute("data-selection") ?? "null")
             expect(clicked).toEqual({ valueId: row.id, selectionRef: request.selectionRef, context: value.projection.context, visualPeriod: plannerPeriod, projectionVersion: value.projection.version, engineVersion: value.projection.engineVersion, reference })
             selections.push(clicked)
+            phase(`${row.id}:origin-${index}:return-focus`)
+            await page.getByRole("button", { name: "Aplicar filtro", exact: true }).focus()
+            expect(await mark.evaluate((element) => document.activeElement === element)).toBe(false)
+            const restored = await page.evaluate(async ({ url, selection }) => {
+              const module = await import(url)
+              const mount = document.body.querySelector("section")
+              if (!(mount instanceof HTMLElement)) throw new Error("Original BI mount unavailable")
+              return module.restoreBiFocus(mount, selection)
+            }, { url, selection: clicked })
+            expect(restored).toBe(true)
+            expect(await mark.evaluate((element) => document.activeElement === element && element.getClientRects().length > 0 && !element.closest("[hidden]"))).toBe(true)
+            expect(await page.locator("[data-bi-source-chooser][hidden] [data-bi-focus]").count()).toBe(0)
             phase(`${row.id}:origin-${index}:keyboard`)
             await page.evaluate(() => { delete document.body.dataset.selection })
             await mark.focus()
@@ -117,15 +129,19 @@ test("real Planner zero and nonzero contributions expose explicit A/B origins th
         }
       })
       for (const selection of selections) {
+        const reference = selection.reference
+        if (!reference || reference.kind !== "record") throw new Error("Explicit Planner record origin required")
         const result = await readBiDestination({ request, selection, context: await fixture.admit("sf_bi_view", request), source, authority: fixture.authority, business })
         expect(result.status).toBe("ok")
         if (result.status !== "ok") throw new Error(result.reason)
         expect(result.value.selection).toEqual(selection)
-        expect(result.value.source.ref).toEqual(selection.reference)
-        expect(result.value.source.currentRef).toEqual(selection.reference)
+        expect(result.value.source.ref).toEqual(reference)
+        expect(result.value.source.currentRef).toEqual(reference)
         const origin = result.value.source.authorizedProjection
         if (!origin || !("values" in origin) || !("components" in origin)) throw new Error("Exact authorized source projection required")
-        expect(origin.context.sourceRefs[0]?.id).toBe(selection.reference?.kind === "record" ? selection.reference.target.recordId : undefined)
+        const originSource = origin.context.sourceRefs[0]
+        if (!originSource) throw new Error("Authorized Planner source identity required")
+        expect(originSource.id).toBe(reference.target.recordId)
       }
       let resolved = false
       const wrong = await readBiDestination({ request, selection: { ...selections[0]!, reference: refs[2]! }, context: await fixture.admit("sf_bi_view", request), source, authority: fixture.authority, business: { resolve: async (ref, context) => { resolved = true; return business.resolve(ref, context) } } })

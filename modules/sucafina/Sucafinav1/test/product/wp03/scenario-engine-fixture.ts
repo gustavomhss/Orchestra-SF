@@ -8,7 +8,7 @@ import { plannerFixture } from "./planner-fixture.ts"
 export const scenarioMonth = { start: "2027-11-01", end: "2027-11-30" }
 
 /** Real domain, SQLite, scoped source issuer and private UI admission; classification remains explicitly pending. */
-export async function scenarioEngineFixture(snapshot: Snapshot) {
+export async function scenarioEngineFixture(snapshot: Snapshot, horizon: CostCoverageAssessment["horizon"] = scenarioMonth) {
   const fixture = await plannerFixture(snapshot)
   try {
     const context = await fixture.admit("sf-human:planner.read", {}, "finance", true)
@@ -17,7 +17,7 @@ export async function scenarioEngineFixture(snapshot: Snapshot) {
     const source = issued.value.evidence
     const coverageRef = "scenario-engine-coverage"
     const basis: CostCoverageBasis = { id: "scenario-engine-basis", version: 1, decisionType: "renewal-transition-v1", categoryIds: [...RENEWAL_TRANSITION_CATEGORIES], additionalCategoryIds: [], sourceRefs: [source] }
-    const assessment: CostCoverageAssessment = { basisId: basis.id, basisVersion: basis.version, alternativeId: "source", alternativeVersion: 1, currency: "USD", horizon: scenarioMonth, evaluatedSourceRefs: [source], coverageState: "pending", entries: RENEWAL_TRANSITION_CATEGORIES.map((categoryId) => ({ categoryId, status: "pending", reason: "Human cost classification not supplied" })), derivedMissingCategoryIds: [...RENEWAL_TRANSITION_CATEGORIES], issues: ["human-cost-classification-required"] }
+    const assessment: CostCoverageAssessment = { basisId: basis.id, basisVersion: basis.version, alternativeId: "source", alternativeVersion: 1, currency: "USD", horizon: structuredClone(horizon), evaluatedSourceRefs: [source], coverageState: "pending", entries: RENEWAL_TRANSITION_CATEGORIES.map((categoryId) => ({ categoryId, status: "pending", reason: "Human cost classification not supplied" })), derivedMissingCategoryIds: [...RENEWAL_TRANSITION_CATEGORIES], issues: ["human-cost-classification-required"] }
     const sources: PlannerSourceHost = { resolveForecastSource: fixture.sources.resolveForecastSource, resolveForecastCoverage: async (reference, binding) => {
       if (reference !== source.refId && reference !== coverageRef) return { status: "unavailable", reason: "unknown-scenario-coverage" }
       const current = await fixture.sources.resolveForecastSource(source.refId, binding)
