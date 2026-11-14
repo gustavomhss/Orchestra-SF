@@ -1,0 +1,118 @@
+{
+  "schema": "sf2h.ci-triage.ledger.v1",
+  "batch": 1,
+  "runs": [
+    {
+      "W": "7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1",
+      "treeW": "2da074668b164b1aa5e051f8a70366969425906f",
+      "S": "0e68fec2e33e6c4c2103f368fed1d00dc832cb0c",
+      "treeS": "9339889db0210f25ba46ee9a3ab7553e146bef1d",
+      "requestPath": ".ci-run.json",
+      "requestBlob": "85fc069e57a87392820409f443e4f4b47c8c4564",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/review-fixes/finance-resume-performance/journey-phase.test.ts",
+          "--timeout",
+          "120000",
+          "-t",
+          "^FIN-IND-005 Finance performance"
+        ],
+        "env": {}
+      },
+      "snapshotDelta": "GitHub compare: exactly one added .ci-run.json; parent W; product/test/config/fixtures unchanged within W→S",
+      "run": 43631582858,
+      "job": 132559159277,
+      "workflow": "test-ci",
+      "terminal": "failure",
+      "counts": {
+        "pass": 0,
+        "fail": 1,
+        "expectations": 18
+      },
+      "phase": "confirmed authority revalidate interrupted by 180000ms guard",
+      "omni": "not applicable; zero spawn claimed",
+      "cleanup": "success",
+      "log": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43631582858/job/132559159277"
+    },
+    {
+      "W": "7c9bbd966483b94d21a4c30961a8174be7ed6804",
+      "treeW": "6c55ee7399780575a61af242e79676a472d038af",
+      "S": "5ef3284a31973be8e3c14c8db23887574754a657",
+      "treeS": "00a2da15699e759733003ef9c788da43acf41c6e",
+      "requestPath": ".ci-run.json",
+      "requestBlob": "9054309f4fff75b66ae2cb6923476c8025faeb9d",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+          "./Sucafinav1/test/product/ui-ack-completion/ordinary-thread.test.ts",
+          "./Sucafinav1/test/product/ui-ack-completion/recipient-recovery.test.ts",
+          "./Sucafinav1/test/product/ui-ack-completion/recipient-refusal.test.ts",
+          "./Sucafinav1/test/product/ui-ack-completion/source-replacement.test.ts",
+          "./Sucafinav1/test/product/ui-split/ui-work/static-gates.test.ts",
+          "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "snapshotDelta": "GitHub compare: exactly one added .ci-run.json; parent W; product/test/config/fixtures unchanged within W→S",
+      "run": 43632801654,
+      "job": 132562905431,
+      "workflow": "test-ci",
+      "terminal": "failure",
+      "counts": {
+        "pass": 3,
+        "fail": 12,
+        "expectations": 30
+      },
+      "phase": "11 fixture imports; 1 static gate. Ordinary thread/startup/lifecycle pass.",
+      "omni": "pass; 4 spawns across 2 declared tests",
+      "cleanup": "success",
+      "log": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43632801654/job/132562905431"
+    },
+    {
+      "W": "e1fe9561f199dc594a5fd559d06d450253e571bc",
+      "treeW": "5cb441e60a88dce057534548796dc6e7b1e40f74",
+      "S": "b7a3fe9b03fa490238fb47acdc67924f3b0e417a",
+      "treeS": "19725df24daab6ab0c96ce6835596c607b2daa6e",
+      "requestPath": ".ci-run.json",
+      "requestBlob": "ad79ccff0172e4db45196222a6bb27e9ebfb6642",
+      "request": {
+        "package": "sucafina",
+        "packageSelector": "packages/sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/procurement-exports/export-regressions.test.ts",
+          "./Sucafinav1/test/product/procurement-exports/export-controls.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "snapshotDelta": "GitHub compare: exactly one added .ci-run.json; parent W; product/test/config/fixtures unchanged within W→S",
+      "run": 43632315600,
+      "job": 132561444043,
+      "workflow": "test-ci",
+      "terminal": "success",
+      "counts": {
+        "pass": 11,
+        "fail": 0,
+        "expectations": 396
+      },
+      "phase": "Both original export regressions and nine controls executed",
+      "omni": "not applicable; no declared spawning test",
+      "cleanup": "success",
+      "log": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43632315600/job/132561444043"
+    }
+  ]
+}
