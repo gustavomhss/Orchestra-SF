@@ -1,0 +1,356 @@
+{
+  "schema": "mission43-assertion-preservation-v1",
+  "reviewer": "/root/c12_review",
+  "review_mode": "text-only review of supplied patch bodies, line multisets, budgets, and artifact hashes; no tests or product code executed",
+  "inputs": [
+    "mission43/patch-input.json",
+    "mission43/final-adjustments.json",
+    "mission43/collected-evidence.json"
+  ],
+  "target_commit": "36521bb47f1d10de8d8bb5d376fdb5d5fa7bc8e1",
+  "source_product_commit": "63f952c06baf3be82464e2b320fbdf4c8c3c9ce8",
+  "final_composed_W": "e539fdbf41101b5fa6703bd373fe48c21bcf8604",
+  "counting_method": "Count source lines containing expect( after trimming only outer whitespace; preserve duplicate lines as a multiset. Static expect-line counts are not executed expect() call counts. New tests can increase totals without proving they passed.",
+  "P02": {
+    "original_source_expect_lines": 188,
+    "original_source_preserved_literal": 188,
+    "original_source_verification_origin": "ci_protocol literal-preservation audit as forwarded by /root; not independently reconstructed because original source bodies are absent from the supplied local patch JSONs",
+    "candidate_expect_lines": 214,
+    "candidate_preserved_literal": 211,
+    "candidate_semantic_amount_replacements": 3,
+    "final_expect_lines": 295,
+    "rows": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-integration.test.ts",
+        "group": "P02",
+        "original_source_expect_lines": null,
+        "original_source_count_origin": "not applicable: new controlled/boundary or P03 accounting",
+        "candidate_expect_lines": 19,
+        "candidate_literal_lines_preserved": 16,
+        "final_expect_lines": 30,
+        "candidate_blob": "9fefc7bc347bfa123fc718fa9b0000d82dfc8a80",
+        "final_blob": "6eec9c363eaa957aec1776cec3284c67424abcb2",
+        "final_blob_matches_body": true,
+        "literal_lines_replaced": [
+          "expect([...domainState.values()].map((value) => value.amount)).toEqual([30, 50])",
+          "expect([...domainState.values()].map((value) => value.amount)).toEqual([40, 50])",
+          "expect([...domainState.values()].map((value) => value.amount)).toEqual([40, 60])"
+        ],
+        "explicit_budgets_candidate": [],
+        "explicit_budgets_final": [],
+        "verification": "local text and multiset comparison; no test execution"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-c08-integration.test.ts",
+        "group": "P02",
+        "original_source_expect_lines": 57,
+        "original_source_count_origin": "ci_protocol audit forwarded by /root; original source bodies are not present in these local patch JSONs",
+        "candidate_expect_lines": 57,
+        "candidate_literal_lines_preserved": 57,
+        "final_expect_lines": 59,
+        "candidate_blob": "d5327a70410a6c52c64b534056939cbfc9eb9483",
+        "final_blob": "0980fe4e1230cf5856871ce925304b558d9ebdec",
+        "final_blob_matches_body": true,
+        "literal_lines_replaced": [],
+        "explicit_budgets_candidate": [],
+        "explicit_budgets_final": [],
+        "verification": "local text and multiset comparison; no test execution"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/campaign.test.ts",
+        "group": "P02",
+        "original_source_expect_lines": 55,
+        "original_source_count_origin": "ci_protocol audit forwarded by /root; original source bodies are not present in these local patch JSONs",
+        "candidate_expect_lines": 56,
+        "candidate_literal_lines_preserved": 56,
+        "final_expect_lines": 60,
+        "candidate_blob": "60693fea1a9fa238ecf57c43c73d8d113911b74a",
+        "final_blob": "3002c859033795cac7db65261a1ff44c44a61d43",
+        "final_blob_matches_body": true,
+        "literal_lines_replaced": [],
+        "explicit_budgets_candidate": [],
+        "explicit_budgets_final": [],
+        "verification": "local text and multiset comparison; no test execution"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+        "group": "P02",
+        "original_source_expect_lines": 49,
+        "original_source_count_origin": "ci_protocol audit forwarded by /root; original source bodies are not present in these local patch JSONs",
+        "candidate_expect_lines": 50,
+        "candidate_literal_lines_preserved": 50,
+        "final_expect_lines": 60,
+        "candidate_blob": "9af706b6a1ab27229fb8514e117550036a13b249",
+        "final_blob": "8ae8e056f426e128ecec38a26d646896b7c28d81",
+        "final_blob_matches_body": true,
+        "literal_lines_replaced": [],
+        "explicit_budgets_candidate": [],
+        "explicit_budgets_final": [
+          "}, 120000)"
+        ],
+        "verification": "local text and multiset comparison; no test execution"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff.test.ts",
+        "group": "P02",
+        "original_source_expect_lines": 27,
+        "original_source_count_origin": "ci_protocol audit forwarded by /root; original source bodies are not present in these local patch JSONs",
+        "candidate_expect_lines": 32,
+        "candidate_literal_lines_preserved": 32,
+        "final_expect_lines": 33,
+        "candidate_blob": "f289bde6c2b97278a9b3a7cfe1462b41b0f1ab7a",
+        "final_blob": "dc7e73e53c3fc7c67e4340597dab6afa726b52cc",
+        "final_blob_matches_body": true,
+        "literal_lines_replaced": [],
+        "explicit_budgets_candidate": [],
+        "explicit_budgets_final": [],
+        "verification": "local text and multiset comparison; no test execution"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/receipt-scope-boundary.test.ts",
+        "group": "P02",
+        "original_source_expect_lines": null,
+        "original_source_count_origin": "not applicable: new controlled/boundary or P03 accounting",
+        "candidate_expect_lines": 0,
+        "candidate_literal_lines_preserved": 0,
+        "final_expect_lines": 53,
+        "candidate_blob": null,
+        "final_blob": "d87b84bcf34b840c77a3f35bbcb8350e4a626ec2",
+        "final_blob_matches_body": true,
+        "literal_lines_replaced": [],
+        "explicit_budgets_candidate": [],
+        "explicit_budgets_final": [],
+        "verification": "local text and multiset comparison; no test execution"
+      }
+    ],
+    "amount_replacements": [
+      {
+        "before": "expect([...domainState.values()].map((value) => value.amount)).toEqual([30, 50])",
+        "after": "expect(await amounts()).toEqual([30, 50])",
+        "expected": [
+          30,
+          50
+        ],
+        "basis": "same domain amounts, now loaded through real durable LocalStore snapshots in planner/procurement order",
+        "after_present_in_final": true
+      },
+      {
+        "before": "expect([...domainState.values()].map((value) => value.amount)).toEqual([40, 50])",
+        "after": "expect(await amounts()).toEqual([40, 50])",
+        "expected": [
+          40,
+          50
+        ],
+        "basis": "same domain amounts, now loaded through real durable LocalStore snapshots in planner/procurement order",
+        "after_present_in_final": true
+      },
+      {
+        "before": "expect([...domainState.values()].map((value) => value.amount)).toEqual([40, 60])",
+        "after": "expect(await amounts()).toEqual([40, 60])",
+        "expected": [
+          40,
+          60
+        ],
+        "basis": "same domain amounts, now loaded through real durable LocalStore snapshots in planner/procurement order",
+        "after_present_in_final": true
+      }
+    ],
+    "semantic_review": [
+      "Canonical fixture uses createSfPreparedApply with real C08 state and durable domain snapshots; expected ok is preserved.",
+      "The three amount assertions keep exactly [30,50], [40,50], [40,60].",
+      "Unavailability before reservation is separate from post-reservation failure. Durable attempt, original intent, single effect/receipt, CAS, replay, reopen and before/after commit boundaries remain tested.",
+      "The historical final-callback CAS test remains unchanged and failed in R2; a passing receipt boundary does not close it."
+    ],
+    "full_closure_status": "HELD: history reader final-callback CAS needs owner patch; legacy domain journey remains a separate static held conflict"
+  },
+  "P03": {
+    "rows": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/portfolio.test.ts",
+        "group": "P03",
+        "original_source_expect_lines": null,
+        "original_source_count_origin": "not applicable: new controlled/boundary or P03 accounting",
+        "candidate_expect_lines": 40,
+        "candidate_literal_lines_preserved": 40,
+        "final_expect_lines": 44,
+        "candidate_blob": "2e103fe41fd5ba5a740247bb65a4ac13d262e7da",
+        "final_blob": "01584c151cde11035a0f5154ed1ecb77b8c0b7d8",
+        "final_blob_matches_body": true,
+        "literal_lines_replaced": [],
+        "explicit_budgets_candidate": [],
+        "explicit_budgets_final": [],
+        "verification": "local text and multiset comparison; no test execution"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/reconciliation.test.ts",
+        "group": "P03",
+        "original_source_expect_lines": null,
+        "original_source_count_origin": "not applicable: new controlled/boundary or P03 accounting",
+        "candidate_expect_lines": 69,
+        "candidate_literal_lines_preserved": 69,
+        "final_expect_lines": 69,
+        "candidate_blob": "6b2a318f73aa8adb67840958add758f151f0bade",
+        "final_blob": "599464bcbcfd1c885fd76098e3bbc061ce80d107",
+        "final_blob_matches_body": true,
+        "literal_lines_replaced": [],
+        "explicit_budgets_candidate": [],
+        "explicit_budgets_final": [],
+        "verification": "local text and multiset comparison; no test execution"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts",
+        "group": "P03",
+        "original_source_expect_lines": null,
+        "original_source_count_origin": "not applicable: new controlled/boundary or P03 accounting",
+        "candidate_expect_lines": 0,
+        "candidate_literal_lines_preserved": 0,
+        "final_expect_lines": 72,
+        "candidate_blob": null,
+        "final_blob": "47b5358c8dda3179045499388ce98871576a2aa9",
+        "final_blob_matches_body": true,
+        "literal_lines_replaced": [],
+        "explicit_budgets_candidate": [],
+        "explicit_budgets_final": [
+          "}, 180000)"
+        ],
+        "verification": "local text and multiset comparison; no test execution"
+      }
+    ],
+    "portfolio_candidate_literal_preservation": "40/40; final file contains 44 expect-lines",
+    "reconciliation_candidate_literal_preservation": "69/69; final file contains 69 expect-lines",
+    "semantic_union_expect_lines": 72,
+    "semantic_union_timeout_ms": 180000,
+    "semantic_union_budget_origin": "Present in patch-input.json postimage 47b5358c8dda3179045499388ce98871576a2aa9; no final-adjustments replacement for this file. The final retained long journey timed out at that unchanged budget in R3.",
+    "full_closure_status": "HELD: semantic union journey timed out in R3; no local or repeated long Finance run performed by this reviewer"
+  },
+  "budgets": {
+    "candidate_explicit_test_budgets_removed": [],
+    "existing_default_budgets_changed": false,
+    "history_new_final_CAS_test_timeout_ms": 120000,
+    "history_new_test_budget_note": "This is a newly appended test; no pre-existing test budget was raised.",
+    "semantic_union_timeout_ms": 180000,
+    "authorized_CI_request_timeout_ms": 120000,
+    "note": "File-level explicit timeout on the existing semantic test remains 180000; the CI command retains its authorized 120000 default."
+  },
+  "KEEP_CURRENT": {
+    "count": 25,
+    "metadata_all_expected_equals_current": true,
+    "no_preserved_path_in_patch_or_final_replacements": true,
+    "all_manifest_unchanged_in_W_flags": true,
+    "origin": "Consistency of supplied patch-input preserve manifest; not a fresh remote read by this reviewer"
+  },
+  "final_typed_receipt_discriminant": {
+    "run_id": 43650463661,
+    "W": "e539fdbf41101b5fa6703bd373fe48c21bcf8604",
+    "S": "5f4755d3a666f49f9d83331339581b2428686fb5",
+    "result": {
+      "pass": 4,
+      "fail": 0,
+      "expect_calls": 84,
+      "duration_ms": 573
+    },
+    "matches_supplied_R4_identity": true,
+    "origin": "Root report confirmed against supplied collected-evidence R4 log text; no independent CI execution or retrieval by c12_review"
+  },
+  "ci_runs_from_supplied_record": [
+    {
+      "id": "R1",
+      "run_id": 43649095824,
+      "W": "96b912ac62b1c9b1825c7c7645c9fec53f2b89dd",
+      "S": "c864c42f2886a5e4ec4baef66b605c2e74810d15",
+      "conclusion": "success",
+      "request_args": [
+        "Sucafinav1/test/product/wp13/handoff-integration.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "summary_log_excerpt": [
+        "2026-11-14T22:39:41.3774442Z  1 pass",
+        "2026-11-14T22:39:41.3774642Z  0 fail",
+        "2026-11-14T22:39:41.3774836Z  31 expect() calls"
+      ],
+      "origin": "mission43/collected-evidence.json captured by root; this reviewer read the supplied text only, did not independently fetch or run CI"
+    },
+    {
+      "id": "R2",
+      "run_id": 43649352866,
+      "W": "0528307ee1f95dbec44f07d3dd5b2e3d1b156bc5",
+      "S": "71ba4615848276bb9f49b4c561514cdddc94186b",
+      "conclusion": "failure",
+      "request_args": [
+        "Sucafinav1/test/product/wp13/handoff-c08-integration.test.ts",
+        "Sucafinav1/test/product/wp13/receipt-scope-boundary.test.ts",
+        "Sucafinav1/test/product/wp13/handoff.test.ts",
+        "Sucafinav1/test/product/wp13/campaign.test.ts",
+        "Sucafinav1/test/product/wp13/history-provenance.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "summary_log_excerpt": [
+        "2026-11-14T22:42:46.8158030Z  39 pass",
+        "2026-11-14T22:42:46.8158251Z  1 fail",
+        "2026-11-14T22:42:46.8158531Z  260 expect() calls",
+        "2026-11-14T22:42:46.8158824Z Ran 40 tests across 5 files. [7.01s]"
+      ],
+      "origin": "mission43/collected-evidence.json captured by root; this reviewer read the supplied text only, did not independently fetch or run CI"
+    },
+    {
+      "id": "R3",
+      "run_id": 43649882839,
+      "W": "524fa67c99dda72807a98f5e23ce3354c8e40197",
+      "S": "6ff519e41a661dcfb87399fa4aa83ea2c1d2213f",
+      "conclusion": "failure",
+      "request_args": [
+        "Sucafinav1/test/product/wp13/portfolio.test.ts",
+        "Sucafinav1/test/product/wp13/reconciliation.test.ts",
+        "Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "summary_log_excerpt": [
+        "2026-11-14T22:51:56.5145474Z  27 pass",
+        "2026-11-14T22:51:56.5145705Z  1 fail",
+        "2026-11-14T22:51:56.5146195Z  154 expect() calls",
+        "2026-11-14T22:51:56.5146539Z Ran 28 tests across 3 files. [180.52s]"
+      ],
+      "origin": "mission43/collected-evidence.json captured by root; this reviewer read the supplied text only, did not independently fetch or run CI"
+    },
+    {
+      "id": "R4",
+      "run_id": 43650463661,
+      "W": "e539fdbf41101b5fa6703bd373fe48c21bcf8604",
+      "S": "5f4755d3a666f49f9d83331339581b2428686fb5",
+      "conclusion": "success",
+      "request_args": [
+        "Sucafinav1/test/product/wp13/handoff-integration.test.ts",
+        "Sucafinav1/test/product/wp13/receipt-scope-boundary.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "summary_log_excerpt": [
+        "2026-11-14T22:55:27.0949628Z  4 pass",
+        "2026-11-14T22:55:27.0949865Z  0 fail",
+        "2026-11-14T22:55:27.0950214Z  84 expect() calls",
+        "2026-11-14T22:55:27.0950849Z Ran 4 tests across 2 files. [573.00ms]"
+      ],
+      "origin": "mission43/collected-evidence.json captured by root; this reviewer read the supplied text only, did not independently fetch or run CI"
+    }
+  ],
+  "legacy_domain": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-domain-integration.test.ts",
+    "status": "HELD_STATIC_INCOMPATIBILITY",
+    "executed_failure_claimed": false,
+    "reason": "Original retry oracle expects producer redispatch after a durable application reservation and no receipt; canonical execution requires original-receipt reconciliation and forbids blind redispatch. Original assertions/budgets remain preserved.",
+    "safe_request_identity_patch": "c12-review/handoff-domain-integration.request-stability.patch",
+    "safe_patch_limitation": "Stable Request identity alone does not resolve the durable-reservation retry conflict."
+  },
+  "CurrentChoice": {
+    "status": "SEPARATE_HELD_OBLIGATION",
+    "closed_by_P01_P04": false
+  },
+  "review_limits": [
+    "A source-line preservation count does not establish test success.",
+    "No original source blobs absent from the supplied files were reconstructed or fetched during this final textual review.",
+    "No local tests, typecheck, server, remote write, workflow dispatch or CI rerun was performed by this reviewer."
+  ]
+}

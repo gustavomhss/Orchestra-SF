@@ -1,0 +1,83 @@
+{
+  "schema": "sf2-wp13-domain-retry-compatibility-v1",
+  "mission": 43,
+  "review": "STATIC_NOT_RUN",
+  "target_commit": "bf81f9776b6ba5fb6267828a9a029d7e8d6f5587",
+  "target_path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-domain-integration.test.ts",
+  "target_blob": "de2315abe69288edc26d66424f676ce5dbe625ea",
+  "writer": "mission43 / WP13 test paths",
+  "contract_owner": "C12 continuation32 / WP11 with S0 acceptance; no external production mutation performed",
+  "findings": [
+    {
+      "id": "WP13-DOMAIN-REQUEST-IDENTITY",
+      "state": "SAFE_FIX_AVAILABLE_NOT_APPLIED",
+      "fact": "The fixture returns a new Request on every host.requestFor call. Current case/receipt readers require object identity to remain stable during the admitted operation.",
+      "fix": "Allocate admittedRequest once in canonicalDomains and return it from host.requestFor.",
+      "scope": "Only test fixture. All 76 original assertion lines and default test budget remain byte-identical.",
+      "payload": "handoff-domain-integration.request-stability.patch",
+      "postimage": "handoff-domain-integration.request-stability.postimage.ts",
+      "does_not_resolve": "WP13-DOMAIN-RESERVATION-RETRY-CONFLICT"
+    },
+    {
+      "id": "WP13-DOMAIN-RESERVATION-RETRY-CONFLICT",
+      "state": "HELD_INCOMPATIBLE_ORACLES_UNDER_CURRENT_DURABLE_RESERVATION",
+      "evidence_type": "Static control-flow contradiction; no executed FAIL claimed",
+      "positive_oracles": [
+        "expect(await execution(secondRequest, binding)).toEqual({ status: \"unavailable\", reason: \"domain-application-unavailable\" })",
+        "expect(domains.fault).toEqual({ procurementPrecommitArmed: false, failures: 1, stagedRevision: 1, code: \"WP13_TEST_PROCUREMENT_PRECOMMIT_STORAGE_FAILURE\" })",
+        "expect(producerCalls).toEqual([\"planner\", \"procurement\"])",
+        "expect(await domains.snapshots()).toEqual(partialDomains)",
+        "expect(await durableReceipts()).toEqual(receiptsBeforeFailure)",
+        "const secondExecution = await execution(secondRequest, binding)",
+        "if (secondExecution.status !== \"ok\") throw new Error(`Procurement canonical application: ${JSON.stringify(secondExecution)}`)",
+        "expect(producerCalls).toEqual([\"planner\", \"procurement\", \"procurement\"])"
+      ],
+      "fixture_fault_semantics": "canonicalDomains wraps the real LocalStore transactionAll. It awaits work(snapshots), detects a staged Procurement revision advance, and throws before SQLite commits. The original driver owns rollback. This is after createPreparedExecution has durably reserved the application and dispatched the producer.",
+      "current_contract": [
+        "createPreparedExecution commits applicationAttempt in namespace cases before executePrepared.",
+        "After lookup not-found, an existing applicationAttempts entry returns application-indeterminate-reconciliation-required without invoking revalidateProducer or executePrepared.",
+        "createSfPreparedApply catches a failed receipt transaction and returns domain-application-unavailable; it cannot delete the earlier application reservation.",
+        "The receipt proof and domain effect roll back together, while the earlier independent reservation remains durable.",
+        "The second identical execution sees no receipt plus the retained reservation and cannot return ok or increment producerCalls."
+      ],
+      "additional_oracle_conflict": "durableReceipts returns the complete SfStateResult, including aggregateRevision. Even when receipt records and receipt storageVersion remain unchanged, reservation increments aggregateRevision. Equality to receiptsBeforeFailure therefore contradicts the durable reserve.",
+      "rejected_workarounds": [
+        {
+          "change": "Move the fixture's failure into revalidateProducer before reservation",
+          "reason": "Changes the tested event from a dispatched domain precommit storage failure to pre-dispatch unavailability. Preserving superficial expected strings would not preserve the original oracle or its scope."
+        },
+        {
+          "change": "Run a staged dry-run mutation in revalidateProducer and count it as the dispatched producer",
+          "reason": "Adds a parallel execution/probe solely to mimic producerCalls, obscures the original boundary, and invents a new fixture protocol."
+        },
+        {
+          "change": "Delay, drop or remove applicationAttempt",
+          "reason": "Weakens the explicitly required durable reservation and makes a lost response unsafe."
+        },
+        {
+          "change": "Return or inject a failed/no-op receipt for the rolled-back transaction",
+          "reason": "Contradicts the original assertions requiring no new receipt/proof and would fabricate evidence if not emitted by a committed canonical producer."
+        },
+        {
+          "change": "Retry createSfPreparedApply directly or under a new hidden key",
+          "reason": "Redispatches the same intent without an authoritative receipt and bypasses the current executor; forbidden."
+        },
+        {
+          "change": "Change expected ok to unavailable or remove assertions",
+          "reason": "Explicitly forbidden by mission43; not performed."
+        }
+      ],
+      "safe_next": "Retain this test and its original oracles as an explicit held incompatibility. The new receipt-scope-boundary.test.ts proves the current durable-reservation contract with genuine rollback, postcommit response loss, reopen, authority checks and CAS. A change to the historical test's scenario/oracles needs an explicit owner decision; it must not be presented as preservation of the original post-dispatch retry proof.",
+      "acceptance_limit": "Do not claim this existing real-domain journey passed or was closed by the new controlled producer tests."
+    }
+  ],
+  "tests": {
+    "local": "NOT_RUN",
+    "actions": "NOT_RUN_BY_SUBAGENT",
+    "typecheck": "NOT_RUN",
+    "guards": "NOT_RUN"
+  },
+  "remote_mutation": "NONE",
+  "scope": "Only scratch draft artifacts; root owns CAS publication and all Actions scheduling."
+}
+

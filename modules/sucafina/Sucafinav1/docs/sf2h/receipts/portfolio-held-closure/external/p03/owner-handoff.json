@@ -1,0 +1,337 @@
+{
+  "schema": "mission43-p03-external-owner-handoff-v1",
+  "mission": 43,
+  "recipient": "session42",
+  "status": "P03_PARTIAL_EXTERNAL_MATERIAL_DEPENDENCY_NOT_APPLIED",
+  "prepared_at": "2026-11-14 22:58:14 UTC",
+  "finding": {
+    "id": "WP13-P03-CANONICAL-SOURCE-DEADLINE",
+    "firstObservedRun": 43649882839,
+    "guard_ms": 180000,
+    "observedAtMs": 180003,
+    "disposition": "KEEP_FAILURE_AND_BUDGET",
+    "errorAfterDeadline": "comparison-persisted-but-binding-unavailable",
+    "notIndependentSemanticFailureProven": true
+  },
+  "p03": {
+    "W": "524fa67c99dda72807a98f5e23ce3354c8e40197",
+    "W_tree": "dafb1be8b17b2c8941818af5fc793255ab73c4da",
+    "S": "6ff519e41a661dcfb87399fa4aa83ea2c1d2213f",
+    "S_tree": "d703c3aea4d9574baac8da9e58040a6b85b1586e",
+    "S_parent": "524fa67c99dda72807a98f5e23ce3354c8e40197",
+    "request_blob": "d0ce0de717e09954f2ec6770a380ccc63bf60969",
+    "run": 43649882839,
+    "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43649882839",
+    "job": 132615750915,
+    "cleanup_job": 132617040916,
+    "cleanup": "success",
+    "results": {
+      "portfolio": {
+        "pass": 16,
+        "fail": 0
+      },
+      "reconciliation": {
+        "pass": 11,
+        "fail": 0
+      },
+      "semantic_source": {
+        "pass": 0,
+        "fail": 1,
+        "reason": "deadline180000"
+      }
+    },
+    "semantic_blob": "47b5358c8dda3179045499388ce98871576a2aa9",
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "packageSelector": "packages/sucafina",
+      "runner": "bun",
+      "args": [
+        "Sucafinav1/test/product/wp13/portfolio.test.ts",
+        "Sucafinav1/test/product/wp13/reconciliation.test.ts",
+        "Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "env": {}
+    },
+    "trace_from_primary_executor": {
+      "bootstrap_ms": 68,
+      "prepare_omitted_ms": 11901,
+      "c08_cases_reads": 6818,
+      "c08_cases_inclusive_ms": 58900,
+      "host_revalidate_calls": 81858,
+      "verify_operation_calls": 2617,
+      "verify_operation_inclusive_ms": 44160,
+      "c08_cases_transactions_at_terminal": 6,
+      "categories_overlap": true
+    }
+  },
+  "source_finance34": {
+    "pr": 42,
+    "branch": "finance-resume",
+    "terminal_commit": "3117cae7e113b7aa0a8286963dcd7bc918994f3f",
+    "terminal_tree": "e59f6e24f49a9856d970789b984c33ef83711c0a",
+    "source_reobserved_same_head": true,
+    "W": "ebbc90dd3a325e2e8367f4e915ddd193a78b9220",
+    "W_tree": "e1ec7c748bd094585dfdbdf0cfbd019782ade908",
+    "S": "858caef12e133425d036867b6333496691856e9a",
+    "S_tree": "c3163564314315c35a64cf91ef9b3ea35636de32",
+    "run": 43648344709,
+    "job": 132611055130,
+    "source_reported_result": "44 PASS / 0 FAIL / 396 assertions; original journey137976.36ms; all9checkpoints",
+    "status": "SOURCE_LONG_JOURNEY_PASS_PENDING_BUNDLE_INTEGRATION",
+    "proof_does_not_transfer_to_wp13": true,
+    "original_handoff_recipient": "session33",
+    "current_mission_recipient": "session42"
+  },
+  "target_observation": {
+    "branch": "sf2-stack",
+    "head": "36521bb47f1d10de8d8bb5d376fdb5d5fa7bc8e1",
+    "tree": "d6cc2b9f562ddc390e13a0645aae510bb5bd4e13",
+    "local_store_blob": "b753e3ffbfcdc06de373388845c686afac26dec8",
+    "contract_blob": "9e9bac976b503409de65868a366f352ca1e65071",
+    "finance_test_namespace_absent": true,
+    "parent_listing_entries": 32,
+    "exact_product_preconditions_match": true,
+    "proof_scope": "READ_ONLY_MCP_BLOB_AND_DIRECTORY_OBSERVATION",
+    "reconcile_again_before_CAS": true
+  },
+  "product": {
+    "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+    "mode": "100644",
+    "disposition": "APPLY_INCREMENTAL_PATCH",
+    "targetPreimage": {
+      "gitBlob": "b753e3ffbfcdc06de373388845c686afac26dec8",
+      "sha256": "e82f739cb1845c0c7fdd90d50a5de0a62d6c3f79d4c981289b63880e7a8e5460",
+      "bytes": 25981,
+      "nonemptyLines": 469
+    },
+    "proposedTargetPostimage": {
+      "gitBlob": "e9da289bdce680f2429904c1e83dec60c39aa2a8",
+      "sha256": "4f16fe7291f763ffba129ba024e6ee0b001d05b6769d0445f049c8869fc54311",
+      "bytes": 31405,
+      "nonemptyLines": 576
+    }
+  },
+  "keep_current_contract": {
+    "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+    "mode": "100644",
+    "disposition": "KEEP_CURRENT_EXACT",
+    "sourcePostimage": {
+      "gitBlob": "b62fce6f0fb0845dbfd18cc94009c33f1586b9c5",
+      "sha256": "cb9ea7ac4610fc19cf6caa51a7339df9fd69ae181cdf638a8712779c846987c0",
+      "bytes": 4642,
+      "nonemptyLines": 111
+    },
+    "targetPreimage": {
+      "gitBlob": "9e9bac976b503409de65868a366f352ca1e65071",
+      "sha256": "809bdbfe8b1efd05e4c0a3d8b78eea726c729d1767e8c4569fa6a31e78bb1c7a",
+      "bytes": 4774,
+      "nonemptyLines": 113
+    },
+    "proposedTargetPostimage": {
+      "gitBlob": "9e9bac976b503409de65868a366f352ca1e65071",
+      "sha256": "809bdbfe8b1efd05e4c0a3d8b78eea726c729d1767e8c4569fa6a31e78bb1c7a",
+      "bytes": 4774,
+      "nonemptyLines": 113
+    }
+  },
+  "exact_test_additions": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/profile.test.ts",
+      "mode": "100644",
+      "disposition": "ADD_EXACT_W3_FILE",
+      "targetPreimage": {
+        "state": "ABSENT",
+        "gitBlob": null,
+        "sha256": null
+      },
+      "sourcePostimage": {
+        "gitBlob": "c4fc07221d7273c6f0cd50180180b362dff30cb0",
+        "sha256": "dd12d55260321f83692dc2cc2d1cdba2ce9761ad82f5abb84f131293b155f943",
+        "bytes": 12803,
+        "nonemptyLines": 195
+      },
+      "proposedTargetPostimage": {
+        "gitBlob": "c4fc07221d7273c6f0cd50180180b362dff30cb0",
+        "sha256": "dd12d55260321f83692dc2cc2d1cdba2ce9761ad82f5abb84f131293b155f943",
+        "bytes": 12803,
+        "nonemptyLines": 195
+      },
+      "sourceIdentity": "ebbc90dd3a325e2e8367f4e915ddd193a78b9220",
+      "sourceNamespaceTree": "e3e7028c4b6f79319c4907d3046a1fa2467e0714"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/isolation.test.ts",
+      "mode": "100644",
+      "disposition": "ADD_EXACT_W3_FILE",
+      "targetPreimage": {
+        "state": "ABSENT",
+        "gitBlob": null,
+        "sha256": null
+      },
+      "sourcePostimage": {
+        "gitBlob": "0492b09ed2c7ef2d56c3ef0a7138dbb922231b46",
+        "sha256": "0cdb9692fc5f2352e5db44840a6924cf12ed72a9327cf4772fd1d49f90122488",
+        "bytes": 15103,
+        "nonemptyLines": 299
+      },
+      "proposedTargetPostimage": {
+        "gitBlob": "0492b09ed2c7ef2d56c3ef0a7138dbb922231b46",
+        "sha256": "0cdb9692fc5f2352e5db44840a6924cf12ed72a9327cf4772fd1d49f90122488",
+        "bytes": 15103,
+        "nonemptyLines": 299
+      },
+      "sourceIdentity": "ebbc90dd3a325e2e8367f4e915ddd193a78b9220",
+      "sourceNamespaceTree": "e3e7028c4b6f79319c4907d3046a1fa2467e0714"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/bounds.test.ts",
+      "mode": "100644",
+      "disposition": "ADD_EXACT_W3_FILE",
+      "targetPreimage": {
+        "state": "ABSENT",
+        "gitBlob": null,
+        "sha256": null
+      },
+      "sourcePostimage": {
+        "gitBlob": "5336cce8cf2e61722d6a14c8a9665c6a983b5622",
+        "sha256": "d6d33018ae4618848a549e013f1c26a7db09d06908dc9691c26bf6fedbf964da",
+        "bytes": 6842,
+        "nonemptyLines": 133
+      },
+      "proposedTargetPostimage": {
+        "gitBlob": "5336cce8cf2e61722d6a14c8a9665c6a983b5622",
+        "sha256": "d6d33018ae4618848a549e013f1c26a7db09d06908dc9691c26bf6fedbf964da",
+        "bytes": 6842,
+        "nonemptyLines": 133
+      },
+      "sourceIdentity": "ebbc90dd3a325e2e8367f4e915ddd193a78b9220",
+      "sourceNamespaceTree": "e3e7028c4b6f79319c4907d3046a1fa2467e0714"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/scope-profile.test.ts",
+      "mode": "100644",
+      "disposition": "ADD_EXACT_W3_FILE",
+      "targetPreimage": {
+        "state": "ABSENT",
+        "gitBlob": null,
+        "sha256": null
+      },
+      "sourcePostimage": {
+        "gitBlob": "f63caa1f12c5efe8cbfc12067734f4c3c1a30c8b",
+        "sha256": "22218690257220bf7a48e59d31494c5a32ea8feab12cc1957fb066153b16645d",
+        "bytes": 13480,
+        "nonemptyLines": 215
+      },
+      "proposedTargetPostimage": {
+        "gitBlob": "f63caa1f12c5efe8cbfc12067734f4c3c1a30c8b",
+        "sha256": "22218690257220bf7a48e59d31494c5a32ea8feab12cc1957fb066153b16645d",
+        "bytes": 13480,
+        "nonemptyLines": 215
+      },
+      "sourceIdentity": "ebbc90dd3a325e2e8367f4e915ddd193a78b9220",
+      "sourceNamespaceTree": "e3e7028c4b6f79319c4907d3046a1fa2467e0714"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+      "mode": "100644",
+      "disposition": "ADD_EXACT_W3_FILE",
+      "targetPreimage": {
+        "state": "ABSENT",
+        "gitBlob": null,
+        "sha256": null
+      },
+      "sourcePostimage": {
+        "gitBlob": "8a81665075aab6f8afa37105d3174d698f18bb9e",
+        "sha256": "762e27c9e868f44fc5ac6c0d0758240e99ad5d67ee2025883d8fc7ced43c5d31",
+        "bytes": 15837,
+        "nonemptyLines": 311
+      },
+      "proposedTargetPostimage": {
+        "gitBlob": "8a81665075aab6f8afa37105d3174d698f18bb9e",
+        "sha256": "762e27c9e868f44fc5ac6c0d0758240e99ad5d67ee2025883d8fc7ced43c5d31",
+        "bytes": 15837,
+        "nonemptyLines": 311
+      },
+      "sourceIdentity": "ebbc90dd3a325e2e8367f4e915ddd193a78b9220",
+      "sourceNamespaceTree": "e3e7028c4b6f79319c4907d3046a1fa2467e0714"
+    }
+  ],
+  "owner_package": {
+    "directory": "finance34-owner",
+    "complete_patch": {
+      "path": "finance34-owner/composed-with-tests.NOT_APPLIED.patch.txt",
+      "git_blob": "4a90b0e422bc628e654111bbc8612cfd796e1a34",
+      "sha256": "f483c07f69b56beb93a600c1ed84fd3100d0f40bb7897de5c05f7b3f4885c1e1",
+      "bytes": 76415,
+      "remote_url": "https://github.com/gustavomhss/Orchestra-SF/blob/3117cae7e113b7aa0a8286963dcd7bc918994f3f/modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/bundle/composed-with-tests.NOT_APPLIED.patch.txt"
+    },
+    "product_patch": {
+      "path": "finance34-owner/product.NOT_APPLIED.patch.txt",
+      "git_blob": "12f4774b0dec057bfb0a56a95c51360abfbba478",
+      "sha256": "e06bc8d5cb98e950597813b3c020acbd9df5de2befec4920dceedd5c2953ec19",
+      "bytes": 8961
+    },
+    "handoff": {
+      "path": "finance34-owner/HANDOFF-FINAL.md",
+      "git_blob": "5296e6d757fc6313412660dfa0bce49d0093cadf",
+      "sha256": "da4bc8db4c257010689f02d552efe61aeb00fbdc8f86a9982ffbe3f3388beae1",
+      "bytes": 22190,
+      "remote_url": "https://github.com/gustavomhss/Orchestra-SF/blob/3117cae7e113b7aa0a8286963dcd7bc918994f3f/modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/HANDOFF-FINAL.md"
+    },
+    "manifest": {
+      "path": "finance34-owner/manifest.json",
+      "git_blob": "b17c689990e433a2703f60ec3ebf26971ac0a0b7",
+      "sha256": "acf720b09f9f7c8babf348f692ba524f3f3ee8e6e8a5fc31f8a9cae09218a183",
+      "bytes": 33902
+    },
+    "residual": {
+      "path": "finance34-owner/residual-boundary.json",
+      "git_blob": "efe3dec143eab1944c5cd0bf9555a395b5f8e036"
+    },
+    "copied_without_modification": true,
+    "patch_hashes_verified_against_manifest": true,
+    "applied": false,
+    "tested_on_target": false,
+    "applied_in_validation": false
+  },
+  "causality": {
+    "observed": "Old local-store materialization dependency is present; producer source34 isolated/measured it and published complete compatible patch.",
+    "inference": "It plausibly contributes to WP13 read/replay cost, but cannot be declared sufficient for this consumer's budget.",
+    "existing_wrappers": [
+      "semantic test266–274 compareScenarios/simulateScenario",
+      "semantic test297–343 compareSelected",
+      "renewal-operation-verifier19–34,86–102"
+    ],
+    "test_only_fix_demonstrated": false,
+    "no_cached_trust_or_digests": true,
+    "no_write_wrapped_in_read_scope": true
+  },
+  "rerun_conditions": [
+    "session42 current authority and expected-head/preimages reconciled",
+    "Actual incremental Finance34 intake under42 authority, preserving contract and all five exact owner tests",
+    "New material W qualified through short authorized deduplicated Actions selection",
+    "Only then WP13 semantic consumer with all assertions and original budgets; no unchanged rerun and no Finance-long rerun requested by43",
+    "Any inherited PASS remains attached to its actual W/S unless material identity permits verified reuse"
+  ],
+  "untouched": {
+    "Finance34": true,
+    "Finance_algorithms": true,
+    "shared_host": true,
+    "normative_contracts": true,
+    "budgets": true,
+    "all_assertions": true,
+    "source_histories": true
+  },
+  "separate_pending": {
+    "CurrentChoice": "HELD_NOT_CLOSED_BY_P01_P04",
+    "native": "NOT_RUN",
+    "global_acceptance": "NOT_GRANTED"
+  },
+  "diagnosis": "DIAGNOSIS-P03.md",
+  "remote_writes": false,
+  "local_product_execution": false,
+  "workflow_dispatches": 0
+}

@@ -1,0 +1,92 @@
+{
+  "id": "R4",
+  "run_id": 43650463661,
+  "job_id": 132617547329,
+  "target_commit": "36521bb47f1d10de8d8bb5d376fdb5d5fa7bc8e1",
+  "source_product_commit": "63f952c06baf3be82464e2b320fbdf4c8c3c9ce8",
+  "W": "e539fdbf41101b5fa6703bd373fe48c21bcf8604",
+  "W_tree": "a7fb647a02e25bf2b18243e213e2a7ed4446bbf8",
+  "S": "5f4755d3a666f49f9d83331339581b2428686fb5",
+  "S_tree": "d0762155edb971a81a8693c2dc4e63552e86c616",
+  "request_blob": "cae9c10f297c629f89e9a2a527858d52f14f9755",
+  "branch": "ci-run-linux-astra-wp13-e539fdbf-cae9c10f-a1",
+  "status": "PASS",
+  "scope": "component Actions; controlled authority fixtures; real canonical C08/LocalStore where used",
+  "workflow": ".github/workflows/test-ci.yml",
+  "workflow_id": 416464764,
+  "run_attempt": 1,
+  "event": "push",
+  "created_at": "2026-11-14T22:53:55Z",
+  "completed_at": "2026-11-14T22:55:35Z",
+  "conclusion": "success",
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43650463661",
+  "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43650463661/job/132617547329",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "packageSelector": "packages/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/wp13/handoff-integration.test.ts",
+      "Sucafinav1/test/product/wp13/receipt-scope-boundary.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "request_identity": {
+    "git_blob": "cae9c10f297c629f89e9a2a527858d52f14f9755",
+    "sha256": "94a0f9384e4049f6c187831df6ae40c84173fbe7b6b5ac27bec897745023bde1",
+    "bytes": 267
+  },
+  "observed": {
+    "pass": 4,
+    "fail": 0,
+    "expect_calls": 84,
+    "duration_seconds": 0.573,
+    "by_file": {
+      "receipt-scope-boundary.test.ts": "3 PASS",
+      "handoff-integration.test.ts": "1 PASS"
+    },
+    "meaning": "Final typed canonical receipt fixtures: rollback/reopen, lost-response recovery, single rejected CAS receipt, pre-dispatch unavailability."
+  },
+  "nonce": "25fc3a62348263b78998fee2683d4665",
+  "omni_verdict": "2026-11-14T22:55:27.0948385Z omni positive control [25fc3a62348263b78998fee2683d4665]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+  "omni_proof": "NOT_APPLICABLE; no native spawn/installed resident acceptance",
+  "artifacts": {
+    "total_count": 0,
+    "artifacts": []
+  },
+  "artifact_explanation": "Existing Bun lane has no generic artifact upload; complete fetched job log is archived here. Zero artifacts is observed, not an omitted artifact claim.",
+  "log": {
+    "path": "logs/R4.log.txt",
+    "git_blob": "c67cd93dcf15487f2562139c562e51e4b5f1fc58",
+    "sha256": "9e93b60b856c8bab9634944f86e382c8e6e9485cb382c340c3b99e05d600ca3e",
+    "bytes": 71517
+  },
+  "excerpt": "logs/R4.excerpt.txt",
+  "envelope": "S has W as product parent and adds only .ci-run.json; compare verified remotely before dispatch.",
+  "deduplication": "One matching run and run_attempt1. Root serialized WP13 product selections and inspected concurrent requests before dispatch.",
+  "budgets": "Original per-test budgets retained; request --timeout120000 does not override the semantic test's explicit180000ms timeout.",
+  "limitations": [
+    "No local tests were run.",
+    "Not proof of installed UI/native/process restart, global AM01-AM06, CurrentChoice or missing business costs.",
+    "Individual PASS within failed aggregate is scoped; overall failures remain FAIL."
+  ],
+  "logical_owner": "S4-C / mission43",
+  "writer_lease": "portfolio-held-browser43",
+  "consumer_session": 42,
+  "reviewer": "root log inspection; read-only supporting reviews recorded separately",
+  "source_paths": [
+    "Sucafinav1/test/product/wp13/handoff-integration.test.ts",
+    "Sucafinav1/test/product/wp13/receipt-scope-boundary.test.ts"
+  ],
+  "not_applicable_or_not_established": {
+    "native_session_id,mcp_server_generation,mcp_operation,profile_id,profile_version,skill_ids,skill_versions,skill_digests": "These were focused repository Bun fixtures; no installed Orchestra native/profile/skill session was exercised.",
+    "effective_model": "No model-driven business action in these tests; assistant identity is not a product execution model witness.",
+    "runtime_build_sha,atlas_engine_baseline,atlas_boundary_version,scanner_binary_version": "No installed binary/Atlas/scanner consumer was qualified; repository input W/S is recorded instead.",
+    "business_schema_version,contract_version,contract_versions": "Repository-pinned source at W; no independently published runtime/schema version asserted.",
+    "case_id,case_version,case_incarnation,domain_call_id,access_revision": "Multiple controlled cases in selected source files. Source and full logs retained; no global single identity asserted.",
+    "criterion_id,entity_id": "Many-to-many mapping in criteria68.json; focused evidence does not make any full criterion PASS."
+  }
+}

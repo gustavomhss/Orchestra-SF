@@ -1,0 +1,126 @@
+2026-11-14T22:47:22.5651208Z   key: Linux-X64-modules-v4-aae4ae6338ceda7ccd75de032d7ff87daba6bcf039d25a710aeb926654749a4f
+2026-11-14T22:47:22.5651768Z   enableCrossOsArchive: false
+2026-11-14T22:47:22.5652144Z   fail-on-cache-miss: false
+2026-11-14T22:47:22.5652467Z   lookup-only: false
+2026-11-14T22:47:22.5652773Z ##[endgroup]
+
+2026-11-14T22:47:22.7911866Z   enableCrossOsArchive: false
+2026-11-14T22:47:22.7912310Z   fail-on-cache-miss: false
+2026-11-14T22:47:22.7912685Z   lookup-only: false
+2026-11-14T22:47:22.7912987Z ##[endgroup]
+2026-11-14T22:47:25.3167355Z       exit 0
+2026-11-14T22:47:25.3167637Z     fi
+2026-11-14T22:47:25.3168126Z     echo "::warning::bun install attempt $attempt failed on Windows; retrying from an empty cache"
+2026-11-14T22:47:25.3168622Z   done
+2026-11-14T22:47:25.3168883Z   exit 1
+2026-11-14T22:48:10.1604912Z   key: ripgrep-archive-ripgrep-15.2.0-x86_64-unknown-linux-musl-33e15bcf1624b25cdd2a55813a47a2f95dbe126268203e76aa6a585d1e7b149c
+2026-11-14T22:48:10.1605714Z   enableCrossOsArchive: false
+2026-11-14T22:48:10.1605989Z   fail-on-cache-miss: false
+2026-11-14T22:48:10.1606504Z   lookup-only: false
+2026-11-14T22:48:10.1606733Z ##[endgroup]
+2026-11-14T22:48:10.3869158Z mkdir -p "$ARCHIVES"
+2026-11-14T22:48:10.3869828Z # https only, redirects included. --retry covers timeouts and HTTP 408, 429, 500, 502, 503 and 504 (GitHub's
+2026-11-14T22:48:10.3870804Z # release CDN has answered 504 for this file); a 404 or another client error fails at once.
+2026-11-14T22:48:10.3871386Z curl --fail --silent --show-error --location --proto '=https' --proto-redir '=https' \
+2026-11-14T22:48:10.3871945Z   --retry 6 --retry-connrefused --retry-delay 5 --connect-timeout 20 --max-time 120 \
+2026-11-14T22:48:10.7001734Z ##[group]Run # Hosted ubuntu-24.04 sometimes cannot resolve azure.archive.ubuntu.com. apt reads that
+2026-11-14T22:48:10.7002393Z # Hosted ubuntu-24.04 sometimes cannot resolve azure.archive.ubuntu.com. apt reads that
+2026-11-14T22:48:10.7003014Z # name from apt-mirrors.txt. Fall back to archive.ubuntu.com only after the fetch fails.
+2026-11-14T22:48:10.7003449Z install_sandbox() {
+2026-11-14T22:48:10.7003713Z   sudo apt-get update -qq
+2026-11-14T22:48:24.8732623Z   key: omni-bin-v2-Linux-X64-97518c5742e25a49884d3106c8ac013f1765c5fc5eee51b24c8c175f8f5f5189
+2026-11-14T22:48:24.8733185Z   enableCrossOsArchive: false
+2026-11-14T22:48:24.8733479Z   fail-on-cache-miss: false
+2026-11-14T22:48:24.8733761Z   lookup-only: false
+2026-11-14T22:48:24.8733994Z env:
+2026-11-14T22:48:55.9399996Z nonce=$(node -e "process.stdout.write(require('node:crypto').randomBytes(16).toString('hex'))")
+2026-11-14T22:48:55.9401014Z echo "ORCHESTRA_OMNI_CONTROL_NONCE=$nonce" >> "$GITHUB_ENV"
+2026-11-14T22:48:55.9401561Z echo "omni control nonce: $nonce"
+2026-11-14T22:48:55.9419547Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T22:48:55.9420029Z env:
+2026-11-14T22:48:55.9422442Z   HUGR_OMNI_SUPERVISOR: /home/runner/work/Orchestra-SF/Orchestra-SF/native/omni/target/release/hugr-omni-supervisor
+2026-11-14T22:48:55.9423220Z ##[endgroup]
+2026-11-14T22:48:55.9801037Z omni control nonce: d600b4cd9f69e44803feebaeb2f99206
+2026-11-14T22:48:55.9831001Z ##[group]Run if [ "$RUNNER" = playwright ]; then
+2026-11-14T22:48:55.9831529Z if [ "$RUNNER" = playwright ]; then
+2026-11-14T22:48:55.9838527Z const args = ['run', 'test:e2e:local', ...playwrightArgs(request), '--trace', 'retain-on-failure']
+2026-11-14T22:48:55.9839138Z const listed = spawnSync('bun', [...args, '--list', '--reporter=json'], { cwd, env, encoding: 'utf8' })
+2026-11-14T22:48:55.9839834Z if (listed.error || listed.status !== 0) throw new Error(`playwright selection failed: ${listed.error ?? listed.stderr}`)
+2026-11-14T22:48:55.9840768Z writeFileSync('test-ci-evidence/playwright-selection.json', listed.stdout)
+2026-11-14T22:48:55.9841203Z const report = JSON.parse(listed.stdout)
+2026-11-14T22:48:55.9842316Z validateSelection(request.args.map((file) => path.resolve(cwd, file)),
+2026-11-14T22:48:55.9842864Z   report.suites.filter(hasTests).map((suite) => path.resolve(report.config.rootDir, suite.file)))
+2026-11-14T22:48:55.9843466Z // The flaky reporter lists tests that passed only on a retry in the log and the job summary.
+2026-11-14T22:48:55.9843975Z const flaky = path.resolve(cwd, 'e2e/utils/flaky-reporter.ts')
+2026-11-14T22:48:55.9844506Z const reporters = statSync(flaky, { throwIfNoEntry: false }) ? `html,line,json,${flaky}` : 'html,line,json'
+2026-11-14T22:48:55.9845662Z   env: { ...env, PLAYWRIGHT_HTML_OUTPUT_DIR: path.resolve(cwd, 'e2e/playwright-report'),
+2026-11-14T22:48:55.9846245Z     PLAYWRIGHT_JSON_OUTPUT_NAME: path.resolve('test-ci-evidence/playwright-runtime.json') } })
+2026-11-14T22:48:55.9846893Z if (run.error || run.status === null) throw new Error(`playwright execution failed: ${run.error ?? run.signal}`)
+2026-11-14T22:48:55.9847361Z process.exit(run.status)
+2026-11-14T22:48:55.9847602Z NODE
+2026-11-14T22:48:55.9849964Z   bun)
+2026-11-14T22:48:55.9850295Z     # solid-sonner's compiled dist/index.js imports `use` from solid-js/web, a
+2026-11-14T22:48:55.9851244Z     # browser-only export that fails under bun's default (`node`) conditions.
+2026-11-14T22:48:55.9851762Z     # The `solid` condition routes solid-sonner to its untranspiled dist/index.jsx
+2026-11-14T22:48:55.9852287Z     # source, which does not make that import. test-ci bypasses the package's own
+2026-11-14T22:48:55.9852813Z     # `test:unit` script (which already passes `--conditions=solid`), so reproduce it.
+2026-11-14T22:48:55.9853340Z     # test-browser/ files follow `test:browser` instead: solid-js has no `solid`
+2026-11-14T22:48:55.9853856Z     # export, so under `solid` it falls through to `node` and loads its server build,
+2026-11-14T22:48:56.0165527Z 
+2026-11-14T22:48:56.0166555Z Sucafinav1/test/product/wp13/reconciliation.test.ts:
+2026-11-14T22:48:56.1017111Z (pass) reconciliation preserves the chosen composition and WP11 partial/retry receipts without writing [48.17ms]
+2026-11-14T22:48:56.1367720Z (pass) reconciliation retains independent evidence and command revisions while binding effects and receipts [35.03ms]
+2026-11-14T22:48:56.1539059Z (pass) reconciliation sends a source-bound price observation to the WP14 classifier while retaining original null and currency [17.09ms]
+2026-11-14T22:48:56.1655805Z (pass) a global criterion change cannot attribute a different component's price to an unchanged component [11.72ms]
+2026-11-14T22:48:56.1678802Z (pass) reconciliation refuses a substituted historical selection even when its numbers match the choice [2.37ms]
+2026-11-14T22:48:56.1722905Z (pass) reconciliation refuses receipt substitution, revoked sources and a different current principal [4.36ms]
+2026-11-14T22:48:56.1865273Z (pass) reconciliation rejects a changed ledger, borrowed callback mutation and a changed read during egress [14.22ms]
+2026-11-14T22:48:56.2016675Z (pass) reconciliation does not reinterpret another source or missing data as a material price signal [15.07ms]
+2026-11-14T22:48:56.2399474Z (pass) reconciliation refuses authority mutation after the final successful revalidation [38.29ms]
+2026-11-14T22:48:56.3036053Z (pass) HTTP reconciliation preserves the admitted selection when authorization mutates the caller request [63.61ms]
+2026-11-14T22:48:56.3275846Z (pass) HTTP reconciliation fences authority from ingress before the core captures it [23.97ms]
+2026-11-14T22:48:56.3276312Z 
+2026-11-14T22:48:56.3276553Z Sucafinav1/test/product/wp13/portfolio.test.ts:
+2026-11-14T22:48:56.3318875Z (pass) portfolio composition > keeps a missing cost category conditioned despite a satisfied known subtotal [2.06ms]
+2026-11-14T22:48:56.3326297Z (pass) portfolio composition > rejects duplicate operations and declares an exploration limit [0.76ms]
+2026-11-14T22:48:56.3332176Z (pass) portfolio composition > does not return results after candidate revocation [0.60ms]
+2026-11-14T22:48:56.3336912Z (pass) portfolio composition > detects an in-place candidate mutation at egress [0.42ms]
+2026-11-14T22:48:56.3344937Z (pass) portfolio composition > preserves scenario observations when the domain reuses a result object [0.82ms]
+2026-11-14T22:48:56.3351286Z (pass) portfolio composition > does not expose a result when scenario coverage is revoked before egress [0.49ms]
+2026-11-14T22:48:56.3359266Z (pass) portfolio composition > egress validation retains admitted values and rejects a validator that mutates its observed proof [0.88ms]
+2026-11-14T22:48:56.3361896Z (pass) portfolio composition > does not claim eligibility if a required constraint was not assessed [0.32ms]
+2026-11-14T22:48:56.3366674Z (pass) portfolio composition > a definitive failed deadline stays infeasible when financial coverage is pending [0.43ms]
+2026-11-14T22:48:56.3377577Z (pass) portfolio composition > a definitive failed deadline preserves unavailable financial evidence [1.09ms]
+2026-11-14T22:48:56.3390768Z (pass) portfolio composition > preserves the domain's failed ceiling after coverage resolves [1.31ms]
+2026-11-14T22:48:56.3395267Z (pass) portfolio composition > does not promote a restricted scenario to complete eligibility [0.46ms]
+2026-11-14T22:48:56.3399107Z (pass) portfolio composition > reports an explicitly pending interaction cost [0.39ms]
+2026-11-14T22:48:56.3402007Z (pass) portfolio composition > refuses a domain result that repeats a shared component [0.28ms]
+2026-11-14T22:48:56.3408722Z (pass) portfolio composition > retains validated canonical analysis and rejects a mismatched scenario reference [0.65ms]
+2026-11-14T22:48:56.3433401Z (pass) canonical C10 assessment preserves the failed ceiling after coverage resolves [2.45ms]
+2026-11-14T22:48:56.3433895Z 
+2026-11-14T22:48:56.3434182Z Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts:
+2026-11-14T22:49:08.2671436Z [wp11-fixture-trace] {"label":"renewal-choice-history","phase":"prepare:transition-omitted:complete","elapsedMs":11901,"budgetMs":180000,"counts":{"c08.read.cases":{"calls":426,"elapsedMs":4621,"maximumMs":20},"host.revalidate":{"calls":2962,"elapsedMs":45,"maximumMs":2},"operation-source":{"calls":846,"elapsedMs":45,"maximumMs":2},"operation-coverage":{"calls":462,"elapsedMs":6,"maximumMs":1},"c08.read.preferences":{"calls":96,"elapsedMs":1039,"maximumMs":20},"c08.transaction.preferences":{"calls":3,"elapsedMs":615,"maximumMs":568},"classified-source":{"calls":39,"elapsedMs":2,"maximumMs":1},"classified-coverage":{"calls":41,"elapsedMs":1910,"maximumMs":77},"c08.transaction.cases":{"calls":5,"elapsedMs":233,"maximumMs":57},"planner.verifySourceOnly":{"calls":96,"elapsedMs":267,"maximumMs":7},"planner.verifyOperation":{"calls":96,"elapsedMs":1674,"maximumMs":24},"planner.verifySourceProjection":{"calls":192,"elapsedMs":204,"maximumMs":6}},"stateBytes":484469,"transactionsBytes":104018,"casesBytes":53809,"resultBytes":111960,"transactions":9,"cases":1,"results":5}
+2026-11-14T22:51:56.3694705Z [wp11-fixture-trace] {"label":"renewal-choice-history","phase":"prepare:transition-omitted:complete","elapsedMs":180003,"budgetMs":180000,"status":"deadline-exceeded","counts":{"c08.read.cases":{"calls":6818,"elapsedMs":58880,"maximumMs":36},"host.revalidate":{"calls":81858,"elapsedMs":6016,"maximumMs":22},"operation-source":{"calls":22134,"elapsedMs":1220,"maximumMs":8},"operation-coverage":{"calls":11666,"elapsedMs":204,"maximumMs":13},"c08.read.preferences":{"calls":96,"elapsedMs":1039,"maximumMs":20},"c08.transaction.preferences":{"calls":3,"elapsedMs":615,"maximumMs":568},"classified-source":{"calls":39,"elapsedMs":2,"maximumMs":1},"classified-coverage":{"calls":41,"elapsedMs":1910,"maximumMs":77},"c08.transaction.cases":{"calls":6,"elapsedMs":279,"maximumMs":57},"planner.verifySourceOnly":{"calls":2617,"elapsedMs":6356,"maximumMs":12},"planner.verifyOperation":{"calls":2617,"elapsedMs":44164,"maximumMs":36},"planner.verifySourceProjection":{"calls":5234,"elapsedMs":4805,"maximumMs":8}}}
+2026-11-14T22:51:56.3732196Z (fail) semantic union: portfolio replays the USD 240000 ceiling and USD 20000 advantage in the same chosen case when training is confirmed [180009.58ms]
+2026-11-14T22:51:56.3733101Z   ^ this test timed out after 180000ms.
+2026-11-14T22:51:56.3760238Z 
+2026-11-14T22:51:56.3761026Z # Unhandled error between tests
+2026-11-14T22:51:56.3765620Z 50 |     if (omitted.status !== "ok") throw new Error(`Omitted-training portfolio: ${JSON.stringify(omitted)}`)
+2026-11-14T22:51:56.3766341Z                                                 ^
+2026-11-14T22:51:56.3767208Z error: Omitted-training portfolio: {"status":"stale","reason":"comparison-persisted-but-binding-unavailable"}
+2026-11-14T22:51:56.3768668Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts:50:44)
+2026-11-14T22:51:56.3769698Z -------------------------------
+2026-11-14T22:51:56.3770225Z 
+2026-11-14T22:51:56.5140474Z 
+2026-11-14T22:51:56.5141975Z omni positive control [d600b4cd9f69e44803feebaeb2f99206]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.
+2026-11-14T22:51:56.5143029Z 1 tests failed:
+2026-11-14T22:51:56.5144147Z (fail) semantic union: portfolio replays the USD 240000 ceiling and USD 20000 advantage in the same chosen case when training is confirmed [180009.58ms]
+2026-11-14T22:51:56.5144979Z   ^ this test timed out after 180000ms.
+2026-11-14T22:51:56.5145272Z 
+2026-11-14T22:51:56.5145474Z  27 pass
+2026-11-14T22:51:56.5145705Z  1 fail
+2026-11-14T22:51:56.5145942Z  1 error
+2026-11-14T22:51:56.5146195Z  154 expect() calls
+2026-11-14T22:51:56.5146539Z Ran 28 tests across 3 files. [180.52s]
+2026-11-14T22:51:56.5328396Z ##[error]Process completed with exit code 1.
+2026-11-14T22:51:56.5974669Z Post job cleanup.

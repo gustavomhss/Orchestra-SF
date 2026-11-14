@@ -1,0 +1,96 @@
+{
+  "id": "R3",
+  "run_id": 43649882839,
+  "job_id": 132615750915,
+  "target_commit": "36521bb47f1d10de8d8bb5d376fdb5d5fa7bc8e1",
+  "source_product_commit": "df851effcb0cfd09660782d21d61a3dfa30cc410",
+  "W": "524fa67c99dda72807a98f5e23ce3354c8e40197",
+  "W_tree": "dafb1be8b17b2c8941818af5fc793255ab73c4da",
+  "S": "6ff519e41a661dcfb87399fa4aa83ea2c1d2213f",
+  "S_tree": "d703c3aea4d9574baac8da9e58040a6b85b1586e",
+  "request_blob": "d0ce0de717e09954f2ec6770a380ccc63bf60969",
+  "branch": "ci-run-linux-astra-wp13-524fa67c-d0ce0de7-a1",
+  "status": "FAIL",
+  "scope": "component Actions; controlled authority fixtures; real canonical C08/LocalStore where used",
+  "workflow": ".github/workflows/test-ci.yml",
+  "workflow_id": 416464764,
+  "run_attempt": 1,
+  "event": "push",
+  "created_at": "2026-11-14T22:47:02Z",
+  "completed_at": "2026-11-14T22:52:03Z",
+  "conclusion": "failure",
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43649882839",
+  "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43649882839/job/132615750915",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "packageSelector": "packages/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/wp13/portfolio.test.ts",
+      "Sucafinav1/test/product/wp13/reconciliation.test.ts",
+      "Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "request_identity": {
+    "git_blob": "d0ce0de717e09954f2ec6770a380ccc63bf60969",
+    "sha256": "06f9834c907264be3f3ed3b6c23adaa92672b8bd3b2f7bfe8e3c8509c7ad83be",
+    "bytes": 319
+  },
+  "observed": {
+    "pass": 27,
+    "fail": 1,
+    "errors": 1,
+    "expect_calls": 154,
+    "duration_seconds": 180.52,
+    "by_file": {
+      "portfolio.test.ts": "16 PASS",
+      "reconciliation.test.ts": "11 PASS",
+      "semantic-union-source-scenario.test.ts": "FAIL timeout180000ms"
+    },
+    "failure": "Semantic scenario180009.58ms. Late comparison-persisted-but-binding-unavailable appears after deadline; it is not an independent demonstrated binding defect. No unchanged long rerun."
+  },
+  "nonce": "d600b4cd9f69e44803feebaeb2f99206",
+  "omni_verdict": "2026-11-14T22:51:56.5141975Z omni positive control [d600b4cd9f69e44803feebaeb2f99206]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+  "omni_proof": "NOT_APPLICABLE; no native spawn/installed resident acceptance",
+  "artifacts": {
+    "total_count": 0,
+    "artifacts": []
+  },
+  "artifact_explanation": "Existing Bun lane has no generic artifact upload; complete fetched job log is archived here. Zero artifacts is observed, not an omitted artifact claim.",
+  "log": {
+    "path": "logs/R3.log.txt",
+    "git_blob": "406df6f9e65a50c4387efd2732873bae749370ef",
+    "sha256": "dff9b95d5fc6d6623888d6689a28da29cce6ce550b8c3922615615bbc12ed5a3",
+    "bytes": 77658
+  },
+  "excerpt": "logs/R3.excerpt.txt",
+  "envelope": "S has W as product parent and adds only .ci-run.json; compare verified remotely before dispatch.",
+  "deduplication": "One matching run and run_attempt1. Root serialized WP13 product selections and inspected concurrent requests before dispatch.",
+  "budgets": "Original per-test budgets retained; request --timeout120000 does not override the semantic test's explicit180000ms timeout.",
+  "limitations": [
+    "No local tests were run.",
+    "Not proof of installed UI/native/process restart, global AM01-AM06, CurrentChoice or missing business costs.",
+    "Individual PASS within failed aggregate is scoped; overall failures remain FAIL."
+  ],
+  "logical_owner": "S4-C / mission43",
+  "writer_lease": "portfolio-held-browser43",
+  "consumer_session": 42,
+  "reviewer": "root log inspection; read-only supporting reviews recorded separately",
+  "source_paths": [
+    "Sucafinav1/test/product/wp13/portfolio.test.ts",
+    "Sucafinav1/test/product/wp13/reconciliation.test.ts",
+    "Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts"
+  ],
+  "not_applicable_or_not_established": {
+    "native_session_id,mcp_server_generation,mcp_operation,profile_id,profile_version,skill_ids,skill_versions,skill_digests": "These were focused repository Bun fixtures; no installed Orchestra native/profile/skill session was exercised.",
+    "effective_model": "No model-driven business action in these tests; assistant identity is not a product execution model witness.",
+    "runtime_build_sha,atlas_engine_baseline,atlas_boundary_version,scanner_binary_version": "No installed binary/Atlas/scanner consumer was qualified; repository input W/S is recorded instead.",
+    "business_schema_version,contract_version,contract_versions": "Repository-pinned source at W; no independently published runtime/schema version asserted.",
+    "case_id,case_version,case_incarnation,domain_call_id,access_revision": "Multiple controlled cases in selected source files. Source and full logs retained; no global single identity asserted.",
+    "criterion_id,entity_id": "Many-to-many mapping in criteria68.json; focused evidence does not make any full criterion PASS."
+  }
+}

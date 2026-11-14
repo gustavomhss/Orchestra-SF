@@ -1,0 +1,427 @@
+{
+  "schema": "sf2h-mission43-selective-patch-v1",
+  "mission": 43,
+  "repository": "gustavomhss/Orchestra-SF",
+  "source_branch": "astra-wp13",
+  "source_pr": 37,
+  "consumer_session": 42,
+  "status": "IMPLEMENTED_PARTIALLY_PROVEN_HELD",
+  "target_apply_status": "NOT_APPLIED_BY_MISSION43",
+  "target_commit": "217b4295e2aeb00bc2f4accb9fb893451b9795e9",
+  "target_tree": "e6a09da0acdf041a8b757e92e20bdca9d2b8c81c",
+  "source_product_commit": "f767ef44e0a165ca6dc5fc4590b0970a68a7379e",
+  "source_product_tree": "80d425d327c5a4beb8f0dba1e45a12277e73849c",
+  "composed_W": "0f74d4ba0646eadfef6ac975d0073344623447d2",
+  "composed_tree": "927ef9f29a4b52ad8a88c8ee1721937f27e8df5b",
+  "tested_compositions": [
+    {
+      "id": "R1",
+      "W": "96b912ac62b1c9b1825c7c7645c9fec53f2b89dd",
+      "S": "c864c42f2886a5e4ec4baef66b605c2e74810d15",
+      "run_id": 43649095824
+    },
+    {
+      "id": "R2",
+      "W": "0528307ee1f95dbec44f07d3dd5b2e3d1b156bc5",
+      "S": "71ba4615848276bb9f49b4c561514cdddc94186b",
+      "run_id": 43649352866
+    },
+    {
+      "id": "R3",
+      "W": "524fa67c99dda72807a98f5e23ce3354c8e40197",
+      "S": "6ff519e41a661dcfb87399fa4aa83ea2c1d2213f",
+      "run_id": 43649882839
+    },
+    {
+      "id": "R4",
+      "W": "e539fdbf41101b5fa6703bd373fe48c21bcf8604",
+      "S": "5f4755d3a666f49f9d83331339581b2428686fb5",
+      "run_id": 43650463661
+    }
+  ],
+  "rules": [
+    "Selective patch only; do not merge the old source branch wholesale into the target.",
+    "Reobserve target ref, exact preimages and absent paths; if drift affects inputs, recompose before CAS.",
+    "P01's six target blobs and the 19 KEEP_CURRENT target blobs are untouched.",
+    "A runtime PASS belongs to its recorded W/S and selected inputs, not to a later documentation commit.",
+    "The patch implements P02-P04; P02 history and P03 semantic closure remain held by recorded failures.",
+    "External owner patches are inert artifacts and are not part of this owned product patch.",
+    "CurrentChoice remains a separate held obligation."
+  ],
+  "entries": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-integration.test.ts",
+      "group": "P02",
+      "mode": "100644",
+      "pre": {
+        "git_blob": "9fefc7bc347bfa123fc718fa9b0000d82dfc8a80",
+        "sha256": "76dca64b41b1b0a4b353566fa7f4f97e083cb92bc37644abfeeb509a8bed7b12",
+        "bytes": 18608,
+        "artifact": "preimages/modules/sucafina/Sucafinav1/test/product/wp13/handoff-integration.test.ts.txt"
+      },
+      "post": {
+        "git_blob": "6eec9c363eaa957aec1776cec3284c67424abcb2",
+        "sha256": "3d4a90f62be013ca4cc58900c01219782068c7165b05017269b5359a69c7f6a3",
+        "bytes": 22154,
+        "artifact": "postimages/modules/sucafina/Sucafinav1/test/product/wp13/handoff-integration.test.ts.txt"
+      },
+      "precondition": "EXACT_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-c08-integration.test.ts",
+      "group": "P02",
+      "mode": "100644",
+      "pre": {
+        "git_blob": "d5327a70410a6c52c64b534056939cbfc9eb9483",
+        "sha256": "e78f7f8875f619e53bbdba0e709fb09a6dac0dd5fc5aafaa2ad0c40a0f2bd157",
+        "bytes": 31986,
+        "artifact": "preimages/modules/sucafina/Sucafinav1/test/product/wp13/handoff-c08-integration.test.ts.txt"
+      },
+      "post": {
+        "git_blob": "0980fe4e1230cf5856871ce925304b558d9ebdec",
+        "sha256": "f97424cb4d5aa8f3b4f3ae46042a1ab4500d51eeadb380e6c99edbf16bacf21c",
+        "bytes": 32910,
+        "artifact": "postimages/modules/sucafina/Sucafinav1/test/product/wp13/handoff-c08-integration.test.ts.txt"
+      },
+      "precondition": "EXACT_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/campaign.test.ts",
+      "group": "P02",
+      "mode": "100644",
+      "pre": {
+        "git_blob": "60693fea1a9fa238ecf57c43c73d8d113911b74a",
+        "sha256": "4d137ed8c0ce0688abf41ea99c2096e32df8da226caa293ceb0ad6fcde6adfba",
+        "bytes": 24215,
+        "artifact": "preimages/modules/sucafina/Sucafinav1/test/product/wp13/campaign.test.ts.txt"
+      },
+      "post": {
+        "git_blob": "3002c859033795cac7db65261a1ff44c44a61d43",
+        "sha256": "85820f65695e30cc6aaa41c079105b17d31cb0d16ed14496b5af7d5c827f6b9b",
+        "bytes": 25387,
+        "artifact": "postimages/modules/sucafina/Sucafinav1/test/product/wp13/campaign.test.ts.txt"
+      },
+      "precondition": "EXACT_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+      "group": "P02",
+      "mode": "100644",
+      "pre": {
+        "git_blob": "9af706b6a1ab27229fb8514e117550036a13b249",
+        "sha256": "68316167a1acf76214b76aabe2f33c3abce615a737e17f6c4d49c50fad0ba7a5",
+        "bytes": 29416,
+        "artifact": "preimages/modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts.txt"
+      },
+      "post": {
+        "git_blob": "8ae8e056f426e128ecec38a26d646896b7c28d81",
+        "sha256": "be8ae1e2a86bf99e4641fdd973be7b0f9b921a191d08f19c938efa427b3d09a4",
+        "bytes": 32610,
+        "artifact": "postimages/modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts.txt"
+      },
+      "precondition": "EXACT_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff.test.ts",
+      "group": "P02",
+      "mode": "100644",
+      "pre": {
+        "git_blob": "f289bde6c2b97278a9b3a7cfe1462b41b0f1ab7a",
+        "sha256": "18d3af81483b6753e410b2bbe521732b7fcec57ed63b808e126457ff13d8dd65",
+        "bytes": 15784,
+        "artifact": "preimages/modules/sucafina/Sucafinav1/test/product/wp13/handoff.test.ts.txt"
+      },
+      "post": {
+        "git_blob": "dc7e73e53c3fc7c67e4340597dab6afa726b52cc",
+        "sha256": "cd8f28e8bf5e0ff71339a2f58cd004933a3dfdab28df529a59588dfc210376d4",
+        "bytes": 15811,
+        "artifact": "postimages/modules/sucafina/Sucafinav1/test/product/wp13/handoff.test.ts.txt"
+      },
+      "precondition": "EXACT_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/portfolio.test.ts",
+      "group": "P03",
+      "mode": "100644",
+      "pre": {
+        "git_blob": "2e103fe41fd5ba5a740247bb65a4ac13d262e7da",
+        "sha256": "9ed10566b2c36a564c6b88313153df2b4dc869c66723563d0c3b91319b6a9dd0",
+        "bytes": 17609,
+        "artifact": "preimages/modules/sucafina/Sucafinav1/test/product/wp13/portfolio.test.ts.txt"
+      },
+      "post": {
+        "git_blob": "01584c151cde11035a0f5154ed1ecb77b8c0b7d8",
+        "sha256": "df3b478d21e9c8e4307d8b3f4e5be6995390ac102a45ea8bb36484563c0969ff",
+        "bytes": 21089,
+        "artifact": "postimages/modules/sucafina/Sucafinav1/test/product/wp13/portfolio.test.ts.txt"
+      },
+      "precondition": "EXACT_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/reconciliation.test.ts",
+      "group": "P03",
+      "mode": "100644",
+      "pre": {
+        "git_blob": "6b2a318f73aa8adb67840958add758f151f0bade",
+        "sha256": "a0088fb0607598b1f47210aedbc1bfea240babbf380a60243c3f389f7371ed4b",
+        "bytes": 33398,
+        "artifact": "preimages/modules/sucafina/Sucafinav1/test/product/wp13/reconciliation.test.ts.txt"
+      },
+      "post": {
+        "git_blob": "599464bcbcfd1c885fd76098e3bbc061ce80d107",
+        "sha256": "33377f4a6d208077b5aa469137550b3ecf95b64a87e530010d62dc1e3d5847a8",
+        "bytes": 34195,
+        "artifact": "postimages/modules/sucafina/Sucafinav1/test/product/wp13/reconciliation.test.ts.txt"
+      },
+      "precondition": "EXACT_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts",
+      "group": "P03",
+      "mode": "100644",
+      "pre": null,
+      "post": {
+        "git_blob": "47b5358c8dda3179045499388ce98871576a2aa9",
+        "sha256": "bf37a61e3e919f54b06edfc1d8808c13e5206f983f34b06661466f05770ce0b9",
+        "bytes": 43332,
+        "artifact": "postimages/modules/sucafina/Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts.txt"
+      },
+      "precondition": "ABSENT"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/receipt-scope-boundary.test.ts",
+      "group": "P02",
+      "mode": "100644",
+      "pre": null,
+      "post": {
+        "git_blob": "d87b84bcf34b840c77a3f35bbcb8350e4a626ec2",
+        "sha256": "48c79138e3b16625de003e20134a7b32fd17d459a7cdbe876a08e729c95a6b57",
+        "bytes": 23190,
+        "artifact": "postimages/modules/sucafina/Sucafinav1/test/product/wp13/receipt-scope-boundary.test.ts.txt"
+      },
+      "precondition": "ABSENT"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/README.md",
+      "group": "P04",
+      "mode": "100644",
+      "pre": {
+        "git_blob": "4bdad097bb82f3dc96a74090bacc567835295680",
+        "sha256": "f5f6ccbe9e8a3c0fc13fc39cf751e6343f761b1d2a42b0be6459e2a4df03e772",
+        "bytes": 13723,
+        "artifact": "preimages/modules/sucafina/Sucafinav1/product/portfolio/README.md.txt"
+      },
+      "post": {
+        "git_blob": "485d09879552f3bf653cfd180f9b0f47b3e861b1",
+        "sha256": "2c54dd9dce8eddebaa510500c700eb15e8eeaae53ca00e29f077f92dbc5ae6b9",
+        "bytes": 19186,
+        "artifact": "postimages/modules/sucafina/Sucafinav1/product/portfolio/README.md.txt"
+      },
+      "precondition": "EXACT_BLOB"
+    }
+  ],
+  "preserved": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/handoff.ts",
+      "obligation": "KEEP_CURRENT",
+      "expected_admitted_blob": "7a236670dcec3ba93a316c7e41db59daefbaaca4",
+      "current_blob": "7a236670dcec3ba93a316c7e41db59daefbaaca4",
+      "unchanged_in_W": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+      "obligation": "KEEP_CURRENT",
+      "expected_admitted_blob": "452877ad2c82835fe883ea05dbf15f80f84f51c5",
+      "current_blob": "452877ad2c82835fe883ea05dbf15f80f84f51c5",
+      "unchanged_in_W": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/result-store.ts",
+      "obligation": "KEEP_CURRENT",
+      "expected_admitted_blob": "ee4e54c4b7761109ebddc1a4a2f6e6becea4ba48",
+      "current_blob": "ee4e54c4b7761109ebddc1a4a2f6e6becea4ba48",
+      "unchanged_in_W": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-store.ts",
+      "obligation": "KEEP_CURRENT",
+      "expected_admitted_blob": "d2528cc98eabfea36025f25cdb0cb2bf9c54c42c",
+      "current_blob": "d2528cc98eabfea36025f25cdb0cb2bf9c54c42c",
+      "unchanged_in_W": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-v6.ts",
+      "obligation": "KEEP_CURRENT",
+      "expected_admitted_blob": "f675fdca70dd48caa4635cb1542b85bbc25d204c",
+      "current_blob": "f675fdca70dd48caa4635cb1542b85bbc25d204c",
+      "unchanged_in_W": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity.ts",
+      "obligation": "KEEP_CURRENT",
+      "expected_admitted_blob": "247a0cdc456f386475f53765e6da2e1db156eba8",
+      "current_blob": "247a0cdc456f386475f53765e6da2e1db156eba8",
+      "unchanged_in_W": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/threshold-proof.ts",
+      "obligation": "KEEP_CURRENT",
+      "expected_admitted_blob": "ce7d267d126992bc1a0796e2b64e5dc1c87bb12b",
+      "current_blob": "ce7d267d126992bc1a0796e2b64e5dc1c87bb12b",
+      "unchanged_in_W": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/analysis-recovery.test.ts",
+      "obligation": "KEEP_CURRENT",
+      "expected_admitted_blob": "d85a362360301686d2c5ca72f3938551c119b38a",
+      "current_blob": "d85a362360301686d2c5ca72f3938551c119b38a",
+      "unchanged_in_W": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-preview.test.ts",
+      "obligation": "KEEP_CURRENT",
+      "expected_admitted_blob": "3d7a0cc397b6afd0877779fdac642bc50e5c40a6",
+      "current_blob": "3d7a0cc397b6afd0877779fdac642bc50e5c40a6",
+      "unchanged_in_W": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage.test.ts",
+      "obligation": "KEEP_CURRENT",
+      "expected_admitted_blob": "775a63f5cd25a68542508f6f8fa154fe7324a2bc",
+      "current_blob": "775a63f5cd25a68542508f6f8fa154fe7324a2bc",
+      "unchanged_in_W": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/persistence-recovery.test.ts",
+      "obligation": "KEEP_CURRENT",
+      "expected_admitted_blob": "63f262129fb37adf74013f58ea5fc56bb4ecd79e",
+      "current_blob": "63f262129fb37adf74013f58ea5fc56bb4ecd79e",
+      "unchanged_in_W": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/persistent-store.test.ts",
+      "obligation": "KEEP_CURRENT",
+      "expected_admitted_blob": "4d89fefdf9a4477b6ab2d8188837a79846ef4efd",
+      "current_blob": "4d89fefdf9a4477b6ab2d8188837a79846ef4efd",
+      "unchanged_in_W": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/planner-sensitivity-boundary.test.ts",
+      "obligation": "KEEP_CURRENT",
+      "expected_admitted_blob": "e20e97e54d60c156952fbc43fab356cf479221de",
+      "current_blob": "e20e97e54d60c156952fbc43fab356cf479221de",
+      "unchanged_in_W": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-fixture.ts",
+      "obligation": "KEEP_CURRENT",
+      "expected_admitted_blob": "5b868fdcb3cc9371a6592b000f33ba0b357329c5",
+      "current_blob": "5b868fdcb3cc9371a6592b000f33ba0b357329c5",
+      "unchanged_in_W": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-read-scope-fixture.ts",
+      "obligation": "KEEP_CURRENT",
+      "expected_admitted_blob": "d337b1cd730c3ecd4efb40329551a27e8d932e08",
+      "current_blob": "d337b1cd730c3ecd4efb40329551a27e8d932e08",
+      "unchanged_in_W": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-read-scope.test.ts",
+      "obligation": "KEEP_CURRENT",
+      "expected_admitted_blob": "56d4f7342696245fae89fd00d15a037dd9cb33a4",
+      "current_blob": "56d4f7342696245fae89fd00d15a037dd9cb33a4",
+      "unchanged_in_W": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+      "obligation": "KEEP_CURRENT",
+      "expected_admitted_blob": "dbbe5f7dc64d3accee536b38ae4196034562cf8f",
+      "current_blob": "dbbe5f7dc64d3accee536b38ae4196034562cf8f",
+      "unchanged_in_W": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/source-scenario.test.ts",
+      "obligation": "KEEP_CURRENT",
+      "expected_admitted_blob": "d5ad83048d49c79d7f83bd13b4f6c81e3d4ca31c",
+      "current_blob": "d5ad83048d49c79d7f83bd13b4f6c81e3d4ca31c",
+      "unchanged_in_W": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/term-defer-boundary.test.ts",
+      "obligation": "KEEP_CURRENT",
+      "expected_admitted_blob": "edb551580d49c817141d3a850be4af36b0a7d647",
+      "current_blob": "edb551580d49c817141d3a850be4af36b0a7d647",
+      "unchanged_in_W": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+      "obligation": "P01_ALREADY_INTEGRATED",
+      "expected_admitted_blob": "9d29046dd40adffc88985be5e1b1603b64491129",
+      "current_blob": "9d29046dd40adffc88985be5e1b1603b64491129",
+      "unchanged_in_W": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+      "obligation": "P01_ALREADY_INTEGRATED",
+      "expected_admitted_blob": "254e22ea35f5b422b59c8f0549c8f12d1d4fb492",
+      "current_blob": "254e22ea35f5b422b59c8f0549c8f12d1d4fb492",
+      "unchanged_in_W": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-disclosure.test.ts",
+      "obligation": "P01_ALREADY_INTEGRATED",
+      "expected_admitted_blob": "ca583dd473bdfb13299dfe470e301a6a113c0b73",
+      "current_blob": "ca583dd473bdfb13299dfe470e301a6a113c0b73",
+      "unchanged_in_W": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity.test.ts",
+      "obligation": "P01_ALREADY_INTEGRATED",
+      "expected_admitted_blob": "0444570a0a961c979f75388fb0708812f98497e5",
+      "current_blob": "0444570a0a961c979f75388fb0708812f98497e5",
+      "unchanged_in_W": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-v6.test.ts",
+      "obligation": "P01_ALREADY_INTEGRATED",
+      "expected_admitted_blob": "a22b4625c8375d7c88037e1c66c1a0fee17e5c83",
+      "current_blob": "a22b4625c8375d7c88037e1c66c1a0fee17e5c83",
+      "unchanged_in_W": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+      "obligation": "P01_ALREADY_INTEGRATED",
+      "expected_admitted_blob": "7025de0601768ccc0bec76d8e0675882dee7cda9",
+      "current_blob": "7025de0601768ccc0bec76d8e0675882dee7cda9",
+      "unchanged_in_W": true
+    }
+  ],
+  "patches": [
+    {
+      "path": "patches/P02.patch",
+      "git_blob": "22eb8c97ff71573993846c0e98ba9ab2538fa5f6",
+      "sha256": "da1e9f1657a9206ec54ce98cbc7076a5087a760b678e9d31265887230b15a299",
+      "bytes": 58632
+    },
+    {
+      "path": "patches/P03.patch",
+      "git_blob": "6f5ce1ab68feffca39d1e8f4deae21f30b51d64a",
+      "sha256": "41f333f5cd5b6982981a1f5899ce1df255a67734c1eb05abc806ed669dfc160c",
+      "bytes": 53288
+    },
+    {
+      "path": "patches/P04.patch",
+      "git_blob": "feb20e4fad8db6269b929450b97d38945ca7c1cc",
+      "sha256": "b8d70aefb887fb62062c613aa124f41f5c64bbade3d3ce3e5696b51c7679b3ca",
+      "bytes": 7422
+    },
+    {
+      "path": "patches/P02-P04-complete.patch",
+      "git_blob": "90b218902d2f58f66611ba2b43404273fe4496da",
+      "sha256": "71c50b685b8eff13a307bea13be2d3bf6c0ba6d004059f594fa9dfcc07098d18",
+      "bytes": 119342
+    }
+  ],
+  "textual_validation": "All pre/post UTF-8 bytes recompute their fetched Git blob IDs; unified hunks generated from complete images. No product code or tests executed locally."
+}
