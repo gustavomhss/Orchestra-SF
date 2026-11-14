@@ -1,0 +1,730 @@
+{
+  "schema": "astra-interface-preservation-audit-v2",
+  "audit_kind": "Metadata preservation review of increments authored by this group; not independent acceptance, product execution or native evidence.",
+  "recorded_at": "2026-11-14T10:59:16.963116+00:00",
+  "repository": "gustavomhss/Orchestra-SF",
+  "published": {
+    "pr": 31,
+    "branch": "astra-interface",
+    "head": "0c3d98dd1263a305ce294c78ad5939cdda110a78",
+    "tree": "5c236ef687871149e9150630a16c4ce0ac70c2a7",
+    "parent": "01633144c83fb1080e6d985ef226b8db2aa131cb",
+    "base_branch": "sf2-stack",
+    "base_head": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+    "base_tree": "acf3b722ad55c090bef8e9dc2b3fac2d9ad570af",
+    "local_head_matches": true,
+    "working_tree_status_before_report": [
+      " M docs/guides/sucafina-workbench.md",
+      " M modules/sucafina/Sucafinav1/product/interface/http.ts",
+      "?? modules/sucafina/Sucafinav1/product/ui/work-review-context.ts",
+      "?? modules/sucafina/Sucafinav1/test/product/wp01/work-review-context-render.test.ts"
+    ],
+    "working_tree_scope": "The audit compares the immutable published W10 Git objects. While the report was being written, WP02 began the separately authorized W11 work-review-context slice; pending worktree paths are recorded for transparency and excluded from this W10 audit."
+  },
+  "method": [
+    "GitHub MCP PR25/PR21/PR31, four branch refs and exact commit trees; no Actions endpoints.",
+    "Local Git ancestry, ls-tree mode/type/blob, numstat and textual diffs at fixed revisions.",
+    "All ten foreign input source blobs re-fetched through GitHub MCP at exact published commits.",
+    "SHA256 computed over approved campaign bytes at immutable plan commit.",
+    "No product code evaluated; no checks/tests/builds, remote writes, branch mutations, CI dispatch or polling."
+  ],
+  "remote_reconciliation": {
+    "prs": [
+      {
+        "number": 25,
+        "state": "open",
+        "head": "6f4360bf0bdd444a19a7d4f97e18306ae7618b6f",
+        "branch": "astra-wp01",
+        "base": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+        "baseBranch": "sf2-stack",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/pull/25",
+        "updatedAt": "2026-11-14T01:20:52Z"
+      },
+      {
+        "number": 21,
+        "state": "open",
+        "head": "6ce14163ec6de963b50ada3d610aa8161176adee",
+        "branch": "astra-wp02",
+        "base": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+        "baseBranch": "sf2-stack",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/pull/21",
+        "updatedAt": "2026-11-14T03:04:31Z"
+      },
+      {
+        "number": 31,
+        "state": "open",
+        "head": "0c3d98dd1263a305ce294c78ad5939cdda110a78",
+        "branch": "astra-interface",
+        "base": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+        "baseBranch": "sf2-stack",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/pull/31",
+        "updatedAt": "2026-11-14T10:52:12Z"
+      }
+    ],
+    "branches": [
+      {
+        "branch": "sf2-stack",
+        "ref": "refs/heads/sf2-stack",
+        "sha": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+        "type": "commit"
+      },
+      {
+        "branch": "astra-interface",
+        "ref": "refs/heads/astra-interface",
+        "sha": "0c3d98dd1263a305ce294c78ad5939cdda110a78",
+        "type": "commit"
+      },
+      {
+        "branch": "astra-wp01",
+        "ref": "refs/heads/astra-wp01",
+        "sha": "6f4360bf0bdd444a19a7d4f97e18306ae7618b6f",
+        "type": "commit"
+      },
+      {
+        "branch": "astra-wp02",
+        "ref": "refs/heads/astra-wp02",
+        "sha": "6ce14163ec6de963b50ada3d610aa8161176adee",
+        "type": "commit"
+      }
+    ],
+    "commits": [
+      {
+        "sha": "6f4360bf0bdd444a19a7d4f97e18306ae7618b6f",
+        "tree": "514e64f2d5bf25cb2bc2cf0caeeeb2526d77e2b6",
+        "parents": [
+          "61348f2279d301a5f9f8e28c562208ce3b8160ee"
+        ],
+        "url": "https://github.com/gustavomhss/Orchestra-SF/commit/6f4360bf0bdd444a19a7d4f97e18306ae7618b6f"
+      },
+      {
+        "sha": "6ce14163ec6de963b50ada3d610aa8161176adee",
+        "tree": "4a4d1736b051785f22493ba43d116020821e73be",
+        "parents": [
+          "e349d3f2d2dc8920f30a27d5968e6724e49ebe07"
+        ],
+        "url": "https://github.com/gustavomhss/Orchestra-SF/commit/6ce14163ec6de963b50ada3d610aa8161176adee"
+      },
+      {
+        "sha": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+        "tree": "acf3b722ad55c090bef8e9dc2b3fac2d9ad570af",
+        "parents": [
+          "85bb786559c7001fdb810a844d1bbc7f82263b98"
+        ],
+        "url": "https://github.com/gustavomhss/Orchestra-SF/commit/6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0"
+      },
+      {
+        "sha": "0c3d98dd1263a305ce294c78ad5939cdda110a78",
+        "tree": "5c236ef687871149e9150630a16c4ce0ac70c2a7",
+        "parents": [
+          "01633144c83fb1080e6d985ef226b8db2aa131cb"
+        ],
+        "url": "https://github.com/gustavomhss/Orchestra-SF/commit/0c3d98dd1263a305ce294c78ad5939cdda110a78"
+      }
+    ]
+  },
+  "prior_audit": {
+    "path": "analysis/w7-preservation-audit.json",
+    "git_blob": "30c338d9d01dca524acee60964d6873508e6918a",
+    "sha256": "c46d9d6a2f4a78131358d0dd10b141bbbc487532f91616ff4c8eb9248c019521",
+    "published_w7_head": "5886df8aaedb4db179f336e474e123c30a1d1193",
+    "unchanged_by_this_audit": true
+  },
+  "recovery_manifest": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/recovery.json",
+    "blob": "c268498408c94b1d201ea5d9bf0009cdbc7f8f80",
+    "sha256": "d536e5352f546bbc3865593c8c8e40a4f0cea65d7923ca5a70fc2dc4fd7b1cf8",
+    "same_blob_as_w7": true,
+    "prior_verification_head": "50906b86da953f9e6fb24f989c51db0fc69496c1",
+    "extended_through": "0c3d98dd1263a305ce294c78ad5939cdda110a78",
+    "reference": "The published recovery.json at this repository path; no separate publishedrecovery.json exists in the workspace."
+  },
+  "recovered_history": {
+    "recovery_head": "23bfad4341008f33fde050bd0d66506fb4035d20",
+    "recovery_tree": "1e1e8813894664f5c4a5f25d39d0d0b3a99c69bb",
+    "recovery_parents": [
+      "6ce14163ec6de963b50ada3d610aa8161176adee",
+      "6f4360bf0bdd444a19a7d4f97e18306ae7618b6f"
+    ],
+    "sources": [
+      {
+        "pr": 25,
+        "branch": "astra-wp01",
+        "head": "6f4360bf0bdd444a19a7d4f97e18306ae7618b6f",
+        "tree": "514e64f2d5bf25cb2bc2cf0caeeeb2526d77e2b6",
+        "recovered_commit_count": 10,
+        "recovered_commits": [
+          "b0fa725b835149e222d48bd023b8899311abaefd",
+          "78b235769e3aaa123d1defe78b8108320f897378",
+          "e210916c1d0be2ee3602c25d02e4c10c68e79862",
+          "b11321bb51585913472d8b26c12b7ba5109860a8",
+          "989abf6a03b864fc59f302cc188cc8c6b00c0bbf",
+          "0a0cfd2d74f0c3d094c5503c5bd5a4e9c8aa33fe",
+          "0fa990d8c9ae44d06118493c75bf123cdccab2bd",
+          "516f1d15f76e5e340609bd4a4b905e3a5f877cab",
+          "61348f2279d301a5f9f8e28c562208ce3b8160ee",
+          "6f4360bf0bdd444a19a7d4f97e18306ae7618b6f"
+        ],
+        "missing_ancestors": [],
+        "historical_receipt_count": 10
+      },
+      {
+        "pr": 21,
+        "branch": "astra-wp02",
+        "head": "6ce14163ec6de963b50ada3d610aa8161176adee",
+        "tree": "4a4d1736b051785f22493ba43d116020821e73be",
+        "recovered_commit_count": 14,
+        "recovered_commits": [
+          "855c17f66fd71964d88a63ca53fd90240159eb08",
+          "abe64592bb08858b55495b9f4710289bd357d64a",
+          "38d340a8857b96904f7246320091c14c051f1929",
+          "4c36e6fc6e69e4dd1e98b5d0d5c2e50962ccfe80",
+          "ae06ed61b7dff57aaf10f7ffdcc348a355374fbb",
+          "df31a6a47f70b72deb0d5d5f39ee156454447387",
+          "5a0f1acf9fa2cdc0171cf3f5178b61ab3bcd8d49",
+          "c59a01042298be0f5a5aaa33d47afc04ab3ab534",
+          "276cf02edb8a4801cbc0127b08289a7203d689f7",
+          "58b8e7c0dcc97809100987fbaaa70990fa832d10",
+          "23cefe55cdae8431eaf6efb6a3212901a58482ce",
+          "d9829f0532f3f72a2b6b1e3af9ffce832b0e7969",
+          "e349d3f2d2dc8920f30a27d5968e6724e49ebe07",
+          "6ce14163ec6de963b50ada3d610aa8161176adee"
+        ],
+        "missing_ancestors": [],
+        "historical_receipt_count": 22
+      }
+    ],
+    "unique_recovered_commits": 24,
+    "all_recovered_commits_are_ancestors": true,
+    "historical_receipts": 32,
+    "receipt_comparison_revisions": "Original PR source head, recovery merge, W7 and W10; expected mode/type/blob from unchanged recovery manifest.",
+    "receipt_comparisons": 128,
+    "receipt_mode_type_blob_mismatches": [],
+    "original_branch_heads_match_manifest_via_mcp": true,
+    "base_head_matches_manifest_via_mcp": true
+  },
+  "immutable_plan": {
+    "head": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/campaign.json",
+    "blob": "71b56906f8bb190c4d568f60c7511ce1ff63d5f3",
+    "bytes": 1503706,
+    "expected_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+    "observed_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+    "exact": true,
+    "handoff_head": "a3d29d011ba3607a57914701300f09117a3e2de9",
+    "present_in_recovery_branch": false,
+    "present_in_w10_branch": false,
+    "scope": "Immutable external reference; not copied into or edited in the implementation branch."
+  },
+  "ownership": {
+    "base_to_recovery_changed_paths": 185,
+    "base_to_w10_changed_paths": 271,
+    "recovery_to_w10": {
+      "from": "23bfad4341008f33fde050bd0d66506fb4035d20",
+      "to": "0c3d98dd1263a305ce294c78ad5939cdda110a78",
+      "paths": 110,
+      "additions": 27412,
+      "deletions": 2238,
+      "categories": {
+        "scoped_ci_workflow": {
+          "paths": 1,
+          "additions": 45,
+          "deletions": 0
+        },
+        "exact_foreign_input": {
+          "paths": 10,
+          "additions": 2677,
+          "deletions": 1829
+        },
+        "owned_guide": {
+          "paths": 1,
+          "additions": 14,
+          "deletions": 0
+        },
+        "new_receipt_or_finding": {
+          "paths": 57,
+          "additions": 19848,
+          "deletions": 0
+        },
+        "recovery_manifest": {
+          "paths": 1,
+          "additions": 376,
+          "deletions": 0
+        },
+        "owned_interface_or_dashboard": {
+          "paths": 12,
+          "additions": 882,
+          "deletions": 247
+        },
+        "owned_test_or_fixture": {
+          "paths": 28,
+          "additions": 3570,
+          "deletions": 162
+        }
+      }
+    },
+    "w9_to_w10": {
+      "from": "01633144c83fb1080e6d985ef226b8db2aa131cb",
+      "to": "0c3d98dd1263a305ce294c78ad5939cdda110a78",
+      "paths": 17,
+      "additions": 7181,
+      "deletions": 9,
+      "categories": {
+        "new_receipt_or_finding": {
+          "paths": 13,
+          "additions": 7117,
+          "deletions": 0
+        },
+        "exact_foreign_input": {
+          "paths": 1,
+          "additions": 9,
+          "deletions": 4
+        },
+        "owned_interface_or_dashboard": {
+          "paths": 1,
+          "additions": 9,
+          "deletions": 3
+        },
+        "owned_test_or_fixture": {
+          "paths": 2,
+          "additions": 46,
+          "deletions": 2
+        }
+      }
+    },
+    "post_recovery_commits": [
+      {
+        "head": "a037a3350f373d9be471e15fae35aa1f1a54372b",
+        "parents": [
+          "23bfad4341008f33fde050bd0d66506fb4035d20"
+        ]
+      },
+      {
+        "head": "903bcee2e007809f7614a7fff39dd5019f7f7733",
+        "parents": [
+          "a037a3350f373d9be471e15fae35aa1f1a54372b"
+        ]
+      },
+      {
+        "head": "e5afff327dc64735bbd8a646124570a0c97a9c6b",
+        "parents": [
+          "903bcee2e007809f7614a7fff39dd5019f7f7733"
+        ]
+      },
+      {
+        "head": "b13b28a8c8843b1c1b8cd81a3c7e627e700287de",
+        "parents": [
+          "e5afff327dc64735bbd8a646124570a0c97a9c6b"
+        ]
+      },
+      {
+        "head": "86b2ba372d187d229820015d8311a0dd54a2c5d5",
+        "parents": [
+          "b13b28a8c8843b1c1b8cd81a3c7e627e700287de"
+        ]
+      },
+      {
+        "head": "a29565f763ddd90bc5bc3b8d298afb47ad84008d",
+        "parents": [
+          "86b2ba372d187d229820015d8311a0dd54a2c5d5"
+        ]
+      },
+      {
+        "head": "50906b86da953f9e6fb24f989c51db0fc69496c1",
+        "parents": [
+          "a29565f763ddd90bc5bc3b8d298afb47ad84008d"
+        ]
+      },
+      {
+        "head": "5886df8aaedb4db179f336e474e123c30a1d1193",
+        "parents": [
+          "50906b86da953f9e6fb24f989c51db0fc69496c1"
+        ]
+      },
+      {
+        "head": "770ca62aa97f66deb70126a32d9819ddf7f32833",
+        "parents": [
+          "5886df8aaedb4db179f336e474e123c30a1d1193"
+        ]
+      },
+      {
+        "head": "01633144c83fb1080e6d985ef226b8db2aa131cb",
+        "parents": [
+          "770ca62aa97f66deb70126a32d9819ddf7f32833"
+        ]
+      },
+      {
+        "head": "0c3d98dd1263a305ce294c78ad5939cdda110a78",
+        "parents": [
+          "01633144c83fb1080e6d985ef226b8db2aa131cb"
+        ]
+      }
+    ],
+    "post_recovery_merge_commits": [],
+    "all_post_recovery_changed_paths_count": 110,
+    "intermediate_only_paths": [],
+    "unclassified_paths": [],
+    "deleted_paths": [],
+    "protected_groups": [
+      "approved sf2h-plan",
+      "engines",
+      "Azure/deploy",
+      "identity",
+      "financial policy",
+      "Protocol/Server HttpApi"
+    ],
+    "protected_post_recovery_history_changes": [],
+    "protected_base_to_w10_net_changes": [],
+    "foreign_control_integration": "Recovery retained; eleven later commits form one linear parent chain rooted at recovery. No foreign branch merge or sf2-control branch operation in this audit.",
+    "foreign_inputs_count": 10,
+    "foreign_inputs": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/outputs.ts",
+        "source_commit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+        "source_blob": "4db2e631bd83ccda67442824557881c2ed990c92",
+        "manifest_expected_blob": "4db2e631bd83ccda67442824557881c2ed990c92",
+        "w10": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "4db2e631bd83ccda67442824557881c2ed990c92"
+        },
+        "exact": true,
+        "method": "GitHub MCP fetch_file at published pin and local W10 ls-tree"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/analysis-verifier-documents.ts",
+        "source_commit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+        "source_blob": "0c8ba8bcafd5d85c6d5adadc9907b786cd2ac695",
+        "manifest_expected_blob": "0c8ba8bcafd5d85c6d5adadc9907b786cd2ac695",
+        "w10": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "0c8ba8bcafd5d85c6d5adadc9907b786cd2ac695"
+        },
+        "exact": true,
+        "method": "GitHub MCP fetch_file at published pin and local W10 ls-tree"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decision-memory/case-recall.ts",
+        "source_commit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+        "source_blob": "fdc378d5f251511f66bb256b78240f472f1d566c",
+        "manifest_expected_blob": "fdc378d5f251511f66bb256b78240f472f1d566c",
+        "w10": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "fdc378d5f251511f66bb256b78240f472f1d566c"
+        },
+        "exact": true,
+        "method": "GitHub MCP fetch_file at published pin and local W10 ls-tree"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/change-proposal-store.ts",
+        "source_commit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+        "source_blob": "d7f4199cc20f8e02290107bc64034d3956b42692",
+        "manifest_expected_blob": "d7f4199cc20f8e02290107bc64034d3956b42692",
+        "w10": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "d7f4199cc20f8e02290107bc64034d3956b42692"
+        },
+        "exact": true,
+        "method": "GitHub MCP fetch_file at published pin and local W10 ls-tree"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/context.ts",
+        "source_commit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+        "source_blob": "ae2d6b73a24970ba23d21e17694b54fd32d1a700",
+        "manifest_expected_blob": "ae2d6b73a24970ba23d21e17694b54fd32d1a700",
+        "w10": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "ae2d6b73a24970ba23d21e17694b54fd32d1a700"
+        },
+        "exact": true,
+        "method": "GitHub MCP fetch_file at published pin and local W10 ls-tree"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/output-schemas.ts",
+        "source_commit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+        "source_blob": "0d9fc51d26a0ca726d32e74605b555f871d99af6",
+        "manifest_expected_blob": "0d9fc51d26a0ca726d32e74605b555f871d99af6",
+        "w10": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "0d9fc51d26a0ca726d32e74605b555f871d99af6"
+        },
+        "exact": true,
+        "method": "GitHub MCP fetch_file at published pin and local W10 ls-tree"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/human-authority.ts",
+        "source_commit": "7c7e5b086a9de405cd3f8e18e8d631af55cf0979",
+        "source_blob": "78529a89586ce9f22d2b2cdd2cd0b1c61d20668a",
+        "manifest_expected_blob": "78529a89586ce9f22d2b2cdd2cd0b1c61d20668a",
+        "w10": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "78529a89586ce9f22d2b2cdd2cd0b1c61d20668a"
+        },
+        "exact": true,
+        "method": "GitHub MCP fetch_file at published pin and local W10 ls-tree"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/personal-view-authority.ts",
+        "source_commit": "ff7a99753d1fd1bc8b68b4f2642fed26e3cadbdf",
+        "source_blob": "ab705bc54819ab4c6a41d83b6c6170ada2859a9d",
+        "manifest_expected_blob": "ab705bc54819ab4c6a41d83b6c6170ada2859a9d",
+        "w10": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "ab705bc54819ab4c6a41d83b6c6170ada2859a9d"
+        },
+        "exact": true,
+        "method": "GitHub MCP fetch_file at published pin and local W10 ls-tree"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/answer-reuse.ts",
+        "source_commit": "ea5a6f965c803d436202934872c3650ab8f8eb19",
+        "source_blob": "134ce5cd8c4f0779380936de6a439c9ea124d932",
+        "manifest_expected_blob": "134ce5cd8c4f0779380936de6a439c9ea124d932",
+        "w10": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "134ce5cd8c4f0779380936de6a439c9ea124d932"
+        },
+        "exact": true,
+        "method": "GitHub MCP fetch_file at published pin and local W10 ls-tree"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+        "source_commit": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+        "source_blob": "4bdd12ac162d61465557363953e25dfd99fad5e8",
+        "manifest_expected_blob": "4bdd12ac162d61465557363953e25dfd99fad5e8",
+        "w10": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "4bdd12ac162d61465557363953e25dfd99fad5e8"
+        },
+        "exact": true,
+        "method": "GitHub MCP fetch_file at published pin and local W10 ls-tree"
+      }
+    ],
+    "foreign_host_paths_unchanged_since_recovery": [
+      "apps/cli/src/sucafina-product/business-services.ts",
+      "apps/cli/src/sucafina-product/business-context.ts",
+      "apps/cli/src/sucafina-product/host-context.ts",
+      "apps/cli/src/sucafina-product/import-http.ts",
+      "apps/cli/src/sucafina-product/document-http.ts"
+    ],
+    "paths_by_category": {
+      "scoped_ci_workflow": [
+        ".github/workflows/astra-interface-check.yml"
+      ],
+      "exact_foreign_input": [
+        "apps/cli/src/sucafina-product/analysis-verifier-documents.ts",
+        "apps/cli/src/sucafina-product/personal-view-authority.ts",
+        "modules/sucafina/Sucafinav1/product/collaboration/answer-reuse.ts",
+        "modules/sucafina/Sucafinav1/product/contracts/context.ts",
+        "modules/sucafina/Sucafinav1/product/contracts/output-schemas.ts",
+        "modules/sucafina/Sucafinav1/product/contracts/outputs.ts",
+        "modules/sucafina/Sucafinav1/product/decision-memory/case-recall.ts",
+        "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+        "modules/sucafina/Sucafinav1/product/decisions/change-proposal-store.ts",
+        "modules/sucafina/Sucafinav1/product/integration/human-authority.ts"
+      ],
+      "owned_guide": [
+        "docs/guides/sucafina-workbench.md"
+      ],
+      "new_receipt_or_finding": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/findings/bi-refresh-lifecycle.md",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/findings/c03-answer-selector.md",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/findings/c03-first-selector-w9.md",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/findings/decision-edit-host-mount.md",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/findings/playwright-launch-observability.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/findings/playwright-launch-observability.md",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/findings/shared-apply-reauthorization.md",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/findings/startup-budget-w8c.md",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/findings/work-selection.md",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/c03-first-selector-w9.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/collaboration-ea5a6f9.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/compose-4306.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/compose-4306.md",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/compose-7c7e-route-review.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/compose-7c7e.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/operations-ba8-apply-w10.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/w10-change-scope.md",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/w7-preservation-audit.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/w8-change-scope.md",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/w9-change-scope.md",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43578288307.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43578288307.request.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43580185033.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43580185033.md",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43580185033.request.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43580186410.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43581283802.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43581283802.md",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43581283802.request.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43581816415.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43581816415.md",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43581816415.request.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43581818182.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43582571937.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43582571937.md",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43582571937.request.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43584162495.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43584162495.md",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43584162495.request.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43584164297.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43585122170.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43585122170.md",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43585122170.request.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43585123967.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43585747922.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43585747922.md",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43585747922.request.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43586466170.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43586466170.md",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43586466170.request.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43586468289.static.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/astra-interface/findings/c12-current-closure-w10.md",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/astra-interface/findings/c12-evidence-routing.md",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/astra-interface/findings/drafts-and-source-continuity.md",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/astra-interface/findings/preserved-meeting-closure-w10.md",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/astra-interface/findings/preserved-meeting-history.md",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/astra-interface/findings/write-scope-continuity-w9.md"
+      ],
+      "recovery_manifest": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/recovery.json"
+      ],
+      "owned_interface_or_dashboard": [
+        "modules/sucafina/Sucafinav1/product/dashboard/hot-topics.ts",
+        "modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts",
+        "modules/sucafina/Sucafinav1/product/interface/personal-views.ts",
+        "modules/sucafina/Sucafinav1/product/ui/components.ts",
+        "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+        "modules/sucafina/Sucafinav1/product/ui/decision-edit.ts",
+        "modules/sucafina/Sucafinav1/product/ui/personal-views.ts",
+        "modules/sucafina/Sucafinav1/product/ui/shell-command.ts",
+        "modules/sucafina/Sucafinav1/product/ui/shell-preview.ts",
+        "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts",
+        "modules/sucafina/Sucafinav1/src/screen-shell.ts"
+      ],
+      "owned_test_or_fixture": [
+        "modules/sucafina/Sucafinav1/test/product/wp01/README.md",
+        "modules/sucafina/Sucafinav1/test/product/wp01/alternative-contribution.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/components.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/contextual-decision.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/decision-conflict-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/meeting-number.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/real-review-fixture.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/shell-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/shell-refresh.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/thread-domain-fixture.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/two-actor-conflict.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp01/unavailable-views.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp02/business-services-fixture.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp02/collaboration-consumer.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp02/dashboard-browser.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp02/host-integration.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp02/hot-topics.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery-fixture.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts"
+      ]
+    }
+  },
+  "preserved_apply_boundary": {
+    "prepared_apply_path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+    "expected_blob": "a45436a6fef8598b7ef9eae33d061ddebf0aa43d",
+    "entries": {
+      "6ce14163ec6de963b50ada3d610aa8161176adee": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "a45436a6fef8598b7ef9eae33d061ddebf0aa43d"
+      },
+      "23bfad4341008f33fde050bd0d66506fb4035d20": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "a45436a6fef8598b7ef9eae33d061ddebf0aa43d"
+      },
+      "0c3d98dd1263a305ce294c78ad5939cdda110a78": {
+        "mode": "100644",
+        "type": "blob",
+        "blob": "a45436a6fef8598b7ef9eae33d061ddebf0aa43d"
+      }
+    },
+    "receipt_binding_path": "modules/sucafina/Sucafinav1/product/decisions/receipt-review-binding.ts",
+    "receipt_binding_entry": {
+      "mode": "100644",
+      "type": "blob",
+      "blob": "6987eddae37ae2c90fe03b2d8e81ea28e8b5221f"
+    },
+    "expected_receipt_binding_blob": "6987eddae37ae2c90fe03b2d8e81ea28e8b5221f",
+    "operations_apply_blob": "4bdd12ac162d61465557363953e25dfd99fad5e8",
+    "scope": "Verbatim Operations apply only; stronger recovered prepared-apply and common receipt binding unchanged. No complete shared-host closure inferred."
+  },
+  "assertion_delta_review": {
+    "range": {
+      "from": "5886df8aaedb4db179f336e474e123c30a1d1193",
+      "to": "0c3d98dd1263a305ce294c78ad5939cdda110a78"
+    },
+    "latest_increment": {
+      "from": "01633144c83fb1080e6d985ef226b8db2aa131cb",
+      "to": "0c3d98dd1263a305ce294c78ad5939cdda110a78"
+    },
+    "test_files_deleted": [],
+    "added_skip_only_todo_lines": [],
+    "relevant_assertions_abandoned": false,
+    "w10_semantic_assertion_substitutions": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+        "old": "Confirm disabled after recovered reply, predicated on absent first-selector issuer.",
+        "new": "Confirm enabled for authorized current recovered message after published issuer intake.",
+        "real_counterproofs": [
+          "No prepare/confirm request before explicit click; data-answer null.",
+          "Real readAnswer returns needs-input / answer-unconfirmed before click.",
+          "Explicit click prepares exact recovered message id/incarnation/version and confirms once through real C06/C08.",
+          "Real confirmed answer body/author/version match; storageVersion advances once while thread messages remain equal.",
+          "Declared unavailable attachment remains explicitly unavailable, not credited as host success."
+        ],
+        "prior_replay_assertions_preserved": [
+          "same request body/key",
+          "one committed reply",
+          "same storageVersion on retry",
+          "equal real stored conversation",
+          "private reply appears once"
+        ]
+      }
+    ],
+    "equivalent_rewrites": [
+      "W10 confirmed.value equality uses type-narrowed aliases of the same producer values; expected shape/values unchanged.",
+      "Late views response retains exact body200 equality and both private-DOM purge assertions; string alias and partial real-body gate expose completion after revoke.",
+      "No-selector negative conversation case renamed to state incomplete current-message identity; disabled/no-mutation assertions retained."
+    ],
+    "additive_or_preserved": [
+      "Unavailable-view removal keeps original count==0 and durable empty store; W10 suspends later real list to make ordering observable.",
+      "Decision recovery adds repeated removal/adoption/comparison retention; earlier three cases retained.",
+      "BusinessServices fixture migration keeps product assertions and explicit limited scope.",
+      "One-launch/leases/context-zero/PID-exit/driver-close/Omni assertions retained."
+    ],
+    "limits": "Textual preservation review, not execution. The single semantic substitution statement is scoped to W10; earlier documented contract adaptations are not claimed as unchanged text."
+  },
+  "preservation_blockers": [],
+  "limitations": [
+    "Peer metadata review of our own increment, not independent final/native review.",
+    "Remote refs record observed state, not provider audit-log evidence of every historical write.",
+    "Exact foreign bytes establish admitted pins, not complete/current host closure; C12 reload, scope continuity, selection/directory and other findings remain separate.",
+    "No CI state polled or inferred; native/global/S0 gates remain separate.",
+    "Prior W7 audit, recovery manifest and historical receipts read, not rewritten.",
+    "Concurrent W11 worktree changes in http.ts, work-review-context helper/test and the guide are outside the fixed W10 revision audited here."
+  ]
+}

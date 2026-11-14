@@ -12,6 +12,8 @@ Se alguma página estiver temporariamente indisponível, a busca informa que a l
 
 Quando **My work** estiver disponível na instalação, informe as datas de início e fim e selecione **Find work**. A lista mostra os itens atribuídos que podem ser consultados nesse período. Quando houver um destino disponível, selecione **Open work** para abri-lo; o acesso é conferido novamente. Se a lista estiver vazia, confira o período. Se a instalação ainda não oferecer essa lista, a tela informa a indisponibilidade e mantém as páginas operacionais como caminho de entrada. Erros de seleção preservam o período para correção e nova tentativa.
 
+Quando o serviço fornecer contexto autorizado de uma reunião preservada, o item mostra a referência e a versão da reunião, além da seção ou referência de encaminhamento correspondente. Esses metadados são informativos; não abrem a reunião nem iniciam uma conversa. Se o contexto não puder ser apresentado, o item informa **Review context is unavailable**.
+
 Em **Search documents**, procure documentos que você tem autorização para consultar. Abra o resultado para verificar a origem. Um resultado pode deixar de estar disponível se o acesso ou a fonte mudar.
 
 O recurso **Extract document evidence** permite extrair candidatos de documentos autorizados:
