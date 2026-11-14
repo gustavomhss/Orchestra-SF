@@ -61,15 +61,34 @@ test("recipient reply delivery loss stays pending until a revoked retry purges t
     const fresh = await app.admitRead("reader-b")
     expect(fresh).not.toBe(app.recipient)
     expect(fresh.binding.accessRevision).toBe("b2")
-    expect((await app.page.reload())?.status()).toBe(200)
-    await app.page.getByRole("button", { name: "Open conversation", exact: true }).click()
-    await app.page.getByLabel("Reply", { exact: true }).waitFor()
-    expect(await app.page.getByText(body, { exact: true }).count()).toBe(1)
-    expect(await app.page.getByLabel("Reply", { exact: true }).inputValue()).toBe("")
+    // The case retains its b1 source reference. This fixture does not grant
+    // historical case-source reissue, so b2 must not turn that GET into success.
+    const reloaded = await app.page.reload().then(
+      (response) => ({ status: response?.status(), failure: undefined }),
+      (error: unknown) => ({ status: undefined, failure: error instanceof Error ? error.message : String(error) }),
+    )
+    // Chromium rejects an empty 503 document as a navigation failure. Keep that
+    // specific failure explicit and independently observe the real HTTP refusal.
+    if (reloaded.failure) expect(reloaded.failure).toContain("net::ERR_HTTP_RESPONSE_CODE_FAILURE")
+    else expect(reloaded.status).toBe(503)
+    const blockedCase = await app.context.request.get(`${app.origin}/product`, { timeout: 5_000 })
+    expect(blockedCase.status()).toBe(503)
+    expect(await blockedCase.text()).not.toContain(body)
+    expect(await app.page.getByText(body, { exact: true }).count()).toBe(0)
+    expect(await app.page.locator("[data-case], [data-thread], [data-principal], [data-case-thread] textarea").count()).toBe(0)
     expect(app.attempts.filter((attempt) => attempt.route === "collaboration-thread-reply")).toHaveLength(2)
+    // The recipient reader independently reissues current sources. This read
+    // proves current authorization, never the lost mutation's exact ACK.
+    const reread = await app.send("thread-read", { id: app.thread.id })
+    expect(reread.status).toBe(200)
+    if (reread.result.status !== "ok") throw new Error("Fresh recipient read unavailable")
+    const current = reread.result.value as Awaited<ReturnType<typeof app.reply>>
+    expect(current).toHaveProperty("current")
+    expect(current).not.toHaveProperty("mutationReceipt")
+    expect(current.messages).toEqual(committed.value.messages)
     expect(await app.inspect()).toEqual(committed)
     expect(app.errors).toEqual([])
-    console.info("WORK_ACK_REVOKED_PENDING_REPLY", JSON.stringify({ threadId: app.thread.id, message: { id: exact.id, incarnation: exact.incarnation, version: exact.version }, attempts: 2, statuses: [200, 403], storageVersion: committed.storageVersion, freshAccessRevision: fresh.binding.accessRevision, acknowledged: false, reloadResent: false }))
+    console.info("WORK_ACK_REVOKED_PENDING_REPLY", JSON.stringify({ threadId: app.thread.id, message: { id: exact.id, incarnation: exact.incarnation, version: exact.version }, attempts: 2, statuses: [200, 403], storageVersion: committed.storageVersion, freshAccessRevision: fresh.binding.accessRevision, caseReloadStatus: reloaded.status ?? null, caseReloadFailure: reloaded.failure ? "ERR_HTTP_RESPONSE_CODE_FAILURE" : null, caseReadStatus: blockedCase.status(), freshThreadReadStatus: reread.status, acknowledged: false, reloadResent: false }))
   } finally { await app.close() }
 }, 60_000)
 
@@ -106,7 +125,7 @@ test("the initial recipient projection marker prevents ACK from a stripped curre
     expect(returned[0]).toHaveProperty("current")
     expect(returned[0]).not.toHaveProperty("mutationReceipt")
     expect(returned[0]!.messages).toHaveLength(baseline.messages.length + 1)
-    expect(returned[0]!.messages.slice(0, baseline.messages.length)).toEqual(baseline.messages)
+    expect(returned[0]!.messages.slice(0, baseline.messages.length)).toEqual([...baseline.messages])
     const exact = returned[0]!.messages[baseline.messages.length]!
     expect(exact.authorRef).toBe("reader-b")
     expect(exact.body).toBe(body)
