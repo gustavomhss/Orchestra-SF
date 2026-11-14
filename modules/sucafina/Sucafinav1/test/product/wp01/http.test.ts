@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test"
+import { closeWp01Browser, launchWp01Browser } from "./browser-fixture.ts"
 import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import path from "node:path"
@@ -33,7 +34,8 @@ test("workbench uses actual identity, SQLite and case dispatcher with revocation
   const environment = async (request: Request) => ({ at: "2026-11-13T08:00:00Z", id: randomUUID, directory: await identity.directory(request) })
   const authority = createSfProductAuthority({ identity: () => ({ installationId: operator.installationId, projectId: "project", hostId: "host", location }), installationId: operator.installationId, origin, policyVersion: "policy", persistence: store, authenticate: identity.authenticate, environment, grants: [{ principalRef: person, namespaces: ["cases"], operations: ["sf_case_draft", "sf_case_read", "sf_work_list"] }], createId: randomUUID, now: Date.now, commandIdentity: async (request, operation) => request.method === "GET" || request.method === "HEAD" ? randomUUID() : request.headers.get("idempotency-key") ? digestSfValue({ operation, key: request.headers.get("idempotency-key") }) : undefined, inspectSession: async () => undefined, verifySelection: async () => false, verifySkillReceipt: async () => false, providerGeneration: async () => undefined, authorizeDocument: async () => undefined })
   const evidence = createSfBusinessContext({ revalidate: authority.host.revalidate, resolveSource: async (ref, context) => ({ state: "unavailable", ref, accessRevision: context.binding.accessRevision, checkedAt: new Date().toISOString() }), proveContinuity: async () => false, recall: async () => [], emitFromLedger: async () => ({ status: "unavailable", sourceEventId: "", scanner: { name: "", version: "", status: "unavailable" } }) })
-  const cases = createDecisionCasePort({ state: authority.state, host: authority.host, creationTarget: authority.creationTarget, operationIdentity: (context) => context.kind === "ui" ? authority.ui.operationIdentity(context) : undefined, authorizeCase: async (value, context) => value.participants.includes(context.binding.principalRef), evidence, createId: randomUUID, now: () => "2026-11-13T08:00:00Z" })
+  const cases = createDecisionCasePort({ state: authority.state, host: authority.host, creationTarget: authority.creationTarget, operationIdentity: (context) => context.kind === "ui" ? authority.ui.operationIdentity(context) : undefined,
+    authorizeCase: async (value, context) => value.participants.includes(context.binding.principalRef) && !value.preparedChanges.length && value.alternatives.every((item) => !item.scenario.operations.length) && value.choices.every((item) => !item.scenario.operations.length), evidence, createId: randomUUID, now: () => "2026-11-13T08:00:00Z" })
   const descriptors = createDecisionCapabilities({ cases, requiredAuthority: { read: [], draft: [], receipt: [], alternative: [], change: [] }, createReceipt: authority.authority.receiptFor })
   const dispatch: SfHostServices["dispatch"] = (operation, payload, context) => dispatchSfCapability({ operation, payload, context, descriptors, authority: authority.authority,
     validateInput: (_descriptor, value) => operation === "sf_case_read" ? decodeSfOperationInput("sf_case_read", value).ok : operation === "sf_case_draft" && decodeSfOperationInput("sf_case_draft", value).ok,
@@ -68,8 +70,7 @@ test("workbench uses actual identity, SQLite and case dispatcher with revocation
     const page = await read()
     expect(page?.status).toBe(200)
     expect(await page!.text()).toContain("Review renewal")
-    const { chromium } = await import("@playwright/test")
-    const browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"] })
+    const browser = await launchWp01Browser()
     try {
       const tab = await browser.newPage()
       await tab.goto(`${origin}/sucafina/auth/local?code=${await identity.enroll()}`)
@@ -83,7 +84,7 @@ test("workbench uses actual identity, SQLite and case dispatcher with revocation
       await tab.getByLabel("Decision objective").fill("Compare renewals")
       await tab.getByLabel("Start", { exact: true }).fill("2027-01-01")
       await tab.getByLabel("End", { exact: true }).fill("2027-12-31")
-      await tab.getByLabel("Currency").fill("USD")
+      await tab.locator("[data-decision-create]").getByLabel("Currency", { exact: true }).fill("USD")
       await tab.getByLabel("Criteria, one per line").fill("Cost\nCoverage")
       await tab.getByRole("button", { name: "Create decision" }).click()
       await tab.getByRole("heading", { name: "Compare renewals" }).waitFor()
@@ -92,7 +93,7 @@ test("workbench uses actual identity, SQLite and case dispatcher with revocation
         await tab.getByRole("link", { name: "Workbench", exact: true }).click()
         await tab.getByRole("heading", { name: "Workbench", exact: true }).waitFor()
       }
-    } finally { await browser.close() }
+    } finally { await closeWp01Browser(browser) }
     await identity.handle(new Request(`${origin}/sucafina/auth/logout`, { method: "POST", headers: { cookie, origin } }))
     expect((await read())?.status).toBe(403)
   } finally { await server.stop(true); await store.dispose(); await rm(directory, { recursive: true, force: true }) }

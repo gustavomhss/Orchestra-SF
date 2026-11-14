@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test"
+import { closeWp01Browser, launchWp01Browser } from "./browser-fixture.ts"
 import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import path from "node:path"
@@ -35,8 +36,7 @@ test("authenticated BI renders, filters and fails closed after session revocatio
     const product = createSfBiHttp({ installationId: operator.installationId, projectId: operator.installationId, policyVersion: "sf-product-v1", origin, mount: "/sucafina", persistence, authenticate: identity.authenticate, environment, browserScript: async () => biBrowser })
     const app = createModule("/sucafina", { persistence, authenticate: identity.authenticate, environment, product, maxJsonBytes: 100000 })
     state.handle = async (request) => await identity.handle(request) ?? await app(request)
-    const { chromium } = await import("@playwright/test")
-    const browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"] })
+    const browser = await launchWp01Browser()
     try {
       const page = await browser.newPage()
       const pageErrors: string[] = []
@@ -88,7 +88,7 @@ test("authenticated BI renders, filters and fails closed after session revocatio
       await page.getByText("Visualização indisponível. Verifique o período e tente novamente.").waitFor()
       expect(await page.locator("[data-sf-bi] table").count()).toBe(0)
       expect(pageErrors).toEqual([])
-    } finally { await browser.close() }
+    } finally { await closeWp01Browser(browser) }
   } finally {
     await server.stop(true)
     await driver.dispose()
