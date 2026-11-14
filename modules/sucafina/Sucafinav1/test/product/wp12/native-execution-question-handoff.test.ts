@@ -214,8 +214,10 @@ async function createSelectedHandoff(context: Wp12NativeMissionContext, source: 
       action: "Esclarecer a informação pendente da decisão com a pessoa selecionada", owner: name,
       due: WP12_QUESTION_PERIOD.end, priority: "normal", notes: "" } }))
   const topic = object(created.topic)
+  const topicStatus = topic.status
   if (created.state !== "created" || typeof created.relationId !== "string" || typeof topic.id !== "string" || !topic.id.trim())
     throw new Error("The real C06 handoff did not create its canonical action and relation")
+  if (typeof topicStatus !== "string") throw new Error("The real C06 handoff did not return its canonical action status")
   const read = await dispatchWp12Ui(context, "sf_relation_read", { recordRefs: [source.refId] })
   if (read.status !== "ok" || read.receipt.kind !== "ui") throw new Error("The human-confirmed handoff relation cannot be read")
   const relation = decodeSfOperationOutput("sf_relation_read", read.result)
@@ -237,7 +239,7 @@ async function createSelectedHandoff(context: Wp12NativeMissionContext, source: 
   const projection = await context.ui("sf_context_get", { actionRef: topicRef.refId }, (call) => context.business.dashboardRecords.read(topicRef.refId, call))
   if (projection.status !== "ok") throw new Error(`The issued action source is not readable: ${projection.reason}`)
   expect(projection.value.values).toHaveLength(1)
-  expect(projection.value.values[0]?.value).toBe(topic.status)
+  expect(projection.value.values[0]?.value).toBe(topicStatus)
   expect(projection.value.values[0]?.sourceRefs).toEqual([topicRef])
   return { topicRef, topicId: topic.id, topicDigest: digestSfValue(topic), relationId: created.relationId }
 }

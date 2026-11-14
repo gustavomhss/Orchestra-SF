@@ -183,7 +183,9 @@ export async function prepareWp12ProcurementCase(context: Wp12NativeMissionConte
   }
   const baseline = get("baseline"), candidate = get("candidate")
   for (const [key, item] of [["baseline", baseline], ["candidate", candidate]] as const) {
-    expect(digestSfValue(item.alternative.result.components.map((component) => ({ id: component.id, amount: component.amount, currency: component.currency, period: component.period })))).toBe(sourceValueDigests.get(key))
+    const sourceValueDigest = sourceValueDigests.get(key)
+    if (!sourceValueDigest) throw new Error(`The canonical ${key} purchase source has no numeric value digest`)
+    expect(digestSfValue(item.alternative.result.components.map((component) => ({ id: component.id, amount: component.amount, currency: component.currency, period: component.period })))).toBe(sourceValueDigest)
   }
   // Observed category coverage does not turn a simulated choice into an applied
   // result. Both alternatives retain the actual engine's hypothetical boundary.

@@ -1,0 +1,45 @@
+--- a/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-question-handoff.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-question-handoff.test.ts
+@@ -214,8 +214,10 @@
+       action: "Esclarecer a informação pendente da decisão com a pessoa selecionada", owner: name,
+       due: WP12_QUESTION_PERIOD.end, priority: "normal", notes: "" } }))
+   const topic = object(created.topic)
++  const topicStatus = topic.status
+   if (created.state !== "created" || typeof created.relationId !== "string" || typeof topic.id !== "string" || !topic.id.trim())
+     throw new Error("The real C06 handoff did not create its canonical action and relation")
++  if (typeof topicStatus !== "string") throw new Error("The real C06 handoff did not return its canonical action status")
+   const read = await dispatchWp12Ui(context, "sf_relation_read", { recordRefs: [source.refId] })
+   if (read.status !== "ok" || read.receipt.kind !== "ui") throw new Error("The human-confirmed handoff relation cannot be read")
+   const relation = decodeSfOperationOutput("sf_relation_read", read.result)
+@@ -237,7 +239,7 @@
+   const projection = await context.ui("sf_context_get", { actionRef: topicRef.refId }, (call) => context.business.dashboardRecords.read(topicRef.refId, call))
+   if (projection.status !== "ok") throw new Error(`The issued action source is not readable: ${projection.reason}`)
+   expect(projection.value.values).toHaveLength(1)
+-  expect(projection.value.values[0]?.value).toBe(topic.status)
++  expect(projection.value.values[0]?.value).toBe(topicStatus)
+   expect(projection.value.values[0]?.sourceRefs).toEqual([topicRef])
+   return { topicRef, topicId: topic.id, topicDigest: digestSfValue(topic), relationId: created.relationId }
+ }
+--- a/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts
+@@ -60,6 +60,7 @@
+           }))
+         if (scoped.status !== "ok") throw new Error(`The current scenario case scope was refused: ${scoped.reason}`)
+         const { compared, persisted } = scoped.value
++        if (typeof compared.outputRef !== "string" || !compared.outputRef.trim()) throw new Error("The persisted scenario comparison lost its real output reference")
+         const comparison = decodeSfOperationOutput("sf_scenario_compare", compared.result)
+         if (!comparison.ok) throw new Error("The real scenario comparison failed its canonical output contract")
+         expect(compared.receipt.kind).toBe("ui")
+--- a/modules/sucafina/Sucafinav1/test/product/wp12/native-procurement-preparation.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp12/native-procurement-preparation.ts
+@@ -183,7 +183,9 @@
+   }
+   const baseline = get("baseline"), candidate = get("candidate")
+   for (const [key, item] of [["baseline", baseline], ["candidate", candidate]] as const) {
+-    expect(digestSfValue(item.alternative.result.components.map((component) => ({ id: component.id, amount: component.amount, currency: component.currency, period: component.period })))).toBe(sourceValueDigests.get(key))
++    const sourceValueDigest = sourceValueDigests.get(key)
++    if (!sourceValueDigest) throw new Error(`The canonical ${key} purchase source has no numeric value digest`)
++    expect(digestSfValue(item.alternative.result.components.map((component) => ({ id: component.id, amount: component.amount, currency: component.currency, period: component.period })))).toBe(sourceValueDigest)
+   }
+   // Observed category coverage does not turn a simulated choice into an applied
+   // result. Both alternatives retain the actual engine's hypothetical boundary.

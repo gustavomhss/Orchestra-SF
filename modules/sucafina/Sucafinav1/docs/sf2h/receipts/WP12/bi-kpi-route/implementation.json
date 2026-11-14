@@ -1,0 +1,127 @@
+{
+  "schema": "wp12-own-native-bi-kpi-increment-v1",
+  "status": "IMPLEMENTED_STATIC_REVIEWED_NOT_RUN",
+  "base_product": {
+    "head": "5c148a16b76f98dfe194823c0e10ed2ef7685a69",
+    "tree": "42bc4bbb0662ad74a4974a4e6165274f50cc32fa"
+  },
+  "map_base": "551ff6c1684ae09704cfce85c12690e8369b2d0c",
+  "previous_addendum": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/own-obligation-audit/obligations-27.json",
+  "code": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-bi-kpi.test.ts",
+    "blob": "32c71d3c8c9645e6957eca6f3e4afa64727b71a5",
+    "sha256": "7a480dec22dfe740e1ee7cf237019589f31e7b03d25750b474f10460451f326b",
+    "bytes": 29289
+  },
+  "canonical_scope": {
+    "profile_id": "sf_finance",
+    "skill_id": "sf-produzir-bi-contextual",
+    "new_required_operation_driver": "sf_kpi_explain",
+    "pointer": "/resident_ui_consumption/skills/15/required_operations/1",
+    "criterion_refs": [
+      "WP12.CMP.40",
+      "WP12.T02.CHK.11",
+      "WP12.T02.CMP.40",
+      "WP12.T02.SUC.60"
+    ],
+    "all_required_operations": [
+      "sf_bi_view",
+      "sf_kpi_explain",
+      "sf_source_get",
+      "sf_dashboard_read"
+    ],
+    "additional_discovery_operation": "sf_case_read",
+    "am02_existing_bi_route": "/resident_ai/operation_call_routes/2",
+    "am02_forecast_kpi_route_not_substituted": "/resident_ai/operation_call_routes/1"
+  },
+  "distinct_mission": "BI01 Budget Overview and an auxiliary annual-budget KPI, separate from both previously executed BI08 milestone variants.",
+  "data_origin": {
+    "kind": "Explicit synthetic raw business rows in an isolated authenticated installation; all scopes, projections, cases, artifacts and receipts are produced by installed ports.",
+    "annual_owner_budget": 120000,
+    "monthly_overrides": [
+      1000,
+      2000,
+      3000,
+      4000,
+      5000,
+      6000,
+      7000,
+      8000,
+      9000,
+      10000,
+      11000,
+      12000
+    ],
+    "expected_effective_annual_budget": 78000,
+    "actual_january": {
+      "raw_cell": 0,
+      "required_projection": {
+        "value": 0,
+        "evidenceState": "confirmed"
+      }
+    },
+    "actual_february": {
+      "raw_cell": "property omitted",
+      "required_projection": {
+        "value": null,
+        "evidenceState": "absent"
+      }
+    },
+    "forecast_april": {
+      "raw_cell": "property omitted",
+      "required_projection": {
+        "value": null,
+        "evidenceState": "absent"
+      }
+    },
+    "currency": "USD is only the human case currency. All Dashboard amounts retain the producer's unspecified currency; no FX or relabeling is introduced.",
+    "summing_assertions": "sumObserved rejects absent/non-numeric values before testing parity of already observed producer components. It never turns a missing cell into zero."
+  },
+  "producer_and_discovery": [
+    "Issue actual Budget Overview/budgetSeries and Budget Overview/budgetMetrics selections for the same full year.",
+    "Retain both producer-issued refs in one real human-created case; no opaque reference is put in the objective.",
+    "Discover the second ref by its public record type/page/fields/period in sf_case_read and qualify it with the exported dashboardMetricSelector format.",
+    "Prepare ContextualBIInput through the installed HTTP route; the input and persisted artifact retain exactly the BI01 series ref.",
+    "Require sf_case_read plus the four normative operations from the real model branch, matching actual payload digests and native result receipts.",
+    "Read Session messages explicitly in ascending order and require the case result in an earlier assistant message than the KPI call; order of parallel tool parts in one message is not discovery proof."
+  ],
+  "verification": [
+    "The real Dashboard monthly effective values are non-uniform and equal the twelve explicit overrides; the sum and actual KPI are 78000, not the owner's nominal annual budget or a flat monthly series.",
+    "The KPI retains twelve components and missing totalActual/totalForecast even though totalBudget is available.",
+    "Every monthly value retains its own series source; the KPI result retains its separate metrics source. The two source scopes cannot be interchanged.",
+    "The authenticated UI dispatcher refuses a metric built from the series selector and refuses an altered period with source-unavailable.",
+    "The raw budget data and case remain unchanged by preparation and optional native execution.",
+    "After reopening the host, actual input/artifact/table/source links and UI KPI are revalidated; if a native mission exists, its output and exact Session tool evidence are reopened too."
+  ],
+  "consumer_boundaries": {
+    "wp05": "Actual bi-data/bi-source render the BI01 series with its equivalent table and drilldown. They do not consume the auxiliary KPI as a new chart/proposal field.",
+    "auxiliary_kpi": "Actual native tool structured result and bound receipt in the durable Session, with inputDigest/resultDigest/run/session/principal/call IDs. Without an installed model, only the authenticated UI dispatcher result is observed.",
+    "proposal": "Closed ContextualBIProposal and ContributionEnvelope evidenceRefs remain exactly the BI source; no additional metric ref or numeric claim is inserted into the output contract."
+  },
+  "remaining_owner_gate": {
+    "id": "WP12-BI-MODEL-ARTIFACT-IDENTITIES",
+    "finding": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/owner-findings/bi-artifact-identities/finding.json",
+    "scope": "The native input/tool surface still lacks the exact persisted canonicalProjectionRefs/tableRef demanded by the verifier. This driver neither creates that owner capability nor injects private IDs. With an available model, failure to produce the exact verified output remains a test failure."
+  },
+  "hosted_selection": {
+    "file": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-bi-kpi.test.ts",
+    "name": "native contextual BI01 discovers its auxiliary KPI source through the real case and preserves separate chart and tool provenance after reload",
+    "timeout_ms": 360000,
+    "phase_markers": "SF_WP12_NATIVE_BI_KPI_PHASE",
+    "status": "NOT_RUN"
+  },
+  "independent_review": {
+    "file": "independent-review.json",
+    "sha256": "a78c814f4d2acb49570a6cec837dc973a78e231c528947d2a17f202728760d3c",
+    "status": "PASS_STATIC_ONLY"
+  },
+  "source_pins": "source-pins.json",
+  "acceptance_upgrades": 0,
+  "native_execution_observed": false,
+  "gnative_accepted": false,
+  "local_product_tests": false,
+  "local_typecheck": false,
+  "foreign_edits": false,
+  "new_provider_or_credentials": false,
+  "frozen_existing_files_changed": false
+}

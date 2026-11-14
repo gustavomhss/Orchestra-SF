@@ -60,6 +60,7 @@ test("native Finance preserves pending versus covered scenario costs and a fresh
           }))
         if (scoped.status !== "ok") throw new Error(`The current scenario case scope was refused: ${scoped.reason}`)
         const { compared, persisted } = scoped.value
+        if (typeof compared.outputRef !== "string" || !compared.outputRef.trim()) throw new Error("The persisted scenario comparison lost its real output reference")
         const comparison = decodeSfOperationOutput("sf_scenario_compare", compared.result)
         if (!comparison.ok) throw new Error("The real scenario comparison failed its canonical output contract")
         expect(compared.receipt.kind).toBe("ui")
