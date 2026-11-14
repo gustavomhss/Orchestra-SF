@@ -1,0 +1,49 @@
+{
+  "schema": "wp10-c08-additive-migration-delta-v1",
+  "parent": "2fb2e13ca7839fe7122c43ba312c7a09e5e5d5e6",
+  "parentTree": "4a0fd535ad284d216b4c9282368404fc14acd6be",
+  "finding": "R1-W9-C08-01",
+  "paths": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "blobSha": "2fd55c7304add0829d7434917c80664fe86356b9",
+      "sha256": "de25a3d2c5fc8725debb538ec0efb45b3a3c986ff478156cce734038f87d7268",
+      "bytes": 19836,
+      "chars": 19836
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "blobSha": "7f59151ab2ea14e7eea4a8f2d41ea1b84bc83aab",
+      "sha256": "1967ace13bd8ad4a81903bff5a7f3506d2f21a2a7bc9d754906d713cdb69cdbb",
+      "bytes": 25838,
+      "chars": 25838
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/README.md",
+      "blobSha": "99305e6d1e0f8745816ddbbdece0cb76a435a064",
+      "sha256": "ce3651f341f5b368b7e0d3535279a085cb227d78bfbdb2a72f44a556ec6b999c",
+      "bytes": 25601,
+      "chars": 24651
+    }
+  ],
+  "inheritedPins": "composition-pins-W9.json, overridden only by these exact own blobs",
+  "sourceContract": {
+    "path": "modules/sucafina/Sucafinav1/product/contracts/state-layout.ts",
+    "blob": "c3a6e039badc5ed49b20caa7153cb01979ebec9a",
+    "owner": "WP00",
+    "mode": "read-only published input"
+  },
+  "sourceConsumer": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+    "blob": "92f2efc066c2018bdbf1a27559a2ffd8a7b5843f",
+    "owner": "WP00",
+    "mode": "unchanged; existing hosted surgical request"
+  },
+  "behavior": [
+    "Initialize all six additive maps on initial creation",
+    "Normalize only absent fields of the virtual write baseline; preserve existing maps and namespace guards",
+    "Persist migration only after a new authorized committed write; reads, previews, denied writes and exact retries do not migrate",
+    "Reject malformed existing additive maps, including decisionResults"
+  ],
+  "qualification": "Independent static cause/fix observed; hosted product evidence pending. No local product execution and no native/global acceptance."
+}

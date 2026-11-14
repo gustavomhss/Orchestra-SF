@@ -2,6 +2,7 @@ import type { Persistence, Snapshot } from "../../runtime/contract.ts"
 import { object } from "../../runtime/contract.ts"
 import type { SfProductState, SfProductStatePort, SfStateAuthority, SfStateNamespace, SfStateResult, SfStateMutation } from "../contracts/state.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
+import { sfProductStateAdditiveFields } from "../contracts/state-layout.ts"
 
 const namespaces = ["preferences", "reviews", "relations", "threads", "confirmations", "cases", "contributions", "documents", "receipts", "atlas", "outbox", "bi-artifacts"] as const
 const storedNamespaces = ["preferences", "reviews", "relations", "threads", "confirmations", "cases", "contributions", "documents", "receipts", "atlas", "outbox", "transactions"] as const
@@ -17,10 +18,10 @@ export function createSfProductState(input: {
   nativePublicationGuards?: WeakMap<object, () => boolean>
   signalRegistryWrites?: WeakSet<object>
   caseSelectionWrites?: WeakSet<object>
+  analysisSelectionWrites?: WeakSet<object>
   threadHistoryWrites?: WeakSet<object>
   dashboardHostWrites?: WeakSet<object>
   procurementEvidenceWrites?: WeakSet<object>
-  analysisSelectionWrites?: WeakSet<object>
   resolveTarget: (request: Request, snapshot: Snapshot, namespace: SfStateNamespace, targetRef: string, command: SfStateMutation) => Promise<{ incarnation: string } | undefined>
 }): SfProductStatePort {
   return {
@@ -63,7 +64,7 @@ export function createSfProductState(input: {
         if (!command.targetRef.trim() || !command.targetIncarnation.trim() || !command.idempotencyKey.trim() || !/^[a-f0-9]{64}$/.test(command.commandDigest))
           return { commit: false, value: { status: "conflict", reason: "invalid-command-identity" } }
         const stored = snapshot.data.__sfProductV1
-        const state = stored === undefined ? emptySfState(input.createId()) : readSfState(snapshot)
+        const state = stored === undefined ? emptySfState(input.createId()) : migrateSfStateForWrite(readSfState(snapshot))
         if (!state) return { commit: false, value: { status: "unavailable", reason: "invalid-product-state" } }
         const target = await input.resolveTarget(request, snapshot, command.namespace, command.targetRef, command)
         if (!target) return { commit: false, value: { status: "denied", reason: "target-access-unavailable" } }
@@ -105,17 +106,11 @@ export function createSfProductState(input: {
         if (!input.signalRegistryWrites?.has(work) && digestSfValue(signalMetadata(staged.preferences)) !== digestSfValue(signalMetadata(state.preferences)))
           return { commit: false, value: { status: "denied", reason: "signal-registry-write-outside-authority" } }
         const caseSelectionMetadata = (preferences: SfProductState["preferences"]) => Object.fromEntries(Object.entries(preferences).filter(([key]) => key.startsWith("sf:case-work-selection:")))
+        const analysisSelectionMetadata = (preferences: SfProductState["preferences"]) => Object.fromEntries(Object.entries(preferences).filter(([key]) => key.startsWith("sf:analysis-selection:")))
+        if (!input.analysisSelectionWrites?.has(work) && digestSfValue(analysisSelectionMetadata(staged.preferences)) !== digestSfValue(analysisSelectionMetadata(state.preferences)))
+          return { commit: false, value: { status: "denied", reason: "analysis-selection-writer-required" } }
         if (!input.caseSelectionWrites?.has(work) && digestSfValue(caseSelectionMetadata(staged.preferences)) !== digestSfValue(caseSelectionMetadata(state.preferences)))
           return { commit: false, value: { status: "denied", reason: "case-selection-write-outside-authority" } }
-        const dashboardMetadata = (preferences: SfProductState["preferences"]) => Object.fromEntries(Object.entries(preferences).filter(([key]) => key.startsWith("sf:dashboard-host:")))
-        if (!input.dashboardHostWrites?.has(work) && digestSfValue(dashboardMetadata(staged.preferences)) !== digestSfValue(dashboardMetadata(state.preferences)))
-          return { commit: false, value: { status: "denied", reason: "dashboard-host-write-outside-authority" } }
-        const procurementEvidence = (preferences: SfProductState["preferences"]) => Object.fromEntries(Object.entries(preferences).filter(([key]) => key.startsWith("sf:procurement-evidence:")))
-        if (!input.procurementEvidenceWrites?.has(work) && digestSfValue(procurementEvidence(staged.preferences)) !== digestSfValue(procurementEvidence(state.preferences)))
-          return { commit: false, value: { status: "denied", reason: "procurement-evidence-write-outside-authority" } }
-        const analysisSelections = (preferences: SfProductState["preferences"]) => Object.fromEntries(Object.entries(preferences).filter(([key]) => key.startsWith("sf:analysis-selection:")))
-        if (!input.analysisSelectionWrites?.has(work) && digestSfValue(analysisSelections(staged.preferences)) !== digestSfValue(analysisSelections(state.preferences)))
-          return { commit: false, value: { status: "denied", reason: "analysis-selection-writer-required" } }
         if (!input.threadHistoryWrites?.has(work) && Object.entries(state.threads).some(([id, value]) => {
           const before = object(value)
           const after = object(staged.threads[id])
@@ -126,6 +121,12 @@ export function createSfProductState(input: {
         })) return { commit: false, value: { status: "denied", reason: "thread-history-write-outside-authority" } }
         if (!input.threadHistoryWrites?.has(work) && Object.entries(staged.threads).some(([id, value]) => !Object.hasOwn(state.threads, id) && object(value).messageRevisions !== undefined))
           return { commit: false, value: { status: "denied", reason: "thread-history-write-outside-authority" } }
+        const dashboardMetadata = (preferences: SfProductState["preferences"]) => Object.fromEntries(Object.entries(preferences).filter(([key]) => key.startsWith("sf:dashboard-host:")))
+        if (!input.dashboardHostWrites?.has(work) && digestSfValue(dashboardMetadata(staged.preferences)) !== digestSfValue(dashboardMetadata(state.preferences)))
+          return { commit: false, value: { status: "denied", reason: "dashboard-host-write-outside-authority" } }
+        const procurementEvidence = (preferences: SfProductState["preferences"]) => Object.fromEntries(Object.entries(preferences).filter(([key]) => key.startsWith("sf:procurement-evidence:")))
+        if (!input.procurementEvidenceWrites?.has(work) && digestSfValue(procurementEvidence(staged.preferences)) !== digestSfValue(procurementEvidence(state.preferences)))
+          return { commit: false, value: { status: "denied", reason: "procurement-evidence-write-outside-authority" } }
         if (digestSfValue(staged.versions) !== digestSfValue(state.versions) || storedNamespaces.some((key) => !scope.some((entry) => entry.namespace === key) && digestSfValue(staged[key]) !== digestSfValue(state[key])) ||
           (!scope.some((entry) => entry.namespace === "contributions") && digestSfValue(staged.nativeRuns) !== digestSfValue(state.nativeRuns)) ||
           (!scope.some((entry) => entry.namespace === "bi-artifacts") && digestSfValue(staged.biArtifacts) !== digestSfValue(state.biArtifacts)) ||
@@ -155,7 +156,15 @@ function sameAuthority(expected: SfStateAuthority, current: SfStateAuthority | u
 
 function emptySfState(incarnation: string): SfProductState | undefined {
   if (!incarnation.trim()) return undefined
-  return { schemaVersion: 1, revision: 0, versions: { preferences: 0, reviews: 0, relations: 0, threads: 0, confirmations: 0, cases: 0, contributions: 0, documents: 0, receipts: 0, atlas: 0, outbox: 0, "bi-artifacts": 0 }, incarnation, preferences: {}, reviews: {}, relations: {}, threads: {}, confirmations: {}, cases: {}, contributions: {}, documents: {}, receipts: {}, atlas: {}, outbox: {}, biArtifacts: {}, transactions: {} }
+  return { schemaVersion: 1, revision: 0, versions: { preferences: 0, reviews: 0, relations: 0, threads: 0, confirmations: 0, cases: 0, contributions: 0, documents: 0, receipts: 0, atlas: 0, outbox: 0, "bi-artifacts": 0 }, incarnation, preferences: {}, reviews: {}, relations: {}, threads: {}, confirmations: {}, cases: {}, contributions: {}, documents: {}, receipts: {}, atlas: {}, outbox: {}, claimBindings: {}, commandProposals: {}, compositeScenarios: {}, decisionResults: {}, nativeRuns: {}, biArtifacts: {}, transactions: {} }
+}
+
+/** Add only missing v1 maps to the write baseline. Persistence still occurs only after all commit guards. */
+function migrateSfStateForWrite(state: SfProductState | undefined): SfProductState | undefined {
+  if (!state) return undefined
+  const migrated = { ...state }
+  for (const field of sfProductStateAdditiveFields) if (migrated[field] === undefined) migrated[field] = {}
+  return migrated
 }
 
 function readSfState(snapshot: Snapshot): SfProductState | undefined {
@@ -165,11 +174,7 @@ function readSfState(snapshot: Snapshot): SfProductState | undefined {
   const legacy = Object.keys(versions).length === 11 && versions["bi-artifacts"] === undefined && state.biArtifacts === undefined
   if ((!legacy && Object.keys(versions).length !== 12) || namespaces.some((key) => !(legacy && key === "bi-artifacts") && (!Number.isSafeInteger(versions[key]) || Number(versions[key]) < 0))) return undefined
   if (storedNamespaces.some((key) => state[key] === null || typeof state[key] !== "object" || Array.isArray(state[key]))) return undefined
-  if (state.nativeRuns !== undefined && (!state.nativeRuns || typeof state.nativeRuns !== "object" || Array.isArray(state.nativeRuns))) return undefined
-  if (state.claimBindings !== undefined && (!state.claimBindings || typeof state.claimBindings !== "object" || Array.isArray(state.claimBindings))) return undefined
-  if (state.commandProposals !== undefined && (!state.commandProposals || typeof state.commandProposals !== "object" || Array.isArray(state.commandProposals))) return undefined
-  if (state.compositeScenarios !== undefined && (!state.compositeScenarios || typeof state.compositeScenarios !== "object" || Array.isArray(state.compositeScenarios))) return undefined
+  if (sfProductStateAdditiveFields.some((field) => state[field] !== undefined && (!state[field] || typeof state[field] !== "object" || Array.isArray(state[field])))) return undefined
   if (!legacy && (!state.biArtifacts || typeof state.biArtifacts !== "object" || Array.isArray(state.biArtifacts))) return undefined
   return (legacy ? { ...state, versions: { ...versions, "bi-artifacts": 0 }, biArtifacts: {} } : state) as SfProductState
 }
-

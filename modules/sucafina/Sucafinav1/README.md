@@ -168,4 +168,6 @@ A revisão de dependências aceita compromissos identificados no caso e marcos d
 
 A composição também incorpora a cópia direta de snapshots com a mesma normalização e rejeições do codec do store, além de evitar duas cópias redundantes em caminhos de leitura. Os guards de persistência continuam ativos. Essa alteração não constitui prova de p95 nem fecha a matriz de desempenho do epic.
 
+Na migração aditiva C08, somente mapas ausentes são inicializados. Conteúdo, encarnação, versões e recibos existentes permanecem preservados. A persistência da migração ocorre com uma nova escrita autorizada e confirmada; leitura, prévia, recusa e retry exato não gravam a migração. Os seis mapas adicionais mantêm os guards dos namespaces proprietários.
+
 A promoção de alternativa reavalia a cobertura pelo produtor publicado com a classificação humana atual; a gravação confere novamente o caso, preferences protegidas, fontes e intenção exata. Categorias pendentes conservam resultado condicionado e total ausente. A escolha pode comparar cenários persistidos em versões sucessivas do mesmo caso pelo leitor histórico autorizado, sem converter um resultado histórico em permissão de alterar suas fontes.

@@ -4,6 +4,7 @@ import type { SfStateAuthority, SfProductStatePort, SfProductState, SfAtlasOutbo
 import { digestSfEvidenceRef } from "../../../../product/contracts/canonical.ts"
 import { createSfProductState } from "../../../../product/host-binding/state-provider.ts"
 import { testPersistence } from "../../../fixture/persistence.ts"
+import { sfProductStateAdditiveFields } from "../../../../product/contracts/state-layout.ts"
 
 const authority: SfStateAuthority = { principalRef: "user-1", accessRevision: "access-1", policyVersion: "policy-1" }
 const request = () => new Request("https://example.test/product")
@@ -182,6 +183,75 @@ test("legacy state adopts the BI namespace without resetting existing versions o
   expect(await f.port.read(request(), "preferences", (state) => state.versions)).toMatchObject({ status: "ok", value: { preferences: 1, "bi-artifacts": 1 } })
 })
 
+test("additive C08 migration preserves existing maps and commits only with a new authorized command", async () => {
+  const f = fixture()
+  const original = await f.port.transaction(request(), command, async (state) => {
+    state.preferences.theme = "light"
+    return { commit: true, value: "original" }
+  })
+  expect(original.status).toBe("ok")
+  const stored = f.storage.state.dashboard.data.__sfProductV1 as SfProductState
+  expect(Object.fromEntries(sfProductStateAdditiveFields.map((field) => [field, stored[field]])))
+    .toEqual(Object.fromEntries(sfProductStateAdditiveFields.map((field) => [field, {}])))
+  // Opaque legacy map contents exercise storage preservation; they are not admitted domain results.
+  Reflect.set(stored, "claimBindings", { preserved: { marker: "legacy-claim-map" } })
+  Reflect.set(stored, "nativeRuns", { preserved: { marker: "legacy-run-map" } })
+  for (const field of ["commandProposals", "compositeScenarios", "decisionResults", "biArtifacts"] as const) delete stored[field]
+  Reflect.deleteProperty(stored.versions, "bi-artifacts")
+  const legacy = structuredClone(f.storage.state.dashboard)
+  expect(await f.port.read(request(), "preferences", (state) => state.preferences.theme)).toMatchObject({ status: "ok", value: "light" })
+  expect(f.storage.state.dashboard).toEqual(legacy)
+  expect(await f.port.transaction(request(), command, async () => { throw new Error("old exact retry must not migrate") })).toEqual(original)
+  expect(f.storage.state.dashboard).toEqual(legacy)
+  const next = { ...command, expectedStorageVersion: 1, idempotencyKey: "migrate-additive", commandDigest: "b".repeat(64) }
+  const revoked = createSfProductState({ persistence: f.storage.persistence, resolveTarget, createId: () => "unused", authorize: async () => undefined })
+  expect(await revoked.transaction(request(), next, async () => { throw new Error("denied migration must not run") })).toMatchObject({ status: "denied" })
+  expect(f.storage.state.dashboard).toEqual(legacy)
+  expect(await f.port.transaction(request(), next, async (state) => {
+    expect(state.decisionResults).toEqual({})
+    state.preferences.theme = "preview"
+    return { commit: false, value: "preview" }
+  })).toMatchObject({ status: "preview", aggregateRevision: 1, storageVersion: 1 })
+  expect(f.storage.state.dashboard).toEqual(legacy)
+  let grants = 0
+  const lateRevoked = createSfProductState({ persistence: f.storage.persistence, resolveTarget, createId: () => "unused", authorize: async () => ++grants === 1 ? authority : undefined })
+  expect(await lateRevoked.transaction(request(), next, async (state) => {
+    state.preferences.theme = "revoked"
+    return { commit: true, value: "must not persist migration" }
+  })).toMatchObject({ status: "denied", reason: "product-authority-changed" })
+  expect(f.storage.state.dashboard).toEqual(legacy)
+  const result = await f.port.transaction(request(), next, async (state) => {
+    state.preferences.theme = "dark"
+    return { commit: true, value: "migrated" }
+  })
+  expect(result).toMatchObject({ status: "ok", aggregateRevision: 2, storageVersion: 2, incarnation: "incarnation-1", value: "migrated" })
+  const once = structuredClone(f.storage.state.dashboard)
+  const migrated = once.data.__sfProductV1 as SfProductState
+  expect(migrated.claimBindings).toEqual(stored.claimBindings)
+  expect(migrated.nativeRuns).toEqual(stored.nativeRuns)
+  expect(migrated.versions).toEqual({ ...stored.versions, preferences: 2, "bi-artifacts": 0 })
+  for (const field of ["commandProposals", "compositeScenarios", "decisionResults", "biArtifacts"] as const) expect(migrated[field]).toEqual({})
+  expect(await f.port.transaction(request(), next, async () => { throw new Error("retry must not migrate twice") })).toEqual(result)
+  expect(f.storage.state.dashboard).toEqual(once)
+})
+
+test("malformed additive maps cannot be normalized into an accepted state", async () => {
+  for (const field of sfProductStateAdditiveFields) {
+    for (const malformed of [null, [], 42]) {
+      const f = fixture()
+      expect((await f.port.transaction(request(), command, async () => ({ commit: true, value: "initialized" }))).status).toBe("ok")
+      Reflect.set(f.storage.state.dashboard.data.__sfProductV1 as SfProductState, field, malformed)
+      const before = structuredClone(f.storage.state.dashboard)
+      expect(await f.port.read(request(), "preferences", () => "must not disclose"))
+        .toEqual({ status: "unavailable", reason: "invalid-product-state" })
+      expect(await f.port.transaction(request(), { ...command, expectedStorageVersion: 1, idempotencyKey: "invalid-map" }, async () => {
+        throw new Error("invalid map must not invoke work")
+      })).toEqual({ status: "unavailable", reason: "invalid-product-state" })
+      expect(f.storage.state.dashboard).toEqual(before)
+    }
+  }
+})
+
 test("replacing the actual target blocks replay of the old receipt", async () => {
   const f = fixture()
   expect((await f.port.transaction(request(), command, async (state) => {
@@ -212,9 +282,7 @@ test("a callback cannot mutate a different namespace, versions, or receipts", as
   const before = structuredClone(f.storage.state.dashboard)
   const mutations = [
     (state: SfProductState) => { state.relations.link = "forged" },
-    (state: SfProductState) => { state.claimBindings = {} },
-    (state: SfProductState) => { state.commandProposals = {} },
-    (state: SfProductState) => { state.compositeScenarios = {} },
+    ...sfProductStateAdditiveFields.map((field) => (state: SfProductState) => { Reflect.set(state, field, { forged: { marker: "unauthorized" } }) }),
     (state: SfProductState) => { state.versions.relations = 7 },
     (state: SfProductState) => { state.transactions.forged = { namespace: "preferences", scopeDigest: "forged", principalRef: "user-1", targetRef: "preference-1", targetIncarnation: "target-1", commandDigest: "a".repeat(64), storageVersion: 1, aggregateRevision: 1, incarnation: "incarnation-1", value: "forged" } },
   ]
