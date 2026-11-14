@@ -22,7 +22,7 @@ export function createPersistentSensitivityPort(input: {
     if (source.value.kind !== "scenario" || source.value.caseRef.id !== caseRef.id || source.value.caseRef.incarnation !== caseRef.incarnation || source.value.caseRef.version > caseRef.version) return { status: "stale", reason: "sensitivity-sample-case-changed" } as const
     const samples = await Promise.all(result.evaluated.map((point) => input.results.read({ kind: "scenario", resultRef: point.resultRef }, context)))
     const failed = samples.find((sample) => sample.status !== "ok")
-    if (failed && failed.status !== "ok") return failed
+    if (failed) return failed
     if (samples.some((sample) => sample.status !== "ok" || sample.value.kind !== "scenario" || digestSfValue(sample.value.caseRef) !== digestSfValue(caseRef))) return { status: "stale", reason: "sensitivity-sample-case-changed" } as const
     return { status: "ok", value: [...source.value.sourceRefs, ...samples.flatMap((sample) => sample.status === "ok" ? sample.value.sourceRefs : [])] } as const
   }
@@ -64,7 +64,9 @@ export function createPersistentSensitivityPort(input: {
       const saved = existing?.status === "ok" && existing.value.state === "found" ? { status: "ok" as const, value: existing.value.result } : await input.results.write({ kind: "sensitivity", result: evaluated.value, caseRef, requestDigest, sourceRefs, idempotencyKey }, context)
       if (saved.status !== "ok") return saved
       if (saved.value.kind !== "sensitivity" || saved.value.requestDigest !== requestDigest || digestSfValue(saved.value.caseRef) !== digestSfValue(caseRef) || digestSfValue(saved.value.result) !== digestSfValue(evaluated.value)) return { status: "conflict", reason: "sensitivity-result-mismatch" } as const
-      if (!(existing?.status === "ok" && existing.value.state === "found")) {
+      const previousBinding = existing?.status === "ok" && existing.value.state === "found" ? await input.bindings.read({ caseRef, resultRef: saved.value.resultRef }, context) : undefined
+      if (previousBinding && previousBinding.status !== "ok" && previousBinding.status !== "unavailable") return previousBinding
+      if (!previousBinding || previousBinding.status !== "ok") {
         const binding = await input.bindings.bind({ caseRef, resultRef: saved.value.resultRef, criterionId: request.criterion.id, expectedRuleRef: proof.value.ruleRef, expectedRuleVersion: proof.value.ruleVersion, expectedRuleDigest: proof.value.ruleDigest, request }, context)
         if (binding.status !== "ok") return binding
       }

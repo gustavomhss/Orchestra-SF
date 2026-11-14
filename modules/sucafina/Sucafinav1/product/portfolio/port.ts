@@ -34,7 +34,7 @@ export function createPortfolioPort(host: PortfolioHost): PortfolioPort & { eval
       return { status: "needs-input", reason: "invalid-portfolio-scope-or-limit" }
     const resolved = await Promise.all(request.candidateRefs.map((ref) => host.resolveCandidate(ref, context)))
     const failure = resolved.find((item) => item.status !== "ok")
-    if (failure && failure.status !== "ok") return failure
+    if (failure) return failure
     const candidates = resolved.flatMap((item) => item.status === "ok" ? [structuredClone(item.value)] : [])
     if (candidates.some((item) => !item.operations.length || item.operations.some((operation) => !operation.targetRef.trim()))) return { status: "needs-input", reason: "candidate-operation-required" }
     if (candidates.some((item, index) => item.ref !== request.candidateRefs[index] || digestSfValue(item.operations) !== digestSfValue(item.scenario.operations))) return { status: "stale", reason: "candidate-reference-changed" }

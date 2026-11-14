@@ -81,9 +81,13 @@ export function createPersistentPortfolioPort(input: {
       const saved = existing?.status === "ok" && existing.value.state === "found" ? { status: "ok" as const, value: existing.value.result } : await input.results.write({ kind: "portfolio", result: evaluated.value, caseRef, requestDigest, sourceRefs, idempotencyKey: key }, context)
       if (saved.status !== "ok") return saved
       if (saved.value.kind !== "portfolio" || saved.value.requestDigest !== requestDigest || digestSfValue(saved.value.caseRef) !== digestSfValue(caseRef) || portfolioResultDigest(saved.value.result) !== portfolioResultDigest(evaluated.value)) return { status: "conflict", reason: "portfolio-result-mismatch" }
-      if (input.bindings && proof?.status === "ok" && !(existing?.status === "ok" && existing.value.state === "found")) {
-        const binding = await input.bindings.bind({ caseRef, resultRef: saved.value.resultRef, request, expectedProof: proof.value }, context)
-        if (binding.status !== "ok") return binding
+      if (input.bindings && proof?.status === "ok") {
+        const previousBinding = existing?.status === "ok" && existing.value.state === "found" ? await input.bindings.read({ caseRef, resultRef: saved.value.resultRef }, context) : undefined
+        if (previousBinding && previousBinding.status !== "ok" && previousBinding.status !== "unavailable") return previousBinding
+        if (!previousBinding || previousBinding.status !== "ok") {
+          const binding = await input.bindings.bind({ caseRef, resultRef: saved.value.resultRef, request, expectedProof: proof.value }, context)
+          if (binding.status !== "ok") return binding
+        }
       }
       return read(saved.value.resultRef, context)
     },

@@ -96,7 +96,7 @@ test("real Planner sensitivity keeps EUR input separate from USD output and leav
     const baselineScenario = { ...scenario, operations: [{ ...scenario.operations[0], amount: 100000 }] }
     const selectedPreview = await planner.simulateScenario(scenario, context)
     const baselinePreview = await planner.simulateScenario(baselineScenario, context)
-    expect(selectedPreview.status).toBe("ok")
+    expect(selectedPreview).toMatchObject({ status: "ok" })
     expect(baselinePreview.status).toBe("ok")
     if (selectedPreview.status !== "ok" || baselinePreview.status !== "ok") return
     if (selectedPreview.value.comparisonStatus !== "conditioned" || baselinePreview.value.comparisonStatus !== "conditioned") throw new Error("expected conditioned Planner previews")

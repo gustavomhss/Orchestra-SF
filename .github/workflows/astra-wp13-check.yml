@@ -1,0 +1,92 @@
+name: astra-wp13-check
+
+# Product tests use test-ci.yml. This branch only checks the declared product.
+on:
+  push:
+    branches: [astra-check-wp13]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: astra-wp13-check
+  cancel-in-progress: false
+
+jobs:
+  wp13:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout check envelope
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Validate product and envelope
+        id: product
+        run: |
+          node --input-type=module <<'NODE'
+          import { appendFileSync, readFileSync } from 'node:fs'
+          import { execFileSync } from 'node:child_process'
+          const input = JSON.parse(readFileSync('.astra-wp13-check.json', 'utf8'))
+          if (Object.keys(input).sort().join(',') !== 'devSha,productSha' ||
+              ![input.productSha, input.devSha].every(value => typeof value === 'string' && /^[a-f0-9]{40}$/.test(value)))
+            throw new Error('Invalid WP13 check envelope')
+          const git = (...args) => execFileSync('git', args, { encoding: 'utf8' }).trim()
+          if (git('rev-parse', 'HEAD') !== process.env.GITHUB_SHA || git('rev-parse', 'HEAD^') !== input.productSha)
+            throw new Error('The snapshot must descend directly from the declared product')
+          if (git('diff-tree', '--no-commit-id', '--name-status', '-r', input.productSha, 'HEAD') !== 'A\t.astra-wp13-check.json')
+            throw new Error('The snapshot changed product blobs')
+          git('cat-file', '-e', `${input.devSha}^{commit}`)
+          appendFileSync(process.env.GITHUB_OUTPUT, `sha=${input.productSha}\ndev=${input.devSha}\n`)
+          NODE
+
+      - name: Checkout exact product
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          ref: ${{ steps.product.outputs.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Record product and guard base
+        env:
+          PRODUCT_SHA: ${{ steps.product.outputs.sha }}
+          DEV_SHA: ${{ steps.product.outputs.dev }}
+        run: |
+          test "$(git rev-parse HEAD)" = "$PRODUCT_SHA"
+          git cat-file -e "$DEV_SHA^{commit}"
+          git update-ref refs/remotes/origin/dev "$DEV_SHA"
+          mkdir -p "$RUNNER_TEMP/astra-wp13-evidence"
+          git rev-parse HEAD HEAD^{tree} origin/dev > "$RUNNER_TEMP/astra-wp13-evidence/revisions.txt"
+          git merge-base HEAD origin/dev > "$RUNNER_TEMP/astra-wp13-evidence/merge-base.txt"
+
+      - name: Setup Bun
+        id: setup
+        uses: ./.github/actions/setup-bun
+
+      - name: Typecheck Sucafina
+        if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
+        working-directory: modules/sucafina
+        run: |
+          set -o pipefail
+          bun typecheck 2>&1 | tee "$RUNNER_TEMP/astra-wp13-evidence/sucafina-typecheck.log"
+
+      - name: Guard product against origin/dev
+        if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
+        run: |
+          set -o pipefail
+          bun run check:guards --base origin/dev 2>&1 | tee "$RUNNER_TEMP/astra-wp13-evidence/guards.log"
+
+      - name: Upload exact-check evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: astra-wp13-check-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/astra-wp13-evidence
+          if-no-files-found: error
+          retention-days: 14
