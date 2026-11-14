@@ -273,7 +273,7 @@
     ],
     "decision": "No package or lock mutation is made. The exact 9cc composition target already supplies its root workspace dependencies and must preserve them. The source-head hosted typecheck exposed that relay/schema aliases are not resolvable from CLI at source 1998ac; owned adapter support therefore uses explicit relative paths to the same existing workspace source modules instead of adding shared dependencies.",
     "package_patch_required_for_target": false,
-    "source_runtime_resolution": "Hosted run 43643108377 job 132594812686 failed typecheck, including owned unresolved alias imports. Those owned imports are being adapted to the actual workspace source paths; the corrected commit still requires hosted revalidation. No local install, module-resolution execution or typecheck was run.",
+    "source_runtime_resolution": "W1 hosted run 43643108377/job 132594812686 failed, including unresolved owned aliases. W2 1fe2e77f8cb70ff9f8fd0195efcc4792ebf6cadd corrected owned imports to existing workspace sources and the native Layer tuple overload. The exact W3 7676fd9173015e2c7d7c91745cc486f50018fc85 check run 43644025753/job 132597678493 observed zero owned diagnostics and 78 external diagnostics; the package typecheck remains FAIL. No package/lock changes, local installs or local typecheck were used.",
     "source_compatibility_correction": {
       "trigger": {
         "run_id": 43643108377,
@@ -286,7 +286,17 @@
       },
       "governance_import": "../../../../modules/relay/src/arm/state.ts",
       "layer_adaptation": "Layer.provide([Relay.node.implementation!]) uses the supported tuple overload and preserves the exact original native layer without any cast or a new service graph.",
-      "verification": "Correction prepared; no PASS claimed until the corrected hosted run completes."
+      "verification": {
+        "W": "7676fd9173015e2c7d7c91745cc486f50018fc85",
+        "S": "f8c20a57dae345d45ada1a42ef38233d24668c13",
+        "run": 43644025753,
+        "job": 132597678493,
+        "own_diagnostics": 0,
+        "external_diagnostics": 78,
+        "package_typecheck": "failure",
+        "guards": "success",
+        "scope": "modules/sucafina bun typecheck reaches owned CLI adapter imports through the named tests; no separate CLI or shared-host postimage typecheck was run"
+      }
     },
     "changed_package_files": []
   },
@@ -344,4 +354,3 @@
     "prohibited_actions_performed": []
   }
 }
-
