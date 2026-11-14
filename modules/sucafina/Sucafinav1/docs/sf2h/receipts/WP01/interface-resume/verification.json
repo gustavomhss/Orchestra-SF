@@ -72,6 +72,14 @@
     "modules/sucafina/Sucafinav1/test/product/wp02/workbench-ack.test.ts",
     "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts"
   ],
-  "pendingFinalStaticReceipt": true,
+  "pendingFinalStaticReceipt": false,
+  "documentaryStatic": {
+    "commit": "1ad4268fa6202be57a404cdfc755ba21776b0a97",
+    "tree": "02793beb4b4fc8040f7fa51b808eae8bc9a65c04",
+    "run": 43617372378,
+    "job": 132515272484,
+    "productEquivalentToW2OutsideOwnReceiptDirectory": true
+  },
+  "postStaticPublicationPolicy": "Only own receipt files may change to append the observed result. Product/test/fixture/workflow/guide bytes remain equal to the checked documentary parent and tested W2.",
   "selfReferencePolicy": "Containing documentary commit identifies these receipts; no recursive self-SHA is embedded."
 }

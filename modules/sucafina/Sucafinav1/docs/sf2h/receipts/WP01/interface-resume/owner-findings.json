@@ -982,7 +982,24 @@
     },
     "SHARED-STATIC": {
       "owner": "WP10/Composition host result union + Collaboration/WP07 retained callers",
-      "status": "SEE_LATEST_STATIC_DIAGNOSTICS",
+      "status": "FOREIGN_STATIC_BLOCKERS_REMAIN",
+      "latestCheck": {
+        "run": 43617372378,
+        "commit": "1ad4268fa6202be57a404cdfc755ba21776b0a97",
+        "counts": {
+          "total": 14,
+          "own": 0,
+          "foreign": 14,
+          "uniqueLocations": 9
+        },
+        "guards": {
+          "rules": 78,
+          "changedPaths": 880,
+          "gateFindings": 0,
+          "warnings": 42,
+          "errors": 0
+        }
+      },
       "publishedFixes": "Later Collaboration restores SQLite fixtures; its pending validation does not fix the retained input automatically. No foreign source intake performed."
     },
     "BI": {

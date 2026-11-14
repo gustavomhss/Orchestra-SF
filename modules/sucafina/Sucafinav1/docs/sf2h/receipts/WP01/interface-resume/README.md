@@ -6,7 +6,7 @@ Entrega na [PR #43](https://github.com/gustavomhss/Orchestra-SF/pull/43), `inter
 
 **Não é uma declaração de DONE.** F04, C05, C12, os demais limites de produtor/composição e a qualificação nativa/global continuam explícitos. A PR permanece em draft para S0; nenhuma PR anterior foi fechada e não houve merge.
 
-Verificação estática final: **pendente de anexar o check do commit documental**. O primeiro check teve 14 diagnósticos estrangeiros e três próprios nas novas assertions. As três chamadas foram corrigidas com argumentos de tipo `unknown`, mantendo os mesmos operandos e comparações; o resultado antigo continua FAIL.
+Verificação estática final: [run 43617372378](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43617372378), job `132515272484`, no commit documental `1ad4268fa6202be57a404cdfc755ba21776b0a97`, tree `02793beb4b4fc8040f7fa51b808eae8bc9a65c04`: **zero diagnóstico próprio; 14 ocorrências estrangeiras em nove locais**. Os dois `bun typecheck` permanecem FAIL por esses callers/contratos retidos. Guards: **78 regras, 880 paths, zero gate, 42 warnings, zero erro**, base `origin/dev` em `a1d37698a7bb097c1578f827eba6a19b9917ef07`. O primeiro check teve também três diagnósticos próprios nas novas assertions; as três chamadas foram corrigidas com argumentos de tipo `unknown`, mantendo operandos/comparações, e desapareceram do check final. O resultado antigo continua FAIL.
 
 ## Identidade e cadeia de publicação
 
@@ -20,7 +20,7 @@ Verificação estática final: **pendente de anexar o check do commit documental
 
 Os compares remotos W1→S1 e W2→S2 mostram **somente `.ci-run.json`**. Cada snapshot tem o respectivo W como pai. Request SHA256 S1: `8dee1fc4ba04461b4420239da72c04c2a2bd8fac8d238c4d21d1857f16ed5a7d`; S2: `0e5a6ed717643836a6100376db735f69ee09780837b5355a9a3fb2afd5086cd8`.
 
-O commit que contém este handoff acrescenta documentação ao W2. Seu SHA/tree e a relação exata com os checks estão na PR e em `verification.json`; os SHAs de produto/testes não são confundidos com os envelopes de CI.
+O commit que contém este handoff acrescenta documentação ao W2. O check final examinou o primeiro commit documental `1ad4268fa6202be57a404cdfc755ba21776b0a97`; a publicação posterior só anexa o resultado observado nos mesmos recibos. Produto, testes, fixtures, workflow e guia permanecem idênticos ao candidato qualificado. O head/tree final está na PR e a relação exata está em `verification.json`; os SHAs de produto/testes não são confundidos com os envelopes de CI.
 
 ## Deltas próprios
 
@@ -57,6 +57,7 @@ Os testes de 320/768/1440 px mantêm as assertions originais e agora também exi
 | [43615877759](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43615877759) / `132510708217` | W1 / S1 | 28 PASS, 3 FAIL, 498 assertions; dois FAIL de Escape e C12 |
 | [43616465145](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43616465145) / `132512490370` | W2 / S2 | **31 PASS, 1 FAIL**, 548 assertions; somente C12 |
 | [43615878780](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43615878780) / `132510711501` | W1 | Typecheck FAIL: 14 ocorrências estrangeiras + 3 próprias; guards PASS |
+| [43617372378](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43617372378) / `132515272484` | Documentação D0; produto idêntico a W2 | Typecheck FAIL: **14 estrangeiras, 0 próprias**; guards **0 gate / 0 erro** |
 | [43605201442](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43605201442) / `132478265438` | Composição W17 `9048e0e…` | BI: 5 PASS, 0 FAIL, 114 assertions; prova externa |
 | [43595658990](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43595658990) / `132449464415` | WP10 `d357de0…` | Dois PASS C05 nomeados; agregado **FAIL**, 105 PASS / 17 FAIL / 1 error |
 
@@ -91,7 +92,7 @@ Edição/rebase com dois atores, threads, saved views, agenda financeira e captu
 | Hot Topic CREATE / incarnation | Provider de source lifecycle e produtor: bind atômico da incarnation física na correlação. Sem segundo write ou identidade inferida. |
 | Draft replay depois de avanço do caso | Produtor de drafts/composição: a ordenação da autorização de versão antes da consulta de recibo continua finding estático; não é confundida com o FAIL runtime C12. |
 | G03 — primeira recusa CAS conhecida | Colaboração/composição: o input retido ainda mapeia `product-state-changed` para 503. A origem avançou para `20821df310ebc6ea08ccab27e829008d72a04de6` e publicou a correção do mapeamento e um teste SQLite real. Compor esse delta e provar o ramo UI de revisão com 409; nenhum PASS novo é inferido. |
-| Tipos compartilhados | WP10/composição: união de resultado em host-context; Colaboração/WP07: callers ReviewHost retidos. Correções publicadas em outra origem requerem composição e evidência, não substituição silenciosa. |
+| Tipos compartilhados | WP10/composição: cinco locais de união de resultado em `host-context.ts`, observados nos dois packages; Colaboração/WP07: quatro callers `ReviewHost` em `review-port.test.ts`. Total final: 14 ocorrências / nove locais / zero próprio. Correções publicadas em outra origem requerem composição e evidência, não substituição silenciosa. |
 | BI | Composição/WP10: reanexado W17 com seus cinco PASS. O shell novo difere transitivamente; revalidar a composição ao consumir este delta. |
 | Documentos/importação | Operações mantém `import-http.ts`, `document-http.ts` e serviços. Nenhum desses paths foi escrito nesta retomada. |
 | Aceite global | S0/WP10/WP12/native owners: cinco perfis, 18 skills, inferência real/output persistido após reload, AM01–AM06, C/G7, D/G8 e oito seleções finais/epic integrado. |

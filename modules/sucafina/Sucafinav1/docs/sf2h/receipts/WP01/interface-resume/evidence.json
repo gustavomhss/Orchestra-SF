@@ -1426,6 +1426,148 @@
       },
       "guardBase": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
       "logSha256": "e33ae7285f8965053433e8df2d442665b13d791ca09649305a3ba25eedc0075e"
+    },
+    {
+      "run": 43617372378,
+      "job": 132515272484,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43617372378",
+      "productCommit": "1ad4268fa6202be57a404cdfc755ba21776b0a97",
+      "tree": "02793beb4b4fc8040f7fa51b808eae8bc9a65c04",
+      "conclusion": "failure",
+      "commands": [
+        "(cd modules/sucafina && bun typecheck)",
+        "(cd apps/cli && bun typecheck)",
+        "bun run check:guards --base origin/dev"
+      ],
+      "diagnostics": [
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "line": 193,
+          "column": 136,
+          "code": "TS2322",
+          "message": "Type 'SfStateResult<string | undefined>' is not assignable to type 'PortResult<{ runRef: string; }>'.",
+          "owner": "WP10/Composition"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "line": 225,
+          "column": 138,
+          "code": "TS2322",
+          "message": "Type 'SfStateResult<({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; intentDigest?: string | undefined; skillInputDigest: string; principalRef: string; accessRevision: string; ... 9 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined>' is not assignable to type 'PortResult<{ runRef: string; }> | undefined'.",
+          "owner": "WP10/Composition"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "line": 281,
+          "column": 138,
+          "code": "TS2322",
+          "message": "Type 'SfStateResult<({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; intentDigest?: string | undefined; skillInputDigest: string; principalRef: string; accessRevision: string; ... 9 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined>' is not assignable to type 'PortResult<SfNativeRunRecord>'.",
+          "owner": "WP10/Composition"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "line": 404,
+          "column": 5,
+          "code": "TS2322",
+          "message": "Type '(context: TrustedUiContext, caseRef: { id: string; incarnation: string; version: number; }) => Promise<{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { ...; }[]; } | { ...; } | { ...; }>' is not assignable to type '(context: TrustedUiContext, caseRef: { id: string; incarnation: string; version: number; }) => Promise<PortResult<readonly { runRef: string; state: \"cancelled\" | \"failed\" | \"needs-input\" | ... 6 more ... | \"unavailable\"; version: number; outputRef?: string | undefined; }[]>>'.",
+          "owner": "WP10/Composition"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "line": 420,
+          "column": 5,
+          "code": "TS2322",
+          "message": "Type '(context: TrustedUiContext, runRef: string) => Promise<{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ ...; } & { ...; }) | ({ ...; } & { ...; }) | undefined; } | { ...; } | { ...; }>' is not assignable to type '(context: TrustedUiContext, runRef: string) => Promise<PortResult<SfNativeRunRecord>>'.",
+          "owner": "WP10/Composition"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+          "line": 40,
+          "column": 35,
+          "code": "TS2739",
+          "message": "Type '{ state: SfProductStatePort; now: () => string; requestFor: () => Request; authorizeSections: () => Promise<boolean>; authorizeComments: () => Promise<boolean>; authorizeSensitivity: () => Promise<...>; revalidate: () => Promise<...>; revalidateEvidence: () => Promise<...>; select: () => Promise<...>; }' is missing the following properties from type 'ReviewHost': creationTarget, authorizeOutcomeComparison, authorizeOutcome, authorizeDecision",
+          "owner": "Collaboration/WP07"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+          "line": 45,
+          "column": 41,
+          "code": "TS2739",
+          "message": "Type '{ state: SfProductStatePort; now: () => string; requestFor: () => Request; authorizeSections: () => Promise<false>; authorizeComments: () => Promise<true>; authorizeSensitivity: () => Promise<...>; revalidate: () => Promise<...>; revalidateEvidence: () => Promise<...>; select: () => Promise<...>; }' is missing the following properties from type 'ReviewHost': creationTarget, authorizeOutcomeComparison, authorizeOutcome, authorizeDecision",
+          "owner": "Collaboration/WP07"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+          "line": 56,
+          "column": 37,
+          "code": "TS2739",
+          "message": "Type '{ state: SfProductStatePort; now: () => string; requestFor: () => Request; authorizeSections: () => Promise<true>; authorizeComments: () => Promise<true>; authorizeSensitivity: () => Promise<...>; revalidate: () => Promise<...>; revalidateEvidence: () => Promise<...>; select: () => Promise<...>; }' is missing the following properties from type 'ReviewHost': creationTarget, authorizeOutcomeComparison, authorizeOutcome, authorizeDecision",
+          "owner": "Collaboration/WP07"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+          "line": 221,
+          "column": 36,
+          "code": "TS2739",
+          "message": "Type '{ state: SfProductStatePort; now: () => string; requestFor: () => undefined; authorizeSections: () => Promise<false>; authorizeComments: () => Promise<true>; authorizeSensitivity: () => Promise<...>; revalidate: () => Promise<...>; revalidateEvidence: () => Promise<...>; select: () => Promise<...>; }' is missing the following properties from type 'ReviewHost': creationTarget, authorizeOutcomeComparison, authorizeOutcome, authorizeDecision",
+          "owner": "Collaboration/WP07"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "line": 193,
+          "column": 136,
+          "code": "TS2322",
+          "message": "Type 'SfStateResult<string | undefined>' is not assignable to type 'PortResult<{ runRef: string; }>'.",
+          "owner": "WP10/Composition"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "line": 225,
+          "column": 138,
+          "code": "TS2322",
+          "message": "Type 'SfStateResult<({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; intentDigest?: string | undefined; skillInputDigest: string; principalRef: string; accessRevision: string; ... 9 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined>' is not assignable to type 'PortResult<{ runRef: string; }> | undefined'.",
+          "owner": "WP10/Composition"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "line": 281,
+          "column": 138,
+          "code": "TS2322",
+          "message": "Type 'SfStateResult<({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; intentDigest?: string | undefined; skillInputDigest: string; principalRef: string; accessRevision: string; ... 9 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined>' is not assignable to type 'PortResult<SfNativeRunRecord>'.",
+          "owner": "WP10/Composition"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "line": 404,
+          "column": 5,
+          "code": "TS2322",
+          "message": "Type '(context: TrustedUiContext, caseRef: { id: string; incarnation: string; version: number; }) => Promise<{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { ...; }[]; } | { ...; } | { ...; }>' is not assignable to type '(context: TrustedUiContext, caseRef: { id: string; incarnation: string; version: number; }) => Promise<PortResult<readonly { runRef: string; state: \"cancelled\" | \"failed\" | \"needs-input\" | ... 6 more ... | \"unavailable\"; version: number; outputRef?: string | undefined; }[]>>'.",
+          "owner": "WP10/Composition"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "line": 420,
+          "column": 5,
+          "code": "TS2322",
+          "message": "Type '(context: TrustedUiContext, runRef: string) => Promise<{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ ...; } & { ...; }) | ({ ...; } & { ...; }) | undefined; } | { ...; } | { ...; }>' is not assignable to type '(context: TrustedUiContext, runRef: string) => Promise<PortResult<SfNativeRunRecord>>'.",
+          "owner": "WP10/Composition"
+        }
+      ],
+      "counts": {
+        "total": 14,
+        "own": 0,
+        "foreign": 14,
+        "uniqueLocations": 9
+      },
+      "guards": {
+        "rules": 78,
+        "changedPaths": 880,
+        "gateFindings": 0,
+        "warnings": 42,
+        "errors": 0
+      },
+      "guardBase": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+      "logSha256": "e646c9350a01d6e914f3ad4a44deb133dc7cad391c1b138150c2634332fc7325"
     }
   ],
   "proofs": {
@@ -1447,15 +1589,15 @@
     },
     "RESUME-STATIC": {
       "kind": "STATIC_GATE",
-      "record": "#/staticChecks/0",
+      "record": "#/staticChecks/1",
       "result": "failure",
       "counts": {
-        "total": 17,
-        "own": 3,
+        "total": 14,
+        "own": 0,
         "foreign": 14,
-        "uniqueLocations": 12
+        "uniqueLocations": 9
       },
-      "pendingFinalStatic": true
+      "pendingFinalStatic": false
     },
     "EXTERNAL-BI-W17": {
       "kind": "EXTERNAL_SCOPED_PASS",
