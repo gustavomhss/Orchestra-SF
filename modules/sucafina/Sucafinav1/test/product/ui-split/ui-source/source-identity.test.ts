@@ -13,7 +13,7 @@ async function intent(f: Fixture, correlationKey: string): Promise<HotTopicInten
   return { ...fields, correlationKey, sourceRefs: [source.value] }
 }
 async function existingAction(f: Fixture) {
-  const response = await f.runtime.command({ page: "Hot Topics & Actions", action: "save", values: fields })
+  const response = await f.runtime.command({ page: "Hot Topics & Actions", action: "save", version: 0, values: fields })
   expect(response?.status).toBe(200)
   expect(await response!.json()).toMatchObject({ ok: true })
   const stored = await f.runtime.inspect()

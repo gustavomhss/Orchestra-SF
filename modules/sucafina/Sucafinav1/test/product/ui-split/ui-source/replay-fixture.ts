@@ -6,7 +6,7 @@ import { createRecoveryFixture, initialCaseRef } from "../../wp02/workbench-reco
 
 export { createRecoveryFixture, initialCaseRef }
 export type Fixture = Awaited<ReturnType<typeof createRecoveryFixture>>
-export async function post(f: Fixture, mode: string, body: unknown, key = randomUUID()) {
+export async function post(f: Fixture, mode: string, body: unknown, key: string = randomUUID()) {
   const headers = new Headers(f.request().headers)
   headers.set("idempotency-key", key)
   return fetch(`${f.origin}/sucafina/dashboard?sf=${mode}`, { method: "POST", headers, body: JSON.stringify(body) })
@@ -21,7 +21,7 @@ export async function draftRequest(f: Fixture): Promise<HotTopicDraftRequest> {
 }
 export async function preferences(f: Fixture) {
   const current = await f.authority.state.read(f.request(), "preferences", (state) => ({ preferences: structuredClone(state.preferences), transactions: structuredClone(state.transactions) }))
-  if (current.status !== "ok") throw new Error(`Preferences unavailable: ${current.reason}`)
+  if (current.status !== "ok") throw new Error(`Preferences unavailable: ${current.status}`)
   return current
 }
 export async function advanceCase(f: Fixture) {
