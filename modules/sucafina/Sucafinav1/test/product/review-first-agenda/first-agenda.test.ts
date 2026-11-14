@@ -136,9 +136,35 @@ test("first agenda uses three real domains, preserves edits through drift and re
     expect(mixed.sections.map((section) => section.period)).toEqual([...Array(5).fill(f.period), { start: "2026-01-01", end: "2026-01-31" }])
     expect(mixed.sections.find((section) => section.title === "Projects")?.recordCount).toBe(1)
     expect(new Set(mixed.sections.flatMap((section) => section.projection.context.sourceRefs.map((ref) => ref.surface)))).toEqual(new Set(["dashboard", "planner", "procurement"]))
+    for (const section of mixed.sections) {
+      const row = view.locator("li").filter({ has: page.getByRole("heading", { name: section.title, exact: true }) })
+      const table = row.getByRole("table", { name: `${section.title} · selected source values`, exact: true })
+      await playwright.expect(table.getByRole("cell")).toHaveText(section.projection.values.flatMap((value) => [
+        value.id, `${value.value === null ? "Unavailable" : String(value.value)} ${value.currency ?? value.unit ?? ""}`.trim(),
+        `${value.period.start} – ${value.period.end}`,
+      ]))
+      await playwright.expect(row.getByText(`${section.period.start} – ${section.period.end} · ${section.recordCount} selected records`, { exact: true })).toBeVisible()
+      await playwright.expect(row.getByText(`Section reference: ${section.id}`, { exact: true })).toBeVisible()
+      for (const source of section.projection.context.sourceRefs) await playwright.expect(row.getByText(
+        `Source: ${source.surface} · ${source.type} · ${source.id} · version ${source.version} · incarnation ${source.incarnation}`, { exact: true })).toBeVisible()
+      const records = mixed.sectionRecordRefs.find((entry) => entry.sectionRef === section.id)!.recordRefs
+      await playwright.expect(row.getByRole("button", { name: /^Remove record / })).toHaveText(records.map((reference) => `Remove record ${reference}`))
+      await row.getByText("Components, evidence and limitations", { exact: true }).click()
+      await playwright.expect(row.locator("details")).toHaveAttribute("open", "")
+      await playwright.expect(row.locator("details > p")).toHaveText([
+        ...section.projection.components.map((component) => `${component.id}: ${component.amount === null ? "Unavailable" : component.amount} ${component.currency} · ${component.period.start} – ${component.period.end} · ${component.evidenceState}`),
+        ...section.projection.values.map((value) => `${value.id} · ${value.evidenceState} · Sources: ${value.sourceRefs.map((reference) => reference.refId).join(", ") || "No source reference"}`),
+        ...section.projection.missing.map((entry) => `${entry.field}: ${entry.reason}`),
+      ])
+    }
     const afterSelection = await f.snapshots()
     expect(afterSelection.dashboard.audit.slice(0, before.dashboard.audit.length)).toEqual(before.dashboard.audit)
-    for (const entry of afterSelection.dashboard.audit.slice(before.dashboard.audit.length)) expect(entry).toMatchObject({ record: "members:private-member", was: null, became: null })
+    // C9 runtime/dashboard-people.ts:161–180, blob de499e6d34af826add34bee4125bcfba4e57ddb8, emits this exact read event.
+    // C9 product/dashboard/port.ts:161–176, blob b5acfaf9b03c4e03a60c375248cf2ecbd1f32811, normalizes its timestamp and commits the audit.
+    const reads = afterSelection.dashboard.audit.slice(before.dashboard.audit.length)
+    expect(reads.length).toBeGreaterThan(0)
+    for (const entry of reads) expect(entry).toEqual({ who: "person", at: "2026-11-13T00:00:00.000Z", record: "members:private-member", was: null,
+      became: { read: true, member: "private-member" } })
     expectUnchangedDomainState(before, { ...afterSelection, dashboard: { ...afterSelection.dashboard, audit: before.dashboard.audit } })
 
     await f.changeCandidate()
@@ -181,6 +207,14 @@ test("first agenda uses three real domains, preserves edits through drift and re
     expect(saved.previousReviewRef).toBeUndefined()
     expect(saved.sections.map((section) => section.title)).toEqual(ordered)
     expect(saved.sections.map((section) => section.count)).toEqual([1, 2, 1, 1, 1, 0])
+    expect(saved.sections.map((section) => section.period)).toEqual(mixed.sections.map((section) => section.period))
+    const finalPreview = transport.previews.at(-1)!
+    expect(saved.sections.map((section) => ({ id: section.id, period: section.period,
+      contextPeriod: (section.content as DomainProjection).context.period, sourceRefs: section.sourceRefs,
+      contextSourceRefs: (section.content as DomainProjection).context.sourceRefs }))).toEqual(finalPreview.sections.map((section) => ({
+      id: section.id, period: section.period, contextPeriod: section.projection.context.period,
+      sourceRefs: section.projection.context.sourceRefs, contextSourceRefs: section.projection.context.sourceRefs,
+    })))
     expect(await f.storedReviews()).toEqual([saved.id])
     const captured = saved.sections.find((section) => section.title === "Forecast · Agenda candidate · candidate")!.content as DomainProjection
     expect(captured.values.find((value) => value.id === "license:1:forecast")?.value).toBe(120)
