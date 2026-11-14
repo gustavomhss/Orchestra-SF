@@ -1,0 +1,814 @@
+{
+  "schema": "sf-routine-owner-hosted-tests-v1",
+  "scope": "Component tests only. New87 at W2; unchanged previous14 at W1. No single-head101/full-native claim.",
+  "cases": [
+    {
+      "attempt": 1,
+      "W": "99d225ba024b4de910753d0fce34bf1b9a43281f",
+      "file": "Sucafinav1/test/product/routine-native-admission/adapter-boundaries.test.ts",
+      "name": "operation descriptors follow the live native binding and never advertise a watch function that only returns unavailable",
+      "duration_ms": 5.94,
+      "result": "PASS"
+    },
+    {
+      "attempt": 1,
+      "W": "99d225ba024b4de910753d0fce34bf1b9a43281f",
+      "file": "Sucafinav1/test/product/routine-native-admission/adapter-boundaries.test.ts",
+      "name": "owner identity, request cancellation, revocation and generation changes fail before native reads or side effects",
+      "duration_ms": 2.18,
+      "result": "PASS"
+    },
+    {
+      "attempt": 1,
+      "W": "99d225ba024b4de910753d0fce34bf1b9a43281f",
+      "file": "Sucafinav1/test/product/routine-native-admission/adapter-boundaries.test.ts",
+      "name": "an already cancelled request interrupts before its synchronous operation can run",
+      "duration_ms": 1.32,
+      "result": "PASS"
+    },
+    {
+      "attempt": 1,
+      "W": "99d225ba024b4de910753d0fce34bf1b9a43281f",
+      "file": "Sucafinav1/test/product/routine-native-admission/adapter-boundaries.test.ts",
+      "name": "abort reaches the real coordinator's owned exclusive fiber while a busy retry never executes",
+      "duration_ms": 18.03,
+      "result": "PASS"
+    },
+    {
+      "attempt": 1,
+      "W": "99d225ba024b4de910753d0fce34bf1b9a43281f",
+      "file": "Sucafinav1/test/product/routine-native-admission/adapter-boundaries.test.ts",
+      "name": "aborting one owned operation preserves a queued successor and cannot stop that new owner",
+      "duration_ms": 1.83,
+      "result": "PASS"
+    },
+    {
+      "attempt": 1,
+      "W": "99d225ba024b4de910753d0fce34bf1b9a43281f",
+      "file": "Sucafinav1/test/product/routine-native-admission/adapter-boundaries.test.ts",
+      "name": "a busy native dispatch cannot bind authority, inspect resources, or interrupt the current owner and its successor",
+      "duration_ms": 1.94,
+      "result": "PASS"
+    },
+    {
+      "attempt": 1,
+      "W": "99d225ba024b4de910753d0fce34bf1b9a43281f",
+      "file": "Sucafinav1/test/product/routine-native-admission/governance-lease.test.ts",
+      "name": "installed native Task governance refuses a workflow-bound SF turn when missing",
+      "duration_ms": 145.63,
+      "result": "PASS"
+    },
+    {
+      "attempt": 1,
+      "W": "99d225ba024b4de910753d0fce34bf1b9a43281f",
+      "file": "Sucafinav1/test/product/routine-native-admission/governance-lease.test.ts",
+      "name": "installed native Task governance refuses a workflow-bound SF turn when revoked",
+      "duration_ms": 43.66,
+      "result": "PASS"
+    },
+    {
+      "attempt": 1,
+      "W": "99d225ba024b4de910753d0fce34bf1b9a43281f",
+      "file": "Sucafinav1/test/product/routine-native-admission/governance-lease.test.ts",
+      "name": "installed native Task governance refuses a workflow-bound SF turn when aborted",
+      "duration_ms": 31.51,
+      "result": "PASS"
+    },
+    {
+      "attempt": 1,
+      "W": "99d225ba024b4de910753d0fce34bf1b9a43281f",
+      "file": "Sucafinav1/test/product/routine-native-admission/governance-lease.test.ts",
+      "name": "installed native Task governance refuses a workflow-bound SF turn when cancel-during-check",
+      "duration_ms": 37.07,
+      "result": "PASS"
+    },
+    {
+      "attempt": 1,
+      "W": "99d225ba024b4de910753d0fce34bf1b9a43281f",
+      "file": "Sucafinav1/test/product/routine-native-admission/governance-lease.test.ts",
+      "name": "installed native Task governance refuses a workflow-bound SF turn when reader-replaced",
+      "duration_ms": 39.31,
+      "result": "PASS"
+    },
+    {
+      "attempt": 1,
+      "W": "99d225ba024b4de910753d0fce34bf1b9a43281f",
+      "file": "Sucafinav1/test/product/routine-native-admission/governance-lease.test.ts",
+      "name": "installed native Task governance refuses a workflow-bound SF turn when lease-replaced",
+      "duration_ms": 28.94,
+      "result": "PASS"
+    },
+    {
+      "attempt": 1,
+      "W": "99d225ba024b4de910753d0fce34bf1b9a43281f",
+      "file": "Sucafinav1/test/product/routine-native-admission/governance-lease.test.ts",
+      "name": "installed native Task governance refuses a workflow-bound SF turn when malformed-input",
+      "duration_ms": 34.37,
+      "result": "PASS"
+    },
+    {
+      "attempt": 1,
+      "W": "99d225ba024b4de910753d0fce34bf1b9a43281f",
+      "file": "Sucafinav1/test/product/routine-native-admission/governance-lease.test.ts",
+      "name": "governance availability uses the installed native service identity and expires with its Location scope",
+      "duration_ms": 26.8,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+      "name": "synthetic trusted hook exposes one stable owner and the existing adapter reads the real published plan",
+      "duration_ms": 393.9,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+      "name": "an authenticated UI lease still needs the separately injected trusted Maestro frame",
+      "duration_ms": 109.03,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+      "name": "without private Request scope, retained SF input and even a core frame confer no owner",
+      "duration_ms": 61.79,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+      "name": "a app frame cannot stand in for native Task settlement",
+      "duration_ms": 66.39,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+      "name": "a sdk frame cannot stand in for native Task settlement",
+      "duration_ms": 42.4,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+      "name": "serialized frame claims cannot forge the private issued native capability",
+      "duration_ms": 44.85,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+      "name": "a forged session cannot replace canonical native invocation identity",
+      "duration_ms": 239.91,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+      "name": "a forged assistant message cannot replace canonical native invocation identity",
+      "duration_ms": 941.49,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+      "name": "a forged call cannot replace canonical native invocation identity",
+      "duration_ms": 43.71,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+      "name": "a forged actor cannot replace canonical native invocation identity",
+      "duration_ms": 41.67,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+      "name": "a forged project cannot replace canonical native invocation identity",
+      "duration_ms": 44.16,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+      "name": "a forged Location cannot replace canonical native invocation identity",
+      "duration_ms": 67.12,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+      "name": "a forged project directory cannot replace canonical native invocation identity",
+      "duration_ms": 47.17,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+      "name": "a forged model text cannot replace canonical native invocation identity",
+      "duration_ms": 72.18,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+      "name": "internally consistent invented session and message claims still fail against SessionStore",
+      "duration_ms": 55.46,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+      "name": "a changed canonical session actor prevents owner capture",
+      "duration_ms": 63.75,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+      "name": "a changed canonical archived session prevents owner capture",
+      "duration_ms": 41.32,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+      "name": "a changed canonical session Location prevents owner capture",
+      "duration_ms": 39.2,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+      "name": "a changed canonical session project prevents owner capture",
+      "duration_ms": 39.13,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+      "name": "a changed canonical assistant actor prevents owner capture",
+      "duration_ms": 51.35,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+      "name": "a changed canonical assistant model prevents owner capture",
+      "duration_ms": 54.98,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+      "name": "a changed canonical human approval prevents owner capture",
+      "duration_ms": 52.69,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+      "name": "a changed canonical native arm provenance prevents owner capture",
+      "duration_ms": 49.64,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+      "name": "a changed canonical authorization prevents owner capture",
+      "duration_ms": 35.08,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+      "name": "a changed canonical review receipt prevents owner capture",
+      "duration_ms": 45.7,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+      "name": "a changed canonical approval receipt prevents owner capture",
+      "duration_ms": 47.51,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+      "name": "a changed canonical presentation receipt prevents owner capture",
+      "duration_ms": 47.91,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+      "name": "a changed canonical visible Maestro prevents owner capture",
+      "duration_ms": 36.51,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+      "name": "a changed canonical provider-executed Task prevents owner capture",
+      "duration_ms": 40.64,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+      "name": "a changed canonical duplicate Task call prevents owner capture",
+      "duration_ms": 76.9,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+      "name": "a changed canonical pending Task prevents owner capture",
+      "duration_ms": 38.2,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+      "name": "a changed canonical completed Task prevents owner capture",
+      "duration_ms": 41.55,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+      "name": "a canonical Task input change matching supplied arguments still needs its approved intent",
+      "duration_ms": 53.18,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+      "name": "native Permission deny remains effective even when the canonical frame agrees with it",
+      "duration_ms": 47.03,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+      "name": "the native deny floor cannot be widened by the selected agent's ask rule",
+      "duration_ms": 44.25,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+      "name": "an issued child frame cannot impersonate the root Task call",
+      "duration_ms": 34.8,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+      "name": "owner observation preserves an independent governance refusal and writes no approval or admission",
+      "duration_ms": 68.71,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+      "name": "a live owner is insufficient when the real publication is revoked",
+      "duration_ms": 130.86,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "name": "owner acquisition refuses principal",
+      "duration_ms": 56.92,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "name": "owner acquisition refuses project",
+      "duration_ms": 37.3,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "name": "owner acquisition refuses host",
+      "duration_ms": 37.89,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "name": "owner acquisition refuses Location",
+      "duration_ms": 37.56,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "name": "owner acquisition refuses native Maestro session",
+      "duration_ms": 75.9,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "name": "owner acquisition refuses case incarnation",
+      "duration_ms": 53.16,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "name": "owner acquisition refuses case version",
+      "duration_ms": 48.67,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "name": "owner acquisition refuses policy revision",
+      "duration_ms": 48.37,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "name": "owner acquisition refuses access revision",
+      "duration_ms": 58.92,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "name": "owner acquisition refuses older provider generation",
+      "duration_ms": 48.02,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "name": "owner acquisition refuses expired context",
+      "duration_ms": 37.2,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "name": "owner acquisition refuses revoked authenticated Request",
+      "duration_ms": 42.54,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "name": "owner acquisition refuses missing provider generation",
+      "duration_ms": 31.41,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "name": "a live owner is fenced when Request headers changes",
+      "duration_ms": 84.66,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "name": "a live owner is fenced when Request identity changes",
+      "duration_ms": 57.47,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "name": "a live owner is fenced when principal changes",
+      "duration_ms": 87.62,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "name": "a live owner is fenced when project changes",
+      "duration_ms": 86.04,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "name": "a live owner is fenced when policyVersion changes",
+      "duration_ms": 66.53,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "name": "a live owner is fenced when accessRevision changes",
+      "duration_ms": 68.08,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "name": "a live owner is fenced when lease identity changes",
+      "duration_ms": 75.61,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "name": "a live owner is fenced when binding identity changes",
+      "duration_ms": 64.46,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "name": "a live owner is fenced when provider generation changes",
+      "duration_ms": 59.26,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "name": "a live owner is fenced when resource object identity changes",
+      "duration_ms": 64.85,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "name": "a live owner is fenced when resource identity facts changes",
+      "duration_ms": 73.69,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "name": "a live owner is fenced when runtime lifetime changes",
+      "duration_ms": 58.85,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "name": "a live owner is fenced when authentication changes",
+      "duration_ms": 90.14,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "name": "a live owner is fenced when lease expiry changes",
+      "duration_ms": 60.7,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "name": "a live owner is fenced when explicit Request revocation changes",
+      "duration_ms": 62.37,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "name": "a live owner is fenced when Request abort changes",
+      "duration_ms": 58.2,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "name": "a live owner is fenced when generation invalidation changes",
+      "duration_ms": 84.51,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "name": "a live owner is fenced when registry disposal changes",
+      "duration_ms": 59.14,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "name": "canonical human approval revocation invalidates a previously captured owner",
+      "duration_ms": 62.84,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "name": "removing the canonical validation receipt revokes the already captured binding",
+      "duration_ms": 81.43,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "name": "removing the canonical context receipt revokes the already captured binding",
+      "duration_ms": 65.78,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "name": "removing the canonical review receipt revokes the already captured binding",
+      "duration_ms": 75.67,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "name": "removing the canonical approval receipt revokes the already captured binding",
+      "duration_ms": 67.7,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "name": "removing the canonical presentation receipt revokes the already captured binding",
+      "duration_ms": 67.8,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "name": "native Permission changes are re-read after capture without creating an approval",
+      "duration_ms": 71.82,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "name": "replacing the real Task registration invalidates ownership even after the old registration returns",
+      "duration_ms": 75.93,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "name": "mutating the original invocation after capture cannot retain authority",
+      "duration_ms": 59.85,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "name": "a duplicate concurrent Task call is refused without replacing the first owner's identity",
+      "duration_ms": 107.76,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "name": "Request headers while settlement awaits prevents a successful result",
+      "duration_ms": 59.33,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "name": "Request revoke while settlement awaits prevents a successful result",
+      "duration_ms": 59.47,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "name": "interrupting an in-flight settlement clears ownership and permanently fences that call's replay",
+      "duration_ms": 68.78,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "name": "Request abort interrupts a blocked settlement before its next effect",
+      "duration_ms": 57.05,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "name": "registry revoke interrupts a blocked settlement before its next effect",
+      "duration_ms": 79.31,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "name": "lease expiry interrupts a blocked settlement before its next effect",
+      "duration_ms": 1184.23,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "name": "an unrelated tool and a nested rejected Request scope cannot mint or overwrite an owner",
+      "duration_ms": 944.64,
+      "result": "PASS"
+    },
+    {
+      "attempt": 2,
+      "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "file": "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "name": "an invalidated old generation cannot be resurrected by restoring its number",
+      "duration_ms": 1072.02,
+      "result": "PASS"
+    }
+  ]
+}

@@ -5,12 +5,13 @@
   "pr": 30,
   "reviewer": "native_api_audit",
   "review_boundary": "Source review of peer-authored registry/runtime/governance/adapter and focused fixtures; the same reviewer authored routine-native-owner.ts, so that file's review is not an independent acceptance review.",
-  "status": "SOURCE_REVIEW_COMPLETE_W1_CHECK_FAILED_OWNED_TEST_DIAGNOSTICS",
+  "status": "SOURCE_REVIEW_COMPLETE_W2_NO_NEW_DIAGNOSTICS_NOT_ACCEPTANCE",
   "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
   "mission_source_sha": "e4c1bb7c914a29cb3d4fcddc9e196823289ccc80",
   "reconciled_source_sha": "d9e1aca275bd04b2066ca84a605c7c315ea14c77",
   "dependency_source_sha": "0c395c462ce0fae67cb274c45ccb06884877d7cd",
   "published_product_sha": "99d225ba024b4de910753d0fce34bf1b9a43281f",
+  "latest_reviewed_product_sha": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
   "reviewed_files": [
     "apps/cli/src/sucafina-product/routine-native-owner.ts",
     "apps/cli/src/sucafina-product/routine-native-registry.ts",
@@ -126,6 +127,32 @@
     ],
     "baseline_comparison": "Both complete decoded job logs were read through GitHub MCP. Strip only the timestamp and GitHub error annotation prefix from each TypeScript diagnostic header: all 78 prior mission30 headers recur exactly, with zero removed and six new headers confined to the three owned test files. Product checkout in the W1 log is 99d225ba024b4de910753d0fce34bf1b9a43281f. Root assigned correction and a deduplicated focused rerun; this reviewer did not change tests, execute locally or trigger a run."
   },
+  "follow_up_check_observations": [
+    {
+      "attempt": "W2",
+      "status": "FAILED_EXTERNAL_BASELINE_ONLY",
+      "product_sha": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+      "product_tree": "294407df8b80276a9f80737fd12531635eccc078",
+      "snapshot_sha": "b333525a854cf64099ea8c6601d4da9bb52c8c1e",
+      "run_id": 43650142544,
+      "job_id": 132616555993,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43650142544",
+      "job_conclusion": "failure",
+      "typecheck_conclusion": "failure",
+      "guard_conclusion": "success",
+      "typescript_diagnostic_count": 78,
+      "preserved_baseline_diagnostics": 78,
+      "removed_baseline_diagnostics": 0,
+      "new_owned_diagnostic_count": 0,
+      "new_private_production_source_diagnostic_count": 0,
+      "resolved_W1_owned_test_diagnostics": 6,
+      "guard": { "rules": 78, "changed_paths": 703, "gate_findings": 0, "warn_findings": 13, "errors": 0 },
+      "source_continuity": "GitHub MCP compare W1...W2 shows one commit with exactly three changed test files and three added receipts, and no private production source change. The product tree and both checkout pins were confirmed from the comparison and complete W2 job log.",
+      "comparison_method": "The complete W2 decoded job log was read through GitHub MCP. Removing only timestamps and GitHub error annotation prefixes yields exactly the same 78 TypeScript diagnostic headers as baseline run43644025753/job132597678493. All six new W1 test diagnostics are absent. The overall check remains red; this is not a clean package typecheck or integrated mission acceptance.",
+      "history_policy": "W1 observation and its six diagnostics above remain unchanged. Formal CI/test receipts are owned by the root session. A later receipt-only terminal commit must not be represented as the tested W2 product.",
+      "new_test_or_rerun_requested_by_this_reviewer": false
+    }
+  ],
   "acceptance": {
     "local_tests": "NOT_RUN_BY_INSTRUCTION",
     "local_typecheck": "NOT_RUN_BY_INSTRUCTION",

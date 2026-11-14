@@ -1,0 +1,177 @@
+{
+  "schema": "sf-routine-native-owner-terminal-v1",
+  "mission": 41,
+  "id": "routine-native-owner-binding",
+  "status": "INDEPENDENT_IMPLEMENTATION_DELIVERED; AUTHENTICATED_NATIVE_ADMISSION_AND_INTEGRATED_ACCEPTANCE_HOLD",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "astra-wp09",
+  "pr": 30,
+  "observed_at": "2026-11-14 22:56:56 UTC",
+  "source_lease": {
+    "epoch": "routine-owner-browser41",
+    "closed": true,
+    "closure": "This terminal closes the bounded mission41 source work. No continuing source lease, new native controller, or final acceptance authority is claimed."
+  },
+  "consumer": {
+    "original_requested": "session33",
+    "current_authorized": "session42/S0, explicit successor to closed33",
+    "authority_receipt_commit": "c5ab23fd7c9b231917bf70123958c9ff03e7d420",
+    "latest_observed_head": "36521bb47f1d10de8d8bb5d376fdb5d5fa7bc8e1",
+    "latest_reconciliation": "assembly/selective-intake.json",
+    "consumption_ack": "NOT_OBSERVED",
+    "final_dispatcher_and_acceptance": "S0",
+    "latest_observed_tree": "d6cc2b9f562ddc390e13a0645aae510bb5bd4e13"
+  },
+  "authority": {
+    "mission_sha": "e4c1bb7c914a29cb3d4fcddc9e196823289ccc80",
+    "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "predecessor_head": "d9e1aca275bd04b2066ca84a605c7c315ea14c77",
+    "claim_commit": "e4ccf93df3e5d3ad0e8c2de0d0b07111902b62ef",
+    "prior_terminal": "../routine-native-admission/terminal.json",
+    "readings": "authority.json and input-provenance.json",
+    "remote": "GitHub MCP only; expected-SHA CAS; force false",
+    "backend_session_id": null,
+    "backend_model_verified": false
+  },
+  "outputs": {
+    "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+    "tree": "294407df8b80276a9f80737fd12531635eccc078",
+    "production_source_commit": "99d225ba024b4de910753d0fce34bf1b9a43281f",
+    "product_commits": [
+      {
+        "W": "99d225ba024b4de910753d0fce34bf1b9a43281f",
+        "tree": "2a1676a8788c58605657c9f99f2e6a82ee29e330"
+      },
+      {
+        "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+        "tree": "294407df8b80276a9f80737fd12531635eccc078"
+      }
+    ],
+    "delivery_D": "The commit containing this terminal. First parent W; only this receipt directory changes. Exact D/tree published by final PR/head readback, avoiding a self-referential SHA.",
+    "product_manifest": "file-manifest.json",
+    "shared_host_patch": "assembly/host-context.patch",
+    "preimage_blob": "2bf1e6e66c13dd099029ec16b1f1ddf1f698dae6",
+    "postimage_blob": "ce3081f75ec97fd3daa7ef4073c51963bdff606f",
+    "patch_sha256": "bff07027a3d0dca1d898e9830191a443544b375a2e026d0c513217fa2f0faca4",
+    "shared_host_patch_applied": false
+  },
+  "release": {
+    "bounded_source_paths": [
+      "apps/cli/src/sucafina-product/routine-native-owner.ts",
+      "apps/cli/src/sucafina-product/routine-native-registry.ts",
+      "apps/cli/src/sucafina-product/routine-native-adapter.ts",
+      "apps/cli/src/sucafina-product/routine-native-runtime.ts",
+      "apps/cli/src/sucafina-product/routine-native-governance.ts",
+      "modules/sucafina/Sucafinav1/test/product/routine-native-owner-binding/fixture.ts",
+      "modules/sucafina/Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts"
+    ],
+    "status": "EXPLICITLY_AVAILABLE_FOR_SELECTIVE_INTAKE_AS_BOUNDED_PARTIAL",
+    "proposal_paths": [
+      "assembly/host-context.patch",
+      "assembly/host-context.preimage.txt",
+      "assembly/host-context.postimage.txt"
+    ],
+    "rule": "Verify exact preimages and retain current integrated dependency/contract blobs. No whole-tree source adoption. Any material integration needs a new exact candidate; source tests never transfer as integrated acceptance.",
+    "production_activation": "HOLD until actual authenticated native admission/continuation and descriptor-readiness capability is supplied and qualified",
+    "package_gate": "FAIL due to exact78 external baseline diagnostics; not waived"
+  },
+  "implemented": {
+    "native_witness": "Core/root CapabilityInvocation plus real scoped Task registration, canonical Session/assistant/Task/governance/Permission records; stable frozen identity, rereads and immutable human approval chain",
+    "registry": "Private actual Request scope, exact context/lease/resource identities, headers/principal/project/Location/policy/accessRevision/providerGeneration, expiry and monotonic timer, revoke/abort/dispose/duplicate/replay fences, cancellation of only owned effect",
+    "governance": "Existing independent strong case/source/publication lease preserved; no ownership bind grant, fabricated messages, new run IDs, parallel ledger or broad permission",
+    "host_mount": "Complete actual-callsite patch instantiates registry, observes existing ToolSafety hook, supplies existing adapter and disposes before shutdown",
+    "available_operations_in_current_production": "No newly available operations. Patch default installs zero routine descriptors without a legitimate admission producer."
+  },
+  "checks": {
+    "evidence": "ci-evidence.json",
+    "attempts": [
+      "ci-attempts/01.json",
+      "ci-attempts/02.json"
+    ],
+    "final_new_tests": {
+      "run": 43650122594,
+      "job": 132616495906,
+      "S": "f1ec557494f0c20159bbac937cc628071c08b074",
+      "S_tree": "4e8d30cc652413614a417dc3decc28efc5c3c5cd",
+      "pass": 87,
+      "fail": 0,
+      "expect_calls": 368,
+      "files": 2
+    },
+    "retained_previous_tests": {
+      "W": "99d225ba024b4de910753d0fce34bf1b9a43281f",
+      "run": 43649747094,
+      "pass": 14,
+      "files": 2,
+      "basis": "Production source and these prior test files unchanged at W2; first attempt also records2 new-file loading failures."
+    },
+    "single_head_101_test_claim": false,
+    "final_check": {
+      "run": 43650142544,
+      "job": 132616555993,
+      "S": "b333525a854cf64099ea8c6601d4da9bb52c8c1e",
+      "S_tree": "98f2f5654813ba5e7ceba38e1d60563678007984",
+      "typecheck": "FAIL",
+      "total_diagnostics": 78,
+      "owned_diagnostics": 0,
+      "external_diagnostics": 78,
+      "baseline_exact": true,
+      "guards": "PASS",
+      "rules": 78,
+      "changed_paths": 703,
+      "warnings": 13,
+      "gate": 0,
+      "errors": 0
+    },
+    "artifacts": "Metadata/digest verified; ZIP not downloaded",
+    "omni": "not applicable (focused, no declared spawn); no Omni proof",
+    "local_product_tests": "NOT_RUN",
+    "full_suite": "NOT_RUN",
+    "shared_postimage_validation": "NOT_RUN"
+  },
+  "criteria": {
+    "ledger": "criteria.json",
+    "canonical_S0B": 98,
+    "partial": 13,
+    "not_reassessed": 85,
+    "canonical_text_preserved": true,
+    "mission_clauses": 7,
+    "prior_WP09_ledger": "Preserved; no blanket revision of historical acceptance",
+    "AM02": "NOT_PROVEN",
+    "AM06": "NOT_PROVEN",
+    "global_release": false
+  },
+  "missing_capability": {
+    "receipt": "assembly/missing-capability.json",
+    "owner": "session42/S0 private host composition and the actual authenticated native admission origin owner",
+    "exact_need": "Bind the authenticated SF Request/principal/project/Location and operation-specific C07/case/source/publication authority to real native Maestro admission plus an already-recorded Task invocation or coordinator-safe continuation, with readiness before provider materialization.",
+    "observed_gap": "Native Task hook has trusted native frame but no SF Request; existing SF resident admission creates sf_maestro/profile sessions, not the native maestro authority Session. No inspected authorized caller owns both.",
+    "forbidden_substitutes": [
+      "HTTP/model session selector",
+      "retained SF_ROUTINE_INPUT as authority",
+      "fabricated Task message",
+      "retaining stale frame after settlement",
+      "reentrant exclusive dispatch in active native Task",
+      "engine modification"
+    ],
+    "watch": "sf_watch_prepare requires separate real Schedule admission",
+    "cancellation_limit": "Interrupts owned pending effect; does not roll back already committed native facts"
+  },
+  "prohibited_actions_performed": {
+    "shared_host_direct_edit": false,
+    "engines": false,
+    "new_adapter": false,
+    "new_controller": false,
+    "local_tests": false,
+    "provider_or_credentials": false,
+    "full_or_epic_suite": false,
+    "force": false,
+    "merge_dev": false,
+    "deploy": false,
+    "Azure": false,
+    "Orchestra_restart": false,
+    "external_messages": false
+  },
+  "final_acceptance": "S0 retains campaign/integrated acceptance. Component green is not AM02/AM06 completion."
+}

@@ -1,0 +1,49 @@
+{
+  "schema": "sf-routine-owner-ci-evidence-v1",
+  "mission": 41,
+  "final_product": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+  "final_tree": "294407df8b80276a9f80737fd12531635eccc078",
+  "attempts": [
+    "ci-attempts/01.json",
+    "ci-attempts/02.json"
+  ],
+  "actions_runs": [
+    43649747094,
+    43649765609,
+    43650122594,
+    43650142544
+  ],
+  "tests": {
+    "final_new_selection": "87 PASS, 0 FAIL at W2; 38 binding + 49 fences",
+    "retained_previous_selection": "14 PASS at W1; source and previous tests unchanged at W2",
+    "single_head_full_selection": false,
+    "fixture_details": "IMPLEMENTATION.md and each fixture header",
+    "hosted_case_inventory": "hosted-tests.json"
+  },
+  "typecheck": {
+    "status": "FAIL",
+    "final_diagnostics": 78,
+    "owned": 0,
+    "comparison": "typecheck-comparison.json",
+    "external_baseline_exact": true
+  },
+  "guards": {
+    "result": "PASS",
+    "rules": 78,
+    "changed_paths": 703,
+    "gate": 0,
+    "warnings": 13,
+    "errors": 0
+  },
+  "dedup": "No repeated W/tree/request/workflow/validator/runtime/fixture execution. W2 was a material test repair; test selection narrowed to the two previously unloadable files. The required existing package gate was repeated after changes.",
+  "envelopes": "Each S differs from its W by exactly one permitted CI envelope. S is not a product candidate.",
+  "artifacts": "Check artifact metadata and digests read for both attempts. ZIPs not downloaded. Bun test lane has no required separate artifact.",
+  "local_product_tests": "NOT_RUN",
+  "full_suite": "NOT_RUN",
+  "engine_changes": false,
+  "shared_postimage_validation": "NOT_RUN",
+  "native_admission_proof": "NOT_PROVEN",
+  "AM02": "NOT_PROVEN",
+  "AM06": "NOT_PROVEN",
+  "GLOBAL_RELEASE": false
+}

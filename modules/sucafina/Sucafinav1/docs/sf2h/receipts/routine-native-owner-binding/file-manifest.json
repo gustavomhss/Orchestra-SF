@@ -1,0 +1,78 @@
+{
+  "schema": "sf-routine-owner-product-manifest-v1",
+  "W": "86e6a650b2b0a7417f0f8bcbdfdadfe679c8d1df",
+  "tree": "294407df8b80276a9f80737fd12531635eccc078",
+  "base": "d9e1aca275bd04b2066ca84a605c7c315ea14c77",
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-owner.ts",
+      "mode": "100644",
+      "bytes": 11691,
+      "preimage": null,
+      "postimage": "a4dce61b612729bb317761bb0d63ff622f55a8cd",
+      "sha256": "9a04db76741494bf6e710a50e17a1df05e27e8c3e4ed2db248c4aaa673477e1f"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-registry.ts",
+      "mode": "100644",
+      "bytes": 11619,
+      "preimage": null,
+      "postimage": "7b7f127610450ed531fbb11464a0308e860a9296",
+      "sha256": "cecb3106c48a211a627f1f1b2a7d6e4d302c180a6685aedaec46b8846b7ff51c"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-adapter.ts",
+      "mode": "100644",
+      "bytes": 29251,
+      "preimage": "aa0b9758acee9338f8422002d718f05c71f00a09",
+      "postimage": "dfde682c3233b36b7c172459f4bc1788c8f7e4b3",
+      "sha256": "e130b2122c90fb8be0e21129e50f3749830a24bcf21b37f1de2da5d03998115f"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-runtime.ts",
+      "mode": "100644",
+      "bytes": 10807,
+      "preimage": "377ceb99d45b6142c8e9f077f69f23673f470f92",
+      "postimage": "5383051da7cda4523d81f34d93430871e564bb06",
+      "sha256": "1455a3cc71648018364cc0c9a429e7b98cd2eadd963ff0bf00ad88d5c43cb328"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-governance.ts",
+      "mode": "100644",
+      "bytes": 14900,
+      "preimage": "59c76df420f9532fbe4d278a9c1dccf86e33cbe0",
+      "postimage": "9934aca5899142f9715d82bf7d4a073e9912f7cc",
+      "sha256": "7364dbbb543fa113d8d898d03cc0ace00cb1376830d1718527aa5e7eddfa5521"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/routine-native-owner-binding/fixture.ts",
+      "mode": "100644",
+      "bytes": 22867,
+      "preimage": null,
+      "postimage": "68c277780db8d4c7ddfa1e55820b80e31b0f8605",
+      "sha256": "90c2a837bf15a93e7367b39330e44384aef4977b23a4de08c8493371ef59d14d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+      "mode": "100644",
+      "bytes": 15370,
+      "preimage": null,
+      "postimage": "dfc38db2ef2552aa729bb73cbccdf1c991cfffbd",
+      "sha256": "4afecd7edc0d60487a982208d95b5c0b64aeec562ae8e1bfb25a2ecc304c4a6e"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "mode": "100644",
+      "bytes": 13735,
+      "preimage": null,
+      "postimage": "4abe43ac65b1006d154ee4b686a995c028079b18",
+      "sha256": "a8cb7369ee0084dd2032682bf65ae85e34c2a1ee7e4b4b56756b4af16c14dba0"
+    }
+  ],
+  "source_preimage_policy": "Compare exact current target before selective application. Existing dependency/contract files stay at the integrated head; never replace the entire source tree.",
+  "assembly": "assembly/manifest.json",
+  "latest_intake": "assembly/selective-intake.json",
+  "shared_direct_write": false,
+  "engines_changed": false,
+  "production_source_unchanged_since_W1": true
+}
