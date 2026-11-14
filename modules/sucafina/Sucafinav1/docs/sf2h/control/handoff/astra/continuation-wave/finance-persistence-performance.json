@@ -1,0 +1,34 @@
+{
+  "number": 34,
+  "id": "finance-persistence-performance",
+  "actor": "S0-C scoped SF persistence source support; not supervisor/integrator",
+  "actor_pack": "execution/actors/S0-C.json",
+  "branch": "finance-resume",
+  "pr": 42,
+  "expected_head": "5e3073bceca683adc5663108832094421b43325e",
+  "lease_epoch": "finance-persistence-browser34",
+  "predecessor": "Mission22terminalHANDOFF-FINAL andwriteAuthorityEndsWithPublishedHandoff:true, no pendingruns. Readexplicittransfer andcurrenthead beforewrite.",
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+    "modules/sucafina/Sucafinav1/runtime/contract.ts (only private snapshot encode/decode validation performance; no normative/domaincontractchange)",
+    "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-persistence-performance/"
+  ],
+  "inputs": {
+    "Finance22": "5e3073bceca683adc5663108832094421b43325e",
+    "Finance22product": "1a656f1f7251de8c104e5b03a43b457e80437181",
+    "composedC4": "253baad3f2ff4af5beac695feae4c2f6372dc2e7",
+    "residual": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-state-read-performance/residual-boundary.json"
+  },
+  "mission": "Implement and prove a material reduction of SFSQLite snapshot materialization/encode/decode/validation cost toclose FININD005, following explicitremainingownerboundary. Priorcanonicalcaseprojection optimization delivered41shortPASS and43regressionPASS, butlongjourneyfails180000ms. Do not repeat thatsame2fileoptimization or merelyproduceanotherdiagnosis.",
+  "facts": "Fullpersistedstate1311209bytes remained.3494casesreads70670ms inclusive and694preferencesreads14654ms. confirmed.exact starts148191ms,timeout180018ms;15000/15001/history/replay/reopen not reached. Inclusivecategoriescannotbeadded. RemainingSQLite loads/decodesfullsnapshots andopaquecallbacksstillneedfullisolation.",
+  "acceptance": [
+    "Readreal localstore/contract/persistence callgraphanddependents beforeediting; shortmeasuredcounterproof isolatesactualbottleneckusingrealSQLiteandrepresentativestate. Chooseimplementation professionallywithinpaths; no prescribedspeculativecache.",
+    "Preserve transaction/lock/WAL/coherence/CAS semantics, actualfreshSQLobservation, callback/outputdetachment, mutation/abort/error isolation, nestedread/nestedwritepoison, closedscopes, credentials/sessionreadindependence, blobtransactionatomicity, crash/reopenvalidation, backwardcompatibility and malformedstate rejection. Noauth/source/resultreuse acrossrequests or mutableobservationwindows.",
+    "Optimization of puredecode/validation permittedonlywithbyte/structureequivalence and boundedresourceproof; neverreusemutableobjects or skipvalidationbasedonly onversion/functionidentity. Do notchange financialalgorithms, budgets orcomputationsemantics.",
+    "Require meaningfulshortproof oflesswork plusisolation/concurrency/error/legacy/poison regressions, thenoriginalunchangedlongjourney ifmaterialimprovementdemonstrated. Preserve180000/300000budgets andfull15000/15001,actualhistoricalchoice reread,replay,reopen/accessnegatives. Ashortpassnotlongclosure.",
+    "Do notedit otherstate-provider/case-port/Financealgorithms;22closed implementation isinput. Fullcoherentproductclosurewithprovenance, newprivatepersistencechanges sourcebranch42 only. Don'toverwritebundlewitholdsource. Ifsourcecontractsemanticsmustchangeoutsideperformance, delivercompletepatchtoactualowner ratherthan silentlyexpand."
+  ],
+  "validation": "SurgicalActions only usingexistingauthorizedCIinterface/dispatcher,dedupe; noglobalcache/infra/install/services or localtests/server. No repeatedunchangedlongrun orassertion/budgetweakening. Packagebun typecheck andguardsperAGENTS. Runtime/persistenceproofinownedisolatedSQLite, neverrestartOrchestra desktop/server.",
+  "handoff": "Completecode, shortcounterproof, preservedsemanticsmatrix, migration/rollbackbounds, sourcepre/postblobs, exactpatchtocomposedtarget, originaljourneyW/S/jobs/results+remaininggaps andterminalhandoffto33. Source34doesnotown33integratortarget ornewdispatcher. FinalS0globalacceptanceunchanged."
+}
