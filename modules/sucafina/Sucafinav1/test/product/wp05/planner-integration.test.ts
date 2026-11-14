@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test"
 import path from "node:path"
 import type { Page } from "@playwright/test"
-import { localBrowser } from "../../fixture/local-browser.ts"
+import { inspectWp05Browser } from "./browser.ts"
 import { resolveWaterfall } from "../../../product/analytics/waterfall.ts"
 import { dispatchSfCapability } from "../../../product/host-binding/capability-dispatch.ts"
 import { decodeSfOperationInput, decodeSfOperationOutput } from "../../../product/contracts/schema-admission.ts"
@@ -201,7 +201,8 @@ for (const role of ["finance", "viewer"] as const) test(`real planner capacity p
     const restricted = projectPlannerSource(storage.state.planner, scopedActor, "v1")
     expect(JSON.stringify(restricted)).not.toContain("97531.25")
   }
-  await inspectBiProjection(request, result.value, async (page) => {
+  await inspectBiProjection(request, result.value, async (page, phase) => {
+    phase("capacity-filter")
     const filtered = { start: "2027-02-01", end: "2027-03-31" }
     await page.getByLabel("Início do período", { exact: true }).fill(filtered.start)
     await page.getByLabel("Fim do período", { exact: true }).fill(filtered.end)
@@ -210,6 +211,7 @@ for (const role of ["finance", "viewer"] as const) test(`real planner capacity p
     expect(await page.locator('svg [data-bi-series="cost"]').count()).toBe(0)
     expect(await page.locator("body").textContent()).toContain("Orçamento de pessoas · USD: indisponível")
     for (const month of [2, 3]) {
+      phase(`capacity-table:${month}`)
       const fte = page.getByRole("row").filter({ has: page.getByRole("cell", { name: `month:${month}:fte`, exact: true }) })
       const cost = page.getByRole("row").filter({ has: page.getByRole("cell", { name: `month:${month}:hr-budget`, exact: true }) })
       expect(await fte.getByRole("cell").nth(1).textContent()).toBe("0.5")
@@ -218,6 +220,7 @@ for (const role of ["finance", "viewer"] as const) test(`real planner capacity p
       expect(await cost.getByRole("cell").nth(2).textContent()).toBe("USD")
       expect(await fte.getByRole("cell").nth(3).textContent()).toBe(await cost.getByRole("cell").nth(3).textContent())
       for (const row of [fte, cost]) {
+        phase(`capacity-navigation:${month}`)
         await row.getByRole("button", { name: "Abrir origem" }).click()
         const selection = JSON.parse(await page.locator("body").getAttribute("data-selection") ?? "null")
         expect(selection.context.period).toEqual(period)
@@ -227,7 +230,9 @@ for (const role of ["finance", "viewer"] as const) test(`real planner capacity p
         expect(JSON.stringify(selection)).not.toContain("97531.25")
       }
     }
+    phase("capacity-exclusions")
     for (const id of ["month:1:fte", "month:1:hr-budget", "month:4:fte", "month:4:hr-budget"]) expect(await page.getByRole("cell", { name: id, exact: true }).count()).toBe(0)
+    phase("capacity-html")
     const rendered = await page.content()
     expect(rendered).not.toContain("PRIVATE_NAME_WP05")
     expect(rendered).not.toContain("97531.25")
@@ -237,50 +242,18 @@ for (const role of ["finance", "viewer"] as const) test(`real planner capacity p
 async function inspectBiProjection(
   request: Parameters<typeof readBiPresentation>[0],
   value: Extract<Awaited<ReturnType<typeof readBiPresentation>>, { status: "ok" }>["value"],
-  inspect: (page: Page) => Promise<void>,
+  inspect: (page: Page, phase: (name: string) => void) => Promise<void>,
 ) {
   const built = await Bun.build({ entrypoints: [path.resolve(import.meta.dir, "../../../product/analytics/view.ts")], target: "browser", format: "esm" })
   if (!built.success || !built.outputs[0]) throw new Error("analytics browser bundle failed")
   const url = `data:text/javascript;base64,${Buffer.from(await built.outputs[0].text()).toString("base64")}`
-  const fixture = await localBrowser()
-  const deadline = {
-    milliseconds: 60000,
-    phase: "open-page" as "open-page" | "render" | "inspect",
-    timer: undefined as ReturnType<typeof setTimeout> | undefined,
-    error: undefined as Error | undefined,
-  }
-  const requireActive = () => {
-    if (deadline.error) throw deadline.error
-  }
-  try {
-    const expired = new Promise<never>((_, reject) => {
-      deadline.timer = setTimeout(() => {
-        deadline.error = new Error(`WP05 browser ${request.viewId} exceeded ${deadline.milliseconds}ms during ${deadline.phase}`)
-        reject(deadline.error)
-      }, deadline.milliseconds)
-    })
-    const body = async () => {
-      const page = await fixture.browser.newPage()
-      requireActive()
-      page.setDefaultTimeout(10000)
-      page.setDefaultNavigationTimeout(10000)
-      await page.goto("about:blank")
-      requireActive()
-      deadline.phase = "render"
-      await page.evaluate(async (input) => {
-        const module = await import(input.url)
-        document.body.append(module.renderBiView(input.request, input.value.projection, (selection: unknown) => { document.body.dataset.selection = JSON.stringify(selection) }, input.value.presentation))
-      }, { url, request, value })
-      requireActive()
-      deadline.phase = "inspect"
-      await inspect(page)
-    }
-    // Promise.race installs rejection handlers on both promises. A late browser
-    // rejection remains handled after the deadline wins; closing the fixture
-    // below terminates the browser operations instead of starting a retry.
-    await Promise.race([body(), expired])
-  } finally {
-    if (deadline.timer) clearTimeout(deadline.timer)
-    await fixture.dispose()
-  }
+  await inspectWp05Browser(`Planner ${request.viewId}`, async (page, phase) => {
+    phase("render")
+    await page.evaluate(async (input) => {
+      const module = await import(input.url)
+      document.body.append(module.renderBiView(input.request, input.value.projection, (selection: unknown) => { document.body.dataset.selection = JSON.stringify(selection) }, input.value.presentation))
+    }, { url, request, value })
+    phase("inspect")
+    await inspect(page, phase)
+  })
 }

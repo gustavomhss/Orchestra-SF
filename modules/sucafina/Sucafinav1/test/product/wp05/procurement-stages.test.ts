@@ -17,7 +17,7 @@ import { domain } from "../../../runtime/procurement.ts"
 import { object, text } from "../../../runtime/contract.ts"
 import { openLocalStore } from "../../../runtime/local-store.ts"
 import { initialProcurementSettings } from "../../../src/initial-settings.ts"
-import { localBrowser } from "../../fixture/local-browser.ts"
+import { inspectWp05Browser } from "./browser.ts"
 
 const period = { start: "2026-01-01", end: "2026-12-31" }
 const requisition = {
@@ -227,16 +227,13 @@ test("approver opens the oldest proven request while a missing age stays visible
     const built = await Bun.build({ entrypoints: [path.resolve(import.meta.dir, "../../../product/analytics/view.ts")], target: "browser", format: "esm" })
     if (!built.success || !built.outputs[0]) throw new Error("Analytics browser bundle failed")
     const url = "data:text/javascript;base64," + Buffer.from(await built.outputs[0].text()).toString("base64")
-    const browser = await localBrowser()
-    try {
-      const page = await browser.browser.newPage()
-      page.setDefaultTimeout(10000)
-      page.setDefaultNavigationTimeout(10000)
-      await page.goto("about:blank")
+    await inspectWp05Browser("procurement oldest proven request", async (page, phase) => {
+      phase("render")
       await page.evaluate(async (input) => {
         const module = await import(input.url)
         document.body.append(module.renderBiView(input.view.request, input.view.projection, (selection: unknown) => { document.body.dataset.selection = JSON.stringify(selection) }, input.view.presentation))
       }, { url, view })
+      phase("assertions")
       expect(await page.locator('svg [data-bi-series="aging"]').count()).toBe(2)
       expect(await page.locator("body").textContent()).toContain("Idade indisponível: 1 de 3 pedidos nesta seleção.")
       const renderedRows = await page.locator("table tbody tr").evaluateAll((rows) => rows.map((row) => Array.from(row.querySelectorAll("td")).slice(0, 6).map((cell) => cell.textContent)))
@@ -250,11 +247,14 @@ test("approver opens the oldest proven request while a missing age stays visible
       ]))
       const mark = page.locator('svg [data-bi-focus="' + known.id + '"]')
       expect(await mark.getAttribute("aria-label")).toContain(": 10 Review · days")
+      phase("navigation")
       await mark.click()
       const selection = JSON.parse(await page.locator("body").getAttribute("data-selection") ?? "null")
       expect(selection.reference).toEqual(known.drilldown)
       expect(selection.context.principalRef).toBe("approver")
+      phase("navigation:detail")
       const detail = await fixture.readRequest(selection.reference.refId)
+      phase("assertions:detail")
       expect(detail.values.find((value) => value.id === "ageDays")).toMatchObject({ value: 10, evidenceState: "confirmed" })
       expect(detail.values.find((value) => value.id === "holder")?.value).toBe("approver")
       expect(detail.values.find((value) => value.id === "status")?.value).toBe("pr_pending")
@@ -262,9 +262,7 @@ test("approver opens the oldest proven request while a missing age stays visible
       const missing = page.getByRole("list", { name: "Pedidos com idade indisponível" })
       expect(await missing.getByRole("listitem").count()).toBe(1)
       expect(await missing.textContent()).toContain("legacy-unknown: idade indisponível")
-    } finally {
-      await browser.dispose()
-    }
+    })
   } finally {
     await fixture.dispose()
   }

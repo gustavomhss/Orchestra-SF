@@ -17,7 +17,7 @@ import { decodeSfOperationInput, decodeSfOperationOutput } from "../../../produc
 import type { SfDomainValidation } from "../../../product/contracts/runtime.ts"
 import type { DomainPortHost } from "../../../product/contracts/ports.ts"
 import { openLocalStore } from "../../../runtime/local-store.ts"
-import { localBrowser } from "../../fixture/local-browser.ts"
+import { inspectWp05Browser } from "./browser.ts"
 
 const period = { start: "2026-01-01", end: "2026-12-31" }
 
@@ -108,12 +108,8 @@ test("real procurement registry and port supply scoped BI stock and deny revoked
     const built = await Bun.build({ entrypoints: [path.resolve(import.meta.dir, "../../../product/analytics/view.ts")], target: "browser", format: "esm" })
     if (!built.success || !built.outputs[0]) throw new Error("analytics browser bundle failed")
     const url = `data:text/javascript;base64,${Buffer.from(await built.outputs[0].text()).toString("base64")}`
-    const browser = await localBrowser()
-    try {
-      const page = await browser.browser.newPage()
-      page.setDefaultTimeout(10000)
-      page.setDefaultNavigationTimeout(10000)
-      await page.goto("about:blank")
+    await inspectWp05Browser("procurement scoped stock and aging", async (page, phase) => {
+      phase("render")
       await page.evaluate(async (input) => {
         const module = await import(input.url)
         for (const entry of input.entries) {
@@ -122,7 +118,9 @@ test("real procurement registry and port supply scoped BI stock and deny revoked
           document.body.append(section)
         }
       }, { url, entries: [{ id: "scoped-stock", request: payload, value: uiProjection.value }, { id: "scoped-aging", request: agingPayload, value: agingView.value }] })
+      phase("assertions")
       for (const entry of [{ id: "scoped-stock", value: uiProjection.value }, { id: "scoped-aging", value: agingView.value }]) {
+        phase(`assertions:${entry.id}`)
         const section = page.locator(`#${entry.id}`)
         const renderedRows = await section.locator("table tbody tr").evaluateAll((rows) => rows.map((row) => Array.from(row.querySelectorAll("td")).slice(0, 6).map((cell) => cell.textContent)))
         expect(renderedRows).toEqual(entry.value.projection.values.map((value) => [
@@ -135,6 +133,7 @@ test("real procurement registry and port supply scoped BI stock and deny revoked
         ]))
         for (const value of entry.value.projection.values) {
           if (!value.drilldown) continue
+          phase(`navigation:${entry.id}:${value.id}`)
           const row = section.getByRole("row").filter({ has: page.getByRole("cell", { name: value.id, exact: true }) })
           await row.getByRole("button", { name: "Abrir origem" }).click()
           const selection = JSON.parse(await page.locator("body").getAttribute("data-selection") ?? "null")
@@ -146,15 +145,18 @@ test("real procurement registry and port supply scoped BI stock and deny revoked
           expect(JSON.stringify(selection)).not.toContain("2025-12-01")
         }
       }
+      phase("assertions:stock")
       const stock = page.locator("#scoped-stock")
       expect(await stock.locator('svg [data-bi-series="stock"]').count()).toBe(3)
       for (const value of uiProjection.value.projection.values) {
         const mark = stock.locator(`svg [data-bi-focus="${value.id}"]`)
         expect(await mark.count()).toBe(1)
         expect(await mark.getAttribute("aria-label")).toContain(`${value.id}: ${value.value} `)
+        phase(`navigation:stock:${value.id}`)
         await mark.click()
         expect(JSON.parse(await page.locator("body").getAttribute("data-selection") ?? "null").reference).toEqual(value.drilldown)
       }
+      phase("assertions:aging")
       const aged = page.locator("#scoped-aging")
       expect(await aged.locator('svg [data-bi-series="aging"]').count()).toBe(1)
       expect(await aged.textContent()).toContain("Idade indisponível: 1 de 2 pedidos nesta seleção.")
@@ -163,19 +165,20 @@ test("real procurement registry and port supply scoped BI stock and deny revoked
       if (!known) throw new Error("real scoped producer omitted known age")
       const point = aged.locator(`svg [data-bi-focus="${known.id}"]`)
       expect(await point.getAttribute("aria-label")).toContain(": 2 ")
+      phase("navigation:aging")
       await point.click()
       expect(JSON.parse(await page.locator("body").getAttribute("data-selection") ?? "null").reference).toEqual(known.drilldown)
       const unavailable = aged.getByRole("list", { name: "Pedidos com idade indisponível" })
       expect(await unavailable.getByRole("listitem").count()).toBe(1)
+      phase("navigation:unavailable")
       await unavailable.getByRole("button", { name: "Abrir waiting", exact: true }).click()
       const unknown = JSON.parse(await page.locator("body").getAttribute("data-selection") ?? "null")
       expect(unknown.reference.target.recordId).toBe("waiting")
+      phase("assertions:privacy")
       const html = await page.content()
       expect(html).not.toContain("hidden")
       expect(html).not.toContain("2025-12-01")
-    } finally {
-      await browser.dispose()
-    }
+    })
     access.enabled = false
     expect((await readBiPresentation(payload, admitted.value, source, authority)).status).toBe("denied")
     expect((await readBiPresentation(agingPayload, agingAdmission.value, source, authority)).status).toBe("denied")
