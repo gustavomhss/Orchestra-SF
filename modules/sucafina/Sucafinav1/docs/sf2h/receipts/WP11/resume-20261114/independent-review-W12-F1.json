@@ -1,0 +1,44 @@
+{
+  "scope": "Independent static review of minimal source lifecycle initialization fixes for the12 failed W11 F1 regression setups",
+  "baseProductSha": "c41d7277be5941bafb105654360a32adea7f0347",
+  "upstreamRun": 43591930502,
+  "upstreamJob": 132438297839,
+  "upstreamSnapshotSha": "3b21bc7e11c4bd804bfafd8298f81337124fe0e5",
+  "reviewer": "ci_reconciliation",
+  "result": "no-static-blocker-found",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+      "baseBlob": "991a7fb18f9e8e7372bd2e0193b6727ab6633b26",
+      "reviewedBlob": "73f0e3b3b7e5579f2cc645503d78f067d9b832c9",
+      "sha256": "e8ab9f17cb78bf127e2091ada9b70bdc931d22e410f95f5cccb11c5fb17e3c70"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+      "baseBlob": "ad9f8aa17a1ece912132d4c2453547693697716f",
+      "reviewedBlob": "c0a63b0368e33133bf5f8fde57487d3ebe2ea291",
+      "sha256": "a488a2874cf6bc6fa090d5fa8b7edc33dee0627ffcaaef12111162550b9f69b1"
+    }
+  ],
+  "findings": [
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+      "change": "Initialize Dashboard and Procurement immediately after plannerFixture and before authority/setup/C08 seed. Planner is already initialized by the shared real fixture.",
+      "reason": "The wrapped C08 persistence needs a valid Dashboard source registry; transactionAll can subsequently span all three domains. Initialization goes through the real lifecycle, not a synthetic identity assignment."
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+      "change": "Move Dashboard initialization before the first wrapped Dashboard write and initialize Procurement for later transactionAll.",
+      "reason": "The previous code attempted a wrapped transaction before its existing initializeSources call. The reordered lifecycle initializes an empty registry, then the normal guarded write enumerates the newly seeded official topic and synchronizes source identities."
+    }
+  ],
+  "invariants": [
+    "The product source lifecycle implementation is unchanged. requireSourceIdentities remains fail closed.",
+    "Only setup ordering/initialization changes. All12 assertions/scenarios, real grants, domain commands, read/list race callbacks, timeout settings and cleanup routines remain unchanged.",
+    "No local product tests or typecheck executed. Static review does not claim the12 tests pass."
+  ],
+  "requiredHostedValidation": [
+    "modules/sucafina/Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts"
+  ]
+}

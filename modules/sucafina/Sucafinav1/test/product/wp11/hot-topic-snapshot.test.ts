@@ -61,15 +61,17 @@ for (const race of ["source", "case", "authority"] as const) test(`hot-topic dra
   try {
     const original = await fixture.readState()
     const official = await fixture.official()
+    const sourceRace = { committed: false }
     const context = await fixture.admit("decisions.draft-hot-topic", fixture.request, `draft-race-${race}`)
     fixture.controls.hook = { remaining: 1, run: async () => {
       if (race === "authority") { fixture.access.allowed = false; return }
       if (race === "source") {
-        await fixture.persistence.transaction("dashboard", async (snapshot) => {
+        const applied = await fixture.persistence.transaction("dashboard", async (snapshot) => {
           const edited = DashboardPeople.domain.execute(snapshot, actor, { page: "Hot Topics & Actions", action: "save", id: "topic", version: 0, values: { notes: "Concurrent official source edit" } }, { at: plannerAt, id: randomUUID, directory: [] })
           if (!edited.ok) throw new Error(`Concurrent Dashboard edit unavailable: ${JSON.stringify(edited)}`)
           return { commit: true, value: edited }
         })
+        sourceRace.committed = applied.ok
         return
       }
       await fixture.editCase()
@@ -87,6 +89,7 @@ for (const race of ["source", "case", "authority"] as const) test(`hot-topic dra
     if (race === "case") expect(after.cases[caseRef.id]).toEqual({ ...original.cases[caseRef.id]!, version: 2, objective: "Concurrent case edit" })
     else expect(after).toEqual(original)
     if (race === "source") {
+      expect(sourceRace.committed).toBe(true)
       expect(fixture.controls.snapshots).toEqual(["dashboard"])
       const changed = await fixture.official()
       expect(rows(changed.dashboard.data.hotTopics)[0]?.notes).toBe("Concurrent official source edit")
@@ -167,8 +170,8 @@ test("hot-topic list refuses a draft replaced during its last case authorization
 
 async function hotTopicFixture() {
   const fixture = await plannerFixture()
-  // The scoped driver requires initialization before its first Dashboard transaction.
-  await fixture.persistence.initializeSources("dashboard")
+  // The first Dashboard transaction and later C08 transactionAll require initialized registries.
+  for (const surface of ["dashboard", "procurement"] as const) await fixture.persistence.initializeSources(surface)
   await fixture.persistence.transaction("dashboard", async (snapshot) => {
     snapshot.data.roleMap = [{ surface: "dashboard", role: "admin", entra: "admin-group", version: 1, by: actor.id }]
     snapshot.data.hotTopics = [{ id: "topic", action: "Review renewal", owner: actor.id, due: "2026-12-01", status: "open", priority: "normal", notes: "Original official topic" }]

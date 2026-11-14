@@ -128,8 +128,8 @@ async function coverageFixture() {
     lines: [{ id: "line", sec: "opex", el: "licenses", cur: "USD", b: Array(12).fill(amount), a: Array(12).fill(null), f: Array(12).fill(amount) }], fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {},
   }))
   const fixture = await plannerFixture(initial)
-  // C08 uses Dashboard through the canonical scoped persistence driver.
-  await fixture.persistence.initializeSources("dashboard")
+  // C08 spans all domain snapshots; initialize their registries through the real lifecycle.
+  for (const surface of ["dashboard", "procurement"] as const) await fixture.persistence.initializeSources(surface)
   const intents = new WeakMap<Request, { action: SfHumanAction; digest: string; operation: string }>()
   const contexts: TrustedUiContext[] = []
   const actions: SfHumanAction[] = ["decisions.portfolio.read", "decisions.coverage", "decisions.promote-alternative"]

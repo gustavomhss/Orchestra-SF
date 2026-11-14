@@ -1,0 +1,300 @@
+{
+  "schema": "sf-finance-independent-review-v1",
+  "reviewer": "/root/pr40_d777_intake_review",
+  "reviewedAt": "2026-11-14T12:24:30.424915+00:00",
+  "scope": "Seven frozen WP11 test/helper paths from current PR40; five exact adoptions and two additive merges; composition with W29 readonly renewal verifier.",
+  "base": {
+    "commit": "96fc3162ae309f8b91b2c55524335026f8704714",
+    "tree": "d3fa003182dd1c38778b37e7b7219a5015bb58a2"
+  },
+  "source": {
+    "pr": 40,
+    "commit": "d7775d6f1eb17af1590ccfb98547259eb017cd1b",
+    "tree": "e6831add3e891e020d34540234bd685a7dd05e01"
+  },
+  "verdict": "NO_STATIC_BLOCKER_FOR_LIMITED_INTAKE",
+  "runtimeQualification": "PENDING_EXACT_CANDIDATE_ACTIONS",
+  "findings": [],
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/calculation-history.test.ts",
+      "beforeBlob": "310435389682b2892fc255a0eb60030ae7dda6a6",
+      "sourceBlob": "9f804318ece7b82c9119508e24763ada47ce294d",
+      "candidateBlob": "7cda99c2d2a0ae9f0400d95f6b4ffae9f1935842",
+      "decision": "merge-additive-preserve-finance-negative-or-diagnostic",
+      "sha256": "1c079fd3ba88a5bc42b195c187d0b92e6a0e8d55d830266f19bec2d0f405b558",
+      "beforeExpectLines": 41,
+      "afterExpectLines": 45,
+      "bytes": 24088,
+      "hashesVerified": true,
+      "captureMatches": true,
+      "allOldAssertionLinesPreservedInOrder": true,
+      "timeoutValues": [
+        "180000"
+      ],
+      "exactSourceBytes": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/choice-prepared-execution.test.ts",
+      "beforeBlob": "1014fdc4461211ae3310e4d9f5ddafea22786713",
+      "sourceBlob": "326a262f17914de6675657dd1e6f82baec31e5c3",
+      "candidateBlob": "326a262f17914de6675657dd1e6f82baec31e5c3",
+      "decision": "adopt-exact",
+      "sha256": "1366f702b3c6667b3a268b46642b79990e77e982948a397c6b44c222523e081c",
+      "beforeExpectLines": 35,
+      "afterExpectLines": 35,
+      "bytes": 28885,
+      "hashesVerified": true,
+      "captureMatches": true,
+      "allOldAssertionLinesPreservedInOrder": true,
+      "timeoutValues": [
+        "180000"
+      ],
+      "exactSourceBytes": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+      "beforeBlob": "9a60848e9a050ffc6690cd484ce12b2d0cd2e9c8",
+      "sourceBlob": "f3f66378b7e310565e46eef1767f8110675d38de",
+      "candidateBlob": "447ae83e4a49175f6751138d44d3221f364b0731",
+      "decision": "merge-additive-preserve-finance-negative-or-diagnostic",
+      "sha256": "8954fcb3f99e0d00fcf36fd23de0663eb3a804ab8044c1067ca490698cd7b87f",
+      "beforeExpectLines": 52,
+      "afterExpectLines": 53,
+      "bytes": 20581,
+      "hashesVerified": true,
+      "captureMatches": true,
+      "allOldAssertionLinesPreservedInOrder": true,
+      "timeoutValues": [],
+      "exactSourceBytes": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+      "beforeBlob": "11c8bd90a9886fec96acddecba26132f3b304c1b",
+      "sourceBlob": "73f0e3b3b7e5579f2cc645503d78f067d9b832c9",
+      "candidateBlob": "73f0e3b3b7e5579f2cc645503d78f067d9b832c9",
+      "decision": "adopt-exact",
+      "sha256": "e8ab9f17cb78bf127e2091ada9b70bdc931d22e410f95f5cccb11c5fb17e3c70",
+      "beforeExpectLines": 39,
+      "afterExpectLines": 39,
+      "bytes": 22853,
+      "hashesVerified": true,
+      "captureMatches": true,
+      "allOldAssertionLinesPreservedInOrder": true,
+      "timeoutValues": [],
+      "exactSourceBytes": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "beforeBlob": "a7fbf1ab3e35810cc717980b89421f039eae41f1",
+      "sourceBlob": "d5395570b44366fa81003d5f5aa68a3023c26fa5",
+      "candidateBlob": "d5395570b44366fa81003d5f5aa68a3023c26fa5",
+      "decision": "adopt-exact",
+      "sha256": "31559515ade97893610d6ccfef80bba7b4eb5c1cc096e6840013fb1309cdbc48",
+      "beforeExpectLines": 0,
+      "afterExpectLines": 0,
+      "bytes": 25425,
+      "hashesVerified": true,
+      "captureMatches": true,
+      "allOldAssertionLinesPreservedInOrder": true,
+      "timeoutValues": [],
+      "exactSourceBytes": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+      "beforeBlob": "6dcb733518a225039da3e7d7f39ff1c63a35fb09",
+      "sourceBlob": "cbce0fa5bc9cff4131ce540e98e05db70574015b",
+      "candidateBlob": "cbce0fa5bc9cff4131ce540e98e05db70574015b",
+      "decision": "adopt-exact",
+      "sha256": "47597f1233478dacd6b4395a811105b44abf072d465341325d4d4834494083bf",
+      "beforeExpectLines": 41,
+      "afterExpectLines": 44,
+      "bytes": 8975,
+      "hashesVerified": true,
+      "captureMatches": true,
+      "allOldAssertionLinesPreservedInOrder": true,
+      "timeoutValues": [
+        "180000"
+      ],
+      "exactSourceBytes": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-fixture.ts",
+      "beforeBlob": "79de9744dcf08cfc8a4f17084954a9230bb1793a",
+      "sourceBlob": "3c1caeff08728b3e0c2aed8ae916c0754ad6318d",
+      "candidateBlob": "3c1caeff08728b3e0c2aed8ae916c0754ad6318d",
+      "decision": "adopt-exact",
+      "sha256": "0485d078d1920a333287f4621882c8370cb6cc42b7901a49013c396120735321",
+      "beforeExpectLines": 0,
+      "afterExpectLines": 0,
+      "bytes": 16513,
+      "hashesVerified": true,
+      "captureMatches": true,
+      "allOldAssertionLinesPreservedInOrder": true,
+      "timeoutValues": [],
+      "exactSourceBytes": true
+    }
+  ],
+  "canonicalAndSupportingContext": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+      "blob": "c90fd36885b2b15e834ddf7a7b37b1919a6a76ad",
+      "sha256": "46129c8de9cc6531f3009e228039fb80b5ef8e7f03b834fe7ab0d604c04025c0",
+      "matchesW29Manifest": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "blob": "eefc1ed550a455abc4952430ec3b57a5abd5c9ee",
+      "sha256": "c8ce4f6d20eb89d2adebc6577692c310b65310be251784b109431bc18a7c26e5",
+      "matchesW29Manifest": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "blob": "e365ac59376482dfcc6f81aed045b0153f911038",
+      "sha256": "724cabc70e417a23f740c5ccd8f15e71c49a2caca17e0c84d0b97faf98905100",
+      "matchesW29Manifest": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/operation-verifier.ts",
+      "blob": "086c0100a39525f5d78f5864ad589e2d72fc40cd",
+      "sha256": "05d1f9c62a415c881bd6b36802abd68a5956cfab2fa4c173d5a0dc63cb53876d",
+      "matchesW29Manifest": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+      "blob": "fca509789efd2bf1b7d9453d09a3a460ee778feb",
+      "sha256": "771b060898fce1b1d851461bee7df743014ab55f9c0994a0331f2664a1c8bfd1",
+      "matchesW29Manifest": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/baseline-coverage.ts",
+      "blob": "b7db14e10babd2a8b53715f5dce9f3034e9aa796",
+      "sha256": "84f41d78798571fe82c7f54f383eb5ea65adf3ca0b79d932fcbb7505758ed714",
+      "matchesW29Manifest": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+      "blob": "e0840d775274ea73c6b938711764c69593dadca0",
+      "sha256": "c1270b39da0574403f7461e007c14e9fb19c8726aa949f938d09879df3988813",
+      "matchesW29Manifest": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "blob": "bc32bfb39e8b6012230ee0d136bed142340e5d89",
+      "sha256": "0bc0d34e79bac608968b088030d38ba3bf75ca6a49e388acef6b6b9e8b55705f",
+      "matchesW29Manifest": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+      "blob": "09097eaba2e0eae71d33d88077a2f86e83e1dde9",
+      "sha256": "0cca19827cfe6793207441d493561d76830d6903383701b9d84230380561a701",
+      "matchesW29Manifest": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+      "blob": "1782c2094239c3712d3a895a6a25f4160fb429c7",
+      "sha256": "0a7636cb5245b63494e2dc0d83adf909cd750ba71f4be46f62f03f797e71a965",
+      "matchesW29Manifest": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+      "blob": "2338917427497733e4bd88aec852985206cce066",
+      "sha256": "ddaa4cc2a68b466179408513c3f96614265251916e5a31f1638e1c6ebf828eca",
+      "matchesW29Manifest": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts",
+      "blob": "18d95b84d01b26048af9a442c44cb32e8f14e9f5",
+      "sha256": "bad22af33418063fdfcb23499416f20b1adf6edb7f511be892635bd37139d129",
+      "matchesW29Manifest": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-restart-reader.ts",
+      "blob": "3086ebdaf8049ab38cc0855934389bdec3f251c8",
+      "sha256": "d84af8ce76b4392699a595c05d24984f2de3e8f8555bd1c9a9df959fa6ec7def",
+      "matchesW29Manifest": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-coverage-fixture.ts",
+      "blob": "d1b8c7b91c071ee970ff217c3a2745d84b99486b",
+      "sha256": "f2149ed78166add2869fd2612d1936007c3a94862ebacdb277e0dba7c6f56ddf",
+      "matchesW29Manifest": true
+    }
+  ],
+  "newReceiptCount": 33,
+  "receiptOverwrites": [],
+  "captureSha256": "f8caa0f89c444b0d0e99ca64a7371640e6076a6d4380bb1e847b86e08e07db51",
+  "verificationSummary": {
+    "exactAdoptions": 5,
+    "additiveMerges": 2,
+    "existingExpectLines": 208,
+    "candidateExpectLines": 216,
+    "allExistingAssertionsPreservedInOrder": true,
+    "timeoutsUnchanged": true,
+    "productionFilesChanged": 0,
+    "financialFormulasAdded": 0,
+    "authorizationImplementedLocally": false,
+    "oldReceiptFilesOverwritten": 0
+  },
+  "reasoning": [
+    {
+      "id": "R1",
+      "topic": "Auxiliary source projections",
+      "conclusion": "sourcePlanner still delegates to createPlannerPort.compareForecast. The canonical port authenticates the actor, applies Planner roles, validates exact evidence/project/principal/source scope and projection digests, rereads source/projection, and revalidates authority. Explicit unavailable coverage yields a conditioned auxiliary FinancialAnalysis; the three changed consumers use only its canonical DomainProjection, not that analysis as evidence of complete comparison."
+    },
+    {
+      "id": "R2",
+      "topic": "C10 remains canonical and classified",
+      "conclusion": "Baseline.register still validates projection context/source identity, resolves exact fresh evidence, calls canonical classifyCoverage/assessCostCoverage, persists supported classification and locks source/basis checks. The classified sources object and Planner remain wired to mutation.addAlternative, comparison/criteria, sensitivity preview, and the final classified projection. No locally supplied complete assessment replaces these producers."
+    },
+    {
+      "id": "R3",
+      "topic": "Initialization order",
+      "conclusion": "The baseline constructor only captures the projectForecast callback. sourcePlanner is initialized before preparePhase/register can invoke it, so the forward lexical reference does not introduce an observed initialization-order defect by inspection."
+    },
+    {
+      "id": "R4",
+      "topic": "Readonly verifier composition",
+      "conclusion": "W29 helper blob2338917427497733e4bd88aec852985206cce066 is unchanged. The new operationSources adapter still resolves only existing references through current.sources and now returns a constant unavailable coverage result. Its actual source reads are the same raw LocalStore readonly projections; no scoped issuer, C08 write, nested commit or new transactionAll is introduced inside its read scope. The canonical operation verifier and source-only projection, ingress/egress revalidation, signal checks and no cross-call cache remain."
+    },
+    {
+      "id": "R5",
+      "topic": "Twelve-month confirmed training quote",
+      "conclusion": "The old f vector and new f0 through f11 payload both supply eleven explicit confirmed zero forecast months and the November amount40000 through the real Planner save command. Runtime planner.ts first assigns vector fields or individual monthly fields then normalizes the same forecast vector, separately from annual budget handling. This is static input-path equivalence, not runtime proof. CAS, version copy, original-source digest, currency and amount70000 for implementation remain."
+    },
+    {
+      "id": "R6",
+      "topic": "Additive historical calculation merge",
+      "conclusion": "Candidate7cda99c2 equals PR40 source9f804318 plus exactly the Finance assertion that the old revoked context remains denied after a renewed context successfully reads the stored result. Four source additions verify requestFor old context absent, distinct new requestId, same principal, and active renewed lease after source-edit negatives. Every old assertion remains in order."
+    },
+    {
+      "id": "R7",
+      "topic": "Additive Hot Topic merge",
+      "conclusion": "Candidate447ae83e equals PR40 sourcef3f66378 except preserving Finance detailed canonical error text. It keeps canonical status open and adds explicit proof the official concurrent command committed, while preserving exactly-one Dashboard snapshot, no private write, audit/source edit and Planner unchanged. Additional Procurement initialization uses the canonical lifecycle."
+    },
+    {
+      "id": "R8",
+      "topic": "Original oracles",
+      "conclusion": "All208 prior expect-containing lines remain in order. Eight lines are added: four calculation-history, one Hot Topic, three training calendar checks. Existing explicit180000ms timeouts and default-timeout omission remain unchanged. No assertion was removed or relaxed."
+    }
+  ],
+  "limits": [
+    "This review did not execute any product code, imports, Bun, tests, typecheck, guards, CI or native runtime. No runtime pass or performance gain is inferred.",
+    "The source-only auxiliary port intentionally exposes conditioned FinancialAnalysis with unavailable C10. It must remain confined to source projections and operation admission; it is not a complete decision/comparison producer.",
+    "The real readonly transaction retains the lock across callbacks and a coherent snapshot for each invocation. It does not prove freshness after releasing the lock, application authorization, a generic source-issuer wrapper, or installed replay.",
+    "The three new read-scope cases and affected full history/revision/implementation/BI consumers remain necessary on the composed candidate. Additional changed calculation-history, promotion and choice-prepared-execution files need their scoped selection.",
+    "33 historical receipt paths are new relative to W29; their source bytes may be preserved without transferring their status or old run qualification to the current candidate.",
+    "Installed/native proof, accepted independent C/D review and S0 final bundle epic remain separate. No READY/DONE claim is made."
+  ],
+  "executed": {
+    "metadataPython": true,
+    "sourceWrites": false,
+    "productImports": false,
+    "productTests": false,
+    "bun": false,
+    "CI": false,
+    "native": false,
+    "remoteWrites": false,
+    "reportWritesOnly": true
+  }
+}

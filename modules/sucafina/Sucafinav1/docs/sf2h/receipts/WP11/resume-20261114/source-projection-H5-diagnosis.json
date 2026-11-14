@@ -1,0 +1,210 @@
+{
+  "schema": "wp11-h4-fixture-wiring-diagnosis-v1",
+  "status": "OWN_FIXTURE_APPLIED_STATIC_REVIEWED_HOSTED_H5_PENDING",
+  "priorFailure": {
+    "productSha": "14d0cef142561c33076e19bf9c8fb17d1f1e7038",
+    "snapshotSha": "a2047da97cf1004471d6c541b7f7ecc81a0b40a9",
+    "runId": 43591146911,
+    "jobId": 132435932792,
+    "cleanupJobId": 132436936384,
+    "summary": {
+      "pass": 0,
+      "fail": 1,
+      "error": 1,
+      "tests": 1,
+      "files": 1,
+      "durationSeconds": 180.16
+    },
+    "log": "ci-analysis/wp11-W10-H4-tests.log",
+    "logSha256": "8bc116b8ab4a2c93fd4da675c8ae55a56b669d3bc298fbf545feb8080b52cb97",
+    "guardElapsedMs": 180026
+  },
+  "diagnostico": "Após a cotação, o helper de fonte revisada executa projeção real em SQLite em cada chamada. O porto auxiliar encaminhava também cobertura, embora operação e sourcePlanner utilizem apenas DomainProjection. Isso repetia autorização/projeção de fonte por um envelope C10 descartado. Os três consumidores de projeção também entravam no registro C10 classificado apenas para obter candidate/components.",
+  "observedCountsAtGuard": {
+    "c08.read.cases": {
+      "calls": 3168,
+      "elapsedMs": 55357,
+      "maximumMs": 68
+    },
+    "host.revalidate": {
+      "calls": 22685,
+      "elapsedMs": 7040,
+      "maximumMs": 39
+    },
+    "classified-source": {
+      "calls": 333,
+      "elapsedMs": 2173,
+      "maximumMs": 43
+    },
+    "classified-coverage": {
+      "calls": 316,
+      "elapsedMs": 28955,
+      "maximumMs": 224
+    },
+    "c08.read.preferences": {
+      "calls": 568,
+      "elapsedMs": 9917,
+      "maximumMs": 35
+    },
+    "c08.transaction.preferences": {
+      "calls": 6,
+      "elapsedMs": 454,
+      "maximumMs": 234
+    },
+    "c08.transaction.cases": {
+      "calls": 12,
+      "elapsedMs": 643,
+      "maximumMs": 97
+    },
+    "planner.verifyOperation": {
+      "calls": 344,
+      "elapsedMs": 20685,
+      "maximumMs": 91
+    },
+    "planner.verifySourceOnly": {
+      "calls": 876,
+      "elapsedMs": 108868,
+      "maximumMs": 287
+    },
+    "operation-source": {
+      "calls": 5960,
+      "elapsedMs": 27708,
+      "maximumMs": 46
+    },
+    "operation-coverage": {
+      "calls": 3520,
+      "elapsedMs": 22246,
+      "maximumMs": 44
+    },
+    "c08.read.outbox": {
+      "calls": 1,
+      "elapsedMs": 10,
+      "maximumMs": 10
+    }
+  },
+  "timingBoundary": "Durações são inclusivas e se sobrepõem; não são CPU exclusiva, memória ou economia garantida.",
+  "observedMilestones": [
+    {
+      "phase": "bootstrap-start",
+      "elapsedMs": 0
+    },
+    {
+      "phase": "bootstrap-complete",
+      "elapsedMs": 45
+    },
+    {
+      "phase": "prepare:transition-omitted:start",
+      "elapsedMs": 48
+    },
+    {
+      "phase": "prepare:transition-omitted:complete",
+      "elapsedMs": 13484
+    },
+    {
+      "phase": "threshold-before:start",
+      "elapsedMs": 13495
+    },
+    {
+      "phase": "threshold-before:complete",
+      "elapsedMs": 27180
+    },
+    {
+      "phase": "choice-recorded",
+      "elapsedMs": 46728
+    },
+    {
+      "phase": "prepare:transition-confirmed:start",
+      "elapsedMs": 46787
+    },
+    {
+      "phase": "prepare:transition-confirmed:complete",
+      "elapsedMs": 109445
+    },
+    {
+      "phase": "training-revised",
+      "elapsedMs": 109477
+    },
+    {
+      "phase": "threshold-after:start",
+      "elapsedMs": 109508
+    },
+    {
+      "phase": "threshold-after:complete",
+      "elapsedMs": 173898
+    },
+    {
+      "phase": "threshold-after:complete",
+      "elapsedMs": 180026
+    }
+  ],
+  "intermediateAssertionsOnly": [
+    "Cálculo completo250000 e12forecasts de treinamento confirmados",
+    "Inversão da comparação e falha da condição original",
+    "Teto canônico posterior15000",
+    "Escolha original imutável e reconsidering",
+    "Conflito da fonte bloqueada e retry sem novo choice ledger"
+  ],
+  "notReached": [
+    "Certificado estrutural de intervalo",
+    "Verificação da segunda conexão reaberta",
+    "Fechamento do writer/UI e leitura do mesmo caso por colaborador autorizado"
+  ],
+  "appliedOwnChange": {
+    "schema": "wp11-own-fixture-projection-only-consumers-v1",
+    "status": "EXACT_OWN_CANDIDATE_APPLIED_FROZEN_NO_STATIC_BLOCKER_HOSTED_VALIDATION_PENDING",
+    "baseProductSha": "14d0cef142561c33076e19bf9c8fb17d1f1e7038",
+    "observedRunId": 43591146911,
+    "observedTestJobId": 132435932792,
+    "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+    "before": {
+      "gitBlob": "a7fbf1ab3e35810cc717980b89421f039eae41f1",
+      "sha256": "36e11f7e1148d0b30fff90473f971a9183aef6b9ffeb5064f63a3034c96ee7e3",
+      "bytes": 25216
+    },
+    "candidate": {
+      "gitBlob": "d5395570b44366fa81003d5f5aa68a3023c26fa5",
+      "sha256": "31559515ade97893610d6ccfef80bba7b4eb5c1cc096e6840013fb1309cdbc48",
+      "bytes": 25425
+    },
+    "patch": {
+      "gitBlob": "46b0a2eb20c5fc6486c7ca7b7d98c1abf7e5e3f1",
+      "sha256": "64d6b49350b1458100a8f5b915d46172e4bcef4c313f5a2b64ef638b647d368e",
+      "bytes": 4954
+    },
+    "scope": "Exactly four own fixture call-site/wiring changes; no product code or test assertion changes.",
+    "callsChanged": [
+      "baseline.projectForecast → canonical sourcePlanner DomainProjection",
+      "operationSources.resolveForecastCoverage → explicit unavailable, as already used by the human-choice fixture",
+      "renewalCoverage input planner → canonical sourcePlanner DomainProjection",
+      "renewalProjection → canonical sourcePlanner DomainProjection"
+    ],
+    "unchanged": [
+      "Source resolver and authority ingress/egress",
+      "Source-only verifier before/after callbacks and canonical compareForecast",
+      "Nonempty operation verifier and all3 initial replace operations",
+      "C10 baseline.register/assess/classification and snapshot fences",
+      "Classified Planner in mutations/comparison/criteria/preview",
+      "Every history assertion including interval certificate and real collaborator restart",
+      "180000ms timeout and fixture wall-clock guard"
+    ],
+    "runtimeClaim": false,
+    "localProductExecution": false,
+    "independentStaticReview": {
+      "reviewer": "producer_seams",
+      "candidateBlob": "d5395570b44366fa81003d5f5aa68a3023c26fa5",
+      "status": "NO_STATIC_BLOCKER_FOUND",
+      "findings": [
+        "Three consumers use DomainProjection, not FinancialAnalysis completeness.",
+        "Actor, current source, projection digest and ingress/egress remain canonical.",
+        "baseline.register still authorizes and computes C10 with CAS/snapshot fences.",
+        "Classified judgment, withCriteria, preview and rules remain unchanged.",
+        "Callback sourcePlanner is initialized before first register; no TDZ.",
+        "No observed duration improvement is claimed before hosted H5."
+      ]
+    },
+    "fourthProjectionCaller": "UNCHANGED_AS_DIRECTED"
+  },
+  "financialBoundary": "A fonte de todos os valores continua buildPlannerFinancialProjection/Planner canônico. O porto auxiliar agora declara cobertura indisponível, como já faz a fixture humana; não atesta C10. baseline.register calcula classificação/assessment próprios com entradas e evidência reais; mutations/comparison/criteria/preview mantêm Planner classificado e suas cercas.",
+  "permissionsBoundary": "Não remover callbacks finais de fonte/ator/autoridade, caso ou ledger. Nenhuma cache de resultado/autoridade é adicionada. Cenários com operações mantêm o verificador completo e os três replace originais.",
+  "validation": "Static source and blob review only; no local product tests/typecheck. All asserts and180000ms remain. Success of full lifecycle requires H5 terminal on the published candidate."
+}

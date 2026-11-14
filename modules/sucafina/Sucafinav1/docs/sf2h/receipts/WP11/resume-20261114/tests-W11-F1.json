@@ -1,0 +1,1198 @@
+{
+  "log": "ci-analysis/wp11-W11-F1-tests.log",
+  "logSha256": "08bbe9f1c121910a8fb42af0f29f681bdd0a169d8bb36bcb5336309c8ceb3613",
+  "metadata": {
+    "productSha": "c41d7277be5941bafb105654360a32adea7f0347",
+    "productTree": "ef9c1884d1de59316421347174ea0ef580bf7e91",
+    "snapshotSha": "3b21bc7e11c4bd804bfafd8298f81337124fe0e5",
+    "snapshotTree": "5673126dab641d69708eb3799c410ae632b51bc8",
+    "branch": "ci-run-linux-astra-wp11-c41d727-8d34fb37-f1",
+    "requestSha256": "8d34fb37b9d2d59b7b2e85cd818aa0ccaac4c9b773c7fa49fe36eb2dbe789697",
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "Sucafinav1/test/product/wp11/application-indeterminate.test.ts",
+        "Sucafinav1/test/product/wp11/assumption-divergence.test.ts",
+        "Sucafinav1/test/product/wp11/case-authority-concurrency.test.ts",
+        "Sucafinav1/test/product/wp11/case-operation-access.test.ts",
+        "Sucafinav1/test/product/wp11/case-port.test.ts",
+        "Sucafinav1/test/product/wp11/case-management.test.ts",
+        "Sucafinav1/test/product/wp11/criterion-rules.test.ts",
+        "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+        "Sucafinav1/test/product/wp11/prepared-rejection.test.ts",
+        "Sucafinav1/test/product/wp11/http.test.ts",
+        "Sucafinav1/test/product/wp11/result-store.test.ts",
+        "Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts",
+        "Sucafinav1/test/product/wp11/analysis-acceptance.test.ts",
+        "Sucafinav1/test/product/wp11/analysis-promotion.test.ts",
+        "Sucafinav1/test/product/wp11/coverage-access.test.ts",
+        "Sucafinav1/test/product/wp11/coverage-classification.test.ts",
+        "Sucafinav1/test/product/wp11/coverage-seal.test.ts",
+        "Sucafinav1/test/product/wp11/planner-apply.test.ts",
+        "Sucafinav1/test/product/wp11/portfolio-history-version.test.ts",
+        "Sucafinav1/test/product/wp11/prepared-apply.test.ts",
+        "Sucafinav1/test/product/wp11/proposal-coverage.test.ts",
+        "Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+        "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+        "--timeout",
+        "180000"
+      ],
+      "env": {}
+    },
+    "verifiedChangedPaths": [
+      ".ci-run.json"
+    ],
+    "requestBlob": "506b45bddd00d28545d8338695021649d7a7e492",
+    "runIds": [
+      43591930502
+    ]
+  },
+  "summary": {
+    "pass": 37,
+    "fail": 12,
+    "tests": 49,
+    "files": 23,
+    "durationSeconds": 1.63
+  },
+  "omniPositiveControl": {
+    "nonces": [
+      "010056ea14a7a41d3f236e92b512855b"
+    ],
+    "observedVerdicts": [
+      "omni positive control [010056ea14a7a41d3f236e92b512855b]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "matchingVerdicts": [
+      "omni positive control [010056ea14a7a41d3f236e92b512855b]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "validPassingVerdict": true,
+    "canonicalProtocolSource": "script/test-ci-request.ts::controlVerdict",
+    "canonicalVerdicts": [
+      "omni positive control: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "protocolErrors": [],
+    "boundary": "Metadata inspection of hosted logs; not a local product execution or independent run."
+  },
+  "requestedFiles": [
+    "Sucafinav1/test/product/wp11/application-indeterminate.test.ts",
+    "Sucafinav1/test/product/wp11/assumption-divergence.test.ts",
+    "Sucafinav1/test/product/wp11/case-authority-concurrency.test.ts",
+    "Sucafinav1/test/product/wp11/case-operation-access.test.ts",
+    "Sucafinav1/test/product/wp11/case-port.test.ts",
+    "Sucafinav1/test/product/wp11/case-management.test.ts",
+    "Sucafinav1/test/product/wp11/criterion-rules.test.ts",
+    "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+    "Sucafinav1/test/product/wp11/prepared-rejection.test.ts",
+    "Sucafinav1/test/product/wp11/http.test.ts",
+    "Sucafinav1/test/product/wp11/result-store.test.ts",
+    "Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts",
+    "Sucafinav1/test/product/wp11/analysis-acceptance.test.ts",
+    "Sucafinav1/test/product/wp11/analysis-promotion.test.ts",
+    "Sucafinav1/test/product/wp11/coverage-access.test.ts",
+    "Sucafinav1/test/product/wp11/coverage-classification.test.ts",
+    "Sucafinav1/test/product/wp11/coverage-seal.test.ts",
+    "Sucafinav1/test/product/wp11/planner-apply.test.ts",
+    "Sucafinav1/test/product/wp11/portfolio-history-version.test.ts",
+    "Sucafinav1/test/product/wp11/prepared-apply.test.ts",
+    "Sucafinav1/test/product/wp11/proposal-coverage.test.ts",
+    "Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+    "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts"
+  ],
+  "observedFiles": [
+    "Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+    "Sucafinav1/test/product/wp11/http.test.ts",
+    "Sucafinav1/test/product/wp11/planner-apply.test.ts",
+    "Sucafinav1/test/product/wp11/case-port.test.ts",
+    "Sucafinav1/test/product/wp11/analysis-promotion.test.ts",
+    "Sucafinav1/test/product/wp11/case-authority-concurrency.test.ts",
+    "Sucafinav1/test/product/wp11/coverage-seal.test.ts",
+    "Sucafinav1/test/product/wp11/portfolio-history-version.test.ts",
+    "Sucafinav1/test/product/wp11/case-operation-access.test.ts",
+    "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+    "Sucafinav1/test/product/wp11/coverage-access.test.ts",
+    "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+    "Sucafinav1/test/product/wp11/prepared-rejection.test.ts",
+    "Sucafinav1/test/product/wp11/application-indeterminate.test.ts",
+    "Sucafinav1/test/product/wp11/prepared-apply.test.ts",
+    "Sucafinav1/test/product/wp11/analysis-acceptance.test.ts",
+    "Sucafinav1/test/product/wp11/criterion-rules.test.ts",
+    "Sucafinav1/test/product/wp11/coverage-classification.test.ts",
+    "Sucafinav1/test/product/wp11/result-store.test.ts",
+    "Sucafinav1/test/product/wp11/proposal-coverage.test.ts",
+    "Sucafinav1/test/product/wp11/case-management.test.ts",
+    "Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts",
+    "Sucafinav1/test/product/wp11/assumption-divergence.test.ts"
+  ],
+  "fileSummaries": [
+    {
+      "file": "Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+      "reportedTests": 6,
+      "counts": {
+        "pass": 0,
+        "fail": 6,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 114.33,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+        "line": 810,
+        "timestamp": "2026-11-14T11:52:20.4780525Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+        "status": "fail",
+        "name": "source-only promotion refuses case-change between coverage observation and commit",
+        "line": 912,
+        "timestamp": "2026-11-14T11:52:20.7399614Z",
+        "durationMs": 13.67
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/http.test.ts",
+      "reportedTests": 2,
+      "counts": {
+        "pass": 2,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 11.94,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/http.test.ts",
+        "line": 914,
+        "timestamp": "2026-11-14T11:52:20.7400210Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/http.test.ts",
+        "status": "pass",
+        "name": "current-choice HTTP binds both human steps and only promotion permits a historical retry",
+        "line": 916,
+        "timestamp": "2026-11-14T11:52:20.7548989Z",
+        "durationMs": 0.97
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/planner-apply.test.ts",
+      "reportedTests": 1,
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 40.87,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/planner-apply.test.ts",
+        "line": 918,
+        "timestamp": "2026-11-14T11:52:20.7549709Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/planner-apply.test.ts",
+        "status": "pass",
+        "name": "real Planner mutation and case receipt commit atomically across surfaces",
+        "line": 919,
+        "timestamp": "2026-11-14T11:52:20.7984515Z",
+        "durationMs": 40.87
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+      "reportedTests": 10,
+      "counts": {
+        "pass": 10,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 174.33,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+        "line": 921,
+        "timestamp": "2026-11-14T11:52:20.7985149Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+        "status": "pass",
+        "name": "human choice persists a versioned snapshot and ledger using the planner comparison",
+        "line": 931,
+        "timestamp": "2026-11-14T11:52:20.9775223Z",
+        "durationMs": 128.43
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/analysis-promotion.test.ts",
+      "reportedTests": 1,
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 17.38,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/analysis-promotion.test.ts",
+        "line": 933,
+        "timestamp": "2026-11-14T11:52:20.9776199Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/analysis-promotion.test.ts",
+        "status": "pass",
+        "name": "promotion commits the reviewed alternative, result and audit event together, and reconciles retries",
+        "line": 934,
+        "timestamp": "2026-11-14T11:52:20.9978312Z",
+        "durationMs": 17.38
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-authority-concurrency.test.ts",
+      "reportedTests": 1,
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 18.33,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/case-authority-concurrency.test.ts",
+        "line": 936,
+        "timestamp": "2026-11-14T11:52:20.9979375Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/case-authority-concurrency.test.ts",
+        "status": "pass",
+        "name": "a reopened case admits a second principal and concurrent human edits preserve one commit and its receipt",
+        "line": 937,
+        "timestamp": "2026-11-14T11:52:21.0179079Z",
+        "durationMs": 18.33
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/coverage-seal.test.ts",
+      "reportedTests": 3,
+      "counts": {
+        "pass": 3,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 2.09,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/coverage-seal.test.ts",
+        "line": 939,
+        "timestamp": "2026-11-14T11:52:21.0179809Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/coverage-seal.test.ts",
+        "status": "pass",
+        "name": "reassessment uses scenario entries and keeps hypothetical totals conditioned",
+        "line": 942,
+        "timestamp": "2026-11-14T11:52:21.0219113Z",
+        "durationMs": 1.09
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/portfolio-history-version.test.ts",
+      "reportedTests": 1,
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 33.08,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/portfolio-history-version.test.ts",
+        "line": 944,
+        "timestamp": "2026-11-14T11:52:21.0219846Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/portfolio-history-version.test.ts",
+        "status": "pass",
+        "name": "portfolio history can retain a result at the same case version and still requires private provenance and current access",
+        "line": 945,
+        "timestamp": "2026-11-14T11:52:21.0574039Z",
+        "durationMs": 33.08
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-operation-access.test.ts",
+      "reportedTests": 1,
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 5.02,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/case-operation-access.test.ts",
+        "line": 947,
+        "timestamp": "2026-11-14T11:52:21.0574758Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/case-operation-access.test.ts",
+        "status": "pass",
+        "name": "case projection denies an inaccessible operation even with no result components",
+        "line": 948,
+        "timestamp": "2026-11-14T11:52:21.0636027Z",
+        "durationMs": 5.02
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+      "reportedTests": 6,
+      "counts": {
+        "pass": 0,
+        "fail": 6,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 29.56,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+        "line": 950,
+        "timestamp": "2026-11-14T11:52:21.0637128Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+        "status": "fail",
+        "name": "hot-topic list refuses a draft replaced during its last case authorization callback",
+        "line": 1052,
+        "timestamp": "2026-11-14T11:52:21.0970344Z",
+        "durationMs": 5.34
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/coverage-access.test.ts",
+      "reportedTests": 2,
+      "counts": {
+        "pass": 2,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 13.93,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/coverage-access.test.ts",
+        "line": 1054,
+        "timestamp": "2026-11-14T11:52:21.0970762Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/coverage-access.test.ts",
+        "status": "pass",
+        "name": "persisted comparison results are scoped to current case, principal, and source access",
+        "line": 1056,
+        "timestamp": "2026-11-14T11:52:21.1115230Z",
+        "durationMs": 13.0
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+      "reportedTests": 3,
+      "counts": {
+        "pass": 3,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 157.77,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+        "line": 1058,
+        "timestamp": "2026-11-14T11:52:21.1115950Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+        "status": "pass",
+        "name": "real prepared execution reconciles revoked without repeating Planner effects",
+        "line": 1061,
+        "timestamp": "2026-11-14T11:52:21.2709213Z",
+        "durationMs": 52.63
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/prepared-rejection.test.ts",
+      "reportedTests": 1,
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 21.93,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/prepared-rejection.test.ts",
+        "line": 1063,
+        "timestamp": "2026-11-14T11:52:21.2709722Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/prepared-rejection.test.ts",
+        "status": "pass",
+        "name": "a separate human rejection cancels only an undispatched proposal, retains the choice and reconciles retries",
+        "line": 1064,
+        "timestamp": "2026-11-14T11:52:21.2949413Z",
+        "durationMs": 21.93
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/application-indeterminate.test.ts",
+      "reportedTests": 1,
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 163.44,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/application-indeterminate.test.ts",
+        "line": 1066,
+        "timestamp": "2026-11-14T11:52:21.4614074Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/application-indeterminate.test.ts",
+        "status": "pass",
+        "name": "a dispatched change without its authoritative receipt stays indeterminate across concurrent actors and restart",
+        "line": 1067,
+        "timestamp": "2026-11-14T11:52:21.4614781Z",
+        "durationMs": 163.44
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/prepared-apply.test.ts",
+      "reportedTests": 1,
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 32.64,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/prepared-apply.test.ts",
+        "line": 1069,
+        "timestamp": "2026-11-14T11:52:21.4615296Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/prepared-apply.test.ts",
+        "status": "pass",
+        "name": "human-approved prepared dashboard command and receipt commit together",
+        "line": 1070,
+        "timestamp": "2026-11-14T11:52:21.4963631Z",
+        "durationMs": 32.64
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/analysis-acceptance.test.ts",
+      "reportedTests": 1,
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 14.19,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/analysis-acceptance.test.ts",
+        "line": 1072,
+        "timestamp": "2026-11-14T11:52:21.4964188Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/analysis-acceptance.test.ts",
+        "status": "pass",
+        "name": "human acceptance commits the existing analysis ledger event and outbox atomically",
+        "line": 1073,
+        "timestamp": "2026-11-14T11:52:21.5121206Z",
+        "durationMs": 14.19
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/criterion-rules.test.ts",
+      "reportedTests": 1,
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 27.28,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/criterion-rules.test.ts",
+        "line": 1075,
+        "timestamp": "2026-11-14T11:52:21.5121722Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/criterion-rules.test.ts",
+        "status": "pass",
+        "name": "explicit criterion rule is versioned, authorized and evaluated using the domain metric",
+        "line": 1076,
+        "timestamp": "2026-11-14T11:52:21.5427228Z",
+        "durationMs": 27.28
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/coverage-classification.test.ts",
+      "reportedTests": 1,
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 1.0,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/coverage-classification.test.ts",
+        "line": 1078,
+        "timestamp": "2026-11-14T11:52:21.5427755Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/coverage-classification.test.ts",
+        "status": "pass",
+        "name": "human classification is bound to real components, source identity and fresh evidence",
+        "line": 1079,
+        "timestamp": "2026-11-14T11:52:21.5448496Z",
+        "durationMs": 1.0
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/result-store.test.ts",
+      "reportedTests": 1,
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 31.55,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/result-store.test.ts",
+        "line": 1081,
+        "timestamp": "2026-11-14T11:52:21.5448980Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/result-store.test.ts",
+        "status": "pass",
+        "name": "decision result persistence binds retries, current case and source authority",
+        "line": 1082,
+        "timestamp": "2026-11-14T11:52:21.5769775Z",
+        "durationMs": 31.55
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/proposal-coverage.test.ts",
+      "reportedTests": 1,
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 24.65,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/proposal-coverage.test.ts",
+        "line": 1084,
+        "timestamp": "2026-11-14T11:52:21.5770268Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/proposal-coverage.test.ts",
+        "status": "pass",
+        "name": "proposal coverage is durable, scoped, and fenced against changed sources",
+        "line": 1085,
+        "timestamp": "2026-11-14T11:52:21.6035818Z",
+        "durationMs": 24.65
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-management.test.ts",
+      "reportedTests": 1,
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 8.36,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/case-management.test.ts",
+        "line": 1087,
+        "timestamp": "2026-11-14T11:52:21.6036278Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/case-management.test.ts",
+        "status": "pass",
+        "name": "case listing and editing recheck access, actor intent, CAS and exact retry",
+        "line": 1088,
+        "timestamp": "2026-11-14T11:52:21.6131074Z",
+        "durationMs": 8.36
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts",
+      "reportedTests": 2,
+      "counts": {
+        "pass": 2,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 10.17,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts",
+        "line": 1090,
+        "timestamp": "2026-11-14T11:52:21.6131628Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts",
+        "status": "pass",
+        "name": "C10 complete coverage needs every category and fresh source resolution",
+        "line": 1092,
+        "timestamp": "2026-11-14T11:52:21.6250650Z",
+        "durationMs": 0.49
+      }
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/assumption-divergence.test.ts",
+      "reportedTests": 1,
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0,
+        "todo": 0
+      },
+      "sumReportedTestDurationMs": 466.28,
+      "header": {
+        "file": "Sucafinav1/test/product/wp11/assumption-divergence.test.ts",
+        "line": 1094,
+        "timestamp": "2026-11-14T11:52:21.6251377Z"
+      },
+      "lastReportedTest": {
+        "file": "Sucafinav1/test/product/wp11/assumption-divergence.test.ts",
+        "status": "pass",
+        "name": "a human-confirmed March assumption keeps the official May project and exposes the divergence until a separate domain command",
+        "line": 1095,
+        "timestamp": "2026-11-14T11:52:22.0943480Z",
+        "durationMs": 466.28
+      }
+    }
+  ],
+  "lastObservedFile": "Sucafinav1/test/product/wp11/assumption-divergence.test.ts",
+  "lastReportedTest": {
+    "file": "Sucafinav1/test/product/wp11/assumption-divergence.test.ts",
+    "status": "pass",
+    "name": "a human-confirmed March assumption keeps the official May project and exposes the divergence until a separate domain command",
+    "line": 1095,
+    "timestamp": "2026-11-14T11:52:22.0943480Z",
+    "durationMs": 466.28
+  },
+  "hasCompletedBunSummary": true,
+  "requestedButNotObserved": [],
+  "observedButNotRequested": [],
+  "ownObservedCounts": {
+    "pass": 37,
+    "fail": 12,
+    "skip": 0,
+    "todo": 0
+  },
+  "observedTests": [
+    {
+      "file": "Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+      "status": "fail",
+      "name": "source-only promotions establish current coverage proofs in source order 0-1",
+      "line": 827,
+      "timestamp": "2026-11-14T11:52:20.6617266Z",
+      "durationMs": 37.43
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+      "status": "fail",
+      "name": "source-only promotions establish current coverage proofs in source order 1-0",
+      "line": 844,
+      "timestamp": "2026-11-14T11:52:20.6782425Z",
+      "durationMs": 15.08
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+      "status": "fail",
+      "name": "source-only promotion refuses missing-proof between coverage observation and commit",
+      "line": 861,
+      "timestamp": "2026-11-14T11:52:20.6951245Z",
+      "durationMs": 17.12
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+      "status": "fail",
+      "name": "source-only promotion refuses revoke between coverage observation and commit",
+      "line": 878,
+      "timestamp": "2026-11-14T11:52:20.7118932Z",
+      "durationMs": 16.27
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+      "status": "fail",
+      "name": "source-only promotion refuses source-change between coverage observation and commit",
+      "line": 895,
+      "timestamp": "2026-11-14T11:52:20.7266922Z",
+      "durationMs": 14.76
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+      "status": "fail",
+      "name": "source-only promotion refuses case-change between coverage observation and commit",
+      "line": 912,
+      "timestamp": "2026-11-14T11:52:20.7399614Z",
+      "durationMs": 13.67
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/http.test.ts",
+      "status": "pass",
+      "name": "decision HTTP uses the real human admission and case CAS",
+      "line": 915,
+      "timestamp": "2026-11-14T11:52:20.7539068Z",
+      "durationMs": 10.97
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/http.test.ts",
+      "status": "pass",
+      "name": "current-choice HTTP binds both human steps and only promotion permits a historical retry",
+      "line": 916,
+      "timestamp": "2026-11-14T11:52:20.7548989Z",
+      "durationMs": 0.97
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/planner-apply.test.ts",
+      "status": "pass",
+      "name": "real Planner mutation and case receipt commit atomically across surfaces",
+      "line": 919,
+      "timestamp": "2026-11-14T11:52:20.7984515Z",
+      "durationMs": 40.87
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+      "status": "pass",
+      "name": "case draft survives a real store reopen, exact retry is idempotent and revoked access is denied",
+      "line": 922,
+      "timestamp": "2026-11-14T11:52:20.8215695Z",
+      "durationMs": 18.54
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+      "status": "pass",
+      "name": "an entirely omitted renewal category remains pending",
+      "line": 923,
+      "timestamp": "2026-11-14T11:52:20.8219860Z",
+      "durationMs": 0.46
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+      "status": "pass",
+      "name": "coverage distinguishes a sourced zero from an omitted category",
+      "line": 924,
+      "timestamp": "2026-11-14T11:52:20.8231280Z",
+      "durationMs": 1.01
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+      "status": "pass",
+      "name": "case references encode both identities without accepting ambiguous aliases",
+      "line": 925,
+      "timestamp": "2026-11-14T11:52:20.8232026Z",
+      "durationMs": 0.1
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+      "status": "pass",
+      "name": "receipt reconciliation preserves partial application and rejects changed identity",
+      "line": 926,
+      "timestamp": "2026-11-14T11:52:20.8237446Z",
+      "durationMs": 0.62
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+      "status": "pass",
+      "name": "a conditional human choice freezes the comparison and cost gap",
+      "line": 927,
+      "timestamp": "2026-11-14T11:52:20.8244840Z",
+      "durationMs": 0.74
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+      "status": "pass",
+      "name": "preparing a change preserves the domain command and never applies it",
+      "line": 928,
+      "timestamp": "2026-11-14T11:52:20.8247956Z",
+      "durationMs": 0.33
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+      "status": "pass",
+      "name": "revoked source suppresses an otherwise authorized case",
+      "line": 929,
+      "timestamp": "2026-11-14T11:52:20.8358263Z",
+      "durationMs": 10.99
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+      "status": "pass",
+      "name": "partial domain execution reconciles a durable receipt and never repeats it on retry",
+      "line": 930,
+      "timestamp": "2026-11-14T11:52:20.8489670Z",
+      "durationMs": 13.11
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-port.test.ts",
+      "status": "pass",
+      "name": "human choice persists a versioned snapshot and ledger using the planner comparison",
+      "line": 931,
+      "timestamp": "2026-11-14T11:52:20.9775223Z",
+      "durationMs": 128.43
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/analysis-promotion.test.ts",
+      "status": "pass",
+      "name": "promotion commits the reviewed alternative, result and audit event together, and reconciles retries",
+      "line": 934,
+      "timestamp": "2026-11-14T11:52:20.9978312Z",
+      "durationMs": 17.38
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-authority-concurrency.test.ts",
+      "status": "pass",
+      "name": "a reopened case admits a second principal and concurrent human edits preserve one commit and its receipt",
+      "line": 937,
+      "timestamp": "2026-11-14T11:52:21.0179079Z",
+      "durationMs": 18.33
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/coverage-seal.test.ts",
+      "status": "pass",
+      "name": "conditioned scenarios cannot carry an incomplete coverage seal",
+      "line": 940,
+      "timestamp": "2026-11-14T11:52:21.0204517Z",
+      "durationMs": 0.62
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/coverage-seal.test.ts",
+      "status": "pass",
+      "name": "an unassigned scenario component prevents complete coverage",
+      "line": 941,
+      "timestamp": "2026-11-14T11:52:21.0207863Z",
+      "durationMs": 0.38
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/coverage-seal.test.ts",
+      "status": "pass",
+      "name": "reassessment uses scenario entries and keeps hypothetical totals conditioned",
+      "line": 942,
+      "timestamp": "2026-11-14T11:52:21.0219113Z",
+      "durationMs": 1.09
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/portfolio-history-version.test.ts",
+      "status": "pass",
+      "name": "portfolio history can retain a result at the same case version and still requires private provenance and current access",
+      "line": 945,
+      "timestamp": "2026-11-14T11:52:21.0574039Z",
+      "durationMs": 33.08
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-operation-access.test.ts",
+      "status": "pass",
+      "name": "case projection denies an inaccessible operation even with no result components",
+      "line": 948,
+      "timestamp": "2026-11-14T11:52:21.0636027Z",
+      "durationMs": 5.02
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+      "status": "fail",
+      "name": "hot-topic draft commits against its actual Dashboard snapshot and preserves official records",
+      "line": 967,
+      "timestamp": "2026-11-14T11:52:21.0731360Z",
+      "durationMs": 5.28
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+      "status": "fail",
+      "name": "hot-topic draft refuses source change after source observation and before C08 commit",
+      "line": 984,
+      "timestamp": "2026-11-14T11:52:21.0787980Z",
+      "durationMs": 5.91
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+      "status": "fail",
+      "name": "hot-topic draft refuses case change after source observation and before C08 commit",
+      "line": 1001,
+      "timestamp": "2026-11-14T11:52:21.0832624Z",
+      "durationMs": 4.6
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+      "status": "fail",
+      "name": "hot-topic draft refuses authority change after source observation and before C08 commit",
+      "line": 1018,
+      "timestamp": "2026-11-14T11:52:21.0874099Z",
+      "durationMs": 4.13
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+      "status": "fail",
+      "name": "hot-topic read refuses an old draft replaced during its last source callback",
+      "line": 1035,
+      "timestamp": "2026-11-14T11:52:21.0917646Z",
+      "durationMs": 4.3
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+      "status": "fail",
+      "name": "hot-topic list refuses a draft replaced during its last case authorization callback",
+      "line": 1052,
+      "timestamp": "2026-11-14T11:52:21.0970344Z",
+      "durationMs": 5.34
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/coverage-access.test.ts",
+      "status": "pass",
+      "name": "C10 derives omitted renewal costs, distinguishes supported zero, and fails closed on bad evidence",
+      "line": 1055,
+      "timestamp": "2026-11-14T11:52:21.0985228Z",
+      "durationMs": 0.93
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/coverage-access.test.ts",
+      "status": "pass",
+      "name": "persisted comparison results are scoped to current case, principal, and source access",
+      "line": 1056,
+      "timestamp": "2026-11-14T11:52:21.1115230Z",
+      "durationMs": 13.0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+      "status": "pass",
+      "name": "real prepared execution reconciles normal without repeating Planner effects",
+      "line": 1059,
+      "timestamp": "2026-11-14T11:52:21.1673855Z",
+      "durationMs": 54.28
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+      "status": "pass",
+      "name": "real prepared execution reconciles lost-response without repeating Planner effects",
+      "line": 1060,
+      "timestamp": "2026-11-14T11:52:21.2182788Z",
+      "durationMs": 50.86
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+      "status": "pass",
+      "name": "real prepared execution reconciles revoked without repeating Planner effects",
+      "line": 1061,
+      "timestamp": "2026-11-14T11:52:21.2709213Z",
+      "durationMs": 52.63
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/prepared-rejection.test.ts",
+      "status": "pass",
+      "name": "a separate human rejection cancels only an undispatched proposal, retains the choice and reconciles retries",
+      "line": 1064,
+      "timestamp": "2026-11-14T11:52:21.2949413Z",
+      "durationMs": 21.93
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/application-indeterminate.test.ts",
+      "status": "pass",
+      "name": "a dispatched change without its authoritative receipt stays indeterminate across concurrent actors and restart",
+      "line": 1067,
+      "timestamp": "2026-11-14T11:52:21.4614781Z",
+      "durationMs": 163.44
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/prepared-apply.test.ts",
+      "status": "pass",
+      "name": "human-approved prepared dashboard command and receipt commit together",
+      "line": 1070,
+      "timestamp": "2026-11-14T11:52:21.4963631Z",
+      "durationMs": 32.64
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/analysis-acceptance.test.ts",
+      "status": "pass",
+      "name": "human acceptance commits the existing analysis ledger event and outbox atomically",
+      "line": 1073,
+      "timestamp": "2026-11-14T11:52:21.5121206Z",
+      "durationMs": 14.19
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/criterion-rules.test.ts",
+      "status": "pass",
+      "name": "explicit criterion rule is versioned, authorized and evaluated using the domain metric",
+      "line": 1076,
+      "timestamp": "2026-11-14T11:52:21.5427228Z",
+      "durationMs": 27.28
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/coverage-classification.test.ts",
+      "status": "pass",
+      "name": "human classification is bound to real components, source identity and fresh evidence",
+      "line": 1079,
+      "timestamp": "2026-11-14T11:52:21.5448496Z",
+      "durationMs": 1.0
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/result-store.test.ts",
+      "status": "pass",
+      "name": "decision result persistence binds retries, current case and source authority",
+      "line": 1082,
+      "timestamp": "2026-11-14T11:52:21.5769775Z",
+      "durationMs": 31.55
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/proposal-coverage.test.ts",
+      "status": "pass",
+      "name": "proposal coverage is durable, scoped, and fenced against changed sources",
+      "line": 1085,
+      "timestamp": "2026-11-14T11:52:21.6035818Z",
+      "durationMs": 24.65
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/case-management.test.ts",
+      "status": "pass",
+      "name": "case listing and editing recheck access, actor intent, CAS and exact retry",
+      "line": 1088,
+      "timestamp": "2026-11-14T11:52:21.6131074Z",
+      "durationMs": 8.36
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts",
+      "status": "pass",
+      "name": "human-confirmed conditional choice persists its C10 caveat and provenance",
+      "line": 1091,
+      "timestamp": "2026-11-14T11:52:21.6246114Z",
+      "durationMs": 9.68
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/analysis-acceptance-adversarial.test.ts",
+      "status": "pass",
+      "name": "C10 complete coverage needs every category and fresh source resolution",
+      "line": 1092,
+      "timestamp": "2026-11-14T11:52:21.6250650Z",
+      "durationMs": 0.49
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/assumption-divergence.test.ts",
+      "status": "pass",
+      "name": "a human-confirmed March assumption keeps the official May project and exposes the divergence until a separate domain command",
+      "line": 1095,
+      "timestamp": "2026-11-14T11:52:22.0943480Z",
+      "durationMs": 466.28
+    }
+  ],
+  "failures": [
+    {
+      "file": "Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+      "status": "fail",
+      "name": "source-only promotions establish current coverage proofs in source order 0-1",
+      "line": 827,
+      "timestamp": "2026-11-14T11:52:20.6617266Z",
+      "durationMs": 37.43
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+      "status": "fail",
+      "name": "source-only promotions establish current coverage proofs in source order 1-0",
+      "line": 844,
+      "timestamp": "2026-11-14T11:52:20.6782425Z",
+      "durationMs": 15.08
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+      "status": "fail",
+      "name": "source-only promotion refuses missing-proof between coverage observation and commit",
+      "line": 861,
+      "timestamp": "2026-11-14T11:52:20.6951245Z",
+      "durationMs": 17.12
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+      "status": "fail",
+      "name": "source-only promotion refuses revoke between coverage observation and commit",
+      "line": 878,
+      "timestamp": "2026-11-14T11:52:20.7118932Z",
+      "durationMs": 16.27
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+      "status": "fail",
+      "name": "source-only promotion refuses source-change between coverage observation and commit",
+      "line": 895,
+      "timestamp": "2026-11-14T11:52:20.7266922Z",
+      "durationMs": 14.76
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/promotion-coverage-proof.test.ts",
+      "status": "fail",
+      "name": "source-only promotion refuses case-change between coverage observation and commit",
+      "line": 912,
+      "timestamp": "2026-11-14T11:52:20.7399614Z",
+      "durationMs": 13.67
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+      "status": "fail",
+      "name": "hot-topic draft commits against its actual Dashboard snapshot and preserves official records",
+      "line": 967,
+      "timestamp": "2026-11-14T11:52:21.0731360Z",
+      "durationMs": 5.28
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+      "status": "fail",
+      "name": "hot-topic draft refuses source change after source observation and before C08 commit",
+      "line": 984,
+      "timestamp": "2026-11-14T11:52:21.0787980Z",
+      "durationMs": 5.91
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+      "status": "fail",
+      "name": "hot-topic draft refuses case change after source observation and before C08 commit",
+      "line": 1001,
+      "timestamp": "2026-11-14T11:52:21.0832624Z",
+      "durationMs": 4.6
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+      "status": "fail",
+      "name": "hot-topic draft refuses authority change after source observation and before C08 commit",
+      "line": 1018,
+      "timestamp": "2026-11-14T11:52:21.0874099Z",
+      "durationMs": 4.13
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+      "status": "fail",
+      "name": "hot-topic read refuses an old draft replaced during its last source callback",
+      "line": 1035,
+      "timestamp": "2026-11-14T11:52:21.0917646Z",
+      "durationMs": 4.3
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+      "status": "fail",
+      "name": "hot-topic list refuses a draft replaced during its last case authorization callback",
+      "line": 1052,
+      "timestamp": "2026-11-14T11:52:21.0970344Z",
+      "durationMs": 5.34
+    }
+  ],
+  "fixtureTrace": {
+    "observations": [],
+    "parseErrors": [],
+    "lastByLabel": {},
+    "maximumObservedSerializedStateBytes": null,
+    "boundary": "Counts and inclusive overlapping wall durations are fixture instrumentation; serialized state bytes are not sampled process memory or exclusive CPU time."
+  }
+}
