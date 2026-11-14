@@ -1,0 +1,52 @@
+{
+  "schema": "sf2h.wp02.delivery-allocation.v1",
+  "allocation_id": "wp02-completion-20261114",
+  "allocated_at_utc": "2026-11-14T00:29:13Z",
+  "work_package": "WP02",
+  "owner": "external-astra-root",
+  "allocation_base_product_sha": "c59a01042298be0f5a5aaa33d47afc04ab3ab534",
+  "allocation_base_tree": "2732fbdcdeca1df0a5f43ad329fa3d2f1530f251",
+  "delivery_paths": [
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/completion-20261114/README.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/completion-20261114/delivery-receipt.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/completion-20261114/criteria.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/completion-20261114/criteria.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/completion-20261114/ci-evidence.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/completion-20261114/ci-request.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/completion-20261114/test-results.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/completion-20261114/execution-evidence.txt",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/completion-20261114/check-product.txt",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/completion-20261114/integrated-proofs.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/completion-20261114/dependency-warnings.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/completion-20261114/candidate-history.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/completion-20261114/host-wiring.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/reviews/wp02-completion-20261114/product-ux.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/reviews/wp02-completion-20261114/product-ux.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/reviews/wp02-completion-20261114/semantics-integrity.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/reviews/wp02-completion-20261114/semantics-integrity.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/reviews/wp02-completion-20261114/native-atlas.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/reviews/wp02-completion-20261114/native-atlas.md"
+  ],
+  "required_mode": "100644",
+  "allowed_extensions": [
+    ".json",
+    ".md",
+    ".txt"
+  ],
+  "purpose": "Evidence and scoped independent reviews only; no executable/build/test/runtime input.",
+  "preconditions": [
+    "The final product C includes this allocation unchanged.",
+    "Immediately before delivery, verify every path is absent in C.",
+    "D directly descends from C and adds only these UTF-8 evidence paths.",
+    "Existing C entries, modes and blob/tree hashes remain unchanged in D.",
+    "Full compare and Git tree witness verify the envelope; guards run separately on C and D."
+  ],
+  "self_reference": "The delivery receipt will identify C, tests and this allocation commit; it will not contain its own D SHA/hash or a future guard result.",
+  "observed_absence": {
+    "verified_at_product": "c59a01042298be0f5a5aaa33d47afc04ab3ab534",
+    "wp02_directory_tree": "7807ec7668d12583185e9ba3ec4d1124bf816786",
+    "wp02_completion_directory_absent": true,
+    "wp10_directory_absent": true
+  },
+  "acceptance": "PENDING_FINAL_CI_AND_REVIEWS"
+}

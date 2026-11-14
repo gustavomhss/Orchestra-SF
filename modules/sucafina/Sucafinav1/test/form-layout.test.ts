@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test"
+import { closeWp01Browser, launchWp01Browser } from "./product/wp01/browser-fixture.ts"
 import { mkdir, mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import path from "node:path"
@@ -19,8 +20,7 @@ test("All editor screens keep readable field widths and ordered configuration se
   }
   const installation = await createLocalInstallation({ origin: "http://localhost:4110" }, file, environment)
   const server = Bun.serve({ hostname: "localhost", port: 4110, fetch: async (request) => await installation.handler(request) ?? new Response(null, { status: 404 }) })
-  const { chromium } = await import("@playwright/test")
-  const browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"] })
+  const browser = await launchWp01Browser()
   const failures: string[] = []
   try {
     const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } })
@@ -146,7 +146,7 @@ test("All editor screens keep readable field widths and ordered configuration se
     expect(failures).toEqual([])
   } finally {
     await server.stop(true)
-    await browser.close()
+    await closeWp01Browser(browser)
     await installation.dispose()
     await rm(root, { recursive: true, force: true })
   }

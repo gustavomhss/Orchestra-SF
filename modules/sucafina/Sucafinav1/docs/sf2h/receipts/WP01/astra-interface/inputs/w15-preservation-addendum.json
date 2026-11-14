@@ -1,0 +1,828 @@
+{
+  "schema": "astra-interface-preservation-addendum-v1",
+  "audit_kind": "Small metadata/text preservation extension only; not native, product or CI acceptance",
+  "recorded_at": "2026-11-14T12:07:26.378772+00:00",
+  "repository": "gustavomhss/Orchestra-SF",
+  "range": {
+    "from": "edefb5b66706aea866ee45c7e8e76332c27c342a",
+    "from_tree": "294c7bd28795119a014190c34a643fe85616e0ac",
+    "to": "5fe39f1259d2f8631cef6172aaa7e6c92f436801",
+    "to_tree": "68a8d13d3d60164670a7e95310b2cf1afb294e43",
+    "direct_parent": true
+  },
+  "base_audit": {
+    "path": "analysis/w14-preservation-audit.json",
+    "bytes": 296354,
+    "blob": "b9406474cd77f6f721b5651a1043d11b441c1b38",
+    "sha256": "6ae59021996c78e0d3a1c2b3311a0be9e9ab6486b26f504e7807a65831c155fc",
+    "preservation_blockers": [],
+    "original_receipt_comparisons": 256,
+    "reprocessed_256_comparisons": false
+  },
+  "remote_reconciliation": {
+    "observed_at": "2026-11-14T12:06:26.516Z",
+    "pr31": {
+      "number": 31,
+      "state": "open",
+      "head": "5fe39f1259d2f8631cef6172aaa7e6c92f436801",
+      "branch": "astra-interface",
+      "base": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+      "baseBranch": "sf2-stack",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/31",
+      "updatedAt": "2026-11-14T12:05:24Z"
+    },
+    "branches": [
+      {
+        "branch": "astra-wp01",
+        "ref": "refs/heads/astra-wp01",
+        "sha": "6f4360bf0bdd444a19a7d4f97e18306ae7618b6f",
+        "type": "commit"
+      },
+      {
+        "branch": "astra-wp02",
+        "ref": "refs/heads/astra-wp02",
+        "sha": "6ce14163ec6de963b50ada3d610aa8161176adee",
+        "type": "commit"
+      },
+      {
+        "branch": "sf2-stack",
+        "ref": "refs/heads/sf2-stack",
+        "sha": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+        "type": "commit"
+      },
+      {
+        "branch": "astra-interface",
+        "ref": "refs/heads/astra-interface",
+        "sha": "5fe39f1259d2f8631cef6172aaa7e6c92f436801",
+        "type": "commit"
+      }
+    ],
+    "commit": {
+      "head": "5fe39f1259d2f8631cef6172aaa7e6c92f436801",
+      "tree": "68a8d13d3d60164670a7e95310b2cf1afb294e43",
+      "parents": [
+        "edefb5b66706aea866ee45c7e8e76332c27c342a"
+      ]
+    }
+  },
+  "delta": {
+    "paths": 12,
+    "owned_product_paths": 1,
+    "owned_test_paths": 1,
+    "new_document_paths": 10,
+    "additions": 11979,
+    "deletions": 1,
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/findings/w15-recipient-label.md",
+        "status": "A",
+        "category": "new_document",
+        "additions": 13,
+        "deletions": 0,
+        "bytes": 1746,
+        "blob": "6e96e3e880ca8456c6a5eebe148bfc254a903df3",
+        "sha256": "b5875157d5220ad2264b809cc0eeee67b68bf457116f80701b8e4ca9dc95d1ba"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/w14-preservation-audit.json",
+        "status": "A",
+        "category": "new_document",
+        "additions": 8279,
+        "deletions": 0,
+        "bytes": 296354,
+        "blob": "b9406474cd77f6f721b5651a1043d11b441c1b38",
+        "sha256": "6ae59021996c78e0d3a1c2b3311a0be9e9ab6486b26f504e7807a65831c155fc"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/w14-preservation-audit.md",
+        "status": "A",
+        "category": "new_document",
+        "additions": 71,
+        "deletions": 0,
+        "bytes": 6362,
+        "blob": "7d5d19c3a72ce7151d0948e4519b006439663977",
+        "sha256": "4f15a916fd5455be91920b0c9ce689f33969e99473143df00141a0998642d9dc"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/w15-change-scope.md",
+        "status": "A",
+        "category": "new_document",
+        "additions": 27,
+        "deletions": 0,
+        "bytes": 3517,
+        "blob": "86e3ad853e910916e8050f4e5c76ffebe2a1321f",
+        "sha256": "cf45f1fbc192c16e89e3b24131ec36c235f2a9c91c538a8e7434f2d42349236e"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/w15-recipient-label-own.json",
+        "status": "A",
+        "category": "new_document",
+        "additions": 85,
+        "deletions": 0,
+        "bytes": 4427,
+        "blob": "d546ebf36877d68fce83c224db5dcbafa397674d",
+        "sha256": "2a4668584b3f6c1ad5898ab340ae04da732337ebc48bcc7436ab324847c8a1c9"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/w15-recipient-label-peer-read.json",
+        "status": "A",
+        "category": "new_document",
+        "additions": 93,
+        "deletions": 0,
+        "bytes": 4863,
+        "blob": "8b93a80086059e03eb10314d223583a78850b953",
+        "sha256": "190d002f46e35348e66ef1027429ecf7240fc40c2555ea78f369988b4a150406"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43592240575.json",
+        "status": "A",
+        "category": "new_document",
+        "additions": 2546,
+        "deletions": 0,
+        "bytes": 106690,
+        "blob": "6d914741f947fa48b5a0bf05310db998fb668f3f",
+        "sha256": "2d0819748e22abbfff326d952ec20b66ad4ea2cce67ab1fe61a88f15cdea5e62"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43592240575.md",
+        "status": "A",
+        "category": "new_document",
+        "additions": 47,
+        "deletions": 0,
+        "bytes": 6656,
+        "blob": "16a6c25ae97de0ab4a8fceeda2cb6fd5708aaf22",
+        "sha256": "d54e2c884ba66f3b750a5b091f0b52d4c89b155a697907ce651ff6d289a66094"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43592240575.request.json",
+        "status": "A",
+        "category": "new_document",
+        "additions": 22,
+        "deletions": 0,
+        "bytes": 810,
+        "blob": "f754b4c2ea7792ad3951aa455011938e2fe73718",
+        "sha256": "6aa5c3fd85cf00bff9710fbbd67bfcce64d94afe7fc1daf66e1874ec5dd5b394"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43592242039.static.json",
+        "status": "A",
+        "category": "new_document",
+        "additions": 781,
+        "deletions": 0,
+        "bytes": 40132,
+        "blob": "6fa859d081dbbe3d30d452a42cff1cc510bc77b9",
+        "sha256": "34919cc09aab24a28c8c6cd98ac5dbd3a21853219754f9a7f69eb3203aad2a2f"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts",
+        "status": "M",
+        "category": "owned_product",
+        "additions": 3,
+        "deletions": 1,
+        "bytes": 35900,
+        "blob": "99e0d4a9f8c265688e7488ece05ab30edf070658",
+        "sha256": "12c7bd303c59d2d57e5eec249f207bcbbc1fd6b8935d9d498a547c418631f4aa"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/question-recipients.test.ts",
+        "status": "M",
+        "category": "owned_test",
+        "additions": 12,
+        "deletions": 0,
+        "bytes": 6471,
+        "blob": "b47b29497f2ec9a2673bfbb299829191de32622f",
+        "sha256": "274d9f7f2c4ec17ba61818a2e484089392800d6df0bb13570dd402f00a3f3f9d"
+      }
+    ]
+  },
+  "assertion_preservation": {
+    "existing_lines": 25,
+    "current_lines": 34,
+    "old_assertions_are_exact_ordered_subsequence": true,
+    "entire_old_test_file_is_exact_ordered_line_subsequence": true,
+    "added_lines": 9,
+    "added_skip_only_todo": [],
+    "no_locator_or_timeout_change": true,
+    "scope": "Source-text preservation; no expectation normalized or removed in this delta and no executed assertion count inferred."
+  },
+  "script_preservation": [
+    {
+      "name": "caseQuestionScript",
+      "scope": "Exact export definition including surrounding unchanged whitespace",
+      "before_sha256": "55eefbc164efad33bdcfbd31484398d0ddaa0acf2e204596ad1baf54087a2de2",
+      "after_sha256": "55eefbc164efad33bdcfbd31484398d0ddaa0acf2e204596ad1baf54087a2de2",
+      "bytes": 29954,
+      "byte_exact": true
+    },
+    {
+      "name": "workDestinationScript",
+      "scope": "Exact export definition including surrounding unchanged whitespace",
+      "before_sha256": "43b4ef03ddd6efd8288777ca5d9f200e36d976e460ad9b8633b9461aa5b9b60b",
+      "after_sha256": "43b4ef03ddd6efd8288777ca5d9f200e36d976e460ad9b8633b9461aa5b9b60b",
+      "bytes": 3038,
+      "byte_exact": true
+    }
+  ],
+  "recovered_history": {
+    "commits": [
+      {
+        "sha": "b0fa725b835149e222d48bd023b8899311abaefd",
+        "is_w15_ancestor": true
+      },
+      {
+        "sha": "78b235769e3aaa123d1defe78b8108320f897378",
+        "is_w15_ancestor": true
+      },
+      {
+        "sha": "e210916c1d0be2ee3602c25d02e4c10c68e79862",
+        "is_w15_ancestor": true
+      },
+      {
+        "sha": "b11321bb51585913472d8b26c12b7ba5109860a8",
+        "is_w15_ancestor": true
+      },
+      {
+        "sha": "989abf6a03b864fc59f302cc188cc8c6b00c0bbf",
+        "is_w15_ancestor": true
+      },
+      {
+        "sha": "0a0cfd2d74f0c3d094c5503c5bd5a4e9c8aa33fe",
+        "is_w15_ancestor": true
+      },
+      {
+        "sha": "0fa990d8c9ae44d06118493c75bf123cdccab2bd",
+        "is_w15_ancestor": true
+      },
+      {
+        "sha": "516f1d15f76e5e340609bd4a4b905e3a5f877cab",
+        "is_w15_ancestor": true
+      },
+      {
+        "sha": "61348f2279d301a5f9f8e28c562208ce3b8160ee",
+        "is_w15_ancestor": true
+      },
+      {
+        "sha": "6f4360bf0bdd444a19a7d4f97e18306ae7618b6f",
+        "is_w15_ancestor": true
+      },
+      {
+        "sha": "855c17f66fd71964d88a63ca53fd90240159eb08",
+        "is_w15_ancestor": true
+      },
+      {
+        "sha": "abe64592bb08858b55495b9f4710289bd357d64a",
+        "is_w15_ancestor": true
+      },
+      {
+        "sha": "38d340a8857b96904f7246320091c14c051f1929",
+        "is_w15_ancestor": true
+      },
+      {
+        "sha": "4c36e6fc6e69e4dd1e98b5d0d5c2e50962ccfe80",
+        "is_w15_ancestor": true
+      },
+      {
+        "sha": "ae06ed61b7dff57aaf10f7ffdcc348a355374fbb",
+        "is_w15_ancestor": true
+      },
+      {
+        "sha": "df31a6a47f70b72deb0d5d5f39ee156454447387",
+        "is_w15_ancestor": true
+      },
+      {
+        "sha": "5a0f1acf9fa2cdc0171cf3f5178b61ab3bcd8d49",
+        "is_w15_ancestor": true
+      },
+      {
+        "sha": "c59a01042298be0f5a5aaa33d47afc04ab3ab534",
+        "is_w15_ancestor": true
+      },
+      {
+        "sha": "276cf02edb8a4801cbc0127b08289a7203d689f7",
+        "is_w15_ancestor": true
+      },
+      {
+        "sha": "58b8e7c0dcc97809100987fbaaa70990fa832d10",
+        "is_w15_ancestor": true
+      },
+      {
+        "sha": "23cefe55cdae8431eaf6efb6a3212901a58482ce",
+        "is_w15_ancestor": true
+      },
+      {
+        "sha": "d9829f0532f3f72a2b6b1e3af9ffce832b0e7969",
+        "is_w15_ancestor": true
+      },
+      {
+        "sha": "e349d3f2d2dc8920f30a27d5968e6724e49ebe07",
+        "is_w15_ancestor": true
+      },
+      {
+        "sha": "6ce14163ec6de963b50ada3d610aa8161176adee",
+        "is_w15_ancestor": true
+      }
+    ],
+    "recovered_commit_count": 24,
+    "historical_receipt_count": 32,
+    "new_receipt_entry_comparisons": 32,
+    "method": "24 direct W15 ancestry reads and one W15 tree read for 32 receipt paths, compared to the unchanged W14 audit. The original 256 historical comparisons were not repeated.",
+    "receipts": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/ACCEPTANCE.md",
+        "expected_from_w14_audit": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "ee62a7f4ef64edca606f520cbd7a9da050169b5f"
+        },
+        "w15": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "ee62a7f4ef64edca606f520cbd7a9da050169b5f"
+        },
+        "exact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/CI.json",
+        "expected_from_w14_audit": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "1d52ca9368c42f0d25db787b5d150dbf791664e8"
+        },
+        "w15": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "1d52ca9368c42f0d25db787b5d150dbf791664e8"
+        },
+        "exact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/IMPLEMENTATION.md",
+        "expected_from_w14_audit": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "9dc6446fad34c67bd8e0e148f774434091345db5"
+        },
+        "w15": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "9dc6446fad34c67bd8e0e148f774434091345db5"
+        },
+        "exact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/STATIC-W8.txt",
+        "expected_from_w14_audit": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "90ddc9f3ed83f948318b384f90fa438094c9d50b"
+        },
+        "w15": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "90ddc9f3ed83f948318b384f90fa438094c9d50b"
+        },
+        "exact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/TEST-S10.txt",
+        "expected_from_w14_audit": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "c84ef467a2ca916fb83ade903a07c4505b7debaa"
+        },
+        "w15": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "c84ef467a2ca916fb83ade903a07c4505b7debaa"
+        },
+        "exact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/TEST-S6.txt",
+        "expected_from_w14_audit": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "b167b4a4f610cc030a87e38bff1f9f2d2a1993bb"
+        },
+        "w15": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "b167b4a4f610cc030a87e38bff1f9f2d2a1993bb"
+        },
+        "exact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/TEST-S7.txt",
+        "expected_from_w14_audit": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "de1058d266541bf3c0f51468fd169d0b7cf0e11c"
+        },
+        "w15": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "de1058d266541bf3c0f51468fd169d0b7cf0e11c"
+        },
+        "exact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/TEST-S8.txt",
+        "expected_from_w14_audit": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "68452c4f2103503eaad4048f9bd9581d3824c4f4"
+        },
+        "w15": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "68452c4f2103503eaad4048f9bd9581d3824c4f4"
+        },
+        "exact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/TEST-S9.txt",
+        "expected_from_w14_audit": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "a5ced9844d8b108e090fafee5dd90fb4c07e9651"
+        },
+        "w15": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "a5ced9844d8b108e090fafee5dd90fb4c07e9651"
+        },
+        "exact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/criteria.json",
+        "expected_from_w14_audit": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "f1ee8ca2b27d5da7def672f0efec9d246e9da4cd"
+        },
+        "w15": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "f1ee8ca2b27d5da7def672f0efec9d246e9da4cd"
+        },
+        "exact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/README.md",
+        "expected_from_w14_audit": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "96db34222638506c4362aede5db86dfd73b348f2"
+        },
+        "w15": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "96db34222638506c4362aede5db86dfd73b348f2"
+        },
+        "exact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/ci-evidence.json",
+        "expected_from_w14_audit": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "1fef410826f020e6ac988856d903d78a5e9870af"
+        },
+        "w15": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "1fef410826f020e6ac988856d903d78a5e9870af"
+        },
+        "exact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/ci-request.json",
+        "expected_from_w14_audit": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "b87f31df5dca0c1125b7610b6df0fb76b53c9bb2"
+        },
+        "w15": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "b87f31df5dca0c1125b7610b6df0fb76b53c9bb2"
+        },
+        "exact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/criteria.json",
+        "expected_from_w14_audit": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "8bf007777edd163104b82d2176728daa7c5d98df"
+        },
+        "w15": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "8bf007777edd163104b82d2176728daa7c5d98df"
+        },
+        "exact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/criteria.md",
+        "expected_from_w14_audit": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "f5f1975947124608c3fed99ce6c325bfa30f9c1d"
+        },
+        "w15": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "f5f1975947124608c3fed99ce6c325bfa30f9c1d"
+        },
+        "exact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/delivery-allocation-20261114.json",
+        "expected_from_w14_audit": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "3815b5e8b59a7c7c3dbf30a8eaefb78f6ed78ae7"
+        },
+        "w15": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "3815b5e8b59a7c7c3dbf30a8eaefb78f6ed78ae7"
+        },
+        "exact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/guard-review.md",
+        "expected_from_w14_audit": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "ce6917c41a055750d64e64c05d56f64c9cbb92d1"
+        },
+        "w15": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "ce6917c41a055750d64e64c05d56f64c9cbb92d1"
+        },
+        "exact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/integration/README.md",
+        "expected_from_w14_audit": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "2a298c4f2130ff90e89527ec856ed8b6369f932c"
+        },
+        "w15": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "2a298c4f2130ff90e89527ec856ed8b6369f932c"
+        },
+        "exact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/integration/historical-c12.md",
+        "expected_from_w14_audit": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "89beca5917d7e62e6e97d852c5a5efaab0af9468"
+        },
+        "w15": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "89beca5917d7e62e6e97d852c5a5efaab0af9468"
+        },
+        "exact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/integration/wp10-agenda.json",
+        "expected_from_w14_audit": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "af7ef3c3a39deb1b877efe2c0682b02f8ebdd41b"
+        },
+        "w15": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "af7ef3c3a39deb1b877efe2c0682b02f8ebdd41b"
+        },
+        "exact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/integration/wp10-agenda.patch",
+        "expected_from_w14_audit": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "68e3f1cd3a746e6d973a7b9596d3492172e69bad"
+        },
+        "w15": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "68e3f1cd3a746e6d973a7b9596d3492172e69bad"
+        },
+        "exact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/integration/wp10-business-services.patch",
+        "expected_from_w14_audit": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "5745296ab69d4bf5d144c6ef1ce08748b55de2ed"
+        },
+        "w15": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "5745296ab69d4bf5d144c6ef1ce08748b55de2ed"
+        },
+        "exact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/integration/wp10-integration-combined.json",
+        "expected_from_w14_audit": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "ef6e366c5bad62a793050641f2f5a074483956db"
+        },
+        "w15": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "ef6e366c5bad62a793050641f2f5a074483956db"
+        },
+        "exact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/integration/wp10-integration-combined.patch",
+        "expected_from_w14_audit": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "1a20a90e58ea3106f6c65a3a1fc008706531cc1f"
+        },
+        "w15": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "1a20a90e58ea3106f6c65a3a1fc008706531cc1f"
+        },
+        "exact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/integration/wp10-preview-feedback.patch",
+        "expected_from_w14_audit": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "89b6e4a457c18a1d743538d7fe110f9e4099f2ce"
+        },
+        "w15": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "89b6e4a457c18a1d743538d7fe110f9e4099f2ce"
+        },
+        "exact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/s1-b-e1-checkpoint-01.json",
+        "expected_from_w14_audit": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "1fd19e9d393dd246430336bfacba3beada15015e"
+        },
+        "w15": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "1fd19e9d393dd246430336bfacba3beada15015e"
+        },
+        "exact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/s1-b-e1-checkpoint-02.json",
+        "expected_from_w14_audit": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "5c62cf7d02ad137d572f75a22eee89d2260a0999"
+        },
+        "w15": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "5c62cf7d02ad137d572f75a22eee89d2260a0999"
+        },
+        "exact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/s1-b-e1-checkpoint-03.json",
+        "expected_from_w14_audit": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "1964447c1025fc24842be0513753910e34fdf2a9"
+        },
+        "w15": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "1964447c1025fc24842be0513753910e34fdf2a9"
+        },
+        "exact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/s1-b-e1-typecheck-01.json",
+        "expected_from_w14_audit": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "64e4816956c5c6d6899d8bbf1cb0806e156f9d7e"
+        },
+        "w15": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "64e4816956c5c6d6899d8bbf1cb0806e156f9d7e"
+        },
+        "exact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/s1-b-e2-checkpoint-01.json",
+        "expected_from_w14_audit": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "d7d60608eb193e4b6a82f9a0296ce97cf1e4e758"
+        },
+        "w15": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "d7d60608eb193e4b6a82f9a0296ce97cf1e4e758"
+        },
+        "exact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/semantic-decisions.json",
+        "expected_from_w14_audit": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "a9f8a65f60f1b5c04dccd6c7574a19b16689a882"
+        },
+        "w15": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "a9f8a65f60f1b5c04dccd6c7574a19b16689a882"
+        },
+        "exact": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/typecheck-blockers.json",
+        "expected_from_w14_audit": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "e1d3cc6144e6d232189814322844dfc90cefa1c4"
+        },
+        "w15": {
+          "mode": "100644",
+          "type": "blob",
+          "blob": "e1d3cc6144e6d232189814322844dfc90cefa1c4"
+        },
+        "exact": true
+      }
+    ],
+    "original_and_base_refs_unchanged": true
+  },
+  "prior_audit_published_copies": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/w14-preservation-audit.json",
+      "source": "analysis/w14-preservation-audit.json",
+      "expected": {
+        "bytes": 296354,
+        "blob": "b9406474cd77f6f721b5651a1043d11b441c1b38",
+        "sha256": "6ae59021996c78e0d3a1c2b3311a0be9e9ab6486b26f504e7807a65831c155fc"
+      },
+      "published": {
+        "bytes": 296354,
+        "blob": "b9406474cd77f6f721b5651a1043d11b441c1b38",
+        "sha256": "6ae59021996c78e0d3a1c2b3311a0be9e9ab6486b26f504e7807a65831c155fc"
+      },
+      "byte_exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/inputs/w14-preservation-audit.md",
+      "source": "analysis/w14-preservation-audit.md",
+      "expected": {
+        "bytes": 6362,
+        "blob": "7d5d19c3a72ce7151d0948e4519b006439663977",
+        "sha256": "4f15a916fd5455be91920b0c9ce689f33969e99473143df00141a0998642d9dc"
+      },
+      "published": {
+        "bytes": 6362,
+        "blob": "7d5d19c3a72ce7151d0948e4519b006439663977",
+        "sha256": "4f15a916fd5455be91920b0c9ce689f33969e99473143df00141a0998642d9dc"
+      },
+      "byte_exact": true
+    }
+  ],
+  "protected_and_foreign": {
+    "foreign_paths_changed": [],
+    "protected_paths_changed": [],
+    "existing_receipt_or_document_paths_mutated": [],
+    "deleted_paths": [],
+    "unexpected_paths": [],
+    "method": "Exhaustive twelve-path delta consists only of the two authorized own paths plus ten new receipts/findings. All prior foreign pins, stronger prepared-apply, retained BCS, immutable campaign and protected paths are inherited unchanged from the direct W14 parent. No new source/foreign intake."
+  },
+  "preservation_blockers": [],
+  "limitations": [
+    "Metadata, immutable Git reads and GitHub MCP refs/commit only; no Actions endpoint, product, typecheck, guard, build or browser execution.",
+    "This agent authored the HTML change; this addendum is preservation review, not global independent or native acceptance.",
+    "Remote refs are a point-in-time observation, not a complete provider write history.",
+    "W15 product result is not inferred. CI and the final criteria map must reference their exact W/S/run pins separately."
+  ]
+}

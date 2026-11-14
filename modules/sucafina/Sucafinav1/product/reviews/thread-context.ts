@@ -1,0 +1,66 @@
+import { digestSfValue } from "../contracts/canonical.ts"
+import { isSfPeriod } from "../contracts/validation.ts"
+import type { DomainProjection, PreservedReview } from "../contracts/context.ts"
+import type { DomainPortHost, PortResult } from "../contracts/ports.ts"
+import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
+import type { ThreadSourceContext } from "../collaboration/thread-context.ts"
+import { reviewProjectionEvidence } from "./port.ts"
+import type { createReviewPort } from "./port.ts"
+
+/** A C05 pin is separate from domain evidence. It never stands in for a C17 reference. */
+export type ReviewThreadContext = { reviewRef: string; reviewVersion: number; reviewDigest: string; sectionId: string }
+
+export function isReviewThreadContext(value: unknown): value is ReviewThreadContext {
+  if (!value || typeof value !== "object" || Array.isArray(value) || Reflect.ownKeys(value).length !== 4 || Reflect.ownKeys(value).some((key) => typeof key !== "string" || !["reviewRef", "reviewVersion", "reviewDigest", "sectionId"].includes(key))) return false
+  const pin = value as Record<string, unknown>
+  return typeof pin.reviewRef === "string" && !!pin.reviewRef.trim() && Number.isSafeInteger(pin.reviewVersion) && Number(pin.reviewVersion) > 0 && typeof pin.reviewDigest === "string" && /^[a-f0-9]{64}$/.test(pin.reviewDigest) && typeof pin.sectionId === "string" && !!pin.sectionId.trim()
+}
+
+/** Reopens the real immutable C05 under the current caller's authority. C06
+ * keeps its original source basis and performs its own C17/recipient checks.
+ * A successful caller check does not authorize another recipient.
+ */
+export function createReviewThreadContext(input: {
+  reviews: Pick<ReturnType<typeof createReviewPort>, "read">
+  host: Pick<DomainPortHost, "revalidate">
+}) {
+  async function read(selection: { reviewRef: string; sectionId: string }, basis: ThreadSourceContext, context: TrustedDomainContext, expected?: ReviewThreadContext): Promise<PortResult<ReviewThreadContext>> {
+    if (!selection || typeof selection !== "object" || Array.isArray(selection) || Reflect.ownKeys(selection).length !== 2 || Reflect.ownKeys(selection).some((key) => key !== "reviewRef" && key !== "sectionId") || typeof selection.reviewRef !== "string" || !selection.reviewRef.trim() || typeof selection.sectionId !== "string" || !selection.sectionId.trim()) return { status: "needs-input", reason: "invalid-review-thread-context" }
+    const selected = structuredClone({ selection, basis, expected })
+    const reviews = input.reviews
+    const host = input.host
+    const readReview = reviews.read
+    const revalidate = host.revalidate
+    const current = () => input.reviews === reviews && input.host === host && reviews.read === readReview && host.revalidate === revalidate
+    if (!current() || !await revalidate.call(host, context) || !current()) return { status: "denied", reason: "review-thread-context-unavailable" }
+    const first = await readReview.call(reviews, selected.selection.reviewRef, context)
+    if (!current() || first.status !== "ok") return { status: "denied", reason: "review-thread-context-unavailable" }
+    const review = structuredClone(first.value)
+    const pin: ReviewThreadContext = { reviewRef: review.id, reviewVersion: review.version, reviewDigest: digestSfValue(review), sectionId: selected.selection.sectionId }
+    if (!isReviewThreadContext(pin) || pin.reviewRef !== selected.selection.reviewRef || selected.expected && digestSfValue(selected.expected) !== digestSfValue(pin) || !containsBasis(review, pin, selected.basis)) return { status: "denied", reason: "review-thread-context-unavailable" }
+    const again = await readReview.call(reviews, selected.selection.reviewRef, context)
+    if (!current() || again.status !== "ok" || digestSfValue(again.value) !== pin.reviewDigest || !containsBasis(again.value, pin, selected.basis) || !await revalidate.call(host, context) || !current()) return { status: "denied", reason: "review-thread-context-unavailable" }
+    return { status: "ok", value: pin }
+  }
+  return {
+    prepare: (selection: { reviewRef: string; sectionId: string }, basis: ThreadSourceContext, context: TrustedDomainContext): Promise<PortResult<ReviewThreadContext>> => read(selection, basis, context).catch(() => ({ status: "unavailable", reason: "review-thread-context-unavailable" })),
+    authorize: async (pin: ReviewThreadContext, basis: ThreadSourceContext, context: TrustedDomainContext): Promise<boolean> => {
+      if (!isReviewThreadContext(pin)) return false
+      return read({ reviewRef: pin.reviewRef, sectionId: pin.sectionId }, basis, context, pin).then((result) => result.status === "ok", () => false)
+    },
+  }
+}
+
+function containsBasis(review: PreservedReview, pin: ReviewThreadContext, basis: ThreadSourceContext) {
+  if (!basis || typeof basis !== "object" || Array.isArray(basis) || !isSfPeriod(basis.period) || typeof basis.sourceRef !== "string" || !basis.sourceRef.trim() || typeof basis.sourceIncarnation !== "string" || !basis.sourceIncarnation.trim() || !Number.isSafeInteger(basis.observedVersion) || basis.observedVersion < 1 || !Array.isArray(basis.evidenceRefs) || !basis.evidenceRefs.length) return false
+  if ("reviewContext" in basis && (basis.reviewContext !== undefined && (!isReviewThreadContext(basis.reviewContext) || digestSfValue(basis.reviewContext) !== digestSfValue(pin)))) return false
+  const sections = review.sections.filter((section) => section.id === pin.sectionId)
+  if (sections.length !== 1 || digestSfValue(sections[0]!.period) !== digestSfValue(basis.period)) return false
+  const refs = reviewProjectionEvidence(sections[0]!.content as DomainProjection)
+  const allowed = new Set(refs.map(digestSfValue))
+  const evidence = basis.evidenceRefs.map(digestSfValue)
+  if (new Set(evidence).size !== evidence.length || evidence.some((digest) => !allowed.has(digest))) return false
+  const sources = basis.evidenceRefs.filter((ref) => ref.refId === basis.sourceRef)
+  const source = sources[0]
+  return sources.length === 1 && !!source && source.kind === "record" && source.target.incarnation === basis.sourceIncarnation && source.target.version === basis.observedVersion && isSfPeriod(source.target.period) && source.target.period.start <= basis.period.start && source.target.period.end >= basis.period.end
+}

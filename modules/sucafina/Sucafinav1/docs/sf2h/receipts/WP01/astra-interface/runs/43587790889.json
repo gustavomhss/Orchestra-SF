@@ -1,0 +1,3137 @@
+{
+  "schema": "astra-interface-ci-receipt-v1",
+  "repository": "gustavomhss/Orchestra-SF",
+  "run_id": 43587790889,
+  "job_id": 132425925541,
+  "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43587790889",
+  "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43587790889/job/132425925541",
+  "conclusion": "failure",
+  "cleanup_job_id": 132426778698,
+  "cleanup_conclusion": "success",
+  "source": "GitHub MCP existing run/jobs/logs and exact snapshot .ci-run.json; no run initiated by auditor",
+  "product_sha": "0c3d98dd1263a305ce294c78ad5939cdda110a78",
+  "product_tree": "5c236ef687871149e9150630a16c4ce0ac70c2a7",
+  "snapshot_sha": "fbd7e6ae4831436e8faad88d66954d3207f943d0",
+  "snapshot_tree": "0a2402ebc38f19d04429816bd8a3090633d567d4",
+  "snapshot_branch": "ci-run-linux-astra-interface-0c3d98dd12-49a393cc9c-1",
+  "request_sha256": "49a393cc9c45e60b378a9299b5480edb47e932bac961ae47be3cdcf61e545a3a",
+  "request_blob": "db3c51ec4021372686faaa5714f08fd7ce9f4ac6",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "packageSelector": "packages/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "./Sucafinav1/test/product/wp01/preview-browser.test.ts",
+      "./Sucafinav1/test/product/wp01/bi-browser.test.ts",
+      "./Sucafinav1/test/product/wp01/import-receipt-browser.test.ts",
+      "./Sucafinav1/test/product/wp01/planner-monthly.test.ts",
+      "./Sucafinav1/test/product/wp01/record-search.test.ts",
+      "./Sucafinav1/test/product/wp01/shell-state.test.ts",
+      "./Sucafinav1/test/product/wp01/view-recovery.test.ts",
+      "./Sucafinav1/test/form-layout.test.ts",
+      "./Sucafinav1/test/visual-layout.test.ts",
+      "./Sucafinav1/test/product/wp01/portfolio-recovery.test.ts",
+      "./Sucafinav1/test/product/wp01/meeting-number.test.ts",
+      "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+    }
+  },
+  "envelope_proof": {
+    "equalExceptCiRun": true,
+    "source": "Parent MCP root-tree comparison; exact request independently fetched by reviewer."
+  },
+  "selection": [
+    "modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/preview-browser.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/bi-browser.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/import-receipt-browser.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/planner-monthly.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/record-search.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/view-recovery.test.ts",
+    "modules/sucafina/Sucafinav1/test/form-layout.test.ts",
+    "modules/sucafina/Sucafinav1/test/visual-layout.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/portfolio-recovery.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/meeting-number.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts"
+  ],
+  "attempt": 1,
+  "decoded_log": {
+    "path": "/workspace/scratch/080d03a98f2e/analysis/product-43587790889.log",
+    "bytes": 106751,
+    "sha256": "d24319ed9234b8132d645476c47628d9bb1957b0e686cf9cb7415b49b7487c54"
+  },
+  "summary": {
+    "pass": 60,
+    "fail": 2,
+    "observations": 62,
+    "files_observed": 13,
+    "files_selected": 13,
+    "expect_calls": 2099,
+    "elapsed_seconds": 101.64,
+    "bun_summary_present": true,
+    "before_all_failures": 0,
+    "named_test_bodies_entered": 62,
+    "named_consumer_tests": 60,
+    "infrastructure_failure_observations": 0,
+    "failed_real_component_or_consumer_observations": 2,
+    "failure_families": {
+      "dashboard_capture_http503_before_meeting_stability": 1,
+      "c05_preserved_financial_review_denied_after_canonical_change": 1
+    }
+  },
+  "omni": {
+    "nonce": "8ae315b35814db4984c7691a069bb137",
+    "status": "pass",
+    "spawns": 2,
+    "delegated": 0
+  },
+  "file_results": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "pass_observations": 1,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "file_header_observed": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/preview-browser.test.ts",
+      "pass_observations": 4,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "file_header_observed": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/bi-browser.test.ts",
+      "pass_observations": 1,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "file_header_observed": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/import-receipt-browser.test.ts",
+      "pass_observations": 1,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "file_header_observed": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/planner-monthly.test.ts",
+      "pass_observations": 2,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "file_header_observed": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/record-search.test.ts",
+      "pass_observations": 5,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "file_header_observed": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+      "pass_observations": 13,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "file_header_observed": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/view-recovery.test.ts",
+      "pass_observations": 18,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "file_header_observed": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/form-layout.test.ts",
+      "pass_observations": 1,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "file_header_observed": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/visual-layout.test.ts",
+      "pass_observations": 1,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "file_header_observed": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/portfolio-recovery.test.ts",
+      "pass_observations": 12,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "file_header_observed": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/meeting-number.test.ts",
+      "pass_observations": 0,
+      "fail_observations": 2,
+      "hook_failures": 0,
+      "file_header_observed": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "pass_observations": 1,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "file_header_observed": true
+    }
+  ],
+  "observations": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "name": "WP01 starts one Node-owned Chromium through Omni before leasing it across files",
+      "status": "pass",
+      "duration_ms": 13685.67,
+      "log_line": 876,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_HARNESS",
+      "proof_kind": "BROWSER_HARNESS",
+      "scope": "This selection proves bounded startup or final physical process closure, not business/native acceptance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/preview-browser.test.ts",
+      "name": "dashboard groups retain every canonical destination and its original index",
+      "status": "pass",
+      "duration_ms": 0.58,
+      "log_line": 879,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "NAMED_UI_CONSUMER_COMPONENT",
+      "scope": "Only the named canonical mapping/editor/input/in-flight consumer assertions pass. The independent in-flight case emits a complete real driver lifecycle report. No whole host/native acceptance is inferred."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/preview-browser.test.ts",
+      "name": "field errors identify the input and preserve the draft",
+      "status": "pass",
+      "duration_ms": 2269.62,
+      "log_line": 891,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "NAMED_UI_CONSUMER_COMPONENT",
+      "scope": "Only the named canonical mapping/editor/input/in-flight consumer assertions pass. The independent in-flight case emits a complete real driver lifecycle report. No whole host/native acceptance is inferred."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/preview-browser.test.ts",
+      "name": "procurement submission carries edits from its record's editor",
+      "status": "pass",
+      "duration_ms": 289.85,
+      "log_line": 903,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "NAMED_UI_CONSUMER_COMPONENT",
+      "scope": "Only the named canonical mapping/editor/input/in-flight consumer assertions pass. The independent in-flight case emits a complete real driver lifecycle report. No whole host/native acceptance is inferred."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/preview-browser.test.ts",
+      "name": "edits made while an apply is in flight remain unsaved in the real shell",
+      "status": "pass",
+      "duration_ms": 813.32,
+      "log_line": 922,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "NAMED_UI_CONSUMER_COMPONENT",
+      "scope": "Only the named canonical mapping/editor/input/in-flight consumer assertions pass. The independent in-flight case emits a complete real driver lifecycle report. No whole host/native acceptance is inferred."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/bi-browser.test.ts",
+      "name": "authenticated BI renders, filters and fails closed after session revocation",
+      "status": "pass",
+      "duration_ms": 1389.74,
+      "log_line": 936,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "REAL_AUTH_BI_CONSUMER_COMPONENT",
+      "scope": "Generated BI consumer with real auth, source lifecycle/SQLite and BI HTTP: rendering, filtering and revoked session pass. This does not prove the separate mounted BI refresh-seam consumer or resident model execution."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/import-receipt-browser.test.ts",
+      "name": "import reports the persisted unchanged outcome after an uncertain response",
+      "status": "pass",
+      "duration_ms": 407.51,
+      "log_line": 950,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Shipped import UI consumes an explicitly fixture-provided unchanged receipt after a503. It proves the consumer label and no duplicate apply; it is not a real import producer persistence/receipt or Operations implementation proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/planner-monthly.test.ts",
+      "name": "Planner boundary rejects unpublished operations and invalid monthly context before host admission",
+      "status": "pass",
+      "duration_ms": 4.77,
+      "log_line": 953,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "PLANNER_HTTP_INPUT_BOUNDARY",
+      "scope": "Real HTTP boundary rejects unsupported operation/invalid input before host admission; no host/domain operation is executed by this named test."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/planner-monthly.test.ts",
+      "name": "Planner grid previews pasted values and preserves a conflicting draft",
+      "status": "pass",
+      "duration_ms": 487.68,
+      "log_line": 965,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "REAL_PLANNER_MONTHLY_CONSUMER_COMPONENT",
+      "scope": "Mounted Planner monthly consumer, auth/store and declared monthly host preview pasted values and retain the conflicting draft. Installed full host/native/global gates remain separate."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/record-search.test.ts",
+      "name": "record search opens an actual authorized project with year, canonical anchor and focus, restores back and clears after logout",
+      "status": "pass",
+      "duration_ms": 836.31,
+      "log_line": 973,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "REAL_AUTH_SQLITE_RECORD_SEARCH_COMPONENT",
+      "scope": "Real module navigation, identity and SQLite records with declared authorization changes. Named canonical destination, back/focus, forbidden collection, reduction revalidation and logout assertions pass. No all-installed-host/native acceptance is inferred."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/record-search.test.ts",
+      "name": "record search queries only the real viewer navigation and exposes no title or count for a forbidden collection",
+      "status": "pass",
+      "duration_ms": 585.38,
+      "log_line": 974,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "REAL_AUTH_SQLITE_RECORD_SEARCH_COMPONENT",
+      "scope": "Real module navigation, identity and SQLite records with declared authorization changes. Named canonical destination, back/focus, forbidden collection, reduction revalidation and logout assertions pass. No all-installed-host/native acceptance is inferred."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/record-search.test.ts",
+      "name": "a role reduction during final search revalidation clears earlier authorized results even without an access revision header",
+      "status": "pass",
+      "duration_ms": 459.18,
+      "log_line": 975,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "REAL_AUTH_SQLITE_RECORD_SEARCH_COMPONENT",
+      "scope": "Real module navigation, identity and SQLite records with declared authorization changes. Named canonical destination, back/focus, forbidden collection, reduction revalidation and logout assertions pass. No all-installed-host/native acceptance is inferred."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/record-search.test.ts",
+      "name": "Planner record search pins the effective default plan from authorized HTML when the starting URL omits version",
+      "status": "pass",
+      "duration_ms": 553.58,
+      "log_line": 976,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "REAL_AUTH_SQLITE_RECORD_SEARCH_COMPONENT",
+      "scope": "Real module navigation, identity and SQLite records with declared authorization changes. Named canonical destination, back/focus, forbidden collection, reduction revalidation and logout assertions pass. No all-installed-host/native acceptance is inferred."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/record-search.test.ts",
+      "name": "Procurement search opens the actual request and supplier details through their canonical selectors",
+      "status": "pass",
+      "duration_ms": 737.07,
+      "log_line": 977,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "REAL_AUTH_SQLITE_RECORD_SEARCH_COMPONENT",
+      "scope": "Real module navigation, identity and SQLite records with declared authorization changes. Named canonical destination, back/focus, forbidden collection, reduction revalidation and logout assertions pass. No all-installed-host/native acceptance is inferred."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+      "name": "refresh 401 removes the old authorized view even with unsaved edits",
+      "status": "pass",
+      "duration_ms": 231.43,
+      "log_line": 991,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Real shipped UI consumer under explicit HTTP/transport fixtures. Named recovery, fencing, navigation or layout assertions pass; fixtures are not domain persistence, full producer or native proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+      "name": "refresh 403 removes the old authorized view even with unsaved edits",
+      "status": "pass",
+      "duration_ms": 220.49,
+      "log_line": 992,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Real shipped UI consumer under explicit HTTP/transport fixtures. Named recovery, fencing, navigation or layout assertions pass; fixtures are not domain persistence, full producer or native proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+      "name": "access revision change fails closed even when refresh returns HTTP 200",
+      "status": "pass",
+      "duration_ms": 194.65,
+      "log_line": 993,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Real shipped UI consumer under explicit HTTP/transport fixtures. Named recovery, fencing, navigation or layout assertions pass; fixtures are not domain persistence, full producer or native proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+      "name": "an expired session rendered as a sign-in document cannot retain the dirty authorized view",
+      "status": "pass",
+      "duration_ms": 196.25,
+      "log_line": 994,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Real shipped UI consumer under explicit HTTP/transport fixtures. Named recovery, fencing, navigation or layout assertions pass; fixtures are not domain persistence, full producer or native proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+      "name": "transient refresh failure and fresh data preserve a dirty form and its expected version",
+      "status": "pass",
+      "duration_ms": 243.05,
+      "log_line": 995,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Real shipped UI consumer under explicit HTTP/transport fixtures. Named recovery, fencing, navigation or layout assertions pass; fixtures are not domain persistence, full producer or native proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+      "name": "edits typed during an ordinary save remain pending after its receipt",
+      "status": "pass",
+      "duration_ms": 235.87,
+      "log_line": 996,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Real shipped UI consumer under explicit HTTP/transport fixtures. Named recovery, fencing, navigation or layout assertions pass; fixtures are not domain persistence, full producer or native proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+      "name": "HTTP conflict preserves the attempt and shows the server value without a duplicated body status",
+      "status": "pass",
+      "duration_ms": 250.48,
+      "log_line": 997,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Real shipped UI consumer under explicit HTTP/transport fixtures. Named recovery, fencing, navigation or layout assertions pass; fixtures are not domain persistence, full producer or native proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+      "name": "navigation keeps scoped Dashboard periods and Planner version without sharing filters",
+      "status": "pass",
+      "duration_ms": 196.37,
+      "log_line": 998,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Real shipped UI consumer under explicit HTTP/transport fixtures. Named recovery, fencing, navigation or layout assertions pass; fixtures are not domain persistence, full producer or native proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+      "name": "back from a detail restores the same query and scroll position after server revalidation",
+      "status": "pass",
+      "duration_ms": 317.25,
+      "log_line": 999,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Real shipped UI consumer under explicit HTTP/transport fixtures. Named recovery, fencing, navigation or layout assertions pass; fixtures are not domain persistence, full producer or native proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+      "name": "real shell detail supports keyboard, focus return and confined overflow at 320 px",
+      "status": "pass",
+      "duration_ms": 245.49,
+      "log_line": 1000,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Real shipped UI consumer under explicit HTTP/transport fixtures. Named recovery, fencing, navigation or layout assertions pass; fixtures are not domain persistence, full producer or native proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+      "name": "real shell detail supports keyboard, focus return and confined overflow at 768 px",
+      "status": "pass",
+      "duration_ms": 267.92,
+      "log_line": 1001,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Real shipped UI consumer under explicit HTTP/transport fixtures. Named recovery, fencing, navigation or layout assertions pass; fixtures are not domain persistence, full producer or native proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+      "name": "real shell detail supports keyboard, focus return and confined overflow at 1440 px",
+      "status": "pass",
+      "duration_ms": 250.48,
+      "log_line": 1002,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Real shipped UI consumer under explicit HTTP/transport fixtures. Named recovery, fencing, navigation or layout assertions pass; fixtures are not domain persistence, full producer or native proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+      "name": "canonical destinations retain identifiers and invalid years cannot enter navigation state",
+      "status": "pass",
+      "duration_ms": 0.68,
+      "log_line": 1003,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Real shipped UI consumer under explicit HTTP/transport fixtures. Named recovery, fencing, navigation or layout assertions pass; fixtures are not domain persistence, full producer or native proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/view-recovery.test.ts",
+      "name": "creation freezes its request after a lost outcome and retains uncertainty on a subsequent 409",
+      "status": "pass",
+      "duration_ms": 455.64,
+      "log_line": 1017,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Real shipped UI consumer under explicit HTTP/transport fixtures. Named recovery, fencing, navigation or layout assertions pass; fixtures are not domain persistence, full producer or native proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/view-recovery.test.ts",
+      "name": "creation freezes its request after a stale outcome and retains uncertainty on a subsequent 409",
+      "status": "pass",
+      "duration_ms": 400.83,
+      "log_line": 1018,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Real shipped UI consumer under explicit HTTP/transport fixtures. Named recovery, fencing, navigation or layout assertions pass; fixtures are not domain persistence, full producer or native proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/view-recovery.test.ts",
+      "name": "a confirmed creation rejection unlocks correction and creates a new intention",
+      "status": "pass",
+      "duration_ms": 365.48,
+      "log_line": 1019,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Real shipped UI consumer under explicit HTTP/transport fixtures. Named recovery, fencing, navigation or layout assertions pass; fixtures are not domain persistence, full producer or native proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/view-recovery.test.ts",
+      "name": "creation 401 removes its inputs and does not echo the denied payload",
+      "status": "pass",
+      "duration_ms": 318.0,
+      "log_line": 1020,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Real shipped UI consumer under explicit HTTP/transport fixtures. Named recovery, fencing, navigation or layout assertions pass; fixtures are not domain persistence, full producer or native proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/view-recovery.test.ts",
+      "name": "creation 403 removes its inputs and does not echo the denied payload",
+      "status": "pass",
+      "duration_ms": 301.2,
+      "log_line": 1021,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Real shipped UI consumer under explicit HTTP/transport fixtures. Named recovery, fencing, navigation or layout assertions pass; fixtures are not domain persistence, full producer or native proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/view-recovery.test.ts",
+      "name": "save-503 view mutation freezes density, version, payload and idempotency key until reconciliation",
+      "status": "pass",
+      "duration_ms": 399.15,
+      "log_line": 1022,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Real shipped UI consumer under explicit HTTP/transport fixtures. Named recovery, fencing, navigation or layout assertions pass; fixtures are not domain persistence, full producer or native proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/view-recovery.test.ts",
+      "name": "save-409 view mutation freezes density, version, payload and idempotency key until reconciliation",
+      "status": "pass",
+      "duration_ms": 381.9,
+      "log_line": 1023,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Real shipped UI consumer under explicit HTTP/transport fixtures. Named recovery, fencing, navigation or layout assertions pass; fixtures are not domain persistence, full producer or native proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/view-recovery.test.ts",
+      "name": "preferred-503 view mutation freezes density, version, payload and idempotency key until reconciliation",
+      "status": "pass",
+      "duration_ms": 368.89,
+      "log_line": 1024,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Real shipped UI consumer under explicit HTTP/transport fixtures. Named recovery, fencing, navigation or layout assertions pass; fixtures are not domain persistence, full producer or native proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/view-recovery.test.ts",
+      "name": "preferred-409 view mutation freezes density, version, payload and idempotency key until reconciliation",
+      "status": "pass",
+      "duration_ms": 362.37,
+      "log_line": 1025,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Real shipped UI consumer under explicit HTTP/transport fixtures. Named recovery, fencing, navigation or layout assertions pass; fixtures are not domain persistence, full producer or native proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/view-recovery.test.ts",
+      "name": "remove-503 view mutation freezes density, version, payload and idempotency key until reconciliation",
+      "status": "pass",
+      "duration_ms": 358.61,
+      "log_line": 1026,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Real shipped UI consumer under explicit HTTP/transport fixtures. Named recovery, fencing, navigation or layout assertions pass; fixtures are not domain persistence, full producer or native proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/view-recovery.test.ts",
+      "name": "remove-409 view mutation freezes density, version, payload and idempotency key until reconciliation",
+      "status": "pass",
+      "duration_ms": 376.58,
+      "log_line": 1027,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Real shipped UI consumer under explicit HTTP/transport fixtures. Named recovery, fencing, navigation or layout assertions pass; fixtures are not domain persistence, full producer or native proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/view-recovery.test.ts",
+      "name": "a confirmed saved-view rejection permits an edited payload with a new key",
+      "status": "pass",
+      "duration_ms": 321.46,
+      "log_line": 1028,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Real shipped UI consumer under explicit HTTP/transport fixtures. Named recovery, fencing, navigation or layout assertions pass; fixtures are not domain persistence, full producer or native proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/view-recovery.test.ts",
+      "name": "saved-view 401 clears old titles and fences a late earlier read",
+      "status": "pass",
+      "duration_ms": 376.35,
+      "log_line": 1029,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Real shipped UI consumer under explicit HTTP/transport fixtures. Named recovery, fencing, navigation or layout assertions pass; fixtures are not domain persistence, full producer or native proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/view-recovery.test.ts",
+      "name": "saved-view 403 clears old titles and fences a late earlier read",
+      "status": "pass",
+      "duration_ms": 337.85,
+      "log_line": 1030,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Real shipped UI consumer under explicit HTTP/transport fixtures. Named recovery, fencing, navigation or layout assertions pass; fixtures are not domain persistence, full producer or native proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/view-recovery.test.ts",
+      "name": "opening an authorized saved view requires an explicit decision to discard current edits",
+      "status": "pass",
+      "duration_ms": 349.68,
+      "log_line": 1031,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Real shipped UI consumer under explicit HTTP/transport fixtures. Named recovery, fencing, navigation or layout assertions pass; fixtures are not domain persistence, full producer or native proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/view-recovery.test.ts",
+      "name": "a newer authorized list cannot be repopulated by an older filtered read",
+      "status": "pass",
+      "duration_ms": 317.19,
+      "log_line": 1032,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Real shipped UI consumer under explicit HTTP/transport fixtures. Named recovery, fencing, navigation or layout assertions pass; fixtures are not domain persistence, full producer or native proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/view-recovery.test.ts",
+      "name": "an older open response cannot replace the user's newer destination choice",
+      "status": "pass",
+      "duration_ms": 297.73,
+      "log_line": 1033,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Real shipped UI consumer under explicit HTTP/transport fixtures. Named recovery, fencing, navigation or layout assertions pass; fixtures are not domain persistence, full producer or native proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/view-recovery.test.ts",
+      "name": "an arriving saved density cannot overwrite edits made while its authorized read was pending",
+      "status": "pass",
+      "duration_ms": 239.7,
+      "log_line": 1034,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Real shipped UI consumer under explicit HTTP/transport fixtures. Named recovery, fencing, navigation or layout assertions pass; fixtures are not domain persistence, full producer or native proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/form-layout.test.ts",
+      "name": "All editor screens keep readable field widths and ordered configuration sections",
+      "status": "pass",
+      "duration_ms": 17792.97,
+      "log_line": 1054,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "RENDERED_SCREEN_LAYOUT_COMPONENT",
+      "scope": "Rendered shipped screens and browser measurements prove only the named field/configuration or executive-metric layout assertions, not business semantics or full journeys."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/visual-layout.test.ts",
+      "name": "Executive metrics align, fill the content area and fit desktop and mobile viewports",
+      "status": "pass",
+      "duration_ms": 14414.93,
+      "log_line": 1083,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "RENDERED_SCREEN_LAYOUT_COMPONENT",
+      "scope": "Rendered shipped screens and browser measurements prove only the named field/configuration or executive-metric layout assertions, not business semantics or full journeys."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/portfolio-recovery.test.ts",
+      "name": "portfolio evaluation freezes body and key after a lost response and a subsequent conflict",
+      "status": "pass",
+      "duration_ms": 724.32,
+      "log_line": 1091,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Real shipped UI consumer under explicit HTTP/transport fixtures. Named recovery, fencing, navigation or layout assertions pass; fixtures are not domain persistence, full producer or native proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/portfolio-recovery.test.ts",
+      "name": "portfolio promotion freezes body and key after a lost response and a subsequent conflict",
+      "status": "pass",
+      "duration_ms": 819.17,
+      "log_line": 1092,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Real shipped UI consumer under explicit HTTP/transport fixtures. Named recovery, fencing, navigation or layout assertions pass; fixtures are not domain persistence, full producer or native proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/portfolio-recovery.test.ts",
+      "name": "portfolio preparation freezes body and key after a lost response and a subsequent conflict",
+      "status": "pass",
+      "duration_ms": 804.44,
+      "log_line": 1093,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Real shipped UI consumer under explicit HTTP/transport fixtures. Named recovery, fencing, navigation or layout assertions pass; fixtures are not domain persistence, full producer or native proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/portfolio-recovery.test.ts",
+      "name": "an initial portfolio stale response retains the same evaluation intention",
+      "status": "pass",
+      "duration_ms": 630.73,
+      "log_line": 1094,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Real shipped UI consumer under explicit HTTP/transport fixtures. Named recovery, fencing, navigation or layout assertions pass; fixtures are not domain persistence, full producer or native proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/portfolio-recovery.test.ts",
+      "name": "an initial portfolio conflict response retains the same evaluation intention",
+      "status": "pass",
+      "duration_ms": 615.7,
+      "log_line": 1095,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Real shipped UI consumer under explicit HTTP/transport fixtures. Named recovery, fencing, navigation or layout assertions pass; fixtures are not domain persistence, full producer or native proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/portfolio-recovery.test.ts",
+      "name": "a published pre-dispatch portfolio rejection permits correction with a new intention",
+      "status": "pass",
+      "duration_ms": 706.18,
+      "log_line": 1096,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Real shipped UI consumer under explicit HTTP/transport fixtures. Named recovery, fencing, navigation or layout assertions pass; fixtures are not domain persistence, full producer or native proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/portfolio-recovery.test.ts",
+      "name": "portfolio promotion does not confirm an incomplete successful acknowledgement",
+      "status": "pass",
+      "duration_ms": 707.69,
+      "log_line": 1097,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Real shipped UI consumer under explicit HTTP/transport fixtures. Named recovery, fencing, navigation or layout assertions pass; fixtures are not domain persistence, full producer or native proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/portfolio-recovery.test.ts",
+      "name": "portfolio preparation does not confirm an incomplete successful acknowledgement",
+      "status": "pass",
+      "duration_ms": 682.04,
+      "log_line": 1098,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Real shipped UI consumer under explicit HTTP/transport fixtures. Named recovery, fencing, navigation or layout assertions pass; fixtures are not domain persistence, full producer or native proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/portfolio-recovery.test.ts",
+      "name": "a closed portfolio page exposes a reload state without retaining its old context",
+      "status": "pass",
+      "duration_ms": 854.1,
+      "log_line": 1099,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Real shipped UI consumer under explicit HTTP/transport fixtures. Named recovery, fencing, navigation or layout assertions pass; fixtures are not domain persistence, full producer or native proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/portfolio-recovery.test.ts",
+      "name": "portfolio 401 clears context and fences a late successful mutation",
+      "status": "pass",
+      "duration_ms": 579.94,
+      "log_line": 1100,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Real shipped UI consumer under explicit HTTP/transport fixtures. Named recovery, fencing, navigation or layout assertions pass; fixtures are not domain persistence, full producer or native proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/portfolio-recovery.test.ts",
+      "name": "portfolio 403 clears context and fences a late successful mutation",
+      "status": "pass",
+      "duration_ms": 617.56,
+      "log_line": 1101,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Real shipped UI consumer under explicit HTTP/transport fixtures. Named recovery, fencing, navigation or layout assertions pass; fixtures are not domain persistence, full producer or native proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/portfolio-recovery.test.ts",
+      "name": "portfolio evaluation times out while reading a body and replays the exact request",
+      "status": "pass",
+      "duration_ms": 10944.74,
+      "log_line": 1102,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Real shipped UI consumer under explicit HTTP/transport fixtures. Named recovery, fencing, navigation or layout assertions pass; fixtures are not domain persistence, full producer or native proof."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/meeting-number.test.ts",
+      "name": "a live Dashboard meeting keeps its financial number during background refresh and reopens an authorized historical capture",
+      "status": "fail",
+      "duration_ms": 832.34,
+      "log_line": 1135,
+      "kind": "named_test",
+      "excerpt": "2026-11-14T11:01:56.9184199Z Sucafinav1/test/product/wp01/meeting-number.test.ts:\n2026-11-14T11:01:57.1117521Z WP01 browser lease acquired {\n2026-11-14T11:01:57.1117910Z   pid: 4107,\n2026-11-14T11:01:57.1118163Z   lease: 12,\n2026-11-14T11:01:57.1118401Z   acquisitions: 12,\n2026-11-14T11:01:57.1118635Z }\n2026-11-14T11:01:57.8699102Z WP01 browser lease released {\n2026-11-14T11:01:57.8699449Z   pid: 4107,\n2026-11-14T11:01:57.8699611Z   lease: 12,\n2026-11-14T11:01:57.8699766Z   releases: 12,\n2026-11-14T11:01:57.8699926Z   contexts: 0,\n2026-11-14T11:01:57.8700083Z }\n2026-11-14T11:01:57.8700259Z 46 | \n2026-11-14T11:01:57.8700754Z 47 |     const captured = page.waitForResponse((response) => new URL(response.url()).searchParams.get(\"sf\") === \"dashboard-capture\")\n2026-11-14T11:01:57.8701375Z 48 |     await panel.getByLabel(\"Registro para preservar\").selectOption({ label: \"Meeting Operations\" })\n2026-11-14T11:01:57.8701876Z 49 |     await panel.getByRole(\"button\", { name: \"Preservar retrato\", exact: true }).click()\n2026-11-14T11:01:57.8702275Z 50 |     const captureResponse = await captured\n2026-11-14T11:01:57.8702579Z 51 |     expect(captureResponse.status()).toBe(200)\n2026-11-14T11:01:57.8702844Z                                           ^\n2026-11-14T11:01:57.8703085Z error: expect(received).toBe(expected)\n2026-11-14T11:01:57.8703218Z \n2026-11-14T11:01:57.8703292Z Expected: 200\n2026-11-14T11:01:57.8703447Z Received: 503\n2026-11-14T11:01:57.8703540Z \n2026-11-14T11:01:57.8703911Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/meeting-number.test.ts:51:38)\n2026-11-14T11:01:57.8854362Z (fail) a live Dashboard meeting keeps its financial number during background refresh and reopens an authorized historical capture [832.34ms]",
+      "test_body_entered": true,
+      "whole_named_test_passed": false,
+      "browser_journey_reached": true,
+      "failure_family": "dashboard_capture_http503_before_meeting_stability",
+      "proof_completion": "FAILED_REAL_HOST_CONSUMER_JOURNEY",
+      "source_assertion_line": 51,
+      "product_failure_inferred": false,
+      "observed_before_failure": [
+        "real operator enrollment and Dashboard navigation",
+        "current workbench discovery completed",
+        "selected actual OPEX record Meeting Operations",
+        "capture HTTP response observed as503"
+      ],
+      "not_proven": [
+        "successful capture and its identity",
+        "financial agenda stability during background refresh",
+        "explicit update to current2400",
+        "historical capture reopening"
+      ],
+      "scope": "The previously blocked browser body now executes. The real capture request expected HTTP200 but returned503 before any stability/background-refresh assertion. Its response reason was not logged. The named test is FAIL; producer scope-remapping analysis is a separate static finding, not an observed response reason."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/meeting-number.test.ts",
+      "name": "C05 reopens the same preserved financial meeting after a canonical budget change with its original authorized content",
+      "status": "fail",
+      "duration_ms": 17614.64,
+      "log_line": 1159,
+      "kind": "named_test",
+      "excerpt": "2026-11-14T11:01:57.8703911Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/meeting-number.test.ts:51:38)\n2026-11-14T11:01:57.8854362Z (fail) a live Dashboard meeting keeps its financial number during background refresh and reopens an authorized historical capture [832.34ms]\n2026-11-14T11:02:15.4993378Z SF_WP01_C05_HISTORICAL_REVIEW {\n2026-11-14T11:02:15.4994122Z   reviewId: \"dashboard-review:f1e48b03014cc2e8230453c18eabd6afb80c065de7ab74231477f132274cb06c\",\n2026-11-14T11:02:15.4994644Z   originalCreatedAt: \"2026-11-14T11:01:59.940Z\",\n2026-11-14T11:02:15.4995481Z   originalTotal: 1300,\n2026-11-14T11:02:15.4995780Z   currentTotal: 2400,\n2026-11-14T11:02:15.4996464Z   sameSourceIncarnation: true,\n2026-11-14T11:02:15.4996680Z   httpStatus: 403,\n2026-11-14T11:02:15.4996858Z   resultStatus: \"denied\",\n2026-11-14T11:02:15.4997066Z   reason: \"access-unavailable\",\n2026-11-14T11:02:15.4997257Z }\n2026-11-14T11:02:15.4999172Z 228 | \n2026-11-14T11:02:15.4999549Z 229 |     const reopened = await fetch(historyUrl, { headers: { cookie } })\n2026-11-14T11:02:15.5000087Z 230 |     const reopenedResponse = object(await reopened.json())\n2026-11-14T11:02:15.5000829Z 231 |     console.info(\"SF_WP01_C05_HISTORICAL_REVIEW\", { reviewId: original.id, originalCreatedAt: original.createdAt, originalTotal: 1300, currentTotal: 2400,\n2026-11-14T11:02:15.5002199Z 232 |       sameSourceIncarnation: currentSource?.incarnation === originalSource!.incarnation, httpStatus: reopened.status, resultStatus: reopenedResponse.status, reason: reopenedResponse.reason })\n2026-11-14T11:02:15.5003246Z 233 |     expect(reopened.status).toBe(200)\n2026-11-14T11:02:15.5003591Z                                   ^\n2026-11-14T11:02:15.5003988Z error: expect(received).toBe(expected)\n2026-11-14T11:02:15.5004176Z \n2026-11-14T11:02:15.5004278Z Expected: 200\n2026-11-14T11:02:15.5004506Z Received: 403\n2026-11-14T11:02:15.5004652Z \n2026-11-14T11:02:15.5005228Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/meeting-number.test.ts:233:29)\n2026-11-14T11:02:15.5006647Z (fail) C05 reopens the same preserved financial meeting after a canonical budget change with its original authorized content [17614.64ms]",
+      "test_body_entered": true,
+      "whole_named_test_passed": false,
+      "browser_journey_reached": false,
+      "failure_family": "c05_preserved_financial_review_denied_after_canonical_change",
+      "proof_completion": "FAILED_REAL_HOST_COMPOSITION",
+      "source_assertion_line": 233,
+      "product_failure_inferred": true,
+      "observed_before_failure": [
+        "real preserved review obtained",
+        "canonical budget update committed",
+        "current source retains same incarnation",
+        "same review GET returned403 denied/access-unavailable"
+      ],
+      "not_proven": [
+        "same preserved meeting returns200 after update",
+        "original review identity/date/projection preserved in reopening"
+      ],
+      "scope": "The independent whole-review HTTP counterproof remains FAIL: original1300, current2400, same source incarnation, reopening same review denied403/access-unavailable. No relaxation to accept denial; no component PASS from its preceding successful methods."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "name": "WP01 shares one Chromium across files, releases every lease, and proves final process exit",
+      "status": "pass",
+      "duration_ms": 53.07,
+      "log_line": 1190,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "proof_completion": "PASS_HARNESS",
+      "proof_kind": "BROWSER_HARNESS",
+      "scope": "This selection proves bounded startup or final physical process closure, not business/native acceptance."
+    }
+  ],
+  "proof_records": {
+    "SF_BROWSER_DRIVER_PHASE": [
+      {
+        "log_line": 842,
+        "observed_at": "2026-11-14T11:00:34.1764224Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "playwright-import",
+          "elapsedMs": 0
+        }
+      },
+      {
+        "log_line": 843,
+        "observed_at": "2026-11-14T11:00:34.5129852Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "playwright-imported",
+          "elapsedMs": 339
+        }
+      },
+      {
+        "log_line": 844,
+        "observed_at": "2026-11-14T11:00:34.5222942Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "app-process-service",
+          "elapsedMs": 347
+        }
+      },
+      {
+        "log_line": 845,
+        "observed_at": "2026-11-14T11:00:34.5223532Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "app-process-spawn",
+          "elapsedMs": 347
+        }
+      },
+      {
+        "log_line": 846,
+        "observed_at": "2026-11-14T11:00:34.5311642Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "app-process-spawned",
+          "elapsedMs": 357,
+          "driverPid": 4092
+        }
+      },
+      {
+        "log_line": 847,
+        "observed_at": "2026-11-14T11:00:34.5542095Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "node-import",
+          "elapsedMs": 380,
+          "driverPid": 4092
+        }
+      },
+      {
+        "log_line": 848,
+        "observed_at": "2026-11-14T11:00:34.7765882Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "node-imported",
+          "elapsedMs": 603,
+          "driverPid": 4092
+        }
+      },
+      {
+        "log_line": 849,
+        "observed_at": "2026-11-14T11:00:34.7843138Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "chromium-launch",
+          "elapsedMs": 610,
+          "driverPid": 4092
+        }
+      },
+      {
+        "log_line": 864,
+        "observed_at": "2026-11-14T11:00:47.7677468Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "chromium-launched",
+          "elapsedMs": 13594,
+          "driverPid": 4092
+        }
+      },
+      {
+        "log_line": 865,
+        "observed_at": "2026-11-14T11:00:47.7678316Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "node-ready",
+          "elapsedMs": 13594,
+          "driverPid": 4092,
+          "browserPid": 4107
+        }
+      },
+      {
+        "log_line": 866,
+        "observed_at": "2026-11-14T11:00:47.7679250Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "pipe-verify",
+          "elapsedMs": 13594,
+          "driverPid": 4092,
+          "browserPid": 4107
+        }
+      },
+      {
+        "log_line": 867,
+        "observed_at": "2026-11-14T11:00:47.7679996Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "browser-connect",
+          "elapsedMs": 13594,
+          "driverPid": 4092,
+          "browserPid": 4107
+        }
+      },
+      {
+        "log_line": 868,
+        "observed_at": "2026-11-14T11:00:47.8246844Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "browser-connected",
+          "elapsedMs": 13651,
+          "driverPid": 4092,
+          "browserPid": 4107
+        }
+      },
+      {
+        "log_line": 904,
+        "observed_at": "2026-11-14T11:00:50.4293158Z",
+        "value": {
+          "consumer": "preview-in-flight",
+          "phase": "playwright-import",
+          "elapsedMs": 0
+        }
+      },
+      {
+        "log_line": 905,
+        "observed_at": "2026-11-14T11:00:50.4301728Z",
+        "value": {
+          "consumer": "preview-in-flight",
+          "phase": "playwright-imported",
+          "elapsedMs": 0
+        }
+      },
+      {
+        "log_line": 906,
+        "observed_at": "2026-11-14T11:00:50.4321406Z",
+        "value": {
+          "consumer": "preview-in-flight",
+          "phase": "app-process-service",
+          "elapsedMs": 2
+        }
+      },
+      {
+        "log_line": 907,
+        "observed_at": "2026-11-14T11:00:50.4331202Z",
+        "value": {
+          "consumer": "preview-in-flight",
+          "phase": "app-process-spawn",
+          "elapsedMs": 2
+        }
+      },
+      {
+        "log_line": 908,
+        "observed_at": "2026-11-14T11:00:50.4345431Z",
+        "value": {
+          "consumer": "preview-in-flight",
+          "phase": "app-process-spawned",
+          "elapsedMs": 6,
+          "driverPid": 4264
+        }
+      },
+      {
+        "log_line": 909,
+        "observed_at": "2026-11-14T11:00:50.4561944Z",
+        "value": {
+          "consumer": "preview-in-flight",
+          "phase": "node-import",
+          "elapsedMs": 28,
+          "driverPid": 4264
+        }
+      },
+      {
+        "log_line": 910,
+        "observed_at": "2026-11-14T11:00:50.6653446Z",
+        "value": {
+          "consumer": "preview-in-flight",
+          "phase": "node-imported",
+          "elapsedMs": 237,
+          "driverPid": 4264
+        }
+      },
+      {
+        "log_line": 911,
+        "observed_at": "2026-11-14T11:00:50.6772749Z",
+        "value": {
+          "consumer": "preview-in-flight",
+          "phase": "chromium-launch",
+          "elapsedMs": 249,
+          "driverPid": 4264
+        }
+      },
+      {
+        "log_line": 914,
+        "observed_at": "2026-11-14T11:00:50.7778878Z",
+        "value": {
+          "consumer": "preview-in-flight",
+          "phase": "chromium-launched",
+          "elapsedMs": 347,
+          "driverPid": 4264
+        }
+      },
+      {
+        "log_line": 915,
+        "observed_at": "2026-11-14T11:00:50.7788481Z",
+        "value": {
+          "consumer": "preview-in-flight",
+          "phase": "node-ready",
+          "elapsedMs": 350,
+          "driverPid": 4264,
+          "browserPid": 4279
+        }
+      },
+      {
+        "log_line": 916,
+        "observed_at": "2026-11-14T11:00:50.7789747Z",
+        "value": {
+          "consumer": "preview-in-flight",
+          "phase": "pipe-verify",
+          "elapsedMs": 350,
+          "driverPid": 4264,
+          "browserPid": 4279
+        }
+      },
+      {
+        "log_line": 917,
+        "observed_at": "2026-11-14T11:00:50.7834453Z",
+        "value": {
+          "consumer": "preview-in-flight",
+          "phase": "browser-connect",
+          "elapsedMs": 353,
+          "driverPid": 4264,
+          "browserPid": 4279
+        }
+      },
+      {
+        "log_line": 918,
+        "observed_at": "2026-11-14T11:00:50.8170119Z",
+        "value": {
+          "consumer": "preview-in-flight",
+          "phase": "browser-connected",
+          "elapsedMs": 388,
+          "driverPid": 4264,
+          "browserPid": 4279
+        }
+      },
+      {
+        "log_line": 919,
+        "observed_at": "2026-11-14T11:00:51.2234981Z",
+        "value": {
+          "consumer": "preview-in-flight",
+          "phase": "node-closed",
+          "elapsedMs": 795,
+          "driverPid": 4264
+        }
+      },
+      {
+        "log_line": 920,
+        "observed_at": "2026-11-14T11:00:51.2313338Z",
+        "value": {
+          "consumer": "preview-in-flight",
+          "phase": "app-process-exited",
+          "elapsedMs": 803,
+          "driverPid": 4264,
+          "exitCode": 0
+        }
+      },
+      {
+        "log_line": 1170,
+        "observed_at": "2026-11-14T11:02:15.5403624Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "node-closed",
+          "elapsedMs": 101367,
+          "driverPid": 4092
+        }
+      },
+      {
+        "log_line": 1171,
+        "observed_at": "2026-11-14T11:02:15.5538715Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "app-process-exited",
+          "elapsedMs": 101380,
+          "driverPid": 4092,
+          "exitCode": 0
+        }
+      }
+    ],
+    "SF_BROWSER_DRIVER_LAUNCH_DIAGNOSTIC": [
+      {
+        "log_line": 850,
+        "observed_at": "2026-11-14T11:00:34.7853738Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4092,
+          "elapsedMs": 1,
+          "resources": {
+            "FSReqPromise": 1,
+            "PipeWrap": 3
+          },
+          "rss": 101085184,
+          "children": [],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 0,
+            "received": 0,
+            "malformed": 0,
+            "pending": []
+          }
+        }
+      },
+      {
+        "log_line": 851,
+        "observed_at": "2026-11-14T11:00:35.7871014Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4092,
+          "elapsedMs": 1003,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1
+          },
+          "rss": 101216256,
+          "children": [
+            {
+              "pid": 4107,
+              "parent": 4092,
+              "name": "chrome",
+              "state": "D (disk sleep)",
+              "wait": "folio_wait_bit_common"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 1,
+            "received": 0,
+            "malformed": 0,
+            "lastSent": "Browser.getVersion",
+            "pending": [
+              "Browser.getVersion"
+            ]
+          }
+        }
+      },
+      {
+        "log_line": 852,
+        "observed_at": "2026-11-14T11:00:36.7875309Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4092,
+          "elapsedMs": 2003,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1
+          },
+          "rss": 101216256,
+          "children": [
+            {
+              "pid": 4107,
+              "parent": 4092,
+              "name": "chrome",
+              "state": "D (disk sleep)",
+              "wait": "folio_wait_bit_common"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 1,
+            "received": 0,
+            "malformed": 0,
+            "lastSent": "Browser.getVersion",
+            "pending": [
+              "Browser.getVersion"
+            ]
+          }
+        }
+      },
+      {
+        "log_line": 853,
+        "observed_at": "2026-11-14T11:00:37.7890052Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4092,
+          "elapsedMs": 3005,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1
+          },
+          "rss": 101216256,
+          "children": [
+            {
+              "pid": 4107,
+              "parent": 4092,
+              "name": "chrome",
+              "state": "D (disk sleep)",
+              "wait": "folio_wait_bit_common"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 1,
+            "received": 0,
+            "malformed": 0,
+            "lastSent": "Browser.getVersion",
+            "pending": [
+              "Browser.getVersion"
+            ]
+          }
+        }
+      },
+      {
+        "log_line": 854,
+        "observed_at": "2026-11-14T11:00:38.7898206Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4092,
+          "elapsedMs": 4005,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1
+          },
+          "rss": 101216256,
+          "children": [
+            {
+              "pid": 4107,
+              "parent": 4092,
+              "name": "chrome",
+              "state": "D (disk sleep)",
+              "wait": "folio_wait_bit_common"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 1,
+            "received": 0,
+            "malformed": 0,
+            "lastSent": "Browser.getVersion",
+            "pending": [
+              "Browser.getVersion"
+            ]
+          }
+        }
+      },
+      {
+        "log_line": 855,
+        "observed_at": "2026-11-14T11:00:39.7913710Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4092,
+          "elapsedMs": 5007,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1
+          },
+          "rss": 101216256,
+          "children": [
+            {
+              "pid": 4107,
+              "parent": 4092,
+              "name": "chrome",
+              "state": "D (disk sleep)",
+              "wait": "folio_wait_bit_common"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 1,
+            "received": 0,
+            "malformed": 0,
+            "lastSent": "Browser.getVersion",
+            "pending": [
+              "Browser.getVersion"
+            ]
+          }
+        }
+      },
+      {
+        "log_line": 856,
+        "observed_at": "2026-11-14T11:00:40.7926891Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4092,
+          "elapsedMs": 6009,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1
+          },
+          "rss": 101216256,
+          "children": [
+            {
+              "pid": 4107,
+              "parent": 4092,
+              "name": "chrome",
+              "state": "S (sleeping)",
+              "wait": "__skb_wait_for_more_packets"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 1,
+            "received": 0,
+            "malformed": 0,
+            "lastSent": "Browser.getVersion",
+            "pending": [
+              "Browser.getVersion"
+            ]
+          }
+        }
+      },
+      {
+        "log_line": 857,
+        "observed_at": "2026-11-14T11:00:41.7943709Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4092,
+          "elapsedMs": 7010,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1
+          },
+          "rss": 101216256,
+          "children": [
+            {
+              "pid": 4107,
+              "parent": 4092,
+              "name": "chrome",
+              "state": "D (disk sleep)",
+              "wait": "folio_wait_bit_common"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 1,
+            "received": 0,
+            "malformed": 0,
+            "lastSent": "Browser.getVersion",
+            "pending": [
+              "Browser.getVersion"
+            ]
+          }
+        }
+      },
+      {
+        "log_line": 858,
+        "observed_at": "2026-11-14T11:00:42.7960075Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4092,
+          "elapsedMs": 8012,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1
+          },
+          "rss": 101216256,
+          "children": [
+            {
+              "pid": 4107,
+              "parent": 4092,
+              "name": "chrome",
+              "state": "D (disk sleep)",
+              "wait": "folio_wait_bit_common"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 1,
+            "received": 0,
+            "malformed": 0,
+            "lastSent": "Browser.getVersion",
+            "pending": [
+              "Browser.getVersion"
+            ]
+          }
+        }
+      },
+      {
+        "log_line": 859,
+        "observed_at": "2026-11-14T11:00:43.7962702Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4092,
+          "elapsedMs": 9012,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1
+          },
+          "rss": 101216256,
+          "children": [
+            {
+              "pid": 4107,
+              "parent": 4092,
+              "name": "chrome",
+              "state": "S (sleeping)",
+              "wait": "futex_do_wait"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 1,
+            "received": 0,
+            "malformed": 0,
+            "lastSent": "Browser.getVersion",
+            "pending": [
+              "Browser.getVersion"
+            ]
+          }
+        }
+      },
+      {
+        "log_line": 860,
+        "observed_at": "2026-11-14T11:00:44.7980081Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4092,
+          "elapsedMs": 10014,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1
+          },
+          "rss": 101216256,
+          "children": [
+            {
+              "pid": 4107,
+              "parent": 4092,
+              "name": "chrome",
+              "state": "S (sleeping)",
+              "wait": "futex_do_wait"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 1,
+            "received": 0,
+            "malformed": 0,
+            "lastSent": "Browser.getVersion",
+            "pending": [
+              "Browser.getVersion"
+            ]
+          }
+        }
+      },
+      {
+        "log_line": 861,
+        "observed_at": "2026-11-14T11:00:45.7989612Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4092,
+          "elapsedMs": 11015,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1
+          },
+          "rss": 101216256,
+          "children": [
+            {
+              "pid": 4107,
+              "parent": 4092,
+              "name": "chrome",
+              "state": "S (sleeping)",
+              "wait": "futex_do_wait"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 1,
+            "received": 0,
+            "malformed": 0,
+            "lastSent": "Browser.getVersion",
+            "pending": [
+              "Browser.getVersion"
+            ]
+          }
+        }
+      },
+      {
+        "log_line": 862,
+        "observed_at": "2026-11-14T11:00:46.8000788Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4092,
+          "elapsedMs": 12016,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1
+          },
+          "rss": 101216256,
+          "children": [
+            {
+              "pid": 4107,
+              "parent": 4092,
+              "name": "chrome",
+              "state": "D (disk sleep)",
+              "wait": "folio_wait_bit_common"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 1,
+            "received": 0,
+            "malformed": 0,
+            "lastSent": "Browser.getVersion",
+            "pending": [
+              "Browser.getVersion"
+            ]
+          }
+        }
+      },
+      {
+        "log_line": 863,
+        "observed_at": "2026-11-14T11:00:47.7675050Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4092,
+          "elapsedMs": 12984,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1,
+            "TCPServerWrap": 1
+          },
+          "rss": 103075840,
+          "children": [
+            {
+              "pid": 4107,
+              "parent": 4092,
+              "name": "chrome",
+              "state": "D (disk sleep)",
+              "wait": "folio_wait_bit_common"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 2,
+            "received": 2,
+            "malformed": 0,
+            "lastSent": "Target.setAutoAttach",
+            "lastReceived": "Target.setAutoAttach",
+            "pending": []
+          }
+        }
+      },
+      {
+        "log_line": 912,
+        "observed_at": "2026-11-14T11:00:50.6774423Z",
+        "value": {
+          "consumer": "preview-in-flight",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4264,
+          "elapsedMs": 0,
+          "resources": {
+            "FSReqPromise": 1,
+            "PipeWrap": 3
+          },
+          "rss": 100601856,
+          "children": [],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 0,
+            "received": 0,
+            "malformed": 0,
+            "pending": []
+          }
+        }
+      },
+      {
+        "log_line": 913,
+        "observed_at": "2026-11-14T11:00:50.7771272Z",
+        "value": {
+          "consumer": "preview-in-flight",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4264,
+          "elapsedMs": 98,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1,
+            "TCPServerWrap": 1
+          },
+          "rss": 102584320,
+          "children": [
+            {
+              "pid": 4279,
+              "parent": 4264,
+              "name": "chrome",
+              "state": "R (running)",
+              "wait": "0"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 2,
+            "received": 2,
+            "malformed": 0,
+            "lastSent": "Target.setAutoAttach",
+            "lastReceived": "Target.setAutoAttach",
+            "pending": []
+          }
+        }
+      }
+    ],
+    "SF_WP02_BROWSER_DRIVER_PROOF": [
+      {
+        "log_line": 921,
+        "observed_at": "2026-11-14T11:00:51.2353674Z",
+        "value": {
+          "consumer": "preview-in-flight",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4072
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 4264
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 4279,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 14,
+            "framesFromBrowser": 56,
+            "peakQueuedBytes": 2013,
+            "peakBufferedBytes": 457,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        }
+      },
+      {
+        "log_line": 1191,
+        "observed_at": "2026-11-14T11:02:15.5571875Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4072
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 4092
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 4107,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 3613,
+            "framesFromBrowser": 9645,
+            "peakQueuedBytes": 623723,
+            "peakBufferedBytes": 1707,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        }
+      }
+    ]
+  },
+  "limits": [
+    "Each observation belongs only to the exact product/snapshot/request recorded here. No prior green is transferred.",
+    "Hook failures do not execute test bodies. Named failures require explicit inspection of the failed stage before attributing a product defect.",
+    "Driver cleanup, Omni spawning and UI assertions have separate scopes. Native model/skill proof and S0 global gates remain separate.",
+    "Both meeting-number tests remain complete FAIL. Neither financial background stability nor whole preserved-meeting reopening is proved.",
+    "Capture503 is observed without its response reason. Static scope-page analysis stays separate from the raw causal evidence.",
+    "Import receipt, shell/view/portfolio transport fixtures are consumer proofs only, never real producer or persistence acceptance.",
+    "BI filtering/authentication PASS does not close the separate mounted refresh seam, resident models or native witnesses.",
+    "C12 reload and F04 write-only authority are not selected in this complement; their historical failures remain open.",
+    "All results belong to exact W10/S/request13. W11 static success and blob equivalence do not rerun these tests or transfer whole-head acceptance.",
+    "No native/resident/global gate or full epic was executed by this auditor. S0 remains responsible for final global acceptance."
+  ],
+  "final_run_metadata": {
+    "id": 43587790889,
+    "name": "test-ci",
+    "node_id": "WFR_kwLOVsSYps8AAAAKJgjoKQ",
+    "head_branch": "ci-run-linux-astra-interface-0c3d98dd12-49a393cc9c-1",
+    "head_sha": "fbd7e6ae4831436e8faad88d66954d3207f943d0",
+    "path": ".github/workflows/test-ci.yml",
+    "display_title": "ci: cover thirteen remaining interface consumers after W9 lifecycle p…",
+    "run_number": 436,
+    "event": "push",
+    "status": "completed",
+    "conclusion": "failure",
+    "workflow_id": 416464764,
+    "check_suite_id": 118021576755,
+    "check_suite_node_id": "CS_kwDOVsSYps8AAAAbeqJYMw",
+    "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43587790889",
+    "html_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43587790889",
+    "pull_requests": [],
+    "created_at": "2026-11-14T10:58:44Z",
+    "updated_at": "2026-11-14T11:02:24Z",
+    "actor": {
+      "login": "gustavomhss",
+      "id": 228147811,
+      "node_id": "U_kgDODZlCYw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/228147811?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/gustavomhss",
+      "html_url": "https://github.com/gustavomhss",
+      "followers_url": "https://api.github.com/users/gustavomhss/followers",
+      "following_url": "https://api.github.com/users/gustavomhss/following{/other_user}",
+      "gists_url": "https://api.github.com/users/gustavomhss/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/gustavomhss/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/gustavomhss/subscriptions",
+      "organizations_url": "https://api.github.com/users/gustavomhss/orgs",
+      "repos_url": "https://api.github.com/users/gustavomhss/repos",
+      "events_url": "https://api.github.com/users/gustavomhss/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/gustavomhss/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "run_attempt": 1,
+    "referenced_workflows": [],
+    "run_started_at": "2026-11-14T10:58:44Z",
+    "triggering_actor": {
+      "login": "gustavomhss",
+      "id": 228147811,
+      "node_id": "U_kgDODZlCYw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/228147811?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/gustavomhss",
+      "html_url": "https://github.com/gustavomhss",
+      "followers_url": "https://api.github.com/users/gustavomhss/followers",
+      "following_url": "https://api.github.com/users/gustavomhss/following{/other_user}",
+      "gists_url": "https://api.github.com/users/gustavomhss/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/gustavomhss/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/gustavomhss/subscriptions",
+      "organizations_url": "https://api.github.com/users/gustavomhss/orgs",
+      "repos_url": "https://api.github.com/users/gustavomhss/repos",
+      "events_url": "https://api.github.com/users/gustavomhss/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/gustavomhss/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "jobs_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43587790889/jobs",
+    "logs_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43587790889/logs",
+    "check_suite_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/check-suites/118021576755",
+    "artifacts_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43587790889/artifacts",
+    "cancel_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43587790889/cancel",
+    "rerun_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43587790889/rerun",
+    "previous_attempt_url": null,
+    "workflow_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/workflows/416464764",
+    "head_commit": {
+      "id": "fbd7e6ae4831436e8faad88d66954d3207f943d0",
+      "tree_id": "0a2402ebc38f19d04429816bd8a3090633d567d4",
+      "message": "ci: cover thirteen remaining interface consumers after W9 lifecycle proof",
+      "timestamp": "2026-11-14T10:56:25Z",
+      "author": {
+        "name": "gustavomhss",
+        "email": "gmhelmold@gmail.com"
+      },
+      "committer": {
+        "name": "gustavomhss",
+        "email": "gmhelmold@gmail.com"
+      }
+    },
+    "repository": {
+      "id": 1455724710,
+      "node_id": "R_kgDOVsSYpg",
+      "name": "Orchestra-SF",
+      "full_name": "gustavomhss/Orchestra-SF",
+      "private": false,
+      "owner": {
+        "login": "gustavomhss",
+        "id": 228147811,
+        "node_id": "U_kgDODZlCYw",
+        "avatar_url": "https://avatars.githubusercontent.com/u/228147811?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/gustavomhss",
+        "html_url": "https://github.com/gustavomhss",
+        "followers_url": "https://api.github.com/users/gustavomhss/followers",
+        "following_url": "https://api.github.com/users/gustavomhss/following{/other_user}",
+        "gists_url": "https://api.github.com/users/gustavomhss/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/gustavomhss/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/gustavomhss/subscriptions",
+        "organizations_url": "https://api.github.com/users/gustavomhss/orgs",
+        "repos_url": "https://api.github.com/users/gustavomhss/repos",
+        "events_url": "https://api.github.com/users/gustavomhss/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/gustavomhss/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF",
+      "description": "Sucafina-native edition of HuGR Orchestra. Derived history preserved; upstream gustavomhss/hugr-orchestra.",
+      "fork": false,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF",
+      "forks_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/forks",
+      "keys_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/keys{/key_id}",
+      "collaborators_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/collaborators{/collaborator}",
+      "teams_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/teams",
+      "hooks_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/hooks",
+      "issue_events_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/issues/events{/number}",
+      "events_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/events",
+      "assignees_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/assignees{/user}",
+      "branches_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/branches{/branch}",
+      "tags_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/tags",
+      "blobs_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs{/sha}",
+      "git_tags_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/tags{/sha}",
+      "git_refs_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/refs{/sha}",
+      "trees_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees{/sha}",
+      "statuses_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/statuses/{sha}",
+      "languages_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/languages",
+      "stargazers_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/stargazers",
+      "contributors_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contributors",
+      "subscribers_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/subscribers",
+      "subscription_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/subscription",
+      "commits_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits{/sha}",
+      "git_commits_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/commits{/sha}",
+      "comments_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/comments{/number}",
+      "issue_comment_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/issues/comments{/number}",
+      "contents_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contents/{+path}",
+      "compare_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/compare/{base}...{head}",
+      "merges_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/merges",
+      "archive_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/{archive_format}{/ref}",
+      "downloads_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/downloads",
+      "issues_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/issues{/number}",
+      "pulls_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/pulls{/number}",
+      "milestones_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/milestones{/number}",
+      "notifications_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/notifications{?since,all,participating}",
+      "labels_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/labels{/name}",
+      "releases_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/releases{/id}",
+      "deployments_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/deployments"
+    },
+    "head_repository": {
+      "id": 1455724710,
+      "node_id": "R_kgDOVsSYpg",
+      "name": "Orchestra-SF",
+      "full_name": "gustavomhss/Orchestra-SF",
+      "private": false,
+      "owner": {
+        "login": "gustavomhss",
+        "id": 228147811,
+        "node_id": "U_kgDODZlCYw",
+        "avatar_url": "https://avatars.githubusercontent.com/u/228147811?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/gustavomhss",
+        "html_url": "https://github.com/gustavomhss",
+        "followers_url": "https://api.github.com/users/gustavomhss/followers",
+        "following_url": "https://api.github.com/users/gustavomhss/following{/other_user}",
+        "gists_url": "https://api.github.com/users/gustavomhss/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/gustavomhss/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/gustavomhss/subscriptions",
+        "organizations_url": "https://api.github.com/users/gustavomhss/orgs",
+        "repos_url": "https://api.github.com/users/gustavomhss/repos",
+        "events_url": "https://api.github.com/users/gustavomhss/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/gustavomhss/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF",
+      "description": "Sucafina-native edition of HuGR Orchestra. Derived history preserved; upstream gustavomhss/hugr-orchestra.",
+      "fork": false,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF",
+      "forks_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/forks",
+      "keys_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/keys{/key_id}",
+      "collaborators_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/collaborators{/collaborator}",
+      "teams_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/teams",
+      "hooks_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/hooks",
+      "issue_events_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/issues/events{/number}",
+      "events_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/events",
+      "assignees_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/assignees{/user}",
+      "branches_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/branches{/branch}",
+      "tags_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/tags",
+      "blobs_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs{/sha}",
+      "git_tags_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/tags{/sha}",
+      "git_refs_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/refs{/sha}",
+      "trees_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees{/sha}",
+      "statuses_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/statuses/{sha}",
+      "languages_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/languages",
+      "stargazers_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/stargazers",
+      "contributors_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contributors",
+      "subscribers_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/subscribers",
+      "subscription_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/subscription",
+      "commits_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits{/sha}",
+      "git_commits_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/commits{/sha}",
+      "comments_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/comments{/number}",
+      "issue_comment_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/issues/comments{/number}",
+      "contents_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contents/{+path}",
+      "compare_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/compare/{base}...{head}",
+      "merges_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/merges",
+      "archive_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/{archive_format}{/ref}",
+      "downloads_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/downloads",
+      "issues_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/issues{/number}",
+      "pulls_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/pulls{/number}",
+      "milestones_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/milestones{/number}",
+      "notifications_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/notifications{?since,all,participating}",
+      "labels_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/labels{/name}",
+      "releases_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/releases{/id}",
+      "deployments_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/deployments"
+    }
+  },
+  "final_job_metadata": [
+    {
+      "id": 132425925541,
+      "name": "test (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_id": 43587790889,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Assert Linux ARM64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 3
+        },
+        {
+          "name": "Assert macOS arm64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 4
+        },
+        {
+          "name": "Setup request validator Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Read request",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Fetch source history for Script fixtures",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "ripgrep",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Setup Playwright Node",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Install Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Linux sandbox dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12
+        },
+        {
+          "name": "Setup Python",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13
+        },
+        {
+          "name": "Install Python test dependencies",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 14
+        },
+        {
+          "name": "Configure git identity",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15
+        },
+        {
+          "name": "Export requested environment",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "omni binaries",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17
+        },
+        {
+          "name": "Rust toolchain (rust-toolchain.toml)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 18
+        },
+        {
+          "name": "Omni control nonce",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19
+        },
+        {
+          "name": "Run tests",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 20
+        },
+        {
+          "name": "Upload Lean dashboard previews (extension)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 21
+        },
+        {
+          "name": "Upload Playwright evidence",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 22
+        },
+        {
+          "name": "Post Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 42
+        },
+        {
+          "name": "Post Setup request validator Node",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 43
+        },
+        {
+          "name": "Post Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 44
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 45
+        }
+      ]
+    },
+    {
+      "id": 132426778698,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 43587790889,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Delete the snapshot branch",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        }
+      ]
+    }
+  ],
+  "cleanup_job_log": {
+    "file": "product-43587790889.cleanup.log",
+    "bytes": 2320,
+    "sha256": "20f3799bf6b1a67cd63571dfd06cd1c4cddeb5b9a0a427cbd2b09ab78ad0210e"
+  },
+  "cleanup_scope": "Temporary workflow-ref cleanup132426778698 succeeded. Physical process proof is separately complete below.",
+  "physical_lifecycle": {
+    "shared_pool": {
+      "status": "PASS",
+      "log_line": 1191,
+      "observed_at": "2026-11-14T11:02:15.5571875Z",
+      "value": {
+        "consumer": "wp01-shared-pool",
+        "clientRuntime": {
+          "name": "bun",
+          "version": "1.3.14",
+          "pid": 4072
+        },
+        "driverRuntime": {
+          "name": "node",
+          "version": "24.22.2",
+          "pid": 4092
+        },
+        "playwrightVersion": "1.59.1",
+        "browserVersion": "157.0.8103.50",
+        "browserPid": 4107,
+        "transport": "playwright-unix-pipe-node-websocket",
+        "spawnBoundary": "AppProcess",
+        "browserStdioCount": 5,
+        "browserUsesPipe": true,
+        "browserPipeOwner": "node",
+        "bridge": {
+          "framing": "json-nul",
+          "acceptedClients": 1,
+          "framesToBrowser": 3613,
+          "framesFromBrowser": 9645,
+          "peakQueuedBytes": 623723,
+          "peakBufferedBytes": 1707,
+          "maxFrameBytes": 16777216,
+          "maxQueuedBytes": 33554432,
+          "directoryMode": 448,
+          "socketMode": 384
+        },
+        "lifecycle": {
+          "remainingContexts": 0,
+          "connected": false,
+          "nodeExitCode": 0,
+          "browserExitCode": 0,
+          "browserSignal": null,
+          "bridgeClosed": true,
+          "listenerClosed": true,
+          "socketClosed": true,
+          "pipeEnded": true,
+          "webSocketOpened": true,
+          "webSocketClosed": true,
+          "webSocketCloseCode": 1000,
+          "webSocketCloseWasClean": true,
+          "pendingFrameBytes": 0,
+          "queuedWriteBytes": 0,
+          "socketRemoved": true,
+          "directoryRemoved": true
+        }
+      },
+      "pool": {
+        "launches": 1,
+        "acquisitions": 12,
+        "releases": 12,
+        "contexts": 0,
+        "activeLease": false,
+        "disconnected": true,
+        "driverClosed": true,
+        "processExited": true
+      }
+    },
+    "independent_full_proofs": [
+      {
+        "log_line": 921,
+        "observed_at": "2026-11-14T11:00:51.2353674Z",
+        "value": {
+          "consumer": "preview-in-flight",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4072
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 4264
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 4279,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 14,
+            "framesFromBrowser": 56,
+            "peakQueuedBytes": 2013,
+            "peakBufferedBytes": 457,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        }
+      }
+    ]
+  },
+  "startup_diagnostic": {
+    "poolBudgetMs": 15000,
+    "namedStartupTestBudgetMs": 20000,
+    "envelopePerTestTimeoutMs": 120000,
+    "driverPid": 4092,
+    "browserPid": 4107,
+    "browserConnectedElapsedMs": 13651,
+    "startupNamedTestDurationMs": 13685.67,
+    "observations": [
+      {
+        "log_line": 850,
+        "observed_at": "2026-11-14T11:00:34.7853738Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4092,
+          "elapsedMs": 1,
+          "resources": {
+            "FSReqPromise": 1,
+            "PipeWrap": 3
+          },
+          "rss": 101085184,
+          "children": [],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 0,
+            "received": 0,
+            "malformed": 0,
+            "pending": []
+          }
+        }
+      },
+      {
+        "log_line": 851,
+        "observed_at": "2026-11-14T11:00:35.7871014Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4092,
+          "elapsedMs": 1003,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1
+          },
+          "rss": 101216256,
+          "children": [
+            {
+              "pid": 4107,
+              "parent": 4092,
+              "name": "chrome",
+              "state": "D (disk sleep)",
+              "wait": "folio_wait_bit_common"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 1,
+            "received": 0,
+            "malformed": 0,
+            "lastSent": "Browser.getVersion",
+            "pending": [
+              "Browser.getVersion"
+            ]
+          }
+        }
+      },
+      {
+        "log_line": 852,
+        "observed_at": "2026-11-14T11:00:36.7875309Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4092,
+          "elapsedMs": 2003,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1
+          },
+          "rss": 101216256,
+          "children": [
+            {
+              "pid": 4107,
+              "parent": 4092,
+              "name": "chrome",
+              "state": "D (disk sleep)",
+              "wait": "folio_wait_bit_common"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 1,
+            "received": 0,
+            "malformed": 0,
+            "lastSent": "Browser.getVersion",
+            "pending": [
+              "Browser.getVersion"
+            ]
+          }
+        }
+      },
+      {
+        "log_line": 853,
+        "observed_at": "2026-11-14T11:00:37.7890052Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4092,
+          "elapsedMs": 3005,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1
+          },
+          "rss": 101216256,
+          "children": [
+            {
+              "pid": 4107,
+              "parent": 4092,
+              "name": "chrome",
+              "state": "D (disk sleep)",
+              "wait": "folio_wait_bit_common"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 1,
+            "received": 0,
+            "malformed": 0,
+            "lastSent": "Browser.getVersion",
+            "pending": [
+              "Browser.getVersion"
+            ]
+          }
+        }
+      },
+      {
+        "log_line": 854,
+        "observed_at": "2026-11-14T11:00:38.7898206Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4092,
+          "elapsedMs": 4005,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1
+          },
+          "rss": 101216256,
+          "children": [
+            {
+              "pid": 4107,
+              "parent": 4092,
+              "name": "chrome",
+              "state": "D (disk sleep)",
+              "wait": "folio_wait_bit_common"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 1,
+            "received": 0,
+            "malformed": 0,
+            "lastSent": "Browser.getVersion",
+            "pending": [
+              "Browser.getVersion"
+            ]
+          }
+        }
+      },
+      {
+        "log_line": 855,
+        "observed_at": "2026-11-14T11:00:39.7913710Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4092,
+          "elapsedMs": 5007,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1
+          },
+          "rss": 101216256,
+          "children": [
+            {
+              "pid": 4107,
+              "parent": 4092,
+              "name": "chrome",
+              "state": "D (disk sleep)",
+              "wait": "folio_wait_bit_common"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 1,
+            "received": 0,
+            "malformed": 0,
+            "lastSent": "Browser.getVersion",
+            "pending": [
+              "Browser.getVersion"
+            ]
+          }
+        }
+      },
+      {
+        "log_line": 856,
+        "observed_at": "2026-11-14T11:00:40.7926891Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4092,
+          "elapsedMs": 6009,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1
+          },
+          "rss": 101216256,
+          "children": [
+            {
+              "pid": 4107,
+              "parent": 4092,
+              "name": "chrome",
+              "state": "S (sleeping)",
+              "wait": "__skb_wait_for_more_packets"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 1,
+            "received": 0,
+            "malformed": 0,
+            "lastSent": "Browser.getVersion",
+            "pending": [
+              "Browser.getVersion"
+            ]
+          }
+        }
+      },
+      {
+        "log_line": 857,
+        "observed_at": "2026-11-14T11:00:41.7943709Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4092,
+          "elapsedMs": 7010,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1
+          },
+          "rss": 101216256,
+          "children": [
+            {
+              "pid": 4107,
+              "parent": 4092,
+              "name": "chrome",
+              "state": "D (disk sleep)",
+              "wait": "folio_wait_bit_common"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 1,
+            "received": 0,
+            "malformed": 0,
+            "lastSent": "Browser.getVersion",
+            "pending": [
+              "Browser.getVersion"
+            ]
+          }
+        }
+      },
+      {
+        "log_line": 858,
+        "observed_at": "2026-11-14T11:00:42.7960075Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4092,
+          "elapsedMs": 8012,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1
+          },
+          "rss": 101216256,
+          "children": [
+            {
+              "pid": 4107,
+              "parent": 4092,
+              "name": "chrome",
+              "state": "D (disk sleep)",
+              "wait": "folio_wait_bit_common"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 1,
+            "received": 0,
+            "malformed": 0,
+            "lastSent": "Browser.getVersion",
+            "pending": [
+              "Browser.getVersion"
+            ]
+          }
+        }
+      },
+      {
+        "log_line": 859,
+        "observed_at": "2026-11-14T11:00:43.7962702Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4092,
+          "elapsedMs": 9012,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1
+          },
+          "rss": 101216256,
+          "children": [
+            {
+              "pid": 4107,
+              "parent": 4092,
+              "name": "chrome",
+              "state": "S (sleeping)",
+              "wait": "futex_do_wait"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 1,
+            "received": 0,
+            "malformed": 0,
+            "lastSent": "Browser.getVersion",
+            "pending": [
+              "Browser.getVersion"
+            ]
+          }
+        }
+      },
+      {
+        "log_line": 860,
+        "observed_at": "2026-11-14T11:00:44.7980081Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4092,
+          "elapsedMs": 10014,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1
+          },
+          "rss": 101216256,
+          "children": [
+            {
+              "pid": 4107,
+              "parent": 4092,
+              "name": "chrome",
+              "state": "S (sleeping)",
+              "wait": "futex_do_wait"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 1,
+            "received": 0,
+            "malformed": 0,
+            "lastSent": "Browser.getVersion",
+            "pending": [
+              "Browser.getVersion"
+            ]
+          }
+        }
+      },
+      {
+        "log_line": 861,
+        "observed_at": "2026-11-14T11:00:45.7989612Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4092,
+          "elapsedMs": 11015,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1
+          },
+          "rss": 101216256,
+          "children": [
+            {
+              "pid": 4107,
+              "parent": 4092,
+              "name": "chrome",
+              "state": "S (sleeping)",
+              "wait": "futex_do_wait"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 1,
+            "received": 0,
+            "malformed": 0,
+            "lastSent": "Browser.getVersion",
+            "pending": [
+              "Browser.getVersion"
+            ]
+          }
+        }
+      },
+      {
+        "log_line": 862,
+        "observed_at": "2026-11-14T11:00:46.8000788Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4092,
+          "elapsedMs": 12016,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1
+          },
+          "rss": 101216256,
+          "children": [
+            {
+              "pid": 4107,
+              "parent": 4092,
+              "name": "chrome",
+              "state": "D (disk sleep)",
+              "wait": "folio_wait_bit_common"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 1,
+            "received": 0,
+            "malformed": 0,
+            "lastSent": "Browser.getVersion",
+            "pending": [
+              "Browser.getVersion"
+            ]
+          }
+        }
+      },
+      {
+        "log_line": 863,
+        "observed_at": "2026-11-14T11:00:47.7675050Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4092,
+          "elapsedMs": 12984,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1,
+            "TCPServerWrap": 1
+          },
+          "rss": 103075840,
+          "children": [
+            {
+              "pid": 4107,
+              "parent": 4092,
+              "name": "chrome",
+              "state": "D (disk sleep)",
+              "wait": "folio_wait_bit_common"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 2,
+            "received": 2,
+            "malformed": 0,
+            "lastSent": "Target.setAutoAttach",
+            "lastReceived": "Target.setAutoAttach",
+            "pending": []
+          }
+        }
+      },
+      {
+        "log_line": 912,
+        "observed_at": "2026-11-14T11:00:50.6774423Z",
+        "value": {
+          "consumer": "preview-in-flight",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4264,
+          "elapsedMs": 0,
+          "resources": {
+            "FSReqPromise": 1,
+            "PipeWrap": 3
+          },
+          "rss": 100601856,
+          "children": [],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 0,
+            "received": 0,
+            "malformed": 0,
+            "pending": []
+          }
+        }
+      },
+      {
+        "log_line": 913,
+        "observed_at": "2026-11-14T11:00:50.7771272Z",
+        "value": {
+          "consumer": "preview-in-flight",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4264,
+          "elapsedMs": 98,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1,
+            "TCPServerWrap": 1
+          },
+          "rss": 102584320,
+          "children": [
+            {
+              "pid": 4279,
+              "parent": 4264,
+              "name": "chrome",
+              "state": "R (running)",
+              "wait": "0"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 2,
+            "received": 2,
+            "malformed": 0,
+            "lastSent": "Target.setAutoAttach",
+            "lastReceived": "Target.setAutoAttach",
+            "pending": []
+          }
+        }
+      }
+    ],
+    "scope": "This launch exceeded the former10s acquisition budget and completed inside15s with no warmup/retry. This is evidence for the bounded budget in this run, not proof of a unique root cause or universal stall repair.",
+    "normative_review": {
+      "file": "w8c-startup-budget-review.md",
+      "bytes": 4943,
+      "sha256": "f465916c402d6f2850a9c627ad1ecee1409082dc8646c27685c9561a6608a773"
+    }
+  },
+  "c05_observation": {
+    "log_line": 1136,
+    "reviewId": "dashboard-review:f1e48b03014cc2e8230453c18eabd6afb80c065de7ab74231477f132274cb06c",
+    "originalCreatedAt": "2026-11-14T11:01:59.940Z",
+    "originalTotal": 1300,
+    "currentTotal": 2400,
+    "sameSourceIncarnation": true,
+    "httpStatus": 403,
+    "resultStatus": "denied",
+    "reason": "access-unavailable"
+  },
+  "static_reference": {
+    "runId": 43587348649,
+    "jobId": 132424581177,
+    "productSha": "0c3d98dd1263a305ce294c78ad5939cdda110a78",
+    "conclusion": "success",
+    "receipt": {
+      "file": "static-43587348649.receipt.json",
+      "bytes": 28119,
+      "sha256": "384a355422574a2bae6600c33aeb6609afe51875c87ce912698cfbf8eabdba31"
+    },
+    "reason": "Same exact W10 candidate. No duplicate static run for complement13."
+  },
+  "selection_reason": {
+    "inventory": {
+      "file": "interface-w10c-inventory.json",
+      "bytes": 23223,
+      "sha256": "a0c9703862567cbf5878f7f185f9aaec6d5f0c337a82c5f965d89b62a0ece61b"
+    },
+    "scope": "W8c15 minus only http/contextual-decision realPASS at W9. Startup/finalizer mandatory. Previously passing methods inside mixed files are explicit incidental repeats; earlier beforeAll/acquisition failures are not counted as executed consumer bodies."
+  }
+}

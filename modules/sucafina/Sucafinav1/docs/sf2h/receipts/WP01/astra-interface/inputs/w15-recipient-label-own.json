@@ -1,0 +1,85 @@
+{
+  "schema": "astra-own-increment-v1",
+  "name": "WP01 stable explicit question select labels",
+  "base": {
+    "head": "edefb5b66706aea866ee45c7e8e76332c27c342a",
+    "tree": "294c7bd28795119a014190c34a643fe85616e0ac"
+  },
+  "status": "FROZEN_PEER_READ_COMPLETE_NO_PRODUCT_EXECUTION",
+  "criteria": [
+    "WP01.T04.CMP.02",
+    "WP01.T04.SUC.01",
+    "WP01.T03.CMP.01"
+  ],
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts",
+      "blob": "99e0d4a9f8c265688e7488ece05ab30edf070658",
+      "sha256": "12c7bd303c59d2d57e5eec249f207bcbbc1fd6b8935d9d498a547c418631f4aa",
+      "bytes": 35900,
+      "baseBlob": "031770797872f4bca0985ac881515539614f5201"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/question-recipients.test.ts",
+      "blob": "b47b29497f2ec9a2673bfbb299829191de32622f",
+      "sha256": "274d9f7f2c4ec17ba61818a2e484089392800d6df0bb13570dd402f00a3f3f9d",
+      "bytes": 6471,
+      "baseBlob": "4add02f35383c09355b0e4966dbb85fc625be1d4"
+    }
+  ],
+  "cause": {
+    "run": 43592240575,
+    "log": "analysis/product-43592240575.log",
+    "failures": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/question-recipients.test.ts",
+        "line": 25,
+        "phase": "getByLabel Recipient exact never resolves before select action"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/question-recipients.test.ts",
+        "line": 53,
+        "phase": "getByLabel Recipient exact never resolves before select action"
+      }
+    ],
+    "evidence": "Both received canonical HTTP200 and observed the real principal option. The call log remained waiting for the locator; no disabled/actionability retry or missing option is logged.",
+    "primarySource": {
+      "repository": "microsoft/playwright",
+      "ref": "v1.59.1",
+      "path": "packages/injected/src/selectorUtils.ts",
+      "blob": "6466e1b7b02a3cf2be2973e9a96013d9a571c77b",
+      "url": "https://github.com/microsoft/playwright/blob/v1.59.1/packages/injected/src/selectorUtils.ts",
+      "mechanism": "getElementLabels lines115-129 uses elementText on HTML labels unless aria-labelledby/aria-label provides another name. elementText lines65-98 concatenates descendant text, including select options. The wrapped Recipient label therefore includes the placeholder and authorized directory option text."
+    }
+  },
+  "change": "Separate Record/Recipient label elements from their selects and associate them with for/id values unique to the form. Keep labels unchanged while options change; preserve visible wording, names, form fields and all client/authority routes.",
+  "preservation": {
+    "allExistingQuestionAndWorkScriptsExact": true,
+    "oldAssertionLines": 25,
+    "newAssertionLines": 34,
+    "missingOldAssertionLines": [],
+    "locators": "Existing getByLabel exact, selectOption and final assertions unchanged; no CSS locator or force substitution.",
+    "deadlines": "Existing10s operation and45s test deadlines unchanged.",
+    "producerFixture": "No change; actual identity/directory/HTTP/state/C08 setup retained.",
+    "foreignEdits": []
+  },
+  "addedAssertions": "One exact Recipient control before directory load, explicit isolated label, unique id, exact Record label and separate id, same Recipient id and label after load, enabled Recipient before both select operations.",
+  "causalSelection": [
+    "modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/question-recipients.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts"
+  ],
+  "proofLimits": [
+    "No W15 Actions result claimed",
+    "No timeout extension, local test, typecheck, guard, browser, CI dispatch or poll",
+    "Only question label/recipient selection and real directory revocation proof; no whole first-cycle or responsible-selection acceptance"
+  ],
+  "peerReview": {
+    "status": "complete_no_causal_blocker",
+    "reviewer": "ci_reconcile",
+    "artifact": "analysis/wp01-recipient-label-w15-peer-read.json",
+    "sha256": "190d002f46e35348e66ef1027429ecf7240fc40c2555ea78f369988b4a150406",
+    "bytes": 4863,
+    "scope": "Independent read of exact candidate blobs, primary Playwright source and types, preserved source-line/expectation order, and byte-identical scripts. No product/check execution or W15 PASS claim."
+  }
+}

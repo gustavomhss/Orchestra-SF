@@ -1,0 +1,135 @@
+{
+  "schema": "astra-interface-static-causal-review-v1",
+  "scope": "Explains missing pw:browser live launch logs, not the launch stall itself. No local runtime test or dependency code modification.",
+  "ownProductSha": "5886df8aaedb4db179f336e474e123c30a1d1193",
+  "ownDriverBlob": "76188b9f567861b30dba3b22afce66d60a2424c8",
+  "productRunId": 43584162495,
+  "jobId": 132414976391,
+  "primarySourceCommit": "d466ac5358cae058cdc75d2ae3ab3ad220042730",
+  "sources": [
+    {
+      "repository": "microsoft/playwright",
+      "tag": "v1.59.1",
+      "commit": "d466ac5358cae058cdc75d2ae3ab3ad220042730",
+      "path": "packages/playwright-core/src/browserServerImpl.ts",
+      "blob": "2ea1a142c03cdb37659e9626de2ce14cd32056a9",
+      "sha256": "2b411e5c5d182986858bb592621c6f01eaf07ed302a738e91331f27ed3fca3f9",
+      "bytes": 5762,
+      "url": "https://github.com/microsoft/playwright/blob/d466ac5358cae058cdc75d2ae3ab3ad220042730/packages/playwright-core/src/browserServerImpl.ts"
+    },
+    {
+      "repository": "microsoft/playwright",
+      "tag": "v1.59.1",
+      "commit": "d466ac5358cae058cdc75d2ae3ab3ad220042730",
+      "path": "packages/playwright-core/src/server/browserType.ts",
+      "blob": "ac900549345d4e92ed928d7018a4e74f1cb46793",
+      "sha256": "5239d614b25c9ee843e5c612ef919b93a731b289773d0e39b4e800a76f4afe37",
+      "bytes": 17011,
+      "url": "https://github.com/microsoft/playwright/blob/d466ac5358cae058cdc75d2ae3ab3ad220042730/packages/playwright-core/src/server/browserType.ts"
+    },
+    {
+      "repository": "microsoft/playwright",
+      "tag": "v1.59.1",
+      "commit": "d466ac5358cae058cdc75d2ae3ab3ad220042730",
+      "path": "packages/playwright-core/src/server/utils/processLauncher.ts",
+      "blob": "6c491d0f48be71c272615c52dde605a48799d227",
+      "sha256": "4a676b2d06989d615fa68c79529d72c18f039f5bd411fb50ecf99f53eb8cfd81",
+      "bytes": 10309,
+      "url": "https://github.com/microsoft/playwright/blob/d466ac5358cae058cdc75d2ae3ab3ad220042730/packages/playwright-core/src/server/utils/processLauncher.ts"
+    },
+    {
+      "repository": "microsoft/playwright",
+      "tag": "v1.59.1",
+      "commit": "d466ac5358cae058cdc75d2ae3ab3ad220042730",
+      "path": "packages/playwright-core/src/server/utils/debugLogger.ts",
+      "blob": "ec2cef4a1cd7da3150abe4df1f8ce299e8988c29",
+      "sha256": "7f11d3ba8f32ed9e48a02af35270147c5ade3fd7ae8593d78f5a67e87671ae3b",
+      "bytes": 2805,
+      "url": "https://github.com/microsoft/playwright/blob/d466ac5358cae058cdc75d2ae3ab3ad220042730/packages/playwright-core/src/server/utils/debugLogger.ts"
+    },
+    {
+      "repository": "microsoft/playwright",
+      "tag": "v1.59.1",
+      "commit": "d466ac5358cae058cdc75d2ae3ab3ad220042730",
+      "path": "packages/playwright-core/src/server/progress.ts",
+      "blob": "5b51f82abfa1d0c135f78f6a2b13abc67a388269",
+      "sha256": "d24b8273d23b4236f510847256191cdcd3b3dc10a6858a357f7a800339169847",
+      "bytes": 5494,
+      "url": "https://github.com/microsoft/playwright/blob/d466ac5358cae058cdc75d2ae3ab3ad220042730/packages/playwright-core/src/server/progress.ts"
+    }
+  ],
+  "lockEvidence": [
+    {
+      "line": 1817,
+      "text": "    \"@playwright/test\": [\"@playwright/test@1.59.1\", \"\", { \"dependencies\": { \"playwright\": \"1.59.1\" }, \"bin\": { \"playwright\": \"cli.js\" } }, \"sha512-PG6q63nQg5c9rIi4/Z5lR5IVF7yU5MqmKaPOe0HSc0O2cX1fPi96sUQu5j7eo4gKCkB2AnNGoWt7y4/Xx3Kcqg==\"],"
+    },
+    {
+      "line": 3435,
+      "text": "    \"playwright\": [\"playwright@1.59.1\", \"\", { \"dependencies\": { \"playwright-core\": \"1.59.1\" }, \"optionalDependencies\": { \"fsevents\": \"2.3.2\" }, \"bin\": { \"playwright\": \"cli.js\" } }, \"sha512-C8oWjPR3F81yljW9o5OxcWzfh6avkVwDD2VYdwIGqTkl+OGFISgypqzfu7dOe4QNLL2aqcWBmI3PMtLIK233lw==\"],"
+    },
+    {
+      "line": 3437,
+      "text": "    \"playwright-core\": [\"playwright-core@1.59.1\", \"\", { \"bin\": { \"playwright-core\": \"cli.js\" } }, \"sha512-HBV/RJg81z5BiiZ9yPzIiClYV/QMsDCKUyogwH9p3MCP6IYjUFu/MActgYAvK0oWyV9NlwM3GLBjADyWgydVyg==\"],"
+    }
+  ],
+  "confirmedStaticChain": [
+    {
+      "path": "packages/playwright-core/src/browserServerImpl.ts",
+      "lines": [
+        62,
+        74
+      ],
+      "fact": "launchServer creates ProgressController(metadata) without the optional onCallLog callback."
+    },
+    {
+      "path": "packages/playwright-core/src/server/progress.ts",
+      "lines": [
+        35,
+        38,
+        80,
+        84
+      ],
+      "fact": "Progress.log appends to metadata.log and invokes only the optional callback. It does not call debugLogger itself."
+    },
+    {
+      "path": "packages/playwright-core/src/server/progress.ts",
+      "lines": [
+        42,
+        49
+      ],
+      "fact": "createForSdkObject supplies the callback that invokes debugLogger, but launchServer does not use that factory."
+    },
+    {
+      "path": "packages/playwright-core/src/server/utils/processLauncher.ts",
+      "lines": [
+        133,
+        144,
+        170,
+        174,
+        179
+      ],
+      "fact": "Launch command, PID and browser stdout/stderr all flow into options.log; BrowserType sends those to progress.log."
+    },
+    {
+      "path": "packages/playwright-core/src/browserServerImpl.ts",
+      "lines": [
+        75,
+        77
+      ],
+      "fact": "Recorded metadata.log is appended to the error when launchServer rejects. W7 observes outer scope cancellation, without a native launch rejection or attached metadata; physical process exit remains unproved."
+    }
+  ],
+  "conclusion": "DEBUG=pw:browser in the Node driver does not make this launchServer route emit its progress log live in Playwright v1.59.1. The absent launch/PID text cannot establish that Chrome was never spawned.",
+  "notEstablished": [
+    "Why launchServer did not resolve within the bounded acquisition deadline.",
+    "Whether Chrome had a PID before cancellation.",
+    "A bug in Omni or stderr collection.",
+    "A causal effect of test selection, runner platform or DEBUG on launch success."
+  ],
+  "nextDiscriminant": "Use an approved observable process boundary or a supported logging path that actually emits before browser-ready, keeping bounded capture, existing deadline and physical cleanup assertions. Do not rely on pw:browser alone for launchServer.",
+  "frozenReceiptsUnchanged": [
+    "product-43584162495.receipt.json",
+    "product-43584162495.review.md",
+    "static-43584164297.receipt.json"
+  ]
+}

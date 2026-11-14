@@ -1,0 +1,44 @@
+--- a/modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts
+@@ -38,11 +38,19 @@
+     }
+     const access = { allowed: true, sections: true, comments: true, sourceAvailable: true }
+     const port = createReviewPort({
++      creationTarget: { ref: "review-creation", incarnation: "review-incarnation" },
++      authorizeOutcomeComparison: async (_context, outcomes) => access.allowed && outcomes.length === 0,
++      authorizeOutcome: async (_context, outcomes) => access.allowed && outcomes.length === 0,
++      authorizeDecision: async (_context, decisions) => access.allowed && decisions.length === 0,
+       state, now: () => "2026-11-13T00:00:00Z", requestFor: () => new Request("https://example.test"), authorizeSections: async () => access.sections, authorizeComments: async () => access.comments, authorizeSensitivity: async () => access.allowed, revalidate: async () => access.allowed, revalidateEvidence: async () => access.allowed,
+       select: async () => access.sourceAvailable ? { status: "ok", value: [section] } : { status: "unavailable", reason: "source-removed" },
+     })
+     const emptySection: ReviewSection = { ...section, id: "restricted", recordCount: 0, comments: [], projection: { ...section.projection, values: [], components: [], context: { ...section.projection.context, sourceRefs: [] } } }
+     const restricted = createReviewPort({
++      creationTarget: { ref: "review-creation", incarnation: "review-incarnation" },
++      authorizeOutcomeComparison: async (_context, outcomes) => outcomes.length === 0,
++      authorizeOutcome: async (_context, outcomes) => outcomes.length === 0,
++      authorizeDecision: async (_context, decisions) => decisions.length === 0,
+       state, now: () => "2026-11-13T00:00:00Z", requestFor: () => new Request("https://example.test"), authorizeSections: async () => false, authorizeComments: async () => true, authorizeSensitivity: async () => true, revalidate: async () => true, revalidateEvidence: async () => true,
+       select: async () => ({ status: "ok", value: [emptySection] }),
+     })
+@@ -54,6 +62,10 @@
+     const second = structuredClone(section)
+     second.id = "second"
+     const paired = createReviewPort({
++      creationTarget: { ref: "review-creation", incarnation: "review-incarnation" },
++      authorizeOutcomeComparison: async (_context, outcomes) => outcomes.length === 0,
++      authorizeOutcome: async (_context, outcomes) => outcomes.length === 0,
++      authorizeDecision: async (_context, decisions) => decisions.length === 0,
+       state, now: () => "2026-11-13T00:00:00Z", requestFor: () => new Request("https://example.test"), authorizeSections: async () => true, authorizeComments: async () => true, authorizeSensitivity: async () => true, revalidate: async () => true, revalidateEvidence: async () => true,
+       select: async () => ({ status: "ok", value: [section, second] }),
+     })
+@@ -219,6 +231,10 @@
+   const state = createSfProductState({ persistence: storage.persistence, createId: () => "state", resolveTarget: async () => ({ incarnation: "i" }), authorize: async () => undefined })
+   const observed = { selections: 0 }
+   const reviews = createReviewPort({
++    creationTarget: { ref: "review-creation", incarnation: "i" },
++    authorizeOutcomeComparison: async () => false,
++    authorizeOutcome: async () => false,
++    authorizeDecision: async () => false,
+     state, now: () => "2026-11-13T00:00:00Z", requestFor: () => undefined, authorizeSections: async () => false, authorizeComments: async () => true, authorizeSensitivity: async () => true, revalidate: async () => false, revalidateEvidence: async () => false,
+     select: async () => { observed.selections++; return { status: "unavailable", reason: "unexpected" } },
+   })

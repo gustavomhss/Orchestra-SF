@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test"
+import { closeWp01Browser, launchWp01Browser } from "./browser-fixture.ts"
 import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import path from "node:path"
@@ -14,6 +15,21 @@ import { createSfWorkbenchHttp } from "../../../product/interface/http.ts"
 import { decorateSfProductHtml } from "../../../product/interface/html.ts"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import type { SfHostServices } from "../../../product/contracts/host-context.ts"
+import { handleSfPlannerMonthly } from "../../../product/interface/planner-http.ts"
+
+test("Planner boundary rejects unpublished operations and invalid monthly context before host admission", async () => {
+  const service = {} as SfHostServices
+  const post = (input: unknown) => handleSfPlannerMonthly(new Request("http://localhost/sucafina/planner?sf=workbench-planner", {
+    method: "POST", headers: { origin: "http://localhost", "content-type": "application/json", "idempotency-key": "planner-boundary-1" },
+    body: JSON.stringify({ action: "apply", input }),
+  }), "http://localhost", service)
+  const extended = await post({ page: "OPEX", versionId: "v1", operation: { rowId: "line", revision: 0, kind: "reset" } })
+  expect(extended.status).toBe(400)
+  expect(await extended.json()).toEqual({ status: "needs-input", reason: "planner-operation-not-published" })
+  for (const [rowId, revision, month] of [["", 0, 1], ["line", -1, 1], ["line", 0, 13], ["line", 0, 1.5]]) {
+    expect((await post({ page: "OPEX", versionId: "v1", drafts: [{ rowId, revision, cells: [{ measure: "budget", month, text: "2" }] }] })).status).toBe(400)
+  }
+})
 
 test("Planner grid previews pasted values and preserves a conflicting draft", async () => {
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-planner-grid-"))
@@ -38,23 +54,39 @@ test("Planner grid previews pasted values and preserves a conflicting draft", as
       snapshot.data.versions = [{ id: "v1", year: 2027, closed: 0, lines: [{ id: "line", name: "Planning line", sec: "opex", el: "licenses", cur: "USD", b: Array(12).fill(100), f: [] }], fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }]
       return { commit: true, value: undefined }
     })
-    const { chromium } = await import("@playwright/test")
-    const browser = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"] })
+    const browser = await launchWp01Browser()
     try {
       const tab = await browser.newPage()
+      tab.setDefaultTimeout(10_000)
+      tab.setDefaultNavigationTimeout(15_000)
       await tab.goto(`${origin}/sucafina/auth/local?code=${await identity.enroll()}`)
-      await tab.goto(`${origin}/sucafina/planner?page=OPEX`)
+      // The bulk editor may only expose cells rendered by the authorized grid.
+      await tab.goto(`${origin}/sucafina/planner?page=OPEX&mode=forecast`)
       await tab.getByLabel("Measure", { exact: true }).selectOption("forecast")
       const first = tab.locator('section input[data-row="line"][data-month="1"]')
-      await first.dispatchEvent("paste", { clipboardData: await tab.evaluateHandle(() => { const data = new DataTransfer(); data.setData("text/plain", "42\t99"); return data }) })
-      expect(await tab.locator('section input[data-row="line"][data-month="2"]').inputValue()).toBe("99")
+      const second = tab.locator('section input[data-row="line"][data-month="2"]')
+      expect(await first.isEnabled()).toBe(true)
+      expect(await second.isEnabled()).toBe(true)
+      // Keep the clipboard and ClipboardEvent in the same browser realm. A generic
+      // serialized Event init does not establish that the consumer received data.
+      const paste = await first.evaluate((element) => {
+        const clipboardData = new DataTransfer()
+        clipboardData.setData("text/plain", "42\t99")
+        const event = new ClipboardEvent("paste", { bubbles: true, cancelable: true, clipboardData })
+        element.dispatchEvent(event)
+        return { type: event.constructor.name, text: event.clipboardData?.getData("text/plain"), handled: event.defaultPrevented }
+      })
+      expect(paste).toEqual({ type: "ClipboardEvent", text: "42\t99", handled: true })
+      expect(await first.inputValue()).toBe("42")
+      expect(await second.inputValue()).toBe("99")
       await tab.getByRole("button", { name: "Preview changes" }).click()
       await tab.getByText("Preview complete. Review the entries and save when ready.").waitFor()
       await store.transaction("planner", async (snapshot) => { snapshot.versions["v1:lines:line"] = { version: 1, by: "another" }; return { commit: true, value: undefined } })
       await tab.getByRole("button", { name: "Save changes" }).click()
       await tab.getByText(/Changed by another user/).waitFor()
       expect(await first.inputValue()).toBe("42")
-      expect(await tab.locator('section input[data-row="line"][data-month="2"]').inputValue()).toBe("99")
-    } finally { await browser.close() }
+      expect(await second.inputValue()).toBe("99")
+    } finally { await closeWp01Browser(browser) }
   } finally { await server.stop(true); await store.dispose(); await rm(directory, { recursive: true, force: true }) }
 }, 60000)
+

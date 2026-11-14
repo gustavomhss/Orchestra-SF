@@ -37,7 +37,7 @@ export async function compareScenarios(input: { host: DomainPortHost; sources: P
   const evaluate = () => Promise.all(request.criteria.map((criterionId) => criteria.evaluate({ scenarioRef: request.scenarioRefs[1], baselineRef: request.scenarioRefs[0], criterionId }, binding)))
   const evaluated = await evaluate()
   const failure = evaluated.find((item) => item.status !== "ok")
-  if (failure && failure.status !== "ok") return failure
+  if (failure) return failure
   if (evaluated.some((item, index) => item.status !== "ok" || item.value.criterionId !== request.criteria[index] || !["satisfied", "failed", "unknown"].includes(item.value.state) || typeof item.value.reason !== "string" || !item.value.reason.trim())) return { status: "unavailable", reason: "criterion-result-invalid" }
   const checked = await evaluate()
   const finalScenarios = await Promise.all(request.scenarioRefs.map((reference) => input.scenarios.resolve(reference, binding)))

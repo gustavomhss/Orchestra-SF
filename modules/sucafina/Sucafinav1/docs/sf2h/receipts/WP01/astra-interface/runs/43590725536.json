@@ -1,0 +1,2268 @@
+{
+  "schema": "astra-interface-ci-receipt-v1",
+  "repository": "gustavomhss/Orchestra-SF",
+  "run_id": 43590725536,
+  "job_id": 132434657511,
+  "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43590725536",
+  "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43590725536/job/132434657511",
+  "conclusion": "failure",
+  "cleanup_job_id": 132435563762,
+  "cleanup_conclusion": "success",
+  "source": "GitHub MCP existing run/jobs/logs and exact snapshot .ci-run.json; no run initiated by auditor",
+  "product_sha": "4bd1f807e449d040e3db61c4d2b1e177b205ac69",
+  "product_tree": "2459923b94c080688a31a1138e73ddf30c5be744",
+  "snapshot_sha": "2af8d573e7d2c808e5222d44242eb1ee8f66d467",
+  "snapshot_tree": "87ba13eafc672b055dd60d10bf631bdfb96233ce",
+  "snapshot_branch": "ci-run-linux-astra-interface-4bd1f807e4-86c9cfbc97-1",
+  "request_sha256": "86c9cfbc97016f1907ed86e1406df069d97a9aaa5227c50ebef402b06a9c07f5",
+  "request_blob": "52b75818aec78242d848a7138604651209b93694",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "packageSelector": "packages/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "./Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "./Sucafinav1/test/product/wp02/hot-topics.test.ts",
+      "./Sucafinav1/test/product/wp02/collaboration-consumer.test.ts",
+      "./Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "./Sucafinav1/test/product/wp01/question-recipients.test.ts",
+      "./Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+    }
+  },
+  "envelope_proof": {
+    "work": "2459923b94c080688a31a1138e73ddf30c5be744",
+    "snapshot": "87ba13eafc672b055dd60d10bf631bdfb96233ce",
+    "equalExceptCiRun": true,
+    "entry": {
+      "path": ".ci-run.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "52b75818aec78242d848a7138604651209b93694",
+      "size": 746,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/52b75818aec78242d848a7138604651209b93694"
+    }
+  },
+  "selection": [
+    "modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp02/hot-topics.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp02/collaboration-consumer.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/question-recipients.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts"
+  ],
+  "attempt": 1,
+  "decoded_log": {
+    "path": "/workspace/scratch/080d03a98f2e/analysis/product-43590725536.log",
+    "bytes": 97087,
+    "sha256": "50c300d72c7e48aa9ab4ad16a4ab50513dfcc6ecedaec13ab05ca9ade5f6a300",
+    "actions_job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43590725536/job/132434657511"
+  },
+  "summary": {
+    "pass": 81,
+    "fail": 3,
+    "observations": 84,
+    "files_observed": 8,
+    "files_selected": 8,
+    "expect_calls": 748,
+    "elapsed_seconds": 132.31,
+    "bun_summary_present": true,
+    "before_all_failures": 0,
+    "named_test_bodies_entered": 84,
+    "named_consumer_tests": 82,
+    "consumer_assertion_bodies_entered": 80,
+    "fixture_setup_failure_observations": 2,
+    "inconclusive_late_delivery_counterproofs": 1,
+    "infrastructure_failure_observations": 0,
+    "failure_families": {
+      "late_review_response_not_observed_after_revocation": 1,
+      "own_recipient_fixture_missing_retained_bcs_export": 2
+    },
+    "thread_scopes": {
+      "real_C03_C08": {
+        "selected": 6,
+        "pass": 6,
+        "fail": 0
+      },
+      "transport_contract": {
+        "selected": 12,
+        "pass": 12,
+        "fail": 0
+      }
+    },
+    "state_provider_scope": {
+      "selected": 18,
+      "pass": 18,
+      "full_wp10_acceptance": false
+    }
+  },
+  "omni": {
+    "nonce": "b1ef692c7303469b988bd838efc37dd3",
+    "status": "pass",
+    "spawns": 1,
+    "delegated": 0
+  },
+  "file_results": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "pass_observations": 1,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "file_header_observed": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "pass_observations": 18,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "file_header_observed": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/hot-topics.test.ts",
+      "pass_observations": 3,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "file_header_observed": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/collaboration-consumer.test.ts",
+      "pass_observations": 7,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "file_header_observed": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "pass_observations": 33,
+      "fail_observations": 1,
+      "hook_failures": 0,
+      "file_header_observed": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/question-recipients.test.ts",
+      "pass_observations": 0,
+      "fail_observations": 2,
+      "hook_failures": 0,
+      "file_header_observed": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "pass_observations": 18,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "file_header_observed": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "pass_observations": 1,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "file_header_observed": true
+    }
+  ],
+  "observations": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "name": "WP01 starts one Node-owned Chromium through Omni before leasing it across files",
+      "status": "pass",
+      "duration_ms": 1525.79,
+      "log_line": 878,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_HARNESS",
+      "proof_kind": "BROWSER_HARNESS",
+      "scope": "Bounded shared-browser acquisition or physical final cleanup for this exact selection, not business/native acceptance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "name": "dashboard administrator is denied without product authority",
+      "status": "pass",
+      "duration_ms": 3.62,
+      "log_line": 881,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "C08_STATE_PROVIDER_WITH_DECLARED_PERSISTENCE_FIXTURE",
+      "scope": "Actual state-provider component against testPersistence exercises authorization, CAS/idempotency, isolation, preview noncommit, atomic namespaces and namespace guards. Eighteen targeted assertions are causal to the changed provider; they are not a full WP10 acceptance run, real native inference or S0 epic."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "name": "exact retry recovers the result, digest reuse conflicts and principals remain isolated",
+      "status": "pass",
+      "duration_ms": 2.47,
+      "log_line": 882,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "C08_STATE_PROVIDER_WITH_DECLARED_PERSISTENCE_FIXTURE",
+      "scope": "Actual state-provider component against testPersistence exercises authorization, CAS/idempotency, isolation, preview noncommit, atomic namespaces and namespace guards. Eighteen targeted assertions are causal to the changed provider; they are not a full WP10 acceptance run, real native inference or S0 epic."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "name": "concurrent different commands at the same version commit once",
+      "status": "pass",
+      "duration_ms": 1.0,
+      "log_line": 883,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "C08_STATE_PROVIDER_WITH_DECLARED_PERSISTENCE_FIXTURE",
+      "scope": "Actual state-provider component against testPersistence exercises authorization, CAS/idempotency, isolation, preview noncommit, atomic namespaces and namespace guards. Eighteen targeted assertions are causal to the changed provider; they are not a full WP10 acceptance run, real native inference or S0 epic."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "name": "a retry after authority revocation never discloses the stored result",
+      "status": "pass",
+      "duration_ms": 0.82,
+      "log_line": 884,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "C08_STATE_PROVIDER_WITH_DECLARED_PERSISTENCE_FIXTURE",
+      "scope": "Actual state-provider component against testPersistence exercises authorization, CAS/idempotency, isolation, preview noncommit, atomic namespaces and namespace guards. Eighteen targeted assertions are causal to the changed provider; they are not a full WP10 acceptance run, real native inference or S0 epic."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "name": "failure before commit rolls back all staged changes",
+      "status": "pass",
+      "duration_ms": 1.22,
+      "log_line": 885,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "C08_STATE_PROVIDER_WITH_DECLARED_PERSISTENCE_FIXTURE",
+      "scope": "Actual state-provider component against testPersistence exercises authorization, CAS/idempotency, isolation, preview noncommit, atomic namespaces and namespace guards. Eighteen targeted assertions are causal to the changed provider; they are not a full WP10 acceptance run, real native inference or S0 epic."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "name": "read callback cannot mutate persisted state",
+      "status": "pass",
+      "duration_ms": 0.61,
+      "log_line": 886,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "C08_STATE_PROVIDER_WITH_DECLARED_PERSISTENCE_FIXTURE",
+      "scope": "Actual state-provider component against testPersistence exercises authorization, CAS/idempotency, isolation, preview noncommit, atomic namespaces and namespace guards. Eighteen targeted assertions are causal to the changed provider; they are not a full WP10 acceptance run, real native inference or S0 epic."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "name": "revoked authority at egress prevents read disclosure and write commit",
+      "status": "pass",
+      "duration_ms": 0.84,
+      "log_line": 887,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "C08_STATE_PROVIDER_WITH_DECLARED_PERSISTENCE_FIXTURE",
+      "scope": "Actual state-provider component against testPersistence exercises authorization, CAS/idempotency, isolation, preview noncommit, atomic namespaces and namespace guards. Eighteen targeted assertions are causal to the changed provider; they are not a full WP10 acceptance run, real native inference or S0 epic."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "name": "preview does not persist state or consume the command",
+      "status": "pass",
+      "duration_ms": 0.7,
+      "log_line": 888,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "C08_STATE_PROVIDER_WITH_DECLARED_PERSISTENCE_FIXTURE",
+      "scope": "Actual state-provider component against testPersistence exercises authorization, CAS/idempotency, isolation, preview noncommit, atomic namespaces and namespace guards. Eighteen targeted assertions are causal to the changed provider; they are not a full WP10 acceptance run, real native inference or S0 epic."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "name": "writes in another namespace do not invalidate section CAS",
+      "status": "pass",
+      "duration_ms": 0.99,
+      "log_line": 889,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "C08_STATE_PROVIDER_WITH_DECLARED_PERSISTENCE_FIXTURE",
+      "scope": "Actual state-provider component against testPersistence exercises authorization, CAS/idempotency, isolation, preview noncommit, atomic namespaces and namespace guards. Eighteen targeted assertions are causal to the changed provider; they are not a full WP10 acceptance run, real native inference or S0 epic."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "name": "replacing the actual target blocks replay of the old receipt",
+      "status": "pass",
+      "duration_ms": 0.57,
+      "log_line": 890,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "C08_STATE_PROVIDER_WITH_DECLARED_PERSISTENCE_FIXTURE",
+      "scope": "Actual state-provider component against testPersistence exercises authorization, CAS/idempotency, isolation, preview noncommit, atomic namespaces and namespace guards. Eighteen targeted assertions are causal to the changed provider; they are not a full WP10 acceptance run, real native inference or S0 epic."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "name": "target replacement during work prevents commit and disclosure",
+      "status": "pass",
+      "duration_ms": 0.32,
+      "log_line": 891,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "C08_STATE_PROVIDER_WITH_DECLARED_PERSISTENCE_FIXTURE",
+      "scope": "Actual state-provider component against testPersistence exercises authorization, CAS/idempotency, isolation, preview noncommit, atomic namespaces and namespace guards. Eighteen targeted assertions are causal to the changed provider; they are not a full WP10 acceptance run, real native inference or S0 epic."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "name": "a callback cannot mutate a different namespace, versions, or receipts",
+      "status": "pass",
+      "duration_ms": 0.91,
+      "log_line": 892,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "C08_STATE_PROVIDER_WITH_DECLARED_PERSISTENCE_FIXTURE",
+      "scope": "Actual state-provider component against testPersistence exercises authorization, CAS/idempotency, isolation, preview noncommit, atomic namespaces and namespace guards. Eighteen targeted assertions are causal to the changed provider; they are not a full WP10 acceptance run, real native inference or S0 epic."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "name": "malformed command digest is rejected without work or persistence",
+      "status": "pass",
+      "duration_ms": 0.24,
+      "log_line": 893,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "C08_STATE_PROVIDER_WITH_DECLARED_PERSISTENCE_FIXTURE",
+      "scope": "Actual state-provider component against testPersistence exercises authorization, CAS/idempotency, isolation, preview noncommit, atomic namespaces and namespace guards. Eighteen targeted assertions are causal to the changed provider; they are not a full WP10 acceptance run, real native inference or S0 epic."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "name": "admitted Atlas and outbox commit atomically with independent versions",
+      "status": "pass",
+      "duration_ms": 2.63,
+      "log_line": 894,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "C08_STATE_PROVIDER_WITH_DECLARED_PERSISTENCE_FIXTURE",
+      "scope": "Actual state-provider component against testPersistence exercises authorization, CAS/idempotency, isolation, preview noncommit, atomic namespaces and namespace guards. Eighteen targeted assertions are causal to the changed provider; they are not a full WP10 acceptance run, real native inference or S0 epic."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "name": "stale secondary namespace blocks all work",
+      "status": "pass",
+      "duration_ms": 1.36,
+      "log_line": 895,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "C08_STATE_PROVIDER_WITH_DECLARED_PERSISTENCE_FIXTURE",
+      "scope": "Actual state-provider component against testPersistence exercises authorization, CAS/idempotency, isolation, preview noncommit, atomic namespaces and namespace guards. Eighteen targeted assertions are causal to the changed provider; they are not a full WP10 acceptance run, real native inference or S0 epic."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "name": "secondary authority revoked at egress rolls back both sections",
+      "status": "pass",
+      "duration_ms": 0.46,
+      "log_line": 896,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "C08_STATE_PROVIDER_WITH_DECLARED_PERSISTENCE_FIXTURE",
+      "scope": "Actual state-provider component against testPersistence exercises authorization, CAS/idempotency, isolation, preview noncommit, atomic namespaces and namespace guards. Eighteen targeted assertions are causal to the changed provider; they are not a full WP10 acceptance run, real native inference or S0 epic."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "name": "retry with a changed admitted namespace scope conflicts without executing",
+      "status": "pass",
+      "duration_ms": 0.92,
+      "log_line": 897,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "C08_STATE_PROVIDER_WITH_DECLARED_PERSISTENCE_FIXTURE",
+      "scope": "Actual state-provider component against testPersistence exercises authorization, CAS/idempotency, isolation, preview noncommit, atomic namespaces and namespace guards. Eighteen targeted assertions are causal to the changed provider; they are not a full WP10 acceptance run, real native inference or S0 epic."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "name": "runtime rejects internal and prototype-key namespaces before work",
+      "status": "pass",
+      "duration_ms": 0.46,
+      "log_line": 898,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "C08_STATE_PROVIDER_WITH_DECLARED_PERSISTENCE_FIXTURE",
+      "scope": "Actual state-provider component against testPersistence exercises authorization, CAS/idempotency, isolation, preview noncommit, atomic namespaces and namespace guards. Eighteen targeted assertions are causal to the changed provider; they are not a full WP10 acceptance run, real native inference or S0 epic."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/hot-topics.test.ts",
+      "name": "canonical hot topic retries once, detects changed intent and follows completion",
+      "status": "pass",
+      "duration_ms": 4.51,
+      "log_line": 901,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "DASHBOARD_CANONICAL_HOT_TOPIC_COMPONENT",
+      "scope": "Preserved canonical Hot Topic command/idempotency/completion component assertions pass after published provider/Collaboration intake. Atomic CREATE physical-incarnation correlation remains a separate producer boundary."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/hot-topics.test.ts",
+      "name": "action input is fixed before asynchronous host authorization",
+      "status": "pass",
+      "duration_ms": 0.49,
+      "log_line": 902,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "DASHBOARD_CANONICAL_HOT_TOPIC_COMPONENT",
+      "scope": "Preserved canonical Hot Topic command/idempotency/completion component assertions pass after published provider/Collaboration intake. Atomic CREATE physical-incarnation correlation remains a separate producer boundary."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/hot-topics.test.ts",
+      "name": "ambiguous normalized topic IDs cannot be read or updated",
+      "status": "pass",
+      "duration_ms": 0.56,
+      "log_line": 903,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "DASHBOARD_CANONICAL_HOT_TOPIC_COMPONENT",
+      "scope": "Preserved canonical Hot Topic command/idempotency/completion component assertions pass after published provider/Collaboration intake. Atomic CREATE physical-incarnation correlation remains a separate producer boundary."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/collaboration-consumer.test.ts",
+      "name": "WP08 handoff recovers a lost C03 response after SQLite reopen and follows the same action through update and completion",
+      "status": "pass",
+      "duration_ms": 5290.92,
+      "log_line": 907,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "DASHBOARD_C06_COLLABORATION_COMPONENT",
+      "scope": "Preserved Dashboard/C06 work-capture, action, confirmation/replacement/period/revalidation component assertions pass with the changed Collaboration inputs. No native/full installed host or new arbitrary-source selection journey follows."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/collaboration-consumer.test.ts",
+      "name": "WP08 explicit intentions with the same title stay distinct and a changed correlation conflicts",
+      "status": "pass",
+      "duration_ms": 4611.52,
+      "log_line": 908,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "DASHBOARD_C06_COLLABORATION_COMPONENT",
+      "scope": "Preserved Dashboard/C06 work-capture, action, confirmation/replacement/period/revalidation component assertions pass with the changed Collaboration inputs. No native/full installed host or new arbitrary-source selection journey follows."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/collaboration-consumer.test.ts",
+      "name": "WP08 requires the human grant and refuses a contributor even with readable source evidence",
+      "status": "pass",
+      "duration_ms": 515.79,
+      "log_line": 909,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "DASHBOARD_C06_COLLABORATION_COMPONENT",
+      "scope": "Preserved Dashboard/C06 work-capture, action, confirmation/replacement/period/revalidation component assertions pass with the changed Collaboration inputs. No native/full installed host or new arbitrary-source selection journey follows."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/collaboration-consumer.test.ts",
+      "name": "WP08 revalidates an admitted human lease after the persisted role is withdrawn",
+      "status": "pass",
+      "duration_ms": 45.94,
+      "log_line": 910,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "DASHBOARD_C06_COLLABORATION_COMPONENT",
+      "scope": "Preserved Dashboard/C06 work-capture, action, confirmation/replacement/period/revalidation component assertions pass with the changed Collaboration inputs. No native/full installed host or new arbitrary-source selection journey follows."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/collaboration-consumer.test.ts",
+      "name": "WP08 rejects revoked source scopes and removed Hot Topic references without recreating an action",
+      "status": "pass",
+      "duration_ms": 2296.53,
+      "log_line": 911,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "DASHBOARD_C06_COLLABORATION_COMPONENT",
+      "scope": "Preserved Dashboard/C06 work-capture, action, confirmation/replacement/period/revalidation component assertions pass with the changed Collaboration inputs. No native/full installed host or new arbitrary-source selection journey follows."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/collaboration-consumer.test.ts",
+      "name": "C06 update replay refuses an action ID reused in a different incarnation after SQLite reopen",
+      "status": "pass",
+      "duration_ms": 2266.08,
+      "log_line": 912,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "DASHBOARD_C06_COLLABORATION_COMPONENT",
+      "scope": "Preserved Dashboard/C06 work-capture, action, confirmation/replacement/period/revalidation component assertions pass with the changed Collaboration inputs. No native/full installed host or new arbitrary-source selection journey follows."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/collaboration-consumer.test.ts",
+      "name": "WP08 does not copy sensitive Talent values and rejects the source when current access is withdrawn",
+      "status": "pass",
+      "duration_ms": 3651.51,
+      "log_line": 913,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "DASHBOARD_C06_COLLABORATION_COMPONENT",
+      "scope": "Preserved Dashboard/C06 work-capture, action, confirmation/replacement/period/revalidation component assertions pass with the changed Collaboration inputs. No native/full installed host or new arbitrary-source selection journey follows."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "monthly apply freezes its draft and replays the exact admitted request after a lost response",
+      "status": "pass",
+      "duration_ms": 674.15,
+      "log_line": 921,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Existing transport/recovery assertions pass at exact W13. Canonical recipient alias strings are updated, but this fixture is not the real recipient directory proof and does not imply full domain/host/native acceptance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "the live monthly grid exposes only the published draft contract and preserves the existing record form",
+      "status": "pass",
+      "duration_ms": 281.44,
+      "log_line": 922,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Existing transport/recovery assertions pass at exact W13. Canonical recipient alias strings are updated, but this fixture is not the real recipient directory proof and does not imply full domain/host/native acceptance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "monthly apply times out while reading an unfinished response body and retries the identical request",
+      "status": "pass",
+      "duration_ms": 10818.05,
+      "log_line": 923,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Existing transport/recovery assertions pass at exact W13. Canonical recipient alias strings are updated, but this fixture is not the real recipient directory proof and does not imply full domain/host/native acceptance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "scenario analysis retries the prepared input and admission key without preparing another run",
+      "status": "pass",
+      "duration_ms": 334.44,
+      "log_line": 924,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Existing transport/recovery assertions pass at exact W13. Canonical recipient alias strings are updated, but this fixture is not the real recipient directory proof and does not imply full domain/host/native acceptance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "decision framing retries its exact prepared input and start key without preparing again",
+      "status": "pass",
+      "duration_ms": 365.37,
+      "log_line": 925,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Existing transport/recovery assertions pass at exact W13. Canonical recipient alias strings are updated, but this fixture is not the real recipient directory proof and does not imply full domain/host/native acceptance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "scenario 401 revokes its options and configuration and prevents another start",
+      "status": "pass",
+      "duration_ms": 351.13,
+      "log_line": 926,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Existing transport/recovery assertions pass at exact W13. Canonical recipient alias strings are updated, but this fixture is not the real recipient directory proof and does not imply full domain/host/native acceptance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "scenario 403 revokes its options and configuration and prevents another start",
+      "status": "pass",
+      "duration_ms": 352.99,
+      "log_line": 927,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Existing transport/recovery assertions pass at exact W13. Canonical recipient alias strings are updated, but this fixture is not the real recipient directory proof and does not imply full domain/host/native acceptance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "forecast start recovers an uncertain admission without changing its model or payload",
+      "status": "pass",
+      "duration_ms": 378.63,
+      "log_line": 928,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Existing transport/recovery assertions pass at exact W13. Canonical recipient alias strings are updated, but this fixture is not the real recipient directory proof and does not imply full domain/host/native acceptance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "choice freezes the comparison and reason and retries the exact serialized intention after a lost response",
+      "status": "pass",
+      "duration_ms": 455.74,
+      "log_line": 929,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Existing transport/recovery assertions pass at exact W13. Canonical recipient alias strings are updated, but this fixture is not the real recipient directory proof and does not imply full domain/host/native acceptance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "an unverifiable choice acknowledgement followed by a conflict remains frozen for reconciliation",
+      "status": "pass",
+      "duration_ms": 459.1,
+      "log_line": 930,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Existing transport/recovery assertions pass at exact W13. Canonical recipient alias strings are updated, but this fixture is not the real recipient directory proof and does not imply full domain/host/native acceptance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "choice 401 removes the comparison, reason and context and blocks another submission",
+      "status": "pass",
+      "duration_ms": 401.56,
+      "log_line": 931,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Existing transport/recovery assertions pass at exact W13. Canonical recipient alias strings are updated, but this fixture is not the real recipient directory proof and does not imply full domain/host/native acceptance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "choice 403 removes the comparison, reason and context and blocks another submission",
+      "status": "pass",
+      "duration_ms": 434.6,
+      "log_line": 932,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Existing transport/recovery assertions pass at exact W13. Canonical recipient alias strings are updated, but this fixture is not the real recipient directory proof and does not imply full domain/host/native acceptance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "a comparison read finishing after access revocation cannot restore private choice data",
+      "status": "pass",
+      "duration_ms": 378.93,
+      "log_line": 933,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Existing transport/recovery assertions pass at exact W13. Canonical recipient alias strings are updated, but this fixture is not the real recipient directory proof and does not imply full domain/host/native acceptance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "choice deadline includes a stalled response body and preserves its exact request for retry",
+      "status": "pass",
+      "duration_ms": 10434.51,
+      "log_line": 934,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Existing transport/recovery assertions pass at exact W13. Canonical recipient alias strings are updated, but this fixture is not the real recipient directory proof and does not imply full domain/host/native acceptance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "an initially rejected choice preserves editable entries and uses a new intention after correction",
+      "status": "pass",
+      "duration_ms": 465.7,
+      "log_line": 935,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Existing transport/recovery assertions pass at exact W13. Canonical recipient alias strings are updated, but this fixture is not the real recipient directory proof and does not imply full domain/host/native acceptance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "a sensitivity conflict preserves its request and a known result is reread without evaluating again",
+      "status": "pass",
+      "duration_ms": 631.98,
+      "log_line": 936,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Existing transport/recovery assertions pass at exact W13. Canonical recipient alias strings are updated, but this fixture is not the real recipient directory proof and does not imply full domain/host/native acceptance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "independent review freezes the original author and replays its prepared request after a lost start response",
+      "status": "pass",
+      "duration_ms": 416.83,
+      "log_line": 937,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Existing transport/recovery assertions pass at exact W13. Canonical recipient alias strings are updated, but this fixture is not the real recipient directory proof and does not imply full domain/host/native acceptance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "independent review does not replace an uncertain author request after a conflict",
+      "status": "pass",
+      "duration_ms": 434.62,
+      "log_line": 938,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Existing transport/recovery assertions pass at exact W13. Canonical recipient alias strings are updated, but this fixture is not the real recipient directory proof and does not imply full domain/host/native acceptance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "a delayed review preparation cannot start or restore data after analysis access is revoked",
+      "status": "fail",
+      "duration_ms": 5371.24,
+      "log_line": 951,
+      "kind": "named_test",
+      "excerpt": "2026-11-14T11:37:15.1179266Z (pass) scenario 401 revokes its options and configuration and prevents another start [351.13ms]\n2026-11-14T11:37:15.4709535Z (pass) scenario 403 revokes its options and configuration and prevents another start [352.99ms]\n2026-11-14T11:37:15.8495385Z (pass) forecast start recovers an uncertain admission without changing its model or payload [378.63ms]\n2026-11-14T11:37:16.3053596Z (pass) choice freezes the comparison and reason and retries the exact serialized intention after a lost response [455.74ms]\n2026-11-14T11:37:16.7645150Z (pass) an unverifiable choice acknowledgement followed by a conflict remains frozen for reconciliation [459.10ms]\n2026-11-14T11:37:17.1659941Z (pass) choice 401 removes the comparison, reason and context and blocks another submission [401.56ms]\n2026-11-14T11:37:17.6006721Z (pass) choice 403 removes the comparison, reason and context and blocks another submission [434.60ms]\n2026-11-14T11:37:17.9796438Z (pass) a comparison read finishing after access revocation cannot restore private choice data [378.93ms]\n2026-11-14T11:37:28.4141730Z (pass) choice deadline includes a stalled response body and preserves its exact request for retry [10434.51ms]\n2026-11-14T11:37:28.8798489Z (pass) an initially rejected choice preserves editable entries and uses a new intention after correction [465.70ms]\n2026-11-14T11:37:29.5118809Z (pass) a sensitivity conflict preserves its request and a known result is reread without evaluating again [631.98ms]\n2026-11-14T11:37:29.9287469Z (pass) independent review freezes the original author and replays its prepared request after a lost start response [416.83ms]\n2026-11-14T11:37:30.3632980Z (pass) independent review does not replace an uncertain author request after a conflict [434.62ms]\n2026-11-14T11:37:35.7345465Z 587 |     await page.getByRole(\"button\", { name: \"Request independent review\", exact: true }).click()\n2026-11-14T11:37:35.7346312Z 588 |     await within(started, \"review preparation entered delayed handler\")\n2026-11-14T11:37:35.7346816Z 589 |     state.denied = true\n2026-11-14T11:37:35.7347423Z 590 |     await page.locator(\"[data-analysis-history]\").dispatchEvent(\"sf-analysis-refresh\")\n2026-11-14T11:37:35.7348437Z 591 |     await page.getByText(\"Analysis access changed. Reopen the decision with your current access.\", { exact: true }).waitFor()\n2026-11-14T11:37:35.7349910Z 592 |     const released = page.waitForResponse((response) => response.headers()[\"x-fixture-review-released\"] === \"yes\")\n2026-11-14T11:37:35.7350568Z                                 ^\n2026-11-14T11:37:35.7351130Z TimeoutError: forResponse: Timeout 5000ms exceeded while waiting for event \"response\"\n2026-11-14T11:37:35.7352069Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts:592:27\n2026-11-14T11:37:35.7353232Z       at browserCase (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts:51:25)\n2026-11-14T11:37:35.7354391Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts:482:5\n2026-11-14T11:37:35.7355332Z       at processTicksAndRejections (native:7:39)\n2026-11-14T11:37:35.7356072Z (fail) a delayed review preparation cannot start or restore data after analysis access is revoked [5371.24ms]",
+      "test_body_entered": true,
+      "whole_named_test_passed": false,
+      "consumer_assertions_entered": true,
+      "failure_family": "late_review_response_not_observed_after_revocation",
+      "proof_completion": "FAILED_TRANSPORT_COUNTERPROOF_DELIVERY_OBSERVATION",
+      "source_assertion_line": 592,
+      "product_failure_inferred": false,
+      "observed_before_failure": [
+        "delayed preparation handler entered",
+        "analysis access changed status observed after a denied refresh"
+      ],
+      "not_proven": [
+        "delayed response with x-fixture-review-released observed",
+        "late preparation cannot start or restore protected data after delivery",
+        "final zero-start and purge assertions after release"
+      ],
+      "scope": "Existing transport counterproof failed at page.waitForResponse for the released response header after five seconds. It reached the revoked status, but no complete late-delivery assertion sequence finished. The current raw log does not establish abort versus response delivery race or an application defect; static causal review is separate. No flaky label or relaxed assertion."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "an opened result without an available reviewer offers no fabricated review action",
+      "status": "pass",
+      "duration_ms": 314.61,
+      "log_line": 952,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Existing transport/recovery assertions pass at exact W13. Canonical recipient alias strings are updated, but this fixture is not the real recipient directory proof and does not imply full domain/host/native acceptance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "history preserves a reason on transient failure, then removes restricted output on revocation",
+      "status": "pass",
+      "duration_ms": 351.64,
+      "log_line": 953,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Existing transport/recovery assertions pass at exact W13. Canonical recipient alias strings are updated, but this fixture is not the real recipient directory proof and does not imply full domain/host/native acceptance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "a stale analysis preserves the reason but disables acceptance and removes its old result",
+      "status": "pass",
+      "duration_ms": 317.84,
+      "log_line": 954,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Existing transport/recovery assertions pass at exact W13. Canonical recipient alias strings are updated, but this fixture is not the real recipient directory proof and does not imply full domain/host/native acceptance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "conversation refresh asks before discarding an unsent reply and preserves it when reading fails",
+      "status": "pass",
+      "duration_ms": 443.61,
+      "log_line": 955,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Existing transport/recovery assertions pass at exact W13. Canonical recipient alias strings are updated, but this fixture is not the real recipient directory proof and does not imply full domain/host/native acceptance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "reply retry preserves the exact thread mutation after an uncertain write",
+      "status": "pass",
+      "duration_ms": 437.39,
+      "log_line": 956,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Existing transport/recovery assertions pass at exact W13. Canonical recipient alias strings are updated, but this fixture is not the real recipient directory proof and does not imply full domain/host/native acceptance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "an unknown monthly write followed by a row conflict remains unresolved and locked",
+      "status": "pass",
+      "duration_ms": 464.77,
+      "log_line": 957,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Existing transport/recovery assertions pass at exact W13. Canonical recipient alias strings are updated, but this fixture is not the real recipient directory proof and does not imply full domain/host/native acceptance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "a definitive rejected analysis start unlocks input without treating it as an uncertain admission",
+      "status": "pass",
+      "duration_ms": 319.33,
+      "log_line": 958,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Existing transport/recovery assertions pass at exact W13. Canonical recipient alias strings are updated, but this fixture is not the real recipient directory proof and does not imply full domain/host/native acceptance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "a queued history refresh observes a new run after an older empty list finishes",
+      "status": "pass",
+      "duration_ms": 253.5,
+      "log_line": 959,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Existing transport/recovery assertions pass at exact W13. Canonical recipient alias strings are updated, but this fixture is not the real recipient directory proof and does not imply full domain/host/native acceptance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "an earlier authorized list cannot repopulate results after an output revocation",
+      "status": "pass",
+      "duration_ms": 881.4,
+      "log_line": 960,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Existing transport/recovery assertions pass at exact W13. Canonical recipient alias strings are updated, but this fixture is not the real recipient directory proof and does not imply full domain/host/native acceptance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "answer confirmation preflight failure restores the reply and conversation controls",
+      "status": "pass",
+      "duration_ms": 347.48,
+      "log_line": 961,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Existing transport/recovery assertions pass at exact W13. Canonical recipient alias strings are updated, but this fixture is not the real recipient directory proof and does not imply full domain/host/native acceptance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "question 401 clears the draft and context and fences an older recipient response",
+      "status": "pass",
+      "duration_ms": 444.85,
+      "log_line": 962,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Existing transport/recovery assertions pass at exact W13. Canonical recipient alias strings are updated, but this fixture is not the real recipient directory proof and does not imply full domain/host/native acceptance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "question 403 clears the draft and context and fences an older recipient response",
+      "status": "pass",
+      "duration_ms": 431.22,
+      "log_line": 963,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Existing transport/recovery assertions pass at exact W13. Canonical recipient alias strings are updated, but this fixture is not the real recipient directory proof and does not imply full domain/host/native acceptance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "transient question recipient and preflight failures preserve the selected recipient and editable draft",
+      "status": "pass",
+      "duration_ms": 397.77,
+      "log_line": 964,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Existing transport/recovery assertions pass at exact W13. Canonical recipient alias strings are updated, but this fixture is not the real recipient directory proof and does not imply full domain/host/native acceptance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "question creation replays its frozen request after uncertainty and retries attachment without creating another thread",
+      "status": "pass",
+      "duration_ms": 525.8,
+      "log_line": 965,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Existing transport/recovery assertions pass at exact W13. Canonical recipient alias strings are updated, but this fixture is not the real recipient directory proof and does not imply full domain/host/native acceptance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "name": "an initial definite question rejection permits correction with a new request identity",
+      "status": "pass",
+      "duration_ms": 387.13,
+      "log_line": 966,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Existing transport/recovery assertions pass at exact W13. Canonical recipient alias strings are updated, but this fixture is not the real recipient directory proof and does not imply full domain/host/native acceptance."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/question-recipients.test.ts",
+      "name": "the question consumer finds recipients through the canonical HTTP route and the real authorized directory",
+      "status": "fail",
+      "duration_ms": 81.46,
+      "log_line": 993,
+      "kind": "named_test",
+      "excerpt": "2026-11-14T11:37:42.0538400Z   pid: 4296,\n2026-11-14T11:37:42.0538713Z   lease: 1,\n2026-11-14T11:37:42.0538927Z   releases: 1,\n2026-11-14T11:37:42.0539131Z   contexts: 0,\n2026-11-14T11:37:42.0539336Z }\n2026-11-14T11:37:42.0539459Z \n2026-11-14T11:37:42.0543061Z Sucafinav1/test/product/wp01/question-recipients.test.ts:\n2026-11-14T11:37:42.2890993Z WP01 browser lease acquired {\n2026-11-14T11:37:42.2892663Z   pid: 4296,\n2026-11-14T11:37:42.2906658Z   lease: 2,\n2026-11-14T11:37:42.2932991Z   acquisitions: 2,\n2026-11-14T11:37:42.2942942Z }\n2026-11-14T11:37:42.3682926Z 91 |         if (!await authority.ui.validate(admitted.value, operation, digest)) return { status: \"denied\" as const, reason: \"read-admission-unavailable\" }\n2026-11-14T11:37:42.3684323Z 92 |         return await work(admitted.value)\n2026-11-14T11:37:42.3685323Z 93 |       } finally { authority.ui.finish(admitted.value) }\n2026-11-14T11:37:42.3685874Z 94 |     }\n2026-11-14T11:37:42.3686986Z 95 |     const selection = { page: \"Portfolio Dashboard\", recordType: \"projects\", recordId: \"project\", fields: [\"name\"], period }\n2026-11-14T11:37:42.3688700Z 96 |     const issued = await read(\"sf_dashboard_read\", selection, (call) => services.dashboardRecords.issue(selection, call))\n2026-11-14T11:37:42.3689480Z                                                                                       ^\n2026-11-14T11:37:42.3690080Z TypeError: undefined is not an object (evaluating 'services.dashboardRecords.issue')\n2026-11-14T11:37:42.3691200Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/work-selection-domain-fixture.ts:96:82\n2026-11-14T11:37:42.3692908Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/work-selection-domain-fixture.ts:66:16\n2026-11-14T11:37:42.3694239Z       at createWorkSelectionDomainFixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/work-selection-domain-fixture.ts:69:92)\n2026-11-14T11:37:42.3696106Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/question-recipients.test.ts:13:6\n2026-11-14T11:37:42.3696810Z       at processTicksAndRejections (unknown:7:39)\n2026-11-14T11:37:42.3697527Z (fail) the question consumer finds recipients through the canonical HTTP route and the real authorized directory [81.46ms]",
+      "test_body_entered": true,
+      "whole_named_test_passed": false,
+      "consumer_assertions_entered": false,
+      "failure_family": "own_recipient_fixture_missing_retained_bcs_export",
+      "proof_completion": "FAILED_OWN_FIXTURE_SETUP_BEFORE_CONSUMER_ASSERTIONS",
+      "source_assertion_line": 96,
+      "product_failure_inferred": false,
+      "observed_before_failure": [
+        "real fixture acquisition begins",
+        "services.dashboardRecords.issue raises TypeError because the retained BusinessServices return has no dashboardRecords property"
+      ],
+      "not_proven": [
+        "canonical recipients HTTP200 and real directory body",
+        "recipient selection preserves question",
+        "obsolete alias404",
+        "real logout403 purges draft and recipient"
+      ],
+      "scope": "The named test was invoked but failed inside fixture creation before its first consumer assertion. This is a concrete OWN fixture defect also observed by static typecheck, not proof that the corrected route failed. No recipient/logout journey PASS is granted."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/question-recipients.test.ts",
+      "name": "real logout denies directory reads and the question consumer purges its protected recipient and draft",
+      "status": "fail",
+      "duration_ms": 42.34,
+      "log_line": 1007,
+      "kind": "named_test",
+      "excerpt": "2026-11-14T11:37:42.3685323Z 93 |       } finally { authority.ui.finish(admitted.value) }\n2026-11-14T11:37:42.3685874Z 94 |     }\n2026-11-14T11:37:42.3686986Z 95 |     const selection = { page: \"Portfolio Dashboard\", recordType: \"projects\", recordId: \"project\", fields: [\"name\"], period }\n2026-11-14T11:37:42.3688700Z 96 |     const issued = await read(\"sf_dashboard_read\", selection, (call) => services.dashboardRecords.issue(selection, call))\n2026-11-14T11:37:42.3689480Z                                                                                       ^\n2026-11-14T11:37:42.3690080Z TypeError: undefined is not an object (evaluating 'services.dashboardRecords.issue')\n2026-11-14T11:37:42.3691200Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/work-selection-domain-fixture.ts:96:82\n2026-11-14T11:37:42.3692908Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/work-selection-domain-fixture.ts:66:16\n2026-11-14T11:37:42.3694239Z       at createWorkSelectionDomainFixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/work-selection-domain-fixture.ts:69:92)\n2026-11-14T11:37:42.3696106Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/question-recipients.test.ts:13:6\n2026-11-14T11:37:42.3696810Z       at processTicksAndRejections (unknown:7:39)\n2026-11-14T11:37:42.3697527Z (fail) the question consumer finds recipients through the canonical HTTP route and the real authorized directory [81.46ms]\n2026-11-14T11:37:42.4107053Z 91 |         if (!await authority.ui.validate(admitted.value, operation, digest)) return { status: \"denied\" as const, reason: \"read-admission-unavailable\" }\n2026-11-14T11:37:42.4108450Z 92 |         return await work(admitted.value)\n2026-11-14T11:37:42.4109244Z 93 |       } finally { authority.ui.finish(admitted.value) }\n2026-11-14T11:37:42.4109781Z 94 |     }\n2026-11-14T11:37:42.4111242Z 95 |     const selection = { page: \"Portfolio Dashboard\", recordType: \"projects\", recordId: \"project\", fields: [\"name\"], period }\n2026-11-14T11:37:42.4113157Z 96 |     const issued = await read(\"sf_dashboard_read\", selection, (call) => services.dashboardRecords.issue(selection, call))\n2026-11-14T11:37:42.4114372Z                                                                                       ^\n2026-11-14T11:37:42.4115697Z TypeError: undefined is not an object (evaluating 'services.dashboardRecords.issue')\n2026-11-14T11:37:42.4117341Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/work-selection-domain-fixture.ts:96:82\n2026-11-14T11:37:42.4119431Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/work-selection-domain-fixture.ts:66:16\n2026-11-14T11:37:42.4121813Z       at createWorkSelectionDomainFixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/work-selection-domain-fixture.ts:69:92)\n2026-11-14T11:37:42.4124376Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/question-recipients.test.ts:43:6\n2026-11-14T11:37:42.4125877Z       at processTicksAndRejections (unknown:7:39)\n2026-11-14T11:37:42.4127170Z (fail) real logout denies directory reads and the question consumer purges its protected recipient and draft [42.34ms]",
+      "test_body_entered": true,
+      "whole_named_test_passed": false,
+      "consumer_assertions_entered": false,
+      "failure_family": "own_recipient_fixture_missing_retained_bcs_export",
+      "proof_completion": "FAILED_OWN_FIXTURE_SETUP_BEFORE_CONSUMER_ASSERTIONS",
+      "source_assertion_line": 96,
+      "product_failure_inferred": false,
+      "observed_before_failure": [
+        "real fixture acquisition begins",
+        "services.dashboardRecords.issue raises TypeError because the retained BusinessServices return has no dashboardRecords property"
+      ],
+      "not_proven": [
+        "canonical recipients HTTP200 and real directory body",
+        "recipient selection preserves question",
+        "obsolete alias404",
+        "real logout403 purges draft and recipient"
+      ],
+      "scope": "The named test was invoked but failed inside fixture creation before its first consumer assertion. This is a concrete OWN fixture defect also observed by static typecheck, not proof that the corrected route failed. No recipient/logout journey PASS is granted."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "name": "conversation read deadline includes an unfinished body and restores the unsent reply controls",
+      "status": "pass",
+      "duration_ms": 10688.54,
+      "log_line": 1021,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Explicit UI transport/contract assertions PASS; no C03/C08/native proof is inferred from transport fixtures."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "name": "conversation recovers a real C03 reply after body timeout with the same C08 effect and frozen request",
+      "status": "pass",
+      "duration_ms": 23341.21,
+      "log_line": 1022,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "REAL_REPLY_RECOVERY_THEN_EXPLICIT_C06_C08_CONFIRMATION",
+      "scope": "Real reply timeout/replay preserves exact request, C08 state and one message. It then proves no automatic answer preparation/effect, and an explicit click obtains the published selector and confirms that same message once through C06/C08. The negative without selector/complete identity remains a separate passing test. Full decision attachment is explicitly unmounted in this C03 component."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "name": "conversation keeps a real committed reply uncertain when delivery replaces the producer result with an empty acknowledgement",
+      "status": "pass",
+      "duration_ms": 2319.1,
+      "log_line": 1023,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "REAL_C03_C08_COMPONENT",
+      "scope": "Real C03/C08 authenticated consumer with thin declared HTTP envelopes; full installed host and native/recipient-distinct proof remain separate."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "name": "conversation obtains its first answer selector from the real issuer and recovers one C06 C08 confirmation after lost delivery",
+      "status": "pass",
+      "duration_ms": 14961.78,
+      "log_line": 1024,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "REAL_FIRST_SELECTOR_C03_C06_C08_COMPONENT",
+      "scope": "Real C03/C08 authenticated consumer with thin declared HTTP envelopes; full installed host and native/recipient-distinct proof remain separate."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "name": "conversation without a selector or complete current message keeps confirmation disabled after a reply preflight failure",
+      "status": "pass",
+      "duration_ms": 391.56,
+      "log_line": 1025,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Explicit UI transport/contract assertions PASS; no C03/C08/native proof is inferred from transport fixtures."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "name": "conversation reviews a real first C08 conflict before issuing a new reply identity and storage version",
+      "status": "pass",
+      "duration_ms": 2355.66,
+      "log_line": 1026,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "REAL_C03_C08_COMPONENT",
+      "scope": "Real C03/C08 authenticated consumer with thin declared HTTP envelopes; full installed host and native/recipient-distinct proof remain separate."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "name": "conversation preserves the same uncertain reply when a later real C08 conflict cannot establish the earlier outcome",
+      "status": "pass",
+      "duration_ms": 1751.49,
+      "log_line": 1027,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "REAL_C03_C08_COMPONENT",
+      "scope": "Real C03/C08 authenticated consumer with thin declared HTTP envelopes; full installed host and native/recipient-distinct proof remain separate."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "name": "conversation refuses a different prepared answer and does not attach or confirm an older recipient message",
+      "status": "pass",
+      "duration_ms": 397.34,
+      "log_line": 1028,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Explicit UI transport/contract assertions PASS; no C03/C08/native proof is inferred from transport fixtures."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "name": "conversation purges an uncertain real reply on authenticated session revocation without another domain effect",
+      "status": "pass",
+      "duration_ms": 11248.02,
+      "log_line": 1029,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "REAL_C03_C08_COMPONENT",
+      "scope": "Real C03/C08 authenticated consumer with thin declared HTTP envelopes; full installed host and native/recipient-distinct proof remain separate."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "name": "conversation confirmation and decision attachment keep producer observation and exact transport bodies independently",
+      "status": "pass",
+      "duration_ms": 518.84,
+      "log_line": 1030,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Explicit UI transport/contract assertions PASS; no C03/C08/native proof is inferred from transport fixtures."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "name": "conversation reopens an edited first answer before requesting another server-issued selector",
+      "status": "pass",
+      "duration_ms": 519.88,
+      "log_line": 1031,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Explicit UI transport/contract assertions PASS; no C03/C08/native proof is inferred from transport fixtures."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "name": "conversation reviews a first rejected decision attachment and changes only its case version and request identity",
+      "status": "pass",
+      "duration_ms": 508.97,
+      "log_line": 1032,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Explicit UI transport/contract assertions PASS; no C03/C08/native proof is inferred from transport fixtures."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "name": "conversation keeps an uncertain attachment exact when its retry reports that the decision changed",
+      "status": "pass",
+      "duration_ms": 404.92,
+      "log_line": 1033,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Explicit UI transport/contract assertions PASS; no C03/C08/native proof is inferred from transport fixtures."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "name": "conversation confirmation treats stale product-state-changed according to its commit boundary",
+      "status": "pass",
+      "duration_ms": 415.18,
+      "log_line": 1034,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Explicit UI transport/contract assertions PASS; no C03/C08/native proof is inferred from transport fixtures."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "name": "conversation confirmation treats stale answer-scope-changed according to its commit boundary",
+      "status": "pass",
+      "duration_ms": 430.13,
+      "log_line": 1035,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Explicit UI transport/contract assertions PASS; no C03/C08/native proof is inferred from transport fixtures."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "name": "conversation revocation aborts collaboration-thread-read and a late body cannot restore private controls",
+      "status": "pass",
+      "duration_ms": 385.69,
+      "log_line": 1036,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Explicit UI transport/contract assertions PASS; no C03/C08/native proof is inferred from transport fixtures."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "name": "conversation revocation aborts collaboration-thread-reply and a late body cannot restore private controls",
+      "status": "pass",
+      "duration_ms": 363.65,
+      "log_line": 1037,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Explicit UI transport/contract assertions PASS; no C03/C08/native proof is inferred from transport fixtures."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "name": "conversation revocation aborts collaboration-answer-confirm and a late body cannot restore private controls",
+      "status": "pass",
+      "duration_ms": 400.01,
+      "log_line": 1038,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_SCOPED",
+      "proof_kind": "EXPLICIT_UI_TRANSPORT_CONTRACT",
+      "scope": "Explicit UI transport/contract assertions PASS; no C03/C08/native proof is inferred from transport fixtures."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "name": "WP01 shares one Chromium across files, releases every lease, and proves final process exit",
+      "status": "pass",
+      "duration_ms": 91.47,
+      "log_line": 1076,
+      "kind": "named_test",
+      "test_body_entered": true,
+      "whole_named_test_passed": true,
+      "consumer_assertions_entered": true,
+      "proof_completion": "PASS_HARNESS",
+      "proof_kind": "BROWSER_HARNESS",
+      "scope": "Bounded shared-browser acquisition or physical final cleanup for this exact selection, not business/native acceptance."
+    }
+  ],
+  "proof_records": {
+    "SF_BROWSER_DRIVER_PHASE": [
+      {
+        "log_line": 856,
+        "observed_at": "2026-11-14T11:36:41.9791493Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "playwright-import",
+          "elapsedMs": 0
+        }
+      },
+      {
+        "log_line": 857,
+        "observed_at": "2026-11-14T11:36:42.3962715Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "playwright-imported",
+          "elapsedMs": 418
+        }
+      },
+      {
+        "log_line": 858,
+        "observed_at": "2026-11-14T11:36:42.4063899Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "app-process-service",
+          "elapsedMs": 428
+        }
+      },
+      {
+        "log_line": 859,
+        "observed_at": "2026-11-14T11:36:42.4065758Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "app-process-spawn",
+          "elapsedMs": 428
+        }
+      },
+      {
+        "log_line": 860,
+        "observed_at": "2026-11-14T11:36:42.4184005Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "app-process-spawned",
+          "elapsedMs": 440,
+          "driverPid": 4281
+        }
+      },
+      {
+        "log_line": 861,
+        "observed_at": "2026-11-14T11:36:42.4480142Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "node-import",
+          "elapsedMs": 470,
+          "driverPid": 4281
+        }
+      },
+      {
+        "log_line": 862,
+        "observed_at": "2026-11-14T11:36:42.7686986Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "node-imported",
+          "elapsedMs": 791,
+          "driverPid": 4281
+        }
+      },
+      {
+        "log_line": 863,
+        "observed_at": "2026-11-14T11:36:42.7809722Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "chromium-launch",
+          "elapsedMs": 803,
+          "driverPid": 4281
+        }
+      },
+      {
+        "log_line": 866,
+        "observed_at": "2026-11-14T11:36:43.4032022Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "chromium-launched",
+          "elapsedMs": 1425,
+          "driverPid": 4281
+        }
+      },
+      {
+        "log_line": 867,
+        "observed_at": "2026-11-14T11:36:43.4033707Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "node-ready",
+          "elapsedMs": 1425,
+          "driverPid": 4281,
+          "browserPid": 4296
+        }
+      },
+      {
+        "log_line": 868,
+        "observed_at": "2026-11-14T11:36:43.4035673Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "pipe-verify",
+          "elapsedMs": 1425,
+          "driverPid": 4281,
+          "browserPid": 4296
+        }
+      },
+      {
+        "log_line": 869,
+        "observed_at": "2026-11-14T11:36:43.4037644Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "browser-connect",
+          "elapsedMs": 1426,
+          "driverPid": 4281,
+          "browserPid": 4296
+        }
+      },
+      {
+        "log_line": 870,
+        "observed_at": "2026-11-14T11:36:43.4603405Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "browser-connected",
+          "elapsedMs": 1482,
+          "driverPid": 4281,
+          "browserPid": 4296
+        }
+      },
+      {
+        "log_line": 1055,
+        "observed_at": "2026-11-14T11:38:53.8962954Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "node-closed",
+          "elapsedMs": 131918,
+          "driverPid": 4281
+        }
+      },
+      {
+        "log_line": 1056,
+        "observed_at": "2026-11-14T11:38:53.9118995Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "app-process-exited",
+          "elapsedMs": 131934,
+          "driverPid": 4281,
+          "exitCode": 0
+        }
+      }
+    ],
+    "SF_BROWSER_DRIVER_LAUNCH_DIAGNOSTIC": [
+      {
+        "log_line": 864,
+        "observed_at": "2026-11-14T11:36:42.7813220Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4281,
+          "elapsedMs": 1,
+          "resources": {
+            "FSReqPromise": 1,
+            "PipeWrap": 3
+          },
+          "rss": 101371904,
+          "children": [],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 0,
+            "received": 0,
+            "malformed": 0,
+            "pending": []
+          }
+        }
+      },
+      {
+        "log_line": 865,
+        "observed_at": "2026-11-14T11:36:43.4028391Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4281,
+          "elapsedMs": 622,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1,
+            "TCPServerWrap": 1
+          },
+          "rss": 103337984,
+          "children": [
+            {
+              "pid": 4296,
+              "parent": 4281,
+              "name": "chrome",
+              "state": "D (disk sleep)",
+              "wait": "folio_wait_bit_common"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 2,
+            "received": 2,
+            "malformed": 0,
+            "lastSent": "Target.setAutoAttach",
+            "lastReceived": "Target.setAutoAttach",
+            "pending": []
+          }
+        }
+      }
+    ],
+    "SF_WP02_BROWSER_DRIVER_PROOF": [
+      {
+        "log_line": 1075,
+        "observed_at": "2026-11-14T11:38:53.9230178Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4259
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 4281
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 4296,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 1040,
+            "framesFromBrowser": 2975,
+            "peakQueuedBytes": 30469,
+            "peakBufferedBytes": 1876,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        }
+      }
+    ]
+  },
+  "limits": [
+    "Each observation belongs only to the exact product/snapshot/request recorded here. No prior green is transferred.",
+    "Hook failures do not execute test bodies. Named failures require explicit inspection of the failed stage before attributing a product defect.",
+    "Driver cleanup, Omni spawning and UI assertions have separate scopes. Native model/skill proof and S0 global gates remain separate.",
+    "New recipient route is implemented but its two real consumer proofs fail in fixture setup; no producer or UI success is inferred from earlier transport tests.",
+    "The late-response counterproof remains incomplete after revoke; its downstream assertions are preserved and not credited.",
+    "C05 WholeReview, C12 reload and F04 write-only authority were not selected; their prior executed failures remain.",
+    "Eighteen state-provider tests are a targeted changed-producer component proof, not global WP10 acceptance.",
+    "W14 selection/destination work is outside this snapshot and receives no W13 credit.",
+    "No local product/typecheck/guards, auditor dispatch/retry, native model witness or epic execution occurred."
+  ],
+  "final_run_metadata": {
+    "id": 43590725536,
+    "name": "test-ci",
+    "node_id": "WFR_kwLOVsSYps8AAAAKJjWvoA",
+    "head_branch": "ci-run-linux-astra-interface-4bd1f807e4-86c9cfbc97-1",
+    "head_sha": "2af8d573e7d2c808e5222d44242eb1ee8f66d467",
+    "path": ".github/workflows/test-ci.yml",
+    "display_title": "ci: surgical recipients and collaboration dependency consumers W13",
+    "run_number": 452,
+    "event": "push",
+    "status": "completed",
+    "conclusion": "failure",
+    "workflow_id": 416464764,
+    "check_suite_id": 118029266187,
+    "check_suite_node_id": "CS_kwDOVsSYps8AAAAbexetCw",
+    "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43590725536",
+    "html_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43590725536",
+    "pull_requests": [],
+    "created_at": "2026-11-14T11:35:06Z",
+    "updated_at": "2026-11-14T11:39:02Z",
+    "actor": {
+      "login": "gustavomhss",
+      "id": 228147811,
+      "node_id": "U_kgDODZlCYw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/228147811?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/gustavomhss",
+      "html_url": "https://github.com/gustavomhss",
+      "followers_url": "https://api.github.com/users/gustavomhss/followers",
+      "following_url": "https://api.github.com/users/gustavomhss/following{/other_user}",
+      "gists_url": "https://api.github.com/users/gustavomhss/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/gustavomhss/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/gustavomhss/subscriptions",
+      "organizations_url": "https://api.github.com/users/gustavomhss/orgs",
+      "repos_url": "https://api.github.com/users/gustavomhss/repos",
+      "events_url": "https://api.github.com/users/gustavomhss/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/gustavomhss/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "run_attempt": 1,
+    "referenced_workflows": [],
+    "run_started_at": "2026-11-14T11:35:06Z",
+    "triggering_actor": {
+      "login": "gustavomhss",
+      "id": 228147811,
+      "node_id": "U_kgDODZlCYw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/228147811?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/gustavomhss",
+      "html_url": "https://github.com/gustavomhss",
+      "followers_url": "https://api.github.com/users/gustavomhss/followers",
+      "following_url": "https://api.github.com/users/gustavomhss/following{/other_user}",
+      "gists_url": "https://api.github.com/users/gustavomhss/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/gustavomhss/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/gustavomhss/subscriptions",
+      "organizations_url": "https://api.github.com/users/gustavomhss/orgs",
+      "repos_url": "https://api.github.com/users/gustavomhss/repos",
+      "events_url": "https://api.github.com/users/gustavomhss/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/gustavomhss/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "jobs_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43590725536/jobs",
+    "logs_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43590725536/logs",
+    "check_suite_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/check-suites/118029266187",
+    "artifacts_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43590725536/artifacts",
+    "cancel_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43590725536/cancel",
+    "rerun_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs/43590725536/rerun",
+    "previous_attempt_url": null,
+    "workflow_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/workflows/416464764",
+    "head_commit": {
+      "id": "2af8d573e7d2c808e5222d44242eb1ee8f66d467",
+      "tree_id": "87ba13eafc672b055dd60d10bf631bdfb96233ce",
+      "message": "ci: surgical recipients and collaboration dependency consumers W13",
+      "timestamp": "2026-11-14T11:34:40Z",
+      "author": {
+        "name": "gustavomhss",
+        "email": "gmhelmold@gmail.com"
+      },
+      "committer": {
+        "name": "gustavomhss",
+        "email": "gmhelmold@gmail.com"
+      }
+    },
+    "repository": {
+      "id": 1455724710,
+      "node_id": "R_kgDOVsSYpg",
+      "name": "Orchestra-SF",
+      "full_name": "gustavomhss/Orchestra-SF",
+      "private": false,
+      "owner": {
+        "login": "gustavomhss",
+        "id": 228147811,
+        "node_id": "U_kgDODZlCYw",
+        "avatar_url": "https://avatars.githubusercontent.com/u/228147811?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/gustavomhss",
+        "html_url": "https://github.com/gustavomhss",
+        "followers_url": "https://api.github.com/users/gustavomhss/followers",
+        "following_url": "https://api.github.com/users/gustavomhss/following{/other_user}",
+        "gists_url": "https://api.github.com/users/gustavomhss/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/gustavomhss/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/gustavomhss/subscriptions",
+        "organizations_url": "https://api.github.com/users/gustavomhss/orgs",
+        "repos_url": "https://api.github.com/users/gustavomhss/repos",
+        "events_url": "https://api.github.com/users/gustavomhss/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/gustavomhss/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF",
+      "description": "Sucafina-native edition of HuGR Orchestra. Derived history preserved; upstream gustavomhss/hugr-orchestra.",
+      "fork": false,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF",
+      "forks_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/forks",
+      "keys_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/keys{/key_id}",
+      "collaborators_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/collaborators{/collaborator}",
+      "teams_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/teams",
+      "hooks_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/hooks",
+      "issue_events_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/issues/events{/number}",
+      "events_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/events",
+      "assignees_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/assignees{/user}",
+      "branches_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/branches{/branch}",
+      "tags_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/tags",
+      "blobs_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs{/sha}",
+      "git_tags_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/tags{/sha}",
+      "git_refs_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/refs{/sha}",
+      "trees_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees{/sha}",
+      "statuses_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/statuses/{sha}",
+      "languages_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/languages",
+      "stargazers_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/stargazers",
+      "contributors_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contributors",
+      "subscribers_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/subscribers",
+      "subscription_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/subscription",
+      "commits_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits{/sha}",
+      "git_commits_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/commits{/sha}",
+      "comments_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/comments{/number}",
+      "issue_comment_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/issues/comments{/number}",
+      "contents_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contents/{+path}",
+      "compare_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/compare/{base}...{head}",
+      "merges_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/merges",
+      "archive_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/{archive_format}{/ref}",
+      "downloads_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/downloads",
+      "issues_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/issues{/number}",
+      "pulls_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/pulls{/number}",
+      "milestones_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/milestones{/number}",
+      "notifications_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/notifications{?since,all,participating}",
+      "labels_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/labels{/name}",
+      "releases_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/releases{/id}",
+      "deployments_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/deployments"
+    },
+    "head_repository": {
+      "id": 1455724710,
+      "node_id": "R_kgDOVsSYpg",
+      "name": "Orchestra-SF",
+      "full_name": "gustavomhss/Orchestra-SF",
+      "private": false,
+      "owner": {
+        "login": "gustavomhss",
+        "id": 228147811,
+        "node_id": "U_kgDODZlCYw",
+        "avatar_url": "https://avatars.githubusercontent.com/u/228147811?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/gustavomhss",
+        "html_url": "https://github.com/gustavomhss",
+        "followers_url": "https://api.github.com/users/gustavomhss/followers",
+        "following_url": "https://api.github.com/users/gustavomhss/following{/other_user}",
+        "gists_url": "https://api.github.com/users/gustavomhss/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/gustavomhss/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/gustavomhss/subscriptions",
+        "organizations_url": "https://api.github.com/users/gustavomhss/orgs",
+        "repos_url": "https://api.github.com/users/gustavomhss/repos",
+        "events_url": "https://api.github.com/users/gustavomhss/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/gustavomhss/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF",
+      "description": "Sucafina-native edition of HuGR Orchestra. Derived history preserved; upstream gustavomhss/hugr-orchestra.",
+      "fork": false,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF",
+      "forks_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/forks",
+      "keys_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/keys{/key_id}",
+      "collaborators_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/collaborators{/collaborator}",
+      "teams_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/teams",
+      "hooks_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/hooks",
+      "issue_events_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/issues/events{/number}",
+      "events_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/events",
+      "assignees_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/assignees{/user}",
+      "branches_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/branches{/branch}",
+      "tags_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/tags",
+      "blobs_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs{/sha}",
+      "git_tags_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/tags{/sha}",
+      "git_refs_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/refs{/sha}",
+      "trees_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees{/sha}",
+      "statuses_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/statuses/{sha}",
+      "languages_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/languages",
+      "stargazers_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/stargazers",
+      "contributors_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contributors",
+      "subscribers_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/subscribers",
+      "subscription_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/subscription",
+      "commits_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits{/sha}",
+      "git_commits_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/commits{/sha}",
+      "comments_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/comments{/number}",
+      "issue_comment_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/issues/comments{/number}",
+      "contents_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contents/{+path}",
+      "compare_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/compare/{base}...{head}",
+      "merges_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/merges",
+      "archive_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/{archive_format}{/ref}",
+      "downloads_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/downloads",
+      "issues_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/issues{/number}",
+      "pulls_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/pulls{/number}",
+      "milestones_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/milestones{/number}",
+      "notifications_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/notifications{?since,all,participating}",
+      "labels_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/labels{/name}",
+      "releases_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/releases{/id}",
+      "deployments_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/deployments"
+    }
+  },
+  "final_job_metadata": [
+    {
+      "id": 132434657511,
+      "name": "test (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_id": 43590725536,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Assert Linux ARM64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 3
+        },
+        {
+          "name": "Assert macOS arm64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 4
+        },
+        {
+          "name": "Setup request validator Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Read request",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Fetch source history for Script fixtures",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "ripgrep",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Setup Playwright Node",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Install Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Linux sandbox dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12
+        },
+        {
+          "name": "Setup Python",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13
+        },
+        {
+          "name": "Install Python test dependencies",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 14
+        },
+        {
+          "name": "Configure git identity",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15
+        },
+        {
+          "name": "Export requested environment",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "omni binaries",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17
+        },
+        {
+          "name": "Rust toolchain (rust-toolchain.toml)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 18
+        },
+        {
+          "name": "Omni control nonce",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19
+        },
+        {
+          "name": "Run tests",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 20
+        },
+        {
+          "name": "Upload Lean dashboard previews (extension)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 21
+        },
+        {
+          "name": "Upload Playwright evidence",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 22
+        },
+        {
+          "name": "Post Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 42
+        },
+        {
+          "name": "Post Setup request validator Node",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 43
+        },
+        {
+          "name": "Post Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 44
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 45
+        }
+      ]
+    },
+    {
+      "id": 132435563762,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 43590725536,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Delete the snapshot branch",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        }
+      ]
+    }
+  ],
+  "cleanup_job_log": {
+    "file": "product-43590725536.cleanup.log",
+    "bytes": 2322,
+    "sha256": "5e27652dffd2255903b7bef693961980bdf49b03f84c740aed5056c8dccdec69",
+    "actions_job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43590725536/job/132435563762"
+  },
+  "cleanup_scope": "Workflow cleanup132435563762 succeeded; physical browser/process proof is separately complete.",
+  "physical_lifecycle": {
+    "shared_pool": {
+      "status": "PASS",
+      "log_line": 1075,
+      "observed_at": "2026-11-14T11:38:53.9230178Z",
+      "value": {
+        "consumer": "wp01-shared-pool",
+        "clientRuntime": {
+          "name": "bun",
+          "version": "1.3.14",
+          "pid": 4259
+        },
+        "driverRuntime": {
+          "name": "node",
+          "version": "24.22.2",
+          "pid": 4281
+        },
+        "playwrightVersion": "1.59.1",
+        "browserVersion": "157.0.8103.50",
+        "browserPid": 4296,
+        "transport": "playwright-unix-pipe-node-websocket",
+        "spawnBoundary": "AppProcess",
+        "browserStdioCount": 5,
+        "browserUsesPipe": true,
+        "browserPipeOwner": "node",
+        "bridge": {
+          "framing": "json-nul",
+          "acceptedClients": 1,
+          "framesToBrowser": 1040,
+          "framesFromBrowser": 2975,
+          "peakQueuedBytes": 30469,
+          "peakBufferedBytes": 1876,
+          "maxFrameBytes": 16777216,
+          "maxQueuedBytes": 33554432,
+          "directoryMode": 448,
+          "socketMode": 384
+        },
+        "lifecycle": {
+          "remainingContexts": 0,
+          "connected": false,
+          "nodeExitCode": 0,
+          "browserExitCode": 0,
+          "browserSignal": null,
+          "bridgeClosed": true,
+          "listenerClosed": true,
+          "socketClosed": true,
+          "pipeEnded": true,
+          "webSocketOpened": true,
+          "webSocketClosed": true,
+          "webSocketCloseCode": 1000,
+          "webSocketCloseWasClean": true,
+          "pendingFrameBytes": 0,
+          "queuedWriteBytes": 0,
+          "socketRemoved": true,
+          "directoryRemoved": true
+        }
+      },
+      "pool": {
+        "launches": 1,
+        "acquisitions": 3,
+        "releases": 3,
+        "contexts": 0,
+        "activeLease": false,
+        "disconnected": true,
+        "driverClosed": true,
+        "processExited": true
+      }
+    }
+  },
+  "startup_diagnostic": {
+    "poolBudgetMs": 15000,
+    "namedStartupTestBudgetMs": 20000,
+    "envelopePerTestTimeoutMs": 120000,
+    "driverPid": 4281,
+    "browserPid": 4296,
+    "browserConnectedElapsedMs": 1482,
+    "startupNamedTestDurationMs": 1525.79,
+    "observations": [
+      {
+        "log_line": 864,
+        "observed_at": "2026-11-14T11:36:42.7813220Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4281,
+          "elapsedMs": 1,
+          "resources": {
+            "FSReqPromise": 1,
+            "PipeWrap": 3
+          },
+          "rss": 101371904,
+          "children": [],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 0,
+            "received": 0,
+            "malformed": 0,
+            "pending": []
+          }
+        }
+      },
+      {
+        "log_line": 865,
+        "observed_at": "2026-11-14T11:36:43.4028391Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "event": "launch-diagnostic",
+          "runtime": "node",
+          "pid": 4281,
+          "elapsedMs": 622,
+          "resources": {
+            "PipeWrap": 7,
+            "ProcessWrap": 1,
+            "TCPServerWrap": 1
+          },
+          "rss": 103337984,
+          "children": [
+            {
+              "pid": 4296,
+              "parent": 4281,
+              "name": "chrome",
+              "state": "D (disk sleep)",
+              "wait": "folio_wait_bit_common"
+            }
+          ],
+          "debugFileConfigured": false,
+          "protocol": {
+            "sent": 2,
+            "received": 2,
+            "malformed": 0,
+            "lastSent": "Target.setAutoAttach",
+            "lastReceived": "Target.setAutoAttach",
+            "pending": []
+          }
+        }
+      }
+    ],
+    "scope": "This launch completed at1482ms. A transient disk-sleep diagnostic was observed while protocol replies progressed; no unique stall cause or universal repair is inferred."
+  },
+  "static_reference": {
+    "runId": 43590727281,
+    "jobId": 132434661801,
+    "productSha": "4bd1f807e449d040e3db61c4d2b1e177b205ac69",
+    "conclusion": "failure",
+    "receipt": {
+      "file": "static-43590727281.receipt.json",
+      "bytes": 42743,
+      "sha256": "f7c813611a71e2b207e64c41ca2d7da34e125ef26c60d4568268c2b60c6c6eb9"
+    },
+    "published_destination": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43590727281.static.json"
+  },
+  "published_input_scope": {
+    "manifest": {
+      "file": "w13-g03-published-inputs.manifest.json",
+      "bytes": 40315,
+      "sha256": "92770ee0435296c0e0a2c8557182ed7b463f596eecfab51d0b3d524c288088d5"
+    },
+    "exact_inputs_consumed": 47,
+    "identical_inputs_preserved": 7,
+    "scope": "Published Collaboration/provider closure changed; BCS, case-port and source-access remain retained baseline. This selection is a material dependency change, not an equivalent rerun."
+  },
+  "publication_destination": {
+    "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43590725536.json",
+    "review": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43590725536.md",
+    "request": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/astra-interface/runs/43590725536.request.json",
+    "scope": "Assigned documentation destinations; any later documentation-only commit is not the executed product head."
+  }
+}

@@ -1,0 +1,90 @@
+{
+  "schema": "astra.interface.independent-metadata-audit.v1",
+  "candidate": {
+    "head": "f4ed6dfd82502bcebc091b9be6ce74d4eccf89b7",
+    "tree": "71fc6e6bb70f44b50cfb66e33a86ccd149ab32ad",
+    "pr": 31,
+    "branch": "astra-interface",
+    "base": "sf2-stack",
+    "increment": "W16"
+  },
+  "reviewer": "ci_reconcile",
+  "verdict": "NO_METADATA_DIVERGENCE_IN_AUDITED_SCOPE",
+  "catalog": {
+    "file": "interface-evidence-catalog-w16.json",
+    "bytes": 1158756,
+    "sha256": "c63b2b7d95c255e84983f5a9011f0fdf2e1bb9b37f1a4efa404ee168e2be5eb7"
+  },
+  "parcels": [
+    {
+      "file": "interface-criteria-w16-WP01.compact.json",
+      "bytes": 176514,
+      "sha256": "3497203a08a2a70e8e9f9fdd8cd733bcb121def773f65e65ad0e57b05192f566"
+    },
+    {
+      "file": "interface-criteria-w16-WP02.compact.json",
+      "bytes": 144111,
+      "sha256": "13c7ca5e6c84dbfbb3d5640a825f2fb9a6966f903fa38dd383e144de9a095316"
+    }
+  ],
+  "readableMap": {
+    "file": "interface-criteria-w16-complete.md",
+    "bytes": 154495,
+    "sha256": "4083ff783482e00a12d1f6c5538df4758f41b6634554862781a25dac5d48b56b"
+  },
+  "counts": {
+    "literalCriteria": 153,
+    "WP01": 75,
+    "WP02": 78,
+    "tasks": 9,
+    "generalClauses": 36,
+    "markdownRows": 153,
+    "typedReferencesVerified": 17393,
+    "historicalObservationObjectsUnchanged": 1268,
+    "newActualBunObservations": 4,
+    "newScopedConsumerPasses": 2,
+    "newHarnessPasses": 2,
+    "totalObservations": 1272,
+    "tests": 435,
+    "runs": 31,
+    "candidateSourcesVerified": 185,
+    "explicitExternalSources": 1,
+    "exactPublishedArtifactsVerified": 45
+  },
+  "checks": [
+    "All criterion IDs/texts/families/task titles match canonical immutable metadata; all153 remain NOT_DECLARED_DONE.",
+    "All1268 W15 observation objects are value-identical; W16 adds only four actual named Bun observations.",
+    "Both recipient consumers now reference complete W16 PASS_SCOPED observations. Their W14 failures and shared W15 beforeAll hook remain in historical references without invented named observations.",
+    "Two normal harness successes remain separate from the two actual product consumer successes. Three latest named consumer failures remain C05/C12/F04.",
+    "Current run summary and all original physical lifecycle fields equal the frozen W16 receipt. Failed-startup cancellation is explicitly NOT_EXERCISED/runtimeCredit:false.",
+    "Every mapped typed reference resolves;185 candidate source blobs/length/SHA256 match exact W16, and one external source stays explicit.",
+    "Historical static43580186410 and current static43594797507 execution fields equal their frozen receipts.",
+    "G03 unpinned STILL_PERIOD_ONLY remains explicitly historical; F04 current action targets the missing new-draft endpoint.",
+    "Published artifact hashes resolve against their exact repository pins, including six owner-only patch/metadata artifacts that remain proposed and unexecuted.",
+    "The C12 draft-registration/case-version-advance variant is explicitly static, with candidate5e0b source evidence; the distinct lost-apply runtime failure is no longer represented as its execution proof.",
+    "Successor harness scope denies runtime credit for the new cancellation branch, I/O cause/cure and unselected standalone callers. Future documentation-head policy preserves the tested W16 identity."
+  ],
+  "latestNamedConsumerFailures": [
+    {
+      "name": "Dashboard contextual draft retains edits when current write authority is withdrawn",
+      "runRef": "R43586466170"
+    },
+    {
+      "name": "C05 reopens the same preserved financial meeting after a canonical budget change with its original authorized content",
+      "runRef": "R43589003673"
+    },
+    {
+      "name": "Dashboard recovers the same C12 application receipt after a committed response is lost and the page reloads",
+      "runRef": "R43587346579"
+    }
+  ],
+  "latestHarnessFailures": [],
+  "limits": [
+    "Read-only metadata/source inspection only; no product, typecheck, guard, CI poll or dispatch.",
+    "External workspace-services is explicit and not a consumed candidate source; its pinned blob was independently verified in earlier audits.",
+    "Canonical proof bindings and native normative inventory remain unchanged; public-resolution metadata can differ.",
+    "This validates bookkeeping and stated scope, not complete functional/native/global acceptance.",
+    "New cancellation probes, a unique I/O cause/cure and non-pool default15 callers receive no runtime proof from this successful three-file selection.",
+    "No W17 implementation or execution credit is included."
+  ]
+}

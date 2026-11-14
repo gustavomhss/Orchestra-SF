@@ -1,0 +1,57 @@
+{
+  "schema": "astra.interface.owner-only-proposal-peer.v1",
+  "reviewer": "ci_reconcile",
+  "status": "NO_BLOCKER_IN_PINNED_SOURCE_REVIEW_OWNER_PUBLICATION_AND_RUNTIME_PROOF_PENDING",
+  "candidate": {
+    "head": "f4ed6dfd82502bcebc091b9be6ce74d4eccf89b7",
+    "tree": "71fc6e6bb70f44b50cfb66e33a86ccd149ab32ad"
+  },
+  "findingId": "WP01-SELECTION-KNOWN-CAS-REJECTION",
+  "proposal": {
+    "manifest": {
+      "path": "analysis/wp01-case-selection-known-cas-owner-only.json",
+      "bytes": 5249,
+      "sha256": "bb157c128251193df0847502ea810cc9b904842db394675165da6af504094cca"
+    },
+    "patch": {
+      "path": "analysis/wp01-case-selection-known-cas-owner-only.patch",
+      "bytes": 1285,
+      "sha256": "ea315fc86d2e58d79a534b6994a98de4e17d96098d56fff110167b454d8329f9"
+    },
+    "target": "modules/sucafina/Sucafinav1/product/collaboration/case-selection.ts",
+    "preimage": {
+      "publishedCommit": "2784daafbb0d3b58b6019822288a07fa38e5c5b0",
+      "publishedBlob": "ec80e2916c8a06cbb471cf02e30bb1cb5ebd9cc0",
+      "sha256": "f10165f3da65d1f6431567f84d1ef2737a9ec66fe6ad4e7c1a670c291381410b",
+      "bytes": 19528,
+      "verifiedVia": "GitHub MCP fetch_file at immutable commit; exact blob equals W16 admitted tree"
+    },
+    "proposedPostimage": {
+      "blob": "89c1336eac4faace1790530c78fce5f160f7ac90",
+      "sha256": "410a7a70ada42572f3445c0de924f27b386ac03ce53738b961440982b80335fe",
+      "bytes": 19605
+    }
+  },
+  "verified": [
+    "The admitted W16 target is exactly ec80e2916c8a06cbb471cf02e30bb1cb5ebd9cc0. In-memory text reconstruction of the sole condition change yields exactly proposed89c1336eac4faace1790530c78fce5f160f7ac90. No patch was applied.",
+    "C08 provider2fd55 checks a durable prior transaction before the namespace-version CAS. Valid prior returns its original ok receipt; content/incarnation/scope mismatch returns idempotency-content-changed, outside this proposal.",
+    "The exact product-state-changed reason returns commit:false before invoking the work callback. The new mapping only changes presentation of that known non-commit result; it creates no command, transaction, receipt, key, retry or write.",
+    "Local-store eefc writes the snapshot and commits only on result.commit; an outstanding transaction is rolled back on exit. The relevant C08 refusal does not enter the domain callback.",
+    "The existing preview mapping is preserved. Other conflict reasons including idempotency-content-changed and target-replaced, as well as denied/cancelled/unavailable, retain their original handling.",
+    "UI3f76 enters rejected only when pending exists, pending.uncertain is false, and the exact HTTP409 conflict/selection-not-committed envelope is received. If already uncertain, it preserves pending.key/body and continues exact retry; this source is unchanged.",
+    "Rejected review reads the current authorized case and storage version, then clears rejected and creates a new key. That review action does not issue create; a separate explicit Save is required.",
+    "All seven source hashes in the assessment match W16; the five existing selection test bodies and their deadlines remain unchanged."
+  ],
+  "runtimeCredit": "NONE",
+  "repoSourceApplied": false,
+  "testsAdded": 0,
+  "checksOrCiExecuted": false,
+  "limits": [
+    "This is a proposal for the collaboration/integration owner. It is not permission to overwrite a newer producer and is not an applied or published product change.",
+    "No first-known409 selection review test has executed. Existing W14 five-case evidence remains scoped and unchanged.",
+    "The conclusion depends on the exact C08 refusal semantics in provider2fd55. Reconcile and re-review against any newer provider before owner publication.",
+    "The future transport-gated concurrent-create proof must use a separately identifiable but admissible selection period/source combination and assert the competing real200 receipt before forwarding the old request. Its intended outcome is not evidence yet.",
+    "No product, typecheck, guard, browser, CI poll, dispatch or local test was executed."
+  ],
+  "nextAction": "Owner reconcile/publish the one-condition mapping or equivalent compatible producer; admit exact published input, then execute the real ordered two-create counterproof with rejected-intent no-effect and explicit-review/new-intent assertions."
+}

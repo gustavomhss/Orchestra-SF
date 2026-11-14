@@ -5,6 +5,16 @@ import type { PortfolioResult, ScenarioComparison, ScenarioResult } from "./deci
 import type { SensitivityResult } from "./outputs.ts"
 
 export type Period = { start: string; end: string }
+export type BiViewId = "BI01" | "BI02" | "BI03" | "BI04" | "BI05" | "BI06" | "BI07" | "BI08" | "BI09" | "BI10" | "BI11"
+export type BiWaterfallPlan = { segments: readonly { label: string; startValueId: string; endValueId: string; componentValueId: string }[]; finalValueId: string; reconciliation: "reconciled" | "unreconciled" | "unavailable" }
+export type BiTimelinePlan = { items: readonly { label: string; dateValueId: string; state: "planned" | "completed" | "unknown" }[] }
+export type BiPresentation = {
+  viewId: BiViewId
+  series: readonly { id: string; label: string; unit: string; role: "budget" | "actual" | "outlook" | "baseline" | "contribution" | "result" | "fte" | "cost" | "stock" | "aging" | "opened" | "closed" | "planned" | "completed" | "sensitivity" | "other"; valueIds: readonly string[]; alignmentKeys?: readonly string[] }[]
+  limitations: readonly string[]
+  waterfall?: BiWaterfallPlan
+  timeline?: BiTimelinePlan
+}
 export type SourceRef = {
   surface: Surface
   type: string
@@ -36,16 +46,18 @@ export type ProjectionComponent = {
   sourceRefs: readonly SourceRef[]
   evidenceState: EvidenceState
 }
+export type ProjectionValue = { id: string; value: string | number | boolean | null; unit?: string; currency?: string; period: Period; granularity: "record" | "month" | "year" | "aggregate"; sourceRefs: readonly BusinessEvidenceRef[]; drilldown: BusinessEvidenceRef | null; evidenceState: EvidenceState }
 export type DomainProjection = {
   context: ProductContext
   version: number
   engineVersion: string
   /** The persisted domain result also consumed by UI, BI and C16; absence never implies complete coverage. */
   decision?:
-    | { kind: "scenario"; scenarioResultRef: string; scenario: ScenarioResult; comparisonRef: string; comparison: ScenarioComparison; sensitivity?: SensitivityResult }
+    | { kind: "scenario"; scenarioResultRef: string; scenario: ScenarioResult; comparisonRef: string; comparison: ScenarioComparison; sensitivity?: SensitivityResult; sensitivityResultRef?: string }
     | { kind: "portfolio"; portfolioResultRef: string; portfolio: PortfolioResult }
+  comparison?: { metricRef: string; comparisonRef: string; context: ProductContext; version: number; engineVersion: string; values: readonly ProjectionValue[] }
   components: readonly ProjectionComponent[]
-  values: readonly { id: string; value: string | number | boolean | null; unit?: string; currency?: string; period: Period; granularity: "record" | "month" | "year" | "aggregate"; sourceRefs: readonly BusinessEvidenceRef[]; drilldown: BusinessEvidenceRef | null; evidenceState: EvidenceState }[]
+  values: readonly ProjectionValue[]
   missing: readonly { field: string; reason: "missing" | "unavailable" | "restricted" | "not-applicable" | "incompatible-currency" | "missing-fx" | "missing-rate" | "unconfirmed" }[]
 }
 export type PreparedCommand = {

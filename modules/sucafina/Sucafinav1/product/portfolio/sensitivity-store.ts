@@ -22,7 +22,7 @@ export function createPersistentSensitivityPort(input: {
     if (source.value.kind !== "scenario" || source.value.caseRef.id !== caseRef.id || source.value.caseRef.incarnation !== caseRef.incarnation || source.value.caseRef.version > caseRef.version) return { status: "stale", reason: "sensitivity-sample-case-changed" } as const
     const samples = await Promise.all(result.evaluated.map((point) => input.results.read({ kind: "scenario", resultRef: point.resultRef }, context)))
     const failed = samples.find((sample) => sample.status !== "ok")
-    if (failed && failed.status !== "ok") return failed
+    if (failed) return failed
     if (samples.some((sample) => sample.status !== "ok" || sample.value.kind !== "scenario" || digestSfValue(sample.value.caseRef) !== digestSfValue(caseRef))) return { status: "stale", reason: "sensitivity-sample-case-changed" } as const
     return { status: "ok", value: [...source.value.sourceRefs, ...samples.flatMap((sample) => sample.status === "ok" ? sample.value.sourceRefs : [])] } as const
   }

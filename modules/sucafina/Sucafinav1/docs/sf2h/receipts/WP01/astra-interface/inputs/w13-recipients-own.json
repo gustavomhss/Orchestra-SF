@@ -1,0 +1,89 @@
+{
+  "schema": "astra-own-increment-v1",
+  "name": "WP01 canonical recipients consumer",
+  "base": {
+    "head": "cccd00c568aea65bb0c1b5cb4a82c2a236c7e775",
+    "tree": "b33c50679fa6c2a36a0e309064e1fa57ee4b0a0e"
+  },
+  "status": "ready-for-publication-and-Actions; not executed locally",
+  "criteria": [
+    "WP01.T04.CMP.02",
+    "WP01.T04.SUC.01",
+    "WP01.T03.CMP.01"
+  ],
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts",
+      "blob": "c307195ddf3b27b53e2f639861b88fc462812c3c",
+      "sha256": "a267e9f5f75abbfd7e1e7ccf6360b4b207ee32ceb24662b0cdbc909750bd78d6",
+      "bytes": 33923
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "blob": "98b235b93451f5449625b65fbd4fbb369dc47f1a",
+      "sha256": "037d9efe3a809be7ee6cb85bb7bbd21c9e89e665fea08712c3bcf10ca0a960d3",
+      "bytes": 72373
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/work-selection-domain-fixture.ts",
+      "blob": "09bd6606f53ed8a57cfdf5c9bc3f4356cb02962d",
+      "sha256": "623a8fe862cc0fef39892e40e91f00486f9cc5963d8b4a190215e093b948c6ef",
+      "bytes": 13020
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/question-recipients.test.ts",
+      "blob": "4add02f35383c09355b0e4966dbb85fc625be1d4",
+      "sha256": "2b07b9ce3263583ca87dfb10dcfa443b6ea31578dd643a58771c69bdada40ef8",
+      "bytes": 5134
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/README.md",
+      "blob": "f6ba4d8b8cbc54431806bcde12b4b7f8d3e82894",
+      "sha256": "28fcf2615128e18db42f810231a5cc4fb313393701daa63086fe4e990fbb63ea",
+      "bytes": 3640
+    },
+    {
+      "path": "docs/guides/sucafina-workbench.md",
+      "blob": "2b26127b05f3ffa3038be10be68878aec0eef229",
+      "sha256": "863d409e9c9cea0edbb094d0c0805dfabc16119d2e128440f61a68949879a2c7",
+      "bytes": 19767
+    }
+  ],
+  "producer_pins": {
+    "PR33": "2784daafbb0d3b58b6019822288a07fa38e5c5b0",
+    "PR32": "35b9fd4f532abeb1058f00281d4ad8885ca9966f"
+  },
+  "dependencies": {
+    "collaboration/host.ts": "0376f81eb7978807106d259d6f65a9b4e1ed3a2a",
+    "collaboration/http.ts": "91091bf444bc23221d1f427138ebb9e5ca4c51bb",
+    "collaboration/http-routes.ts": "8e43041300f452a83d6b8f1895e73188a81138a3",
+    "collaboration/human.ts": "a4f87ef048c4cbbd44656ea1852eb38da602720a",
+    "integration/product-authority.ts": "2c82d60d220d8d5365da8322bad648a64bbb62d2",
+    "note": "Full exact import closure maintained by wp02_read/root. No foreign source authored or copied by this increment."
+  },
+  "selection": [
+    "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+    "./Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+    "./Sucafinav1/test/product/wp01/question-recipients.test.ts",
+    "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts"
+  ],
+  "preservation": {
+    "first_thread_block": "unchanged",
+    "existing_assertions": "all retained; route expectations updated to canonical producer path",
+    "transport_alias": "no fake alias mounted; obsolete URL asserted 404 from real router"
+  },
+  "scope": {
+    "proves_when_Actions_passes": [
+      "canonical recipients HTTP/service with real operator directory",
+      "private draft retained across authorized recipient selection",
+      "no thread creation from discovery",
+      "real logout denies the next directory read and purges protected consumer content"
+    ],
+    "not_proved": [
+      "full application host mount",
+      "two-person enterprise directory",
+      "first-cycle global selection/responsible filters",
+      "native resident or global acceptance"
+    ]
+  }
+}

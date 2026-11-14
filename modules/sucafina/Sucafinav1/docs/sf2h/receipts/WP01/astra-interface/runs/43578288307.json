@@ -1,0 +1,1989 @@
+{
+  "schema": "astra-interface-ci-receipt-v1",
+  "source": "GitHub MCP fetch_workflow_run_jobs + fetch_workflow_job_logs + fetch_file(.ci-run.json at snapshot)",
+  "repository": "gustavomhss/Orchestra-SF",
+  "run_id": 43578288307,
+  "job_id": 132397300697,
+  "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43578288307",
+  "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43578288307/job/132397300697",
+  "conclusion": "failure",
+  "cleanup_job_id": 132400248828,
+  "cleanup_conclusion": "success",
+  "product_sha": "903bcee2e007809f7614a7fff39dd5019f7f7733",
+  "product_tree": "524b6878a6a4ab40753ab4f8e1c80498785d7c38",
+  "snapshot_sha": "5047d2cf4e39e215e8c7add05d7597ed8254a101",
+  "snapshot_tree": "1118cd654a1de803efc20b5d025eac46ffd1dfd9",
+  "snapshot_branch": "ci-run-linux-astra-interface-903bcee2e0-18ec58e5f7-1",
+  "attempt": 1,
+  "envelope_proof": {
+    "method": "Git root tree entries compared; equal child SHAs preserve all descendant blobs",
+    "onlyDelta": [
+      ".ci-run.json"
+    ],
+    "requestBlob": "3c20002402daf8bd9e97fac307141b9355ed682c",
+    "productTree": "524b6878a6a4ab40753ab4f8e1c80498785d7c38",
+    "snapshotTree": "1118cd654a1de803efc20b5d025eac46ffd1dfd9"
+  },
+  "request_sha256": "18ec58e5f7c08d8472c1681bc3e3ca59a6f6aed69a0905321a424f80e4bdfbcd",
+  "request_blob": "3c20002402daf8bd9e97fac307141b9355ed682c",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "packageSelector": "packages/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/wp01/preview-browser.test.ts",
+      "./Sucafinav1/test/product/wp01/bi-browser.test.ts",
+      "./Sucafinav1/test/product/wp01/components.test.ts",
+      "./Sucafinav1/test/product/wp01/http.test.ts",
+      "./Sucafinav1/test/product/wp01/import-receipt-browser.test.ts",
+      "./Sucafinav1/test/product/wp01/personal-views.test.ts",
+      "./Sucafinav1/test/product/wp01/planner-monthly.test.ts",
+      "./Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+      "./Sucafinav1/test/product/wp01/component-coverage.test.ts",
+      "./Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "./Sucafinav1/test/product/wp01/record-search.test.ts",
+      "./Sucafinav1/test/product/wp01/shell-state.test.ts",
+      "./Sucafinav1/test/product/wp01/view-recovery.test.ts",
+      "./Sucafinav1/test/form-layout.test.ts",
+      "./Sucafinav1/test/screen.test.ts",
+      "./Sucafinav1/test/visual-layout.test.ts",
+      "./Sucafinav1/test/product/wp10/integration/ui-authority.test.ts",
+      "./Sucafinav1/test/product/wp01/contextual-decision.test.ts",
+      "./Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+      "./Sucafinav1/test/product/wp01/portfolio-recovery.test.ts",
+      "./Sucafinav1/test/product/wp02/agenda.test.ts",
+      "./Sucafinav1/test/product/wp02/agenda-subselections.test.ts",
+      "./Sucafinav1/test/product/wp02/confirmation.test.ts",
+      "./Sucafinav1/test/product/wp02/historical-reissue.test.ts",
+      "./Sucafinav1/test/product/wp02/historical-bindings.test.ts",
+      "./Sucafinav1/test/product/wp02/hot-topic-draft.test.ts",
+      "./Sucafinav1/test/product/wp02/hot-topics.test.ts",
+      "./Sucafinav1/test/product/wp02/prepared-review.test.ts",
+      "./Sucafinav1/test/product/wp02/privacy-egress.test.ts",
+      "./Sucafinav1/test/product/wp02/review-completion.test.ts",
+      "./Sucafinav1/test/product/wp02/validation-feedback.test.ts",
+      "./Sucafinav1/test/product/wp02/host-integration.test.ts",
+      "./Sucafinav1/test/product/wp02/dashboard-browser.test.ts",
+      "./Sucafinav1/test/product/wp02/host-workbench.test.ts",
+      "./Sucafinav1/test/product/wp02/collaboration-consumer.test.ts",
+      "./Sucafinav1/test/product/wp02/native-capabilities.test.ts",
+      "./Sucafinav1/test/product/wp02/atlas-consumer.test.ts",
+      "./Sucafinav1/test/product/wp02/import-report-consumer.test.ts",
+      "./Sucafinav1/test/product/wp02/capabilities-e2e.test.ts",
+      "./Sucafinav1/test/product/wp01/shell-recovery.test.ts",
+      "./Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+      "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+    }
+  },
+  "decoded_log": {
+    "sha256": "badf8afbb357e35ad11242c9e4d2a03dc6fec69dfa4599fc8109e8b8fcf20879",
+    "bytes": 209789,
+    "source": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43578288307/job/132397300697",
+    "note": "Full decoded job log was captured and verified during review. The source link retains the original GitHub Actions log; this receipt embeds observations and structured proof records."
+  },
+  "selection": [
+    "modules/sucafina/Sucafinav1/test/product/wp01/preview-browser.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/bi-browser.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/components.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/import-receipt-browser.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/personal-views.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/planner-monthly.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/component-coverage.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/record-search.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/view-recovery.test.ts",
+    "modules/sucafina/Sucafinav1/test/form-layout.test.ts",
+    "modules/sucafina/Sucafinav1/test/screen.test.ts",
+    "modules/sucafina/Sucafinav1/test/visual-layout.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp10/integration/ui-authority.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/contextual-decision.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/portfolio-recovery.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp02/agenda.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp02/agenda-subselections.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp02/confirmation.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp02/historical-reissue.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp02/historical-bindings.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp02/hot-topic-draft.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp02/hot-topics.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp02/prepared-review.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp02/privacy-egress.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp02/review-completion.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp02/validation-feedback.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp02/host-integration.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp02/dashboard-browser.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp02/collaboration-consumer.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp02/native-capabilities.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp02/atlas-consumer.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp02/import-report-consumer.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp02/capabilities-e2e.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/shell-recovery.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts"
+  ],
+  "summary": {
+    "pass": 93,
+    "fail": 21,
+    "observations": 114,
+    "files": 42,
+    "expect_calls": 1643,
+    "elapsed_seconds": 601.88,
+    "wp01_launch_or_cascade_failures": 17,
+    "dashboard_draft_save_completion_failures": 4,
+    "before_all_hook_failures": 7,
+    "warning": "114 is the Bun observation count including seven failing hooks; it does not mean every declared test body executed."
+  },
+  "omni": {
+    "nonce": "27930f0b5e2f0ef1b81fe7d53e3269d7",
+    "status": "pass",
+    "spawns": 28,
+    "delegated": 0
+  },
+  "file_results": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/preview-browser.test.ts",
+      "pass_observations": 2,
+      "fail_observations": 2,
+      "hook_failures": 0,
+      "test_bodies_not_executed_due_to_before_all": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/bi-browser.test.ts",
+      "pass_observations": 0,
+      "fail_observations": 1,
+      "hook_failures": 0,
+      "test_bodies_not_executed_due_to_before_all": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/components.test.ts",
+      "pass_observations": 5,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "test_bodies_not_executed_due_to_before_all": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts",
+      "pass_observations": 0,
+      "fail_observations": 1,
+      "hook_failures": 0,
+      "test_bodies_not_executed_due_to_before_all": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/import-receipt-browser.test.ts",
+      "pass_observations": 0,
+      "fail_observations": 1,
+      "hook_failures": 0,
+      "test_bodies_not_executed_due_to_before_all": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/personal-views.test.ts",
+      "pass_observations": 1,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "test_bodies_not_executed_due_to_before_all": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/planner-monthly.test.ts",
+      "pass_observations": 1,
+      "fail_observations": 1,
+      "hook_failures": 0,
+      "test_bodies_not_executed_due_to_before_all": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+      "pass_observations": 14,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "test_bodies_not_executed_due_to_before_all": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/component-coverage.test.ts",
+      "pass_observations": 6,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "test_bodies_not_executed_due_to_before_all": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "pass_observations": 0,
+      "fail_observations": 1,
+      "hook_failures": 1,
+      "test_bodies_not_executed_due_to_before_all": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/record-search.test.ts",
+      "pass_observations": 0,
+      "fail_observations": 1,
+      "hook_failures": 1,
+      "test_bodies_not_executed_due_to_before_all": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+      "pass_observations": 0,
+      "fail_observations": 1,
+      "hook_failures": 1,
+      "test_bodies_not_executed_due_to_before_all": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/view-recovery.test.ts",
+      "pass_observations": 0,
+      "fail_observations": 1,
+      "hook_failures": 1,
+      "test_bodies_not_executed_due_to_before_all": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/form-layout.test.ts",
+      "pass_observations": 0,
+      "fail_observations": 1,
+      "hook_failures": 0,
+      "test_bodies_not_executed_due_to_before_all": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/screen.test.ts",
+      "pass_observations": 2,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "test_bodies_not_executed_due_to_before_all": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/visual-layout.test.ts",
+      "pass_observations": 0,
+      "fail_observations": 1,
+      "hook_failures": 0,
+      "test_bodies_not_executed_due_to_before_all": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/ui-authority.test.ts",
+      "pass_observations": 5,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "test_bodies_not_executed_due_to_before_all": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/contextual-decision.test.ts",
+      "pass_observations": 0,
+      "fail_observations": 1,
+      "hook_failures": 0,
+      "test_bodies_not_executed_due_to_before_all": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+      "pass_observations": 0,
+      "fail_observations": 1,
+      "hook_failures": 1,
+      "test_bodies_not_executed_due_to_before_all": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/portfolio-recovery.test.ts",
+      "pass_observations": 0,
+      "fail_observations": 1,
+      "hook_failures": 1,
+      "test_bodies_not_executed_due_to_before_all": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/agenda.test.ts",
+      "pass_observations": 1,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "test_bodies_not_executed_due_to_before_all": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/agenda-subselections.test.ts",
+      "pass_observations": 6,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "test_bodies_not_executed_due_to_before_all": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/confirmation.test.ts",
+      "pass_observations": 1,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "test_bodies_not_executed_due_to_before_all": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/historical-reissue.test.ts",
+      "pass_observations": 3,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "test_bodies_not_executed_due_to_before_all": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/historical-bindings.test.ts",
+      "pass_observations": 2,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "test_bodies_not_executed_due_to_before_all": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/hot-topic-draft.test.ts",
+      "pass_observations": 2,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "test_bodies_not_executed_due_to_before_all": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/hot-topics.test.ts",
+      "pass_observations": 3,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "test_bodies_not_executed_due_to_before_all": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/prepared-review.test.ts",
+      "pass_observations": 2,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "test_bodies_not_executed_due_to_before_all": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/privacy-egress.test.ts",
+      "pass_observations": 1,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "test_bodies_not_executed_due_to_before_all": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/review-completion.test.ts",
+      "pass_observations": 6,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "test_bodies_not_executed_due_to_before_all": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/validation-feedback.test.ts",
+      "pass_observations": 2,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "test_bodies_not_executed_due_to_before_all": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/host-integration.test.ts",
+      "pass_observations": 6,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "test_bodies_not_executed_due_to_before_all": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/dashboard-browser.test.ts",
+      "pass_observations": 1,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "test_bodies_not_executed_due_to_before_all": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts",
+      "pass_observations": 3,
+      "fail_observations": 2,
+      "hook_failures": 0,
+      "test_bodies_not_executed_due_to_before_all": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/collaboration-consumer.test.ts",
+      "pass_observations": 6,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "test_bodies_not_executed_due_to_before_all": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/native-capabilities.test.ts",
+      "pass_observations": 1,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "test_bodies_not_executed_due_to_before_all": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/atlas-consumer.test.ts",
+      "pass_observations": 9,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "test_bodies_not_executed_due_to_before_all": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/import-report-consumer.test.ts",
+      "pass_observations": 1,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "test_bodies_not_executed_due_to_before_all": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/capabilities-e2e.test.ts",
+      "pass_observations": 1,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "test_bodies_not_executed_due_to_before_all": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-recovery.test.ts",
+      "pass_observations": 0,
+      "fail_observations": 1,
+      "hook_failures": 1,
+      "test_bodies_not_executed_due_to_before_all": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+      "pass_observations": 0,
+      "fail_observations": 2,
+      "hook_failures": 0,
+      "test_bodies_not_executed_due_to_before_all": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "pass_observations": 0,
+      "fail_observations": 1,
+      "hook_failures": 0,
+      "test_bodies_not_executed_due_to_before_all": false
+    }
+  ],
+  "observations": [
+    {
+      "status": "pass",
+      "name": "dashboard groups retain every canonical destination and its original index",
+      "duration_ms": 1.39,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/preview-browser.test.ts",
+      "log_line": 817,
+      "kind": "named_test"
+    },
+    {
+      "status": "fail",
+      "name": "field errors identify the input and preserve the draft",
+      "duration_ms": 10005.46,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/preview-browser.test.ts",
+      "log_line": 882,
+      "kind": "named_test",
+      "failure_family": "wp01_browser_initial_launch_and_poisoned_pool",
+      "test_body_reached": true,
+      "browser_journey_reached": false,
+      "excerpt": "2026-11-14T09:00:04.1636699Z     \"/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts\",\n2026-11-14T09:00:04.1637478Z     \"/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts\"\n2026-11-14T09:00:04.1637897Z   ],\n2026-11-14T09:00:04.1638363Z   finalizer: \"/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts\",\n2026-11-14T09:00:04.1638816Z }\n2026-11-14T09:00:04.1653197Z WP01 browser launch phase {\n2026-11-14T09:00:04.1653722Z   phase: \"load public Playwright API\",\n2026-11-14T09:00:04.1654037Z }\n2026-11-14T09:00:04.4990652Z WP01 browser launch phase {\n2026-11-14T09:00:04.4991057Z   phase: \"chromium.launch\",\n2026-11-14T09:00:04.4991360Z }\n2026-11-14T09:00:14.1572752Z 27 | \n2026-11-14T09:00:14.1573479Z 28 | async function bounded<T>(operation: Promise<T>, stage: string, timeout = 10_000): Promise<T> {\n2026-11-14T09:00:14.1574415Z 29 |   let timer: ReturnType<typeof setTimeout> | undefined\n2026-11-14T09:00:14.1574818Z 30 |   try {\n2026-11-14T09:00:14.1575385Z 31 |     return await Promise.race([operation, new Promise<never>((_, reject) => {\n2026-11-14T09:00:14.1576052Z 32 |       timer = setTimeout(() => reject(new Error(\"WP01 browser timed out: \" + stage)), timeout)\n2026-11-14T09:00:14.1576438Z                                                ^\n2026-11-14T09:00:14.1576818Z error: WP01 browser timed out: single Chromium launch and PID acquisition\n2026-11-14T09:00:14.1577437Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:32:43)\n2026-11-14T09:00:14.1578058Z (fail) field errors identify the input and preserve the draft [10005.46ms]"
+    },
+    {
+      "status": "fail",
+      "name": "procurement submission carries edits from its record's editor",
+      "duration_ms": 3.07,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/preview-browser.test.ts",
+      "log_line": 903,
+      "kind": "named_test",
+      "failure_family": "wp01_browser_initial_launch_and_poisoned_pool",
+      "test_body_reached": true,
+      "browser_journey_reached": false,
+      "excerpt": "2026-11-14T09:00:14.1602722Z 170 | \n2026-11-14T09:00:14.1603298Z 171 | /** A lease is reserved before any await. No concurrent caller or replacement\n2026-11-14T09:00:14.1604072Z 172 |  * Chromium is admitted. Existing consumers keep isolated contexts per case. */\n2026-11-14T09:00:14.1604534Z 173 | export async function launchWp01Browser(): Promise<Browser> {\n2026-11-14T09:00:14.1605019Z 174 |   if (pool.sealed) throw new Error(\"WP01 browser selection has already been finalized\")\n2026-11-14T09:00:14.1606019Z 175 |   if (pool.failed) throw new Error(\"WP01 browser pool is unavailable after an earlier failure\", { cause: pool.failure })\n2026-11-14T09:00:14.1606456Z                                    ^\n2026-11-14T09:00:14.1606787Z error: WP01 browser pool is unavailable after an earlier failure\n2026-11-14T09:00:14.1607403Z       at launchWp01Browser (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:175:30)\n2026-11-14T09:00:14.1608247Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/preview-browser.test.ts:44:25)\n2026-11-14T09:00:14.1608656Z \n2026-11-14T09:00:14.1608733Z 27 | \n2026-11-14T09:00:14.1609202Z 28 | async function bounded<T>(operation: Promise<T>, stage: string, timeout = 10_000): Promise<T> {\n2026-11-14T09:00:14.1609784Z 29 |   let timer: ReturnType<typeof setTimeout> | undefined\n2026-11-14T09:00:14.1610204Z 30 |   try {\n2026-11-14T09:00:14.1610541Z 31 |     return await Promise.race([operation, new Promise<never>((_, reject) => {\n2026-11-14T09:00:14.1611064Z 32 |       timer = setTimeout(() => reject(new Error(\"WP01 browser timed out: \" + stage)), timeout)\n2026-11-14T09:00:14.1611431Z                                                ^\n2026-11-14T09:00:14.1611797Z error: WP01 browser timed out: single Chromium launch and PID acquisition\n2026-11-14T09:00:14.1612391Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:32:43)\n2026-11-14T09:00:14.1613015Z (fail) procurement submission carries edits from its record's editor [3.07ms]"
+    },
+    {
+      "status": "pass",
+      "name": "edits made while an apply is in flight remain unsaved in the real shell",
+      "duration_ms": 5188.6,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/preview-browser.test.ts",
+      "log_line": 904,
+      "kind": "named_test"
+    },
+    {
+      "status": "fail",
+      "name": "authenticated BI renders, filters and fails closed after session revocation",
+      "duration_ms": 266.06,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/bi-browser.test.ts",
+      "log_line": 929,
+      "kind": "named_test",
+      "failure_family": "wp01_browser_initial_launch_and_poisoned_pool",
+      "test_body_reached": true,
+      "browser_journey_reached": false,
+      "excerpt": "2026-11-14T09:00:19.6512212Z 171 | /** A lease is reserved before any await. No concurrent caller or replacement\n2026-11-14T09:00:19.6513067Z 172 |  * Chromium is admitted. Existing consumers keep isolated contexts per case. */\n2026-11-14T09:00:19.6513920Z 173 | export async function launchWp01Browser(): Promise<Browser> {\n2026-11-14T09:00:19.6514706Z 174 |   if (pool.sealed) throw new Error(\"WP01 browser selection has already been finalized\")\n2026-11-14T09:00:19.6515785Z 175 |   if (pool.failed) throw new Error(\"WP01 browser pool is unavailable after an earlier failure\", { cause: pool.failure })\n2026-11-14T09:00:19.6516541Z                                    ^\n2026-11-14T09:00:19.6517065Z error: WP01 browser pool is unavailable after an earlier failure\n2026-11-14T09:00:19.6518185Z       at launchWp01Browser (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:175:30)\n2026-11-14T09:00:19.6519053Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/bi-browser.test.ts:48:25\n2026-11-14T09:00:19.6519793Z       at processTicksAndRejections (unknown:7:39)\n2026-11-14T09:00:19.6519977Z \n2026-11-14T09:00:19.6520058Z 27 | \n2026-11-14T09:00:19.6520460Z 28 | async function bounded<T>(operation: Promise<T>, stage: string, timeout = 10_000): Promise<T> {\n2026-11-14T09:00:19.6520925Z 29 |   let timer: ReturnType<typeof setTimeout> | undefined\n2026-11-14T09:00:19.6521195Z 30 |   try {\n2026-11-14T09:00:19.6521535Z 31 |     return await Promise.race([operation, new Promise<never>((_, reject) => {\n2026-11-14T09:00:19.6522044Z 32 |       timer = setTimeout(() => reject(new Error(\"WP01 browser timed out: \" + stage)), timeout)\n2026-11-14T09:00:19.6522413Z                                                ^\n2026-11-14T09:00:19.6522777Z error: WP01 browser timed out: single Chromium launch and PID acquisition\n2026-11-14T09:00:19.6523399Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:32:43)\n2026-11-14T09:00:19.6524310Z (fail) authenticated BI renders, filters and fails closed after session revocation [266.06ms]"
+    },
+    {
+      "status": "pass",
+      "name": "conditioned scenario shows known subtotal and missing category without a total",
+      "duration_ms": 2.16,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/components.test.ts",
+      "log_line": 932,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "status messages escape user-supplied details",
+      "duration_ms": 0.09,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/components.test.ts",
+      "log_line": 933,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "work list displays only supplied authorized items and handles an empty selection",
+      "duration_ms": 0.15,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/components.test.ts",
+      "log_line": 934,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "routine status does not claim admission for a pending request",
+      "duration_ms": 0.15,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/components.test.ts",
+      "log_line": 935,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "contribution renders a persisted question and retains explicit stale state",
+      "duration_ms": 1.11,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/components.test.ts",
+      "log_line": 936,
+      "kind": "named_test"
+    },
+    {
+      "status": "fail",
+      "name": "workbench uses actual identity, SQLite and case dispatcher with revocation and CSRF",
+      "duration_ms": 274.33,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts",
+      "log_line": 960,
+      "kind": "named_test",
+      "failure_family": "wp01_browser_initial_launch_and_poisoned_pool",
+      "test_body_reached": true,
+      "browser_journey_reached": false,
+      "excerpt": "2026-11-14T09:00:20.0046599Z 171 | /** A lease is reserved before any await. No concurrent caller or replacement\n2026-11-14T09:00:20.0047165Z 172 |  * Chromium is admitted. Existing consumers keep isolated contexts per case. */\n2026-11-14T09:00:20.0047639Z 173 | export async function launchWp01Browser(): Promise<Browser> {\n2026-11-14T09:00:20.0048120Z 174 |   if (pool.sealed) throw new Error(\"WP01 browser selection has already been finalized\")\n2026-11-14T09:00:20.0048976Z 175 |   if (pool.failed) throw new Error(\"WP01 browser pool is unavailable after an earlier failure\", { cause: pool.failure })\n2026-11-14T09:00:20.0049416Z                                    ^\n2026-11-14T09:00:20.0049996Z error: WP01 browser pool is unavailable after an earlier failure\n2026-11-14T09:00:20.0051106Z       at launchWp01Browser (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:175:30)\n2026-11-14T09:00:20.0052104Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts:76:25\n2026-11-14T09:00:20.0052568Z       at processTicksAndRejections (unknown:7:39)\n2026-11-14T09:00:20.0052749Z \n2026-11-14T09:00:20.0052864Z 27 | \n2026-11-14T09:00:20.0053383Z 28 | async function bounded<T>(operation: Promise<T>, stage: string, timeout = 10_000): Promise<T> {\n2026-11-14T09:00:20.0054003Z 29 |   let timer: ReturnType<typeof setTimeout> | undefined\n2026-11-14T09:00:20.0054261Z 30 |   try {\n2026-11-14T09:00:20.0054589Z 31 |     return await Promise.race([operation, new Promise<never>((_, reject) => {\n2026-11-14T09:00:20.0055110Z 32 |       timer = setTimeout(() => reject(new Error(\"WP01 browser timed out: \" + stage)), timeout)\n2026-11-14T09:00:20.0055478Z                                                ^\n2026-11-14T09:00:20.0055842Z error: WP01 browser timed out: single Chromium launch and PID acquisition\n2026-11-14T09:00:20.0056446Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:32:43)\n2026-11-14T09:00:20.0057140Z (fail) workbench uses actual identity, SQLite and case dispatcher with revocation and CSRF [274.33ms]"
+    },
+    {
+      "status": "fail",
+      "name": "import reports the persisted unchanged outcome after an uncertain response",
+      "duration_ms": 2.44,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/import-receipt-browser.test.ts",
+      "log_line": 983,
+      "kind": "named_test",
+      "failure_family": "wp01_browser_initial_launch_and_poisoned_pool",
+      "test_body_reached": true,
+      "browser_journey_reached": false,
+      "excerpt": "2026-11-14T09:00:20.0089064Z 170 | \n2026-11-14T09:00:20.0089633Z 171 | /** A lease is reserved before any await. No concurrent caller or replacement\n2026-11-14T09:00:20.0090506Z 172 |  * Chromium is admitted. Existing consumers keep isolated contexts per case. */\n2026-11-14T09:00:20.0091365Z 173 | export async function launchWp01Browser(): Promise<Browser> {\n2026-11-14T09:00:20.0092231Z 174 |   if (pool.sealed) throw new Error(\"WP01 browser selection has already been finalized\")\n2026-11-14T09:00:20.0093414Z 175 |   if (pool.failed) throw new Error(\"WP01 browser pool is unavailable after an earlier failure\", { cause: pool.failure })\n2026-11-14T09:00:20.0096822Z                                    ^\n2026-11-14T09:00:20.0098708Z error: WP01 browser pool is unavailable after an earlier failure\n2026-11-14T09:00:20.0100371Z       at launchWp01Browser (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:175:30)\n2026-11-14T09:00:20.0102498Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/import-receipt-browser.test.ts:19:25)\n2026-11-14T09:00:20.0103352Z \n2026-11-14T09:00:20.0104400Z 27 | \n2026-11-14T09:00:20.0105583Z 28 | async function bounded<T>(operation: Promise<T>, stage: string, timeout = 10_000): Promise<T> {\n2026-11-14T09:00:20.0106380Z 29 |   let timer: ReturnType<typeof setTimeout> | undefined\n2026-11-14T09:00:20.0106935Z 30 |   try {\n2026-11-14T09:00:20.0107992Z 31 |     return await Promise.race([operation, new Promise<never>((_, reject) => {\n2026-11-14T09:00:20.0109367Z 32 |       timer = setTimeout(() => reject(new Error(\"WP01 browser timed out: \" + stage)), timeout)\n2026-11-14T09:00:20.0110079Z                                                ^\n2026-11-14T09:00:20.0111240Z error: WP01 browser timed out: single Chromium launch and PID acquisition\n2026-11-14T09:00:20.0112025Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:32:43)\n2026-11-14T09:00:20.0113179Z (fail) import reports the persisted unchanged outcome after an uncertain response [2.44ms]"
+    },
+    {
+      "status": "pass",
+      "name": "personal views isolate authenticated principals and reconcile exact retries",
+      "duration_ms": 1948.43,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/personal-views.test.ts",
+      "log_line": 987,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "Planner boundary rejects unpublished operations and invalid monthly context before host admission",
+      "duration_ms": 2.49,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/planner-monthly.test.ts",
+      "log_line": 990,
+      "kind": "named_test"
+    },
+    {
+      "status": "fail",
+      "name": "Planner grid previews pasted values and preserves a conflicting draft",
+      "duration_ms": 442.53,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/planner-monthly.test.ts",
+      "log_line": 1012,
+      "kind": "named_test",
+      "failure_family": "wp01_browser_initial_launch_and_poisoned_pool",
+      "test_body_reached": true,
+      "browser_journey_reached": false,
+      "excerpt": "2026-11-14T09:00:22.4267998Z 171 | /** A lease is reserved before any await. No concurrent caller or replacement\n2026-11-14T09:00:22.4268561Z 172 |  * Chromium is admitted. Existing consumers keep isolated contexts per case. */\n2026-11-14T09:00:22.4269313Z 173 | export async function launchWp01Browser(): Promise<Browser> {\n2026-11-14T09:00:22.4269805Z 174 |   if (pool.sealed) throw new Error(\"WP01 browser selection has already been finalized\")\n2026-11-14T09:00:22.4270437Z 175 |   if (pool.failed) throw new Error(\"WP01 browser pool is unavailable after an earlier failure\", { cause: pool.failure })\n2026-11-14T09:00:22.4270866Z                                    ^\n2026-11-14T09:00:22.4271192Z error: WP01 browser pool is unavailable after an earlier failure\n2026-11-14T09:00:22.4271808Z       at launchWp01Browser (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:175:30)\n2026-11-14T09:00:22.4272559Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/planner-monthly.test.ts:73:15\n2026-11-14T09:00:22.4273045Z       at processTicksAndRejections (unknown:7:39)\n2026-11-14T09:00:22.4273223Z \n2026-11-14T09:00:22.4273298Z 27 | \n2026-11-14T09:00:22.4273872Z 28 | async function bounded<T>(operation: Promise<T>, stage: string, timeout = 10_000): Promise<T> {\n2026-11-14T09:00:22.4274337Z 29 |   let timer: ReturnType<typeof setTimeout> | undefined\n2026-11-14T09:00:22.4274602Z 30 |   try {\n2026-11-14T09:00:22.4274930Z 31 |     return await Promise.race([operation, new Promise<never>((_, reject) => {\n2026-11-14T09:00:22.4275430Z 32 |       timer = setTimeout(() => reject(new Error(\"WP01 browser timed out: \" + stage)), timeout)\n2026-11-14T09:00:22.4275787Z                                                ^\n2026-11-14T09:00:22.4276145Z error: WP01 browser timed out: single Chromium launch and PID acquisition\n2026-11-14T09:00:22.4276754Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:32:43)\n2026-11-14T09:00:22.4277546Z (fail) Planner grid previews pasted values and preserves a conflicting draft [442.53ms]"
+    },
+    {
+      "status": "pass",
+      "name": "Workbench analysis HTTP enforces human authority and hides forged run references",
+      "duration_ms": 3498.84,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+      "log_line": 1054,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "Workbench analysis returns unavailable when its host services are absent",
+      "duration_ms": 9.48,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+      "log_line": 1055,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "Reviewer consumer projects the actual ScenarioComparison from its supplied ports and rereads both sources",
+      "duration_ms": 8.04,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+      "log_line": 1056,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "Reviewer consumer projects the actual FinancialAnalysis comparison from its supplied ports and rereads both sources",
+      "duration_ms": 13.39,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+      "log_line": 1057,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "Reviewer consumer refuses read-denied through the existing read grants and saved-author checks",
+      "duration_ms": 11.29,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+      "log_line": 1058,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "Reviewer consumer refuses wrong-case through the existing read grants and saved-author checks",
+      "duration_ms": 4.37,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+      "log_line": 1059,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "Reviewer consumer refuses wrong-digest through the existing read grants and saved-author checks",
+      "duration_ms": 10.99,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+      "log_line": 1060,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "Reviewer consumer refuses wrong-provenance through the existing read grants and saved-author checks",
+      "duration_ms": 4.34,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+      "log_line": 1061,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "Reviewer consumer refuses missing-native through the existing read grants and saved-author checks",
+      "duration_ms": 4.09,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+      "log_line": 1062,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "Reviewer consumer refuses case-changed through the existing read grants and saved-author checks",
+      "duration_ms": 11.77,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+      "log_line": 1063,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "Reviewer consumer refuses author-changed through the existing read grants and saved-author checks",
+      "duration_ms": 4.85,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+      "log_line": 1064,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "Reviewer consumer refuses revoked through the existing read grants and saved-author checks",
+      "duration_ms": 11.58,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+      "log_line": 1065,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "Reviewer consumer rejects a supplied comparison, evidence or nonreviewer profile before reading ports",
+      "duration_ms": 3.39,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+      "log_line": 1066,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "analysis output returns a denial when access changes during optional review discovery",
+      "duration_ms": 10.93,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/workbench-analysis.test.ts",
+      "log_line": 1067,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "coverage references and the derived omitted category accompany conditioned amounts",
+      "duration_ms": 6.36,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/component-coverage.test.ts",
+      "log_line": 1070,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "unavailable values remain unavailable and a pending question supplies the next step",
+      "duration_ms": 0.19,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/component-coverage.test.ts",
+      "log_line": 1071,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "a confirmed zero and a later nonzero cost are consumed without UI arithmetic",
+      "duration_ms": 0.13,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/component-coverage.test.ts",
+      "log_line": 1072,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "choice history retains its original conditional result after reevaluation",
+      "duration_ms": 0.2,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/component-coverage.test.ts",
+      "log_line": 1073,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "coverage metadata is escaped and complete comparison does not mask conditioned source",
+      "duration_ms": 0.12,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/component-coverage.test.ts",
+      "log_line": 1074,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "work context displays the authorized record scope and does not manufacture records",
+      "duration_ms": 0.2,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/component-coverage.test.ts",
+      "log_line": 1075,
+      "kind": "named_test"
+    },
+    {
+      "status": "fail",
+      "name": "(unnamed)",
+      "duration_ms": 6.38,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "log_line": 1098,
+      "kind": "hook_failure",
+      "failure_family": "wp01_browser_initial_launch_and_poisoned_pool",
+      "test_body_reached": false,
+      "browser_journey_reached": false,
+      "excerpt": "2026-11-14T09:00:27.1093772Z 170 | \n2026-11-14T09:00:27.1094699Z 171 | /** A lease is reserved before any await. No concurrent caller or replacement\n2026-11-14T09:00:27.1095734Z 172 |  * Chromium is admitted. Existing consumers keep isolated contexts per case. */\n2026-11-14T09:00:27.1096716Z 173 | export async function launchWp01Browser(): Promise<Browser> {\n2026-11-14T09:00:27.1097806Z 174 |   if (pool.sealed) throw new Error(\"WP01 browser selection has already been finalized\")\n2026-11-14T09:00:27.1098937Z 175 |   if (pool.failed) throw new Error(\"WP01 browser pool is unavailable after an earlier failure\", { cause: pool.failure })\n2026-11-14T09:00:27.1099665Z                                    ^\n2026-11-14T09:00:27.1100215Z error: WP01 browser pool is unavailable after an earlier failure\n2026-11-14T09:00:27.1101670Z       at launchWp01Browser (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:175:30)\n2026-11-14T09:00:27.1103043Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts:24:19)\n2026-11-14T09:00:27.1103834Z \n2026-11-14T09:00:27.1103913Z 27 | \n2026-11-14T09:00:27.1104305Z 28 | async function bounded<T>(operation: Promise<T>, stage: string, timeout = 10_000): Promise<T> {\n2026-11-14T09:00:27.1104776Z 29 |   let timer: ReturnType<typeof setTimeout> | undefined\n2026-11-14T09:00:27.1105041Z 30 |   try {\n2026-11-14T09:00:27.1105378Z 31 |     return await Promise.race([operation, new Promise<never>((_, reject) => {\n2026-11-14T09:00:27.1105896Z 32 |       timer = setTimeout(() => reject(new Error(\"WP01 browser timed out: \" + stage)), timeout)\n2026-11-14T09:00:27.1106275Z                                                ^\n2026-11-14T09:00:27.1106650Z error: WP01 browser timed out: single Chromium launch and PID acquisition\n2026-11-14T09:00:27.1107298Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:32:43\n2026-11-14T09:00:27.1108040Z (fail) (unnamed) [6.38ms]"
+    },
+    {
+      "status": "fail",
+      "name": "(unnamed)",
+      "duration_ms": 0.15,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/record-search.test.ts",
+      "log_line": 1121,
+      "kind": "hook_failure",
+      "failure_family": "wp01_browser_initial_launch_and_poisoned_pool",
+      "test_body_reached": false,
+      "browser_journey_reached": false,
+      "excerpt": "2026-11-14T09:00:27.1174716Z 170 | \n2026-11-14T09:00:27.1175281Z 171 | /** A lease is reserved before any await. No concurrent caller or replacement\n2026-11-14T09:00:27.1176118Z 172 |  * Chromium is admitted. Existing consumers keep isolated contexts per case. */\n2026-11-14T09:00:27.1176908Z 173 | export async function launchWp01Browser(): Promise<Browser> {\n2026-11-14T09:00:27.1177690Z 174 |   if (pool.sealed) throw new Error(\"WP01 browser selection has already been finalized\")\n2026-11-14T09:00:27.1179269Z 175 |   if (pool.failed) throw new Error(\"WP01 browser pool is unavailable after an earlier failure\", { cause: pool.failure })\n2026-11-14T09:00:27.1180056Z                                    ^\n2026-11-14T09:00:27.1180589Z error: WP01 browser pool is unavailable after an earlier failure\n2026-11-14T09:00:27.1181658Z       at launchWp01Browser (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:175:30)\n2026-11-14T09:00:27.1182973Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/record-search.test.ts:18:41)\n2026-11-14T09:00:27.1183834Z \n2026-11-14T09:00:27.1183942Z 27 | \n2026-11-14T09:00:27.1184555Z 28 | async function bounded<T>(operation: Promise<T>, stage: string, timeout = 10_000): Promise<T> {\n2026-11-14T09:00:27.1185017Z 29 |   let timer: ReturnType<typeof setTimeout> | undefined\n2026-11-14T09:00:27.1185281Z 30 |   try {\n2026-11-14T09:00:27.1185619Z 31 |     return await Promise.race([operation, new Promise<never>((_, reject) => {\n2026-11-14T09:00:27.1186131Z 32 |       timer = setTimeout(() => reject(new Error(\"WP01 browser timed out: \" + stage)), timeout)\n2026-11-14T09:00:27.1186499Z                                                ^\n2026-11-14T09:00:27.1186862Z error: WP01 browser timed out: single Chromium launch and PID acquisition\n2026-11-14T09:00:27.1187455Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:32:43\n2026-11-14T09:00:27.1187966Z (fail) (unnamed) [0.15ms]"
+    },
+    {
+      "status": "fail",
+      "name": "(unnamed)",
+      "duration_ms": 6.17,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+      "log_line": 1144,
+      "kind": "hook_failure",
+      "failure_family": "wp01_browser_initial_launch_and_poisoned_pool",
+      "test_body_reached": false,
+      "browser_journey_reached": false,
+      "excerpt": "2026-11-14T09:00:27.1467575Z 170 | \n2026-11-14T09:00:27.1468159Z 171 | /** A lease is reserved before any await. No concurrent caller or replacement\n2026-11-14T09:00:27.1468959Z 172 |  * Chromium is admitted. Existing consumers keep isolated contexts per case. */\n2026-11-14T09:00:27.1469457Z 173 | export async function launchWp01Browser(): Promise<Browser> {\n2026-11-14T09:00:27.1469931Z 174 |   if (pool.sealed) throw new Error(\"WP01 browser selection has already been finalized\")\n2026-11-14T09:00:27.1470844Z 175 |   if (pool.failed) throw new Error(\"WP01 browser pool is unavailable after an earlier failure\", { cause: pool.failure })\n2026-11-14T09:00:27.1471266Z                                    ^\n2026-11-14T09:00:27.1471596Z error: WP01 browser pool is unavailable after an earlier failure\n2026-11-14T09:00:27.1472245Z       at launchWp01Browser (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:175:30)\n2026-11-14T09:00:27.1473055Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts:11:27)\n2026-11-14T09:00:27.1473442Z \n2026-11-14T09:00:27.1473686Z 27 | \n2026-11-14T09:00:27.1474098Z 28 | async function bounded<T>(operation: Promise<T>, stage: string, timeout = 10_000): Promise<T> {\n2026-11-14T09:00:27.1474553Z 29 |   let timer: ReturnType<typeof setTimeout> | undefined\n2026-11-14T09:00:27.1474807Z 30 |   try {\n2026-11-14T09:00:27.1475133Z 31 |     return await Promise.race([operation, new Promise<never>((_, reject) => {\n2026-11-14T09:00:27.1475639Z 32 |       timer = setTimeout(() => reject(new Error(\"WP01 browser timed out: \" + stage)), timeout)\n2026-11-14T09:00:27.1475999Z                                                ^\n2026-11-14T09:00:27.1476357Z error: WP01 browser timed out: single Chromium launch and PID acquisition\n2026-11-14T09:00:27.1476925Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:32:43\n2026-11-14T09:00:27.1477480Z (fail) (unnamed) [6.17ms]"
+    },
+    {
+      "status": "fail",
+      "name": "(unnamed)",
+      "duration_ms": 0.14,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/view-recovery.test.ts",
+      "log_line": 1167,
+      "kind": "hook_failure",
+      "failure_family": "wp01_browser_initial_launch_and_poisoned_pool",
+      "test_body_reached": false,
+      "browser_journey_reached": false,
+      "excerpt": "2026-11-14T09:00:27.1543774Z 170 | \n2026-11-14T09:00:27.1544332Z 171 | /** A lease is reserved before any await. No concurrent caller or replacement\n2026-11-14T09:00:27.1545332Z 172 |  * Chromium is admitted. Existing consumers keep isolated contexts per case. */\n2026-11-14T09:00:27.1545802Z 173 | export async function launchWp01Browser(): Promise<Browser> {\n2026-11-14T09:00:27.1546268Z 174 |   if (pool.sealed) throw new Error(\"WP01 browser selection has already been finalized\")\n2026-11-14T09:00:27.1546896Z 175 |   if (pool.failed) throw new Error(\"WP01 browser pool is unavailable after an earlier failure\", { cause: pool.failure })\n2026-11-14T09:00:27.1547325Z                                    ^\n2026-11-14T09:00:27.1547646Z error: WP01 browser pool is unavailable after an earlier failure\n2026-11-14T09:00:27.1548258Z       at launchWp01Browser (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:175:30)\n2026-11-14T09:00:27.1549188Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/view-recovery.test.ts:24:19)\n2026-11-14T09:00:27.1549858Z \n2026-11-14T09:00:27.1549968Z 27 | \n2026-11-14T09:00:27.1550581Z 28 | async function bounded<T>(operation: Promise<T>, stage: string, timeout = 10_000): Promise<T> {\n2026-11-14T09:00:27.1551215Z 29 |   let timer: ReturnType<typeof setTimeout> | undefined\n2026-11-14T09:00:27.1551471Z 30 |   try {\n2026-11-14T09:00:27.1551798Z 31 |     return await Promise.race([operation, new Promise<never>((_, reject) => {\n2026-11-14T09:00:27.1552302Z 32 |       timer = setTimeout(() => reject(new Error(\"WP01 browser timed out: \" + stage)), timeout)\n2026-11-14T09:00:27.1552667Z                                                ^\n2026-11-14T09:00:27.1553024Z error: WP01 browser timed out: single Chromium launch and PID acquisition\n2026-11-14T09:00:27.1553748Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:32:43\n2026-11-14T09:00:27.1554205Z (fail) (unnamed) [0.14ms]"
+    },
+    {
+      "status": "fail",
+      "name": "All editor screens keep readable field widths and ordered configuration sections",
+      "duration_ms": 284.79,
+      "path": "modules/sucafina/Sucafinav1/test/form-layout.test.ts",
+      "log_line": 1190,
+      "kind": "named_test",
+      "failure_family": "wp01_browser_initial_launch_and_poisoned_pool",
+      "test_body_reached": true,
+      "browser_journey_reached": false,
+      "excerpt": "2026-11-14T09:00:27.4606709Z 170 | \n2026-11-14T09:00:27.4607166Z 171 | /** A lease is reserved before any await. No concurrent caller or replacement\n2026-11-14T09:00:27.4608107Z 172 |  * Chromium is admitted. Existing consumers keep isolated contexts per case. */\n2026-11-14T09:00:27.4608594Z 173 | export async function launchWp01Browser(): Promise<Browser> {\n2026-11-14T09:00:27.4609076Z 174 |   if (pool.sealed) throw new Error(\"WP01 browser selection has already been finalized\")\n2026-11-14T09:00:27.4609699Z 175 |   if (pool.failed) throw new Error(\"WP01 browser pool is unavailable after an earlier failure\", { cause: pool.failure })\n2026-11-14T09:00:27.4610212Z                                    ^\n2026-11-14T09:00:27.4610602Z error: WP01 browser pool is unavailable after an earlier failure\n2026-11-14T09:00:27.4611561Z       at launchWp01Browser (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:175:30)\n2026-11-14T09:00:27.4612336Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/form-layout.test.ts:23:25)\n2026-11-14T09:00:27.4612684Z \n2026-11-14T09:00:27.4612760Z 27 | \n2026-11-14T09:00:27.4613146Z 28 | async function bounded<T>(operation: Promise<T>, stage: string, timeout = 10_000): Promise<T> {\n2026-11-14T09:00:27.4613773Z 29 |   let timer: ReturnType<typeof setTimeout> | undefined\n2026-11-14T09:00:27.4614076Z 30 |   try {\n2026-11-14T09:00:27.4614414Z 31 |     return await Promise.race([operation, new Promise<never>((_, reject) => {\n2026-11-14T09:00:27.4614916Z 32 |       timer = setTimeout(() => reject(new Error(\"WP01 browser timed out: \" + stage)), timeout)\n2026-11-14T09:00:27.4615315Z                                                ^\n2026-11-14T09:00:27.4615682Z error: WP01 browser timed out: single Chromium launch and PID acquisition\n2026-11-14T09:00:27.4616240Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:32:43\n2026-11-14T09:00:27.4617115Z (fail) All editor screens keep readable field widths and ordered configuration sections [284.79ms]"
+    },
+    {
+      "status": "pass",
+      "name": "the screen draws the server list, the footer is not a page, and a refused write is not saved",
+      "duration_ms": 3.77,
+      "path": "modules/sucafina/Sucafinav1/test/screen.test.ts",
+      "log_line": 1193,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "planner and procurement screens do not add a page and do not carry another surface",
+      "duration_ms": 1.39,
+      "path": "modules/sucafina/Sucafinav1/test/screen.test.ts",
+      "log_line": 1194,
+      "kind": "named_test"
+    },
+    {
+      "status": "fail",
+      "name": "Executive metrics align, fill the content area and fit desktop and mobile viewports",
+      "duration_ms": 1494.84,
+      "path": "modules/sucafina/Sucafinav1/test/visual-layout.test.ts",
+      "log_line": 1219,
+      "kind": "named_test",
+      "failure_family": "wp01_browser_initial_launch_and_poisoned_pool",
+      "test_body_reached": true,
+      "browser_journey_reached": false,
+      "excerpt": "2026-11-14T09:00:28.9818830Z 171 | /** A lease is reserved before any await. No concurrent caller or replacement\n2026-11-14T09:00:28.9819650Z 172 |  * Chromium is admitted. Existing consumers keep isolated contexts per case. */\n2026-11-14T09:00:28.9820421Z 173 | export async function launchWp01Browser(): Promise<Browser> {\n2026-11-14T09:00:28.9821233Z 174 |   if (pool.sealed) throw new Error(\"WP01 browser selection has already been finalized\")\n2026-11-14T09:00:28.9822282Z 175 |   if (pool.failed) throw new Error(\"WP01 browser pool is unavailable after an earlier failure\", { cause: pool.failure })\n2026-11-14T09:00:28.9822971Z                                    ^\n2026-11-14T09:00:28.9823441Z error: WP01 browser pool is unavailable after an earlier failure\n2026-11-14T09:00:28.9824508Z       at launchWp01Browser (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:175:30)\n2026-11-14T09:00:28.9825687Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/visual-layout.test.ts:58:6\n2026-11-14T09:00:28.9826410Z       at processTicksAndRejections (unknown:7:39)\n2026-11-14T09:00:28.9826686Z \n2026-11-14T09:00:28.9826780Z 27 | \n2026-11-14T09:00:28.9827381Z 28 | async function bounded<T>(operation: Promise<T>, stage: string, timeout = 10_000): Promise<T> {\n2026-11-14T09:00:28.9828113Z 29 |   let timer: ReturnType<typeof setTimeout> | undefined\n2026-11-14T09:00:28.9828601Z 30 |   try {\n2026-11-14T09:00:28.9828932Z 31 |     return await Promise.race([operation, new Promise<never>((_, reject) => {\n2026-11-14T09:00:28.9829441Z 32 |       timer = setTimeout(() => reject(new Error(\"WP01 browser timed out: \" + stage)), timeout)\n2026-11-14T09:00:28.9829810Z                                                ^\n2026-11-14T09:00:28.9830175Z error: WP01 browser timed out: single Chromium launch and PID acquisition\n2026-11-14T09:00:28.9830757Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:32:43\n2026-11-14T09:00:28.9831447Z (fail) Executive metrics align, fill the content area and fit desktop and mobile viewports [1494.84ms]"
+    },
+    {
+      "status": "pass",
+      "name": "UI lease pins the private Request and consumes once across concurrent dispatches",
+      "duration_ms": 6.59,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/ui-authority.test.ts",
+      "log_line": 1222,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "serializing UI context never recovers authority, and selectors cannot change its operation",
+      "duration_ms": 0.24,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/ui-authority.test.ts",
+      "log_line": 1223,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "revocation and changed access revision dispose UI admission before disclosure",
+      "duration_ms": 0.24,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/ui-authority.test.ts",
+      "log_line": 1224,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "expired UI context and invalid operation cannot acquire a Request or receipt",
+      "duration_ms": 0.2,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/ui-authority.test.ts",
+      "log_line": 1225,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "a transport readmission has a new call identity and preserves the host command intention",
+      "duration_ms": 0.2,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/ui-authority.test.ts",
+      "log_line": 1226,
+      "kind": "named_test"
+    },
+    {
+      "status": "fail",
+      "name": "contract context uses mounted evidence, survives a lost response, and rejects tamper and revocation",
+      "duration_ms": 130.83,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/contextual-decision.test.ts",
+      "log_line": 1253,
+      "kind": "named_test",
+      "failure_family": "wp01_browser_initial_launch_and_poisoned_pool",
+      "test_body_reached": true,
+      "browser_journey_reached": false,
+      "excerpt": "2026-11-14T09:00:29.1365283Z 171 | /** A lease is reserved before any await. No concurrent caller or replacement\n2026-11-14T09:00:29.1366371Z 172 |  * Chromium is admitted. Existing consumers keep isolated contexts per case. */\n2026-11-14T09:00:29.1367227Z 173 | export async function launchWp01Browser(): Promise<Browser> {\n2026-11-14T09:00:29.1368034Z 174 |   if (pool.sealed) throw new Error(\"WP01 browser selection has already been finalized\")\n2026-11-14T09:00:29.1369027Z 175 |   if (pool.failed) throw new Error(\"WP01 browser pool is unavailable after an earlier failure\", { cause: pool.failure })\n2026-11-14T09:00:29.1369734Z                                    ^\n2026-11-14T09:00:29.1370283Z error: WP01 browser pool is unavailable after an earlier failure\n2026-11-14T09:00:29.1371259Z       at launchWp01Browser (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:175:30)\n2026-11-14T09:00:29.1372607Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/contextual-decision.test.ts:100:19\n2026-11-14T09:00:29.1373476Z       at processTicksAndRejections (unknown:7:39)\n2026-11-14T09:00:29.1373957Z \n2026-11-14T09:00:29.1374067Z 27 | \n2026-11-14T09:00:29.1374679Z 28 | async function bounded<T>(operation: Promise<T>, stage: string, timeout = 10_000): Promise<T> {\n2026-11-14T09:00:29.1375388Z 29 |   let timer: ReturnType<typeof setTimeout> | undefined\n2026-11-14T09:00:29.1375790Z 30 |   try {\n2026-11-14T09:00:29.1376333Z 31 |     return await Promise.race([operation, new Promise<never>((_, reject) => {\n2026-11-14T09:00:29.1377172Z 32 |       timer = setTimeout(() => reject(new Error(\"WP01 browser timed out: \" + stage)), timeout)\n2026-11-14T09:00:29.1377551Z                                                ^\n2026-11-14T09:00:29.1377920Z error: WP01 browser timed out: single Chromium launch and PID acquisition\n2026-11-14T09:00:29.1378491Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:32:43\n2026-11-14T09:00:29.1379204Z (fail) contract context uses mounted evidence, survives a lost response, and rejects tamper and revocation [130.83ms]"
+    },
+    {
+      "status": "fail",
+      "name": "(unnamed)",
+      "duration_ms": 5.93,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/decision-mutations.test.ts",
+      "log_line": 1276,
+      "kind": "hook_failure",
+      "failure_family": "wp01_browser_initial_launch_and_poisoned_pool",
+      "test_body_reached": false,
+      "browser_journey_reached": false,
+      "excerpt": "2026-11-14T09:00:29.1503189Z 170 | \n2026-11-14T09:00:29.1503936Z 171 | /** A lease is reserved before any await. No concurrent caller or replacement\n2026-11-14T09:00:29.1504731Z 172 |  * Chromium is admitted. Existing consumers keep isolated contexts per case. */\n2026-11-14T09:00:29.1505501Z 173 | export async function launchWp01Browser(): Promise<Browser> {\n2026-11-14T09:00:29.1506322Z 174 |   if (pool.sealed) throw new Error(\"WP01 browser selection has already been finalized\")\n2026-11-14T09:00:29.1507405Z 175 |   if (pool.failed) throw new Error(\"WP01 browser pool is unavailable after an earlier failure\", { cause: pool.failure })\n2026-11-14T09:00:29.1508078Z                                    ^\n2026-11-14T09:00:29.1508611Z error: WP01 browser pool is unavailable after an earlier failure\n2026-11-14T09:00:29.1509736Z       at launchWp01Browser (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:175:30)\n2026-11-14T09:00:29.1511177Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/decision-mutations.test.ts:16:19)\n2026-11-14T09:00:29.1511907Z \n2026-11-14T09:00:29.1512015Z 27 | \n2026-11-14T09:00:29.1512657Z 28 | async function bounded<T>(operation: Promise<T>, stage: string, timeout = 10_000): Promise<T> {\n2026-11-14T09:00:29.1513419Z 29 |   let timer: ReturnType<typeof setTimeout> | undefined\n2026-11-14T09:00:29.1513961Z 30 |   try {\n2026-11-14T09:00:29.1514478Z 31 |     return await Promise.race([operation, new Promise<never>((_, reject) => {\n2026-11-14T09:00:29.1515352Z 32 |       timer = setTimeout(() => reject(new Error(\"WP01 browser timed out: \" + stage)), timeout)\n2026-11-14T09:00:29.1515953Z                                                ^\n2026-11-14T09:00:29.1516454Z error: WP01 browser timed out: single Chromium launch and PID acquisition\n2026-11-14T09:00:29.1517277Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:32:43\n2026-11-14T09:00:29.1517753Z (fail) (unnamed) [5.93ms]"
+    },
+    {
+      "status": "fail",
+      "name": "(unnamed)",
+      "duration_ms": 0.13,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/portfolio-recovery.test.ts",
+      "log_line": 1299,
+      "kind": "hook_failure",
+      "failure_family": "wp01_browser_initial_launch_and_poisoned_pool",
+      "test_body_reached": false,
+      "browser_journey_reached": false,
+      "excerpt": "2026-11-14T09:00:29.1579922Z 170 | \n2026-11-14T09:00:29.1580497Z 171 | /** A lease is reserved before any await. No concurrent caller or replacement\n2026-11-14T09:00:29.1581351Z 172 |  * Chromium is admitted. Existing consumers keep isolated contexts per case. */\n2026-11-14T09:00:29.1582102Z 173 | export async function launchWp01Browser(): Promise<Browser> {\n2026-11-14T09:00:29.1582881Z 174 |   if (pool.sealed) throw new Error(\"WP01 browser selection has already been finalized\")\n2026-11-14T09:00:29.1584126Z 175 |   if (pool.failed) throw new Error(\"WP01 browser pool is unavailable after an earlier failure\", { cause: pool.failure })\n2026-11-14T09:00:29.1584806Z                                    ^\n2026-11-14T09:00:29.1585355Z error: WP01 browser pool is unavailable after an earlier failure\n2026-11-14T09:00:29.1586382Z       at launchWp01Browser (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:175:30)\n2026-11-14T09:00:29.1587811Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/portfolio-recovery.test.ts:17:19)\n2026-11-14T09:00:29.1588519Z \n2026-11-14T09:00:29.1588621Z 27 | \n2026-11-14T09:00:29.1589056Z 28 | async function bounded<T>(operation: Promise<T>, stage: string, timeout = 10_000): Promise<T> {\n2026-11-14T09:00:29.1589513Z 29 |   let timer: ReturnType<typeof setTimeout> | undefined\n2026-11-14T09:00:29.1589769Z 30 |   try {\n2026-11-14T09:00:29.1590108Z 31 |     return await Promise.race([operation, new Promise<never>((_, reject) => {\n2026-11-14T09:00:29.1590625Z 32 |       timer = setTimeout(() => reject(new Error(\"WP01 browser timed out: \" + stage)), timeout)\n2026-11-14T09:00:29.1590998Z                                                ^\n2026-11-14T09:00:29.1591396Z error: WP01 browser timed out: single Chromium launch and PID acquisition\n2026-11-14T09:00:29.1592202Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:32:43\n2026-11-14T09:00:29.1592648Z (fail) (unnamed) [0.13ms]"
+    },
+    {
+      "status": "pass",
+      "name": "agenda resolves all, a selected project, and an explicit empty selection through real sources",
+      "duration_ms": 618.75,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/agenda.test.ts",
+      "log_line": 1302,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "operations agenda subsets retain only the chosen monthly register and its missing cells",
+      "duration_ms": 132.63,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/agenda-subselections.test.ts",
+      "log_line": 1305,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "operations agenda cannot attribute duplicate monthly values to one physical record",
+      "duration_ms": 302.77,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/agenda-subselections.test.ts",
+      "log_line": 1306,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "operations agenda revalidates source changes and current role access",
+      "duration_ms": 241.51,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/agenda-subselections.test.ts",
+      "log_line": 1307,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "executive agenda retains its selected aggregate fields and explicitly subsets signal sources",
+      "duration_ms": 596.67,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/agenda-subselections.test.ts",
+      "log_line": 1308,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "performance item projection uses real unique IDs and preserves source privacy and current period",
+      "duration_ms": 63.86,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/agenda-subselections.test.ts",
+      "log_line": 1309,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "performance agenda fails closed when the host has no physical item lifecycle",
+      "duration_ms": 54.81,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/agenda-subselections.test.ts",
+      "log_line": 1310,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "C06 observes exact dashboard data, distinguishes dependency changes, and fences current authority",
+      "duration_ms": 1903.7,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/confirmation.test.ts",
+      "log_line": 1313,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "historical record reissue permits material changes and a new day but rejects replacement",
+      "duration_ms": 299.57,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/historical-reissue.test.ts",
+      "log_line": 1316,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "historical dated entries keep the original competence after the observation year changes",
+      "duration_ms": 40.86,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/historical-reissue.test.ts",
+      "log_line": 1317,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "historical security captures revalidate current observation fields after the year changes",
+      "duration_ms": 88.22,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/historical-reissue.test.ts",
+      "log_line": 1318,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "historical binding preserves the captured fact after material edits and rechecks current access and physical identity",
+      "duration_ms": 140.22,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/historical-bindings.test.ts",
+      "log_line": 1321,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "a caller cannot alter a prepared historical capture and keep its authorization fence",
+      "duration_ms": 40.36,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/historical-bindings.test.ts",
+      "log_line": 1322,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "receipt version comes from one actor-visible canonical topic and domain version",
+      "duration_ms": 0.36,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/hot-topic-draft.test.ts",
+      "log_line": 1325,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "draft preview uses reissued scoped identity and rejects stale or revoked authority",
+      "duration_ms": 77.37,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/hot-topic-draft.test.ts",
+      "log_line": 1326,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "canonical hot topic retries once, detects changed intent and follows completion",
+      "duration_ms": 8.37,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/hot-topics.test.ts",
+      "log_line": 1329,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "action input is fixed before asynchronous host authorization",
+      "duration_ms": 0.29,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/hot-topics.test.ts",
+      "log_line": 1330,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "ambiguous normalized topic IDs cannot be read or updated",
+      "duration_ms": 0.31,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/hot-topics.test.ts",
+      "log_line": 1331,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "C12 dashboard producer prepares, independently reviews and applies the canonical Hot Topic without reopening it",
+      "duration_ms": 132.96,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/prepared-review.test.ts",
+      "log_line": 1334,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "C12 review rejects a forged preview, changed source, revocation and changed private choice binding",
+      "duration_ms": 63.71,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/prepared-review.test.ts",
+      "log_line": 1335,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "dashboard producer does not emit restricted content or its private dependency digest",
+      "duration_ms": 113.82,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/privacy-egress.test.ts",
+      "log_line": 1338,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "Portfolio reviews the canonical selection and drills into All Projects without exposing the register",
+      "duration_ms": 2.51,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/review-completion.test.ts",
+      "log_line": 1341,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "Portfolio order exposes watch preference and recorded dates, retaining undated records",
+      "duration_ms": 0.35,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/review-completion.test.ts",
+      "log_line": 1342,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "Portfolio cannot publish a record destination for missing or ambiguous physical IDs",
+      "duration_ms": 2.37,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/review-completion.test.ts",
+      "log_line": 1343,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "Security presents facts while all mutation controls remain in closed contextual editors",
+      "duration_ms": 3.75,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/review-completion.test.ts",
+      "log_line": 1344,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "Performance retains its read views and command scope with collapsed item and sub-item editing",
+      "duration_ms": 1.85,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/review-completion.test.ts",
+      "log_line": 1345,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "historical KPI year does not relabel current security actions, campaigns or incident status",
+      "duration_ms": 0.66,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/review-completion.test.ts",
+      "log_line": 1346,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "preview preserves field validation and the submitted draft without mutating the source",
+      "duration_ms": 9.19,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/validation-feedback.test.ts",
+      "log_line": 1349,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "apply returns the domain validation and conflicts expose only the authorized stored row",
+      "duration_ms": 3.3,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/validation-feedback.test.ts",
+      "log_line": 1350,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "real host protects metadata writes and captures under the all-surface C08 lock",
+      "duration_ms": 321.95,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/host-integration.test.ts",
+      "log_line": 1353,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "ReviewHost.select consumes real Performance item lifecycle and preserves an authorized subset",
+      "duration_ms": 696.47,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/host-integration.test.ts",
+      "log_line": 1354,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "C12 host persists the real draft and prepared binding, applies once, and reconciles its receipt",
+      "duration_ms": 2137.27,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/host-integration.test.ts",
+      "log_line": 1355,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "prepared host refuses replaced choice and forged metadata before touching the target or receipt",
+      "duration_ms": 1042.41,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/host-integration.test.ts",
+      "log_line": 1356,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "HTTP consumer checks origin, payload, action grant and never admits caller-supplied commands",
+      "duration_ms": 46.78,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/host-integration.test.ts",
+      "log_line": 1357,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "changing protected prepared content or its digest cannot substitute a C12 command",
+      "duration_ms": 843.46,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/host-integration.test.ts",
+      "log_line": 1358,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "Dashboard browser keeps the monthly draft through a real conflict, reviews three values and preserves record navigation",
+      "duration_ms": 3162.87,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/dashboard-browser.test.ts",
+      "log_line": 1362,
+      "kind": "named_test"
+    },
+    {
+      "status": "fail",
+      "name": "Dashboard contextual controls preserve a real agenda and record, then review and apply an existing C12 choice",
+      "duration_ms": 35275.36,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts",
+      "log_line": 1378,
+      "kind": "named_test",
+      "failure_family": "dashboard_draft_save_completion",
+      "test_body_reached": true,
+      "browser_journey_reached": true,
+      "excerpt": "2026-11-14T09:00:39.3001039Z (pass) changing protected prepared content or its digest cannot substitute a C12 command [843.46ms]\n2026-11-14T09:00:39.3001415Z \n2026-11-14T09:00:39.3001616Z Sucafinav1/test/product/wp02/dashboard-browser.test.ts:\n2026-11-14T09:00:42.4705529Z SF_WP02_BROWSER_DRIVER_PROOF {\"consumer\":\"dashboard-monthly\",\"clientRuntime\":{\"name\":\"bun\",\"version\":\"1.3.14\",\"pid\":4059},\"driverRuntime\":{\"name\":\"node\",\"version\":\"24.22.2\",\"pid\":4458},\"playwrightVersion\":\"1.59.1\",\"browserVersion\":\"157.0.8103.50\",\"browserPid\":4473,\"transport\":\"playwright-unix-pipe-node-websocket\",\"spawnBoundary\":\"AppProcess\",\"browserStdioCount\":5,\"browserUsesPipe\":true,\"browserPipeOwner\":\"node\",\"bridge\":{\"framing\":\"json-nul\",\"acceptedClients\":1,\"framesToBrowser\":74,\"framesFromBrowser\":228,\"peakQueuedBytes\":2460,\"peakBufferedBytes\":661,\"maxFrameBytes\":16777216,\"maxQueuedBytes\":33554432,\"directoryMode\":448,\"socketMode\":384},\"lifecycle\":{\"remainingContexts\":0,\"connected\":false,\"nodeExitCode\":0,\"browserExitCode\":0,\"browserSignal\":null,\"bridgeClosed\":true,\"listenerClosed\":true,\"socketClosed\":true,\"pipeEnded\":true,\"webSocketOpened\":true,\"webSocketClosed\":true,\"webSocketCloseCode\":1000,\"webSocketCloseWasClean\":true,\"pendingFrameBytes\":0,\"queuedWriteBytes\":0,\"socketRemoved\":true,\"directoryRemoved\":true}}\n2026-11-14T09:00:42.4715138Z (pass) Dashboard browser keeps the monthly draft through a real conflict, reviews three values and preserves record navigation [3162.87ms]\n2026-11-14T09:00:42.4715655Z \n2026-11-14T09:00:42.4715829Z Sucafinav1/test/product/wp02/host-workbench.test.ts:\n2026-11-14T09:01:17.7554759Z 197 |     await panel.getByLabel(\"Ação\", { exact: true }).fill(\"Approved new action\")\n2026-11-14T09:01:17.7555351Z 198 |     await panel.getByLabel(\"Prazo\", { exact: true }).fill(\"2026-12-20\")\n2026-11-14T09:01:17.7555842Z 199 |     await panel.getByLabel(/^Prioridade/).selectOption(\"high\")\n2026-11-14T09:01:17.7556329Z 200 |     await panel.getByLabel(\"Notas\", { exact: true }).fill(\"Reviewed with Operations\")\n2026-11-14T09:01:17.7557168Z 201 |     await panel.getByRole(\"button\", { name: \"Salvar rascunho\", exact: true }).click()\n2026-11-14T09:01:17.7557685Z 202 |     await panel.getByText(\"Rascunho salvo.\", { exact: false }).waitFor()\n2026-11-14T09:01:17.7558054Z                                                                      ^\n2026-11-14T09:01:17.7558366Z TimeoutError: for: Timeout 30000ms exceeded.\n2026-11-14T09:01:17.7558600Z Call log:\n2026-11-14T09:01:17.7558949Z   - waiting for locator('[data-dashboard-workbench]').getByText('Rascunho salvo.') to be visible\n2026-11-14T09:01:17.7559246Z \n2026-11-14T09:01:17.7559617Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts:202:64\n2026-11-14T09:01:17.7560112Z       at processTicksAndRejections (native:7:39)\n2026-11-14T09:01:17.7560690Z (fail) Dashboard contextual controls preserve a real agenda and record, then review and apply an existing C12 choice [35275.36ms]"
+    },
+    {
+      "status": "fail",
+      "name": "Dashboard draft conflict reloads the same draft identity and preserves local edits until the current base is confirmed",
+      "duration_ms": 16520.74,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts",
+      "log_line": 1423,
+      "kind": "named_test",
+      "failure_family": "dashboard_draft_save_completion",
+      "test_body_reached": true,
+      "browser_journey_reached": true,
+      "excerpt": "2026-11-14T09:01:34.1786367Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts:215:11\n2026-11-14T09:01:34.1787015Z       at processTicksAndRejections (native:7:39)\n2026-11-14T09:01:34.1787191Z \n2026-11-14T09:01:34.1788084Z SF_WP02_DRAFT_CONFLICT_SERVER_TRACE [{\"mode\":\"dashboard-workbench\",\"method\":\"POST\",\"state\":\"returned\",\"status\":200,\"elapsedMs\":331},{\"mode\":\"dashboard-hot-topic-draft\",\"method\":\"POST\",\"state\":\"returned\",\"status\":200,\"elapsedMs\":89}]\n2026-11-14T09:01:34.1788930Z SF_WP02_DRAFT_CONFLICT_PHASE {\"phase\":\"browser.close\",\"state\":\"started\"}\n2026-11-14T09:01:34.1789470Z SF_WP02_DRAFT_CONFLICT_PHASE {\"phase\":\"fixture.close\",\"state\":\"started\"}\n2026-11-14T09:01:34.1797965Z SF_WP02_DRAFT_CONFLICT_PHASE {\"phase\":\"fixture.close\",\"state\":\"returned\",\"elapsedMs\":2}\n2026-11-14T09:01:34.2759141Z SF_WP02_DRAFT_CONFLICT_PHASE {\"phase\":\"browser.close\",\"state\":\"returned\",\"elapsedMs\":98}\n2026-11-14T09:01:34.2760173Z 305 |     const save = (tab: typeof page, target: typeof panel, name: string) => phase(name, async () => {\n2026-11-14T09:01:34.2761044Z 306 |       // A successful write can be followed by a failed discovery. Qualify both\n2026-11-14T09:01:34.2761812Z 307 |       // actual responses and the complete success state before selecting again.\n2026-11-14T09:01:34.2762463Z 308 |       const [written, discovered] = await Promise.all([\n2026-11-14T09:01:34.2763885Z 309 |         tab.waitForResponse((response) => response.request().method() === \"POST\" && new URL(response.url()).searchParams.get(\"sf\") === \"dashboard-hot-topic-draft\"),\n2026-11-14T09:01:34.2765104Z 310 |         tab.waitForResponse((response) => response.request().method() === \"POST\" && new URL(response.url()).searchParams.get(\"sf\") === \"dashboard-workbench\"),\n2026-11-14T09:01:34.2765597Z                   ^\n2026-11-14T09:01:34.2766395Z TimeoutError: forResponse: Timeout 15000ms exceeded while waiting for event \"response\"\n2026-11-14T09:01:34.2767468Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts:310:13\n2026-11-14T09:01:34.2768490Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts:161:27\n2026-11-14T09:01:34.2769625Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts:215:11\n2026-11-14T09:01:34.2770321Z       at processTicksAndRejections (native:7:39)\n2026-11-14T09:01:34.2771182Z (fail) Dashboard draft conflict reloads the same draft identity and preserves local edits until the current base is confirmed [16520.74ms]"
+    },
+    {
+      "status": "pass",
+      "name": "Dashboard discovery fences participant removal after options were assembled",
+      "duration_ms": 73.65,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts",
+      "log_line": 1424,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "Dashboard discovery resolves real ticket months and Executive signal records",
+      "duration_ms": 642.91,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts",
+      "log_line": 1425,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "Dashboard contextual draft retains edits when current write authority is withdrawn",
+      "duration_ms": 1836.1,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/host-workbench.test.ts",
+      "log_line": 1426,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "WP08 handoff recovers a lost C03 response after SQLite reopen and follows the same action through update and completion",
+      "duration_ms": 3020.15,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/collaboration-consumer.test.ts",
+      "log_line": 1431,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "WP08 explicit intentions with the same title stay distinct and a changed correlation conflicts",
+      "duration_ms": 1929.62,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/collaboration-consumer.test.ts",
+      "log_line": 1432,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "WP08 requires the human grant and refuses a contributor even with readable source evidence",
+      "duration_ms": 312.09,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/collaboration-consumer.test.ts",
+      "log_line": 1433,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "WP08 revalidates an admitted human lease after the persisted role is withdrawn",
+      "duration_ms": 98.28,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/collaboration-consumer.test.ts",
+      "log_line": 1434,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "WP08 rejects revoked source scopes and removed Hot Topic references without recreating an action",
+      "duration_ms": 1179.93,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/collaboration-consumer.test.ts",
+      "log_line": 1435,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "WP08 does not copy sensitive Talent values and rejects the source when current access is withdrawn",
+      "duration_ms": 1706.56,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/collaboration-consumer.test.ts",
+      "log_line": 1436,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "AM02: real SessionV2 skill admission reaches Dashboard, KPI and WP05 through native C16 with current authority",
+      "duration_ms": 10177.47,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/native-capabilities.test.ts",
+      "log_line": 1478,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "C17 real Atlas preserves Dashboard source metadata and durable memory after reopen",
+      "duration_ms": 61645.11,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/atlas-consumer.test.ts",
+      "log_line": 1530,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "C17 Atlas capability validates its schema and denies caller-selected ownership and another principal",
+      "duration_ms": 108286.35,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/atlas-consumer.test.ts",
+      "log_line": 1566,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "C17 a changed Dashboard fingerprint invalidates its memory while an independent source stays readable",
+      "duration_ms": 24697.59,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/atlas-consumer.test.ts",
+      "log_line": 1602,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "C17 replacement record identity and current ACL withdrawal cannot inherit prior Atlas authority",
+      "duration_ms": 4176.98,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/atlas-consumer.test.ts",
+      "log_line": 1646,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "C17 Atlas storage reconciles rollback and a lost committed reply while rejecting a corrupted capture",
+      "duration_ms": 115314.42,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/atlas-consumer.test.ts",
+      "log_line": 1698,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "C17 the qualified real scanner refuses unsafe memory and fails closed when absent or timed out",
+      "duration_ms": 9093.83,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/atlas-consumer.test.ts",
+      "log_line": 1736,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "C17 bounded recall rejects a persisted source change after its protected observation",
+      "duration_ms": 21887.9,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/atlas-consumer.test.ts",
+      "log_line": 1759,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "C17 bounded recall rejects withdrawn access after its protected observation",
+      "duration_ms": 22389.01,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/atlas-consumer.test.ts",
+      "log_line": 1784,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "C17 bounded recall rejects a corrupted capture after its protected egress read",
+      "duration_ms": 54187.98,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/atlas-consumer.test.ts",
+      "log_line": 1808,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "Dashboard app delegates reviewed JSON import and authorized report download to the real producers",
+      "duration_ms": 3710.26,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/import-report-consumer.test.ts",
+      "log_line": 1813,
+      "kind": "named_test"
+    },
+    {
+      "status": "pass",
+      "name": "all published dashboard pages read through scoped sources and current authority",
+      "duration_ms": 400.13,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/capabilities-e2e.test.ts",
+      "log_line": 1816,
+      "kind": "named_test"
+    },
+    {
+      "status": "fail",
+      "name": "(unnamed)",
+      "duration_ms": 0.28,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-recovery.test.ts",
+      "log_line": 1839,
+      "kind": "hook_failure",
+      "failure_family": "wp01_browser_initial_launch_and_poisoned_pool",
+      "test_body_reached": false,
+      "browser_journey_reached": false,
+      "excerpt": "2026-11-14T09:09:01.2136355Z 170 | \n2026-11-14T09:09:01.2136970Z 171 | /** A lease is reserved before any await. No concurrent caller or replacement\n2026-11-14T09:09:01.2137555Z 172 |  * Chromium is admitted. Existing consumers keep isolated contexts per case. */\n2026-11-14T09:09:01.2138079Z 173 | export async function launchWp01Browser(): Promise<Browser> {\n2026-11-14T09:09:01.2138598Z 174 |   if (pool.sealed) throw new Error(\"WP01 browser selection has already been finalized\")\n2026-11-14T09:09:01.2139282Z 175 |   if (pool.failed) throw new Error(\"WP01 browser pool is unavailable after an earlier failure\", { cause: pool.failure })\n2026-11-14T09:09:01.2139743Z                                    ^\n2026-11-14T09:09:01.2140083Z error: WP01 browser pool is unavailable after an earlier failure\n2026-11-14T09:09:01.2140737Z       at launchWp01Browser (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:175:30)\n2026-11-14T09:09:01.2141889Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/shell-recovery.test.ts:35:41)\n2026-11-14T09:09:01.2142318Z \n2026-11-14T09:09:01.2142468Z 27 | \n2026-11-14T09:09:01.2142866Z 28 | async function bounded<T>(operation: Promise<T>, stage: string, timeout = 10_000): Promise<T> {\n2026-11-14T09:09:01.2143351Z 29 |   let timer: ReturnType<typeof setTimeout> | undefined\n2026-11-14T09:09:01.2144013Z 30 |   try {\n2026-11-14T09:09:01.2145817Z 31 |     return await Promise.race([operation, new Promise<never>((_, reject) => {\n2026-11-14T09:09:01.2146523Z 32 |       timer = setTimeout(() => reject(new Error(\"WP01 browser timed out: \" + stage)), timeout)\n2026-11-14T09:09:01.2146889Z                                                ^\n2026-11-14T09:09:01.2147253Z error: WP01 browser timed out: single Chromium launch and PID acquisition\n2026-11-14T09:09:01.2147821Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:32:43\n2026-11-14T09:09:01.2148272Z (fail) (unnamed) [0.28ms]"
+    },
+    {
+      "status": "fail",
+      "name": "Dashboard recovers a committed draft after response loss, restores only its authorized identity on reload, and fences revoked late discovery",
+      "duration_ms": 32412.87,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+      "log_line": 1855,
+      "kind": "named_test",
+      "failure_family": "dashboard_draft_save_completion",
+      "test_body_reached": true,
+      "browser_journey_reached": true,
+      "excerpt": "2026-11-14T09:09:01.2146523Z 32 |       timer = setTimeout(() => reject(new Error(\"WP01 browser timed out: \" + stage)), timeout)\n2026-11-14T09:09:01.2146889Z                                                ^\n2026-11-14T09:09:01.2147253Z error: WP01 browser timed out: single Chromium launch and PID acquisition\n2026-11-14T09:09:01.2147821Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:32:43\n2026-11-14T09:09:01.2148272Z (fail) (unnamed) [0.28ms]\n2026-11-14T09:09:01.2148407Z \n2026-11-14T09:09:01.2154470Z Sucafinav1/test/product/wp02/workbench-recovery.test.ts:\n2026-11-14T09:09:33.6501493Z 64 |     expect(await panel.getByLabel(/^Caso/).isDisabled()).toBe(true)\n2026-11-14T09:09:33.6502364Z 65 |     expect(await panel.locator(\"[data-dashboard-pending]\").getAttribute(\"data-dirty\")).toBe(\"true\")\n2026-11-14T09:09:33.6503080Z 66 |     const committed = await currentDraft(f)\n2026-11-14T09:09:33.6503951Z 67 |     expect(committed).toMatchObject({ version: 1, fields: { action: \"Retained private draft\" } })\n2026-11-14T09:09:33.6504883Z 68 |     await panel.getByRole(\"button\", { name: \"Repetir mesma tentativa\", exact: true }).click()\n2026-11-14T09:09:33.6505670Z 69 |     await panel.getByText(\"Rascunho salvo.\", { exact: false }).waitFor()\n2026-11-14T09:09:33.6506230Z                                                                     ^\n2026-11-14T09:09:33.6506703Z TimeoutError: for: Timeout 30000ms exceeded.\n2026-11-14T09:09:33.6507067Z Call log:\n2026-11-14T09:09:33.6507665Z   - waiting for locator('[data-dashboard-workbench]').getByText('Rascunho salvo.') to be visible\n2026-11-14T09:09:33.6508128Z \n2026-11-14T09:09:33.6509124Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts:69:64\n2026-11-14T09:09:33.6509946Z       at processTicksAndRejections (native:7:39)\n2026-11-14T09:09:33.6510831Z (fail) Dashboard recovers a committed draft after response loss, restores only its authorized identity on reload, and fences revoked late discovery [32412.87ms]"
+    },
+    {
+      "status": "fail",
+      "name": "Dashboard recovers the same C12 application receipt after a committed response is lost and the page reloads",
+      "duration_ms": 32106.2,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+      "log_line": 1869,
+      "kind": "named_test",
+      "failure_family": "dashboard_draft_save_completion",
+      "test_body_reached": true,
+      "browser_journey_reached": true,
+      "excerpt": "2026-11-14T09:09:33.6506703Z TimeoutError: for: Timeout 30000ms exceeded.\n2026-11-14T09:09:33.6507067Z Call log:\n2026-11-14T09:09:33.6507665Z   - waiting for locator('[data-dashboard-workbench]').getByText('Rascunho salvo.') to be visible\n2026-11-14T09:09:33.6508128Z \n2026-11-14T09:09:33.6509124Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts:69:64\n2026-11-14T09:09:33.6509946Z       at processTicksAndRejections (native:7:39)\n2026-11-14T09:09:33.6510831Z (fail) Dashboard recovers a committed draft after response loss, restores only its authorized identity on reload, and fences revoked late discovery [32412.87ms]\n2026-11-14T09:10:05.7564084Z 142 |     const page = await driver.browser.newPage(), errors: string[] = []\n2026-11-14T09:10:05.7564772Z 143 |     page.on(\"pageerror\", (error) => errors.push(error.message))\n2026-11-14T09:10:05.7565287Z 144 |     const panel = await openWorkbench(page, f)\n2026-11-14T09:10:05.7565895Z 145 |     await editNewDraft(page, \"Applied once despite response loss\")\n2026-11-14T09:10:05.7566702Z 146 |     await panel.getByRole(\"button\", { name: \"Salvar rascunho\", exact: true }).click()\n2026-11-14T09:10:05.7567441Z 147 |     await panel.getByText(\"Rascunho salvo.\", { exact: false }).waitFor()\n2026-11-14T09:10:05.7568065Z                                                                      ^\n2026-11-14T09:10:05.7568567Z TimeoutError: for: Timeout 30000ms exceeded.\n2026-11-14T09:10:05.7568932Z Call log:\n2026-11-14T09:10:05.7569488Z   - waiting for locator('[data-dashboard-workbench]').getByText('Rascunho salvo.') to be visible\n2026-11-14T09:10:05.7569943Z \n2026-11-14T09:10:05.7570547Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts:147:64\n2026-11-14T09:10:05.7571052Z       at processTicksAndRejections (native:7:39)\n2026-11-14T09:10:05.7571607Z (fail) Dashboard recovers the same C12 application receipt after a committed response is lost and the page reloads [32106.20ms]"
+    },
+    {
+      "status": "fail",
+      "name": "WP01 shares one Chromium across files, releases every lease, and proves final process exit",
+      "duration_ms": 0.68,
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "log_line": 1922,
+      "kind": "named_test",
+      "failure_family": "wp01_browser_initial_launch_and_poisoned_pool",
+      "test_body_reached": true,
+      "browser_journey_reached": false,
+      "excerpt": "2026-11-14T09:10:05.7704382Z 235 |   if (pool.failed) failures.push(pool.failure)\n2026-11-14T09:10:05.7704904Z 236 |   if (pool.launches !== 1) failures.push(new Error(\"WP01 selection did not share exactly one Chromium launch\"))\n2026-11-14T09:10:05.7705576Z 237 |   if (activeLease || pool.releasing) failures.push(new Error(\"WP01 browser lease remains active at finalization\"))\n2026-11-14T09:10:05.7706191Z 238 |   if (contexts !== 0) failures.push(new Error(\"WP01 browser contexts remain at finalization\"))\n2026-11-14T09:10:05.7706927Z 239 |   if (pool.acquisitions === 0 || pool.acquisitions !== pool.releases) failures.push(new Error(\"WP01 browser acquisition/release counts do not match\"))\n2026-11-14T09:10:05.7707495Z                                                                                               ^\n2026-11-14T09:10:05.7707871Z error: WP01 browser acquisition/release counts do not match\n2026-11-14T09:10:05.7708527Z       at finishWp01BrowserLifecycle (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:239:89)\n2026-11-14T09:10:05.7709392Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts:9:26)\n2026-11-14T09:10:05.7709872Z 88 | }\n2026-11-14T09:10:05.7710033Z 89 | \n2026-11-14T09:10:05.7710269Z 90 | function shutdownBrowser(): Promise<void> {\n2026-11-14T09:10:05.7710582Z 91 |   if (pool.shutdown) return pool.shutdown\n2026-11-14T09:10:05.7710867Z 92 |   const browser = pool.browser\n2026-11-14T09:10:05.7711575Z 93 |   if (!browser) return Promise.reject(new Error(\"WP01 browser was never acquired in this shared module\"))\n2026-11-14T09:10:05.7712005Z                                                ^\n2026-11-14T09:10:05.7712336Z error: WP01 browser was never acquired in this shared module\n2026-11-14T09:10:05.7712928Z       at shutdownBrowser (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:93:43)\n2026-11-14T09:10:05.7713979Z       at finishWp01BrowserLifecycle (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:240:15)\n2026-11-14T09:10:05.7714802Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts:9:26)\n2026-11-14T09:10:05.7715515Z (fail) WP01 shares one Chromium across files, releases every lease, and proves final process exit [0.68ms]"
+    }
+  ],
+  "proof_records": {
+    "SF_WP02_BROWSER_DRIVER_PROOF": [
+      {
+        "log_line": 905,
+        "value": {
+          "consumer": "preview-in-flight",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4059
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 4143
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 4174,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 14,
+            "framesFromBrowser": 57,
+            "peakQueuedBytes": 1923,
+            "peakBufferedBytes": 457,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        }
+      },
+      {
+        "log_line": 986,
+        "value": {
+          "consumer": "personal-views",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4059
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 4303
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 4318,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 23,
+            "framesFromBrowser": 96,
+            "peakQueuedBytes": 2458,
+            "peakBufferedBytes": 649,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        }
+      },
+      {
+        "log_line": 1361,
+        "value": {
+          "consumer": "dashboard-monthly",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4059
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 4458
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 4473,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 74,
+            "framesFromBrowser": 228,
+            "peakQueuedBytes": 2460,
+            "peakBufferedBytes": 661,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        }
+      },
+      {
+        "log_line": 1427,
+        "value": {
+          "consumer": "host-write-authority",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4059
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 4883
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 4898,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 24,
+            "framesFromBrowser": 87,
+            "peakQueuedBytes": 2458,
+            "peakBufferedBytes": 555,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        }
+      }
+    ],
+    "AM02_NATIVE_CAPABILITY": [
+      {
+        "log_line": 1475,
+        "value": {
+          "scope": "SessionV2.skill(resume:false), host admission, C16 and consumer; no LLM/GNATIVE assertion",
+          "transports": [
+            "ui",
+            "native-direct",
+            "native-wrapper/private-mcp"
+          ],
+          "skillReceipt": {
+            "runId": "947ddb14-9a17-4307-9870-a6e3f23a23de",
+            "nativeSessionId": "ses_e26b56c51ffeoow14MoMufJBXN",
+            "profileId": "sf_maestro",
+            "profileVersion": "1.0.0",
+            "profileDigest": "90ff882d8c4ff48234efd5cd2c0de01cd8e917c22256b12dd9321610c4490bcb",
+            "skillId": "sf-produzir-bi-contextual",
+            "skillVersion": "1.0.0",
+            "sourceDigest": "db1f3b552ea8d317ce8c27cc7e69f7912630ec314f1adfdb789137fccd48dfd7",
+            "instructionsDigest": "4b0f8eda17125e40a9458f9390328419f9460a34f291c0d7ab9636ed89686bd0",
+            "loadedMessageId": "msg_1d94a958e001q0Ly5fhmYfS2dr",
+            "loadedAt": "2026-11-14T09:01:46.262Z",
+            "manifestDigest": "d00c7ce2e450fc15fda8d35ebf1c27eeff43833ad2bb35b5b8e4548a9054c31d"
+          },
+          "receipt": {
+            "operation": "sf_dashboard_read",
+            "handlerExport": "readDashboard",
+            "inputDigest": "4ef8922a1cd7520fd18940cc93954ec821426e468884294623dffa45c7ac6126",
+            "resultDigest": "f797651a6dd20e7d6d2bf29e40a65e42988371fe27efcb4b8bf0e6e1c12058f9",
+            "principalRef": "person",
+            "accessRevision": "090e4e63213695b771a5e137f6844e92cdea8bc2f4c6a9c72a8550a96b6227de"
+          }
+        }
+      },
+      {
+        "log_line": 1476,
+        "value": {
+          "scope": "SessionV2.skill(resume:false), host admission, C16 and consumer; no LLM/GNATIVE assertion",
+          "transports": [
+            "ui",
+            "native-direct",
+            "native-wrapper/private-mcp"
+          ],
+          "skillReceipt": {
+            "runId": "0ca346ff-dbe0-408d-adb6-68fb6db176b1",
+            "nativeSessionId": "ses_e26b56a32ffelwihmGCMv0Ijhl",
+            "profileId": "sf_finance",
+            "profileVersion": "1.0.0",
+            "profileDigest": "89631395da62d761eadbb8801d1ebeb634dbe8a297b91ba73e0734d663100793",
+            "skillId": "sf-explicar-forecast",
+            "skillVersion": "1.0.0",
+            "sourceDigest": "7ebaf18536cb91d9ab6a075e45cc1d85147b544bae8eb5a2915d39f533c1e740",
+            "instructionsDigest": "ba80c66c9a4b41677c0e2ffb94f94cc63b5e2a3c81e8a4a230739d80f0ff9227",
+            "loadedMessageId": "msg_1d94a963b001Th9jaAhryba2R1",
+            "loadedAt": "2026-11-14T09:01:46.439Z",
+            "manifestDigest": "d00c7ce2e450fc15fda8d35ebf1c27eeff43833ad2bb35b5b8e4548a9054c31d"
+          },
+          "receipt": {
+            "operation": "sf_kpi_explain",
+            "handlerExport": "explainKpi",
+            "inputDigest": "182533f194ee4bf4a04666a8f3037f74d087ec2607f89f390710e755dbc32819",
+            "resultDigest": "611b01ef13f6dd657de67cbfb02b6eb28584a6425e208915a86391bf3e1a689d",
+            "principalRef": "person",
+            "accessRevision": "090e4e63213695b771a5e137f6844e92cdea8bc2f4c6a9c72a8550a96b6227de"
+          }
+        }
+      },
+      {
+        "log_line": 1477,
+        "value": {
+          "scope": "SessionV2.skill(resume:false), host admission, C16 and consumer; no LLM/GNATIVE assertion",
+          "transports": [
+            "ui",
+            "native-direct",
+            "native-wrapper/private-mcp"
+          ],
+          "skillReceipt": {
+            "runId": "52184d74-6bef-48ed-a94e-c23ed078accf",
+            "nativeSessionId": "ses_e26b56993ffebf5QW3EOCtqMcJ",
+            "profileId": "sf_finance",
+            "profileVersion": "1.0.0",
+            "profileDigest": "89631395da62d761eadbb8801d1ebeb634dbe8a297b91ba73e0734d663100793",
+            "skillId": "sf-produzir-bi-contextual",
+            "skillVersion": "1.0.0",
+            "sourceDigest": "db1f3b552ea8d317ce8c27cc7e69f7912630ec314f1adfdb789137fccd48dfd7",
+            "instructionsDigest": "4b0f8eda17125e40a9458f9390328419f9460a34f291c0d7ab9636ed89686bd0",
+            "loadedMessageId": "msg_1d94a96ac00103tdGNb936gJaT",
+            "loadedAt": "2026-11-14T09:01:46.544Z",
+            "manifestDigest": "d00c7ce2e450fc15fda8d35ebf1c27eeff43833ad2bb35b5b8e4548a9054c31d"
+          },
+          "receipt": {
+            "operation": "sf_bi_view",
+            "handlerExport": "readBiView",
+            "inputDigest": "f2c33a028d63910ae22d13db7c31884602c388d9ee3aca33dcd0a53bf701d4cc",
+            "resultDigest": "f797651a6dd20e7d6d2bf29e40a65e42988371fe27efcb4b8bf0e6e1c12058f9",
+            "principalRef": "person",
+            "accessRevision": "090e4e63213695b771a5e137f6844e92cdea8bc2f4c6a9c72a8550a96b6227de"
+          }
+        }
+      }
+    ],
+    "SF_ATLAS_DASHBOARD_PROOF": [
+      {
+        "log_line": 1525,
+        "value": {
+          "scenario": "metadata-durable",
+          "boundaryModule": "file:///home/runner/work/Orchestra-SF/Orchestra-SF/modules/atlas/boundary/src/generated/business-memory-ports.js",
+          "scanner": {
+            "version": "8.30.1",
+            "url": "https://github.com/gitleaks/gitleaks/releases/download/v8.30.1/gitleaks_8.30.1_linux_x64.tar.gz",
+            "sha256": "551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb",
+            "bytes": 8230402,
+            "observedVersion": "8.30.1"
+          },
+          "write": {
+            "status": "committed",
+            "sourceEventId": "9853c9b1-3924-4f07-9110-71e687f39113",
+            "eventId": "d55b20a495e0c6169857f91cc6faf6acf4090a136b6c20b4b58f663b46bc53c9",
+            "recordDigest": "6e992095b73476508060ab4e09e27fe2d8f88eec40cfef8a3c528020a50ac421",
+            "committedRevision": 5,
+            "scanner": {
+              "name": "gitleaks",
+              "version": "8.30.1",
+              "status": "clean"
+            }
+          },
+          "topicWrite": {
+            "status": "committed",
+            "sourceEventId": "e6e3df02-49af-4a8e-a5c3-c7fa2c7aa7e0",
+            "eventId": "4ffc1bad245c3d358a159cc6142dcc6a7741c40d782a29d3906e4e2a8eeba715",
+            "recordDigest": "9fe80ffa53f7b7670643d0ee3c89b174c699d5d4b1aa503e753246481a35343c",
+            "committedRevision": 6,
+            "scanner": {
+              "name": "gitleaks",
+              "version": "8.30.1",
+              "status": "clean"
+            }
+          },
+          "recalledEventId": "d55b20a495e0c6169857f91cc6faf6acf4090a136b6c20b4b58f663b46bc53c9",
+          "sourceVersions": {
+            "6ae6018212e62788fa4de28dcbf927c6b20159ecc5509b80e5ef76bcba8e1ef9": 1,
+            "c0c5dbc6c79c30d9a11b71fbb12633cb5a2ade767d2e8dc9b45ba97d0d10d49e": 2
+          },
+          "sourceIncarnations": {
+            "6ae6018212e62788fa4de28dcbf927c6b20159ecc5509b80e5ef76bcba8e1ef9": "c04e5b3b-7660-4936-900b-cd9fcf006557",
+            "c0c5dbc6c79c30d9a11b71fbb12633cb5a2ade767d2e8dc9b45ba97d0d10d49e": "b9d1b8a5-e450-4073-a0a6-29c4c557dcd3"
+          },
+          "durableReopen": true,
+          "sourceCheckedAt": "2026-11-13T08:00:00Z",
+          "reopenedSourceCheckedAt": "2026-11-13T10:00:00Z"
+        }
+      },
+      {
+        "log_line": 1561,
+        "value": {
+          "scenario": "capability-authority",
+          "write": {
+            "status": "committed",
+            "sourceEventId": "b377323b-d5a1-488a-b160-4ca70e939376",
+            "eventId": "fb9ddaacb42afdf619892f42b924366e1bbd5f4579da0aa2ef58ca69a052f910",
+            "recordDigest": "db058e7845d23a1e292b21819ec9891ed50b7d11f3f6f53613f12799c66f3483",
+            "committedRevision": 3,
+            "scanner": {
+              "name": "gitleaks",
+              "version": "8.30.1",
+              "status": "clean"
+            }
+          },
+          "matchedMemoryRecordRef": "fb9ddaacb42afdf619892f42b924366e1bbd5f4579da0aa2ef58ca69a052f910",
+          "matchedCaseRef": {
+            "id": "678f263a-090b-4a04-9dab-6cdeb61787bf",
+            "incarnation": "2fcfb8e0-b036-4ba0-be06-b4d7f4af64ec",
+            "version": 2
+          },
+          "schema": "sf_decision_recall",
+          "receiptKind": "ui",
+          "referenceForgery": "unavailable",
+          "ownerArguments": "needs-input",
+          "otherPrincipal": "unavailable",
+          "work": {
+            "protectedReads": 4,
+            "originalReads": 48
+          },
+          "movingClock": {
+            "stepMs": 1,
+            "environmentReads": 1473,
+            "startedAt": "2026-11-13T08:00:00Z",
+            "finishedAt": "2026-11-13T08:00:01.473Z",
+            "distinctSourceObservations": 5,
+            "firstObservedAt": "2026-11-13T08:00:00.006Z",
+            "lastObservedAt": "2026-11-13T08:00:01.135Z"
+          }
+        }
+      },
+      {
+        "log_line": 1597,
+        "value": {
+          "scenario": "source-fingerprint",
+          "write": {
+            "status": "committed",
+            "sourceEventId": "c3f3c7bf-de46-4fb3-a079-7a65e9b28b82",
+            "eventId": "e084c94678b722fedeff7e5dd9e3d852b00acaccf6d25f240772cd0611aaf055",
+            "recordDigest": "5977391d03c1921d371fe0b691473e132f7f1bf665f2f07964a90174d528a16c",
+            "committedRevision": 5,
+            "scanner": {
+              "name": "gitleaks",
+              "version": "8.30.1",
+              "status": "clean"
+            }
+          },
+          "independentWrite": {
+            "status": "committed",
+            "sourceEventId": "b1074120-bcb7-4f12-abd8-c1298cda2273",
+            "eventId": "77bc36afb5d4b228c0b05168b8bc787f9eb891bb37f35d4129a126cf1f0f409f",
+            "recordDigest": "115a38392591ff75884f453f78c5b7c133dc6bb643797cf754fe03500a64d789",
+            "committedRevision": 6,
+            "scanner": {
+              "name": "gitleaks",
+              "version": "8.30.1",
+              "status": "clean"
+            }
+          },
+          "changedSource": "unavailable",
+          "retainedMemoryEventId": "77bc36afb5d4b228c0b05168b8bc787f9eb891bb37f35d4129a126cf1f0f409f",
+          "atlasAndOutboxUnchanged": true
+        }
+      },
+      {
+        "log_line": 1641,
+        "value": {
+          "scenario": "replacement-current-acl",
+          "priorWrite": {
+            "status": "committed",
+            "sourceEventId": "cc4da760-5163-43b0-b903-7ff99e160f6e",
+            "eventId": "ac863f4de9ab6a7376c02ea057bf13dadb6f2ce78594a6c92e424d26a0b4f630",
+            "recordDigest": "5b4f159b748e4338507b80ecbe113c7ac6efa321c10df487b897ff5b0767177b",
+            "committedRevision": 3,
+            "scanner": {
+              "name": "gitleaks",
+              "version": "8.30.1",
+              "status": "clean"
+            }
+          },
+          "replacementWrite": {
+            "status": "committed",
+            "sourceEventId": "1368c4ff-11b9-40f8-a90b-07c8918ee4de",
+            "eventId": "aac7774944e32848c79af96e5719c45ffe7758a4349397aa962abf0e0bcb4504",
+            "recordDigest": "2b1d31bb76481aba8efe92ed23e608bade49e37b01b5274f24e01062f7be8c2a",
+            "committedRevision": 6,
+            "scanner": {
+              "name": "gitleaks",
+              "version": "8.30.1",
+              "status": "clean"
+            }
+          },
+          "originalIncarnation": "2b935193-0f4a-430f-803d-7a4039377715",
+          "replacementIncarnation": "61a5cd4e-78c9-41d7-911d-56e1612ec9de",
+          "replacedMemory": "unavailable",
+          "withdrawnLease": "unavailable",
+          "freshRequests": "unavailable",
+          "atlasAndOutboxUnchangedBeforeReplacementWrite": true
+        }
+      },
+      {
+        "log_line": 1693,
+        "value": {
+          "scenario": "storage-reconciliation",
+          "beforeCommit": "unavailable",
+          "afterCommit": "unavailable",
+          "reconciled": {
+            "status": "already-committed",
+            "sourceEventId": "680b103d-2a23-4687-9d3b-054b085558bd",
+            "eventId": "24e0a363cbe7351c0e90e870b985043c843d17a14bf643c85e0f456780b218f7",
+            "recordDigest": "277a0c1195fa9ed3dc6c9f2f6a54db1f2a9042177a807981d4b6b5ceacaf4ab3",
+            "committedRevision": 6,
+            "scanner": {
+              "name": "gitleaks",
+              "version": "8.30.1",
+              "status": "clean"
+            }
+          },
+          "storageFaults": 2,
+          "sharedSource": "readable",
+          "corruptedCapture": "unavailable",
+          "healthyCapture": "readable"
+        }
+      },
+      {
+        "log_line": 1731,
+        "value": {
+          "scenario": "scanner-failure-paths",
+          "observedScannerVersion": "8.30.1",
+          "archiveSha256": "551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb",
+          "scannerAbsent": "unavailable",
+          "scannerRestored": "committed",
+          "scannerHit": "refused",
+          "scannerTimeout": "unavailable",
+          "refusal": {
+            "status": "refused",
+            "sourceEventId": "69ec68f0-ce11-47e7-a24c-1b76d1bd522d",
+            "scanner": {
+              "name": "gitleaks",
+              "version": "8.30.1",
+              "status": "hit"
+            },
+            "reason": "scanner-blocked"
+          }
+        }
+      }
+    ]
+  },
+  "limits": [
+    "Results belong only to product903bcee2e007809f7614a7fff39dd5019f7f7733 and its exact request; W3 e5afff327dc64735bbd8a646124570a0c97a9c6b is not tested by this run.",
+    "WP01 direct-Bun Chromium launch exceeded its10s bound before PID acquisition. The pool failed closed and rejected later leases; no product failure is inferred from those dependent launch failures.",
+    "The7 unnamed failures are beforeAll acquisition failures; the individual test bodies in those files were not run.",
+    "All4 Dashboard failures stop during draft save or its completion/discovery; the lost-apply test did not reach application. The observed behavior is consistent with the903 receipt-shape bug fixed in W3, but this run does not validate that fix.",
+    "AM02 evidence is SessionV2.skill(resume:false), native C16 transport and consumer admission. It is not LLM output, GNATIVE or complete AM01-AM06 acceptance.",
+    "Four successful Node browser driver lifecycle proofs do not repair the failed WP01 browser lifecycle proof.",
+    "Atlas/scanner durable-path assertions passed in this run at903. They do not transfer a global green to any other product head or close the separate final S0 epic."
+  ]
+}

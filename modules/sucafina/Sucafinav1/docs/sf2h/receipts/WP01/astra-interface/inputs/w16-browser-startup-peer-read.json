@@ -1,0 +1,103 @@
+{
+  "schema": "astra-independent-peer-read-v1",
+  "reviewer": "ci_reconcile",
+  "status": "NO_BLOCKER_IN_SOURCE_REVIEW_RUNTIME_PENDING",
+  "base": {
+    "head": "5fe39f1259d2f8631cef6172aaa7e6c92f436801",
+    "tree": "68a8d13d3d60164670a7e95310b2cf1afb294e43"
+  },
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts",
+      "bytes": 15926,
+      "blob": "156beb2d4ea52e4312c3bfb3c3298bcc32edfc0e",
+      "sha256": "8e2673472d0e67e7756b0a7ad1b8eb5c743491385838351f6b7c184af41e59a7"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "bytes": 879,
+      "blob": "f681ca2a663d0540898c4b4472dce86355ef20ae",
+      "sha256": "6bf12141743b52d256b35f48e410eb52bb65fd556d0eecadece976cfe73ea080"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts",
+      "bytes": 33122,
+      "blob": "cd43fad88f3424ac160f32be743df17b80a74336",
+      "sha256": "31aae478fa5d1a0420ce26af5d340373090a9caf2f4676b73e8fd79b21fbb139"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/README.md",
+      "bytes": 5171,
+      "blob": "4bca9c1ef90e07e4167292d612cc55cc6330f26f",
+      "sha256": "7e6e5d473fa9ffcfd9efd375a5219459d308cc094dcc5cccce0e1441a3d7cdbc"
+    }
+  ],
+  "scope": "Read-only comparison of four candidate files, original W15 sources, deadline/cancellation control flow and preservation metadata; no product, typecheck, guards, browser, local test or CI execution.",
+  "findings": [],
+  "verified": [
+    "Only four authorized harness/README files differ from W15; no Core, Omni, workflow, AGENTS, CI.md, application UI or producer change.",
+    "WP01 uses one 30000ms acquisition deadline with a 35000ms named startup. The same absolute deadline is serialized as the fourth Node -e argument; Node validates consumer ceiling and recomputes remaining before the only launchServer expression.",
+    "Non-pool callers keep default and ceiling15000ms. All eleven existing non-pool call sites omit the optional startup argument; none gains the pool30000ms ceiling.",
+    "Client remaining() rejects <=0. Import, ready-race, Unix-pipe check and pool CDP/detach operations compute their deadline before constructing work. Connect evaluates its timeout before calling chromium.connect.",
+    "ready.promise has an immediate ownership observer. The original promise remains in the actual ready race, and finished.catch continues logging/rejecting it; the catch does not turn the awaited failure into success.",
+    "First cancellation fixes the cleanup observation window once. Scope ownership is awaited; the window never restarts. A scope finishing after5000ms yields incomplete with no late probes.",
+    "PID probes use signal0 only, accept ESRCH as absent, and reject missing IDs, invalid IDs, same-process IDs, observation errors or known present/unobserved processes. Child IDs are accumulated only when the diagnostic parent matches the observed Node PID.",
+    "Startup failure keeps its original error and includes cleanup errors in AggregateError. The separate receipt always states startupSucceeded:false and normalBridgeProof:false; observed-absent is limited to known PID absence, not transport or lifecycle success.",
+    "The original normal forward transport, closedMessage validation, close/proof/report, pool shutdown and lease/finalizer sections are byte-identical.",
+    "Five startup assertions, lifecycle file and24 dependent consumer files remain byte-identical; only the named startup timeout increases. No consumer operation/test bound changes.",
+    "README preserves the24-file dependency inventory and explicitly makes selection causal; next selection is startup, question-recipients, lifecycle only."
+  ],
+  "preservation": {
+    "startupAssertionLines": 5,
+    "dependentConsumersByteExact": 24,
+    "finalizerByteExact": true,
+    "normalSections": [
+      {
+        "section": "Node forwarding transport",
+        "byteExact": true,
+        "sha256": "07c6fa3e71fa30597c6155ac8dc16d97ece44e711bd496c0277453258f627b24"
+      },
+      {
+        "section": "closedMessage validation",
+        "byteExact": true,
+        "sha256": "6f9fb4d2fca800b0bbb8e63f218cb5d76c4bdb7617e0eb8139bbf398feb20d2f"
+      },
+      {
+        "section": "normal close/proof/report",
+        "byteExact": true,
+        "sha256": "42c46e1e6076e2d4f899524b57bd75df6e1cedcd4a143beefee4636a3defe6a0"
+      },
+      {
+        "section": "pool shutdown",
+        "byteExact": true,
+        "sha256": "9e05062bb51870c9da3d1bbe6972ebabc5a83ea51647eccdba90dce64a59b236"
+      },
+      {
+        "section": "lease/finalizer/report",
+        "byteExact": true,
+        "sha256": "9b6b7c1ed381e3b09a667f27303a9cb6a1cc0c289a2c6c8762aaae4353238686"
+      }
+    ],
+    "launchExpressions": 1,
+    "changedPaths": [
+      "modules/sucafina/Sucafinav1/test/product/wp01/README.md",
+      "modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts"
+    ]
+  },
+  "limits": [
+    "This is source and metadata review, not compilation or runtime proof. Only assigned GitHub Actions can establish execution.",
+    "The5000ms cleanup value is a reporting/observation window, not a promise of a physical process exit within5000ms. The code continues awaiting owned scope if infrastructure stalls; named test can fail. No abandoned-promise timeout is introduced.",
+    "A failure receipt can only speak for observed parent-validated Node/child PIDs. It is not the normal clean bridge proof and does not establish absence of every possible descendant.",
+    "The W15 I/O sleep and initial protocol stall remain observed symptoms. A shared30s deadline removes the competing clock boundary but does not establish or cure a unique underlying I/O cause.",
+    "The next three-file selection does not runtime-validate non-pool callers or other24 consumers. Their source preservation and historical evidence remain distinct."
+  ],
+  "proposedSelection": [
+    "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+    "./Sucafinav1/test/product/wp01/question-recipients.test.ts",
+    "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts"
+  ],
+  "runtimeCredit": "NONE",
+  "nextAction": "Publish exact four-file candidate and execute the single authorized three-file Actions request with static checks; retain old recipient failures until their named bodies execute."
+}

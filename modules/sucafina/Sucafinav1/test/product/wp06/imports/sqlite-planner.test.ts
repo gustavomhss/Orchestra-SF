@@ -38,12 +38,12 @@ test("SQLite Planner imports workbook bytes and rejects a stale preview without 
     expect(prepared.result.ok).toBe(true)
     const mutation = createPlannerImportMutation({ command: prepared.command, commandDigest: prepared.commandDigest, previewDigest: prepared.previewDigest, actorId: actor.id, operationId: "operation-1", idempotencyKey: "key-1", targetIncarnation: source.identity.incarnation, previewAt: environment.at, verifyTarget: (snapshot, id, incarnation) => sfSourceIdentity(snapshot, "planner-version", id)?.incarnation === incarnation })
     if (!mutation) throw new Error("missing mutation")
-    const applied = await store.transaction("planner", async (snapshot) => mutation.execute(snapshot, actor, environment))
+    const applied = await store.transaction<ReturnType<typeof mutation.execute>["value"]>("planner", async (snapshot) => mutation.execute(snapshot, actor, environment))
     expect(applied.status).toBe("applied")
     const stored = await store.transaction("planner", async (snapshot) => ({ commit: false, value: structuredClone(snapshot) }))
     const lines = (stored.data.versions as { lines: { f: (number | null)[] }[] }[])[0]!.lines
     expect(lines[0]!.f[0]).toBe(0)
-    const stale = await store.transaction("planner", async (snapshot) => mutation.execute(snapshot, actor, environment))
+    const stale = await store.transaction<ReturnType<typeof mutation.execute>["value"]>("planner", async (snapshot) => mutation.execute(snapshot, actor, environment))
     expect(stale.status).toBe("conflict")
     expect(await store.transaction("planner", async (snapshot) => ({ commit: false, value: snapshot }))).toEqual(stored)
   } finally {

@@ -55,5 +55,14 @@ export function createPlannerMonthlyHost(input: { host: DomainPortHost; humanAut
 }
 
 function validMonthlyRequest(request: MonthlyRequest) {
-  return !!request && Object.keys(request).every((key) => ["page", "versionId", "drafts"].includes(key)) && (request.page === "OPEX" || request.page === "CAPEX") && typeof request.versionId === "string" && !!request.versionId.trim() && Array.isArray(request.drafts) && request.drafts.length > 0 && request.drafts.every((draft) => !!draft && Object.keys(draft).every((key) => ["rowId", "revision", "cells"].includes(key)) && typeof draft.rowId === "string" && Number.isSafeInteger(draft.revision) && draft.revision >= 0 && Array.isArray(draft.cells) && draft.cells.length > 0 && draft.cells.every((cell) => !!cell && Object.keys(cell).every((key) => ["measure", "month", "text"].includes(key)) && ["budget", "actual", "forecast"].includes(cell.measure) && Number.isInteger(cell.month) && cell.month >= 1 && cell.month <= 12 && typeof cell.text === "string"))
+  if (!request || Object.keys(request).some((key) => !["page", "versionId", "drafts"].includes(key)) || (request.page !== "OPEX" && request.page !== "CAPEX") || typeof request.versionId !== "string" || !request.versionId.trim()) return false
+  return Array.isArray(request.drafts) && request.drafts.length > 0 && request.drafts.every((incoming: unknown) => {
+    if (!incoming || typeof incoming !== "object" || Array.isArray(incoming)) return false
+    const draft = object(incoming)
+    return Object.keys(draft).every((key) => ["rowId", "revision", "cells"].includes(key)) && typeof draft.rowId === "string" && typeof draft.revision === "number" && Number.isSafeInteger(draft.revision) && draft.revision >= 0 && Array.isArray(draft.cells) && draft.cells.length > 0 && draft.cells.every((incomingCell: unknown) => {
+      if (!incomingCell || typeof incomingCell !== "object" || Array.isArray(incomingCell)) return false
+      const cell = object(incomingCell)
+      return Object.keys(cell).every((key) => ["measure", "month", "text"].includes(key)) && typeof cell.measure === "string" && ["budget", "actual", "forecast"].includes(cell.measure) && typeof cell.month === "number" && Number.isInteger(cell.month) && cell.month >= 1 && cell.month <= 12 && typeof cell.text === "string"
+    })
+  })
 }

@@ -1,0 +1,457 @@
+{
+  "schema": "astra-interface-dependency-intake-v1",
+  "candidate": "Prepared for W6 after the separate W5 browser diagnostic; no published W6 SHA assigned by this review",
+  "prior_product": {
+    "head": "b13b28a8c8843b1c1b8cd81a3c7e627e700287de",
+    "tree": "81d2ef6f1106447c1ad4730e4e7a31c084c0662f"
+  },
+  "source": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "owner": "astra-compose",
+    "pr": 32,
+    "commit": "4306b310e4d6dac77f9beab461adad4e8e924849"
+  },
+  "scope": "Six exact published foreign inputs hydrated by root for W6; none belongs to W5 diagnostic86b2ba372d187d229820015d8311a0dd54a2c5d5. Reviewer changed no product or staging files.",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/outputs.ts",
+      "before_product_sha": "b13b28a8c8843b1c1b8cd81a3c7e627e700287de",
+      "before_blob": "428c3c4cc1fdb5d674549b000179c0e06bb0ceb2",
+      "before_presence": "present",
+      "source_commit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "source_blob": "4db2e631bd83ccda67442824557881c2ed990c92",
+      "after_blob": "4db2e631bd83ccda67442824557881c2ed990c92",
+      "sha256": "4de7c758a68bab91ed464dd465d9e17ba7146a05e2a4b8c66ad1161297534a80",
+      "bytes": 12947,
+      "role": "Published AlternativeDraft contribution union and optional CommercialComparison detail. Supports readonly UI; it does not create a native output.",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/4306b310e4d6dac77f9beab461adad4e8e924849/modules/sucafina/Sucafinav1/product/contracts/outputs.ts",
+      "source_verification": "Exact source pin read with GitHub MCP by root/reviewer; local bytes independently recomputed to the published Git blob.",
+      "direct_relative_imports": [
+        {
+          "specifier": "./business-context.ts",
+          "path": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+          "exists": true
+        },
+        {
+          "specifier": "./context.ts",
+          "path": "modules/sucafina/Sucafinav1/product/contracts/context.ts",
+          "exists": true
+        },
+        {
+          "specifier": "./decisions.ts",
+          "path": "modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+          "exists": true
+        },
+        {
+          "specifier": "./ports.ts",
+          "path": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+          "exists": true
+        },
+        {
+          "specifier": "./resident-ai.ts",
+          "path": "modules/sucafina/Sucafinav1/product/contracts/resident-ai.ts",
+          "exists": true
+        },
+        {
+          "specifier": "./business-context.ts",
+          "path": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+          "exists": true
+        },
+        {
+          "specifier": "./context.ts",
+          "path": "modules/sucafina/Sucafinav1/product/contracts/context.ts",
+          "exists": true
+        },
+        {
+          "specifier": "./decisions.ts",
+          "path": "modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+          "exists": true
+        },
+        {
+          "specifier": "./ports.ts",
+          "path": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+          "exists": true
+        }
+      ]
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-verifier-documents.ts",
+      "before_product_sha": "b13b28a8c8843b1c1b8cd81a3c7e627e700287de",
+      "before_blob": "c8904623c3213757d7d0c880572eacd4e0413854",
+      "before_presence": "present",
+      "source_commit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "source_blob": "0c8ba8bcafd5d85c6d5adadc9907b786cd2ac695",
+      "after_blob": "0c8ba8bcafd5d85c6d5adadc9907b786cd2ac695",
+      "sha256": "f1feef5bb8149f62494969a0d8b405f2c33caf6fe6abc45eb571146348552e6f",
+      "bytes": 18359,
+      "role": "Correct document-schema selector and documentRef argument; pending CostCoverageEntry discriminant; string-category union; real document resolver; PreparedChangeSet proof through readSet.",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/4306b310e4d6dac77f9beab461adad4e8e924849/apps/cli/src/sucafina-product/analysis-verifier-documents.ts",
+      "source_verification": "Exact source pin read with GitHub MCP by root/reviewer; local bytes independently recomputed to the published Git blob.",
+      "direct_relative_imports": [
+        {
+          "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+          "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+          "exists": true
+        },
+        {
+          "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts",
+          "path": "modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts",
+          "exists": true
+        },
+        {
+          "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/skill-inputs.ts",
+          "path": "modules/sucafina/Sucafinav1/product/contracts/skill-inputs.ts",
+          "exists": true
+        },
+        {
+          "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+          "path": "modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+          "exists": true
+        },
+        {
+          "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+          "path": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+          "exists": true
+        },
+        {
+          "specifier": "../../../../modules/sucafina/Sucafinav1/product/decisions/change-proposal-store.ts",
+          "path": "modules/sucafina/Sucafinav1/product/decisions/change-proposal-store.ts",
+          "exists": true
+        },
+        {
+          "specifier": "../../../../modules/sucafina/Sucafinav1/product/documents/capabilities.ts",
+          "path": "modules/sucafina/Sucafinav1/product/documents/capabilities.ts",
+          "exists": true
+        },
+        {
+          "specifier": "../../../../modules/sucafina/Sucafinav1/product/documents/store.ts",
+          "path": "modules/sucafina/Sucafinav1/product/documents/store.ts",
+          "exists": true
+        },
+        {
+          "specifier": "../../../../modules/sucafina/Sucafinav1/product/documents/evidence-resolver.ts",
+          "path": "modules/sucafina/Sucafinav1/product/documents/evidence-resolver.ts",
+          "exists": true
+        },
+        {
+          "specifier": "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "exists": true
+        },
+        {
+          "specifier": "./analysis-verifier.ts",
+          "path": "apps/cli/src/sucafina-product/analysis-verifier.ts",
+          "exists": true
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/case-recall.ts",
+      "before_product_sha": "b13b28a8c8843b1c1b8cd81a3c7e627e700287de",
+      "before_blob": null,
+      "before_presence": "absent",
+      "source_commit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "source_blob": "fdc378d5f251511f66bb256b78240f472f1d566c",
+      "after_blob": "fdc378d5f251511f66bb256b78240f472f1d566c",
+      "sha256": "c9004825a4da66cfe2af7b733478ccf6e9a303b5d765dae2427cec51b86ae9de",
+      "bytes": 8123,
+      "role": "Restores typed case-recall dependency of analysis-verifier-memory. Reauthorizes source/candidates, bounded selection, repeated rank/read evidence and current binding; native cross-case requires explicit candidateAccess.",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/4306b310e4d6dac77f9beab461adad4e8e924849/modules/sucafina/Sucafinav1/product/decision-memory/case-recall.ts",
+      "source_verification": "Exact source pin read with GitHub MCP by root/reviewer; local bytes independently recomputed to the published Git blob.",
+      "direct_relative_imports": [
+        {
+          "specifier": "../contracts/canonical.ts",
+          "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+          "exists": true
+        },
+        {
+          "specifier": "../decisions/case-port.ts",
+          "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "exists": true
+        },
+        {
+          "specifier": "../contracts/business-context.ts",
+          "path": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+          "exists": true
+        },
+        {
+          "specifier": "../contracts/ports.ts",
+          "path": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+          "exists": true
+        },
+        {
+          "specifier": "../contracts/sf-execution.ts",
+          "path": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+          "exists": true
+        },
+        {
+          "specifier": "../host-binding/atlas-memory.ts",
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+          "exists": true
+        },
+        {
+          "specifier": "../contracts/skill-inputs.ts",
+          "path": "modules/sucafina/Sucafinav1/product/contracts/skill-inputs.ts",
+          "exists": true
+        },
+        {
+          "specifier": "./recall.ts",
+          "path": "modules/sucafina/Sucafinav1/product/decision-memory/recall.ts",
+          "exists": true
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/change-proposal-store.ts",
+      "before_product_sha": "b13b28a8c8843b1c1b8cd81a3c7e627e700287de",
+      "before_blob": null,
+      "before_presence": "absent",
+      "source_commit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "source_blob": "d7f4199cc20f8e02290107bc64034d3956b42692",
+      "after_blob": "d7f4199cc20f8e02290107bc64034d3956b42692",
+      "sha256": "09487be6d75ac8d506f442f2efaabfc4a96ea5968109557e350628887e9aeadf",
+      "bytes": 20948,
+      "role": "Typed proposal store dependency of purchase verifier. Stores private command provenance, verifies output/source/case and exposes readSet; it never executes a domain command.",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/4306b310e4d6dac77f9beab461adad4e8e924849/modules/sucafina/Sucafinav1/product/decisions/change-proposal-store.ts",
+      "source_verification": "Exact source pin read with GitHub MCP by root/reviewer; local bytes independently recomputed to the published Git blob.",
+      "direct_relative_imports": [
+        {
+          "specifier": "../contracts/canonical.ts",
+          "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+          "exists": true
+        },
+        {
+          "specifier": "../contracts/schema-admission.ts",
+          "path": "modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts",
+          "exists": true
+        },
+        {
+          "specifier": "../contracts/business-context.ts",
+          "path": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+          "exists": true
+        },
+        {
+          "specifier": "../contracts/context.ts",
+          "path": "modules/sucafina/Sucafinav1/product/contracts/context.ts",
+          "exists": true
+        },
+        {
+          "specifier": "../contracts/decisions.ts",
+          "path": "modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+          "exists": true
+        },
+        {
+          "specifier": "../contracts/operations.ts",
+          "path": "modules/sucafina/Sucafinav1/product/contracts/operations.ts",
+          "exists": true
+        },
+        {
+          "specifier": "../contracts/outputs.ts",
+          "path": "modules/sucafina/Sucafinav1/product/contracts/outputs.ts",
+          "exists": true
+        },
+        {
+          "specifier": "../contracts/ports.ts",
+          "path": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+          "exists": true
+        },
+        {
+          "specifier": "../contracts/sf-execution.ts",
+          "path": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+          "exists": true
+        },
+        {
+          "specifier": "../contracts/state.ts",
+          "path": "modules/sucafina/Sucafinav1/product/contracts/state.ts",
+          "exists": true
+        },
+        {
+          "specifier": "../../runtime/contract.ts",
+          "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+          "exists": true
+        },
+        {
+          "specifier": "./case-port.ts",
+          "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "exists": true
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/context.ts",
+      "before_product_sha": "b13b28a8c8843b1c1b8cd81a3c7e627e700287de",
+      "before_blob": "dbaa8dd7a57134769aa12d4e196db1013cb278cb",
+      "before_presence": "present",
+      "source_commit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "source_blob": "ae2d6b73a24970ba23d21e17694b54fd32d1a700",
+      "after_blob": "ae2d6b73a24970ba23d21e17694b54fd32d1a700",
+      "sha256": "a703d59373a826021214617867191e0a8bba920cef9ead22dc064e0f018e6517",
+      "bytes": 6977,
+      "role": "Required source contract for generated schema: optional DomainProjection.comparison and scenario sensitivityResultRef, plus local ProjectionValue/BI presentation types.",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/4306b310e4d6dac77f9beab461adad4e8e924849/modules/sucafina/Sucafinav1/product/contracts/context.ts",
+      "source_verification": "Exact source pin read with GitHub MCP by root/reviewer; local bytes independently recomputed to the published Git blob.",
+      "direct_relative_imports": [
+        {
+          "specifier": "../../src/identity.ts",
+          "path": "modules/sucafina/Sucafinav1/src/identity.ts",
+          "exists": true
+        },
+        {
+          "specifier": "../../runtime/contract.ts",
+          "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+          "exists": true
+        },
+        {
+          "specifier": "./business-context.ts",
+          "path": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+          "exists": true
+        },
+        {
+          "specifier": "./decisions.ts",
+          "path": "modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+          "exists": true
+        },
+        {
+          "specifier": "./outputs.ts",
+          "path": "modules/sucafina/Sucafinav1/product/contracts/outputs.ts",
+          "exists": true
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/output-schemas.ts",
+      "before_product_sha": "b13b28a8c8843b1c1b8cd81a3c7e627e700287de",
+      "before_blob": "dae3f65d645a80ab319498f9c50743a0141706fa",
+      "before_presence": "present",
+      "source_commit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "source_blob": "0d9fc51d26a0ca726d32e74605b555f871d99af6",
+      "after_blob": "0d9fc51d26a0ca726d32e74605b555f871d99af6",
+      "sha256": "47da83871b556f7623399062dc95ab5a397c83de3661087defb2c134251fb20e",
+      "bytes": 209098,
+      "role": "Exact official generated schemas from the same producer pin; admits AlternativeDraft and keeps output/envelope/skill schemas coherent with outputs/context.",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/4306b310e4d6dac77f9beab461adad4e8e924849/modules/sucafina/Sucafinav1/product/contracts/output-schemas.ts",
+      "source_verification": "Exact source pin read with GitHub MCP by root/reviewer; local bytes independently recomputed to the published Git blob.",
+      "direct_relative_imports": []
+    }
+  ],
+  "static_diagnostic_reconciliation": [
+    {
+      "run_id": 43580186410,
+      "job_id": 132403043627,
+      "diagnostics": 1,
+      "previous": "analysis-verifier-documents.ts24 TS2554: resolveFieldSchema requires3args.",
+      "source_change": "Now uses schema:${id}:${version}, currentCall, authorizedFileRef; matches documents/schemas.ts regexp and capabilities.ts signature.",
+      "status": "STATICALLY_ADDRESSED_NOT_TYPECHECKED"
+    },
+    {
+      "run_id": 43580186410,
+      "job_id": 132403043627,
+      "diagnostics": 3,
+      "previous": "documents127/128: CostCoverageEntry.reason missing and string→never category union.",
+      "source_change": "Explicit pending Extract type guard and readonly string[] missing-category binding. It preserves every condition predicate.",
+      "status": "STATICALLY_ADDRESSED_NOT_TYPECHECKED"
+    },
+    {
+      "run_id": 43580186410,
+      "job_id": 132403043627,
+      "diagnostics": 8,
+      "previous": "analysis-verifier-memory missing case-recall module and7 cascading implicit-any diagnostics.",
+      "source_change": "Published createSfCaseRecall exposes inferred discriminated ok/unavailable result, typed matches/evidenceRefs; direct imports resolve against current Atlas contracts.",
+      "status": "STATICALLY_ADDRESSED_NOT_TYPECHECKED"
+    }
+  ],
+  "schema_review": {
+    "method": "Read generated JSON definitions as data; recursively compared references against W4 without evaluating TypeScript or running decoder/product.",
+    "contribution_maps": {
+      "old": 24,
+      "new": 25,
+      "added": [
+        "AlternativeDraft"
+      ],
+      "changed": [
+        "CommercialComparison",
+        "FinancialAnalysis"
+      ]
+    },
+    "operation_maps": {
+      "old": 39,
+      "new": 39,
+      "changed": [
+        "sf_bi_view",
+        "sf_case_read",
+        "sf_context_get",
+        "sf_contract_read",
+        "sf_dashboard_read",
+        "sf_evidence_get",
+        "sf_forecast_compare",
+        "sf_freshness_check",
+        "sf_import_preview",
+        "sf_kpi_explain",
+        "sf_request_read",
+        "sf_source_get",
+        "sf_sourcing_compare",
+        "sf_supplier_read"
+      ]
+    },
+    "skill_maps": {
+      "old": 18,
+      "new": 18,
+      "changed": [
+        "ForecastExplainInput",
+        "PurchasePreparationInput"
+      ]
+    },
+    "envelope_changed": [
+      "ContributionEnvelope"
+    ],
+    "compatibility": "Existing DomainProjection/CommercialComparison changes add optional fields; no existing required field was removed or made optional in inspected changed paths. New nested fields remain closed and require their own complete structure when provided.",
+    "important_dependency": "Context ae2d6b73 is consumed with schema0d9fc51d. Consuming only outputs+schema would leave admitted fields absent from the local source contract.",
+    "generation": "This intake reuses the exact published generated artifact. No local generator was executed; Protocol/Server HttpApi paths were not changed."
+  },
+  "producer_review": [
+    "Document extraction now uses the actual document reader/resolver; current accessRevision, stored evidence equality, document identity and final read are checked. A reader absent from host returns unavailable, never ready.",
+    "Purchase prepared output must equal the persisted readSet and selected choice; missing changeProposals fails closed. This is a type/helper intake, not proof that this host constructed/wired the new store or native verifier.",
+    "Case recall uses current authorized projections, evidence/candidate identity, period, principal/access revision, two rank passes and source abort fence. No new unresolvable direct import found.",
+    "The hydrated store retains strict current case/version/source validation and private command provenance. No isolated store execution or corruption/TOCTOU proof was performed; safe behavior is not inferred from static presence."
+  ],
+  "unconsumed_published_dependencies": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/http.ts",
+      "source_commit": "4306b310e4d6dac77f9beab461adad4e8e924849",
+      "source_blob_prefix": "b1fca956",
+      "state": "PUBLISHED_REQUIRED_HOST_CLOSURE_NOT_CONSUMED_BY_ROOT",
+      "description": "Published endpoint already has4fields plus bindAdmittedApply. Interface reviewDigest consumer depends on that additive host closure; do not label the latest producer absent or overwrite it."
+    },
+    {
+      "scope": "Native verifier/recall/change-proposal registration and callbacks",
+      "state": "HOST_COMPOSITION_PENDING",
+      "description": "Current interface host-context retains older verifier composition. New helper/type files alone do not wire purchase/doc/memory native journeys. Consume the integration bundle with its owner."
+    }
+  ],
+  "preserved_failures": [
+    {
+      "run_id": 43580185033,
+      "product_sha": "b13b28a8c8843b1c1b8cd81a3c7e627e700287de",
+      "scope": "C05 whole PreservedReview reopen",
+      "result": "Executed positive200 assertion received403 after canonical source change. These6inputs do not alter review host path."
+    },
+    {
+      "run_id": 43580185033,
+      "product_sha": "b13b28a8c8843b1c1b8cd81a3c7e627e700287de",
+      "scope": "Dashboard lostC12apply reload",
+      "result": "Committed apply/reload reached; discovery success expectation failed before receipt replay assertions. Dashboard producer fixes remain separate owner work."
+    },
+    {
+      "run_id": 43580185033,
+      "product_sha": "b13b28a8c8843b1c1b8cd81a3c7e627e700287de",
+      "scope": "Dashboard write-only authority withdrawal",
+      "result": "Existing test stopped at denial message before retain-input assertions. Source-continuity dependency remains separately reviewed."
+    }
+  ],
+  "validation_limits": [
+    "No local product test, local typecheck, generated-schema execution, remote run, retry or push was performed by this review.",
+    "Direct relative import existence and exact bytes are static evidence only. The next GitHub Actions package bun typechecks and guards determine whether the12 diagnostics are actually closed.",
+    "No existing check/run status is transferred to this future head. Own captureId narrowing and UI changes are outside these6foreignfiles.",
+    "Native proofs, final S0 epic and global gates remain pending; no DONE inferred."
+  ]
+}

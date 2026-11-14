@@ -1,0 +1,570 @@
+{
+  "schema": "astra-interface-ci-receipt-v1",
+  "repository": "gustavomhss/Orchestra-SF",
+  "run_id": 43581283802,
+  "job_id": 132406342669,
+  "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43581283802",
+  "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43581283802/job/132406342669",
+  "conclusion": "success",
+  "cleanup_job_id": 132406780978,
+  "cleanup_conclusion": "success",
+  "source": "GitHub MCP existing run/jobs/logs and exact snapshot .ci-run.json; no run initiated by auditor",
+  "product_sha": "86b2ba372d187d229820015d8311a0dd54a2c5d5",
+  "product_tree": "9f6ecfd420189dad05fc8a5557f2cf84192da5da",
+  "snapshot_sha": "1b122b629d4b407f783f329ecc5fbb9d14b320a4",
+  "snapshot_tree": "54aec8a62a5f679b24156960d385386257a09484",
+  "snapshot_branch": "ci-run-linux-astra-interface-86b2ba372d-771bab2e7d-1",
+  "request_sha256": "771bab2e7dfe3fbea29a5bd0495714a3fe8b5d0f0ec63665c40b304c5e9cba57",
+  "request_blob": "cabd199f198840f4b1097dc9467c28bb4561f073",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "packageSelector": "packages/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "./Sucafinav1/test/product/wp01/preview-browser.test.ts",
+      "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+    }
+  },
+  "envelope_proof": {
+    "method": "Root compared root Git trees before creating immutable snapshot; independent reviewer confirmed snapshot commit tree and exact MCP request hash/blob.",
+    "onlyDelta": [
+      ".ci-run.json"
+    ],
+    "requestBlob": "cabd199f198840f4b1097dc9467c28bb4561f073",
+    "productTree": "9f6ecfd420189dad05fc8a5557f2cf84192da5da",
+    "snapshotTree": "54aec8a62a5f679b24156960d385386257a09484"
+  },
+  "selection": [
+    "modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/preview-browser.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts"
+  ],
+  "attempt": 1,
+  "decoded_log": {
+    "path": "/workspace/scratch/080d03a98f2e/analysis/product-43581283802.log",
+    "bytes": 81117,
+    "sha256": "577d02a8ce48df4700ace1a725173eba720bb4cf752d43f6896e3af7dfa07dc3"
+  },
+  "summary": {
+    "pass": 6,
+    "fail": 0,
+    "observations": 6,
+    "files_observed": 3,
+    "files_selected": 3,
+    "expect_calls": 40,
+    "elapsed_seconds": 6.3,
+    "bun_summary_present": true
+  },
+  "omni": {
+    "nonce": "fab69894d02554c65fea74ac3b93e5b6",
+    "status": "pass",
+    "spawns": 2,
+    "delegated": 0
+  },
+  "file_results": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "pass_observations": 1,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "file_header_observed": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/preview-browser.test.ts",
+      "pass_observations": 4,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "file_header_observed": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "pass_observations": 1,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "file_header_observed": true
+    }
+  ],
+  "observations": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "name": "WP01 starts one Node-owned Chromium through Omni before leasing it across files",
+      "status": "pass",
+      "duration_ms": 2056.36,
+      "log_line": 861,
+      "kind": "named_test"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/preview-browser.test.ts",
+      "name": "dashboard groups retain every canonical destination and its original index",
+      "status": "pass",
+      "duration_ms": 0.69,
+      "log_line": 864,
+      "kind": "named_test"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/preview-browser.test.ts",
+      "name": "field errors identify the input and preserve the draft",
+      "status": "pass",
+      "duration_ms": 2440.72,
+      "log_line": 876,
+      "kind": "named_test"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/preview-browser.test.ts",
+      "name": "procurement submission carries edits from its record's editor",
+      "status": "pass",
+      "duration_ms": 288.48,
+      "log_line": 888,
+      "kind": "named_test"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/preview-browser.test.ts",
+      "name": "edits made while an apply is in flight remain unsaved in the real shell",
+      "status": "pass",
+      "duration_ms": 1019.95,
+      "log_line": 905,
+      "kind": "named_test"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "name": "WP01 shares one Chromium across files, releases every lease, and proves final process exit",
+      "status": "pass",
+      "duration_ms": 77.49,
+      "log_line": 928,
+      "kind": "named_test"
+    }
+  ],
+  "proof_records": {
+    "SF_BROWSER_DRIVER_PHASE": [
+      {
+        "log_line": 841,
+        "observed_at": "2026-11-14T09:37:13.8931560Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "playwright-import",
+          "elapsedMs": 0
+        }
+      },
+      {
+        "log_line": 842,
+        "observed_at": "2026-11-14T09:37:14.3510821Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "playwright-imported",
+          "elapsedMs": 460
+        }
+      },
+      {
+        "log_line": 843,
+        "observed_at": "2026-11-14T09:37:14.3615521Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "app-process-service",
+          "elapsedMs": 469
+        }
+      },
+      {
+        "log_line": 844,
+        "observed_at": "2026-11-14T09:37:14.3616315Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "app-process-spawn",
+          "elapsedMs": 469
+        }
+      },
+      {
+        "log_line": 845,
+        "observed_at": "2026-11-14T09:37:14.3763856Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "app-process-spawned",
+          "elapsedMs": 483,
+          "driverPid": 4269
+        }
+      },
+      {
+        "log_line": 846,
+        "observed_at": "2026-11-14T09:37:14.4081580Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "node-import",
+          "elapsedMs": 517,
+          "driverPid": 4269
+        }
+      },
+      {
+        "log_line": 847,
+        "observed_at": "2026-11-14T09:37:14.7048878Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "node-imported",
+          "elapsedMs": 813,
+          "driverPid": 4269
+        }
+      },
+      {
+        "log_line": 848,
+        "observed_at": "2026-11-14T09:37:14.7145588Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "chromium-launch",
+          "elapsedMs": 823,
+          "driverPid": 4269
+        }
+      },
+      {
+        "log_line": 849,
+        "observed_at": "2026-11-14T09:37:15.5307428Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "chromium-launched",
+          "elapsedMs": 1639,
+          "driverPid": 4269
+        }
+      },
+      {
+        "log_line": 850,
+        "observed_at": "2026-11-14T09:37:15.5309255Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "node-ready",
+          "elapsedMs": 1640,
+          "driverPid": 4269,
+          "browserPid": 4284
+        }
+      },
+      {
+        "log_line": 851,
+        "observed_at": "2026-11-14T09:37:15.5310922Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "pipe-verify",
+          "elapsedMs": 1640,
+          "driverPid": 4269,
+          "browserPid": 4284
+        }
+      },
+      {
+        "log_line": 852,
+        "observed_at": "2026-11-14T09:37:15.5312378Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "browser-connect",
+          "elapsedMs": 1640,
+          "driverPid": 4269,
+          "browserPid": 4284
+        }
+      },
+      {
+        "log_line": 853,
+        "observed_at": "2026-11-14T09:37:15.8329774Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "browser-connected",
+          "elapsedMs": 1941,
+          "driverPid": 4269,
+          "browserPid": 4284
+        }
+      },
+      {
+        "log_line": 889,
+        "observed_at": "2026-11-14T09:37:18.7539501Z",
+        "value": {
+          "consumer": "preview-in-flight",
+          "phase": "playwright-import",
+          "elapsedMs": 0
+        }
+      },
+      {
+        "log_line": 890,
+        "observed_at": "2026-11-14T09:37:18.7541770Z",
+        "value": {
+          "consumer": "preview-in-flight",
+          "phase": "playwright-imported",
+          "elapsedMs": 0
+        }
+      },
+      {
+        "log_line": 891,
+        "observed_at": "2026-11-14T09:37:18.7557355Z",
+        "value": {
+          "consumer": "preview-in-flight",
+          "phase": "app-process-service",
+          "elapsedMs": 2
+        }
+      },
+      {
+        "log_line": 892,
+        "observed_at": "2026-11-14T09:37:18.7558595Z",
+        "value": {
+          "consumer": "preview-in-flight",
+          "phase": "app-process-spawn",
+          "elapsedMs": 2
+        }
+      },
+      {
+        "log_line": 893,
+        "observed_at": "2026-11-14T09:37:18.7578204Z",
+        "value": {
+          "consumer": "preview-in-flight",
+          "phase": "app-process-spawned",
+          "elapsedMs": 4,
+          "driverPid": 4440
+        }
+      },
+      {
+        "log_line": 894,
+        "observed_at": "2026-11-14T09:37:18.7855780Z",
+        "value": {
+          "consumer": "preview-in-flight",
+          "phase": "node-import",
+          "elapsedMs": 32,
+          "driverPid": 4440
+        }
+      },
+      {
+        "log_line": 895,
+        "observed_at": "2026-11-14T09:37:19.0719720Z",
+        "value": {
+          "consumer": "preview-in-flight",
+          "phase": "node-imported",
+          "elapsedMs": 318,
+          "driverPid": 4440
+        }
+      },
+      {
+        "log_line": 896,
+        "observed_at": "2026-11-14T09:37:19.0857624Z",
+        "value": {
+          "consumer": "preview-in-flight",
+          "phase": "chromium-launch",
+          "elapsedMs": 332,
+          "driverPid": 4440
+        }
+      },
+      {
+        "log_line": 897,
+        "observed_at": "2026-11-14T09:37:19.2208938Z",
+        "value": {
+          "consumer": "preview-in-flight",
+          "phase": "chromium-launched",
+          "elapsedMs": 466,
+          "driverPid": 4440
+        }
+      },
+      {
+        "log_line": 898,
+        "observed_at": "2026-11-14T09:37:19.2250830Z",
+        "value": {
+          "consumer": "preview-in-flight",
+          "phase": "node-ready",
+          "elapsedMs": 471,
+          "driverPid": 4440,
+          "browserPid": 4455
+        }
+      },
+      {
+        "log_line": 899,
+        "observed_at": "2026-11-14T09:37:19.2252748Z",
+        "value": {
+          "consumer": "preview-in-flight",
+          "phase": "pipe-verify",
+          "elapsedMs": 471,
+          "driverPid": 4440,
+          "browserPid": 4455
+        }
+      },
+      {
+        "log_line": 900,
+        "observed_at": "2026-11-14T09:37:19.2255737Z",
+        "value": {
+          "consumer": "preview-in-flight",
+          "phase": "browser-connect",
+          "elapsedMs": 472,
+          "driverPid": 4440,
+          "browserPid": 4455
+        }
+      },
+      {
+        "log_line": 901,
+        "observed_at": "2026-11-14T09:37:19.2689700Z",
+        "value": {
+          "consumer": "preview-in-flight",
+          "phase": "browser-connected",
+          "elapsedMs": 515,
+          "driverPid": 4440,
+          "browserPid": 4455
+        }
+      },
+      {
+        "log_line": 902,
+        "observed_at": "2026-11-14T09:37:19.7565529Z",
+        "value": {
+          "consumer": "preview-in-flight",
+          "phase": "node-closed",
+          "elapsedMs": 1003,
+          "driverPid": 4440
+        }
+      },
+      {
+        "log_line": 903,
+        "observed_at": "2026-11-14T09:37:19.7643742Z",
+        "value": {
+          "consumer": "preview-in-flight",
+          "phase": "app-process-exited",
+          "elapsedMs": 1010,
+          "driverPid": 4440,
+          "exitCode": 0
+        }
+      },
+      {
+        "log_line": 916,
+        "observed_at": "2026-11-14T09:37:19.8361982Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "node-closed",
+          "elapsedMs": 5945,
+          "driverPid": 4269
+        }
+      },
+      {
+        "log_line": 917,
+        "observed_at": "2026-11-14T09:37:19.8455722Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "app-process-exited",
+          "elapsedMs": 5954,
+          "driverPid": 4269,
+          "exitCode": 0
+        }
+      }
+    ],
+    "SF_WP02_BROWSER_DRIVER_PROOF": [
+      {
+        "log_line": 904,
+        "observed_at": "2026-11-14T09:37:19.7696289Z",
+        "value": {
+          "consumer": "preview-in-flight",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4249
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 4440
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 4455,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 14,
+            "framesFromBrowser": 56,
+            "peakQueuedBytes": 2013,
+            "peakBufferedBytes": 457,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        }
+      },
+      {
+        "log_line": 942,
+        "observed_at": "2026-11-14T09:37:19.8500380Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "clientRuntime": {
+            "name": "bun",
+            "version": "1.3.14",
+            "pid": 4249
+          },
+          "driverRuntime": {
+            "name": "node",
+            "version": "24.22.2",
+            "pid": 4269
+          },
+          "playwrightVersion": "1.59.1",
+          "browserVersion": "157.0.8103.50",
+          "browserPid": 4284,
+          "transport": "playwright-unix-pipe-node-websocket",
+          "spawnBoundary": "AppProcess",
+          "browserStdioCount": 5,
+          "browserUsesPipe": true,
+          "browserPipeOwner": "node",
+          "bridge": {
+            "framing": "json-nul",
+            "acceptedClients": 1,
+            "framesToBrowser": 26,
+            "framesFromBrowser": 103,
+            "peakQueuedBytes": 2013,
+            "peakBufferedBytes": 391,
+            "maxFrameBytes": 16777216,
+            "maxQueuedBytes": 33554432,
+            "directoryMode": 448,
+            "socketMode": 384
+          },
+          "lifecycle": {
+            "remainingContexts": 0,
+            "connected": false,
+            "nodeExitCode": 0,
+            "browserExitCode": 0,
+            "browserSignal": null,
+            "bridgeClosed": true,
+            "listenerClosed": true,
+            "socketClosed": true,
+            "pipeEnded": true,
+            "webSocketOpened": true,
+            "webSocketClosed": true,
+            "webSocketCloseCode": 1000,
+            "webSocketCloseWasClean": true,
+            "pendingFrameBytes": 0,
+            "queuedWriteBytes": 0,
+            "socketRemoved": true,
+            "directoryRemoved": true
+          }
+        }
+      }
+    ]
+  },
+  "limits": [
+    "This diagnostic selects startup, preview-browser and finalizer only. It does not green every WP01 consumer or any Dashboard recovery test.",
+    "W6 source inputs and consumer changes are absent from this W5 snapshot. No static check was scheduled for W5.",
+    "Startup/cancel phases alone are not physical process cleanup proof. Complete PID/driver lifecycle assertions must pass independently.",
+    "Native model receipts, full skill matrix, S0 epic and global gates remain outside this component run."
+  ]
+}

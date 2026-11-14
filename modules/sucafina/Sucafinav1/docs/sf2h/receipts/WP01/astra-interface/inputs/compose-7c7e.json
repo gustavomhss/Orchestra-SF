@@ -1,0 +1,57 @@
+{
+  "schema": "astra-interface-published-input-v1",
+  "source_pr": 32,
+  "source_head": "7c7e5b086a9de405cd3f8e18e8d631af55cf0979",
+  "source_tree": "3deb1ed790fc247a6633c9cc25a11523ae3f61b1",
+  "inputs": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/human-authority.ts",
+      "source_pr": 32,
+      "source_head": "7c7e5b086a9de405cd3f8e18e8d631af55cf0979",
+      "source_tree": "3deb1ed790fc247a6633c9cc25a11523ae3f61b1",
+      "blob": "78529a89586ce9f22d2b2cdd2cd0b1c61d20668a",
+      "method": "EXACT_PUBLISHED_BLOB",
+      "scope": "Closed human-action/read list, consumed without changes. Admission/authorization implementation unchanged; no installation grant added. Full read-only host binding remains integration-owned."
+    }
+  ],
+  "review": {
+    "scope": "Closed vocabulary for the real C03/C08 reply consumer fixture and production consumer contract. No authority implementation rewritten and no installation grant added.",
+    "method": "GitHub MCP fetched exact source content; local Git blob verified; source commit/tree queried independently of PR body.",
+    "independent_final_review": false,
+    "product_tests_local": false,
+    "protocol_or_server_httpapi_changed": false
+  },
+  "published_upstream_not_consumed": [
+    {
+      "path": "apps/cli/src/sucafina-product/dashboard-decision-evidence.ts",
+      "blob": "4c205439aed7779dff66079a1ebaad1927d75d77",
+      "status": "PUBLISHED_UPSTREAM_PENDING_COMPOSE_AND_COUNTERPROOF"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/dashboard-decisions.ts",
+      "blob": "f8914c141ba5c72439f5fdba50e9153c4cd477d4",
+      "status": "PUBLISHED_UPSTREAM_PENDING_COMPOSE_AND_COUNTERPROOF"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "blob": "0e5a508722c9e741a1737beb7d88ccb596a6f495",
+      "status": "PUBLISHED_UPSTREAM_PENDING_COMPOSE_AND_COUNTERPROOF"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+      "blob": "91e8bc8f5d80f83b7756b4647c790cc5e5936d59",
+      "status": "PUBLISHED_UPSTREAM_PENDING_COMPOSE_AND_COUNTERPROOF"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "blob": "f6cfe69432142cdc4063494522627d6d3d50c5d8",
+      "status": "PUBLISHED_UPSTREAM_PENDING_COMPOSE_AND_COUNTERPROOF"
+    }
+  ],
+  "limits": [
+    "The producer-owned BusinessServices dependency closure includes Planner, collaboration, dossiers and host contracts absent from this inherited interface tree. Do not transplant isolated host wiring or replace current integration code with inherited interface copies.",
+    "The published C12 receipt/record-history changes are candidate fixes to W4/W6 findings, not proven by this group's older failing run. C05 whole-review history still needs its own current authorization proof.",
+    "Writable real operator sessions are covered by the new C03 consumer fixture; complete host/read-only admission and first answer-selector issuance are not qualified here.",
+    "S0 retains full composition, native witnesses, independent final reviewers and global/epic gates."
+  ]
+}

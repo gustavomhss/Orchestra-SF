@@ -1,0 +1,197 @@
+WP01 — TEST EVIDENCE S6 (minimum lifecycle qualification; PASS)
+
+Run: https://github.com/gustavomhss/Orchestra-SF/actions/runs/43535146652
+W7: 516f1d15f76e5e340609bd4a4b905e3a5f877cab
+W7/tree: 618b8bc884e80b1598d496524c10c40392013fe8
+S6/head_sha: 718724ccedea6b2db74d4dd274e066b19686a8be
+S6/tree: 0a8042afa8182d6a68fda745c3c39c90bda3f1d3
+Test job:132262221961; cleanup job:132262807905; attempt:1
+Status:completed; conclusion:success
+Request SHA256:d589f4bcd4fd06efdcbcba485593bcd586eeb7b02f6bfa505faa874d25e3bfb0
+Test log SHA256:03e35aba3b1fda0b45b5698b3afc5f6154341695a8ca1181cbdaec36741072bf
+Cleanup log SHA256:b3fb96078157fa16a6ef34ce18dfd84b0754000dae0c81c19836dcef59ffc939
+
+SCOPE / RESULT
+Observed S6 Linux command-line preflight, three isolated leases sharing one public Chromium launch across files, and final disconnected/physical PID exit. Does not qualify the full 21-file selection or native AI execution.
+5 pass; 0 fail; 34 expect calls; 5 tests across 2 files; 2.44 seconds.
+Required and observed: exactly 1 launch, 3 acquisitions, 3 releases, PID 4344 throughout, no active lease, zero contexts, disconnected=true, processExited=true. The source fixture records processExited only after an ESRCH result from the signal-0 PID probe.
+
+REDACTIONS: Transient auth/local?code values are redacted if present. This focused log contains no giant HTML failure dump. Complete downloaded logs are retained separately and bound by SHA256 above.
+
+SELECTED REQUEST
+{
+  "package": "sucafina",
+  "directory": "modules/sucafina",
+  "packageSelector": "packages/sucafina",
+  "runner": "bun",
+  "args": [
+    "./Sucafinav1/test/product/wp01/preview-browser.test.ts",
+    "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+    "--timeout",
+    "120000"
+  ],
+  "env": {}
+}
+
+RESOLVED COMMAND (validated request and observed Bun workflow branch)
+cwd=modules/sucafina
+GITHUB_ACTIONS=false bun test ./Sucafinav1/test/product/wp01/preview-browser.test.ts ./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts --timeout 120000
+
+OBSERVED COMMAND / CONTROL / OMNI
+echo "omni control nonce: $nonce"
+  HUGR_OMNI_ADDON: /home/runner/work/Orchestra-SF/Orchestra-SF/native/omni/target/release/libhugr_omni_node.so
+  HUGR_OMNI_SUPERVISOR: /home/runner/work/Orchestra-SF/Orchestra-SF/native/omni/target/release/hugr-omni-supervisor
+omni control nonce: 59e76f030adff57dae359dbd0bbe964a
+    GITHUB_ACTIONS=false bun test "${args[@]}"
+  HUGR_OMNI_ADDON: /home/runner/work/Orchestra-SF/Orchestra-SF/native/omni/target/release/libhugr_omni_node.so
+  HUGR_OMNI_SUPERVISOR: /home/runner/work/Orchestra-SF/Orchestra-SF/native/omni/target/release/hugr-omni-supervisor
+  ORCHESTRA_OMNI_CONTROL_NONCE: 59e76f030adff57dae359dbd0bbe964a
+  ORCHESTRA_OMNI_CONTROL: declared
+  PACKAGE: sucafina
+  DIRECTORY: modules/sucafina
+  RUNNER: bun
+
+COMPLETE TEST EXECUTION / PREFLIGHT / ACQUISITIONS / RELEASES / FINAL EXIT (timestamps retained)
+2026-11-14T00:36:26.5317425Z bun test v1.3.14 (0d9b296a)
+2026-11-14T00:36:26.5423927Z 
+2026-11-14T00:36:26.5424480Z Sucafinav1/test/product/wp01/preview-browser.test.ts:
+2026-11-14T00:36:26.5628201Z (pass) dashboard groups retain every canonical destination and its original index [8.79ms]
+2026-11-14T00:36:26.5684221Z WP01 browser explicit selection admitted {
+2026-11-14T00:36:26.5684955Z   executable: "bun",
+2026-11-14T00:36:26.5685482Z   command: "test",
+2026-11-14T00:36:26.5686982Z   files: [ "/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/preview-browser.test.ts",
+2026-11-14T00:36:26.5688804Z     "/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts"
+2026-11-14T00:36:26.5689900Z   ],
+2026-11-14T00:36:26.5691029Z   finalizer: "/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+2026-11-14T00:36:26.5692266Z }
+2026-11-14T00:36:26.5692709Z WP01 browser launch phase {
+2026-11-14T00:36:26.5693300Z   phase: "load public Playwright API",
+2026-11-14T00:36:26.5693825Z }
+2026-11-14T00:36:27.0054566Z WP01 browser launch phase {
+2026-11-14T00:36:27.0054941Z   phase: "chromium.launch",
+2026-11-14T00:36:27.0055237Z }
+2026-11-14T00:36:27.5640780Z WP01 browser launch phase {
+2026-11-14T00:36:27.5641774Z   phase: "read actual browser PID through CDP",
+2026-11-14T00:36:27.5647884Z }
+2026-11-14T00:36:27.5750049Z WP01 browser launch complete {
+2026-11-14T00:36:27.5750392Z   pid: 4344,
+2026-11-14T00:36:27.5750696Z   launches: 1,
+2026-11-14T00:36:27.5753824Z }
+2026-11-14T00:36:27.5754765Z WP01 browser lease acquired {
+2026-11-14T00:36:27.5755277Z   pid: 4344,
+2026-11-14T00:36:27.5755518Z   lease: 1,
+2026-11-14T00:36:27.5755745Z   acquisitions: 1,
+2026-11-14T00:36:27.5755971Z }
+2026-11-14T00:36:28.0528125Z WP01 browser lease released {
+2026-11-14T00:36:28.0531171Z   pid: 4344,
+2026-11-14T00:36:28.0531442Z   lease: 1,
+2026-11-14T00:36:28.0531664Z   releases: 1,
+2026-11-14T00:36:28.0531882Z   contexts: 0,
+2026-11-14T00:36:28.0532114Z }
+2026-11-14T00:36:28.0664625Z (pass) field errors identify the input and preserve the draft [1503.15ms]
+2026-11-14T00:36:28.0707854Z WP01 browser lease acquired {
+2026-11-14T00:36:28.0708635Z   pid: 4344,
+2026-11-14T00:36:28.0709055Z   lease: 2,
+2026-11-14T00:36:28.0709408Z   acquisitions: 2,
+2026-11-14T00:36:28.0709712Z }
+2026-11-14T00:36:28.3707959Z WP01 browser lease released {
+2026-11-14T00:36:28.3736865Z   pid: 4344,
+2026-11-14T00:36:28.3737669Z   lease: 2,
+2026-11-14T00:36:28.3738248Z   releases: 2,
+2026-11-14T00:36:28.3739286Z   contexts: 0,
+2026-11-14T00:36:28.3741630Z }
+2026-11-14T00:36:28.3857927Z (pass) procurement submission carries edits from its record's editor [317.54ms]
+2026-11-14T00:36:28.3947397Z WP01 browser lease acquired {
+2026-11-14T00:36:28.3948943Z   pid: 4344,
+2026-11-14T00:36:28.3951950Z   lease: 3,
+2026-11-14T00:36:28.3953277Z   acquisitions: 3,
+2026-11-14T00:36:28.3954099Z }
+2026-11-14T00:36:28.7490169Z WP01 browser lease released {
+2026-11-14T00:36:28.7490936Z   pid: 4344,
+2026-11-14T00:36:28.7491606Z   lease: 3,
+2026-11-14T00:36:28.7492132Z   releases: 3,
+2026-11-14T00:36:28.7492622Z   contexts: 0,
+2026-11-14T00:36:28.7493094Z }
+2026-11-14T00:36:28.7586231Z (pass) edits made while an apply is in flight remain unsaved in the real shell [373.75ms]
+2026-11-14T00:36:28.7603201Z 
+2026-11-14T00:36:28.7625673Z Sucafinav1/test/product/wp01/browser-lifecycle.test.ts:
+2026-11-14T00:36:28.7627560Z WP01 browser final close starting {
+2026-11-14T00:36:28.7628138Z   pid: 4344,
+2026-11-14T00:36:28.7639725Z   connected: true,
+2026-11-14T00:36:28.7645739Z }
+2026-11-14T00:36:28.7816757Z WP01 browser disconnected {
+2026-11-14T00:36:28.7817460Z   pid: 4344,
+2026-11-14T00:36:28.7817907Z   expected: true,
+2026-11-14T00:36:28.7818246Z }
+2026-11-14T00:36:28.8253940Z WP01 browser final close observed {
+2026-11-14T00:36:28.8254345Z   pid: 4344,
+2026-11-14T00:36:28.8254608Z   disconnected: true,
+2026-11-14T00:36:28.8254885Z   connected: false,
+2026-11-14T00:36:28.8255145Z   processExited: true,
+2026-11-14T00:36:28.8255879Z }
+2026-11-14T00:36:28.8256179Z WP01 browser lifecycle final evidence {
+2026-11-14T00:36:28.8256857Z   launches: 1,
+2026-11-14T00:36:28.8257232Z   acquisitions: 3,
+2026-11-14T00:36:28.8257604Z   releases: 3,
+2026-11-14T00:36:28.8257953Z   pid: 4344,
+2026-11-14T00:36:28.8258307Z   activeLease: false,
+2026-11-14T00:36:28.8258697Z   contexts: 0,
+2026-11-14T00:36:28.8259060Z   disconnected: true,
+2026-11-14T00:36:28.8259471Z   processExited: true,
+2026-11-14T00:36:28.8259849Z }
+2026-11-14T00:36:28.8260910Z (pass) WP01 shares one Chromium across files, releases every lease, and proves final process exit [65.36ms]
+2026-11-14T00:36:28.9701905Z 
+2026-11-14T00:36:28.9703418Z omni positive control [59e76f030adff57dae359dbd0bbe964a]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.
+2026-11-14T00:36:28.9704451Z  5 pass
+2026-11-14T00:36:28.9704722Z  0 fail
+2026-11-14T00:36:28.9705005Z  34 expect() calls
+2026-11-14T00:36:28.9705540Z Ran 5 tests across 2 files. [2.44s]
+
+ACTIONS CLEANUP JOB (complete)
+﻿2026-11-14T00:36:35.1368045Z Current runner version: '2.338.2'
+2026-11-14T00:36:35.1393388Z ##[group]Runner Image Provisioner
+2026-11-14T00:36:35.1394320Z Hosted Compute Agent
+2026-11-14T00:36:35.1395039Z Version: 20261103.629
+2026-11-14T00:36:35.1395729Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+2026-11-14T00:36:35.1396733Z Build Date: 2026-11-03T17:26:59Z
+2026-11-14T00:36:35.1397577Z Worker ID: {eaba7131-34ab-4cc1-8c92-f6d3124a5b1c}
+2026-11-14T00:36:35.1398380Z Region: westus2
+2026-11-14T00:36:35.1398987Z Cloud: Azure
+2026-11-14T00:36:35.1399579Z ##[endgroup]
+2026-11-14T00:36:35.1401413Z ##[group]Operating System
+2026-11-14T00:36:35.1402199Z Ubuntu
+2026-11-14T00:36:35.1402787Z 24.04.5
+2026-11-14T00:36:35.1403359Z LTS
+2026-11-14T00:36:35.1403918Z ##[endgroup]
+2026-11-14T00:36:35.1404503Z ##[group]Runner Image
+2026-11-14T00:36:35.1405180Z Image: ubuntu-24.04
+2026-11-14T00:36:35.1405853Z Version: 20261111.370.1
+2026-11-14T00:36:35.1407491Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261111.370/images/ubuntu/Ubuntu2404-Readme.md
+2026-11-14T00:36:35.1409163Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261111.370
+2026-11-14T00:36:35.1410270Z ##[endgroup]
+2026-11-14T00:36:35.1411529Z ##[group]GITHUB_TOKEN Permissions
+2026-11-14T00:36:35.1413788Z Contents: write
+2026-11-14T00:36:35.1414444Z Metadata: read
+2026-11-14T00:36:35.1415538Z ##[endgroup]
+2026-11-14T00:36:35.1418099Z Secret source: Actions
+2026-11-14T00:36:35.1419216Z Cache mode: write
+2026-11-14T00:36:35.1419947Z Prepare workflow directory
+2026-11-14T00:36:35.1770333Z Prepare all required actions
+2026-11-14T00:36:35.1879045Z Complete job name: cleanup
+2026-11-14T00:36:35.3257042Z ##[group]Run gh api --method DELETE "repos/$REPO/git/refs/heads/$BRANCH" || true
+2026-11-14T00:36:35.3258492Z [36;1mgh api --method DELETE "repos/$REPO/git/refs/heads/$BRANCH" || true[0m
+2026-11-14T00:36:35.3538285Z shell: /usr/bin/bash -e {0}
+2026-11-14T00:36:35.3539485Z env:
+2026-11-14T00:36:35.3543746Z   GH_TOKEN: ***
+2026-11-14T00:36:35.3544442Z   REPO: gustavomhss/Orchestra-SF
+2026-11-14T00:36:35.3545270Z   BRANCH: ci-run-linux-astra-wp01-516f1d15-d589f4bc-6
+2026-11-14T00:36:35.3546013Z ##[endgroup]
+2026-11-14T00:36:36.1504830Z Cleaning up orphan processes
+
+
+ARTIFACTS
+{
+  "artifacts": []
+}
+Upload Lean dashboard previews: skipped. Upload Playwright evidence: skipped.
+Cleanup job conclusion: success.

@@ -1,0 +1,477 @@
+{
+  "schema": "astra-interface-executed-selection-v1",
+  "status": "Executed once after W10/6 terminal and physical cleanup; original selection plan preserved below.",
+  "execution": {
+    "W": "0c3d98dd1263a305ce294c78ad5939cdda110a78",
+    "tree": "5c236ef687871149e9150630a16c4ce0ac70c2a7",
+    "S": "fbd7e6ae4831436e8faad88d66954d3207f943d0",
+    "snapshotTree": "0a2402ebc38f19d04429816bd8a3090633d567d4",
+    "requestSha256": "49a393cc9c45e60b378a9299b5480edb47e932bac961ae47be3cdcf61e545a3a",
+    "runId": 43587790889,
+    "jobId": 132425925541,
+    "cleanupJobId": 132426778698,
+    "result": {
+      "pass": 60,
+      "fail": 2,
+      "observations": 62,
+      "files": 13,
+      "assertions": 2099
+    },
+    "limitations": "Two meeting failures retained: initial capture HTTP503 and WholeReview HTTP403. No consumer PASS inferred from process or other tests."
+  },
+  "selectionPlan": {
+    "schema": "astra-interface-surgical-complement-v2",
+    "scope": "Metadata plan only. No run/branch/dispatch; execution requires root publication/final pins and completed W10/6 physical lifecycle.",
+    "request": "interface-w10c-request.json",
+    "request_sha256": "49a393cc9c45e60b378a9299b5480edb47e932bac961ae47be3cdcf61e545a3a",
+    "request_blob": "db3c51ec4021372686faaa5714f08fd7ce9f4ac6",
+    "selected_files": 13,
+    "legacy_consumer_files": 11,
+    "mandatory_lifecycle": [
+      "browser-startup.test.ts",
+      "browser-lifecycle.test.ts"
+    ],
+    "derived_from": {
+      "run_id": 43585747922,
+      "request_sha256": "68b6155e363bd3971f17a3954e210af251ad462cc9025a469cf88cb4f2b96767",
+      "removed_paths": [
+        "./Sucafinav1/test/product/wp01/contextual-decision.test.ts",
+        "./Sucafinav1/test/product/wp01/http.test.ts"
+      ]
+    },
+    "included": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+        "reason": "Mandatory acquisition/final physical cleanup for this fresh shared-process selection. A different run cannot provide lifecycle for these consumers.",
+        "last_run_id": 43585747922,
+        "last_job_id": 132419730244,
+        "product_sha": "770ca62aa97f66deb70126a32d9819ddf7f32833",
+        "snapshot_sha": "21ab870301a54b08fe9b2fb0f7adf46a3ce22238",
+        "observations": [
+          {
+            "name": "WP01 starts one Node-owned Chromium through Omni before leasing it across files",
+            "status": "fail",
+            "log_line": 878,
+            "kind": "named_test",
+            "test_body_entered": true,
+            "failure_family": "shared_chromium_startup_deadline",
+            "browser_journey_reached": false,
+            "proof_completion": "INFRASTRUCTURE_FAILURE",
+            "scope": "Node4096 spawned Chrome4111, but Browser.getVersion remained unanswered at the bounded acquisition deadline. Kernel wait snapshots show disk sleep/folio_wait_bit_common at1–7s and9s. This is no consumer functional result."
+          }
+        ],
+        "actual_beforeAll_failure": false,
+        "named_bodies_entered": 1,
+        "intended_browser_journey_unexecuted": false,
+        "incidental_prior_pass_names": []
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/preview-browser.test.ts",
+        "reason": "Two named field/submit browser consumers stopped on the failed shared pool. Preserve both assertions; the same file also contains two scoped passes, so their incidental repeat is explicit rather than a claim that all four were unexecuted.",
+        "last_run_id": 43585747922,
+        "last_job_id": 132419730244,
+        "product_sha": "770ca62aa97f66deb70126a32d9819ddf7f32833",
+        "snapshot_sha": "21ab870301a54b08fe9b2fb0f7adf46a3ce22238",
+        "observations": [
+          {
+            "name": "dashboard groups retain every canonical destination and its original index",
+            "status": "pass",
+            "log_line": 881,
+            "kind": "named_test",
+            "test_body_entered": true,
+            "browser_journey_reached": false,
+            "proof_completion": "PASS_SCOPED",
+            "scope": "Canonical destination/index mapping PASS. No browser interaction or authorization journey is proven by this observation."
+          },
+          {
+            "name": "field errors identify the input and preserve the draft",
+            "status": "fail",
+            "log_line": 902,
+            "kind": "named_test",
+            "test_body_entered": true,
+            "failure_family": "shared_pool_acquisition_failed",
+            "browser_journey_reached": false,
+            "proof_completion": "BLOCKED_BEFORE_BROWSER_INTERACTION",
+            "scope": "The named test body may have constructed its domain/HTTP fixture, but acquisition encountered the earlier failed shared pool. Its intended browser journey did not execute."
+          },
+          {
+            "name": "procurement submission carries edits from its record's editor",
+            "status": "fail",
+            "log_line": 923,
+            "kind": "named_test",
+            "test_body_entered": true,
+            "failure_family": "shared_pool_acquisition_failed",
+            "browser_journey_reached": false,
+            "proof_completion": "BLOCKED_BEFORE_BROWSER_INTERACTION",
+            "scope": "The named test body may have constructed its domain/HTTP fixture, but acquisition encountered the earlier failed shared pool. Its intended browser journey did not execute."
+          },
+          {
+            "name": "edits made while an apply is in flight remain unsaved in the real shell",
+            "status": "pass",
+            "log_line": 942,
+            "kind": "named_test",
+            "test_body_entered": true,
+            "browser_journey_reached": true,
+            "proof_completion": "PASS_SCOPED",
+            "scope": "Real shell preview/apply-in-flight consumer PASS using an independent Node/Chromium driver; physical cleanup is separately proven. Does not establish the failed shared-pool lifecycle or other journeys."
+          }
+        ],
+        "actual_beforeAll_failure": false,
+        "named_bodies_entered": 4,
+        "intended_browser_journey_unexecuted": true,
+        "incidental_prior_pass_names": [
+          "dashboard groups retain every canonical destination and its original index",
+          "edits made while an apply is in flight remain unsaved in the real shell"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/bi-browser.test.ts",
+        "reason": "Named test body entered but browser acquisition met the earlier failed shared pool; its intended consumer/browser assertions did not run.",
+        "last_run_id": 43585747922,
+        "last_job_id": 132419730244,
+        "product_sha": "770ca62aa97f66deb70126a32d9819ddf7f32833",
+        "snapshot_sha": "21ab870301a54b08fe9b2fb0f7adf46a3ce22238",
+        "observations": [
+          {
+            "name": "authenticated BI renders, filters and fails closed after session revocation",
+            "status": "fail",
+            "log_line": 965,
+            "kind": "named_test",
+            "test_body_entered": true,
+            "failure_family": "shared_pool_acquisition_failed",
+            "browser_journey_reached": false,
+            "proof_completion": "BLOCKED_BEFORE_BROWSER_INTERACTION",
+            "scope": "The named test body may have constructed its domain/HTTP fixture, but acquisition encountered the earlier failed shared pool. Its intended browser journey did not execute."
+          }
+        ],
+        "actual_beforeAll_failure": false,
+        "named_bodies_entered": 1,
+        "intended_browser_journey_unexecuted": true,
+        "incidental_prior_pass_names": []
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/import-receipt-browser.test.ts",
+        "reason": "Named test body entered but browser acquisition met the earlier failed shared pool; its intended consumer/browser assertions did not run.",
+        "last_run_id": 43585747922,
+        "last_job_id": 132419730244,
+        "product_sha": "770ca62aa97f66deb70126a32d9819ddf7f32833",
+        "snapshot_sha": "21ab870301a54b08fe9b2fb0f7adf46a3ce22238",
+        "observations": [
+          {
+            "name": "import reports the persisted unchanged outcome after an uncertain response",
+            "status": "fail",
+            "log_line": 1011,
+            "kind": "named_test",
+            "test_body_entered": true,
+            "failure_family": "shared_pool_acquisition_failed",
+            "browser_journey_reached": false,
+            "proof_completion": "BLOCKED_BEFORE_BROWSER_INTERACTION",
+            "scope": "The named test body may have constructed its domain/HTTP fixture, but acquisition encountered the earlier failed shared pool. Its intended browser journey did not execute."
+          }
+        ],
+        "actual_beforeAll_failure": false,
+        "named_bodies_entered": 1,
+        "intended_browser_journey_unexecuted": true,
+        "incidental_prior_pass_names": []
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/planner-monthly.test.ts",
+        "reason": "The actual monthly grid/paste/conflict journey stopped on shared pool acquisition. The same file also has one non-browser admission PASS, preserved explicitly.",
+        "last_run_id": 43585747922,
+        "last_job_id": 132419730244,
+        "product_sha": "770ca62aa97f66deb70126a32d9819ddf7f32833",
+        "snapshot_sha": "21ab870301a54b08fe9b2fb0f7adf46a3ce22238",
+        "observations": [
+          {
+            "name": "Planner boundary rejects unpublished operations and invalid monthly context before host admission",
+            "status": "pass",
+            "log_line": 1014,
+            "kind": "named_test",
+            "test_body_entered": true,
+            "browser_journey_reached": false,
+            "proof_completion": "PASS_SCOPED",
+            "scope": "Non-browser Planner admission/boundary negative PASS. The monthly grid browser journey in the same file remains blocked."
+          },
+          {
+            "name": "Planner grid previews pasted values and preserves a conflicting draft",
+            "status": "fail",
+            "log_line": 1035,
+            "kind": "named_test",
+            "test_body_entered": true,
+            "failure_family": "shared_pool_acquisition_failed",
+            "browser_journey_reached": false,
+            "proof_completion": "BLOCKED_BEFORE_BROWSER_INTERACTION",
+            "scope": "The named test body may have constructed its domain/HTTP fixture, but acquisition encountered the earlier failed shared pool. Its intended browser journey did not execute."
+          }
+        ],
+        "actual_beforeAll_failure": false,
+        "named_bodies_entered": 2,
+        "intended_browser_journey_unexecuted": true,
+        "incidental_prior_pass_names": [
+          "Planner boundary rejects unpublished operations and invalid monthly context before host admission"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/record-search.test.ts",
+        "reason": "The prior beforeAll failed on the shared pool. Zero named test bodies in this file executed; current actual consumers still require their original assertions.",
+        "last_run_id": 43585747922,
+        "last_job_id": 132419730244,
+        "product_sha": "770ca62aa97f66deb70126a32d9819ddf7f32833",
+        "snapshot_sha": "21ab870301a54b08fe9b2fb0f7adf46a3ce22238",
+        "observations": [
+          {
+            "name": "(unnamed)",
+            "status": "fail",
+            "log_line": 1058,
+            "kind": "hook_failure",
+            "test_body_entered": false,
+            "failure_family": "shared_pool_failed_before_all",
+            "hook_phase": "beforeAll",
+            "browser_journey_reached": false,
+            "proof_completion": "NOT_EXECUTED_BEFORE_ALL_FAILED",
+            "scope": "The beforeAll hook encountered the earlier shared-pool launch failure. No named consumer test body in this file executed."
+          }
+        ],
+        "actual_beforeAll_failure": true,
+        "named_bodies_entered": 0,
+        "intended_browser_journey_unexecuted": true,
+        "incidental_prior_pass_names": []
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+        "reason": "The prior beforeAll failed on the shared pool. Zero named test bodies in this file executed; current actual consumers still require their original assertions.",
+        "last_run_id": 43585747922,
+        "last_job_id": 132419730244,
+        "product_sha": "770ca62aa97f66deb70126a32d9819ddf7f32833",
+        "snapshot_sha": "21ab870301a54b08fe9b2fb0f7adf46a3ce22238",
+        "observations": [
+          {
+            "name": "(unnamed)",
+            "status": "fail",
+            "log_line": 1081,
+            "kind": "hook_failure",
+            "test_body_entered": false,
+            "failure_family": "shared_pool_failed_before_all",
+            "hook_phase": "beforeAll",
+            "browser_journey_reached": false,
+            "proof_completion": "NOT_EXECUTED_BEFORE_ALL_FAILED",
+            "scope": "The beforeAll hook encountered the earlier shared-pool launch failure. No named consumer test body in this file executed."
+          }
+        ],
+        "actual_beforeAll_failure": true,
+        "named_bodies_entered": 0,
+        "intended_browser_journey_unexecuted": true,
+        "incidental_prior_pass_names": []
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/view-recovery.test.ts",
+        "reason": "The prior beforeAll failed on the shared pool. Zero named test bodies in this file executed; current actual consumers still require their original assertions.",
+        "last_run_id": 43585747922,
+        "last_job_id": 132419730244,
+        "product_sha": "770ca62aa97f66deb70126a32d9819ddf7f32833",
+        "snapshot_sha": "21ab870301a54b08fe9b2fb0f7adf46a3ce22238",
+        "observations": [
+          {
+            "name": "(unnamed)",
+            "status": "fail",
+            "log_line": 1104,
+            "kind": "hook_failure",
+            "test_body_entered": false,
+            "failure_family": "shared_pool_failed_before_all",
+            "hook_phase": "beforeAll",
+            "browser_journey_reached": false,
+            "proof_completion": "NOT_EXECUTED_BEFORE_ALL_FAILED",
+            "scope": "The beforeAll hook encountered the earlier shared-pool launch failure. No named consumer test body in this file executed."
+          }
+        ],
+        "actual_beforeAll_failure": true,
+        "named_bodies_entered": 0,
+        "intended_browser_journey_unexecuted": true,
+        "incidental_prior_pass_names": []
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/form-layout.test.ts",
+        "reason": "Named test body entered but browser acquisition met the earlier failed shared pool; its intended consumer/browser assertions did not run.",
+        "last_run_id": 43585747922,
+        "last_job_id": 132419730244,
+        "product_sha": "770ca62aa97f66deb70126a32d9819ddf7f32833",
+        "snapshot_sha": "21ab870301a54b08fe9b2fb0f7adf46a3ce22238",
+        "observations": [
+          {
+            "name": "All editor screens keep readable field widths and ordered configuration sections",
+            "status": "fail",
+            "log_line": 1127,
+            "kind": "named_test",
+            "test_body_entered": true,
+            "failure_family": "shared_pool_acquisition_failed",
+            "browser_journey_reached": false,
+            "proof_completion": "BLOCKED_BEFORE_BROWSER_INTERACTION",
+            "scope": "The named test body may have constructed its domain/HTTP fixture, but acquisition encountered the earlier failed shared pool. Its intended browser journey did not execute."
+          }
+        ],
+        "actual_beforeAll_failure": false,
+        "named_bodies_entered": 1,
+        "intended_browser_journey_unexecuted": true,
+        "incidental_prior_pass_names": []
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/visual-layout.test.ts",
+        "reason": "Named test body entered but browser acquisition met the earlier failed shared pool; its intended consumer/browser assertions did not run.",
+        "last_run_id": 43585747922,
+        "last_job_id": 132419730244,
+        "product_sha": "770ca62aa97f66deb70126a32d9819ddf7f32833",
+        "snapshot_sha": "21ab870301a54b08fe9b2fb0f7adf46a3ce22238",
+        "observations": [
+          {
+            "name": "Executive metrics align, fill the content area and fit desktop and mobile viewports",
+            "status": "fail",
+            "log_line": 1151,
+            "kind": "named_test",
+            "test_body_entered": true,
+            "failure_family": "shared_pool_acquisition_failed",
+            "browser_journey_reached": false,
+            "proof_completion": "BLOCKED_BEFORE_BROWSER_INTERACTION",
+            "scope": "The named test body may have constructed its domain/HTTP fixture, but acquisition encountered the earlier failed shared pool. Its intended browser journey did not execute."
+          }
+        ],
+        "actual_beforeAll_failure": false,
+        "named_bodies_entered": 1,
+        "intended_browser_journey_unexecuted": true,
+        "incidental_prior_pass_names": []
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/portfolio-recovery.test.ts",
+        "reason": "The prior beforeAll failed on the shared pool. Zero named test bodies in this file executed; current actual consumers still require their original assertions.",
+        "last_run_id": 43585747922,
+        "last_job_id": 132419730244,
+        "product_sha": "770ca62aa97f66deb70126a32d9819ddf7f32833",
+        "snapshot_sha": "21ab870301a54b08fe9b2fb0f7adf46a3ce22238",
+        "observations": [
+          {
+            "name": "(unnamed)",
+            "status": "fail",
+            "log_line": 1200,
+            "kind": "hook_failure",
+            "test_body_entered": false,
+            "failure_family": "shared_pool_failed_before_all",
+            "hook_phase": "beforeAll",
+            "browser_journey_reached": false,
+            "proof_completion": "NOT_EXECUTED_BEFORE_ALL_FAILED",
+            "scope": "The beforeAll hook encountered the earlier shared-pool launch failure. No named consumer test body in this file executed."
+          }
+        ],
+        "actual_beforeAll_failure": true,
+        "named_bodies_entered": 0,
+        "intended_browser_journey_unexecuted": true,
+        "incidental_prior_pass_names": []
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/meeting-number.test.ts",
+        "reason": "The financial-stability browser journey has not run after shared-pool acquisition. Keep the entire file: its independent positive C05 HTTP counterproof actually executed and failed403, and must not be suppressed or labeled infrastructure-only.",
+        "last_run_id": 43585747922,
+        "last_job_id": 132419730244,
+        "product_sha": "770ca62aa97f66deb70126a32d9819ddf7f32833",
+        "snapshot_sha": "21ab870301a54b08fe9b2fb0f7adf46a3ce22238",
+        "observations": [
+          {
+            "name": "a live Dashboard meeting keeps its financial number during background refresh and reopens an authorized historical capture",
+            "status": "fail",
+            "log_line": 1223,
+            "kind": "named_test",
+            "test_body_entered": true,
+            "failure_family": "shared_pool_acquisition_failed",
+            "browser_journey_reached": false,
+            "proof_completion": "BLOCKED_BEFORE_BROWSER_INTERACTION",
+            "scope": "The named test body may have constructed its domain/HTTP fixture, but acquisition encountered the earlier failed shared pool. Its intended browser journey did not execute."
+          },
+          {
+            "name": "C05 reopens the same preserved financial meeting after a canonical budget change with its original authorized content",
+            "status": "fail",
+            "log_line": 1247,
+            "kind": "named_test",
+            "test_body_entered": true,
+            "failure_family": "c05_preserved_review_reopen_denied",
+            "browser_journey_reached": false,
+            "proof_completion": "FAILED_REAL_HTTP_PRODUCT_ASSERTION",
+            "scope": "A real preserved financial meeting was reopened after a canonical budget change with current access. The positive contract requires200; actual HTTP403 denied/access-unavailable, with the same source incarnation. This test is independent of Chromium."
+          }
+        ],
+        "actual_beforeAll_failure": false,
+        "named_bodies_entered": 2,
+        "intended_browser_journey_unexecuted": true,
+        "incidental_prior_pass_names": []
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+        "reason": "Mandatory acquisition/final physical cleanup for this fresh shared-process selection. A different run cannot provide lifecycle for these consumers.",
+        "last_run_id": 43585747922,
+        "last_job_id": 132419730244,
+        "product_sha": "770ca62aa97f66deb70126a32d9819ddf7f32833",
+        "snapshot_sha": "21ab870301a54b08fe9b2fb0f7adf46a3ce22238",
+        "observations": [
+          {
+            "name": "WP01 shares one Chromium across files, releases every lease, and proves final process exit",
+            "status": "fail",
+            "log_line": 1301,
+            "kind": "named_test",
+            "test_body_entered": true,
+            "failure_family": "shared_pool_finalizer_failed_after_startup",
+            "browser_journey_reached": false,
+            "proof_completion": "INFRASTRUCTURE_FAILURE",
+            "scope": "The finalizer reports the earlier failed shared pool. No complete shared-browser physical lifecycle proof was emitted for this selection."
+          }
+        ],
+        "actual_beforeAll_failure": false,
+        "named_bodies_entered": 1,
+        "intended_browser_journey_unexecuted": true,
+        "incidental_prior_pass_names": []
+      }
+    ],
+    "excluded": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/contextual-decision.test.ts",
+        "reason": "Real BusinessServices fixture migration and the actual consumer body passed in exact W9; no material complementary change identified. Do not rerun for inventory completeness.",
+        "run_id": 43586466170,
+        "job_id": 132421925833,
+        "product_sha": "01633144c83fb1080e6d985ef226b8db2aa131cb",
+        "snapshot_sha": "7f9657d7217ba5ceccdbf09b9ed5ec0cf866169c",
+        "observations": [
+          {
+            "name": "contract context uses mounted evidence, survives a lost response, and rejects tamper and revocation",
+            "status": "pass",
+            "log_line": 1296,
+            "kind": "named_test",
+            "proof_kind": "REAL_CONTEXTUAL_DECISION_COMPONENT",
+            "scope": "Real mounted contract evidence, authority/BusinessServices and contextual decision consumer; loss/tamper/revocation assertions PASS. Native resident and complete host routing remain separate."
+          }
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp01/http.test.ts",
+        "reason": "Real BusinessServices fixture migration and the actual consumer body passed in exact W9; no material complementary change identified. Do not rerun for inventory completeness.",
+        "run_id": 43586466170,
+        "job_id": 132421925833,
+        "product_sha": "01633144c83fb1080e6d985ef226b8db2aa131cb",
+        "snapshot_sha": "7f9657d7217ba5ceccdbf09b9ed5ec0cf866169c",
+        "observations": [
+          {
+            "name": "workbench uses actual identity, SQLite and case dispatcher with revocation and CSRF",
+            "status": "pass",
+            "log_line": 1282,
+            "kind": "named_test",
+            "proof_kind": "REAL_AUTH_SQLITE_WORKBENCH_COMPONENT",
+            "scope": "Workbench consumer with real identity, SQLite, canonical case dispatcher and real BusinessServices; revocation/CSRF assertions PASS. Does not establish every installed host route/native journey."
+          }
+        ]
+      }
+    ],
+    "exact_changes_from_previous_request": "Only the two proven W9 HTTP/contextual files removed; order, package, runner, env and120000 envelope unchanged. No broad filters, test-name filters, retries, warmups, skips or relaxed assertions.",
+    "deduplication": "No equivalent run selected at the new product/fixture head. Previously passing co-located cases are explicitly listed; repeats are limited to files still needed for blocked real consumers plus mandatory acquisition/finalizer.",
+    "pending_pin": {
+      "product_sha": null,
+      "tree": null,
+      "snapshot_sha": null,
+      "requirement": "Compare final W/S and exact selected blobs; only request may differ. Wait for root preflight and existing W10 run completion."
+    }
+  }
+}

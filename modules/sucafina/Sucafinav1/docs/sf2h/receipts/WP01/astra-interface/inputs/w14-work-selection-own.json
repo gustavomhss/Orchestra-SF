@@ -1,0 +1,115 @@
+{
+  "schema": "astra-own-increment-v1",
+  "name": "WP01 case work selection and destination access recovery",
+  "base": {
+    "head": "4bd1f807e449d040e3db61c4d2b1e177b205ac69",
+    "tree": "2459923b94c080688a31a1138e73ddf30c5be744"
+  },
+  "status": "candidate for peer freeze and Actions; not executed locally",
+  "criteria": [
+    "WP01.T04.CMP.01",
+    "WP01.T04.CMP.02",
+    "WP01.T04.SUC.01",
+    "WP01.T03.CMP.01"
+  ],
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+      "blob": "930c93a1704d0444519ffa85b8f69f57cc6c2735",
+      "sha256": "75e5099ff70d345028f0c5d867bd16340484746420d86e54d5b7aeefde390949",
+      "bytes": 24430
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts",
+      "blob": "031770797872f4bca0985ac881515539614f5201",
+      "sha256": "b44e26f770ff03768798b1b457262e1dca6132d0653faa9c64b067160e845175",
+      "bytes": 35645
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/case-work-selection.ts",
+      "blob": "3f76f17d51d09b86fa63a5c98c70cd4e77c91713",
+      "sha256": "af1e3caf4aa78885bee1a82518b88a01c5f7db9daf27c22ddb8feb0b7a03304e",
+      "bytes": 17851
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/work-selection-domain-fixture.ts",
+      "blob": "85ee6b0c7111023fc58576c1ad227907daed18a4",
+      "sha256": "42fb45aa9e7f3b85cad25da07f2037334f5f4641d118314b6d095fb117dc6c6b",
+      "bytes": 13566
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/case-work-selection.test.ts",
+      "blob": "3699a3c9c3206e86878770768a2399fc49d11618",
+      "sha256": "d5f6093df48d5e7c0bd7b897f8d51744f6fa18040813d835535dc4b624bba1e2",
+      "bytes": 14709
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/work-destination-recovery.test.ts",
+      "blob": "6321582683cfaec721ad5cf0624a8e2da6e37226",
+      "sha256": "21f0fff966bb475d9c8556c5628c387d28ff030491842242b9f2e3c5315c2957",
+      "bytes": 15844
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/README.md",
+      "blob": "e6aa3175931b38e1a12e02664a859779993506a5",
+      "sha256": "3352d29881776166360044a2bd83a2be50697f82ba31504e023a3e5490a114fb",
+      "bytes": 3764
+    },
+    {
+      "path": "docs/guides/sucafina-workbench.md",
+      "blob": "97adc8ba58ed3fbd6d20fc02e9154c9ef7499647",
+      "sha256": "35a849a4877e29d4d60be2ff6b63f93902762765cb94f169b661af40cce8b5bf",
+      "bytes": 20993
+    }
+  ],
+  "producer_reconcile": {
+    "compose_head": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+    "compose_tree": "57ce597f3ebe8ddb543f9d71d34d20f789c76e33",
+    "business_services_blob": "4b02413b5a98e750187fa8f5fa54f3cb2415f4e3",
+    "host_context_blob": "834b3c967d73411771e1f5aa82b683c6427e6769",
+    "collaboration_pin": "2784daafbb0d3b58b6019822288a07fa38e5c5b0",
+    "case_selection_blob": "ec80e2916c8a06cbb471cf02e30bb1cb5ebd9cc0",
+    "work_port_blob": "a01b11e23e650ffb218fd0a64640110fbc2f8710",
+    "host_blob": "0376f81eb7978807106d259d6f65a9b4e1ed3a2a",
+    "http_routes_blob": "8e43041300f452a83d6b8f1895e73188a81138a3"
+  },
+  "causal_selection": [
+    "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+    "./Sucafinav1/test/product/wp01/question-recipients.test.ts",
+    "./Sucafinav1/test/product/wp01/case-work-selection.test.ts",
+    "./Sucafinav1/test/product/wp01/work-destination-recovery.test.ts",
+    "./Sucafinav1/test/product/wp01/http.test.ts",
+    "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts"
+  ],
+  "conditional_selection": [
+    "edit-recovery.test.ts only when the separate W13 delayed-review counterproof repair is included by root"
+  ],
+  "foreign_edits": [],
+  "preservation": {
+    "question_and_thread_blocks": "unchanged from W13",
+    "existing_assertions": "retained; new tests added",
+    "recipient_fixture_fix": "real record issuer and source host over the same authority/persistence, no BCS export assumed"
+  },
+  "real_test_cases": {
+    "case_work_selection": 5,
+    "work_destination_recovery": 2,
+    "recipients_preserved": 2
+  },
+  "gaps": [
+    "Published Compose BCS does not supply WorkSignals: case-bound cycle/work list returns real503 work-signals-unavailable. Test preserves this negative rather than fabricating an empty provider.",
+    "Published Compose BCS does not supply workDestination: no positive navigation acceptance claimed.",
+    "SelectionDraft has no responsibleIds; recipient selection remains the separate real question action. Global non-case first-cycle selectors remain outside this case-bound producer.",
+    "Private create does not accept expectedCaseVersion; UI reads the authorized case before creating and after an acknowledgement, and does not present a changed case as the reviewed one.",
+    "First409 conflict/selection-not-committed is statically confirmed precommit; explicit review was added, but this branch is not claimed as a real end-to-end counterproof yet."
+  ],
+  "proof_limits": [
+    "No Actions result claimed for this candidate",
+    "No native execution or global gate acceptance",
+    "No mock authority, state, directory, successful destination, or empty signals provider"
+  ],
+  "peer_review": {
+    "case_selection": "wp02_read: no blocker in final candidate; no executed proof for first-known-409 branch",
+    "destination": "ci_reconcile: final read of blob 6321582683cfaec721ad5cf0624a8e2da6e37226 completed without a causal blocker; real capture dependency is present. Reference: wp01-work-destination-w14-peer-read.json, SHA256 7dc7f10f8d827ecf1f427aff7a84c09fbceced48b1d487125e78bf0ddb899ac6. Static peer review only; no product execution or successful destination claim.",
+    "root_access_revocation": "Observed401/403 or principal/accessRevision change now emits one global sf-access-revoked outside the listener; real logout test observes exactly1 event plus all prior purge assertions."
+  }
+}

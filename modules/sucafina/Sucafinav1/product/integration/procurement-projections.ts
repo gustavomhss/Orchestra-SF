@@ -16,7 +16,7 @@ export function projectSfProcurementScope(surface: Surface, snapshot: Snapshot, 
   const actor: Actor = { id: scope.principalRef, roles: selector.roles, canWrite: selector.canWrite, assigned: [], domains: [] }
   const view = domain.view(snapshot, actor, { at: "1970-01-01T00:00:00Z", directory: [], id: () => "" })
   if (selector.kind === "procurement-record-v1" && (scope.recordType === "procurement-request" || scope.recordType === "procurement-supplier")) {
-    const fields = scope.recordType === "procurement-request" ? ["status", "holder", "stageEnteredAt", "ageDays", "baseAmount", "submittedAmount", "submittedCurrency", "submittedFxRate", "originalAmount", "originalCurrency", "fxRate", "fxSource", "monetaryState", "subject", "reason", "nextStep", "sourcing"] : ["number", "legalName", "status", "categories", "taxId"]
+    const fields = scope.recordType === "procurement-request" ? ["status", "holder", "approvalStage", "stageEnteredAt", "ageDays", "baseAmount", "submittedAmount", "submittedCurrency", "submittedFxRate", "originalAmount", "originalCurrency", "fxRate", "fxSource", "monetaryState", "subject", "reason", "nextStep", "sourcing"] : ["number", "legalName", "status", "categories", "taxId"]
     if (digestSfValue(selector.fields) !== digestSfValue(fields)) return undefined
     const records = rows(scope.recordType === "procurement-request" ? view.data.requests : view.data.suppliers).filter((record) => (scope.recordType === "procurement-request" ? record.number : record.id) === scope.recordId)
     if (records.length !== 1) return undefined

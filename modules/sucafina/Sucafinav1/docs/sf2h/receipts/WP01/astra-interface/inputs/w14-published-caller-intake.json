@@ -1,0 +1,467 @@
+{
+  "schema": "astra-published-input-manifest-v1",
+  "status": "FROZEN_REVIEW_NOT_IMPORTED_NOT_EXECUTED",
+  "baseline": {
+    "head": "4bd1f807e449d040e3db61c4d2b1e177b205ac69",
+    "tree": "2459923b94c080688a31a1138e73ddf30c5be744",
+    "staticRun": 43590727281,
+    "staticJob": 132434661801,
+    "receipt": "analysis/static-43590727281.receipt.json"
+  },
+  "reconciledHeads": {
+    "Compose": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+    "Collaboration": "2784daafbb0d3b58b6019822288a07fa38e5c5b0",
+    "Operations": "ba8a09e371ce8d93eb917eabb102caaee5affaf4"
+  },
+  "reconcileFromRootOnly": {
+    "Finance": "0c4a2545a63b4903c7eedb00d3f0989eb74ed398",
+    "casePortTestBlob": "42cbc7e3440192c71df79e6adbe86f95aa75e6df",
+    "effect": "Root verified same test blob; prior C12 preservation finding remains. No new audit/credit by this reviewer."
+  },
+  "diagnosticCorrection": "The initial message attributed the local W13 missing ReviewHost fields to the published Dashboard caller. Exact diff corrected that: Compose0891d178 already supplies creationTarget and deny-nonempty guards; it is directly consumable. No Dashboard author patch is included.",
+  "originalForeignUniqueLocations": 11,
+  "publishedIntakeAddresses": 2,
+  "remainingAfterTheseTwoInputs": {
+    "hostContextDiscriminantLocations": 5,
+    "retainedWp07ReviewHostLocations": 4
+  },
+  "inputs": [
+    {
+      "path": "apps/cli/src/sucafina-product/dashboard-services.ts",
+      "sourceOwner": "Compose",
+      "sourceRef": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "sourceBlob": "0891d178833165fff098e3c05f3a64c5f5b35043",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/ed10a3806a4ffdf6ad5891e2065d93a4c91412cf/apps/cli/src/sucafina-product/dashboard-services.ts",
+      "cachePath": "/workspace/scratch/080d03a98f2e/reference/w13-static-published/compose/apps/cli/src/sucafina-product/dashboard-services.ts",
+      "bytes": 29221,
+      "blob": "0891d178833165fff098e3c05f3a64c5f5b35043",
+      "sha256": "7a44e3ebca4ecc31bca3e4842c09f2e31fff0bb24523d869fbcc7e1125e40611",
+      "baseline": {
+        "bytes": 28976,
+        "blob": "24c76c54e314c0c0579bf4beaaca8f492a7038b5",
+        "sha256": "46cc2e3c2e535012d6f0fd60aa9074ebc50dd1a07c4042d159b2cd3c03a12cd2"
+      },
+      "action": "READY_FOR_ROOT_EXACT_BLOB_INTAKE_NOT_IMPORTED_BY_REVIEWER",
+      "importsIdenticalToW13": true,
+      "directDependencies": [
+        "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+        "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+        "modules/sucafina/Sucafinav1/product/contracts/context.ts",
+        "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+        "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+        "modules/sucafina/Sucafinav1/product/contracts/state.ts",
+        "modules/sucafina/Sucafinav1/product/contracts/validation.ts",
+        "modules/sucafina/Sucafinav1/product/dashboard/agenda.ts",
+        "modules/sucafina/Sucafinav1/product/dashboard/confirmation-issuer.ts",
+        "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+        "modules/sucafina/Sucafinav1/product/dashboard/historical-bindings.ts",
+        "modules/sucafina/Sucafinav1/product/dashboard/sources.ts",
+        "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+        "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+        "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+        "modules/sucafina/Sucafinav1/product/integration/dashboard-sources.ts",
+        "modules/sucafina/Sucafinav1/product/reviews/port.ts",
+        "modules/sucafina/Sucafinav1/runtime/contract.ts"
+      ],
+      "externalDependenciesUnchanged": [
+        "node:crypto"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/documents/capabilities.ts",
+      "sourceOwner": "Operations",
+      "sourceRef": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+      "sourceBlob": "6b655187d4444cff5b8966e868ba163191adfc42",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/ba8a09e371ce8d93eb917eabb102caaee5affaf4/modules/sucafina/Sucafinav1/product/documents/capabilities.ts",
+      "cachePath": "/workspace/scratch/080d03a98f2e/reference/w13-static-published/operations/modules/sucafina/Sucafinav1/product/documents/capabilities.ts",
+      "bytes": 25051,
+      "blob": "6b655187d4444cff5b8966e868ba163191adfc42",
+      "sha256": "5a899e7b74607cd1b5469a80071e6f46961eefdce3ad081e833a5927a1e1f490",
+      "baseline": {
+        "bytes": 21082,
+        "blob": "d2eb0f7c3532a56ce547429c66f5e6dd9af8e072",
+        "sha256": "6385e2d38d44962e0fa9dcba26888e5b7cfa3d6bc5ecba16ec8e75fb0e983128"
+      },
+      "action": "READY_FOR_ROOT_EXACT_BLOB_INTAKE_NOT_IMPORTED_BY_REVIEWER",
+      "importsIdenticalToW13": true,
+      "directDependencies": [
+        "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+        "modules/sucafina/Sucafinav1/product/contracts/outputs.ts",
+        "modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+        "modules/sucafina/Sucafinav1/product/contracts/operations.ts",
+        "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+        "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+        "modules/sucafina/Sucafinav1/product/contracts/state.ts",
+        "modules/sucafina/Sucafinav1/product/documents/evidence-resolver.ts",
+        "modules/sucafina/Sucafinav1/product/documents/index.ts",
+        "modules/sucafina/Sucafinav1/product/documents/extract.ts",
+        "modules/sucafina/Sucafinav1/product/documents/rag-adapter.ts",
+        "modules/sucafina/Sucafinav1/product/documents/store.ts",
+        "modules/sucafina/Sucafinav1/product/documents/source-fence.ts"
+      ],
+      "externalDependenciesUnchanged": [
+        "@orchestra/rag-studio"
+      ]
+    }
+  ],
+  "preservedDependencyCount": 27,
+  "preservedDependencies": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "bytes": 3612,
+      "blob": "1769271386cdda1017c38023b0988ce2d64423d2",
+      "sha256": "c3b11a2acabf6539c09e33489accfc53d8ee61a38063294c7d9003b74c753291",
+      "action": "PRESERVE_W13_EXACT",
+      "reason": "Existing dependency; the candidate introduces no import or public-signature change requiring its replacement."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+      "bytes": 5643,
+      "blob": "102c849084980ae52223809d33bdeea36a58536b",
+      "sha256": "6047c7239f2dbb36d40ed09880f908dc9033e362a599a6921798bbdccbef031a",
+      "action": "PRESERVE_W13_EXACT",
+      "reason": "Existing dependency; the candidate introduces no import or public-signature change requiring its replacement."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/context.ts",
+      "bytes": 6977,
+      "blob": "ae2d6b73a24970ba23d21e17694b54fd32d1a700",
+      "sha256": "a703d59373a826021214617867191e0a8bba920cef9ead22dc064e0f018e6517",
+      "action": "PRESERVE_W13_EXACT",
+      "reason": "Existing dependency; the candidate introduces no import or public-signature change requiring its replacement."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "bytes": 9232,
+      "blob": "61099006a0312f2cabc1e42fb5b625c859d0eb15",
+      "sha256": "07eb4dfc264a1150b5b06b00170ebcc8da1ce0b62e0ef94f5dfee57bddfa5aad",
+      "action": "PRESERVE_W13_EXACT",
+      "reason": "Existing dependency; the candidate introduces no import or public-signature change requiring its replacement."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "bytes": 3022,
+      "blob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95",
+      "sha256": "a3cf340b5c4e73b9a6cb64892ee47de1c2176bb77a34d93cec326b09f5fdc1d6",
+      "action": "PRESERVE_W13_EXACT",
+      "reason": "Existing dependency; the candidate introduces no import or public-signature change requiring its replacement."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/state.ts",
+      "bytes": 9143,
+      "blob": "755639b2a16265fe164ba2e6343738c1362d168c",
+      "sha256": "ed588ca9aa44aac43882c31a0d7b75857adb5790790b3a0e44ddac75f3bc0af0",
+      "action": "PRESERVE_W13_EXACT",
+      "reason": "Existing dependency; the candidate introduces no import or public-signature change requiring its replacement."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/validation.ts",
+      "bytes": 2967,
+      "blob": "44e79b3009076e9fae595e79a8c72a8f3918f14b",
+      "sha256": "2fe8236bd56162cb9e5398b1155320057fd12f5f51f3700eb46aee2a8d7b1b15",
+      "action": "PRESERVE_W13_EXACT",
+      "reason": "Existing dependency; the candidate introduces no import or public-signature change requiring its replacement."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/agenda.ts",
+      "bytes": 23941,
+      "blob": "32b95d4a270cb9b9c987c6cb3097dbd6de975895",
+      "sha256": "de91827bb2c4816a75a56a6e5ca5ca8b8c77c4f7c27a1918db1e2215aad9768f",
+      "action": "PRESERVE_W13_EXACT",
+      "reason": "Existing dependency; the candidate introduces no import or public-signature change requiring its replacement."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation-issuer.ts",
+      "bytes": 4314,
+      "blob": "2493b4d16cdec9a0798fc6627a02b07f9859ad4d",
+      "sha256": "d3ac5e8ae9d6b23d41da0916d3faa9910047f6e94ce41829849a4065fbfc1ef7",
+      "action": "PRESERVE_W13_EXACT",
+      "reason": "Existing dependency; the candidate introduces no import or public-signature change requiring its replacement."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+      "bytes": 28021,
+      "blob": "562cdca31a843ad893bc5f31eab039c55e7c9baa",
+      "sha256": "8c80486f9c928b850e7e26a9a9b74c038def3446f559ee073cb6e5cb68f6ea1b",
+      "action": "PRESERVE_W13_EXACT",
+      "reason": "Existing dependency; the candidate introduces no import or public-signature change requiring its replacement."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/historical-bindings.ts",
+      "bytes": 7364,
+      "blob": "01ab380bd9a2b0b4c8db0d62984492e12598c034",
+      "sha256": "843cdf2a5bb24bff5bb01ea10470a8d24f964664cb30f2e623d1df06ffda4935",
+      "action": "PRESERVE_W13_EXACT",
+      "reason": "Existing dependency; the candidate introduces no import or public-signature change requiring its replacement."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/sources.ts",
+      "bytes": 16016,
+      "blob": "c32c973c0b4111e4ac7df0c5d934e094277823f6",
+      "sha256": "fe44de260ce2d30d3ae48308517437c9a7b68681f702e536e16b7a1a9233ad61",
+      "action": "PRESERVE_W13_EXACT",
+      "reason": "Existing dependency; the candidate introduces no import or public-signature change requiring its replacement."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "bytes": 22358,
+      "blob": "2c82d60d220d8d5365da8322bad648a64bbb62d2",
+      "sha256": "c3d843a4bb26a0f74fce550aa1114ae490e0410e1bcc4016a33b62c72c49eb81",
+      "action": "PRESERVE_W13_EXACT",
+      "reason": "Existing dependency; the candidate introduces no import or public-signature change requiring its replacement."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+      "bytes": 10621,
+      "blob": "ec265772aa3100f6f69648cbd444fcdfde01b754",
+      "sha256": "f6f7db8d392ab07123e0f872831c3d2600070dae3d9b218d751a16b55097ca12",
+      "action": "PRESERVE_W13_EXACT",
+      "reason": "Existing dependency; the candidate introduces no import or public-signature change requiring its replacement."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "bytes": 14100,
+      "blob": "d0cab7f33b08806a6bb01a869fa789dc77e087ee",
+      "sha256": "4bf78ba13cc1533a93408b97125e66b21bbadf26b286176252ab9fd8930f0289",
+      "action": "PRESERVE_W13_EXACT",
+      "reason": "Existing dependency; the candidate introduces no import or public-signature change requiring its replacement."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/dashboard-sources.ts",
+      "bytes": 8314,
+      "blob": "4ddee38662690ce5284cc46ef04d315cb3fb4f6c",
+      "sha256": "af0164cbb864b16e4cc813e1f49fdb6711a705a3722bad6e1b61c75e794333e8",
+      "action": "PRESERVE_W13_EXACT",
+      "reason": "Existing dependency; the candidate introduces no import or public-signature change requiring its replacement."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/port.ts",
+      "bytes": 35313,
+      "blob": "62db836fd93e349f19d007e1933396420a3540ff",
+      "sha256": "eaa1fc11729c16f08d808d55219a7140348a3f7686f0cdaa2de87d09acfe13d6",
+      "action": "PRESERVE_W13_EXACT",
+      "reason": "Existing dependency; the candidate introduces no import or public-signature change requiring its replacement."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "bytes": 4642,
+      "blob": "b62fce6f0fb0845dbfd18cc94009c33f1586b9c5",
+      "sha256": "cb9ea7ac4610fc19cf6caa51a7339df9fd69ae181cdf638a8712779c846987c0",
+      "action": "PRESERVE_W13_EXACT",
+      "reason": "Existing dependency; the candidate introduces no import or public-signature change requiring its replacement."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/outputs.ts",
+      "bytes": 12947,
+      "blob": "4db2e631bd83ccda67442824557881c2ed990c92",
+      "sha256": "4de7c758a68bab91ed464dd465d9e17ba7146a05e2a4b8c66ad1161297534a80",
+      "action": "PRESERVE_W13_EXACT",
+      "reason": "Existing dependency; the candidate introduces no import or public-signature change requiring its replacement."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+      "bytes": 7262,
+      "blob": "f22b00f0a97ab138d1d8b86855f432c6ef709c36",
+      "sha256": "d2929cd8cf8f67e697b2584684491346905657c69cfed2ab144d26a9a646deaf",
+      "action": "PRESERVE_W13_EXACT",
+      "reason": "Existing dependency; the candidate introduces no import or public-signature change requiring its replacement."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/operations.ts",
+      "bytes": 50543,
+      "blob": "88550f78693ba1a66b285f2f53abcd3f8c09afdc",
+      "sha256": "4b4dea78486ca436a03725e44d98951333ca15f353bdf02e204e8a0914f58527",
+      "action": "PRESERVE_W13_EXACT",
+      "reason": "Existing dependency; the candidate introduces no import or public-signature change requiring its replacement."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/documents/evidence-resolver.ts",
+      "bytes": 6597,
+      "blob": "ae8b296b6565aeaf6748dfd86cd1b4593a0463d7",
+      "sha256": "b1e65930f0ba7082b0494f0298c0133260c56d0ce93e98ab11749d5f9c13f1de",
+      "action": "PRESERVE_W13_EXACT",
+      "reason": "Existing dependency; the candidate introduces no import or public-signature change requiring its replacement."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/documents/index.ts",
+      "bytes": 5501,
+      "blob": "33a2cc39a1f614b8df120395615cb12c6de0efde",
+      "sha256": "c9e186818f34f3a9f128cc73c275c374941e5d79d386ee098ed7cf2e714bfe82",
+      "action": "PRESERVE_W13_EXACT",
+      "reason": "Existing dependency; the candidate introduces no import or public-signature change requiring its replacement."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/documents/extract.ts",
+      "bytes": 3173,
+      "blob": "883ffb39b09d5073407a37ef7814884b57be2285",
+      "sha256": "443550f7a1bc97aaced3afce8f23fdc23d01d8728eb447b898f8424e31beb6c9",
+      "action": "PRESERVE_W13_EXACT",
+      "reason": "Existing dependency; the candidate introduces no import or public-signature change requiring its replacement."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/documents/rag-adapter.ts",
+      "bytes": 3757,
+      "blob": "b968936724192eaab050cf48e69dc5a634dc54d9",
+      "sha256": "a1f6fb390f7a535ad7bd516c3b03501996b2901e4562348dee187c7745487203",
+      "action": "PRESERVE_W13_EXACT",
+      "reason": "Existing dependency; the candidate introduces no import or public-signature change requiring its replacement."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/documents/store.ts",
+      "bytes": 3280,
+      "blob": "330b2a2ece099a2e1868d1db7b405f4373533350",
+      "sha256": "43ea98054262efbf107927ef4e720964182a172822b15cc72528cb78c78433df",
+      "action": "PRESERVE_W13_EXACT",
+      "reason": "Existing dependency; the candidate introduces no import or public-signature change requiring its replacement."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/documents/source-fence.ts",
+      "bytes": 1629,
+      "blob": "c6c08b32c206fb2b77be7d9d66e7f145c75483f9",
+      "sha256": "bfb3e78897260c26b0ed5da0c40759944b77103c32a164675dac0d0e78adadf0",
+      "action": "PRESERVE_W13_EXACT",
+      "reason": "Existing dependency; the candidate introduces no import or public-signature change requiring its replacement."
+    }
+  ],
+  "hostContextAlternative": {
+    "path": "apps/cli/src/sucafina-product/host-context.ts",
+    "sourceRef": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+    "bytes": 74908,
+    "blob": "834b3c967d73411771e1f5aa82b683c6427e6769",
+    "sha256": "6a608e24847fe730b645d5f51f86e47d83e803875162820038e0c05d18f96772",
+    "action": "DO_NOT_INTAKE_FOR_THIS_SLICE_CLOSURE_NOT_PRESERVED",
+    "missingDirectPaths": [
+      "apps/cli/src/sucafina-product/alternative-captures.ts",
+      "apps/cli/src/sucafina-product/analysis-host-services.ts",
+      "apps/cli/src/sucafina-product/analysis-http.ts",
+      "apps/cli/src/sucafina-product/analysis-memory-evidence.ts",
+      "apps/cli/src/sucafina-product/analysis-namespaces.ts",
+      "apps/cli/src/sucafina-product/analysis-native-inputs.ts",
+      "apps/cli/src/sucafina-product/analysis-run-context.ts",
+      "apps/cli/src/sucafina-product/analysis-stale-commit.ts",
+      "apps/cli/src/sucafina-product/baseline-services.ts",
+      "apps/cli/src/sucafina-product/decision-domain-http.ts",
+      "apps/cli/src/sucafina-product/decision-domain-services.ts",
+      "apps/cli/src/sucafina-product/document-analysis.ts",
+      "apps/cli/src/sucafina-product/dossier-services.ts",
+      "apps/cli/src/sucafina-product/extended-business-services.ts",
+      "apps/cli/src/sucafina-product/forecast-input-adapter.ts",
+      "apps/cli/src/sucafina-product/memory-http.ts",
+      "apps/cli/src/sucafina-product/memory-selection.ts",
+      "apps/cli/src/sucafina-product/memory-services.ts",
+      "apps/cli/src/sucafina-product/native-identity.ts",
+      "apps/cli/src/sucafina-product/review-services.ts",
+      "apps/cli/src/sucafina-product/routine-inputs.ts",
+      "apps/cli/src/sucafina-product/routine-publication.ts",
+      "apps/cli/src/sucafina-product/routine-services.ts",
+      "apps/cli/src/sucafina-product/sourcing-inputs.ts",
+      "modules/sucafina/Sucafinav1/product/decisions/alternative-provenance.ts",
+      "modules/sucafina/Sucafinav1/product/imports/analysis-options.ts",
+      "modules/sucafina/Sucafinav1/product/integration/host-presentation.ts",
+      "modules/sucafina/Sucafinav1/product/interface/document-scenario-http.ts",
+      "modules/sucafina/Sucafinav1/product/procurement/decision-http.ts"
+    ],
+    "intersectsC12Held": [
+      {
+        "path": "apps/cli/src/sucafina-product/business-services.ts",
+        "sourceBlob": "4b02413b5a98e750187fa8f5fa54f3cb2415f4e3",
+        "heldReasonRef": "analysis/w13-c12-held-inputs.manifest.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+        "sourceBlob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+        "heldReasonRef": "analysis/w13-c12-held-inputs.manifest.json"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/planner-sources.ts",
+        "sourceBlob": "1b2bb4b9ab9b2e06a82f3038b02600c3bdba220f",
+        "heldReasonRef": "analysis/w13-c12-held-inputs.manifest.json"
+      }
+    ],
+    "concreteIncompatibilities": [
+      {
+        "publishedCall": "createSfBusinessServices at host-context.ts:213",
+        "newInputsNotAcceptedByRetainedFactory": [
+          "procurementEvidenceWrites",
+          "caseSelectionWrites",
+          "threadHistoryWrites",
+          "readQuestionContribution",
+          "documentEvidenceList"
+        ],
+        "retainedFactory": "apps/cli/src/sucafina-product/business-services.ts:42",
+        "retainedFactoryBlob": "b289a4a376f937c2cf4b56a00a6c1247152c5798"
+      },
+      {
+        "publishedUses": [
+          "business.baselineCoverage",
+          "business.bindForecastCoverage",
+          "business.bindDecisionDomain"
+        ],
+        "retainedReturn": "apps/cli/src/sucafina-product/business-services.ts:270",
+        "reason": "Members absent from retained real BCS; consuming matching BCS/case-port reopens the C12 held verification/preservation boundary."
+      }
+    ]
+  },
+  "stateProposal": {
+    "artifact": "analysis/w13-state-discriminant.owner-only.patch",
+    "preimageBlob": "755639b2a16265fe164ba2e6343738c1362d168c",
+    "proposedBlob": "24d47e62825453fd15edbcc03349280701745099",
+    "action": "OWNER_PUBLICATION_REQUIRED_DO_NOT_APPLY_FOREIGN",
+    "scope": "Separate type discriminants only; preserve every runtime field and new namespace."
+  },
+  "wp07Proposal": {
+    "artifact": "analysis/w13-retained-review-fixtures.owner-only.patch",
+    "preimageBlob": "0b10585a9ea34b26a132816a4e56670ac5de23a8",
+    "proposedBlob": "2c73273188b74f0ae4c22dd4717da7c86e405b38",
+    "action": "OWNER_RECONCILIATION_REQUIRED_DO_NOT_OVERWRITE_CURRENT_PUBLISHED_SUITE",
+    "originalTests": 11,
+    "originalAssertionLines": 82,
+    "preservedExactly": true,
+    "newUnconditionalAllowCallbacks": 0
+  },
+  "artifacts": [
+    {
+      "path": "analysis/w13-state-discriminant.owner-only.patch",
+      "bytes": 819,
+      "blob": "69c15342e95ea4d3c0dc0f51fe835ff28c4be4f7",
+      "sha256": "42d10251e72a30ed38be9bff59c29e7d076bc7f490637de7477163970eff9225"
+    },
+    {
+      "path": "analysis/w13-state-discriminant.owner-only.patch.metadata.json",
+      "bytes": 1369,
+      "blob": "3ff1c900c5ec37ddbb4898ed3bb6961202d3f0c4",
+      "sha256": "f21e48c771fc25077ea962558346797fd8da5ce89dba8512dcac634ad6d377fc"
+    },
+    {
+      "path": "analysis/w13-retained-review-fixtures.owner-only.patch",
+      "bytes": 3839,
+      "blob": "bd9ddaf5a019765574760f7dd93e5d8f58699488",
+      "sha256": "5a0952d0b46f12b8b930c0286d99ab12bb39eeedad3e5bd6ae12844df0c72d51"
+    },
+    {
+      "path": "analysis/w13-retained-review-fixtures.owner-only.patch.metadata.json",
+      "bytes": 1434,
+      "blob": "87e7ea8283646ba47b9c58ca474d64f484fc52d2",
+      "sha256": "4e1052e9d2abe250a9d5bc3046f1808829a289e10dac457b0bfac4ee237f6999"
+    },
+    {
+      "path": "analysis/w13-static-foreign-closure.md",
+      "bytes": 12657,
+      "blob": "d4cb11067cea4965d4eeccfa6faea48e80b3c371",
+      "sha256": "d674657ea5c253b36101d3ea61cc0d872df54b255ffc8c20642ce45a1b3593b3"
+    },
+    {
+      "path": "analysis/w13-static-operations-capabilities.published.diff",
+      "bytes": 10280,
+      "blob": "38a8934371ca7c7a792a1e8fe3e48efe95d2a892",
+      "sha256": "a12af478742d82806e88d902b5816d5ca63195253f3081d7f7ab55105a8de0f6"
+    },
+    {
+      "path": "analysis/w13-static-compose-host-context.published.diff",
+      "bytes": 63586,
+      "blob": "4d3a43fc95fdd678d27fbcc78fd3ac79de4b6894",
+      "sha256": "527974004a68065f3896640e3f94ce683c1bbaba2227712300bed3693fa879ef"
+    }
+  ],
+  "validationScope": "Static source retrieval, read/diff, Git blob and byte hashes, and exact assertion-line comparison only. No local product tests, typecheck, guards, CI polling/dispatch, or canonical foreign writes. Runtime compatibility still needs authorized Actions after root intake and owner publications."
+}

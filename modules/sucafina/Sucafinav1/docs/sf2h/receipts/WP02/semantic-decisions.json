@@ -1,0 +1,58 @@
+{
+  "schema": "wp02-semantic-decisions-v1",
+  "source_pack_planning_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "baseline": {
+    "commit": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+    "path": "modules/sucafina/Sucafinav1/runtime/dashboard-budget.ts",
+    "blob": "62e63815d16261a3d8bc1bd793ec718facc81287",
+    "verification": "Read using GitHub MCP at the exact baseline commit; inspected ranges175-198,748-788,862-876."
+  },
+  "product_commit": "38d340a8857b96904f7246320091c14c051f1929",
+  "snapshot_commit": "f238adf0cce5693a2583f719c72a9b402b291571",
+  "test_run_id": 43516062361,
+  "decisions": [
+    {
+      "id": "SD01",
+      "baseline_observed": "Logical utilization was Math.min((actual / budget) * 100, 100) || 0; red threshold >110 could not be reached.",
+      "final": "Logical ratio is not capped; only the visual bar may be capped. Zero and missing budget/actual have explicit states.",
+      "oracle": {
+        "budget": 100,
+        "actual": 120,
+        "utilization_percent": 120,
+        "tone": "red"
+      },
+      "test": "Sucafinav1/test/dashboard-budget-runtime.test.ts :: utilization preserves excess and overview renders effective monthly distribution",
+      "status": "SCOPED_VERIFIED"
+    },
+    {
+      "id": "SD02",
+      "baseline_observed": "Budget Overview plotted budgetChartSeries(totals.totalBudget), with a flat /12 series as its budget curve.",
+      "final": "Effective monthly curve uses monthly overrides and annual fallback; flat annual/12 remains a separately labeled reference.",
+      "oracle": {
+        "annual_budget": 1200,
+        "january_override": 200,
+        "effective_annual_budget": 1300
+      },
+      "tests": [
+        "Sucafinav1/test/product/wp02/port.test.ts :: dashboard port reads canonical effective budget and rejects stale and unauthorized sources",
+        "Sucafinav1/test/dashboard-budget-runtime.test.ts :: utilization preserves excess and overview renders effective monthly distribution"
+      ],
+      "status": "SCOPED_VERIFIED"
+    },
+    {
+      "id": "SD03",
+      "baseline_observed": "Executive backlog was Math.max(opened - closed, 0), including a clamped YTD difference.",
+      "final": "Backlog requires an initial balance; net flow is separately disclosed. Missing initial balance does not fabricate zero backlog.",
+      "oracle": {
+        "initial_balance": 20,
+        "opened": 10,
+        "closed": 15,
+        "backlog": 15,
+        "net_flow": -5
+      },
+      "test": "Sucafinav1/test/dashboard-budget-runtime.test.ts :: Executive backlog requires initial balances and distinguishes net flow",
+      "status": "SCOPED_VERIFIED"
+    }
+  ],
+  "limitation": "Applies the explicit SD01-SD03 semantic decisions in the supplied pack. Does not redefine financial policy or claim native execution."
+}

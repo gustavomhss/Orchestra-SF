@@ -1,0 +1,74 @@
+{
+  "schema": "sf-interface-peer-read-v1",
+  "candidateBase": {
+    "head": "cccd00c568aea65bb0c1b5cb4a82c2a236c7e775",
+    "tree": "b33c50679fa6c2a36a0e309064e1fa57ee4b0a0e"
+  },
+  "scope": "Six OWN recipients increment files; static read only, no execution and no foreign edits",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts",
+      "blob": "c307195ddf3b27b53e2f639861b88fc462812c3c",
+      "sha256": "a267e9f5f75abbfd7e1e7ccf6360b4b207ee32ceb24662b0cdbc909750bd78d6",
+      "bytes": 33923
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "blob": "98b235b93451f5449625b65fbd4fbb369dc47f1a",
+      "sha256": "037d9efe3a809be7ee6cb85bb7bbd21c9e89e665fea08712c3bcf10ca0a960d3",
+      "bytes": 72373
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/work-selection-domain-fixture.ts",
+      "blob": "09bd6606f53ed8a57cfdf5c9bc3f4356cb02962d",
+      "sha256": "623a8fe862cc0fef39892e40e91f00486f9cc5963d8b4a190215e093b948c6ef",
+      "bytes": 13020
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/question-recipients.test.ts",
+      "blob": "4add02f35383c09355b0e4966dbb85fc625be1d4",
+      "sha256": "2b07b9ce3263583ca87dfb10dcfa443b6ea31578dd643a58771c69bdada40ef8",
+      "bytes": 5134
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/README.md",
+      "blob": "f6ba4d8b8cbc54431806bcde12b4b7f8d3e82894",
+      "sha256": "28fcf2615128e18db42f810231a5cc4fb313393701daa63086fe4e990fbb63ea",
+      "bytes": 3640
+    },
+    {
+      "path": "docs/guides/sucafina-workbench.md",
+      "blob": "2b26127b05f3ffa3038be10be68878aec0eef229",
+      "sha256": "863d409e9c9cea0edbb094d0c0805dfabc16119d2e128440f61a68949879a2c7",
+      "bytes": 19767
+    }
+  ],
+  "result": "NO_BLOCKER_FOUND_FOR_DECLARED_COMPONENT_SCOPE",
+  "reviewedBehavior": [
+    "Canonical collaboration-recipients route aligns with published router; no legacy alias mounted.",
+    "Real directory recipient resolution and authority revalidation; UI preserves question/selection through authorized read.",
+    "Actual operator logout then403 clears protected draft/context/controls; no thread creation from discovery.",
+    "Existing transport assertions remain, only3 route strings changed; first thread consumer unchanged.",
+    "Guide describes behavior and README adds new browser consumer to pool affected-file inventory."
+  ],
+  "limits": [
+    "Single real local operator directory, not a two-person enterprise directory.",
+    "Component/real-service HTTP mounting, not full app host or native execution.",
+    "No runtime/typechecker result inferred. Published dependency closure is separately maintained by root/wp02_read."
+  ],
+  "nonBlockingObservation": "Fixture begins acquiring driver/server/authority before its main cleanup try. A failure before that try could escape close(); no failing constructor path established from the valid reviewed arguments. Author informed for later acquisition-hardening if fixture is expanded.",
+  "surgicalSelectionReview": {
+    "count": 8,
+    "rationale": "Lifecycle wrappers; materially changed state provider guard; changed Collaboration/C06 inputs consumed by HotTopics, collaboration consumer and thread consumer; alias change in existing transport and new real recipients proof. This is not an equivalent rerun at the same source inputs.",
+    "paths": [
+      "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "./Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "./Sucafinav1/test/product/wp02/hot-topics.test.ts",
+      "./Sucafinav1/test/product/wp02/collaboration-consumer.test.ts",
+      "./Sucafinav1/test/product/wp01/edit-recovery.test.ts",
+      "./Sucafinav1/test/product/wp01/question-recipients.test.ts",
+      "./Sucafinav1/test/product/wp01/thread-recovery.test.ts",
+      "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts"
+    ]
+  }
+}
