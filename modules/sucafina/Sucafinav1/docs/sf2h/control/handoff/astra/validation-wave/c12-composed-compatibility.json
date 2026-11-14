@@ -1,0 +1,44 @@
+{
+  "number": 32,
+  "id": "c12-composed-compatibility",
+  "state": "PREPARED_NOT_STARTED",
+  "session_id": null,
+  "model_effective": null,
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "actor": "S4-A C12 producer continuation",
+  "actor_pack": "execution/actors/S4-A.json",
+  "branch": "procurement-apply",
+  "pr": 60,
+  "expected_head": "c8a03c4f689025ca70a1c815fd292af22b6261cd",
+  "lease_epoch": "c12-browser32",
+  "predecessor": "Mission19 published terminal HANDOFF with functional scoped evidence, ends source work; explicit continuation on samebranch. Currenthead/handoff authority and all CI must be reconciled before replacement, not inferred from silence.",
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+    "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+    "modules/sucafina/Sucafinav1/product/procurement/decision-http.ts",
+    "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+    "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/",
+    "modules/sucafina/Sucafinav1/test/product/c12-composed-compatibility/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-composed-compatibility/"
+  ],
+  "inputs": {
+    "source": "c8a03c4f689025ca70a1c815fd292af22b6261cd",
+    "composition_observed": "253baad3f2ff4af5beac695feae4c2f6372dc2e7",
+    "original_manifest": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/increment-01.json",
+    "prior_candidate": "9cc27888581a13b55992cdb5dfbd27e43479ac29"
+  },
+  "observed_gap": "Mission23 manifest compatibility.c12_oracle: STATIC_EXPECTATION_MISMATCH, source tests expect legacy case-changed-after-application/409 and absent linked receipt after unrelatedcaseedit; retainedFinanceexecutor usesfreshreconciliation. Tests remainunchanged and runtime notobserved. Prior7/7C12sourcePASS doesn'tprovecomposition. Need reproduce before asserting actualdefect or decidingoraclechange.",
+  "mission": "Close composed C12 compatibility with real currentFinanceexecutor + actualC08/SQLite/HTTP/UI, not oldfixturehost. Resolve contract/fixcode onlywhere required; update an oracle only with canonicalcontract and discriminatingproof, never justacceptactualstatus. Deliver working source/testpatches and targetedhostedproof tosession23.",
+  "acceptance": [
+    "Reconcile and consume exactcomposedproductdependencyclosure, no wholebranchoverwrite or artificialoldexecutor. Preserve priorOPSREV02 and C12 sourceproof/receipts independently.",
+    "Prove positiveeffectone/receiptone acrosslostresponse, unrelatedlegitimatecaseedit, currentreconciliation, explicitrecovery, servicereopen and freshadmission. Allow contractpermittedfreshreconciliation only whenexact originalprincipal/payload/digest/target/incarnation/proof holds and unrelatededit preserved.",
+    "Keep normalApplyCAS, humanreview/approval and no-redispatch whenoriginalreceipt missing. Wrongprincipal/case/choice/target/incarnation/payload ormaterialconcurrentchange/revoke cannot return success. A material edit must refuse even if unrelated edit may reconcile.",
+    "For everychangedtestoracle preserve oldassertion intent, showoriginalcontract clause and addpositive/negativepair distinguishing stale/mismatched command fromvalid originalreceipt. Keep audit/versions/values/history/effects assertions; don'tunconditionallychange409→200 or remove checks.",
+    "No edits to Financeproducer/resultstore/stateprovider/caseport/DecisionHTTP/UIchoice/alternative orhostshared. Changes toexisting testsoutsideownprefix must becompleteproposedpatch underownreceipts; session23consumes afterownerqualification. Original IOPS02,first-save,lost-register remainopen unless actuallyproved.",
+    "Publish source/testfixtures coherently and surgicalresultW/S/selection/jobs/executions; priorgreensnottransferred and no finalAM04/nativeclaim fromcomponentproof."
+  ],
+  "testing": "Actions only through existingauthorizedCI interface/dispatcher, dedup andre-attach, no localtests or servers/epic/fullsuite. Initialcomposedmissingproof justifies surgicaldiscriminatingrun; subsequentequivalentfailure requiresmaterialfix/diagnosis, notunchangedrerun. No budgets/assertionsweakening. Packagebun typecheck/guards perAGENTS with inheritedfailures explicit.",
+  "handoff": "ReadpinnedCOMMON,fullS4Apack+appendices, AGENTS andterminal19/manifest. SamePR60 GitHubMCP CAS, noforce/gh/push/devmerge/deploy/Azure/credentials/engines/restart/messages/newGoalcontroller. Consumer23soleintegrator; S0finaldispatcher/acceptance. Completecodepatch+testoraclerationale+W/S/proofs/limits+terminalhandoff. Preservefullscope/T0. NoBLOCKEDdeclared merelypriorfixturegap; finishindependentwork."
+}
