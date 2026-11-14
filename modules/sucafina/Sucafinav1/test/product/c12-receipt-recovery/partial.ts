@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import type { DecisionCase, PreparedChange } from "../../../product/contracts/decisions.ts"
+import { encodeCaseRef } from "../../../product/decisions/case-port.ts"
 import { sfPlannerProjectionSelector } from "../../../product/integration/source-projections.ts"
 import { preparePlannerMutation } from "../../../product/planner/prepared.ts"
 import type { createC12Fixture } from "./fixture.ts"
@@ -15,8 +16,12 @@ export async function appendPendingPlannerChange(fixture: Fixture) {
       fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }]
     return { commit: true, value: true }
   })
-  const call = await fixture.ui("sf_context_read", { purpose: "c12-partial-domain" })
+  const selected = await fixture.storedCase()
+  const readRequest = { caseRef: encodeCaseRef(selected.value) }
+  const call = await fixture.ui("sf_case_read", readRequest)
   try {
+    const decision = await fixture.business.cases.read(readRequest, call)
+    if (decision.status !== "ok" || decision.value.case.version !== selected.value.version) throw new Error("real case admission failed for partial-state fixture")
     const issued = await fixture.business.plannerProduct.issueSource("c12-forecast", call)
     if (issued.status !== "ok") throw new Error("real Planner source failed: " + issued.reason)
     const snapshot = await fixture.persistence.transaction("planner", async (value) => ({ commit: false, value: structuredClone(value) }))
@@ -42,7 +47,10 @@ export async function appendPendingPlannerChange(fixture: Fixture) {
           version: target.version, engineVersion: "planner-pending-fixture", components: [], values: [], missing: [{ field: "review", reason: "unconfirmed" }],
         } },
       preview: procurement.preview }
-    const next: DecisionCase = { ...current.value, version: current.value.version + 1, state: "partially-applied", preparedChanges: [...current.value.preparedChanges, change] }
+    // Keep the new target covered by its real issued source so case reads remain
+    // authorized; foreign-route refusal must not come from an invalid whole case.
+    const next: DecisionCase = { ...current.value, version: current.value.version + 1, state: "partially-applied",
+      sourceRefs: [...current.value.sourceRefs, evidence], preparedChanges: [...current.value.preparedChanges, change] }
     const saved = await fixture.authority.state.transaction(fixture.request(), {
       namespace: "cases", expectedStorageVersion: current.storageVersion, targetRef: next.id, targetIncarnation: next.incarnation,
       idempotencyKey: randomUUID(), commandDigest: digestSfValue(next),

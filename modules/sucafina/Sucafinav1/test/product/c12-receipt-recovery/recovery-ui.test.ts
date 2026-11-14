@@ -1,9 +1,30 @@
 import { expect, test } from "bun:test"
+import type { Page } from "@playwright/test"
 import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
 import { object, rows } from "../../../runtime/contract.ts"
 import { launchBrowserDriver } from "../wp02/browser-driver-fixture.ts"
 import { createC12Consumer, interleaveC12CaseEdit, observeC12 } from "./consumer.ts"
 import { readReviewDigest } from "./fixture.ts"
+
+/** Read the real response before the production script receives it and reloads. */
+async function captureRecoveryResponse(page: Page) {
+  const captured = Promise.withResolvers<{ status: number; body: unknown }>()
+  await page.route(/\/sf\/procurement\?sf=decision-recover$/, async (route) => {
+    try {
+      expect(route.request().method()).toBe("POST")
+      const response = await route.fetch({ maxRetries: 0 })
+      let observed: { status: number; body: unknown }
+      try {
+        observed = { status: response.status(), body: await response.json() }
+        // Forward the original response without replacing its status, headers or
+        // bytes. The browser still consumes it and performs its normal reload.
+        await route.fulfill({ response })
+      } finally { await response.dispose() }
+      captured.resolve(observed)
+    } catch (error) { captured.reject(error); throw error }
+  }, { times: 1 })
+  return { response: captured.promise }
+}
 
 test("C12 UI recovers the original receipt after lost response concurrent edit reload and a new SQLite composition", async () => {
   expectSpawn(import.meta.path)
@@ -94,12 +115,15 @@ test("C12 UI recovers the original receipt after lost response concurrent edit r
     expect((await reopened.goto(consumer.url))?.status()).toBe(200)
     expect(await reopened.evaluate(() => ({ session: sessionStorage.length, local: localStorage.length }))).toEqual({ session: 0, local: 0 })
     await reopened.locator("[data-recover-change]:enabled").waitFor()
+    const recoveryCapture = await captureRecoveryResponse(reopened)
     const recoveredResponse = reopened.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "decision-recover")
     const reloaded = reopened.waitForEvent("framenavigated", { predicate: (frame) => frame === reopened.mainFrame() })
     await reopened.getByRole("button", { name: "Recover recorded receipt", exact: true }).click()
     const response = await recoveredResponse
     expect(response.status()).toBe(200)
-    const result = object(await response.json())
+    const recoveredBody = await recoveryCapture.response
+    expect(recoveredBody.status).toBe(response.status())
+    const result = object(recoveredBody.body)
     expect(object(result.value)).toMatchObject({ receiptId: committed.receipts[0]!.id, surface: "procurement", version: 1, outcome: "applied" })
     await reloaded
     await reopened.locator("[data-decision-apply]").getByText("State: applied", { exact: true }).waitFor()
@@ -123,12 +147,15 @@ test("C12 UI recovers the original receipt after lost response concurrent edit r
 
     // Another explicit recovery after success is observational, including CAS/audit.
     await reopened.locator("[data-recover-change]:enabled").waitFor()
+    const repeatedCapture = await captureRecoveryResponse(reopened)
     const again = reopened.waitForResponse((reply) => new URL(reply.url()).searchParams.get("sf") === "decision-recover")
     const navigated = reopened.waitForEvent("framenavigated", { predicate: (frame) => frame === reopened.mainFrame() })
     await reopened.getByRole("button", { name: "Recover recorded receipt", exact: true }).click()
     const repeated = await again
     expect(repeated.status()).toBe(200)
-    expect(await repeated.json()).toEqual(result)
+    const repeatedBody = await repeatedCapture.response
+    expect(repeatedBody.status).toBe(repeated.status())
+    expect(repeatedBody.body).toEqual(result)
     await navigated
     expect(await observeC12(consumer.current())).toEqual(reconciled)
     expect(consumer.traffic.filter((item) => item.mode === "decision-apply")).toHaveLength(2)
@@ -171,12 +198,15 @@ test("C12 UI recovers a successful committed Apply whose 200 response was lost",
     expect(committed.receipts).toHaveLength(1)
     expect(committed.decision.receipts).toEqual(committed.receipts)
     expect(rows(committed.domain.request.history)).toHaveLength(1)
+    const recoveryCapture = await captureRecoveryResponse(page)
     const recovered = page.waitForResponse((response) => new URL(response.url()).searchParams.get("sf") === "decision-recover")
     const navigated = page.waitForEvent("framenavigated", { predicate: (frame) => frame === page.mainFrame() })
     await page.getByRole("button", { name: "Recover recorded receipt", exact: true }).click()
     const response = await recovered
     expect(response.status()).toBe(200)
-    expect(object(object(await response.json()).value).receiptId).toBe(committed.receipts[0]!.id)
+    const recoveredBody = await recoveryCapture.response
+    expect(recoveredBody.status).toBe(response.status())
+    expect(object(object(recoveredBody.body).value).receiptId).toBe(committed.receipts[0]!.id)
     await navigated
     expect(await observeC12(consumer.current())).toEqual(committed)
     expect(consumer.traffic.filter((item) => item.mode === "decision-apply")).toHaveLength(1)
