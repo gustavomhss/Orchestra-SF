@@ -1,0 +1,779 @@
+{
+  "schema": "sf2h.procurement-exports.result.v1",
+  "campaign": "sf2h-integral-20261112",
+  "actor": "S2-A",
+  "session": "procurement-exports-20261114",
+  "leaseEpoch": 1,
+  "branch": "sourcing-money",
+  "pr": 57,
+  "prUrl": "https://github.com/gustavomhss/Orchestra-SF/pull/57",
+  "state": "TERMINAL_EXPORTS_RESOLVED_EXTERNAL_TYPECHECK_BLOCKER",
+  "writerReleased": true,
+  "acceptance": {
+    "EXPORT_01": "RESOLVED_WITH_EXECUTED_EVIDENCE",
+    "EXPORT_02": "RESOLVED_WITH_EXECUTED_EVIDENCE",
+    "functional": "PASS",
+    "sucafinaTypecheck": "FAIL_INHERITED_READONLY_WP14",
+    "cliTypecheck": "PASS",
+    "guards": "PASS_WITH_11_INHERITED_WARNINGS",
+    "globalAcceptance": false,
+    "merge": false,
+    "deploy": false
+  },
+  "sourceReceipt": "INTAKE.json",
+  "sources": {
+    "planningCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "campaignSha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+    "actorPack": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S2-A.json",
+      "blob": "7327be5449328c356a0f5b242ddc9d2014175e41",
+      "sha256": "912d62bbffb99a70ca880c255036c31bad9ad694288f7c6c4267d05b0c49fed8",
+      "read": "Full by independent pack_review; relevant implementation sections by writer."
+    },
+    "executionCommon": {
+      "blob": "d61f32af03fe10747a50274233f953af044decf6",
+      "sha256": "a518cf4b3136d5c1126d59304afedf71b5f93168314f1f2f56743dcae719c94e"
+    },
+    "mandatoryAppendices": [
+      {
+        "path": "specs/product-acceptance.md",
+        "blob": "ded082688fce327def0b48968fa3b89a5831029c",
+        "sha256": "a41222e3bed4a8a8134a7fd814c73a99f607457a7df1e38b74566a4d2589eee2"
+      },
+      {
+        "path": "specs/resident-runtime.md",
+        "blob": "033737b1051b23443e633df7874c550629bf55a1",
+        "sha256": "024795abe175e756f93f1904eba23884bf4d9ad2416c6185b3eea2e6b13ca420"
+      }
+    ],
+    "canonicalCriterionCount": 111,
+    "canonicalCriteriaSha256": "de5df06984f523dea5807ba687a86a81e395655d1fbfac33410106f99570118f",
+    "criteriaUnchanged": true,
+    "agents": {
+      "path": "AGENTS.md",
+      "blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+      "localInstructions": "No nested AGENTS on runtime/test/docs write paths in the initial tree."
+    }
+  },
+  "authority": {
+    "userInstruction": "Continue the existing sourcing-money / PR57; fix downloads.ts only, own tests/receipts.",
+    "mission": {
+      "sha": "5e5c6b6ad29b985376880b4da40cb51c7424849b",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-wave/procurement-exports.json",
+      "blob": "1aad489096367fcebb1d640e221921eb3c79439e"
+    },
+    "common": {
+      "sha": "c708ec0609dbfc95b259707d8c38481617f74f11",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-wave/COMMON.md",
+      "blob": "e54d84e3cdfa0046225518e253baf9dcf377fa7c"
+    },
+    "receivedHead": "2a185e05967f611d63796684379761ded991092b",
+    "receivedTree": "5f3f826dcafe7ac78817290160d2540f6a7d1723",
+    "previousTerminalHandoff": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/review-fixes/sourcing-money/attempt-02/HANDOFF.md",
+      "commit": "2a185e05967f611d63796684379761ded991092b",
+      "blob": "46a288969e6fc59342f0753ab7bb661b72c3ab3a"
+    },
+    "reconciliation": "Head matches mission and previous terminal delivery. PR body is unchanged from terminal report; no comments/new writer claim. Explicit new user mission supplies continuation authority; silence was not used as proof of termination.",
+    "leaseEpoch": 1,
+    "writePaths": [
+      "modules/sucafina/Sucafinav1/runtime/downloads.ts",
+      "modules/sucafina/Sucafinav1/test/product/procurement-exports/",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-exports/"
+    ],
+    "readOnly": [
+      "runtime/procurement.ts",
+      "product/procurement/monetary.ts",
+      "UI",
+      "shared fixtures",
+      "configs",
+      "engines"
+    ],
+    "publication": "Single-parent descendant via GitHub MCP CAS expected_sha, no force/reset/merge."
+  },
+  "reconciliation": {
+    "initialHead": "2a185e05967f611d63796684379761ded991092b",
+    "receivedTree": "5f3f826dcafe7ac78817290160d2540f6a7d1723",
+    "operationsSha": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+    "actualTargetRefBeforeClose": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+    "productHeadBeforeDocumentaryClose": "e1fe9561f199dc594a5fd559d06d450253e571bc",
+    "prBodyUnchangedFromPreviousTerminalHandoff": true,
+    "prCommentsObserved": 0,
+    "authorityBasis": "Explicit new user instruction plus previous terminal handoff, matching mission head and branch. No inference of writer death from silence.",
+    "intake": {
+      "operationsCommit": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+      "handoffBlob": "5cf17dcdf04283384efe581ecc7a029b850fa798",
+      "proposedPatchBlob": "d47538f593c2b563e34c75434044def6e070de58",
+      "downloadsPreimage": "fa365f9d350be341348ab69d789e40779c8b9756",
+      "preimageMatches": true,
+      "helperBlob": "c9a224b12c13b7cec506be90527300caa7e984fd",
+      "requestValueBlob": "510be5b2aeb82e740f342a5b649619116cb8ff1c",
+      "patchReconciliation": "Both hunks reconciled against exact preimage; same purchaseOrderMoney wrapper for PO columns and per-line HTML. Temporary po_draft projection for sourcing/src_pending/src_rejected; producer/frozen PO/cancelled behavior unchanged.",
+      "sourceRegressions": {
+        "path": "modules/sucafina/Sucafinav1/test/product/operations-consumers/export-owner-regression.test.ts",
+        "blob": "3170c80978ef8c87e0a254c8817ffe8514019d7c"
+      },
+      "sourceFixture": {
+        "path": "modules/sucafina/Sucafinav1/test/product/operations-consumers/fixture.ts",
+        "blob": "13dc9ab57a57fbd5e1c1477cf5fc6718cd5d2cad"
+      },
+      "sourceControls": {
+        "path": "modules/sucafina/Sucafinav1/test/product/operations-consumers/monetary-consumers.test.ts",
+        "blob": "f57ad2e8a745c56797bd7e1b7fe9c8fb0cda83bf"
+      },
+      "copyChanges": [
+        "Own namespace, preserve original two test names and expected export values.",
+        "Use persisted sourcing facts instead of legacy domain.view.record.value=108, which depends on Operations runtime/procurement.ts fix not imported here.",
+        "Fixture retains real domain commands and durable source lifecycle; drops unrelated C02/C06/UI scaffolding.",
+        "Both formats checked for filename/MIME/bytes, original/base currency, FX source/state, exact line values, unchanged snapshot and persisted record.",
+        "Malformed/multiline read premises are cloned and discarded; they do not claim allowed domain mutations."
+      ],
+      "baseline": {
+        "runId": 43628901747,
+        "jobId": 132550880255,
+        "productW": "fd363ca6f66dea56422c235f835103467c7ee8ba",
+        "snapshotS": "80e78d97f15b468b8393c6a1676472f1979d2d33",
+        "conclusion": "failure",
+        "observed": "10 pass / 2 fail; both EXPORT-01 and EXPORT-02 fail in actual logs.",
+        "logsRead": true
+      }
+    }
+  },
+  "candidate": {
+    "W": "e1fe9561f199dc594a5fd559d06d450253e571bc",
+    "tree": "5cb441e60a88dce057534548796dc6e7b1e40f74",
+    "parent": "2a185e05967f611d63796684379761ded991092b",
+    "productDiff": {
+      "path": "modules/sucafina/Sucafinav1/runtime/downloads.ts",
+      "additions": 8,
+      "deletions": 4,
+      "before": "fa365f9d350be341348ab69d789e40779c8b9756",
+      "after": "7fa9c254c7c08b894d8b4c3336653c32b6270126"
+    },
+    "commitUrl": "https://github.com/gustavomhss/Orchestra-SF/commit/e1fe9561f199dc594a5fd559d06d450253e571bc",
+    "comparisonUrl": "https://github.com/gustavomhss/Orchestra-SF/compare/2a185e05967f611d63796684379761ded991092b...e1fe9561f199dc594a5fd559d06d450253e571bc",
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/downloads.ts",
+        "blob": "7fa9c254c7c08b894d8b4c3336653c32b6270126",
+        "sha256": "3853ec7a8d99d8c0a3774c7e932a5efd3f53ff750e86dbd0a2f418599842cb04"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/procurement-exports/fixture.ts",
+        "blob": "a14accbfe4a089ccb37cb281663ada538a92bc57",
+        "sha256": "0503a6d8c1e74e72a110779d1d80877150d6c14fa12a195f45bbcc35cfe7e1c5"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/procurement-exports/artifacts.ts",
+        "blob": "4439d59c6114ce83caa3f5a880357da49712fd41",
+        "sha256": "f9a8c1735c92f0c1010b27a22fae05078520c83080009a8a75c99e66889bcb80"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/procurement-exports/export-regressions.test.ts",
+        "blob": "e97b8bd1984a5a87bfb2f2704ce004bcba5735b7",
+        "sha256": "1a4502bb77d5728aa7addffb6f1832004f627166ca0e4e07c2455200295e6f13"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/procurement-exports/export-controls.test.ts",
+        "blob": "30173580d07036ea97fef6d9caf0c7dac2e085f8",
+        "sha256": "e3c7f842bcf65776649a923e882a2873bffafea7aebaf63194e76ba56f5f1830"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-exports/attempt-01/INTAKE.json",
+        "blob": "9e3db2e14dbc88d49bac2586cb9d8a8afc88be17",
+        "sha256": "dce1bf771c3a900ef662d77bb10051d53b4aa60893bba7e5c23f39d2d7546009"
+      }
+    ]
+  },
+  "implementation": {
+    "consumer": "runtime/downloads.ts",
+    "summary": "purchaseOrderMoney projects only sourcing/src_pending/src_rejected to a temporary po_draft read view, preserving source record/status. HTML line values use the same wrapper with exactly one line. Existing producer performs all money calculations.",
+    "helper": "product/procurement/monetary.ts#procurementMonetaryFacts",
+    "helperBlob": "c9a224b12c13b7cec506be90527300caa7e984fd",
+    "requestValueBlob": "510be5b2aeb82e740f342a5b649619116cb8ff1c",
+    "noNewFormula": true,
+    "noPersistedRecordMutation": true,
+    "noProducerChange": true,
+    "noPolicyScoringOrAuthorityChange": true,
+    "readOnlyPathsUnchanged": true,
+    "patch": "Reconciled against exact preimage and shared helper; applied to candidate W and executed, not merely proposed."
+  },
+  "functional": {
+    "selected": [
+      "Sucafinav1/test/product/procurement-exports/export-regressions.test.ts",
+      "Sucafinav1/test/product/procurement-exports/export-controls.test.ts"
+    ],
+    "expected": [
+      "Sucafinav1/test/product/procurement-exports/export-regressions.test.ts",
+      "Sucafinav1/test/product/procurement-exports/export-controls.test.ts"
+    ],
+    "passes": [
+      "(pass) OPS-CONSUMER-EXPORT-01: future PO exports use their current estimate while the real sourcing decision stays frozen [63.82ms]",
+      "(pass) OPS-CONSUMER-EXPORT-02: future PO line totals do not borrow the whole selected quote [39.85ms]",
+      "(pass) submitted PO exports keep their own FX2 snapshot after FX3 and cancellation [71.37ms]",
+      "(pass) cancellation directly from sourcing retains PO semantics without borrowing sourcing approval [37.88ms]",
+      "(pass) missing live FX leaves the future PO unconverted and preserves the frozen sourcing record [36.57ms]",
+      "(pass) a changed base currency does not relabel submitted PO approval history [54.97ms]",
+      "(pass) missing historical PO FX never falls back to current FX3 [47.61ms]",
+      "(pass) line quantities and unit prices define each exported amount even when redundant amount fields disagree [31.72ms]",
+      "(pass) missing and nonfinite monetary inputs stay unavailable while observed zero remains zero in both files [44.98ms]",
+      "(pass) incidental PO without usable lines cannot borrow the selected sourcing quote [37.43ms]",
+      "(pass) future PO estimates remain separate in real sourcing and rejected sourcing stages [38.39ms]"
+    ],
+    "failures": [],
+    "skip": [],
+    "nonce": "d9fb27f7b137e2a4cfe974b933ed502b",
+    "control": "omni positive control [d9fb27f7b137e2a4cfe974b933ed502b]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+    "logBytes": 98444,
+    "logSha256": "f40a980bcb7c2026a11bbe84a5e637880c5a83a78e89351675c8d065d5b81cac",
+    "runId": 43632315600,
+    "jobId": 132561444043,
+    "assertions": 396,
+    "durationSeconds": 0.637,
+    "testCount": 11,
+    "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43632315600",
+    "conclusion": "success",
+    "jobConclusion": "success",
+    "cleanupConclusion": "success",
+    "runAttempt": 1,
+    "W": "e1fe9561f199dc594a5fd559d06d450253e571bc",
+    "snapshotS": "b7a3fe9b03fa490238fb47acdc67924f3b0e417a",
+    "snapshotTree": "19725df24daab6ab0c96ce6835596c607b2daa6e",
+    "snapshotParent": "e1fe9561f199dc594a5fd559d06d450253e571bc",
+    "snapshotOnlyDelta": ".ci-run.json",
+    "productTestConfigFixtureBlobsIdentical": true,
+    "snapshotComparisonUrl": "https://github.com/gustavomhss/Orchestra-SF/compare/e1fe9561f199dc594a5fd559d06d450253e571bc...b7a3fe9b03fa490238fb47acdc67924f3b0e417a",
+    "request": {
+      "package": "sucafina",
+      "packageSelector": "packages/sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "./Sucafinav1/test/product/procurement-exports/export-regressions.test.ts",
+        "./Sucafinav1/test/product/procurement-exports/export-controls.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "env": {}
+    },
+    "requestExactUtf8": "{\"package\":\"sucafina\",\"packageSelector\":\"packages/sucafina\",\"directory\":\"modules/sucafina\",\"runner\":\"bun\",\"args\":[\"./Sucafinav1/test/product/procurement-exports/export-regressions.test.ts\",\"./Sucafinav1/test/product/procurement-exports/export-controls.test.ts\",\"--timeout\",\"120000\"],\"env\":{}}",
+    "requestBlob": "ad79ccff0172e4db45196222a6bb27e9ebfb6642",
+    "requestSha256": "2cb4ddb556d33faf204eea057e86c4463b6e199f3a8e104c6aaa4d64370e64bd",
+    "requestCanonicalValidation": "success",
+    "workflow": ".github/workflows/test-ci.yml",
+    "workflowBlob": "9f078f4e37b758691bcd073e5590f05d5444392a",
+    "ephemeralRef": "ci-run-linux-procurement-exports-e1fe9561-ad79ccff-1",
+    "createdAt": "2026-11-14T19:28:57Z",
+    "completedAt": "2026-11-14T19:30:54Z",
+    "logUrl": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/jobs/132561444043/logs",
+    "logEncoding": "Raw decoded UTF-8; BOM and LF preserved for log SHA256.",
+    "artifactManifest": [],
+    "artifactRequirement": "No generic Bun artifact upload is declared by the existing workflow. Actual download bytes were emitted in the job log; primary payloads and all observation metadata are archived in EXPORTS.json and files/. No missing mandatory artifact is hidden.",
+    "outputPairs": 18,
+    "outputFiles": 36,
+    "allSnapshotAndPersistedEqualityAssertions": true,
+    "downloadEntryPoint": "runtime/downloads.ts#download(register|po)",
+    "primaryPayloadReceipt": "EXPORTS.json",
+    "omni": "NOT_APPLICABLE; nonce matches, no declaring test or spawn ran; not an Omni acceptance proof."
+  },
+  "checks": {
+    "runId": 43632616824,
+    "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43632616824",
+    "status": "completed",
+    "conclusion": "failure",
+    "runAttempt": 1,
+    "headSha": "cd4e8f8c63db9b66d4ab6742f3893c1dd3e8dd27",
+    "createdAt": "2026-11-14T19:32:10Z",
+    "updatedAt": "2026-11-14T19:34:26Z",
+    "jobId": 132562347834,
+    "jobConclusion": "failure",
+    "steps": [
+      {
+        "name": "Set up job",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 1
+      },
+      {
+        "name": "Checkout check envelope",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 2
+      },
+      {
+        "name": "Verify product SHA and unchanged product tree",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 3
+      },
+      {
+        "name": "Checkout exact product",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 4
+      },
+      {
+        "name": "Record product and guard base",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 5
+      },
+      {
+        "name": "Setup Bun",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 6
+      },
+      {
+        "name": "Typecheck Sucafina",
+        "status": "completed",
+        "conclusion": "failure",
+        "number": 7
+      },
+      {
+        "name": "Typecheck CLI consumers",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 8
+      },
+      {
+        "name": "Guard product against origin/dev",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 9
+      },
+      {
+        "name": "Upload check evidence",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 10
+      },
+      {
+        "name": "Post Setup Bun",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 18
+      },
+      {
+        "name": "Post Checkout exact product",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 19
+      },
+      {
+        "name": "Post Checkout check envelope",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 20
+      },
+      {
+        "name": "Complete job",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 21
+      }
+    ],
+    "commands": [
+      {
+        "directory": "modules/sucafina",
+        "command": "bun typecheck",
+        "conclusion": "failure",
+        "diagnostics": [
+          "##[error]test/product/wp14/source-access-atlas.test.ts(167,41): error TS2741: Property 'procurementEvidenceWrites' is missing in type '{ authority: { state: import(\"/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/product/contracts/state\").SfProductStatePort; ui: { admit(request: Request, operation: string, inputDigest: string): Promise<...>; ... 6 more ...; finish(context: import(\"/home/runner/work/Orchestra-SF/Orchestra-SF/...' but required in type '{ authority: { state: import(\"/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/product/contracts/state\").SfProductStatePort; ui: { admit(request: Request, operation: string, inputDigest: string): Promise<...>; ... 6 more ...; finish(context: import(\"/home/runner/work/Orchestra-SF/Orchestra-SF/...'."
+        ]
+      },
+      {
+        "directory": "apps/cli",
+        "command": "bun typecheck",
+        "conclusion": "success"
+      },
+      {
+        "directory": ".",
+        "command": "bun run check:guards --base origin/dev",
+        "base": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+        "conclusion": "success",
+        "rules": 78,
+        "changedPaths": 852,
+        "gates": 0,
+        "warnings": 11,
+        "errors": 0,
+        "warningLines": [
+          "WARN apps/cli/package.json:37 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/atlas/boundary/package.json:66 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/atlas/boundary/package.json:67 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/atlas/boundary/package.json:68 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/sucafina/package.json:17 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/sucafina/package.json:18 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/sucafina/package.json:19 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/sucafina/package.json:20 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/sucafina/package.json:21 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/sucafina/package.json:22 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+          "WARN modules/sucafina/Sucafinav1/test/product/wp01/personal-views.test.ts:82 [test-timeout-raised] Test timeout raised to 10s or more. Find out why it is slow instead of waiting longer."
+        ]
+      }
+    ],
+    "log": {
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/jobs/132562347834/logs",
+      "read": true,
+      "encoding": "Raw decoded UTF-8, BOM and LF preserved",
+      "bytes": 67900,
+      "sha256": "d5621b4c14a9be7563e22ca9554a961f2b882184806ebe61ac5f73e3fef510a0"
+    },
+    "artifact": {
+      "id": 14129021623,
+      "name": "astra-operations-check-1",
+      "size_in_bytes": 1579,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14129021623",
+      "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14129021623/zip",
+      "expired": false,
+      "created_at": "2026-11-14T19:34:24Z",
+      "expires_at": "2026-11-28T19:34:23Z",
+      "updated_at": "2026-11-14T19:34:24Z",
+      "digest": "sha256:3c9d547be53ac18f5c7b32234e8009cd5ac91aef5c16ce1cede7ed32acf9e12a",
+      "workflow_run": {
+        "id": 43632616824,
+        "repository_id": 1455724710,
+        "head_repository_id": 1455724710,
+        "head_branch": "astra-check-operations-exports-e1fe9561-1",
+        "head_sha": "cd4e8f8c63db9b66d4ab6742f3893c1dd3e8dd27"
+      },
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43632616824/artifacts/14129021623",
+      "verification": "Upload success, manifest and ZIP digest observed in the job log and artifact API. Compiler/guard contents read from decoded log. ZIP itself was not separately downloaded."
+    },
+    "boundary": {
+      "callerPath": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+      "callerBlob": "fbe627ffde443ff7e2d3b1204bbcf67523404f41",
+      "calleePath": "apps/cli/src/sucafina-product/business-services.ts",
+      "calleeBlob": "9aee116a091c684ba467f81316d2fb915b3f8758",
+      "identicalInitialAndW": true,
+      "baselineRunPerformed": false,
+      "operationsFixAlreadyPresentAt": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+      "operationsCallerBlob": "d7d2a69837560f42438d470b83724c1a61939a73",
+      "action": "Integration owner must reconcile the separately published target fix and validate the composed candidate; readonly WP14 was not edited here."
+    },
+    "W": "e1fe9561f199dc594a5fd559d06d450253e571bc",
+    "snapshotS": "cd4e8f8c63db9b66d4ab6742f3893c1dd3e8dd27",
+    "snapshotTree": "aec6724439edf39398620902d3fd7650ffc42445",
+    "snapshotParent": "e1fe9561f199dc594a5fd559d06d450253e571bc",
+    "snapshotOnlyDelta": ".astra-operations-check.json",
+    "productTestConfigFixtureBlobsIdentical": true,
+    "snapshotComparisonUrl": "https://github.com/gustavomhss/Orchestra-SF/compare/e1fe9561f199dc594a5fd559d06d450253e571bc...cd4e8f8c63db9b66d4ab6742f3893c1dd3e8dd27",
+    "request": {
+      "productSha": "e1fe9561f199dc594a5fd559d06d450253e571bc",
+      "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+    },
+    "requestExactUtf8": "{\"productSha\":\"e1fe9561f199dc594a5fd559d06d450253e571bc\",\"devSha\":\"a1d37698a7bb097c1578f827eba6a19b9917ef07\"}",
+    "requestBlob": "437b06e8462bd713723dd36f8a96a4d8033d3e10",
+    "requestSha256": "3fa0604186b5323aa665dd2f0aef741266c48ef5e49b896d1c1eba63378d6a8c",
+    "workflow": ".github/workflows/astra-operations-check.yml",
+    "workflowBlob": "ec63fc5e1a355ada4f1b73cc518c225719e9b08e",
+    "ephemeralRef": "astra-check-operations-exports-e1fe9561-1",
+    "exactProductCheckout": "e1fe9561f199dc594a5fd559d06d450253e571bc",
+    "mode": "default-all",
+    "modeReason": "Narrow guards/sucafina reuse modes do not admit this downloads.ts delta. Existing default workflow used without changes."
+  },
+  "dedupe": {
+    "functionalSearchMatches": [],
+    "checkSearchMatches": [],
+    "basis": "Before creating each CI-only ref, searched latest100 repository runs for matching product/tree/selection/request/config/env/fixture and verified no mission run in flight. Checks were triggered only after functional completion.",
+    "newRuns": 2,
+    "reruns": 0,
+    "maxMissionRunsInFlight": 1,
+    "localProductTests": 0,
+    "epicOrFullSuiteRuns": 0,
+    "configAndValidators": [
+      {
+        "path": ".github/workflows/test-ci.yml",
+        "blob": "9f078f4e37b758691bcd073e5590f05d5444392a"
+      },
+      {
+        "path": "script/test-ci.ts",
+        "blob": "6f67619958ce0567ea93dd66c53ae3aca242cb95"
+      },
+      {
+        "path": "script/test-ci-request.ts",
+        "blob": "5007e48270b80c83eb719d35cec9e6343206a195"
+      },
+      {
+        "path": "script/test-ci-location.ts",
+        "blob": "ee07aaf93c54fa935e6c4e9d845aa73af3b464ee"
+      },
+      {
+        "path": "modules/sucafina/package.json",
+        "blob": "0fabcdd9148286629ba67bcbda4860783ab9c487"
+      },
+      {
+        "path": "modules/sucafina/bunfig.toml",
+        "blob": "7000633db2c4f11e3f1aff351cd28c0df9affeca"
+      }
+    ],
+    "env": {},
+    "ownFixtureBlob": "a14accbfe4a089ccb37cb281663ada538a92bc57",
+    "historicSourcingEvidence": "Retained at its original W, not relabelled as a new green run on this export W. New export impact is covered by the focused11-test run."
+  },
+  "baselineFailure": {
+    "runId": 43628901747,
+    "jobId": 132550880255,
+    "productW": "fd363ca6f66dea56422c235f835103467c7ee8ba",
+    "snapshotS": "80e78d97f15b468b8393c6a1676472f1979d2d33",
+    "conclusion": "failure",
+    "observed": "10 pass / 2 fail; both EXPORT-01 and EXPORT-02 fail in actual logs.",
+    "logsRead": true,
+    "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43628901747",
+    "logSha256": "95c77b84f39b225c7eecf7deec4637f907ac59bb82b32e1a9825c1026ab86b12",
+    "logBytes": 77744,
+    "logHashRecomputed": true,
+    "rerun": false,
+    "comparison": "Original published10pass/2fail result read at pinned Operations source. Own selective copies retain exported-content oracles; readonly legacy view.value assertion adapted to persisted sourcing facts as documented in INTAKE."
+  },
+  "criteria": {
+    "canonicalSourceCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "canonicalCount": 111,
+    "canonicalSha256": "de5df06984f523dea5807ba687a86a81e395655d1fbfac33410106f99570118f",
+    "canonicalIdsTextsAndStatusesUnchanged": true,
+    "matrix": [
+      {
+        "id": "WP04.INV.02",
+        "canonicalText": "Histórico, identificadores já emitidos, versões esperadas e snapshots de aprovação/câmbio são preservados; po_issued continua significando emissão interna.",
+        "scopeStatus": "COMPLEMENTARY_EVIDENCE_NO_FULL_CRITERION_ACCEPTANCE",
+        "observed": "Snapshots e registro completo iguais antes/depois de cada exportação; PO submetida conserva USD200/FX2 após FX3 e cancelamento.",
+        "limit": "Identificadores, versões concorrentes e emissão interna não foram reaceitos globalmente.",
+        "canonicalStatusAtPlanning": "NOT_RUN"
+      },
+      {
+        "id": "WP04.INV.03",
+        "canonicalText": "Recortes autorizados e restrições bancárias valem para tela, exportação, resumo e C02; referência textual ou ausência nunca vira relação, autorização ou valor zero.",
+        "scopeStatus": "COMPLEMENTARY_EVIDENCE_NO_FULL_CRITERION_ACCEPTANCE",
+        "observed": "FX/quantidade/preço/linhas ausentes ficam indisponíveis; zero observado permanece zero no CSV e HTML.",
+        "limit": "A matriz de permissões não foi exercitada integralmente.",
+        "canonicalStatusAtPlanning": "NOT_RUN"
+      },
+      {
+        "id": "WP04.CMP.02",
+        "canonicalText": "A cobertura monetária inclui moeda base, moeda estrangeira, FX ausente, mudança de taxa após submissão, proposta incompleta e divergência entre total informado e quantidade vezes preço.",
+        "scopeStatus": "COMPLEMENTARY_EVIDENCE_NO_FULL_CRITERION_ACCEPTANCE",
+        "observed": "Moeda estrangeira, FX ausente, taxa alterada depois de submissão, base alterada e qty×preço com amount redundante divergente verificados nos arquivos.",
+        "limit": "Recorte de exportações; não cobertura monetária de todos os consumidores.",
+        "canonicalStatusAtPlanning": "NOT_RUN"
+      },
+      {
+        "id": "WP04.T03.CHK.03",
+        "canonicalText": "Mudar a taxa configurada depois da submissão: a decisão pendente preserva o valor/câmbio congelado; remover FX de uma comparação sem snapshot produz indisponibilidade/pendência, nunca total zero.",
+        "scopeStatus": "COMPLEMENTARY_EVIDENCE_NO_FULL_CRITERION_ACCEPTANCE",
+        "observed": "PO realmente submetida em FX2 permanece USD200/2 quando Settings vai para FX3; FX histórico ausente não recebe fallback corrente.",
+        "limit": "Não reaceita todo WP04 nem repete as provas sourcing 58+5.",
+        "canonicalStatusAtPlanning": "NOT_RUN"
+      },
+      {
+        "id": "WP04.T03.CHK.05",
+        "canonicalText": "Introduzir total informado diferente de qty vezes unitPrice: ambas as bases e a discrepância aparecem; nenhum cálculo silencioso altera preço, política de aprovação ou documento.",
+        "scopeStatus": "COMPLEMENTARY_EVIDENCE_NO_FULL_CRITERION_ACCEPTANCE",
+        "observed": "Linhas qty2×20 e qty3×20 exportam 40 e 60 mesmo com amount redundante999/888; total100.",
+        "limit": "O total selecionado100 coincide com a soma100. A exibição das duas bases e da discrepância, exigida pelo critério completo, não foi coberta; apenas os amount redundantes999/888 foram discriminados.",
+        "canonicalStatusAtPlanning": "NOT_RUN"
+      },
+      {
+        "id": "WP04.T03.DOD.02",
+        "canonicalText": "Moeda, taxa/snapshot e estado monetário ficam definidos para cada valor exibido.",
+        "scopeStatus": "COMPLEMENTARY_EVIDENCE_NO_FULL_CRITERION_ACCEPTANCE",
+        "observed": "Arquivos mostram moeda original/base/submetida, FX source/state e indisponibilidade, conforme a etapa própria da PO.",
+        "limit": "Demais telas/blocos não foram reexecutados.",
+        "canonicalStatusAtPlanning": "NOT_RUN"
+      },
+      {
+        "id": "WP04.T03.INV.01",
+        "canonicalText": "Pesos, mínimo de propostas, critérios, elegibilidade e justificativas continuam os da configuração existente.",
+        "scopeStatus": "COMPLEMENTARY_EVIDENCE_NO_FULL_CRITERION_ACCEPTANCE",
+        "observed": "Delta restrito ao consumidor reutiliza purchaseOrderMoney/procurementMonetaryFacts sem fórmula, política, alçada ou scoring novos.",
+        "limit": "Constatação de diff; não auditoria global de políticas.",
+        "canonicalStatusAtPlanning": "NOT_RUN"
+      },
+      {
+        "id": "WP04.T03.INV.02",
+        "canonicalText": "Ausência de taxa/nota/valor não vira zero, precisão inventada ou confirmação de gasto realizado.",
+        "scopeStatus": "COMPLEMENTARY_EVIDENCE_NO_FULL_CRITERION_ACCEPTANCE",
+        "observed": "Ausência monetária continua Unavailable; quantidades e preços zero permanecem0/0.00.",
+        "limit": "Somente entradas e exportações exercitadas.",
+        "canonicalStatusAtPlanning": "NOT_RUN"
+      },
+      {
+        "id": "WP04.T03.QLT.02",
+        "canonicalText": "Arredondamento é de apresentação e não altera ranking, valor aprovado ou reconciliação.",
+        "scopeStatus": "COMPLEMENTARY_EVIDENCE_NO_FULL_CRITERION_ACCEPTANCE",
+        "observed": "40+60 mantém total100 na moeda EUR; ambos os formatos exibem200USD/FX2 quando a conversão é disponível.",
+        "limit": "Não é matriz de arredondamento de todas as moedas.",
+        "canonicalStatusAtPlanning": "NOT_RUN"
+      },
+      {
+        "id": "WP04.T03.SUC.02",
+        "canonicalText": "O mesmo valor de domínio aparece coerentemente no detalhe, resumo e C02 entregue a consumidores.",
+        "scopeStatus": "COMPLEMENTARY_EVIDENCE_NO_FULL_CRITERION_ACCEPTANCE",
+        "observed": "PO futura exporta estimativa própria, sem herdar aprovação do sourcing; PO real preserva o próprio snapshot.",
+        "limit": "Paridade integral entre consumidores continua fora deste recorte; runtime.value legado é readonly.",
+        "canonicalStatusAtPlanning": "NOT_RUN"
+      },
+      {
+        "id": "WP04.T04.CHK.02",
+        "canonicalText": "Aprovar uma etapa intermediária mantém o pedido pendente se ainda houver holder seguinte; concluir sourcing libera po_draft, nunca po_issued ou aprovação de PO implícita.",
+        "scopeStatus": "COMPLEMENTARY_EVIDENCE_NO_FULL_CRITERION_ACCEPTANCE",
+        "observed": "Sourcing pendente não aprova PO futura; após aprovar sourcing e submit_po reais, os arquivos exibem aprovação própria200USD/2.",
+        "limit": "Não é revalidação de toda a cadeia de aprovadores.",
+        "canonicalStatusAtPlanning": "NOT_RUN"
+      },
+      {
+        "id": "WP04.T04.DOD.01",
+        "canonicalText": "PR, sourcing e PO possuem resumos próprios ligados à versão e aos comandos reais.",
+        "scopeStatus": "COMPLEMENTARY_EVIDENCE_NO_FULL_CRITERION_ACCEPTANCE",
+        "observed": "Resumo monetário da PO no HTML e colunas PO do CSV mantêm etapa, moeda, valor e proveniência corretos.",
+        "limit": "Não reaceita os três resumos de UX completos.",
+        "canonicalStatusAtPlanning": "NOT_RUN"
+      },
+      {
+        "id": "WP04.T04.QLT.02",
+        "canonicalText": "Resumo curto e drilldown detalhado apresentam os mesmos valores, contexto e limitações.",
+        "scopeStatus": "COMPLEMENTARY_EVIDENCE_NO_FULL_CRITERION_ACCEPTANCE",
+        "observed": "CSV/HTML usam o mesmo wrapper/helper para valores próprios da PO e snapshots imutáveis.",
+        "limit": "Não declara paridade de toda a UI, C02/C06 ou valor legado.",
+        "canonicalStatusAtPlanning": "NOT_RUN"
+      },
+      {
+        "id": "WP04.T05.CHK.03",
+        "canonicalText": "Reset de Settings restaura exatamente os defaults do baseline sem apagar requests/suppliers; edição de matriz/câmbio não modifica snapshots já congelados.",
+        "scopeStatus": "COMPLEMENTARY_EVIDENCE_NO_FULL_CRITERION_ACCEPTANCE",
+        "observed": "Mudança de FX corrente não reescreve o snapshot PO submetido durante a exportação.",
+        "limit": "Sem prova do reset completo ou de alteração contratual.",
+        "canonicalStatusAtPlanning": "NOT_RUN"
+      },
+      {
+        "id": "WP04.T05.CHK.04",
+        "canonicalText": "Após importação representativa ou exclusão permitida, criar PR/PO/SUP não reutiliza identificador já emitido; registro/PO exportados preservam campos de negócio e omitem material restrito.",
+        "scopeStatus": "COMPLEMENTARY_EVIDENCE_NO_FULL_CRITERION_ACCEPTANCE",
+        "observed": "Conteúdo monetário e unidades dos downloads reais inspecionados; igualdade completa antes/depois observada.",
+        "limit": "IDs, importação e exclusão não foram reaceitos.",
+        "canonicalStatusAtPlanning": "NOT_RUN"
+      }
+    ],
+    "missionCriteria": [
+      {
+        "id": "EXPORT-01",
+        "status": "RESOLVED_WITH_EXECUTED_EVIDENCE",
+        "observed": "CSV and HTML show PO original EUR100, base USD200, FX2/current/estimate; PO submitted approval fields Unavailable. Persisted sourcing remains USD108/FX1.08 and original request status remains src_pending."
+      },
+      {
+        "id": "EXPORT-02",
+        "status": "RESOLVED_WITH_EXECUTED_EVIDENCE",
+        "observed": "HTML line1/service40.00 and line2/service60.00; total EUR100.00. CSV original total100/base200. Quantity and unit-price counterexample also40/60 despite redundant amount999/888."
+      }
+    ],
+    "limits": "Only the stated export observations are accepted here. Canonical planning statuses are quoted, not updated or superseded. No full WP04/E05/AM/G7/G8/global acceptance.",
+    "unmappedCriteria": "Remain unchanged at the planning source; not re-evaluated or accepted by this narrow export mission.",
+    "invariantsByScope": [
+      "WP04.INV.01",
+      "WP04.T03.INV.01",
+      "WP04.T03.QLT.02"
+    ],
+    "review": "Read-only pack reviewer independently confirmed the exact canonical text, scoped observations and no full acceptance; see SOURCE-REVIEW.json."
+  },
+  "previousEvidence": {
+    "sourcingRuns": [
+      {
+        "runId": 43625920456,
+        "productW": "aa5d8c0ee49777ea82bc707df8c976d311728292",
+        "snapshotS": "532a73aa2d7b8e7f5e57e0156b0de67f7ac1fb1c",
+        "result": "58 pass"
+      },
+      {
+        "runId": 43626658534,
+        "productW": "a3b7fb9b45d7852a3000e01098336a1aca9526c3",
+        "snapshotS": "fb440a03e4d712e0d6f40f021997b31a80943a3d",
+        "result": "5 affected tests revalidated; not 63 distinct tests"
+      }
+    ],
+    "meaning": "58 distinct tests covered previously;5 affected tests revalidated, not63 distinct.",
+    "originalHandoff": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/review-fixes/sourcing-money/attempt-02/HANDOFF.md",
+    "originalResult": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/review-fixes/sourcing-money/attempt-02/RESULT.json",
+    "originalReceiptCommit": "2a185e05967f611d63796684379761ded991092b",
+    "unchanged": true,
+    "lastChecks": {
+      "runId": 43626850572,
+      "snapshotS": "b47a2787636a4b9584a703b0dd562f392d00e596",
+      "conclusion": "Package inherited TS2741; CLI/guards success",
+      "rerunForHistoricalEvidence": false
+    }
+  },
+  "reviews": "SOURCE-REVIEW.json",
+  "remainingFindings": [
+    {
+      "id": "READONLY-WP14-TYPECHECK",
+      "status": "OPEN_IN_W",
+      "owner": "WP14 / Operations integration",
+      "evidence": "Only TS2741 at source-access-atlas.test.ts(167,41); caller/callee blobs unchanged initial→W.",
+      "action": "Reconcile the already separately published Operations target correction at15df31a... when composing candidates, then run checks affected by the composition. This mission does not modify WP14 or merge."
+    },
+    {
+      "id": "READONLY-LEGACY-VALUE",
+      "status": "OUTSIDE_EXPORT_DELTA",
+      "owner": "WP04 runtime / Operations integration",
+      "evidence": "Legacy runtime/procurement.ts value correction belongs to Operations target and was not imported. Export consumers now independently use the correct existing helper.",
+      "action": "Preserve and reconcile Operations' correction during authorized composition; do not assert whole-consumer parity from this export run."
+    }
+  ],
+  "documentaryDelivery": {
+    "method": "Append-only single-parent commit D over W; only new files in this receipt namespace. W→D comparison and exact D SHA are published in PR57 after commit creation.",
+    "productTestConfigFixtureBlobsUnchanged": true,
+    "oldReceiptsUnchanged": true,
+    "ciReattribution": "All results refer to W and recorded S, not an invented new green at documentary D.",
+    "nextWriter": "No active product writer remains from this session; integrator must re-read actual head and target before any future write.",
+    "archivedArtifacts": [
+      {
+        "caseId": "EXPORT-01",
+        "path": "files/EXPORT-01/procurement-register.csv",
+        "mimeType": "text/csv; charset=utf-8",
+        "byteLength": 749,
+        "sha256": "093e72bc5be8db0212fab2b14f9d6c26c7b0b73a6368ed8fc21ce83df1ee481e",
+        "source": "Exact utf8 string emitted by the executed hosted test; reconstructed without any newline or character normalization."
+      },
+      {
+        "caseId": "EXPORT-01",
+        "path": "files/EXPORT-01/PO-2026-0001.html",
+        "mimeType": "text/html; charset=utf-8",
+        "byteLength": 1870,
+        "sha256": "41d0ab4d31d1ab03959a235daf7c5f92e2a11d72d24b267e336282e146966c77",
+        "source": "Exact utf8 string emitted by the executed hosted test; reconstructed without any newline or character normalization."
+      },
+      {
+        "caseId": "EXPORT-02",
+        "path": "files/EXPORT-02/procurement-register.csv",
+        "mimeType": "text/csv; charset=utf-8",
+        "byteLength": 749,
+        "sha256": "093e72bc5be8db0212fab2b14f9d6c26c7b0b73a6368ed8fc21ce83df1ee481e",
+        "source": "Exact utf8 string emitted by the executed hosted test; reconstructed without any newline or character normalization."
+      },
+      {
+        "caseId": "EXPORT-02",
+        "path": "files/EXPORT-02/PO-2026-0001.html",
+        "mimeType": "text/html; charset=utf-8",
+        "byteLength": 1996,
+        "sha256": "d25317b2bd21968b20d19429ab3b99b0b5995b917cfb85ebf4907772ebc4a066",
+        "source": "Exact utf8 string emitted by the executed hosted test; reconstructed without any newline or character normalization."
+      }
+    ],
+    "companionReceipts": [
+      {
+        "path": "SOURCE-REVIEW.json",
+        "sha256": "6f3748a1e46396a060b0592de8e3a180eafd911bb63e96bf0ec4d8ff793bd0b4"
+      },
+      {
+        "path": "EXPORTS.json",
+        "sha256": "a011952acc083d782c5c0cea755a97bc45b6c4a5d00588135e3e919b4235b2e0"
+      }
+    ]
+  },
+  "limitations": [
+    "Hosted production download generator was executed against persisted synthetic domain records; no browser or HTTP attachment journey is claimed.",
+    "Malformed/partial records and multiline premises are discarded read clones; not a claim that domain commands permit those edits.",
+    "Only primary CSV/HTML pairs include full payloads; all18 pairs carry real byte lengths/hashes/parsed content and immutability results.",
+    "Focused independent reviews are preliminary and do not replace three final approvals on one integrated candidateC.",
+    "Errored package check remains failure; no new permissions, workflow changes, full suite, product branch, PR, merge or deployment."
+  ]
+}

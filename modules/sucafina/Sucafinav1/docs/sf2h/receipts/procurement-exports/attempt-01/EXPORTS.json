@@ -1,0 +1,970 @@
+{
+  "schema": "sf2h.procurement-exports.download-evidence.v1",
+  "productCandidateSha": "e1fe9561f199dc594a5fd559d06d450253e571bc",
+  "ciSnapshotSha": "b7a3fe9b03fa490238fb47acdc67924f3b0e417a",
+  "runId": 43632315600,
+  "jobId": 132561444043,
+  "logSha256": "f40a980bcb7c2026a11bbe84a5e637880c5a83a78e89351675c8d065d5b81cac",
+  "encoding": "UTF-8; original CRLF in CSV and all characters preserved inside utf8 strings.",
+  "provenance": "Exact JSON observations emitted by the executed tests after production download bytes and immutability assertions. The primary utf8 payloads were independently rehashed and their encoded byte lengths confirmed.",
+  "scope": "Production file generator exercised in hosted CI with synthetic persisted domain records; not a browser/HTTP journey.",
+  "pairCount": 18,
+  "outputCount": 36,
+  "primaryPayloadVerification": [
+    {
+      "caseId": "EXPORT-01",
+      "name": "procurement-register.csv",
+      "sha256": "093e72bc5be8db0212fab2b14f9d6c26c7b0b73a6368ed8fc21ce83df1ee481e",
+      "byteLength": 749,
+      "recomputedSha256": "093e72bc5be8db0212fab2b14f9d6c26c7b0b73a6368ed8fc21ce83df1ee481e",
+      "recomputedByteLength": 749
+    },
+    {
+      "caseId": "EXPORT-01",
+      "name": "PO-2026-0001.html",
+      "sha256": "41d0ab4d31d1ab03959a235daf7c5f92e2a11d72d24b267e336282e146966c77",
+      "byteLength": 1870,
+      "recomputedSha256": "41d0ab4d31d1ab03959a235daf7c5f92e2a11d72d24b267e336282e146966c77",
+      "recomputedByteLength": 1870
+    },
+    {
+      "caseId": "EXPORT-02",
+      "name": "procurement-register.csv",
+      "sha256": "093e72bc5be8db0212fab2b14f9d6c26c7b0b73a6368ed8fc21ce83df1ee481e",
+      "byteLength": 749,
+      "recomputedSha256": "093e72bc5be8db0212fab2b14f9d6c26c7b0b73a6368ed8fc21ce83df1ee481e",
+      "recomputedByteLength": 749
+    },
+    {
+      "caseId": "EXPORT-02",
+      "name": "PO-2026-0001.html",
+      "sha256": "d25317b2bd21968b20d19429ab3b99b0b5995b917cfb85ebf4907772ebc4a066",
+      "byteLength": 1996,
+      "recomputedSha256": "d25317b2bd21968b20d19429ab3b99b0b5995b917cfb85ebf4907772ebc4a066",
+      "recomputedByteLength": 1996
+    }
+  ],
+  "observations": [
+    {
+      "caseId": "EXPORT-01",
+      "entrypoint": "runtime/downloads.ts#download(register|po)",
+      "actor": "buyer",
+      "requestRef": "PR-2026-0001",
+      "artifacts": [
+        {
+          "name": "procurement-register.csv",
+          "type": "text/csv; charset=utf-8",
+          "byteLength": 749,
+          "sha256": "093e72bc5be8db0212fab2b14f9d6c26c7b0b73a6368ed8fc21ce83df1ee481e",
+          "utf8": "\"PR number\",\"Title\",\"Type\",\"Category\",\"Cost centre\",\"Requester\",\"Created\",\"Status\",\"Recurring\",\"Frequency\",\"Est. annual value\",\"Estimated amount\",\"Quotes\",\"Selected supplier\",\"Selected quote total\",\"Contract strategy\",\"PO number\",\"OPEX/CAPEX\",\"PO currency\",\"PO total\",\"PO total (base)\",\"PO base currency\",\"PO FX rate\",\"PO FX source\",\"PO monetary state\",\"PO submitted amount\",\"PO submitted currency\",\"PO submitted FX rate\",\"Payment terms\",\"Delivery date\",\"PO issued\"\r\n\"PR-2026-0001\",\"Sourcing snapshot regression\",\"service\",\"\",\"IT\",\"requester\",\"\",\"src_pending\",\"No\",\"\",\"Unavailable\",\"100\",\"3\",\"European supplier\",\"EUR 100.00\",\"\",\"PO-2026-0001\",\"OPEX\",\"EUR\",\"100\",\"200\",\"USD\",\"2\",\"current\",\"estimate\",\"Unavailable\",\"Unavailable\",\"Unavailable\",\"\",\"\",\"\""
+        },
+        {
+          "name": "PO-2026-0001.html",
+          "type": "text/html; charset=utf-8",
+          "byteLength": 1870,
+          "sha256": "41d0ab4d31d1ab03959a235daf7c5f92e2a11d72d24b267e336282e146966c77",
+          "utf8": "<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>PO-2026-0001</title><style>body{font:13px/1.5 Arial,sans-serif;color:#111;max-width:820px;margin:30px auto;padding:0 24px}table{width:100%;border-collapse:collapse;margin:10px 0}th,td{border:1px solid #ccc;padding:6px 8px;text-align:left}th{background:#f2f4f7}.box{display:grid;grid-template-columns:1fr 1fr;gap:16px}.box>div{border:1px solid #ccc;padding:10px}</style></head><body><h1>PURCHASE ORDER</h1><p>Status: src_pending</p><p><b>PO-2026-0001</b><br>Date: <br>Requisition: PR-2026-0001</p><div class=\"box\"><div><b>Supplier</b><br>European supplier<br><br>Quote ref: —</div><div><b>Invoice to</b><br>—</div></div><h2>Description</h2><p>—</p><table><thead><tr><th>#</th><th>Description</th><th>Qty</th><th>Unit</th><th>Unit price (EUR)</th><th>Total (EUR)</th></tr></thead><tbody><tr><td>1</td><td></td><td>1</td><td></td><td>100.00</td><td>100.00</td></tr><tr><th colspan=\"5\">Total agreed price (excl. VAT)</th><td>100.00</td></tr></tbody></table><p>Monetary state: estimate. Current base amount: 200.00 USD. FX: 2 (current). Submitted approval: Unavailable; submitted FX: Unavailable.</p><h2>Terms & conditions</h2><table><tr><th>Currency</th><td>EUR</td></tr><tr><th>Expenditure type</th><td>OPEX</td></tr><tr><th>Payment terms</th><td>—</td></tr><tr><th>Incoterm</th><td>—</td></tr><tr><th>Delivery / service start date</th><td>—</td></tr><tr><th>Delivery address</th><td>—</td></tr><tr><th>Specific delivery conditions</th><td>—</td></tr><tr><th>Acceptance criteria</th><td>—</td></tr><tr><th>Warranty / SLA</th><td>—</td></tr><tr><th>Contract reference</th><td>—</td></tr><tr><th>Other terms</th><td>—</td></tr></table><p>Please quote the PO number on all invoices and delivery notes.</p></body></html>"
+        }
+      ],
+      "register": {
+        "Status": "src_pending",
+        "Selected quote total": "EUR 100.00",
+        "PO number": "PO-2026-0001",
+        "PO currency": "EUR",
+        "PO total": "100",
+        "PO total (base)": "200",
+        "PO base currency": "USD",
+        "PO FX rate": "2",
+        "PO FX source": "current",
+        "PO monetary state": "estimate",
+        "PO submitted amount": "Unavailable",
+        "PO submitted currency": "Unavailable",
+        "PO submitted FX rate": "Unavailable",
+        "PO issued": ""
+      },
+      "lines": [
+        {
+          "description": "",
+          "quantity": "1",
+          "unit": "",
+          "unitPrice": "100.00",
+          "total": "100.00"
+        }
+      ],
+      "money": "<p>Monetary state: estimate. Current base amount: 200.00 USD. FX: 2 (current). Submitted approval: Unavailable; submitted FX: Unavailable.</p>",
+      "snapshotUnchanged": true,
+      "persistedUnchanged": true
+    },
+    {
+      "caseId": "EXPORT-02",
+      "entrypoint": "runtime/downloads.ts#download(register|po)",
+      "actor": "buyer",
+      "requestRef": "PR-2026-0001",
+      "artifacts": [
+        {
+          "name": "procurement-register.csv",
+          "type": "text/csv; charset=utf-8",
+          "byteLength": 749,
+          "sha256": "093e72bc5be8db0212fab2b14f9d6c26c7b0b73a6368ed8fc21ce83df1ee481e",
+          "utf8": "\"PR number\",\"Title\",\"Type\",\"Category\",\"Cost centre\",\"Requester\",\"Created\",\"Status\",\"Recurring\",\"Frequency\",\"Est. annual value\",\"Estimated amount\",\"Quotes\",\"Selected supplier\",\"Selected quote total\",\"Contract strategy\",\"PO number\",\"OPEX/CAPEX\",\"PO currency\",\"PO total\",\"PO total (base)\",\"PO base currency\",\"PO FX rate\",\"PO FX source\",\"PO monetary state\",\"PO submitted amount\",\"PO submitted currency\",\"PO submitted FX rate\",\"Payment terms\",\"Delivery date\",\"PO issued\"\r\n\"PR-2026-0001\",\"Sourcing snapshot regression\",\"service\",\"\",\"IT\",\"requester\",\"\",\"src_pending\",\"No\",\"\",\"Unavailable\",\"100\",\"3\",\"European supplier\",\"EUR 100.00\",\"\",\"PO-2026-0001\",\"OPEX\",\"EUR\",\"100\",\"200\",\"USD\",\"2\",\"current\",\"estimate\",\"Unavailable\",\"Unavailable\",\"Unavailable\",\"\",\"\",\"\""
+        },
+        {
+          "name": "PO-2026-0001.html",
+          "type": "text/html; charset=utf-8",
+          "byteLength": 1996,
+          "sha256": "d25317b2bd21968b20d19429ab3b99b0b5995b917cfb85ebf4907772ebc4a066",
+          "utf8": "<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>PO-2026-0001</title><style>body{font:13px/1.5 Arial,sans-serif;color:#111;max-width:820px;margin:30px auto;padding:0 24px}table{width:100%;border-collapse:collapse;margin:10px 0}th,td{border:1px solid #ccc;padding:6px 8px;text-align:left}th{background:#f2f4f7}.box{display:grid;grid-template-columns:1fr 1fr;gap:16px}.box>div{border:1px solid #ccc;padding:10px}</style></head><body><h1>PURCHASE ORDER</h1><p>Status: src_pending</p><p><b>PO-2026-0001</b><br>Date: <br>Requisition: PR-2026-0001</p><div class=\"box\"><div><b>Supplier</b><br>European supplier<br><br>Quote ref: —</div><div><b>Invoice to</b><br>—</div></div><h2>Description</h2><p>—</p><table><thead><tr><th>#</th><th>Description</th><th>Qty</th><th>Unit</th><th>Unit price (EUR)</th><th>Total (EUR)</th></tr></thead><tbody><tr><td>1</td><td>First separate line</td><td>1</td><td>service</td><td>40.00</td><td>40.00</td></tr><tr><td>2</td><td>Second separate line</td><td>1</td><td>service</td><td>60.00</td><td>60.00</td></tr><tr><th colspan=\"5\">Total agreed price (excl. VAT)</th><td>100.00</td></tr></tbody></table><p>Monetary state: estimate. Current base amount: 200.00 USD. FX: 2 (current). Submitted approval: Unavailable; submitted FX: Unavailable.</p><h2>Terms & conditions</h2><table><tr><th>Currency</th><td>EUR</td></tr><tr><th>Expenditure type</th><td>OPEX</td></tr><tr><th>Payment terms</th><td>—</td></tr><tr><th>Incoterm</th><td>—</td></tr><tr><th>Delivery / service start date</th><td>—</td></tr><tr><th>Delivery address</th><td>—</td></tr><tr><th>Specific delivery conditions</th><td>—</td></tr><tr><th>Acceptance criteria</th><td>—</td></tr><tr><th>Warranty / SLA</th><td>—</td></tr><tr><th>Contract reference</th><td>—</td></tr><tr><th>Other terms</th><td>—</td></tr></table><p>Please quote the PO number on all invoices and delivery notes.</p></body></html>"
+        }
+      ],
+      "register": {
+        "Status": "src_pending",
+        "Selected quote total": "EUR 100.00",
+        "PO number": "PO-2026-0001",
+        "PO currency": "EUR",
+        "PO total": "100",
+        "PO total (base)": "200",
+        "PO base currency": "USD",
+        "PO FX rate": "2",
+        "PO FX source": "current",
+        "PO monetary state": "estimate",
+        "PO submitted amount": "Unavailable",
+        "PO submitted currency": "Unavailable",
+        "PO submitted FX rate": "Unavailable",
+        "PO issued": ""
+      },
+      "lines": [
+        {
+          "description": "First separate line",
+          "quantity": "1",
+          "unit": "service",
+          "unitPrice": "40.00",
+          "total": "40.00"
+        },
+        {
+          "description": "Second separate line",
+          "quantity": "1",
+          "unit": "service",
+          "unitPrice": "60.00",
+          "total": "60.00"
+        }
+      ],
+      "money": "<p>Monetary state: estimate. Current base amount: 200.00 USD. FX: 2 (current). Submitted approval: Unavailable; submitted FX: Unavailable.</p>",
+      "snapshotUnchanged": true,
+      "persistedUnchanged": true
+    },
+    {
+      "caseId": "PO-SUBMITTED-FX3",
+      "entrypoint": "runtime/downloads.ts#download(register|po)",
+      "actor": "buyer",
+      "requestRef": "PR-2026-0001",
+      "artifacts": [
+        {
+          "name": "procurement-register.csv",
+          "type": "text/csv; charset=utf-8",
+          "byteLength": 748,
+          "sha256": "8969095acc253f96e55c08f204cd73a36108322739a860ef33a5113533cb06d9"
+        },
+        {
+          "name": "PO-2026-0001.html",
+          "type": "text/html; charset=utf-8",
+          "byteLength": 2049,
+          "sha256": "d168da9b131a7fa24fec3e10719c880bf9587e65d4397b594c2557a9c68afa49"
+        }
+      ],
+      "register": {
+        "Status": "po_pending",
+        "Selected quote total": "EUR 100.00",
+        "PO number": "PO-2026-0001",
+        "PO currency": "EUR",
+        "PO total": "100",
+        "PO total (base)": "200",
+        "PO base currency": "USD",
+        "PO FX rate": "2",
+        "PO FX source": "submitted",
+        "PO monetary state": "pending-approval",
+        "PO submitted amount": "200",
+        "PO submitted currency": "USD",
+        "PO submitted FX rate": "2",
+        "PO issued": ""
+      },
+      "lines": [
+        {
+          "description": "",
+          "quantity": "1",
+          "unit": "",
+          "unitPrice": "100.00",
+          "total": "100.00"
+        }
+      ],
+      "money": "<p>Monetary state: pending-approval. Current base amount: 200.00 USD. FX: 2 (submitted). Submitted approval: 200.00 USD; submitted FX: 2.</p>",
+      "snapshotUnchanged": true,
+      "persistedUnchanged": true
+    },
+    {
+      "caseId": "PO-CANCELLED-FROZEN",
+      "entrypoint": "runtime/downloads.ts#download(register|po)",
+      "actor": "buyer",
+      "requestRef": "PR-2026-0001",
+      "artifacts": [
+        {
+          "name": "procurement-register.csv",
+          "type": "text/csv; charset=utf-8",
+          "byteLength": 740,
+          "sha256": "ce081705c2a0a0a97ab9fbd34d1f7cf1a6a7202f1d953fb585e6137bd84aca38"
+        },
+        {
+          "name": "PO-2026-0001.html",
+          "type": "text/html; charset=utf-8",
+          "byteLength": 2041,
+          "sha256": "fa918df8ea29eb8da6418dc8cf8ed13403fff92c4ba7953422ce63fd9adde78e"
+        }
+      ],
+      "register": {
+        "Status": "cancelled",
+        "Selected quote total": "EUR 100.00",
+        "PO number": "PO-2026-0001",
+        "PO currency": "EUR",
+        "PO total": "100",
+        "PO total (base)": "200",
+        "PO base currency": "USD",
+        "PO FX rate": "2",
+        "PO FX source": "submitted",
+        "PO monetary state": "cancelled",
+        "PO submitted amount": "200",
+        "PO submitted currency": "USD",
+        "PO submitted FX rate": "2",
+        "PO issued": ""
+      },
+      "lines": [
+        {
+          "description": "",
+          "quantity": "1",
+          "unit": "",
+          "unitPrice": "100.00",
+          "total": "100.00"
+        }
+      ],
+      "money": "<p>Monetary state: cancelled. Current base amount: 200.00 USD. FX: 2 (submitted). Submitted approval: 200.00 USD; submitted FX: 2.</p>",
+      "snapshotUnchanged": true,
+      "persistedUnchanged": true
+    },
+    {
+      "caseId": "SOURCING-CANCELLED",
+      "entrypoint": "runtime/downloads.ts#download(register|po)",
+      "actor": "buyer",
+      "requestRef": "PR-2026-0001",
+      "artifacts": [
+        {
+          "name": "procurement-register.csv",
+          "type": "text/csv; charset=utf-8",
+          "byteLength": 748,
+          "sha256": "a34c83c2a246a5c7b773d7ec9589313b8da45c152cb277203e9eaab0a4fd487d"
+        },
+        {
+          "name": "PO-2026-0001.html",
+          "type": "text/html; charset=utf-8",
+          "byteLength": 1869,
+          "sha256": "9d79448dbc50ea934f4eca322627a448885b5703e0bbc724df88390e5401a7cc"
+        }
+      ],
+      "register": {
+        "Status": "cancelled",
+        "Selected quote total": "EUR 100.00",
+        "PO number": "PO-2026-0001",
+        "PO currency": "EUR",
+        "PO total": "100",
+        "PO total (base)": "200",
+        "PO base currency": "USD",
+        "PO FX rate": "2",
+        "PO FX source": "current",
+        "PO monetary state": "cancelled",
+        "PO submitted amount": "Unavailable",
+        "PO submitted currency": "Unavailable",
+        "PO submitted FX rate": "Unavailable",
+        "PO issued": ""
+      },
+      "lines": [
+        {
+          "description": "",
+          "quantity": "1",
+          "unit": "",
+          "unitPrice": "100.00",
+          "total": "100.00"
+        }
+      ],
+      "money": "<p>Monetary state: cancelled. Current base amount: 200.00 USD. FX: 2 (current). Submitted approval: Unavailable; submitted FX: Unavailable.</p>",
+      "snapshotUnchanged": true,
+      "persistedUnchanged": true
+    },
+    {
+      "caseId": "PO-LIVE-FX-MISSING",
+      "entrypoint": "runtime/downloads.ts#download(register|po)",
+      "actor": "buyer",
+      "requestRef": "PR-2026-0001",
+      "artifacts": [
+        {
+          "name": "procurement-register.csv",
+          "type": "text/csv; charset=utf-8",
+          "byteLength": 771,
+          "sha256": "a751c0ade74414736925bea76b76079bc12b335be30629999ca1322d9d817f7c"
+        },
+        {
+          "name": "PO-2026-0001.html",
+          "type": "text/html; charset=utf-8",
+          "byteLength": 1885,
+          "sha256": "a61fa1fb693424893b26a1f843e5828c99fee529f8bc45c1bc797c8d2f61d250"
+        }
+      ],
+      "register": {
+        "Status": "src_pending",
+        "Selected quote total": "EUR 100.00",
+        "PO number": "PO-2026-0001",
+        "PO currency": "EUR",
+        "PO total": "100",
+        "PO total (base)": "Unavailable",
+        "PO base currency": "USD",
+        "PO FX rate": "Unavailable",
+        "PO FX source": "Unavailable",
+        "PO monetary state": "estimate",
+        "PO submitted amount": "Unavailable",
+        "PO submitted currency": "Unavailable",
+        "PO submitted FX rate": "Unavailable",
+        "PO issued": ""
+      },
+      "lines": [
+        {
+          "description": "",
+          "quantity": "1",
+          "unit": "",
+          "unitPrice": "100.00",
+          "total": "100.00"
+        }
+      ],
+      "money": "<p>Monetary state: estimate. Current base amount: Unavailable. FX: Unavailable (Unavailable). Submitted approval: Unavailable; submitted FX: Unavailable.</p>",
+      "snapshotUnchanged": true,
+      "persistedUnchanged": true
+    },
+    {
+      "caseId": "PO-BASE-CHANGED",
+      "entrypoint": "runtime/downloads.ts#download(register|po)",
+      "actor": "buyer",
+      "requestRef": "PR-2026-0001",
+      "artifacts": [
+        {
+          "name": "procurement-register.csv",
+          "type": "text/csv; charset=utf-8",
+          "byteLength": 768,
+          "sha256": "62d9b8683e3e7e245b6ca560f849d4357e242fef9abdc4f730b8d2eb78ede4ec"
+        },
+        {
+          "name": "PO-2026-0001.html",
+          "type": "text/html; charset=utf-8",
+          "byteLength": 2062,
+          "sha256": "9cd96d3f1a241ddf5d7b2f0e0a0d9a2bfb9b8ac5d6a2e82666be2123313132f4"
+        }
+      ],
+      "register": {
+        "Status": "po_pending",
+        "Selected quote total": "EUR 100.00",
+        "PO number": "PO-2026-0001",
+        "PO currency": "EUR",
+        "PO total": "100",
+        "PO total (base)": "Unavailable",
+        "PO base currency": "GBP",
+        "PO FX rate": "Unavailable",
+        "PO FX source": "Unavailable",
+        "PO monetary state": "pending-approval",
+        "PO submitted amount": "200",
+        "PO submitted currency": "USD",
+        "PO submitted FX rate": "2",
+        "PO issued": ""
+      },
+      "lines": [
+        {
+          "description": "",
+          "quantity": "1",
+          "unit": "",
+          "unitPrice": "100.00",
+          "total": "100.00"
+        }
+      ],
+      "money": "<p>Monetary state: pending-approval. Current base amount: Unavailable. FX: Unavailable (Unavailable). Submitted approval: 200.00 USD; submitted FX: 2.</p>",
+      "snapshotUnchanged": true,
+      "persistedUnchanged": true
+    },
+    {
+      "caseId": "PO-SUBMITTED-FX-MISSING",
+      "entrypoint": "runtime/downloads.ts#download(register|po)",
+      "actor": "buyer",
+      "requestRef": "PR-2026-0001",
+      "artifacts": [
+        {
+          "name": "procurement-register.csv",
+          "type": "text/csv; charset=utf-8",
+          "byteLength": 778,
+          "sha256": "e02e836e298913e749ca44872f6403cb664ca3fd542f1fd8f6913d8d019837be"
+        },
+        {
+          "name": "PO-2026-0001.html",
+          "type": "text/html; charset=utf-8",
+          "byteLength": 2072,
+          "sha256": "1f944741cddcad5ca4e1376c828f4d69da016e74962003af507320d02c0d0943"
+        }
+      ],
+      "register": {
+        "Status": "po_pending",
+        "Selected quote total": "EUR 100.00",
+        "PO number": "PO-2026-0001",
+        "PO currency": "EUR",
+        "PO total": "100",
+        "PO total (base)": "Unavailable",
+        "PO base currency": "USD",
+        "PO FX rate": "Unavailable",
+        "PO FX source": "Unavailable",
+        "PO monetary state": "pending-approval",
+        "PO submitted amount": "200",
+        "PO submitted currency": "USD",
+        "PO submitted FX rate": "Unavailable",
+        "PO issued": ""
+      },
+      "lines": [
+        {
+          "description": "",
+          "quantity": "1",
+          "unit": "",
+          "unitPrice": "100.00",
+          "total": "100.00"
+        }
+      ],
+      "money": "<p>Monetary state: pending-approval. Current base amount: Unavailable. FX: Unavailable (Unavailable). Submitted approval: 200.00 USD; submitted FX: Unavailable.</p>",
+      "snapshotUnchanged": true,
+      "persistedUnchanged": true
+    },
+    {
+      "caseId": "PO-LINE-QUANTITIES",
+      "entrypoint": "runtime/downloads.ts#download(register|po)",
+      "actor": "buyer",
+      "requestRef": "PR-2026-0001",
+      "artifacts": [
+        {
+          "name": "procurement-register.csv",
+          "type": "text/csv; charset=utf-8",
+          "byteLength": 749,
+          "sha256": "093e72bc5be8db0212fab2b14f9d6c26c7b0b73a6368ed8fc21ce83df1ee481e"
+        },
+        {
+          "name": "PO-2026-0001.html",
+          "type": "text/html; charset=utf-8",
+          "byteLength": 1985,
+          "sha256": "d919806a75cc781adab9cb0f22b2e4f8f9e4063b1f13747f825228905f0c71c6"
+        }
+      ],
+      "register": {
+        "Status": "src_pending",
+        "Selected quote total": "EUR 100.00",
+        "PO number": "PO-2026-0001",
+        "PO currency": "EUR",
+        "PO total": "100",
+        "PO total (base)": "200",
+        "PO base currency": "USD",
+        "PO FX rate": "2",
+        "PO FX source": "current",
+        "PO monetary state": "estimate",
+        "PO submitted amount": "Unavailable",
+        "PO submitted currency": "Unavailable",
+        "PO submitted FX rate": "Unavailable",
+        "PO issued": ""
+      },
+      "lines": [
+        {
+          "description": "Two service days",
+          "quantity": "2",
+          "unit": "day",
+          "unitPrice": "20.00",
+          "total": "40.00"
+        },
+        {
+          "description": "Three service hours",
+          "quantity": "3",
+          "unit": "hour",
+          "unitPrice": "20.00",
+          "total": "60.00"
+        }
+      ],
+      "money": "<p>Monetary state: estimate. Current base amount: 200.00 USD. FX: 2 (current). Submitted approval: Unavailable; submitted FX: Unavailable.</p>",
+      "snapshotUnchanged": true,
+      "persistedUnchanged": true
+    },
+    {
+      "caseId": "QTY-ABSENT",
+      "entrypoint": "runtime/downloads.ts#download(register|po)",
+      "actor": "buyer",
+      "requestRef": "PR-2026-0001",
+      "artifacts": [
+        {
+          "name": "procurement-register.csv",
+          "type": "text/csv; charset=utf-8",
+          "byteLength": 765,
+          "sha256": "3a06b5833b231e5880d5876ef36b0ad8577fb593f13446df111777948dd847f0"
+        },
+        {
+          "name": "PO-2026-0001.html",
+          "type": "text/html; charset=utf-8",
+          "byteLength": 2007,
+          "sha256": "196b0032de9081f3a653ef05690467742caf788ccc6f1ba78f3666781ae857a9"
+        }
+      ],
+      "register": {
+        "Status": "src_pending",
+        "Selected quote total": "EUR 100.00",
+        "PO number": "PO-2026-0001",
+        "PO currency": "EUR",
+        "PO total": "Unavailable",
+        "PO total (base)": "Unavailable",
+        "PO base currency": "USD",
+        "PO FX rate": "2",
+        "PO FX source": "current",
+        "PO monetary state": "estimate",
+        "PO submitted amount": "Unavailable",
+        "PO submitted currency": "Unavailable",
+        "PO submitted FX rate": "Unavailable",
+        "PO issued": ""
+      },
+      "lines": [
+        {
+          "description": "Unavailable input",
+          "quantity": "Unavailable",
+          "unit": "service",
+          "unitPrice": "20.00",
+          "total": "Unavailable"
+        },
+        {
+          "description": "Observed zero",
+          "quantity": "0",
+          "unit": "service",
+          "unitPrice": "0.00",
+          "total": "0.00"
+        }
+      ],
+      "money": "<p>Monetary state: estimate. Current base amount: Unavailable. FX: 2 (current). Submitted approval: Unavailable; submitted FX: Unavailable.</p>",
+      "snapshotUnchanged": true,
+      "persistedUnchanged": true
+    },
+    {
+      "caseId": "PRICE-ABSENT",
+      "entrypoint": "runtime/downloads.ts#download(register|po)",
+      "actor": "buyer",
+      "requestRef": "PR-2026-0001",
+      "artifacts": [
+        {
+          "name": "procurement-register.csv",
+          "type": "text/csv; charset=utf-8",
+          "byteLength": 765,
+          "sha256": "3a06b5833b231e5880d5876ef36b0ad8577fb593f13446df111777948dd847f0"
+        },
+        {
+          "name": "PO-2026-0001.html",
+          "type": "text/html; charset=utf-8",
+          "byteLength": 2003,
+          "sha256": "44ad072e139c0a1b885339eac5fd479b9713e69f811c6b8fffb3c6860df1f061"
+        }
+      ],
+      "register": {
+        "Status": "src_pending",
+        "Selected quote total": "EUR 100.00",
+        "PO number": "PO-2026-0001",
+        "PO currency": "EUR",
+        "PO total": "Unavailable",
+        "PO total (base)": "Unavailable",
+        "PO base currency": "USD",
+        "PO FX rate": "2",
+        "PO FX source": "current",
+        "PO monetary state": "estimate",
+        "PO submitted amount": "Unavailable",
+        "PO submitted currency": "Unavailable",
+        "PO submitted FX rate": "Unavailable",
+        "PO issued": ""
+      },
+      "lines": [
+        {
+          "description": "Unavailable input",
+          "quantity": "2",
+          "unit": "service",
+          "unitPrice": "Unavailable",
+          "total": "Unavailable"
+        },
+        {
+          "description": "Observed zero",
+          "quantity": "0",
+          "unit": "service",
+          "unitPrice": "0.00",
+          "total": "0.00"
+        }
+      ],
+      "money": "<p>Monetary state: estimate. Current base amount: Unavailable. FX: 2 (current). Submitted approval: Unavailable; submitted FX: Unavailable.</p>",
+      "snapshotUnchanged": true,
+      "persistedUnchanged": true
+    },
+    {
+      "caseId": "PRICE-NAN",
+      "entrypoint": "runtime/downloads.ts#download(register|po)",
+      "actor": "buyer",
+      "requestRef": "PR-2026-0001",
+      "artifacts": [
+        {
+          "name": "procurement-register.csv",
+          "type": "text/csv; charset=utf-8",
+          "byteLength": 765,
+          "sha256": "3a06b5833b231e5880d5876ef36b0ad8577fb593f13446df111777948dd847f0"
+        },
+        {
+          "name": "PO-2026-0001.html",
+          "type": "text/html; charset=utf-8",
+          "byteLength": 2003,
+          "sha256": "44ad072e139c0a1b885339eac5fd479b9713e69f811c6b8fffb3c6860df1f061"
+        }
+      ],
+      "register": {
+        "Status": "src_pending",
+        "Selected quote total": "EUR 100.00",
+        "PO number": "PO-2026-0001",
+        "PO currency": "EUR",
+        "PO total": "Unavailable",
+        "PO total (base)": "Unavailable",
+        "PO base currency": "USD",
+        "PO FX rate": "2",
+        "PO FX source": "current",
+        "PO monetary state": "estimate",
+        "PO submitted amount": "Unavailable",
+        "PO submitted currency": "Unavailable",
+        "PO submitted FX rate": "Unavailable",
+        "PO issued": ""
+      },
+      "lines": [
+        {
+          "description": "Unavailable input",
+          "quantity": "2",
+          "unit": "service",
+          "unitPrice": "Unavailable",
+          "total": "Unavailable"
+        },
+        {
+          "description": "Observed zero",
+          "quantity": "0",
+          "unit": "service",
+          "unitPrice": "0.00",
+          "total": "0.00"
+        }
+      ],
+      "money": "<p>Monetary state: estimate. Current base amount: Unavailable. FX: 2 (current). Submitted approval: Unavailable; submitted FX: Unavailable.</p>",
+      "snapshotUnchanged": true,
+      "persistedUnchanged": true
+    },
+    {
+      "caseId": "PO-OBSERVED-ZERO",
+      "entrypoint": "runtime/downloads.ts#download(register|po)",
+      "actor": "buyer",
+      "requestRef": "PR-2026-0001",
+      "artifacts": [
+        {
+          "name": "procurement-register.csv",
+          "type": "text/csv; charset=utf-8",
+          "byteLength": 745,
+          "sha256": "20d57a09a70d316cbf5fc19a74effe53403c3bc3d48d74952aa7b88896e074e5"
+        },
+        {
+          "name": "PO-2026-0001.html",
+          "type": "text/html; charset=utf-8",
+          "byteLength": 1882,
+          "sha256": "71d01b7b9e3981f64cf3d98351cd7260ff49c34a1519f3936cf788965f39e7b1"
+        }
+      ],
+      "register": {
+        "Status": "src_pending",
+        "Selected quote total": "EUR 100.00",
+        "PO number": "PO-2026-0001",
+        "PO currency": "EUR",
+        "PO total": "0",
+        "PO total (base)": "0",
+        "PO base currency": "USD",
+        "PO FX rate": "2",
+        "PO FX source": "current",
+        "PO monetary state": "estimate",
+        "PO submitted amount": "Unavailable",
+        "PO submitted currency": "Unavailable",
+        "PO submitted FX rate": "Unavailable",
+        "PO issued": ""
+      },
+      "lines": [
+        {
+          "description": "Observed zero",
+          "quantity": "0",
+          "unit": "service",
+          "unitPrice": "0.00",
+          "total": "0.00"
+        }
+      ],
+      "money": "<p>Monetary state: estimate. Current base amount: 0.00 USD. FX: 2 (current). Submitted approval: Unavailable; submitted FX: Unavailable.</p>",
+      "snapshotUnchanged": true,
+      "persistedUnchanged": true
+    },
+    {
+      "caseId": "LINES-ABSENT",
+      "entrypoint": "runtime/downloads.ts#download(register|po)",
+      "actor": "buyer",
+      "requestRef": "PR-2026-0001",
+      "artifacts": [
+        {
+          "name": "procurement-register.csv",
+          "type": "text/csv; charset=utf-8",
+          "byteLength": 782,
+          "sha256": "14b36d7acc272fa9d431d64d14ffeabccc975aff54f5fe117649de6967c9f55a"
+        },
+        {
+          "name": "PO-2026-0001.html",
+          "type": "text/html; charset=utf-8",
+          "byteLength": 1816,
+          "sha256": "32db89d6ddd61ac967f6127da83fc8d9923115964f2dd841544612c7369f02b1"
+        }
+      ],
+      "register": {
+        "Status": "src_pending",
+        "Selected quote total": "EUR 100.00",
+        "PO number": "PO-2026-0001",
+        "PO currency": "EUR",
+        "PO total": "Unavailable",
+        "PO total (base)": "Unavailable",
+        "PO base currency": "USD",
+        "PO FX rate": "Unavailable",
+        "PO FX source": "Unavailable",
+        "PO monetary state": "Unavailable",
+        "PO submitted amount": "Unavailable",
+        "PO submitted currency": "Unavailable",
+        "PO submitted FX rate": "Unavailable",
+        "PO issued": ""
+      },
+      "lines": [],
+      "money": "<p>Monetary state: Unavailable. Current base amount: Unavailable. FX: Unavailable (Unavailable). Submitted approval: Unavailable; submitted FX: Unavailable.</p>",
+      "snapshotUnchanged": true,
+      "persistedUnchanged": true
+    },
+    {
+      "caseId": "LINES-EMPTY",
+      "entrypoint": "runtime/downloads.ts#download(register|po)",
+      "actor": "buyer",
+      "requestRef": "PR-2026-0001",
+      "artifacts": [
+        {
+          "name": "procurement-register.csv",
+          "type": "text/csv; charset=utf-8",
+          "byteLength": 782,
+          "sha256": "14b36d7acc272fa9d431d64d14ffeabccc975aff54f5fe117649de6967c9f55a"
+        },
+        {
+          "name": "PO-2026-0001.html",
+          "type": "text/html; charset=utf-8",
+          "byteLength": 1816,
+          "sha256": "32db89d6ddd61ac967f6127da83fc8d9923115964f2dd841544612c7369f02b1"
+        }
+      ],
+      "register": {
+        "Status": "src_pending",
+        "Selected quote total": "EUR 100.00",
+        "PO number": "PO-2026-0001",
+        "PO currency": "EUR",
+        "PO total": "Unavailable",
+        "PO total (base)": "Unavailable",
+        "PO base currency": "USD",
+        "PO FX rate": "Unavailable",
+        "PO FX source": "Unavailable",
+        "PO monetary state": "Unavailable",
+        "PO submitted amount": "Unavailable",
+        "PO submitted currency": "Unavailable",
+        "PO submitted FX rate": "Unavailable",
+        "PO issued": ""
+      },
+      "lines": [],
+      "money": "<p>Monetary state: Unavailable. Current base amount: Unavailable. FX: Unavailable (Unavailable). Submitted approval: Unavailable; submitted FX: Unavailable.</p>",
+      "snapshotUnchanged": true,
+      "persistedUnchanged": true
+    },
+    {
+      "caseId": "LINES-MALFORMED",
+      "entrypoint": "runtime/downloads.ts#download(register|po)",
+      "actor": "buyer",
+      "requestRef": "PR-2026-0001",
+      "artifacts": [
+        {
+          "name": "procurement-register.csv",
+          "type": "text/csv; charset=utf-8",
+          "byteLength": 782,
+          "sha256": "14b36d7acc272fa9d431d64d14ffeabccc975aff54f5fe117649de6967c9f55a"
+        },
+        {
+          "name": "PO-2026-0001.html",
+          "type": "text/html; charset=utf-8",
+          "byteLength": 1913,
+          "sha256": "2ec22937fbc99a8ca2e833021456bf40bb49a228ddd672aed2ba80ed3aa86e4d"
+        }
+      ],
+      "register": {
+        "Status": "src_pending",
+        "Selected quote total": "EUR 100.00",
+        "PO number": "PO-2026-0001",
+        "PO currency": "EUR",
+        "PO total": "Unavailable",
+        "PO total (base)": "Unavailable",
+        "PO base currency": "USD",
+        "PO FX rate": "Unavailable",
+        "PO FX source": "Unavailable",
+        "PO monetary state": "Unavailable",
+        "PO submitted amount": "Unavailable",
+        "PO submitted currency": "Unavailable",
+        "PO submitted FX rate": "Unavailable",
+        "PO issued": ""
+      },
+      "lines": [
+        {
+          "description": "",
+          "quantity": "Unavailable",
+          "unit": "",
+          "unitPrice": "Unavailable",
+          "total": "Unavailable"
+        }
+      ],
+      "money": "<p>Monetary state: Unavailable. Current base amount: Unavailable. FX: Unavailable (Unavailable). Submitted approval: Unavailable; submitted FX: Unavailable.</p>",
+      "snapshotUnchanged": true,
+      "persistedUnchanged": true
+    },
+    {
+      "caseId": "PO-FUTURE-SOURCING",
+      "entrypoint": "runtime/downloads.ts#download(register|po)",
+      "actor": "buyer",
+      "requestRef": "PR-2026-0001",
+      "artifacts": [
+        {
+          "name": "procurement-register.csv",
+          "type": "text/csv; charset=utf-8",
+          "byteLength": 746,
+          "sha256": "c15cdeee2da8ca654ee8421fcfb6937198857b8c97ff608ae01c8b385d7201da"
+        },
+        {
+          "name": "PO-2026-0001.html",
+          "type": "text/html; charset=utf-8",
+          "byteLength": 1867,
+          "sha256": "e70e6c8590c86a110de8b421c0a8c36854915d007a501deaafc8acc2252c449b"
+        }
+      ],
+      "register": {
+        "Status": "sourcing",
+        "Selected quote total": "EUR 100.00",
+        "PO number": "PO-2026-0001",
+        "PO currency": "EUR",
+        "PO total": "100",
+        "PO total (base)": "200",
+        "PO base currency": "USD",
+        "PO FX rate": "2",
+        "PO FX source": "current",
+        "PO monetary state": "estimate",
+        "PO submitted amount": "Unavailable",
+        "PO submitted currency": "Unavailable",
+        "PO submitted FX rate": "Unavailable",
+        "PO issued": ""
+      },
+      "lines": [
+        {
+          "description": "",
+          "quantity": "1",
+          "unit": "",
+          "unitPrice": "100.00",
+          "total": "100.00"
+        }
+      ],
+      "money": "<p>Monetary state: estimate. Current base amount: 200.00 USD. FX: 2 (current). Submitted approval: Unavailable; submitted FX: Unavailable.</p>",
+      "snapshotUnchanged": true,
+      "persistedUnchanged": true
+    },
+    {
+      "caseId": "PO-FUTURE-REJECTED",
+      "entrypoint": "runtime/downloads.ts#download(register|po)",
+      "actor": "buyer",
+      "requestRef": "PR-2026-0001",
+      "artifacts": [
+        {
+          "name": "procurement-register.csv",
+          "type": "text/csv; charset=utf-8",
+          "byteLength": 750,
+          "sha256": "552a2db69a448dd6953bf70052bde32f77ad03eb402df82bc52b8ea1f66b5068"
+        },
+        {
+          "name": "PO-2026-0001.html",
+          "type": "text/html; charset=utf-8",
+          "byteLength": 1871,
+          "sha256": "823f38e8dc30b18e3728c43f9927b645444e4357b7be7248cb6784b511a6dd56"
+        }
+      ],
+      "register": {
+        "Status": "src_rejected",
+        "Selected quote total": "EUR 100.00",
+        "PO number": "PO-2026-0001",
+        "PO currency": "EUR",
+        "PO total": "100",
+        "PO total (base)": "200",
+        "PO base currency": "USD",
+        "PO FX rate": "2",
+        "PO FX source": "current",
+        "PO monetary state": "estimate",
+        "PO submitted amount": "Unavailable",
+        "PO submitted currency": "Unavailable",
+        "PO submitted FX rate": "Unavailable",
+        "PO issued": ""
+      },
+      "lines": [
+        {
+          "description": "",
+          "quantity": "1",
+          "unit": "",
+          "unitPrice": "100.00",
+          "total": "100.00"
+        }
+      ],
+      "money": "<p>Monetary state: estimate. Current base amount: 200.00 USD. FX: 2 (current). Submitted approval: Unavailable; submitted FX: Unavailable.</p>",
+      "snapshotUnchanged": true,
+      "persistedUnchanged": true
+    }
+  ],
+  "archivedFiles": [
+    {
+      "caseId": "EXPORT-01",
+      "path": "files/EXPORT-01/procurement-register.csv",
+      "mimeType": "text/csv; charset=utf-8",
+      "byteLength": 749,
+      "sha256": "093e72bc5be8db0212fab2b14f9d6c26c7b0b73a6368ed8fc21ce83df1ee481e",
+      "source": "Exact utf8 string emitted by the executed hosted test; reconstructed without any newline or character normalization."
+    },
+    {
+      "caseId": "EXPORT-01",
+      "path": "files/EXPORT-01/PO-2026-0001.html",
+      "mimeType": "text/html; charset=utf-8",
+      "byteLength": 1870,
+      "sha256": "41d0ab4d31d1ab03959a235daf7c5f92e2a11d72d24b267e336282e146966c77",
+      "source": "Exact utf8 string emitted by the executed hosted test; reconstructed without any newline or character normalization."
+    },
+    {
+      "caseId": "EXPORT-02",
+      "path": "files/EXPORT-02/procurement-register.csv",
+      "mimeType": "text/csv; charset=utf-8",
+      "byteLength": 749,
+      "sha256": "093e72bc5be8db0212fab2b14f9d6c26c7b0b73a6368ed8fc21ce83df1ee481e",
+      "source": "Exact utf8 string emitted by the executed hosted test; reconstructed without any newline or character normalization."
+    },
+    {
+      "caseId": "EXPORT-02",
+      "path": "files/EXPORT-02/PO-2026-0001.html",
+      "mimeType": "text/html; charset=utf-8",
+      "byteLength": 1996,
+      "sha256": "d25317b2bd21968b20d19429ab3b99b0b5995b917cfb85ebf4907772ebc4a066",
+      "source": "Exact utf8 string emitted by the executed hosted test; reconstructed without any newline or character normalization."
+    }
+  ]
+}
