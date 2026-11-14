@@ -78,7 +78,7 @@ async function contextFor(name: string) {
     if (action === "cancel") {
       scenario.state = "cancelled"
       if (scenario.loseCancelResponse) return Response.json({ status: "unavailable" }, { status: 503 })
-      return Response.json({ status: "ok", value: { runRef } })
+      return Response.json({ status: "ok", value: { cancelled: true } })
     }
     if (action === "output") return Response.json({ status: "ok", value: { html: "<p>Forecast result supplied by the explicit UI fixture.</p>" } })
     return new Response(null, { status: 400 })
