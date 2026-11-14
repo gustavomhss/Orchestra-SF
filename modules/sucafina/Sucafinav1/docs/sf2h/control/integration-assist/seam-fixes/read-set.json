@@ -1,0 +1,377 @@
+{
+  "schema_version": 1,
+  "mission": "session16 integration-conflict-fixes",
+  "actor_pack": "S0-B",
+  "status": "READ_COMPLETE; PROPOSALS_NOT_APPLIED",
+  "authority": {
+    "commit": "557adbd63f5700f487447cbb6167fe7c71e9bcdb",
+    "read_files": [
+      {
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/557adbd63f5700f487447cbb6167fe7c71e9bcdb/AGENTS.md",
+        "blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+        "read": "FULL"
+      },
+      {
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/557adbd63f5700f487447cbb6167fe7c71e9bcdb/modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/integration-wave/COMMON.md",
+        "blob": "4106a5f0dbd5ee5bbff999b9f7ca1d6ff970f922",
+        "read": "FULL"
+      },
+      {
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/557adbd63f5700f487447cbb6167fe7c71e9bcdb/modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/integration-wave/integration-conflict-fixes.json",
+        "blob": "632c3be8aed7f1a2f780aaef01e860d3e51aad29",
+        "read": "FULL"
+      }
+    ],
+    "write_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/control/integration-assist/seam-fixes/",
+    "product_writer": "session14 only",
+    "remote_transport": "GitHub MCP only"
+  },
+  "planning": {
+    "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "campaign_hash": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/START.md",
+        "blob": "522782bb7e113124a937d7ef17313032be9d6850",
+        "read": "FULL"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/WORKFLOW.md",
+        "blob": "043205bee6031b4517a98591b3588fca0ab12925",
+        "read": "FULL"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/COMMON.md",
+        "blob": "d61f32af03fe10747a50274233f953af044decf6",
+        "read": "FULL"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S0-B.json",
+        "blob": "7597a7e508228ac2878a9061887ac77fc70ad009",
+        "read": "FULL"
+      }
+    ],
+    "required_appendices": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/product-acceptance.md",
+        "blob": "ded082688fce327def0b48968fa3b89a5831029c",
+        "read": "FULL"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/resident-runtime.md",
+        "blob": "033737b1051b23443e633df7874c550629bf55a1",
+        "read": "FULL"
+      }
+    ],
+    "pack_read_distribution": {
+      "root": "Full metadata, authority, assignments, work packages, criteria, allocation, handoffs, dependency context, coverage/evidence, execution proofs, resident interfaces/gates and selection/source references.",
+      "internal_read_helpers": "Full 17 contracts and seven numeric oracles; full resident and resident_ui sections and both mandatory appendices. Helpers were read-only internal analysis, not native actors or official independent reviewers.",
+      "complete_pack": "All sections covered; no earlier broad runtime write lease imported into this restricted mission."
+    }
+  },
+  "sources": [
+    {
+      "area": "WP10",
+      "branch": "astra-wp10",
+      "read_pin": "f511f30b73289c2f21c843254569d31c02eb9608",
+      "pr": 29,
+      "handoff": {
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f511f30b73289c2f21c843254569d31c02eb9608/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-continuation-c09/HANDOFF.md",
+        "blob": "ff67547a8b4bce811e3b34bbfc75aab530c150fc",
+        "read": "FULL"
+      },
+      "last_observed": {
+        "branch": "astra-wp10",
+        "sha": "a00ba2a55190e9ee1fe52fa3030a9cc297b2825a",
+        "observed_at": "2026-11-14 19:56:50 UTC"
+      },
+      "disposition": "ADVANCED; original proposal pin retained; later head not prequalified"
+    },
+    {
+      "area": "Finance",
+      "branch": "finance-resume",
+      "read_pin": "454b97daf614176507711df889bd45743467f7af",
+      "pr": 42,
+      "handoff": {
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/454b97daf614176507711df889bd45743467f7af/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-performance/HANDOFF-FINAL.md",
+        "blob": "976b71bc150fa5810a60ff5917e17bfd18701bc9",
+        "read": "FULL"
+      },
+      "last_observed": {
+        "branch": "finance-resume",
+        "sha": "9a2ab893be9f2af2078f67ca867c13892452752e",
+        "observed_at": "2026-11-14 19:56:50 UTC"
+      },
+      "disposition": "ADVANCED; original proposal pin retained; later head not prequalified"
+    },
+    {
+      "area": "Operations",
+      "branch": "astra-operations",
+      "read_pin": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+      "pr": 34,
+      "handoff": {
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/15df31a67efab0aae6e2bff2b7eb8e5e59511324/modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-consumers/attempt-01/HANDOFF.md",
+        "blob": "5cf17dcdf04283384efe581ecc7a029b850fa798",
+        "read": "FULL"
+      },
+      "last_observed": {
+        "branch": "astra-operations",
+        "sha": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+        "observed_at": "2026-11-14 19:56:50 UTC"
+      },
+      "disposition": "UNCHANGED_AT_LAST_OBSERVATION"
+    },
+    {
+      "area": "Colaboração",
+      "branch": "collab-resume",
+      "read_pin": "62e5629dbf31be2bb662dda152c96021f22b0ca5",
+      "pr": 41,
+      "handoff": {
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/62e5629dbf31be2bb662dda152c96021f22b0ca5/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP08/recipient-receipt-20261114/HANDOFF.md",
+        "blob": "e73fed58ebf09d7dc5e4112be3a872a02977d058",
+        "read": "FULL"
+      },
+      "last_observed": {
+        "branch": "collab-resume",
+        "sha": "62e5629dbf31be2bb662dda152c96021f22b0ca5",
+        "observed_at": "2026-11-14 19:56:50 UTC"
+      },
+      "disposition": "UNCHANGED_AT_LAST_OBSERVATION"
+    },
+    {
+      "area": "Interface",
+      "branch": "interface-resume",
+      "read_pin": "2ee71fc90055814912654ae198f7a1dcf9583943",
+      "pr": 43,
+      "handoff": {
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2ee71fc90055814912654ae198f7a1dcf9583943/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/interface-resume/README.md",
+        "blob": "64bd336d692231884a3d4b779073277783aa5ded",
+        "read": "FULL"
+      },
+      "last_observed": {
+        "branch": "interface-resume",
+        "sha": "2ee71fc90055814912654ae198f7a1dcf9583943",
+        "observed_at": "2026-11-14 19:56:50 UTC"
+      },
+      "disposition": "UNCHANGED_AT_LAST_OBSERVATION"
+    }
+  ],
+  "last_head_snapshot": [
+    {
+      "branch": "sf2-stack",
+      "sha": "47273c4f20c7c1af9b08537d26618901c36725e3",
+      "observed_at": "2026-11-14 19:56:50 UTC"
+    },
+    {
+      "branch": "sf2-control",
+      "sha": "1a6739493531447ae47a76cc5778486d1cca51ff",
+      "observed_at": "2026-11-14 19:56:50 UTC"
+    },
+    {
+      "branch": "astra-wp10",
+      "sha": "a00ba2a55190e9ee1fe52fa3030a9cc297b2825a",
+      "observed_at": "2026-11-14 19:56:50 UTC"
+    },
+    {
+      "branch": "finance-resume",
+      "sha": "9a2ab893be9f2af2078f67ca867c13892452752e",
+      "observed_at": "2026-11-14 19:56:50 UTC"
+    },
+    {
+      "branch": "astra-operations",
+      "sha": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+      "observed_at": "2026-11-14 19:56:50 UTC"
+    },
+    {
+      "branch": "collab-resume",
+      "sha": "62e5629dbf31be2bb662dda152c96021f22b0ca5",
+      "observed_at": "2026-11-14 19:56:50 UTC"
+    },
+    {
+      "branch": "interface-resume",
+      "sha": "2ee71fc90055814912654ae198f7a1dcf9583943",
+      "observed_at": "2026-11-14 19:56:50 UTC"
+    },
+    {
+      "branch": "ui-work",
+      "sha": "d8524169e0de188312f6c2d3b6877562c47e664d",
+      "observed_at": "2026-11-14 19:56:50 UTC"
+    },
+    {
+      "branch": "ui-review",
+      "sha": "cbad554e1933289ac9e40e9fde887d494e5a42e6",
+      "observed_at": "2026-11-14 19:56:50 UTC"
+    },
+    {
+      "branch": "sourcing-money",
+      "sha": "717efbbef27de70b382db2aa734605c779228947",
+      "observed_at": "2026-11-14 19:56:50 UTC"
+    },
+    {
+      "branch": "sf2-seam-fixes",
+      "sha": "3c433e4be688a3d68e9f61ea1e96cfe344c58df4",
+      "observed_at": "2026-11-14 19:56:50 UTC"
+    }
+  ],
+  "snapshot_time": "2026-11-14 19:56:50 UTC",
+  "later_primary_changes": [
+    {
+      "branch": "astra-wp10",
+      "from": "f511f30b73289c2f21c843254569d31c02eb9608",
+      "to": "a00ba2a55190e9ee1fe52fa3030a9cc297b2825a",
+      "compare": [
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/memory-integrity/attempt-02/RESULT.json",
+          "status": "added",
+          "additions": 51,
+          "deletions": 0,
+          "changes": 51,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/memory-integrity/attempt-03/PREPARATION.json",
+          "status": "added",
+          "additions": 31,
+          "deletions": 0,
+          "changes": 31,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/authority.test.ts",
+          "status": "modified",
+          "additions": 14,
+          "deletions": 12,
+          "changes": 26,
+          "previous_filename": null
+        }
+      ],
+      "latest_receipt": {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/memory-integrity/attempt-03/PREPARATION.json",
+        "blob": "86a4cd05f26462af8efce66896e82829bfde57c7",
+        "status": "PREPARED_NOT_RUN"
+      },
+      "decision": "Memory test/receipt continuation remains session13. Product proposal pin is not advanced and Memory acceptance is not inferred."
+    },
+    {
+      "branch": "finance-resume",
+      "from": "454b97daf614176507711df889bd45743467f7af",
+      "to": "9a2ab893be9f2af2078f67ca867c13892452752e",
+      "compare": [
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-journey-closure/intake-01.json",
+          "status": "added",
+          "additions": 43,
+          "deletions": 0,
+          "changes": 43,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/finance-journey-closure/original-authority.test.ts",
+          "status": "added",
+          "additions": 41,
+          "deletions": 0,
+          "changes": 41,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/finance-journey-closure/units-batch.test.ts",
+          "status": "added",
+          "additions": 146,
+          "deletions": 0,
+          "changes": 146,
+          "previous_filename": null
+        }
+      ],
+      "latest_receipt": {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/finance-journey-closure/intake-01.json",
+        "blob": "d7f5a341bcbae6bd66cf4a99b462bdcb6aefd850",
+        "status": "NOT_RUN"
+      },
+      "decision": "Session18 has explicit Finance journey continuation. Preserve prior producer work; no Finance performance work or claimed FIN-IND-005 closure here."
+    },
+    {
+      "branch": "sf2-stack",
+      "from": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+      "to": "47273c4f20c7c1af9b08537d26618901c36725e3",
+      "tree": "894074bb9436867979f81e93a8360bc900cf5f7a",
+      "receipt": {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/bundle-integrator-20261114/increment-01.json",
+        "blob": "9e4415d7e10c534add2a89031e7f946c5d9710cb",
+        "status": "COMPOSED_NOT_VALIDATED"
+      },
+      "decision": "Import recovery was composed by session14. None of this session's proposals is inferred applied; destination preconditions were separately checked and rejected."
+    }
+  ],
+  "rejected_false_positive": {
+    "id": "OLD-FINANCE-SOURCE-FENCE-DELTA-01",
+    "path": "apps/cli/src/sucafina-product/source-fence-read.ts",
+    "checked_commit": "f511f30b73289c2f21c843254569d31c02eb9608",
+    "blob": "5f1c4b43162aa2ba3eae9a7c57862cd41df0af18",
+    "finding": "The current fixed WP10 adapter already snapshots request/binding/header digest, uses the active source snapshot without a nested writer, compares complete snapshots after awaits and permits transactionAll fallback only outside a scope. The old proposed source-fence fix is superseded.",
+    "decision": "NO_PATCH; preserve current implementation. This is not a Finance performance PASS."
+  },
+  "historical_external_type_diagnostics": {
+    "source": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43629131094/job/132551590764",
+    "runtime_checkout": "d4fb072fa9bd32ebfef2b9cbc9b27b998d34f4e7",
+    "not_a_current_head_run": true,
+    "included_product_issue": "analysisHistory import: SF2-SEAM-003",
+    "remaining": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts",
+        "count": 2,
+        "diagnostics": [
+          "resolver function versus resolve object",
+          "required verifyScenarioOperations"
+        ],
+        "owner": "Existing WP04 integration/verification owner with session14 caller reconciliation"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp06/native/import-analysis.test.ts",
+        "count": 4,
+        "diagnostics": [
+          "Three importPreview union accesses",
+          "One stale two-argument call"
+        ],
+        "owner": "Existing WP06 native proof owner"
+      },
+      {
+        "paths": [
+          "modules/sucafina/Sucafinav1/test/product/wp08/collaboration-journey.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp08/confirmation-work-integration.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp08/host-answer-reuse.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp08/question-consumer.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp08/thread-actors-fixture.ts"
+        ],
+        "count": 5,
+        "diagnostic": "required verifyScenarioOperations",
+        "owner": "Existing WP08 integration/fixture owners"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp09/decision-answer-consumer.test.ts",
+        "count": 1,
+        "diagnostic": "required verifyScenarioOperations",
+        "owner": "Existing WP09 consumer/verification owner"
+      }
+    ],
+    "rule": "No assertion weakening, optional verifyScenarioOperations or permissive fixture adapter. Current candidate recheck remains assigned to its existing owners; historical diagnostics are not asserted still present on every later head."
+  },
+  "excluded_lanes": [
+    "session10 ACK UI",
+    "session11 exports",
+    "session12 forecast",
+    "session13 Memory integrity",
+    "Finance performance and session18 journey continuation",
+    "existing E2E/native proofs/CI/traceability/official reviewers"
+  ],
+  "execution": {
+    "product_code": "NOT_EXECUTED",
+    "tests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "ci_dispatches": 0,
+    "native_actors": 0,
+    "external_messages": 0,
+    "merges": 0
+  },
+  "local_artifact_checks": "JavaScript in-memory text comparison, hunk replay, dependency-path/hash reconciliation and documentation JSON assembly only; no shell, checkout, package install or product-code execution."
+}

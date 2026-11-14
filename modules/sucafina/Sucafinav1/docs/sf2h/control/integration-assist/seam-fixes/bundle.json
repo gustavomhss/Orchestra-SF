@@ -1,0 +1,933 @@
+{
+  "schema_version": 1,
+  "id": "SF2-SEAM-BUNDLE-20261114",
+  "status": "PROPOSED/NOT_APPLIED",
+  "repository": "gustavomhss/Orchestra-SF",
+  "publication": {
+    "branch": "sf2-seam-fixes",
+    "base": "sf2-control",
+    "pr": 66,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/pull/66",
+    "draft": true,
+    "merge": false
+  },
+  "authority": {
+    "commit": "557adbd63f5700f487447cbb6167fe7c71e9bcdb",
+    "actor_pack": "S0-B",
+    "planning_pin": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "allowed_write_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/control/integration-assist/seam-fixes/",
+    "product_writer": "session14"
+  },
+  "checked_on": {
+    "branch": "astra-wp10",
+    "commit": "f511f30b73289c2f21c843254569d31c02eb9608",
+    "tree": "ee2964cd6cc96ee2697e9d05835777870a843f65",
+    "product_subtree": "dd7128a2565cdb2f60309e35e05f2bb592dbb250",
+    "head_state": "Observed current composition; session13 Memory delta is in flight and is not accepted by this proposal"
+  },
+  "proposals": [
+    {
+      "id": "SF2-SEAM-001",
+      "manifest": "modules/sucafina/Sucafinav1/docs/sf2h/control/integration-assist/seam-fixes/01-review-thread-context/manifest.json",
+      "published_commit": "1e79b8cb30df3d01b447385aa66033b0a5dd79d1",
+      "entries": 4,
+      "delivery": "Existing exact source blobs; complete producer/application/HTTP intake."
+    },
+    {
+      "id": "SF2-SEAM-002",
+      "manifest": "modules/sucafina/Sucafinav1/docs/sf2h/control/integration-assist/seam-fixes/02-sourcing-money/manifest.json",
+      "published_commit": "8a0f6bcc16bfa7ad39976841ed4e910d3d891337",
+      "entries": 2,
+      "delivery": "Existing exact producer and Requests consumer blobs.",
+      "verification_detail": "modules/sucafina/Sucafinav1/docs/sf2h/control/integration-assist/seam-fixes/02-sourcing-money/verification-inputs.json"
+    },
+    {
+      "id": "SF2-SEAM-003",
+      "manifest": "modules/sucafina/Sucafinav1/docs/sf2h/control/integration-assist/seam-fixes/03-sourcing-assembly/manifest.json",
+      "published_commit": "3c433e4be688a3d68e9f61ea1e96cfe344c58df4",
+      "entries": 2,
+      "delivery": "Unified patch plus full postimages with confirmed Git blob IDs."
+    }
+  ],
+  "changes": [
+    {
+      "proposal": "SF2-SEAM-001",
+      "path": "modules/sucafina/Sucafinav1/product/reviews/thread-context.ts",
+      "preimage": {
+        "sha": null,
+        "type": "absent",
+        "mode": null
+      },
+      "postimage": {
+        "sha": "20d98a976372338a22c947ee6bfcb9641c0429c5",
+        "type": "blob",
+        "mode": "100644",
+        "source_commit": "62e5629dbf31be2bb662dda152c96021f22b0ca5",
+        "source_path": "modules/sucafina/Sucafinav1/product/reviews/thread-context.ts"
+      }
+    },
+    {
+      "proposal": "SF2-SEAM-001",
+      "path": "modules/sucafina/Sucafinav1/product/reviews/services.ts",
+      "preimage": {
+        "sha": "23fa5ed9a68afd137b018ad788a11594118d37f0",
+        "type": "blob",
+        "mode": "100644"
+      },
+      "postimage": {
+        "sha": "f37a2c540b009a8c5bed90365c267b95303e646b",
+        "type": "blob",
+        "mode": "100644",
+        "source_commit": "62e5629dbf31be2bb662dda152c96021f22b0ca5",
+        "source_path": "modules/sucafina/Sucafinav1/product/reviews/services.ts"
+      }
+    },
+    {
+      "proposal": "SF2-SEAM-001",
+      "path": "modules/sucafina/Sucafinav1/product/reviews/application.ts",
+      "preimage": {
+        "sha": "db311ddf0db9178aba66a0df98950697fccec62c",
+        "type": "blob",
+        "mode": "100644"
+      },
+      "postimage": {
+        "sha": "de76611be141d599b9eecc96e1173559e06be26d",
+        "type": "blob",
+        "mode": "100644",
+        "source_commit": "62e5629dbf31be2bb662dda152c96021f22b0ca5",
+        "source_path": "modules/sucafina/Sucafinav1/product/reviews/application.ts"
+      }
+    },
+    {
+      "proposal": "SF2-SEAM-001",
+      "path": "modules/sucafina/Sucafinav1/product/reviews/http.ts",
+      "preimage": {
+        "sha": "d3db3bb516d245b502a4e57df63dfd9869237881",
+        "type": "blob",
+        "mode": "100644"
+      },
+      "postimage": {
+        "sha": "ce0e5655f19d7d60246024af013c811bf921b042",
+        "type": "blob",
+        "mode": "100644",
+        "source_commit": "62e5629dbf31be2bb662dda152c96021f22b0ca5",
+        "source_path": "modules/sucafina/Sucafinav1/product/reviews/http.ts"
+      }
+    },
+    {
+      "proposal": "SF2-SEAM-002",
+      "path": "modules/sucafina/Sucafinav1/product/procurement/monetary.ts",
+      "preimage": {
+        "sha": "5ed7b1c7e8f140c2820d9e3095a7427374d10f69",
+        "mode": "100644",
+        "type": "blob"
+      },
+      "postimage": {
+        "sha": "c9a224b12c13b7cec506be90527300caa7e984fd",
+        "mode": "100644",
+        "type": "blob",
+        "source_commit": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+        "source_path": "modules/sucafina/Sucafinav1/product/procurement/monetary.ts"
+      }
+    },
+    {
+      "proposal": "SF2-SEAM-002",
+      "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+      "preimage": {
+        "sha": "6cd5783d5b4f6f9c9ed3e15547d59f79ccb5ef72",
+        "mode": "100644",
+        "type": "blob"
+      },
+      "postimage": {
+        "sha": "20a3ec5a30ac0fce6b35f05750d1b3dced11c45b",
+        "mode": "100644",
+        "type": "blob",
+        "source_commit": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+        "source_path": "modules/sucafina/Sucafinav1/runtime/procurement.ts"
+      }
+    },
+    {
+      "proposal": "SF2-SEAM-003",
+      "path": "modules/sucafina/Sucafinav1/product/procurement/sourcing-analysis.ts",
+      "preimage": {
+        "sha": "987f7179101ffe3db0276d9c6172b3bcf6024329",
+        "mode": "100644",
+        "type": "blob",
+        "bytes": 10100
+      },
+      "postimage": {
+        "sha": "e54386d4b84331ff255546dc891ccad5b1391709",
+        "mode": "100644",
+        "type": "blob",
+        "bytes": 10291,
+        "artifact_path": "modules/sucafina/Sucafinav1/docs/sf2h/control/integration-assist/seam-fixes/03-sourcing-assembly/postimages/sourcing-analysis.ts.txt"
+      }
+    },
+    {
+      "proposal": "SF2-SEAM-003",
+      "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+      "preimage": {
+        "sha": "930c93a1704d0444519ffa85b8f69f57cc6c2735",
+        "mode": "100644",
+        "type": "blob",
+        "bytes": 24430
+      },
+      "postimage": {
+        "sha": "81b7cd4ef5a73670642df42a2f891b9d95420dac",
+        "mode": "100644",
+        "type": "blob",
+        "bytes": 25174,
+        "artifact_path": "modules/sucafina/Sucafinav1/docs/sf2h/control/integration-assist/seam-fixes/03-sourcing-assembly/postimages/interface-http.ts.txt"
+      }
+    }
+  ],
+  "tree_elements": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/thread-context.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "20d98a976372338a22c947ee6bfcb9641c0429c5"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/services.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f37a2c540b009a8c5bed90365c267b95303e646b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/application.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "de76611be141d599b9eecc96e1173559e06be26d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/http.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ce0e5655f19d7d60246024af013c811bf921b042"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/monetary.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c9a224b12c13b7cec506be90527300caa7e984fd"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "20a3ec5a30ac0fce6b35f05750d1b3dced11c45b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/sourcing-analysis.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e54386d4b84331ff255546dc891ccad5b1391709"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "81b7cd4ef5a73670642df42a2f891b9d95420dac"
+    }
+  ],
+  "required_existing_dependencies": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1769271386cdda1017c38023b0988ce2d64423d2",
+      "import_kind": "runtime; some exports also type-only",
+      "action": "PRESERVE_TARGET",
+      "required_by": [
+        "SF2-SEAM-001",
+        "SF2-SEAM-003"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "102c849084980ae52223809d33bdeea36a58536b",
+      "import_kind": "type-only",
+      "action": "PRESERVE_TARGET",
+      "required_by": [
+        "SF2-SEAM-001",
+        "SF2-SEAM-003"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "88b6efb4840b8731f707862a8baf14683526c7a9",
+      "import_kind": "type-only",
+      "action": "PRESERVE_TARGET",
+      "required_by": [
+        "SF2-SEAM-001"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/runtime.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "beba733084e87da8664b0f4067b52d4b29795c5c",
+      "import_kind": "type-only",
+      "action": "PRESERVE_TARGET",
+      "required_by": [
+        "SF2-SEAM-001"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/state.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "755639b2a16265fe164ba2e6343738c1362d168c",
+      "import_kind": "type-only",
+      "action": "PRESERVE_TARGET",
+      "required_by": [
+        "SF2-SEAM-001"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95",
+      "import_kind": "type-only",
+      "action": "PRESERVE_TARGET",
+      "required_by": [
+        "SF2-SEAM-001"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reports/storage.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bf91209e680a94dc0414251e1ab00c227a577d8a",
+      "import_kind": "runtime; some exports also type-only",
+      "action": "PRESERVE_TARGET",
+      "required_by": [
+        "SF2-SEAM-001"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/capabilities.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d4ea6ec8cfd1c1a9dbe0be0a92e236df94b1d11f",
+      "import_kind": "runtime; some exports also type-only",
+      "action": "PRESERVE_TARGET",
+      "required_by": [
+        "SF2-SEAM-001"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/port.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "62db836fd93e349f19d007e1933396420a3540ff",
+      "import_kind": "runtime; some exports also type-only",
+      "action": "PRESERVE_TARGET",
+      "required_by": [
+        "SF2-SEAM-001"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c0c615b006d4b638015217e9d5b4d353b4ea41e6",
+      "import_kind": "runtime; some exports also type-only",
+      "action": "PRESERVE_TARGET",
+      "required_by": [
+        "SF2-SEAM-001",
+        "SF2-SEAM-003"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/capability-dispatch.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6ba1b02eee73d44133c78599284f9772b26007b1",
+      "import_kind": "runtime; some exports also type-only",
+      "action": "PRESERVE_TARGET",
+      "required_by": [
+        "SF2-SEAM-001"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/human-authority.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "78529a89586ce9f22d2b2cdd2cd0b1c61d20668a",
+      "import_kind": "type-only",
+      "action": "PRESERVE_TARGET",
+      "required_by": [
+        "SF2-SEAM-001"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "502fb1ab3a4116a62aeb504a4bb26040c66d81b2",
+      "import_kind": "type-only",
+      "action": "PRESERVE_TARGET",
+      "required_by": [
+        "SF2-SEAM-001"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/closure-action.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "92e74e4f231e02a4d357232da08cb21e1bedc158",
+      "import_kind": "runtime; some exports also type-only",
+      "action": "PRESERVE_TARGET",
+      "required_by": [
+        "SF2-SEAM-001"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/comparison-port.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a3e206ea6ab413330328c3372f816182b564affa",
+      "import_kind": "runtime; some exports also type-only",
+      "action": "PRESERVE_TARGET",
+      "required_by": [
+        "SF2-SEAM-001"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/composition.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e55a1ebbddb54d9a300948ba7c954da7412f627c",
+      "import_kind": "runtime; some exports also type-only",
+      "action": "PRESERVE_TARGET",
+      "required_by": [
+        "SF2-SEAM-001"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/contribution.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "78a2d943c4711cb63f3104f82a62ac96b5b9e92b",
+      "import_kind": "runtime; some exports also type-only",
+      "action": "PRESERVE_TARGET",
+      "required_by": [
+        "SF2-SEAM-001"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/human.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3877edbe3f3b1e4ae50f52a40ebcc9dab68d0b21",
+      "import_kind": "runtime; some exports also type-only",
+      "action": "PRESERVE_TARGET",
+      "required_by": [
+        "SF2-SEAM-001"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/routine-reader.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "38ba6de728b76cfa0347a04bdd4f9f597470385b",
+      "import_kind": "runtime; some exports also type-only",
+      "action": "PRESERVE_TARGET",
+      "required_by": [
+        "SF2-SEAM-001"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/thread-access.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9d00f632224d36a7e073f1dd66d50c885a1ad872",
+      "import_kind": "runtime; some exports also type-only",
+      "action": "PRESERVE_TARGET",
+      "required_by": [
+        "SF2-SEAM-001"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/current-thread.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7c256db9ccc3cca1a34515ab8d1355d77a82839a",
+      "import_kind": "runtime; some exports also type-only",
+      "action": "PRESERVE_TARGET",
+      "required_by": [
+        "SF2-SEAM-001"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reports/download.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "01a345d1c60fd00499aff1d689b77c9e6e82cfb1",
+      "import_kind": "type-only",
+      "action": "PRESERVE_TARGET",
+      "required_by": [
+        "SF2-SEAM-001"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/selection.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3de1bf6369b1ca68e09dbae5ab6ffecaa87b85dc",
+      "import_kind": "type-only",
+      "action": "PRESERVE_TARGET",
+      "required_by": [
+        "SF2-SEAM-001"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/thread-context.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e0745ad913c6c1e93e83794ed1b4de6082868519",
+      "import_kind": "type-only",
+      "action": "PRESERVE_TARGET",
+      "required_by": [
+        "SF2-SEAM-001"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/routine-selection.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4e6f46000cdf54507830b020e517649faa2689b7",
+      "import_kind": "type-only",
+      "action": "PRESERVE_TARGET",
+      "required_by": [
+        "SF2-SEAM-001"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/validation.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "44e79b3009076e9fae595e79a8c72a8f3918f14b",
+      "import_kind": "runtime; some exports also type-only",
+      "action": "PRESERVE_TARGET",
+      "required_by": [
+        "SF2-SEAM-001",
+        "SF2-SEAM-003"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/context.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ae2d6b73a24970ba23d21e17694b54fd32d1a700",
+      "import_kind": "type-only",
+      "action": "PRESERVE_TARGET",
+      "required_by": [
+        "SF2-SEAM-001"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/procurement.ts",
+      "sha": "eb486f52910425e9ca06d1f11ce18c90528ff36c",
+      "type": "blob",
+      "mode": "100644",
+      "action": "PRESERVE_TARGET",
+      "required_by": [
+        "SF2-SEAM-002"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/requests.ts",
+      "sha": "3a7475a2b100739d566e2e5c7eecaa13e59b33b5",
+      "type": "blob",
+      "mode": "100644",
+      "action": "PRESERVE_TARGET",
+      "required_by": [
+        "SF2-SEAM-002"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/form.ts",
+      "sha": "5c2ceed59b5af1a0e2958e93c2267bee9e72a0dc",
+      "type": "blob",
+      "mode": "100644",
+      "action": "PRESERVE_TARGET",
+      "required_by": [
+        "SF2-SEAM-002"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/procurement-screen.ts",
+      "sha": "510be5b2aeb82e740f342a5b649619116cb8ff1c",
+      "type": "blob",
+      "mode": "100644",
+      "action": "PRESERVE_TARGET",
+      "required_by": [
+        "SF2-SEAM-002"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/initial-settings.ts",
+      "sha": "7682bb517a77ef812dbd4626790f1453cc5c0100",
+      "type": "blob",
+      "mode": "100644",
+      "action": "PRESERVE_TARGET",
+      "required_by": [
+        "SF2-SEAM-002"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/supplier.ts",
+      "sha": "dd9ac04145e11b8d614de33e5251424b3c31c922",
+      "type": "blob",
+      "mode": "100644",
+      "action": "PRESERVE_TARGET",
+      "required_by": [
+        "SF2-SEAM-002"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "sha": "9e9bac976b503409de65868a366f352ca1e65071",
+      "type": "blob",
+      "mode": "100644",
+      "action": "PRESERVE_TARGET",
+      "required_by": [
+        "SF2-SEAM-002"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/guided-request.ts",
+      "sha": "0d69e6456fe7124dfd3e788abf1b17bc6b7ad500",
+      "type": "blob",
+      "mode": "100644",
+      "action": "PRESERVE_TARGET",
+      "required_by": [
+        "SF2-SEAM-002"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/queue-view.ts",
+      "sha": "a03998f3b87df91c6c84b198f2b51aa9c391bcd2",
+      "type": "blob",
+      "mode": "100644",
+      "action": "PRESERVE_TARGET",
+      "required_by": [
+        "SF2-SEAM-002"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/ui.ts",
+      "sha": "2d59a6d4a5cb4b87590c326ada84347aa85c094e",
+      "type": "blob",
+      "mode": "100644",
+      "action": "PRESERVE_TARGET",
+      "required_by": [
+        "SF2-SEAM-002"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+      "sha": "d69bb554ba35863b0bf248c6aa0382205614d12a",
+      "type": "blob",
+      "mode": "100644",
+      "action": "PRESERVE_TARGET",
+      "required_by": [
+        "SF2-SEAM-002",
+        "SF2-SEAM-003"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+      "sha": "920fda293db553096f4d8ab7004fcd9652a69291",
+      "mode": "100644",
+      "type": "blob",
+      "action": "PRESERVE_TARGET",
+      "kind": "type-only",
+      "required_by": [
+        "SF2-SEAM-003"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+      "sha": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+      "mode": "100644",
+      "type": "blob",
+      "action": "PRESERVE_TARGET",
+      "kind": "runtime",
+      "required_by": [
+        "SF2-SEAM-003"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/components.ts",
+      "sha": "8de96e7fef8b1db5f174baaff47864b68f8d2fca",
+      "mode": "100644",
+      "type": "blob",
+      "action": "PRESERVE_TARGET",
+      "kind": "runtime",
+      "required_by": [
+        "SF2-SEAM-003"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "sha": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+      "mode": "100644",
+      "type": "blob",
+      "action": "PRESERVE_TARGET",
+      "kind": "runtime",
+      "required_by": [
+        "SF2-SEAM-003"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+      "sha": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+      "mode": "100644",
+      "type": "blob",
+      "action": "PRESERVE_TARGET",
+      "kind": "runtime",
+      "required_by": [
+        "SF2-SEAM-003"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/decision-create.ts",
+      "sha": "1c3bf805fed4d0cf186964b4631def5b0161d9ef",
+      "mode": "100644",
+      "type": "blob",
+      "action": "PRESERVE_TARGET",
+      "kind": "runtime",
+      "required_by": [
+        "SF2-SEAM-003"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/planner-http.ts",
+      "sha": "2befb1d4c7964b30830311abe1c93c7c575b8f70",
+      "mode": "100644",
+      "type": "blob",
+      "action": "PRESERVE_TARGET",
+      "kind": "runtime",
+      "required_by": [
+        "SF2-SEAM-003"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/forecast-http.ts",
+      "sha": "b814872f18556d1137820cfb33c46048066a1c6e",
+      "mode": "100644",
+      "type": "blob",
+      "action": "PRESERVE_TARGET",
+      "kind": "runtime",
+      "required_by": [
+        "SF2-SEAM-003"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts",
+      "sha": "973a2f09b394426364c514b923ecdc8e10ffb184",
+      "mode": "100644",
+      "type": "blob",
+      "action": "PRESERVE_TARGET",
+      "kind": "runtime",
+      "required_by": [
+        "SF2-SEAM-003"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/sourcing-input-http.ts",
+      "sha": "de85660b664826163c2e157ec382b97a425bb10d",
+      "mode": "100644",
+      "type": "blob",
+      "action": "PRESERVE_TARGET",
+      "kind": "runtime",
+      "required_by": [
+        "SF2-SEAM-003"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/decision-edit.ts",
+      "sha": "2c63bd893fa1bf999fa2a3d368a298594bcbcc27",
+      "mode": "100644",
+      "type": "blob",
+      "action": "PRESERVE_TARGET",
+      "kind": "runtime",
+      "required_by": [
+        "SF2-SEAM-003"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/decision-choice.ts",
+      "sha": "78bbcfcf09ee49152745f4142f90c79bd307269d",
+      "mode": "100644",
+      "type": "blob",
+      "action": "PRESERVE_TARGET",
+      "kind": "runtime",
+      "required_by": [
+        "SF2-SEAM-003"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/views-http.ts",
+      "sha": "4f246d4b1e6090d509d8bed554d3556b50e61386",
+      "mode": "100644",
+      "type": "blob",
+      "action": "PRESERVE_TARGET",
+      "kind": "runtime",
+      "required_by": [
+        "SF2-SEAM-003"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/personal-views.ts",
+      "sha": "4c20c81eeeb770b80eacc3c57589435bfdaba2ae",
+      "mode": "100644",
+      "type": "blob",
+      "action": "PRESERVE_TARGET",
+      "kind": "runtime",
+      "required_by": [
+        "SF2-SEAM-003"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/document-search.ts",
+      "sha": "39fbe05f2acd621a4d7031d012524cacdc4ecc92",
+      "mode": "100644",
+      "type": "blob",
+      "action": "PRESERVE_TARGET",
+      "kind": "runtime",
+      "required_by": [
+        "SF2-SEAM-003"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/record-search.ts",
+      "sha": "95864fedf3146ca71d4a9e3443879f1668f986d1",
+      "mode": "100644",
+      "type": "blob",
+      "action": "PRESERVE_TARGET",
+      "kind": "runtime",
+      "required_by": [
+        "SF2-SEAM-003"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/portfolio.ts",
+      "sha": "823b5f4eedf0db9d9c5e8ac87a6d91493d45ced2",
+      "mode": "100644",
+      "type": "blob",
+      "action": "PRESERVE_TARGET",
+      "kind": "runtime",
+      "required_by": [
+        "SF2-SEAM-003"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+      "sha": "2e6c081ad2a5282654707f7fc7278183e7dfb20d",
+      "mode": "100644",
+      "type": "blob",
+      "action": "PRESERVE_TARGET",
+      "kind": "runtime",
+      "required_by": [
+        "SF2-SEAM-003"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts",
+      "sha": "99e0d4a9f8c265688e7488ece05ab30edf070658",
+      "mode": "100644",
+      "type": "blob",
+      "action": "PRESERVE_TARGET",
+      "kind": "runtime",
+      "required_by": [
+        "SF2-SEAM-003"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/work-review-context.ts",
+      "sha": "a13f85982fa441086971d2b86af355f96c854bbd",
+      "mode": "100644",
+      "type": "blob",
+      "action": "PRESERVE_TARGET",
+      "kind": "runtime",
+      "required_by": [
+        "SF2-SEAM-003"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/case-work-selection.ts",
+      "sha": "3f76f17d51d09b86fa63a5c98c70cd4e77c91713",
+      "mode": "100644",
+      "type": "blob",
+      "action": "PRESERVE_TARGET",
+      "kind": "runtime",
+      "required_by": [
+        "SF2-SEAM-003"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/contextual-decision.ts",
+      "sha": "5245f469fab7f23474c4c406ddd1d2f1f43d65a2",
+      "mode": "100644",
+      "type": "blob",
+      "action": "PRESERVE_TARGET",
+      "kind": "runtime",
+      "required_by": [
+        "SF2-SEAM-003"
+      ]
+    }
+  ],
+  "composition": {
+    "modified_paths": 8,
+    "unique_required_existing_direct_dependencies": 60,
+    "path_overlap": false,
+    "conflicting_dependency_pins": false,
+    "package_order": "The three units have disjoint changed paths and consistent pinned direct dependencies on the checked base. Apply each unit atomically after the integrator's owner intake and new target receipt; order between units is not a claim of compatibility with a different tree.",
+    "new_package_dependencies_required": false
+  },
+  "destination_check": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/integration-assist/seam-fixes/destination-check-47273c4.json",
+    "observed_commit": "47273c4f20c7c1af9b08537d26618901c36725e3",
+    "result": "PRECONDITION_FAILED_ON_OBSERVED_DESTINATION",
+    "instruction": "Do not apply the bundle to that observed stack. Complete owner-scoped intake and repin/reconcile preimages plus dependencies first. Do not replace the whole tree."
+  },
+  "invariants": [
+    "Current authorization and C16 grant intersection remain mandatory.",
+    "CAS/source/case/request identities and observations are preserved.",
+    "Memory owner is not reassigned or bypassed.",
+    "No assertion removal, optional security contract or stub substitution."
+  ],
+  "static_artifact_verification": {
+    "eight_preimages_checked_on_exact_base": true,
+    "existing_source_postimages": 6,
+    "new_complete_postimages": 2,
+    "new_postimage_hashes_confirmed_by_github": true,
+    "unified_patch_hunks_replayed": 5,
+    "dependency_paths_and_pins_checked": true,
+    "publication_prefix_check_through": "3c433e4be688a3d68e9f61ea1e96cfe344c58df4",
+    "published_paths_at_that_check": 10,
+    "published_files_all_added": true
+  },
+  "verification_status": {
+    "product_applied": false,
+    "typecheck": "NOT_RUN",
+    "tests": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "browser": "NOT_RUN",
+    "native_proofs": "NOT_RUN",
+    "ci": "NOT_DISPATCHED",
+    "official_review": "NOT_CLAIMED"
+  },
+  "handoff": "modules/sucafina/Sucafinav1/docs/sf2h/control/integration-assist/seam-fixes/HANDOFF.md",
+  "read_set": "modules/sucafina/Sucafinav1/docs/sf2h/control/integration-assist/seam-fixes/read-set.json"
+}
