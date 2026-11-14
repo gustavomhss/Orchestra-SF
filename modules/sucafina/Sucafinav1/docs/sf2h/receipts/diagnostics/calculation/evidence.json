@@ -1,0 +1,688 @@
+{
+  "status": "PROPOSAL_READY",
+  "product_change": "NOT_APPLIED",
+  "proposed_validation": "NOT_RUN",
+  "date_utc": "2026-11-14",
+  "repository": "gustavomhss/Orchestra-SF",
+  "diagnostic_branch": "diagnose-calculation",
+  "pr_base": "astra-wp10",
+  "normative": {
+    "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan",
+    "ci_commit": "d3d411f7e2476a562a57aa7620823980eaf34e46",
+    "ci_path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/CI.md"
+  },
+  "products": {
+    "W26": {
+      "commit": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+      "tree": "a9398de38c9e684d28c27b0188ab653e75bf3305",
+      "role": "Fixed diagnostic product/preimage"
+    },
+    "W27": {
+      "commit": "ab8fb4f29d078d179742a77679ef85e5c549b114",
+      "tree": "6b889a436fafe019580801edba3015d90fa75dfd",
+      "role": "Existing successor observation, not execution of W26 or proposed patch",
+      "financial_producers_changed": false,
+      "proposed_patch_preimages_changed": false,
+      "other_changes": "Memory/Procurement read scopes, host callback, tests/traces and receipts; not diagnosed here",
+      "preimages_directly_compared_to_W26": true
+    }
+  },
+  "runs": {
+    "X26": {
+      "run_id": 43619479808,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43619479808",
+      "snapshot": "4650ebf5948747a49f04120070765aa6317e6fd8",
+      "product": "W26",
+      "job_id": 132521664604,
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43619479808/job/132521664604",
+      "cleanup_job_id": 132523530424,
+      "cleanup": "success",
+      "conclusion": "failure",
+      "pass": 0,
+      "fail": 1,
+      "expect_calls_reached": 3,
+      "tests": 1,
+      "files": 1,
+      "test_seconds": 285.82,
+      "fixture_ms": 9640,
+      "host_ms": 275640,
+      "elapsed_at_abort_ms": 285285,
+      "host_environment_reads": 1934,
+      "total_environment_reads": 2054,
+      "inner_attribution": "NOT_INSTRUMENTED",
+      "product_snapshot_diff": [
+        ".ci-run.json"
+      ],
+      "omni": "not applicable; no spawn or delegation"
+    },
+    "X27": {
+      "run_id": 43623440133,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43623440133",
+      "snapshot": "329a3b4547ec77c6b516ac1f28c732f0fc076902",
+      "product": "W27",
+      "job_id": 132533968037,
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43623440133/job/132533968037",
+      "cleanup_job_id": 132535684366,
+      "cleanup": "success",
+      "conclusion": "failure",
+      "pass": 0,
+      "fail": 1,
+      "expect_calls_reached": 3,
+      "tests": 1,
+      "files": 1,
+      "test_seconds": 285.57,
+      "fixture_ms_composition": 7765,
+      "fixture_ms_trace": 7766,
+      "host_ms": 277391,
+      "elapsed_at_host_entry_ms": 7772,
+      "elapsed_at_abort_ms": 285163,
+      "host_environment_reads": 2126,
+      "total_environment_reads": 2246,
+      "trace_event_lines": 311,
+      "product_snapshot_diff": [
+        ".ci-run.json"
+      ],
+      "omni": "not applicable; no spawn or delegation",
+      "artifacts": []
+    }
+  },
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "--timeout",
+      "120000",
+      "Sucafinav1/test/product/wp10/integration/portfolio-exact-threshold.test.ts"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+    }
+  },
+  "observations": {
+    "exact_search": "Completed anchor/IEEE-adjacent production before sensitivity write; no inference of stuck bisection.",
+    "raw_sensitivity_write": {
+      "started_ms": 208547,
+      "returned_ms": 209914,
+      "duration_ms": 1367,
+      "status": "ok"
+    },
+    "binding": {
+      "started_ms": 209916,
+      "returned_ms": 285163,
+      "duration_ms": 75247,
+      "status": "denied"
+    },
+    "first_binding_proof": {
+      "started_ms": 212103,
+      "returned_ms": 285163,
+      "duration_ms": 73060,
+      "status": "false",
+      "abort_inside": "third primary.hostUnits.issue",
+      "binding_commit": "NOT_REACHED"
+    },
+    "downstream": {
+      "public_saved_assertions": "NOT_REACHED",
+      "durable_inspection": "NOT_REACHED",
+      "recomposed_read": "NOT_REACHED",
+      "same_operation_retry": "NOT_REACHED",
+      "authority_revocation": "NOT_REACHED"
+    },
+    "metrics_scope": "Entire X27 test, including fixture; spans are inclusive and overlapping, not additive/exclusive wall times.",
+    "metrics": {
+      "phase.fixture.complete": {
+        "started": 1,
+        "completed": 1,
+        "threw": 0,
+        "inclusiveMs": 7766,
+        "maximumMs": 7766,
+        "outcomes": {
+          "returned": 1
+        },
+        "active": 0
+      },
+      "shared.sources.resolveForecastSource": {
+        "started": 4885,
+        "completed": 4885,
+        "threw": 0,
+        "inclusiveMs": 189597,
+        "maximumMs": 142,
+        "outcomes": {
+          "ok": 4885
+        },
+        "active": 0
+      },
+      "shared.cases.read": {
+        "started": 177,
+        "completed": 177,
+        "threw": 0,
+        "inclusiveMs": 97897,
+        "maximumMs": 1501,
+        "outcomes": {
+          "ok": 176,
+          "unavailable": 1
+        },
+        "active": 0
+      },
+      "shared.evidence.context": {
+        "started": 1003,
+        "completed": 1002,
+        "threw": 1,
+        "inclusiveMs": 269829,
+        "maximumMs": 820,
+        "outcomes": {
+          "array:2": 876,
+          "array:4": 37,
+          "array:3": 88,
+          "array:6": 1
+        },
+        "active": 0
+      },
+      "shared.sources.resolveForecastCoverage": {
+        "started": 370,
+        "completed": 370,
+        "threw": 0,
+        "inclusiveMs": 39850,
+        "maximumMs": 1419,
+        "outcomes": {
+          "ok": 370
+        },
+        "active": 0
+      },
+      "shared.results.write": {
+        "started": 6,
+        "completed": 6,
+        "threw": 0,
+        "inclusiveMs": 3717,
+        "maximumMs": 1367,
+        "outcomes": {
+          "ok": 6
+        },
+        "active": 0
+      },
+      "shared.results.readHistoricalScenario": {
+        "started": 245,
+        "completed": 245,
+        "threw": 0,
+        "inclusiveMs": 154478,
+        "maximumMs": 1844,
+        "outcomes": {
+          "ok": 243,
+          "denied": 2
+        },
+        "active": 0
+      },
+      "shared.scenarios.resolveMany": {
+        "started": 24,
+        "completed": 24,
+        "threw": 0,
+        "inclusiveMs": 73923,
+        "maximumMs": 6108,
+        "outcomes": {
+          "array:2": 24
+        },
+        "active": 0
+      },
+      "shared.evidence.resolve": {
+        "started": 80,
+        "completed": 80,
+        "threw": 0,
+        "inclusiveMs": 15545,
+        "maximumMs": 414,
+        "outcomes": {
+          "fresh": 78,
+          "unavailable": 2
+        },
+        "active": 0
+      },
+      "phase.storage.before": {
+        "started": 1,
+        "completed": 1,
+        "threw": 0,
+        "inclusiveMs": 6,
+        "maximumMs": 6,
+        "outcomes": {
+          "returned": 1
+        },
+        "active": 0
+      },
+      "phase.host.evaluate-and-store": {
+        "started": 1,
+        "completed": 0,
+        "threw": 1,
+        "inclusiveMs": 277391,
+        "maximumMs": 277391,
+        "outcomes": {},
+        "active": 0
+      },
+      "shared.results.readByRequest": {
+        "started": 5,
+        "completed": 5,
+        "threw": 0,
+        "inclusiveMs": 135,
+        "maximumMs": 36,
+        "outcomes": {
+          "ok": 5
+        },
+        "active": 0
+      },
+      "shared.scenarios.resolve": {
+        "started": 44,
+        "completed": 44,
+        "threw": 0,
+        "inclusiveMs": 124342,
+        "maximumMs": 6314,
+        "outcomes": {
+          "ok": 44
+        },
+        "active": 0
+      },
+      "primary.planner.simulateScenario": {
+        "started": 22,
+        "completed": 22,
+        "threw": 0,
+        "inclusiveMs": 12318,
+        "maximumMs": 1240,
+        "outcomes": {
+          "ok": 22
+        },
+        "active": 0
+      },
+      "primary.hostUnits.issue": {
+        "started": 3,
+        "completed": 3,
+        "threw": 0,
+        "inclusiveMs": 31935,
+        "maximumMs": 12179,
+        "outcomes": {
+          "ok": 2,
+          "stale": 1
+        },
+        "active": 0
+      },
+      "shared.results.read": {
+        "started": 10,
+        "completed": 10,
+        "threw": 0,
+        "inclusiveMs": 12337,
+        "maximumMs": 1507,
+        "outcomes": {
+          "ok": 10
+        },
+        "active": 0
+      },
+      "primary.sensitivityBindings.bind": {
+        "started": 1,
+        "completed": 1,
+        "threw": 0,
+        "inclusiveMs": 75247,
+        "maximumMs": 75247,
+        "outcomes": {
+          "denied": 1
+        },
+        "active": 0
+      },
+      "primary.proof.verifySensitivity": {
+        "started": 1,
+        "completed": 1,
+        "threw": 0,
+        "inclusiveMs": 73060,
+        "maximumMs": 73060,
+        "outcomes": {
+          "false": 1
+        },
+        "active": 0
+      },
+      "primary.hostUnits.resolve": {
+        "started": 1,
+        "completed": 1,
+        "threw": 0,
+        "inclusiveMs": 22807,
+        "maximumMs": 22807,
+        "outcomes": {
+          "ok": 1
+        },
+        "active": 0
+      }
+    },
+    "timeline": [
+      {
+        "elapsedMs": 0,
+        "environmentReads": 0,
+        "state": "started",
+        "id": 1,
+        "parentId": null,
+        "name": "phase.fixture.complete",
+        "ordinal": 1,
+        "details": {},
+        "logLine": 817,
+        "timestamp": "2026-11-14T17:53:48.6068048Z"
+      },
+      {
+        "elapsedMs": 7766,
+        "environmentReads": 120,
+        "state": "returned",
+        "id": 1,
+        "parentId": null,
+        "name": "phase.fixture.complete",
+        "ordinal": 1,
+        "status": "returned",
+        "durationMs": 7766,
+        "details": {},
+        "logLine": 900,
+        "timestamp": "2026-11-14T17:53:56.3715381Z"
+      },
+      {
+        "elapsedMs": 7766,
+        "environmentReads": 120,
+        "state": "started",
+        "id": 371,
+        "parentId": null,
+        "name": "phase.storage.before",
+        "ordinal": 1,
+        "details": {},
+        "logLine": 902,
+        "timestamp": "2026-11-14T17:53:56.3718631Z"
+      },
+      {
+        "elapsedMs": 7772,
+        "environmentReads": 120,
+        "state": "returned",
+        "id": 371,
+        "parentId": null,
+        "name": "phase.storage.before",
+        "ordinal": 1,
+        "status": "returned",
+        "durationMs": 6,
+        "details": {},
+        "logLine": 905,
+        "timestamp": "2026-11-14T17:53:56.3777349Z"
+      },
+      {
+        "elapsedMs": 7772,
+        "environmentReads": 120,
+        "state": "started",
+        "id": 372,
+        "parentId": null,
+        "name": "phase.host.evaluate-and-store",
+        "ordinal": 1,
+        "details": {},
+        "logLine": 907,
+        "timestamp": "2026-11-14T17:53:56.3780142Z"
+      },
+      {
+        "elapsedMs": 45500,
+        "environmentReads": 597,
+        "state": "started",
+        "id": 1799,
+        "parentId": 372,
+        "name": "primary.hostUnits.issue",
+        "ordinal": 1,
+        "details": {
+          "scenarioRef": "decision-result:73907255-199f-4498-b2be-b374f3c1558b",
+          "baselineRef": "decision-result:168f19ad-9227-4ed0-b4be-3a9470263b18",
+          "parameterRef": "line:1"
+        },
+        "logLine": 975,
+        "timestamp": "2026-11-14T17:54:34.1050627Z"
+      },
+      {
+        "elapsedMs": 55180,
+        "environmentReads": 677,
+        "state": "returned",
+        "id": 1799,
+        "parentId": 372,
+        "name": "primary.hostUnits.issue",
+        "ordinal": 1,
+        "status": "ok",
+        "durationMs": 9680,
+        "details": {
+          "scenarioRef": "decision-result:73907255-199f-4498-b2be-b374f3c1558b",
+          "baselineRef": "decision-result:168f19ad-9227-4ed0-b4be-3a9470263b18",
+          "parameterRef": "line:1"
+        },
+        "logLine": 980,
+        "timestamp": "2026-11-14T17:54:43.7856095Z"
+      },
+      {
+        "elapsedMs": 105967,
+        "environmentReads": 1082,
+        "state": "started",
+        "id": 3350,
+        "parentId": 372,
+        "name": "primary.hostUnits.issue",
+        "ordinal": 2,
+        "details": {
+          "scenarioRef": "decision-result:73907255-199f-4498-b2be-b374f3c1558b",
+          "baselineRef": "decision-result:168f19ad-9227-4ed0-b4be-3a9470263b18",
+          "parameterRef": "line:1"
+        },
+        "logLine": 1029,
+        "timestamp": "2026-11-14T17:55:34.5727891Z"
+      },
+      {
+        "elapsedMs": 116043,
+        "environmentReads": 1162,
+        "state": "returned",
+        "id": 3350,
+        "parentId": 372,
+        "name": "primary.hostUnits.issue",
+        "ordinal": 2,
+        "status": "ok",
+        "durationMs": 10076,
+        "details": {
+          "scenarioRef": "decision-result:73907255-199f-4498-b2be-b374f3c1558b",
+          "baselineRef": "decision-result:168f19ad-9227-4ed0-b4be-3a9470263b18",
+          "parameterRef": "line:1"
+        },
+        "logLine": 1034,
+        "timestamp": "2026-11-14T17:55:44.6488082Z"
+      },
+      {
+        "elapsedMs": 208547,
+        "environmentReads": 1913,
+        "state": "started",
+        "id": 5869,
+        "parentId": 372,
+        "name": "shared.results.write",
+        "ordinal": 6,
+        "details": {
+          "kind": "sensitivity"
+        },
+        "logLine": 1096,
+        "timestamp": "2026-11-14T17:57:17.1522160Z"
+      },
+      {
+        "elapsedMs": 209914,
+        "environmentReads": 1919,
+        "state": "returned",
+        "id": 5869,
+        "parentId": 372,
+        "name": "shared.results.write",
+        "ordinal": 6,
+        "status": "ok",
+        "durationMs": 1367,
+        "details": {
+          "kind": "sensitivity"
+        },
+        "logLine": 1097,
+        "timestamp": "2026-11-14T17:57:18.5196597Z"
+      },
+      {
+        "elapsedMs": 209916,
+        "environmentReads": 1919,
+        "state": "started",
+        "id": 5885,
+        "parentId": 372,
+        "name": "primary.sensitivityBindings.bind",
+        "ordinal": 1,
+        "details": {},
+        "logLine": 1098,
+        "timestamp": "2026-11-14T17:57:18.5214085Z"
+      },
+      {
+        "elapsedMs": 212103,
+        "environmentReads": 1929,
+        "state": "started",
+        "id": 5912,
+        "parentId": 5885,
+        "name": "primary.proof.verifySensitivity",
+        "ordinal": 1,
+        "details": {},
+        "logLine": 1100,
+        "timestamp": "2026-11-14T17:57:20.7087839Z"
+      },
+      {
+        "elapsedMs": 212149,
+        "environmentReads": 1929,
+        "state": "started",
+        "id": 5913,
+        "parentId": 5912,
+        "name": "primary.hostUnits.resolve",
+        "ordinal": 1,
+        "details": {},
+        "logLine": 1101,
+        "timestamp": "2026-11-14T17:57:20.7541601Z"
+      },
+      {
+        "elapsedMs": 234956,
+        "environmentReads": 2029,
+        "state": "returned",
+        "id": 5913,
+        "parentId": 5912,
+        "name": "primary.hostUnits.resolve",
+        "ordinal": 1,
+        "status": "ok",
+        "durationMs": 22807,
+        "details": {},
+        "logLine": 1109,
+        "timestamp": "2026-11-14T17:57:43.5611463Z"
+      },
+      {
+        "elapsedMs": 272984,
+        "environmentReads": 2192,
+        "state": "started",
+        "id": 6719,
+        "parentId": 5912,
+        "name": "primary.hostUnits.issue",
+        "ordinal": 3,
+        "details": {
+          "scenarioRef": "decision-result:73907255-199f-4498-b2be-b374f3c1558b",
+          "baselineRef": "decision-result:168f19ad-9227-4ed0-b4be-3a9470263b18",
+          "parameterRef": "line:1"
+        },
+        "logLine": 1127,
+        "timestamp": "2026-11-14T17:58:21.5899564Z"
+      },
+      {
+        "elapsedMs": 285163,
+        "environmentReads": 2246,
+        "state": "returned",
+        "id": 6719,
+        "parentId": 5912,
+        "name": "primary.hostUnits.issue",
+        "ordinal": 3,
+        "status": "stale",
+        "durationMs": 12179,
+        "details": {
+          "scenarioRef": "decision-result:73907255-199f-4498-b2be-b374f3c1558b",
+          "baselineRef": "decision-result:168f19ad-9227-4ed0-b4be-3a9470263b18",
+          "parameterRef": "line:1"
+        },
+        "logLine": 1138,
+        "timestamp": "2026-11-14T17:58:33.7699313Z"
+      },
+      {
+        "elapsedMs": 285163,
+        "environmentReads": 2246,
+        "state": "returned",
+        "id": 5912,
+        "parentId": 5885,
+        "name": "primary.proof.verifySensitivity",
+        "ordinal": 1,
+        "status": "false",
+        "durationMs": 73060,
+        "details": {},
+        "logLine": 1139,
+        "timestamp": "2026-11-14T17:58:33.7701654Z"
+      },
+      {
+        "elapsedMs": 285163,
+        "environmentReads": 2246,
+        "state": "returned",
+        "id": 5885,
+        "parentId": 372,
+        "name": "primary.sensitivityBindings.bind",
+        "ordinal": 1,
+        "status": "denied",
+        "durationMs": 75247,
+        "details": {},
+        "logLine": 1140,
+        "timestamp": "2026-11-14T17:58:33.7703367Z"
+      },
+      {
+        "elapsedMs": 285163,
+        "environmentReads": 2246,
+        "state": "threw",
+        "id": 372,
+        "parentId": null,
+        "name": "phase.host.evaluate-and-store",
+        "ordinal": 1,
+        "durationMs": 277391,
+        "errorName": "Error",
+        "details": {},
+        "logLine": 1142,
+        "timestamp": "2026-11-14T17:58:33.7706938Z"
+      }
+    ]
+  },
+  "static_findings": {
+    "source_resolve": {
+      "path": "product/integration/planner-sources.ts",
+      "current_and_again": 2,
+      "source_transaction_envelopes_current": 4,
+      "source_transaction_envelopes_candidate": 2,
+      "direct_authenticate_calls_preserved": 6,
+      "direct_revalidate_calls_preserved": 4,
+      "successful_full_run_source_calls_observed": 4885,
+      "modeled_envelopes_eligible_for_consolidation": 9770,
+      "model_limit": "2 per observed successful resolver, using unchanged W26/W27 source path; not measured saved transactions or milliseconds, not host-only."
+    },
+    "success_path_binding_verifiers": {
+      "before_commit": 1,
+      "bind_return_read": 2,
+      "final_sensitivity_read": 2,
+      "total": 5,
+      "observed_X27_starts": 1,
+      "limit": "Count of completed successful path from code; not an assertion that five occurred in X26/X27."
+    },
+    "driver": "Every top-level transaction uses the real queue/BEGIN IMMEDIATE/decode envelope even for commit:false; CPU/serialization/queue time not separated by the existing trace.",
+    "ancestry": "AsyncLocalStorage ancestry tracks/rejects cycles/depth; no observed evidence of a stuck recursive cycle. Existing ancestry failures are not cleared by this diagnosis."
+  },
+  "hypotheses_pending": [
+    "Fraction of source time due to queue admission, snapshot decoding, cloning, hashing and authentication.",
+    "Net temporal gain and lock occupancy/fairness after consolidation.",
+    "Whether the entire unchanged exact-threshold journey, including downstream mandatory proofs, fits its original budget."
+  ],
+  "execution_policy": {
+    "local_product_tests": 0,
+    "new_hosted_runs": 0,
+    "reason": "Existing W27 trace discriminated the phases; proposed owner source change is not applied.",
+    "remote_channel": "GitHub MCP",
+    "no_product_or_other_branch_mutation": true
+  },
+  "acceptance": "Only owner execution on pinned applied product may validate performance and all financial/authorization fences.",
+  "artifact_inspection": {
+    "allowedPaths": 11,
+    "jsonParsed": true,
+    "patchHunksMatchPinnedText": [
+      true,
+      true
+    ],
+    "existingFilesOverwritten": 0,
+    "productExecution": false,
+    "typecheck": "NOT_RUN",
+    "guards": "NOT_RUN"
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "schema": "orchestra-sf.memory-publication-observation.v1",
+  "observedAtUtc": "2026-11-14 18:06:37 UTC",
+  "branch": "diagnose-memory",
+  "expectedParent": {
+    "commit": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+    "tree": "a9398de38c9e684d28c27b0188ab653e75bf3305"
+  },
+  "owner": {
+    "branch": "astra-wp10",
+    "commit": "ab8fb4f29d078d179742a77679ef85e5c549b114",
+    "tree": "6b889a436fafe019580801edba3015d90fa75dfd"
+  },
+  "existingOwnerMemoryRun": {
+    "id": 43624030665,
+    "jobId": 132535810515,
+    "attempt": 1,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43624030665",
+    "snapshot": "e336f3e945fc22ae737af9b2425186c25b46a43d",
+    "snapshotTree": "56b50dd0bab45311b7859f30179eb3d91ea68f32",
+    "requestBlob": "661cbd88494d80b48c193177137f61980b034bf8",
+    "envelopeOnlyDiff": [
+      ".ci-run.json"
+    ],
+    "statusAtObservation": "completed",
+    "statusObservedAtUtc": "2026-11-14T18:06:07Z (run updated_at; terminal fetched afterward)",
+    "selection": "same eight complete files as A26",
+    "validationOfNewPatches": false,
+    "conclusion": "failure",
+    "priorInProgressLogError": {
+      "status": "unavailable while in progress",
+      "error": "GitHub API error 404: BlobNotFound. The specified blob does not exist.",
+      "requestId": "a2782c92-801e-005b-1362-74cc9d000000",
+      "time": "2026-11-14T18:03:56.6274890Z"
+    },
+    "terminalLogFetched": true,
+    "cleanupJob": 132537774635,
+    "cleanupConclusion": "success",
+    "failure": "staleAccess.preflight expected denied received ok at historical-memory.test.ts:580:103; 182124.35ms, no timeout"
+  },
+  "runDeduplication": {
+    "newRunsDispatched": 0,
+    "decision": "A27 terminal and cleanup consumed. Do not replay it unchanged. Owner should address the new capture-integrity mismatch and attach instrumentation to a necessary frozen-candidate run if residual cost attribution remains required.",
+    "recheckBeforeAnyDispatch": true
+  },
+  "finalDeliveryIdentity": "Published PR description records the exact delivery commit and tree after the commit exists; this file does not self-claim its own hash.",
+  "branchRefsUnchanged": true,
+  "branchRefRecheckMethod": "GitHub MCP GET refs before publication; both heads still match the pinned identities above."
+}

@@ -1,0 +1,137 @@
+{
+  "schema": "sf2h.work-g03.ci-result.v1",
+  "attempt": 1,
+  "W": "034d03c4721367a00fb0f546eed98b3ad047b0f9",
+  "WTree": "3ccd6bfa9311adf20ab341a519af3c1e2f3c648b",
+  "S": "4a63cfecb426dcca14ed8d55a3790f25eab6e6fa",
+  "STree": "299df80b88f87e75dfe7848d644fd5bb2534f926",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "./Sucafinav1/test/product/work-split/work-g03/g03-conflict-review.test.ts",
+      "./Sucafinav1/test/product/ui-split/ui-work/static-gates.test.ts",
+      "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+    }
+  },
+  "requestBlob": "4414e256e592dd809675c153ecc72cc10135b776",
+  "equivalence": [
+    {
+      "filename": ".ci-run.json",
+      "status": "added",
+      "additions": 16,
+      "deletions": 0,
+      "changes": 16,
+      "previous_filename": null
+    }
+  ],
+  "run": {
+    "id": 43624801241,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43624801241",
+    "job": 132538140988,
+    "conclusion": "failure",
+    "requestValidation": "PASS",
+    "artifacts": []
+  },
+  "counts": {
+    "pass": 2,
+    "fail": 2,
+    "expectCalls": 87,
+    "files": 4
+  },
+  "g03": {
+    "status": "FAIL",
+    "http": 409,
+    "payload": {
+      "status": "conflict",
+      "reason": "selection-not-committed"
+    },
+    "failedPhase": "final revoked browser reload observation",
+    "failure": "reload: net::ERR_HTTP_RESPONSE_CODE_FAILURE",
+    "sourceLine": 180,
+    "observedBeforeFailure": [
+      "Exact 409 payload",
+      "Inputs locked until explicit review",
+      "Fresh case/version reads without writes",
+      "One reviewed effect after the competitor",
+      "Lost delivery and exact retry without duplicate",
+      "Authorized reload without autosave",
+      "Real logout, list 403, scrubbed UI and one revocation event",
+      "Revoked replay 403 and fresh authorized C08 state equal to committed"
+    ],
+    "limitation": "Prior assertions were reached before the final navigation error, but the complete G03 case remains FAIL in this run; no full-case PASS inferred.",
+    "testDeadlineMs": 45000,
+    "caseDurationMs": 5789.02
+  },
+  "typecheck": {
+    "command": "bun typecheck",
+    "cwd": "modules/sucafina",
+    "exitCode": 2,
+    "status": "FAIL",
+    "ownDiagnostics": 1,
+    "foreignDiagnostics": 9,
+    "diagnostics": [
+      "../../../apps/cli/src/sucafina-product/host-context.ts(193,136): error TS2322: Type 'SfStateResult<string | undefined>' is not assignable to type 'PortResult<{ runRef: string; }>'.",
+      "../../../apps/cli/src/sucafina-product/host-context.ts(225,138): error TS2322: Type 'SfStateResult<({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; intentDigest?: string | undefined; skillInputDigest: string; principalRef: string; accessRevision: string; ... 9 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined>' is not assignable to type 'PortResult<{ runRef: string; }> | undefined'.",
+      "../../../apps/cli/src/sucafina-product/host-context.ts(281,138): error TS2322: Type 'SfStateResult<({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; intentDigest?: string | undefined; skillInputDigest: string; principalRef: string; accessRevision: string; ... 9 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined>' is not assignable to type 'PortResult<SfNativeRunRecord>'.",
+      "../../../apps/cli/src/sucafina-product/host-context.ts(404,5): error TS2322: Type '(context: TrustedUiContext, caseRef: { id: string; incarnation: string; version: number; }) => Promise<{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { ...; }[]; } | { ...; } | { ...; }>' is not assignable to type '(context: TrustedUiContext, caseRef: { id: string; incarnation: string; version: number; }) => Promise<PortResult<readonly { runRef: string; state: \"cancelled\" | \"failed\" | \"needs-input\" | ... 6 more ... | \"unavailable\"; version: number; outputRef?: string | undefined; }[]>>'.",
+      "../../../apps/cli/src/sucafina-product/host-context.ts(420,5): error TS2322: Type '(context: TrustedUiContext, runRef: string) => Promise<{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ ...; } & { ...; }) | ({ ...; } & { ...; }) | undefined; } | { ...; } | { ...; }>' is not assignable to type '(context: TrustedUiContext, runRef: string) => Promise<PortResult<SfNativeRunRecord>>'.",
+      "test/product/work-split/work-g03/g03-conflict-review.test.ts(168,89): error TS2345: Argument of type 'string' is not assignable to parameter of type '`${string}-${string}-${string}-${string}-${string}`'.",
+      "test/product/wp07/review-port.test.ts(40,35): error TS2739: Type '{ state: SfProductStatePort; now: () => string; requestFor: () => Request; authorizeSections: () => Promise<boolean>; authorizeComments: () => Promise<boolean>; authorizeSensitivity: () => Promise<...>; revalidate: () => Promise<...>; revalidateEvidence: () => Promise<...>; select: () => Promise<...>; }' is missing the following properties from type 'ReviewHost': creationTarget, authorizeOutcomeComparison, authorizeOutcome, authorizeDecision",
+      "test/product/wp07/review-port.test.ts(45,41): error TS2739: Type '{ state: SfProductStatePort; now: () => string; requestFor: () => Request; authorizeSections: () => Promise<false>; authorizeComments: () => Promise<true>; authorizeSensitivity: () => Promise<...>; revalidate: () => Promise<...>; revalidateEvidence: () => Promise<...>; select: () => Promise<...>; }' is missing the following properties from type 'ReviewHost': creationTarget, authorizeOutcomeComparison, authorizeOutcome, authorizeDecision",
+      "test/product/wp07/review-port.test.ts(56,37): error TS2739: Type '{ state: SfProductStatePort; now: () => string; requestFor: () => Request; authorizeSections: () => Promise<true>; authorizeComments: () => Promise<true>; authorizeSensitivity: () => Promise<...>; revalidate: () => Promise<...>; revalidateEvidence: () => Promise<...>; select: () => Promise<...>; }' is missing the following properties from type 'ReviewHost': creationTarget, authorizeOutcomeComparison, authorizeOutcome, authorizeDecision",
+      "test/product/wp07/review-port.test.ts(221,36): error TS2739: Type '{ state: SfProductStatePort; now: () => string; requestFor: () => undefined; authorizeSections: () => Promise<false>; authorizeComments: () => Promise<true>; authorizeSensitivity: () => Promise<...>; revalidate: () => Promise<...>; revalidateEvidence: () => Promise<...>; select: () => Promise<...>; }' is missing the following properties from type 'ReviewHost': creationTarget, authorizeOutcomeComparison, authorizeOutcome, authorizeDecision"
+    ]
+  },
+  "guards": {
+    "command": "bun run check:guards --base origin/dev",
+    "baseFetchExitCode": 0,
+    "exitCode": 0,
+    "status": "PASS",
+    "rules": 78,
+    "changedPaths": 932,
+    "gateFindings": 0,
+    "warnings": 52,
+    "errors": 0
+  },
+  "omni": {
+    "verdict": "pass",
+    "nonce": "5f2a6e30c3435b9a430dd2536c4f95b7",
+    "declaringTests": 2,
+    "spawns": 4,
+    "delegated": 0
+  },
+  "browser": {
+    "launches": 1,
+    "acquisitions": 1,
+    "releases": 1,
+    "activeLease": false,
+    "contexts": 0,
+    "driverClosed": true,
+    "processExited": true
+  },
+  "next": {
+    "hypothesis": "The final empty HTTP403 causes Chromium navigation to reject before a Response is returned; observe the real server response while forwarding it unchanged. The shared post helper infers a UUID template key; send the frozen replay bytes and header through the real HTTP endpoint instead.",
+    "changed": [
+      "Own test observation of denied reload",
+      "Own test sends the exact frozen revoked replay without the shared UUID-typed helper",
+      "Clarify caseReadsSinceReview diagnostic label"
+    ],
+    "unchanged": [
+      "Producer blob",
+      "Consumer UI",
+      "Shared fixtures and browser driver",
+      "All deadlines",
+      "HTTP409/403 assertions",
+      "CAS/source/authorization fences"
+    ],
+    "rerun": "Same narrow selection required to prove the corrected test and eliminate the new TS diagnostic; previous failed run preserved."
+  }
+}

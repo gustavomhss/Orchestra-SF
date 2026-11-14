@@ -1,0 +1,23 @@
+APPLIED — exact owner-published producer blob consumption in work-g03.
+Consumer base 79ebf5555eddaa4b5b8b57cbe1df7c5ad22b1244; preimage blob ec80e2916c8a06cbb471cf02e30bb1cb5ebd9cc0.
+Owner origin 20821df310ebc6ea08ccab27e829008d72a04de6; observed collab-resume dc21cd389de67c2e7fac996b663d9c0aa7d8cae5.
+Postimage blob cd9a67887f41986243809672572c972440c832ec consumed by Git tree reference, without reauthoring.
+Applied in W1 034d03c4721367a00fb0f546eed98b3ad047b0f9; unchanged in W2 bbebc56623f326572dd25d0e0d20655da4904eba.
+
+diff --git a/modules/sucafina/Sucafinav1/product/collaboration/case-selection.ts b/modules/sucafina/Sucafinav1/product/collaboration/case-selection.ts
+--- a/modules/sucafina/Sucafinav1/product/collaboration/case-selection.ts
++++ b/modules/sucafina/Sucafinav1/product/collaboration/case-selection.ts
+@@ -176,7 +176,7 @@
+       }
+       input.caseSelectionWrites.add(work)
+       const saved = await input.state.transaction(request, { namespace: "preferences", ...selected.mutation, commandDigest: digestSfValue(selected.draft), targetRef: input.target.ref, targetIncarnation: input.target.incarnation }, work).finally(() => input.caseSelectionWrites.delete(work))
+-      if (saved.status === "preview") return { status: "conflict", reason: "selection-not-committed" }
++      if (saved.status === "preview" || (saved.status === "conflict" && saved.reason === "product-state-changed")) return { status: "conflict", reason: "selection-not-committed" }
+       if (saved.status !== "ok" || !saved.value) return { status: "unavailable", reason: "selection-unavailable" }
+       const verified = await load(saved.value, stored.period, context)
+       if (verified.status !== "ok") return verified
+@@ -185,3 +185,4 @@
+   }
+ }
+ 
++

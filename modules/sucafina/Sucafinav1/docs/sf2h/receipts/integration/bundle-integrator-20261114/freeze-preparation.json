@@ -1,0 +1,165 @@
+{
+  "schema": "sf2-candidate-freeze-preparation-v1",
+  "candidate_class": "COMPOSED_REVIEW_CANDIDATE_NOT_ACCEPTED",
+  "scope": "Fix the next committed tree as review/test candidate C; exact commit/tree recorded in the post-publication checkpoint and PR. It is not a final acceptance declaration.",
+  "target_before": "46cb4dd02f0a6d11b3fa7a0deac7f839e7b7af3c",
+  "target_before_tree": "3ca2f19fb2d1b40d0f94b4a6e9c1cfecb4cefb32",
+  "code_inputs": "increment-02.json and its four per-file manifests, increment-03.json; base and import-recovery increment preserved",
+  "source_cutoff_utc": "2026-11-14T20:20:03Z",
+  "active_sources_not_silently_consumed": [
+    {
+      "pr": 29,
+      "accepted": "54317229d7f8fcb7e92921c2f4a8dc6f9310270b",
+      "observed": "5d42e44fb623db78a3a6ef025d2317a3fb653432",
+      "state": "MEMORY_ATTEMPT05_IN_FLIGHT"
+    },
+    {
+      "pr": 42,
+      "accepted": "454b97daf614176507711df889bd45743467f7af",
+      "observed": "5a029e77bfd9d8ba19494966a95c908e3f05043d",
+      "state": "CONTINUATION_NO_TERMINAL_HANDOFF_OBSERVED"
+    }
+  ],
+  "gate_inputs": {
+    "workflow": {
+      "path": ".github/workflows/sf2-epic.yml",
+      "blob": "4e92e4960e2bc371aa712d95e08acd76a5cc1ff2",
+      "trigger": "push refs/heads/sf2-epic-c only"
+    },
+    "recipes": {
+      "path": "script/sf2h/final-bundle/requests.json",
+      "blob": "3ff28507d6ae6b874f021fb8acf5088d61442c80",
+      "entries": [
+        {
+          "id": "CI-SF",
+          "request": {
+            "package": "sucafina",
+            "runner": "bun",
+            "args": []
+          },
+          "directory": "modules/sucafina"
+        },
+        {
+          "id": "CI-CLI",
+          "request": {
+            "package": "cli",
+            "runner": "bun",
+            "args": []
+          },
+          "directory": "apps/cli"
+        },
+        {
+          "id": "CI-APP-SRC",
+          "request": {
+            "package": "app",
+            "runner": "bun",
+            "args": []
+          },
+          "directory": "packages/app-shell"
+        },
+        {
+          "id": "CI-APP-BROWSER",
+          "request": {
+            "package": "app",
+            "runner": "bun",
+            "args": [
+              "test-browser"
+            ]
+          },
+          "directory": "packages/app-shell"
+        },
+        {
+          "id": "CI-ATLAS-BUSINESS",
+          "request": {
+            "package": "atlas-boundary",
+            "runner": "bun",
+            "args": [
+              "--timeout",
+              "30000"
+            ]
+          },
+          "directory": "modules/atlas/boundary"
+        },
+        {
+          "id": "CI-UI-OPERATIONS",
+          "request": {
+            "package": "app",
+            "runner": "playwright",
+            "config": "e2e/playwright.production.config.ts",
+            "args": [
+              "e2e/sucafina/operations.spec.ts"
+            ]
+          },
+          "directory": "packages/app-shell"
+        },
+        {
+          "id": "CI-UI-DECISIONS",
+          "request": {
+            "package": "app",
+            "runner": "playwright",
+            "config": "e2e/playwright.production.config.ts",
+            "args": [
+              "e2e/sucafina/decisions.spec.ts"
+            ]
+          },
+          "directory": "packages/app-shell"
+        },
+        {
+          "id": "CI-UI-REPORTS",
+          "request": {
+            "package": "app",
+            "runner": "playwright",
+            "config": "e2e/playwright.production.config.ts",
+            "args": [
+              "e2e/sucafina/reports.spec.ts"
+            ]
+          },
+          "directory": "packages/app-shell"
+        }
+      ]
+    },
+    "production_config": {
+      "path": "packages/app-shell/e2e/playwright.production.config.ts",
+      "blob": "ae56b7fc9da248ee8e34d73d0eb13c8fe8e0c088"
+    },
+    "dev_base_observed": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+    "fixtures_and_skills": "Pinned per-file manifests plus candidate Git tree; preserve all inputs, no source-tree green adoption."
+  },
+  "static_preflight_commands": {
+    "state": "NOT_EXECUTED_IN_THIS_MISSION",
+    "commands": [
+      "python3 script/sf2h/final-bundle/build-artifact.py --repo-root . --check",
+      "node script/sf2h/final-bundle/validate-requests.mjs"
+    ],
+    "note": "S0 verifies these against fixed C through an authorized environment; data inspection here is not their execution."
+  },
+  "final_gates": {
+    "state": "ALL_NOT_RUN_ON_C",
+    "required": [
+      "Eight exact recipes with real nonempty executed selection and Omni where applicable",
+      "Inherited full-suite jobs and aggregator",
+      "Atlas check:generated/generation with clean diff",
+      "Five canonical package typechecks: Atlas boundary, Sucafina, Core, CLI, app",
+      "Spawn imports and repository guards against actual origin/dev",
+      "E2E graph typecheck coverage",
+      "AM01–AM06 with native, real scanner/restart and consumer evidence",
+      "Three independent final reviews of the same C",
+      "All 1610 campaign criteria/consumers accounted; no mandatory finding open"
+    ]
+  },
+  "dispatch": {
+    "owner": "S0 existing dispatcher",
+    "performed": false,
+    "new_dispatcher": false,
+    "epic_ref_touched": false,
+    "acceptance_required_before_testing": false
+  },
+  "acceptance": {
+    "state": "NOT_ACCEPTED",
+    "known_mandatory_findings": "pending-owners-03.json",
+    "release_allowed": false,
+    "GLOBAL_RELEASE": "NOT_DECLARED"
+  },
+  "invalidation": "Any product/test/config/workflow/skill/normative-guide change requires a new candidate SHA and impacted requalification. Future source output is new intake, never silent ref drift.",
+  "envelope": "The later integration checkpoint only names C and records readback; it is not a D/G8 release envelope. S0 retains final acceptance and final dispatcher."
+}

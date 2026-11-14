@@ -1,0 +1,390 @@
+{
+  "schema": "sf2h.work-g03.criteria-overlay.v1",
+  "normativeCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "sourcePacks": [
+    "execution/actors/S1-A.json",
+    "execution/actors/S1-B.json",
+    "contracts.json"
+  ],
+  "preservedUniverse": {
+    "WP01": 75,
+    "WP02": 78,
+    "total": 153,
+    "criterionIds": [
+      "WP01.CMP.01",
+      "WP01.CMP.02",
+      "WP01.CMP.20",
+      "WP01.CMP.30",
+      "WP01.DOD.01",
+      "WP01.DOD.02",
+      "WP01.DOD.03",
+      "WP01.DOD.20",
+      "WP01.DOD.30",
+      "WP01.INV.01",
+      "WP01.INV.02",
+      "WP01.INV.20",
+      "WP01.INV.30",
+      "WP01.QLT.01",
+      "WP01.QLT.02",
+      "WP01.QLT.20",
+      "WP01.QLT.30",
+      "WP01.SUC.01",
+      "WP01.SUC.02",
+      "WP01.SUC.20",
+      "WP01.SUC.30",
+      "WP01.T01.CHK.01",
+      "WP01.T01.CHK.02",
+      "WP01.T01.CHK.03",
+      "WP01.T01.CMP.01",
+      "WP01.T01.DOD.01",
+      "WP01.T01.INV.01",
+      "WP01.T01.QLT.01",
+      "WP01.T01.SUC.01",
+      "WP01.T02.CHK.01",
+      "WP01.T02.CHK.02",
+      "WP01.T02.CHK.03",
+      "WP01.T02.CMP.01",
+      "WP01.T02.DOD.01",
+      "WP01.T02.INV.01",
+      "WP01.T02.QLT.01",
+      "WP01.T02.SUC.01",
+      "WP01.T03.CHK.01",
+      "WP01.T03.CHK.02",
+      "WP01.T03.CHK.03",
+      "WP01.T03.CMP.01",
+      "WP01.T03.DOD.01",
+      "WP01.T03.INV.01",
+      "WP01.T03.QLT.01",
+      "WP01.T03.SUC.01",
+      "WP01.T04.CHK.01",
+      "WP01.T04.CHK.02",
+      "WP01.T04.CHK.03",
+      "WP01.T04.CMP.01",
+      "WP01.T04.CMP.02",
+      "WP01.T04.DOD.01",
+      "WP01.T04.INV.01",
+      "WP01.T04.QLT.01",
+      "WP01.T04.SUC.01",
+      "WP01.T05.CHK.01",
+      "WP01.T05.CHK.02",
+      "WP01.T05.CHK.03",
+      "WP01.T05.CHK.20",
+      "WP01.T05.CHK.30",
+      "WP01.T05.CHK.31",
+      "WP01.T05.CMP.01",
+      "WP01.T05.CMP.20",
+      "WP01.T05.CMP.30",
+      "WP01.T05.DOD.01",
+      "WP01.T05.DOD.20",
+      "WP01.T05.DOD.30",
+      "WP01.T05.INV.01",
+      "WP01.T05.INV.20",
+      "WP01.T05.INV.30",
+      "WP01.T05.QLT.01",
+      "WP01.T05.QLT.20",
+      "WP01.T05.QLT.30",
+      "WP01.T05.SUC.01",
+      "WP01.T05.SUC.20",
+      "WP01.T05.SUC.30",
+      "WP02.CMP.01",
+      "WP02.CMP.02",
+      "WP02.CMP.10",
+      "WP02.DOD.01",
+      "WP02.DOD.02",
+      "WP02.DOD.10",
+      "WP02.INV.01",
+      "WP02.INV.02",
+      "WP02.INV.10",
+      "WP02.QLT.01",
+      "WP02.QLT.02",
+      "WP02.QLT.10",
+      "WP02.SUC.01",
+      "WP02.SUC.02",
+      "WP02.SUC.10",
+      "WP02.T01.CHK.01",
+      "WP02.T01.CHK.02",
+      "WP02.T01.CHK.03",
+      "WP02.T01.CHK.04",
+      "WP02.T01.CHK.05",
+      "WP02.T01.CHK.18",
+      "WP02.T01.CMP.01",
+      "WP02.T01.CMP.02",
+      "WP02.T01.CMP.18",
+      "WP02.T01.DOD.01",
+      "WP02.T01.DOD.02",
+      "WP02.T01.DOD.18",
+      "WP02.T01.INV.01",
+      "WP02.T01.INV.02",
+      "WP02.T01.INV.18",
+      "WP02.T01.QLT.01",
+      "WP02.T01.QLT.02",
+      "WP02.T01.QLT.18",
+      "WP02.T01.SUC.01",
+      "WP02.T01.SUC.02",
+      "WP02.T01.SUC.18",
+      "WP02.T02.CHK.01",
+      "WP02.T02.CHK.02",
+      "WP02.T02.CHK.03",
+      "WP02.T02.CHK.04",
+      "WP02.T02.CMP.01",
+      "WP02.T02.CMP.02",
+      "WP02.T02.CMP.03",
+      "WP02.T02.DOD.01",
+      "WP02.T02.DOD.02",
+      "WP02.T02.INV.01",
+      "WP02.T02.INV.02",
+      "WP02.T02.QLT.01",
+      "WP02.T02.QLT.02",
+      "WP02.T02.SUC.01",
+      "WP02.T02.SUC.02",
+      "WP02.T03.CHK.01",
+      "WP02.T03.CHK.02",
+      "WP02.T03.CHK.03",
+      "WP02.T03.CMP.01",
+      "WP02.T03.CMP.02",
+      "WP02.T03.DOD.01",
+      "WP02.T03.DOD.02",
+      "WP02.T03.INV.01",
+      "WP02.T03.INV.02",
+      "WP02.T03.QLT.01",
+      "WP02.T03.QLT.02",
+      "WP02.T03.QLT.03",
+      "WP02.T03.SUC.01",
+      "WP02.T03.SUC.02",
+      "WP02.T04.CHK.01",
+      "WP02.T04.CHK.02",
+      "WP02.T04.CHK.03",
+      "WP02.T04.CMP.01",
+      "WP02.T04.CMP.02",
+      "WP02.T04.DOD.01",
+      "WP02.T04.DOD.02",
+      "WP02.T04.INV.01",
+      "WP02.T04.INV.02",
+      "WP02.T04.QLT.01",
+      "WP02.T04.QLT.02",
+      "WP02.T04.SUC.01",
+      "WP02.T04.SUC.02"
+    ],
+    "campaign": {
+      "workPackages": 15,
+      "tasks": 74,
+      "contracts": 17,
+      "criteria": 1610
+    },
+    "waivers": []
+  },
+  "evidence": {
+    "G03": {
+      "W": "bbebc56623f326572dd25d0e0d20655da4904eba",
+      "S": "3a278f0bafd7cb9e255b28b0babce45a6c9d05a0",
+      "run": 43625362178,
+      "job": 132539863339,
+      "outcome": "SCOPED_COMPONENT_PASS",
+      "receipt": "run-02.json"
+    }
+  },
+  "criteria": [
+    {
+      "id": "WP01.INV.01",
+      "text": "Visibilidade de controles não substitui autorização; pesquisa e preferências nunca expõem dados fora do acesso existente.",
+      "status": "SCOPED_OBSERVATION_ONLY",
+      "fullCriterionAccepted": false,
+      "scope": "Conflict/review, exact case/source/period, single-effect retries and authorized reload/revocation in the G03 selection consumer.",
+      "proofs": [
+        "G03"
+      ]
+    },
+    {
+      "id": "WP01.INV.02",
+      "text": "Trocar visualização não altera registros financeiros, estado de compra ou período silenciosamente.",
+      "status": "SCOPED_OBSERVATION_ONLY",
+      "fullCriterionAccepted": false,
+      "scope": "Conflict/review, exact case/source/period, single-effect retries and authorized reload/revocation in the G03 selection consumer.",
+      "proofs": [
+        "G03"
+      ]
+    },
+    {
+      "id": "WP01.T03.CHK.01",
+      "text": "Uma falha não exibe Saved e não descarta o texto digitado.",
+      "status": "SCOPED_OBSERVATION_ONLY",
+      "fullCriterionAccepted": false,
+      "scope": "Conflict/review, exact case/source/period, single-effect retries and authorized reload/revocation in the G03 selection consumer.",
+      "proofs": [
+        "G03"
+      ]
+    },
+    {
+      "id": "WP01.T03.CHK.02",
+      "text": "Dois usuários alteram a mesma versão: o perdedor vê conflito e sua tentativa; nenhum merge silencioso.",
+      "status": "SCOPED_OBSERVATION_ONLY",
+      "fullCriterionAccepted": false,
+      "scope": "Real CAS competition between two distinct requests from the fixture operator. It proves the selection loser/review behavior, not all two-person editing journeys.",
+      "proofs": [
+        "G03"
+      ]
+    },
+    {
+      "id": "WP01.T03.DOD.01",
+      "text": "Salvamento, validação, cancelamento e conflito têm estados completos e recuperáveis nos componentes reais.",
+      "status": "SCOPED_OBSERVATION_ONLY",
+      "fullCriterionAccepted": false,
+      "scope": "Conflict/review, exact case/source/period, single-effect retries and authorized reload/revocation in the G03 selection consumer.",
+      "proofs": [
+        "G03"
+      ]
+    },
+    {
+      "id": "WP01.T03.INV.01",
+      "text": "Reconciliação visual nunca faz escrita não solicitada nem ignora a versão esperada.",
+      "status": "SCOPED_OBSERVATION_ONLY",
+      "fullCriterionAccepted": false,
+      "scope": "Conflict/review, exact case/source/period, single-effect retries and authorized reload/revocation in the G03 selection consumer.",
+      "proofs": [
+        "G03"
+      ]
+    },
+    {
+      "id": "WP01.T03.CMP.01",
+      "text": "Cobrir sucesso, validação, perda de conexão, timeout, conflito, read-only e navegação com edição pendente.",
+      "status": "SCOPED_OBSERVATION_ONLY",
+      "fullCriterionAccepted": false,
+      "scope": "Conflict/review, exact case/source/period, single-effect retries and authorized reload/revocation in the G03 selection consumer.",
+      "proofs": [
+        "G03"
+      ]
+    },
+    {
+      "id": "WP01.T03.SUC.01",
+      "text": "A pessoa consegue corrigir o problema e continuar sem redigitar sua contribuição.",
+      "status": "SCOPED_OBSERVATION_ONLY",
+      "fullCriterionAccepted": false,
+      "scope": "Conflict/review, exact case/source/period, single-effect retries and authorized reload/revocation in the G03 selection consumer.",
+      "proofs": [
+        "G03"
+      ]
+    },
+    {
+      "id": "WP01.T04.INV.01",
+      "text": "Preferência não altera dado de negócio nem contorna papel; Meu trabalho é uma projeção dos registros canônicos.",
+      "status": "SCOPED_OBSERVATION_ONLY",
+      "fullCriterionAccepted": false,
+      "scope": "Conflict/review, exact case/source/period, single-effect retries and authorized reload/revocation in the G03 selection consumer.",
+      "proofs": [
+        "G03"
+      ]
+    },
+    {
+      "id": "WP01.T04.CMP.01",
+      "text": "Cobrir usuário novo, preferência existente, registro removido/inacessível, busca sem resultado e nenhuma pendência.",
+      "status": "SCOPED_OBSERVATION_ONLY",
+      "fullCriterionAccepted": false,
+      "scope": "Conflict/review, exact case/source/period, single-effect retries and authorized reload/revocation in the G03 selection consumer.",
+      "proofs": [
+        "G03"
+      ]
+    },
+    {
+      "id": "WP01.T04.CMP.02",
+      "text": "Primeiro ciclo distingue ausência de configuração, ausência de acesso e ausência de pendência; permite selecionar registros, período e responsáveis confirmados pelo diretório já autorizado.",
+      "status": "SCOPED_OBSERVATION_ONLY",
+      "fullCriterionAccepted": false,
+      "scope": "Conflict/review, exact case/source/period, single-effect retries and authorized reload/revocation in the G03 selection consumer.",
+      "proofs": [
+        "G03"
+      ]
+    },
+    {
+      "id": "WP01.T04.SUC.01",
+      "text": "Responsáveis chegam aos seus registros, André à revisão e aprovadores às suas decisões com contexto preservado.",
+      "status": "SCOPED_OBSERVATION_ONLY",
+      "fullCriterionAccepted": false,
+      "scope": "Conflict/review, exact case/source/period, single-effect retries and authorized reload/revocation in the G03 selection consumer.",
+      "proofs": [
+        "G03"
+      ]
+    },
+    {
+      "id": "WP01.T05.INV.01",
+      "text": "UI nunca inventa permissão, confirmação, resultado de IA ou sucesso de comando; chat não é fonte única dos dados da decisão.",
+      "status": "SCOPED_OBSERVATION_ONLY",
+      "fullCriterionAccepted": false,
+      "scope": "Selection authorization/status and revocation only; no native analysis, attachment or broader decision journey.",
+      "proofs": [
+        "G03"
+      ]
+    },
+    {
+      "id": "WP01.T05.CHK.02",
+      "text": "Trocar permissões com análise antiga e confirmar ausência de vazamento na tela e nos detalhes.",
+      "status": "SCOPED_OBSERVATION_ONLY",
+      "fullCriterionAccepted": false,
+      "scope": "Selection authorization/status and revocation only; no native analysis, attachment or broader decision journey.",
+      "proofs": [
+        "G03"
+      ]
+    },
+    {
+      "id": "WP01.T05.CMP.01",
+      "text": "Cobrir novo caso, caso existente, lacuna, análise em curso, cancelamento, falha, stale, escolha, aplicação parcial, reavaliação e acesso revogado.",
+      "status": "SCOPED_OBSERVATION_ONLY",
+      "fullCriterionAccepted": false,
+      "scope": "Selection authorization/status and revocation only; no native analysis, attachment or broader decision journey.",
+      "proofs": [
+        "G03"
+      ]
+    },
+    {
+      "id": "WP02.INV.02",
+      "text": "A leitura mantém restrições de talento e de função; PMO, CAPEX e contratos continuam entidades distintas, e Hot Topics continua a ação operacional canônica.",
+      "status": "PRESERVED_NOT_REQUALIFIED",
+      "fullCriterionAccepted": false,
+      "scope": "Dashboard policies, source producer and financial paths are unchanged; this G03 selection proof does not qualify Dashboard capabilities.",
+      "proofs": []
+    },
+    {
+      "id": "WP02.INV.10",
+      "text": "WP02 conserva autoridade, dados oficiais e ownership; não assume identidade técnica ou novo acesso empresarial.",
+      "status": "PRESERVED_NOT_REQUALIFIED",
+      "fullCriterionAccepted": false,
+      "scope": "Dashboard policies, source producer and financial paths are unchanged; this G03 selection proof does not qualify Dashboard capabilities.",
+      "proofs": []
+    },
+    {
+      "id": "WP02.QLT.02",
+      "text": "A manutenção distingue leitura e edição, conserva a posição/contexto do usuário e explica validação ou conflito sem apagar o rascunho.",
+      "status": "PRESERVED_NOT_REQUALIFIED",
+      "fullCriterionAccepted": false,
+      "scope": "Dashboard policies, source producer and financial paths are unchanged; this G03 selection proof does not qualify Dashboard capabilities.",
+      "proofs": []
+    },
+    {
+      "id": "WP02.CMP.02",
+      "text": "As provas contemplam leitor autorizado e recusado, registro existente e ausente, período independente, dados incompletos e edição concorrente.",
+      "status": "PRESERVED_NOT_REQUALIFIED",
+      "fullCriterionAccepted": false,
+      "scope": "Dashboard policies, source producer and financial paths are unchanged; this G03 selection proof does not qualify Dashboard capabilities.",
+      "proofs": []
+    }
+  ],
+  "contracts": [
+    {
+      "id": "C03",
+      "scope": "Exact expected storage revision, no silent overwrite, preserved rejected draft, explicit new intent, idempotent receipt replay and current authorization.",
+      "fullContractAccepted": false
+    },
+    {
+      "id": "C06",
+      "scope": "Selection remains a reference to canonical authorized case/source data; no parallel business task or manufactured confirmation.",
+      "fullContractAccepted": false,
+      "remaining": "Human confirmation validity, material fingerprints, answer reuse and wider My Work remain with their original owners/proofs."
+    },
+    {
+      "id": "C08",
+      "scope": "Real protected namespace, compare-and-swap, durable receipt and SQLite observation in component fixture.",
+      "fullContractAccepted": false,
+      "remaining": "Installed host and native composition remain WP10 obligations."
+    }
+  ],
+  "globalRelease": false
+}

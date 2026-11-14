@@ -1,0 +1,209 @@
+{
+  "schema": "sf2h.work-reuse.validation.v1",
+  "status": "DIAGNOSIS_AND_PROPOSAL_DELIVERED_REAL_ATTACHMENT_OWNER_BLOCKED",
+  "pr": {
+    "number": 61,
+    "base": "ui-work",
+    "head": "work-reuse",
+    "draft": true,
+    "merged": false
+  },
+  "input": {
+    "sha": "79ebf5555eddaa4b5b8b57cbe1df7c5ad22b1244",
+    "tree": "d0508747f0818b3467f44bac845ca6a878bdb7ea"
+  },
+  "tested_checkpoint": {
+    "W": "fc700e3127596171cd81eea1aa3cf630a19d9985",
+    "tree": "ba77e073f3aa7b136dd8c1b1ee64ef88bbc69d92",
+    "selected_test_blobs": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/work-split/work-reuse/timing-fixture.ts",
+        "blob": "8183746fe24af18605866bdeb3c88faedbb8c286",
+        "exactReadback": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/work-split/work-reuse/browser-host-fixture.ts",
+        "blob": "1d830560e179c25b16a773650e1ef42cc0a0c721",
+        "exactReadback": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/work-split/work-reuse/confirmation-diagnostic.test.ts",
+        "blob": "7e1c6339d8f10d896e5d9f48dedeb268a0deee48",
+        "exactReadback": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/work-split/work-reuse/static-gates.test.ts",
+        "blob": "d493371c8d7537d7a686ce2063797b7998737ae4",
+        "exactReadback": true
+      }
+    ]
+  },
+  "delivery_rule": "The final descendant adds/updates receipts only. Its exact head/tree is reported in PR61 and the delivery reply; it cannot be embedded self-referentially in its own tree. R02 covers W2; final evidence does not change any product/test/config/fixture blob.",
+  "snapshots": [
+    {
+      "label": "R01",
+      "W": "c5a0ced6493410d321a61f8a2fbe4c3d7d9fd40b",
+      "W_tree": "456f62ed8689ebeb6db7d874826be4849dca2c5a",
+      "S": "5d5ae7d98cf6db43f5ef409ddf87bd802ef97870",
+      "S_tree": "2cda9823b600b73565ccb97b968fe938bf3002c3",
+      "run": 43625766773,
+      "job": 132541092295,
+      "conclusion": "failure",
+      "diff": [
+        ".ci-run.json"
+      ]
+    },
+    {
+      "label": "R02",
+      "W": "fc700e3127596171cd81eea1aa3cf630a19d9985",
+      "W_tree": "ba77e073f3aa7b136dd8c1b1ee64ef88bbc69d92",
+      "S": "aa207b331b6a64549ab41130ed879619ecc2593e",
+      "S_tree": "0c69c3993779b9441219a86128110bf7ecf0f4a9",
+      "run": 43626770240,
+      "job": 132544283579,
+      "conclusion": "failure",
+      "diff": [
+        ".ci-run.json"
+      ]
+    }
+  ],
+  "runtime_equivalence": {
+    "from_W": "c5a0ced6493410d321a61f8a2fbe4c3d7d9fd40b",
+    "changed_runtime_files": 0,
+    "type_only_path": "modules/sucafina/Sucafinav1/test/product/work-split/work-reuse/timing-fixture.ts",
+    "node_erasure": "stripTypeScriptTypes({ mode: transform }) outputs are byte-identical",
+    "erased_js_sha256": "dd707900bf9d3a895d6dbf9f25d5b06070fae4d7782d2d3d659156406b80e721",
+    "other_changes": "Receipts and proposed .patch text only.",
+    "reattached_runtime_proof": "R01 with its original FAIL and reached/not-reached assertions; not converted to PASS."
+  },
+  "producer_readbacks": {
+    "retained_host": "0376f81eb7978807106d259d6f65a9b4e1ed3a2a",
+    "retained_answer_reuse": "134ce5cd8c4f0779380936de6a439c9ea124d932",
+    "retained_ui": "175ff36fe09405e0f31dd55207d751e3753f6ffb",
+    "retained_local_store": "eefc1ed550a455abc4952430ec3b57a5abd5c9ee",
+    "latest_collaboration": {
+      "head": "9ec98ac9cdc807d2b95040274f4312df768d932d",
+      "tree": "34c5197f92afe1a773a3c87e2f3397bf89f2abb2",
+      "readback_utc": "2026-11-14T18:32:48Z",
+      "since_W7": {
+        "files": 63,
+        "receipts_only": true,
+        "product_changes": 0,
+        "test_changes": 0
+      },
+      "product_W6": "dc21cd389de67c2e7fac996b663d9c0aa7d8cae5",
+      "test_W7": "9e1f44af7689946d27d37ed48b9f5e9849417121",
+      "W7_run": 43625515062,
+      "W7_conclusion": "success"
+    },
+    "compose": {
+      "head": "ad7fcdef7739e1bc471e42fac082452799de751b",
+      "tree": "885ce466354d2b8dcf674472561c9c1fc3b632ff",
+      "mount_present": true,
+      "recipient_authority_wiring_present": false,
+      "basis": "portfolio-http.ts c434de513cb7ceae4acad1fc595e776785ec85af; business-services.ts b3595989d0c08159c96484d96bd40a149a9721e6; see attachment-owner-request.md"
+    }
+  },
+  "inherited": [
+    {
+      "label": "UI R02",
+      "W": "639636280859f5f21f44813658d5d9a0c207fff0",
+      "S": "aebd6ee7bf597fd6cd742af347e60846f58e5cfc",
+      "run": 43621603578,
+      "conclusion": "failure",
+      "pass": 5,
+      "fail": 2,
+      "scope": "Reattach only approved direct reply/retry/reload, distinct-recipient uncertainty/retry, selected-case recovery and lifecycle. Do not upgrade failed confirmation or G03."
+    },
+    {
+      "label": "UI R03",
+      "W": "a8d5d83f9da9a7042f1bfb5f3f19eb601cc16db3",
+      "S": "27d000afc04aa646e27f6804bf430c6dea76835c",
+      "run": 43622153636,
+      "conclusion": "failure",
+      "scope": "Original5000ms status timeout and nine foreign typecheck diagnostics remain historical evidence."
+    },
+    {
+      "label": "UI R04",
+      "W": "e817f5d9d8a85d8d19d70f7e356120cac30a0265",
+      "S": "0e244bfb4d4b59ffed4424025ea4125adcb846e2",
+      "run": 43622829031,
+      "conclusion": "success",
+      "scope": "Prior guards-only proof retained."
+    },
+    {
+      "label": "Collaboration W6",
+      "W": "dc21cd389de67c2e7fac996b663d9c0aa7d8cae5",
+      "S": "72848c2122b68e15341baa41e5beef4e9237562a",
+      "run": 43623257640,
+      "job": 132533400502,
+      "conclusion": "failure",
+      "pass": 7,
+      "fail": 3,
+      "scope": "Seven scoped passes only; no copy launched, first consulted before edits."
+    },
+    {
+      "label": "Collaboration W7",
+      "W": "9e1f44af7689946d27d37ed48b9f5e9849417121",
+      "S": "a4f8c7bd673de3e4092f20185f4c3ea2d10d0ec3",
+      "run": 43625515062,
+      "job": 132540336771,
+      "conclusion": "success",
+      "pass": 5,
+      "fail": 0,
+      "expect": 62,
+      "omni": "not applicable; no spawns",
+      "diff": [
+        ".ci-run.json"
+      ],
+      "scope": "Three C05 edit/reconfirm scenarios and two R10 refusals; no product change from W6, no UI/attachment latency proof."
+    }
+  ],
+  "acceptance": {
+    "cause": "DEMONSTRATED_IN_RETAINED_COMPONENT_R01",
+    "minimal_patch": "PROPOSED_NOT_APPLIED_NOT_COMPILED_NOT_RUN",
+    "post_intake_latency": "NOT_RUN",
+    "attachment_request_boundary": "OBSERVED_AFTER_FAILED_WAITER_WITH_FIXTURE_404",
+    "real_attachment": "NOT_RUN_OWNER_COMPOSITION_DEPENDENCY",
+    "replay_persistence_after_waiter": "NOT_REACHED_IN_R01",
+    "typecheck": {
+      "status": "FAIL",
+      "own_diagnostics": 0,
+      "foreign_diagnostics": 9,
+      "proof": "R02"
+    },
+    "guards": {
+      "status": "PASS",
+      "proof": "R02",
+      "gate_findings": 0
+    },
+    "omni": "PASS_R01_AND_R02",
+    "installed": false,
+    "native": false,
+    "global_release": false
+  },
+  "write_scope": {
+    "production_changes": 0,
+    "shared_fixture_changes": 0,
+    "driver_changes": 0,
+    "workflow_changes": 0,
+    "foreign_writer_changes": 0,
+    "allowed_prefixes": [
+      "modules/sucafina/Sucafinav1/test/product/work-split/work-reuse/",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/work-split/work-reuse/"
+    ],
+    "local_product_tests": false,
+    "duplicate_product_runs": false,
+    "deadlines_raised": false,
+    "merge": false,
+    "force_push": false
+  },
+  "local_checks": [
+    "Canonical CI request-only validation using unchanged candidate validators and35 actual package manifests.",
+    "Static TypeScript syntax and erased-JavaScript equality; no product code executed.",
+    "Proposed patch textual applicability against exact preimage and patch SHA256 readback.",
+    "Structured evidence JSON parse."
+  ],
+  "criteria": "criteria.json",
+  "next_action": "S0/Composition rechecks current preimages, consumes the published producer closure (or mutually exclusive minimal backport for isolation), runs request-owner-after-intake.json after that causal delta, wires real recipient authority and executes attachment-owner-request.md oracle with the existing real endpoint."
+}

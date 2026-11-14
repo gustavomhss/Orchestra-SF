@@ -1,0 +1,11 @@
+--- a/modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts
+@@ -67,7 +67,7 @@
+   const counters = { persistenceCalls: 0, rootPersistenceCalls: 0, nestedPersistenceCalls: 0, groupedEvidenceFences: 0,
+     c08Reads: 0, caseReads: 0, caseFences: 0, evidenceContextReads: 0, groupedCaseContextReads: 0, atlasCanonicalReads: 0, atlasCanonicalCompleted: 0,
+     groupedAtlasReads: 0, groupedAtlasCompleted: 0 }
+-  const persistenceObserver = observeMemoryPersistence(driver, counters, "snapshots")
++  const persistenceObserver = observeMemoryPersistence(driver, counters, "callback-scope")
+   const measuredDriver = persistenceObserver.driver
+   const measure = <Value>(label: string, work: () => Promise<Value>) => deadline.phase(label, async () => {
+     const before = { ...counters }

@@ -1,0 +1,98 @@
+{
+  "status": "NOT_APPLIED",
+  "validation": "NOT_RUN",
+  "patch": "0001-wp10-source-observation.patch.txt",
+  "owner": "WP10",
+  "producer_owner": "Financeiro; no producer patch requested",
+  "base_commit": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+  "base_tree": "a9398de38c9e684d28c27b0188ab653e75bf3305",
+  "observed_compatible_owner_commit": "ab8fb4f29d078d179742a77679ef85e5c549b114",
+  "preimages": [
+    {
+      "owner": "WP10",
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "git_blob_sha": "65867a3e6aa9b5b85266bb637fb22cf1c6c6d539",
+      "source_commit": "a1434e7ea7340aa1d1c8ce6bb48958b724218170"
+    },
+    {
+      "owner": "WP10",
+      "path": "modules/sucafina/Sucafinav1/product/integration/planner-sources.ts",
+      "git_blob_sha": "6230f22e7dd66fec1103f28cc9a7937b2dca1449",
+      "source_commit": "a1434e7ea7340aa1d1c8ce6bb48958b724218170"
+    }
+  ],
+  "preimage_sha_algorithm": "Git blob SHA-1 (repository object id), not a file SHA-256",
+  "reason": "Each successful canonical source resolver repeats preparation plus observation in separate Planner transactions. Consolidate each pair while retaining both current/again observations, original readers/authentication/projection and materialization kernel.",
+  "changes": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "actions": [
+        "Add optional prepared observation to existing port",
+        "Extract original readScopedSource snapshot kernel unchanged",
+        "Validate source identities before preparing",
+        "Prepare on isolated clone and call kernel directly in same surface transaction",
+        "Forward TransactionOptions signal"
+      ],
+      "preserve": [
+        "observe",
+        "resolveScopedSource",
+        "checkScopedSource",
+        "source identity/write/restore guards",
+        "synchronizeSources",
+        "synchronizeScopes",
+        "transactionAll"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/planner-sources.ts",
+      "actions": [
+        "Prepare original selector and authorizer in prepared transaction if available",
+        "Keep original fallback for existing ports",
+        "Retain Request signal",
+        "Preserve independent current/again observations and all outside-transaction revalidations"
+      ],
+      "preserve": [
+        "selector parsing",
+        "principal/policy/access revision",
+        "incarnation/version equality",
+        "projection/evidence digests",
+        "final egress"
+      ]
+    }
+  ],
+  "excluded": [
+    "Financial formulas and producers",
+    "exactThreshold algorithm",
+    "Mandatory sensitivity recertification count",
+    "Readers/assertions",
+    "Cross-invocation cache",
+    "Runtime engines/local-store",
+    "Policies/grants/lease/C08 contract",
+    "Timeouts",
+    "Memory/Atlas"
+  ],
+  "expected_source_path": {
+    "source_transaction_envelopes_before": 4,
+    "source_transaction_envelopes_after": 2,
+    "source_observations_before": 2,
+    "source_observations_after": 2,
+    "direct_authenticate_before": 6,
+    "direct_authenticate_after": 6,
+    "direct_revalidate_before": 4,
+    "direct_revalidate_after": 4
+  },
+  "required_proof": [
+    "New real source-observation diagnostic: identical source/digests,4→2 envelopes with6auth/4revalidate, fresh same-instance invocation, A→B→A, final revalidation revoke, actual abort after authorizer, unchanged durable snapshots.",
+    "Existing full source lifecycle/read-fence/source-fence-read files: mutation/identity/restore/incarnation/C08/Request/lease guards.",
+    "Unchanged full portfolio-exact-threshold with W27 trace retained: samples/exact IEEE/pending coverage, durable sensitivity, recomposed verifier, unchanged retry storage, revoked read and retry.",
+    "Canonical financial coverage/recertification files on same applied W:55k/15k,N-A/shared,absence/zero,current evidence and one-ULP rejection.",
+    "Affected typecheck and repository guard checks on applied W through existing owner CI; no local execution.",
+    "Capture remaining queue/admission/callback cost and full host completion within unchanged budgets; no performance PASS based solely on counts."
+  ],
+  "residual_risks": [
+    "Longer individual transaction occupancy; net runtime/fairness unmeasured.",
+    "Full successful path has five mandatory binding verifications plus downstream journey; X27 observed only first.",
+    "Abort test uses already-materialized scope; it does not prove first materialization or queued cancellation.",
+    "If owner source preimage changed after observed W27, refresh/review patch; do not overwrite successor code."
+  ]
+}

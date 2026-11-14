@@ -1,0 +1,478 @@
+{
+  "schema": "sf2h.work-reuse.run.v1",
+  "attempt": "R01",
+  "purpose": "Discriminate the existing 5000ms confirmation/reuse failure without changing product or deadlines.",
+  "W": "c5a0ced6493410d321a61f8a2fbe4c3d7d9fd40b",
+  "W_tree": "456f62ed8689ebeb6db7d874826be4849dca2c5a",
+  "S": "5d5ae7d98cf6db43f5ef409ddf87bd802ef97870",
+  "S_tree": "2cda9823b600b73565ccb97b968fe938bf3002c3",
+  "request": "request-01.json",
+  "request_sha256": "9265870bb1d8113f76429f7fecbba72df1ddeb59759d254a3d536cad5dd0ace2",
+  "snapshot_diff": [
+    ".ci-run.json"
+  ],
+  "run_id": 43625766773,
+  "job_id": 132541092295,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43625766773/job/132541092295",
+  "conclusion": "failure",
+  "counts": {
+    "pass": 2,
+    "fail": 2,
+    "expect": 28,
+    "tests": 4,
+    "files": 4,
+    "duration_seconds": 80.81
+  },
+  "selected": [
+    "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+    "./Sucafinav1/test/product/work-split/work-reuse/confirmation-diagnostic.test.ts",
+    "./Sucafinav1/test/product/work-split/work-reuse/static-gates.test.ts",
+    "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts"
+  ],
+  "request_validator": "PASS in hosted Read request step; canonical local request-only validation also passed.",
+  "omni": {
+    "verdict": "pass",
+    "nonce": "6bc8e42b71347a2233bb6362883a39d8",
+    "declaring_tests": 2,
+    "spawns": 4,
+    "delegated": 0
+  },
+  "browser": {
+    "startup": "PASS",
+    "lifecycle": "PASS",
+    "launches": 1,
+    "leases": 1,
+    "releases": 1,
+    "remaining_contexts": 0,
+    "disconnected": true,
+    "driver_exit": 0,
+    "browser_exit": 0
+  },
+  "diagnostic": {
+    "status": "FAIL",
+    "duration_ms": 20178.75,
+    "phase": "confirmation-replay-to-attachment",
+    "error": "TimeoutError: forResponse: Timeout 5000ms exceeded while waiting for event response",
+    "location": "confirmation-diagnostic.test.ts:55",
+    "first_confirmation_assertions": "Reached and passed: exact latest message identity, distinct prior answerRef, corrupted first successful delivery, prepare-message 200, confirm 200, no legacy prepare and no early attachment.",
+    "replay_observed": "Two confirm HTTP200 responses with the same idempotency key; real answer-read HTTP200; late decision-answer-question request observed with fixture fallback404.",
+    "not_reached": [
+      "attachment response assertion",
+      "post-replay immutable thread/confirmation snapshot comparisons",
+      "explicit answer-read content assertion after attachment",
+      "reload/no-auto-write assertions"
+    ],
+    "page_errors": [],
+    "final_status": "Could not confirm the answer. Retry this same request.",
+    "attachment": "UNMOUNTED_FIXTURE_404_OBSERVED_AFTER_DEADLINE; not installed product failure or real case attachment PASS"
+  },
+  "route_measurements": [
+    {
+      "phase": "collaboration-answer-prepare-message:1",
+      "http": {
+        "calls": 1,
+        "inclusiveMs": 4346.52,
+        "maxMs": 4346.52
+      },
+      "thread_reads": {
+        "calls": 17,
+        "inclusiveMs": 4309.41,
+        "maxMs": 261.49
+      },
+      "thread_reads_share_percent": 99.15,
+      "fixture_response_audit": {
+        "calls": 1,
+        "inclusiveMs": 0.01,
+        "maxMs": 0.01
+      },
+      "snapshot_copies": {
+        "calls": 276,
+        "inclusiveMs": 251.07,
+        "maxMs": 3.69
+      },
+      "raw_dashboard_transactions": 2656,
+      "scoped_source_resolutions": 1146,
+      "records_resolutions": 340
+    },
+    {
+      "phase": "collaboration-answer-confirm:1",
+      "http": {
+        "calls": 1,
+        "inclusiveMs": 2556.35,
+        "maxMs": 2556.35
+      },
+      "thread_reads": {
+        "calls": 10,
+        "inclusiveMs": 2507.44,
+        "maxMs": 262.35
+      },
+      "thread_reads_share_percent": 98.09,
+      "fixture_response_audit": {
+        "calls": 1,
+        "inclusiveMs": 0.01,
+        "maxMs": 0.01
+      },
+      "snapshot_copies": {
+        "calls": 168,
+        "inclusiveMs": 151.6,
+        "maxMs": 4
+      },
+      "raw_dashboard_transactions": 1571,
+      "scoped_source_resolutions": 677,
+      "records_resolutions": 200
+    },
+    {
+      "phase": "collaboration-answer-confirm:2",
+      "http": {
+        "calls": 1,
+        "inclusiveMs": 2685.07,
+        "maxMs": 2685.07
+      },
+      "thread_reads": {
+        "calls": 10,
+        "inclusiveMs": 2647.49,
+        "maxMs": 272.9
+      },
+      "thread_reads_share_percent": 98.6,
+      "fixture_response_audit": {
+        "calls": 1,
+        "inclusiveMs": 0.01,
+        "maxMs": 0.01
+      },
+      "snapshot_copies": {
+        "calls": 164,
+        "inclusiveMs": 165.57,
+        "maxMs": 7.67
+      },
+      "raw_dashboard_transactions": 1571,
+      "scoped_source_resolutions": 677,
+      "records_resolutions": 200
+    },
+    {
+      "phase": "collaboration-answer-read:1",
+      "http": {
+        "calls": 1,
+        "inclusiveMs": 3886.46,
+        "maxMs": 3886.46
+      },
+      "thread_reads": {
+        "calls": 15,
+        "inclusiveMs": 3839.81,
+        "maxMs": 263.09
+      },
+      "thread_reads_share_percent": 98.8,
+      "fixture_response_audit": {
+        "calls": 1,
+        "inclusiveMs": 0.02,
+        "maxMs": 0.02
+      },
+      "snapshot_copies": {
+        "calls": 247,
+        "inclusiveMs": 223.24,
+        "maxMs": 3.2
+      },
+      "raw_dashboard_transactions": 2348,
+      "scoped_source_resolutions": 1012,
+      "records_resolutions": 300
+    }
+  ],
+  "timeline": [
+    {
+      "atMs": 4341.84,
+      "name": "collaboration-thread-read:1:ingress"
+    },
+    {
+      "atMs": 4606.5,
+      "name": "collaboration-thread-read:1:producer-return",
+      "detail": {
+        "status": 200
+      }
+    },
+    {
+      "atMs": 4606.54,
+      "name": "collaboration-thread-read:1:fixture-return"
+    },
+    {
+      "atMs": 4610.2,
+      "name": "browser.status",
+      "detail": {
+        "atMs": 174.39999999999418,
+        "text": "Opening conversation…"
+      }
+    },
+    {
+      "atMs": 4611.58,
+      "name": "browser.requestfinished",
+      "detail": {
+        "route": "collaboration-thread-read"
+      }
+    },
+    {
+      "atMs": 4613.59,
+      "name": "browser.status",
+      "detail": {
+        "atMs": 444.8999999999942,
+        "text": ""
+      }
+    },
+    {
+      "atMs": 4631.86,
+      "name": "first-confirmation:click"
+    },
+    {
+      "atMs": 4649.69,
+      "name": "browser.status",
+      "detail": {
+        "atMs": 481.30000000001746,
+        "text": "Confirming answer…"
+      }
+    },
+    {
+      "atMs": 4652.01,
+      "name": "collaboration-answer-prepare-message:1:ingress"
+    },
+    {
+      "atMs": 8999.33,
+      "name": "collaboration-answer-prepare-message:1:producer-return",
+      "detail": {
+        "status": 200
+      }
+    },
+    {
+      "atMs": 8999.36,
+      "name": "collaboration-answer-prepare-message:1:fixture-return"
+    },
+    {
+      "atMs": 9004.41,
+      "name": "browser.requestfinished",
+      "detail": {
+        "route": "collaboration-answer-prepare-message"
+      }
+    },
+    {
+      "atMs": 9004.8,
+      "name": "collaboration-storage-version:1:ingress"
+    },
+    {
+      "atMs": 9007.2,
+      "name": "collaboration-storage-version:1:producer-return",
+      "detail": {
+        "status": 200
+      }
+    },
+    {
+      "atMs": 9007.21,
+      "name": "collaboration-storage-version:1:fixture-return"
+    },
+    {
+      "atMs": 9009.82,
+      "name": "browser.requestfinished",
+      "detail": {
+        "route": "collaboration-storage-version"
+      }
+    },
+    {
+      "atMs": 9011.51,
+      "name": "intercept.confirm.fetch:start"
+    },
+    {
+      "atMs": 9017.11,
+      "name": "collaboration-answer-confirm:1:ingress"
+    },
+    {
+      "atMs": 11573.97,
+      "name": "collaboration-answer-confirm:1:producer-return",
+      "detail": {
+        "status": 200
+      }
+    },
+    {
+      "atMs": 11573.98,
+      "name": "collaboration-answer-confirm:1:fixture-return"
+    },
+    {
+      "atMs": 11577.12,
+      "name": "intercept.confirm.fetch:end",
+      "detail": {
+        "status": 200
+      }
+    },
+    {
+      "atMs": 11580.5,
+      "name": "intercept.corrupt-delivery:fulfilled"
+    },
+    {
+      "atMs": 11582.46,
+      "name": "browser.requestfinished",
+      "detail": {
+        "route": "collaboration-answer-confirm"
+      }
+    },
+    {
+      "atMs": 11582.84,
+      "name": "browser.status",
+      "detail": {
+        "atMs": 7414,
+        "text": "Could not confirm the answer. Retry this same request."
+      }
+    },
+    {
+      "atMs": 12338.75,
+      "name": "confirmation-replay-to-attachment:click"
+    },
+    {
+      "atMs": 12364.59,
+      "name": "browser.status",
+      "detail": {
+        "atMs": 8196.800000000017,
+        "text": "Confirming answer…"
+      }
+    },
+    {
+      "atMs": 12365.52,
+      "name": "intercept.confirm.fetch:start"
+    },
+    {
+      "atMs": 12367.59,
+      "name": "collaboration-answer-confirm:2:ingress"
+    },
+    {
+      "atMs": 15053.3,
+      "name": "collaboration-answer-confirm:2:producer-return",
+      "detail": {
+        "status": 200
+      }
+    },
+    {
+      "atMs": 15053.33,
+      "name": "collaboration-answer-confirm:2:fixture-return"
+    },
+    {
+      "atMs": 15055.65,
+      "name": "intercept.confirm.fetch:end",
+      "detail": {
+        "status": 200
+      }
+    },
+    {
+      "atMs": 15060.21,
+      "name": "browser.requestfinished",
+      "detail": {
+        "route": "collaboration-answer-confirm"
+      }
+    },
+    {
+      "atMs": 15060.51,
+      "name": "collaboration-answer-read:1:ingress"
+    },
+    {
+      "atMs": 18947.8,
+      "name": "collaboration-answer-read:1:producer-return",
+      "detail": {
+        "status": 200
+      }
+    },
+    {
+      "atMs": 18947.84,
+      "name": "collaboration-answer-read:1:fixture-return"
+    },
+    {
+      "atMs": 18955.34,
+      "name": "decision-answer-question:1:ingress"
+    },
+    {
+      "atMs": 18956.02,
+      "name": "decision-answer-question:1:producer-return",
+      "detail": {
+        "status": 404
+      }
+    },
+    {
+      "atMs": 18956.05,
+      "name": "decision-answer-question:1:fixture-return"
+    },
+    {
+      "atMs": 18956.66,
+      "name": "browser.requestfinished",
+      "detail": {
+        "route": "collaboration-answer-read"
+      }
+    },
+    {
+      "atMs": 18960.31,
+      "name": "browser.status",
+      "detail": {
+        "atMs": 14790.800000000017,
+        "text": "Could not confirm the answer. Retry this same request."
+      }
+    },
+    {
+      "atMs": 18960.44,
+      "name": "browser.requestfinished",
+      "detail": {
+        "route": "decision-answer-question"
+      }
+    }
+  ],
+  "cause": {
+    "demonstrated": "On the retained producer in this fixture, repeated authenticated thread/source read work dominates HTTP durations (98.09–99.15%). Sequential replay confirmation plus mandatory answer-read costs6571.53ms, above the existing5000ms attachment waiter.",
+    "replay_confirm_plus_read_ms": 6571.53,
+    "attachment_ingress_after_pre_wait_marker_ms": 6616.59,
+    "observation_deadline_ms": 5000,
+    "eliminated_as_dominant": "Fixture response cloning/audit costs0.01–0.02ms per phase. Route-fetch extra time is only a few milliseconds relative to the producer. Raw currentSnapshots copying is a measured minority, not the dominant cause.",
+    "limits": [
+      "Single instrumented sample; no p95 or installed latency claim.",
+      "Inclusive nested spans are not independent costs. Do not add raw transactions and their nested children.",
+      "currentSnapshots includes the recipient-authority fixture fingerprint; it is not isolated production storage-engine time.",
+      "host.revalidate wraps dynamically dispatched calls only.",
+      "Browser detail.atMs and server atMs are different clocks. Only same-clock event differences are used.",
+      "First-confirmation click marker precedes await click and does not mark the exact start of that waitFor. The replay marker immediately precedes waitForResponse and click.",
+      "Report follows allTextContents in finally: final HTTP status does not prove it was available when the waiter expired.",
+      "Instrumentation overhead is not subtracted. No post-intake speedup claimed."
+    ]
+  },
+  "typecheck": {
+    "command": "bun typecheck",
+    "cwd": "modules/sucafina",
+    "exit": 2,
+    "status": "FAIL",
+    "own_diagnostics": [
+      "timing-fixture.ts:58 snapshot TS7006",
+      "timing-fixture.ts:58 blobs TS7006"
+    ],
+    "foreign_diagnostics": 9,
+    "foreign_paths": {
+      "apps/cli/src/sucafina-product/host-context.ts": [
+        193,
+        225,
+        281,
+        404,
+        420
+      ],
+      "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts": [
+        40,
+        45,
+        56,
+        221
+      ]
+    }
+  },
+  "guards": {
+    "command": "bun run check:guards --base origin/dev",
+    "base_fetch_exit": 0,
+    "exit": 0,
+    "status": "PASS",
+    "rules": 78,
+    "paths": 935,
+    "gate_findings": 0,
+    "warnings": 53,
+    "errors": 0,
+    "own_warning": "The new diagnostic copy repeats the original page.setDefaultTimeout(5_000); the timeout warning is recorded, not waived. No deadline was raised."
+  },
+  "followup": {
+    "reason": "Correct only the two implicit callback parameter types, then execute static-gates.test.ts alone. Runtime JavaScript after Node TypeScript erasure is byte-identical; do not repeat the browser journey without a new runtime hypothesis.",
+    "status": "EXECUTED_R02_OWN_TYPES_RESOLVED_GLOBAL_TYPECHECK_FAILED",
+    "run": 43626770240,
+    "W": "fc700e3127596171cd81eea1aa3cf630a19d9985"
+  }
+}

@@ -1,0 +1,178 @@
+{
+  "schema": "sf2h.work-g03.ci-result.v1",
+  "attempt": 2,
+  "W": "bbebc56623f326572dd25d0e0d20655da4904eba",
+  "WTree": "ada91397233d12b9a6ee2bafaac3f85cf51a3c46",
+  "S": "3a278f0bafd7cb9e255b28b0babce45a6c9d05a0",
+  "STree": "b4c6de249a60aa234058865bd47c5b323ba53d25",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "./Sucafinav1/test/product/work-split/work-g03/g03-conflict-review.test.ts",
+      "./Sucafinav1/test/product/ui-split/ui-work/static-gates.test.ts",
+      "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+    }
+  },
+  "requestBlob": "4414e256e592dd809675c153ecc72cc10135b776",
+  "equivalence": [
+    {
+      "filename": ".ci-run.json",
+      "status": "added",
+      "additions": 16,
+      "deletions": 0,
+      "changes": 16,
+      "previous_filename": null
+    }
+  ],
+  "run": {
+    "id": 43625362178,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43625362178",
+    "job": 132539863339,
+    "conclusion": "failure",
+    "requestValidation": "PASS",
+    "artifacts": [],
+    "artifactRequirement": "No mandatory artifact for this explicit Bun runner; canonical request, actual job log and nonce-bound control are retained as evidence."
+  },
+  "counts": {
+    "pass": 3,
+    "fail": 1,
+    "expectCalls": 90,
+    "files": 4
+  },
+  "g03": {
+    "status": "SCOPED_COMPONENT_PASS",
+    "name": "G03 acceptance requires the real precommit CAS conflict and preserves the reviewed selection",
+    "durationMs": 7696.05,
+    "testDeadlineMs": 45000,
+    "testBlob": "38042d9ad60e65c411c0024c77faf0194bb6163f",
+    "producerBlob": "cd9a67887f41986243809672572c972440c832ec",
+    "consumerBlob": "cc0bfcdbd7b31d1aa31d65300251b574aaad4fb9",
+    "conflict": {
+      "http": 409,
+      "payload": {
+        "status": "conflict",
+        "reason": "selection-not-committed"
+      }
+    },
+    "observation": {
+      "caseRef": "case:work-decision:work-decision-incarnation",
+      "sourceRef": "sf-source:10449d48-3d98-4d98-9e61-16e72d58c4c4:1",
+      "period": {
+        "start": "2026-03-01",
+        "end": "2026-03-31"
+      },
+      "selectionRef": "sf:case-work-selection:8d29c4ab-0fe2-4b72-a4c7-8502d3c9d838",
+      "createHttp": [
+        200,
+        409,
+        200,
+        200,
+        403
+      ],
+      "storageVersions": [
+        0,
+        1,
+        2
+      ],
+      "effects": {
+        "competitor": 1,
+        "rejected": 0,
+        "reviewed": 1,
+        "retry": 0,
+        "reload": 0,
+        "revokedReplay": 0
+      },
+      "exactRetryBody": true,
+      "exactRetryKey": true,
+      "caseReadsSinceReview": 3,
+      "sessionRevoked": true,
+      "revokedReloadHttp": 403
+    },
+    "discriminants": [
+      "A real competing HTTP write wins; original UI request must return exactly 409/selection-not-committed, never 503.",
+      "Rejected form retains exact source membership, case context and March period; inputs/submit remain locked until explicit review.",
+      "Review makes one case reread and one selection-version read, creates zero writes and unlocks the preserved draft.",
+      "Reviewed explicit save uses a new key and current storage revision, while keeping the exact case/source/period.",
+      "Only delivery is damaged after a real 200 commit; retry has identical body and key, and protected state remains equal.",
+      "Reload returns both separately authorized intent results with exact selectionRef/period links and creates no automatic write.",
+      "Real durable logout denies list, purges links/fields/context, emits exactly one revocation event and denies frozen receipt replay.",
+      "A fresh enrolled observer sees the unchanged protected state; revoked browser reload still returns real HTTP403."
+    ],
+    "effectAccounting": "One competitor effect plus one reviewed user effect. Rejected request, exact retry, reload and revoked replay contribute zero. Total two legitimate selections, never a third.",
+    "navigationObservation": "route.fetch observes the real denied HTTP response, route.fulfill forwards it unchanged, and only Chromium's specific empty-response navigation error is accepted alongside mandatory captured HTTP403.",
+    "telemetryNote": "caseReadsSinceReview=3 includes the review read and subsequent preflight/ACK reads. The earlier assertion proves exactly one read during the Review click."
+  },
+  "typecheck": {
+    "command": "bun typecheck",
+    "cwd": "modules/sucafina",
+    "exitCode": 2,
+    "status": "FAIL",
+    "ownDiagnostics": 0,
+    "foreignDiagnostics": 9,
+    "diagnostics": [
+      "../../../apps/cli/src/sucafina-product/host-context.ts(193,136): error TS2322: Type 'SfStateResult<string | undefined>' is not assignable to type 'PortResult<{ runRef: string; }>'.",
+      "../../../apps/cli/src/sucafina-product/host-context.ts(225,138): error TS2322: Type 'SfStateResult<({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; intentDigest?: string | undefined; skillInputDigest: string; principalRef: string; accessRevision: string; ... 9 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined>' is not assignable to type 'PortResult<{ runRef: string; }> | undefined'.",
+      "../../../apps/cli/src/sucafina-product/host-context.ts(281,138): error TS2322: Type 'SfStateResult<({ schema: \"sf-native-run-v1\"; runRef: string; version: number; requestDigest: string; intentDigest?: string | undefined; skillInputDigest: string; principalRef: string; accessRevision: string; ... 9 more ...; reviewTarget?: { ...; } | undefined; } & { ...; }) | ({ ...; } & { ...; }) | undefined>' is not assignable to type 'PortResult<SfNativeRunRecord>'.",
+      "../../../apps/cli/src/sucafina-product/host-context.ts(404,5): error TS2322: Type '(context: TrustedUiContext, caseRef: { id: string; incarnation: string; version: number; }) => Promise<{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: { ...; }[]; } | { ...; } | { ...; }>' is not assignable to type '(context: TrustedUiContext, caseRef: { id: string; incarnation: string; version: number; }) => Promise<PortResult<readonly { runRef: string; state: \"cancelled\" | \"failed\" | \"needs-input\" | ... 6 more ... | \"unavailable\"; version: number; outputRef?: string | undefined; }[]>>'.",
+      "../../../apps/cli/src/sucafina-product/host-context.ts(420,5): error TS2322: Type '(context: TrustedUiContext, runRef: string) => Promise<{ status: \"ok\" | \"preview\"; storageVersion: number; aggregateRevision: number; incarnation: string; value: ({ ...; } & { ...; }) | ({ ...; } & { ...; }) | undefined; } | { ...; } | { ...; }>' is not assignable to type '(context: TrustedUiContext, runRef: string) => Promise<PortResult<SfNativeRunRecord>>'.",
+      "test/product/wp07/review-port.test.ts(40,35): error TS2739: Type '{ state: SfProductStatePort; now: () => string; requestFor: () => Request; authorizeSections: () => Promise<boolean>; authorizeComments: () => Promise<boolean>; authorizeSensitivity: () => Promise<...>; revalidate: () => Promise<...>; revalidateEvidence: () => Promise<...>; select: () => Promise<...>; }' is missing the following properties from type 'ReviewHost': creationTarget, authorizeOutcomeComparison, authorizeOutcome, authorizeDecision",
+      "test/product/wp07/review-port.test.ts(45,41): error TS2739: Type '{ state: SfProductStatePort; now: () => string; requestFor: () => Request; authorizeSections: () => Promise<false>; authorizeComments: () => Promise<true>; authorizeSensitivity: () => Promise<...>; revalidate: () => Promise<...>; revalidateEvidence: () => Promise<...>; select: () => Promise<...>; }' is missing the following properties from type 'ReviewHost': creationTarget, authorizeOutcomeComparison, authorizeOutcome, authorizeDecision",
+      "test/product/wp07/review-port.test.ts(56,37): error TS2739: Type '{ state: SfProductStatePort; now: () => string; requestFor: () => Request; authorizeSections: () => Promise<true>; authorizeComments: () => Promise<true>; authorizeSensitivity: () => Promise<...>; revalidate: () => Promise<...>; revalidateEvidence: () => Promise<...>; select: () => Promise<...>; }' is missing the following properties from type 'ReviewHost': creationTarget, authorizeOutcomeComparison, authorizeOutcome, authorizeDecision",
+      "test/product/wp07/review-port.test.ts(221,36): error TS2739: Type '{ state: SfProductStatePort; now: () => string; requestFor: () => undefined; authorizeSections: () => Promise<false>; authorizeComments: () => Promise<true>; authorizeSensitivity: () => Promise<...>; revalidate: () => Promise<...>; revalidateEvidence: () => Promise<...>; select: () => Promise<...>; }' is missing the following properties from type 'ReviewHost': creationTarget, authorizeOutcomeComparison, authorizeOutcome, authorizeDecision"
+    ],
+    "sameDiagnosticLocationsAsPrior": true,
+    "priorRun": 43622153636,
+    "priorW": "a8d5d83f9da9a7042f1bfb5f3f19eb601cc16db3",
+    "owners": [
+      "Composition/WP10: apps/cli/src/sucafina-product/host-context.ts (five)",
+      "WP07: test/product/wp07/review-port.test.ts (four)"
+    ],
+    "notWaived": true
+  },
+  "guards": {
+    "command": "bun run check:guards --base origin/dev",
+    "baseFetchExitCode": 0,
+    "exitCode": 0,
+    "status": "PASS",
+    "actualCheckout": "3a278f0bafd7cb9e255b28b0babce45a6c9d05a0",
+    "rules": 78,
+    "changedPaths": 935,
+    "gateFindings": 0,
+    "warnings": 52,
+    "errors": 0
+  },
+  "omni": {
+    "verdict": "pass",
+    "nonce": "6dcdbdd89a9d3bc7b080f970c7eb25c4",
+    "declaringTests": 2,
+    "spawns": 4,
+    "delegated": 0,
+    "nonceMatched": true
+  },
+  "browser": {
+    "launches": 1,
+    "acquisitions": 1,
+    "releases": 1,
+    "activeLease": false,
+    "contexts": 0,
+    "driverClosed": true,
+    "processExited": true
+  },
+  "limits": [
+    "Run-level conclusion remains failure due to the mandatory package typecheck; no green run is claimed.",
+    "G03 scope is component composition over real HTTP/C08/SQLite/source/session producers; case corpus is seeded.",
+    "No installed-host, native, global campaign or full WP01/WP02/C03/C06 acceptance.",
+    "Readonly inherited ui-work selection-recovery test still requires its owner observation patch before a wider selection."
+  ],
+  "previousFailedRun": 43624801241,
+  "productTestsLocal": false,
+  "globalRelease": false
+}
