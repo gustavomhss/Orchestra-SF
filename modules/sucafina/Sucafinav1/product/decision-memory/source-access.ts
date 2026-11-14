@@ -174,25 +174,38 @@ function sameCurrentSource(original: BusinessEvidenceRef, current: BusinessEvide
 
 /** Immutable ledger events are read through protected state without recursively reopening
  * the full case. Every ancestor's dependencies still require the current caller's access. */
-export function createSfCaseEventSourceAccess(input: { host: DomainPortHost; state: SfProductStatePort; authorizeCase: (value: DecisionCase, call: TrustedDomainContext) => Promise<boolean>; authorizeEvidence: (refs: readonly BusinessEvidenceRef[], call: TrustedDomainContext, ancestors: ReadonlySet<string>) => Promise<boolean> }) {
+export function createSfCaseEventSourceAccess(input: {
+  host: DomainPortHost
+  state: SfProductStatePort
+  authorizeCase: (value: DecisionCase, call: TrustedDomainContext) => Promise<boolean>
+  /** Host-only, per-request precedent grant. It must bind the original native
+   * call/current case and the selected candidate's exact id/incarnation/version. */
+  authorizeRecallCase?: (value: DecisionCase, call: TrustedDomainContext) => Promise<boolean>
+  authorizeEvidence: (refs: readonly BusinessEvidenceRef[], call: TrustedDomainContext, ancestors: ReadonlySet<string>) => Promise<boolean>
+}) {
   return async (ref: BusinessEvidenceRef, call: TrustedDomainContext, ancestors: ReadonlySet<string> = new Set()): Promise<BusinessEvidenceResolution> => {
     const unavailable = (checkedAt = ""): BusinessEvidenceResolution => ({ state: "unavailable", ref, accessRevision: call.binding.accessRevision, checkedAt })
     try {
       if (ref.kind !== "case-event" || ancestors.has(ref.refDigest) || ancestors.size > 16 || ref.installationId !== call.binding.installationId || ref.projectId !== call.binding.projectId) return unavailable()
+      const requestDigest = digestSfValue([ref, [...ancestors].sort()])
+      const binding = digestSfValue([call.kind, call.binding])
       sfEvidenceSourceMaps([ref])
       if (!Number.isSafeInteger(ref.target.caseVersion) || ref.target.caseVersion < 1 || !ref.target.eventId.trim() || !/^[a-f0-9]{64}$/i.test(ref.target.outputDigest)) return unavailable()
       const request = input.host.requestFor(call)
       if (!request || request.signal.aborted || !await input.host.revalidate(call)) return unavailable()
       const now = await input.host.environment(request)
       if (!Number.isFinite(Date.parse(now.at))) return unavailable()
-      const binding = digestSfValue([call.kind, call.binding])
       const target = ref.target
       const ancestry = new Set([...ancestors, ref.refDigest])
       const read = async () => {
         const result = await input.state.read(request, "cases", (state, authority) => authority.principalRef === call.binding.principalRef && authority.accessRevision === call.binding.accessRevision && authority.policyVersion === call.binding.policyVersion ? state.cases[target.caseId] : undefined)
         if (result.status !== "ok" || !result.value) return undefined
         const value = result.value
-        if (value.id !== target.caseId || value.incarnation !== target.caseIncarnation || value.version < target.caseVersion || !value.participants.includes(call.binding.principalRef) || (call.kind === "native" && (call.binding.caseId !== value.id || call.binding.caseIncarnation !== value.incarnation || call.binding.caseVersion !== value.version)) || !await input.authorizeCase(value, call)) return undefined
+        if (value.id !== target.caseId || value.incarnation !== target.caseIncarnation || value.version < target.caseVersion || !value.participants.includes(call.binding.principalRef) || !await input.authorizeCase(value, call)) return undefined
+        if (call.kind === "native") {
+          const boundCase = call.binding.caseId === value.id && call.binding.caseIncarnation === value.incarnation
+          if (boundCase ? call.binding.caseVersion !== value.version : !await input.authorizeRecallCase?.(value, call)) return undefined
+        }
         const ledger = value.ledger.filter((event) => event.id === target.eventId)
         if (ledger.length !== 1) return undefined
         const event = ledger[0]!
@@ -203,7 +216,7 @@ export function createSfCaseEventSourceAccess(input: { host: DomainPortHost; sta
       const event = await read()
       if (!event || request.signal.aborted || !await input.host.revalidate(call)) return unavailable(now.at)
       const again = await read()
-      if (!again || digestSfValue(event) !== digestSfValue(again) || request.signal.aborted || digestSfValue([call.kind, call.binding]) !== binding || !await input.host.revalidate(call)) return unavailable(now.at)
+      if (!await input.host.revalidate(call) || !again || digestSfValue(event) !== digestSfValue(again) || request.signal.aborted || digestSfValue([ref, [...ancestors].sort()]) !== requestDigest || digestSfValue([call.kind, call.binding]) !== binding) return unavailable(now.at)
       return { state: "fresh", ref, currentRef: ref, authorizedProjection: event.event, accessRevision: call.binding.accessRevision, checkedAt: now.at }
     } catch {
       return unavailable()
@@ -212,7 +225,7 @@ export function createSfCaseEventSourceAccess(input: { host: DomainPortHost; sta
 }
 
 /** The existing Procurement resolver and port reauthenticate and project the current record. */
-export function createSfProcurementSourceAccess(input: { host: DomainPortHost; resolve: ReturnType<typeof createProcurementSourceResolver>; procurement: ProcurementPort }) {
+export function createSfProcurementSourceAccess(input: { host: DomainPortHost; resolve: ReturnType<typeof createProcurementSourceResolver>["resolve"]; procurement: ProcurementPort }) {
   return async (ref: BusinessEvidenceRef, call: TrustedDomainContext): Promise<BusinessEvidenceResolution> => {
     const unavailable = (checkedAt = ""): BusinessEvidenceResolution => ({ state: "unavailable", ref, accessRevision: call.binding.accessRevision, checkedAt })
     try {

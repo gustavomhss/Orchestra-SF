@@ -7,6 +7,7 @@ import { AbsolutePath } from "@orchestra/core/schema"
 import { SessionV2 } from "@orchestra/core/session"
 import { SkillV2 } from "@orchestra/core/skill"
 import { Effect } from "effect"
+import { expectSpawn } from "../../../../../../packages/core/test/fixture/omni-expect.ts"
 import { createResidentAiBundle } from "../../../product/ai/resident.ts"
 import { validSfSelection } from "../../../product/host-binding/resident-agents.ts"
 import { loadSfSkill } from "../../../product/host-binding/skill-loader.ts"
@@ -17,6 +18,7 @@ const root = path.resolve(import.meta.dir, "../../../product/ai")
 // This exercises real AgentV2 registration and SessionV2.skill loading. No inference,
 // domain operation, persisted contribution or consumer witness is implied by a load.
 test("five profiles register and all eighteen distributed skills load into distinct native sessions", async () => {
+  expectSpawn(import.meta.path)
   const bundle = await createResidentAiBundle({ root, manifestPath: path.join(root, "manifests/resident.json") })
   expect(bundle.selected).toHaveLength(5)
   expect(bundle.selected.every(validSfSelection)).toBe(true)
@@ -29,7 +31,7 @@ test("five profiles register and all eighteen distributed skills load into disti
 
   const fixture = createResidentNativeFixture(bundle)
   const location = Location.Ref.make({ directory: AbsolutePath.make(root) })
-  const receipts = await Effect.gen(function* () {
+  const observations = await Effect.gen(function* () {
     const session = yield* SessionV2.Service
     const locations = yield* LocationServiceMap.Service
     return yield* Effect.gen(function* () {
@@ -62,25 +64,33 @@ test("five profiles register and all eighteen distributed skills load into disti
         expect(receipt).toMatchObject({ profileId: selected.profile.id, skillId: skill.id, nativeSessionId: created.id,
           sourceDigest: skill.sourceDigest, instructionsDigest: skill.instructionsDigest, manifestDigest: bundle.manifestDigest })
         const forbidden = bundle.selected.find((selection) => !selection.profile.allowedSkills.includes(skill.id) && !skill.allowedProfiles.includes(selection.profile.id))
-        expect(forbidden).toBeDefined()
-        if (!forbidden) throw new Error(`No negative profile boundary for ${skill.id}`)
-        const wrongSession = yield* session.create({ location, agent: AgentV2.ID.make(forbidden.profile.id) })
+        // Recall is deliberately shared by all five profiles. Its pertinent
+        // negative is an unregistered manifest, not a fabricated sixth profile.
+        const negativeSelection = forbidden ?? selected
+        if (!forbidden) expect(skill.allowedProfiles.toSorted()).toEqual(bundle.profiles.map((profile) => profile.id).toSorted())
+        const wrongSession = yield* session.create({ location, agent: AgentV2.ID.make(negativeSelection.profile.id) })
         const wrongMessages = yield* session.messages({ sessionID: wrongSession.id })
-        const rejected = yield* Effect.result(loadSfSkill({ session, skills, sourceCapability: capability, selected: forbidden,
-          sessionID: wrongSession.id, profile: forbidden.profile, skill, runId: `wp12-forbidden-${skill.id}`, manifestDigest: bundle.manifestDigest }))
+        const rejected = yield* Effect.result(loadSfSkill({ session, skills, sourceCapability: capability, selected: negativeSelection,
+          sessionID: wrongSession.id, profile: negativeSelection.profile, skill, runId: `wp12-forbidden-${skill.id}`,
+          manifestDigest: forbidden ? bundle.manifestDigest : "0".repeat(64) }))
         expect(rejected._tag).toBe("Failure")
         if (rejected._tag === "Failure") expect(rejected.failure).toMatchObject({ code: "invalid-skill", reason: "resident-source-capability-invalid" })
         expect(yield* session.messages({ sessionID: wrongSession.id })).toEqual(wrongMessages)
         expect(yield* session.messages({ sessionID: created.id })).toEqual(messages)
-        return receipt
+        return { receipt, refusal: { skillId: skill.id, profileId: negativeSelection.profile.id, nativeSessionId: wrongSession.id,
+          boundary: forbidden ? "profile-allowlist" : "manifest-digest", state: rejected._tag,
+          reason: rejected._tag === "Failure" ? rejected.failure.reason : "unexpected-success", messageCount: wrongMessages.length } }
       }))
     }).pipe(Effect.provide(locations.get(location)))
   }).pipe(Effect.scoped, Effect.provide(fixture.layer), Effect.runPromise)
+  const receipts = observations.map((observation) => observation.receipt)
   expect(receipts).toHaveLength(18)
   expect(new Set(receipts.map((receipt) => receipt.nativeSessionId)).size).toBe(18)
   expect(new Set(receipts.map((receipt) => receipt.loadedMessageId)).size).toBe(18)
   expect(new Set(receipts.map((receipt) => receipt.skillId))).toEqual(new Set(bundle.skills.map((skill) => skill.id)))
-  console.log("WP12 native skill loads:", JSON.stringify({ scope: "registration-and-load-only", receipts }))
+  expect(observations.filter((observation) => observation.refusal.state === "Failure")).toHaveLength(18)
+  console.log("WP12 native skill loads:", JSON.stringify({ scope: "registration-and-load-only", receipts,
+    refusals: observations.map((observation) => observation.refusal) }))
 }, 120_000)
 
 test("native probe registration grants only its one announced operation", async () => {

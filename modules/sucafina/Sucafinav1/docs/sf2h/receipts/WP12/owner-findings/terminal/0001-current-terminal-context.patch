@@ -1,0 +1,108 @@
+--- a/apps/cli/src/sucafina-product/host-context.ts
++++ b/apps/cli/src/sucafina-product/host-context.ts
+@@ -74,6 +74,7 @@
+ import { createPlannerMonthlyHost } from "../../../../modules/sucafina/Sucafinav1/product/planner/monthly-host.ts"
+ import { createSfRunStore, sfRunSourceFence } from "../../../../modules/sucafina/Sucafinav1/product/ai/run-store.ts"
+ import { createSfAnalysisHost } from "../../../../modules/sucafina/Sucafinav1/product/ai/analysis-host.ts"
++import { hasSfRunSkillReceipt } from "../../../../modules/sucafina/Sucafinav1/product/ai/run-provenance.ts"
+ import { runSfAnalysis } from "../../../../modules/sucafina/Sucafinav1/product/ai/analysis-port.ts"
+ import { decodeSfContributionEnvelope, decodeSfOperationInput, decodeSfOperationOutput, decodeSfSkillInput } from "../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
+ import { captureAlternativeProvenance } from "../../../../modules/sucafina/Sucafinav1/product/decisions/alternative-provenance.ts"
+@@ -416,6 +417,28 @@
+       const baseRequest = captured.request
+       const verifiedInput = structuredClone(skillInput)
+       const selectedRuntime = structuredClone(chosen)
++      // Metadata authority is private to this admitted run and cannot publish content.
++      const lifecycleRecords = new WeakMap<TrustedDomainContext, SfNativeRunRecord>()
++      const withLifecycleContext = async <T>(id: string, action: (call: TrustedDomainContext) => Promise<PortResult<T>>): Promise<PortResult<T>> => {
++        if (id !== runRef || request.signal.aborted || !identity()) return { status: "denied", reason: "analysis-authority-unavailable" }
++        const admitted = await authority.human.admit(request, "analysis.start", captured)
++        if (admitted.status !== "ok") return admitted
++        try {
++          const prior = await store.readLifecycle(id, admitted.value)
++          if (prior.status !== "ok") return prior
++          if (digestSfValue(prior.value.caseRef) !== digestSfValue(baseRequest.caseRef) || prior.value.contextFingerprint !== fingerprint ||
++            prior.value.requestDigest !== digestSfValue(fullRequest) || prior.value.skillInputDigest !== digestSfValue(verifiedInput) ||
++            digestSfValue(prior.value.selection) !== digestSfValue(selectedRuntime) || digestSfValue(prior.value.model) !== digestSfValue(actualModel) ||
++            digestSfValue(prior.value.reviewTarget) !== digestSfValue(reviewTarget) || (prior.value.native && !hasSfRunSkillReceipt(prior.value)))
++            return { status: "denied", reason: "analysis-lifecycle-binding-unavailable" }
++          lifecycleRecords.set(admitted.value, structuredClone(prior.value))
++          const result = await action(admitted.value)
++          const current = await store.readLifecycle(id, admitted.value)
++          if (current.status !== "ok") return current
++          return await authority.human.authorize(admitted.value, "analysis.start", captured) && await authority.host.revalidate(admitted.value)
++            ? result : { status: "denied", reason: "analysis-authority-unavailable" }
++        } finally { lifecycleRecords.delete(admitted.value); authority.human.finish(admitted.value) }
++      }
+       const withRunContext = async <T>(id: string, action: (call: TrustedDomainContext) => Promise<PortResult<T>>): Promise<PortResult<T>> => {
+         if (id !== runRef || request.signal.aborted || !identity()) return { status: "denied", reason: "analysis-authority-unavailable" }
+         const admitted = await authority.human.admit(request, "analysis.start", captured)
+@@ -465,7 +488,7 @@
+         captures: () => [...alternativeCaptures.get(runRef)?.values() ?? []] })
+       const staleAccess = createSfStaleAnalysisAccess({ authority, persistence: input.persistence, context: business.context, request, start: captured,
+         proof: { runRef, caseRef: baseRequest.caseRef, contextFingerprint: fingerprint, evidenceRefs: first.sources.map((source) => source.ref) } })
+-      const store = staleAccess.wrapStore(createSfRunStore({ state: runState, readCapturedAlternative: nativeInputs.readCapturedAlternative, requestFor: authority.host.requestFor, revalidate: authority.host.revalidate,
++      const rawStore = createSfRunStore({ state: runState, readCapturedAlternative: nativeInputs.readCapturedAlternative, requestFor: authority.host.requestFor, revalidate: authority.host.revalidate,
+         requiredNamespaces: sfAnalysisSourceNamespaces(fullRequest.skillId),
+         preflight: async (record, call, output) => {
+           if (record.state === "stale") return staleAccess.preflight(record, call, output)
+@@ -492,6 +515,27 @@
+           return { status: "ok", value: { sourceFence: after.dashboard } }
+         },
+         revalidateForCommit: async (record, call, snapshot, output, alternative) => {
++          const admitted = lifecycleRecords.get(call)
++          if (admitted && ["failed", "unavailable", "needs-input", "stale"].includes(record.state)) {
++            const denied = () => ({ status: "denied", reason: "analysis-lifecycle-commit-unavailable" } as const)
++            const snapshots = input.persistence.currentSnapshots?.()
++            if (!snapshots || digestSfValue(snapshots.dashboard) !== digestSfValue(snapshot) || output || alternative || record.outputRef ||
++              !["preparing", "queued", "running"].includes(admitted.state) || record.runRef !== runRef ||
++              record.principalRef !== call.binding.principalRef || record.policyVersion !== call.binding.policyVersion || record.accessRevision !== call.binding.accessRevision ||
++              request.signal.aborted || authority.host.requestFor(call) !== request || !Number.isFinite(Date.parse(record.updatedAt))) return denied()
++            const stored = object(snapshot.data.__sfProductV1)
++            const currentCase = object(object(stored.cases)[record.caseRef.id])
++            const expected = { ...admitted, version: admitted.version + 1, state: record.state, reason: record.reason, updatedAt: record.updatedAt }
++            const identity = digestSfValue([record, call.kind, call.binding, snapshot])
++            if (digestSfValue(object(stored.nativeRuns)[runRef]) !== digestSfValue(admitted) || digestSfValue(expected) !== digestSfValue(record) ||
++              currentCase.id !== record.caseRef.id || currentCase.incarnation !== record.caseRef.incarnation ||
++              typeof currentCase.version !== "number" || !Number.isSafeInteger(currentCase.version) || currentCase.version < record.caseRef.version ||
++              !Array.isArray(currentCase.participants) || !currentCase.participants.includes(call.binding.principalRef) ||
++              !await authority.human.authorize(call, "analysis.start", captured) || !await authority.host.revalidate(call) ||
++              request.signal.aborted || authority.host.requestFor(call) !== request ||
++              identity !== digestSfValue([record, call.kind, call.binding, snapshot])) return denied()
++            return { status: "ok", value: true }
++          }
+           if (record.state === "stale") return alternative ? { status: "denied", reason: "alternative-capture-unavailable" }
+             : staleAccess.commit(record, call, snapshot, output)
+           if (record.state === "cancelled") return staleAccess.commitCancellation(record, call, snapshot)
+@@ -510,7 +554,12 @@
+           if (digestSfValue(actual) !== digestSfValue(fences.current) || record.contextFingerprint !== fingerprint) return { status: "stale", reason: "analysis-source-changed" }
+           if (alternative && (!output || !await revalidateCapture(alternative))) return { status: "denied", reason: "alternative-capture-authority-changed" }
+           return { status: "ok", value: true }
+-        }, now: () => new Date().toISOString() }))
++        }, now: () => new Date().toISOString() })
++      const scopedStore = staleAccess.wrapStore(rawStore)
++      const store: ReturnType<typeof createSfRunStore> = { ...scopedStore,
++        markStale: (id, reason, call) => lifecycleRecords.has(call)
++          ? rawStore.markStale(id, reason, call) : scopedStore.markStale(id, reason, call),
++      }
+       const announcement = Promise.withResolvers<PortResult<{ runRef: string }>>()
+       const host = state.api
+       if (!host || !identity()) return { status: "unavailable", reason: "analysis-host-unavailable" }
+@@ -562,7 +611,7 @@
+         const saved = await store.transition(id, current.value.version, "cancelled", "human-cancelled", call)
+         return saved.status === "ok" ? { status: "ok", value: { cancelled: true } } : saved
+       } }
+-      const analysisHost = createSfAnalysisHost({ store, execution, analysis, routines: routineServices.routines, withRunContext,
++      const analysisHost = createSfAnalysisHost({ store, execution, analysis, routines: routineServices.routines, withRunContext, withLifecycleContext,
+         alternativeForOutput: async (id, resultDigest, call) => {
+           const found = await nativeInputs.readAlternativeCapture(id, resultDigest, call)
+           return found.status === "ok" ? { status: "ok", value: found.value.record } : found
+@@ -583,7 +632,7 @@
+         }
+         else announcement.resolve({ status: "unavailable", reason: "analysis-admission-missing" })
+       }).catch(async () => {
+-        await withRunContext(runRef, (call) => analysisHost.settle(runRef, "unavailable", "analysis-outcome-unknown", call)).catch(() => undefined)
++        await withLifecycleContext(runRef, (call) => analysisHost.settle(runRef, "unavailable", "analysis-outcome-unknown", call)).catch(() => undefined)
+         announcement.resolve({ status: "unavailable", reason: "analysis-outcome-unknown" })
+       }).finally(async () => {
+         const marker = await execution.releaseRun(runRef).catch(() => undefined)

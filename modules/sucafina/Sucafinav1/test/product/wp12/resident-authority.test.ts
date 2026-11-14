@@ -9,6 +9,7 @@ import { AbsolutePath } from "@orchestra/core/schema"
 import { SessionV2 } from "@orchestra/core/session"
 import { SkillV2 } from "@orchestra/core/skill"
 import { Effect, Schema } from "effect"
+import { expectSpawn } from "../../../../../../packages/core/test/fixture/omni-expect.ts"
 import { createResidentAiBundle } from "../../../product/ai/resident.ts"
 import { registerSfResidentAgents, validSfSelection } from "../../../product/host-binding/resident-agents.ts"
 import { loadSfSkill } from "../../../product/host-binding/skill-loader.ts"
@@ -17,6 +18,7 @@ import { createResidentNativeFixture, residentNativeLayer } from "./resident-nat
 const root = path.resolve(import.meta.dir, "../../../product/ai")
 
 test("native loading keeps the reserved source and rejects changed bytes or grants without adding a message", async () => {
+  expectSpawn(import.meta.path)
   const directory = await mkdtemp(path.join(tmpdir(), "sf-resident-authority-"))
   try {
     const source = path.join(directory, "resident")
@@ -80,6 +82,7 @@ test("native loading keeps the reserved source and rejects changed bytes or gran
 }, 120_000)
 
 test("closing the native registration scope revokes its capability before another skill load", async () => {
+  expectSpawn(import.meta.path)
   const bundle = await createResidentAiBundle({ root, manifestPath: path.join(root, "manifests/native-probe.json") })
   const selected = bundle.selected[0]!
   const skill = selected.skills[0]!

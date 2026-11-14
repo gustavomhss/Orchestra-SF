@@ -16,6 +16,7 @@ export function createSfAnalysisHost(input: {
   analysis: SfAnalysisHost["analysis"]
   routines: SfAnalysisHost["routines"]
   withRunContext: SfAnalysisHost["withRunContext"]
+  withLifecycleContext?: SfAnalysisHost["withLifecycleContext"]
   /** Resolve exactly one bridge-captured call; never accept provenance from the model. */
   alternativeForOutput?: (runRef: string, resultDigest: string, context: TrustedDomainContext) => Promise<PortResult<AlternativeCapabilityProvenance>>
   verify: (context: TrustedDomainContext, record: SfNativeRunRecord, request: Parameters<SfAnalysisHost["revalidate"]>[1]) => Promise<PortResult<true>>
@@ -26,6 +27,7 @@ export function createSfAnalysisHost(input: {
     routines: input.routines,
     readRun: input.store.readLifecycle,
     withRunContext: input.withRunContext,
+    withLifecycleContext: input.withLifecycleContext ?? input.withRunContext,
     revalidate: async (context, request) => {
       const loaded = await input.store.read(request.runRef, context)
       if (loaded.status !== "ok") return loaded

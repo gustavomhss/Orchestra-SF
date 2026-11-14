@@ -15,6 +15,7 @@ import { SessionExecutionLocal } from "@orchestra/core/session/execution/local"
 import { SessionRunnerModel } from "@orchestra/core/session/runner/model"
 import { SkillV2 } from "@orchestra/core/skill"
 import { Effect, Layer } from "effect"
+import { expectSpawn } from "../../../../../../packages/core/test/fixture/omni-expect.ts"
 import { createResidentAiBundle } from "../../../product/ai/resident.ts"
 import type { SfSourceCapability } from "../../../product/contracts/runtime.ts"
 import { registerSfResidentAgents } from "../../../product/host-binding/resident-agents.ts"
@@ -24,6 +25,7 @@ import { loadSfSkill } from "../../../product/host-binding/skill-loader.ts"
 // witness. No catalog/provider/model, credential, Session or budget gate is faked.
 // A positive candidate still requires the authorized SF host, case and C15 gate.
 test("native probe observes actual Location model admission after a real Session skill load", async () => {
+  expectSpawn(import.meta.path)
   const root = path.resolve(import.meta.dir, "../../../product/ai")
   const bundle = await createResidentAiBundle({ root, manifestPath: path.join(root, "manifests/native-probe.json") })
   const selected = bundle.selected[0]!

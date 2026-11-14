@@ -232,6 +232,70 @@ test("admitted runs persist non-executing native outcomes under fresh authority"
   }
 })
 
+test("terminal metadata uses current lifecycle authority after the execution source scope closes", async () => {
+  const { runSfAnalysis } = await import("../../../product/ai/analysis-port.ts")
+  const { sfRunFixture } = await import("./run-fixture.ts")
+  const original = sfRunFixture()
+  const request = { caseRef: original.caseRef, profileId: original.receipt.profileId, profileVersion: original.receipt.profileVersion,
+    skillId: original.receipt.skillId, skillVersion: original.receipt.skillVersion, manifestDigest: original.receipt.manifestDigest,
+    outputSchemaVersion: "sf-contribution-v1", requestedOperationScope: [], objective: "Review", contextFingerprint: "context" }
+  const skillInput = { currentCase: original.caseRef, recallScope: { cases: [], period: { start: "2027-01-01", end: "2027-12-31" }, includeHistorical: true }, query: "renewal" }
+  for (const state of ["failed", "unavailable", "needs-input", "stale"] as const) {
+    const access = { sourceCurrent: true, lifecycleAllowed: true, strictCalls: 0, lifecycleCalls: 0 }
+    const writes: { state: string; context: object }[] = []
+    const lifecycleContext = { binding: { principalRef: "principal", accessRevision: "access", currentCaseVersion: 2 } }
+    const host = {
+      withRunContext: async (_runRef: string, action: (context: object) => Promise<unknown>) => {
+        access.strictCalls++
+        return access.sourceCurrent ? action({ binding: { accessRevision: "access" } }) : { status: "denied", reason: "old-case-selection-unavailable" }
+      },
+      withLifecycleContext: async (_runRef: string, action: (context: object) => Promise<unknown>) => {
+        access.lifecycleCalls++
+        return access.lifecycleAllowed ? action(lifecycleContext) : { status: "denied", reason: "current-case-access-revoked" }
+      },
+      revalidate: async () => ({ status: "ok", value: true }),
+      fail: async (_runRef: string, _reason: string, context: object) => { writes.push({ state: "failed", context }); return { status: "ok", value: true } },
+      settle: async (_runRef: string, state: string, _reason: string, context: object) => { writes.push({ state, context }); return { status: "ok", value: true } },
+      markStale: async (_runRef: string, _reason: string, context: object) => { writes.push({ state: "stale", context }); return { status: "ok", value: true } },
+      execution: {
+        admit: async () => ({ status: "ok", value: { runRef: original.run.runRef, sessionID: original.receipt.nativeSessionId, skillReceipt: original.receipt, executionTicket: {} } }),
+        execute: async () => { access.sourceCurrent = false; return { status: state, reason: "source-changed-during-execution" } },
+        collect: async () => { throw new Error("terminal execution cannot collect content") },
+      },
+    }
+    const input = { host, request, skillInput } as unknown as Parameters<typeof runSfAnalysis>[0]
+    expect(await runSfAnalysis(input)).toEqual({ status: state, reason: "source-changed-during-execution" })
+    expect(writes).toEqual([{ state, context: lifecycleContext }])
+    expect(access.strictCalls).toBe(1)
+    expect(access.lifecycleCalls).toBe(1)
+    access.sourceCurrent = true
+    access.lifecycleAllowed = false
+    expect(await runSfAnalysis(input)).toEqual({ status: "denied", reason: "current-case-access-revoked" })
+    expect(writes).toHaveLength(1)
+  }
+})
+
+test("lifecycle progress cannot use its current metadata authority to return a ready payload", async () => {
+  const { readSfAnalysisRun } = await import("../../../product/ai/analysis-port.ts")
+  const { sfRunFixture } = await import("./run-fixture.ts")
+  const original = sfRunFixture()
+  const observed = { ready: false, strictCalls: 0, lifecycleCalls: 0 }
+  const host = {
+    withRunContext: async () => { observed.strictCalls++; return { status: "denied", reason: "old-case-selection-unavailable" } },
+    withLifecycleContext: async (_runRef: string, action: (context: object) => Promise<unknown>) => { observed.lifecycleCalls++; return action({ binding: { accessRevision: "access" } }) },
+    readRun: async () => ({ status: "ok", value: { ...original.run, state: observed.ready ? "ready" : "stale", outputRef: original.output.id, reason: "case-changed" } }),
+    analysis: { read: async () => { throw new Error("metadata authority cannot return contribution content") } },
+  }
+  const input = { host, runRef: original.run.runRef } as unknown as Parameters<typeof readSfAnalysisRun>[0]
+  const progress = await readSfAnalysisRun(input)
+  expect(progress).toEqual({ status: "ok", value: { run: { runRef: original.run.runRef, version: original.run.version, caseRef: original.caseRef, skillId: original.run.skillId,
+    state: "stale", createdAt: original.run.createdAt, updatedAt: original.run.updatedAt, reason: "case-changed", outputRef: original.output.id } } })
+  expect(observed).toEqual({ ready: false, strictCalls: 0, lifecycleCalls: 1 })
+  observed.ready = true
+  expect(await readSfAnalysisRun(input)).toEqual({ status: "denied", reason: "old-case-selection-unavailable" })
+  expect(observed).toEqual({ ready: true, strictCalls: 1, lifecycleCalls: 2 })
+})
+
 test("revoked authority prevents settling an admitted run", async () => {
   const { runSfAnalysis } = await import("../../../product/ai/analysis-port.ts")
   const caseRef = { id: "case-1", incarnation: "incarnation-1", version: 1 }

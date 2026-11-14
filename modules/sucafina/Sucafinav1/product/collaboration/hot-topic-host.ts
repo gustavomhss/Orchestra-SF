@@ -16,8 +16,7 @@ export function createCollaborationHotTopicHost(input: { host: DomainPortHost; s
   const transact: HotTopicHost["transact"] = async (context, sourceRefs, work) => {
     const refs = structuredClone(sourceRefs)
     const request = input.host.requestFor(context)
-    const first = refs[0]
-    if (!request || first?.kind !== "record" || !await input.host.revalidate(context) || !await sourcesAvailable(input.evidence, refs, context)) return { status: "denied", reason: "source-access-unavailable" }
+    if (!request || !refs.length || !await input.host.revalidate(context) || !await sourcesAvailable(input.evidence, refs, context)) return { status: "denied", reason: "source-access-unavailable" }
     const fence = await input.mutationFence.prepare(() => sourcesAvailable(input.evidence, refs, context))
     if (!fence) return { status: "unavailable", reason: "source-fence-unavailable" }
     const before = await input.state.read(request, "relations", () => null)
@@ -25,6 +24,7 @@ export function createCollaborationHotTopicHost(input: { host: DomainPortHost; s
     const environment = await input.host.environment(request)
     const transactionId = environment.id()
     if (!transactionId.trim() || !await input.host.revalidate(context)) return { status: "unavailable", reason: "authority-unavailable" }
+    const commit = { requested: false }
     const saved = await input.state.transaction(request, {
       namespace: "relations", expectedStorageVersion: before.status === "ok" ? before.storageVersion : 0,
       targetRef: input.creationTarget.ref, targetIncarnation: input.creationTarget.incarnation,
@@ -42,9 +42,11 @@ export function createCollaborationHotTopicHost(input: { host: DomainPortHost; s
       if (!outcome.commit) return { commit: false, value: outcome.value }
       if (request.signal.aborted || !await input.authorizeMutation(context)) return { commit: false, value: { status: "denied" as const, reason: "source-access-unavailable" } }
       Object.entries(correlations).forEach(([key, value]) => { state.relations[`${prefix}${key}`] = value })
+      commit.requested = true
       return { commit: true, value: outcome.value }
     }).catch(() => ({ status: "unavailable" as const, reason: "action-outcome-unknown-retry-same-correlation" }))
-    if (saved.status !== "ok" && saved.status !== "preview") return saved
+    if ("reason" in saved) return saved
+    if (saved.status === "preview" && commit.requested) return { status: "unavailable", reason: "action-commit-unconfirmed" }
     if (!await input.host.revalidate(context) || !await sourcesAvailable(input.evidence, refs, context)) return { status: "denied", reason: "source-access-unavailable" }
     return saved.value
   }
@@ -55,3 +57,4 @@ async function sourcesAvailable(evidence: BusinessContextService, refs: readonly
   const resolutions = await evidence.context({ refs }, context).catch(() => [])
   return resolutions.length === refs.length && resolutions.every((entry, index) => entry.state === "fresh" && digestSfValue(entry.ref) === digestSfValue(refs[index]))
 }
+
