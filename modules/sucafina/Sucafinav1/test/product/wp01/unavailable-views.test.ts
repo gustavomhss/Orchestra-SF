@@ -191,10 +191,18 @@ test("an unavailable preferred destination is never opened automatically and its
     await fixture.page.getByText("Unavailable starting page", { exact: true }).waitFor()
     expect(new URL(fixture.page.url()).searchParams.has("view")).toBe(false)
     expect(await fixture.page.locator("[data-personal-views]").textContent()).not.toContain("PRIVATE-")
+    fixture.hold.nextList = true
+    const entered = new Promise<void>((resolve) => { fixture.hold.entered = resolve })
     await fixture.page.getByRole("button", { name: "Remove unavailable view", exact: true }).click()
+    await within(entered, "hold the real post-removal list before its body completes")
+    expect(fixture.hold.status).toBe(200)
+    expect(JSON.parse(fixture.hold.body ?? "null")).toEqual({ status: "ok", value: [] })
+    // The confirmed deletion must update the DOM before a later list finishes.
+    // Keep the original assertion while the real empty response is incomplete.
     await fixture.page.getByText("Saved view removed.", { exact: true }).waitFor()
     expect(await fixture.page.locator("[data-view-unavailable]").count()).toBe(0)
     expect(await (await fixture.post("list", {})).json()).toEqual({ status: "ok", value: [] })
+    fixture.hold.release?.()
   })
 }, 45_000)
 

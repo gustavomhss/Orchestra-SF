@@ -96,7 +96,7 @@ document.querySelectorAll('[data-personal-views]').forEach((section) => {
     if (!preserveStatus) status.textContent = entries.some((entry) => entry.availability === 'unavailable') ? unavailableMessage : visible.length ? '' : 'No saved views yet.'
     visible.forEach((entry) => {
       if (entry.availability === 'unavailable') {
-        const row = document.createElement('li'); row.dataset.viewUnavailable = 'true'
+        const row = document.createElement('li'); row.dataset.viewUnavailable = 'true'; row.dataset.viewId = entry.id
         const label = document.createElement('span'); label.textContent = entry.id.startsWith('preferred-') ? 'Unavailable starting page' : 'Unavailable saved view'
         const remove = document.createElement('button'); remove.type = 'button'; remove.textContent = 'Remove unavailable view'; remove.addEventListener('click', () => void write('remove', 'remove', { id: entry.id, expectedVersion: entry.version }))
         row.append(label, ' ', remove)
@@ -111,7 +111,7 @@ document.querySelectorAll('[data-personal-views]').forEach((section) => {
         }
         list.append(row); return
       }
-      const row = document.createElement('li'); const button = document.createElement('button'); button.type = 'button'; button.textContent = entry.view.title; button.addEventListener('click', () => void open(entry.view.id))
+      const row = document.createElement('li'); row.dataset.viewId = entry.view.id; const button = document.createElement('button'); button.type = 'button'; button.textContent = entry.view.title; button.addEventListener('click', () => void open(entry.view.id))
       const remove = document.createElement('button'); remove.type = 'button'; remove.textContent = 'Remove'; remove.setAttribute('aria-label', 'Remove ' + entry.view.title)
       remove.addEventListener('click', () => void write('remove', 'remove', { id: entry.view.id, expectedVersion: entry.version }))
       row.append(button, ' · ' + entry.view.surface + ' ', remove); list.append(row)
@@ -133,6 +133,12 @@ document.querySelectorAll('[data-personal-views]').forEach((section) => {
     if (!active() || pending !== attempt) return
     attempt.running = false
     if (result.kind === 'ok' && (attempt.action === 'remove' ? result.value?.removed === true : result.value?.view?.id === attempt.viewId && Number.isSafeInteger(result.value?.version) && result.value.version > 0)) {
+      if (attempt.action === 'remove') {
+        // The acknowledged delete is authoritative even while the next list is
+        // still loading. Remove only that identity before announcing completion.
+        entries = entries.filter((entry) => entryId(entry) !== attempt.viewId)
+        list.querySelectorAll('[data-view-id]').forEach((row) => { if (row.dataset.viewId === attempt.viewId) row.remove() })
+      }
       pending = undefined; epoch++; syncControls()
       if (attempt.kind === 'save' || attempt.kind === 'replace') { form.querySelector('[name=title]').value = ''; delete form.dataset.dirty }
       status.textContent = attempt.kind === 'remove' ? 'Saved view removed.' : attempt.kind === 'preferred' ? 'Starting page saved.' : attempt.kind === 'replace' ? 'Saved view replaced with the current page and filters.' : 'View saved.'
@@ -151,7 +157,7 @@ document.querySelectorAll('[data-personal-views]').forEach((section) => {
   const write = async (kind, action, input) => {
     if (!active() || pending) return
     epoch++
-    pending = { kind, action, viewId: input.view?.id, key: crypto.randomUUID(), body: JSON.stringify({ action, input }), uncertain: false, running: false }
+    pending = { kind, action, viewId: input.view?.id ?? input.id, key: crypto.randomUUID(), body: JSON.stringify({ action, input }), uncertain: false, running: false }
     await perform()
   }
   recovery.addEventListener('submit', (event) => { event.preventDefault(); void perform() })

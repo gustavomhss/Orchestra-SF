@@ -1,0 +1,39 @@
+{
+  "schema": "astra-interface-published-input-v1",
+  "parentProductSha": "01633144c83fb1080e6d985ef226b8db2aa131cb",
+  "observedAt": "2026-11-14T10:49:33.811Z",
+  "source": {
+    "pullRequest": 34,
+    "head": "ba8a09e371ce8d93eb917eabb102caaee5affaf4",
+    "tree": "eb427121bcfd8c2511aac31d908f3c0d52c1915e",
+    "codeHead": "c4a2f4ebeb88f5915e51569b921be06b3c37ddad",
+    "codeTree": "5cc00703f04845c62448a2a3239683d266d8d548"
+  },
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+      "beforeBlob": "535c689f075db0d306cd2e8152930e875f6be13a",
+      "afterBlob": "4bdd12ac162d61465557363953e25dfd99fad5e8",
+      "intake": "verbatim",
+      "scope": "Re-read the authoritative receipt and exact case before C08 reconciliation; preserve post-domain storageVersion reread."
+    }
+  ],
+  "preserve": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "blob": "a45436a6fef8598b7ef9eae33d061ddebf0aa43d",
+      "reason": "Existing transaction path verifies receiptProofTransactionKey, commandDigest binding and exact receipt. Published Operations/Compose 90c3e981d8418c562342660bd3d56d03f9995383 is weaker on this path and is not copied."
+    }
+  ],
+  "commonBinding": {
+    "path": "modules/sucafina/Sucafinav1/product/decisions/receipt-review-binding.ts",
+    "blob": "6987eddae37ae2c90fe03b2d8e81ea28e8b5221f"
+  },
+  "codeDelta": "9 additions, 4 deletions. Factory signature and imports unchanged. No protocol or Server HttpApi change.",
+  "status": "Published producer consumed. Static comparison only at intake; Actions validation attached to subsequent W/S receipt.",
+  "limits": [
+    "Does not install Dashboard historical evidence readers or C12 reload composition.",
+    "Does not replace business-services from Operations; that branch lacks Dashboard wiring.",
+    "Does not import sf2-control or modify foreign source branches."
+  ]
+}
