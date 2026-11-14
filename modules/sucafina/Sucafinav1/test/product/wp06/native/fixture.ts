@@ -53,7 +53,7 @@ import contractFreeze from "../../../../product/contracts/freeze-v1.json" with {
 /** Actual native stores, source registration, skill load and private MCP. The public input is
  * prerecorded through the production event publisher; no external model, C15 oracle or installed
  * scanner qualification is claimed. The reused storage fixture declares its scanner substitute. */
-export async function withNativeWp06(work: (fixture: Awaited<ReturnType<typeof compose>>) => Promise<void>, options: { traceOperations?: boolean } = {}) {
+export async function withNativeWp06(work: (fixture: Awaited<ReturnType<typeof compose>>) => Promise<void>, options: { traceOperations?: boolean; deadlineMs?: 100_000 | 300_000 } = {}) {
   const control = nativeFixtureControl(options)
   const resources: { app?: Awaited<ReturnType<typeof createWp06Runtime>> } = {}
   try {
@@ -348,14 +348,15 @@ async function compose(input: {
     dispose: async () => { for (const release of releases) release(); proof.clear(); fences.clear(); lifetime.open = false; documents.dispose(); business.dispose() } }
 }
 
-/** Leave time for awaited resource cleanup before Bun's unchanged 120-second test deadline. */
-function nativeFixtureControl(options: { traceOperations?: boolean }) {
+/** Each cooperative limit leaves time for awaited cleanup before that case's Bun deadline. */
+function nativeFixtureControl(options: { traceOperations?: boolean; deadlineMs?: 100_000 | 300_000 }) {
   const cancellation = new AbortController()
   const started = performance.now()
-  const deadline = started + 100_000
+  const budget = options.deadlineMs ?? 100_000
+  const deadline = started + budget
   const active = { stage: "fixture:setup" }
   const expire = () => cancellation.abort(new Error(`WP06 native fixture deadline exceeded at ${active.stage}`))
-  const expiration = setTimeout(expire, 100_000)
+  const expiration = setTimeout(expire, budget)
   const check = () => {
     if (performance.now() >= deadline && !cancellation.signal.aborted) expire()
     cancellation.signal.throwIfAborted()

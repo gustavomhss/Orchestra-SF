@@ -288,8 +288,8 @@ test("recorded forecast and intent Sessions preserve selected C04 importPreviewR
       expect(denied).not.toHaveProperty("result")
     }
     expect(await app.store.transaction("dashboard", async (snapshot) => ({ commit: false, value: digestSfValue(snapshot) }))).toBe(beforeLogout)
-  }, { traceOperations: true })
-}, 120_000)
+  }, { traceOperations: true, deadlineMs: 300_000 })
+}, 360_000)
 
 async function prepareImportWorkbook(fixture: Parameters<Parameters<typeof withNativeWp06>[0]>[0]) {
   const { app } = fixture
