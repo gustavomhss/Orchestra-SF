@@ -1,0 +1,64 @@
+diff --git a/modules/sucafina/Sucafinav1/product/procurement/sourcing-analysis.ts b/modules/sucafina/Sucafinav1/product/procurement/sourcing-analysis.ts
+index 987f7179101ffe3db0276d9c6172b3bcf6024329..e54386d4b84331ff255546dc891ccad5b1391709 100644
+--- a/modules/sucafina/Sucafinav1/product/procurement/sourcing-analysis.ts
++++ b/modules/sucafina/Sucafinav1/product/procurement/sourcing-analysis.ts
+@@ -1,12 +1,11 @@
+ import type { AuthorizedCaseProjection, BusinessEvidenceRef } from "../contracts/business-context.ts"
+ import type { SfHostServices } from "../contracts/host-context.ts"
+ import { esc } from "../../src/screen-shell.ts"
+-import { analysisHistory } from "../ui/forecast-analysis.ts"
+ 
+ /** Only the authorized case supplies request selectors; the host prepares and revalidates their material. */
+ export async function sourcingAnalysisForm(projection: AuthorizedCaseProjection, runtime: Pick<SfHostServices, "analyses" | "sourcingInputs" | "selected" | "models">) {
+   if (!runtime.analyses) return "<p>Sourcing analysis is currently unavailable.</p>"
+-  const history = analysisHistory(projection)
++  const history = `<section data-analysis-history data-case="${esc(JSON.stringify({ id: projection.case.id, incarnation: projection.case.incarnation, version: projection.case.version }))}"><h3>Analysis history</h3><p role="status">Loading analysis history…</p><div data-results></div></section>`
+   if (!runtime.sourcingInputs) return `${history}<p>Sourcing analysis is currently unavailable.</p>`
+   const sources = projection.evidenceRefs.filter((ref): ref is Extract<BusinessEvidenceRef, { kind: "record" }> =>
+     ref.kind === "record" && ref.evidenceLevel === "observed" && ref.target.surface === "procurement" &&
+diff --git a/modules/sucafina/Sucafinav1/product/interface/http.ts b/modules/sucafina/Sucafinav1/product/interface/http.ts
+index 930c93a1704d0444519ffa85b8f69f57cc6c2735..81b7cd4ef5a73670642df42a2f891b9d95420dac 100644
+--- a/modules/sucafina/Sucafinav1/product/interface/http.ts
++++ b/modules/sucafina/Sucafinav1/product/interface/http.ts
+@@ -11,6 +11,8 @@
+ import { handleSfPlannerMonthly } from "./planner-http.ts"
+ import { handleSfForecastInput } from "./forecast-http.ts"
+ import { forecastAnalysisForm, forecastAnalysisScript, scenarioAnalysisForm, intentAnalysisForm } from "../ui/forecast-analysis.ts"
++import { sourcingAnalysisForm, sourcingAnalysisScript } from "../procurement/sourcing-analysis.ts"
++import { handleSfSourcingInput } from "../procurement/sourcing-input-http.ts"
+ import { decisionEditForm, decisionEditScript } from "../ui/decision-edit.ts"
+ import { decisionChoiceForm, decisionChoiceScript } from "../ui/decision-choice.ts"
+ import { handleSfViews } from "./views-http.ts"
+@@ -26,7 +28,7 @@
+ 
+ /** Mount in the existing authenticated application; authority remains private to the host. */
+ export function createSfWorkbenchHttp(input: { origin: string; mount: string; runtime: () => SfHostServices | undefined }) {
+-  const modes = ["workbench", "workbench-case", "workbench-context", "workbench-work", "workbench-work-select", "workbench-search", "workbench-routine", "workbench-command", "workbench-analysis", "workbench-planner", "workbench-forecast", "workbench-views"] as const
++  const modes = ["workbench", "workbench-case", "workbench-context", "workbench-work", "workbench-work-select", "workbench-search", "workbench-routine", "workbench-command", "workbench-analysis", "workbench-planner", "workbench-forecast", "workbench-sourcing-input", "workbench-views"] as const
+   return async (request: Request, surface: string): Promise<Response | undefined> => {
+     const url = new URL(request.url)
+     const mode = url.searchParams.get("sf")
+@@ -55,6 +57,10 @@
+       if ([...url.searchParams.keys()].some((key) => key !== "sf") || url.searchParams.getAll("sf").length !== 1) return reply({ status: "invalid" }, 400)
+       return handleSfForecastInput(request, input.origin, runtime)
+     }
++    if (mode === "workbench-sourcing-input") {
++      if ([...url.searchParams.keys()].some((key) => key !== "sf") || url.searchParams.getAll("sf").length !== 1) return reply({ status: "invalid" }, 400)
++      return handleSfSourcingInput(request, input.origin, runtime)
++    }
+     if (mode === "workbench-views") {
+       if ([...url.searchParams.keys()].some((key) => key !== "sf") || url.searchParams.getAll("sf").length !== 1) return reply({ status: "invalid" }, 400)
+       return handleSfViews(request, input.origin, runtime)
+@@ -174,9 +180,10 @@
+       const searchOutput = operation === "sf_knowledge_search" && result?.status === "ok" ? decodeSfOperationOutput("sf_knowledge_search", result.result) : undefined
+       const returnTo = caseOutput?.ok && url.searchParams.has("returnTo") ? contextualCaseReturn({ ...input, returnTo: url.searchParams.get("returnTo")!, sourceRefs: caseOutput.value.case.sourceRefs }) : undefined
+       if (caseOutput?.ok && url.searchParams.has("returnTo") && !returnTo) return pageReply("<h2>Source context unavailable</h2><p>The return destination does not match this decision's contract evidence. Open the decision again from Workbench.</p>", 400)
+-      const body = caseOutput?.ok ? (returnTo ? `<p><a href="${esc(returnTo)}">Return to contract</a></p>` : "") + decisionDesk(caseOutput.value) + decisionEditForm(caseOutput.value) + decisionChoiceForm(caseOutput.value) + decisionApplyForms(caseOutput.value) + caseWorkSelectionForm(caseOutput.value) + caseQuestionForm(caseOutput.value) + caseQuestionThreads(caseOutput.value) + portfolioHistory(caseOutput.value) + await forecastAnalysisForm(caseOutput.value, runtime) + await scenarioAnalysisForm(caseOutput.value, runtime) + await intentAnalysisForm(caseOutput.value, runtime) : routineOutput?.ok ? routineStatus(routineOutput.value) : searchOutput?.ok ? `<h2>Search results</h2>${searchOutput.value.matches.length ? `<ul>${searchOutput.value.matches.map((item) => `<li data-document-result data-ref="${esc(JSON.stringify(item.documentRef))}"><strong data-document-title>Checking source…</strong><p data-document-text>${esc(item.text)}</p></li>`).join("")}</ul>` : "<p>No accessible results.</p>"}${searchOutput.value.limitations.map((item) => `<p>${esc(item)}</p>`).join("")}` : forms
++      const analysis = caseOutput?.ok ? await (caseOutput.value.evidenceRefs.some((ref) => ref.kind === "record" && ref.target.surface === "procurement" && ref.target.recordType === "procurement-request") ? sourcingAnalysisForm : forecastAnalysisForm)(caseOutput.value, runtime) : ""
++      const body = caseOutput?.ok ? (returnTo ? `<p><a href="${esc(returnTo)}">Return to contract</a></p>` : "") + decisionDesk(caseOutput.value) + decisionEditForm(caseOutput.value) + decisionChoiceForm(caseOutput.value) + decisionApplyForms(caseOutput.value) + caseWorkSelectionForm(caseOutput.value) + caseQuestionForm(caseOutput.value) + caseQuestionThreads(caseOutput.value) + portfolioHistory(caseOutput.value) + analysis + await scenarioAnalysisForm(caseOutput.value, runtime) + await intentAnalysisForm(caseOutput.value, runtime) : routineOutput?.ok ? routineStatus(routineOutput.value) : searchOutput?.ok ? `<h2>Search results</h2>${searchOutput.value.matches.length ? `<ul>${searchOutput.value.matches.map((item) => `<li data-document-result data-ref="${esc(JSON.stringify(item.documentRef))}"><strong data-document-title>Checking source…</strong><p data-document-text>${esc(item.text)}</p></li>`).join("")}</ul>` : "<p>No accessible results.</p>"}${searchOutput.value.limitations.map((item) => `<p>${esc(item)}</p>`).join("")}` : forms
+       if (!await runtime.ui.revalidate(admitted.value)) return reply({ status: "denied" }, 403)
+-      const script = `;(() => { const initialize = () => {${decisionCreateScript}${decisionEditScript}${decisionChoiceScript}${decisionApplyScript}${caseWorkSelectionScript}${caseQuestionScript}${forecastAnalysisScript}${personalViewsScript}${documentSearchScript}${recordSearchScript}${portfolioScript}}; initialize(); const root = document.querySelector('#content'); if (root) new MutationObserver(initialize).observe(root, { childList: true, subtree: true }) })();`
++      const script = `;(() => { const initialize = () => {${decisionCreateScript}${decisionEditScript}${decisionChoiceScript}${decisionApplyScript}${caseWorkSelectionScript}${caseQuestionScript}${forecastAnalysisScript}${sourcingAnalysisScript}${personalViewsScript}${documentSearchScript}${recordSearchScript}${portfolioScript}}; initialize(); const root = document.querySelector('#content'); if (root) new MutationObserver(initialize).observe(root, { childList: true, subtree: true }) })();`
+       const html = documentHtml("Workbench", surface, "", pageMain({ drawn: true, key: "Workbench", index: 0 }, `<p><a href="?sf=workbench">Workbench</a></p>${body}`), "", "", admitted.value.binding.accessRevision).replace("</script>", `${script}</script>`)
+       return new Response(request.method === "HEAD" ? null : html, { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "Content-Security-Policy": htmlPolicy(html), "X-Content-Type-Options": "nosniff" } })
+     } finally { runtime.ui.finish(admitted.value) }

@@ -1,0 +1,429 @@
+{
+  "schema_version": 1,
+  "id": "SF2-SEAM-003",
+  "title": "Sourcing history import and authenticated Workbench assembly",
+  "status": "PROPOSED/NOT_APPLIED",
+  "validation_status": "STATIC_PATCH_REPLAY_CONFIRMED; TYPECHECK_AND_TESTS_NOT_RUN",
+  "checked_on": {
+    "branch": "astra-wp10",
+    "commit": "f511f30b73289c2f21c843254569d31c02eb9608",
+    "tree": "ee2964cd6cc96ee2697e9d05835777870a843f65",
+    "product_subtree": "dd7128a2565cdb2f60309e35e05f2bb592dbb250",
+    "head_state": "Observed current composition; session13 Memory delta is in flight and is not accepted by this proposal"
+  },
+  "destination": {
+    "branch": "sf2-stack",
+    "authorized_writer": "session14 only",
+    "observed_head": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+    "requires_new_target_receipt": true,
+    "rule": "This manifest is checked only on checked_on.commit. Do not use its full tree as a replacement sf2-stack snapshot. Session14 must reconcile its actual target commit, verify all preimages and required dependencies, then record new target SHA before application. A later head is NOT prequalified."
+  },
+  "origin": {
+    "assembly_branch": "astra-operations",
+    "assembly_commit": "15df31a67efab0aae6e2bff2b7eb8e5e59511324",
+    "assembly_http_blob": "e79a5aa7b601cd6e0ab50c62033c72ec89362ab7",
+    "history_markup_source_blob": "b40d8be0088e7900af9bfc1d4bc4e03eef35819c",
+    "history_markup_source_path": "modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts",
+    "handoff_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-consumers/attempt-01/HANDOFF.md",
+    "handoff_blob": "5cf17dcdf04283384efe581ecc7a029b850fa798",
+    "strategy": "Port only authored sourcing wiring and the exact existing history markup into the newer target. Do not replace current Forecast or the full HTTP file with the older author version."
+  },
+  "problem": [
+    "The pinned sourcing renderer imports analysisHistory, but the pinned current Forecast module no longer exports that helper.",
+    "The pinned Workbench HTTP consumer does not mount the published sourcing form, browser script or workbench-sourcing-input route, although the real host provider and handler exist.",
+    "Copying the older Operations HTTP/Forecast pair would regress newer Work, contextual return, record search, scenario and intent composition."
+  ],
+  "changes": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/sourcing-analysis.ts",
+      "preimage": {
+        "sha": "987f7179101ffe3db0276d9c6172b3bcf6024329",
+        "mode": "100644",
+        "type": "blob",
+        "bytes": 10100
+      },
+      "postimage": {
+        "sha": "e54386d4b84331ff255546dc891ccad5b1391709",
+        "mode": "100644",
+        "type": "blob",
+        "bytes": 10291,
+        "artifact_path": "modules/sucafina/Sucafinav1/docs/sf2h/control/integration-assist/seam-fixes/03-sourcing-assembly/postimages/sourcing-analysis.ts.txt"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+      "preimage": {
+        "sha": "930c93a1704d0444519ffa85b8f69f57cc6c2735",
+        "mode": "100644",
+        "type": "blob",
+        "bytes": 24430
+      },
+      "postimage": {
+        "sha": "81b7cd4ef5a73670642df42a2f891b9d95420dac",
+        "mode": "100644",
+        "type": "blob",
+        "bytes": 25174,
+        "artifact_path": "modules/sucafina/Sucafinav1/docs/sf2h/control/integration-assist/seam-fixes/03-sourcing-assembly/postimages/interface-http.ts.txt"
+      }
+    }
+  ],
+  "tree_elements": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/sourcing-analysis.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e54386d4b84331ff255546dc891ccad5b1391709"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "81b7cd4ef5a73670642df42a2f891b9d95420dac"
+    }
+  ],
+  "application_unit": "ATOMIC_TWO_ENTRIES",
+  "complete_payloads": {
+    "unified_patch": "modules/sucafina/Sucafinav1/docs/sf2h/control/integration-assist/seam-fixes/03-sourcing-assembly/sourcing-assembly.patch.txt",
+    "postimages": [
+      "modules/sucafina/Sucafinav1/docs/sf2h/control/integration-assist/seam-fixes/03-sourcing-assembly/postimages/sourcing-analysis.ts.txt",
+      "modules/sucafina/Sucafinav1/docs/sf2h/control/integration-assist/seam-fixes/03-sourcing-assembly/postimages/interface-http.ts.txt"
+    ],
+    "instructions": "Postimage artifacts are full UTF-8 product contents stored only in the authorized documentation directory. Their Git blob IDs must equal tree_elements.sha. After validating a newly pinned target, session14 may materialize these exact entries. Do not copy the .txt artifact path into product or apply to an unqualified later head."
+  },
+  "required_existing_dependencies": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+      "sha": "102c849084980ae52223809d33bdeea36a58536b",
+      "mode": "100644",
+      "type": "blob",
+      "action": "PRESERVE_TARGET",
+      "kind": "type-only"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+      "sha": "920fda293db553096f4d8ab7004fcd9652a69291",
+      "mode": "100644",
+      "type": "blob",
+      "action": "PRESERVE_TARGET",
+      "kind": "type-only"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+      "sha": "d69bb554ba35863b0bf248c6aa0382205614d12a",
+      "mode": "100644",
+      "type": "blob",
+      "action": "PRESERVE_TARGET",
+      "kind": "runtime"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "sha": "1769271386cdda1017c38023b0988ce2d64423d2",
+      "mode": "100644",
+      "type": "blob",
+      "action": "PRESERVE_TARGET",
+      "kind": "runtime"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts",
+      "sha": "c0c615b006d4b638015217e9d5b4d353b4ea41e6",
+      "mode": "100644",
+      "type": "blob",
+      "action": "PRESERVE_TARGET",
+      "kind": "runtime"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+      "sha": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+      "mode": "100644",
+      "type": "blob",
+      "action": "PRESERVE_TARGET",
+      "kind": "runtime"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/components.ts",
+      "sha": "8de96e7fef8b1db5f174baaff47864b68f8d2fca",
+      "mode": "100644",
+      "type": "blob",
+      "action": "PRESERVE_TARGET",
+      "kind": "runtime"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "sha": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+      "mode": "100644",
+      "type": "blob",
+      "action": "PRESERVE_TARGET",
+      "kind": "runtime"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+      "sha": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+      "mode": "100644",
+      "type": "blob",
+      "action": "PRESERVE_TARGET",
+      "kind": "runtime"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/validation.ts",
+      "sha": "44e79b3009076e9fae595e79a8c72a8f3918f14b",
+      "mode": "100644",
+      "type": "blob",
+      "action": "PRESERVE_TARGET",
+      "kind": "runtime"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/decision-create.ts",
+      "sha": "1c3bf805fed4d0cf186964b4631def5b0161d9ef",
+      "mode": "100644",
+      "type": "blob",
+      "action": "PRESERVE_TARGET",
+      "kind": "runtime"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/planner-http.ts",
+      "sha": "2befb1d4c7964b30830311abe1c93c7c575b8f70",
+      "mode": "100644",
+      "type": "blob",
+      "action": "PRESERVE_TARGET",
+      "kind": "runtime"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/forecast-http.ts",
+      "sha": "b814872f18556d1137820cfb33c46048066a1c6e",
+      "mode": "100644",
+      "type": "blob",
+      "action": "PRESERVE_TARGET",
+      "kind": "runtime"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts",
+      "sha": "973a2f09b394426364c514b923ecdc8e10ffb184",
+      "mode": "100644",
+      "type": "blob",
+      "action": "PRESERVE_TARGET",
+      "kind": "runtime"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/sourcing-input-http.ts",
+      "sha": "de85660b664826163c2e157ec382b97a425bb10d",
+      "mode": "100644",
+      "type": "blob",
+      "action": "PRESERVE_TARGET",
+      "kind": "runtime"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/decision-edit.ts",
+      "sha": "2c63bd893fa1bf999fa2a3d368a298594bcbcc27",
+      "mode": "100644",
+      "type": "blob",
+      "action": "PRESERVE_TARGET",
+      "kind": "runtime"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/decision-choice.ts",
+      "sha": "78bbcfcf09ee49152745f4142f90c79bd307269d",
+      "mode": "100644",
+      "type": "blob",
+      "action": "PRESERVE_TARGET",
+      "kind": "runtime"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/views-http.ts",
+      "sha": "4f246d4b1e6090d509d8bed554d3556b50e61386",
+      "mode": "100644",
+      "type": "blob",
+      "action": "PRESERVE_TARGET",
+      "kind": "runtime"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/personal-views.ts",
+      "sha": "4c20c81eeeb770b80eacc3c57589435bfdaba2ae",
+      "mode": "100644",
+      "type": "blob",
+      "action": "PRESERVE_TARGET",
+      "kind": "runtime"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/document-search.ts",
+      "sha": "39fbe05f2acd621a4d7031d012524cacdc4ecc92",
+      "mode": "100644",
+      "type": "blob",
+      "action": "PRESERVE_TARGET",
+      "kind": "runtime"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/record-search.ts",
+      "sha": "95864fedf3146ca71d4a9e3443879f1668f986d1",
+      "mode": "100644",
+      "type": "blob",
+      "action": "PRESERVE_TARGET",
+      "kind": "runtime"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/portfolio.ts",
+      "sha": "823b5f4eedf0db9d9c5e8ac87a6d91493d45ced2",
+      "mode": "100644",
+      "type": "blob",
+      "action": "PRESERVE_TARGET",
+      "kind": "runtime"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/decision-apply.ts",
+      "sha": "2e6c081ad2a5282654707f7fc7278183e7dfb20d",
+      "mode": "100644",
+      "type": "blob",
+      "action": "PRESERVE_TARGET",
+      "kind": "runtime"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/work-collaboration.ts",
+      "sha": "99e0d4a9f8c265688e7488ece05ab30edf070658",
+      "mode": "100644",
+      "type": "blob",
+      "action": "PRESERVE_TARGET",
+      "kind": "runtime"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/work-review-context.ts",
+      "sha": "a13f85982fa441086971d2b86af355f96c854bbd",
+      "mode": "100644",
+      "type": "blob",
+      "action": "PRESERVE_TARGET",
+      "kind": "runtime"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/case-work-selection.ts",
+      "sha": "3f76f17d51d09b86fa63a5c98c70cd4e77c91713",
+      "mode": "100644",
+      "type": "blob",
+      "action": "PRESERVE_TARGET",
+      "kind": "runtime"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/contextual-decision.ts",
+      "sha": "5245f469fab7f23474c4c406ddd1d2f1f43d65a2",
+      "mode": "100644",
+      "type": "blob",
+      "action": "PRESERVE_TARGET",
+      "kind": "runtime"
+    }
+  ],
+  "installed_host_chain": [
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "sha": "bdf6d4e2014cc9b2a492b6ae304948c249221e39",
+      "role": "Construct createSfSourcingInputs with authority/business and return sourcingInputs in the actual SfHostServices object."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/sourcing-inputs.ts",
+      "sha": "cb4b630b004c999deae758f70973f7dcd0bb3b67",
+      "role": "Real NonNullable<SfHostServices[sourcingInputs]> adapter, not a stub."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-verifier-procurement.ts",
+      "sha": "8843617fcab07d6da320cc5935aee563e740e4dd",
+      "role": "Prepare domain sourcing material and decode the contract."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "sha": "385dd1998ec3fb73b32f77ab3dec9c93beb440d1",
+      "role": "Compose real sourcingEvidence/cases/context/withCase."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/sourcing-input-http.ts",
+      "sha": "de85660b664826163c2e157ec382b97a425bb10d",
+      "role": "Existing strict handler used by the new route."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/http-body.ts",
+      "sha": "419d542b2bb42b9766acc33ee4411249955fa9ab",
+      "role": "Existing bounded body reader."
+    }
+  ],
+  "dependency_closure_rule": "Every direct import from the two postimages resolves to another proposed entry or one of the 27 pinned existing dependencies. The host path above is already composed in the fixed target. Unchanged transitive graphs and package/lock configuration remain pinned by checked_on.tree; no new dependency, service or generated file is introduced.",
+  "exact_changes": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/sourcing-analysis.ts",
+      "operations": [
+        "Remove the import of the no-longer-exported analysisHistory helper.",
+        "Inline the exact existing escaped data-analysis-history markup. Leave the sourcing browser script and remaining renderer unchanged."
+      ],
+      "hunks": 1
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+      "operations": [
+        "Import sourcingAnalysisForm/sourcingAnalysisScript and the existing handleSfSourcingInput handler.",
+        "Allow workbench-sourcing-input mode and route it through the same strict query validation.",
+        "For an authorized case with a procurement-request evidence reference, render sourcing; otherwise render the current forecast form.",
+        "Preserve scenario and intent forms; append sourcingAnalysisScript to the existing initializer."
+      ],
+      "hunks": 4
+    }
+  ],
+  "behavior_preserved": [
+    "Method, origin, path, query cardinality, content type, idempotency and bounded body checks remain in the actual HTTP path.",
+    "sourcing-input-http retains sf_sourcing_compare UI admission, input digest, validate/revalidate and finally finish.",
+    "The host adapter retains matchesIntent, host.revalidate, withCase, exact case version, attached source identity, evidence digest equality, a fresh authorized projection and a second case read.",
+    "Workbench final authorization revalidation and finish remain unchanged. Work destination, contextual return, review context, case questions, record search, scenario and intent remain present.",
+    "Current forecastAnalysisScript already owns the data-analysis-history controller. It is retained, including refresh, list/read/output/cancel and history clearing on 401/403 or sf-access-revoked.",
+    "Exactly one sourcing-or-forecast renderer supplies history; scenario/intent do not add a second history section. No old analysisHistoryScript is inserted.",
+    "The sourcing browser script itself is unchanged; this proposal does not claim a new revocation fix for that script.",
+    "Authorization, CAS, C16 intersection, Memory ownership, observations and request/source/case identity are not made optional."
+  ],
+  "preserved_forecast": {
+    "path": "modules/sucafina/Sucafinav1/product/ui/forecast-analysis.ts",
+    "target_blob": "973a2f09b394426364c514b923ecdc8e10ffb184",
+    "action": "PRESERVE_TARGET; session12 continues independently",
+    "later_owner_blob_observed": "dad8eeb1879e6c93bc9a448c6567fc0e2ee0f747",
+    "later_head_compatibility": "NOT_QUALIFIED; actual candidate requires a new dependency/assembly check"
+  },
+  "historical_evidence": {
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43629131094/job/132551590764",
+    "runtime_checkout": "d4fb072fa9bd32ebfef2b9cbc9b27b998d34f4e7",
+    "workflow_checkout": "00d1ba5220121c8490ae28ed0fc839c56b0b7192",
+    "diagnostic": "TS2305: sourcing-analysis imports analysisHistory, which Forecast no longer exports.",
+    "use": "Historical corroboration only. Not a typecheck result for f511. Direct pinned blob inspection establishes the current incompatibility.",
+    "remaining_diagnostics": "Twelve other historical fixture/caller diagnostics remain outside this proposal; no claim of a green package typecheck."
+  },
+  "verification_inputs": {
+    "existing_target_test": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/ui-sourcing-analysis.test.ts",
+      "sha": "ce1064c72d28b3cb281c0adbd50964b22e753099",
+      "target_state": "PRESENT_UNCHANGED"
+    },
+    "assertions_preserved": true
+  },
+  "minimal_recheck": {
+    "owner": "session14/S0 and already assigned verification owners after real application",
+    "checks": [
+      "On the actual candidate, verify both preimages, modes, full dependency set and installed provider; repin any changed head before applying.",
+      "Verify both postimage Git blob IDs and record the resulting candidate SHA.",
+      "Run the canonical module typecheck through the existing verification lane; do not treat the historical CHECK30 as this result.",
+      "Recheck existing ui-sourcing-analysis tests: authorized selectors, exact case identity, escaping, no capabilities leakage, unavailable catalogs and mounted route 503/403.",
+      "Exercise the actual authenticated handler/provider: unauthorized identity/origin, stale case/source version or digest, revoked access and final finish.",
+      "Check sourcing-versus-forecast selection, scenario and intent presence, single history initialization and refresh/read/output/cancel behavior."
+    ],
+    "tests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "browser": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "ci_dispatched": false
+  },
+  "static_applicability": {
+    "exact_preimages": 2,
+    "hunks": 5,
+    "all_context_and_removed_lines_matched": true,
+    "hunk_counts_and_new_offsets_matched": true,
+    "replay_equal_to_complete_postimages": true,
+    "full_postimage_blob_verification": "GitHub-created artifact blobs must match the two declared hashes before ref publication.",
+    "direct_dependencies": 27,
+    "product_tree_created": false,
+    "product_applied": false
+  },
+  "scope_limit": [
+    "This does not implement session12 Forecast fixes or session10 ACK UI.",
+    "No session11 exports, session13 Memory, Finance performance, new E2E/native proof or CI work.",
+    "No weakening of verifyScenarioOperations, other contracts, assertions or adapters to hide unrelated type errors."
+  ]
+}
