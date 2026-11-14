@@ -20,6 +20,23 @@ import { readNativeResponse, withNativeWp06 } from "./fixture.ts"
 test("recorded forecast and intent Sessions preserve selected C04 importPreviewRef through rendered preview links and fail after source or authority change", async () => {
   await withNativeWp06(async (fixture) => {
     const { app } = fixture
+    // Timed delegates still invoke the real producers with the same arguments and grants.
+    const imports = { ...fixture.imports.imports,
+      readPreparedPreviewForAnalysis: (...args: Parameters<typeof fixture.imports.imports.readPreparedPreviewForAnalysis>) =>
+        fixture.stage("import:prepared-preview", () => fixture.imports.imports.readPreparedPreviewForAnalysis(...args)),
+      readPreviewForAnalysis: (...args: Parameters<typeof fixture.imports.imports.readPreviewForAnalysis>) =>
+        fixture.stage("import:preview-view", () => fixture.imports.imports.readPreviewForAnalysis(...args)),
+    }
+    const issueSource: Parameters<typeof createPlannerImportAnalysis>[0]["issueSource"] = (...args) =>
+      fixture.stage("import:issue-source", () => fixture.business.plannerProduct.issueSource(...args))
+    const dependencies = {
+      cases: { ...fixture.business.cases, read: (...args: Parameters<typeof fixture.business.cases.read>) =>
+        fixture.stage("analysis:case-read", () => fixture.business.cases.read(...args)) },
+      planner: fixture.business.planner, procurement: fixture.business.procurement,
+      context: { ...fixture.business.context, context: (...args: Parameters<typeof fixture.business.context.context>) =>
+        fixture.stage("analysis:source-context", () => fixture.business.context.context(...args)) },
+      host: fixture.authority.host,
+    }
     await app.store.transaction("planner", async (snapshot) => {
       snapshot.data.versions = [{ id: "v1", name: "FY27", year: 2027, closed: 9, locked: false,
         lines: [{ id: "42", sec: "opex", el: "licenses", name: "Licences", cur: "USD",
@@ -39,7 +56,7 @@ test("recorded forecast and intent Sessions preserve selected C04 importPreviewR
     sheet.addRow(["Line ID", "Cost element", "Vendor / item", "Currency", "Measure", "Oct", "Nov", "Dec"])
     sheet.addRow(["42", "Licenses", "Licences", "ZZZ", "Forecast", 38000, 124000, 40000])
     const form = new FormData()
-    form.set("file", new File([new Uint8Array(await workbook.xlsx.writeBuffer())], "forecast.xlsx"))
+    form.set("file", new File([new Uint8Array(await fixture.stage("import:workbook", () => workbook.xlsx.writeBuffer()))], "forecast.xlsx"))
     form.set("surface", "planner"); form.set("selectionRef", choice.selectionRef)
     form.set("options", JSON.stringify({ newVersion: false, removeMissing: false, preview: {} }))
     const admitted = await readNativeResponse<{ ref: string }>(await fixture.http("import", "import-admit", form))
@@ -84,9 +101,9 @@ test("recorded forecast and intent Sessions preserve selected C04 importPreviewR
         version: target.version, options: { newVersion: false, removeMissing: false, preview: {} } }, actor, call)
     }
     const selection = { caseRef: fixture.caseRef, previewRef: chosen.id, importRequest: request, period: { start: "2027-01-01", end: "2027-12-31" }, currency: "USD" }
-    const analyze = createPlannerImportAnalysis({ host: fixture.authority.host, issueSource: fixture.business.plannerProduct.issueSource,
-      readPreview: fixture.imports.imports.readPreparedPreviewForAnalysis, verifyTarget })
-    const replay = await fixture.ui("sf_import_preview", request, (call) => analyze(selection, call))
+    const analyze = createPlannerImportAnalysis({ host: fixture.authority.host, issueSource,
+      readPreview: imports.readPreparedPreviewForAnalysis, verifyTarget })
+    const replay = await fixture.ui("sf_import_preview", request, (call) => fixture.stage("forecast:replay", () => analyze(selection, call)))
     if (replay.status !== "ok") throw new Error(replay.reason)
     expect(replay.status).toBe("ok")
     expect(replay.value).toMatchObject({ importPreviewRef: chosen.id, analysisBasis: "import-preview", domainApplied: false, knownDifference: 12000, completeDifference: null })
@@ -103,20 +120,20 @@ test("recorded forecast and intent Sessions preserve selected C04 importPreviewR
     if (updated.status !== "ok") throw new Error(`Case source selection: ${"reason" in updated ? updated.reason : updated.status}`)
     fixture.caseRef.version = updated.value
     for (const surface of ["native", "mcp"] as const) expect((await previewRun.call(surface, "sf_import_preview", request)).status).toBe("denied")
-    const dependencies = { cases: fixture.business.cases, planner: fixture.business.planner, procurement: fixture.business.procurement,
-      context: fixture.business.context, host: fixture.authority.host }
-    const producer = createSfImportForecastAnalysis({ ...dependencies, imports: fixture.imports.imports,
-      issueSource: fixture.business.plannerProduct.issueSource, verifyTarget, intentOperation: "analysis.prepare",
+    const producer = createSfImportForecastAnalysis({ ...dependencies, imports,
+      issueSource, verifyTarget, intentOperation: "analysis.prepare",
       matchesIntent: async (call, operation, digest) => operation === "analysis.prepare" && digest === digestSfValue(selection) &&
         await fixture.authority.human.authorize(call, "analysis.prepare", selection) })
-    const prepared = await fixture.human("analysis.prepare", selection, (call) => fixture.business.withCase(call, fixture.caseRef, {}, () => producer.prepare(call, selection)))
+    const prepared = await fixture.human("analysis.prepare", selection, (call) => fixture.stage("forecast:with-case", () =>
+      fixture.business.withCase(call, fixture.caseRef, {}, () => fixture.stage("forecast:prepare", () => producer.prepare(call, selection)))))
     if (prepared.status !== "ok") throw new Error(prepared.reason)
     expect(prepared.status).toBe("ok")
     expect(prepared.value.forecastComparison.importPreviewRef).toBe(chosen.id)
     const analysisRequest = { caseRef: fixture.caseRef, profileId: previewRun.admission.profile.id, profileVersion: previewRun.admission.profile.version,
       skillId: previewRun.receipt.skillId, skillVersion: previewRun.receipt.skillVersion, manifestDigest: previewRun.receipt.manifestDigest,
       outputSchemaVersion: "sf-contribution-v1", requestedOperationScope: previewRun.admission.selected.operationIds, objective: "Explain this exact import preview" }
-    const forecastProof = await fixture.human("analysis.read", { caseRef: fixture.caseRef }, (call) => producer.verifier.verify(prepared.value, analysisRequest, call))
+    const forecastProof = await fixture.human("analysis.read", { caseRef: fixture.caseRef }, (call) =>
+      fixture.stage("forecast:verify", () => producer.verifier.verify(prepared.value, analysisRequest, call)))
     if (forecastProof.status !== "ok") throw new Error(forecastProof.reason)
     expect(forecastProof.value.promptContext?.importPreview.manifest).toEqual(chosen)
     const forecastPrompt = sfAnalysisPrompt(analysisRequest.objective, forecastProof.value)
@@ -126,8 +143,8 @@ test("recorded forecast and intent Sessions preserve selected C04 importPreviewR
     expect(native.promptAdmission?.prompt.text).toBe(forecastPrompt)
     expect(native.promptAdmission?.sessionID).toBe(native.session.id)
     const complete = await native.complete({ kind: "FinancialAnalysis", payload: prepared.value.forecastComparison, evidenceRefs: prepared.value.sourceRefs }, async (output, call) => {
-      const proof = await producer.verifier.verify(prepared.value, analysisRequest, call)
-      return proof.status === "ok" ? proof.value.acceptsOutput(output, call) : proof
+      const proof = await fixture.stage("forecast:verify-output", () => producer.verifier.verify(prepared.value, analysisRequest, call))
+      return proof.status === "ok" ? fixture.stage("forecast:accept-output", () => proof.value.acceptsOutput(output, call)) : proof
     })
     expect(complete.run).toMatchObject({ state: "ready", native: { sessionID: native.session.id, skillReceipt: native.receipt }, outputRef: complete.output.id })
     expect(complete.output.kind).toBe("FinancialAnalysis")
@@ -168,11 +185,12 @@ test("recorded forecast and intent Sessions preserve selected C04 importPreviewR
       expect((await proof.value.acceptsOutput({ ...contribution, payload: { ...comparison, importPreviewRef: ui.id } }, call)).status).not.toBe("ok")
     })
     const intentSelection = { caseRef: fixture.caseRef, previewRef: chosen.id, importRequest: request, intentText: "Frame the decision from this exact import preview" }
-    const createIntent = (expected = intentSelection) => createSfImportIntentAnalysis({ ...dependencies, imports: fixture.imports.imports,
+    const createIntent = (expected = intentSelection) => createSfImportIntentAnalysis({ ...dependencies, imports,
       replayIntent: fixture.business.cases.prepareIntentForCase, state: fixture.authority.state,
       operationIdentity: (call) => call.kind === "ui" ? fixture.authority.ui.operationIdentity(call) : undefined,
       authorize: async (call, value) => digestSfValue(value) === digestSfValue(expected) && await fixture.authority.human.authorize(call, "analysis.prepare", expected) })
-    const intentPrepared = await fixture.human("analysis.prepare", intentSelection, (call) => fixture.business.withCase(call, fixture.caseRef, {}, () => createIntent().prepare(call, intentSelection)))
+    const intentPrepared = await fixture.human("analysis.prepare", intentSelection, (call) => fixture.stage("intent:with-case", () =>
+      fixture.business.withCase(call, fixture.caseRef, {}, () => fixture.stage("intent:prepare", () => createIntent().prepare(call, intentSelection)))))
     if (intentPrepared.status !== "ok") throw new Error(intentPrepared.reason)
     expect(intentPrepared.status).toBe("ok")
     expect(decodeSfSkillInput("DecisionIntentInput", intentPrepared.value).ok).toBe(true)
@@ -188,7 +206,8 @@ test("recorded forecast and intent Sessions preserve selected C04 importPreviewR
       outputSchemaVersion: "sf-contribution-v1", requestedOperationScope: intentSkill.allowedOperations, objective: intentSelection.intentText }
     // A new composition has no in-memory selection cache. It must recover the C08 binding.
     const intentProducer = createIntent()
-    const intentProof = await fixture.human("analysis.read", { caseRef: fixture.caseRef }, (call) => intentProducer.verifier.verify(intentPrepared.value, intentRequest, call))
+    const intentProof = await fixture.human("analysis.read", { caseRef: fixture.caseRef }, (call) =>
+      fixture.stage("intent:verify", () => intentProducer.verifier.verify(intentPrepared.value, intentRequest, call)))
     if (intentProof.status !== "ok") throw new Error(intentProof.reason)
     expect(intentProof.status).toBe("ok")
     expect(intentProof.value.promptContext?.importPreview).toEqual({ importPreviewRef: chosen.id, manifest: chosen, detail: reference.detail })
@@ -209,8 +228,8 @@ test("recorded forecast and intent Sessions preserve selected C04 importPreviewR
     expect(drafted.receipt).toMatchObject({ kind: "native", runId: intentNative.record.runRef, nativeSessionId: intentNative.session.id })
     const intentComplete = await intentNative.complete({ kind: "IntentFrame", payload: { ...intentFrame.value,
       analysisBasis: "import-preview", importPreviewRef: chosen.id }, evidenceRefs: intentFrame.value.sourceRefs }, async (output, call) => {
-      const proof = await intentProducer.verifier.verify(intentPrepared.value, intentRequest, call)
-      return proof.status === "ok" ? proof.value.acceptsOutput(output, call) : proof
+      const proof = await fixture.stage("intent:verify-output", () => intentProducer.verifier.verify(intentPrepared.value, intentRequest, call))
+      return proof.status === "ok" ? fixture.stage("intent:accept-output", () => proof.value.acceptsOutput(output, call)) : proof
     })
     if (intentComplete.output.kind !== "IntentFrame" || intentComplete.output.state !== "ready") throw new Error("Intent contribution unavailable")
     const intentOutput = intentComplete.output
@@ -277,7 +296,7 @@ test("recorded forecast and intent Sessions preserve selected C04 importPreviewR
       expect(denied).not.toHaveProperty("result")
     }
     expect(await app.store.transaction("dashboard", async (snapshot) => ({ commit: false, value: digestSfValue(snapshot) }))).toBe(beforeLogout)
-  })
+  }, { traceOperations: true })
 }, 120_000)
 
 function renderedPreviewUrl(output: ContributionEnvelope, origin: string) {
