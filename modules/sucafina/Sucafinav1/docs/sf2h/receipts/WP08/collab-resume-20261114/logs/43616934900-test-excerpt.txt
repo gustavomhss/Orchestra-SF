@@ -1,0 +1,110 @@
+2026-11-14T16:42:36.7236553Z bun test v1.3.14 (0d9b296a)
+2026-11-14T16:42:36.7358175Z 
+2026-11-14T16:42:36.7359110Z Sucafinav1/test/product/wp07/review-port.test.ts:
+2026-11-14T16:42:37.1722673Z (pass) preserved review survives changed projections and is denied after access revocation [398.69ms]
+2026-11-14T16:42:37.2275975Z (pass) compact review receipts survive SQLite restart, legacy replay and concurrent preservation [55.33ms]
+2026-11-14T16:42:37.2323705Z (pass) review egress revalidates decision and section sources after the other authorization readers [4.85ms]
+2026-11-14T16:42:37.2363084Z (pass) comparison requires identity and a compatible period before calculating a delta [3.89ms]
+2026-11-14T16:42:37.2954002Z (pass) preserved report exports every selected record from the captured projection [56.63ms]
+2026-11-14T16:42:37.2962135Z (pass) review capability denies a forged binding before selecting source data [0.75ms]
+2026-11-14T16:42:37.3521824Z (pass) financial trajectory exports a captured figure and the same data table in both formats [58.40ms]
+2026-11-14T16:42:37.4439414Z (pass) category charts paginate every captured value in both export formats [91.71ms]
+2026-11-14T16:42:37.4452836Z (pass) ticket flow chart keeps monthly entries as separate periods [1.46ms]
+2026-11-14T16:42:37.4972710Z (pass) timeline export paginates resolved milestones and refuses fabricated completion [51.87ms]
+2026-11-14T16:42:37.5849604Z (pass) waterfall export uses resolved endpoints and marks a mismatched snapshot unavailable [87.65ms]
+2026-11-14T16:42:37.6028636Z (pass) capacity and cost charts require alignment and keep separate units [17.89ms]
+2026-11-14T16:42:37.6533465Z (pass) sensitivity exports evaluated points and preserves a sampled threshold as an interval [50.51ms]
+2026-11-14T16:42:37.6799175Z (pass) decision exports retain conditioned coverage and reject an invented complete comparison [26.45ms]
+2026-11-14T16:42:37.6800255Z 
+2026-11-14T16:42:37.6800880Z Sucafinav1/test/product/wp07/review-thread-context.test.ts:
+2026-11-14T16:42:37.6847482Z 
+2026-11-14T16:42:37.6848081Z # Unhandled error between tests
+2026-11-14T16:42:37.6848456Z -------------------------------
+2026-11-14T16:42:37.6849489Z 290 |     expect(await f.persistence.transactionAll!(async () => ({ commit: false, value: await source.fence(scope, structuredClone(first), f.basis, f.recipient) })))).toBe(false)
+2026-11-14T16:42:37.6850864Z                                                                                                                                                                       ^
+2026-11-14T16:42:37.6851402Z error: Expected ";" but found ")"
+2026-11-14T16:42:37.6852128Z     at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp07/review-thread-context.test.ts:290:161
+2026-11-14T16:42:37.6852973Z 
+2026-11-14T16:42:37.6856570Z 290 |     expect(await f.persistence.transactionAll!(async () => ({ commit: false, value: await source.fence(scope, structuredClone(first), f.basis, f.recipient) })))).toBe(false)
+2026-11-14T16:42:37.6858134Z                                                                                                                                                                        ^
+2026-11-14T16:42:37.6858907Z error: Unexpected .
+2026-11-14T16:42:37.6860292Z     at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp07/review-thread-context.test.ts:290:162
+2026-11-14T16:42:37.6861859Z -------------------------------
+2026-11-14T16:42:37.6862152Z 
+2026-11-14T16:42:37.6862186Z 
+2026-11-14T16:42:37.6862673Z Sucafinav1/test/product/wp07/dashboard-agenda-consumer.test.ts:
+2026-11-14T16:42:38.9936794Z (pass) review agenda consumes real Dashboard selectors with exact record identity, counts, order, empty scope and Talent denial [1089.51ms]
+2026-11-14T16:42:38.9938220Z 
+2026-11-14T16:42:38.9938715Z Sucafinav1/test/product/wp08/case-selection-cas.test.ts:
+2026-11-14T16:42:39.7195596Z (pass) a lost case-selection CAS is a known no-commit conflict and retains exact retry identity [724.17ms]
+2026-11-14T16:42:39.7196215Z 
+2026-11-14T16:42:39.7196585Z Sucafinav1/test/product/wp08/review-recipient-authority.test.ts:
+2026-11-14T16:43:13.2890749Z (pass) a C05 request uses the recipient's current review lease, preserves exact retry and denies a homonym or revoked lease [33565.75ms]
+2026-11-14T16:43:13.2892087Z 
+2026-11-14T16:43:13.2892752Z Sucafinav1/test/product/wp08/review-answer-confirmation.test.ts:
+2026-11-14T16:48:25.3625197Z (fail) C05 answers confirm only the preserved review, suppress one work item, and recheck edits and review ACL [312068.16ms]
+2026-11-14T16:48:25.3628170Z   ^ this test timed out after 120000ms.
+2026-11-14T16:53:29.1639718Z (fail) C05 confirmation refuses a lease revoked at commit and cannot revive a replaced physical source [303803.18ms]
+2026-11-14T16:53:29.1640756Z   ^ this test timed out after 120000ms.
+2026-11-14T16:53:29.1641076Z 
+2026-11-14T16:53:29.1641469Z Sucafinav1/test/product/wp08/host-answer-reuse.test.ts:
+2026-11-14T16:58:03.9195254Z (pass) host-created capabilities consume a confirmed answer through shared dispatch and real Dashboard scope [18876.44ms]
+2026-11-14T16:58:03.9195814Z 
+2026-11-14T16:58:03.9196118Z Sucafinav1/test/product/wp08/answer-first-confirm-http.test.ts:
+2026-11-14T16:58:15.1642838Z (pass) first answer confirmation issues its selector server-side and rejects another recipient, wrong thread, edited version and revoked access [11242.77ms]
+2026-11-14T16:58:15.1644218Z 
+2026-11-14T16:58:15.1644756Z Sucafinav1/test/product/wp08/recipient-human-actions.test.ts:
+2026-11-14T16:58:15.1668718Z (pass) extended collaboration actions require explicitly registered commands and live human grants [0.97ms]
+2026-11-14T16:58:15.1675226Z (pass) thread edit admission is confined to POST, same origin and the retained current request [0.65ms]
+2026-11-14T16:58:15.1688342Z (pass) cancelled and expired selection admissions never regain authority [0.54ms]
+2026-11-14T16:58:15.1689057Z 
+2026-11-14T16:58:15.1690073Z Sucafinav1/test/product/wp08/recipient-authority.test.ts:
+2026-11-14T16:58:15.1704077Z (pass) caller access permits self-assignment but cannot substitute for recipient source authority [0.34ms]
+2026-11-14T16:58:15.1709399Z (pass) recipient identity and every material dependency are checked without name inference [0.54ms]
+2026-11-14T16:58:15.1713162Z (pass) revocation during source inspection and proof failure refuse assignment [0.38ms]
+2026-11-14T16:58:15.1719982Z (pass) the proof gets detached exact refs and cannot rewrite the assignment or omit a dependency [0.59ms]
+2026-11-14T16:58:15.1723797Z (pass) commit checks require a current synchronous recipient lease without repeating source I/O [0.43ms]
+2026-11-14T16:58:15.1725499Z 
+2026-11-14T16:58:15.1725831Z Sucafinav1/test/product/wp08/thread-actors.test.ts:
+2026-11-14T16:58:38.0176017Z (pass) a selected viewer with a homonym replies across scoped incarnations and current access revisions without gaining domain authority [22841.90ms]
+2026-11-14T16:58:38.0176781Z 
+2026-11-14T16:58:38.0177432Z Sucafinav1/test/product/wp08/thread-history-continuity.test.ts:
+2026-11-14T16:58:51.3124984Z 41 |     expect(historical).toEqual(oldHistory)
+2026-11-14T16:58:51.3126070Z 42 |     const current = available(await port.recipientThread(thread.id, fixture.read))
+2026-11-14T16:58:51.3127277Z 43 |     expect(current.continuity).toBe("historical")
+2026-11-14T16:58:51.3128812Z 44 |     expect(current.historical).toMatchObject({ sourceRef: source.refId, observedVersion: source.target.version, evidenceRefs: [source] })
+2026-11-14T16:58:51.3131016Z 45 |     expect(current.current.sourceRef.target.version).toBeGreaterThan(source.target.version)
+2026-11-14T16:58:51.3132735Z 46 |     expect(await port.answerReuse.read(thread.id, fixture.read)).toMatchObject({ status: "stale", reason: "answer-scope-changed" })
+2026-11-14T16:58:51.3133609Z                                                                       ^
+2026-11-14T16:58:51.3134330Z error: expect(received).toMatchObject(expected)
+2026-11-14T16:58:51.3134701Z 
+2026-11-14T16:58:51.3134831Z   {
+2026-11-14T16:58:51.3135226Z -   "reason": "answer-scope-changed",
+2026-11-14T16:58:51.3135713Z -   "status": "stale",
+2026-11-14T16:58:51.3136204Z +   "reason": "answer-reuse-unavailable",
+2026-11-14T16:58:51.3136726Z +   "status": "unavailable",
+2026-11-14T16:58:51.3137358Z   }
+2026-11-14T16:58:51.3137523Z 
+2026-11-14T16:58:51.3137663Z - Expected  - 2
+2026-11-14T16:58:51.3138021Z + Received  + 2
+2026-11-14T16:58:51.3138231Z 
+2026-11-14T16:58:51.3139321Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp08/thread-history-continuity.test.ts:46:66)
+2026-11-14T16:58:51.3141203Z (fail) authorized historical messages keep their original basis and a new answer reuses the same stale thread [13292.12ms]
+2026-11-14T16:58:51.3141949Z 
+2026-11-14T16:58:51.3142429Z Sucafinav1/test/product/wp08/thread-history-supplements.test.ts:
+2026-11-14T16:58:58.6504266Z (pass) record history and replies retain an independently authorized immutable document supplement [7335.59ms]
+2026-11-14T16:58:58.6522104Z 
+2026-11-14T16:58:58.6523885Z omni positive control [77a4e807111dac85408fd627b425af22]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.
+2026-11-14T16:58:58.6525066Z 4 tests failed:
+2026-11-14T16:58:58.6525719Z (fail) C05 answers confirm only the preserved review, suppress one work item, and recheck edits and review ACL [312068.16ms]
+2026-11-14T16:58:58.6526377Z   ^ this test timed out after 120000ms.
+2026-11-14T16:58:58.6527402Z (fail) C05 confirmation refuses a lease revoked at commit and cannot revive a replaced physical source [303803.18ms]
+2026-11-14T16:58:58.6528110Z   ^ this test timed out after 120000ms.
+2026-11-14T16:58:58.6528806Z (fail) authorized historical messages keep their original basis and a new answer reuses the same stale thread [13292.12ms]
+2026-11-14T16:58:58.6529285Z 
+2026-11-14T16:58:58.6529373Z  29 pass
+2026-11-14T16:58:58.6529554Z  4 fail
+2026-11-14T16:58:58.6529735Z  1 error
+2026-11-14T16:58:58.6529924Z  518 expect() calls
+2026-11-14T16:58:58.6530211Z Ran 33 tests across 13 files. [981.93s]
+2026-11-14T16:58:58.6880735Z ##[error]Process completed with exit code 1.

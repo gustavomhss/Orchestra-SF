@@ -1,0 +1,95 @@
+2026-11-14T17:51:55.9508484Z bun test v1.3.14 (0d9b296a)
+2026-11-14T17:51:55.9639845Z 
+2026-11-14T17:51:55.9641048Z Sucafinav1/test/product/wp08/review-answer-confirmation.test.ts:
+2026-11-14T17:51:56.4702296Z WP08_C05_STAGE confirmation-reopen fixture-ready 256ms
+2026-11-14T17:52:02.2765648Z WP08_C05_STAGE confirmation-reopen question-and-source-change 6063ms
+2026-11-14T17:52:14.1218307Z WP08_C05_STAGE confirmation-reopen recipient-reply 17908ms
+2026-11-14T17:52:21.8319416Z WP08_C05_STAGE confirmation-reopen exact-answer-reference-checked 25618ms
+2026-11-14T17:52:42.6571009Z WP08_C05_STAGE confirmation-reopen unconfirmed-read 46443ms
+2026-11-14T17:52:54.1490076Z WP08_C05_STAGE confirmation-reopen http-observation 57935ms
+2026-11-14T17:53:11.2570446Z WP08_C05_STAGE confirmation-reopen confirmation-retry 75043ms
+2026-11-14T17:53:29.7786851Z WP08_C05_STAGE confirmation-reopen confirmed-read-work-and-shared-denial 93565ms
+2026-11-14T17:53:45.4330249Z WP08_C05_STAGE confirmation-reopen sqlite-reopen-and-reuse 109219ms
+2026-11-14T17:53:45.4346612Z WP08_C05_STAGE confirmation-reopen reopened-storage-unchanged 109221ms
+2026-11-14T17:53:45.4362711Z WP08_C05_STAGE confirmation-reopen disposed 109222ms
+2026-11-14T17:53:45.4379862Z (pass) C05 answers confirm the displayed preserved review and reuse the same baseline after SQLite reopen [109225.56ms]
+2026-11-14T17:53:45.6176569Z WP08_C05_STAGE edit-reconfirm fixture-ready 179ms
+2026-11-14T17:54:08.8678076Z WP08_C05_STAGE edit-reconfirm real-question-source-change-and-answer 23429ms
+2026-11-14T17:54:27.8012244Z WP08_C05_STAGE edit-reconfirm real-confirmation-and-sqlite-reopen 42362ms
+2026-11-14T17:55:05.2410716Z WP08_C05_STAGE edit-reconfirm answer-edit-and-stale-work 79802ms
+2026-11-14T17:56:14.8453788Z WP08_C05_STAGE edit-reconfirm reconfirmation-history-and-resolution 149407ms
+2026-11-14T17:56:14.8467131Z (fail) C05 edited answers after SQLite reopen create one stale item and reconfirm the same original review [149408.75ms]
+2026-11-14T17:56:14.8468224Z   ^ this test timed out after 120000ms.
+2026-11-14T17:56:14.8484433Z WP08_C05_STAGE edit-reconfirm disposed 149409ms
+2026-11-14T17:56:15.0197406Z WP08_C05_STAGE distinct-current-revocation fixture-ready 172ms
+2026-11-14T17:56:38.7088397Z WP08_C05_STAGE distinct-current-revocation real-question-source-change-and-answer 23861ms
+2026-11-14T17:56:58.4521658Z WP08_C05_STAGE distinct-current-revocation real-c05-confirmation 43605ms
+2026-11-14T17:57:03.6051163Z WP08_C05_STAGE distinct-current-revocation distinct-current-source-answer 48757ms
+2026-11-14T17:57:04.3091964Z WP08_C05_STAGE distinct-current-revocation disposed 49462ms
+2026-11-14T17:57:04.3095406Z (pass) a current-domain question cannot inherit a confirmed C05 answer and review ACL revocation hides every private consumer [49462.65ms]
+2026-11-14T17:57:04.4764690Z WP08_C05_STAGE current-lease fixture-ready 166ms
+2026-11-14T17:57:18.8936281Z WP08_C05_STAGE current-lease reply-denied-at-last-human-await 14583ms
+2026-11-14T17:57:44.7069898Z WP08_C05_STAGE current-lease reply-and-private-observation 40396ms
+2026-11-14T17:57:51.6536951Z WP08_C05_STAGE current-lease confirmation-denied-at-commit 47343ms
+2026-11-14T17:58:00.9961952Z WP08_C05_STAGE current-lease unconfirmed-read 56686ms
+2026-11-14T17:58:27.3763146Z WP08_C05_STAGE current-lease restored-access-confirmation 83066ms
+2026-11-14T17:58:27.4054431Z WP08_C05_STAGE current-lease physical-replacement-denied 83095ms
+2026-11-14T17:58:27.4067740Z WP08_C05_STAGE current-lease disposed 83096ms
+2026-11-14T17:58:27.4071427Z (pass) C05 confirmation refuses a lease revoked at commit and cannot revive a replaced physical source [83097.57ms]
+2026-11-14T17:58:27.4072106Z 
+2026-11-14T17:58:27.4072389Z Sucafinav1/test/product/wp08/thread-history-continuity.test.ts:
+2026-11-14T17:59:05.7595912Z (pass) authorized historical messages keep their original basis and a new answer reuses the same stale thread [38349.72ms]
+2026-11-14T17:59:05.7596841Z 
+2026-11-14T17:59:05.7597251Z Sucafinav1/test/product/wp08/host-answer-reuse.test.ts:
+2026-11-14T17:59:17.2067960Z (pass) host-created capabilities consume a confirmed answer through shared dispatch and real Dashboard scope [11444.84ms]
+2026-11-14T17:59:17.2068686Z 
+2026-11-14T17:59:17.2069047Z Sucafinav1/test/product/wp08/answer-first-confirm-http.test.ts:
+2026-11-14T17:59:23.6636924Z (pass) first answer confirmation issues its selector server-side and rejects another recipient, wrong thread, edited version and revoked access [6455.03ms]
+2026-11-14T17:59:23.6649781Z 
+2026-11-14T17:59:23.6673891Z Sucafinav1/test/product/wp08/answer-egress-version.test.ts:
+2026-11-14T17:59:23.8328176Z [wp08-answer-egress:read] fixture-ready 167ms
+2026-11-14T18:00:03.7531954Z [wp08-answer-egress:read] real-confirmation 40088ms
+2026-11-14T18:00:30.3280478Z [wp08-answer-egress:read] edit-refused-at-final-egress 66662ms
+2026-11-14T18:00:30.3326515Z [wp08-answer-egress:read] disposed 66667ms
+2026-11-14T18:00:30.3328905Z 78 |       expect(after.value.thread.messages.find((entry) => entry.id === message.id)).toMatchObject({ id: message.id, incarnation: message.incarnation, version: message.version + 1, body: edit.body, sourceContext: f.basis })
+2026-11-14T18:00:30.3330042Z 79 |       expect(after.value.baseline).toEqual(before.value.baseline)
+2026-11-14T18:00:30.3330713Z 80 |       const domainAfter = await f.snapshots()
+2026-11-14T18:00:30.3331469Z 81 |       expect(domainAfter.dashboard.data.projects).toEqual(domainBefore.dashboard.data.projects)
+2026-11-14T18:00:30.3332570Z 82 |       expect(sfSourceIdentity(domainAfter.dashboard, "projects", "project")).toEqual(sourceIdentity)
+2026-11-14T18:00:30.3333913Z 83 |       expect(digestSfValue(object(object(domainAfter.dashboard.data.__sfProductV1).reviews)[f.review.id])).toBe(f.basis.reviewContext.reviewDigest)
+2026-11-14T18:00:30.3335331Z                                                                                                                 ^
+2026-11-14T18:00:30.3335886Z error: expect(received).toBe(expected)
+2026-11-14T18:00:30.3336089Z 
+2026-11-14T18:00:30.3336391Z Expected: "b68726e153e6b179d42174d6d194de17a5a7ab1e7d775db6c51b0d8b13714298"
+2026-11-14T18:00:30.3337342Z Received: "40484e9c59942961cf6765b3c408cddd550d8eea3b5cc8cfd12aa1d88092abec"
+2026-11-14T18:00:30.3337768Z 
+2026-11-14T18:00:30.3338354Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp08/answer-egress-version.test.ts:83:108)
+2026-11-14T18:00:30.3339647Z (fail) C05 answer read refuses a real human edit after its final external version read [66668.51ms]
+2026-11-14T18:00:30.5168397Z [wp08-answer-egress:work] fixture-ready 184ms
+2026-11-14T18:01:10.3247485Z [wp08-answer-egress:work] real-confirmation 39992ms
+2026-11-14T18:01:28.2802189Z [wp08-answer-egress:work] edit-refused-at-final-egress 57947ms
+2026-11-14T18:01:28.2850594Z [wp08-answer-egress:work] disposed 57952ms
+2026-11-14T18:01:28.2854317Z 78 |       expect(after.value.thread.messages.find((entry) => entry.id === message.id)).toMatchObject({ id: message.id, incarnation: message.incarnation, version: message.version + 1, body: edit.body, sourceContext: f.basis })
+2026-11-14T18:01:28.2856293Z 79 |       expect(after.value.baseline).toEqual(before.value.baseline)
+2026-11-14T18:01:28.2857117Z 80 |       const domainAfter = await f.snapshots()
+2026-11-14T18:01:28.2858868Z 81 |       expect(domainAfter.dashboard.data.projects).toEqual(domainBefore.dashboard.data.projects)
+2026-11-14T18:01:28.2860127Z 82 |       expect(sfSourceIdentity(domainAfter.dashboard, "projects", "project")).toEqual(sourceIdentity)
+2026-11-14T18:01:28.2861918Z 83 |       expect(digestSfValue(object(object(domainAfter.dashboard.data.__sfProductV1).reviews)[f.review.id])).toBe(f.basis.reviewContext.reviewDigest)
+2026-11-14T18:01:28.2863346Z                                                                                                                 ^
+2026-11-14T18:01:28.2864070Z error: expect(received).toBe(expected)
+2026-11-14T18:01:28.2864393Z 
+2026-11-14T18:01:28.2864921Z Expected: "2aded03885b8a5e3149c8acef8e59bbe97740ac981ffc051e9c36c9c170a566e"
+2026-11-14T18:01:28.2866013Z Received: "40484e9c59942961cf6765b3c408cddd550d8eea3b5cc8cfd12aa1d88092abec"
+2026-11-14T18:01:28.2866575Z 
+2026-11-14T18:01:28.2867459Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp08/answer-egress-version.test.ts:83:108)
+2026-11-14T18:01:28.2869376Z (fail) C05 answer work refuses a real human edit after its final external version read [57952.40ms]
+2026-11-14T18:01:28.2870070Z 
+2026-11-14T18:01:28.2870449Z Sucafinav1/test/product/wp08/answer-reuse.test.ts:
+2026-11-14T18:01:28.2905851Z (pass) answer reuse delegates cross-actor scope and authorization to producer [3.20ms]
+2026-11-14T18:01:28.2925217Z 
+2026-11-14T18:01:28.2926683Z omni positive control [8a76934ee7ae715bb5066422d6beb1d9]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.
+2026-11-14T18:01:28.2927502Z  7 pass
+2026-11-14T18:01:28.2927703Z  3 fail
+2026-11-14T18:01:28.2927911Z  212 expect() calls
+2026-11-14T18:01:28.2928191Z Ran 10 tests across 6 files. [572.34s]
+2026-11-14T18:01:28.3288355Z ##[error]Process completed with exit code 1.

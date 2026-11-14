@@ -1,0 +1,581 @@
+{
+  "schema": "sf2h-wp09-collab-resume-evidence-v1",
+  "purpose": "Reconciliação de recibos; produto local não executado, nenhuma execução Relay nativa inferida.",
+  "candidate": {
+    "branch": "collab-resume",
+    "sha": "ff557552936197b6734e57f0ecea0c44b19139b1",
+    "tree": "0349fb1b18315a9c7c0cadb04b738ea499beda05",
+    "pull_request": 41,
+    "base": "sf2-stack"
+  },
+  "initial": {
+    "sha": "2784daafbb0d3b58b6019822288a07fa38e5c5b0",
+    "tree": "fd1c89074488008ff0e60fd07577268a34329069",
+    "origin_pr": 33
+  },
+  "historical": {
+    "id": "PR30-175",
+    "product_sha": "a3dcbb62c88231f95a7c57afb32e975404a3b59c",
+    "snapshot_sha": "000761d8604faf642c918c2df2435bf24a2e0297",
+    "run_id": 43540247856,
+    "job_id": 132278872428,
+    "conclusion": "success",
+    "passed": 175,
+    "failed": 0,
+    "files": 31,
+    "assertions": 1085,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43540247856/job/132278872428",
+    "selection": "28 arquivos WP09 + 3 consumidores documentais WP06; seleção exata em ../ci-evidence.json.",
+    "receipt": "../ci-evidence.json",
+    "criterion_map": "../criterion-map.json",
+    "limit": "Preservado no SHA real. Não é um green de 2784 nem de ff557552, nem prova nativa. Critérios que dependem de resultado nativo/rota/residente/UI continuam abertos."
+  },
+  "reattached_native_schedule": {
+    "id": "CI04-SCHEDULE-NATIVE",
+    "product_sha": "ea5a6f965c803d436202934872c3650ab8f8eb19",
+    "product_tree": "8535b4ffdbbeee8549bc8820fec2551fa6cf9d09",
+    "snapshot_sha": "c03b06bea510e0ed8ec8df105c269304d388317f",
+    "run_id": 43584357490,
+    "job_id": 132415569882,
+    "request_sha256": "4abd04a9ceac4c9b60ede0a35bcade064e24683a832bd67846491d0c6c8554ae",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43584357490",
+    "run_conclusion": "failure",
+    "file_conclusion": "success",
+    "file": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/schedule-native.test.ts",
+      "passed": 22,
+      "failed": 0,
+      "tests": [
+        {
+          "state": "pass",
+          "test": "native Schedule controls and deduped prompt receipts remain distinct from a completed routine [259.89ms]"
+        },
+        {
+          "state": "pass",
+          "test": "admitted plus resultRef remains blocked without execution or authenticated output readers [1.85ms]"
+        },
+        {
+          "state": "pass",
+          "test": "native execution failed cannot become reviewable because a result reference exists [0.34ms]"
+        },
+        {
+          "state": "pass",
+          "test": "native execution cancelled cannot become reviewable because a result reference exists [0.18ms]"
+        },
+        {
+          "state": "pass",
+          "test": "reviewable requires matching native completion and the authenticated immutable artifact [1.33ms]"
+        },
+        {
+          "state": "pass",
+          "test": "result authorization denial never returns schedule result metadata [0.26ms]"
+        },
+        {
+          "state": "pass",
+          "test": "completion rejects a substituted runRef before reading output [0.21ms]"
+        },
+        {
+          "state": "pass",
+          "test": "completion rejects a substituted resultRef before reading output [0.12ms]"
+        },
+        {
+          "state": "pass",
+          "test": "completion rejects a substituted outputDigest before reading output [0.08ms]"
+        },
+        {
+          "state": "pass",
+          "test": "cancellation after the artifact read invalidates the earlier completion snapshot [0.51ms]"
+        },
+        {
+          "state": "pass",
+          "test": "a changed schedule revision during result recovery cannot return its older occurrence [0.49ms]"
+        },
+        {
+          "state": "pass",
+          "test": "a substituted owner binding during result recovery cannot expose the former owner's result [0.53ms]"
+        },
+        {
+          "state": "pass",
+          "test": "a replacement schedule-service cannot release identical result bytes through the previous provider [0.61ms]"
+        },
+        {
+          "state": "pass",
+          "test": "a replacement schedule-get cannot release identical result bytes through the previous provider [0.29ms]"
+        },
+        {
+          "state": "pass",
+          "test": "a replacement owner-resolver cannot release identical result bytes through the previous provider [0.22ms]"
+        },
+        {
+          "state": "pass",
+          "test": "a replacement source-authority cannot release identical result bytes through the previous provider [0.19ms]"
+        },
+        {
+          "state": "pass",
+          "test": "a replacement routine-reader cannot release identical result bytes through the previous provider [0.20ms]"
+        },
+        {
+          "state": "pass",
+          "test": "a replacement execution-reader cannot release identical result bytes through the previous provider [0.21ms]"
+        },
+        {
+          "state": "pass",
+          "test": "a replacement result-reader cannot release identical result bytes through the previous provider [0.23ms]"
+        },
+        {
+          "state": "pass",
+          "test": "a replacement result-read-call cannot release identical result bytes through the previous provider [0.20ms]"
+        },
+        {
+          "state": "pass",
+          "test": "a provider replacement during initial authorization stops before result recovery [0.17ms]"
+        },
+        {
+          "state": "pass",
+          "test": "a provider replacement during final authorization cannot release an already recovered result [0.59ms]"
+        }
+      ]
+    },
+    "omni_positive_control": "not applicable (focused: no declaring test ran)",
+    "equivalence": {
+      "from": "ea5a6f965c803d436202934872c3650ab8f8eb19",
+      "to": "2784daafbb0d3b58b6019822288a07fa38e5c5b0",
+      "changed_paths": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP07/collaboration-20261114/review-thread-context.md",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP08/collaboration-20261114/check03.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP08/collaboration-20261114/ci04-per-file.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP08/collaboration-20261114/ci04.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP08/collaboration-20261114/increment07.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP08/collaboration-20261114/visual-inspection-ci04.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP08/collaboration-reconciliation/README.md",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP08/collaboration-reconciliation/criteria-132.json",
+        "modules/sucafina/Sucafinav1/product/collaboration/authority.ts",
+        "modules/sucafina/Sucafinav1/product/collaboration/composition.ts",
+        "modules/sucafina/Sucafinav1/product/collaboration/host.ts",
+        "modules/sucafina/Sucafinav1/product/collaboration/recipient-actions.ts",
+        "modules/sucafina/Sucafinav1/product/collaboration/recipient-thread.ts",
+        "modules/sucafina/Sucafinav1/product/collaboration/thread-context.ts",
+        "modules/sucafina/Sucafinav1/product/collaboration/thread-history.ts",
+        "modules/sucafina/Sucafinav1/product/collaboration/thread-reads.ts",
+        "modules/sucafina/Sucafinav1/product/collaboration/threads.ts",
+        "modules/sucafina/Sucafinav1/product/collaboration/work-port.ts",
+        "modules/sucafina/Sucafinav1/product/reviews/application.ts",
+        "modules/sucafina/Sucafinav1/product/reviews/http.ts",
+        "modules/sucafina/Sucafinav1/product/reviews/services.ts",
+        "modules/sucafina/Sucafinav1/product/reviews/thread-context.ts",
+        "modules/sucafina/Sucafinav1/product/reviews/workspace.ts",
+        "modules/sucafina/Sucafinav1/product/routines/review-result.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp07/browser-ui.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp07/dashboard-agenda-consumer.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp07/review-thread-context.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp08/handoff-relation-continuity.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp08/thread-actors-fixture.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp08/work-review-context.test.ts"
+      ],
+      "preserved": [
+        "schedule-native.ts",
+        "schedule-native.test.ts",
+        "result-access.ts",
+        "lifecycle.ts",
+        "ui-authority-fixture.ts",
+        "product/integration/ui-authority.ts",
+        "product/contracts/**",
+        "packages/core/**",
+        "package manifests and lockfile"
+      ],
+      "assessment": "O compare completo contém somente os paths listados; nenhum cruza os imports em runtime deste teste. A mudança WP09 é review-result.ts, não importado pelo caso Schedule. Reanexação limitada a este arquivo, sem repetir o teste.",
+      "subsequent_candidate": "W1 altera schedule.ts e schedule-boundaries.test.ts, que não são importados por schedule-native.test.ts, além de fixtures WP07 e recibos."
+    },
+    "limits": [
+      "Run agregado falhou por dois testes WP07/WP08; não rotular o run como PASS.",
+      "O primeiro caso usa SQLite/ScheduledTask/SessionInput reais. SessionExecution é explicitamente substituído para não executar provider.",
+      "Os 21 casos restantes incluem snapshots de fronteira; completed/failed não demonstram Relay real. Prompt durável não é admissão C07 nem conclusão.",
+      "Não cobre schedule-result-consumer.test.ts."
+    ]
+  },
+  "reattached_review_consumers": {
+    "id": "W07-REVIEW",
+    "product_sha": "2784daafbb0d3b58b6019822288a07fa38e5c5b0",
+    "product_tree": "fd1c89074488008ff0e60fd07577268a34329069",
+    "snapshot_sha": "528ef2329844fe20aee393357a6bb9a549de332a",
+    "run_id": 43586213509,
+    "job_id": 132421137142,
+    "request_sha256": "eaa50841c218ed383b33d8cb28fd966de9eeda83c21a8fca9d39d629d88274c1",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43586213509/job/132421137142",
+    "run_conclusion": "failure",
+    "total": {
+      "passed": 56,
+      "failed": 2,
+      "files": 18,
+      "assertions": 475
+    },
+    "wp09": {
+      "passed": 30,
+      "failed": 0,
+      "files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp09/review-result.test.ts",
+          "passed": 29,
+          "failed": 0,
+          "cases": [
+            "C07 factual review retains the entire selected agenda after the transient selection is gone [7.26ms]",
+            "old factual results remain previewable without fabricating a preservable agenda [3.15ms]",
+            "the immutable result rejects a mismatched count in its agenda [4.40ms]",
+            "the immutable result rejects a mismatched records in its agenda [1.81ms]",
+            "the immutable result rejects a mismatched note in its agenda [11.72ms]",
+            "the immutable result rejects a mismatched section-order in its agenda [1.44ms]",
+            "a result cannot introduce a section source outside the admitted immutable source set [1.44ms]",
+            "revocation denies factual draft, comments and charts together on every reopening [2.57ms]",
+            "failed native execution cannot be reclassified as a factual review even with an old result [0.63ms]",
+            "a chart containing a different value is rejected before any review content is returned [1.62ms]",
+            "revoked nested evidence denies the entire factual result even when outer source access still succeeds [1.60ms]",
+            "revoked comment or decision access denies the snapshot despite authorized outer sources and C17 evidence [1.72ms]",
+            "an authenticated artifact cannot expose unknown nested projection bytes [1.40ms]",
+            "an authenticated artifact cannot expose unknown nested value bytes [1.26ms]",
+            "an authenticated artifact cannot expose unknown nested context bytes [1.28ms]",
+            "an authenticated artifact cannot expose unknown nested missing bytes [1.40ms]",
+            "an authenticated artifact cannot expose unknown nested chart bytes [1.75ms]",
+            "an authenticated artifact cannot expose unknown nested comment bytes [1.65ms]",
+            "an authenticated artifact cannot expose unknown nested pending bytes [1.38ms]",
+            "a distinct nested drilldown is independently authorized by C17 [1.93ms]",
+            "a distinct nested comparison is independently authorized by C17 [2.02ms]",
+            "a comparison cannot introduce an unadmitted source even when the outer source is valid [1.62ms]",
+            "nested evidence is rechecked after the final authenticated output reopening [2.59ms]",
+            "unavailable-source releases the selection instead of producing an incomplete preservable snapshot [1.41ms]",
+            "period-mismatch releases the selection instead of producing an incomplete preservable snapshot [0.56ms]",
+            "explicit agenda gaps remain present alongside the complete selected section snapshot [1.02ms]",
+            "a prior C05 comment association is bound to its original full comment digest [4.67ms]",
+            "an agenda comment association cannot borrow a comment from a different preserved review [1.95ms]",
+            "a factual result without an agenda cannot retain a dangling comment association [1.41ms]"
+          ]
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp09/review-product-consumer.test.ts",
+          "passed": 1,
+          "failed": 0,
+          "cases": [
+            "routine review returns a real WP07 selection consumed by human preservation and immutable C05 reads [21020.84ms]"
+          ]
+        }
+      ]
+    },
+    "omni_positive_control": "not applicable (focused: no declaring test ran)",
+    "limits": [
+      "As duas falhas agregadas são fixtures WP07. Não rotular o run como PASS.",
+      "review-result usa adapters reais com armazenamento/execução de fronteira; não é execução Relay nativa.",
+      "review-product-consumer usa Planner, seleção WP07, preservação humana e leitura C05 reais; não observa a UI do usuário.",
+      "A seleção não contém schedule-result-consumer.test.ts.",
+      "Em W1, estes dois testes e seus consumidores não mudam; nenhum novo green foi inventado."
+    ]
+  },
+  "new_schedule_delta": {
+    "id": "RESUME-SCHEDULE",
+    "product_sha": "ff557552936197b6734e57f0ecea0c44b19139b1",
+    "product_tree": "0349fb1b18315a9c7c0cadb04b738ea499beda05",
+    "snapshot_sha": "6f73befe7414d08cf882ef0b125d8857ad69ec4f",
+    "run_id": 43615514065,
+    "job_id": 132509571848,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43615514065",
+    "request_sha256": "3ccb0282eeac6533cad109b40d3c2750d19cfd6f42451f2458ccef744ed0ba4f",
+    "status": "success",
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "./Sucafinav1/test/product/wp09/schedule-boundaries.test.ts",
+        "./Sucafinav1/test/product/wp09/schedule-result-consumer.test.ts",
+        "./Sucafinav1/test/product/wp09/schedule.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "env": {
+        "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+      }
+    },
+    "envelope": "Snapshot filho de W1; apenas .ci-run.json adicionado. Root registrou compare canônico antes do dispatch.",
+    "purpose": "Troca assíncrona de autorizer/scheduler/occurrence/result reader, integridade de saída, compatibilidade com methods de prototype e contrato de recorrência existente.",
+    "limits": [
+      "São testes próprios de fronteira e consumidor; não substituem admissão/execução governada ou skill/residente.",
+      "Conclusão e log conferidos pelo root, sem duplicar o run. O workflow removeu a ref temporária após o sucesso."
+    ],
+    "conclusion": "success",
+    "passed": 42,
+    "failed": 0,
+    "files": 3,
+    "assertions": 111,
+    "duration_ms": 152,
+    "run_attempt": 1,
+    "completed_at": "2026-11-14T16:26:57Z",
+    "omni_positive_control": {
+      "verdict": "not applicable",
+      "nonce": "611300de1451a68088c085171e82befd",
+      "declaring_tests": 0,
+      "spawns": 0,
+      "delegated": 0,
+      "limit": "Não prova Omni nem Relay."
+    },
+    "job_log_sha256": "8243a84c07f81d19c731001848217b7be9c4b22cac80fe7c20600fac5a24847c",
+    "per_file": [
+      {
+        "path": "schedule-boundaries.test.ts",
+        "passed": 32,
+        "failed": 0
+      },
+      {
+        "path": "schedule-result-consumer.test.ts",
+        "passed": 7,
+        "failed": 0
+      },
+      {
+        "path": "schedule.test.ts",
+        "passed": 3,
+        "failed": 0
+      }
+    ]
+  },
+  "static": {
+    "historical": {
+      "product_sha": "a3dcbb62c88231f95a7c57afb32e975404a3b59c",
+      "snapshot_sha": "16a58925e65f410c95e2096778ea24f912919427",
+      "run_id": 43540252662,
+      "job_id": 132278887356,
+      "typecheck": {
+        "result": "failure",
+        "diagnostics": 78,
+        "own_diagnostics": 0
+      },
+      "guards": {
+        "result": "success",
+        "rules": 78,
+        "paths": 644,
+        "gates": 0,
+        "warnings": 13,
+        "errors": 0
+      }
+    },
+    "initial_resume": {
+      "product_sha": "2784daafbb0d3b58b6019822288a07fa38e5c5b0",
+      "snapshot_sha": "1a1ad851ff55683865d68d0d316db5bcdd45a9b7",
+      "run_id": 43586229183,
+      "job_id": 132421184948,
+      "result": "failure",
+      "receipt_owner": "WP08 collab-resume-20261114 intake-verified.json",
+      "typecheck": {
+        "result": "failure",
+        "diagnostics": 69,
+        "own_diagnostics": 0
+      },
+      "guards": {
+        "result": "success",
+        "rules": 78,
+        "paths": 842,
+        "gates": 0,
+        "warnings": 14,
+        "errors": 0
+      }
+    },
+    "candidate": {
+      "product_sha": "ff557552936197b6734e57f0ecea0c44b19139b1",
+      "status": "PENDING_ROOT_CHECKS",
+      "policy": "bun typecheck no package e guards origin/dev conforme AGENTS/CI; sem tsc direto, sem validação local de produto."
+    }
+  },
+  "unresolved_historical_failure": {
+    "run_id": 43540684025,
+    "job_id": 132280281865,
+    "scope": "WP06 runtime isolado",
+    "result": "failure_timeout",
+    "action": "Preservar; não rerodar como WP09 e não declarar corrigido."
+  },
+  "no_product_test_locally": true,
+  "no_native_completion_claimed": true,
+  "external_origin_advances": {
+    "wp12": {
+      "id": "WP12-ADVANCE-SCOPED-UI",
+      "origin_base": "dc8f3b19d40f52c19aabd219544c291460592b99",
+      "origin_head": "812f8427423dc143cefc2731edc3485eeb8d1f04",
+      "origin_tree": "37282950a3d1b07a08b2616c18a2bd06c1f4364e",
+      "changed_paths": 47,
+      "documentation_paths": 46,
+      "test_paths": 1,
+      "production_paths": 0,
+      "run_id": 43615955284,
+      "job_id": 132510939072,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43615955284",
+      "product_sha": "6880666b15dc18bf400c908a8457580526b70f4d",
+      "snapshot_sha": "89799ce8ca1d9a78e25695353879dfe2bd0c229a",
+      "request_blob": "7da6158d86bb67894540a3da08b9cc8fa46e6d96",
+      "request_sha256": "f70f8bd781179de5d2bddda44c66a00975ddcc9ed394ee13b4ad9d96932794a9",
+      "source_blobs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-review-crossroutes.test.ts",
+          "blob": "33a8103345de3addbd5dd75ed1303d3ff9826095",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/89799ce8ca1d9a78e25695353879dfe2bd0c229a/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-review-crossroutes.test.ts"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-work-list.test.ts",
+          "blob": "d305c89fcbf42eef0290e744880342b3b017b48d",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/89799ce8ca1d9a78e25695353879dfe2bd0c229a/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-work-list.test.ts"
+        }
+      ],
+      "conclusion": "failure",
+      "passed": 2,
+      "failed": 1,
+      "assertions": 446,
+      "cases": [
+        {
+          "status": "PASS",
+          "name": "native executive report routes and meeting review preparation consume real public human selections without changing either output contract",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-review-crossroutes.test.ts",
+          "blob": "33a8103345de3addbd5dd75ed1303d3ff9826095",
+          "pass_log_line": 904,
+          "duration_ms": 72209.63,
+          "supports": [
+            "WP07 T02/T04 scoped human public review selection and preservation; logged selection contains 44 values.",
+            "Actual UI sf_report_prepare and sf_artifact_get receipts, download and WP07 preserved review read after host reopen.",
+            "The same UI artifact ref and digest remain readable after reload."
+          ],
+          "marker_lines": [
+            871,
+            876,
+            903
+          ],
+          "limits": [
+            "Catalog empty; no Session/SkillLoadReceipt native mission output, native tool receipt or contribution consumer executed.",
+            "No historical source mutation is claimed; this does not prove removed-source historical access, current recipient ACL or C07.",
+            "This tests WP12 product W6880666b, not the later collaboration C05 W2/R09 changes."
+          ]
+        },
+        {
+          "status": "FAIL",
+          "name": "native question work list uses a public Procurement selection for its own pending case and reopens its real consumers",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-work-list.test.ts",
+          "blob": "d305c89fcbf42eef0290e744880342b3b017b48d",
+          "fail_log_line": 956,
+          "cause_log_line": 957,
+          "duration_ms": 448134.68,
+          "cause": "Test timed out after the fixed 360000ms deadline.",
+          "marker_lines": [
+            933,
+            955,
+            997
+          ],
+          "supports": [
+            "Partial observations only: real public Procurement Workbench selection, UI work result and existing C06 action, then consumer markers."
+          ],
+          "limits": [
+            "Terminal FAIL remains FAIL; markers after timeout do not establish an accepted case or authorize a larger deadline.",
+            "No native QuestionProposal, outputRef, native receipt or confirmed-answer reuse occurred."
+          ]
+        },
+        {
+          "status": "PASS",
+          "name": "native executive work list matches its selected real Hot Topic review and reopens the existing human action",
+          "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-work-list.test.ts",
+          "blob": "d305c89fcbf42eef0290e744880342b3b017b48d",
+          "pass_log_line": 1024,
+          "duration_ms": 207566.33,
+          "supports": [
+            "WP08 public Procurement My Work selection rendered through the actual Workbench and used the real UI sf_work_list receipt.",
+            "Same request/action/relation subject, current Hot Topic observation period and preserved review retained; the financial request horizon remains distinct.",
+            "Host reopening rejects the prior selector, emits a new public selector and reopens the existing action/review consumer.",
+            "Unauthenticated access and selected request deletion are refused; UI returned stale/Selection changed and HTTP409."
+          ],
+          "marker_lines": [
+            999,
+            1021,
+            1022
+          ],
+          "limits": [
+            "No Open work/destination-navigation claim.",
+            "No case-work-selection/workSignals proof.",
+            "No confirmed answer, independent recipient grant or full UI/native/MCP parity.",
+            "No native DecisionBrief, tool receipt or C07 execution; catalog empty.",
+            "Request-deletion denial does not prove positive historical access to a deleted source."
+          ]
+        }
+      ],
+      "native": {
+        "catalog_observations": 7,
+        "empty_catalog_observations": 7,
+        "unavailable_missions": 4,
+        "inference_executions": 0,
+        "output_refs": 0,
+        "native_consumers": 0,
+        "c07_execution": false,
+        "catalog_lines": [
+          856,
+          896,
+          926,
+          954,
+          996,
+          998,
+          1020
+        ],
+        "unavailable_lines": [
+          872,
+          873,
+          934,
+          1000
+        ]
+      },
+      "omni_positive_control": {
+        "verdict": "pass",
+        "nonce": "591afaaf0ac71df56c73467600b093a9",
+        "spawns": 189,
+        "delegated": 0,
+        "detail": "focused: no declaring test ran",
+        "line": 1023,
+        "native_acceptance": false
+      },
+      "log_sha256": "bacf25008bb8c9a5ab330211851a652462a294a126cc90a93536a25584a808a0",
+      "qualification": "Evidência externa delimitada de UI/consumo/reabertura WP07/WP08; não é execução nativa C07 nem validação do novo C05 em collab-resume. Nenhum critério WP09 foi promovido.",
+      "producer_blockers_unchanged": [
+        "C17 removed-source positive history",
+        "C06 capture and authorized current-period rollover",
+        "independent recipient ACL",
+        "full-review nonrecord access",
+        "C05 shared answer pin",
+        "native admission/recurrence/result"
+      ],
+      "document_correction": "Run antes descrito IN_PROGRESS e driver NOT_RUN já têm resultado terminal. A seleção pública Procurement existe; ausência de workSignals é do caminho distinto de seleção por caso.",
+      "source": "GitHub MCP compare, exact snapshot/request/test blobs, terminal workflow metadata and complete job log independently read by wp09_audit.",
+      "canonical_criterion_status_changed": false
+    },
+    "finance": {
+      "id": "FINANCE-CASE-PORT-ADVANCE",
+      "original": {
+        "branch": "astra-finance",
+        "sha": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "preserved": true
+      },
+      "successor": {
+        "branch": "finance-resume",
+        "sha": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+        "tree": "e7e471f64dfd7a34c9d4143968d76b711b0a2966",
+        "ahead": 28,
+        "behind": 0
+      },
+      "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "prior_owner_blob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+      "current_owner_blob": "d43849ba101000eb9eb2a6ddc9a04830b004ccc6",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/88b9b6bff53a4f64d37d04ddc868f1443cecf5b3/modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "required_dependency": "verifyScenarioOperations",
+      "owner": [
+        "WP11",
+        "WP10",
+        "S0"
+      ],
+      "observed": "Current Finance source requires verifyScenarioOperations and calls it before returning case evidence/access. The older integration document cites a prior case-port blob; the current source is authoritative.",
+      "disposition": "Do not transplant a permissive callback into collab-resume. When the new CasePort is composed, supply the actual canonical operation verifier and revalidate affected routine/collaboration consumers.",
+      "own_consumer": "modules/sucafina/Sucafinav1/test/product/wp09/decision-answer-consumer.test.ts",
+      "current_collab_implementation_changed": false,
+      "qualification": "Finding de composição futura; sem callback permissivo, cast, import inexistente ou edição de política financeira. Quando entrar o CasePort compatível, fornecer verificador canônico real e validar consumidores afetados no head integrado.",
+      "source_receipt": "../../WP08/collab-resume-20261114/finance-advance-reconciliation.json",
+      "source_receipt_sha256": "0ea6f79c0329c8b64bd564bba40ea05461eaebc1336319f9a432051813a1d422",
+      "source_method": "GitHub MCP compare plus exact per-directory Git tree comparison; compare capped at 300 files and not used as a complete inventory.",
+      "canonical_criterion_status_changed": false
+    }
+  }
+}

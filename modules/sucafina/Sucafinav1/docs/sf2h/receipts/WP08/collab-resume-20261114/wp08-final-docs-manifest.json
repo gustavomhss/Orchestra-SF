@@ -1,0 +1,93 @@
+{
+  "schema": "sf2h-wp08-final-four-documents-v1",
+  "status": "FROZEN_FOR_ROOT_COPY_AND_FINAL_STATIC_GATE",
+  "product_sha": "9e1f44af7689946d27d37ed48b9f5e9849417121",
+  "product_tree": "ac88fa893a3b8b9f36c4373c2889652025fcf0f3",
+  "implementation_product_sha": "dc21cd389de67c2e7fac996b663d9c0aa7d8cae5",
+  "source_pr": 33,
+  "draft_pr": 41,
+  "base_branch": "sf2-stack",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP08/collab-resume-20261114/criteria-132.json",
+      "preimage_blob": null,
+      "postimage_blob": "0ae2a4d312c44dab6c9d072ff193a8906ffea200",
+      "sha256": "e4f849f1edc2c26096c15fadaec51ebf2928a316faab2032bbd087a5664ca9ff",
+      "bytes": 461292,
+      "local_postimage": "/workspace/scratch/b64879936364/wp08-proposal/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP08/collab-resume-20261114/criteria-132.json"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP08/collab-resume-20261114/criteria-index.md",
+      "preimage_blob": null,
+      "postimage_blob": "5d80f4f51ec9d140081d96fd06936dfd52d1a58d",
+      "sha256": "7e422788a4ad51c04c851f6d8a700135bede1970fd8ea11e6f47ebaf92efbd4c",
+      "bytes": 19476,
+      "local_postimage": "/workspace/scratch/b64879936364/wp08-proposal/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP08/collab-resume-20261114/criteria-index.md"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP08/collab-resume-20261114/owner-deltas.md",
+      "preimage_blob": null,
+      "postimage_blob": "1048095471e52887ef253a04c60695bb0b39910c",
+      "sha256": "9e56800b169d16e30803d12e7cd6105bf8ec1a3cc41e4d7b3173f23826d44ee2",
+      "bytes": 16935,
+      "local_postimage": "/workspace/scratch/b64879936364/wp08-proposal/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP08/collab-resume-20261114/owner-deltas.md"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP08/collab-resume-20261114/handoff.md",
+      "preimage_blob": null,
+      "postimage_blob": "3e138d38da6debead1983a8a0126e53c40e5f143",
+      "sha256": "f8c77be3fd12c55546748bd18cdc11cb06961f735aa07877bc5aed6b0fbabf9a",
+      "bytes": 27543,
+      "local_postimage": "/workspace/scratch/b64879936364/wp08-proposal/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP08/collab-resume-20261114/handoff.md"
+    }
+  ],
+  "criteria": {
+    "wp08": 132,
+    "wp08_tasks": 6,
+    "combined": 330,
+    "combined_tasks": 17,
+    "literal_mismatches": 0,
+    "missing_ids": 0,
+    "extra_ids": 0,
+    "coverage_is_not_done": true,
+    "states": {
+      "SCOPED_W6_W7_ACTIONS_PROOF_WITH_OWNER_LIMITS": 23,
+      "PARTIAL_WITH_REATTACHED_HOSTED_EVIDENCE_AND_OWNER_LIMITS": 82,
+      "PRESERVED_PRIOR_PROOF_WITH_EXPLICIT_LIMITS": 13,
+      "SCOPED_W5_PASS_WITH_OWNER_LIMITS": 14
+    }
+  },
+  "verified_product_checks": {
+    "W6": {
+      "run_id": 43623257640,
+      "job_id": 132533400502,
+      "snapshot": "72848c2122b68e15341baa41e5beef4e9237562a",
+      "aggregate": "FAILURE",
+      "pass": 7,
+      "fail": 3,
+      "retained_named_pass": 7
+    },
+    "W7": {
+      "run_id": 43625515062,
+      "job_id": 132540336771,
+      "snapshot": "a4f8c7bd673de3e4092f20185f4c3ea2d10d0ec3",
+      "aggregate": "SUCCESS",
+      "pass": 5,
+      "fail": 0,
+      "filtered": 3,
+      "expects": 62,
+      "seconds": 316.06
+    }
+  },
+  "limitations_preserved": [
+    "W5 first253128.15ms and W6 B149408.75ms remain deadline failures; partition is not product-latency/SLO acceptance.",
+    "No installed-host UI C05 display, shared C16 pin extension, native Relay/C07, model inference or authenticated native output is claimed.",
+    "Same HTTP observationRef consumed by test is not proof of presentation to a person.",
+    "C17 producers belong to WP10/source owners; WP12 is a native consumer.",
+    "WP13 positive numerical replay and private-writer refusal remain separate open findings; provider fix already published WP10 but not composed into Finance; R5 only4+2 fixtures.",
+    "Final Bun typecheck/guards pending one root gate over product plus receipt commit; last verified W4 has69 unchanged foreign diagnostics,zero own."
+  ],
+  "product_tests_run_locally": false,
+  "source_or_test_changes_after_freeze": false,
+  "preimage_note": "Four new WP08 receipt paths, not yet published. Root must confirm absence/current blob before the one documentation commit."
+}

@@ -1,0 +1,84 @@
+{
+  "schema": "sf2h-wp08-w6-static-diagnosis-v1",
+  "base": "0d9820924b33a8fc7b145f54a675aeef76c98489",
+  "base_tree": "39cec0a91dc5ebc2dde012d4d1d8b63166074373",
+  "run": 43619790251,
+  "job": 132522634877,
+  "snapshot": "49e83715497e221350a8c221f45968debb566bea",
+  "summary": {
+    "pass": 8,
+    "fail": 2,
+    "assertions": 235,
+    "tests": 10,
+    "files": 7,
+    "seconds": 462.12
+  },
+  "native": "OMNI not applicable; no native execution claimed",
+  "findings": [
+    {
+      "id": "W6-FRESH-SCOPE",
+      "observed": "Fresh historical fixture first prepare fails answer-scope-unavailable at test line26, before any source change.",
+      "verified_static_mechanism": "projects confirmation issuer uses Portfolio Dashboard; page belongs to the scoped source selector. Unconditional readHistorical can replace the reader-issued current scope with the original All Projects scoped incarnation; prepare checks observation.incarnation against scope incarnation. This is not proof that every fresh source requires historical grant.",
+      "fix": "Restore the previously proven generic message.sourceContext ?? authenticated thread display basis and all existing refs/period/manifest checks. Apply strict canonical threadMessageContext only to explicit C05 pins. Never mutate observedVersion or fabricate currentRef."
+    },
+    {
+      "id": "W6-C05-COST",
+      "observed_ms": 253128.15,
+      "deadline_ms": 120000,
+      "phase_ms": {
+        "before_reopen": 109681,
+        "after_reopen": 132859,
+        "stale_work": 167054,
+        "reconfirm_history_resolve": 248492
+      },
+      "fix": "C05-only membership uses actual C08 identity/participation/latest-message checks, never source authorization; all successful prepare/confirm/read paths retain authenticated answer reader, exact scope observer and read-only fences. Non-C05 retains full membership evidence producer. answer-work omits duplicate resolve because observe independently derives and compares exact material scope.",
+      "static_full_review_reads_prepare": {
+        "W2": 70,
+        "W5": 32,
+        "W6": 16
+      },
+      "static_full_review_reads_work_projection": {
+        "W5": 4,
+        "W6": 2
+      },
+      "qualification": "Static counts only; latency remains an explicit limitation. Dividing causal tests does not establish performance improvement."
+    },
+    {
+      "id": "W6-CAUSAL-TESTS",
+      "fix": "Three independent real journeys redistribute the former first case: confirm/retry/shared refusal/SQLite reopen; real confirm and SQLite reopen then edit/stale/reconfirm/history/resolve; real confirmed C05 then distinct current-source question and ACL refusal. Original last-await revocation/physical replacement case remains whole. Every fixture/setup runs within its own120000ms budget; no shared beforeAll baseline or persisted boolean grant."
+    },
+    {
+      "id": "R10",
+      "owner": "WP08",
+      "classification": "New confirmed static version race, not a timeout diagnosis",
+      "mechanism": "answerReuse.read reread the answer and baseline outside C08, then its protected source fence did not bind either stored object. An independently admitted human edit after that final read left source/review/baseline unchanged and could return old body as confirmed. Both generic and C05 answerWork branches had the same last-read/fence gap and could return valid, suppressing work.",
+      "fix": "Common readonly helper pins persistence/transactionAll/currentSnapshots. It checks exact full canonical thread digest and applicable baseline digest in currentSnapshots before and after the awaited real producer fence. Generic and C05 paths share it. No nested state read/write or stored boolean grants.",
+      "baseline_cases": {
+        "prepare": "thread exact; baseline omitted, because an existing baseline is allowed",
+        "unconfirmed_read": "thread exact plus expected absent baseline",
+        "confirmed_read": "thread exact plus expected exact baseline",
+        "post_confirm": "thread exact plus newly saved exact baseline",
+        "work_both_branches": "thread exact plus expected exact baseline"
+      },
+      "counterexamples": "New answer-egress-version.test.ts has two120s cases with actual SQLite and a separately admitted human edit outsideC08. Read: after second baseline read. Work: after its own second canonical read, using the actual component directly so a later collector cannot mask invalid valid output.",
+      "status": "STATIC_PATCH_PREPARED; runtime proof pending Actions",
+      "prior_approval": "Suspended before publication; retained above, not erased."
+    }
+  ],
+  "product_tests_run_locally": false,
+  "approval": "Initial static approval is preserved as history and suspended by R10. Revised seven-file candidate requires independent cold review and hosted Actions.",
+  "approval_history": [
+    {
+      "state": "APPROVED_STATICALLY_BEFORE_R10",
+      "evidence": "Independent WP09 cold review of host1678fc9d,answer-work42e4813f,test55705843; no product test run."
+    },
+    {
+      "state": "SUSPENDED",
+      "reason": "R10 found after initial cold approval: version reread and source fence were separate; root explicitly held W6 publication."
+    },
+    {
+      "state": "PATCHED_PENDING_REVIEW_AND_CI",
+      "reason": "Root authorized common protected thread/baseline equality in both consumers and two actual human-edit counterexamples."
+    }
+  ]
+}

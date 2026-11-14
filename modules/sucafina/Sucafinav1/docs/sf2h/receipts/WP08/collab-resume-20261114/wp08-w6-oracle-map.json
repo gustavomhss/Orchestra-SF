@@ -1,0 +1,941 @@
+{
+  "schema": "sf2h-wp08-w6-causal-oracle-map-v1",
+  "source_product": "0d9820924b33a8fc7b145f54a675aeef76c98489",
+  "source_test_blob": "16b38f72bcbb6046647a7c0dde90b67d51e95029",
+  "source_assert_sites": 58,
+  "original_w2_assert_sites": 54,
+  "w5_added_assert_sites": 4,
+  "current_assert_sites": 58,
+  "removed_oracles": [],
+  "altered_literal_assertions": [],
+  "deadline_ms_each": 120000,
+  "fixtures_shared_between_tests": false,
+  "before_all_setup": false,
+  "direct_baseline_seeding": false,
+  "performance_limit": "W5 first journey253128.15ms exceeded120000ms despite completing its assertions. Splitting it does not itself prove lower product latency; new phase measurements are required.",
+  "causal_chains": [
+    {
+      "case": "A confirmation-reopen",
+      "chain": "Actual C05 and independently admitted recipient -> live domain change -> preserved reply -> exact ref negative -> work/unconfirmed -> actual HTTP observation -> exact displayed token confirm and idempotent retry -> source/domain invariants -> C16 refusal -> actual SQLite close/reopen and fresh consumers -> same saved baseline/work state and denied old in-memory observation."
+    },
+    {
+      "case": "B edit-reconfirm",
+      "chain": "New actual C05/recipient/domain-change/reply -> actual prepare + human confirm via C08 -> actual SQLite reopen and fresh consumers -> edit same message/incarnation/version -> exactly one stale item and repeated projection -> old observation denied -> new answerRef/prepare/confirm -> work suppression -> original version/body/pin -> same thread resolve and edited answer reuse."
+    },
+    {
+      "case": "C distinct-current-revocation",
+      "chain": "New actual C05/recipient/domain-change/reply -> actual prepare/human confirm -> new current-source question/reply with exactly same body -> unconfirmed status/shared current answer -> current review ACL revoke -> read/prepare/work all non-ok with no body or pin. The body alias edit.body is only a same-text selector in this scenario, not a claim that the edit journey was skipped or proven here."
+    },
+    {
+      "case": "D current-lease",
+      "chain": "Original second test unchanged: revoke review ACL during final human reply await -> no commit -> restore real admission/reply -> observe -> revoke at confirmation C08 commit -> no commit -> restore + explicit new observation/idempotency key -> confirm/read -> legal delete then hostile storage replacement -> new defined physical incarnation and old response denied."
+    }
+  ],
+  "loop_expansion": "Original final ACL loop still executes3 assertions for each of3 calls (read, prepare, work), retaining9 runtime assertions.",
+  "oracle_mapping": [
+    {
+      "id": "O01",
+      "before": {
+        "line": 31,
+        "case": "C05 answers confirm only the preserved review, suppress one work item, and recheck edits and review ACL",
+        "assertion": "expect(replied.messages[1]!.sourceContext).toEqual(f.basis)"
+      },
+      "after": {
+        "line": 31,
+        "case": "C05 answers confirm the displayed preserved review and reuse the same baseline after SQLite reopen",
+        "assertion": "expect(replied.messages[1]!.sourceContext).toEqual(f.basis)"
+      },
+      "text_preserved": true
+    },
+    {
+      "id": "O02",
+      "before": {
+        "line": 35,
+        "case": "C05 answers confirm only the preserved review, suppress one work item, and recheck edits and review ACL",
+        "assertion": "expect(wrongReference).toEqual({ status: \"unavailable\", reason: \"answer-observation-unavailable\" })"
+      },
+      "after": {
+        "line": 35,
+        "case": "C05 answers confirm the displayed preserved review and reuse the same baseline after SQLite reopen",
+        "assertion": "expect(wrongReference).toEqual({ status: \"unavailable\", reason: \"answer-observation-unavailable\" })"
+      },
+      "text_preserved": true
+    },
+    {
+      "id": "O03",
+      "before": {
+        "line": 36,
+        "case": "C05 answers confirm only the preserved review, suppress one work item, and recheck edits and review ACL",
+        "assertion": "expect(JSON.stringify(wrongReference)).not.toContain(body)"
+      },
+      "after": {
+        "line": 36,
+        "case": "C05 answers confirm the displayed preserved review and reuse the same baseline after SQLite reopen",
+        "assertion": "expect(JSON.stringify(wrongReference)).not.toContain(body)"
+      },
+      "text_preserved": true
+    },
+    {
+      "id": "O04",
+      "before": {
+        "line": 40,
+        "case": "C05 answers confirm only the preserved review, suppress one work item, and recheck edits and review ACL",
+        "assertion": "expect(pending.items.filter((item) => item.actionRef === thread.id)).toMatchObject([{ state: \"clarification-open\", reviewContext: f.basis.reviewContext }])"
+      },
+      "after": {
+        "line": 40,
+        "case": "C05 answers confirm the displayed preserved review and reuse the same baseline after SQLite reopen",
+        "assertion": "expect(pending.items.filter((item) => item.actionRef === thread.id)).toMatchObject([{ state: \"clarification-open\", reviewContext: f.basis.reviewContext }])"
+      },
+      "text_preserved": true
+    },
+    {
+      "id": "O05",
+      "before": {
+        "line": 41,
+        "case": "C05 answers confirm only the preserved review, suppress one work item, and recheck edits and review ACL",
+        "assertion": "expect(await port.answerReuse.read(thread.id, f.recipient)).toEqual({ status: \"needs-input\", reason: \"answer-unconfirmed\" })"
+      },
+      "after": {
+        "line": 41,
+        "case": "C05 answers confirm the displayed preserved review and reuse the same baseline after SQLite reopen",
+        "assertion": "expect(await port.answerReuse.read(thread.id, f.recipient)).toEqual({ status: \"needs-input\", reason: \"answer-unconfirmed\" })"
+      },
+      "text_preserved": true
+    },
+    {
+      "id": "O06",
+      "before": {
+        "line": 48,
+        "case": "C05 answers confirm only the preserved review, suppress one work item, and recheck edits and review ACL",
+        "assertion": "expect(httpPrepared.status).toBe(200)"
+      },
+      "after": {
+        "line": 48,
+        "case": "C05 answers confirm the displayed preserved review and reuse the same baseline after SQLite reopen",
+        "assertion": "expect(httpPrepared.status).toBe(200)"
+      },
+      "text_preserved": true
+    },
+    {
+      "id": "O07",
+      "before": {
+        "line": 49,
+        "case": "C05 answers confirm only the preserved review, suppress one work item, and recheck edits and review ACL",
+        "assertion": "expect(JSON.parse(displayed)).toMatchObject({ status: \"ok\", value: { reviewContext: f.basis.reviewContext, answer: body } })"
+      },
+      "after": {
+        "line": 49,
+        "case": "C05 answers confirm the displayed preserved review and reuse the same baseline after SQLite reopen",
+        "assertion": "expect(JSON.parse(displayed)).toMatchObject({ status: \"ok\", value: { reviewContext: f.basis.reviewContext, answer: body } })"
+      },
+      "text_preserved": true
+    },
+    {
+      "id": "O08",
+      "before": {
+        "line": 50,
+        "case": "C05 answers confirm only the preserved review, suppress one work item, and recheck edits and review ACL",
+        "assertion": "expect(displayed).not.toContain(\"accessLeaseRef\")"
+      },
+      "after": {
+        "line": 50,
+        "case": "C05 answers confirm the displayed preserved review and reuse the same baseline after SQLite reopen",
+        "assertion": "expect(displayed).not.toContain(\"accessLeaseRef\")"
+      },
+      "text_preserved": true
+    },
+    {
+      "id": "O09",
+      "before": {
+        "line": 51,
+        "case": "C05 answers confirm only the preserved review, suppress one work item, and recheck edits and review ACL",
+        "assertion": "expect(displayed).not.toContain(\"physicalIncarnation\")"
+      },
+      "after": {
+        "line": 51,
+        "case": "C05 answers confirm the displayed preserved review and reuse the same baseline after SQLite reopen",
+        "assertion": "expect(displayed).not.toContain(\"physicalIncarnation\")"
+      },
+      "text_preserved": true
+    },
+    {
+      "id": "O10",
+      "before": {
+        "line": 56,
+        "case": "C05 answers confirm only the preserved review, suppress one work item, and recheck edits and review ACL",
+        "assertion": "expect(prepared.reviewContext).toEqual(f.basis.reviewContext)"
+      },
+      "after": {
+        "line": 56,
+        "case": "C05 answers confirm the displayed preserved review and reuse the same baseline after SQLite reopen",
+        "assertion": "expect(prepared.reviewContext).toEqual(f.basis.reviewContext)"
+      },
+      "text_preserved": true
+    },
+    {
+      "id": "O11",
+      "before": {
+        "line": 57,
+        "case": "C05 answers confirm only the preserved review, suppress one work item, and recheck edits and review ACL",
+        "assertion": "expect(prepared.scope.scopeDefinitionVersion).toBe(\"review-thread-c06-v1\")"
+      },
+      "after": {
+        "line": 57,
+        "case": "C05 answers confirm the displayed preserved review and reuse the same baseline after SQLite reopen",
+        "assertion": "expect(prepared.scope.scopeDefinitionVersion).toBe(\"review-thread-c06-v1\")"
+      },
+      "text_preserved": true
+    },
+    {
+      "id": "O12",
+      "before": {
+        "line": 58,
+        "case": "C05 answers confirm only the preserved review, suppress one work item, and recheck edits and review ACL",
+        "assertion": "expect(prepared.observedSourceVersion).toBe(f.source.target.version)"
+      },
+      "after": {
+        "line": 58,
+        "case": "C05 answers confirm the displayed preserved review and reuse the same baseline after SQLite reopen",
+        "assertion": "expect(prepared.observedSourceVersion).toBe(f.source.target.version)"
+      },
+      "text_preserved": true
+    },
+    {
+      "id": "O13",
+      "before": {
+        "line": 61,
+        "case": "C05 answers confirm only the preserved review, suppress one work item, and recheck edits and review ACL",
+        "assertion": "expect(available(await confirm())).toEqual({ answerRef, observedVersion: f.source.target.version })"
+      },
+      "after": {
+        "line": 61,
+        "case": "C05 answers confirm the displayed preserved review and reuse the same baseline after SQLite reopen",
+        "assertion": "expect(available(await confirm())).toEqual({ answerRef, observedVersion: f.source.target.version })"
+      },
+      "text_preserved": true
+    },
+    {
+      "id": "O14",
+      "before": {
+        "line": 63,
+        "case": "C05 answers confirm only the preserved review, suppress one work item, and recheck edits and review ACL",
+        "assertion": "expect(available(await confirm())).toEqual({ answerRef, observedVersion: f.source.target.version })"
+      },
+      "after": {
+        "line": 63,
+        "case": "C05 answers confirm the displayed preserved review and reuse the same baseline after SQLite reopen",
+        "assertion": "expect(available(await confirm())).toEqual({ answerRef, observedVersion: f.source.target.version })"
+      },
+      "text_preserved": true
+    },
+    {
+      "id": "O15",
+      "before": {
+        "line": 64,
+        "case": "C05 answers confirm only the preserved review, suppress one work item, and recheck edits and review ACL",
+        "assertion": "expect(available(await port.storageVersion(\"threads\", f.recipient))).toBe(version)"
+      },
+      "after": {
+        "line": 64,
+        "case": "C05 answers confirm the displayed preserved review and reuse the same baseline after SQLite reopen",
+        "assertion": "expect(available(await port.storageVersion(\"threads\", f.recipient))).toBe(version)"
+      },
+      "text_preserved": true
+    },
+    {
+      "id": "O16",
+      "before": {
+        "line": 66,
+        "case": "C05 answers confirm only the preserved review, suppress one work item, and recheck edits and review ACL",
+        "assertion": "expect(available(await port.answerReuse.read(thread.id, f.recipient))).toMatchObject({ answerRef, answer: body, authorRef: \"reader-b\", observedVersion: f.source.target.version, reviewContext: f.basis.reviewContext })"
+      },
+      "after": {
+        "line": 66,
+        "case": "C05 answers confirm the displayed preserved review and reuse the same baseline after SQLite reopen",
+        "assertion": "expect(available(await port.answerReuse.read(thread.id, f.recipient))).toMatchObject({ answerRef, answer: body, authorRef: \"reader-b\", observedVersion: f.source.target.version, reviewContext: f.basis.reviewContext })"
+      },
+      "text_preserved": true
+    },
+    {
+      "id": "O17",
+      "before": {
+        "line": 67,
+        "case": "C05 answers confirm only the preserved review, suppress one work item, and recheck edits and review ACL",
+        "assertion": "expect(available(await port.work.listPresentation(workSelection, f.recipient)).items.filter((item) => item.actionRef === thread.id)).toEqual([])"
+      },
+      "after": {
+        "line": 67,
+        "case": "C05 answers confirm the displayed preserved review and reuse the same baseline after SQLite reopen",
+        "assertion": "expect(available(await port.work.listPresentation(workSelection, f.recipient)).items.filter((item) => item.actionRef === thread.id)).toEqual([])"
+      },
+      "text_preserved": true
+    },
+    {
+      "id": "O18",
+      "before": {
+        "line": 68,
+        "case": "C05 answers confirm only the preserved review, suppress one work item, and recheck edits and review ACL",
+        "assertion": "expect(digestSfValue(available(await f.services.reviews.read(f.review.id, f.recipient)))).toBe(f.basis.reviewContext.reviewDigest)"
+      },
+      "after": {
+        "line": 68,
+        "case": "C05 answers confirm the displayed preserved review and reuse the same baseline after SQLite reopen",
+        "assertion": "expect(digestSfValue(available(await f.services.reviews.read(f.review.id, f.recipient)))).toBe(f.basis.reviewContext.reviewDigest)"
+      },
+      "text_preserved": true
+    },
+    {
+      "id": "O19",
+      "before": {
+        "line": 70,
+        "case": "C05 answers confirm only the preserved review, suppress one work item, and recheck edits and review ACL",
+        "assertion": "expect(afterConfirm.dashboard.data.projects).toEqual(afterDomain.dashboard.data.projects)"
+      },
+      "after": {
+        "line": 70,
+        "case": "C05 answers confirm the displayed preserved review and reuse the same baseline after SQLite reopen",
+        "assertion": "expect(afterConfirm.dashboard.data.projects).toEqual(afterDomain.dashboard.data.projects)"
+      },
+      "text_preserved": true
+    },
+    {
+      "id": "O20",
+      "before": {
+        "line": 71,
+        "case": "C05 answers confirm only the preserved review, suppress one work item, and recheck edits and review ACL",
+        "assertion": "expect(afterConfirm.dashboard.data.hotTopics).toEqual(afterDomain.dashboard.data.hotTopics)"
+      },
+      "after": {
+        "line": 71,
+        "case": "C05 answers confirm the displayed preserved review and reuse the same baseline after SQLite reopen",
+        "assertion": "expect(afterConfirm.dashboard.data.hotTopics).toEqual(afterDomain.dashboard.data.hotTopics)"
+      },
+      "text_preserved": true
+    },
+    {
+      "id": "O21",
+      "before": {
+        "line": 78,
+        "case": "C05 answers confirm only the preserved review, suppress one work item, and recheck edits and review ACL",
+        "assertion": "expect(shared).toMatchObject({ status: \"unavailable\", reason: \"review-answer-output-contract-unavailable\" })"
+      },
+      "after": {
+        "line": 78,
+        "case": "C05 answers confirm the displayed preserved review and reuse the same baseline after SQLite reopen",
+        "assertion": "expect(shared).toMatchObject({ status: \"unavailable\", reason: \"review-answer-output-contract-unavailable\" })"
+      },
+      "text_preserved": true
+    },
+    {
+      "id": "O22",
+      "before": {
+        "line": 79,
+        "case": "C05 answers confirm only the preserved review, suppress one work item, and recheck edits and review ACL",
+        "assertion": "expect(JSON.stringify(shared)).not.toContain(body)"
+      },
+      "after": {
+        "line": 79,
+        "case": "C05 answers confirm the displayed preserved review and reuse the same baseline after SQLite reopen",
+        "assertion": "expect(JSON.stringify(shared)).not.toContain(body)"
+      },
+      "text_preserved": true
+    },
+    {
+      "id": "O23",
+      "before": {
+        "line": 80,
+        "case": "C05 answers confirm only the preserved review, suppress one work item, and recheck edits and review ACL",
+        "assertion": "expect(JSON.stringify(shared)).not.toContain(f.review.id)"
+      },
+      "after": {
+        "line": 80,
+        "case": "C05 answers confirm the displayed preserved review and reuse the same baseline after SQLite reopen",
+        "assertion": "expect(JSON.stringify(shared)).not.toContain(f.review.id)"
+      },
+      "text_preserved": true
+    },
+    {
+      "id": "O24",
+      "before": {
+        "line": 86,
+        "case": "C05 answers confirm only the preserved review, suppress one work item, and recheck edits and review ACL",
+        "assertion": "await expect(reopened.closed.transaction(\"dashboard\", async () => ({ commit: false, value: true }))).rejects.toThrow(\"disposed\")"
+      },
+      "after": {
+        "line": 86,
+        "case": "C05 answers confirm the displayed preserved review and reuse the same baseline after SQLite reopen",
+        "assertion": "await expect(reopened.closed.transaction(\"dashboard\", async () => ({ commit: false, value: true }))).rejects.toThrow(\"disposed\")"
+      },
+      "text_preserved": true
+    },
+    {
+      "id": "O25",
+      "before": {
+        "line": 89,
+        "case": "C05 answers confirm only the preserved review, suppress one work item, and recheck edits and review ACL",
+        "assertion": "expect(available(await port.answerReuse.read(thread.id, f.recipient))).toMatchObject({ answerRef, answer: body, observedVersion: f.source.target.version, reviewContext: f.basis.reviewContext })"
+      },
+      "after": {
+        "line": 89,
+        "case": "C05 answers confirm the displayed preserved review and reuse the same baseline after SQLite reopen",
+        "assertion": "expect(available(await port.answerReuse.read(thread.id, f.recipient))).toMatchObject({ answerRef, answer: body, observedVersion: f.source.target.version, reviewContext: f.basis.reviewContext })"
+      },
+      "text_preserved": true
+    },
+    {
+      "id": "O26",
+      "before": {
+        "line": 90,
+        "case": "C05 answers confirm only the preserved review, suppress one work item, and recheck edits and review ACL",
+        "assertion": "expect(available(await port.work.listPresentation(workSelection, f.recipient)).items.filter((item) => item.actionRef === thread.id)).toEqual([])"
+      },
+      "after": {
+        "line": 90,
+        "case": "C05 answers confirm the displayed preserved review and reuse the same baseline after SQLite reopen",
+        "assertion": "expect(available(await port.work.listPresentation(workSelection, f.recipient)).items.filter((item) => item.actionRef === thread.id)).toEqual([])"
+      },
+      "text_preserved": true
+    },
+    {
+      "id": "O27",
+      "before": {
+        "line": 91,
+        "case": "C05 answers confirm only the preserved review, suppress one work item, and recheck edits and review ACL",
+        "assertion": "expect(await confirm()).toEqual({ status: \"denied\", reason: \"answer-observation-unavailable\" })"
+      },
+      "after": {
+        "line": 91,
+        "case": "C05 answers confirm the displayed preserved review and reuse the same baseline after SQLite reopen",
+        "assertion": "expect(await confirm()).toEqual({ status: \"denied\", reason: \"answer-observation-unavailable\" })"
+      },
+      "text_preserved": true
+    },
+    {
+      "id": "O28",
+      "before": {
+        "line": 93,
+        "case": "C05 answers confirm only the preserved review, suppress one work item, and recheck edits and review ACL",
+        "assertion": "expect(available(await port.storageVersion(\"threads\", f.recipient))).toBe(version)"
+      },
+      "after": {
+        "line": 93,
+        "case": "C05 answers confirm the displayed preserved review and reuse the same baseline after SQLite reopen",
+        "assertion": "expect(available(await port.storageVersion(\"threads\", f.recipient))).toBe(version)"
+      },
+      "text_preserved": true
+    },
+    {
+      "id": "O29",
+      "before": {
+        "line": 102,
+        "case": "C05 answers confirm only the preserved review, suppress one work item, and recheck edits and review ACL",
+        "assertion": "expect(stale).toHaveLength(1)"
+      },
+      "after": {
+        "line": 122,
+        "case": "C05 edited answers after SQLite reopen create one stale item and reconfirm the same original review",
+        "assertion": "expect(stale).toHaveLength(1)"
+      },
+      "text_preserved": true
+    },
+    {
+      "id": "O30",
+      "before": {
+        "line": 103,
+        "case": "C05 answers confirm only the preserved review, suppress one work item, and recheck edits and review ACL",
+        "assertion": "expect(stale).toMatchObject([{ state: \"answer-stale\", reason: \"answer-changed\", reviewContext: f.basis.reviewContext }])"
+      },
+      "after": {
+        "line": 123,
+        "case": "C05 edited answers after SQLite reopen create one stale item and reconfirm the same original review",
+        "assertion": "expect(stale).toMatchObject([{ state: \"answer-stale\", reason: \"answer-changed\", reviewContext: f.basis.reviewContext }])"
+      },
+      "text_preserved": true
+    },
+    {
+      "id": "O31",
+      "before": {
+        "line": 104,
+        "case": "C05 answers confirm only the preserved review, suppress one work item, and recheck edits and review ACL",
+        "assertion": "expect(available(await port.work.listPresentation(workSelection, f.recipient)).items.filter((item) => item.actionRef === thread.id)).toEqual(stale)"
+      },
+      "after": {
+        "line": 124,
+        "case": "C05 edited answers after SQLite reopen create one stale item and reconfirm the same original review",
+        "assertion": "expect(available(await port.work.listPresentation(workSelection, f.recipient)).items.filter((item) => item.actionRef === thread.id)).toEqual(stale)"
+      },
+      "text_preserved": true
+    },
+    {
+      "id": "O32",
+      "before": {
+        "line": 106,
+        "case": "C05 answers confirm only the preserved review, suppress one work item, and recheck edits and review ACL",
+        "assertion": "expect((await confirm()).status).not.toBe(\"ok\")"
+      },
+      "after": {
+        "line": 126,
+        "case": "C05 edited answers after SQLite reopen create one stale item and reconfirm the same original review",
+        "assertion": "expect((await confirm()).status).not.toBe(\"ok\")"
+      },
+      "text_preserved": true
+    },
+    {
+      "id": "O33",
+      "before": {
+        "line": 108,
+        "case": "C05 answers confirm only the preserved review, suppress one work item, and recheck edits and review ACL",
+        "assertion": "expect(currentAnswerRef).not.toBe(answerRef)"
+      },
+      "after": {
+        "line": 128,
+        "case": "C05 edited answers after SQLite reopen create one stale item and reconfirm the same original review",
+        "assertion": "expect(currentAnswerRef).not.toBe(answerRef)"
+      },
+      "text_preserved": true
+    },
+    {
+      "id": "O34",
+      "before": {
+        "line": 112,
+        "case": "C05 answers confirm only the preserved review, suppress one work item, and recheck edits and review ACL",
+        "assertion": "expect(available(await port.work.listPresentation(workSelection, f.recipient)).items.filter((item) => item.actionRef === thread.id)).toEqual([])"
+      },
+      "after": {
+        "line": 132,
+        "case": "C05 edited answers after SQLite reopen create one stale item and reconfirm the same original review",
+        "assertion": "expect(available(await port.work.listPresentation(workSelection, f.recipient)).items.filter((item) => item.actionRef === thread.id)).toEqual([])"
+      },
+      "text_preserved": true
+    },
+    {
+      "id": "O35",
+      "before": {
+        "line": 114,
+        "case": "C05 answers confirm only the preserved review, suppress one work item, and recheck edits and review ACL",
+        "assertion": "expect(historicalAnswer.message.body).toBe(body)"
+      },
+      "after": {
+        "line": 134,
+        "case": "C05 edited answers after SQLite reopen create one stale item and reconfirm the same original review",
+        "assertion": "expect(historicalAnswer.message.body).toBe(body)"
+      },
+      "text_preserved": true
+    },
+    {
+      "id": "O36",
+      "before": {
+        "line": 115,
+        "case": "C05 answers confirm only the preserved review, suppress one work item, and recheck edits and review ACL",
+        "assertion": "expect(historicalAnswer.reviewContext).toEqual(f.basis.reviewContext)"
+      },
+      "after": {
+        "line": 135,
+        "case": "C05 edited answers after SQLite reopen create one stale item and reconfirm the same original review",
+        "assertion": "expect(historicalAnswer.reviewContext).toEqual(f.basis.reviewContext)"
+      },
+      "text_preserved": true
+    },
+    {
+      "id": "O37",
+      "before": {
+        "line": 117,
+        "case": "C05 answers confirm only the preserved review, suppress one work item, and recheck edits and review ACL",
+        "assertion": "expect(available(await port.recipientActions.resolve(thread.id, resolution, await f.admit(\"reader-b\", \"collaboration.thread.resolve\", { id: thread.id, mutation: resolution }))).state).toBe(\"resolved\")"
+      },
+      "after": {
+        "line": 137,
+        "case": "C05 edited answers after SQLite reopen create one stale item and reconfirm the same original review",
+        "assertion": "expect(available(await port.recipientActions.resolve(thread.id, resolution, await f.admit(\"reader-b\", \"collaboration.thread.resolve\", { id: thread.id, mutation: resolution }))).state).toBe(\"resolved\")"
+      },
+      "text_preserved": true
+    },
+    {
+      "id": "O38",
+      "before": {
+        "line": 118,
+        "case": "C05 answers confirm only the preserved review, suppress one work item, and recheck edits and review ACL",
+        "assertion": "expect(available(await port.answerReuse.read(thread.id, f.recipient))).toMatchObject({ answer: edit.body, reviewContext: f.basis.reviewContext })"
+      },
+      "after": {
+        "line": 138,
+        "case": "C05 edited answers after SQLite reopen create one stale item and reconfirm the same original review",
+        "assertion": "expect(available(await port.answerReuse.read(thread.id, f.recipient))).toMatchObject({ answer: edit.body, reviewContext: f.basis.reviewContext })"
+      },
+      "text_preserved": true
+    },
+    {
+      "id": "O39",
+      "before": {
+        "line": 129,
+        "case": "C05 answers confirm only the preserved review, suppress one work item, and recheck edits and review ACL",
+        "assertion": "expect(await port.answerReuse.read(live.id, f.recipient)).toEqual({ status: \"needs-input\", reason: \"answer-unconfirmed\" })"
+      },
+      "after": {
+        "line": 172,
+        "case": "a current-domain question cannot inherit a confirmed C05 answer and review ACL revocation hides every private consumer",
+        "assertion": "expect(await port.answerReuse.read(live.id, f.recipient)).toEqual({ status: \"needs-input\", reason: \"answer-unconfirmed\" })"
+      },
+      "text_preserved": true
+    },
+    {
+      "id": "O40",
+      "before": {
+        "line": 130,
+        "case": "C05 answers confirm only the preserved review, suppress one work item, and recheck edits and review ACL",
+        "assertion": "expect(await dispatch(live.id)).toMatchObject({ status: \"ok\", result: { questionRef: live.id, answer: edit.body, state: \"unconfirmed\" } })"
+      },
+      "after": {
+        "line": 173,
+        "case": "a current-domain question cannot inherit a confirmed C05 answer and review ACL revocation hides every private consumer",
+        "assertion": "expect(await dispatch(live.id)).toMatchObject({ status: \"ok\", result: { questionRef: live.id, answer: edit.body, state: \"unconfirmed\" } })"
+      },
+      "text_preserved": true
+    },
+    {
+      "id": "O41",
+      "before": {
+        "line": 134,
+        "case": "C05 answers confirm only the preserved review, suppress one work item, and recheck edits and review ACL",
+        "assertion": "expect(result.status).not.toBe(\"ok\")"
+      },
+      "after": {
+        "line": 177,
+        "case": "a current-domain question cannot inherit a confirmed C05 answer and review ACL revocation hides every private consumer",
+        "assertion": "expect(result.status).not.toBe(\"ok\")"
+      },
+      "text_preserved": true
+    },
+    {
+      "id": "O42",
+      "before": {
+        "line": 135,
+        "case": "C05 answers confirm only the preserved review, suppress one work item, and recheck edits and review ACL",
+        "assertion": "expect(JSON.stringify(result)).not.toContain(\"C05-ANSWER\")"
+      },
+      "after": {
+        "line": 178,
+        "case": "a current-domain question cannot inherit a confirmed C05 answer and review ACL revocation hides every private consumer",
+        "assertion": "expect(JSON.stringify(result)).not.toContain(\"C05-ANSWER\")"
+      },
+      "text_preserved": true
+    },
+    {
+      "id": "O43",
+      "before": {
+        "line": 136,
+        "case": "C05 answers confirm only the preserved review, suppress one work item, and recheck edits and review ACL",
+        "assertion": "expect(JSON.stringify(result)).not.toContain(f.review.id)"
+      },
+      "after": {
+        "line": 179,
+        "case": "a current-domain question cannot inherit a confirmed C05 answer and review ACL revocation hides every private consumer",
+        "assertion": "expect(JSON.stringify(result)).not.toContain(f.review.id)"
+      },
+      "text_preserved": true
+    },
+    {
+      "id": "O44",
+      "before": {
+        "line": 162,
+        "case": "C05 confirmation refuses a lease revoked at commit and cannot revive a replaced physical source",
+        "assertion": "expect(revokedAfterHumanCheck).toBe(true)"
+      },
+      "after": {
+        "line": 205,
+        "case": "C05 confirmation refuses a lease revoked at commit and cannot revive a replaced physical source",
+        "assertion": "expect(revokedAfterHumanCheck).toBe(true)"
+      },
+      "text_preserved": true
+    },
+    {
+      "id": "O45",
+      "before": {
+        "line": 163,
+        "case": "C05 confirmation refuses a lease revoked at commit and cannot revive a replaced physical source",
+        "assertion": "expect(refused.status).not.toBe(\"ok\")"
+      },
+      "after": {
+        "line": 206,
+        "case": "C05 confirmation refuses a lease revoked at commit and cannot revive a replaced physical source",
+        "assertion": "expect(refused.status).not.toBe(\"ok\")"
+      },
+      "text_preserved": true
+    },
+    {
+      "id": "O46",
+      "before": {
+        "line": 164,
+        "case": "C05 confirmation refuses a lease revoked at commit and cannot revive a replaced physical source",
+        "assertion": "expect(JSON.stringify(refused)).not.toContain(body)"
+      },
+      "after": {
+        "line": 207,
+        "case": "C05 confirmation refuses a lease revoked at commit and cannot revive a replaced physical source",
+        "assertion": "expect(JSON.stringify(refused)).not.toContain(body)"
+      },
+      "text_preserved": true
+    },
+    {
+      "id": "O47",
+      "before": {
+        "line": 166,
+        "case": "C05 confirmation refuses a lease revoked at commit and cannot revive a replaced physical source",
+        "assertion": "expect(available(await port.storageVersion(\"threads\", f.recipient))).toBe(replyMutation.expectedStorageVersion)"
+      },
+      "after": {
+        "line": 209,
+        "case": "C05 confirmation refuses a lease revoked at commit and cannot revive a replaced physical source",
+        "assertion": "expect(available(await port.storageVersion(\"threads\", f.recipient))).toBe(replyMutation.expectedStorageVersion)"
+      },
+      "text_preserved": true
+    },
+    {
+      "id": "O48",
+      "before": {
+        "line": 182,
+        "case": "C05 confirmation refuses a lease revoked at commit and cannot revive a replaced physical source",
+        "assertion": "expect(entered).toBe(true)"
+      },
+      "after": {
+        "line": 225,
+        "case": "C05 confirmation refuses a lease revoked at commit and cannot revive a replaced physical source",
+        "assertion": "expect(entered).toBe(true)"
+      },
+      "text_preserved": true
+    },
+    {
+      "id": "O49",
+      "before": {
+        "line": 183,
+        "case": "C05 confirmation refuses a lease revoked at commit and cannot revive a replaced physical source",
+        "assertion": "expect(raced.status).not.toBe(\"ok\")"
+      },
+      "after": {
+        "line": 226,
+        "case": "C05 confirmation refuses a lease revoked at commit and cannot revive a replaced physical source",
+        "assertion": "expect(raced.status).not.toBe(\"ok\")"
+      },
+      "text_preserved": true
+    },
+    {
+      "id": "O50",
+      "before": {
+        "line": 184,
+        "case": "C05 confirmation refuses a lease revoked at commit and cannot revive a replaced physical source",
+        "assertion": "expect(JSON.stringify(raced)).not.toContain(body)"
+      },
+      "after": {
+        "line": 227,
+        "case": "C05 confirmation refuses a lease revoked at commit and cannot revive a replaced physical source",
+        "assertion": "expect(JSON.stringify(raced)).not.toContain(body)"
+      },
+      "text_preserved": true
+    },
+    {
+      "id": "O51",
+      "before": {
+        "line": 186,
+        "case": "C05 confirmation refuses a lease revoked at commit and cannot revive a replaced physical source",
+        "assertion": "expect(available(await port.storageVersion(\"threads\", f.recipient))).toBe(version)"
+      },
+      "after": {
+        "line": 229,
+        "case": "C05 confirmation refuses a lease revoked at commit and cannot revive a replaced physical source",
+        "assertion": "expect(available(await port.storageVersion(\"threads\", f.recipient))).toBe(version)"
+      },
+      "text_preserved": true
+    },
+    {
+      "id": "O52",
+      "before": {
+        "line": 188,
+        "case": "C05 confirmation refuses a lease revoked at commit and cannot revive a replaced physical source",
+        "assertion": "expect(await port.answerReuse.read(thread.id, f.recipient)).toEqual({ status: \"needs-input\", reason: \"answer-unconfirmed\" })"
+      },
+      "after": {
+        "line": 231,
+        "case": "C05 confirmation refuses a lease revoked at commit and cannot revive a replaced physical source",
+        "assertion": "expect(await port.answerReuse.read(thread.id, f.recipient)).toEqual({ status: \"needs-input\", reason: \"answer-unconfirmed\" })"
+      },
+      "text_preserved": true
+    },
+    {
+      "id": "O53",
+      "before": {
+        "line": 193,
+        "case": "C05 confirmation refuses a lease revoked at commit and cannot revive a replaced physical source",
+        "assertion": "expect(available(await port.answerReuse.read(thread.id, f.recipient)).reviewContext).toEqual(f.basis.reviewContext)"
+      },
+      "after": {
+        "line": 236,
+        "case": "C05 confirmation refuses a lease revoked at commit and cannot revive a replaced physical source",
+        "assertion": "expect(available(await port.answerReuse.read(thread.id, f.recipient)).reviewContext).toEqual(f.basis.reviewContext)"
+      },
+      "text_preserved": true
+    },
+    {
+      "id": "O54",
+      "before": {
+        "line": 207,
+        "case": "C05 confirmation refuses a lease revoked at commit and cannot revive a replaced physical source",
+        "assertion": "expect(replacedPhysical).toBeDefined()"
+      },
+      "after": {
+        "line": 250,
+        "case": "C05 confirmation refuses a lease revoked at commit and cannot revive a replaced physical source",
+        "assertion": "expect(replacedPhysical).toBeDefined()"
+      },
+      "text_preserved": true
+    },
+    {
+      "id": "O55",
+      "before": {
+        "line": 208,
+        "case": "C05 confirmation refuses a lease revoked at commit and cannot revive a replaced physical source",
+        "assertion": "expect(replacedPhysical?.incarnation).not.toBe(oldPhysical.incarnation)"
+      },
+      "after": {
+        "line": 251,
+        "case": "C05 confirmation refuses a lease revoked at commit and cannot revive a replaced physical source",
+        "assertion": "expect(replacedPhysical?.incarnation).not.toBe(oldPhysical.incarnation)"
+      },
+      "text_preserved": true
+    },
+    {
+      "id": "O56",
+      "before": {
+        "line": 210,
+        "case": "C05 confirmation refuses a lease revoked at commit and cannot revive a replaced physical source",
+        "assertion": "expect(replaced.status).not.toBe(\"ok\")"
+      },
+      "after": {
+        "line": 253,
+        "case": "C05 confirmation refuses a lease revoked at commit and cannot revive a replaced physical source",
+        "assertion": "expect(replaced.status).not.toBe(\"ok\")"
+      },
+      "text_preserved": true
+    },
+    {
+      "id": "O57",
+      "before": {
+        "line": 211,
+        "case": "C05 confirmation refuses a lease revoked at commit and cannot revive a replaced physical source",
+        "assertion": "expect(JSON.stringify(replaced)).not.toContain(body)"
+      },
+      "after": {
+        "line": 254,
+        "case": "C05 confirmation refuses a lease revoked at commit and cannot revive a replaced physical source",
+        "assertion": "expect(JSON.stringify(replaced)).not.toContain(body)"
+      },
+      "text_preserved": true
+    },
+    {
+      "id": "O58",
+      "before": {
+        "line": 212,
+        "case": "C05 confirmation refuses a lease revoked at commit and cannot revive a replaced physical source",
+        "assertion": "expect(JSON.stringify(replaced)).not.toContain(f.review.id)"
+      },
+      "after": {
+        "line": 255,
+        "case": "C05 confirmation refuses a lease revoked at commit and cannot revive a replaced physical source",
+        "assertion": "expect(JSON.stringify(replaced)).not.toContain(f.review.id)"
+      },
+      "text_preserved": true
+    }
+  ],
+  "validation": "Static source/text mapping only; no local product test.",
+  "r10_additional_oracles": {
+    "file": "modules/sucafina/Sucafinav1/test/product/wp08/answer-egress-version.test.ts",
+    "sites_per_parameterized_consumer": 18,
+    "consumers": [
+      "read",
+      "work"
+    ],
+    "clock_ms_per_case": 120000,
+    "real_causal_chain": "Real C05 preserve and recipient admission -> actual question/reply -> prepare and human confirmation -> capture canonical thread/baseline -> intercept completed real C08 read outside the transaction -> separately admitted actual human edit -> return captured external read -> refuse old confirmed/valid output -> prove one version increment, same baseline/source physical identity/review/ACL, and current stale Work.",
+    "discriminant": "read intercepts its second baseline read; Work intercepts its own second thread/answer/baseline read. No outer Work collection or fabricated source/baseline can hide an old component success.",
+    "assertions": [
+      {
+        "line": 30,
+        "assertion": "expect(available(await port.answerReuse.confirm(thread.id, answerRef, confirmation, await f.admit(\"reader-b\", \"collaboration.answer.confirm\", { questionId: thread.id, answerRef, mutation: confirmation })))).toEqual({ answerRef, observedVersion: f.source.target.version })"
+      },
+      {
+        "line": 39,
+        "assertion": "expect(sourceIdentity).toBeDefined()"
+      },
+      {
+        "line": 57,
+        "assertion": "expect(f.persistence.currentSnapshots?.()).toBeUndefined()"
+      },
+      {
+        "line": 58,
+        "assertion": "expect(available(await port.threadHistory!.edit(edit.id, edit.messageId, edit.expectedVersion, edit.body, edit.mutation, await f.admit(\"reader-b\", \"collaboration.thread.edit\", edit)))).toEqual({ id: thread.id, messageId: message.id, version: message.version + 1 })"
+      },
+      {
+        "line": 67,
+        "assertion": "expect(edited).toBe(true)"
+      },
+      {
+        "line": 68,
+        "assertion": "expect(externalReads).toBe(2)"
+      },
+      {
+        "line": 69,
+        "assertion": "expect(result).toEqual(consumer === \"read\" ? { status: \"stale\", reason: \"answer-scope-changed\" } : { status: \"unavailable\", reason: \"answer-work-unavailable\" })"
+      },
+      {
+        "line": 70,
+        "assertion": "expect(JSON.stringify(result)).not.toContain(body)"
+      },
+      {
+        "line": 71,
+        "assertion": "expect(JSON.stringify(result)).not.toContain(edit.body)"
+      },
+      {
+        "line": 72,
+        "assertion": "expect(JSON.stringify(result)).not.toContain(f.review.id)"
+      },
+      {
+        "line": 77,
+        "assertion": "expect(after.storageVersion).toBe(before.storageVersion + 1)"
+      },
+      {
+        "line": 78,
+        "assertion": "expect(after.value.thread.messages.find((entry) => entry.id === message.id)).toMatchObject({ id: message.id, incarnation: message.incarnation, version: message.version + 1, body: edit.body, sourceContext: f.basis })"
+      },
+      {
+        "line": 79,
+        "assertion": "expect(after.value.baseline).toEqual(before.value.baseline)"
+      },
+      {
+        "line": 81,
+        "assertion": "expect(domainAfter.dashboard.data.projects).toEqual(domainBefore.dashboard.data.projects)"
+      },
+      {
+        "line": 82,
+        "assertion": "expect(sfSourceIdentity(domainAfter.dashboard, \"projects\", \"project\")).toEqual(sourceIdentity)"
+      },
+      {
+        "line": 83,
+        "assertion": "expect(digestSfValue(object(object(domainAfter.dashboard.data.__sfProductV1).reviews)[f.review.id])).toBe(f.basis.reviewContext.reviewDigest)"
+      },
+      {
+        "line": 84,
+        "assertion": "expect(digestSfValue({ actors: f.actors, access: f.access })).toBe(accessDigest)"
+      },
+      {
+        "line": 85,
+        "assertion": "expect(available(await work.project(thread.id, f.recipient))).toMatchObject({ state: \"stale\", reason: \"answer-changed\", reviewContext: f.basis.reviewContext })"
+      }
+    ],
+    "execution": "PENDING_GITHUB_ACTIONS"
+  },
+  "unit_oracles_preserved": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp08/answer-reuse.test.ts",
+    "assert_sites": 23,
+    "changed_or_removed": 0
+  }
+}

@@ -1,0 +1,283 @@
+{
+  "schema": "sf2h.collab-resume.final-source-reconciliation.v1",
+  "observed_at_utc": "2026-11-14 17:15:54 UTC",
+  "repository": "gustavomhss/Orchestra-SF",
+  "method": "Read-only GitHub MCP: branch refs, commit metadata, exact two-commit comparison and patches, new owner receipts, existing Actions run/job logs. No remote mutation, source intake, tree copy, local product test, CI dispatch or change to frozen WP07 documents.",
+  "identity": {
+    "interface": {
+      "branch": "interface-resume",
+      "head": "2ee71fc90055814912654ae198f7a1dcf9583943",
+      "tree": "cf3676a469a1f8bcab05e322ee7a4a1ada0704c5",
+      "commit_url": "https://github.com/gustavomhss/Orchestra-SF/commit/2ee71fc90055814912654ae198f7a1dcf9583943",
+      "previous_pin": "2ee71fc90055814912654ae198f7a1dcf9583943",
+      "comparison": "identical",
+      "ahead": 0,
+      "changed_paths": 0,
+      "prior_report": "interface-advance-reconciliation.json",
+      "original": {
+        "branch": "astra-interface",
+        "head": "9d65ea8fcd8ce6ea1249dc669e0fcc248b540241",
+        "tree": "cbf56c2c58b4a7a3cb89b7b2de3a18953ae6e7b0",
+        "commit_url": "https://github.com/gustavomhss/Orchestra-SF/commit/9d65ea8fcd8ce6ea1249dc669e0fcc248b540241",
+        "preserved": true
+      }
+    },
+    "finance": {
+      "branch": "finance-resume",
+      "head": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+      "tree": "1fd989023150ac85fd9bd48e7196eddce2c49607",
+      "commit_url": "https://github.com/gustavomhss/Orchestra-SF/commit/229d66fa59ceebbc4b3683565670698f2cf3aa65",
+      "previous_pin": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+      "previous_tree": "e7e471f64dfd7a34c9d4143968d76b711b0a2966",
+      "comparison": "ahead",
+      "ahead": 2,
+      "behind": 0,
+      "changed_paths": 39,
+      "product_paths": 10,
+      "test_paths": 17,
+      "receipt_paths": 12,
+      "original": {
+        "branch": "astra-finance",
+        "head": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "tree": "ec517fa26571228bc1ce5e3698fcfc9c5d137ae3",
+        "commit_url": "https://github.com/gustavomhss/Orchestra-SF/commit/ec052c2c3bef96f492512f3d5f663919580f25c8",
+        "preserved": true
+      }
+    }
+  },
+  "finance_commits": [
+    {
+      "label": "R3",
+      "head": "9de58454924b072b6e571b5b4ebcd70f95e596df",
+      "tree": "6f2cb4d131ba5437f70d7700e3274cc26a22630c",
+      "parent": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+      "classification": "Product, tests and receipts",
+      "delta": "Six WP11 sources and WP13 campaign readers now retain the original Request after their last awaited authorization/C08 callback. Existing canonical calculations and receipt/idempotency behavior are preserved. New real UI lease/C08 contraproofs and three fixture type corrections accompany the bounded change."
+    },
+    {
+      "label": "R4",
+      "head": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+      "tree": "1fd989023150ac85fd9bd48e7196eddce2c49607",
+      "parent": "9de58454924b072b6e571b5b4ebcd70f95e596df",
+      "classification": "Product, tests and receipts",
+      "delta": "Adds Planner paired scenario BI09/BI10 producer and projectedScenario factory route; waterfall labels distinguish known subtotals when comparison is conditioned. Extends the existing real choice/prepared-review/separate-apply test with section-specific case provenance. The archived-evidence adapter in that addition is explicitly a test boundary, not installed historical authorization."
+    }
+  ],
+  "finance_product_delta": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/application-status.ts",
+      "owner_manifest_blob": "77d29655b4e162a4d191de3bb1f7bd581cb3def4",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-20261114/delta-manifest-R3.json"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+      "owner_manifest_blob": "f8404c18abc040c49cf111eb4561ce4c2873a4c6",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-20261114/delta-manifest-R3.json"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts",
+      "owner_manifest_blob": "a0c1d07be1ddd63492e7bcc3ff5980c0666b432a",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-20261114/delta-manifest-R3.json"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+      "owner_manifest_blob": "3f31dd52babca16249fb04fec29abbf74e7a5da4",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-20261114/delta-manifest-R3.json"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "owner_manifest_blob": "d6b1d58e658a784aafe0ea978c46692cd8c5f59a",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-20261114/delta-manifest-R3.json"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-request-store.ts",
+      "owner_manifest_blob": "13b41a023714ca58409d8860d1a7851e58ea8e69",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-20261114/delta-manifest-R3.json"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/campaign.ts",
+      "owner_manifest_blob": "475e7532bbef2ede5fc91d1c7092e4b000e1fbde",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/finance-resume-20261114/campaign-delta-R3.json"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-bi.ts",
+      "owner_manifest_blob": "68d6b2e8c1f4ee0badb169565d5041f80d6e937b",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/finance-resume-20261114/scenario-bi-delta-R4.json"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/factory.ts",
+      "owner_manifest_blob": "9cc4cc81538a7247cd87893f958acf5665194eb5",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/finance-resume-20261114/scenario-bi-delta-R4.json"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/waterfall.ts",
+      "owner_manifest_blob": "fef3b0546384fcb0739fcf11ef531406c60ad760",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/finance-resume-20261114/scenario-bi-delta-R4.json"
+    }
+  ],
+  "unchanged_collaboration_scope": {
+    "observed": "No changed path in this two-commit compare is under product/reviews, product/collaboration, product/routines or their WP07/WP08/WP09 tests. No contract, host or engine path changed in this delta.",
+    "qualification": "This states identity across the two Finance pins only. It does not establish equivalence of Finance to collab-resume, nor import its tests or code.",
+    "imported_into_collab_resume": false
+  },
+  "observed_runs": [
+    {
+      "run": 43618462688,
+      "job": 132518604113,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43618462688",
+      "product": "9de58454924b072b6e571b5b4ebcd70f95e596df",
+      "product_tree": "6f2cb4d131ba5437f70d7700e3274cc26a22630c",
+      "snapshot": "f74733ed5c2ef77b53c3a40948a1b9c509bf7ac9",
+      "snapshot_tree": "7b0270dd270aa81e8c1ecc92a77ee123f1f5124f",
+      "snapshot_parent_is_product": true,
+      "compare_paths": [
+        ".ci-run.json"
+      ],
+      "conclusion": "success",
+      "pass": 19,
+      "fail": 0,
+      "assertions": 487,
+      "files": 8,
+      "seconds": 11.73,
+      "verification": "Terminal Actions metadata and actual job log independently read through MCP.",
+      "relevant_passes": [
+        "an accepted C17 reference reopens through the explicit ledger lane after the case advances, without becoming a current result",
+        "a canonical human choice creates a reviewed Planner proposal and only a separate application grant commits it"
+      ],
+      "limit": "Producer-scoped historical calculation and application evidence at this exact W/S. No installed C05 full-review nonrecord access lease, removed-source recipient history, WP14 expected/observed consumer or native execution is inferred.",
+      "native": "Omni control explicitly not applicable; no spawn or delegation."
+    },
+    {
+      "run": 43619824316,
+      "job": 132522741789,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43619824316",
+      "product": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+      "product_tree": "1fd989023150ac85fd9bd48e7196eddce2c49607",
+      "snapshot": "711f156d6995fa02f5e15043638bef9847a7f845",
+      "snapshot_tree": "627c45c326b26c8a017c3181e05a316e0cc05120",
+      "snapshot_parent_is_product": true,
+      "compare_paths": [
+        ".ci-run.json"
+      ],
+      "conclusion": "success",
+      "pass": 1,
+      "fail": 0,
+      "assertions": 71,
+      "files": 1,
+      "verification": "Terminal Actions metadata and actual job log independently read through MCP; both test and cleanup jobs succeeded.",
+      "test": "a canonical human choice creates a reviewed Planner proposal and only a separate application grant commits it",
+      "limit": "The real choice/prepared/apply journey and added provenance assertions passed. The exact archived-evidence projection adapter remains controlled test evidence. It is not the collaboration-question producer, installed C17 restart or native authority.",
+      "native": "Omni control explicitly not applicable; no spawn or delegation."
+    }
+  ],
+  "other_run_observations_at_utc": "2026-11-14 17:14:52 UTC",
+  "other_run_observations": [
+    {
+      "run": 43619734769,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43619734769",
+      "head": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+      "kind": "static",
+      "status": "completed",
+      "conclusion": "failure",
+      "limit": "Terminal metadata only in this final supplement; no claim about own diagnostic counts or global clean gates."
+    },
+    {
+      "run": 43619817826,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43619817826",
+      "snapshot": "f004a08d124a43f67bfc2bd41debe06ecad7b13e",
+      "branch": "ci-run-linux-finance-resume-wp03-wp05-229d66fa-e19fb141-1",
+      "kind": "WP03/WP05 scenario BI",
+      "status": "in_progress",
+      "conclusion": null
+    },
+    {
+      "run": 43619812123,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43619812123",
+      "snapshot": "07f905d3a309b9752525ef34aeafbc5d870bd54a",
+      "branch": "ci-run-linux-finance-resume-wp13-229d66fa-8006a8b7-1",
+      "kind": "WP13 campaign",
+      "status": "in_progress",
+      "conclusion": null
+    }
+  ],
+  "receipt_reconciliation": {
+    "r3_manifest": "The R3 publication manifest says Actions pending. Its original WP11 selector later completed 19 PASS, verified above.",
+    "r4_manifest": "The R4 manifest also says Actions pending. The single WP11 journey already completed 1 PASS, verified above. BI and campaign runs were still active at the recorded run-status cut.",
+    "pr42": "PR #42 remains open/draft and its description still presents initial R1. Current commits, exact patches and run results take precedence over that description.",
+    "no_transfer": "No previous PASS or newer source PASS is assigned automatically to collab-resume or another product SHA."
+  },
+  "impacts_and_next_owners": [
+    {
+      "finding": "IF-NODE-CLEANUP",
+      "owners": [
+        "WP02/Interface",
+        "S0/WP10",
+        "WP07 harness"
+      ],
+      "impact": "No Interface advance. The previously reconciled Node helper and its label/budget restrictions remain unchanged. The WP07 Bun transport-fault finding is still open.",
+      "next_action": "Owner composes the exact helper and explicit WP07 support before migration of the owned WP07 fixture and a real failure/recovery run. No foreign helper was copied."
+    },
+    {
+      "finding": "IF-CAS-AND-REVIEW-HOST",
+      "owners": [
+        "Interface",
+        "S0/WP10"
+      ],
+      "impact": "No Interface advance changes the previous finding: its retained CAS and ReviewHost callers require bounded composition of the already published Collaboration fixes.",
+      "next_action": "Use exact owned hunks and retain the actual Collaboration W2/W3/W4 qualification; do not replay older callers or infer composed UI success."
+    },
+    {
+      "finding": "FIN-REQUEST-EGRESS",
+      "owners": [
+        "WP11",
+        "WP13",
+        "S0/WP10"
+      ],
+      "impact": "A new real product hardening delta exists across seven sources. The source now explicitly rejects a replaced or ended original Request after awaited callbacks. WP11 scope has 19 PASS; campaign-specific validation was still running at the cut.",
+      "next_action": "Compose only the seven bounded source deltas with their actual authority providers when authorized. Preserve final Request equality, current ACL and durable receipt/retry rules. No permissive callback replacement."
+    },
+    {
+      "finding": "FIN-C09-C17-C05-HISTORY",
+      "owners": [
+        "WP11",
+        "WP10/source owners",
+        "WP07/WP08 consumer"
+      ],
+      "impact": "R3 provides an additional real producer-scoped accepted-C17 calculation replay PASS after case advance. It does not provide the full-review prepareAccess lease needed for documents/calculations/case-events, independent recipient grants, removed physical sources or C05 confirmation integration.",
+      "next_action": "Retain the exact producer proof and request a bounded installed full-review lease adapter from its owner. Keep the existing C05 nonrecord/history criteria open until the composed consumer and its revocation/replacement contraproofs execute."
+    },
+    {
+      "finding": "FIN-SCENARIO-BI",
+      "owners": [
+        "WP03/WP05",
+        "S0/WP10"
+      ],
+      "impact": "R4 exposes paired stored scenario results for BI09/BI10, keeping complete totals, known subtotals, periods, currency and evidence separate. The relevant hosted BI run had no terminal result at the cut.",
+      "next_action": "Attach the owner run result, then compose the explicit projectedScenario route and source dependencies. This does not alter Collaboration projections or financial engines and does not close WP14 expected/observed obligations."
+    },
+    {
+      "finding": "FIN-CASE-PROVENANCE",
+      "owners": [
+        "WP11",
+        "WP08 consumer",
+        "WP10"
+      ],
+      "impact": "The R4 real human choice/review/separate-application journey passed with 71 assertions, including projection provenance. Its added question/answer/archive callbacks are explicitly controlled adapters, not current canonical C06 producers.",
+      "next_action": "Reuse the bounded projection evidence; keep the canonical collaboration question/answer and installed historical authorization seams with their owners."
+    },
+    {
+      "finding": "FIN-SNAPSHOT-CONTRACT",
+      "owners": [
+        "WP10",
+        "S0"
+      ],
+      "impact": "New review-R2 receipt keeps INV.11/C08/C17 interpretation open around cross-surface reads inside the audited LocalStore read scope. It records no concrete runtime defect and grants no normative waiver.",
+      "next_action": "Resolve that shared contract interpretation explicitly at composition. Do not treat prior implementation runs as amendment of the immutable plan."
+    }
+  ],
+  "local_product_tests": false,
+  "remote_mutations": false,
+  "source_tree_intake": false,
+  "frozen_wp07_documents_changed": false,
+  "global_acceptance": false
+}

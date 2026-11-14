@@ -1,0 +1,40 @@
+{
+  "manifest_sha256": "0dc06542fce3e77ebaf0c5d77846bb734cd99fb9f6d0d087400874718134d16d",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/host.ts",
+      "postimage_blob": "d80d441aa5775a3747303a60161e5a049f84ac16",
+      "postimage_sha256": "af2fa984081282b83371da97ab36cb0651f0412288e5c4f70ca7bad4e33a21ba",
+      "postimage_matches_manifest": true,
+      "preimage_exact_match": true,
+      "preimage_matches_if_capture_final_LF_removed": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/review-answers-fixture.ts",
+      "postimage_blob": "be15f9ad9c6477491fd0c9418ac776ea97199d68",
+      "postimage_sha256": "c65c3f308423b6431a99c5537b1cd46117ab02f242c6b065adeab6c379b52866",
+      "postimage_matches_manifest": true,
+      "preimage_exact_match": true,
+      "preimage_matches_if_capture_final_LF_removed": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/review-answer-confirmation.test.ts",
+      "postimage_blob": "16b38f72bcbb6046647a7c0dde90b67d51e95029",
+      "postimage_sha256": "8a0d60e4a0b9b6cc44ea093d72feedae63a3610880b0d0d9714f2189574388c2",
+      "postimage_matches_manifest": true,
+      "preimage_exact_match": true,
+      "preimage_matches_if_capture_final_LF_removed": false,
+      "expect_line_inventory": {
+        "before": 54,
+        "after": 58,
+        "removed": [],
+        "added": [
+          "expect(wrongReference).toEqual({ status: \"unavailable\", reason: \"answer-observation-unavailable\" })",
+          "expect(JSON.stringify(wrongReference)).not.toContain(body)",
+          "expect(replacedPhysical).toBeDefined()",
+          "expect(replacedPhysical?.incarnation).not.toBe(oldPhysical.incarnation)"
+        ]
+      }
+    }
+  ]
+}

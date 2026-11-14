@@ -1,0 +1,100 @@
+{
+  "schema": "sf2h-wp08-b01-reconciliation-v1",
+  "finding": "B01 approvalStage issuer/projector mismatch",
+  "status": "resolved_in_inherited_product",
+  "initial_failure": {
+    "product_sha": "156f074d15c9787a9fc1b6430e632504ee3a69e6",
+    "snapshot_sha": "b55254b4da225f3ad874b27885d4792c69f047ac",
+    "run_id": 43533574980,
+    "job_id": 132256977328,
+    "run_conclusion": "failure",
+    "test": "modules/sucafina/Sucafinav1/test/product/wp08/work-presentation.test.ts",
+    "test_blob": "43103eea4e7a10e8da2f799a2495894627ce528a",
+    "old_projector_blob": "08fdfb878f6f9282f70ec71b3e66122f1b95f6f5"
+  },
+  "published_fix": {
+    "commit": "a3dcbb62c88231f95a7c57afb32e975404a3b59c",
+    "origin_owner_sha": "87f7317d5f983adb255a5707b65d6f07bfa5a0d4",
+    "path": "modules/sucafina/Sucafinav1/product/integration/procurement-projections.ts",
+    "blob": "3e8830c3dddc8b9609f583f877b2fe7458eccd28",
+    "description": "Delegates to canonical WP04 projectProcurementScope, whose current fields include approvalStage; old duplicate projector rejected the issuer selector because it omitted that field."
+  },
+  "current_sources": {
+    "initial_resume_sha": "2784daafbb0d3b58b6019822288a07fa38e5c5b0",
+    "checked_sha": "ff557552936197b6734e57f0ecea0c44b19139b1",
+    "integration_projector_blob": "3e8830c3dddc8b9609f583f877b2fe7458eccd28",
+    "canonical_projector_path": "modules/sucafina/Sucafinav1/product/procurement/source-projection.ts",
+    "canonical_projector_blob": "ab9814817d11c0b477636ee54d1b2763d365f405",
+    "test_blob": "43103eea4e7a10e8da2f799a2495894627ce528a",
+    "test_unchanged_from_failed_and_passing_runs": true
+  },
+  "later_executed_evidence": {
+    "product_sha": "ea5a6f965c803d436202934872c3650ab8f8eb19",
+    "snapshot_sha": "c03b06bea510e0ed8ec8df105c269304d388317f",
+    "run_id": 43584357490,
+    "job_id": 132415569882,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43584357490/job/132415569882",
+    "run_conclusion": "failure",
+    "overall": {
+      "passed": 42,
+      "failed": 2,
+      "files": 17,
+      "assertions": 342
+    },
+    "test_conclusion": "pass",
+    "test_passed": 1,
+    "test_failed": 0,
+    "test_duration_ms": 378.76,
+    "omni": "not applicable (focused: no declaring test ran)",
+    "request_sha256": "4abd04a9ceac4c9b60ede0a35bcade064e24683a832bd67846491d0c6c8554ae",
+    "receipt_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP08/collaboration-20261114/ci04-per-file.json",
+    "receipt_blob": "b85aa4572eb3a1edd32f149a4bebc497e75d0c46",
+    "job_log_excerpt": [
+      {
+        "line": 1040,
+        "text": "2026-11-14T10:19:09.1723851Z Sucafinav1/test/product/wp08/work-presentation.test.ts:"
+      },
+      {
+        "line": 1041,
+        "text": "2026-11-14T10:19:09.5555460Z (pass) canonical My Work presentation resolves current Procurement title and destination through SQLite, then revocation removes it [378.76ms]"
+      },
+      {
+        "line": 1073,
+        "text": "2026-11-14T10:19:10.3321360Z omni positive control [8d1a8b55b22578b5bf13e120f1f8aeb4]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+      },
+      {
+        "line": 1078,
+        "text": "2026-11-14T10:19:10.3334306Z  42 pass"
+      },
+      {
+        "line": 1079,
+        "text": "2026-11-14T10:19:10.3334476Z  2 fail"
+      },
+      {
+        "line": 1081,
+        "text": "2026-11-14T10:19:10.3334883Z Ran 44 tests across 17 files. [147.24s]"
+      }
+    ]
+  },
+  "scope_and_limits": {
+    "covered": [
+      "Canonical individual request capture and My Work presentation through actual SQLite and product services",
+      "approvalStage Manager, title Approval, holder identity, source version and canonical request destination",
+      "Duplicate directory labels omit ownerLabel",
+      "Revocation removes access"
+    ],
+    "not_covered": [
+      "Legal approval command followed by holder transfer/stage changes and completion",
+      "An interactive browser navigation journey",
+      "Native or resident contribution qualification"
+    ],
+    "equivalence": "B01 producer and test blobs remain unchanged from their fixed/passing versions through W0/W1. CI04→W0 changed collaboration C05 branches, not the Procurement presentation branch or its source producer; W1 changes unrelated WP09 adapter and WP07 fixtures. This reattaches the scoped producer regression, not an aggregate green or all criteria acceptance.",
+    "map_instruction": "Replace present-tense B01 blocker claims with historical failure resolved by a3dcbb + CI04 per-file pass. Keep legal approval/holder-transfer/stage/completion journey obligations explicit and separate."
+  },
+  "validation_policy": {
+    "product_tests_run_locally": false,
+    "new_hosted_tests_dispatched": false,
+    "remote_writes": false,
+    "remote_reads": "GitHub MCP only"
+  }
+}

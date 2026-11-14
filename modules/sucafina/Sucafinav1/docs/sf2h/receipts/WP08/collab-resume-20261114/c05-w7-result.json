@@ -1,0 +1,237 @@
+{
+  "schema": "sf2h.collab-resume.c05-w7-result.v1",
+  "run_id": 43625515062,
+  "job_id": 132540336771,
+  "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43625515062",
+  "product_sha": "9e1f44af7689946d27d37ed48b9f5e9849417121",
+  "product_tree": "ac88fa893a3b8b9f36c4373c2889652025fcf0f3",
+  "snapshot_sha": "a4f8c7bd673de3e4092f20185f4c3ea2d10d0ec3",
+  "snapshot_tree": "0e4ca3c0551816cc4033a978f32fed750ed46434",
+  "request_sha256": "9d3fcc8f30bb2b880ebe67a5cfd7f2011d4b92ada94b7fb7cc2fd17fa15f6586",
+  "conclusion": "success",
+  "counts": {
+    "pass": 5,
+    "fail": 0,
+    "filtered": 3,
+    "expect_calls": 62,
+    "tests": 5,
+    "files": 2,
+    "duration_seconds": 316.06
+  },
+  "cases": [
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp08/review-answer-confirmation.test.ts",
+      "result": "pass",
+      "name": "C05 edited answers after SQLite reopen create one stable stale item and reject the old confirmation",
+      "duration_ms": 61511.96
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp08/review-answer-confirmation.test.ts",
+      "result": "pass",
+      "name": "C05 edited answers after SQLite reopen reconfirm the same response and retain its original historical version",
+      "duration_ms": 78004.9
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp08/review-answer-confirmation.test.ts",
+      "result": "pass",
+      "name": "C05 edited answers after SQLite reopen resolve and reuse the newly confirmed response",
+      "duration_ms": 81498.13
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp08/answer-egress-version.test.ts",
+      "result": "pass",
+      "name": "C05 answer read refuses a real human edit after its final external version read",
+      "duration_ms": 50642.45
+    },
+    {
+      "file": "modules/sucafina/Sucafinav1/test/product/wp08/answer-egress-version.test.ts",
+      "result": "pass",
+      "name": "C05 answer work refuses a real human edit after its final external version read",
+      "duration_ms": 44219.55
+    }
+  ],
+  "phase_timings": [
+    {
+      "scenario": "edit-stale",
+      "phase": "fixture-ready",
+      "elapsed_ms": 176
+    },
+    {
+      "scenario": "edit-stale",
+      "phase": "real-question-source-change-and-answer",
+      "elapsed_ms": 17501
+    },
+    {
+      "scenario": "edit-stale",
+      "phase": "real-confirmation-and-sqlite-reopen",
+      "elapsed_ms": 32159
+    },
+    {
+      "scenario": "edit-stale",
+      "phase": "real-answer-edit",
+      "elapsed_ms": 46375
+    },
+    {
+      "scenario": "edit-stale",
+      "phase": "stable-stale-work-and-old-confirmation-refusal",
+      "elapsed_ms": 61508
+    },
+    {
+      "scenario": "edit-stale",
+      "phase": "disposed",
+      "elapsed_ms": 61510
+    },
+    {
+      "scenario": "edit-reconfirm-history",
+      "phase": "fixture-ready",
+      "elapsed_ms": 129
+    },
+    {
+      "scenario": "edit-reconfirm-history",
+      "phase": "real-question-source-change-and-answer",
+      "elapsed_ms": 17795
+    },
+    {
+      "scenario": "edit-reconfirm-history",
+      "phase": "real-confirmation-and-sqlite-reopen",
+      "elapsed_ms": 32796
+    },
+    {
+      "scenario": "edit-reconfirm-history",
+      "phase": "real-answer-edit",
+      "elapsed_ms": 47145
+    },
+    {
+      "scenario": "edit-reconfirm-history",
+      "phase": "real-reconfirmation",
+      "elapsed_ms": 68029
+    },
+    {
+      "scenario": "edit-reconfirm-history",
+      "phase": "work-suppressed-and-original-history-retained",
+      "elapsed_ms": 78003
+    },
+    {
+      "scenario": "edit-reconfirm-history",
+      "phase": "disposed",
+      "elapsed_ms": 78004
+    },
+    {
+      "scenario": "edit-reconfirm-resolve",
+      "phase": "fixture-ready",
+      "elapsed_ms": 125
+    },
+    {
+      "scenario": "edit-reconfirm-resolve",
+      "phase": "real-question-source-change-and-answer",
+      "elapsed_ms": 17696
+    },
+    {
+      "scenario": "edit-reconfirm-resolve",
+      "phase": "real-confirmation-and-sqlite-reopen",
+      "elapsed_ms": 30930
+    },
+    {
+      "scenario": "edit-reconfirm-resolve",
+      "phase": "real-answer-edit",
+      "elapsed_ms": 43843
+    },
+    {
+      "scenario": "edit-reconfirm-resolve",
+      "phase": "real-reconfirmation",
+      "elapsed_ms": 62183
+    },
+    {
+      "scenario": "edit-reconfirm-resolve",
+      "phase": "same-thread-resolved-and-edited-answer-reused",
+      "elapsed_ms": 81496
+    },
+    {
+      "scenario": "edit-reconfirm-resolve",
+      "phase": "disposed",
+      "elapsed_ms": 81498
+    },
+    {
+      "scenario": "r10-read",
+      "phase": "fixture-ready",
+      "elapsed_ms": 131
+    },
+    {
+      "scenario": "r10-read",
+      "phase": "real-confirmation",
+      "elapsed_ms": 29745
+    },
+    {
+      "scenario": "r10-read",
+      "phase": "edit-refused-at-final-egress",
+      "elapsed_ms": 49544
+    },
+    {
+      "scenario": "r10-read",
+      "phase": "same-source-baseline-and-current-stale-work",
+      "elapsed_ms": 50640
+    },
+    {
+      "scenario": "r10-read",
+      "phase": "disposed",
+      "elapsed_ms": 50642
+    },
+    {
+      "scenario": "r10-work",
+      "phase": "fixture-ready",
+      "elapsed_ms": 127
+    },
+    {
+      "scenario": "r10-work",
+      "phase": "real-confirmation",
+      "elapsed_ms": 29624
+    },
+    {
+      "scenario": "r10-work",
+      "phase": "edit-refused-at-final-egress",
+      "elapsed_ms": 43125
+    },
+    {
+      "scenario": "r10-work",
+      "phase": "same-source-baseline-and-current-stale-work",
+      "elapsed_ms": 44218
+    },
+    {
+      "scenario": "r10-work",
+      "phase": "disposed",
+      "elapsed_ms": 44219
+    }
+  ],
+  "exact_expected_case_names": true,
+  "filtered_unchanged_cases": [
+    "C05 answers confirm the displayed preserved review and reuse the same baseline after SQLite reopen",
+    "a current-domain question cannot inherit a confirmed C05 answer and review ACL revocation hides every private consumer",
+    "C05 confirmation refuses a lease revoked at commit and cannot revive a replaced physical source"
+  ],
+  "omni": {
+    "verdict": "not applicable",
+    "nonce": "d697005db9ba2b3452bf3294a8edd353",
+    "spawns": 0,
+    "native_execution_proof": false
+  },
+  "artifacts": [],
+  "cleanup": {
+    "job_id": 132542378353,
+    "conclusion": "success",
+    "snapshot_ref_deleted_by_workflow": true
+  },
+  "reattached": {
+    "run_id": 43623257640,
+    "named_pass": 7,
+    "aggregate": "failure",
+    "scope": "W6 product/shared fixtures identical; A/C/D blocks, imports and helpers byte-equivalent. Seven named PASS stay at their original W6/S."
+  },
+  "limitations": [
+    "The five selected cases passed completely; three unchanged C05 cases were intentionally filtered.",
+    "W5 253128.15ms and W6 149408.75ms aggregate journey deadline failures remain in history. Partitioning does not establish product latency or UI SLO acceptance.",
+    "No installed-host UI C05 presentation, shared C16 extension or native Relay/C07 output is proved.",
+    "All product executions took place only in GitHub Actions; local operations verified metadata/text/hashes."
+  ],
+  "log_sha256": "bfca38f38fb832f9b9f6abfb835a1642c69891880a46f319ce7947865e8a3c74",
+  "log_bytes": 72905
+}

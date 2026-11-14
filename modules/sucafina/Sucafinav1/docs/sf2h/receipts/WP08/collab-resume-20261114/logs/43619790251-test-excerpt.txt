@@ -1,0 +1,65 @@
+2026-11-14T17:13:59.2885785Z bun test v1.3.14 (0d9b296a)
+2026-11-14T17:13:59.2953088Z 
+2026-11-14T17:13:59.2953482Z Sucafinav1/test/product/wp07/review-thread-context.test.ts:
+2026-11-14T17:14:57.6339778Z (pass) a question on C05 keeps its original review and source basis through current data changes and denies revoked review access [58178.83ms]
+2026-11-14T17:15:00.0737757Z (pass) C05 observation rejects a provider replacement after its protected read-only source fence [2439.78ms]
+2026-11-14T17:15:03.5771448Z (pass) a second C05 observation cannot rebind the first observation to a replacement access producer [3500.91ms]
+2026-11-14T17:15:03.5772268Z 
+2026-11-14T17:15:03.5772505Z Sucafinav1/test/product/wp08/case-selection-cas.test.ts:
+2026-11-14T17:15:04.1074066Z (pass) a lost case-selection CAS is a known no-commit conflict and retains exact retry identity [532.05ms]
+2026-11-14T17:15:04.1074401Z 
+2026-11-14T17:15:04.1074605Z Sucafinav1/test/product/wp08/review-recipient-authority.test.ts:
+2026-11-14T17:15:34.1562992Z (pass) a C05 request uses the recipient's current review lease, preserves exact retry and denies a homonym or revoked lease [30046.12ms]
+2026-11-14T17:15:34.1568348Z 
+2026-11-14T17:15:34.1568710Z Sucafinav1/test/product/wp08/review-answer-confirmation.test.ts:
+2026-11-14T17:15:34.2887153Z WP08_C05_STAGE preserved-answer fixture-ready 125ms
+2026-11-14T17:15:38.4261375Z WP08_C05_STAGE preserved-answer question-and-source-change 4263ms
+2026-11-14T17:15:47.6414697Z WP08_C05_STAGE preserved-answer recipient-reply 13478ms
+2026-11-14T17:15:53.4224741Z WP08_C05_STAGE preserved-answer exact-answer-reference-checked 19259ms
+2026-11-14T17:16:17.8856338Z WP08_C05_STAGE preserved-answer unconfirmed-read 43722ms
+2026-11-14T17:16:35.4635803Z WP08_C05_STAGE preserved-answer http-observation 61300ms
+2026-11-14T17:16:57.8063956Z WP08_C05_STAGE preserved-answer confirmation-retry 83643ms
+2026-11-14T17:17:23.8444990Z WP08_C05_STAGE preserved-answer confirmed-read-work-and-shared-denial 109681ms
+2026-11-14T17:17:47.0227298Z WP08_C05_STAGE preserved-answer sqlite-reopen-and-reuse 132859ms
+2026-11-14T17:17:47.0240316Z WP08_C05_STAGE preserved-answer reopened-storage-unchanged 132861ms
+2026-11-14T17:18:21.2171751Z WP08_C05_STAGE preserved-answer answer-edit-and-stale-work 167054ms
+2026-11-14T17:19:42.6555165Z WP08_C05_STAGE preserved-answer reconfirmation-history-and-resolution 248492ms
+2026-11-14T17:19:46.8512119Z WP08_C05_STAGE preserved-answer distinct-current-source-answer 252688ms
+2026-11-14T17:19:47.2898300Z (fail) C05 answers confirm only the preserved review, suppress one work item, and recheck edits and review ACL [253128.15ms]
+2026-11-14T17:19:47.2898970Z   ^ this test timed out after 120000ms.
+2026-11-14T17:19:47.2917286Z WP08_C05_STAGE preserved-answer disposed 253127ms
+2026-11-14T17:19:47.4208482Z WP08_C05_STAGE current-lease fixture-ready 130ms
+2026-11-14T17:19:59.0082029Z WP08_C05_STAGE current-lease reply-denied-at-last-human-await 11717ms
+2026-11-14T17:20:25.9681253Z WP08_C05_STAGE current-lease reply-and-private-observation 38677ms
+2026-11-14T17:20:34.9509760Z WP08_C05_STAGE current-lease confirmation-denied-at-commit 47660ms
+2026-11-14T17:20:49.3836027Z WP08_C05_STAGE current-lease unconfirmed-read 62093ms
+2026-11-14T17:21:27.1643766Z WP08_C05_STAGE current-lease restored-access-confirmation 99874ms
+2026-11-14T17:21:27.1836379Z WP08_C05_STAGE current-lease physical-replacement-denied 99893ms
+2026-11-14T17:21:27.1846489Z WP08_C05_STAGE current-lease disposed 99894ms
+2026-11-14T17:21:27.1849070Z (pass) C05 confirmation refuses a lease revoked at commit and cannot revive a replaced physical source [99895.10ms]
+2026-11-14T17:21:27.1849722Z 
+2026-11-14T17:21:27.1849944Z Sucafinav1/test/product/wp08/thread-history-continuity.test.ts:
+2026-11-14T17:21:28.0319163Z 30 | import { createCollaborationMutationFence } from "../../../product/collaboration/mutation-fence.ts"
+2026-11-14T17:21:28.0319932Z 31 | import { createRelationPort } from "../../../product/collaboration/relations.ts"
+2026-11-14T17:21:28.0320491Z 32 | import { createThreadPort } from "../../../product/collaboration/threads.ts"
+2026-11-14T17:21:28.0320867Z 33 | 
+2026-11-14T17:21:28.0321204Z 34 | export function available<T>(result: PortResult<T>): T {
+2026-11-14T17:21:28.0321767Z 35 |   if (result.status !== "ok") throw new Error(`${result.status}: ${result.reason}`)
+2026-11-14T17:21:28.0322209Z                                              ^
+2026-11-14T17:21:28.0322542Z error: unavailable: answer-scope-unavailable
+2026-11-14T17:21:28.0323281Z       at available (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp08/relations-fixture.ts:35:41)
+2026-11-14T17:21:28.0324301Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp08/thread-history-continuity.test.ts:26:22)
+2026-11-14T17:21:28.0325037Z (fail) authorized historical messages keep their original basis and a new answer reuses the same stale thread [845.12ms]
+2026-11-14T17:21:28.0325342Z 
+2026-11-14T17:21:28.0325502Z Sucafinav1/test/product/wp08/host-answer-reuse.test.ts:
+2026-11-14T17:21:36.4533602Z (pass) host-created capabilities consume a confirmed answer through shared dispatch and real Dashboard scope [8419.28ms]
+2026-11-14T17:21:36.4534138Z 
+2026-11-14T17:21:36.4534382Z Sucafinav1/test/product/wp08/answer-first-confirm-http.test.ts:
+2026-11-14T17:21:41.3990450Z (pass) first answer confirmation issues its selector server-side and rejects another recipient, wrong thread, edited version and revoked access [4942.64ms]
+2026-11-14T17:21:41.4055740Z 
+2026-11-14T17:21:41.4056719Z omni positive control [7d6e60eb59182bbc5026acd868131ddc]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.
+2026-11-14T17:21:41.4057310Z  8 pass
+2026-11-14T17:21:41.4057458Z  2 fail
+2026-11-14T17:21:41.4057619Z  235 expect() calls
+2026-11-14T17:21:41.4057834Z Ran 10 tests across 7 files. [462.12s]
+2026-11-14T17:21:41.4243388Z ##[error]Process completed with exit code 1.

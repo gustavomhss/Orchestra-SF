@@ -1,0 +1,514 @@
+{
+  "schema": "sf2h.collab-resume.source-advance-supplement.v1",
+  "observed_at_utc": "2026-11-14 17:40:51 UTC",
+  "repository": "gustavomhss/Orchestra-SF",
+  "previous_receipt": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP08/collab-resume-20261114/source-advances-final-interface-finance.json",
+    "sha256": "391640fcfa037613cc1e1b3a37fa76fc57283c99dd8eb0534ad77670a28e4258",
+    "cut_utc": "2026-11-14 17:15:54 UTC",
+    "policy": "Append this supplement. Preserve the complete original R4 aggregates and failures; no retrospective PASS or reassignment to a newer candidate."
+  },
+  "method": "GitHub MCP read-only refs, commit metadata, one-commit comparison/patch, two new essential receipts and actual logs of existing Actions runs. No tests dispatched/executed, remote write, source intake, tree copy or edits to frozen WP07 documents.",
+  "refs": [
+    {
+      "branch": "interface-resume",
+      "head": "2ee71fc90055814912654ae198f7a1dcf9583943",
+      "tree": "cf3676a469a1f8bcab05e322ee7a4a1ada0704c5",
+      "since_previous": "identical"
+    },
+    {
+      "branch": "finance-resume",
+      "head": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+      "tree": "67af8927297fa12ca7d84077e0450833a9738c52",
+      "previous": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+      "since_previous": "one commit ahead"
+    },
+    {
+      "branch": "astra-interface",
+      "head": "9d65ea8fcd8ce6ea1249dc669e0fcc248b540241",
+      "tree": "cbf56c2c58b4a7a3cb89b7b2de3a18953ae6e7b0",
+      "preserved": true
+    },
+    {
+      "branch": "astra-finance",
+      "head": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+      "tree": "ec517fa26571228bc1ce5e3698fcfc9c5d137ae3",
+      "preserved": true
+    }
+  ],
+  "finance_delta": {
+    "base": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+    "base_tree": "1fd989023150ac85fd9bd48e7196eddce2c49607",
+    "head": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+    "tree": "67af8927297fa12ca7d84077e0450833a9738c52",
+    "status": "ahead",
+    "ahead": 1,
+    "behind": 0,
+    "changed_paths": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/finance-resume-20261114/scenario-bi-bootstrap-R5.json",
+        "status": "added",
+        "additions": 45,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/finance-resume-20261114/reservation-delta-R5.json",
+        "status": "added",
+        "additions": 43,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-bi-fixture.ts",
+        "status": "modified",
+        "additions": 3,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-domain-integration.test.ts",
+        "status": "modified",
+        "additions": 6,
+        "deletions": 2
+      }
+    ],
+    "product_files_changed": 0,
+    "test_or_fixture_files_changed": 2,
+    "receipt_files_added": 2,
+    "statement": "No producer changed between Finance 229d66fa and 4f82cf10. There is no new product delta for the Collaboration tree. All prior producer pins and owner-composition findings remain in force.",
+    "corrections": [
+      {
+        "owner": "WP03",
+        "path": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-bi-fixture.ts",
+        "before_blob": "14445a3e32ab1c906a993fd628d011b8d22659c9",
+        "after_blob": "17f0d6de84fed684b73fca1550cc719a292e7893",
+        "source": "scenario-bi-bootstrap-R5.json",
+        "change": "Initialize Dashboard and Procurement through the existing initializeSources API before admitting/issuing sources or seeding C08. Three added fixture lines; no product, numerical assertion, actor identity, manual incarnation or timeout change."
+      },
+      {
+        "owner": "WP13",
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-domain-integration.test.ts",
+        "before_blob": "e3a0395a9ad33d6fb0ed161f69a246fa14664bd2",
+        "after_blob": "56befede439f9d08233a75fc7b9c25c013e73b4c",
+        "source": "reservation-delta-R5.json",
+        "change": "Keep both full receipt-envelope comparisons and require aggregateRevision exactly before+1 for the real cases-namespace reservation. Receipt namespace version, incarnation, receipt/proof values, absent failed Procurement proof and retry equality remain checked. No product or timeout change."
+      }
+    ]
+  },
+  "formerly_pending_runs": [
+    {
+      "run": 43619817826,
+      "job": 132522722250,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43619817826",
+      "product": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+      "product_tree": "1fd989023150ac85fd9bd48e7196eddce2c49607",
+      "snapshot": "f004a08d124a43f67bfc2bd41debe06ecad7b13e",
+      "snapshot_tree": "d8ba00d43dfe45954fdb0253714b71a0a6adb0cb",
+      "snapshot_parent_is_product": true,
+      "compare_paths": [
+        ".ci-run.json"
+      ],
+      "conclusion": "failure",
+      "full_aggregate": {
+        "pass": 2,
+        "fail": 4,
+        "assertions": 23,
+        "files": 3,
+        "tests": 6,
+        "seconds": 51.73
+      },
+      "cases": [
+        {
+          "file": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-bi.test.ts",
+          "title": "BI09 routes a real C08 pair through the Planner waterfall without promoting conditioned totals or reversing evidence",
+          "status": "FAIL",
+          "duration_ms": 152.42,
+          "log_line": 827
+        },
+        {
+          "file": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-bi.test.ts",
+          "title": "BI09 preserves explicit zero, missing amount and missing FX through actual Planner scenarios",
+          "status": "FAIL",
+          "duration_ms": 101.96,
+          "log_line": 844
+        },
+        {
+          "file": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-bi.test.ts",
+          "title": "BI10 shows the real deferred periods and no invented annual saving or completed payment",
+          "status": "FAIL",
+          "duration_ms": 83.95,
+          "log_line": 861
+        },
+        {
+          "file": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-bi.test.ts",
+          "title": "scenario plans reject callback mutation, changed paired projection, swallowed nested writes and final lease revocation",
+          "status": "FAIL",
+          "duration_ms": 88.42,
+          "log_line": 878
+        },
+        {
+          "file": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-bi-complete.test.ts",
+          "title": "BI09 accepts the complete source-only 235000 result with real N-A/shared coverage and -5000 complete difference",
+          "status": "PASS",
+          "duration_ms": 51131.64,
+          "log_line": 887
+        },
+        {
+          "file": "modules/sucafina/Sucafinav1/test/product/wp05/factory-selection.test.ts",
+          "title": "producer selection cannot switch between read and revalidation in one bound call",
+          "status": "PASS",
+          "duration_ms": 1.55,
+          "log_line": 890
+        }
+      ],
+      "fail_cause": "All four scenario-bi.test cases failed setup with SF_SOURCE_IDENTITIES_UNAVAILABLE before their financial/authorization assertions.",
+      "cleanup": {
+        "job": 132523563002,
+        "conclusion": "success"
+      },
+      "retained_pass_limit": "The complete 235000/-5000 BI case and factory selection remain named PASS at R4. They do not turn the three-file aggregate into PASS or prove the separate 240000/20000 portfolio replay.",
+      "native": "Omni explicitly not applicable; no spawn or delegation."
+    },
+    {
+      "run": 43619812123,
+      "job": 132522704978,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43619812123",
+      "product": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+      "product_tree": "1fd989023150ac85fd9bd48e7196eddce2c49607",
+      "snapshot": "07f905d3a309b9752525ef34aeafbc5d870bd54a",
+      "snapshot_tree": "723fadf3a3b616b269b9fa8052d760cd643e80c2",
+      "snapshot_parent_is_product": true,
+      "compare_paths": [
+        ".ci-run.json"
+      ],
+      "conclusion": "failure",
+      "full_aggregate": {
+        "pass": 56,
+        "fail": 3,
+        "assertions": 582,
+        "files": 11,
+        "tests": 59,
+        "seconds": 281.99
+      },
+      "failures": [
+        {
+          "file": "modules/sucafina/Sucafinav1/test/product/wp13/source-scenario.test.ts",
+          "title": "portfolio replays the USD 240000 ceiling and USD 20000 advantage in the same chosen case when training is confirmed",
+          "status": "FAIL",
+          "duration_ms": 180030.89,
+          "log_line": 857
+        },
+        {
+          "file": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-domain-integration.test.ts",
+          "title": "portfolio C08 choice preserves a receipt-required reservation after a real Procurement precommit failure without redispatch",
+          "status": "FAIL",
+          "duration_ms": 1219.26,
+          "log_line": 933
+        },
+        {
+          "file": "modules/sucafina/Sucafinav1/test/product/wp13/campaign.test.ts",
+          "title": "campaign metadata needs the host's private writer grant",
+          "status": "FAIL",
+          "duration_ms": 12.92,
+          "log_line": 1061
+        }
+      ],
+      "scoped_campaign_request_passes": [
+        {
+          "file": "modules/sucafina/Sucafinav1/test/product/wp13/campaign-request.test.ts",
+          "title": "campaign read retains its original UI request after the last callback (finished)",
+          "status": "PASS",
+          "duration_ms": 42.9,
+          "log_line": 939
+        },
+        {
+          "file": "modules/sucafina/Sucafinav1/test/product/wp13/campaign-request.test.ts",
+          "title": "campaign read retains its original UI request after the last callback (replacement)",
+          "status": "PASS",
+          "duration_ms": 36.28,
+          "log_line": 940
+        },
+        {
+          "file": "modules/sucafina/Sucafinav1/test/product/wp13/campaign-request.test.ts",
+          "title": "campaign readOriginal retains its original UI request after the last callback (finished)",
+          "status": "PASS",
+          "duration_ms": 36.28,
+          "log_line": 941
+        },
+        {
+          "file": "modules/sucafina/Sucafinav1/test/product/wp13/campaign-request.test.ts",
+          "title": "campaign readOriginal retains its original UI request after the last callback (replacement)",
+          "status": "PASS",
+          "duration_ms": 34.34,
+          "log_line": 942
+        },
+        {
+          "file": "modules/sucafina/Sucafinav1/test/product/wp13/campaign-request.test.ts",
+          "title": "campaign readHistorical retains its original UI request after the last callback (finished)",
+          "status": "PASS",
+          "duration_ms": 32.54,
+          "log_line": 943
+        },
+        {
+          "file": "modules/sucafina/Sucafinav1/test/product/wp13/campaign-request.test.ts",
+          "title": "campaign readHistorical retains its original UI request after the last callback (replacement)",
+          "status": "PASS",
+          "duration_ms": 31.92,
+          "log_line": 944
+        },
+        {
+          "file": "modules/sucafina/Sucafinav1/test/product/wp13/campaign-request.test.ts",
+          "title": "campaign list retains its original UI request after the last callback (finished)",
+          "status": "PASS",
+          "duration_ms": 40.05,
+          "log_line": 945
+        },
+        {
+          "file": "modules/sucafina/Sucafinav1/test/product/wp13/campaign-request.test.ts",
+          "title": "campaign list retains its original UI request after the last callback (replacement)",
+          "status": "PASS",
+          "duration_ms": 38.47,
+          "log_line": 946
+        },
+        {
+          "file": "modules/sucafina/Sucafinav1/test/product/wp13/campaign-request.test.ts",
+          "title": "campaign listHistorical retains its original UI request after the last callback (finished)",
+          "status": "PASS",
+          "duration_ms": 38.1,
+          "log_line": 947
+        },
+        {
+          "file": "modules/sucafina/Sucafinav1/test/product/wp13/campaign-request.test.ts",
+          "title": "campaign listHistorical retains its original UI request after the last callback (replacement)",
+          "status": "PASS",
+          "duration_ms": 43.17,
+          "log_line": 948
+        },
+        {
+          "file": "modules/sucafina/Sucafinav1/test/product/wp13/campaign-request.test.ts",
+          "title": "absent campaign retains the UI request after its final namespace authorization (finished)",
+          "status": "PASS",
+          "duration_ms": 9.27,
+          "log_line": 949
+        },
+        {
+          "file": "modules/sucafina/Sucafinav1/test/product/wp13/campaign-request.test.ts",
+          "title": "absent campaign retains the UI request after its final namespace authorization (replacement)",
+          "status": "PASS",
+          "duration_ms": 8.79,
+          "log_line": 950
+        }
+      ],
+      "other_passes_retained": 44,
+      "cleanup": {
+        "job": 132524463531,
+        "conclusion": "success"
+      },
+      "retained_failure_policy": "All three original failures remain FAIL in this aggregate. The later R5 reservation fix has its own product/snapshot and does not erase this result.",
+      "native": "Omni explicitly not applicable; no spawn or delegation."
+    }
+  ],
+  "r5_scoped_runs": [
+    {
+      "run": 43620858830,
+      "job": 132525991986,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43620858830",
+      "product": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+      "product_tree": "67af8927297fa12ca7d84077e0450833a9738c52",
+      "snapshot": "a646c3009b0a348517ee2d2b551fbe0c8e0bc63e",
+      "snapshot_tree": "10e43b4e657216f3fe18a47aaf0f0c532401920f",
+      "snapshot_parent_is_product": true,
+      "compare_paths": [
+        ".ci-run.json"
+      ],
+      "conclusion": "success",
+      "scope": {
+        "pass": 4,
+        "fail": 0,
+        "assertions": 77,
+        "files": 1,
+        "tests": 4,
+        "seconds": 59.16
+      },
+      "cases": [
+        {
+          "file": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-bi.test.ts",
+          "title": "BI09 routes a real C08 pair through the Planner waterfall without promoting conditioned totals or reversing evidence",
+          "status": "PASS",
+          "duration_ms": 12371.68,
+          "log_line": 811
+        },
+        {
+          "file": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-bi.test.ts",
+          "title": "BI09 preserves explicit zero, missing amount and missing FX through actual Planner scenarios",
+          "status": "PASS",
+          "duration_ms": 22431.1,
+          "log_line": 812
+        },
+        {
+          "file": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-bi.test.ts",
+          "title": "BI10 shows the real deferred periods and no invented annual saving or completed payment",
+          "status": "PASS",
+          "duration_ms": 11661.83,
+          "log_line": 813
+        },
+        {
+          "file": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-bi.test.ts",
+          "title": "scenario plans reject callback mutation, changed paired projection, swallowed nested writes and final lease revocation",
+          "status": "PASS",
+          "duration_ms": 12542.16,
+          "log_line": 814
+        }
+      ],
+      "cleanup": {
+        "job": 132526762711,
+        "conclusion": "success"
+      },
+      "native": "Omni explicitly not applicable; no spawn or delegation."
+    },
+    {
+      "run": 43621178540,
+      "job": 132526990338,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43621178540",
+      "product": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+      "product_tree": "67af8927297fa12ca7d84077e0450833a9738c52",
+      "snapshot": "4d998e9e8cd22af9e8c475ee5dcb4081336f3d82",
+      "snapshot_tree": "0d00c0d98ef2f6349377fb8e27643acdeedcb2c5",
+      "snapshot_parent_is_product": true,
+      "compare_paths": [
+        ".ci-run.json"
+      ],
+      "conclusion": "success",
+      "scope": {
+        "pass": 2,
+        "fail": 0,
+        "assertions": 133,
+        "files": 1,
+        "tests": 2,
+        "seconds": 3.08
+      },
+      "cases": [
+        {
+          "file": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-domain-integration.test.ts",
+          "title": "portfolio C08 choice applies two confirmed domain changes with durable receipts and preserves the conditioned choice",
+          "status": "PASS",
+          "duration_ms": 1519.14,
+          "log_line": 811
+        },
+        {
+          "file": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-domain-integration.test.ts",
+          "title": "portfolio C08 choice preserves a receipt-required reservation after a real Procurement precommit failure without redispatch",
+          "status": "PASS",
+          "duration_ms": 1407.37,
+          "log_line": 812
+        }
+      ],
+      "cleanup": {
+        "job": 132527505861,
+        "conclusion": "success"
+      },
+      "native": "Omni explicitly not applicable; no spawn or delegation."
+    }
+  ],
+  "qualification_rule": "R5 qualifies only the six executed cases in the two corrected selections (4 + 2). It does not convert either R4 aggregate into PASS, remove the unresolved numerical/grant counterexamples or qualify the entire Finance/Collaboration tree.",
+  "essential_receipts": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/finance-resume-20261114/scenario-bi-bootstrap-R5.json",
+      "at": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+      "content_read": true,
+      "receipt_status": "READY_FOR_ROOT_REVIEW_AND_ACTIONS",
+      "reconciliation": "The indicated surgical run has now completed with four PASS, verified directly above. Preserve the earlier four FAIL at R4."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/finance-resume-20261114/reservation-delta-R5.json",
+      "at": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+      "content_read": true,
+      "receipt_status": "NOT_RUN_AFTER_FIX",
+      "reconciliation": "The indicated surgical run has now completed with two PASS, verified directly above. Preserve the earlier reservation-envelope FAIL at R4."
+    }
+  ],
+  "static_observation": {
+    "run": 43620788510,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43620788510",
+    "product": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+    "status": "completed",
+    "conclusion": "failure",
+    "scope": "Terminal metadata only in this supplement. No own-diagnostic count or globally clean guards claim."
+  },
+  "current_findings": [
+    {
+      "id": "FIN-WP13-PRIVATE-WRITER-GRANT",
+      "owner": "WP13",
+      "coordination_owners": [
+        "WP10/state-provider",
+        "S0"
+      ],
+      "status": "OPEN_REAL_COUNTEREXAMPLE",
+      "test": "campaign metadata needs the host's private writer grant",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/campaign.test.ts",
+      "product": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+      "snapshot": "07f905d3a309b9752525ef34aeafbc5d870bd54a",
+      "run": 43619812123,
+      "job": 132522704978,
+      "log_line": 1061,
+      "expected": {
+        "status": "unavailable",
+        "reason": "campaign-locked-proof-unavailable"
+      },
+      "observed": {
+        "status": "ok"
+      },
+      "impact": "The omitted-grant counterexample returned an accepted campaign. R5 changes neither this test nor its producer/provider paths, and the new two-case handoff PASS does not cover it.",
+      "next_action": "WP13 must retain and diagnose this counterexample with the canonical grant/provider owner, propose a bounded WP10 delta if needed and qualify the actual denied/authorized branches. Do not supply a permissive callback or infer grant isolation from other campaign PASS."
+    },
+    {
+      "id": "FIN-WP13-NUMERICAL-REPLAY",
+      "owner": "WP13",
+      "coordination_owners": [
+        "WP11 producer",
+        "S0"
+      ],
+      "status": "OPEN_TIMEOUT",
+      "test": "portfolio replays the USD 240000 ceiling and USD 20000 advantage in the same chosen case when training is confirmed",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/source-scenario.test.ts",
+      "product": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+      "snapshot": "07f905d3a309b9752525ef34aeafbc5d870bd54a",
+      "run": 43619812123,
+      "job": 132522704978,
+      "log_line": 857,
+      "duration_ms": 180030.89,
+      "budget_ms": 180000,
+      "impact": "The complete numerical replay did not finish inside its unchanged budget. The 235000/-5000 scenario BI PASS is a different oracle and cannot close this one. R5 changes no source-scenario producer or test.",
+      "next_action": "WP13 owns the complete chosen-case replay and its unchanged numerical oracles; coordinate bounded producer-cost corrections with WP11 and obtain its own hosted terminal result. No timeout increase or native inference claim."
+    },
+    {
+      "id": "FIN-CAMPAIGN-REQUEST-EGRESS",
+      "owner": "WP13",
+      "status": "SCOPED_PASS_AT_R4",
+      "impact": "All twelve finished/replacement Request cases passed, including absent campaign. This closes the previously pending request-egress evidence only at R4; the missing writer-grant counterexample remains independent."
+    },
+    {
+      "id": "FIN-R5-FIXTURES",
+      "owner": "WP03/WP13",
+      "status": "SIX_SCOPED_PASS_AT_R5",
+      "impact": "Canonical source bootstrap and the exact durable reservation envelope are now qualified in the two corrected files. No producer, shared contract, host or financial engine changed."
+    },
+    {
+      "id": "COLLABORATION-CONSUMERS",
+      "owner": "WP07/WP08/WP09 with S0 composition",
+      "status": "NO_NEW_PRODUCT_DELTA",
+      "impact": "No source intake is needed for this R5 advance. Preserve already reconciled Finance R3/R4 product pins. Full-review nonrecord ACL/physical continuity, canonical C06 questions/answers, nonempty WP14 outcome consumption and installed/native execution remain separate owner obligations."
+    },
+    {
+      "id": "INTERFACE",
+      "owner": "WP02/Interface with S0 composition",
+      "status": "IDENTICAL",
+      "impact": "No change to the prior helper, CAS/caller composition or UI/native findings. Do not reopen or rerun stabilized chains solely because Finance receipts advanced."
+    }
+  ],
+  "global_acceptance": false,
+  "native_execution_claimed": false,
+  "subprocess_is_native_proof": false,
+  "remote_mutations": false,
+  "product_tests_executed": false,
+  "source_tree_intake": false,
+  "frozen_wp07_documents_changed": false
+}

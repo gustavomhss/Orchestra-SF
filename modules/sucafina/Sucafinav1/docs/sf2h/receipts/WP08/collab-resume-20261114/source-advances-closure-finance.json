@@ -1,0 +1,407 @@
+{
+  "schema": "sf-collab-finance-source-closure-v1",
+  "observed_at_utc": "2026-11-14 17:59:34 UTC",
+  "requested_ref_cut_at_utc": "2026-11-14 17:57:31 UTC",
+  "scope": "Read-only GitHub MCP reconciliation of the Finance advance after the prior 17:40:51 supplement. No remote mutation, CI dispatch, product execution, source intake or changes to frozen WP07 receipts.",
+  "previous_supplement": {
+    "path": "source-advances-post-171554-interface-finance.json",
+    "sha256": "573d884b488bccd8d52a9dbd27a63248b5be3fe2e2e7f0eb4755737a2c6fecd9",
+    "git_blob": "2a640765cb83ce0b371786d5b32f51bbd6056916",
+    "preservation": "This supplement appends observations; all prior failed aggregates and scoped R5 PASS remain unchanged."
+  },
+  "refs": {
+    "finance": {
+      "base": {
+        "sha": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+        "tree": "67af8927297fa12ca7d84077e0450833a9738c52"
+      },
+      "head": {
+        "sha": "3ea9dc2efe0de8d283f9625774697e431f55a0d7",
+        "tree": "2d1ecef2ebc5aeca3fd312397bdf709f53d42582",
+        "parent": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+        "committed_at": "2026-11-14T17:46:21Z",
+        "subject": "docs(sucafina): publish Finance restart evidence and S0 handoff"
+      },
+      "verified_via": "GitHub MCP compare plus git commit GET"
+    },
+    "interface": {
+      "head": "2ee71fc90055814912654ae198f7a1dcf9583943",
+      "tree": "cf3676a469a1f8bcab05e322ee7a4a1ada0704c5",
+      "status": "UNCHANGED_AT_ROOT_REF_CUT",
+      "verification": "Root MCP observation 2026-11-14 17:57:31 UTC; prior supplement independently fixed the same identity. Not re-read during this Finance-only delta."
+    },
+    "preserved_origins": {
+      "astra_interface": "9d65ea8fcd8ce6ea1249dc669e0fcc248b540241",
+      "astra_finance": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+      "verification": "Root MCP final ref cut states both preserved; prior supplement contains verified head/tree identities. No branch was changed by this audit."
+    }
+  },
+  "delta": {
+    "status": "ahead",
+    "ahead_by": 1,
+    "behind_by": 0,
+    "total_commits": 1,
+    "changed_paths": 29,
+    "product_paths": 0,
+    "test_paths": 0,
+    "fixture_paths": 0,
+    "configuration_paths": 0,
+    "receipt_paths": 29,
+    "all_paths_added": true,
+    "classification": "RECEIPTS_ONLY_NO_NEW_PRODUCER_OR_FIXTURE_DELTA",
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/finance-resume-20261114/criteria-supplement-R2-S3.json",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/finance-resume-20261114/evidence-reuse-R2-S3.json",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/finance-resume-20261114/scenario-bi-handoff.json",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-resume-20261114/criteria-supplement-R2-S3.json",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-resume-20261114/independent-scenario-bi-r4-review.json",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP05/finance-resume-20261114/independent-scenario-bi-r4-review.md",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-20261114/CHECK-R3-result-final.json",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-20261114/CHECK-R4-result-final.json",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-20261114/CHECK-R5-result-final.json",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-20261114/HANDOFF-FINAL.md",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-20261114/ci-ledger-final.json",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-20261114/consumer-reconciliation-wp12-refresh-2-20261114.json",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-20261114/consumer-reconciliation-wp12-refresh-20261114.json",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-20261114/consumer-reconciliation.json",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-20261114/criteria-index-final.json",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-20261114/criteria-index-validation-final.json",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-20261114/independent-reservation-R5-review.json",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-20261114/independent-review-bindings-final.json",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-20261114/provenance-final.json",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-20261114/publication-inputs-final.json",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-20261114/remaining-gaps-final.json",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-20261114/source-heads-final.json",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-20261114/source-publication-observation.json",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/finance-resume/S11-terminal-supplement.json",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/finance-resume/S2-terminal-diagnosis.json",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/finance-resume/S5-terminal-supplement.json",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/finance-resume/criteria-triage-R2-R3.json",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/finance-resume/independent-bi-source-review.json",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/finance-resume/source-head-observation-170331.json",
+        "status": "added"
+      }
+    ],
+    "impact": "No implementation from this advance is eligible or required for transplantation into collab-resume. Existing producers and fixtures are identical to R5; new receipts do not retroactively change the executed W/S."
+  },
+  "new_receipts_read": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-20261114/HANDOFF-FINAL.md",
+      "blob": "2623594eb8124b45e45ec6665764be61c34be70c",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/3ea9dc2efe0de8d283f9625774697e431f55a0d7/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-20261114/HANDOFF-FINAL.md"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-20261114/remaining-gaps-final.json",
+      "blob": "3935412c87c380f2d6c8c5a855bbea17c629b412",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/3ea9dc2efe0de8d283f9625774697e431f55a0d7/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-20261114/remaining-gaps-final.json"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-20261114/ci-ledger-final.json",
+      "blob": "2a49cc82c758ee5c9e966182ffbc5de66558f2c7",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/3ea9dc2efe0de8d283f9625774697e431f55a0d7/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-20261114/ci-ledger-final.json"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/finance-resume/S5-terminal-supplement.json",
+      "blob": "118b47a6b6fa850cb950c5bde671dba08bb85a1f",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/3ea9dc2efe0de8d283f9625774697e431f55a0d7/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/finance-resume/S5-terminal-supplement.json"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/finance-resume/S11-terminal-supplement.json",
+      "blob": "ba04fac6a5d123b3ac46111e95ccc3aed07fbbed",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/3ea9dc2efe0de8d283f9625774697e431f55a0d7/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP13/finance-resume/S11-terminal-supplement.json"
+    }
+  ],
+  "findings": [
+    {
+      "id": "FINANCE_NUMERIC_SOURCE_SCENARIO",
+      "status": "OPEN_UNCHANGED",
+      "owner": "WP13; coordinate WP10/provider profiling and relevant canonical producers",
+      "test_path": "modules/sucafina/Sucafinav1/test/product/wp13/source-scenario.test.ts",
+      "test_name": "portfolio replays the USD 240000 ceiling and USD 20000 advantage in the same chosen case when training is confirmed",
+      "evidence": {
+        "run": 43619812123,
+        "job": 132522704978,
+        "W": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+        "W_tree": "1fd989023150ac85fd9bd48e7196eddce2c49607",
+        "S": "07f905d3a309b9752525ef34aeafbc5d870bd54a",
+        "S_tree": "723fadf3a3b616b269b9fa8052d760cd643e80c2",
+        "outcome": "FAIL",
+        "duration_ms": 180030.89,
+        "budget_ms": 180000,
+        "log_line": 857,
+        "provenance": "Actual terminal log verified in the preceding supplement; new S5 receipt agrees. No repeated test execution."
+      },
+      "new_information": "FIN-PERF-02 remains OPEN_PERFORMANCE. The owner records repeated authorized C08/read/replay work; nested timer totals do not isolate one root cause and must not be added as a flat allocation. No safe further own-only optimization or new numeric PASS is established.",
+      "next_action": "WP13 and producer/provider owners profile and change a concrete redundant cost while retaining complete calculation, original 180000ms oracle, physical/source authorization and the persisted human choice. Requalify only a materially changed case."
+    },
+    {
+      "id": "FINANCE_PRIVATE_WRITER_GRANT",
+      "status": "OPEN_SHARED_COMPOSITION_WITH_EXISTING_PROVIDER_FIX",
+      "test_owner": "WP13 retains the original negative oracle",
+      "implementation_owner": "WP10/provider and S0 composition",
+      "test_path": "modules/sucafina/Sucafinav1/test/product/wp13/campaign.test.ts",
+      "test_name": "campaign metadata needs the host's private writer grant",
+      "evidence": {
+        "run": 43619812123,
+        "job": 132522704978,
+        "W": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+        "S": "07f905d3a309b9752525ef34aeafbc5d870bd54a",
+        "outcome": "FAIL",
+        "duration_ms": 12.92,
+        "expected": {
+          "status": "unavailable",
+          "reason": "campaign-locked-proof-unavailable"
+        },
+        "actual": {
+          "status": "ok"
+        },
+        "log_line": 1061,
+        "provenance": "Actual terminal log verified in the preceding supplement; new S5 receipt agrees. The subsequent absence assertion did not execute after the first assertion failed."
+      },
+      "provider_source_read": {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+        "finance": {
+          "ref": "3ea9dc2efe0de8d283f9625774697e431f55a0d7",
+          "blob": "b7988a2963a2797a96ea19ab2b3a481564548213",
+          "lines": [
+            84,
+            85,
+            86
+          ],
+          "observed": "proposalMetadata includes sf:proposal-coverage: and sf:criterion-rule: only; sf:portfolio:campaign: is absent."
+        },
+        "published_owner": {
+          "ref": "9048e0e65351a5bd80768458a79fed94a4993db7",
+          "pr": 32,
+          "blob": "2fd55c7304add0829d7434917c80664fe86356b9",
+          "lines": [
+            102,
+            103,
+            104
+          ],
+          "observed": "proposalMetadata additionally includes sf:portfolio:campaign: and rejects a changed value when proposalCoverageWrites lacks the work callback."
+        },
+        "verification": "Both exact files read via GitHub MCP. This is bounded static confirmation of the already-published owner guard, not runtime qualification of the Finance composition. No foreign source file was copied."
+      },
+      "new_information": "Do not describe the provider fix as unimplemented. The fix exists at the owner pin, while Finance retains the older provider. A receipt-only commit does not discharge the unsafe observed outcome.",
+      "next_action": "WP10/S0 reconcile only the required provider guard and compatible sourceFence/checkNamespaces seam; WP13 then qualifies the original missing-grant refusal and absence of retained campaign/history writes. Do not replace the full foreign provider or remove the assertion."
+    },
+    {
+      "id": "FINANCE_HUMAN_CHOICE_REPLAY_S11",
+      "status": "OPEN_ADDITIONAL_TERMINAL_PERFORMANCE_EVIDENCE",
+      "owner": "WP13 with WP10/provider profiling",
+      "test_path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+      "test_name": "WP13 keeps the human choice in one case while confirmed training changes the source-only analysis to the real 15000 boundary",
+      "distinction": "This is a separate full human-choice journey; it neither fixes nor replaces the USD240000/USD20000 source-scenario case.",
+      "next_action": "Preserve full calculation, source-only reconfirmation, human choice and persisted replay. No identical repeat without a material safe fix, and no increased budget."
+    }
+  ],
+  "new_terminal_run": {
+    "label": "S11",
+    "run": 43620619049,
+    "job": 132525249982,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43620619049",
+    "W": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+    "W_tree": "1fd989023150ac85fd9bd48e7196eddce2c49607",
+    "S": "c7a0956f850525a03ccd28b26cb8d90808f4d83f",
+    "S_tree": "413f807a60933f928e5526fb2dba768e41ba00d6",
+    "S_parent": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+    "snapshot_comparison": {
+      "ahead_by": 1,
+      "changed_paths": [
+        ".ci-run.json"
+      ],
+      "product_tests_fixtures_unchanged": true
+    },
+    "status": "completed",
+    "conclusion": "failure",
+    "started_at": "2026-11-14T17:20:59Z",
+    "updated_at": "2026-11-14T17:25:34Z",
+    "pass": 0,
+    "fail": 1,
+    "filtered": 5,
+    "assertions": 10,
+    "tests": 1,
+    "files": 1,
+    "case_duration_ms": 180013.46,
+    "reported_duration_seconds": 180.18,
+    "unchanged_case_budget_ms": 180000,
+    "cleanup": {
+      "job": 132526519733,
+      "conclusion": "success"
+    },
+    "omni": "not applicable; no omni spawn and no delegated execution. No native Relay, inference or authenticated native outcome proof.",
+    "log": {
+      "fetched_via": "GitHub MCP fetch_workflow_job_logs",
+      "decoded_characters": 76212,
+      "utf8_bytes": 76214,
+      "sha256_as_published_by_owner": "0ecbb8bdf9cb605ad3b60f18686b695f5c019ebbdf89579ddd88995c82b0a4b8",
+      "hash_independently_recomputed": false,
+      "excerpts": [
+        {
+          "line": 825,
+          "text": "2026-11-14T17:25:26.5445405Z error: WP11_FIXTURE_DEADLINE_EXCEEDED:renewal-choice-history:prepare:transition-confirmed:complete:180000"
+        },
+        {
+          "line": 835,
+          "text": "2026-11-14T17:25:26.5482345Z (fail) WP13 keeps the human choice in one case while confirmed training changes the source-only analysis to the real 15000 boundary [180013.46ms]"
+        },
+        {
+          "line": 837,
+          "text": "2026-11-14T17:25:26.6615872Z omni positive control [c132b65b53aded85b03765ea844e248f]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+        },
+        {
+          "line": 838,
+          "text": "2026-11-14T17:25:26.6616604Z  0 pass"
+        },
+        {
+          "line": 839,
+          "text": "2026-11-14T17:25:26.6616799Z  5 filtered out"
+        },
+        {
+          "line": 840,
+          "text": "2026-11-14T17:25:26.6617014Z  1 fail"
+        },
+        {
+          "line": 841,
+          "text": "2026-11-14T17:25:26.6617294Z  10 expect() calls"
+        },
+        {
+          "line": 842,
+          "text": "2026-11-14T17:25:26.6617683Z Ran 1 test across 1 file. [180.18s]"
+        }
+      ]
+    },
+    "verification": "Run metadata, job status, exact log, git snapshot parent/tree and .ci-run-only compare independently read through GitHub MCP. Test not launched by this auditor."
+  },
+  "preserved_proof_limits": {
+    "R4_S5": {
+      "run": 43619812123,
+      "pass": 56,
+      "fail": 3,
+      "assertions": 582,
+      "status": "FAILURE_RETAINED"
+    },
+    "R4_S8": {
+      "run": 43619817826,
+      "pass": 2,
+      "fail": 4,
+      "assertions": 23,
+      "status": "FAILURE_RETAINED"
+    },
+    "R5_S12": {
+      "run": 43620858830,
+      "job": 132525991986,
+      "W": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+      "S": "a646c3009b0a348517ee2d2b551fbe0c8e0bc63e",
+      "pass": 4,
+      "fail": 0,
+      "assertions": 77,
+      "scope": "Only the corrected scenario-BI selection; no aggregate or numeric-history promotion."
+    },
+    "R5_S13": {
+      "run": 43621178540,
+      "job": 132526990338,
+      "W": "4f82cf10ae6766c56e9bf1862fc5198a5246cb5c",
+      "S": "4d998e9e8cd22af9e8c475ee5dcb4081336f3d82",
+      "pass": 2,
+      "fail": 0,
+      "assertions": 133,
+      "scope": "Only the two selected handoff-domain cases after the fixture envelope correction."
+    },
+    "closed_original_findings": [],
+    "source_execution_classification": "Receipts clarify distinctions between service reconstruction, second SQLite connection, true LocalStore disposal/reopen, installed integration and native execution. None may substitute for another.",
+    "no_global_acceptance": true
+  },
+  "next_owner_actions": [
+    "S0 retains the existing collab-resume source and references this receipt-only Finance advance; no producer intake is required from 3ea9dc2e.",
+    "WP10/S0 compose the already-published campaign provider guard through a bounded delta, with WP13 retaining and qualifying the original negative oracle.",
+    "WP13 and relevant producer owners resolve the observed full-replay cost before a justified surgical selection. Preserve budgets, all numerical oracles and authentication boundaries.",
+    "WP07 nonempty WP14 result consumer, C17 historical leases by type, C05 installed presentation and WP09 Relay-native result remain governed by their existing owner findings; this Finance receipt advance does not close them."
+  ]
+}

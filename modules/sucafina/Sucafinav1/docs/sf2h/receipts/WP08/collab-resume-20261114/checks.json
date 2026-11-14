@@ -1,0 +1,955 @@
+{
+  "schema": "sf2h.collab-resume.checks.v1",
+  "repository": "gustavomhss/Orchestra-SF",
+  "origin": {
+    "pr": 33,
+    "sha": "2784daafbb0d3b58b6019822288a07fa38e5c5b0",
+    "tree": "fd1c89074488008ff0e60fd07577268a34329069"
+  },
+  "delivery_pr": 41,
+  "policy": {
+    "product_execution": "GitHub Actions only",
+    "remote_transport": "GitHub MCP only",
+    "local_operations": "Read-only source analysis, canonical CI request validation, document/manifest/hash reconciliation. No local product tests.",
+    "global_acceptance": "NOT CLAIMED"
+  },
+  "increments": [
+    {
+      "id": "W1",
+      "sha": "ff557552936197b6734e57f0ecea0c44b19139b1",
+      "tree": "0349fb1b18315a9c7c0cadb04b738ea499beda05"
+    },
+    {
+      "id": "W2",
+      "sha": "20821df310ebc6ea08ccab27e829008d72a04de6",
+      "tree": "98d5c2f4f62a778f4acf6ec1b69ef5bfd19d5783"
+    },
+    {
+      "id": "W3",
+      "sha": "34f26821f62a99ae40ca1e69f4bded602f83768e",
+      "tree": "25e89787b9c49dd97078db999bc74dfad57e1818"
+    },
+    {
+      "id": "W4",
+      "sha": "70af5b7d26bbc9456b1d9b9aa324bf2ae10668c4",
+      "tree": "44a6c14f500f88dc8b01f82f64dedb6cc4d3c47f"
+    },
+    {
+      "id": "W5",
+      "sha": "0d9820924b33a8fc7b145f54a675aeef76c98489",
+      "tree": "39cec0a91dc5ebc2dde012d4d1d8b63166074373"
+    },
+    {
+      "id": "W6",
+      "sha": "dc21cd389de67c2e7fac996b663d9c0aa7d8cae5",
+      "tree": "0a5eea5d992e65153fae6999ce3e7e4d109f30b0"
+    },
+    {
+      "id": "W7",
+      "sha": "9e1f44af7689946d27d37ed48b9f5e9849417121",
+      "tree": "ac88fa893a3b8b9f36c4373c2889652025fcf0f3"
+    }
+  ],
+  "product_runs": [
+    {
+      "run_id": 43615514065,
+      "job_id": 132509571848,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43615514065",
+      "product_sha": "ff557552936197b6734e57f0ecea0c44b19139b1",
+      "snapshot_sha": "6f73befe7414d08cf882ef0b125d8857ad69ec4f",
+      "snapshot_tree": "9cb7515d56cc9d017d945b29e16ba035a668d5cf",
+      "request_sha256": "3ccb0282eeac6533cad109b40d3c2750d19cfd6f42451f2458ccef744ed0ba4f",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp09/schedule-boundaries.test.ts",
+          "./Sucafinav1/test/product/wp09/schedule-result-consumer.test.ts",
+          "./Sucafinav1/test/product/wp09/schedule.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "envelope": "MCP compare verified W is S parent; only .ci-run.json added.",
+      "conclusion": "success",
+      "counts": {
+        "pass": 42,
+        "fail": 0,
+        "expect_calls": 111,
+        "duration_ms": 152
+      },
+      "by_file": [
+        {
+          "path": "Sucafinav1/test/product/wp09/schedule-boundaries.test.ts",
+          "pass": 32
+        },
+        {
+          "path": "Sucafinav1/test/product/wp09/schedule-result-consumer.test.ts",
+          "pass": 7
+        },
+        {
+          "path": "Sucafinav1/test/product/wp09/schedule.test.ts",
+          "pass": 3
+        }
+      ],
+      "omni": {
+        "verdict": "not applicable",
+        "nonce": "611300de1451a68088c085171e82befd",
+        "native_execution_proof": false
+      },
+      "cleanup": "official workflow deleted snapshot branch"
+    },
+    {
+      "run_id": 43616934900,
+      "job_id": 132513933634,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43616934900",
+      "product_sha": "20821df310ebc6ea08ccab27e829008d72a04de6",
+      "snapshot_sha": "161f5f9b547dcb7ca7868a70ab0ffa05413131b3",
+      "snapshot_tree": "5c111f0f8bc448c32c7adfee0e1b42c1666e4be1",
+      "request_sha256": "887cb8b244e4d3cf24ac1fd9c2b60aef611da122e955353eb8cd0b57a25bb457",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp07/review-port.test.ts",
+          "./Sucafinav1/test/product/wp07/review-thread-context.test.ts",
+          "./Sucafinav1/test/product/wp07/dashboard-agenda-consumer.test.ts",
+          "./Sucafinav1/test/product/wp08/case-selection-cas.test.ts",
+          "./Sucafinav1/test/product/wp08/review-recipient-authority.test.ts",
+          "./Sucafinav1/test/product/wp08/review-answer-confirmation.test.ts",
+          "./Sucafinav1/test/product/wp08/host-answer-reuse.test.ts",
+          "./Sucafinav1/test/product/wp08/answer-first-confirm-http.test.ts",
+          "./Sucafinav1/test/product/wp08/recipient-human-actions.test.ts",
+          "./Sucafinav1/test/product/wp08/recipient-authority.test.ts",
+          "./Sucafinav1/test/product/wp08/thread-actors.test.ts",
+          "./Sucafinav1/test/product/wp08/thread-history-continuity.test.ts",
+          "./Sucafinav1/test/product/wp08/thread-history-supplements.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "envelope": "MCP compare verified W is S parent; only .ci-run.json added.",
+      "conclusion": "failure",
+      "counts": {
+        "pass": 29,
+        "fail": 4,
+        "error": 1,
+        "expect_calls": 518,
+        "tests": 33,
+        "files": 13,
+        "duration_seconds": 981.93
+      },
+      "detail": "c05-w2-result.json",
+      "omni": {
+        "verdict": "not applicable",
+        "nonce": "77a4e807111dac85408fd627b425af22",
+        "native_execution_proof": false
+      },
+      "cleanup": "official workflow deleted snapshot branch",
+      "artifacts": [],
+      "log_capture_sha256": "4ec37548a3e7c8584af9529dcff5649766fc8d4f3abc726a9d1559f30f76699c"
+    },
+    {
+      "run_id": 43619790251,
+      "job_id": 132522634877,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43619790251",
+      "product_sha": "0d9820924b33a8fc7b145f54a675aeef76c98489",
+      "snapshot_sha": "49e83715497e221350a8c221f45968debb566bea",
+      "snapshot_tree": "47fa6c5b106da857128545bb62c935c4c7528614",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp07/review-thread-context.test.ts",
+          "./Sucafinav1/test/product/wp08/case-selection-cas.test.ts",
+          "./Sucafinav1/test/product/wp08/review-recipient-authority.test.ts",
+          "./Sucafinav1/test/product/wp08/review-answer-confirmation.test.ts",
+          "./Sucafinav1/test/product/wp08/thread-history-continuity.test.ts",
+          "./Sucafinav1/test/product/wp08/host-answer-reuse.test.ts",
+          "./Sucafinav1/test/product/wp08/answer-first-confirm-http.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "request_sha256": "1a023927eb151674cc2763b489b9cb7b0abb65c7d3845fd9cedf397a2f11168d",
+      "envelope": "Verified exact parent W; only .ci-run.json added. Dedup zero; no other WP07/WP08 product run in flight.",
+      "conclusion": "failure",
+      "reason_for_revalidation": {
+        "review-thread-context.test.ts": "W2 parser prevented execution; W3 repaired without removing oracle.",
+        "case-selection-cas.test.ts": "W4 explicitly narrows the C08 result type; same CAS assertions retained.",
+        "review-recipient-authority.test.ts": "W4 adds same-context lease replay/provider replacement counterexample.",
+        "review-answer-confirmation.test.ts": "W5 changes affected host derivation, uses displayed HTTP observation, adds exact-reference/physical-counterexamples and timing checkpoints.",
+        "thread-history-continuity.test.ts": "W2 real failure corrected in W5; original stale expectation retained.",
+        "host-answer-reuse.test.ts": "Affected authenticated answer/scope host callbacks changed in W5.",
+        "answer-first-confirm-http.test.ts": "Affected host identity/scope callbacks used by actual HTTP preparation and confirmation."
+      },
+      "counts": {
+        "pass": 8,
+        "fail": 2,
+        "expect_calls": 235,
+        "tests": 10,
+        "files": 7,
+        "duration_seconds": 462.12
+      },
+      "omni": {
+        "verdict": "not applicable",
+        "nonce": "7d6e60eb59182bbc5026acd868131ddc",
+        "native_execution_proof": false
+      },
+      "detail": "c05-w5-result.json",
+      "findings": [
+        "Long preserved-answer journey completed its checkpoints but exceeded unchanged120000ms test deadline (253128.15ms); not a PASS.",
+        "Fresh preparation regressed: unconditional historical basis retained an All Projects scoped incarnation, while the current confirmation issuer uses Portfolio Dashboard. Page participates in scoped identity; prepare rejects mismatched observation/scope incarnations. W6 must restore the proven generic current derivation and keep strict pinned C05 handling."
+      ],
+      "retained_scoped_passes": [
+        "WP07 review-thread-context:3cases",
+        "WP08 case selection CAS",
+        "WP08 review recipient authority including R09",
+        "WP08 current review lease revocation and physical replacement counterexample",
+        "WP08 host answer reuse",
+        "WP08 HTTP first confirmation"
+      ],
+      "cleanup": {
+        "job_id": 132525458294,
+        "conclusion": "success",
+        "snapshot_ref_deleted_by_workflow": true
+      },
+      "artifacts": [],
+      "log_capture_sha256": "dd5b4a6b646775c0a32337f27d8df304498c277b2ee33a6cfca23dd603432a83"
+    },
+    {
+      "run_id": 43623257640,
+      "job_id": 132533400502,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43623257640",
+      "product_sha": "dc21cd389de67c2e7fac996b663d9c0aa7d8cae5",
+      "snapshot_sha": "72848c2122b68e15341baa41e5beef4e9237562a",
+      "snapshot_tree": "a2736ebc9cad587e0e10576a6758a5003c00831c",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp08/review-answer-confirmation.test.ts",
+          "./Sucafinav1/test/product/wp08/thread-history-continuity.test.ts",
+          "./Sucafinav1/test/product/wp08/host-answer-reuse.test.ts",
+          "./Sucafinav1/test/product/wp08/answer-first-confirm-http.test.ts",
+          "./Sucafinav1/test/product/wp08/answer-egress-version.test.ts",
+          "./Sucafinav1/test/product/wp08/answer-reuse.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "request_sha256": "05443c8b6ad0e91d18b1aae3e92864d7be9016d1779ac2b9f533500655f7ac69",
+      "envelope": "One direct child commit changes only .ci-run.json; compare verified before branch trigger.",
+      "conclusion": "failure",
+      "reason_for_revalidation": "W5 generic scope refusal and 253128.15ms aggregate timeout plus newly confirmed R10 final version race. Exact six-file selection covers changed code, new real races and the existing unit snapshot model. No WP07/Schedule/export duplicates.",
+      "counts": {
+        "pass": 7,
+        "fail": 3,
+        "expect_calls": 212,
+        "tests": 10,
+        "files": 6,
+        "duration_seconds": 572.34
+      },
+      "cases": [
+        {
+          "file": "modules/sucafina/Sucafinav1/test/product/wp08/review-answer-confirmation.test.ts",
+          "result": "pass",
+          "name": "C05 answers confirm the displayed preserved review and reuse the same baseline after SQLite reopen",
+          "duration_ms": 109225.56
+        },
+        {
+          "file": "modules/sucafina/Sucafinav1/test/product/wp08/review-answer-confirmation.test.ts",
+          "result": "fail",
+          "name": "C05 edited answers after SQLite reopen create one stale item and reconfirm the same original review",
+          "duration_ms": 149408.75
+        },
+        {
+          "file": "modules/sucafina/Sucafinav1/test/product/wp08/review-answer-confirmation.test.ts",
+          "result": "pass",
+          "name": "a current-domain question cannot inherit a confirmed C05 answer and review ACL revocation hides every private consumer",
+          "duration_ms": 49462.65
+        },
+        {
+          "file": "modules/sucafina/Sucafinav1/test/product/wp08/review-answer-confirmation.test.ts",
+          "result": "pass",
+          "name": "C05 confirmation refuses a lease revoked at commit and cannot revive a replaced physical source",
+          "duration_ms": 83097.57
+        },
+        {
+          "file": "modules/sucafina/Sucafinav1/test/product/wp08/thread-history-continuity.test.ts",
+          "result": "pass",
+          "name": "authorized historical messages keep their original basis and a new answer reuses the same stale thread",
+          "duration_ms": 38349.72
+        },
+        {
+          "file": "modules/sucafina/Sucafinav1/test/product/wp08/host-answer-reuse.test.ts",
+          "result": "pass",
+          "name": "host-created capabilities consume a confirmed answer through shared dispatch and real Dashboard scope",
+          "duration_ms": 11444.84
+        },
+        {
+          "file": "modules/sucafina/Sucafinav1/test/product/wp08/answer-first-confirm-http.test.ts",
+          "result": "pass",
+          "name": "first answer confirmation issues its selector server-side and rejects another recipient, wrong thread, edited version and revoked access",
+          "duration_ms": 6455.03
+        },
+        {
+          "file": "modules/sucafina/Sucafinav1/test/product/wp08/answer-egress-version.test.ts",
+          "result": "fail",
+          "name": "C05 answer read refuses a real human edit after its final external version read",
+          "duration_ms": 66668.51
+        },
+        {
+          "file": "modules/sucafina/Sucafinav1/test/product/wp08/answer-egress-version.test.ts",
+          "result": "fail",
+          "name": "C05 answer work refuses a real human edit after its final external version read",
+          "duration_ms": 57952.4
+        },
+        {
+          "file": "modules/sucafina/Sucafinav1/test/product/wp08/answer-reuse.test.ts",
+          "result": "pass",
+          "name": "answer reuse delegates cross-actor scope and authorization to producer",
+          "duration_ms": 3.2
+        }
+      ],
+      "phase_timings": [
+        {
+          "scenario": "confirmation-reopen",
+          "phase": "fixture-ready",
+          "elapsed_ms": 256
+        },
+        {
+          "scenario": "confirmation-reopen",
+          "phase": "question-and-source-change",
+          "elapsed_ms": 6063
+        },
+        {
+          "scenario": "confirmation-reopen",
+          "phase": "recipient-reply",
+          "elapsed_ms": 17908
+        },
+        {
+          "scenario": "confirmation-reopen",
+          "phase": "exact-answer-reference-checked",
+          "elapsed_ms": 25618
+        },
+        {
+          "scenario": "confirmation-reopen",
+          "phase": "unconfirmed-read",
+          "elapsed_ms": 46443
+        },
+        {
+          "scenario": "confirmation-reopen",
+          "phase": "http-observation",
+          "elapsed_ms": 57935
+        },
+        {
+          "scenario": "confirmation-reopen",
+          "phase": "confirmation-retry",
+          "elapsed_ms": 75043
+        },
+        {
+          "scenario": "confirmation-reopen",
+          "phase": "confirmed-read-work-and-shared-denial",
+          "elapsed_ms": 93565
+        },
+        {
+          "scenario": "confirmation-reopen",
+          "phase": "sqlite-reopen-and-reuse",
+          "elapsed_ms": 109219
+        },
+        {
+          "scenario": "confirmation-reopen",
+          "phase": "reopened-storage-unchanged",
+          "elapsed_ms": 109221
+        },
+        {
+          "scenario": "confirmation-reopen",
+          "phase": "disposed",
+          "elapsed_ms": 109222
+        },
+        {
+          "scenario": "edit-reconfirm",
+          "phase": "fixture-ready",
+          "elapsed_ms": 179
+        },
+        {
+          "scenario": "edit-reconfirm",
+          "phase": "real-question-source-change-and-answer",
+          "elapsed_ms": 23429
+        },
+        {
+          "scenario": "edit-reconfirm",
+          "phase": "real-confirmation-and-sqlite-reopen",
+          "elapsed_ms": 42362
+        },
+        {
+          "scenario": "edit-reconfirm",
+          "phase": "answer-edit-and-stale-work",
+          "elapsed_ms": 79802
+        },
+        {
+          "scenario": "edit-reconfirm",
+          "phase": "reconfirmation-history-and-resolution",
+          "elapsed_ms": 149407
+        },
+        {
+          "scenario": "edit-reconfirm",
+          "phase": "disposed",
+          "elapsed_ms": 149409
+        },
+        {
+          "scenario": "distinct-current-revocation",
+          "phase": "fixture-ready",
+          "elapsed_ms": 172
+        },
+        {
+          "scenario": "distinct-current-revocation",
+          "phase": "real-question-source-change-and-answer",
+          "elapsed_ms": 23861
+        },
+        {
+          "scenario": "distinct-current-revocation",
+          "phase": "real-c05-confirmation",
+          "elapsed_ms": 43605
+        },
+        {
+          "scenario": "distinct-current-revocation",
+          "phase": "distinct-current-source-answer",
+          "elapsed_ms": 48757
+        },
+        {
+          "scenario": "distinct-current-revocation",
+          "phase": "disposed",
+          "elapsed_ms": 49462
+        },
+        {
+          "scenario": "current-lease",
+          "phase": "fixture-ready",
+          "elapsed_ms": 166
+        },
+        {
+          "scenario": "current-lease",
+          "phase": "reply-denied-at-last-human-await",
+          "elapsed_ms": 14583
+        },
+        {
+          "scenario": "current-lease",
+          "phase": "reply-and-private-observation",
+          "elapsed_ms": 40396
+        },
+        {
+          "scenario": "current-lease",
+          "phase": "confirmation-denied-at-commit",
+          "elapsed_ms": 47343
+        },
+        {
+          "scenario": "current-lease",
+          "phase": "unconfirmed-read",
+          "elapsed_ms": 56686
+        },
+        {
+          "scenario": "current-lease",
+          "phase": "restored-access-confirmation",
+          "elapsed_ms": 83066
+        },
+        {
+          "scenario": "current-lease",
+          "phase": "physical-replacement-denied",
+          "elapsed_ms": 83095
+        },
+        {
+          "scenario": "current-lease",
+          "phase": "disposed",
+          "elapsed_ms": 83096
+        },
+        {
+          "scenario": "r10-read",
+          "phase": "fixture-ready",
+          "elapsed_ms": 167
+        },
+        {
+          "scenario": "r10-read",
+          "phase": "real-confirmation",
+          "elapsed_ms": 40088
+        },
+        {
+          "scenario": "r10-read",
+          "phase": "edit-refused-at-final-egress",
+          "elapsed_ms": 66662
+        },
+        {
+          "scenario": "r10-read",
+          "phase": "disposed",
+          "elapsed_ms": 66667
+        },
+        {
+          "scenario": "r10-work",
+          "phase": "fixture-ready",
+          "elapsed_ms": 184
+        },
+        {
+          "scenario": "r10-work",
+          "phase": "real-confirmation",
+          "elapsed_ms": 39992
+        },
+        {
+          "scenario": "r10-work",
+          "phase": "edit-refused-at-final-egress",
+          "elapsed_ms": 57947
+        },
+        {
+          "scenario": "r10-work",
+          "phase": "disposed",
+          "elapsed_ms": 57952
+        }
+      ],
+      "findings": [
+        {
+          "id": "W6-LATENCY-B",
+          "kind": "test deadline",
+          "case": "edit-reconfirm",
+          "duration_ms": 149408.75,
+          "deadline_ms": 120000,
+          "status": "unresolved at W6; phase completion is not PASS"
+        },
+        {
+          "id": "W6-R10-FIXTURE",
+          "kind": "incorrect test observation",
+          "line": 83,
+          "diagnosis": "f.snapshots() intentionally applies businessSnapshot, removing __sfProductV1. The test reads undefined, not the persisted C08 review. Read the actual reviews namespace before/after and require defined identity/version/digest equal to the pin; keep domain snapshots unchanged.",
+          "product_denial_assertions_reached": true,
+          "complete_case_pass": false,
+          "future_work": "Correct only the test; later invariant/Work checks were not reached."
+        }
+      ],
+      "omni": {
+        "verdict": "not applicable",
+        "nonce": "8a76934ee7ae715bb5066422d6beb1d9",
+        "spawns": 0,
+        "native_execution_proof": false
+      },
+      "artifacts": [],
+      "cleanup": {
+        "job_id": 132536507250,
+        "conclusion": "success",
+        "snapshot_ref_deleted_by_workflow": true
+      },
+      "log_capture_sha256": "541e50c1778aa605f1458faa770dd5b052e5afd18c8df1f95ef85395d11dd69b",
+      "detail": "Full failures retained. W7 targets only the five changed scenarios in two files; seven named W6 PASS remain attached to their original W/S."
+    },
+    {
+      "run_id": 43625515062,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43625515062",
+      "product_sha": "9e1f44af7689946d27d37ed48b9f5e9849417121",
+      "snapshot_sha": "a4f8c7bd673de3e4092f20185f4c3ea2d10d0ec3",
+      "snapshot_tree": "0e4ca3c0551816cc4033a978f32fed750ed46434",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/wp08/review-answer-confirmation.test.ts",
+          "./Sucafinav1/test/product/wp08/answer-egress-version.test.ts",
+          "--test-name-pattern",
+          "^(?:C05 edited answers after SQLite reopen create one stable stale item and reject the old confirmation|C05 edited answers after SQLite reopen reconfirm the same response and retain its original historical version|C05 edited answers after SQLite reopen resolve and reuse the newly confirmed response|C05 answer read refuses a real human edit after its final external version read|C05 answer work refuses a real human edit after its final external version read)$",
+          "--timeout",
+          "120000"
+        ],
+        "env": {
+          "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+        }
+      },
+      "request_sha256": "9d3fcc8f30bb2b880ebe67a5cfd7f2011d4b92ada94b7fb7cc2fd17fa15f6586",
+      "envelope": "One direct child commit adds only .ci-run.json; verified before branch trigger.",
+      "conclusion": "success",
+      "reason_for_revalidation": "Only the three split edit/reconfirm cases and the two corrected R10 cases are selected. Seven unchanged W6 PASS are reattached; product and shared fixtures are identical.",
+      "expected_cases": [
+        "C05 edited answers after SQLite reopen create one stable stale item and reject the old confirmation",
+        "C05 edited answers after SQLite reopen reconfirm the same response and retain its original historical version",
+        "C05 edited answers after SQLite reopen resolve and reuse the newly confirmed response",
+        "C05 answer read refuses a real human edit after its final external version read",
+        "C05 answer work refuses a real human edit after its final external version read"
+      ],
+      "job_id": 132540336771,
+      "counts": {
+        "pass": 5,
+        "fail": 0,
+        "filtered": 3,
+        "expect_calls": 62,
+        "tests": 5,
+        "files": 2,
+        "duration_seconds": 316.06
+      },
+      "cases": [
+        {
+          "file": "modules/sucafina/Sucafinav1/test/product/wp08/review-answer-confirmation.test.ts",
+          "result": "pass",
+          "name": "C05 edited answers after SQLite reopen create one stable stale item and reject the old confirmation",
+          "duration_ms": 61511.96
+        },
+        {
+          "file": "modules/sucafina/Sucafinav1/test/product/wp08/review-answer-confirmation.test.ts",
+          "result": "pass",
+          "name": "C05 edited answers after SQLite reopen reconfirm the same response and retain its original historical version",
+          "duration_ms": 78004.9
+        },
+        {
+          "file": "modules/sucafina/Sucafinav1/test/product/wp08/review-answer-confirmation.test.ts",
+          "result": "pass",
+          "name": "C05 edited answers after SQLite reopen resolve and reuse the newly confirmed response",
+          "duration_ms": 81498.13
+        },
+        {
+          "file": "modules/sucafina/Sucafinav1/test/product/wp08/answer-egress-version.test.ts",
+          "result": "pass",
+          "name": "C05 answer read refuses a real human edit after its final external version read",
+          "duration_ms": 50642.45
+        },
+        {
+          "file": "modules/sucafina/Sucafinav1/test/product/wp08/answer-egress-version.test.ts",
+          "result": "pass",
+          "name": "C05 answer work refuses a real human edit after its final external version read",
+          "duration_ms": 44219.55
+        }
+      ],
+      "phase_timings": [
+        {
+          "scenario": "edit-stale",
+          "phase": "fixture-ready",
+          "elapsed_ms": 176
+        },
+        {
+          "scenario": "edit-stale",
+          "phase": "real-question-source-change-and-answer",
+          "elapsed_ms": 17501
+        },
+        {
+          "scenario": "edit-stale",
+          "phase": "real-confirmation-and-sqlite-reopen",
+          "elapsed_ms": 32159
+        },
+        {
+          "scenario": "edit-stale",
+          "phase": "real-answer-edit",
+          "elapsed_ms": 46375
+        },
+        {
+          "scenario": "edit-stale",
+          "phase": "stable-stale-work-and-old-confirmation-refusal",
+          "elapsed_ms": 61508
+        },
+        {
+          "scenario": "edit-stale",
+          "phase": "disposed",
+          "elapsed_ms": 61510
+        },
+        {
+          "scenario": "edit-reconfirm-history",
+          "phase": "fixture-ready",
+          "elapsed_ms": 129
+        },
+        {
+          "scenario": "edit-reconfirm-history",
+          "phase": "real-question-source-change-and-answer",
+          "elapsed_ms": 17795
+        },
+        {
+          "scenario": "edit-reconfirm-history",
+          "phase": "real-confirmation-and-sqlite-reopen",
+          "elapsed_ms": 32796
+        },
+        {
+          "scenario": "edit-reconfirm-history",
+          "phase": "real-answer-edit",
+          "elapsed_ms": 47145
+        },
+        {
+          "scenario": "edit-reconfirm-history",
+          "phase": "real-reconfirmation",
+          "elapsed_ms": 68029
+        },
+        {
+          "scenario": "edit-reconfirm-history",
+          "phase": "work-suppressed-and-original-history-retained",
+          "elapsed_ms": 78003
+        },
+        {
+          "scenario": "edit-reconfirm-history",
+          "phase": "disposed",
+          "elapsed_ms": 78004
+        },
+        {
+          "scenario": "edit-reconfirm-resolve",
+          "phase": "fixture-ready",
+          "elapsed_ms": 125
+        },
+        {
+          "scenario": "edit-reconfirm-resolve",
+          "phase": "real-question-source-change-and-answer",
+          "elapsed_ms": 17696
+        },
+        {
+          "scenario": "edit-reconfirm-resolve",
+          "phase": "real-confirmation-and-sqlite-reopen",
+          "elapsed_ms": 30930
+        },
+        {
+          "scenario": "edit-reconfirm-resolve",
+          "phase": "real-answer-edit",
+          "elapsed_ms": 43843
+        },
+        {
+          "scenario": "edit-reconfirm-resolve",
+          "phase": "real-reconfirmation",
+          "elapsed_ms": 62183
+        },
+        {
+          "scenario": "edit-reconfirm-resolve",
+          "phase": "same-thread-resolved-and-edited-answer-reused",
+          "elapsed_ms": 81496
+        },
+        {
+          "scenario": "edit-reconfirm-resolve",
+          "phase": "disposed",
+          "elapsed_ms": 81498
+        },
+        {
+          "scenario": "r10-read",
+          "phase": "fixture-ready",
+          "elapsed_ms": 131
+        },
+        {
+          "scenario": "r10-read",
+          "phase": "real-confirmation",
+          "elapsed_ms": 29745
+        },
+        {
+          "scenario": "r10-read",
+          "phase": "edit-refused-at-final-egress",
+          "elapsed_ms": 49544
+        },
+        {
+          "scenario": "r10-read",
+          "phase": "same-source-baseline-and-current-stale-work",
+          "elapsed_ms": 50640
+        },
+        {
+          "scenario": "r10-read",
+          "phase": "disposed",
+          "elapsed_ms": 50642
+        },
+        {
+          "scenario": "r10-work",
+          "phase": "fixture-ready",
+          "elapsed_ms": 127
+        },
+        {
+          "scenario": "r10-work",
+          "phase": "real-confirmation",
+          "elapsed_ms": 29624
+        },
+        {
+          "scenario": "r10-work",
+          "phase": "edit-refused-at-final-egress",
+          "elapsed_ms": 43125
+        },
+        {
+          "scenario": "r10-work",
+          "phase": "same-source-baseline-and-current-stale-work",
+          "elapsed_ms": 44218
+        },
+        {
+          "scenario": "r10-work",
+          "phase": "disposed",
+          "elapsed_ms": 44219
+        }
+      ],
+      "exact_expected_case_names": true,
+      "filtered_unchanged_cases": [
+        "C05 answers confirm the displayed preserved review and reuse the same baseline after SQLite reopen",
+        "a current-domain question cannot inherit a confirmed C05 answer and review ACL revocation hides every private consumer",
+        "C05 confirmation refuses a lease revoked at commit and cannot revive a replaced physical source"
+      ],
+      "omni": {
+        "verdict": "not applicable",
+        "nonce": "d697005db9ba2b3452bf3294a8edd353",
+        "spawns": 0,
+        "native_execution_proof": false
+      },
+      "artifacts": [],
+      "cleanup": {
+        "job_id": 132542378353,
+        "conclusion": "success",
+        "snapshot_ref_deleted_by_workflow": true
+      },
+      "log_capture_sha256": "bfca38f38fb832f9b9f6abfb835a1642c69891880a46f319ce7947865e8a3c74",
+      "reattached": {
+        "run_id": 43623257640,
+        "named_pass": 7,
+        "aggregate": "failure",
+        "scope": "W6 product/shared fixtures identical; A/C/D blocks, imports and helpers byte-equivalent. Seven named PASS stay at their original W6/S."
+      }
+    }
+  ],
+  "static_runs": [
+    {
+      "product_sha": "20821df310ebc6ea08ccab27e829008d72a04de6",
+      "run_id": 43616954979,
+      "job_id": 132513992303,
+      "conclusion": "failure",
+      "typecheck": {
+        "command": "bun typecheck",
+        "directory": "modules/sucafina",
+        "own_diagnostics": 6,
+        "classification": "Parser errors from a single extra close parenthesis at review-thread-context.test.ts:290. Semantic diagnostics unavailable until parser repaired in W3."
+      },
+      "guards": {
+        "command": "bun run check:guards --base origin/dev",
+        "rules": 78,
+        "changed_paths": 851,
+        "gate": 0,
+        "warn": 14,
+        "errors": 0,
+        "conclusion": "success"
+      },
+      "artifacts": [
+        {
+          "id": 14122213861,
+          "name": "astra-wp08-check-20821df310ebc6ea08ccab27e829008d72a04de6-1",
+          "size_in_bytes": 1529,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14122213861",
+          "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14122213861/zip",
+          "expired": false,
+          "created_at": "2026-11-14T16:42:33Z",
+          "expires_at": "2026-11-28T16:42:32Z",
+          "updated_at": "2026-11-14T16:42:33Z",
+          "digest": "sha256:d2108eb8c73ac4dbc0739c0ccef53c1d46401d79abb7506c71ce70cb1bc2ea8f",
+          "workflow_run": {
+            "id": 43616954979,
+            "repository_id": 1455724710,
+            "head_repository_id": 1455724710,
+            "head_branch": "astra-check-wp08",
+            "head_sha": "20821df310ebc6ea08ccab27e829008d72a04de6"
+          }
+        }
+      ]
+    },
+    {
+      "product_sha": "34f26821f62a99ae40ca1e69f4bded602f83768e",
+      "run_id": 43617349965,
+      "job_id": 132515203708,
+      "conclusion": "failure",
+      "typecheck": {
+        "command": "bun typecheck",
+        "directory": "modules/sucafina",
+        "total_diagnostics": 72,
+        "inherited_diagnostics": 69,
+        "own_diagnostics": 3,
+        "classification": "Own CAS test narrowing corrected in W4; exact inherited diagnostic set unchanged."
+      },
+      "guards": {
+        "command": "bun run check:guards --base origin/dev",
+        "rules": 78,
+        "changed_paths": 852,
+        "gate": 0,
+        "warn": 14,
+        "errors": 0,
+        "conclusion": "success"
+      },
+      "artifacts": [
+        {
+          "id": 14122758181,
+          "name": "astra-wp08-check-34f26821f62a99ae40ca1e69f4bded602f83768e-1",
+          "size_in_bytes": 5742,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14122758181",
+          "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14122758181/zip",
+          "expired": false,
+          "created_at": "2026-11-14T16:47:00Z",
+          "expires_at": "2026-11-28T16:46:59Z",
+          "updated_at": "2026-11-14T16:47:00Z",
+          "digest": "sha256:2fe66de181e7a3dab1e3a615d350b79314ea0df42518b101002158ce5e6d9d53",
+          "workflow_run": {
+            "id": 43617349965,
+            "repository_id": 1455724710,
+            "head_repository_id": 1455724710,
+            "head_branch": "astra-check-wp08",
+            "head_sha": "34f26821f62a99ae40ca1e69f4bded602f83768e"
+          }
+        }
+      ]
+    },
+    {
+      "product_sha": "70af5b7d26bbc9456b1d9b9aa324bf2ae10668c4",
+      "run_id": 43618057932,
+      "job_id": 132517365573,
+      "conclusion": "failure",
+      "typecheck": {
+        "command": "bun typecheck",
+        "directory": "modules/sucafina",
+        "total_diagnostics": 69,
+        "inherited_diagnostics": 69,
+        "own_diagnostics": 0,
+        "classification": "Exact file/line/column/code/message match to origin baseline. Global typecheck remains failed."
+      },
+      "guards": {
+        "command": "bun run check:guards --base origin/dev",
+        "base_sha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+        "rules": 78,
+        "changed_paths": 853,
+        "gate": 0,
+        "warn": 14,
+        "errors": 0,
+        "conclusion": "success"
+      },
+      "artifacts": [
+        {
+          "id": 14123230259,
+          "name": "astra-wp08-check-70af5b7d26bbc9456b1d9b9aa324bf2ae10668c4-1",
+          "size_in_bytes": 5582,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14123230259",
+          "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14123230259/zip",
+          "expired": false,
+          "created_at": "2026-11-14T16:54:55Z",
+          "expires_at": "2026-11-28T16:54:54Z",
+          "updated_at": "2026-11-14T16:54:55Z",
+          "digest": "sha256:fa4792993510bb78306b2b45a36e5f829b210bed33933f5d82f0349ab24e9383",
+          "workflow_run": {
+            "id": 43618057932,
+            "repository_id": 1455724710,
+            "head_repository_id": 1455724710,
+            "head_branch": "astra-check-wp08",
+            "head_sha": "70af5b7d26bbc9456b1d9b9aa324bf2ae10668c4"
+          }
+        }
+      ]
+    }
+  ],
+  "product_reference": {
+    "sha": "9e1f44af7689946d27d37ed48b9f5e9849417121",
+    "tree": "ac88fa893a3b8b9f36c4373c2889652025fcf0f3"
+  },
+  "final_delivery_policy": {
+    "evidence_commit": "A single descendant commit adds only owned receipts after product validation; its exact SHA/tree and final mandatory typecheck/guards are recorded in PR41.",
+    "static_check_ref": "astra-check-wp08",
+    "expected_previous_static_sha": "70af5b7d26bbc9456b1d9b9aa324bf2ae10668c4",
+    "no_duplicate_product_test_on_evidence_commit": true,
+    "reason": "Compare product to delivery: only documentation/receipt paths; do not rerun equivalent product tests."
+  }
+}

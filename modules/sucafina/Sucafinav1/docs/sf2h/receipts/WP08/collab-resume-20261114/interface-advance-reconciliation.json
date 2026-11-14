@@ -1,0 +1,703 @@
+{
+  "schema": "sf2h.collab-resume.interface-advance-reconciliation.v1",
+  "observedAt": "2026-11-14 16:53:24 UTC",
+  "repository": "gustavomhss/Orchestra-SF",
+  "scope": "Reconciliação somente leitura do delta Interface, helper Node/cleanup e findings dirigidos a WP07/WP08. Nenhum produto, branch, comentário, teste ou documento final do root foi alterado.",
+  "source": {
+    "preservedOriginal": {
+      "branch": "astra-interface",
+      "pr": 31,
+      "head": "9d65ea8fcd8ce6ea1249dc669e0fcc248b540241",
+      "tree": "cbf56c2c58b4a7a3cb89b7b2de3a18953ae6e7b0",
+      "headIndependentlyVerified": true
+    },
+    "resumed": {
+      "branch": "interface-resume",
+      "pr": 43,
+      "head": "2ee71fc90055814912654ae198f7a1dcf9583943",
+      "tree": "cf3676a469a1f8bcab05e322ee7a4a1ada0704c5",
+      "headIndependentlyVerified": true,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/43"
+    },
+    "compare": {
+      "base": "9d65ea8fcd8ce6ea1249dc669e0fcc248b540241",
+      "head": "2ee71fc90055814912654ae198f7a1dcf9583943",
+      "status": "ahead",
+      "aheadBy": 4,
+      "behindBy": 0,
+      "totalCommits": 4,
+      "changedPaths": 20,
+      "truncated": false,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/compare/9d65ea8fcd8ce6ea1249dc669e0fcc248b540241...2ee71fc90055814912654ae198f7a1dcf9583943",
+      "files": [
+        {
+          "filename": ".github/workflows/astra-interface-resume-check.yml",
+          "status": "added",
+          "additions": 45,
+          "deletions": 0,
+          "changes": 45,
+          "previous_filename": null
+        },
+        {
+          "filename": "docs/guides/sucafina-workbench.md",
+          "status": "modified",
+          "additions": 3,
+          "deletions": 1,
+          "changes": 4,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/interface-resume/README.md",
+          "status": "added",
+          "additions": 112,
+          "deletions": 0,
+          "changes": 112,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/interface-resume/criteria/WP01.json",
+          "status": "added",
+          "additions": 7574,
+          "deletions": 0,
+          "changes": 7574,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/interface-resume/criteria/WP02.json",
+          "status": "added",
+          "additions": 5372,
+          "deletions": 0,
+          "changes": 5372,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/interface-resume/criteria/index.md",
+          "status": "added",
+          "additions": 159,
+          "deletions": 0,
+          "changes": 159,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/interface-resume/evidence.json",
+          "status": "added",
+          "additions": 1853,
+          "deletions": 0,
+          "changes": 1853,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/interface-resume/owner-findings.json",
+          "status": "added",
+          "additions": 1033,
+          "deletions": 0,
+          "changes": 1033,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/interface-resume/patches/c05-owner-mount.json",
+          "status": "added",
+          "additions": 469,
+          "deletions": 0,
+          "changes": 469,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/interface-resume/patches/c05-owner-mount.patch",
+          "status": "added",
+          "additions": 24,
+          "deletions": 0,
+          "changes": 24,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/interface-resume/reconciliation.json",
+          "status": "added",
+          "additions": 821,
+          "deletions": 0,
+          "changes": 821,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/interface-resume/review.json",
+          "status": "added",
+          "additions": 54,
+          "deletions": 0,
+          "changes": 54,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/interface-resume/verification.json",
+          "status": "added",
+          "additions": 85,
+          "deletions": 0,
+          "changes": 85,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts",
+          "status": "modified",
+          "additions": 23,
+          "deletions": 3,
+          "changes": 26,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/product/ui/shell-state.ts",
+          "status": "modified",
+          "additions": 28,
+          "deletions": 20,
+          "changes": 48,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+          "status": "modified",
+          "additions": 4,
+          "deletions": 1,
+          "changes": 5,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/wp01/shell-state.test.ts",
+          "status": "modified",
+          "additions": 1,
+          "deletions": 0,
+          "changes": 1,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/wp01/work-destination-recovery.test.ts",
+          "status": "modified",
+          "additions": 16,
+          "deletions": 3,
+          "changes": 19,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-ack.test.ts",
+          "status": "added",
+          "additions": 210,
+          "deletions": 0,
+          "changes": 210,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/wp02/workbench-recovery.test.ts",
+          "status": "modified",
+          "additions": 27,
+          "deletions": 6,
+          "changes": 33,
+          "previous_filename": null
+        }
+      ]
+    }
+  },
+  "facts": {
+    "helperChanged": false,
+    "ownWPsChangedInInterfaceDelta": [],
+    "summary": "O avanço acrescenta ACKs do Dashboard, purga global após revogação, correção do estado acessível ao fechar o editor, testes e recibos. Não modifica o helper Node nem fontes WP07/WP08/WP09. Os findings de colaboração são overlays de integração, não novas contraprovas contra o produto collab-resume.",
+    "finalProduct": {
+      "W": "ad94fd2d78be47cecfb91f801ce7764127667b60",
+      "tree": "2677e5209f65a1b5dd26f50803ca98a760e6e40f",
+      "S": "519571ec1c90454b8a1eacf94f156dcc9c296f9f",
+      "snapshotTree": "bddad5d5a9ce9c99b2834c62d593c015681c488d",
+      "run": 43616465145,
+      "job": 132512490370,
+      "conclusion": "failure",
+      "counts": {
+        "PASS": 31,
+        "FAIL": 1,
+        "tests": 32,
+        "files": 8,
+        "expects": 548,
+        "seconds": 129.48
+      },
+      "cleanupJob": 132513497267,
+      "cleanupConclusion": "success",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43616465145"
+    },
+    "finalStatic": {
+      "run": 43617372378,
+      "job": 132515272484,
+      "commit": "1ad4268fa6202be57a404cdfc755ba21776b0a97",
+      "tree": "02793beb4b4fc8040f7fa51b808eae8bc9a65c04",
+      "conclusion": "failure",
+      "counts": {
+        "total": 14,
+        "own": 0,
+        "foreign": 14,
+        "uniqueLocations": 9
+      },
+      "guards": {
+        "rules": 78,
+        "changedPaths": 880,
+        "gateFindings": 0,
+        "warnings": 42,
+        "errors": 0
+      },
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43617372378",
+      "ownWp07Diagnostics": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+          "line": 40,
+          "column": 35,
+          "code": "TS2739",
+          "message": "Type '{ state: SfProductStatePort; now: () => string; requestFor: () => Request; authorizeSections: () => Promise<boolean>; authorizeComments: () => Promise<boolean>; authorizeSensitivity: () => Promise<...>; revalidate: () => Promise<...>; revalidateEvidence: () => Promise<...>; select: () => Promise<...>; }' is missing the following properties from type 'ReviewHost': creationTarget, authorizeOutcomeComparison, authorizeOutcome, authorizeDecision",
+          "owner": "Collaboration/WP07"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+          "line": 45,
+          "column": 41,
+          "code": "TS2739",
+          "message": "Type '{ state: SfProductStatePort; now: () => string; requestFor: () => Request; authorizeSections: () => Promise<false>; authorizeComments: () => Promise<true>; authorizeSensitivity: () => Promise<...>; revalidate: () => Promise<...>; revalidateEvidence: () => Promise<...>; select: () => Promise<...>; }' is missing the following properties from type 'ReviewHost': creationTarget, authorizeOutcomeComparison, authorizeOutcome, authorizeDecision",
+          "owner": "Collaboration/WP07"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+          "line": 56,
+          "column": 37,
+          "code": "TS2739",
+          "message": "Type '{ state: SfProductStatePort; now: () => string; requestFor: () => Request; authorizeSections: () => Promise<true>; authorizeComments: () => Promise<true>; authorizeSensitivity: () => Promise<...>; revalidate: () => Promise<...>; revalidateEvidence: () => Promise<...>; select: () => Promise<...>; }' is missing the following properties from type 'ReviewHost': creationTarget, authorizeOutcomeComparison, authorizeOutcome, authorizeDecision",
+          "owner": "Collaboration/WP07"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+          "line": 221,
+          "column": 36,
+          "code": "TS2739",
+          "message": "Type '{ state: SfProductStatePort; now: () => string; requestFor: () => undefined; authorizeSections: () => Promise<false>; authorizeComments: () => Promise<true>; authorizeSensitivity: () => Promise<...>; revalidate: () => Promise<...>; revalidateEvidence: () => Promise<...>; select: () => Promise<...>; }' is missing the following properties from type 'ReviewHost': creationTarget, authorizeOutcomeComparison, authorizeOutcome, authorizeDecision",
+          "owner": "Collaboration/WP07"
+        }
+      ]
+    }
+  },
+  "browserHelper": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts",
+    "owner": "WP02/Interface; composição S0/WP10",
+    "original": {
+      "commit": "9d65ea8fcd8ce6ea1249dc669e0fcc248b540241",
+      "blob": "cd43fad88f3424ac160f32be743df17b80a74336"
+    },
+    "advanced": {
+      "commit": "2ee71fc90055814912654ae198f7a1dcf9583943",
+      "blob": "cd43fad88f3424ac160f32be743df17b80a74336",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2ee71fc90055814912654ae198f7a1dcf9583943/modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts"
+    },
+    "exactlyUnchanged": true,
+    "publicEntryPoint": "launchBrowserDriver(consumer, {signal, timeoutMs, deadlineEpochMs?}) -> {browser, close, report}",
+    "consumerLabels": [
+      "host-contextual-controls",
+      "host-draft-conflict",
+      "host-write-authority",
+      "host-response-recovery",
+      "host-draft-recovery",
+      "host-access-recovery",
+      "host-egress-recovery",
+      "host-source-recovery",
+      "dashboard-monthly",
+      "personal-views",
+      "preview-in-flight",
+      "wp01-shared-pool"
+    ],
+    "declaredImports": [
+      "@orchestra/core/process:AppProcess",
+      "@orchestra/core/effect/layer-node:LayerNode",
+      "effect:Effect/Fiber/Stream",
+      "effect/unstable/process:ChildProcess",
+      "node:fs/promises",
+      "node:path",
+      "@playwright/test/package.json",
+      "../../../runtime/contract.ts:object"
+    ],
+    "sourceMechanism": {
+      "transport": "Bun chama Playwright via Unix pipe; Chromium/pipe/WebSocket pertencem ao processo Node lançado por AppProcess.",
+      "limits": "Startup padrão/teto 15000ms, somente wp01-shared-pool admite teto30000ms; deadline absoluto passa ao Node e o tempo remanescente cobre importação, launch e conexão. Cleanup normal5000ms; falha de cleanup permanece falha e aguarda a liberação do scope.",
+      "successfulProof": "report() requer cleanup concluído: contexts0, connectedfalse, Node/Chromium exit0, bridge/listener/socket/pipe encerrados, WS1000 limpo, buffers0 e socket/diretório removidos.",
+      "startupFailure": "Cancelamento espera o finalizer do AppProcess e observa ausência dos PIDs conhecidos dentro de janela comum5000ms. Amostras sem PID de browser ou orçamento excedido são incomplete; erro principal e erro de cleanup são agregados.",
+      "codeInspectionOnly": true
+    },
+    "newRetainedEvidence": {
+      "run": 43616465145,
+      "job": 132512490370,
+      "product": "ad94fd2d78be47cecfb91f801ce7764127667b60",
+      "snapshot": "519571ec1c90454b8a1eacf94f156dcc9c296f9f",
+      "physicalReportCount": 6,
+      "consumers": [
+        "host-draft-recovery",
+        "host-egress-recovery",
+        "host-source-recovery",
+        "host-access-recovery",
+        "dashboard-monthly",
+        "wp01-shared-pool"
+      ],
+      "runtimeVersions": {
+        "bun": "1.3.14",
+        "node": "24.22.2",
+        "playwright": "1.59.1",
+        "chromium": "157.0.8103.50"
+      },
+      "lifecycle": {
+        "remainingContexts": 0,
+        "connected": false,
+        "nodeExitCode": 0,
+        "browserExitCode": 0,
+        "browserSignal": null,
+        "bridgeClosed": true,
+        "listenerClosed": true,
+        "socketClosed": true,
+        "pipeEnded": true,
+        "webSocketOpened": true,
+        "webSocketClosed": true,
+        "webSocketCloseCode": 1000,
+        "webSocketCloseWasClean": true,
+        "pendingFrameBytes": 0,
+        "queuedWriteBytes": 0,
+        "socketRemoved": true,
+        "directoryRemoved": true
+      },
+      "allReportsHaveEqualLifecycle": true,
+      "evidencePointer": "evidence.json#/runs/1/physicalReports",
+      "evidenceLimit": "C12 failed before report() after try/finally; its close ran and Node exit 0 was logged, but no serialized complete C12 lifecycle report is claimed.",
+      "notClaimed": [
+        "Nenhum desses relatórios é do consumidor WP07.",
+        "Nenhum deles demonstra recuperação da falha Bun/CDP do WP07.",
+        "O caso C12 falhou; close no finally e Node exit0 não criam relatório JSON completo ausente nem PASS da jornada."
+      ]
+    },
+    "distinctHistoricalBI": {
+      "product": "9048e0e65351a5bd80768458a79fed94a4993db7",
+      "tree": "f073278e9fb11ca93b129c16331460e1fb6e25c4",
+      "helperBlob": "76188b9f567861b30dba3b22afce66d60a2424c8",
+      "run": 43605201442,
+      "job": 132478265438,
+      "snapshot": "dcd14c5fad0c84143d3071557c493e2c5de3e9e4",
+      "pass": 5,
+      "fail": 0,
+      "sourceDifferent": true,
+      "scope": "O helper76188b9f do BI não é o cd43fad8 da Interface. Reanexar só sua prova própria; não transferir lifecycle/timeout para outro blob ou para o WP07."
+    },
+    "proposal": {
+      "status": "OWNER_ACTION_REQUIRED_NOT_APPLIED",
+      "nextOwnerAction": "S0/Interface deve compor o helper cd43fad88f3424ac160f32be743df17b80a74336 em seu path original e dependências compatíveis, preservando qualquer avanço posterior. A API ainda não tem rótulo WP07: solicitar inclusão explícita pelo owner, sem reutilizar label de outro consumidor.",
+      "nextWp07Action": "Depois desse input autorizado, migrar somente a fixture WP07 consumidora para o helper compartilhado, mantendo orçamento e erro primário. Quando houver mudança material, provar uma falha real e recuperação no GitHub Actions; não repetir os runs equivalentes nem mudar testes agora.",
+      "prohibitions": [
+        "Não copiar a implementação para dentro de WP07 como segundo helper.",
+        "Não sobrescrever árvore Interface/Compose.",
+        "Não alongar orçamento por adotar o label wp01-shared-pool.",
+        "Não declarar connectedfalse/cleanupPASS sem observação final."
+      ]
+    }
+  },
+  "findings": [
+    {
+      "id": "D09_SHARED_STATIC_COMPATIBILITY",
+      "owner": "WP07 para consumidores; Interface/S0 para composição na branch estrangeira; WP10 para host-context",
+      "interfaceDisposition": {
+        "owner": "WP10/Composition host result union + Collaboration/WP07 retained callers",
+        "status": "FOREIGN_STATIC_BLOCKERS_REMAIN",
+        "latestCheck": {
+          "run": 43617372378,
+          "commit": "1ad4268fa6202be57a404cdfc755ba21776b0a97",
+          "counts": {
+            "total": 14,
+            "own": 0,
+            "foreign": 14,
+            "uniqueLocations": 9
+          },
+          "guards": {
+            "rules": 78,
+            "changedPaths": 880,
+            "gateFindings": 0,
+            "warnings": 42,
+            "errors": 0
+          }
+        },
+        "publishedFixes": "Later Collaboration restores SQLite fixtures; its pending validation does not fix the retained input automatically. No foreign source intake performed."
+      },
+      "retainedCaller": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp07/review-port.test.ts",
+        "commit": "2ee71fc90055814912654ae198f7a1dcf9583943",
+        "blob": "0b10585a9ea34b26a132816a4e56670ac5de23a8"
+      },
+      "publishedOwnCaller": {
+        "commit": "34f26821f62a99ae40ca1e69f4bded602f83768e",
+        "blob": "565b2d8310332a9c1d6ad9faeeecea6724815baf",
+        "firstPublished": "ff557552936197b6734e57f0ecea0c44b19139b1"
+      },
+      "assessment": "Quatro TS2739 pertencem ao caller antigo retido pela Interface, não são diagnósticos novos contra collab W3. Root informou static W3 run43617349965/job132515203708: zero WP07; diagnóstico global continua aberto. O arquivo Interface tem corpo diferente, portanto não recomendar substituição integral.",
+      "boundedOwnerDelta": "Reconciliar somente as quatro composições ReviewHost com creationTarget e callbacks opcionais corretos, aproveitando o fixture SQLite real publicado por WP07 e guards/asserções atuais. Preservar a semântica dos negativos e permitir listas vazias apenas quando o caso não seleciona outcome/decision. Não usar um cast para esconder a falta de campos.",
+      "proofLimit": "A correção publicada numa origem não corrige automaticamente a árvore Interface. Sua composição e check devem manter os5locais host-context externos explicitamente separados."
+    },
+    {
+      "id": "G03_FIRST_CYCLE_SELECTION",
+      "owner": "WP08 produtor + Interface consumidor + WP10/S0 composição",
+      "interfaceDisposition": {
+        "owner": "Collaboration case-selection producer + Composition",
+        "status": "PRODUCER_FIX_PUBLISHED_INTAKE_AND_UI_PROOF_PENDING",
+        "limit": "Retained input still maps product-state-changed to503. Owner20821df publishes mapping fix cd9a678 and real producer test f19984; preserve both works, compose the delta and then execute the real UI review branch. No new PASS inferred."
+      },
+      "retainedProducer": {
+        "commit": "2ee71fc90055814912654ae198f7a1dcf9583943",
+        "blob": "ec80e2916c8a06cbb471cf02e30bb1cb5ebd9cc0"
+      },
+      "publishedProducer": {
+        "commit": "20821df310ebc6ea08ccab27e829008d72a04de6",
+        "blob": "cd9a67887f41986243809672572c972440c832ec",
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/case-selection.ts"
+      },
+      "publishedTest": {
+        "commit": "20821df310ebc6ea08ccab27e829008d72a04de6",
+        "blob": "f19984edc18de56e1f97a60f538a25983cd9e367",
+        "path": "modules/sucafina/Sucafinav1/test/product/wp08/case-selection-cas.test.ts"
+      },
+      "exactDelta": "No ramo de commit de saveAnswerSelection, mapear também conflict/product-state-changed para conflict/selection-not-committed, mantendo preview no mesmo ramo. Isso distingue recusa CAS conhecida da tentativa incerta.",
+      "assessment": "A Interface reconhece explicitamente o hunk W2 e o teste SQLite real; seu input ec80e291 ainda mantém somente preview. Consumir o delta publicado, não escrever correção paralela.",
+      "nextOwnerAction": "Compor o hunk delimitado e executar somente o consumidor UI original que deve entrar em revisão com409 e conservar a tentativa. CI de produtor W2 ainda em voo conforme root; nenhum PASS inferido desta leitura."
+    },
+    {
+      "id": "C05_PRESERVED_MEETING_HISTORY",
+      "owner": "WP10/Compose + Review; Interface conserva positivo original",
+      "interfaceDisposition": {
+        "owner": "WP10/Composition + Review",
+        "status": "PUBLISHED_PRODUCER_REQUIRES_COMPATIBLE_MOUNT_AND_ORIGINAL_CONSUMER_PROOF",
+        "patch": "patches/c05-owner-mount.patch",
+        "patchApplied": false,
+        "requiredConsumer": "wp01/meeting-number.test.ts original WholeReview 1300→2400 positive",
+        "externalProof": "EXTERNAL-C05-W22"
+      },
+      "patchApplied": false,
+      "exactProposal": {
+        "metadataBlob": "1867e7fcacf0048f51b74748c59595d76adfb882",
+        "patchBlob": "6259694912dc0ce468ca6529cc56718245058e3b",
+        "target": {
+          "repository": "gustavomhss/Orchestra-SF",
+          "inputCommit": "9d65ea8fcd8ce6ea1249dc669e0fcc248b540241",
+          "path": "apps/cli/src/sucafina-product/business-services.ts",
+          "expectedPreimageGitBlob": "b289a4a376f937c2cf4b56a00a6c1247152c5798",
+          "preimageGitBlob": "b289a4a376f937c2cf4b56a00a6c1247152c5798",
+          "preimageSha256": "854e20c0a4d48ffebc8fcfc1f85a9f6525fd0aca9116ca3a00e266d819fbeeb4",
+          "preimageBytes": 27238,
+          "postimageGitBlob": "95d4cec147d4ee8969884797905805348991bab5",
+          "postimageSha256": "c65e7231ece2dcffb749c348f4c0741b1e6d9af867d8e85e9dd8d16f23cce759",
+          "postimageBytes": 27257,
+          "unchangedOnDisk": true
+        },
+        "prerequisiteProducerIntake": [
+          {
+            "path": "apps/cli/src/sucafina-product/dashboard-services.ts",
+            "blob": "9084d0d376a5135aa5804b002d8068ac09f89f83",
+            "sourceCommit": "abb9eb9983b8a7cbb4ffe2d153ab9bf85f9cc6a9",
+            "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/abb9eb9983b8a7cbb4ffe2d153ab9bf85f9cc6a9/apps/cli/src/sucafina-product/dashboard-services.ts",
+            "imports": [
+              "node:crypto",
+              "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+              "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+              "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts",
+              "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+              "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+              "../../../../modules/sucafina/Sucafinav1/product/contracts/state.ts",
+              "../../../../modules/sucafina/Sucafinav1/product/contracts/validation.ts",
+              "../../../../modules/sucafina/Sucafinav1/product/dashboard/agenda.ts",
+              "../../../../modules/sucafina/Sucafinav1/product/dashboard/confirmation-issuer.ts",
+              "../../../../modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+              "../../../../modules/sucafina/Sucafinav1/product/dashboard/historical-bindings.ts",
+              "../../../../modules/sucafina/Sucafinav1/product/dashboard/historical-bindings.ts",
+              "../../../../modules/sucafina/Sucafinav1/product/dashboard/sources.ts",
+              "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+              "../../../../modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+              "../../../../modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+              "../../../../modules/sucafina/Sucafinav1/product/integration/dashboard-sources.ts",
+              "../../../../modules/sucafina/Sucafinav1/product/reviews/port.ts",
+              "../../../../modules/sucafina/Sucafinav1/product/reviews/port.ts",
+              "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts",
+              "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts",
+              "./review-history.ts",
+              "./review-read-integrity.ts"
+            ]
+          },
+          {
+            "path": "apps/cli/src/sucafina-product/review-history.ts",
+            "blob": "0c9a68225d114ba77617af4a0e3acc2607ea0e5a",
+            "sourceCommit": "abb9eb9983b8a7cbb4ffe2d153ab9bf85f9cc6a9",
+            "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/abb9eb9983b8a7cbb4ffe2d153ab9bf85f9cc6a9/apps/cli/src/sucafina-product/review-history.ts",
+            "imports": [
+              "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+              "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+              "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts",
+              "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+              "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+              "../../../../modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+              "../../../../modules/sucafina/Sucafinav1/runtime/admin.ts",
+              "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts",
+              "./review-calculation-history.ts"
+            ]
+          },
+          {
+            "path": "apps/cli/src/sucafina-product/review-read-integrity.ts",
+            "blob": "2a04d86546c1c5361ec523a5f7c7189b5a8d2d65",
+            "sourceCommit": "abb9eb9983b8a7cbb4ffe2d153ab9bf85f9cc6a9",
+            "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/abb9eb9983b8a7cbb4ffe2d153ab9bf85f9cc6a9/apps/cli/src/sucafina-product/review-read-integrity.ts",
+            "imports": [
+              "node:async_hooks",
+              "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+              "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts",
+              "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+              "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+              "../../../../modules/sucafina/Sucafinav1/product/contracts/state.ts",
+              "../../../../modules/sucafina/Sucafinav1/product/reviews/port.ts",
+              "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+              "../../../../modules/sucafina/Sucafinav1/runtime/admin.ts"
+            ]
+          },
+          {
+            "path": "apps/cli/src/sucafina-product/review-calculation-history.ts",
+            "blob": "012c83ed8b6382bebc0046526985f2f900f04035",
+            "sourceCommit": "abb9eb9983b8a7cbb4ffe2d153ab9bf85f9cc6a9",
+            "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/abb9eb9983b8a7cbb4ffe2d153ab9bf85f9cc6a9/apps/cli/src/sucafina-product/review-calculation-history.ts",
+            "imports": [
+              "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+              "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+              "../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+              "../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts",
+              "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+              "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+              "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
+            ]
+          }
+        ],
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2ee71fc90055814912654ae198f7a1dcf9583943/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/interface-resume/patches/c05-owner-mount.patch"
+      },
+      "assessment": "A proposta move a construção Dashboard para depois de BusinessContext e passa evidence:context. Depende de quatro helpers WP10; adicionar só o argumento ao host antigo é incompatível. É o caminho WholeReview financeiro, distinto do novo consumidor de resposta/conversa C05 de WP07/WP08.",
+      "requiredProof": "Preservar meeting-number.test.ts blob53834c8c0802bf90a2336527460e2ecbf9aa8c97 e seu positivo original1300→2400. Os dois PASS externos1200→1800 no run43595658990/job132449464415 mantêm alcance próprio; o agregado falhou105/17/1error."
+    },
+    {
+      "id": "D05_MY_WORK_PRESERVED_REVIEW_CONTEXT",
+      "owner": "WP01/WP08/WP10 composição",
+      "retainedFinding": {
+        "owner": "WP01 / Collaboration / astra-compose",
+        "classification": "PUBLISHED_COMPONENT_HOST_COMPOSITION_PENDING",
+        "description": "All eight readonly production renderer tests pass at W12 for optional context shapes, exact references/versions, escaping, passive UI, immutable input and accessor failure. The actual published context producer/host emission still requires composition. These tests do not exercise ACL/C05/C06/C08 or arbitrary records/responsibles selection.",
+        "criteria": [
+          "WP01.T04.INV.01",
+          "WP01.T04.SUC.01",
+          "WP02.T04.INV.02"
+        ]
+      },
+      "assessment": "O renderer readonly já tem8provas históricas; o avanço Interface não altera esse renderer nem monta o novo produtor. Collab W2 publicou contexto/pin de revisão no consumidor privado e em work routing, mas instalação e ACL reais continuam dependência do host.",
+      "boundedOwnerDelta": "Montar o produtor publicado reviewContexts/reviewAnswerSource e passagem explícita do pin, com prepareAccess fora de C08 e fence readonly. Não transformar C05 em resposta de domínio corrente nem descartar reviewContext no transporte.",
+      "proofLimit": "Provas do renderer não exercitam C05/C06/C08 ou ACL; provas de domínio controladas não são instalação nativa. sf_answer_read compartilhado ainda exige delta de contrato por seu owner para representar pinC05."
+    },
+    {
+      "id": "WP01-C03-01-initial-answer-selector",
+      "owner": "WP01 consumidor + WP08 produtor + WP10 composição",
+      "retainedFinding": {
+        "owner": "astra-compose/C03 with WP01 consumer",
+        "classification": "PUBLISHED_CONSUMER_WITH_HOST_COMPOSITION_PENDING",
+        "description": "Collaboration PR33 published prepare-message. W9 consumes its exact answer-reuse issuer and implements first-selector UI consumption; the six real component tests use declared thin HTTP envelopes. Full shared HTTP/host intake and recipient-distinct production acceptance remain pending.",
+        "criteria": [
+          "WP01.T03.DOD.01",
+          "WP01.T03.CMP.01",
+          "WP01.T03.SUC.01",
+          "WP01.T05.CMP.01"
+        ]
+      },
+      "assessment": "Prepare-message e leitor de reuso já estavam publicados/consumidos como componentes. O avanço não altera a prova de destinatário distinto em produção. Collab W2 oferece callback independente de autoridade do destinatário C05, que não deve herdar grant do remetente.",
+      "nextOwnerAction": "Compor HTTP/host atual com produtor e diretório de destinatários próprios; não refazer o seletor já provado e não marcar sua fixture como autoridade nativa."
+    }
+  ],
+  "ownerBoundariesRetained": {
+    "F04": {
+      "owner": "WP10/Composition + Dashboard source provider",
+      "status": "EXTERNAL_AUTHORIZED_SOURCE_CONTINUITY_REQUIRED",
+      "requirement": "Retain readable dirty draft when only write authority is withdrawn. Do not equate scope incarnation/digest with physical identity or weaken the original retention assertions.",
+      "publishedDelta": "dashboard-http unchanged at the reconciled pins; no admitted source reauthorization seam."
+    },
+    "C12": {
+      "owner": "WP10/Composition + C12 producers",
+      "status": "ORIGINAL_LOST_REPLY_RELOAD_CONSUMER_FAILS",
+      "latestObservedRun": 43616465145,
+      "failedObservations": [
+        "IR-R43616465145-308258a1e8d5"
+      ],
+      "separation": "New full-ACK positive and incomplete-ACK negative pass only if named logs say so; neither closes reload discovery/receipt recovery."
+    },
+    "firstSave": {
+      "owner": "WP10/Composition",
+      "status": "AUTHORIZED_INTENT_OUTCOME_LOOKUP_REQUIRED",
+      "limit": "Reload before learning draftRef cannot recover by title/position or browser-persisted private text."
+    },
+    "hotTopicCreate": {
+      "owner": "Composition/source lifecycle with Dashboard producer",
+      "status": "ATOMIC_PHYSICAL_INCARNATION_BINDING_REQUIRED",
+      "limit": "CREATE correlation id+digest is published before source lifecycle finalization; no second write or inferred physical identity."
+    },
+    "draftReplay": "Ordenação da autorização de versão antes da consulta de recibo é finding estático separado da falha runtime C12. Não tratar ambos como mesmo defeito.",
+    "nativeGlobal": {
+      "owner": "S0 with WP10/WP12/native owners",
+      "status": "NOT_DECLARED_DONE",
+      "required": [
+        "five native profiles",
+        "18 skill witnesses",
+        "actual model inference and persisted output consumed after reload",
+        "AM01–AM06",
+        "C/G7 and D/G8",
+        "eight final selections and integrated epic"
+      ]
+    }
+  },
+  "readSources": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/interface-resume/README.md",
+      "commit": "2ee71fc90055814912654ae198f7a1dcf9583943",
+      "blob": "64bd336d692231884a3d4b779073277783aa5ded"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/interface-resume/owner-findings.json",
+      "commit": "2ee71fc90055814912654ae198f7a1dcf9583943",
+      "blob": "a56f8857f2c1f27267a4b3f3cad7fd8d511c92ce"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/interface-resume/evidence.json",
+      "commit": "2ee71fc90055814912654ae198f7a1dcf9583943",
+      "blob": "ebd1827166ef5f5dccd71c91144872655a5a2132"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/interface-resume/reconciliation.json",
+      "commit": "2ee71fc90055814912654ae198f7a1dcf9583943",
+      "blob": "869260b792335b7b3d7bee390a8ed6c8b842084c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/interface-resume/review.json",
+      "commit": "2ee71fc90055814912654ae198f7a1dcf9583943",
+      "blob": "d4feaf4c45cdefde27acc5d7fb03100ee42e106d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/interface-resume/verification.json",
+      "commit": "2ee71fc90055814912654ae198f7a1dcf9583943",
+      "blob": "c2c22dc970fc6ac602dca846bad817dff2017025"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/interface-resume/patches/c05-owner-mount.json",
+      "commit": "2ee71fc90055814912654ae198f7a1dcf9583943",
+      "blob": "1867e7fcacf0048f51b74748c59595d76adfb882"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/interface-resume/patches/c05-owner-mount.patch",
+      "commit": "2ee71fc90055814912654ae198f7a1dcf9583943",
+      "blob": "6259694912dc0ce468ca6529cc56718245058e3b"
+    }
+  ],
+  "validation": {
+    "remoteReads": "GitHub MCP only",
+    "remoteWrites": false,
+    "sourceFilesEdited": false,
+    "wholeTreeCopied": false,
+    "productTestsExecuted": false,
+    "ciDispatched": false,
+    "rootFinalDocumentsEdited": false,
+    "nativeAcceptanceClaimed": false,
+    "newCriterionPassClaimed": false
+  }
+}

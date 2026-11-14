@@ -1,0 +1,284 @@
+{
+  "schema": "sf2h-c05-w6-independent-review-v1",
+  "reviewer": "/root/wp09_audit",
+  "reviewed_at_utc": "2026-11-14T17:49:00Z",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "collab-resume",
+  "scope": "Independent read-only review of the final seven-file WP08 W6/R10 candidate over W5; no product execution and no product edits by reviewer.",
+  "decision": {
+    "status": "APPROVED_FOR_PUBLICATION_AND_HOSTED_SURGICAL_CI",
+    "unresolved_owned_blockers": [],
+    "runtime_status": "PENDING_GITHUB_ACTIONS",
+    "native_execution_proven": false,
+    "authorization_limit": "Source review permits root to publish this exact candidate and run the already selected six files. It does not establish runtime acceptance, product latency improvement, native execution, owner composition or all-WP completion."
+  },
+  "candidate": {
+    "base_product": "0d9820924b33a8fc7b145f54a675aeef76c98489",
+    "base_tree": "39cec0a91dc5ebc2dde012d4d1d8b63166074373",
+    "manifest_path": "wp08-w6-manifest.json",
+    "manifest_sha256": "6a2f86bd94d3e1fa62e1f3fcd1e48b8b6bdb274a219868e8162464f72da9aeef",
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/host.ts",
+        "preimage_blob": "d80d441aa5775a3747303a60161e5a049f84ac16",
+        "postimage_blob": "1678fc9d46c36a7da962aeca3b782b395e129c51",
+        "postimage_sha256": "59ceaf1a3910ff31ef366184bd31b8e5611e0e42edc9d97640e41c963dc3b808"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/answer-work.ts",
+        "preimage_blob": "a6984795460b51d685b820fba1823df1d56930f4",
+        "postimage_blob": "f1e638546518f35aef1dcd053ae0f2a202cdadd3",
+        "postimage_sha256": "1ee46cf4b39ab7e7c7dab1206f8b762d4c7c050d0682cb50884f1e0dec1c7075"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/answer-reuse.ts",
+        "preimage_blob": "6cc84fa9ac2be269893225d3ae0e6e119fb3f42e",
+        "postimage_blob": "012175e4acc2be40547089b43f248144beb6c712",
+        "postimage_sha256": "0415729de4175fd746f417917d3b57eeb6ec627e81506b46d45458f69a10c288"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/collaboration/answer-state-fence.ts",
+        "preimage_blob": null,
+        "postimage_blob": "7b19cf14f220adb3a01530515ec5ad1657bc8f11",
+        "postimage_sha256": "a7dc5ff1dc4039ebe8fefb81a8315b1e1273d3d7203d21da831c019f36d22607"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp08/review-answer-confirmation.test.ts",
+        "preimage_blob": "16b38f72bcbb6046647a7c0dde90b67d51e95029",
+        "postimage_blob": "5570584303752e8e95159e21d78dccaa63832110",
+        "postimage_sha256": "0e0cfaf5fdfe48ac7f11852c9bb137ad7fe52006c98cb2460534dd0417c19936"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp08/answer-reuse.test.ts",
+        "preimage_blob": "d03e3444c85391f5b801396dfee4eca84ba6e686",
+        "postimage_blob": "506127c65b0e86c5e69303589f3d42102e62fefc",
+        "postimage_sha256": "15430dbcfe2f14cc55029637e2a2604b84ca9255f2207f5b4f48f84965546d08"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp08/answer-egress-version.test.ts",
+        "preimage_blob": null,
+        "postimage_blob": "dab12a75873f435243911957ce681fb251916c51",
+        "postimage_sha256": "0d2e07044e63926659a03b53a83d7ddf42d42d2cca3bc9f924a315f5e83a8ebf"
+      }
+    ],
+    "preimage_remote_verification": "Root reported verification through GitHub MCP of the five exact W5 preimages and absence of the two new files before publication. Reviewer independently rehashed all seven local postimages.",
+    "byte_inventory_path": "c05-w6-final-byte-check.json",
+    "byte_inventory_sha256": "305d551dba9325b21591adff48b8b90f5724c18d2cb222c0d37d12c6ad29002b",
+    "oracle_map_path": "wp08-w6-oracle-map.json",
+    "oracle_map_sha256": "8d3ee96824f4179b4a1fd1689e90ffbe83c775ce590eaae8b99ed3c9afbdb8be",
+    "diagnosis_path": "wp08-w6-diagnosis.json",
+    "diagnosis_sha256": "863e915815b92d2f0e5c4f0412737ce0ecd1d07a37988a1b4128a86a6e56e063"
+  },
+  "prior_runtime_evidence": {
+    "product": "0d9820924b33a8fc7b145f54a675aeef76c98489",
+    "tree": "39cec0a91dc5ebc2dde012d4d1d8b63166074373",
+    "snapshot": "49e83715497e221350a8c221f45968debb566bea",
+    "snapshot_tree": "47fa6c5b106da857128545bb62c935c4c7528614",
+    "snapshot_relation": "Direct child of W5; only .ci-run.json changed, blob effa8a69efb1cc85c69ce3f4d481efff13076d47.",
+    "run_id": 43619790251,
+    "job_id": 132522634877,
+    "log_path": "intake/job-132522634877.log",
+    "result": {
+      "passed": 8,
+      "failed": 2,
+      "expect_calls": 235,
+      "tests": 10,
+      "files": 7,
+      "seconds": 462.12
+    },
+    "observed_failures": [
+      {
+        "case": "First complete C05 answer confirmation journey",
+        "observed_ms": 253128.15,
+        "timeout_ms": 120000,
+        "interpretation": "Real causal checkpoints continued through confirm, SQLite reopen, edit, reconfirm/history/resolve and distinct current question. This is accumulated expensive execution; no lock or deadlock was demonstrated."
+      },
+      {
+        "case": "thread-history-continuity first prepare",
+        "location": "test/product/wp08/thread-history-continuity.test.ts:26",
+        "reason": "answer-scope-unavailable",
+        "interpretation": "Failure occurred before source change. The fresh generic scope chosen from historical original context was incompatible with the current producer selector."
+      }
+    ],
+    "preserved_positive": "C05 final-await revocation and physical replacement case passed in 99895.10 ms. WP07 producer three cases, case selection CAS, recipient authority R09, host reuse and first confirmation HTTP also passed in their selected scopes.",
+    "omni": {
+      "state": "NOT_APPLICABLE",
+      "nonce": "7d6e60eb59182bbc5026acd868131ddc",
+      "spawns": 0
+    },
+    "prior_review_limit": "The earlier W5 static approval did not prove runtime correctness; the fresh-scope regression was revealed by Actions. Its original report remains intact."
+  },
+  "findings_and_disposition": [
+    {
+      "id": "R10",
+      "severity": "BLOCKER_BEFORE_THIS_PATCH",
+      "owner": "WP08",
+      "state": "RESOLVED_IN_SOURCE_PENDING_HOSTED_COUNTEREXAMPLES",
+      "discovery": "WP08 self-review identified the race; independent WP09 review confirmed both consumers and suspended the earlier three-file W6 approval before publication.",
+      "mechanism": "Reuse reread an authenticated answer and its baseline outside C08, then protected only the source fence. A separately admitted human edit after the final external read could leave the source, immutable C05 and baseline unchanged while the old message body escaped as confirmed. Both generic and C05 Work branches had the corresponding gap and could return valid after the message changed.",
+      "fix_locations": [
+        {
+          "path": "product/collaboration/answer-state-fence.ts",
+          "lines": [
+            10,
+            29
+          ]
+        },
+        {
+          "path": "product/collaboration/answer-reuse.ts",
+          "lines": [
+            52,
+            148
+          ]
+        },
+        {
+          "path": "product/collaboration/answer-work.ts",
+          "lines": [
+            41,
+            100
+          ]
+        }
+      ],
+      "verified_fix": "The common private helper pins the persistence object plus transactionAll/currentSnapshots method identities, preserves method receivers, clones expected identifiers/digests, and compares full canonical thread plus applicable exact or absent baseline in protected snapshots before and after the current producer fence. It checks method identity again after transaction completion. It performs no nested state read/write and creates no access grant.",
+      "baseline_cases": {
+        "prepare": "Exact thread only: an already confirmed answer is allowed to be prepared again.",
+        "post_confirm": "Exact thread and newly saved exact baseline.",
+        "unconfirmed_read": "Exact thread and baseline absence, represented by digestSfValue(undefined).",
+        "confirmed_read": "Exact thread and exact saved baseline at both protected captures, including after the last external baseline reread.",
+        "work_generic_and_c05": "Exact full thread and exact saved baseline at the last protected capture."
+      },
+      "linearization": "Successful reuse/work output is bound to the protected snapshot check. Source equality never replaces current source authorization; existing actual producer fences and ACL revalidation remain in place."
+    },
+    {
+      "id": "R10-TEST-SOURCE-IDENTITY-ARITY",
+      "severity": "TEST_BLOCKER_BEFORE_CORRECTION",
+      "owner": "WP08",
+      "state": "FIXED_BEFORE_PUBLICATION",
+      "path": "test/product/wp08/answer-egress-version.test.ts",
+      "lines": [
+        38,
+        82
+      ],
+      "finding": "Both initial counterexample calls supplied two arguments to sfSourceIdentity. The existing producer requires snapshot, recordType and recordId.",
+      "fix": "Both calls now use sfSourceIdentity(snapshot, \"projects\", \"project\"). The physical identity assertion is preserved.",
+      "superseded_test_blob": "1eec95c5b1885b8f9b540a2620671c5f7ba7b16c",
+      "final_test_blob": "dab12a75873f435243911957ce681fb251916c51"
+    },
+    {
+      "id": "W6-FRESH-SCOPE",
+      "owner": "WP08",
+      "state": "SOURCE_CORRECTION_ACCEPTED_PENDING_HISTORY_REGRESSION",
+      "path": "product/collaboration/host.ts",
+      "lines": [
+        224,
+        259
+      ],
+      "verified_mechanism": "Projects current confirmation issuer uses Portfolio Dashboard while the generic fixture originally issues All Projects. Page is part of the selector/scoped identity. Unconditional readHistorical could reintroduce the original scoped incarnation while prepare requires the current observation incarnation to equal scope.sourceRef.incarnation.",
+      "correction": "Generic scope again derives from message.sourceContext or the authenticated normal reader display. Existing exact source ref, selected fields, period, material dependency and manifest checks remain. Explicit C05 pins still require canonical threadMessageContext and full historical source authorization; C05 cannot fall through to current-domain confirmation.",
+      "precision_note": "The diagnosis is not that every fresh source requires a historical grant. historicalSources accepts a fresh source and readHistorical can fall back to canonical thread reading. No observedVersion is rewritten and no currentRef is fabricated.",
+      "supporting_blobs": {
+        "product/dashboard/confirmation-issuer.ts": "4925fedacd8c81f4abe6b85c514ddfccd91eb171",
+        "product/integration/dashboard-sources.ts": "4ddee38662690ce5284cc46ef04d315cb3fb4f6c",
+        "product/collaboration/thread-reads.ts": "5d3ad37709fff05625877ecd90768d7253ce3735",
+        "test/product/wp08/thread-history-fixture.ts": "2f55115067511ae38c17b6220592f4e6cdb42090"
+      }
+    }
+  ],
+  "other_reviewed_deltas": [
+    {
+      "path": "product/collaboration/host.ts",
+      "lines": [
+        190,
+        223
+      ],
+      "conclusion": "C05 membership is a private identity predicate: current admitted context, raw canonical C08 thread, participation, latest recipient answer, exact full question/message/incarnation/version reference and matching installation/project are checked. It returns neither source data nor a grant. The normal authenticated answer reader still checks actual current source/recipient access and binds visible messages to a raw canonical thread digest. Non-C05 membership retains the full evidence producer."
+    },
+    {
+      "path": "product/collaboration/answer-work.ts",
+      "lines": [
+        61,
+        83
+      ],
+      "conclusion": "Removing C05 resolve is limited to work already repeated by observe. The producer observe derives and compares the exact scope from actual C05 reads; C05 source/method/authority identities, all source and dependency fingerprints, physical incarnation, stored reread and current fence remain. R10 now adds protected stored thread/baseline equality to both branches."
+    },
+    {
+      "path": "test/product/wp08/answer-reuse.test.ts",
+      "conclusion": "The unit fixture currentSnapshots now exposes its existing actual model state at dashboard.data.__sfProductV1, instead of an empty object. All 23 earlier literal expect sites are unchanged. This remains a unit model; the SQLite counterexamples provide the integration evidence only if Actions passes."
+    }
+  ],
+  "counterexample_review": {
+    "path": "test/product/wp08/answer-egress-version.test.ts",
+    "postimage_blob": "dab12a75873f435243911957ce681fb251916c51",
+    "cases": 2,
+    "literal_expect_sites_per_case": 18,
+    "timeout_ms_each": 120000,
+    "actual_setup": "Each case creates an independent real SQLite fixture, C05 question and recipient answer, actual producer observation and explicit human confirmation through the real mutation API.",
+    "interleaving": "The wrapper awaits the real state read to complete, asserts that no protected snapshots remain active, then performs a separately admitted real threadHistory.edit and returns the previously captured read result. Reuse hooks the second baseline-only read; Work hooks its own second thread/answer/baseline read.",
+    "consumer_selection": "The real Work component is called directly, so a later collector reread cannot conceal an erroneous valid result.",
+    "discriminating_oracles": "The edit increments storage and message versions exactly once, preserves message ID/incarnation and sourceContext, and leaves saved baseline, actual project values, physical source identity, C05 review digest and actor/access digest unchanged. Thus the old source-only fence would remain satisfied. The raced read must be stale and raced Work unavailable without body/review disclosure; a fresh projection of the same real Work component must then report stale/answer-changed.",
+    "limits": "These counterexamples are prepared and reviewed, not executed locally. No runtime success or performance claim is made before the pinned Actions result."
+  },
+  "oracle_preservation": {
+    "independently_checked": true,
+    "review_confirmation": {
+      "before_literal_expect_sites": 58,
+      "after_literal_expect_sites": 58,
+      "removed": [],
+      "altered": []
+    },
+    "reuse_unit": {
+      "before_literal_expect_sites": 23,
+      "after_literal_expect_sites": 23,
+      "removed": [],
+      "altered": []
+    },
+    "scenario_partition": "The former first C05 journey is redistributed into three independently timed complete causal journeys: actual confirm/retry/reopen; actual confirm and actual SQLite reopen before edit/reconfirm/history; actual confirmed C05 then distinct current question and ACL denial. The fourth revocation/physical replacement journey remains whole.",
+    "causal_requirements_retained": [
+      "Setup remains inside each 120000 ms timer.",
+      "Each journey creates its own actual fixture; there is no beforeAll seed, shared baseline or cached boolean grant.",
+      "The edit journey performs real confirmation and SQLite close/reopen before the edit.",
+      "The ACL loop retains nine runtime checks over read, prepare and Work.",
+      "All 58 prior literal assertion sites remain; partitioning is not product performance acceptance."
+    ]
+  },
+  "ci": {
+    "executor": "ROOT_ONLY_GITHUB_ACTIONS",
+    "request_hash_reported_by_root": "05443c8b6ad0e91d18b1aae3e92864d7be9016d1779ac2b9f533500655f7ac69",
+    "selected_files": [
+      "modules/sucafina/Sucafinav1/test/product/wp08/review-answer-confirmation.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp08/thread-history-continuity.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp08/host-answer-reuse.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp08/answer-first-confirm-http.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp08/answer-egress-version.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp08/answer-reuse.test.ts"
+    ],
+    "reattach_only_with_stated_equivalence": [
+      "W5 WP07 review-thread-context3cases; unchanged producer",
+      "W5 case-selection-cas; unchanged G03 product/test",
+      "W5 review-recipient-authority including R09: executed threads.create, threadReads.read and authority.reviewRecipientSources; none of the host answer callbacks or answerWork/answerReuse changed by W6 were exercised. This is path equivalence, not whole-host blob equivalence.",
+      "W2 review-port14cases and Dashboard agenda1case; unchanged consumers"
+    ],
+    "no_duplicate_or_broad_run_requested": true
+  },
+  "remaining_limits": [
+    "W6 runtime and all new race counterexamples remain pending the exact hosted run. Static review is not native or integration proof.",
+    "The W5 253128.15 ms complete journey is retained as an explicit latency limitation. Reduced static review-read counts and test partitioning do not prove a latency improvement.",
+    "WP10 actual consumer hook composition and shared C16 C05 pin output remain owner dependencies; the endpoint lacking a representable C05 pin continues to refuse.",
+    "C17 removed-source/non-record source leases and WP14 nonempty expected/observed outcome composition retain the already recorded owner boundaries; no producer tree was copied.",
+    "WP07 was reassigned by root to documentation review; this report does not claim an additional WP07 product cold read. Root separately reported reading the helper and callsites."
+  ],
+  "frozen_external_reconciliation": {
+    "path": "source-advances-final-native-outcome.json",
+    "sha256": "fb99f0820d95e224ab411be50c1b19be5ecadae2343567a1809473e8b72408cf",
+    "unchanged_by_this_review": true
+  },
+  "operations": {
+    "local_product_tests": false,
+    "local_typecheck": false,
+    "native_execution": false,
+    "remote_writes": false,
+    "product_postimages_edited": false,
+    "review_only_file_written": "c05-w6-independent-review.json"
+  },
+  "next_action": "Root may publish the seven exact postimages after its verified preimages, create the request-only snapshot, execute the selected six files in Actions and bind the observed W/S/tree/run/job/check results without extending the claim to native execution or overall DONE."
+}

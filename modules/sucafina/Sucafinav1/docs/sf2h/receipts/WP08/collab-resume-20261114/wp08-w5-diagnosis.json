@@ -1,0 +1,72 @@
+{
+  "schema": "sf2h-wp08-w5-static-diagnosis-v1",
+  "base": "70af5b7d26bbc9456b1d9b9aa324bf2ae10668c4",
+  "base_tree": "44a6c14f500f88dc8b01f82f64dedb6cc4d3c47f",
+  "run": 43616934900,
+  "job": 132513933634,
+  "tested_product": "20821df310ebc6ea08ccab27e829008d72a04de6",
+  "snapshot": "161f5f9b547dcb7ca7868a70ab0ffa05413131b3",
+  "observed": {
+    "pass": 29,
+    "fail": 4,
+    "error": 1,
+    "expects": 518,
+    "tests": 33,
+    "files": 13,
+    "seconds": 981.93,
+    "timeouts_ms": [
+      312068.16,
+      303803.18
+    ],
+    "deadline_ms": 120000,
+    "historical_failure": "stale/answer-scope-changed expected, unavailable/answer-reuse-unavailable received"
+  },
+  "static_findings": [
+    {
+      "id": "W5-HISTORY",
+      "cause": "host.scopeForAnswer applies threadMessageContext to the recipient display projection. It combines current refs/version with original observedVersion, so validThreadSourceContext refuses a historical source before baseline comparison.",
+      "correction": "derive scope from the authenticated canonical historical thread reader; retain the existing stale assertion and current access checks"
+    },
+    {
+      "id": "W5-AMPLIFICATION",
+      "cause": "prepare repeats answer evidence resolution from already authenticated messages. Each recipientThread C05 read performs two context authorizations; each authorization performs two full ReviewPort.read calls.",
+      "full_review_reads_before": {
+        "answer": 12,
+        "belongs": 8,
+        "scopeForAnswer": 26,
+        "observe": 4,
+        "againAnswer": 12,
+        "againBelongs": 8,
+        "total": 70
+      },
+      "full_review_reads_after_planned": {
+        "answer": 4,
+        "belongs": 8,
+        "scopeForAnswer": 6,
+        "observe": 2,
+        "againAnswer": 4,
+        "againBelongs": 8,
+        "total": 32
+      },
+      "qualification": "Static happy-path call count, not a benchmark or proof of elapsed-time improvement. At least3 historical resolutions per full review read in the fixture, before recipient refresh/reissue work. No persistent authorization memoization is proposed."
+    },
+    {
+      "id": "W5-NO-LOCK-PROOF",
+      "evidence": "Independent WP07/WP09 cold review: observe/resolve run outside C08; commit only fences. local-store nested transactionAll immediately throws; nested surface reads clone, lock timeout5000ms is asynchronous. No simple self-deadlock is established by the log.",
+      "correction": "keep persistence unchanged; add bounded phase timing checkpoints to hosted tests"
+    },
+    {
+      "id": "W5-PHYSICAL-COUNTEREXAMPLE",
+      "cause": "The second new test attempts a domain save under a tombstoned ID; the canonical business command refuses reuse.",
+      "correction": "explicit hostile-storage replacement using real source-lifecycle persistence, assert a different physical incarnation and denial; never call it a legal domain write"
+    }
+  ],
+  "constraints": {
+    "local_product_tests": false,
+    "timeout_changed": false,
+    "assertions_removed": false,
+    "shared_or_foreign_product_changed": false,
+    "human_observation_expiry_changed": false
+  },
+  "authorization": "Root approved bounded host message dedup, fixture removal of redundant full C05 authorization while retaining current ACL/full source leases, actual lifecycle replacement counterexample, and bounded timing checkpoints."
+}

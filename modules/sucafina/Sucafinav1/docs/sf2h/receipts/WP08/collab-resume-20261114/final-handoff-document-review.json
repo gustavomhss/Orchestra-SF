@@ -1,0 +1,27 @@
+{
+  "schema": "sf2h.collab-resume.final-handoff-review.v1",
+  "reviewer": "wp07_audit",
+  "scope": "Central handoff prose, relative links, owner allocation and comparison with staged source/CI receipts; no product execution or source changes.",
+  "corrections": [
+    {
+      "finding": "HTTP observation test was described as actual display to the human.",
+      "applied": "The same observationRef is returned by prepare HTTP and consumed by the counterexample; UI display in the installed composition remains pending."
+    },
+    {
+      "finding": "C17 source production was attributed to WP12.",
+      "applied": "WP10 and the source/C17 owners publish the producers; WP12 is the native consumer."
+    },
+    {
+      "finding": "Both WP13 failures were described as denied operations.",
+      "applied": "Separate the positive numeric replay exceeding its time budget from the expected private-writer-grant denial returning ok; R5 selected passes do not close either."
+    }
+  ],
+  "preserved_distinctions": [
+    "44 populated review UI values do not prove the separate nonempty expected/observed WP14 outcome consumer.",
+    "WP12 UI passes and Omni subprocesses do not prove native Relay inference or C07 output.",
+    "Finance R5 six selected passes do not rewrite the failed R4 aggregates."
+  ],
+  "relative_links": "Existing targets resolve; planned WP08 maps/checks are to be verified after final staging.",
+  "status": "THREE_CORRECTIONS_APPLIED_BY_ROOT",
+  "product_executed": false
+}

@@ -1,0 +1,204 @@
+{
+  "schema": "sf2h.collab-resume.finance-advance-reconciliation.v1",
+  "original": {
+    "branch": "astra-finance",
+    "sha": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+    "preserved": true
+  },
+  "successor": {
+    "branch": "finance-resume",
+    "sha": "88b9b6bff53a4f64d37d04ddc868f1443cecf5b3",
+    "tree": "e7e471f64dfd7a34c9d4143968d76b711b0a2966",
+    "ahead": 28,
+    "behind": 0
+  },
+  "inspection": {
+    "method": "GitHub MCP compare plus exact per-directory Git tree comparison; compare capped at 300 files and not used as a complete inventory.",
+    "scope": "Relevant product subtrees and producer/API receipts, no intake or foreign mutation",
+    "product_tests_local": false
+  },
+  "changed_product_blobs": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "before": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+      "after": "d43849ba101000eb9eb2a6ddc9a04830b004ccc6"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+      "before": "38f82f4b931682e255a18d52856e192f2ee43390",
+      "after": "c27e908140ba34ffea39078a78626f47943a8444"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "before": "8389709232225424b5905638d0951d8cdbb71dd7",
+      "after": "13800a1ac7dbe1b9bc95ca0a10480708760b4936"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/README.md",
+      "before": "760f3cca4b572a49f3b9087100205b63185894bd",
+      "after": "7b7779960f4ca5658bda5917f7033c51dad663f2"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/S4-C-CHECKPOINT.md",
+      "before": null,
+      "after": "f5ea8480fc9514c34f666f673b12e80c92f9d1dd"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/analysis.ts",
+      "before": "9a74bc4b5b92054a32e3ae2b084b661937ce4964",
+      "after": "347d1c97952167523f9b2b04f1ab4fac7178cc9a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/campaign-proposals.ts",
+      "before": null,
+      "after": "3ad0b190ad5d50c33e99d3c622831b6f0cc6cdac"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/campaign.ts",
+      "before": null,
+      "after": "d5fe38ec0a02ce23dedd756869a8f10c15e3db4d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/candidates.ts",
+      "before": "34e1f60df0d31db15597cce55718506ffaa5b6b1",
+      "after": "5a56fb5305e64922af8b6b3246b8807256e79138"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/catalog.ts",
+      "before": "e81c2292873600cf605bad9494e671d94d6c1de8",
+      "after": "cb75aeeae32310911063b673fc27e9c94eef3762"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/contribution.ts",
+      "before": "bdc058569dccc53a049b0fcc84506e5520435e0c",
+      "after": "527549734e66439a4298877f5b9e90918dd8b3f5"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/coverage-preview.ts",
+      "before": null,
+      "after": "9f7e12113b38e73befb64f99a94fb8ca28d05eee"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/handoff.ts",
+      "before": "64fe0f4a98e2bfadc972e3b760bcfd4e40ff8db0",
+      "after": "3488f1d757fca6fd6527540679f4fb68a533aee0"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/history-provenance.ts",
+      "before": "4a3049d462c5fc24b81163c8468b8bd314d8aa61",
+      "after": "de5846f024f85ad8203fa12adf27212c23850d4f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+      "before": "31f327a784316f4f099f83e901d443531340bb63",
+      "after": "3dec070ca5f56f7bd03a09b4b19468c950d82214"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts.draft",
+      "before": null,
+      "after": "6391fb0608872e47d4cabc6cafa96044ab098b1f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+      "before": "9c678d6b8db1d00242ae0ae5c02cdff9219009c7",
+      "after": "84151d62b46e949c90a48a5965f5bdd244b0c5fb"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/product.ts",
+      "before": "495169ccb0da1c775622907facf9b2ba13e0bb5c",
+      "after": "d4c5d9c9aabcf70bb71739d3952776517dc55923"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/production.ts",
+      "before": "ead16a6d11698ac0385ab884520bb9615162607d",
+      "after": "a1765988434920f8dc9c71eaea2427b6ecac59cb"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/proof.ts",
+      "before": null,
+      "after": "19ac96241c24fbcd2038c70b961fa5a8d25d4418"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts",
+      "before": null,
+      "after": "095a0e5764e115fb874a5f5c0c16a9c73466c340"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/reconciliation.ts",
+      "before": null,
+      "after": "387e78deeb6a1e97a21a68bd84839c3f1e979254"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/result-store.ts",
+      "before": "a5c35991f028e723fa5dcfc4f1e481911297ce72",
+      "after": "1d68174e4e54551fef742630c77c5733cd6b1b7b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-store.ts",
+      "before": "3d7d19b1de537638d0b1f9918c27c3712e2f534d",
+      "after": "33a8d973c045769b456342499e1c247d524f6c53"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-v6.ts",
+      "before": "28b9bcdb5df9786dd5de140255e382d1f89f7522",
+      "after": "ec0053c5fe571cf3867cdae09ae66c3b999b9a4d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity.ts",
+      "before": "247f82eb6e3ca4b097327aeacd33f268099b1770",
+      "after": "527db7238ae9e7c5a5233e2fedfbb8431017e3d5"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/threshold-proof.ts",
+      "before": null,
+      "after": "056a857364cf8a6c2a2bc97bf107276612edf55d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+      "before": "6723576021e0c8b7df91c0823fe0448aa58f4972",
+      "after": "912df8ecd8552b245e124b93c46644c92a32f3ac"
+    }
+  ],
+  "preserved_collaboration_inputs_on_finance": {
+    "collaboration_tree": "7d6ea58b7d17ca06c98175237767c1e3f2e8078c",
+    "reviews_tree": "ec085fbeb4193a1cc5a18038f447e96891671c16",
+    "statement": "These subtrees are identical between the two Finance pins. Their identity is not equivalence to collab-resume; no published collaboration delta was overwritten or reimported."
+  },
+  "findings": [
+    {
+      "id": "FIN-CASE-PORT",
+      "owner": "WP11/WP10/S0",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "blob": "d43849ba101000eb9eb2a6ddc9a04830b004ccc6",
+      "observed": "Current Finance source requires verifyScenarioOperations and calls it before returning case evidence/access. The older integration document cites a prior case-port blob; the current source is authoritative.",
+      "disposition": "Do not transplant a permissive callback into collab-resume. When the new CasePort is composed, supply the actual canonical operation verifier and revalidate affected routine/collaboration consumers."
+    },
+    {
+      "id": "FIN-PLANNER-RATE",
+      "owner": "WP03",
+      "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936",
+      "observed": "The new private qualifier uses canonical normalized rate identities. The owner receipt preserves its failed S1 fixture run and planned narrowed rerun; no success is inferred from the receipt.",
+      "disposition": "Owner/S0 must reconcile the exact current runtime+port together. No financial-policy or Planner file was edited by collaboration; archived source digests are not rewritten."
+    },
+    {
+      "id": "FIN-PORTFOLIO",
+      "owner": "WP13/S0",
+      "observed": "Portfolio subtree advanced to 8681c6b1e226ad6f8577eef9ae044dcd89c8ed05; new/changed proof, reconciliation, source-read and result-store paths are inventoried above.",
+      "disposition": "Do not transfer the older integration document's reader findings or historical CI blindly to these new blobs. Preserve the exact owner bundle and qualify the nonempty portfolio/review consumer at composition."
+    }
+  ],
+  "read_receipts": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/final-20261114/INTEGRATION.md",
+      "blob": "3a7856aabd701b720f2b28611c54d6b879a82b14",
+      "limit": "Describes frozen WP11 W19 a3b57d4 and older owner pins, not the whole current Finance successor."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP03/finance-resume-20261114/rate-identity-handoff.json",
+      "blob": "0dd7f279866801549a3119567569a55d39b7ecbd",
+      "limit": "Receipt state may lag live Actions; no acceptance imported."
+    }
+  ],
+  "action": "Continue own fixes and evidence on collab-resume. S0 composes only authorized, exact owner deltas; no whole-tree copy, source branch mutation, contract or host changes performed."
+}

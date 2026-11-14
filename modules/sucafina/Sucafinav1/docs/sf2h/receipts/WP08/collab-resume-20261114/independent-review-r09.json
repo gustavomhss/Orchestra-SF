@@ -1,0 +1,126 @@
+{
+  "schema": "sf2h-c05-independent-review-supplement-v1",
+  "reviewer": "wp09_audit (did not author this R09 delta)",
+  "method": "Read-only source and fixture inspection; deterministic hashing of local frozen postimages. No local product tests or remote writes.",
+  "status": "APPROVED_FOR_HOSTED_VALIDATION",
+  "scope": "R09 recipient lease repinning, plus the manifest-declared SfStateResult narrowing in the CAS test.",
+  "manifest": "wp08-r09-manifest.json",
+  "manifest_sha256": "3bb5beef9d109b66f90c394c7a007d182c204d4ecd481cfccfe7ccac4a98fc86",
+  "base_product_sha": "20821df310ebc6ea08ccab27e829008d72a04de6",
+  "preimage_validation": "All three preimages match the original frozen WP08 postimages by Git blob hash. Exact remote-head validation remains with root.",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/authority.ts",
+      "preimage_blob": "15cfe27a6be1b51b7b7c6bd737c9e2b979752cd5",
+      "blob": "5c9850034bef92736b05a4fc0dddbaa1170c57b1",
+      "sha256": "4ae96d1de91fbbba2df9ccb37eb73e7d3c7990a5eb871acfd234fe5c069e43c3"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/case-selection-cas.test.ts",
+      "preimage_blob": "f19984edc18de56e1f97a60f538a25983cd9e367",
+      "blob": "b7e6c7eb149cf9ef05a2390ca289e065cff88489",
+      "sha256": "bb8b23c0afd1dc766af84fba54e8e9b5050baf4a3abf09ac62fb4db83bac92a4"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/review-recipient-authority.test.ts",
+      "preimage_blob": "bdc370736e6167b0e570cb9d5f801f8e2a88ef09",
+      "blob": "85cbd3d88a224a816ffdd9340537d69025b1dbd1",
+      "sha256": "5842128b363d9ba25a8a696003feb166865cb734a7f7b4e3698a6310edce1341"
+    }
+  ],
+  "findings": [
+    {
+      "id": "C05-R09",
+      "severity": "P2",
+      "owner": "WP08",
+      "status": "fixed_source_reviewed_pending_hosted_proof",
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/authority.ts",
+      "original_lines": [
+        17,
+        18,
+        22,
+        55,
+        58,
+        59
+      ],
+      "lines": [
+        17,
+        18,
+        19,
+        23,
+        25,
+        26,
+        56,
+        57,
+        58,
+        59,
+        60,
+        63,
+        66,
+        67
+      ],
+      "summary": "A second recipient authorization using the same authenticated context could replace the provider lease of an operation waiting to commit.",
+      "trigger": "Prepare recipient authorization for operation A, replace checkAtCommit on the provider, and reauthorize the same recipient/full basis with the exact same TrustedDomainContext before A enters C08. The former binding-keyed Map overwrote the slot and A could use the new permissive check.",
+      "resolution": "Use a WeakMap keyed by the authentic context object, with an inner Map keyed by recipient, full basis and binding. A populated slot cannot be replaced with different proof, authorize or check method identities. Recheck current provider and existing slot after the last await and before first insertion. At 512 entries reject a new slot instead of evicting a possibly active lease. The commit path invokes the original synchronous checkAtCommit and checks identity on both sides; no authorization boolean is cached.",
+      "test_source": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp08/review-recipient-authority.test.ts",
+        "lines": [
+          73,
+          74,
+          75,
+          76,
+          77,
+          80,
+          81,
+          82,
+          83,
+          84,
+          86,
+          89,
+          90,
+          91,
+          92,
+          93,
+          94,
+          95
+        ],
+        "assessment": "The existing real SQLite/admitted context fixture calls the same collaboration authority instance outside C08 after replacing checkAtCommit, using the exact same context as the pending thread create. The regression asserts that reauthorization is false, mutation fails without echoing the submitted body and the storage version is unchanged. This is source inspection; it has not been run by this reviewer."
+      },
+      "scope_clarification": "Fresh requestId separated independent normal requests in the earlier analysis. It did not protect concurrent/replayed calls sharing one context; R09 addresses that separate mechanism. Distinct context objects with identical bindings are now isolated as well.",
+      "limits": [
+        "Current recipient ACL remains a fixture boundary; this regression does not prove an installed native recipient authority.",
+        "The reviewer did not run product tests, typecheck, guards or CI, and did not mutate remote state.",
+        "Root must bind hosted results to the final source SHA and verify remote preimages before publication."
+      ]
+    }
+  ],
+  "checks": [
+    {
+      "topic": "Context identity",
+      "assessment": "WeakMap keys preserve object identity; equal serialized bindings on distinct authentic contexts do not share slots."
+    },
+    {
+      "topic": "Same-context concurrency",
+      "assessment": "The shared inner Map is installed synchronously before awaits. current() checks any existing slot after asynchronous authorization and again after final host revalidation, so a competing insertion with different provider/method identities is rejected."
+    },
+    {
+      "topic": "Lifetime and capacity",
+      "assessment": "No populated slot is overwritten or evicted. The 512-slot guard rejects only new entries and is checked again after awaits; the weak outer key allows collection with the context lifetime."
+    },
+    {
+      "topic": "Grant freshness",
+      "assessment": "The stored lease contains proof and method identities only. checkReviewRecipient executes the original checkAtCommit synchronously under C08, checking identities before and after the call."
+    },
+    {
+      "topic": "Counterexample relevance",
+      "assessment": "The new branch intercepts the original thread transaction before C08, invokes the same authority/context after method replacement, and checks both refusal and unchanged persisted storage version. The previous implementation would overwrite that slot under unchanged source/ACL fixture state."
+    },
+    {
+      "topic": "CAS test narrowing",
+      "assessment": "case-selection-cas.test.ts now narrows SfStateResult.status explicitly before comparing value. The expected persisted preferences, winner/loser CAS and exact retry assertions are preserved."
+    }
+  ],
+  "owned_source_blockers": [],
+  "remaining_validation": "Root coordinates hosted CI on the final source head; this supplement supplies no PASS or native-execution claim.",
+  "parent_review": "c05-independent-review.json"
+}

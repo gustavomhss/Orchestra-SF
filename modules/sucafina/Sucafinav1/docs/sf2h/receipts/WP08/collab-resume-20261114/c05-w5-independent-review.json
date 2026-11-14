@@ -1,0 +1,121 @@
+{
+  "schema": "sf2h-c05-w5-independent-source-review-v1",
+  "reviewer": "/root/wp09_audit",
+  "review_date": "2026-11-14",
+  "decision": "APPROVED_FOR_HOSTED_CI",
+  "open_product_blockers": [],
+  "scope": "Independent read-only review of the three W5 postimages against W4; byte hashing and textual assertion inventory only. No product execution, no product edits, no remote writes.",
+  "base": {
+    "commit": "70af5b7d26bbc9456b1d9b9aa324bf2ae10668c4",
+    "tree": "44a6c14f500f88dc8b01f82f64dedb6cc4d3c47f",
+    "preimage_note": "The three preimage blobs exactly match the prior frozen WP08 product/test files, unchanged by W3/W4. Root remains responsible for the final GitHub preimage check before publication."
+  },
+  "manifest": {
+    "path": "wp08-w5-manifest.json",
+    "initial_review_sha256": "fd197d637166cedd9917089a22143624a28689229bb224d2da70ac4bf39a7218",
+    "final_reviewed_sha256": "0dc06542fce3e77ebaf0c5d77846bb734cd99fb9f6d0d087400874718134d16d",
+    "revision_reason": "The author corrected the physical replacement oracle reported in this review. The host and fixture postimages remained unchanged.",
+    "byte_check": "c05-w5-independent-byte-check.json"
+  },
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/host.ts",
+      "preimage_blob": "119f642392a046dabc280c785acd2ad1fa65a838",
+      "postimage_blob": "d80d441aa5775a3747303a60161e5a049f84ac16",
+      "sha256": "af2fa984081282b83371da97ab36cb0651f0412288e5c4f70ca7bad4e33a21ba",
+      "decision": "APPROVED_FOR_HOSTED_CI"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/review-answers-fixture.ts",
+      "preimage_blob": "55a72783e18a18b0f267b45e4b2b09dd41b244ae",
+      "postimage_blob": "be15f9ad9c6477491fd0c9418ac776ea97199d68",
+      "sha256": "c65c3f308423b6431a99c5537b1cd46117ab02f242c6b065adeab6c379b52866",
+      "decision": "APPROVED_FOR_HOSTED_CI"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/review-answer-confirmation.test.ts",
+      "preimage_blob": "7a97f5f1b8f3728c49f64f0b49c84ac91d98919c",
+      "postimage_blob": "16b38f72bcbb6046647a7c0dde90b67d51e95029",
+      "sha256": "8a0d60e4a0b9b6cc44ea093d72feedae63a3610880b0d0d9714f2189574388c2",
+      "superseded_candidate_blob": "375545f0b32b76f9087a0b17d210d3c03a480c53",
+      "decision": "APPROVED_FOR_HOSTED_CI_AFTER_ORACLE_CORRECTION"
+    }
+  ],
+  "findings": [
+    {
+      "id": "W5-IR01",
+      "owner": "WP08",
+      "severity": "test-oracle",
+      "status": "RESOLVED_IN_REVIEWED_POSTIMAGE",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/review-answer-confirmation.test.ts",
+      "original_line": 200,
+      "finding": "The initial hostile replacement test obtained oldPhysical from the already deleted snapshot. sfSourceIdentity returns undefined for a tombstoned identity, so comparing the replacement incarnation with oldPhysical?.incarnation established only that the replacement had an incarnation, not that it differed from the original.",
+      "support": {
+        "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+        "blob": "d0cab7f33b08806a6bb01a869fa789dc77e087ee",
+        "function": "sfSourceIdentity returns a clone only when identity.alive is true"
+      },
+      "correction": "Lines 195-208 capture the original physical identity before deletion, require its presence, perform the explicit hostile storage replacement through the actual lifecycle persistence, require the replacement identity to exist, and compare its incarnation with the original nonoptional incarnation.",
+      "runtime_status": "PENDING_HOSTED_CI"
+    }
+  ],
+  "review_checks": [
+    {
+      "id": "message-reference",
+      "status": "SOURCE_REVIEW_PASS",
+      "evidence": ["product/collaboration/host.ts:187-208", "product/collaboration/evidence.ts:12-54", "product/collaboration/answer-reuse.ts:57-69,78-101,113-146"],
+      "assessment": "The reference formula exactly matches the canonical evidence issuer and includes encoded question ID, message ID, message incarnation and numeric version. It is derived from an authenticated thread reader and the latest recipient answer. The raw C08 reread validates principal/access/policy and now additionally compares recipient, kind and state alongside all messages. Canonical belongsToQuestion remains called independently by prepare, confirm and read. The derived string does not become an authority grant."
+    },
+    {
+      "id": "historical-scope-and-new-answer",
+      "status": "SOURCE_REVIEW_PASS",
+      "evidence": ["product/collaboration/host.ts:209-242", "product/collaboration/thread-reads.ts:23-29", "product/collaboration/recipient-thread.ts:31-69", "product/collaboration/thread-context.ts:16-39", "test/product/wp08/thread-history-continuity.test.ts:34-60,90-104"],
+      "assessment": "readHistorical uses the same current authenticated recipient reader, which checks participation, current source ACL, every stored message basis and physical continuity before returning the preserved basis. It is not an unauthenticated historical store read. threadMessageContext selects message.sourceContext when present; a later response therefore retains its own new basis instead of being forced back to the thread's old basis. The original answer preserves its original scope so a later live source change can reach the unchanged stale comparison. A thread without the needed historical grant is still refused. The existing continuity test already asserts both old-answer stale and successful new-answer prepare/confirm/reuse on the same thread."
+    },
+    {
+      "id": "c05-resolve-provider-pinning",
+      "status": "SOURCE_REVIEW_PASS",
+      "evidence": ["product/collaboration/host.ts:219-230", "product/reviews/review-answer-source.ts:35-38,54-61", "product/reviews/thread-context.ts:28-44,64-75"],
+      "assessment": "The host captures the source and resolve method before the historical authority await, checks their identities before invoking, retains the original receiver with call, and checks them after resolve and after the final host revalidation. The real producer resolve still performs two current authenticated full C05 reads, exact full-review digest/pin checks, exact selected-section period and source-basis containment. Removing an additional call to the same full C05 authorizer does not remove those checks."
+    },
+    {
+      "id": "fixture-access-leases",
+      "status": "SOURCE_REVIEW_PASS",
+      "evidence": ["test/product/wp08/review-answers-fixture.ts:84-99", "product/reviews/review-answer-source.ts:65-100,103-135"],
+      "assessment": "Only the fixture's redundant full C05 authorization is removed. Before prepareAccess the real adapter has already read and authenticated the complete C05 twice. The fixture checks current actor access, host revalidation, full review digest and exact basis pin, then prepares real historical reissue leases for every unique original review source. It retains actor digest and current access checks and invokes every physical source fence. No boolean grant cache, replacement producer, permissive fence or mocked physical identity is introduced. The adapter still requires prepared read-only fences within the protected transaction and binds the full stored review digest."
+    },
+    {
+      "id": "c08-and-final-egress",
+      "status": "SOURCE_REVIEW_PASS",
+      "evidence": ["product/collaboration/answer-reuse.ts:37-51,57-76,78-111,113-147", "product/reviews/review-answer-source.ts:39-50", "product/collaboration/host.ts:244-246"],
+      "assessment": "AnswerReuse still observes before C08, verifies original provider/method identities through its bound fence, checks current caller and explicit human authorization at commit, compares canonical thread digest, preserves CAS and idempotency, and captures the fence again before successful return. The private access lease is not persisted into confirmation fingerprints. W5 makes no persistence-interface, transaction-lock or admission change."
+    },
+    {
+      "id": "displayed-human-observation",
+      "status": "SOURCE_REVIEW_PASS",
+      "evidence": ["test/product/wp08/review-answer-confirmation.test.ts:43-64", "product/collaboration/http-routes.ts:22-28", "product/collaboration/answer-reuse.ts:53-55,70-90"],
+      "assessment": "The HTTP preparation already returns scope, observationRef, observedSourceVersion and expectedScopeFingerprint, while stripping private lease/physical fields. The test now confirms that actual displayed observation. Confirmation recomputes authority and the source observation under its separately admitted human mutation context; it does not reuse the finished read context. Observation binding intentionally includes installation/project/principal/access/policy rather than requiring the same request ID across distinct read and confirmation actions."
+    },
+    {
+      "id": "test-oracles-and-bounded-diagnostics",
+      "status": "SOURCE_REVIEW_PASS_RUNTIME_PENDING",
+      "evidence": ["test/product/wp08/review-answer-confirmation.test.ts:34-36,53-64,83-112,195-219", "c05-w5-independent-byte-check.json"],
+      "assessment": "A textual multiset inventory independently confirms all 54 prior expect lines remain unchanged and four new expect lines were added, for 58. The two existing journeys remain unsplit, the 120000 ms timeout remains unchanged, actual SQLite reopen remains, and wrong-reference, no-body leakage, explicit physical replacement and preserved C05 scope assertions are present. The checkpoint logger records elapsed phases without sleeps, mocks or budget increases."
+    }
+  ],
+  "runtime_evidence_boundary": {
+    "prior_run": 43616934900,
+    "prior_job": 132513933634,
+    "prior_product_commit": "20821df310ebc6ea08ccab27e829008d72a04de6",
+    "prior_snapshot": "161f5f9b547dcb7ca7868a70ab0ffa05413131b3",
+    "prior_observation": "W2 has two C05 journey timeouts and the stale-vs-unavailable continuity failure. It is not passing evidence for W5.",
+    "lock_analysis": "Static review found no proven self-deadlock: nested transactionAll rejects immediately, allowed nested surface reads return clones, and the local-store lock wait is bounded and asynchronous. Repeated full source collection and synchronous snapshot cloning/hashing remain a plausible elapsed-time contributor, not a proven sole cause.",
+    "call_count": "The real happy-path prepare composition now has 32 full C05 reads versus 70 before, counting repeated reader/issuer/context calls. This is a static call-count analysis, not a timing benchmark or proof that the 120000 ms deadline is met.",
+    "local_product_tests_run": false,
+    "new_hosted_run_started_by_reviewer": false,
+    "new_runtime_status": "PENDING_ROOT_HOSTED_CI",
+    "native_execution_claim": false,
+    "global_head_green_claim": false
+  },
+  "next_action": "Root publishes the three exact final postimages after its GitHub preimage check, then runs the already scoped seven-file CI request and static gates. Inspect phase checkpoints and outcomes; do not mark the timeout fixed or C05 native execution proved from this source review."
+}

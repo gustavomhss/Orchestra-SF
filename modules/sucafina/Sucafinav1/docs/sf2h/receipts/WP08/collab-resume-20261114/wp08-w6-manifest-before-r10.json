@@ -1,0 +1,73 @@
+{
+  "schema": "sf2h-wp08-w6-proposal-v1",
+  "base": "0d9820924b33a8fc7b145f54a675aeef76c98489",
+  "base_tree": "39cec0a91dc5ebc2dde012d4d1d8b63166074373",
+  "preimage_note": "Exact published W5 blobs; answer-work unchanged since W2. Root must verify through GitHub before commit.",
+  "product_tests_run_locally": false,
+  "deadline_ms_each_case": 120000,
+  "human_observation_expiry_changed": false,
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/host.ts",
+      "preimage_blob": "d80d441aa5775a3747303a60161e5a049f84ac16",
+      "postimage_blob": "1678fc9d46c36a7da962aeca3b782b395e129c51",
+      "postimage_sha256": "59ceaf1a3910ff31ef366184bd31b8e5611e0e42edc9d97640e41c963dc3b808",
+      "local_postimage": "/workspace/scratch/b64879936364/wp08-w6-proposal/modules/sucafina/Sucafinav1/product/collaboration/host.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/collaboration/answer-work.ts",
+      "preimage_blob": "a6984795460b51d685b820fba1823df1d56930f4",
+      "postimage_blob": "42e4813f722a02a8138142bbea8aff89313d9983",
+      "postimage_sha256": "392dcd1f80bedbcc2ec229aa030103aa8038faad60a13ea10a3d363a65e4fc4c",
+      "local_postimage": "/workspace/scratch/b64879936364/wp08-w6-proposal/modules/sucafina/Sucafinav1/product/collaboration/answer-work.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/review-answer-confirmation.test.ts",
+      "preimage_blob": "16b38f72bcbb6046647a7c0dde90b67d51e95029",
+      "postimage_blob": "5570584303752e8e95159e21d78dccaa63832110",
+      "postimage_sha256": "0e0cfaf5fdfe48ac7f11852c9bb137ad7fe52006c98cb2460534dd0417c19936",
+      "local_postimage": "/workspace/scratch/b64879936364/wp08-w6-proposal/modules/sucafina/Sucafinav1/test/product/wp08/review-answer-confirmation.test.ts"
+    }
+  ],
+  "static_diagnosis": "wp08-w6-diagnosis.json",
+  "oracle_redistribution_map": "wp08-w6-oracle-map.json",
+  "static_call_count": {
+    "prepare": {
+      "W2": 70,
+      "W5": 32,
+      "W6": 16
+    },
+    "read": {
+      "W5": 32,
+      "W6": 16
+    },
+    "confirm": {
+      "W5": 20,
+      "W6": 12
+    },
+    "work_confirmed": {
+      "W5": 8,
+      "W6": 4
+    },
+    "work_stale": {
+      "W5": 16,
+      "W6": 12
+    },
+    "unit": "full C05 ReviewPort.read calls on the stated happy path; not elapsed-time measurements"
+  },
+  "test_decision": "Keep all58 exact literal expect sites (54 original+4W5), including9 runtime ACL assertions over3consumers. Redistribute first253128.15ms journey into3 complete causal scenarios with fresh real fixtures and setup within each120s budget; preserve actual confirm+SQLite reopen before editing. Keep revocation/physical replacement scenario whole. No seeding of baselines, no shared fixtures or grant cache.",
+  "performance_limit": "The prior253128.15ms failure remains evidence of excessive full-journey latency. Partitioning the tests is not performance acceptance; measure new phase timings and record the limit.",
+  "recommended_ci_files": [
+    "modules/sucafina/Sucafinav1/test/product/wp08/review-answer-confirmation.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/thread-history-continuity.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/host-answer-reuse.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp08/answer-first-confirm-http.test.ts"
+  ],
+  "reattach_scoped_previous_pass": [
+    "W5 WP07 review-thread-context3cases; unchanged producer",
+    "W5 case-selection-cas; unchanged G03 product/test",
+    "W5 review-recipient-authority including R09; unchanged authority/test",
+    "W2 review-port14cases and Dashboard agenda1case; unchanged consumers"
+  ],
+  "status": "FROZEN_FOR_INDEPENDENT_READ_ONLY_REVIEW"
+}
