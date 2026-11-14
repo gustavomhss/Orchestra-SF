@@ -4,7 +4,7 @@ import type { DomainProjection, PreservedReview, SourceRef } from "../contracts/
 import type { PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import { isSfPeriod } from "../contracts/validation.ts"
-import { reviewProjectionEvidence, reviewProjectionSources, validChart, validSectionProjection } from "../reviews/port.ts"
+import { reviewProjectionEvidence, reviewProjectionSources, validChart, validReviewCommentRefs, validSectionProjection } from "../reviews/port.ts"
 import type { ReviewSection } from "../reviews/port.ts"
 import { validReviewDecision } from "../reviews/decision.ts"
 import { validOutcomeComparison, validReviewOutcome } from "../reviews/outcome.ts"
@@ -42,6 +42,7 @@ export function createRoutineReviewResultReader(input: {
     if (!validDraft(draft, result, context)) return { status: "unavailable", reason: "routine-review-draft-invalid" }
     const agenda = content.agendaSnapshot as unknown as Omit<ReviewAgendaPreview, "selectionRef"> | undefined
     if (agenda !== undefined && !validAgenda(agenda, draft, result, context)) return { status: "unavailable", reason: "routine-review-agenda-invalid" }
+    if (draft.sections.some((section, index) => !validReviewCommentRefs(section.content, agenda?.sections[index]?.comments ?? []))) return { status: "unavailable", reason: "routine-review-comment-association-invalid" }
     const sections = [...draft.sections.map(draftSection), ...(agenda?.sections ?? []),
       ...(draft.previousReview && !("status" in draft.previousReview) ? draft.previousReview.sections.map(draftSection) : [])]
     const comments = [...(agenda?.sections.flatMap((section) => section.comments ?? []) ?? []),
@@ -73,7 +74,7 @@ function validDraft(draft: ReviewDraft, result: AuthorizedRoutineArtifactResult,
   if (![coverage.selectedTopics, coverage.includedTopics, coverage.unavailableTopics, coverage.omittedTopics].every(count) ||
     coverage.includedTopics !== draft.sections.length || coverage.selectedTopics !== coverage.includedTopics + coverage.unavailableTopics + coverage.omittedTopics ||
     new Set(draft.sections.map((section) => section?.id)).size !== draft.sections.length) return false
-  if (draft.sections.some((section) => !record(section) || !keys(section, ["id", "title", "period", "count", "sourceRefs", "content"]) ||
+  if (draft.sections.some((section: ReviewDraft["sections"][number]) => !record(section) || !keys(section, ["id", "title", "period", "count", "sourceRefs", "content"]) ||
     (section.count !== null && !count(section.count)) || !Array.isArray(section.sourceRefs) ||
     !validSectionContents(draftSection(section)) ||
     !matchesProjectionPrincipal(section.content, context) || digestSfValue(section.sourceRefs) !== digestSfValue(section.content.context.sourceRefs) ||
@@ -82,12 +83,12 @@ function validDraft(draft: ReviewDraft, result: AuthorizedRoutineArtifactResult,
   const records = draft.sections.some((section) => section.count === null) ? null : draft.sections.reduce((sum, section) => sum + section.count!, 0)
   if (coverage.includedRecordCount !== records) return false
   const topicRefs = new Set(draft.sections.map((section) => section.id))
-  if (draft.pendencies.some((pending) => !record(pending) || !keys(pending, ["topicRef", "kind", "reason", "evaluatedAt", "missing"]) || !topicRefs.has(pending.topicRef) ||
-    !["material-review", "unconfirmed"].includes(pending.kind) || !Array.isArray(pending.missing) || pending.missing.some((entry) => !record(entry) || !keys(entry, ["field", "reason"]) || typeof entry.field !== "string" ||
+  if (draft.pendencies.some((pending: ReviewDraft["pendencies"][number]) => !record(pending) || !keys(pending, ["topicRef", "kind", "reason", "evaluatedAt", "missing"]) || !topicRefs.has(pending.topicRef) ||
+    !["material-review", "unconfirmed"].includes(pending.kind) || !Array.isArray(pending.missing) || pending.missing.some((entry: DomainProjection["missing"][number]) => !record(entry) || !keys(entry, ["field", "reason"]) || typeof entry.field !== "string" ||
       !["missing", "unavailable", "restricted", "not-applicable", "incompatible-currency", "missing-fx", "missing-rate", "unconfirmed"].includes(entry.reason)) ||
     (pending.evaluatedAt !== null && !date(pending.evaluatedAt)) ||
     (pending.reason !== null && !["unchanged-scope", "material-change", "dependency-change", "source-removed", "source-replaced", "access-unavailable", "dependency-unavailable"].includes(pending.reason)))) return false
-  if (draft.nextSteps.some((step) => !record(step) || !keys(step, ["kind", "topicRef", "message"]) ||
+  if (draft.nextSteps.some((step: ReviewDraft["nextSteps"][number]) => !record(step) || !keys(step, ["kind", "topicRef", "message"]) ||
     !["review-material", "confirm-scope", "check-source-access", "select-matching-period"].includes(step.kind) || !nonempty(step.message) ||
     (step.topicRef !== undefined && !topicRefs.has(step.topicRef)))) return false
   if (draft.previousReview === null) return true
@@ -97,9 +98,10 @@ function validDraft(draft: ReviewDraft, result: AuthorizedRoutineArtifactResult,
   const previous = draft.previousReview
   return keys(previous, ["id", "version", "createdAt", "sourceRefs", "sections", "comments", "previousReviewRef"]) && nonempty(previous.id) &&
     count(previous.version) && previous.version > 0 && date(previous.createdAt) && (previous.previousReviewRef === undefined || nonempty(previous.previousReviewRef)) && Array.isArray(previous.sourceRefs) && sourcesBound(previous.sourceRefs, result.output.sourceRefs) &&
-    Array.isArray(previous.sections) && previous.sections.every((section) => record(section) && keys(section, ["id", "title", "period", "content", "count", "sourceRefs"]) && nonempty(section.id) && typeof section.title === "string" && count(section.count) &&
+    Array.isArray(previous.sections) && previous.sections.every((section: PreservedReview["sections"][number]) => record(section) && keys(section, ["id", "title", "period", "content", "count", "sourceRefs"]) && nonempty(section.id) && typeof section.title === "string" && count(section.count) &&
       Array.isArray(section.sourceRefs) && sourcesBound(section.sourceRefs, previous.sourceRefs) && isSfPeriod(section.period) &&
       validSectionContents(draftSection(section)) &&
+      validReviewCommentRefs(section.content, previous.comments) &&
       digestSfValue(section.sourceRefs) === digestSfValue((section.content as DomainProjection).context.sourceRefs) &&
       sourcesBound(reviewProjectionSources(section.content as DomainProjection), previous.sourceRefs) &&
       matchesProjectionPrincipal(section.content as DomainProjection, context)) &&
@@ -128,6 +130,7 @@ function validAgendaSection(section: ReviewSection, result: AuthorizedRoutineArt
   return record(section) && keys(section, ["id", "title", "period", "recordCount", "projection", "agendaNote", "outcome", "outcomeComparison", "chart", "comments"]) &&
     count(section.recordCount) && validSectionContents(section) && matchesProjectionPrincipal(section.projection, context) &&
     sourcesBound(reviewProjectionSources(section.projection), result.output.sourceRefs) &&
+    validReviewCommentRefs(section.projection, section.comments ?? []) &&
     (section.agendaNote === undefined || (typeof section.agendaNote === "string" && section.agendaNote.length <= 2000)) &&
     (section.comments === undefined || section.comments.every((comment) => validComment(comment, result.output.sourceRefs)))
 }

@@ -226,3 +226,42 @@ test("explicit agenda gaps remain present alongside the complete selected sectio
     agendaGaps: gaps, agendaSnapshot: { sectionRefs: ["budget"], sections: [f.section], gaps }, draft: { coverage: { selectedTopics: 1, includedTopics: 1 } },
   } })
 })
+
+test("a prior C05 comment association is bound to its original full comment digest", async () => {
+  const f = await fixture()
+  const comment = structuredClone(f.section.comments![0]!)
+  const projection = { ...structuredClone(f.projection), reviewCommentRefs: [{ id: comment.id, version: comment.version, digest: digestSfValue(comment) }] }
+  f.content.draft.previousReview = { id: "prior-review", version: 1, createdAt: comment.createdAt, sourceRefs: [f.source],
+    sections: [{ id: "prior-budget", title: "Prior budget", period, count: 1, sourceRefs: [f.source], content: projection }], comments: [comment] }
+  f.seal()
+  expect((await f.reader.read("run", f.context)).status).toBe("ok")
+  comment.content = "Changed prior comment sentinel"
+  f.seal()
+  const denied = await f.reader.read("run", f.context)
+  expect(denied).toEqual({ status: "unavailable", reason: "routine-review-draft-invalid" })
+  expect(JSON.stringify(denied)).not.toContain(comment.content)
+})
+
+test("an agenda comment association cannot borrow a comment from a different preserved review", async () => {
+  const f = await fixture()
+  const other = { ...structuredClone(f.section.comments![0]!), id: "other-review-comment", content: "Unselected historical comment sentinel" }
+  f.content.draft.previousReview = { id: "prior-review", version: 1, createdAt: other.createdAt, sourceRefs: [f.source],
+    sections: [{ id: "prior-budget", title: "Prior budget", period, count: 1, sourceRefs: [f.source], content: structuredClone(f.projection) }], comments: [other] }
+  for (const projection of [f.content.draft.sections[0]!.content, f.content.agendaSnapshot.sections[0]!.projection]) {
+    Object.assign(projection, { reviewCommentRefs: [{ id: other.id, version: other.version, digest: digestSfValue(other) }] })
+  }
+  f.seal()
+  const read = await f.reader.read("run", f.context)
+  expect(read).toEqual({ status: "unavailable", reason: "routine-review-agenda-invalid" })
+  expect(JSON.stringify(read)).not.toContain(other.content)
+})
+
+test("a factual result without an agenda cannot retain a dangling comment association", async () => {
+  const f = await fixture()
+  const comment = f.section.comments![0]!
+  Object.assign(f.content.draft.sections[0]!.content, { reviewCommentRefs: [{ id: comment.id, version: comment.version, digest: digestSfValue(comment) }] })
+  const { agendaSnapshot: _agenda, ...legacy } = f.content
+  f.output.content = legacy as unknown as JsonValue
+  f.seal()
+  expect(await f.reader.read("run", f.context)).toEqual({ status: "unavailable", reason: "routine-review-comment-association-invalid" })
+})

@@ -1,6 +1,8 @@
 import { expect, test } from "bun:test"
 import { DashboardPortfolio } from "../../../runtime/dashboard-portfolio.ts"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
+import { object, rows } from "../../../runtime/contract.ts"
+import { sfSourceIdentity } from "../../../product/integration/source-lifecycle.ts"
 import { isThread } from "../../../product/collaboration/threads.ts"
 import { createThreadHistoryFixture } from "./thread-history-fixture.ts"
 import { available } from "./relations-fixture.ts"
@@ -66,7 +68,9 @@ test("authorized historical messages keep their original basis and a new answer 
     expect(available(await port.threadHistory.readVersion(thread.id, nextMessage.id, nextMessage.incarnation, 1, fixture.read))).toEqual(newHistory)
     const retry = available(await port.recipientActions.reply(thread.id, newBody, newMutation, await fixture.admit("collaboration.thread.reply", { id: thread.id, body: newBody, mutation: newMutation })))
     expect(retry.messages).toEqual(next.messages)
-    const stored = available(await fixture.state.read(fixture.request(), "threads", (state) => state.threads))
+    const storedState = await fixture.state.read(fixture.request(), "threads", (state) => state.threads)
+    if (storedState.status !== "ok") throw new Error("canonical threads unavailable")
+    const stored = storedState.value
     expect(Object.entries(stored).filter(([key, value]) => isThread(value) && key === value.id)).toHaveLength(1)
     const resolutionEntry = Object.entries(stored).find(([key]) => key.startsWith("sf:thread-resolution-history:"))
     if (!resolutionEntry) throw new Error("resolution archive missing")
@@ -78,7 +82,9 @@ test("authorized historical messages keep their original basis and a new answer 
         return { commit: true, value: true }
       })
       expect(attacked).toMatchObject({ status: "denied", reason: "thread-history-write-outside-authority" })
-      expect(available(await fixture.state.read(fixture.request(), "threads", (state) => state.threads[resolutionEntry[0]]))).toEqual(resolutionEntry[1])
+      const unchanged = await fixture.state.read(fixture.request(), "threads", (state) => state.threads[resolutionEntry[0]])
+      if (unchanged.status !== "ok") throw new Error("resolution archive unavailable")
+      expect(unchanged.value).toEqual(resolutionEntry[1])
     }
     expect(await fixture.snapshots()).toEqual(changed)
     const nextAnswer = available(await port.answerEvidence.issue(thread.id, nextMessage.id, fixture.read)).refId
@@ -97,7 +103,17 @@ test("authorized historical messages keep their original basis and a new answer 
     fixture.gate.dashboard = true
     expect(available(await port.threadHistory.readVersion(thread.id, message.id, message.incarnation, 1, fixture.read))).toEqual(oldHistory)
     await fixture.mutate("dashboard", DashboardPortfolio.domain, { page: "All Projects", action: "delete", id: "project", version: changed.dashboard.versions["projects:project"]!.version, values: {} })
-    await fixture.mutate("dashboard", DashboardPortfolio.domain, { page: "All Projects", action: "save", version: 0, values: { name: "Replacement", budget: 100, spent: 20, status: "In Progress", risk: "Low", notes: "New incarnation" } }, "project")
+    expect((await port.threadReads.readHistorical(thread.id, fixture.read)).status).not.toBe("ok")
+    // The business command refuses reuse of a tombstoned ID. Inject the hostile storage replacement
+    // explicitly to exercise the real lifecycle/reader boundary without claiming a valid domain write.
+    const deleted = await fixture.snapshots()
+    const oldPhysical = sfSourceIdentity(deleted.dashboard, "projects", "project")
+    await fixture.persistence.transaction("dashboard", async (snapshot) => {
+      snapshot.data.projects = [...rows(snapshot.data.projects), { ...object(rows(changed.dashboard.data.projects).find((row) => row.id === "project")), id: "project", name: "Replacement", status: "In Progress", notes: "Replacement physical identity" }]
+      return { commit: true, value: undefined }
+    })
+    const replaced = await fixture.snapshots()
+    expect(sfSourceIdentity(replaced.dashboard, "projects", "project")?.incarnation).not.toBe(oldPhysical?.incarnation)
     expect((await port.threadReads.readHistorical(thread.id, fixture.read)).status).not.toBe("ok")
     expect((await port.threadHistory.readVersion(thread.id, message.id, message.incarnation, 1, fixture.read)).status).not.toBe("ok")
     expect(digestSfValue(historical)).toBe(digestSfValue(oldHistory))

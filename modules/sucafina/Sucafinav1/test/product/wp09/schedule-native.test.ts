@@ -165,8 +165,7 @@ test("a changed schedule revision during result recovery cannot return its older
   const { host, context, native, resultAccess } = lifecycleFixture()
   host.resultAccess = { readResult: async (runRef, binding) => {
     const opened = await resultAccess.readResult(runRef, binding)
-    native.revision++
-    native.enabled = false
+    host.schedules.get = () => Effect.succeed({ ...native, revision: native.revision + 1, enabled: false })
     return opened
   } }
   expect(await readNativeRoutineSchedule("schedule", context, host)).toEqual({ status: "stale", reason: "schedule-changed" })

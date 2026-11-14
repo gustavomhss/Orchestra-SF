@@ -137,8 +137,11 @@ function messageBasis(thread: Thread, message: Message): ThreadSourceContext | u
 }
 
 function sameThreadSelector(thread: Thread, basis: ThreadSourceContext, continuityProven: boolean) {
-  if (digestSfValue(thread.period) !== digestSfValue(basis.period)) return false
-  const selector = (ref: BusinessEvidenceRef) => ref.kind === "record" ? { installationId: ref.installationId, projectId: ref.projectId, surface: ref.target.surface, type: ref.target.recordType, id: ref.target.recordId, ...(continuityProven ? {} : { incarnation: ref.target.incarnation }), fields: [...ref.target.fields].sort(), period: ref.target.period } : ref
+  // The historical C06 reader proves every message basis against the same
+  // physical source with current ACL. Without that reader, scopes/periods must
+  // remain exact. Capture still requires its explicit continuity callback below.
+  if (!continuityProven && digestSfValue(thread.period) !== digestSfValue(basis.period)) return false
+  const selector = (ref: BusinessEvidenceRef) => ref.kind === "record" ? { installationId: ref.installationId, projectId: ref.projectId, surface: ref.target.surface, type: ref.target.recordType, id: ref.target.recordId, ...(continuityProven ? {} : { incarnation: ref.target.incarnation, period: ref.target.period }), fields: [...ref.target.fields].sort() } : ref
   return digestSfValue(thread.evidenceRefs.map(selector).map(digestSfValue).sort()) === digestSfValue(basis.evidenceRefs.map(selector).map(digestSfValue).sort())
 }
 
@@ -147,11 +150,12 @@ function captureSources(sources: readonly SourceRef[], basis: ThreadSourceContex
   // Existing producer mappings can cover non-record sources. They still authorize
   // the complete original body; this branch never creates a continuity claim.
   if (!records.length) return structuredClone([...sources])
-  const matches = (source: SourceRef, ref: typeof records[number]) => source.surface === ref.target.surface && source.type === ref.target.recordType && source.id === ref.target.recordId && (continuityProven || source.incarnation === ref.target.incarnation) && digestSfValue([...source.fields].sort()) === digestSfValue([...ref.target.fields].sort()) && digestSfValue(source.period) === digestSfValue(ref.target.period)
+  const matches = (source: SourceRef, ref: typeof records[number]) => source.surface === ref.target.surface && source.type === ref.target.recordType && source.id === ref.target.recordId && (continuityProven || source.incarnation === ref.target.incarnation && digestSfValue(source.period) === digestSfValue(ref.target.period)) && digestSfValue([...source.fields].sort()) === digestSfValue([...ref.target.fields].sort())
   if (sources.some((source) => !records.some((ref) => matches(source, ref))) || records.some((ref) => !sources.some((source) => matches(source, ref)))) return undefined
+  if (sources.some((source) => new Set(records.filter((ref) => matches(source, ref)).map((ref) => digestSfValue(ref.target))).size !== 1)) return undefined
   return sources.map((source) => {
     const matched = records.find((ref) => matches(source, ref))!
-    return { ...structuredClone(source), incarnation: matched.target.incarnation, version: matched.target.version }
+    return { ...structuredClone(source), incarnation: matched.target.incarnation, version: matched.target.version, period: structuredClone(matched.target.period!) }
   })
 }
 

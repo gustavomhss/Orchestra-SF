@@ -1,4 +1,4 @@
-import { matchesSelectedSources } from "./references.ts"
+import { selectedReviewComments } from "./comment-selection.ts"
 import type { ReviewChart } from "./port.ts"
 import type { DomainProjection, PreservedReview } from "../contracts/context.ts"
 import type PptxGenJS from "pptxgenjs"
@@ -94,8 +94,8 @@ export function reviewCoverageLines(review: PreservedReview, sectionRefs: readon
   if (new Set(sectionRefs).size !== sectionRefs.length) return undefined
   const sections = sectionRefs.map((id) => review.sections.find((section) => section.id === id))
   if (sections.some((section) => !section)) return undefined
-  const selectedRefs = sections.flatMap((section) => section?.sourceRefs ?? [])
-  const comments = review.comments.filter((comment) => matchesSelectedSources(comment.sourceRefs, selectedRefs))
+  const comments = selectedReviewComments(review, sectionRefs)
+  if (!comments) return undefined
   return [
     `Coverage: ${sections.length} section(s) in selection order.`,
     ...sections.flatMap((section) => section ? [coverageLine(section)] : []),
@@ -192,3 +192,4 @@ function wide(char: string) {
     || (code >= 0x1f300 && code <= 0x1faff)
     || (code >= 0x20000 && code <= 0x3fffd)
 }
+

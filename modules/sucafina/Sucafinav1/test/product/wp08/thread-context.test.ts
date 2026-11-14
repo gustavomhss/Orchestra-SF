@@ -32,4 +32,5 @@ test("message bases preserve immutable document and case supplements and reject 
   const replacedEvent = signed({ ...event, target: { ...event.target, eventId: "different-event" } })
   expect(threadMessageContext(thread, { ...answered, sourceContext: { ...basis, evidenceRefs: [current, document, replacedEvent] } })).toBeUndefined()
   expect(isThread({ ...thread, messages: [message, { ...answered, sourceContext: { ...basis, evidenceRefs: [current, document] } }] })).toBe(false)
+  expect(isThread({ ...thread, evidenceRefs: [source, { ...source, refId: "malformed-extra", target: { ...source.target, fields: null } }], messages: [answered] })).toBe(false)
 })

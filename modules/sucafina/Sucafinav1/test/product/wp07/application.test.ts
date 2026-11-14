@@ -4,6 +4,7 @@ import { tmpdir } from "node:os"
 import { join } from "node:path"
 import JSZip from "jszip"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
+import { extractReportText } from "./export-fixture.ts"
 import type { DomainProjection } from "../../../product/contracts/context.ts"
 import type { SfDomainValidation } from "../../../product/contracts/runtime.ts"
 import { decodeSfOperationInput, decodeSfOperationOutput } from "../../../product/contracts/schema-admission.ts"
@@ -184,7 +185,9 @@ test("HTTP opens a pinned C07 factual result and preserves its original values t
     const zip = await JSZip.loadAsync(bytes)
     const paths = Object.keys(zip.files).filter((path) => format === "docx" ? path === "word/document.xml" : path.startsWith("ppt/slides/slide") && path.endsWith(".xml"))
     expect(paths.length).toBeGreaterThan(0)
-    const document = (await Promise.all(paths.map((path) => zip.file(path)!.async("string")))).join("\n")
+    // Text nodes are product content. XML attributes include font size 1400
+    // (14pt), which is unrelated to the changed live monetary amount.
+    const document = (await extractReportText(new Uint8Array(bytes), format)).text
     expect(document).toContain("1320")
     expect(document).not.toContain("1400")
     expect(document).toContain("Discuss the preserved source")

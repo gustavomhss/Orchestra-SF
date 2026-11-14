@@ -32,7 +32,7 @@ export function createSourcingDossierPreparation(input: {
     revalidateProcurement: async (material, call) => {
       const current = await prepare(requestRef, call)
       // Stage/source versions remain exact; the displayed clock-derived age is an observation.
-      const digest = (value: ProcurementPreparation) => digestSfValue({ ...value, ...(value.sourcing ? { sourcing: { ...value.sourcing, context: routineContextMaterial(value.sourcing.context) } } : {}), request: { ...routineProjectionMaterial(value.request), values: value.request.values.map((item) => item.id === "ageDays" ? { ...item, value: null } : item) } })
+      const digest = (value: ProcurementPreparation) => digestSfValue({ ...value, ...(value.sourcing ? { sourcing: { ...value.sourcing, context: routineContextMaterial(value.sourcing.context) } } : {}), request: routineProjectionMaterial(value.request) })
       return current.status === "ok" && digest(current.value) === digest(material) && await input.revalidateAuthority(call)
     },
     revalidate: async (refs, call) => {

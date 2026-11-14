@@ -20,7 +20,10 @@ test("record history and replies retain an independently authorized immutable do
     const draft = { kind: "clarification" as const, sourceRef: source.refId, sourceIncarnation: source.target.incarnation, observedVersion: source.target.version, period: fixture.period, recipientRef: fixture.person.id, body: "Read the original document with this project.", evidenceRefs: [source, document] }
     const mutation = { expectedStorageVersion: await version(), idempotencyKey: "supplement-thread" }
     const created = available(await port.threads.create(draft, mutation, await fixture.admit("collaboration.thread.create", { draft, mutation })))
-    expect(available(await port.recipientThread(created.id, fixture.read)).current.evidenceRefs).toEqual([source, document])
+    const current = available(await port.recipientThread(created.id, fixture.read))
+    expect(current.current.evidenceRefs[0]).toMatchObject({ kind: "record", target: { recordType: "projects", recordId: "project", fields: source.target.fields, period: source.target.period, projectionDigest: source.target.projectionDigest } })
+    expect(current.current.evidenceRefs[1]).toEqual(document)
+    expect(current.historical?.evidenceRefs).toEqual([source, document])
     const before = await fixture.snapshots()
     await fixture.mutate("dashboard", DashboardPortfolio.domain, { page: "All Projects", action: "save", id: "project", version: before.dashboard.versions["projects:project"]!.version, values: { status: "On Hold" } })
     expect((await port.threadReads.readHistorical(created.id, fixture.read)).status).not.toBe("ok")

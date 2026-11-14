@@ -308,7 +308,7 @@ test("Chromium preserves the annual agenda, recovers a lost response and removes
       expect(section.period).toEqual(period)
       expect((section.content as DomainProjection).values.filter((value) => /^license:\d+:forecast$/.test(value.id)).map((value) => [value.id, value.value])).toEqual(Array.from({ length: 12 }, (_, index) => [`license:${index + 1}:forecast`, 120]))
     }
-    const screenshot = fileURLToPath(new URL("../../../../../../test-ci-evidence/wp07-browser-ui.png", import.meta.url))
+    const screenshot = fileURLToPath(new URL("../../../../e2e/test-results/lean-visual/wp07-browser-ui.png", import.meta.url))
     await mkdir(path.dirname(screenshot), { recursive: true })
     await timed("screenshot", () => page.screenshot({ path: screenshot, timeout: 5000 }))
     checkpoint("selection-revoke")
@@ -334,6 +334,22 @@ test("Chromium preserves the annual agenda, recovers a lost response and removes
     await expect(currentValue).toBeVisible()
     await expect(meeting.getByRole("heading", { name: "Preserved comments", exact: true })).toBeVisible()
     await expect(meeting.getByText(`${principalRef} · ${at} · v1: ${commentText}`, { exact: true })).toBeVisible()
+    checkpoint("meeting-current-conversation")
+    await meeting.getByRole("button", { name: "Open current conversation", exact: true }).click()
+    const conversation = meeting.getByRole("region", { name: "Current conversation", exact: true })
+    await expect(conversation.getByRole("heading", { name: "Current conversation", exact: true })).toBeVisible()
+    await expect(conversation.getByRole("listitem")).toHaveText([`${principalRef} · ${at} · v1: ${commentText}`])
+    await expect(meeting.getByRole("status")).toHaveText("Current conversation opened; the preserved review is unchanged.")
+    await expect(currentValue).toBeVisible()
+    const conversationScreenshot = fileURLToPath(new URL("../../../../e2e/test-results/lean-visual/wp07-current-conversation.png", import.meta.url))
+    await timed("current-conversation-screenshot", () => page.screenshot({ path: conversationScreenshot, timeout: 5000 }))
+    await Bun.write(path.join(path.dirname(conversationScreenshot), "wp07-browser-visual.json"), JSON.stringify({
+      schema: "wp07-browser-visual-v1", runId: process.env.GITHUB_RUN_ID ?? "unavailable", runAttempt: process.env.GITHUB_RUN_ATTEMPT ?? "unavailable", workflowSha: process.env.GITHUB_SHA ?? "unavailable", productSha: process.env.WP07_PRODUCT_SHA ?? "parent-maps-workflow-sha-to-product",
+      captures: ["wp07-browser-ui.png", "wp07-current-conversation.png"], capturedPhases: ["preserved annual review", "authorized current conversation beside unchanged captured values"],
+      fixture: "isolated Chromium, SQLite, real Planner/review/HTTP/browser; controlled historical evidence and C06 thread producer",
+      limits: ["Not a production host mount or native Relay/Session/SkillLoadReceipt execution.", "Images record these phases; the run conclusion and later revocation assertions remain in GitHub Actions results."], visualInspection: "pending",
+    }, null, 2))
+    expect(await storedReviews()).toHaveLength(2)
     await changeForecast(140)
     await meeting.getByRole("button", { name: "Next topic", exact: true }).click()
     await expect(meeting.getByRole("heading", { name: "First forecast · candidate", exact: true })).toBeVisible()
@@ -364,7 +380,7 @@ test("Chromium preserves the annual agenda, recovers a lost response and removes
     await expect(changed).toBeVisible()
     await expect(changed).not.toContainText(commentText)
     await expect(meeting.getByRole("heading", { name: "Preserved comments", exact: true })).toBeVisible()
-    await expect(meeting.getByRole("listitem").filter({ hasText: commentText })).toHaveText([
+    await expect(meeting.getByRole("listitem").filter({ hasText: commentText }).locator(":scope > span")).toHaveText([
       `${originalRef} · ${principalRef} · ${at} · v1: ${commentText}`,
       `${currentRef} · ${principalRef} · ${at} · v1: ${commentText}`,
     ])
@@ -386,7 +402,7 @@ test("Chromium preserves the annual agenda, recovers a lost response and removes
     await expect(meeting.getByRole("button", { name: "Open before item", exact: true })).toHaveCount(0)
     await expect(meeting.getByRole("button", { name: "Open after item", exact: true })).toHaveCount(0)
     await expect(meeting.getByRole("listitem").filter({ hasText: / · (changed|incompatible|added|removed): / })).toHaveCount(0)
-    await expect(meeting.getByRole("listitem").filter({ hasText: commentText })).toHaveText([`${originalRef} · ${principalRef} · ${at} · v1: ${commentText}`])
+    await expect(meeting.getByRole("listitem").filter({ hasText: commentText }).locator(":scope > span")).toHaveText([`${originalRef} · ${principalRef} · ${at} · v1: ${commentText}`])
     await meeting.getByRole("button", { name: "Next topic", exact: true }).click()
     await expect(meeting.getByRole("heading", { name: "First forecast · candidate", exact: true })).toBeVisible()
     await expect(originalValue).toBeVisible()
@@ -465,3 +481,4 @@ test("Chromium preserves the annual agenda, recovers a lost response and removes
   }
   if (failures.length) throw new AggregateError(failures, "WP07 browser regression or cleanup failed")
 }, 120000)
+

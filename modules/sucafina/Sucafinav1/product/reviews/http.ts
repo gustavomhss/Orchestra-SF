@@ -10,6 +10,7 @@ import type { createReviewClosurePort, ReviewActionHandoff } from "./closure-act
 import type { createReviewHumanPort } from "./human.ts"
 import type { createReviewAgendaSelection, ReviewAgendaItem } from "./selection.ts"
 import type { createReviewPort } from "./port.ts"
+import type { createReviewCurrentThread } from "./current-thread.ts"
 import type { createReviewComparisonPort } from "./comparison-port.ts"
 import type { createReviewContributionConsumer, ReviewContributionRequest } from "./contribution.ts"
 import type { createReviewRoutineSelection, RoutineReviewSelectionRequest } from "./routine-selection.ts"
@@ -27,6 +28,7 @@ export function createReviewHttp(input: {
   agenda?: ReturnType<typeof createReviewAgendaSelection>
   routineAgenda?: ReturnType<typeof createReviewRoutineSelection>
   comparison?: ReturnType<typeof createReviewComparisonPort>
+  currentThread?: ReturnType<typeof createReviewCurrentThread>
   contribution?: ReturnType<typeof createReviewContributionConsumer>
   download: ReturnType<typeof createReviewDownloadHandler>
   maxBodyBytes: number
@@ -35,7 +37,7 @@ export function createReviewHttp(input: {
   return async (request: Request, surface: string): Promise<Response | undefined> => {
     const url = new URL(request.url)
     const mode = url.searchParams.get("sf")
-    if (mode !== "review-read" && mode !== "review-preview" && mode !== "review-contribution" && mode !== "review-comparison" && mode !== "review-preserve" && mode !== "review-agenda" && mode !== "review-routine" && mode !== "review-close" && mode !== "review-closure" && mode !== "review-report" && mode !== "review-download") return undefined
+    if (mode !== "review-read" && mode !== "review-current-thread" && mode !== "review-preview" && mode !== "review-contribution" && mode !== "review-comparison" && mode !== "review-preserve" && mode !== "review-agenda" && mode !== "review-routine" && mode !== "review-close" && mode !== "review-closure" && mode !== "review-report" && mode !== "review-download") return undefined
     const json = (value: unknown, status: number) => new Response(JSON.stringify(value), { status, headers: { "Content-Type": "application/json", "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } })
     if (surface !== "dashboard" || url.origin !== input.origin || request.signal.aborted || url.searchParams.getAll("sf").length !== 1) return json({ status: "denied", reason: "review-unavailable" }, 403)
     if (mode === "review-download") {
@@ -140,14 +142,23 @@ export function createReviewHttp(input: {
       } finally { input.ui.finish(admitted.value) }
     }
     if (request.method !== "GET") return json({ status: "denied", reason: "method-unavailable" }, 405)
-    if ([...url.searchParams.keys()].some((key) => !["sf", "reviewRef"].includes(key)) || url.searchParams.getAll("reviewRef").length !== 1) return json({ status: "needs-input", reason: "invalid-reference" }, 400)
+    const currentConversation = mode === "review-current-thread"
+    if ([...url.searchParams.keys()].some((key) => !(currentConversation ? ["sf", "reviewRef", "commentId"] : ["sf", "reviewRef"]).includes(key)) || url.searchParams.getAll("reviewRef").length !== 1 || currentConversation && url.searchParams.getAll("commentId").length !== 1) return json({ status: "needs-input", reason: "invalid-reference" }, 400)
     const reviewRef = url.searchParams.get("reviewRef") ?? ""
     if (!reviewRef.trim() || reviewRef.length > 2048) return json({ status: "needs-input", reason: "invalid-reference" }, 400)
-    const digest = digestSfValue({ reviewRef })
+    const commentId = currentConversation ? url.searchParams.get("commentId") ?? "" : undefined
+    if (currentConversation && (!commentId?.trim() || commentId.length > 8192)) return json({ status: "needs-input", reason: "invalid-reference" }, 400)
+    const digest = digestSfValue(currentConversation ? { reviewRef, commentId } : { reviewRef })
     const admitted = await input.ui.admit(request, "sf_review_prepare", digest)
     if (admitted.status !== "ok") return json({ status: "denied", reason: "review-unavailable" }, 403)
     try {
       if (!await input.ui.validate(admitted.value, "sf_review_prepare", digest) || input.ui.requestFor(admitted.value) !== request || !await input.ui.revalidate(admitted.value)) return json({ status: "denied", reason: "review-unavailable" }, 403)
+      if (currentConversation) {
+        if (!input.currentThread) return json({ status: "unavailable", reason: "current-thread-producer-unavailable" }, 503)
+        const result = await input.currentThread(reviewRef, commentId!, admitted.value)
+        if (!await input.ui.revalidate(admitted.value)) return json({ status: "denied", reason: "current-thread-unavailable" }, 403)
+        return json(result, result.status === "ok" ? 200 : result.status === "needs-input" ? 400 : result.status === "denied" ? 403 : 503)
+      }
       if (mode === "review-comparison") {
         if (!input.comparison) return json({ status: "unavailable", reason: "comparison-producer-unavailable" }, 503)
         const result = await input.comparison.read(reviewRef, admitted.value)

@@ -11,6 +11,7 @@ import { decodeSfContributionEnvelope, decodeSfOperationOutput } from "../contra
 import type { ReviewContribution, ReviewContributionRequest } from "./contribution.ts"
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
 import type { RoutineReviewSelection, RoutineReviewSelectionRequest } from "./routine-selection.ts"
+import type { ReviewCurrentThread } from "./current-thread.ts"
 
 /** Uses the mounted application's same-origin route; each read obtains a fresh host lease. */
 export function createReviewBrowser(input: {
@@ -41,10 +42,22 @@ export function createReviewBrowser(input: {
     if (!response?.ok || !isResult(value) || value.status !== "ok" || !value.value || typeof value.value !== "object" || !("comparison" in value.value) || !("forwardings" in value.value) || !Array.isArray(value.value.forwardings) || !("forwardingCoverage" in value.value) || !["complete", "partial", "unavailable"].includes(String(value.value.forwardingCoverage)) || !("limitations" in value.value) || !Array.isArray(value.value.limitations)) return { status: "unavailable", reason: "review-comparison-unavailable" }
     return { status: "ok", value: value.value as ReviewComparisonRead }
   }
-  const view = createMeetingViewFromReads({ reviewRef: input.reviewRef, read, readComparison, checkUpdate: input.checkUpdate, requestUpdate: input.requestUpdate, openSource: input.openSource, openReviewSection: input.openReviewSection })
+  const readCurrentThread = async (reviewRef: string, commentId: string): Promise<PortResult<ReviewCurrentThread>> => {
+    const url = reviewUrl("review-current-thread")
+    url.searchParams.set("reviewRef", reviewRef)
+    url.searchParams.set("commentId", commentId)
+    const response = await fetch(url, { credentials: "same-origin", cache: "no-store" }).catch(() => undefined)
+    const result: unknown = await response?.json().catch(() => undefined)
+    if (!response?.ok || !isResult(result) || result.status !== "ok" || !result.value || typeof result.value !== "object") return { status: "unavailable", reason: "current-thread-unavailable" }
+    const value = result.value as Partial<ReviewCurrentThread>
+    if (typeof value.threadId !== "string" || !value.threadId.trim() || value.view !== "current" || !["comment", "review"].includes(String(value.kind)) || !Array.isArray(value.messages) || value.messages.some((message) => !message || typeof message.id !== "string" || typeof message.incarnation !== "string" || typeof message.body !== "string" || typeof message.authorRef !== "string" || typeof message.createdAt !== "string" || !Number.isSafeInteger(message.version) || message.version < 1)) return { status: "unavailable", reason: "current-thread-unavailable" }
+    return { status: "ok", value: value as ReviewCurrentThread }
+  }
+  const view = createMeetingViewFromReads({ reviewRef: input.reviewRef, read, readComparison, readCurrentThread, checkUpdate: input.checkUpdate, requestUpdate: input.requestUpdate, openSource: input.openSource, openReviewSection: input.openReviewSection })
   return {
     ...view,
     readComparison,
+    readCurrentThread,
     async confirmAction(handoff: ReviewActionHandoff): Promise<PortResult<{ closureRef: string; review: PreservedReview; topic: HotTopic; relationId: string }>> {
       const { response, result } = await post("review-close", { reviewRef: input.reviewRef, handoff })
       if (!response?.ok) return { status: "unavailable", reason: "handoff-unavailable" }

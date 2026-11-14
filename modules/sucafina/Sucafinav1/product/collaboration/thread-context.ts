@@ -11,7 +11,7 @@ export type ThreadSourceContext = Pick<CollaborationThread, "sourceRef" | "sourc
  */
 export function threadMessageContext(thread: CollaborationThread, message: CollaborationThread["messages"][number]): ThreadSourceContext | undefined {
   const selected = message.sourceContext ?? thread
-  if (!validThreadSourceContext(selected)) return undefined
+  if (!validThreadSourceContext(thread) || !validThreadSourceContext(selected)) return undefined
   const original = thread.evidenceRefs.find((ref) => ref.refId === thread.sourceRef)
   const source = selected.evidenceRefs.find((ref) => ref.refId === selected.sourceRef)
   if (!original || !source || original.kind !== "record" || source.kind !== "record" || digestSfValue(selector(original)) !== digestSfValue(selector(source)) || digestSfValue(selected.period) !== digestSfValue(thread.period)) return undefined

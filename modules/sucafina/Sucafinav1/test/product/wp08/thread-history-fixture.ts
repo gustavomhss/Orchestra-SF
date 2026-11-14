@@ -11,8 +11,8 @@ import type { BusinessEvidenceRef, BusinessEvidenceResolution } from "../../../p
 import type { DomainProjection } from "../../../product/contracts/context.ts"
 import { available, createRelationsFixture } from "./relations-fixture.ts"
 
-/** Actual SQLite/domain/BCS/host consumers; only the historical source grant+archive is injected.
- * It is deliberately disabled initially and is NOT proof that the production C17 host archives history.
+/** Actual SQLite/domain/BCS/host consumers and Dashboard historical access verifier.
+ * The capture archive/availability switch is injected; this does NOT prove a production C17 archive.
  */
 export async function createThreadHistoryFixture(options: { supplement?: { reference: BusinessEvidenceRef; authorized: () => boolean } } = {}) {
   const threadHistoryWrites = new WeakSet<object>()
@@ -23,6 +23,11 @@ export async function createThreadHistoryFixture(options: { supplement?: { refer
   const issueForActor: NonNullable<Parameters<typeof createCollaborationHost>[0]["issueForActor"]> = (target, context) => issue({ recordType: target.recordType, recordId: target.recordId, fields: target.fields, period: target.period }, context)
   const refresh = createWorkSourceRefresh({ host: fixture.host, issueForActor, authorize: (ref, context) => fixture.authority.sources([ref], context) })
   const source = createDashboardConfirmationObserver({ host: fixture.host, scopedSources: fixture.persistence, readProjection: (selection, context) => fixture.records.read(selection.reference, context) })
+  const historicalAccess = async (ref: BusinessEvidenceRef, context: Parameters<typeof source.prepareHistoricalReissue>[1]) => {
+    if (ref.kind !== "record") return false
+    const grant = await source.prepareHistoricalReissue(ref, context)
+    return grant.status === "ok" && await fixture.persistence.transactionAll!(async () => ({ commit: false, value: await grant.value.fence() }))
+  }
   const evidence = createSfBusinessContext({
     revalidate: fixture.host.revalidate,
     resolveSource: async (ref, context): Promise<BusinessEvidenceResolution> => {
@@ -34,7 +39,7 @@ export async function createThreadHistoryFixture(options: { supplement?: { refer
       const live = await refresh(ref, context)
       if (live.status !== "ok") return current
       const projection = await fixture.records.read(live.value.refId, context)
-      if (projection.status !== "ok") return current
+      if (projection.status !== "ok" || !await historicalAccess(ref, context)) return current
       return { state: "historical", ref, currentRef: live.value, authorizedProjection: captured.projection, differences: captured.projection.values.flatMap((before) => {
         const after = projection.value.values.find((value) => value.id === before.id)
         return after && before.value !== after.value ? [{ field: before.id, before: before.value, after: after.value }] : []
@@ -43,7 +48,7 @@ export async function createThreadHistoryFixture(options: { supplement?: { refer
     proveContinuity: async (original, current, context) => {
       if (!historical.allowed || context.binding.principalRef !== fixture.person.id || !archive.has(original.refDigest) || original.kind !== "record") return false
       const live = await refresh(original, context)
-      return live.status === "ok" && digestSfValue(live.value) === digestSfValue(current)
+      return live.status === "ok" && digestSfValue(live.value) === digestSfValue(current) && await historicalAccess(original, context)
     },
     recall: async () => [],
     emitFromLedger: async () => ({ status: "unavailable", sourceEventId: "", scanner: { name: "", version: "", status: "unavailable" }, reason: "not-selected" }),

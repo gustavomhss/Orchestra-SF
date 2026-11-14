@@ -4,7 +4,14 @@ import type { DomainProjection } from "../../../product/contracts/context.ts"
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
 
 const context = {} as TrustedDomainContext
-const projection = { version: 8, values: [], components: [], missing: [] } as unknown as DomainProjection
+const projection: DomainProjection = {
+  context: { installationId: "i", projectId: "p", principalRef: "reader", accessRevision: "1", policyVersion: "1", surface: "planner", period: { start: "2027-01-01", end: "2027-01-31" }, currency: "USD", sourceRefs: [], capabilities: [] },
+  version: 8,
+  engineVersion: "planner-v1",
+  values: [],
+  components: [],
+  missing: [],
+}
 
 describe("factual review", () => {
   test("uses scoped validity despite a newer global version and deduplicates topics", async () => {

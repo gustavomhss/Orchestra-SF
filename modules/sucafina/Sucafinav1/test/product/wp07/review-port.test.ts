@@ -3,7 +3,7 @@ import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { openLocalStore } from "../../../runtime/local-store.ts"
-import { digestSfValue } from "../../../product/contracts/canonical.ts"
+import { digestSfEvidenceRef, digestSfValue } from "../../../product/contracts/canonical.ts"
 import { createSfProductState } from "../../../product/host-binding/state-provider.ts"
 import { createReviewPort } from "../../../product/reviews/port.ts"
 import type { ReviewSection } from "../../../product/reviews/port.ts"
@@ -623,7 +623,8 @@ test("decision exports retain conditioned coverage and reject an invented comple
   } as const
   expect(validReviewDecision(decision)).toBe(true)
   expect(validReviewDecision({ ...decision, comparison: { ...decision.comparison, comparisonStatus: "complete", completeDifference: 20 } })).toBe(false)
-  const outcomeEvidence = { schema: "sf-evidence-v1", refId: "outcome-source", installationId: "i", projectId: "p", refDigest: "digest", evidenceLevel: "observed", kind: "record", target: { surface: "planner", recordType: "outcome", recordId: "one", incarnation: "inc", version: 1, fields: ["value"], projectionDigest: "digest" } } as const
+  const outcomeBasis = { schema: "sf-evidence-v1", refId: "outcome-source", installationId: "i", projectId: "p", refDigest: "", evidenceLevel: "observed", kind: "record", target: { surface: "planner", recordType: "outcome", recordId: "one", incarnation: "inc", version: 1, fields: ["value"], projectionDigest: "digest" } } as const
+  const outcomeEvidence = { ...outcomeBasis, refDigest: digestSfEvidenceRef(outcomeBasis) }
   const outcome = { caseRef: { id: "case", version: 1, incarnation: "inc" }, expected: 100, observed: 95, cutoff: "2026-12-31", currency: "USD", sourceRefs: [outcomeEvidence], limitations: ["not a causal claim"] } as const
   const outcomeComparison = { status: "comparable", caseRef: outcome.caseRef, choiceId: "choice", criterionRef: "cost", unit: "USD", currency: "USD", period, expected: 100, observed: 95, delta: -5, cutoff: outcome.cutoff, sourceRefs: outcome.sourceRefs, baselineRefs: [outcomeEvidence], limitations: outcome.limitations, compatibility: { metric: true, unit: true, period: true, currency: true, coverage: "complete", compatible: true }, summary: { facts: ["Observed comparison"], pending: ["No cause inferred"], causality: "not-attributed" }, observation: outcome } as const
   const storage = testPersistence()
@@ -659,3 +660,4 @@ test("decision exports retain conditioned coverage and reject an invented comple
     expect(xml).not.toContain("Complete difference: 20")
   }
 })
+

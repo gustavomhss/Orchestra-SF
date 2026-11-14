@@ -80,6 +80,13 @@ jobs:
           set -o pipefail
           bun run check:guards --base origin/dev 2>&1 | tee "$RUNNER_TEMP/astra-collaboration-evidence/guards.log"
 
+      - name: Generate WP07 export inspection fixtures
+        if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
+        env:
+          WP07_EXPORT_DIR: ${{ runner.temp }}/astra-collaboration-evidence/exports
+          WP07_PRODUCT_SHA: ${{ steps.product.outputs.sha }}
+        run: bun run modules/sucafina/Sucafinav1/test/product/wp07/generate-export-fixtures.ts
+
       - name: Upload check evidence
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2

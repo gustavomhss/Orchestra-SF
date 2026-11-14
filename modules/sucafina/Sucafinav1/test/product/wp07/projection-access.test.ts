@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test"
+import { digestSfEvidenceRef } from "../../../product/contracts/canonical.ts"
 import type { BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
 import type { SourceRef } from "../../../product/contracts/context.ts"
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
@@ -14,7 +15,10 @@ const context = { kind: "ui", binding: identity } as unknown as TrustedDomainCon
 
 function fixture() {
   const source = (id: string): SourceRef => ({ surface: "dashboard", type: "projects", id, incarnation: id + "-original", version: 1, fields: ["amount"], period, observedAt: "2026-11-14T00:00:00Z" })
-  const evidence = (id: string): BusinessEvidenceRef => ({ schema: "sf-evidence-v1", refId: id, installationId: identity.installationId, projectId: identity.projectId, refDigest: id, evidenceLevel: "observed", kind: "record", target: { surface: "dashboard", recordType: "projects", recordId: id, incarnation: id + "-original", version: 1, fields: ["amount"], period, projectionDigest: id } })
+  const evidence = (id: string): BusinessEvidenceRef => {
+    const ref: BusinessEvidenceRef = { schema: "sf-evidence-v1", refId: id, installationId: identity.installationId, projectId: identity.projectId, refDigest: "", evidenceLevel: "observed", kind: "record", target: { surface: "dashboard", recordType: "projects", recordId: id, incarnation: id + "-original", version: 1, fields: ["amount"], period, projectionDigest: id } }
+    return { ...ref, refDigest: digestSfEvidenceRef(ref) }
+  }
   const productContext = { ...identity, surface: "dashboard" as const, period, currency: "USD", sourceRefs: [source("main")], capabilities: [] }
   const section: ReviewSection = { id: "budget", title: "Budget comparison", period, recordCount: 1, projection: {
     context: productContext, version: 1, engineVersion: "fixture-v1", missing: [],

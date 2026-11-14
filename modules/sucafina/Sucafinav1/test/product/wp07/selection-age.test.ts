@@ -20,7 +20,8 @@ function fixture() {
     const productContext: ProductContext = { ...context.binding, surface: "procurement", period, currency: "USD", sourceRefs: [source], capabilities: [] }
     return projectProcurementSource(record, productContext, evidence, state.at)
   }
-  const ports = { procurement: { read: async () => ({ status: "ok" as const, value: project() }) } } as ReviewAgendaPorts
+  const unavailable = async () => ({ status: "unavailable", reason: "not-selected" } as const)
+  const ports: ReviewAgendaPorts = { planner: { compareForecast: unavailable }, procurement: { read: async () => ({ status: "ok", value: project() }), readSupplier: unavailable, readContract: unavailable }, selectDashboardAgenda: unavailable }
   const agenda = createReviewAgendaSelection({ ports, revalidate: async () => state.allowed, now: () => state.at })
   return { state, project, agenda }
 }
