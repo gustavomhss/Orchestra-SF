@@ -1,0 +1,86 @@
+{
+  "schema": "sf-wp12-minimal-public-document-bundle-v1",
+  "publicationRound": "D27",
+  "state": "PREPARED_FOR_ROOT_PUBLICATION",
+  "topic": "scenario-calculation-read-scope",
+  "repository": "gustavomhss/Orchestra-SF",
+  "authoredFilesRewritten": false,
+  "payloads": [
+    {
+      "file": "README.md",
+      "originalScratchPath": "resume-input/own-missions/scenario-calculation-read-scope/README.md",
+      "bytes": 1750,
+      "sha256": "2ea1497d51a9a0a974dfe1ef7b35f7d1acf13c5b3136ea5b293fb8de07f3fbab",
+      "blob": "a644db75dcf37d89f64eb31205a35f94cc9a08a5",
+      "preservation": "BYTE_IDENTICAL"
+    },
+    {
+      "file": "audit.json",
+      "originalScratchPath": "resume-input/own-missions/scenario-calculation-read-scope/audit.json",
+      "bytes": 9502,
+      "sha256": "f4871bcefb9e7e91522f5e0d1674656ddcb4ddfd8ca6c8cc2622caac5f738718",
+      "blob": "51cdafc4a3efd479638bce30a144e6d1c5f46500",
+      "preservation": "BYTE_IDENTICAL"
+    },
+    {
+      "file": "source-pins.json",
+      "originalScratchPath": "resume-input/own-missions/scenario-calculation-read-scope/source-pins.json",
+      "bytes": 11238,
+      "sha256": "aa4a053da0c5b9099659888d496f989efb57ae5645eb160ed1fd554072182450",
+      "blob": "372c6ab2782dff0758ae87feda9309c0642d5f55",
+      "preservation": "BYTE_IDENTICAL"
+    },
+    {
+      "file": "independent-review-compose.json",
+      "originalScratchPath": "resume-input/own-missions/scenario-calculation-read-scope/independent-review-compose.json",
+      "bytes": 5925,
+      "sha256": "0681dd41202dd5ef1e5fdd559bc98ab03e5cd3876f6fba8c8c4a9c22e012ce19",
+      "blob": "4525dfbcfbc101d365af8f41b149f4ad3aaa848e",
+      "preservation": "BYTE_IDENTICAL"
+    }
+  ],
+  "reproduction": {
+    "index": "source-pins.json",
+    "sourceCount": 19,
+    "mechanism": "Retrieve each path at its immutable commit through GitHub MCP fetch_file; verify the exact UTF-8 bytes against the source SHA256 and Git blob SHA1 in the index. The url field is the corresponding immutable GitHub permalink.",
+    "urlTemplate": "https://github.com/gustavomhss/Orchestra-SF/blob/{commit}/{path}",
+    "gitBlobDefinition": "SHA1(UTF8(\"blob \" + byteLength + NUL) + originalBytes)",
+    "newlinePolicy": "Use the retrieved original bytes; do not pretty-print or normalize line endings."
+  },
+  "scratchMetadata": {
+    "bundled": false,
+    "originalManifest": {
+      "path": "resume-input/own-missions/scenario-calculation-read-scope/manifest.json",
+      "sha256": "692b089ebdfc8426e2aab3a097867d2a081e9fbc7a99649b5d87684cdb5fdc50",
+      "blob": "3a7437bc0c667f5891aaad8fdbdcd54b80faa283"
+    },
+    "meaning": "References in the frozen audit, README or independent review to local capsules, source files, logs and scratch manifests describe the original audit workspace. They are not additional bundled files or published source paths. Source evidence can be reproduced from the immutable index; original audit hashes remain unchanged.",
+    "excluded": [
+      "source-bytes.json",
+      "path-source-bytes.json",
+      "progress-source.json",
+      "observed-heads-and-directory.json",
+      "base/",
+      "owner/",
+      "path/",
+      "manifest.json (original scratch manifest)"
+    ],
+    "localFields": "Any local path in source-pins.json is provenance metadata from scratch, not a path required in this repository bundle."
+  },
+  "limits": {
+    "documentationOnly": true,
+    "productionSourceIncluded": false,
+    "sourceIntakeApplied": false,
+    "newRuntimeEvidence": false,
+    "productTestsRun": false,
+    "typecheckRun": false,
+    "ciRun": false,
+    "canonicalCriteriaUpgraded": false,
+    "recommendedIntakeForObservedFailure": []
+  },
+  "independentReview": {
+    "file": "independent-review-compose.json",
+    "status": "CONFIRMS_NOT_ON_OBSERVED_PREPARATION_PATH",
+    "scope": "Only applicability of the three files to the observed record-only ScenarioComparisonInput path, not global security, compatibility, performance or activation approval."
+  }
+}
