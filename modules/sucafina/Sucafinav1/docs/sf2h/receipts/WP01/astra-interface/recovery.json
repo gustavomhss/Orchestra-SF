@@ -1,0 +1,376 @@
+{
+  "schema": "astra-interface-recovery-v1",
+  "repository": "gustavomhss/Orchestra-SF",
+  "target_base": {
+    "branch": "sf2-stack",
+    "head": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+    "tree": "acf3b722ad55c090bef8e9dc2b3fac2d9ad570af"
+  },
+  "recovery_merge": {
+    "head": "23bfad4341008f33fde050bd0d66506fb4035d20",
+    "tree": "1e1e8813894664f5c4a5f25d39d0d0b3a99c69bb",
+    "parents": [
+      "6ce14163ec6de963b50ada3d610aa8161176adee",
+      "6f4360bf0bdd444a19a7d4f97e18306ae7618b6f"
+    ]
+  },
+  "sources": [
+    {
+      "pr": 25,
+      "wp": "WP01",
+      "branch": "astra-wp01",
+      "head": "6f4360bf0bdd444a19a7d4f97e18306ae7618b6f",
+      "tree": "514e64f2d5bf25cb2bc2cf0caeeeb2526d77e2b6",
+      "commits": [
+        {
+          "sha": "b0fa725b835149e222d48bd023b8899311abaefd",
+          "subject": "chore(sf): seed Astra WP01 from saved work"
+        },
+        {
+          "sha": "78b235769e3aaa123d1defe78b8108320f897378",
+          "subject": "fix(sucafina): harden WP01 recovery and authorized record search"
+        },
+        {
+          "sha": "e210916c1d0be2ee3602c25d02e4c10c68e79862",
+          "subject": "fix(sucafina): validate WP01 projections and record baseline checks"
+        },
+        {
+          "sha": "b11321bb51585913472d8b26c12b7ba5109860a8",
+          "subject": "feat(sucafina): connect contextual decisions and authorized case analysis"
+        },
+        {
+          "sha": "989abf6a03b864fc59f302cc188cc8c6b00c0bbf",
+          "subject": "fix(sucafina): preserve uncertain decisions and add independent review"
+        },
+        {
+          "sha": "0a0cfd2d74f0c3d094c5503c5bd5a4e9c8aa33fe",
+          "subject": "fix(sucafina): align recovery fixtures and bound browser lifecycle"
+        },
+        {
+          "sha": "0fa990d8c9ae44d06118493c75bf123cdccab2bd",
+          "subject": "test(sucafina): isolate browser processes and await UI outcomes"
+        },
+        {
+          "sha": "516f1d15f76e5e340609bd4a4b905e3a5f877cab",
+          "subject": "test(sucafina): share one browser and verify final process exit"
+        },
+        {
+          "sha": "61348f2279d301a5f9f8e28c562208ce3b8160ee",
+          "subject": "test(sucafina): synchronize the exact delayed decision read"
+        },
+        {
+          "sha": "6f4360bf0bdd444a19a7d4f97e18306ae7618b6f",
+          "subject": "docs(sucafina): publish WP01 hosted evidence and acceptance gaps"
+        }
+      ],
+      "receipts": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/ACCEPTANCE.md",
+          "mode": "100644",
+          "type": "blob",
+          "blob": "ee62a7f4ef64edca606f520cbd7a9da050169b5f",
+          "unchanged_in_published_interface": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/CI.json",
+          "mode": "100644",
+          "type": "blob",
+          "blob": "1d52ca9368c42f0d25db787b5d150dbf791664e8",
+          "unchanged_in_published_interface": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/IMPLEMENTATION.md",
+          "mode": "100644",
+          "type": "blob",
+          "blob": "9dc6446fad34c67bd8e0e148f774434091345db5",
+          "unchanged_in_published_interface": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/STATIC-W8.txt",
+          "mode": "100644",
+          "type": "blob",
+          "blob": "90ddc9f3ed83f948318b384f90fa438094c9d50b",
+          "unchanged_in_published_interface": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/TEST-S10.txt",
+          "mode": "100644",
+          "type": "blob",
+          "blob": "c84ef467a2ca916fb83ade903a07c4505b7debaa",
+          "unchanged_in_published_interface": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/TEST-S6.txt",
+          "mode": "100644",
+          "type": "blob",
+          "blob": "b167b4a4f610cc030a87e38bff1f9f2d2a1993bb",
+          "unchanged_in_published_interface": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/TEST-S7.txt",
+          "mode": "100644",
+          "type": "blob",
+          "blob": "de1058d266541bf3c0f51468fd169d0b7cf0e11c",
+          "unchanged_in_published_interface": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/TEST-S8.txt",
+          "mode": "100644",
+          "type": "blob",
+          "blob": "68452c4f2103503eaad4048f9bd9581d3824c4f4",
+          "unchanged_in_published_interface": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/TEST-S9.txt",
+          "mode": "100644",
+          "type": "blob",
+          "blob": "a5ced9844d8b108e090fafee5dd90fb4c07e9651",
+          "unchanged_in_published_interface": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP01/criteria.json",
+          "mode": "100644",
+          "type": "blob",
+          "blob": "f1ee8ca2b27d5da7def672f0efec9d246e9da4cd",
+          "unchanged_in_published_interface": true
+        }
+      ]
+    },
+    {
+      "pr": 21,
+      "wp": "WP02",
+      "branch": "astra-wp02",
+      "head": "6ce14163ec6de963b50ada3d610aa8161176adee",
+      "tree": "4a4d1736b051785f22493ba43d116020821e73be",
+      "commits": [
+        {
+          "sha": "855c17f66fd71964d88a63ca53fd90240159eb08",
+          "subject": "chore(sf): seed Astra WP02 from saved work"
+        },
+        {
+          "sha": "abe64592bb08858b55495b9f4710289bd357d64a",
+          "subject": "feat(sucafina): complete WP02 dashboard domain review and evidence adapters"
+        },
+        {
+          "sha": "38d340a8857b96904f7246320091c14c051f1929",
+          "subject": "fix(sucafina): resolve WP02 type findings and complete literal budget oracle"
+        },
+        {
+          "sha": "4c36e6fc6e69e4dd1e98b5d0d5c2e50962ccfe80",
+          "subject": "docs(sucafina): record WP02 surgical CI and complete criterion evidence"
+        },
+        {
+          "sha": "ae06ed61b7dff57aaf10f7ffdcc348a355374fbb",
+          "subject": "fix(sucafina): close dashboard host and contract gates"
+        },
+        {
+          "sha": "df31a6a47f70b72deb0d5d5f39ee156454447387",
+          "subject": "fix(sucafina): complete dashboard review and native capability paths"
+        },
+        {
+          "sha": "5a0f1acf9fa2cdc0171cf3f5178b61ab3bcd8d49",
+          "subject": "fix(sucafina): reconcile dashboard consumers and integrated proof gates"
+        },
+        {
+          "sha": "c59a01042298be0f5a5aaa33d47afc04ab3ab534",
+          "subject": "fix(sucafina): close WP02 review findings and qualify integrated consumers"
+        },
+        {
+          "sha": "276cf02edb8a4801cbc0127b08289a7203d689f7",
+          "subject": "test(sucafina): isolate WP02 Atlas proofs and qualify scanner controls"
+        },
+        {
+          "sha": "58b8e7c0dcc97809100987fbaaa70990fa832d10",
+          "subject": "fix(sucafina): bound Atlas recall work and synchronize draft conflict proof"
+        },
+        {
+          "sha": "23cefe55cdae8431eaf6efb6a3212901a58482ce",
+          "subject": "fix(sucafina): distinguish Atlas source content from observation time"
+        },
+        {
+          "sha": "d9829f0532f3f72a2b6b1e3af9ffce832b0e7969",
+          "subject": "test(sucafina): expose draft selection failures before bounded cleanup"
+        },
+        {
+          "sha": "e349d3f2d2dc8920f30a27d5968e6724e49ebe07",
+          "subject": "test(sucafina): isolate browser driver pipes in managed Node process"
+        },
+        {
+          "sha": "6ce14163ec6de963b50ada3d610aa8161176adee",
+          "subject": "test(sucafina): bridge browser transport through a private local pipe"
+        }
+      ],
+      "receipts": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/README.md",
+          "mode": "100644",
+          "type": "blob",
+          "blob": "96db34222638506c4362aede5db86dfd73b348f2",
+          "unchanged_in_published_interface": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/ci-evidence.json",
+          "mode": "100644",
+          "type": "blob",
+          "blob": "1fef410826f020e6ac988856d903d78a5e9870af",
+          "unchanged_in_published_interface": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/ci-request.json",
+          "mode": "100644",
+          "type": "blob",
+          "blob": "b87f31df5dca0c1125b7610b6df0fb76b53c9bb2",
+          "unchanged_in_published_interface": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/criteria.json",
+          "mode": "100644",
+          "type": "blob",
+          "blob": "8bf007777edd163104b82d2176728daa7c5d98df",
+          "unchanged_in_published_interface": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/criteria.md",
+          "mode": "100644",
+          "type": "blob",
+          "blob": "f5f1975947124608c3fed99ce6c325bfa30f9c1d",
+          "unchanged_in_published_interface": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/delivery-allocation-20261114.json",
+          "mode": "100644",
+          "type": "blob",
+          "blob": "3815b5e8b59a7c7c3dbf30a8eaefb78f6ed78ae7",
+          "unchanged_in_published_interface": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/guard-review.md",
+          "mode": "100644",
+          "type": "blob",
+          "blob": "ce6917c41a055750d64e64c05d56f64c9cbb92d1",
+          "unchanged_in_published_interface": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/integration/README.md",
+          "mode": "100644",
+          "type": "blob",
+          "blob": "2a298c4f2130ff90e89527ec856ed8b6369f932c",
+          "unchanged_in_published_interface": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/integration/historical-c12.md",
+          "mode": "100644",
+          "type": "blob",
+          "blob": "89beca5917d7e62e6e97d852c5a5efaab0af9468",
+          "unchanged_in_published_interface": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/integration/wp10-agenda.json",
+          "mode": "100644",
+          "type": "blob",
+          "blob": "af7ef3c3a39deb1b877efe2c0682b02f8ebdd41b",
+          "unchanged_in_published_interface": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/integration/wp10-agenda.patch",
+          "mode": "100644",
+          "type": "blob",
+          "blob": "68e3f1cd3a746e6d973a7b9596d3492172e69bad",
+          "unchanged_in_published_interface": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/integration/wp10-business-services.patch",
+          "mode": "100644",
+          "type": "blob",
+          "blob": "5745296ab69d4bf5d144c6ef1ce08748b55de2ed",
+          "unchanged_in_published_interface": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/integration/wp10-integration-combined.json",
+          "mode": "100644",
+          "type": "blob",
+          "blob": "ef6e366c5bad62a793050641f2f5a074483956db",
+          "unchanged_in_published_interface": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/integration/wp10-integration-combined.patch",
+          "mode": "100644",
+          "type": "blob",
+          "blob": "1a20a90e58ea3106f6c65a3a1fc008706531cc1f",
+          "unchanged_in_published_interface": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/integration/wp10-preview-feedback.patch",
+          "mode": "100644",
+          "type": "blob",
+          "blob": "89b6e4a457c18a1d743538d7fe110f9e4099f2ce",
+          "unchanged_in_published_interface": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/s1-b-e1-checkpoint-01.json",
+          "mode": "100644",
+          "type": "blob",
+          "blob": "1fd19e9d393dd246430336bfacba3beada15015e",
+          "unchanged_in_published_interface": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/s1-b-e1-checkpoint-02.json",
+          "mode": "100644",
+          "type": "blob",
+          "blob": "5c62cf7d02ad137d572f75a22eee89d2260a0999",
+          "unchanged_in_published_interface": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/s1-b-e1-checkpoint-03.json",
+          "mode": "100644",
+          "type": "blob",
+          "blob": "1964447c1025fc24842be0513753910e34fdf2a9",
+          "unchanged_in_published_interface": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/s1-b-e1-typecheck-01.json",
+          "mode": "100644",
+          "type": "blob",
+          "blob": "64e4816956c5c6d6899d8bbf1cb0806e156f9d7e",
+          "unchanged_in_published_interface": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/s1-b-e2-checkpoint-01.json",
+          "mode": "100644",
+          "type": "blob",
+          "blob": "d7d60608eb193e4b6a82f9a0296ce97cf1e4e758",
+          "unchanged_in_published_interface": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/semantic-decisions.json",
+          "mode": "100644",
+          "type": "blob",
+          "blob": "a9f8a65f60f1b5c04dccd6c7574a19b16689a882",
+          "unchanged_in_published_interface": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/typecheck-blockers.json",
+          "mode": "100644",
+          "type": "blob",
+          "blob": "e1d3cc6144e6d232189814322844dfc90cefa1c4",
+          "unchanged_in_published_interface": true
+        }
+      ]
+    }
+  ],
+  "total_recovered_commits": 24,
+  "total_preserved_historical_receipts": 32,
+  "immutable_plan": {
+    "head": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "campaign_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+    "handoff_head": "a3d29d011ba3607a57914701300f09117a3e2de9"
+  },
+  "verification": {
+    "published_interface_head": "50906b86da953f9e6fb24f989c51db0fc69496c1",
+    "all_source_heads_ancestors": true,
+    "historical_receipts_blob_exact": true,
+    "source_branches_updated": false,
+    "foreign_control_integrated": false,
+    "method": "Read-only local Git objects from the GitHub-reconciled source refs; current PR heads rechecked through GitHub MCP at 2026-11-14T09:57Z."
+  }
+}

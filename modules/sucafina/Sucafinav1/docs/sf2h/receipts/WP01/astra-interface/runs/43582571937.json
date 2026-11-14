@@ -1,0 +1,545 @@
+{
+  "schema": "astra-interface-ci-receipt-v1",
+  "repository": "gustavomhss/Orchestra-SF",
+  "run_id": 43582571937,
+  "job_id": 132410232822,
+  "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43582571937",
+  "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43582571937/job/132410232822",
+  "conclusion": "failure",
+  "cleanup_job_id": 132410837139,
+  "cleanup_conclusion": "success",
+  "source": "GitHub MCP existing run/jobs/logs and exact snapshot .ci-run.json; no run initiated by auditor",
+  "product_sha": "50906b86da953f9e6fb24f989c51db0fc69496c1",
+  "product_tree": "07681e28bfb16f216c738c54345661af1239dc3c",
+  "snapshot_sha": "ab306684ad09a7b83490664ecba77b12d6adcad9",
+  "snapshot_tree": "59050c9df9bce0cacad64aac8de8a48076caa945",
+  "snapshot_branch": "ci-run-linux-astra-interface-50906b86da-c41773934b-1",
+  "request_sha256": "c41773934b80847d7499cb480e479c7a23295b5cfffaf307c9be5fb2f2861a49",
+  "request_blob": "6598e0007501a050b48a5a013cb361869f5a04b4",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "packageSelector": "packages/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "./Sucafinav1/test/product/wp01/shell-recovery.test.ts",
+      "./Sucafinav1/test/product/wp01/unavailable-views.test.ts",
+      "./Sucafinav1/test/product/wp01/two-actor-conflict.test.ts",
+      "./Sucafinav1/test/product/wp01/shell-refresh.test.ts",
+      "./Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+    }
+  },
+  "envelope_proof": {
+    "onlyDelta": [
+      ".ci-run.json"
+    ],
+    "requestBlob": "6598e0007501a050b48a5a013cb361869f5a04b4",
+    "productTree": "07681e28bfb16f216c738c54345661af1239dc3c",
+    "snapshotTree": "59050c9df9bce0cacad64aac8de8a48076caa945"
+  },
+  "selection": [
+    "modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/shell-recovery.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/unavailable-views.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/two-actor-conflict.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/shell-refresh.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts"
+  ],
+  "attempt": 1,
+  "decoded_log": {
+    "path": "/workspace/scratch/080d03a98f2e/analysis/product-43582571937.log",
+    "bytes": 90337,
+    "sha256": "baaa0d0427336b116c1ccbdaf2023be488cae2bf7dd7c5158414e85dbdd63761"
+  },
+  "summary": {
+    "pass": 14,
+    "fail": 5,
+    "observations": 19,
+    "files_observed": 6,
+    "files_selected": 6,
+    "expect_calls": 130,
+    "elapsed_seconds": 67.58,
+    "bun_summary_present": true
+  },
+  "omni": {
+    "nonce": "10f83d574782dafc70907bce38cef90f",
+    "status": "pass",
+    "spawns": 1,
+    "delegated": 0
+  },
+  "file_results": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "pass_observations": 1,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "file_header_observed": true,
+      "beforeAll_failures": 0,
+      "afterAll_failures": 0,
+      "bodies_not_executed": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-recovery.test.ts",
+      "pass_observations": 11,
+      "fail_observations": 0,
+      "hook_failures": 0,
+      "file_header_observed": true,
+      "beforeAll_failures": 0,
+      "afterAll_failures": 0,
+      "bodies_not_executed": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/unavailable-views.test.ts",
+      "pass_observations": 2,
+      "fail_observations": 2,
+      "hook_failures": 1,
+      "file_header_observed": true,
+      "beforeAll_failures": 0,
+      "afterAll_failures": 1,
+      "bodies_not_executed": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/two-actor-conflict.test.ts",
+      "pass_observations": 0,
+      "fail_observations": 1,
+      "hook_failures": 1,
+      "file_header_observed": true,
+      "beforeAll_failures": 1,
+      "afterAll_failures": 0,
+      "bodies_not_executed": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-refresh.test.ts",
+      "pass_observations": 0,
+      "fail_observations": 1,
+      "hook_failures": 1,
+      "file_header_observed": true,
+      "beforeAll_failures": 1,
+      "afterAll_failures": 0,
+      "bodies_not_executed": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "pass_observations": 0,
+      "fail_observations": 1,
+      "hook_failures": 0,
+      "file_header_observed": true,
+      "beforeAll_failures": 0,
+      "afterAll_failures": 0,
+      "bodies_not_executed": false
+    }
+  ],
+  "observations": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "name": "WP01 starts one Node-owned Chromium through Omni before leasing it across files",
+      "status": "pass",
+      "duration_ms": 1470.97,
+      "log_line": 853,
+      "kind": "named_test"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-recovery.test.ts",
+      "name": "a real generic save with lost delivery stays unknown, preserves edits and never resends without a receipt",
+      "status": "pass",
+      "duration_ms": 1769.03,
+      "log_line": 861,
+      "kind": "named_test"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-recovery.test.ts",
+      "name": "a real generic POST refused with 401 removes protected drafts and has no effect",
+      "status": "pass",
+      "duration_ms": 742.81,
+      "log_line": 862,
+      "kind": "named_test"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-recovery.test.ts",
+      "name": "a real generic POST refused with 403 removes protected drafts and has no effect",
+      "status": "pass",
+      "duration_ms": 516.48,
+      "log_line": 863,
+      "kind": "named_test"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-recovery.test.ts",
+      "name": "a duplicate submit is fenced and a late successful response cannot restore a revoked page",
+      "status": "pass",
+      "duration_ms": 501.96,
+      "log_line": 864,
+      "kind": "named_test"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-recovery.test.ts",
+      "name": "loading a current version after a real conflict revalidates access before showing any stored fields",
+      "status": "pass",
+      "duration_ms": 546.7,
+      "log_line": 865,
+      "kind": "named_test"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-recovery.test.ts",
+      "name": "the deadline covers a partial response body after a real generic commit",
+      "status": "pass",
+      "duration_ms": 11360.32,
+      "log_line": 866,
+      "kind": "named_test"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-recovery.test.ts",
+      "name": "a lost preview-apply acknowledgement is recovered by its real receipt without a second mutation",
+      "status": "pass",
+      "duration_ms": 587.25,
+      "log_line": 867,
+      "kind": "named_test"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-recovery.test.ts",
+      "name": "a preview application not delivered to the domain requires inspection then an explicit exact retry",
+      "status": "pass",
+      "duration_ms": 623.58,
+      "log_line": 868,
+      "kind": "named_test"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-recovery.test.ts",
+      "name": "reload resumes the authorized saved preview without storing financial drafts or applying it automatically",
+      "status": "pass",
+      "duration_ms": 1021.06,
+      "log_line": 869,
+      "kind": "named_test"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-recovery.test.ts",
+      "name": "reload recovers a lost committed preview response from the receipt and never sends apply again",
+      "status": "pass",
+      "duration_ms": 616.94,
+      "log_line": 870,
+      "kind": "named_test"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-recovery.test.ts",
+      "name": "editing during a delayed real preview recovery keeps both the original reconciliation action and the newer draft",
+      "status": "pass",
+      "duration_ms": 1100.15,
+      "log_line": 871,
+      "kind": "named_test"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/unavailable-views.test.ts",
+      "name": "a removed plan produces a sanitized personal placeholder and can be explicitly replaced with the authorized current page",
+      "status": "pass",
+      "duration_ms": 745.35,
+      "log_line": 885,
+      "kind": "named_test"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/unavailable-views.test.ts",
+      "name": "an unavailable preferred destination is never opened automatically and its private preference can be removed",
+      "status": "pass",
+      "duration_ms": 483.28,
+      "log_line": 886,
+      "kind": "named_test"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/unavailable-views.test.ts",
+      "name": "an earlier real saved-view response cannot restore private labels after the session is revoked",
+      "status": "fail",
+      "duration_ms": 45002.33,
+      "log_line": 887,
+      "kind": "named_test",
+      "excerpt": "2026-11-14T09:53:48.2944890Z (pass) a real generic POST refused with 401 removes protected drafts and has no effect [742.81ms]\n2026-11-14T09:53:48.8108065Z (pass) a real generic POST refused with 403 removes protected drafts and has no effect [516.48ms]\n2026-11-14T09:53:49.3130021Z (pass) a duplicate submit is fenced and a late successful response cannot restore a revoked page [501.96ms]\n2026-11-14T09:53:49.8586828Z (pass) loading a current version after a real conflict revalidates access before showing any stored fields [546.70ms]\n2026-11-14T09:54:01.2190162Z (pass) the deadline covers a partial response body after a real generic commit [11360.32ms]\n2026-11-14T09:54:01.8065488Z (pass) a lost preview-apply acknowledgement is recovered by its real receipt without a second mutation [587.25ms]\n2026-11-14T09:54:02.4307656Z (pass) a preview application not delivered to the domain requires inspection then an explicit exact retry [623.58ms]\n2026-11-14T09:54:03.4513022Z (pass) reload resumes the authorized saved preview without storing financial drafts or applying it automatically [1021.06ms]\n2026-11-14T09:54:04.0684354Z (pass) reload recovers a lost committed preview response from the receipt and never sends apply again [616.94ms]\n2026-11-14T09:54:05.1688703Z (pass) editing during a delayed real preview recovery keeps both the original reconciliation action and the newer draft [1100.15ms]\n2026-11-14T09:54:05.1697181Z WP01 browser lease released {\n2026-11-14T09:54:05.1706693Z \n2026-11-14T09:54:05.1707162Z Sucafinav1/test/product/wp01/unavailable-views.test.ts:\n2026-11-14T09:54:05.1709971Z   pid: 4081,\n2026-11-14T09:54:05.1710154Z   lease: 1,\n2026-11-14T09:54:05.1710333Z   releases: 1,\n2026-11-14T09:54:05.1710506Z   contexts: 0,\n2026-11-14T09:54:05.1710666Z }\n2026-11-14T09:54:05.2378405Z WP01 browser lease acquired {\n2026-11-14T09:54:05.2383364Z   pid: 4081,\n2026-11-14T09:54:05.2383868Z   lease: 2,\n2026-11-14T09:54:05.2384144Z   acquisitions: 2,\n2026-11-14T09:54:05.2384418Z }\n2026-11-14T09:54:05.9831615Z (pass) a removed plan produces a sanitized personal placeholder and can be explicitly replaced with the authorized current page [745.35ms]\n2026-11-14T09:54:06.4665464Z (pass) an unavailable preferred destination is never opened automatically and its private preference can be removed [483.28ms]\n2026-11-14T09:54:51.4688069Z (fail) an earlier real saved-view response cannot restore private labels after the session is revoked [45002.33ms]",
+      "failure_family": "saved_view_late_revocation_test_timeout_unlocated_await",
+      "test_body_entered": true,
+      "browser_journey_reached": true,
+      "proof_completion": "INCONCLUSIVE_TIMEOUT",
+      "product_failure_inferred": false,
+      "scope": "45000ms test timeout; raw log gives no precise await or failed assertion. Source contains unbounded entered/response.finished/cleanup awaits; consumer violation is not established."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/unavailable-views.test.ts",
+      "name": "(unnamed)",
+      "status": "fail",
+      "duration_ms": 8.47,
+      "log_line": 899,
+      "kind": "hook_failure",
+      "excerpt": "2026-11-14T09:54:05.1707162Z Sucafinav1/test/product/wp01/unavailable-views.test.ts:\n2026-11-14T09:54:05.1709971Z   pid: 4081,\n2026-11-14T09:54:05.1710154Z   lease: 1,\n2026-11-14T09:54:05.1710333Z   releases: 1,\n2026-11-14T09:54:05.1710506Z   contexts: 0,\n2026-11-14T09:54:05.1710666Z }\n2026-11-14T09:54:05.2378405Z WP01 browser lease acquired {\n2026-11-14T09:54:05.2383364Z   pid: 4081,\n2026-11-14T09:54:05.2383868Z   lease: 2,\n2026-11-14T09:54:05.2384144Z   acquisitions: 2,\n2026-11-14T09:54:05.2384418Z }\n2026-11-14T09:54:05.9831615Z (pass) a removed plan produces a sanitized personal placeholder and can be explicitly replaced with the authorized current page [745.35ms]\n2026-11-14T09:54:06.4665464Z (pass) an unavailable preferred destination is never opened automatically and its private preference can be removed [483.28ms]\n2026-11-14T09:54:51.4688069Z (fail) an earlier real saved-view response cannot restore private labels after the session is revoked [45002.33ms]\n2026-11-14T09:54:51.4688776Z   ^ this test timed out after 45000ms.\n2026-11-14T09:54:51.4771551Z 245 |     try {\n2026-11-14T09:54:51.4772942Z 246 |       const outcomes = await bounded(Promise.allSettled(contexts.map((context) => context.close())), \"close lease contexts\", 5_000)\n2026-11-14T09:54:51.4773982Z 247 |       for (const outcome of outcomes) if (outcome.status === \"rejected\") failures.push(outcome.reason)\n2026-11-14T09:54:51.4774652Z 248 |     } catch (error) { failures.push(error) }\n2026-11-14T09:54:51.4775472Z 249 |     if (!browser.isConnected()) failures.push(new Error(\"WP01 browser disconnected during lease release\"))\n2026-11-14T09:54:51.4776594Z 250 |     if (browser.contexts().length !== 0) failures.push(new Error(\"WP01 browser contexts remain after lease release\"))\n2026-11-14T09:54:51.4777318Z                                                                  ^\n2026-11-14T09:54:51.4777835Z error: WP01 browser contexts remain after lease release\n2026-11-14T09:54:51.4778774Z       at closeWp01Browser (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:250:60)\n2026-11-14T09:54:51.4780142Z       at async <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/unavailable-views.test.ts:23:43)\n2026-11-14T09:54:51.4780970Z (fail) (unnamed) [8.47ms]",
+      "hook_phase": "afterAll",
+      "failure_family": "shared_pool_context_cleanup_failure",
+      "test_body_entered": false,
+      "scope": "afterAll failed after named test ran; do not classify all prior bodies as unexecuted. Context count remained nonzero at browser-fixture:250."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/two-actor-conflict.test.ts",
+      "name": "(unnamed)",
+      "status": "fail",
+      "duration_ms": 0.27,
+      "log_line": 924,
+      "kind": "hook_failure",
+      "excerpt": "2026-11-14T09:54:51.4780970Z (fail) (unnamed) [8.47ms]\n2026-11-14T09:54:51.4791931Z \n2026-11-14T09:54:51.4792337Z Sucafinav1/test/product/wp01/two-actor-conflict.test.ts:\n2026-11-14T09:54:51.4820404Z 201 | \n2026-11-14T09:54:51.4867894Z 202 | /** A lease is reserved before any await. No concurrent caller or replacement\n2026-11-14T09:54:51.4869066Z 203 |  * Chromium is admitted. Existing consumers keep isolated contexts per case. */\n2026-11-14T09:54:51.4870041Z 204 | export async function launchWp01Browser(): Promise<Browser> {\n2026-11-14T09:54:51.4871147Z 205 |   if (pool.sealed) throw new Error(\"WP01 browser selection has already been finalized\")\n2026-11-14T09:54:51.4872564Z 206 |   if (pool.failed) throw new Error(\"WP01 browser pool is unavailable after an earlier failure\", { cause: pool.failure })\n2026-11-14T09:54:51.4873386Z                                    ^\n2026-11-14T09:54:51.4874055Z error: WP01 browser pool is unavailable after an earlier failure\n2026-11-14T09:54:51.4875179Z       at launchWp01Browser (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:206:30)\n2026-11-14T09:54:51.4876868Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/two-actor-conflict.test.ts:16:41)\n2026-11-14T09:54:51.4878787Z \n2026-11-14T09:54:51.4880530Z 246 |       const outcomes = await bounded(Promise.allSettled(contexts.map((context) => context.close())), \"close lease contexts\", 5_000)\n2026-11-14T09:54:51.4882014Z 247 |       for (const outcome of outcomes) if (outcome.status === \"rejected\") failures.push(outcome.reason)\n2026-11-14T09:54:51.4884480Z 248 |     } catch (error) { failures.push(error) }\n2026-11-14T09:54:51.4885222Z 249 |     if (!browser.isConnected()) failures.push(new Error(\"WP01 browser disconnected during lease release\"))\n2026-11-14T09:54:51.4886361Z 250 |     if (browser.contexts().length !== 0) failures.push(new Error(\"WP01 browser contexts remain after lease release\"))\n2026-11-14T09:54:51.4887321Z 251 |     if (failures.length) throw new AggregateError(failures, \"WP01 browser lease cleanup failed\")\n2026-11-14T09:54:51.4887926Z                                          ^\n2026-11-14T09:54:51.4888563Z AggregateError: WP01 browser lease cleanup failed\n2026-11-14T09:54:51.4889155Z       at closeWp01Browser (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:251:36)\n2026-11-14T09:54:51.4889930Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/unavailable-views.test.ts:23:28\n2026-11-14T09:54:51.4890422Z       at processTicksAndRejections (unknown:7:39)\n2026-11-14T09:54:51.4890685Z (fail) (unnamed) [0.27ms]",
+      "hook_phase": "beforeAll",
+      "failure_family": "shared_pool_poisoned_by_prior_context_cleanup_failure",
+      "test_body_entered": false,
+      "browser_journey_reached": false,
+      "scope": "Prior unavailable-views cleanup poisoned the pool. This file did not execute test bodies."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/shell-refresh.test.ts",
+      "name": "(unnamed)",
+      "status": "fail",
+      "duration_ms": 0.12,
+      "log_line": 949,
+      "kind": "hook_failure",
+      "excerpt": "2026-11-14T09:54:51.4890685Z (fail) (unnamed) [0.27ms]\n2026-11-14T09:54:51.4890826Z \n2026-11-14T09:54:51.4890982Z Sucafinav1/test/product/wp01/shell-refresh.test.ts:\n2026-11-14T09:54:51.4891236Z 201 | \n2026-11-14T09:54:51.4891559Z 202 | /** A lease is reserved before any await. No concurrent caller or replacement\n2026-11-14T09:54:51.4892029Z 203 |  * Chromium is admitted. Existing consumers keep isolated contexts per case. */\n2026-11-14T09:54:51.4892461Z 204 | export async function launchWp01Browser(): Promise<Browser> {\n2026-11-14T09:54:51.4892933Z 205 |   if (pool.sealed) throw new Error(\"WP01 browser selection has already been finalized\")\n2026-11-14T09:54:51.4893549Z 206 |   if (pool.failed) throw new Error(\"WP01 browser pool is unavailable after an earlier failure\", { cause: pool.failure })\n2026-11-14T09:54:51.4893972Z                                    ^\n2026-11-14T09:54:51.4894287Z error: WP01 browser pool is unavailable after an earlier failure\n2026-11-14T09:54:51.4894886Z       at launchWp01Browser (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:206:30)\n2026-11-14T09:54:51.4895646Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/shell-refresh.test.ts:16:41)\n2026-11-14T09:54:51.4896024Z \n2026-11-14T09:54:51.4897179Z 246 |       const outcomes = await bounded(Promise.allSettled(contexts.map((context) => context.close())), \"close lease contexts\", 5_000)\n2026-11-14T09:54:51.4898286Z 247 |       for (const outcome of outcomes) if (outcome.status === \"rejected\") failures.push(outcome.reason)\n2026-11-14T09:54:51.4898959Z 248 |     } catch (error) { failures.push(error) }\n2026-11-14T09:54:51.4899929Z 249 |     if (!browser.isConnected()) failures.push(new Error(\"WP01 browser disconnected during lease release\"))\n2026-11-14T09:54:51.4900985Z 250 |     if (browser.contexts().length !== 0) failures.push(new Error(\"WP01 browser contexts remain after lease release\"))\n2026-11-14T09:54:51.4901957Z 251 |     if (failures.length) throw new AggregateError(failures, \"WP01 browser lease cleanup failed\")\n2026-11-14T09:54:51.4902555Z                                          ^\n2026-11-14T09:54:51.4902984Z AggregateError: WP01 browser lease cleanup failed\n2026-11-14T09:54:51.4903826Z       at closeWp01Browser (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:251:36)\n2026-11-14T09:54:51.4905118Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/unavailable-views.test.ts:23:28\n2026-11-14T09:54:51.4906003Z       at processTicksAndRejections (unknown:7:39)\n2026-11-14T09:54:51.4906620Z (fail) (unnamed) [0.12ms]",
+      "hook_phase": "beforeAll",
+      "failure_family": "shared_pool_poisoned_by_prior_context_cleanup_failure",
+      "test_body_entered": false,
+      "browser_journey_reached": false,
+      "scope": "Prior unavailable-views cleanup poisoned the pool. This file did not execute test bodies."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "name": "WP01 shares one Chromium across files, releases every lease, and proves final process exit",
+      "status": "fail",
+      "duration_ms": 93.58,
+      "log_line": 1019,
+      "kind": "named_test",
+      "excerpt": "2026-11-14T09:54:51.5836474Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts:8:26)\n2026-11-14T09:54:51.5837419Z 266 |   const contexts = pool.browser?.contexts().length ?? 0\n2026-11-14T09:54:51.5837940Z 267 |   if (pool.failed) failures.push(pool.failure)\n2026-11-14T09:54:51.5838322Z   connected: false,\n2026-11-14T09:54:51.5838575Z   driverClosed: false,\n2026-11-14T09:54:51.5839303Z 268 |   if (pool.launches !== 1) failures.push(new Error(\"WP01 selection did not share exactly one Chromium launch\"))\n2026-11-14T09:54:51.5840548Z 269 |   if (activeLease || pool.releasing) failures.push(new Error(\"WP01 browser lease remains active at finalization\"))\n2026-11-14T09:54:51.5841528Z 270 |   if (contexts !== 0) failures.push(new Error(\"WP01 browser contexts remain at finalization\"))\n2026-11-14T09:54:51.5842692Z 271 |   if (pool.acquisitions === 0 || pool.acquisitions !== pool.releases) failures.push(new Error(\"WP01 browser acquisition/release counts do not match\"))\n2026-11-14T09:54:51.5843614Z                                                                                               ^\n2026-11-14T09:54:51.5844147Z error: WP01 browser acquisition/release counts do not match\n2026-11-14T09:54:51.5845056Z       at finishWp01BrowserLifecycle (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-fixture.ts:271:89)\n2026-11-14T09:54:51.5846355Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp01/browser-lifecycle.test.ts:8:26)\n2026-11-14T09:54:51.5847185Z 325 |     const browserVersion = browser.version()\n2026-11-14T09:54:51.5847608Z 326 |     let closing: Promise<void> | undefined\n2026-11-14T09:54:51.5847948Z 327 |     return { browser,\n2026-11-14T09:54:51.5848303Z 328 |       close: () => closing ??= cleanup(async () => {\n2026-11-14T09:54:51.5848807Z 329 |         for (const context of browser.contexts()) await context.close()\n2026-11-14T09:54:51.5849547Z 330 |         if (browser.contexts().length) throw new Error(\"Browser contexts remained open\")\n2026-11-14T09:54:51.5850077Z                                                        ^\n2026-11-14T09:54:51.5850483Z error: Browser contexts remained open\n2026-11-14T09:54:51.5851235Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts:330:50\n2026-11-14T09:54:51.5852274Z       at within (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts:212:26)\n2026-11-14T09:54:51.5853319Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp02/browser-driver-fixture.ts:273:91\n2026-11-14T09:54:51.5854247Z       at processTicksAndRejections (unknown:7:39)\n2026-11-14T09:54:51.5855010Z (fail) WP01 shares one Chromium across files, releases every lease, and proves final process exit [93.58ms]",
+      "failure_family": "shared_pool_context_cleanup_failure",
+      "test_body_entered": true,
+      "browser_journey_reached": false,
+      "scope": "Finalizer assertions remain intact: active lease, mismatched acquisitions/releases and browser contexts still open. No full driver cleanup proof."
+    }
+  ],
+  "proof_records": {
+    "SF_BROWSER_DRIVER_PHASE": [
+      {
+        "log_line": 833,
+        "observed_at": "2026-11-14T09:53:44.2776313Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "playwright-import",
+          "elapsedMs": 0
+        }
+      },
+      {
+        "log_line": 834,
+        "observed_at": "2026-11-14T09:53:44.6216697Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "playwright-imported",
+          "elapsedMs": 347
+        }
+      },
+      {
+        "log_line": 835,
+        "observed_at": "2026-11-14T09:53:44.6304147Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "app-process-service",
+          "elapsedMs": 355
+        }
+      },
+      {
+        "log_line": 836,
+        "observed_at": "2026-11-14T09:53:44.6305196Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "app-process-spawn",
+          "elapsedMs": 355
+        }
+      },
+      {
+        "log_line": 837,
+        "observed_at": "2026-11-14T09:53:44.6402584Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "app-process-spawned",
+          "elapsedMs": 366,
+          "driverPid": 4066
+        }
+      },
+      {
+        "log_line": 838,
+        "observed_at": "2026-11-14T09:53:44.6639880Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "node-import",
+          "elapsedMs": 390,
+          "driverPid": 4066
+        }
+      },
+      {
+        "log_line": 839,
+        "observed_at": "2026-11-14T09:53:44.9154459Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "node-imported",
+          "elapsedMs": 641,
+          "driverPid": 4066
+        }
+      },
+      {
+        "log_line": 840,
+        "observed_at": "2026-11-14T09:53:44.9187345Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "chromium-launch",
+          "elapsedMs": 644,
+          "driverPid": 4066
+        }
+      },
+      {
+        "log_line": 841,
+        "observed_at": "2026-11-14T09:53:45.6589924Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "chromium-launched",
+          "elapsedMs": 1384,
+          "driverPid": 4066
+        }
+      },
+      {
+        "log_line": 842,
+        "observed_at": "2026-11-14T09:53:45.6590912Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "node-ready",
+          "elapsedMs": 1385,
+          "driverPid": 4066,
+          "browserPid": 4081
+        }
+      },
+      {
+        "log_line": 843,
+        "observed_at": "2026-11-14T09:53:45.6591671Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "pipe-verify",
+          "elapsedMs": 1385,
+          "driverPid": 4066,
+          "browserPid": 4081
+        }
+      },
+      {
+        "log_line": 844,
+        "observed_at": "2026-11-14T09:53:45.6597317Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "browser-connect",
+          "elapsedMs": 1385,
+          "driverPid": 4066,
+          "browserPid": 4081
+        }
+      },
+      {
+        "log_line": 845,
+        "observed_at": "2026-11-14T09:53:45.7076644Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "browser-connected",
+          "elapsedMs": 1433,
+          "driverPid": 4066,
+          "browserPid": 4081
+        }
+      }
+    ],
+    "SF_BROWSER_DRIVER_FAILURE": [
+      {
+        "log_line": 960,
+        "observed_at": "2026-11-14T09:54:51.5808531Z",
+        "value": {
+          "consumer": "wp01-shared-pool",
+          "phase": "browser-connected",
+          "driverPid": 4066,
+          "reason": "Browser contexts remained open",
+          "stderr": ""
+        }
+      }
+    ]
+  },
+  "limits": [
+    "Diagnostic W6d changed only Playwright browser logging. No retry or deadline increase; assertions remain intact.",
+    "Six selected files include four W6 consumer files whose bodies had not executed. A pass covers only these paths/head, not all25 W6 consumers.",
+    "W7 decision-edit/work-thread changes are excluded from this snapshot.",
+    "C05 historical-review HTTP403 and the excluded WP02 W4 failures remain preserved at their exact SHAs.",
+    "No static run was scheduled for this diagnostic-only edit. W6 static pass remains at W6. Native/global/S0 acceptance is separate."
+  ],
+  "diagnostics": {
+    "startup": {
+      "status": "PASS",
+      "node_pid": 4066,
+      "browser_pid": 4081,
+      "playwright_imported_ms": 347,
+      "node_imported_ms": 641,
+      "chromium_launch_ms": 644,
+      "chromium_launched_ms": 1384,
+      "browser_connected_ms": 1433,
+      "test_duration_ms": 1470.97,
+      "scope": "Initial W6 stall did not reproduce. DEBUG-only edit is not demonstrated to fix it."
+    },
+    "causal_chain": [
+      {
+        "stage": "shell-recovery",
+        "result": "11PASS",
+        "scope": "All11 actual generic/financial recovery tests executed, including two status variants generated by a source loop."
+      },
+      {
+        "stage": "unavailable-views",
+        "result": "2PASS +1timeout",
+        "test": "an earlier real saved-view response cannot restore private labels after the session is revoked",
+        "timeout_ms": 45000,
+        "log_line": 887,
+        "cause_status": "UNLOCATED_AWAIT_NOT_A_PROVEN_CONSUMER_VIOLATION"
+      },
+      {
+        "stage": "unavailable-views afterAll",
+        "result": "FAIL",
+        "assertion": "browser.contexts().length must equal0",
+        "source": "browser-fixture.ts:250",
+        "log_line": 899
+      },
+      {
+        "stage": "two-actor-conflict and shell-refresh beforeAll",
+        "result": "FAIL",
+        "bodies_executed": false,
+        "log_lines": [
+          924,
+          949
+        ]
+      },
+      {
+        "stage": "browser-lifecycle",
+        "result": "FAIL",
+        "assertions": [
+          "no active lease",
+          "acquisitions match releases",
+          "contexts0",
+          "driver physical cleanup"
+        ],
+        "log_line": 1019
+      }
+    ],
+    "cleanup": {
+      "observed_disconnect": true,
+      "driverClosed": false,
+      "physical_process_exit_proof": "NOT_OBSERVED",
+      "complete_driver_proof_records": 0
+    },
+    "classification_counts": {
+      "pass_named_tests": 14,
+      "inconclusive_named_test_timeout": 1,
+      "afterAll_failures": 1,
+      "beforeAll_failures": 2,
+      "finalizer_failure": 1
+    },
+    "static": "NOT_RUN_DIAGNOSTIC_ONLY_CHANGE; W6 static belongs to a295 only"
+  }
+}

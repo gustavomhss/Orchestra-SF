@@ -39,9 +39,15 @@ Use **Create a decision** quando precisar manter objetivo, critérios, alternati
 
 Se o salvamento de uma edição ficar sem confirmação, os campos ficam preservados e bloqueados. Use **Retry same save** para consultar o resultado da mesma solicitação. Um conflito confirmado antes de salvar mostra os valores atuais e sua tentativa; uma resposta perdida seguida de conflito mantém a tentativa inconclusiva até você conferir o caso salvo.
 
+Depois de um conflito confirmado, compare as entradas e selecione **Use current version and keep my edits**. Essa ação relê a decisão e adota a versão atual sem gravar. Os textos dos critérios acompanham seus IDs mesmo quando a ordem muda. Se outra pessoa adicionar ou remover critérios, marque **I reviewed the added and removed criteria** depois de conferir as diferenças; o texto dos critérios removidos permanece na comparação. Confira o formulário e selecione **Save decision** para gravar. Se a decisão mudar novamente, a tela pede uma nova revisão. **Reload current values for comparison** repete somente a leitura quando ela estiver indisponível.
+
 Em **Dashboard → Vendor Contracts**, a ação **Create decision** de cada contrato abre uma decisão contextual. O contrato e o ano efetivo acompanham a criação; informe a moeda explicitamente. A fonte é conferida novamente ao salvar. No caso criado, **Return to contract** retoma a página, os filtros e o registro de origem. Se o contrato mudar ou seu acesso for revogado, a criação não utiliza silenciosamente a referência anterior.
 
 Quando a confirmação de criação não chegar, os campos permanecem preenchidos e bloqueados para repetir a mesma tentativa. Isso evita transformar uma resposta perdida em uma segunda decisão com conteúdo diferente.
+
+Quando a conversa de uma pergunta estiver disponível, use **Open conversation** para consultar suas mensagens. Se a leitura não terminar em dez segundos, a tela libera a nova tentativa e conserva a resposta ainda não enviada. Depois de um envio sem confirmação, use novamente **Send reply**: o texto fica bloqueado e a mesma solicitação é repetida. Se a primeira tentativa for recusada porque a conversa mudou, **Review changed conversation** relê as mensagens e conserva seu texto; confira-o antes de enviar novamente. Uma resposta perdida seguida de conflito continua inconclusiva, preservando a mesma tentativa.
+
+A confirmação usa somente a resposta autorizada mais recente. Quando ela ainda não estiver disponível para o caso, a ação fica desabilitada com uma explicação; você pode continuar enviando respostas. Uma resposta já registrada na decisão aparece como registrada. Quando a confirmação ou a inclusão no caso estiver disponível e seu resultado ficar incerto, a tela conserva a solicitação original. Se o acesso mudar, a conversa e o rascunho saem da tela; reabra a decisão com seu acesso atual.
 
 Quando houver um serviço de análise disponível, **Frame this decision → Prepare decision framing** usa o objetivo atual e as fontes anexadas para preparar uma contribuição. A preparação relê o caso e verifica sua versão; ela não cria fontes nem registra uma escolha. A contribuição aparece no histórico para revisão.
 

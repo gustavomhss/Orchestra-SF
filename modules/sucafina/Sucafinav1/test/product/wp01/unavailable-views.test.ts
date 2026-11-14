@@ -22,6 +22,22 @@ let browser: Browser
 beforeAll(async () => { browser = await launchWp01Browser() }, 35_000)
 afterAll(async () => { if (browser) await closeWp01Browser(browser) }, 25_000)
 
+async function within<T>(operation: Promise<T>, phase: string): Promise<T> {
+  const started = performance.now()
+  console.info("WP01 saved views phase", { phase, state: "started" })
+  let timer: ReturnType<typeof setTimeout> | undefined
+  try {
+    const value = await Promise.race([operation, new Promise<never>((_, reject) => {
+      timer = setTimeout(() => reject(new Error(`Saved views timed out: ${phase}`)), 5_000)
+    })])
+    console.info("WP01 saved views phase", { phase, state: "completed", elapsedMs: Math.round(performance.now() - started) })
+    return value
+  } catch (error) {
+    console.error("WP01 saved views phase", { phase, state: "failed", elapsedMs: Math.round(performance.now() - started) })
+    throw error
+  } finally { clearTimeout(timer) }
+}
+
 type Fixture = {
   page: Page
   context: BrowserContext
@@ -29,7 +45,7 @@ type Fixture = {
   origin: string
   post: (action: string, input: unknown) => ReturnType<BrowserContext["request"]["post"]>
   otherList: () => Promise<Response | undefined>
-  hold: { nextList: boolean; entered?: () => void; release?: () => void }
+  hold: { nextList: boolean; entered?: () => void; release?: () => void; status?: number; body?: string }
 }
 
 // The destination predicate is the exact published integration implementation,
@@ -40,6 +56,7 @@ async function withViews(check: (fixture: Fixture) => Promise<void>) {
   const store = await openLocalStore(directory)
   const routing: { handle?: (request: Request) => Promise<Response | undefined> } = {}
   const hold: Fixture["hold"] = { nextList: false }
+  const releases = new Set<() => void>()
   const server = Bun.serve({ hostname: "localhost", port: 0, fetch: async (request) => await routing.handle?.(request) ?? new Response(null, { status: 503 }) })
   const origin = server.url.origin
   const installationId = randomUUID()
@@ -57,16 +74,29 @@ async function withViews(check: (fixture: Fixture) => Promise<void>) {
   const product = createSfWorkbenchHttp({ origin, mount: "/sucafina", runtime: () => services })
   const app = createModule("/sucafina", { persistence: store, authenticate, environment, product, productHtml: decorateSfProductHtml, maxJsonBytes: 100000 })
   routing.handle = async (request) => {
-    const delayed = hold.nextList && request.method === "POST" && new URL(request.url).searchParams.get("sf") === "workbench-views" && (await request.clone().json()).action === "list"
-    if (delayed) hold.nextList = false
-    const response = await first.handle(request) ?? await app(request)
+    // Reserve before an await: two concurrent reads must not both claim the gate.
+    const candidate = hold.nextList && request.method === "POST" && new URL(request.url).searchParams.get("sf") === "workbench-views"
+    if (candidate) hold.nextList = false
+    const delayed = candidate && (await within(request.clone().json(), "read the delivery-gated list request")).action === "list"
+    if (candidate && !delayed) hold.nextList = true
+    const response = candidate
+      ? await within((async () => await first.handle(request) ?? await app(request))(), "produce the real delivery-gated list response")
+      : await first.handle(request) ?? await app(request)
     if (!delayed || !response) return response
-    await new Promise<void>((resolve) => { hold.release = resolve; hold.entered?.() })
+    // Delay exact bytes already produced by the real authorized application.
+    // A live response stream must not keep the domain request or a store scope open.
+    const body = await within(response.text(), "materialize the authorized list response")
+    hold.status = response.status; hold.body = body
+    await new Promise<void>((resolve) => {
+      const release = () => { releases.delete(release); resolve() }
+      releases.add(release); hold.release = release; hold.entered?.()
+    })
     const headers = new Headers(response.headers)
     headers.set("X-SF-Views-Late", "yes")
-    return new Response(response.body, { status: response.status, headers })
+    return new Response(body, { status: response.status, headers })
   }
   let context: BrowserContext | undefined
+  let failure: unknown
   try {
     await store.transaction("planner", async (snapshot) => {
       snapshot.data.versions = ["previous-plan", "current-plan"].map((id) => ({ id, name: id, year: 2026, locked: false, closed: 0, lines: [], fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }))
@@ -77,20 +107,26 @@ async function withViews(check: (fixture: Fixture) => Promise<void>) {
     context = await browser.newContext()
     const page = await context.newPage()
     page.setDefaultTimeout(10_000)
+    page.setDefaultNavigationTimeout(10_000)
     const errors: string[] = []
     page.on("pageerror", (error) => errors.push(error.message))
     page.on("dialog", (dialog) => dialog.accept())
     expect((await page.goto(`${origin}/sucafina/auth/local?code=${await first.enroll()}`))?.status()).toBe(200)
     const active = context
-    const post: Fixture["post"] = (action, input) => active.request.post(`${origin}/sucafina/planner?sf=workbench-views`, { headers: { origin, "idempotency-key": randomUUID() }, data: { action, input } })
+    const post: Fixture["post"] = (action, input) => active.request.post(`${origin}/sucafina/planner?sf=workbench-views`, { headers: { origin, "idempotency-key": randomUUID() }, data: { action, input }, timeout: 5_000 })
     await check({ page, context, store, origin, post, hold, otherList: () => product(new Request(`${origin}/sucafina/planner?sf=workbench-views`, { method: "POST", headers: { cookie: otherCookie, origin, "content-type": "application/json", "idempotency-key": randomUUID() }, body: JSON.stringify({ action: "list", input: {} }) }), "planner") })
     expect(errors).toEqual([])
-  } finally {
-    hold.release?.()
-    await context?.close()
-    await server.stop(true)
-    await store.dispose()
-    await rm(directory, { recursive: true, force: true })
+  } catch (error) { failure = error; throw error }
+  finally {
+    hold.nextList = false; hold.entered = undefined; releases.forEach((release) => release())
+    const cleanup: unknown[] = []
+    // Abort remaining HTTP delivery before closing the browser context. All
+    // failures are retained; lease/finalizer still require zero open contexts.
+    try { await within(Promise.resolve(server.stop(true)), "stop saved views HTTP") } catch (error) { cleanup.push(error) }
+    try { if (context) await within(context.close(), "close saved views browser context") } catch (error) { cleanup.push(error) }
+    try { await within(store.dispose(), "dispose saved views store") } catch (error) { cleanup.push(error) }
+    try { await within(rm(directory, { recursive: true, force: true }), "remove saved views directory") } catch (error) { cleanup.push(error) }
+    if (cleanup.length) throw new AggregateError(failure ? [failure, ...cleanup] : cleanup, "Saved views cleanup failed")
   }
 }
 
@@ -149,20 +185,30 @@ test("an unavailable preferred destination is never opened automatically and its
 
 test("an earlier real saved-view response cannot restore private labels after the session is revoked", async () => {
   await withViews(async (fixture) => {
-    await savePrevious(fixture)
-    await fixture.page.goto(`${fixture.origin}/sucafina/planner?page=OPEX&year=2026&version=current-plan`)
-    await fixture.page.getByRole("button", { name: "PRIVATE-PREVIOUS-TITLE", exact: true }).waitFor()
+    await within(savePrevious(fixture), "save private view before revocation")
+    await within(fixture.page.goto(`${fixture.origin}/sucafina/planner?page=OPEX&year=2026&version=current-plan`), "open current plan before revocation")
+    await within(fixture.page.getByRole("button", { name: "PRIVATE-PREVIOUS-TITLE", exact: true }).waitFor(), "observe the authorized private title")
     fixture.hold.nextList = true
     const entered = new Promise<void>((resolve) => { fixture.hold.entered = resolve })
-    await fixture.page.getByRole("button", { name: "Refresh saved views" }).click()
-    await entered
-    expect((await fixture.context.request.post(`${fixture.origin}/sucafina/auth/logout`, { headers: { origin: fixture.origin } })).status()).toBe(204)
-    await fixture.page.getByRole("button", { name: "Refresh saved views" }).click()
-    await fixture.page.getByText("Your access changed. Reload before opening or changing saved views.", { exact: true }).waitFor()
-    const delivered = fixture.page.waitForResponse((response) => response.headers()["x-sf-views-late"] === "yes")
+    await within(fixture.page.getByRole("button", { name: "Refresh saved views" }).click(), "request the delayed authorized list")
+    await within(entered, "hold the complete authorized list before delivery")
+    expect(fixture.hold.status).toBe(200)
+    expect(fixture.hold.body).toContain("PRIVATE-PREVIOUS-TITLE")
+    expect((await within(fixture.context.request.post(`${fixture.origin}/sucafina/auth/logout`, { headers: { origin: fixture.origin }, timeout: 5_000 }), "revoke the actual operator session")).status()).toBe(204)
+    const [refused] = await Promise.all([
+      within(fixture.page.waitForResponse((response) => response.status() === 403 && new URL(response.url()).searchParams.get("sf") === "workbench-views", { timeout: 5_000 }), "observe the real revoked list response"),
+      within(fixture.page.getByRole("button", { name: "Refresh saved views" }).click(), "request views with the revoked session"),
+    ])
+    expect(refused.status()).toBe(403)
+    await within(fixture.page.getByText("Your access changed. Reload before opening or changing saved views.", { exact: true }).waitFor(), "observe access revocation before late delivery")
+    const delivered = fixture.page.waitForResponse((response) => response.headers()["x-sf-views-late"] === "yes", { timeout: 5_000 })
     fixture.hold.release?.()
-    await (await delivered).finished()
-    await fixture.page.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => resolve())))
+    const late = await within(delivered, "observe the delayed authorized response headers")
+    expect(late.status()).toBe(200)
+    // Reading exact delivered bytes proves completion and the private content
+    // available to the old request without an unbounded response.finished wait.
+    expect(await within(late.text(), "read the delayed authorized response body")).toBe(fixture.hold.body)
+    await within(fixture.page.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())))), "settle late-response browser rendering")
     expect(await fixture.page.locator("[data-personal-views]").textContent()).not.toContain("PRIVATE-")
     expect(await fixture.page.locator("[data-personal-views] button, [data-personal-views] input").count()).toBe(0)
   })
