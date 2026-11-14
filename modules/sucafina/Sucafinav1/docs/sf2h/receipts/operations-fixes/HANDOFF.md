@@ -67,3 +67,7 @@ W2→W3 acrescenta apenas os testes documentais. Os incrementos seguintes a W3 a
 **Gates finais separados:** executar o workflow existente `astra-operations-check` em modo completo no commit que publica estes recibos, com snapshot que acrescenta somente `.astra-operations-check.json`. Ele roda `bun typecheck` em `modules/sucafina` e `apps/cli`, e `bun run check:guards --base origin/dev`. O resultado terminal e o par produto/snapshot dessa checagem serão registrados na [PR #52](https://github.com/gustavomhss/Orchestra-SF/pull/52), sem novo commit autorreferente de recibo. A falha Atlas já observada no pin inicial não é suprimida nem corrigida fora do ownership.
 
 S0 deve consumir o delta documental e reconciliar a proposta C12 com os owners atuais. Estes recibos não declaram READY global, aceite humano, GNATIVE ou permissão de merge.
+
+## Continuação publicada — OPS-REV-03
+
+A retomada preservou esta entrega e seus recibos. O produto `c9b14ba6848d87a756c4144a542f5cee571dac37` corrige o orçamento da busca após autorização/deduplicação. [Handoff completo da continuação](continuation-20261114/HANDOFF.md) e [recibo terminal](continuation-20261114/proof.json): run `43626678715` com **4 PASS / 37 assertions**; check `43627083716` com CLI/guards PASS e o único TS2741 herdado de WP14. I-OPS-02 continua bloqueado pelos owners, sem aplicação dos patches compartilhados. Esta retomada encerrou sua escrita e não deixou CI próprio em voo.
