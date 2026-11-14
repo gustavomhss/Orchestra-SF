@@ -1,0 +1,159 @@
+{
+  "schema": "sf2h.mission20.inputs.v1",
+  "mission": 20,
+  "campaign": "sf2h-integral-20261112",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "astra-wp11",
+  "pull_request": 40,
+  "lease_epoch": "browser-decisions-continuation-20",
+  "inspection_time_utc": "2026-11-14T20:26:27Z",
+  "mission_source": {
+    "commit": "11ae11f1f470a405be954f050ff0ba5d8a536e5b",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-wave/decisions-initial-alternatives.json",
+    "blob": "5e9328d600a4f4258d2fb93a258df8b7271dbb32"
+  },
+  "reconciliation": {
+    "expected_head": "8645fadbce014ce870e3485ae1de6cf7d76bf1c3",
+    "observed_head": "8645fadbce014ce870e3485ae1de6cf7d76bf1c3",
+    "tree": "4694b37ecc0957ca5360cc541fd6b937786d843d",
+    "delta": "none before implementation; rechecked before publication",
+    "predecessor_handoff": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/final-e2e/decisions/attempt-01/HANDOFF.md",
+      "blob": "6fbf52018824f3d95db9f727eb42096ae8d7a50a",
+      "state": "PARTIAL/BLOCKED; terminal writer relinquished"
+    },
+    "previous_work": "All existing files and prior receipts preserved. The three existing Decisions E2E test bodies are retained."
+  },
+  "normative_read": {
+    "planning_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "actor": "S4-A",
+    "actor_complete": true,
+    "criterion_count": 83,
+    "method": "Root read complete common/work packages/contracts/criteria/bindings/dependencies; delegated readers completed resident/resident_ui/numeric_oracles and both mandatory appendices. Findings consolidated before implementation.",
+    "root_agents": {
+      "path": "AGENTS.md",
+      "blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4"
+    },
+    "additional_module_agents": "No additional AGENTS in modules/sucafina or parent modules tree at input head.",
+    "sources": [
+      {
+        "source": "plan:START.md",
+        "blob": "522782bb7e113124a937d7ef17313032be9d6850",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/START.md"
+      },
+      {
+        "source": "plan:WORKFLOW.md",
+        "blob": "043205bee6031b4517a98591b3588fca0ab12925",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/WORKFLOW.md"
+      },
+      {
+        "source": "plan:execution/COMMON.md",
+        "blob": "d61f32af03fe10747a50274233f953af044decf6",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/COMMON.md"
+      },
+      {
+        "source": "plan:execution/actors/S4-A.json",
+        "blob": "75ead4aae6187f440df6d9f9cdda6b10e444da13",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S4-A.json"
+      },
+      {
+        "source": "product-acceptance",
+        "blob": "ded082688fce327def0b48968fa3b89a5831029c",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/product-acceptance.md"
+      },
+      {
+        "source": "resident-runtime",
+        "blob": "033737b1051b23443e633df7874c550629bf55a1",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/resident-runtime.md"
+      },
+      {
+        "source": "parallel-common",
+        "blob": "e54d84e3cdfa0046225518e253baf9dcf377fa7c",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c708ec0609dbfc95b259707d8c38481617f74f11/modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-wave/COMMON.md"
+      },
+      {
+        "source": "c12mission",
+        "blob": "e015b2e8de1bb0bdd4a81a422f3f9c397eedb49d",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a32285b2683b5000dafe93df99289547c7f410fb/modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-wave/c12-receipt-recovery.json"
+      },
+      {
+        "source": "finance-mission",
+        "blob": "c8129f55def8293a43595e9ab7beda44d66654b1",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a32285b2683b5000dafe93df99289547c7f410fb/modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-wave/finance-journey-closure.json"
+      },
+      {
+        "source": "integration-common",
+        "blob": "4106a5f0dbd5ee5bbff999b9f7ca1d6ff970f922",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/557adbd63f5700f487447cbb6167fe7c71e9bcdb/modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/integration-wave/COMMON.md"
+      },
+      {
+        "source": "bundle-integrator",
+        "blob": "ff7595909a27c5e7cefdbf172e8668767b4b2082",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/557adbd63f5700f487447cbb6167fe7c71e9bcdb/modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/integration-wave/bundle-integrator.json"
+      },
+      {
+        "source": "ci",
+        "blob": "c34ab425e0f3b7dc0899a05826829f38b5af84bb",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a3d29d011ba3607a57914701300f09117a3e2de9/modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/CI.md"
+      },
+      {
+        "source": "app-agents",
+        "blob": "a9ed3dc797d2756089a032e75bc0ab77256b3a03",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/8645fadbce014ce870e3485ae1de6cf7d76bf1c3/packages/app-shell/AGENTS.md"
+      },
+      {
+        "source": "e2e-agents",
+        "blob": "2e24eecc8ccea104922263bf6c7ccc8e93da24ec",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/8645fadbce014ce870e3485ae1de6cf7d76bf1c3/packages/app-shell/e2e/AGENTS.md"
+      }
+    ]
+  },
+  "profile_provenance": {
+    "origin_commit": "6cf5d78ba412f97aa4dd8648bfec340a27060d3b",
+    "mission_input": "a00ba2a55190e9ee1fe52fa3030a9cc297b2825a",
+    "latest_pr29_observed": "ab511e9ab2dcb0f64b34bea944533cdbf7ed98e7",
+    "latest_delta": "Two commits since mission input; changes concern memory integrity in analysis-stale-commit/business-context and its tests/receipts. Critical profile/manifest/host/Decisions route blobs below are unchanged. No wholesale intake.",
+    "profile_blob": "744918076fa510339a3216487da8f59b06fe45e8",
+    "manifest_blob": "453c6f3a5b48c081223909af8293f854ad31d7c8",
+    "resident_loader_blob": "7e3d3849272bb5755d793a9e2b00ad34c523c188",
+    "normative_contracts_blob": "a59ecb7ea7315504cb78ced5c6b6dd828e238730",
+    "source_digest": "249ec91f7d1a76fef83c4408795b66953589d3b3f45e91c64ca691c60c8c2b83",
+    "action": "Reuse compatible published producers through session14 composition; no profile/manifest/policy/digest changes in this mission."
+  },
+  "consumer": {
+    "session": "session14",
+    "branch": "sf2-stack",
+    "head_observed": "46cb4dd02f0a6d11b3fa7a0deac7f839e7b7af3c",
+    "prior_observation": "47273c4f20c7c1af9b08537d26618901c36725e3",
+    "delta": "increment-02 composition inspected; profile fix and compatible Decisions producers now present, new Alternatives module/mount absent.",
+    "status": "COMPOSED_PENDING_QUALIFICATION",
+    "composition_receipt_blob": "7b5ba57a1329bcc43db3563e6b785076ec5152fd",
+    "accepted_inputs": {
+      "PR29": "54317229d7f8fcb7e92921c2f4a8dc6f9310270b",
+      "PR39": "ba27411a7cda9301aa162680a94153a5e643be4d",
+      "PR43": "2ee71fc90055814912654ae198f7a1dcf9583943",
+      "PR60": "8e23e592602fb9f2fae9ce8f824322a073073e23",
+      "PR66": "3c433e4be688a3d68e9f61ea1e96cfe344c58df4"
+    },
+    "http_blob": "81b7cd4ef5a73670642df42a2f891b9d95420dac",
+    "edit_blob": "ebc7763548e3eaf476f36c17de72e1800f0fee2d",
+    "apply_blob": "2e6c081ad2a5282654707f7fc7278183e7dfb20d",
+    "host_blob": "bdf6d4e2014cc9b2a492b6ae304948c249221e39",
+    "business_services_blob": "385dd1998ec3fb73b32f77ab3dec9c93beb440d1",
+    "decision_http_blob": "5cb8e4e45c1e68af4c59ec096b499ed0907f6c66",
+    "decision_controls_blob": "77563520dbfa9cab5876c0312eba294cb579e11d",
+    "assembly_patch": "integration/http-mount.patch",
+    "coverage_read_proposal": "integration/coverage-read.patch"
+  },
+  "boundaries": {
+    "no_local_tests": true,
+    "remote_interface": "GitHub MCP only",
+    "no_whole_branch_merge": true,
+    "reserved_shared_files_modified": false,
+    "financial_formulas_added": false,
+    "engines_modified": false,
+    "runtime_restarted": false,
+    "provider_native_AM_acceptance": "not granted",
+    "old_nominal_run": "43632217395 is historical failed bootstrap before any UI; do not rerun unchanged old product tree or treat source composition as runtime proof."
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "schema": "sf-mission20-integration-proposal-v1",
+  "destinationSession": "session14",
+  "purpose": "Expose the canonical registered coverage reference through the existing authorized decision-controls forecast reader.",
+  "preimage": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "commit": "a00ba2a55190e9ee1fe52fa3030a9cc297b2825a",
+    "path": "apps/cli/src/sucafina-product/decision-controls.ts",
+    "blob": "77563520dbfa9cab5876c0312eba294cb579e11d"
+  },
+  "proposal": {
+    "patch": "coverage-read.patch",
+    "patchSha256": "0a7fdb20441a98a5d5564c74dedc038afad6f8033193d0b5d30572fc36237689",
+    "resultBlob": "5a348c62d4e247db0f7ecaddaedc041177604d15",
+    "appliedToRemote": false
+  },
+  "semanticGuards": [
+    "No new endpoint, producer, mutation, finance calculation, authority grant, manifest or policy change.",
+    "Optional forecast.coverage is absent only when the existing classification is absent; expectedVersion zero still requires the existing authorized absence observation and its recheck.",
+    "Present classification or coverage read failures propagate their tagged PortResult; no empty fallback or optimistic expectedVersion is exposed.",
+    "Canonical coverage is resolved by runtime.domain.baselineCoverage.resolveForecastCoverage(source.refId, call), never computed by the client.",
+    "Source, case identity/incarnation, non-future case revision, exact basis, assessment basis/revision/currency/horizon and classified entries must agree.",
+    "The forecast comparison must already contain the same canonical coverage reference; a read spanning registration or replacement returns stale.",
+    "A second authorized classification read must equal the first; existing presence recheck, outer case recheck and authority revalidation remain in place.",
+    "Projection is not recomputed: the existing compareForecast producer already rechecks source and coverage; canonical comparison reference matching binds the returned coverage to that observation."
+  ],
+  "validation": {
+    "performed": "Static producer-contract inspection and preimage/artifact hashing only.",
+    "testsRun": [],
+    "integratorRequired": "Session14 must reconcile its current producer blob before applying this optional seam, then include it in the already authorized surgical GitHub Actions validation."
+  }
+}

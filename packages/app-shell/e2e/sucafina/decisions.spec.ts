@@ -1,10 +1,19 @@
 import { expect, test } from "@playwright/test"
 import { asRecord, assertCase, caseIdentity, clickCommand, draft, enterWorkbench, fillDecision, isCommand, reopenCase, withInstallation } from "./decisions-support/journey"
 import { loseCreationResponse } from "./decisions-support/lost-response"
+import { initialAlternativesJourney } from "./decisions-support/initial-alternatives"
 
 // Enrollment and the HttpOnly operator session are real. Do not retain auth in traces.
 test.use({ trace: "off" })
 test.describe.configure({ retries: 0 })
+
+test("CI-UI-DECISIONS — attach authorized evidence, create two alternatives and recover one uncertain result", async ({ page }, info) => {
+  test.setTimeout(180_000)
+  info.annotations.push({ type: "proof-limit", description: "Initial alternatives with pending cost coverage; no complete financial comparison, financial approval, C12 Apply, native model or AM acceptance" })
+  await withInstallation(page, info, async (installation, observations) => {
+    await initialAlternativesJourney(page, installation, observations)
+  })
+})
 
 // This selection remains red when its installed producers are missing. It does not
 // seed alternatives/choices, turn a dependency into a skip, or assert an expected failure.
@@ -154,3 +163,4 @@ test("CI-UI-DECISIONS — recover a lost creation response by reading the same c
     } finally { await interruption.close() }
   })
 })
+

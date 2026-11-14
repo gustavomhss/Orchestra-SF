@@ -1,0 +1,18 @@
+{
+  "status": "BLOCKED_NOT_DISPATCHED",
+  "consumer": "session14 / S0 final dispatcher",
+  "reason": "Compose the module, HTTP mount and compatible producer blobs first. Do not run this envelope against unchanged PR40 bootstrap sources.",
+  "request": {
+    "package": "app",
+    "packageSelector": "packages/app",
+    "directory": "packages/app-shell",
+    "runner": "playwright",
+    "args": [
+      "e2e/sucafina/decisions.spec.ts"
+    ],
+    "env": {
+      "ORCHESTRA_CHANNEL": "prod"
+    },
+    "config": "e2e/playwright.production.config.ts"
+  }
+}

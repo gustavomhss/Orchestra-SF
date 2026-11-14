@@ -1,0 +1,51 @@
+--- a/apps/cli/src/sucafina-product/decision-controls.ts
++++ b/apps/cli/src/sucafina-product/decision-controls.ts
+@@ -1,7 +1,7 @@
+ import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+ import type { AuthorizedCaseProjection, BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
+ import type { DomainProjection, SourceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
+-import type { PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
++import type { PlannerSourceHost, PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
+ import type { TrustedUiContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
+ import type { StoredDecisionResult } from "../../../../modules/sucafina/Sucafinav1/product/decisions/result-store.ts"
+ import { encodeCaseRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+@@ -13,7 +13,8 @@
+ 
+ type CaseRef = { id: string; incarnation: string; version: number }
+ type RecordEvidence = Extract<BusinessEvidenceRef, { kind: "record" }>
+-type Forecast = { source: RecordEvidence; projection: DomainProjection; expectedVersion?: number; classification?: CoverageClassification }
++type ForecastCoverage = Extract<Awaited<ReturnType<PlannerSourceHost["resolveForecastCoverage"]>>, { status: "ok" }>["value"]
++type Forecast = { source: RecordEvidence; projection: DomainProjection; expectedVersion?: number; classification?: CoverageClassification; coverage?: ForecastCoverage }
+ type Scenario = { ref: string; title: string; alternativeId: string; parameters: readonly { ref: string; label: string }[] }
+ type Evidence = { evidence: RecordEvidence; source: SourceRef; fields: readonly string[]; label: string }
+ type ControlsBody = { cases: readonly { ref: string; title: string; version: number }[]; actions: readonly string[]; accessRevision: string; selected?: {
+@@ -131,10 +132,28 @@
+   const presence = await read()
+   if (presence.status !== "ok" || !presence.value) return { status: "unavailable", reason: "decision-controls-classification-unavailable" }
+   const classification = presence.value.absent ? undefined : await runtime.domain.baselineCoverage.readClassification(source.refId, call)
++  if (classification && classification.status !== "ok") return classification
++  const coverage = classification?.status === "ok" ? await runtime.domain.baselineCoverage.resolveForecastCoverage(source.refId, call) : undefined
++  if (coverage && coverage.status !== "ok") return coverage
++  if (classification?.status === "ok" && coverage?.status === "ok") {
++    const registered = classification.value, assessment = coverage.value.assessment
++    if (!same(registered.source, source) || registered.caseRef.id !== caseRef.id || registered.caseRef.incarnation !== caseRef.incarnation ||
++      registered.caseRef.version > caseRef.version || !same(coverage.value.basis, registered.basis) ||
++      assessment.basisId !== registered.basis.id || assessment.basisVersion !== registered.basis.version || assessment.alternativeVersion !== registered.version ||
++      assessment.currency !== current.value.case.currency || !same(assessment.horizon, current.value.case.horizon) ||
++      !same(assessment.entries.filter((entry) => entry.status === "included"), registered.mappings.map((mapping) => mapping.entry)) ||
++      !same(assessment.entries.filter((entry) => entry.status === "not-applicable"), registered.notApplicableEntries ?? []) ||
++      !result.value.comparison.costCoverageRefs.length || result.value.comparison.costCoverageRefs.some((ref) => ref !== coverage.value.coverageRef))
++      return { status: "stale", reason: "decision-controls-coverage-changed" }
++    const verified = await runtime.domain.baselineCoverage.readClassification(source.refId, call)
++    if (verified.status !== "ok") return verified
++    if (!same(verified.value, registered)) return { status: "stale", reason: "decision-controls-classification-changed" }
++  } else if (result.value.comparison.costCoverageRefs.length) return { status: "stale", reason: "decision-controls-coverage-changed" }
+   const again = await read()
+   if (again.status !== "ok" || !same(again.value, presence.value) || !await runtime.authority.host.revalidate(call)) return { status: "stale", reason: "decision-controls-classification-changed" }
+   return { status: "ok", value: { source, projection: result.value.baseline,
+-    ...(presence.value.absent ? { expectedVersion: 0 } : classification?.status === "ok" ? { expectedVersion: classification.value.version, classification: classification.value } : {}) } }
++    ...(presence.value.absent ? { expectedVersion: 0 } : classification?.status === "ok" ? { expectedVersion: classification.value.version, classification: classification.value } : {}),
++    ...(coverage?.status === "ok" ? { coverage: coverage.value } : {}) } }
+ }
+ 
+ export function sfDecisionControlsHtml(value: Controls, surface: "dashboard" | "planner" | "procurement") {
