@@ -70,7 +70,7 @@ test("Maestro frames two real case selections and its native contribution reopen
         const resolved = decodeSfOperationOutput("sf_freshness_check", freshness.result)
         if (!resolved.ok) throw new Error("The real freshness capability returned an invalid resolution")
         expect(freshness.receipt.kind).toBe("ui")
-        expect(resolved.value.resolutions.map((entry) => entry.ref)).toEqual(decision.value.sourceRefs)
+        expect<typeof decision.value.sourceRefs>(resolved.value.resolutions.map((entry) => entry.ref)).toEqual(decision.value.sourceRefs)
         expect(resolved.value.resolutions.every((entry) => entry.state === "fresh")).toBe(true)
 
         // This human preview checks the actual selected sources. Native AM02

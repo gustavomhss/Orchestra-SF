@@ -1,0 +1,49 @@
+{
+  "schema": "sf-wp12-type-only-correction-v1",
+  "baseProduct": "aebf95b980c461b6330d030ac5f4991ee96d8f88",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-intent.test.ts",
+      "blob": "bcd35e803b8a00e6ddabef03c10885279e427870",
+      "sha256": "56aa4a17c9795f99204134fdce2393edebab57bc928018c36f1a03f5ca7f00cf",
+      "bytes": 23887
+    }
+  ],
+  "diagnostic": {
+    "runId": 43600168125,
+    "jobId": 132463010548,
+    "code": "TS2769",
+    "line": 73,
+    "reason": "Bun assertion overload inferred mutable array but sourceRefs is readonly."
+  },
+  "change": "Type the assertion as the actual readonly sourceRefs collection. Runtime assertion, values and control flow are unchanged.",
+  "emittedJavaScript": {
+    "identical": true,
+    "sha256": "f23e0e20668e8efc4b4ca589c72841c71cec4cbca6e54724751894d98123899c",
+    "method": "Node stripTypeScriptTypes transform; product not imported"
+  },
+  "localProductTests": false,
+  "localTypecheck": false,
+  "hostedCheck": "PENDING",
+  "independentReview": {
+    "review": "PASS_STATIC",
+    "reviewer": "/root/compose_typecheck",
+    "scope": "Single generic type argument on the existing readonly EvidenceRef collection equality assertion",
+    "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-intent.test.ts",
+    "beforeBlob": "ac815d5b6175a7147497fd548776a5f83be0e007",
+    "afterBlob": "bcd35e803b8a00e6ddabef03c10885279e427870",
+    "beforeExpectedPublishedBlob": "ac815d5b6175a7147497fd548776a5f83be0e007",
+    "afterExpectedBlob": "bcd35e803b8a00e6ddabef03c10885279e427870",
+    "reconstructsWholePublishedBeforeExactly": true,
+    "reason": "The mapped EvidenceRef[] is assignable to the actual readonly sourceRefs type. Providing that type to expect permits toEqual to receive the same readonly collection without a mutable-array mismatch. No value, assertion, narrowing guard or control flow changes.",
+    "localProductTests": false,
+    "localTypecheck": false,
+    "sourceEditedByReviewer": false,
+    "hostedCheck": "PENDING",
+    "independentJavaScriptComparison": {
+      "method": "Node stripTypeScriptTypes transform of source strings only; no import/evaluation of the product or test",
+      "identical": true,
+      "sha256": "f23e0e20668e8efc4b4ca589c72841c71cec4cbca6e54724751894d98123899c"
+    }
+  }
+}
