@@ -148,7 +148,8 @@ export async function createFirstAgendaFixture() {
     return { commit: true, value: undefined }
   })
   const storedReviews = () => f.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: Object.keys(object(object(snapshot.data.__sfProductV1).reviews)) }))
-  return { ...f, control, authority, business, discovery, app, handle, request, readCall, discover, changeCandidate, storedReviews, preserveDiagnostics,
+  const storedReview = (id: string) => f.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: structuredClone(object(object(snapshot.data.__sfProductV1).reviews)[id]) }))
+  return { ...f, control, authority, business, discovery, app, handle, request, readCall, discover, changeCandidate, storedReviews, storedReview, preserveDiagnostics,
     dispose: async () => { business.dispose(); await f.dispose() } }
 }
 

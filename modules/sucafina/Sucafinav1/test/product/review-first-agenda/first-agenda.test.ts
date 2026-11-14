@@ -16,7 +16,7 @@ function deferred<T>() {
   return { promise, complete }
 }
 
-test("first agenda uses three real domains, preserves edits through drift and reload, and fences a late response after revocation", async () => {
+test("first agenda uses three real domains, preserves edits through drift and reload, and denies revoked historical reads", async () => {
   const playwright = await import("@playwright/test")
   const built = await Bun.build({ entrypoints: [fileURLToPath(new URL("./browser-entry.ts", import.meta.url))], target: "browser", format: "esm", sourcemap: "none" })
   expect(built.success).toBe(true)
@@ -26,8 +26,7 @@ test("first agenda uses three real domains, preserves edits through drift and re
   const f = await createFirstAgendaFixture()
   const runtime: { browser?: Browser; close?: () => Promise<void> } = {}
   const transport = { preserve: [] as PortResult<PreservedReview>[], previews: [] as ReviewAgendaPreview[],
-    preserveCommands: [] as { key: string; body: string; reviewRef?: string }[], loseNextPreserveBody: false,
-    delayed: undefined as { captured: ReturnType<typeof deferred<void>>; release: ReturnType<typeof deferred<void>> } | undefined }
+    preserveCommands: [] as { key: string; body: string; reviewRef?: string }[], loseNextPreserveBody: false }
   try {
     expect(await f.storedReviews()).toEqual([])
     const before = await f.snapshots()
@@ -59,13 +58,6 @@ test("first agenda uses three real domains, preserves edits through drift and re
       if (mode === "review-agenda" && incoming.method() === "POST") {
         const result = JSON.parse(body) as PortResult<ReviewAgendaPreview>
         if (result.status === "ok") transport.previews.push(result.value)
-      }
-      if (mode === "review-agenda" && incoming.method() === "GET" && transport.delayed) {
-        const pending = transport.delayed
-        expect(response.status).toBe(200)
-        pending.captured.complete()
-        await pending.release.promise
-        transport.delayed = undefined
       }
       return route.fulfill({ status: response.status, headers: Object.fromEntries(response.headers), body: loseBody ? "{" : body })
     })
@@ -267,37 +259,15 @@ test("first agenda uses three real domains, preserves edits through drift and re
     await playwright.expect(meeting.getByRole("listitem").filter({ hasText: /^license:1:forecast: 120 USD · / })).toBeVisible()
     await playwright.expect(meeting.getByRole("listitem").filter({ hasText: /^license:1:forecast: 130 USD · / })).toHaveCount(0)
 
-    // A real authorized response is held in transport, then delivered after
-    // revocation. No manufactured projection or timing sleep supplies the race.
-    await page.goto("https://example.test/product", { waitUntil: "domcontentloaded" })
-    await view.getByLabel("Domain", { exact: true }).selectOption("dashboard")
-    await discover(["Talent Review"])
-    await view.getByRole("button", { name: "Add Talent Review", exact: true }).click()
-    await view.getByRole("button", { name: "Load selection", exact: true }).click()
-    await playwright.expect(view).toContainText("PRIVATE_AGENDA_TALENT_NAME")
-    await view.getByLabel("Domain", { exact: true }).selectOption("planner")
-    const pending = { captured: deferred<void>(), release: deferred<void>() }
-    transport.delayed = pending
-    await view.getByRole("button", { name: "Discover agenda topics", exact: true }).click()
-    await pending.captured.promise
+    // Revoking the historical read must leave the complete durable C05 body intact.
     f.gate.active = false
-    await page.evaluate(() => window.dispatchEvent(new Event("sf-access-revoked")))
-    await playwright.expect(view).toContainText("Private content and the selection were cleared")
-    await playwright.expect(view).not.toContainText("PRIVATE_AGENDA_TALENT")
-    pending.release.complete()
-    await page.evaluate(async () => { await (window as Window & { firstAgendaDiscovery?: Promise<void> }).firstAgendaDiscovery })
-    await playwright.expect(view.getByRole("table")).toHaveCount(0)
-    await playwright.expect(view.getByRole("button")).toHaveCount(0)
-    await playwright.expect(view.getByRole("list")).toHaveCount(0)
-    await playwright.expect(view).not.toContainText("Agenda candidate")
-    await playwright.expect(view).not.toContainText("PRIVATE_AGENDA_TALENT")
     const denied = await f.request("review-read", undefined, { reviewRef: saved.id })
     expect(denied.status).toBe(403)
     expect(await denied.text()).not.toContain("Independent purchase")
     expect(await f.storedReviews()).toEqual([saved.id])
+    expect(await f.storedReview(saved.id)).toEqual(saved)
     expect(failures).toEqual([])
   } finally {
-    transport.delayed?.release.complete()
     if (runtime.close) await runtime.close()
     else await runtime.browser?.close()
     await f.dispose()
@@ -361,3 +331,95 @@ test("discovery is per source, denies forged and private selectors, and keeps in
     expect(await f.storedReviews()).toEqual([])
   } finally { await f.dispose() }
 }, 180000)
+
+test("first-use Talent preview is purged on revocation and rejects a late authorized catalog without any capture", async () => {
+  const playwright = await import("@playwright/test")
+  const built = await Bun.build({ entrypoints: [fileURLToPath(new URL("./browser-entry.ts", import.meta.url))], target: "browser", format: "esm", sourcemap: "none" })
+  expect(built.success).toBe(true)
+  const bundle = built.outputs.find((output) => output.kind === "entry-point")
+  if (!bundle) throw new Error("First agenda browser bundle unavailable")
+  const script = await bundle.text()
+  const f = await createFirstAgendaFixture()
+  const runtime: { browser?: Browser; close?: () => Promise<void> } = {}
+  const transport = { preserveRequests: 0,
+    delayed: undefined as { captured: ReturnType<typeof deferred<void>>; release: ReturnType<typeof deferred<void>> } | undefined }
+  try {
+    expect(await f.storedReviews()).toEqual([])
+    runtime.browser = await playwright.chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"], timeout: 15000 })
+    runtime.close = await captureChromiumCleanup(runtime.browser)
+    const page = await runtime.browser.newPage()
+    const failures: string[] = []
+    page.on("pageerror", (error) => failures.push(error.message))
+    // Fresh first-use state; the same real browser entry and HTTP handlers serve
+    // the private preview. No prior C05 body or manufactured result supplies it.
+    await page.route("https://example.test/**", async (route) => {
+      const incoming = route.request(), url = new URL(incoming.url())
+      if (url.pathname === "/browser-entry.js") return route.fulfill({ status: 200, contentType: "application/javascript", body: script })
+      if (!url.searchParams.has("sf")) return route.fulfill({ status: 200, contentType: "text/html", body: '<!doctype html><html><body><main></main><script type="module" src="/browser-entry.js"></script></body></html>' })
+      if (url.searchParams.get("sf") === "review-preserve") transport.preserveRequests++
+      const response = await f.handle(new Request(incoming.url(), { method: incoming.method(), headers: incoming.headers(),
+        ...(incoming.postData() === null ? {} : { body: incoming.postData()! }) }))
+      const body = await response.text()
+      if (url.searchParams.get("sf") === "review-agenda" && incoming.method() === "GET" && transport.delayed) {
+        const pending = transport.delayed
+        const result = JSON.parse(body) as PortResult<ReviewAgendaCatalog>
+        expect({ http: response.status, result }).toMatchObject({ http: 200, result: { status: "ok" } })
+        expect(available(result).options.map((option) => option.label)).toContain("Forecast · Agenda candidate")
+        pending.captured.complete()
+        await pending.release.promise
+        transport.delayed = undefined
+      }
+      return route.fulfill({ status: response.status, headers: Object.fromEntries(response.headers), body })
+    })
+    await page.goto("https://example.test/product", { waitUntil: "domcontentloaded" })
+    const view = page.locator('section[aria-label="Prepare review"]')
+    await playwright.expect(view.getByRole("list", { name: "Selected agenda", exact: true }).getByRole("listitem")).toHaveCount(0)
+    await view.getByLabel("Domain", { exact: true }).selectOption("dashboard")
+    const pendingCatalog = page.waitForResponse((response) => response.request().method() === "GET" && new URL(response.url()).searchParams.get("sf") === "review-agenda")
+    await view.getByRole("button", { name: "Discover agenda topics", exact: true }).click()
+    const catalogResponse = await pendingCatalog
+    const catalog = await catalogResponse.json() as PortResult<ReviewAgendaCatalog>
+    expect({ http: catalogResponse.status(), result: catalog }).toMatchObject({ http: 200, result: { status: "ok" } })
+    expect(available(catalog).options.map((option) => option.label)).toContain("Talent Review")
+    await view.getByRole("button", { name: "Add Talent Review", exact: true }).click()
+    const pendingPreview = page.waitForResponse((response) => response.request().method() === "POST" && new URL(response.url()).searchParams.get("sf") === "review-agenda")
+    await view.getByRole("button", { name: "Load selection", exact: true }).click()
+    const previewResponse = await pendingPreview
+    const preview = await previewResponse.json() as PortResult<ReviewAgendaPreview>
+    expect({ http: previewResponse.status(), result: preview }).toMatchObject({ http: 200, result: { status: "ok" } })
+    const privatePreview = available(preview)
+    expect(privatePreview.sections).toHaveLength(1)
+    expect(privatePreview.sections[0]?.recordCount).toBe(1)
+    expect(privatePreview.sectionRecordRefs[0]?.recordRefs).toHaveLength(1)
+    expect(new Set(privatePreview.sections.flatMap((section) => section.projection.context.sourceRefs.map((ref) => ref.surface)))).toEqual(new Set(["dashboard"]))
+    await playwright.expect(view).toContainText("PRIVATE_AGENDA_TALENT_NAME")
+    expect(await f.storedReviews()).toEqual([])
+
+    // A real authorized response is held in transport, then delivered after
+    // revocation. No manufactured projection or timing sleep supplies the race.
+    await view.getByLabel("Domain", { exact: true }).selectOption("planner")
+    const pending = { captured: deferred<void>(), release: deferred<void>() }
+    transport.delayed = pending
+    await view.getByRole("button", { name: "Discover agenda topics", exact: true }).click()
+    await pending.captured.promise
+    f.gate.active = false
+    await page.evaluate(() => window.dispatchEvent(new Event("sf-access-revoked")))
+    await playwright.expect(view).toContainText("Private content and the selection were cleared")
+    await playwright.expect(view).not.toContainText("PRIVATE_AGENDA_TALENT")
+    pending.release.complete()
+    await page.evaluate(async () => { await (window as Window & { firstAgendaDiscovery?: Promise<void> }).firstAgendaDiscovery })
+    await playwright.expect(view.getByRole("table")).toHaveCount(0)
+    await playwright.expect(view.getByRole("button")).toHaveCount(0)
+    await playwright.expect(view.getByRole("list")).toHaveCount(0)
+    await playwright.expect(view).not.toContainText("Agenda candidate")
+    await playwright.expect(view).not.toContainText("PRIVATE_AGENDA_TALENT")
+    expect(transport.preserveRequests).toBe(0)
+    expect(await f.storedReviews()).toEqual([])
+    expect(failures).toEqual([])
+  } finally {
+    transport.delayed?.release.complete()
+    if (runtime.close) await runtime.close()
+    else await runtime.browser?.close()
+    await f.dispose()
+  }
+}, 120000)
