@@ -35,6 +35,7 @@ import type { TrustedDomainContext, TrustedUiContext } from "../../../../product
 import { openLocalStore } from "../../../../runtime/local-store.ts"
 import { domain as portfolio } from "../../../../runtime/dashboard-portfolio.ts"
 import { compositionTestDeadline } from "../integration/composition-test-deadline.ts"
+import { verifierOutputFixture } from "./verifier-output-fixture.ts"
 
 const period = { start: "2026-01-01", end: "2026-12-31" }
 const at = "2026-11-14T00:00:00Z"
@@ -246,11 +247,11 @@ async function fixture(withChoice = true, duplicateMilestone = false, withRelati
 }
 
 function dependencySelection() { return { relationRefIds: [], commitmentIds: ["chosen"], milestoneIds: [milestoneId], declaredConstraints: [declaration] } }
-function delivery(caseRef: SfAnalysisRequest["caseRef"], refs: readonly BusinessEvidenceRef[]): ContributionEnvelope {
+function delivery(request: SfAnalysisRequest, refs: readonly BusinessEvidenceRef[]): ContributionEnvelope {
   // Only the output payload boundary is exercised here; this is not a native contribution receipt.
-  return { state: "ready", kind: "DeliveryAssessment", evidenceRefs: refs, payload: { caseRef: encodeCaseRef(caseRef), candidateRefs: ["candidate"], dependencies: [], capacityConstraints: [declaration],
+  return verifierOutputFixture(request, { state: "ready", kind: "DeliveryAssessment", evidenceRefs: refs, payload: { caseRef: encodeCaseRef(request.caseRef), candidateRefs: ["candidate"], dependencies: [], capacityConstraints: [declaration],
     unresolvedConditions: [{ id: "coverage-service", category: "service", reason: "Cost coverage pending", evidenceRefs: [] },
-      { id: "human-declared-constraint:0", category: "human-declared-constraint", reason: `Unverified human declaration: ${declaration}`, evidenceRefs: [] }] } } as ContributionEnvelope
+      { id: "human-declared-constraint:0", category: "human-declared-constraint", reason: `Unverified human declaration: ${declaration}`, evidenceRefs: [] }] } })
 }
 
 test("dependency variants reopen exact C09 choice and Dashboard milestone and preserve human declarations", async () => {
@@ -261,14 +262,14 @@ test("dependency variants reopen exact C09 choice and Dashboard milestone and pr
     expect(input.commitments).toEqual([{ id: "chosen", case: state.caseRef, evidenceRefs: [state.source()] }])
     expect(input.milestones).toEqual([{ id: milestoneId, projectRef: state.source(), at: "2026-12-20", state: "upcoming" }])
     expect(input.declaredConstraints).toEqual([declaration])
-    expect(await state.accept(state.dependencies, input, human.incoming, human.call, delivery(state.caseRef, [state.source()]))).toEqual({ status: "ok", value: true })
+    expect(await state.accept(state.dependencies, input, human.incoming, human.call, delivery(human.incoming.request, [state.source()]))).toEqual({ status: "ok", value: true })
     const injected = { ...input, declaredConstraints: ["2 FTE of free capacity"] }
-    expect((await state.accept(state.dependencies, injected, human.incoming, human.call, delivery(state.caseRef, [state.source()]))).status).toBe("unavailable")
-    const promoted = delivery(state.caseRef, [state.source()])
+    expect((await state.accept(state.dependencies, injected, human.incoming, human.call, delivery(human.incoming.request, [state.source()]))).status).toBe("unavailable")
+    const promoted = delivery(human.incoming.request, [state.source()])
     if (promoted.state !== "ready" || promoted.kind !== "DeliveryAssessment") throw new Error("Fixture kind mismatch")
     promoted.payload.capacityConstraints = ["2 FTE of free capacity"]
     expect((await state.accept(state.dependencies, input, human.incoming, human.call, promoted)).status).toBe("unavailable")
-    const erased = delivery(state.caseRef, [state.source()])
+    const erased = delivery(human.incoming.request, [state.source()])
     if (erased.state !== "ready" || erased.kind !== "DeliveryAssessment") throw new Error("Fixture kind mismatch")
     erased.payload.unresolvedConditions = erased.payload.unresolvedConditions.filter((condition) => condition.category !== "human-declared-constraint")
     expect((await state.accept(state.dependencies, input, human.incoming, human.call, erased)).status).toBe("unavailable")
@@ -287,7 +288,7 @@ test("dependency variants refuse absent choices, noncanonical IDs, ambiguous mil
     const human = await state.admit("sf-revisar-dependencias", dependencySelection())
     const input = ok(await state.prepare(state.dependencies, human.incoming, human.call))
     await state.editDate("2026-12-21")
-    expect((await state.accept(state.dependencies, input, human.incoming, human.call, delivery(state.caseRef, [state.source()]))).status).toBe("unavailable")
+    expect((await state.accept(state.dependencies, input, human.incoming, human.call, delivery(human.incoming.request, [state.source()]))).status).toBe("unavailable")
     state.control.active = false
     expect((await state.dependencies.producer.prepare(dependencySelection(), human.incoming.request, human.call)).status).toBe("unavailable")
     state.authority.human.finish(human.call)
@@ -320,9 +321,9 @@ for (const group of [
     try {
       const input = ok(await state.prepare(state.dependencies, human.incoming, human.call)) as DependencyReviewInput
       expect(input.relations).toMatchObject([{ id: relation.id, version: 1, state: "confirmed" }])
-      const output = { state: "ready", kind: "DependencyConflict", evidenceRefs: relation.evidenceRefs,
+      const output = verifierOutputFixture(human.incoming.request, { state: "ready", kind: "DependencyConflict", evidenceRefs: relation.evidenceRefs,
         payload: { fromRef: relation.fromRef, toRef: relation.toRef, constraintRef: "human-declared-constraint:0",
-          reason: `Unverified human declaration: ${declaration}`, evidenceRefs: relation.evidenceRefs, state: "needs-input" } } as ContributionEnvelope
+          reason: `Unverified human declaration: ${declaration}`, evidenceRefs: relation.evidenceRefs, state: "needs-input" } })
       if (output.state !== "ready" || output.kind !== "DependencyConflict") throw new Error("Fixture kind mismatch")
       expect(decodeSfContributionOutput("DependencyConflict", output.payload).ok).toBe(true)
       expect(await state.accept(state.dependencies, input, human.incoming, human.call, output)).toEqual({ status: "ok", value: true })
@@ -371,8 +372,8 @@ test("real Dashboard confirmations preserve stale and executive output cannot er
     const input = ok(await state.prepare(state.executives, human.incoming, human.call)) as ExecutiveReviewInput
     expect(input.confirmations).toMatchObject([{ confirmationId: record.id, state: "stale", reason: "material-change" }])
     expect(input.factualRoutineResults).toEqual([])
-    const output = { state: "ready", kind: "DecisionBrief", evidenceRefs: [state.source()], payload: { caseRef: encodeCaseRef(state.caseRef), caseVersion: 1, objective: human.incoming.request.objective,
-      orderedResultRefs: [], evidenceRefs: [state.source()], conditions: [{ id: `confirmation:${record.id}`, category: "confirmation", reason: "material-change", evidenceRefs: [] }] } } as ContributionEnvelope
+    const output = verifierOutputFixture(human.incoming.request, { state: "ready", kind: "DecisionBrief", evidenceRefs: [state.source()], payload: { caseRef: encodeCaseRef(state.caseRef), caseVersion: 1, objective: human.incoming.request.objective,
+      orderedResultRefs: [], evidenceRefs: [state.source()], conditions: [{ id: `confirmation:${record.id}`, category: "confirmation", reason: "material-change", evidenceRefs: [] }] } })
     expect(await state.accept(state.executives, input, human.incoming, human.call, output)).toEqual({ status: "ok", value: true })
     if (output.state !== "ready" || output.kind !== "DecisionBrief") throw new Error("Fixture kind mismatch")
     output.payload.conditions = []

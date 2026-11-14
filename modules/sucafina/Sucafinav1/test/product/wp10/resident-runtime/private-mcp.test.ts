@@ -151,7 +151,9 @@ for (const path of bridgePaths) {
       expect(fixture.registry.requestFor(finished)).toBeUndefined()
       expect(fixture.events.indexOf("server:closed")).toBeLessThan(fixture.events.indexOf("finish"))
       if ("result" in answer) {
-        expect(answer.result).toEqual({ fixture: "synthetic-domain-payload", privateMarker: fixture.privateMarker })
+        // This lifecycle fixture intentionally carries an opaque synthetic domain payload.
+        const transported: unknown = answer.result
+        expect(transported).toEqual({ fixture: "synthetic-domain-payload", privateMarker: fixture.privateMarker })
         expect(answer.receipt.kind).toBe("native")
         expect(fixture.captures).toHaveLength(1)
         expect(fixture.captures[0]![2]).toEqual(answer)

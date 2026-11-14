@@ -8,7 +8,7 @@ import { decodeSfOperationInput, decodeSfOperationOutput } from "../contracts/sc
 import { isSfPeriod } from "../contracts/validation.ts"
 import type { BoundCapabilityReceipt, TrustedDomainContext } from "../contracts/sf-execution.ts"
 import { dispatchSfCapability } from "../host-binding/capability-dispatch.ts"
-import { createBiDescriptor, readBiPresentation } from "./capabilities.ts"
+import { createBiDescriptor, readBiPresentation, revalidateBiSnapshot } from "./capabilities.ts"
 import type { BiPresentationPort } from "./capabilities.ts"
 import type { BiSelection } from "./catalog.ts"
 import { sameBiContext, sameBiProjection } from "./projection.ts"
@@ -63,6 +63,7 @@ export async function readBiDestination(input: {
   if (source.state === "revoked") return { status: "denied", reason: "selection-source-revoked" }
   if (source.state === "historical" || source.state === "stale" || source.state === "replaced") return { status: "stale", reason: "selection-source-changed" }
   if (!decodeSfOperationOutput("sf_source_get", source).ok || source.state !== "fresh" || !source.authorizedProjection || digestSfValue(source.ref) !== digestSfValue(row.drilldown) || source.accessRevision !== input.context.binding.accessRevision) return { status: "unavailable", reason: "selection-source-unavailable" }
-  if (!await input.source.revalidate(request, input.context, structuredClone(projection)) || !await input.authority.revalidateDomainContext(input.context)) return { status: "denied", reason: "access-changed" }
+  if (source.currentRef && digestSfValue(source.currentRef) !== digestSfValue(row.drilldown)) return { status: "stale", reason: "selection-source-changed" }
+  if (!await revalidateBiSnapshot(input.source, request, input.context, projection) || !await input.authority.revalidateDomainContext(input.context)) return { status: "denied", reason: "access-changed" }
   return { status: "ok", value: { selection, source } }
 }

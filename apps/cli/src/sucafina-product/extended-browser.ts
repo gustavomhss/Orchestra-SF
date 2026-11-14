@@ -52,6 +52,7 @@ if (root && bootstrap) {
     finally { pending.delete(controller) }
   }
   window.addEventListener("focus", () => { void probe() })
+  window.addEventListener("sf-access-revoked", clearPrivate, { once: true })
   window.addEventListener("pagehide", clearPrivate, { once: true })
   if (value && typeof value === "object" && typeof value.reviewRef === "string") {
     const status = document.createElement("p"), sources = document.createElement("nav")

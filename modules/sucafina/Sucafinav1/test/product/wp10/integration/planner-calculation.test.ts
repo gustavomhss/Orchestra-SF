@@ -241,7 +241,7 @@ test("Planner calculation preserves UI and repeated BCS reads and rejects cycles
       expect((await first.business.calculations.issue(calculation.target.runId, call)).status).toBe("ok")
       expect(reentered).toBe(true)
       const found = await first.business.context.resolve(calculation, call)
-      if (!found.authorizedProjection || !("context" in found.authorizedProjection)) throw new Error("Authorized calculation projection missing")
+      if (!found.authorizedProjection || !("context" in found.authorizedProjection) || !("components" in found.authorizedProjection)) throw new Error("Authorized calculation projection missing")
       expect(found.authorizedProjection.components).toEqual(produced.value.result.components)
       expect(found.authorizedProjection.decision).toBeUndefined()
       expect(found.authorizedProjection.values.find((value) => value.id === "scenario:total")?.value).toBeNull()

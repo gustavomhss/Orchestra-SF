@@ -74,7 +74,7 @@ test("exact mark destination revalidates identity, version and C17 evidence with
   }
 })
 
-test("checked projections are detached from callback mutation and access is fenced at egress", async () => {
+test("checked projections reject a mutating host fence and access is fenced at egress", async () => {
   const f = fixture()
   const context = await f.admit()
   expect(await f.ui.validate(context, "sf_bi_view", digestSfValue(f.request))).toBe(true)
@@ -83,10 +83,50 @@ test("checked projections are detached from callback mutation and access is fenc
     return true
   } }
   const result = await readBiView(f.request, context, source, f.authority)
-  expect(result.status).toBe("ok")
-  if (result.status === "ok") expect(result.value.context.currency).toBe("USD")
+  expect(result).toEqual({ status: "denied", reason: "access-changed" })
+  expect(result).not.toHaveProperty("value")
   const revoked = { ...f.source, describe: async () => { f.active.value = false; return { status: "ok" as const, value: { viewId: "BI04" as const, series: [], limitations: [] } } } }
   expect((await dispatchBiPresentation(f.request, await f.admit(), revoked, f.authority)).status).toBe("denied")
+})
+
+test("the final C17 fence cannot authorize a different selection or projection after evidence resolution", async () => {
+  for (const target of ["selection", "projection"] as const) {
+    const f = fixture()
+    const selection = presentProjection(f.projection, f.request.selectionRef).rows[0]!.selection
+    const resolved = { value: false }
+    const source: BiPresentationPort = { ...f.source, revalidate: async (request, context, projection) => {
+      if (resolved.value) {
+        if (target === "selection") request.selectionRef = "different-selection"
+        if (target === "projection" && projection) projection.version++
+      }
+      return f.authority.revalidateDomainContext(context)
+    } }
+    const result = await readBiDestination({ request: f.request, selection, context: await f.admit(), source, authority: f.authority, business: { resolve: async (reference) => {
+      resolved.value = true
+      return { state: "fresh", ref: reference, authorizedProjection: f.projection, accessRevision: "1", checkedAt: "2026-11-13T00:00:00Z" }
+    } } })
+    expect(resolved.value).toBe(true)
+    expect(result).toEqual({ status: "denied", reason: "access-changed" })
+    expect(result).not.toHaveProperty("value")
+    expect(f.request.selectionRef).toBe("authorized-selection")
+    expect(f.projection.version).toBe(2)
+    expect(selection.projectionVersion).toBe(2)
+  }
+})
+
+test("C17 fresh evidence cannot advertise a different current reference from the selected mark", async () => {
+  const f = fixture()
+  const selection = presentProjection(f.projection, f.request.selectionRef).rows[0]!.selection
+  const changed = { ...f.reference, refId: "different-current-record" }
+  changed.refDigest = digestSfEvidenceRef(changed)
+  for (const currentRef of [f.reference, changed]) {
+    const result = await readBiDestination({ request: f.request, selection, context: await f.admit(), source: f.source, authority: f.authority, business: { resolve: async () => ({ state: "fresh", ref: f.reference, currentRef, authorizedProjection: f.projection, accessRevision: "1", checkedAt: "2026-11-13T00:00:00Z" }) } })
+    if (currentRef === f.reference) expect(result.status).toBe("ok")
+    else {
+      expect(result).toEqual({ status: "stale", reason: "selection-source-changed" })
+      expect(result).not.toHaveProperty("value")
+    }
+  }
 })
 
 test("a new projection between dispatch and presentation is stale", async () => {

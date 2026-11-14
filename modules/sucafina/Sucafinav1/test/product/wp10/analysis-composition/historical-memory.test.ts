@@ -33,7 +33,7 @@ import { digestSfEvidenceRef, digestSfValue } from "../../../../product/contract
 import type { BusinessEvidenceRef } from "../../../../product/contracts/business-context.ts"
 import type { CostCoverageBasis, DecisionCase, ScenarioResult, CaseLedgerEvent } from "../../../../product/contracts/decisions.ts"
 import type { ScenarioOperation } from "../../../../product/contracts/operations.ts"
-import type { ContributionEnvelope } from "../../../../product/contracts/resident-ai.ts"
+import { verifierOutputFixture } from "./verifier-output-fixture.ts"
 import type { DecisionRecallInput } from "../../../../product/contracts/skill-inputs.ts"
 import atlasPackage from "../../../../../../atlas/boundary/package.json" with { type: "json" }
 import contractFreeze from "../../../../product/contracts/freeze-v1.json" with { type: "json" }
@@ -44,7 +44,8 @@ const at = "2026-11-14T00:00:00Z"
 
 // The chosen case is an explicit upstream fixture with pending coverage. Source archives,
 // the scanner, C08, source lifecycle, continuity, CaseRecall and all adapter checks are real.
-// No model, Session, SkillLoadReceipt or native publication is constructed by this test.
+// No model or Session executes. Output metadata below is an explicitly unpublished
+// structural fixture; no loaded-skill receipt or native publication is claimed.
 test("historical decision recall binds original/current evidence and rejects changed proof or authority", async () => {
   expectSpawn(import.meta.path)
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-historical-recall-"))
@@ -206,8 +207,9 @@ test("historical decision recall binds original/current evidence and rejects cha
         const changed = proof.sources.map((item) => item === historical ? malformed : item)
         expect(sfAnalysisSourcesAuthorized({ ...proof, sources: changed, promptContext: { decisionRecall: { ...prompt, sources: changed.map(sfMemoryEvidence) } } }, analysis, call)).toBe(false)
       }
-      // This fragment tests only the payload verifier. It has no native envelope/provenance or publication authority.
-      const output = { kind: "CaseRecall", state: "ready", payload: prompt.result, evidenceRefs: proof.sources.map((item) => item.ref) } as ContributionEnvelope
+      // The canonical decoder checks this structural fixture; only the payload verifier runs.
+      // Its explicitly unexecuted metadata confers no publication authority.
+      const output = verifierOutputFixture(analysis, { kind: "CaseRecall", state: "ready", payload: prompt.result, evidenceRefs: proof.sources.map((item) => item.ref) })
       expect(await proof.acceptsOutput(output, call)).toEqual({ status: "ok", value: true })
       const excluded = await activeBusiness.caseRecall({ caseRef, limit: 50, scope: { query: value.query, recallScope: { ...value.recallScope, includeHistorical: false } } }, call)
       expect(excluded).toMatchObject({ status: "ok", matches: [] })

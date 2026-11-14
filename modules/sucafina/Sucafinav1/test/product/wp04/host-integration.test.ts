@@ -28,6 +28,7 @@ import { createSfSourceScopeProjector } from "../../../product/integration/sourc
 import { encodeCaseRef } from "../../../product/decisions/case-port.ts"
 import { createChoiceSnapshot } from "../../../product/decisions/choice.ts"
 import { createProcurementDecisionHttp } from "../../../product/procurement/decision-http.ts"
+import { createProcurementDecisionHost } from "../../../product/procurement/decision-host.ts"
 
 const period = { start: "2026-01-01", end: "2026-12-31" }
 const initialAt = "2026-11-13T00:00:00Z"
@@ -100,7 +101,8 @@ test("real HTTP prepares, reviews and applies C12 with one durable effect and au
     if (visible.status !== "ok") throw new Error(`prepared case unreadable: ${visible.reason}`)
     expect(visible.value.case.preparedChanges[0]).not.toHaveProperty("operation")
     expect(visible.value.case.preparedChanges[0]).toHaveProperty("operationRef")
-    const noReview = await fixture.http("decision-apply", prepared.request)
+    expect((await fixture.http("decision-apply", prepared.request)).response.status).toBe(400)
+    const noReview = await fixture.http("decision-apply", { ...prepared.request, reviewDigest: digestSfValue({ purpose: "unobserved-review" }) })
     expect(noReview.response.status).toBe(403)
     expect(noReview.body.reason).toBe("prepared-review-required")
     expect(object((await fixture.material()).request.pr).estAmount).toBe(100)
@@ -110,8 +112,9 @@ test("real HTTP prepares, reviews and applies C12 with one durable effect and au
     expect(object(review.body.value).fields).toContainEqual(expect.objectContaining({ field: "originalAmount", before: 100, after: 150 }))
     expect(object(review.body.value)).not.toHaveProperty("command")
     expect(object(review.body.value)).not.toHaveProperty("operation")
+    const application = { ...prepared.request, reviewDigest: readReviewDigest(review.body) }
     fixture.advance(60_000)
-    const applied = await fixture.http("decision-apply", prepared.request, "alice", "apply-one")
+    const applied = await fixture.http("decision-apply", application, "alice", "apply-one")
     expect(applied.response.status).toBe(200)
     expect(object(applied.body.value)).toMatchObject({ outcome: "applied", surface: "procurement", version: 1 })
     expect(fixture.receiptCommits).toHaveLength(1)
@@ -119,7 +122,7 @@ test("real HTTP prepares, reviews and applies C12 with one durable effect and au
     const after = await fixture.material()
     expect(object(after.request.pr).estAmount).toBe(150)
     expect(after.request.history).toEqual([expect.objectContaining({ action: "Saved", by: "alice", at: "2026-11-13T00:01:00.000Z" })])
-    const retry = await fixture.http("decision-apply", prepared.request, "alice", "apply-one")
+    const retry = await fixture.http("decision-apply", application, "alice", "apply-one")
     expect(retry.response.status).toBe(200)
     expect(retry.body).toEqual(applied.body)
     expect(await fixture.material()).toEqual(after)
@@ -149,7 +152,7 @@ test("real HTTP prepares, reviews and applies C12 with one durable effect and au
     fixture.revoke("alice")
     expect((await fixture.business.context.resolve(fixture.evidence, call)).state).toBe("unavailable")
     expect((await fixture.business.context.resolve(receipt, call)).state).toBe("unavailable")
-    expect((await fixture.http("decision-apply", prepared.request, "alice", "apply-one")).response.status).toBe(403)
+    expect((await fixture.http("decision-apply", application, "alice", "apply-one")).response.status).toBe(403)
     expect(await fixture.material()).toEqual(after)
   } finally { await fixture.dispose() }
 // W5 measured 30.58s across prepare/review/apply/retry and multi-actor historical reads.
@@ -181,8 +184,10 @@ test("private original evidence is immutable and a replacement Request cannot re
     expect(archivedAgain).toMatchObject({ status: "ok", value: before.value[key] })
     const updated = readCaseRef(object(repeated.body.value).caseRef)
     const chosen = { ...prepared.request, caseRef: updated }
-    expect((await fixture.http("decision-review", { purpose: "review", ...chosen })).response.status).toBe(200)
-    expect((await fixture.http("decision-apply", chosen)).response.status).toBe(200)
+    const review = await fixture.http("decision-review", { purpose: "review", ...chosen })
+    expect(review.response.status).toBe(200)
+    const application = { ...chosen, reviewDigest: readReviewDigest(review.body) }
+    expect((await fixture.http("decision-apply", application)).response.status).toBe(200)
     const call = await fixture.ui("sf_case_read", { caseRef: encodeCaseRef(updated) })
     const current = await fixture.business.cases.read({ caseRef: encodeCaseRef(updated) }, call)
     if (current.status !== "ok") throw new Error(`applied case unavailable: ${current.reason}`)
@@ -215,7 +220,7 @@ test("private original evidence is immutable and a replacement Request cannot re
     expect((await fixture.business.context.resolve(fixture.evidence, call)).state).toBe("unavailable")
     expect((await fixture.business.context.resolve(receipt, call)).state).toBe("unavailable")
     expect((await fixture.business.cases.read({ caseRef: encodeCaseRef(updated) }, call)).status).toBe("unavailable")
-    expect((await fixture.http("decision-apply", chosen)).response.status).toBe(403)
+    expect((await fixture.http("decision-apply", application)).response.status).toBe(403)
     expect((await fixture.material()).request).toEqual(saved.request)
   } finally { await fixture.dispose() }
 // W5 measured 23.97s for two preparations, archive guards and historical/ABA checks.
@@ -226,13 +231,14 @@ test("Procurement decision HTTP rejects injected commands, ungranted actors and 
   try {
     const prepared = await prepareChange(fixture)
     const before = await fixture.material()
-    for (const payload of [{ ...prepared.request, actor: "alice" }, { ...prepared.request, command: { page: "Requests", action: "delete" } }, { ...prepared.request, caseRef: { ...prepared.request.caseRef, version: "3" } }]) {
+    const application = { ...prepared.request, reviewDigest: digestSfValue({ purpose: "rejected-http-intent" }) }
+    for (const payload of [prepared.request, { ...application, reviewDigest: "invalid" }, { ...application, reviewDigest: null }, { ...application, actor: "alice" }, { ...application, command: { page: "Requests", action: "delete" } }, { ...application, caseRef: { ...prepared.request.caseRef, version: "3" } }]) {
       expect((await fixture.http("decision-apply", payload)).response.status).toBe(400)
     }
-    expect((await fixture.http("decision-apply", prepared.request, "mallory")).response.status).toBe(403)
-    const cross = await fixture.application(fixture.request("alice", "decision-apply", prepared.request, randomUUID(), { origin: "https://other.invalid" }))
+    expect((await fixture.http("decision-apply", application, "mallory")).response.status).toBe(403)
+    const cross = await fixture.application(fixture.request("alice", "decision-apply", application, randomUUID(), { origin: "https://other.invalid" }))
     expect(cross?.status).toBe(403)
-    const extraQuery = fixture.request("alice", "decision-apply", prepared.request)
+    const extraQuery = fixture.request("alice", "decision-apply", application)
     const wrongQuery = new Request(`${extraQuery.url}&actor=alice`, extraQuery)
     expect((await fixture.application(wrongQuery))?.status).toBe(400)
     expect(await fixture.material()).toEqual(before)
@@ -243,14 +249,16 @@ test("a real case edit between durable receipt and reconciliation preserves the 
   const fixture = await hostFixture("H05")
   try {
     const prepared = await prepareChange(fixture)
-    expect((await fixture.http("decision-review", { purpose: "review", ...prepared.request })).response.status).toBe(200)
+    const review = await fixture.http("decision-review", { purpose: "review", ...prepared.request })
+    expect(review.response.status).toBe(200)
+    const application = { ...prepared.request, reviewDigest: readReviewDigest(review.body) }
     fixture.afterReceiptCommit(async () => {
       const current = await fixture.storedCase()
       const changed = { ...current.value, version: current.value.version + 1, objective: "Concurrent authorized case edit" }
       const saved = await fixture.authority.state.transaction(fixture.request(), { namespace: "cases", expectedStorageVersion: current.storageVersion, targetRef: changed.id, targetIncarnation: changed.incarnation, idempotencyKey: randomUUID(), commandDigest: digestSfValue(changed) }, async (state) => { state.cases[changed.id] = changed; return { commit: true, value: true } })
       if (saved.status !== "ok") throw new Error("concurrent real case edit failed")
     })
-    const conflict = await fixture.http("decision-apply", prepared.request)
+    const conflict = await fixture.http("decision-apply", application)
     expect(conflict.response.status).toBe(409)
     expect(conflict.body).toEqual({ status: "stale", reason: "case-changed-after-application" })
     expect(fixture.receiptCommits).toHaveLength(1)
@@ -267,7 +275,7 @@ test("a real case edit between durable receipt and reconciliation preserves the 
     expect(receipts.value).toHaveLength(1)
     expect(receipts.value[0]).toMatchObject({ principalRef: "alice", surface: "procurement", version: 1 })
     expect(receipts.value[0]!.result).toEqual({ ok: true, value: { status: "applied" } })
-    expect((await fixture.http("decision-apply", prepared.request)).response.status).toBe(409)
+    expect((await fixture.http("decision-apply", application)).response.status).toBe(409)
     expect(await fixture.material()).toEqual(after)
     expect(fixture.receiptCommits).toHaveLength(1)
   } finally { await fixture.dispose() }
@@ -278,19 +286,27 @@ test("a durable application recovers after a lost commit response and cleared re
   const fixture = await hostFixture("H06")
   try {
     const prepared = await prepareChange(fixture)
-    expect((await fixture.http("decision-review", { purpose: "review", ...prepared.request })).response.status).toBe(200)
+    const review = await fixture.http("decision-review", { purpose: "review", ...prepared.request })
+    expect(review.response.status).toBe(200)
+    const application = { ...prepared.request, reviewDigest: readReviewDigest(review.body) }
     fixture.afterReceiptCommit(async () => {
       fixture.business.procurementDecisions.dispose()
       throw new Error("injected response loss after the real SQLite receipt commit")
     })
-    const interrupted = await fixture.http("decision-apply", prepared.request, "alice", "recover-application")
+    const interrupted = await fixture.http("decision-apply", application, "alice", "recover-application")
     expect(interrupted.response.status).toBe(503)
     const afterCommit = await fixture.material()
     expect(object(afterCommit.request.pr).estAmount).toBe(150)
     expect(afterCommit.request.history).toHaveLength(1)
     expect((await fixture.storedCase()).value.receipts).toEqual([])
     expect(fixture.receiptCommits).toHaveLength(1)
-    const recovered = await fixture.http("decision-apply", prepared.request, "alice", "recover-application")
+    fixture.advance(300_001)
+    const changedProof = await fixture.http("decision-apply", { ...application, reviewDigest: changedReviewDigest(application.reviewDigest) }, "alice", "recover-application")
+    expect(changedProof.response.status).toBe(409)
+    expect(changedProof.body).toEqual({ status: "conflict", reason: "review-proof-mismatch" })
+    expect(await fixture.material()).toEqual(afterCommit)
+    expect(fixture.receiptCommits).toHaveLength(1)
+    const recovered = await fixture.http("decision-apply", application, "alice", "recover-application")
     expect(recovered.response.status).toBe(200)
     expect(object(recovered.body.value)).toMatchObject({ outcome: "applied", version: 1 })
     expect((await fixture.storedCase()).value.state).toBe("applied")
@@ -305,7 +321,7 @@ test("a durable application recovers after a lost commit response and cleared re
     })
     // The actor and grants remain unchanged: physical continuity must be checked
     // again after the host captures its target and before returning the receipt.
-    const replaced = await fixture.http("decision-apply", prepared.request, "alice", "recover-application")
+    const replaced = await fixture.http("decision-apply", application, "alice", "recover-application")
     expect(replacedAfterCapture).toBe(true)
     expect(replaced.response.status).toBe(403)
     expect(object((await fixture.material()).request.pr).estAmount).toBe(150)
@@ -315,7 +331,61 @@ test("a durable application recovers after a lost commit response and cleared re
 // W5 measured 15.30s including durable failure recovery and the receipt ABA interleave.
 }, 30_000)
 
-async function hostFixture(scenario: string) {
+test("C12 rejects another review proof, changed human intent and an expired observed review", async () => {
+  const fixture = await hostFixture("H07", true)
+  try {
+    const prepared = await prepareChange(fixture)
+    const review = await fixture.http("decision-review", { purpose: "review", ...prepared.request })
+    expect(review.response.status).toBe(200)
+    const application = { ...prepared.request, reviewDigest: readReviewDigest(review.body) }
+    const changed = { ...application, reviewDigest: changedReviewDigest(application.reviewDigest) }
+    const before = await fixture.material()
+    const mismatched = await fixture.http("decision-apply", changed)
+    expect(mismatched.response.status).toBe(409)
+    expect(mismatched.body).toEqual({ status: "conflict", reason: "prepared-review-proof-mismatch" })
+    const admitted = await fixture.authority.human.admit(fixture.request("alice", "decision-apply", application), "decisions.apply", application)
+    if (admitted.status !== "ok") throw new Error(`real human admission unavailable: ${admitted.reason}`)
+    try {
+      expect(await fixture.business.procurementDecisions.apply(changed, admitted.value)).toEqual({ status: "denied", reason: "human-application-required" })
+    } finally { fixture.authority.human.finish(admitted.value) }
+    fixture.advance(300_000)
+    const expired = await fixture.http("decision-apply", application)
+    expect(expired.response.status).toBe(403)
+    expect(expired.body).toEqual({ status: "denied", reason: "prepared-review-required" })
+    expect(await fixture.material()).toEqual(before)
+    expect(fixture.receiptCommits).toHaveLength(0)
+    const receipts = await fixture.authority.state.read(fixture.request(), "receipts", (state) => Object.values(state.receipts))
+    expect(receipts).toMatchObject({ status: "ok", value: [] })
+  } finally { await fixture.dispose() }
+}, 25_000)
+
+test("C12 rereads the real review producer before the first application and rejects a changed source", async () => {
+  const fixture = await hostFixture("H08")
+  try {
+    const prepared = await prepareChange(fixture)
+    const review = await fixture.http("decision-review", { purpose: "review", ...prepared.request })
+    expect(review.response.status).toBe(200)
+    const application = { ...prepared.request, reviewDigest: readReviewDigest(review.body) }
+    let changedAfterCapture = false
+    fixture.afterApplyTargetCaptured(async () => {
+      changedAfterCapture = true
+      await fixture.edit({ estAmount: 175 })
+    })
+    const rejected = await fixture.http("decision-apply", application)
+    expect(changedAfterCapture).toBe(true)
+    expect(rejected.response.status).toBe(409)
+    expect(rejected.body.status).toBe("stale")
+    const material = await fixture.material()
+    expect(object(material.request.pr).estAmount).toBe(175)
+    expect(material.request.history).toHaveLength(1)
+    expect(fixture.receiptCommits).toHaveLength(0)
+    const receipts = await fixture.authority.state.read(fixture.request(), "receipts", (state) => Object.values(state.receipts))
+    expect(receipts).toMatchObject({ status: "ok", value: [] })
+    expect((await fixture.storedCase()).value.preparedChanges[0]?.state).toBe("planned")
+  } finally { await fixture.dispose() }
+}, 25_000)
+
+async function hostFixture(scenario: string, controlledReviewClock = false) {
   const started = performance.now()
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-procurement-host-"))
   await chmod(directory, 0o700)
@@ -394,7 +464,18 @@ async function hostFixture(scenario: string) {
     inspectSession: async () => undefined, verifySelection: async () => false, verifySkillReceipt: async () => false, providerGeneration: async () => undefined, authorizeDocument: async () => undefined, proposalCoverageWrites, procurementEvidenceWrites,
     authorizePreparedTarget: (value, snapshot, targetRef, current) => mounted.business?.procurementDecisions.authorizeReceiptTarget(value, snapshot, targetRef, current) ?? Promise.resolve(undefined),
   })
-  const business = createSfBusinessServices({ authority, persistence, proposalCoverageWrites, procurementEvidenceWrites })
+  const services = createSfBusinessServices({ authority, persistence, proposalCoverageWrites, procurementEvidenceWrites })
+  // The expiry case varies only the owned producer's clock. Its ports, grants,
+  // review producer, source fences and SQLite persistence are the real services.
+  const decisions = controlledReviewClock ? createProcurementDecisionHost({
+    host: { ...authority.host, ...services.registry, resolveRequestSource: services.resolveProcurement,
+      isCurrentRequestSource: (snapshot, evidence) => services.registry.isCurrentRequestSource(snapshot, evidence) || services.individual.isCurrent(snapshot, evidence),
+      resolveSupplierSource: services.individual.resolve, isCurrentSupplierSource: services.individual.isCurrent, readContractSource: services.contracts.readContractSource },
+    port: services.procurement, individual: services.individual, authority, procurementEvidenceWrites, cases: services.cases,
+    planner: services.planner, plannerSources: services.plannerSources, operationIdentity: services.operationIdentity,
+    readSourceFences: services.readSourceFences, lockedSourceFences: services.lockedSourceFences, createId: randomUUID, now: () => clock.at,
+  }) : services.procurementDecisions
+  const business = { ...services, procurementDecisions: decisions }
   mounted.business = business
   const root = path.resolve(import.meta.dir, "../../../product/ai")
   const bundle = await createResidentAiBundle({ root, manifestPath: path.join(root, "manifests/resident.json") })
@@ -447,6 +528,7 @@ async function hostFixture(scenario: string) {
       return { response, body: object(await response.json()) }
     },
     dispose: async () => {
+      if (controlledReviewClock) decisions.dispose()
       business.dispose()
       await store.dispose()
       await rm(directory, { recursive: true, force: true })
@@ -483,4 +565,14 @@ function readCaseRef(value: unknown) {
   const ref = object(value)
   if (typeof ref.id !== "string" || typeof ref.incarnation !== "string" || typeof ref.version !== "number" || !Number.isSafeInteger(ref.version)) throw new Error("HTTP case reference invalid")
   return { id: ref.id, incarnation: ref.incarnation, version: ref.version }
+}
+
+function readReviewDigest(body: Record<string, unknown>) {
+  const digest = object(body.value).reviewDigest
+  if (typeof digest !== "string" || !/^[a-f0-9]{64}$/.test(digest)) throw new Error("real review producer digest unavailable")
+  return digest
+}
+
+function changedReviewDigest(digest: string) {
+  return `${digest[0] === "0" ? "1" : "0"}${digest.slice(1)}`
 }

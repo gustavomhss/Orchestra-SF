@@ -172,6 +172,9 @@ if (root) {
   for (const refresh of document.querySelectorAll<HTMLButtonElement>("[data-refresh-view]"))
     refresh.addEventListener("click", () => { void refreshAuthorized() })
   for (const logout of document.querySelectorAll<HTMLButtonElement>("[data-logout]")) logout.addEventListener("click", async () => {
+    // The canonical shell binds its sign-out handler before this bundle.
+    // Standalone mounting still has a fallback, without issuing a second POST.
+    if (logout.dataset.bound === "true") return
     if (stopped) return
     logout.disabled = true
     try {

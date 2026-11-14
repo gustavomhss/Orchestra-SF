@@ -7,6 +7,8 @@ import { Schema } from "effect"
 import { Location } from "@orchestra/core/location"
 import { AbsolutePath } from "@orchestra/core/schema"
 import { SessionSchema } from "@orchestra/core/session/schema"
+import { ModelV2 } from "@orchestra/core/model"
+import { ProviderV2 } from "@orchestra/core/provider"
 import { createSfBusinessServices } from "../../../../../../../apps/cli/src/sucafina-product/business-services.ts"
 import { createSfDecisionDomainServices } from "../../../../../../../apps/cli/src/sucafina-product/decision-domain-services.ts"
 import { createSfPortfolioServices } from "../../../../../../../apps/cli/src/sucafina-product/portfolio-services.ts"
@@ -171,7 +173,8 @@ async function fixture(horizon: DecisionCase["horizon"] = { start: "2026-01-01",
       runForContext: (call) => replayContexts.get(call), admittedInput: (id) => id === "run" ? admitted.value : undefined, captures: () => [], revalidateCapture: async () => false })
     const actualPortfolio = createSfPortfolioServices({ authority, business, proposalCoverageWrites })
     cleanups.push(() => actualPortfolio.dispose())
-    const sharedPortfolio = { ...actualPortfolio, selection: { ...actualPortfolio.selection,
+    if (!actualPortfolio.product) throw new Error("Real shared Portfolio product unavailable")
+    const sharedPortfolio = { ...actualPortfolio, product: actualPortfolio.product, selection: { ...actualPortfolio.selection,
       read: async (...args: Parameters<typeof actualPortfolio.selection.read>) => { metrics.selectionReads++; return actualPortfolio.selection.read(...args) },
     } }
     const domain = createSfDecisionDomainServices({ authority, business, baseline: business.baselineCoverage, proposalCoverageWrites, signalRegistryWrites: new WeakSet(),
@@ -208,7 +211,10 @@ async function fixture(horizon: DecisionCase["horizon"] = { start: "2026-01-01",
         const result = ok(await phase(`fixture.scenario.${id}`, () => business.planner.simulateScenario(scenario, coverageCall)))
         expect(result.horizon).toEqual(horizon)
         // Only the fixture's case identities are assigned; financial results and source evidence come from the actual Planner.
-        alternatives.push({ id, version: 1, title: "Same title", scenario, result: { ...result, costCoverage: { ...result.costCoverage, alternativeId: id, alternativeVersion: 1 } } })
+        const assigned = structuredClone(result)
+        assigned.costCoverage.alternativeId = id
+        assigned.costCoverage.alternativeVersion = 1
+        alternatives.push({ id, version: 1, title: "Same title", scenario, result: assigned })
       }
       return { status: "ok", value: true }
     }))
@@ -237,7 +243,7 @@ async function fixture(horizon: DecisionCase["horizon"] = { start: "2026-01-01",
     authority.human.finish(preparing)
     const start: Parameters<NonNullable<SfHostServices["analyses"]>["start"]>[1] = { request: { caseRef, profileId: profile.id, profileVersion: profile.version, skillId: skill.id,
       skillVersion: skill.version, manifestDigest: selected.manifestDigest, outputSchemaVersion: "sf-contribution-v1", requestedOperationScope: ["sf_alternative_draft"], objective: "Compare exact alternatives" },
-      skillInput, model: { providerID: "openai", id: "model" } }
+      skillInput, model: { providerID: ProviderV2.ID.make("openai"), id: ModelV2.ID.make("model") } }
     const fullRequest = { ...start.request, contextFingerprint: digestSfValue({ caseRef, skillInput }) }
     const select = async (baselineAlternativeId: string, alternativeId: string, expectedVersion: number) => {
       const selection = { caseRef, baselineAlternativeId, alternativeId, criteria: [], expectedVersion }
@@ -399,7 +405,9 @@ test("canonical comparison reuse reopens Planner authority and remains bound to 
         // Even a rejection is returned from that actual producer, unchanged.
         await mutate((product) => { product.cases[state.caseRef.id]!.criteria = [{ id: "optional", description: "Fixture optional criterion", required: false }] })
         for (const attempt of [4, 5]) {
-          expect(await scope.compare(request, call)).toEqual(canonical)
+          const compared = await scope.compare(request, call)
+          if (!canonical) throw new Error("Canonical comparison was not observed")
+          expect(compared).toEqual(canonical)
           expect(produced).toBe(attempt)
         }
         await mutate((product) => { product.cases[state.caseRef.id]!.criteria = [] })

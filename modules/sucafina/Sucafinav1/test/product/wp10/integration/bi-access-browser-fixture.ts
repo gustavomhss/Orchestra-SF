@@ -108,7 +108,7 @@ export async function prepareSfBiAccessBrowser(input: { http: ReturnType<typeof 
       console.info("SF_BI_BROWSER_HTTP", JSON.stringify({ mode, state: "started", navigation: request.isNavigationRequest(), resource: request.resourceType() }))
       try {
         const response = await input.http(new Request(request.url(), { method: request.method(), headers: await request.allHeaders(), signal: input.signal,
-          ...(request.postDataBuffer() ? { body: request.postDataBuffer()! } : {}) }), "dashboard")
+          ...(request.postDataBuffer() ? { body: new Uint8Array(request.postDataBuffer()!).buffer } : {}) }), "dashboard")
         if (!response) {
           if (watch) throw new Error(`Real handler did not handle browser request ${mode}`)
           await route.abort("blockedbyclient")

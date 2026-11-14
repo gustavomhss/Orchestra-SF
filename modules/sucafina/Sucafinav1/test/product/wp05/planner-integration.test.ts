@@ -248,6 +248,11 @@ async function inspectBiProjection(
   if (!built.success || !built.outputs[0]) throw new Error("analytics browser bundle failed")
   const url = `data:text/javascript;base64,${Buffer.from(await built.outputs[0].text()).toString("base64")}`
   await inspectWp05Browser(`Planner ${request.viewId}`, async (page, phase) => {
+    phase("module-import")
+    await page.evaluate(async (url) => {
+      const module = await import(url)
+      if (typeof module.renderBiView !== "function") throw new Error("BI renderer export unavailable")
+    }, url)
     phase("render")
     await page.evaluate(async (input) => {
       const module = await import(input.url)

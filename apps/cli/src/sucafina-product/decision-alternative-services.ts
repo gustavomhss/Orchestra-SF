@@ -1,6 +1,7 @@
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import { decodeSfOperationInput, decodeSfSkillInput } from "../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
-import type { CostCoverageEntry, DecisionCase } from "../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts"
+import type { CostCoverageEntry } from "../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts"
+import type { AuthorizedCaseProjection } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
 import type { ScenarioRequest } from "../../../../modules/sucafina/Sucafinav1/product/contracts/operations.ts"
 import type { PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
 import type { SfHostServices } from "../../../../modules/sucafina/Sucafinav1/product/contracts/host-context.ts"
@@ -31,7 +32,7 @@ type CaseRef = { id: string; incarnation: string; version: number }
 type SelectedScenario = { caseRef: CaseRef; scenario: ScenarioRequest; coverageRef: string }
 type AnalysisStart = Parameters<NonNullable<SfHostServices["analyses"]>["start"]>[1]
 type ComparisonSelection = SelectedScenario & { caseDigest: string; selection: PortfolioSelection; coverageDigest: string }
-type ComparisonCase = { selected: CaseRef; decision: DecisionCase; alternatives: DecisionCase["alternatives"] }
+type ComparisonCase = { selected: CaseRef; decision: AuthorizedCaseProjection["case"]; alternatives: AuthorizedCaseProjection["case"]["alternatives"] }
 export type SfAdmittedAlternativeSelection = ComparisonSelection & {
   schema: "sf-admitted-alternative-selection-v1"
   requestDigest: string

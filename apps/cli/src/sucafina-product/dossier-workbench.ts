@@ -15,8 +15,23 @@ get("show").addEventListener("click",async()=>{
   try{
     const dossier=await read("sourcing-dossier-read",{requestRef:selection.value});
     const request=document.createElement("article");request.append(element("h2","Request"),element("pre",JSON.stringify(dossier.request.values.map((item)=>({field:item.id,value:item.value})),null,2)));result.append(request);
+    if(dossier.explanation){
+      const comparison=document.createElement("article");comparison.append(element("h2","Commercial comparison"),element("p",dossier.explanation.summary),element("p",dossier.explanation.sourceDistinction));
+      for(const proposal of dossier.explanation.proposals)comparison.append(element("p",proposal.text));
+      comparison.append(element("p",dossier.explanation.selection.message));
+      if(dossier.summary.ranking.length){const ranking=document.createElement("ol");for(const ref of dossier.summary.ranking)ranking.append(element("li",ref));comparison.append(element("h3","Domain ranking"),ranking);}
+      result.append(comparison);
+    }
+    if(dossier.commercialSources){
+      const terms=document.createElement("article"), source=dossier.commercialSources.proposalTerms;
+      terms.append(element("h2","Request proposal terms"));
+      if(source.status==="available")terms.append(element("p","Request source "+source.sourceRef.refId),element("pre",JSON.stringify({offers:source.offers,submittedBaseCurrency:source.submittedBaseCurrency,submittedFx:source.submittedFx},null,2)));
+      else terms.append(element("p","Proposal terms are unavailable for this Request."));
+      terms.append(element("p","Supplier register: "+dossier.commercialSources.supplierRegister.status));result.append(terms);
+    }
     for(const entry of dossier.documents){
       const article=document.createElement("article");
+      if(entry.state==="rejected"){article.append(element("h2",entry.fieldCandidate+": Rejected evidence"),element("p","This candidate was rejected and is excluded from dossier premises."),element("p","Reference "+entry.evidenceRef.refId));result.append(article);continue;}
       if(!entry.evidence){article.append(element("h2","Evidence unavailable"),element("p","The source is unavailable."));result.append(article);continue;}
       const evidence=entry.evidence, source=await read("document-open",{ref:JSON.stringify(evidence.ref)});
       article.append(element("h2",evidence.fieldCandidate+": "+String(evidence.value)+(evidence.unit?" "+evidence.unit:"")),
@@ -25,6 +40,8 @@ get("show").addEventListener("click",async()=>{
       if(source.href){const target=new URL(source.href,location.href);if(target.origin!==location.origin||target.pathname!==location.pathname)throw new Error("The source or access changed. Reload Requests and review current evidence.");const link=element("a","Open original");link.href=target.pathname+target.search;article.append(link);}
       result.append(article);
     }
+    if(dossier.nextSteps?.length){const next=document.createElement("article"), items=document.createElement("ul");next.append(element("h2","Next steps"));for(const step of dossier.nextSteps)items.append(element("li",step.message));next.append(items);result.append(next);}
+    if(dossier.draft){const draft=document.createElement("article");draft.append(element("h2","Draft conditions and gaps"),element("pre",JSON.stringify({conditions:dossier.draft.conditions,gaps:dossier.draft.gaps},null,2)));result.append(draft);}
     status.textContent=dossier.documents.length?"Current evidence loaded. This view does not confirm fields or apply changes.":"No current document evidence is available for this Request.";
   }catch(error){clearSelection();status.textContent=error.message;}finally{controls.disabled=false;}
 });

@@ -15,6 +15,7 @@ import { createSfExtendedBiOptions } from "./extended-bi-options.ts"
 import { readSfDecisionBiSelection, sfPlannerBiSelection } from "./bi-selections.ts"
 import { createSfExtendedReviewCycle, sfDashboardReviewAgendaItem } from "./extended-review-cycle.ts"
 import { sfExtendedSourceLinks } from "./extended-source-links.ts"
+import { sameBiProjection } from "../../../../modules/sucafina/Sucafinav1/product/analytics/projection.ts"
 import type { DomainProjection } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
 
 export function createSfExtendedHttp(input: {
@@ -63,14 +64,29 @@ export function createSfExtendedHttp(input: {
         if (!input.reviews || !reference || !referenceId || reference.length > 2048 || referenceId.length > 16384) return json({ status: "needs-input", reason: "invalid-review-source" }, 400)
         const reviewed = await input.reviews.reviews.read(reference, call)
         if (reviewed.status !== "ok") return json(reviewed, reviewed.status === "denied" ? 403 : 409)
+        const preserved = [{ reference, digest: digestSfValue(reviewed.value) }]
         let sources = reviewCycle.evidence(reviewed.value, referenceId)
         if (!sources.length && reviewed.value.previousReviewRef) {
           const previous = await input.reviews.reviews.read(reviewed.value.previousReviewRef, call)
           if (previous.status !== "ok") return json(previous, previous.status === "denied" ? 403 : 409)
+          preserved.push({ reference: reviewed.value.previousReviewRef, digest: digestSfValue(previous.value) })
           sources = reviewCycle.evidence(previous.value, referenceId)
         }
         if (!sources.length || sources.some((source) => digestSfValue(source) !== digestSfValue(sources[0]))) return json({ status: "denied", reason: "source-outside-preserved-review" }, 403)
         const links = await sfExtendedSourceLinks({ business, reference: sources[0]!, call, url })
+        // The record destination does not authorize its association with a
+        // preserved review. Reopen every review used by that association after
+        // resolving links, in one real C08 read scope, including the predecessor.
+        const checked = await authority.state.read(request, "reviews", async () => {
+          for (const expected of preserved) {
+            const current = await input.reviews!.reviews.read(expected.reference, call)
+            if (current.status !== "ok") return current
+            if (digestSfValue(current.value) !== expected.digest) return { status: "stale" as const, reason: "review-source-changed" }
+          }
+          return { status: "ok" as const, value: true }
+        })
+        if (checked.status !== "ok") return json(checked, checked.status === "denied" ? 403 : 409)
+        if (checked.value.status !== "ok") return json(checked.value, checked.value.status === "denied" ? 403 : 409)
         return links.length ? json({ links }) : json({ status: "unavailable", reason: "source-or-destination-period-unavailable" }, 409)
       }
       if (mode === "bi-options") {
@@ -88,6 +104,11 @@ export function createSfExtendedHttp(input: {
           const value = current.value.values.find((entry) => entry.id === url.searchParams.get("valueId"))
           if (!value?.drilldown) return { status: "unavailable" as const, reason: "bi-value-source-unavailable" }
           const links = await sfExtendedSourceLinks({ business, reference: value.drilldown, call, url })
+          // Reopen the protected selection after destination resolution. The
+          // producer's digest comparison ignores only observation timestamps.
+          const latest = await input.bi.source.read({ viewId, selectionRef: ref, period }, call)
+          if (latest.status !== "ok") return latest
+          if (!sameBiProjection(latest.value, current.value)) return { status: "stale" as const, reason: "bi-source-changed" }
           return links.length ? { status: "ok" as const, value: { links } } : { status: "unavailable" as const, reason: "source-or-destination-period-unavailable" }
         }
         const result = selectedCase ? await business.withCase(call, selectedCase, {}, read) : await read()
@@ -165,20 +186,14 @@ export function createSfExtendedHttp(input: {
         const unavailable = await verifyReviewBootstrap()
         if (unavailable) return unavailable
       }
-      const content = mode === "review" ? '<section data-sf-review-workspace><p role="status">Loading review…</p></section>' : '<section data-sf-bi><p role="status">Loading analyses…</p></section>'
+      // These client workspaces retain their live state across shell probes.
+      // The published shell still owns navigation, notifications and sign-out.
+      const content = mode === "review" ? '<section data-sf-review-workspace data-sf-retain-view><p role="status">Loading review…</p></section>' : '<section data-sf-bi data-sf-retain-view><p role="status">Loading analyses…</p></section>'
       const inline = script.replace(/<\/script/gi, "<\\/script")
       const bootstrapHtml = data === undefined ? "" : `<script type="application/json" data-sf-review-bootstrap>${JSON.stringify(data).replace(/</g, "\\u003c")}</script>`
       const title = mode === "review" ? "Review and reports" : "Business intelligence"
       const shell = documentHtml(title, "dashboard", `<a href="${url.pathname}">Dashboard</a>`, pageMain({ drawn: true, key: title, index: 0 }, content), "")
-      // BI owns its live selection, refresh and cancellation lifecycle. The
-      // generic shell replaces main with server HTML without mounting that
-      // client again. Exclude that whole script, never rewrite published code.
-      // A changed shell shape requires an explicit integration update.
-      const shellScripts = mode === "bi" ? [...shell.matchAll(/<script\b([^>]*)>[\s\S]*?<\/script\s*>/gi)] : []
-      if (mode === "bi" && (shellScripts.length !== 1 || shellScripts[0]![1]!.trim()))
-        return json({ status: "unavailable", reason: "browser-shell-unavailable" }, 503)
-      const layout = mode === "bi" ? shell.slice(0, shellScripts[0]!.index!) + shell.slice(shellScripts[0]!.index! + shellScripts[0]![0].length) : shell
-      const html = layout
+      const html = shell
         // A replacement string would interpret dollar sequences in the bundle
         // or bootstrap as substitutions of the surrounding document.
         .replace("</body>", () => `${bootstrapHtml}<script>${inline}</script></body>`)

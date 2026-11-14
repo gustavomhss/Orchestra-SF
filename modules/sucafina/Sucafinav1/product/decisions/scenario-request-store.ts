@@ -6,7 +6,7 @@ import type { DomainPortHost, PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { SfProductState, SfProductStatePort, SfStateAuthority } from "../contracts/state.ts"
 import type { Snapshot } from "../../runtime/contract.ts"
-import type { createSfDecisionResultStore } from "./result-store.ts"
+import type { createSfDecisionResultStore, StoredDecisionResult } from "./result-store.ts"
 
 type StoredScenarioRequest = { schema: "sf-scenario-request-v1"; resultRef: string; caseRef: { id: string; incarnation: string; version: number }; request: ScenarioRequest; requestDigest: string; resultDigest: string; engineVersion: string; recordDigest: string }
 const key = (resultRef: string) => `sf:proposal-coverage:scenario-request:${digestSfValue(resultRef)}`
@@ -19,6 +19,8 @@ export function createScenarioRequestStore(input: {
   host: Pick<DomainPortHost, "requestFor" | "revalidate">
   authorizeCase: (decision: DecisionCase, context: TrustedDomainContext) => Promise<boolean>
   authorizeProducer: (request: ScenarioRequest, resultRef: string, engineVersion: string, context: TrustedDomainContext) => Promise<boolean>
+  /** Nested input is admitted only with the canonical producer's source-closure and ancestry verifier. */
+  verifyRequestSources?: (request: ScenarioRequest, result: Extract<StoredDecisionResult, { kind: "scenario" }>, context: TrustedDomainContext) => Promise<boolean>
   verifySnapshot: (snapshot: Snapshot, record: StoredScenarioRequest, context: TrustedDomainContext) => boolean
   operationIdentity: (context: TrustedDomainContext) => string | undefined
   writes: WeakSet<object>
@@ -30,14 +32,16 @@ export function createScenarioRequestStore(input: {
       const loaded = await input.state.read(source, "preferences", (state, authority) => sameAuthority(authority, context) ? state.preferences[key(resultRef)] : undefined)
       if (loaded.status !== "ok" || !loaded.value || typeof loaded.value !== "object") return { status: "unavailable", reason: "scenario-request-unavailable" }
       const record = loaded.value as StoredScenarioRequest
-      if (!decodeSfOperationInput("sf_scenario_simulate", record.request).ok || record.request.assumptions.some((item) => item.evidenceRefs.some((ref) => ref.kind !== "record")) || record.request.operations.some((item) => item.replacementRef !== undefined)) return { status: "unavailable", reason: "calculation-source-unsupported" }
+      if (!decodeSfOperationInput("sf_scenario_simulate", record.request).ok || !input.verifyRequestSources && (record.request.assumptions.some((item) => item.evidenceRefs.some((ref) => ref.kind !== "record")) || record.request.operations.some((item) => item.replacementRef !== undefined))) return { status: "unavailable", reason: "calculation-source-unsupported" }
       const result = await input.results.readForCalculation({ resultRef }, context)
       if (result.status !== "ok" || result.value.kind !== "scenario") return { status: "unavailable", reason: "scenario-request-unavailable" }
       const current = await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? state.cases[result.value.caseRef.id] : undefined)
       if (record.schema !== "sf-scenario-request-v1" || record.resultRef !== resultRef || record.recordDigest !== digest(record) || !decodeSfOperationInput("sf_scenario_simulate", record.request).ok || record.requestDigest !== digestSfValue(record.request) || record.requestDigest !== result.value.requestDigest || record.resultDigest !== result.value.resultDigest || digestSfValue(record.caseRef) !== digestSfValue(result.value.caseRef) || !record.engineVersion.trim() || current.status !== "ok" || !current.value || current.value.version !== record.caseRef.version || current.value.incarnation !== record.caseRef.incarnation || !current.value.participants.includes(context.binding.principalRef) || !await input.authorizeCase(current.value, context)) return { status: "unavailable", reason: "scenario-request-unavailable" }
+      if (input.verifyRequestSources && !await input.verifyRequestSources(structuredClone(record.request), structuredClone(result.value), context)) return { status: "unavailable", reason: "calculation-request-sources-unproven" }
       const again = await input.state.read(source, "preferences", (state, authority) => sameAuthority(authority, context) ? state.preferences[key(resultRef)] : undefined)
       const resultAgain = await input.results.readForCalculation({ resultRef }, context)
       if (again.status !== "ok" || digestSfValue(again.value) !== digestSfValue(record) || resultAgain.status !== "ok" || digestSfValue(resultAgain.value) !== digestSfValue(result.value) || source.signal.aborted || !await input.host.revalidate(context)) return { status: "stale", reason: "scenario-request-changed" }
+      if (input.verifyRequestSources && (resultAgain.value.kind !== "scenario" || !await input.verifyRequestSources(structuredClone(record.request), structuredClone(resultAgain.value), context) || source.signal.aborted || !await input.host.revalidate(context))) return { status: "unavailable", reason: "calculation-request-sources-unproven" }
       return { status: "ok", value: structuredClone(record) }
     } catch { return { status: "unavailable", reason: "scenario-request-unavailable" } }
   }

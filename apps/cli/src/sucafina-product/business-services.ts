@@ -53,7 +53,7 @@ import { createProcurementConfirmationObserver } from "../../../../modules/sucaf
 import { createProcurementCollectionMemberIssuer } from "../../../../modules/sucafina/Sucafinav1/product/procurement/collection-member.ts"
 import { createProcurementDecisionPreparation } from "../../../../modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts"
 import { createProcurementQueuePageView, procurementQueueIntent } from "../../../../modules/sucafina/Sucafinav1/product/procurement/queue-page.ts"
-import { prepareSourcingDossier } from "../../../../modules/sucafina/Sucafinav1/product/routines/dossier.ts"
+import { prepareSourcingDossier, type ProcurementPreparation } from "../../../../modules/sucafina/Sucafinav1/product/routines/dossier.ts"
 import { resolveSfDocumentEvidence } from "../../../../modules/sucafina/Sucafinav1/product/documents/evidence-resolver.ts"
 import freeze from "../../../../modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json" with { type: "json" }
 
@@ -284,7 +284,9 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
         ? final : { status: "denied", reason: "calculation-case-authority-changed" }
     } finally { if (scope) releaseCaseScope(call, scope) }
   }
+  const calculationVerifier: { current?: NonNullable<Parameters<typeof createSfDecisionResultStore>[0]["verifyCalculationSources"]> } = {}
   const results = createSfDecisionResultStore({ state: input.authority.state, host, authorizeCase, createId: randomUUID, now: () => new Date().toISOString(),
+    verifyCalculationSources: (value, refs, call) => calculationVerifier.current?.(value, refs, call) ?? Promise.resolve(false),
     verifySources: async (_value, refs, call) => {
       const found = await context.context({ refs }, call)
       return found.length === refs.length && found.every((item, index) => item.state === "fresh" && !!item.authorizedProjection && !!item.currentRef &&
@@ -336,7 +338,8 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     readSourceFences, resolveProcurementEvidence: context.resolve, externalOperation: dashboardDecisions.resolveOperation })
   const basePersist = createPlannerResultPersistence({ store: results, scenarios: product.scenarios, replay: planner, resolveCase })
   const calculations = createSfPlannerCalculationServices({ host, state: input.authority.state, results, authorizeCase, operationIdentity,
-    writes: input.proposalCoverageWrites, sources: plannerSources, evidence: context, persist: basePersist, readSourceFences, lockedSourceFences, withCalculationCase })
+    writes: input.proposalCoverageWrites, sources: plannerSources, replayScenario: planner.simulateScenario, evidence: context, persist: basePersist, readSourceFences, lockedSourceFences, withCalculationCase })
+  calculationVerifier.current = calculations.verifyCalculationSources
   const persist = calculations.persist
   const receipt = input.authority.authority.receiptFor
   const descriptors = [
@@ -499,6 +502,17 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     })
   } }
   const prepareProcurement = createProcurementDecisionPreparation(procurement)
+  const prepareDossierProcurement = async (requestRef: string, call: TrustedDomainContext): Promise<PortResult<ProcurementPreparation>> => {
+    const prepared = await prepareProcurement(requestRef, call)
+    if (prepared.status !== "ok") return prepared
+    const source = await sourcingEvidence(requestRef, call)
+    if (source.status !== "ok") return source
+    if (prepared.value.request.version !== source.value.evidence.target.version || digestSfValue(prepared.value.request.context) !== digestSfValue(source.value.context) ||
+      !prepared.value.request.values.length || prepared.value.request.values.some((value) => !value.sourceRefs.length || value.sourceRefs.some((ref) => digestSfValue(ref) !== digestSfValue(source.value.evidence))) ||
+      digestSfValue(prepared.value.comparison) !== digestSfValue(source.value.comparison) || !await host.revalidate(call))
+      return { status: "stale", reason: "dossier-request-projection-changed" }
+    return { status: "ok", value: { ...prepared.value, sourcing: source.value } }
+  }
   const dossierDocuments = async (requestRef: string, call: TrustedDomainContext): Promise<PortResult<readonly Extract<BusinessEvidenceRef, { kind: "document" }>[]>> => {
     const request = host.requestFor(call)
     const source = await resolveProcurement(requestRef, call)
@@ -527,7 +541,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
     return { status: "ok", value: refs.map(({ entry }) => entry.ref).sort((a, b) => a.refDigest.localeCompare(b.refDigest)) }
   }
   const procurementDossier = { prepare: (requestRef: string, call: TrustedDomainContext) => prepareSourcingDossier({
-    requestRef, context: call, prepareProcurement, selectedDocuments: dossierDocuments,
+    requestRef, context: call, prepareProcurement: prepareDossierProcurement, selectedDocuments: dossierDocuments,
     reader: input.documentRead ?? (async (_id, binding) => ({ status: "unavailable", accessRevision: binding.binding.accessRevision })),
     revalidate: async (refs) => {
       const request = host.requestFor(call)
@@ -536,7 +550,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
       return resolved.every((value) => value.state === "fresh" && !!value.authorizedProjection) && !request.signal.aborted && await host.revalidate(call)
     },
     revalidateProcurement: async (material) => {
-      const current = await prepareProcurement(requestRef, call)
+      const current = await prepareDossierProcurement(requestRef, call)
       const stable = (value: typeof material) => ({ ...value, request: { ...value.request, values: value.request.values.filter((field) => field.id !== "ageDays") } })
       return current.status === "ok" && digestSfValue(stable(current.value)) === digestSfValue(stable(material)) && await host.revalidate(call)
     },

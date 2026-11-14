@@ -3,12 +3,14 @@ import type { PortResult } from "../contracts/ports.ts"
 import type { TrustedUiContext } from "../contracts/sf-execution.ts"
 import type { createSfHumanAuthority } from "../integration/human-authority.ts"
 import { encodeCaseRef } from "../decisions/case-port.ts"
+import { isReviewDigest } from "../decisions/receipt-review-binding.ts"
 import type { createProcurementDecisionHost } from "./decision-host.ts"
 import { readProcurementBody } from "./http-body.ts"
 
 type CaseRef = { id: string; incarnation: string; version: number }
 type Decisions = ReturnType<typeof createProcurementDecisionHost>
 type Apply = Parameters<Decisions["apply"]>[0]
+type Review = Parameters<Decisions["reviewChange"]>[0]
 type Prepare = Parameters<Decisions["prepareChanges"]>[0]
 
 /** Narrow HTTP adapter over the real Procurement/WP11 services and full human intent. */
@@ -42,9 +44,10 @@ export function createProcurementDecisionHttp(input: {
       return await runtime.withCase(admitted.value, parsed.caseRef, { allowHistoricalRetry: mode !== "decision-review" }, async (): Promise<PortResult<Response>> => {
         if (mode === "decision-prepare-changes" && "operations" in parsed) return { status: "ok", value: response(await runtime.decisions.prepareChanges(parsed, admitted.value)) }
         if (!("changeId" in parsed)) return { status: "needs-input", reason: "invalid-decision-input" }
-        const selected: Apply = { caseRef: parsed.caseRef, choiceId: parsed.choiceId, changeId: parsed.changeId }
+        const selected: Review = { caseRef: parsed.caseRef, choiceId: parsed.choiceId, changeId: parsed.changeId }
         if (mode === "decision-review") return { status: "ok", value: response(await runtime.decisions.reviewChange(selected, admitted.value)) }
-        const result = await runtime.decisions.apply(selected, admitted.value)
+        if (!("reviewDigest" in parsed)) return { status: "needs-input", reason: "invalid-decision-input" }
+        const result = await runtime.decisions.apply({ ...selected, reviewDigest: parsed.reviewDigest }, admitted.value)
         return { status: "ok", value: result.status === "ok" ? response({ status: "ok", value: { receiptId: result.value.id, surface: result.value.surface, version: result.value.version, outcome: result.value.result.ok ? "applied" : result.value.result.status === 409 ? "conflict" : "failed" } }) : response(result) }
       }).then((result) => result.status === "ok" ? result.value : response(result))
     } catch {
@@ -53,7 +56,7 @@ export function createProcurementDecisionHttp(input: {
   }
 }
 
-function parse(mode: string, value: unknown): Prepare | Apply | (Apply & { purpose: "review" }) | undefined {
+function parse(mode: string, value: unknown): Prepare | Apply | (Review & { purpose: "review" }) | undefined {
   if (!object(value) || !caseRef(value.caseRef) || typeof value.choiceId !== "string" || !value.choiceId.trim()) return undefined
   if (mode === "decision-prepare-changes") {
     if (!closed(value, ["caseRef", "choiceId", "operations"])) return undefined
@@ -62,7 +65,7 @@ function parse(mode: string, value: unknown): Prepare | Apply | (Apply & { purpo
   }
   if (typeof value.changeId !== "string" || !value.changeId.trim()) return undefined
   if (mode === "decision-review") return closed(value, ["purpose", "caseRef", "choiceId", "changeId"]) && value.purpose === "review" ? { purpose: "review", caseRef: value.caseRef, choiceId: value.choiceId, changeId: value.changeId } : undefined
-  return closed(value, ["caseRef", "choiceId", "changeId"]) ? { caseRef: value.caseRef, choiceId: value.choiceId, changeId: value.changeId } : undefined
+  return closed(value, ["caseRef", "choiceId", "changeId", "reviewDigest"]) && typeof value.reviewDigest === "string" && isReviewDigest(value.reviewDigest) ? { caseRef: value.caseRef, choiceId: value.choiceId, changeId: value.changeId, reviewDigest: value.reviewDigest } : undefined
 }
 
 function response(result: PortResult<unknown>, status?: number) {

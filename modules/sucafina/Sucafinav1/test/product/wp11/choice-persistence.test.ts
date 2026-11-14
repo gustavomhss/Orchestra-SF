@@ -20,7 +20,7 @@ test("explicit human choice persists the producer result, survives reopen, and n
       prepareDomainCommands: async () => ({ status: "unavailable", reason: "separate-domain-confirmation-required" }),
       resolveChoiceValues: async (_caseRef, comparison, context) => {
         const result = await fixture.plannerWithCriteria.compareScenarios(comparison, context)
-        return result.status === "ok" ? { status: "ok", value: [{ criterionRef: fixture.sensitivityRequest.criterion.id, value: result.value.knownDifference, currency: "USD", horizon: wp05Horizon }] } : result
+        return result.status === "ok" ? { status: "ok", value: [{ criterionRef: fixture.sensitivityRequest.criterion.id, value: result.value.knownDifference, unit: "USD", currency: "USD", horizon: wp05Horizon }] } : result
       },
       readScenarioResult: (resultRef, context) => fixture.results.read({ kind: "scenario", resultRef }, context),
       createId: () => `wp11-choice-${++human.nextId}`, now: () => "2026-11-13T00:00:00Z",

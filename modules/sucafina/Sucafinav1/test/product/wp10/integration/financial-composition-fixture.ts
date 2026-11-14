@@ -50,7 +50,7 @@ export async function financialCompositionFixture(options: { clock?: { at: strin
   // this stage correctly gets unavailable evidence from every domain reader.
   business.initializeAtlas(undefined, { boundaryVersion: "fixture", schemaVersion: "fixture", manifestVersion: "fixture", skillVersion: "fixture" })
   const portfolio = createSfPortfolioServices({ authority, business, ...guards })
-  const request = (operation = randomUUID()) => new Request("https://example.test/dashboard", { method: "POST", signal: options.signal, headers: { origin: "https://example.test", "x-operation": operation } })
+  const request = (operation: string = randomUUID()) => new Request("https://example.test/dashboard", { method: "POST", signal: options.signal, headers: { origin: "https://example.test", "x-operation": operation } })
   const read = async () => {
     const source = request()
     const digest = digestSfValue({ selectionRef: "fixture", period: { start: "2026-01-01", end: "2026-12-31" }, sectionRefs: ["budget"] })

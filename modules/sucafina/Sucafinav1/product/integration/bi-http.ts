@@ -17,6 +17,7 @@ import { sameBiProjection } from "../analytics/projection.ts"
 import { createSfUiAuthority } from "./ui-authority.ts"
 import { createDashboardSourceIssuer } from "./dashboard-sources.ts"
 import type { SfScopedSourcePort } from "./source-lifecycle.ts"
+import { sfBiBrowserLifecycle } from "./bi-browser-lifecycle.ts"
 
 /** Composed with the installation's existing authenticator, store and three surfaces. Starts no server. */
 export function createSfBiHttp(input: {
@@ -118,7 +119,7 @@ export function createSfBiHttp(input: {
         const script = (await input.browserScript()).replace(/<\/script/gi, "<\\/script")
         if (!await ui.revalidate(context)) return json({ status: "denied", reason: "authority-changed" }, 403)
         const html = documentHtml("Business intelligence", "dashboard", `<a href="${input.mount}/dashboard">Dashboard</a>`,
-          pageMain({ drawn: true, key: "Business intelligence", index: 0 }, '<section data-sf-bi><p role="status">Loading analyses…</p></section>'), "").replace("</body>", () => `<script>${script}</script></body>`)
+          pageMain({ drawn: true, key: "Business intelligence", index: 0 }, '<section data-sf-bi data-sf-retain-view><p role="status">Loading analyses…</p></section>'), "").replace("</body>", () => `<script>${script}</script><script>${sfBiBrowserLifecycle}</script></body>`)
         const policy = htmlPolicy(html).replace("; style-src", ` 'sha256-${createHash("sha256").update(script).digest("base64")}'; style-src`)
         return new Response(request.method === "HEAD" ? null : html, { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "Content-Security-Policy": policy, "X-Content-Type-Options": "nosniff" } })
       }

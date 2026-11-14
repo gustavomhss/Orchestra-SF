@@ -97,7 +97,8 @@ async function reviewPortfolioFixture(deadline: ReturnType<typeof compositionTes
     const candidateRef = portfolioCandidateRef({ caseRef: encodeCaseRef(caseRef), caseVersion: caseRef.version, alternativeId: "selected", alternativeVersion: 1 })
     const request = { scope: { horizon: period, currency: "USD" }, candidateRefs: [candidateRef], operations: [], constraints: [], priorities: [], explorationLimit: 1 }
     const producer = createProductionPortfolio({ cases: business.cases, planner: business.planner, sources: business.plannerSources, evidence: business.context,
-      revalidate: authority.host.revalidate, createReceipt: business.receipt, decisions: portfolio.mutations, enabledOperations: ["sf_portfolio_evaluate"],
+      revalidate: authority.host.revalidate, createReceipt: async (context, operation, inputDigest, resultDigest) =>
+        await authority.host.revalidate(context) ? business.receipt(context, operation, inputDigest, resultDigest) : undefined, decisions: portfolio.mutations, enabledOperations: ["sf_portfolio_evaluate"],
       persistence: { results: business.results, portfolioBindings: portfolio.portfolioBindings, caseFor: business.resolveCase, idempotencyKey: async (digest) => `history:${digest}` } })
     const evaluated = await deadline.phase("portfolio.evaluate", () => producer.port.evaluate(request, call))
     if (evaluated.status !== "ok") return evaluated
@@ -147,6 +148,7 @@ async function reviewPortfolioFixture(deadline: ReturnType<typeof compositionTes
   const projection = await business.dashboardRecords.read(source.value.refId, call)
   if (projection.status !== "ok") throw new Error(projection.reason)
   const captured: DomainProjection = { ...projection.value, decision: { kind: "portfolio", portfolioResultRef: stored.resultRef, portfolio: stored.result } }
+  const captureSelection = { projection: captured }
   const sources = async (context: TrustedDomainContext, refs: readonly SourceRef[]) => (await Promise.all(refs.map(async (ref) =>
     await historical.currentSource(ref, context) || await historical.historicalSource(ref, context)))).every(Boolean) && await authority.host.revalidate(context)
   // The published agenda has no direct Portfolio item. Capture a selected
@@ -154,7 +156,7 @@ async function reviewPortfolioFixture(deadline: ReturnType<typeof compositionTes
   // the unmodified default application and its authenticated HTTP consumer.
   const captureServices = createReviewServices({ state: authority.state, host: authority.host, authority: authority.authority, evidence: historical.evidence,
     creationTarget: authority.creationTarget, operationIdentity: business.operationIdentity, requiredAuthority: ["reviews:read"], maxBytes: 2 * 1024 * 1024, now: () => fixture.at,
-    selection: { select: async () => ({ status: "ok", value: [{ id: "portfolio", title: "Selected Portfolio", period, recordCount: 1, projection: captured }] }),
+    selection: { select: async () => ({ status: "ok", value: [{ id: "portfolio", title: "Selected Portfolio", period, recordCount: 1, projection: captureSelection.projection }] }),
       authorizeSections: (context, sections) => sources(context, sections.flatMap((section) => section.sourceRefs)), revalidate: sources,
       authorizeDecision: decisions.authorizeDecision,
       authorizeComments: async (context, values) => !values.length && await authority.host.revalidate(context),
@@ -199,7 +201,8 @@ async function reviewPortfolioFixture(deadline: ReturnType<typeof compositionTes
   })
   const reviewPageUrl = `https://example.test/dashboard?${new URLSearchParams({ sf: "review", reviewRef: original.id, sectionId: "portfolio", start: period.start, end: period.end })}`
   return { deadline, fixture, authority, business, persistence, assets, period, caseRef, call, browserChecks, stored,
-    binding, bindingKey, application, bi, human, original, receiptKey, receipt, http, invoke, get, getSource, post, mutate, reviewPageUrl }
+    binding, bindingKey, application, bi, human, original, receiptKey, receipt, http, invoke, get, getSource, post, mutate, reviewPageUrl,
+    captureSelection, sourceRef: source.value }
 }
 
 type ReviewPortfolioFixture = Awaited<ReturnType<typeof reviewPortfolioFixture>>
@@ -226,6 +229,114 @@ async function preserveSuccessor({ deadline, human, fixture, original }: ReviewP
   const successor = await deadline.phase("review.successor", () => human.preserve(fixture.request("history-successor"), { selectionRef: "selected-portfolio", sectionRefs: ["portfolio"], previousReviewRef: original.id }))
   if (successor.status !== "ok") throw new Error(successor.reason)
   return successor
+}
+
+// R3-W13-SOURCE-EGRESS-02: preserve real bodies and receipts, pause only the
+// actual BCS destination read, and change C08 without changing the session.
+for (const revocation of ["current-case", "previous-case", "successor-body"] as const) {
+  test(`Review source HTTP protects ${revocation} after destination resolution without exposing labels or URLs`, async () => {
+    await withReviewPortfolio(`source-egress-${revocation}`, async ({ deadline, fixture, authority, business, bi, application, persistence, assets,
+      call, caseRef, original, sourceRef, captureSelection, human, period, mutate }) => {
+      let selected = original
+      if (revocation !== "current-case") {
+        // The successor intentionally has a distinct, real Dashboard source
+        // and no Portfolio decision. It stays authorized when the original
+        // case is revoked, so checking only the successor cannot pass the test.
+        await persistence.transaction("dashboard", async (snapshot) => {
+          const owners = snapshot.data.opexOwners as { id: string; name: string; budget: number }[]
+          owners.push({ id: "successor-owner", name: "Successor source", budget: 2400 })
+          return { commit: true, value: undefined }
+        })
+        const issued = await business.dashboardRecords.issue({ page: "OPEX Detail", recordType: "opexOwners", recordId: "successor-owner", fields: ["budget"], period }, call)
+        if (issued.status !== "ok") throw new Error(issued.reason)
+        const projected = await business.dashboardRecords.read(issued.value.refId, call)
+        if (projected.status !== "ok") throw new Error(projected.reason)
+        expect(projected.value.decision).toBeUndefined()
+        expect(projected.value.values.flatMap((value) => [value.drilldown, ...value.sourceRefs]).some((ref) => ref?.refId === sourceRef.refId)).toBe(false)
+        captureSelection.projection = projected.value
+        const successor = await human.preserve(fixture.request("source-successor"), { selectionRef: "selected-successor-source",
+          sectionRefs: ["portfolio"], previousReviewRef: original.id })
+        if (successor.status !== "ok") throw new Error(successor.reason)
+        selected = successor.value
+        expect(selected.previousReviewRef).toBe(original.id)
+        expect((await application.reviews.read(selected.id, call)).status).toBe("ok")
+        expect((await application.reviews.read(original.id, call)).status).toBe("ok")
+      }
+      const reached = Promise.withResolvers<void>(), release = Promise.withResolvers<void>()
+      let armed = false, destinationResolved = false
+      const finalReads: { reference: string; locked: boolean }[] = []
+      const observedBusiness = { ...business, context: { ...business.context,
+        resolve: async (...args: Parameters<typeof business.context.resolve>) => {
+          const result = await business.context.resolve(...args)
+          if (armed) {
+            armed = false
+            expect(args[0]).toEqual(sourceRef)
+            expect(result.state).toBe("fresh")
+            expect(result.authorizedProjection).toBeDefined()
+            destinationResolved = true
+            reached.resolve()
+            await release.promise
+          }
+          return result
+        },
+      } }
+      const observedReviews = { ...application, reviews: { ...application.reviews,
+        read: async (...args: Parameters<typeof application.reviews.read>) => {
+          if (destinationResolved) finalReads.push({ reference: args[0], locked: !!business.lockedSourceFences() })
+          return application.reviews.read(...args)
+        },
+      } }
+      const http = createSfExtendedHttp({ authority, business: observedBusiness, bi, reviews: observedReviews, persistence, origin: "https://example.test", assets })
+      const url = `https://example.test/dashboard?${new URLSearchParams({ sf: "review-source", reviewRef: selected.id, referenceId: sourceRef.refId })}`
+      const invoke = () => deadline.phase("http.review-source", () => http(new Request(url, { signal: deadline.signal }), "dashboard"))
+      const positive = await invoke()
+      expect(positive?.status).toBe(200)
+      const before = await positive!.json() as { links: { label: string; url: string }[] }
+      expect(before.links.length).toBeGreaterThan(0)
+      expect(before.links.every((link) => !!link.label && !!link.url)).toBe(true)
+      armed = true
+      const pending = invoke()
+      try {
+        await Promise.race([reached.promise, pending.then((response) => { throw new Error(`Review source did not reach its real destination: ${response?.status}`) })])
+        expect(destinationResolved).toBe(true)
+        if (revocation === "successor-body") {
+          await mutate((state) => { state.reviews[selected.id] = { ...selected, createdAt: "2026-01-02T00:00:00Z" } })
+          expect((await application.reviews.read(original.id, call)).status).toBe("ok")
+        } else {
+          await mutate((state) => { state.cases[caseRef.id]!.participants = [] })
+          if (revocation === "previous-case") expect((await application.reviews.read(selected.id, call)).status).toBe("ok")
+        }
+        expect(fixture.active.value).toBe(true)
+        expect(await authority.host.revalidate(call)).toBe(true)
+        // The Dashboard source itself is still authorized and unchanged.
+        expect((await business.context.resolve(sourceRef, call)).state).toBe("fresh")
+        release.resolve()
+        const denied = await pending
+        expect(denied?.status).toBe(403)
+        const text = await denied!.text()
+        const body = JSON.parse(text)
+        expect(body).toMatchObject({ status: "denied" })
+        expect(body).not.toHaveProperty("links")
+        expect(body).not.toHaveProperty("value")
+        for (const link of before.links) {
+          expect(text).not.toContain(link.label)
+          expect(text).not.toContain(link.url)
+        }
+        expect(finalReads.map((entry) => entry.reference)).toEqual(revocation === "previous-case" ? [selected.id, original.id] : [selected.id])
+        // Both protected producers use the same actual C08 read scope;
+        // sequential unprotected rereads cannot satisfy this observation.
+        expect(finalReads.every((entry) => entry.locked)).toBe(true)
+      } finally {
+        release.resolve()
+        await pending.catch(() => undefined)
+        await mutate((state) => { state.cases[caseRef.id]!.participants = ["person"]; state.reviews[selected.id] = selected })
+      }
+      destinationResolved = false
+      const recovered = await invoke()
+      expect(recovered?.status).toBe(200)
+      expect(await recovered!.json()).toEqual(before)
+    })
+  }, 120_000)
 }
 
 test("default Review HTTP retains the persisted Portfolio at N after the case reaches N+1", async () => {

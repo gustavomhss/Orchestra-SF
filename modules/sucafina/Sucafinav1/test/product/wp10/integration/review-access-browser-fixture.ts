@@ -124,7 +124,7 @@ export async function prepareSfReviewAccessBrowser(input: { http: ReturnType<typ
       console.info("SF_REVIEW_BROWSER_HTTP", JSON.stringify({ page: page === focusPage ? "focus" : "source", mode, state: "started" }))
       try {
         const response = await input.http(new Request(request.url(), { method: request.method(), headers: await request.allHeaders(), signal: input.signal,
-          ...(request.postDataBuffer() ? { body: request.postDataBuffer()! } : {}) }), "dashboard")
+          ...(request.postDataBuffer() ? { body: new Uint8Array(request.postDataBuffer()!).buffer } : {}) }), "dashboard")
         if (!response) {
           if (watch) throw new Error(`Real handler did not handle browser request ${mode}`)
           await route.abort("blockedbyclient")
@@ -196,6 +196,22 @@ export async function prepareSfReviewAccessBrowser(input: { http: ReturnType<typ
       expect(await page.locator("[data-sf-review-workspace]").textContent()).toContain(input.privateText)
       expect(await page.locator("script[data-sf-review-bootstrap]").count()).toBe(0)
     }
+    // Exercise the real shell refresh while the review is authorized. The
+    // server HTML contains only a bootstrap placeholder; it must not replace
+    // the mounted workspace or discard its preserved selected content.
+    stage = "focus.authorized-refresh"
+    const refreshedPage = observe(focusPage, "review")
+    const retained = ready(focusPage.evaluate(async () => {
+      const before = document.querySelector("[data-sf-review-workspace]")
+      const refresh = (window as typeof window & { sucafinaRefresh?: () => Promise<void> }).sucafinaRefresh
+      if (!before || !refresh) throw new Error("Real review shell refresh unavailable")
+      await refresh()
+      return before === document.querySelector("[data-sf-review-workspace]")
+    }))
+    expect((await refreshedPage.response()).status()).toBe(200)
+    expect(await retained).toBe(true)
+    expect(await focusPage.locator("[data-sf-review-workspace]").textContent()).toContain(input.privateText)
+    expect(await focusPage.locator("[data-sf-review-selected-section] table").count()).toBeGreaterThan(0)
     // Hold a genuinely authorized source response across the later case-only
     // revocation; no response payload or access decision is substituted.
     const priorSource = observe(focusPage, "review-source")
