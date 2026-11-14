@@ -1,0 +1,370 @@
+{
+  "schema": "sf-wp11-finance-targeted-intake-v1",
+  "recordedAtUtc": "2026-11-14T10:27:32.493090+00:00",
+  "repository": "gustavomhss/Orchestra-SF",
+  "pullRequest": 35,
+  "fixedHeadForSelection": "fe13ee693bdcec1830190bcdb5cc7f2794942c1f",
+  "fixedHeadTree": "1ce4e9fcb2e9fb81e12dcfd773aa2daae64be39a",
+  "previousConsumedCommit": "660db9a46e4c1d7ff87c23f6bb37f451cc703ccb",
+  "status": "IMPORTED_EXACT_AWAITING_HOSTED_EVIDENCE",
+  "authorization": "Root authorized five exact files at fe13; after dependency review, root additionally authorized analytics/view.ts at 217c9 only. No other remote writes, branch advancement, product execution or foreign authorship authorized.",
+  "retrieval": {
+    "method": "GitHub MCP fetch_file(base64), fetch commit and compare endpoints at immutable refs; no later head followed",
+    "compare": {
+      "status": "ahead",
+      "aheadBy": 4,
+      "behindBy": 0,
+      "totalCommits": 4,
+      "changedFiles": 13
+    },
+    "publishedCommits": [
+      {
+        "sha": "88144ff9495c4061fd1661c55e8c6d802bf197a7",
+        "parents": [
+          "660db9a46e4c1d7ff87c23f6bb37f451cc703ccb"
+        ],
+        "message": "test(sucafina): narrow authorized BI record selections before exact assertions",
+        "files": [
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp05/planner-origins.test.ts",
+            "blob": "600d8d96a3517f0a3c1c51b6c2978213f9c8a066"
+          }
+        ]
+      },
+      {
+        "sha": "217c9bcc75d499eff3884fb4afe662d5c0029935",
+        "parents": [
+          "88144ff9495c4061fd1661c55e8c6d802bf197a7"
+        ],
+        "message": "fix(sucafina): restore BI focus to visible origin marks",
+        "files": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/analytics/source-navigation.ts",
+            "blob": "c6f3d5cf5772b588cb0da9f0648ce69f8775f357"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/analytics/view.ts",
+            "blob": "9b279523da60f18eebdc270707d1b42c865e3dca"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp05/planner-origins.test.ts",
+            "blob": "bf92905dccfd01eaedc624841d808d5ce21b6f21"
+          }
+        ]
+      },
+      {
+        "sha": "7a67364aeb5c478be54e533910c4b4c91bbd1ebe",
+        "parents": [
+          "217c9bcc75d499eff3884fb4afe662d5c0029935"
+        ],
+        "message": "fix(sucafina): preserve missing months outside scenario operations",
+        "files": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+            "blob": "fc15d2d9130e23d0a290f5a14f61423152d2c72c"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-engine-fixture.ts",
+            "blob": "fd6a6b8b75152e858961360d16f7432233700b2f"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+            "blob": "8ba0ad3e8e4ce04df044dbe77df8e745008f5191"
+          }
+        ]
+      },
+      {
+        "sha": "fe13ee693bdcec1830190bcdb5cc7f2794942c1f",
+        "message": "feat(sucafina): render advantage from persisted canonical comparison",
+        "disposition": "Feature excluded; immutable ref used only to select unchanged prior-fix blobs."
+      }
+    ]
+  },
+  "summary": {
+    "exactFiles": 6,
+    "fromFe13": 5,
+    "fromFocusOnly217c": 1,
+    "whollyExcludedChangedFiles": 7,
+    "excludedFe13ViewBlob": true
+  },
+  "observedDiagnosis": {
+    "typecheck": {
+      "productSha": "be50d42d6a2c030d57d17038dec267ebd33ea78c",
+      "runId": 43584569598,
+      "jobId": 132416199953,
+      "log": "ci-analysis/wp11-W5-checks/typecheck.log",
+      "path": "test/product/wp05/planner-origins.test.ts",
+      "diagnostics": [
+        {
+          "line": 124,
+          "column": 49,
+          "code": "TS2769"
+        },
+        {
+          "line": 125,
+          "column": 56,
+          "code": "TS2769"
+        },
+        {
+          "line": 128,
+          "column": 55,
+          "code": "TS2769"
+        }
+      ],
+      "claim": "Published narrowing targets these diagnostics; no new hosted check is asserted by this intake."
+    }
+  },
+  "dependencyReview": {
+    "relativeImports": "All relative imports exist; none of the six files adds an import. Static path check only.",
+    "scenarioFixture": "Optional horizon keeps all existing callers compatible and permits two/three-month coverage in the new regressions.",
+    "focusDependency": "Commit 217c9 changed source-navigation, view and planner-origins together. All three corresponding fix blobs are consumed; view is pinned to 217c9 to exclude fe13 feature changes.",
+    "financialSemantics": [
+      "Amounts still come from the real post-command projection and canonical plannerKnownSubtotal; no financial formula is reproduced.",
+      "Only cells addressed by the scenario operation, including both deferral endpoints, can become hypothetical; untouched prior null/absent cells remain null/absent even when legacy save normalizes them to zero.",
+      "Only missing disclosures for addressed cells are rederived; missing other months remain disclosed.",
+      "Any operations or assumptions retain conditioned/total:null/preview-not-applied. Zero-operation/no-assumption source-only completeness keeps its existing canonical C10 and authority checks.",
+      "No choice, preparation, human confirmation or application implementation was changed."
+    ],
+    "review": "Static read of complete scenario-port, optional-horizon fixture, focus helpers and exact patches. Independent review by ci_reconciliation found no concrete static blocker; that review separately recalculated all six Git blob and SHA256 values and confirmed exact published bytes.",
+    "independentReview": {
+      "reviewer": "ci_reconciliation",
+      "result": "NO_CONCRETE_STATIC_BLOCKER_FOUND",
+      "checks": [
+        "All six sourceBlob/finalSha256 values independently matched local bytes.",
+        "view at 217c9 closes focus dependency by requiring a visible connected candidate and actual activeElement change; chooser clears child controls before open/cancel.",
+        "Origin tests retain assertions and narrow record/reference before access.",
+        "Scenario qualification keeps canonical post-command values, restores untouched absent cells and preserves their disclosures; deferral addresses both endpoints.",
+        "No formula, human authority, choice or application implementation was duplicated."
+      ],
+      "limit": "Static review only; the WP03 qualification and WP05 origins tests still need final hosted selection and observation."
+    }
+  },
+  "scopeProtection": {
+    "ownCasePort": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-port.test.ts",
+      "before": {
+        "exists": true,
+        "gitBlob": "42cbc7e3440192c71df79e6adbe86f95aa75e6df",
+        "sha256": "6e654a1efe5b5fa151e5b883aa4ba5b043da0484ae20b64598b45c256dbeab28"
+      },
+      "after": {
+        "exists": true,
+        "gitBlob": "42cbc7e3440192c71df79e6adbe86f95aa75e6df",
+        "sha256": "6e654a1efe5b5fa151e5b883aa4ba5b043da0484ae20b64598b45c256dbeab28"
+      },
+      "preserved": true
+    },
+    "excludedPathsUnchanged": true,
+    "otherOwnFixtures": "Requirements agent informed before copying; its own performance fixtures are outside this intake."
+  },
+  "validation": {
+    "sourceBlobHashes": "All six decoded MCP files matched their returned Git blob SHA before any repo write.",
+    "finalBlobHashes": "All six resulting repo files match the exact per-file sourceBlob.",
+    "relativeImports": "PASS_STATIC_ONLY",
+    "diffCheck": "PASS_STATIC_ONLY",
+    "productTests": "NOT_RUN_LOCALLY",
+    "typecheck": "NOT_RUN_LOCALLY",
+    "hostedCi": {
+      "status": "PENDING_UNSELECTED_FOR_THIS_INTAKE",
+      "commitSha": null,
+      "runIds": [],
+      "producerTests": [
+        "modules/sucafina/Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp05/planner-origins.test.ts"
+      ],
+      "notice": "Producer regression tests are not yet selected/executed on the final consumer candidate. No imported test is marked PASS. Browser harness output, when observed, will not establish an installed/native session."
+    }
+  },
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+      "sourceCommit": "fe13ee693bdcec1830190bcdb5cc7f2794942c1f",
+      "sourceBlob": "fc15d2d9130e23d0a290f5a14f61423152d2c72c",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/fe13ee693bdcec1830190bcdb5cc7f2794942c1f/modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+      "publishedOriginCommits": [
+        "7a67364aeb5c478be54e533910c4b4c91bbd1ebe"
+      ],
+      "localBeforeBlob": "9ef6d197759bbfb9513cce5118c93c08ac797303",
+      "localBeforeSha256": "a0e63b0c46001df807f9d56fa01f83d10ecc70cc69aca35a76b58f3c6c4c8b52",
+      "finalBlob": "fc15d2d9130e23d0a290f5a14f61423152d2c72c",
+      "finalSha256": "6e0f003055c08005e3a2f339d221c6f608d615a8068e66d30555a981604eb0fd",
+      "bytes": 17443,
+      "action": "IMPORTED_EXACT_PUBLISHED_BYTES",
+      "reason": "Consume the published correction for legacy row normalization: unaddressed months that were absent remain amount:null/absent, and their missing-value disclosures remain. Only addressed cells may acquire hypothetical quantification."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-engine-fixture.ts",
+      "sourceCommit": "fe13ee693bdcec1830190bcdb5cc7f2794942c1f",
+      "sourceBlob": "fd6a6b8b75152e858961360d16f7432233700b2f",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/fe13ee693bdcec1830190bcdb5cc7f2794942c1f/modules/sucafina/Sucafinav1/test/product/wp03/scenario-engine-fixture.ts",
+      "publishedOriginCommits": [
+        "7a67364aeb5c478be54e533910c4b4c91bbd1ebe"
+      ],
+      "localBeforeBlob": "6d1810ce1d6b3dcfe688c4057a4cf28a06566209",
+      "localBeforeSha256": "4057945bd9066243e9be660313d9ce34252d1d3de1eb9f59ceeddd628b177231",
+      "finalBlob": "fd6a6b8b75152e858961360d16f7432233700b2f",
+      "finalSha256": "3972443bbfe4eec57e4f3ba0b6dfe08c55ebed1dad19fd7bdb650659b3b69796",
+      "bytes": 2744,
+      "action": "IMPORTED_EXACT_PUBLISHED_BYTES",
+      "reason": "Backward-compatible optional horizon enables the published two/three-month regression while default November remains unchanged."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+      "sourceCommit": "fe13ee693bdcec1830190bcdb5cc7f2794942c1f",
+      "sourceBlob": "8ba0ad3e8e4ce04df044dbe77df8e745008f5191",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/fe13ee693bdcec1830190bcdb5cc7f2794942c1f/modules/sucafina/Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+      "publishedOriginCommits": [
+        "7a67364aeb5c478be54e533910c4b4c91bbd1ebe"
+      ],
+      "localBeforeBlob": "e0f2b7b6e1d99293e0cebac9c375eba34c796d9c",
+      "localBeforeSha256": "da55c6e3f3cd4ad3d01a268f0247a8eaf0d76eb71523aa214df7bae8422da765",
+      "finalBlob": "8ba0ad3e8e4ce04df044dbe77df8e745008f5191",
+      "finalSha256": "7b5b59fb90149d739858ffb5ded2ebe473ad105e5ffda892cc1393d621e6c9f6",
+      "bytes": 17737,
+      "action": "IMPORTED_EXACT_PUBLISHED_BYTES",
+      "reason": "Published discriminating real-domain regressions for untouched December null versus explicitly addressed zero, and deferral origin/destination versus a third untouched missing month."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/source-navigation.ts",
+      "sourceCommit": "fe13ee693bdcec1830190bcdb5cc7f2794942c1f",
+      "sourceBlob": "c6f3d5cf5772b588cb0da9f0648ce69f8775f357",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/fe13ee693bdcec1830190bcdb5cc7f2794942c1f/modules/sucafina/Sucafinav1/product/analytics/source-navigation.ts",
+      "publishedOriginCommits": [
+        "217c9bcc75d499eff3884fb4afe662d5c0029935"
+      ],
+      "localBeforeBlob": "3866a95cdad732d51afb9094db7908d107ca920d",
+      "localBeforeSha256": "ce7c98d50d4ddbe796209d2dad7f180768e4c2ae72401b18716e3019450f86a9",
+      "finalBlob": "c6f3d5cf5772b588cb0da9f0648ce69f8775f357",
+      "finalSha256": "203f906ea799710141214a5d1aa498db24a6e3531e552328fb251116fa2e4359",
+      "bytes": 3428,
+      "action": "IMPORTED_EXACT_PUBLISHED_BYTES",
+      "reason": "Clear the closed origin chooser so hidden origin controls cannot retain duplicate focus targets."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/planner-origins.test.ts",
+      "sourceCommit": "fe13ee693bdcec1830190bcdb5cc7f2794942c1f",
+      "sourceBlob": "bf92905dccfd01eaedc624841d808d5ce21b6f21",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/fe13ee693bdcec1830190bcdb5cc7f2794942c1f/modules/sucafina/Sucafinav1/test/product/wp05/planner-origins.test.ts",
+      "publishedOriginCommits": [
+        "88144ff9495c4061fd1661c55e8c6d802bf197a7",
+        "217c9bcc75d499eff3884fb4afe662d5c0029935"
+      ],
+      "localBeforeBlob": "0f4fe1324f56961b044f3ce2ba64c2a3cb79dd46",
+      "localBeforeSha256": "2fbd2f3c0d558bed7cd109accaffc798d7925f795d11276c586c2f9e3666fb63",
+      "finalBlob": "bf92905dccfd01eaedc624841d808d5ce21b6f21",
+      "finalSha256": "878c41dec62c6620c3ee62ebfdfaf23a758594a28ab9219c6064fd6503bef9bd",
+      "bytes": 12244,
+      "action": "IMPORTED_EXACT_PUBLISHED_BYTES",
+      "reason": "Published explicit record/origin narrowing addresses the three observed TS2769 diagnostics; retains all browser assertions and adds visible focus restoration after explicit A/B origin selection."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/view.ts",
+      "sourceCommit": "217c9bcc75d499eff3884fb4afe662d5c0029935",
+      "sourceBlob": "9b279523da60f18eebdc270707d1b42c865e3dca",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/217c9bcc75d499eff3884fb4afe662d5c0029935/modules/sucafina/Sucafinav1/product/analytics/view.ts",
+      "publishedOriginCommits": [
+        "217c9bcc75d499eff3884fb4afe662d5c0029935"
+      ],
+      "localBeforeBlob": "2269a407fe361741775441149e464d919683de4f",
+      "localBeforeSha256": "f8ae30136d95490fad004ca7029dcc08678bbf77b01fd8788e6f38dc46ba3fb5",
+      "finalBlob": "9b279523da60f18eebdc270707d1b42c865e3dca",
+      "finalSha256": "e2312a2c0ae3c91047555abe9856eb0ea77d79d3beb19f0bc1c2136672e5cd44",
+      "bytes": 26907,
+      "action": "IMPORTED_EXACT_PUBLISHED_BYTES",
+      "reason": "Consume only the earlier published focus guard: skip disconnected/hidden/inert/nonvisible candidates and report success only after activeElement actually moves. The fe13 view blob contains unrelated advantage rendering and is deliberately excluded."
+    }
+  ],
+  "excluded": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/advantage-view.ts",
+      "sourceCommit": "fe13ee693bdcec1830190bcdb5cc7f2794942c1f",
+      "sourceBlob": "47b271f492292956a8d8696cc32cd999e9878661",
+      "disposition": "NOT_IMPORTED",
+      "localBeforeAndAfter": {
+        "exists": false
+      },
+      "reason": "New advantage-view/persisted inverse-comparison/stored-BI feature and its tests are outside the observed failure diagnosis; no import or local edit authorized."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/projection.ts",
+      "sourceCommit": "fe13ee693bdcec1830190bcdb5cc7f2794942c1f",
+      "sourceBlob": "29f32617de3ce33bbf414a7439f97d64806bbaa9",
+      "disposition": "NOT_IMPORTED",
+      "localBeforeAndAfter": {
+        "exists": true,
+        "gitBlob": "3e585a0d0371fc2d1f642f4b59c8d76325ccd451",
+        "sha256": "78ae896f582ef722457b4887463ec55b679c379396a3b4ed2c4faf53f3919e5b"
+      },
+      "reason": "New advantage-view/persisted inverse-comparison/stored-BI feature and its tests are outside the observed failure diagnosis; no import or local edit authorized."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/scenario.ts",
+      "sourceCommit": "fe13ee693bdcec1830190bcdb5cc7f2794942c1f",
+      "sourceBlob": "b7174b16b485323f767d63e6842f3d61284245eb",
+      "disposition": "NOT_IMPORTED",
+      "localBeforeAndAfter": {
+        "exists": true,
+        "gitBlob": "acf0ad7ee8f2c29d258dd69f14d309bdbf99b19b",
+        "sha256": "f0f5b3da4e68f3d91ca6eea2b3c09870ad01b584b979913cff8ab01743aff6d3"
+      },
+      "reason": "New advantage-view/persisted inverse-comparison/stored-BI feature and its tests are outside the observed failure diagnosis; no import or local edit authorized."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/stored-scenario.ts",
+      "sourceCommit": "fe13ee693bdcec1830190bcdb5cc7f2794942c1f",
+      "sourceBlob": "f5bb6d732ffc588626553097d53d3c0e1457a81c",
+      "disposition": "NOT_IMPORTED",
+      "localBeforeAndAfter": {
+        "exists": true,
+        "gitBlob": "79669d2313e86990d0ee9eae4b37401dd148c26f",
+        "sha256": "9b837f5ec194efabdbaffcc0a5683ffda58241b8b3ce203155c34f919dd5e4e1"
+      },
+      "reason": "New advantage-view/persisted inverse-comparison/stored-BI feature and its tests are outside the observed failure diagnosis; no import or local edit authorized."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/view.ts",
+      "sourceCommit": "fe13ee693bdcec1830190bcdb5cc7f2794942c1f",
+      "sourceBlob": "4a6d481a8c7de805d7e13a3d3ab334beffd5692e",
+      "disposition": "FE13_BLOB_EXCLUDED_EARLIER_FOCUS_ONLY_BLOB_IMPORTED",
+      "substituteSourceCommit": "217c9bcc75d499eff3884fb4afe662d5c0029935",
+      "substituteSourceBlob": "9b279523da60f18eebdc270707d1b42c865e3dca",
+      "reason": "The fe13 view mixes advantage rendering with focus repair; root separately authorized the exact 217c9 focus-only blob to close the dependency without importing that feature."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/choice-history-bi.test.ts",
+      "sourceCommit": "fe13ee693bdcec1830190bcdb5cc7f2794942c1f",
+      "sourceBlob": "40fbaf6eb4a7b88c3f4feb54773961188cd007da",
+      "disposition": "NOT_IMPORTED",
+      "localBeforeAndAfter": {
+        "exists": true,
+        "gitBlob": "9ecb910e6a45fda0f77125fdb6832ad650a011df",
+        "sha256": "dfddc21e304216449494f87fd6c0a3ce6a40368b31cb50589ebadb79b1d946cb"
+      },
+      "reason": "New advantage-view/persisted inverse-comparison/stored-BI feature and its tests are outside the observed failure diagnosis; no import or local edit authorized."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/projection.test.ts",
+      "sourceCommit": "fe13ee693bdcec1830190bcdb5cc7f2794942c1f",
+      "sourceBlob": "52e71583353ca80cfbba6746c5bb0dadac48d042",
+      "disposition": "NOT_IMPORTED",
+      "localBeforeAndAfter": {
+        "exists": true,
+        "gitBlob": "9a8a3f82f14789cb637340e5f6e0bf8209f868cb",
+        "sha256": "d0b2ba4b29fbee2d91bdfb04c91f19c56827e752b4375a4a33528c1c38b3a994"
+      },
+      "reason": "New advantage-view/persisted inverse-comparison/stored-BI feature and its tests are outside the observed failure diagnosis; no import or local edit authorized."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/stored-bi-fences.test.ts",
+      "sourceCommit": "fe13ee693bdcec1830190bcdb5cc7f2794942c1f",
+      "sourceBlob": "2e18729fa382d1c8c1cc68d98703644e5c018be7",
+      "disposition": "NOT_IMPORTED",
+      "localBeforeAndAfter": {
+        "exists": true,
+        "gitBlob": "bd00deb467e5df32c426f200deb83c8d31f6dd3a",
+        "sha256": "5f01d4c022ab582ce67b0d91c1a3f8f95ae29591dc2b913f04830f3baa4808dc"
+      },
+      "reason": "New advantage-view/persisted inverse-comparison/stored-BI feature and its tests are outside the observed failure diagnosis; no import or local edit authorized."
+    }
+  ]
+}

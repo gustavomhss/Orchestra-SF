@@ -12,15 +12,15 @@ import { createSfProductState } from "../../../product/host-binding/state-provid
 import { createSfHumanAuthority } from "../../../product/integration/human-authority.ts"
 import { createSfUiAuthority } from "../../../product/integration/ui-authority.ts"
 import { createPlannerCriterionMetric } from "../../../product/planner/criterion-metric.ts"
-import { createPlannerOperationVerifier } from "../../../product/planner/operation-verifier.ts"
 import { createPlannerPort, projectPlannerSource } from "../../../product/planner/port.ts"
 import { comparePlannerPreview } from "../../../product/planner/preview-comparison.ts"
-import { createPlannerScenarioInputs } from "../../../product/planner/scenario-inputs.ts"
 import { createPlannerSensitivityUnits } from "../../../product/planner/sensitivity-units.ts"
 import { createStoredPlannerScenarioHost } from "../../../product/planner/stored-scenarios.ts"
 import type { Snapshot } from "../../../runtime/contract.ts"
 import { wp05Horizon } from "../wp05/engine-fixture.ts"
 import type { createRenewalChoiceHistory } from "./renewal-choice-fixture.ts"
+import { createRenewalOperationVerifier } from "./renewal-operation-verifier.ts"
+import { renewalEvidenceContext } from "./renewal-source-fixture.ts"
 
 type History = Awaited<ReturnType<typeof createRenewalChoiceHistory>>
 type Phase = History["before"]
@@ -78,7 +78,7 @@ export function createRenewalHumanChoices(history: History) {
   }
   const evidence: BusinessContextService = {
     resolve: async (ref, context) => ({ state: await currentSource(ref, context) ? "fresh" : "revoked", ref, accessRevision: context.binding.accessRevision, checkedAt: at }),
-    context: async ({ refs }, context) => Promise.all(refs.map((ref) => evidence.resolve(ref, context))),
+    context: renewalEvidenceContext((ref, context) => evidence.resolve(ref, context)),
     recall: async () => [], emitFromLedger: async () => { throw new Error("No native memory emission in human choice fixture") },
   }
   const verifyEvidence = async (refs: readonly BusinessEvidenceRef[], context: TrustedDomainContext) => (await evidence.context({ refs }, context)).every((resolved) => resolved.state === "fresh")
@@ -100,7 +100,9 @@ export function createRenewalHumanChoices(history: History) {
   }
   const planner = createPlannerPort({ host, sources, evidence })
   const results = createSfDecisionResultStore({ state, host, authorizeCase, verifySources: (_value, refs, context) => verifyEvidence(refs, context), createId: () => `unused-human-result-${++controls.event}`, now: () => at })
-  const verifyOperations = createPlannerOperationVerifier({ host, planner, sources, scenarioInputs: createPlannerScenarioInputs({ planner, sources }) })
+  // Admission needs current canonical targets; C10 stays on the judgment Planner.
+  const operationSources: PlannerSourceHost = { resolveForecastSource: sources.resolveForecastSource, resolveForecastCoverage: async () => ({ status: "unavailable", reason: "coverage-not-needed-for-operation-admission" }) }
+  const verifyOperations = createRenewalOperationVerifier(host, operationSources)
   const cases = createDecisionCasePort({ state, host, creationTarget: { ref: fixture.caseRef.id, incarnation: fixture.caseRef.incarnation }, operationIdentity: (context) => context.kind === "ui" ? ui.operationIdentity(context) : undefined, authorizeCase, verifyScenarioOperations: async (decision, context) => (await Promise.all(decision.alternatives.map((alternative) => verifyOperations(alternative.scenario, context)))).every(Boolean), evidence, createId: () => `unused-human-case-${++controls.event}`, now: () => at })
   const scenarios = createStoredPlannerScenarioHost({ store: results, cases, planner, coverageRefFor: (ref, alternative) => decisionCoverageRef(ref, alternative.id, alternative.version) })
   const preview = (request: Parameters<typeof comparePlannerPreview>[1], context: TrustedDomainContext) => comparePlannerPreview({ host, sources, scenarios, planner }, request, context)
