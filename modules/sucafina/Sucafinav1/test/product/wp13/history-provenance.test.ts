@@ -1,3 +1,9 @@
+import { decisionCoverageRef } from "../../../product/decisions/coverage-access.ts"
+import { createDecisionMutations } from "../../../product/decisions/mutations.ts"
+import type { PortfolioBinding } from "../../../product/decisions/portfolio-bindings.ts"
+import { createDecisionCandidateResolver, portfolioCandidateRef } from "../../../product/portfolio/candidates.ts"
+import { createPortfolioCandidateHistoryReader } from "../../../product/portfolio/proof.ts"
+import { createWp13AnalysisFixture } from "./sensitivity-fixture.ts"
 import { describe, expect, test } from "bun:test"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import type { BusinessContextService, BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
@@ -5,13 +11,7 @@ import type { DecisionCasePort, PortResult } from "../../../product/contracts/po
 import type { SfStoredDecisionResult } from "../../../product/contracts/state.ts"
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
 import { encodeCaseRef } from "../../../product/decisions/case-port.ts"
-import { decisionCoverageRef } from "../../../product/decisions/coverage-access.ts"
-import { createDecisionMutations } from "../../../product/decisions/mutations.ts"
-import type { PortfolioBinding } from "../../../product/decisions/portfolio-bindings.ts"
 import { createPortfolioHistoricalProvenance } from "../../../product/portfolio/history-provenance.ts"
-import { createDecisionCandidateResolver, portfolioCandidateRef } from "../../../product/portfolio/candidates.ts"
-import { createPortfolioCandidateHistoryReader } from "../../../product/portfolio/proof.ts"
-import { createWp13SensitivityFixture } from "./sensitivity-fixture.ts"
 
 const context = { binding: { accessRevision: "access-7" } } as TrustedDomainContext
 const originalCase = { id: "case-a", incarnation: "inc-a", version: 3 }
@@ -53,18 +53,21 @@ describe("portfolio historical provenance", () => {
     expect(await createPortfolioHistoricalProvenance(harness())(stored, context)).toBe(true)
   })
 
-  test("accepts authenticated source history at the same case version and still rejects revocation", async () => {
+  test("allows preserved evidence after a source change while the case remains at the original version", async () => {
     const input = harness()
     input.caseFor = async () => ({ status: "ok", value: originalCase })
     input.cases.read = async () => ({ status: "ok", value: { case: { ...originalCase, alternatives: [alternative] } } } as never)
     expect(await createPortfolioHistoricalProvenance(input)(stored, context)).toBe(true)
     input.evidence.context = async ({ refs }) => refs.map((ref) => ({ ref, state: "revoked", accessRevision: "access-7", checkedAt: "now" }))
     expect(await createPortfolioHistoricalProvenance(input)(stored, context)).toBe(false)
-    input.evidence.context = harness().evidence.context
+  })
+
+  test("rejects a preserved result from a future case version", async () => {
+    const input = harness()
     let bindingReads = 0
     const readBinding = input.readHistoricalBinding
     input.readHistoricalBinding = async (request, trusted) => { bindingReads++; return readBinding(request, trusted) }
-    input.caseFor = async () => ({ status: "ok", value: { ...originalCase, version: originalCase.version - 1 } })
+    input.caseFor = async () => ({ status: "ok", value: { ...originalCase, version: 2 } })
     expect(await createPortfolioHistoricalProvenance(input)(stored, context)).toBe(false)
     expect(bindingReads).toBe(0)
   })
@@ -114,6 +117,22 @@ describe("portfolio historical provenance", () => {
     input.cases.read = async () => {
       if (++reads > 1) shared.case.version += 1
       return { status: "ok", value: shared } as never
+    }
+    expect(await createPortfolioHistoricalProvenance(input)(stored, context)).toBe(false)
+  })
+
+  test("keeps the case snapshot before awaiting a historical candidate provider that reuses the same object", async () => {
+    const input = harness()
+    const shared = { case: { ...currentCase, alternatives: [] } }
+    const candidate = { ref: candidateRef, caseRef: encodeCaseRef(originalCase), operations: alternative.scenario.operations, scenario: alternative.scenario, result: alternative.result }
+    input.cases.read = async () => ({ status: "ok", value: shared } as never)
+    const proof = () => ({ status: "ok" as const, value: { candidate, originalCaseRef: originalCase, currentCaseRef: { id: shared.case.id, incarnation: shared.case.incarnation, version: shared.case.version }, scenarioResultRef: "scenario-a", provenanceDigest: "a".repeat(64) } })
+    input.readHistoricalCandidate = async () => proof()
+    expect(await createPortfolioHistoricalProvenance(input)(stored, context)).toBe(true)
+    let reads = 0
+    input.readHistoricalCandidate = async () => {
+      if (++reads === 1) shared.case.version += 1
+      return proof()
     }
     expect(await createPortfolioHistoricalProvenance(input)(stored, context)).toBe(false)
   })
@@ -268,8 +287,8 @@ test("historical candidate rejects changed C08 request ancestry and revoked evid
   }
 })
 
-test("historical chosen candidate selects its witnessed C08 among equivalent writes and requires the exact WP11 ledger", async () => {
-  const world = await createWp13SensitivityFixture()
+test("historical chosen candidate requires the exact WP11 choice ledger and its original C08 scenario", async () => {
+  const world = await createWp13AnalysisFixture()
   try {
     const operation = { id: "history-original-choice" }
     const mutations = historyMutations(world, operation)
@@ -310,7 +329,7 @@ test("historical chosen candidate selects its witnessed C08 among equivalent wri
 })
 
 async function revisedCandidate() {
-  const world = await createWp13SensitivityFixture()
+  const world = await createWp13AnalysisFixture()
   try {
     const operation = { id: "history-alternative-v1" }
     const mutations = historyMutations(world, operation)
@@ -333,7 +352,7 @@ async function revisedCandidate() {
   }
 }
 
-function historyMutations(world: Awaited<ReturnType<typeof createWp13SensitivityFixture>>, operation: { id: string }) {
+function historyMutations(world: Awaited<ReturnType<typeof createWp13AnalysisFixture>>, operation: { id: string }) {
   let ids = 0
   return createDecisionMutations({
     state: world.state,
@@ -365,3 +384,48 @@ function originalPortfolio(fixture: Awaited<ReturnType<typeof revisedCandidate>>
   const binding: PortfolioBinding = { ...value, bindingDigest: bindingDigest(value) }
   return { stored, binding }
 }
+
+test("historical candidate refuses a real case CAS in its last callback while the authority remains live", async () => {
+  const fixture = await revisedCandidate()
+  try {
+    const world = fixture.world
+    const initial = await world.state.read(world.request, "cases", (state) => ({ decision: state.cases[world.caseRef.id], result: state.decisionResults?.[fixture.scenarioResultRef] }))
+    if (initial.status !== "ok" || !initial.value.decision || !initial.value.result) throw new Error("Historical read counterexample requires the actual persisted case and C08")
+    let validations = 0
+    let attempts = 0
+    let attemptedCommits = 0
+    let writeRejected = false
+    const host = { ...world.host, revalidate: async (context: TrustedDomainContext) => {
+      validations++
+      // The reader has completed two full provenance observations. Its final
+      // callback tries an authorized, versioned write and swallows the refusal.
+      if (validations === 4) {
+        attempts++
+        await world.state.transaction(world.request, { namespace: "cases", expectedStorageVersion: initial.storageVersion, targetRef: world.caseRef.id, targetIncarnation: world.caseRef.incarnation, idempotencyKey: "wp13-history-final-case-cas", commandDigest: digestSfValue("wp13-history-final-case-cas") }, async (state) => {
+          const decision = state.cases[world.caseRef.id]
+          if (!decision) throw new Error("Case disappeared")
+          attemptedCommits++
+          state.cases[world.caseRef.id] = { ...decision, version: decision.version + 1, participants: [] }
+          return { commit: true, value: true }
+        }).catch(() => { writeRejected = true })
+      }
+      return world.host.revalidate(context)
+    } }
+    const read = createPortfolioCandidateHistoryReader({ state: world.state, cases: world.cases, results: world.results, evidence: world.evidenceService, host })
+    const rejected = await read(fixture.expected, world.context)
+    expect(rejected.status).not.toBe("ok")
+    expect(Object.hasOwn(rejected, "value")).toBe(false)
+    expect(attempts).toBe(1)
+    expect(attemptedCommits).toBe(1)
+    expect(writeRejected).toBe(true)
+    expect(await world.host.revalidate(world.context)).toBe(true)
+    const after = await world.state.read(world.request, "cases", (state) => ({ decision: state.cases[world.caseRef.id], result: state.decisionResults?.[fixture.scenarioResultRef] }))
+    expect(after.status === "ok" && after.value).toEqual(initial.value)
+    expect(after.status === "ok" && after.storageVersion).toBe(initial.storageVersion)
+    // A fresh call executes all readers again; failed root state is never cached.
+    const normal = createPortfolioCandidateHistoryReader({ state: world.state, cases: world.cases, results: world.results, evidence: world.evidenceService, host: world.host })
+    expect((await normal(fixture.expected, world.context)).status).toBe("ok")
+  } finally {
+    await fixture.world.cleanup()
+  }
+}, 120000)

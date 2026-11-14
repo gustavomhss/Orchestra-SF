@@ -60,10 +60,11 @@ async function harness(options: { fenceRace?: boolean; omitWriteAuthority?: bool
   const proposals = new Map([["output-1", "ab".repeat(32)]])
   const fences = (snapshots: Record<"dashboard" | "planner" | "procurement", Snapshot>) => ({ dashboard: sfRunSourceFence(snapshots.dashboard), planner: sfRunSourceFence(snapshots.planner), procurement: sfRunSourceFence(snapshots.procurement) })
   let operation = "campaign-operation-1"
+  const admittedRequest = new Request("https://example.test/campaign")
   const campaign = createPortfolioCampaign({
     state,
-    host: { requestFor: () => new Request("https://example.test/campaign"), revalidate: async () => access.allowed },
-    cases: { read: async (request) => { const parsed = /case:([^:]+):([^:]+)/.exec(request.caseRef); const item = parsed ? cases.get(decodeURIComponent(parsed[1]!)) : undefined; const found = item && item.id !== "owner" ? candidate(item, item.id) : undefined; return access.authorizeCase && item && item.incarnation === decodeURIComponent(parsed![2]!) ? { status: "ok", value: { context: { installationId: "install", projectId: "project", principalRef: "principal", policyVersion: "policy", accessRevision: "access", kind: "ui" }, case: { ...item, alternatives: item.alternatives.length ? item.alternatives : found && found.result ? [{ id: item.id, version: 1, title: item.id, scenario: found.scenario, result: found.result }] : [], preparedChanges: [], receipts: [] }, events: [], evidenceRefs: [], checkedAt: "2026-11-13T00:00:00Z" } } : { status: "denied", reason: "case-access-unavailable" } } },
+    host: { requestFor: () => admittedRequest, revalidate: async () => access.allowed },
+    cases: { read: async (request) => { const parsed = /case:([^:]+):([^:]+)/.exec(request.caseRef); const item = parsed ? cases.get(decodeURIComponent(parsed[1]!)) : undefined; const found = item && item.id !== "owner" ? candidate(item, item.id) : undefined; return access.allowed && access.authorizeCase && item && item.incarnation === decodeURIComponent(parsed![2]!) ? { status: "ok", value: { context: { installationId: "install", projectId: "project", principalRef: "principal", policyVersion: "policy", accessRevision: "access", kind: "ui" }, case: { ...item, alternatives: item.alternatives.length ? item.alternatives : found && found.result ? [{ id: item.id, version: 1, title: item.id, scenario: found.scenario, result: found.result }] : [], preparedChanges: [], receipts: [] }, events: [], evidenceRefs: [], checkedAt: "2026-11-13T00:00:00Z" } } : { status: "denied", reason: "case-access-unavailable" } } },
     resolveCandidate: async (ref) => { const found = [left, right].map((item) => candidate(item, item.id)).find((value) => value.ref === ref); return found && cases.get(found.caseRef.split(":")[1] ? decodeURIComponent(found.caseRef.split(":")[1]!) : "")?.version === 1 ? { status: "ok", value: found } : { status: "stale", reason: "case-changed" } },
     validateCandidate: async () => access.supported ? { status: "ok", value: true } : { status: "needs-input", reason: "unsupported-candidate-effect" },
     contracts: { issueContract: async (selection) => sources.revoked ? { status: "denied", reason: "contract-access-unavailable" } : selection.id === "c1" ? { status: "ok", value: contract.refId } : { status: "needs-input", reason: "Contract fields unavailable" }, readContractSource: async () => { sources.contractReads += 1; return sources.revoked ? { status: "denied", reason: "contract-access-unavailable" } : { status: "ok", value: projection(contract, sources.contractValue) } } },
@@ -195,25 +196,6 @@ test("campaign rejects a candidate in another currency or horizon before any wri
   }
 })
 
-test("a saved campaign remains authenticated historical data at the same owner case version", async () => {
-  const world = await harness()
-  try {
-    const saved = await world.campaign.save(world.edit(), binding)
-    if (saved.status !== "ok") throw new Error(`Campaign unavailable: ${JSON.stringify(saved)}`)
-    const request = { ownerCase: saved.value.ownerCase, commandDigest: saved.value.commandDigest }
-    expect(await world.campaign.readHistorical(request, binding)).toEqual({ status: "ok", value: { state: "historical", campaign: saved.value } })
-    expect(await world.campaign.listHistorical(saved.value.ownerCase, binding)).toEqual({ status: "ok", value: [{ state: "historical", campaign: saved.value }] })
-    world.sources.revoked = true
-    expect((await world.campaign.readHistorical(request, binding)).status).toBe("unavailable")
-    world.sources.revoked = false
-    world.access.authorizeCase = false
-    expect((await world.campaign.readHistorical(request, binding)).status).toBe("denied")
-  } finally {
-    await world.store.dispose()
-    await rm(world.directory, { recursive: true, force: true })
-  }
-})
-
 test("a prior campaign is separately marked historical after the owner case advances", async () => {
   const world = await harness()
   try {
@@ -273,6 +255,46 @@ test("campaign history binds a replaced candidate to the trusted historical port
     world.access.authorizeCase = false
     expect((await world.campaign.readHistorical({ ownerCase, commandDigest: saved.value.commandDigest }, binding)).status).toBe("denied")
     expect(calls).toHaveLength(beforeDenied)
+  } finally {
+    await world.store.dispose()
+    await rm(world.directory, { recursive: true, force: true })
+  }
+})
+
+test("a source fence may advance while a preserved campaign remains authorized at owner N/N", async () => {
+  const world = await harness()
+  try {
+    const saved = await world.campaign.save(world.edit(), binding)
+    expect(saved.status).toBe("ok")
+    if (saved.status !== "ok") throw new Error(saved.reason)
+    await world.store.transaction("planner", async (snapshot) => { snapshot.data.changedSource = { revision: 2 }; return { commit: true, value: true } })
+    expect((await world.campaign.read(saved.value.ownerCase, binding)).status).toBe("stale")
+    const historical = await world.campaign.readHistorical({ ownerCase: saved.value.ownerCase, commandDigest: saved.value.commandDigest }, binding)
+    expect(historical.status === "ok" && historical.value).toEqual({ state: "historical", campaign: saved.value })
+    world.sources.contractValue = "Changed commitment"
+    expect((await world.campaign.readHistorical({ ownerCase: saved.value.ownerCase, commandDigest: saved.value.commandDigest }, binding)).status).not.toBe("ok")
+    world.sources.contractValue = "Acme"
+    world.access.allowed = false
+    expect((await world.campaign.readHistorical({ ownerCase: saved.value.ownerCase, commandDigest: saved.value.commandDigest }, binding)).status).toBe("denied")
+  } finally {
+    await world.store.dispose()
+    await rm(world.directory, { recursive: true, force: true })
+  }
+})
+
+test("a saved campaign remains authenticated historical data at the same owner case version", async () => {
+  const world = await harness()
+  try {
+    const saved = await world.campaign.save(world.edit(), binding)
+    if (saved.status !== "ok") throw new Error(`Campaign unavailable: ${JSON.stringify(saved)}`)
+    const request = { ownerCase: saved.value.ownerCase, commandDigest: saved.value.commandDigest }
+    expect(await world.campaign.readHistorical(request, binding)).toEqual({ status: "ok", value: { state: "historical", campaign: saved.value } })
+    expect(await world.campaign.listHistorical(saved.value.ownerCase, binding)).toEqual({ status: "ok", value: [{ state: "historical", campaign: saved.value }] })
+    world.sources.revoked = true
+    expect((await world.campaign.readHistorical(request, binding)).status).toBe("unavailable")
+    world.sources.revoked = false
+    world.access.authorizeCase = false
+    expect((await world.campaign.readHistorical(request, binding)).status).toBe("denied")
   } finally {
     await world.store.dispose()
     await rm(world.directory, { recursive: true, force: true })
