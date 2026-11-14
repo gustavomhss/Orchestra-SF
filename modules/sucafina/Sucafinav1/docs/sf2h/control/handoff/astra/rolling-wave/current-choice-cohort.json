@@ -1,0 +1,48 @@
+{
+  "number": 46,
+  "id": "current-choice-cohort",
+  "state": "PREPARED_NOT_STARTED",
+  "session_id": null,
+  "model_effective": null,
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "acceptance_digest": "32205922d4a3a2417d5413c232bf892769b3c8fa95045434a0461b030ba081c4",
+  "actor": "Finance/WP11 continuation; CurrentChoice implementation owner",
+  "branch": "astra-finance",
+  "pr": 35,
+  "expected_head": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+  "lease_epoch": "current-choice-browser46",
+  "authority": "Predecessor published terminal group-handoff at expected head. Before ACK reconcile actual branch, predecessor terminal handoff and any new authority; do not replace a live writer. This is a new manual browser session, not native Goal resume. No other campaign controller is started.",
+  "inputs": {
+    "source": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+    "composed_C12": "6470bebdc9bb5044df7959e697cb7d8629157e23",
+    "source_handoff": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/group-handoff.md",
+    "source_pins": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/integration-pins-final.json",
+    "finding": "CURRENT-CHOICE-COHORT in C11 pending-owner-actions; Portfolio21/43 explicitly do not close it"
+  },
+  "read_context": [
+    "Read applicable AGENTS, pinned START/WORKFLOW/execution COMMON and complete assigned WP11 task criteria/actor pack and required annexes; derive exact criterion IDs from canonical pack, not from this operational summary.",
+    "Read source cohort, providers and consumers, source diagnostic history and current candidate versions. Compare complete cohort and preimages before intake. No blind whole-branch merge. Read-only inspect live lanes and source release receipts."
+  ],
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+    "modules/sucafina/Sucafinav1/product/decisions/current-choice-promotion.ts",
+    "modules/sucafina/Sucafinav1/product/planner/current-choice.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/current-choice-cohort/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/current-choice-cohort/"
+  ],
+  "excluded": "No runtime/local-store.ts or runtime/contract.ts (34), host-binding/business-context or atlas-memory (40), Procurement producer paths (37), BI (38), Portfolio43 paths, Decisions44 UI/http, native41, Reports/Agenda36/39, compiler45, shared host/context/contracts or sf2-stack. Supply complete minimal patches for shared consumer/provider changes to 42/actual owner; no competing source writer.",
+  "mission": "Close held CurrentChoice cohort as a coherent delivered product increment: reconcile preview, promotion, Planner resimulation with admitted producers and actual current Request/lease/snapshot authorization. Preserve immutable historical choice and require explicit human current-result promotion. Portfolio sensitivity patches are not a substitute. Implement fixes and genuine negative proof; do not return another inventory-only proposal.",
+  "acceptance": [
+    "Working canonical prepare -> authorized resimulation -> result/coverage binding -> explicit UI promotion -> persisted current result, with historical choice bytes unchanged; exact scenario/result/coverage/case/source binding and safe idempotent replay.",
+    "Use actual shipped provider/host adapters for negatives: ui.finish invalidates existing context, substituted/renewed unrelated lease or Request cannot authorize prior work; revoke/expiry/source/case changes must deny output and mutation. Do not replace the provider with a permissive mock or a custom boolean oracle.",
+    "Final joint lease/Request/snapshot fence must cover all admitted external observations at commit and egress. Show source-version/case/principal/policy/installation/project integrity. Confirm no partial mutation or unauthorized result leaks.",
+    "Reconcile entire source cohort against composed candidate: exact base/output blobs, proposed shared patches and dependencies. Independent current source APIs must be used, not copied alternate implementations.",
+    "Run only surgical hosted CI for these files/actual consumer after implementation, using existing authorized request interface and checking for matching in-flight runs first. No local product tests/heavy checks, no full epic, no skip/timeout inflation/fabricated passes. Record actual W/S/run/job/commands/counts/results, package bun typecheck and guards as required through supported interface. Final same-C qualification remains with S0."
+  ],
+  "handoff": "Same PR35; commit and publish via GitHub MCP with CAS expected-head. Deliver ACK/authority, task-criterion mapping, product SHA/tree/path blobs, behavioral changes, actual validation receipts, remaining mandatory gaps, shared complete patches, source release and terminal handoff. Consumer 42 selectively integrates; never merge control or entire mixed historical finance branch. Final acceptance/epic dispatcher stays S0.",
+  "limits": "GitHub MCP only for remote operations; no gh, git push/force, credentials, dev merge/deploy/Azure/policy changes/engine edits/restarts/new supervisor or Goal. Preserve original plan and T0, all 15WP/74tasks/1610criteria and GLOBAL_RELEASE predicate. Prepared is not running; actual model and browser session identity remain unverified until receipt."
+}
