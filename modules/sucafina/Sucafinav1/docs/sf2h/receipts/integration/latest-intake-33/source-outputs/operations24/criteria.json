@@ -1,0 +1,111 @@
+{
+  "schema": "operations24-criteria-v1",
+  "global_acceptance": false,
+  "scope": "Only the five requested nominal journeys and exact annotated criterion slices; no waiver of 15WPs/74tasks/17contracts/1610criteria.",
+  "nominal_run": 43639526175,
+  "nominal_input": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+  "criteria": [
+    {
+      "case": "OP-PROC-01",
+      "name": "OP-PROC-01 real comparison preserves the J04 values and exact C02 drilldown",
+      "criteria": [
+        "WP04.T03.CHK.01",
+        "WP04.T01.INV.01",
+        "WP04.T01.CMP.02"
+      ],
+      "code_status": "PRESERVED",
+      "attempted": true,
+      "status": "FAIL_BEFORE_UI",
+      "functional_pass": false,
+      "failure": "Host prerequisite absent in published selection; readManifest before login",
+      "retry": 0
+    },
+    {
+      "case": "OP-PROC-02",
+      "name": "OP-PROC-02 pending sourcing keeps its submitted FX while the future PO changes",
+      "criteria": [
+        "WP04.T03.CHK.02",
+        "WP04.T03.CHK.03",
+        "WP04.T03.INV.02"
+      ],
+      "code_status": "PRESERVED",
+      "attempted": true,
+      "status": "FAIL_BEFORE_UI",
+      "functional_pass": false,
+      "failure": "Host prerequisite absent in published selection; readManifest before login",
+      "retry": 0
+    },
+    {
+      "case": "OP-PROC-03",
+      "name": "OP-PROC-03 missing FX stays unavailable and refuses submission without a new version",
+      "criteria": [
+        "WP04.T03.CHK.03",
+        "WP04.T03.CMP.01",
+        "WP04.CMP.02"
+      ],
+      "code_status": "PRESERVED",
+      "attempted": true,
+      "status": "FAIL_BEFORE_UI",
+      "functional_pass": false,
+      "failure": "Host prerequisite absent in published selection; readManifest before login",
+      "retry": 0
+    },
+    {
+      "case": "OP-IMPORT-01",
+      "name": "OP-IMPORT-01 real preview and one Apply recover the same receipt without duplicate effects",
+      "criteria": [
+        "WP06.T01.INV.01",
+        "WP06.T01.QLT.01",
+        "WP06.T02.INV.01",
+        "WP06.T02.INV.02",
+        "WP06.T02.QLT.18",
+        "WP06.T03.CHK.04",
+        "WP06.T03.INV.01",
+        "WP06.T03.INV.03",
+        "WP06.T03.QLT.02",
+        "WP06.T03.SUC.02",
+        "WP06.T04.CHK.02",
+        "WP06.T04.INV.01",
+        "WP06.T04.QLT.01"
+      ],
+      "code_status": "PRESERVED",
+      "attempted": true,
+      "status": "FAIL_BEFORE_UI",
+      "functional_pass": false,
+      "failure": "Host prerequisite absent in published selection; readManifest before login",
+      "retry": 0
+    },
+    {
+      "case": "OP-DOC-01",
+      "name": "OP-DOC-01 real schema and confirmation preserve exact evidence through source revocation",
+      "criteria": [
+        "WP06.T05.CHK.02",
+        "WP06.T05.CHK.19",
+        "WP06.T05.INV.01",
+        "WP06.T05.QLT.18",
+        "WP06.T05.QLT.19",
+        "WP06.T05.CMP.19",
+        "WP06.T05.SUC.19"
+      ],
+      "code_status": "PRESERVED",
+      "attempted": true,
+      "status": "FAIL_BEFORE_UI",
+      "functional_pass": false,
+      "failure": "Host prerequisite absent in published selection; readManifest before login",
+      "retry": 0
+    }
+  ],
+  "retained_oracles": {
+    "comparison": "A 87.933333 / B 85; B USD30240; C excluded; A premium USD2160 / 7.142857%",
+    "snapshot": "Submitted sourcing USD30240 and FX1.08; future PO USD56000 and FX2; versions/C02/reload preserved",
+    "missing_fx": "Unavailable, exact422; no new version or domain effects",
+    "import": "Real XLSX preview72000→84000, retain518000 and all other rows/versions; one Apply, lost delivery, GET recovery/refresh/reload/logout",
+    "document": "Private upload, production parser, Price42, schema, exact UTF16 range7..9 and SHA256 blob/segment; explicit confirm; source revoke403/409, cached card cleared"
+  },
+  "not_accepted": [
+    "C06 material selection/confirmation contract: original producer/host/UI gap remains; C02 UUID is not C06.",
+    "Native/AM parity and four human timing/usability criteria remain outside this browser proof.",
+    "PDF/DOCX/OCR and broader document/dossier scenarios not asserted.",
+    "Source tests and static checks do not transfer to a composed candidate or final C/G7/D/G8/GLOBAL_RELEASE."
+  ]
+}

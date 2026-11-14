@@ -1,0 +1,48 @@
+--- a/packages/app-shell/e2e/sucafina/wp04/host.ts
++++ b/packages/app-shell/e2e/sucafina/wp04/host.ts
+@@ -79,9 +79,13 @@
+   if (!reset.ok) throw new Error("Baseline Procurement settings could not be initialized")
+   const holders = ProcurementModule.domain.execute(snapshot, actor, {
+     page: "Settings", action: "save", version: snapshot.versions.settings!.version,
+-    values: { levels: initialProcurementSettings().levels.map((level) => ({ ...level, holderId: actor.id })) },
++    values: {
++      levels: initialProcurementSettings().levels.map((level) => ({ ...level, holderId: actor.id })),
++      // The real private upload path requires a configured limit in bytes before scanning.
++      uploadCap: 16 * 1024 * 1024,
++    },
+   }, context)
+-  if (!holders.ok) throw new Error("Synthetic approval holder could not be configured")
++  if (!holders.ok) throw new Error("Synthetic approval holder and attachment limit could not be configured")
+   const execute = (command: Command) => {
+     const result = ProcurementModule.domain.execute(snapshot, actor, command, context)
+     if (!result.ok) throw new Error(`Fixture command ${command.page}/${command.action} was refused (${result.status})`)
+--- a/packages/app-shell/e2e/tsconfig.json
++++ b/packages/app-shell/e2e/tsconfig.json
+@@ -30,6 +30,9 @@
+     "../../core/src/flag/flag.ts",
+     "../playwright.config.ts",
+     "./playwright.production.config.ts",
++    "./sucafina/operations.spec.ts",
++    "./sucafina/operations-support/**/*.ts",
++    "./sucafina/wp04/host.ts",
+     "./orchestra/**/*.ts",
+     "./orchestra-screenshots/**/*.ts",
+     "./orchestra/theme-first-paint.fixture.tsx",
+--- a/modules/sucafina/Sucafinav1/test/product/operations-functional-closure/mount-boundary.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/operations-functional-closure/mount-boundary.test.ts
+@@ -58,7 +58,14 @@
+     const result = ProcurementModule.domain.execute(snapshot, { id: principalRef, roles: ["admin", "buyer"], canWrite: true },
+       { page: "Settings", action: "reset", version: 0, values: {} }, await environment())
+     expect(result.ok).toBe(true)
+-    return { commit: result.ok, value: undefined }
++    // Fixture policy is expressed in bytes and applied through the real Settings command.
++    // A configured cap lets the no-scanner regression reach the scanner boundary.
++    const uploadCap = 16 * 1024 * 1024
++    const configured = ProcurementModule.domain.execute(snapshot, { id: principalRef, roles: ["admin", "buyer"], canWrite: true },
++      { page: "Settings", action: "save", version: snapshot.versions.settings!.version, values: { uploadCap } }, await environment())
++    expect(configured.ok).toBe(true)
++    expect(object(object(snapshot.data.store).settings).uploadCap).toBe(uploadCap)
++    return { commit: result.ok && configured.ok, value: undefined }
+   })
+   const admitted = await identity.handle(new Request(origin + mount + "/auth/local?code=" + await identity.enroll()))
+   expect(admitted?.status).toBe(303)

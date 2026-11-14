@@ -1,0 +1,77 @@
+{
+  "schema": "operations-mount-boundary-source-run-v1",
+  "attempt": 2,
+  "W": "0042a95967ad651fe65ac0da216db6af86ed804c",
+  "W_tree": "ad87005bbc3b02d18652ebb07d87fac904cfcfbf",
+  "S": "0142facd1367eadaaf8f11a5e192b195c439cfa4",
+  "S_tree": "41548b44859b38c115188e8039280c775a3ca4ee",
+  "branch": "ci-run-linux-astra-wp04-0042a959-c3cb131600-m24b2",
+  "request": {
+    "package": "sucafina",
+    "packageSelector": "@orchestra/sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/operations-functional-closure/mount-boundary.test.ts"
+    ],
+    "env": {
+      "ORCHESTRA_CHANNEL": "prod"
+    }
+  },
+  "request_sha256": "c3cb1316006809204c675213e6a7789fe66bb6c7df0325c2af1584d7738c90a6",
+  "envelope": {
+    "w_tree": "ad87005bbc3b02d18652ebb07d87fac904cfcfbf",
+    "s_tree": "41548b44859b38c115188e8039280c775a3ca4ee",
+    "changed_non_request": [],
+    "missing": [],
+    "request": {
+      "path": ".ci-run.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ff67d3e579dcbf96010db2b529f457771459357c",
+      "size": 274,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/ff67d3e579dcbf96010db2b529f457771459357c"
+    }
+  },
+  "run_id": 43640551629,
+  "job_id": 132586959036,
+  "conclusion": "failure",
+  "selected": 5,
+  "executed": 5,
+  "passed": 2,
+  "failed": 3,
+  "expect_calls": 27,
+  "duration_ms": 669,
+  "tests": [
+    {
+      "name": "Operations mount denies unauthenticated workbenches without changing source data",
+      "result": "FAIL",
+      "cause": "Source W retains import-http f500c9ab/document-http fbb76f54 without workbench routes; response falls through to legacy page401. Target composed input provides72196e5d/8f679dee; do not relax403 assertion."
+    },
+    {
+      "name": "Operations mount serves the real Planner and import/document workbenches",
+      "result": "FAIL",
+      "cause": "Same old source HTTP adapters decline sf=imports; ordinary Planner Overview returned."
+    },
+    {
+      "name": "Operations viewer has no human import or document mutation authority",
+      "result": "PASS"
+    },
+    {
+      "name": "Operations source admission rejects an unissued selector and a revoked credential",
+      "result": "PASS"
+    },
+    {
+      "name": "Operations private upload fails closed with no scanner and preserves the source",
+      "result": "FAIL",
+      "cause": "Own fixture leaves uploadCap null, so request422 is plain-text Attachment limit is not configured before scanner. Correct Settings/save setup; preserve scanner JSON/no-effects assertions."
+    }
+  ],
+  "omni_positive_control": {
+    "result": "not applicable (focused: no declaring test ran)",
+    "spawn_count": 0,
+    "qualification": "No Omni execution proof"
+  },
+  "scope": "Auxiliary real service tests against own source lineage. Not the composed product input; no nominal UI PASS transfer.",
+  "next": "Fix own upload precondition and matching shared host patch. Revalidate exact same file on new committed W. Existing workbench failures remain explicit until session23 intakes own helper into composed product."
+}

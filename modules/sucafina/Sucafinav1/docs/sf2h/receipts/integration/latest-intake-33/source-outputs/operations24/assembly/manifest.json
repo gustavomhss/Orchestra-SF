@@ -1,0 +1,136 @@
+{
+  "schema": "operations-assembly-proposal-v1",
+  "consumer": "session23 sole sf2-stack integrator",
+  "input_commit": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+  "product_commit": "b62c32940d06c15c04f52b88209d5b4930cf1a3e",
+  "state": "READY_PATCH_PENDING_SESSION23_ASSEMBLY_AND_ACTIONS_QUALIFICATION",
+  "files": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp04/host.ts",
+      "preimage_blob": "3dd5760da92346e267a3cc767c69c4d8bb51b31c",
+      "postimage_blob": "8230eb28f322dde255382b74280192f39844724d",
+      "preimage_file": "preimages/packages/app-shell/e2e/sucafina/wp04/host.ts.txt",
+      "postimage_file": "postimages/packages/app-shell/e2e/sucafina/wp04/host.ts.txt"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp04/selection.ts",
+      "preimage_blob": "7224825eb470a2f172e7dc32172f83a6b05a5787",
+      "postimage_blob": "1bfa058531fc84f012dcb8b601d471abd8fa0aad",
+      "preimage_file": "preimages/packages/app-shell/e2e/sucafina/wp04/selection.ts.txt",
+      "postimage_file": "postimages/packages/app-shell/e2e/sucafina/wp04/selection.ts.txt"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/installation.ts",
+      "preimage_blob": null,
+      "postimage_blob": "d60be2f87aa210c9700fba276932a6f443264e4f",
+      "own_source_path": "packages/app-shell/e2e/sucafina/operations-support/installation.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-functional-closure/mount-boundary.test.ts",
+      "preimage_blob": null,
+      "postimage_blob": "eddc60289524c374f970ea226632a030fc9b994d",
+      "own_source_path": "modules/sucafina/Sucafinav1/test/product/operations-functional-closure/mount-boundary.test.ts"
+    },
+    {
+      "path": "packages/app-shell/e2e/tsconfig.json",
+      "preimage_blob": "8364221434311400cae3007ea74cc67ddcfde765",
+      "postimage_blob": "fd63fd70922e9cc243626b52302ecd7774e4b478",
+      "preimage_file": "preimages/packages/app-shell/e2e/tsconfig.json.txt",
+      "postimage_file": "postimages/packages/app-shell/e2e/tsconfig.json.txt",
+      "purpose": "Include the exact Operations spec/helpers and mounted existing host in the existing typecheck:e2e graph; do not broaden test execution."
+    }
+  ],
+  "scanner": {
+    "source": "modules/sucafina/Sucafinav1/runtime/local-scanner.ts",
+    "source_blob": "f4fc6bc7c653213c61b8d05ecfad6bfd765df261",
+    "environment": "SF_OPERATIONS_CLAMD_PORT",
+    "host": "127.0.0.1",
+    "mode": "Existing approved ClamD endpoint only. No install or service launch. Missing endpoint fails closed.",
+    "pending": "No observed real Actions scanner endpoint yet."
+  },
+  "proof_boundaries": [
+    "Five nominal browser journeys remain distinct from the five assembly regressions.",
+    "No native Sessions/provider authority/C06 material/human timing proof.",
+    "No shared postimage may be applied outside session23.",
+    "Mutation Requests in mount-boundary.test.ts exercise HTTP authorization as regression tests; they do not replace required browser UI actions."
+  ],
+  "static_peer_review": {
+    "documents_dispose": "Feature-detect source39 dispose; composed d8ab factory has no dispose. business.dispose runs in finally.",
+    "fixture_cleanup": "Register each resource immediately and attempt every closer; collect failures.",
+    "tests_executed": false
+  },
+  "bounded_input_inventory": "input-subtrees.json",
+  "tests": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-functional-closure/mount-boundary.test.ts",
+      "cases": 5,
+      "scope": "real installation/authentication/SQLite/HTTP regression; does not qualify UI journeys",
+      "execution": "PENDING"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-functional-closure/selection.test.ts",
+      "cases": 2,
+      "scope": "canonical request and existing host prerequisite selection; requires session23 shared postimage",
+      "execution": "NOT_RUN_PENDING_SHARED_PATCH"
+    }
+  ],
+  "application_order": [
+    "Preserve current sf2-stack and verify the exact shared preimage blobs. Only session23 applies shared changes.",
+    "Intake the five own source files by exact terminal delivery path/blob identities. The fixed mount-boundary test blob eddc6028 supersedes the 0042a959 test blob508f4580; other own code blobs remain unchanged.",
+    "Apply shared.patch (host.ts, selection.ts, e2e/tsconfig.json) after verifying all three preimages. No production selector, retry, timeout or test-body assertion is weakened.",
+    "Reconcile an already approved real ClamD service through the existing CI environment. This payload does not install/start a service and cannot claim positive upload without it.",
+    "Run both exact regression files through existing Actions and then the unchanged five-case nominal request on the resulting committed composition; no inherited green."
+  ],
+  "source_helpers": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-functional-closure/mount-boundary.test.ts",
+      "postimage_blob": "eddc60289524c374f970ea226632a030fc9b994d",
+      "source_commit": "Pinned by terminal handoff after this fix is committed"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-functional-closure/selection.test.ts",
+      "postimage_blob": "ad277ff25b728397993ea8d57b492c8ebe5eab90",
+      "source_commit": "0042a95967ad651fe65ac0da216db6af86ed804c"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/documents.ts",
+      "postimage_blob": "7136131cdb713abecccde2c29e8b6c1204b60a6c",
+      "source_commit": "0042a95967ad651fe65ac0da216db6af86ed804c"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/imports.ts",
+      "postimage_blob": "c03cf0ec947f10548557643dd8a57a39e098fef0",
+      "source_commit": "0042a95967ad651fe65ac0da216db6af86ed804c"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/installation.ts",
+      "postimage_blob": "d60be2f87aa210c9700fba276932a6f443264e4f",
+      "source_commit": "0042a95967ad651fe65ac0da216db6af86ed804c"
+    }
+  ],
+  "shared_patch": "shared.patch",
+  "approved_source_scope": "The exact own code blobs are committed at 0042a959. Shared patch remains inert in receipts; only session23 can apply it after preimage reconciliation.",
+  "required_checks": [
+    {
+      "interface": "existing package script",
+      "directory": "packages/app-shell",
+      "command": "bun run typecheck:e2e",
+      "state": "NOT_RUN_PENDING_SHARED_TSCONFIG_INTAKE"
+    },
+    {
+      "interface": "existing test-ci request",
+      "file": "regression-request.json",
+      "state": "Requires integrated shared selection postimage; first boundary-only attempt and corrected retry are recorded separately."
+    },
+    {
+      "interface": "existing test-ci request",
+      "file": "../nominal-request.json",
+      "state": "Five nominal journeys remain blocked; require real approved scanner for positive file admission."
+    }
+  ],
+  "preconditions": {
+    "procurement_attachment_cap_bytes": 16777216,
+    "method": "Existing real Settings/save command with current CAS version; test fixture asserts configured value; host configures alongside existing approval levels.",
+    "scanner": "Real approved ClamD remains external; cap does not substitute scanner."
+  }
+}

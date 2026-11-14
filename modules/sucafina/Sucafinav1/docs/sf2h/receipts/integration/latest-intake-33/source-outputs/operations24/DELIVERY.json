@@ -1,0 +1,338 @@
+{
+  "schema": "operations24-delivery-v1",
+  "mission": 24,
+  "lease_epoch": "operations-browser24",
+  "branch": "astra-wp04",
+  "pr": 23,
+  "state": "IMPLEMENTED_WITH_BLOCKED_DEPENDENCIES",
+  "terminal": true,
+  "initial_head": "39b50786b8d341d13f98ca2c5ada035a4bd7a46a",
+  "source_W": "837ff32d178fc754a38e9b42b117c49c5390257a",
+  "source_tree": "afafe3f1a53f848896daee1654562e8928a246db",
+  "commits": [
+    {
+      "sha": "3b5706d3737d75b6dde8185fe058b22aa728bba6",
+      "purpose": "reconciled predecessor/authority/input identity"
+    },
+    {
+      "sha": "0042a95967ad651fe65ac0da216db6af86ed804c",
+      "purpose": "UI helper repairs, actual service assembly, boundary/selector regressions, published run evidence"
+    },
+    {
+      "sha": "49d29bf4d6512d130307f46e145885949f213ea8",
+      "purpose": "real Settings upload precondition in fixture/shared-host patch; complete typecheck patch and source input dispositions"
+    },
+    {
+      "sha": "837ff32d178fc754a38e9b42b117c49c5390257a",
+      "purpose": "Remove three own raw log copies flagged by guards; retain structured result and provenance records with canonical Actions evidence."
+    }
+  ],
+  "own_files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-functional-closure/mount-boundary.test.ts",
+      "postimage_blob": "eddc60289524c374f970ea226632a030fc9b994d",
+      "source_commit": "49d29bf4d6512d130307f46e145885949f213ea8"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-functional-closure/selection.test.ts",
+      "postimage_blob": "ad277ff25b728397993ea8d57b492c8ebe5eab90",
+      "source_commit": "49d29bf4d6512d130307f46e145885949f213ea8"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/documents.ts",
+      "postimage_blob": "7136131cdb713abecccde2c29e8b6c1204b60a6c",
+      "source_commit": "49d29bf4d6512d130307f46e145885949f213ea8"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/imports.ts",
+      "postimage_blob": "c03cf0ec947f10548557643dd8a57a39e098fef0",
+      "source_commit": "49d29bf4d6512d130307f46e145885949f213ea8"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/installation.ts",
+      "postimage_blob": "d60be2f87aa210c9700fba276932a6f443264e4f",
+      "source_commit": "49d29bf4d6512d130307f46e145885949f213ea8"
+    }
+  ],
+  "shared_patch": {
+    "consumer": "session23 sole sf2-stack integrator",
+    "state": "PARTIAL_0042_ASSEMBLY_CONSUMED_C4_FINAL_DELTA_READY_NOT_APPLIED",
+    "historical_package": "assembly/",
+    "current_package": "assembly-c4/",
+    "current_target": {
+      "checkpoint_commit": "402a091485e11d60dff433049c7dedd7fcead687",
+      "checkpoint_tree": "006339cc3a61de9bf99d2ba17069181bd5d8a02e",
+      "candidate_id": "C4",
+      "product_commit": "253baad3f2ff4af5beac695feae4c2f6372dc2e7",
+      "product_tree": "c3648fca57012f6e6934e207e02c88c75cc6eb3a"
+    },
+    "current_paths": [
+      {
+        "path": "packages/app-shell/e2e/sucafina/wp04/host.ts",
+        "preimage_blob": "8ba8d97ec138265454507852a5ab50b600b96c60",
+        "postimage_blob": "8230eb28f322dde255382b74280192f39844724d",
+        "disposition": "PROPOSED_EXACT_DELTA"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/wp04/selection.ts",
+        "preimage_blob": "1bfa058531fc84f012dcb8b601d471abd8fa0aad",
+        "postimage_blob": "1bfa058531fc84f012dcb8b601d471abd8fa0aad",
+        "disposition": "ALREADY_PRESENT_NO_OP"
+      },
+      {
+        "path": "packages/app-shell/e2e/tsconfig.json",
+        "preimage_blob": "8364221434311400cae3007ea74cc67ddcfde765",
+        "postimage_blob": "fd63fd70922e9cc243626b52302ecd7774e4b478",
+        "disposition": "PROPOSED_EXACT_DELTA"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/operations-functional-closure/mount-boundary.test.ts",
+        "preimage_blob": "508f4580d0decb1d5c97208fed650f51d8566045",
+        "postimage_blob": "eddc60289524c374f970ea226632a030fc9b994d",
+        "disposition": "PROPOSED_EXACT_DELTA"
+      }
+    ],
+    "patches": [
+      {
+        "file": "shared.patch",
+        "targets": [
+          "packages/app-shell/e2e/sucafina/wp04/host.ts",
+          "packages/app-shell/e2e/tsconfig.json"
+        ],
+        "use": "Apply only after exact C4 preimage reconciliation; boundary test intake is separate.",
+        "git_blob": "b433efe06f957a816c6525433352556816b47c19",
+        "sha256": "ceb11ff3f5eaa3f9ce661352499307853d971c97923f25511011dad89b75d46f",
+        "bytes": 1651,
+        "files": 2
+      },
+      {
+        "file": "test-source-intake.patch",
+        "targets": [
+          "modules/sucafina/Sucafinav1/test/product/operations-functional-closure/mount-boundary.test.ts"
+        ],
+        "use": "Intake exact source49 corrected regression when current C4 has old508f test.",
+        "git_blob": "5f175a76ceb0d63c4b596ba36703844a3ffa32a3",
+        "sha256": "6b84a25c8074420f50dfdbb86ecaa876ea21a63bbb119a0974ccdd4c9e7eb36e",
+        "bytes": 1361,
+        "files": 1
+      },
+      {
+        "file": "complete-followup.patch",
+        "targets": [
+          "packages/app-shell/e2e/sucafina/wp04/host.ts",
+          "packages/app-shell/e2e/tsconfig.json",
+          "modules/sucafina/Sucafinav1/test/product/operations-functional-closure/mount-boundary.test.ts"
+        ],
+        "use": "Alternative combined three-file payload. Use instead of, never in addition to, the two component patches.",
+        "git_blob": "16895fe4784f24363275d7c1a5fdcbd1b5ae36d8",
+        "sha256": "237d6aa1a33c79533c108789bc1e5715251bffdb06ee9c70c88689535387dbe5",
+        "bytes": 3012,
+        "files": 3
+      }
+    ],
+    "verification": "Strict exact text reconstruction only; no product execution or runtime qualification",
+    "own_source_intake": "C4 already contains four final own code blobs and unchanged spec. Intake corrected boundary508f→eddc plus host/tsconfig proposal; preserve all unrelated composition sources.",
+    "tooling_ownership": {
+      "owner": "tooling26 / astra-compose / PR32",
+      "control": "6da04cd66eb268362ee58509271fef773ac2a62e",
+      "instruction_blob": "171ce861c06e890e73240362dfaeb50a553c82e7",
+      "scope": "packages/app-shell/e2e/tsconfig.json is a tooling26 shared target. Session23 must reconcile its current accepted output/lease before applying this inert proposal. Operations24 edits no shared tooling source.",
+      "state": "PREPARED_NOT_STARTED at reconciled authority; no accepted tooling26 intake observed at C4."
+    }
+  },
+  "nominal": {
+    "W": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+    "S": "a54db382b9425e68f0c1dee1754aae80e2665726",
+    "run_id": 43639526175,
+    "result": "FAIL_BEFORE_UI",
+    "selected": 5,
+    "body_attempts": 5,
+    "functional_passes": 0,
+    "failed": 5,
+    "skipped": 0,
+    "retries": 0,
+    "record": "nominal-run.json"
+  },
+  "boundary": {
+    "W": "49d29bf4d6512d130307f46e145885949f213ea8",
+    "S": "ca244e5b74ebb2f9a20262b4e7448aa7d528a15b",
+    "run_id": 43641173533,
+    "pass": 3,
+    "fail": 2,
+    "record": "boundary-attempt-03.json",
+    "scope": "Own source branch retains old HTTP producers. Failed workbench expectations are preserved; scanner/no-effects case now passes."
+  },
+  "checks": {
+    "initial": {
+      "W": "0042a95967ad651fe65ac0da216db6af86ed804c",
+      "run_id": 43640212098,
+      "result": "PASS_WITH_11_EXISTING_WARNINGS"
+    },
+    "final": {
+      "W": "837ff32d178fc754a38e9b42b117c49c5390257a",
+      "tree": "afafe3f1a53f848896daee1654562e8928a246db",
+      "run_id": 43641839432,
+      "job_id": 132590896644,
+      "result": "PASS_WITH_11_EXISTING_WARNINGS",
+      "generated": "PASS",
+      "module_typecheck": "PASS",
+      "guards": {
+        "gate": 0,
+        "warnings": 11,
+        "errors": 0,
+        "rules": 78,
+        "changed_paths": 701
+      },
+      "record": "source-checks-03.json"
+    },
+    "intermediate": {
+      "W": "49d29bf4d6512d130307f46e145885949f213ea8",
+      "run_id": 43641414497,
+      "generated": "PASS",
+      "module_typecheck": "PASS",
+      "guards": "FAIL_3_OWN_RAW_LOG_FILES",
+      "record": "source-checks-02.json"
+    }
+  },
+  "read_authority": {
+    "mission_commit": "233e9acb7c048dda3d8174d87b76f1e8441f4917",
+    "mission_blob": "4d04b061cba169532e8448035fc19eedafa7f0c2",
+    "common_blob": "6dddb69b7f044e0467cfa4ab8dff60f560ca50b1",
+    "planning_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "actor_pack_blob": "7327be5449328c356a0f5b242ddc9d2014175e41",
+    "pack_read": "complete; applicable mandatory appendices read",
+    "ci_protocol_blob": "c34ab425e0f3b7dc0899a05826829f38b5af84bb"
+  },
+  "read_guidance": [
+    {
+      "path": "AGENTS.md",
+      "blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4"
+    },
+    {
+      "path": "packages/app-shell/AGENTS.md",
+      "blob": "a9ed3dc797d2756089a032e75bc0ab77256b3a03"
+    },
+    {
+      "path": "packages/app-shell/e2e/AGENTS.md",
+      "blob": "2e24eecc8ccea104922263bf6c7ccc8e93da24ec"
+    },
+    {
+      "repository": "microsoft/playwright",
+      "path": "docs/src/best-practices-js.md",
+      "blob": "02e1e4db6baea68e725040646396e09a29584420",
+      "read": "complete"
+    },
+    {
+      "repository": "microsoft/playwright",
+      "path": "docs/src/actionability.md",
+      "blob": "848df596771406a7c4d7b2e6120f95b01330a756",
+      "read": "complete"
+    },
+    {
+      "repository": "microsoft/playwright",
+      "path": "docs/src/test-assertions-js.md",
+      "blob": "97eb22aa6c5839c4f83be974fef260221d6494e2",
+      "read": "complete"
+    },
+    {
+      "repository": "microsoft/playwright",
+      "path": "docs/src/locators.md",
+      "blob": "a4307c3b47fc1cf6c048e5f94c98b5dcbb6bcb9a",
+      "read": "complete"
+    },
+    {
+      "repository": "microsoft/playwright",
+      "path": "docs/src/network.md",
+      "blob": "fb24a1855d418e4c9291d8e2656dcc51c3dbf2e4",
+      "read": "complete"
+    },
+    {
+      "repository": "microsoft/playwright",
+      "path": "docs/src/browser-contexts.md",
+      "blob": "d34759c18549026d7cba3558ce8357d6e441c4c7",
+      "read": "complete"
+    }
+  ],
+  "full_input_identity": "input-closure.json",
+  "bounded_provenance": "input-subtrees.json",
+  "criteria": "criteria.json",
+  "pending": [
+    "S0-authorized continuation of session23's completed bounded integration slice, on existing sf2-stack/PR65; then intake final boundary eddc6028, host cap and E2E graph proposal using exact C4 preimages still present at3c0b7df2.",
+    "Tooling26 ownership reconciliation before integrating the E2E tsconfig proposal; mission24 does not edit shared tooling.",
+    "Approved existing real ClamD endpoint and CI environment wiring; no installation/service launch or synthetic scanner is authorized.",
+    "Complete Operations E2E graph typecheck, seven exact assembly/selector regressions and five nominal UI journeys on the resulting new composed candidate. No source or C4 green is transferred.",
+    "C06 material source/confirmation, native/AM, human timing and global C/G7,D/G8 acceptance.",
+    "Final corrected output has no session23 consumer ACK at the bounded C4 checkpoint; ACK04 covers0042 partial source only."
+  ],
+  "authority_after_terminal": "Release mission24 own write lease at terminal handoff. No controller/watchdog/background test remains. session23 owns next assembly and any new candidate; additional source mutation needs explicit continuation.",
+  "prohibitions_observed": {
+    "github_remote_operations": "GitHub MCP",
+    "local_product_tests": 0,
+    "local_servers": 0,
+    "mocks": 0,
+    "parallel_html": 0,
+    "synthetic_success_handlers": 0,
+    "mutation_retries": 0,
+    "new_test_skips": 0,
+    "timeout_increases": 0,
+    "shared_source_edits": 0,
+    "other_writer_edits": 0,
+    "full_or_epic_runs": 0,
+    "external_person_directed_messages": 0
+  },
+  "source_code_W": "49d29bf4d6512d130307f46e145885949f213ea8",
+  "latest_composed_input": {
+    "id": "C4",
+    "product": "253baad3f2ff4af5beac695feae4c2f6372dc2e7",
+    "product_tree": "c3648fca57012f6e6934e207e02c88c75cc6eb3a",
+    "checkpoint": "402a091485e11d60dff433049c7dedd7fcead687",
+    "checkpoint_tree": "006339cc3a61de9bf99d2ba17069181bd5d8a02e",
+    "operations_ack": "ACK_PARTIAL_SOURCE_AND_SHARED_ASSEMBLY_CONSUMED_LANE_REMAINS_OPEN",
+    "source_consumed": "0042a95967ad651fe65ac0da216db6af86ed804c",
+    "corrected_upload_intake": "NOT_CONSUMED_AT_C4",
+    "qualification": "NOT_RUN_ON_C4",
+    "proof_transfer": false,
+    "disposition": "advanced-input-disposition-c4.json",
+    "final_documentary_checkpoint": "3c0b7df201559223ddf1631c182a409af700ff38",
+    "final_documentary_tree": "b92f6f83e83e2b7ed5ad5ff74d89fb8c015de196",
+    "final_disposition": "final-disposition.json",
+    "effective_preimages_still_match": true
+  },
+  "prepared_at_utc": "2026-11-14 21:18:13 UTC",
+  "functional_acceptance": "NOT_ACCEPTED",
+  "terminal_receipt": {
+    "kind": "documentary commit after checked source837ff32d; containing commit identified by PR23 publication",
+    "checked_parent": "837ff32d178fc754a38e9b42b117c49c5390257a",
+    "does_not_change_product_code": true
+  },
+  "latest_authority": {
+    "control": "86dfe5cd709a4d1701a21b877c2feb92924b08c8",
+    "source": "final-disposition.json",
+    "mission24_revoked": false,
+    "change": "Additive prepared validation missions26–32 preserve session23 as sole integrator and S0 as final dispatcher/acceptor.",
+    "integrator_state": "TERMINAL_BOUNDED_INTAKE_HANDOFF_TO_S0",
+    "next_intake": "After Operations terminal delivery,S0 must authorize continuation of the sole integrator on existing sf2-stack/PR65. Read this terminal handoff and reconcile actual head/authority; do not assume an active write lease,create a replacement writer,or alter3c0b7df2 history."
+  },
+  "dispatch_ledger": "dispatch-ledger.json",
+  "publication": {
+    "branch": "astra-wp04",
+    "pr": 23,
+    "base": "sf2-stack",
+    "history": "preserved; all updates fast-forward with expected-head CAS",
+    "third_party_messages": "none; PR23 body only carries this requested delivery"
+  },
+  "provenance_correction": {
+    "record": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/operations24-revision-disposition.json",
+    "record_blob": "6a9c98dabb8bf43bdbd50e5d9dcf6049ffd41597",
+    "field": "source_tree",
+    "reported": "fbaf5fe4762cd8d68a71d8600c28f4afb0774dd5",
+    "authoritative_source_commit": "49d29bf4d6512d130307f46e145885949f213ea8",
+    "correct_tree": "0d982446f0708975895b59fad3c94d0a53704f58",
+    "proof": [
+      "GitHub git commit object read directly by root",
+      "Actions43641414497 artifact revisions.txt",
+      "Actions43641173533 execution W/S envelope"
+    ],
+    "instruction": "Session23 must use exact source49 tree0d982446 for next intake; preserve historical record and correct by additive provenance receipt. No change to final own path/blob identities."
+  }
+}

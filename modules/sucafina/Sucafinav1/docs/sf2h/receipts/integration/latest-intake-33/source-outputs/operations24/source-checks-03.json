@@ -1,0 +1,109 @@
+{
+  "schema": "operations-source-checks-v1",
+  "attempt": 3,
+  "W": "837ff32d178fc754a38e9b42b117c49c5390257a",
+  "tree": "afafe3f1a53f848896daee1654562e8928a246db",
+  "source_code_W": "49d29bf4d6512d130307f46e145885949f213ea8",
+  "source_code_unchanged_since_W": true,
+  "workflow": {
+    "path": ".github/workflows/astra-wp04-check.yml",
+    "blob": "dab8d29f69d78ba304325333e03fb8d729fe026e",
+    "branch": "astra-check-wp04",
+    "previous_head": "49d29bf4d6512d130307f46e145885949f213ea8",
+    "expected_head_CAS": true
+  },
+  "run_id": 43641839432,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43641839432",
+  "job_id": 132590896644,
+  "conclusion": "success",
+  "commands": [
+    {
+      "directory": "modules/sucafina/Sucafinav1",
+      "commands": [
+        "bun product/contracts/generate-output-schemas.ts",
+        "bun product/contracts/generate-output-schemas.ts --check",
+        "git diff --exit-code -- product/contracts/output-schemas.ts"
+      ],
+      "result": "PASS",
+      "contributions": 24,
+      "operations": 39,
+      "skill_inputs": 18,
+      "closed_definitions": 300
+    },
+    {
+      "directory": "modules/sucafina",
+      "command": "bun typecheck",
+      "result": "PASS"
+    },
+    {
+      "directory": ".",
+      "command": "bun run check:guards --base origin/dev",
+      "base_sha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+      "result": "PASS_WITH_EXISTING_WARNINGS",
+      "rules": 78,
+      "changed_paths": 701,
+      "gate_findings": 0,
+      "warnings": 11,
+      "errors": 0
+    }
+  ],
+  "warnings": [
+    "WARN apps/cli/package.json:37 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+    "WARN modules/atlas/boundary/package.json:66 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+    "WARN modules/atlas/boundary/package.json:67 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+    "WARN modules/atlas/boundary/package.json:68 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+    "WARN modules/sucafina/package.json:17 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+    "WARN modules/sucafina/package.json:18 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+    "WARN modules/sucafina/package.json:19 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+    "WARN modules/sucafina/package.json:20 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+    "WARN modules/sucafina/package.json:21 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+    "WARN modules/sucafina/package.json:22 [dep-new-added] New dependency. Check that the package exists, is the one you mean (not a look-alike name), and is needed; then say why in the PR.",
+    "WARN modules/sucafina/Sucafinav1/product/decisions/analysis-acceptance.ts:46 [ts-double-cast] Double cast through unknown bypasses the type checker. Fix the type, or narrow the value with a guard."
+  ],
+  "artifact": {
+    "id": 14131754630,
+    "name": "astra-wp04-checks",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43641839432/artifacts/14131754630",
+    "zip_sha256": "235dd28f554f351d3015f677e305d3b4a9ea0fe268df6cddab9c6ed62093876d",
+    "size_in_bytes": 15009,
+    "members": [
+      {
+        "name": "output-schemas.ts",
+        "bytes": 205836,
+        "sha256": "33fd0a159ef9258e02c4777a3fb4d88b27a86930122e1e563d88ec3d1362d806"
+      },
+      {
+        "name": "revisions.txt",
+        "bytes": 123,
+        "sha256": "a25eaeaf9d7448d6bb44d8549b5457f2cedd71164369aaaf7150e897d5c7a6ca"
+      },
+      {
+        "name": "guards.log",
+        "bytes": 4525,
+        "sha256": "df91fceb490866a8421599b7baa8c8a8e5f4b2e88aea927ceb23089dff139dd6"
+      },
+      {
+        "name": "typecheck.log",
+        "bytes": 49,
+        "sha256": "0cce49ed17a272b35cda32961bce19ce118bab2aac71290749bdfe7f493abf53"
+      }
+    ],
+    "revisions_verified": [
+      "837ff32d178fc754a38e9b42b117c49c5390257a",
+      "afafe3f1a53f848896daee1654562e8928a246db",
+      "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+    ]
+  },
+  "resolved": {
+    "prior_run": 43641414497,
+    "prior_gate_findings": 3,
+    "action": "Deleted three own raw log copies; no rule exemption, rename or product change",
+    "record": "receipt-log-correction.json"
+  },
+  "coverage": "Existing modules/sucafina typecheck; test/**/*.ts includes new boundary regression and imported actual installation helper.",
+  "limits": [
+    "Complete Operations spec/UI helper graph awaits accepted shared E2E tsconfig proposal and existing typecheck:e2e execution.",
+    "This is own source lineage, not qualification of d8ab, C4 or the future integrated candidate.",
+    "Final terminal receipt commit is documentary and is not labelled a checked commit."
+  ]
+}
