@@ -1,0 +1,536 @@
+{
+  "schema": "finance-resume-performance-scope-v1",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "finance-resume",
+  "pullRequest": 42,
+  "initialHead": "3ea9dc2efe0de8d283f9625774697e431f55a0d7",
+  "productHead": "7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1",
+  "productTree": "2da074668b164b1aa5e051f8a70366969425906f",
+  "linearProductAndEvidenceCommits": [
+    "ab38a14c09d2292553670033b8c1eaea1d26f31f",
+    "95f474484fb49cedb563ed3d02a61e9638d6784d",
+    "189cb74252b3b6aa160038da4410b1c7cdcaa31b",
+    "7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1"
+  ],
+  "productFiles": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+      "preimageCommit": "3ea9dc2efe0de8d283f9625774697e431f55a0d7",
+      "preimageBlob": "3dec070ca5f56f7bd03a09b4b19468c950d82214",
+      "outputCommit": "7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1",
+      "outputBlob": "fe4ab56201fd1898905ac7bc810f0495a64f8602",
+      "bytes": 19250
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/threshold-proof.ts",
+      "preimageCommit": "3ea9dc2efe0de8d283f9625774697e431f55a0d7",
+      "preimageBlob": "056a857364cf8a6c2a2bc97bf107276612edf55d",
+      "outputCommit": "7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1",
+      "outputBlob": "ce7d267d126992bc1a0796e2b64e5dc1c87bb12b",
+      "bytes": 8265
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+      "preimageCommit": "3ea9dc2efe0de8d283f9625774697e431f55a0d7",
+      "preimageBlob": "912df8ecd8552b245e124b93c46644c92a32f3ac",
+      "outputCommit": "7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1",
+      "outputBlob": "46a04597df74205add4531465f35d8a55ca1f8dd",
+      "bytes": 24748
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+      "preimageCommit": "3ea9dc2efe0de8d283f9625774697e431f55a0d7",
+      "preimageBlob": "1673c86995cf71b61e288d91492ae7b691934171",
+      "outputCommit": "7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1",
+      "outputBlob": "d2ae9e7b53fe3a86b356f8453814b2b7d7b2615e",
+      "bytes": 23015
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+      "preimageCommit": "3ea9dc2efe0de8d283f9625774697e431f55a0d7",
+      "preimageBlob": "fca509789efd2bf1b7d9453d09a3a460ee778feb",
+      "outputCommit": "7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1",
+      "outputBlob": "d39d52bc2b04d7b4864539c78a002232628ad2c7",
+      "bytes": 6933
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "preimageCommit": "3ea9dc2efe0de8d283f9625774697e431f55a0d7",
+      "preimageBlob": "d6b1d58e658a784aafe0ea978c46692cd8c5f59a",
+      "outputCommit": "7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1",
+      "outputBlob": "33a99c9fc0d1c22b9dee21ee37274988c72736ba",
+      "bytes": 26350
+    }
+  ],
+  "tests": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/finance-resume-performance/exact-threshold-work.test.ts",
+      "blob": "960acb6fda9c975aff35f287c202bb3b3b8386f5",
+      "bytes": 8030
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/finance-resume-performance/historical-batch-fences.test.ts",
+      "blob": "873a805e013ff4e3f7f3a83faae2ddd5429aa26e",
+      "bytes": 9998
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/finance-resume-performance/historical-batch.test.ts",
+      "blob": "e4c53acab52da7d8e16968bc2073be4f38d38bc6",
+      "bytes": 5018
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/finance-resume-performance/journey-phase.test.ts",
+      "blob": "6395a5dc529acadfb0d9c1e2d8dca0664f40a39e",
+      "bytes": 9796
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/finance-resume-performance/observed-coverage.ts",
+      "blob": "0b6bdc6285b9a57c38939f5dea469bfdc060eb2f",
+      "bytes": 5176
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/finance-resume-performance/observed-ports.ts",
+      "blob": "5e8740a9e3372e75624674617b63fadb5f81bfbc",
+      "bytes": 1471
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/finance-resume-performance/persisted-recertification.test.ts",
+      "blob": "ca194cbb04ca6e39caaf408b0045fc8d65b70cc1",
+      "bytes": 12158
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/finance-resume-performance/phase-trace.ts",
+      "blob": "127f0ed61d5e5eb74dfb89d9f8346370f235745d",
+      "bytes": 2012
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/finance-resume-performance/units-observation.test.ts",
+      "blob": "4b333c9c92e12e8dd355dd2f7f8f2b11e26a09d6",
+      "bytes": 6856
+    }
+  ],
+  "sourcePolicy": {
+    "normative": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "instructions": [
+      {
+        "path": "AGENTS.md",
+        "commit": "30e2215749d5295f81fdeafccb9e69ba21d0cdb8",
+        "blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/review-fixes/COMMON.md",
+        "commit": "30e2215749d5295f81fdeafccb9e69ba21d0cdb8",
+        "blob": "77528795ad0ac28e077dd070898f758825db12ec"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/CI.md",
+        "commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+        "blob": "c34ab425e0f3b7dc0899a05826829f38b5af84bb"
+      }
+    ],
+    "priorHandoff": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-20261114/HANDOFF-FINAL.md",
+      "commit": "3ea9dc2efe0de8d283f9625774697e431f55a0d7",
+      "blob": "2623594eb8124b45e45ec6665764be61c34be70c"
+    }
+  },
+  "selectiveInputs": {
+    "schema": "sf2h.finance-resume-performance.inputs.v1",
+    "base": {
+      "commit": "3ea9dc2efe0de8d283f9625774697e431f55a0d7",
+      "tree": "2d1ecef2ebc5aeca3fd312397bdf709f53d42582"
+    },
+    "planning": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "helpers": [
+      {
+        "destination": "modules/sucafina/Sucafinav1/test/product/review-fixes/finance-resume-performance/journey-phase.test.ts",
+        "commit": "0d2e59ffb14c31ebfb0b717d3d0078985ab2a3b7",
+        "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/finance-journey/journey-phase.test.ts",
+        "blob": "5ca793fc4c7ae6d06f1af9cfb2f53faaa963c70b",
+        "adaptations": "Own log prefix and test label only; original arithmetic, history, retry, restart and revocation assertions preserved."
+      },
+      {
+        "destination": "modules/sucafina/Sucafinav1/test/product/review-fixes/finance-resume-performance/observed-coverage.ts",
+        "commit": "0d2e59ffb14c31ebfb0b717d3d0078985ab2a3b7",
+        "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/finance-journey/observed-coverage.ts",
+        "blob": "0b6bdc6285b9a57c38939f5dea469bfdc060eb2f",
+        "adaptations": "Own log prefix and test label only; original arithmetic, history, retry, restart and revocation assertions preserved."
+      },
+      {
+        "destination": "modules/sucafina/Sucafinav1/test/product/review-fixes/finance-resume-performance/observed-ports.ts",
+        "commit": "0d2e59ffb14c31ebfb0b717d3d0078985ab2a3b7",
+        "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/finance-journey/observed-ports.ts",
+        "blob": "5e8740a9e3372e75624674617b63fadb5f81bfbc",
+        "adaptations": "Own log prefix and test label only; original arithmetic, history, retry, restart and revocation assertions preserved."
+      },
+      {
+        "destination": "modules/sucafina/Sucafinav1/test/product/review-fixes/finance-resume-performance/phase-trace.ts",
+        "commit": "0d2e59ffb14c31ebfb0b717d3d0078985ab2a3b7",
+        "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/finance-journey/phase-trace.ts",
+        "blob": "7123f5147720f643ef909b0a2d1ad1943afd3df5",
+        "adaptations": "Own log prefix and test label only; original arithmetic, history, retry, restart and revocation assertions preserved."
+      }
+    ],
+    "newCounterproof": "test/product/review-fixes/finance-resume-performance/exact-threshold-work.test.ts",
+    "diagnostics": {
+      "financeJourney": {
+        "head": "0d2e59ffb14c31ebfb0b717d3d0078985ab2a3b7",
+        "product": "1248dc6c5aaa83cb16c92697947fa5fea9699625",
+        "run": 43625830145
+      },
+      "calculation": "e80fdc933dfd25956a50c22dea76bf077e79815b",
+      "memory": "0d7fb6f12ed053340391ff6e4f95b6f3c1276ea8"
+    },
+    "results": "NOT_RUN"
+  },
+  "additionalInputs": {
+    "schema": "finance-resume-performance-inputs-v1",
+    "initialHead": "3ea9dc2efe0de8d283f9625774697e431f55a0d7",
+    "productCommit": "95f474484fb49cedb563ed3d02a61e9638d6784d",
+    "productTree": "5173889bce7f5a6a6785e1adcdbc5b348483c190",
+    "preimages": {
+      "product/portfolio/planner-sensitivity.ts": "3dec070ca5f56f7bd03a09b4b19468c950d82214",
+      "product/portfolio/threshold-proof.ts": "056a857364cf8a6c2a2bc97bf107276612edf55d",
+      "product/portfolio/verification.ts": "912df8ecd8552b245e124b93c46644c92a32f3ac",
+      "product/planner/sensitivity-units.ts": "1673c86995cf71b61e288d91492ae7b691934171"
+    },
+    "intake": {
+      "W26": {
+        "commit": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+        "files": {
+          "product/portfolio/verification.ts": "b2ac17f210886353d3596fc6a891242c7ea40f0a",
+          "product/portfolio/threshold-proof.ts": "89ba60857babe8a5c80f409de39b7e0598695b96",
+          "product/planner/interval-proof.ts": "55a701b7be49fb3f550a0b52b580e6f7dc819b31",
+          "product/portfolio/planner-sensitivity.ts": "ee1a9586231ec9027bb323a817c4a469c4b207a6",
+          "product/portfolio/sensitivity.ts": "247a0cdc456f386475f53765e6da2e1db156eba8"
+        },
+        "disposition": "selective candidate/domain recertification only; original Finance finalizer retained, no whole-file import"
+      },
+      "PR59": {
+        "commit": "e80fdc933dfd25956a50c22dea76bf077e79815b",
+        "files": {
+          "README.md": "aa9d7d1142e8279eaee8a4eb0cbcb675ff6e9bd4",
+          "OWNER_HANDOFF.md": "6f7f5a7f9d12d09e8034eed94da6dcb86c08a95e",
+          "proposed/manifest.json": "15a2048d7ec943a9fdfdbff191aef1d95fc0fe3b"
+        },
+        "disposition": "WP10 envelope patch NOT applied"
+      },
+      "PR55": {
+        "commit": "0d7fb6f12ed053340391ff6e4f95b6f3c1276ea8",
+        "files": {
+          "README.md": "5b37f2716187dca34a6e438d524a24da720cd856",
+          "HANDOFF.md": "ee0da487d3956bc8467841fc70e5d4a37abf3102"
+        },
+        "disposition": "consumed; investigation not repeated; no patch applied"
+      }
+    },
+    "testInputs": [
+      {
+        "path": "test/product/wp13/coverage-preview-fixture.ts",
+        "commit": "3ea9dc2efe0de8d283f9625774697e431f55a0d7",
+        "blob": "6e56a64ee1b76422706d685e2f646a156a8ade39"
+      },
+      {
+        "path": "test/product/wp13/sensitivity-read-scope-fixture.ts",
+        "commit": "3ea9dc2efe0de8d283f9625774697e431f55a0d7",
+        "blob": "d337b1cd730c3ecd4efb40329551a27e8d932e08"
+      },
+      {
+        "path": "test/product/wp13/sensitivity-read-scope.test.ts",
+        "commit": "3ea9dc2efe0de8d283f9625774697e431f55a0d7",
+        "blob": "a25539d00f8a43f2e7e3be02a16c29ba1c0272f2"
+      },
+      {
+        "path": "test/product/wp13/sensitivity-fixture.ts",
+        "commit": "3ea9dc2efe0de8d283f9625774697e431f55a0d7",
+        "blob": "ecc4678cf757e68c5763f8bc99d5f3573df86bc5"
+      },
+      {
+        "path": "test/product/wp13/threshold-recertification.test.ts",
+        "commit": "a1434e7ea7340aa1d1c8ce6bb48958b724218170",
+        "blob": "42ddb74c93873d0dec1e9d255ba90a2ae71cab7d"
+      }
+    ],
+    "coldReview": {
+      "reviewer": "criteria_test_intake",
+      "result": "no blocking source finding",
+      "localProductExecution": false,
+      "preserves": [
+        "fresh structural and accepted/adjacent-rejected witnesses",
+        "full Finance evidence/result digest",
+        "private first-observation reuse only within invocation",
+        "two independent source/case/evidence observations",
+        "current Request/lease and final root/staged publication fences"
+      ],
+      "limit": "source review only; S2 separately validates15tests, FIN-IND-005 still awaits S3"
+    }
+  },
+  "secondProductPreimages": {
+    "initialHead": "3ea9dc2efe0de8d283f9625774697e431f55a0d7",
+    "baseW": "189cb74252b3b6aa160038da4410b1c7cdcaa31b",
+    "productPreimages": {
+      "product/decisions/result-store.ts": "d6b1d58e658a784aafe0ea978c46692cd8c5f59a",
+      "product/planner/stored-scenarios.ts": "fca509789efd2bf1b7d9453d09a3a460ee778feb"
+    },
+    "sourceTest": {
+      "path": "test/product/wp13/sensitivity-fixture.ts",
+      "commit": "3ea9dc2efe0de8d283f9625774697e431f55a0d7",
+      "blob": "ecc4678cf757e68c5763f8bc99d5f3573df86bc5"
+    },
+    "coldReview": {
+      "reviewers": [
+        "root",
+        "diagnostic_intake"
+      ],
+      "localProductExecution": false,
+      "result": "no static blocker after store/method identity guard",
+      "requiredProof": "actual late source mutation through final complete-case production operation verifier"
+    }
+  },
+  "sourceComparison": {
+    "repository_full_name": "gustavomhss/Orchestra-SF",
+    "base": "3ea9dc2efe0de8d283f9625774697e431f55a0d7",
+    "head": "7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1",
+    "status": "ahead",
+    "ahead_by": 4,
+    "behind_by": 0,
+    "total_commits": 4,
+    "too_large": null,
+    "base_commit": {
+      "sha": "3ea9dc2efe0de8d283f9625774697e431f55a0d7",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/3ea9dc2efe0de8d283f9625774697e431f55a0d7",
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/3ea9dc2efe0de8d283f9625774697e431f55a0d7"
+    },
+    "merge_base_commit": {
+      "sha": "3ea9dc2efe0de8d283f9625774697e431f55a0d7",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/3ea9dc2efe0de8d283f9625774697e431f55a0d7",
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/3ea9dc2efe0de8d283f9625774697e431f55a0d7"
+    },
+    "files": [
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-performance/S1-result.json",
+        "status": "added",
+        "additions": 181,
+        "deletions": 0,
+        "changes": 181,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-performance/S2-result.json",
+        "status": "added",
+        "additions": 616,
+        "deletions": 0,
+        "changes": 616,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-performance/S3-result.json",
+        "status": "added",
+        "additions": 2472,
+        "deletions": 0,
+        "changes": 2472,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-performance/S4-result.json",
+        "status": "added",
+        "additions": 98,
+        "deletions": 0,
+        "changes": 98,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-performance/checkpoint-01.md",
+        "status": "added",
+        "additions": 22,
+        "deletions": 0,
+        "changes": 22,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-performance/checkpoint-02.md",
+        "status": "added",
+        "additions": 25,
+        "deletions": 0,
+        "changes": 25,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-performance/checkpoint-03.md",
+        "status": "added",
+        "additions": 23,
+        "deletions": 0,
+        "changes": 23,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-performance/inputs-01.json",
+        "status": "added",
+        "additions": 49,
+        "deletions": 0,
+        "changes": 49,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-performance/inputs-02.json",
+        "status": "added",
+        "additions": 82,
+        "deletions": 0,
+        "changes": 82,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-resume-performance/inputs-03.json",
+        "status": "added",
+        "additions": 22,
+        "deletions": 0,
+        "changes": 22,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+        "status": "modified",
+        "additions": 115,
+        "deletions": 0,
+        "changes": 115,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+        "status": "modified",
+        "additions": 48,
+        "deletions": 12,
+        "changes": 60,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+        "status": "modified",
+        "additions": 18,
+        "deletions": 6,
+        "changes": 24,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+        "status": "modified",
+        "additions": 4,
+        "deletions": 4,
+        "changes": 8,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/product/portfolio/threshold-proof.ts",
+        "status": "modified",
+        "additions": 7,
+        "deletions": 0,
+        "changes": 7,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+        "status": "modified",
+        "additions": 26,
+        "deletions": 2,
+        "changes": 28,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/review-fixes/finance-resume-performance/exact-threshold-work.test.ts",
+        "status": "added",
+        "additions": 143,
+        "deletions": 0,
+        "changes": 143,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/review-fixes/finance-resume-performance/historical-batch-fences.test.ts",
+        "status": "added",
+        "additions": 159,
+        "deletions": 0,
+        "changes": 159,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/review-fixes/finance-resume-performance/historical-batch.test.ts",
+        "status": "added",
+        "additions": 74,
+        "deletions": 0,
+        "changes": 74,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/review-fixes/finance-resume-performance/journey-phase.test.ts",
+        "status": "added",
+        "additions": 102,
+        "deletions": 0,
+        "changes": 102,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/review-fixes/finance-resume-performance/observed-coverage.ts",
+        "status": "added",
+        "additions": 61,
+        "deletions": 0,
+        "changes": 61,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/review-fixes/finance-resume-performance/observed-ports.ts",
+        "status": "added",
+        "additions": 25,
+        "deletions": 0,
+        "changes": 25,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/review-fixes/finance-resume-performance/persisted-recertification.test.ts",
+        "status": "added",
+        "additions": 165,
+        "deletions": 0,
+        "changes": 165,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/review-fixes/finance-resume-performance/phase-trace.ts",
+        "status": "added",
+        "additions": 36,
+        "deletions": 0,
+        "changes": 36,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/test/product/review-fixes/finance-resume-performance/units-observation.test.ts",
+        "status": "added",
+        "additions": 108,
+        "deletions": 0,
+        "changes": 108,
+        "previous_filename": null
+      }
+    ]
+  },
+  "scopeAssertions": {
+    "unchangedPriorHistory": true,
+    "newProductBranch": false,
+    "newPullRequest": false,
+    "reset": false,
+    "merge": false,
+    "forcePush": false,
+    "editedCli": false,
+    "editedHostBinding": false,
+    "editedIntegration": false,
+    "editedFinanceJourney": false,
+    "localProductTests": false,
+    "localTypecheck": false,
+    "timeoutRaised": false,
+    "removedAssertions": false,
+    "authorizationCacheAcrossOperations": false,
+    "wp10EnvelopePatchApplied": false
+  },
+  "limitations": [
+    "The WeakMap records canonical function provenance, not results, grants, or prior observations.",
+    "C08 namespace admission occurs for each new shared snapshot; total namespace callbacks decrease with envelope count. Explicit per-result authority/source checks retain their multiplicity, and initial/final complete-case observations remain separate.",
+    "This manifest's productHead is the exact tested code. Any final evidence commit is permitted to add only this mission's receipts; its W4 comparison is recorded separately after publication."
+  ]
+}
+
