@@ -8,10 +8,11 @@ test("cancellation refuses a session different from the loaded skill receipt", a
 
 test("cancellation persists before interrupting and permits a source-stale run under current authority", async () => {
   const { sfRunFixture } = await import("./run-fixture.ts")
-  const { receipt, caseRef } = sfRunFixture()
+  const { receipt, caseRef, run } = sfRunFixture()
   const operations: string[] = []
   const scopes: object[] = []
   const host = {
+    readRun: async () => ({ status: "ok", value: run }),
     withRunContext: async (_runRef: string, action: (context: object) => Promise<unknown>) => {
       const context = { binding: { accessRevision: "access" } }
       scopes.push(context)
@@ -31,10 +32,11 @@ test("cancellation persists before interrupting and permits a source-stale run u
 
 test("revocation after durable cancellation prevents interruption through an expired authority", async () => {
   const { sfRunFixture } = await import("./run-fixture.ts")
-  const { receipt, caseRef } = sfRunFixture()
+  const { receipt, caseRef, run } = sfRunFixture()
   let calls = 0
   let interrupted = false
   const host = {
+    readRun: async () => ({ status: "ok", value: run }),
     withRunContext: async (_runRef: string, action: (context: object) => Promise<unknown>) => {
       if (++calls === 3) return { status: "denied", reason: "access-revoked" }
       return action({ binding: { accessRevision: "access" } })

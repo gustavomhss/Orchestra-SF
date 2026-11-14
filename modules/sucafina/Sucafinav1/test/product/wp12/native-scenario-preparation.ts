@@ -57,7 +57,7 @@ export async function prepareWp12ScenarioCase(context: Wp12NativeMissionContext,
   const basis: CostCoverageBasis = { id: `wp12-renewal-inventory:${caseRef.id}`, version: 1, decisionType: "renewal-transition-v1",
     categoryIds: RENEWAL_TRANSITION_CATEGORIES, additionalCategoryIds: [], sourceRefs: draft.sourceRefs }
   const before = await context.persistence.transaction("planner", async (snapshot) => ({ commit: false, value: digestSfValue(snapshot.data.versions) }))
-  const promoted = []
+  const promoted: { key: typeof alternatives[number]["key"]; resultRef: string; coverageRef: string }[] = []
   for (const source of sources) {
     const projection = await context.ui("sf_context_get", { sourceRef: source.evidence.refId }, (call) =>
       context.business.projectPlannerEvidence(source.evidence, call, { period: WP12_SCENARIO_PERIOD, currency: "USD" }))

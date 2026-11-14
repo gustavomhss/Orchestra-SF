@@ -1,0 +1,14 @@
+{
+  "schema": "sf-wp12-owner-delta-v1",
+  "id": "WP12-STALE-OBSERVATION-FORWARDING",
+  "owner": "WP10",
+  "path": "apps/cli/src/sucafina-product/analysis-stale-commit.ts",
+  "sourceCommit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+  "baseBlob": "f40a30aca8668f3ef7636ca8af4bf65d4e987217",
+  "applied": false,
+  "requiredChange": "Forward the optional fourth observation argument from wrapStore.markStale to the own run store markStale. No caller output, capture or authority is added.",
+  "authorityLimit": "The current installed createSfAnalysisHost defaults lifecycle to strict withRunContext. A separate current-authenticated metadata-only scope is still an owner composition delta. W17 case-version historical retry does not grant access to revoked sources.",
+  "outputRefCorrection": "prepare already spreads prior.value and retains its stored outputRef when no candidate output is supplied. Do not synthesize or pass model content.",
+  "validation": "Static verified against published base; new own run store/port counterproofs pending composed Actions execution.",
+  "consumer": "WP12 publishSfContribution fallback -> WP10 wrapStore.markStale -> WP12 createSfRunStore CAS"
+}

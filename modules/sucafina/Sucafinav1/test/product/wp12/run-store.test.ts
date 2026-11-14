@@ -4,31 +4,37 @@ import { tmpdir } from "node:os"
 import path from "node:path"
 import { createSfRunStore, sfRunSourceFence } from "../../../product/ai/run-store.ts"
 import { createSfAnalysisHost } from "../../../product/ai/analysis-host.ts"
-import { cancelSfAnalysis } from "../../../product/ai/analysis-port.ts"
+import { cancelSfAnalysis, readSfAnalysisRun } from "../../../product/ai/analysis-port.ts"
 import { createSfProductState } from "../../../product/host-binding/state-provider.ts"
 import type { SfNativeRunRecord } from "../../../product/contracts/state.ts"
+import type { ContributionEnvelope } from "../../../product/contracts/resident-ai.ts"
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
 import { openLocalStore } from "../../../runtime/local-store.ts"
-import { sfRunFixture } from "./run-fixture.ts"
+import { sfCaseFixture, sfRunFixture } from "./run-fixture.ts"
 import { digestSfContribution, digestSfValue } from "../../../product/contracts/canonical.ts"
 
 // Real product-state transactions with an injected host; this does not prove a native host or ACL.
-async function fixture(options?: { mutateSnapshot?: boolean; concurrentPreflight?: boolean; mutatePreflightRun?: boolean; mutateCommitOutput?: boolean; unavailablePreflight?: boolean; deniedCommit?: boolean; revoked?: boolean; onReadyPreflight?: () => Promise<void>; onAuthority?: () => Promise<void>; onPreflight?: (record: SfNativeRunRecord) => void }) {
+async function fixture(options?: { mutateSnapshot?: boolean; concurrentPreflight?: boolean; mutatePreflightRun?: boolean; mutateCommitOutput?: boolean; unavailablePreflight?: boolean; deniedCommit?: boolean; revoked?: boolean; onReadyPreflight?: () => Promise<void>; onAuthority?: () => Promise<void>; onStateWrite?: () => Promise<void>; onPreflight?: (record: SfNativeRunRecord) => void }) {
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-run-store-"))
   const persistence = await openLocalStore(directory)
   const request = new Request("https://example.test/")
   const authority = { principalRef: "user", policyVersion: "policy", accessRevision: "access" }
   const context = { kind: "ui", binding: authority } as unknown as TrustedDomainContext
-  const state = createSfProductState({ persistence, authorize: async () => authority, resolveTarget: async () => ({ incarnation: "inc" }), createId: () => "store" })
+  const state = createSfProductState({ persistence, authorize: async (_request, _snapshot, namespace, mode) => {
+    if (namespace === "contributions" && mode === "write") await options?.onStateWrite?.()
+    return authority
+  }, resolveTarget: async () => ({ incarnation: "inc" }), createId: () => "store" })
   await state.transaction(request, { namespace: "cases", expectedStorageVersion: 0, idempotencyKey: "initial", commandDigest: "a".repeat(64), targetRef: "case", targetIncarnation: "inc" }, async (current) => {
-    current.cases.case = { id: "case", incarnation: "inc", version: 1, participants: ["user"] } as unknown as typeof current.cases[string]
+    current.cases.case = sfCaseFixture({ id: "case", incarnation: "inc", version: 1 }, ["user"])
     return { commit: true, value: true }
   })
   const fired = { value: false }
+  const source = { stale: false }
   const observed = { preflights: 0, commits: 0 }
   const store = createSfRunStore({ state, requestFor: () => request, revalidate: async () => { await options?.onAuthority?.(); return !options?.revoked }, preflight: async (record) => {
     observed.preflights++
     if (options?.unavailablePreflight) return { status: "unavailable", reason: "source-unavailable" }
+    if (source.stale) return { status: "stale", reason: "source-changed" }
     options?.onPreflight?.(record)
     if (options?.mutatePreflightRun) record.objective = "changed-by-verifier"
     if (record.state === "ready") await options?.onReadyPreflight?.()
@@ -51,7 +57,7 @@ async function fixture(options?: { mutateSnapshot?: boolean; concurrentPreflight
     return { status: "ok", value: true }
   }, now: () => "2026-11-13T00:00:00Z" })
   const record = { schema: "sf-native-run-v1", runRef: "run", version: 1, intentDigest: "c".repeat(64), requestDigest: "a".repeat(64), skillInputDigest: "b".repeat(64), principalRef: "user", accessRevision: "access", policyVersion: "policy", caseRef: { id: "case", incarnation: "inc", version: 1 }, selection: { profile: { id: "sf_finance", version: "1", outputTypes: [], sourceDigest: "d".repeat(64) }, skills: [{ id: "skill", version: "1", sourceDigest: "e".repeat(64), instructionsDigest: "f".repeat(64) }], operationIds: [], manifestDigest: "c".repeat(64) }, model: { providerID: "openai", id: "model" }, skillId: "skill", objective: "review", contextFingerprint: "context", createdAt: "2026-11-13T00:00:00Z", updatedAt: "2026-11-13T00:00:00Z", state: "preparing" } as unknown as SfNativeRunRecord
-  return { persistence, state, store, context, record, request, observed, [Symbol.asyncDispose]: async () => {
+  return { persistence, state, store, context, record, source, request, observed, [Symbol.asyncDispose]: async () => {
     await persistence.dispose()
     await rm(directory, { recursive: true, force: true })
   } }
@@ -146,6 +152,57 @@ test("stale output is preserved with its original provenance and cannot be publi
   expect(await f.store.publish("run", 4, original.output, f.context)).toEqual({ status: "conflict", reason: "invalid-run-output" })
 })
 
+test("real C08 host cancels an independent review using its durable target even when its source becomes stale", async () => {
+  for (const stale of [false, true]) {
+    await using f = await fixture()
+    const original = sfRunFixture()
+    const { native: _native, outputRef: _outputRef, ...base } = original.run
+    const skill = { ...original.skill, id: "sf-contestar-decisao", allowedProfiles: ["sf_reviewer" as const], outputSchemaRefs: ["CritiqueReport"] }
+    const profile = { ...original.profile, id: "sf_reviewer" as const, allowedSkills: [skill.id], outputTypes: ["CritiqueReport" as const] }
+    const receipt = { ...original.receipt, profileId: profile.id, skillId: skill.id }
+    const reviewTarget = { targetRunId: "author", targetSessionId: "author-session", targetOutputDigest: "9".repeat(64), caseRef: original.caseRef }
+    const record = { ...base, principalRef: "user", state: "preparing" as const, version: 1, reviewTarget, skillId: skill.id,
+      selection: { ...base.selection, profile, skills: [skill] } }
+    expect((await f.store.create(record, f.context)).status).toBe("ok")
+    expect((await f.store.attach("run", 1, "session", receipt, f.context)).status).toBe("ok")
+    expect((await f.store.transition("run", 2, "running", undefined, f.context)).status).toBe("ok")
+    f.source.stale = stale
+    let observedTarget: unknown
+    let interrupted = false
+    const host = createSfAnalysisHost({ store: f.store,
+      withRunContext: async (_runRef, action) => action(f.context),
+      verify: async (_context, _record, request) => { observedTarget = request.reviewTarget; return { status: "ok", value: true } },
+      analysis: { create: async () => ({ status: "unavailable", reason: "not-used" }), read: async () => ({ status: "unavailable", reason: "not-used" }), cancel: async (runRef, context) => {
+        const run = await f.store.readLifecycle(runRef, context)
+        if (run.status !== "ok") return run
+        const saved = await f.store.transition(runRef, run.value.version, "cancelled", "human-cancelled", context)
+        return saved.status === "ok" ? { status: "ok", value: { cancelled: true } } : saved
+      } },
+      execution: {
+        admit: async () => ({ status: "unavailable", reason: "native-runtime-not-attached" }),
+        execute: async () => ({ status: "unavailable", reason: "native-runtime-not-attached" }),
+        collect: async () => ({ status: "unavailable", reason: "native-runtime-not-attached" }),
+        interrupt: async () => {
+        expect(await f.store.readLifecycle("run", f.context)).toMatchObject({ status: "ok", value: { state: "cancelled", version: 4, reviewTarget } })
+        interrupted = true
+        return { status: "ok", value: true }
+      } },
+      routines: {} as Parameters<typeof createSfAnalysisHost>[0]["routines"],
+    })
+    expect(await cancelSfAnalysis({ host, runRef: "run", sessionID: "session", executionTicket: {} as Parameters<typeof cancelSfAnalysis>[0]["executionTicket"],
+      skillReceipt: receipt, caseRef: original.caseRef, contextFingerprint: "context" })).toEqual({ status: "ok", value: { cancelled: true } })
+    expect(interrupted).toBe(true)
+    if (!stale) expect(observedTarget).toEqual(reviewTarget)
+    const version = await f.state.read(new Request("https://example.test/"), "cases", () => null)
+    if (version.status !== "ok") throw new Error("case state unavailable")
+    expect((await f.state.transaction(new Request("https://example.test/"), { namespace: "cases", expectedStorageVersion: version.storageVersion, idempotencyKey: "revoke-member", commandDigest: "8".repeat(64), targetRef: "case", targetIncarnation: "inc" }, async (state) => {
+      state.cases.case!.participants = []
+      return { commit: true, value: true }
+    })).status).toBe("ok")
+    expect(await f.store.readLifecycle("run", f.context)).toEqual({ status: "denied", reason: "run-case-access-unavailable" })
+  }
+})
+
 test("read-only preflight cannot rewrite the admitted run", async () => {
   const options = { mutatePreflightRun: false }
   await using f = await fixture(options)
@@ -169,6 +226,59 @@ test("a commit verifier cannot replace an already validated contribution", async
   expect(await f.store.publish("run", 3, original.output, f.context)).toEqual({ status: "denied", reason: "commit-revalidation-mutated-input" })
   const stored = await f.state.read(new Request("https://example.test/"), "contributions", (state) => ({ run: state.nativeRuns?.run, output: state.contributions.output }))
   expect(stored).toMatchObject({ status: "ok", value: { run: { state: "running", version: 3 }, output: undefined } })
+})
+
+test("C08 keeps its admitted record when the caller changes an alias during final write authorization", async () => {
+  const entered = Promise.withResolvers<void>()
+  const resume = Promise.withResolvers<void>()
+  let calls = 0
+  await using f = await fixture({ onStateWrite: async () => {
+    if (++calls === 2) { entered.resolve(); await resume.promise }
+  } })
+  const admitted = structuredClone(f.record)
+  const pending = f.store.create(f.record, f.context)
+  await Promise.race([entered.promise, pending.then(() => { throw new Error("admission missed final C08 write authorization") })])
+  try { f.record.objective = "changed-after-staging" } finally { resume.resolve() }
+  expect((await pending).status).not.toBe("ok")
+  expect(calls).toBe(2)
+  const stored = await f.state.read(new Request("https://example.test/"), "contributions", (state) => ({
+    run: state.nativeRuns?.run,
+    receipt: Object.entries(state.transactions).find(([key]) => JSON.parse(key)[3] === "run:run:1")?.[1].value,
+  }))
+  expect(stored.status).toBe("ok")
+  if (stored.status !== "ok") throw new Error("durable run unavailable")
+  expect(digestSfValue(stored.value.run)).toBe(digestSfValue(admitted))
+  expect(stored.value.receipt).toEqual({ status: "ok", value: admitted })
+})
+
+test("C08 keeps validated contribution bytes when the caller changes an alias during final write authorization", async () => {
+  const entered = Promise.withResolvers<void>()
+  const resume = Promise.withResolvers<void>()
+  let armed = false
+  let calls = 0
+  await using f = await fixture({ onStateWrite: async () => {
+    if (armed && ++calls === 2) { entered.resolve(); await resume.promise }
+  } })
+  const original = sfRunFixture()
+  const { native: _native, outputRef: _outputRef, ...base } = original.run
+  expect((await f.store.create({ ...base, principalRef: "user", state: "preparing", version: 1 }, f.context)).status).toBe("ok")
+  expect((await f.store.attach("run", 1, "session", original.receipt, f.context)).status).toBe("ok")
+  expect((await f.store.transition("run", 2, "running", undefined, f.context)).status).toBe("ok")
+  const admitted = structuredClone(original.output)
+  armed = true
+  const pending = f.store.publish("run", 3, original.output, f.context)
+  await Promise.race([entered.promise, pending.then(() => { throw new Error("publication missed final C08 write authorization") })])
+  try {
+    original.output.runProvenance.actualModel = "changed-after-staging/model"
+    original.output.outputDigest = digestSfContribution(original.output)
+  } finally { resume.resolve() }
+  expect((await pending).status).not.toBe("ok")
+  expect(calls).toBe(2)
+  const stored = await f.state.read(new Request("https://example.test/"), "contributions", (state) => ({ run: state.nativeRuns?.run, output: state.contributions.output }))
+  expect(stored).toMatchObject({ status: "ok", value: { run: { state: "ready", version: 4, outputRef: "output" } } })
+  if (stored.status !== "ok") throw new Error("durable contribution unavailable")
+  expect(digestSfValue(stored.value.output)).toBe(digestSfValue(admitted))
+  expect(stored.value.output?.outputDigest).toBe(admitted.outputDigest)
 })
 
 test("publication pins its validated output before awaiting mutation authority", async () => {
@@ -308,7 +418,9 @@ test("lifecycle access survives source unavailability while current case members
   expect(lifecycle).toMatchObject({ status: "ok", value: { state: "preparing", caseRef: { version: 1 } } })
   expect(lifecycle.status === "ok" && Object.hasOwn(lifecycle.value, "payload")).toBe(false)
   expect(f.observed.preflights).toBe(preflights)
-  expect(await f.store.readLifecycle("run", { ...f.context, binding: { ...f.context.binding, principalRef: "outsider" } } as TrustedDomainContext)).toEqual({ status: "denied", reason: "run-access-unavailable" })
+  for (const changed of [{ principalRef: "outsider" }, { policyVersion: "other-policy" }, { accessRevision: "other-access" }]) {
+    expect(await f.store.readLifecycle("run", { ...f.context, binding: { ...f.context.binding, ...changed } } as TrustedDomainContext)).toEqual({ status: "denied", reason: "run-access-unavailable" })
+  }
   options.revoked = true
   expect(await f.store.readLifecycle("run", f.context)).toEqual({ status: "denied", reason: "invalid-authority" })
   options.revoked = false
@@ -327,6 +439,12 @@ test("terminal settlement persists without source preflight and still requires t
     await using f = await fixture(options)
     expect((await f.store.create(f.record, f.context)).status).toBe("ok")
     const host = createSfAnalysisHost({ store: f.store } as unknown as Parameters<typeof createSfAnalysisHost>[0])
+    const cases = await f.state.read(f.request, "cases", () => null)
+    if (cases.status !== "ok") throw new Error("case state unavailable")
+    expect((await f.state.transaction(f.request, { namespace: "cases", expectedStorageVersion: cases.storageVersion, idempotencyKey: "advance-terminal", commandDigest: "b".repeat(64), targetRef: "case", targetIncarnation: "inc" }, async (current) => {
+      current.cases.case!.version = 2
+      return { commit: true, value: true }
+    })).status).toBe("ok")
     options.unavailablePreflight = true
     options.deniedCommit = true
     const settle = () => state === "failed" ? host.fail("run", "source-unavailable", f.context) : host.settle("run", state, "source-unavailable", f.context)
@@ -338,6 +456,7 @@ test("terminal settlement persists without source preflight and still requires t
     expect(await f.store.readLifecycle("run", f.context)).toMatchObject({ status: "ok", value: { state, version: 2, reason: "source-unavailable" } })
     expect(f.observed.preflights).toBe(preflights)
     expect(await settle()).toEqual({ status: "conflict", reason: "invalid-run-transition" })
+    expect(f.observed.commits).toBe(3)
     expect(await f.state.read(f.request, "contributions", (stored) => Object.keys(stored.contributions))).toMatchObject({ status: "ok", value: [] })
   }
 })
@@ -359,4 +478,93 @@ test("a committed ready output can become stale only with its exact stored bytes
   expect(await f.store.preserveStale("run", "source-changed", original.output, f.context)).toMatchObject({ status: "ok", value: { state: "stale", version: 5, outputRef: original.output.id } })
   expect(await f.state.read(f.request, "contributions", (stored) => digestSfValue(stored.contributions[original.output.id]))).toMatchObject({ status: "ok", value: digestSfValue(original.output) })
   expect(await f.store.preserveStale("run", "again", original.output, f.context)).toEqual({ status: "conflict", reason: "invalid-stale-run-output" })
+})
+
+test("real C08 analysis progress fences host verification aliases and returns private ready content", async () => {
+  await using f = await fixture()
+  const original = sfRunFixture()
+  const { native: _native, outputRef: _outputRef, ...base } = original.run
+  expect((await f.store.create({ ...base, principalRef: "user", state: "preparing", version: 1 }, f.context)).status).toBe("ok")
+  expect((await f.store.attach("run", 1, "session", original.receipt, f.context)).status).toBe("ok")
+  expect((await f.store.transition("run", 2, "running", undefined, f.context)).status).toBe("ok")
+  expect((await f.store.publish("run", 3, original.output, f.context)).status).toBe("ok")
+  const stored = () => f.state.read(f.request, "contributions", (state) => ({ run: state.nativeRuns?.run, output: state.contributions.output }))
+  const before = await stored()
+  if (before.status !== "ok") throw new Error("Ready contribution was not persisted")
+  const originalDigest = digestSfValue(before.value)
+  const fault: { phase?: 1 | 2; target?: "output" | "output-cycle" | "case" | "binding" | "request"; afterScope: boolean; calls: number } = { calls: 0, afterScope: false }
+  const retained: { output?: ContributionEnvelope; caseRef?: ContributionEnvelope["caseRef"] } = {}
+  const unavailable = async () => ({ status: "unavailable", reason: "native-runtime-not-attached" } as const)
+  const host = createSfAnalysisHost({ store: f.store,
+    withRunContext: async (_runRef, action) => {
+      const result = await action(f.context)
+      // Real authorities freeze bindings. This mutable test context separately
+      // checks a composition defense at the final asynchronous scope boundary.
+      if (fault.afterScope && fault.calls === 2) Object.assign(f.context.binding, { accessRevision: "changed-after-scope" })
+      return result
+    },
+    verify: async (context, _record, value) => {
+      fault.calls++
+      retained.output = value.output
+      retained.caseRef = value.caseRef
+      if (fault.calls === fault.phase) {
+        if (fault.target === "output" && value.output) {
+          value.output.createdAt = "2026-11-14T00:00:00Z"
+          value.output.outputDigest = digestSfContribution(value.output)
+        } else if (fault.target === "output-cycle" && value.output) Object.assign(value.output, { evidenceRefs: [value.output] })
+        else if (fault.target === "case") value.caseRef.version++
+        else if (fault.target === "binding") Object.assign(context.binding, { accessRevision: "changed-by-verifier" })
+        else if (fault.target === "request") input.runRef = "another-run"
+      }
+      return { status: "ok", value: true }
+    },
+    analysis: { create: unavailable, cancel: unavailable, read: async (_runRef, _context) => {
+      const output = await f.state.read(f.request, "contributions", (state) => state.contributions.output)
+      if (output.status !== "ok" || !output.value) return { status: "unavailable", reason: "stored-output-unavailable" }
+      return { status: "ok", value: output.value }
+    } },
+    routines: { catalog: unavailable, prepareAdmission: unavailable, readAdmission: unavailable, readRun: unavailable, run: unavailable },
+    execution: { admit: unavailable, execute: unavailable, collect: unavailable, interrupt: unavailable },
+  })
+  const input: Parameters<typeof readSfAnalysisRun>[0] = { host, runRef: "run" }
+  const reset = () => {
+    fault.calls = 0
+    fault.phase = undefined
+    fault.target = undefined
+    fault.afterScope = false
+    input.runRef = "run"
+    Object.assign(f.context.binding, { principalRef: "user", policyVersion: "policy", accessRevision: "access" })
+  }
+  for (const phase of [1, 2] as const) {
+    for (const target of ["output", "output-cycle", "case", "binding", "request"] as const) {
+      reset()
+      Object.assign(fault, { phase, target })
+      expect({ phase, target, result: await readSfAnalysisRun(input) }).toEqual({ phase, target,
+        result: { status: "denied", reason: "run-input-changed-during-read" } })
+      reset()
+      const after = await stored()
+      expect(after.status).toBe("ok")
+      if (after.status !== "ok") throw new Error("Ready contribution became unavailable")
+      expect(after.storageVersion).toBe(before.storageVersion)
+      expect(digestSfValue(after.value)).toBe(originalDigest)
+    }
+  }
+  reset()
+  fault.afterScope = true
+  expect(await readSfAnalysisRun(input)).toEqual({ status: "denied", reason: "run-input-changed-during-read" })
+  reset()
+  const accepted = await readSfAnalysisRun(input)
+  expect(accepted.status).toBe("ok")
+  if (accepted.status !== "ok" || !accepted.value.output || !retained.output || !retained.caseRef) throw new Error("Ready content was not returned")
+  expect(accepted.value.output).not.toBe(retained.output)
+  expect(accepted.value.run.caseRef).not.toBe(retained.caseRef)
+  const returnedDigest = digestSfValue(accepted.value)
+  retained.output.createdAt = "2026-11-14T00:00:00Z"
+  retained.caseRef.version++
+  expect(digestSfValue(accepted.value)).toBe(returnedDigest)
+  const after = await stored()
+  expect(after.status).toBe("ok")
+  if (after.status !== "ok") throw new Error("Ready contribution was lost")
+  expect(after.storageVersion).toBe(before.storageVersion)
+  expect(digestSfValue(after.value)).toBe(originalDigest)
 })

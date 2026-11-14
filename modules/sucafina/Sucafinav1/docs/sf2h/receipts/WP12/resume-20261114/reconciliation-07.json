@@ -1,0 +1,183 @@
+{
+  "schema": "wp12-selective-own-reconciliation-v1",
+  "status": "frozen-pending-root-publication-and-hosted-ci",
+  "source": {
+    "productHead": "e5b3adf215939e9a5c16cbcaf3ad028475e0a693",
+    "productTree": "933cc7c0fa2baf66623f0b09612523ebce19eb2b",
+    "branch": "astra-intelligence",
+    "pullRequest": 36,
+    "snapshot": "86e8209bea7b1b01e1be555df24ab64e568cf7c1",
+    "runId": 43592159275,
+    "jobId": 132438988564,
+    "result": {
+      "pass": 82,
+      "fail": 0,
+      "assertions": 1004,
+      "files": 13,
+      "modelCandidates": [],
+      "nativeInference": false,
+      "gnative": false
+    }
+  },
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+      "blob": "978e4d54d2d54d1308152b7a4e9625f5c54b36ae",
+      "sha256": "296e85bbeb97370706294baedfe0b04a826adc003a6058c110168d4810de31f2",
+      "baseBlob": "0c2021133e2398ecf33fdcc5ddb567ab3ebbc64b",
+      "addedLines": 56,
+      "removedLines": 6
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/analysis-host.ts",
+      "blob": "79bc5b933253daf8db73171d20e84f77436f5bbe",
+      "sha256": "655c545bc8bd5efe4e597c2f030835be0f0df06a14fb7a1776ad3647ead06769",
+      "baseBlob": "278277fc413caf72bea3f9a0b8310b6073f69e0d",
+      "addedLines": 2,
+      "removedLines": 2
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+      "blob": "4b57c6e0bbfae95d28ab1f90c723b1dd14eb02be",
+      "sha256": "ac29d906a9b1d7e6a663a5de8e7e276ff0c954e0ed6caabde55a723e5bb93afe",
+      "baseBlob": "b641f11960e6b69f5985fc49228a839700f40fa8",
+      "addedLines": 101,
+      "removedLines": 25
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/run-store.test.ts",
+      "blob": "282255c3f34ac9df7f14c913e5698d0d6146a71a",
+      "sha256": "831ea75381cdaaa79896d9e7850746890842f5e2eb2f4abc8f5901fd920f4b6c",
+      "baseBlob": "55d1e6f122e37e7021ae0de13b5a65c427faa020",
+      "addedLines": 215,
+      "removedLines": 7,
+      "newTests": [
+        "real C08 host cancels an independent review using its durable target even when its source becomes stale",
+        "C08 keeps its admitted record when the caller changes an alias during final write authorization",
+        "C08 keeps validated contribution bytes when the caller changes an alias during final write authorization",
+        "real C08 analysis progress fences host verification aliases and returns private ready content"
+      ],
+      "removedTests": [],
+      "duplicateTests": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/publication-lifecycle.test.ts",
+      "blob": "655e187da43b3f6da02e9ffa644145f4259fe94f",
+      "sha256": "ff2fd5b1071e161246e3242e3badc56f637ef1cc513867b4f4e3bffe9ffe55a7",
+      "baseBlob": "e3e3dacbb3af4c62cc5c3f57582dfaac5581ae3c",
+      "addedLines": 158,
+      "removedLines": 6,
+      "newTests": [
+        "a closed strict source scope settles a pre-write run through current lifecycle without content",
+        "a closed strict source scope marks the exact committed output stale through metadata only",
+        "revocation of current lifecycle authority prevents stale metadata writes after strict scope closes",
+        "lifecycle fallback cannot overwrite a concurrent cancellation at the C08 boundary",
+        "ready metadata fallback refuses injected run or output changes between its read and C08 commit",
+        "stale observation refuses a replacement publication before the lifecycle callback begins"
+      ],
+      "removedTests": [],
+      "duplicateTests": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/analysis.test.ts",
+      "blob": "ab321fb2d1562255cf987571477233767c5240e3",
+      "sha256": "93d52c3a86b34f2cb4002e78134f05c5832c0e1ac37de3c7e511b9c5b40939d7",
+      "baseBlob": "f4bd15b2bcc7d0bbe43b8581102210d656c29f02",
+      "addedLines": 4,
+      "removedLines": 2,
+      "newTests": [],
+      "removedTests": [],
+      "duplicateTests": []
+    }
+  ],
+  "apiChanges": [
+    {
+      "symbol": "SfStaleRunObservation / observeSfStaleRun",
+      "change": "new exported observation value; evidence only, no authority/content grant"
+    },
+    {
+      "symbol": "SfAnalysisHost.markStale / run store markStale",
+      "change": "optional fourth observation argument; three-argument callers retain previous queued/running behavior; ready metadata transition requires exact observation and persisted-output CAS"
+    },
+    {
+      "symbol": "cancelSfAnalysis",
+      "change": "same call signature; reviewTarget optional consistency assertion, authoritative target read from durable run"
+    },
+    {
+      "symbol": "readSfAnalysisRun",
+      "change": "explicit PortResult return annotation; preserves output optionality and existing refusal reason"
+    }
+  ],
+  "preserved": [
+    "static schema-admission import and command pin before first await",
+    "all current publication/run mutation/C08 guards and cyclic-value refusals",
+    "all current W8/W9 test names/assertions",
+    "outer scope/result egress pins and final private clones",
+    "AlternativeDraft private capture and no unpublished payload in metadata fallback",
+    "caller-provided mismatching review target still refused"
+  ],
+  "importAudit": {
+    "relativeImports": 99,
+    "notMaterializedInSubset": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+        "import": "../../runtime/contract.ts",
+        "exists": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/run-store.test.ts",
+        "import": "../../../runtime/local-store.ts",
+        "exists": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/publication-lifecycle.test.ts",
+        "import": "../../../runtime/local-store.ts",
+        "exists": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp12/analysis.test.ts",
+        "import": "../../../runtime/local-store.ts",
+        "exists": false
+      }
+    ],
+    "newRelativeImports": [],
+    "interpretation": "All unresolved subset paths are unchanged runtime imports. Exact baseline blobs are staged separately; no additional intake is required.",
+    "baselineFiles": [
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+        "stagedBaseline": "resume-input/compose/sources/own/modules/sucafina/Sucafinav1/runtime/contract.ts",
+        "blob": "b62fce6f0fb0845dbfd18cc94009c33f1586b9c5"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "stagedBaseline": "resume-input/compose/sources/own/modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "blob": "eefc1ed550a455abc4952430ec3b57a5abd5c9ee"
+      }
+    ]
+  },
+  "testChanges": {
+    "newPublishedCounterproofs": 10,
+    "removedTests": 0,
+    "reasonAdaptations": [
+      "new changed-output injection is refused earlier by preserved command pin",
+      "new progress reader probes retain current run-input-changed-during-read reason"
+    ]
+  },
+  "foreignOwnerDelta": {
+    "owner": "WP10",
+    "path": "apps/cli/src/sucafina-product/analysis-stale-commit.ts",
+    "baseBlob": "f40a30aca8668f3ef7636ca8af4bf65d4e987217",
+    "applied": false,
+    "proposedPatch": "wp10-observation-forwarding-proposed.patch",
+    "minimalChange": "forward optional fourth observation argument through wrapStore.markStale",
+    "outputRef": "already preserved by spread of prior.value in prepare; no content argument or outputRef synthesis required",
+    "authorityLimit": "createSfAnalysisHost defaults lifecycle scope to the strict withRunContext; W17 helper allows historical retry of same case. A separately authenticated metadata-only scope is not mounted by current host-context. Tests inject this seam and do not prove installed source-revocation behavior.",
+    "baseSourceCommit": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0"
+  },
+  "validation": {
+    "localProductTests": false,
+    "localTypecheck": false,
+    "staticReview": true,
+    "rootMustRunHostedCiForComposedHead": true
+  }
+}

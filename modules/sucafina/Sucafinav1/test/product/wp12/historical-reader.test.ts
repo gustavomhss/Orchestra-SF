@@ -17,6 +17,7 @@ test("historical contribution survives SQLite reopen and requires current access
   const context = { kind: "ui", binding: authority } as unknown as TrustedDomainContext
   const access = { case: true, source: true, revokeAtSecondVerification: false, verifications: 0, mutateAtVerification: 0, mutateAtEgress: false, cyclicAtVerification: 0 }
   const retained: { output?: ContributionEnvelope } = {}
+  let mutateIdentity: (() => void) | undefined
   const fixture = sfRunFixture()
   const open = async () => {
     const persistence = await openLocalStore(directory)
@@ -24,6 +25,7 @@ test("historical contribution survives SQLite reopen and requires current access
       authorize: async () => access.case ? authority : undefined })
     const read = createSfHistoricalContributionReader({ state, requestFor: () => request, revalidate: async () => {
       if (access.mutateAtEgress && access.verifications === 2 && retained.output) retained.output.createdAt = "2026-11-14T00:00:00Z"
+      if (access.verifications === 2) mutateIdentity?.()
       return access.case
     },
       verifyHistorical: async (output) => {
@@ -89,6 +91,22 @@ test("historical contribution survives SQLite reopen and requires current access
       access.mutateAtEgress = true
       expect(await reopened.read(selection, context)).toEqual({ status: "denied", reason: "historical-verification-mutated-input" })
       access.mutateAtEgress = false
+      // Synthetic mutable identities exercise a defensive fence; the actual UI/native
+      // authority factories freeze their binding/lease and recheck private registries.
+      for (const change of [
+        { name: "selection", mutate: () => { selection.outputRef = "another-output" }, restore: () => { selection.outputRef = fixture.output.id } },
+        { name: "case-version", mutate: () => { selection.currentCase = { ...fixture.caseRef, version: 2 } }, restore: () => { selection.currentCase = fixture.caseRef } },
+        { name: "binding-identity", mutate: () => Object.assign(context, { binding: { ...authority } }), restore: () => Object.assign(context, { binding: authority }) },
+        { name: "lease-identity", mutate: () => Object.assign(context, { lease: {} }), restore: () => Object.assign(context, { lease: undefined }) },
+        { name: "binding", mutate: () => Object.assign(authority, { accessRevision: "changed-at-egress" }), restore: () => Object.assign(authority, { accessRevision: "access-current" }) },
+      ]) {
+        access.verifications = 0
+        mutateIdentity = change.mutate
+        expect({ change: change.name, result: await reopened.read(selection, context) }).toEqual({ change: change.name,
+          result: { status: "denied", reason: "contribution-read-identity-changed" } })
+        change.restore()
+      }
+      mutateIdentity = undefined
       expect(await reopened.state.read(request, "contributions", (state) => digestSfValue(state.contributions[fixture.output.id]))).toMatchObject({ status: "ok", value: digestSfValue(fixture.output) })
       expect(await reopened.read({ ...selection, currentCase: { ...fixture.caseRef, incarnation: "replacement" } }, context)).toMatchObject({ status: "unavailable" })
       access.case = false

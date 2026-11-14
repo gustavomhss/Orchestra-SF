@@ -11,6 +11,8 @@ import type { SfNativeRunRecord } from "../contracts/state.ts"
 import { readDecisionRoutine, startDecisionRoutine } from "../routines/decision.ts"
 import type { DecisionRoutineHost } from "../routines/decision.ts"
 import { matchesSfRunOutput, sameSfSkillLoadReceipt } from "./run-provenance.ts"
+import { observeSfStaleRun } from "./run-store.ts"
+import type { SfStaleRunObservation } from "./run-store.ts"
 
 declare const nativeExecutionTicket: unique symbol
 /** Host-owned capability, bound to one Session, run, request digest and selected runtime. */
@@ -50,8 +52,8 @@ export type SfAnalysisHost = {
   /** Persist non-executing outcomes under fresh, current authority. */
   settle: (runRef: string, state: "unavailable" | "needs-input", reason: string, context: TrustedDomainContext) => Promise<PortResult<true>>
   /** Preserve a stale run and its safe references under the host's current access policy. */
-  markStale: (runRef: string, reason: string, context: TrustedDomainContext) => Promise<PortResult<true>>
-  /** Preserve a ready provider envelope under its original case/run provenance while marking it stale atomically. */
+  markStale: (runRef: string, reason: string, context: TrustedDomainContext, observation?: SfStaleRunObservation) => Promise<PortResult<true>>
+  /** Preserve safe original content atomically, or lifecycle only for an unpublished alternative without a private capture. */
   preserveStale: (runRef: string, reason: string, output: ContributionEnvelope, context: TrustedDomainContext) => Promise<PortResult<true>>
   /** Verify host-owned binding and load receipt, current evidence and C10 semantics against real domain results, and persisted review target; field shape alone is insufficient. */
   revalidate: (context: TrustedDomainContext, input: { runRef: string; caseRef: ContributionEnvelope["caseRef"]; contextFingerprint: string; manifestDigest: string; accessRevision: string; outputKind?: ContributionEnvelope["kind"]; evidenceRefs?: ContributionEnvelope["evidenceRefs"]; output?: ContributionEnvelope; skillReceipts: readonly SkillLoadReceipt[]; reviewTarget?: SfReviewTarget }) => Promise<PortResult<true>>
@@ -114,10 +116,33 @@ export async function publishSfContribution(input: {
   const runRef = input.runRef
   const command = () => ({ runRef: input.runRef, output: input.output, skillReceipt: input.skillReceipt, reviewTarget: input.reviewTarget })
   const commandDigest = digestSfValue(command())
-  const unchanged = () => matchesDigest(command(), commandDigest)
+  const unchanged = () => input.host === host && matchesDigest(command(), commandDigest)
   const changed = { status: "denied", reason: "contribution-input-changed-during-authorization" } as const
+  const publication = Object.freeze({ outputRef: input.output.id, outputDigest: digestSfValue(input.output) })
+  let staleObservation: SfStaleRunObservation | undefined
+  const retainStale = async (reason: string) => {
+    if (!unchanged()) return changed
+    const preserved = await host.withRunContext(runRef, (context) => unchanged()
+      ? host.preserveStale(runRef, reason, input.output, context) : Promise.resolve(changed))
+    if (!unchanged()) return changed
+    if (preserved.status === "ok" || !host.withLifecycleContext || !staleObservation) return preserved
+    // Reopen current lifecycle authority only to reconcile the exact observed
+    // run/publication. Neither candidate content nor capture crosses this boundary.
+    const settled = await host.withLifecycleContext(runRef, (context) => unchanged()
+      ? host.markStale(runRef, reason, context, staleObservation) : Promise.resolve(changed))
+    return unchanged() ? settled : changed
+  }
   const authorized = await host.withRunContext(runRef, async (context) => {
     if (!unchanged()) return changed
+    if (host.withLifecycleContext) {
+      const observed = await host.readRun(runRef, context)
+      if (!unchanged()) return changed
+      if (observed.status !== "ok") return observed
+      if (observed.value.runRef !== runRef || observed.value.principalRef !== context.binding.principalRef ||
+        observed.value.policyVersion !== context.binding.policyVersion || observed.value.accessRevision !== context.binding.accessRevision ||
+        !matchesSfRunOutput(observed.value, input.output)) return { status: "denied", reason: "stale-observation-unavailable" } as const
+      staleObservation = observeSfStaleRun(observed.value, publication)
+    }
     const checked = await host.revalidate(context, {
       runRef,
       caseRef: input.output.caseRef,
@@ -134,8 +159,7 @@ export async function publishSfContribution(input: {
   })
   if (!unchanged()) return changed
   if (authorized.status === "stale") {
-    const stale = await host.withRunContext(runRef, (context) => unchanged()
-      ? host.preserveStale(runRef, authorized.reason, input.output, context) : Promise.resolve(changed))
+    const stale = await retainStale(authorized.reason)
     if (!unchanged()) return changed
     if (stale.status !== "ok") return stale
     return authorized
@@ -147,8 +171,7 @@ export async function publishSfContribution(input: {
   if (written.status !== "stale") return written
   // The result may have committed before its final source check. The store can
   // retain only that same verified output, never replace a concurrent terminal state.
-  const stale = await host.withRunContext(runRef, (context) => unchanged()
-    ? host.preserveStale(runRef, written.reason, input.output, context) : Promise.resolve(changed))
+  const stale = await retainStale(written.reason)
   if (!unchanged()) return changed
   return stale.status === "ok" ? written : stale
 }
@@ -309,50 +332,96 @@ export async function cancelSfAnalysis(input: {
   skillReceipt: SkillLoadReceipt
   caseRef: ContributionEnvelope["caseRef"]
   contextFingerprint: string
+  /** Optional consistency assertion; authority always comes from the durable run. */
   reviewTarget?: SfReviewTarget
 }) {
   if (input.skillReceipt.nativeSessionId !== input.sessionID || input.skillReceipt.runId !== input.runRef) return { status: "denied", reason: "session-mismatch" } as const
-  const authorized = await input.host.withRunContext(input.runRef, (context) => input.host.revalidate(context, {
-    runRef: input.runRef,
-    caseRef: input.caseRef,
-    contextFingerprint: input.contextFingerprint,
-    manifestDigest: input.skillReceipt.manifestDigest,
-    accessRevision: context.binding.accessRevision,
-    skillReceipts: [input.skillReceipt],
-    reviewTarget: input.reviewTarget,
-  }))
+  const { host, runRef, executionTicket } = input
+  const command = () => ({ runRef: input.runRef, sessionID: input.sessionID, skillReceipt: input.skillReceipt,
+    caseRef: input.caseRef, contextFingerprint: input.contextFingerprint, reviewTarget: input.reviewTarget })
+  const commandDigest = digestSfValue(command())
+  const unchanged = () => input.host === host && input.executionTicket === executionTicket && matchesDigest(command(), commandDigest)
+  const changed = { status: "denied", reason: "cancellation-input-changed-during-authorization" } as const
+  const authorized = await host.withRunContext(runRef, async (context) => {
+    if (!unchanged()) return changed
+    const current = await host.readRun(runRef, context)
+    if (!unchanged()) return changed
+    if (current.status !== "ok") return current
+    const run = current.value
+    if (run.runRef !== runRef || !run.native || run.native.sessionID !== input.sessionID ||
+      digestSfValue(run.native.skillReceipt) !== digestSfValue(input.skillReceipt) || digestSfValue(run.caseRef) !== digestSfValue(input.caseRef) ||
+      run.contextFingerprint !== input.contextFingerprint || (input.reviewTarget && digestSfValue(input.reviewTarget) !== digestSfValue(run.reviewTarget))) {
+      return { status: "denied", reason: "run-binding-mismatch" } as const
+    }
+    const runDigest = digestSfValue(run)
+    // Independent review cancellation validates the stored author identity even
+    // when the caller supplies no review metadata or the old source is stale.
+    const checked = await host.revalidate(context, {
+      runRef,
+      caseRef: run.caseRef,
+      contextFingerprint: run.contextFingerprint,
+      manifestDigest: run.selection.manifestDigest,
+      accessRevision: context.binding.accessRevision,
+      skillReceipts: [run.native.skillReceipt],
+      reviewTarget: run.reviewTarget,
+    })
+    return unchanged() && matchesDigest(run, runDigest) ? checked : changed
+  })
+  if (!unchanged()) return changed
   if (authorized.status !== "ok" && authorized.status !== "stale") return authorized
-  const cancelled = await input.host.withRunContext(input.runRef, (context) => input.host.analysis.cancel(input.runRef, context))
+  const cancelled = await host.withRunContext(runRef, (context) => unchanged()
+    ? host.analysis.cancel(runRef, context) : Promise.resolve(changed))
+  if (!unchanged()) return changed
   if (cancelled.status !== "ok" || !cancelled.value.cancelled) return cancelled
-  const interrupted = await input.host.withRunContext(input.runRef, async (context) => {
+  const interrupted = await host.withRunContext(runRef, async (context) => {
     // Cancellation is already durable. The execution host must authorize this one-shot interrupt
     // against its own ticket/session registry even though ordinary run revalidation now rejects it.
-    return input.host.execution.interrupt(input.executionTicket, context)
+    return unchanged() ? host.execution.interrupt(executionTicket, context) : changed
   })
+  if (!unchanged()) return changed
   if (interrupted.status !== "ok") return interrupted
   return cancelled
 }
 
 /** Recover persisted progress and a ready result after restart without reviving an expired ticket or grant. */
-export async function readSfAnalysisRun(input: { host: SfAnalysisHost; runRef: string }) {
+export async function readSfAnalysisRun(input: { host: SfAnalysisHost; runRef: string }): Promise<PortResult<{ run: SfAnalysisRunProgress; output?: ContributionEnvelope }>> {
   const host = input.host
   const runRef = input.runRef
   const changed = { status: "denied", reason: "run-input-changed-during-read" } as const
-  const read = await withLifecycleContext(host, runRef, (context) => host.readRun(runRef, context))
-  if (input.runRef !== runRef) return changed
+  const pins: { value: unknown; digest: string }[] = []
+  let lifecycleIdentity = () => true
+  let contentIdentity = () => true
+  let lifecycleDigest: string | undefined
+  const unchanged = () => input.host === host && input.runRef === runRef && lifecycleIdentity() && contentIdentity() &&
+    pins.every((pin) => matchesDigest(pin.value, pin.digest))
+  const read = await withLifecycleContext(host, runRef, async (context) => {
+    lifecycleIdentity = retainScopeIdentity(context)
+    if (!unchanged()) return changed
+    const found = await host.readRun(runRef, context)
+    if (!unchanged()) return changed
+    if (found.status !== "ok") return found
+    // Keep both the observed source and a private snapshot pinned. Scope disposal
+    // cannot replace the metadata, and retained host aliases cannot rewrite it.
+    const value = structuredClone(found.value)
+    lifecycleDigest = digestSfValue(value)
+    pins.push({ value: found.value, digest: lifecycleDigest }, { value, digest: lifecycleDigest })
+    return { status: "ok", value } as const
+  })
+  if (!unchanged()) return changed
   if (read.status !== "ok") return read
+  if (!lifecycleDigest || !matchesDigest(read.value, lifecycleDigest)) return changed
   const run = read.value
   if (run.runRef !== runRef) return { status: "denied", reason: "run-identity-mismatch" } as const
   const runDigest = digestSfValue(run)
   const progress: SfAnalysisRunProgress = { runRef: run.runRef, version: run.version, caseRef: structuredClone(run.caseRef), skillId: run.skillId, state: run.state, createdAt: run.createdAt, updatedAt: run.updatedAt,
     ...("reason" in run && run.reason ? { reason: run.reason } : {}), ...(run.outputRef ? { outputRef: run.outputRef } : {}) }
-  if (run.state !== "ready") return { status: "ok", value: { run: progress } } as const
+  if (run.state !== "ready") return { status: "ok", value: { run: structuredClone(progress) } }
   if (!run.outputRef || !run.native) return { status: "unavailable", reason: "ready-output-unavailable" } as const
   const receipt = run.native.skillReceipt
-  const pins: { value: unknown; digest: string }[] = [{ value: run, digest: runDigest }, { value: receipt, digest: digestSfValue(receipt) }]
+  pins.push({ value: run, digest: runDigest }, { value: receipt, digest: digestSfValue(receipt) })
   const egress: { digest?: string } = {}
-  const unchanged = () => input.runRef === runRef && pins.every((pin) => matchesDigest(pin.value, pin.digest))
   const result = await host.withRunContext<{ run: SfAnalysisRunProgress; output?: Extract<ContributionEnvelope, { state: "ready" }> }>(runRef, async (context) => {
+    contentIdentity = retainScopeIdentity(context)
     if (!unchanged()) return changed
     const output = await host.analysis.read(runRef, context)
     if (!unchanged()) return changed
@@ -380,6 +449,13 @@ export async function readSfAnalysisRun(input: { host: SfAnalysisHost; runRef: s
   })
   if (!unchanged() || (result.status === "ok" && (!egress.digest || !matchesDigest(result, egress.digest)))) return changed
   return result.status === "ok" ? structuredClone(result) : result
+}
+
+function retainScopeIdentity(context: TrustedDomainContext) {
+  const binding = context.binding
+  const lease = context.lease
+  const digest = digestSfValue({ kind: context.kind, binding })
+  return () => context.binding === binding && context.lease === lease && matchesDigest({ kind: context.kind, binding: context.binding }, digest)
 }
 
 function withLifecycleContext<T>(host: SfAnalysisHost, runRef: string, action: (context: TrustedDomainContext) => Promise<PortResult<T>>) {
