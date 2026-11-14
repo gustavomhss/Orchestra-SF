@@ -10,6 +10,7 @@ import { SessionExecutionLocal } from "@orchestra/core/session/execution/local"
 import { SkillV2 } from "@orchestra/core/skill"
 import { SkillDiscovery } from "@orchestra/core/skill/discovery"
 import { Effect, Layer } from "effect"
+import type { Scope } from "effect"
 import type { SfResidentRegistration, SfSourceCapability } from "../../../product/contracts/runtime.ts"
 import { registerSfResidentAgents } from "../../../product/host-binding/resident-agents.ts"
 
@@ -27,7 +28,7 @@ export const residentNativeLayer = AppNodeBuilder.build(root, replacements)
  * Location acquisition, as a host contribution does, instead of only the test's first scope. */
 export function createResidentNativeFixture(
   input: Pick<SfResidentRegistration, "selected" | "source">,
-  beforeRegister?: (skills: SkillV2.Interface) => Effect.Effect<void>,
+  beforeRegister?: (skills: SkillV2.Interface) => Effect.Effect<void, never, Scope.Scope>,
 ) {
   const capabilities = new WeakMap<SkillV2.Interface, SfSourceCapability>()
   return {
