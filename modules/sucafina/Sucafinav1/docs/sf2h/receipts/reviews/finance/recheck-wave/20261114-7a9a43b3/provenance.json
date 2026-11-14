@@ -1,0 +1,243 @@
+{
+  "schema": "sf-finance-independent-recheck-provenance-v1",
+  "campaign": "sf2h-integral-20261112",
+  "actor": "S2-R2",
+  "role": "independent preliminary reviewer",
+  "model_requested": "Astra browser, manually started by user",
+  "model_effective": "NOT_VERIFIED",
+  "independent": true,
+  "product_authorship": false,
+  "publication_branch": "review-finance",
+  "publication_pr": 50,
+  "base_branch": "sf2-control",
+  "write_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reviews/finance/recheck-wave/",
+  "inherited_review": {
+    "commit": "7155f90a6492597a3dd79cfcfda9330fef8be2a2",
+    "tree": "51bff2c758697e82ad6ddcec6f38e929773241c6",
+    "terminal_source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reviews/finance/20261114-4f82cf10/REVIEW.md#8-handoff-da-revisão",
+    "terminal_statement": "A revisão documental está concluída.",
+    "files_preserved": [
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reviews/finance/20261114-4f82cf10/REVIEW.md",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reviews/finance/20261114-4f82cf10/coverage.json",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reviews/finance/20261114-4f82cf10/evidence.json",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reviews/finance/20261114-4f82cf10/findings.json",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reviews/finance/20261114-4f82cf10/provenance.json"
+    ],
+    "comments_observed": 0
+  },
+  "authority_reconciliation": "Explicit user mission plus prior terminal REVIEW and unchanged current review-finance head. New recheck-wave namespace absent before creation. No inference of writer termination from silence; no product writer replaced.",
+  "mission": {
+    "commit": "c708ec0609dbfc95b259707d8c38481617f74f11",
+    "common_blob": "e54d84e3cdfa0046225518e253baf9dcf377fa7c",
+    "mission_blob": "8e66833481193aea98305f04bee384ab09de19a9",
+    "expected_review_head": "7155f90a6492597a3dd79cfcfda9330fef8be2a2",
+    "finance_launch_reference": "ab38a14c09d2292553670033b8c1eaea1d26f31f"
+  },
+  "product_freeze": {
+    "pr": 42,
+    "branch": "finance-resume",
+    "head": "7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1",
+    "tree": "2da074668b164b1aa5e051f8a70366969425906f",
+    "parent": "189cb74252b3b6aa160038da4410b1c7cdcaa31b",
+    "changed_since_final_handoff": {
+      "base": "3ea9dc2efe0de8d283f9625774697e431f55a0d7",
+      "commits": 4,
+      "paths": 25,
+      "product_files": 6,
+      "tests_helpers": 9,
+      "receipts": 10
+    },
+    "material_files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+        "blob": "33a99c9fc0d1c22b9dee21ee37274988c72736ba"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/sensitivity-units.ts",
+        "blob": "d2ae9e7b53fe3a86b356f8453814b2b7d7b2615e"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+        "blob": "d39d52bc2b04d7b4864539c78a002232628ad2c7"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+        "blob": "fe4ab56201fd1898905ac7bc810f0495a64f8602"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/threshold-proof.ts",
+        "blob": "ce7d267d126992bc1a0796e2b64e5dc1c87bb12b"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+        "blob": "46a04597df74205add4531465f35d8a55ca1f8dd"
+      }
+    ]
+  },
+  "diagnosis_freeze": {
+    "pr": 56,
+    "head": "0d2e59ffb14c31ebfb0b717d3d0078985ab2a3b7",
+    "tree": "106808a93f3685ab44ee9751a383dfa3c3244bcf",
+    "producer_proposal_applied": false
+  },
+  "normative_reading": {
+    "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "AGENTS": {
+      "path": "AGENTS.md",
+      "blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+      "read": "COMPLETE",
+      "same_blob_in_plan_review_and_product": true,
+      "additional_applicable_AGENTS": "None in inspected module/CLI/test/receipt ancestry."
+    },
+    "execution_COMMON": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/COMMON.md",
+      "blob": "d61f32af03fe10747a50274233f953af044decf6",
+      "read": "COMPLETE"
+    },
+    "actor_pack": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S2-R2.json",
+      "blob": "dfb48ef567034ebc235d47bb12be030083d3e065",
+      "read": "COMPLETE_COLLECTIVELY_WITH_EXPLICIT_SECTION_ALLOCATION",
+      "sections_by_reader": {
+        "root": [
+          "provenance",
+          "job_id",
+          "actor",
+          "session",
+          "assignment",
+          "branch_provenance",
+          "common",
+          "write_authority",
+          "allocation",
+          "physical_slot",
+          "incoming_outgoing_handoffs",
+          "task_output_dependencies",
+          "dependency_context",
+          "reference_context_rule",
+          "mandatory_appendices",
+          "source_receipt_index",
+          "workflow",
+          "coverage_source",
+          "criterion_ids",
+          "completion",
+          "review_assignment"
+        ],
+        "finance_bindings": [
+          "contracts",
+          "resident",
+          "resident_handoff_interfaces",
+          "resident_gate_requirements",
+          "resident_ui",
+          "resident_packaging"
+        ],
+        "finance_grants_ui": [
+          "work_packages",
+          "review_sources_read_only",
+          "consumer_edges",
+          "coverage",
+          "proof_bindings",
+          "execution_proofs"
+        ],
+        "finance_evidence": [
+          "evidence",
+          "code_sources",
+          "numeric_oracles",
+          "selection_pointers",
+          "ci_plan"
+        ]
+      },
+      "all_top_level_sections_accounted_for": true,
+      "other_actor_packs_loaded": false
+    },
+    "appendices": [
+      {
+        "path": "specs/product-acceptance.md",
+        "blob": "ded082688fce327def0b48968fa3b89a5831029c",
+        "read": "COMPLETE",
+        "reader": "finance_grants_ui"
+      },
+      {
+        "path": "specs/execution-reconciliation.md",
+        "blob": "89d3a9ea372c9700eb04267fab6462feb0c0b9d1",
+        "read": "COMPLETE",
+        "reader": "finance_grants_ui"
+      },
+      {
+        "path": "specs/atlas-packaging.md",
+        "blob": "907750ae7c945e5f303480cc6e14f11bb1696eb9",
+        "read": "COMPLETE",
+        "reader": "finance_bindings"
+      },
+      {
+        "path": "specs/resident-runtime.md",
+        "blob": "033737b1051b23443e633df7874c550629bf55a1",
+        "read": "COMPLETE",
+        "reader": "finance_bindings"
+      }
+    ],
+    "additional_full_WPs": [
+      {
+        "path": "work-packages/WP11.json",
+        "blob": "b11c665d8a0b529a3a1b2ad16012167b167a2c5c"
+      },
+      {
+        "path": "work-packages/WP13.json",
+        "blob": "1c268bae1d894ee1a2a350bd1a2cc5da7a3433dd"
+      }
+    ],
+    "reading_limits": "The read-only WP index and code_sources catalogue were read in full as index/catalogue. This does not claim rereading all 15 external WPs or all 34 baseline source files. Targeted WP01.T05/WP13.T01 and real producer/consumer dependencies were expanded. Original normative coverage records remain unchanged."
+  },
+  "inventory": {
+    "product_subtree": "1387683322b48be4d390d64306f74cb57ffa2a0c",
+    "product_subtree_entries": 1668,
+    "product_subtree_truncated": false,
+    "review_docs_subtree": "4618cc7a2953ecdb0f9ce8d34cf698fb86269e13",
+    "review_docs_entries": 317,
+    "review_docs_truncated": false,
+    "review_namespace_absent": true
+  },
+  "authorship_exclusions": {
+    "root": "No product, test, runtime, configuration or producer patch authorship.",
+    "auxiliaries": [
+      "finance_bindings: read-only001/002 and norm/contracts/native sections",
+      "finance_grants_ui: read-only003/004, norm/review sections and cold counterread of proposal",
+      "finance_evidence: read-only005, Actions and norm/evidence/oracles sections"
+    ],
+    "independent_contexts": 4,
+    "document_writer": "root only",
+    "native_campaign_workers_claimed": false
+  },
+  "evidence_cutoff_utc": "2026-11-14T19:25:12Z",
+  "heads_at_evidence_cutoff": {
+    "PR42": "7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1",
+    "PR56": "0d2e59ffb14c31ebfb0b717d3d0078985ab2a3b7",
+    "PR50": "7155f90a6492597a3dd79cfcfda9330fef8be2a2"
+  },
+  "later_deltas": {
+    "policy": "Any later product head is pending delta and receives no transferred verdict. Any later CI needs its exact W/S selection and terminal state reconciled.",
+    "observed_after_cutoff": [
+      {
+        "relative_to": "initial evidence observation2026-11-14T19:19:11Z",
+        "type": "CI_ON_SAME_W",
+        "run": 43631582858,
+        "status": "in_progress",
+        "observed_at": "2026-11-14T19:25:12Z",
+        "verdict": "PENDING_TERMINAL",
+        "no_duplicate": true
+      }
+    ]
+  },
+  "scope_limits": [
+    "Preliminary SHA-specific review, not final C approval.",
+    "No product execution or CI dispatch.",
+    "No automatic adoption of other-branch fixes or green runs.",
+    "No mounted Portfolio factory observed in Finance composition chain.",
+    "No native/AM/provider identity or process restart acceptance."
+  ],
+  "publication_verification": "After commit creation, verify exact append-only six-file diff and read back branch/PR. Commit identity is reported externally, never self-embedded.",
+  "heads_before_publication": {
+    "PR42": "7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1",
+    "PR56": "0d2e59ffb14c31ebfb0b717d3d0078985ab2a3b7",
+    "PR50": "7155f90a6492597a3dd79cfcfda9330fef8be2a2"
+  }
+}

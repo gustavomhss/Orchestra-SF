@@ -1,0 +1,395 @@
+{
+  "schema": "sf-finance-independent-recheck-evidence-v1",
+  "reviewed_sha": "7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1",
+  "evidence_cutoff_utc": "2026-11-14T19:25:12Z",
+  "execution_policy": {
+    "product_tests_by_reviewers": 0,
+    "ci_dispatches_by_reviewers": 0,
+    "product_writes_by_reviewers": 0,
+    "remote_access": "GitHub MCP",
+    "runtime_inferences_explicit": true
+  },
+  "snapshot_validation": "PR56 and S1-S5: direct parent W, exact Git trees, one commit and only .ci-run.json in W->S, requests and actual run/job/logs read. No result transferred to an unexamined tree.",
+  "runs": [
+    {
+      "selection": "PR56",
+      "W": "1248dc6c5aaa83cb16c92697947fa5fea9699625",
+      "Wtree": "17105591e5a92ff792b676c61497c0c75a48d954",
+      "S": "b8f023e61983dbe33dc11f9e5dfd2000034ef4c0",
+      "Stree": "525224251530ac6dd1e5fd2a4ca1dbba296e713b",
+      "request_blob": "d17151760cc63c5561fd96985aa82cadfac3802d",
+      "run": 43625830145,
+      "job": 132541295004,
+      "attempt": 1,
+      "event": "push",
+      "status": "completed",
+      "conclusion": "failure",
+      "pass": 0,
+      "fail": 1,
+      "expects": 18,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43625830145",
+      "scope": {
+        "phase": "first confirmed coverage.qualify final authority reread after preview replay",
+        "confirmed_sample_writes": 0,
+        "confirmed_exact_calls": 0,
+        "fixture_guard_ms": 180000,
+        "product_patch": "NOT_APPLIED",
+        "phase_details": "units.resolve returned at179968ms; following case read reached guard180003ms. Fixture had returned."
+      }
+    },
+    {
+      "selection": "S1",
+      "W": "ab38a14c09d2292553670033b8c1eaea1d26f31f",
+      "Wtree": "c0a952e7aaaa02a66b48ee004ebaa8d38096d985",
+      "S": "4afc641b8f9e71be3e13ea7f3bdcff69ae29bb67",
+      "Stree": "6ca68127f3b9d63f22e9a0db080beef6d25b389f",
+      "request_blob": "1796be9189bb8b1022ae44950d96416de1bc12b3",
+      "run": 43627723188,
+      "job": 132547252223,
+      "attempt": 1,
+      "event": "push",
+      "status": "completed",
+      "conclusion": "failure",
+      "pass": 0,
+      "fail": 1,
+      "expects": 27,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43627723188",
+      "scope": {
+        "phase": "discriminating count assertion",
+        "observed_searches": 2,
+        "expected_searches": 1,
+        "financial_result": "conditioned result returned before failing count",
+        "not_claimed": "numeric bug"
+      }
+    },
+    {
+      "selection": "S2",
+      "W": "95f474484fb49cedb563ed3d02a61e9638d6784d",
+      "Wtree": "5173889bce7f5a6a6785e1adcdbc5b348483c190",
+      "S": "4fce91718b8ea90f6d05ba0c30729f030b58451b",
+      "Stree": "7801a4103038cb23cf87b129260cdd95947a4549",
+      "request_blob": "869275c1422a442a3879e4f65142eff8f35f1455",
+      "run": 43628402812,
+      "job": 132549346211,
+      "attempt": 1,
+      "event": "push",
+      "status": "completed",
+      "conclusion": "success",
+      "pass": 15,
+      "fail": 0,
+      "expects": 159,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43628402812",
+      "scope": {
+        "files": 6,
+        "filtered_out": 4,
+        "counts": {
+          "searches": 1,
+          "search_previews": 9,
+          "search_unit_issues": 2,
+          "consumer_previews": 8,
+          "revalidations": 4
+        },
+        "persisted_recertification": {
+          "searches": 0,
+          "units": 4,
+          "previews": 10,
+          "root_checks": 2
+        },
+        "negative_cases": [
+          "forged evidence",
+          "readonly root write poison",
+          "late lease revocation",
+          "original Request mutation",
+          "borrowed source mutation",
+          "scope freshness",
+          "missing FX"
+        ],
+        "not_claimed": "global speedup or full journey acceptance"
+      }
+    },
+    {
+      "selection": "S3",
+      "W": "95f474484fb49cedb563ed3d02a61e9638d6784d",
+      "Wtree": "5173889bce7f5a6a6785e1adcdbc5b348483c190",
+      "S": "10750da63ec539002a014b598a8e40afb817ec22",
+      "Stree": "fd4457be8b79f4063ae62ee6492c853522477004",
+      "request_blob": "85fc069e57a87392820409f443e4f4b47c8c4564",
+      "run": 43629238602,
+      "job": 132551927313,
+      "attempt": 1,
+      "event": "push",
+      "status": "completed",
+      "conclusion": "failure",
+      "pass": 0,
+      "fail": 1,
+      "expects": 18,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43629238602",
+      "scope": {
+        "phase": "confirmed.exact -> confirmed.preview",
+        "confirmed_qualifications_completed": 2,
+        "confirmed_sample_writes_completed": 2,
+        "confirmed_exact_calls": 1,
+        "fixture_guard_ms": 180000,
+        "not_reached": [
+          "final threshold15000",
+          "witness15000/15001",
+          "history.read",
+          "choice replay",
+          "real restart"
+        ],
+        "not_claimed": "PR56's earlier stop phase on this newer version"
+      }
+    },
+    {
+      "selection": "S4",
+      "W": "189cb74252b3b6aa160038da4410b1c7cdcaa31b",
+      "Wtree": "32e6d1e03ac129505d3c0737d55a953fd50fcf87",
+      "S": "ff04e4ff973f3369fb71b0fe5c058f4b98249996",
+      "Stree": "cfabe4c40529efe4b1c09b6a1d467426fe7cfb4a",
+      "request_blob": "8f9ff2a0838b0f64593119732513b239425d6595",
+      "run": 43629852422,
+      "job": 132553814068,
+      "attempt": 1,
+      "event": "push",
+      "status": "completed",
+      "conclusion": "failure",
+      "pass": 0,
+      "fail": 1,
+      "expects": 6,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43629852422",
+      "scope": {
+        "phase": "discriminating C08 read-envelope count",
+        "observed_envelopes": 16,
+        "expected_envelopes": 10,
+        "full_case_reads": 2,
+        "prior_assertions_passed": 5
+      }
+    },
+    {
+      "selection": "S5",
+      "W": "7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1",
+      "Wtree": "2da074668b164b1aa5e051f8a70366969425906f",
+      "S": "18e2a5dcf69b039dcd86e91f8fbf85db613acf6c",
+      "Stree": "705ee2f2ec35d43e8b23a2f0790830ed835dab76",
+      "request_blob": "be628b5c6024e2ffe565d4a8d251135c70a7facd",
+      "run": 43630462257,
+      "job": 132555694380,
+      "attempt": 1,
+      "event": "push",
+      "status": "completed",
+      "conclusion": "success",
+      "pass": 36,
+      "fail": 0,
+      "expects": 297,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43630462257",
+      "scope": {
+        "files": 10,
+        "filtered_out": 4,
+        "duration_seconds": 368.57,
+        "completed_at": "2026-11-14T19:16:32Z",
+        "long_journey_selected": false,
+        "coverage_preview_proposal_selected": false,
+        "positive_siblings": {
+          "statuses": [
+            "ok",
+            "ok"
+          ],
+          "C08_envelopes": 10,
+          "full_case_reads": 2,
+          "scalar_hooks": 0
+        },
+        "scalar_override": {
+          "statuses": [
+            "ok",
+            "ok"
+          ],
+          "C08_envelopes": 16,
+          "full_case_reads": 2,
+          "scalar_hooks": 4
+        },
+        "duplicate_occurrences": {
+          "statuses": [
+            "ok",
+            "unavailable",
+            "ok",
+            "ok"
+          ],
+          "authorize_case": 12,
+          "verify_sources": 12,
+          "revalidate": 25,
+          "C08_envelopes": 10,
+          "full_case_reads": 2
+        },
+        "negative_statuses": {
+          "planner-source": [
+            "unavailable",
+            "unavailable"
+          ],
+          "case-version": [
+            "denied",
+            "denied"
+          ],
+          "stored-result": [
+            "denied",
+            "ok"
+          ],
+          "request-headers": [
+            "denied",
+            "denied"
+          ],
+          "lease": [
+            "denied",
+            "denied"
+          ],
+          "scalar-facade": [
+            "denied",
+            "denied"
+          ],
+          "store-facade": [
+            "denied",
+            "denied"
+          ]
+        },
+        "omni": "not applicable; no Omni spawn or native evidence",
+        "request": {
+          "package": "sucafina",
+          "directory": "modules/sucafina",
+          "packageSelector": "packages/sucafina",
+          "runner": "bun",
+          "args": [
+            "Sucafinav1/test/product/review-fixes/finance-resume-performance/exact-threshold-work.test.ts",
+            "Sucafinav1/test/product/review-fixes/finance-resume-performance/units-observation.test.ts",
+            "Sucafinav1/test/product/review-fixes/finance-resume-performance/persisted-recertification.test.ts",
+            "Sucafinav1/test/product/review-fixes/finance-resume-performance/historical-batch.test.ts",
+            "Sucafinav1/test/product/review-fixes/finance-resume-performance/historical-batch-fences.test.ts",
+            "Sucafinav1/test/product/wp13/planner-sensitivity-boundary.test.ts",
+            "Sucafinav1/test/product/wp13/sensitivity-read-scope.test.ts",
+            "Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+            "Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+            "Sucafinav1/test/product/wp11/result-store.test.ts",
+            "--timeout",
+            "120000",
+            "-t",
+            "^(Finance sensitivity|units resolution|persisted Finance candidates|historical scenario batch|historical batch|sensitivity retains the admitted request|sensitivity detects a provider|each sensitivity verification reads a fresh|a failed sensitivity scope cannot retain|real Planner sensitivity keeps EUR|one sibling batch|units emit the identical binding|comparison starts independent batches|different cases and historical|ledger, alternative|authority revoked after result rereads|a real Planner source change|retained store and case|batch refusals|decision result persistence)"
+          ],
+          "env": {}
+        }
+      }
+    }
+  ],
+  "exact_product_check": {
+    "W": "7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1",
+    "Wtree": "2da074668b164b1aa5e051f8a70366969425906f",
+    "run": 43630618176,
+    "job": 132556167840,
+    "attempt": 1,
+    "status": "completed",
+    "conclusion": "failure",
+    "typecheck_errors": 115,
+    "diagnostics_in_six_changed_Finance_product_files": 0,
+    "confirmed_diagnostics": [
+      "TS2741 business-services.ts(102,40): missing verifyScenarioOperations",
+      "TS2353 business-context.ts(170,71): state not in {host,cases}"
+    ],
+    "guards": {
+      "rules": 78,
+      "changed_paths": 1519,
+      "gates": 43,
+      "warnings": 15,
+      "engine_errors": 0,
+      "base": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+      "merge_base": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf"
+    },
+    "artifact": {
+      "id": 14127863004,
+      "size_bytes": 8203,
+      "api_digest": "sha256:1b3f66b8c352749155baeeb2379b8a3fd69ec6d5f3546fb054a219dc59ca3bba",
+      "independently_extracted_or_hashed": false
+    }
+  },
+  "prior_grant_counterproof": {
+    "finding": "FIN-IND-003",
+    "W": "229d66fa59ceebbc4b3683565670698f2cf3aa65",
+    "S": "07f905d3a309b9752525ef34aeafbc5d870bd54a",
+    "Stree": "723fadf3a3b616b269b9fa8052d760cd643e80c2",
+    "run": 43619812123,
+    "job": 132522704978,
+    "attempt": 1,
+    "conclusion": "failure",
+    "pass": 56,
+    "fail": 3,
+    "expects": 582,
+    "test": "campaign metadata needs the host's private writer grant",
+    "expected": "unavailable/campaign-locked-proof-unavailable",
+    "observed": "ok with campaign v1",
+    "unreached_assertion": "campaign-not-created",
+    "applicability": "three relevant blobs identical, confirmed independently; not new runtime at W7a9"
+  },
+  "external_W28": {
+    "W": "90f2c4f81f74edc26a1783bfda7891638b429fa6",
+    "Wtree": "232c69db4eed34e913f125bb787b926971d6d031",
+    "S": "8dedb1fa71a0805505e50eda8c0a038de79276a8",
+    "Stree": "7d885e25c52af39b9d22357c59910df6e6d78051",
+    "snapshot_delta": "only .ci-run.json",
+    "run": 43627315630,
+    "job": 132546009522,
+    "attempt": 1,
+    "conclusion": "failure",
+    "pass": 8,
+    "fail": 1,
+    "expects": 136,
+    "C09_C17_tests_pass": 2,
+    "test_blob": "3cab95503375cd8c3ed4ea473a2443099a046379",
+    "fixture_blob": "a56aeb8b4441d1f8a91996636605ea538be370e4",
+    "limits": "Synthetic auth/data; real C09/Atlas/scanner/LocalStore. Reopen same process, not process restart. Numeric oracle elsewhere failed. Not credited to Finance."
+  },
+  "diagnostic_final": {
+    "PR": 56,
+    "head": "0d2e59ffb14c31ebfb0b717d3d0078985ab2a3b7",
+    "tree": "106808a93f3685ab44ee9751a383dfa3c3244bcf",
+    "handoff_blob": "e388bd96f96a8a5880cbf83abe68f76cf3baeb6a",
+    "result_blob": "e1aec46a5d899bb96522e114b3a61e1935661909",
+    "proposal_patch_blob": "07cfd30ecfda15e32c36e13ed6b1c9d2218da9a6",
+    "proposal_manifest_blob": "b0b93127f56a50d3d786843bf2a6bfe7e5291670"
+  },
+  "limits": [
+    "No fresh execution by this review.",
+    "No sum of passing tests as accepted criteria.",
+    "No timeout classified as financial formula error.",
+    "Nested timings are inclusive and not additive.",
+    "S5 does not include journey-phase.test.ts or the NOT_APPLIED patch.",
+    "Native/AM, installed consumer and final C remain unqualified.",
+    "S6 already launched by its owner on the reviewed W; reconcile its terminal outcome instead of dispatching a duplicate."
+  ],
+  "pending_runs": [
+    {
+      "selection": "S6",
+      "W": "7a9a43b3b05ee2fb18c9ee70901dbdf7014711a1",
+      "Wtree": "2da074668b164b1aa5e051f8a70366969425906f",
+      "S": "0e68fec2e33e6c4c2103f368fed1d00dc832cb0c",
+      "Stree": "9339889db0210f25ba46ee9a3ab7553e146bef1d",
+      "request_blob": "85fc069e57a87392820409f443e4f4b47c8c4564",
+      "request_identical_to": "S3",
+      "run": 43631582858,
+      "job": 132559159277,
+      "attempt": 1,
+      "event": "push",
+      "status": "in_progress",
+      "conclusion": null,
+      "created_at": "2026-11-14T19:20:42Z",
+      "observed_at": "2026-11-14T19:25:12Z",
+      "snapshot_validation": "direct parent W; one commit; only .ci-run.json",
+      "selection_args": [
+        "Sucafinav1/test/product/review-fixes/finance-resume-performance/journey-phase.test.ts",
+        "--timeout",
+        "120000",
+        "-t",
+        "^FIN-IND-005 Finance performance"
+      ],
+      "env": {},
+      "disposition": "ADOPT_EXISTING_RUN_DO_NOT_DUPLICATE",
+      "result": "PENDING_NO_TERMINAL_CLAIM",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43631582858"
+    }
+  ]
+}
