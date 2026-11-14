@@ -1,0 +1,208 @@
+{
+  "schema": "sf2h-review-fix-execution-v1",
+  "campaign_id": "sf2h-integral-20261112",
+  "execution_instance": "import-recovery-20261114",
+  "mission": "import-recovery",
+  "actor": "S2-C",
+  "lease_epoch": 1,
+  "attempt": 2,
+  "status_at_receipt": "IN_PROGRESS",
+  "branch": "import-recovery",
+  "target": "astra-operations",
+  "pr": "https://github.com/gustavomhss/Orchestra-SF/pull/58",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "mission_allocation_commit": "30e2215749d5295f81fdeafccb9e69ba21d0cdb8",
+  "reason": "Revalidar somente a fixture Apply afetada pela correção da inferência UUID; conservar evidência anterior e a falha de typecheck, sem repetir a seleção não afetada.",
+  "product_candidate": {
+    "W": "95b3c9a33ba1bf66b9edf2bdd35736e6228eb979",
+    "tree": "5ac0f080f98d1326b35dc8ff15a7be3521e5bda3",
+    "parent": "feaa3856ef84b5a85b687fd67e8e20883bc246c2",
+    "previous_product": "20915a35aa8364a39d1a6014c494f9ab4c1339e8",
+    "comparison": "https://github.com/gustavomhss/Orchestra-SF/compare/20915a35aa8364a39d1a6014c494f9ab4c1339e8...95b3c9a33ba1bf66b9edf2bdd35736e6228eb979",
+    "changed_executable_inputs": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/review-fixes/import-recovery/apply-fixture.ts",
+        "before": "d08a7c77421e3e40c70ba4e75c741fccdd58dd09",
+        "after": "446c0244a71d388cc995f99255c529e72d9dc88b",
+        "change": "intent = randomUUID() → intent: string = randomUUID(); anotação de tipo, sem alteração de lógica ou default."
+      }
+    ],
+    "product_staged_files_blob": "0d42f5242acd3d1c93bc110422285b96975b8ea0",
+    "unchanged": "Todo produto, outros testes, configs, fixtures e dependências de W1, exceto a assinatura explicitada; as demais adições W1→W2 são três recibos novos."
+  },
+  "functional_ci": {
+    "status": "PASS",
+    "snapshot": {
+      "S": "0a3857a4f3c9f3824c09b6aa76d155d6295e9ed9",
+      "parent": "95b3c9a33ba1bf66b9edf2bdd35736e6228eb979",
+      "tree": "8ed572d8eb1e225fe648fb0abb7c5f54573e98ab",
+      "branch": "ci-run-linux-astra-wp06-95b3c9a3-310b5c19-import-recovery-2",
+      "request_blob": "310b5c19356a521e2a3faea37a1cc16d935689ae",
+      "request": {
+        "package": "sucafina",
+        "packageSelector": "packages/sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/review-fixes/import-recovery/apply-restart.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "complete_delta_from_W": [
+        {
+          "status": "added",
+          "path": ".ci-run.json",
+          "mode": "100644"
+        }
+      ],
+      "all_existing_blobs_unchanged": true
+    },
+    "run": {
+      "id": 43627493939,
+      "attempt": 1,
+      "head_sha": "0a3857a4f3c9f3824c09b6aa76d155d6295e9ed9",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43627493939",
+      "conclusion": "success",
+      "started_at": "2026-11-14T18:35:57Z",
+      "completed_observed_at": "2026-11-14T18:37:37Z"
+    },
+    "jobs": [
+      {
+        "id": 132546551148,
+        "name": "test (ubuntu-24.04)",
+        "conclusion": "success",
+        "request_validation": "success",
+        "execution_step": "Run tests: success",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43627493939/job/132546551148"
+      },
+      {
+        "id": 132546980887,
+        "name": "cleanup",
+        "conclusion": "success"
+      }
+    ],
+    "actual": {
+      "bun": "1.3.14 (0d9b296a)",
+      "files": 1,
+      "pass": 4,
+      "fail": 0,
+      "expect_calls": 84,
+      "duration_seconds": 16.89,
+      "observed_cases": [
+        "E-OPS-02: lost Apply response, SQLite restart and fresh HTTP recovery preserve one effect (newVersion=false)",
+        "E-OPS-02: lost Apply response, SQLite restart and fresh HTTP recovery preserve one effect (newVersion=true)",
+        "E-OPS-02: durable session revocation before restart denies receipt recovery and exact Apply retry",
+        "E-OPS-02: persisted Planner grant revocation denies recovery after restart and fresh authentication"
+      ]
+    },
+    "omni": {
+      "nonce": "847c7c2445db20e55e51a7b160f8a18c",
+      "status": "not applicable",
+      "reason": "focused: no declaring test ran",
+      "scope": "No omni spawn or delegated spawn; no Omni qualification."
+    },
+    "artifacts": [],
+    "artifact_requirement": "Nenhum upload obrigatório para o caminho Bun selecionado. Request imutável e logs oficiais consultados.",
+    "deduplication": "Runs existentes consultados antes da criação da ref; ambos os runs anteriores da missão já concluídos. Uma execução da seleção Apply afetada; sem execução concorrente desta missão."
+  },
+  "proof": {
+    "finding": "E-OPS-02",
+    "criteria": [
+      "WP06.T03.DOD.02"
+    ],
+    "related": [
+      "C03",
+      "C04",
+      "CAMP.CMP.02"
+    ],
+    "proof_package_bindings": [
+      "E07",
+      "E15"
+    ],
+    "expected": "Apply com resposta perdida, fechamento real de SQLite/composição, novas instâncias dos serviços reais e nova autenticação; recuperar manifesto/recibo por HTTP e repetir payload e intenção sem duplicação. Revogação antes da recuperação.",
+    "observed": "Os quatro cenários passaram novamente. Versão atual e nova versão preservam recibos completos, valores, snapshots/versões/transações/auditoria após replay. Logout persistido e revogação real do grant Planner recusam referência/detalhe/Apply; no segundo negativo a nova autenticação é válida e a permissão continua revogada.",
+    "scope": "Composição isolada hospedada; mesmas implementações reais e limites explícitos do recibo da tentativa 1."
+  },
+  "unchanged_proof_retained": {
+    "finding": "OPS-REV-04",
+    "criteria": [
+      "WP06.QLT.03"
+    ],
+    "related": [
+      "CAMP.CMP.02",
+      "CAMP.QLT.03"
+    ],
+    "source_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/review-fixes/import-recovery/attempt-01-functional-20915a35.json",
+    "source_receipt_blob": "e7d46b4111fca731e1e984566d4876eaa0c53265",
+    "W": "20915a35aa8364a39d1a6014c494f9ab4c1339e8",
+    "S": "a0e8b4d9c9ed338d3a3e1e850ae258bf098678c3",
+    "run": 43626093062,
+    "job": 132542099820,
+    "cases_retained": 10,
+    "selection_retained": [
+      "./Sucafinav1/test/product/review-fixes/import-recovery/admission-restart.test.ts",
+      "./Sucafinav1/test/product/wp06/imports/staged-files.test.ts",
+      "./Sucafinav1/test/product/wp06/imports/admission-boundaries.test.ts"
+    ],
+    "reason": "A única alteração de código desde W1 é a anotação de tipo no helper exclusivo dos testes Apply. Código de produto, fixture/admission e regressões mantêm os mesmos blobs. Não atribuir ao W2 uma execução nova desses dez casos."
+  },
+  "prior_check_failure": {
+    "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/review-fixes/import-recovery/attempt-01-checks-feaa3856.json",
+    "blob": "9121474abcf8d76ce3c4afc4bf7e256cd69843c6",
+    "run": 43627027938,
+    "job": 132545209318,
+    "preserved": true,
+    "own_type_diagnostic": "TS2345 da chave de intenção corrigido nesta tentativa; o checker seguinte confirmará o resultado.",
+    "external_type_diagnostic": "TS2741 preexistente em WP14/source-access-atlas.test.ts:167 permanece fora do lease.",
+    "external_patch": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/review-fixes/import-recovery/attempt-01-external-wp14-typecheck.json",
+      "blob": "f3cfc230fcdb2a9b8b113b9315dc2ddf1fab87a2",
+      "preimage": "fbe627ffde443ff7e2d3b1204bbcf67523404f41",
+      "applied": false,
+      "owner": "WP14 / S0"
+    }
+  },
+  "checks_after_receipt": {
+    "status": "NOT_RUN_AT_RECEIPT_CREATION",
+    "workflow": ".github/workflows/astra-operations-check.yml",
+    "workflow_blob": "ec63fc5e1a355ada4f1b73cc518c225719e9b08e",
+    "commands": [
+      "modules/sucafina: bun typecheck",
+      "apps/cli: bun typecheck",
+      "root: bun run check:guards --base origin/dev"
+    ],
+    "reporting": "Examinar o novo head que acrescenta somente este recibo a W2. Publicar SHA exato, run/job, artefato e resultados na PR, sem reescrever recibos para incluir guard futuro ou autorreferência."
+  },
+  "time_accounting": {
+    "observed_run_seconds": 100,
+    "bun_test_seconds": 16.89,
+    "previous_check_seconds": 143,
+    "session_elapsed_minutes": null,
+    "eta": "Pendente apenas checker final e fechamento da PR; não estimar fila sem medição."
+  },
+  "limits": [
+    "Sem testes de produto locais, epic/full suite ou restart do desktop/server.",
+    "Sem alteração de CLI/dependências fora do lease.",
+    "Sem merge/deploy.",
+    "Fixture de scanner e membership não qualificam scanner/IdP corporativos.",
+    "Não representa aceite global, G7/G8 nem pacotes E07/E15 completos.",
+    "Órfãos legados sem prova durável são preservados e recusados."
+  ],
+  "consumer": "S0 / integrador astra-operations; WP06/WP10; WP14 para dependência externa do typecheck.",
+  "previous_attempt_refs": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/review-fixes/import-recovery/attempt-01-functional-20915a35.json",
+      "blob": "e7d46b4111fca731e1e984566d4876eaa0c53265"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/review-fixes/import-recovery/attempt-01-external-wp14-typecheck.json",
+      "blob": "f3cfc230fcdb2a9b8b113b9315dc2ddf1fab87a2"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/review-fixes/import-recovery/attempt-01-checks-feaa3856.json",
+      "blob": "9121474abcf8d76ce3c4afc4bf7e256cd69843c6"
+    }
+  ]
+}
