@@ -20,14 +20,14 @@ test("recipient receipt initial reply returns the original C08 value with one ex
     const result = available(await response.json() as RecipientMutationResult)
     const after = await receiptState(f, thread.id)
     const receipt = result.mutationReceipt
-    expect(receipt).toEqual(after.transactions[transactionKey(f, intent)]!.value)
+    expect(after.transactions[transactionKey(f, intent)]!.value).toEqual(receipt)
     expect(receipt).toMatchObject({ kind: "recipient-thread-action-v1", action: "reply", threadId: thread.id, principalRef: "reader-b", idempotencyKey: intent.mutation.idempotencyKey, commandDigest: digestSfValue({ id: intent.id, action: { kind: "reply", body: intent.body } }), intentDigest: digestSfValue(intent) })
     if (receipt.action !== "reply") throw new Error("Reply receipt missing")
     const exact = after.thread.messages.filter((message) => message.id === receipt.reply.id && message.incarnation === receipt.reply.incarnation && message.version === receipt.reply.version)
     expect(exact).toHaveLength(1)
     expect(exact[0]).toMatchObject({ body: intent.body, authorRef: "reader-b", sourceContext: { sourceIncarnation: receipt.sourceIncarnation } })
     expect(after.thread.messages).toHaveLength(before.thread.messages.length + 1)
-    expect(after.thread.messages.slice(0, before.thread.messages.length)).toEqual(before.thread.messages)
+    expect(before.thread.messages).toEqual(after.thread.messages.slice(0, before.thread.messages.length))
     expect(after.storageVersion).toBe(before.storageVersion + 1)
     expect(after.aggregateRevision).toBe(before.aggregateRevision + 1)
   } finally { await f.dispose() }

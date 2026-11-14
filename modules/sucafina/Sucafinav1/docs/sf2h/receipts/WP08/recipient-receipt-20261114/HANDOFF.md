@@ -53,7 +53,7 @@ Essa repetição é justificada pelo delta concreto em `recipientActions.resolve
 | Revogação | Recusa antes do retry, depois da leitura final, com host ainda válido e após o último await do fence C05; sem mensagem/recibo divulgado. |
 | Fontes e review | Substituição física com o mesmo ID textual é recusada; novo reply conserva `sourceFence: "all"`, `checkNamespaces: reviews` e o fence de commit. |
 
-Os nomes exatos, tempos, contagens, seleção, hashes e limites de cada prova estão em [validation.json](validation.json). Os logs originais estão em [logs/01-recipient-receipt.log](logs/01-recipient-receipt.log) e [logs/02-review-resolve.log](logs/02-review-resolve.log).
+Os nomes exatos, tempos, contagens, seleção, hashes e limites de cada prova estão em [validation.json](validation.json). Os logs originais permanecem nos jobs S1/S2 vinculados acima; seus SHA256 estão no recibo. As cópias brutas acrescentadas no primeiro commit evidencial foram removidas da árvore atual para cumprir o guard `agent-scratch`, sem renomear arquivos ou conceder exceções.
 
 O Boolean foi produzido por uma fixture de compatibilidade que altera somente o valor de uma transação real; não se afirma execução do produtor antigo. A substituição física é uma injeção hostil explícita depois da exclusão canônica; o teste usa o produtor real de identidade física e verifica outra encarnação.
 
@@ -64,6 +64,12 @@ O [contrato aditivo](CONTRACT.md) já está publicado no SHA do produtor. O camp
 O consumidor precisa conservar a intenção inteira, incluindo body, thread, chave e expectedStorageVersion originais. Para retry, readmitir exatamente esse payload sob autorização atual. Associar o ACK à intenção/principal/chave/thread e à tupla de mensagem retornada. Texto, autor, posição, contagem e projeção corrente não identificam a operação. A projeção acompanhante pode conter mensagens posteriores e uma thread já resolvida.
 
 **O teste de reopen conserva o payload na memória do teste. Não prova persistência da intenção no navegador nem ACK positivo após reload da UI.** Essas provas pertencem ao consumidor no candidato composto: persistir/restaurar a intenção, obter admissão atual e demonstrar ACK positivo, perda de resposta, igualdade de mensagens, replay após resolução, divergência, revogação e substituição da fonte. O ACK não equivale à confirmação humana, attachment/reuso autorizado ou aprovação financeira.
+
+## Correção do primeiro gate
+
+O gate [43629952588](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43629952588), no head `3097481a…`, falhou: 69 diagnósticos herdados idênticos ao baseline, quatro erros próprios de tipagem/fixture e dois findings `agent-scratch` nas cópias de log bruto. A falha permanece registrada em [static-attempt.01.json](static-attempt.01.json).
+
+A correção mantém o produto byte a byte: três comparações de igualdade estrutural nos testes novos têm seus lados invertidos para os overloads unknown/readonly; o fixture `reissue` recebe o mesmo SQLite real já utilizado por C08 e mutationFence. Nenhum oráculo ou prazo foi removido. Os dois logs brutos foram removidos; resultados, hashes e links dos jobs permanecem. A seleção `ci-request.03.json` revalida somente os dois casos de recibo com comparações corrigidas e o caso de reissue. Seu resultado será acrescentado após a execução hospedada.
 
 ## Gate estático e obrigações preservadas
 

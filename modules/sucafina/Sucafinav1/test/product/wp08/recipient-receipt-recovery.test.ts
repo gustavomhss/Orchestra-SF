@@ -22,7 +22,7 @@ test("recipient receipt lost response survives SQLite reopen and fresh admission
     await expect(closed.transaction("dashboard", async () => ({ commit: false, value: true }))).rejects.toThrow("disposed")
     const port = f.compose()
     expect(await f.human.authorize(admission, "collaboration.thread.reply", intent)).toBe(false)
-    expect(available(await replyWith(f, intent, port)).mutationReceipt).toEqual(durable)
+    expect(durable).toEqual(available(await replyWith(f, intent, port)).mutationReceipt)
     expect(await receiptState(f, thread.id)).toEqual(before)
     // This fixture retains the full intent in test memory; browser reload recovery is a separate UI obligation.
   } finally { await f.dispose() }

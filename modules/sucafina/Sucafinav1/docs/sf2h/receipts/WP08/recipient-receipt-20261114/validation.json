@@ -312,10 +312,17 @@
       },
       "artifacts": [],
       "log": {
-        "path": "logs/01-recipient-receipt.log",
-        "bytes": 74305,
+        "source": "GitHub Actions job log",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43628901092/job/132550878448",
         "sha256": "ee2140ae40d886d761fd590ec2403313ea44edef4adadfc4b0f794905c18de94",
-        "blob": "f5569b949bea03cd08f2432a90e553a43f30ac32"
+        "bytes": 74305,
+        "retained_in_current_tree": false,
+        "historical_copy": {
+          "commit": "3097481a0baa534220555cfbb18d0506383b9bd9",
+          "path": "logs/01-recipient-receipt.log",
+          "blob": "f5569b949bea03cd08f2432a90e553a43f30ac32"
+        },
+        "removal_reason": "agent-scratch path rule; raw tool output removed, not renamed or exempted"
       },
       "validator": "Canonical request validation in GitHub Actions Read request step: success"
     },
@@ -376,10 +383,17 @@
       },
       "artifacts": [],
       "log": {
-        "path": "logs/02-review-resolve.log",
-        "bytes": 70115,
+        "source": "GitHub Actions job log",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43629467025/job/132552649884",
         "sha256": "1616c417395494a2d58d207fa1ffa824a95a257623d32e51f27f5d0ef9e5089e",
-        "blob": "93edc293a00099aba7664892bd7572d2b2a77872"
+        "bytes": 70115,
+        "retained_in_current_tree": false,
+        "historical_copy": {
+          "commit": "3097481a0baa534220555cfbb18d0506383b9bd9",
+          "path": "logs/02-review-resolve.log",
+          "blob": "93edc293a00099aba7664892bd7572d2b2a77872"
+        },
+        "removal_reason": "agent-scratch path rule; raw tool output removed, not renamed or exempted"
       },
       "validator": "Canonical request validation in GitHub Actions Read request step: success",
       "limit": "Positive compatibility of review resolve and subsequent reuse. Does not independently compare the resolve receipt with C08 or claim resolve replay."
@@ -509,7 +523,100 @@
       "warnings": 14,
       "errors": 0
     },
-    "final_gate": "Existing Astra WP08 checks will execute on the evidence delivery HEAD. Its exact HEAD/tree/run/job/artifact, diagnostic comparison and guards result are published in PR41 after this commit to avoid recursive evidence commits. No baseline gate is attributed to W."
+    "final_gate": "Existing Astra WP08 checks will execute on the evidence delivery HEAD. Its exact HEAD/tree/run/job/artifact, diagnostic comparison and guards result are published in PR41 after this commit to avoid recursive evidence commits. No baseline gate is attributed to W.",
+    "attempts": [
+      {
+        "schema": "sf2h.collaboration.recipient-receipt.static-attempt.v1",
+        "head": "3097481a0baa534220555cfbb18d0506383b9bd9",
+        "tree": "4d6ecf07dfe7cb24d778386b4713e1b21d39d080",
+        "run_id": 43629952588,
+        "job_id": 132554121997,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43629952588",
+        "conclusion": "failure",
+        "typecheck": {
+          "conclusion": "failure",
+          "total": 73,
+          "inherited": 69,
+          "inherited_exact_diagnostic_equality": true,
+          "new": 4,
+          "own_diagnostics": [
+            {
+              "file": "test/product/wp08/recipient-receipt-recovery.test.ts",
+              "line": 25,
+              "column": 81,
+              "code": "TS2769",
+              "message": "No overload matches this call."
+            },
+            {
+              "file": "test/product/wp08/recipient-receipt.test.ts",
+              "line": 23,
+              "column": 29,
+              "code": "TS2769",
+              "message": "No overload matches this call."
+            },
+            {
+              "file": "test/product/wp08/recipient-receipt.test.ts",
+              "line": 30,
+              "column": 83,
+              "code": "TS2769",
+              "message": "No overload matches this call."
+            },
+            {
+              "file": "test/product/wp08/reissue.test.ts",
+              "line": 85,
+              "column": 59,
+              "code": "TS2741",
+              "message": "Property 'persistence' is missing in type '{ requestFor: (binding: TrustedDomainContext) => Request | undefined; revalidate: (binding: TrustedDomainContext) => Promise<...>; }' but required in type 'Pick<DomainPortHost, \"persistence\" | \"requestFor\" | \"revalidate\">'."
+            }
+          ]
+        },
+        "guards": {
+          "conclusion": "failure",
+          "rules": 78,
+          "changed_paths": 933,
+          "gates": 2,
+          "warnings": 14,
+          "errors": 0,
+          "findings": [
+            {
+              "rule": "agent-scratch",
+              "path": "logs/01-recipient-receipt.log"
+            },
+            {
+              "rule": "agent-scratch",
+              "path": "logs/02-review-resolve.log"
+            }
+          ]
+        },
+        "artifact": {
+          "id": 14127239841,
+          "name": "astra-wp08-check-3097481a0baa534220555cfbb18d0506383b9bd9-1",
+          "sha256": "8dbd5a44f21b1bb613075cce89cb1546a6ee0d09e75d5bf759f6ff5ec83c9a40"
+        },
+        "log": {
+          "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43629952588/job/132554121997",
+          "bytes": 99701,
+          "sha256": "774919ca67995487e77b32f5173ec5b379894b1484045f0b3e68c495f957f7df",
+          "retained_in_repository": false
+        },
+        "correction": {
+          "product_changed": false,
+          "tests": [
+            "Reverse three symmetric structural equality comparisons to respect unknown/readonly overloads; keep full equality assertions.",
+            "Pass the existing real SQLite store to the reissue fixture host, matching its C08 and mutationFence."
+          ],
+          "documentation": [
+            "Remove both raw log files from the current tree instead of renaming or exempting them.",
+            "Preserve exact hashes, outcome records and GitHub job links; the original failed HEAD remains in history."
+          ],
+          "guard_rules_changed": false,
+          "ignores_added": false,
+          "approvals_added": false,
+          "followup_selection": "ci-request.03.json",
+          "followup_status": "PENDING_HOSTED_VALIDATION"
+        }
+      }
+    ]
   },
   "consumer": {
     "owners": [
@@ -575,5 +682,12 @@
     "new_cases": 13,
     "existing_regressions": 8,
     "product_compiled_by_hosted_bun": true
+  },
+  "correction": {
+    "status": "TEST_TYPING_AND_FIXTURE_PENDING_SCOPED_HOSTED_RUN",
+    "product_byte_identical_to_W": "9dd3c830810d4f3e56f0e3474f5a633978c91831",
+    "request": "ci-request.03.json",
+    "assertions_preserved": true,
+    "existing_deadlines_unchanged": true
   }
 }

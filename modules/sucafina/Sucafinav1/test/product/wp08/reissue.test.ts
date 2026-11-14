@@ -82,7 +82,7 @@ test("reissue checks actor access and the live physical incarnation", async () =
     const mutation = { expectedStorageVersion: 1, idempotencyKey: "reply" }
     const admitted = await human.admit(new Request("https://example.test/action", { method: "POST", headers: { origin: "https://example.test" } }), "collaboration.thread.reply", { id: "thread", body: "Because", mutation })
     if (admitted.status !== "ok") throw new Error("recipient admission failed")
-    const actions = createRecipientThreadActions({ state, host: { requestFor: (binding) => binding.kind === "ui" ? ui.requestFor(binding) : undefined, revalidate: async (binding) => binding.kind === "ui" && await ui.revalidate(binding) }, human, mutationFence: createCollaborationMutationFence({ persistence: store }), read: reader, creationTarget: { ref: "workspace", incarnation: "workspace-inc" }, createId: randomUUID, now: () => "2026-11-13T00:00:00Z" })
+    const actions = createRecipientThreadActions({ state, host: { persistence: store, requestFor: (binding) => binding.kind === "ui" ? ui.requestFor(binding) : undefined, revalidate: async (binding) => binding.kind === "ui" && await ui.revalidate(binding) }, human, mutationFence: createCollaborationMutationFence({ persistence: store }), read: reader, creationTarget: { ref: "workspace", incarnation: "workspace-inc" }, createId: randomUUID, now: () => "2026-11-13T00:00:00Z" })
     const replied = await actions.reply("thread", "Because", mutation, admitted.value)
     expect(replied).toMatchObject({ status: "ok", value: { messages: [{ body: "Why?" }, { body: "Because", authorRef: "B" }] } })
     if (replied.status === "ok") {
