@@ -1,0 +1,88 @@
+{
+  "schema": "wp10-builder-correction-v1",
+  "actor": "/root/performance_diagnosis",
+  "role": "builder-not-independent-reviewer",
+  "status": "CLOSED",
+  "baseCandidate": "09d942cc59af77197179f586fa727de5d62ac16b",
+  "baseTree": "17d8a440ed8bffc8e793ab9d4702ddeffc90bed7",
+  "nextCandidate": "root-pending-freeze-publication",
+  "authorization": "Root delegated narrow own Planner evidence consolidation after static diagnosis; no foreign edits or local product execution.",
+  "finding": "The owned BCS project composition resolved the same Planner source four times per evidence pass. The actual owned projector already owns a full first/last source envelope and two authenticated projection reads.",
+  "changes": [
+    "Keep createSfPlannerEvidence callable projection API and its existing body byte-identical; expose readEvidence which captures the ref and binding, executes that real projector and revalidates current authority before returning BusinessEvidenceResolution.",
+    "Compose the full reader into createSfAtlasBusiness through the owned business-services root. No capability payload or public schema selects this reader.",
+    "For the explicit full-reader path, BCS verifies fresh state, exact original/current ref digests, access revision, projection installation/project/principal/policy/access/surface/period and every value source ref, then revalidates current call authority. No source or projection authorization is cached.",
+    "Keep the existing project/port fallback first/last source resolutions and all equivalent projection guards for consumers without the explicit full reader.",
+    "Add two own regressions through real createSfBusinessServices/SQLite/Planner/UI authority/BCS: change persisted Planner data after the first source check, or change the current principal at that real projection boundary. Both must withhold authorized projection and the next read cannot reuse prior freshness."
+  ],
+  "preserved": [
+    "Two full source resolutions and two authenticated projection reads, including source identity/projection/field/period digests and before/after authority.",
+    "BCS evidence budget/ancestry and per-pass duplicate handling; no cross-call result or authority cache.",
+    "Current versus admitted human selection checks, request/input capture digests, proposal checks and native lease duration unchanged.",
+    "C08 transaction/idempotency/source fence behavior unchanged.",
+    "Fallback arbitrary project/port guard behavior unchanged; no inference that project alone is a full source reader.",
+    "All foreign source files and archived inputs untouched by this builder."
+  ],
+  "staticChecks": [
+    "Ownership prefixes and operational exclusions read from context/pack.json, alongside handoff and AGENTS.",
+    "Changed projector body compared byte-for-byte to frozen W4; no existing guard statement removed.",
+    "Diff inspected for four source/test paths; before/after Git blob and SHA256 hashes recorded.",
+    "Diagnostic JSON parsed as data; no product module imported or executed."
+  ],
+  "sourceLevelReduction": {
+    "plannerSourceResolutionsPerSuccessfulBcsPass": {
+      "before": 4,
+      "after": 2
+    },
+    "projectionReadsPerSuccessfulBcsPass": {
+      "before": 2,
+      "after": 2
+    },
+    "interpretation": "Call-site count only, not a runtime counter, benchmark or guarantee that the 120000ms test deadline is now met."
+  },
+  "pendingProof": {
+    "status": "NOT_RUN_FOR_THIS_CHANGE",
+    "hostedSelection": [
+      "test/product/wp10/integration/planner-evidence.test.ts",
+      "test/product/wp10/atlas-business/business-context.test.ts",
+      "test/product/wp10/analysis-composition/alternative-selection.test.ts"
+    ],
+    "required": "Root publishes/freezes W5, applies affected consumer/source guards and obtains three independent reviews plus hosted results on exact product/snapshot SHAs.",
+    "limits": "No local tests/typecheck/build/product import, no remote mutation, no timing or native/global acceptance claim. W4 hosted run was still in progress when diagnosis began; no W4 outcome is inferred from old W7 timeout."
+  },
+  "diagnosis": "analysis/performance-diagnosis-W4.json",
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/planner-evidence.ts",
+      "beforeSha256": "9d3d6efde955732cbe76022df830576023cfece1a26b68c2eac6c1db3b1a58a3",
+      "afterSha256": "c92b50d58f15b85897b778b9b57736cafb8fdb8fdcce41b6ec6246306b01ccfc",
+      "beforeBlob": "b0117d1883f7bbc3f2b5e40600d6ce0753622676",
+      "afterBlob": "13153182e357b716a12d2554654905d54fa30ee4",
+      "bytes": 5684
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "beforeSha256": "7bb3e1bffcf353bc570c3d5656ac9984c5db18de570052ff1356cb9d89222cea",
+      "afterSha256": "968b57ff8ecf5cbe5f7dc8070ac26501f35e16094f43f1637febc9dd502fce0e",
+      "beforeBlob": "9f0216f2d58b973dcfa5665753bc3c3b8855d4d6",
+      "afterBlob": "2abaecde296cb9fe18e01ee556c70c240992f63f",
+      "bytes": 50465
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "beforeSha256": "ff75a1dd28693c54b7ddd446406b77a8c8aa72bcb85d1c3d3f8769b6e722b8bc",
+      "afterSha256": "8fd24e545a83c327ecb3b30e6433c83fb0b2ee30e4ee3d0bac98cea3ece4969c",
+      "beforeBlob": "e48a4441fc26b948ee34c5cc052b0293e0611a30",
+      "afterBlob": "089fc34f37b6e281e25d0061f992174a700688bb",
+      "bytes": 25482
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-evidence.test.ts",
+      "beforeSha256": "a4f27aa6f913783764c8fa4b7312f5b2130f88d393c4f53d180864d4251da335",
+      "afterSha256": "bbcca886cd57980e15a3152c074f7d76d1f58cd06fa6f0426231386db3393d5e",
+      "beforeBlob": "ff3d72656e2642b37c5c4826a97514703d56f620",
+      "afterBlob": "4092804b5ba52baea87bf58b1c252c6ce5917f30",
+      "bytes": 10222
+    }
+  ]
+}

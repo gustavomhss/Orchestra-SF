@@ -1,0 +1,54 @@
+{
+  "schema": "sf2.wp10.builder-corrections.v1",
+  "actor": "/root",
+  "role": "builder-not-independent-reviewer",
+  "status": "CLOSED",
+  "baseProductSha": "09d942cc59af77197179f586fa727de5d62ac16b",
+  "nextProductSha": "pending W5 publication",
+  "changes": [
+    {
+      "finding": "WP10 C08 additive migration consumed by WP00",
+      "sourceEvidence": "Historical W7 run43548294775/job132304626874 plus unchanged W4 state-provider. Five additive fields were absent after authorized write; canonical C08 lists six including biArtifacts.",
+      "correction": "Initialize all contracted additive maps; validate nonmissing map types; normalize missing maps in detached read view and persist only with successful authorized write. Namespace CAS, command receipts, exact retry and immutable provider metadata remain in place.",
+      "proof": "Existing exact WP00 contract-consumers migration/retry test scheduled; own read-no-write and malformed-map non-disclosure/non-write regressions added."
+    },
+    {
+      "finding": "R1-HARNESS-01",
+      "correction": "Initial decision-control fixture response and meta declare UTF-8; browser asserts HTTP200, UTF-8 and exact link href before click. Production HTML unchanged.",
+      "qualification": "Missing charset is concrete; causation of old locator timeout remains plausible until hosted observation."
+    },
+    {
+      "finding": "R1-HARNESS-02",
+      "correction": "Assert upstream rejection of partial monthly period; separately require a legitimately fresh multi-month source and verify no navigation link. No fabricated fresh reference or relaxed producer."
+    }
+  ],
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "beforeBlob": "0a44053b36e80061bfe59d92578ae90c88f898d8",
+      "afterBlob": "46ab67ccbae91006b2ce9655206c49d21907489e",
+      "afterSha256": "1bfeab4e6dbf952c537ca053cfb6082d7d30de606ae5d8da729e0e4d88fd4f40"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "beforeBlob": "be81b3b992ebeebc30626dde3433afa379c5f0a9",
+      "afterBlob": "7492c5a357fb082573d3712b87d98678aa52e345",
+      "afterSha256": "108c64c0bbee9516de6147cbf02435602ddd2a57083f71055d40788d795fa8f1"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/decision-controls.test.ts",
+      "beforeBlob": "ed999a9d2be4a842615df3c6f8c1dc544d197654",
+      "afterBlob": "6cb105904be027b393db439241e106ba1fff8307",
+      "afterSha256": "04ead547b0f77bc50b8d2562e2264ab5b27c4056f600a18c69ae0e99b629d434"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/source-destinations.test.ts",
+      "beforeBlob": "1491248605635035df2722fc453bb2ec5332337f",
+      "afterBlob": "bdc641ceb1d850c86cbd5c30488be3c1b16e1497",
+      "afterSha256": "28b140b46e21ea5ca5429bf88a62d9e087ac3a401a3dcef7a89906b8b879034c"
+    }
+  ],
+  "localProductExecution": false,
+  "independentAcceptance": false,
+  "hostedProof": "pending next exact snapshot"
+}

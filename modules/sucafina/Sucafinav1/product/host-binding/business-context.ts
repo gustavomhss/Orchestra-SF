@@ -10,6 +10,7 @@ import type { SfProductStatePort } from "../contracts/state.ts"
 import type { SfDomainValidation } from "../contracts/runtime.ts"
 import type { ScannerBinarySpec } from "@orchestra/atlas-boundary/native-memory"
 import type { DecisionCase } from "../contracts/decisions.ts"
+import type { DomainProjection } from "../contracts/context.ts"
 
 /** Bound repeated source reauthorization without caching an authorization across reads. */
 function evidenceWithinBudget(refs: readonly BusinessEvidenceRef[]) {
@@ -207,7 +208,9 @@ export function createSfAtlasBusiness(input: {
   procurementResolve: Parameters<typeof createSfProcurementSourceAccess>[0]["resolve"]
   procurementEvidence?: Pick<ReturnType<typeof import("../procurement/decision-host.ts").createProcurementDecisionHost>, "resolveEvidence" | "proveContinuity">
   documentRead: Parameters<typeof createSfDocumentSourceAccess>[0]["read"]
-  planner?: { sources: PlannerSourceHost; port: PlannerPort; project?: (ref: Extract<BusinessEvidenceRef, { kind: "record" }>, call: TrustedDomainContext) => Promise<import("../contracts/ports.ts").PortResult<import("../contracts/context.ts").DomainProjection>> }
+  planner?: { sources: PlannerSourceHost; port: PlannerPort; project?: (ref: Extract<BusinessEvidenceRef, { kind: "record" }>, call: TrustedDomainContext) => Promise<import("../contracts/ports.ts").PortResult<DomainProjection>>;
+    /** Host-owned reader with current source and projection checks; an arbitrary project callback does not qualify. */
+    readEvidence?: (ref: Extract<BusinessEvidenceRef, { kind: "record" }>, call: TrustedDomainContext) => Promise<BusinessEvidenceResolution> }
   calculation?: (ref: BusinessEvidenceRef, call: TrustedDomainContext) => Promise<BusinessEvidenceResolution>
   caseForEvidence: (digest: string, call: TrustedDomainContext) => Promise<readonly { id: string; incarnation: string }[] | { id: string; incarnation: string } | undefined>
   selections: Pick<Parameters<typeof createSfEvidenceCapabilities>[0], "contextSelections" | "recallSelections" | "featuresForCase" | "runtimeVersions">
@@ -231,12 +234,19 @@ export function createSfAtlasBusiness(input: {
   const planner = async (ref: BusinessEvidenceRef, call: TrustedDomainContext): Promise<BusinessEvidenceResolution> => {
     const unavailable = (): BusinessEvidenceResolution => ({ state: "unavailable", ref, accessRevision: call.binding.accessRevision, checkedAt: input.now() })
     if (!input.planner || ref.kind !== "record" || ref.target.surface !== "planner" || ref.target.recordType !== "planner-version" || !ref.target.period || !await input.host.revalidate(call)) return unavailable()
+    if (input.planner.readEvidence) {
+      const result = await input.planner.readEvidence(ref, call)
+      const projection = result.authorizedProjection
+      if (result.state !== "fresh" || !result.currentRef || digestSfValue(result.ref) !== digestSfValue(ref) || digestSfValue(result.currentRef) !== digestSfValue(ref) ||
+        result.accessRevision !== call.binding.accessRevision || !projection || !("values" in projection) || !plannerProjectionMatches(projection, ref, call) || !await input.host.revalidate(call)) return unavailable()
+      return result
+    }
     const first = await input.planner.sources.resolveForecastSource(ref.refId, call)
     if (first.status !== "ok" || digestSfValue(first.value.evidence) !== digestSfValue(ref)) return unavailable()
     const direct = input.planner.project ? await input.planner.project(ref, call) : undefined
     const compared = direct ? undefined : await input.planner.port.compareForecast({ baseRef: ref.refId, candidateRef: ref.refId, period: ref.target.period, currency: "USD" }, call)
     const projection = direct?.status === "ok" ? direct.value : compared?.status === "ok" ? compared.value.baseline : undefined
-    if (!projection || projection.context.installationId !== call.binding.installationId || projection.context.projectId !== call.binding.projectId || projection.context.principalRef !== call.binding.principalRef || projection.context.accessRevision !== call.binding.accessRevision || projection.context.policyVersion !== call.binding.policyVersion || projection.context.surface !== "planner" || digestSfValue(projection.context.period) !== digestSfValue(ref.target.period) || projection.values.some((value) => value.sourceRefs.length !== 1 || digestSfValue(value.sourceRefs[0]) !== digestSfValue(ref)) || !await input.host.revalidate(call)) return unavailable()
+    if (!projection || !plannerProjectionMatches(projection, ref, call) || !await input.host.revalidate(call)) return unavailable()
     const again = await input.planner.sources.resolveForecastSource(ref.refId, call)
     if (again.status !== "ok" || digestSfValue(again.value.evidence) !== digestSfValue(ref) || !await input.host.revalidate(call)) return unavailable()
     return { state: "fresh", ref, currentRef: again.value.evidence, authorizedProjection: projection, accessRevision: call.binding.accessRevision, checkedAt: input.now() }
@@ -291,4 +301,12 @@ export function createSfAtlasBusiness(input: {
   const memory = createSfAtlasMemory({ state: input.state, cases: input.cases, authorizeCase: input.authorizeCase, host: input.host, evidence: context, proveContinuity: router.proveContinuity, scanner: createSfAtlasScanner({ scanners: input.scanner ? [input.scanner.spec] : [] }), scannerVersion: input.scanner?.version ?? "", now: input.now })
   const capabilities = createSfEvidenceCapabilities({ ...input.selections, context, memory, proveContinuity: router.proveContinuity, revalidate: input.host.revalidate, createReceipt: input.authority.receiptFor })
   return { context, memory, capabilities, proveContinuity: router.proveContinuity }
+}
+
+function plannerProjectionMatches(projection: DomainProjection, ref: Extract<BusinessEvidenceRef, { kind: "record" }>, call: TrustedDomainContext) {
+  return projection.context.installationId === call.binding.installationId && projection.context.projectId === call.binding.projectId &&
+    projection.context.principalRef === call.binding.principalRef && projection.context.accessRevision === call.binding.accessRevision &&
+    projection.context.policyVersion === call.binding.policyVersion && projection.context.surface === "planner" &&
+    digestSfValue(projection.context.period) === digestSfValue(ref.target.period) && projection.values.every((value) =>
+      value.sourceRefs.length === 1 && digestSfValue(value.sourceRefs[0]) === digestSfValue(ref))
 }

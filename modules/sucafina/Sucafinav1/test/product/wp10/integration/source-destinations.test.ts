@@ -48,18 +48,18 @@ test("authorized monthly source links open the real page with the exact primary 
   } finally { authority.ui.finish(call); await fixture.dispose() }
 })
 
-test("monthly source navigation refuses partial and multi-month periods instead of changing the selection", async () => {
+test("monthly source issuance rejects partial spans and navigation refuses a fresh multi-month period", async () => {
   const fixture = await financialCompositionFixture(), call = await fixture.read()
   try {
     await fixture.persistence.transaction("dashboard", async (snapshot) => { snapshot.data.opsTickets = []; return { commit: true, value: undefined } })
     const issue = createDashboardSourceIssuer({ host: fixture.business.host, scopedSources: fixture.persistence })
-    for (const period of [{ start: "2027-02-01", end: "2027-02-10" }, { start: "2027-02-01", end: "2027-03-31" }]) {
-      const issued = await issue({ page: "IT Operations", fields: ["opsTickets"], period }, call)
-      expect(issued.status).toBe("ok")
-      if (issued.status !== "ok") throw new Error(issued.reason)
-      expect((await fixture.business.context.resolve(issued.value.evidence, call)).state).toBe("fresh")
-      expect(await sfExtendedSourceLinks({ business: fixture.business, reference: issued.value.evidence, call,
-        url: new URL("https://example.test/sucafina/dashboard?sf=review-source") })).toEqual([])
-    }
+    const partial = await issue({ page: "IT Operations", fields: ["opsTickets"], period: { start: "2027-02-01", end: "2027-02-10" } }, call)
+    expect(partial).toEqual({ status: "denied", reason: "source-unavailable" })
+    const issued = await issue({ page: "IT Operations", fields: ["opsTickets"], period: { start: "2027-02-01", end: "2027-03-31" } }, call)
+    expect(issued.status).toBe("ok")
+    if (issued.status !== "ok") throw new Error(issued.reason)
+    expect((await fixture.business.context.resolve(issued.value.evidence, call)).state).toBe("fresh")
+    expect(await sfExtendedSourceLinks({ business: fixture.business, reference: issued.value.evidence, call,
+      url: new URL("https://example.test/sucafina/dashboard?sf=review-source") })).toEqual([])
   } finally { fixture.authority.ui.finish(call); await fixture.dispose() }
 })

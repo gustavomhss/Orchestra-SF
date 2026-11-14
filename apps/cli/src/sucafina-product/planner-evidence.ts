@@ -1,5 +1,5 @@
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
-import type { BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
+import type { BusinessEvidenceRef, BusinessEvidenceResolution } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
 import type { DomainProjection } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
 import type { DomainPortHost, PlannerSourceHost, PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
@@ -9,7 +9,7 @@ import { object } from "../../../../modules/sucafina/Sucafinav1/runtime/contract
 
 /** Project the current source without asking coverage to authorize its own evidence recursively. */
 export function createSfPlannerEvidence(input: { host: DomainPortHost; sources: PlannerSourceHost }) {
-  return async (ref: Extract<BusinessEvidenceRef, { kind: "record" }>, call: TrustedDomainContext, selected?: { period: { start: string; end: string }; currency: "USD" }): Promise<PortResult<DomainProjection>> => {
+  const project = async (ref: Extract<BusinessEvidenceRef, { kind: "record" }>, call: TrustedDomainContext, selected?: { period: { start: string; end: string }; currency: "USD" }): Promise<PortResult<DomainProjection>> => {
     const request = input.host.requestFor(call)
     if (!request || ref.target.surface !== "planner" || ref.target.recordType !== "planner-version" || !ref.target.period || !await input.host.revalidate(call))
       return { status: "denied", reason: "planner-source-authority-unavailable" }
@@ -42,4 +42,16 @@ export function createSfPlannerEvidence(input: { host: DomainPortHost; sources: 
       request.signal.aborted || !await input.host.revalidate(call)) return { status: "stale", reason: "planner-source-changed" }
     return { status: "ok", value: result }
   }
+  // Only the host composition supplies this full reader. It retains the source and
+  // projection checks above so BCS does not repeat the same source envelope.
+  const readEvidence = async (ref: Extract<BusinessEvidenceRef, { kind: "record" }>, call: TrustedDomainContext): Promise<BusinessEvidenceResolution> => {
+    const captured = structuredClone(ref)
+    const binding = digestSfValue([call.kind, call.binding])
+    const unavailable = (): BusinessEvidenceResolution => ({ state: "unavailable", ref: captured, accessRevision: call.binding.accessRevision, checkedAt: new Date().toISOString() })
+    const projection = await project(captured, call)
+    if (projection.status !== "ok" || digestSfValue(ref) !== digestSfValue(captured) || binding !== digestSfValue([call.kind, call.binding]) || !await input.host.revalidate(call)) return unavailable()
+    return { state: "fresh", ref: captured, currentRef: captured, authorizedProjection: projection.value,
+      accessRevision: call.binding.accessRevision, checkedAt: new Date().toISOString() }
+  }
+  return Object.assign(project, { readEvidence })
 }

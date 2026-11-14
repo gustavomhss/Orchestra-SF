@@ -1,0 +1,96 @@
+{
+  "schema": "wp10-published-direct-copy-intake-v1",
+  "status": "CLOSED",
+  "sourceCommit": "c9f1fee77c26b01a6ddff6b238a5914c4e4bb319",
+  "baseCommit": "9eaf1e8d804501b819ff5cd6ddcefc28ce95eae1",
+  "candidatePublication": "pending W5 publication",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/local-store.test.ts",
+      "sourceCommit": "c9f1fee77c26b01a6ddff6b238a5914c4e4bb319",
+      "sourceBlobSha": "39fe4f8926e1a78de49015f334192be7806e1428",
+      "sha256": "e6704dfb7eb1e41a939420c785cf814315b17bffb3571786012d13aebd2e4309",
+      "kind": "exact-published-consumption",
+      "before": {
+        "blobSha": "2d6562176cf2b106945c4478f2f5422f0b454d80",
+        "sha256": "bc33c9046585e1398a9a85bb73d61e58cfe84a622ed7419de361123b4d8ddc7a"
+      },
+      "exactPublished": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "sourceCommit": "c9f1fee77c26b01a6ddff6b238a5914c4e4bb319",
+      "sourceBlobSha": "b753e3ffbfcdc06de373388845c686afac26dec8",
+      "sha256": "e82f739cb1845c0c7fdd90d50a5de0a62d6c3f79d4c981289b63880e7a8e5460",
+      "kind": "WP10-owned-exact-published-copy",
+      "before": {
+        "blobSha": "b614dee55399f5830c91c8cf07a6a2f29c491abd",
+        "sha256": "747a369204009b512447b71fff9cb899038d4451bd727826280583ee23acbd80"
+      },
+      "exactPublished": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/native/fixture.ts",
+      "sourceCommit": "c9f1fee77c26b01a6ddff6b238a5914c4e4bb319",
+      "sourceBlobSha": "9f647d64cf621733c68c844fec202d9244ee1c39",
+      "sha256": "7acc20900c2b191f6d4eb80022682f3cef6a8837f62723202cafbcb5776b8451",
+      "kind": "exact-published-consumption",
+      "before": {
+        "blobSha": "b914e7cedaa4bb500070bce7b46f25ee1f6986d4",
+        "sha256": "c07a7b5efa4bd9c12726518051800a78f5cab8114c1f1e2e417820a0ad611e77"
+      },
+      "exactPublished": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/native/import-analysis.test.ts",
+      "sourceCommit": "c9f1fee77c26b01a6ddff6b238a5914c4e4bb319",
+      "sourceBlobSha": "4087659570356188c546b59ba112dfd33a2a189c",
+      "sha256": "a127f1bf6e3754794c123e63fc3e18a41c2f207b9543a5fccf3e02d529c40113",
+      "kind": "exact-published-consumption",
+      "before": {
+        "blobSha": "2504ad32f11df09c409825b7d2e918166f5c6b15",
+        "sha256": "3c91eed3d4ba9321471970f61bf8f9b12680a15cb9a41ee04f85eec2ec990a3e"
+      },
+      "exactPublished": true
+    }
+  ],
+  "foreignPins": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/local-store.test.ts",
+      "sourceCommit": "c9f1fee77c26b01a6ddff6b238a5914c4e4bb319",
+      "blobSha": "39fe4f8926e1a78de49015f334192be7806e1428",
+      "sha256": "e6704dfb7eb1e41a939420c785cf814315b17bffb3571786012d13aebd2e4309",
+      "publisher": "astra-wp06"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/native/fixture.ts",
+      "sourceCommit": "c9f1fee77c26b01a6ddff6b238a5914c4e4bb319",
+      "blobSha": "9f647d64cf621733c68c844fec202d9244ee1c39",
+      "sha256": "7acc20900c2b191f6d4eb80022682f3cef6a8837f62723202cafbcb5776b8451",
+      "publisher": "astra-wp06"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/native/import-analysis.test.ts",
+      "sourceCommit": "c9f1fee77c26b01a6ddff6b238a5914c4e4bb319",
+      "blobSha": "4087659570356188c546b59ba112dfd33a2a189c",
+      "sha256": "a127f1bf6e3754794c123e63fc3e18a41c2f207b9543a5fccf3e02d529c40113",
+      "publisher": "astra-wp06"
+    }
+  ],
+  "qualification": "Exact published consumption. No local product execution or runtime performance claim. W4 evidence does not validate this delta.",
+  "preserved": [
+    "Validation and codec semantics for finite numbers including -0, undefined/null, own plain-object descriptors, symbols/accessors/cycles refusal, sparse-array densification and alias isolation.",
+    "Locking, transaction commit/rollback and cancellation semantics unchanged.",
+    "Foreign test bytes copied exactly; native import owner split the parity and analysis journeys and supplied explicit cooperative/test deadlines. This is not native model/global acceptance."
+  ],
+  "notConsumed": [
+    "WP06 imports/source-fences optional guard dependent on an unconsumed source reader.",
+    "WP14 source-access-atlas expanded foreign test not required by this narrow intake."
+  ],
+  "requiredHostedSelection": [
+    "test/local-store.test.ts",
+    "test/product/wp06/native/documents.test.ts",
+    "test/product/wp06/native/import-analysis.test.ts",
+    "Affected WP10 C08/authority/source/AlternativeDraft tests"
+  ]
+}
