@@ -1,0 +1,32 @@
+{
+  "schema": "wp11-independent-static-review-v1",
+  "reviewer": "producer_seams",
+  "status": "NO_STATIC_BLOCKER_FOUND_HOSTED_TESTS_PENDING",
+  "proposal": {
+    "path": "requirements/criterion-revision-proposal/manifest.json",
+    "sha256": "ccbb5a109d70b5255fb49d2f0c6fb8a15313dd80ed9edb0dfee46999799e2942"
+  },
+  "baseProductSha": "26bb96b22fbfe610eef1714036dbaa068ec7c371",
+  "path": "modules/sucafina/Sucafinav1/test/product/wp11/criterion-rules.test.ts",
+  "reviewedBlob": "403bccda901a88d713b4b6a5cdbd9f0c17a31144",
+  "reviewedSha256": "c961e7692094255d60fbbf59472f34722ea7ea0fabe125aa3333677a350f5a40",
+  "runtimeSource": {
+    "path": "modules/sucafina/Sucafinav1/product/decisions/criterion-rules.ts",
+    "blob": "c357c6c66aac544394ab355306e1f6f7195395f7"
+  },
+  "findings": [
+    "The separate operation identity intent-revision bypasses only the old-operation receipt path legitimately and uses expectedRuleVersion1 against current version1. The canonical registry derives a new ruleRef/version2 and retains immutable history1/history2.",
+    "Metric callback remains100, unitUSD, confirmed; the canonical lte evaluator therefore moves from satisfied under threshold150 to failed under50. No alternate monetary formula or result is supplied.",
+    "Exact replay of revision2 resolves the same current rule and returns the original ruleRef/version. New stale operation with expectedVersion0 fails before transaction. Old intent receipt is retained but cannot replay as current after rule2, matching criterion-replay-unavailable.",
+    "Real state-provider/SQLite preferences reads compare both stored full history rules, current pointer, exactly two history keys and preserved original digests. The refusal checks do not overwrite either history entry or pointer.",
+    "Original authorization, snapshot-proof denial, same-operation changed-content conflict, conditioned metric, currency mismatch and final revocation assertions remain.",
+    "Const discriminated results firstRule/revised/currentRule are narrowed before property use and closure capture; no typecast or non-null assertion was introduced. criterionRuleKey is a real exported function."
+  ],
+  "boundaries": [
+    "Synthetic context/authorization and controlled metric100 are explicit pre-existing fixture boundaries; this is not canonical Planner money, native execution or a human confirmation journey.",
+    "The test creates no ChoiceRecord. It establishes rule history and new evaluation while original choice preservation remains another test boundary.",
+    "No new runtime behavior, contract, timeout or foreign source change. Static review only; no tests, typecheck, build or install executed."
+  ],
+  "repositoryEditsByReviewer": false,
+  "remoteMutations": false
+}

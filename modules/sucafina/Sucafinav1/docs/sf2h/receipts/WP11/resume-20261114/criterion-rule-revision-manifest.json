@@ -1,0 +1,48 @@
+{
+  "schema": "wp11-criterion-rule-revision-test-proposal-v1",
+  "status": "SCRATCH_CANDIDATE_NOT_APPLIED_NOT_EXECUTED",
+  "preparedAtUtc": "2026-11-14T13:03:04.815312+00:00",
+  "basePin": "26bb96b22fbfe610eef1714036dbaa068ec7c371",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/criterion-rules.test.ts",
+      "base": {
+        "blob": "ea9146c2bf47822f4a7fb47f540b0f66afa35615",
+        "sha256": "5be2d8a60460e3a4cecf097cedda01eac22f2b23d398d0754c51da17d479c8ba",
+        "bytes": 5452
+      },
+      "candidate": {
+        "blob": "403bccda901a88d713b4b6a5cdbd9f0c17a31144",
+        "sha256": "c961e7692094255d60fbbf59472f34722ea7ea0fabe125aa3333677a350f5a40",
+        "bytes": 8698
+      }
+    }
+  ],
+  "patch": {
+    "path": "requirements/criterion-revision-proposal/criterion-revision.patch",
+    "blob": "8e6776ed4a0d11153eb2e679a1bc94dfcdb9a15f",
+    "sha256": "9d8b2383963e1b429a0148164b585a20f5c9dbc6e46ef728861b74fcf414805a",
+    "bytes": 8333
+  },
+  "criterion": "WP11.T02.CMP.01",
+  "implementationFinding": "Runtime already accepts a new rule revision with distinct operation identity and expectedRuleVersion. It stores each full rule under an immutable history key and only updates the current pointer; no runtime change proposed.",
+  "runtimeSource": {
+    "path": "modules/sucafina/Sucafinav1/product/decisions/criterion-rules.ts",
+    "blob": "c357c6c66aac544394ab355306e1f6f7195395f7"
+  },
+  "sourceAssertions": [
+    "The existing version1 rule/150 threshold remains satisfied for the same metric100.",
+    "A separate operation accepts threshold50 with expectedRuleVersion1, returns a new ruleRef/version2 and has exact idempotent replay.",
+    "Canonical registry evaluate rereads current rule and the same controlled metric, producing failed with the new ruleRef; original evaluation object/digest is unchanged.",
+    "Real C08 preferences retain both full history records and the current pointer; old digest and first evaluation survive.",
+    "A new operation with obsolete expectedRuleVersion is stale; retry of superseded version1 is unavailable and cannot rewrite either history record or current pointer.",
+    "All earlier authorization, same-operation content conflict, conditioned metric, currency mismatch and revocation assertions remain."
+  ],
+  "boundaries": [
+    "Existing fixture uses a controlled metric callback returning100 and synthetic authority/context. It tests the canonical rule registry and real C08/SQLite, not a canonical Planner monetary calculation or installed human grant.",
+    "The separate operation identity is explicit test input; no confirmation is fabricated or attributed to a real person.",
+    "No ChoiceRecord is created here. B1B remains responsible for preserving a financial choice when a new choice is recorded.",
+    "No local test/typecheck/build/install, timeout change, source formula, product runtime or repository write."
+  ],
+  "relationToB1B": "The B1B files never register a second criterion rule; they re-evaluate a stable criterion after source/selection changes. This test specifically qualifies a changed rule definition."
+}
