@@ -1,0 +1,46 @@
+{
+  "number": 30,
+  "id": "routine-native-admission",
+  "state": "PREPARED_NOT_STARTED",
+  "session_id": null,
+  "model_effective": null,
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "actor": "S3 / WP09 native composition source-support",
+  "actor_pack": "execution/actors/S3.json",
+  "branch": "astra-wp09",
+  "pr": 30,
+  "expected_head": "1998acb0dcb59e68d41ee924eca4737bccbd5148",
+  "lease_epoch": "routine-native-browser30",
+  "authority": "Continue closed/blocked WP09 delivery only after reading terminal handoff and current-head reconciliation. No duplicate native session/supervisor. Single source writer for listed adapter files; session23 owns sf2-stack/shared composition.",
+  "write_paths": [
+    "apps/cli/src/sucafina-product/routine-services.ts",
+    "apps/cli/src/sucafina-product/routine-native-adapter.ts (new)",
+    "apps/cli/src/sucafina-product/routine-native-*.ts (new adapter support only)",
+    "modules/sucafina/Sucafinav1/test/product/routine-native-admission/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-admission/"
+  ],
+  "inputs": {
+    "composed": "9cc27888581a13b55992cdb5dfbd27e43479ac29",
+    "source": "1998acb0dcb59e68d41ee924eca4737bccbd5148",
+    "native_harness": "8a776484bb17ac0c83ae2eb56ddcfb2fad73aa35",
+    "source_paths": [
+      "apps/cli/src/sucafina-product/routine-services.ts",
+      "apps/cli/src/sucafina-product/host-context.ts",
+      "script/sf2h/native-acceptance/host-requirements.json"
+    ]
+  },
+  "observed_gap": "At composedSHA host-context calls createSfRoutineServices({authority,publication,resolveCase,prepareWatch,...routineInputs}) without native. Explicit code comment: governed native C07 admission remains unavailable so no routine descriptors advertised. Routine-services declares SfRoutineNativePort and returns unavailable without native. Missing adapter blocks AM06 and six Routines routes AM02. This is actual current source inspection, not just old receipt.",
+  "mission": "Implement production SfRoutineNativePort against existing governed Task/Relay/publication/plan/admission/run/terminal-artifact services. Preserve human review/approval, native admission, published recipe version/write scope/parameters, actual owner/case/source provenance and result return. Deliver a complete usable adapter and exact shared assembly patch to23, not catalog/mock/diagnostic-only report. Inspect actual engine APIs/dependencies before code; no invented native record/runID or external self-reported ledger.",
+  "acceptance": [
+    "Adapter covers resolvePlan/resolveRecipe/prepare/readAdmission/readRun/start/listRunRefs/readExecution/readArtifact with exact canonical provenance and authority, without second admission/run ledger. Catalogue doesn't execute. LLM.generateObject or Session.resume is not workflow admission.",
+    "Bind real current Request/principal/project/location/case/incarnation/source versions, exact published version/planRevision/writeScope/inputDigest. Reauthorize at native transaction/dispatch and result return; reject drift/revocation/old-generation; retries don't duplicateadmission/dispatch/effect. Native engine keeps its existing identity and semantics.",
+    "Real governed human review/approval/arm/dispatch boundaries remain enforced. Only advertise sixRoutinesdescriptors when native port truly available; absent resources keep explicitunavailable, nofakepositive.",
+    "Factualterminalresult/body/artifact/version/run belongs actualadmission and retained input. Return to originalcase with currentauthority, preservepartial/failure/cancel/replay, no modelclaim as receipt. Existing Schedule behavior only via its supported port, noenginechanges.",
+    "Surgical hosted proof for adapter where actual existing runtime testservices available, truthfulboundary for any testfixture. RealAMneeds authorizedinstalledhost and actualprovider; do not claim adapterunit/integrationtest satisfiesAM01–06. No Orchestra desktop/server restart forproof."
+  ],
+  "shared_seam": "host-context.ts, public host contracts, global descriptors/routers and engines are read-only. Produce complete minimal assembly patch with targetpreimages/postimages and dependencies under ownreceipts for23, including how existingnative services are passed in safely. No editing entire host fromoldsource. If public Protocol/HttpApi wouldchange instead seekexistingprivatecomposition; currentmissionnotauthorizepublicchange.",
+  "testing": "Actions only via existing authorized CI interface/dispatcher, surgical once atclosure aftermaterialchange, dedup/re-attach. No localtests/servers, no epic/fullsuite, no dependency/client installs or timeout/assertionweakening. Packagebun typecheck and guards perAGENTS; externalFAIL remainsFAIL.",
+  "handoff": "Commit coherent adapter+tests+sharedassemblypatch+manifest+criteria evidence samebranch/PR. Exactinputs/outputSHAs, methods/proofbindings/resourcesobserved and unavailable, testW/S/jobs/results, consumer23ACKrequest, native acceptance gaps. Read pinnedCOMMON,completeS3pack+appendices and applicableAGENTS. RemoteGitHubMCPonly,no gh/push/force/devmerge/deploy/Azure/credentials/messages/engineedit/restart/newcontroller. Fullscope preserved. NoGLOBAL_RELEASE."
+}
