@@ -1,0 +1,77 @@
+{
+  "schema": "sf2h.mission35.validation-requests.v1",
+  "mission": 35,
+  "state": "IN_PROGRESS",
+  "logicalSession": "/root",
+  "leaseEpoch": "atlas-restart-browser35",
+  "publication": {
+    "P": "0ea218715eda33efc7eaeb1f9139265777920b82",
+    "tree": "703802ccc1ac5df6bfd51729aeaba2b7c67b6ac9"
+  },
+  "test": {
+    "W": "bf0ae438bc19da6ac4ba248f202c2395f0d89544",
+    "tree": "8258adea46b276808c91a4c83f5f300461a87748",
+    "parent": "b19606b73f1ffc5a9e58702e939f1aa788dabfa1",
+    "S": "38bba07aedb1aabbad62e814ba2bd1342864ac63",
+    "snapshotTree": "5a6d6ca2b253844de09c9a5d1812cf9261cd03c8",
+    "branch": "ci-run-linux-astra-wp14-m35-bf0ae438-3f35ec91-01",
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "env": {}
+    },
+    "requestSha256": "3f35ec9118fcbebf663c87f9024c8dfcca1bad489eb7c029cb9ca1347a7dbfd9",
+    "runId": 43645127480,
+    "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43645127480",
+    "jobId": 132601067130,
+    "equalProductTestBlobs": true,
+    "composedDiffOnly": [
+      "modules/sucafina/Sucafinav1/test/product/wp14/atlas-restart-reader.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts"
+    ],
+    "snapshotDiffOnly": [
+      ".ci-run.json"
+    ],
+    "dedup": {
+      "inFlightWp14Before": 0,
+      "equivalentRecentRun": false,
+      "hostedQueueBefore": 0
+    }
+  },
+  "check": {
+    "productSha": "0ea218715eda33efc7eaeb1f9139265777920b82",
+    "snapshotSha": "177c7bb87b5c608ad96e4489cba6f78b809ddf7d",
+    "tree": "616d9b337df072f493c9d302c29e5fcaddfde969",
+    "additionalParent": "760cf0549a5432819f3a3d4a42f87fdbedfb1ece",
+    "additionalParentPurpose": "Fast-forward operational check history only; exact product tree plus canonical envelope. Product first parent and validator preserved.",
+    "branch": "astra-check-wp14",
+    "config": {
+      "productSha": "0ea218715eda33efc7eaeb1f9139265777920b82",
+      "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+    },
+    "workflowBlob": "2b0b36f3b9277a17cc22c3bab8144303d7c77830",
+    "runId": 43645173216,
+    "composedClosure": "NOT_RUN: pinned composed input does not contain astra-wp14-check workflow; no workflow edits or epic authorized. This check examines P, not W."
+  },
+  "staticValidation": {
+    "patchAppliesToExactComposedPreimages": true,
+    "method": "git apply --check on downloaded texts only; no product execution",
+    "c17PreservedByteForByte": true,
+    "review": "read-only auxiliary /root/atlas_review; no final independent acceptance"
+  },
+  "constraints": {
+    "nativeSessionWitness": false,
+    "AM05": "OPEN",
+    "localProductTests": 0,
+    "force": false,
+    "sourceRuntimeEdits": 0,
+    "sf2StackRefWrites": 0,
+    "desktopOrServerRestarts": 0
+  }
+}
