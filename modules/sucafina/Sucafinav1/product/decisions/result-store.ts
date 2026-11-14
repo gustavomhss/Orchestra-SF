@@ -15,6 +15,39 @@ type CaseRef = { id: string; incarnation: string; version: number }
 export type StoredDecisionResult = Result & { schema: "sf-decision-result-v1"; resultRef: string; caseRef: CaseRef; principalRef: string; accessRevision: string; policyVersion: string; requestDigest: string; resultDigest: string; sourceRefs: readonly BusinessEvidenceRef[]; createdAt: string }
 type Write = Result & { caseRef: CaseRef; requestDigest: string; sourceRefs: readonly BusinessEvidenceRef[]; idempotencyKey: string }
 
+type HistoricalScenarioReader = (request: { resultRef: string }, context: TrustedDomainContext) => Promise<PortResult<StoredDecisionResult>>
+type HistoricalScenarioBatch = (references: readonly string[], context: TrustedDomainContext) => Promise<PortResult<StoredDecisionResult>[]>
+// Function provenance only. No result, source observation or authorization survives a call.
+const historicalScenarioBatches = new WeakMap<HistoricalScenarioReader, HistoricalScenarioBatch>()
+
+/** Internal sibling reader for stored-scenarios. Only C08 read envelopes are grouped;
+ * per-result source checks remain independent, and the caller retains its complete
+ * case/projection/final-case observations. This is not an atomic domain-source read. */
+export async function readHistoricalScenarios(
+  store: Pick<ReturnType<typeof createSfDecisionResultStore>, "read"> & { readHistoricalScenario?: HistoricalScenarioReader },
+  incoming: readonly string[],
+  context: TrustedDomainContext,
+): Promise<PortResult<StoredDecisionResult>[]> {
+  const references = [...incoming]
+  if (!references.length) return []
+  const scalar = store.readHistoricalScenario
+  const batch = scalar && historicalScenarioBatches.get(scalar)
+  if (batch) {
+    const observed = await batch(references, context)
+    // A facade that replaces the scalar during an await cannot inherit a grant
+    // from the old reader. Never fall back after starting this observation.
+    if (store.readHistoricalScenario !== scalar) return references.map(() => ({ status: "denied", reason: "historical-reader-changed" }))
+    return observed
+  }
+  const observed: PortResult<StoredDecisionResult>[] = []
+  // Overriding scalar readers may add checks/interleavings. Forward every
+  // occurrence in the original order; even duplicates keep their callbacks.
+  for (const resultRef of references) observed.push(structuredClone(await (store.readHistoricalScenario
+    ? store.readHistoricalScenario({ resultRef }, context)
+    : store.read({ resultRef, kind: "scenario" }, context))))
+  return observed
+}
+
 export function createSfDecisionResultStore(input: {
   state: SfProductStatePort
   host: Pick<DomainPortHost, "requestFor" | "revalidate">
@@ -85,6 +118,88 @@ export function createSfDecisionResultStore(input: {
   const readForCalculation = (request: { resultRef: string }, context: TrustedDomainContext) => readResult({ resultRef: request.resultRef, kind: "scenario" }, context, false, true)
   const readHistoricalCalculation = (request: HistoricalCalculationRead, context: TrustedDomainContext) => readResult({ resultRef: request.reference.target.runId, kind: "scenario" }, context, true, true, request)
   const readHistoricalScenario = (request: { resultRef: string }, context: TrustedDomainContext) => readResult({ resultRef: request.resultRef, kind: "scenario" }, context, true)
+
+  const readHistoricalScenarioBatch: HistoricalScenarioBatch = async (incoming, context) => {
+    const references = [...incoming]
+    if (!references.length) return []
+    const host = input.host
+    const requestFor = host.requestFor
+    const revalidate = host.revalidate
+    const source = requestFor.call(host, context)
+    const binding = context.binding
+    const lease = context.lease
+    const authorityDigest = digestSfValue({ kind: context.kind, binding })
+    const requestFingerprint = () => {
+      const headers: [string, string][] = []
+      source?.headers.forEach((value, name) => headers.push([name, value]))
+      return digestSfValue({ method: source?.method, url: source?.url, headers: headers.sort(([left], [right]) => left.localeCompare(right)) })
+    }
+    const requestDigest = requestFingerprint()
+    const sameRequest = () => !!source && !source.signal.aborted && input.host === host && host.requestFor === requestFor && host.revalidate === revalidate && requestFor.call(host, context) === source && context.binding === binding && context.lease === lease && digestSfValue({ kind: context.kind, binding: context.binding }) === authorityDigest && requestFingerprint() === requestDigest
+    const failures: (PortResult<never> | undefined)[] = references.map(() => undefined)
+    const denied = (): PortResult<never> => ({ status: "denied", reason: "result-access-unavailable" })
+    const unavailable = (): PortResult<never> => ({ status: "unavailable", reason: "result-unavailable" })
+    const remaining = () => failures.some((failure) => failure === undefined)
+    const failRemaining = (failure: PortResult<never>) => references.map((_, index) => failures[index] ?? failure)
+    // Keep the singleton reader's admission callback for every occurrence.
+    for (const [index, reference] of references.entries()) {
+      if (!source || typeof reference !== "string" || !reference.trim() || !await input.host.revalidate(context).catch(() => false))
+        failures[index] = { status: "denied", reason: "invalid-authority" }
+    }
+    if (!source || !remaining()) return failRemaining(denied())
+    const observe = () => input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context)
+      ? references.map((reference, index) => {
+        if (failures[index]) return undefined
+        const stored = state.decisionResults?.[reference]
+        return stored ? { stored, current: state.cases[stored.caseRef.id] } : undefined
+      }) : undefined).catch(() => ({ status: "unavailable" as const, reason: "product-state-unavailable" }))
+    const first = await observe()
+    if (first.status !== "ok") return failRemaining({ status: first.status === "preview" ? "unavailable" : first.status, reason: "result-unavailable" })
+    const values = structuredClone(first.value)
+    for (const [index, reference] of references.entries()) {
+      if (failures[index]) continue
+      const value = values?.[index]
+      if (!value || value.stored.kind !== "scenario" || !validResult(value.stored) || value.stored.resultRef !== reference || value.stored.resultDigest !== digestSfValue(value.stored.result)) {
+        failures[index] = unavailable()
+        continue
+      }
+      if (!allowedCase(value.current, value.stored.caseRef, context, true) || !await authorizeCase(value.current!, context).catch(() => false) || !await verifySources(value.stored, value.stored.sourceRefs, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) failures[index] = denied()
+    }
+    if (!remaining()) return failRemaining(denied())
+    // This is a second C08 snapshot, after every initial per-result callback.
+    const again = await observe()
+    if (again.status !== "ok") return failRemaining(unavailable())
+    const latest = structuredClone(again.value)
+    for (const index of references.keys()) {
+      if (failures[index]) continue
+      const value = values?.[index]
+      const current = latest?.[index]
+      if (!value || !current || !allowedCase(current.current, value.stored.caseRef, context, true) || current.current?.version !== value.current?.version || digestSfValue(current.stored) !== digestSfValue(value.stored) || !await authorizeCase(current.current!, context).catch(() => false) || !await verifySources(current.stored, current.stored.sourceRefs, context).catch(() => false) || !await input.host.revalidate(context).catch(() => false)) {
+        failures[index] = denied()
+        continue
+      }
+      // Preserve the original pre-final authority callback for each result too.
+      if (source.signal.aborted || !await input.host.revalidate(context).catch(() => false)) failures[index] = denied()
+    }
+    if (!remaining()) return failRemaining(denied())
+    // Finish all external source/authority callbacks before the common final
+    // namespace fence. Each surviving item still compares its own entire case
+    // and stored result against the second observation.
+    const final = await observe()
+    if (final.status !== "ok") return failRemaining(unavailable())
+    const observed = structuredClone(final.value)
+    if (!sameRequest()) return failRemaining(denied())
+    return references.map((_, index): PortResult<StoredDecisionResult> => {
+      const failure = failures[index]
+      if (failure) return failure
+      const value = values?.[index]
+      const previous = latest?.[index]
+      const current = observed?.[index]
+      if (!value || !previous || !current || !allowedCase(current.current, value.stored.caseRef, context, true) || digestSfValue(current.current) !== digestSfValue(previous.current) || digestSfValue(current.stored) !== digestSfValue(previous.stored)) return denied()
+      return { status: "ok", value: structuredClone(current.stored) }
+    })
+  }
+  historicalScenarioBatches.set(readHistoricalScenario, readHistoricalScenarioBatch)
   const readByRequest = async (incoming: { caseRef: CaseRef; kind: keyof ResultMap; idempotencyKey: string; requestDigest: string }, context: TrustedDomainContext): Promise<PortResult<{ state: "found"; result: StoredDecisionResult } | { state: "not-found" }>> => {
     const request = structuredClone(incoming)
     const source = input.host.requestFor(context)

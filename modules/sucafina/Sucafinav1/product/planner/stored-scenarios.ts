@@ -1,6 +1,7 @@
 import { digestSfValue } from "../contracts/canonical.ts"
 import type { DecisionCasePort, PlannerPort, PortResult } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
+import { readHistoricalScenarios } from "../decisions/result-store.ts"
 import type { createSfDecisionResultStore, StoredDecisionResult } from "../decisions/result-store.ts"
 import { encodeCaseRef } from "../decisions/case-port.ts"
 import type { PlannerScenarioHost, ResolvedScenario } from "./scenario-comparison-port.ts"
@@ -16,7 +17,14 @@ export function createStoredPlannerScenarioHost(input: {
   planner: Pick<PlannerPort, "compareForecast">
   coverageRefFor: (caseRef: { id: string; incarnation: string; version: number }, alternative: { id: string; version: number }) => string
 }): PlannerScenarioHost {
-  const read = async (reference: string, context: TrustedDomainContext) => structuredClone(await (input.store.readHistoricalScenario ? input.store.readHistoricalScenario({ resultRef: reference }, context) : input.store.read({ resultRef: reference, kind: "scenario" }, context)))
+  const read = async (references: readonly string[], context: TrustedDomainContext) => {
+    const store = input.store
+    const observed = await readHistoricalScenarios(store, references, context)
+    // A changed facade may add admission checks. Refuse this phase instead of
+    // releasing observations made through the earlier store or replaying it.
+    if (input.store !== store) return references.map(() => ({ status: "denied" as const, reason: "historical-reader-changed" }))
+    return structuredClone(observed)
+  }
   const observeCase = async (stored: StoredScenario, observations: Map<string, CaseObservation>, context: TrustedDomainContext) => {
     // Historical producer versions may differ. They remain separate groups, not a refusal.
     const key = digestSfValue(stored.caseRef)
@@ -25,9 +33,9 @@ export function createStoredPlannerScenarioHost(input: {
   }
   const resolveMany = async (incoming: readonly string[], context: TrustedDomainContext): Promise<PortResult<ResolvedScenario>[]> => {
     const references = [...incoming]
-    const stored: Awaited<ReturnType<typeof read>>[] = []
-    // Authenticate each result before sharing a case observation. Even repeated refs are read.
-    for (const reference of references) stored.push(await read(reference, context))
+    // Group only this phase's C08 envelopes. Every occurrence still receives
+    // its own result/source checks, including repeated refs and scalar facades.
+    const stored = await read(references, context)
     const initialCases = new Map<string, CaseObservation>()
     const prepared: PortResult<PreparedScenario>[] = []
     for (const [index, entry] of stored.entries()) {
@@ -50,10 +58,14 @@ export function createStoredPlannerScenarioHost(input: {
       prepared.push({ status: "ok", value: { reference: references[index]!, stored: entry.value, caseDigest, value: structuredClone({ result: alternative.result, coverageRef, basis: bases[0]!, projection: projection.value.baseline, source: refs[0] }) } })
     }
     const checked: PortResult<PreparedScenario>[] = []
-    // Finish every per-result reread before the separate final case observation starts.
+    const rereadReferences = prepared.flatMap((entry) => entry.status === "ok" ? [entry.value.reference] : [])
+    // This is a new result observation after all projections. Finish every
+    // per-result reread before the separate final complete-case observation.
+    const reread = await read(rereadReferences, context)
+    let rereadIndex = 0
     for (const entry of prepared) {
       if (entry.status !== "ok") { checked.push(entry); continue }
-      const again = await read(entry.value.reference, context)
+      const again = reread[rereadIndex++]!
       if (again.status !== "ok") { checked.push(again); continue }
       checked.push(digestSfValue(again.value) === digestSfValue(entry.value.stored) ? entry : { status: "stale", reason: "scenario-changed" })
     }

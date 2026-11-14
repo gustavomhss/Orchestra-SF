@@ -1,0 +1,98 @@
+{
+  "schema": "finance-resume-performance-ci-v1",
+  "selection": "S4",
+  "purpose": "Discriminating expected-red C08 baseline before grouping",
+  "W": "189cb74252b3b6aa160038da4410b1c7cdcaa31b",
+  "Wtree": "32e6d1e03ac129505d3c0737d55a953fd50fcf87",
+  "S": "ff04e4ff973f3369fb71b0fe5c058f4b98249996",
+  "Stree": "cfabe4c40529efe4b1c09b6a1d467426fe7cfb4a",
+  "branch": "ci-run-linux-finance-performance-189cb742-67a68f3b-s4",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "packageSelector": "packages/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/review-fixes/finance-resume-performance/historical-batch.test.ts",
+      "--timeout",
+      "120000",
+      "-t",
+      "^historical scenario batches coalesce only C08 envelopes for real siblings$"
+    ],
+    "env": {}
+  },
+  "requestSha256": "67a68f3bfd1f4afac520736b1ef3c17733a9c2edd4e7e49edd4abff08bd34b7c",
+  "requestOnlyComparison": {
+    "repository_full_name": "gustavomhss/Orchestra-SF",
+    "base": "189cb74252b3b6aa160038da4410b1c7cdcaa31b",
+    "head": "ff04e4ff973f3369fb71b0fe5c058f4b98249996",
+    "status": "ahead",
+    "ahead_by": 1,
+    "behind_by": 0,
+    "total_commits": 1,
+    "too_large": null,
+    "base_commit": {
+      "sha": "189cb74252b3b6aa160038da4410b1c7cdcaa31b",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/189cb74252b3b6aa160038da4410b1c7cdcaa31b",
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/189cb74252b3b6aa160038da4410b1c7cdcaa31b"
+    },
+    "merge_base_commit": {
+      "sha": "189cb74252b3b6aa160038da4410b1c7cdcaa31b",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/189cb74252b3b6aa160038da4410b1c7cdcaa31b",
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/189cb74252b3b6aa160038da4410b1c7cdcaa31b"
+    },
+    "files": [
+      {
+        "filename": ".ci-run.json",
+        "status": "added",
+        "additions": 1,
+        "deletions": 0,
+        "changes": 1,
+        "previous_filename": null
+      }
+    ]
+  },
+  "runId": 43629852422,
+  "jobId": 132553814068,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43629852422",
+  "conclusion": "failure",
+  "pass": 0,
+  "fail": 1,
+  "assertions": 6,
+  "testDurationMs": 433.55,
+  "bunDurationMs": 574,
+  "phase": {
+    "phase": "historical-scenario-batch",
+    "duplicate": false,
+    "durationMs": 70.542824,
+    "counters": {
+      "casesNamespaceReads": 16,
+      "otherNamespaceReads": 0,
+      "fullCaseReads": 2,
+      "scalarHooks": 0
+    },
+    "statuses": [
+      "ok",
+      "ok"
+    ]
+  },
+  "log": {
+    "sha256": "a943de92739518d0cec1f4a32c6d4a882f4f350c6463a57509880f4f50e8a976",
+    "bytes": 69829
+  },
+  "omni": {
+    "nonce": "0ece5a02844096483d92ff3a01afd843",
+    "result": "not applicable"
+  },
+  "excerpts": [
+    "2026-11-14T19:03:59.1734654Z {\"phase\":\"historical-scenario-batch\",\"duplicate\":false,\"durationMs\":70.542824,\"counters\":{\"casesNamespaceReads\":16,\"otherNamespaceReads\":0,\"fullCaseReads\":2,\"scalarHooks\":0},\"statuses\":[\"ok\",\"ok\"]}",
+    "2026-11-14T19:03:59.1751876Z Expected: 10",
+    "2026-11-14T19:03:59.1752034Z Received: 16",
+    "2026-11-14T19:03:59.1763913Z (fail) historical scenario batches coalesce only C08 envelopes for real siblings [433.55ms]",
+    "2026-11-14T19:03:59.2741495Z omni positive control [0ece5a02844096483d92ff3a01afd843]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+    "2026-11-14T19:03:59.2742302Z  0 pass",
+    "2026-11-14T19:03:59.2742737Z  1 fail",
+    "2026-11-14T19:03:59.2742922Z  6 expect() calls",
+    "2026-11-14T19:03:59.2743385Z Ran 1 test across 1 file. [574.00ms]"
+  ]
+}
