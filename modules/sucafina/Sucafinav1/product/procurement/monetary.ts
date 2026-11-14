@@ -15,7 +15,9 @@ export function procurementMonetaryFacts(record: Record<string, unknown>, baseCu
   const selectedId = text(sourcing.selectedId)
   const selectedQuotes = selectedId ? rows(sourcing.quotes).filter((quote) => quote.id === selectedId) : []
   const selected = selectedQuotes.length === 1 ? selectedQuotes[0] : undefined
-  const order = lines.length > 0 || ["po_draft", "po_pending", "po_rejected", "po_approved", "po_issued"].includes(status)
+  // select_quote creates a future PO before the sourcing decision is submitted.
+  const sourcingStage = ["sourcing", "src_pending", "src_rejected"].includes(status)
+  const order = !sourcingStage && (lines.length > 0 || ["po_draft", "po_pending", "po_rejected", "po_approved", "po_issued"].includes(status))
   const quotation = !order && (!!selectedId || status === "src_pending" || sourcing.fxSnapshot != null || sourcing.approval != null || sourcing.approvalBaseCurrency != null)
   const lineTotal = lines.length && Array.isArray(po.lines) && lines.length === po.lines.length && lines.every((line) => typeof line.qty === "number" && typeof line.unitPrice === "number" && Number.isFinite(line.qty * line.unitPrice)) ? lines.reduce((sum, line) => sum + Number(line.qty) * Number(line.unitPrice), 0) : null
   const original = order
@@ -34,7 +36,7 @@ export function procurementMonetaryFacts(record: Record<string, unknown>, baseCu
   const rate = !currency || !/^[A-Z]{3}$/.test(baseCurrency) || frozen && submittedBase !== baseCurrency ? null : currency === baseCurrency ? 1 : frozen ? snapshot : live
   const validRate = typeof rate === "number" && Number.isFinite(rate) && rate > 0 ? rate : null
   const rates = { currency: baseCurrency, fxRates: rows(object(formSettings).fxRates).flatMap((rate) => typeof rate.code === "string" && typeof rate.rate === "number" ? [{ code: rate.code, rate: rate.rate }] : []) }
-  const baseAmount = known && original != null && validRate != null ? requestValue(record as RequestView, rates) : null
+  const baseAmount = known && original != null && validRate != null ? requestValue((sourcingStage ? { ...record, po: null } : record) as RequestView, rates) : null
   const submittedApproval = order ? object(po.approval) : quotation ? object(sourcing.approval) : object(record.prApproval)
   const submittedCurrencyInput = order ? text(po.approvalBaseCurrency) : quotation ? text(sourcing.approvalBaseCurrency) : text(record.prApprovalBaseCurrency)
   const submittedCurrency = /^[A-Z]{3}$/.test(submittedCurrencyInput) ? submittedCurrencyInput : ""
