@@ -57,6 +57,9 @@ test("dossier keeps the real WP04 ranking, submitted FX, technical exclusion, mi
         expect(result.value.draft.domainApplied).toBe(false)
         expect(result.value.draft.gaps).toContain("document-evidence-unavailable")
         expect(result.value.commercialSources.supplierRegister).toEqual({ status: "not-selected" })
+        expect(result.value.explanation.sourceDistinction).toBe("Condições negociadas vêm das propostas deste pedido. O cadastro do fornecedor não foi selecionado como evidência dessas condições.")
+        expect(result.value.explanation.proposals.map((proposal) => proposal.proposalRef)).toEqual(result.value.comparison?.proposals.map((proposal) => proposal.proposalRef) ?? [])
+        for (const explained of result.value.explanation.proposals) expect(explained.evidenceRefs).toEqual(result.value.comparison?.proposals.find((proposal) => proposal.proposalRef === explained.proposalRef)?.evidenceRefs)
         expect(result.value.commercialSources.proposalTerms).toMatchObject({ status: "available", sourceRef: { refId: ref }, offers: quotes.map((quote) => expect.objectContaining({ offerRef: quote.id, amount: quote.total, currency: quote.currency })) })
         if (scenario === "three") {
           expect(result.value.comparison?.proposals).toHaveLength(3)
@@ -64,16 +67,27 @@ test("dossier keeps the real WP04 ranking, submitted FX, technical exclusion, mi
           expect(result.value.comparison?.proposals.find((proposal) => proposal.proposalRef === "C")).toMatchObject({ eligible: false, score: null })
           expect(result.value.comparison?.proposals.find((proposal) => proposal.proposalRef === "B")?.convertedAmount).toBeCloseTo(30240, 6)
           expect(result.value.sourcing?.submittedFx).toContainEqual({ from: "EUR", rate: 1.08 })
+          expect(result.value.explanation.selection).toMatchObject({ state: "recorded", proposalRef: "B", message: expect.stringContaining("custo comparável USD 30.240") })
+          expect(result.value.explanation.selection.message).toContain("Justificativa registrada: Recorded human choice")
+          expect(result.value.explanation.proposals.find((proposal) => proposal.proposalRef === "C")?.text).toContain("não elegível segundo o domínio")
           expect(result.value.request.values).toContainEqual(expect.objectContaining({ id: "reason", value: "Recorded human choice" }))
         }
-        if (scenario === "one") expect(result.value.draft.gaps).toContain("comparison-needs-multiple-proposals")
+        if (scenario === "one") {
+          expect(result.value.draft.gaps).toContain("comparison-needs-multiple-proposals")
+          expect(result.value.explanation.selection.state).toBe("unavailable")
+        }
         if (scenario === "missing-score") expect(result.value.comparison?.ranking).toEqual([])
         if (scenario === "missing-fx") {
           expect(result.value.comparison?.ranking).toEqual([])
           expect(result.value.comparison?.proposals.find((proposal) => proposal.proposalRef === "B")?.convertedAmount).toBeNull()
+          expect(result.value.explanation.proposals.find((proposal) => proposal.proposalRef === "B")?.text).toContain("custo comparável indisponível")
         }
         if (scenario === "rejected") expect(result.value.sourcing?.stage).toBe("src_rejected")
-        if (scenario === "absent") expect(result.value.comparison).toBeNull()
+        if (scenario === "absent") {
+          expect(result.value.comparison).toBeNull()
+          expect(result.value.explanation.selection.state).toBe("unavailable")
+          expect(result.value.explanation.proposals).toEqual([])
+        }
         expect(await fixture.store.transaction("procurement", async (snapshot) => ({ commit: false, value: snapshot.data.store }))).toEqual(before)
         // The original selection becomes unusable after a material Request edit.
         await fixture.store.transaction("procurement", async (snapshot) => {

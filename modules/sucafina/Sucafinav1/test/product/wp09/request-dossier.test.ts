@@ -70,6 +70,7 @@ test.each(["txt", "docx", "pdf"] as const)("%s Request evidence reaches the real
     const pending = await prepareNow()
     expect(pending).toMatchObject({ status: "ok", value: { comparison: null, sourcing: { stage: "sourcing" }, complete: false, synthesisIncluded: false, documents: [{ state: "pending", evidence: { ref: candidate.value.ref, status: "extracted" } }], draft: { domainApplied: false, gaps: expect.arrayContaining(["document-needs-confirmation", "comparison-unavailable"]) } } })
     if (pending.status !== "ok") throw new Error(pending.reason)
+    expect(pending.value.nextSteps).toContainEqual({ kind: "confirm-document", evidenceRef: candidate.value.ref, message: "Abra o trecho extraído e confira o valor no documento; confirme-o na superfície documental antes de usá-lo como premissa." })
     expect(pending.value.draft.sourceRefs.some((ref) => ref.kind === "document")).toBe(false)
     expect(pending.value.draft.sourceRefs.some((ref) => ref.refId === requestRef)).toBe(true)
     // WP06 has no public reject command. This is an explicit producer-state fixture over an actual extraction,
@@ -90,6 +91,7 @@ test.each(["txt", "docx", "pdf"] as const)("%s Request evidence reaches the real
     if (rejected.status !== "ok") throw new Error(rejected.reason)
     expect(rejected.value.draft.sourceRefs.some((ref) => ref.kind === "document")).toBe(false)
     expect(rejected.value.documents[0]).not.toHaveProperty("evidence")
+    expect(rejected.value.nextSteps).toContainEqual({ kind: "review-rejected-document", evidenceRef: candidate.value.ref, message: "O candidato foi rejeitado. Confira o trecho na superfície documental; ele não participa das premissas do dossiê." })
     await setCandidateStatus("extracted")
     const confirmed = await fixture.documentRequest("document-confirm", candidate.value)
     expect(confirmed.status).toBe(200)
@@ -99,6 +101,7 @@ test.each(["txt", "docx", "pdf"] as const)("%s Request evidence reaches the real
     expect(dossier).toMatchObject({ status: "ok", value: { documents: [{ state: "confirmed", evidence: { id: candidate.value.id, fieldCandidate: "Price", value: 42, ref: { refId: candidate.value.ref.refId, target: { revision: candidate.value.ref.target.revision, segment: candidate.value.ref.target.segment } } } }], summary: { confirmedDocumentCount: 1, pendingDocumentCount: 0 }, complete: false } })
     if (dossier.status !== "ok") throw new Error(dossier.reason)
     expect(dossier.value.draft.sourceRefs.some((ref) => ref.kind === "document" && ref.refId === candidate.value.ref.refId)).toBe(true)
+    expect(dossier.value.nextSteps.some((step) => step.kind === "confirm-document")).toBe(false)
 
     // Changing only the file invalidates the old evidence even when the Request remains in sourcing.
     await fixture.store.transaction("procurement", async (snapshot) => {

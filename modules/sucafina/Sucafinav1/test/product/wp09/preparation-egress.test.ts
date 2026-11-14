@@ -44,6 +44,7 @@ test("review refuses a mixed source snapshot but accepts a new C06 evaluation ti
     revalidate: async () => true,
   } })
   expect(stable).toMatchObject({ status: "ok", value: { synthesisIncluded: false, topics: [{ review: "confirmed", sourceObservedAt: ["2026-12-20T00:00:00Z"] }], draft: { pendencies: [], coverage: { selectedTopics: 1, includedTopics: 1, unavailableTopics: 0, omittedTopics: 0, includedRecordCount: 2 } } } })
+  expect(stable).toMatchObject({ status: "ok", value: { topics: [{ lastUpdate: { state: "unknown", reason: "source-update-time-unavailable" } }], draft: { nextSteps: [] } } })
 })
 
 test("review coverage declares unavailable topics and unknown record counts without counting metrics", async () => {

@@ -48,6 +48,8 @@ test("routine review returns a real WP07 selection consumed by human preservatio
     expect(first).toMatchObject({ status: "ok", value: { preserved: false, synthesisIncluded: false, draft: { coverage: { selectedTopics: 2, includedTopics: 2, includedRecordCount: 2 } } } })
     if (first.status !== "ok") throw new Error(`first draft failed: ${first.reason}`)
     expect(first.value.reviewSelection.sectionRefs).toEqual(["forecast:baseline", "forecast:candidate"])
+    expect(first.value.draft.nextSteps).toMatchObject([{ kind: "confirm-scope", topicRef: "forecast:baseline" }, { kind: "confirm-scope", topicRef: "forecast:candidate" }])
+    expect(first.value.topics.every((topic) => topic.state === "available" && topic.lastUpdate.state === "unknown" && topic.lastUpdate.reason === "source-update-time-unavailable")).toBe(true)
     expect(await fixture.state.read(fixture.request(), "reviews", (state) => Object.keys(state.reviews))).toMatchObject({ status: "unavailable", reason: "product-state-uninitialized" })
     const preserved = await human.preserve(fixture.request("preserve-first"), first.value.reviewSelection)
     expect(preserved.status).toBe("ok")
