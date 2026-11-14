@@ -5,6 +5,7 @@ import { uploadAsset } from "../../../../runtime/assets.ts"
 import { digestSfContribution, digestSfValue } from "../../../../product/contracts/canonical.ts"
 import { decodeSfOperationOutput, decodeSfSkillInput } from "../../../../product/contracts/schema-admission.ts"
 import type { DocumentEvidence } from "../../../../product/contracts/decisions.ts"
+import type { EvidenceSearchResult } from "../../../../product/contracts/outputs.ts"
 import type { ContributionEnvelope } from "../../../../product/contracts/resident-ai.ts"
 import { createSfDocumentAnalysisInput, readSfDocumentAnalysisCandidate, sfDocumentAnalysisLimits } from "../../../../../../../apps/cli/src/sucafina-product/document-analysis.ts"
 import { createSfDocumentExtractionVerifier } from "../../../../../../../apps/cli/src/sucafina-product/analysis-verifier-documents.ts"
@@ -40,6 +41,13 @@ test.each(["txt", "docx", "pdf"] as const)("%s real Session skill and MCP share 
     if (uiReceipt.status !== "ok") throw new Error(uiReceipt.reason)
     expect(uiReceipt.result).toEqual(uiEvidence)
     expect(uiReceipt.receipt).toMatchObject({ kind: "ui", handlerExport: "extractDocumentEvidence", inputDigest: digestSfValue(payload) })
+    const finished = await fixture.ui("sf_document_extract", payload, async (call) => call)
+    const extractionHandler = fixture.documents.descriptors.find((descriptor) => descriptor.id === "sf_document_extract")
+    if (!extractionHandler) throw new Error("Extraction destination unavailable")
+    const ungranted = await extractionHandler.handler(payload, finished)
+    expect(ungranted).toMatchObject({ status: "denied", reason: "invalid-binding", receipt: { kind: "unbound", operation: "sf_document_extract" } })
+    expect(ungranted).not.toHaveProperty("result")
+    expect((await fixture.dispatch("sf_document_extract", payload, finished)).status).toBe("denied")
 
     const analysisSelection = { caseRef: fixture.caseRef, ...payload }
     const dependencies = { cases: fixture.business.cases, planner: fixture.business.planner, procurement: fixture.business.procurement,
@@ -94,9 +102,18 @@ test.each(["txt", "docx", "pdf"] as const)("%s real Session skill and MCP share 
       expect((await verifier.verify({ ...prepared.value, targetFieldSchema: { ...prepared.value.targetFieldSchema, version: `${prepared.value.targetFieldSchema.version}-changed` } }, requestInput, call)).status).not.toBe("ok")
       expect((await verifier.verify({ ...prepared.value, authorizedFileRef: "other-document" }, requestInput, call)).status).not.toBe("ok")
     })
-    const invalidSchema = { ...payload, fieldSchemaRef: "schema:missing:1" }
-    expect((await fixture.http("document", "document-extract", invalidSchema)).status).not.toBe(200)
-    for (const surface of ["native", "mcp"] as const) expect((await native.call(surface, "sf_document_extract", invalidSchema)).status).not.toBe("ok")
+    const absentSchema = { ...payload, fieldSchemaRef: `schema:schema_${"0".repeat(40)}:1` }
+    const unavailableUi = await fixture.http("document", "document-extract", absentSchema)
+    expect(unavailableUi.status).toBe(503)
+    expect(await unavailableUi.json()).toMatchObject({ status: "unavailable" })
+    const unavailableHandler = await fixture.ui("sf_document_extract", absentSchema, (call) => extractionHandler.handler(absentSchema, call))
+    expect(unavailableHandler).toMatchObject({ status: "unavailable", reason: "schema-unavailable" })
+    expect(unavailableHandler).not.toHaveProperty("result")
+    for (const surface of ["native", "mcp"] as const) {
+      const unavailable = await native.call(surface, "sf_document_extract", absentSchema)
+      expect(unavailable).toMatchObject({ status: "unavailable", reason: "schema-unavailable" })
+      expect(unavailable).not.toHaveProperty("result")
+    }
     const confirmed = await readNativeResponse<DocumentEvidence>(await fixture.http("document", "document-confirm", candidate))
     expect(confirmed.status).toBe("confirmed")
     await fixture.ui("sf_evidence_get", { evidenceRef: confirmed.ref }, async (call) => {
@@ -105,7 +122,7 @@ test.each(["txt", "docx", "pdf"] as const)("%s real Session skill and MCP share 
     })
     const searchRun = await fixture.bind("sf-revisar-condicoes-contratuais")
     const query = { query: "Price", documentRefs: [admitted.documentRef], limit: 5 }
-    const searched = await readNativeResponse<unknown>(await fixture.http("document", "document-search", query))
+    const searched = await readNativeResponse<EvidenceSearchResult>(await fixture.http("document", "document-search", query))
     const searchUi = await fixture.ui("sf_knowledge_search", query, (call) => fixture.dispatch("sf_knowledge_search", query, call))
     expect(searchUi.status).toBe("ok")
     if (searchUi.status !== "ok") throw new Error(searchUi.reason)
@@ -119,7 +136,7 @@ test.each(["txt", "docx", "pdf"] as const)("%s real Session skill and MCP share 
         handlerExport: "searchDocumentEvidence", inputDigest: digestSfValue(query), resultDigest: digestSfValue(searched) })
     }
     const unknownQuery = { ...query, documentRefs: ["unadmitted-document"] }
-    const unavailableSearch = await readNativeResponse<unknown>(await fixture.http("document", "document-search", unknownQuery))
+    const unavailableSearch = await readNativeResponse<EvidenceSearchResult>(await fixture.http("document", "document-search", unknownQuery))
     expect(unavailableSearch).toMatchObject({ matches: [] })
     expect(JSON.stringify(unavailableSearch)).not.toContain(admitted.documentRef)
     for (const surface of ["native", "mcp"] as const) {

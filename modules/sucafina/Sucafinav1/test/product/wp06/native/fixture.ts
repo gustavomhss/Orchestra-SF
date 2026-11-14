@@ -15,10 +15,11 @@ import { SessionExecution } from "@orchestra/core/session/execution"
 import { SessionExecutionLocal } from "@orchestra/core/session/execution/local"
 import { SessionStore } from "@orchestra/core/session/store"
 import { SessionEvent } from "@orchestra/core/session/event"
+import { SessionMessage } from "@orchestra/core/session/message"
 import { createLLMEventPublisher } from "@orchestra/core/session/runner/publish-llm-event"
 import { SkillV2 } from "@orchestra/core/skill"
 import type { Tool } from "@orchestra/core/tool/tool"
-import { LLMEvent } from "@orchestra/llm"
+import { LLMEvent } from "../../../../../../../packages/llm/src/index.ts"
 import { createWp06Runtime } from "../runtime-fixture.ts"
 import { createResidentAiBundle } from "../../../../product/ai/resident.ts"
 import { createSfRunStore, sfRunSourceFence } from "../../../../product/ai/run-store.ts"
@@ -53,8 +54,11 @@ export async function withNativeWp06(work: (fixture: Awaited<ReturnType<typeof c
   try {
     const root = path.resolve(import.meta.dir, "../../../../product/ai")
     const bundle = await createResidentAiBundle({ root, manifestPath: path.join(root, "manifests/resident.json") })
-    const selected: SfSelectedRuntime[] = bundle.profiles.map((profile) => ({ profile, manifestDigest: bundle.manifestDigest,
-      skills: bundle.skills.filter((skill) => profile.allowedSkills.includes(skill.id)), operationIds: profile.allowedOperations }))
+    const selected: SfSelectedRuntime[] = bundle.profiles.map((profile) => {
+      const skills = bundle.skills.filter((skill) => profile.allowedSkills.includes(skill.id))
+      return { profile, manifestDigest: bundle.manifestDigest, skills,
+        operationIds: profile.allowedOperations.filter((operation) => skills.some((skill) => skill.allowedOperations.includes(operation))) }
+    })
     const layer = AppNodeBuilder.build(LayerNode.group([SessionV2.node, SessionStore.node, EventV2.node, LocationServiceMap.node, ProjectV2.node]),
       [[SessionExecution.node, SessionExecutionLocal.node]])
     await Effect.gen(function* () {
@@ -167,8 +171,8 @@ async function compose(input: {
       return { status: "ok", value: { sourceFence: await app.store.transaction("dashboard", async (snapshot) => ({ commit: false, value: sfRunSourceFence(snapshot) })) } }
     }, revalidateForCommit: (record, call, _snapshot, output) => verifyOutput(record, call, output), now: () => new Date().toISOString() })
   const releases = new Set<() => void>()
-  const bind = async (skillId: string, skillInput: unknown = {}) => {
-    const parent = input.selected.find((value) => value.profile.id === (skillId === "sf-explicar-forecast" ? "sf_finance" : "sf_procurement") && value.skills.some((skill) => skill.id === skillId))
+  const bind = async (skillId: string, skillInput: unknown = {}, prompt?: string) => {
+    const parent = input.selected.find((value) => value.profile.id === (skillId === "sf-explicar-forecast" ? "sf_finance" : skillId === "sf-enquadrar-decisao" ? "sf_maestro" : "sf_procurement") && value.skills.some((skill) => skill.id === skillId))
     const skill = parent?.skills.find((value) => value.id === skillId)
     if (!parent || !skill) throw new Error("Native skill missing from real bundle")
     const selected: SfSelectedRuntime = { ...parent, skills: [skill], operationIds: [...skill.allowedOperations] }
@@ -201,6 +205,8 @@ async function compose(input: {
       if (attached.status !== "ok") throw new Error(`Native receipt persistence: ${attached.reason}`)
       const bound = await authority.native.bind(admission)
       if (bound.status !== "ok") throw new Error(`Native binding: ${bound.reason}`)
+      const promptID = prompt ? SessionMessage.ID.create() : undefined
+      const promptAdmission = promptID && prompt ? await Effect.runPromise(input.session.prompt({ id: promptID, sessionID: session.id, prompt: { text: prompt }, resume: false })) : undefined
       const publisher = createLLMEventPublisher(input.events, { sessionID: session.id, agent: parent.profile.id, model })
       const context = async (operation: string, payload: unknown): Promise<Tool.Context> => {
         const callId = randomUUID()
@@ -257,7 +263,7 @@ async function compose(input: {
           return { run: saved.value, output: built.value, assistantMessageID }
         })
       }
-      return { admission, binding: bound.value, session, receipt, record: attached.value, context, call, domain, complete, release }
+      return { admission, binding: bound.value, session, receipt, record: attached.value, promptAdmission, context, call, domain, complete, release }
     } finally { authority.human.finish(access.value) }
   }
   const http = async (kind: "document" | "import", mode: string, payload?: unknown, query: Record<string, string> = {}, cookie = app.cookie) => {
@@ -271,7 +277,7 @@ async function compose(input: {
     if (!response) throw new Error("Native consumer route missing")
     return response
   }
-  return { app, installation, authority, documents, imports, business, dispatch, bridge, proof, sessionStore: input.store, caseRef, runs, ui, human, bind, http,
+  return { app, installation, authority, documents, imports, business, dispatch, bridge, proof, selected: input.selected, sessionStore: input.store, caseRef, runs, ui, human, bind, http, importHttp,
     dispose: async () => { for (const release of releases) release(); proof.clear(); lifetime.open = false; documents.dispose(); business.dispose() } }
 }
 

@@ -22,6 +22,9 @@ test("real Planner mutation and case receipt commit atomically across surfaces",
   const store = await openLocalStore(directory)
   try {
     const persistence = createSfSourcePersistence({ persistence: store, createId: randomUUID, enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(() => "2026-11-13T00:00:00Z") })
+    // C08 stores the Case and receipt in Dashboard and commits with Planner atomically.
+    // Both surfaces therefore need their real source lifecycle before either is used.
+    await persistence.initializeSources("dashboard")
     await persistence.initializeSources("planner")
     await persistence.transaction("planner", async (snapshot) => {
       snapshot.data.roleMap = [{ surface: "planner", role: "finance", entra: "finance-group", version: 1, by: "admin" }]

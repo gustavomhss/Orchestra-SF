@@ -1,9 +1,10 @@
 import type { SfHostServices } from "../contracts/host-context.ts"
 import { digestSfValue } from "../contracts/canonical.ts"
 import { contribution } from "../ui/components.ts"
+import { readSfImportAnalysisChoices } from "../imports/analysis-options.ts"
 
 /** The host owns authorization and execution; this boundary exposes no native binding. */
-export async function handleSfAnalysis(request: Request, origin: string, runtime: SfHostServices) {
+export async function handleSfAnalysis(request: Request, origin: string, runtime: SfHostServices, mount = new URL(request.url).pathname.replace(/\/(?:dashboard|planner|procurement)$/, "")) {
   const reply = (value: unknown, status: number) => Response.json(value, { status, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } })
   if (request.method !== "POST") return reply({ status: "denied" }, 405)
   if (request.headers.get("origin") !== origin || request.headers.get("sec-fetch-site") === "cross-site") return reply({ status: "denied" }, 403)
@@ -11,9 +12,16 @@ export async function handleSfAnalysis(request: Request, origin: string, runtime
   const body = await request.text()
   if (new TextEncoder().encode(body).byteLength > 65536) return reply({ status: "invalid" }, 413)
   const parsed: unknown = await Promise.resolve().then(() => JSON.parse(body)).catch(() => undefined)
-  if (!record(parsed) || (parsed.action !== "start" && parsed.action !== "read" && parsed.action !== "cancel" && parsed.action !== "list" && parsed.action !== "output" && parsed.action !== "prepare")) return reply({ status: "invalid" }, 400)
+  if (!record(parsed) || (parsed.action !== "start" && parsed.action !== "read" && parsed.action !== "cancel" && parsed.action !== "list" && parsed.action !== "output" && parsed.action !== "prepare" && parsed.action !== "choices")) return reply({ status: "invalid" }, 400)
   if (!runtime.analyses) return reply({ status: "unavailable" }, 503)
   const action = parsed.action
+  if (action === "choices") {
+    if (Object.keys(parsed).length !== 1) return reply({ status: "invalid" }, 400)
+    if (!runtime.analysisInputs) return reply({ status: "unavailable" }, 503)
+    const result = await readSfImportAnalysisChoices(request, runtime).catch(() => undefined)
+    if (!result) return reply({ status: "unavailable" }, 503)
+    return reply(result, result.status === "ok" ? 200 : result.status === "denied" ? 403 : result.status === "stale" || result.status === "conflict" ? 409 : 503)
+  }
   if (action === "prepare") {
     if (!runtime.analysisInputs) return reply({ status: "unavailable" }, 503)
     const selected = record(parsed.input) && Object.keys(parsed.input).every((key) => key === "request" || key === "selection") && "selection" in parsed.input ? parsed.input : undefined
@@ -43,10 +51,10 @@ export async function handleSfAnalysis(request: Request, origin: string, runtime
     if (!result) return reply({ status: "unavailable" }, 503)
     if (result.status !== "ok") return reply({ status: result.status }, result.status === "denied" ? 403 : result.status === "stale" || result.status === "conflict" ? 409 : result.status === "needs-input" ? 400 : 503)
     if (!await runtime.ui.revalidate(admitted.value)) return reply({ status: "denied" }, 403)
-    if (action === "read" && "runRef" in result.value && "version" in result.value && "state" in result.value) return reply({ status: "ok", value: { runRef: result.value.runRef, state: result.value.state, version: result.value.version, ...(result.value.outputRef ? { outputRef: result.value.outputRef } : {}) } }, 200)
+    if (action === "read" && "runRef" in result.value && "version" in result.value && "state" in result.value) return reply({ status: "ok", value: { runRef: result.value.runRef, state: result.value.state, version: result.value.version, ...("outputRef" in result.value && result.value.outputRef ? { outputRef: result.value.outputRef } : {}) } }, 200)
     if (action === "output" && "kind" in result.value) {
       const output = result.value
-      const html = await Promise.resolve().then(() => contribution(output)).catch(() => undefined)
+      const html = await Promise.resolve().then(() => contribution(output, { mount })).catch(() => undefined)
       if (!html || !await runtime.ui.revalidate(admitted.value)) return reply({ status: "unavailable" }, 503)
       return reply({ status: "ok", value: { html } }, 200)
     }

@@ -5,6 +5,7 @@ import type { ImportPreviewRequest } from "../../../../modules/sucafina/Sucafina
 import type { PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
 import type { ForecastExplainInput } from "../../../../modules/sucafina/Sucafinav1/product/contracts/skill-inputs.ts"
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
+import type { createSfImportHost } from "../../../../modules/sucafina/Sucafinav1/product/imports/host.ts"
 import { encodeCaseRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
 import { createPlannerImportAnalysis } from "../../../../modules/sucafina/Sucafinav1/product/planner/import-analysis.ts"
 import { createSfForecastVerifier, withoutObservationTimes, type SfAnalysisDependencies, type SfAnalysisProof, type SfAnalysisRequest, type SfAnalysisVerifier } from "./analysis-verifier.ts"
@@ -22,7 +23,7 @@ export type SfImportForecastSelection = {
 }
 
 export function createSfImportForecastAnalysis(input: SfAnalysisDependencies & {
-  imports: { readPreparedPreviewForAnalysis: PreviewReader }
+  imports: { readPreparedPreviewForAnalysis: PreviewReader } & Pick<ReturnType<typeof createSfImportHost>, "readPreviewForAnalysis">
   issueSource: PlannerAnalysis["issueSource"]
   verifyTarget: PlannerAnalysis["verifyTarget"]
   matchesIntent: (call: TrustedDomainContext, operation: string, inputDigest: string) => Promise<boolean>
@@ -39,14 +40,18 @@ export function createSfImportForecastAnalysis(input: SfAnalysisDependencies & {
     if (selection.caseRef.id !== request.caseRef.id || selection.caseRef.incarnation !== request.caseRef.incarnation || selection.caseRef.version !== request.caseRef.version || !selection.previewRef.trim()) return undefined
     const current = await input.cases.read({ caseRef: encodeCaseRef(request.caseRef) }, call)
     if (current.status !== "ok" || current.value.case.id !== request.caseRef.id || current.value.case.incarnation !== request.caseRef.incarnation || current.value.case.version !== request.caseRef.version) return undefined
+    const preview = await input.imports.readPreviewForAnalysis({ previewRef: selection.previewRef, request: selection.importRequest }, call)
+    if (preview.status !== "ok") return undefined
     const replay = await analyze({ previewRef: selection.previewRef, importRequest: selection.importRequest, period: selection.period, currency: selection.currency }, call)
     if (replay.status !== "ok" || replay.value.analysisBasis !== "import-preview" || replay.value.domainApplied !== false || replay.value.importPreviewRef !== selection.previewRef) return undefined
     const refs = replay.value.sourceRefs
     if (!refs.length || refs.some((ref) => !current.value.evidenceRefs.some((item) => digestSfValue(item) === digestSfValue(ref)))) return undefined
     const sources = await input.context.context({ refs }, call)
     const again = await input.cases.read({ caseRef: encodeCaseRef(request.caseRef) }, call)
-    if (sources.length !== refs.length || sources.some((item) => item.state !== "fresh" || !item.authorizedProjection || !item.currentRef || digestSfValue(item.currentRef) !== digestSfValue(item.ref)) || again.status !== "ok" || digestSfValue(again.value.case) !== digestSfValue(current.value.case) || !await input.host.revalidate(call)) return undefined
-    return { current: current.value.case, replay: replay.value, sources }
+    const latest = await input.imports.readPreviewForAnalysis({ previewRef: selection.previewRef, request: selection.importRequest }, call)
+    if (sources.length !== refs.length || sources.some((item) => item.state !== "fresh" || !item.authorizedProjection || !item.currentRef || digestSfValue(item.currentRef) !== digestSfValue(item.ref)) || again.status !== "ok" || digestSfValue(again.value.case) !== digestSfValue(current.value.case) || latest.status !== "ok" || latest.value.digest !== preview.value.digest || !await input.host.revalidate(call)) return undefined
+    return { current: current.value.case, replay: replay.value, sources,
+      promptContext: { importPreview: { importPreviewRef: selection.previewRef, manifest: latest.value.manifest, detail: latest.value.detail } } }
   }
   const domain = createSfForecastVerifier(input)
   return {
@@ -72,9 +77,9 @@ export function createSfImportForecastAnalysis(input: SfAnalysisDependencies & {
         }
         const proof = await load(call)
         if (!proof) return { status: "unavailable", reason: "analysis-source-unavailable" }
-        const accepted: SfAnalysisProof = { current: proof.current, input: decoded.value, sources: proof.sources, acceptsOutput: async (output, freshCall) => {
+        const accepted: SfAnalysisProof = { current: proof.current, input: decoded.value, sources: proof.sources, promptContext: proof.promptContext, acceptsOutput: async (output, freshCall) => {
           const current = await load(freshCall)
-          return current && output.kind === "FinancialAnalysis" && output.state === "ready" && digestSfValue(output.evidenceRefs) === digestSfValue(current.replay.sourceRefs) && digestSfValue(withoutObservationTimes(output.payload)) === digestSfValue(withoutObservationTimes(current.replay))
+          return current && digestSfValue(current.promptContext) === digestSfValue(proof.promptContext) && output.kind === "FinancialAnalysis" && output.state === "ready" && digestSfValue(output.evidenceRefs) === digestSfValue(current.replay.sourceRefs) && digestSfValue(withoutObservationTimes(output.payload)) === digestSfValue(withoutObservationTimes(current.replay))
             ? { status: "ok", value: true } : { status: "unavailable", reason: "analysis-output-unverified" }
         } }
         return { status: "ok", value: accepted }

@@ -1,6 +1,7 @@
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import { decodeSfSkillInput } from "../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
 import type { SfSkillInputMap } from "../../../../modules/sucafina/Sucafinav1/product/contracts/skill-inputs.ts"
+import type { CostCoverageEntry } from "../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts"
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import type { DocumentEvidenceHost } from "../../../../modules/sucafina/Sucafinav1/product/documents/capabilities.ts"
 import { readDocumentEvidence } from "../../../../modules/sucafina/Sucafinav1/product/documents/store.ts"
@@ -126,11 +127,11 @@ export function createSfPurchasePreparationVerifier(dependencies: SfAnalysisDepe
         const current = await read(currentCall)
         if (!current) return { status: "unavailable", reason: "analysis-output-unverified" }
         const dossier = output.payload
-        const pending = value.choice.costCoverage.entries.filter((entry) => entry.status === "pending")
+        const pending = value.choice.costCoverage.entries.filter((entry): entry is Extract<CostCoverageEntry, { status: "pending" }> => entry.status === "pending")
         const missing = value.choice.costCoverage.derivedMissingCategoryIds
         if (dossier.requestRef !== value.request.requestRef || dossier.requestVersion !== value.request.version || dossier.domainApplied !== false || digestSfValue(dossier.alternatives) !== digestSfValue([value.choice.alternativeId]) ||
           digestSfValue(dossier.gaps) !== digestSfValue(value.choice.costCoverage.issues) || pending.some((entry) => !dossier.conditions.some((condition) => condition.category === entry.categoryId && condition.reason === entry.reason)) || missing.some((category) => !dossier.conditions.some((condition) => condition.category === category)) ||
-          dossier.conditions.some((condition) => !condition.reason.trim() || (!pending.some((entry) => entry.categoryId === condition.category && entry.reason === condition.reason) && !missing.includes(condition.category)) || condition.evidenceRefs.some((ref) => !current.refs.some((item) => digestSfValue(item) === digestSfValue(ref)))) ||
+          dossier.conditions.some((condition) => !condition.reason.trim() || (!pending.some((entry) => entry.categoryId === condition.category && entry.reason === condition.reason) && !missing.some((category) => category === condition.category)) || condition.evidenceRefs.some((ref) => !current.refs.some((item) => digestSfValue(item) === digestSfValue(ref)))) ||
           digestSfValue(dossier.sourceRefs) !== digestSfValue(current.refs) || digestSfValue(output.evidenceRefs) !== digestSfValue(current.refs)) return { status: "unavailable", reason: "analysis-output-unverified" }
         return { status: "ok", value: true }
       } } }

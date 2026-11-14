@@ -108,7 +108,7 @@ export function createSfDocumentScenarios(input: {
       if (projection.status !== "ok") return projection
       sources.push(source)
       for (const value of projection.value.baseline.values) {
-        if (!value.id.endsWith(":forecast") || value.granularity !== "month" || value.currency !== document.value.unit || Number(value.period.start.slice(5, 7)) <= version.closed) continue
+        if (!value.id.endsWith(":forecast") || value.granularity !== "month" || typeof value.currency !== "string" || value.currency !== document.value.unit || Number(value.period.start.slice(5, 7)) <= version.closed) continue
         result.push({ baseRef: source.refId, targetRef: value.id.slice(0, -":forecast".length), period: value.period, currency: value.currency,
           label: `${version.id} · ${value.id.slice(0, -":forecast".length)} · ${value.currency}` })
       }

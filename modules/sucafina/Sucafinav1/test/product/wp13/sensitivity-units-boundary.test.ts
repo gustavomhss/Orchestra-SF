@@ -46,7 +46,9 @@ const caseRef = { id: "case", incarnation: "case-incarnation", version: 1 }
 const initial = (): Snapshot => ({
   data: {
     roleMap: [{ surface: "planner", role: "finance", entra: "finance-group", version: 1, by: "admin" }],
-    versions: [{ id: "v0", year: 2027, closed: 9, lines: [{ id: "line", sec: "opex", el: "licenses", cur: "EUR", b: Array(12).fill(100000), a: Array(12).fill(null), f: [null, null, null, null, null, null, null, null, null, 100000, 112000, 100000] }], fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }],
+    // EUR is an admitted currency with an unavailable conversion rate; an unknown
+    // currency would correctly stop the real command before the missing-FX oracle.
+    versions: [{ id: "v0", year: 2027, closed: 9, lines: [{ id: "line", sec: "opex", el: "licenses", cur: "EUR", b: Array(12).fill(100000), a: Array(12).fill(null), f: [null, null, null, null, null, null, null, null, null, 100000, 112000, 100000] }], fx: [{ id: "EUR", cur: "EUR", rate: null }], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }],
   },
   versions: {}, sequences: {}, audit: [], notices: [],
 })
@@ -98,7 +100,7 @@ test("real Planner sensitivity keeps EUR input separate from USD output and leav
     const baselinePreview = await planner.simulateScenario(baselineScenario, context)
     expect(selectedPreview.status).toBe("ok")
     expect(baselinePreview.status).toBe("ok")
-    if (selectedPreview.status !== "ok" || baselinePreview.status !== "ok") return
+    if (selectedPreview.status !== "ok" || baselinePreview.status !== "ok") throw new Error(`Planner previews unavailable: ${JSON.stringify({ selectedPreview, baselinePreview })}`)
     if (selectedPreview.value.comparisonStatus !== "conditioned" || baselinePreview.value.comparisonStatus !== "conditioned") throw new Error("expected conditioned Planner previews")
     const selectedResult: ScenarioResult = { ...selectedPreview.value, costCoverage: { ...selectedPreview.value.costCoverage, alternativeId: "selected", alternativeVersion: 1 } }
     const baselineResult: ScenarioResult = { ...baselinePreview.value, costCoverage: { ...baselinePreview.value.costCoverage, alternativeId: "baseline", alternativeVersion: 1 } }

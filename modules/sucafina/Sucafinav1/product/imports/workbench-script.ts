@@ -1,3 +1,5 @@
+import { importAnalysisScript } from "./analysis-workbench.ts"
+
 /** Human-only transport: no skill/provider result can call Apply or supply a destination. */
 export const importWorkbenchScript = `
 (() => {
@@ -7,7 +9,7 @@ export const importWorkbenchScript = `
   const status = root.querySelector('[role=status]'); const context = root.querySelector('[data-context]'); const impact = root.querySelector('[data-impact]')
   const receiptRetry = root.querySelector('[data-receipt-retry]')
   const changes = root.querySelector('[data-changes]'); const receipt = root.querySelector('[data-receipt]'); const surface = document.body.dataset.surface
-  let targets = []; let fileRef; let manifest; let busy = false; let generation = 0; let reviewed = false
+  let targets = []; let fileRef; let manifest; let importRequest; let busy = false; let generation = 0; let reviewed = false
   let admitKey = crypto.randomUUID(); let previewKey = crypto.randomUUID(); let applyKey = crypto.randomUUID()
   const endpoint = (mode) => { const url = new URL(location.href); url.search = ''; url.searchParams.set('sf', mode); return url }
   const line = (parent, text, tag = 'p') => { const element = document.createElement(tag); element.textContent = text; parent.append(element); return element }
@@ -17,12 +19,13 @@ export const importWorkbenchScript = `
     return result.value
   }
   const post = (mode, value, key) => request(endpoint(mode), { method: 'POST', headers: { 'Content-Type': 'application/json', 'Idempotency-Key': key }, body: JSON.stringify(value) })
-  const lock = (value) => { busy = value; root.querySelectorAll('input, select, form button, [data-find]').forEach((entry) => { entry.disabled = value }); cancel.disabled = value || !manifest; refresh.disabled = value || !targets.length; apply.disabled = value || !reviewed || manifest?.state !== 'preview'; receiptRetry.disabled = value || !manifest }
-  const clear = () => { generation++; fileRef = undefined; manifest = undefined; reviewed = false; apply.disabled = true; cancel.disabled = true; receiptRetry.disabled = true; context.replaceChildren(); impact.replaceChildren(); changes.replaceChildren(); receipt.replaceChildren(); admitKey = crypto.randomUUID(); previewKey = crypto.randomUUID(); applyKey = crypto.randomUUID() }
+  const analysis = ${importAnalysisScript}
+  const lock = (value) => { busy = value; root.querySelectorAll('[data-import-form] input, [data-import-form] select, [data-import-form] button, [data-period-start], [data-period-end], [data-find]').forEach((entry) => { entry.disabled = value }); cancel.disabled = value || !manifest; refresh.disabled = value || !targets.length; apply.disabled = value || !reviewed || manifest?.state !== 'preview'; receiptRetry.disabled = value || !manifest; analysis.lock(value) }
+  const clear = () => { generation++; fileRef = undefined; manifest = undefined; importRequest = undefined; reviewed = false; apply.disabled = true; cancel.disabled = true; receiptRetry.disabled = true; context.replaceChildren(); impact.replaceChildren(); changes.replaceChildren(); receipt.replaceChildren(); analysis.clear(); admitKey = crypto.randomUUID(); previewKey = crypto.randomUUID(); applyKey = crypto.randomUUID() }
   const failure = (error) => {
     apply.disabled = true
     if (error.state === 'denied') { clear(); status.textContent = 'Access changed. The previous preview is no longer available.'; return }
-    if (error.state === 'stale' || error.state === 'conflict') { if (manifest) manifest.state = 'stale'; status.textContent = 'The source or authority changed. Your file and options are preserved. Refresh the destination and review a new preview.'; return }
+    if (error.state === 'stale' || error.state === 'conflict') { if (manifest) manifest.state = 'stale'; analysis.clear(); status.textContent = 'The source or authority changed. Your file and options are preserved. Refresh the destination and review a new preview.'; return }
     status.textContent = manifest?.domainApplied ? 'Import confirmed, but the receipt detail is unavailable. Use Refresh receipt to read the confirmed result.' : 'The operation could not be confirmed. Your file and options are preserved. Retry the same action to reconcile its result.'
   }
   const show = (entry) => entry?.state === 'absent' ? 'Absent' : entry?.state === 'undefined' ? 'Unspecified' : entry?.state === 'present' ? entry.value === null ? 'Empty' : typeof entry.value === 'object' ? JSON.stringify(entry.value) : String(entry.value) : 'Unavailable'
@@ -70,6 +73,7 @@ export const importWorkbenchScript = `
     manifest.issues.forEach((issue) => line(impact, 'Not applied / review required: row ' + issue.row + ' · ' + issue.field + ' · ' + issue.reason))
     drawDetail(result)
     reviewed = manifest.state === 'preview' && result.receipt?.outcome !== 'rejected'
+    analysis.show(reviewed ? manifest : undefined, importRequest)
   }
   const syncOptions = () => { const label = root.querySelector('[data-replace-option]'); if (label) label.hidden = !['All Members', 'Projects Import', 'All Projects'].includes(select.value === '' ? undefined : targets[Number(select.value)]?.sheet) }
   form.addEventListener('change', () => { if (!busy) { clear(); syncOptions(); status.textContent = 'File or options changed. Prepare a new preview.' } })
@@ -96,14 +100,15 @@ export const importWorkbenchScript = `
     const current = generation; reviewed = false; lock(true); status.textContent = 'Preparing impact preview…'
     try {
       if (!fileRef) { const body = new FormData(); body.set('file', file); body.set('surface', target.surface); body.set('selectionRef', target.selectionRef); body.set('options', JSON.stringify(options)); fileRef = await request(endpoint('import-admit'), { method: 'POST', headers: { 'Idempotency-Key': admitKey }, body }) }
-      const prepared = await post('import-preview', { admittedFileRef: fileRef.ref, format, options: options.preview }, previewKey)
+      const selectedImport = { admittedFileRef: fileRef.ref, format, options: options.preview }
+      const prepared = await post('import-preview', selectedImport, previewKey)
       if (current !== generation) return
-      manifest = prepared; draw(await readDetail()); status.textContent = 'Review the simulation, including ignored and rejected items. Apply requires your explicit action.'
+      importRequest = selectedImport; manifest = prepared; draw(await readDetail()); status.textContent = 'Review the simulation, including ignored and rejected items. Apply requires your explicit action.'
     } catch (error) { failure(error) } finally { lock(false) }
   })
   apply.addEventListener('click', async () => {
     if (busy || !reviewed || manifest?.state !== 'preview') return
-    lock(true); status.textContent = 'Applying the reviewed import…'
+    analysis.clear(); lock(true); status.textContent = 'Applying the reviewed import…'
     try {
       manifest = await post('import-apply', { manifestId: manifest.id, version: manifest.version }, applyKey)
       if (!manifest.domainApplied || manifest.state !== 'applied') throw new Error('unconfirmed')

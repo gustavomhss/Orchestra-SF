@@ -4,13 +4,22 @@ import type { AuthorizedCaseProjection, BusinessContextService, BusinessEvidence
 import type { ContributionEnvelope } from "../../../../modules/sucafina/Sucafinav1/product/contracts/resident-ai.ts"
 import type { BusinessPorts, DecisionCasePort, DomainPortHost, PlannerPort, PortResult, ProcurementPort } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
+import type { ImportManifest } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
+import type { ImportDetail } from "../../../../modules/sucafina/Sucafinav1/product/imports/store.ts"
 import { encodeCaseRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
 
 export type SfAnalysisRequest = Omit<Parameters<BusinessPorts["analysis"]["create"]>[0], "contextFingerprint">
 export type SfAnalysisProof = { current: AuthorizedCaseProjection["case"]; input: unknown; sources: readonly BusinessEvidenceResolution[];
+  /** Only an authorized verifier may add host context beyond the closed skill input. */
+  promptContext?: { importPreview: { importPreviewRef: string; manifest: ImportManifest; detail: ImportDetail } };
   acceptsOutput: (output: ContributionEnvelope, call: TrustedDomainContext) => Promise<PortResult<true>> }
 export type SfAnalysisVerifier = { skillIds: readonly string[]; verify: (input: unknown, request: SfAnalysisRequest, call: TrustedDomainContext) => Promise<PortResult<SfAnalysisProof>> }
 export type SfAnalysisDependencies = { cases: DecisionCasePort; planner: PlannerPort; procurement: ProcurementPort; context: BusinessContextService; host: DomainPortHost }
+
+export function sfAnalysisPrompt(objective: string, proof: SfAnalysisProof) {
+  return JSON.stringify({ objective, skillInput: proof.input, ...(proof.promptContext ? { context: proof.promptContext } : {}),
+    output: "Return one JSON object with kind, payload, and evidenceRefs." })
+}
 
 export function createSfForecastVerifier(dependencies: SfAnalysisDependencies): SfAnalysisVerifier {
   return {

@@ -32,7 +32,7 @@ export function createSfWorkbenchHttp(input: { origin: string; mount: string; ru
     if (!runtime) return reply({ status: "unavailable", reason: "workbench-unavailable" }, 503)
     if (mode === "workbench-analysis") {
       if ([...url.searchParams.keys()].some((key) => key !== "sf") || url.searchParams.getAll("sf").length !== 1) return reply({ status: "invalid" }, 400)
-      return handleSfAnalysis(request, input.origin, runtime)
+      return handleSfAnalysis(request, input.origin, runtime, input.mount)
     }
     if (mode === "workbench-planner") {
       if (surface !== "planner" || [...url.searchParams.keys()].some((key) => key !== "sf") || url.searchParams.getAll("sf").length !== 1) return reply({ status: "invalid" }, 400)

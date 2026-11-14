@@ -1,6 +1,7 @@
 import { documentHtml, pageMain } from "../../src/screen-shell.ts"
 import { htmlPolicy } from "../../runtime/application.ts"
 import { importWorkbenchScript } from "./workbench-script.ts"
+import { importAnalysisMarkup } from "./analysis-workbench.ts"
 
 /** This page uses only the authorized import HTTP port; file bytes stay in the human flow. */
 export function renderSfImportWorkbench(surface: string) {
@@ -19,6 +20,7 @@ export function renderSfImportWorkbench(surface: string) {
     <section data-changes></section><section data-receipt></section>
     <button type="button" data-cancel disabled>Cancel preview</button><button type="button" data-repreview disabled>Refresh destination and preview again</button>
     <button type="button" data-apply disabled>Apply reviewed import</button><button type="button" data-receipt-retry disabled>Refresh receipt</button>
+    ${importAnalysisMarkup}
   </section>`
   const html = documentHtml("Imports", surface, "", pageMain({ drawn: true, key: "Imports", index: 0 }, body), "")
     .replace("</body>", `<script>${importWorkbenchScript}</script></body>`)

@@ -98,7 +98,8 @@ test("protected Atlas original binds cross-principal continuity after store reop
     if (!original) return
     const current = await reopened.source(original, binding("bob"))
     expect(current.state).toBe("fresh")
-    if (!current.currentRef) return
+    expect(current.currentRef).toBeDefined()
+    if (!current.currentRef) throw new Error("Reauthorized current source reference unavailable")
     const proof = createSfDashboardContinuityProof({ host: reopened.host, issue: reopened.issue, dashboard: reopened.dashboard, readOriginal: (digest, call) => reopened.atlas.readOriginal({ id: "case", incarnation: "case-inc" }, digest, call) })
     expect(await proof(original, current.currentRef, binding("bob"))).toBe(true)
     const recall = await reopened.atlas.recall({ id: "case", incarnation: "case-inc" }, binding("bob"))
