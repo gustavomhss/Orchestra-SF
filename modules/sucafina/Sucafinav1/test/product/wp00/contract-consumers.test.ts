@@ -15,7 +15,7 @@ const command = { namespace: "preferences" as const, expectedStorageVersion: 0, 
 
 // These are acceptance assertions against current consumers. A failure remains a release blocker.
 for (const operation of freeze.operations) {
-  test(`producer ${operation.id}: ${operation.handlerPath}#${operation.handlerExport} is exported`, async () => {
+  test(`producer ${operation.operation}: ${operation.handlerPath}#${operation.handlerExport} is exported`, async () => {
     const root = path.resolve(import.meta.dir, "../../../../../..")
     const source = await Bun.file(path.join(root, operation.handlerPath)).text()
     expect(source).toMatch(new RegExp(`export (?:async )?(?:function|const) ${operation.handlerExport}\\b`))

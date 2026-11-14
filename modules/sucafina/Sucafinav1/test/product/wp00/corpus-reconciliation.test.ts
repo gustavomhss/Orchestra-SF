@@ -66,7 +66,7 @@ test("real XLSX reimport preserves project identities and reconciles changed val
       expect(projectBusinessValues(reimported)).toEqual(projectBusinessValues(imported))
       expect(projects(reimported).map((project) => project.updatedAt)).toEqual([replayAt, replayAt])
       expect(reimported.audit.slice(0, imported.audit.length)).toEqual(imported.audit)
-      expect({ ...reimported.data, projects: imported.data.projects }).toEqual(imported.data)
+      expect<Record<string, unknown>>({ ...reimported.data, projects: imported.data.projects }).toEqual(imported.data)
       expect(reimported.sequences).toEqual(imported.sequences)
       expect(reimported.notices).toEqual(imported.notices)
 
@@ -85,7 +85,7 @@ test("real XLSX reimport preserves project identities and reconciles changed val
       expect(projects(altered).map((project) => project.notes)).toEqual(["Synthetic revised note A", "Synthetic original note B"])
       expect(projects(altered).reduce((sum, project) => sum + Number(project.budget), 0)).toBe(fixture.projectImport.expected.alteredTotal)
       expect(projectBusinessValues(altered)[1]).toEqual(projectBusinessValues(reimported)[1])
-      expect({ ...altered.data, projects: reimported.data.projects }).toEqual(reimported.data)
+      expect<Record<string, unknown>>({ ...altered.data, projects: reimported.data.projects }).toEqual(reimported.data)
       expect(altered.audit.slice(0, reimported.audit.length)).toEqual(reimported.audit)
       expect(altered.sequences).toEqual(reimported.sequences)
       expect(altered.notices).toEqual(reimported.notices)

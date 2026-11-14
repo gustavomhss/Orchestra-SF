@@ -70,6 +70,7 @@ export function summarizeMeasurements(plan: readonly MeasurementPlan[], observat
     const key = measurementKey(configuration)
     const attempted = observations.filter((sample) => measurementKey(sample) === key)
     const passed = attempted.filter((sample) => sample.outcome === "passed")
+    const usable = attempted.flatMap((sample) => sample.visualReadyMs === null ? [] : [sample.visualReadyMs])
     const cancellationReason = attempted.length < configuration.repetitions ? cancelled[key] ?? fallbackReason : null
     if (cancellationReason !== null && (typeof cancellationReason !== "string" || !cancellationReason.trim()))
       throw new Error("Unexecuted attempts require a cancellation reason")
@@ -82,6 +83,14 @@ export function summarizeMeasurements(plan: readonly MeasurementPlan[], observat
       cancellationReason,
       visualReady: distribution(passed.map((sample) => sample.visualReadyMs!)),
       completion: distribution(passed.map((sample) => sample.completionMs!)),
+      perceptibleResponseBudget: {
+        criterion: "CAMP.QLT.05", limitMs: 200, evidenceBasis: "usable-result-upper-bound",
+        observedWithinLimit: usable.filter((latency) => latency <= 200).length,
+        observedAboveLimit: usable.filter((latency) => latency > 200).length,
+        unobserved: configuration.repetitions - usable.length,
+        state: passed.length === configuration.repetitions && usable.every((latency) => latency <= 200) ? "OBSERVED_WITHIN_LIMIT" : "NOT_PROVEN",
+        limit: "Only the declared flow start is timed. An earlier work indicator and each internal action are not independently observed; an upper bound above 200 ms is not proof of a perceptible-response violation.",
+      },
       statisticsPopulation,
       quantileMethod,
     }

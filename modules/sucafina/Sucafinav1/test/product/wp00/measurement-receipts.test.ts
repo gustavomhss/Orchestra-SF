@@ -22,6 +22,7 @@ test("a bootstrap failure cancels the full planned matrix without manufacturing 
   for (const row of summary) expect(row).toMatchObject({
     attempted: 0, passed: 0, failed: 0, cancelled: 30, cancellationReason: "bootstrap-failed",
     visualReady: { samples: 0, medianMs: null, p95Ms: null }, completion: { samples: 0, medianMs: null, p95Ms: null },
+    perceptibleResponseBudget: { state: "NOT_PROVEN", observedWithinLimit: 0, observedAboveLimit: 0, unobserved: 30 },
   })
 })
 
@@ -32,6 +33,7 @@ test("thirty unordered successful observations retain distinct median and neares
     attempted: 30, passed: 30, failed: 0, cancelled: 0, cancellationReason: null,
     visualReady: { samples: 30, medianMs: 15.5, p95Ms: 29 },
     completion: { samples: 30, medianMs: 65.5, p95Ms: 79 },
+    perceptibleResponseBudget: { state: "OBSERVED_WITHIN_LIMIT", observedWithinLimit: 30, observedAboveLimit: 0, unobserved: 0 },
   })
 })
 
@@ -42,6 +44,18 @@ test("a failed attempt remains evidence and never contributes a successful timin
     attempted: 1, passed: 0, failed: 1, cancelled: 29, cancellationReason: "flow-stopped-after-failure",
     visualReady: { samples: 0, medianMs: null, p95Ms: null }, completion: { samples: 0, medianMs: null, p95Ms: null },
   })
+})
+
+test("a usable-result bound above 200 ms leaves first perceptible response unproven", () => {
+  const observations = Array.from({ length: 30 }, (_, index) => ({
+    ...sample(index + 1), visualReadyMs: index === 29 ? 201 : 200, completionMs: 250,
+  }))
+  const summary = summarizeMeasurements([configuration], observations, {}, "")[0]!
+  expect(summary.perceptibleResponseBudget).toMatchObject({
+    criterion: "CAMP.QLT.05", limitMs: 200, evidenceBasis: "usable-result-upper-bound",
+    state: "NOT_PROVEN", observedWithinLimit: 29, observedAboveLimit: 1, unobserved: 0,
+  })
+  expect(summary.passed).toBe(30)
 })
 
 test("duplicate, unplanned, incomplete and temporally inverted observations are rejected", () => {
@@ -122,7 +136,9 @@ test.each([
   ["different quantile method", { quantileMethod: "mean labelled as p95" }],
 ] as const)("a supplied summary with %s cannot produce numerical comparisons", (_, patch) => {
   const baseline = receipt("baseline", Array.from({ length: 30 }, (_, index) => sample(index + 1)))
-  const candidate = { ...baseline, productSha: "candidate", summaries: [{ ...baseline.summaries[0]!, ...patch }] }
+  const candidate = { ...baseline, productSha: "candidate", summaries: structuredClone(baseline.summaries) }
+  // Deliberately corrupt a received aggregate at runtime without changing the valid summary type.
+  for (const [field, value] of Object.entries(patch)) Reflect.set(candidate.summaries[0]!, field, value)
   expect(compareMeasurements(candidate, baseline)).toMatchObject({
     state: "incomplete", comparisons: [{
       state: "incomplete", visualMedianDeltaMs: null, completionMedianDeltaMs: null,

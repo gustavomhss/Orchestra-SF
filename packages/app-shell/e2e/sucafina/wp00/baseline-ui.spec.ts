@@ -130,7 +130,8 @@ test("WP00 observes seven real business flows, browser zoom and thirty repetitio
             for (let repetition = 1; repetition <= configuration.repetitions; repetition++) {
               signal.throwIfAborted()
               await prepareUiFlow(flow, page, state.corpus!, directory)
-              await observe(page, testInfo, observations, configuration, repetition, (visual) => runUiFlow(flow, page, state.corpus!, directory, testInfo, repetition, visual))
+              signal.throwIfAborted()
+              await observe(page, testInfo, observations, configuration, repetition, signal, (visual) => runUiFlow(flow, page, state.corpus!, directory, testInfo, repetition, visual))
             }
           } catch (error) {
             signal.throwIfAborted()
@@ -157,17 +158,30 @@ test("WP00 observes seven real business flows, browser zoom and thirty repetitio
       await mkdir(testInfo.outputDir, { recursive: true })
       await writeFile(testInfo.outputPath("wp00-server.log"), redact(logs.join("")))
       await testInfo.attach("wp00-server", { path: testInfo.outputPath("wp00-server.log"), contentType: "text/plain" })
-      const summaries = summarizeMeasurements(plan, observations, cancellations, state.failure ?? "Configuration was not reached")
+      // A cancelled Effect can finish before its underlying browser Promise rejects.
+      // Snapshot an active attempt as failed with the observed interruption; never invent a duration.
+      const settledObservations = observations.map((item) => item.outcome === "failed" && item.failureReason === null
+        ? { ...item, failureReason: state.failure ?? "Process scope ended before the active attempt completed" }
+        : { ...item })
+      const summaries = summarizeMeasurements(plan, settledObservations, cancellations, state.failure ?? "Configuration was not reached")
       const environment = {
-        datasetDigest: state.corpus?.datasetDigest ?? "not-prepared", runtimeVersion: state.corpus?.runtimeVersion ?? "not-observed",
-        operatingSystem: `${process.platform} ${release()}`, device: "GitHub Actions runner", browserVersion: state.browserVersion ?? "not-started",
-        cacheState: state.authenticated ? "same authenticated browser context; server responses no-store; repeated navigation" : "not-reached", method,
+        datasetDigest: state.corpus?.datasetDigest ?? null, runtimeVersion: state.corpus?.runtimeVersion ?? null,
+        operatingSystem: `${process.platform} ${release()}`, device: "GitHub Actions runner", browserVersion: state.browserVersion,
+        cacheState: state.authenticated ? "same authenticated browser context; server responses no-store; repeated navigation" : null, method,
       }
+      const comparison = state.productSha && environment.datasetDigest && environment.runtimeVersion && environment.browserVersion && environment.cacheState
+        ? compareMeasurements({ productSha: state.productSha, environment: {
+          ...environment, datasetDigest: environment.datasetDigest, runtimeVersion: environment.runtimeVersion,
+          browserVersion: environment.browserVersion, cacheState: environment.cacheState,
+        }, summaries }, null)
+        : { state: "unavailable", reason: "Authenticated candidate measurement was not reached and baseline was not measured", comparisons: [] }
       await testInfo.attach("wp00-raw-measurements", { body: JSON.stringify({
         schema: "wp00-real-ui-measurements-v2", executedSnapshotCommit: process.env.GITHUB_SHA, productCommit: state.productSha,
         baselineReferenceCommit: "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf", startedAt, environment,
-        authenticated: state.authenticated, state, plan, observations, summaries, zoomObservations,
-        comparison: compareMeasurements({ productSha: state.productSha ?? "not-observed", environment, summaries }, null),
+        unavailableEnvironmentReasons: Object.fromEntries(Object.entries(environment).filter(([, value]) => value === null)
+          .map(([key]) => [key, state.failure ?? "The required stage was not reached"])),
+        authenticated: state.authenticated, state, plan, observations: settledObservations, summaries, zoomObservations,
+        comparison,
         processObservation: processCounters ? { ...processCounters(), canonicalControlVerdict: "Playwright scoped counters; not the Bun canonical control" } : null,
         limits: ["Local operator only; no Microsoft identity or native AI qualification", "Seeded Planner alternatives do not prove a native AI scenario or composite J05", "The original baseline commit has not been timed", "Cancelled attempts have no invented latency or successful outcome"],
       }, null, 2), contentType: "application/json" })
@@ -175,12 +189,13 @@ test("WP00 observes seven real business flows, browser zoom and thirty repetitio
   }
 })
 
-async function observe(page: Page, testInfo: TestInfo, output: Measurement[], configuration: MeasurementPlan, repetition: number, action: (visual: () => void) => Promise<void>) {
+async function observe(page: Page, testInfo: TestInfo, output: Measurement[], configuration: MeasurementPlan, repetition: number, signal: AbortSignal, action: (visual: () => void) => Promise<void>) {
   const start = performance.now()
   const record: Measurement = { ...configuration, repetition, startedAt: new Date().toISOString(), visualReadyMs: null, completionMs: null, outcome: "failed", failureReason: null, resultEvidenceRef: null }
   output.push(record)
   try {
-    await action(() => { record.visualReadyMs ??= performance.now() - start })
+    await action(() => { signal.throwIfAborted(); record.visualReadyMs ??= performance.now() - start })
+    signal.throwIfAborted()
     if (record.visualReadyMs === null) throw new Error("The flow never observed a usable business result")
     record.completionMs = performance.now() - start
     if (repetition === configuration.repetitions) {
@@ -189,6 +204,7 @@ async function observe(page: Page, testInfo: TestInfo, output: Measurement[], co
       await testInfo.attach(evidence, { path: testInfo.outputPath(evidence), contentType: "image/png" })
       record.resultEvidenceRef = evidence
     }
+    signal.throwIfAborted()
     record.outcome = "passed"
   } catch (error) {
     record.failureReason = redact(error instanceof Error ? error.message : String(error))
