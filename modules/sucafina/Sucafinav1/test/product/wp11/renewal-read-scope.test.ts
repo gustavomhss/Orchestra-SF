@@ -7,6 +7,7 @@ import { createRenewalSourceFixture } from "./renewal-source-fixture.ts"
 test("renewal admission verifies operations and source-only alternatives without changing any durable snapshot", async () => {
   const fixture = await createRenewalSourceFixture("omitted")
   try {
+    if (!fixture.store.transactionAll) throw new Error("Real cross-surface snapshot transaction unavailable")
     const before = await fixture.store.transactionAll(async (snapshots) => ({ commit: false, value: structuredClone(snapshots) }))
     const verify = createRenewalOperationVerifier(fixture.host, fixture.sources)
     expect(await verify(fixture.scenario, fixture.context)).toBe(true)
