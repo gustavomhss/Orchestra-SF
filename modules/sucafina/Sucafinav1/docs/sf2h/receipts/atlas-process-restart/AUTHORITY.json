@@ -1,0 +1,71 @@
+{
+  "schema": "sf2h.mission35.authority.v1",
+  "mission": 35,
+  "finding": "M29-ATLAS-003",
+  "status": "ACTIVE",
+  "actor": "S0-C scoped WP14 test correction",
+  "logicalSession": "/root",
+  "backendSessionId": null,
+  "modelEnvironment": "GPT-6 Astra Pro",
+  "leaseEpoch": "atlas-restart-browser35",
+  "authorityInput": {
+    "sha": "970ae24e36cae47dfa7e0df327e409d9cc3fcea7",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/continuation-wave/atlas-process-restart-proof.json",
+    "blob": "0772578134458d933d66769b307d564eab4aa105"
+  },
+  "planningSha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "branch": "astra-wp14",
+  "pr": 38,
+  "expectedHead": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+  "previousDelivery": {
+    "head": "f8031d7c54ec2fa06359156dc0b6462c3a248633",
+    "handoffBlob": "5de2d875dbad82a48b88d283697e21e4a97ed799",
+    "status": "TERMINAL_DELIVERY_READ",
+    "laterHead": false,
+    "laterAuthorityInPrTimeline": false
+  },
+  "composedInput": {
+    "head": "b19606b73f1ffc5a9e58702e939f1aa788dabfa1",
+    "tree": "561700c145767a16d42e8b2103bd0ea81d0b379f",
+    "testBlob": "d7d2a69837560f42438d470b83724c1a61939a73",
+    "helperBlob": "6194f415573636efd47751f977cd157c9396f17d"
+  },
+  "readCoverage": {
+    "rootAgents": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+    "start": "522782bb7e113124a937d7ef17313032be9d6850",
+    "workflow": "043205bee6031b4517a98591b3588fca0ab12925",
+    "common": "d61f32af03fe10747a50274233f953af044decf6",
+    "pack": "4eb6547c53ce65bc2170b9fdd6d8fd580e572e3b",
+    "fullPackReadBy": "/root/pack_audit",
+    "appendices": [
+      "ded082688fce327def0b48968fa3b89a5831029c",
+      "033737b1051b23443e633df7874c550629bf55a1",
+      "907750ae7c945e5f303480cc6e14f11bb1696eb9"
+    ],
+    "noNestedAgents": true
+  },
+  "allowedWrites": [
+    "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp14/atlas-restart-reader.ts",
+    "modules/sucafina/Sucafinav1/test/product/atlas-process-restart/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/atlas-process-restart/"
+  ],
+  "remote": "GitHub MCP only; CAS; no force",
+  "scopesExcluded": [
+    "runtime/persistence",
+    "Memory",
+    "Atlas engines",
+    "shared host",
+    "workflows/global configs",
+    "sf2-stack"
+  ],
+  "ciInterface": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/CI.md",
+    "blob": "c34ab425e0f3b7dc0899a05826829f38b5af84bb",
+    "scope": "own surgical WP checks only; no new global dispatcher",
+    "proofPlan": "Publish tests on PR38; create unreferenced proof candidate over pinned composed input with only identical test/helper overlays, then canonical .ci-run snapshot; do not move sf2-stack."
+  },
+  "nativeSessionWitness": false,
+  "consumer": "mission33 sole sf2-stack integrator",
+  "observedAt": "2026-11-14 21:48:01 UTC"
+}
