@@ -118,7 +118,7 @@ test("Dashboard browser keeps the monthly draft through a real conflict, reviews
     const finalNote = "Approved renewal shifted the January forecast. Supplier timing is confirmed."
     await deviation.getByLabel("Deviation notes").fill(finalNote)
     delayed.release?.()
-    await page.getByText("The submitted changes were saved. New edits remain unsaved; review them before saving again.", { exact: true }).waitFor()
+    await page.getByText("The submitted changes were saved. Later edits remain unsaved; review them before continuing.", { exact: true }).waitFor()
     expect(await deviation.getByLabel("Deviation notes").inputValue()).toBe(finalNote)
     expect(await deviation.getAttribute("data-dirty")).toBe("true")
     expect(await persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: object(snapshot.data.deviations)["opex-owner-1-2026-1"] }))).toEqual({ flag: "dev-amber", text: "Approved renewal shifted the January forecast." })

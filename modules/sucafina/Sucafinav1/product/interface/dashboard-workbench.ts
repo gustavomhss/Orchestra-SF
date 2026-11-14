@@ -6,6 +6,7 @@ export function dashboardWorkbenchWidget(page: string) {
     <p>Monte a pauta desta página, preserve registros e revise escolhas existentes antes de aplicar alterações. As opções mostram até 100 registros e 50 casos autorizados.</p>
     <div class="form-grid"><label>Início do período<input type="date" data-dashboard-from></label><label>Fim do período<input type="date" data-dashboard-to></label></div>
     <button type="button" data-dashboard-load>Carregar opções</button><p role="status" aria-live="polite" data-dashboard-status></p>
+    <div data-dashboard-recovery hidden><p>O resultado da tentativa anterior ainda não foi confirmado. Os valores enviados estão preservados; repita a mesma requisição para recuperar seu resultado antes de iniciar outra alteração.</p><button type="button" data-dashboard-retry disabled>Repetir mesma tentativa</button></div><form data-dashboard-pending hidden></form>
     <fieldset><legend>Pauta da reunião</legend><p data-dashboard-agenda-count>Carregue as opções desta página.</p><button type="button" data-dashboard-agenda disabled>Pré-visualizar pauta</button> <button type="button" data-dashboard-preserve disabled>Preservar reunião</button><div data-dashboard-agenda-view></div></fieldset>
     <fieldset><legend>Retratos e histórico</legend><label>Registro para preservar<select data-dashboard-record><option value="">Selecione um registro</option></select></label><button type="button" data-dashboard-capture disabled>Preservar retrato</button><label>Reunião ou retrato preservado<select data-dashboard-history><option value="">Selecione um item do histórico</option></select></label><button type="button" data-dashboard-reopen disabled>Abrir histórico</button><div data-dashboard-history-view></div></fieldset>
     <form data-dashboard-draft><fieldset><legend>Rascunho de Hot Topic</legend><p>O rascunho precisa integrar uma escolha no caso antes de ser preparado. O impacto financeiro não é calculado aqui.</p>
@@ -26,14 +27,29 @@ document.querySelectorAll('[data-dashboard-workbench]').forEach((root) => {
   if (root.dataset.ready) return;
   root.dataset.ready = 'true';
   const find = (name) => root.querySelector('[data-dashboard-' + name + ']');
-  const form = find('draft'), status = find('status'), panel = root.closest('[data-dashboard-workbench-panel]');
+  const form = find('draft'), status = find('status'), panel = root.closest('[data-dashboard-workbench-panel]'), guard = find('pending');
   const fields = ['action', 'owner', 'due', 'priority', 'notes'];
   const labels = { action: 'Ação', owner: 'Responsável', due: 'Prazo', priority: 'Prioridade', notes: 'Notas', name: 'Nome', title: 'Título', status: 'Situação', risk: 'Risco', budget: 'Orçamento', actual: 'Realizado', forecast: 'Previsão', vendor: 'Fornecedor', type: 'Tipo', end: 'Término', start: 'Início', month: 'Mês', year: 'Ano', target: 'Meta', weight: 'Peso', progress: 'Progresso', value: 'Valor', description: 'Descrição', pm: 'Responsável pelo projeto', effective: 'Orçamento vigente', totalBudget: 'Orçamento total', totalActual: 'Realizado total', totalForecast: 'Previsão total', fact: 'Fato', rule: 'Regra', date: 'Data', severity: 'Severidade', opened: 'Chamados abertos', closed: 'Chamados encerrados', netChange: 'Variação de chamados', backlog: 'Chamados pendentes', active: 'Ativos', openIncidents: 'Incidentes abertos', renewal: 'Renovação', probability: 'Probabilidade', impact: 'Impacto' };
   const evidenceLabels = { confirmed: 'Confirmado', estimated: 'Estimado', absent: 'Ausente', unavailable: 'Indisponível', hypothetical: 'Hipótese' };
   const origins = { hotTopics: 'Hot Topics', opsTickets: 'Chamados', projects: 'Projetos', risks: 'Riscos', contracts: 'Contratos', members: 'Pessoas', leaders: 'Estrutura da equipe', opexOwners: 'OPEX', opexEntries: 'OPEX', capexProjects: 'CAPEX', capexEntries: 'CAPEX', 'itperf-item': 'Contrato de performance', stakeholders: 'Stakeholders', secKpi: 'Segurança de TI' };
   const states = { planned: 'Aguardando revisão', applied: 'Aplicada', conflict: 'Em conflito', failed: 'Não aplicada' };
-  let data, agenda, review, draftBinding, draftIdentity, pendingDraft, draftConflict = false, draftCatalog = [], caseCatalog = [], sourceCatalog = [], busy = false;
-  const keys = new Map();
+  let data, agenda, review, draftBinding, draftIdentity, pendingDraft, mutation, draftConflict = false, draftCatalog = [], caseCatalog = [], sourceCatalog = [], busy = false, revoked = false;
+  const controllers = new Set();
+  const storedView = () => {
+    const value = history.state && history.state.sfDashboardWorkbench;
+    return value && value.schema === 1 && value.path === location.pathname && value.page === root.dataset.page ? value : {};
+  };
+  // Browser state contains only selectors and application correlation, never draft fields or evidence.
+  // Every restoration first matches the current authorized discovery; the host admits every replay again.
+  const remember = (change) => {
+    try {
+      const previous = history.state && typeof history.state === 'object' ? history.state : {};
+      history.replaceState({ ...previous, sfDashboardWorkbench: { ...storedView(), schema: 1, path: location.pathname, page: root.dataset.page, ...change } }, '', location.href);
+    } catch { /* A browser that cannot retain navigation state still keeps the active attempt in memory. */ }
+  };
+  const rememberDraft = () => remember({ draft: draftIdentity && draftBinding ? { id: draftIdentity.id, incarnation: draftIdentity.incarnation, caseId: draftBinding.caseRef.id, caseIncarnation: draftBinding.caseRef.incarnation } : undefined });
+  let applicationToRestore = storedView().application;
+  const rememberApplication = () => remember({ application: mutation && mutation.mode === 'dashboard-hot-topic-apply' ? { body: mutation.body, key: mutation.key } : undefined });
   const scalar = (value) => value === null || value === undefined ? 'Não informado' : typeof value === 'boolean' ? value ? 'Sim' : 'Não' : String(value);
   const choice = (name, list) => find(name).value === '' ? undefined : list[Number(find(name).value)];
   const fieldLabel = (id) => {
@@ -46,38 +62,44 @@ document.querySelectorAll('[data-dashboard-workbench]').forEach((root) => {
     }
     return labels[name] || (name.includes('|') ? name.split('|').join(' · ') : 'Campo');
   };
-  const announce = (message) => { status.textContent = message; };
+  const announce = (message) => { if (!revoked) status.textContent = message; };
   const options = (name, list, empty) => {
     const select = find(name); select.replaceChildren(new Option(empty, ''));
     list.forEach((item, index) => select.add(new Option(item.label, String(index))));
   };
   const resetReview = () => { review = undefined; find('confirm').checked = false; find('review-view').replaceChildren(); };
   const retainView = () => {
-    if (panel.open || busy || form.dataset.dirty) root.setAttribute('data-sf-retain-view', 'true');
+    if (revoked) return;
+    if (panel.open || busy || mutation || form.dataset.dirty) root.setAttribute('data-sf-retain-view', 'true');
     else if (root.hasAttribute('data-sf-retain-view')) {
       root.removeAttribute('data-sf-retain-view');
       if (typeof window.sucafinaRefresh === 'function') void window.sucafinaRefresh();
     }
   };
   const enable = () => {
-    root.querySelectorAll('input, select, textarea, button').forEach((control) => { control.disabled = busy; });
+    if (revoked) return;
+    const locked = busy || !!mutation;
+    root.querySelectorAll('input, select, textarea, button').forEach((control) => { control.disabled = locked; });
     const permissions = data && data.permissions || {}, decisions = data && data.decisions || {}, writes = decisions.permissions || {};
     const selectedChange = choice('change', decisions.changes || []);
-    find('agenda').disabled = busy || !data || !data.agenda;
-    find('preserve').disabled = busy || !permissions.preserve || !agenda;
-    find('capture').disabled = busy || !permissions.capture || !choice('record', data && data.records || []);
-    find('reopen').disabled = busy || !choice('history', data && data.history || []);
-    ['case', 'draft-choice', 'draft-source'].forEach((name) => { find(name).disabled = busy || !writes.draft || !!form.dataset.dirty; });
+    find('load').disabled = busy;
+    find('recovery').hidden = !mutation || !mutation.uncertain;
+    find('retry').disabled = busy || !mutation || !mutation.uncertain;
+    find('agenda').disabled = locked || !data || !data.agenda;
+    find('preserve').disabled = locked || !permissions.preserve || !agenda;
+    find('capture').disabled = locked || !permissions.capture || !choice('record', data && data.records || []);
+    find('reopen').disabled = locked || !choice('history', data && data.history || []);
+    ['case', 'draft-choice', 'draft-source'].forEach((name) => { find(name).disabled = locked || !writes.draft || !!form.dataset.dirty; });
     find('draft-source').disabled = find('draft-source').disabled || find('draft-choice').value !== 'new';
-    fields.forEach((name) => { form.elements.namedItem(name).disabled = busy || !writes.draft || !draftBinding; });
-    find('save-draft').disabled = busy || !writes.draft || !draftBinding || !form.dataset.dirty || draftConflict;
-    find('reset-draft').disabled = busy || !form.dataset.dirty;
-    find('refresh-draft').disabled = busy || !writes.draft || !draftBinding || !form.dataset.dirty;
-    find('confirm-draft').disabled = busy || !writes.draft || !pendingDraft;
-    find('prepare').disabled = busy || !writes.prepare || !choice('preparation', decisions.preparations || []);
-    find('review').disabled = busy || !selectedChange || selectedChange.state !== 'planned';
-    find('confirm').disabled = busy || !review || !writes.apply;
-    find('apply').disabled = busy || !review || !writes.apply || !find('confirm').checked;
+    fields.forEach((name) => { form.elements.namedItem(name).disabled = locked || !writes.draft || !draftBinding; });
+    find('save-draft').disabled = locked || !writes.draft || !draftBinding || !form.dataset.dirty || draftConflict;
+    find('reset-draft').disabled = locked || !form.dataset.dirty;
+    find('refresh-draft').disabled = locked || !writes.draft || !draftBinding || !form.dataset.dirty;
+    find('confirm-draft').disabled = locked || !writes.draft || !pendingDraft;
+    find('prepare').disabled = locked || !writes.prepare || !choice('preparation', decisions.preparations || []);
+    find('review').disabled = locked || !selectedChange || selectedChange.state !== 'planned';
+    find('confirm').disabled = locked || !review || !writes.apply;
+    find('apply').disabled = locked || !review || !writes.apply || !find('confirm').checked;
     retainView();
   };
   const failure = (result) => {
@@ -86,21 +108,32 @@ document.querySelectorAll('[data-dashboard-workbench]').forEach((root) => {
     if (result.status === 'needs-input' || result.status === 'invalid') return 'Confira os campos e a seleção. Seu formulário foi mantido.';
     return 'Não foi possível concluir a ação. Seu formulário foi mantido; tente novamente.';
   };
-  const request = async (mode, payload, id) => {
+  const request = async (mode, payload, id, attempt) => {
+    if (revoked) throw new Error('Seu acesso mudou. Reabra a página com o acesso atual.');
     const url = new URL(location.href); url.search = ''; url.hash = ''; url.searchParams.set('sf', mode);
     if (id) url.searchParams.set('id', id);
-    const key = mode + ':' + JSON.stringify(payload);
-    if (!keys.has(key)) keys.set(key, crypto.randomUUID());
-    const response = await fetch(url, id ? { credentials: 'same-origin' } : { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json', 'Idempotency-Key': keys.get(key) }, body: JSON.stringify(payload) });
-    const result = await response.json();
-    if (!response.ok || result.status !== 'ok') { const error = new Error(failure(result)); error.status = result.status; throw error; }
-    keys.delete(key);
-    return result.value;
+    const controller = new AbortController(), timeout = setTimeout(() => controller.abort(), 10000);
+    controllers.add(controller);
+    try {
+      const response = await fetch(url, id ? { credentials: 'same-origin', signal: controller.signal } : { method: 'POST', credentials: 'same-origin', signal: controller.signal, headers: { 'Content-Type': 'application/json', 'Idempotency-Key': attempt ? attempt.key : crypto.randomUUID() }, body: attempt ? attempt.body : JSON.stringify(payload) });
+      if (response.status === 401 || response.status === 403 && !attempt) {
+        window.dispatchEvent(new Event('sf-access-revoked'));
+        throw new Error('Seu acesso mudou. Reabra a página com o acesso atual.');
+      }
+      const result = await response.json();
+      if (revoked) throw new Error('Seu acesso mudou. Reabra a página com o acesso atual.');
+      if (!response.ok || !result || result.status !== 'ok') {
+        const error = new Error(failure(result || {})); error.status = result && result.status;
+        error.rejected = [400, 401, 403, 409, 422].includes(response.status) && ['denied', 'conflict', 'stale', 'needs-input', 'invalid'].includes(error.status);
+        throw error;
+      }
+      return result.value;
+    } finally { clearTimeout(timeout); controllers.delete(controller); }
   };
   const run = async (work) => {
-    if (busy) return;
+    if (busy || revoked) return;
     busy = true; enable(); announce('Carregando…');
-    try { await work(); } catch (error) { resetReview(); announce(error instanceof Error ? error.message : 'Não foi possível concluir a ação.'); }
+    try { await work(); } catch (error) { if (!revoked) { if (!mutation) resetReview(); announce(error instanceof Error ? error.message : 'Não foi possível concluir a ação.'); } }
     finally { busy = false; enable(); }
   };
   const table = (container, headings, items) => {
@@ -142,7 +175,7 @@ document.querySelectorAll('[data-dashboard-workbench]').forEach((root) => {
       const existing = choice('draft-choice', draftCatalog);
       if (existing) { draftBinding = draftRequest(existing); draftIdentity = { id: existing.id, incarnation: existing.incarnation }; }
     }
-    fillFields(draftBinding && draftBinding.fields); enable();
+    fillFields(draftBinding && draftBinding.fields); rememberDraft(); enable();
   };
   const selectCase = () => {
     const selected = choice('case', caseCatalog);
@@ -155,7 +188,11 @@ document.querySelectorAll('[data-dashboard-workbench]').forEach((root) => {
     const from = find('from').value, to = find('to').value;
     if ((from && !to) || (!from && to) || (from && to && from > to)) throw new Error('Informe o início e o fim do período em ordem cronológica.');
     const next = await request('dashboard-workbench', { page: root.dataset.page, ...(from && to ? { period: { start: from, end: to } } : {}) });
-    data = next; agenda = undefined; resetReview();
+    if (form.dataset.dirty && draftBinding && !next.decisions.cases.some((value) => value.caseRef.id === draftBinding.caseRef.id && value.caseRef.incarnation === draftBinding.caseRef.incarnation)) {
+      window.dispatchEvent(new Event('sf-access-revoked'));
+      throw new Error('O caso não está disponível com seu acesso atual.');
+    }
+    data = next; agenda = undefined; if (!mutation) resetReview();
     find('from').value = next.period.start; find('to').value = next.period.end;
     find('agenda-view').replaceChildren();
     find('agenda-count').textContent = next.agenda ? next.agenda.recordCount + ' registro(s) na pauta de ' + root.dataset.page + '.' : 'Esta página não possui pauta disponível.';
@@ -164,18 +201,86 @@ document.querySelectorAll('[data-dashboard-workbench]').forEach((root) => {
     options('change', next.decisions.changes.map((change) => ({ ...change, label: change.label + ' · ' + (states[change.state] || 'Aguardando revisão') })), 'Selecione uma alteração');
     find('choice-reason').textContent = '';
     if (!form.dataset.dirty) {
+      const selected = storedView().draft;
       caseCatalog = next.decisions.cases; sourceCatalog = next.records.filter((record) => record.draft);
-      options('case', caseCatalog, 'Selecione um caso'); options('draft-source', sourceCatalog, 'Selecione um Hot Topic'); selectCase();
+      options('case', caseCatalog, 'Selecione um caso'); options('draft-source', sourceCatalog, 'Selecione um Hot Topic');
+      const caseIndex = selected ? caseCatalog.findIndex((value) => value.caseRef.id === selected.caseId && value.caseRef.incarnation === selected.caseIncarnation) : -1;
+      if (caseIndex >= 0) find('case').value = String(caseIndex);
+      selectCase();
+      const draftIndex = selected ? draftCatalog.findIndex((value) => value.id === selected.id && value.incarnation === selected.incarnation) : -1;
+      if (draftIndex >= 0) { find('draft-choice').value = String(draftIndex); selectDraft(); }
     }
+    restoreApplication();
   };
   const refreshedAfter = async (message) => {
     try { await refresh(); announce(message); }
-    catch { data = undefined; agenda = undefined; resetReview(); announce(message + ' Atualize as opções para continuar.'); }
+    catch { if (!revoked) { data = undefined; agenda = undefined; resetReview(); announce(message + ' Atualize as opções para continuar.'); } }
   };
-  find('load').addEventListener('click', () => run(async () => { await refresh(); announce(form.dataset.dirty ? 'Opções atualizadas. As alterações do formulário foram mantidas com a origem revisada anteriormente.' : 'Opções carregadas. Selecione os registros e escolhas que deseja revisar.'); }));
+  const restoreApplication = () => {
+    if (!applicationToRestore || mutation) return;
+    const saved = applicationToRestore; applicationToRestore = undefined;
+    try {
+      if (typeof saved.body !== 'string' || saved.body.length > 65536 || typeof saved.key !== 'string' || !/^[a-f0-9-]{36}$/.test(saved.key)) throw new Error('Invalid correlation');
+      const value = JSON.parse(saved.body), ref = value.caseRef;
+      if (Object.keys(value).sort().join(',') !== 'caseRef,changeId,choiceId,reviewDigest' || !ref || Object.keys(ref).sort().join(',') !== 'id,incarnation,version' ||
+        typeof ref.id !== 'string' || typeof ref.incarnation !== 'string' || !Number.isSafeInteger(ref.version) || ref.version < 0 ||
+        typeof value.choiceId !== 'string' || typeof value.changeId !== 'string' || !/^[a-f0-9]{64}$/.test(value.reviewDigest)) throw new Error('Invalid correlation');
+      const current = data.decisions.changes.filter((change) => change.caseRef.id === ref.id && change.caseRef.incarnation === ref.incarnation && change.choiceId === value.choiceId && change.changeId === value.changeId);
+      if (current.length !== 1) throw new Error('Application no longer available');
+      mutation = { mode: 'dashboard-hot-topic-apply', body: saved.body, key: saved.key, uncertain: true };
+      guard.dataset.dirty = 'true';
+    } catch { remember({ application: undefined }); }
+  };
+  const completeMutation = async (attempt, value) => {
+    if (attempt.mode === 'dashboard-hot-topic-draft') {
+      draftBinding = draftRequest(value); draftIdentity = { id: value.id, incarnation: value.incarnation }; rememberDraft();
+      delete form.dataset.dirty; clearDraftReview();
+      await refreshedAfter('Rascunho salvo. Ele pode ser incluído em uma escolha do caso antes da preparação.');
+    } else if (attempt.mode === 'dashboard-hot-topic-apply') {
+      resetReview();
+      await refreshedAfter(value.result.ok ? 'Alterações aplicadas. O comprovante foi registrado no caso.' : 'A alteração não foi aplicada. O resultado foi registrado no caso; revise seu estado atual.');
+    } else {
+      const messages = { 'dashboard-hot-topic-prepare': 'Escolha preparada. Selecione a alteração e revise os campos antes de aplicar.', 'dashboard-review-preserve': 'Reunião preservada. Ela está disponível no histórico enquanto suas fontes permanecem autorizadas.', 'dashboard-capture': 'Retrato do registro preservado.' };
+      await refreshedAfter(messages[attempt.mode]);
+    }
+  };
+  const retryMutation = async () => {
+    const attempt = mutation;
+    if (!attempt || revoked) return;
+    const reconciling = attempt.uncertain;
+    try {
+      const value = await request(attempt.mode, undefined, undefined, attempt);
+      if (revoked || mutation !== attempt) return;
+      if (!value || typeof value !== 'object') throw new Error('Resultado não confirmado.');
+      if (attempt.mode === 'dashboard-hot-topic-draft' && (typeof value.id !== 'string' || typeof value.incarnation !== 'string' || typeof value.draftRef !== 'string' || !value.caseRef || !value.fields)) throw new Error('Rascunho não confirmado.');
+      if (attempt.mode === 'dashboard-hot-topic-apply' && (typeof value.id !== 'string' || !value.id || value.surface !== 'dashboard' || !Number.isSafeInteger(value.version) || value.version < 0 || !value.result || typeof value.result.ok !== 'boolean')) throw new Error('Comprovante não confirmado.');
+      mutation = undefined; delete guard.dataset.dirty; rememberApplication();
+      await completeMutation(attempt, value);
+    } catch (error) {
+      if (revoked || mutation !== attempt) return;
+      if (error.rejected && !reconciling) {
+        mutation = undefined; delete guard.dataset.dirty; rememberApplication();
+        if (attempt.mode === 'dashboard-hot-topic-draft' && (error.status === 'conflict' || error.status === 'stale')) {
+          clearDraftReview(); draftConflict = true;
+          throw new Error('O rascunho mudou. Use Carregar versão atual e manter minhas alterações, compare as diferenças e confirme a base antes de salvar.');
+        }
+        throw error;
+      }
+      attempt.uncertain = true; rememberApplication();
+      announce(error.rejected ? 'A repetição não foi autorizada ou seus dados mudaram. O resultado anterior continua pendente; carregue as opções com seu acesso atual e repita a mesma tentativa para recuperar o comprovante.' : 'O resultado não foi confirmado. Os valores enviados estão preservados. Use Repetir mesma tentativa para recuperar o resultado.');
+    }
+  };
+  const mutate = async (mode, payload) => {
+    if (mutation || revoked) return;
+    mutation = { mode, body: JSON.stringify(payload), key: crypto.randomUUID(), uncertain: false };
+    guard.dataset.dirty = 'true'; rememberApplication();
+    await retryMutation();
+  };
+  find('retry').addEventListener('click', () => run(retryMutation));
+  find('load').addEventListener('click', () => run(async () => { await refresh(); announce(mutation ? 'Opções atualizadas com seu acesso atual. Repita a mesma tentativa para confirmar o resultado anterior.' : form.dataset.dirty ? 'Opções atualizadas. As alterações do formulário foram mantidas com a origem revisada anteriormente.' : 'Opções carregadas. Selecione os registros e escolhas que deseja revisar.'); }));
   find('agenda').addEventListener('click', () => run(async () => { agenda = await request('dashboard-agenda', { sections: [data.agenda.section] }); sections(find('agenda-view'), agenda.sections); announce('Pauta pronta para revisão.'); }));
-  find('preserve').addEventListener('click', () => run(async () => { await request('dashboard-review-preserve', { selectionRef: agenda.selectionRef, sectionRefs: agenda.sections.map((section) => section.id) }); await refreshedAfter('Reunião preservada. Ela está disponível no histórico enquanto suas fontes permanecem autorizadas.'); }));
-  find('capture').addEventListener('click', () => run(async () => { const selected = choice('record', data.records); await request('dashboard-capture', { sourceRef: selected.sourceRef }); await refreshedAfter('Retrato do registro preservado.'); }));
+  find('preserve').addEventListener('click', () => run(async () => { await mutate('dashboard-review-preserve', { selectionRef: agenda.selectionRef, sectionRefs: agenda.sections.map((section) => section.id) }); }));
+  find('capture').addEventListener('click', () => run(async () => { const selected = choice('record', data.records); await mutate('dashboard-capture', { sourceRef: selected.sourceRef }); }));
   find('reopen').addEventListener('click', () => run(async () => {
     const selected = choice('history', data.history), value = await request(selected.kind === 'capture' ? 'dashboard-history' : 'dashboard-review', undefined, selected.ref);
     const view = find('history-view'); view.replaceChildren();
@@ -213,12 +318,10 @@ document.querySelectorAll('[data-dashboard-workbench]').forEach((root) => {
   form.addEventListener('submit', (event) => { event.preventDefault(); if (!draftBinding || !form.reportValidity()) return; run(async () => {
     if (draftConflict) throw new Error('Carregue a versão atual e confirme a base antes de salvar. Seus valores foram mantidos.');
     const edited = Object.fromEntries(fields.map((name) => [name, form.elements.namedItem(name).value]));
-    try { await request('dashboard-hot-topic-draft', { ...draftBinding, fields: edited }); }
-    catch (error) { if (error.status === 'conflict' || error.status === 'stale') { clearDraftReview(); draftConflict = true; throw new Error('O rascunho mudou. Use Carregar versão atual e manter minhas alterações, compare as diferenças e confirme a base antes de salvar.'); } throw error; }
-    delete form.dataset.dirty; clearDraftReview(); await refreshedAfter('Rascunho salvo. Ele pode ser incluído em uma escolha do caso antes da preparação.');
+    await mutate('dashboard-hot-topic-draft', { ...draftBinding, fields: edited });
   }); });
   find('preparation').addEventListener('change', () => { const selected = choice('preparation', data && data.decisions.preparations || []); find('choice-reason').textContent = selected ? 'Motivo registrado: ' + selected.reason : ''; enable(); });
-  find('prepare').addEventListener('click', () => run(async () => { const selected = choice('preparation', data.decisions.preparations); await request('dashboard-hot-topic-prepare', { caseRef: selected.caseRef, choiceId: selected.choiceId, draftRef: selected.draftRef }); await refreshedAfter('Escolha preparada. Selecione a alteração e revise os campos antes de aplicar.'); }));
+  find('prepare').addEventListener('click', () => run(async () => { const selected = choice('preparation', data.decisions.preparations); await mutate('dashboard-hot-topic-prepare', { caseRef: selected.caseRef, choiceId: selected.choiceId, draftRef: selected.draftRef }); }));
   find('change').addEventListener('change', () => { resetReview(); enable(); });
   find('review').addEventListener('click', () => run(async () => {
     const selected = choice('change', data.decisions.changes); resetReview();
@@ -233,13 +336,20 @@ document.querySelectorAll('[data-dashboard-workbench]').forEach((root) => {
   find('confirm').addEventListener('change', enable);
   find('apply').addEventListener('click', () => run(async () => {
     if (!review || !find('confirm').checked) return;
-    const receipt = await request('dashboard-hot-topic-apply', review);
-    if (!receipt.result || receipt.result.ok !== true) throw new Error('A alteração não foi aplicada. Atualize as opções e revise o estado atual.');
-    resetReview(); await refreshedAfter('Alterações aplicadas. O comprovante foi registrado no caso.');
+    await mutate('dashboard-hot-topic-apply', review);
   }));
   ['record', 'history'].forEach((name) => find(name).addEventListener('change', enable));
   ['from', 'to'].forEach((name) => find(name).addEventListener('change', () => { data = undefined; agenda = undefined; resetReview(); enable(); announce('Atualize as opções para usar o novo período.'); }));
   panel.addEventListener('toggle', retainView);
+  window.addEventListener('sf-access-revoked', () => {
+    if (revoked) return;
+    revoked = true; controllers.forEach((controller) => controller.abort()); controllers.clear();
+    data = agenda = review = draftBinding = draftIdentity = pendingDraft = mutation = applicationToRestore = undefined;
+    draftCatalog = []; caseCatalog = []; sourceCatalog = []; delete form.dataset.dirty; delete guard.dataset.dirty;
+    remember({ draft: undefined, application: undefined });
+    const note = document.createElement('p'); note.textContent = 'Seu acesso mudou. Reabra a página com o acesso atual.'; root.replaceChildren(note);
+  });
+  if (applicationToRestore) announce('Há uma tentativa anterior para conferir. Carregue as opções com seu acesso atual antes de recuperar o resultado.');
   enable();
 });
 `

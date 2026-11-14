@@ -2,6 +2,8 @@
 // Não importa superfície. Não há localStorage.
 
 import { shellStateScript } from "../product/ui/shell-state.ts"
+import { shellCommandScript } from "../product/ui/shell-command.ts"
+import { shellPreviewScript } from "../product/ui/shell-preview.ts"
 import { DASHBOARD_PAGES, PLANNER_TABS, PROCUREMENT_NAV, showPage } from "./nav.ts"
 
 export const UNSAVED = "A escrita não ficou gravada."
@@ -20,6 +22,8 @@ type PressResult = { ok: true; value?: unknown } | { ok: false; status?: 409; st
 const SCRIPT = `
 const unsaved = ${JSON.stringify(UNSAVED)}
 ${shellStateScript}
+${shellCommandScript}
+${shellPreviewScript}
 function assignValue(target, name, value) {
   const path = name.replace(/\\[(\\d+)\\]/g, ".$1").split(".")
   if (path.some((part) => ["__proto__", "constructor", "prototype"].includes(part))) throw new Error("Invalid field")
@@ -44,60 +48,6 @@ async function valuesOf(form) {
   }
   function compact(value) { if (Array.isArray(value)) return value.filter((entry) => entry !== undefined).map(compact); if (value && typeof value === "object") return Object.fromEntries(Object.entries(value).map(([key, entry]) => [key, compact(entry)])); return value }
   return compact(values)
-}
-function offerLatestVersion(form) {
-  if (!form || !form.isConnected) return
-  form.querySelector("[data-reload-draft]")?.remove()
-  const button = document.createElement("button")
-  button.type = "button"
-  button.dataset.reloadDraft = "true"
-  button.textContent = "Load current version and keep my edits"
-  button.addEventListener("click", async () => {
-    button.disabled = true
-    try {
-      const response = await fetch(location.href, { credentials: "same-origin", cache: "no-store" })
-      if (!response.ok) { notice("The current record is unavailable. Your edits are still here."); return }
-      const next = new DOMParser().parseFromString(await response.text(), "text/html")
-      const identity = (candidate) => ["year", "month"].map((name) => {
-        const input = [...candidate.elements].find((element) => element.name === name)
-        return input ? input.defaultValue ?? input.value : null
-      })
-      const candidates = [...next.querySelectorAll("form[data-command]")].filter((candidate) =>
-        candidate.dataset.page === form.dataset.page && candidate.dataset.command === form.dataset.command && candidate.dataset.record === form.dataset.record && JSON.stringify(identity(candidate)) === JSON.stringify(identity(form)))
-      const current = candidates.length === 1 ? candidates[0] : null
-      if (!form.isConnected || !current || !Number.isSafeInteger(Number(current.dataset.version)) || Number(current.dataset.version) < 0 || current.querySelector('button[type="submit"]')?.disabled) {
-        notice("This record can no longer be updated in this context. Your edits are still here.")
-        return
-      }
-      const stored = await valuesOf(current)
-      delete stored.versions
-      const details = document.createElement("section")
-      details.dataset.currentRevision = "true"
-      const heading = document.createElement("h3")
-      heading.textContent = "Current record — review before saving your edits"
-      details.append(heading)
-      const list = document.createElement("ul")
-      for (const [name, value] of Object.entries(stored)) {
-        const item = document.createElement("li")
-        item.textContent = name + ": " + (value == null ? "Not provided" : typeof value === "object" ? JSON.stringify(value) : String(value))
-        list.append(item)
-      }
-      details.append(list)
-      form.dataset.version = current.dataset.version
-      const versions = form.querySelector('input[name="versions"]'), latestVersions = current.querySelector('input[name="versions"]')
-      if (versions && latestVersions) versions.value = latestVersions.value
-      form.dataset.previewRevision = String(Number(form.dataset.previewRevision || "0") + 1)
-      form.querySelector("[data-preview]")?.remove()
-      form.querySelector("[data-current-revision]")?.remove()
-      form.append(details)
-      button.remove()
-      notice("Current version loaded. Your edits are still here; review the current values, then save again.")
-      heading.tabIndex = -1
-      heading.focus()
-    } catch { notice("The current record could not be loaded. Your edits are still here.") }
-    finally { button.disabled = false }
-  })
-  form.append(button)
 }
 function showResult(result, attempt, form, status = result?.status) {
   if (form && Array.isArray(result?.fieldErrors)) {
@@ -132,16 +82,6 @@ function beginWrite() {
   pending.generation++
   pending.html = null
   return () => { pending.writing--; pending.generation++; pending.html = null }
-}
-async function send(command, form) {
-  const finish = beginWrite()
-  try {
-  const response = await fetch(location.href, { method: "POST", headers: { "Content-Type": "application/json" }, credentials: "same-origin", body: JSON.stringify(command) })
-  const result = await response.json()
-  if (!response.ok || !result || result.ok !== true) { showResult(result, command.values, form, response.status); return false }
-  notice(result.warnings && result.warnings.length ? result.warnings.join(" · ") : "Saved.")
-  return true
-  } finally { finish() }
 }
 async function press(name) {
   if (name === "Import JSON" && !window.confirm("Substitui para toda a gente.")) return
@@ -299,10 +239,12 @@ function attach() {
       applyRefresh()
     })
     dialog.addEventListener("cancel", (event) => {
+      const active = [...dialog.querySelectorAll("form[data-command]")].find((form) => outstandingCommand(form))
+      if (active) { event.preventDefault(); commandBlocked(active); return }
       const dirty = dialog.querySelectorAll("form[data-dirty]")
       if (!dirty.length) return
       if (!window.confirm("Discard unsaved changes?")) { event.preventDefault(); return }
-      dirty.forEach((form) => delete form.dataset.dirty)
+      dirty.forEach((form) => { delete form.dataset.dirty; discardDashboardPreview(form) })
       setTimeout(() => void refresh(true), 0)
     })
     dialog.addEventListener("keydown", (event) => {
@@ -320,8 +262,10 @@ function attach() {
     button.dataset.bound = "true"
     button.addEventListener("click", () => {
       const dialog = button.closest("dialog")
+      const active = [...dialog.querySelectorAll("form[data-command]")].find((form) => outstandingCommand(form))
+      if (active) { commandBlocked(active); return }
       if (dialog.querySelector("form[data-dirty]") && !window.confirm("Discard unsaved changes?")) return
-      dialog.querySelectorAll("form[data-dirty]").forEach((form) => delete form.dataset.dirty)
+      dialog.querySelectorAll("form[data-dirty]").forEach((form) => { delete form.dataset.dirty; discardDashboardPreview(form) })
       dialog.close()
       void refresh(true)
     })
@@ -408,6 +352,7 @@ function attach() {
     form.dataset.bound = "true"
     form.addEventListener("submit", async (event) => {
       event.preventDefault()
+      if (pending.closed || form.dataset.saving === "true" || commandBlocked(form)) return
       const errorScope = form.closest("section") || form
       errorScope.querySelectorAll("[data-field-error]").forEach((message) => {
         errorScope.querySelectorAll("[aria-describedby]").forEach((input) => {
@@ -419,6 +364,7 @@ function attach() {
       })
       const confirmed = /import|delete|replace|restore/.test(form.dataset.command)
       if (confirmed && !window.confirm("Confirm this change?")) return
+      form.dataset.saving = "true"
       const buttons = [...form.querySelectorAll("button")]
       buttons.forEach((button) => button.disabled = true)
       try {
@@ -431,53 +377,7 @@ function attach() {
         const values = submitsEditor ? { ...await valuesOf(editors[0]), ...await valuesOf(form) } : await valuesOf(form)
         const command = { page: form.dataset.page, action: form.dataset.command, id: form.dataset.record || undefined, version: Number(form.dataset.version), values, confirmed: confirmed || values.confirmed === true }
         if (document.body.dataset.surface === "dashboard" && ["OPEX Detail", "CAPEX Projects"].includes(command.page) && ["year-amount", "annual-entry", "save-entry"].includes(command.action)) {
-          const revision = formRevision
-          const finish = beginWrite()
-          try {
-            const response = await fetch(location.href, { method: "POST", headers: { "Content-Type": "application/json" }, credentials: "same-origin", body: JSON.stringify({ page: command.page, action: "preview-change", version: 0, values: { command: { ...command, confirmed: false } } }) })
-            const result = await response.json()
-            if (!response.ok || !result?.ok || result.value?.status !== "preview") { showResult(result, values, form, response.status); return }
-            if ((form.dataset.previewRevision || "0") !== revision) { notice("The draft changed. Review a new preview."); return }
-            const preview = result.value
-            const panel = document.createElement("section")
-            panel.dataset.preview = "true"
-            panel.setAttribute("aria-label", "Review changes")
-            const heading = document.createElement("h3")
-            heading.textContent = "Review changes before applying"
-            panel.append(heading)
-            const format = (item) => item?.state === "absent" ? "Absent" : item?.state === "undefined" ? "Undefined" : item?.state === "value" ? (item.value == null ? "Not provided" : typeof item.value === "object" ? JSON.stringify(item.value) : String(item.value)) : "Unavailable"
-            const list = document.createElement("ul")
-            for (const change of preview.changes || []) { const row = document.createElement("li"); row.textContent = change.path + ": " + format(change.before) + " → " + format(change.after); list.append(row) }
-            if (!list.children.length) { const row = document.createElement("li"); row.textContent = "No changes."; list.append(row) }
-            panel.append(list)
-            for (const warning of preview.warnings || []) { const message = document.createElement("p"); message.textContent = warning; panel.append(message) }
-            if (preview.summary) { const summary = document.createElement("p"); summary.textContent = "Added: " + preview.summary.added + " · Updated: " + preview.summary.updated + " · Ignored: " + preview.summary.ignored; panel.append(summary) }
-            const apply = document.createElement("button")
-            apply.type = "button"
-            apply.textContent = "Confirm and apply"
-            apply.addEventListener("click", async () => {
-              if ((form.dataset.previewRevision || "0") !== revision) { panel.remove(); notice("The draft changed. Review a new preview."); return }
-              apply.disabled = true
-              const done = beginWrite()
-              try {
-                const response = await fetch(location.href, { method: "POST", headers: { "Content-Type": "application/json" }, credentials: "same-origin", body: JSON.stringify({ page: command.page, action: "apply-preview", version: 0, values: { previewRef: preview.previewRef } }) })
-                const result = await response.json()
-                if (!response.ok || !result?.ok || result.value?.applied !== true) { showResult(result, values, form, response.status); if (response.status === 409) panel.remove(); return }
-                if ((form.dataset.previewRevision || "0") !== revision) { panel.remove(); notice("The reviewed changes were saved. New edits remain unsaved; review them before applying."); return }
-                delete form.dataset.dirty
-                const dialog = form.closest("dialog")
-                if (dialog) { pending.focus = dialog.closest("td").querySelector("[data-open-editor]").dataset.editorKey; dialog.close() }
-                notice("Saved.")
-                pending.again = true
-              } catch { notice(unsaved) }
-              finally { done(); apply.disabled = false; if (pending.again) { pending.again = false; void refresh() } }
-            })
-            panel.append(apply)
-            form.querySelector("[data-preview]")?.remove()
-            form.append(panel)
-            heading.tabIndex = -1
-            heading.focus()
-          } finally { finish() }
+          await reviewDashboardCommand(form, command, formRevision)
           return
         }
         const saved = await send(command, form)
@@ -497,7 +397,7 @@ function attach() {
           await refresh()
         }
       } catch { notice(unsaved) }
-      finally { buttons.forEach((button) => button.disabled = false) }
+      finally { delete form.dataset.saving; buttons.forEach((button) => button.disabled = false) }
     })
   })
   document.querySelectorAll("[data-action]").forEach((button) => button.addEventListener("click", () => press(button.getAttribute("data-action"))))
@@ -525,7 +425,7 @@ function applyRefresh() {
   }
 }
 async function refresh(silent = false) {
-  if (pending.closed || pending.writing) return
+  if (pending.closed) return
   if (pending.loading) { if (!silent) pending.again = true; return }
   const generation = pending.generation
   pending.loading = true
@@ -551,7 +451,7 @@ async function refresh(silent = false) {
   } catch { if (!silent && !pending.closed) notice("Could not refresh. Your current view and unsaved edits are unchanged. Try again.") }
   finally { clearTimeout(deadline); pending.loading = false; pending.controller = null; if (pending.again) { pending.again = false; void refresh() } }
 }
-const markDirty = (event) => { const form = event.target.closest("form[data-command], form[data-private-upload]"); if (form) { form.dataset.dirty = "true"; form.dataset.previewRevision = String(Number(form.dataset.previewRevision || "0") + 1); form.querySelector("[data-preview]")?.remove() } }
+const markDirty = (event) => { const form = event.target.closest("form[data-command], form[data-private-upload]"); if (form) { form.dataset.dirty = "true"; form.dataset.previewRevision = String(Number(form.dataset.previewRevision || "0") + 1); if (!outstandingCommand(form)) discardDashboardPreview(form) } }
 document.addEventListener("input", markDirty)
 document.addEventListener("change", markDirty)
 const businessTimer = setInterval(() => { if (!document.hidden) void refresh(true) }, 30000)
@@ -561,6 +461,7 @@ window.addEventListener("pageshow", (event) => { if (event.persisted) { location
 window.sucafinaRefresh = async () => { pending.generation++; pending.html = null; await refresh() }
 document.addEventListener("focusout", () => setTimeout(applyRefresh, 0))
 attach()
+void restoreDashboardPreviews()
 `
 
 export function press(
