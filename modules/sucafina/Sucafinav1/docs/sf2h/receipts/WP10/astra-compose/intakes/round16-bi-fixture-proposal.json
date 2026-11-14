@@ -1,0 +1,155 @@
+{
+  "schema": "sf2-wp10-bi-ci8-fixture-proposal-v1",
+  "status": "PROPOSED_OWN_FIXTURE_CORRECTIONS_NOT_EXECUTED",
+  "author": "/root/composition_wp10",
+  "independent_review": false,
+  "base": {
+    "head": "5cb947a4d6e11a37dbd702404c2d4f4d352a4b57",
+    "tree": "e39b8189cf70ecd3b00c02dcf59f9388d65b8b2d",
+    "receipt": "evidence/published-w15.json"
+  },
+  "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts",
+  "base_blob": "7ac0a8b590e52bbe001e15015335cfa8aed7f0f6",
+  "base_sha256": "c98f9094ae4c4b351f6bdbdcee1037b5da089d03873bbe9df12276025d0733a9",
+  "proposed": {
+    "path": "incoming-cache/bi-w16/patch/modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts",
+    "bytes": 38434,
+    "blob": "d4f3078394e65092f5da9261d5febfad61080f0a",
+    "sha256": "c2ecb44138a5fe3e3686082028da4cc0d73d0445ef0835a003de1f94bef96151"
+  },
+  "diff": {
+    "path": "incoming-cache/bi-w16/bi-lifecycle.patch",
+    "bytes": 6657,
+    "blob": "740a44d0c548acd4248304fde8799c2699a36c73",
+    "sha256": "e4fde34765b1d5a9cc767860fbcd53828ca22a5df9e7ca489e57d419db73b7d8"
+  },
+  "payload": {
+    "path": "incoming-cache/bi-w16/payload.json",
+    "bytes": 40264,
+    "blob": "34b41ce7d73af9d03b267618661a55ab01222e43",
+    "sha256": "85d5fbf774826c053211dca4b5760b943b764f3a50d33d445d488fd6c55f0227"
+  },
+  "diagnosis": {
+    "path": "incoming-cache/bi-w16/diagnosis.md",
+    "bytes": 4492,
+    "blob": "52255abaf44806996db476b1fa860734b33f72b9",
+    "sha256": "7d0de54cffe8bbb12fe340145fa14085e9d81914354e6cb337ec6a1c5481eac3"
+  },
+  "evidence": {
+    "run": 43601886040,
+    "job": 132468196684,
+    "W": "5cb947a4d6e11a37dbd702404c2d4f4d352a4b57",
+    "W_tree": "e39b8189cf70ecd3b00c02dcf59f9388d65b8b2d",
+    "S": "25d89ec664217f56c60defa0eb518f4e94e05d39",
+    "S_tree": "9da69a9c4024e13427a401ddbab7cbc701ea1d8b",
+    "result": {
+      "pass": 24,
+      "fail": 2,
+      "tests": 26,
+      "files": 8,
+      "assertions": 505,
+      "seconds": 126.24,
+      "unhandled_errors": 0
+    },
+    "log": {
+      "path": "evidence/ci8.log",
+      "bytes": 267861,
+      "sha256": "c68fffbd7deeefb3f2b58849cabc33baa4c42ab5f2697293a036f3d7f25aef62"
+    }
+  },
+  "findings": [
+    {
+      "id": "CI8-BI-MOUNTED-OPERATOR-COOKIE",
+      "classification": "CONFIRMED_STATIC_FIXTURE_DEFECT_WITH_MATCHING_CI_OBSERVATION",
+      "observed": "Actual anchored shell HTTP200 instead of required403; its wait completed14ms. Logout204 alone did not establish revocation.",
+      "mechanism": "cookies(origin) excludes Path=/sucafina; producer logout without a handle still returns204 and does not revoke.",
+      "proposal": "Query actual mounted logout URL; exactly one operator cookie, exact mount and nonempty presence before actual request.",
+      "runtime_validation": "PENDING_NEXT_SHA_ACTIONS"
+    },
+    {
+      "id": "CI8-BI-COMPARISON-FORM-BOUNDARY",
+      "classification": "DUPLICATE_DATE_CHANGE_CONFIRMED_FULL_TIMEOUT_CAUSE_UNPROVEN",
+      "observed": "comparison.http10000ms timeout before any source/navigation phase; body failure preserved.",
+      "mechanism": "Playwright fill(date) already emits change. Manual second change starts another options load and aborts previous read. Exact event order causing timeout was not logged.",
+      "proposal": "No manual dispatch; observe real exact-period options200, Tab date and currency, require real DOM/valid enabled submit/exact selection, observe exact BI data response.",
+      "runtime_validation": "PENDING_NEXT_SHA_ACTIONS"
+    },
+    {
+      "id": "CI8-WP07-CHROME-CLEANUP",
+      "classification": "FOREIGN_OWNER_OPEN",
+      "owner": "WP07 / PR33",
+      "observed": "After primary comparison timeout, connectedtrue and3close RPCs unsettled.",
+      "forwarded_comment": "https://github.com/gustavomhss/Orchestra-SF/pull/33#issuecomment-6878062059",
+      "changed": false
+    }
+  ],
+  "dependencies_read": [
+    {
+      "path": "worktree/modules/sucafina/Sucafinav1/runtime/operator-identity.ts",
+      "bytes": 7948,
+      "blob": "4845de24285df2459991da7d9895aad95eb93b19",
+      "sha256": "b197275ce454ddf5ede70fe5794b02f1814cf136eb3cfe8b177b761121b550db"
+    },
+    {
+      "path": "worktree/apps/cli/src/sucafina-product/extended-bi-browser.ts",
+      "bytes": 27164,
+      "blob": "e491194f76b2183d04666a7f82c53a9490822678",
+      "sha256": "7dc936d9f3d974880a22059e6d17531070db638d242e1691a207664688068ee3"
+    },
+    {
+      "path": "worktree/modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts",
+      "bytes": 2313,
+      "blob": "3eb140557b597156baf52578d8981d332e52aef3",
+      "sha256": "d3db838157ddfd9143302f84b49b5790e0f949af1ed0e0ce08074b98b97c493c"
+    }
+  ],
+  "official_static_sources": [
+    {
+      "repository": "microsoft/playwright",
+      "ref": "v1.59.1",
+      "path": "packages/playwright-core/src/server/network.ts",
+      "blob": "b39d668d14a158cb9620a7ed317b3a3cfa5975f4"
+    },
+    {
+      "repository": "microsoft/playwright",
+      "ref": "v1.59.1",
+      "path": "packages/injected/src/injectedScript.ts",
+      "blob": "a0882d2b0561016936d4f837896b0ed7563b6588"
+    }
+  ],
+  "invariants": [
+    "One own fixture file only; no product, identity, foreign WP07, workflow or shared worktree edits.",
+    "Every preexisting expect assertion retained verbatim; the other3test bodies and fixture setup/cleanup helper are byte-identical.",
+    "Five120000ms outer budgets,105000ms cooperative deadline,10000ms default and15000ms navigation unchanged.",
+    "Interval anchor, held-read<30000ms, real403, absence of late render/payload and subsequent requests unchanged.",
+    "Cookie values never logged or used as expected assertion operands; only count/path/nonempty boolean observed.",
+    "Date/currency changes use real locator gestures; no new synthetic dispatch, retries or alternate selections.",
+    "Options/data observers match current period/pair; form readiness reads DOM and validity without changing product state.",
+    "Explicit source navigation/noWaitAfter, current return read and complete filter/pair/currency/focus assertions unchanged.",
+    "Cleanup always awaited; body-only, cleanup-only and combined failures still fail."
+  ],
+  "counterproofs_required": [
+    "Missing or multiple operator cookies fail before logout; wrong mount or empty value fail without exposing credentials.",
+    "Unrevoked or rebound browser authority still fails expected403 and late-render/traffic assertions.",
+    "Missing/denied options, changed selection, invalid form or disabled submit fail without retry under existing defaults.",
+    "Data for another view/period/pair/currency does not satisfy the actual response observer.",
+    "Current reauthorization, exact history state and mark focus must survive a real source round trip.",
+    "WP07 transport failure remains independently fatal and cannot replace or hide primary failure."
+  ],
+  "static_validation": {
+    "worktree_base_blob_verified": true,
+    "removed_existing_assertion_lines": 0,
+    "other_three_test_bodies_unchanged": true,
+    "fixture_setup_and_cleanup_unchanged": true,
+    "all_test_names_and_budgets_unchanged": true,
+    "product_execution": false
+  },
+  "next_action": "Root may publish the bounded proposal and select the complete5case BI lifecycle file on exact next W/S through CI.md. No passing result yet.",
+  "local_product_execution": false,
+  "CI_dispatched": false,
+  "GitHub_writes": false,
+  "worktree_edits": false,
+  "foreign_source_edits": false,
+  "full_criterion_accepted": false,
+  "global_release": false
+}

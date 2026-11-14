@@ -1,0 +1,22 @@
+diff --git a/modules/sucafina/Sucafinav1/src/screen-shell.ts b/modules/sucafina/Sucafinav1/src/screen-shell.ts
+--- a/modules/sucafina/Sucafinav1/src/screen-shell.ts
++++ b/modules/sucafina/Sucafinav1/src/screen-shell.ts
+@@ -424,7 +424,16 @@ function applyRefresh() {
+   const next = new DOMParser().parseFromString(pending.html, "text/html")
+   const main = next.querySelector("main")
+   if (!main) { pending.html = null; return }
+-  document.querySelector("main").replaceWith(main)
++  const current = document.querySelector("main")
++  // Server access checks already ran in refresh(). A client-owned workspace
++  // may retain its live mount and revalidate through its own product reader.
++  // Unclaimed events keep the existing full-main replacement behavior.
++  if (current?.getAttribute("data-page") === main.getAttribute("data-page") &&
++      !current.dispatchEvent(new CustomEvent("sucafina:main-refresh", { cancelable: true }))) {
++    pending.html = null
++    return
++  }
++  current?.replaceWith(main)
+   pending.html = null
+   attach()
+   if (pending.focus !== null) {
+

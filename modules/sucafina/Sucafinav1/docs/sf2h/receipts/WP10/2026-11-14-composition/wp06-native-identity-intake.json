@@ -1,0 +1,49 @@
+{
+  "from": "e4e9ceb5ec97a9c3238a35582cb7ca5401756536",
+  "to": "fb13945d9687e0ebd90f81ba5f9356ec8c7613af",
+  "consumed": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/native/documents.test.ts",
+      "blobSha": "0eb5f70c6cd79ed63b7ca854afced52d1e5c7d20",
+      "owner": "WP06",
+      "publisher": "astra-wp06",
+      "sourceCommit": "fb13945d9687e0ebd90f81ba5f9356ec8c7613af"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/native/fixture.ts",
+      "blobSha": "aa483ae3f02ff446cbcc1138a07bb4a4de6008b5",
+      "owner": "WP06",
+      "publisher": "astra-wp06",
+      "sourceCommit": "fb13945d9687e0ebd90f81ba5f9356ec8c7613af"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/native/import-analysis.test.ts",
+      "blobSha": "77c3fa98168842d0902cd6b457ad400e1a365caf",
+      "owner": "WP06",
+      "publisher": "astra-wp06",
+      "sourceCommit": "fb13945d9687e0ebd90f81ba5f9356ec8c7613af"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/native-identity.ts",
+      "blobSha": "dfece223dc3b6e0c1a94f74992afe9a62a928707",
+      "owner": "WP10",
+      "publisher": "astra-wp06",
+      "sourceCommit": "fb13945d9687e0ebd90f81ba5f9356ec8c7613af"
+    }
+  ],
+  "ownedReconciled": [
+    "apps/cli/src/sucafina-product/host-context.ts",
+    "apps/cli/src/sucafina-product/native-host.ts",
+    "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts"
+  ],
+  "commits": [
+    {
+      "sha": "ea7cffd9928a26e95286572966522360fb2b4816",
+      "message": "test(sucafina): consume UI grants once in native parity fixture\n\nMatch production admission-to-dispatch ownership. Retain direct domain invocation with one consumed grant and explicit reused/finished-grant denials. Preserve real Core, loaded skills, private MCP, domain consumers and all output comparisons.\n\nReport safe stage and reason codes for prerequisite failures observed during hosted validation; do not weaken production authority."
+    },
+    {
+      "sha": "fb13945d9687e0ebd90f81ba5f9356ec8c7613af",
+      "message": "fix(sucafina): align native identity with persisted Core sessions\n\nCanonicalize optional model variant and location workspace fields before run persistence and native admission, retaining strict identity and catalog checks. Core persists the default variant and explicit workspace key; the prior UI model/location shapes caused native admission conflicts.\n\nUse actual per-Location resident registration in the WP06 fixture, keep its location scope active, and compare real SessionStore identity and loaded skill evidence. Preserve missing/forged receipt and grant-denial cases. Safe skill-load failures now distinguish missing or busy sessions without exposing source content.\n\nAddresses hosted N10 skill-load failure and independently reviewed production identity defects. Hosted validation of this candidate follows."
+    }
+  ]
+}

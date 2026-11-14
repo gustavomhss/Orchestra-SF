@@ -1,0 +1,76 @@
+{
+  "schema": "sf-wp00-consumer-inputs-v1",
+  "synthetic": true,
+  "planningCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "codeBaseline": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+  "oracles": ["FX01", "FX02", "FX03"],
+  "authorization": {
+    "finance": { "id": "synthetic-finance", "roles": ["finance"], "canWrite": true },
+    "viewer": { "id": "synthetic-viewer", "roles": ["viewer"], "canWrite": false },
+    "dashboardAdmin": { "id": "synthetic-dashboard-admin", "roles": ["admin"], "canWrite": true },
+    "outsider": { "id": "synthetic-outsider", "roles": [], "canWrite": false },
+    "meaning": "Roles are native domain roles, scoped to each surface; these fixtures confer no live identity or request authority."
+  },
+  "procurement": {
+    "currency": "USD",
+    "prEstimate": 32000,
+    "fxSnapshot": { "USD": 1, "EUR": 1.08 },
+    "laterFxRates": [{ "code": "EUR", "rate": 2 }],
+    "weights": {
+      "tech": 60,
+      "comm": 40,
+      "criteria": [{ "weight": 35 }, { "weight": 20 }, { "weight": 15 }, { "weight": 15 }, { "weight": 15 }],
+      "commCriteria": [{ "weight": 70, "auto": true }, { "weight": 15 }, { "weight": 15 }]
+    },
+    "quotes": [
+      { "id": "A", "supplier": "Synthetic Supplier A", "currency": "USD", "total": 32400, "techPass": true, "scores": [5, 4, 4, 4, 4], "cscores": [null, 4, 4] },
+      { "id": "B", "supplier": "Synthetic Supplier B", "currency": "EUR", "total": 28000, "techPass": true, "scores": [4, 4, 4, 3, 4], "cscores": [null, 5, 4] },
+      { "id": "C", "supplier": "Synthetic Supplier C", "currency": "USD", "total": 29000, "techPass": false, "scores": [5, 5, 5, 5, 5], "cscores": [null, 5, 5] }
+    ],
+    "expected": {
+      "ranking": ["A", "B"],
+      "aTechnical": 87,
+      "aCommercial": 89.33333333333333,
+      "aOverall": 87.93333333333334,
+      "bTechnical": 77,
+      "bCommercial": 97,
+      "bOverall": 85,
+      "bUsd": 30240,
+      "cRank": null,
+      "source": "campaign.json numeric_oracles FX02; declared independently of quoteAssessment"
+    }
+  },
+  "planner": {
+    "versionId": "synthetic-corpus-2027",
+    "baseLineId": "synthetic-operating",
+    "licenseLineId": "synthetic-license",
+    "closedMonths": 9,
+    "licenseMonthIndex": 10,
+    "expected": {
+      "baseOutlook": 590000,
+      "replacement84000": 602000,
+      "replacement78000": 596000,
+      "baseNovember": 112000,
+      "november84000": 124000,
+      "november78000": 118000,
+      "source": "campaign.json numeric_oracles FX01/FX03; November contribution is replaced once"
+    }
+  },
+  "approvalLifecycle": {
+    "requester": { "id": "synthetic-requester", "roles": ["requester"], "canWrite": true },
+    "holder": { "id": "synthetic-holder", "roles": ["approver"], "canWrite": true },
+    "request": { "title": "Synthetic purchase", "type": "service", "description": "Synthetic service for approval history", "estAmount": 32000, "costCenter": "SYN-FIN", "needBy": "2027-01-01", "justification": "Synthetic business reason", "recurring": false, "expenseType": "OPEX" },
+    "createdAt": "2026-11-13T04:01:10Z",
+    "submittedAt": "2026-11-13T04:02:10Z",
+    "returnedAt": "2026-11-13T04:03:10Z",
+    "resubmittedAt": "2026-11-13T04:04:10Z",
+    "returnReason": "Synthetic correction required",
+    "expected": { "returnedStatus": "pr_rejected", "resubmittedStatus": "pr_pending", "submissionEvents": 2, "rejectionEvents": 1 },
+    "configuration": "Assign the synthetic holder to existing native levels; preserve initial thresholds and approval mode."
+  },
+  "volume": {
+    "generator": "./volume.ts#createVolumeCorpus",
+    "definition": "Explicit synthetic row recipe; no monthly values inferred from annual totals.",
+    "expected": { "financialRows": 1000, "financialActual": 1000, "financialForecast": 2000, "purchaseOrders": 200, "purchaseOrderTotal": 20100, "projects": 100 }
+  }
+}

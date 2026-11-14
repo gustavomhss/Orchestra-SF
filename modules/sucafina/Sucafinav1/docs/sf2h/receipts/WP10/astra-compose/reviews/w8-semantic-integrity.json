@@ -1,0 +1,416 @@
+{
+  "schema": "sf2-independent-review-v1",
+  "reviewer": "/root/review_semantics_w8",
+  "role": "semantic-integrity",
+  "reviewed_head": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+  "reviewed_tree": "051391628c61f6a4333c8f13567c5518c4ff8f86",
+  "pr": "https://github.com/gustavomhss/Orchestra-SF/pull/32",
+  "status": "PROVISIONAL_REVIEW_PENDING_EXACT_HEAD_ACTIONS_AND_DELTA",
+  "no_author_overlap": true,
+  "author_overlap": [],
+  "product_edits": false,
+  "github_mutations": false,
+  "local_product_execution": false,
+  "created_at": "2026-11-14T10:51:03.065279+00:00",
+  "scope": "Independent static review of WP00 contracts and WP10 protected state, financial read semantics, C17 current/historical evidence, actual Atlas persistence and associated regression sources. Not a full-bundle S0 acceptance.",
+  "authors_examined": [
+    "Astra /root and completed implementation subagents",
+    "Finance WP03/WP05/WP11 owner",
+    "Operations WP04/WP06 owner",
+    "Intelligence WP12-WP14 owner"
+  ],
+  "examined_paths": [
+    {
+      "path": "apps/cli/src/sucafina-product/planner-calculation-history.ts",
+      "blob": "9805676b50cb5d12f37a4a91350f01ba227a168f",
+      "sha256": "5b5822480441f8972ec4ced62d655c933504bcd200c7cb3882aa0170e8244694",
+      "identity_source": "Github MCP exact W8 fetch_file plus local byte comparison",
+      "review_method": "static code/contract inspection; no local product execution"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+      "blob": "bc224c0b2830fe54a02c3b2bc356cb6bf2b1c327",
+      "sha256": "ff4732ca4b8fc8f6b3ffdccc3b04584dbc6739524ab55162196049c30c2357ed",
+      "identity_source": "Github MCP exact W8 fetch_file plus local byte comparison",
+      "review_method": "static code/contract inspection; no local product execution"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "blob": "4b02413b5a98e750187fa8f5fa54f3cb2415f4e3",
+      "sha256": "c6911aa04b6b22750b2f320b680c3b4510ae4f230d29baba76932b4feca12811",
+      "identity_source": "Hydrated W8 worktree supplied by integrator; local byte identity recorded",
+      "review_method": "static code/contract inspection; no local product execution"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/calculation-history.ts",
+      "blob": "4e92219aae9046891f167502139412bf9c509529",
+      "sha256": "06d7d1acbf1857550bb65c5e9251984aa8ef712ced3add121e5fdbad9d103fe3",
+      "identity_source": "Hydrated W8 worktree supplied by integrator; local byte identity recorded",
+      "review_method": "static code/contract inspection; no local product execution"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "blob": "d7d8eb3ca267551797b191ccfb1d037149757898",
+      "sha256": "2ddd4c7f64c24e781b5914cec322b0efa3ee0aa02c5f9b27cdd61271bb17fd5d",
+      "identity_source": "Hydrated W8 worktree supplied by integrator; local byte identity recorded",
+      "review_method": "static code/contract inspection; no local product execution"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-request-store.ts",
+      "blob": "0d677d2d0b3a9df7127f13b25fe3968757f0dceb",
+      "sha256": "8d2164156cb51c038c77bf08ddeda0f7298e429075f8213041c4c2cdc1f20b47",
+      "identity_source": "Hydrated W8 worktree supplied by integrator; local byte identity recorded",
+      "review_method": "static code/contract inspection; no local product execution"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/calculation-evidence.ts",
+      "blob": "aaacc8bf7df9fa67870c4067154fe67a58c34a22",
+      "sha256": "58e9aa1984498e2d1d080e8f073b204162b18c1e018e7202ea82461740386430",
+      "identity_source": "Hydrated W8 worktree supplied by integrator; local byte identity recorded",
+      "review_method": "static code/contract inspection; no local product execution"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-recall-scope.ts",
+      "blob": "30697fcbeee6b7011cc7786a0a3bc64bd0d3449e",
+      "sha256": "ac95c12bb81b42f0186c1bafcd801b71e50aebe576791e844f4d7c849e25bb47",
+      "identity_source": "Hydrated W8 worktree supplied by integrator; local byte identity recorded",
+      "review_method": "static code/contract inspection; no local product execution"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "blob": "5cca27ce239c92a8e3c9f9f92f816f5224562904",
+      "sha256": "9791fd4c605693711a4508b3b496c0fb67a407c1009d734408659ed10664fefc",
+      "identity_source": "Github MCP exact W8 fetch_file plus local byte comparison",
+      "review_method": "static code/contract inspection; no local product execution"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+      "blob": "91e8bc8f5d80f83b7756b4647c790cc5e5936d59",
+      "sha256": "62e0ab3ada8792c84b91c2e2b6ef9181fb9290292277485e7b18176090287a00",
+      "identity_source": "Github MCP exact W8 fetch_file plus local byte comparison",
+      "review_method": "static code/contract inspection; no local product execution"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-store.ts",
+      "blob": "0d7a1fa1d0f138d99fd0dc358ab898ebf828dcbf",
+      "sha256": "1875b7befe0c03c05c6e0c873b5bb522b681241833d98b7321ebeea8bad7614c",
+      "identity_source": "Hydrated W8 worktree supplied by integrator; local byte identity recorded",
+      "review_method": "static code/contract inspection; no local product execution"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "blob": "2fd55c7304add0829d7434917c80664fe86356b9",
+      "sha256": "de25a3d2c5fc8725debb538ec0efb45b3a3c986ff478156cce734038f87d7268",
+      "identity_source": "Github MCP exact W8 fetch_file plus local byte comparison",
+      "review_method": "static code/contract inspection; no local product execution"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "blob": "2c82d60d220d8d5365da8322bad648a64bbb62d2",
+      "sha256": "c3d843a4bb26a0f74fce550aa1114ae490e0410e1bcc4016a33b62c72c49eb81",
+      "identity_source": "Hydrated W8 worktree supplied by integrator; local byte identity recorded",
+      "review_method": "static code/contract inspection; no local product execution"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/public-state.ts",
+      "blob": "97d5062f42def4199cb16c1ae4502fdd982da68c",
+      "sha256": "bd448330bd4f6fd377207b46e2b22b03197862605e0323070879801ad501b334",
+      "identity_source": "Hydrated W8 worktree supplied by integrator; local byte identity recorded",
+      "review_method": "static code/contract inspection; no local product execution"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/state-layout.ts",
+      "blob": "c3a6e039badc5ed49b20caa7153cb01979ebec9a",
+      "sha256": "a8c13adf11aac2e421dc4dd84018c700e142d2c453277d32cfcdf90036bff08c",
+      "identity_source": "Hydrated W8 worktree supplied by integrator; local byte identity recorded",
+      "review_method": "static code/contract inspection; no local product execution"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json",
+      "blob": "5cc315a2fb88118dbfa9ed5259e0fdf792dbf6b7",
+      "sha256": "d321f4d671d20e6852ba939dadf1753f72b2810d7b6ebac1b4e0156b496ad6bd",
+      "identity_source": "Hydrated W8 worktree supplied by integrator; local byte identity recorded",
+      "review_method": "static code/contract inspection; no local product execution"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/atlas-projection.ts",
+      "blob": "7c1b3dd08dc663e9dfa406b09dc2af5920281131",
+      "sha256": "d75df91777528df4f4cf2af8099bbea47ebdf614a20d73803de6e6eb06ed877d",
+      "identity_source": "Github MCP exact W8 fetch_file plus local byte comparison",
+      "review_method": "static code/contract inspection; no local product execution"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/manifests/resident.json",
+      "blob": "453c6f3a5b48c081223909af8293f854ad31d7c8",
+      "sha256": "df8da1957543a1d33dbde5553a2c1b63ad141ef7925e1353bdc854fe7000a430",
+      "identity_source": "Hydrated W8 worktree supplied by integrator; local byte identity recorded",
+      "review_method": "static code/contract inspection; no local product execution"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+      "blob": "0a26a1ed086b9ce0a4a1907a233b705e6061e659",
+      "sha256": "0b2f7ab34f64bdf8fe38014916035aa7451246d10632a17fc15abae81f59759c",
+      "identity_source": "Hydrated W8 worktree supplied by integrator; local byte identity recorded",
+      "review_method": "static code/contract inspection; no local product execution"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "blob": "80b44373f154a70553f1c9ab84139091be3e0238",
+      "sha256": "4eaf7272bb7ef9748406241973780612392fc43ad7b7c66a35a449fc4233195f",
+      "identity_source": "Hydrated W8 worktree supplied by integrator; local byte identity recorded",
+      "review_method": "static code/contract inspection; no local product execution"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/atlas-store.test.ts",
+      "blob": "e366d37c1f31217744e800263d9dcc514e2db755",
+      "sha256": "40c687e1560bd4019654a3d6496bd4762dc7e7fd3e7f7b9fa484d23536db7de7",
+      "identity_source": "Hydrated W8 worktree supplied by integrator; local byte identity recorded",
+      "review_method": "static code/contract inspection; no local product execution"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/comparison.ts",
+      "blob": "459b94f2da3b4ea9e7addf7b2fed1d13015a2c84",
+      "sha256": "90ec6a2211bd8753f1a7d850e06c311b49cf056cc9430521179d980c97a64636",
+      "identity_source": "Hydrated W8 worktree supplied by integrator; local byte identity recorded",
+      "review_method": "static code/contract inspection; no local product execution"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/scenario.ts",
+      "blob": "acf0ad7ee8f2c29d258dd69f14d309bdbf99b19b",
+      "sha256": "f0f5b3da4e68f3d91ca6eea2b3c09870ad01b584b979913cff8ab01743aff6d3",
+      "identity_source": "Hydrated W8 worktree supplied by integrator; local byte identity recorded",
+      "review_method": "static code/contract inspection; no local product execution"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/catalog.ts",
+      "blob": "2b92394e3f1ce66e715e83a79b249b7972305ff6",
+      "sha256": "5521b06aef001830175f1192db3b731d92178789b2813f43c35a224f68853a28",
+      "identity_source": "Hydrated W8 worktree supplied by integrator; local byte identity recorded",
+      "review_method": "static code/contract inspection; no local product execution"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/procurement.ts",
+      "blob": "46f677152e5655617977ed2b8e49471c8a09e3be",
+      "sha256": "03605c8cf530c90803bd6bec8a679c204ce8c4bff4aaa183fca51d50a3bf32e0",
+      "identity_source": "Hydrated W8 worktree supplied by integrator; local byte identity recorded",
+      "review_method": "static code/contract inspection; no local product execution"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/decision-view.ts",
+      "blob": "3e5cf79d39a09c383b792ee27c867023a624231a",
+      "sha256": "84eb8d164ea84b822382aa4c1ae95370917b9d99d6987545fe9d5d5cbcc531ad",
+      "identity_source": "Hydrated W8 worktree supplied by integrator; local byte identity recorded",
+      "review_method": "static code/contract inspection; no local product execution"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/port.ts",
+      "blob": "4f94c3355074db43dcc4acaab09e14be9150767c",
+      "sha256": "7b67e94e0ca50e553854b048a0372d34f41ca273d4cf46bd6bebb0727413b49f",
+      "identity_source": "Hydrated W8 worktree supplied by integrator; local byte identity recorded",
+      "review_method": "static code/contract inspection; no local product execution"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/procurement-screen.ts",
+      "blob": "510be5b2aeb82e740f342a5b649619116cb8ff1c",
+      "sha256": "6b05ad525a3f756ef6312656b2bd8d0f36746b7791480d5c52375c2c7a656908",
+      "identity_source": "Hydrated W8 worktree supplied by integrator; local byte identity recorded",
+      "review_method": "static code/contract inspection; no local product execution"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/README.md",
+      "blob": "511db1593b7d6adb9bb248d05dc53195646d7a1a",
+      "sha256": "ca6efa35563d57a6d51ce3634076fa309e023e1ff38e2119754655ea69d6d037",
+      "identity_source": "Hydrated W8 worktree supplied by integrator; local byte identity recorded",
+      "review_method": "static code/contract inspection; no local product execution"
+    },
+    {
+      "path": "modules/atlas/boundary/src/business-memory-entry.ts",
+      "blob": "06f8085df12d57baf7973d0df500da3e366dc29a",
+      "identity_source": "Github MCP exact W8 fetch_file",
+      "review_method": "direct canonical reexports inspection"
+    },
+    {
+      "path": "modules/atlas/packages/memory/src/respawn.ts",
+      "blob": "9a4e27f13ab58c03f8f2de32d5fba06358a05001",
+      "identity_source": "Github MCP exact W8 fetch_file",
+      "review_method": "read-only canonical event identity/fold inspection; no engine mutation"
+    }
+  ],
+  "normative_sources": {
+    "plan_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "campaign_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+    "handoff_commit": "a3d29d011ba3607a57914701300f09117a3e2de9",
+    "read": [
+      "AGENTS",
+      "START",
+      "WORKFLOW",
+      "COMMON",
+      "WP00 and WP10 handoffs",
+      "WP00 canonical work package and relevant WP10 T01/T03/T07 task bodies",
+      "C08/C15/C17 complete contracts in packs",
+      "literal full criterion-map reconciliation for WP00 and WP10"
+    ]
+  },
+  "metadata_observations": {
+    "kind": "DETERMINISTIC_METADATA_ONLY_NOT_PRODUCT_TESTS",
+    "freeze_revision": 9,
+    "artifact_hashes_observed": 38,
+    "artifact_hash_mismatches": 0,
+    "resident_profiles": 5,
+    "resident_skills": 18,
+    "packs": 8,
+    "operation_call_routes": 39,
+    "profile_and_skill_source_hashes_observed": 23,
+    "profile_and_skill_source_hash_mismatches": 0,
+    "criteria": {
+      "WP00": {
+        "exact_ids_and_texts": 85,
+        "inherited_campaign_exact": 50
+      },
+      "WP10": {
+        "exact_ids_and_texts": 171,
+        "inherited_campaign_exact": 50
+      }
+    },
+    "acceptance_transfer": false
+  },
+  "positive_static_observations": [
+    {
+      "area": "C08 persistence",
+      "observation": "Namespace-specific current grants, explicit CAS, protected callback identities, duplicate-key digest/scope checks and transactional staging preserve metadata ownership; generic public views strip __sfProductV1 recursively.",
+      "limits": "No assertion of all consumer compilation or actual installed persistence qualification."
+    },
+    {
+      "area": "C15 source authority",
+      "observation": "Manifest counts 5/18/8/39 and 23 source byte digests match; skill loader validates unique owned path/realpath, source/instruction digests, SessionV2.skill receipt and exact observed message before issuing receipt.",
+      "limits": "No native Session/SkillLoadReceipt, model invocation or AM01/AM03 was executed by this reviewer."
+    },
+    {
+      "area": "Current and historical C17 calculation",
+      "observation": "New history lane requires exact ledger association, current case identity/incarnation/membership, original protected capture and record-only fresh-source canonical replay; current issue/persist/request lanes stay strict. Original projection/context bytes are preserved and case.version difference is explicit.",
+      "limits": "Historical source drift, mixed/nested historical ancestry and first capture after case advance remain unsupported, and the new positive/negative tests require exact-head Actions."
+    },
+    {
+      "area": "Read scopes and continuity",
+      "observation": "Request identity, abort, lease, access revision, case retainer, whole case/result/request/Atlas/source/day fences and lexical replay guards are inspected; independent recall cannot borrow a proof outside its AsyncLocalStorage scope.",
+      "limits": "Static reasoning does not establish scheduling/performance or replace the actual overlapping/egress negative cases."
+    },
+    {
+      "area": "Financial semantics",
+      "observation": "Planner presentation distinguishes alternative-minus-baseline cost from baseline-minus-alternative savings. Complete comparison requires canonical coverage and confirmed finite components; null and pending stay explicit. Procurement aging uses the latest matching stage submission and previous approved holder transition, with unavailable age when history does not support it.",
+      "limits": "This review does not attest every financial engine path or the unconsumed newer Finance commit."
+    }
+  ],
+  "findings": [
+    {
+      "id": "SEM-C17-POLICY-PROJECT-01",
+      "severity": "HIGH",
+      "classification": "MANDATORY_COMPLETENESS_GAP",
+      "status": "OPEN",
+      "introduced_by_w8": false,
+      "owner": [
+        "WP10 composition",
+        "WP14 reviewed policy projection producer / S0 authority intake"
+      ],
+      "criteria": [
+        "C17",
+        "WP10.T07.DOD.01",
+        "WP10.T07.CMP.01",
+        "WP10.T07.CHK.06",
+        "WP00.T02.CMP.10",
+        "AM05"
+      ],
+      "summary": "Policy evidence and project memory have a pure mapper but no composed authorized read/publication route.",
+      "evidence": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+          "blob": "5cca27ce239c92a8e3c9f9f92f816f5224562904",
+          "lines": [
+            178,
+            200
+          ],
+          "observation": "createSfEvidenceRouter has no policy branch; all policy refs fall through to unavailable."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+          "blob": "91e8bc8f5d80f83b7756b4647c790cc5e5936d59",
+          "lines": [
+            82,
+            216
+          ],
+          "observation": "emitFromLedger requires case-event; recall accepts a case and validates task records only."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decision-memory/atlas-projection.ts",
+          "blob": "7c1b3dd08dc663e9dfa406b09dc2af5920281131",
+          "lines": [
+            44,
+            53
+          ],
+          "observation": "WP14 defines project mapping from AuthorizedPolicyProjection, but no WP10 composition invokes this branch."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/README.md",
+          "lines": [
+            87,
+            87
+          ],
+          "observation": "Text acknowledges missing policy/project proofs; missing producer/composition should also be explicit."
+        }
+      ],
+      "static_reproduction": [
+        "Take a schema-valid BusinessEvidenceRef of kind policy in the same installation/project and a currently authorized call.",
+        "Route it through the composed BCS evidence router: no matching policy branch exists, so it returns unavailable.",
+        "There is no host projectSlab or authorized policy emit/recall entry in the inspected host-binding and CLI composition roots. Pure mapSfAtlasEntry({kind:project}) is not runtime composition."
+      ],
+      "impact": "Reviewed procedures cannot be persisted/recalled through the composed project memory lane; a C17 complete/AM05 acceptance would omit approved scope. Existing behavior fails closed rather than granting invented authority.",
+      "required_action": "Wire only an actual reviewed policy producer and current authorization/owner/scope, durable project publication and retrieval; otherwise list implementation and native evidence as blocked dependencies. Do not substitute a fabricated provider, source or policy.",
+      "recheck": "On a new exact candidate, review the producer/host wiring and run affected hosted policy/project positive and negative cases, including revocation, identity, scanner/commit/restart and whole-record suppression; retain AM05 installed proof separately.",
+      "forwarded_to": "/root",
+      "forwarding_method": "collaboration message in this review session"
+    }
+  ],
+  "known_external_dependencies_not_reproduced_by_reviewer": [
+    "Finance C12 reconciliation CAS, no-op coverage proof and HotTopic domain-snapshot findings already forwarded by integrator",
+    "Foreign package type diagnostics on W7; W8 result pending",
+    "WP14 restart Request identity fixture and Collaboration governed recipient/Relay authority gaps"
+  ],
+  "ci_evidence": {
+    "exact_candidate": [],
+    "pending": [
+      "Check6 exact W8 or successor candidate package/Atlas/spawn/guards",
+      "CI5 exact W8 or successor candidate changed C17/history/lifecycle selection"
+    ],
+    "historical_only": [
+      {
+        "run_id": 43584781236,
+        "product_sha": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+        "snapshot_sha": "8d03f8e6e15d2da63f35e4eefd2a6ae2ed092ec9",
+        "conclusion": "failure",
+        "applicable_to_reviewed_candidate": false
+      },
+      {
+        "run_id": 43584817547,
+        "product_sha": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+        "snapshot_sha": "b9ab9e5bf6916ccc6b08693baae2fec95913343f",
+        "conclusion": "failure",
+        "applicable_to_reviewed_candidate": false
+      }
+    ]
+  },
+  "verdict": {
+    "scope": "STATIC_REVIEW_COMPLETED_WITH_MANDATORY_GAP; runtime/delta review pending",
+    "accepted_complete_wp00_wp10": false,
+    "ready": false,
+    "global_release": false,
+    "reason": "Policy/project composition is missing, exact candidate hosted validation remains pending, and mandatory installed/final-bundle proofs are not present."
+  },
+  "remaining_gates": [
+    "Three nonauthor reports on the same final candidate after affected corrections; this is one independent review and not global S0 closure",
+    "AM01-AM06 actual installed native proofs",
+    "Eight final selections plus suites required by actual footprint on S0 final bundle",
+    "C/G7 full candidate qualification",
+    "D/G8 evidence-only envelope verification and real D guard, without reattributing C run SHAs"
+  ],
+  "next_action": "Integrator receives findings, applies only owned changes or consumes published owner fixes, then supplies exact successor head/tree and W/S Actions evidence for independent affected recheck."
+}

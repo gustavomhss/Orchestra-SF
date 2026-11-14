@@ -1,0 +1,55 @@
+{
+  "schema": "wp10-builder-harness-reconciliation-v1",
+  "actor": "/root/performance_diagnosis",
+  "role": "builder-not-independent-reviewer",
+  "status": "CLOSED",
+  "sourceCommit": "2fb2e13ca7839fe7122c43ba312c7a09e5e5d5e6",
+  "sourceTree": "4a0fd535ad284d216b4c9282368404fc14acd6be",
+  "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/alternative-selection.test.ts",
+  "beforeBlob": "3752f8afeb5f8be0d648be102404bd9f9a4f21ae",
+  "afterBlob": "61adaeea9939dc9b78361a9d5cdf2f8720742aa0",
+  "beforeSha256": "23bd732fb8588e55d23aaf765856323ab4cb6824e5062770133788223005cea3",
+  "afterSha256": "7c84e04640ed88bdd7e1730719045d4c393e652354db137e22586afb76f6a8e4",
+  "bytes": 29836,
+  "method": "Started from byte-verified published W9 file, applied explicit fixture-only edits, wrapped initialization with cleanup; did not merge the earlier W4 fixture wholesale.",
+  "preserved": {
+    "testBodiesByteIdenticalToW9": true,
+    "testBodySha256": "88eb29f7aa0f517274e09f97e268c56d4387d0a9ff876584bc159d785b06b341",
+    "declaredTestTimeoutMs": 120000,
+    "testCount": 3,
+    "phaseWrapperByteIdenticalExceptIndentation": true,
+    "realMeteredDriverDelegationsByteIdenticalExceptIndentation": true,
+    "realSimulationAndSelectionWrappersByteIdenticalExceptIndentation": true,
+    "interleavingTestPreserved": true,
+    "profilesSkillsGrantsUnchanged": true,
+    "actualPortfolioDisposeRetained": true,
+    "alternativeCallScopeSha256Unchanged": "5ce1c1e6cffbdfec0c5d0cd00d87b940259be2af1b72c28faad77caa38f9b0d1"
+  },
+  "correction": [
+    "105000ms cooperative fixture deadline from performance.now(), plus abort timer and the same real Request signal.",
+    "Existing host boundary callbacks check deadline then retain their actual prior result expressions; authentication still counts every observed call.",
+    "Every acquired directory/store/native binding/business/actual portfolio/domain/UI admission is registered for cleanup immediately. Initialization failure invokes the same close path.",
+    "Close clears timer, aborts outstanding request scope, runs cleanup in reverse acquisition order even after errors, and rethrows deadline failure after cleanup; a product port converting a thrown boundary error into denied cannot make a negative test pass.",
+    "All source/selection/case/operation production arguments and W9 expectations remain unchanged. No native TTL, test timeout, cache or product source changes."
+  ],
+  "diagnosis": {
+    "hostedRun": 43548294775,
+    "hostedJob": 132304626874,
+    "meaning": "Earlier W7 callbacks continued693826.24ms/933196.64ms beyond the120000ms Bun timeout. This harness bounds continued cooperative work and releases resources; it does not establish a performance fix or successful acceptance."
+  },
+  "validation": {
+    "localProductExecution": false,
+    "localTests": false,
+    "localTypecheckBuildImport": false,
+    "remoteMutation": false,
+    "staticOnly": [
+      "Published W9 bytes verified against both downloaded and frozen copies.",
+      "All three W9 test bodies including assertions/interleaving/120000ms declarations compared byte-for-byte.",
+      "Phase, metrics/driver, simulation and selection delegate wrapper bodies compared after excluding only added try indentation.",
+      "Profiles, skills and grants compared unchanged.",
+      "alternative-call-scope.ts hash unchanged."
+    ],
+    "hostedStatus": "NOT_RUN_FOR_THIS_CHANGE; root freeze/publication/reviews and hosted run required."
+  },
+  "analysisReportSha256": "cc49198e85f8af8f24045c13192db9f7c6c30954a29daf18dd441ced32079b51"
+}

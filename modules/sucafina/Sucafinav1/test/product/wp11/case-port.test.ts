@@ -4,6 +4,7 @@ import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import { createSfDecisionResultStore } from "../../../product/decisions/result-store.ts"
+import { createChangeProposalStore } from "../../../product/decisions/change-proposal-store.ts"
 import { createDecisionChoiceResultLookup } from "../../../product/decisions/choice-result-lookup.ts"
 import { createDecisionCasePort, encodeCaseRef, parseCaseRef } from "../../../product/decisions/case-port.ts"
 import { createDecisionCapabilities, encodeReceiptRef } from "../../../product/decisions/capabilities.ts"
@@ -22,7 +23,7 @@ test("case draft survives a real store reopen, exact retry is idempotent and rev
   const open = async () => {
     const store = await openLocalStore(directory)
     const state = createSfProductState({ persistence: store, createId: () => "state-incarnation", resolveTarget: async () => ({ incarnation: "installation-incarnation" }), authorize: async () => access.allowed ? { principalRef: "principal", policyVersion: "policy", accessRevision: "access" } : undefined })
-    const cases = createDecisionCasePort({ state, host: { requestFor: () => new Request("https://example.test/"), revalidate: async () => access.allowed }, creationTarget: { ref: "installation:install:cases", incarnation: "installation-incarnation" }, operationIdentity: () => "operation-1", authorizeCase: async () => access.allowed, evidence, createId: () => `id-${++ids.n}`, now: () => "2026-11-13T00:00:00Z" })
+    const cases = createDecisionCasePort({ state, host: { requestFor: () => new Request("https://example.test/"), revalidate: async () => access.allowed }, creationTarget: { ref: "installation:install:cases", incarnation: "installation-incarnation" }, operationIdentity: () => "operation-1", authorizeCase: async () => access.allowed, verifyScenarioOperations: async () => access.allowed, evidence, createId: () => `id-${++ids.n}`, now: () => "2026-11-13T00:00:00Z" })
     return { store, cases }
   }
   try {
@@ -175,7 +176,7 @@ test("revoked source suppresses an otherwise authorized case", async () => {
     const evidence: BusinessContextService = { context: async ({ refs }) => refs.map((item) => ({ ref: item, state: source.fresh ? "fresh" as const : "revoked" as const, accessRevision: "access", checkedAt: "2026-11-13T00:00:00Z" })).reverse(), resolve: async () => { throw new Error("unused") }, recall: async () => [], emitFromLedger: async () => { throw new Error("unused") } }
     const state = createSfProductState({ persistence: store, createId: () => "state-inc", resolveTarget: async (_request, _snapshot, _namespace, targetRef) => ({ incarnation: targetRef === "installation:install:cases" ? "installation-inc" : "source-case-2" }), authorize: async () => ({ principalRef: "principal", policyVersion: "policy", accessRevision: "access" }) })
     const ids = { n: 0 }
-    const cases = createDecisionCasePort({ state, host: { requestFor: () => new Request("https://example.test/"), revalidate: async () => true }, creationTarget: { ref: "installation:install:cases", incarnation: "installation-inc" }, operationIdentity: () => "operation", authorizeCase: async () => true, evidence, createId: () => `source-case-${++ids.n}`, now: () => "2026-11-13T00:00:00Z" })
+    const cases = createDecisionCasePort({ state, host: { requestFor: () => new Request("https://example.test/"), revalidate: async () => true }, creationTarget: { ref: "installation:install:cases", incarnation: "installation-inc" }, operationIdentity: () => "operation", authorizeCase: async () => true, verifyScenarioOperations: async () => true, evidence, createId: () => `source-case-${++ids.n}`, now: () => "2026-11-13T00:00:00Z" })
     const draft = await cases.draft({ objective: "source-bound", currency: "USD", horizon: { start: "2027-01-01", end: "2027-12-31" }, criteria: ["cost"], sourceRefs: [ref] }, binding)
     expect(draft.status).toBe("ok")
     if (draft.status !== "ok") return
@@ -222,7 +223,7 @@ test("partial domain execution reconciles a durable receipt and never repeats it
         return result
       },
     }
-    const execute = createPreparedExecution({ state, host: { requestFor: () => new Request("https://example.test"), revalidate: async () => true }, apply, authorizeCase: async () => true, authorizeApplication: async () => domain.authorized, confirmApplication: async () => { if (domain.revokeOnConfirm) domain.authorized = false; return domain.confirmed }, operationIdentity: () => "operation", classifyReceipt: async () => ({ state: "applied", evidence: { schema: "sf-evidence-v1", refId: "receipt-ref", installationId: "install", projectId: "project", refDigest: "d".repeat(64), evidenceLevel: "observed", kind: "receipt", target: { surface: "planner", receiptId: "receipt", idempotencyKey: "key", targetIncarnation: "target-inc", commandDigest: "a".repeat(64), version: 1 } } }) })
+    const execute = createPreparedExecution({ state, host: { requestFor: () => new Request("https://example.test"), revalidate: async () => true }, apply, reviewDigestFor: () => "a".repeat(64), revalidateProducer: async () => ({ status: "ok", value: { reviewDigest: "a".repeat(64) } }), authorizeCase: async () => true, authorizeApplication: async () => domain.authorized, confirmApplication: async () => { if (domain.revokeOnConfirm) domain.authorized = false; return domain.confirmed }, operationIdentity: () => "operation", classifyReceipt: async () => ({ state: "applied", evidence: { schema: "sf-evidence-v1", refId: "receipt-ref", installationId: "install", projectId: "project", refDigest: "d".repeat(64), evidenceLevel: "observed", kind: "receipt", target: { surface: "planner", receiptId: "receipt", idempotencyKey: "key", targetIncarnation: "target-inc", commandDigest: "a".repeat(64), version: 1 } } }) })
     const request = { caseRef: { id: "case", incarnation: "case-inc", version: 1 }, changeId: "change", choiceId: "choice" }
     expect((await execute(request, binding)).status).toBe("unavailable")
     expect(domain.calls).toBe(0)
@@ -237,12 +238,11 @@ test("partial domain execution reconciles a durable receipt and never repeats it
     domain.revokeOnConfirm = false
     expect((await execute(request, binding)).status).toBe("unavailable")
     domain.loseResponse = false
-    expect((await execute(request, binding)).status).toBe("ok")
-    expect((await execute(request, binding)).status).toBe("ok")
+    expect(await execute(request, binding)).toMatchObject({ status: "unavailable", reason: "review-proof-unbound" })
     expect(domain.calls).toBe(1)
     const result = await state.read(new Request("https://example.test"), "cases", (staged) => staged.cases.case)
     expect(result.status).toBe("ok")
-    if (result.status === "ok") expect(result.value).toMatchObject({ state: "partially-applied", version: 2 })
+    if (result.status === "ok") expect(result.value).toMatchObject({ state: "chosen", version: 1 })
   } finally {
     await store.dispose()
     await rm(directory, { recursive: true, force: true })
@@ -270,7 +270,7 @@ test("human choice persists a versioned snapshot and ledger using the planner co
     const { createDecisionProposalService } = await import("../../../product/decisions/proposals.ts")
     const evidence: BusinessContextService = { context: async ({ refs }) => refs.map((ref) => ({ ref, state: "fresh" as const, accessRevision: "access", checkedAt: "2026-11-13T00:00:00Z" })), resolve: async () => { throw new Error("unused") }, recall: async () => [], emitFromLedger: async () => { throw new Error("unused") } }
     const host = { requestFor: () => new Request("https://example.test"), revalidate: async () => true }
-    const cases = createDecisionCasePort({ state, host, creationTarget: { ref: "case", incarnation: "inc" }, operationIdentity: () => "operation", authorizeCase: async () => true, evidence, createId: () => "unused", now: () => "2026-11-13T00:00:00Z" })
+    const cases = createDecisionCasePort({ state, host, creationTarget: { ref: "case", incarnation: "inc" }, operationIdentity: () => "operation", authorizeCase: async () => true, verifyScenarioOperations: async () => true, evidence, createId: () => "unused", now: () => "2026-11-13T00:00:00Z" })
     const alternative = createDecisionProposalService({ cases, host, planner: { compareForecast: unavailable, simulateScenario: async () => ({ status: "ok", value: simulation.value }), compareScenarios: async () => ({ status: "ok", value: comparison }), evaluateSensitivity: unavailable }, sources: { resolveForecastSource: unavailable, resolveForecastCoverage: async () => ({ status: "ok", value: { coverageRef: "coverage-2", basis: decision.costCoverageBases[0], assessment: simulation.value.costCoverage } }) }, resolveAlternative: async () => ({ status: "ok", value: { scenario: { baseRef: "base", operations: [], assumptions: [] }, coverageRef: "coverage-2" } }), authorizeProposal: async () => true })
     const descriptors = createDecisionCapabilities({ cases, alternative, requiredAuthority: { read: [], draft: [], receipt: [], alternative: [], change: [] }, createReceipt: (_context, operation, inputDigest, resultDigest) => ({ kind: "ui", operation, handlerExport: "draftAlternative", inputDigest, resultDigest, principalRef: "principal", callId: "call", requestId: "request", accessRevision: "access", at: "2026-11-13T00:00:00Z" }) })
     expect(descriptors.some((item) => item.id === "sf_alternative_draft")).toBe(true)
@@ -298,10 +298,20 @@ test("human choice persists a versioned snapshot and ledger using the planner co
     const targetEvidence = { schema: "sf-evidence-v1", refId: "target-ref", installationId: "install", projectId: "project", refDigest: "f".repeat(64), evidenceLevel: "observed", kind: "record", target: { surface: "planner", recordType: "forecast", recordId: "target", incarnation: "target-inc", version: 1, fields: ["amount"], period: horizon, projectionDigest: "a".repeat(64) } } as const
     const results = createSfDecisionResultStore({ state, host, authorizeCase: async () => true, verifySources: async (_value, refs, context) => (await evidence.context({ refs }, context)).every((item) => item.state === "fresh"), createId: () => "unused", now: () => "2026-11-13T00:00:00Z" })
     const resolvePreview = createDecisionChoiceResultLookup({ cases, state, results, host })
-    const change = createChangeProposalService({ cases, host, resolvePreview, resolveChanges: async () => ({ status: "ok", value: { changes: [{ command: { id: "domain-command", target, expectedVersion: 0, idempotencyKey: "domain-key", commandDigest: "c".repeat(64), requiredAuthority: ["planner"], command: { page: "planner", action: "edit", version: 0, values: {} }, preview: {} as import("../../../product/contracts/context.ts").DomainProjection }, preview: scenario, targetEvidence }], conditions: [] } }), authorizeProposal: async () => true })
+    const proposalStore = createChangeProposalStore({ state, host, authorizeCase: async () => true, authorizeProposal: async () => true, verifySources: async () => true, verifySnapshot: () => true, operationIdentity: () => "proposal-operation", proposalCoverageWrites: new WeakSet(), now: () => "2026-11-13T00:00:00Z" })
+    const change = createChangeProposalService({ cases, host, store: proposalStore, resolvePreview, resolveChanges: async () => ({ status: "ok", value: { changes: [{ command: { id: "domain-command", target, expectedVersion: 0, idempotencyKey: "domain-key", commandDigest: "c".repeat(64), requiredAuthority: ["planner"], command: { page: "planner", action: "edit", version: 0, values: {} }, preview: {} as import("../../../product/contracts/context.ts").DomainProjection }, preview: scenario, targetEvidence }], conditions: [] } }), authorizeProposal: async () => true })
     const changeDescriptors = createDecisionCapabilities({ cases, change, requiredAuthority: { read: [], draft: [], receipt: [], alternative: [], change: [] }, createReceipt: (_context, operation, inputDigest, resultDigest) => ({ kind: "ui", operation, handlerExport: "prepareChange", inputDigest, resultDigest, principalRef: "principal", callId: "call", requestId: "request", accessRevision: "access", at: "2026-11-13T00:00:00Z" }) })
     const changeProposal = await changeDescriptors.find((item) => item.id === "sf_change_prepare")!.handler({ caseRef: encodeCaseRef(decision), choiceRef: "choice-event", operations: [{ kind: "include", targetRef: "target" }] }, binding)
     expect(changeProposal.status).toBe("ok")
+    const replayedProposal = await change({ caseRef: encodeCaseRef(decision), choiceRef: "choice-event", operations: [{ kind: "include", targetRef: "target" }] }, binding)
+    expect(replayedProposal.status).toBe("ok")
+    if (replayedProposal.status === "ok") {
+      const refs = replayedProposal.value.changes.map((item) => item.changeRef)
+      const set = await proposalStore.readSet({ caseRef: { id: "case", incarnation: "inc", version: 2 }, changeRefs: refs }, binding)
+      expect(set.status).toBe("ok")
+      if (set.status === "ok") expect(set.value.output).toEqual(replayedProposal.value)
+      expect((await proposalStore.readSet({ caseRef: { id: "case", incarnation: "inc", version: 2 }, changeRefs: [...refs, "unrelated"] }, binding)).status).toBe("unavailable")
+    }
     const afterProposal = await state.read(new Request("https://example.test"), "cases", (staged) => staged.cases.case)
     if (afterProposal.status === "ok") expect(afterProposal.value?.version).toBe(2)
     admission.confirmed = false

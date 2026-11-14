@@ -1,0 +1,78 @@
+{
+  "schema": "sf2h-compose-increment-receipt-v1",
+  "owner": "Astra / WP10",
+  "scope": "Read-only authorization of stored Planner operations with protected original sources",
+  "status": "IMPLEMENTED_NOT_REVALIDATED",
+  "base": {
+    "pr": 32,
+    "head": "8f760659279567d2c169691c3e57cf19be10417d",
+    "tree": "2b99a9ee4fa948d02ab7010755b70e434dde11e2"
+  },
+  "reconciled": {
+    "head": "7c7e5b086a9de405cd3f8e18e8d631af55cf0979",
+    "tree": "3deb1ed790fc247a6633c9cc25a11523ae3f61b1",
+    "own_bases_identical": true
+  },
+  "addresses": "WP10-C17-PLANNER-HISTORICAL-OPERATIONS",
+  "implementation": [
+    "The existing live verifier may enter the recorded path only when the actual forecast or amount producer reports stale. Denied/unavailable producers do not gain a fallback.",
+    "The recorded verifier requires the complete supplied case/scenario/result to match current protected C08 state, current membership and principal/access/policy. Native case ID/incarnation/version is checked without rewriting any binding.",
+    "Original projections and canonical monthly planner-value selections come from BCS/C17. At least one historical protected capture is required; currentRef/current authority and physical continuity remain the existing C17 producer responsibility.",
+    "Two complete source observations and a final C08 case reread fence changes; original historical context and bytes remain unchanged. A recursion sentinel is deleted at return and never caches an authorization.",
+    "The stored scenario/result is read unchanged. Canonical Planner simulation, operation admission, prepare and execution are not replaced, relaxed or routed through this reader."
+  ],
+  "composition": {
+    "business_services": "Import createSfRecordedPlannerOperationAccess and pass its C08/BCS instance into createSfScenarioOperationAccess via recordedPlanner. Apply the additive hunk with the concurrent C17 recall hunk.",
+    "guide": "Apply the additive Planner-history paragraph to the existing README."
+  },
+  "checks": {
+    "runs": [],
+    "product_execution": "NOT_RUN_LOCALLY",
+    "typecheck": "PENDING: bun typecheck in modules/sucafina through GitHub Actions on the published composed head/tree",
+    "hosted_tests": [
+      "test/product/wp10/integration/planner-recorded-history.test.ts",
+      "test/product/wp10/integration/scenario-operation-access.test.ts",
+      "test/product/wp10/atlas-business/record-history.test.ts"
+    ],
+    "guards": "Per applicable AGENTS. No epic. Reattach equivalent runs; do not inherit green from a different tree."
+  },
+  "test_provenance": [
+    "Two real forecast sources and real Planner simulation produce the stored alternatives. C08 case promotion and ledger are explicit fixture data, not a native/human execution proof.",
+    "The test uses the real SQLite/C08 store, source lifecycle, Atlas durable append and pinned gitleaks scanner to retain originals; it never injects a positive original capture.",
+    "Positive candidates cover base drift, unchanged base with historical amount reference, unchanged original result/context and composed case read. Current simulation/operation verifier/amount resolver must still reject stale selectors.",
+    "Negative candidates cover nonstored operation changes, missing Atlas capture, noncanonical nested amount selector, source drift during an await, membership change, call reentry, principal revocation and deletion/recreation of the physical source."
+  ],
+  "criterion_scope": [
+    {
+      "criterion": "WP10.T07.CHK.02",
+      "status": "PARTIAL_IMPLEMENTATION_PENDING_PROOF",
+      "limit": "Adds a composed case-read consumer of actual protected originals; process restart and UI journey remain separate required evidence."
+    },
+    {
+      "criterion": "WP10.T07.CHK.03",
+      "status": "PARTIAL_IMPLEMENTATION_PENDING_PROOF",
+      "limit": "Current C08 membership/principal and C17 source access checked; the full two-actor and field-revocation matrix is not supplied by this increment."
+    },
+    {
+      "criterion": "WP10.T07.CHK.07",
+      "status": "PARTIAL_IMPLEMENTATION_PENDING_PROOF",
+      "limit": "Adds physical delete/recreate counterexample; import, caches, audit and export criteria remain in their full map."
+    }
+  ],
+  "limits": [
+    "This is authorization to read a previously stored scenario, never a new calculation or replay result. Financial replay still uses canonical producer APIs and their existing current-dependency rules.",
+    "Missing original capture, unsupported/noncanonical replacement selectors or insufficient current continuity remain unavailable.",
+    "No new WP03 seam was needed for this stored-read scope; no WP03 product source or branch was modified.",
+    "Cross-case native precedent access, C07 provider, policy/project variants, eight final selections, AM01-AM06 and three independent final reviews remain outside this evidence."
+  ],
+  "global_gates": {
+    "approved_plan": "UNCHANGED",
+    "criteria": "Preserve all 85 WP00 and 171 WP10 criteria",
+    "eight_final_selections": "PRESERVED_PENDING",
+    "AM01_AM06": "PRESERVED_PENDING",
+    "independent_reviews": "THREE_REQUIRED; author review does not count",
+    "C_G7_D_G8": "PRESERVED",
+    "global_release": false
+  },
+  "next_action": "Compose on astra-compose with the two additive shared-file hunks, publish exact head/tree and run only affected hosted gates before declaring readiness for this scope."
+}

@@ -1,0 +1,111 @@
+{
+  "W": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+  "tree": "57ce597f3ebe8ddb543f9d71d34d20f789c76e33",
+  "ci5": {
+    "run": 43589763353,
+    "S": "564d04391d009b89718b10e67175d710d9e6b9c9",
+    "tree": "2ee153c2f7aa0cc6f637fa9e9bb4e1ecdb8ce3a7",
+    "branch": "ci-run-linux-astra-compose-ed10a380-a4e017c1-a1",
+    "request_sha256": "a4e017c16deb27ee3920ae204d36c958d15f6fcc2291489ff13e3238758c89a3",
+    "request_blob": "6d03ad550572bfa42edfbcc4edaee85eeaf107eb",
+    "selection": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "packageSelector": "packages/sucafina",
+      "runner": "bun",
+      "args": [
+        "./Sucafinav1/test/product/wp00/contract-freeze.test.ts",
+        "./Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+        "./Sucafinav1/test/product/wp10/atlas-business/atlas-recovery.test.ts",
+        "./Sucafinav1/test/product/wp10/atlas-business/record-history.test.ts",
+        "./Sucafinav1/test/product/wp10/integration/planner-recorded-history.test.ts",
+        "./Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+        "./Sucafinav1/test/product/wp10/integration/calculation-case-scope.test.ts",
+        "./Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+        "./Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+        "./Sucafinav1/test/product/wp11/calculation-history.test.ts",
+        "./Sucafinav1/test/product/wp11/calculation-persistence.test.ts",
+        "./Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+        "./Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+        "./Sucafinav1/test/product/wp03/resume-engine-freshness.test.ts",
+        "./Sucafinav1/test/product/wp05/projection.test.ts",
+        "./Sucafinav1/test/product/wp05/choice-history-bi.test.ts",
+        "./Sucafinav1/test/product/wp05/stored-bi-fences.test.ts",
+        "./Sucafinav1/test/product/wp05/planner-integration.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "env": {
+        "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "1"
+      }
+    },
+    "status": "IN_PROGRESS",
+    "envelope_changed_paths": [
+      ".ci-run.json"
+    ],
+    "parents": [
+      "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf"
+    ],
+    "last_observed_status_at_utc": "2026-11-14T11:52:35Z",
+    "job": 132431793223,
+    "live_logs": "Not available from GitHub job-log endpoint while the job is running; no partial outcome inferred."
+  },
+  "check7": {
+    "run": 43589766495,
+    "S": "83c2c898fa9fc0be57afd2cb4cd6a95269c4e8ce",
+    "tree": "7d77e1ed9f129cb76f34132a3a4048a113d7f82f",
+    "envelope_blob": "8bcc5fdb7cb2a6061459dfed3dadf4c4720ff557",
+    "dev": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+    "status": "COMPLETED",
+    "envelope_changed_paths": [
+      ".astra-compose-check.json"
+    ],
+    "parents": [
+      "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "3bd08ffc7dcc0924422f37b3e01645482bc16c1b"
+    ],
+    "conclusion": "failure",
+    "job": 132431802351,
+    "diagnostics": {
+      "sucafina": 15,
+      "cli": 0,
+      "own": 1,
+      "foreign": 14,
+      "by_owner": {
+        "WP04": 3,
+        "WP06": 4,
+        "WP08": 4,
+        "WP09": 1,
+        "WP10": 1,
+        "WP13": 1,
+        "WP14": 1
+      }
+    },
+    "steps": {
+      "sucafina_typecheck": "FAIL",
+      "cli_typecheck": "PASS",
+      "atlas_generate_check_diff": "PASS",
+      "atlas_typecheck": "PASS",
+      "spawn": "PASS",
+      "guards": "PASS"
+    },
+    "guards": {
+      "rules": 78,
+      "paths": 1345,
+      "gate_findings": 0,
+      "warnings": 46,
+      "errors": 0
+    },
+    "spawn": {
+      "files": 4671,
+      "allowlisted_sites": 66
+    },
+    "artifact": {
+      "id": 14111719156,
+      "bytes": 4064,
+      "sha256": "6b33669252987a25ca8a97877638829e3365d1582020fc7f5f4b90433498cd04"
+    }
+  },
+  "CI6": "PLANNED_AFTER_CI5_NO_CONCURRENT_WP10_FLIGHT",
+  "global_release": false
+}

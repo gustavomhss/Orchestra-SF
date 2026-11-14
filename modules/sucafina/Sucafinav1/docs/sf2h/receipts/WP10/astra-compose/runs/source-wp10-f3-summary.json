@@ -1,0 +1,38 @@
+{
+  "schema": "sf2-source-flight-observation-v1",
+  "source_pr": 29,
+  "W": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+  "tree": "d1350cf59e9fd98996e23fd12aba6b28b9fa752f",
+  "S": "bf8bace5d755d897f2f97bd4a01d36995b6884d1",
+  "snapshot_tree": "49ccf55bde90aefc7ee9f25d4efc9ba2bced840f",
+  "request_blob": "c4669f389d91ca7417a6229f181b2b979ce538f5",
+  "run_id": 43585812801,
+  "job_id": 132419922038,
+  "conclusion": "failure",
+  "tests": {
+    "pass": 82,
+    "fail": 20,
+    "total": 102,
+    "files": 18,
+    "duration_seconds": 1405.57
+  },
+  "omni": {
+    "result": "pass",
+    "spawns": 2,
+    "declared": 1,
+    "nonce": "cf1e2ae62d9d007f699acfe1fd393203"
+  },
+  "envelope_proof": {
+    "parents": [
+      "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0"
+    ],
+    "changed_paths": [
+      {
+        "path": ".ci-run.json",
+        "status": "added",
+        "sha": "c4669f389d91ca7417a6229f181b2b979ce538f5"
+      }
+    ]
+  },
+  "acceptance": "SOURCE_CONTEXT_ONLY_NO_TRANSFER_TO_COMPOSED_PRODUCT"
+}

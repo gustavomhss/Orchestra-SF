@@ -1,0 +1,206 @@
+{
+  "schema": "astra-owned-increment-v1",
+  "owner": "Astra WP10 composition",
+  "role": "Implementation author, not independent final review",
+  "state": "IMPLEMENTED_STAGED_ACTIONS_PENDING",
+  "baseHead": "f9990ecc7ade0d64122633d51258ddafe2c93802",
+  "baseTree": "195f4ea0f9b0099b0070b009570f79bf0a62d0be",
+  "observedRun": {
+    "id": 43592994998,
+    "sha": "747e1006562677391187c501e99d5bdd9751949a",
+    "productHead": "00304ac25cc82ffd87ebd3096bd2f5cfec5222e1",
+    "productTree": "884138976f1e5ab04d924c3f29f4ba6584acb070",
+    "conclusion": "FAILURE",
+    "pass": 103,
+    "fail": 15,
+    "tests": 118,
+    "files": 23,
+    "log": "evidence/ci6.log",
+    "logSha256": "f0e071c3d5d47a4f78235d628b00de31428b0026ba7a0bafd46d8d786bd0e10d"
+  },
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts",
+      "status": "modified",
+      "baseBlob": "4db5ab95035eb465411f7a6cbef2b8515f2154ef",
+      "blob": "542a1c4405e063c99f8888ff9ab895e958f17f86",
+      "sha256": "81ea989ea6f9cc5c1a3035281fcd7dd12039d700dc8304d076467875960bfa0d",
+      "bytes": 32087,
+      "stagedPath": "/workspace/scratch/4c48b09c5c29/owned-patch-round13/modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts",
+      "baseVerification": "GitHub MCP fetch_file at exact W12; local Git blob hash equals returned SHA.",
+      "mcpUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/f9990ecc7ade0d64122633d51258ddafe2c93802/modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts",
+      "assertionTextUnchanged": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-advantage-selection.test.ts",
+      "status": "modified",
+      "baseBlob": "a4b2f5b3f2d66c5c78bfc8d837edad6225d9ed80",
+      "blob": "17415533dc254bb5181171a48a77fefe80792dcf",
+      "sha256": "1a379ba00696cc451662ef73db499bfed8df6a7a496e2098e4f8b13abb38a958",
+      "bytes": 10371,
+      "stagedPath": "/workspace/scratch/4c48b09c5c29/owned-patch-round13/modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-advantage-selection.test.ts",
+      "baseVerification": "GitHub MCP fetch_file at exact W12; local Git blob hash equals returned SHA.",
+      "mcpUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/f9990ecc7ade0d64122633d51258ddafe2c93802/modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-advantage-selection.test.ts",
+      "assertionTextUnchanged": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-access-browser-fixture.ts",
+      "status": "modified",
+      "baseBlob": "871990f932d22d034b30927657721435d182c1ca",
+      "blob": "34805fe3b91e8f21e3ba3db0b92b03d8decf73c0",
+      "sha256": "cd0394908d773aae5775e2342671636761f7bf62570c47d5c755fcd33becae07",
+      "bytes": 16606,
+      "stagedPath": "/workspace/scratch/4c48b09c5c29/owned-patch-round13/modules/sucafina/Sucafinav1/test/product/wp10/integration/review-access-browser-fixture.ts",
+      "baseVerification": "GitHub MCP fetch_file at exact W12; local Git blob hash equals returned SHA.",
+      "mcpUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/f9990ecc7ade0d64122633d51258ddafe2c93802/modules/sucafina/Sucafinav1/test/product/wp10/integration/review-access-browser-fixture.ts",
+      "assertionTextUnchanged": true
+    }
+  ],
+  "affectedFailures": [
+    {
+      "status": "fail",
+      "name": "BI keeps the canonical shell, refreshes on manual focus and timer, and signs out once while discarding a held genuine success",
+      "ms": 647.22,
+      "file": "Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts",
+      "line": 1176
+    },
+    {
+      "status": "fail",
+      "name": "the canonical shell still polls authority while BI awaits a held result and revocation prevents every late render",
+      "ms": 538.19,
+      "file": "Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts",
+      "line": 1198
+    },
+    {
+      "status": "fail",
+      "name": "clearing the BI selection while genuine authorized options are delayed prevents restoration of the previous selection",
+      "ms": 589.62,
+      "file": "Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts",
+      "line": 1220
+    },
+    {
+      "status": "fail",
+      "name": "BI returns from a real source with the same human filters, version pair, currency and mark focus after current reauthorization",
+      "ms": 531.08,
+      "file": "Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts",
+      "line": 1242
+    },
+    {
+      "status": "fail",
+      "name": "BI refuses lease loss after its first and last real authorization awaits and a changed final Request",
+      "ms": 5286.29,
+      "file": "Sucafinav1/test/product/wp10/integration/bi-advantage-selection.test.ts",
+      "line": 1277
+    },
+    {
+      "status": "fail",
+      "name": "Review browser clears selected content after case revocation while the session remains authenticated",
+      "ms": 59816.95,
+      "file": "Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "line": 1729
+    }
+  ],
+  "findings": [
+    {
+      "id": "CI6-BI-LIFECYCLE-COMMAND-IDENTITY",
+      "count": 4,
+      "owner": "WP10 fixture",
+      "observed": "Four browser setups reach real enrollment and fail at browser.choices HTTP403 before the BI lifecycle assertions.",
+      "cause": "Fixture passes commandIdentity: async () => undefined. The real UI authority requires a nonempty command ID even for reads and returns ui-identity-unavailable otherwise; extended-http maps the non-ok admission to403.",
+      "certainty": "Deterministic source cause; the original log omitted the response reason. Added status/reason-only diagnostic preserves the200 assertion for any remaining refusal.",
+      "change": "Fixture uses the real host policy for GET/HEAD: randomUUID. Other methods still receive no identity. Cookie authentication, existing grants, UI validate/finish, Request and source guards are unchanged.",
+      "sourceLocations": [
+        "bi-lifecycle.test.ts:121",
+        "product/integration/ui-authority.ts:44-46",
+        "apps/cli/src/sucafina-product/extended-http.ts:53-57",
+        "apps/cli/src/sucafina-product/host-context.ts:128-131"
+      ]
+    },
+    {
+      "id": "CI6-BI-ADVANTAGE-OPTIONAL-COUNTER",
+      "count": 1,
+      "owner": "WP10 fixture",
+      "observed": "The genuine baseline read succeeds but baseline.calls.count is0, failing >1.",
+      "cause": "The ++calls.count argument is inside after?.(...); when the baseline observer has no callback, optional invocation skips argument evaluation.",
+      "change": "Increment after the actual awaited host.revalidate unconditionally, then invoke the optional mutation hook. Preserve exact first/last boundary numbers, real lease revocation, Request replacement, denial reason and absent-value assertions."
+    },
+    {
+      "id": "CI6-REVIEW-CLICK-NAVIGATION-BOUNDARY",
+      "count": 1,
+      "owner": "WP10 browser fixture",
+      "observed": "The log shows click action completed, then Timeout10000ms while waiting for scheduled navigations; the real handler produces200 in12959ms. No console/page error or revoked authority is reported at this stage.",
+      "change": "Use locator.click({noWaitAfter:true}) for the manual refresh only. The existing observer is installed before the action and still requires request sent, actual handler completion and actual response200; its delivery bound starts after handler completion.",
+      "invariants": "Actionability remains under10s; initial navigation15s, transport10s, cooperative105s and outer120s remain unchanged. No force, programmatic DOM click, sleep, retry, ignored failure or synthesized response. All retained workspace and later revocation/late-response assertions remain.",
+      "remainingRisk": "Source/authorization work still takes12-13s per Review HTML request. If total composition exceeds105s, that is a separate performance failure; this patch does not increase the budget or certify runtime success."
+    }
+  ],
+  "invariants": [
+    "Only three own test/fixture files changed; zero product sources, imports, dependencies, grants, host contracts or manifests changed.",
+    "Every pre-existing expect(...) source line is preserved verbatim.",
+    "No assertion scope, timeout, case, Request, lease, authorization check, bound or canonical result is relaxed.",
+    "Provisional cleanup registration, acquisition tracking, browser closure and every late-response fence remain unchanged.",
+    "No test, typecheck, guard, product execution, CI dispatch, CLI/GitHub write or shared worktree mutation occurred."
+  ],
+  "dependencies": [
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "blob": "834b3c967d73411771e1f5aa82b683c6427e6769",
+      "changed": false
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-http.ts",
+      "blob": "5b3de578ce8204e8985076fe72240fdbc4d47286",
+      "changed": false
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/bi-services.ts",
+      "blob": "f2f25da7875267f722d88cfa36820b5daa6c6c74",
+      "changed": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+      "blob": "502fb1ab3a4116a62aeb504a4bb26040c66d81b2",
+      "changed": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/scenario-batch-fixture.ts",
+      "blob": "0bd661681e2dd3c3daafdea82851af88c772f0cf",
+      "changed": false
+    }
+  ],
+  "foreignDependencies": {
+    "scenarioBatchFixture": "Existing published WP11 fixture is imported unchanged. The patch does not depend on the Finance comparison fixtures root plans to revert; if the exact selected producer cannot complete, its failure remains visible.",
+    "providerClaims": "These are deterministic browser and authority fixture corrections, not native AM or installed-identity evidence."
+  },
+  "validation": {
+    "performed": [
+      "Read actual CI6 failure logs and observed request/handler traces",
+      "Read exact product/authority/fixture control flow",
+      "Verified three W12 base blobs through read-only GitHub MCP",
+      "Reviewed unified diff and unchanged existing assertion text"
+    ],
+    "notPerformed": [
+      "Product tests",
+      "Typecheck",
+      "Guards",
+      "Build",
+      "Browser execution"
+    ],
+    "next": "Root publishes on astra-compose and runs existing scoped selections under CI.md; no PASS claimed."
+  },
+  "actionsSelection": [
+    "Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts",
+    "Sucafinav1/test/product/wp10/integration/bi-advantage-selection.test.ts",
+    "Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts"
+  ],
+  "officialDocumentationRead": [
+    "https://playwright.dev/docs/best-practices",
+    "https://playwright.dev/docs/actionability",
+    "https://playwright.dev/docs/test-assertions",
+    "https://playwright.dev/docs/api/class-locator#locator-click-option-no-wait-after"
+  ],
+  "payloadPath": "/workspace/scratch/4c48b09c5c29/incoming-cache/ui-ci6-round13/payloads.json",
+  "patchPath": "/workspace/scratch/4c48b09c5c29/incoming-cache/ui-ci6-round13/ui-ci6.patch",
+  "payloadSha256": "f08de205f28aa0314a6c0941463ba930fec2def8853274afccf2b9597ca00605",
+  "patchSha256": "72501399cfcd209c82cdb042cc38bc72491ce4525ff96ff31721392175307b49"
+}

@@ -1,0 +1,80 @@
+{
+  "schema": "astra-compose-pr35-narrow-reconciliation-v1",
+  "source": {
+    "pr": 35,
+    "head": "92f6d97d2df5ebf53cd845f4cfe93355d10b0f6f",
+    "tree": "a843c5d5767c4a055fcacb77668c3798fd8a564c",
+    "head_tree_verified": "MCP PR metadata plus Git commit metadata"
+  },
+  "comparison": {
+    "source_prior": "6016a70d7ab0c3d50f1ec2827a534a80e48a5c56",
+    "delta_commits": 6,
+    "delta_changed_paths": 67,
+    "inspected_product_paths": 2,
+    "target_head": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+    "target_tree": "051391628c61f6a4333c8f13567c5518c4ff8f86"
+  },
+  "result": "NEITHER_REQUESTED_FINDING_FIXED",
+  "accepted": [],
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+      "source_pr": 35,
+      "source_head": "92f6d97d2df5ebf53cd845f4cfe93355d10b0f6f",
+      "source_tree": "a843c5d5767c4a055fcacb77668c3798fd8a564c",
+      "source_blob": "81513bbca0d087211e4d3d46afe805941bb98a6c",
+      "base_head": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "base_tree": "051391628c61f6a4333c8f13567c5518c4ff8f86",
+      "base_blob": "922358d17c470c16b43076510bdf04744e2306e4",
+      "content_sha256": "d7348a65355b38db23b65586e64c81744a329c0b1b229d1fb004160c6b5f44ce",
+      "MCP_blob_hash_verified": true,
+      "staged_source": "incoming-cache/owner-round9/pr35-narrow-src/modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+      "selected_for_intake": false,
+      "finding": {
+        "id": "WP11_NOOP_PROMOTION_COVERAGE_UNFIXED",
+        "lines": {
+          "reassessed": 111,
+          "entries": 112,
+          "result": 114,
+          "verifySnapshot_closure": 123
+        },
+        "cause": "No-op scenario whose costCoverage equals the producer assessment sets reassessed=false. entries is invoked only when reassessed; result then stays attributed. The composed portfolio coverage provider creates its private snapshot proof during entries, so saveCase still lacks the proof required by its existing verifySnapshot.",
+        "required_owner_fix": "When coverageEvidence exists, read real entries and reassess with the producer basis before saving, retaining existing C08 proof verification and evaluatedSourceRefs ordering. Do not relax verifySnapshot.",
+        "observed_delta_from_6016": "Adds applicationAttempts/reject-change and its outbox event, and moves the complete/source-fence guard after validateScenarioCoverage. These changes do not repair the no-op entries/reassessment path.",
+        "prior_owner_comment": "https://github.com/gustavomhss/Orchestra-SF/pull/35#issuecomment-6875919952",
+        "classification": "STATIC_FINDING_REMAINS; no new runtime result alleged"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts",
+      "source_pr": 35,
+      "source_head": "92f6d97d2df5ebf53cd845f4cfe93355d10b0f6f",
+      "source_tree": "a843c5d5767c4a055fcacb77668c3798fd8a564c",
+      "source_blob": "dc480a2e1e343e7f2a8844a3c23ec9f06582d5ad",
+      "base_head": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "base_tree": "051391628c61f6a4333c8f13567c5518c4ff8f86",
+      "base_blob": "dc480a2e1e343e7f2a8844a3c23ec9f06582d5ad",
+      "content_sha256": "ba2291fdcb64f5f4d8503da6c6dfa12c1bf268364b15bc576fa5519ea862d9fe",
+      "MCP_blob_hash_verified": true,
+      "staged_source": "incoming-cache/owner-round9/pr35-narrow-src/modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts",
+      "selected_for_intake": false,
+      "finding": {
+        "id": "WP11_HOT_TOPIC_SURFACE_UNFIXED",
+        "line": 108,
+        "cause": "Draft transaction still selects domainSurface planner although its snapshot verification is supplied by the actual Dashboard source path. The exact blob is unchanged from W8, so the prior scoped Dashboard finding remains.",
+        "required_owner_fix": "Publish the delimited domainSurface dashboard change while preserving current case/digest/authority/CAS checks; no source edit made by intake.",
+        "relation_to_W8": "EXACT_IDENTICAL_BLOB",
+        "prior_owner_comment": "https://github.com/gustavomhss/Orchestra-SF/pull/35#issuecomment-6875917412",
+        "classification": "STATIC_FINDING_REMAINS; no new HTTP cause or success inferred"
+      }
+    }
+  ],
+  "product_payload_generated": false,
+  "source_CI_transferred": false,
+  "new_CI_required_or_dispatched": false,
+  "worktree_edits": false,
+  "GitHub_mutations": false,
+  "product_tests_or_typecheck": false,
+  "independent_review": false,
+  "next_action": "Owner WP11 must publish the two delimited corrections; root may retain current findings. No additional closure or snapshot intake attempted."
+}

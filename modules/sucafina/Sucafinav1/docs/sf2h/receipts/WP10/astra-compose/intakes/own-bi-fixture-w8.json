@@ -1,0 +1,93 @@
+{
+  "schema": "astra-own-bi-fixture-repair-v1",
+  "status": "NOT_REVALIDATED",
+  "published_head": null,
+  "published_tree": null,
+  "base": {
+    "pr": 32,
+    "head": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+    "tree": "2a61f73fc5bf404501d61f71f552861f5e1338e1"
+  },
+  "paths": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts",
+      "base_head": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "base_blob": "f8191c00120ca3ace3dece882dc615849c132525",
+      "blob": "9b39e67b932f93e09ea28436144b668208849155",
+      "bytes": 27109,
+      "kind": "OWN_TEST_FIXTURE",
+      "change": "Use actual Chromium absolute navigation/fetch for enrollment/options; direct absolute HTTP revocation uses observed cookie; early provisional ownership, cancel/dispose shared promise and afterEach; await resource acquisition before cleanup."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-case-access.test.ts",
+      "base_head": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "base_blob": "c2cd2484272e2f1fff369358e0438bbcae9f44bf",
+      "blob": "be3b015a4a2de0c9b48d65fa7947b1a73f45d7d5",
+      "bytes": 15287,
+      "kind": "OWN_TEST_FIXTURE",
+      "change": "Log exact non200 promotion Response.clone().text() with fixture/index/caseRef; preserve assert200 and original response consumption."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-call-scope.test.ts",
+      "base_head": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "base_blob": "524eb3fe1bb2b723a983258290e099fb84768125",
+      "blob": "9c844f4e1e506eb0984bf3f59edf4e00de8de9dd",
+      "bytes": 29271,
+      "kind": "OWN_TEST_FIXTURE",
+      "change": "Log exact non200 promotion Response.clone().text() with fixture/index/caseRef; preserve assert200 and original response consumption."
+    }
+  ],
+  "observed_failure": {
+    "run_id": 43584781236,
+    "job_id": 132416826537,
+    "snapshot_head": "8d03f8e6e15d2da63f35e4eefd2a6ae2ed092ec9",
+    "request_sha256": "718794b3f1a350649f73d0a5c38a6450c47bee60f798fe9c0aeb1048bcc5844f",
+    "equivalence": "MCP comparison verified one direct child of W7, only .ci-run.json added",
+    "result": "FAILURE",
+    "counts": {
+      "pass": 36,
+      "fail": 11,
+      "tests": 47,
+      "files": 15,
+      "assertions": 993,
+      "seconds": 112.22
+    },
+    "omni": {
+      "result": "PASS",
+      "spawns": 1,
+      "declared": 1,
+      "nonce": "084263e379840a47dd760a750ec8957f"
+    },
+    "lifecycle": "Three tests failed ERR_INVALID_URL in Playwright _parseSetCookieHeader. W7 test input was already absolute; the Node HTTP adapter under Bun supplied the relative response path to that parser. Browser.setup returned12.7s/31.1s after Bun reported tests failed.",
+    "before_consumer": "Seven BI tests fail status409 in decision-promote before any BI consumer assertion; exact response bodies absent in W7 logs. Diagnostics added; status200 remains required. Root/owner_fix_triage/finance own causal correction.",
+    "passed_scope": "Fourth explicit A/B origin test passed on W7 and is byte-identical in this payload; no transfer of PASS to the modified file/W8."
+  },
+  "changes_and_limits": [
+    "No product source changed; no identity implementation or financial policy changed.",
+    "Replace APIRequestContext transport with Chromium navigation/fetch and real absolute HTTP calls, preserving actual cookie/session revocation.",
+    "Register provisional disposal before first asynchronous setup; afterEach can close it even when Bun reports an external error before setup settles.",
+    "Acquisition installs cleanup before observing cancellation; dispose cancels and awaits acquisitions, releases held responses, closes HTTP transport/Chromium, then state/store/directory. All cleanup callbacks run even if an earlier one fails.",
+    "Cooperative deadline starts shared disposal while browser work is pending; deadline cleanup and afterEach await that same promise.",
+    "All four tests, original status assertions and120s outer/105s cooperative budgets remain; explicit A/B test exactly unchanged.",
+    "W7 staging frozen and preserved. No local product tests/typecheck/guards/browser and no CI or remote mutation performed."
+  ],
+  "static_review": {
+    "reviewer": "composition_wp10",
+    "scope": "first224 lines of own fixture acquisition/cleanup and real browser transport",
+    "result": "No concrete blocker found in static reading",
+    "independent_final_review": false
+  },
+  "pending": [
+    "Publish exact W8 head/tree",
+    "Actions re-execution of three previously blocked lifecycle cases on W8",
+    "Actions typecheck/guards on final W8",
+    "Receive real promotion409 bodies if owner correction does not resolve them; seven pre-consumer tests stay unclosed until actual200 path executes",
+    "All WP00/WP10/global/native gates unchanged"
+  ],
+  "payload": {
+    "path": "/workspace/scratch/4c48b09c5c29/incoming-cache/bi-round8-payloads.json",
+    "count": 3,
+    "bytes": 74748,
+    "sha256": "1f1853322c92ba4a0af953c544dcd9c8d3a03614b69a4deb961a37534ee13a1c"
+  }
+}

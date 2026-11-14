@@ -1,0 +1,343 @@
+{
+  "schema": "sf2.wp10.builder-receipt.v1",
+  "status": "CLOSED",
+  "builder": "/root/planner_recovery_w6",
+  "role": "author-builder, not an independent reviewer",
+  "scope": "W7 authenticated scenario component selection, protected Atlas capture lookup, own negative fixtures and W11 reconciliation",
+  "reconciledBase": {
+    "W": "9c427835a029ac8594421436bffb4c5c23da059c",
+    "tree": "f2f38d45ce24b92296dcd8806b5eb71b7a8ab33a",
+    "parentW6": "d1ca0b2b02936d4824a9201af5c133d7bbf2056c"
+  },
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+      "beforeW11": {
+        "gitBlobSha": "d7f4ad7c4c43ebb030c43e9632ba10fdc1944149",
+        "sha256": "7df77a80cea27bf917cc84028f833f1dd2eeddce24c34b6b4f1542d8c4d263c1",
+        "bytes": 7986
+      },
+      "after": {
+        "gitBlobSha": "f27b25e5e7fdea3a4a228cbe7d79ef82bf4b0fdf",
+        "sha256": "aaaa67de08f6556a1904ef66a75c461f86e77cec273c7fa0d60407d2824f1ae5",
+        "bytes": 9082
+      }
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "beforeW11": {
+        "gitBlobSha": "964147cad0f28da040807c07f3400d5d4c03a956",
+        "sha256": "da85622386f40b5f4a6b924e4400c9d5f8c608872538a8746b0ffdb6afe88911",
+        "bytes": 54453
+      },
+      "after": {
+        "gitBlobSha": "34a491f859f7b57b0883a122f816803df43c74c8",
+        "sha256": "92bd0da864af19ac4265342d6052bec72d95ee57bfdddc0c87e44178eef00e22",
+        "bytes": 54720
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "beforeW11": null,
+      "after": {
+        "gitBlobSha": "f0adea5368fb0e027d2e920bdf2c2038b37b3d84",
+        "sha256": "bcf2a2d4e8eec9347572b5d32c17464740ede26a3339bf3de13672392fa30368",
+        "bytes": 10430
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "beforeW11": {
+        "gitBlobSha": "9c7e72f156e86035e9c8499ee6d74b255a2a2fcc",
+        "sha256": "0f20eb35e93034de80db8f2455c370ce4cd17310ac19abee518d011cd95e84ce",
+        "bytes": 20195
+      },
+      "after": {
+        "gitBlobSha": "c238bb120452788dfca35a0997a806f84016885e",
+        "sha256": "b702bba68bd5adee806fd080aeb44b489da540bde78d1e297e528378cd97d458",
+        "bytes": 24295
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+      "beforeW11": {
+        "gitBlobSha": "e0176bec941dfc542e8534846010bfcdfab245fd",
+        "sha256": "407594976879d33e19478295caa31da8ffed98d3c27708c8d3a82c9253b73a3e",
+        "bytes": 21235
+      },
+      "after": {
+        "gitBlobSha": "cec2598f03e97a7b1efe9d478829955d17a731a3",
+        "sha256": "3f140fc4d3ff9d1362172bef3b848c47c45e0f92a99627c21e5471efac86c1ba",
+        "bytes": 21703
+      }
+    }
+  ],
+  "lease": "Only parent-authorized own two source files and own tests changed. No foreign path edits, remote writes, CI dispatch, merge or deploy by this builder.",
+  "reconciliation": {
+    "W6Archive": "analysis/scenario-access-W7/pre-W11/manifest.json",
+    "ownDeltaBeforeW11": "analysis/scenario-access-W7/own-delta-pre-W11.patch",
+    "W6ToOwnBeforeW11": "analysis/scenario-access-W7/frozen-W6-to-own-pre-W11.patch",
+    "finalPatch": "analysis/scenario-access-W7/W11-to-W7.patch",
+    "preserved": "All W11 CaseScope retainers/Request/binding checks, ordered evidence reads, removed queue, reentrant replay-cycle proof and ancestor/repeated-context checks remain. The new protected capture discovery also uses mapSfEvidenceInOrder."
+  },
+  "diagnosis": [
+    {
+      "problem": "The stored-scenario selector guard compared the same Planner source with itself just to get baseline.components. This reopened C10 coverage four times per selector verification and amplified case/BCS reads before drafting.",
+      "W": "7377e364e4870e832e49d99d0d2bdbde9eb63a5f",
+      "S": "3b84cd40cfd596f53c70e2210d0ac8775ea0e66f",
+      "runId": 43556325733,
+      "jobId": 132329877039,
+      "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43556325733",
+      "conclusion": "failure",
+      "logSha256": "ad71a2f73e7a7ec1a436094e8554cce1d6930074729203668f95f89816653c98",
+      "firstSlowPhases": [
+        {
+          "phase": "selection.register",
+          "state": "returned",
+          "elapsedMs": 39007,
+          "transactions": 10776,
+          "allTransactions": 2,
+          "snapshotCopies": 14469,
+          "authentications": 28161,
+          "selectionReads": 0,
+          "simulations": 0,
+          "logLine": 832
+        },
+        {
+          "phase": "selection.capture",
+          "state": "returned",
+          "elapsedMs": 48485,
+          "transactions": 13373,
+          "allTransactions": 0,
+          "snapshotCopies": 17928,
+          "authentications": 34925,
+          "selectionReads": 2,
+          "simulations": 0,
+          "logLine": 834
+        }
+      ]
+    },
+    {
+      "problem": "Protected Atlas capture discovery reopened full cases.read and replayed calculations during continuity lookup. W6 passed its parallel proof and wrote Atlas before reopen, then exceeded its 105000 ms cooperative deadline.",
+      "W": "d1ca0b2b02936d4824a9201af5c133d7bbf2056c",
+      "S": "ebcd344c1b138b931b9ca76feaa10da0c318dd43",
+      "runId": 43557027877,
+      "jobId": 132332098591,
+      "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43557027877",
+      "conclusion": "failure",
+      "logSha256": "b4c9419695b4bc963143d555e8f4700c4108cb336e220ea6c55d0c422d027ad2",
+      "counts": {
+        "pass": 140,
+        "skip": 2,
+        "fail": 3
+      },
+      "phasesMs": {
+        "parallelProofs": 13484,
+        "atlasWrite": 19132,
+        "sqliteReopen": 19152
+      }
+    }
+  ],
+  "implementation": {
+    "scenario": {
+      "change": "Wire the existing authenticated createSfPlannerEvidence into selector authorization. The existing projector uses the same projectPlannerSource and buildPlannerFinancialProjection as compareForecast. Validate engine/source version, installation/project/principal/accessRevision/policyVersion, Planner surface, USD, exact period, source coverage and unique projection value IDs before selecting exactly one component.",
+      "preserved": [
+        "Authenticated source before/after, projector source/projection rereads, source identity/incarnation/version/digest/fields",
+        "Current principal/roles/data scope; three source fences; original case input digest and final revalidation",
+        "Procurement and external operation branches byte-identical",
+        "Replacement resolver, finite amount, evidence/source coverage, currency/period and amount mutual exclusion byte-identical"
+      ],
+      "semanticDifference": "Target-selector authorization no longer recomputes same-source financial comparison or current coverage state. It does not produce/promote financial acceptance. Full case evidence authorization and Scenario/comparison/coverage producers remain unchanged; prepared tests explicitly retain conditioned status and null total."
+    },
+    "capture": {
+      "change": "Enumerate authenticated current C08 membership, or the native run-bound case; preserve the 500-candidate bound. Ask the same initialized Atlas memory for the exact protected original, in order. After final host revalidation, recheck exact Request identity, abort state and binding digest. originalMemory contains only the service reference, with no authorization/result cache.",
+      "proof": "Unchanged memory.readOriginal rechecks C08 before and after: current participants, case identity/incarnation, actor principal/accessRevision/policyVersion, native exact current case version, authorizeCase and host authority. It derives the authenticated owner, checks the durable log, canonical evidence digest, linked envelope, owner/kind/case identity, capture digest and projection digest. Unchanged continuity reads the original and reauthorizes the actual current domain source twice.",
+      "semanticDifference": "Actual protected capture linkage replaces current projected-evidence/outbox hints as the discovery index. A pending outbox alone cannot supply an original. A genuine captured original remains discoverable under current authorized case identity even when active case projection is not its index. Full financial case recomputation is avoided; current source authorization remains required.",
+      "limits": "No new currentVersion>=historicalVersion shortcut; native readOriginal still requires binding.caseVersion===current case.version. F05 is not closed. Foreign continuity, historical readers, replay producer, scanner/writer and durable store are unchanged."
+    },
+    "historicalFixture": "Consume each actual sf_work_list and sf_request_read admission exactly once with its exact digest before the producer, and finish in finally. Production authority is not relaxed.",
+    "concurrency": "W11 uses sequential siblings within each composed evidence pass and reference-counted case ownership. Distinct stored runs may overlap without deleting each other scope. Same run/binding recursive or independent overlap retains the published calculation-replay-cycle refusal. No per-call queue/mutex remains that a recursive replay could await. W11 real coverage-reentry expects immediate refusal. W6 same-run parallel-positive evidence is superseded, not claimed as W7 qualification."
+  },
+  "counterproofsPrepared": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "tests": 6,
+      "proofs": [
+        "Actual SQLite/authenticated source/Planner scenario and composed cases.read with zero additional coverage calls in direct amount selector authorization",
+        "Actual replacement producer/resolver positive and amount+reference, wrong currency/period and nonexistent replacement-value negatives",
+        "Wrong target, non-USD result, partial month and missing stored evidence negatives",
+        "Actual Planner/Dashboard/Procurement data changes, principal revocation and input mutation during the projection await"
+      ],
+      "limits": "Pending coverage/C08 capture are explicit fixtures; no human promotion, complete-cost or native/global claim. composition-test-deadline helper belongs to the other builder."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "proofs": [
+        "All published W11 assertions retained",
+        "Another authorized case with the same calculation has no protected original",
+        "Missing original, tampered original ref, tampered projection, bad capture digest, envelope case mismatch and removed envelope all reject continuity",
+        "Current membership revoked during actual domain await rejects continuity although session authentication remains active; restoring exact data restores the positive",
+        "Real SQLite reopen/scanner/Atlas write, replay, idempotent receipt and principal revocation retained",
+        "Extra phase logs distinguish reopened calculation, continuity, original capture, ancestor/repeated context and Atlas recall"
+      ],
+      "budgetsMs": {
+        "cooperative": 105000,
+        "bun": 120000
+      },
+      "runtime": "NOT_RUN_ON_W7"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+      "proofs": [
+        "Both actual UI admissions consumed; original assertions retained"
+      ]
+    }
+  ],
+  "staticDataChecks": {
+    "caseScopeW11Unchanged": true,
+    "scenarioProcurementAndExternalBranchesUnchanged": true,
+    "scenarioReplacementChecksUnchanged": true,
+    "scenarioFinalSourceFencesAndCoveredPredicateUnchanged": true,
+    "scenarioNoCompareForecastCall": true,
+    "protectedLookupNoCaseProjection": true,
+    "protectedLookupSequential": true
+  },
+  "assertionPreservationAgainstW11": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "W11ExpectationLines": 32,
+      "W7ExpectationLines": 39,
+      "removed": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+      "W11ExpectationLines": 26,
+      "W7ExpectationLines": 26,
+      "removed": []
+    }
+  ],
+  "unhydratedPreexistingImports": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "target": "../../../../../../../packages/core/test/fixture/omni-expect.ts",
+      "alreadyPresentInW11": true,
+      "classification": "unhydrated in partial local checkout; hosted runner resolves full tree"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+      "target": "../../../../../../../packages/core/test/fixture/omni-expect.ts",
+      "alreadyPresentInW11": true,
+      "classification": "unhydrated in partial local checkout; hosted runner resolves full tree"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+      "target": "../../../../../../atlas/boundary/package.json",
+      "alreadyPresentInW11": true,
+      "classification": "unhydrated in partial local checkout; hosted runner resolves full tree"
+    }
+  ],
+  "newImportsMissing": [],
+  "unchangedSourcePins": [
+    {
+      "path": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+      "gitBlobSha": "6898b08eb4b018f5a83167555836ac876d288976",
+      "sha256": "4fbe85a796f92b2fa154b46997d1f6c9ab4af53f6e96e8ff1ebd3c3a438e9510",
+      "bytes": 12587
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/planner-evidence.ts",
+      "gitBlobSha": "13153182e357b716a12d2554654905d54fa30ee4",
+      "sha256": "c92b50d58f15b85897b778b9b57736cafb8fdb8fdcce41b6ec6246306b01ccfc",
+      "bytes": 5684
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/evidence-order.ts",
+      "gitBlobSha": "6b3f78f6d8f4037829db6b83259edb76dc2436a5",
+      "sha256": "ccf024c91822f9410aaebf0bcba9e7a259bc0663bec0e7d503deb87ee4654e26",
+      "bytes": 400
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "gitBlobSha": "0ac4c11d4eddb6e4a67c2c41efe40a7ff34fa47e",
+      "sha256": "50a87c0cf4fa02146b14bff6262c919df390201550b5a5f5e18e55963804c10e",
+      "bytes": 25566
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+      "gitBlobSha": "d2860d3b241c90ecd5dc45bb4010de3c85449a27",
+      "sha256": "4e1b0eeee204742a68b89b052e3fcf4254e2e4af87bb347614b1ee74d6f6894c",
+      "bytes": 33457
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts",
+      "gitBlobSha": "9a29a61dca38f723aca5c0bcd416c26a1cc636b1",
+      "sha256": "e590c1e022e5bfb5e7c9b5a37ad2d5057b4c4b7eaa184ca51e1d694173d9ec53",
+      "bytes": 26135
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "gitBlobSha": "dba62042653bd061fa099e2956cae4d11a0475ce",
+      "sha256": "d66bf0f6e47bbd7e8223c362fa1a67a4625f2cc1156eb0d0a46dc1a1c9419456",
+      "bytes": 24849
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+      "gitBlobSha": "f474ed278b7f41e1a754d6ba7a59d2108b6785d3",
+      "sha256": "731e566e9e07bca8e2ee4a8077b2983dc16671915304a1eba3b9bc84f2d3b50c",
+      "bytes": 14052
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-inputs.ts",
+      "gitBlobSha": "f2a49fc79880ccb204184c6c83e957bab97b483f",
+      "sha256": "8a4d96c7a9ec720117fd1bb41b553c052248dd30a719cdf0622c4f71e8b5e95c",
+      "bytes": 3007
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/calculation-evidence.ts",
+      "gitBlobSha": "a1d2b84c59732b05c5944cd81be82f247c2c9c91",
+      "sha256": "e5726e7f60690ac451c07c49fecfa4a2254b4b6f5cda017f800ef9c208ef294d",
+      "bytes": 7910
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+      "gitBlobSha": "102c849084980ae52223809d33bdeea36a58536b",
+      "sha256": "6047c7239f2dbb36d40ed09880f908dc9033e362a599a6921798bbdccbef031a",
+      "bytes": 5643
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+      "gitBlobSha": "f22b00f0a97ab138d1d8b86855f432c6ef709c36",
+      "sha256": "d2929cd8cf8f67e697b2584684491346905657c69cfed2ab144d26a9a646deaf",
+      "bytes": 7262
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-case-scope.test.ts",
+      "gitBlobSha": "37c3ebc9f88065b5c6d40f6fbce06088e414a1c7",
+      "sha256": "c988c090dcb65f6766f8427d4b6da8ba3b0a45e499e0a5019c900ec66365d7f3",
+      "bytes": 17081
+    }
+  ],
+  "criteria": {
+    "canonicalCount": 171,
+    "taskCount": 7,
+    "planModified": false,
+    "related": [
+      "WP10.T01.DOD.10",
+      "WP10.T01.INV.01",
+      "WP10.T01.INV.10",
+      "WP10.T01.SUC.10",
+      "WP10.T07.DOD.01",
+      "WP10.T07.INV.01",
+      "WP10.T07.CMP.01",
+      "WP10.T07.SUC.01",
+      "WP10.T07.SUC.40"
+    ],
+    "qualification": "No criterion promoted to PASS by this source inspection. Parent maintains the complete 171-criterion map."
+  },
+  "validation": {
+    "performed": "Only source/data/diff/hash inspection. No local product test, build, typecheck, import, server or browser.",
+    "runtime": "PENDING_HOSTED_SURGICAL_CI",
+    "independentReview": "PENDING: builder is an author and does not replace any of the three independent reviewers.",
+    "remaining": "Root publishes W7 on W11 and executes the surgical selection, then independent review on that exact candidate. Full epic, native/global acceptance and F05 remain separately unqualified."
+  }
+}

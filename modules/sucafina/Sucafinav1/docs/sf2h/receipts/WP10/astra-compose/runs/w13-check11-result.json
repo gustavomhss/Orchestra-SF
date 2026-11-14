@@ -1,0 +1,73 @@
+{
+  "schema": "sf2-compose-check-receipt-v1",
+  "product": {
+    "head": "39972fd2539ce7eda9a09cf95ba91137b8f59e1e",
+    "tree": "6177139433da16cd5ee2e8f35b5637276cb4c434"
+  },
+  "check": {
+    "run": 43596536832,
+    "job": 132452135188,
+    "W": "39972fd2539ce7eda9a09cf95ba91137b8f59e1e",
+    "S": "a203238c485596e3929df2528f78923913d5d460",
+    "snapshot_tree": "1532fdbe0535a42ecaf825e199012e45570ab12e",
+    "envelope_blob": "8298105fd034f7cb1301a520361053cc011bc580",
+    "parents": [
+      "39972fd2539ce7eda9a09cf95ba91137b8f59e1e",
+      "02576bd6dc61391feb47709970f2fafc3b9c8f16"
+    ],
+    "envelope": {
+      "productSha": "39972fd2539ce7eda9a09cf95ba91137b8f59e1e",
+      "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+    },
+    "conclusion": "FAILURE",
+    "diagnostics": {
+      "sucafina": 14,
+      "own_wp00_wp10": 0,
+      "cli": 0,
+      "baseline_owners": {
+        "WP04": 3,
+        "WP06": 4,
+        "WP08": 4,
+        "WP09": 1,
+        "WP13": 1,
+        "WP14": 1
+      }
+    },
+    "passed": [
+      "CLI bun typecheck",
+      "Atlas generation/check/no-diff/typecheck",
+      "spawn guard",
+      "repository guards"
+    ],
+    "guards": {
+      "rules": 78,
+      "paths": 1381,
+      "gates": 0,
+      "warnings": 46,
+      "errors": 0
+    },
+    "spawn": {
+      "files": 4671,
+      "sites": 66
+    },
+    "artifact": [
+      {
+        "id": 14114866968,
+        "name": "astra-compose-check-1",
+        "bytes": 3952,
+        "digest": "sha256:37b2aef51c19059397c63e191a27d3e248e8ca9c1c55ead06c391c8dd5285af0",
+        "expires_at": "2026-11-28T12:50:43Z"
+      }
+    ],
+    "snapshot_diff": [
+      {
+        "path": ".astra-compose-check.json",
+        "sha": "8298105fd034f7cb1301a520361053cc011bc580",
+        "status": "added"
+      }
+    ]
+  },
+  "acceptance": "EXACT_SCOPED_OBSERVATIONS_ONLY_NOT_FULL_WP_READY",
+  "local_product_execution": false
+}
+

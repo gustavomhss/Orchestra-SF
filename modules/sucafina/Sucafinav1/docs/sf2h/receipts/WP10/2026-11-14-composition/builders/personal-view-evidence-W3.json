@@ -1,0 +1,29 @@
+{
+  "schema": "wp10-saved-view-persistence-evidence-v1",
+  "status": "CLOSED",
+  "finding": "R1-UX-05",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/personal-view-persistence.test.ts",
+      "bytes": 7732,
+      "blobSha": "b5b8267bc1f377e870eeab84e16682fa4771d723",
+      "sha256": "c023a0af2021b8f05a9e1b741f69d413833bf3a083760d6babc69eaaf4bec869"
+    }
+  ],
+  "selection": "Sucafinav1/test/product/wp10/integration/personal-view-persistence.test.ts",
+  "covers": [
+    "Actual createSfPersonalViews composed with createSfPersonalViewAuthority, createSfProductAuthority, source persistence and SQLite driver, with the same callbacks as host-context.",
+    "Explicit human save of Planner OPEX year/version/owner/class/mode/query/period/currency/density and Procurement Suppliers year/status/supplier/query/density.",
+    "Driver is closed; a new driver and product authority reopen the same durable directory. Newly admitted human reads assert exact saved records and their list.",
+    "Removing the actual Planner version makes its saved view unavailable and removes it from the authorized list; revocation of the principal denies an already admitted open."
+  ],
+  "limitations": [
+    "Authenticator and installation identity are explicit test fixtures; this is not native Session or global acceptance.",
+    "Same logical ID replacement cannot be established because the published SfPersonalView contract does not carry destination incarnation.",
+    "Awaiting hosted test-ci execution and independent reviewer recheck; no test PASS is claimed."
+  ],
+  "validation": [
+    "Read-only static source/contract inspection and byte hashing only. No local product test, build, typecheck or runtime import."
+  ],
+  "remoteMutations": []
+}

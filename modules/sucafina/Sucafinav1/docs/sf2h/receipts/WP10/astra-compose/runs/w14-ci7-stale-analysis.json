@@ -1,0 +1,2456 @@
+{
+  "schema": "sf2-ci7-stale-timeout-analysis-v1",
+  "finding": "CI7-WP10-STALE-LIFECYCLE-ADMISSION-01",
+  "status": "OBSERVED_TIMEOUTS_OPEN_PROTOTYPE_NOT_APPLIED_NOT_TESTED",
+  "identity": {
+    "product_head": "9a475b5fb28655f1c4309cd3e68b6e4d76269a2e",
+    "product_tree": "2bedbc721d0b402b41c942b770c49bf36e6a9e0b",
+    "request_head": "be9c1606e8a4bc0a3fe52814cd2089aabc284bc7",
+    "run_id": 43598770529,
+    "job_id": 132458824188,
+    "verification": "Supplied metadata; W/S relationship and run identity are not authenticated by this parser."
+  },
+  "log": {
+    "path": "/workspace/scratch/4c48b09c5c29/evidence/ci7.log",
+    "sha256": "25dc690dccf2ba6f0eeaa0b2c36ada8293befcb73a606ac89fda34c61387c9f8"
+  },
+  "parsed": {
+    "path": "/workspace/scratch/4c48b09c5c29/evidence/ci7.parsed.json",
+    "sha256": "f419f50c03f00d958d6cfa7d366456effae02e0481d8b01f63cb3ee993a2ac5d"
+  },
+  "bunSummary": [
+    {
+      "line": 1863,
+      "timestamp": "2026-11-14T13:26:49.4285658Z",
+      "tests": 43,
+      "files": 12,
+      "duration_text": "639.61s",
+      "milliseconds": 639610.0,
+      "counts": {
+        "pass": 36,
+        "fail": 7,
+        "expect_calls": 612
+      },
+      "count_lines": [
+        {
+          "line": 1859,
+          "timestamp": "2026-11-14T13:26:49.4284762Z",
+          "key": "pass",
+          "value": 36
+        },
+        {
+          "line": 1861,
+          "timestamp": "2026-11-14T13:26:49.4285180Z",
+          "key": "fail",
+          "value": 7
+        },
+        {
+          "line": 1862,
+          "timestamp": "2026-11-14T13:26:49.4285381Z",
+          "key": "expect_calls",
+          "value": 612
+        }
+      ]
+    }
+  ],
+  "unhandledErrors": [],
+  "scopeLimit": "CI7 reports 43 cases/12 files, 36 pass/7 fail; the prepared 42-case selection included an incompatible WP01 lifecycle hook. Root owns that separate scope/Omni finding.",
+  "cases": [
+    {
+      "status": "fail",
+      "name": "Late captured calculation settles its original output after case advance without changing the active selector, and survives restart",
+      "milliseconds": 105014.96,
+      "duration_text": "105014.96ms",
+      "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+      "line": 1222,
+      "timestamp": "2026-11-14T13:20:08.8832763Z"
+    },
+    {
+      "status": "pass",
+      "name": "Late calculation settlement rejects another case, a later producer, missing ledger/capture and changed sources without writing output",
+      "milliseconds": 74903.27,
+      "duration_text": "74903.27ms",
+      "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+      "line": 1429,
+      "timestamp": "2026-11-14T13:21:23.7857381Z"
+    },
+    {
+      "status": "fail",
+      "name": "Private historical read refuses a substituted Request, first or last authorization loss, and closes every admitted lease",
+      "milliseconds": 105011.23,
+      "duration_text": "105011.23ms",
+      "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+      "line": 1640,
+      "timestamp": "2026-11-14T13:23:08.7974871Z"
+    }
+  ],
+  "fixtures": {
+    "settlement-and-restart": {
+      "selectedPhaseReturns": [
+        {
+          "line": 1042,
+          "timestamp": "2026-11-14T13:18:28.7901298Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.settlement-and-restart",
+            "phase": "fixture.calculation-produce",
+            "state": "returned",
+            "phaseMs": 4195,
+            "elapsedMs": 4919,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1054,
+          "timestamp": "2026-11-14T13:18:37.9115312Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.settlement-and-restart",
+            "phase": "fixture.atlas-archive",
+            "state": "returned",
+            "phaseMs": 9003,
+            "elapsedMs": 14042,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1055,
+          "timestamp": "2026-11-14T13:18:38.0181760Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.settlement-and-restart",
+            "phase": "fixture.prepare",
+            "state": "returned",
+            "phaseMs": 14149,
+            "elapsedMs": 14149,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1090,
+          "timestamp": "2026-11-14T13:19:05.1596774Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.settlement-and-restart",
+            "phase": "positive.original-scoped-read",
+            "state": "returned",
+            "phaseMs": 223,
+            "elapsedMs": 41290,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1141,
+          "timestamp": "2026-11-14T13:19:15.0021656Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.settlement-and-restart",
+            "phase": "positive.preserve-stale",
+            "state": "returned",
+            "phaseMs": 9842,
+            "elapsedMs": 51132,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1144,
+          "timestamp": "2026-11-14T13:19:15.0753369Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.settlement-and-restart",
+            "phase": "positive.original-current-issue",
+            "state": "returned",
+            "phaseMs": 42,
+            "elapsedMs": 51205,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1146,
+          "timestamp": "2026-11-14T13:19:15.0826660Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.settlement-and-restart",
+            "phase": "settlement.1.with-run",
+            "state": "returned",
+            "phaseMs": 37062,
+            "elapsedMs": 51213,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1149,
+          "timestamp": "2026-11-14T13:19:15.0890740Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.settlement-and-restart",
+            "phase": "fixture.restart",
+            "state": "returned",
+            "phaseMs": 6,
+            "elapsedMs": 51219,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1177,
+          "timestamp": "2026-11-14T13:19:43.1729345Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.settlement-and-restart",
+            "phase": "settlement.2.with-run",
+            "state": "returned",
+            "phaseMs": 28060,
+            "elapsedMs": 79303,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1179,
+          "timestamp": "2026-11-14T13:19:43.1734884Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.settlement-and-restart",
+            "phase": "positive.reopened-lifecycle",
+            "state": "returned",
+            "phaseMs": 28060,
+            "elapsedMs": 79303,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1207,
+          "timestamp": "2026-11-14T13:20:08.8775000Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.settlement-and-restart",
+            "phase": "settlement.2.with-run",
+            "state": "returned",
+            "phaseMs": 25704,
+            "elapsedMs": 105007,
+            "aborted": true
+          }
+        },
+        {
+          "line": 1209,
+          "timestamp": "2026-11-14T13:20:08.8784101Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.settlement-and-restart",
+            "phase": "positive.reopened-publication-refusal",
+            "state": "returned",
+            "phaseMs": 25704,
+            "elapsedMs": 105007,
+            "aborted": true
+          }
+        },
+        {
+          "line": 1211,
+          "timestamp": "2026-11-14T13:20:08.8792292Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.settlement-and-restart",
+            "phase": "scenario",
+            "state": "returned",
+            "phaseMs": 90858,
+            "elapsedMs": 105007,
+            "aborted": true
+          }
+        }
+      ],
+      "historicalCallReturns": [
+        {
+          "line": 1063,
+          "timestamp": "2026-11-14T13:18:42.8140177Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.settlement-and-restart",
+            "phase": "calculation.historical.initial.1",
+            "state": "returned",
+            "phaseMs": 4562,
+            "elapsedMs": 18944,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1066,
+          "timestamp": "2026-11-14T13:18:47.2439376Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.settlement-and-restart",
+            "phase": "calculation.historical.initial.2",
+            "state": "returned",
+            "phaseMs": 4421,
+            "elapsedMs": 23374,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1069,
+          "timestamp": "2026-11-14T13:18:51.6943046Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.settlement-and-restart",
+            "phase": "calculation.historical.initial.3",
+            "state": "returned",
+            "phaseMs": 4450,
+            "elapsedMs": 27824,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1075,
+          "timestamp": "2026-11-14T13:18:56.2528638Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.settlement-and-restart",
+            "phase": "calculation.historical.initial.4",
+            "state": "returned",
+            "phaseMs": 4322,
+            "elapsedMs": 32383,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1078,
+          "timestamp": "2026-11-14T13:19:00.5771255Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.settlement-and-restart",
+            "phase": "calculation.historical.initial.5",
+            "state": "returned",
+            "phaseMs": 4317,
+            "elapsedMs": 36707,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1081,
+          "timestamp": "2026-11-14T13:19:04.8566044Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.settlement-and-restart",
+            "phase": "calculation.historical.initial.6",
+            "state": "returned",
+            "phaseMs": 4279,
+            "elapsedMs": 40987,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1088,
+          "timestamp": "2026-11-14T13:19:05.1488583Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.settlement-and-restart",
+            "phase": "calculation.historical.initial.7",
+            "state": "returned",
+            "phaseMs": 154,
+            "elapsedMs": 41279,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1098,
+          "timestamp": "2026-11-14T13:19:05.4583211Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.settlement-and-restart",
+            "phase": "calculation.historical.initial.8",
+            "state": "returned",
+            "phaseMs": 147,
+            "elapsedMs": 41589,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1110,
+          "timestamp": "2026-11-14T13:19:07.0865045Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.settlement-and-restart",
+            "phase": "calculation.historical.initial.9",
+            "state": "returned",
+            "phaseMs": 1545,
+            "elapsedMs": 43217,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1113,
+          "timestamp": "2026-11-14T13:19:08.6073748Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.settlement-and-restart",
+            "phase": "calculation.historical.initial.10",
+            "state": "returned",
+            "phaseMs": 1518,
+            "elapsedMs": 44737,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1116,
+          "timestamp": "2026-11-14T13:19:10.1334773Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.settlement-and-restart",
+            "phase": "calculation.historical.initial.11",
+            "state": "returned",
+            "phaseMs": 1524,
+            "elapsedMs": 46262,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1129,
+          "timestamp": "2026-11-14T13:19:11.8359207Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.settlement-and-restart",
+            "phase": "calculation.historical.initial.12",
+            "state": "returned",
+            "phaseMs": 1522,
+            "elapsedMs": 47966,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1132,
+          "timestamp": "2026-11-14T13:19:13.3742300Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.settlement-and-restart",
+            "phase": "calculation.historical.initial.13",
+            "state": "returned",
+            "phaseMs": 1535,
+            "elapsedMs": 49504,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1135,
+          "timestamp": "2026-11-14T13:19:14.9209075Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.settlement-and-restart",
+            "phase": "calculation.historical.initial.14",
+            "state": "returned",
+            "phaseMs": 1547,
+            "elapsedMs": 51051,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1157,
+          "timestamp": "2026-11-14T13:19:19.7649407Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.settlement-and-restart",
+            "phase": "calculation.historical.reopened.15",
+            "state": "returned",
+            "phaseMs": 4399,
+            "elapsedMs": 55895,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1160,
+          "timestamp": "2026-11-14T13:19:24.2799739Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.settlement-and-restart",
+            "phase": "calculation.historical.reopened.16",
+            "state": "returned",
+            "phaseMs": 4506,
+            "elapsedMs": 60409,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1163,
+          "timestamp": "2026-11-14T13:19:28.8201934Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.settlement-and-restart",
+            "phase": "calculation.historical.reopened.17",
+            "state": "returned",
+            "phaseMs": 4542,
+            "elapsedMs": 64950,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1169,
+          "timestamp": "2026-11-14T13:19:33.8454135Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.settlement-and-restart",
+            "phase": "calculation.historical.reopened.18",
+            "state": "returned",
+            "phaseMs": 4789,
+            "elapsedMs": 69975,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1172,
+          "timestamp": "2026-11-14T13:19:38.4330760Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.settlement-and-restart",
+            "phase": "calculation.historical.reopened.19",
+            "state": "returned",
+            "phaseMs": 4580,
+            "elapsedMs": 74563,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1175,
+          "timestamp": "2026-11-14T13:19:43.0322375Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.settlement-and-restart",
+            "phase": "calculation.historical.reopened.20",
+            "state": "returned",
+            "phaseMs": 4599,
+            "elapsedMs": 79163,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1187,
+          "timestamp": "2026-11-14T13:19:47.9852767Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.settlement-and-restart",
+            "phase": "calculation.historical.reopened.21",
+            "state": "returned",
+            "phaseMs": 4586,
+            "elapsedMs": 84116,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1190,
+          "timestamp": "2026-11-14T13:19:52.5539573Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.settlement-and-restart",
+            "phase": "calculation.historical.reopened.22",
+            "state": "returned",
+            "phaseMs": 4561,
+            "elapsedMs": 88684,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1193,
+          "timestamp": "2026-11-14T13:19:57.0889312Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.settlement-and-restart",
+            "phase": "calculation.historical.reopened.23",
+            "state": "returned",
+            "phaseMs": 4535,
+            "elapsedMs": 93219,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1199,
+          "timestamp": "2026-11-14T13:20:01.9421720Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.settlement-and-restart",
+            "phase": "calculation.historical.reopened.24",
+            "state": "returned",
+            "phaseMs": 4605,
+            "elapsedMs": 98072,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1202,
+          "timestamp": "2026-11-14T13:20:06.6152212Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.settlement-and-restart",
+            "phase": "calculation.historical.reopened.25",
+            "state": "returned",
+            "phaseMs": 4665,
+            "elapsedMs": 102745,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1205,
+          "timestamp": "2026-11-14T13:20:08.8767273Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.settlement-and-restart",
+            "phase": "calculation.historical.reopened.26",
+            "state": "returned",
+            "phaseMs": 2261,
+            "elapsedMs": 105007,
+            "aborted": true
+          }
+        }
+      ],
+      "currentCallReturns": [
+        {
+          "line": 1046,
+          "timestamp": "2026-11-14T13:18:31.6815698Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.settlement-and-restart",
+            "phase": "calculation.current.initial.1",
+            "state": "returned",
+            "phaseMs": 2728,
+            "elapsedMs": 7812,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1049,
+          "timestamp": "2026-11-14T13:18:34.5268578Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.settlement-and-restart",
+            "phase": "calculation.current.initial.2",
+            "state": "returned",
+            "phaseMs": 2790,
+            "elapsedMs": 10657,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1052,
+          "timestamp": "2026-11-14T13:18:37.4609475Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.settlement-and-restart",
+            "phase": "calculation.current.initial.3",
+            "state": "returned",
+            "phaseMs": 2900,
+            "elapsedMs": 13591,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1060,
+          "timestamp": "2026-11-14T13:18:38.2518403Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.settlement-and-restart",
+            "phase": "calculation.current.initial.4",
+            "state": "returned",
+            "phaseMs": 47,
+            "elapsedMs": 14382,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1072,
+          "timestamp": "2026-11-14T13:18:51.9310146Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.settlement-and-restart",
+            "phase": "calculation.current.initial.5",
+            "state": "returned",
+            "phaseMs": 52,
+            "elapsedMs": 28061,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1085,
+          "timestamp": "2026-11-14T13:19:04.9942175Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.settlement-and-restart",
+            "phase": "calculation.current.initial.6",
+            "state": "returned",
+            "phaseMs": 51,
+            "elapsedMs": 41124,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1095,
+          "timestamp": "2026-11-14T13:19:05.3114463Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.settlement-and-restart",
+            "phase": "calculation.current.initial.7",
+            "state": "returned",
+            "phaseMs": 61,
+            "elapsedMs": 41442,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1107,
+          "timestamp": "2026-11-14T13:19:05.5420187Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.settlement-and-restart",
+            "phase": "calculation.current.initial.8",
+            "state": "returned",
+            "phaseMs": 28,
+            "elapsedMs": 41672,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1126,
+          "timestamp": "2026-11-14T13:19:10.3136048Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.settlement-and-restart",
+            "phase": "calculation.current.initial.9",
+            "state": "returned",
+            "phaseMs": 28,
+            "elapsedMs": 46444,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1154,
+          "timestamp": "2026-11-14T13:19:15.3654986Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.settlement-and-restart",
+            "phase": "calculation.current.reopened.10",
+            "state": "returned",
+            "phaseMs": 49,
+            "elapsedMs": 51496,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1166,
+          "timestamp": "2026-11-14T13:19:29.0562500Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.settlement-and-restart",
+            "phase": "calculation.current.reopened.11",
+            "state": "returned",
+            "phaseMs": 52,
+            "elapsedMs": 65187,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1184,
+          "timestamp": "2026-11-14T13:19:43.3995180Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.settlement-and-restart",
+            "phase": "calculation.current.reopened.12",
+            "state": "returned",
+            "phaseMs": 51,
+            "elapsedMs": 79530,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1196,
+          "timestamp": "2026-11-14T13:19:57.3375761Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.settlement-and-restart",
+            "phase": "calculation.current.reopened.13",
+            "state": "returned",
+            "phaseMs": 63,
+            "elapsedMs": 93468,
+            "aborted": false
+          }
+        }
+      ],
+      "historicalReportedMs": 88471,
+      "currentReportedMs": 8900,
+      "finalCounters": {
+        "line": 1210,
+        "timestamp": "2026-11-14T13:20:08.8788622Z",
+        "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+        "marker": "SF_STALE_CALCULATION_COUNTERS",
+        "data": {
+          "fixture": "settlement-and-restart",
+          "phase": "scenario",
+          "delta": {
+            "transactions": 11469,
+            "allTransactions": 2,
+            "currentSnapshotReads": 17788,
+            "authentications": 39169,
+            "environments": 625,
+            "coverageReads": 329,
+            "calculationReads": 10,
+            "calculationSettled": 10,
+            "historicalReads": 26,
+            "historicalSettled": 26,
+            "privateAdmissions": 2,
+            "contextReads": 5,
+            "privateContextReads": 2,
+            "settlements": 2
+          },
+          "total": {
+            "transactions": 20327,
+            "allTransactions": 334,
+            "currentSnapshotReads": 31452,
+            "authentications": 64967,
+            "environments": 811,
+            "coverageReads": 427,
+            "calculationReads": 13,
+            "calculationSettled": 13,
+            "historicalReads": 26,
+            "historicalSettled": 26,
+            "privateAdmissions": 2,
+            "contextReads": 5,
+            "privateContextReads": 2,
+            "settlements": 2
+          }
+        }
+      }
+    },
+    "lineage-and-source-fences": {
+      "selectedPhaseReturns": [
+        {
+          "line": 1250,
+          "timestamp": "2026-11-14T13:20:13.6215308Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.lineage-and-source-fences",
+            "phase": "fixture.calculation-produce",
+            "state": "returned",
+            "phaseMs": 4051,
+            "elapsedMs": 4738,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1262,
+          "timestamp": "2026-11-14T13:20:22.8898890Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.lineage-and-source-fences",
+            "phase": "fixture.atlas-archive",
+            "state": "returned",
+            "phaseMs": 9261,
+            "elapsedMs": 14007,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1263,
+          "timestamp": "2026-11-14T13:20:23.0214618Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.lineage-and-source-fences",
+            "phase": "fixture.prepare",
+            "state": "returned",
+            "phaseMs": 14135,
+            "elapsedMs": 14135,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1309,
+          "timestamp": "2026-11-14T13:20:54.3715122Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.lineage-and-source-fences",
+            "phase": "settlement.1.with-run",
+            "state": "returned",
+            "phaseMs": 31352,
+            "elapsedMs": 45488,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1426,
+          "timestamp": "2026-11-14T13:21:23.7652310Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.lineage-and-source-fences",
+            "phase": "settlement.2.with-run",
+            "state": "returned",
+            "phaseMs": 29381,
+            "elapsedMs": 74882,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1428,
+          "timestamp": "2026-11-14T13:21:23.7807841Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.lineage-and-source-fences",
+            "phase": "scenario",
+            "state": "returned",
+            "phaseMs": 60762,
+            "elapsedMs": 74897,
+            "aborted": false
+          }
+        }
+      ],
+      "historicalCallReturns": [
+        {
+          "line": 1271,
+          "timestamp": "2026-11-14T13:20:27.7043232Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.lineage-and-source-fences",
+            "phase": "calculation.historical.initial.1",
+            "state": "returned",
+            "phaseMs": 4456,
+            "elapsedMs": 18821,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1274,
+          "timestamp": "2026-11-14T13:20:32.0856894Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.lineage-and-source-fences",
+            "phase": "calculation.historical.initial.2",
+            "state": "returned",
+            "phaseMs": 4374,
+            "elapsedMs": 23202,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1277,
+          "timestamp": "2026-11-14T13:20:36.3817096Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.lineage-and-source-fences",
+            "phase": "calculation.historical.initial.3",
+            "state": "returned",
+            "phaseMs": 4296,
+            "elapsedMs": 27498,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1283,
+          "timestamp": "2026-11-14T13:20:40.9036513Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.lineage-and-source-fences",
+            "phase": "calculation.historical.initial.4",
+            "state": "returned",
+            "phaseMs": 4295,
+            "elapsedMs": 32020,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1286,
+          "timestamp": "2026-11-14T13:20:45.2460924Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.lineage-and-source-fences",
+            "phase": "calculation.historical.initial.5",
+            "state": "returned",
+            "phaseMs": 4335,
+            "elapsedMs": 36363,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1289,
+          "timestamp": "2026-11-14T13:20:49.5599931Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.lineage-and-source-fences",
+            "phase": "calculation.historical.initial.6",
+            "state": "returned",
+            "phaseMs": 4314,
+            "elapsedMs": 40676,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1299,
+          "timestamp": "2026-11-14T13:20:51.2221405Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.lineage-and-source-fences",
+            "phase": "calculation.historical.initial.7",
+            "state": "returned",
+            "phaseMs": 1528,
+            "elapsedMs": 42339,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1302,
+          "timestamp": "2026-11-14T13:20:52.7941127Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.lineage-and-source-fences",
+            "phase": "calculation.historical.initial.8",
+            "state": "returned",
+            "phaseMs": 1569,
+            "elapsedMs": 43910,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1305,
+          "timestamp": "2026-11-14T13:20:54.3372751Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.lineage-and-source-fences",
+            "phase": "calculation.historical.initial.9",
+            "state": "returned",
+            "phaseMs": 1543,
+            "elapsedMs": 45454,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1316,
+          "timestamp": "2026-11-14T13:20:58.9260871Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.lineage-and-source-fences",
+            "phase": "calculation.historical.initial.10",
+            "state": "returned",
+            "phaseMs": 4325,
+            "elapsedMs": 50043,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1319,
+          "timestamp": "2026-11-14T13:21:03.1829381Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.lineage-and-source-fences",
+            "phase": "calculation.historical.initial.11",
+            "state": "returned",
+            "phaseMs": 4247,
+            "elapsedMs": 54300,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1322,
+          "timestamp": "2026-11-14T13:21:07.4059949Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.lineage-and-source-fences",
+            "phase": "calculation.historical.initial.12",
+            "state": "returned",
+            "phaseMs": 4223,
+            "elapsedMs": 58523,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1328,
+          "timestamp": "2026-11-14T13:21:11.8076934Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.lineage-and-source-fences",
+            "phase": "calculation.historical.initial.13",
+            "state": "returned",
+            "phaseMs": 4186,
+            "elapsedMs": 62924,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1331,
+          "timestamp": "2026-11-14T13:21:16.0253752Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.lineage-and-source-fences",
+            "phase": "calculation.historical.initial.14",
+            "state": "returned",
+            "phaseMs": 4210,
+            "elapsedMs": 67142,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1334,
+          "timestamp": "2026-11-14T13:21:20.2531366Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.lineage-and-source-fences",
+            "phase": "calculation.historical.initial.15",
+            "state": "returned",
+            "phaseMs": 4228,
+            "elapsedMs": 71370,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1341,
+          "timestamp": "2026-11-14T13:21:20.5174531Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.lineage-and-source-fences",
+            "phase": "calculation.historical.initial.16",
+            "state": "returned",
+            "phaseMs": 32,
+            "elapsedMs": 71634,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1350,
+          "timestamp": "2026-11-14T13:21:20.7377343Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.lineage-and-source-fences",
+            "phase": "calculation.historical.initial.17",
+            "state": "returned",
+            "phaseMs": 32,
+            "elapsedMs": 71854,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1359,
+          "timestamp": "2026-11-14T13:21:21.1317650Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.lineage-and-source-fences",
+            "phase": "calculation.historical.initial.18",
+            "state": "returned",
+            "phaseMs": 33,
+            "elapsedMs": 72248,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1368,
+          "timestamp": "2026-11-14T13:21:21.3632342Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.lineage-and-source-fences",
+            "phase": "calculation.historical.initial.19",
+            "state": "returned",
+            "phaseMs": 36,
+            "elapsedMs": 72478,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1380,
+          "timestamp": "2026-11-14T13:21:21.4702982Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.lineage-and-source-fences",
+            "phase": "calculation.historical.initial.20",
+            "state": "returned",
+            "phaseMs": 22,
+            "elapsedMs": 72587,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1389,
+          "timestamp": "2026-11-14T13:21:21.5601625Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.lineage-and-source-fences",
+            "phase": "calculation.historical.initial.21",
+            "state": "returned",
+            "phaseMs": 25,
+            "elapsedMs": 72677,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1401,
+          "timestamp": "2026-11-14T13:21:21.5904464Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.lineage-and-source-fences",
+            "phase": "calculation.historical.initial.22",
+            "state": "returned",
+            "phaseMs": 13,
+            "elapsedMs": 72707,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1410,
+          "timestamp": "2026-11-14T13:21:22.0023553Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.lineage-and-source-fences",
+            "phase": "calculation.historical.initial.23",
+            "state": "returned",
+            "phaseMs": 177,
+            "elapsedMs": 73119,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1422,
+          "timestamp": "2026-11-14T13:21:23.7519173Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.lineage-and-source-fences",
+            "phase": "calculation.historical.initial.24",
+            "state": "returned",
+            "phaseMs": 1666,
+            "elapsedMs": 74868,
+            "aborted": false
+          }
+        }
+      ],
+      "currentCallReturns": [
+        {
+          "line": 1254,
+          "timestamp": "2026-11-14T13:20:16.4970076Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.lineage-and-source-fences",
+            "phase": "calculation.current.initial.1",
+            "state": "returned",
+            "phaseMs": 2824,
+            "elapsedMs": 7614,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1257,
+          "timestamp": "2026-11-14T13:20:19.4177688Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.lineage-and-source-fences",
+            "phase": "calculation.current.initial.2",
+            "state": "returned",
+            "phaseMs": 2865,
+            "elapsedMs": 10534,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1260,
+          "timestamp": "2026-11-14T13:20:22.2974372Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.lineage-and-source-fences",
+            "phase": "calculation.current.initial.3",
+            "state": "returned",
+            "phaseMs": 2842,
+            "elapsedMs": 13414,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1268,
+          "timestamp": "2026-11-14T13:20:23.2487658Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.lineage-and-source-fences",
+            "phase": "calculation.current.initial.4",
+            "state": "returned",
+            "phaseMs": 48,
+            "elapsedMs": 14365,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1280,
+          "timestamp": "2026-11-14T13:20:36.6084152Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.lineage-and-source-fences",
+            "phase": "calculation.current.initial.5",
+            "state": "returned",
+            "phaseMs": 48,
+            "elapsedMs": 27725,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1296,
+          "timestamp": "2026-11-14T13:20:49.6951821Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.lineage-and-source-fences",
+            "phase": "calculation.current.initial.6",
+            "state": "returned",
+            "phaseMs": 42,
+            "elapsedMs": 40811,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1313,
+          "timestamp": "2026-11-14T13:20:54.6019421Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.lineage-and-source-fences",
+            "phase": "calculation.current.initial.7",
+            "state": "returned",
+            "phaseMs": 49,
+            "elapsedMs": 45718,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1325,
+          "timestamp": "2026-11-14T13:21:07.6213213Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.lineage-and-source-fences",
+            "phase": "calculation.current.initial.8",
+            "state": "returned",
+            "phaseMs": 47,
+            "elapsedMs": 58738,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1338,
+          "timestamp": "2026-11-14T13:21:20.4859306Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.lineage-and-source-fences",
+            "phase": "calculation.current.initial.9",
+            "state": "returned",
+            "phaseMs": 60,
+            "elapsedMs": 71603,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1347,
+          "timestamp": "2026-11-14T13:21:20.7056221Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.lineage-and-source-fences",
+            "phase": "calculation.current.initial.10",
+            "state": "returned",
+            "phaseMs": 46,
+            "elapsedMs": 71822,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1356,
+          "timestamp": "2026-11-14T13:21:21.0986938Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.lineage-and-source-fences",
+            "phase": "calculation.current.initial.11",
+            "state": "returned",
+            "phaseMs": 188,
+            "elapsedMs": 72215,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1365,
+          "timestamp": "2026-11-14T13:21:21.3249262Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.lineage-and-source-fences",
+            "phase": "calculation.current.initial.12",
+            "state": "returned",
+            "phaseMs": 47,
+            "elapsedMs": 72441,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1377,
+          "timestamp": "2026-11-14T13:21:21.4482197Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.lineage-and-source-fences",
+            "phase": "calculation.current.initial.13",
+            "state": "returned",
+            "phaseMs": 27,
+            "elapsedMs": 72565,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1386,
+          "timestamp": "2026-11-14T13:21:21.5350866Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.lineage-and-source-fences",
+            "phase": "calculation.current.initial.14",
+            "state": "returned",
+            "phaseMs": 10,
+            "elapsedMs": 72652,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1398,
+          "timestamp": "2026-11-14T13:21:21.5774618Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.lineage-and-source-fences",
+            "phase": "calculation.current.initial.15",
+            "state": "returned",
+            "phaseMs": 8,
+            "elapsedMs": 72694,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1407,
+          "timestamp": "2026-11-14T13:21:21.8249071Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.lineage-and-source-fences",
+            "phase": "calculation.current.initial.16",
+            "state": "returned",
+            "phaseMs": 48,
+            "elapsedMs": 72942,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1419,
+          "timestamp": "2026-11-14T13:21:22.0854494Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.lineage-and-source-fences",
+            "phase": "calculation.current.initial.17",
+            "state": "returned",
+            "phaseMs": 30,
+            "elapsedMs": 73202,
+            "aborted": false
+          }
+        }
+      ],
+      "historicalReportedMs": 58165,
+      "currentReportedMs": 9229,
+      "finalCounters": {
+        "line": 1427,
+        "timestamp": "2026-11-14T13:21:23.7803562Z",
+        "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+        "marker": "SF_STALE_CALCULATION_COUNTERS",
+        "data": {
+          "fixture": "lineage-and-source-fences",
+          "phase": "scenario",
+          "delta": {
+            "transactions": 7919,
+            "allTransactions": 7,
+            "currentSnapshotReads": 12441,
+            "authentications": 27189,
+            "environments": 417,
+            "coverageReads": 210,
+            "calculationReads": 14,
+            "calculationSettled": 14,
+            "historicalReads": 24,
+            "historicalSettled": 24,
+            "privateAdmissions": 4,
+            "contextReads": 14,
+            "privateContextReads": 4,
+            "settlements": 2
+          },
+          "total": {
+            "transactions": 16777,
+            "allTransactions": 339,
+            "currentSnapshotReads": 26105,
+            "authentications": 52987,
+            "environments": 603,
+            "coverageReads": 308,
+            "calculationReads": 17,
+            "calculationSettled": 17,
+            "historicalReads": 24,
+            "historicalSettled": 24,
+            "privateAdmissions": 4,
+            "contextReads": 14,
+            "privateContextReads": 4,
+            "settlements": 2
+          }
+        }
+      }
+    },
+    "private-authority-boundaries": {
+      "selectedPhaseReturns": [
+        {
+          "line": 1457,
+          "timestamp": "2026-11-14T13:21:29.0372780Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.private-authority-boundaries",
+            "phase": "fixture.calculation-produce",
+            "state": "returned",
+            "phaseMs": 4353,
+            "elapsedMs": 5250,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1469,
+          "timestamp": "2026-11-14T13:21:38.0262186Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.private-authority-boundaries",
+            "phase": "fixture.atlas-archive",
+            "state": "returned",
+            "phaseMs": 8939,
+            "elapsedMs": 14240,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1470,
+          "timestamp": "2026-11-14T13:21:38.1444018Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.private-authority-boundaries",
+            "phase": "fixture.prepare",
+            "state": "returned",
+            "phaseMs": 14358,
+            "elapsedMs": 14358,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1511,
+          "timestamp": "2026-11-14T13:22:04.5600831Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.private-authority-boundaries",
+            "phase": "settlement.1.with-run",
+            "state": "returned",
+            "phaseMs": 26414,
+            "elapsedMs": 40773,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1513,
+          "timestamp": "2026-11-14T13:22:04.5610227Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.private-authority-boundaries",
+            "phase": "fault.request",
+            "state": "returned",
+            "phaseMs": 26414,
+            "elapsedMs": 40773,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1553,
+          "timestamp": "2026-11-14T13:22:30.6891606Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.private-authority-boundaries",
+            "phase": "settlement.2.with-run",
+            "state": "returned",
+            "phaseMs": 26114,
+            "elapsedMs": 66903,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1555,
+          "timestamp": "2026-11-14T13:22:30.6897106Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.private-authority-boundaries",
+            "phase": "fault.first-authorize",
+            "state": "returned",
+            "phaseMs": 26114,
+            "elapsedMs": 66903,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1610,
+          "timestamp": "2026-11-14T13:23:01.5529505Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.private-authority-boundaries",
+            "phase": "settlement.3.with-run",
+            "state": "returned",
+            "phaseMs": 30849,
+            "elapsedMs": 97766,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1612,
+          "timestamp": "2026-11-14T13:23:01.5539243Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.private-authority-boundaries",
+            "phase": "fault.last-authorize",
+            "state": "returned",
+            "phaseMs": 30849,
+            "elapsedMs": 97766,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1625,
+          "timestamp": "2026-11-14T13:23:08.7902023Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.private-authority-boundaries",
+            "phase": "settlement.4.with-run",
+            "state": "returned",
+            "phaseMs": 7221,
+            "elapsedMs": 105003,
+            "aborted": true
+          }
+        },
+        {
+          "line": 1627,
+          "timestamp": "2026-11-14T13:23:08.7907523Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.private-authority-boundaries",
+            "phase": "fault.finish",
+            "state": "returned",
+            "phaseMs": 7221,
+            "elapsedMs": 105003,
+            "aborted": true
+          }
+        },
+        {
+          "line": 1629,
+          "timestamp": "2026-11-14T13:23:08.7912988Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.private-authority-boundaries",
+            "phase": "scenario",
+            "state": "returned",
+            "phaseMs": 90645,
+            "elapsedMs": 105003,
+            "aborted": true
+          }
+        }
+      ],
+      "historicalCallReturns": [
+        {
+          "line": 1479,
+          "timestamp": "2026-11-14T13:21:42.6752366Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.private-authority-boundaries",
+            "phase": "calculation.historical.initial.1",
+            "state": "returned",
+            "phaseMs": 4314,
+            "elapsedMs": 18889,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1482,
+          "timestamp": "2026-11-14T13:21:46.9839091Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.private-authority-boundaries",
+            "phase": "calculation.historical.initial.2",
+            "state": "returned",
+            "phaseMs": 4298,
+            "elapsedMs": 23197,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1485,
+          "timestamp": "2026-11-14T13:21:51.2328271Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.private-authority-boundaries",
+            "phase": "calculation.historical.initial.3",
+            "state": "returned",
+            "phaseMs": 4249,
+            "elapsedMs": 27446,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1491,
+          "timestamp": "2026-11-14T13:21:55.6545982Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.private-authority-boundaries",
+            "phase": "calculation.historical.initial.4",
+            "state": "returned",
+            "phaseMs": 4208,
+            "elapsedMs": 31868,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1494,
+          "timestamp": "2026-11-14T13:21:59.9141085Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.private-authority-boundaries",
+            "phase": "calculation.historical.initial.5",
+            "state": "returned",
+            "phaseMs": 4252,
+            "elapsedMs": 36128,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1497,
+          "timestamp": "2026-11-14T13:22:04.1557703Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.private-authority-boundaries",
+            "phase": "calculation.historical.initial.6",
+            "state": "returned",
+            "phaseMs": 4241,
+            "elapsedMs": 40369,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1504,
+          "timestamp": "2026-11-14T13:22:04.5114791Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.private-authority-boundaries",
+            "phase": "calculation.historical.initial.7",
+            "state": "returned",
+            "phaseMs": 149,
+            "elapsedMs": 40708,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1521,
+          "timestamp": "2026-11-14T13:22:08.9563048Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.private-authority-boundaries",
+            "phase": "calculation.historical.initial.8",
+            "state": "returned",
+            "phaseMs": 4177,
+            "elapsedMs": 45170,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1524,
+          "timestamp": "2026-11-14T13:22:13.2134222Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.private-authority-boundaries",
+            "phase": "calculation.historical.initial.9",
+            "state": "returned",
+            "phaseMs": 4246,
+            "elapsedMs": 49423,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1527,
+          "timestamp": "2026-11-14T13:22:17.4426561Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.private-authority-boundaries",
+            "phase": "calculation.historical.initial.10",
+            "state": "returned",
+            "phaseMs": 4233,
+            "elapsedMs": 53656,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1533,
+          "timestamp": "2026-11-14T13:22:21.8374069Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.private-authority-boundaries",
+            "phase": "calculation.historical.initial.11",
+            "state": "returned",
+            "phaseMs": 4175,
+            "elapsedMs": 58051,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1536,
+          "timestamp": "2026-11-14T13:22:26.0613942Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.private-authority-boundaries",
+            "phase": "calculation.historical.initial.12",
+            "state": "returned",
+            "phaseMs": 4217,
+            "elapsedMs": 62275,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1539,
+          "timestamp": "2026-11-14T13:22:30.2790824Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.private-authority-boundaries",
+            "phase": "calculation.historical.initial.13",
+            "state": "returned",
+            "phaseMs": 4218,
+            "elapsedMs": 66493,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1546,
+          "timestamp": "2026-11-14T13:22:30.6338807Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.private-authority-boundaries",
+            "phase": "calculation.historical.initial.14",
+            "state": "returned",
+            "phaseMs": 149,
+            "elapsedMs": 66847,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1563,
+          "timestamp": "2026-11-14T13:22:35.1734019Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.private-authority-boundaries",
+            "phase": "calculation.historical.initial.15",
+            "state": "returned",
+            "phaseMs": 4255,
+            "elapsedMs": 71384,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1566,
+          "timestamp": "2026-11-14T13:22:39.4123875Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.private-authority-boundaries",
+            "phase": "calculation.historical.initial.16",
+            "state": "returned",
+            "phaseMs": 4224,
+            "elapsedMs": 75626,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1569,
+          "timestamp": "2026-11-14T13:22:43.6818422Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.private-authority-boundaries",
+            "phase": "calculation.historical.initial.17",
+            "state": "returned",
+            "phaseMs": 4269,
+            "elapsedMs": 79895,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1575,
+          "timestamp": "2026-11-14T13:22:48.1033830Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.private-authority-boundaries",
+            "phase": "calculation.historical.initial.18",
+            "state": "returned",
+            "phaseMs": 4207,
+            "elapsedMs": 84317,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1578,
+          "timestamp": "2026-11-14T13:22:52.3386427Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.private-authority-boundaries",
+            "phase": "calculation.historical.initial.19",
+            "state": "returned",
+            "phaseMs": 4228,
+            "elapsedMs": 88552,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1581,
+          "timestamp": "2026-11-14T13:22:56.5534133Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.private-authority-boundaries",
+            "phase": "calculation.historical.initial.20",
+            "state": "returned",
+            "phaseMs": 4215,
+            "elapsedMs": 92767,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1588,
+          "timestamp": "2026-11-14T13:22:56.9078040Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.private-authority-boundaries",
+            "phase": "calculation.historical.initial.21",
+            "state": "returned",
+            "phaseMs": 156,
+            "elapsedMs": 93121,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1600,
+          "timestamp": "2026-11-14T13:22:58.5043140Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.private-authority-boundaries",
+            "phase": "calculation.historical.initial.22",
+            "state": "returned",
+            "phaseMs": 1517,
+            "elapsedMs": 94717,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1603,
+          "timestamp": "2026-11-14T13:23:00.0244656Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.private-authority-boundaries",
+            "phase": "calculation.historical.initial.23",
+            "state": "returned",
+            "phaseMs": 1516,
+            "elapsedMs": 96236,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1606,
+          "timestamp": "2026-11-14T13:23:01.5348324Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.private-authority-boundaries",
+            "phase": "calculation.historical.initial.24",
+            "state": "returned",
+            "phaseMs": 1512,
+            "elapsedMs": 97748,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1620,
+          "timestamp": "2026-11-14T13:23:06.0285812Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.private-authority-boundaries",
+            "phase": "calculation.historical.initial.25",
+            "state": "returned",
+            "phaseMs": 4246,
+            "elapsedMs": 102242,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1623,
+          "timestamp": "2026-11-14T13:23:08.7893708Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.private-authority-boundaries",
+            "phase": "calculation.historical.initial.26",
+            "state": "returned",
+            "phaseMs": 2753,
+            "elapsedMs": 105003,
+            "aborted": true
+          }
+        }
+      ],
+      "currentCallReturns": [
+        {
+          "line": 1461,
+          "timestamp": "2026-11-14T13:21:31.8875403Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.private-authority-boundaries",
+            "phase": "calculation.current.initial.1",
+            "state": "returned",
+            "phaseMs": 2752,
+            "elapsedMs": 8101,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1464,
+          "timestamp": "2026-11-14T13:21:34.7429142Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.private-authority-boundaries",
+            "phase": "calculation.current.initial.2",
+            "state": "returned",
+            "phaseMs": 2802,
+            "elapsedMs": 10956,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1467,
+          "timestamp": "2026-11-14T13:21:37.5868715Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.private-authority-boundaries",
+            "phase": "calculation.current.initial.3",
+            "state": "returned",
+            "phaseMs": 2809,
+            "elapsedMs": 13800,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1476,
+          "timestamp": "2026-11-14T13:21:38.3606827Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.private-authority-boundaries",
+            "phase": "calculation.current.initial.4",
+            "state": "returned",
+            "phaseMs": 48,
+            "elapsedMs": 14574,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1488,
+          "timestamp": "2026-11-14T13:21:51.4469103Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.private-authority-boundaries",
+            "phase": "calculation.current.initial.5",
+            "state": "returned",
+            "phaseMs": 49,
+            "elapsedMs": 27660,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1501,
+          "timestamp": "2026-11-14T13:22:04.3455490Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.private-authority-boundaries",
+            "phase": "calculation.current.initial.6",
+            "state": "returned",
+            "phaseMs": 51,
+            "elapsedMs": 40559,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1518,
+          "timestamp": "2026-11-14T13:22:04.7798537Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.private-authority-boundaries",
+            "phase": "calculation.current.initial.7",
+            "state": "returned",
+            "phaseMs": 46,
+            "elapsedMs": 40993,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1530,
+          "timestamp": "2026-11-14T13:22:17.6619400Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.private-authority-boundaries",
+            "phase": "calculation.current.initial.8",
+            "state": "returned",
+            "phaseMs": 47,
+            "elapsedMs": 53875,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1543,
+          "timestamp": "2026-11-14T13:22:30.4851537Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.private-authority-boundaries",
+            "phase": "calculation.current.initial.9",
+            "state": "returned",
+            "phaseMs": 47,
+            "elapsedMs": 66699,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1560,
+          "timestamp": "2026-11-14T13:22:30.9152907Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.private-authority-boundaries",
+            "phase": "calculation.current.initial.10",
+            "state": "returned",
+            "phaseMs": 47,
+            "elapsedMs": 67129,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1572,
+          "timestamp": "2026-11-14T13:22:43.8962233Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.private-authority-boundaries",
+            "phase": "calculation.current.initial.11",
+            "state": "returned",
+            "phaseMs": 48,
+            "elapsedMs": 80110,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1585,
+          "timestamp": "2026-11-14T13:22:56.7517105Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.private-authority-boundaries",
+            "phase": "calculation.current.initial.12",
+            "state": "returned",
+            "phaseMs": 47,
+            "elapsedMs": 92965,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1597,
+          "timestamp": "2026-11-14T13:22:56.9868704Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.private-authority-boundaries",
+            "phase": "calculation.current.initial.13",
+            "state": "returned",
+            "phaseMs": 29,
+            "elapsedMs": 93200,
+            "aborted": false
+          }
+        },
+        {
+          "line": 1617,
+          "timestamp": "2026-11-14T13:23:01.7828051Z",
+          "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+          "marker": "SF_COMPOSITION_PHASE",
+          "data": {
+            "fixture": "analysis-stale-calculation.private-authority-boundaries",
+            "phase": "calculation.current.initial.14",
+            "state": "returned",
+            "phaseMs": 49,
+            "elapsedMs": 97996,
+            "aborted": false
+          }
+        }
+      ],
+      "historicalReportedMs": 88224,
+      "currentReportedMs": 8871,
+      "finalCounters": {
+        "line": 1628,
+        "timestamp": "2026-11-14T13:23:08.7910311Z",
+        "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+        "marker": "SF_STALE_CALCULATION_COUNTERS",
+        "data": {
+          "fixture": "private-authority-boundaries",
+          "phase": "scenario",
+          "delta": {
+            "transactions": 12123,
+            "allTransactions": 3,
+            "currentSnapshotReads": 18275,
+            "authentications": 37944,
+            "environments": 608,
+            "coverageReads": 315,
+            "calculationReads": 11,
+            "calculationSettled": 11,
+            "historicalReads": 26,
+            "historicalSettled": 26,
+            "privateAdmissions": 3,
+            "contextReads": 7,
+            "privateContextReads": 1,
+            "settlements": 4
+          },
+          "total": {
+            "transactions": 20981,
+            "allTransactions": 335,
+            "currentSnapshotReads": 31939,
+            "authentications": 63742,
+            "environments": 794,
+            "coverageReads": 413,
+            "calculationReads": 14,
+            "calculationSettled": 14,
+            "historicalReads": 26,
+            "historicalSettled": 26,
+            "privateAdmissions": 3,
+            "contextReads": 7,
+            "privateContextReads": 1,
+            "settlements": 4
+          }
+        }
+      }
+    }
+  },
+  "sources": [
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-run-context.ts",
+      "blob": "5b0f9e394f433bc904724019678d08555078dc0b",
+      "sha256": "9d497b424797430aa713cae24a3bdd6a433ddbf678f4acc88da87d66230f6abf"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "blob": "4b02413b5a98e750187fa8f5fa54f3cb2415f4e3",
+      "sha256": "c6911aa04b6b22750b2f320b680c3b4510ae4f230d29baba76932b4feca12811"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-stale-commit.ts",
+      "blob": "299979047340dd76d7cc2db667b826da675a1e2e",
+      "sha256": "291deebb5dcb128ed8aa7bba35cdda68203f838c33c3afbb4a4bfacd77708013"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/planner-calculation-history.ts",
+      "blob": "9805676b50cb5d12f37a4a91350f01ba227a168f",
+      "sha256": "5b5822480441f8972ec4ced62d655c933504bcd200c7cb3882aa0170e8244694"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "blob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+      "sha256": "a34b014aead5afe68cb6b45edf8a7981588b5b80fae99af9a0c082ce6986d47a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "blob": "5cca27ce239c92a8e3c9f9f92f816f5224562904",
+      "sha256": "9791fd4c605693711a4508b3b496c0fb67a407c1009d734408659ed10664fefc"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "blob": "2fd55c7304add0829d7434917c80664fe86356b9",
+      "sha256": "de25a3d2c5fc8725debb538ec0efb45b3a3c986ff478156cce734038f87d7268"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+      "blob": "a3c306b720fd7f82e32340682e5001b1e6f4ef8e",
+      "sha256": "7824be3173f8450f2605f63f52022e623e3857878895ab4b00d7f5c0dc14e540"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "blob": "b753e3ffbfcdc06de373388845c686afac26dec8",
+      "sha256": "e82f739cb1845c0c7fdd90d50a5de0a62d6c3f79d4c981289b63880e7a8e5460"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+      "blob": "e8b12ab55f3b4101f7e8585d070bcb770ac2e537",
+      "sha256": "aca0cb637b3ede772cf079f9b262754c7e518cbd59185fbcfcc26fa97640bf28"
+    }
+  ],
+  "established": [
+    "The positive scenario preserves the stale output before restart, then spends 28060ms in reopened lifecycle reentry and times out during the next reentry, not while opening the store (restart 6ms).",
+    "Positive withRun begins at elapsed14150ms and the first explicit callback phase begins at41066ms: a26916ms window containing six historical resolves in admission plus an uninstrumented initial selectedCase check. This is not an isolated measurement of admission latency.",
+    "The final observed positive await is calculation.historical.reopened.26, started at elapsed102745ms and returned aborted at105007ms. The reopened publication callback has not reached its expected conflict assertion.",
+    "Private-authority request/first/last fault phases consume26414/26114/30849ms; finish begins at97782ms and aborts during admission historical.initial.26, before a finish private-context observation.",
+    "The source call graph reenters full cases.read for every analysis run callback; cases.read invokes accessible twice. Each historical calculation resolution invokes one historical reader plus two historical readers for continuity, accounting for six observed historical resolves per full admission.",
+    "The three complete scenario bodies and their existing105000ms cooperative/120000ms Bun deadlines are unchanged by this proposal."
+  ],
+  "notEstablished": [
+    "No inner historical resolver primitive was timed: cloning, serialization, SQLite, authentication or canonical replay cannot individually be named as the measured CPU bottleneck.",
+    "Counts of currentSnapshots are call counts, not measured copies or allocation cost; settled includes denied and aborted returns.",
+    "No runtime result proves the proposed metadata-only stale admission fits the unchanged deadlines or preserves all security properties.",
+    "The four earlier CI5 historical/calculation timeouts were outside CI7 selection and remain open; the two stale timeout cases also remain open until a later equivalent run proves them."
+  ],
+  "owners": {
+    "Astra/WP10": "Compose narrower analysis lifecycle admission and retain strict current-case path and complete C17 commit checks.",
+    "WP14 source-access + WP11 Finance issuer": "Own remaining historical proof/replay cost and any observation-epoch protocol; no foreign implementation changed.",
+    "S0": "Final global bundle, independent reviews, AM01-AM06, C/G7 and D/G8; no global release claim."
+  },
+  "proposal": {
+    "manifest": "/workspace/scratch/4c48b09c5c29/evidence/ci7-stale-reentry-proposal/manifest.json",
+    "state": "PROPOSED_NOT_APPLIED_NOT_TESTED",
+    "mechanism": "No caching. Current case delegates to unchanged strict withCase. Advanced case gets a lifecycleOnly scope with two admission observations and one exit observation; source readers and C17 preflight/commit retain all existing proofs.",
+    "lastAwait": "Final human.authorize runs inside the callback. A dashboard transaction holds the actual snapshot through C08 post-callback authorize, then checks case digest/namespace version/incarnation/membership plus Request/lease/binding synchronously. No asynchronous authorization follows that case observation.",
+    "counterproofs": "Three new tests in the isolated proposal use real UI admission/C08/SQLite. They have not been run; the third covers held read-snapshot corruption and real human lease finish at admission/egress, explicitly proving C08 namespace authorization still succeeds, and verifying rollback, denied result and cleanup."
+  },
+  "remoteMinimum": [
+    "All three original analysis-stale-calculation scenarios without subdivision or deadline changes.",
+    "All three new analysis-lifecycle-admission counterproofs.",
+    "Existing complete analysis-run-context reentry scenario.",
+    "Existing post-proof/lexical calculation/recall counterproofs required by the changed CaseScope consumer; root chooses exact equivalent selection and Omni control.",
+    "Four prior CI5 timeout scenarios still require their own equivalent run before closing those findings."
+  ],
+  "execution": {
+    "product": false,
+    "tests": false,
+    "typecheck": false,
+    "guards": false,
+    "ciDispatch": false,
+    "worktreeChanged": false,
+    "foreignProducerChanged": false,
+    "independentReviewCredit": false,
+    "nativeProof": false,
+    "READY": false
+  }
+}

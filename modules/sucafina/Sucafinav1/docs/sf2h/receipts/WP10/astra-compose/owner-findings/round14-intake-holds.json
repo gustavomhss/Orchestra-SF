@@ -1,0 +1,70 @@
+{
+  "schema": "astra-compose-bounded-intake-decisions-v1",
+  "compared_candidate": {
+    "head": "39972fd2539ce7eda9a09cf95ba91137b8f59e1e",
+    "tree": "6177139433da16cd5ee2e8f35b5637276cb4c434"
+  },
+  "status": "NO_WHOLE_SOURCE_SNAPSHOT_INTAKE",
+  "decisions": [
+    {
+      "source_pr": 29,
+      "head": "d357de0b1f58abc33e86e79ad3f93b8715ba0e83",
+      "tree": "20d4e76e42a8b74daced57d64ad285f5dfef17a2",
+      "decision": "HOLD_NEW_GROUP_DEPENDENCY_CLOSURE",
+      "reason": "Procurement record-only memory scope does not address Planner/calculation timeouts. Source business-services and portfolio-coverage also carry earlier unconsumed replay/application dependencies. Exact planner-sources would remove the composed projectForecastSource capability. Pure resident-review extraction lacks a transplantable regression: its test requires application.readScope, absent from the composed review-services. Preserve W13 sources and current frozen host contract.",
+      "source_flight": {
+        "run": 43595658990,
+        "W": "d357de0b1f58abc33e86e79ad3f93b8715ba0e83",
+        "S": "12988ada266de298d0ec0ba9d8968845ae4c7782",
+        "observed_status": "IN_PROGRESS_AT_RECONCILIATION",
+        "acceptance": "NO_COMPOSE_PROOF"
+      },
+      "forwarded_finding": {
+        "pr": 29,
+        "comment": 6877632184,
+        "kind": "STATIC_OBSERVATION_GAP_NOT_EXECUTED_BYPASS",
+        "detail": "The last environment observation precedes authenticate/revalidate/final C08 awaits; current() does not cover clock/directory/bankKey. Require a late-environment mutation counterproof and final matching observation. The source freeze rev9 host-context entry also differs from its current blob; never import it over the verified compose rev10."
+      }
+    },
+    {
+      "source_pr": 31,
+      "head": "f4ed6dfd82502bcebc091b9be6ce74d4eccf89b7",
+      "tree": "71fc6e6bb70f44b50cfb66e33a86ccd149ab32ad",
+      "decision": "HOLD_STARTUP_DIAGNOSTIC_GROUP_OUTSIDE_AFFECTED_FAILURE",
+      "reason": "Would import earlier /proc/CDP diagnostics plus cancellation changes and increase composed pool startup budget10s to30s and startup test15s to35s. CI6 actually started the current pool in7211.42ms and proved final cleanup. It does not remedy the six browser/HTTP failures. Retain exact current pool; owner diagnostic group can be qualified separately."
+    },
+    {
+      "source_pr": 35,
+      "head": "c449efc092e507fca2b4f61d1e7ce057faf05c89",
+      "tree": "82ea6bff11f9647d14cac30587ccd2feb80c6950",
+      "decision": "ACCEPT_TWO_REGRESSIONS_HOLD_RENEWAL_PIPELINE",
+      "accepted": [
+        "modules/sucafina/Sucafinav1/test/product/wp11/calculation-history.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts"
+      ],
+      "reason": "No new imports in the two accepted fixtures. Renewal choice d5395570 plus operation verifier23389174 is not a two-file closure; it needs source/trace/restart fixtures and coverage helper d1b8 previously restored out. No custom owner hunk or broader fixture pipeline is imported.",
+      "missing_in_candidate": [
+        "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-fixture.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp11/fixture-trace.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp11/renewal-restart-reader.ts"
+      ]
+    },
+    {
+      "source_pr": 36,
+      "head": "8bb72c8cdeda149b000d91403c368642c3b53dec",
+      "tree": "ce9c5f30155b49c6deabffc63c547685d9af4b8c",
+      "decision": "ACCEPT_INDEPENDENT_CONTINUATION_AND_BUILDER_GROUP_HOLD_LIFECYCLE_AND_PLANNER_PIPELINES",
+      "accepted": [
+        "modules/sucafina/Sucafinav1/product/ai/continuation.ts",
+        "modules/sucafina/Sucafinav1/product/ai/contribution-builder.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp12/continuation.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp12/contribution-builder.test.ts"
+      ],
+      "reason": "Continuation binds inputs and aliases before callbacks, isolates admission/result and preserves fresh authority. Builder requires the independent review target for every reviewer output. Existing contract and run-fixture/run-provenance dependencies are present. Analysis-port3c78 is held: it imports observeSfStaleRun/SfStaleRunObservation unavailable in the composed run-store and requires wider lifecycle/host integration. Source-access Atlas final candidate/grant finding is unchanged by this source delta; no Atlas acceptance."
+    }
+  ],
+  "local_product_execution": false,
+  "all_green_not_required": true,
+  "no_result_transfer": true
+}

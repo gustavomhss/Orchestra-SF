@@ -5,13 +5,18 @@ import type { TrustedDomainContext } from "../../../product/contracts/sf-executi
 import type { SensitivityLegacyResult } from "../../../product/portfolio/sensitivity-v6.ts"
 import type { BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
 
-const result: SensitivityLegacyResult = { parameterUnit: "days", resultUnit: "USD", scenarioRef: "s", parameterRef: "price", bounds: { minimum: 0, maximum: 100000, steps: 2 }, evaluated: [{ parameterValue: 50000, resultRef: "sample-a", value: 1 }, { parameterValue: 60000, resultRef: "sample-b", value: -1 }], threshold: 55000, comparisonStatus: "conditioned", unresolvedConditions: [], evidenceRefs: [] }
+const result: SensitivityLegacyResult = { parameterUnit: "days", resultUnit: "USD", scenarioRef: "s", parameterRef: "price", bounds: { minimum: 0, maximum: 100000, steps: 2 }, evaluated: [{ parameterValue: 50000, resultRef: "sample-a", value: 1 }, { parameterValue: 60000, resultRef: "sample-b", value: -1 }], threshold: 55000, comparisonStatus: "complete", unresolvedConditions: [], evidenceRefs: [] }
 const evidence = [{ refDigest: "synthetic" } as unknown as BusinessEvidenceRef]
 
 test("v6 keeps exact evidence and legacy threshold consistent", () => {
   const input = { result, costCoverageRefs: ["coverage-v1"], unit: "USD", engineVersion: "planner-v1", thresholdEvidence: { state: "exact" as const, value: 55000, evidenceRefs: evidence } }
   const accepted = attachSensitivityV6(input)
   expect(accepted.status).toBe("ok")
+  const conditioned = attachSensitivityV6({ ...input, result: { ...result, comparisonStatus: "conditioned", unresolvedConditions: [{ id: "training", category: "coverage", reason: "Known subtotal threshold; training remains unresolved.", evidenceRefs: evidence }] } })
+  expect(conditioned.status).toBe("ok")
+  if (conditioned.status === "ok") expect(conditioned.value.comparisonStatus).toBe("conditioned")
+  expect(attachSensitivityV6({ ...input, result: { ...result, comparisonStatus: "incompatible" } })).toEqual({ status: "conflict", reason: "threshold-evidence-mismatch" })
+  expect(attachSensitivityV6({ ...input, result: { ...result, evaluated: [{ parameterValue: 50000, resultRef: "missing", value: null }] } })).toEqual({ status: "conflict", reason: "threshold-evidence-mismatch" })
   expect(attachSensitivityV6({ ...input, thresholdEvidence: { ...input.thresholdEvidence, value: 15000 } })).toEqual({ status: "conflict", reason: "threshold-evidence-mismatch" })
 })
 

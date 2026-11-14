@@ -1,0 +1,387 @@
+{
+  "schema": "sf2h-wp10-task-observations-v1",
+  "plan": {
+    "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "campaignSha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+    "handoff": "a3d29d011ba3607a57914701300f09117a3e2de9"
+  },
+  "source": {
+    "pr": 29,
+    "head": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+    "tree": "a3e36522b4b403a394f2f5127d8eb7f692b53de6"
+  },
+  "criteria": {
+    "expected": 171,
+    "mapped": 171,
+    "acceptedByThisAuthor": 0,
+    "allFiveFamiliesPreserved": true
+  },
+  "scope": "Author observations and exact-source requirements; not an independent review or current candidate test acceptance. Does not rewrite immutable approved plan or previous criterion-map.",
+  "groups": [
+    {
+      "scope": "WP10",
+      "criterionCount": 25,
+      "criteria": [
+        "WP10.DOD.01",
+        "WP10.DOD.02",
+        "WP10.DOD.10",
+        "WP10.DOD.40",
+        "WP10.DOD.60",
+        "WP10.INV.01",
+        "WP10.INV.02",
+        "WP10.INV.10",
+        "WP10.INV.40",
+        "WP10.INV.60",
+        "WP10.QLT.01",
+        "WP10.QLT.02",
+        "WP10.QLT.10",
+        "WP10.QLT.40",
+        "WP10.QLT.60",
+        "WP10.CMP.01",
+        "WP10.CMP.02",
+        "WP10.CMP.10",
+        "WP10.CMP.40",
+        "WP10.CMP.60",
+        "WP10.SUC.01",
+        "WP10.SUC.02",
+        "WP10.SUC.10",
+        "WP10.SUC.40",
+        "WP10.SUC.60"
+      ],
+      "proofPackages": [
+        "E01",
+        "E16",
+        "E17",
+        "E18"
+      ],
+      "status": "NOT_PROVEN",
+      "observed": "Published W12 provides a substantial composed implementation; the canonical171-criterion map remains entirely NOT_PROVEN.",
+      "missing": [
+        "Exact-candidate acceptance for all inherited and local criteria.",
+        "All13 journeys,28capabilities,R01-R41,IA01-IA18; 5profiles/18skills/8packs/39operations with actual consumers.",
+        "AM01-AM06, three independent final reviews, C/G7 and additive evidential D/G8."
+      ]
+    },
+    {
+      "scope": "WP10.T01",
+      "criterionCount": 21,
+      "criteria": [
+        "WP10.T01.DOD.01",
+        "WP10.T01.DOD.10",
+        "WP10.T01.INV.01",
+        "WP10.T01.INV.02",
+        "WP10.T01.INV.03",
+        "WP10.T01.INV.10",
+        "WP10.T01.QLT.01",
+        "WP10.T01.QLT.10",
+        "WP10.T01.CMP.01",
+        "WP10.T01.CMP.02",
+        "WP10.T01.CMP.10",
+        "WP10.T01.SUC.01",
+        "WP10.T01.SUC.10",
+        "WP10.T01.CHK.01",
+        "WP10.T01.CHK.02",
+        "WP10.T01.CHK.03",
+        "WP10.T01.CHK.04",
+        "WP10.T01.CHK.05",
+        "WP10.T01.CHK.10",
+        "WP10.T01.CHK.11",
+        "WP10.T01.CHK.12"
+      ],
+      "proofPackages": [
+        "E01",
+        "E16",
+        "E17",
+        "E18"
+      ],
+      "status": "NOT_PROVEN",
+      "observed": "Real CLI contribution/install/serve and local/runtime roots, C08 protected namespace and shared HTTP/job persistence are present. Incremental WP04/WP06 intake must retain each published pin.",
+      "paths": [
+        "apps/cli/src/commands/handlers/serve.ts",
+        "apps/cli/src/sucafina-product/contribution.ts",
+        "apps/cli/src/sucafina-product/host-context.ts",
+        "modules/sucafina/Sucafinav1/local/entry.ts",
+        "modules/sucafina/Sucafinav1/runtime/host.ts",
+        "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts"
+      ],
+      "missing": [
+        "C07 actual Native Task/Relay/publication/discovery injection is absent; routine factory/catalogue do not supply it.",
+        "Finish real navigation/consumer lifecycle and recheck bundle compilation/rendering on exact candidate.",
+        "C08 cross-surface namespace privacy, migration twice, new-session recovery, Apply failure-before-commit/lost-response/idempotency and concurrency remain integrated evidence obligations.",
+        "Reconcile current WP04 C12 producers and WP06 bootstrap/import/document ports by exact source; historical diagnostics alone do not establish current failures."
+      ]
+    },
+    {
+      "scope": "WP10.T02",
+      "criterionCount": 17,
+      "criteria": [
+        "WP10.T02.DOD.01",
+        "WP10.T02.DOD.10",
+        "WP10.T02.INV.01",
+        "WP10.T02.INV.10",
+        "WP10.T02.QLT.01",
+        "WP10.T02.QLT.10",
+        "WP10.T02.CMP.01",
+        "WP10.T02.CMP.10",
+        "WP10.T02.SUC.01",
+        "WP10.T02.SUC.10",
+        "WP10.T02.CHK.01",
+        "WP10.T02.CHK.02",
+        "WP10.T02.CHK.03",
+        "WP10.T02.CHK.04",
+        "WP10.T02.CHK.05",
+        "WP10.T02.CHK.10",
+        "WP10.T02.CHK.11"
+      ],
+      "proofPackages": [
+        "E01",
+        "E16",
+        "E17",
+        "E18"
+      ],
+      "status": "NOT_PROVEN",
+      "observed": "W12 core recorded162pass/2skip/6fail; these results identify bounded work, not whole journeys. First-round changes fix lexical proof borrowing and bundle literal interpolation; new local test fixes address two more own failures.",
+      "paths": [
+        "modules/sucafina/Sucafinav1/test/product/wp10/integration/",
+        "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/"
+      ],
+      "missing": [
+        "BI client mount is removed by the generic30s shell refresh; owner lifecycle seam and consumer coalescing are pending.",
+        "Three Alternative journeys exceed105s using January from annual sources; annual/full journeys remain unqualified.",
+        "Planner/Review recovery failures from earlier W8 evidence require exact-candidate recheck; no equivalent pass was observed.",
+        "J01-J13, two actors,25-record reports, keyboard,320/768/1440 and200%zoom; all mandatory consumer assertions, including lost access.",
+        "30 comparable measurements, visual response<=200ms and baseline/p95 regression analysis remain unmeasured; no latency claim based on January alone."
+      ]
+    },
+    {
+      "scope": "WP10.T03",
+      "criterionCount": 15,
+      "criteria": [
+        "WP10.T03.DOD.01",
+        "WP10.T03.DOD.40",
+        "WP10.T03.INV.01",
+        "WP10.T03.INV.40",
+        "WP10.T03.QLT.01",
+        "WP10.T03.QLT.40",
+        "WP10.T03.CMP.01",
+        "WP10.T03.CMP.02",
+        "WP10.T03.CMP.40",
+        "WP10.T03.SUC.01",
+        "WP10.T03.SUC.40",
+        "WP10.T03.CHK.01",
+        "WP10.T03.CHK.02",
+        "WP10.T03.CHK.03",
+        "WP10.T03.CHK.40"
+      ],
+      "proofPackages": [
+        "E01",
+        "E16",
+        "E17",
+        "E18"
+      ],
+      "status": "NOT_PROVEN",
+      "observed": "PR29 records independent R1/R2/R3 reviews of W8 and an independent W12 BI lexical finding. Our authored fixes are not independent review.",
+      "missing": [
+        "Freeze the completed product candidate after writers finish and obtain three new independent candidate-specific reviews.",
+        "Route each corrected finding to its independent reviewer; the lexical fix requires hosted regression and R3 recheck.",
+        "Preserve reviewer/author disjointness per section and negative counterproofs; do not use author receipts as approval."
+      ]
+    },
+    {
+      "scope": "WP10.T04",
+      "criterionCount": 22,
+      "criteria": [
+        "WP10.T04.DOD.01",
+        "WP10.T04.DOD.10",
+        "WP10.T04.DOD.40",
+        "WP10.T04.INV.01",
+        "WP10.T04.INV.10",
+        "WP10.T04.INV.40",
+        "WP10.T04.QLT.01",
+        "WP10.T04.QLT.10",
+        "WP10.T04.QLT.40",
+        "WP10.T04.CMP.01",
+        "WP10.T04.CMP.10",
+        "WP10.T04.CMP.40",
+        "WP10.T04.SUC.01",
+        "WP10.T04.SUC.10",
+        "WP10.T04.SUC.40",
+        "WP10.T04.CHK.01",
+        "WP10.T04.CHK.02",
+        "WP10.T04.CHK.03",
+        "WP10.T04.CHK.10",
+        "WP10.T04.CHK.11",
+        "WP10.T04.CHK.40",
+        "WP10.T04.CHK.41"
+      ],
+      "proofPackages": [
+        "E01",
+        "E16",
+        "E17",
+        "E18"
+      ],
+      "status": "NOT_PROVEN",
+      "observed": "W12 hosted checks ran Atlas generate/check:generated/typecheck,spawn and guards successfully, but product typecheck failed32 foreign diagnostics and2 parse errors limited semantic coverage. This is historical evidence.",
+      "missing": [
+        "Reconcile current scoped hosted checks by product/tree/request/snapshot/run/job/attempt, attach equivalent runs rather than duplicating.",
+        "S0 must execute the eight final selections on full C: CI-SF,CI-CLI,CI-APP-SRC,CI-APP-BROWSER,CI-ATLAS-BUSINESS,CI-UI-OPERATIONS,CI-UI-DECISIONS,CI-UI-REPORTS.",
+        "Keep app/src versus app/test-browser distinct, require nonempty matched selection; run package bun typecheck and required guards.",
+        "Retain separate Atlas generation,freshness,typecheck,AST,spawn checks and all additional epic-required gates; this author did not dispatch the epic."
+      ]
+    },
+    {
+      "scope": "WP10.T05",
+      "criterionCount": 14,
+      "criteria": [
+        "WP10.T05.DOD.01",
+        "WP10.T05.DOD.10",
+        "WP10.T05.INV.01",
+        "WP10.T05.INV.10",
+        "WP10.T05.QLT.01",
+        "WP10.T05.QLT.10",
+        "WP10.T05.CMP.01",
+        "WP10.T05.CMP.10",
+        "WP10.T05.SUC.01",
+        "WP10.T05.SUC.10",
+        "WP10.T05.CHK.01",
+        "WP10.T05.CHK.02",
+        "WP10.T05.CHK.03",
+        "WP10.T05.CHK.10"
+      ],
+      "proofPackages": [
+        "E01",
+        "E16",
+        "E17",
+        "E18"
+      ],
+      "status": "NOT_PROVEN",
+      "observed": "No GLOBAL_RELEASE or finalC/D claimed. Older receipts, foreign archives and approved plan are preserved.",
+      "missing": [
+        "Include role guide,demo,changelog and all normative/runtime/test/build inputs in productC.",
+        "Obtain G7 after T04, all required gates and independent reviews; no missing capability may be relabeled optional.",
+        "Create only new append-only allowed evidence in D, hash/guard it, reject delete/rename/mode/normative/runtime/test/build change in D; prove G8.",
+        "Publish complete statuses and owners where blocked; target duration does not waive remaining scope."
+      ]
+    },
+    {
+      "scope": "WP10.T06",
+      "criterionCount": 27,
+      "criteria": [
+        "WP10.T06.DOD.01",
+        "WP10.T06.DOD.40",
+        "WP10.T06.DOD.60",
+        "WP10.T06.INV.01",
+        "WP10.T06.INV.40",
+        "WP10.T06.INV.60",
+        "WP10.T06.QLT.01",
+        "WP10.T06.QLT.40",
+        "WP10.T06.QLT.60",
+        "WP10.T06.CMP.01",
+        "WP10.T06.CMP.40",
+        "WP10.T06.CMP.60",
+        "WP10.T06.SUC.01",
+        "WP10.T06.SUC.40",
+        "WP10.T06.SUC.60",
+        "WP10.T06.CHK.01",
+        "WP10.T06.CHK.02",
+        "WP10.T06.CHK.03",
+        "WP10.T06.CHK.04",
+        "WP10.T06.CHK.05",
+        "WP10.T06.CHK.06",
+        "WP10.T06.CHK.07",
+        "WP10.T06.CHK.08",
+        "WP10.T06.CHK.09",
+        "WP10.T06.CHK.10",
+        "WP10.T06.CHK.40",
+        "WP10.T06.CHK.60"
+      ],
+      "proofPackages": [
+        "E01",
+        "E11",
+        "E15",
+        "E16"
+      ],
+      "status": "NOT_PROVEN",
+      "observed": "Contribution uses AgentV2 after config-agent, reserved SkillV2 sources, real SDK private bridge, trusted bindings/leases, shared dispatch and typed operation schemas. Static wiring and authority fixtures do not prove native execution.",
+      "paths": [
+        "apps/cli/src/sucafina-product/contribution.ts",
+        "apps/cli/src/sucafina-product/native-execution.ts",
+        "modules/sucafina/Sucafinav1/product/host-binding/resident-agents.ts",
+        "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+        "modules/sucafina/Sucafinav1/product/host-binding/execution-context.ts",
+        "modules/sucafina/Sucafinav1/product/host-binding/sf-mcp-bridge.ts"
+      ],
+      "missing": [
+        "Actual installed-authority GNATIVE chain with persistedC09 case, SessionV2.skill instructionsDigest, private initialize/listTools/callTool, real Planner output and observed consumer.",
+        "AM01 per-skill receipts covering5profiles/18skills, actual outputs persisted and reopened; reviewer freshSession/run linked to original target.",
+        "AM02 all39 positive routes/8packs and exact UI/native/MCP handler/result parity; C07 remains unprovided.",
+        "AM03 two principals/sessions concurrent, direct ungranted calls, forgedargs, normalized provider collision, revocation, generation, expiry, reuse, digest mutation and restart.",
+        "Do not count scripted boundary session/skill observations as native proof; routine-result must deny recursive prepare/run."
+      ]
+    },
+    {
+      "scope": "WP10.T07",
+      "criterionCount": 30,
+      "criteria": [
+        "WP10.T07.DOD.01",
+        "WP10.T07.DOD.40",
+        "WP10.T07.DOD.60",
+        "WP10.T07.INV.01",
+        "WP10.T07.INV.40",
+        "WP10.T07.INV.60",
+        "WP10.T07.QLT.01",
+        "WP10.T07.QLT.40",
+        "WP10.T07.QLT.60",
+        "WP10.T07.CMP.01",
+        "WP10.T07.CMP.40",
+        "WP10.T07.CMP.60",
+        "WP10.T07.SUC.01",
+        "WP10.T07.SUC.40",
+        "WP10.T07.SUC.60",
+        "WP10.T07.CHK.01",
+        "WP10.T07.CHK.02",
+        "WP10.T07.CHK.03",
+        "WP10.T07.CHK.04",
+        "WP10.T07.CHK.05",
+        "WP10.T07.CHK.06",
+        "WP10.T07.CHK.07",
+        "WP10.T07.CHK.08",
+        "WP10.T07.CHK.09",
+        "WP10.T07.CHK.10",
+        "WP10.T07.CHK.40",
+        "WP10.T07.CHK.41",
+        "WP10.T07.CHK.60",
+        "WP10.T07.CHK.61",
+        "WP10.T07.CHK.62"
+      ],
+      "proofPackages": [
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "status": "NOT_PROVEN",
+      "observed": "Production imports real Atlas business-memory factories and native scanner exports. DurableMemory remains synchronous within protected transactions. Source has clean->false,hit->true,could-not-run->throw behavior and reauthorized filtered recall.",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+        "modules/sucafina/Sucafinav1/product/host-binding/atlas-store.ts",
+        "modules/sucafina/Sucafinav1/product/host-binding/atlas-scanner.ts",
+        "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+        "modules/atlas/boundary/src/business-memory-entry.ts"
+      ],
+      "missing": [
+        "AM05 exact-candidate real scanner binary/path/version with clean,canary,unavailable,timeout,error; denied paths append zero.",
+        "Instrument real createMemoryEmit/read and DurableMemory, await actual commit, restart process and reopen UI precedent with current differences; ledger-only fixtures do not close it.",
+        "Concurrency/sameowner/lostresponse/rollback/reforged/fieldrevoked/replacedincarnation privacy and same-instancePersistence proofs.",
+        "Reconcile WP06 real document resolver/RAG and WP14 pure mapper/ranking current pins; no fake engine or raw sharedAtlas store.",
+        "Nine approved Atlas paths only,4derived artifacts, exact literal external scanner edge, zero computed/dynamic/spawn imports in business bundle, preserved native-bound exports and guards."
+      ]
+    }
+  ],
+  "constraints": {
+    "noLocalProductTests": true,
+    "noRemoteMutationsByThisAuthor": true,
+    "noEngineAzureDeployIdentityFinancialChanges": true,
+    "finalEightAndEpicOwner": "S0",
+    "release": "NOT_DECLARED"
+  }
+}

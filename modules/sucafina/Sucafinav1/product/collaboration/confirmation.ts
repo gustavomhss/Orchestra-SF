@@ -76,7 +76,7 @@ export function createConfirmationPort<T extends AvailableConfirmationScopeObser
         return { commit: true, value: record }
       })
       if (saved.status === "preview") return { status: "conflict", reason: "confirmation-not-committed" }
-      if (saved.status !== "ok") return saved
+      if ("reason" in saved) return saved
       if (!saved.value) return { status: "conflict", reason: "confirmation-not-committed" }
       const current = await input.observe(saved.value.scope, context)
       if (!await input.host.revalidate(context) || current.state !== "available") return { status: "unavailable", reason: "scope-unavailable" }
@@ -88,7 +88,7 @@ export function createConfirmationPort<T extends AvailableConfirmationScopeObser
       if (!request || !await input.host.revalidate(context)) return { status: "denied", reason: "authority-unavailable" }
       const found = await input.state.read(request, "confirmations", (state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? state.confirmations[id] : undefined)
       if (found.status === "preview") return { status: "unavailable", reason: "unexpected-state-preview" }
-      if (found.status !== "ok") return found
+      if ("reason" in found) return found
       const record = found.value as (ConfirmationRecord & Partial<ConfirmationBaseline>) | undefined
       if (!record) return { status: "unavailable", reason: "confirmation-unavailable" }
       const observation = await input.observe(record.scope, context)
@@ -104,6 +104,44 @@ export function createConfirmationPort<T extends AvailableConfirmationScopeObser
   }
   return {
     ...port,
+    readScope: async (scope: ConfirmationScope, context: TrustedDomainContext): Promise<PortResult<ConfirmationValidityProjection | null>> => {
+      const selected = structuredClone(scope)
+      if (!isSfPeriod(selected.period) || !selected.fields.length || selected.fields.some((field) => !field.trim()) || new Set(selected.fields).size !== selected.fields.length || !selected.scopeDefinitionVersion.trim()) return { status: "needs-input", reason: "invalid-confirmation-scope" }
+      const request = input.host.requestFor(context)
+      if (!request || !await input.host.revalidate(context)) return { status: "denied", reason: "authority-unavailable" }
+      const observation = await input.observe(selected, context)
+      if (observation.state !== "available") return { status: "unavailable", reason: "confirmation-scope-unavailable" }
+      const list = () => input.state.read(request, "confirmations", (state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? Object.values(state.confirmations).filter((record) => confirmationScopeKey(record.scope) === confirmationScopeKey(selected)).sort((a, b) => b.confirmedAt.localeCompare(a.confirmedAt) || a.id.localeCompare(b.id)) : undefined)
+      const first = await list()
+      const empty = first.status === "unavailable" && first.reason === "product-state-uninitialized"
+      if (!empty && (first.status !== "ok" || !first.value)) return { status: "unavailable", reason: "confirmation-scope-unavailable" }
+      const records = first.status === "ok" ? first.value ?? [] : []
+      const projections = await Promise.all(records.map((record) => port.project(record.id, context)))
+      if (projections.some((result) => result.status !== "ok" || result.value.state === "unavailable")) return { status: "unavailable", reason: "confirmation-scope-unavailable" }
+      const again = await list()
+      const unchanged = empty ? again.status === "unavailable" && again.reason === "product-state-uninitialized" : again.status === "ok" && first.status === "ok" && again.storageVersion === first.storageVersion && digestSfValue(again.value) === digestSfValue(first.value)
+      const current = await input.observe(selected, context)
+      if (!unchanged || current.state !== "available" || current.physicalIncarnation !== observation.physicalIncarnation || current.incarnation !== observation.incarnation || current.sourceFingerprint !== observation.sourceFingerprint || current.dependencyFingerprint !== observation.dependencyFingerprint || current.scopeFingerprint !== observation.scopeFingerprint || !await input.host.revalidate(context)) return { status: "unavailable", reason: "confirmation-scope-changed" }
+      const available = projections.flatMap((result) => result.status === "ok" && result.value.state !== "unavailable" ? [result.value] : [])
+      const chosen = available.find((value) => value.state === "valid") ?? available[0]
+      if (!chosen) return { status: "ok", value: null }
+      const final = await port.project(chosen.confirmationId, context)
+      if (final.status !== "ok" || final.value.state === "unavailable" || final.value.state !== chosen.state || final.value.reason !== chosen.reason || final.value.scopeFingerprint !== chosen.scopeFingerprint || !await input.host.revalidate(context)) return { status: "unavailable", reason: "confirmation-scope-changed" }
+      return { status: "ok", value: final.value }
+    },
+    find: async (scope: ConfirmationScope, context: TrustedDomainContext): Promise<PortResult<{ confirmationIds: readonly string[] }>> => {
+      const request = input.host.requestFor(context)
+      if (!request || !await input.host.revalidate(context)) return { status: "denied", reason: "authority-unavailable" }
+      const selected = structuredClone(scope)
+      const list = () => input.state.read(request, "confirmations", (state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? Object.values(state.confirmations).filter((record) => confirmationScopeKey(record.scope) === confirmationScopeKey(selected)).map((record) => record.id).sort() : undefined)
+      const first = await list()
+      if (first.status === "unavailable" && first.reason === "product-state-uninitialized" && await input.host.revalidate(context)) return { status: "ok", value: { confirmationIds: [] } }
+      if (first.status !== "ok" || !first.value) return { status: "unavailable", reason: "confirmation-unavailable" }
+      const results = await Promise.all(first.value.map((id) => port.project(id, context)))
+      const current = await list()
+      if (current.status !== "ok" || !current.value || current.storageVersion !== first.storageVersion || digestSfValue(current.value) !== digestSfValue(first.value) || !await input.host.revalidate(context)) return { status: "unavailable", reason: "confirmation-unavailable" }
+      return { status: "ok", value: { confirmationIds: first.value.filter((_id, index) => { const result = results[index]; return result?.status === "ok" && result.value.state !== "unavailable" }) } }
+    },
     inspect: async (id: string, context: TrustedDomainContext): Promise<PortResult<{ confirmationId: string; authorId: string; confirmedAt: string; observedSourceVersion: number; period: ConfirmationScope["period"]; validity: ConfirmationValidityProjection }>> => {
       const request = input.host.requestFor(context)
       if (!request || !await input.host.revalidate(context)) return { status: "denied", reason: "authority-unavailable" }
@@ -112,6 +150,7 @@ export function createConfirmationPort<T extends AvailableConfirmationScopeObser
       const record = found.value
       const validity = await port.project(id, context)
       if (validity.status !== "ok") return validity
+      if (validity.value.state === "unavailable") return { status: "unavailable", reason: "confirmation-unavailable" }
       const again = await input.state.read(request, "confirmations", (state, authority) => authority.principalRef === context.binding.principalRef && authority.accessRevision === context.binding.accessRevision && authority.policyVersion === context.binding.policyVersion ? state.confirmations[id] : undefined)
       if (again.status !== "ok" || !again.value || digestSfValue(again.value) !== digestSfValue(record) || !await input.host.revalidate(context)) return { status: "unavailable", reason: "confirmation-unavailable" }
       const current = await port.project(id, context)
@@ -120,3 +159,9 @@ export function createConfirmationPort<T extends AvailableConfirmationScopeObser
     },
   }
 }
+
+/** Observed versions and timestamps belong to the audit; current validity comes from the producer's fingerprint. */
+function confirmationScopeKey(scope: ConfirmationScope) {
+  return digestSfValue({ sourceRef: scope.sourceRef, fields: [...scope.fields].sort(), period: scope.period, materialDependencies: scope.materialDependencies.map((dependency) => ({ surface: dependency.surface, type: dependency.type, id: dependency.id, incarnation: dependency.incarnation, fields: [...dependency.fields].sort(), period: dependency.period })).toSorted((a, b) => digestSfValue(a).localeCompare(digestSfValue(b))), scopeDefinitionVersion: scope.scopeDefinitionVersion })
+}
+

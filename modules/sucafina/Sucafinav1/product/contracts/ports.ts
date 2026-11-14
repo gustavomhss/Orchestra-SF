@@ -1,6 +1,6 @@
 import type { Application } from "../../runtime/application.ts"
 import type { Actor, Environment, Persistence, Snapshot } from "../../runtime/contract.ts"
-import type { ForecastCompareRequest, CaseDraftRequest, CaseReadRequest, DashboardReadRequest, RequestReadRequest, SupplierReadRequest, ContractReadRequest, SourcingCompareRequest, ScenarioRequest, ScenarioCompareRequest, SensitivityRequest, JsonValue } from "./operations.ts"
+import type { ForecastCompareRequest, CaseDraftRequest, CaseReadRequest, DashboardReadRequest, RequestReadRequest, SupplierReadRequest, ContractReadRequest, SourcingCompareRequest, ScenarioOperation, ScenarioRequest, ScenarioCompareRequest, SensitivityRequest, JsonValue } from "./operations.ts"
 import type { DomainProjection, ImportManifest, PreservedReview, RoutineResult, CommandReceipt } from "./context.ts"
 import type { DecisionCase, ScenarioResult, ScenarioComparison, PortfolioResult, ObservedResultProjection, CostCoverageAssessment, CostCoverageBasis } from "./decisions.ts"
 import type { BusinessEvidenceRef, BusinessContextService, AuthorizedCaseProjection } from "./business-context.ts"
@@ -19,6 +19,8 @@ export type DomainPortHost = {
 export type PortResult<T> =
   | { status: "ok"; value: T }
   | { status: "needs-input" | "stale" | "denied" | "unavailable" | "conflict" | "provider-conflict" | "failed"; reason: string }
+/** Internal routing result: references are reauthorized selectors, never grants. */
+export type SfScenarioOperationResolver = (request: { baseRef: string; operation: ScenarioOperation }, context: TrustedDomainContext) => Promise<PortResult<{ operationDigest: string; target: BusinessEvidenceRef; producer: "planner" | "dashboard" | "procurement"; sourceVersion: number; replacement?: BusinessEvidenceRef }>>
 type FinancialAnalysisBase = {
   baseline: DomainProjection
   candidate: DomainProjection

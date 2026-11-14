@@ -1,0 +1,787 @@
+{
+  "schema": "sf2h-c17-timeout-diagnosis-v1",
+  "created_at": "2026-11-14T12:20:17.164090+00:00",
+  "author": "Astra diagnostic subagent /root/c17_timeout_diagnosis",
+  "scope": "Four own WP10 C17 timeout cases; read-only diagnosis, not an independent review or acceptance receipt",
+  "status": "BLOCKED_PERFORMANCE_AND_PRODUCER_OBSERVATION_PROTOCOL",
+  "ready": false,
+  "global_release": false,
+  "product_mutations": false,
+  "local_product_execution": false,
+  "ci_dispatched": false,
+  "product_diff_proposed": false,
+  "pins": {
+    "current_product_head": "00304ac25cc82ffd87ebd3096bd2f5cfec5222e1",
+    "current_product_tree": "884138976f1e5ab04d924c3f29f4ba6584acb070",
+    "tested_product_head": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+    "tested_product_tree": "57ce597f3ebe8ddb543f9d71d34d20f789c76e33",
+    "ci_request_head": "564d04391d009b89718b10e67175d710d9e6b9c9",
+    "ci_request_tree": "2ee153c2f7aa0cc6f637fa9e9bb4e1ecdb8ce3a7",
+    "run_id": 43589763353,
+    "job_id": 132431793223,
+    "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43589763353",
+    "ci_conclusion": "failure",
+    "exact_head_caveat": "CI5 executed W9 plus its sole .ci-run.json request. W10 source matches are inspection only, not W10 test approval."
+  },
+  "inputs": [
+    {
+      "path": "evidence/ci5.log",
+      "sha256": "71dacd6982e9c43358a7420e51c25b8dfca376d124cc54e63ac2380e57a861a9"
+    },
+    {
+      "path": "evidence/ci5-case-results.json",
+      "sha256": "8631ac87c81840ca226c6d2f80f97ef8338e789b4d3094a837ed335c1fc62d49"
+    }
+  ],
+  "failures": [
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/planner-recorded-history.test.ts",
+      "result": "fail",
+      "test": "stored Planner operations read protected originals after drift while new execution stays current",
+      "milliseconds": 165797.62
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/planner-recorded-history.test.ts",
+      "result": "fail",
+      "test": "stored Planner historical access rejects unrecorded input, missing capture, read races, cycles and replacement",
+      "milliseconds": 165748.85
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+      "result": "fail",
+      "test": "C17 composition reopens a calculation with ledger ancestry and rejects a persisted cycle and revoked authority",
+      "milliseconds": 105006.15
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "result": "fail",
+      "test": "Planner calculation survives SQLite and Atlas reopen with continuity, original and ancestor context",
+      "milliseconds": 105020.25
+    }
+  ],
+  "source_blobs": [
+    {
+      "path": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+      "blob": "bc224c0b2830fe54a02c3b2bc356cb6bf2b1c327",
+      "w10_catalog_blob": "bc224c0b2830fe54a02c3b2bc356cb6bf2b1c327",
+      "matches_w10_catalog": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/recorded-planner-operation-access.ts",
+      "blob": "38b832f73b0eaa615d5fdf2d7838b0e5635440fa",
+      "w10_catalog_blob": "38b832f73b0eaa615d5fdf2d7838b0e5635440fa",
+      "matches_w10_catalog": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+      "blob": "aa1be4cfb8f501b3fccddb269efce5567bcdd447",
+      "w10_catalog_blob": "aa1be4cfb8f501b3fccddb269efce5567bcdd447",
+      "matches_w10_catalog": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "blob": "4b02413b5a98e750187fa8f5fa54f3cb2415f4e3",
+      "w10_catalog_blob": "4b02413b5a98e750187fa8f5fa54f3cb2415f4e3",
+      "matches_w10_catalog": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "blob": "5cca27ce239c92a8e3c9f9f92f816f5224562904",
+      "w10_catalog_blob": "5cca27ce239c92a8e3c9f9f92f816f5224562904",
+      "matches_w10_catalog": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts",
+      "blob": "41741c5131ea66242c881126c22c6d03cfd9c3c3",
+      "w10_catalog_blob": "41741c5131ea66242c881126c22c6d03cfd9c3c3",
+      "matches_w10_catalog": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "blob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+      "w10_catalog_blob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+      "matches_w10_catalog": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "blob": "b753e3ffbfcdc06de373388845c686afac26dec8",
+      "w10_catalog_blob": "b753e3ffbfcdc06de373388845c686afac26dec8",
+      "matches_w10_catalog": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/calculation-evidence.ts",
+      "blob": "aaacc8bf7df9fa67870c4067154fe67a58c34a22",
+      "w10_catalog_blob": "aaacc8bf7df9fa67870c4067154fe67a58c34a22",
+      "matches_w10_catalog": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-request-store.ts",
+      "blob": "0d677d2d0b3a9df7127f13b25fe3968757f0dceb",
+      "w10_catalog_blob": "0d677d2d0b3a9df7127f13b25fe3968757f0dceb",
+      "matches_w10_catalog": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/business-context.test.ts",
+      "blob": "6de0459d3897490b89b85d7f375a4234f554025f",
+      "w10_catalog_blob": "6de0459d3897490b89b85d7f375a4234f554025f",
+      "matches_w10_catalog": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/record-history.test.ts",
+      "blob": "e6d29ab48f12d260672ba4e1fde2d263b7e3fdc4",
+      "w10_catalog_blob": "e6d29ab48f12d260672ba4e1fde2d263b7e3fdc4",
+      "matches_w10_catalog": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/calculation-evidence.test.ts",
+      "blob": "a0a67918c69a636120daa66877669020803c108e",
+      "w10_catalog_blob": "a0a67918c69a636120daa66877669020803c108e",
+      "matches_w10_catalog": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+      "blob": "0cd792293ecffe8fad0e1eff838de9ab332fdcfe",
+      "w10_catalog_blob": "0cd792293ecffe8fad0e1eff838de9ab332fdcfe",
+      "matches_w10_catalog": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-recorded-history.test.ts",
+      "blob": "432ca1f9c72fbbb3d278a8cb687b9c65ddaadb0a",
+      "w10_catalog_blob": "432ca1f9c72fbbb3d278a8cb687b9c65ddaadb0a",
+      "matches_w10_catalog": true
+    }
+  ],
+  "observed_phase_events": [
+    {
+      "line": 888,
+      "marker": "SF_COMPOSITION_PHASE",
+      "fixture": "planner-recorded-history",
+      "phase": "actual-producers-and-archive",
+      "state": "started",
+      "elapsedMs": 0
+    },
+    {
+      "line": 889,
+      "marker": "SF_COMPOSITION_PHASE",
+      "fixture": "planner-recorded-history",
+      "phase": "actual-producers-and-archive",
+      "state": "returned",
+      "phaseMs": 1868,
+      "elapsedMs": 1868,
+      "aborted": false
+    },
+    {
+      "line": 890,
+      "marker": "SF_COMPOSITION_PHASE",
+      "fixture": "planner-recorded-history",
+      "phase": "historical-replacement-only",
+      "state": "started",
+      "elapsedMs": 2196
+    },
+    {
+      "line": 891,
+      "marker": "SF_COMPOSITION_PHASE",
+      "fixture": "planner-recorded-history",
+      "phase": "historical-replacement-only",
+      "state": "returned",
+      "phaseMs": 15036,
+      "elapsedMs": 17231,
+      "aborted": false
+    },
+    {
+      "line": 892,
+      "marker": "SF_COMPOSITION_PHASE",
+      "fixture": "planner-recorded-history",
+      "phase": "historical-source",
+      "state": "started",
+      "elapsedMs": 17293
+    },
+    {
+      "line": 893,
+      "marker": "SF_COMPOSITION_PHASE",
+      "fixture": "planner-recorded-history",
+      "phase": "historical-source",
+      "state": "returned",
+      "phaseMs": 6917,
+      "elapsedMs": 24211,
+      "aborted": false
+    },
+    {
+      "line": 894,
+      "marker": "SF_COMPOSITION_PHASE",
+      "fixture": "planner-recorded-history",
+      "phase": "stored-operation-access",
+      "state": "started",
+      "elapsedMs": 24211
+    },
+    {
+      "line": 895,
+      "marker": "SF_COMPOSITION_PHASE",
+      "fixture": "planner-recorded-history",
+      "phase": "stored-operation-access",
+      "state": "returned",
+      "phaseMs": 42216,
+      "elapsedMs": 66427,
+      "aborted": false
+    },
+    {
+      "line": 896,
+      "marker": "SF_COMPOSITION_PHASE",
+      "fixture": "planner-recorded-history",
+      "phase": "composed-case-read",
+      "state": "started",
+      "elapsedMs": 66427
+    },
+    {
+      "line": 897,
+      "marker": "SF_COMPOSITION_PHASE",
+      "fixture": "planner-recorded-history",
+      "phase": "composed-case-read",
+      "state": "returned",
+      "phaseMs": 99363,
+      "elapsedMs": 165790,
+      "aborted": true
+    },
+    {
+      "line": 908,
+      "marker": "SF_COMPOSITION_PHASE",
+      "fixture": "planner-recorded-history-negative",
+      "phase": "actual-producers-and-archive",
+      "state": "started",
+      "elapsedMs": 0
+    },
+    {
+      "line": 909,
+      "marker": "SF_COMPOSITION_PHASE",
+      "fixture": "planner-recorded-history-negative",
+      "phase": "actual-producers-and-archive",
+      "state": "returned",
+      "phaseMs": 2003,
+      "elapsedMs": 2003,
+      "aborted": false
+    },
+    {
+      "line": 941,
+      "marker": "SF_COMPOSITION_PHASE",
+      "fixture": "calculation-ancestry-composition",
+      "phase": "initialize",
+      "state": "started",
+      "elapsedMs": 0
+    },
+    {
+      "line": 942,
+      "marker": "SF_COMPOSITION_PHASE",
+      "fixture": "calculation-ancestry-composition",
+      "phase": "initialize",
+      "state": "returned",
+      "phaseMs": 15,
+      "elapsedMs": 16,
+      "aborted": false
+    },
+    {
+      "line": 943,
+      "marker": "SF_COMPOSITION_PHASE",
+      "fixture": "calculation-ancestry-composition",
+      "phase": "produce-inner",
+      "state": "started",
+      "elapsedMs": 16
+    },
+    {
+      "line": 944,
+      "marker": "SF_COMPOSITION_PHASE",
+      "fixture": "calculation-ancestry-composition",
+      "phase": "produce-inner",
+      "state": "returned",
+      "phaseMs": 4592,
+      "elapsedMs": 4608,
+      "aborted": false
+    },
+    {
+      "line": 945,
+      "marker": "SF_COMPOSITION_PHASE",
+      "fixture": "calculation-ancestry-composition",
+      "phase": "produce-outer",
+      "state": "started",
+      "elapsedMs": 4640
+    },
+    {
+      "line": 946,
+      "marker": "SF_COMPOSITION_PHASE",
+      "fixture": "calculation-ancestry-composition",
+      "phase": "produce-outer",
+      "state": "returned",
+      "phaseMs": 100361,
+      "elapsedMs": 105002,
+      "aborted": true
+    },
+    {
+      "line": 1044,
+      "marker": "SF_CALCULATION_PHASE",
+      "fixture": "reopen-and-context",
+      "phase": "initialized-real-store-producers-and-scanner",
+      "elapsedMs": 724
+    },
+    {
+      "line": 1045,
+      "marker": "SF_COMPOSITION_PHASE",
+      "fixture": "planner-calculation.reopen-and-context",
+      "phase": "calculation.produce",
+      "state": "started",
+      "elapsedMs": 724
+    },
+    {
+      "line": 1046,
+      "marker": "SF_COMPOSITION_PHASE",
+      "fixture": "planner-calculation.reopen-and-context",
+      "phase": "calculation.produce",
+      "state": "returned",
+      "phaseMs": 4494,
+      "elapsedMs": 5218,
+      "aborted": false
+    },
+    {
+      "line": 1047,
+      "marker": "SF_CALCULATION_PHASE",
+      "fixture": "reopen-and-context",
+      "phase": "persisted-and-replayed-calculation",
+      "elapsedMs": 5218
+    },
+    {
+      "line": 1048,
+      "marker": "SF_CALCULATION_RESOLUTION",
+      "fixture": "reopen-and-context",
+      "generation": "initial",
+      "sequence": 1,
+      "state": "started"
+    },
+    {
+      "line": 1049,
+      "marker": "SF_CALCULATION_RESOLUTION",
+      "fixture": "reopen-and-context",
+      "generation": "initial",
+      "sequence": 1,
+      "state": "returned",
+      "elapsedMs": 3070,
+      "completed": 1,
+      "entered": 1
+    },
+    {
+      "line": 1050,
+      "marker": "SF_CALCULATION_RESOLUTION",
+      "fixture": "reopen-and-context",
+      "generation": "initial",
+      "sequence": 2,
+      "state": "started"
+    },
+    {
+      "line": 1051,
+      "marker": "SF_CALCULATION_RESOLUTION",
+      "fixture": "reopen-and-context",
+      "generation": "initial",
+      "sequence": 2,
+      "state": "returned",
+      "elapsedMs": 3108,
+      "completed": 2,
+      "entered": 2
+    },
+    {
+      "line": 1052,
+      "marker": "SF_CALCULATION_RESOLUTION",
+      "fixture": "reopen-and-context",
+      "generation": "initial",
+      "sequence": 3,
+      "state": "started"
+    },
+    {
+      "line": 1053,
+      "marker": "SF_CALCULATION_RESOLUTION",
+      "fixture": "reopen-and-context",
+      "generation": "initial",
+      "sequence": 3,
+      "state": "returned",
+      "elapsedMs": 3133,
+      "completed": 3,
+      "entered": 3
+    },
+    {
+      "line": 1054,
+      "marker": "SF_CALCULATION_PHASE",
+      "fixture": "reopen-and-context",
+      "phase": "real-atlas-write-committed",
+      "elapsedMs": 15154
+    },
+    {
+      "line": 1055,
+      "marker": "SF_CALCULATION_PHASE",
+      "fixture": "reopen-and-context",
+      "phase": "reopened-sqlite-and-authority",
+      "elapsedMs": 15169
+    },
+    {
+      "line": 1056,
+      "marker": "SF_CALCULATION_RESOLUTION",
+      "fixture": "reopen-and-context",
+      "generation": "reopened",
+      "sequence": 4,
+      "state": "started"
+    },
+    {
+      "line": 1057,
+      "marker": "SF_CALCULATION_RESOLUTION",
+      "fixture": "reopen-and-context",
+      "generation": "reopened",
+      "sequence": 4,
+      "state": "returned",
+      "elapsedMs": 18472,
+      "completed": 4,
+      "entered": 4
+    },
+    {
+      "line": 1058,
+      "marker": "SF_CALCULATION_PHASE",
+      "fixture": "reopen-and-context",
+      "phase": "reopened-calculation-resolved",
+      "elapsedMs": 33832
+    },
+    {
+      "line": 1059,
+      "marker": "SF_CALCULATION_RESOLUTION",
+      "fixture": "reopen-and-context",
+      "generation": "reopened",
+      "sequence": 5,
+      "state": "started"
+    },
+    {
+      "line": 1060,
+      "marker": "SF_CALCULATION_RESOLUTION",
+      "fixture": "reopen-and-context",
+      "generation": "reopened",
+      "sequence": 5,
+      "state": "returned",
+      "elapsedMs": 17672,
+      "completed": 5,
+      "entered": 5
+    },
+    {
+      "line": 1061,
+      "marker": "SF_CALCULATION_RESOLUTION",
+      "fixture": "reopen-and-context",
+      "generation": "reopened",
+      "sequence": 6,
+      "state": "started"
+    },
+    {
+      "line": 1062,
+      "marker": "SF_CALCULATION_RESOLUTION",
+      "fixture": "reopen-and-context",
+      "generation": "reopened",
+      "sequence": 6,
+      "state": "returned",
+      "elapsedMs": 17730,
+      "completed": 6,
+      "entered": 6
+    },
+    {
+      "line": 1063,
+      "marker": "SF_CALCULATION_PHASE",
+      "fixture": "reopen-and-context",
+      "phase": "reopened-continuity-authorized",
+      "elapsedMs": 69861
+    },
+    {
+      "line": 1064,
+      "marker": "SF_CALCULATION_PHASE",
+      "fixture": "reopen-and-context",
+      "phase": "reopened-original-capture-read",
+      "elapsedMs": 69982
+    },
+    {
+      "line": 1065,
+      "marker": "SF_CALCULATION_RESOLUTION",
+      "fixture": "reopen-and-context",
+      "generation": "reopened",
+      "sequence": 7,
+      "state": "started"
+    },
+    {
+      "line": 1066,
+      "marker": "SF_CALCULATION_RESOLUTION",
+      "fixture": "reopen-and-context",
+      "generation": "reopened",
+      "sequence": 7,
+      "state": "returned",
+      "elapsedMs": 17843,
+      "completed": 7,
+      "entered": 7
+    },
+    {
+      "line": 1067,
+      "marker": "SF_CALCULATION_RESOLUTION",
+      "fixture": "reopen-and-context",
+      "generation": "reopened",
+      "sequence": 8,
+      "state": "started"
+    },
+    {
+      "line": 1068,
+      "marker": "SF_CALCULATION_RESOLUTION",
+      "fixture": "reopen-and-context",
+      "generation": "reopened",
+      "sequence": 8,
+      "state": "returned",
+      "elapsedMs": 16931,
+      "completed": 8,
+      "entered": 8
+    }
+  ],
+  "established": [
+    {
+      "id": "C17-TIME-01",
+      "claim": "The recorded-history producer/archive setup completes; emitFromLedger is not the observed stall.",
+      "measurements_ms": {
+        "positive_setup": 1868,
+        "negative_setup": 2003,
+        "positive_historical_replacement_only": 15036,
+        "positive_historical_source": 6917,
+        "positive_stored_operation_access": 42216,
+        "positive_composed_case_read_interrupted": 99363
+      },
+      "log_lines": [
+        888,
+        889,
+        890,
+        891,
+        892,
+        893,
+        894,
+        895,
+        896,
+        897,
+        908,
+        909
+      ]
+    },
+    {
+      "id": "C17-TIME-02",
+      "claim": "The reopened calculation path completes repeated expensive reads until the deadline, rather than hanging at first admission.",
+      "initial_calculation_ms": 4494,
+      "initial_resolution_ms": [
+        3070,
+        3108,
+        3133
+      ],
+      "archive_committed_at_ms": 15154,
+      "reopened_at_ms": 15169,
+      "post_reopen_resolution_ms": [
+        18472,
+        17672,
+        17730,
+        17843,
+        16931
+      ],
+      "post_reopen_resolution_total_ms": 88648,
+      "continuity_complete_at_ms": 69861,
+      "original_capture_complete_at_ms": 69982,
+      "deadline_ms": 105000,
+      "log_lines": [
+        1044,
+        1045,
+        1046,
+        1048,
+        1049,
+        1050,
+        1051,
+        1052,
+        1053,
+        1054,
+        1055,
+        1056,
+        1057,
+        1058,
+        1059,
+        1060,
+        1061,
+        1062,
+        1063,
+        1064,
+        1065,
+        1066,
+        1067,
+        1068,
+        1075
+      ]
+    },
+    {
+      "id": "C17-TIME-03",
+      "claim": "Ancestry creation completes inner production, then exhausts the remaining deadline inside outer production.",
+      "initialize_ms": 15,
+      "inner_production_ms": 4592,
+      "outer_interrupted_ms": 100361,
+      "deadline_ms": 105000,
+      "log_lines": [
+        941,
+        942,
+        943,
+        944,
+        945,
+        946,
+        953
+      ]
+    },
+    {
+      "id": "C17-TIME-04",
+      "claim": "Nested transactionAll inside the same local-store scope is rejected synchronously as a nested write; it does not queue behind its own owner.",
+      "source": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "lines": [
+        99,
+        118,
+        277,
+        278
+      ],
+      "limitation": "No per-lock telemetry exists for these four cases; unrelated external contention is not globally ruled out."
+    }
+  ],
+  "static_call_graph": [
+    {
+      "path": "historical Planner record",
+      "calls": "BCS.resolveAncestry -> withRecordHistory -> recordHistory.resolve; BCS historical branch -> recordHistory.proveContinuity -> resolve twice. Each resolve has two current-source observations, three protected-capture reads and lineage checks.",
+      "classification": "established static fanout, not separate CI timing for each internal method",
+      "source_ranges": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+          "lines": "64-84,238-253,451-509"
+        }
+      ]
+    },
+    {
+      "path": "recorded Planner alternatives",
+      "calls": "Two alternatives: literal uses 1 original x2 reads; amount-reference uses 2 originals x2 reads =6 BCS historical resolutions. 6 x6.917s=41.502s, close to measured42.216s. cases.read repeats (accessible evidence + scenario-operation authorization) twice, giving at least16 historical resolutions for the two distinct source refs and two alternatives, before other case-event work.",
+      "classification": "static count plus measured scale; multiplication is not a new benchmark",
+      "source_ranges": [
+        {
+          "path": "apps/cli/src/sucafina-product/recorded-planner-operation-access.ts",
+          "lines": "51-80,103-105"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+          "lines": "30-35,62-65"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "lines": "79-85,132-144"
+        }
+      ]
+    },
+    {
+      "path": "case event containing one calculation",
+      "calls": "createSfCaseEventSourceAccess.read invokes authorizeEvidence; it calls read twice with the same ancestry Set. assembleSfBusinessContext then resolves children once more after resolveSource and revalidate. context([event,calculation,calculation]) therefore requests 3 calculation resolutions from the event and1 direct resolution; the two direct duplicates already share the top-level pass.",
+      "classification": "established static count; only the first two event-child calls completed before CI5 deadline",
+      "source_ranges": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts",
+          "lines": "177-207"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+          "lines": "64-83,92-109,258-261"
+        }
+      ]
+    },
+    {
+      "path": "Finance C17 issuer and Astra resolver",
+      "calls": "Finance request/result/issuer checks revalidate ancestry at distinct initial/final phases. Astra issue adds a request read and case scope; resolveEvidence adds initial/final result/request reads plus source context.",
+      "classification": "established static fanout; exact subphase replay counts for the four own cases are not instrumented",
+      "source_ranges": [
+        {
+          "path": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+          "lines": "120-135,159-202"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-request-store.ts",
+          "lines": "29-52"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/planner/calculation-evidence.ts",
+          "lines": "68-102"
+        }
+      ]
+    }
+  ],
+  "hypotheses_not_proven": [
+    "Why each reopened calculation is approximately5.7x slower than its initial resolution is not isolated: larger C08/Atlas state and repeated source/runtime snapshot work are plausible but no byte/count/CPU profile establishes a dominant primitive.",
+    "Negative recorded-history has no inner phase telemetry after setup; its exact final method at cancellation is unknown.",
+    "Ancestry outer-production internal split among simulate/persist/issue is unknown; measured100.361s identifies the phase, not one exact verifier.",
+    "Finance static18 verifier paths and CI5 related nested-case176 replays corroborate multiplicative topology, but those counts are not measurements of these four own cases."
+  ],
+  "unsafe_optimization_rejected": {
+    "candidate": "Share resolved child evidence across one entire resolveAncestry traversal, keyed by digest or the existing ancestry Set.",
+    "reason": "The same lexical traversal/ancestry Set spans the case-event initial read, final read and later BCS child walk. state.read, authorizeCase and host.revalidate await between them. A stable ref, Request or call binding does not prove source/capture/result/ledger bytes remained unchanged. Memoization would turn final observations into initial grants.",
+    "existing_contract": "authorizeEvidence returns only boolean. No observation epoch, authenticated snapshot proof or final-consumption fence is exported to the consumer.",
+    "decision": "No diff supplied or applied. Reaching this producer boundary is an explicit blocker, not a waiver or readiness claim."
+  },
+  "owner_findings": [
+    {
+      "owner": "Astra / WP10",
+      "finding": "C17-TIME-COMPOSE",
+      "paths": [
+        "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+        "apps/cli/src/sucafina-product/recorded-planner-operation-access.ts",
+        "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+        "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts"
+      ],
+      "action": "Keep failures open and compose a producer-published phase/proof interface only after counters and race/cycle/independence evidence validate it. Do not memoize consumer authority or alter deadlines."
+    },
+    {
+      "owner": "WP14 / source-access and Atlas producer",
+      "finding": "C17-TIME-OBSERVATION-BOUNDARY",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts",
+        "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts"
+      ],
+      "action": "Design and implement private observation epochs and authenticated snapshot proof at the source producer. Initial and final read() phases must have different epochs; any reuse after the producer final await requires a fresh matching source/state/ACL/capture fence. Publish bounded patch and contraproofs for Astra intake."
+    },
+    {
+      "owner": "Finance / WP11 C17 issuer (shared WP03 producer code)",
+      "finding": "C17-TIME-ISSUER-FANOUT",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/planner/calculation-evidence.ts",
+        "modules/sucafina/Sucafinav1/product/decisions/scenario-request-store.ts"
+      ],
+      "action": "Provide per-observation request/result/replay counts and a producer-owned bounded phase protocol if proofs can be reused within a single observation. Retain both canonical replays, complete closure, mutable-byte equality, final authorization and persisted-cycle guards; do not revive superseded ALS patch."
+    }
+  ],
+  "bounded_protocol_proposal": {
+    "status": "design finding only; no new contract or product change created in this round",
+    "required_properties": [
+      "Private unforgeable epoch minted for exactly one producer observation; initial and final observations are different epochs.",
+      "Scope bound to exact Request object, TrustedDomainContext object and binding digest, selected case/ref, live abort state and lexical owner; independent same-call work cannot borrow it.",
+      "Proof binds the actual source/state/capture/request/result/ledger bytes and physical lineage observed by the producer, with its applicable source and access fences; ref equality alone is insufficient.",
+      "Any consumer await after proof completion requires producer revalidation/fencing before disclosure; proof lifetime ends in finally, with no module-global WeakMap granting success.",
+      "Cycle/depth and aggregate budgets are enforced before memo lookup; every initial/final canonical replay and current ACL observation remains.",
+      "Only duplicate work inside one epoch is eligible; no promise cache across recursion, no sharing among independent calls, and no generic authority cache."
+    ]
+  },
+  "minimum_remote_validation": {
+    "dispatch_now": false,
+    "reason": "No patch produced. Reattach CI5 evidence; a duplicate unchanged run adds no evidence.",
+    "phase_1_after_producer_patch": [
+      "Sucafinav1/test/product/wp10/atlas-business/business-context.test.ts",
+      "Sucafinav1/test/product/wp10/atlas-business/record-history.test.ts",
+      "Sucafinav1/test/product/wp03/calculation-evidence.test.ts"
+    ],
+    "phase_2_only_affected_product_paths": [
+      "Sucafinav1/test/product/wp10/integration/planner-recorded-history.test.ts",
+      "Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+      "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts"
+    ],
+    "additional_required_contraproofs": [
+      "Mutate a child source, request/result, ledger/capture or participant after the first case-event child pass and before the second; final read must refuse.",
+      "Mutate after the second child pass during the BCS post-source revalidate await; consumer must refuse before disclosure.",
+      "Same ref in independent same-call work must not share a completed grant; sibling DAG branches must not be mistaken for cycles.",
+      "Abort, principal/Request/lease drift, persisted cycle, over-depth and aggregate over-budget graphs still fail closed.",
+      "The five recall-mutation-hook fixture failures remain a separate owner correction and are not claimed repaired by this diagnosis."
+    ],
+    "gates": "Use exact new W/S relation, package bun typecheck and applicable guards via CI.md/GitHub MCP. Keep deadlines/assertions/scenarios; no epic/global suite."
+  },
+  "independent_review_credit": false
+}

@@ -1,0 +1,95 @@
+{
+  "schema": "sf2.wp10.builder-reconciliation.v1",
+  "builder": "/root/runtime_analysis",
+  "independentReview": false,
+  "status": "CLOSED",
+  "issuedAt": "2026-11-14T02:53:36.936580+00:00",
+  "base": "eee00ac3ef2b68c987970535ba5bba5e4c6ad01b",
+  "published": {
+    "commit": "a43883c930cf996472b27c524aadb4694c13b5a3",
+    "tree": "e92e13fdfd1ef0b5e761b759f2b3eb84e46e0db9"
+  },
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/routine-publication.ts",
+      "publishedSourceCommit": "a43883c930cf996472b27c524aadb4694c13b5a3",
+      "publishedBlobSha": "3bc63f611beb36d535fd3ccedd9c5ae846ee4ca5",
+      "archiveMatchesPublishedManifest": true,
+      "resultBlobSha": "3bc63f611beb36d535fd3ccedd9c5ae846ee4ca5",
+      "sha256": "9de5ec3d5f6bee3815c5347662f47985c94ed333db7a24160eb775d6dc760479",
+      "equalsPublished": true,
+      "changedByThisReconciliation": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/native-host/routine-services.test.ts",
+      "publishedSourceCommit": "a43883c930cf996472b27c524aadb4694c13b5a3",
+      "publishedBlobSha": "01663714ae9b55d3f5fb1049d5fda09d57aa8a2c",
+      "archiveMatchesPublishedManifest": true,
+      "resultBlobSha": "01663714ae9b55d3f5fb1049d5fda09d57aa8a2c",
+      "sha256": "b12275126d0cf3352f1af4c1b871e4cbef554ecf26abe8303afb017824b6d586",
+      "equalsPublished": true,
+      "changedByThisReconciliation": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/native-host/native-host-disposal.test.ts",
+      "publishedSourceCommit": "a43883c930cf996472b27c524aadb4694c13b5a3",
+      "publishedBlobSha": "62ca725aead8e1c355742783c25a84c5b42c3ab9",
+      "archiveMatchesPublishedManifest": true,
+      "resultBlobSha": "db03fcbcef522bd71878c224be6c3e9ee24070bb",
+      "sha256": "fc3ad62e772531d5b0eed5f983e5cdbdc99a28685c301e737f5a173630732742",
+      "equalsPublished": false,
+      "changedByThisReconciliation": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-native-inputs.ts",
+      "publishedSourceCommit": "a43883c930cf996472b27c524aadb4694c13b5a3",
+      "publishedBlobSha": "fbb9ea1173ab6fec6171c67cd8d086a99deebabe",
+      "archiveMatchesPublishedManifest": true,
+      "resultBlobSha": "f1a39b70748dbe771bccc80ad81f29eea1312027",
+      "sha256": "c9d9fcdb832c118665c75d217fd48102df0e59f6fae6b4fd9fd6297b5ff8bd42",
+      "equalsPublished": false,
+      "changedByThisReconciliation": false
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/native-host.ts",
+      "publishedSourceCommit": "a43883c930cf996472b27c524aadb4694c13b5a3",
+      "publishedBlobSha": "cf5a5136360ec5dc75292be8106713bdd2ef01c0",
+      "archiveMatchesPublishedManifest": true,
+      "resultBlobSha": "33c9c45b66c8e5117c343affc309b704454b2aa2",
+      "sha256": "4f473b5b874ff5d954d1daa9419799470615ad991031ffd186fc8f7588756f6e",
+      "equalsPublished": false,
+      "changedByThisReconciliation": false
+    }
+  ],
+  "decisions": {
+    "routine-publication.ts": "Exact published a438 blob. Preserve the public installed RoutinePublicationHost requirement, epoch/provider replacement fences and unavailable status without installation. Supersedes private Maestro publication import and prior global FS/Git/Session acquisition fix.",
+    "routine-services.test.ts": "Exact published a438 blob. Uses real public AuthoringStore and supplied public provider; covers absence, replacement during read and disposal, without native C07 acceptance.",
+    "native-host-disposal.test.ts": "Combine own six disposal/abort/revoke/attachment/announcement lifecycle modes with published canonical Location, persisted Model default-variant checks, and all six negative persisted Session identity injections. Keep both authorization and changed.create controls.",
+    "analysis-native-inputs.ts": "Auto-merge inspected, no additional edit. Published verified alternative admission/selection reader preserved. Entire C11 veto correction preserved; the only delta against published is the external denied result for a veto and associated flag/final guard.",
+    "native-host.ts": "Auto-merge inspected, no additional edit. Canonical Location/Model and strict persisted identity comparison preserved. The only delta against published is releasing host-owned resources before the Session interruption."
+  },
+  "verification": {
+    "method": "Static source/diff and artifact hashing only",
+    "unresolvedMarkersInAssignedFiles": 0,
+    "localProductTests": 0,
+    "localBuilds": 0,
+    "localTypechecks": 0,
+    "productImports": 0,
+    "newCI": 0,
+    "remoteWrites": 0,
+    "foreignProducerEdits": 0,
+    "outsideAssignedProductEdits": 0
+  },
+  "runsMentionedByController": {
+    "ids": [
+      43548294775,
+      43548298822
+    ],
+    "status": "Not inspected or changed; no outcome claimed"
+  },
+  "remaining": [
+    "Parent must pin the reconciled blobs in the next immutable candidate.",
+    "Installed public C07 publication/native adapter is still a separate native prerequisite; absence stays unavailable.",
+    "Hosted CI results and independent reviewer recheck of the next candidate remain required."
+  ]
+}

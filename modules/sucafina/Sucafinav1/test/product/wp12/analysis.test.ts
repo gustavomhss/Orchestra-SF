@@ -6,6 +6,50 @@ test("cancellation refuses a session different from the loaded skill receipt", a
   expect(await cancelSfAnalysis(input)).toEqual({ status: "denied", reason: "session-mismatch" })
 })
 
+test("cancellation persists before interrupting and permits a source-stale run under current authority", async () => {
+  const { sfRunFixture } = await import("./run-fixture.ts")
+  const { receipt, caseRef, run } = sfRunFixture()
+  const operations: string[] = []
+  const scopes: object[] = []
+  const host = {
+    readRun: async () => ({ status: "ok", value: run }),
+    withRunContext: async (_runRef: string, action: (context: object) => Promise<unknown>) => {
+      const context = { binding: { accessRevision: "access" } }
+      scopes.push(context)
+      return action(context)
+    },
+    revalidate: async () => { operations.push("revalidate"); return { status: "stale", reason: "source-changed" } },
+    analysis: { cancel: async () => { operations.push("persist-cancel"); return { status: "ok", value: { cancelled: true } } } },
+    execution: { interrupt: async () => { operations.push("interrupt-own-ticket"); return { status: "ok", value: true } } },
+  }
+  const input = { host, runRef: receipt.runId, sessionID: receipt.nativeSessionId, executionTicket: {}, skillReceipt: receipt, caseRef, contextFingerprint: "context" } as unknown as Parameters<typeof cancelSfAnalysis>[0]
+  expect(await cancelSfAnalysis(input)).toEqual({ status: "ok", value: { cancelled: true } })
+  expect(operations).toEqual(["revalidate", "persist-cancel", "interrupt-own-ticket"])
+  expect(new Set(scopes).size).toBe(3)
+  expect(await cancelSfAnalysis({ ...input, runRef: "another-run" })).toEqual({ status: "denied", reason: "session-mismatch" })
+  expect(operations).toHaveLength(3)
+})
+
+test("revocation after durable cancellation prevents interruption through an expired authority", async () => {
+  const { sfRunFixture } = await import("./run-fixture.ts")
+  const { receipt, caseRef, run } = sfRunFixture()
+  let calls = 0
+  let interrupted = false
+  const host = {
+    readRun: async () => ({ status: "ok", value: run }),
+    withRunContext: async (_runRef: string, action: (context: object) => Promise<unknown>) => {
+      if (++calls === 3) return { status: "denied", reason: "access-revoked" }
+      return action({ binding: { accessRevision: "access" } })
+    },
+    revalidate: async () => ({ status: "ok", value: true }),
+    analysis: { cancel: async () => ({ status: "ok", value: { cancelled: true } }) },
+    execution: { interrupt: async () => { interrupted = true; return { status: "ok", value: true } } },
+  }
+  const input = { host, runRef: receipt.runId, sessionID: receipt.nativeSessionId, executionTicket: {}, skillReceipt: receipt, caseRef, contextFingerprint: "context" } as unknown as Parameters<typeof cancelSfAnalysis>[0]
+  expect(await cancelSfAnalysis(input)).toEqual({ status: "denied", reason: "access-revoked" })
+  expect(interrupted).toBe(false)
+})
+
 test("a routine result cannot start another routine", async () => {
   const { runSfAnalysisRoutine } = await import("../../../product/ai/analysis-port.ts")
   const input = { binding: { kind: "native", binding: { entryMode: "routine-result" } } } as unknown as Parameters<typeof runSfAnalysisRoutine>[0]
@@ -41,7 +85,7 @@ test("a review cannot reuse the author's run or session", async () => {
     evidenceRefs: [], runProvenance: { ...receipt, actualModel: "configured-model", contextFingerprint: "context-1", reviewerRunId: "same-run", targetRunId: "same-run", targetOutputDigest: "e".repeat(64) },
     accessRevision: "access-1", createdAt: "2026-11-13T00:00:00Z", outputDigest: "0".repeat(64),
   }
-  const input = { output, skillReceipt: receipt, runRef: "run-1", reviewTarget: { caseRef, targetRunId: "same-run", targetSessionId: "same-session", targetOutputDigest: "e".repeat(64) } } as unknown as Parameters<typeof publishSfContribution>[0]
+  const input = { output, skillReceipt: receipt, runRef: "same-run", reviewTarget: { caseRef, targetRunId: "same-run", targetSessionId: "same-session", targetOutputDigest: "e".repeat(64) } } as unknown as Parameters<typeof publishSfContribution>[0]
   expect(await publishSfContribution(input)).toEqual({ status: "failed", reason: "review-not-independent" })
 })
 
@@ -184,7 +228,7 @@ test("real SQLite and C08 reject a changed Planner source and persist settlement
   const sessionID = SessionSchema.ID.make("ses_sf_analysis")
   const caseRef = { id: "case", incarnation: "inc", version: 1 }
   const profile = { id: "sf_finance", version: "1", mission: "Finance", allowedSkills: ["sf-explicar-forecast"], allowedOperations: ["sf_forecast_compare"], outputTypes: ["MatchExplanation"], contextBudgetTokens: 1000, maxSteps: 2, maxDelegations: 0, modelClass: "reasoning", resumePolicy: "fresh", sourcePath: "profile.json", sourceDigest: "a".repeat(64) } as const
-  const skill = { id: "sf-explicar-forecast", version: "1", sourcePath: "skill/SKILL.md", sourceDigest: "b".repeat(64), instructionsDigest: "c".repeat(64), inputSchemaRef: "input", outputSchemaRefs: [], allowedProfiles: ["sf_finance"], allowedOperations: ["sf_forecast_compare"], workflow: [], limits: { maxSteps: 2, contextBudgetTokens: 1000 }, positiveAcceptance: [], negativeAcceptance: [] } as const
+  const skill = { id: "sf-explicar-forecast", version: "1", sourcePath: "skill/SKILL.md", sourceDigest: "b".repeat(64), instructionsDigest: "c".repeat(64), inputSchemaRef: "input", outputSchemaRefs: ["MatchExplanation"], allowedProfiles: ["sf_finance"], allowedOperations: ["sf_forecast_compare"], workflow: [], limits: { maxSteps: 2, contextBudgetTokens: 1000 }, positiveAcceptance: [], negativeAcceptance: [] } as const
   const selection = { profile, skills: [skill], operationIds: ["sf_forecast_compare"], manifestDigest: "d".repeat(64) }
   const receipt = { runId: "run", nativeSessionId: sessionID, profileId: profile.id, profileVersion: profile.version, profileDigest: profile.sourceDigest, skillId: skill.id, skillVersion: skill.version, sourceDigest: skill.sourceDigest, instructionsDigest: skill.instructionsDigest, loadedMessageId: "msg_loaded", loadedAt: "2026-11-13T00:00:00Z", manifestDigest: selection.manifestDigest }
   const access = { allowed: true, calls: 0, expectedPlanner: 0, preparingChecks: 0, revokeAtEgress: true }
@@ -204,7 +248,11 @@ test("real SQLite and C08 reject a changed Planner source and persist settlement
   }
   const open = async () => {
     const persistence = await openLocalStore(directory)
-    const state = createSfProductState({ persistence, createId: () => "store", resolveTarget: async () => ({ incarnation: "inc" }), authorize: async (source) => source === request && access.allowed ? { principalRef: "principal", policyVersion: "policy", accessRevision: "access" } : undefined })
+    const locked: { planner?: number } = {}
+    const state = createSfProductState({ persistence: { ...persistence, transactionAll: (work, options) => persistence.transactionAll!(async (snapshots) => {
+      locked.planner = Number(snapshots.planner.data.revision ?? 0)
+      try { return await work(snapshots) } finally { delete locked.planner }
+    }, options) }, createId: () => "store", resolveTarget: async () => ({ incarnation: "inc" }), authorize: async (source) => source === request && access.allowed ? { principalRef: "principal", policyVersion: "policy", accessRevision: "access" } : undefined })
     const store = createSfRunStore({ state, requestFor: (context) => context.kind === "native" ? registry.requestFor(context) : undefined, revalidate: (context) => context.kind === "native" ? registry.revalidate(context) : Promise.resolve(false), preflight: async (_record, context) => {
       if (context.kind !== "native" || !await registry.revalidate(context)) return { status: "denied", reason: "invalid-authority" }
       const sourceFence = await persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: sfRunSourceFence(snapshot) }))
@@ -217,8 +265,8 @@ test("real SQLite and C08 reject a changed Planner source and persist settlement
     }, revalidateForCommit: async (_record, context, _snapshot, output) => {
       if (context.kind !== "native" || !await registry.revalidate(context)) return { status: "denied", reason: "invalid-authority" }
       if (!output) return { status: "ok", value: true }
-      const current = await persistence.transaction("planner", async (snapshot) => ({ commit: false, value: Number(snapshot.data.revision ?? 0) }))
-      if (current !== access.expectedPlanner) return { status: "stale", reason: "planner-source-changed" }
+      // C08 supplied the snapshot under transactionAll. No nested cross-surface read occurs.
+      if (locked.planner === undefined || locked.planner !== access.expectedPlanner) return { status: "stale", reason: "planner-source-changed" }
       return { status: "ok", value: true }
     }, now: () => "2026-11-13T00:00:00Z" })
     return { persistence, state, store }
@@ -238,7 +286,7 @@ test("real SQLite and C08 reject a changed Planner source and persist settlement
     expect(await withRunContext("run", (context) => first.store.create(record, context))).toEqual({ status: "stale", reason: "run-or-output-changed" })
     expect((await withRunContext("run", (context) => first.store.transition("run", 2, "running", undefined, context))).status).toBe("ok")
     const { digestSfContribution } = await import("../../../product/contracts/canonical.ts")
-    const output = { id: "output", caseRef, kind: "MatchExplanation", schemaVersion: "sf-contribution-v1", state: "ready", payload: { candidateCaseRef: caseRef, matchedCriteria: [], currentDifferences: [], sourceStates: [], limitations: [] }, evidenceRefs: [], runProvenance: { ...receipt, actualModel: "model", contextFingerprint: "context" }, accessRevision: "access", createdAt: "2026-11-13T00:00:00Z", outputDigest: "" } as const
+    const output = { id: "output", caseRef, kind: "MatchExplanation", schemaVersion: "sf-contribution-v1", state: "ready", payload: { candidateCaseRef: caseRef, matchedCriteria: [], currentDifferences: [], sourceStates: [], limitations: [] }, evidenceRefs: [], runProvenance: { ...receipt, actualModel: "openai/model", contextFingerprint: "context" }, accessRevision: "access", createdAt: "2026-11-13T00:00:00Z", outputDigest: "" } as const
     const contribution = { ...output, outputDigest: digestSfContribution(output) }
     expect(await withRunContext("run", (context) => first.store.publish("run", 3, contribution, context))).toEqual({ status: "stale", reason: "planner-source-changed" })
     expect(await first.state.read(request, "contributions", (state) => state.contributions.output)).toMatchObject({ status: "ok", value: undefined })

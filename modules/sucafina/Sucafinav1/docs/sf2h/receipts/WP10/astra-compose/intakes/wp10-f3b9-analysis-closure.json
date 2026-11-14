@@ -1,0 +1,595 @@
+{
+  "schema": "astra-compose-own-reconciliation-w9-v1",
+  "source_pr": 29,
+  "source_head": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+  "source_tree": "d1350cf59e9fd98996e23fd12aba6b28b9fa752f",
+  "target_head": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+  "target_tree": "051391628c61f6a4333c8f13567c5518c4ff8f86",
+  "scope": "Only analysis-stale-commit.ts and four host-context.ts hunks",
+  "proposed": [
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-stale-commit.ts",
+      "blob": "f40a30aca8668f3ef7636ca8af4bf65d4e987217",
+      "source_pr": 29,
+      "source_head": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+      "source_tree": "d1350cf59e9fd98996e23fd12aba6b28b9fa752f",
+      "base_head": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "base_tree": "051391628c61f6a4333c8f13567c5518c4ff8f86",
+      "base_blob": null,
+      "worktree_blob": null,
+      "content_sha256": "8c237876e2a2636ab0634cf9599bc136300253c621784fa4496d4636dc73e311",
+      "operation": "add_exact_published_blob",
+      "proposed_result_blob": "f40a30aca8668f3ef7636ca8af4bf65d4e987217",
+      "disposition": "OWN_WP10_PROPOSED_PATCH_FOR_ROOT",
+      "dependency_inventory": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+          "blob": "1769271386cdda1017c38023b0988ce2d64423d2",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+          "blob": "102c849084980ae52223809d33bdeea36a58536b",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+          "blob": "88b6efb4840b8731f707862a8baf14683526c7a9",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/resident-ai.ts",
+          "blob": "38e3d664f4dedb56f3e614bde41d51548e44f805",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+          "blob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/state.ts",
+          "blob": "755639b2a16265fe164ba2e6343738c1362d168c",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          "blob": "2c82d60d220d8d5365da8322bad648a64bbb62d2",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+          "blob": "a3c306b720fd7f82e32340682e5001b1e6f4ef8e",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+          "blob": "9e9bac976b503409de65868a366f352ca1e65071",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        }
+      ],
+      "staged_source": "incoming-cache/owner-round9/pr29-analysis-src/source_helper/apps/cli/src/sucafina-product/analysis-stale-commit.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "blob": "28046172e5a540c8418aff0b968b2e098888c432",
+      "source_pr": 29,
+      "source_head": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+      "source_tree": "d1350cf59e9fd98996e23fd12aba6b28b9fa752f",
+      "base_head": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "base_tree": "051391628c61f6a4333c8f13567c5518c4ff8f86",
+      "base_blob": "0d3abcf642deb3d2f6c6346cdddc8bfb40141532",
+      "worktree_blob": "0d3abcf642deb3d2f6c6346cdddc8bfb40141532",
+      "content_sha256": "da9a8d3dce14c1ca5de45e5bb8c6100f6394e7b5a6de2e2c243185fd5689cbcb",
+      "operation": "apply_four_hunks_to_exact_W8_lease",
+      "proposed_result_blob": "28046172e5a540c8418aff0b968b2e098888c432",
+      "disposition": "OWN_WP10_PROPOSED_PATCH_FOR_ROOT",
+      "dependency_inventory": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/personal-views.ts",
+          "blob": "e424c7454a1aa4b7bd8290408001e65ae029d156",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/personal-view-authority.ts",
+          "blob": "ab705bc54819ab4c6a41d83b6c6170ada2859a9d",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/ai/resident.ts",
+          "blob": "7e3d3849272bb5755d793a9e2b00ad34c523c188",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+          "blob": "1769271386cdda1017c38023b0988ce2d64423d2",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+          "blob": "920fda293db553096f4d8ab7004fcd9652a69291",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          "blob": "2c82d60d220d8d5365da8322bad648a64bbb62d2",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/native-evidence.ts",
+          "blob": "0502f30e054e40049df1283c00d4f5af1545f7c2",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+          "blob": "9e9bac976b503409de65868a366f352ca1e65071",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/resident-agents.ts",
+          "blob": "a1413fd5224f373d704bbdfca7a489a904875d00",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-scanner.ts",
+          "blob": "11922bec60a7b9223f6f11043b02a63885b55b31",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "modules/atlas/boundary/package.json",
+          "blob": "6a5e7bddf5b9ea31dd0fb795f38be4fc98a231b7",
+          "source": "MCP exact W8 (earlier round9 dependency fetch)"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json",
+          "blob": "5cc315a2fb88118dbfa9ed5259e0fdf792dbf6b7",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/roster-sources.ts",
+          "blob": "04e62d34018c57ab43d4ccf33a064294f013b258",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/planner-sources.ts",
+          "blob": "1b2bb4b9ab9b2e06a82f3038b02600c3bdba220f",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/document-authority.ts",
+          "blob": "5cf7795dd466f0d2ec6eaa084194ff3c31d6f728",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/document-services.ts",
+          "blob": "9e63a31a088d1e17e69a4721aec0fdcd4a7146e4",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/document-http.ts",
+          "blob": "8f679deec37dc99ae335c4bacae2162c9a7a076a",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/document-scenario-http.ts",
+          "blob": "d6926db6f770692e4d2ccbe9f425bf389a9f5c95",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/dossier-services.ts",
+          "blob": "0a89225f73bfe1c458ac5530918609a063ae385d",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/document-analysis.ts",
+          "blob": "fbec7b20cfe236d3f729b364b8f35b40bdc4c8ab",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/import-services.ts",
+          "blob": "53a1f34779598545cde83295c8ff98b861fabb72",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/import-http.ts",
+          "blob": "72196e5d8ac256e161be0c4bde2fbf1090cc6786",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/imports/analysis-options.ts",
+          "blob": "a7d01f61282b4e044591e8d69db4b2c0a9e3252b",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/business-services.ts",
+          "blob": "4b02413b5a98e750187fa8f5fa54f3cb2415f4e3",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/extended-business-services.ts",
+          "blob": "a57e9d39f81e8a064f903765e70533bdffea4ba2",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+          "blob": "6facc71b1351aea04ed3e7d51d1d0ed5d81c24d9",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/decision-domain-http.ts",
+          "blob": "5cb8e4e45c1e68af4c59ec096b499ed0907f6c66",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/analysis-native-inputs.ts",
+          "blob": "42439e65042399bb2597dc4e6e3ccb81c88f4d9b",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/alternative-captures.ts",
+          "blob": "9e2bc584c80844b213b026351d766bd6ae5eba09",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/baseline-services.ts",
+          "blob": "72f36763f25188b0304e9a9e513d1ae61c3c600a",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/memory-services.ts",
+          "blob": "85c3021dec21ab942a8fab04524d48295fd918f7",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/memory-http.ts",
+          "blob": "f727d5250024df7338491321c36e7055d7c18f74",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/memory-selection.ts",
+          "blob": "e456a67e701810594e01c2bd8052944a95d2514e",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/review-services.ts",
+          "blob": "e795aa2e8667a0da134a00ce6012fe1f7f1dc712",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/analysis-author.ts",
+          "blob": "efcfef49e44ce17f80f5f44c68ca10500ae10b4e",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/ai/contribution-reader.ts",
+          "blob": "98ed7307c8970ecb35f2eedb8427b37dd9ceeb5d",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/analysis-host-services.ts",
+          "blob": "9b21d9f7d4b115bb690ab82256b2cef0590c6afe",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/analysis-http.ts",
+          "blob": "06522fa4a2eaa0841af8aabead799d9d56a8ada7",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/forecast-input-adapter.ts",
+          "blob": "994c99f2cae59db47e2a7494ddc8f08439525794",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/analysis-namespaces.ts",
+          "blob": "873db13c33707122c06c9aec3e2216a4a6eae4df",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/analysis-stale-commit.ts",
+          "blob": "f40a30aca8668f3ef7636ca8af4bf65d4e987217",
+          "source": "atomic two-file closure"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/host-presentation.ts",
+          "blob": "70725d5dcd4c76893b8c8a85350bcd83ef796734",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/routine-publication.ts",
+          "blob": "3bc63f611beb36d535fd3ccedd9c5ae846ee4ca5",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/routine-inputs.ts",
+          "blob": "a7c3cfa6723bf68770f58fca6ebb78cea6eefb4e",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/routine-services.ts",
+          "blob": "8b76b7591bf3ce0312108faafcda6b244a2d5e89",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/dashboard-http.ts",
+          "blob": "c6c24f4a66315c75dd8b0903ddd70c89b9b9e19c",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/sourcing-inputs.ts",
+          "blob": "cb4b630b004c999deae758f70973f7dcd0bb3b67",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/procurement/decision-http.ts",
+          "blob": "e169d335f091c446bb380ee73f450083f917946f",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/http.ts",
+          "blob": "91091bf444bc23221d1f427138ebb9e5ca4c51bb",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/human.ts",
+          "blob": "a4f87ef048c4cbbd44656ea1852eb38da602720a",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/human-authority.ts",
+          "blob": "78529a89586ce9f22d2b2cdd2cd0b1c61d20668a",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/contribution.ts",
+          "blob": "8d44320acedc4afec9ffc100f5f6a171cdf26993",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/token-gate.ts",
+          "blob": "4d7b395aa29a03a8311d8dec87cb1e69e0a4ab30",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/native-host.ts",
+          "blob": "f43e9ae216a94f16daf985bac32f2c9e2627a2b7",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/native-identity.ts",
+          "blob": "dfece223dc3b6e0c1a94f74992afe9a62a928707",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/native-execution.ts",
+          "blob": "2423138831dbac9eaf65eb44485499e5c9475027",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/planner/monthly-host.ts",
+          "blob": "b8bdf6ef06a9883952faa010efdec80f8d3b69d5",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+          "blob": "a3c306b720fd7f82e32340682e5001b1e6f4ef8e",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": true
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/ai/analysis-host.ts",
+          "blob": "337f6764a6e4fa84c09d4b53afd87c814a8d1fab",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+          "blob": "03f6ba173ca1d27693f784fdf149d2c674ca5edf",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts",
+          "blob": "c0c615b006d4b638015217e9d5b4d353b4ea41e6",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/alternative-provenance.ts",
+          "blob": "1d3229d717ac490a2727cc30df65cedd77d52a57",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/skill-inputs.ts",
+          "blob": "e57131cc3c5b03ca894d57437b22040cf69dd3db",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/analysis-verifier.ts",
+          "blob": "9c62b6a375e4894f1d487b7eb12ab1c1bba9dd17",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/analysis-memory-evidence.ts",
+          "blob": "8ef62f7ceb58b57647aab4761033452306f31f0d",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+          "blob": "88b6efb4840b8731f707862a8baf14683526c7a9",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+          "blob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/state.ts",
+          "blob": "755639b2a16265fe164ba2e6343738c1362d168c",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+          "blob": "67203e058f6e08d9e32e0c51e0b1a01e5fadf322",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/runtime.ts",
+          "blob": "beba733084e87da8664b0f4067b52d4b29795c5c",
+          "source": "W8 root-provided hash-verified materialization",
+          "fresh_remote_read": false
+        }
+      ],
+      "staged_source": "incoming-cache/owner-round9/pr29-analysis-src/source_host/apps/cli/src/sucafina-product/host-context.ts"
+    }
+  ],
+  "summary": {
+    "new_paths": 1,
+    "existing_paths": 1,
+    "host_hunks": 4,
+    "foreign_paths_imported": 0,
+    "engine_changes": 0,
+    "worktree_mutations": 0
+  },
+  "dependency_resolution": {
+    "WP12_run_store": {
+      "path": "modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+      "base_blob": "a3c306b720fd7f82e32340682e5001b1e6f4ef8e",
+      "source_blob": "a3c306b720fd7f82e32340682e5001b1e6f4ef8e",
+      "relation": "EXACT_IDENTICAL_BLOB_AT_BOTH_IMMUTABLE_COMMITS_VERIFIED_BY_MCP",
+      "available_apis": [
+        "readLifecycle",
+        "markStale",
+        "preserveStale",
+        "transition",
+        "sfRunSourceFence",
+        "revalidateForCommit under sourceFence all"
+      ],
+      "additional_WP12_or_PR36_API_required": false
+    },
+    "runtime_persistence": "transactionAll/currentSnapshots are already part of W8 Persistence and the composed source lifecycle; helper fails unavailable if their shared snapshot is absent",
+    "native_joint_admission": "createSfAlternativeRunState and nativeInputs.readCapturedAlternative remain unchanged; source alternative proof input is denied on stale commits; ready/active publication path retains private capture checks, current source fences, material selection and exact case version"
+  },
+  "static_findings": [
+    {
+      "id": "STALE_LIFECYCLE_CURRENT_AUTHORITY",
+      "finding": "Separates stale lifecycle settlement from active publication freshness. Captures admitted run/case/fingerprint and original Request, reopens real current BusinessContext sources, checks current C08 authority and case membership, and pins source fences across prepare and commit."
+    },
+    {
+      "id": "RUN_AND_OUTPUT_CAS_RETAINED",
+      "finding": "W8 run-store retains original record/version CAS, contribution digest/provenance checks, immutable ready-output preservation and refusal to append an unpublished AlternativeDraft. Proposed helper delegates all writes to this unchanged store."
+    },
+    {
+      "id": "CANCELLATION_NO_OLD_SOURCE_FRESHNESS",
+      "finding": "Dedicated cancellation scope captures the current authorized cancellation request and exact lifecycle record, requires analysis.cancel again under commit, validates current case identity/membership and original record/version. It replaces dependence on the previous unrelated active-source fence."
+    },
+    {
+      "id": "JOINT_ADMISSION_AND_OTHER_OWN_WORK_PRESERVED",
+      "finding": "Exact source-vs-W8 host diff contains only import, wrapper creation, stale/cancel dispatch and closing parenthesis; no C17, BI, Dossier, captureCurrent, native publication guard, alternative selection or route hunk."
+    }
+  ],
+  "test_evidence": {
+    "new_tests_executed": false,
+    "local_typecheck": false,
+    "guards_executed": false,
+    "source_CI": "PR29 flight 43585812801 status/outcome owned by root; no success alleged or transferred",
+    "target_CI": "Pending root publication and surgical Actions flight",
+    "direct_helper_tests_in_payload": 0,
+    "proposed_existing_paths": [
+      "modules/sucafina/Sucafinav1/test/product/wp12/run-store.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp12/analysis.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts"
+    ],
+    "required_behavior_observations": [
+      "Stale source with retained current access settles lifecycle without reviving execution",
+      "Historical original capture plus real continuity permitted, revoked/unavailable source denied",
+      "Case/request identity, access revision, case incarnation and source-fence changes denied",
+      "Concurrent cancellation and changed ready output do not get overwritten",
+      "Unpublished AlternativeDraft has no durable output publication or invented provenance",
+      "Cancellation requires current analysis.cancel and exact original run identity"
+    ],
+    "package_checks": "Root: bun typecheck in affected packages and applicable AGENTS guards via GitHub Actions only"
+  },
+  "excluded": [
+    "All remaining PR29 snapshot paths, including the five already-identical paths",
+    "All PR36 snapshots/deletions",
+    "Any product/foreign-branch modification by this agent"
+  ],
+  "status": "COMPOSABLE_TWO_PATH_PROPOSAL_PENDING_ROOT_AND_TARGET_CI",
+  "independent_review": false,
+  "patch": "incoming-cache/owner-round9/pr29-analysis-closure.patch",
+  "payload": "incoming-cache/owner-round9/pr29-analysis-closure-payload.json"
+}

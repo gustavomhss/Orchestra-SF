@@ -1,0 +1,37 @@
+--- a/modules/sucafina/Sucafinav1/test/product/wp14/atlas-restart-reader.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp14/atlas-restart-reader.ts
+@@ -32,10 +32,16 @@
+   const time = "2026-11-13T12:00:00Z"
+   const call = (): TrustedDomainContext => ({ kind: "ui", binding: { installationId: "i", projectId: "p", principalRef: session.id, requestId: "restart", policyVersion: "1", accessRevision: "1", expiresAt: "2099-01-01T00:00:00Z" }, lease: {} as TrustedUiLease })
+   const persistence = createSfSourcePersistence({ persistence: store, createId: randomUUID, enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(() => time) })
++  const requests = new WeakMap<TrustedDomainContext, Request>()
++  const requestFor = (call: TrustedDomainContext) => {
++    let request = requests.get(call)
++    if (!request) { request = new Request("https://example.test", { headers: { authorization: session.id } }); requests.set(call, request) }
++    return request
++  }
+   const host: DomainPortHost = { persistence, authenticate: async (request, context) => {
+     const id = request.headers.get("authorization")
+     return id ? resolve(id, [...context!.roleMap], (group) => group === "admins") : null
+-  }, environment: async () => ({ at: time, id: randomUUID, directory: [] }), requestFor: () => new Request("https://example.test", { headers: { authorization: session.id } }), revalidate: async (context) => context.binding.principalRef === session.id && await store.transaction("dashboard", async () => ({ commit: false, value: true })) }
++  }, environment: async () => ({ at: time, id: randomUUID, directory: [] }), requestFor, revalidate: async (context) => context.binding.principalRef === session.id && await store.transaction("dashboard", async () => ({ commit: false, value: true })) }
+   const issue = createDashboardSourceIssuer({ host, scopedSources: persistence })
+   const dashboard = createDashboardPort({ host, sources: createDashboardSourceHost({ host, scopedSources: persistence }) })
+   const source = createSfDashboardSourceAccess({ host, issue, dashboard })
+--- a/modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts
+@@ -56,7 +56,13 @@
+         await persistence.initializeSources("dashboard")
+         await persistence.transaction("dashboard", async (snapshot) => { snapshot.data.roleMap = [{ surface: "dashboard", role: "admin", entra: "admins", version: 1, by: "admin" }]; snapshot.data.opexOwners = [{ id: "o", budget: 1200 }]; snapshot.data.opexEntries = []; return { commit: true, value: undefined } })
+       }
+-      const host: DomainPortHost = { persistence, authenticate: async (request, context) => { const id = request.headers.get("authorization"); return id ? resolve(id, [...context!.roleMap], (group) => session.active && group === "admins") : null }, environment: async () => ({ at: time, id: randomUUID, directory: [] }), requestFor: () => new Request("https://example.test", { headers: { authorization: session.id } }), revalidate: async (call) => session.active && session.id === call.binding.principalRef && await store.transaction("dashboard", async () => ({ commit: false, value: true })) }
++      const requests = new WeakMap<TrustedDomainContext, Request>()
++      const requestFor = (call: TrustedDomainContext) => {
++        let request = requests.get(call)
++        if (!request) { request = new Request("https://example.test", { headers: { authorization: session.id } }); requests.set(call, request) }
++        return request
++      }
++      const host: DomainPortHost = { persistence, authenticate: async (request, context) => { const id = request.headers.get("authorization"); return id ? resolve(id, [...context!.roleMap], (group) => session.active && group === "admins") : null }, environment: async () => ({ at: time, id: randomUUID, directory: [] }), requestFor, revalidate: async (call) => session.active && session.id === call.binding.principalRef && await store.transaction("dashboard", async () => ({ commit: false, value: true })) }
+       const issue = createDashboardSourceIssuer({ host, scopedSources: persistence })
+       const sources = createDashboardSourceHost({ host, scopedSources: persistence })
+       const dashboard = createDashboardPort({ host, sources })

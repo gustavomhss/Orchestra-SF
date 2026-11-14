@@ -47,7 +47,7 @@ export function createRecipientThreadActions(input: {
       return { commit: true, value: true }
     })
     if (saved.status === "preview") return { status: "conflict", reason: "thread-changed" }
-    if (saved.status !== "ok") return saved
+    if ("reason" in saved) return saved
     if (!saved.value) return { status: "conflict", reason: "thread-changed" }
     return input.read(id, context)
   }
@@ -56,3 +56,4 @@ export function createRecipientThreadActions(input: {
     resolve: (id: string, mutation: Mutation, context: TrustedDomainContext) => change(id, { kind: "resolve" }, mutation, context),
   }
 }
+

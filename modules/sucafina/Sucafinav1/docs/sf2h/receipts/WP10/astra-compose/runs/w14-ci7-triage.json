@@ -1,0 +1,68 @@
+{
+  "schema": "sf2-compose-ci-failure-triage-v1",
+  "product": {
+    "head": "9a475b5fb28655f1c4309cd3e68b6e4d76269a2e",
+    "tree": "2bedbc721d0b402b41c942b770c49bf36e6a9e0b"
+  },
+  "run": 43598770529,
+  "snapshot": "be9c1606e8a4bc0a3fe52814cd2089aabc284bc7",
+  "job": 132458824188,
+  "classification": [
+    {
+      "owner": "Astra / CI selection",
+      "failures": 3,
+      "cases": [
+        "WP01 startup",
+        "WP01 shared-browser lifecycle",
+        "unnamed Omni positive control"
+      ],
+      "finding": "Root added WP01 pool lifecycle files while using a name filter. browser-fixture.ts explicitly rejects that combination; startup makes no spawn. Named BI and Review consumers use their own WP07 Chromium ownership/cleanup, not this pool. Verify the whole import closure before preparing the corrected selector.",
+      "next": "Omit only the unrelated pool pair from the scoped request; retain real consumer lifecycle and Omni. No foreign fixture guard is weakened."
+    },
+    {
+      "owner": "Astra / WP10 BI composition",
+      "failures": 1,
+      "case": "canonical shell polls while BI data response is held",
+      "finding": "Timeout waiting for data-access-unavailable after runFor1000 then runFor29000 and actual204logout. Existing log does not establish whether the periodic HTTP observation completed.",
+      "next": "Observe actual shell request/response and DOM separately and preserve all revocation, late-render and cleanup assertions. No budget increase or fabricated access event."
+    },
+    {
+      "owner": "Astra consumer; WP07 owner consulted",
+      "failures": 1,
+      "case": "BI returns from a real source preserving filters and focus",
+      "finding": "Finally reports WP07_CHROME_GROUP_OR_TRANSPORT_REMAINS_LIVE, connectedtrue and3unsettled closeRPCs. Primary body outcome may be masked. It does not prove a reflow or source-authority failure.",
+      "next": "Preserve body and cleanup errors together and add phases. Foreign cleanup remains unchanged. FindingPR33comment6878062059."
+    },
+    {
+      "owner": "Astra / WP10 historical admission; Finance and Intelligence producer dependencies",
+      "failures": 2,
+      "cases": [
+        "Late captured calculation settlement and restart",
+        "Private historical read fault boundaries"
+      ],
+      "finding": "Both exhaust105s cooperative deadline. Third negative stale-calculation case passes. Actual phases now locate expensive repeated historical reads in admission; no cache or authority bypass approved.",
+      "next": "Complete actual-log diagnosis and bounded safe remediation if demonstrable; otherwise retain blocked tests and forward exact producer/call evidence."
+    }
+  ],
+  "positive_observations": [
+    {
+      "scope": "W14 six consumed owner files",
+      "cases_passed": 21,
+      "detail": "Finance calculation-history1 + HotTopic6 + continuation9 + builder5. Exact W14 observations only; Omni and whole run failed."
+    },
+    {
+      "scope": "Astra modified W13 fixtures",
+      "detail": "BI advantage3, Review browser revocation1, Analysis reentry1 and six Planner post-proof/lexical hooks pass. BI lifecycle3pass2fail; stale1pass2fail."
+    }
+  ],
+  "preserved_open": [
+    "Four CI5 historical/ancestry/reopen timeout cases not selected inCI7",
+    "CI6 WP04 H02/H03/H05/H06/H09 and Dashboard withdrawal",
+    "BI renderer reflow and full journey/viewport/zoom/keyboard/performance",
+    "Check12 fourteen baseline SF diagnostics",
+    "C17 final candidate grant, native provider/Atlas proof, AM01–AM06 and all final global gates"
+  ],
+  "local_product_execution": false,
+  "source_branches_modified": false,
+  "global_release": false
+}

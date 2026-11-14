@@ -1,15 +1,16 @@
 import { roleMap } from "../../runtime/admin.ts"
 import { object } from "../../runtime/contract.ts"
 import type { Snapshot } from "../../runtime/contract.ts"
-import { digestSfEvidenceRef, digestSfValue } from "../contracts/canonical.ts"
+import { digestSfEvidenceRef, digestSfValue, sfEvidenceSourceMaps } from "../contracts/canonical.ts"
 import type { BusinessEvidenceRef, BusinessEvidenceResolution } from "../contracts/business-context.ts"
-import type { DashboardPort, DecisionCasePort, DomainPortHost, PortResult, ProcurementPort } from "../contracts/ports.ts"
+import type { DashboardPort, DomainPortHost, PortResult, ProcurementPort } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { Period } from "../contracts/context.ts"
 import type { SfDocumentReader } from "../documents/evidence-resolver.ts"
 import type { createProcurementSourceResolver } from "../procurement/sources.ts"
 import type { createDashboardRecordEvidenceHost } from "../dashboard/sources.ts"
-import { encodeCaseRef } from "../decisions/case-port.ts"
+import type { SfProductStatePort } from "../contracts/state.ts"
+import type { DecisionCase } from "../contracts/decisions.ts"
 
 type RecordRef = Extract<BusinessEvidenceRef, { kind: "record" }>
 type DashboardIssuer = (selection: { page: string; fields: readonly string[]; period: Period }, context: TrustedDomainContext) => Promise<PortResult<{ selectionRef: string; evidence: RecordRef }>>
@@ -171,32 +172,39 @@ function sameCurrentSource(original: BusinessEvidenceRef, current: BusinessEvide
   return false
 }
 
-/** Immutable ledger events are re-read through the authorized case port on every use. */
-export function createSfCaseEventSourceAccess(input: { host: DomainPortHost; cases: DecisionCasePort }) {
-  return async (ref: BusinessEvidenceRef, call: TrustedDomainContext): Promise<BusinessEvidenceResolution> => {
+/** Immutable ledger events are read through protected state without recursively reopening
+ * the full case. Every ancestor's dependencies still require the current caller's access. */
+export function createSfCaseEventSourceAccess(input: { host: DomainPortHost; state: SfProductStatePort; authorizeCase: (value: DecisionCase, call: TrustedDomainContext) => Promise<boolean>; authorizeEvidence: (refs: readonly BusinessEvidenceRef[], call: TrustedDomainContext, ancestors: ReadonlySet<string>) => Promise<boolean> }) {
+  return async (ref: BusinessEvidenceRef, call: TrustedDomainContext, ancestors: ReadonlySet<string> = new Set()): Promise<BusinessEvidenceResolution> => {
     const unavailable = (checkedAt = ""): BusinessEvidenceResolution => ({ state: "unavailable", ref, accessRevision: call.binding.accessRevision, checkedAt })
     try {
-      if (ref.kind !== "case-event" || ref.installationId !== call.binding.installationId || ref.projectId !== call.binding.projectId || ref.refDigest !== digestSfEvidenceRef(ref)) return unavailable()
+      if (ref.kind !== "case-event" || ancestors.has(ref.refDigest) || ancestors.size > 16 || ref.installationId !== call.binding.installationId || ref.projectId !== call.binding.projectId) return unavailable()
+      sfEvidenceSourceMaps([ref])
+      if (!Number.isSafeInteger(ref.target.caseVersion) || ref.target.caseVersion < 1 || !ref.target.eventId.trim() || !/^[a-f0-9]{64}$/i.test(ref.target.outputDigest)) return unavailable()
       const request = input.host.requestFor(call)
       if (!request || request.signal.aborted || !await input.host.revalidate(call)) return unavailable()
       const now = await input.host.environment(request)
       if (!Number.isFinite(Date.parse(now.at))) return unavailable()
+      const binding = digestSfValue([call.kind, call.binding])
       const target = ref.target
+      const ancestry = new Set([...ancestors, ref.refDigest])
       const read = async () => {
-        const result = await input.cases.read({ caseRef: encodeCaseRef({ id: target.caseId, incarnation: target.caseIncarnation }) }, call)
-        if (result.status !== "ok" || result.value.context.installationId !== call.binding.installationId || result.value.context.projectId !== call.binding.projectId || result.value.context.principalRef !== call.binding.principalRef || result.value.context.accessRevision !== call.binding.accessRevision || result.value.context.policyVersion !== call.binding.policyVersion || result.value.case.id !== target.caseId || result.value.case.incarnation !== target.caseIncarnation || result.value.case.version < target.caseVersion) return undefined
-        const events = result.value.events.filter((event) => event.id === target.eventId)
-        const ledger = result.value.case.ledger.filter((event) => event.id === target.eventId)
-        if (events.length !== 1 || ledger.length !== 1) return undefined
-        const event = events[0]!
-        if (digestSfValue(event) !== digestSfValue(ledger[0]) || event.caseRef.id !== target.caseId || event.caseRef.incarnation !== target.caseIncarnation || event.caseRef.version !== target.caseVersion || event.outputDigest !== target.outputDigest || digestSfValue(event.evidenceRefs) !== digestSfValue(target.evidenceRefs)) return undefined
-        return event
+        const result = await input.state.read(request, "cases", (state, authority) => authority.principalRef === call.binding.principalRef && authority.accessRevision === call.binding.accessRevision && authority.policyVersion === call.binding.policyVersion ? state.cases[target.caseId] : undefined)
+        if (result.status !== "ok" || !result.value) return undefined
+        const value = result.value
+        if (value.id !== target.caseId || value.incarnation !== target.caseIncarnation || value.version < target.caseVersion || !value.participants.includes(call.binding.principalRef) || (call.kind === "native" && (call.binding.caseId !== value.id || call.binding.caseIncarnation !== value.incarnation || call.binding.caseVersion !== value.version)) || !await input.authorizeCase(value, call)) return undefined
+        const ledger = value.ledger.filter((event) => event.id === target.eventId)
+        if (ledger.length !== 1) return undefined
+        const event = ledger[0]!
+        if (event.caseRef.id !== target.caseId || event.caseRef.incarnation !== target.caseIncarnation || event.caseRef.version !== target.caseVersion || event.outputDigest !== target.outputDigest || digestSfValue(event.evidenceRefs) !== digestSfValue(target.evidenceRefs)) return undefined
+        if (!await input.authorizeEvidence(event.evidenceRefs, call, ancestry)) return undefined
+        return { event, caseVersion: value.version, storageVersion: result.storageVersion }
       }
       const event = await read()
       if (!event || request.signal.aborted || !await input.host.revalidate(call)) return unavailable(now.at)
       const again = await read()
-      if (!again || digestSfValue(event) !== digestSfValue(again) || request.signal.aborted || !await input.host.revalidate(call)) return unavailable(now.at)
-      return { state: "fresh", ref, currentRef: ref, authorizedProjection: event, accessRevision: call.binding.accessRevision, checkedAt: now.at }
+      if (!again || digestSfValue(event) !== digestSfValue(again) || request.signal.aborted || digestSfValue([call.kind, call.binding]) !== binding || !await input.host.revalidate(call)) return unavailable(now.at)
+      return { state: "fresh", ref, currentRef: ref, authorizedProjection: event.event, accessRevision: call.binding.accessRevision, checkedAt: now.at }
     } catch {
       return unavailable()
     }
@@ -204,7 +212,7 @@ export function createSfCaseEventSourceAccess(input: { host: DomainPortHost; cas
 }
 
 /** The existing Procurement resolver and port reauthenticate and project the current record. */
-export function createSfProcurementSourceAccess(input: { host: DomainPortHost; resolve: ReturnType<typeof createProcurementSourceResolver>; procurement: ProcurementPort }) {
+export function createSfProcurementSourceAccess(input: { host: DomainPortHost; resolve: Pick<ReturnType<typeof createProcurementSourceResolver>, "resolve">; procurement: ProcurementPort }) {
   return async (ref: BusinessEvidenceRef, call: TrustedDomainContext): Promise<BusinessEvidenceResolution> => {
     const unavailable = (checkedAt = ""): BusinessEvidenceResolution => ({ state: "unavailable", ref, accessRevision: call.binding.accessRevision, checkedAt })
     try {
@@ -213,13 +221,13 @@ export function createSfProcurementSourceAccess(input: { host: DomainPortHost; r
       if (!request || request.signal.aborted || !await input.host.revalidate(call)) return unavailable()
       const now = await input.host.environment(request)
       if (!Number.isFinite(Date.parse(now.at))) return unavailable()
-      const current = await input.resolve(ref.refId, call)
+      const current = await input.resolve.resolve(ref.refId, call)
       if (current.status !== "ok" || digestSfValue(current.value.evidence) !== digestSfValue(ref) || !await input.host.revalidate(call)) return unavailable(now.at)
       const projection = ref.target.recordType === "procurement-request"
         ? await input.procurement.read({ requestRef: ref.refId }, call)
         : await input.procurement.readSupplier({ supplierRef: ref.refId, fields: ref.target.fields }, call)
       if (projection.status !== "ok" || projection.value.context.installationId !== call.binding.installationId || projection.value.context.projectId !== call.binding.projectId || projection.value.context.principalRef !== call.binding.principalRef || projection.value.context.accessRevision !== call.binding.accessRevision || projection.value.context.policyVersion !== call.binding.policyVersion) return unavailable(now.at)
-      const again = await input.resolve(ref.refId, call)
+      const again = await input.resolve.resolve(ref.refId, call)
       if (again.status !== "ok" || digestSfValue(again.value.evidence) !== digestSfValue(ref) || request.signal.aborted || !await input.host.revalidate(call)) return unavailable(now.at)
       return { state: "fresh", ref, currentRef: again.value.evidence, authorizedProjection: projection.value, accessRevision: call.binding.accessRevision, checkedAt: now.at }
     } catch {

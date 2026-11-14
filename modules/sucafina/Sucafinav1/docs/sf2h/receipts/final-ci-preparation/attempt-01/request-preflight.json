@@ -1,0 +1,103 @@
+{
+  "schema": "sf2-final-request-preflight-v1",
+  "status": "BLOCKED",
+  "scope": "canonical request admission only; no test collection or execution",
+  "manifest": "script/sf2h/final-bundle/requests.json",
+  "checks": [
+    {
+      "id": "CI-SF",
+      "status": "VALID",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [],
+        "env": {}
+      },
+      "request_sha256": "7bc4b2fc36048990ed231ed0eb28919b03eb1dfe15379dfab26913cbb1218169",
+      "omni_control": "suite",
+      "execution": "NOT_RUN"
+    },
+    {
+      "id": "CI-CLI",
+      "status": "VALID",
+      "request": {
+        "package": "cli",
+        "directory": "apps/cli",
+        "runner": "bun",
+        "args": [],
+        "env": {}
+      },
+      "request_sha256": "2c4a01a80cebaacc93db36c606a795ee501a26b42558a7c4131824032c5c4a9a",
+      "omni_control": "suite",
+      "execution": "NOT_RUN"
+    },
+    {
+      "id": "CI-APP-SRC",
+      "status": "VALID",
+      "request": {
+        "package": "app",
+        "directory": "packages/app-shell",
+        "runner": "bun",
+        "args": [],
+        "env": {}
+      },
+      "request_sha256": "61968bf8574074abe1822fec9a7b2cc543e465c119c088b3ef6b7ef6d3dcf6ab",
+      "omni_control": "suite",
+      "execution": "NOT_RUN"
+    },
+    {
+      "id": "CI-APP-BROWSER",
+      "status": "VALID",
+      "request": {
+        "package": "app",
+        "directory": "packages/app-shell",
+        "runner": "bun",
+        "args": [
+          "test-browser"
+        ],
+        "env": {}
+      },
+      "request_sha256": "93f5c9544af32b496cb0930402282e5fb7981b7e13010f7cf384dbfb2c1e984e",
+      "omni_control": "declared",
+      "execution": "NOT_RUN"
+    },
+    {
+      "id": "CI-ATLAS-BUSINESS",
+      "status": "VALID",
+      "request": {
+        "package": "atlas-boundary",
+        "directory": "modules/atlas/boundary",
+        "runner": "bun",
+        "args": [
+          "--timeout",
+          "30000"
+        ],
+        "env": {}
+      },
+      "request_sha256": "50c28f8b4b780ffefd0e62d299b767a2ee2b042c2654c8e68046cb1ff004ffbe",
+      "omni_control": "suite",
+      "execution": "NOT_RUN"
+    },
+    {
+      "id": "CI-UI-OPERATIONS",
+      "status": "BLOCKED",
+      "reason": "playwright spec missing: e2e/sucafina/operations.spec.ts",
+      "execution": "NOT_RUN"
+    },
+    {
+      "id": "CI-UI-DECISIONS",
+      "status": "BLOCKED",
+      "reason": "playwright spec missing: e2e/sucafina/decisions.spec.ts",
+      "execution": "NOT_RUN"
+    },
+    {
+      "id": "CI-UI-REPORTS",
+      "status": "BLOCKED",
+      "reason": "playwright spec missing: e2e/sucafina/reports.spec.ts",
+      "execution": "NOT_RUN"
+    }
+  ],
+  "examined_head": "9048e0e65351a5bd80768458a79fed94a4993db7",
+  "scope_note": "Sources retrieved at immutable SHA; static preparation only; no product execution."
+}

@@ -19,7 +19,7 @@ export function createPrivateDocumentParser(limits: { maxBytes: number; maxTextL
     const started = performance.now()
     active += 1
     const worker = (() => {
-      try { return new Worker(new URL("./parser-worker.ts", import.meta.url), { resourceLimits: { maxOldGenerationSizeMb: 128, maxYoungGenerationSizeMb: 16 } }) }
+      try { return new Worker(new URL("./parser-worker.ts", import.meta.url), { workerData: { kind }, resourceLimits: { maxOldGenerationSizeMb: 128, maxYoungGenerationSizeMb: 16 } }) }
       catch { return undefined }
     })()
     if (!worker) { active -= 1; return { status: "unavailable", reason: "document-parser-unavailable" } }

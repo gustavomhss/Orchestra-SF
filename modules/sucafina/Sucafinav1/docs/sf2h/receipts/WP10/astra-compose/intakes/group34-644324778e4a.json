@@ -1,0 +1,574 @@
+{
+  "repository": "gustavomhss/Orchestra-SF",
+  "observed_at_utc": "2026-11-14T10:14:53.623573+00:00",
+  "comparison": {
+    "pr": 32,
+    "head": "7c7e5b086a9de405cd3f8e18e8d631af55cf0979",
+    "tree": "3deb1ed790fc247a6633c9cc25a11523ae3f61b1",
+    "sucafina_tree": "8b6b6fd41687be9d3b57925ecce4ae954c378371",
+    "tree_entries": 1291,
+    "truncated": false,
+    "method": "Published immutable source-tree + exact owner delta, verified content blob SHA1 and SHA256; every materialized target equals published W6. Missing local E2E file verified by MCP at W6, never treated as absent from product."
+  },
+  "local_validation": {
+    "product_executed": false,
+    "typecheck_executed": false,
+    "tests_executed": false,
+    "guards_executed": false,
+    "remote_test_dispatch": false,
+    "remote_owner_branch_mutations": false,
+    "worktree_mutated": false,
+    "relative_import_count": 68,
+    "unresolved_relative_imports": []
+  },
+  "review_classification": "Astra integration intake, not independent final review. Eligibility to compose is not READY or global acceptance.",
+  "global_gates": "Eight final selections, AM01–AM06, three independent reviews, C/G7 and D/G8 remain required; no native evidence fabricated or GLOBAL_RELEASE declared.",
+  "schema": "sf2-astra-group34-w7-intake-v1",
+  "source": {
+    "pr": 34,
+    "head": "644324778e4a21d22424515dd698d5b8d6c01893",
+    "tree": "6ec8797d360ecec89f1734031b0d1e3e98dd3605",
+    "sucafina_tree": "1d3345c833ffe426e06ecded5a6a862a53cb391c",
+    "truncated": false,
+    "source_base": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+    "delta_commits": 1,
+    "latest_observed_head": "b98264317b39bec01c57e31a5c197802a954429f",
+    "latest_observed_tree": "3b485e9da605ff628336ddb678301aaf409669ba",
+    "latest_delta_qualification": "644→b982 is5 owner receipt documents only. Product and test blobs unchanged; source intake remains pinned644; newly published CAS finding preserved separately."
+  },
+  "summary": {
+    "eligible_paths": 3,
+    "source_paths": 0,
+    "test_fixture_paths": 3,
+    "direct_delta_paths": 2,
+    "older_published_owner_dependency_paths": 1,
+    "foreign_deletions_selected": 0,
+    "textual_conflicts": 0,
+    "restored_missing_owner_fixture_wiring": 2
+  },
+  "accepted": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/documents/dossier-runtime.test.ts",
+      "blob": "312eedee019b1118707a9024749bbdbc862b5976",
+      "pin": "644324778e4a21d22424515dd698d5b8d6c01893",
+      "head": "644324778e4a21d22424515dd698d5b8d6c01893",
+      "source_head": "644324778e4a21d22424515dd698d5b8d6c01893",
+      "tree": "6ec8797d360ecec89f1734031b0d1e3e98dd3605",
+      "pr": 34,
+      "owner": "WP06",
+      "base_head": "7c7e5b086a9de405cd3f8e18e8d631af55cf0979",
+      "base_tree": "3deb1ed790fc247a6633c9cc25a11523ae3f61b1",
+      "target_blob_at_wp10": "fb8a556a350ffa00953f037c51a1ce9d245b92f7",
+      "worktree_blob": "fb8a556a350ffa00953f037c51a1ce9d245b92f7",
+      "worktree_materialized": true,
+      "base_verified_from": "W6 immutable recursive SF tree",
+      "source_base_head": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+      "source_base_blob": "1f98172064c80a9e4b3ee053b95f008b979e5d01",
+      "source_base_relation": "RESTORES_OMITTED_PUBLISHED_OWNER_DEPENDENCY",
+      "content_sha256": "d0dd8f0e1b494f16c995230b1204e76ef06b8675a6e8ca61047fdc9fa6f10352",
+      "content_blob_verified": true,
+      "source_tree_match": true,
+      "staged_source": "/workspace/scratch/4c48b09c5c29/incoming-cache/group34-w7-src/modules/sucafina/Sucafinav1/test/product/wp06/documents/dossier-runtime.test.ts",
+      "operation": "copy_exact_blob_only",
+      "disposition": "ELIGIBLE_FOR_SCOPED_COMPOSITION",
+      "atomic_group": "dossier-current-sourcing",
+      "why": "Preserves three real document format cases and adds source-change/logout egress counterexamples; binds the same procurementEvidenceWrites WeakSet to authority and business.",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/644324778e4a21d22424515dd698d5b8d6c01893/modules/sucafina/Sucafinav1/test/product/wp06/documents/dossier-runtime.test.ts",
+      "target_proof_status": "NOT_REVALIDATED",
+      "upstream_pass_transferred": false
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp06/documents.spec.ts",
+      "blob": "6d7322f9cac51c897c45211a4d69329df95d402c",
+      "pin": "644324778e4a21d22424515dd698d5b8d6c01893",
+      "head": "644324778e4a21d22424515dd698d5b8d6c01893",
+      "source_head": "644324778e4a21d22424515dd698d5b8d6c01893",
+      "tree": "6ec8797d360ecec89f1734031b0d1e3e98dd3605",
+      "pr": 34,
+      "owner": "WP06",
+      "base_head": "7c7e5b086a9de405cd3f8e18e8d631af55cf0979",
+      "base_tree": "3deb1ed790fc247a6633c9cc25a11523ae3f61b1",
+      "target_blob_at_wp10": "4fbd2fc2dfab7308bba8df4dcef89cc95c23f762",
+      "worktree_blob": null,
+      "worktree_materialized": false,
+      "base_verified_from": "MCP file API at immutable W6",
+      "source_base_head": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+      "source_base_blob": "4fbd2fc2dfab7308bba8df4dcef89cc95c23f762",
+      "source_base_relation": "TARGET_EQUALS_SOURCE_BASE",
+      "content_sha256": "6cd45b5e982228811e1c58acaa7153e0161134c2404dc3dc6ad51a5b54069d60",
+      "content_blob_verified": true,
+      "source_tree_match": false,
+      "staged_source": "/workspace/scratch/4c48b09c5c29/incoming-cache/group34-w7-src/packages/app-shell/e2e/sucafina/wp06/documents.spec.ts",
+      "operation": "copy_exact_blob_only",
+      "disposition": "ELIGIBLE_FOR_SCOPED_COMPOSITION",
+      "atomic_group": "dossier-renderer",
+      "why": "Adds terms/FX and private-field cleanup coverage using the real renderer/CSP and explicitly synthetic HTTP responses.",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/644324778e4a21d22424515dd698d5b8d6c01893/packages/app-shell/e2e/sucafina/wp06/documents.spec.ts",
+      "target_proof_status": "NOT_REVALIDATED",
+      "upstream_pass_transferred": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/runtime-fixture.ts",
+      "blob": "5f45ba3357aa724af2746687761fc32fd4ca48ef",
+      "pin": "644324778e4a21d22424515dd698d5b8d6c01893",
+      "head": "644324778e4a21d22424515dd698d5b8d6c01893",
+      "source_head": "644324778e4a21d22424515dd698d5b8d6c01893",
+      "tree": "6ec8797d360ecec89f1734031b0d1e3e98dd3605",
+      "pr": 34,
+      "owner": "WP06",
+      "base_head": "7c7e5b086a9de405cd3f8e18e8d631af55cf0979",
+      "base_tree": "3deb1ed790fc247a6633c9cc25a11523ae3f61b1",
+      "target_blob_at_wp10": "42512241dac897799b795d609518b49b9387e4e9",
+      "worktree_blob": "42512241dac897799b795d609518b49b9387e4e9",
+      "worktree_materialized": true,
+      "base_verified_from": "W6 immutable recursive SF tree",
+      "source_base_head": "d7d343ecb2ef4b4ccff925f50a5a60324d22b371",
+      "source_base_blob": "5f45ba3357aa724af2746687761fc32fd4ca48ef",
+      "source_base_relation": "RESTORES_OMITTED_PUBLISHED_OWNER_DEPENDENCY",
+      "content_sha256": "647e763e96b31074d6be0ddd970dbf3d0e4ff7d77235c303ffe09716e1ee0ece",
+      "content_blob_verified": true,
+      "source_tree_match": true,
+      "staged_source": "/workspace/scratch/4c48b09c5c29/incoming-cache/group34-w7-src/modules/sucafina/Sucafinav1/test/product/wp06/runtime-fixture.ts",
+      "operation": "copy_exact_blob_only",
+      "disposition": "ELIGIBLE_FOR_SCOPED_COMPOSITION",
+      "atomic_group": "dossier-current-sourcing",
+      "why": "Required narrow owner dependency already published at d7/644: adds optional procurementEvidenceWrites and forwards it to product authority.",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/644324778e4a21d22424515dd698d5b8d6c01893/modules/sucafina/Sucafinav1/test/product/wp06/runtime-fixture.ts",
+      "target_proof_status": "NOT_REVALIDATED",
+      "upstream_pass_transferred": false,
+      "outside_direct_delta_reason": "Own dependency present in d7 and644 but omitted from earlier 4-path intake; source diff against W6 is exactly option + authority forwarding. No foreign source imported."
+    }
+  ],
+  "excluded": [
+    {
+      "path": ".github/workflows/astra-operations-check.yml",
+      "source_status": "modified",
+      "source_blob": null,
+      "target_blob": null,
+      "reason": "Foreign ownership/workflow snapshot excluded; preserve W6/current target."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/dossier-services.ts",
+      "source_status": "modified",
+      "source_blob": null,
+      "target_blob": null,
+      "reason": "Foreign ownership/workflow snapshot excluded; preserve W6/current target."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/dossier-workbench.ts",
+      "source_status": "modified",
+      "source_blob": null,
+      "target_blob": null,
+      "reason": "Foreign ownership/workflow snapshot excluded; preserve W6/current target."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/c12-case-port-independent-review.md",
+      "source_status": "added",
+      "source_blob": "389461807afdff8f8bb528c458f645c312561d4a",
+      "target_blob": null,
+      "reason": "Owner receipts retained as evidence only, not imported into product."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/c12-fixture-negative-followup.json",
+      "source_status": "added",
+      "source_blob": "16b3c36c53124baf09816acd551f9f4ba9269ed8",
+      "target_blob": null,
+      "reason": "Owner receipts retained as evidence only, not imported into product."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP04/operations-20261114/scoped-check-modes-review.md",
+      "source_status": "added",
+      "source_blob": "fc0e5a979f031403966cb6b357aa79f8f61b344c",
+      "target_blob": null,
+      "reason": "Owner receipts retained as evidence only, not imported into product."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/owner-dossier-impact.json",
+      "source_status": "added",
+      "source_blob": "59f405bd6c872c5ab54501ac8709a3cfe41a747e",
+      "target_blob": null,
+      "reason": "Owner receipts retained as evidence only, not imported into product."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/owner-dossier-impact.md",
+      "source_status": "added",
+      "source_blob": "ad89d1c90ec7c94f54fe2a7757d49231a3a8fbfa",
+      "target_blob": null,
+      "reason": "Owner receipts retained as evidence only, not imported into product."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/owner-dossier-independent-source-review.json",
+      "source_status": "added",
+      "source_blob": "3566afa98b88058d9e197a2bd6b25226f5fd1622",
+      "target_blob": null,
+      "reason": "Owner receipts retained as evidence only, not imported into product."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/owner-dossier-intake.json",
+      "source_status": "added",
+      "source_blob": "28e44579492c024c9f7440e12e3057a576c86481",
+      "target_blob": null,
+      "reason": "Owner receipts retained as evidence only, not imported into product."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP06/operations-20261114/owner-dossier-test-manifest.json",
+      "source_status": "added",
+      "source_blob": "a26c75cad7fa83f9975cae4761916dc06d7aee38",
+      "target_blob": null,
+      "reason": "Owner receipts retained as evidence only, not imported into product."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/case-port.test.ts",
+      "source_status": "modified",
+      "source_blob": "a8348b91ed8eb4483352e449b8bb37aef409b803",
+      "target_blob": "4e01acf909609e40bf9fc5e64c633ea8189c6e8b",
+      "reason": "Foreign ownership/workflow snapshot excluded; preserve W6/current target."
+    }
+  ],
+  "source_evidence": [
+    {
+      "run_id": 43582205250,
+      "job_id": 132409129729,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43582205250",
+      "product": "644324778e4a21d22424515dd698d5b8d6c01893",
+      "conclusion": "failure",
+      "observations": {
+        "pass": 114,
+        "fail": 3,
+        "files": 24,
+        "observations": 117,
+        "omni": "NOT_APPLICABLE; no declared spawn executed",
+        "dossier_runtime": {
+          "pass": 5,
+          "fail": 0,
+          "cases": [
+            "txt",
+            "docx",
+            "pdf",
+            "source-change on second sourcing read",
+            "logout on second sourcing read"
+          ]
+        },
+        "blocking_failures": [
+          "H02 first C12 apply HTTP503 vs200",
+          "H03 historical evidence path HTTP503 vs200",
+          "H05 concurrent case edit HTTP503 vs409"
+        ],
+        "qualification": "The three C12 failures remain in the failed aggregate. CAS mechanism is source-derived; the log does not capture the response reason body."
+      },
+      "log": "/workspace/scratch/4c48b09c5c29/incoming-cache/w7-job-132409129729.log",
+      "log_sha256": "3cd8aac7c2bd85f4d0ab9e018b79ae5f8788f3b999b92b92130f1071d318124e",
+      "upstream_pass_transferred": false,
+      "scope": "Source observations only; not composed target proof and not native/human/global approval.",
+      "snapshot": "6108eafea9a35ba15968271f0aed76b1498d5ac4",
+      "snapshot_tree": "4936290eef233ef027c5d6a2e85098bd700aaf78",
+      "parent_verified": true,
+      "snapshot_delta": [
+        ".ci-run.json"
+      ],
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/parity-planner.test.ts",
+          "Sucafinav1/test/planner-runtime.test.ts",
+          "Sucafinav1/test/product/wp02/confirmation.test.ts",
+          "Sucafinav1/test/product/wp06/documents/egress-fences.test.ts",
+          "Sucafinav1/test/product/wp06/documents/extraction-reuse.test.ts",
+          "Sucafinav1/test/product/wp06/documents/request-selection.test.ts",
+          "Sucafinav1/test/product/wp06/imports/admission-boundaries.test.ts",
+          "Sucafinav1/test/product/wp06/imports/atomic-rejection.test.ts",
+          "Sucafinav1/test/product/wp06/imports/dashboard.test.ts",
+          "Sucafinav1/test/product/wp06/imports/financial-impact.test.ts",
+          "Sucafinav1/test/product/wp06/imports/html-policy.test.ts",
+          "Sucafinav1/test/product/wp06/imports/planner-options-runtime.test.ts",
+          "Sucafinav1/test/product/wp06/imports/planner-roundtrip-runtime.test.ts",
+          "Sucafinav1/test/product/wp06/imports/planner.test.ts",
+          "Sucafinav1/test/product/wp06/imports/preview-privacy.test.ts",
+          "Sucafinav1/test/product/wp06/imports/roster-runtime.test.ts",
+          "Sucafinav1/test/product/wp06/imports/roster-save-race.test.ts",
+          "Sucafinav1/test/product/wp08/hot-topic-host.test.ts",
+          "Sucafinav1/test/product/wp04/host-integration.test.ts",
+          "Sucafinav1/test/product/wp04/prepared-production.test.ts",
+          "Sucafinav1/test/product/wp11/prepared-apply.test.ts",
+          "Sucafinav1/test/product/wp11/planner-apply.test.ts",
+          "Sucafinav1/test/product/wp11/case-port.test.ts",
+          "Sucafinav1/test/product/wp06/documents/dossier-runtime.test.ts"
+        ],
+        "env": {}
+      },
+      "request_blob": "9f05f47165054bc410b125789f0fd0f4f1449ab8",
+      "request_sha256": "6a4634ea330cfef363042c93fe674ba276d5d83dd4034b3e085be0c45f4100eb"
+    },
+    {
+      "run_id": 43582192808,
+      "job_id": 132409093299,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43582192808",
+      "product": "644324778e4a21d22424515dd698d5b8d6c01893",
+      "conclusion": "failure",
+      "observations": {
+        "Sucafina_typecheck": "FAIL: source-access-atlas.test.ts:167 missing procurementEvidenceWrites",
+        "CLI_typecheck": "PASS",
+        "guards": {
+          "rules": 78,
+          "changed_paths": 740,
+          "gate": 0,
+          "warn": 11,
+          "errors": 0
+        },
+        "composition_limitation": "Source contract/consumer closure differs from W6; none of its green substeps clears W6 unresolved diagnostics."
+      },
+      "log": "/workspace/scratch/4c48b09c5c29/incoming-cache/w7-job-132409093299.log",
+      "log_sha256": "05334af359ce56fdc10e7d0fd11ef480afdc27de42af3d4b0e27261e801337fd",
+      "upstream_pass_transferred": false,
+      "scope": "Source observations only; not composed target proof and not native/human/global approval.",
+      "snapshot": "e4b18ec95f837985d1f138272d54f2b2732ce66e",
+      "snapshot_tree": "ed9e2dfa08545aa0091607b8c90679f4b45e695f",
+      "parent_verified": true,
+      "snapshot_delta": [
+        ".astra-operations-check.json"
+      ],
+      "request": {
+        "productSha": "644324778e4a21d22424515dd698d5b8d6c01893",
+        "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+      },
+      "request_blob": "20b88c60c527e5cec6affb5c86f796582f23219b",
+      "request_sha256": "b8ce2f8050be9cc96fd50199e1ababd27540e0e9d034fec6c0626570253e9578"
+    }
+  ],
+  "open_findings": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/sourcing-analysis.ts",
+      "line": 4,
+      "column": 10,
+      "code": "TS2305",
+      "message": "Module '\"../ui/forecast-analysis.ts\"' has no exported member 'analysisHistory'.",
+      "state": "UNCHANGED_PUBLISHED_SOURCE_BLOCKER",
+      "source_head": "644324778e4a21d22424515dd698d5b8d6c01893",
+      "source_blob": "987f7179101ffe3db0276d9c6172b3bcf6024329",
+      "target_blob": "987f7179101ffe3db0276d9c6172b3bcf6024329",
+      "owner_action": "Publish the bounded current-consumer correction; no source blob in this delta fixes this diagnostic."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts",
+      "line": 388,
+      "column": 65,
+      "code": "TS2322",
+      "message": "Type '(ref: string, binding: TrustedDomainContext) => Promise<PortResult<{ evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; ... 6 more ...; projectionDigest: string; }; }; context: ProductContext; }>>' is not assignable to type 'Pick<{ issue: (kind: \"procurement-request\" | \"procurement-supplier\", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }, \"resolve\">'.",
+      "state": "UNCHANGED_PUBLISHED_SOURCE_BLOCKER",
+      "source_head": "644324778e4a21d22424515dd698d5b8d6c01893",
+      "source_blob": "c9fa74a4e59e9204e6873619b9c580257d7d793d",
+      "target_blob": "c9fa74a4e59e9204e6873619b9c580257d7d793d",
+      "owner_action": "Publish the bounded current-consumer correction; no source blob in this delta fixes this diagnostic."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts",
+      "line": 394,
+      "column": 40,
+      "code": "TS2741",
+      "message": "Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (call: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, call: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options?: Ran...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "state": "UNCHANGED_PUBLISHED_SOURCE_BLOCKER",
+      "source_head": "644324778e4a21d22424515dd698d5b8d6c01893",
+      "source_blob": "c9fa74a4e59e9204e6873619b9c580257d7d793d",
+      "target_blob": "c9fa74a4e59e9204e6873619b9c580257d7d793d",
+      "owner_action": "Publish the bounded current-consumer correction; no source blob in this delta fixes this diagnostic."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/native/import-analysis.test.ts",
+      "line": 130,
+      "column": 47,
+      "code": "TS2339",
+      "message": "Property 'importPreview' does not exist on type '{ importPreview: { importPreviewRef: string; manifest: ImportManifest; detail: ImportDetail; }; } | { decisionRecall: SfMemoryPrompt; }'.",
+      "state": "UNCHANGED_PUBLISHED_SOURCE_BLOCKER",
+      "source_head": "644324778e4a21d22424515dd698d5b8d6c01893",
+      "source_blob": "4087659570356188c546b59ba112dfd33a2a189c",
+      "target_blob": "4087659570356188c546b59ba112dfd33a2a189c",
+      "owner_action": "Publish the bounded current-consumer correction; no source blob in this delta fixes this diagnostic."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/native/import-analysis.test.ts",
+      "line": 166,
+      "column": 47,
+      "code": "TS2339",
+      "message": "Property 'importPreview' does not exist on type '{ importPreview: { importPreviewRef: string; manifest: ImportManifest; detail: ImportDetail; }; } | { decisionRecall: SfMemoryPrompt; }'.",
+      "state": "UNCHANGED_PUBLISHED_SOURCE_BLOCKER",
+      "source_head": "644324778e4a21d22424515dd698d5b8d6c01893",
+      "source_blob": "4087659570356188c546b59ba112dfd33a2a189c",
+      "target_blob": "4087659570356188c546b59ba112dfd33a2a189c",
+      "owner_action": "Publish the bounded current-consumer correction; no source blob in this delta fixes this diagnostic."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/native/import-analysis.test.ts",
+      "line": 205,
+      "column": 45,
+      "code": "TS2339",
+      "message": "Property 'importPreview' does not exist on type '{ importPreview: { importPreviewRef: string; manifest: ImportManifest; detail: ImportDetail; }; } | { decisionRecall: SfMemoryPrompt; }'.",
+      "state": "UNCHANGED_PUBLISHED_SOURCE_BLOCKER",
+      "source_head": "644324778e4a21d22424515dd698d5b8d6c01893",
+      "source_blob": "4087659570356188c546b59ba112dfd33a2a189c",
+      "target_blob": "4087659570356188c546b59ba112dfd33a2a189c",
+      "owner_action": "Publish the bounded current-consumer correction; no source blob in this delta fixes this diagnostic."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/native/import-analysis.test.ts",
+      "line": 324,
+      "column": 37,
+      "code": "TS2554",
+      "message": "Expected 1 arguments, but got 2.",
+      "state": "UNCHANGED_PUBLISHED_SOURCE_BLOCKER",
+      "source_head": "644324778e4a21d22424515dd698d5b8d6c01893",
+      "source_blob": "4087659570356188c546b59ba112dfd33a2a189c",
+      "target_blob": "4087659570356188c546b59ba112dfd33a2a189c",
+      "owner_action": "Publish the bounded current-consumer correction; no source blob in this delta fixes this diagnostic."
+    }
+  ],
+  "required_composition_dependencies": [
+    {
+      "owner": "WP10",
+      "path": "apps/cli/src/sucafina-product/dossier-services.ts",
+      "blob": "0a89225f73bfe1c458ac5530918609a063ae385d",
+      "status": "Already byte-identical in W6/current worktree; source644 snapshot excluded."
+    },
+    {
+      "owner": "WP10",
+      "path": "apps/cli/src/sucafina-product/dossier-workbench.ts",
+      "blob": "aca602b5d5ea02c6cea88897c4c2110c6c9afe39",
+      "status": "Already byte-identical in W6/current worktree; source644 snapshot excluded."
+    },
+    {
+      "owner": "WP06",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/runtime-fixture.ts",
+      "blob": "5f45ba3357aa724af2746687761fc32fd4ca48ef",
+      "status": "Included own dependency; passes the same WeakSet to product authority. Source d7/644 same; W6 omitted these2 lines."
+    },
+    {
+      "owner": "WP11 producer / WP10 integration",
+      "id": "OPS-C12-CAS-REGRESSION",
+      "state": "HOLD_OWNER_PRODUCER_FIX",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+      "observed_target_blob": "fed7feb25d9af2fecebba8d2b1d2e2a6b1a3e0ac",
+      "source_finding_commit": "b98264317b39bec01c57e31a5c197802a954429f",
+      "finding": {
+        "schema": "astra-operations.published-delta-composition-restoration.v1",
+        "id": "OPS-C12-CAS-REGRESSION",
+        "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+        "owner": "astra-finance producer; astra-compose integration",
+        "state": "PROPOSED_NOT_APPLIED_BY_REVIEWER",
+        "classification": "Published WP04 reconciliation delta lost while consuming exact Finance review-binding producer. Restore the union of already published implementations, not a new shared feature.",
+        "observed_failure": {
+          "run_id": 43582205250,
+          "job_id": 132409129729,
+          "product": "644324778e4a21d22424515dd698d5b8d6c01893",
+          "cases": [
+            {
+              "scenario": "H02",
+              "expected_http": 200,
+              "actual_http": 503
+            },
+            {
+              "scenario": "H03",
+              "expected_http": 200,
+              "actual_http": 503
+            },
+            {
+              "scenario": "H05",
+              "expected_http": 409,
+              "actual_http": 503
+            }
+          ],
+          "counterexample": "H06 first apply intentionally loses response; same-proof retry succeeds with current state, consistent with stale post-commit CAS on first application.",
+          "qualification": "The log prints HTTP status and transaction metrics, not the failure response body. The reconciliation reason and mechanism are derived from the exact source path, not claimed as a captured response."
+        },
+        "published_sources": {
+          "wp04_pr23": {
+            "commit": "91e1f60bc6f7e85517e2b4f963eec5ac7da13e62",
+            "blob": "927ae5bd892412d7025bde5e9acf274087d71fd9",
+            "sha256": "6c14a47a78861655a1048087b1e0c19a34a36aaff84ae566f7c7f7e3140f5925",
+            "bytes": 11795
+          },
+          "operations_w1": {
+            "commit": "de6959db82dbe48bd59e3d012ff668a86347a6cd",
+            "blob": "927ae5bd892412d7025bde5e9acf274087d71fd9",
+            "sha256": "6c14a47a78861655a1048087b1e0c19a34a36aaff84ae566f7c7f7e3140f5925",
+            "bytes": 11795
+          },
+          "finance_pr35": {
+            "commit": "981ad44102b2e2e67d31bfc8fb7d97208e390e5b",
+            "blob": "fed7feb25d9af2fecebba8d2b1d2e2a6b1a3e0ac",
+            "sha256": "5c25c65a9c521c7c7ca8dbb9a6070e9e343833d6e40755183a128d8d1fdbb52b",
+            "bytes": 12410
+          },
+          "operations_w4": {
+            "commit": "644324778e4a21d22424515dd698d5b8d6c01893",
+            "blob": "fed7feb25d9af2fecebba8d2b1d2e2a6b1a3e0ac",
+            "sha256": "5c25c65a9c521c7c7ca8dbb9a6070e9e343833d6e40755183a128d8d1fdbb52b",
+            "bytes": 12410
+          }
+        },
+        "source_verification": "All three immutable owner/W1 producer blobs independently fetched through GitHub MCP; exact hashes agree with local materialized bytes.",
+        "proposed": {
+          "blob": "4bdd12ac162d61465557363953e25dfd99fad5e8",
+          "sha256": "aa777b4062e785eb69db1724e2be633e4547303310ec02d9b15329affc8f7db8",
+          "bytes": 14023
+        },
+        "restored_hunk": {
+          "verbatim_from_prior": true,
+          "prior_lines": [
+            62,
+            73
+          ],
+          "current_replaced_lines": [
+            79,
+            81
+          ],
+          "restored_sha256": "a3fc2ffc06892fb32c8be698b8b1d2e0ddba06e79992cc51b55e2d39fb9fbd41",
+          "prefix_and_suffix_equal_finance": true
+        },
+        "causal_chain": [
+          "createSfPreparedApply commits receipt and domain with additionalNamespaces cases, checking its current storage CAS.",
+          "createSfProductState increments every namespace named in scope, including cases, even though the first domain receipt transaction does not mutate the selected case value.",
+          "Finance apply.ts then reconciles with current.storageVersion captured before that increment. The transaction returns product-state-changed, mapped by createPreparedExecution to case-reconciliation-pending (HTTP503).",
+          "The preserved WP04 block reloads cases after the domain receipt, requires the entire case value to be unchanged, rereads and matches the authoritative receipt, rechecks case/application/current host authority, and uses the new reconciliation.storageVersion.",
+          "An actual concurrent case edit is distinguished by full case equality and returns stale/case-changed-after-application (HTTP409); it is never silently overwritten.",
+          "The write callback also preserves full selected-case digest equality under its lock."
+        ],
+        "preserved_finance_safety": [
+          "Real reviewDigestFor callback and isReviewDigest validation",
+          "Producer reread before first application",
+          "Persisted receiptReviewBinding and receiptProofTransactionKey verification",
+          "Digest mismatch/conflict handling and bound receipt replay",
+          "No changed permission, grant, target incarnation, CAS guard or command semantics"
+        ],
+        "qualification": {
+          "no_local_product_execution": true,
+          "no_source_mutation_by_reviewer": true,
+          "requires_hosted_selection": [
+            "Sucafinav1/test/product/wp04/host-integration.test.ts",
+            "Sucafinav1/test/product/wp11/case-port.test.ts"
+          ],
+          "may_reuse_if_unchanged": "prepared-apply/planner-apply/prepared-production component passes remain at their executed pin if they do not call createPreparedExecution; parent should apply the actual closure selection.",
+          "does_not_promote": [
+            "native",
+            "human",
+            "global"
+          ]
+        }
+      },
+      "proposed_owner_patch": "/workspace/scratch/4c48b09c5c29/incoming-cache/group34-w7-cas-owner.patch",
+      "action": "Root informed immediately. Do not import/modify WP11 source here. Reconcile the already-published owner restoration while preserving Finance review-binding and atomic authority, then validate affected callers."
+    },
+    {
+      "owner": "WP01+WP04",
+      "id": "SOURCE_ANALYSIS_HISTORY_EXPORT",
+      "state": "OPEN",
+      "detail": "Both source files unchanged at requested pins; owner must publish compatible export/call boundary."
+    }
+  ],
+  "required_next_actions": [
+    "Compose three exact owner test/fixture blobs atomically; current root CLI files remain unchanged.",
+    "Keep seven unchanged W6 diagnostics open until real owner commits arrive.",
+    "Route CAS producer restoration to Finance/own integration, not via foreign snapshot.",
+    "Run affected dossier/renderer selectors only when composed dependency closure changes; preserve five source passes under failed aggregate without promoting the aggregate or target."
+  ]
+}

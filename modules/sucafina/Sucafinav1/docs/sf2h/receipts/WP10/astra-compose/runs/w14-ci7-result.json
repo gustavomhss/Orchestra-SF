@@ -1,0 +1,466 @@
+{
+  "schema": "sf2-compose-surgical-ci-receipt-v1",
+  "status": "COMPLETED_FAILURE",
+  "run": 43598770529,
+  "W": "9a475b5fb28655f1c4309cd3e68b6e4d76269a2e",
+  "W_tree": "2bedbc721d0b402b41c942b770c49bf36e6a9e0b",
+  "S": "be9c1606e8a4bc0a3fe52814cd2089aabc284bc7",
+  "S_tree": "5c5d0b28accf18c295703c9c6e80edced15cecd2",
+  "request_blob": "cb36d1de57c5d7e930c2931ea38a2da7814a5e51",
+  "request_sha256": "4868ee2d67ae22cd5b42fb83e75704039786345d198ec142845bcd7523aaf3d1",
+  "branch": "ci-run-linux-astra-compose-9a475b5f-4868ee2d-a1",
+  "first_and_only_parent": "9a475b5fb28655f1c4309cd3e68b6e4d76269a2e",
+  "snapshot_diff": [
+    {
+      "status": "added",
+      "path": ".ci-run.json",
+      "blob": "cb36d1de57c5d7e930c2931ea38a2da7814a5e51"
+    }
+  ],
+  "selection": {
+    "files": 12,
+    "expected_cases": 42,
+    "observed_cases": 43,
+    "unfiltered_stale_scenarios": 3,
+    "difference": "One unnamed Omni positive-control failure is reported in addition to the42 expected named tests."
+  },
+  "canonical_validator": "validateRequest + locateTestPackage, metadata-only local validation",
+  "preflight": {
+    "current_time": "2026-11-14 13:14:22 UTC"
+  },
+  "single_flight_previous": {
+    "run": 43595658990,
+    "status": "completed",
+    "conclusion": "failure",
+    "W": "d357de0b1f58abc33e86e79ad3f93b8715ba0e83",
+    "S": "12988ada266de298d0ec0ba9d8968845ae4c7782",
+    "no_result_transfer": true
+  },
+  "local_product_execution": false,
+  "global_release": false,
+  "job": 132458824188,
+  "cleanup": {
+    "job": 132461923260,
+    "status": "COMPLETED",
+    "conclusion": "SUCCESS"
+  },
+  "result": {
+    "pass": 36,
+    "fail": 7,
+    "tests": 43,
+    "files": 12,
+    "assertions": 612,
+    "seconds": 639.61,
+    "unhandled_errors": 0
+  },
+  "omni": {
+    "status": "FAIL",
+    "nonce": "ea37cacc9129fda3018dd7ecfd2fae30",
+    "declaring_tests": 10,
+    "spawns": null,
+    "delegated": null,
+    "reason": "WP01 startup declared an Omni spawn but its selection validator rejected --test-name-pattern before launch. The failure line does not report spawn/delegated totals; none are inferred."
+  },
+  "artifacts": [],
+  "log": {
+    "path": "evidence/ci7.log",
+    "bytes": 358629,
+    "sha256": "25dc690dccf2ba6f0eeaa0b2c36ada8293befcb73a606ac89fda34c61387c9f8"
+  },
+  "parser": {
+    "path": "/workspace/scratch/4c48b09c5c29/evidence/parse_ci_log_metadata.py",
+    "sha256": "bbd094b9bdce8ac3e82193eddf9a825c1a891159f03a0b53c15dadf98affb194"
+  },
+  "cases": [
+    {
+      "status": "fail",
+      "name": "WP01 starts one Node-owned Chromium through Omni before leasing it across files",
+      "milliseconds": 1.83,
+      "duration_text": "1.83ms",
+      "file": "Sucafinav1/test/product/wp01/browser-startup.test.ts",
+      "line": 834,
+      "timestamp": "2026-11-14T13:16:10.0883611Z"
+    },
+    {
+      "status": "pass",
+      "name": "BI keeps the canonical shell, refreshes on manual focus and timer, and signs out once while discarding a held genuine success",
+      "milliseconds": 11515.57,
+      "duration_text": "11515.57ms",
+      "file": "Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts",
+      "line": 852,
+      "timestamp": "2026-11-14T13:16:21.7257785Z"
+    },
+    {
+      "status": "fail",
+      "name": "the canonical shell still polls authority while BI awaits a held result and revocation prevents every late render",
+      "milliseconds": 12759.57,
+      "duration_text": "12759.57ms",
+      "file": "Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts",
+      "line": 873,
+      "timestamp": "2026-11-14T13:16:34.4859111Z"
+    },
+    {
+      "status": "pass",
+      "name": "clearing the BI selection while genuine authorized options are delayed prevents restoration of the previous selection",
+      "milliseconds": 1227.46,
+      "duration_text": "1227.46ms",
+      "file": "Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts",
+      "line": 881,
+      "timestamp": "2026-11-14T13:16:35.7128557Z"
+    },
+    {
+      "status": "fail",
+      "name": "BI returns from a real source with the same human filters, version pair, currency and mark focus after current reauthorization",
+      "milliseconds": 24983.49,
+      "duration_text": "24983.49ms",
+      "file": "Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts",
+      "line": 918,
+      "timestamp": "2026-11-14T13:17:00.6968774Z"
+    },
+    {
+      "status": "pass",
+      "name": "BI origin digests select only an explicit source of the real current Planner difference and never choose A or B implicitly",
+      "milliseconds": 508.49,
+      "duration_text": "508.49ms",
+      "file": "Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts",
+      "line": 935,
+      "timestamp": "2026-11-14T13:17:01.2048959Z"
+    },
+    {
+      "status": "pass",
+      "name": "BI transports only explicit persisted inverse selectors and preserves existing selector filters",
+      "milliseconds": 0.35,
+      "duration_text": "0.35ms",
+      "file": "Sucafinav1/test/product/wp10/integration/bi-advantage-selection.test.ts",
+      "line": 938,
+      "timestamp": "2026-11-14T13:17:01.2092015Z"
+    },
+    {
+      "status": "pass",
+      "name": "BI offers every authorized inverse separately and binds the current exact case pair without changing canonical values",
+      "milliseconds": 5276.68,
+      "duration_text": "5276.68ms",
+      "file": "Sucafinav1/test/product/wp10/integration/bi-advantage-selection.test.ts",
+      "line": 939,
+      "timestamp": "2026-11-14T13:17:06.4859909Z"
+    },
+    {
+      "status": "pass",
+      "name": "BI refuses lease loss after its first and last real authorization awaits and a changed final Request",
+      "milliseconds": 5634.04,
+      "duration_text": "5634.04ms",
+      "file": "Sucafinav1/test/product/wp10/integration/bi-advantage-selection.test.ts",
+      "line": 940,
+      "timestamp": "2026-11-14T13:17:12.1200856Z"
+    },
+    {
+      "status": "pass",
+      "name": "Review browser clears selected content after case revocation while the session remains authenticated",
+      "milliseconds": 71485.65,
+      "duration_text": "71485.65ms",
+      "file": "Sucafinav1/test/product/wp10/integration/review-portfolio-http.test.ts",
+      "line": 1007,
+      "timestamp": "2026-11-14T13:18:23.6316534Z"
+    },
+    {
+      "status": "pass",
+      "name": "Analysis reentry reaches current lifecycle metadata after case advancement without upgrading its original fresh selector",
+      "milliseconds": 206.13,
+      "duration_text": "206.13ms",
+      "file": "Sucafinav1/test/product/wp10/integration/analysis-run-context.test.ts",
+      "line": 1012,
+      "timestamp": "2026-11-14T13:18:23.8516215Z"
+    },
+    {
+      "status": "fail",
+      "name": "Late captured calculation settles its original output after case advance without changing the active selector, and survives restart",
+      "milliseconds": 105014.96,
+      "duration_text": "105014.96ms",
+      "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+      "line": 1222,
+      "timestamp": "2026-11-14T13:20:08.8832763Z"
+    },
+    {
+      "status": "pass",
+      "name": "Late calculation settlement rejects another case, a later producer, missing ledger/capture and changed sources without writing output",
+      "milliseconds": 74903.27,
+      "duration_text": "74903.27ms",
+      "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+      "line": 1429,
+      "timestamp": "2026-11-14T13:21:23.7857381Z"
+    },
+    {
+      "status": "fail",
+      "name": "Private historical read refuses a substituted Request, first or last authorization loss, and closes every admitted lease",
+      "milliseconds": 105011.23,
+      "duration_text": "105011.23ms",
+      "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+      "line": 1640,
+      "timestamp": "2026-11-14T13:23:08.7974871Z"
+    },
+    {
+      "status": "pass",
+      "name": "Planner reopened recall rejects source drift after a completed calculation proof",
+      "milliseconds": 33186.05,
+      "duration_text": "33186.05ms",
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "line": 1660,
+      "timestamp": "2026-11-14T13:23:41.9870124Z"
+    },
+    {
+      "status": "pass",
+      "name": "Planner reopened recall rejects membership drift after a completed calculation proof",
+      "milliseconds": 29333.15,
+      "duration_text": "29333.15ms",
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "line": 1678,
+      "timestamp": "2026-11-14T13:24:11.3205642Z"
+    },
+    {
+      "status": "pass",
+      "name": "Planner reopened recall rejects capture drift after a completed calculation proof",
+      "milliseconds": 29722.91,
+      "duration_text": "29722.91ms",
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "line": 1696,
+      "timestamp": "2026-11-14T13:24:41.0430677Z"
+    },
+    {
+      "status": "pass",
+      "name": "Planner reopened recall rejects coverage drift after a completed calculation proof",
+      "milliseconds": 29432.34,
+      "duration_text": "29432.34ms",
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "line": 1714,
+      "timestamp": "2026-11-14T13:25:10.4754031Z"
+    },
+    {
+      "status": "pass",
+      "name": "Planner reopened recall rejects selector drift after a completed calculation proof",
+      "milliseconds": 29909.11,
+      "duration_text": "29909.11ms",
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "line": 1732,
+      "timestamp": "2026-11-14T13:25:40.3845298Z"
+    },
+    {
+      "status": "pass",
+      "name": "Planner recall proof stays lexical while an independent same-call calculation resolves in parallel",
+      "milliseconds": 65550.0,
+      "duration_text": "65550.00ms",
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "line": 1751,
+      "timestamp": "2026-11-14T13:26:45.9345952Z"
+    },
+    {
+      "status": "pass",
+      "name": "an accepted C17 reference reopens through the explicit ledger lane after the case advances, without becoming a current result",
+      "milliseconds": 2302.78,
+      "duration_text": "2302.78ms",
+      "file": "Sucafinav1/test/product/wp11/calculation-history.test.ts",
+      "line": 1754,
+      "timestamp": "2026-11-14T13:26:48.2533548Z"
+    },
+    {
+      "status": "pass",
+      "name": "hot-topic draft commits against its actual Dashboard snapshot and preserves official records",
+      "milliseconds": 206.74,
+      "duration_text": "206.74ms",
+      "file": "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+      "line": 1757,
+      "timestamp": "2026-11-14T13:26:48.4643067Z"
+    },
+    {
+      "status": "pass",
+      "name": "hot-topic draft refuses source change after source observation and before C08 commit",
+      "milliseconds": 79.92,
+      "duration_text": "79.92ms",
+      "file": "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+      "line": 1758,
+      "timestamp": "2026-11-14T13:26:48.5441992Z"
+    },
+    {
+      "status": "pass",
+      "name": "hot-topic draft refuses case change after source observation and before C08 commit",
+      "milliseconds": 310.8,
+      "duration_text": "310.80ms",
+      "file": "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+      "line": 1759,
+      "timestamp": "2026-11-14T13:26:48.8549850Z"
+    },
+    {
+      "status": "pass",
+      "name": "hot-topic draft refuses authority change after source observation and before C08 commit",
+      "milliseconds": 114.22,
+      "duration_text": "114.22ms",
+      "file": "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+      "line": 1760,
+      "timestamp": "2026-11-14T13:26:48.9692366Z"
+    },
+    {
+      "status": "pass",
+      "name": "hot-topic read refuses an old draft replaced during its last source callback",
+      "milliseconds": 127.32,
+      "duration_text": "127.32ms",
+      "file": "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+      "line": 1761,
+      "timestamp": "2026-11-14T13:26:49.0965653Z"
+    },
+    {
+      "status": "pass",
+      "name": "hot-topic list refuses a draft replaced during its last case authorization callback",
+      "milliseconds": 229.9,
+      "duration_text": "229.90ms",
+      "file": "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+      "line": 1762,
+      "timestamp": "2026-11-14T13:26:49.3265109Z"
+    },
+    {
+      "status": "pass",
+      "name": "continuation admits a fresh run with exact human-response lineage and a new session/receipt",
+      "milliseconds": 4.0,
+      "duration_text": "4.00ms",
+      "file": "Sucafinav1/test/product/wp12/continuation.test.ts",
+      "line": 1765,
+      "timestamp": "2026-11-14T13:26:49.3417010Z"
+    },
+    {
+      "status": "pass",
+      "name": "continuation refuses a response changed between initial resolution and pre-admission recheck",
+      "milliseconds": 0.38,
+      "duration_text": "0.38ms",
+      "file": "Sucafinav1/test/product/wp12/continuation.test.ts",
+      "line": 1766,
+      "timestamp": "2026-11-14T13:26:49.3419834Z"
+    },
+    {
+      "status": "pass",
+      "name": "continuation refuses an admitted run whose returned receipt differs from its persisted receipt",
+      "milliseconds": 0.56,
+      "duration_text": "0.56ms",
+      "file": "Sucafinav1/test/product/wp12/continuation.test.ts",
+      "line": 1767,
+      "timestamp": "2026-11-14T13:26:49.3425577Z"
+    },
+    {
+      "status": "pass",
+      "name": "continuation does not admit after current authority is revoked",
+      "milliseconds": 0.3,
+      "duration_text": "0.30ms",
+      "file": "Sucafinav1/test/product/wp12/continuation.test.ts",
+      "line": 1768,
+      "timestamp": "2026-11-14T13:26:49.3428473Z"
+    },
+    {
+      "status": "pass",
+      "name": "continuation withholds the new run if authority is revoked after admission",
+      "milliseconds": 0.81,
+      "duration_text": "0.81ms",
+      "file": "Sucafinav1/test/product/wp12/continuation.test.ts",
+      "line": 1769,
+      "timestamp": "2026-11-14T13:26:49.3437025Z"
+    },
+    {
+      "status": "pass",
+      "name": "continuation binds the original command before any authority callback or admission",
+      "milliseconds": 8.32,
+      "duration_text": "8.32ms",
+      "file": "Sucafinav1/test/product/wp12/continuation.test.ts",
+      "line": 1770,
+      "timestamp": "2026-11-14T13:26:49.3520742Z"
+    },
+    {
+      "status": "pass",
+      "name": "continuation isolates the admission command and refuses its alteration without mutating caller input",
+      "milliseconds": 1.57,
+      "duration_text": "1.57ms",
+      "file": "Sucafinav1/test/product/wp12/continuation.test.ts",
+      "line": 1771,
+      "timestamp": "2026-11-14T13:26:49.3536456Z"
+    },
+    {
+      "status": "pass",
+      "name": "continuation withholds admitted aliases changed during final authorization and returns an isolated result",
+      "milliseconds": 44.37,
+      "duration_text": "44.37ms",
+      "file": "Sucafinav1/test/product/wp12/continuation.test.ts",
+      "line": 1772,
+      "timestamp": "2026-11-14T13:26:49.3982194Z"
+    },
+    {
+      "status": "pass",
+      "name": "continuation rejects stale prior versions and non-UI contexts before resolving a response",
+      "milliseconds": 0.48,
+      "duration_text": "0.48ms",
+      "file": "Sucafinav1/test/product/wp12/continuation.test.ts",
+      "line": 1773,
+      "timestamp": "2026-11-14T13:26:49.3985045Z"
+    },
+    {
+      "status": "pass",
+      "name": "host builds persisted provenance from the observed assistant model and skill receipt",
+      "milliseconds": 3.41,
+      "duration_text": "3.41ms",
+      "file": "Sucafinav1/test/product/wp12/contribution-builder.test.ts",
+      "line": 1776,
+      "timestamp": "2026-11-14T13:26:49.4181229Z"
+    },
+    {
+      "status": "pass",
+      "name": "review provenance is assigned by the host for an independent run",
+      "milliseconds": 0.48,
+      "duration_text": "0.48ms",
+      "file": "Sucafinav1/test/product/wp12/contribution-builder.test.ts",
+      "line": 1777,
+      "timestamp": "2026-11-14T13:26:49.4184654Z"
+    },
+    {
+      "status": "pass",
+      "name": "durable output must belong to the active skill and observed model",
+      "milliseconds": 0.26,
+      "duration_text": "0.26ms",
+      "file": "Sucafinav1/test/product/wp12/contribution-builder.test.ts",
+      "line": 1778,
+      "timestamp": "2026-11-14T13:26:49.4187323Z"
+    },
+    {
+      "status": "pass",
+      "name": "standalone reviewer conditions require the same independent host-owned target as a critique",
+      "milliseconds": 0.53,
+      "duration_text": "0.53ms",
+      "file": "Sucafinav1/test/product/wp12/contribution-builder.test.ts",
+      "line": 1779,
+      "timestamp": "2026-11-14T13:26:49.4193041Z"
+    },
+    {
+      "status": "pass",
+      "name": "malformed review payloads fail while missing or reused review authority stays denied",
+      "milliseconds": 0.66,
+      "duration_text": "0.66ms",
+      "file": "Sucafinav1/test/product/wp12/contribution-builder.test.ts",
+      "line": 1780,
+      "timestamp": "2026-11-14T13:26:49.4199643Z"
+    },
+    {
+      "status": "fail",
+      "name": "WP01 shares one Chromium across files, releases every lease, and proves final process exit",
+      "milliseconds": 0.61,
+      "duration_text": "0.61ms",
+      "file": "Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "line": 1838,
+      "timestamp": "2026-11-14T13:26:49.4267706Z"
+    },
+    {
+      "status": "fail",
+      "name": "(unnamed)",
+      "milliseconds": 0.59,
+      "duration_text": "0.59ms",
+      "file": "Sucafinav1/test/product/wp01/browser-lifecycle.test.ts",
+      "line": 1848,
+      "timestamp": "2026-11-14T13:26:49.4277268Z"
+    }
+  ],
+  "source_artifact_limit": "No CI artifacts returned. Log and source/request pins are the available evidence.",
+  "acceptance": "SCOPED_W14_OBSERVATIONS_ONLY_OVERALL_FAILURE; no READY or global acceptance",
+  "preparation_record": "evidence/ci7-dispatch-receipt.json remains an unmodified historical pre-dispatch observation."
+}

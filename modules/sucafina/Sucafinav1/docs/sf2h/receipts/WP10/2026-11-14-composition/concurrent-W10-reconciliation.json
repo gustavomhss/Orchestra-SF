@@ -1,0 +1,38 @@
+{
+  "schema": "sf2.wp10.concurrent-publication-reconciliation.v1",
+  "status": "CLOSED",
+  "parent": "2fb2e13ca7839fe7122c43ba312c7a09e5e5d5e6",
+  "published": "078d84fafe2b220c831b243198a451bc417d40ee",
+  "publishedTree": "9262a4c29fcf5b84bb9f8466ba3fefd162f616dc",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/README.md",
+      "blobSha": "99305e6d1e0f8745816ddbbdece0cb76a435a064",
+      "sha256": "ce3651f341f5b368b7e0d3535279a085cb227d78bfbdb2a72f44a556ec6b999c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/2026-11-14-review/c08-migration-W10.json",
+      "blobSha": "eb97a98e67b0fc320ef8a74974e04b2723f53af3",
+      "sha256": "028bd7c1b3318966cd603002774f6f1fef3972664c7640b6adee709d7bfbe36f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "blobSha": "2fd55c7304add0829d7434917c80664fe86356b9",
+      "sha256": "de25a3d2c5fc8725debb538ec0efb45b3a3c986ff478156cce734038f87d7268"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "blobSha": "7f59151ab2ea14e7eea4a8f2d41ea1b84bc83aab",
+      "sha256": "1967ace13bd8ad4a81903bff5a7f3506d2f21a2a7bc9d754906d713cdb69cdbb"
+    }
+  ],
+  "decision": "Adopt exact published C08 fix/tests/README. It preserves all original guards, initializes all six maps, normalizes only the write baseline, rejects malformed maps and explicitly covers no migration on read/preview/denial/exact retry plus existing-map preservation.",
+  "supersededUnpublishedOwnWork": "The state-provider source and acceptance-test entries of builders/root-corrections-W5.json are earlier unpublished drafts, preserved in analysis/pre-concurrent-W10. Their read normalization test was not added because the published write-only migration is the narrower contract-preserving implementation. All supplied W10 test expectations are retained.",
+  "retainedOwnWork": [
+    "Planner evidence consolidation",
+    "Source-destination contract-correct negative",
+    "Exact UTF8/link assertion",
+    "Alternative cooperative deadline and complete cleanup"
+  ],
+  "qualification": "Byte reconciliation only. No local product execution, no reviewer acceptance and no native/global acceptance."
+}

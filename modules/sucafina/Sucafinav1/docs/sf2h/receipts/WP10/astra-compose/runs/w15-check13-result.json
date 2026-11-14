@@ -1,0 +1,89 @@
+{
+  "schema": "sf2-compose-check-receipt-v1",
+  "product": {
+    "head": "5cb947a4d6e11a37dbd702404c2d4f4d352a4b57",
+    "tree": "e39b8189cf70ecd3b00c02dcf59f9388d65b8b2d"
+  },
+  "check": {
+    "run": 43601889400,
+    "job": 132468206844,
+    "W": "5cb947a4d6e11a37dbd702404c2d4f4d352a4b57",
+    "S": "133a87a21568f0579692c7919d7c12dd7bf8931c",
+    "snapshot_tree": "0c4ff18ec2e05ce91040b397d24fcf34e58d19ce",
+    "envelope_blob": "c9734f6c0020ad4ed7743b800aafebbe91916f33",
+    "parents": [
+      "5cb947a4d6e11a37dbd702404c2d4f4d352a4b57",
+      "86d7fd4c195809305a7b4fa412adfb43e6c13b4e"
+    ],
+    "envelope": {
+      "productSha": "5cb947a4d6e11a37dbd702404c2d4f4d352a4b57",
+      "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+    },
+    "conclusion": "FAILURE",
+    "diagnostics": {
+      "sucafina": 14,
+      "own_wp00_wp10": 0,
+      "new_admitted_wp12_group": 0,
+      "cli": 0,
+      "baseline_owners": {
+        "WP04": 3,
+        "WP06": 4,
+        "WP08": 4,
+        "WP09": 1,
+        "WP13": 1,
+        "WP14": 1
+      }
+    },
+    "passed": [
+      "CLI bun typecheck",
+      "Atlas generation/check/no-diff/typecheck",
+      "spawn guard",
+      "repository guards"
+    ],
+    "guards": {
+      "rules": 78,
+      "paths": 1405,
+      "gates": 0,
+      "warnings": 46,
+      "errors": 0
+    },
+    "spawn": {
+      "files": 4671,
+      "sites": 66
+    },
+    "artifact": [
+      {
+        "id": 14116672345,
+        "name": "astra-compose-check-1",
+        "bytes": 3953,
+        "digest": "sha256:ab54dae5f935a271d04430ee8d2e5e9bd71ef5d34622921446b2733921e977c8",
+        "expires_at": "2026-11-28T13:55:08Z"
+      }
+    ],
+    "snapshot_diff": [
+      {
+        "path": ".astra-compose-check.json",
+        "sha": "c9734f6c0020ad4ed7743b800aafebbe91916f33",
+        "status": "added"
+      }
+    ],
+    "diagnostics_receipt": {
+      "path": "evidence/check13-diagnostics.json",
+      "bytes": 6927,
+      "sha256": "838e27d1c86fd33d50b7d6b52dfa51af993b7475f869acacc5486cd999b53d15"
+    },
+    "artifact_verification": {
+      "path": "evidence/check13-artifact-verification.json",
+      "bytes": 1159,
+      "sha256": "9850d68b98f13c07d82a85c1283eda6f27f4793282b89b0cc2f276eafdf5600f"
+    },
+    "log": {
+      "path": "evidence/check13.log",
+      "bytes": 83498,
+      "sha256": "a3ec4586baf231544dbc2e272a9fafcdd0d893f2acb2485ddb178583f8492c7f"
+    },
+    "baseline_identical_text_and_order_to_Check12": true
+  },
+  "acceptance": "EXACT_SCOPED_OBSERVATIONS_ONLY_NOT_FULL_WP_READY",
+  "local_product_execution": false
+}

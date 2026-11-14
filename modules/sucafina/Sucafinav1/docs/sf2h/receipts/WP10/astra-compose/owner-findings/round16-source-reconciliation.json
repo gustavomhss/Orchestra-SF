@@ -1,0 +1,97 @@
+{
+  "schema": "sf2-astra-bounded-intake-review-v1",
+  "candidate": {
+    "head": "5cb947a4d6e11a37dbd702404c2d4f4d352a4b57",
+    "tree": "e39b8189cf70ecd3b00c02dcf59f9388d65b8b2d"
+  },
+  "source_check": {
+    "schema": "sf2-source-check-observation-v1",
+    "pr": 29,
+    "head": "c3b02c7693c1ff3b702596c7c8458f913972a404",
+    "tree": "f3719144bcaa6cfebcfdbd9cd1283edaae99ae3c",
+    "run": 43601767154,
+    "job": 132467830629,
+    "S": "746652850ccfc46c6ae5c9987c129daedcf12799",
+    "S_tree": "3e7d96ac62aea9b428eb268b9ed056ea6ef5be35",
+    "parents": [
+      "c3b02c7693c1ff3b702596c7c8458f913972a404",
+      "2905231af2c4522d400fd1d292721f9d8429501e"
+    ],
+    "conclusion": "FAILURE",
+    "diagnostic_lines": 33,
+    "diagnostics": [
+      "../../../apps/cli/src/sucafina-product/portfolio-reconciliation-services.ts(93,22): error TS2367: This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "../../../apps/cli/src/sucafina-product/work-destinations.ts(95,52): error TS2339: Property 'resolveRequestSource' does not exist on type '{ issue: (kind: \"procurement-request\" | \"procurement-supplier\", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }'.",
+      "product/procurement/sourcing-analysis.ts(4,10): error TS2305: Module '\"../ui/forecast-analysis.ts\"' has no exported member 'analysisHistory'.",
+      "test/product/wp04/finance-sourcing-integration.test.ts(388,65): error TS2322: Type '(ref: string, binding: TrustedDomainContext) => Promise<PortResult<{ evidence: EvidenceIdentity & { kind: \"record\"; target: { surface: Surface; ... 6 more ...; projectionDigest: string; }; }; context: ProductContext; }>>' is not assignable to type 'Pick<{ issue: (kind: \"procurement-request\" | \"procurement-supplier\", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }, \"resolve\">'.",
+      "test/product/wp04/finance-sourcing-integration.test.ts(394,40): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (call: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, call: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options?: Ran...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "test/product/wp06/native/import-analysis.test.ts(130,47): error TS2339: Property 'importPreview' does not exist on type '{ importPreview: { importPreviewRef: string; manifest: ImportManifest; detail: ImportDetail; }; } | { decisionRecall: SfMemoryPrompt; }'.",
+      "test/product/wp06/native/import-analysis.test.ts(166,47): error TS2339: Property 'importPreview' does not exist on type '{ importPreview: { importPreviewRef: string; manifest: ImportManifest; detail: ImportDetail; }; } | { decisionRecall: SfMemoryPrompt; }'.",
+      "test/product/wp06/native/import-analysis.test.ts(205,45): error TS2339: Property 'importPreview' does not exist on type '{ importPreview: { importPreviewRef: string; manifest: ImportManifest; detail: ImportDetail; }; } | { decisionRecall: SfMemoryPrompt; }'.",
+      "test/product/wp06/native/import-analysis.test.ts(324,37): error TS2554: Expected 1 arguments, but got 2.",
+      "test/product/wp08/collaboration-journey.test.ts(79,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ host: DomainPortHost; state: SfProductStatePort; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "test/product/wp08/confirmation-work-integration.test.ts(83,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "test/product/wp08/host-answer-reuse.test.ts(79,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "test/product/wp08/question-consumer.test.ts(44,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ host: DomainPortHost; state: SfProductStatePort; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "test/product/wp08/thread-actors-fixture.ts(126,40): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; evidence: BusinessContextService; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "test/product/wp09/decision-answer-consumer.test.ts(76,42): error TS2741: Property 'verifyScenarioOperations' is missing in type '{ state: SfProductStatePort; host: DomainPortHost; evidence: BusinessContextService; creationTarget: { ref: string; incarnation: string; }; operationIdentity: (binding: TrustedDomainContext) => string | undefined; authorizeCase: (value: DecisionCase, binding: TrustedDomainContext) => Promise<...>; createId: (options...' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; creationTarget: { ref: string; incarnation: string; }; ... 5 more ...; now: () => string; }'.",
+      "test/product/wp10/integration/analysis-lifecycle-context.test.ts(90,121): error TS2345: Argument of type 'TrustedDomainContext' is not assignable to parameter of type 'TrustedUiContext'.",
+      "test/product/wp10/integration/portfolio-reconciliation.test.ts(166,47): error TS2769: No overload matches this call.",
+      "test/product/wp10/native-host/routine-installed-publication.test.ts(160,19): error TS2339: Property 'installed' does not exist on type 'never'.",
+      "test/product/wp10/native-host/routine-installed-publication.test.ts(161,25): error TS2339: Property 'host' does not exist on type 'never'.",
+      "test/product/wp10/native-host/routine-installed-publication.test.ts(161,49): error TS2339: Property 'ui' does not exist on type 'never'.",
+      "test/product/wp10/native-host/routine-installed-publication.test.ts(163,66): error TS2339: Property 'host' does not exist on type 'never'.",
+      "test/product/wp10/native-host/routine-installed-publication.test.ts(293,51): error TS2345: Argument of type '<A, E>(effect: Effect<A, E, never>, options?: RunOptions | undefined) => Promise<A>' is not assignable to parameter of type '(_: Effect<A, unknown, Service | Service>) => Promise<A>'.",
+      "src/sucafina-product/portfolio-reconciliation-services.ts(93,22): error TS2367: This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "src/sucafina-product/work-destinations.ts(95,52): error TS2339: Property 'resolveRequestSource' does not exist on type '{ issue: (kind: \"procurement-request\" | \"procurement-supplier\", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }'.",
+      "../../../apps/cli/src/sucafina-product/portfolio-reconciliation-services.ts(93,22): error TS2367: This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "../../../apps/cli/src/sucafina-product/work-destinations.ts(95,52): error TS2339: Property 'resolveRequestSource' does not exist on type '{ issue: (kind: \"procurement-request\" | \"procurement-supplier\", id: string, binding: TrustedDomainContext) => Promise<PortResult<string>>; ... 4 more ...; isCurrent(snapshot: Snapshot, evidence: EvidenceIdentity & { ...; }): boolean; }'.",
+      "test/product/wp10/integration/analysis-lifecycle-context.test.ts(90,121): error TS2345: Argument of type 'TrustedDomainContext' is not assignable to parameter of type 'TrustedUiContext'.",
+      "test/product/wp10/integration/portfolio-reconciliation.test.ts(166,47): error TS2769: No overload matches this call.",
+      "test/product/wp10/native-host/routine-installed-publication.test.ts(160,19): error TS2339: Property 'installed' does not exist on type 'never'.",
+      "test/product/wp10/native-host/routine-installed-publication.test.ts(161,25): error TS2339: Property 'host' does not exist on type 'never'.",
+      "test/product/wp10/native-host/routine-installed-publication.test.ts(161,49): error TS2339: Property 'ui' does not exist on type 'never'.",
+      "test/product/wp10/native-host/routine-installed-publication.test.ts(163,66): error TS2339: Property 'host' does not exist on type 'never'.",
+      "test/product/wp10/native-host/routine-installed-publication.test.ts(293,51): error TS2345: Argument of type '<A, E>(effect: Effect<A, E, never>, options?: RunOptions | undefined) => Promise<A>' is not assignable to parameter of type '(_: Effect<A, unknown, Service | Service>) => Promise<A>'."
+    ],
+    "acceptance": "SOURCE_ONLY_NOT_COMPOSE_APPROVAL",
+    "local_product_execution": false
+  },
+  "counter_regression": {
+    "id": "WP10_BI_AUTHORIZATION_COUNTER_REGRESSION",
+    "comment": 6878456445,
+    "source_test_blob": "61c1040725c55d07ded391b993f96ab11f062b5c",
+    "resolution": "Preserve prior unconditional counter after authentic await and take only new header-mutation loop in own WP10 test."
+  },
+  "intake": "Exact BI service b6a84dd + own reconciled test + own lifecycle fixture only. No other PR29 file or branch ancestry admitted.",
+  "remaining_source_groups": [
+    "PR29 lifecycle/run-store, memory scope, Portfolio/reconciliation, routine publication, work destinations and broader source fences require complete dependency/criterion review. Source check failed with own WP10/CLI diagnostics; this receipt does not transfer them to compose.",
+    "Finance current-choice final C08 lease; sensitivity last-operation await; Atlas candidate-B grant after last await; Portfolio threshold API/closure; held Renewal consumers; startup budget group remain unconsumed.",
+    "C12 H02/H03/H05/H06/H09, Dashboard withdrawal, four unselected CI5 history/ancestry/reopen timeouts, BI reflow/full journeys/viewport/zoom/keyboard/p95, C07 provider/recipient, installed Atlas policy/project and native AM remain open."
+  ],
+  "prior_findings": [
+    {
+      "pr": 35,
+      "finding": "FINANCE_CURRENT_CHOICE_FINAL_C08_LEASE",
+      "result": {
+        "id": 6878061695
+      }
+    },
+    {
+      "pr": 36,
+      "finding": "PR36-48486-SENSITIVITY-LAST-OPERATION-AWAIT",
+      "result": {
+        "id": 6878061890
+      }
+    },
+    {
+      "pr": 33,
+      "finding": "WP07_CHROME_TRANSPORT_CI7_BI_RETURN",
+      "result": {
+        "id": 6878062059
+      }
+    }
+  ],
+  "local_product_execution": false,
+  "source_branches_modified": false
+}

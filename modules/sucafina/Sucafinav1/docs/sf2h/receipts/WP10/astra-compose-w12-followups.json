@@ -1,0 +1,129 @@
+{
+  "schema": "sf2h-wp10-author-findings-v1",
+  "source": {
+    "pr": 29,
+    "head": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+    "tree": "a3e36522b4b403a394f2f5127d8eb7f692b53de6"
+  },
+  "evidence": {
+    "core": {
+      "run": 43567831092,
+      "job": 132365452222,
+      "snapshot": "14d0d8fbf81b1340bef81edc5a54c5d214ca1f18",
+      "pass": 162,
+      "skip": 2,
+      "fail": 6
+    },
+    "review": {
+      "run": 43567379056,
+      "job": 132364057245,
+      "snapshot": "dfa848a6e2c060379dce26382192b83dddae901a"
+    },
+    "checks": {
+      "run": 43567393559,
+      "job": 132364101703,
+      "snapshot": "a943b2fab1fa33a4d34e94a1c0a53c28a07343f0",
+      "artifact": 14103087548
+    }
+  },
+  "ownInspection": "AUTHOR_INSPECTION_NOT_INDEPENDENT_REVIEW",
+  "newTestsRun": false,
+  "findings": [
+    {
+      "id": "WP10-W12-BI-LIFECYCLE",
+      "owner": "WP01 producer / WP10 consumer",
+      "status": "OWNER_PATCH_PROPOSED_NOT_APPLIED",
+      "failure": "BI clears a real persisted case after participant revocation with the session valid and discards a delayed authorized source",
+      "repro": [
+        "Real BI options200 took15444ms; bi-data200 took17905ms, then another sf=bi200 occurred before table wait.",
+        "screen-shell businessTimer refreshes location.href every30000ms; applyRefresh replaces main using DOMParser. New inline client scripts do not execute.",
+        "The new main only contains the server loading placeholder; extended-bi-browser continues holding its detached original root. Native source access/privacy assertions are not reached."
+      ],
+      "paths": [
+        "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+        "apps/cli/src/sucafina-product/extended-bi-browser.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-access-browser-fixture.ts"
+      ],
+      "patch": "owner-patches/wp01-client-refresh-seam.patch",
+      "limits": "Patch proposes an explicit lifecycle event after the existing server authorization checks. It is not applied to foreign source and is not sufficient alone. WP10 must consume an owner-published seam with scoped BI/Review listeners and in-flight refresh coalescing. No timer disabling, DOM script evaluation, sleep, forced green or timeout increase.",
+      "verify": [
+        "Ordinary shell still replaces main when event is unclaimed.",
+        "401/403, signed-out, changed access revision and drawn=false still revoke before the event.",
+        "Real composed BI/Review retains live client mount through a scheduled/manual refresh; consumer reopens current product authority.",
+        "An old delayed200 cannot restore data after case revocation; refresh while loading is coalesced without starving a producer."
+      ]
+    },
+    {
+      "id": "WP10-W12-CONTROLS-NAVIGATION",
+      "owner": "WP10",
+      "status": "PATCH_READY_UNTESTED",
+      "failure": "Chromium navigates the own decision controls, saves real classification and removes revoked content",
+      "repro": "The GET form Abrir caso destroys its JS context while allTextContents reads the old forecast selector (test line194).",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/decision-controls.test.ts",
+      "change": "Wait for exact destination sf/case/source URL and DOMContentLoaded, then wait for the forecast picker and classification version to be visible. Existing content/classification/CAS/revocation assertions remain; no import alias, sleep or timeout increase.",
+      "guidance": [
+        "https://playwright.dev/docs/best-practices",
+        "https://playwright.dev/docs/actionability",
+        "https://playwright.dev/docs/test-assertions"
+      ]
+    },
+    {
+      "id": "WP10-W12-ALTERNATIVE-LATENCY",
+      "owner": "WP10 composition; WP11 producer if domain changes prove necessary",
+      "status": "OPEN_NOT_RETESTED",
+      "failures": [
+        "canonical comparison drafts the exact human-selected second alternative and supports only the private replay context",
+        "comparison capture refuses missing or outside selections and a running draft cannot adopt a newer human selection",
+        "a missing admission snapshot stays missing and request/input digests cannot reuse a capture"
+      ],
+      "repro": "All three exceed the real105000ms cooperative deadline. The fixture selects January from an annual source; this does not qualify annual latency.",
+      "measuredPhasesMs": {
+        "fixtureInput": 10440,
+        "selectionRegister": 21399,
+        "selectionCapture": 11761,
+        "draftBeforeDeadline": 57050
+      },
+      "draftCounters": {
+        "transactions": 14777,
+        "snapshotCopies": 24126,
+        "authentications": 59776,
+        "selectionReads": 2,
+        "simulations": 2,
+        "comparisonScenarioReads": 8,
+        "comparisonSourceReads": 11
+      },
+      "paths": [
+        "apps/cli/src/sucafina-product/decision-alternative-services.ts",
+        "apps/cli/src/sucafina-product/alternative-call-scope.ts",
+        "apps/cli/src/sucafina-product/portfolio-comparison-scope.ts",
+        "modules/sucafina/Sucafinav1/product/decisions/proposals.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/alternative-selection.test.ts"
+      ],
+      "next": "Use scoped hosted phase evidence to identify repeated producer work. The lexical isolation fix does not claim a latency fix. Preserve fresh authority/source fences, real producers, tests and105000ms budget; no unproved cross-request cache."
+    },
+    {
+      "id": "WP10-W12-FINAL-REVOCATION",
+      "owner": "WP10",
+      "status": "PATCH_READY_UNTESTED",
+      "failure": "canonical comparison scopes reject overlap, input replacement and authority lost during their final clock read",
+      "repro": "Inner canonical comparison correctly denies after the final clock revocation; host revalidation invalidates the binding so outer scope also returns denied. The test incorrectly wraps that final return in ok(). Log reason is portfolio-comparison-invocation-unavailable.",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/alternative-selection.test.ts",
+      "change": "Require outer denied with the exact reason and no value; retain inner denied, produced-count, eight-clock and current-authority-false counterproofs and strengthen inner exact reason."
+    }
+  ],
+  "otherDependencies": [
+    {
+      "id": "WP10-C07-HOST-PROVIDER",
+      "owner": "WP09 producer / WP10 host",
+      "status": "OPEN",
+      "detail": "PR30 head1998acb0dcb59e68d41ee924eca4737bccbd5148 factory/publication/capabilities/dossier blobs already match W12. No native.ts or port.ts producer exists under product/routines. Actual C07 native/publication/discovery injection remains absent in host-context. Catalogue/175pass routine tests do not prove AM06.",
+      "reportedBy": "incoming_prs agent, exact source pins in incoming-cache/wp09-producers.json"
+    },
+    {
+      "id": "WP10-W12-CHECK-32",
+      "owner": "WP01/WP04/WP06/WP11/WP12/WP13/WP14",
+      "status": "HISTORICAL_ONLY",
+      "detail": "The W12 check recorded32 foreign diagnostics (including2 parse failures). They are not promoted to current findings after intake of newer WP04/WP06 sources. Reconcile the new candidate's hosted typecheck before routing remaining source-specific patches."
+    }
+  ]
+}

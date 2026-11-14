@@ -1,0 +1,153 @@
+{
+  "id": "WP10-C17-HISTORICAL-CASE-ADVANCE-R8",
+  "baseHead": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+  "baseTree": "2a61f73fc5bf404501d61f71f552861f5e1338e1",
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "baseBlob": "4b96a408bd43e73a6e614977f959b6f58f9559e0",
+      "blob": "4b02413b5a98e750187fa8f5fa54f3cb2415f4e3",
+      "sha256": "c6911aa04b6b22750b2f320b680c3b4510ae4f230d29baba76932b4feca12811",
+      "bytes": 57170,
+      "staging": "/workspace/scratch/4c48b09c5c29/composition-c17-history-round8/apps/cli/src/sucafina-product/business-services.ts",
+      "diff": "/workspace/scratch/4c48b09c5c29/incoming-cache/c17-history-round8-diffs/apps/cli/src/sucafina-product/business-services.ts.diff",
+      "owner": "WP10 composition"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/planner-calculation-history.ts",
+      "baseBlob": null,
+      "blob": "9805676b50cb5d12f37a4a91350f01ba227a168f",
+      "sha256": "5b5822480441f8972ec4ced62d655c933504bcd200c7cb3882aa0170e8244694",
+      "bytes": 11862,
+      "staging": "/workspace/scratch/4c48b09c5c29/composition-c17-history-round8/apps/cli/src/sucafina-product/planner-calculation-history.ts",
+      "diff": "/workspace/scratch/4c48b09c5c29/incoming-cache/c17-history-round8-diffs/apps/cli/src/sucafina-product/planner-calculation-history.ts.diff",
+      "owner": "WP10 composition"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/planner-calculation-services.ts",
+      "baseBlob": "6678372b0c955d551e9910060e405a6765c79ccd",
+      "blob": "bc224c0b2830fe54a02c3b2bc356cb6bf2b1c327",
+      "sha256": "ff4732ca4b8fc8f6b3ffdccc3b04584dbc6739524ab55162196049c30c2357ed",
+      "bytes": 18307,
+      "staging": "/workspace/scratch/4c48b09c5c29/composition-c17-history-round8/apps/cli/src/sucafina-product/planner-calculation-services.ts",
+      "diff": "/workspace/scratch/4c48b09c5c29/incoming-cache/c17-history-round8-diffs/apps/cli/src/sucafina-product/planner-calculation-services.ts.diff",
+      "owner": "WP10 composition"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "baseBlob": "5f9a4761693beaf2fc0830d03ea8a2421de7f794",
+      "blob": "5cca27ce239c92a8e3c9f9f92f816f5224562904",
+      "sha256": "9791fd4c605693711a4508b3b496c0fb67a407c1009d734408659ed10664fefc",
+      "bytes": 46099,
+      "staging": "/workspace/scratch/4c48b09c5c29/composition-c17-history-round8/modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "diff": "/workspace/scratch/4c48b09c5c29/incoming-cache/c17-history-round8-diffs/modules/sucafina/Sucafinav1/product/host-binding/business-context.ts.diff",
+      "owner": "WP10 composition"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "baseBlob": "ecdc6a22936b6df734eb9ae4f6fac58927519f2d",
+      "blob": "80b44373f154a70553f1c9ab84139091be3e0238",
+      "sha256": "4eaf7272bb7ef9748406241973780612392fc43ad7b7c66a35a449fc4233195f",
+      "bytes": 44150,
+      "staging": "/workspace/scratch/4c48b09c5c29/composition-c17-history-round8/modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "diff": "/workspace/scratch/4c48b09c5c29/incoming-cache/c17-history-round8-diffs/modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts.diff",
+      "owner": "WP10 composition"
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/calculation-history.ts",
+      "blob": "4e92219aae9046891f167502139412bf9c509529",
+      "source": "PR35 217c9bcc75d499eff3884fb4afe662d5c0029935 already consumed in W7"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "blob": "d7d8eb3ca267551797b191ccfb1d037149757898",
+      "source": "PR35 217c9bcc75d499eff3884fb4afe662d5c0029935 already consumed in W7"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/scenario-request-store.ts",
+      "blob": "0d677d2d0b3a9df7127f13b25fe3968757f0dceb",
+      "source": "PR35 217c9bcc75d499eff3884fb4afe662d5c0029935 already consumed in W7"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/calculation-evidence.ts",
+      "blob": "aaacc8bf7df9fa67870c4067154fe67a58c34a22",
+      "source": "PR35 217c9bcc75d499eff3884fb4afe662d5c0029935 already consumed in W7"
+    }
+  ],
+  "supportedScope": "Protected original calculation already captured by real Atlas; record-only canonical source closure; same case identity/incarnation advanced beyond stored version with explicit ledger association; sources remain fresh and canonical producer replays twice. Read-only historical projection preserves original exact bytes.",
+  "invariants": [
+    "Real Request identity, cancellation, UI/native binding and current principal rechecked",
+    "C08 cases and preferences snapshots before and after include current membership/case/ledger, stored result, persisted actual request, Atlas bytes, source fences and UTC day",
+    "Exact current case scope retained through egress; no cases.read recursion or arbitrary authority",
+    "Real historical result/request readers plus canonical double replay; exact ref match; actual protected capture read before/after/egress",
+    "Current calculation issuance, request readers and publication remain strict; no persisted grant, auth cache, provider stub or captured-source replay",
+    "Lexical per-invocation ancestry closes on exit; reentry denied without cancelling owner"
+  ],
+  "regressions": [
+    "Original capture after real SQLite/authority/Atlas reopen survives legitimate case version advance; cyclic reentry refused; current issuance and request read stay unavailable",
+    "Missing membership/ledger, replacement case incarnation, duplicate ledger event, result/request/capture tamper and material source drift return unavailable without projection",
+    "Actual canonical replay principal revocation denies; real capture followed by actual Request abort or UI lease finish denies"
+  ],
+  "validation": {
+    "status": "NOT_RUN",
+    "localProductExecutions": 0,
+    "remoteExecutionsByAgent": 0,
+    "textualChecks": "Exact W7 bases, import existence, no foreign mutation; hashes and diffs only",
+    "staticReviewer": "contracts_wp00 read-only technical review, no concrete blocker; not independent final acceptance",
+    "proposedActionsSelection": [
+      "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp10/integration/calculation-case-scope.test.ts"
+    ],
+    "deadlinesUnchanged": "105000ms fixture / 120000ms test",
+    "unhydratedDependencyVerifiedMCP": {
+      "path": "packages/core/test/fixture/omni-expect.ts",
+      "head": "a1e9eb62aa7fa862322622cc38474ef0ff5a7d09",
+      "blob": "067fbf7a21e008caacfab46a2eaeb878ac7bcaac"
+    }
+  },
+  "gaps": [
+    "Source material drift not supported: historical producer still requires original source fresh; explicit unavailable, no recomputation from captured bytes",
+    "Mixed/nested historical closure and assumptions/replacement remain unsupported here; existing current nested path retained",
+    "First Atlas append after case advance without prior protected capture remains unavailable; no capture invented or historical source promoted to fresh",
+    "Installed UI/native runtime/AM05/global candidate acceptance still unproven; this integration fixture does not qualify human ledger acceptance or global release"
+  ],
+  "criterionMap": [
+    {
+      "id": "WP10.T01.DOD.10",
+      "status": "IMPLEMENTED_PARTIAL_NOT_RUN"
+    },
+    {
+      "id": "WP10.T07.CHK.02",
+      "status": "IMPLEMENTED_PARTIAL_NOT_RUN"
+    },
+    {
+      "id": "WP10.T07.CHK.03",
+      "status": "IMPLEMENTED_PARTIAL_NOT_RUN"
+    },
+    {
+      "id": "WP10.T07.CHK.07",
+      "status": "IMPLEMENTED_PARTIAL_NOT_RUN"
+    },
+    {
+      "id": "WP10.T07.DOD.01",
+      "status": "IMPLEMENTED_PARTIAL_NOT_RUN"
+    },
+    {
+      "id": "WP10.T07.INV.01",
+      "status": "IMPLEMENTED_PARTIAL_NOT_RUN"
+    },
+    {
+      "id": "WP10.T07.SUC.01",
+      "status": "IMPLEMENTED_PARTIAL_NOT_RUN"
+    },
+    {
+      "id": "WP10.T07.SUC.40",
+      "status": "IMPLEMENTED_PARTIAL_NOT_RUN"
+    }
+  ],
+  "freeze": "No normative contract, host-context, matrix or enumerated freeze artifact changed; no freeze bump required for internal helper",
+  "ownerDependencyFinding": "ASTRA-WP10-PROMOTION-PROOF-01 / PR35 comment6875919952 blocks BI/Alternative promotion independently; not bypassed"
+}

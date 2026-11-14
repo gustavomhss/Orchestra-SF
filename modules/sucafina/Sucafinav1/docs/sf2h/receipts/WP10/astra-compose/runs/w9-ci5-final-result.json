@@ -1,0 +1,821 @@
+{
+  "W": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+  "S": "564d04391d009b89718b10e67175d710d9e6b9c9",
+  "run": 43589763353,
+  "result": "FAILURE",
+  "case_results": [
+    {
+      "file": "Sucafinav1/test/product/wp00/contract-freeze.test.ts",
+      "result": "pass",
+      "test": "the contract freeze binds current artifact bytes without hashing itself",
+      "milliseconds": 11.39
+    },
+    {
+      "file": "Sucafinav1/test/product/wp00/contract-freeze.test.ts",
+      "result": "pass",
+      "test": "all seventeen contracts identify actual public exports, writers and consumers",
+      "milliseconds": 1.75
+    },
+    {
+      "file": "Sucafinav1/test/product/wp00/contract-freeze.test.ts",
+      "result": "pass",
+      "test": "five profiles and eighteen skills have schemas, consumers and proof assignments",
+      "milliseconds": 0.44
+    },
+    {
+      "file": "Sucafinav1/test/product/wp00/contract-freeze.test.ts",
+      "result": "pass",
+      "test": "eight packs and every operation have a declared producer and effective loaded-skill route",
+      "milliseconds": 1.07
+    },
+    {
+      "file": "Sucafinav1/test/product/wp00/contract-freeze.test.ts",
+      "result": "pass",
+      "test": "C08 assigns every stored field to one namespace or to the provider",
+      "milliseconds": 0.12
+    },
+    {
+      "file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "result": "pass",
+      "test": "producer sf_dashboard_read: modules/sucafina/Sucafinav1/product/dashboard/capabilities.ts#readDashboard is exported",
+      "milliseconds": 3.5
+    },
+    {
+      "file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "result": "pass",
+      "test": "producer sf_kpi_explain: modules/sucafina/Sucafinav1/product/dashboard/capabilities.ts#explainKpi is exported",
+      "milliseconds": 0.77
+    },
+    {
+      "file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "result": "pass",
+      "test": "producer sf_bi_view: modules/sucafina/Sucafinav1/product/analytics/capabilities.ts#readBiView is exported",
+      "milliseconds": 0.15
+    },
+    {
+      "file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "result": "pass",
+      "test": "producer sf_source_get: modules/sucafina/Sucafinav1/product/host-binding/capabilities.ts#resolveSfSource is exported",
+      "milliseconds": 0.11
+    },
+    {
+      "file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "result": "pass",
+      "test": "producer sf_forecast_compare: modules/sucafina/Sucafinav1/product/planner/capabilities.ts#compareForecast is exported",
+      "milliseconds": 0.08
+    },
+    {
+      "file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "result": "pass",
+      "test": "producer sf_scenario_simulate: modules/sucafina/Sucafinav1/product/planner/capabilities.ts#simulateScenario is exported",
+      "milliseconds": 0.08
+    },
+    {
+      "file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "result": "pass",
+      "test": "producer sf_scenario_compare: modules/sucafina/Sucafinav1/product/planner/capabilities.ts#compareScenarios is exported",
+      "milliseconds": 0.08
+    },
+    {
+      "file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "result": "pass",
+      "test": "producer sf_sensitivity_evaluate: modules/sucafina/Sucafinav1/product/portfolio/capabilities.ts#evaluateSensitivity is exported",
+      "milliseconds": 0.08
+    },
+    {
+      "file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "result": "pass",
+      "test": "producer sf_portfolio_evaluate: modules/sucafina/Sucafinav1/product/portfolio/capabilities.ts#evaluatePortfolio is exported",
+      "milliseconds": 0.07
+    },
+    {
+      "file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "result": "pass",
+      "test": "producer sf_request_read: modules/sucafina/Sucafinav1/product/procurement/capabilities.ts#readRequest is exported",
+      "milliseconds": 0.08
+    },
+    {
+      "file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "result": "pass",
+      "test": "producer sf_supplier_read: modules/sucafina/Sucafinav1/product/procurement/capabilities.ts#readSupplier is exported",
+      "milliseconds": 0.43
+    },
+    {
+      "file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "result": "pass",
+      "test": "producer sf_contract_read: modules/sucafina/Sucafinav1/product/procurement/capabilities.ts#readContract is exported",
+      "milliseconds": 4.88
+    },
+    {
+      "file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "result": "pass",
+      "test": "producer sf_sourcing_compare: modules/sucafina/Sucafinav1/product/procurement/capabilities.ts#compareSourcing is exported",
+      "milliseconds": 0.93
+    },
+    {
+      "file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "result": "pass",
+      "test": "producer sf_case_read: modules/sucafina/Sucafinav1/product/decisions/capabilities.ts#readCase is exported",
+      "milliseconds": 2.99
+    },
+    {
+      "file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "result": "pass",
+      "test": "producer sf_case_draft: modules/sucafina/Sucafinav1/product/decisions/capabilities.ts#draftCase is exported",
+      "milliseconds": 0.98
+    },
+    {
+      "file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "result": "pass",
+      "test": "producer sf_alternative_draft: modules/sucafina/Sucafinav1/product/decisions/capabilities.ts#draftAlternative is exported",
+      "milliseconds": 1.03
+    },
+    {
+      "file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "result": "pass",
+      "test": "producer sf_change_prepare: modules/sucafina/Sucafinav1/product/decisions/capabilities.ts#prepareChange is exported",
+      "milliseconds": 0.11
+    },
+    {
+      "file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "result": "pass",
+      "test": "producer sf_receipt_get: modules/sucafina/Sucafinav1/product/decisions/capabilities.ts#readReceipt is exported",
+      "milliseconds": 0.38
+    },
+    {
+      "file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "result": "pass",
+      "test": "producer sf_work_list: modules/sucafina/Sucafinav1/product/collaboration/capabilities.ts#listWork is exported",
+      "milliseconds": 0.12
+    },
+    {
+      "file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "result": "pass",
+      "test": "producer sf_question_prepare: modules/sucafina/Sucafinav1/product/collaboration/capabilities.ts#prepareQuestion is exported",
+      "milliseconds": 1.47
+    },
+    {
+      "file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "result": "pass",
+      "test": "producer sf_answer_read: modules/sucafina/Sucafinav1/product/collaboration/capabilities.ts#readAnswer is exported",
+      "milliseconds": 7.95
+    },
+    {
+      "file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "result": "pass",
+      "test": "producer sf_relation_read: modules/sucafina/Sucafinav1/product/collaboration/capabilities.ts#readRelations is exported",
+      "milliseconds": 0.12
+    },
+    {
+      "file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "result": "pass",
+      "test": "producer sf_handoff_prepare: modules/sucafina/Sucafinav1/product/collaboration/capabilities.ts#prepareHandoff is exported",
+      "milliseconds": 0.1
+    },
+    {
+      "file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "result": "pass",
+      "test": "producer sf_document_extract: modules/sucafina/Sucafinav1/product/documents/capabilities.ts#extractDocumentEvidence is exported",
+      "milliseconds": 0.09
+    },
+    {
+      "file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "result": "pass",
+      "test": "producer sf_import_preview: modules/sucafina/Sucafinav1/product/imports/capabilities.ts#previewImport is exported",
+      "milliseconds": 0.07
+    },
+    {
+      "file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "result": "pass",
+      "test": "producer sf_review_prepare: modules/sucafina/Sucafinav1/product/reviews/capabilities.ts#prepareReview is exported",
+      "milliseconds": 0.09
+    },
+    {
+      "file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "result": "pass",
+      "test": "producer sf_report_prepare: modules/sucafina/Sucafinav1/product/reviews/capabilities.ts#prepareReport is exported",
+      "milliseconds": 0.07
+    },
+    {
+      "file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "result": "pass",
+      "test": "producer sf_artifact_get: modules/sucafina/Sucafinav1/product/reviews/capabilities.ts#readArtifact is exported",
+      "milliseconds": 0.11
+    },
+    {
+      "file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "result": "pass",
+      "test": "producer sf_context_get: modules/sucafina/Sucafinav1/product/host-binding/capabilities.ts#readSfBusinessContext is exported",
+      "milliseconds": 0.11
+    },
+    {
+      "file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "result": "pass",
+      "test": "producer sf_knowledge_search: modules/sucafina/Sucafinav1/product/documents/capabilities.ts#searchDocumentEvidence is exported",
+      "milliseconds": 0.16
+    },
+    {
+      "file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "result": "pass",
+      "test": "producer sf_evidence_get: modules/sucafina/Sucafinav1/product/host-binding/capabilities.ts#resolveSfBusinessEvidence is exported",
+      "milliseconds": 0.09
+    },
+    {
+      "file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "result": "pass",
+      "test": "producer sf_decision_recall: modules/sucafina/Sucafinav1/product/host-binding/capabilities.ts#recallSfDecisions is exported",
+      "milliseconds": 0.1
+    },
+    {
+      "file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "result": "pass",
+      "test": "producer sf_freshness_check: modules/sucafina/Sucafinav1/product/host-binding/capabilities.ts#checkSfFreshness is exported",
+      "milliseconds": 0.09
+    },
+    {
+      "file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "result": "pass",
+      "test": "producer sf_routine_catalog: modules/sucafina/Sucafinav1/product/routines/capabilities.ts#readRoutineCatalog is exported",
+      "milliseconds": 0.11
+    },
+    {
+      "file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "result": "pass",
+      "test": "producer sf_routine_prepare: modules/sucafina/Sucafinav1/product/routines/capabilities.ts#prepareRoutine is exported",
+      "milliseconds": 0.07
+    },
+    {
+      "file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "result": "pass",
+      "test": "producer sf_routine_run: modules/sucafina/Sucafinav1/product/routines/capabilities.ts#runAdmittedRoutine is exported",
+      "milliseconds": 0.06
+    },
+    {
+      "file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "result": "pass",
+      "test": "producer sf_routine_status: modules/sucafina/Sucafinav1/product/routines/capabilities.ts#readRoutineStatus is exported",
+      "milliseconds": 0.09
+    },
+    {
+      "file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "result": "pass",
+      "test": "producer sf_routine_result: modules/sucafina/Sucafinav1/product/routines/capabilities.ts#readRoutineResult is exported",
+      "milliseconds": 0.08
+    },
+    {
+      "file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "result": "pass",
+      "test": "producer sf_watch_prepare: modules/sucafina/Sucafinav1/product/routines/capabilities.ts#prepareWatch is exported",
+      "milliseconds": 0.07
+    },
+    {
+      "file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "result": "pass",
+      "test": "the distributed five-profile/eighteen-skill bundle consumes the frozen C15 contract",
+      "milliseconds": 12.79
+    },
+    {
+      "file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "result": "pass",
+      "test": "the existing C08 provider creates all contracted namespace versions",
+      "milliseconds": 2.54
+    },
+    {
+      "file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "result": "pass",
+      "test": "C08 adds the v1 fields on an authorized write and an exact retry does not migrate twice",
+      "milliseconds": 1.58
+    },
+    {
+      "file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "result": "pass",
+      "test": "C08 checkNamespaces rejects a stale read dependency before invoking the write callback",
+      "milliseconds": 0.65
+    },
+    {
+      "file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "result": "pass",
+      "test": "C08 checkNamespaces requires current read authority and does not increment the read version",
+      "milliseconds": 0.8
+    },
+    {
+      "file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "result": "pass",
+      "test": "C08 refuses an unreadable check namespace before invoking any write callback",
+      "milliseconds": 0.46
+    },
+    {
+      "file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "result": "pass",
+      "test": "C08 namespace fence refuses claimBindings outside preferences before a durable commit",
+      "milliseconds": 0.34
+    },
+    {
+      "file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "result": "pass",
+      "test": "C08 namespace fence refuses commandProposals outside preferences before a durable commit",
+      "milliseconds": 0.24
+    },
+    {
+      "file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "result": "pass",
+      "test": "C08 namespace fence refuses compositeScenarios outside preferences before a durable commit",
+      "milliseconds": 0.21
+    },
+    {
+      "file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "result": "pass",
+      "test": "C08 namespace fence refuses decisionResults outside preferences before a durable commit",
+      "milliseconds": 0.21
+    },
+    {
+      "file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "result": "pass",
+      "test": "C08 namespace fence refuses nativeRuns outside preferences before a durable commit",
+      "milliseconds": 0.17
+    },
+    {
+      "file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "result": "pass",
+      "test": "C08 namespace fence refuses biArtifacts outside preferences before a durable commit",
+      "milliseconds": 0.2
+    },
+    {
+      "file": "Sucafinav1/test/product/wp00/contract-consumers.test.ts",
+      "result": "pass",
+      "test": "C08 retains existing preference CAS and idempotency semantics",
+      "milliseconds": 0.63
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/atlas-business/atlas-recovery.test.ts",
+      "result": "pass",
+      "test": "WP10 Atlas fences writes and recovers a durable receipt after reopen without a scanner",
+      "milliseconds": 32766.63
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/atlas-business/record-history.test.ts",
+      "result": "pass",
+      "test": "record history keeps original bytes and rejects missing, changed, revoked or recreated sources",
+      "milliseconds": 555.49
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/atlas-business/record-history.test.ts",
+      "result": "pass",
+      "test": "Planner history retains the original projection while separately proving the current forecast",
+      "milliseconds": 216.03
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/planner-recorded-history.test.ts",
+      "result": "fail",
+      "test": "stored Planner operations read protected originals after drift while new execution stays current",
+      "milliseconds": 165797.62
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/planner-recorded-history.test.ts",
+      "result": "fail",
+      "test": "stored Planner historical access rejects unrecorded input, missing capture, read races, cycles and replacement",
+      "milliseconds": 165748.85
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "result": "pass",
+      "test": "stored Planner selectors use the exact domain projection without reopening coverage",
+      "milliseconds": 1014.5
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "result": "pass",
+      "test": "stored scenario rejects planner changes across the actual projection await",
+      "milliseconds": 159.3
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "result": "pass",
+      "test": "stored scenario rejects dashboard changes across the actual projection await",
+      "milliseconds": 208.25
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "result": "pass",
+      "test": "stored scenario rejects procurement changes across the actual projection await",
+      "milliseconds": 263.96
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "result": "pass",
+      "test": "stored scenario rejects principal changes across the actual projection await",
+      "milliseconds": 134.09
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "result": "pass",
+      "test": "stored scenario rejects case-input changes across the actual projection await",
+      "milliseconds": 147.89
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/calculation-case-scope.test.ts",
+      "result": "pass",
+      "test": "concurrent calculation admissions retain one case scope across two real same-run replays and release it after the last replay",
+      "milliseconds": 15958.94
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/calculation-case-scope.test.ts",
+      "result": "pass",
+      "test": "concurrent calculation admissions retain one case scope across two real different-run replays and release it after the last replay",
+      "milliseconds": 16237.42
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/calculation-case-scope.test.ts",
+      "result": "pass",
+      "test": "a real calculation retains a withCase owner's selection after the outer action completes",
+      "milliseconds": 13649.61
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/calculation-case-scope.test.ts",
+      "result": "pass",
+      "test": "calculation replay cannot borrow another selected case even when the same principal belongs to both",
+      "milliseconds": 13906.7
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/calculation-case-scope.test.ts",
+      "result": "pass",
+      "test": "two real calculation replays refuse revoke during overlap and release every retention",
+      "milliseconds": 13675.87
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/calculation-case-scope.test.ts",
+      "result": "pass",
+      "test": "two real calculation replays refuse abort during overlap and release every retention",
+      "milliseconds": 14140.2
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/calculation-case-scope.test.ts",
+      "result": "pass",
+      "test": "record-only calculation verification rereads the real Planner source and refuses source drift after admission",
+      "milliseconds": 11225.04
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/calculation-case-scope.test.ts",
+      "result": "pass",
+      "test": "record-only calculation verification rereads the real Planner source and refuses principal drift after admission",
+      "milliseconds": 11561.62
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/calculation-case-scope.test.ts",
+      "result": "pass",
+      "test": "record-only calculation verification rereads the real Planner source and refuses lease drift after admission",
+      "milliseconds": 11159.73
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/calculation-ancestry-composition.test.ts",
+      "result": "fail",
+      "test": "C17 composition reopens a calculation with ledger ancestry and rejects a persisted cycle and revoked authority",
+      "milliseconds": 105006.15
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "result": "pass",
+      "test": "Planner ledger history preserves the protected original after case advance and cannot authorize current execution",
+      "milliseconds": 31699.79
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "result": "pass",
+      "test": "Planner calculation history requires its actual ledger, case incarnation, request, result, capture and fresh sources",
+      "milliseconds": 37058.51
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "result": "pass",
+      "test": "Planner calculation history denies disclosure after principal, Request or lease revocation",
+      "milliseconds": 23480.14
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "result": "pass",
+      "test": "Planner calculation preserves UI and repeated BCS reads and rejects cycles, tampering and over-budget selectors",
+      "milliseconds": 22539.79
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "result": "fail",
+      "test": "Planner calculation survives SQLite and Atlas reopen with continuity, original and ancestor context",
+      "milliseconds": 105020.25
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "result": "pass",
+      "test": "Planner calculation recalls the actual reopened Atlas record and does not append it twice",
+      "milliseconds": 75765.08
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "result": "pass",
+      "test": "Planner calculation rejects foreign case routing and all six corrupted durable Atlas capture fields",
+      "milliseconds": 89570.48
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "result": "pass",
+      "test": "Planner continuity fences membership changes during a real environment await and recovers after restoration",
+      "milliseconds": 84690.04
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "result": "pass",
+      "test": "Planner overlapping replays and Atlas recall disclose nothing after principal revocation",
+      "milliseconds": 73501.89
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "result": "pass",
+      "test": "Planner calculation becomes unavailable after its real persisted source changes",
+      "milliseconds": 36870.9
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "result": "fail",
+      "test": "Planner reopened recall rejects source drift after a completed calculation proof",
+      "milliseconds": 20754.25
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "result": "fail",
+      "test": "Planner reopened recall rejects membership drift after a completed calculation proof",
+      "milliseconds": 20791.68
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "result": "fail",
+      "test": "Planner reopened recall rejects capture drift after a completed calculation proof",
+      "milliseconds": 21003.47
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "result": "fail",
+      "test": "Planner reopened recall rejects coverage drift after a completed calculation proof",
+      "milliseconds": 21522.37
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "result": "fail",
+      "test": "Planner reopened recall rejects selector drift after a completed calculation proof",
+      "milliseconds": 20756.33
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "result": "pass",
+      "test": "Planner reopened recall rejects clock drift after a completed calculation proof",
+      "milliseconds": 55953.12
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "result": "pass",
+      "test": "Planner reopened recall rejects principal drift after a completed calculation proof",
+      "milliseconds": 56611.16
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "result": "pass",
+      "test": "Planner reopened recall rejects lease drift after a completed calculation proof",
+      "milliseconds": 56401.33
+    },
+    {
+      "file": "Sucafinav1/test/product/wp10/integration/planner-calculation.test.ts",
+      "result": "pass",
+      "test": "Planner recall proof stays lexical while an independent same-call calculation resolves in parallel",
+      "milliseconds": 72602.1
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/calculation-history.test.ts",
+      "result": "fail",
+      "test": "an accepted C17 reference reopens through the explicit ledger lane after the case advances, without becoming a current result",
+      "milliseconds": 21.61
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/calculation-persistence.test.ts",
+      "result": "fail",
+      "test": "nested C17 calculations reopen through persisted canonical requests and replay every ancestor",
+      "milliseconds": 252378.44
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+      "result": "pass",
+      "test": "one sibling batch shares only its two canonical case observations and retains every result reread",
+      "milliseconds": 53247.01
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+      "result": "pass",
+      "test": "units emit the identical binding with six canonical case reads, while a legacy host still performs ten",
+      "milliseconds": 57681.22
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+      "result": "pass",
+      "test": "comparison starts independent batches for its initial and final observations",
+      "milliseconds": 4234.84
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+      "result": "pass",
+      "test": "different cases and historical producer versions form separate groups and retain order, cardinality and refusal",
+      "milliseconds": 4417.12
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+      "result": "pass",
+      "test": "ledger, alternative and coverage changes between phases invalidate every sibling without a version shortcut",
+      "milliseconds": 3542.45
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+      "result": "pass",
+      "test": "authority revoked after result rereads is rejected by the fresh final case observation",
+      "milliseconds": 1456.44
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+      "result": "pass",
+      "test": "a real Planner source change during projection invalidates both stored siblings",
+      "milliseconds": 843.68
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+      "result": "pass",
+      "test": "retained store and case callback objects cannot rewrite an earlier observation",
+      "milliseconds": 2123.22
+    },
+    {
+      "file": "Sucafinav1/test/product/wp11/scenario-batch.test.ts",
+      "result": "pass",
+      "test": "batch refusals and malformed cardinality never fall back to individual resolution",
+      "milliseconds": 2017.72
+    },
+    {
+      "file": "Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+      "result": "pass",
+      "test": "replace and include qualify an absent forecast from the real post-command copy, including explicit zero",
+      "milliseconds": 411.9
+    },
+    {
+      "file": "Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+      "result": "pass",
+      "test": "a row save preserves an untouched missing December while an explicit December zero is hypothetical",
+      "milliseconds": 318.2
+    },
+    {
+      "file": "Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+      "result": "pass",
+      "test": "deferral quantifies its origin and destination while preserving a third missing month on the same row",
+      "milliseconds": 76.52
+    },
+    {
+      "file": "Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+      "result": "pass",
+      "test": "an explicit foreign forecast without FX stays absent instead of publishing the engine's legacy zero",
+      "milliseconds": 81.42
+    },
+    {
+      "file": "Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+      "result": "pass",
+      "test": "a hypothetical HR forecast remains quantifiable when its independent budget rate is absent",
+      "milliseconds": 242.32
+    },
+    {
+      "file": "Sucafinav1/test/product/wp03/scenario-qualification.test.ts",
+      "result": "pass",
+      "test": "a self-comparison reads once per source observation and still rejects revocation at final revalidation",
+      "milliseconds": 38.79
+    },
+    {
+      "file": "Sucafinav1/test/product/wp03/resume-engine-freshness.test.ts",
+      "result": "pass",
+      "test": "scenario comparison snapshots each cached resolver result before resolving the next reference",
+      "milliseconds": 257.38
+    },
+    {
+      "file": "Sucafinav1/test/product/wp03/resume-engine-freshness.test.ts",
+      "result": "pass",
+      "test": "criterion mutation in a reused response cannot erase the first freshness observation",
+      "milliseconds": 119.49
+    },
+    {
+      "file": "Sucafinav1/test/product/wp03/resume-engine-freshness.test.ts",
+      "result": "pass",
+      "test": "distinct criterion observations remain associated when the evaluator reuses one cache object",
+      "milliseconds": 153.45
+    },
+    {
+      "file": "Sucafinav1/test/product/wp03/resume-engine-freshness.test.ts",
+      "result": "pass",
+      "test": "preview comparison rejects a reused baseline cache changed after a real simulation",
+      "milliseconds": 140.68
+    },
+    {
+      "file": "Sucafinav1/test/product/wp03/resume-engine-freshness.test.ts",
+      "result": "pass",
+      "test": "stable preview remains conditioned with the canonical cost difference and preserved domain",
+      "milliseconds": 119.17
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/projection.test.ts",
+      "result": "pass",
+      "test": "observation timestamps do not create stale data, while source and value changes do",
+      "milliseconds": 0.37
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/projection.test.ts",
+      "result": "pass",
+      "test": "persisted comparison keeps its complete scope identity while allowing a later observation time",
+      "milliseconds": 0.56
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/projection.test.ts",
+      "result": "pass",
+      "test": "nested decision source observation times are ignored without ignoring material changes",
+      "milliseconds": 0.65
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/projection.test.ts",
+      "result": "pass",
+      "test": "sensitivity requires its paired persisted reference",
+      "milliseconds": 0.2
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/choice-history-bi.test.ts",
+      "result": "fail",
+      "test": "same-case BI preserves the human choice while the confirmed training revision changes its current source result and table",
+      "milliseconds": 217874.72
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/stored-bi-fences.test.ts",
+      "result": "pass",
+      "test": "persisted BI rejects a reused result object changed between its independent observations",
+      "milliseconds": 24.95
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/stored-bi-fences.test.ts",
+      "result": "pass",
+      "test": "persisted BI rejects mutation of selection, projection or case by either host fence",
+      "milliseconds": 42.05
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/stored-bi-fences.test.ts",
+      "result": "pass",
+      "test": "persisted BI detects a sensitivity object mutated by its reader on replay",
+      "milliseconds": 60.98
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/stored-bi-fences.test.ts",
+      "result": "pass",
+      "test": "optional persisted advantage is copied only for the exact inverse pair and survives both complete source fences",
+      "milliseconds": 90.55
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/stored-bi-fences.test.ts",
+      "result": "pass",
+      "test": "BI presentation cannot mutate the stored scenario or portfolio projection it describes",
+      "milliseconds": 22.07
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/stored-bi-fences.test.ts",
+      "result": "pass",
+      "test": "BI projection cannot rewrite the canonical portfolio result to make a replacement agree",
+      "milliseconds": 18.45
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/planner-integration.test.ts",
+      "result": "fail",
+      "test": "real planner projection reaches BI with distinct missing and zero values",
+      "milliseconds": 17417.17
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/planner-integration.test.ts",
+      "result": "fail",
+      "test": "real planner comparison supplies the same reconciled waterfall to BI and dispatcher",
+      "milliseconds": 744.98
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/planner-integration.test.ts",
+      "result": "fail",
+      "test": "real planner capacity preserves aligned filtered panels and personal-data absence for finance",
+      "milliseconds": 24256.18
+    },
+    {
+      "file": "Sucafinav1/test/product/wp05/planner-integration.test.ts",
+      "result": "pass",
+      "test": "real planner capacity preserves aligned filtered panels and personal-data absence for viewer",
+      "milliseconds": 1760.56
+    }
+  ],
+  "own_failure_count": 9,
+  "finance_failure_count": 6,
+  "owner_comment": {
+    "pr": 35,
+    "id": 6877030815
+  },
+  "own_fix_staged": "incoming-cache/recall-hook-round11-manifest.json",
+  "native_proof": false,
+  "global_release": false
+}

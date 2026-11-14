@@ -33,7 +33,7 @@ export function createPortfolioPort(host: PortfolioHost): PortfolioPort & { eval
       return { status: "needs-input", reason: "invalid-portfolio-scope-or-limit" }
     const resolved = await Promise.all(request.candidateRefs.map((ref) => host.resolveCandidate(ref, context)))
     const failure = resolved.find((item) => item.status !== "ok")
-    if (failure && failure.status !== "ok") return failure
+    if (failure) return failure
     const candidates = resolved.flatMap((item) => item.status === "ok" ? [item.value] : [])
     if (candidates.some((item) => !item.operations.length || item.operations.some((operation) => !operation.targetRef.trim()))) return { status: "needs-input", reason: "candidate-operation-required" }
     if (candidates.some((item, index) => item.ref !== request.candidateRefs[index] || digestSfValue(item.operations) !== digestSfValue(item.scenario.operations))) return { status: "stale", reason: "candidate-reference-changed" }
@@ -75,8 +75,11 @@ export function createPortfolioPort(host: PortfolioHost): PortfolioPort & { eval
       const common = { ...(analysis ? { analysis } : {}), id, caseRefs: selected.map((candidate) => candidate.caseRef), components: scenario.components, costCoverageRefs: evaluated.value.costCoverageRefs, conflicts: [], restrictions }
       evidenceRefs.push(...selected.flatMap((candidate) => candidate.result ? [...candidate.result.sourceRefs, ...candidate.result.costCoverage.evaluatedSourceRefs, ...candidate.result.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs)] : []), ...scenario.sourceRefs, ...scenario.costCoverage.evaluatedSourceRefs, ...scenario.costCoverage.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs))
       const candidateComplete = selected.every((candidate) => !!candidate.result && candidate.result.comparisonStatus === "complete" && candidate.result.costCoverage.coverageState === "complete" && !candidate.result.unresolvedConditions.length && !candidate.result.restrictions.length && !candidate.result.costCoverage.issues.length && candidate.result.components.every((component) => component.amount !== null && Number.isFinite(component.amount) && component.evidenceState === "confirmed" && component.sourceRefs.length > 0) && candidate.result.costCoverage.entries.length > 0 && candidate.result.costCoverage.evaluatedSourceRefs.length > 0 && candidate.result.costCoverage.entries.every((entry) => entry.evidenceRefs.length > 0))
-      if (scenario.comparisonStatus === "incompatible" || selected.some((candidate) => candidate.result?.comparisonStatus === "incompatible") || analysis?.comparison.comparisonStatus === "incompatible" || (candidateComplete && scenario.comparisonStatus === "complete" && analysis?.comparison.comparisonStatus === "complete" && (analysis.comparison.criterionResults.some((item) => item.state === "failed") || checks.some((check) => check.state === "failed")))) {
-        combinations.push({ ...common, eligibility: "ineligible", comparisonStatus: analysis?.comparison.comparisonStatus === "incompatible" || selected.some((candidate) => candidate.result?.comparisonStatus === "incompatible") ? "incompatible" : scenario.comparisonStatus })
+      const financialStatus = scenario.comparisonStatus === "complete" && candidateComplete && analysis?.comparison.comparisonStatus === "complete" ? "complete" : scenario.comparisonStatus === "complete" ? "conditioned" : scenario.comparisonStatus
+      // A failed domain constraint is decisive even when other evidence is incomplete.
+      // Keep financial completeness separate so this refusal never fills a coverage gap.
+      if (scenario.comparisonStatus === "incompatible" || selected.some((candidate) => candidate.result?.comparisonStatus === "incompatible") || analysis?.comparison.comparisonStatus === "incompatible" || checks.some((check) => check.state === "failed")) {
+        combinations.push({ ...common, eligibility: "ineligible", comparisonStatus: analysis?.comparison.comparisonStatus === "incompatible" || selected.some((candidate) => candidate.result?.comparisonStatus === "incompatible") ? "incompatible" : financialStatus })
         continue
       }
       if (scenario.comparisonStatus === "complete" && analysis && analysis.comparison.comparisonStatus === "complete" && !analysis.comparison.unresolvedConditions.length && analysis.comparison.criterionResults.every((item) => item.state === "satisfied") && scenario.costCoverage.coverageState === "complete" && !scenario.unresolvedConditions.length && !scenario.restrictions.length && !scenario.costCoverage.issues.length && scenario.costCoverage.entries.length > 0 && scenario.costCoverage.evaluatedSourceRefs.length > 0 && scenario.costCoverage.entries.every((entry) => entry.evidenceRefs.length > 0) && scenario.components.every((component) => component.amount !== null && Number.isFinite(component.amount) && component.evidenceState === "confirmed" && component.sourceRefs.length > 0) && candidateComplete && checks.every((check) => check.state === "satisfied") && evaluated.value.costCoverageRefs.length) {
@@ -87,7 +90,6 @@ export function createPortfolioPort(host: PortfolioHost): PortfolioPort & { eval
         combinations.push({ ...common, eligibility: "unavailable", comparisonStatus: "unavailable" })
         continue
       }
-      const financialStatus = scenario.comparisonStatus === "complete" && candidateComplete && analysis?.comparison.comparisonStatus === "complete" ? "complete" : scenario.comparisonStatus === "complete" ? "conditioned" : scenario.comparisonStatus
       combinations.push({ ...common, eligibility: "conditioned", comparisonStatus: financialStatus })
     }
     if (!(await host.revalidate(context)) || !(await Promise.all(evaluatedSources.map((item) => host.revalidateEvaluation(item.scenario, item.costCoverageRefs, item.analysis, context, item.candidates)))).every(Boolean)) return { status: "stale", reason: "source-or-authority-changed" }

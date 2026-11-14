@@ -1,0 +1,141 @@
+{
+  "schema": "astra-compose-wp10-integration-increment-v1",
+  "scope": "WP10 Alternative Planner evidence fan-out",
+  "status": "IMPLEMENTED_AWAITING_GITHUB_ACTIONS",
+  "base": "W12 source417038d6b3cfd1817f40ffc60e56f42e505b50a5; root published composition ff7a997 does not modify these three sources",
+  "local_staging": "composition-planner-perf-patch",
+  "remote_mutations": false,
+  "local_product_execution": false,
+  "cause": {
+    "before": "planner-evidence.project requested two complete resolveForecastSource envelopes, each already performing two scoped projection reads, and separately ran projectPlannerSource twice: six actual authorized projections per evidence.",
+    "after": "The host-only projectForecastSource callback receives the same sanitized projectPlannerSource projection between two independently authorized source lifecycle reads. The unchanged buildPlannerFinancialProjection runs inside that interval. No source or authority result is reused by a later invocation."
+  },
+  "static_call_counts": {
+    "planner_project_before": {
+      "source_lifecycle_projection_reads": 4,
+      "additional_direct_projection_reads": 2
+    },
+    "planner_project_after": {
+      "source_lifecycle_projection_reads": 2,
+      "additional_direct_projection_reads": 0
+    },
+    "native_revalidate_before": 10,
+    "native_revalidate_after": 5,
+    "scope": "One successful planner-evidence.project, excluding BCS outer authorization and any nested domain callbacks. Counts derived from sources, not run evidence."
+  },
+  "remaining_call_graph": [
+    {
+      "path": "product/decisions/portfolio-selection.ts",
+      "owner": "WP11",
+      "edge": "selection.read -> compare twice, bracketing its persisted preference reread"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-comparison-scope.ts",
+      "owner": "WP10",
+      "edge": "per-invocation canonical proof, with fresh C08/source/day/ACL samples on reuse; unchanged"
+    },
+    {
+      "path": "product/decisions/comparison.ts",
+      "owner": "WP11",
+      "edge": "one canonical compare ->2 direct cases.read +4 scenario lookups"
+    },
+    {
+      "path": "product/decisions/scenario-lookup.ts",
+      "owner": "WP11",
+      "edge": "each lookup ->2 cases.read +2 historical result reads"
+    },
+    {
+      "path": "product/planner/scenario-comparison-port.ts",
+      "owner": "WP04",
+      "edge": "two scenarios read in two passes ->4 stored scenario resolves;4 source/coverage validations"
+    },
+    {
+      "path": "product/planner/stored-scenarios.ts",
+      "owner": "WP04",
+      "edge": "each stored scenario ->2 cases.read +2 result reads +real compareForecast"
+    },
+    {
+      "path": "product/decisions/case-port.ts",
+      "owner": "WP11",
+      "edge": "each case read ->two independent evidence context passes; source/operations checks unchanged"
+    },
+    {
+      "path": "product/host-binding/business-context.ts",
+      "owner": "WP10",
+      "edge": "already deduplicates identical references within each authorized evidence pass; no new memoization"
+    }
+  ],
+  "static_comparison_lower_bound": {
+    "case_reads": 18,
+    "historical_result_reads": 16,
+    "coverage_validations": 4,
+    "assumptions": "One completed canonical comparison of two scenarios and zero criteria, excluding nested coverage and result callbacks; not multiplied by unrelated selection reads."
+  },
+  "invariants": [
+    "Every successful optimized source invocation independently authenticates roles and granular source scope before/after its projection callback.",
+    "Both reads use real source lifecycle identity, incarnation, version, current projection and scope validation.",
+    "Same canonical producer projectPlannerSource, same current assigned/domains source projector and same buildPlannerFinancialProjection; no financial policy changes.",
+    "Mutation of source or principal during the actual awaited environment boundary is denied by the second source read.",
+    "A granular Planner role change is rejected even while the UI binding remains valid.",
+    "Fallback hosts without the optional seam retain the original complete envelope/projection path.",
+    "Alternative full C08/source/day fingerprints, before/after checks,105000ms deadline and all contraproofs are unchanged.",
+    "No persistent/invocation authority cache, native execution claim or GLOBAL_RELEASE.",
+    "The original local: principal prohibition is enforced before either evidence path. Regression consumes a real UI lease, verifies matching local authentication against the actual role map, and requires denial with no payload and zero scoped-source reads."
+  ],
+  "checks": {
+    "static_diff_whitespace": "clean textual diff check; no product execution",
+    "product_tests": "NOT_RUN_BY_CHILD",
+    "planned_exact_files": [
+      "test/product/wp10/integration/planner-evidence.test.ts",
+      "test/product/wp10/integration/source-read-fence.test.ts",
+      "test/product/wp10/integration/source-lifecycle.test.ts",
+      "test/product/wp10/integration/scenario-operation-access.test.ts",
+      "test/product/wp10/integration/alternative-call-scope.test.ts",
+      "test/product/wp10/analysis-composition/alternative-selection.test.ts"
+    ],
+    "required_package_checks": [
+      "apps/cli: bun typecheck",
+      "Sucafinav1: bun typecheck",
+      "repository guards per AGENTS"
+    ],
+    "run_ids": []
+  },
+  "findings": [
+    {
+      "owner": "WP10",
+      "state": "implemented-awaiting-CI",
+      "finding": "Repeated source-envelope/financial-projection observations collapsed into one two-observation callback interval."
+    },
+    {
+      "owner": "WP11/WP04",
+      "state": "measurement-pending",
+      "finding": "Repeated canonical case/result/coverage proofs remain unchanged. Optimize domain-owned producer nesting only if exact-sha Actions still shows material latency, with owner patch and fresh authorization retained."
+    },
+    {
+      "owner": "WP10",
+      "state": "corrected-before-publication",
+      "finding": "Root static review identified local: exclusion present in the former direct projector but absent from the source envelope. Explicit early rejection restores the projection policy for the new path and legacy fallback."
+    }
+  ],
+  "next_action": "Root consume exact blobs and combine with authenticated-admission delta; execute/reuse one surgical GitHub Actions request and measure actual Alternative105s completion. No global readiness claim.",
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/planner-evidence.ts",
+      "base_blob": "13153182e357b716a12d2554654905d54fa30ee4",
+      "new_blob": "692adcc1100cf0894817f9023bf5c45c9c28232c",
+      "sha256": "cfd53ce5b8c066a30d82581649248f82e277e7e79cf4c1f61883dee3d861ac51"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/planner-sources.ts",
+      "base_blob": "8a3201272fddf48b25d137886dcdd290e2d2db3e",
+      "new_blob": "1b2bb4b9ab9b2e06a82f3038b02600c3bdba220f",
+      "sha256": "2f736540e127c795dc106c222435580a4a3867d8a6c4315e3ae543ccc71f834b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-evidence.test.ts",
+      "base_blob": "4092804b5ba52baea87bf58b1c252c6ce5917f30",
+      "new_blob": "9285f9c2fa6a417a6d9a57a35392ff3a281c6f46",
+      "sha256": "154d922f8b8f4ec517d5c09fb4b036e4a7fd02593c70b92a10b8b99de8fac4fb"
+    }
+  ]
+}

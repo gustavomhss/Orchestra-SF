@@ -25,7 +25,10 @@ import { createSfSourceScopeProjector } from "../product/integration/source-proj
 import { createSfBiHttp } from "../product/integration/bi-http.ts"
 import { createSfWorkbenchHttp } from "../product/interface/http.ts"
 import { decorateSfProductHtml } from "../product/interface/html.ts"
+import { decorateSfDecisionControlsHtml } from "../product/integration/decision-controls-link.ts"
 import { sfHumanActions } from "../product/integration/human-authority.ts"
+import { getSfProductHtml } from "../product/integration/host-presentation.ts"
+import { AsyncLocalStorage } from "node:async_hooks"
 import { digestSfValue } from "../product/contracts/canonical.ts"
 import freeze from "../product/contracts/freeze-v1.json"
 import biBrowser from "../product/integration/generated/bi-entry.txt" with { type: "text" }
@@ -91,17 +94,31 @@ export async function createLocalInstallation(context: { origin: string; createH
   const runtime = await context.createHostRuntime?.({ installationId, directory: loaded.directory, sourceRoot: path.resolve(import.meta.dir, "../product/ai"), origin: config.origin,
     mount: config.mount, persistence: store, authenticate: identity.authenticate, environment: requestEnvironment, assets,
     grants: operator ? [{ principalRef: `macos:${operator.installationId}:${operator.uid}`,
-      namespaces: ["preferences", "reviews", "relations", "threads", "confirmations", "cases", "contributions", "documents", "receipts", "atlas", "outbox"],
+      namespaces: ["preferences", "reviews", "relations", "threads", "confirmations", "cases", "contributions", "documents", "receipts", "atlas", "outbox", "bi-artifacts"],
       operations: freeze.operations.map((operation) => operation.operation), humanActions: sfHumanActions }] : [] })
   const bi = createSfBiHttp({ installationId, projectId: installationId, policyVersion: "sf-product-v1", origin: config.origin, mount: config.mount,
     persistence: store, authenticate: identity.authenticate, environment: requestEnvironment, browserScript: async () => biBrowser, ...(runtime ? { identity: runtime.identity } : {}) })
   const workbench = createSfWorkbenchHttp({ origin: config.origin, mount: config.mount, runtime: () => runtime?.services?.() })
+  const presentationRequest = new AsyncLocalStorage<Request>()
   const business = createModule(config.mount, {
     persistence: store,
     authenticate: identity.authenticate,
     environment: requestEnvironment,
     product: async (request, surface) => await runtime?.services?.()?.productHttp?.(request, surface) ?? await workbench(request, surface) ?? await bi(request, surface),
-    productHtml: decorateSfProductHtml,
+    productView: async (request, surface, page) => {
+      if (surface !== "procurement" || page !== "Requests" && page !== "My approvals") return undefined
+      if (!runtime) return undefined
+      const view = runtime.services?.()?.productView
+      return view ? view(request, surface, page) : new Response("Procurement is temporarily unavailable. Refresh the page to try again.", {
+        status: 503, headers: { "Cache-Control": "no-store", "Content-Type": "text/plain; charset=utf-8", "X-Content-Type-Options": "nosniff" },
+      })
+    },
+    productHtml: (html, surface, page) => {
+      const productHtml = getSfProductHtml(runtime?.services?.())
+      const document = productHtml?.(decorateSfProductHtml(html, surface, page), surface, page, presentationRequest.getStore()) ?? decorateSfProductHtml(html, surface, page)
+      // Keep WP06 document/import navigation while composing WP04's fenced page projection.
+      return decorateSfDecisionControlsHtml(document.replace('<div class="workspace-tools">', `<div class="workspace-tools">${surface === "dashboard" || surface === "planner" ? '<a href="?sf=imports">Imports</a>' : ""}<a href="?sf=documents">Documents</a>`), surface)
+    },
     maxJsonBytes: 2 * 1024 * 1024,
     assets,
   })
@@ -185,7 +202,7 @@ export async function createLocalInstallation(context: { origin: string; createH
         if (!person && request.method === "GET") return new Response(null, { status: 303, headers: { location: `${config.mount}/auth/login?returnTo=${encodeURIComponent(url.pathname + url.search)}`, "Cache-Control": "no-store" } })
         if (person && !operator) await bootstrapLocalSurface({ request, surface, groups: config.groups[surface], identity, store })
       }
-      const response = await business(request)
+      const response = await presentationRequest.run(request, () => business(request))
       if (request.method === "POST" && response?.ok) void jobs.runOnce().catch(() => undefined)
       if (!operator || !response || !response.headers.get("content-type")?.includes("text/html") || url.searchParams.has("download") || request.method === "HEAD") return response
       return localChrome(response)

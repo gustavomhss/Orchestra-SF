@@ -1,0 +1,113 @@
+{
+  "schema": "astra-compose-owner-intake-w9-hold-v1",
+  "source_pr": 36,
+  "source_head": "c21a990c57b714cd60bb7f915beb6be51acbafdb",
+  "source_tree": "3cdfa2b5a6d0ce2ea57aa37e5b95cb7037151fa5",
+  "target_head": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+  "target_tree": "051391628c61f6a4333c8f13567c5518c4ff8f86",
+  "accepted": [],
+  "held": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/atlas-restart-reader.ts",
+      "source_pr": 36,
+      "source_head": "c21a990c57b714cd60bb7f915beb6be51acbafdb",
+      "source_tree": "3cdfa2b5a6d0ce2ea57aa37e5b95cb7037151fa5",
+      "source_blob": "f4fcfa9f961f5087eead1e4ce54296625c93172d",
+      "base_head": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "base_tree": "051391628c61f6a4333c8f13567c5518c4ff8f86",
+      "base_blob": "9268b8797955057559bf22c0625b3b302c49cfe5",
+      "content_sha256": "940d24f7452e964b137911b2d708de8d238087c84aa6e286fa8fbb500aafd936",
+      "cached_compare_matches_remote": true,
+      "disposition": "HOLD_SPECIFIC_CLOSURE_DEFECT",
+      "finding": {
+        "id": "WP14_STABLE_REQUEST_IDENTITY_UNFIXED",
+        "line": 51,
+        "cause": "requestFor constructs a new Request on every invocation. W8 Atlas readOriginalCapture pins its first Request and requires host.requestFor(call) === request at egress (product/host-binding/atlas-memory.ts:73). A protected original therefore cannot be returned under this fixture even when other authorization remains valid.",
+        "remedy": "Owner must preserve one Request per TrustedDomainContext for the duration of the admitted call, bind the existing cancellation signal, and retain all principal/access/source revalidation. Do not remove the production identity guard.",
+        "type_change": "The newly added conservative no-scenario-operations verifier addresses the missing-property shape, but does not repair the protected-original continuity prerequisite.",
+        "tests_proposed": [
+          "GitHub Actions source-access-atlas protected original across store reopen and actor changes",
+          "Retain cancellation, revocation, inaccessible nested-source and cross-principal negatives"
+        ],
+        "cause_status": "STATIC_DETERMINISTIC_PATH; no runtime claim or timeout-cause inference"
+      },
+      "staged_source": "incoming-cache/owner-round9/pr36-src/modules/sucafina/Sucafinav1/test/product/wp14/atlas-restart-reader.ts",
+      "published_by_agent": false,
+      "source_modified_by_agent": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+      "source_pr": 36,
+      "source_head": "c21a990c57b714cd60bb7f915beb6be51acbafdb",
+      "source_tree": "3cdfa2b5a6d0ce2ea57aa37e5b95cb7037151fa5",
+      "source_blob": "d44e2088e04ba96fa5eb88256f0ffc0a4517b463",
+      "base_head": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "base_tree": "051391628c61f6a4333c8f13567c5518c4ff8f86",
+      "base_blob": "d31c8dc6867bcbb7f389bde79df644a5133de51a",
+      "content_sha256": "8c06998cc9ce65d8ed57d0d995b026f4da326717b47c7c748388f1e57769ce42",
+      "cached_compare_matches_remote": true,
+      "disposition": "HOLD_SPECIFIC_CLOSURE_DEFECT",
+      "finding": {
+        "id": "WP14_ATLAS_FILE_CLOSURE_INCOMPLETE",
+        "line": 63,
+        "cause": "The first existing scenario also returns a fresh Request per requestFor call and launches atlas-restart-reader.ts at line177. Both its local original-reader and its child violate the same W8 Request identity egress check. The newly added document scenario (line235) uses actual C08, document services and Atlas scanner, but the exact whole owner file is not an authentic complete closure for the restart requirement.",
+        "remedy": "Owner should publish stable admitted-call Request handling in the parent and child, preserving existing predicates and all first-scenario assertions. The added document scenario must keep the shared procurementEvidenceWrites WeakSet and current real service composition; do not import foreign source snapshots.",
+        "dependency_inventory": [
+          "test/product/wp14/atlas-restart-reader.ts at f4fcfa9f961f5087eead1e4ce54296625c93172d (held)",
+          "W8 product/host-binding/atlas-memory.ts request identity egress predicate",
+          "New second scenario directly imports W8 WP06 runtime-fixture, product-authority, document-authority/services, business-services, Atlas business-context and ledger-outbox"
+        ],
+        "tests_proposed": [
+          "GitHub Actions both source-access-atlas cases with exact final producer/reader blobs",
+          "Confirm scanner/native child evidence from Actions rather than fabricating local proof"
+        ],
+        "cause_status": "STATIC_CLOSURE_HOLD; new second scenario has not been executed or fully qualified"
+      },
+      "staged_source": "incoming-cache/owner-round9/pr36-src/modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+      "published_by_agent": false,
+      "source_modified_by_agent": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+      "source_pr": 36,
+      "source_head": "c21a990c57b714cd60bb7f915beb6be51acbafdb",
+      "source_tree": "3cdfa2b5a6d0ce2ea57aa37e5b95cb7037151fa5",
+      "source_blob": "dbbe5f7dc64d3accee536b38ae4196034562cf8f",
+      "base_head": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+      "base_tree": "051391628c61f6a4333c8f13567c5518c4ff8f86",
+      "base_blob": "f81469e41928f9fe1d2fbc2303158cfe4e5b5809",
+      "content_sha256": "0e03b416666ab55a81c618ed4d1c2091479b93e42425dfaa8647344cbcd270ca",
+      "cached_compare_matches_remote": true,
+      "disposition": "HOLD_SPECIFIC_CLOSURE_DEFECT",
+      "finding": {
+        "id": "WP13_FORECAST_PROJECTOR_DEPENDENCY_UNFIXED",
+        "line": 163,
+        "cause": "createPortfolioProduct still receives planner.sources typed as PlannerSourceHost with no projectForecastSource. W8 check6 TS2322 at the previous line158 therefore remains applicable to this constructor (now line163). The source delta adds FX fixture data and stage logging, but not the mandatory real forecast projector.",
+        "remedy": "Owner must compose the real SfPlannerSourceProjector into sources and preserve per-read source authorization/projection checks; no cast or permissive placeholder.",
+        "tests_proposed": [
+          "GitHub Actions package bun typecheck",
+          "GitHub Actions sensitivity-units-boundary tests including wrong case, historical source, unit/currency and revoked access negatives"
+        ],
+        "cause_status": "STATIC_TYPE_DEPENDENCY_UNRESOLVED; no local typecheck performed"
+      },
+      "staged_source": "incoming-cache/owner-round9/pr36-src/modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+      "published_by_agent": false,
+      "source_modified_by_agent": false
+    }
+  ],
+  "excluded": "All other 132 source delta paths; no snapshot or deletion import",
+  "execution": {
+    "local_tests": false,
+    "local_typecheck": false,
+    "local_guards": false,
+    "CI_dispatched": false,
+    "GitHub_mutations": false,
+    "worktree_edits": false
+  },
+  "proof_limits": [
+    "No current-head/native success alleged",
+    "Old source aggregate failures remain in source-comments.json and W3 reconciliation receipt; no old green transferred",
+    "This is intake analysis, not an independent release review"
+  ],
+  "next_action": "Root may relay bounded findings to owner WP13/WP14; consume a published correction after exact blob/dependency review"
+}

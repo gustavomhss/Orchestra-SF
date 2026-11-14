@@ -1,0 +1,22 @@
+{
+  "finding": "CI6-WP10-ANALYSIS-REENTRY-FIXTURE-01",
+  "baseHead": "f9990ecc7ade0d64122633d51258ddafe2c93802",
+  "baseTree": "195f4ea0f9b0099b0070b009570f79bf0a62d0be",
+  "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/analysis-run-context.test.ts",
+  "baseBlob": "c6be5fbecf49e93237b873bb79ac12260022bdf1",
+  "blob": "8bccf7136a0a2a9f4faf116ae912000756ad32f4",
+  "sha256": "849e4413930aa1729659ee5b9e407d714d5c96e2fc942971571b1d5826d45db9",
+  "stagedPath": "owned-patch-round13/modules/sucafina/Sucafinav1/test/product/wp10/integration/analysis-run-context.test.ts",
+  "run": 43592994998,
+  "observedW": "00304ac25cc82ffd87ebd3096bd2f5cfec5222e1",
+  "observedS": "747e1006562677391187c501e99d5bdd9751949a",
+  "cause": "The fixture attempted to restore its own membership through C08 after removing the only participant; product correctly denied at test line84.",
+  "change": "Assert denial of self-restoration; model external fixture membership restoration in the real SQLite store with case namespace and aggregate revision advance, then preserve every original reentry/strict selector/revocation/abort/incarnation assertion.",
+  "limits": [
+    "No product/auth identity/policy change",
+    "No native witness",
+    "No deadline, test filter or skip change",
+    "Actions runtime pending"
+  ],
+  "local_product_execution": false
+}

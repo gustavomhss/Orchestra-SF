@@ -1,0 +1,321 @@
+{
+  "schema": "sf2-compose-surgical-ci-receipt-v1",
+  "status": "COMPLETED_FAILURE",
+  "run": 43601886040,
+  "job": 132468196684,
+  "W": "5cb947a4d6e11a37dbd702404c2d4f4d352a4b57",
+  "W_tree": "e39b8189cf70ecd3b00c02dcf59f9388d65b8b2d",
+  "S": "25d89ec664217f56c60defa0eb518f4e94e05d39",
+  "S_tree": "9da69a9c4024e13427a401ddbab7cbc701ea1d8b",
+  "request_blob": "0f914221b5c962f7f7da6fe8ac907be0e6fd24ce",
+  "request_sha256": "b394bff29da69525921c3a92b169083a42e3e8c233b6475cde7849784b1948b0",
+  "branch": "ci-run-linux-astra-compose-5cb947a4-b394bff2-a1",
+  "first_and_only_parent": "5cb947a4d6e11a37dbd702404c2d4f4d352a4b57",
+  "snapshot_diff": [
+    {
+      "path": ".ci-run.json",
+      "status": "added",
+      "sha": "0f914221b5c962f7f7da6fe8ac907be0e6fd24ce"
+    }
+  ],
+  "selection": {
+    "files": 8,
+    "expected_cases": 26,
+    "observed_cases": 26,
+    "full_files": true,
+    "scope": {
+      "path": "ci-source/request-compose-08-w15.scope.json",
+      "bytes": 3402,
+      "sha256": "861f3420d7f96c3ceb4037ace6a5a46f3e7cfb6e85860c7319c7cb0d6364e316"
+    },
+    "original_pre_dispatch_scope": {
+      "path": "ci-source/request-compose-08-w15.scope.pre-dispatch.json",
+      "bytes": 2479,
+      "sha256": "fcf5942083d42bd6fb26b152cbf32c3e2e617e0d7c2ffaf0acb1497189476058"
+    },
+    "count_correction": "Initial static declaration count23 omitted3 loop registrations. All26 were selected by unchanged full-file request; no redispatch."
+  },
+  "canonical_validator": "validateRequest + locateTestPackage; metadata-only local validation",
+  "cleanup": {
+    "job": 132469128843,
+    "status": "COMPLETED",
+    "conclusion": "SUCCESS",
+    "scope": "Deletes CI snapshot branch only; does not establish Chrome cleanup."
+  },
+  "result": {
+    "pass": 24,
+    "fail": 2,
+    "tests": 26,
+    "files": 8,
+    "assertions": 505,
+    "seconds": 126.24,
+    "unhandled_errors": 0
+  },
+  "omni": {
+    "status": "PASS",
+    "nonce": "e092a896bad5abe35dd4657e6ef34534",
+    "declaring_tests": 3,
+    "spawns": 6,
+    "delegated": 0
+  },
+  "artifacts": [],
+  "log": {
+    "path": "evidence/ci8.log",
+    "bytes": 267861,
+    "sha256": "c68fffbd7deeefb3f2b58849cabc33baa4c42ab5f2697293a036f3d7f25aef62"
+  },
+  "parser": {
+    "path": "/workspace/scratch/4c48b09c5c29/evidence/parse_ci_log_metadata.py",
+    "sha256": "bbd094b9bdce8ac3e82193eddf9a825c1a891159f03a0b53c15dadf98affb194"
+  },
+  "cases": [
+    {
+      "status": "pass",
+      "name": "BI keeps the canonical shell, refreshes on manual focus and timer, and signs out once while discarding a held genuine success",
+      "milliseconds": 13402.26,
+      "duration_text": "13402.26ms",
+      "file": "Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts",
+      "line": 832,
+      "timestamp": "2026-11-14T13:53:42.0460713Z"
+    },
+    {
+      "status": "fail",
+      "name": "the canonical shell still polls authority while BI awaits a held result and revocation prevents every late render",
+      "milliseconds": 2975.91,
+      "duration_text": "2975.91ms",
+      "file": "Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts",
+      "line": 880,
+      "timestamp": "2026-11-14T13:53:45.0223572Z"
+    },
+    {
+      "status": "pass",
+      "name": "clearing the BI selection while genuine authorized options are delayed prevents restoration of the previous selection",
+      "milliseconds": 1226.03,
+      "duration_text": "1226.03ms",
+      "file": "Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts",
+      "line": 888,
+      "timestamp": "2026-11-14T13:53:46.2481312Z"
+    },
+    {
+      "status": "fail",
+      "name": "BI returns from a real source with the same human filters, version pair, currency and mark focus after current reauthorization",
+      "milliseconds": 24467.5,
+      "duration_text": "24467.50ms",
+      "file": "Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts",
+      "line": 962,
+      "timestamp": "2026-11-14T13:54:10.7173934Z"
+    },
+    {
+      "status": "pass",
+      "name": "BI origin digests select only an explicit source of the real current Planner difference and never choose A or B implicitly",
+      "milliseconds": 532.13,
+      "duration_text": "532.13ms",
+      "file": "Sucafinav1/test/product/wp10/integration/bi-lifecycle.test.ts",
+      "line": 979,
+      "timestamp": "2026-11-14T13:54:11.2477182Z"
+    },
+    {
+      "status": "pass",
+      "name": "Analysis reentry reaches current lifecycle metadata after case advancement without upgrading its original fresh selector",
+      "milliseconds": 250.84,
+      "duration_text": "250.84ms",
+      "file": "Sucafinav1/test/product/wp10/integration/analysis-run-context.test.ts",
+      "line": 984,
+      "timestamp": "2026-11-14T13:54:11.5145424Z"
+    },
+    {
+      "status": "pass",
+      "name": "Analysis lifecycle admission keeps strict fresh projection and refuses fresh work after stale case rollback or changed selection",
+      "milliseconds": 306.03,
+      "duration_text": "306.03ms",
+      "file": "Sucafinav1/test/product/wp10/integration/analysis-lifecycle-admission.test.ts",
+      "line": 987,
+      "timestamp": "2026-11-14T13:54:11.8231595Z"
+    },
+    {
+      "status": "pass",
+      "name": "Analysis lifecycle egress refuses membership revoked during the final real human authorization",
+      "milliseconds": 29.13,
+      "duration_text": "29.13ms",
+      "file": "Sucafinav1/test/product/wp10/integration/analysis-lifecycle-admission.test.ts",
+      "line": 988,
+      "timestamp": "2026-11-14T13:54:11.8522833Z"
+    },
+    {
+      "status": "pass",
+      "name": "Analysis lifecycle admission and egress reject snapshot mutation or finished lease after C08 projection",
+      "milliseconds": 175.84,
+      "duration_text": "175.84ms",
+      "file": "Sucafinav1/test/product/wp10/integration/analysis-lifecycle-admission.test.ts",
+      "line": 989,
+      "timestamp": "2026-11-14T13:54:12.0282010Z"
+    },
+    {
+      "status": "pass",
+      "name": "Late captured calculation settles its original output after case advance without changing the active selector, and survives restart",
+      "milliseconds": 30937.32,
+      "duration_text": "30937.32ms",
+      "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+      "line": 1147,
+      "timestamp": "2026-11-14T13:54:42.9786318Z"
+    },
+    {
+      "status": "pass",
+      "name": "Late calculation settlement rejects another case, a later producer, missing ledger/capture and changed sources without writing output",
+      "milliseconds": 23217.84,
+      "duration_text": "23217.84ms",
+      "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+      "line": 1306,
+      "timestamp": "2026-11-14T13:55:06.1964080Z"
+    },
+    {
+      "status": "pass",
+      "name": "Private historical read refuses a substituted Request, first or last authorization loss, and closes every admitted lease",
+      "milliseconds": 26580.85,
+      "duration_text": "26580.85ms",
+      "file": "Sucafinav1/test/product/wp10/integration/analysis-stale-calculation.test.ts",
+      "line": 1453,
+      "timestamp": "2026-11-14T13:55:32.7772378Z"
+    },
+    {
+      "status": "pass",
+      "name": "empty-source admission observes two authenticated projections and refuses a static reference after a real Planner edit",
+      "milliseconds": 123.32,
+      "duration_text": "123.32ms",
+      "file": "Sucafinav1/test/product/wp11/renewal-source-admission.test.ts",
+      "line": 1456,
+      "timestamp": "2026-11-14T13:55:32.9166444Z"
+    },
+    {
+      "status": "pass",
+      "name": "empty-source admission refuses second-source-resolve before its final projection",
+      "milliseconds": 66.65,
+      "duration_text": "66.65ms",
+      "file": "Sucafinav1/test/product/wp11/renewal-source-admission.test.ts",
+      "line": 1457,
+      "timestamp": "2026-11-14T13:55:32.9833000Z"
+    },
+    {
+      "status": "pass",
+      "name": "empty-source admission refuses last-revalidate-source-change before its final projection",
+      "milliseconds": 33.86,
+      "duration_text": "33.86ms",
+      "file": "Sucafinav1/test/product/wp11/renewal-source-admission.test.ts",
+      "line": 1458,
+      "timestamp": "2026-11-14T13:55:33.0171552Z"
+    },
+    {
+      "status": "pass",
+      "name": "empty-source admission refuses last-revalidate-revocation before its final projection",
+      "milliseconds": 34.93,
+      "duration_text": "34.93ms",
+      "file": "Sucafinav1/test/product/wp11/renewal-source-admission.test.ts",
+      "line": 1459,
+      "timestamp": "2026-11-14T13:55:33.0521408Z"
+    },
+    {
+      "status": "pass",
+      "name": "empty-source admission refuses authority revoked by its final authentication callback",
+      "milliseconds": 36.5,
+      "duration_text": "36.50ms",
+      "file": "Sucafinav1/test/product/wp11/renewal-source-admission.test.ts",
+      "line": 1460,
+      "timestamp": "2026-11-14T13:55:33.0886466Z"
+    },
+    {
+      "status": "pass",
+      "name": "empty-source admission refuses mismatched scope, projection fields, digest and source period",
+      "milliseconds": 270.34,
+      "duration_text": "270.34ms",
+      "file": "Sucafinav1/test/product/wp11/renewal-source-admission.test.ts",
+      "line": 1461,
+      "timestamp": "2026-11-14T13:55:33.3590077Z"
+    },
+    {
+      "status": "pass",
+      "name": "nonempty operations retain the canonical target verifier and never write the real source",
+      "milliseconds": 60.37,
+      "duration_text": "60.37ms",
+      "file": "Sucafinav1/test/product/wp11/renewal-source-admission.test.ts",
+      "line": 1462,
+      "timestamp": "2026-11-14T13:55:33.4193558Z"
+    },
+    {
+      "status": "pass",
+      "name": "case operation admission observes all alternatives in a read-only scope without changing durable state",
+      "milliseconds": 58.37,
+      "duration_text": "58.37ms",
+      "file": "Sucafinav1/test/product/wp11/renewal-case-read-scope.test.ts",
+      "line": 1465,
+      "timestamp": "2026-11-14T13:55:33.4800900Z"
+    },
+    {
+      "status": "pass",
+      "name": "case operation admission refuses a nested source write even when the source callback swallows its rejection",
+      "milliseconds": 214.23,
+      "duration_text": "214.23ms",
+      "file": "Sucafinav1/test/product/wp11/renewal-case-read-scope.test.ts",
+      "line": 1466,
+      "timestamp": "2026-11-14T13:55:33.6943720Z"
+    },
+    {
+      "status": "pass",
+      "name": "a later case operation admission observes a committed source change instead of reusing the prior scope",
+      "milliseconds": 63.39,
+      "duration_text": "63.39ms",
+      "file": "Sucafinav1/test/product/wp11/renewal-case-read-scope.test.ts",
+      "line": 1467,
+      "timestamp": "2026-11-14T13:55:33.7577715Z"
+    },
+    {
+      "status": "pass",
+      "name": "case operation admission refuses authority revoked by an awaited source callback",
+      "milliseconds": 75.14,
+      "duration_text": "75.14ms",
+      "file": "Sucafinav1/test/product/wp11/renewal-case-read-scope.test.ts",
+      "line": 1468,
+      "timestamp": "2026-11-14T13:55:33.8329282Z"
+    },
+    {
+      "status": "pass",
+      "name": "consumer opens the stored result and refuses revoked or mismatched provenance",
+      "milliseconds": 7.81,
+      "duration_text": "7.81ms",
+      "file": "Sucafinav1/test/product/wp12/contribution-reader.test.ts",
+      "line": 1471,
+      "timestamp": "2026-11-14T13:55:33.8538371Z"
+    },
+    {
+      "status": "pass",
+      "name": "real C08 current reader fences verifier aliases and returns private output and run copies",
+      "milliseconds": 531.16,
+      "duration_text": "531.16ms",
+      "file": "Sucafinav1/test/product/wp12/contribution-reader.test.ts",
+      "line": 1472,
+      "timestamp": "2026-11-14T13:55:34.3850151Z"
+    },
+    {
+      "status": "pass",
+      "name": "historical contribution survives SQLite reopen and requires current access to case and sources",
+      "milliseconds": 60.96,
+      "duration_text": "60.96ms",
+      "file": "Sucafinav1/test/product/wp12/historical-reader.test.ts",
+      "line": 1475,
+      "timestamp": "2026-11-14T13:55:34.4486130Z"
+    }
+  ],
+  "positive_scope": "W15 lifecycle admission3, reentry1, stale-calculation3, Finance11, readers3 pass. BI3/5 pass.",
+  "open_findings": [
+    "BI authority expected403 observed200; mounted-cookie fixture diagnosis requires next-SHA verification",
+    "BI comparison.http timeout before source navigation, followed by browser cleanup failure",
+    "Four historical CI5 timeout scenarios were not selected",
+    "No full WP/native/AM/global acceptance"
+  ],
+  "local_product_execution": false,
+  "global_release": false,
+  "terminal_mcp_observations": {
+    "path": "evidence/w15-terminal-mcp-observations.json",
+    "bytes": 40192,
+    "sha256": "f769290aab2c367bfcf5f239f3ce17bda25fa61855d919bf8930d6f84a67bd17"
+  }
+}

@@ -1,0 +1,93 @@
+{
+  "schema": "sf2h-owned-increment-manifest-v1",
+  "owner": "Astra / WP10",
+  "base_pr": 32,
+  "base_head": "8f760659279567d2c169691c3e57cf19be10417d",
+  "base_tree": "2b99a9ee4fa948d02ab7010755b70e434dde11e2",
+  "reconciled_head": "7c7e5b086a9de405cd3f8e18e8d631af55cf0979",
+  "reconciled_tree": "3deb1ed790fc247a6633c9cc25a11523ae3f61b1",
+  "staging": "/workspace/scratch/4c48b09c5c29/composition-planner-history-patch",
+  "status": "IMPLEMENTED_NOT_REVALIDATED",
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/recorded-planner-operation-access.ts",
+      "base_blob": null,
+      "blob": "38b832f73b0eaa615d5fdf2d7838b0e5635440fa",
+      "sha256": "9e23675cd288e9407f78787778abee30b3f01811823c0f714e99455f9899f8ea",
+      "bytes": 12291,
+      "operation": "add",
+      "owner": "WP10 composition",
+      "staged_path": "/workspace/scratch/4c48b09c5c29/composition-planner-history-patch/apps/cli/src/sucafina-product/recorded-planner-operation-access.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+      "base_blob": "f27b25e5e7fdea3a4a228cbe7d79ef82bf4b0fdf",
+      "blob": "aa1be4cfb8f501b3fccddb269efce5567bcdd447",
+      "sha256": "9d59609b2a66ac9f0a6dab22e479398cffd6cf656687a1f215a949ec0d8f0290",
+      "bytes": 10118,
+      "operation": "update",
+      "owner": "WP10 composition",
+      "staged_path": "/workspace/scratch/4c48b09c5c29/composition-planner-history-patch/apps/cli/src/sucafina-product/scenario-operation-access.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/compose-planner-recorded-history.json",
+      "base_blob": null,
+      "blob": "b130dec3d7f18b8485288c415c431b5a35ac5817",
+      "sha256": "8c07a36d27a364d2f2e034c12c3c31af9a31b18a683c207bd5f0ecccbb96fe00",
+      "bytes": 5438,
+      "operation": "add",
+      "owner": "WP10 composition",
+      "staged_path": "/workspace/scratch/4c48b09c5c29/composition-planner-history-patch/modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/compose-planner-recorded-history.json"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/financial-composition-fixture.ts",
+      "base_blob": "1bf3ead4c6652e4aa31a28ea6850db3efd40c2f0",
+      "blob": "febb795303b8c4ada5fb6f39d6373667ee71dac1",
+      "sha256": "be6322af3235a0cfa4ab8c7c3f9d45f2e48d0146d560efca6ed6a5815418e15d",
+      "bytes": 5929,
+      "operation": "update",
+      "owner": "WP10 composition",
+      "staged_path": "/workspace/scratch/4c48b09c5c29/composition-planner-history-patch/modules/sucafina/Sucafinav1/test/product/wp10/integration/financial-composition-fixture.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-recorded-history.test.ts",
+      "base_blob": null,
+      "blob": "432ca1f9c72fbbb3d278a8cb687b9c65ddaadb0a",
+      "sha256": "c16da7312850a99961c982920d3c0527e281bea91e86fbd954d1838e581979ec",
+      "bytes": 16751,
+      "operation": "add",
+      "owner": "WP10 composition",
+      "staged_path": "/workspace/scratch/4c48b09c5c29/composition-planner-history-patch/modules/sucafina/Sucafinav1/test/product/wp10/integration/planner-recorded-history.test.ts"
+    }
+  ],
+  "deletions": [],
+  "product_tests_run_locally": false,
+  "remote_product_mutations": false,
+  "consumer_hunks": [
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "base_blob": "0e5a508722c9e741a1737beb7d88ccb596a6f495",
+      "patch": "/workspace/scratch/4c48b09c5c29/incoming-cache/planner-history-business-services.hunk.patch",
+      "note": "Two additive hunks only; root combines with the separate C17 recall composition."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/README.md",
+      "base_head": "7c7e5b086a9de405cd3f8e18e8d631af55cf0979",
+      "base_blob": "923e9389d8660a50f4eee0add74a0c02818e603a",
+      "patch": "/workspace/scratch/4c48b09c5c29/incoming-cache/planner-history-readme.hunk.patch",
+      "note": "One additive paragraph; preserve concurrent guide work."
+    }
+  ],
+  "checks_requested": {
+    "runs": [],
+    "product_execution": "NOT_RUN_LOCALLY",
+    "typecheck": "PENDING: bun typecheck in modules/sucafina through GitHub Actions on the published composed head/tree",
+    "hosted_tests": [
+      "test/product/wp10/integration/planner-recorded-history.test.ts",
+      "test/product/wp10/integration/scenario-operation-access.test.ts",
+      "test/product/wp10/atlas-business/record-history.test.ts"
+    ],
+    "guards": "Per applicable AGENTS. No epic. Reattach equivalent runs; do not inherit green from a different tree."
+  },
+  "criterion_maps": "No full criterion changes to PASS; parent retains all 85 WP00 + 171 WP10 and global gates."
+}

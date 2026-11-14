@@ -1,0 +1,932 @@
+{
+  "schema": "astra-owner-typecheck-findings-v1",
+  "source_commit": "ff7a99753d1fd1bc8b68b4f2642fed26e3cadbdf",
+  "source_tree": "91fdfc7cdf15ad57350ca4c4f2751dfe50daf919",
+  "evidence": {
+    "workflow_run": 43577846910,
+    "job": 132395914997,
+    "snapshot_commit": "ee53445dc8bf49f7148918867eedab0093cc111f",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43577846910",
+    "log_sha256": "35ad4ca4b7d0a5994bb3acd09d0443bc57f8dbb66150676e43eaa429681401bb"
+  },
+  "diagnostic_counts": {
+    "WP01": 2,
+    "WP04": 2,
+    "WP06": 1,
+    "WP11": 14,
+    "WP12": 2,
+    "WP13": 8,
+    "WP14": 3
+  },
+  "total_diagnostics": 32,
+  "root_cause_count": 13,
+  "read_only_product": true,
+  "remote_mutations": false,
+  "independent_review": false,
+  "product_validation": "NOT_RUN — proposed patches, not applied. No local product tests/typecheck executed.",
+  "scope_note": "Only diagnostics actually emitted in this run; Sucafina parse blockers prevent claiming that all semantic diagnostics were reached.",
+  "current_remote_checks": [
+    {
+      "pr": 35,
+      "head": "8184761b61f78d6aeac73232fdc879e93f85bc5e",
+      "path": "product/decisions/alternative-replay.ts",
+      "sha": "7f4fa4df2075fea83cf89981b00a5f1cba0f630a",
+      "display_url": "https://github.com/gustavomhss/Orchestra-SF/blob/8184761b61f78d6aeac73232fdc879e93f85bc5e/modules/sucafina/Sucafinav1/product/decisions/alternative-replay.ts",
+      "identical_to_source_commit": true
+    },
+    {
+      "pr": 35,
+      "head": "8184761b61f78d6aeac73232fdc879e93f85bc5e",
+      "path": "product/decisions/prepared-apply.ts",
+      "sha": "60c1b9d21f82f0871a8d15886f1949e1396de57a",
+      "display_url": "https://github.com/gustavomhss/Orchestra-SF/blob/8184761b61f78d6aeac73232fdc879e93f85bc5e/modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "identical_to_source_commit": true
+    },
+    {
+      "pr": 35,
+      "head": "8184761b61f78d6aeac73232fdc879e93f85bc5e",
+      "path": "product/decisions/mutations.ts",
+      "sha": "c9b380d4f9e3f0b35eae027374d57bf4c9b65c3e",
+      "display_url": "https://github.com/gustavomhss/Orchestra-SF/blob/8184761b61f78d6aeac73232fdc879e93f85bc5e/modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+      "identical_to_source_commit": true
+    },
+    {
+      "pr": 35,
+      "head": "8184761b61f78d6aeac73232fdc879e93f85bc5e",
+      "path": "product/decisions/proposals.ts",
+      "sha": "304eb80e72a002078e3f6ea8c5cfac507ffdd494",
+      "display_url": "https://github.com/gustavomhss/Orchestra-SF/blob/8184761b61f78d6aeac73232fdc879e93f85bc5e/modules/sucafina/Sucafinav1/product/decisions/proposals.ts",
+      "identical_to_source_commit": true
+    },
+    {
+      "pr": 31,
+      "head": "a037a3350f373d9be471e15fae35aa1f1a54372b",
+      "path": "product/ui/components.ts",
+      "sha": "cd559d550b6fa799549b23c5c2c9f353781145cb",
+      "display_url": "https://github.com/gustavomhss/Orchestra-SF/blob/a037a3350f373d9be471e15fae35aa1f1a54372b/modules/sucafina/Sucafinav1/product/ui/components.ts",
+      "identical_to_source_commit": true
+    },
+    {
+      "pr": 31,
+      "head": "a037a3350f373d9be471e15fae35aa1f1a54372b",
+      "path": "product/ui/contribution-body.ts",
+      "sha": "95f3c12a559ff40b010b7774bc7a036da4b2afed",
+      "display_url": "https://github.com/gustavomhss/Orchestra-SF/blob/a037a3350f373d9be471e15fae35aa1f1a54372b/modules/sucafina/Sucafinav1/product/ui/contribution-body.ts",
+      "identical_to_source_commit": true
+    },
+    {
+      "pr": 34,
+      "head": "91e1f60b",
+      "path": "product/procurement/decision-host.ts",
+      "sha": "0c970d36c5af4f5a58dfca80e1c46cf12d478f5f",
+      "display_url": "https://github.com/gustavomhss/Orchestra-SF/blob/91e1f60b/modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+      "identical_to_source_commit": true
+    },
+    {
+      "pr": 34,
+      "head": "91e1f60b",
+      "path": "product/imports/dashboard.ts",
+      "sha": "0284244fbb6fdfcb1c7a654b1d0327e92865134c",
+      "display_url": "https://github.com/gustavomhss/Orchestra-SF/blob/91e1f60b/modules/sucafina/Sucafinav1/product/imports/dashboard.ts",
+      "identical_to_source_commit": false
+    },
+    {
+      "pr": 34,
+      "head": "de6959db82dbe48bd59e3d012ff668a86347a6cd",
+      "path": "product/procurement/decision-host.ts",
+      "sha": "0c970d36c5af4f5a58dfca80e1c46cf12d478f5f",
+      "display_url": "https://github.com/gustavomhss/Orchestra-SF/blob/de6959db82dbe48bd59e3d012ff668a86347a6cd/modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+      "identical_to_source_commit": true
+    },
+    {
+      "pr": 34,
+      "head": "de6959db82dbe48bd59e3d012ff668a86347a6cd",
+      "path": "product/imports/dashboard.ts",
+      "sha": "3a2dbbf47fb9e5d430ccd0edde2efccdf8412437",
+      "display_url": "https://github.com/gustavomhss/Orchestra-SF/blob/de6959db82dbe48bd59e3d012ff668a86347a6cd/modules/sucafina/Sucafinav1/product/imports/dashboard.ts",
+      "identical_to_source_commit": true
+    },
+    {
+      "pr": 31,
+      "head": "903bcee2e007809f7614a7fff39dd5019f7f7733",
+      "path": "product/ui/components.ts",
+      "sha": "cd559d550b6fa799549b23c5c2c9f353781145cb",
+      "display_url": "https://github.com/gustavomhss/Orchestra-SF/blob/903bcee2e007809f7614a7fff39dd5019f7f7733/modules/sucafina/Sucafinav1/product/ui/components.ts",
+      "identical_to_source_commit": true
+    },
+    {
+      "pr": 31,
+      "head": "903bcee2e007809f7614a7fff39dd5019f7f7733",
+      "path": "product/ui/contribution-body.ts",
+      "sha": "95f3c12a559ff40b010b7774bc7a036da4b2afed",
+      "display_url": "https://github.com/gustavomhss/Orchestra-SF/blob/903bcee2e007809f7614a7fff39dd5019f7f7733/modules/sucafina/Sucafinav1/product/ui/contribution-body.ts",
+      "identical_to_source_commit": true
+    }
+  ],
+  "findings": [
+    {
+      "source_commit": "ff7a99753d1fd1bc8b68b4f2642fed26e3cadbdf",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+      "line": 60,
+      "column": 202,
+      "code": "TS1005",
+      "error": "',' expected.",
+      "owner": "WP13",
+      "group": "Portfolio",
+      "cause": "Faltam duas chaves de fechamento em literais de PortResult de fixtures de histórico; o typecheck Sucafina para antes de checar semanticamente o package.",
+      "remedy": "Acrescentar as duas chaves, sem alterar valores, casts preexistentes ou expectativas.",
+      "proposed_hosted_selectors": [
+        "Sucafinav1/test/product/wp13/history-provenance.test.ts"
+      ],
+      "patch": "wp13-ff7a997-typecheck.patch",
+      "validation": "NOT_RUN — product tests/typecheck only in GitHub Actions",
+      "limitation": "Este parse blocker pode estar mascarando diagnósticos adicionais no package. Corrigir estes 32 diagnósticos não demonstra typecheck global verde.",
+      "cause_id": "PORTFOLIO_FIXTURE_PARSE",
+      "id": "TS-01"
+    },
+    {
+      "source_commit": "ff7a99753d1fd1bc8b68b4f2642fed26e3cadbdf",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+      "line": 66,
+      "column": 157,
+      "code": "TS1005",
+      "error": "',' expected.",
+      "owner": "WP13",
+      "group": "Portfolio",
+      "cause": "Faltam duas chaves de fechamento em literais de PortResult de fixtures de histórico; o typecheck Sucafina para antes de checar semanticamente o package.",
+      "remedy": "Acrescentar as duas chaves, sem alterar valores, casts preexistentes ou expectativas.",
+      "proposed_hosted_selectors": [
+        "Sucafinav1/test/product/wp13/history-provenance.test.ts"
+      ],
+      "patch": "wp13-ff7a997-typecheck.patch",
+      "validation": "NOT_RUN — product tests/typecheck only in GitHub Actions",
+      "limitation": "Este parse blocker pode estar mascarando diagnósticos adicionais no package. Corrigir estes 32 diagnósticos não demonstra typecheck global verde.",
+      "cause_id": "PORTFOLIO_FIXTURE_PARSE",
+      "id": "TS-02"
+    },
+    {
+      "source_commit": "ff7a99753d1fd1bc8b68b4f2642fed26e3cadbdf",
+      "path": "modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+      "line": 245,
+      "column": 120,
+      "code": "TS2345",
+      "error": "Argument of type '\"cancelled\" | \"failed\" | \"needs-input\" | \"queued\" | \"running\" | \"stale\" | \"unavailable\"' is not assignable to parameter of type '\"needs-input\" | \"unavailable\"'.",
+      "owner": "WP12",
+      "group": "AI residente",
+      "cause": "O refinamento de outcome.state por needs-input/unavailable não é conservado no callback passado a withRunContext.",
+      "remedy": "Capturar o state já refinado em const antes de criar o callback; manter reautenticação e o estado real do outcome.",
+      "proposed_hosted_selectors": [
+        "Sucafinav1/test/product/wp12/analysis.test.ts"
+      ],
+      "patch": "wp12-ff7a997-typecheck.patch",
+      "validation": "NOT_RUN — product tests/typecheck only in GitHub Actions",
+      "cause_id": "ANALYSIS_STATE_CLOSURE",
+      "id": "TS-03"
+    },
+    {
+      "source_commit": "ff7a99753d1fd1bc8b68b4f2642fed26e3cadbdf",
+      "path": "modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+      "line": 303,
+      "column": 50,
+      "code": "TS2345",
+      "error": "Argument of type '(context: TrustedDomainContext) => Promise<{ status: \"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"; reason: string; } | ... 6 more ... | { ...; }>' is not assignable to parameter of type '(context: TrustedDomainContext) => Promise<PortResult<{ output?: undefined; readonly run: SfAnalysisRunProgress; }>>'.",
+      "owner": "WP12",
+      "group": "AI residente",
+      "cause": "withRunContext infere seu generic a partir do retorno de progresso sem output, impedindo o retorno legítimo de contribuição pronta.",
+      "remedy": "Especificar tipo do retorno como run progress com output opcional restrito a ContributionEnvelope ready, mantendo todas as verificações de digest/proveniência/revalidação.",
+      "proposed_hosted_selectors": [
+        "Sucafinav1/test/product/wp12/run-store.test.ts",
+        "Sucafinav1/test/product/wp12/continuation.test.ts"
+      ],
+      "patch": "wp12-ff7a997-typecheck.patch",
+      "validation": "NOT_RUN — product tests/typecheck only in GitHub Actions",
+      "cause_id": "ANALYSIS_RECOVERY_GENERIC",
+      "id": "TS-04"
+    },
+    {
+      "source_commit": "ff7a99753d1fd1bc8b68b4f2642fed26e3cadbdf",
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/signal-list.ts",
+      "line": 91,
+      "column": 1060,
+      "code": "TS7006",
+      "error": "Parameter 'field' implicitly has an 'any' type.",
+      "owner": "WP14",
+      "group": "Decision memory",
+      "cause": "Array.isArray estreita para any[] e perde o tipo contextual da binding; o callback de selection.fields fica implicit any.",
+      "remedy": "Anotar o parâmetro binding como SfStoredSignalBinding mantendo Array.isArray e todas as guards de evidência, campos, ACL e períodos.",
+      "proposed_hosted_selectors": [
+        "Sucafinav1/test/product/wp14/signal-registry.test.ts",
+        "Sucafinav1/test/product/wp14/outcome-signals.test.ts"
+      ],
+      "patch": "wp14-ff7a997-typecheck.patch",
+      "validation": "NOT_RUN — product tests/typecheck only in GitHub Actions",
+      "cause_id": "SIGNAL_BINDING_ARRAY_TYPE",
+      "id": "TS-05"
+    },
+    {
+      "source_commit": "ff7a99753d1fd1bc8b68b4f2642fed26e3cadbdf",
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts",
+      "line": 221,
+      "column": 35,
+      "code": "TS2349",
+      "error": "This expression is not callable.",
+      "owner": "WP14",
+      "group": "Decision memory",
+      "cause": "O resolver publicado por WP04 é um objeto issue/resolve; o consumidor tenta chamar esse objeto como função nas duas leituras.",
+      "remedy": "Invocar input.resolve.resolve em ambas as leituras, preservando igualdade de evidência e revalidação entre passagens.",
+      "proposed_hosted_selectors": [
+        "Sucafinav1/test/product/wp14/source-access-procurement.test.ts"
+      ],
+      "patch": "wp14-ff7a997-typecheck.patch",
+      "validation": "NOT_RUN — product tests/typecheck only in GitHub Actions",
+      "known_selector_dependency": "A fixture source-access-procurement.test.ts ainda usa API antiga: imports procurementSourceSelector/isCurrentProcurementSource removidos, factory sem scopedSources, resolver callable. Owner deve migrar a fixture para issue/resolve e scopedSources antes de executá-la; patch proposto só cobre produto diagnosticado.",
+      "cause_id": "PROCUREMENT_RESOLVER_OBJECT",
+      "id": "TS-06"
+    },
+    {
+      "source_commit": "ff7a99753d1fd1bc8b68b4f2642fed26e3cadbdf",
+      "path": "modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts",
+      "line": 227,
+      "column": 33,
+      "code": "TS2349",
+      "error": "This expression is not callable.",
+      "owner": "WP14",
+      "group": "Decision memory",
+      "cause": "O resolver publicado por WP04 é um objeto issue/resolve; o consumidor tenta chamar esse objeto como função nas duas leituras.",
+      "remedy": "Invocar input.resolve.resolve em ambas as leituras, preservando igualdade de evidência e revalidação entre passagens.",
+      "proposed_hosted_selectors": [
+        "Sucafinav1/test/product/wp14/source-access-procurement.test.ts"
+      ],
+      "patch": "wp14-ff7a997-typecheck.patch",
+      "validation": "NOT_RUN — product tests/typecheck only in GitHub Actions",
+      "known_selector_dependency": "A fixture source-access-procurement.test.ts ainda usa API antiga: imports procurementSourceSelector/isCurrentProcurementSource removidos, factory sem scopedSources, resolver callable. Owner deve migrar a fixture para issue/resolve e scopedSources antes de executá-la; patch proposto só cobre produto diagnosticado.",
+      "cause_id": "PROCUREMENT_RESOLVER_OBJECT",
+      "id": "TS-07"
+    },
+    {
+      "source_commit": "ff7a99753d1fd1bc8b68b4f2642fed26e3cadbdf",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/alternative-replay.ts",
+      "line": 42,
+      "column": 36,
+      "code": "TS2345",
+      "error": "Argument of type '{ id: string; version: number; components: readonly ProjectionComponent[]; currency: string; horizon: Period; sourceRefs: readonly BusinessEvidenceRef[]; ... 5 more ...; costCoverage: { ...; } | { ...; }; } | { ...; }' is not assignable to parameter of type 'ScenarioResult'.",
+      "owner": "WP11",
+      "group": "astra-finance / PR #35",
+      "cause": "O spread do ScenarioResult e override separado de costCoverage perde a correlação comparisonStatus=complete ⇒ costCoverage complete e total numérico.",
+      "remedy": "Fazer o mesmo override dentro de branches explicitamente discriminadas por comparisonStatus, com resultado tipado ScenarioResult; não calcular valores nem promover cobertura parcial.",
+      "proposed_hosted_selectors": [
+        "Sucafinav1/test/product/wp11/proposal-coverage.test.ts",
+        "Sucafinav1/test/product/wp11/analysis-acceptance.test.ts"
+      ],
+      "patch": "wp11-ff7a997-typecheck.patch",
+      "validation": "NOT_RUN — product tests/typecheck only in GitHub Actions",
+      "cause_id": "ALTERNATIVE_DISCRIMINANT",
+      "id": "TS-08"
+    },
+    {
+      "source_commit": "ff7a99753d1fd1bc8b68b4f2642fed26e3cadbdf",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/alternative-replay.ts",
+      "line": 44,
+      "column": 58,
+      "code": "TS2345",
+      "error": "Argument of type '{ id: string; version: number; title: string; scenario: ScenarioRequest; result: { id: string; version: number; components: readonly ProjectionComponent[]; currency: string; ... 7 more ...; costCoverage: { ...; } | { ...; }; } | { ...; }; }' is not assignable to parameter of type '{ id: string; version: number; title: string; scenario: ScenarioRequest; result: ScenarioResult; }'.",
+      "owner": "WP11",
+      "group": "astra-finance / PR #35",
+      "cause": "O spread do ScenarioResult e override separado de costCoverage perde a correlação comparisonStatus=complete ⇒ costCoverage complete e total numérico.",
+      "remedy": "Fazer o mesmo override dentro de branches explicitamente discriminadas por comparisonStatus, com resultado tipado ScenarioResult; não calcular valores nem promover cobertura parcial.",
+      "proposed_hosted_selectors": [
+        "Sucafinav1/test/product/wp11/proposal-coverage.test.ts",
+        "Sucafinav1/test/product/wp11/analysis-acceptance.test.ts"
+      ],
+      "patch": "wp11-ff7a997-typecheck.patch",
+      "validation": "NOT_RUN — product tests/typecheck only in GitHub Actions",
+      "cause_id": "ALTERNATIVE_DISCRIMINANT",
+      "id": "TS-09"
+    },
+    {
+      "source_commit": "ff7a99753d1fd1bc8b68b4f2642fed26e3cadbdf",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/alternative-replay.ts",
+      "line": 50,
+      "column": 213,
+      "code": "TS2345",
+      "error": "Argument of type '{ id: string; version: number; title: string; scenario: ScenarioRequest; result: { id: string; version: number; components: readonly ProjectionComponent[]; currency: string; ... 7 more ...; costCoverage: { ...; } | { ...; }; } | { ...; }; }' is not assignable to parameter of type '{ id: string; version: number; title: string; scenario: ScenarioRequest; result: ScenarioResult; }'.",
+      "owner": "WP11",
+      "group": "astra-finance / PR #35",
+      "cause": "O spread do ScenarioResult e override separado de costCoverage perde a correlação comparisonStatus=complete ⇒ costCoverage complete e total numérico.",
+      "remedy": "Fazer o mesmo override dentro de branches explicitamente discriminadas por comparisonStatus, com resultado tipado ScenarioResult; não calcular valores nem promover cobertura parcial.",
+      "proposed_hosted_selectors": [
+        "Sucafinav1/test/product/wp11/proposal-coverage.test.ts",
+        "Sucafinav1/test/product/wp11/analysis-acceptance.test.ts"
+      ],
+      "patch": "wp11-ff7a997-typecheck.patch",
+      "validation": "NOT_RUN — product tests/typecheck only in GitHub Actions",
+      "cause_id": "ALTERNATIVE_DISCRIMINANT",
+      "id": "TS-10"
+    },
+    {
+      "source_commit": "ff7a99753d1fd1bc8b68b4f2642fed26e3cadbdf",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/alternative-replay.ts",
+      "line": 51,
+      "column": 39,
+      "code": "TS2322",
+      "error": "Type '{ caseRef: string; proposal: { id: string; version: number; title: string; scenario: ScenarioRequest; result: { id: string; version: number; components: readonly ProjectionComponent[]; ... 8 more ...; costCoverage: { ...; } | { ...; }; } | { ...; }; }; costCoverageBasis: CostCoverageBasis; coverageRef: string; domai...' is not assignable to type '{ caseRef: string; proposal: { id: string; version: number; title: string; scenario: ScenarioRequest; result: ScenarioResult; }; costCoverageBasis: CostCoverageBasis; coverageRef: string; domainApplied: false; }'.",
+      "owner": "WP11",
+      "group": "astra-finance / PR #35",
+      "cause": "O spread do ScenarioResult e override separado de costCoverage perde a correlação comparisonStatus=complete ⇒ costCoverage complete e total numérico.",
+      "remedy": "Fazer o mesmo override dentro de branches explicitamente discriminadas por comparisonStatus, com resultado tipado ScenarioResult; não calcular valores nem promover cobertura parcial.",
+      "proposed_hosted_selectors": [
+        "Sucafinav1/test/product/wp11/proposal-coverage.test.ts",
+        "Sucafinav1/test/product/wp11/analysis-acceptance.test.ts"
+      ],
+      "patch": "wp11-ff7a997-typecheck.patch",
+      "validation": "NOT_RUN — product tests/typecheck only in GitHub Actions",
+      "cause_id": "ALTERNATIVE_DISCRIMINANT",
+      "id": "TS-11"
+    },
+    {
+      "source_commit": "ff7a99753d1fd1bc8b68b4f2642fed26e3cadbdf",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+      "line": 119,
+      "column": 26,
+      "code": "TS2367",
+      "error": "This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "owner": "WP11",
+      "group": "astra-finance / PR #35",
+      "cause": "find(item.status !== ok) já infere exclusivamente o ramo de falha; a segunda comparação com ok é impossível sob tsgo.",
+      "remedy": "Manter o predicate original e retornar a falha quando encontrada, removendo somente a comparação redundante.",
+      "proposed_hosted_selectors": [
+        "Sucafinav1/test/product/wp11/case-operation-access.test.ts",
+        "Sucafinav1/test/product/wp11/proposal-coverage.test.ts"
+      ],
+      "patch": "wp11-ff7a997-typecheck.patch",
+      "validation": "NOT_RUN — product tests/typecheck only in GitHub Actions",
+      "cause_id": "DECISIONS_FIND_NARROWING",
+      "id": "TS-12"
+    },
+    {
+      "source_commit": "ff7a99753d1fd1bc8b68b4f2642fed26e3cadbdf",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "line": 48,
+      "column": 5,
+      "code": "TS2322",
+      "error": "Type '(incoming: { caseRef: { id: string; incarnation: string; version: number; }; changeId: string; choiceId: string; }, context: TrustedDomainContext) => Promise<{ reason?: undefined; status: \"ok\"; value: {}; } | { ...; }>' is not assignable to type '(request: { caseRef: { id: string; incarnation: string; version: number; }; changeId: string; choiceId: string; }, binding: TrustedDomainContext) => Promise<PortResult<CommandReceipt>>'.",
+      "owner": "WP11",
+      "group": "astra-finance / PR #35",
+      "cause": "O parâmetro genérico da transação é inferido a partir do primeiro retorno failure/null; existing receipt e CommandReceipt deixam de caber e propagam {} nos consumidores.",
+      "remedy": "Declarar a união local exata CommandReceipt | existing receipt | failure(conflict/unavailable) | null como generic de transaction. Todas as guards, flags commit, domínios e verificações de receipt ficam iguais.",
+      "proposed_hosted_selectors": [
+        "Sucafinav1/test/product/wp11/prepared-apply.test.ts",
+        "Sucafinav1/test/product/wp11/planner-apply.test.ts"
+      ],
+      "patch": "wp11-ff7a997-typecheck.patch",
+      "validation": "NOT_RUN — product tests/typecheck only in GitHub Actions",
+      "cause_id": "PREPARED_TRANSACTION_INFERENCE",
+      "id": "TS-13"
+    },
+    {
+      "source_commit": "ff7a99753d1fd1bc8b68b4f2642fed26e3cadbdf",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "line": 85,
+      "column": 426,
+      "code": "TS2345",
+      "error": "Argument of type '(state: SfProductState, authority: SfStateAuthority, snapshot: Snapshot) => Promise<{ commit: false; value: null; } | { commit: false; value: { ...; }; } | { ...; } | { ...; } | { ...; }>' is not assignable to parameter of type '(state: SfProductState, authority: SfStateAuthority, snapshot: Snapshot) => Promise<{ commit: boolean; value: { failure: \"unavailable\"; existing?: undefined; } | null; }>'.",
+      "owner": "WP11",
+      "group": "astra-finance / PR #35",
+      "cause": "O parâmetro genérico da transação é inferido a partir do primeiro retorno failure/null; existing receipt e CommandReceipt deixam de caber e propagam {} nos consumidores.",
+      "remedy": "Declarar a união local exata CommandReceipt | existing receipt | failure(conflict/unavailable) | null como generic de transaction. Todas as guards, flags commit, domínios e verificações de receipt ficam iguais.",
+      "proposed_hosted_selectors": [
+        "Sucafinav1/test/product/wp11/prepared-apply.test.ts",
+        "Sucafinav1/test/product/wp11/planner-apply.test.ts"
+      ],
+      "patch": "wp11-ff7a997-typecheck.patch",
+      "validation": "NOT_RUN — product tests/typecheck only in GitHub Actions",
+      "cause_id": "PREPARED_TRANSACTION_INFERENCE",
+      "id": "TS-14"
+    },
+    {
+      "source_commit": "ff7a99753d1fd1bc8b68b4f2642fed26e3cadbdf",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "line": 109,
+      "column": 75,
+      "code": "TS2638",
+      "error": "Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.",
+      "owner": "WP11",
+      "group": "astra-finance / PR #35",
+      "cause": "O parâmetro genérico da transação é inferido a partir do primeiro retorno failure/null; existing receipt e CommandReceipt deixam de caber e propagam {} nos consumidores.",
+      "remedy": "Declarar a união local exata CommandReceipt | existing receipt | failure(conflict/unavailable) | null como generic de transaction. Todas as guards, flags commit, domínios e verificações de receipt ficam iguais.",
+      "proposed_hosted_selectors": [
+        "Sucafinav1/test/product/wp11/prepared-apply.test.ts",
+        "Sucafinav1/test/product/wp11/planner-apply.test.ts"
+      ],
+      "patch": "wp11-ff7a997-typecheck.patch",
+      "validation": "NOT_RUN — product tests/typecheck only in GitHub Actions",
+      "cause_id": "PREPARED_TRANSACTION_INFERENCE",
+      "id": "TS-15"
+    },
+    {
+      "source_commit": "ff7a99753d1fd1bc8b68b4f2642fed26e3cadbdf",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "line": 111,
+      "column": 185,
+      "code": "TS2740",
+      "error": "Type '{}' is missing the following properties from type 'CommandReceipt': id, idempotencyKey, commandDigest, targetIncarnation, and 5 more.",
+      "owner": "WP11",
+      "group": "astra-finance / PR #35",
+      "cause": "O parâmetro genérico da transação é inferido a partir do primeiro retorno failure/null; existing receipt e CommandReceipt deixam de caber e propagam {} nos consumidores.",
+      "remedy": "Declarar a união local exata CommandReceipt | existing receipt | failure(conflict/unavailable) | null como generic de transaction. Todas as guards, flags commit, domínios e verificações de receipt ficam iguais.",
+      "proposed_hosted_selectors": [
+        "Sucafinav1/test/product/wp11/prepared-apply.test.ts",
+        "Sucafinav1/test/product/wp11/planner-apply.test.ts"
+      ],
+      "patch": "wp11-ff7a997-typecheck.patch",
+      "validation": "NOT_RUN — product tests/typecheck only in GitHub Actions",
+      "cause_id": "PREPARED_TRANSACTION_INFERENCE",
+      "id": "TS-16"
+    },
+    {
+      "source_commit": "ff7a99753d1fd1bc8b68b4f2642fed26e3cadbdf",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "line": 114,
+      "column": 74,
+      "code": "TS2638",
+      "error": "Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.",
+      "owner": "WP11",
+      "group": "astra-finance / PR #35",
+      "cause": "O parâmetro genérico da transação é inferido a partir do primeiro retorno failure/null; existing receipt e CommandReceipt deixam de caber e propagam {} nos consumidores.",
+      "remedy": "Declarar a união local exata CommandReceipt | existing receipt | failure(conflict/unavailable) | null como generic de transaction. Todas as guards, flags commit, domínios e verificações de receipt ficam iguais.",
+      "proposed_hosted_selectors": [
+        "Sucafinav1/test/product/wp11/prepared-apply.test.ts",
+        "Sucafinav1/test/product/wp11/planner-apply.test.ts"
+      ],
+      "patch": "wp11-ff7a997-typecheck.patch",
+      "validation": "NOT_RUN — product tests/typecheck only in GitHub Actions",
+      "cause_id": "PREPARED_TRANSACTION_INFERENCE",
+      "id": "TS-17"
+    },
+    {
+      "source_commit": "ff7a99753d1fd1bc8b68b4f2642fed26e3cadbdf",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "line": 115,
+      "column": 81,
+      "code": "TS2638",
+      "error": "Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.",
+      "owner": "WP11",
+      "group": "astra-finance / PR #35",
+      "cause": "O parâmetro genérico da transação é inferido a partir do primeiro retorno failure/null; existing receipt e CommandReceipt deixam de caber e propagam {} nos consumidores.",
+      "remedy": "Declarar a união local exata CommandReceipt | existing receipt | failure(conflict/unavailable) | null como generic de transaction. Todas as guards, flags commit, domínios e verificações de receipt ficam iguais.",
+      "proposed_hosted_selectors": [
+        "Sucafinav1/test/product/wp11/prepared-apply.test.ts",
+        "Sucafinav1/test/product/wp11/planner-apply.test.ts"
+      ],
+      "patch": "wp11-ff7a997-typecheck.patch",
+      "validation": "NOT_RUN — product tests/typecheck only in GitHub Actions",
+      "cause_id": "PREPARED_TRANSACTION_INFERENCE",
+      "id": "TS-18"
+    },
+    {
+      "source_commit": "ff7a99753d1fd1bc8b68b4f2642fed26e3cadbdf",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "line": 115,
+      "column": 112,
+      "code": "TS2638",
+      "error": "Type '{}' may represent a primitive value, which is not permitted as the right operand of the 'in' operator.",
+      "owner": "WP11",
+      "group": "astra-finance / PR #35",
+      "cause": "O parâmetro genérico da transação é inferido a partir do primeiro retorno failure/null; existing receipt e CommandReceipt deixam de caber e propagam {} nos consumidores.",
+      "remedy": "Declarar a união local exata CommandReceipt | existing receipt | failure(conflict/unavailable) | null como generic de transaction. Todas as guards, flags commit, domínios e verificações de receipt ficam iguais.",
+      "proposed_hosted_selectors": [
+        "Sucafinav1/test/product/wp11/prepared-apply.test.ts",
+        "Sucafinav1/test/product/wp11/planner-apply.test.ts"
+      ],
+      "patch": "wp11-ff7a997-typecheck.patch",
+      "validation": "NOT_RUN — product tests/typecheck only in GitHub Actions",
+      "cause_id": "PREPARED_TRANSACTION_INFERENCE",
+      "id": "TS-19"
+    },
+    {
+      "source_commit": "ff7a99753d1fd1bc8b68b4f2642fed26e3cadbdf",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+      "line": 116,
+      "column": 183,
+      "code": "TS2740",
+      "error": "Type '{}' is missing the following properties from type 'CommandReceipt': id, idempotencyKey, commandDigest, targetIncarnation, and 5 more.",
+      "owner": "WP11",
+      "group": "astra-finance / PR #35",
+      "cause": "O parâmetro genérico da transação é inferido a partir do primeiro retorno failure/null; existing receipt e CommandReceipt deixam de caber e propagam {} nos consumidores.",
+      "remedy": "Declarar a união local exata CommandReceipt | existing receipt | failure(conflict/unavailable) | null como generic de transaction. Todas as guards, flags commit, domínios e verificações de receipt ficam iguais.",
+      "proposed_hosted_selectors": [
+        "Sucafinav1/test/product/wp11/prepared-apply.test.ts",
+        "Sucafinav1/test/product/wp11/planner-apply.test.ts"
+      ],
+      "patch": "wp11-ff7a997-typecheck.patch",
+      "validation": "NOT_RUN — product tests/typecheck only in GitHub Actions",
+      "cause_id": "PREPARED_TRANSACTION_INFERENCE",
+      "id": "TS-20"
+    },
+    {
+      "source_commit": "ff7a99753d1fd1bc8b68b4f2642fed26e3cadbdf",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/proposals.ts",
+      "line": 98,
+      "column": 26,
+      "code": "TS2367",
+      "error": "This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "owner": "WP11",
+      "group": "astra-finance / PR #35",
+      "cause": "find(item.status !== ok) já infere exclusivamente o ramo de falha; a segunda comparação com ok é impossível sob tsgo.",
+      "remedy": "Manter o predicate original e retornar a falha quando encontrada, removendo somente a comparação redundante.",
+      "proposed_hosted_selectors": [
+        "Sucafinav1/test/product/wp11/case-operation-access.test.ts",
+        "Sucafinav1/test/product/wp11/proposal-coverage.test.ts"
+      ],
+      "patch": "wp11-ff7a997-typecheck.patch",
+      "validation": "NOT_RUN — product tests/typecheck only in GitHub Actions",
+      "cause_id": "DECISIONS_FIND_NARROWING",
+      "id": "TS-21"
+    },
+    {
+      "source_commit": "ff7a99753d1fd1bc8b68b4f2642fed26e3cadbdf",
+      "path": "modules/sucafina/Sucafinav1/product/imports/dashboard.ts",
+      "line": 54,
+      "column": 3,
+      "code": "TS2322",
+      "error": "Type '(snapshot: Snapshot, actor: Actor, command: Command, environment: Environment) => { baseDigest?: undefined; commandDigest?: undefined; ... 7 more ...; reason: string; } | { ...; }' is not assignable to type '(snapshot: Snapshot, actor: Actor, command: Command, environment: Environment) => { status: \"denied\"; reason: string; by?: undefined; stored?: undefined; ... 8 more ...; summary?: undefined; } | ... 5 more ... | { ...; }'.",
+      "owner": "WP06",
+      "group": "astra-operations / PR #34",
+      "cause": "O adapter local de backup afirma retornar o tipo de preview de páginas Dashboard; rejeições backup têm status/reason próprios e não possuem os campos por variante daquela união.",
+      "remedy": "Tipar o preview local com typeof simulateBackup, preservando exatamente o retorno do produtor backup. Nenhuma branch de autorização, status, digest, apply ou contrato compartilhado é alterada.",
+      "proposed_hosted_selectors": [
+        "Sucafinav1/test/product/wp06/imports/dashboard-backup-e2e.test.ts",
+        "Sucafinav1/test/product/wp06/imports/dashboard-provenance.test.ts",
+        "Sucafinav1/test/product/wp06/imports/atomic-rejection.test.ts"
+      ],
+      "patch": "wp06-ff7a997-typecheck.patch",
+      "validation": "NOT_RUN — product tests/typecheck only in GitHub Actions",
+      "cause_id": "BACKUP_ADAPTER_RETURN",
+      "id": "TS-22"
+    },
+    {
+      "source_commit": "ff7a99753d1fd1bc8b68b4f2642fed26e3cadbdf",
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/catalog.ts",
+      "line": 15,
+      "column": 20,
+      "code": "TS2367",
+      "error": "This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "owner": "WP13",
+      "group": "Portfolio",
+      "cause": "find(item.status !== ok) já retorna apenas a variante de falha; comparação adicional contra ok gera TS2367.",
+      "remedy": "Manter todos os predicates/find e retornar failure quando presente; remover só a comparação redundante.",
+      "proposed_hosted_selectors": [
+        "Sucafinav1/test/product/wp13/candidates.test.ts",
+        "Sucafinav1/test/product/wp13/handoff.test.ts",
+        "Sucafinav1/test/product/wp13/handoff-integration.test.ts"
+      ],
+      "patch": "wp13-ff7a997-typecheck.patch",
+      "validation": "NOT_RUN — product tests/typecheck only in GitHub Actions",
+      "cause_id": "PORTFOLIO_FIND_NARROWING",
+      "id": "TS-23"
+    },
+    {
+      "source_commit": "ff7a99753d1fd1bc8b68b4f2642fed26e3cadbdf",
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/handoff.ts",
+      "line": 41,
+      "column": 18,
+      "code": "TS2367",
+      "error": "This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "owner": "WP13",
+      "group": "Portfolio",
+      "cause": "find(item.status !== ok) já retorna apenas a variante de falha; comparação adicional contra ok gera TS2367.",
+      "remedy": "Manter todos os predicates/find e retornar failure quando presente; remover só a comparação redundante.",
+      "proposed_hosted_selectors": [
+        "Sucafinav1/test/product/wp13/candidates.test.ts",
+        "Sucafinav1/test/product/wp13/handoff.test.ts",
+        "Sucafinav1/test/product/wp13/handoff-integration.test.ts"
+      ],
+      "patch": "wp13-ff7a997-typecheck.patch",
+      "validation": "NOT_RUN — product tests/typecheck only in GitHub Actions",
+      "cause_id": "PORTFOLIO_FIND_NARROWING",
+      "id": "TS-24"
+    },
+    {
+      "source_commit": "ff7a99753d1fd1bc8b68b4f2642fed26e3cadbdf",
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/handoff.ts",
+      "line": 79,
+      "column": 18,
+      "code": "TS2367",
+      "error": "This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "owner": "WP13",
+      "group": "Portfolio",
+      "cause": "find(item.status !== ok) já retorna apenas a variante de falha; comparação adicional contra ok gera TS2367.",
+      "remedy": "Manter todos os predicates/find e retornar failure quando presente; remover só a comparação redundante.",
+      "proposed_hosted_selectors": [
+        "Sucafinav1/test/product/wp13/candidates.test.ts",
+        "Sucafinav1/test/product/wp13/handoff.test.ts",
+        "Sucafinav1/test/product/wp13/handoff-integration.test.ts"
+      ],
+      "patch": "wp13-ff7a997-typecheck.patch",
+      "validation": "NOT_RUN — product tests/typecheck only in GitHub Actions",
+      "cause_id": "PORTFOLIO_FIND_NARROWING",
+      "id": "TS-25"
+    },
+    {
+      "source_commit": "ff7a99753d1fd1bc8b68b4f2642fed26e3cadbdf",
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/handoff.ts",
+      "line": 96,
+      "column": 20,
+      "code": "TS2367",
+      "error": "This comparison appears to be unintentional because the types '\"conflict\" | \"denied\" | \"failed\" | \"needs-input\" | \"provider-conflict\" | \"stale\" | \"unavailable\"' and '\"ok\"' have no overlap.",
+      "owner": "WP13",
+      "group": "Portfolio",
+      "cause": "find(item.status !== ok) já retorna apenas a variante de falha; comparação adicional contra ok gera TS2367.",
+      "remedy": "Manter todos os predicates/find e retornar failure quando presente; remover só a comparação redundante.",
+      "proposed_hosted_selectors": [
+        "Sucafinav1/test/product/wp13/candidates.test.ts",
+        "Sucafinav1/test/product/wp13/handoff.test.ts",
+        "Sucafinav1/test/product/wp13/handoff-integration.test.ts"
+      ],
+      "patch": "wp13-ff7a997-typecheck.patch",
+      "validation": "NOT_RUN — product tests/typecheck only in GitHub Actions",
+      "cause_id": "PORTFOLIO_FIND_NARROWING",
+      "id": "TS-26"
+    },
+    {
+      "source_commit": "ff7a99753d1fd1bc8b68b4f2642fed26e3cadbdf",
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+      "line": 80,
+      "column": 106,
+      "code": "TS2339",
+      "error": "Property 'costCoverage' does not exist on type 'PortfolioResult | SensitivityResult | ScenarioComparison | ScenarioResult'.",
+      "owner": "WP13",
+      "group": "Portfolio",
+      "cause": "O refinamento source/baseline.value.kind= scenario feito fora do callback exactThreshold não se mantém no acesso tardio a result.costCoverage.",
+      "remedy": "Repetir as guards de kind no callback antes de acessar costCoverage. Isso rejeita outros tipos e conserva a exigência de cobertura completa para threshold exato.",
+      "proposed_hosted_selectors": [
+        "Sucafinav1/test/product/wp13/sensitivity-v6.test.ts",
+        "Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts"
+      ],
+      "patch": "wp13-ff7a997-typecheck.patch",
+      "validation": "NOT_RUN — product tests/typecheck only in GitHub Actions",
+      "cause_id": "SENSITIVITY_SCENARIO_NARROWING",
+      "id": "TS-27"
+    },
+    {
+      "source_commit": "ff7a99753d1fd1bc8b68b4f2642fed26e3cadbdf",
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+      "line": 80,
+      "column": 171,
+      "code": "TS2339",
+      "error": "Property 'costCoverage' does not exist on type 'PortfolioResult | SensitivityResult | ScenarioComparison | ScenarioResult'.",
+      "owner": "WP13",
+      "group": "Portfolio",
+      "cause": "O refinamento source/baseline.value.kind= scenario feito fora do callback exactThreshold não se mantém no acesso tardio a result.costCoverage.",
+      "remedy": "Repetir as guards de kind no callback antes de acessar costCoverage. Isso rejeita outros tipos e conserva a exigência de cobertura completa para threshold exato.",
+      "proposed_hosted_selectors": [
+        "Sucafinav1/test/product/wp13/sensitivity-v6.test.ts",
+        "Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts"
+      ],
+      "patch": "wp13-ff7a997-typecheck.patch",
+      "validation": "NOT_RUN — product tests/typecheck only in GitHub Actions",
+      "cause_id": "SENSITIVITY_SCENARIO_NARROWING",
+      "id": "TS-28"
+    },
+    {
+      "source_commit": "ff7a99753d1fd1bc8b68b4f2642fed26e3cadbdf",
+      "path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+      "line": 168,
+      "column": 42,
+      "code": "TS2741",
+      "error": "Property 'reviewDigestFor' is missing in type '{ state: SfProductStatePort; host: ProcurementSourceHost; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; ... 9 more ...; now: () => string; }' but required in type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; ... 10 more ...; reviewDigestFor: ReviewDigestFor; }'.",
+      "owner": "WP04",
+      "group": "astra-operations / PR #34",
+      "cause": "O host Procurement chama factories WP11 que passaram a exigir reviewDigestFor/revalidateProducer. Seu cache reviews conserva apenas changeDigest/expiresAt e descarta review.value.reviewDigest; grants sf-human:decisions.apply ainda vinculam só request.",
+      "remedy": "Owner deve conservar o digest produzido por createDecisionPreparedReview, admiti-lo em payload/grant de confirmação humana, fornecê-lo por ReviewDigestFor privado e revalidar o producer com readReview antes da primeira aplicação. A mesma vinculação precisa sobreviver à consulta/retry do receipt e detectar troca de digest/conteúdo; não aceitar digest do modelo nem usar callback constante. Não há patch automático seguro restrito às duas chamadas.",
+      "proposed_hosted_selectors": [
+        "Sucafinav1/test/product/wp04/prepared-production.test.ts",
+        "Sucafinav1/test/product/wp04/confirmation.test.ts",
+        "Sucafinav1/test/product/wp04/confirmation-cross-actor.test.ts",
+        "Sucafinav1/test/product/wp11/prepared-apply.test.ts"
+      ],
+      "patch": null,
+      "validation": "NOT_RUN — product tests/typecheck only in GitHub Actions",
+      "required_cases": [
+        "Review original aceito; digest alterado ou expirado rejeitado.",
+        "Mudança de producer após revisão impede primeira aplicação.",
+        "Retry do receipt original com proof idêntico funciona; mesmo idempotencyKey com review diferente conflita.",
+        "ACL/principal/target reincarnation atuais continuam obrigatórios, inclusive no replay."
+      ],
+      "severity": "BLOCKS_C12_APPLICATION_AND_TYPECHECK",
+      "cause_id": "PROCUREMENT_REVIEW_BINDING",
+      "id": "TS-29"
+    },
+    {
+      "source_commit": "ff7a99753d1fd1bc8b68b4f2642fed26e3cadbdf",
+      "path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+      "line": 187,
+      "column": 43,
+      "code": "TS2739",
+      "error": "Type '{ state: SfProductStatePort; host: ProcurementSourceHost; apply: PreparedApplyPort; authorizeCase: (value: DecisionCase, context: TrustedDomainContext) => Promise<...>; operationIdentity: (context: TrustedDomainContext) => string | undefined; authorizeApplication: (request: { ...; }, change: PreparedChange, context:...' is missing the following properties from type '{ state: SfProductStatePort; host: Pick<DomainPortHost, \"requestFor\" | \"revalidate\">; apply: PreparedApplyPort; ... 6 more ...; revalidateProducer: (request: { ...; }, context: TrustedDomainContext) => Promise<...>; }': reviewDigestFor, revalidateProducer",
+      "owner": "WP04",
+      "group": "astra-operations / PR #34",
+      "cause": "O host Procurement chama factories WP11 que passaram a exigir reviewDigestFor/revalidateProducer. Seu cache reviews conserva apenas changeDigest/expiresAt e descarta review.value.reviewDigest; grants sf-human:decisions.apply ainda vinculam só request.",
+      "remedy": "Owner deve conservar o digest produzido por createDecisionPreparedReview, admiti-lo em payload/grant de confirmação humana, fornecê-lo por ReviewDigestFor privado e revalidar o producer com readReview antes da primeira aplicação. A mesma vinculação precisa sobreviver à consulta/retry do receipt e detectar troca de digest/conteúdo; não aceitar digest do modelo nem usar callback constante. Não há patch automático seguro restrito às duas chamadas.",
+      "proposed_hosted_selectors": [
+        "Sucafinav1/test/product/wp04/prepared-production.test.ts",
+        "Sucafinav1/test/product/wp04/confirmation.test.ts",
+        "Sucafinav1/test/product/wp04/confirmation-cross-actor.test.ts",
+        "Sucafinav1/test/product/wp11/prepared-apply.test.ts"
+      ],
+      "patch": null,
+      "validation": "NOT_RUN — product tests/typecheck only in GitHub Actions",
+      "required_cases": [
+        "Review original aceito; digest alterado ou expirado rejeitado.",
+        "Mudança de producer após revisão impede primeira aplicação.",
+        "Retry do receipt original com proof idêntico funciona; mesmo idempotencyKey com review diferente conflita.",
+        "ACL/principal/target reincarnation atuais continuam obrigatórios, inclusive no replay."
+      ],
+      "severity": "BLOCKS_C12_APPLICATION_AND_TYPECHECK",
+      "cause_id": "PROCUREMENT_REVIEW_BINDING",
+      "id": "TS-30"
+    },
+    {
+      "source_commit": "ff7a99753d1fd1bc8b68b4f2642fed26e3cadbdf",
+      "path": "modules/sucafina/Sucafinav1/product/ui/components.ts",
+      "line": 64,
+      "column": 9,
+      "code": "TS2741",
+      "error": "Property 'AlternativeDraft' is missing in type '{ IntentFrame: string; AnalysisPlan: string; DecisionBrief: string; QuestionProposal: string; FinancialAnalysis: string; ScenarioComparison: string; SensitivityResult: string; CommercialComparison: string; ... 15 more ...; MatchExplanation: string; }' but required in type 'Record<\"AlternativeDraft\" | \"AnalysisPlan\" | \"CaseRecall\" | \"ClaimIssue\" | \"CommercialComparison\" | \"CommercialGap\" | \"ContextualBIProposal\" | \"CritiqueReport\" | \"DecisionBrief\" | ... 16 more ... | \"UnresolvedCondition\", string>'.",
+      "owner": "WP01",
+      "group": "astra-interface / PR #31",
+      "cause": "AlternativeDraft entrou na união normativa ContributionEnvelope, mas faltam label e arm no renderizador exaustivo.",
+      "remedy": "Acrescentar label e renderização somente leitura de proposta, preservando valores armazenados e o rótulo known subtotal para comparação parcial; domainApplied continua false.",
+      "proposed_hosted_selectors": [
+        "Sucafinav1/test/product/wp01/component-coverage.test.ts",
+        "Sucafinav1/test/product/wp01/components.test.ts"
+      ],
+      "patch": "wp01-ff7a997-typecheck.patch",
+      "validation": "NOT_RUN — product tests/typecheck only in GitHub Actions",
+      "required_case": "Incluir AlternativeDraft ready e não-ready na cobertura de componentes, incluindo texto escapado e cobertura parcial.",
+      "cause_id": "UI_ALTERNATIVE_DRAFT",
+      "id": "TS-31"
+    },
+    {
+      "source_commit": "ff7a99753d1fd1bc8b68b4f2642fed26e3cadbdf",
+      "path": "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts",
+      "line": 8,
+      "column": 65,
+      "code": "TS2366",
+      "error": "Function lacks ending return statement and return type does not include 'undefined'.",
+      "owner": "WP01",
+      "group": "astra-interface / PR #31",
+      "cause": "AlternativeDraft entrou na união normativa ContributionEnvelope, mas faltam label e arm no renderizador exaustivo.",
+      "remedy": "Acrescentar label e renderização somente leitura de proposta, preservando valores armazenados e o rótulo known subtotal para comparação parcial; domainApplied continua false.",
+      "proposed_hosted_selectors": [
+        "Sucafinav1/test/product/wp01/component-coverage.test.ts",
+        "Sucafinav1/test/product/wp01/components.test.ts"
+      ],
+      "patch": "wp01-ff7a997-typecheck.patch",
+      "validation": "NOT_RUN — product tests/typecheck only in GitHub Actions",
+      "required_case": "Incluir AlternativeDraft ready e não-ready na cobertura de componentes, incluindo texto escapado e cobertura parcial.",
+      "cause_id": "UI_ALTERNATIVE_DRAFT",
+      "id": "TS-32"
+    }
+  ],
+  "patches": [
+    {
+      "owner": "WP01",
+      "path": "/workspace/scratch/4c48b09c5c29/owner-patches/wp01-ff7a997-typecheck.patch",
+      "base_commit": "ff7a99753d1fd1bc8b68b4f2642fed26e3cadbdf",
+      "patch_sha256": "dd5e414f15cbd640c80fa448e91ab71987d6d34b7b99b5bd8a3973931f3264fb",
+      "status": "PROPOSED_NOT_TESTED_NOT_APPLIED",
+      "files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/ui/components.ts",
+          "before_sha256": "423a27494a02363a2e6b34d7a1ff751c6f9b83d5c7da8a33723ae7bfd089b43f",
+          "after_sha256": "1103fd0b657380c716d61c6bb2a2bc0a767fd3e3bb07ba21fe55612855228e10",
+          "before_git_blob_sha": "cd559d550b6fa799549b23c5c2c9f353781145cb"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts",
+          "before_sha256": "5128c9edb74f9f6abbf2d0f8bf0401ad9ee6d7849fde6368f6cd140f6179cc4d",
+          "after_sha256": "bcd509455f796fbac3832face50ce06892196d610642cfb91c09ea29511ad880",
+          "before_git_blob_sha": "95f3c12a559ff40b010b7774bc7a036da4b2afed"
+        }
+      ]
+    },
+    {
+      "owner": "WP06",
+      "path": "/workspace/scratch/4c48b09c5c29/owner-patches/wp06-ff7a997-typecheck.patch",
+      "base_commit": "ff7a99753d1fd1bc8b68b4f2642fed26e3cadbdf",
+      "patch_sha256": "3b941dcf2a6fde9843a8e9a10dc40242c83fa2191b9cb591816d8de99428f80d",
+      "status": "PROPOSED_NOT_TESTED_NOT_APPLIED",
+      "files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/imports/dashboard.ts",
+          "before_sha256": "6510647c9d5f2ad6ba131874fdf528848011c72d8bae46f174c9be2e0101a177",
+          "after_sha256": "5c961d8e190b069ccf6bc13b50f83efe8319a78de1404ac5b34eefeb314db91a",
+          "before_git_blob_sha": "3a2dbbf47fb9e5d430ccd0edde2efccdf8412437"
+        }
+      ]
+    },
+    {
+      "owner": "WP11",
+      "path": "/workspace/scratch/4c48b09c5c29/owner-patches/wp11-ff7a997-typecheck.patch",
+      "base_commit": "ff7a99753d1fd1bc8b68b4f2642fed26e3cadbdf",
+      "patch_sha256": "f45af542cd04f9aa423aa7a3d09d0662310bccd1a77592f57bc255e847f1b021",
+      "status": "PROPOSED_NOT_TESTED_NOT_APPLIED",
+      "files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/alternative-replay.ts",
+          "before_sha256": "588f33414d0b374b903804dd49e09f637ea9d009947694af43f18c707e44cfd3",
+          "after_sha256": "49b93cd2593ab8cf101fee2239abb1efcb649446b5d085bea4e215ceceb240ed",
+          "before_git_blob_sha": "7f4fa4df2075fea83cf89981b00a5f1cba0f630a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+          "before_sha256": "aafab15ce407e6d6cbc808e05cbad7f3cb15238f2fe53941434405caef3b36ba",
+          "after_sha256": "30e49fcd3009875941c2b4cd80c51fceab9de4d18319f9a7dfb908bbe17c84af",
+          "before_git_blob_sha": "c9b380d4f9e3f0b35eae027374d57bf4c9b65c3e"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/proposals.ts",
+          "before_sha256": "dfdded626948cb36fc0de55844de600eb751f47ccb4cb526b21f570740fda00c",
+          "after_sha256": "6be8bdb846c7d7ee7afbd3127f3760a83085b07362385f4ae6c8fa42865973ba",
+          "before_git_blob_sha": "304eb80e72a002078e3f6ea8c5cfac507ffdd494"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+          "before_sha256": "7dd20ec50a9c5123387995efe56dc9eb5656b88b2ee38503187a88b83bd09e98",
+          "after_sha256": "6a0f05ecb00d07ee9a69899b53de186ba0190e7711c30a7a498eb4bbf05e95f4",
+          "before_git_blob_sha": "60c1b9d21f82f0871a8d15886f1949e1396de57a"
+        }
+      ]
+    },
+    {
+      "owner": "WP12",
+      "path": "/workspace/scratch/4c48b09c5c29/owner-patches/wp12-ff7a997-typecheck.patch",
+      "base_commit": "ff7a99753d1fd1bc8b68b4f2642fed26e3cadbdf",
+      "patch_sha256": "c831017c8eca350da57cf2960392f75e1d6001d6fc1d5e8a63152849bae0548a",
+      "status": "PROPOSED_NOT_TESTED_NOT_APPLIED",
+      "files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/ai/analysis-port.ts",
+          "before_sha256": "b9efbadbf45320bff6cb615bacd1e2923b74c73db16e369ed78344dcf4860245",
+          "after_sha256": "6dead6bb0febf1d58ac9fbf52116a1cc51901d080c1507743da5af25e03ac776",
+          "before_git_blob_sha": "06b12a8714adb16b87f7f6e8f8a329e164ed5288"
+        }
+      ]
+    },
+    {
+      "owner": "WP13",
+      "path": "/workspace/scratch/4c48b09c5c29/owner-patches/wp13-ff7a997-typecheck.patch",
+      "base_commit": "ff7a99753d1fd1bc8b68b4f2642fed26e3cadbdf",
+      "patch_sha256": "430ab0f0ae4870c6d1a321c4bb61fada1dad58a29988400d52a2aec6214d6d4a",
+      "status": "PROPOSED_NOT_TESTED_NOT_APPLIED",
+      "files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+          "before_sha256": "ff381acc05d0567a093d1d0898a49bf30808c46d1af38d13165709a0889a2b2c",
+          "after_sha256": "c4c75e079b5fe1bf94f01eb75d2d6442e3331489f18de9fbfd8e580514cee94a",
+          "before_git_blob_sha": "9e1ba356e87e46a74df73e1a9953ab7570fd547b"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/catalog.ts",
+          "before_sha256": "6bd00755e8b3da0f3d6ac4b149255b9adbbfffd9d0b0ac084aa2c8d316ee9a28",
+          "after_sha256": "e258070a4706f1ad32141c8c4b1784fe295c61fda32434539b060f7fddbb9a2d",
+          "before_git_blob_sha": "484ee7dc8ac3a78a381f73c020a3afc06c5394c7"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/handoff.ts",
+          "before_sha256": "2a02971dfd904fe4d1bfa104312f9de607a2d6d07d90c7a6e57aec620af681fb",
+          "after_sha256": "d225f2d891f556a1c7303457baa260d7162abbe2906832189464895790d8aea5",
+          "before_git_blob_sha": "b1d98fe90c01a6de34f1dcafdff92fcddf83da2d"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+          "before_sha256": "05ae743244fc921e3e8a03bfad07de6842b81e12eca29f90e58e6e70557c4b54",
+          "after_sha256": "476c5d4f9be53f7fef0cddc1cf66057f627b5a6a7f82a476bebb72048d3831b0",
+          "before_git_blob_sha": "e6313ad315f5235a87442c7094ff47f2c74ca6c3"
+        }
+      ]
+    },
+    {
+      "owner": "WP14",
+      "path": "/workspace/scratch/4c48b09c5c29/owner-patches/wp14-ff7a997-typecheck.patch",
+      "base_commit": "ff7a99753d1fd1bc8b68b4f2642fed26e3cadbdf",
+      "patch_sha256": "33cba8e5cd197794baa56a68aa40bfc402bfccac01dc4e13b0a82803cd99e59a",
+      "status": "PROPOSED_NOT_TESTED_NOT_APPLIED",
+      "files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decision-memory/signal-list.ts",
+          "before_sha256": "d6b31f4b0cccd0a725cc95fe2f8330472582aea5eb5f8547a80544b60347aad1",
+          "after_sha256": "2d55880564d85b72840f1c9a0e14b8b52f93bebb504af169424cc420b06b0cef",
+          "before_git_blob_sha": "91b6154c5e932b60ed70d50087961af290b626c6"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts",
+          "before_sha256": "e590c1e022e5bfb5e7c9b5a37ad2d5057b4c4b7eaa184ca51e1d694173d9ec53",
+          "after_sha256": "d5f4fa13da48cf1076971560ab314818479fa525bb48c0d47cba1b41000ff727",
+          "before_git_blob_sha": "9a29a61dca38f723aca5c0bcd416c26a1cc636b1"
+        }
+      ]
+    }
+  ]
+}

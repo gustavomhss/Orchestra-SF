@@ -4,7 +4,7 @@ import type { ScenarioOperation } from "../contracts/operations.ts"
 import { domain } from "../../runtime/planner.ts"
 
 /** Apply forecast operations to an isolated snapshot through the real Planner command. */
-export function simulatePlannerOperations(snapshot: Snapshot, actor: Actor, environment: Environment, versionId: string, operations: readonly ScenarioOperation[]) {
+export function simulatePlannerOperations(snapshot: Snapshot, actor: Actor, environment: Environment, versionId: string, operations: readonly ScenarioOperation[], project?: (snapshot: Snapshot) => Record<string, unknown> | undefined) {
   const preview = structuredClone(snapshot)
   const targets = new Set<string>()
   for (const operation of operations) {
@@ -53,5 +53,5 @@ export function simulatePlannerOperations(snapshot: Snapshot, actor: Actor, envi
     const result = apply(updates)
     if (!result.ok) return { status: result.status === 403 ? "denied" as const : result.status === 409 ? "conflict" as const : "needs-input" as const, reason: "planner-command-rejected" }
   }
-  return { status: "ok" as const, view: domain.view(preview, actor, environment) }
+  return { status: "ok" as const, view: domain.view(preview, actor, environment), ...(project ? { projection: project(preview) } : {}) }
 }

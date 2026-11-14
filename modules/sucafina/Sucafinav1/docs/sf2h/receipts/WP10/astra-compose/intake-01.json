@@ -1,0 +1,52 @@
+{
+  "schema": "sf2h.compose-integration.v1",
+  "state": "IN_PROGRESS",
+  "scope": [
+    "WP00",
+    "WP10"
+  ],
+  "base": {
+    "branch": "sf2-stack",
+    "head": "6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0",
+    "tree": "acf3b722ad55c090bef8e9dc2b3fac2d9ad570af"
+  },
+  "consumed": [
+    {
+      "pr": 29,
+      "branch": "astra-wp10",
+      "head": "417038d6b3cfd1817f40ffc60e56f42e505b50a5",
+      "tree": "a3e36522b4b403a394f2f5127d8eb7f692b53de6",
+      "mode": "explicit changed blob overlay",
+      "changed_blobs": 883,
+      "exclusions": [
+        ".github/workflows/astra-wp10-check.yml"
+      ],
+      "approval": "NOT_GRANTED"
+    }
+  ],
+  "conflicts_resolved": [],
+  "checks": [],
+  "findings": [],
+  "next_action": "Consume verified incremental WP04/#23 and WP06/#26 without regressing newer composition. Correct owned BI lexical scope and inline bundle substitution; publish hosted change-scoped proof. Reconcile remaining PR heads and preserve all criteria/gates.",
+  "preservation": {
+    "deletions": 0,
+    "foreign_archives": "untouched",
+    "control_branch": "not_consumed",
+    "native_proofs": "not_claimed",
+    "global_release": false
+  },
+  "gates": {
+    "final_selections": 8,
+    "integrated_proofs": [
+      "AM01",
+      "AM02",
+      "AM03",
+      "AM04",
+      "AM05",
+      "AM06"
+    ],
+    "independent_reviews": 3,
+    "C_G7": "PENDING_S0_FULL_BUNDLE",
+    "D_G8": "PENDING_S0_FULL_BUNDLE"
+  }
+}

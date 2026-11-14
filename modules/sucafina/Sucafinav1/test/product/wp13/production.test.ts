@@ -38,7 +38,7 @@ test("production factory keeps an unbound Planner preview conditional", async ()
     const seeded = await state.transaction(request, { namespace: "cases", expectedStorageVersion: 0, idempotencyKey: "seed", commandDigest: "b".repeat(64), targetRef: "case", targetIncarnation: "inc" }, async (value) => { value.cases.case = decision; return { commit: true, value: true } })
     expect(seeded.status).toBe("ok")
     const host = { requestFor: () => request, revalidate: async () => access.allowed }
-    const cases = createDecisionCasePort({ state, host, creationTarget: { ref: "case", incarnation: "inc" }, operationIdentity: () => "operation", authorizeCase: async () => access.allowed, evidence, createId: () => "unused", now: () => "2026-11-13T00:00:00Z" })
+    const cases = createDecisionCasePort({ state, host, creationTarget: { ref: "case", incarnation: "inc" }, operationIdentity: () => "operation", authorizeCase: async () => access.allowed, verifyScenarioOperations: async () => access.allowed, evidence, createId: () => "unused", now: () => "2026-11-13T00:00:00Z" })
     const results = createSfDecisionResultStore({ state, host, authorizeCase: async () => access.allowed, verifySources: async () => access.allowed, createId: () => "portfolio-id", now: () => "2026-11-13T00:00:00Z" })
     const contribution = createProductionPortfolio({ cases, planner, sources, evidence, revalidate: host.revalidate, createReceipt: async () => undefined, decisions: { prepareChanges: unavailable }, persistence: { results, caseFor: async () => ({ status: "ok", value: caseRef }), idempotencyKey: async () => "operation" }, enabledOperations: ["sf_portfolio_evaluate", "sf_sensitivity_evaluate"] })
     expect(contribution.capabilities).toEqual([])

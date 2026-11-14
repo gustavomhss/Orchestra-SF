@@ -3,6 +3,8 @@ import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import path from "node:path"
 import { openLocalStore } from "../../../../runtime/local-store.ts"
+import type { Snapshot } from "../../../../runtime/contract.ts"
+import type { BlobTransaction } from "../../../../runtime/assets.ts"
 
 test("blob generations survive ABA, removal and restart while rollback and forgery fail", async () => {
   const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-blob-generation-"))
@@ -10,7 +12,7 @@ test("blob generations survive ABA, removal and restart while rollback and forge
   const store = await openLocalStore(directory)
   const key = "__proto__"
   try {
-    const write = (bytes: number[], commit = true, type = "binary") => store.transaction("procurement", async (snapshot, blobs) => {
+    const write = (bytes: number[], commit = true, type = "binary") => store.transaction("procurement", async (snapshot: Snapshot, blobs: BlobTransaction) => {
       await blobs.put(key, new Uint8Array(bytes), type)
       return { commit, value: snapshot.sfBlobGenerations?.[key] }
     })
@@ -28,7 +30,7 @@ test("blob generations survive ABA, removal and restart while rollback and forge
       snapshots.procurement.sfBlobGenerations = {}
       return { commit: true, value: true }
     })).rejects.toThrow("Private blob generations")
-    expect(await store.transaction("procurement", async (snapshot, blobs) => {
+    expect(await store.transaction("procurement", async (snapshot: Snapshot, blobs: BlobTransaction) => {
       await blobs.remove(key)
       await blobs.remove(key)
       return { commit: true, value: snapshot.sfBlobGenerations?.[key] }
@@ -37,7 +39,7 @@ test("blob generations survive ABA, removal and restart while rollback and forge
     await store.dispose()
     const reopened = await openLocalStore(directory)
     try {
-      expect(await reopened.transaction("procurement", async (snapshot, blobs) => ({ commit: false, value: { generation: snapshot.sfBlobGenerations?.[key], bytes: await blobs.get(key) } })))
+      expect(await reopened.transaction("procurement", async (snapshot: Snapshot, blobs: BlobTransaction) => ({ commit: false, value: { generation: snapshot.sfBlobGenerations?.[key], bytes: await blobs.get(key) } })))
         .toEqual({ generation: 6, bytes: new Uint8Array([1]) })
     } finally { await reopened.dispose() }
   } finally { await store.dispose(); await rm(directory, { recursive: true, force: true }) }
@@ -48,7 +50,7 @@ test("caught generation overflow cannot commit blob changes", async () => {
   await chmod(directory, 0o700)
   const store = await openLocalStore(directory)
   try {
-    await store.transaction("dashboard", async (_snapshot, blobs) => {
+    await store.transaction("dashboard", async (_snapshot: Snapshot, blobs: BlobTransaction) => {
       await blobs.put("asset", new Uint8Array([1]), "binary")
       return { commit: true, value: true }
     })
@@ -65,7 +67,7 @@ test("caught generation overflow cannot commit blob changes", async () => {
     } finally { db.close() }
     const reopened = await openLocalStore(directory)
     try {
-      const caught = await reopened.transaction("dashboard", async (_snapshot, blobs) => {
+      const caught = await reopened.transaction("dashboard", async (_snapshot: Snapshot, blobs: BlobTransaction) => {
         const putFailed = await blobs.put("asset", new Uint8Array([2]), "binary").then(() => false, () => true)
         const removeFailed = await blobs.remove("asset").then(() => false, () => true)
         return { commit: true, value: { putFailed, removeFailed, bytes: await blobs.get("asset") } }

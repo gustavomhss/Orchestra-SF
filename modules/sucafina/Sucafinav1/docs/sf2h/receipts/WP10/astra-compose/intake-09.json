@@ -1,0 +1,90 @@
+{
+  "schema": "sf2-astra-compose-intake-v1",
+  "sequence": 9,
+  "base": {
+    "head": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+    "tree": "051391628c61f6a4333c8f13567c5518c4ff8f86"
+  },
+  "scope": "Incremental Finance/Interface/Routines/C12 producer intake; own BI decision destinations/context, Review refresh, stale-analysis commit",
+  "source_pins": [
+    {
+      "pr": 31,
+      "head": "01633144c83fb1080e6d985ef226b8db2aa131cb",
+      "tree": "63f3a45a86dd33679a44cf113f8a620a2052bf4e",
+      "paths": 5
+    },
+    {
+      "pr": 33,
+      "head": "2784daafbb0d3b58b6019822288a07fa38e5c5b0",
+      "tree": "fd1c89074488008ff0e60fd07577268a34329069",
+      "paths": 2
+    },
+    {
+      "pr": 35,
+      "head": "6016a70d7ab0c3d50f1ec2827a534a80e48a5c56",
+      "tree": "f84399d12c35bb8fd66cf4631bae56b02e84123a",
+      "paths": 19
+    },
+    {
+      "pr": 29,
+      "head": "f3b9f512fbcae66bc369ff7dbbe6fa433ae4c9d0",
+      "tree": "d1350cf59e9fd98996e23fd12aba6b28b9fa752f",
+      "paths": 1,
+      "closure_preserved_in_later_host": true
+    },
+    {
+      "pr": 29,
+      "head": "2ec17b2c8204d5e953eec3186b7e236c0faaad47",
+      "tree": "526f67866223b8b73e1bcae16e45ec9377b1af2e",
+      "paths": 3,
+      "foreign_analysis_port_excluded": true
+    },
+    {
+      "branch": "astra-wp11",
+      "head": "11261a57ebb5ad7281bb7bcdd9d3f2687c2c76de",
+      "tree": "e63f555351ec6a21402319797e044fd51e8eb4fb",
+      "paths": 3,
+      "pr30_head_is_different": true
+    }
+  ],
+  "own_changes": [
+    "BI stores only human filter/selection/focus identifiers in browser history; returning reopens options/data under current authorization before restoring focus.",
+    "BI09-BI11 destinations bind tokens to exact authorized projection, read actual result/coverage/question/case/source, reread selected projection and enforce final Request/C08 fences.",
+    "Review claims successful shell refresh to preserve immutable history and human preparation; logout/revocation/pagehide clear private data and abort pending work.",
+    "Own published PR29 stale-analysis commit closure preserves current cancellation authority, source fences, terminal CAS and output provenance."
+  ],
+  "conflicts_resolved": "Exact W8 bases verified for owner blobs. Preserve own C17 historical-reader closure and all previously composed contracts, Planner, dossier and BI work. No foreign snapshot/deletion/branch mutation.",
+  "files": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/astra-compose/intakes/round09-files.json",
+  "freeze": {
+    "revision": 10,
+    "unchanged_artifacts": 36,
+    "repinned_artifacts": 2,
+    "unchanged_typed_contracts": 20,
+    "approved_semantics_unchanged": true
+  },
+  "check6": {
+    "W": "35b9fd4f532abeb1058f00281d4ad8885ca9966f",
+    "run": 43586748889,
+    "S": "3bd08ffc7dcc0924422f37b3e01645482bc16c1b",
+    "conclusion": "FAILURE",
+    "sucafina_diagnostics": 20,
+    "cli_diagnostics": 0,
+    "own_diagnostics": 0,
+    "atlas_spawn_guards": "PASS;78rules/1308paths/0gate/46warnings/0errors",
+    "owner_intake_static_delta": "6 diagnostics addressed by Interface/Routines exact blobs; not a composed typecheck result"
+  },
+  "independent_reviews": "Three nonauthor W8 reviews completed with changes required/open gates; W9 fixes require review and exact Actions. Authorship does not count as independent review.",
+  "remaining": [
+    "WP11 no-op promotion coverage proof and HotTopic domain mismatch remain owner findings.",
+    "C07 governed native provider and recipient authorization absent.",
+    "C17 genuine historical source-drift/mixed closure plus reviewed-policy producer/project emit/read wiring absent.",
+    "Remaining foreign typecheck/Atlas Request fixture defects stay with owners.",
+    "Full positive native journeys, all 8 final selections, AM01-AM06, fresh final independent review acceptance and C/G7,D/G8 remain required."
+  ],
+  "next_action": "Run surgical C17/Finance affected selection then BI/Review/C12/analysis consumers serially via canonical CI.md; package bun typecheck and guards on exact W. No epic.",
+  "status": "IMPLEMENTED_NOT_REVALIDATED",
+  "deletions": 0,
+  "local_product_execution": false,
+  "source_branches_modified": false,
+  "global_release": false
+}

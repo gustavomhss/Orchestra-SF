@@ -1,0 +1,520 @@
+{
+  "schema": "astra-compose-owner-intake-w10-v1",
+  "repository": "gustavomhss/Orchestra-SF",
+  "source": {
+    "pr": 35,
+    "head": "6184a0d3c818fd508f05028d34428ef1c95c01a5",
+    "tree": "f30c35028acb382d2b38b7be6e105f3a98a0518c",
+    "head_from": "MCP live PR snapshot once; commit tree via exact MCP Git commit",
+    "body_lag": "PR body cited cfbf7c8; actual head6184 used"
+  },
+  "comparison": {
+    "target_head": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+    "target_tree": "57ce597f3ebe8ddb543f9d71d34d20f789c76e33",
+    "worktree_edits": false,
+    "textual_conflicts": 0
+  },
+  "accepted": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+      "blob": "3e7575cddfd52d9f5751c0ee6179c747bb318c98",
+      "pin": "6184a0d3c818fd508f05028d34428ef1c95c01a5",
+      "head": "6184a0d3c818fd508f05028d34428ef1c95c01a5",
+      "source_head": "6184a0d3c818fd508f05028d34428ef1c95c01a5",
+      "tree": "f30c35028acb382d2b38b7be6e105f3a98a0518c",
+      "pr": 35,
+      "owner": "WP11 Finance",
+      "base_head": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "base_tree": "57ce597f3ebe8ddb543f9d71d34d20f789c76e33",
+      "base_blob": "922358d17c470c16b43076510bdf04744e2306e4",
+      "target_blob_at_wp10": "922358d17c470c16b43076510bdf04744e2306e4",
+      "worktree_blob": "922358d17c470c16b43076510bdf04744e2306e4",
+      "content_sha256": "da9865c8903e9e3f159bded7f4a1604a531df3be8ba5bb337b6cdf5e61fc6f0d",
+      "content_blob_verified": true,
+      "operation": "copy_exact_published_blob_only",
+      "disposition": "ELIGIBLE_WITH_EXPLICIT_INCIDENTAL_API_NOTE_PENDING_TARGET_CI",
+      "staged_source": "incoming-cache/owner-round10/pr35-src/modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+      "dependency_inventory": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+          "blob": "1769271386cdda1017c38023b0988ce2d64423d2",
+          "availability": "W9 root-provided materialization; no dependency delta imported"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+          "blob": "09097eaba2e0eae71d33d88077a2f86e83e1dde9",
+          "availability": "W9 root-provided materialization; no dependency delta imported",
+          "remote_proof": "MCP source6184 and W9 both 09097eaba2e0eae71d33d88077a2f86e83e1dde9"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/ledger-outbox.ts",
+          "blob": "393aebdac3b6b5c80b41a1ca73227413563ad440",
+          "availability": "W9 root-provided materialization; no dependency delta imported"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+          "blob": "102c849084980ae52223809d33bdeea36a58536b",
+          "availability": "W9 root-provided materialization; no dependency delta imported"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/context.ts",
+          "blob": "ae2d6b73a24970ba23d21e17694b54fd32d1a700",
+          "availability": "W9 root-provided materialization; no dependency delta imported"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+          "blob": "f22b00f0a97ab138d1d8b86855f432c6ef709c36",
+          "availability": "W9 root-provided materialization; no dependency delta imported"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/operations.ts",
+          "blob": "88550f78693ba1a66b285f2f53abcd3f8c09afdc",
+          "availability": "W9 root-provided materialization; no dependency delta imported"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+          "blob": "88b6efb4840b8731f707862a8baf14683526c7a9",
+          "availability": "W9 root-provided materialization; no dependency delta imported"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+          "blob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95",
+          "availability": "W9 root-provided materialization; no dependency delta imported"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/state.ts",
+          "blob": "755639b2a16265fe164ba2e6343738c1362d168c",
+          "availability": "W9 root-provided materialization; no dependency delta imported"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/choice.ts",
+          "blob": "ac65bdd3445113f00b643b72dfaa2a8840826a99",
+          "availability": "W9 root-provided materialization; no dependency delta imported"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts",
+          "blob": "5e0b80a470958dd201db4283bde96d594935e68d",
+          "availability": "selected atomic group"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-change.ts",
+          "blob": "fc9dc0b25e1a1d646318bc0df3e0d41f95b9562e",
+          "availability": "W9 root-provided materialization; no dependency delta imported"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/application-attempt.ts",
+          "blob": "d7ef49df787cc4b058f0992b1fbbdc5c0cb6634e",
+          "availability": "W9 root-provided materialization; no dependency delta imported",
+          "remote_proof": "MCP source6184 and W9 both d7ef49df787cc4b058f0992b1fbbdc5c0cb6634e"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+          "blob": "9e9bac976b503409de65868a366f352ca1e65071",
+          "availability": "W9 root-provided materialization; no dependency delta imported"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+          "blob": "d7d8eb3ca267551797b191ccfb1d037149757898",
+          "availability": "W9 root-provided materialization; no dependency delta imported"
+        }
+      ],
+      "target_tests_executed": false,
+      "upstream_pass_transferred": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts",
+      "blob": "5e0b80a470958dd201db4283bde96d594935e68d",
+      "pin": "6184a0d3c818fd508f05028d34428ef1c95c01a5",
+      "head": "6184a0d3c818fd508f05028d34428ef1c95c01a5",
+      "source_head": "6184a0d3c818fd508f05028d34428ef1c95c01a5",
+      "tree": "f30c35028acb382d2b38b7be6e105f3a98a0518c",
+      "pr": 35,
+      "owner": "WP11 Finance",
+      "base_head": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "base_tree": "57ce597f3ebe8ddb543f9d71d34d20f789c76e33",
+      "base_blob": "dc480a2e1e343e7f2a8844a3c23ec9f06582d5ad",
+      "target_blob_at_wp10": "dc480a2e1e343e7f2a8844a3c23ec9f06582d5ad",
+      "worktree_blob": "dc480a2e1e343e7f2a8844a3c23ec9f06582d5ad",
+      "content_sha256": "fcb53e92873f59aa9da18c9c06b44508e34cbf753ef21c8dea6be9afdaee0f36",
+      "content_blob_verified": true,
+      "operation": "copy_exact_published_blob_only",
+      "disposition": "ELIGIBLE_PENDING_TARGET_CI",
+      "staged_source": "incoming-cache/owner-round10/pr35-src/modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts",
+      "dependency_inventory": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/validation.ts",
+          "blob": "44e79b3009076e9fae595e79a8c72a8f3918f14b",
+          "availability": "W9 root-provided materialization; no dependency delta imported"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+          "blob": "1769271386cdda1017c38023b0988ce2d64423d2",
+          "availability": "W9 root-provided materialization; no dependency delta imported"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+          "blob": "102c849084980ae52223809d33bdeea36a58536b",
+          "availability": "W9 root-provided materialization; no dependency delta imported"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/context.ts",
+          "blob": "ae2d6b73a24970ba23d21e17694b54fd32d1a700",
+          "availability": "W9 root-provided materialization; no dependency delta imported"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+          "blob": "f22b00f0a97ab138d1d8b86855f432c6ef709c36",
+          "availability": "W9 root-provided materialization; no dependency delta imported"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/operations.ts",
+          "blob": "88550f78693ba1a66b285f2f53abcd3f8c09afdc",
+          "availability": "W9 root-provided materialization; no dependency delta imported"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+          "blob": "88b6efb4840b8731f707862a8baf14683526c7a9",
+          "availability": "W9 root-provided materialization; no dependency delta imported"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+          "blob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95",
+          "availability": "W9 root-provided materialization; no dependency delta imported"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/state.ts",
+          "blob": "755639b2a16265fe164ba2e6343738c1362d168c",
+          "availability": "W9 root-provided materialization; no dependency delta imported"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+          "blob": "9e9bac976b503409de65868a366f352ca1e65071",
+          "availability": "W9 root-provided materialization; no dependency delta imported"
+        }
+      ],
+      "target_tests_executed": false,
+      "upstream_pass_transferred": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/source-promotion-coverage.test.ts",
+      "blob": "1c2d45332907483ec7c816ebdc64ea81ee8b215e",
+      "pin": "6184a0d3c818fd508f05028d34428ef1c95c01a5",
+      "head": "6184a0d3c818fd508f05028d34428ef1c95c01a5",
+      "source_head": "6184a0d3c818fd508f05028d34428ef1c95c01a5",
+      "tree": "f30c35028acb382d2b38b7be6e105f3a98a0518c",
+      "pr": 35,
+      "owner": "WP11 Finance",
+      "base_head": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "base_tree": "57ce597f3ebe8ddb543f9d71d34d20f789c76e33",
+      "base_blob": null,
+      "target_blob_at_wp10": null,
+      "worktree_blob": null,
+      "content_sha256": "0d91264ba30f755f5c8853e826ee940f125c83150053f7444fc446110e368d4e",
+      "content_blob_verified": true,
+      "operation": "copy_exact_published_blob_only",
+      "disposition": "ELIGIBLE_PENDING_TARGET_CI",
+      "staged_source": "incoming-cache/owner-round10/pr35-src/modules/sucafina/Sucafinav1/test/product/wp11/source-promotion-coverage.test.ts",
+      "dependency_inventory": [
+        {
+          "import": "bun:test",
+          "availability": "existing runtime/package dependency unchanged"
+        },
+        {
+          "import": "node:fs/promises",
+          "availability": "existing runtime/package dependency unchanged"
+        },
+        {
+          "import": "node:os",
+          "availability": "existing runtime/package dependency unchanged"
+        },
+        {
+          "import": "node:path",
+          "availability": "existing runtime/package dependency unchanged"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+          "blob": "1769271386cdda1017c38023b0988ce2d64423d2",
+          "availability": "W9 root-provided materialization; no dependency delta imported"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+          "blob": "102c849084980ae52223809d33bdeea36a58536b",
+          "availability": "W9 root-provided materialization; no dependency delta imported"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+          "blob": "f22b00f0a97ab138d1d8b86855f432c6ef709c36",
+          "availability": "W9 root-provided materialization; no dependency delta imported"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/operations.ts",
+          "blob": "88550f78693ba1a66b285f2f53abcd3f8c09afdc",
+          "availability": "W9 root-provided materialization; no dependency delta imported"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+          "blob": "88b6efb4840b8731f707862a8baf14683526c7a9",
+          "availability": "W9 root-provided materialization; no dependency delta imported"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+          "blob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95",
+          "availability": "W9 root-provided materialization; no dependency delta imported"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+          "blob": "09097eaba2e0eae71d33d88077a2f86e83e1dde9",
+          "availability": "W9 root-provided materialization; no dependency delta imported",
+          "remote_proof": "MCP source6184 and W9 both 09097eaba2e0eae71d33d88077a2f86e83e1dde9"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/coverage-classification.ts",
+          "blob": "4280c9a249627893eb798eb421711d9e58e50a8f",
+          "availability": "W9 root-provided materialization; no dependency delta imported"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+          "blob": "3e7575cddfd52d9f5751c0ee6179c747bb318c98",
+          "availability": "selected atomic group"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+          "blob": "2fd55c7304add0829d7434917c80664fe86356b9",
+          "availability": "W9 root-provided materialization; no dependency delta imported"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+          "blob": "502fb1ab3a4116a62aeb504a4bb26040c66d81b2",
+          "availability": "W9 root-provided materialization; no dependency delta imported"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+          "blob": "e365ac59376482dfcc6f81aed045b0153f911038",
+          "availability": "W9 root-provided materialization; no dependency delta imported"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          "blob": "b753e3ffbfcdc06de373388845c686afac26dec8",
+          "availability": "W9 root-provided materialization; no dependency delta imported"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+          "blob": "9e9bac976b503409de65868a366f352ca1e65071",
+          "availability": "W9 root-provided materialization; no dependency delta imported"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/src/identity.ts",
+          "blob": "5a146c7a1c05598bdc67596e282ce150c720e9c0",
+          "availability": "W9 root-provided materialization; no dependency delta imported"
+        }
+      ],
+      "target_tests_executed": false,
+      "upstream_pass_transferred": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/hot-topic-draft-domain.test.ts",
+      "blob": "d75d700de4a9a607550691382dc0e14237c289a0",
+      "pin": "6184a0d3c818fd508f05028d34428ef1c95c01a5",
+      "head": "6184a0d3c818fd508f05028d34428ef1c95c01a5",
+      "source_head": "6184a0d3c818fd508f05028d34428ef1c95c01a5",
+      "tree": "f30c35028acb382d2b38b7be6e105f3a98a0518c",
+      "pr": 35,
+      "owner": "WP11 Finance",
+      "base_head": "ed10a3806a4ffdf6ad5891e2065d93a4c91412cf",
+      "base_tree": "57ce597f3ebe8ddb543f9d71d34d20f789c76e33",
+      "base_blob": null,
+      "target_blob_at_wp10": null,
+      "worktree_blob": null,
+      "content_sha256": "6132ff97b7bf12577d43dd05b511fdfe47cf46bb8ac701c6d49007cef85b94e3",
+      "content_blob_verified": true,
+      "operation": "copy_exact_published_blob_only",
+      "disposition": "ELIGIBLE_PENDING_TARGET_CI",
+      "staged_source": "incoming-cache/owner-round10/pr35-src/modules/sucafina/Sucafinav1/test/product/wp11/hot-topic-draft-domain.test.ts",
+      "dependency_inventory": [
+        {
+          "import": "bun:test",
+          "availability": "existing runtime/package dependency unchanged"
+        },
+        {
+          "import": "node:fs/promises",
+          "availability": "existing runtime/package dependency unchanged"
+        },
+        {
+          "import": "node:os",
+          "availability": "existing runtime/package dependency unchanged"
+        },
+        {
+          "import": "node:path",
+          "availability": "existing runtime/package dependency unchanged"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+          "blob": "1769271386cdda1017c38023b0988ce2d64423d2",
+          "availability": "W9 root-provided materialization; no dependency delta imported"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+          "blob": "f22b00f0a97ab138d1d8b86855f432c6ef709c36",
+          "availability": "W9 root-provided materialization; no dependency delta imported"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/state.ts",
+          "blob": "755639b2a16265fe164ba2e6343738c1362d168c",
+          "availability": "W9 root-provided materialization; no dependency delta imported"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+          "blob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95",
+          "availability": "W9 root-provided materialization; no dependency delta imported"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts",
+          "blob": "5e0b80a470958dd201db4283bde96d594935e68d",
+          "availability": "selected atomic group"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+          "blob": "2fd55c7304add0829d7434917c80664fe86356b9",
+          "availability": "W9 root-provided materialization; no dependency delta imported"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+          "blob": "502fb1ab3a4116a62aeb504a4bb26040c66d81b2",
+          "availability": "W9 root-provided materialization; no dependency delta imported"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          "blob": "b753e3ffbfcdc06de373388845c686afac26dec8",
+          "availability": "W9 root-provided materialization; no dependency delta imported"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+          "blob": "9e9bac976b503409de65868a366f352ca1e65071",
+          "availability": "W9 root-provided materialization; no dependency delta imported"
+        }
+      ],
+      "target_tests_executed": false,
+      "upstream_pass_transferred": false
+    }
+  ],
+  "summary": {
+    "accepted_paths": 4,
+    "product_paths": 2,
+    "test_paths": 2,
+    "declared_new_test_cases": 8,
+    "external_Check7_type_diagnostics_fixed": 0,
+    "concrete_findings_addressed": [
+      "WP11_NOOP_PROMOTION_COVERAGE",
+      "WP11_HOT_TOPIC_DOMAIN_SURFACE"
+    ],
+    "foreign_snapshot_or_delete_imports": 0
+  },
+  "criterion_map": [
+    {
+      "finding": "WP11_NOOP_PROMOTION_COVERAGE",
+      "code": "Entries and canonical reassessment now run whenever coverageEvidence exists, including equal no-op observations; without provider the attributed fallback only survives unchanged assessment. Source proof, verification, CAS, exact replay and complete-without-proof denial remain.",
+      "counterproof": "source-promotion-coverage: alpha and beta source ordering; exact stored result; replay without new entries; changed scenario remains hypothetical/conditioned; entries/source/case/authority/abort negatives.",
+      "limits": "Real Planner/classification/reassessment/C08; synthetic human authorization and exact-result proof callback are explicit. No native/installed authority or N/A promotion proof claimed."
+    },
+    {
+      "finding": "WP11_HOT_TOPIC_DOMAIN_SURFACE",
+      "code": "Only domainSurface planner→dashboard changes in hot-topic-draft. Existing authority, case, digest, protected write, snapshot check and CAS preserved.",
+      "counterproof": "hot-topic-draft-domain discriminates different Dashboard/Planner rows, human denial, durable exact replay, source race and no partial domain/case write.",
+      "limits": "Real store/C08; authorization and source verifier are declared fixture boundaries. Installed Dashboard consumer still needs target evidence."
+    }
+  ],
+  "incidental_published_delta": [
+    {
+      "change": "rejectChange method, reject-change operation union and reconsideration outbox branch",
+      "dependency": "applicationAttempts exists in W9 with the same published blob as source; PreparedApplyRequest is structurally {caseRef:{id,incarnation,version},changeId,choiceId} in product/decisions/receipt-review-binding.ts:5",
+      "new_contract_required": false
+    },
+    {
+      "change": "PreparedChange is marked cancelled and ledger uses reconsideration-accepted",
+      "dependency": "W9 product/contracts/decisions.ts blob f22b00f0a97ab138d1d8b86855f432c6ef709c36 already declares cancelled at line88 and reconsideration-accepted at line124",
+      "new_contract_required": false
+    },
+    {
+      "change": "New entrypoint remains unannounced",
+      "evidence": "W9 product/decisions/http.ts and apps/cli/src/sucafina-product/portfolio-http.ts use explicit action maps/calls and contain no rejectChange route; decisions/host-product.ts mutationIntent returns undefined for an unlisted operation. No C15 descriptor or human action is added by these four blobs.",
+      "activated_by_intake": false
+    },
+    {
+      "finding": "Before any future rejectChange wiring, give it an explicit action mapping",
+      "detail": "WP10 portfolio-services.ts:35 and portfolio-preparation.ts:24 currently default non-listed operations to decisions.answer-question. Existing HTTP routes do not call the new method. This intake does not announce or qualify that extra API, and no future route should rely on those defaults.",
+      "owner": "WP10 composition / WP11 before rejection feature activation",
+      "blocking_for_existing_promotion_or_HotTopic_routes": false
+    }
+  ],
+  "source_receipts": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/late-own-deltas-manifest.json",
+      "blob": "79af462e793a41cf4efb37ae9955c0f14b4e9ead",
+      "source_head": "6184a0d3c818fd508f05028d34428ef1c95c01a5",
+      "MCP_blob_verified": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/bi-choice-failure-files-ready.json",
+      "blob": "32e5b26cce3faf7cda676f1486a9c7b525a0063e",
+      "source_head": "6184a0d3c818fd508f05028d34428ef1c95c01a5",
+      "MCP_blob_verified": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP11/finance-20261114/reviews/review-late-core.json",
+      "blob": "3db47cedb696fd42b768c66cc663bbba72705114",
+      "source_head": "6184a0d3c818fd508f05028d34428ef1c95c01a5",
+      "MCP_blob_verified": true
+    }
+  ],
+  "source_validation": {
+    "matching_executed_proof_established_by_intake": false,
+    "review_late_core": "STATIC_REVIEW_COMPLETE_REMOTE_VALIDATION_PENDING; reviewedHead null; no independent final-review credit",
+    "late_manifest": "FROZEN_FOR_INDEPENDENT_REVIEW_NOT_RUN",
+    "known_historical_failures_from_frozen_PR_body": [
+      {
+        "run": 43586902727,
+        "source": "6016a70d7ab0c3d50f1ec2827a534a80e48a5c56",
+        "result": "4 pass / 1 fail + 1 error; BI null total and timeout"
+      },
+      {
+        "run": 43587138878,
+        "source": "92f6d97d2df5ebf53cd845f4cfe93355d10b0f6f",
+        "result": "17 pass / 5 fail"
+      }
+    ],
+    "no_old_green_transferred": true
+  },
+  "remaining_findings": [
+    {
+      "owner": "WP10 integration",
+      "finding": "Canonical portfolio-coverage baseline N/A rejection remains unchanged. The source-only tests use explicitly included classifications; N/A is not qualified."
+    },
+    {
+      "owner": "WP01/WP05",
+      "finding": "No newly published advantage reflow fix found in the frozen candidate deltas. decision-view changes orientation copy and SVG hit area, so that blob is excluded."
+    }
+  ],
+  "proposed_target_checks": {
+    "executor": "GitHub Actions only, root scheduling",
+    "focused_paths": [
+      "modules/sucafina/Sucafinav1/test/product/wp11/source-promotion-coverage.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp11/hot-topic-draft-domain.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-case-access.test.ts"
+    ],
+    "consumer_note": "Root may select the already-existing real Dashboard draft consumer for the HotTopic change, without epic",
+    "typecheck": "bun typecheck in affected packages; existing external diagnostics remain separately owned",
+    "guards": "Applicable AGENTS guards in Actions; not run locally"
+  },
+  "execution": {
+    "local_product_tests": false,
+    "local_typecheck": false,
+    "local_guards": false,
+    "CI_dispatched": false,
+    "GitHub_mutations": false,
+    "worktree_edits": false,
+    "independent_review": false,
+    "GLOBAL_RELEASE": false
+  },
+  "payload": "incoming-cache/owner-round10/group35-payload.json",
+  "status": "COMPOSABLE_INCREMENT_PENDING_EXACT_TARGET_VALIDATION"
+}
