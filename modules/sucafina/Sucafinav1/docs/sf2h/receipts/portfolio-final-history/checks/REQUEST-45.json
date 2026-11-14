@@ -1,0 +1,79 @@
+{
+  "schema": "sf2h.portfolio-final-history.compiler-owner-request.v1",
+  "mission": 50,
+  "owner": 45,
+  "consumer": 47,
+  "status": "NOT_RUN_INTERFACE_NOT_PUBLISHED",
+  "request": "Qualify exact composed W using authorized package compiler/guards interface; do not transfer checks43 or other candidates",
+  "product": {
+    "W": "a68ac1b35a023b6769519fed64daadfdda50ea5a",
+    "tree": "47e2d418566704e49c70286bf32e05e01feb9218",
+    "parent_C18": "ee1a3ea147ab7d7f4f6b231217e623456e294c84",
+    "source": "b84dfb5e97689def89fde63ed0b6f44732f882d0",
+    "overlay": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/proof.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "d99af3b43388b510e510908fff2371a34b57eee1"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "09b5c3fe64493d15cbd42596ce73d7c7f0a52188"
+      }
+    ]
+  },
+  "dev_base": {
+    "ref": "dev",
+    "sha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+    "revalidate_at_dispatch": true
+  },
+  "commands": [
+    {
+      "directory": "modules/sucafina",
+      "command": "bun typecheck"
+    },
+    {
+      "directory": ".",
+      "command": "bun run check:guards --base origin/dev"
+    }
+  ],
+  "interface_observation": {
+    "control": "f2383d1248a130e05a9e6667516023ecea70389e",
+    "mission45_blob": "7ca93a297e5ed4d17af5ad832aac4f07154a92de",
+    "mission45_state": "PREPARED_NOT_STARTED",
+    "astra_compose": "d317873c18bf224c4c1f4d3425179d12ad53e81b",
+    "C18_workflows": [
+      "sf2-epic.yml",
+      "test-ci.yml"
+    ],
+    "scoped_check_workflow": "ABSENT",
+    "scoped_checks_script": "ABSENT",
+    "composed_compiler_receipts": "ABSENT",
+    "observed_by": "ci_p03 read-only reviewer; root target/control reads"
+  },
+  "independent_functional_request": {
+    "W": "a68ac1b35a023b6769519fed64daadfdda50ea5a",
+    "S": "c2bb42ba3f1be357b51045f4d827911b86596847",
+    "request_blob": "7abd4938446bf3d555440a26924629602fd903d0",
+    "run": 43653550785,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43653550785",
+    "result": "IN_PROGRESS"
+  },
+  "constraints": [
+    "No astra-check-wp13 takeover or historical source workflow transplant",
+    "No epic dispatch, local typecheck/test, timeout/oracle weakening",
+    "If45 publishes material gate/config changes, bind a new composed candidate explicitly",
+    "Return exact run/job/log/diagnostics and guards verdict; identify owner for shared diagnostics"
+  ],
+  "source50_authority_excludes": [
+    "workflows",
+    "runtime",
+    "shared host/CLI",
+    "compiler ref",
+    "sf2-stack"
+  ],
+  "GLOBAL_RELEASE": false
+}
