@@ -1,0 +1,77 @@
+{
+  "W": "1fe2e77f8cb70ff9f8fd0195efcc4792ebf6cadd",
+  "Wtree": "8b87de54ccc99d3849294af9731feea1d43a4bd5",
+  "test": {
+    "S": "67cb97d12e2b3f93597edd0b50c2f7f7fd07164c",
+    "tree": "2c10f45eb4f4d7476de81019a6412b06e0160110",
+    "run": 43643528434,
+    "branch": "ci-run-linux-astra-wp09-1fe2e77f-697dca0d-1",
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "Sucafinav1/test/product/routine-native-admission/adapter-boundaries.test.ts",
+        "Sucafinav1/test/product/routine-native-admission/admission-records.test.ts",
+        "Sucafinav1/test/product/routine-native-admission/governance-lease.test.ts",
+        "Sucafinav1/test/product/routine-native-admission/plan-records.test.ts",
+        "Sucafinav1/test/product/routine-native-admission/positive-admission.test.ts",
+        "Sucafinav1/test/product/routine-native-admission/retained-input.test.ts"
+      ],
+      "env": {}
+    }
+  },
+  "check": {
+    "S": "6866f36b76c757e0a7e93efb77a0a02e92df0b41",
+    "tree": "9a15f768831f84a05f865ae3f25bca0b940a3693",
+    "run": 43643536188,
+    "request": {
+      "productSha": "1fe2e77f8cb70ff9f8fd0195efcc4792ebf6cadd",
+      "devSha": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+    }
+  },
+  "testJob": 132596076058,
+  "checkJob": 132596100938,
+  "testResult": {
+    "pass": 30,
+    "fail": 1,
+    "errors": 0,
+    "expect": 193,
+    "tests": 31,
+    "files": 6,
+    "duration_ms": 1910,
+    "omniNonce": "59dd2e94e91dd915341a7197dd5117f6",
+    "omniVerdict": "not applicable (focused: no declaring test ran)",
+    "conclusion": "failure",
+    "failure": "retained-input.test.ts: negative SourceRef.version accepted by metadata reader"
+  },
+  "checkResult": {
+    "typecheck": "failure",
+    "diagnostics": 78,
+    "ownDiagnostics": 0,
+    "externalDiagnostics": 78,
+    "externalDiagnosticsComparedTo": "f3b97d4ff68d69fccbdf286dd66767c1d5fceae5",
+    "externalDiagnosticBlocksIdenticalAfterTimestampRemoval": true,
+    "externalDiagnosticBlocksSha256": "d446e1dbf2d8dfd438a6dece288a12a306e2687fb52d3a89165150fb54ca5f37",
+    "guards": "failure",
+    "rules": 78,
+    "changedPaths": 683,
+    "gate": 2,
+    "warnings": 13,
+    "errors": 0,
+    "guardRule": "agent-scratch",
+    "guardPaths": [
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-admission/ci-attempts/01-tests.log",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-admission/ci-attempts/01-typecheck-diagnostics.log"
+    ],
+    "artifact": {
+      "id": 14132374151,
+      "name": "astra-wp09-check-1",
+      "bytes": 5710,
+      "digest": "sha256:e30f60f93e74819f9faa909eacb8815127fbe25dd6c5ca6d738c153e7f07f619",
+      "expires_at": "2026-11-28T21:35:58Z",
+      "zip_downloaded": false
+    }
+  },
+  "correction_reason": "Reject negative/non-integer/unsafe SourceRef versions in the owned native-input reader; remove raw tool logs from the receipt tree as required by agent-scratch. Preserve structured evidence, hosted links, all existing assertions, the same CI interfaces and timeouts."
+}

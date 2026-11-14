@@ -61,13 +61,13 @@ export function readSfRoutineNativeInput(revision: NativePlan): SfRoutineNativeI
     publishedRecipeRef: retained.publishedRecipeRef, inputRefs: retained.inputRefs, parameters: retained.parameters,
   })
   if (!operation.ok) return undefined
-  // Reuse the frozen C07 decoder for every SourceRef, including its closed fields and versions.
+  // Reuse the frozen C07 decoder for the closed SourceRef shape; reject invalid native versions below.
   const result = decodeSfOperationOutput("sf_routine_status", {
     admission: "preparing", documentId: publication.documentID, publishedVersion: publication.activeVersionID,
     principalRef: retained.owner.principalRef, projectId: retained.owner.projectId, correlationId: revision.id,
     sourceRefs: retained.sourceRefs, pending: [],
   })
-  if (!result.ok) return undefined
+  if (!result.ok || result.value.sourceRefs.some(source => !Number.isSafeInteger(source.version) || source.version < 0)) return undefined
   const input: RoutineAdmittedInput = {
     ...operation.value, parameters: operation.value.parameters,
     planRevisionId: revision.id, writeScope: [...revision.workflowBinding.writePaths],
