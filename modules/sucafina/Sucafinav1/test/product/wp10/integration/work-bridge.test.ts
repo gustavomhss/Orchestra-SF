@@ -42,7 +42,7 @@ function ok<T>(value: PortResult<T>, name: string): T {
 // memory registry reads. No condition or accepted native receipt is fabricated.
 // The separate memory fixture below declares its upstream scenario/criterion
 // inputs; those are not evidence of native execution or global acceptance.
-async function fixture(options: { threadRead?: boolean; key?: Uint8Array; procurement?: boolean } = {}) {
+async function workFixture(options: { threadRead?: boolean; key?: Uint8Array } = {}) {
   const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-work-bridge-"))
   await chmod(directory, 0o700)
   const store = await openLocalStore(join(directory, "store"))
@@ -99,6 +99,13 @@ async function fixture(options: { threadRead?: boolean; key?: Uint8Array; procur
     return { authority, business, memory, signals, destinations, http, request, admit, human }
   }
   const runtime = open(new Uint8Array(await readFile(keyPath)))
+  return { ...runtime, directory, store, persistence, active, access, signingKey,
+    reopen: async () => open(new Uint8Array(await readFile(keyPath))),
+    dispose: async () => { runtime.business.dispose(); await store.dispose(); await rm(directory, { recursive: true, force: true }) } }
+}
+
+async function fixture(options: { threadRead?: boolean; key?: Uint8Array } = {}) {
+  const runtime = await workFixture(options)
   const call = await runtime.admit("sf_dashboard_read", { page: "All Projects", period })
   const source = ok(await runtime.business.dashboardRecords.issue({ page: "All Projects", recordType: "projects", recordId: "work-project", fields: ["status"], period }, call), "source")
   runtime.authority.ui.finish(call)
@@ -111,19 +118,19 @@ async function fixture(options: { threadRead?: boolean; key?: Uint8Array; procur
   const selection = await runtime.human("collaboration.selection.create", { draft: selected, mutation }, (context) => runtime.business.collaboration.caseSelection!.create(selected, mutation, context))
   const query = { selectionRef: selection.selectionRef, period }
   const threadDraft = { kind: "clarification" as const, sourceRef: source.refId, sourceIncarnation: source.target.incarnation, observedVersion: source.target.version,
-    period, recipientRef: options.procurement ? "other" : "person", body: "Read this actual contextual question", evidenceRefs: [source] }
+    period, recipientRef: "person", body: "Read this actual contextual question", evidenceRefs: [source] }
   const threadMutation = { expectedStorageVersion: 0, idempotencyKey: randomUUID() }
   const thread = await runtime.human("collaboration.thread.create", { draft: threadDraft, mutation: threadMutation }, (context) => runtime.business.collaboration.threads.create(threadDraft, threadMutation, context))
   const payload = { selection: query, actionRef: thread.id }
   const route = new URL(`${mount}/dashboard`, origin)
   for (const [key, value] of Object.entries({ sf: "work-item", selectionRef: query.selectionRef, start: period.start, end: period.end, actionRef: thread.id })) route.searchParams.set(key, value)
-  return { ...runtime, directory, store, persistence, active, access, signingKey, decision, source, selection: query, thread, payload, route,
-    reopen: async () => open(new Uint8Array(await readFile(keyPath))),
-    dispose: async () => { runtime.business.dispose(); await store.dispose(); await rm(directory, { recursive: true, force: true }) } }
+  return { ...runtime, decision, source, selection: query, thread, payload, route }
 }
 
 async function procurementFixture() {
-  const f = await fixture({ procurement: true })
+  // Build the real Procurement source directly. An unrelated contextual thread
+  // to another recipient is not a precondition for reading this approval work.
+  const f = await workFixture()
   try {
     const actor = { id: "person", canWrite: true, roles: ["admin"], assigned: [], domains: [] }
     const environment = await f.authority.host.environment(f.request())
@@ -188,6 +195,36 @@ async function procurementSession() {
     } catch (error) { reopened.business.dispose(); throw error }
   } catch (error) { await f.dispose(); throw error }
 }
+
+test("Procurement work reads an uninitialized C08 without writing and invalidates its witness on the first real commit", async () => {
+  const { f, reopened, queue, dispose } = await procurementSession()
+  try {
+    const request = reopened.request(), payload = { selection: queue.selection, actionRef: queue.actionRef }
+    const absent = () => reopened.authority.state.read(request, "threads", () => true)
+    expect(await absent()).toMatchObject({ status: "unavailable", reason: "product-state-uninitialized" })
+    const call = await reopened.admit("sf-human:collaboration.work.destination", payload, request)
+    const opened = ok(await reopened.destinations.read(queue.selection, queue.actionRef, call), "Procurement before first C08 commit")
+    expect(await opened.verify()).toBe(true)
+    expect(await absent()).toMatchObject({ status: "unavailable", reason: "product-state-uninitialized" })
+    const initialized = await reopened.authority.state.transaction(request, { namespace: "preferences", expectedStorageVersion: 0,
+      targetRef: reopened.authority.creationTarget.ref, targetIncarnation: reopened.authority.creationTarget.incarnation,
+      idempotencyKey: randomUUID(), commandDigest: digestSfValue({ purpose: "first-real-work-preference" }) }, async (state) => {
+      state.preferences.workWitnessCounterproof = { first: true }
+      return { commit: true, value: true }
+    })
+    expect(initialized.status).toBe("ok")
+    expect(await reopened.authority.ui.revalidate(call)).toBe(true)
+    expect(await opened.verify()).toBe(false)
+    const fresh = ok(await reopened.destinations.read(queue.selection, queue.actionRef, call), "Procurement after first C08 commit")
+    expect(await fresh.verify()).toBe(true)
+    await f.persistence.transaction("dashboard", async (snapshot) => {
+      snapshot.data.__sfProductV1 = { schemaVersion: "corrupted-counterproof" }
+      return { commit: true, value: undefined }
+    })
+    expect((await reopened.destinations.read(queue.selection, queue.actionRef, call)).status).not.toBe("ok")
+    reopened.authority.ui.finish(call)
+  } finally { await dispose() }
+}, 120_000)
 
 test("Procurement destination resolves a new canonical collection in a rebuilt host and new UI with no ambient period", async () => {
   const { f, reopened, queue, dispose } = await procurementSession()

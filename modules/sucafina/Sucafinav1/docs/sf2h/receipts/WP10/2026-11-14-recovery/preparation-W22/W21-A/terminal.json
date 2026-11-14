@@ -1,0 +1,463 @@
+{
+  "schema": "wp10.normalized-hosted-ci.v4",
+  "kind": "test",
+  "label": "W21-A-authority-lifecycle",
+  "productSha": "532da498e08fa36fadbd3c01e3e7da00d869dd47",
+  "productTree": "5dcac0d207da530a4ff9b8f3ccd39e2e1cd2ef1f",
+  "snapshotSha": "43e3f3cc819a0e154dbe927662a0b473ffa6a401",
+  "snapshotTree": "f977924a15226850407c6ba5530d274c10f88269",
+  "runId": 43604032487,
+  "jobId": 132474686748,
+  "runAttempt": 1,
+  "status": "completed",
+  "conclusion": "failure",
+  "jobConclusion": "failure",
+  "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43604032487",
+  "runStartedAt": "2026-11-14T14:16:53Z",
+  "runUpdatedAt": "2026-11-14T14:29:43Z",
+  "envelopeOnlyDiff": [
+    {
+      "path": ".ci-run.json",
+      "status": "added",
+      "blob": "f9690472088e599ad14f7e7812b41bafdeb0f794"
+    }
+  ],
+  "request": {
+    "path": "evidence/W21/A-envelope.json",
+    "bytes": 2278,
+    "sha256": "9f621add376fb2fece3a7c8372d222ddb9d17100384ea678a6668c7f96469038",
+    "git_blob_sha1": "f9690472088e599ad14f7e7812b41bafdeb0f794"
+  },
+  "log": {
+    "path": "evidence/W21/A-job-132474686748.raw.txt",
+    "bytes": 279522,
+    "sha256": "3f5e222d2a35c876ae84acbf3653351e9b9246fd190732cbf0c96930cadf167f",
+    "git_blob_sha1": "0edd0a5f6e78c7d8e35f9f0c8b77eb8a8da2b469",
+    "characters": 279520,
+    "byteExactRawCapture": true,
+    "duplicatedInPackage": false
+  },
+  "steps": [
+    {
+      "name": "Set up job",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 1
+    },
+    {
+      "name": "Checkout repository",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 2
+    },
+    {
+      "name": "Assert Linux ARM64",
+      "status": "completed",
+      "conclusion": "skipped",
+      "number": 3
+    },
+    {
+      "name": "Assert macOS arm64",
+      "status": "completed",
+      "conclusion": "skipped",
+      "number": 4
+    },
+    {
+      "name": "Setup request validator Node",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 5
+    },
+    {
+      "name": "Read request",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 6
+    },
+    {
+      "name": "Fetch source history for Script fixtures",
+      "status": "completed",
+      "conclusion": "skipped",
+      "number": 7
+    },
+    {
+      "name": "Setup Bun",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 8
+    },
+    {
+      "name": "ripgrep",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 9
+    },
+    {
+      "name": "Setup Playwright Node",
+      "status": "completed",
+      "conclusion": "skipped",
+      "number": 10
+    },
+    {
+      "name": "Install Chromium",
+      "status": "completed",
+      "conclusion": "skipped",
+      "number": 11
+    },
+    {
+      "name": "Linux sandbox dependencies",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 12
+    },
+    {
+      "name": "Setup Python",
+      "status": "completed",
+      "conclusion": "skipped",
+      "number": 13
+    },
+    {
+      "name": "Install Python test dependencies",
+      "status": "completed",
+      "conclusion": "skipped",
+      "number": 14
+    },
+    {
+      "name": "Configure git identity",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 15
+    },
+    {
+      "name": "Export requested environment",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 16
+    },
+    {
+      "name": "omni binaries",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 17
+    },
+    {
+      "name": "Rust toolchain (rust-toolchain.toml)",
+      "status": "completed",
+      "conclusion": "skipped",
+      "number": 18
+    },
+    {
+      "name": "Omni control nonce",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 19
+    },
+    {
+      "name": "Run tests",
+      "status": "completed",
+      "conclusion": "failure",
+      "number": 20
+    },
+    {
+      "name": "Upload Lean dashboard previews (extension)",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 21
+    },
+    {
+      "name": "Upload Playwright evidence",
+      "status": "completed",
+      "conclusion": "skipped",
+      "number": 22
+    },
+    {
+      "name": "Post Setup Bun",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 42
+    },
+    {
+      "name": "Post Setup request validator Node",
+      "status": "completed",
+      "conclusion": "skipped",
+      "number": 43
+    },
+    {
+      "name": "Post Checkout repository",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 44
+    },
+    {
+      "name": "Complete job",
+      "status": "completed",
+      "conclusion": "success",
+      "number": 45
+    }
+  ],
+  "cleanupJobs": [
+    {
+      "id": 132478048841,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 43604032487,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Delete the snapshot branch",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        }
+      ]
+    }
+  ],
+  "returnedArtifacts": [
+    {
+      "id": 14117961376,
+      "name": "lean-visual-Linux",
+      "size_in_bytes": 972253,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14117961376",
+      "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14117961376/zip",
+      "expired": false,
+      "created_at": "2026-11-14T14:29:36Z",
+      "expires_at": "2026-11-21T14:29:35Z",
+      "updated_at": "2026-11-14T14:29:36Z",
+      "digest": "sha256:42e8c693f1737b0893b0bd14142f8e7489d91bf6c440bc918cf995fe31eabbf1",
+      "workflow_run": {
+        "id": 43604032487,
+        "repository_id": 1455724710,
+        "head_repository_id": 1455724710,
+        "head_branch": "ci-run-linux-astra-wp10-532da498-9f621add-01",
+        "head_sha": "43e3f3cc819a0e154dbe927662a0b473ffa6a401"
+      }
+    }
+  ],
+  "terminalResultObserved": true,
+  "nativeAcceptance": false,
+  "globalAcceptance": false,
+  "builderIndependentAcceptance": false,
+  "artifact": {
+    "id": 14117961376,
+    "path": "evidence/W21/A-artifact-14117961376.zip",
+    "bytes": 972253,
+    "sha256": "42e8c693f1737b0893b0bd14142f8e7489d91bf6c440bc918cf995fe31eabbf1",
+    "git_blob_sha1": "d2d948c2086fa687e696859efef89bf8b109bf2c",
+    "membersVerified": 6,
+    "duplicatedZipInPackage": false
+  },
+  "counts": {
+    "pass": 188,
+    "fail": 11,
+    "expects": 3964,
+    "tests": 199,
+    "files": 29,
+    "durationSeconds": 670.02,
+    "skip": 0,
+    "errors": 0,
+    "errorsAreAdditionalTestCases": false
+  },
+  "fileResults": {
+    "Sucafinav1/test/product/wp00/contract-freeze.test.ts": {
+      "pass": 4,
+      "fail": 1,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts": {
+      "pass": 8,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp11/cross-domain-execution.test.ts": {
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts": {
+      "pass": 9,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp12/historical-reader.test.ts": {
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp12/contribution-reader.test.ts": {
+      "pass": 2,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp12/contribution-builder.test.ts": {
+      "pass": 5,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp12/publication-lifecycle.test.ts": {
+      "pass": 20,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp12/run-store.test.ts": {
+      "pass": 22,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp12/continuation.test.ts": {
+      "pass": 9,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp12/analysis.test.ts": {
+      "pass": 21,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/native-host/native-host-disposal.test.ts": {
+      "pass": 7,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts": {
+      "pass": 0,
+      "fail": 5,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/native-host/routine-services.test.ts": {
+      "pass": 3,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/integration/alternative-call-scope.test.ts": {
+      "pass": 3,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/integration/extended-ui-regressions.test.ts": {
+      "pass": 4,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/integration/dossier-consumers.test.ts": {
+      "pass": 4,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/integration/source-fence-read.test.ts": {
+      "pass": 3,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/integration/bi-source-choice.test.ts": {
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/integration/analysis-lifecycle-context.test.ts": {
+      "pass": 4,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/integration/analysis-run-context.test.ts": {
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/integration/work-bridge.test.ts": {
+      "pass": 6,
+      "fail": 4,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/integration/dashboard-after-apply.test.ts": {
+      "pass": 1,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/integration/memory-services.test.ts": {
+      "pass": 6,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/resident-runtime/private-mcp.test.ts": {
+      "pass": 19,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/analysis-composition/decision-controls.test.ts": {
+      "pass": 3,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/analysis-composition/analysis-variants.test.ts": {
+      "pass": 10,
+      "fail": 0,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts": {
+      "pass": 0,
+      "fail": 1,
+      "skip": 0
+    },
+    "Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts": {
+      "pass": 11,
+      "fail": 0,
+      "skip": 0
+    }
+  },
+  "selectedFiles": [
+    "Sucafinav1/test/product/wp00/contract-freeze.test.ts",
+    "Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts",
+    "Sucafinav1/test/product/wp10/integration/analysis-run-context.test.ts",
+    "Sucafinav1/test/product/wp10/native-host/native-host-disposal.test.ts",
+    "Sucafinav1/test/product/wp10/integration/bi-source-choice.test.ts",
+    "Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+    "Sucafinav1/test/product/wp10/analysis-composition/native-inputs.test.ts",
+    "Sucafinav1/test/product/wp10/integration/alternative-call-scope.test.ts",
+    "Sucafinav1/test/product/wp10/integration/dashboard-after-apply.test.ts",
+    "Sucafinav1/test/product/wp10/integration/dossier-consumers.test.ts",
+    "Sucafinav1/test/product/wp10/analysis-composition/analysis-variants.test.ts",
+    "Sucafinav1/test/product/wp10/resident-runtime/private-mcp.test.ts",
+    "Sucafinav1/test/product/wp10/integration/extended-ui-regressions.test.ts",
+    "Sucafinav1/test/product/wp10/analysis-composition/decision-controls.test.ts",
+    "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+    "Sucafinav1/test/product/wp11/cross-domain-execution.test.ts",
+    "Sucafinav1/test/product/wp12/analysis.test.ts",
+    "Sucafinav1/test/product/wp12/continuation.test.ts",
+    "Sucafinav1/test/product/wp12/contribution-builder.test.ts",
+    "Sucafinav1/test/product/wp12/contribution-reader.test.ts",
+    "Sucafinav1/test/product/wp12/historical-reader.test.ts",
+    "Sucafinav1/test/product/wp12/publication-lifecycle.test.ts",
+    "Sucafinav1/test/product/wp12/run-store.test.ts",
+    "Sucafinav1/test/product/wp10/integration/analysis-lifecycle-context.test.ts",
+    "Sucafinav1/test/product/wp10/integration/work-bridge.test.ts",
+    "Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts",
+    "Sucafinav1/test/product/wp10/native-host/routine-services.test.ts",
+    "Sucafinav1/test/product/wp10/integration/source-fence-read.test.ts",
+    "Sucafinav1/test/product/wp10/integration/memory-services.test.ts"
+  ],
+  "omniPositiveControl": {
+    "observedLines": [
+      "omni positive control [7cd023f3cd15545e0f2c79fc6b0f094e]: pass (declared: 1 test(s) in Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts); 2 omni spawn(s), 0 delegated."
+    ],
+    "nativeInferenceAcceptance": false,
+    "status": "success",
+    "spawns": 2,
+    "delegated": 0,
+    "declaredTests": 1,
+    "declaringFile": "Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts"
+  },
+  "scopeQualification": "Observed terminal of the exact selected product and snapshot. Individual scoped passes never change a failed run into success. No native/global, criterion or independent-review acceptance is inferred."
+}

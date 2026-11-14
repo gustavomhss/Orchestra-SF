@@ -258,7 +258,9 @@ async function fixture<A>(work: (fixture: Fixture) => Effect.Effect<A, unknown, 
     host: { requestFor: (call) => call.kind === "ui" ? access.ui?.authority.requestFor(call) : native.registry?.requestFor(call), revalidate: authorized } })
   const publication = createSfRoutinePublicationContribution({ identity: () => placement.current, authorize: authorized, installed: installed.publication })
   expect(installed.publication()).toBeUndefined()
-  const layer = AppNodeBuilder.build(LayerNode.group([installed.node, publication.node, SessionV2.node, SessionStore.node, LocationServiceMap.node]),
+  // Location's Task captures the completed root's process-global execution service;
+  // replacing a transitive dependency does not export it from the application graph.
+  const layer = AppNodeBuilder.build(LayerNode.group([installed.node, publication.node, SessionV2.node, SessionStore.node, SessionExecution.node, LocationServiceMap.node]),
     [[SessionExecution.node, SessionExecutionLocal.node]])
   try {
     return await Effect.gen(function* () {

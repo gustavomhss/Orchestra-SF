@@ -5,9 +5,10 @@ import type { SfSkillInputMap } from "../../../../modules/sucafina/Sucafinav1/pr
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import type { createSfCaseRecall } from "../../../../modules/sucafina/Sucafinav1/product/decision-memory/case-recall.ts"
 import type { SfAnalysisDependencies, SfAnalysisRequest, SfAnalysisVerifier } from "./analysis-verifier.ts"
-import { readSfMemorySelection, sfMemoryEvidence, sfMemoryReadIdentity } from "./analysis-memory-evidence.ts"
+import { observeSfMemorySelection, readSfMemorySelection, sfMemoryEvidence, sfMemoryReadIdentity } from "./analysis-memory-evidence.ts"
+import type { SfMemoryObservationBinding } from "./analysis-memory-evidence.ts"
 
-export function createSfDecisionMemoryVerifier(dependencies: SfAnalysisDependencies & {
+export function createSfDecisionMemoryVerifier(dependencies: SfAnalysisDependencies & SfMemoryObservationBinding & {
   caseRecall: ReturnType<typeof createSfCaseRecall>
   readRecallSelection: (caseRef: SfAnalysisRequest["caseRef"], call: TrustedDomainContext) => Promise<PortResult<SfSkillInputMap["DecisionRecallInput"]>>
 }): SfAnalysisVerifier {
@@ -17,14 +18,14 @@ export function createSfDecisionMemoryVerifier(dependencies: SfAnalysisDependenc
       const decoded = decodeSfSkillInput("DecisionRecallInput", input)
       if (!decoded.ok || !decoded.value.query.trim() || decoded.value.query !== request.objective || digestSfValue(decoded.value.currentCase) !== digestSfValue(request.caseRef)) return { status: "needs-input", reason: "invalid-analysis-input" }
       const value = structuredClone(decoded.value)
-      const read = async (currentCall: TrustedDomainContext) => {
+      const read = async (currentCall: TrustedDomainContext) => observeSfMemorySelection(dependencies, value, currentCall, async (caseRecall) => {
         const selection = await dependencies.readRecallSelection(request.caseRef, currentCall)
         if (selection.status !== "ok" || digestSfValue(selection.value) !== digestSfValue(value)) return undefined
-        const recalled = await readSfMemorySelection(dependencies, value, currentCall)
+        const recalled = await readSfMemorySelection({ ...dependencies, caseRecall }, value, currentCall)
         if (!recalled) return undefined
         const again = await dependencies.readRecallSelection(request.caseRef, currentCall)
         return again.status === "ok" && digestSfValue(again.value) === digestSfValue(selection.value) && await dependencies.host.revalidate(currentCall) ? recalled : undefined
-      }
+      })
       const proof = await read(call)
       if (!proof) return { status: "unavailable", reason: "analysis-source-unavailable" }
       const checked = await read(call)

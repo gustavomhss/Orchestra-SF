@@ -1,0 +1,68 @@
+{
+  "schema": "wp10-w22-work-c08-static-correction-v1",
+  "status": "sealed-for-successor-publication-and-hosted-qualification",
+  "baseProduct": "532da498e08fa36fadbd3c01e3e7da00d869dd47",
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/work-destinations.ts",
+      "bytes": 18165,
+      "sha256": "13be764232afc395e33a8c0d5e5405eb11e43e1e5b341bd1553d0e002aef9326",
+      "blobSha": "506888f365643e0276d9098c6b924186212da5ee",
+      "baseBlobSha": "3ee3eea082dea99ab68f55013726967a34546ce8"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts",
+      "bytes": 36271,
+      "sha256": "dc21862371a8a2e07045c48f4d5ff793e6f72e44d30d03f4f67884c673d988de",
+      "blobSha": "f643abc8cb78feabb82cde3eaea9bdae9e428ee9",
+      "baseBlobSha": "cd63b34552bc9d01712939407071e157c6e20abd"
+    }
+  ],
+  "hostedCause": {
+    "runId": 43604032487,
+    "jobId": 132474686748,
+    "snapshot": "43e3f3cc819a0e154dbe927662a0b473ffa6a401",
+    "failureCount": 4,
+    "stage": "Unrelated thread.create fixture before Procurement setup or destination positive",
+    "noColdC08HostedObservation": true
+  },
+  "additionalStaticFinding": {
+    "paths": [
+      "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "modules/sucafina/Sucafinav1/product/procurement/queue-page.ts",
+      "modules/sucafina/Sucafinav1/product/procurement/sources.ts",
+      "modules/sucafina/Sucafinav1/product/collaboration/work-port.ts",
+      "apps/cli/src/sucafina-product/work-destinations.ts"
+    ],
+    "reason": "Queue/individual scopes do not initialize C08. Canonical WorkPort accepts absent C08 as empty collaboration lists, while the old composed destination required a present C08 witness. This was found by static analysis after A; A did not reach this condition."
+  },
+  "changes": [
+    "Use the same actual C08/source/authority service setup for Procurement without the unrelated thread recipient precondition. Existing thread fixtures still create their original real case, selection and thread.",
+    "Retain the initialized-state witness exactly. Only the precise product-state-uninitialized result permits the new readonly absence witness. Invalid or denied state never uses the branch.",
+    "Under the actual dashboard transaction/read scope, hash the complete three-surface snapshots and source fences; perform two actual threads-namespace reads and exact human-authority revalidation, pinning Request/all headers/binding/payload/day/directory/bank key and reopening snapshots after each await.",
+    "Never create or synthesize product state during reading. A new full-file case uses a real authority.state.transaction to create the first preference, checks invalidation of the old witness, reads freshly through the initialized branch, then verifies refusal of actual malformed persisted state."
+  ],
+  "preservation": {
+    "allOriginalTenTestBodiesByteExact": true,
+    "allOriginalBudgetsUnchanged": true,
+    "newTestCount": 1,
+    "newTestBudgetMs": 120000,
+    "wholeFileTests": 11,
+    "foreignFilesEdited": false,
+    "grantsChanged": false,
+    "existingInitializedWitnessChanged": false
+  },
+  "qualification": {
+    "localProductExecution": false,
+    "hostedW22Result": null,
+    "independentAcceptance": false,
+    "nativeAcceptance": false,
+    "globalAcceptance": false,
+    "auxiliaryStaticReview": {
+      "agent": "/root/c17_composition/w22_observation_audit",
+      "independentReview": false,
+      "result": "No concrete blocker identified in source. Actual local-store dashboard read scope contains all three snapshots; nested namespace reads are supported readonly transactions. The test uses the real namespace/creation target and validates old-witness invalidation followed by fresh initialized-state reading and rejection of malformed persisted state.",
+      "productExecuted": false
+    }
+  }
+}

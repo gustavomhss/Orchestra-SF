@@ -8,12 +8,22 @@ import type { createSfCaseRecall } from "../../../../modules/sucafina/Sucafinav1
 import { encodeCaseRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
 import { withoutObservationTimes } from "./analysis-verifier.ts"
 import type { SfAnalysisDependencies, SfAnalysisProof, SfAnalysisRequest } from "./analysis-verifier.ts"
+import type { SfMemoryObservation } from "./memory-case-read-scope.ts"
 
+export type SfMemoryObservationBinding = { withMemoryObservation?: SfMemoryObservation }
 type MemoryDependencies = Pick<SfAnalysisDependencies, "cases" | "context" | "host"> & { caseRecall: ReturnType<typeof createSfCaseRecall> }
 export type SfMemoryEvidence = Pick<BusinessEvidenceResolution, "state" | "ref" | "currentRef" | "authorizedProjection" | "differences" | "accessRevision">
 export type SfMemoryPrompt = { result: CaseRecall; sources: readonly SfMemoryEvidence[] }
 
 function same(left: unknown, right: unknown) { return digestSfValue(left) === digestSfValue(right) }
+
+/** One complete observation, including its selection reads; never spans both passes. */
+export function observeSfMemorySelection<Value>(dependencies: SfMemoryObservationBinding & Pick<MemoryDependencies, "caseRecall">, value: DecisionRecallInput,
+  call: TrustedDomainContext, work: (recall: MemoryDependencies["caseRecall"]) => Promise<Value | undefined>) {
+  return dependencies.withMemoryObservation
+    ? dependencies.withMemoryObservation({ caseRef: value.currentCase, limit: 50, scope: { query: value.query, recallScope: value.recallScope } }, call, work)
+    : work(dependencies.caseRecall)
+}
 
 /** Preserve original evidence and the current comparison together; checkedAt is an observation, not proof identity. */
 export function sfMemoryEvidence(source: BusinessEvidenceResolution): SfMemoryEvidence {

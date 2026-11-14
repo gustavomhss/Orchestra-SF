@@ -63,7 +63,7 @@ test("historical decision recall binds original/current evidence and rejects cha
   const driver = await openLocalStore(path.join(directory, "store"))
   const transactionAll = driver.transactionAll
   if (!transactionAll) throw new Error("Real cross-surface store unavailable")
-  const counters = { persistenceCalls: 0, c08Reads: 0, caseReads: 0, caseFences: 0, atlasCanonicalReads: 0, atlasCanonicalCompleted: 0 }
+  const counters = { persistenceCalls: 0, c08Reads: 0, caseReads: 0, caseFences: 0, evidenceContextReads: 0, atlasCanonicalReads: 0, atlasCanonicalCompleted: 0 }
   const measuredDriver: typeof driver = { ...driver,
     transaction: (surface, work, options) => {
       counters.persistenceCalls += 1
@@ -80,7 +80,8 @@ test("historical decision recall binds original/current evidence and rejects cha
     finally { console.info("SF_MEMORY_READ_COUNTS", JSON.stringify({ phase: label,
       ...Object.fromEntries(Object.entries(counters).map(([key, value]) => [key, value - before[key as keyof typeof before]])) })) }
   })
-  const interleave: { after?: { completed: number; remaining: number; work: () => Promise<void> }; observe?: { completed: number; fences: number } } = {}
+  const interleave: { before?: { started: number; remaining: number; work: () => Promise<void> };
+    after?: { completed: number; remaining: number; work: () => Promise<void> }; observe?: { completed: number; fences: number } } = {}
   const clock = { at }
   let business: ReturnType<typeof createSfBusinessServices> | undefined
   deadline.own(() => rm(directory, { recursive: true, force: true }))
@@ -128,6 +129,11 @@ test("historical decision recall binds original/current evidence and rejects cha
       const result = await readState(source, namespace, read)
       if (result.status === "ok" && object(result.value).kind === "sf-memory-case-fence") {
         counters.caseFences += 1
+        const before = interleave.before
+        if (before && counters.atlasCanonicalReads === before.started && --before.remaining === 0) {
+          interleave.before = undefined
+          await before.work()
+        }
         if (interleave.observe && counters.atlasCanonicalCompleted > interleave.observe.completed) interleave.observe.fences += 1
         const action = interleave.after
         if (action && counters.atlasCanonicalCompleted > action.completed && --action.remaining === 0) {
@@ -145,6 +151,8 @@ test("historical decision recall binds original/current evidence and rejects cha
       manifestVersion: bundle.manifestDigest, skillVersion: digestSfValue(bundle.skills.map((skill) => ({ id: skill.id, version: skill.version, sourceDigest: skill.sourceDigest }))) })
     const readCase = activeBusiness.cases.read
     activeBusiness.cases.read = async (value, call) => { counters.caseReads += 1; return readCase(value, call) }
+    const readEvidenceContext = activeBusiness.context.context
+    activeBusiness.context.context = async (value, call) => { counters.evidenceContextReads += 1; return readEvidenceContext(value, call) }
     const readMemory = atlas.memory.recall
     atlas.memory.recall = async (value, call) => {
       counters.atlasCanonicalReads += 1
@@ -239,20 +247,50 @@ test("historical decision recall binds original/current evidence and rejects cha
       expect(source.currentRef?.refDigest).not.toBe(original.refDigest)
       expect(source.differences).toContainEqual({ field: "originalAmount", before: 100, after: 150 })
       const dependencies = { cases: activeBusiness.cases, planner: activeBusiness.planner, procurement: activeBusiness.procurement,
-        context: activeBusiness.context, host: authority.host, caseRecall: activeBusiness.caseRecall }
+        context: activeBusiness.context, host: authority.host, caseRecall: activeBusiness.caseRecall, withMemoryObservation: activeBusiness.withMemoryObservation }
       const producer = createSfMemoryInputProducer(dependencies)
       const beforePrepare = { ...counters }
-      expect(await measure("memory.prepare", () => producer.prepare(value, analysis, call))).toEqual({ status: "ok", value })
+      const observationInput = { caseRef, limit: 50, scope: { query: value.query, recallScope: value.recallScope } }
+      let observationEarlyOverlap = false, observationOverlap = false, overlappingWorkRan = false
+      interleave.before = { started: counters.atlasCanonicalReads, remaining: 2, work: async () => {
+        // The first case projection has completed its two C08 witnesses, but
+        // the intended recall has not started. Its capability cannot be stolen
+        // by a public call with the identical live context and arguments.
+        expect(counters.atlasCanonicalReads).toBe(beforePrepare.atlasCanonicalReads)
+        expect((await activeBusiness.caseRecall(observationInput, call)).status).toBe("unavailable")
+        observationEarlyOverlap = true
+      } }
+      interleave.after = { completed: counters.atlasCanonicalCompleted, remaining: 1, work: async () => {
+        expect(await activeBusiness.withMemoryObservation(observationInput, call, async () => {
+          overlappingWorkRan = true
+          return activeBusiness.cases.read({ caseRef: `case:${caseRef.id}:${caseRef.incarnation}` }, call)
+        })).toBeUndefined()
+        expect((await activeBusiness.caseRecall(observationInput, call)).status).toBe("unavailable")
+        observationOverlap = true
+      } }
+      try { expect(await measure("memory.prepare", () => producer.prepare(value, analysis, call))).toEqual({ status: "ok", value }) }
+      finally { interleave.before = undefined; interleave.after = undefined }
+      expect(observationEarlyOverlap).toBe(true)
+      expect(observationOverlap).toBe(true)
+      expect(overlappingWorkRan).toBe(false)
       // The real rank starts with {id, incarnation} and reopens the same memory
       // using its versioned envelope.caseRef at egress. Both remain one Atlas
       // recall contract. Each of the producer's two independent observations
       // must nevertheless complete its own canonical original/capture proof.
       expect(counters.atlasCanonicalReads - beforePrepare.atlasCanonicalReads).toBe(2)
       expect(counters.atlasCanonicalCompleted - beforePrepare.atlasCanonicalCompleted).toBe(2)
+      // Per independent observation: the first complete case producer performs
+      // its two evidence contexts; the selection performs its own source read.
+      // Repeated cases still reopen C08/authority without replaying that producer.
+      expect(counters.evidenceContextReads - beforePrepare.evidenceContextReads).toBe(6)
       const readers = createSfAnalysisSelectionReaders({ authority, business: activeBusiness })
       const verifier = createSfDecisionMemoryVerifier({ ...dependencies, readRecallSelection: readers.recallSelection(value) })
+      const beforeVerify = { ...counters }
       const verified = await measure("memory.verify", () => verifier.verify(value, analysis, call))
       if (verified.status !== "ok") throw new Error(verified.reason)
+      expect(counters.atlasCanonicalReads - beforeVerify.atlasCanonicalReads).toBe(2)
+      expect(counters.atlasCanonicalCompleted - beforeVerify.atlasCanonicalCompleted).toBe(2)
+      expect(counters.evidenceContextReads - beforeVerify.evidenceContextReads).toBe(6)
       const proof = verified.value
       expect(sfAnalysisSourcesAuthorized(proof, analysis, call)).toBe(true)
       const prompt = proof.promptContext && "decisionRecall" in proof.promptContext ? proof.promptContext.decisionRecall : undefined

@@ -1,0 +1,44 @@
+{
+  "kind": "static-data-verification-only",
+  "timestampUtc": "2026-11-14T14:37:35.090755+00:00",
+  "sourceBlobsMatchW21": true,
+  "baseBlobMatchesW21": true,
+  "allowedMutationExact": true,
+  "changedProductPaths": [
+    "modules/sucafina/Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts"
+  ],
+  "testBodiesAndImportsByteIdentical": true,
+  "testBodiesSha256": "38a6be0df6e5f5f7313a8035bf9ec27a47330c51ed586e0c7aa724b8a8b8b673",
+  "testCountBefore": 5,
+  "testCountAfter": 5,
+  "testBudgetsMsBefore": [
+    120000,
+    120000,
+    120000,
+    120000,
+    120000
+  ],
+  "testBudgetsMsAfter": [
+    120000,
+    120000,
+    120000,
+    120000,
+    120000
+  ],
+  "expectExpressionsBefore": 51,
+  "expectExpressionsAfter": 51,
+  "assertionsRemoved": 0,
+  "testNameFilters": [],
+  "newMocks": 0,
+  "permissiveVerifierIntroduced": false,
+  "realExecutionProvider": "@orchestra/core/session/execution/local SessionExecutionLocal.node",
+  "existingReplacementUnchanged": true,
+  "hostFactoryModified": false,
+  "foreignModified": false,
+  "testExecutionPerformed": false,
+  "typecheckPerformed": false,
+  "buildPerformed": false,
+  "productImportsExecuted": false,
+  "remoteMutationsPerformed": false,
+  "claim": "The specific missing export is corrected statically. Candidate runtime success and C07/native/global acceptance are not claimed."
+}

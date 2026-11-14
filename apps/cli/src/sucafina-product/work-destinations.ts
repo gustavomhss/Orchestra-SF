@@ -153,7 +153,36 @@ export function createSfWorkDestinations(input: {
           snapshotDigest !== digestSfValue(host.persistence.currentSnapshots?.()) || digestSfValue(sources) !== digestSfValue(business.lockedSourceFences())) return undefined
         return digestSfValue({ snapshotDigest, state, sources, actor, scope, requestDigest, binding, payloadDigest })
       })
-      return checked.status === "ok" && current() ? checked.value : undefined
+      if (checked.status === "ok") return current() ? checked.value : undefined
+      if (checked.status !== "unavailable" || checked.reason !== "product-state-uninitialized" || !current()) return undefined
+      // Procurement work can exist before the first product-state commit. Hash
+      // that actual absence under the provider's full read scope, with two real
+      // namespace authorizations. Reading work never creates an empty C08 record.
+      const uninitialized = async () => {
+        const snapshots = host.persistence.currentSnapshots?.(), sources = business.lockedSourceFences()
+        if (!snapshots || snapshots.dashboard.data.__sfProductV1 !== undefined || !sources) return undefined
+        const snapshotDigest = digestSfValue(snapshots), sourceDigest = digestSfValue(sources)
+        const stable = () => {
+          const currentSnapshots = host.persistence.currentSnapshots?.()
+          return current() && !!currentSnapshots && currentSnapshots.dashboard.data.__sfProductV1 === undefined &&
+            digestSfValue(currentSnapshots) === snapshotDigest && digestSfValue(business.lockedSourceFences()) === sourceDigest
+        }
+        const absent = await authority.state.read(request, "threads", () => undefined)
+        if (absent.status !== "unavailable" || absent.reason !== "product-state-uninitialized" || !stable()) return undefined
+        const environment = await host.environment(request)
+        const at = Date.parse(environment.at)
+        if (!Number.isFinite(at) || !stable()) return undefined
+        const scope = { day: new Date(at).toISOString().slice(0, 10), directory: environment.directory,
+          bankKey: environment.bankKey ? Array.from(environment.bankKey) : undefined }
+        const again = await host.environment(request), nextAt = Date.parse(again.at)
+        if (!Number.isFinite(nextAt) || !stable() || digestSfValue(scope) !== digestSfValue({ day: new Date(nextAt).toISOString().slice(0, 10),
+          directory: again.directory, bankKey: again.bankKey ? Array.from(again.bankKey) : undefined })) return undefined
+        const final = await authority.state.read(request, "threads", () => undefined)
+        if (final.status !== "unavailable" || final.reason !== "product-state-uninitialized" || !stable() || !await authorized() || !stable()) return undefined
+        return digestSfValue({ snapshotDigest, productStateUninitialized: true, sources, scope, requestDigest, binding, payloadDigest })
+      }
+      const value = await host.persistence.transaction("dashboard", async () => ({ commit: false, value: await uninitialized() }), { signal: request.signal })
+      return current() ? value : undefined
     }
     try {
       const first = await collect()

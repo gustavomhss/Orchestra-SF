@@ -1,0 +1,91 @@
+{
+  "sourceCommit": "532da498e08fa36fadbd3c01e3e7da00d869dd47",
+  "sources": [
+    {
+      "path": "packages/core/src/effect/app-node-builder.ts",
+      "sourceCommit": "532da498e08fa36fadbd3c01e3e7da00d869dd47",
+      "sourceTree": "5dcac0d207da530a4ff9b8f3ccd39e2e1cd2ef1f",
+      "localPath": "agents/ci/W22-installed-publication/sources/W21/packages/core/src/effect/app-node-builder.ts",
+      "bytes": 2044,
+      "blobSha": "f81f07cd9f4876742c1e8039f4453bf31fd55f58",
+      "sha256": "753fe1a4b14d038ad93836eb92a9a9e28458c9fdf73e61a56804bf5477dc2c0e",
+      "lines": [
+        14,
+        35
+      ],
+      "reason": "AppNodeBuilder supplies the completed root export Context to lazy Location acquisitions, after replacement resolution."
+    },
+    {
+      "path": "packages/core/src/effect/layer-node.ts",
+      "sourceCommit": "532da498e08fa36fadbd3c01e3e7da00d869dd47",
+      "sourceTree": "5dcac0d207da530a4ff9b8f3ccd39e2e1cd2ef1f",
+      "localPath": "agents/ci/W22-installed-publication/sources/W21/packages/core/src/effect/layer-node.ts",
+      "bytes": 13687,
+      "blobSha": "4d1491948140e05894193050f07b664163a69912",
+      "sha256": "0978d7e4e51c14ac6fe4904647b00726cc37a22b4e6d33649dbde2e007a33d78",
+      "lines": [
+        269,
+        293
+      ],
+      "reason": "Dependency layers use Layer.provide and are not exported; explicit root nodes are combined with Layer.provideMerge."
+    },
+    {
+      "path": "packages/core/src/session/execution.ts",
+      "sourceCommit": "532da498e08fa36fadbd3c01e3e7da00d869dd47",
+      "sourceTree": "5dcac0d207da530a4ff9b8f3ccd39e2e1cd2ef1f",
+      "localPath": "agents/ci/W22-installed-publication/sources/W21/packages/core/src/session/execution.ts",
+      "bytes": 2715,
+      "blobSha": "770dd6e0a169f10560c771dd1b912d8456632a12",
+      "sha256": "c9d3664b771def2d68c6edd5aea8a82d4d209a423449c003b6981e46fa2a1f8a",
+      "lines": [
+        41,
+        47
+      ],
+      "reason": "SessionExecution is a public process-global unbound node; the existing real SessionExecutionLocal replacement remains selected. noopLayer is not used."
+    },
+    {
+      "path": "packages/core/src/tool/task.ts",
+      "sourceCommit": "532da498e08fa36fadbd3c01e3e7da00d869dd47",
+      "sourceTree": "5dcac0d207da530a4ff9b8f3ccd39e2e1cd2ef1f",
+      "localPath": "agents/ci/W22-installed-publication/sources/W21/packages/core/src/tool/task.ts",
+      "bytes": 30815,
+      "blobSha": "0e82455ca428e5b498551496bc65bdc0f6551df3",
+      "sha256": "ec3ff8e684c131e2894071e2f46af78fbdccbc80d2a47531088e65e678e9cb05",
+      "lines": [
+        306,
+        349
+      ],
+      "reason": "Location Task captures SessionExecution from completed process-global exports; missing service dies with the exact W21 setup diagnostic."
+    },
+    {
+      "path": "packages/core/src/location-service-map.ts",
+      "sourceCommit": "532da498e08fa36fadbd3c01e3e7da00d869dd47",
+      "sourceTree": "5dcac0d207da530a4ff9b8f3ccd39e2e1cd2ef1f",
+      "localPath": "agents/ci/W22-installed-publication/sources/W21/packages/core/src/location-service-map.ts",
+      "bytes": 1696,
+      "blobSha": "2f9f70c7edf21ab9e8d57eb6966aacab13c47c33",
+      "sha256": "eab185ee9a1ec6ec1c16bb686b5cd57caf9b6ef21100393277c902e7f4b8977f",
+      "lines": [
+        18,
+        48
+      ],
+      "reason": "Lazy Location contexts merge completed globals; transitive constructor services are not a substitute for root exports."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/native-host/native-host-disposal.test.ts",
+      "sourceCommit": "532da498e08fa36fadbd3c01e3e7da00d869dd47",
+      "sourceTree": "5dcac0d207da530a4ff9b8f3ccd39e2e1cd2ef1f",
+      "localPath": "agents/ci/W22-installed-publication/sources/W21/modules/sucafina/Sucafinav1/test/product/wp10/native-host/native-host-disposal.test.ts",
+      "bytes": 19963,
+      "blobSha": "cf90ba55860b36ce085fa500c0c51f987ad06743",
+      "sha256": "b525c02969323232de5c216e6feb3a9076fe734dad3d5ca1570aaa215e3a0783",
+      "lines": [
+        60,
+        66
+      ],
+      "reason": "Functional same-SHA Core fixture explicitly exports SessionExecution.node with SessionExecutionLocal.node replacement; all seven variants passed in W21 A."
+    }
+  ],
+  "allGitBlobsMatchVerifiedW21Tree": true,
+  "sourceReadOnly": true
+}

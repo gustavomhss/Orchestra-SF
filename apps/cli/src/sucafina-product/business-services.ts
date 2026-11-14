@@ -50,6 +50,7 @@ import { createSfScenarioOperationAccess } from "./scenario-operation-access.ts"
 import { createSfRecordedPlannerOperationAccess } from "./recorded-planner-operation-access.ts"
 import { createSfPreparedApplicationEgress } from "./prepared-application-egress.ts"
 import { createSfMemoryCaseReadScope } from "./memory-case-read-scope.ts"
+import type { SfMemoryObservation } from "./memory-case-read-scope.ts"
 import { createSfSourceFenceReader } from "./source-fence-read.ts"
 import { createSfScenarioProcurementProofScope } from "./scenario-procurement-proof-scope.ts"
 import { createSfDecisionBaselineServices } from "./decision-baseline-services.ts"
@@ -163,6 +164,10 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   const memoryCaseScope = createSfMemoryCaseReadScope({ host, state: input.authority.state, read: canonicalCases.read,
     selection: selectedPeriod, readerIdentity: () => evidence.current, lockedSourceFences })
   const cases = { ...canonicalCases, read: memoryCaseScope.read }
+  const withMemoryObservation: SfMemoryObservation = (request, call, work) => {
+    const canonical = recall.current
+    return canonical ? memoryCaseScope.observe(request, call, canonical, work) : work(caseRecall)
+  }
   const plannerConfirmation: { current?: ReturnType<typeof createPlannerConfirmationObserver> } = {}
   const confirmationSourceFor = (scope: ConfirmationScope) => scope.sourceRef.surface === "dashboard" ? dashboardServices.observer
     : scope.sourceRef.surface === "planner" ? plannerConfirmation.current : scope.sourceRef.surface === "procurement" ? procurementConfirmation : undefined
@@ -672,6 +677,7 @@ export function createSfBusinessServices(input: { authority: ReturnType<typeof c
   }) }
   return { host, authorizeCase, dashboardSources, dashboardRecords, dashboard, dashboardServices, dashboardDecisions, procurement, procurementDecisions, procurementConfirmation, procurementDossier, procurementQueueView, collaboration, planner, plannerProduct: product, plannerSources, registry, individual, contracts, cases, context, evidence, caseRecall, results, calculations, scenarioLookup, sourcingEvidence, operationIdentity, receipt, resolveCase, withCase, readSourceFences, lockedSourceFences, lockedDecisionStateDigest, descriptors, procurementSelections, forecastInputs, initializeAtlas,
     projectPlannerEvidence, documentScenarios, resolveProcurement, selectedCase, baselineCoverage, bindDecisionDomain, withProcurementWorkPeriod,
+    withMemoryObservation,
     bindWorkBridge: (bridge: WorkBridge) => {
       if (workBridge.current) throw new Error("SF_WORK_BRIDGE_ALREADY_BOUND")
       workBridge.current = Object.freeze({ ...bridge })

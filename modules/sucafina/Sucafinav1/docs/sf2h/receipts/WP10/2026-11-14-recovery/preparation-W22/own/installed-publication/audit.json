@@ -1,0 +1,45 @@
+{
+  "role": "builder-followup; not independent review",
+  "status": "sealed-static-awaiting-hosted",
+  "baseProduct": "532da498e08fa36fadbd3c01e3e7da00d869dd47",
+  "cause": {
+    "observed": "All five C07 installed-publication tests fail during Location graph acquisition with Task requires an exported process-global service: @orchestra/v2/SessionExecution.",
+    "chain": [
+      "Fixture root exports installed publication, publication, SessionV2, SessionStore and LocationServiceMap.",
+      "The replacement SessionExecution.node -> SessionExecutionLocal.node supplies a transitive Session dependency but Layer.provide keeps that dependency out of completed root exports.",
+      "AppNodeBuilder exposes the completed root Context to lazy Location acquisitions.",
+      "Location Task.captureGlobal(SessionExecution.Service) cannot find the missing export and dies before each test body."
+    ],
+    "classification": "Own test graph wiring; no producer API refusal or C07 publication execution result was reached."
+  },
+  "resolution": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts",
+    "delta": "Add SessionExecution.node to the existing root group, retaining the exact real SessionExecutionLocal.node replacement.",
+    "providerBehaviorChanged": false,
+    "testsPreserved": 5,
+    "budgetEachMs": 120000,
+    "hostMergeTwoContributionAssertionUnchanged": true
+  },
+  "guardsPreserved": [
+    "Real authenticated Location/Relay/SkillV2 catalog and AuthoringStore",
+    "Actual SessionV2 and SessionStore persistence and SF binding registry",
+    "Project mismatch refusal before store read",
+    "UI lease revocation and Location replacement across await",
+    "Publication and skill drift refusal",
+    "Knowledge author refusal without authenticated provenance",
+    "Core author-session archive, removal and lease revocation",
+    "Retained-provider disposal and epoch guards"
+  ],
+  "limits": [
+    "Only static API/source/data verification has run for the successor.",
+    "The existing five C07 test bodies remain the required hosted proof; no success is inferred from the one-line graph fix.",
+    "Installed publication remains separate from SfRoutineNativePort, governed Task execution, approval, ledger and global/native acceptance.",
+    "The parent alone will bind a published successor and dispatch hosted CI."
+  ],
+  "pathsChanged": [
+    "modules/sucafina/Sucafinav1/test/product/wp10/native-host/routine-installed-publication.test.ts"
+  ],
+  "sourceManifest": "source-manifest.json",
+  "verification": "verification.json",
+  "patch": "own-diff.patch"
+}

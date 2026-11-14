@@ -1,0 +1,141 @@
+{
+  "schema": "wp10-owner-probe-seal-v1",
+  "status": "sealed",
+  "sourcePr32": "9048e0e65351a5bd80768458a79fed94a4993db7",
+  "sourcePr35": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+  "baseProductCommit": "532da498e08fa36fadbd3c01e3e7da00d869dd47",
+  "selectedFiles": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "sourceCommit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+      "blobSha": "8389709232225424b5905638d0951d8cdbb71dd7",
+      "sha256": "8c51fdb91dc3c35bd6ff075488f3d393711b2d16e411085960fa3728c1fe5bd1",
+      "bytes": 26150,
+      "localPath": "/workspace/scratch/301a7f2754f4/agents/c17/W22-owner-probe/archive/pr35/modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "composedTreeEntry": {
+        "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "e365ac59376482dfcc6f81aed045b0153f911038"
+      },
+      "newRelativeToFullW21Tree": false,
+      "mode": "exact-published-foreign-byte-copy",
+      "reason": "Exact canonical Actor mapper extraction needed by the new verifier; same rejection, role, canWrite, assigned and domains semantics as the previous inline mapper."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+      "sourceCommit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+      "blobSha": "df3c335c95bf9d8d06d00474ff0bc391dd852b4e",
+      "sha256": "9fb65068cc969ebb04f2e14f9082147d058287f09fa40702d56c4c4838a6d9a1",
+      "bytes": 8303,
+      "localPath": "/workspace/scratch/301a7f2754f4/agents/c17/W22-owner-probe/archive/pr35/modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+      "composedTreeEntry": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-operation-verifier.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "2338917427497733e4bd88aec852985206cce066"
+      },
+      "newRelativeToFullW21Tree": false,
+      "mode": "exact-published-foreign-byte-copy",
+      "reason": "Preserves full canonical verifier for nonempty scenarios. Source-only admission uses canonical actor-filtered projections twice; adds per-case readonly grouping with all siblings awaited and final async authority check inside the held snapshot."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "sourceCommit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+      "blobSha": "2da82bf379910826f4558b5b330c97cdaf6806df",
+      "sha256": "e25c0f56ec3b9e8efe762e9bf372bb56b2a7d7d08b94cfaf66358033d8401a97",
+      "bytes": 25464,
+      "localPath": "/workspace/scratch/301a7f2754f4/agents/c17/W22-owner-probe/archive/pr35/modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "composedTreeEntry": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "d5395570b44366fa81003d5f5aa68a3023c26fa5"
+      },
+      "newRelativeToFullW21Tree": false,
+      "mode": "exact-published-foreign-byte-copy",
+      "reason": "Existing D consumers (renewal history, coverage-sensitivity and reconciliation-price) bind the actual case verifier; source-only DomainProjection uses sourcePlanner without replacing financial C10 computations."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-admission.test.ts",
+      "sourceCommit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+      "blobSha": "4a5780b82989b9e8c3437bb3758779d7cfb76733",
+      "sha256": "ed792565e2a75a2b29a65dc81eee892db5bcefd0744c55d110ee9af6401df737",
+      "bytes": 11611,
+      "localPath": "/workspace/scratch/301a7f2754f4/agents/c17/W22-owner-probe/archive/pr35/modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-admission.test.ts",
+      "composedTreeEntry": null,
+      "newRelativeToFullW21Tree": true,
+      "mode": "exact-published-foreign-byte-copy",
+      "reason": "Required whole-file counterproof for source-only projection/source-CAS/final authentication lease changes."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-case-read-scope.test.ts",
+      "sourceCommit": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+      "blobSha": "75a2cbcd0c3907fc2d14f18f2b35f131331ecfb2",
+      "sha256": "fbccc98f43e078bcc735ac9f613507ab152f2fbbdd5fbce09e45b3a580a6929f",
+      "bytes": 6024,
+      "localPath": "/workspace/scratch/301a7f2754f4/agents/c17/W22-owner-probe/archive/pr35/modules/sucafina/Sucafinav1/test/product/wp11/renewal-case-read-scope.test.ts",
+      "composedTreeEntry": null,
+      "newRelativeToFullW21Tree": true,
+      "mode": "exact-published-foreign-byte-copy",
+      "reason": "Required whole-file four counterproofs for group no-write, swallowed nested write, new invocation source change and callback revocation."
+    }
+  ],
+  "findingId": "W22-OWNER-CURRENT-CHOICE-FINAL-LEASE-01",
+  "artifacts": {
+    "audit.json": {
+      "path": "agents/c17/W22-owner-probe/audit.json",
+      "bytes": 19153,
+      "blobSha": "b8060f7916734ec9a076a8cc5f0ccb5735577dd5",
+      "sha256": "e1563b4e992eb55811b33c4d3f7d95f6692b342b2e8271ad8fbfbe62793739f5"
+    },
+    "audit.md": {
+      "path": "agents/c17/W22-owner-probe/audit.md",
+      "bytes": 5354,
+      "blobSha": "07ecb607579da08243c49206855fe91d29c93bd5",
+      "sha256": "429448b1480b8440e9423a955200590516b4e8296cc87a777a053b9f9c98e98e"
+    },
+    "proposal.json": {
+      "path": "agents/c17/W22-owner-probe/proposal.json",
+      "bytes": 6435,
+      "blobSha": "1b9127e794dd44446a27f495cdd345e79a6d8a29",
+      "sha256": "a8b263e762bc4d42247f0def094f4393d5e415687504be0bb8a2c2a84e5fb08c"
+    },
+    "download-manifest.json": {
+      "path": "agents/c17/W22-owner-probe/download-manifest.json",
+      "bytes": 17531,
+      "blobSha": "98bd31fc0699394a8f3d6ca8b46a01e10789604c",
+      "sha256": "82c31c1580a264562341b78c9ed27caa6a323bc53ac0c09dae59943a8ac20afe"
+    },
+    "import-closure.json": {
+      "path": "agents/c17/W22-owner-probe/import-closure.json",
+      "bytes": 32313,
+      "blobSha": "2f12c66c8f15cc508dc2df0df83eae2f4d736600",
+      "sha256": "2440c83bef49b583304048c7dfa61ae4aede3d074c12bd6d815c2f6259c9b281"
+    },
+    "fulltree-presence.json": {
+      "path": "agents/c17/W22-owner-probe/fulltree-presence.json",
+      "bytes": 1450,
+      "blobSha": "048da4dd73aa18120300f290f9394daa98d13a79",
+      "sha256": "f80d808b3ec73a1478c137a86b51a467617f4f9480c6ca9c3378c430486912ea"
+    },
+    "freeze-byte-audit.json": {
+      "path": "agents/c17/W22-owner-probe/freeze-byte-audit.json",
+      "bytes": 15833,
+      "blobSha": "3a43cf82d608a03bdcd38d0fb0b3b510c35d53fc",
+      "sha256": "7206b3431be3e20bfd4ced9af653005ce696e1091bc6b4436c7fc0e8436688cb"
+    },
+    "check-diagnostic-map.json": {
+      "path": "agents/c17/W22-owner-probe/check-diagnostic-map.json",
+      "bytes": 9645,
+      "blobSha": "3dc8535aa576e28ccc04fbe4c66ede5b63f808ee",
+      "sha256": "7fb4d0107f1a9ee821a1a257697cd8a870d2806ea64fd29c8e4206d40686ba20"
+    },
+    "current-choice-lease-finding.json": {
+      "path": "agents/c17/W22-owner-probe/current-choice-lease-finding.json",
+      "bytes": 2194,
+      "blobSha": "6fdcc71f17c4e51177c4469dd64499fec3c40431",
+      "sha256": "4e915c18474a07eb46dd2ec62f262193c8e32fb2b5c74a8b8f553d706de16973"
+    }
+  }
+}

@@ -1,0 +1,232 @@
+{
+  "schema": "wp10-builder-correction-audit-v1",
+  "workPackage": "WP10",
+  "wave": "W22",
+  "area": "historical-memory-observation-scope",
+  "status": "frozen-awaiting-hosted-ci",
+  "builder": "/root/c17_composition",
+  "frozenAtUtc": "2026-11-14T14:51:39.801850+00:00",
+  "baseline": {
+    "commit": "532da498e08fa36fadbd3c01e3e7da00d869dd47",
+    "tree": "5dcac0d207da530a4ff9b8f3ccd39e2e1cd2ef1f",
+    "snapshotCommit": "43e3f3cc819a0e154dbe927662a0b473ffa6a401",
+    "mutableBaselineExactFrozenW21": true
+  },
+  "publishedW22Commit": null,
+  "failureEvidence": {
+    "runId": 43604032487,
+    "jobId": 132474686748,
+    "conclusion": "failure",
+    "provenance": {
+      "path": "agents/c17/W22-memory/failure-provenance.json",
+      "bytes": 4392,
+      "sha256": "981b87c83541782067540b94f6a6cde8959689f6ffd605a23292a7f11577fa0a",
+      "blobSha": "efea10e6a5adf58a71e16529bb02ff382fc81fe1"
+    },
+    "summary": "W21 prepare returned ok after 84840 ms; verify consumed another 136224 ms before the unchanged 225000 ms cooperative deadline. The 240000 ms outer budget did not change.",
+    "prepare": {
+      "elapsedMs": 84840,
+      "phase": "memory.prepare",
+      "persistenceCalls": 24954,
+      "c08Reads": 738,
+      "caseReads": 24,
+      "caseFences": 36,
+      "atlasCanonicalReads": 2,
+      "atlasCanonicalCompleted": 2
+    },
+    "verifyAborted": {
+      "elapsedMs": 136224,
+      "phase": "memory.verify",
+      "persistenceCalls": 40050,
+      "c08Reads": 1042,
+      "caseReads": 33,
+      "caseFences": 36,
+      "atlasCanonicalReads": 2,
+      "atlasCanonicalCompleted": 2
+    }
+  },
+  "causalFinding": {
+    "classification": "own-adapter-observation-scope-too-narrow",
+    "mechanism": "The existing completed-case proof scope covered business.caseRecall only. readSfMemorySelection performed a full cases.read before and after that scope. The verifier added readRecallSelection before and after; for this one-case selection each reads the same case three times. Every complete case read calls evidence.context twice and verifyScenarioOperations twice. This repeats completed source proof in one logical observation despite unchanged full authority/state.",
+    "notClaimed": "The observed W21 persistence and C08 counters are not counts of physical SQLite commits or full canonical case projections.",
+    "canonicalProducersPreserved": [
+      "createDecisionCasePort.read first complete proof",
+      "createSfCaseRecall admission, candidate selection and ranking",
+      "Atlas original/capture/current-continuity first complete proof per independent observation",
+      "rank.proveContinuity",
+      "all source proof and authority checks"
+    ]
+  },
+  "implementation": [
+    {
+      "path": "apps/cli/src/sucafina-product/memory-case-read-scope.ts",
+      "change": "Expose a private one-observation runner. It owns an exact Scope and one-use canonical recall callback; public recall never joins an active observation. Keep existing environment/snapshot/read/memory/eligibility bodies byte exact. Clear proofs and close only the owning scope in finally."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "change": "Add the typed withMemoryObservation binding, capturing the actual recall.current producer for the private callback. No foreign API changes."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-memory-evidence.ts",
+      "change": "Add optional observation binding and canonical fallback helper. readSfMemorySelection body remains byte exact."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/input-producer-memory.ts",
+      "change": "Wrap each of the two existing independent selection observations separately, passing only its private recall callback to its read."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-verifier-memory.ts",
+      "change": "Wrap one complete readRecallSelection/readSfMemorySelection/readRecallSelection observation. verify and acceptsOutput still each run two independent observations."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/analysis-host-services.ts",
+      "change": "Inject the runner only when caseRecall has exact identity business.caseRecall; absent/custom binding stays canonical."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+      "change": "Count actual evidence.context calls; assert two canonical Atlas reads/completions and six evidence contexts for prepare and verify. Probe same-call public recall before intended Atlas and nested observation/recall after canonical Atlas, preserving original positive and all old negatives."
+    }
+  ],
+  "guardInvariants": {
+    "authorityNotMemoized": "Each reused case/Atlas result reopens actual C08 state.read, host.revalidate, real Procurement authentication and environment observations.",
+    "completeWitness": [
+      "full SfProductState including __sfProductV1 originals/captures/receipts/preferences/outbox/cases",
+      "source fences for dashboard/planner/procurement",
+      "same Request object, method, URL and all headers",
+      "same binding and current lease",
+      "same exact incoming selection digest and selected-period identity/digest/expiry",
+      "same evidence reader identity",
+      "current principal/accessRevision/policyVersion/directory/bankKey/day",
+      "record/ledger-only eligible source closure and unchanged exact case bytes"
+    ],
+    "privateRecall": "One callback per observation, exact call identity and digest before/after canonical await, claimed synchronously before await. Public recall active.has refuses before producer work; no implicit first matching call may join.",
+    "firstProof": "Always complete canonical case and Atlas proof before storing completed cloned results. Failed results and pending Promises are never shared.",
+    "invalidation": "A changed protected witness returns unavailable rather than an older completed result. Existing source-materialization behavior is unchanged: do not store a first proof if before/after witness changed.",
+    "cleanup": "Scope is closed and completed proof maps cleared in finally; WeakMap entry removed only when it still owns that exact Scope. Detached readers/private callbacks cannot use a closed scope.",
+    "observationSeparation": "Prepare, verify and acceptsOutput preserve two sequential independent observations each. No scope or proof crosses between their passes.",
+    "fallbacks": [
+      "native uses canonical producer",
+      "missing selection/reader uses canonical producer",
+      "custom binding without optional runner uses canonical producer",
+      "Planner/mixed/timed-approval-age or otherwise ineligible closure keeps canonical readers"
+    ]
+  },
+  "staticEstimate": {
+    "status": "static-call-graph-estimate-not-measured-performance",
+    "condition": "the existing single-case record/ledger Procurement fixture after original-source materialization",
+    "canonicalCaseProjectionsPerObservation": {
+      "prepare": {
+        "W21": 3,
+        "W22": 1
+      },
+      "verify": {
+        "W21": 9,
+        "W22": 1
+      }
+    },
+    "canonicalAtlasCallsPerPair": {
+      "prepare": 2,
+      "verify": 2,
+      "unchanged": true
+    },
+    "evidenceContextCallsPerPair": {
+      "prepare": {
+        "W21StaticEstimate": 14,
+        "W22AssertedExpectation": 6
+      },
+      "verify": {
+        "W21StaticEstimate": 38,
+        "W22AssertedExpectation": 6
+      }
+    },
+    "explanationOfSix": "Two evidence.context calls in the first full case producer plus one explicit memory-selection source read per observation, times two observations. Atlas uses its internal BCS resolve rather than this counted proxy.",
+    "measuredW22Latency": null,
+    "measuredW22Persistence": null,
+    "oldMetricSemantics": {
+      "persistenceCalls": "Calls to driver.transaction/transactionAll API wrappers, including nested invocations; not physical SQLite commits.",
+      "c08Reads": "Calls to actual authority.state.read wrapper.",
+      "caseReads": "Calls to exposed business.cases.read, including completed-proof reuse; not canonical full-case replays.",
+      "caseFences": "Actual C08 callbacks returning sf-memory-case-fence.",
+      "atlasCanonicalReads": "Calls to actual atlas.memory.recall.",
+      "atlasCanonicalCompleted": "Those canonical Atlas calls returning ok."
+    }
+  },
+  "validation": {
+    "staticChecks": {
+      "path": "agents/c17/W22-memory/static-checks.json",
+      "bytes": 853,
+      "sha256": "bbadbf09184a51f6bc75dccfa9e99a3e3b4ee580dcc65989dce45d45188a738c",
+      "blobSha": "9f68a1dc75d90b10381b324837ee85c6969fc6dc"
+    },
+    "allRecordedStaticChecksTrue": true,
+    "consumerInspection": [
+      "analysis-host-services.ts exact-identity injection",
+      "analysis-services.ts derives optional binding type and spreads into producer/verifier",
+      "analysis-domain-bindings.ts supplies custom recall without runner",
+      "host-context.ts actual business.caseRecall binding",
+      "historical-memory.test.ts actual business runner fixture"
+    ],
+    "builderAuxiliaryReview": {
+      "agent": "/root/c17_composition/w22_observation_audit",
+      "kind": "builder-static-audit-not-independent-review",
+      "finding": "No concrete new blocker in final seven file hashes; previous implicit recallAvailable audit was superseded. Stale WIP patch files were regenerated for the final bytes."
+    },
+    "localTests": "not-run-prohibited",
+    "localTypecheck": "not-run-prohibited",
+    "localBuild": "not-run-prohibited",
+    "localProductImports": "not-run-prohibited",
+    "browser": "not-run-prohibited",
+    "hostedW22Ci": "not-run-by-builder",
+    "independentReview": "pending-parent-review-wave",
+    "nativeAcceptance": "unexecuted",
+    "globalEpic": "unexecuted"
+  },
+  "ciSelection": {
+    "requiredWholeFile": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+    "consumerCompatibilityWholeFile": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/analysis-services.test.ts",
+    "newTestFile": false,
+    "hostedCheckRequired": true,
+    "budgetMs": {
+      "cooperative": 225000,
+      "outerBun": 240000
+    },
+    "measure": [
+      "SF_COMPOSITION_PHASE phase timing and abort state",
+      "SF_MEMORY_READ_COUNTS persistenceCalls/c08Reads/caseReads/caseFences",
+      "new evidenceContextReads count",
+      "canonical Atlas reads and completions"
+    ],
+    "doNotInfer": [
+      "W21 result transferred to W22",
+      "static 3-to-1/9-to-1 as measured gain",
+      "full-file completion from prepare alone",
+      "native/global acceptance from this fixture"
+    ]
+  },
+  "limitsAndPending": [
+    "All seven code paths require hosted CHECK and full historical-memory file. No typed or functional green is claimed.",
+    "Total file completion within unchanged 225/240 seconds is unmeasured; first canonical proofs and all later revocation/lifecycle probes still have real cost.",
+    "The optimization does not apply to arbitrary closures, native execution, Planner/mixed inputs or timed Procurement approval ages.",
+    "Existing native metadata in structural output fixtures remains explicitly unexecuted; no Session/model/native publication is asserted.",
+    "No foreign producer, contract, archive, receipt or prior frozen audit was modified; memory-services and work-bridge are untouched by this builder.",
+    "Three independent reviewers remain required; this builder and its helper audit do not substitute for them."
+  ],
+  "manifest": {
+    "path": "agents/c17/W22-memory/manifest.json",
+    "bytes": 7947,
+    "sha256": "14d23ea417c1b93fee1610e32a296401c9ba92e89bda7077696d0b56dc9294f8",
+    "blobSha": "8545aa9aaa5c8a96fe2927c27fec436b43b46789"
+  },
+  "combinedPatch": {
+    "path": "agents/c17/W22-memory/changes.patch",
+    "bytes": 25531,
+    "sha256": "b38a082cf7486f5ff8cb244b25650394b49b766643c83f641ecf1479e027936d",
+    "blobSha": "3d9da4ef5edd5b497082efef688c0e781556b24e"
+  },
+  "readonlyDependencies": {
+    "path": "agents/c17/W22-memory/readonly-dependencies.json",
+    "bytes": 4844,
+    "sha256": "0360054daed8a89840a4bab68040e6f1e3ca32bbcef169fedbce0e2e484c4c73",
+    "blobSha": "db1ad02195db76fdd2ac3ccb8bf7d03fdcaa5389"
+  }
+}

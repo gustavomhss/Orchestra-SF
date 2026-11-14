@@ -21,7 +21,7 @@ import { wp05Horizon } from "../wp05/engine-fixture.ts"
 import { renewalCoverage } from "./renewal-coverage-fixture.ts"
 import { createWp11FixtureTrace } from "./fixture-trace.ts"
 import { createRenewalQuoteRevision, createRenewalSourceFixture, renewalEvidenceContext } from "./renewal-source-fixture.ts"
-import { createRenewalOperationVerifier } from "./renewal-operation-verifier.ts"
+import { createRenewalCaseOperationVerifier } from "./renewal-operation-verifier.ts"
 import { createRenewalRestartReader } from "./renewal-restart-reader.ts"
 
 type RecordEvidence = Extract<BusinessEvidenceRef, { kind: "record" }>
@@ -99,8 +99,8 @@ export async function createRenewalChoiceHistory(options: { training: "omitted" 
     // supplies only the canonical source DomainProjection; judgment and preview
     // keep the classified Planner and revalidate their complete C10 observations.
     const sourcePlanner = createPlannerPort({ host: fixture.host, sources: operationSources })
-    const verifyOperations = createRenewalOperationVerifier(fixture.host, operationSources, trace)
-    const cases = createDecisionCasePort({ state, host: fixture.host, creationTarget: { ref: fixture.caseRef.id, incarnation: fixture.caseRef.incarnation }, operationIdentity: () => current.identity, authorizeCase, verifyScenarioOperations: async (decision, context) => (await Promise.all(decision.alternatives.map((alternative) => verifyOperations(alternative.scenario, context)))).every(Boolean), evidence, createId: () => `wp11-history-case-${++current.next}`, now })
+    const verifyOperations = createRenewalCaseOperationVerifier(fixture.host, operationSources, trace)
+    const cases = createDecisionCasePort({ state, host: fixture.host, creationTarget: { ref: fixture.caseRef.id, incarnation: fixture.caseRef.incarnation }, operationIdentity: () => current.identity, authorizeCase, verifyScenarioOperations: verifyOperations, evidence, createId: () => `wp11-history-case-${++current.next}`, now })
     const scenarios = createStoredPlannerScenarioHost({ store: results, cases, planner: sourcePlanner, coverageRefFor: (ref, alternative) => decisionCoverageRef(ref, alternative.id, alternative.version) })
     const preview: Parameters<typeof createPlannerExactThreshold>[0]["preview"] = (request, context) => comparePlannerPreview({ host: fixture.host, sources, scenarios, planner }, request, context)
     const metrics: { read?: ReturnType<typeof createPlannerCriterionMetric> } = {}
@@ -175,7 +175,9 @@ export async function createRenewalChoiceHistory(options: { training: "omitted" 
       if (compared.status !== "ok" || advantage.status !== "ok") throw new Error(`Current comparison unavailable: ${JSON.stringify({ compared, advantage })}`)
       const comparisonStored = await results.write({ kind: "comparison", result: compared.value, caseRef, requestDigest: digestSfValue(comparisonRequest), sourceRefs: basis.sourceRefs, idempotencyKey: `current-comparison-${caseRef.version}` }, fixture.context)
       if (comparisonStored.status !== "ok") throw new Error(comparisonStored.reason)
-      const projection = await planner.compareForecast({ baseRef: source.refId, candidateRef: source.refId, period: wp05Horizon, currency: "USD" }, fixture.context)
+      // This phase member exposes only the canonical source DomainProjection;
+      // the persisted results, comparisons, criterion and previews above retain C10.
+      const projection = await sourcePlanner.compareForecast({ baseRef: source.refId, candidateRef: source.refId, period: wp05Horizon, currency: "USD" }, fixture.context)
       if (projection.status !== "ok") throw new Error(projection.reason)
       const classification = await baseline.readClassification(source.refId, fixture.context)
       const rule = await rules.resolve({ caseRef, criterionId: "renewal-difference" }, fixture.context)

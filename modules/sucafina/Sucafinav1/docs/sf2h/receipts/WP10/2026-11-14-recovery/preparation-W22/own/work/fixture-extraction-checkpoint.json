@@ -1,0 +1,20 @@
+{
+  "schema": "wp10-w22-procurement-fixture-correction-v1",
+  "base": "532da498e08fa36fadbd3c01e3e7da00d869dd47",
+  "runId": 43604032487,
+  "jobId": 132474686748,
+  "snapshot": "43e3f3cc819a0e154dbe927662a0b473ffa6a401",
+  "cause": "All four new Procurement cases failed in the unrelated contextual thread.create setup before procurementFixture reached the real Procurement source. The other recipient precondition was unavailable. No destination positive was reached.",
+  "change": "Extract the identical actual C08/authority/work service setup as workFixture; existing thread cases still create their same person-owned thread. Procurement creates and submits its real request directly on the shared actual setup, without an unrelated thread precondition.",
+  "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts",
+  "blobSha": "6ecb32c8a320247bf7928f290b67bb903079e295",
+  "sha256": "bfef3dfc088893c01e0c9562f3853a1ec79c49b8ed753f0b62b3b988c9e0f66f",
+  "bytes": 34139,
+  "testBodiesByteExactToW21": 10,
+  "budgetsUnchanged": true,
+  "assertionsRemoved": 0,
+  "productImplementationChanged": false,
+  "grantsAndAuthPolicyChanged": false,
+  "localProductExecution": false,
+  "hostedCorrectionResult": "pending-successor-publication-and-full-file-run"
+}

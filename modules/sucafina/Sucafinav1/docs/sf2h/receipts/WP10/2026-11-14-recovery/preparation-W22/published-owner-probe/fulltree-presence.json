@@ -1,0 +1,32 @@
+{
+  "tree": "5dcac0d207da530a4ff9b8f3ccd39e2e1cd2ef1f",
+  "commit": "532da498e08fa36fadbd3c01e3e7da00d869dd47",
+  "newRelativeToFullTree": [
+    "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp11/renewal-case-read-scope.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-admission.test.ts"
+  ],
+  "newPathsConfirmedByMcp404OnW21": [
+    "mcp/w21-base-0.json",
+    "mcp/w21-base-1.json",
+    "mcp/w21-base-2.json",
+    "mcp/w21-base-3.json",
+    "mcp/w21-base-4.json"
+  ],
+  "productionCallsiteCoverage": [
+    {
+      "prefix": "modules/sucafina/Sucafinav1/product/",
+      "fullTreeTypeScriptFiles": 454,
+      "unhydratedFiles": []
+    },
+    {
+      "prefix": "apps/cli/src/sucafina-product/",
+      "fullTreeTypeScriptFiles": 139,
+      "unhydratedFiles": []
+    }
+  ],
+  "currentChoiceCallers": "No invocation in the fully hydrated product/CLI namespaces; two proposed exact owner tests invoke it and both supply verifySources. Broader unhydrated test files were not fetched; independent current-choice closure remains held.",
+  "defaultBranchSearch": "mcp/default-branch-callsite-search.json returned no results; not evidence of absence at either pinned commit."
+}

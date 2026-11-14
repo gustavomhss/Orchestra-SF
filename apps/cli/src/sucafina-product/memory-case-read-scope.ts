@@ -16,6 +16,8 @@ import type { createSfAtlasMemory } from "../../../../modules/sucafina/Sucafinav
 import { parseCaseRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
 
 type Recall = ReturnType<typeof createSfCaseRecall>
+export type SfMemoryObservation = <Value>(incoming: Parameters<Recall>[0], call: TrustedDomainContext,
+  work: (recall: Recall) => Promise<Value | undefined>) => Promise<Value | undefined>
 type CaseRef = { id: string; incarnation: string }
 type Selection = { period: Period; expiresAt: number }
 type Proof = { ref: CaseRef; readDigest: string; fence: string; value: AuthorizedCaseProjection }
@@ -26,7 +28,7 @@ type Scope = { call: TrustedDomainContext; request: Request; requestDigest: stri
   memoryBusy: Set<string>; memories: Map<string, MemoryProof> }
 type Fence = { kind: "sf-memory-case-fence"; digest: string; cases: Record<string, string> } | { kind: "unsupported" }
 
-/** Reuse a completed case projection only inside one UI recall with unchanged, protected inputs. */
+/** Reuse completed case projections only inside one UI observation with unchanged, protected inputs. */
 export function createSfMemoryCaseReadScope(input: {
   host: DomainPortHost
   state: SfProductStatePort
@@ -36,8 +38,8 @@ export function createSfMemoryCaseReadScope(input: {
   lockedSourceFences: () => Record<"dashboard" | "planner" | "procurement", string> | undefined
 }) {
   const local = new AsyncLocalStorage<Scope>()
-  const active = new WeakSet<TrustedDomainContext>()
-  const current = (scope: Scope) => local.getStore() === scope && scope.open && !scope.invalid && active.has(scope.call) &&
+  const active = new WeakMap<TrustedDomainContext, Scope>()
+  const current = (scope: Scope) => local.getStore() === scope && scope.open && !scope.invalid && active.get(scope.call) === scope &&
     scope.call.kind === "ui" && input.host.requestFor(scope.call) === scope.request && !scope.request.signal.aborted &&
     requestIdentity(scope.request) === scope.requestDigest &&
     digestSfValue([scope.call.kind, scope.call.binding]) === scope.binding && digestSfValue(scope.incoming) === scope.inputDigest &&
@@ -162,34 +164,58 @@ export function createSfMemoryCaseReadScope(input: {
       return structuredClone(result)
     } finally { scope.memoryBusy.delete(key) }
   }
-  const recall = async (incoming: Parameters<Recall>[0], call: TrustedDomainContext, work: () => ReturnType<Recall>): ReturnType<Recall> => {
+  const observation = async <Value>(incoming: Parameters<Recall>[0], call: TrustedDomainContext,
+    work: (scope?: Scope) => Promise<Value | undefined>): Promise<Value | undefined> => {
     if (call.kind !== "ui") return work()
     const request = input.host.requestFor(call), selection = input.selection(call), reader = input.readerIdentity()
-    if (!request || request.signal.aborted || active.has(call)) return { status: "unavailable" }
+    if (!request || request.signal.aborted || active.has(call)) return undefined
     if (!selection || !reader) return work()
     const scope: Scope = { call, request, requestDigest: requestIdentity(request), selection, selectionDigest: digestSfValue(selection), reader,
       binding: digestSfValue([call.kind, call.binding]), incoming, inputDigest: digestSfValue(incoming),
       open: true, invalid: false, busy: new Set(), proofs: new Map(), memoryBusy: new Set(), memories: new Map() }
-    active.add(call)
+    active.set(call, scope)
     try {
       return await local.run(scope, async () => {
-        if (!current(scope) || !await input.host.revalidate(call) || !current(scope)) return { status: "unavailable" }
-        const result = await work()
-        if (result.status !== "ok" || !current(scope)) return { status: "unavailable" }
+        if (!current(scope) || !await input.host.revalidate(call) || !current(scope)) return undefined
+        const result = await work(scope)
+        if (result === undefined || !current(scope)) return undefined
         const proofs = [...scope.proofs.values()]
         const memories = [...scope.memories.values()]
         if (proofs.length || memories.length) {
           const refs = [...new Map([...proofs, ...memories].map((proof) => [caseKey(proof.ref), proof.ref])).values()]
           const final = await snapshot(scope, refs)
           if (final?.kind !== "sf-memory-case-fence" || [...proofs, ...memories].some((proof) => proof.fence !== final.digest) ||
-            proofs.some((proof) => final.cases[caseKey(proof.ref)] !== digestSfValue(proof.value.case)) || !current(scope)) return { status: "unavailable" }
-        } else if (!await input.host.revalidate(call) || !current(scope)) return { status: "unavailable" }
+            proofs.some((proof) => final.cases[caseKey(proof.ref)] !== digestSfValue(proof.value.case)) || !current(scope)) return undefined
+        } else if (!await input.host.revalidate(call) || !current(scope)) return undefined
         return structuredClone(result)
       })
-    } catch { return { status: "unavailable" } }
-    finally { scope.open = false; scope.proofs.clear(); scope.memories.clear(); active.delete(call) }
+    } catch { return undefined }
+    finally { scope.open = false; scope.proofs.clear(); scope.memories.clear(); if (active.get(call) === scope) active.delete(call) }
   }
-  return { read, memory, recall }
+  const recall = async (incoming: Parameters<Recall>[0], call: TrustedDomainContext, work: () => ReturnType<Recall>): ReturnType<Recall> => {
+    const result = await observation(incoming, call, async () => {
+      const result = await work()
+      return result.status === "ok" ? result : undefined
+    })
+    return result ?? { status: "unavailable" }
+  }
+  // Each producer/verifier pass creates a new scope; its two independent Atlas
+  // observations never share completed projections, memory results or fences.
+  const observe = <Value>(incoming: Parameters<Recall>[0], call: TrustedDomainContext, canonical: Recall,
+    work: (recall: Recall) => Promise<Value | undefined>): Promise<Value | undefined> => observation(incoming, call, async (scope) => {
+    if (!scope) return work(canonical)
+    let claimed = false
+    const scopedRecall: Recall = async (value, currentCall) => {
+      // Only this callback enters the existing observation. The public recall
+      // cannot consume its admission, even before this one has started.
+      if (claimed || currentCall !== call || !current(scope) || digestSfValue(value) !== scope.inputDigest) return { status: "unavailable" }
+      claimed = true
+      const result = await canonical(value, currentCall)
+      return current(scope) && digestSfValue(value) === scope.inputDigest ? result : { status: "unavailable" }
+    }
+    return work(scopedRecall)
+  })
+  return { read, memory, recall, observe }
 }
 
 function caseKey(ref: CaseRef) { return JSON.stringify([ref.id, ref.incarnation]) }
