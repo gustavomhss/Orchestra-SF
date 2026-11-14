@@ -1,0 +1,54 @@
+{
+  "schema": "astra-interface-own-increment-v1",
+  "increment": "W12-dashboard-capture-scope",
+  "base": {
+    "head": "a9dfea8907151bbe6a6815d5ff78264c1498026a",
+    "tree": "199d1cc34d412ff9cb8acf1cdb2bb56c6502ccea"
+  },
+  "ownership": "WP02 product/dashboard prefix and own tests/guide",
+  "productExecution": "not-run-by-agent; pending GitHub Actions",
+  "foreignInputsAdded": [],
+  "publicProtocolOrServerHttpApiChanged": false,
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+      "bytes": 28021,
+      "blob": "562cdca31a843ad893bc5f31eab039c55e7c9baa",
+      "sha256": "8c80486f9c928b850e7e26a9a9b74c038def3446f559ee073cb6e5cb68f6ea1b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/record-capture-scope.test.ts",
+      "bytes": 7798,
+      "blob": "8dc2ac105b64e73f9e5f0f18683ef27a59ee386d",
+      "sha256": "23b2dae242eed6ca5126539229eaa3ea28a9b9de0de3132f3cfa62840840e0f1"
+    },
+    {
+      "path": "docs/guides/sucafina-workbench.md",
+      "bytes": 19617,
+      "blob": "465224d07ac152110bfbcaa35173509a1fd1e7cc",
+      "sha256": "7aac1d4f0457b91e23486d593046e9f3c793651e132050986697ddbadc401cff"
+    }
+  ],
+  "finding": {
+    "path": "analysis/dashboard-capture-scope-w12.md",
+    "bytes": 10362,
+    "blob": "b7633ea8c0baf01db3640185bed4915c770386c8",
+    "sha256": "311aa453172dbc11619b8efafa078a37ec793af4f6846885f37a67b45b82af7c"
+  },
+  "newLiteralTests": 1,
+  "productSelection": [
+    "./Sucafinav1/test/product/wp02/record-capture-scope.test.ts"
+  ],
+  "retainedAssertions": [
+    "meeting-number.test.ts unchanged",
+    "Budget/Budget exact scope positive",
+    "Budget/OPEX exact scope negative",
+    "forged digest rejected",
+    "fence false outside lock, true under real lock",
+    "capture replay one C08 receipt",
+    "authorized original history",
+    "revocation suppresses projection",
+    "same-id same-value replacement cannot reopen capture"
+  ],
+  "separateOpenFinding": "WholeReview C05 preserved meeting HTTP403 is not closed by record capture"
+}

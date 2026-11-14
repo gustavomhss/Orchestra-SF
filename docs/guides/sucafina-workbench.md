@@ -35,6 +35,10 @@ Se um registro, plano ou filtro salvo deixar de estar disponível, a lista mostr
 
 Se a confirmação de salvar, remover ou definir a página inicial não chegar, mantenha a página aberta e use a opção de repetir a mesma solicitação. Nome, densidade e filtros ficam preservados enquanto o resultado é incerto. Abrir outra visualização com uma edição pendente exige confirmar o descarte.
 
+## Preservar um retrato do Dashboard
+
+No Dashboard, abra **Revisão e ações**, confira o período e selecione **Carregar opções**. Em **Registro para preservar**, escolha um registro da página atual e selecione **Preservar retrato**. A captura conserva os campos autorizados dessa seleção, inclusive quando o registro também aparece em outra página. Para consultar o retrato salvo, selecione-o em **Reunião ou retrato preservado** e use **Abrir histórico**; a data apresentada é a da captura e o acesso é conferido novamente.
+
 ## Registrar e comparar uma decisão
 
 Use **Create a decision** quando precisar manter objetivo, critérios, alternativas e histórico juntos. Informe o objetivo, as datas, a moeda e um critério por linha; depois selecione **Create decision**. A tela abre o caso criado. Você pode editar objetivo, período, moeda e critérios em **Edit decision**.
