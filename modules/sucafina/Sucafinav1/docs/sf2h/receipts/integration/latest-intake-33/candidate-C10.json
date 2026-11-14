@@ -1,0 +1,486 @@
+{
+  "schema": "sf2-candidate-identity-v1",
+  "mission": 33,
+  "symbol": "C10",
+  "commit": "0c395c462ce0fae67cb274c45ccb06884877d7cd",
+  "tree": "d34dba1f7eca5a1bce546a0b6fab9d9ec5aef5b7",
+  "parent": "2c44f5d63b6f1a09bd81610be6fe3a1087f6daa0",
+  "previous_candidate": {
+    "symbol": "C9",
+    "commit": "c1bd1c91b0e0d32db3074408e815e36107384073",
+    "tree": "ed93999e2a0e1d9f815017acf396e7f0c497227c"
+  },
+  "consumer_ack": {
+    "source": "C12/32",
+    "source_release": "8b7497a271c5afbd8604927f75b2a86a4f960bae",
+    "source_composition": "796f7d75310eba98a847a5ad9a5d4a5cec7e3de7",
+    "manifest": "increment-06.json",
+    "ack": "consumer-ack-06.json",
+    "integrated_commit": "0c395c462ce0fae67cb274c45ccb06884877d7cd",
+    "integrated_tree": "d34dba1f7eca5a1bce546a0b6fab9d9ec5aef5b7",
+    "source_PASS_transferred": false
+  },
+  "remote_readback": {
+    "head": "0c395c462ce0fae67cb274c45ccb06884877d7cd",
+    "tree": "d34dba1f7eca5a1bce546a0b6fab9d9ec5aef5b7",
+    "paths": 30,
+    "unexpected": 0,
+    "source_blob_mismatches": 0,
+    "metadata_bytes_confirmed": 3
+  },
+  "complete_diff": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-composed-compatibility/ACK-32.json",
+      "pre": null,
+      "post": {
+        "path": "ACK-32.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "d9d299ef886a1a81cc822845fb8d971b36137ed8",
+        "size": 2102,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/d9d299ef886a1a81cc822845fb8d971b36137ed8"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-composed-compatibility/checks-01/result.json",
+      "pre": null,
+      "post": {
+        "path": "result.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "984133f453d6fa69e5ae1a7407e562b2b5d7f0ee",
+        "size": 6638,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/984133f453d6fa69e5ae1a7407e562b2b5d7f0ee"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-composed-compatibility/closure.json",
+      "pre": null,
+      "post": {
+        "path": "closure.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "2862d7f32e02f03596cadac64bbdc652d52a9f80",
+        "size": 16185,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/2862d7f32e02f03596cadac64bbdc652d52a9f80"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-composed-compatibility/HANDOFF.md",
+      "pre": null,
+      "post": {
+        "path": "HANDOFF.md",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "0b56157c7c80a2a051a766e24b1c2687180338b8",
+        "size": 16449,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/0b56157c7c80a2a051a766e24b1c2687180338b8"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-composed-compatibility/INTEGRATION.md",
+      "pre": null,
+      "post": {
+        "path": "INTEGRATION.md",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "10d9d2beb09c35f084f837f950d6f040a1654314",
+        "size": 9116,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/10d9d2beb09c35f084f837f950d6f040a1654314"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-composed-compatibility/ORACLES-EGRESS.md",
+      "pre": null,
+      "post": {
+        "path": "ORACLES-EGRESS.md",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "114b7ec7455c359cf04c1fce2120059b85eec32a",
+        "size": 9721,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/114b7ec7455c359cf04c1fce2120059b85eec32a"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-composed-compatibility/ORACLES.md",
+      "pre": null,
+      "post": {
+        "path": "ORACLES.md",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "81fab15e8f2ea0db0ef5a5ca42088d0e344c4855",
+        "size": 18443,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/81fab15e8f2ea0db0ef5a5ca42088d0e344c4855"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-composed-compatibility/patches/bundle-product.patch",
+      "pre": null,
+      "post": {
+        "path": "bundle-product.patch",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "3a0b18e0cd1e2c36af5bab659e0154623eb0edc0",
+        "size": 10760,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/3a0b18e0cd1e2c36af5bab659e0154623eb0edc0"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-composed-compatibility/patches/bundle-tests.patch",
+      "pre": null,
+      "post": {
+        "path": "bundle-tests.patch",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "4121a6ce13aff9003bc4109885f50fa5ad5af8fe",
+        "size": 39626,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/4121a6ce13aff9003bc4109885f50fa5ad5af8fe"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-composed-compatibility/patches/manifest.json",
+      "pre": null,
+      "post": {
+        "path": "manifest.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "771835d0e0fb6265fe10c66cbcce1ffebcbb9c3f",
+        "size": 5885,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/771835d0e0fb6265fe10c66cbcce1ffebcbb9c3f"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-composed-compatibility/reproduction-01/request.json",
+      "pre": null,
+      "post": {
+        "path": "request.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "a347e220aabd8ce4624e1b1cd157eba3ba2e6ff8",
+        "size": 1780,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/a347e220aabd8ce4624e1b1cd157eba3ba2e6ff8"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-composed-compatibility/reproduction-01/result.json",
+      "pre": null,
+      "post": {
+        "path": "result.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "7ca0d6ff44f7282f2a4c8f8a496c7d9a253e8439",
+        "size": 1924,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/7ca0d6ff44f7282f2a4c8f8a496c7d9a253e8439"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-composed-compatibility/validation-01/result.json",
+      "pre": null,
+      "post": {
+        "path": "result.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "0cc75755f6185f7cc2e0b7c6d588a03671a51dbb",
+        "size": 2736,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/0cc75755f6185f7cc2e0b7c6d588a03671a51dbb"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-composed-compatibility/validation-02/request.json",
+      "pre": null,
+      "post": {
+        "path": "request.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "94c17130574e2ccc39e21db83141fed63ff0bb01",
+        "size": 2195,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/94c17130574e2ccc39e21db83141fed63ff0bb01"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-composed-compatibility/validation-02/result.json",
+      "pre": null,
+      "post": {
+        "path": "result.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "87ce90746cf7cc0f027a0ff0feda52ffb6f5b7fb",
+        "size": 11340,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/87ce90746cf7cc0f027a0ff0feda52ffb6f5b7fb"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-composed-compatibility/validation-03/request.json",
+      "pre": null,
+      "post": {
+        "path": "request.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "66a09c785a40cecd4b63bc1086e94abff5a97943",
+        "size": 1522,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/66a09c785a40cecd4b63bc1086e94abff5a97943"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-composed-compatibility/validation-03/result.json",
+      "pre": null,
+      "post": {
+        "path": "result.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "134cf8c662cc9c347c92ba3b307fa5acb7257fcc",
+        "size": 2977,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/134cf8c662cc9c347c92ba3b307fa5acb7257fcc"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/c12-composed-static-review.json",
+      "pre": null,
+      "post": {
+        "path": "c12-composed-static-review.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "a1fdf4753136b57f7396c20d0db3eb4546f5c9af",
+        "size": 26682,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/a1fdf4753136b57f7396c20d0db3eb4546f5c9af"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/consumer-ack-06.json",
+      "pre": null,
+      "post": {
+        "path": "consumer-ack-06.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "be4f80689b77a0d34cb281dbbe9fda89857eede4",
+        "size": 32098,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/be4f80689b77a0d34cb281dbbe9fda89857eede4"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/increment-06.json",
+      "pre": null,
+      "post": {
+        "path": "increment-06.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "d13f4fafdd8b1a4f4c15d90fb92d5a1535b1c41d",
+        "size": 90747,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/d13f4fafdd8b1a4f4c15d90fb92d5a1535b1c41d"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+      "pre": {
+        "path": "apply.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "6ad51e47b22eca073a0a81731575c463d98673e4",
+        "size": 21939,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/6ad51e47b22eca073a0a81731575c463d98673e4"
+      },
+      "post": {
+        "path": "apply.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "65d2a0518427b1454aa665ef744bce7564ed8049",
+        "size": 22728,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/65d2a0518427b1454aa665ef744bce7564ed8049"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+      "pre": {
+        "path": "decision-host.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "14e41977752f48fc0f204dc5e5893521a5bd1d30",
+        "size": 50653,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/14e41977752f48fc0f204dc5e5893521a5bd1d30"
+      },
+      "post": {
+        "path": "decision-host.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "9b48c999661e4b8a10593ae7cd5d6e2ed1e2f635",
+        "size": 51473,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/9b48c999661e4b8a10593ae7cd5d6e2ed1e2f635"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/c12-composed-compatibility/admission-race.test.ts",
+      "pre": null,
+      "post": {
+        "path": "admission-race.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "c9a7fc6ee875a2ec6e9ac2a02307fe1d1c41124a",
+        "size": 5553,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/c9a7fc6ee875a2ec6e9ac2a02307fe1d1c41124a"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/c12-composed-compatibility/duplicate-choice.test.ts",
+      "pre": null,
+      "post": {
+        "path": "duplicate-choice.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "e8b6d8a9c0c02670269f38336e4a9446b8133647",
+        "size": 6015,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/e8b6d8a9c0c02670269f38336e4a9446b8133647"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/c12-composed-compatibility/fresh-reconciliation.test.ts",
+      "pre": null,
+      "post": {
+        "path": "fresh-reconciliation.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "c45757c67769a7654f9ae1ecbbeb2f55f93e6acd",
+        "size": 7489,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/c45757c67769a7654f9ae1ecbbeb2f55f93e6acd"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/c12-composed-compatibility/material-race.test.ts",
+      "pre": null,
+      "post": {
+        "path": "material-race.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "c2fca3a7aed03776072cd059cd361df98ac9cf28",
+        "size": 4786,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/c2fca3a7aed03776072cd059cd361df98ac9cf28"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/consumer.ts",
+      "pre": {
+        "path": "consumer.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "80e4b8f5eba72f95ba94f906c982e4d4ad902907",
+        "size": 5213,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/80e4b8f5eba72f95ba94f906c982e4d4ad902907"
+      },
+      "post": {
+        "path": "consumer.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "fc9b0e4d52fca55921aa619687f41b8953954c7e",
+        "size": 5682,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/fc9b0e4d52fca55921aa619687f41b8953954c7e"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/normal-retry.test.ts",
+      "pre": {
+        "path": "normal-retry.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "f1b39878522b5c154b6e250bb2fd1c93e2428025",
+        "size": 4141,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/f1b39878522b5c154b6e250bb2fd1c93e2428025"
+      },
+      "post": {
+        "path": "normal-retry.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "4528a2c390110b3bf010cc77884e204139b50c09",
+        "size": 4254,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/4528a2c390110b3bf010cc77884e204139b50c09"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/recovery-http.test.ts",
+      "pre": {
+        "path": "recovery-http.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "15aaff1ae0406f9b495c9f60b81b18d9c8174e64",
+        "size": 17125,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/15aaff1ae0406f9b495c9f60b81b18d9c8174e64"
+      },
+      "post": {
+        "path": "recovery-http.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "76bf7963d30dde72eb369616dfcd0fee61948803",
+        "size": 18033,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/76bf7963d30dde72eb369616dfcd0fee61948803"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/recovery-ui.test.ts",
+      "pre": {
+        "path": "recovery-ui.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "5bad0ed7698de7a75ce394773e7ec6d629ea3c10",
+        "size": 14183,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/5bad0ed7698de7a75ce394773e7ec6d629ea3c10"
+      },
+      "post": {
+        "path": "recovery-ui.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "65876bfc65f8682ad19723cd3bc1589803118b9b",
+        "size": 14273,
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/65876bfc65f8682ad19723cd3bc1589803118b9b"
+      }
+    }
+  ],
+  "verification": {
+    "tests": "NOT_RUN",
+    "ci": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "AM": "NOT_RUN",
+    "functional_acceptance": false
+  },
+  "checkpoint_policy": "Following documentary checkpoint records exact material candidate; no redefinition of C4 and no functional acceptance/dispatch authority.",
+  "source_evidence_limits": {
+    "reproduction": {
+      "run": 43642218184,
+      "result": "FAIL",
+      "pass": 0,
+      "fail": 3
+    },
+    "validation01": {
+      "run": 43642889681,
+      "result": "FAIL",
+      "pass": 8,
+      "fail": 6,
+      "errors": 6
+    },
+    "validation02": {
+      "run": 43643559235,
+      "result": "FAIL",
+      "pass": 22,
+      "fail": 1,
+      "assertions": 567
+    },
+    "validation03": {
+      "run": 43644467464,
+      "result": "PASS",
+      "pass": 1,
+      "fail": 0,
+      "filtered": 4,
+      "assertions": 28
+    },
+    "combined_source_qualification": "23 distinct source-composed scenarios via22 W2 and1 W3; no single green23 run, no transfer to mission33 candidate.",
+    "source_checks": {
+      "run": 43644816495,
+      "aggregate": "FAIL",
+      "cli": "PASS",
+      "guards": "PASS",
+      "sucafina": "FAIL_TS2741_WP14_INHERITED"
+    },
+    "wp14_current_blob": "d7d2a69837560f42438d470b83724c1a61939a73",
+    "reapply_wp14_patch": false
+  },
+  "excluded_post_terminal_advance": "a20f8701f8e8d8a5e75a1dc66e47de1ef8a2dfe1",
+  "global_release": false
+}
