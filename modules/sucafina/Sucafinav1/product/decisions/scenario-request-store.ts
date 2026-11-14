@@ -7,6 +7,7 @@ import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import type { SfProductState, SfProductStatePort, SfStateAuthority } from "../contracts/state.ts"
 import type { Snapshot } from "../../runtime/contract.ts"
 import type { createSfDecisionResultStore, StoredDecisionResult } from "./result-store.ts"
+import type { HistoricalCalculationRead } from "./calculation-history.ts"
 
 type StoredScenarioRequest = { schema: "sf-scenario-request-v1"; resultRef: string; caseRef: { id: string; incarnation: string; version: number }; request: ScenarioRequest; requestDigest: string; resultDigest: string; engineVersion: string; recordDigest: string }
 const key = (resultRef: string) => `sf:proposal-coverage:scenario-request:${digestSfValue(resultRef)}`
@@ -25,26 +26,44 @@ export function createScenarioRequestStore(input: {
   operationIdentity: (context: TrustedDomainContext) => string | undefined
   writes: WeakSet<object>
 }) {
-  const read = async (resultRef: string, context: TrustedDomainContext): Promise<PortResult<StoredScenarioRequest>> => {
+  const readRequest = async (resultRef: string, context: TrustedDomainContext, incoming?: HistoricalCalculationRead): Promise<PortResult<StoredScenarioRequest>> => {
     try {
+      const historical = incoming ? structuredClone(incoming) : undefined
+      const readResult = () => historical ? input.results.readHistoricalCalculation(historical, context) : input.results.readForCalculation({ resultRef }, context)
       const source = input.host.requestFor(context)
       if (!source || !resultRef.trim() || !await input.host.revalidate(context)) return { status: "denied", reason: "scenario-request-access-unavailable" }
       const loaded = await input.state.read(source, "preferences", (state, authority) => sameAuthority(authority, context) ? state.preferences[key(resultRef)] : undefined)
       if (loaded.status !== "ok" || !loaded.value || typeof loaded.value !== "object") return { status: "unavailable", reason: "scenario-request-unavailable" }
-      const record = loaded.value as StoredScenarioRequest
+      const record = structuredClone(loaded.value) as StoredScenarioRequest
       if (!decodeSfOperationInput("sf_scenario_simulate", record.request).ok || !input.verifyRequestSources && (record.request.assumptions.some((item) => item.evidenceRefs.some((ref) => ref.kind !== "record")) || record.request.operations.some((item) => item.replacementRef !== undefined))) return { status: "unavailable", reason: "calculation-source-unsupported" }
-      const result = await input.results.readForCalculation({ resultRef }, context)
+      const result = await readResult()
       if (result.status !== "ok" || result.value.kind !== "scenario") return { status: "unavailable", reason: "scenario-request-unavailable" }
       const current = await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? state.cases[result.value.caseRef.id] : undefined)
-      if (record.schema !== "sf-scenario-request-v1" || record.resultRef !== resultRef || record.recordDigest !== digest(record) || !decodeSfOperationInput("sf_scenario_simulate", record.request).ok || record.requestDigest !== digestSfValue(record.request) || record.requestDigest !== result.value.requestDigest || record.resultDigest !== result.value.resultDigest || digestSfValue(record.caseRef) !== digestSfValue(result.value.caseRef) || !record.engineVersion.trim() || current.status !== "ok" || !current.value || current.value.version !== record.caseRef.version || current.value.incarnation !== record.caseRef.incarnation || !current.value.participants.includes(context.binding.principalRef) || !await input.authorizeCase(current.value, context)) return { status: "unavailable", reason: "scenario-request-unavailable" }
-      if (input.verifyRequestSources && !await input.verifyRequestSources(structuredClone(record.request), structuredClone(result.value), context)) return { status: "unavailable", reason: "calculation-request-sources-unproven" }
+      const decision = current.status === "ok" ? structuredClone(current.value) : undefined
+      const expectedCase = historical?.caseRef ?? record.caseRef
+      if (record.schema !== "sf-scenario-request-v1" || record.resultRef !== resultRef || record.recordDigest !== digest(record) || !decodeSfOperationInput("sf_scenario_simulate", record.request).ok || record.requestDigest !== digestSfValue(record.request) || record.requestDigest !== result.value.requestDigest || record.resultDigest !== result.value.resultDigest || digestSfValue(record.caseRef) !== digestSfValue(result.value.caseRef) || !record.engineVersion.trim() || historical && record.engineVersion !== historical.reference.target.engineVersion || !decision || decision.id !== expectedCase.id || decision.version !== expectedCase.version || decision.incarnation !== expectedCase.incarnation || !decision.participants.includes(context.binding.principalRef) || !await authorizeCase(decision, context)) return { status: "unavailable", reason: "scenario-request-unavailable" }
+      if (input.verifyRequestSources && !await verifyRequestSources(record.request, result.value, context)) return { status: "unavailable", reason: "calculation-request-sources-unproven" }
       const again = await input.state.read(source, "preferences", (state, authority) => sameAuthority(authority, context) ? state.preferences[key(resultRef)] : undefined)
-      const resultAgain = await input.results.readForCalculation({ resultRef }, context)
+      const resultAgain = await readResult()
+      const caseAgain = await input.state.read(source, "cases", (state, authority) => sameAuthority(authority, context) ? state.cases[result.value.caseRef.id] : undefined)
       if (again.status !== "ok" || digestSfValue(again.value) !== digestSfValue(record) || resultAgain.status !== "ok" || digestSfValue(resultAgain.value) !== digestSfValue(result.value) || source.signal.aborted || !await input.host.revalidate(context)) return { status: "stale", reason: "scenario-request-changed" }
-      if (input.verifyRequestSources && (resultAgain.value.kind !== "scenario" || !await input.verifyRequestSources(structuredClone(record.request), structuredClone(resultAgain.value), context) || source.signal.aborted || !await input.host.revalidate(context))) return { status: "unavailable", reason: "calculation-request-sources-unproven" }
+      if (caseAgain.status !== "ok" || !caseAgain.value || digestSfValue(caseAgain.value) !== digestSfValue(decision) || !await authorizeCase(caseAgain.value, context)) return { status: "stale", reason: "scenario-request-case-changed" }
+      if (input.verifyRequestSources && (resultAgain.value.kind !== "scenario" || !await verifyRequestSources(record.request, resultAgain.value, context) || source.signal.aborted || !await input.host.revalidate(context))) return { status: "unavailable", reason: "calculation-request-sources-unproven" }
       return { status: "ok", value: structuredClone(record) }
     } catch { return { status: "unavailable", reason: "scenario-request-unavailable" } }
   }
+  const authorizeCase = async (decision: DecisionCase, context: TrustedDomainContext) => {
+    const value = structuredClone(decision)
+    const expected = digestSfValue(value)
+    return await input.authorizeCase(value, context) && digestSfValue(value) === expected
+  }
+  const verifyRequestSources = async (request: ScenarioRequest, stored: Extract<StoredDecisionResult, { kind: "scenario" }>, context: TrustedDomainContext) => {
+    const candidate = { request: structuredClone(request), stored: structuredClone(stored) }
+    const expected = digestSfValue(candidate)
+    return !!input.verifyRequestSources && await input.verifyRequestSources(candidate.request, candidate.stored, context) && digestSfValue(candidate) === expected
+  }
+  const read = (resultRef: string, context: TrustedDomainContext) => readRequest(resultRef, context)
+  const readHistorical = (request: HistoricalCalculationRead, context: TrustedDomainContext) => readRequest(request.reference.target.runId, context, request)
   const register = async (incoming: { resultRef: string; request: ScenarioRequest; engineVersion: string }, context: TrustedDomainContext): Promise<PortResult<StoredScenarioRequest>> => {
     try {
       const request = structuredClone(incoming)
@@ -73,7 +92,7 @@ export function createScenarioRequestStore(input: {
       return read(record.resultRef, context)
     } catch { return { status: "unavailable", reason: "scenario-request-unavailable" } }
   }
-  return { register, read }
+  return { register, read, readHistorical }
 }
 
 function sameAuthority(authority: SfStateAuthority, context: TrustedDomainContext) {

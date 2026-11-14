@@ -15,6 +15,7 @@ import { createSfExtendedBiOptions } from "./extended-bi-options.ts"
 import { readSfDecisionBiSelection, sfPlannerBiSelection } from "./bi-selections.ts"
 import { createSfExtendedReviewCycle, sfDashboardReviewAgendaItem } from "./extended-review-cycle.ts"
 import { sfExtendedSourceLinks } from "./extended-source-links.ts"
+import { sameBiProjection } from "../../../../modules/sucafina/Sucafinav1/product/analytics/projection.ts"
 import type { DomainProjection } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
 
 export function createSfExtendedHttp(input: {
@@ -39,13 +40,13 @@ export function createSfExtendedHttp(input: {
       headers: { "Content-Type": "application/json", "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } })
     if (surface !== "dashboard" || url.origin !== input.origin || request.signal.aborted) return json({ status: "denied", reason: "surface-unavailable" }, 403)
     if (request.method !== "GET" && request.method !== "HEAD") return json({ status: "denied", reason: "read-method-required" }, 405)
-    const allowed = mode === "review" ? ["sf", "page", "reviewRef", "previousReviewRef", "sectionId", "start", "end"] : mode === "review-update" ? ["sf", "reviewRef"] : mode === "review-source" ? ["sf", "reviewRef", "referenceId"] : mode === "bi-source" ? ["sf", "selectionRef", "viewId", "start", "end", "valueId"] : mode === "bi-options" ? ["sf", "page", "viewId", "start", "end"] : ["sf", "page", "viewId", "selectionRef", "start", "end", "baseRef", "candidateRef", "currency"]
+    const allowed = mode === "review" ? ["sf", "page", "reviewRef", "previousReviewRef", "sectionId", "start", "end"] : mode === "review-update" ? ["sf", "reviewRef"] : mode === "review-source" ? ["sf", "reviewRef", "referenceId"] : mode === "bi-source" ? ["sf", "selectionRef", "viewId", "start", "end", "valueId", "refDigest"] : mode === "bi-options" ? ["sf", "page", "viewId", "start", "end"] : ["sf", "page", "viewId", "selectionRef", "start", "end", "baseRef", "candidateRef", "currency"]
     if ([...url.searchParams.keys()].some((key) => !allowed.includes(key) || url.searchParams.getAll(key).length !== 1)) return json({ status: "needs-input", reason: "invalid-query" }, 400)
     const period = { start: url.searchParams.get("start") ?? `${new Date().getUTCFullYear()}-01-01`, end: url.searchParams.get("end") ?? `${new Date().getUTCFullYear()}-12-31` }
     if (!isSfPeriod(period)) return json({ status: "needs-input", reason: "invalid-period" }, 400)
     const viewId = url.searchParams.get("viewId") ?? "BI01"
     const bootstrap = { mode, page: url.searchParams.get("page"), period, viewId, selectionRef: url.searchParams.get("selectionRef"), reviewRef: url.searchParams.get("reviewRef"), baseRef: url.searchParams.get("baseRef"), candidateRef: url.searchParams.get("candidateRef"), currency: url.searchParams.get("currency"), previousReviewRef: url.searchParams.get("previousReviewRef"), sectionId: url.searchParams.get("sectionId"), referenceId: url.searchParams.get("referenceId"), valueId: url.searchParams.get("valueId") }
-    const digest = digestSfValue(bootstrap)
+    const digest = digestSfValue(mode === "bi-source" ? { ...bootstrap, refDigest: url.searchParams.get("refDigest") } : bootstrap)
     const action = mode?.startsWith("review") ? "sf_review_prepare" : "sf_dashboard_read"
     const admitted = await authority.ui.admit(request, action, digest)
     if (admitted.status !== "ok") return json(admitted, 403)
@@ -80,14 +81,29 @@ export function createSfExtendedHttp(input: {
       if (mode === "bi-source") {
         const ref = url.searchParams.get("selectionRef")
         if (!ref || ref.length > 16_384) return json({ status: "needs-input", reason: "invalid-selection" }, 400)
+        const refDigest = url.searchParams.get("refDigest")
+        if (refDigest !== null && !/^[a-f0-9]{64}$/.test(refDigest)) return json({ status: "needs-input", reason: "invalid-source-digest" }, 400)
         const selectedCase = readSfDecisionBiSelection(ref) ? await options.caseFor(ref, call) : undefined
         if (readSfDecisionBiSelection(ref) && !selectedCase) return json({ status: "denied", reason: "bi-case-selection-unavailable" }, 403)
         const read = async () => {
           const current = await input.bi.source.read({ viewId, selectionRef: ref, period }, call)
           if (current.status !== "ok") return current
           const value = current.value.values.find((entry) => entry.id === url.searchParams.get("valueId"))
-          if (!value?.drilldown) return { status: "unavailable" as const, reason: "bi-value-source-unavailable" }
-          const links = await sfExtendedSourceLinks({ business, reference: value.drilldown, call, url })
+          if (!value || !value.drilldown && !value.sourceRefs.length) return { status: "unavailable" as const, reason: "bi-value-source-unavailable" }
+          // A digest selects only an exact origin of this current protected row.
+          // Legacy single drilldown remains explicit; multiple origins never
+          // fall back to array order, a reciprocal source or an incoming ref.
+          if (refDigest === null && !value.drilldown) return { status: "needs-input" as const, reason: "choose-explicit-bi-origin" }
+          const offered = value.drilldown ? [value.drilldown] : value.sourceRefs
+          const matches = refDigest === null ? offered : offered.filter((reference) => reference.refDigest === refDigest)
+          const reference = matches[0]
+          if (!reference || matches.some((other) => digestSfValue(other) !== digestSfValue(reference))) return { status: "denied" as const, reason: "bi-origin-outside-selected-value" }
+          const links = await sfExtendedSourceLinks({ business, reference, call, url })
+          // Destination access does not authorize its association with this
+          // selected case. Reopen the protected projection after that await.
+          const latest = await input.bi.source.read({ viewId, selectionRef: ref, period }, call)
+          if (latest.status !== "ok") return latest
+          if (!sameBiProjection(latest.value, current.value)) return { status: "stale" as const, reason: "bi-source-changed" }
           return links.length ? { status: "ok" as const, value: { links } } : { status: "unavailable" as const, reason: "source-or-destination-period-unavailable" }
         }
         const result = selectedCase ? await business.withCase(call, selectedCase, {}, read) : await read()
@@ -165,13 +181,16 @@ export function createSfExtendedHttp(input: {
         const unavailable = await verifyReviewBootstrap()
         if (unavailable) return unavailable
       }
-      const content = mode === "review" ? '<section data-sf-review-workspace><p role="status">Loading review…</p></section>' : '<section data-sf-bi><p role="status">Loading analyses…</p></section>'
+      // The published shell keeps polling authority and owns navigation/logout.
+      // Its retained-view seam preserves the BI client and its selected state.
+      const content = mode === "review" ? '<section data-sf-review-workspace><p role="status">Loading review…</p></section>' : '<section data-sf-bi data-sf-retain-view><p role="status">Loading analyses…</p></section>'
       const inline = script.replace(/<\/script/gi, "<\\/script")
       const bootstrapHtml = data === undefined ? "" : `<script type="application/json" data-sf-review-bootstrap>${JSON.stringify(data).replace(/</g, "\\u003c")}</script>`
       const title = mode === "review" ? "Review and reports" : "Business intelligence"
-      const html = documentHtml(title, "dashboard", `<a href="${url.pathname}">Dashboard</a>`, pageMain({ drawn: true, key: title, index: 0 }, content), "")
+      const accessRevision = mode === "bi" ? call.binding.accessRevision : undefined
+      const html = documentHtml(title, "dashboard", `<a href="${url.pathname}">Dashboard</a>`, pageMain({ drawn: true, key: title, index: 0 }, content), "", "", accessRevision)
         .replace("</body>", () => `${bootstrapHtml}<script>${inline}</script></body>`)
-      return new Response(request.method === "HEAD" ? null : html, { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "Content-Security-Policy": htmlPolicy(html), "X-Content-Type-Options": "nosniff" } })
+      return new Response(request.method === "HEAD" ? null : html, { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "Content-Security-Policy": htmlPolicy(html), "X-Content-Type-Options": "nosniff", ...(accessRevision ? { "X-SF-Access-Revision": accessRevision } : {}) } })
     } finally { authority.ui.finish(call) }
   }
 }

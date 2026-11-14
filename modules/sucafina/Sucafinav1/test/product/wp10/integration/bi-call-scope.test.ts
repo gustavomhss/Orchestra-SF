@@ -9,6 +9,9 @@ import type { SfProductState } from "../../../../product/contracts/state.ts"
 import type { TrustedUiContext } from "../../../../product/contracts/sf-execution.ts"
 import type { BaselineCoverageRequest } from "../../../../product/decisions/baseline-coverage.ts"
 import { createSfBiCallScope } from "../../../../../../../apps/cli/src/sucafina-product/bi-call-scope.ts"
+import { createSfBiServices } from "../../../../../../../apps/cli/src/sucafina-product/bi-services.ts"
+import { createSfExtendedHttp } from "../../../../../../../apps/cli/src/sucafina-product/extended-http.ts"
+import { createSfExtendedAssets } from "../../../../../../../apps/cli/src/sucafina-product/extended-assets.ts"
 import { sfDecisionBiSelection } from "../../../../../../../apps/cli/src/sucafina-product/bi-selections.ts"
 import { financialCompositionFixture } from "./financial-composition-fixture.ts"
 import { compositionTestDeadline } from "./composition-test-deadline.ts"
@@ -352,3 +355,82 @@ test("BI egress returns denied after actor revocation, Request abort or lease re
   } finally { await deadline.close() }
 }, 120_000)
 
+test("BI source HTTP reopens its real case after destination resolution and returns no links after participation is revoked", async () => {
+  const deadline = compositionTestDeadline("bi-source-http-egress")
+  try {
+    const fixture = await prepare(deadline)
+    const { authority, business, portfolio, persistence, caseRef } = fixture
+    const bi = createSfBiServices({ authority, business, portfolio })
+    const assets = createSfExtendedAssets()
+    deadline.own(() => assets.dispose())
+    const { request: selection, call } = await fixture.admit()
+    await fixture.consume(selection, call)
+    const projection = ok(await business.withCase(call, caseRef, {}, () => bi.source.read(selection, call)), "Actual BI source projection")
+    const value = projection.values.find((entry) => entry.drilldown?.kind === "record" && entry.drilldown.target.surface === "planner")
+    if (value?.drilldown?.kind !== "record") throw new Error("Actual BI projection has no Planner record drilldown")
+    const reference = value.drilldown
+    const url = `https://example.test/dashboard?${new URLSearchParams({ sf: "bi-source", viewId: selection.viewId, selectionRef: selection.selectionRef,
+      valueId: value.id, start: selection.period.start, end: selection.period.end })}`
+    const reached = Promise.withResolvers<void>(), release = Promise.withResolvers<void>()
+    let armed = false, resolvedDestination = false
+    const observedBusiness = { ...business, context: { ...business.context,
+      resolve: async (...args: Parameters<typeof business.context.resolve>) => {
+        const result = await business.context.resolve(...args)
+        // The BI producer above retains the original BCS. Only the real
+        // destination resolution performed by the HTTP link helper is paused.
+        if (armed) {
+          armed = false
+          expect(result.state).toBe("fresh")
+          expect(result.authorizedProjection).toBeDefined()
+          resolvedDestination = true
+          reached.resolve()
+          await release.promise
+        }
+        return result
+      },
+    } }
+    const http = createSfExtendedHttp({ authority, business: observedBusiness, bi, reviews: undefined, persistence, origin: "https://example.test", assets })
+    const invoke = () => deadline.phase("http.bi-source", () => http(new Request(url, { signal: deadline.signal }), "dashboard"))
+    const positive = await invoke()
+    expect(positive?.status).toBe(200)
+    const before = await positive!.json() as { links: { label: string; url: string }[] }
+    expect(before.links.length).toBeGreaterThan(0)
+    expect(before.links.every((link) => !!link.label && !!link.url)).toBe(true)
+    const setParticipants = (participants: string[]) => fixture.store.transaction("dashboard", async (snapshot) => {
+      (snapshot.data.__sfProductV1 as SfProductState).cases[caseRef.id]!.participants = participants
+      return { commit: true, value: undefined }
+    })
+    armed = true
+    const pending = invoke()
+    try {
+      await Promise.race([reached.promise, pending.then((response) => { throw new Error(`Source HTTP did not reach its real destination: ${response?.status}`) })])
+      expect(resolvedDestination).toBe(true)
+      await setParticipants([])
+      expect(fixture.active.value).toBe(true)
+      expect(await authority.host.revalidate(call)).toBe(true)
+      // The original source remains readable; only its association with this
+      // case has been revoked. General record authority cannot release it.
+      const original = await business.context.resolve(reference, call)
+      expect(original.state).toBe("fresh")
+      release.resolve()
+      const denied = await pending
+      expect(denied?.status).toBe(403)
+      const text = await denied!.text()
+      const body = JSON.parse(text)
+      expect(body).toMatchObject({ status: "denied" })
+      expect(body).not.toHaveProperty("links")
+      expect(body).not.toHaveProperty("value")
+      for (const link of before.links) {
+        expect(text).not.toContain(link.label)
+        expect(text).not.toContain(link.url)
+      }
+    } finally {
+      release.resolve()
+      await pending.catch(() => undefined)
+      await setParticipants(["person"])
+    }
+    const recovered = await invoke()
+    expect(recovered?.status).toBe(200)
+    expect(await recovered!.json()).toEqual(before)
+  } finally { await deadline.close() }
+}, 120_000)

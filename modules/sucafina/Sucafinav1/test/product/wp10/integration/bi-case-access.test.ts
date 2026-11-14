@@ -166,7 +166,7 @@ test("BI clears a real persisted case after participant revocation with the sess
     // Authenticated HTML/options/data still come from each real browser request.
     await deadline.phase("browser.bundle", () => assets.bi())
     const browser = await deadline.phase("browser.prepare", async () => {
-      const value = await prepareSfBiAccessBrowser({ http, signal: deadline.signal, selectionRef,
+      const value = await prepareSfBiAccessBrowser({ http, biAsset: assets.bi, signal: deadline.signal, selectionRef,
         privateReferences: [candidate.resultRef, persisted.resultRef],
         url: `https://example.test/dashboard?${new URLSearchParams({ sf: "bi", viewId: "BI09", selectionRef, start: period.start, end: period.end })}` })
       deadline.own(() => value.dispose())

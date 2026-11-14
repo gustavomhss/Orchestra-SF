@@ -86,6 +86,8 @@ A memória usa `createMemoryEmit` e `createMemoryRead` reais do Atlas protegidos
 
 O host limita custo de ancestralidade antes de IO e não reutiliza autorização entre releituras. Referências exatamente iguais são resolvidas uma vez dentro de cada chamada de contexto; o orçamento é aplicado antes da deduplicação e a próxima chamada volta a ler as fontes. Grafo acima do orçamento técnico retorna indisponibilidade. A consulta `sf-consultar-memoria-decisoria` aceita histórico somente com `includeHistorical=true` e seleção humana exata de caso/período. Ela reabre CaseRecall e as fontes, preserva diferenças e referência atual, e refaz essas verificações no retorno. As outras skills continuam exigindo fontes frescas. Política/project e a matriz completa de variantes C17 ainda exigem as provas previstas; uma prova de caso com fonte inalterada não as substitui.
 
+Casos com cenários Planner já registrados podem ser consultados após alterações nas fontes quando a memória preserva a projeção original e o acesso atual ainda permite verificar a continuidade da fonte. A consulta conserva o cenário, os valores e o contexto originais; referências mensais de substituição também precisam continuar verificáveis. Ausência da captura, revogação de acesso ou exclusão e recriação da fonte deixam a consulta indisponível. Para simular, preparar ou executar uma nova alteração, selecione as fontes atuais e passe novamente pela validação do Planner.
+
 ## Roteiro sintético reproduzível
 
 Use homologação autorizada e dados inventados, rotulados como sintéticos. Este guia não inicia servidor, envia notificações ou cria compras reais; os passos abaixo ainda precisam de observação no candidato correspondente.

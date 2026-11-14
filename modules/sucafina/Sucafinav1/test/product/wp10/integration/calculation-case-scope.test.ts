@@ -20,9 +20,11 @@ import { openLocalStore } from "../../../../runtime/local-store.ts"
 // delay real completed C08 reads / the fixture coverage provider; they do not
 // replace authorization, source validation, computation or stored requests.
 // This is a composition/concurrency proof, not a native model or Atlas acceptance.
-test("concurrent calculation admissions retain one case scope across two real replays and release it after the last replay", async () => {
+for (const runSelection of ["same", "different"] as const) {
+test(`concurrent calculation admissions retain one case scope across two real ${runSelection}-run replays and release it after the last replay`, async () => {
   const fixture = await calculationFixture()
   const { authority, business } = fixture
+  const nextCalculation = runSelection === "same" ? fixture.calculation : fixture.otherCalculation
   const lease = await fixture.admit()
   const reads = [gate(), gate()]
   const coverage = [gate(), gate()]
@@ -51,7 +53,7 @@ test("concurrent calculation admissions retain one case scope across two real re
   let second: ReturnType<typeof business.calculations.issue> | undefined
   try {
     await reached(reads[0]!.entered, first)
-    second = business.calculations.issue(fixture.otherCalculation.target.runId, lease.call)
+    second = business.calculations.issue(nextCalculation.target.runId, lease.call)
     await reached(reads[1]!.entered, second)
     reads[0]!.release()
     await reached(coverage[0]!.entered, first)
@@ -65,7 +67,7 @@ test("concurrent calculation admissions retain one case scope across two real re
     // The first owner's finally must not erase the second replay's selection.
     expect(await business.selectedCase(lease.call)).toEqual({ status: "ok", value: fixture.caseRef })
     coverage[1]!.release()
-    expect(await second).toEqual({ status: "ok", value: fixture.otherCalculation })
+    expect(await second).toEqual({ status: "ok", value: nextCalculation })
     expect((await business.selectedCase(lease.call)).status).toBe("unavailable")
     // Cleanup must permit a new independently authorized scope on the same call.
     expect(await business.withCase(lease.call, fixture.otherCaseRef, {}, async () => business.selectedCase(lease.call)))
@@ -80,6 +82,7 @@ test("concurrent calculation admissions retain one case scope across two real re
     await fixture.dispose()
   }
 }, 120_000)
+}
 
 test("a real calculation retains a withCase owner's selection after the outer action completes", async () => {
   const fixture = await calculationFixture()
@@ -121,7 +124,9 @@ test("calculation replay cannot borrow another selected case even when the same 
     const reads = fixture.control.coverageReads
     const refused = await business.withCase(lease.call, fixture.otherCaseRef, {}, async () =>
       business.calculations.issue(fixture.calculation.target.runId, lease.call))
-    expect(refused).toEqual({ status: "denied", reason: "calculation-case-scope-mismatch" })
+    // The real request/result stores reject the conflicting selected case before
+    // the private calculation scope is entered; no coverage or payload escapes.
+    expect(refused).toEqual({ status: "unavailable", reason: "scenario-request-unavailable" })
     expect(Object.hasOwn(refused, "value")).toBe(false)
     expect(fixture.control.coverageReads).toBe(reads)
     expect((await business.selectedCase(lease.call)).status).toBe("unavailable")
@@ -174,6 +179,51 @@ for (const change of ["revoke", "abort"] as const) {
     } finally {
       coverage.forEach((held) => held.release())
       await Promise.allSettled([first, ...(second ? [second] : [])])
+      authority.ui.finish(lease.call)
+      await fixture.dispose()
+    }
+  }, 120_000)
+}
+
+for (const mutation of ["source", "principal", "lease"] as const) {
+  test(`record-only calculation verification rereads the real Planner source and refuses ${mutation} drift after admission`, async () => {
+    const fixture = await calculationFixture()
+    const { authority, business } = fixture
+    const lease = await fixture.admit()
+    const read = business.plannerSources.resolveForecastSource
+    let reads = 0
+    let mutate = false
+    let mutations = 0
+    business.plannerSources.resolveForecastSource = async (reference, call) => {
+      const result = await read(reference, call)
+      if (call !== lease.call || result.status !== "ok") return result
+      reads++
+      if (mutate) {
+        mutate = false
+        mutations++
+        if (mutation === "source") await fixture.persistence.transaction("planner", async (snapshot) => {
+          snapshot.data.entities = [{ id: "changed-after-real-source-read", name: "Changed source" }]
+          return { commit: true, value: undefined }
+        })
+        if (mutation === "principal") fixture.control.active = false
+        if (mutation === "lease") authority.ui.finish(call)
+      }
+      return result
+    }
+    try {
+      const stored = await authority.state.read(lease.request, "cases", (state) => state.decisionResults?.[fixture.calculation.target.runId])
+      if (stored.status !== "ok" || !stored.value || stored.value.kind !== "scenario") throw new Error("Actual stored scenario unavailable")
+      const refs = fixture.calculation.target.sourceRefs
+      expect(await business.calculations.verifyCalculationSources(stored.value, refs, lease.call)).toBe(true)
+      expect(reads).toBe(1)
+      expect((await business.selectedCase(lease.call)).status).toBe("unavailable")
+      mutate = true
+      expect(await business.calculations.verifyCalculationSources(stored.value, refs, lease.call)).toBe(false)
+      expect(mutations).toBe(1)
+      expect(reads).toBe(2)
+      expect((await business.selectedCase(lease.call)).status).toBe("unavailable")
+    } finally {
+      business.plannerSources.resolveForecastSource = read
       authority.ui.finish(lease.call)
       await fixture.dispose()
     }
@@ -239,9 +289,8 @@ async function calculationFixture() {
     })
     if (seeded.status !== "ok") throw new Error("Cases unavailable")
     const calculations: Extract<BusinessEvidenceRef, { kind: "calculation" }>[] = []
-    // Distinct real stored runs: the foreign calculation reader intentionally
-    // rejects a concurrent replay of the SAME run/binding as a recursive cycle.
-    // This test preserves that guard and exercises permitted same-case overlap.
+    // Distinct real stored runs support both the same-run and different-run
+    // overlap proofs. Each invocation still rejects actual recursive ancestry.
     for (const index of [0, 1]) {
       const producer = await admit("sf_scenario_simulate")
       try {
@@ -261,7 +310,7 @@ async function calculationFixture() {
     const calculation = calculations[0]!
     const otherCalculation = calculations[1]!
     if (calculation.target.runId === otherCalculation.target.runId) throw new Error("Distinct stored calculation runs required")
-    return { authority, business, control, caseRef, otherCaseRef, calculation, otherCalculation, admit, dispose }
+    return { authority, business, control, persistence, caseRef, otherCaseRef, calculation, otherCalculation, admit, dispose }
   } catch (error) { await dispose(); throw error }
 }
 

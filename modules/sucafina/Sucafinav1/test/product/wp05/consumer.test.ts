@@ -129,6 +129,51 @@ test("C17 fresh evidence cannot advertise a different current reference from the
   }
 })
 
+test("an explicit A or B origin must belong in full to the same current comparison row", async () => {
+  const f = fixture()
+  const sign = (reference: Extract<BusinessEvidenceRef, { kind: "record" }>) => ({ ...reference, refDigest: digestSfEvidenceRef(reference) })
+  const second = sign({ ...structuredClone(f.reference), refId: "comparison-origin-B", target: { ...f.reference.target, recordId: "v2", incarnation: "record-B" } })
+  const third = sign({ ...structuredClone(f.reference), refId: "different-row-origin", target: { ...f.reference.target, recordId: "v3", incarnation: "record-C" } })
+  f.projection.values = [
+    { ...f.projection.values[0]!, sourceRefs: [f.reference, second], drilldown: null },
+    { ...f.projection.values[0]!, id: "other-row", sourceRefs: [third], drilldown: third },
+  ]
+  const base = presentProjection(f.projection, f.request.selectionRef).rows[0]!.selection
+  expect(base.reference).toBeNull()
+  const seen: BusinessEvidenceRef[] = []
+  const business = { resolve: async (reference: BusinessEvidenceRef): Promise<BusinessEvidenceResolution> => {
+    seen.push(reference)
+    return { state: "fresh", ref: reference, currentRef: reference, authorizedProjection: f.projection, accessRevision: "1", checkedAt: "2026-11-13T00:00:00Z" }
+  } }
+  for (const reference of [f.reference, second]) {
+    const selection = { ...base, reference }
+    const result = await readBiDestination({ request: f.request, selection, context: await f.admit(), source: f.source, authority: f.authority, business })
+    expect(result.status).toBe("ok")
+    if (result.status !== "ok") throw new Error(result.reason)
+    expect(result.value.selection).toEqual(selection)
+    expect(result.value.source.ref).toEqual(reference)
+  }
+  expect(seen).toEqual([f.reference, second])
+  const alteredFields = sign({ ...structuredClone(second), target: { ...second.target, fields: ["another-field"] } })
+  const alteredVersion = sign({ ...structuredClone(second), target: { ...second.target, version: second.target.version + 1 } })
+  for (const selection of [base, { ...base, reference: third }, { ...base, reference: alteredFields }, { ...base, reference: alteredVersion }, { ...base, reference: second, valueId: "other-row" }, { ...base, reference: second, projectionVersion: base.projectionVersion + 1 }, { ...base, reference: second, engineVersion: "different-engine" }, { ...base, reference: second, selectionRef: "different-selection" }, { ...base, reference: second, context: { ...base.context, currency: "EUR" } }]) {
+    const result = await readBiDestination({ request: f.request, selection, context: await f.admit(), source: f.source, authority: f.authority, business })
+    expect(result.status).not.toBe("ok")
+    expect(result).not.toHaveProperty("value")
+  }
+  expect(seen).toHaveLength(2)
+  for (const change of ["revoke-source", "different-current-ref", "revoke-after-resolve"] as const) {
+    const selection = { ...base, reference: second }
+    const result = await readBiDestination({ request: f.request, selection, context: await f.admit(), source: f.source, authority: f.authority, business: { resolve: async (reference) => {
+      if (change === "revoke-after-resolve") f.active.value = false
+      return { state: change === "revoke-source" ? "revoked" : "fresh", ref: reference, currentRef: change === "different-current-ref" ? f.reference : reference, authorizedProjection: f.projection, accessRevision: "1", checkedAt: "2026-11-13T00:00:00Z" }
+    } } })
+    expect(result.status).toBe(change === "different-current-ref" ? "stale" : "denied")
+    expect(result).not.toHaveProperty("value")
+    f.active.value = true
+  }
+})
+
 test("a new projection between dispatch and presentation is stale", async () => {
   const f = fixture()
   let reads = 0

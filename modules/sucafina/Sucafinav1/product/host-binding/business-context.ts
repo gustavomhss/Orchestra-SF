@@ -16,6 +16,8 @@ import { roleMap } from "../../runtime/admin.ts"
 import { object } from "../../runtime/contract.ts"
 import { sfPlannerProjectionSelector } from "../integration/source-projections.ts"
 import { sfPlannerSourceSelector } from "../integration/planner-sources.ts"
+import { createSfAtlasRecallScope } from "./atlas-recall-scope.ts"
+import type { SfCalculationCaseScope } from "./atlas-recall-scope.ts"
 
 /** Bound repeated source reauthorization without caching an authorization across reads. */
 function evidenceWithinBudget(refs: readonly BusinessEvidenceRef[]) {
@@ -222,6 +224,8 @@ export function createSfAtlasBusiness(input: {
     readEvidence?: (ref: Extract<BusinessEvidenceRef, { kind: "record" }>, call: TrustedDomainContext) => Promise<BusinessEvidenceResolution> }
   calculation?: (ref: BusinessEvidenceRef, call: TrustedDomainContext) => Promise<BusinessEvidenceResolution>
   caseForEvidence: (digest: string, call: TrustedDomainContext) => Promise<readonly { id: string; incarnation: string }[] | { id: string; incarnation: string } | undefined>
+  withCalculationCase?: SfCalculationCaseScope
+  lockedSourceFences?: () => Record<"dashboard" | "planner" | "procurement", string> | undefined
   selections: Pick<Parameters<typeof createSfEvidenceCapabilities>[0], "contextSelections" | "recallSelections" | "featuresForCase" | "runtimeVersions">
   scanner?: { spec: ScannerBinarySpec; version: string }
   now: () => string
@@ -326,8 +330,12 @@ export function createSfAtlasBusiness(input: {
     },
   })
   const planner = withRecordHistory(freshPlanner)
+  const recallScope = input.calculation && input.planner && input.withCalculationCase && input.lockedSourceFences
+    ? createSfAtlasRecallScope({ host: input.host, state: input.state, sources: input.planner.sources, readPlanner: freshPlanner,
+      calculation: input.calculation, withCalculationCase: input.withCalculationCase, lockedSourceFences: input.lockedSourceFences, now: input.now }) : undefined
+  const calculation = recallScope?.resolve ?? input.calculation
   const router = createSfEvidenceRouter({
-    dashboard, dashboardRecord, caseEvent, procurement, document, planner, calculation: input.calculation,
+    dashboard, dashboardRecord, caseEvent, procurement, document, planner, calculation,
     dashboardProof: recordHistory.proveContinuity,
     dashboardRecordProof: async (original, current, call) => await recordHistory.proveContinuity(original, current, call) ||
       await input.dashboardEvidence?.proveContinuity(original, current, call) === true,
@@ -344,7 +352,7 @@ export function createSfAtlasBusiness(input: {
     },
     documentProof: createSfSourceContinuityProof({ host: input.host, readOriginal, readCurrent: document }),
     plannerProof: recordHistory.proveContinuity,
-    calculationProof: input.calculation ? createSfSourceContinuityProof({ host: input.host, readOriginal, readCurrent: input.calculation }) : undefined,
+    calculationProof: calculation ? createSfSourceContinuityProof({ host: input.host, readOriginal, readCurrent: calculation }) : undefined,
   })
   const assembled = assembleSfBusinessContext({
     revalidate: input.host.revalidate, ...router,
@@ -357,7 +365,9 @@ export function createSfAtlasBusiness(input: {
   })
   const context = assembled.service
   resolveAncestry = assembled.resolveAncestry
-  const memory = createSfAtlasMemory({ state: input.state, cases: input.cases, authorizeCase: input.authorizeCase, host: input.host, evidence: context, proveContinuity: router.proveContinuity, scanner: createSfAtlasScanner({ scanners: input.scanner ? [input.scanner.spec] : [] }), scannerVersion: input.scanner?.version ?? "", now: input.now })
+  const canonicalMemory = createSfAtlasMemory({ state: input.state, cases: input.cases, authorizeCase: input.authorizeCase, host: input.host, evidence: context, proveContinuity: router.proveContinuity, scanner: createSfAtlasScanner({ scanners: input.scanner ? [input.scanner.spec] : [] }), scannerVersion: input.scanner?.version ?? "", now: input.now })
+  const memory = { ...canonicalMemory, recall: (ref: { id: string; incarnation: string }, call: TrustedDomainContext) =>
+    recallScope ? recallScope.recall(ref, call, () => canonicalMemory.recall(ref, call)) : canonicalMemory.recall(ref, call) }
   const capabilities = createSfEvidenceCapabilities({ ...input.selections, context, memory, proveContinuity: router.proveContinuity, revalidate: input.host.revalidate, createReceipt: input.authority.receiptFor })
   return { context, memory, capabilities, proveContinuity: router.proveContinuity }
 }

@@ -72,6 +72,7 @@ test("contribution renders a persisted question and retains explicit stale state
   expect(commercialHtml).toContain("&lt;human reason&gt;")
   expect(commercialHtml).not.toContain("Price: 0")
   const malformed = { ...commercial, payload: { ...commercial.payload, weights: { invalid: true } } }
+  // @ts-expect-error Deliberately malformed persisted metadata must remain safe at the render boundary.
   expect(contribution(malformed)).toContain("Weights not supplied")
 })
 
